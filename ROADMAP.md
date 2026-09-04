@@ -16,12 +16,13 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - PostgreSQL, Redis, backend, and frontend Docker Compose topology
 - Locked dependencies, standard Make commands, CI, and platform setup guides
 
-## Phase 2 — Domain and market data
+## Phase 2 — Domain and market data (complete)
 
 - Typed `Bar`, signal, order, fill, position, portfolio, and snapshot models
 - Deterministic in-process event bus and event contracts
 - `MarketDataProvider`, strict CSV adapter, data service, and deterministic fixtures
-- One development internet provider behind the same interface
+- Offline validation for ordering, filtering, timestamps, corrupt data, and event publication
+- PostgreSQL bar persistence and HTTP transport intentionally deferred to Phase 7
 
 ## Phase 3 — Indicators and strategies
 

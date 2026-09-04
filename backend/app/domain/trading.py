@@ -1,0 +1,95 @@
+from decimal import Decimal
+from enum import StrEnum
+from typing import Self
+from uuid import UUID, uuid4
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from app.domain.common import (
+    NonNegativeDecimal,
+    PositiveDecimal,
+    Symbol,
+    UtcDateTime,
+)
+
+
+class SignalType(StrEnum):
+    BUY = "BUY"
+    SELL = "SELL"
+    HOLD = "HOLD"
+
+
+class OrderSide(StrEnum):
+    BUY = "BUY"
+    SELL = "SELL"
+
+
+class OrderType(StrEnum):
+    MARKET = "MARKET"
+    LIMIT = "LIMIT"
+
+
+class OrderStatus(StrEnum):
+    CREATED = "CREATED"
+    SUBMITTED = "SUBMITTED"
+    ACCEPTED = "ACCEPTED"
+    PARTIALLY_FILLED = "PARTIALLY_FILLED"
+    FILLED = "FILLED"
+    CANCELLED = "CANCELLED"
+    REJECTED = "REJECTED"
+
+
+class DomainModel(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+
+class Signal(DomainModel):
+    strategy_id: str = Field(min_length=1)
+    symbol: Symbol
+    timestamp: UtcDateTime
+    signal_type: SignalType
+
+
+class Order(DomainModel):
+    id: UUID = Field(default_factory=uuid4)
+    symbol: Symbol
+    side: OrderSide
+    order_type: OrderType
+    quantity: PositiveDecimal
+    price: PositiveDecimal | None = None
+    status: OrderStatus = OrderStatus.CREATED
+    created_at: UtcDateTime
+
+    @model_validator(mode="after")
+    def validate_order_price(self) -> Self:
+        if self.order_type is OrderType.LIMIT and self.price is None:
+            raise ValueError("limit orders require a price")
+        if self.order_type is OrderType.MARKET and self.price is not None:
+            raise ValueError("market orders must not specify a price")
+        return self
+
+
+class Fill(DomainModel):
+    order_id: UUID
+    symbol: Symbol
+    quantity: PositiveDecimal
+    price: PositiveDecimal
+    commission: NonNegativeDecimal
+    timestamp: UtcDateTime
+
+
+class Position(DomainModel):
+    symbol: Symbol
+    quantity: Decimal
+    average_price: NonNegativeDecimal
+    market_price: NonNegativeDecimal
+    unrealized_pnl: Decimal
+    realized_pnl: Decimal
+
+
+class PortfolioSnapshot(DomainModel):
+    timestamp: UtcDateTime
+    cash: Decimal
+    market_value: Decimal
+    equity: Decimal
+    drawdown: Decimal
