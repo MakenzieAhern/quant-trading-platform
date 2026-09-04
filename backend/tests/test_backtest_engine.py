@@ -13,10 +13,10 @@ from app.backtest import (
 )
 from app.data.providers import Timeframe
 from app.domain.market import Bar
-from app.domain.trading import OrderStatus, Signal, SignalType
+from app.domain.trading import OrderSide, OrderStatus, Signal, SignalType
 from app.event import EventBus, EventType
 from app.execution import FixedBasisPointSlippage, FixedCommission
-from app.strategies import BaseStrategy
+from app.strategies import BaseStrategy, MovingAverageCrossoverStrategy
 
 START = datetime(2024, 1, 1, tzinfo=UTC)
 
@@ -29,7 +29,7 @@ def make_bar(day: int, open_price: str, close_price: str, symbol: str = "AAPL") 
         timestamp=START + timedelta(days=day),
         open=open_value,
         high=max(open_value, close_value) + Decimal(1),
-        low=min(open_value, close_value) - Decimal(1),
+        low=max(min(open_value, close_value) - Decimal(1), Decimal("0.01")),
         close=close_value,
         volume=Decimal(1000),
     )
@@ -142,6 +142,8 @@ def test_manual_reference_backtest_uses_next_bar_open() -> None:
         bars[1].timestamp,
         bars[3].timestamp,
     ]
+    assert [order.side for order in result.orders] == [OrderSide.BUY, OrderSide.SELL]
+    assert all(order.quantity == Decimal(2) for order in result.orders)
     assert [fill.timestamp for fill in result.fills] == [
         bars[2].timestamp,
         bars[4].timestamp,
@@ -151,6 +153,7 @@ def test_manual_reference_backtest_uses_next_bar_open() -> None:
         Decimal("109.9450"),
     ]
     assert [fill.commission for fill in result.fills] == [Decimal(1), Decimal(1)]
+    assert [fill.side for fill in result.fills] == [OrderSide.BUY, OrderSide.SELL]
     assert all(order.status is OrderStatus.FILLED for order in result.orders)
     assert result.start_time == bars[0].timestamp
     assert result.end_time == bars[-1].timestamp
@@ -182,6 +185,28 @@ def test_per_bar_events_execute_old_orders_before_current_market_data() -> None:
         EventType.ORDER_FILLED,
         EventType.MARKET_DATA,
     ]
+
+
+def test_real_crossover_strategy_signal_fills_at_following_open() -> None:
+    closes = ["3", "2", "1", "2", "4", "5"]
+    bars = [make_bar(day, "50" if day == 5 else close, close) for day, close in enumerate(closes)]
+    strategy = MovingAverageCrossoverStrategy("ma", "AAPL", 2, 3)
+    engine = BacktestEngine(
+        StubProvider(bars),
+        (strategy,),
+        BacktestConfig(
+            commission_model=FixedCommission(),
+            slippage_model=FixedBasisPointSlippage(),
+        ),
+    )
+
+    result = engine.run("AAPL")
+
+    assert len(result.signals) == len(result.orders) == len(result.fills) == 1
+    assert result.signals[0].timestamp == bars[4].timestamp
+    assert result.orders[0].created_at == bars[4].timestamp
+    assert result.fills[0].timestamp == bars[5].timestamp
+    assert result.fills[0].price == Decimal(50)
 
 
 def test_signal_on_final_bar_remains_accepted_without_invented_fill() -> None:
