@@ -17,7 +17,7 @@ FastAPI modular monolith ─── Redis (cache and future transient events)
         └────────────────── PostgreSQL (durable state, Alembic-managed)
 ```
 
-Phase 1 contains operational foundations only: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration.
+Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion.
 
 ## Planned backend modules
 
@@ -41,6 +41,27 @@ Portfolio <- Fill <- BrokerAdapter <- OrderManager <- RiskManager
 - `analytics`: equity, drawdown, returns, and trade statistics.
 - `api`: thin transport adapters using explicit request/response schemas; no business logic or raw ORM responses.
 - `db`: SQLAlchemy persistence models/repositories; migrations are the schema authority.
+
+## Market-data flow
+
+```text
+CSV / future data source
+          │
+          ▼
+MarketDataProvider
+          │ normalized, immutable Bar objects
+          ▼
+MarketDataService
+          │
+          ▼
+EventBus ── MARKET_DATA ──> future Strategy / Backtest consumers
+```
+
+`Bar` requires an aware timestamp and normalizes it to UTC. Prices are positive `Decimal` values, volume is a non-negative integer, and OHLC relationships are validated. The CSV adapter maps `<SYMBOL>.csv` under a configured directory, validates the entire file before filtering, rejects duplicate UTC instants and malformed rows, then returns an immutable chronological tuple. Date bounds are inclusive.
+
+The in-process `EventBus` invokes a snapshot of handlers synchronously in registration order. It is intentionally fail-fast: a handler exception propagates to the publisher and later handlers do not run. Subscription changes made during a publish apply to the next event.
+
+Market-bar persistence is deferred to the persistence/API phase. Phase 2 sources are read through `MarketDataProvider`; future PostgreSQL storage will implement the same boundary and add a unique/indexed `(symbol, timestamp)` key. This keeps research and backtesting independent of PostgreSQL and avoids a premature migration. The public market-data REST route remains deferred to Phase 7 for the same reason.
 
 ## Correctness contracts
 
