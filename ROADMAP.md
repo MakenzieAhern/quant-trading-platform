@@ -24,12 +24,13 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - Offline validation for ordering, filtering, timestamps, corrupt data, and event publication
 - PostgreSQL bar persistence and HTTP transport intentionally deferred to Phase 7
 
-## Phase 3 — Indicators and strategies
+## Phase 3 — Indicators and strategies (complete on feature branch)
 
 - Pure SMA, EMA, RSI, MACD, and Bollinger Band functions
 - Broker-independent strategy interface and parameter metadata
 - Moving-average crossover and RSI mean-reversion strategies
 - Unit tests proving completed-bar-only inputs
+- Strict per-symbol chronological processing, deterministic reset, and `MARKET_DATA` to `SIGNAL` event integration
 
 ## Phase 4 — Backtest and accounting
 
