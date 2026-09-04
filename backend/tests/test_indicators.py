@@ -1,4 +1,4 @@
-from decimal import Decimal, localcontext
+from decimal import ROUND_DOWN, Decimal, getcontext, localcontext
 
 import pytest
 
@@ -51,6 +51,13 @@ def test_macd_has_explicit_signal_warmup_and_consistent_result() -> None:
     assert result.histogram == result.line - result.signal
 
 
+def test_default_macd_warms_up_after_slow_and_signal_windows() -> None:
+    values = [Decimal(value) for value in range(1, 35)]
+
+    assert macd(values[:-1]) is None
+    assert macd(values) is not None
+
+
 def test_bollinger_bands_use_population_standard_deviation() -> None:
     assert bollinger_bands(decimals("1", "1", "3"), 4) is None
 
@@ -61,6 +68,10 @@ def test_bollinger_bands_use_population_standard_deviation() -> None:
     assert result.upper == Decimal(4)
     assert result.lower == Decimal(0)
     assert result.lower <= result.middle <= result.upper
+
+    flat_result = bollinger_bands(decimals("10", "10", "10", "10"), 4)
+    assert flat_result is not None
+    assert flat_result.middle == flat_result.upper == flat_result.lower == Decimal(10)
 
 
 @pytest.mark.parametrize("period", [0, -1, True])
@@ -92,5 +103,15 @@ def test_indicators_require_decimal_and_use_a_fixed_decimal_context() -> None:
 
     with localcontext() as context:
         context.prec = 6
+        context.rounding = ROUND_DOWN
         result = rsi(decimals("1", "2", "3", "2", "4"), 3)
+        assert context.prec == 6
+        assert context.rounding == ROUND_DOWN
     assert result == Decimal("83.33333333333333333333333333")
+
+    application_context = getcontext()
+    original_precision = application_context.prec
+    original_rounding = application_context.rounding
+    ema(decimals("2", "5", "1", "6", "4"), 3)
+    assert application_context.prec == original_precision
+    assert application_context.rounding == original_rounding

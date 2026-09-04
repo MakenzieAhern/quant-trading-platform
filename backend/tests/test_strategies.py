@@ -51,6 +51,24 @@ def test_moving_average_strategy_emits_only_true_crossovers() -> None:
     assert all(signal.strategy_id == "ma" and signal.symbol == "AAPL" for signal in signals)
 
 
+@pytest.mark.parametrize(
+    ("closes", "expected"),
+    [
+        (["1", "1", "1", "2"], SignalType.BUY),
+        (["2", "2", "2", "1"], SignalType.SELL),
+    ],
+)
+def test_moving_average_crossover_includes_previous_equality(
+    closes: list[str], expected: SignalType
+) -> None:
+    strategy = MovingAverageCrossoverStrategy("ma", "AAPL", 2, 3)
+
+    signals = run_strategy(strategy, closes)
+
+    assert [signal.signal_type for signal in signals] == [expected]
+    assert signals[0].timestamp == START + timedelta(days=3)
+
+
 def test_rsi_strategy_emits_only_threshold_reentry_crossings() -> None:
     strategy = RSIMeanReversionStrategy(
         "rsi",
@@ -60,25 +78,38 @@ def test_rsi_strategy_emits_only_threshold_reentry_crossings() -> None:
         overbought=Decimal(70),
     )
 
-    signals = run_strategy(strategy, ["3", "2", "1", "2", "3", "2"])
+    signals = run_strategy(strategy, ["4", "3", "2", "1", "2", "3", "4", "3"])
 
     assert [signal.signal_type for signal in signals] == [SignalType.BUY, SignalType.SELL]
     assert [signal.timestamp for signal in signals] == [
-        START + timedelta(days=3),
-        START + timedelta(days=5),
+        START + timedelta(days=4),
+        START + timedelta(days=7),
     ]
 
 
 def test_strategy_rejects_duplicate_and_out_of_order_bars_before_mutation() -> None:
-    strategy = MovingAverageCrossoverStrategy("ma", "AAPL", 2, 3)
-    strategy.on_bar(make_bar(1, "3"))
+    control = MovingAverageCrossoverStrategy("control", "AAPL", 2, 3)
+    reviewed = MovingAverageCrossoverStrategy("reviewed", "AAPL", 2, 3)
+    first_bar = make_bar(1, "3")
+    control.on_bar(first_bar)
+    reviewed.on_bar(first_bar)
 
     with pytest.raises(BarOrderError, match="strictly later"):
-        strategy.on_bar(make_bar(1, "2"))
+        reviewed.on_bar(make_bar(1, "100"))
     with pytest.raises(BarOrderError, match="strictly later"):
-        strategy.on_bar(make_bar(0, "2"))
+        reviewed.on_bar(make_bar(0, "100"))
 
-    assert strategy.on_bar(make_bar(2, "2")) == ()
+    remaining_bars = [make_bar(day, close) for day, close in enumerate(["2", "1", "2", "4"], 2)]
+    control_signals = tuple(signal for bar in remaining_bars for signal in control.on_bar(bar))
+    reviewed_signals = tuple(signal for bar in remaining_bars for signal in reviewed.on_bar(bar))
+
+    assert [signal.signal_type for signal in reviewed_signals] == [SignalType.BUY]
+    assert [signal.signal_type for signal in reviewed_signals] == [
+        signal.signal_type for signal in control_signals
+    ]
+    assert [signal.timestamp for signal in reviewed_signals] == [
+        signal.timestamp for signal in control_signals
+    ]
 
 
 def test_single_symbol_strategy_rejects_direct_cross_symbol_input() -> None:

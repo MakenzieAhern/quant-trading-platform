@@ -46,6 +46,19 @@ class RecordingStrategy(BaseStrategy):
         self.seen = 0
 
 
+class FailingStrategy(BaseStrategy):
+    def __init__(self, calls: list[str]) -> None:
+        super().__init__("failing", "AAPL", {})
+        self.calls = calls
+
+    def _process_bar(self, bar: Bar) -> Sequence[Signal]:
+        self.calls.append(self.strategy_id)
+        raise RuntimeError("strategy failed")
+
+    def _reset_state(self) -> None:
+        pass
+
+
 class SingleBarProvider:
     def __init__(self, bar: Bar) -> None:
         self.bar = bar
@@ -106,6 +119,24 @@ def test_engine_routes_symbols_without_mixing_strategy_state() -> None:
     assert calls == ["aapl"]
     assert aapl.seen == 1
     assert msft.seen == 0
+
+
+def test_strategy_failure_is_propagated_and_stops_later_strategies() -> None:
+    bus = EventBus()
+    engine = StrategyEngine(bus)
+    calls: list[str] = []
+    later = RecordingStrategy("later", "AAPL", calls)
+    engine.register(FailingStrategy(calls))
+    engine.register(later)
+    published: list[Signal] = []
+    bus.subscribe(EventType.SIGNAL, lambda event: published.append(event.payload))
+
+    with pytest.raises(RuntimeError, match="strategy failed"):
+        bus.publish(Event(EventType.MARKET_DATA, make_bar()))
+
+    assert calls == ["failing"]
+    assert later.seen == 0
+    assert published == []
 
 
 def test_engine_rejects_duplicate_strategy_identity_and_invalid_event_payload() -> None:

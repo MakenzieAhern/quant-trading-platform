@@ -56,7 +56,7 @@ def _ema_series(values: Sequence[Decimal], period: int) -> list[Decimal | None]:
         alpha = Decimal(2) / Decimal(period + 1)
         previous = seed
         for index in range(period, len(values)):
-            previous = values[index] * alpha + previous * (Decimal(1) - alpha)
+            previous += alpha * (values[index] - previous)
             results[index] = previous
     return results
 

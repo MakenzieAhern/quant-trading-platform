@@ -93,6 +93,8 @@ Each `BaseStrategy` instance supports one normalized symbol and receives complet
 
 `StrategyEngine` subscribes to the existing `MARKET_DATA` event stream, routes a bar only to strategies for its symbol, invokes strategies in registration order, collects their trading intent, then publishes typed `SIGNAL` events in that same order. Signals use the completed bar's timestamp. The engine does not create orders, inspect portfolios, apply risk, access data providers, or interact with brokers.
 
+Strategy processing is fail-fast. If a strategy raises while handling a market-data event, the exception propagates through `EventBus`, later strategies do not run, and the engine publishes no signals collected for that bar. A run that encounters a strategy exception must be treated as aborted; callers must reset or replace its strategies before replay rather than retrying the same bar against potentially advanced strategy-local state.
+
 ## Correctness contracts
 
 Daily strategies see a bar only after it closes. A market order caused by that bar may first fill at the next available bar's open. Event order and fixture inputs must make runs repeatable. Commission and directional slippage are mandatory inputs; rejections and order transitions are recorded. The initial accounting model is long-only. Tests will explicitly cover timestamp alignment, no same-bar execution, fills, cash, average cost, PnL, and drawdown.

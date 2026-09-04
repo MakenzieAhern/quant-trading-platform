@@ -24,7 +24,7 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - Offline validation for ordering, filtering, timestamps, corrupt data, and event publication
 - PostgreSQL bar persistence and HTTP transport intentionally deferred to Phase 7
 
-## Phase 3 — Indicators and strategies (complete on feature branch)
+## Phase 3 — Indicators and strategies (complete)
 
 - Pure SMA, EMA, RSI, MACD, and Bollinger Band functions
 - Broker-independent strategy interface and parameter metadata
