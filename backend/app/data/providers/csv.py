@@ -1,4 +1,5 @@
 import csv
+from collections import Counter
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -9,7 +10,7 @@ from app.data.providers.base import Timeframe
 from app.domain.common import ensure_utc, normalize_symbol
 from app.domain.market import Bar
 
-REQUIRED_COLUMNS = frozenset({"timestamp", "open", "high", "low", "close", "volume"})
+REQUIRED_COLUMNS = ("timestamp", "open", "high", "low", "close", "volume")
 
 
 class MarketDataError(ValueError):
@@ -69,8 +70,16 @@ class CSVDataProvider:
 
         with path.open(encoding="utf-8-sig", newline="") as source:
             reader = csv.DictReader(source)
-            columns = set(reader.fieldnames or ())
-            missing = REQUIRED_COLUMNS - columns
+            fieldnames = reader.fieldnames or []
+            duplicates = sorted(
+                column for column, count in Counter(fieldnames).items() if count > 1
+            )
+            if duplicates:
+                duplicate_list = ", ".join(duplicates)
+                raise MarketDataSchemaError(
+                    f"{path.name} contains duplicate columns: {duplicate_list}"
+                )
+            missing = set(REQUIRED_COLUMNS) - set(fieldnames)
             if missing:
                 missing_list = ", ".join(sorted(missing))
                 raise MarketDataSchemaError(f"{path.name} is missing columns: {missing_list}")
@@ -91,6 +100,8 @@ class CSVDataProvider:
     @staticmethod
     def _parse_row(path: Path, symbol: str, row_number: int, row: dict[str, str | None]) -> Bar:
         try:
+            if None in row:
+                raise MarketDataSchemaError("row contains more values than the CSV header")
             values = {
                 column: CSVDataProvider._required_value(row, column) for column in REQUIRED_COLUMNS
             }
@@ -102,7 +113,7 @@ class CSVDataProvider:
                 high=Decimal(values["high"]),
                 low=Decimal(values["low"]),
                 close=Decimal(values["close"]),
-                volume=int(values["volume"]),
+                volume=Decimal(values["volume"]),
             )
         except (InvalidOperation, ValueError, ValidationError) as exc:
             raise MarketDataValidationError(

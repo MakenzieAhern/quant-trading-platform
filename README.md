@@ -8,7 +8,7 @@ The project is a modular monolith: React/Vite provides the dashboard, FastAPI ex
 
 **Stack:** Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL, Redis, React, TypeScript, Vite, pytest, Vitest, and Docker Compose. Pandas, NumPy, SciPy, and TradingView Lightweight Charts join in the phases that first use them.
 
-**Current features:** reproducible Phase 1 environment, safe configuration, structured logs, database migration baseline, health API, tested frontend shell, and Linux CI. The Phase 2 feature branch adds typed financial contracts, a deterministic in-process event bus, strict offline CSV ingestion, and a source-independent market-data service. Indicators, strategies, backtesting, analytics, risk, and paper execution are sequenced in the [roadmap](ROADMAP.md).
+**Current features:** reproducible Phase 1 environment, safe configuration, structured logs, database migration baseline, health API, tested frontend shell, and Linux CI. Phase 2 adds typed financial contracts, a deterministic in-process event bus, strict offline CSV ingestion, and a source-independent market-data service. Indicators, strategies, backtesting, analytics, risk, and paper execution are sequenced in the [roadmap](ROADMAP.md).
 
 ## Quick start
 

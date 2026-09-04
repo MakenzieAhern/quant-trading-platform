@@ -57,7 +57,7 @@ MarketDataService
 EventBus ── MARKET_DATA ──> future Strategy / Backtest consumers
 ```
 
-`Bar` requires an aware timestamp and normalizes it to UTC. Prices are positive `Decimal` values, volume is a non-negative integer, and OHLC relationships are validated. The CSV adapter maps `<SYMBOL>.csv` under a configured directory, validates the entire file before filtering, rejects duplicate UTC instants and malformed rows, then returns an immutable chronological tuple. Date bounds are inclusive.
+`Bar` requires an aware timestamp and normalizes it to UTC. Prices are positive `Decimal` values, volume is a non-negative `Decimal` so providers can represent both share and fractional asset volume without precision loss, and OHLC relationships are validated. The CSV adapter maps `<SYMBOL>.csv` under a configured directory, validates the entire file before filtering, rejects duplicate columns, extra row values, duplicate UTC instants, and malformed rows, then returns an immutable chronological tuple. Date bounds are inclusive.
 
 The in-process `EventBus` invokes a snapshot of handlers synchronously in registration order. It is intentionally fail-fast: a handler exception propagates to the publisher and later handlers do not run. Subscription changes made during a publish apply to the next event.
 

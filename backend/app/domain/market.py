@@ -1,6 +1,6 @@
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 
-from app.domain.common import PositiveDecimal, Symbol, UtcDateTime
+from app.domain.common import NonNegativeDecimal, PositiveDecimal, Symbol, UtcDateTime
 
 
 class Bar(BaseModel):
@@ -14,7 +14,7 @@ class Bar(BaseModel):
     high: PositiveDecimal
     low: PositiveDecimal
     close: PositiveDecimal
-    volume: int = Field(ge=0)
+    volume: NonNegativeDecimal
 
     @model_validator(mode="after")
     def validate_ohlc(self) -> "Bar":

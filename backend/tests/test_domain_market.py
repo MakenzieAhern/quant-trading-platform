@@ -51,3 +51,8 @@ def test_bar_rejects_invalid_market_values(overrides: dict[str, object], message
 def test_bar_preserves_decimal_prices() -> None:
     bar = make_bar(close="103.1234", high="104")
     assert bar.close == Decimal("103.1234")
+
+
+def test_bar_preserves_fractional_volume() -> None:
+    bar = make_bar(volume="123.456")
+    assert bar.volume == Decimal("123.456")

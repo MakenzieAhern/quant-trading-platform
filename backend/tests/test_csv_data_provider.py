@@ -59,6 +59,15 @@ def test_provider_rejects_missing_columns(tmp_path: Path) -> None:
         provider.get_historical_bars("AAPL")
 
 
+def test_provider_rejects_duplicate_columns(tmp_path: Path) -> None:
+    provider = write_csv(
+        tmp_path,
+        "timestamp,open,high,low,close,volume,close\n",
+    )
+    with pytest.raises(MarketDataSchemaError, match="duplicate columns: close"):
+        provider.get_historical_bars("AAPL")
+
+
 @pytest.mark.parametrize(
     "row",
     [
@@ -87,6 +96,16 @@ def test_provider_rejects_duplicate_utc_timestamps(tmp_path: Path) -> None:
         "2024-01-02T11:00:00+11:00,100,101,99,100,1100\n",
     )
     with pytest.raises(DuplicateTimestampError, match="duplicate UTC timestamp"):
+        provider.get_historical_bars("AAPL")
+
+
+def test_provider_rejects_values_beyond_header(tmp_path: Path) -> None:
+    provider = write_csv(
+        tmp_path,
+        "timestamp,open,high,low,close,volume\n"
+        "2024-01-02T00:00:00Z,100,101,99,100,1000,unexpected\n",
+    )
+    with pytest.raises(MarketDataValidationError, match="more values than the CSV header"):
         provider.get_historical_bars("AAPL")
 
 
