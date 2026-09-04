@@ -10,6 +10,7 @@ from app.domain.trading import Order, OrderSide, OrderStatus, OrderType
 def test_limit_order_requires_price() -> None:
     with pytest.raises(ValidationError, match="limit orders require a price"):
         Order(
+            strategy_id="strategy",
             symbol="AAPL",
             side=OrderSide.BUY,
             order_type=OrderType.LIMIT,
@@ -20,6 +21,7 @@ def test_limit_order_requires_price() -> None:
 
 def test_order_defaults_to_created() -> None:
     order = Order(
+        strategy_id="strategy",
         symbol="aapl",
         side=OrderSide.BUY,
         order_type=OrderType.MARKET,
