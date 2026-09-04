@@ -17,7 +17,7 @@ FastAPI modular monolith ─── Redis (cache and future transient events)
         └────────────────── PostgreSQL (durable state, Alembic-managed)
 ```
 
-Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation.
+Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation. Phase 4 adds a historical simulation clock, event-driven backtest coordination, and deterministic simulated execution.
 
 ## Planned backend modules
 
@@ -95,9 +95,56 @@ Each `BaseStrategy` instance supports one normalized symbol and receives complet
 
 Strategy processing is fail-fast. If a strategy raises while handling a market-data event, the exception propagates through `EventBus`, later strategies do not run, and the engine publishes no signals collected for that bar. A run that encounters a strategy exception must be treated as aborted; callers must reset or replace its strategies before replay rather than retrying the same bar against potentially advanced strategy-local state.
 
+## Backtest and execution flow
+
+```text
+Historical MarketDataProvider
+             │
+             ▼
+       BacktestEngine
+             │
+             ▼
+      SimulationClock
+             │
+             ▼
+ EventBus / MARKET_DATA -> StrategyEngine -> EventBus / SIGNAL
+                                                   │
+                                                   ▼
+                                         MARKET Order creation
+                                                   │
+                                                   ▼
+                                         SimulatedBroker queue
+                                                   │ next same-symbol Bar
+                                                   ▼
+                                      next-Bar OPEN + adverse slippage
+                                                   │
+                                                   ▼
+                                         Fill + commission
+```
+
+The simulation clock advances only from timezone-aware historical timestamps and never reads wall-clock time. Provider output is validated before a run: every Bar must match the requested symbol and timestamps must be strictly increasing. Each run resets clock, strategy, order, fill, and signal state.
+
+Within each completed daily Bar the event order is fixed:
+
+1. advance the simulation clock to the Bar timestamp;
+2. execute accepted MARKET orders from earlier signals for that symbol at the current Bar open;
+3. publish their `ORDER_FILLED` events;
+4. publish `MARKET_DATA` for the current completed Bar;
+5. let strategies publish `SIGNAL` events in registration order;
+6. translate each BUY/SELL Signal to a fixed-quantity MARKET Order;
+7. publish `ORDER_CREATED`, `ORDER_SUBMITTED`, and `ORDER_ACCEPTED`, then queue the Order.
+
+Consequently an Order created from Bar T cannot use any price from Bar T and first becomes eligible at the next Bar for its symbol. Its Fill timestamp is that later Bar timestamp. An Order created on the final Bar remains visibly `ACCEPTED` and unfilled; no final-close fill is invented. Phase 4 supports all-or-nothing MARKET Orders only. Existing LIMIT Orders are deterministically moved from `SUBMITTED` to `REJECTED`, because daily OHLC data cannot establish an unambiguous intrabar path.
+
+Order transitions are explicit and immutable: `CREATED -> SUBMITTED -> ACCEPTED -> FILLED`, with `SUBMITTED -> REJECTED` for unsupported execution. Invalid transitions fail immediately. `ORDER_FILLED` carries the immutable Fill, which includes order and strategy identity, side, quantity, adverse-slippage price, non-negative commission, and execution timestamp.
+
+Transaction costs use replaceable protocols. `FixedCommission` charges one configured Decimal amount per fill. `PercentageCommission` treats its configured rate as a fraction of filled notional. `FixedBasisPointSlippage` increases BUY prices and decreases SELL prices by `basis_points / 10000`; favorable slippage is rejected. Execution arithmetic uses an isolated 28-digit `ROUND_HALF_EVEN` Decimal context and never converts financial values to float.
+
+The Phase 4 result contains ordered Signals, final Order states, Fills, historical bounds, and configuration. It intentionally contains no cash ledger, positions, PnL, equity curve, drawdown, risk decisions, analytics, paper execution, or live brokerage behavior.
+
 ## Correctness contracts
 
-Daily strategies see a bar only after it closes. A market order caused by that bar may first fill at the next available bar's open. Event order and fixture inputs must make runs repeatable. Commission and directional slippage are mandatory inputs; rejections and order transitions are recorded. The initial accounting model is long-only. Tests will explicitly cover timestamp alignment, no same-bar execution, fills, cash, average cost, PnL, and drawdown.
+Daily strategies see a bar only after it closes. A market order caused by that bar may first fill at the next available bar's open. Event order and fixture inputs must make runs repeatable. Commission and directional slippage are mandatory inputs; rejections and order transitions are recorded. Future portfolio accounting starts long-only. Tests explicitly separate Phase 4 timing and fill correctness from later cash, average-cost, PnL, equity, and drawdown accounting.
 
 ## Runtime separation and safety
 

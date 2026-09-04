@@ -32,16 +32,17 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - Unit tests proving completed-bar-only inputs
 - Strict per-symbol chronological processing, deterministic reset, and `MARKET_DATA` to `SIGNAL` event integration
 
-## Phase 4 — Backtest and accounting
+## Phase 4 — Backtest and simulated execution (complete on feature branch)
 
 - Simulation clock and event-driven engine
 - Order manager and explicit transition table
 - Replaceable fixed/percentage commission and basis-point slippage
 - Next-bar-open fill model, market and limit orders, and rejection paths
-- Shared portfolio accounting with manually verifiable tests
+- Deterministic result records with manually verifiable next-Bar-open tests
 
-## Phase 5 — Analytics
+## Phase 5 — Portfolio accounting and analytics
 
+- Cash, positions, average cost, realized/unrealized PnL, and equity series
 - Equity and drawdown series
 - Return, CAGR, volatility, Sharpe, Sortino, exposure, and trade metrics
 - Documented annualization and zero/negative-series behavior
