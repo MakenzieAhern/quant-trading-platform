@@ -17,7 +17,7 @@ FastAPI modular monolith ─── Redis (cache and future transient events)
         └────────────────── PostgreSQL (durable state, Alembic-managed)
 ```
 
-Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion.
+Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation.
 
 ## Planned backend modules
 
@@ -62,6 +62,38 @@ EventBus ── MARKET_DATA ──> future Strategy / Backtest consumers
 The in-process `EventBus` invokes a snapshot of handlers synchronously in registration order. It is intentionally fail-fast: a handler exception propagates to the publisher and later handlers do not run. Subscription changes made during a publish apply to the next event.
 
 Market-bar persistence is deferred to the persistence/API phase. Phase 2 sources are read through `MarketDataProvider`; future PostgreSQL storage will implement the same boundary and add a unique/indexed `(symbol, timestamp)` key. This keeps research and backtesting independent of PostgreSQL and avoids a premature migration. The public market-data REST route remains deferred to Phase 7 for the same reason.
+
+## Indicator and strategy flow
+
+```text
+MarketDataProvider -> MarketDataService -> Bar
+                                         │
+                                         ▼
+                              EventBus / MARKET_DATA
+                                         │
+                                         ▼
+                                  StrategyEngine
+                                         │ registration order
+                                         ▼
+                                   BaseStrategy
+                                         │ historical closes only
+                                         ▼
+                                     Indicators
+                                         │
+                                         ▼
+                                      Signal
+                                         │
+                                         ▼
+                                 EventBus / SIGNAL
+```
+
+SMA, EMA, Wilder RSI, MACD, and Bollinger Bands are focused pure calculations. They accept `Decimal` values, execute in a fixed 28-digit `ROUND_HALF_EVEN` decimal context, and return `None` until their complete input window is available. EMA uses the SMA of its first complete window as its seed. MACD applies that same rule to both price EMAs and to the signal EMA. Bollinger Bands use population standard deviation.
+
+Each `BaseStrategy` instance supports one normalized symbol and receives completed `Bar` objects sequentially. It can retain only values derived from bars already delivered. A duplicate or older timestamp fails before processing, while `reset()` discards all observed history for deterministic replay. Moving-average crossover signals occur only on true short/long SMA crossings. RSI mean-reversion signals occur only when RSI crosses back into the neutral region from an extreme; strategies emit no `HOLD` events.
+
+`StrategyEngine` subscribes to the existing `MARKET_DATA` event stream, routes a bar only to strategies for its symbol, invokes strategies in registration order, collects their trading intent, then publishes typed `SIGNAL` events in that same order. Signals use the completed bar's timestamp. The engine does not create orders, inspect portfolios, apply risk, access data providers, or interact with brokers.
+
+Strategy processing is fail-fast. If a strategy raises while handling a market-data event, the exception propagates through `EventBus`, later strategies do not run, and the engine publishes no signals collected for that bar. A run that encounters a strategy exception must be treated as aborted; callers must reset or replace its strategies before replay rather than retrying the same bar against potentially advanced strategy-local state.
 
 ## Correctness contracts
 
