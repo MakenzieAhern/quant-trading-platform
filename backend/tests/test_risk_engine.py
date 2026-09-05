@@ -81,6 +81,9 @@ def test_manual_position_limit_reference_uses_projected_position() -> None:
         ("5", OrderSide.BUY, "3", "7", False, "8"),
         ("-5", OrderSide.SELL, "3", "7", False, "-8"),
         ("10", OrderSide.SELL, "4", "5", True, "6"),
+        ("20", OrderSide.BUY, "5", "25", True, "25"),
+        ("10", OrderSide.SELL, "15", "5", True, "-5"),
+        ("-10", OrderSide.BUY, "15", "5", True, "5"),
         ("5", OrderSide.SELL, "8", "2", False, "-3"),
         ("-5", OrderSide.BUY, "8", "2", False, "3"),
     ],
@@ -119,6 +122,10 @@ def test_multi_symbol_gross_and_net_exposure_use_independent_marks() -> None:
     assert decision.projected_net_exposure == Decimal(2500)
 
     hedged = snapshot((position("AAPL", "10", "100"), position("MSFT", "-5", "200")))
+    assert hedged.market_value == Decimal(0)
+    assert sum(
+        (abs(item.quantity * item.market_price) for item in hedged.positions), ZERO
+    ) == Decimal(2000)
     diagnostic = RiskEngine().evaluate(
         proposal(quantity="1"), hedged, {"AAPL": Decimal(100), "MSFT": Decimal(200)}
     )
@@ -136,6 +143,31 @@ def test_symbol_exposure_uses_target_mark_and_exact_decimal() -> None:
     assert decision.reference_price == Decimal(100)
     assert decision.projected_symbol_exposure == Decimal(300)
     assert decision.projected_gross_exposure == Decimal(1300)
+
+
+@pytest.mark.parametrize(
+    ("current", "side", "quantity", "expected_quantity", "expected_exposure"),
+    [
+        ("10", OrderSide.SELL, "4", "6", "600"),
+        ("-10", OrderSide.BUY, "4", "-6", "600"),
+        ("10", OrderSide.SELL, "15", "-5", "500"),
+        ("-10", OrderSide.BUY, "15", "5", "500"),
+    ],
+)
+def test_symbol_exposure_uses_final_long_short_reduction_and_reversal_state(
+    current: str,
+    side: OrderSide,
+    quantity: str,
+    expected_quantity: str,
+    expected_exposure: str,
+) -> None:
+    state = snapshot((position("AAPL", current, "100"),))
+    decision = RiskEngine().evaluate(
+        proposal(side=side, quantity=quantity), state, {"AAPL": Decimal(100)}
+    )
+
+    assert decision.projected_position_quantity == Decimal(expected_quantity)
+    assert decision.projected_symbol_exposure == Decimal(expected_exposure)
 
 
 def test_permissive_configuration_supports_short_selling() -> None:
@@ -158,6 +190,26 @@ def test_order_notional_uses_current_mark_not_future_execution_price() -> None:
     assert decision.reason_code is RiskReasonCode.ORDER_NOTIONAL_LIMIT
     assert decision.order_notional == Decimal(1001)
     assert decision.reference_price == Decimal(100)
+
+
+@pytest.mark.parametrize(
+    ("side", "quantity", "approved"),
+    [
+        (OrderSide.BUY, "10", True),
+        (OrderSide.SELL, "10", True),
+        (OrderSide.BUY, "10.0001", False),
+        (OrderSide.SELL, "10.0001", False),
+    ],
+)
+def test_order_notional_limit_has_exact_decimal_boundary_for_both_sides(
+    side: OrderSide, quantity: str, approved: bool
+) -> None:
+    decision = RiskEngine(RiskConfig(max_order_notional=Decimal(1000))).evaluate(
+        proposal(side=side, quantity=quantity), snapshot(), {"AAPL": Decimal(100)}
+    )
+
+    assert decision.approved is approved
+    assert decision.order_notional == Decimal(quantity) * Decimal(100)
 
 
 def test_order_notional_limit_still_applies_to_a_reduction() -> None:
@@ -199,7 +251,7 @@ def test_genuine_reduction_can_remain_above_portfolio_risk_limits() -> None:
     assert decision.projected_gross_exposure == Decimal(1500)
 
 
-def test_leverage_reference_is_gross_exposure_over_projected_equity() -> None:
+def test_leverage_reference_is_gross_exposure_over_current_equity() -> None:
     decision = RiskEngine(RiskConfig(max_leverage=Decimal(2))).evaluate(
         proposal(quantity="25"),
         snapshot(cash="1000", equity="1000"),
@@ -207,6 +259,20 @@ def test_leverage_reference_is_gross_exposure_over_projected_equity() -> None:
     )
 
     assert decision.reason_code is RiskReasonCode.LEVERAGE_LIMIT
+    assert decision.projected_gross_exposure == Decimal(2500)
+    assert decision.projected_gross_leverage == Decimal("2.5")
+
+
+def test_leverage_uses_current_equity_not_transaction_cost_adjusted_equity() -> None:
+    decision = RiskEngine(RiskConfig(max_leverage=Decimal("2.6"))).evaluate(
+        proposal(quantity="25"),
+        snapshot(cash="1000", equity="1000"),
+        {"AAPL": Decimal(100)},
+        estimated_transaction_cost=Decimal(100),
+    )
+
+    assert decision.approved
+    assert decision.projected_cash == Decimal("-1600")
     assert decision.projected_gross_exposure == Decimal(2500)
     assert decision.projected_gross_leverage == Decimal("2.5")
 
@@ -267,6 +333,9 @@ def test_drawdown_guard_blocks_increase_and_allows_reduction() -> None:
         proposal(2, OrderSide.SELL, "5"), long_state, {"AAPL": Decimal(100)}
     )
     assert reduction.approved
+
+    boundary = snapshot(cash="8500", equity="8500", drawdown="-0.15")
+    assert engine.evaluate(proposal(3), boundary, {"AAPL": Decimal(100)}).approved
 
 
 def test_basic_validation_and_missing_mark_are_explicit() -> None:
@@ -334,11 +403,39 @@ def test_reservations_are_included_without_mutating_inputs_or_decimal_context() 
     assert intent == expected_intent
 
 
+def test_risk_evaluation_is_pure_and_reproducible() -> None:
+    state = snapshot((position("AAPL", "4", "100"),), cash="9600")
+    intent = proposal(side=OrderSide.SELL, quantity="2")
+    marks = {"AAPL": Decimal(100)}
+    engine = RiskEngine(RiskConfig(max_position_quantity=Decimal(10)))
+
+    first = engine.evaluate(intent, state, marks)
+    second = engine.evaluate(intent, state, marks)
+
+    assert second == first
+    assert state.positions[0].quantity == Decimal(4)
+    assert marks == {"AAPL": Decimal(100)}
+
+
+def test_invalid_reserved_buying_power_is_rejected_explicitly() -> None:
+    decision = RiskEngine().evaluate(
+        proposal(),
+        snapshot(),
+        {"AAPL": Decimal(100)},
+        reserved_buying_power=Decimal(-1),
+    )
+
+    assert decision.reason_code is RiskReasonCode.INVALID_PORTFOLIO_STATE
+    assert "reserved buying power" in decision.message
+
+
 @pytest.mark.parametrize(
     ("values", "message"),
     [
         ({"max_order_notional": Decimal(0)}, "max_order_notional"),
         ({"max_leverage": Decimal(-1)}, "max_leverage"),
+        ({"max_leverage": Decimal("NaN")}, "finite"),
+        ({"max_gross_exposure": Decimal("Infinity")}, "finite"),
         ({"max_drawdown": Decimal("-1.1")}, "max_drawdown"),
         ({"max_drawdown": Decimal("0.1")}, "max_drawdown"),
     ],

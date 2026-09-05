@@ -58,21 +58,26 @@ class SimulatedBroker:
         if any(existing.id == order.id for existing in self._orders):
             raise BrokerExecutionError(f"order is already known: {order.id}")
 
-        submitted = transition_order(order, OrderStatus.SUBMITTED)
-        self._orders.append(submitted)
-        self._publish(EventType.ORDER_SUBMITTED, submitted)
+        try:
+            submitted = transition_order(order, OrderStatus.SUBMITTED)
+            self._orders.append(submitted)
+            self._publish(EventType.ORDER_SUBMITTED, submitted)
 
-        if submitted.order_type is not OrderType.MARKET:
-            rejected = transition_order(submitted, OrderStatus.REJECTED)
-            self._replace_order(rejected)
-            self._publish(EventType.ORDER_REJECTED, rejected)
-            return rejected
+            if submitted.order_type is not OrderType.MARKET:
+                rejected = transition_order(submitted, OrderStatus.REJECTED)
+                self._replace_order(rejected)
+                self._publish(EventType.ORDER_REJECTED, rejected)
+                return rejected
 
-        accepted = transition_order(submitted, OrderStatus.ACCEPTED)
-        self._replace_order(accepted)
-        self._pending.append(accepted)
-        self._publish(EventType.ORDER_ACCEPTED, accepted)
-        return accepted
+            accepted = transition_order(submitted, OrderStatus.ACCEPTED)
+            self._replace_order(accepted)
+            self._pending.append(accepted)
+            self._publish(EventType.ORDER_ACCEPTED, accepted)
+            return accepted
+        except Exception:
+            self._orders = [existing for existing in self._orders if existing.id != order.id]
+            self._pending = [existing for existing in self._pending if existing.id != order.id]
+            raise
 
     def execute_pending(self, bar: Bar) -> tuple[Fill, ...]:
         executable = tuple(

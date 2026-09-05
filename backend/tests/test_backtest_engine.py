@@ -273,6 +273,8 @@ def test_signal_on_final_bar_remains_accepted_without_invented_fill() -> None:
     assert len(result.orders) == 1
     assert result.orders[0].status is OrderStatus.ACCEPTED
     assert result.fills == ()
+    assert len(result.active_risk_reservations) == 1
+    assert result.active_risk_reservations[0].order_id == result.orders[0].id
 
 
 def test_multiple_strategies_preserve_registration_order() -> None:
@@ -362,6 +364,7 @@ def test_empty_history_returns_typed_empty_result() -> None:
     assert isinstance(result, BacktestResult)
     assert result.signals == result.order_proposals == result.risk_decisions == ()
     assert result.orders == result.fills == ()
+    assert result.active_risk_reservations == ()
     assert result.portfolio_snapshots == result.equity_curve == ()
     assert result.performance_metrics.final_equity == Decimal("10000")
     assert result.performance_metrics.total_return == Decimal(0)

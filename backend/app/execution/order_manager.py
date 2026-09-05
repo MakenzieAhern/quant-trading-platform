@@ -1,9 +1,8 @@
-from dataclasses import dataclass
 from decimal import ROUND_HALF_EVEN, Context, Decimal, localcontext
 from typing import Any
 from uuid import UUID
 
-from app.domain.risk import OrderProposal, RiskDecision
+from app.domain.risk import OrderProposal, RiskDecision, RiskReservation
 from app.domain.trading import Fill, Order, OrderSide, OrderStatus, OrderType
 from app.event import Event, EventBus, EventType
 from app.execution.broker import ExecutionBroker
@@ -28,15 +27,6 @@ class ReservationError(OrderManagementError):
     """Raised when risk capacity cannot be reconciled deterministically."""
 
 
-@dataclass(frozen=True, slots=True)
-class _Reservation:
-    proposal_id: UUID
-    order_id: UUID
-    symbol: str
-    signed_quantity: Decimal
-    cash_delta: Decimal
-
-
 class OrderManager:
     """Coordinate proposals, pre-trade decisions, orders, and risk reservations."""
 
@@ -57,7 +47,7 @@ class OrderManager:
         self._decisions: dict[UUID, RiskDecision] = {}
         self._orders: dict[UUID, Order] = {}
         self._order_by_proposal: dict[UUID, UUID] = {}
-        self._reservations: dict[UUID, _Reservation] = {}
+        self._reservations: dict[UUID, RiskReservation] = {}
         self._event_bus.subscribe(EventType.ORDER_PROPOSAL, self._on_proposal)
         self._event_bus.subscribe(EventType.ORDER_SUBMITTED, self._on_order_state)
         self._event_bus.subscribe(EventType.ORDER_ACCEPTED, self._on_order_state)
@@ -79,6 +69,10 @@ class OrderManager:
     @property
     def active_reservation_count(self) -> int:
         return len(self._reservations)
+
+    @property
+    def active_reservations(self) -> tuple[RiskReservation, ...]:
+        return tuple(self._reservations.values())
 
     def get_order(self, order_id: UUID) -> Order | None:
         return self._orders.get(order_id)
@@ -110,55 +104,77 @@ class OrderManager:
             and proposal.order_type is OrderType.MARKET
         ):
             estimated_cost = self._commission_model.calculate(proposal.quantity, reference_price)
-        reserved_quantities, reserved_cash_delta = self._reservation_state()
+        reserved_quantities, reserved_cash_delta, reserved_buying_power = self._reservation_state()
         decision = self._risk_engine.evaluate(
             proposal,
             self._portfolio.latest_snapshot,
             marks,
             reserved_quantities=reserved_quantities,
             reserved_cash_delta=reserved_cash_delta,
+            reserved_buying_power=reserved_buying_power,
             estimated_transaction_cost=estimated_cost,
         )
         self._proposals[proposal.proposal_id] = proposal
         self._decisions[proposal.proposal_id] = decision
-        self._event_bus.publish(
-            Event(EventType.RISK_DECISION, decision, occurred_at=decision.timestamp)
-        )
+        try:
+            self._event_bus.publish(
+                Event(EventType.RISK_DECISION, decision, occurred_at=decision.timestamp)
+            )
+        except Exception:
+            self._forget_proposal(proposal.proposal_id)
+            raise
         if not decision.approved:
             return decision, None
 
-        if decision.reference_price is None or decision.estimated_transaction_cost is None:
-            raise OrderManagementError("approved decision is missing reservation diagnostics")
-        order = Order(
-            id=proposal.proposal_id,
-            strategy_id=proposal.strategy_id,
-            symbol=proposal.symbol,
-            side=proposal.side,
-            order_type=proposal.order_type,
-            quantity=proposal.quantity,
-            created_at=proposal.signal_timestamp,
-        )
-        with localcontext(OMS_CONTEXT):
-            notional = proposal.quantity * decision.reference_price
-            cash_delta = (
-                -notional if proposal.side is OrderSide.BUY else notional
-            ) - decision.estimated_transaction_cost
-        reservation = _Reservation(
-            proposal_id=proposal.proposal_id,
-            order_id=order.id,
-            symbol=order.symbol,
-            signed_quantity=(order.quantity if order.side is OrderSide.BUY else -order.quantity),
-            cash_delta=cash_delta,
-        )
+        try:
+            if decision.reference_price is None or decision.estimated_transaction_cost is None:
+                raise OrderManagementError("approved decision is missing reservation diagnostics")
+            order = Order(
+                id=proposal.proposal_id,
+                strategy_id=proposal.strategy_id,
+                symbol=proposal.symbol,
+                side=proposal.side,
+                order_type=proposal.order_type,
+                quantity=proposal.quantity,
+                created_at=proposal.signal_timestamp,
+            )
+            with localcontext(OMS_CONTEXT):
+                notional = proposal.quantity * decision.reference_price
+                cash_delta = (
+                    -notional if proposal.side is OrderSide.BUY else notional
+                ) - decision.estimated_transaction_cost
+                buying_power_consumed = (
+                    notional + decision.estimated_transaction_cost
+                    if proposal.side is OrderSide.BUY
+                    else ZERO
+                )
+            reservation = RiskReservation(
+                proposal_id=proposal.proposal_id,
+                order_id=order.id,
+                symbol=order.symbol,
+                signed_quantity=(
+                    order.quantity if order.side is OrderSide.BUY else -order.quantity
+                ),
+                cash_delta=cash_delta,
+                buying_power_consumed=buying_power_consumed,
+            )
+        except Exception:
+            self._forget_proposal(proposal.proposal_id)
+            raise
         self._orders[order.id] = order
         self._order_by_proposal[proposal.proposal_id] = order.id
         self._reservations[order.id] = reservation
-        self._event_bus.publish(Event(EventType.ORDER_CREATED, order, occurred_at=order.created_at))
         try:
+            self._event_bus.publish(
+                Event(EventType.ORDER_CREATED, order, occurred_at=order.created_at)
+            )
             submitted = self._broker.submit(order)
+            if submitted.status is OrderStatus.CREATED or self._orders.get(order.id) != submitted:
+                raise OrderManagementError(
+                    f"broker result does not match the published OMS lifecycle: {order.id}"
+                )
         except Exception:
-            if order.id in self._reservations:
-                self.release_reservation(order.id)
+            self._forget_proposal(proposal.proposal_id)
             raise
         return decision, submitted
 
@@ -174,16 +190,26 @@ class OrderManager:
         self._order_by_proposal.clear()
         self._reservations.clear()
 
-    def _reservation_state(self) -> tuple[dict[str, Decimal], Decimal]:
+    def _reservation_state(self) -> tuple[dict[str, Decimal], Decimal, Decimal]:
         quantities: dict[str, Decimal] = {}
         cash_delta = ZERO
+        buying_power = ZERO
         with localcontext(OMS_CONTEXT):
             for reservation in self._reservations.values():
                 quantities[reservation.symbol] = (
                     quantities.get(reservation.symbol, ZERO) + reservation.signed_quantity
                 )
                 cash_delta += reservation.cash_delta
-        return quantities, cash_delta
+                buying_power += reservation.buying_power_consumed
+        return quantities, cash_delta, buying_power
+
+    def _forget_proposal(self, proposal_id: UUID) -> None:
+        order_id = self._order_by_proposal.pop(proposal_id, None)
+        if order_id is not None:
+            self._reservations.pop(order_id, None)
+            self._orders.pop(order_id, None)
+        self._decisions.pop(proposal_id, None)
+        self._proposals.pop(proposal_id, None)
 
     def _on_proposal(self, event: Event[Any]) -> None:
         if not isinstance(event.payload, OrderProposal):

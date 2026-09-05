@@ -33,6 +33,21 @@ class OrderProposal(DomainModel):
     signal_timestamp: UtcDateTime
 
 
+class RiskReservation(DomainModel):
+    proposal_id: UUID
+    order_id: UUID
+    symbol: Symbol
+    signed_quantity: FiniteDecimal
+    cash_delta: FiniteDecimal
+    buying_power_consumed: FiniteDecimal
+
+    @model_validator(mode="after")
+    def validate_buying_power_consumed(self) -> Self:
+        if self.buying_power_consumed < 0:
+            raise ValueError("buying_power_consumed must be non-negative")
+        return self
+
+
 class RiskDecision(DomainModel):
     proposal_id: UUID
     approved: bool

@@ -40,6 +40,7 @@ class RiskEngine:
         *,
         reserved_quantities: Mapping[str, Decimal] | None = None,
         reserved_cash_delta: Decimal = ZERO,
+        reserved_buying_power: Decimal = ZERO,
         estimated_transaction_cost: Decimal = ZERO,
     ) -> RiskDecision:
         if proposal.quantity <= ZERO:
@@ -69,6 +70,12 @@ class RiskEngine:
                 proposal,
                 RiskReasonCode.INVALID_PORTFOLIO_STATE,
                 "reserved cash delta must be finite",
+            )
+        if not self._is_non_negative_finite_decimal(reserved_buying_power):
+            return self._reject(
+                proposal,
+                RiskReasonCode.INVALID_PORTFOLIO_STATE,
+                "reserved buying power must be non-negative and finite",
             )
 
         actual_quantities = self._snapshot_quantities(snapshot)
@@ -147,7 +154,7 @@ class RiskEngine:
             ) - estimated_transaction_cost
             projected_cash = effective_cash + trade_cash_delta
             projected_equity = projected_cash + net_exposure
-            leverage = gross_exposure / projected_equity if projected_equity > ZERO else None
+            leverage = gross_exposure / snapshot.equity if snapshot.equity > ZERO else None
 
         diagnostics: _DecisionDiagnostics = {
             "risk_increasing": risk_increasing,
@@ -225,10 +232,11 @@ class RiskEngine:
                 **diagnostics,
             )
         required_buying_power = order_notional + estimated_transaction_cost
+        available_buying_power = snapshot.cash - reserved_buying_power
         if (
             self._config.enforce_buying_power
             and proposal.side is OrderSide.BUY
-            and required_buying_power > effective_cash
+            and required_buying_power > available_buying_power
             and risk_increasing
         ):
             return self._reject(

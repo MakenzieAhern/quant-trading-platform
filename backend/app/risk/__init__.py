@@ -1,6 +1,12 @@
 """Deterministic pre-trade risk evaluation."""
 
-from app.domain.risk import OrderProposal, RiskConfig, RiskDecision, RiskReasonCode
+from app.domain.risk import (
+    OrderProposal,
+    RiskConfig,
+    RiskDecision,
+    RiskReasonCode,
+    RiskReservation,
+)
 from app.risk.engine import RiskEngine
 
 __all__ = [
@@ -9,4 +15,5 @@ __all__ = [
     "RiskDecision",
     "RiskEngine",
     "RiskReasonCode",
+    "RiskReservation",
 ]

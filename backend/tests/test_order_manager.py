@@ -13,6 +13,7 @@ from app.execution import (
     FixedBasisPointSlippage,
     FixedCommission,
     InvalidOrderTransitionError,
+    OrderManagementError,
     OrderManager,
     ReservationError,
     SimulatedBroker,
@@ -24,10 +25,10 @@ from app.risk import RiskEngine
 START = datetime(2024, 1, 1, tzinfo=UTC)
 
 
-def bar(day: int, price: str = "100") -> Bar:
+def bar(day: int, price: str = "100", symbol: str = "AAPL") -> Bar:
     value = Decimal(price)
     return Bar(
-        symbol="AAPL",
+        symbol=symbol,
         timestamp=START + timedelta(days=day),
         open=value,
         high=value,
@@ -44,11 +45,12 @@ def proposal(
     side: OrderSide = OrderSide.BUY,
     strategy_id: str = "manual",
     order_type: OrderType = OrderType.MARKET,
+    symbol: str = "AAPL",
 ) -> OrderProposal:
     return OrderProposal(
         proposal_id=UUID(int=sequence),
         strategy_id=strategy_id,
-        symbol="AAPL",
+        symbol=symbol,
         side=side,
         order_type=order_type,
         quantity=Decimal(quantity),
@@ -126,12 +128,44 @@ def test_sequential_reservation_prevents_combined_same_bar_position_breach() -> 
 def test_sequential_reservation_prevents_combined_buying_power_breach() -> None:
     _, _, _, manager = components(RiskConfig(enforce_buying_power=True), initial_cash="1000")
 
-    first, _ = manager.process_proposal(proposal(1, quantity="6"))
-    second, _ = manager.process_proposal(proposal(2, quantity="5"))
+    first, _ = manager.process_proposal(proposal(1, quantity="8"))
+    second, _ = manager.process_proposal(proposal(2, quantity="8"))
 
     assert first.approved
     assert second.reason_code is RiskReasonCode.INSUFFICIENT_BUYING_POWER
-    assert second.projected_cash == Decimal(-100)
+    assert second.projected_cash == Decimal(-600)
+
+
+def test_unfilled_sell_proceeds_do_not_fund_another_symbol_buy() -> None:
+    _, portfolio, _, manager = components(
+        RiskConfig(enforce_buying_power=True), initial_cash="1000"
+    )
+    portfolio.mark_to_market(bar(0, symbol="MSFT"))
+
+    sell, _ = manager.process_proposal(
+        proposal(1, quantity="8", side=OrderSide.SELL, symbol="AAPL")
+    )
+    buy, order = manager.process_proposal(proposal(2, quantity="15", symbol="MSFT"))
+
+    assert sell.approved
+    assert sell.projected_cash == Decimal(1800)
+    assert buy.reason_code is RiskReasonCode.INSUFFICIENT_BUYING_POWER
+    assert buy.projected_cash == Decimal(300)
+    assert order is None
+
+
+def test_cross_symbol_reservations_enforce_combined_gross_exposure() -> None:
+    _, portfolio, _, manager = components(RiskConfig(max_gross_exposure=Decimal(5000)))
+    portfolio.mark_to_market(bar(0, symbol="MSFT"))
+
+    first, _ = manager.process_proposal(proposal(1, quantity="30", symbol="AAPL"))
+    second, order = manager.process_proposal(proposal(2, quantity="30", symbol="MSFT"))
+
+    assert first.approved
+    assert first.projected_gross_exposure == Decimal(3000)
+    assert second.reason_code is RiskReasonCode.GROSS_EXPOSURE_LIMIT
+    assert second.projected_gross_exposure == Decimal(6000)
+    assert order is None
 
 
 def test_fill_reconciles_actual_portfolio_and_releases_reservation() -> None:
@@ -145,6 +179,7 @@ def test_fill_reconciles_actual_portfolio_and_releases_reservation() -> None:
     assert portfolio.positions[0].quantity == Decimal(2)
     assert manager.orders[0].status is OrderStatus.FILLED
     assert manager.active_reservation_count == 0
+    assert manager.active_reservations == ()
 
 
 class RejectingBroker:
@@ -184,6 +219,12 @@ class FailingBroker(RejectingBroker):
         raise RuntimeError("broker unavailable")
 
 
+class SilentBroker(RejectingBroker):
+    def submit(self, order: Order) -> Order:
+        self._orders.append(order)
+        return order
+
+
 def test_broker_rejection_is_distinct_and_releases_approved_reservation() -> None:
     bus = EventBus()
     portfolio = PortfolioEngine(bus, Decimal(10000))
@@ -197,6 +238,27 @@ def test_broker_rejection_is_distinct_and_releases_approved_reservation() -> Non
     assert order is not None and order.status is OrderStatus.REJECTED
     assert manager.orders[0].status is OrderStatus.REJECTED
     assert manager.active_reservation_count == 0
+
+
+def test_broker_rejection_restores_buying_power_for_next_proposal() -> None:
+    bus = EventBus()
+    portfolio = PortfolioEngine(bus, Decimal(1000))
+    broker = RejectingBroker(bus)
+    manager = OrderManager(
+        bus,
+        broker,
+        portfolio,
+        RiskEngine(RiskConfig(enforce_buying_power=True)),
+        FixedCommission(),
+    )
+    portfolio.mark_to_market(bar(0))
+
+    first, _ = manager.process_proposal(proposal(1, quantity="8"))
+    second, _ = manager.process_proposal(proposal(2, quantity="10"))
+
+    assert first.approved and second.approved
+    assert second.projected_cash == Decimal(0)
+    assert manager.active_reservations == ()
 
 
 def test_broker_failure_releases_reservation_before_propagating() -> None:
@@ -214,6 +276,51 @@ def test_broker_failure_releases_reservation_before_propagating() -> None:
     with pytest.raises(RuntimeError, match="broker unavailable"):
         manager.process_proposal(proposal(1))
     assert manager.active_reservation_count == 0
+    assert manager.proposals == manager.decisions == manager.orders == ()
+
+
+def test_broker_must_publish_a_lifecycle_matching_its_returned_order() -> None:
+    bus = EventBus()
+    portfolio = PortfolioEngine(bus, Decimal(10000))
+    manager = OrderManager(
+        bus,
+        SilentBroker(bus),
+        portfolio,
+        RiskEngine(),
+        FixedCommission(),
+    )
+    portfolio.mark_to_market(bar(0))
+
+    with pytest.raises(OrderManagementError, match="broker result does not match"):
+        manager.process_proposal(proposal(1))
+
+    assert manager.proposals == manager.decisions == manager.orders == ()
+    assert manager.active_reservations == ()
+
+
+@pytest.mark.parametrize(
+    "event_type",
+    [
+        EventType.RISK_DECISION,
+        EventType.ORDER_CREATED,
+        EventType.ORDER_SUBMITTED,
+        EventType.ORDER_ACCEPTED,
+    ],
+)
+def test_event_handler_failure_rolls_back_partial_oms_state(event_type: EventType) -> None:
+    bus, _, broker, manager = components()
+
+    def fail(_event: Event[object]) -> None:
+        raise RuntimeError("downstream handler failed")
+
+    bus.subscribe(event_type, fail)
+
+    with pytest.raises(RuntimeError, match="downstream handler failed"):
+        manager.process_proposal(proposal(1))
+
+    assert manager.proposals == manager.decisions == manager.orders == ()
+    assert manager.active_reservations == ()
+    assert broker.orders == ()
 
 
 def test_invalid_release_and_illegal_order_transition_fail_explicitly() -> None:

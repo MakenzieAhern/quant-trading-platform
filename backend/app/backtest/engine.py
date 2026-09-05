@@ -114,6 +114,7 @@ class BacktestEngine:
             order_proposals=self._order_manager.proposals,
             risk_decisions=self._order_manager.decisions,
             orders=self._order_manager.orders,
+            active_risk_reservations=self._order_manager.active_reservations,
             fills=self._broker.fills,
             portfolio_snapshots=self._portfolio.snapshots,
             equity_curve=equity_curve,
