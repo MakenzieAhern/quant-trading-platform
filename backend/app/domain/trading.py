@@ -6,6 +6,7 @@ from uuid import UUID, uuid4
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.domain.common import (
+    FiniteDecimal,
     NonNegativeDecimal,
     PositiveDecimal,
     Symbol,
@@ -83,16 +84,20 @@ class Fill(DomainModel):
 
 class Position(DomainModel):
     symbol: Symbol
-    quantity: Decimal
+    quantity: FiniteDecimal
     average_price: NonNegativeDecimal
     market_price: NonNegativeDecimal
-    unrealized_pnl: Decimal
-    realized_pnl: Decimal
+    unrealized_pnl: FiniteDecimal
+    realized_pnl: FiniteDecimal
 
 
 class PortfolioSnapshot(DomainModel):
     timestamp: UtcDateTime
-    cash: Decimal
-    market_value: Decimal
-    equity: Decimal
-    drawdown: Decimal
+    cash: FiniteDecimal
+    positions: tuple[Position, ...] = ()
+    market_value: FiniteDecimal
+    equity: FiniteDecimal
+    realized_pnl: FiniteDecimal = Decimal(0)
+    unrealized_pnl: FiniteDecimal = Decimal(0)
+    cumulative_commission: NonNegativeDecimal = Decimal(0)
+    drawdown: FiniteDecimal

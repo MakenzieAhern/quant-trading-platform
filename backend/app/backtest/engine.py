@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
+from app.analytics import AnalyticsConfig, AnalyticsEngine
 from app.backtest.clock import SimulationClock
 from app.backtest.config import BacktestConfig
 from app.backtest.result import BacktestResult
@@ -12,6 +13,7 @@ from app.domain.market import Bar
 from app.domain.trading import Order, OrderSide, OrderType, Signal, SignalType
 from app.event import Event, EventBus, EventType
 from app.execution import SimulatedBroker
+from app.portfolio import PortfolioEngine
 from app.strategies import BaseStrategy, StrategyEngine
 
 
@@ -41,6 +43,7 @@ class BacktestEngine:
         self._config = config
         self._event_bus = event_bus or EventBus()
         self._clock = SimulationClock()
+        self._portfolio = PortfolioEngine(self._event_bus, config.initial_cash)
         self._strategy_engine = StrategyEngine(self._event_bus)
         for strategy in strategies:
             self._strategy_engine.register(strategy)
@@ -48,6 +51,12 @@ class BacktestEngine:
             self._event_bus,
             config.commission_model,
             config.slippage_model,
+        )
+        self._analytics = AnalyticsEngine(
+            AnalyticsConfig(
+                periods_per_year=config.periods_per_year,
+                risk_free_rate_per_period=config.risk_free_rate_per_period,
+            )
         )
         self._signals: list[Signal] = []
         self._seen_signals: set[tuple[str, str, datetime, SignalType]] = set()
@@ -83,10 +92,21 @@ class BacktestEngine:
         finally:
             self._running = False
 
+        equity_curve, performance_metrics = self._analytics.analyze(
+            self._portfolio.snapshots,
+            self._config.initial_cash,
+            self._portfolio.cumulative_commission,
+            len(self._broker.fills),
+            bars[0].timestamp if bars else None,
+            bars[-1].timestamp if bars else None,
+        )
         return BacktestResult(
             signals=tuple(self._signals),
             orders=self._broker.orders,
             fills=self._broker.fills,
+            portfolio_snapshots=self._portfolio.snapshots,
+            equity_curve=equity_curve,
+            performance_metrics=performance_metrics,
             start_time=bars[0].timestamp if bars else None,
             end_time=bars[-1].timestamp if bars else None,
             configuration=self._config,
@@ -98,6 +118,7 @@ class BacktestEngine:
         self._clock.reset()
         self._strategy_engine.reset()
         self._broker.reset()
+        self._portfolio.reset()
         self._signals.clear()
         self._seen_signals.clear()
 

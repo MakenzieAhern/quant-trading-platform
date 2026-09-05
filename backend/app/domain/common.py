@@ -27,5 +27,6 @@ def normalize_symbol(value: str) -> str:
 
 UtcDateTime = Annotated[datetime, AfterValidator(ensure_utc)]
 Symbol = Annotated[str, AfterValidator(normalize_symbol)]
+FiniteDecimal = Annotated[Decimal, Field(allow_inf_nan=False)]
 PositiveDecimal = Annotated[Decimal, Field(gt=0)]
 NonNegativeDecimal = Annotated[Decimal, Field(ge=0)]
