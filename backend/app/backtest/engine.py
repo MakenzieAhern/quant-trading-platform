@@ -10,10 +10,12 @@ from app.backtest.result import BacktestResult
 from app.data.providers import MarketDataProvider, Timeframe
 from app.domain.common import normalize_symbol
 from app.domain.market import Bar
-from app.domain.trading import Order, OrderSide, OrderType, Signal, SignalType
+from app.domain.risk import OrderProposal
+from app.domain.trading import OrderSide, OrderType, Signal, SignalType
 from app.event import Event, EventBus, EventType
-from app.execution import SimulatedBroker
+from app.execution import OrderManager, SimulatedBroker
 from app.portfolio import PortfolioEngine
+from app.risk import RiskEngine
 from app.strategies import BaseStrategy, StrategyEngine
 
 
@@ -51,6 +53,13 @@ class BacktestEngine:
             self._event_bus,
             config.commission_model,
             config.slippage_model,
+        )
+        self._order_manager = OrderManager(
+            self._event_bus,
+            self._broker,
+            self._portfolio,
+            RiskEngine(config.risk),
+            config.commission_model,
         )
         self._analytics = AnalyticsEngine(
             AnalyticsConfig(
@@ -102,7 +111,10 @@ class BacktestEngine:
         )
         return BacktestResult(
             signals=tuple(self._signals),
-            orders=self._broker.orders,
+            order_proposals=self._order_manager.proposals,
+            risk_decisions=self._order_manager.decisions,
+            orders=self._order_manager.orders,
+            active_risk_reservations=self._order_manager.active_reservations,
             fills=self._broker.fills,
             portfolio_snapshots=self._portfolio.snapshots,
             equity_curve=equity_curve,
@@ -118,6 +130,7 @@ class BacktestEngine:
         self._clock.reset()
         self._strategy_engine.reset()
         self._broker.reset()
+        self._order_manager.reset()
         self._portfolio.reset()
         self._signals.clear()
         self._seen_signals.clear()
@@ -145,28 +158,37 @@ class BacktestEngine:
         side = self._side_for(signal.signal_type)
         if side is None:
             return
-        order = Order(
-            id=uuid5(
+        proposal = OrderProposal(
+            proposal_id=uuid5(
                 NAMESPACE_URL,
-                ":".join(
-                    (
-                        "quant-trading-platform",
-                        signal.strategy_id,
-                        signal.symbol,
-                        signal.timestamp.isoformat(),
-                        signal.signal_type.value,
-                    )
-                ),
+                self._deterministic_intent_key(signal),
             ),
             strategy_id=signal.strategy_id,
             symbol=signal.symbol,
             side=side,
             order_type=OrderType.MARKET,
             quantity=self._config.default_order_quantity,
-            created_at=signal.timestamp,
+            signal_timestamp=signal.timestamp,
         )
-        self._event_bus.publish(Event(EventType.ORDER_CREATED, order, occurred_at=order.created_at))
-        self._broker.submit(order)
+        self._event_bus.publish(
+            Event(
+                EventType.ORDER_PROPOSAL,
+                proposal,
+                occurred_at=proposal.signal_timestamp,
+            )
+        )
+
+    @staticmethod
+    def _deterministic_intent_key(signal: Signal) -> str:
+        return ":".join(
+            (
+                "quant-trading-platform",
+                signal.strategy_id,
+                signal.symbol,
+                signal.timestamp.isoformat(),
+                signal.signal_type.value,
+            )
+        )
 
     @staticmethod
     def _side_for(signal_type: SignalType) -> OrderSide | None:

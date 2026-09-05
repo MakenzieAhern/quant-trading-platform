@@ -51,6 +51,14 @@ class PortfolioEngine:
         return tuple(self._snapshots)
 
     @property
+    def latest_snapshot(self) -> PortfolioSnapshot | None:
+        return self._snapshots[-1] if self._snapshots else None
+
+    @property
+    def marks(self) -> dict[str, Decimal]:
+        return {symbol: self._marks[symbol] for symbol in sorted(self._marks)}
+
+    @property
     def cumulative_commission(self) -> Decimal:
         return self._cumulative_commission
 

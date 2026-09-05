@@ -179,6 +179,10 @@ def test_multi_symbol_marks_are_retained_independently() -> None:
         ("MSFT", Decimal(40)),
     ]
     assert aapl_updated.market_value == Decimal(120)
+    exported_marks = portfolio.marks
+    exported_marks["AAPL"] = Decimal(999)
+    assert portfolio.marks == {"AAPL": Decimal(120), "MSFT": Decimal(40)}
+    assert portfolio.latest_snapshot == aapl_updated
 
 
 @pytest.mark.parametrize(

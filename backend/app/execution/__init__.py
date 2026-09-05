@@ -8,16 +8,26 @@ from app.execution.costs import (
     PercentageCommission,
     SlippageModel,
 )
+from app.execution.order_manager import (
+    DuplicateProposalError,
+    OrderManagementError,
+    OrderManager,
+    ReservationError,
+)
 from app.execution.state import InvalidOrderTransitionError, transition_order
 
 __all__ = [
     "BrokerExecutionError",
     "CommissionModel",
+    "DuplicateProposalError",
     "ExecutionBroker",
     "FixedBasisPointSlippage",
     "FixedCommission",
     "InvalidOrderTransitionError",
+    "OrderManagementError",
+    "OrderManager",
     "PercentageCommission",
+    "ReservationError",
     "SimulatedBroker",
     "SlippageModel",
     "transition_order",

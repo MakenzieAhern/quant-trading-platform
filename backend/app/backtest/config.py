@@ -7,6 +7,7 @@ from app.execution.costs import (
     FixedCommission,
     SlippageModel,
 )
+from app.risk import RiskConfig
 
 
 def _require_positive_decimal(value: Decimal, name: str) -> None:
@@ -31,6 +32,7 @@ class BacktestConfig:
     slippage_model: SlippageModel = field(default_factory=FixedBasisPointSlippage)
     periods_per_year: int = 252
     risk_free_rate_per_period: Decimal = Decimal(0)
+    risk: RiskConfig = field(default_factory=RiskConfig)
 
     def __post_init__(self) -> None:
         _require_positive_decimal(self.initial_cash, "initial_cash")
@@ -44,3 +46,5 @@ class BacktestConfig:
         if self.periods_per_year <= 0:
             raise ValueError("periods_per_year must be positive")
         _require_finite_decimal(self.risk_free_rate_per_period, "risk_free_rate_per_period")
+        if not isinstance(self.risk, RiskConfig):
+            raise TypeError("risk must be a RiskConfig instance")
