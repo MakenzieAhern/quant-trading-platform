@@ -18,7 +18,7 @@ Choose one workflow:
 docker compose up --build
 ```
 
-This starts PostgreSQL, Redis, FastAPI, and Vite. Apply migrations in another terminal with `docker compose exec backend alembic upgrade head`. Stop with `make down`; use `docker compose down --volumes` only when intentionally discarding local database/cache state.
+This starts PostgreSQL, Redis, FastAPI, and Vite. The backend applies migrations before serving requests. Stop with `make down`; use `docker compose down --volumes` only when intentionally discarding local database/cache state.
 
 ### Host application workflow
 
@@ -32,6 +32,8 @@ make backend
 ```
 
 Run `make frontend` in a second terminal. The Python environment lives in `.venv`; Node packages live in `frontend/node_modules`. Both are machine-local and must be recreated after switching CPU architecture.
+
+The Phase 7 backend integration tests use real PostgreSQL. Start `postgres`, apply migrations, and then run `make test`; SQLite is intentionally not used as a substitute.
 
 ## Commands
 

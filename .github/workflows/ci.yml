@@ -11,6 +11,22 @@ permissions:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql+asyncpg://quant:quant_dev_only@localhost:5432/quant_platform
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: quant_platform
+          POSTGRES_USER: quant
+          POSTGRES_PASSWORD: quant_dev_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U quant -d quant_platform"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -20,6 +36,12 @@ jobs:
           cache-dependency-path: backend/requirements.lock
       - run: pip install -r backend/requirements.lock
       - run: pip install -e backend --no-deps
+      - run: |
+          alembic upgrade head
+          alembic downgrade 20260904_0001
+          alembic upgrade head
+          alembic check
+        working-directory: backend
       - run: pytest backend/tests
       - run: ruff check backend
       - run: mypy backend/app

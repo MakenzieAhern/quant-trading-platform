@@ -17,7 +17,7 @@ FastAPI modular monolith ─── Redis (cache and future transient events)
         └────────────────── PostgreSQL (durable state, Alembic-managed)
 ```
 
-Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation. Phase 4 adds a historical simulation clock, event-driven backtest coordination, and deterministic simulated execution. Phase 5 adds downstream portfolio accounting, end-of-Bar valuation, an equity curve, and performance analytics. Phase 6 adds order proposals, deterministic pre-trade risk decisions, an order management system, and sequential risk reservations.
+Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation. Phase 4 adds a historical simulation clock, event-driven backtest coordination, and deterministic simulated execution. Phase 5 adds downstream portfolio accounting, end-of-Bar valuation, an equity curve, and performance analytics. Phase 6 adds order proposals, deterministic pre-trade risk decisions, an order management system, and sequential risk reservations. Phase 7 adds an application orchestration boundary, PostgreSQL repositories, and thin REST transport adapters without introducing framework dependencies into the Phase 2–6 engine.
 
 ## Planned backend modules
 
@@ -41,6 +41,30 @@ Portfolio <- Fill <- BrokerAdapter <- OrderManager <- RiskManager
 - `analytics`: equity, drawdown, returns, and trade statistics.
 - `api`: thin transport adapters using explicit request/response schemas; no business logic or raw ORM responses.
 - `db`: SQLAlchemy persistence models/repositories; migrations are the schema authority.
+
+## Backtest application and persistence boundary
+
+```text
+REST request -> BacktestApplicationService -> approved dataset + strategy registries
+                         │                              │
+                         │                              ▼
+                         │                       fresh BacktestEngine
+                         ▼                              │
+               BacktestRepository protocol <----------┘
+                         │
+                         ▼
+                SQLAlchemy/PostgreSQL
+```
+
+Each request constructs fresh mutable engine, strategy, risk, OMS, broker, and portfolio state. The application service owns the explicit `CREATED -> RUNNING -> SUCCEEDED|FAILED` lifecycle; it does not reproduce indicators, execution, risk, accounting, or analytics. Application code depends on a repository protocol, while the SQLAlchemy implementation stays in `db`. Synchronous execution is deliberate for Phase 7 and the service boundary permits a future job runner without changing the engine.
+
+Only logical dataset identifiers from the registry can reach a provider. `AAPL_fixture` maps to source-controlled data under the configured fixture root, and the API never accepts a filesystem path. Strategy construction likewise uses an explicit registry containing only the two reviewed Phase 3 strategies; dynamic imports and evaluation are prohibited. An optional `Idempotency-Key` is stored with a canonical request hash: an identical retry returns its run and conflicting content returns a conflict.
+
+Run metadata is committed at `CREATED`, then `RUNNING`. Signals, proposals, every risk decision (including rejections), final Order states, Fills, snapshots, metrics, and active end-of-run risk reservations are inserted in one transaction with the `SUCCEEDED` transition. A write failure rolls back that complete result and is followed, where safely possible, by a separate `FAILED` transition. Error summaries contain an exception class and stable context only, never a traceback or exception text that could contain paths or secrets.
+
+All financial database columns use PostgreSQL `NUMERIC(78, 38)`: 40 integral and 38 fractional digits comfortably contain the engine's isolated 28-digit arithmetic while preserving high-precision external values. No Decimal crosses persistence through `float`. REST financial values are canonical non-exponent JSON strings, and undefined metrics remain SQL/JSON null. Snapshot positions use JSONB to avoid a high-cardinality join for immutable snapshot reads; every numeric member is encoded as a Decimal string. This makes JSONB less convenient for numeric SQL aggregation, a deliberate tradeoff because normalized snapshot totals remain queryable columns. Risk reservations are a separate audit table and are never interpreted as cash or positions.
+
+Collection endpoints order by per-run sequence and enforce `1 <= limit <= 200`. Run lists query metadata only and do not load child events. PostgreSQL primary/unique keys preserve deterministic sequence, proposal, and Order identity, and cascading foreign keys prevent orphaned results.
 
 ## Market-data flow
 
