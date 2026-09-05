@@ -54,10 +54,12 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - Deterministic OMS lifecycle, idempotency, same-Bar reservations, and release on Fill/broker rejection
 - Simplified short exposure controls; stop Orders and broker margin/borrow rules remain deferred
 
-## Phase 7 — Application API
+## Phase 7 — Application API (complete)
 
-- Instruments, bars, strategies, backtest jobs/results, trades, equity, drawdown, orders, and positions
-- Persistence models, indexes, and migrations per bounded context
+- Synchronous backtest run lifecycle and application service over framework-independent protocols
+- Approved dataset/strategy registries, idempotent submission, and bounded result collection APIs
+- PostgreSQL audit persistence for runs, signals, proposals, decisions, orders, fills, snapshots, metrics, and reservations
+- Alembic migration, exact Decimal/UTC serialization, atomic success writes, and durable failure records
 
 ## Phase 8 — Research dashboard
 

@@ -8,7 +8,7 @@ The project is a modular monolith: React/Vite provides the dashboard, FastAPI ex
 
 **Stack:** Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL, Redis, React, TypeScript, Vite, pytest, Vitest, and Docker Compose. Pandas, NumPy, SciPy, and TradingView Lightweight Charts join in the phases that first use them.
 
-**Current features:** reproducible Phase 1 environment, safe configuration, structured logs, database migration baseline, health API, tested frontend shell, and Linux CI. Phase 2 adds typed financial contracts, a deterministic in-process event bus, strict offline CSV ingestion, and a source-independent market-data service. Phase 3 adds Decimal-based indicators and deterministic broker-independent strategies. Phase 4 adds a simulation clock, event-driven historical backtests, explicit order transitions, next-Bar-open simulated fills, and replaceable Decimal commission and adverse-slippage models. Phase 5 adds signed long/short portfolio accounting, end-of-Bar valuation, immutable snapshots, an equity curve, and deterministic return, CAGR, drawdown, Sharpe, and Sortino analytics. Phase 6 adds immutable Order proposals, explicit pre-trade decisions, Decimal position/exposure/leverage/buying-power/drawdown controls, and an OMS with deterministic same-Bar reservations. Persistence/API expansion and paper execution remain sequenced in the [roadmap](ROADMAP.md).
+**Current features:** reproducible Phase 1 environment, safe configuration, structured logs, database migrations, health API, tested frontend shell, and Linux CI. Phases 2–6 provide typed financial contracts, offline CSV ingestion, Decimal indicators, broker-independent strategies, deterministic event-driven backtests, simulated execution, portfolio accounting, analytics, pre-trade risk, and OMS reservations. Phase 7 adds a synchronous backtest application service, PostgreSQL audit persistence, an approved dataset/strategy registry, and paginated REST result APIs. Dashboard and paper execution remain sequenced in the [roadmap](ROADMAP.md).
 
 ## Quick start
 
@@ -20,6 +20,17 @@ docker compose up --build
 ```
 
 Open <http://localhost:5173>; API health is at <http://localhost:8000/api/health> and OpenAPI at <http://localhost:8000/docs>. Stop with `docker compose down`.
+
+The Compose backend applies Alembic migrations after PostgreSQL becomes healthy. A deterministic example run can be submitted with:
+
+```bash
+curl -X POST http://localhost:8000/api/backtests \
+  -H 'Content-Type: application/json' \
+  -H 'Idempotency-Key: example-aapl-ma' \
+  -d '{"dataset_id":"AAPL_fixture","symbol":"AAPL","strategy":{"type":"moving_average_crossover","parameters":{"short_period":2,"long_period":3}},"initial_cash":"100000","default_order_quantity":"10"}'
+```
+
+Financial inputs and outputs use JSON strings under the `NUMERIC(78,38)` contract: values with more than 40 integral or 38 fractional digits are rejected rather than rounded. Phase 7 accepts only registered datasets and the `moving_average_crossover` and `rsi_mean_reversion` strategy types; filesystem paths and Python import names are not accepted. Execution is synchronous. A process crash can leave a detectable stale `RUNNING` record; durable cancellation, workers, and stale-run recovery are deliberately deferred beyond Phase 7.
 
 For host-based development, install Python 3.12, Node 24 LTS, and GNU Make, then:
 

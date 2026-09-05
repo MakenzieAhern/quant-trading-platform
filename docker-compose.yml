@@ -40,7 +40,9 @@ services:
       BROKER_MODE: paper
       MARKET_DATA_PROVIDER: csv
       MARKET_DATA_PATH: /workspace/data/raw
+      BACKTEST_FIXTURE_PATH: /workspace/data/fixtures
       FRONTEND_ORIGIN: http://localhost:5173
+    command: ["sh", "-c", "alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port 8000"]
     ports:
       - "8000:8000"
     volumes:
