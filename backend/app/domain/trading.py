@@ -52,6 +52,7 @@ class Signal(DomainModel):
 
 class Order(DomainModel):
     id: UUID = Field(default_factory=uuid4)
+    strategy_id: str = Field(min_length=1)
     symbol: Symbol
     side: OrderSide
     order_type: OrderType
@@ -71,7 +72,9 @@ class Order(DomainModel):
 
 class Fill(DomainModel):
     order_id: UUID
+    strategy_id: str = Field(min_length=1)
     symbol: Symbol
+    side: OrderSide
     quantity: PositiveDecimal
     price: PositiveDecimal
     commission: NonNegativeDecimal
