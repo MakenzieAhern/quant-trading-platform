@@ -30,7 +30,7 @@ class PortfolioEngine:
         self._snapshots: list[PortfolioSnapshot] = []
         self._cumulative_commission = ZERO
         self._running_peak = initial_cash
-        self._last_snapshot_timestamp: datetime | None = None
+        self._last_event_timestamp: datetime | None = None
         self._event_bus.subscribe(EventType.ORDER_FILLED, self._on_fill)
         self._event_bus.subscribe(EventType.MARKET_DATA, self._on_market_data)
 
@@ -55,11 +55,7 @@ class PortfolioEngine:
         return self._cumulative_commission
 
     def apply_fill(self, fill: Fill) -> Position:
-        if (
-            self._last_snapshot_timestamp is not None
-            and fill.timestamp < self._last_snapshot_timestamp
-        ):
-            raise PortfolioError("fill cannot move portfolio time backwards")
+        self._require_chronological(fill.timestamp, "fill")
         current = self._positions.get(fill.symbol)
         current_quantity = current.quantity if current is not None else ZERO
         current_average = current.average_price if current is not None else ZERO
@@ -93,14 +89,11 @@ class PortfolioEngine:
         self._cash = updated_cash
         self._cumulative_commission = updated_commission
         self._positions[fill.symbol] = updated
+        self._last_event_timestamp = fill.timestamp
         return updated
 
     def mark_to_market(self, bar: Bar) -> PortfolioSnapshot:
-        if (
-            self._last_snapshot_timestamp is not None
-            and bar.timestamp < self._last_snapshot_timestamp
-        ):
-            raise PortfolioError("market data cannot move portfolio time backwards")
+        self._require_chronological(bar.timestamp, "market data")
 
         self._marks[bar.symbol] = bar.close
         current = self._positions.get(bar.symbol)
@@ -134,7 +127,7 @@ class PortfolioEngine:
             drawdown=drawdown,
         )
         self._running_peak = running_peak
-        self._last_snapshot_timestamp = bar.timestamp
+        self._last_event_timestamp = bar.timestamp
         self._snapshots.append(snapshot)
         self._event_bus.publish(
             Event(EventType.PORTFOLIO_UPDATED, snapshot, occurred_at=snapshot.timestamp)
@@ -148,7 +141,11 @@ class PortfolioEngine:
         self._snapshots.clear()
         self._cumulative_commission = ZERO
         self._running_peak = self._initial_cash
-        self._last_snapshot_timestamp = None
+        self._last_event_timestamp = None
+
+    def _require_chronological(self, timestamp: datetime, event_name: str) -> None:
+        if self._last_event_timestamp is not None and timestamp < self._last_event_timestamp:
+            raise PortfolioError(f"{event_name} cannot move portfolio time backwards")
 
     @staticmethod
     def _cost_basis_after_fill(

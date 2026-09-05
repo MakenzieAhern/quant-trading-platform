@@ -30,19 +30,22 @@ class AnalyticsConfig:
 
 
 def build_equity_curve(snapshots: tuple[PortfolioSnapshot, ...]) -> tuple[EquityPoint, ...]:
+    """Build one point per timestamp, retaining the last same-time snapshot."""
     previous_timestamp: datetime | None = None
     points: list[EquityPoint] = []
     for snapshot in snapshots:
         if previous_timestamp is not None and snapshot.timestamp < previous_timestamp:
             raise AnalyticsInputError("portfolio snapshots must be chronological")
-        points.append(
-            EquityPoint(
-                timestamp=snapshot.timestamp,
-                equity=snapshot.equity,
-                cash=snapshot.cash,
-                market_value=snapshot.market_value,
-            )
+        point = EquityPoint(
+            timestamp=snapshot.timestamp,
+            equity=snapshot.equity,
+            cash=snapshot.cash,
+            market_value=snapshot.market_value,
         )
+        if previous_timestamp == snapshot.timestamp:
+            points[-1] = point
+        else:
+            points.append(point)
         previous_timestamp = snapshot.timestamp
     return tuple(points)
 
@@ -60,8 +63,8 @@ def calculate_period_returns(equity_curve: tuple[EquityPoint, ...]) -> tuple[Dec
     _require_chronological_curve(equity_curve)
     returns: list[Decimal] = []
     for previous, current in pairwise(equity_curve):
-        if previous.equity == ZERO:
-            raise AnalyticsInputError("period return is undefined after zero equity")
+        if previous.equity <= ZERO:
+            raise AnalyticsInputError("period return requires positive previous equity")
         with localcontext(ANALYTICS_CONTEXT):
             returns.append(current.equity / previous.equity - ONE)
     return tuple(returns)
@@ -84,13 +87,14 @@ def calculate_max_drawdown(equity_curve: tuple[EquityPoint, ...]) -> Decimal:
 
 
 def calculate_sharpe_ratio(returns: tuple[Decimal, ...], config: AnalyticsConfig) -> Decimal | None:
+    _require_finite_returns(returns)
     if len(returns) < 2:
         return None
-    excess = tuple(value - config.risk_free_rate_per_period for value in returns)
-    mean, variance = _mean_and_population_variance(excess)
-    if variance == ZERO:
-        return None
     with localcontext(ANALYTICS_CONTEXT) as context:
+        excess = tuple(value - config.risk_free_rate_per_period for value in returns)
+        mean, variance = _mean_and_population_variance(excess)
+        if variance == ZERO:
+            return None
         ratio = context.sqrt((mean * mean) / variance)
         if mean < ZERO:
             ratio = -ratio
@@ -100,10 +104,11 @@ def calculate_sharpe_ratio(returns: tuple[Decimal, ...], config: AnalyticsConfig
 def calculate_sortino_ratio(
     returns: tuple[Decimal, ...], config: AnalyticsConfig
 ) -> Decimal | None:
+    _require_finite_returns(returns)
     if len(returns) < 2:
         return None
-    excess = tuple(value - config.risk_free_rate_per_period for value in returns)
     with localcontext(ANALYTICS_CONTEXT) as context:
+        excess = tuple(value - config.risk_free_rate_per_period for value in returns)
         mean = sum(excess, ZERO) / Decimal(len(excess))
         downside_variance = sum((min(value, ZERO) ** 2 for value in excess), ZERO) / Decimal(
             len(excess)
@@ -182,6 +187,11 @@ def _require_finite_decimal(value: Decimal, name: str) -> None:
         raise TypeError(f"{name} must be a Decimal instance")
     if not value.is_finite():
         raise AnalyticsInputError(f"{name} must be finite")
+
+
+def _require_finite_returns(returns: tuple[Decimal, ...]) -> None:
+    for index, value in enumerate(returns):
+        _require_finite_decimal(value, f"returns[{index}]")
 
 
 def _require_chronological_curve(equity_curve: tuple[EquityPoint, ...]) -> None:

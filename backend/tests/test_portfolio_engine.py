@@ -3,6 +3,7 @@ from decimal import Decimal
 from uuid import UUID
 
 import pytest
+from pydantic import ValidationError
 
 from app.domain.market import Bar
 from app.domain.trading import Fill, OrderSide
@@ -111,6 +112,18 @@ def test_same_direction_fills_use_weighted_average_cost() -> None:
     assert portfolio.cash == Decimal(-1200)
 
 
+def test_same_direction_short_fills_use_absolute_weighted_average_cost() -> None:
+    portfolio = PortfolioEngine(EventBus(), Decimal(3000))
+
+    portfolio.apply_fill(make_fill(1, OrderSide.SELL, "10", "100"))
+    position = portfolio.apply_fill(make_fill(2, OrderSide.SELL, "10", "120"))
+
+    assert position.quantity == Decimal(-20)
+    assert position.average_price == Decimal(110)
+    assert position.realized_pnl == Decimal(0)
+    assert portfolio.cash == Decimal(5200)
+
+
 def test_long_reduction_preserves_cost_basis_and_realizes_price_pnl() -> None:
     portfolio = PortfolioEngine(EventBus(), Decimal(2000))
     portfolio.apply_fill(make_fill(1, OrderSide.BUY, "10", "100"))
@@ -168,6 +181,35 @@ def test_multi_symbol_marks_are_retained_independently() -> None:
     assert aapl_updated.market_value == Decimal(120)
 
 
+@pytest.mark.parametrize(
+    ("side", "mark"),
+    [(OrderSide.BUY, "90"), (OrderSide.SELL, "110")],
+)
+def test_unrealized_pnl_is_negative_for_losing_long_and_short(side: OrderSide, mark: str) -> None:
+    portfolio = PortfolioEngine(EventBus(), Decimal(2000))
+    portfolio.apply_fill(make_fill(1, side, "10", "100"))
+
+    snapshot = portfolio.mark_to_market(make_bar(1, mark))
+
+    assert snapshot.unrealized_pnl == Decimal(-100)
+    assert snapshot.positions[0].unrealized_pnl == Decimal(-100)
+
+
+def test_historical_snapshots_are_frozen_and_do_not_reference_live_positions() -> None:
+    portfolio = PortfolioEngine(EventBus(), Decimal(2000))
+    portfolio.apply_fill(make_fill(1, OrderSide.BUY, "10", "100"))
+    historical = portfolio.mark_to_market(make_bar(1, "110"))
+    expected = historical.model_copy(deep=True)
+
+    portfolio.apply_fill(make_fill(2, OrderSide.SELL, "4", "120"))
+    portfolio.mark_to_market(make_bar(2, "120"))
+
+    assert historical == expected
+    assert historical.positions[0].quantity == Decimal(10)
+    with pytest.raises(ValidationError, match="frozen"):
+        historical.positions[0].quantity = Decimal(0)  # type: ignore[misc]
+
+
 def test_negative_cash_is_recorded_and_reset_is_deterministic() -> None:
     portfolio = PortfolioEngine(EventBus(), Decimal(100))
     portfolio.apply_fill(make_fill(1, OrderSide.BUY, "2", "100"))
@@ -181,10 +223,17 @@ def test_negative_cash_is_recorded_and_reset_is_deterministic() -> None:
     assert second == first
 
 
-def test_market_data_cannot_move_portfolio_time_backwards() -> None:
+def test_fills_and_market_data_share_one_monotonic_portfolio_clock() -> None:
     portfolio = PortfolioEngine(EventBus(), Decimal(1000))
     portfolio.mark_to_market(make_bar(2, "100"))
     with pytest.raises(PortfolioError, match="backwards"):
+        portfolio.mark_to_market(make_bar(1, "100"))
+    with pytest.raises(PortfolioError, match="fill cannot move"):
+        portfolio.apply_fill(make_fill(1, OrderSide.BUY, "1", "100"))
+
+    portfolio.reset()
+    portfolio.apply_fill(make_fill(2, OrderSide.BUY, "1", "100"))
+    with pytest.raises(PortfolioError, match="market data cannot move"):
         portfolio.mark_to_market(make_bar(1, "100"))
     with pytest.raises(PortfolioError, match="fill cannot move"):
         portfolio.apply_fill(make_fill(1, OrderSide.BUY, "1", "100"))
