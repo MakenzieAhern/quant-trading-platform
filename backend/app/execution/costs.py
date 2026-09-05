@@ -44,7 +44,7 @@ class FixedCommission:
 
 @dataclass(frozen=True, slots=True)
 class PercentageCommission:
-    """Charge `rate` as a fraction of notional; 0.001 means 0.1%."""
+    """Charge `rate` as a fraction of absolute notional; 0.001 means 0.1%."""
 
     rate: Decimal
 
@@ -57,7 +57,7 @@ class PercentageCommission:
         _require_decimal(quantity, "quantity")
         _require_decimal(price, "price")
         with localcontext(EXECUTION_CONTEXT):
-            return quantity * price * self.rate
+            return abs(quantity * price) * self.rate
 
 
 @dataclass(frozen=True, slots=True)

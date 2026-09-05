@@ -148,6 +148,10 @@ def test_manual_reference_backtest_uses_next_bar_open() -> None:
         bars[2].timestamp,
         bars[4].timestamp,
     ]
+    assert all(
+        fill.timestamp > signal.timestamp
+        for signal, fill in zip(result.signals, result.fills, strict=True)
+    )
     assert [fill.price for fill in result.fills] == [
         Decimal("105.0525"),
         Decimal("109.9450"),
@@ -232,6 +236,7 @@ def test_multiple_strategies_preserve_registration_order() -> None:
     assert [signal.strategy_id for signal in result.signals] == ["first", "second"]
     assert [order.strategy_id for order in result.orders] == ["first", "second"]
     assert [fill.strategy_id for fill in result.fills] == ["first", "second"]
+    assert len({order.id for order in result.orders}) == len(result.orders)
 
 
 def test_duplicate_signal_fails_instead_of_creating_a_second_order() -> None:
@@ -251,6 +256,7 @@ def test_repeated_run_is_exactly_reproducible() -> None:
     second = engine.run("AAPL")
 
     assert second == first
+    assert [order.id for order in second.orders] == [order.id for order in first.orders]
 
 
 def test_appending_future_bars_does_not_change_completed_history() -> None:

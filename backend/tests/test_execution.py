@@ -71,9 +71,9 @@ def test_order_quantity_must_be_positive() -> None:
 
 def test_commission_models_use_decimal_and_validate_values() -> None:
     assert FixedCommission(Decimal("1.25")).calculate(Decimal(2), Decimal(100)) == Decimal("1.25")
-    assert PercentageCommission(Decimal("0.001")).calculate(Decimal(2), Decimal(100)) == Decimal(
-        "0.200"
-    )
+    percentage = PercentageCommission(Decimal("0.001"))
+    assert percentage.calculate(Decimal(10), Decimal(100)) == Decimal("1.000")
+    assert percentage.calculate(Decimal(-10), Decimal(100)) == Decimal("1.000")
 
     with pytest.raises(ValueError, match="non-negative"):
         FixedCommission(Decimal("-1"))
@@ -179,11 +179,27 @@ class NegativeCommission:
         return Decimal("-1")
 
 
+class ImprovingSlippage:
+    def apply(self, market_price: Decimal, side: OrderSide) -> Decimal:
+        return market_price - Decimal(1)
+
+
 def test_broker_rejects_invalid_custom_transaction_cost() -> None:
     broker = SimulatedBroker(EventBus(), NegativeCommission(), FixedBasisPointSlippage())
     broker.submit(make_order())
 
     with pytest.raises(ValueError, match="invalid commission"):
+        broker.execute_pending(make_bar(1, "100"))
+    assert broker.orders[0].status is OrderStatus.ACCEPTED
+    assert broker.pending_orders == (broker.orders[0],)
+    assert broker.fills == ()
+
+
+def test_broker_keeps_order_pending_when_custom_slippage_is_invalid() -> None:
+    broker = SimulatedBroker(EventBus(), FixedCommission(), ImprovingSlippage())
+    broker.submit(make_order())
+
+    with pytest.raises(ValueError, match="must not improve a BUY"):
         broker.execute_pending(make_bar(1, "100"))
     assert broker.orders[0].status is OrderStatus.ACCEPTED
     assert broker.pending_orders == (broker.orders[0],)

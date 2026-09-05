@@ -32,7 +32,7 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - Unit tests proving completed-bar-only inputs
 - Strict per-symbol chronological processing, deterministic reset, and `MARKET_DATA` to `SIGNAL` event integration
 
-## Phase 4 — Backtest and simulated execution (complete on feature branch)
+## Phase 4 — Backtest and simulated execution (complete)
 
 - Simulation clock and event-driven engine
 - Order manager and explicit transition table
