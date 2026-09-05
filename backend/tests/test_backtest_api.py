@@ -1,5 +1,7 @@
 import asyncio
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Iterable
+from dataclasses import replace
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import cast
@@ -7,10 +9,12 @@ from uuid import UUID, uuid4
 
 import pytest
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy import func, select, text
+from sqlalchemy import delete, func, select, text
+from sqlalchemy.exc import IntegrityError
 
 from app.application.backtests import (
     BacktestApplicationService,
+    BacktestRun,
     BacktestRunStatus,
     CreateBacktestCommand,
     StrategyRegistry,
@@ -21,13 +25,20 @@ from app.backtest import BacktestConfig, BacktestEngine
 from app.backtest.result import BacktestResult
 from app.data.providers import CSVDataProvider, MarketDataProvider
 from app.db.models.backtest import (
+    BacktestFillModel,
     BacktestMetricsModel,
+    BacktestOrderModel,
+    BacktestOrderProposalModel,
     BacktestPortfolioSnapshotModel,
+    BacktestRiskDecisionModel,
+    BacktestRiskReservationModel,
+    BacktestRunModel,
     BacktestSignalModel,
 )
 from app.db.repositories import SQLAlchemyBacktestRepository
 from app.db.session import SessionFactory
 from app.domain.risk import RiskConfig
+from app.domain.trading import OrderStatus
 from app.main import app
 from app.strategies import MovingAverageCrossoverStrategy
 
@@ -209,6 +220,45 @@ async def test_api_pagination_errors_and_idempotency(client: AsyncClient) -> Non
     assert (await client.post("/api/backtests", json=invalid_strategy)).status_code == 422
 
 
+@pytest.mark.parametrize(
+    "value",
+    [
+        "0.000000000000000001",
+        "999999999999999999.123456789012345678",
+    ],
+)
+async def test_reference_decimals_round_trip_through_postgresql_and_api(
+    client: AsyncClient, value: str
+) -> None:
+    payload = request_body(value)
+    payload["strategy"] = {
+        "type": "moving_average_crossover",
+        "parameters": {"short_period": 4, "long_period": 5},
+    }
+    response = await client.post("/api/backtests", json=payload)
+    assert response.status_code == 201, response.text
+    detail = await client.get(f"/api/backtests/{response.json()['run_id']}")
+    result = await client.get(f"/api/backtests/{response.json()['run_id']}/result")
+    assert detail.json()["initial_cash"] == value
+    assert result.json()["metrics"]["initial_equity"] == value
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "10000000000000000000000000000000000000000",
+        "0.000000000000000000000000000000000000001",
+    ],
+)
+async def test_decimal_overflow_and_excess_scale_are_rejected_without_run(
+    client: AsyncClient, value: str
+) -> None:
+    response = await client.post("/api/backtests", json=request_body(value))
+    assert response.status_code == 422
+    assert "maximum" in response.text
+    assert (await client.get("/api/backtests")).json()["total"] == 0
+
+
 async def test_independent_concurrent_runs(client: AsyncClient) -> None:
     first, second = await asyncio.gather(
         client.post("/api/backtests", json=request_body()),
@@ -220,6 +270,218 @@ async def test_independent_concurrent_runs(client: AsyncClient) -> None:
     second_result = (await client.get(f"/api/backtests/{second.json()['run_id']}/result")).json()
     assert first_result["metrics"] == second_result["metrics"]
     assert first_result["snapshot_count"] == second_result["snapshot_count"]
+
+
+async def test_concurrent_identical_idempotency_key_executes_once(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from app.application.backtests import service as service_module
+
+    calls = 0
+    engine_type = service_module.BacktestEngine
+
+    def counting_engine(*args: object, **kwargs: object) -> BacktestEngine:
+        nonlocal calls
+        calls += 1
+        return engine_type(*args, **kwargs)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(service_module, "BacktestEngine", counting_engine)
+    headers = {"Idempotency-Key": "phase7-concurrent-same-key"}
+    first, second = await asyncio.gather(
+        client.post("/api/backtests", json=request_body(), headers=headers),
+        client.post("/api/backtests", json=request_body(), headers=headers),
+    )
+    assert first.status_code == second.status_code == 201
+    assert first.json()["run_id"] == second.json()["run_id"]
+    assert first.json()["status"] == second.json()["status"] == "SUCCEEDED"
+    assert calls == 1
+    async with SessionFactory() as session:
+        count = await session.scalar(
+            select(func.count())
+            .select_from(BacktestRunModel)
+            .where(BacktestRunModel.client_request_id == "phase7-concurrent-same-key")
+        )
+    assert count == 1
+
+
+async def test_repository_reloads_complete_final_bar_reservation_result(
+    client: AsyncClient,
+) -> None:
+    expected = BacktestEngine(
+        CSVDataProvider(FIXTURES),
+        (MovingAverageCrossoverStrategy("moving_average_crossover:AAPL", "AAPL", 3, 5),),
+        BacktestConfig(initial_cash=Decimal("100000"), default_order_quantity=Decimal("10")),
+    ).run("AAPL")
+    assert expected.active_risk_reservations
+    payload = request_body()
+    payload["strategy"] = {
+        "type": "moving_average_crossover",
+        "parameters": {"short_period": 3, "long_period": 5},
+    }
+    response = await client.post("/api/backtests", json=payload)
+    assert response.status_code == 201
+    run_id = UUID(response.json()["run_id"])
+
+    async with SessionFactory() as session:
+        repository = SQLAlchemyBacktestRepository(session)
+        assert (await repository.list_signals(run_id, 200, 0)).items == expected.signals
+        assert (await repository.list_proposals(run_id, 200, 0)).items == (expected.order_proposals)
+        assert (await repository.list_risk_decisions(run_id, 200, 0)).items == (
+            expected.risk_decisions
+        )
+        assert (await repository.list_orders(run_id, 200, 0)).items == expected.orders
+        assert (await repository.list_fills(run_id, 200, 0)).items == expected.fills
+        assert (await repository.list_snapshots(run_id, 200, 0)).items == (
+            expected.portfolio_snapshots
+        )
+        assert (await repository.list_reservations(run_id, 200, 0)).items == (
+            expected.active_risk_reservations
+        )
+        summary = await repository.get_result_summary(run_id)
+    assert summary is not None
+    assert summary.metrics == expected.performance_metrics
+    assert summary.reservation_count == len(expected.active_risk_reservations)
+    assert summary.fill_count == 0
+
+
+async def test_api_counts_and_utc_timestamps_match_postgresql(client: AsyncClient) -> None:
+    response = await client.post("/api/backtests", json=request_body())
+    assert response.status_code == 201
+    run_id = UUID(response.json()["run_id"])
+    detail = (await client.get(f"/api/backtests/{run_id}")).json()
+    result = (await client.get(f"/api/backtests/{run_id}/result")).json()
+    assert detail["status"] == result["status"] == "SUCCEEDED"
+    assert detail["metrics"] == result["metrics"]
+
+    model_counts = {
+        "signal_count": BacktestSignalModel,
+        "proposal_count": BacktestOrderProposalModel,
+        "risk_decision_count": BacktestRiskDecisionModel,
+        "order_count": BacktestOrderModel,
+        "fill_count": BacktestFillModel,
+        "snapshot_count": BacktestPortfolioSnapshotModel,
+        "reservation_count": BacktestRiskReservationModel,
+    }
+    async with SessionFactory() as session:
+        run = await session.get(BacktestRunModel, run_id)
+        assert run is not None
+        for api_field, model in model_counts.items():
+            count = await session.scalar(
+                select(func.count()).select_from(model).where(model.run_id == run_id)
+            )
+            assert result[api_field] == count
+
+        timestamp_values = [run.created_at, run.started_at, run.completed_at]
+        timestamp_columns = (
+            (BacktestSignalModel, BacktestSignalModel.timestamp),
+            (BacktestOrderProposalModel, BacktestOrderProposalModel.signal_timestamp),
+            (BacktestRiskDecisionModel, BacktestRiskDecisionModel.timestamp),
+            (BacktestOrderModel, BacktestOrderModel.created_at),
+            (BacktestFillModel, BacktestFillModel.timestamp),
+            (BacktestPortfolioSnapshotModel, BacktestPortfolioSnapshotModel.timestamp),
+        )
+        for model, column in timestamp_columns:
+            timestamp_values.extend(
+                (await session.scalars(select(column).where(model.run_id == run_id))).all()
+            )
+
+    assert all(
+        value is not None and value.tzinfo is not None and value.utcoffset() == timedelta(0)
+        for value in timestamp_values
+    )
+    for field in ("created_at", "started_at", "completed_at"):
+        value = datetime.fromisoformat(detail[field].replace("Z", "+00:00"))
+        assert value.utcoffset() == timedelta(0)
+
+
+async def test_risk_rejection_is_persisted_without_order(client: AsyncClient) -> None:
+    payload = request_body()
+    payload["risk"] = {"max_order_notional": "1"}
+    response = await client.post("/api/backtests", json=payload)
+    assert response.status_code == 201
+    run_id = UUID(response.json()["run_id"])
+    decisions = await client.get(f"/api/backtests/{run_id}/risk-decisions")
+    orders = await client.get(f"/api/backtests/{run_id}/orders")
+    result = await client.get(f"/api/backtests/{run_id}/result")
+    assert decisions.json()["total"] == 1
+    assert decisions.json()["items"][0]["approved"] is False
+    assert decisions.json()["items"][0]["reason_code"] == "ORDER_NOTIONAL_LIMIT"
+    assert orders.json()["total"] == 0
+    assert result.json()["proposal_count"] == 1
+    assert result.json()["risk_rejection_count"] == 1
+    assert result.json()["reservation_count"] == 0
+
+
+async def test_list_and_child_pagination_is_stable_and_bounded(
+    client: AsyncClient,
+) -> None:
+    run_ids = []
+    for cash in ("100000", "100001", "100002"):
+        response = await client.post("/api/backtests", json=request_body(cash))
+        run_ids.append(response.json()["run_id"])
+    first = await client.get("/api/backtests?limit=1&offset=0")
+    second = await client.get("/api/backtests?limit=1&offset=1")
+    repeated = await client.get("/api/backtests?limit=1&offset=0")
+    assert first.json() == repeated.json()
+    assert first.json()["items"][0]["run_id"] != second.json()["items"][0]["run_id"]
+    assert first.json()["total"] == 3
+    assert (await client.get("/api/backtests?limit=200")).status_code == 200
+    for query in ("limit=0", "limit=201", "offset=-1"):
+        assert (await client.get(f"/api/backtests?{query}")).status_code == 422
+
+    run_id = run_ids[0]
+    complete = await client.get(f"/api/backtests/{run_id}/equity?limit=200")
+    page_one = await client.get(f"/api/backtests/{run_id}/equity?limit=3&offset=0")
+    page_two = await client.get(f"/api/backtests/{run_id}/equity?limit=3&offset=3")
+    assert page_one.json()["items"] + page_two.json()["items"] == complete.json()["items"]
+
+
+async def test_all_run_endpoints_return_consistent_unknown_contract(
+    client: AsyncClient,
+) -> None:
+    missing = uuid4()
+    for suffix in (
+        "",
+        "/result",
+        "/signals",
+        "/risk-decisions",
+        "/orders",
+        "/fills",
+        "/equity",
+    ):
+        response = await client.get(f"/api/backtests/{missing}{suffix}")
+        assert response.status_code == 404
+        assert response.json()["detail"] == "backtest run not found"
+    assert (await client.get("/api/backtests/not-a-uuid")).status_code == 422
+
+
+async def test_dataset_and_strategy_attack_strings_are_rejected(
+    client: AsyncClient,
+) -> None:
+    for dataset_id in (
+        "../../etc/passwd",
+        "/etc/passwd",
+        "C:\\Windows\\system.ini",
+        "\\\\server\\share\\AAPL.csv",
+        "https://example.invalid/AAPL.csv",
+        "%2e%2e%2fetc%2fpasswd",
+    ):
+        response = await client.post(
+            "/api/backtests", json={**request_body(), "dataset_id": dataset_id}
+        )
+        assert response.status_code == 404
+        assert dataset_id not in response.text
+    for strategy_type in (
+        "module.ClassName",
+        "../../strategy.py",
+        "__import__",
+        "eval('x')",
+    ):
+        payload = request_body()
+        payload["strategy"] = {"type": strategy_type, "parameters": {}}
+        response = await client.post("/api/backtests", json=payload)
+        assert response.status_code == 422
+        assert "Traceback" not in response.text
 
 
 class FailingProvider:
@@ -235,7 +497,11 @@ class FailingDatasetRegistry(DatasetRegistry):
         return cast(MarketDataProvider, FailingProvider())
 
 
-async def test_failed_run_is_safe_and_has_no_partial_result() -> None:
+async def test_failed_run_is_safe_and_has_no_partial_result(client: AsyncClient) -> None:
+    successful = await client.post("/api/backtests", json=request_body())
+    assert successful.status_code == 201
+    successful_id = successful.json()["run_id"]
+    successful_result = (await client.get(f"/api/backtests/{successful_id}/result")).json()
     async with SessionFactory() as session:
         repository = SQLAlchemyBacktestRepository(session)
         service = BacktestApplicationService(
@@ -265,11 +531,17 @@ async def test_failed_run_is_safe_and_has_no_partial_result() -> None:
             .where(BacktestSignalModel.run_id == run.id)
         )
         assert signal_count == 0
+    result = await client.get(f"/api/backtests/{failure.value.run_id}/result")
+    assert result.status_code == 409
+    assert result.json()["detail"] == "backtest result is not available"
+    assert (await client.get(f"/api/backtests/{successful_id}/result")).json() == (
+        successful_result
+    )
 
 
 class DeliberatelyCorruptingRepository(SQLAlchemyBacktestRepository):
-    def _add_result(self, run_id: UUID, result: BacktestResult) -> None:
-        super()._add_result(run_id, result)
+    async def _add_result(self, run_id: UUID, result: BacktestResult) -> None:
+        await super()._add_result(run_id, result)
         signal = result.signals[0]
         self._session.add(
             BacktestSignalModel(
@@ -312,3 +584,197 @@ async def test_success_result_transaction_rolls_back_atomically() -> None:
             )
             == 0
         )
+
+
+def _two_strategy_result() -> BacktestResult:
+    return BacktestEngine(
+        CSVDataProvider(FIXTURES),
+        (
+            MovingAverageCrossoverStrategy("ma-filled", "AAPL", 2, 3),
+            MovingAverageCrossoverStrategy("ma-final", "AAPL", 3, 5),
+        ),
+        BacktestConfig(initial_cash=Decimal("100000"), default_order_quantity=Decimal("10")),
+    ).run("AAPL")
+
+
+def _new_run() -> BacktestRun:
+    return BacktestRun(
+        id=uuid4(),
+        status=BacktestRunStatus.CREATED,
+        strategy_id="review-test",
+        strategy_type="moving_average_crossover",
+        strategy_parameters={"short_period": 2, "long_period": 3},
+        symbol="AAPL",
+        dataset_id="AAPL_fixture",
+        created_at=datetime.now(UTC),
+        started_at=None,
+        completed_at=None,
+        initial_cash=Decimal("100000"),
+        default_order_quantity=Decimal("10"),
+        risk={
+            "max_order_notional": None,
+            "max_position_quantity": None,
+            "max_symbol_exposure": None,
+            "max_gross_exposure": None,
+            "max_leverage": None,
+            "enforce_buying_power": False,
+            "max_drawdown": None,
+        },
+        start=None,
+        end=None,
+        error_message=None,
+        client_request_id=None,
+        request_hash=None,
+    )
+
+
+@pytest.mark.parametrize(
+    "target_model",
+    [
+        BacktestSignalModel,
+        BacktestOrderProposalModel,
+        BacktestRiskDecisionModel,
+        BacktestOrderModel,
+        BacktestFillModel,
+        BacktestPortfolioSnapshotModel,
+        BacktestMetricsModel,
+        BacktestRiskReservationModel,
+    ],
+)
+async def test_every_result_stage_rolls_back_as_one_transaction(
+    target_model: type[object], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    result = _two_strategy_result()
+    assert result.fills and result.active_risk_reservations
+    async with SessionFactory() as session:
+        repository = SQLAlchemyBacktestRepository(session)
+        run = await repository.create(_new_run())
+        await repository.transition(
+            run.id,
+            BacktestRunStatus.CREATED,
+            BacktestRunStatus.RUNNING,
+            datetime.now(UTC),
+        )
+        original_add = session.add
+        original_add_all = session.add_all
+
+        def failing_add(instance: object) -> None:
+            original_add(instance)
+            if isinstance(instance, target_model):
+                raise RuntimeError("injected persistence stage failure")
+
+        def failing_add_all(instances: Iterable[object]) -> None:
+            values = list(instances)
+            original_add_all(values)
+            if any(isinstance(instance, target_model) for instance in values):
+                raise RuntimeError("injected persistence stage failure")
+
+        monkeypatch.setattr(session, "add", failing_add)
+        monkeypatch.setattr(session, "add_all", failing_add_all)
+        with pytest.raises(RuntimeError, match="injected persistence stage failure"):
+            await repository.persist_success(run.id, result, datetime.now(UTC))
+        monkeypatch.setattr(session, "add", original_add)
+        monkeypatch.setattr(session, "add_all", original_add_all)
+        persisted = await repository.get(run.id)
+        assert persisted is not None and persisted.status is BacktestRunStatus.RUNNING
+        for model in (
+            BacktestSignalModel,
+            BacktestOrderProposalModel,
+            BacktestRiskDecisionModel,
+            BacktestOrderModel,
+            BacktestFillModel,
+            BacktestPortfolioSnapshotModel,
+            BacktestMetricsModel,
+            BacktestRiskReservationModel,
+        ):
+            count = await session.scalar(
+                select(func.count()).select_from(model).where(model.run_id == run.id)
+            )
+            assert count == 0
+
+
+async def test_database_constraints_prevent_duplicates_orphans_and_audit_deletion(
+    client: AsyncClient,
+) -> None:
+    response = await client.post("/api/backtests", json=request_body())
+    run_id = UUID(response.json()["run_id"])
+    async with SessionFactory() as session:
+        session.add(
+            BacktestSignalModel(
+                run_id=uuid4(),
+                sequence=0,
+                strategy_id="orphan",
+                symbol="AAPL",
+                timestamp=datetime.now(UTC),
+                signal_type="BUY",
+            )
+        )
+        with pytest.raises(IntegrityError):
+            await session.commit()
+        await session.rollback()
+
+        proposal = await session.scalar(
+            select(BacktestOrderProposalModel).where(BacktestOrderProposalModel.run_id == run_id)
+        )
+        assert proposal is not None
+        session.add(
+            BacktestOrderProposalModel(
+                run_id=run_id,
+                sequence=999,
+                proposal_id=proposal.proposal_id,
+                strategy_id=proposal.strategy_id,
+                symbol=proposal.symbol,
+                side=proposal.side,
+                order_type=proposal.order_type,
+                quantity=proposal.quantity,
+                signal_timestamp=proposal.signal_timestamp,
+            )
+        )
+        with pytest.raises(IntegrityError):
+            await session.commit()
+        await session.rollback()
+
+        with pytest.raises(IntegrityError):
+            await session.execute(delete(BacktestRunModel).where(BacktestRunModel.id == run_id))
+        await session.rollback()
+        assert await session.get(BacktestRunModel, run_id) is not None
+
+
+async def test_broker_rejection_remains_distinct_from_risk_rejection() -> None:
+    source = BacktestEngine(
+        CSVDataProvider(FIXTURES),
+        (MovingAverageCrossoverStrategy("broker-rejection", "AAPL", 3, 5),),
+        BacktestConfig(),
+    ).run("AAPL")
+    assert len(source.orders) == 1 and source.risk_decisions[0].approved
+    rejected = source.orders[0].model_copy(update={"status": OrderStatus.REJECTED})
+    result = replace(source, orders=(rejected,), active_risk_reservations=())
+    async with SessionFactory() as session:
+        repository = SQLAlchemyBacktestRepository(session)
+        run = await repository.create(_new_run())
+        await repository.transition(
+            run.id,
+            BacktestRunStatus.CREATED,
+            BacktestRunStatus.RUNNING,
+            datetime.now(UTC),
+        )
+        await repository.persist_success(run.id, result, datetime.now(UTC))
+        decisions = await repository.list_risk_decisions(run.id, 200, 0)
+        orders = await repository.list_orders(run.id, 200, 0)
+    assert decisions.items[0].approved is True
+    assert orders.items[0].status is OrderStatus.REJECTED
+
+
+async def test_historical_snapshots_remain_immutable_after_later_run(
+    client: AsyncClient,
+) -> None:
+    first = await client.post("/api/backtests", json=request_body())
+    first_id = UUID(first.json()["run_id"])
+    async with SessionFactory() as session:
+        repository = SQLAlchemyBacktestRepository(session)
+        before = (await repository.list_snapshots(first_id, 200, 0)).items
+    await client.post("/api/backtests", json=request_body("200000"))
+    async with SessionFactory() as session:
+        repository = SQLAlchemyBacktestRepository(session)
+        after = (await repository.list_snapshots(first_id, 200, 0)).items
+    assert before == after
