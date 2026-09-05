@@ -5,8 +5,10 @@ from uuid import UUID
 
 from sqlalchemy import (
     Boolean,
+    CheckConstraint,
     DateTime,
     ForeignKey,
+    ForeignKeyConstraint,
     Index,
     Integer,
     Numeric,
@@ -29,6 +31,14 @@ class BacktestRunModel(Base):
     __table_args__ = (
         Index("ix_backtest_runs_status", "status"),
         Index("ix_backtest_runs_created_at", "created_at"),
+        CheckConstraint(
+            "status IN ('CREATED', 'RUNNING', 'SUCCEEDED', 'FAILED')",
+            name="ck_backtest_runs_status",
+        ),
+        CheckConstraint(
+            "(client_request_id IS NULL) = (request_hash IS NULL)",
+            name="ck_backtest_runs_idempotency_pair",
+        ),
     )
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
@@ -49,7 +59,7 @@ class BacktestSignalModel(Base):
     __tablename__ = "backtest_signals"
 
     run_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="CASCADE"), primary_key=True
+        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="RESTRICT"), primary_key=True
     )
     sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
     strategy_id: Mapped[str] = mapped_column(String(128), nullable=False)
@@ -63,7 +73,7 @@ class BacktestOrderProposalModel(Base):
     __table_args__ = (UniqueConstraint("run_id", "proposal_id"),)
 
     run_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="CASCADE"), primary_key=True
+        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="RESTRICT"), primary_key=True
     )
     sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
     proposal_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)
@@ -77,9 +87,17 @@ class BacktestOrderProposalModel(Base):
 
 class BacktestRiskDecisionModel(Base):
     __tablename__ = "backtest_risk_decisions"
+    __table_args__ = (
+        UniqueConstraint("run_id", "proposal_id"),
+        ForeignKeyConstraint(
+            ("run_id", "proposal_id"),
+            ("backtest_order_proposals.run_id", "backtest_order_proposals.proposal_id"),
+            ondelete="RESTRICT",
+        ),
+    )
 
     run_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="CASCADE"), primary_key=True
+        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="RESTRICT"), primary_key=True
     )
     sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
     proposal_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)
@@ -92,10 +110,18 @@ class BacktestRiskDecisionModel(Base):
 
 class BacktestOrderModel(Base):
     __tablename__ = "backtest_orders"
-    __table_args__ = (UniqueConstraint("run_id", "order_id"),)
+    __table_args__ = (
+        UniqueConstraint("run_id", "order_id"),
+        UniqueConstraint("run_id", "proposal_id"),
+        ForeignKeyConstraint(
+            ("run_id", "proposal_id"),
+            ("backtest_order_proposals.run_id", "backtest_order_proposals.proposal_id"),
+            ondelete="RESTRICT",
+        ),
+    )
 
     run_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="CASCADE"), primary_key=True
+        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="RESTRICT"), primary_key=True
     )
     sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
     order_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)
@@ -117,10 +143,15 @@ class BacktestFillModel(Base):
     __table_args__ = (
         UniqueConstraint("run_id", "order_id"),
         Index("ix_backtest_fills_run_timestamp", "run_id", "timestamp"),
+        ForeignKeyConstraint(
+            ("run_id", "order_id"),
+            ("backtest_orders.run_id", "backtest_orders.order_id"),
+            ondelete="RESTRICT",
+        ),
     )
 
     run_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="CASCADE"), primary_key=True
+        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="RESTRICT"), primary_key=True
     )
     sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
     order_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)
@@ -138,7 +169,7 @@ class BacktestPortfolioSnapshotModel(Base):
     __table_args__ = (Index("ix_backtest_snapshots_run_sequence", "run_id", "sequence"),)
 
     run_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="CASCADE"), primary_key=True
+        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="RESTRICT"), primary_key=True
     )
     sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
     timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
@@ -154,9 +185,12 @@ class BacktestPortfolioSnapshotModel(Base):
 
 class BacktestMetricsModel(Base):
     __tablename__ = "backtest_metrics"
+    __table_args__ = (
+        CheckConstraint("number_of_fills >= 0", name="ck_backtest_metrics_fill_count"),
+    )
 
     run_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="CASCADE"), primary_key=True
+        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="RESTRICT"), primary_key=True
     )
     initial_equity: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     final_equity: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
@@ -171,10 +205,23 @@ class BacktestMetricsModel(Base):
 
 class BacktestRiskReservationModel(Base):
     __tablename__ = "backtest_risk_reservations"
-    __table_args__ = (UniqueConstraint("run_id", "proposal_id"),)
+    __table_args__ = (
+        UniqueConstraint("run_id", "proposal_id"),
+        UniqueConstraint("run_id", "order_id"),
+        ForeignKeyConstraint(
+            ("run_id", "proposal_id"),
+            ("backtest_order_proposals.run_id", "backtest_order_proposals.proposal_id"),
+            ondelete="RESTRICT",
+        ),
+        ForeignKeyConstraint(
+            ("run_id", "order_id"),
+            ("backtest_orders.run_id", "backtest_orders.order_id"),
+            ondelete="RESTRICT",
+        ),
+    )
 
     run_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="CASCADE"), primary_key=True
+        PGUUID(as_uuid=True), ForeignKey(RUN_FK, ondelete="RESTRICT"), primary_key=True
     )
     sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
     proposal_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)

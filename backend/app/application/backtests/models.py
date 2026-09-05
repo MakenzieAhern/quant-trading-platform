@@ -75,6 +75,7 @@ class ResultSummary:
     order_count: int
     fill_count: int
     snapshot_count: int
+    reservation_count: int
     start_time: datetime | None
     end_time: datetime | None
 

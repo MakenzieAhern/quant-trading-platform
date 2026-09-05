@@ -7,6 +7,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, model_validator
 
+from app.application.backtests.decimal_policy import validate_storage_decimal
 from app.application.backtests.models import BacktestRunStatus
 from app.domain.common import Symbol, UtcDateTime
 
@@ -20,7 +21,7 @@ def _decimal_string(value: object) -> Decimal:
         raise ValueError("invalid Decimal string") from exc
     if not parsed.is_finite():
         raise ValueError("Decimal value must be finite")
-    return parsed
+    return validate_storage_decimal(parsed, "Decimal value")
 
 
 DecimalString = Annotated[Decimal, BeforeValidator(_decimal_string)]
@@ -142,6 +143,7 @@ class ResultResponse(BaseModel):
     order_count: int
     fill_count: int
     snapshot_count: int
+    reservation_count: int
     start_time: datetime | None
     end_time: datetime | None
 

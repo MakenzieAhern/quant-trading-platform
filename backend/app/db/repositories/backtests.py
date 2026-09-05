@@ -5,8 +5,13 @@ from typing import Any, TypeVar
 from uuid import UUID
 
 from sqlalchemy import Select, func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.application.backtests.decimal_policy import (
+    canonical_decimal,
+    validate_storage_decimal,
+)
 from app.application.backtests.models import (
     BacktestRun,
     BacktestRunStatus,
@@ -27,13 +32,15 @@ from app.db.models.backtest import (
     BacktestSignalModel,
 )
 from app.domain.analytics import EquityPoint, PerformanceMetrics
-from app.domain.risk import RiskDecision, RiskReasonCode
+from app.domain.risk import OrderProposal, RiskDecision, RiskReasonCode, RiskReservation
 from app.domain.trading import (
     Fill,
     Order,
     OrderSide,
     OrderStatus,
     OrderType,
+    PortfolioSnapshot,
+    Position,
     Signal,
     SignalType,
 )
@@ -43,8 +50,12 @@ ModelT = TypeVar("ModelT")
 
 def _decimal_json(value: object) -> object:
     if isinstance(value, Decimal):
-        return str(value)
+        return canonical_decimal(validate_storage_decimal(value, "JSONB Decimal"))
     return value
+
+
+def _numeric(value: Decimal, field: str) -> Decimal:
+    return validate_storage_decimal(value, field)
 
 
 class SQLAlchemyBacktestRepository:
@@ -70,11 +81,23 @@ class SQLAlchemyBacktestRepository:
                 request_hash=run.request_hash,
             )
         )
-        await self._session.commit()
+        try:
+            await self._session.commit()
+        except IntegrityError:
+            await self._session.rollback()
+            if run.client_request_id is not None:
+                existing = await self.get_by_client_request_id(run.client_request_id)
+                if existing is not None:
+                    return existing
+            raise
         return run
 
     async def get(self, run_id: UUID) -> BacktestRun | None:
-        model = await self._session.get(BacktestRunModel, run_id)
+        model = await self._session.scalar(
+            select(BacktestRunModel)
+            .where(BacktestRunModel.id == run_id)
+            .execution_options(populate_existing=True)
+        )
         return self._to_run(model) if model is not None else None
 
     async def get_by_client_request_id(self, value: str) -> BacktestRun | None:
@@ -118,7 +141,7 @@ class SQLAlchemyBacktestRepository:
             if run is None:
                 raise LookupError(f"unknown backtest run: {run_id}")
             require_transition(BacktestRunStatus(run.status), BacktestRunStatus.SUCCEEDED)
-            self._add_result(run_id, result)
+            await self._add_result(run_id, result)
             run.status = BacktestRunStatus.SUCCEEDED.value
             run.completed_at = completed_at
             run.error_message = None
@@ -162,6 +185,7 @@ class SQLAlchemyBacktestRepository:
             BacktestOrderModel,
             BacktestFillModel,
             BacktestPortfolioSnapshotModel,
+            BacktestRiskReservationModel,
         ):
             counts.append(
                 await self._session.scalar(
@@ -194,6 +218,7 @@ class SQLAlchemyBacktestRepository:
             order_count=counts[3],
             fill_count=counts[4],
             snapshot_count=counts[5],
+            reservation_count=counts[6],
             start_time=bounds[0],
             end_time=bounds[1],
         )
@@ -207,6 +232,26 @@ class SQLAlchemyBacktestRepository:
                     symbol=row.symbol,
                     timestamp=row.timestamp,
                     signal_type=SignalType(row.signal_type),
+                )
+                for row in rows
+            ),
+            limit,
+            offset,
+            total,
+        )
+
+    async def list_proposals(self, run_id: UUID, limit: int, offset: int) -> Page[OrderProposal]:
+        rows, total = await self._page(BacktestOrderProposalModel, run_id, limit, offset)
+        return Page(
+            tuple(
+                OrderProposal(
+                    proposal_id=row.proposal_id,
+                    strategy_id=row.strategy_id,
+                    symbol=row.symbol,
+                    side=OrderSide(row.side),
+                    order_type=OrderType(row.order_type),
+                    quantity=row.quantity,
+                    signal_timestamp=row.signal_timestamp,
                 )
                 for row in rows
             ),
@@ -299,6 +344,61 @@ class SQLAlchemyBacktestRepository:
             total,
         )
 
+    async def list_snapshots(
+        self, run_id: UUID, limit: int, offset: int
+    ) -> Page[PortfolioSnapshot]:
+        rows, total = await self._page(BacktestPortfolioSnapshotModel, run_id, limit, offset)
+        return Page(
+            tuple(
+                PortfolioSnapshot(
+                    timestamp=row.timestamp,
+                    cash=row.cash,
+                    positions=tuple(
+                        Position(
+                            symbol=position["symbol"],
+                            quantity=Decimal(position["quantity"]),
+                            average_price=Decimal(position["average_price"]),
+                            market_price=Decimal(position["market_price"]),
+                            unrealized_pnl=Decimal(position["unrealized_pnl"]),
+                            realized_pnl=Decimal(position["realized_pnl"]),
+                        )
+                        for position in row.positions
+                    ),
+                    market_value=row.market_value,
+                    equity=row.equity,
+                    realized_pnl=row.realized_pnl,
+                    unrealized_pnl=row.unrealized_pnl,
+                    cumulative_commission=row.cumulative_commission,
+                    drawdown=row.drawdown,
+                )
+                for row in rows
+            ),
+            limit,
+            offset,
+            total,
+        )
+
+    async def list_reservations(
+        self, run_id: UUID, limit: int, offset: int
+    ) -> Page[RiskReservation]:
+        rows, total = await self._page(BacktestRiskReservationModel, run_id, limit, offset)
+        return Page(
+            tuple(
+                RiskReservation(
+                    proposal_id=row.proposal_id,
+                    order_id=row.order_id,
+                    symbol=row.symbol,
+                    signed_quantity=row.signed_quantity,
+                    cash_delta=row.cash_delta,
+                    buying_power_consumed=row.buying_power_consumed,
+                )
+                for row in rows
+            ),
+            limit,
+            offset,
+            total,
+        )
+
     async def _page(
         self, model: type[ModelT], run_id: UUID, limit: int, offset: int
     ) -> tuple[Sequence[ModelT], int]:
@@ -317,7 +417,7 @@ class SQLAlchemyBacktestRepository:
         rows = (await self._session.scalars(statement)).all()
         return rows, total or 0
 
-    def _add_result(self, run_id: UUID, result: BacktestResult) -> None:
+    async def _add_result(self, run_id: UUID, result: BacktestResult) -> None:
         self._session.add_all(
             [
                 BacktestSignalModel(
@@ -341,12 +441,13 @@ class SQLAlchemyBacktestRepository:
                     symbol=item.symbol,
                     side=item.side.value,
                     order_type=item.order_type.value,
-                    quantity=item.quantity,
+                    quantity=_numeric(item.quantity, "proposal.quantity"),
                     signal_timestamp=item.signal_timestamp,
                 )
                 for index, item in enumerate(result.order_proposals)
             ]
         )
+        await self._session.flush()
         self._session.add_all(
             [
                 BacktestRiskDecisionModel(
@@ -378,8 +479,8 @@ class SQLAlchemyBacktestRepository:
                     symbol=item.symbol,
                     side=item.side.value,
                     order_type=item.order_type.value,
-                    quantity=item.quantity,
-                    price=item.price,
+                    quantity=_numeric(item.quantity, "order.quantity"),
+                    price=(_numeric(item.price, "order.price") if item.price is not None else None),
                     status=item.status.value,
                     created_at=item.created_at,
                     submitted_at=None,
@@ -388,6 +489,7 @@ class SQLAlchemyBacktestRepository:
                 for index, item in enumerate(result.orders)
             ]
         )
+        await self._session.flush()
         self._session.add_all(
             [
                 BacktestFillModel(
@@ -397,9 +499,9 @@ class SQLAlchemyBacktestRepository:
                     strategy_id=item.strategy_id,
                     symbol=item.symbol,
                     side=item.side.value,
-                    quantity=item.quantity,
-                    price=item.price,
-                    commission=item.commission,
+                    quantity=_numeric(item.quantity, "fill.quantity"),
+                    price=_numeric(item.price, "fill.price"),
+                    commission=_numeric(item.commission, "fill.commission"),
                     timestamp=item.timestamp,
                 )
                 for index, item in enumerate(result.fills)
@@ -411,15 +513,17 @@ class SQLAlchemyBacktestRepository:
                     run_id=run_id,
                     sequence=index,
                     timestamp=item.timestamp,
-                    cash=item.cash,
-                    market_value=item.market_value,
-                    equity=item.equity,
-                    realized_pnl=item.realized_pnl,
-                    unrealized_pnl=item.unrealized_pnl,
-                    cumulative_commission=item.cumulative_commission,
-                    drawdown=item.drawdown,
+                    cash=_numeric(item.cash, "snapshot.cash"),
+                    market_value=_numeric(item.market_value, "snapshot.market_value"),
+                    equity=_numeric(item.equity, "snapshot.equity"),
+                    realized_pnl=_numeric(item.realized_pnl, "snapshot.realized_pnl"),
+                    unrealized_pnl=_numeric(item.unrealized_pnl, "snapshot.unrealized_pnl"),
+                    cumulative_commission=_numeric(
+                        item.cumulative_commission, "snapshot.cumulative_commission"
+                    ),
+                    drawdown=_numeric(item.drawdown, "snapshot.drawdown"),
                     positions=[
-                        {key: str(value) for key, value in position.model_dump().items()}
+                        {key: _decimal_json(value) for key, value in position.model_dump().items()}
                         for position in item.positions
                     ],
                 )
@@ -430,14 +534,22 @@ class SQLAlchemyBacktestRepository:
         self._session.add(
             BacktestMetricsModel(
                 run_id=run_id,
-                initial_equity=metrics.initial_equity,
-                final_equity=metrics.final_equity,
-                total_return=metrics.total_return,
-                cagr=metrics.cagr,
-                max_drawdown=metrics.max_drawdown,
-                sharpe_ratio=metrics.sharpe_ratio,
-                sortino_ratio=metrics.sortino_ratio,
-                total_commission=metrics.total_commission,
+                initial_equity=_numeric(metrics.initial_equity, "metrics.initial_equity"),
+                final_equity=_numeric(metrics.final_equity, "metrics.final_equity"),
+                total_return=_numeric(metrics.total_return, "metrics.total_return"),
+                cagr=_numeric(metrics.cagr, "metrics.cagr") if metrics.cagr is not None else None,
+                max_drawdown=_numeric(metrics.max_drawdown, "metrics.max_drawdown"),
+                sharpe_ratio=(
+                    _numeric(metrics.sharpe_ratio, "metrics.sharpe_ratio")
+                    if metrics.sharpe_ratio is not None
+                    else None
+                ),
+                sortino_ratio=(
+                    _numeric(metrics.sortino_ratio, "metrics.sortino_ratio")
+                    if metrics.sortino_ratio is not None
+                    else None
+                ),
+                total_commission=_numeric(metrics.total_commission, "metrics.total_commission"),
                 number_of_fills=metrics.number_of_fills,
             )
         )
@@ -449,9 +561,11 @@ class SQLAlchemyBacktestRepository:
                     proposal_id=item.proposal_id,
                     order_id=item.order_id,
                     symbol=item.symbol,
-                    signed_quantity=item.signed_quantity,
-                    cash_delta=item.cash_delta,
-                    buying_power_consumed=item.buying_power_consumed,
+                    signed_quantity=_numeric(item.signed_quantity, "reservation.signed_quantity"),
+                    cash_delta=_numeric(item.cash_delta, "reservation.cash_delta"),
+                    buying_power_consumed=_numeric(
+                        item.buying_power_consumed, "reservation.buying_power_consumed"
+                    ),
                 )
                 for index, item in enumerate(result.active_risk_reservations)
             ]
@@ -464,8 +578,14 @@ class SQLAlchemyBacktestRepository:
             "strategy_parameters": {
                 key: _decimal_json(value) for key, value in run.strategy_parameters.items()
             },
-            "initial_cash": str(run.initial_cash),
-            "default_order_quantity": str(run.default_order_quantity),
+            "initial_cash": canonical_decimal(
+                validate_storage_decimal(run.initial_cash, "config.initial_cash")
+            ),
+            "default_order_quantity": canonical_decimal(
+                validate_storage_decimal(
+                    run.default_order_quantity, "config.default_order_quantity"
+                )
+            ),
             "risk": run.risk,
             "start": run.start.isoformat() if run.start is not None else None,
             "end": run.end.isoformat() if run.end is not None else None,

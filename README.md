@@ -30,7 +30,7 @@ curl -X POST http://localhost:8000/api/backtests \
   -d '{"dataset_id":"AAPL_fixture","symbol":"AAPL","strategy":{"type":"moving_average_crossover","parameters":{"short_period":2,"long_period":3}},"initial_cash":"100000","default_order_quantity":"10"}'
 ```
 
-Financial inputs and outputs use JSON strings. Phase 7 accepts only registered datasets and the `moving_average_crossover` and `rsi_mean_reversion` strategy types; filesystem paths and Python import names are not accepted.
+Financial inputs and outputs use JSON strings under the `NUMERIC(78,38)` contract: values with more than 40 integral or 38 fractional digits are rejected rather than rounded. Phase 7 accepts only registered datasets and the `moving_average_crossover` and `rsi_mean_reversion` strategy types; filesystem paths and Python import names are not accepted. Execution is synchronous. A process crash can leave a detectable stale `RUNNING` record; durable cancellation, workers, and stale-run recovery are deliberately deferred beyond Phase 7.
 
 For host-based development, install Python 3.12, Node 24 LTS, and GNU Make, then:
 

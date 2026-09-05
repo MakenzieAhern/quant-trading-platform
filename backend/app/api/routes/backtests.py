@@ -28,6 +28,7 @@ from app.application.backtests import (
     DatasetRegistry,
     StrategyRegistry,
 )
+from app.application.backtests.decimal_policy import canonical_decimal
 from app.application.backtests.registry import (
     InvalidStrategyParametersError,
     UnknownDatasetError,
@@ -36,6 +37,7 @@ from app.application.backtests.registry import (
 from app.application.backtests.service import (
     BacktestExecutionError,
     IdempotencyConflictError,
+    IdempotencyInProgressError,
 )
 from app.core.config import get_settings
 from app.db.repositories import SQLAlchemyBacktestRepository
@@ -49,12 +51,7 @@ PaginationOffset = Annotated[int, Query(ge=0)]
 
 
 def _decimal(value: Decimal | None) -> str | None:
-    if value is None:
-        return None
-    text = format(value, "f")
-    if "." in text:
-        text = text.rstrip("0").rstrip(".")
-    return text if text not in {"", "-0"} else "0"
+    return canonical_decimal(value) if value is not None else None
 
 
 def _links(run_id: UUID) -> LinkSet:
@@ -154,6 +151,8 @@ async def create_backtest(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "dataset not found") from exc
     except IdempotencyConflictError as exc:
         raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
+    except IdempotencyInProgressError as exc:
+        raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
     except (UnknownStrategyError, InvalidStrategyParametersError, ValueError) as exc:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(exc)) from exc
     except IntegrityError as exc:
@@ -215,6 +214,7 @@ async def get_result(
         order_count=summary.order_count,
         fill_count=summary.fill_count,
         snapshot_count=summary.snapshot_count,
+        reservation_count=summary.reservation_count,
         start_time=summary.start_time,
         end_time=summary.end_time,
     )
