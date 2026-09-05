@@ -17,7 +17,7 @@ FastAPI modular monolith ─── Redis (cache and future transient events)
         └────────────────── PostgreSQL (durable state, Alembic-managed)
 ```
 
-Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation. Phase 4 adds a historical simulation clock, event-driven backtest coordination, and deterministic simulated execution.
+Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation. Phase 4 adds a historical simulation clock, event-driven backtest coordination, and deterministic simulated execution. Phase 5 adds downstream portfolio accounting, end-of-Bar valuation, an equity curve, and performance analytics.
 
 ## Planned backend modules
 
@@ -140,11 +140,33 @@ Order transitions are explicit and immutable: `CREATED -> SUBMITTED -> ACCEPTED 
 
 Transaction costs use replaceable protocols. `FixedCommission` charges one configured Decimal amount per fill. `PercentageCommission` treats its configured rate as a fraction of absolute filled notional, so its result cannot become negative if a signed quantity is supplied at the model boundary. `FixedBasisPointSlippage` increases BUY prices and decreases SELL prices by `basis_points / 10000`; favorable slippage is rejected. Basis points must be non-negative and strictly below 10,000 so adverse SELL slippage cannot produce a zero or negative fill price. Execution arithmetic uses an isolated 28-digit `ROUND_HALF_EVEN` Decimal context and never converts financial values to float.
 
-The Phase 4 result contains ordered Signals, final Order states, Fills, historical bounds, and configuration. It intentionally contains no cash ledger, positions, PnL, equity curve, drawdown, risk decisions, analytics, paper execution, or live brokerage behavior.
+The backtest result retains ordered Signals, final Order states, Fills, historical bounds, and configuration. Phase 5 extends it with immutable portfolio snapshots, an equity curve, and performance metrics without changing Phase 4 execution.
+
+## Portfolio accounting and analytics flow
+
+```text
+Historical Bar -> BacktestEngine -> MARKET_DATA -> Strategy -> Signal -> Order
+                         │                                      │
+                         │                         next-Bar OPEN ▼
+                         └-> PortfolioSnapshot <- Portfolio <- Fill <- Broker
+                                              │
+                                              ▼
+                                      Equity + Analytics
+```
+
+`PortfolioEngine` subscribes to successful `ORDER_FILLED` events and records what execution produced; it never creates, sizes, approves, or rejects trades. BUY cash flow is `-(quantity * fill price) - commission`, and SELL cash flow is `+(quantity * fill price) - commission`. Fill price already includes Phase 4 slippage. Commissions reduce cash exactly once, remain outside price-movement realized PnL, and are also accumulated separately for reporting. Negative cash is recorded rather than rejected because capital limits belong to Phase 6.
+
+Positions use signed quantities: positive is long, negative is short, and zero is flat. Same-direction fills use absolute-quantity weighted average cost. Reductions preserve average cost and realize long PnL as `closed quantity * (sell price - average cost)` or short PnL as `closed quantity * (average cost - buy price)`. A fill crossing zero closes the old position at its prior basis and opens the remainder in the opposite direction at the reversing fill price. Flat per-symbol records remain in snapshots so cumulative realized PnL stays auditable.
+
+For each completed daily Bar, old accepted orders first fill at its OPEN and the portfolio consumes those fills. On `MARKET_DATA`, PortfolioEngine updates only that symbol's mark to the completed Bar CLOSE, retains the latest already-observed marks for other symbols, creates and publishes an end-of-Bar `PortfolioSnapshot`, and then StrategyEngine processes the same completed Bar. Thus valuation cannot leak a future price or change next-Bar execution. Snapshot market value is the sum of `signed quantity * latest mark`; unrealized PnL is `signed quantity * (mark - average cost)`; equity is cash plus signed market value. Snapshot ordering is chronological and deterministic.
+
+Analytics consumes snapshots only. Total return is `final equity / initial equity - 1`, and a non-positive initial equity is an explicit error. Period return is `current / previous - 1`; zero previous equity is an explicit error. Maximum drawdown is reported as the most negative peak-to-trough return, so the sequence `100, 120, 90, 110` reports `-0.25`.
+
+Sharpe and Sortino use configurable `periods_per_year` (252 by default for daily observations) and an explicit per-period risk-free rate (zero by default). Sharpe uses population standard deviation of excess period returns. Sortino uses the root mean square of negative excess returns over all observed periods. Fewer than two returns, zero volatility, or zero downside deviation produces `None`, never infinity. CAGR uses a 365.2425-day year and isolated 28-digit `ROUND_HALF_EVEN` Decimal arithmetic; it is `None` for non-positive duration or non-positive final equity. Analytics is pure downstream output and cannot influence strategies, orders, fills, or the portfolio.
 
 ## Correctness contracts
 
-Daily strategies see a bar only after it closes. A market order caused by that bar may first fill at the next available bar's open. Event order and fixture inputs must make runs repeatable. Commission and directional slippage are mandatory inputs; rejections and order transitions are recorded. Future portfolio accounting starts long-only. Tests explicitly separate Phase 4 timing and fill correctness from later cash, average-cost, PnL, equity, and drawdown accounting.
+Daily strategies see a bar only after it closes. A market order caused by that bar may first fill at the next available bar's open. Event order and fixture inputs must make runs repeatable. Commission and directional slippage are mandatory inputs; rejections and order transitions are recorded. Portfolio accounting supports both long and short fills but never makes risk or strategy decisions. Tests keep execution timing separate from downstream cash, cost-basis, PnL, valuation, and analytics calculations.
 
 ## Runtime separation and safety
 

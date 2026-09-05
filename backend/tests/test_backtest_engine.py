@@ -1,6 +1,7 @@
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
+from uuid import UUID
 
 import pytest
 
@@ -143,6 +144,10 @@ def test_manual_reference_backtest_uses_next_bar_open() -> None:
         bars[3].timestamp,
     ]
     assert [order.side for order in result.orders] == [OrderSide.BUY, OrderSide.SELL]
+    assert [order.id for order in result.orders] == [
+        UUID("f356a327-b7d7-568d-a23a-c52738c9bfa9"),
+        UUID("5775c3a9-a6a0-551e-b9dd-79037e72aca5"),
+    ]
     assert all(order.quantity == Decimal(2) for order in result.orders)
     assert [fill.timestamp for fill in result.fills] == [
         bars[2].timestamp,
@@ -161,6 +166,21 @@ def test_manual_reference_backtest_uses_next_bar_open() -> None:
     assert all(order.status is OrderStatus.FILLED for order in result.orders)
     assert result.start_time == bars[0].timestamp
     assert result.end_time == bars[-1].timestamp
+    assert [snapshot.equity for snapshot in result.portfolio_snapshots] == [
+        Decimal("10000"),
+        Decimal("10000"),
+        Decimal("9988.8950"),
+        Decimal("10008.8950"),
+        Decimal("10007.7850"),
+    ]
+    assert result.portfolio_snapshots[2].cash == Decimal("9788.8950")
+    assert result.portfolio_snapshots[2].unrealized_pnl == Decimal("-10.1050")
+    assert result.portfolio_snapshots[-1].realized_pnl == Decimal("9.7850")
+    assert result.portfolio_snapshots[-1].cumulative_commission == Decimal(2)
+    assert result.performance_metrics.final_equity == Decimal("10007.7850")
+    assert result.performance_metrics.total_return == Decimal("0.0007785")
+    assert result.performance_metrics.total_commission == Decimal(2)
+    assert result.performance_metrics.number_of_fills == 2
 
 
 def test_per_bar_events_execute_old_orders_before_current_market_data() -> None:
@@ -188,6 +208,26 @@ def test_per_bar_events_execute_old_orders_before_current_market_data() -> None:
         EventType.ORDER_ACCEPTED,
         EventType.ORDER_FILLED,
         EventType.MARKET_DATA,
+    ]
+
+
+def test_portfolio_snapshot_precedes_strategy_signal_for_each_completed_bar() -> None:
+    bars = manual_bars()[:3]
+    bus = EventBus()
+    observed: list[EventType] = []
+    for event_type in (EventType.MARKET_DATA, EventType.PORTFOLIO_UPDATED, EventType.SIGNAL):
+        bus.subscribe(event_type, lambda event: observed.append(event.event_type))
+
+    make_engine(StubProvider(bars), event_bus=bus).run("AAPL")
+
+    assert observed == [
+        EventType.MARKET_DATA,
+        EventType.PORTFOLIO_UPDATED,
+        EventType.MARKET_DATA,
+        EventType.PORTFOLIO_UPDATED,
+        EventType.SIGNAL,
+        EventType.MARKET_DATA,
+        EventType.PORTFOLIO_UPDATED,
     ]
 
 
@@ -270,6 +310,8 @@ def test_appending_future_bars_does_not_change_completed_history() -> None:
     assert complete.signals[:1] == prefix.signals
     assert complete.orders[:1] == prefix.orders
     assert complete.fills[:1] == prefix.fills
+    assert complete.portfolio_snapshots[:3] == prefix.portfolio_snapshots
+    assert complete.equity_curve[:3] == prefix.equity_curve
 
 
 @pytest.mark.parametrize(
@@ -301,6 +343,9 @@ def test_empty_history_returns_typed_empty_result() -> None:
 
     assert isinstance(result, BacktestResult)
     assert result.signals == result.orders == result.fills == ()
+    assert result.portfolio_snapshots == result.equity_curve == ()
+    assert result.performance_metrics.final_equity == Decimal("10000")
+    assert result.performance_metrics.total_return == Decimal(0)
     assert result.start_time is result.end_time is None
 
 
@@ -315,3 +360,7 @@ def test_backtest_config_requires_decimal_positive_values() -> None:
         BacktestConfig(commission_model=object())  # type: ignore[arg-type]
     with pytest.raises(TypeError, match="SlippageModel"):
         BacktestConfig(slippage_model=object())  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="periods_per_year"):
+        BacktestConfig(periods_per_year=0)
+    with pytest.raises(TypeError, match="risk_free_rate_per_period"):
+        BacktestConfig(risk_free_rate_per_period=0)  # type: ignore[arg-type]

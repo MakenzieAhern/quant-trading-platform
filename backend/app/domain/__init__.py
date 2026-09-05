@@ -1,5 +1,6 @@
 """Provider- and framework-independent financial domain contracts."""
 
+from app.domain.analytics import EquityPoint, PerformanceMetrics
 from app.domain.market import Bar
 from app.domain.trading import (
     Fill,
@@ -15,11 +16,13 @@ from app.domain.trading import (
 
 __all__ = [
     "Bar",
+    "EquityPoint",
     "Fill",
     "Order",
     "OrderSide",
     "OrderStatus",
     "OrderType",
+    "PerformanceMetrics",
     "PortfolioSnapshot",
     "Position",
     "Signal",

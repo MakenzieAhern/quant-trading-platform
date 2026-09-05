@@ -40,7 +40,7 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - Next-bar-open fill model, market and limit orders, and rejection paths
 - Deterministic result records with manually verifiable next-Bar-open tests
 
-## Phase 5 — Portfolio accounting and analytics
+## Phase 5 — Portfolio accounting and analytics (complete on feature branch)
 
 - Cash, positions, average cost, realized/unrealized PnL, and equity series
 - Equity and drawdown series
