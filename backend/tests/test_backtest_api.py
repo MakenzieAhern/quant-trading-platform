@@ -20,7 +20,11 @@ from app.application.backtests.service import BacktestExecutionError
 from app.backtest import BacktestConfig, BacktestEngine
 from app.backtest.result import BacktestResult
 from app.data.providers import CSVDataProvider, MarketDataProvider
-from app.db.models.backtest import BacktestMetricsModel, BacktestSignalModel
+from app.db.models.backtest import (
+    BacktestMetricsModel,
+    BacktestPortfolioSnapshotModel,
+    BacktestSignalModel,
+)
 from app.db.repositories import SQLAlchemyBacktestRepository
 from app.db.session import SessionFactory
 from app.domain.risk import RiskConfig
@@ -77,6 +81,9 @@ async def test_api_persists_reference_result_and_exact_decimals(
     detail = await client.get(f"/api/backtests/{created['run_id']}")
     result = await client.get(f"/api/backtests/{created['run_id']}/result")
     equity = await client.get(f"/api/backtests/{created['run_id']}/equity")
+    signals = await client.get(f"/api/backtests/{created['run_id']}/signals")
+    orders = await client.get(f"/api/backtests/{created['run_id']}/orders")
+    fills = await client.get(f"/api/backtests/{created['run_id']}/fills")
     assert detail.json()["initial_cash"] == unusual
     assert result.status_code == 200
     assert result.json()["metrics"]["initial_equity"] == unusual
@@ -91,6 +98,87 @@ async def test_api_persists_reference_result_and_exact_decimals(
     )
     assert [Decimal(item["equity"]) for item in equity.json()["items"]] == [
         item.equity for item in expected.equity_curve
+    ]
+    assert [
+        (item["strategy_id"], item["symbol"], item["timestamp"], item["signal_type"])
+        for item in signals.json()["items"]
+    ] == [
+        (
+            item.strategy_id,
+            item.symbol,
+            item.timestamp.isoformat().replace("+00:00", "Z"),
+            item.signal_type.value,
+        )
+        for item in expected.signals
+    ]
+    assert [
+        (
+            item["order_id"],
+            item["status"],
+            Decimal(item["quantity"]),
+            item["created_at"],
+        )
+        for item in orders.json()["items"]
+    ] == [
+        (
+            str(item.id),
+            item.status.value,
+            item.quantity,
+            item.created_at.isoformat().replace("+00:00", "Z"),
+        )
+        for item in expected.orders
+    ]
+    assert [
+        (
+            item["order_id"],
+            Decimal(item["quantity"]),
+            Decimal(item["price"]),
+            Decimal(item["commission"]),
+            item["timestamp"],
+        )
+        for item in fills.json()["items"]
+    ] == [
+        (
+            str(item.order_id),
+            item.quantity,
+            item.price,
+            item.commission,
+            item.timestamp.isoformat().replace("+00:00", "Z"),
+        )
+        for item in expected.fills
+    ]
+    async with SessionFactory() as session:
+        snapshots = (
+            await session.scalars(
+                select(BacktestPortfolioSnapshotModel)
+                .where(BacktestPortfolioSnapshotModel.run_id == UUID(created["run_id"]))
+                .order_by(BacktestPortfolioSnapshotModel.sequence)
+            )
+        ).all()
+    assert [
+        (
+            item.timestamp,
+            item.cash,
+            item.market_value,
+            item.equity,
+            item.realized_pnl,
+            item.unrealized_pnl,
+            item.cumulative_commission,
+            item.drawdown,
+        )
+        for item in snapshots
+    ] == [
+        (
+            item.timestamp,
+            item.cash,
+            item.market_value,
+            item.equity,
+            item.realized_pnl,
+            item.unrealized_pnl,
+            item.cumulative_commission,
+            item.drawdown,
+        )
+        for item in expected.portfolio_snapshots
     ]
 
 
