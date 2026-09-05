@@ -17,7 +17,7 @@ FastAPI modular monolith ─── Redis (cache and future transient events)
         └────────────────── PostgreSQL (durable state, Alembic-managed)
 ```
 
-Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation. Phase 4 adds a historical simulation clock, event-driven backtest coordination, and deterministic simulated execution. Phase 5 adds downstream portfolio accounting, end-of-Bar valuation, an equity curve, and performance analytics.
+Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation. Phase 4 adds a historical simulation clock, event-driven backtest coordination, and deterministic simulated execution. Phase 5 adds downstream portfolio accounting, end-of-Bar valuation, an equity curve, and performance analytics. Phase 6 adds order proposals, deterministic pre-trade risk decisions, an order management system, and sequential risk reservations.
 
 ## Planned backend modules
 
@@ -34,7 +34,7 @@ Portfolio <- Fill <- BrokerAdapter <- OrderManager <- RiskManager
 - `event`: synchronous deterministic in-process bus first. Events carry typed payloads and preserve ordering.
 - `data`: provider interfaces and normalized bars. CSV fixtures keep tests independent of external services.
 - `strategies` and `indicators`: broker-agnostic signal generation and pure calculations.
-- `risk`: converts permitted signals into order intent or records an explicit rejection reason.
+- `risk`: purely evaluates typed order proposals against observed portfolio state, explicit limits, and OMS reservations.
 - `execution`: order state machine and broker adapters. Backtest and paper adapters reuse fill/accounting rules.
 - `portfolio`: the single accounting implementation for cash, positions, realized/unrealized PnL, and equity.
 - `backtest`: simulation clock, next-bar execution, replaceable commission/slippage/fill models.
@@ -110,7 +110,13 @@ Historical MarketDataProvider
  EventBus / MARKET_DATA -> StrategyEngine -> EventBus / SIGNAL
                                                    │
                                                    ▼
-                                         MARKET Order creation
+                                          OrderProposal
+                                                   │
+                                                   ▼
+                                       RiskEngine -> RiskDecision
+                                                   │ approved
+                                                   ▼
+                                          OMS -> MARKET Order
                                                    │
                                                    ▼
                                          SimulatedBroker queue
@@ -131,8 +137,11 @@ Within each completed daily Bar the event order is fixed:
 3. publish their `ORDER_FILLED` events;
 4. publish `MARKET_DATA` for the current completed Bar;
 5. let strategies publish `SIGNAL` events in registration order;
-6. translate each BUY/SELL Signal to a fixed-quantity MARKET Order;
-7. publish `ORDER_CREATED`, `ORDER_SUBMITTED`, and `ORDER_ACCEPTED`, then queue the Order.
+6. translate each BUY/SELL Signal to a deterministic fixed-quantity `OrderProposal`;
+7. evaluate the proposal using the completed Bar close, current portfolio snapshot, and earlier active reservations;
+8. publish a `RISK_DECISION`; stop before Order creation when rejected;
+9. let the OMS create an approved MARKET Order, publish `ORDER_CREATED`, and submit it to the broker;
+10. publish `ORDER_SUBMITTED` and `ORDER_ACCEPTED`, then queue the Order.
 
 Consequently an Order created from Bar T cannot use any price from Bar T and first becomes eligible at the next Bar for its symbol. Its Fill timestamp is that later Bar timestamp. An Order created on the final Bar remains visibly `ACCEPTED` and unfilled; no final-close fill is invented. Phase 4 supports all-or-nothing MARKET Orders only. Existing LIMIT Orders are deterministically moved from `SUBMITTED` to `REJECTED`, because daily OHLC data cannot establish an unambiguous intrabar path.
 
@@ -141,6 +150,8 @@ Order transitions are explicit and immutable: `CREATED -> SUBMITTED -> ACCEPTED 
 Transaction costs use replaceable protocols. `FixedCommission` charges one configured Decimal amount per fill. `PercentageCommission` treats its configured rate as a fraction of absolute filled notional, so its result cannot become negative if a signed quantity is supplied at the model boundary. `FixedBasisPointSlippage` increases BUY prices and decreases SELL prices by `basis_points / 10000`; favorable slippage is rejected. Basis points must be non-negative and strictly below 10,000 so adverse SELL slippage cannot produce a zero or negative fill price. Execution arithmetic uses an isolated 28-digit `ROUND_HALF_EVEN` Decimal context and never converts financial values to float.
 
 The backtest result retains ordered Signals, final Order states, Fills, historical bounds, and configuration. Phase 5 extends it with immutable portfolio snapshots, an equity curve, and performance metrics without changing Phase 4 execution.
+
+Phase 6 additionally retains every ordered `OrderProposal` and `RiskDecision`. Permissive `RiskConfig` defaults preserve the exact Phase 4 Order IDs, next-Bar-open timestamps, fill prices, and commissions for approved proposals.
 
 ## Portfolio accounting and analytics flow
 
@@ -164,9 +175,36 @@ Analytics consumes snapshots only. Its equity curve contains one point per times
 
 Sharpe and Sortino use configurable `periods_per_year` (252 by default for daily observations) and an explicit per-period risk-free rate (zero by default). Sharpe uses population standard deviation of excess period returns. Sortino uses the root mean square of negative excess returns over all observed periods. Fewer than two returns, zero volatility, or zero downside deviation produces `None`, never infinity. CAGR uses a 365.2425-day year and isolated 28-digit `ROUND_HALF_EVEN` Decimal arithmetic; it is `None` for non-positive duration or non-positive final equity. Analytics is pure downstream output and cannot influence strategies, orders, fills, or the portfolio.
 
+## Pre-trade risk and OMS flow
+
+```text
+Signal -> ORDER_PROPOSAL -> RiskEngine -> RISK_DECISION
+                                           │
+                         rejected ──────────┴──> no Order and no broker submission
+                                           │ approved
+                                           ▼
+                              OMS reservation + ORDER_CREATED
+                                           │
+                                           ▼
+                          broker SUBMITTED -> ACCEPTED -> FILLED
+                                           │
+                                           ▼
+                         reservation release; Fill updates Portfolio
+```
+
+`OrderProposal` is immutable broker-independent intent with a deterministic proposal ID, strategy and symbol identity, side, type, quantity, and Signal timestamp. The approved Order deliberately reuses that proposal ID, preserving the established deterministic Order IDs. `RiskDecision` is immutable and includes an explicit reason code plus Decimal diagnostics for reference price, projected position, cash, symbol/gross/net exposure, and leverage. A risk rejection is not represented as a broker-rejected Order: no Order is created or submitted. A later broker rejection remains an ordinary `SUBMITTED -> REJECTED` Order transition and releases its reservation.
+
+`RiskConfig` independently controls maximum Order notional, absolute per-symbol position quantity, symbol exposure, gross exposure, gross leverage, optional cash buying power, and maximum tolerated drawdown. Every limit defaults to disabled, which is the permissive regression configuration. MARKET risk notional uses only the target symbol's latest completed-Bar close; it never reads the future execution OPEN. The buying-power estimate uses that observed mark plus the configured commission model. It is a cash check, not a broker margin, borrow, or locate model. Short selling remains supported through the same exposure and leverage rules.
+
+Risk evaluates the projected signed position after the proposal. Gross exposure is the sum of absolute marked positions, net exposure is their signed sum, and gross leverage is gross exposure divided by projected equity only when equity is positive. Missing or non-positive marks, inconsistent snapshots, non-finite reservation inputs, and risk-increasing proposals with non-positive actual or projected equity produce deterministic invalid-state decisions rather than division by zero.
+
+A proposal is genuinely risk-reducing only when it lowers the target symbol's absolute quantity without crossing through zero into a non-flat opposite position. Genuine reductions may proceed when the current portfolio remains above position, exposure, leverage, buying-power, or drawdown limits; this permits orderly de-risking. Reversals are risk-increasing and must satisfy all configured limits. Maximum Order notional remains an operational per-Order limit for both increases and reductions. The drawdown guard never creates liquidation Orders by itself.
+
+The OMS evaluates same-Bar proposals sequentially in StrategyEngine registration/event order. Each approval reserves projected signed quantity and mark-based cash, including estimated commission, without mutating PortfolioEngine. Later proposals see actual portfolio state plus all active reservations, preventing combined position, exposure, leverage, or buying-power breaches. A Fill first updates PortfolioEngine through the existing event path and then releases the reservation; a broker rejection or submission failure also releases it. Identical reprocessing returns the existing decision/Order, while conflicting reuse of a proposal ID, unknown reservations, and illegal Order transitions fail explicitly. All OMS and reservation state resets between backtests.
+
 ## Correctness contracts
 
-Daily strategies see a bar only after it closes. A market order caused by that bar may first fill at the next available bar's open. Event order and fixture inputs must make runs repeatable. Commission and directional slippage are mandatory inputs; rejections and order transitions are recorded. Portfolio accounting supports both long and short fills but never makes risk or strategy decisions. Tests keep execution timing separate from downstream cash, cost-basis, PnL, valuation, and analytics calculations.
+Daily strategies see a bar only after it closes. A market order caused by that bar may first fill at the next available bar's open. Event order and fixture inputs must make runs repeatable. Commission and directional slippage are mandatory inputs; risk decisions, broker rejections, and order transitions remain distinct and recorded. Portfolio accounting supports both long and short fills but never makes risk or strategy decisions. Tests keep risk reference marks and reservations separate from execution timing and downstream cash, cost-basis, PnL, valuation, and analytics calculations.
 
 ## Runtime separation and safety
 

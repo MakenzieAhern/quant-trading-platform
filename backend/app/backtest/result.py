@@ -3,12 +3,15 @@ from datetime import datetime
 
 from app.backtest.config import BacktestConfig
 from app.domain.analytics import EquityPoint, PerformanceMetrics
+from app.domain.risk import OrderProposal, RiskDecision
 from app.domain.trading import Fill, Order, PortfolioSnapshot, Signal
 
 
 @dataclass(frozen=True, slots=True)
 class BacktestResult:
     signals: tuple[Signal, ...]
+    order_proposals: tuple[OrderProposal, ...]
+    risk_decisions: tuple[RiskDecision, ...]
     orders: tuple[Order, ...]
     fills: tuple[Fill, ...]
     portfolio_snapshots: tuple[PortfolioSnapshot, ...]

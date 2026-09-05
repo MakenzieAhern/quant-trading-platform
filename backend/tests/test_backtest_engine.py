@@ -14,6 +14,7 @@ from app.backtest import (
 )
 from app.data.providers import Timeframe
 from app.domain.market import Bar
+from app.domain.risk import RiskConfig, RiskReasonCode
 from app.domain.trading import OrderSide, OrderStatus, Signal, SignalType
 from app.event import EventBus, EventType
 from app.execution import FixedBasisPointSlippage, FixedCommission
@@ -110,6 +111,7 @@ def make_engine(
     provider: StubProvider,
     strategies: tuple[BaseStrategy, ...] | None = None,
     event_bus: EventBus | None = None,
+    risk_config: RiskConfig | None = None,
 ) -> BacktestEngine:
     selected = strategies or (
         CurrentBarStrategy(
@@ -126,6 +128,7 @@ def make_engine(
             default_order_quantity=Decimal(2),
             commission_model=FixedCommission(Decimal(1)),
             slippage_model=FixedBasisPointSlippage(Decimal(5)),
+            risk=risk_config or RiskConfig(),
         ),
         event_bus,
     )
@@ -148,6 +151,10 @@ def test_manual_reference_backtest_uses_next_bar_open() -> None:
         UUID("f356a327-b7d7-568d-a23a-c52738c9bfa9"),
         UUID("5775c3a9-a6a0-551e-b9dd-79037e72aca5"),
     ]
+    assert [proposal.proposal_id for proposal in result.order_proposals] == [
+        order.id for order in result.orders
+    ]
+    assert all(decision.approved for decision in result.risk_decisions)
     assert all(order.quantity == Decimal(2) for order in result.orders)
     assert [fill.timestamp for fill in result.fills] == [
         bars[2].timestamp,
@@ -190,6 +197,8 @@ def test_per_bar_events_execute_old_orders_before_current_market_data() -> None:
     for event_type in (
         EventType.MARKET_DATA,
         EventType.SIGNAL,
+        EventType.ORDER_PROPOSAL,
+        EventType.RISK_DECISION,
         EventType.ORDER_CREATED,
         EventType.ORDER_SUBMITTED,
         EventType.ORDER_ACCEPTED,
@@ -203,6 +212,8 @@ def test_per_bar_events_execute_old_orders_before_current_market_data() -> None:
         EventType.MARKET_DATA,
         EventType.MARKET_DATA,
         EventType.SIGNAL,
+        EventType.ORDER_PROPOSAL,
+        EventType.RISK_DECISION,
         EventType.ORDER_CREATED,
         EventType.ORDER_SUBMITTED,
         EventType.ORDER_ACCEPTED,
@@ -276,6 +287,11 @@ def test_multiple_strategies_preserve_registration_order() -> None:
     assert [signal.strategy_id for signal in result.signals] == ["first", "second"]
     assert [order.strategy_id for order in result.orders] == ["first", "second"]
     assert [fill.strategy_id for fill in result.fills] == ["first", "second"]
+    assert [proposal.strategy_id for proposal in result.order_proposals] == [
+        "first",
+        "second",
+    ]
+    assert all(decision.approved for decision in result.risk_decisions)
     assert len({order.id for order in result.orders}) == len(result.orders)
 
 
@@ -310,6 +326,8 @@ def test_appending_future_bars_does_not_change_completed_history() -> None:
     assert complete.signals[:1] == prefix.signals
     assert complete.orders[:1] == prefix.orders
     assert complete.fills[:1] == prefix.fills
+    assert complete.order_proposals[:1] == prefix.order_proposals
+    assert complete.risk_decisions[:1] == prefix.risk_decisions
     assert complete.portfolio_snapshots[:3] == prefix.portfolio_snapshots
     assert complete.equity_curve[:3] == prefix.equity_curve
 
@@ -342,7 +360,8 @@ def test_empty_history_returns_typed_empty_result() -> None:
     result = engine.run("AAPL")
 
     assert isinstance(result, BacktestResult)
-    assert result.signals == result.orders == result.fills == ()
+    assert result.signals == result.order_proposals == result.risk_decisions == ()
+    assert result.orders == result.fills == ()
     assert result.portfolio_snapshots == result.equity_curve == ()
     assert result.performance_metrics.final_equity == Decimal("10000")
     assert result.performance_metrics.total_return == Decimal(0)
@@ -364,3 +383,50 @@ def test_backtest_config_requires_decimal_positive_values() -> None:
         BacktestConfig(periods_per_year=0)
     with pytest.raises(TypeError, match="risk_free_rate_per_period"):
         BacktestConfig(risk_free_rate_per_period=0)  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="RiskConfig"):
+        BacktestConfig(risk=object())  # type: ignore[arg-type]
+
+
+def test_risk_rejection_creates_no_broker_order() -> None:
+    result = make_engine(
+        StubProvider(manual_bars()[:2]),
+        risk_config=RiskConfig(max_order_notional=Decimal(100)),
+    ).run("AAPL")
+
+    assert len(result.signals) == len(result.order_proposals) == 1
+    assert result.risk_decisions[0].reason_code is RiskReasonCode.ORDER_NOTIONAL_LIMIT
+    assert result.risk_decisions[0].reference_price == Decimal(90)
+    assert result.orders == result.fills == ()
+
+
+def test_risk_uses_completed_signal_bar_close_not_next_bar_open() -> None:
+    bars = manual_bars()[:3]
+    result = make_engine(StubProvider(bars)).run("AAPL")
+
+    assert result.risk_decisions[0].reference_price == bars[1].close == Decimal(90)
+    assert result.fills[0].price == Decimal("105.0525")
+    assert result.fills[0].timestamp == bars[2].timestamp
+
+
+def test_same_bar_strategy_order_uses_sequential_risk_reservations() -> None:
+    bars = manual_bars()[:3]
+    strategies = tuple(
+        CurrentBarStrategy(name, "AAPL", {Decimal(90): SignalType.BUY})
+        for name in ("first", "second")
+    )
+    result = make_engine(
+        StubProvider(bars),
+        strategies,
+        risk_config=RiskConfig(max_position_quantity=Decimal(3)),
+    ).run("AAPL")
+
+    assert [proposal.strategy_id for proposal in result.order_proposals] == [
+        "first",
+        "second",
+    ]
+    assert [decision.reason_code for decision in result.risk_decisions] == [
+        RiskReasonCode.APPROVED,
+        RiskReasonCode.POSITION_LIMIT,
+    ]
+    assert [order.strategy_id for order in result.orders] == ["first"]
+    assert [fill.strategy_id for fill in result.fills] == ["first"]

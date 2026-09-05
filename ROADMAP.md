@@ -47,10 +47,12 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - Return, CAGR, volatility, Sharpe, Sortino, exposure, and trade metrics
 - Documented annualization and zero/negative-series behavior
 
-## Phase 6 — Risk
+## Phase 6 — Pre-trade risk and order management (complete on feature branch)
 
-- Position size, exposure, order notional, and drawdown rules
-- Optional stop-loss rule and visible rejection reasons
+- Immutable Order proposals and explicit approved/rejected Risk decisions
+- Decimal position, Order-notional, symbol/gross-exposure, leverage, buying-power, and drawdown rules
+- Deterministic OMS lifecycle, idempotency, same-Bar reservations, and release on Fill/broker rejection
+- Simplified short exposure controls; stop Orders and broker margin/borrow rules remain deferred
 
 ## Phase 7 — Application API
 
