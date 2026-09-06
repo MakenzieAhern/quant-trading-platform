@@ -8,7 +8,9 @@ The project is a modular monolith: React/Vite provides the dashboard, FastAPI ex
 
 **Stack:** Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL, Redis, React, TypeScript, Vite, pytest, Vitest, and Docker Compose. Pandas, NumPy, SciPy, and TradingView Lightweight Charts join in the phases that first use them.
 
-**Current features:** reproducible Phase 1 environment, safe configuration, structured logs, database migrations, health API, tested frontend shell, and Linux CI. Phases 2–6 provide typed financial contracts, offline CSV ingestion, Decimal indicators, broker-independent strategies, deterministic event-driven backtests, simulated execution, portfolio accounting, analytics, pre-trade risk, and OMS reservations. Phase 7 adds a synchronous backtest application service, PostgreSQL audit persistence, an approved dataset/strategy registry, and paginated REST result APIs. Phase 8 adds the persisted research dashboard over those APIs. Paper execution remains sequenced in the [roadmap](ROADMAP.md).
+**Current features:** reproducible Phase 1 environment, safe configuration, structured logs, database migrations, health API, tested frontend shell, and Linux CI. Phases 2–6 provide typed financial contracts, offline CSV ingestion, Decimal indicators, broker-independent strategies, deterministic event-driven backtests, simulated execution, portfolio accounting, analytics, pre-trade risk, and OMS reservations. Phase 7 adds a synchronous backtest application service, PostgreSQL audit persistence, an approved dataset/strategy registry, and paginated REST result APIs. Phase 8 adds the persisted research dashboard. Phase 9 adds local-only paper sessions using deterministic replay, the existing risk/OMS/accounting path, durable event journals, and bounded WebSocket updates.
+
+> **PAPER TRADING IS SIMULATED EXECUTION. THE PHASE 9 MVP HAS NO LIVE BROKER CONNECTIVITY, BROKERAGE CREDENTIALS, OR REAL-MONEY ORDER ROUTING.**
 
 ## Quick start
 
@@ -26,6 +28,10 @@ The Phase 8 dashboard uses stable browser routes:
 - `/backtests` — paginated persisted run history
 - `/backtests/new` — approved dataset/strategy execution form
 - `/backtests/:runId` — run status, authoritative metrics, equity, signals, risk decisions, orders, and fills
+
+Phase 9 adds `/paper`, `/paper/new`, and `/paper/:sessionId`. Creation is idempotent and does not start a session. Starting a session replays only completed registered fixture Bars through Strategy → Risk → OMS → local PaperBroker → Portfolio. MARKET orders use the next later same-symbol Bar open, matching backtest lookahead protection. REST snapshots are authoritative; `/api/paper-trading/sessions/ws/:sessionId` supplies typed incremental events. Each WebSocket client has a bounded queue; a slow client receives a resync instruction and must reload REST state.
+
+Paper runtimes are intentionally in-memory while their lifecycle and event journal are durable. On graceful shutdown or discovery after process restart, an active session becomes `INTERRUPTED`; it is never silently resumed. Completed/stopped sessions remain queryable after browser, backend, PostgreSQL, or Docker restarts.
 
 Set the public `VITE_API_BASE_URL` when the API is not available at `http://localhost:8000`. This value is compiled into browser code and must never contain credentials. Docker Compose supplies the local URL; missing or blank values use the localhost default. Successful API payloads are checked at runtime before rendering, active requests time out safely, and route changes invalidate stale responses. The dashboard preserves every financial value as an API Decimal string in transport, state, and textual rendering; only SVG plotting coordinates use JavaScript numbers for approximate presentation. All displayed timestamps are explicitly labeled UTC.
 
