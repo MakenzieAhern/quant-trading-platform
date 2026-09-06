@@ -11,6 +11,7 @@ from app.db.models.backtest import (
     BacktestRunModel,
     BacktestSignalModel,
 )
+from app.db.models.paper import PaperTradingEventModel, PaperTradingSessionModel
 
 __all__ = [
     "BacktestFillModel",
@@ -22,4 +23,6 @@ __all__ = [
     "BacktestRiskReservationModel",
     "BacktestRunModel",
     "BacktestSignalModel",
+    "PaperTradingEventModel",
+    "PaperTradingSessionModel",
 ]
