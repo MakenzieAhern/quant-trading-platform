@@ -82,8 +82,22 @@ Each phase must be deterministic, documented, linted, and tested before dependen
   browser refresh/reconnect persistence, and repeated-session resource cleanup
 - No live broker connectivity, credentials, external order routing, GPU, or ML dependencies
 
-## Phase 10 — Hardening
+## Phase 10 — MVP hardening and release readiness (complete)
 
-- End-to-end fixtures, failure recovery, performance profiling, documentation polish, and deployment rehearsal
+- Final supported MVP: registered historical CSV data, technical indicators, strategy signals,
+  deterministic backtesting, simulated orders and transaction costs, portfolio accounting,
+  performance analytics, risk management, OMS, PostgreSQL persistence, REST APIs,
+  backtest dashboard, paper replay sessions, realtime WebSocket updates, and lifecycle control.
+- Golden-path tests, reproducible Docker/WSL commands, security and configuration review,
+  restart durability, measured performance baselines, and a documented demonstration.
+- Completed local simulated-MVP acceptance and focused review; evidence and limitations
+  are recorded in `docs/RELEASE_VALIDATION.md`. Public/live deployment is not certified.
+
+## Beyond the MVP (not implemented)
+
+Live brokerage, real-money orders, broker credentials, ML, GPU strategies, distributed workers,
+HFT, options, futures, and broker margin/borrow simulation beyond the documented cash and
+exposure semantics are unsupported. Advanced data feeds and additional asset classes are
+future work, not release capabilities. The shipped product is local simulated trading only.
 
 Only after the MVP acceptance flow passes should work begin on live adapters, additional assets, optimization, machine learning, GPU/CUDA, or native acceleration.

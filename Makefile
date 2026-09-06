@@ -1,76 +1,59 @@
 SHELL := /bin/sh
-PYTHON ?= python3.12
-VENV := .venv
-BIN := $(VENV)/bin
-HOST_NPM := $(shell command -v npm 2>/dev/null)
+CHECK := docker compose -p quant-mvp-tests -f compose.test.yml
 
-ifeq ($(HOST_NPM),)
-FRONTEND_NPM := docker compose run --rm --build --no-deps -v /app/node_modules frontend npm
-FRONTEND_PREFIX :=
-else
-FRONTEND_NPM := npm
-FRONTEND_PREFIX := --prefix frontend
-endif
-
-.PHONY: help setup dev up down backend frontend test lint format typecheck migrate seed clean
-
+.PHONY: help setup up dev down test lint build format typecheck migrate host-setup backend frontend
 help:
-	@echo "setup      Create local environments and install locked dependencies"
-	@echo "dev/up     Build and start the complete Docker development stack"
-	@echo "down       Stop the Docker development stack"
-	@echo "backend    Run the backend locally (infrastructure must be running)"
-	@echo "frontend   Run the frontend locally"
-	@echo "test       Run backend and frontend tests"
-	@echo "lint       Run backend lint/type checks and frontend lint/type checks"
-	@echo "format     Format backend and frontend source"
-	@echo "migrate    Apply database migrations"
-	@echo "seed       Run the idempotent development seed command"
-	@echo "clean      Remove local generated build and test output"
+	@echo "setup      Build locked Python 3.12 / Node 24 environments (Docker + Make only)"
+	@echo "up/dev     Start local platform; migrations run automatically"
+	@echo "down       Stop platform; preserve database history"
+	@echo "test       All tests against isolated disposable PostgreSQL"
+	@echo "lint       Ruff, format check, mypy, ESLint and TypeScript"
+	@echo "build      Frontend production build"
+	@echo "format     Format source in project containers"
+	@echo "migrate    Apply application database migrations"
+	@echo "host-setup Optional local install: Python 3.12 and Node 24 required"
 
 setup:
-	$(PYTHON) -m venv $(VENV)
-	$(BIN)/python -m pip install --upgrade pip
-	$(BIN)/pip install -r backend/requirements.lock
-	$(BIN)/pip install -e backend --no-deps
-	npm ci --prefix frontend
+	docker compose build
 
-dev up:
-	docker compose up --build
+up dev:
+	docker compose up --build -d --wait
 
 down:
 	docker compose down
 
+test:
+	$(CHECK) build
+	@trap '$(CHECK) down --volumes' EXIT INT TERM; \
+	$(CHECK) run --rm backend sh -c 'alembic upgrade head && pytest tests' && \
+	$(CHECK) run --rm --no-deps frontend npm test -- --run
+
+lint:
+	$(CHECK) run --rm --build --no-deps backend sh -c 'ruff check . && ruff format --check . && mypy app'
+	$(CHECK) run --rm --build --no-deps frontend sh -c 'npm run lint && npm run typecheck'
+
+build:
+	$(CHECK) run --rm --build --no-deps frontend npm run build
+
+format:
+	$(CHECK) run --rm --build --no-deps backend sh -c 'ruff check --fix . && ruff format .'
+	$(CHECK) run --rm --build --no-deps frontend npm run format
+
+typecheck:
+	$(CHECK) run --rm --build --no-deps backend mypy app
+	$(CHECK) run --rm --build --no-deps frontend npm run typecheck
+
+migrate:
+	docker compose exec backend alembic upgrade head
+
+host-setup:
+	python3.12 -m venv .venv
+	.venv/bin/pip install -r backend/requirements.lock
+	.venv/bin/pip install -e backend --no-deps
+	npm ci --prefix frontend
+
 backend:
-	$(BIN)/uvicorn app.main:app --app-dir backend --reload --host 0.0.0.0 --port 8000
+	.venv/bin/uvicorn app.main:app --app-dir backend --reload --host 127.0.0.1 --port 8000
 
 frontend:
 	npm run dev --prefix frontend
-
-test:
-	$(BIN)/pytest backend/tests
-	$(FRONTEND_NPM) test $(FRONTEND_PREFIX) -- --run
-
-lint:
-	$(BIN)/ruff check backend
-	$(BIN)/mypy backend/app
-	$(FRONTEND_NPM) run lint $(FRONTEND_PREFIX)
-	$(FRONTEND_NPM) run typecheck $(FRONTEND_PREFIX)
-
-format:
-	$(BIN)/ruff format backend
-	$(BIN)/ruff check --fix backend
-	$(FRONTEND_NPM) run format $(FRONTEND_PREFIX)
-
-typecheck:
-	$(BIN)/mypy backend/app
-	$(FRONTEND_NPM) run typecheck $(FRONTEND_PREFIX)
-
-migrate:
-	cd backend && ../$(BIN)/alembic upgrade head
-
-seed:
-	$(BIN)/python -m app.db.seed
-
-clean:
-	rm -rf backend/.pytest_cache backend/.mypy_cache backend/.ruff_cache backend/htmlcov frontend/dist frontend/coverage
-	find backend frontend -type d -name __pycache__ -prune -exec rm -rf {} +

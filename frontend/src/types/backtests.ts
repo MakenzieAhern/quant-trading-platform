@@ -60,6 +60,7 @@ export interface RsiRequest {
 }
 
 export interface CreateBacktestRequest {
+  risk?: { enforce_buying_power: boolean; max_order_notional?: string };
   dataset_id: "AAPL_fixture";
   symbol: "AAPL";
   strategy: MovingAverageRequest | RsiRequest;

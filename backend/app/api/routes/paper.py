@@ -104,7 +104,7 @@ async def create_paper_session(
 @router.get("", response_model=PaperSessionPage)
 async def list_paper_sessions(
     limit: Annotated[int, Query(ge=1, le=200)] = 50,
-    offset: Annotated[int, Query(ge=0)] = 0,
+    offset: Annotated[int, Query(ge=0, le=2147483647)] = 0,
 ) -> PaperSessionPage:
     sessions, total = await paper_manager.list(limit, offset)
     return PaperSessionPage(
@@ -148,8 +148,10 @@ async def get_paper_events(session_id: UUID) -> list[PaperEventResponse]:
 
 @router.get("/{session_id}/snapshot", response_model=PaperSnapshotResponse)
 async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
-    session = await _require_session(session_id)
-    events = await paper_manager.events(session_id)
+    snapshot = await paper_manager.snapshot(session_id)
+    if snapshot is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found")
+    session, events = snapshot
     latest_bar: MarketBarPayload | None = None
     latest_portfolio: PortfolioPayload | None = None
     signals = []
@@ -209,6 +211,7 @@ async def paper_session_websocket(websocket: WebSocket, session_id: UUID) -> Non
             }
         )
         receive_task = asyncio.create_task(websocket.receive())
+        event_task: asyncio.Task[dict[str, object]] | None = None
         try:
             while True:
                 event_task = asyncio.create_task(queue.get())
@@ -237,6 +240,10 @@ async def paper_session_websocket(websocket: WebSocket, session_id: UUID) -> Non
         except WebSocketDisconnect:
             logger.info("Paper WebSocket disconnected for session %s", session_id)
         finally:
+            if event_task is not None:
+                event_task.cancel()
+                with suppress(asyncio.CancelledError):
+                    await event_task
             receive_task.cancel()
             with suppress(asyncio.CancelledError):
                 await receive_task

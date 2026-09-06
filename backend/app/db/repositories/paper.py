@@ -30,6 +30,19 @@ class SQLAlchemyPaperRepository:
         )
         return self._to_domain(model) if model is not None else None
 
+    async def snapshot(
+        self, session_id: UUID
+    ) -> tuple[PaperSession, tuple[PaperEventRecord, ...]] | None:
+        # Writers lock this same row. Hold a shared lock until both reads finish.
+        model = await self._session.scalar(
+            select(PaperTradingSessionModel)
+            .where(PaperTradingSessionModel.id == session_id)
+            .with_for_update(read=True)
+        )
+        if model is None:
+            return None
+        return self._to_domain(model), await self.list_events(session_id)
+
     async def create(self, session: PaperSession) -> PaperSession:
         model = PaperTradingSessionModel(
             id=session.id,

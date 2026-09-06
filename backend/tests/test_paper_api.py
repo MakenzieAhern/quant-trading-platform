@@ -322,6 +322,27 @@ async def test_start_stop_race_terminates_without_duplicate_runtime(client: Asyn
     assert sum(1 for task in paper_manager._tasks if str(task) == session_id) <= 1
 
 
+async def test_rest_snapshot_status_matches_its_journal_during_replay(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    created = await client.post("/api/paper-trading/sessions", json=request_body())
+    session_id = UUID(created.json()["session_id"])
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(100):
+        snapshot = await paper_manager.snapshot(session_id)
+        assert snapshot is not None
+        session, events = snapshot
+        statuses = [
+            item.payload["status"] for item in events if item.event_type == "session.status"
+        ]
+        assert statuses[-1] == session.status.value
+        if session.status.value == "STOPPED":
+            break
+        await asyncio.sleep(0.01)
+    assert session.status.value == "STOPPED"
+
+
 async def test_event_batches_and_lifecycle_transition_roll_back_atomically(
     client: AsyncClient,
 ) -> None:
@@ -498,8 +519,27 @@ async def test_unexpected_api_failure_returns_opaque_500(
     ) as safe_client:
         response = await safe_client.get(f"/api/paper-trading/sessions/{uuid4()}")
     assert response.status_code == 500
-    assert response.text == "Internal Server Error"
+    assert response.json() == {"detail": "internal server error"}
     assert "sensitive" not in response.text
+
+
+async def test_cancelling_websocket_handler_releases_child_tasks(client: AsyncClient) -> None:
+    created = await client.post("/api/paper-trading/sessions", json=request_body())
+    session_id = UUID(created.json()["session_id"])
+    before = asyncio.all_tasks()
+    websocket = FakeWebSocket()
+    task = asyncio.create_task(paper_session_websocket(websocket, session_id))  # type: ignore[arg-type]
+    for _ in range(100):
+        if websocket.sent:
+            break
+        await asyncio.sleep(0.001)
+    await asyncio.sleep(0)
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+    await asyncio.sleep(0)
+    assert paper_manager.hub.subscriber_count(session_id) == 0
+    assert not (asyncio.all_tasks() - before)
 
 
 async def test_session_lifecycle_rejects_a_naive_clock(

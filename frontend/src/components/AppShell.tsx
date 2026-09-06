@@ -21,6 +21,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="appShell">
+      <a className="skipLink" href="#main-content">
+        Skip to main content
+      </a>
       <header className="topbar">
         <Link
           className="brand"
@@ -42,7 +45,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           {error ? "API unavailable" : describeConnection(health)}
         </span>
       </header>
-      <main className="workspace">{children}</main>
+      <main id="main-content" tabIndex={-1} className="workspace">
+        {children}
+      </main>
       <footer>
         <strong>RESEARCH / BACKTEST / PAPER</strong>
         <span>

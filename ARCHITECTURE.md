@@ -45,7 +45,7 @@ WebSocket delivery is incremental, not authoritative history. Every connection o
 
 **There is no live broker connectivity in the Phase 9 MVP.** `PaperBroker` is local simulation only. No brokerage credentials, external order endpoints, dynamic providers, or real-money routes exist.
 
-## Planned backend modules
+## Backend modules
 
 ```text
 MarketDataProvider -> MarketDataEvent -> Strategy -> Signal
@@ -113,7 +113,7 @@ EventBus ── MARKET_DATA ──> future Strategy / Backtest consumers
 
 The in-process `EventBus` invokes a snapshot of handlers synchronously in registration order. It is intentionally fail-fast: a handler exception propagates to the publisher and later handlers do not run. Subscription changes made during a publish apply to the next event.
 
-Market-bar persistence is deferred to the persistence/API phase. Phase 2 sources are read through `MarketDataProvider`; future PostgreSQL storage will implement the same boundary and add a unique/indexed `(symbol, timestamp)` key. This keeps research and backtesting independent of PostgreSQL and avoids a premature migration. The public market-data REST route remains deferred to Phase 7 for the same reason.
+Market Bars are read through registered CSV providers. PostgreSQL stores run results and paper journals, not a general market-data warehouse. Public market-data ingestion/REST and a PostgreSQL market-data provider remain future work; Phase 7 did not implement them.
 
 ## Indicator and strategy flow
 
@@ -277,6 +277,25 @@ The create form exposes only the registered `AAPL_fixture` dataset and the two r
 ## Portability
 
 Configuration resolves paths from repository files via `pathlib`, not user home directories. Python 3.12 is pinned by `.python-version` and `pyproject.toml`; resolved Python packages are locked in `backend/requirements.lock`. Node 24 LTS is pinned by `.nvmrc` and `package.json`; npm is the sole Node package manager and `package-lock.json` is authoritative. Official images support ARM64 and x86_64, and CI continuously exercises Linux.
+
+## Final MVP release boundary
+
+The core domain, indicators, strategies, risk, execution, portfolio and analytics layers have
+an AST regression check excluding FastAPI/SQLAlchemy/API/database imports. Backtest application
+orchestration uses a repository protocol; the paper manager is an infrastructure composition
+service and currently constructs its SQLAlchemy repository explicitly. Neither domain engine
+depends on that composition. Redis is provisioned but is not the current event transport.
+
+Paper REST snapshot reads hold a shared session-row lock while reading lifecycle and events;
+writers use the same row's exclusive lock, preventing a mixed status/journal snapshot.
+Requests are bounded to 64 KiB before JSON parsing (including chunked requests). Validation
+responses omit raw inputs/context, and unexpected errors expose a generic JSON detail.
+This is a single-process, single-user local application without authentication. Loopback
+published ports and exact CORS/WebSocket origins are required deployment boundaries.
+
+Canonical tests run in a distinct temporary PostgreSQL Compose project; application history
+is never test storage. Python 3.12 and Node 24 are provided by locked project containers.
+See the explicit supported/unsupported contract in ROADMAP and the reference DEMO.
 
 ## Deployment shape
 
