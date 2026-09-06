@@ -82,7 +82,7 @@ Each phase must be deterministic, documented, linted, and tested before dependen
   browser refresh/reconnect persistence, and repeated-session resource cleanup
 - No live broker connectivity, credentials, external order routing, GPU, or ML dependencies
 
-## Phase 10 — MVP hardening and release readiness (in progress)
+## Phase 10 — MVP hardening and release readiness (complete)
 
 - Final supported MVP: registered historical CSV data, technical indicators, strategy signals,
   deterministic backtesting, simulated orders and transaction costs, portfolio accounting,
@@ -90,7 +90,8 @@ Each phase must be deterministic, documented, linted, and tested before dependen
   backtest dashboard, paper replay sessions, realtime WebSocket updates, and lifecycle control.
 - Golden-path tests, reproducible Docker/WSL commands, security and configuration review,
   restart durability, measured performance baselines, and a documented demonstration.
-- Release readiness is pending the complete Phase 10 validation and focused PR review.
+- Completed local simulated-MVP acceptance and focused review; evidence and limitations
+  are recorded in `docs/RELEASE_VALIDATION.md`. Public/live deployment is not certified.
 
 ## Beyond the MVP (not implemented)
 

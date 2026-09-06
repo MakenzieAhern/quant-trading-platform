@@ -43,6 +43,10 @@ Compose explicitly supplies container settings; the root `.env` configures host 
 
 HTTP request bodies are capped at 65,536 bytes, Decimal input strings at 128 characters, strategy periods at 10,000, and pagination offset at 2,147,483,647. Pagination limit is 1–200. Oversized bodies return 413; validation failures return 422. Configuration paths are trusted operator input, never REST parameters.
 
+State-changing browser requests with an Origin other than FRONTEND_ORIGIN return 403,
+including bodyless start/stop requests. CLI clients without Origin remain supported.
+This origin check is not authentication; keep the application on loopback.
+
 ## Dependency updates
 
 Python 3.12 and Node 24 remain pinned. Update Python ranges in `backend/pyproject.toml` and regenerate `requirements.lock` with pip-compile; npm and `package-lock.json` are the frontend authority. Re-run all checks after changes. Use `make help` for commands.

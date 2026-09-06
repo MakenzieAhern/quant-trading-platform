@@ -85,4 +85,6 @@ Follow [DEMO.md](DEMO.md) for a 5–10 minute walkthrough and exact expected res
 
 [Performance baseline](docs/PERFORMANCE.md) records synthetic measurements for regression comparison. CI runs backend, frontend and Compose checks. [ROADMAP.md](ROADMAP.md) distinguishes implemented MVP work from future capabilities.
 
+[Release validation](docs/RELEASE_VALIDATION.md) records the final local-MVP checks and focused review.
+
 Screenshots can be added from the local deterministic demo; no live account imagery is required.

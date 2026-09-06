@@ -13,6 +13,38 @@ function deferred<T>() {
 }
 
 describe("useApiResource", () => {
+  it("clears completed A when switching B then back to A", async () => {
+    const oldA = deferred<string>();
+    const nextA = deferred<string>();
+    const pendingB = deferred<string>();
+    function Fixture({
+      identity,
+      again,
+    }: {
+      identity: string;
+      again: boolean;
+    }) {
+      const resource = useApiResource(
+        () =>
+          identity === "B"
+            ? pendingB.promise
+            : again
+              ? nextA.promise
+              : oldA.promise,
+        [identity],
+      );
+      return <span>{resource.loading ? "loading" : resource.data}</span>;
+    }
+    const view = render(<Fixture identity="A" again={false} />);
+    oldA.resolve("old A");
+    expect(await screen.findByText("old A")).toBeInTheDocument();
+    view.rerender(<Fixture identity="B" again={false} />);
+    view.rerender(<Fixture identity="A" again={true} />);
+    expect(screen.getByText("loading")).toBeInTheDocument();
+    expect(screen.queryByText("old A")).not.toBeInTheDocument();
+    nextA.resolve("new A");
+    expect(await screen.findByText("new A")).toBeInTheDocument();
+  });
   it("does not allow an old request to overwrite a new dependency", async () => {
     const first = deferred<string>();
     const second = deferred<string>();

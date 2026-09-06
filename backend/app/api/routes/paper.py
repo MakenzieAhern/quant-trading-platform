@@ -211,6 +211,7 @@ async def paper_session_websocket(websocket: WebSocket, session_id: UUID) -> Non
             }
         )
         receive_task = asyncio.create_task(websocket.receive())
+        event_task: asyncio.Task[dict[str, object]] | None = None
         try:
             while True:
                 event_task = asyncio.create_task(queue.get())
@@ -239,6 +240,10 @@ async def paper_session_websocket(websocket: WebSocket, session_id: UUID) -> Non
         except WebSocketDisconnect:
             logger.info("Paper WebSocket disconnected for session %s", session_id)
         finally:
+            if event_task is not None:
+                event_task.cancel()
+                with suppress(asyncio.CancelledError):
+                    await event_task
             receive_task.cancel()
             with suppress(asyncio.CancelledError):
                 await receive_task

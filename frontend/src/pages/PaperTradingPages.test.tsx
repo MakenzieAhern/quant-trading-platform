@@ -50,6 +50,40 @@ function installWebSocket() {
 }
 
 describe("paper trading pages", () => {
+  it("bounds events waiting for a slow REST hydration and reconnects", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockReturnValue(new Promise(() => {}));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    act(() => {
+      for (let sequence = 1; sequence <= 257; sequence++) {
+        MockWebSocket.instances[0]!.message({
+          sequence,
+          type: "portfolio.snapshot",
+          occurred_at: "2024-01-09T00:00:00Z",
+          payload: {
+            timestamp: "2024-01-09T00:00:00Z",
+            cash: "100000",
+            market_value: "0",
+            equity: "100000",
+            realized_pnl: "0",
+            unrealized_pnl: "0",
+            cumulative_commission: "0",
+            drawdown: "0",
+            positions: [],
+          },
+        });
+      }
+    });
+    expect(fetch.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+    expect(MockWebSocket.instances[0]!.readyState).toBe(MockWebSocket.CLOSED);
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    expect(MockWebSocket.instances).toHaveLength(2);
+  });
+
   it("renders persisted session history and the permanent safety warning", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({ items: [paperSession()], limit: 20, offset: 0, total: 1 }),
@@ -150,9 +184,18 @@ describe("paper trading pages", () => {
   it("closes terminal session streams without reconnecting", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      jsonResponse(paperSnapshot("RUNNING")),
-    );
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockResolvedValue(
+        jsonResponse({
+          ...paperSnapshot("STOPPED"),
+          last_sequence: 1,
+          session: {
+            ...paperSession("STOPPED"),
+            stopped_at: "2026-09-06T02:01:00Z",
+          },
+        }),
+      );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     act(() =>
@@ -167,6 +210,38 @@ describe("paper trading pages", () => {
     expect(screen.getByText("WebSocket: closed")).toBeInTheDocument();
     await act(async () => vi.advanceTimersByTimeAsync(2000));
     expect(MockWebSocket.instances).toHaveLength(1);
+    expect(screen.getByText("2026-09-06 02:01:00Z (UTC)")).toBeInTheDocument();
+  });
+
+  it("hydrates terminal failure even when it arrives before the initial REST snapshot", async () => {
+    installWebSocket();
+    vi.spyOn(globalThis, "fetch")
+      .mockReturnValueOnce(new Promise(() => {}))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          ...paperSnapshot("FAILED"),
+          last_sequence: 1,
+          session: {
+            ...paperSession("FAILED"),
+            error_message: "Paper execution failed safely.",
+          },
+        }),
+      );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await act(async () =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "session.status",
+        occurred_at: "2026-09-06T02:01:00Z",
+        payload: { status: "FAILED" },
+      }),
+    );
+    expect(await screen.findByText("FAILED")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Paper execution failed safely.",
+    );
+    expect(screen.getByText("WebSocket: closed")).toBeInTheDocument();
   });
 
   it("rejects unknown stream events and rehydrates instead of advancing state", async () => {

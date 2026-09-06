@@ -48,5 +48,9 @@ export function useApiResource<T>(
     dependencies.every((value, index) =>
       Object.is(value, resource.dependencies[index]),
     );
+  if (!current) {
+    // Reset on identity changes during render so A → B → A cannot revive stale A.
+    setResource({ dependencies, data: null, loading: true, error: null });
+  }
   return current ? resource : { data: null, loading: true, error: null };
 }

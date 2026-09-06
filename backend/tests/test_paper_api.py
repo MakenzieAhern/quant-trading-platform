@@ -523,6 +523,25 @@ async def test_unexpected_api_failure_returns_opaque_500(
     assert "sensitive" not in response.text
 
 
+async def test_cancelling_websocket_handler_releases_child_tasks(client: AsyncClient) -> None:
+    created = await client.post("/api/paper-trading/sessions", json=request_body())
+    session_id = UUID(created.json()["session_id"])
+    before = asyncio.all_tasks()
+    websocket = FakeWebSocket()
+    task = asyncio.create_task(paper_session_websocket(websocket, session_id))  # type: ignore[arg-type]
+    for _ in range(100):
+        if websocket.sent:
+            break
+        await asyncio.sleep(0.001)
+    await asyncio.sleep(0)
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+    await asyncio.sleep(0)
+    assert paper_manager.hub.subscriber_count(session_id) == 0
+    assert not (asyncio.all_tasks() - before)
+
+
 async def test_session_lifecycle_rejects_a_naive_clock(
     client: AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:

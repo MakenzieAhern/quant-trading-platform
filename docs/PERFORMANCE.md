@@ -29,3 +29,15 @@ equity/audit pages are limited to 200 items. There is no per-row lazy ORM relati
 
 Future comparisons should repeat several times on the same environment and dataset, record
 medians and memory, and investigate large differences before setting CI timing thresholds.
+
+## Frontend rendering
+
+`frontend/scripts/benchmark.mjs` renders the actual equity chart and its accessible text
+alternative with 200 points (the API page maximum). Node 24 React server-side rendering:
+10 measured samples after one warmup, median **19.194 ms** on the same development PC.
+This measures React rendering only, not Chrome layout/paint, networking or interaction latency.
+It is a repeatable regression baseline, not a browser frame-rate claim.
+
+```bash
+docker compose -f compose.test.yml run --rm --no-deps frontend node scripts/benchmark.mjs
+```

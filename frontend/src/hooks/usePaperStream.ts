@@ -98,6 +98,41 @@ export function usePaperStream(sessionId: string) {
     let firstConnection = true;
     let buffered: PaperWireEvent[] = [];
     let terminal = false;
+    let hydrating = false;
+
+    const hydrate = () => {
+      hydrationController?.abort();
+      const controller = new AbortController();
+      hydrationController = controller;
+      hydrating = true;
+      void paperApi
+        .snapshot(sessionId, controller.signal)
+        .then((hydrated) => {
+          if (!active || controller.signal.aborted) return;
+          const complete = buffered.reduce(applyPaperEvent, hydrated);
+          buffered = [];
+          hydrating = false;
+          setSnapshot(complete);
+          setError(null);
+          firstConnection = false;
+          terminal = ["STOPPED", "FAILED", "INTERRUPTED"].includes(
+            complete.session.status,
+          );
+          setConnection(terminal ? "closed" : "connected");
+          if (terminal) socket?.close();
+        })
+        .catch((reason: unknown) => {
+          if (!active || controller.signal.aborted) return;
+          hydrating = false;
+          setError({
+            sessionId,
+            message:
+              reason instanceof Error
+                ? reason.message
+                : "Unable to hydrate paper session.",
+          });
+        });
+    };
 
     const connect = () => {
       if (!active) return;
@@ -105,44 +140,9 @@ export function usePaperStream(sessionId: string) {
       socket = new WebSocket(
         `${PAPER_WS_BASE_URL}/api/paper-trading/sessions/ws/${sessionId}`,
       );
-      socket.onopen = () => {
-        hydrationController?.abort();
-        hydrationController = new AbortController();
-        void paperApi
-          .snapshot(sessionId, hydrationController.signal)
-          .then((hydrated) => {
-            if (!active || socket?.readyState !== WebSocket.OPEN) return;
-            const complete = buffered.reduce(applyPaperEvent, hydrated);
-            buffered = [];
-            setSnapshot(complete);
-            setError(null);
-            setConnection("connected");
-            firstConnection = false;
-            if (
-              ["STOPPED", "FAILED", "INTERRUPTED"].includes(
-                complete.session.status,
-              )
-            ) {
-              terminal = true;
-              setConnection("closed");
-              socket.close();
-            }
-          })
-          .catch((reason: unknown) => {
-            if (
-              active &&
-              !(reason instanceof DOMException && reason.name === "AbortError")
-            )
-              setError({
-                sessionId,
-                message:
-                  reason instanceof Error
-                    ? reason.message
-                    : "Unable to hydrate paper session.",
-              });
-          });
-      };
+      socket.onopen = hydrate;
       socket.onmessage = (message) => {
+        if (!active) return;
         try {
           const event = parseWireEvent(JSON.parse(String(message.data)));
           if (event.type === "stream.connected") return;
@@ -158,13 +158,22 @@ export function usePaperStream(sessionId: string) {
           ) {
             terminal = true;
           }
-          setSnapshot((current) => {
-            if (current === null) {
-              buffered.push(event);
-              return current;
-            }
-            return applyPaperEvent(current, event);
-          });
+          if (hydrating && buffered.length >= 256) {
+            buffered = [];
+            terminal = false;
+            socket?.close();
+            return;
+          }
+          if (hydrating) buffered.push(event);
+          else
+            setSnapshot((current) =>
+              current?.session.session_id === sessionId
+                ? applyPaperEvent(current, event)
+                : current,
+            );
+          // Status events carry no lifecycle timestamps or sanitized failure text.
+          // Refresh REST, buffering subsequent incremental events until it completes.
+          if (event.type === "session.status") hydrate();
           if (terminal) {
             setConnection("closed");
             socket?.close();
@@ -180,12 +189,12 @@ export function usePaperStream(sessionId: string) {
       socket.onerror = () => socket?.close();
       socket.onclose = () => {
         if (!active) return;
-        hydrationController?.abort();
-        hydrationController = null;
         if (terminal) {
           setConnection("closed");
           return;
         }
+        hydrationController?.abort();
+        hydrationController = null;
         setConnection("reconnecting");
         retry = window.setTimeout(connect, 1000);
       };
