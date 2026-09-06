@@ -47,7 +47,7 @@ from app.domain.risk import RiskConfig
 
 router = APIRouter(prefix="/backtests", tags=["backtests"])
 PaginationLimit = Annotated[int, Query(ge=1, le=200)]
-PaginationOffset = Annotated[int, Query(ge=0)]
+PaginationOffset = Annotated[int, Query(ge=0, le=2147483647)]
 
 
 def _decimal(value: Decimal | None) -> str | None:

@@ -6,6 +6,26 @@ import { jsonResponse, RUN_ID } from "../test/fixtures";
 import { CreateBacktestPage } from "./CreateBacktestPage";
 
 describe("create backtest", () => {
+  it("submits configured risk without rounding the Decimal limit", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(
+        jsonResponse({ run_id: RUN_ID, status: "SUCCEEDED", links: {} }, 201),
+      );
+    render(<CreateBacktestPage />);
+    await userEvent.click(screen.getByLabelText("Enforce buying power"));
+    fireEvent.change(
+      screen.getByLabelText("Maximum order notional (optional)"),
+      {
+        target: { value: "1000.000000000000000001" },
+      },
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Run backtest" }));
+    expect(JSON.parse(String(fetch.mock.calls[0]?.[1]?.body)).risk).toEqual({
+      enforce_buying_power: true,
+      max_order_notional: "1000.000000000000000001",
+    });
+  });
   it("validates strategy periods before submission", async () => {
     const fetch = vi.spyOn(globalThis, "fetch");
     render(<CreateBacktestPage />);

@@ -19,6 +19,8 @@ export function CreateBacktestPage() {
   );
   const [initialCash, setInitialCash] = useState("100000");
   const [quantity, setQuantity] = useState("10");
+  const [buyingPower, setBuyingPower] = useState(false);
+  const [maxNotional, setMaxNotional] = useState("");
   const [shortPeriod, setShortPeriod] = useState("2");
   const [longPeriod, setLongPeriod] = useState("3");
   const [rsiPeriod, setRsiPeriod] = useState("14");
@@ -38,6 +40,10 @@ export function CreateBacktestPage() {
     event.preventDefault();
     if (submissionLocked.current) return;
     setError(null);
+    if (maxNotional && !isPositiveDecimal(maxNotional)) {
+      setError("Maximum order notional must be a positive Decimal string.");
+      return;
+    }
     if (!isPositiveDecimal(initialCash) || !isPositiveDecimal(quantity)) {
       setError(
         "Initial cash and order quantity must be positive decimal strings.",
@@ -85,6 +91,14 @@ export function CreateBacktestPage() {
       initial_cash: initialCash,
       default_order_quantity: quantity,
       strategy,
+      ...(buyingPower || maxNotional
+        ? {
+            risk: {
+              enforce_buying_power: buyingPower,
+              ...(maxNotional ? { max_order_notional: maxNotional } : {}),
+            },
+          }
+        : {}),
     };
 
     requestKey.current ??= crypto.randomUUID();
@@ -122,8 +136,8 @@ export function CreateBacktestPage() {
           <p className="eyebrow">NEW RESEARCH RUN</p>
           <h1>Create backtest</h1>
           <p>
-            Inputs map directly to the approved Phase 7 dataset and strategy
-            contracts.
+            Configure a deterministic simulated run using the registered dataset
+            and strategy.
           </p>
         </div>
         <Link className="button" href="/backtests">
@@ -261,6 +275,28 @@ export function CreateBacktestPage() {
               </label>
             </div>
           )}
+        </fieldset>
+        <fieldset disabled={pending}>
+          <legend>Risk controls</legend>
+          <label>
+            <input
+              type="checkbox"
+              checked={buyingPower}
+              onChange={(event) => setBuyingPower(event.target.checked)}
+            />
+            Enforce buying power
+          </label>
+          <label>
+            Maximum order notional (optional)
+            <input
+              inputMode="decimal"
+              value={maxNotional}
+              onChange={(event) => setMaxNotional(event.target.value)}
+            />
+          </label>
+          <p className="fieldHint">
+            Risk is evaluated by the backend using completed-Bar prices.
+          </p>
         </fieldset>
         {error && (
           <div id="form-error" className="formError" role="alert">

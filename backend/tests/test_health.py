@@ -1,5 +1,6 @@
 from httpx import ASGITransport, AsyncClient
 
+from app.core.config import get_settings
 from app.main import app
 
 
@@ -12,6 +13,6 @@ async def test_health_endpoint() -> None:
         "status": "ok",
         "service": "Quant Trading Platform",
         "version": "0.1.0",
-        "environment": "development",
+        "environment": get_settings().app_env,
         "broker_mode": "paper",
     }

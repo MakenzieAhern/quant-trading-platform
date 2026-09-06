@@ -1,69 +1,88 @@
 # Quant Trading Platform
 
-A portfolio-grade personal platform for deterministic US-equity research, realistic backtesting, risk-controlled execution, and paper trading. The MVP is deliberately **research/backtest/paper only**; real-money trading is disabled.
+A local research and demonstration platform for deterministic US-equity backtests and simulated paper replay. It connects typed market data, indicators, strategies, pre-trade risk, OMS, execution, accounting and analytics to durable PostgreSQL history and a React dashboard.
+
+**NO LIVE TRADING. NO REAL BROKER CONNECTIVITY. NO REAL-MONEY ORDER EXECUTION.**
+This project currently supports simulated paper trading only.
+
+## Supported MVP
+
+- Registered daily historical CSV fixtures; SMA, EMA, RSI, MACD and Bollinger Bands.
+- Moving-average crossover and RSI mean-reversion strategies.
+- Deterministic next-Bar OPEN execution, transaction-cost models, portfolio accounting and analytics.
+- Pre-trade limits, buying-power reservations, explicit OMS states and auditable rejections.
+- PostgreSQL backtest results, paginated REST APIs and an equity/audit dashboard.
+- Paper replay lifecycle, durable events, bounded WebSocket updates and REST recovery.
+
+The Python engine supports cost-model and multi-strategy composition. The public demo API uses the registered fixture and fixed default zero-cost execution; it does not expose every engine configuration. LIMIT execution, live feeds, broker margin/borrow rules, options, futures, HFT, distributed workers, ML and GPU are outside this MVP.
+
+## Quick start: Windows / WSL2, Linux or macOS
+
+Requires Git, GNU Make and Docker with Compose v2. On Windows enable Ubuntu integration in Docker Desktop and work inside WSL.
+
+```bash
+git clone https://github.com/MakenzieAhern/quant-trading-platform.git
+cd quant-trading-platform
+cp .env.example .env
+make setup
+make up
+```
+
+Open [dashboard](http://localhost:5173/backtests), [API health](http://localhost:8000/api/health) or [OpenAPI](http://localhost:8000/docs). Migrations run before the backend starts.
+
+```bash
+make test       # complete suites; disposable, isolated PostgreSQL
+make lint       # Ruff + format, mypy, ESLint, TypeScript
+make build      # frontend production bundle
+make down       # preserves application database history
+```
+
+No host Python or Node install is required for these commands. Test containers use a separate Compose project and temporary database; tests never use the application's database URL. Do not run two `make test` commands simultaneously because they share that disposable project name. Optional host development: [development guide](docs/DEVELOPMENT.md).
 
 ## Architecture
 
-The project is a modular monolith: React/Vite provides the dashboard, FastAPI exposes APIs, PostgreSQL persists trading state, and Redis supports cache/event delivery. Trading capabilities will share a typed event-driven core so strategies do not depend on market-data or broker vendors. See [ARCHITECTURE.md](ARCHITECTURE.md).
-
-**Stack:** Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL, Redis, React, TypeScript, Vite, pytest, Vitest, and Docker Compose. Pandas, NumPy, SciPy, and TradingView Lightweight Charts join in the phases that first use them.
-
-**Current features:** reproducible Phase 1 environment, safe configuration, structured logs, database migrations, health API, tested frontend shell, and Linux CI. Phases 2–6 provide typed financial contracts, offline CSV ingestion, Decimal indicators, broker-independent strategies, deterministic event-driven backtests, simulated execution, portfolio accounting, analytics, pre-trade risk, and OMS reservations. Phase 7 adds a synchronous backtest application service, PostgreSQL audit persistence, an approved dataset/strategy registry, and paginated REST result APIs. Phase 8 adds the persisted research dashboard. Phase 9 adds local-only paper sessions using deterministic replay, the existing risk/OMS/accounting path, durable event journals, and bounded WebSocket updates.
-
-> **PAPER TRADING IS SIMULATED EXECUTION. THE PHASE 9 MVP HAS NO LIVE BROKER CONNECTIVITY, BROKERAGE CREDENTIALS, OR REAL-MONEY ORDER ROUTING.**
-
-## Quick start
-
-Prerequisites: Docker Desktop with Compose. On Windows, use Ubuntu in WSL2 with Docker Desktop integration.
-
-```bash
-cp .env.example .env
-docker compose up --build
+```text
+Historical Bars → Strategy → Signal → Risk → OMS → simulated Broker
+                                                         ↓ Fill
+                                              Portfolio → Analytics
+                                                         ↓
+                                                   PostgreSQL
+                                                         ↓
+                                             REST / WebSocket → React
 ```
 
-Open <http://localhost:5173/backtests>; API health is at <http://localhost:8000/api/health> and OpenAPI at <http://localhost:8000/docs>. Stop with `docker compose down`.
+Python 3.12 / FastAPI / Pydantic / SQLAlchemy / Alembic; PostgreSQL 16; React / TypeScript / Vite / Node 24; pytest / Vitest / Docker Compose. Redis is provisioned for future cache use; current trading and WebSocket delivery use the in-process event bus, not Redis.
 
-The Phase 8 dashboard uses stable browser routes:
+Domain engines do not import FastAPI or SQLAlchemy. Financial values remain Decimal in Python and exact strings in JSON and UI state; chart coordinates are approximate presentation only. Authoritative timestamps are aware UTC. See [architecture](ARCHITECTURE.md).
 
-- `/backtests` — paginated persisted run history
-- `/backtests/new` — approved dataset/strategy execution form
-- `/backtests/:runId` — run status, authoritative metrics, equity, signals, risk decisions, orders, and fills
+## API and dashboard
 
-Phase 9 adds `/paper`, `/paper/new`, and `/paper/:sessionId`. Creation is idempotent and does not start a session. Starting a session replays only completed registered fixture Bars through Strategy → Risk → OMS → local PaperBroker → Portfolio. MARKET orders use the next later same-symbol Bar open, matching backtest lookahead protection. REST snapshots are authoritative; `/api/paper-trading/sessions/ws/:sessionId` supplies typed incremental events. Each WebSocket client has a bounded queue; a slow client receives a resync instruction and must reload REST state.
+- `/backtests`, `/backtests/new`, `/backtests/:runId`: history, creation, metrics, equity, signals, risk decisions, orders and fills.
+- `/paper`, `/paper/new`, `/paper/:sessionId`: simulated session creation, start/stop and live updates.
+- `POST /api/backtests`: synchronous execution; optional `Idempotency-Key`.
+- `GET /api/backtests/{id}` and `/result`, `/signals`, `/risk-decisions`, `/orders`, `/fills`, `/equity`.
+- `POST /api/paper-trading/sessions` and `/{id}/start`, `/{id}/stop`.
+- `GET /api/paper-trading/sessions/{id}/snapshot` and `/events`.
+- `/api/paper-trading/sessions/ws/{id}`: incremental delivery; REST is authoritative.
 
-Paper runtimes are intentionally in-memory while their lifecycle and event journal are durable. On graceful shutdown or discovery after process restart, an active session becomes `INTERRUPTED`; it is never silently resumed. Stopping or interrupting cancels any pending local simulated Orders and releases their in-memory risk reservations before the terminal lifecycle event is committed. Completed/stopped sessions remain queryable after browser, backend, PostgreSQL, or Docker restarts.
+Collection pages accept limits 1–200. Inputs use registered identifiers, never user-supplied paths or imports. Financial JSON inputs are strings with at most 40 integral and 38 fractional digits.
 
-Set the public `VITE_API_BASE_URL` when the API is not available at `http://localhost:8000`. This value is compiled into browser code and must never contain credentials. Docker Compose supplies the local URL; missing or blank values use the localhost default. Successful API payloads are checked at runtime before rendering, active requests time out safely, and route changes invalidate stale responses. The dashboard preserves every financial value as an API Decimal string in transport, state, and textual rendering; only SVG plotting coordinates use JavaScript numbers for approximate presentation. All displayed timestamps are explicitly labeled UTC.
+## Paper semantics and recovery
 
-The Compose backend applies Alembic migrations after PostgreSQL becomes healthy. A deterministic example run can be submitted with:
+A signal from completed Bar T may fill only at the next later same-symbol Bar OPEN. Replay never contacts a market-data vendor or broker. Each session owns isolated strategies, risk reservations, broker and portfolio. Stopping cancels pending orders. Shutdown/restart marks active sessions INTERRUPTED and never resumes execution automatically. Financial event batches commit before publication; each browser queue is bounded to 64 events and saturation requests REST resynchronization.
 
-```bash
-curl -X POST http://localhost:8000/api/backtests \
-  -H 'Content-Type: application/json' \
-  -H 'Idempotency-Key: example-aapl-ma' \
-  -d '{"dataset_id":"AAPL_fixture","symbol":"AAPL","strategy":{"type":"moving_average_crossover","parameters":{"short_period":2,"long_period":3}},"initial_cash":"100000","default_order_quantity":"10"}'
-```
+Backtests execute synchronously. A process crash may leave a stale RUNNING backtest; its missing result is never fabricated. Automatic backtest job recovery is unsupported. Paper restart interruption is supported. Finite registered replay data bounds runtime history; endless feeds require a future retention design.
 
-Financial inputs and outputs use JSON strings under the `NUMERIC(78,38)` contract: values with more than 40 integral or 38 fractional digits are rejected rather than rounded. Phase 7 accepts only registered datasets and the `moving_average_crossover` and `rsi_mean_reversion` strategy types; filesystem paths and Python import names are not accepted. Execution is synchronous. A process crash can leave a detectable stale `RUNNING` record; durable cancellation, workers, and stale-run recovery are deliberately deferred beyond Phase 7.
+## Security and configuration
 
-For host-based development, install Python 3.12, Node 24 LTS, and GNU Make, then:
+This is a single-user local MVP without authentication. Compose binds every published port to loopback; do not expose it to a shared network. CORS/WebSocket origins are restricted, HTTP bodies are limited to 64 KiB, validation does not reflect original inputs, and unexpected failures return sanitized JSON. There are no broker credentials or live adapters.
 
-```bash
-make setup
-docker compose up -d postgres redis
-make migrate
-make backend       # terminal 1
-make frontend      # terminal 2
-```
+`.env` is ignored. Compose defines safe local container URLs and intentionally local-only development credentials; `.env.example` documents optional host settings. `VITE_API_BASE_URL` is public browser configuration and must contain no secrets. [Configuration and operations](docs/DEVELOPMENT.md), [deployment limits](docs/DEPLOYMENT.md).
 
-Run validation with `make test` and `make lint`. When Node 24/npm is installed in the host environment these commands use it directly. In a Docker-first WSL checkout without host npm, the same targets automatically run frontend commands in the pinned `node:24-alpine` project image with an isolated dependency volume; Docker Desktop integration is therefore sufficient and Node 22 is never used as a fallback.
+## Demo, validation and status
 
-## Supported development environments
+Follow [DEMO.md](DEMO.md) for a 5–10 minute walkthrough and exact expected results. The small registered fixture is for regression/demo use, not a licensed market feed or investment recommendation. No external dataset is downloaded.
 
-- macOS on Apple Silicon: [Mac setup](docs/MAC_SETUP.md)
-- Windows 11 using Ubuntu/WSL2: [Windows + WSL2 setup](docs/WINDOWS_WSL_SETUP.md)
-- Container images are official multi-architecture images; no architecture-specific virtual environment or `node_modules` is committed.
+[Performance baseline](docs/PERFORMANCE.md) records synthetic measurements for regression comparison. CI runs backend, frontend and Compose checks. [ROADMAP.md](ROADMAP.md) distinguishes implemented MVP work from future capabilities.
 
-More detail: [development guide](docs/DEVELOPMENT.md), [Git workflow](docs/GIT_WORKFLOW.md), [deployment notes](docs/DEPLOYMENT.md), and [contributing guide](CONTRIBUTING.md).
-
-> This software is for research and education. Simulated results do not guarantee future performance. It does not provide financial advice and must not be used for real-money trading without an independent security, compliance, and correctness review.
+Screenshots can be added from the local deterministic demo; no live account imagery is required.

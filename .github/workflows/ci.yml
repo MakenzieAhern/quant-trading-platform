@@ -44,6 +44,7 @@ jobs:
         working-directory: backend
       - run: pytest backend/tests
       - run: ruff check backend
+      - run: ruff format --check backend
       - run: mypy backend/app
 
   frontend:
@@ -71,3 +72,5 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: docker compose config --quiet
+      - run: docker compose -f compose.test.yml config --quiet
+      - run: docker compose -f docker-compose.yml -f compose.release.yml config --quiet

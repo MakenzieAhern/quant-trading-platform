@@ -1,56 +1,50 @@
-# Development guide
+# Development and configuration
 
-The same command surface is used on macOS and Ubuntu/WSL2. Platform installation details are in [MAC_SETUP.md](MAC_SETUP.md) and [WINDOWS_WSL_SETUP.md](WINDOWS_WSL_SETUP.md).
+## Canonical Docker workflow
 
-## Fresh clone
+Requires Git, GNU Make and Docker Compose v2, with Docker Desktop WSL integration on Windows. No host Python/Node is required.
 
 ```bash
-git clone <your-github-repository-url> quant-trading-platform
-cd quant-trading-platform
 cp .env.example .env
-```
-
-Choose one workflow:
-
-### Complete Docker workflow
-
-```bash
-docker compose up --build
-```
-
-This starts PostgreSQL, Redis, FastAPI, and Vite. The backend applies migrations before serving requests. Stop with `make down`; use `docker compose down --volumes` only when intentionally discarding local database/cache state.
-
-### Host application workflow
-
-Install Python 3.12 and Node 24, then:
-
-```bash
 make setup
-docker compose up -d postgres redis
-make migrate
-make backend
+make up
+make test
+make lint
+make build
+make down
 ```
 
-Run `make frontend` in a second terminal. The Python environment lives in `.venv`; Node packages live in `frontend/node_modules`. Both are machine-local and must be recreated after switching CPU architecture.
+`make up` waits for database/backend health and applies migrations. `make down` preserves named application volumes. `make test` builds locked images and runs all suites using `compose.test.yml`: a different project, no published database port, and temporary PostgreSQL storage. Its exit trap removes only this disposable test project. Run one test invocation at a time. Lint/build use the same pinned images without starting the application database.
 
-The Phase 7+ backend integration tests use real PostgreSQL. Start `postgres`, apply migrations, and then run `make test`; SQLite is intentionally not used as a substitute. If npm is not installed in WSL, `make test`, `make lint`, `make format`, and `make typecheck` automatically use the project's `node:24-alpine` frontend image. This Docker fallback uses an isolated `/app/node_modules` volume and does not install or downgrade Node on the host.
+The integration suites truncate tables; direct pytest execution must target a disposable database. Prefer `make test`. Never point direct tests at a database containing demonstration or personal history.
 
-## Commands
+## Optional host development
 
-| Command | Purpose |
+Install Python 3.12 and Node 24/npm 11, then `make host-setup`. Start infrastructure with `docker compose up -d postgres redis`. Apply migrations using `cd backend && ../.venv/bin/alembic upgrade head`. Use `make backend` and `make frontend` in separate terminals. Host environments are optional and must be recreated after architecture changes.
+
+## Configuration reference
+
+Compose explicitly supplies container settings; the root `.env` configures host Python execution. No broker keys are needed or supported.
+
+| Variable | Default / purpose |
 | --- | --- |
-| `make setup` | Create `.venv` from the Python lock and restore npm packages |
-| `make dev` / `make up` | Build and run all Compose services |
-| `make down` | Stop services without deleting named volumes |
-| `make backend` | Run FastAPI with reload on the host |
-| `make frontend` | Run Vite on the host |
-| `make test` | Run pytest and Vitest |
-| `make lint` | Run Ruff, mypy, ESLint, and TypeScript checks |
-| `make format` | Format/fix supported source files |
-| `make migrate` | Apply Alembic migrations from the host environment |
-| `make seed` | Run the idempotent development seed entry point |
-| `make clean` | Remove generated test/build caches, never datasets or databases |
+| APP_NAME / APP_VERSION | Quant Trading Platform / 0.1.0, public health metadata |
+| APP_ENV | development; also test or production, metadata only, not authentication |
+| LOG_LEVEL | INFO; lifecycle logging without sensitive exception text |
+| API_HOST / API_PORT | 0.0.0.0 / 8000; metadata settings, use CLI bind flags to change server binding |
+| DATABASE_URL | Local PostgreSQL asyncpg URL; backend only |
+| REDIS_URL | Local Redis URL; provisioned infrastructure, not trading authority |
+| BROKER_MODE | paper or backtest; live is rejected at startup |
+| MARKET_DATA_PROVIDER | csv; no vendor adapters |
+| MARKET_DATA_PATH | data/raw; administrator-selected local source directory |
+| BACKTEST_FIXTURE_PATH | data/fixtures; directory for registered AAPL_fixture |
+| FRONTEND_ORIGIN | http://localhost:5173; exact CORS/WebSocket origin |
+| VITE_API_BASE_URL | http://localhost:8000; public build-time browser URL |
 
-When dependencies change, update `backend/pyproject.toml`, regenerate `backend/requirements.lock` with `pip-compile --extra dev --output-file backend/requirements.lock backend/pyproject.toml`, and validate a clean install. For Node, use npm only: update `frontend/package.json` and run `npm install --prefix frontend` to update the lock.
+HTTP request bodies are capped at 65,536 bytes, Decimal input strings at 128 characters, strategy periods at 10,000, and pagination offset at 2,147,483,647. Pagination limit is 1–200. Oversized bodies return 413; validation failures return 422. Configuration paths are trusted operator input, never REST parameters.
 
-Tests must be deterministic and offline. Store only small source-controlled fixtures in `backend/tests/fixtures`; use scripts (added with their provider module) to reproduce larger local data under `data/`.
+## Dependency updates
+
+Python 3.12 and Node 24 remain pinned. Update Python ranges in `backend/pyproject.toml` and regenerate `requirements.lock` with pip-compile; npm and `package-lock.json` are the frontend authority. Re-run all checks after changes. Use `make help` for commands.
+
+The local Compose topology has source mounts and Vite for iteration. It is not a public production deployment; see [DEPLOYMENT.md](DEPLOYMENT.md).

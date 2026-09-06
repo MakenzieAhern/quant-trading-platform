@@ -1,0 +1,32 @@
+name: quant-mvp-tests
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: quant_test
+      POSTGRES_USER: quant
+      POSTGRES_PASSWORD: test_only
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quant -d quant_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  backend:
+    build: ./backend
+    environment:
+      APP_ENV: test
+      DATABASE_URL: postgresql+asyncpg://quant:test_only@postgres:5432/quant_test
+      BACKTEST_FIXTURE_PATH: /data/fixtures
+    volumes:
+      - ./backend:/app
+      - ./data:/data:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules

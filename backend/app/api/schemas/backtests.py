@@ -15,6 +15,8 @@ from app.domain.common import Symbol, UtcDateTime
 def _decimal_string(value: object) -> Decimal:
     if not isinstance(value, str):
         raise ValueError("financial Decimal values must be JSON strings")
+    if len(value) > 128:
+        raise ValueError("Decimal string must not exceed 128 characters")
     try:
         parsed = Decimal(value)
     except InvalidOperation as exc:
@@ -33,8 +35,8 @@ class StrictModel(BaseModel):
 
 
 class MovingAverageParameters(StrictModel):
-    short_period: int = Field(gt=0, strict=True)
-    long_period: int = Field(gt=0, strict=True)
+    short_period: int = Field(gt=0, le=10000, strict=True)
+    long_period: int = Field(gt=0, le=10000, strict=True)
 
 
 class MovingAverageStrategy(StrictModel):
@@ -43,7 +45,7 @@ class MovingAverageStrategy(StrictModel):
 
 
 class RSIParameters(StrictModel):
-    rsi_period: int = Field(gt=0, strict=True)
+    rsi_period: int = Field(gt=0, le=10000, strict=True)
     oversold: DecimalString
     overbought: DecimalString
 
