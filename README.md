@@ -19,7 +19,15 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Open <http://localhost:5173>; API health is at <http://localhost:8000/api/health> and OpenAPI at <http://localhost:8000/docs>. Stop with `docker compose down`.
+Open <http://localhost:5173/backtests>; API health is at <http://localhost:8000/api/health> and OpenAPI at <http://localhost:8000/docs>. Stop with `docker compose down`.
+
+The Phase 8 dashboard uses stable browser routes:
+
+- `/backtests` — paginated persisted run history
+- `/backtests/new` — approved dataset/strategy execution form
+- `/backtests/:runId` — run status, authoritative metrics, equity, signals, risk decisions, orders, and fills
+
+Set the public `VITE_API_BASE_URL` when the API is not available at `http://localhost:8000`. This value is compiled into browser code and must never contain credentials. Docker Compose supplies the local URL. The dashboard preserves financial values as API Decimal strings; only SVG plotting coordinates use JavaScript numbers for presentation. All displayed timestamps are explicitly labeled UTC.
 
 The Compose backend applies Alembic migrations after PostgreSQL becomes healthy. A deterministic example run can be submitted with:
 

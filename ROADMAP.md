@@ -61,10 +61,13 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - PostgreSQL audit persistence for runs, signals, proposals, decisions, orders, fills, snapshots, metrics, and reservations
 - Alembic migration, exact Decimal/UTC serialization, atomic success writes, and durable failure records
 
-## Phase 8 — Research dashboard
+## Phase 8 — Research dashboard (implementation ready for review)
 
-- TradingView Lightweight Charts candlesticks/volume/indicators
-- Dynamic strategy forms, backtest workflow, results, trade markers, and responsive analytics
+- Typed Phase 7 API client, stable history/create/detail routes, and bounded collection pagination
+- Registry-constrained dynamic strategy forms with idempotent submission and safe status/error handling
+- Persisted performance summary, lightweight accessible equity chart, and signal/risk/order/fill audit tables
+- Exact Decimal-string rendering, explicitly labeled UTC timestamps, and Docker/browser integration coverage
+- Candlesticks, volume, additional indicators, and trade-marker overlays remain future dashboard enhancements rather than being fabricated from the current Phase 7 API
 
 ## Phase 9 — Paper trading
 

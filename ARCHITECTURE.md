@@ -240,6 +240,14 @@ Strategies target domain interfaces and cannot call a broker or data vendor dire
 
 Secrets enter through environment variables and are never logged. Large data, model weights, virtual environments, and architecture-specific dependencies remain outside Git.
 
+## Research dashboard boundary
+
+The Phase 8 React application is a presentation client for the Phase 7 REST API. Its typed transport layer lives under `frontend/src/api`, API response models under `frontend/src/types`, reusable view components under `frontend/src/components`, and route-level orchestration under `frontend/src/pages`. Browser History API routes make persisted runs directly addressable without introducing another application framework.
+
+React never recreates signals, risk decisions, portfolio accounting, fills, or analytics. Financial values remain Decimal strings from request through rendering. Formatting helpers operate on strings; the equity chart converts values to JavaScript numbers only to derive SVG screen coordinates and retains exact strings in its accessible table and labels. UTC API timestamps are displayed through an explicit UTC formatter rather than converted to unlabeled local time.
+
+The create form exposes only the registered `AAPL_fixture` dataset and the two registered strategy discriminators. Each submission receives a browser-generated `Idempotency-Key`, retains that key across a retry of unchanged inputs, and locks concurrent submissions. Active detail pages conservatively poll only `CREATED` or `RUNNING` runs every five seconds. All terminal results reload from PostgreSQL through the API; no quantitative result is kept solely in browser memory.
+
 ## Portability
 
 Configuration resolves paths from repository files via `pathlib`, not user home directories. Python 3.12 is pinned by `.python-version` and `pyproject.toml`; resolved Python packages are locked in `backend/requirements.lock`. Node 24 LTS is pinned by `.nvmrc` and `package.json`; npm is the sole Node package manager and `package-lock.json` is authoritative. Official images support ARM64 and x86_64, and CI continuously exercises Linux.
