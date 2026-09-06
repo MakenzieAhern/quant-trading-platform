@@ -1,5 +1,7 @@
 import { API_BASE_URL } from "./config";
 
+export const REQUEST_TIMEOUT_MS = 15_000;
+
 export class ApiError extends Error {
   constructor(
     public readonly status: number,
@@ -31,15 +33,34 @@ export async function apiRequest<T>(
   path: string,
   init: RequestInit = {},
   signal?: AbortSignal,
+  parse?: (payload: unknown) => T,
 ): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    signal,
-    headers: {
-      Accept: "application/json",
-      ...init.headers,
-    },
-  });
+  const timeoutController = new AbortController();
+  const timeout = window.setTimeout(
+    () => timeoutController.abort(),
+    REQUEST_TIMEOUT_MS,
+  );
+  const requestSignal = signal
+    ? AbortSignal.any([signal, timeoutController.signal])
+    : timeoutController.signal;
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      signal: requestSignal,
+      headers: {
+        Accept: "application/json",
+        ...init.headers,
+      },
+    });
+  } catch (reason) {
+    if (timeoutController.signal.aborted && !signal?.aborted) {
+      throw new ApiError(408, "The API request timed out.");
+    }
+    throw reason;
+  } finally {
+    window.clearTimeout(timeout);
+  }
   if (!response.ok) {
     let payload: unknown;
     try {
@@ -52,5 +73,11 @@ export async function apiRequest<T>(
       safeErrorMessage(response.status, payload),
     );
   }
-  return (await response.json()) as T;
+  let payload: unknown;
+  try {
+    payload = await response.json();
+  } catch {
+    throw new ApiError(502, "The API returned an invalid JSON response.");
+  }
+  return parse ? parse(payload) : (payload as T);
 }

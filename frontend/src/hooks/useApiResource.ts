@@ -17,15 +17,21 @@ export function useApiResource<T>(
   });
   useEffect(() => {
     const controller = new AbortController();
+    let active = true;
     setResource({ data: null, loading: true, error: null });
     void load(controller.signal)
-      .then((data) => setResource({ data, loading: false, error: null }))
+      .then((data) => {
+        if (active) setResource({ data, loading: false, error: null });
+      })
       .catch((reason: unknown) => {
-        if (reason instanceof Error && reason.name !== "AbortError") {
+        if (active && reason instanceof Error && reason.name !== "AbortError") {
           setResource({ data: null, loading: false, error: reason.message });
         }
       });
-    return () => controller.abort();
+    return () => {
+      active = false;
+      controller.abort();
+    };
     // The caller supplies the exact dependency list for its stable loader closure.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);

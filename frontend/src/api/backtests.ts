@@ -11,6 +11,17 @@ import type {
   Signal,
 } from "../types/backtests";
 import { apiRequest } from "./client";
+import {
+  parseCreate,
+  parseEquityPage,
+  parseFillPage,
+  parseOrderPage,
+  parseResult,
+  parseRiskDecisionPage,
+  parseRun,
+  parseRunPage,
+  parseSignalPage,
+} from "./contracts";
 
 const pageQuery = (limit: number, offset: number) =>
   `?${new URLSearchParams({ limit: String(limit), offset: String(offset) })}`;
@@ -32,6 +43,7 @@ export const backtestsApi = {
         body: JSON.stringify(payload),
       },
       signal,
+      parseCreate,
     );
   },
   list(limit = 20, offset = 0, signal?: AbortSignal) {
@@ -39,16 +51,23 @@ export const backtestsApi = {
       `/api/backtests${pageQuery(limit, offset)}`,
       {},
       signal,
+      parseRunPage,
     );
   },
   get(runId: string, signal?: AbortSignal) {
-    return apiRequest<BacktestRun>(`/api/backtests/${runId}`, {}, signal);
+    return apiRequest<BacktestRun>(
+      `/api/backtests/${runId}`,
+      {},
+      signal,
+      parseRun,
+    );
   },
   result(runId: string, signal?: AbortSignal) {
     return apiRequest<BacktestResult>(
       `/api/backtests/${runId}/result`,
       {},
       signal,
+      parseResult,
     );
   },
   signals(runId: string, limit = 50, offset = 0, signal?: AbortSignal) {
@@ -56,6 +75,7 @@ export const backtestsApi = {
       `/api/backtests/${runId}/signals${pageQuery(limit, offset)}`,
       {},
       signal,
+      parseSignalPage,
     );
   },
   riskDecisions(runId: string, limit = 50, offset = 0, signal?: AbortSignal) {
@@ -63,6 +83,7 @@ export const backtestsApi = {
       `/api/backtests/${runId}/risk-decisions${pageQuery(limit, offset)}`,
       {},
       signal,
+      parseRiskDecisionPage,
     );
   },
   orders(runId: string, limit = 50, offset = 0, signal?: AbortSignal) {
@@ -70,6 +91,7 @@ export const backtestsApi = {
       `/api/backtests/${runId}/orders${pageQuery(limit, offset)}`,
       {},
       signal,
+      parseOrderPage,
     );
   },
   fills(runId: string, limit = 50, offset = 0, signal?: AbortSignal) {
@@ -77,6 +99,7 @@ export const backtestsApi = {
       `/api/backtests/${runId}/fills${pageQuery(limit, offset)}`,
       {},
       signal,
+      parseFillPage,
     );
   },
   equity(runId: string, limit = 200, offset = 0, signal?: AbortSignal) {
@@ -84,6 +107,7 @@ export const backtestsApi = {
       `/api/backtests/${runId}/equity${pageQuery(limit, offset)}`,
       {},
       signal,
+      parseEquityPage,
     );
   },
 };
