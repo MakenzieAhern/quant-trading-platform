@@ -33,7 +33,7 @@ make backend
 
 Run `make frontend` in a second terminal. The Python environment lives in `.venv`; Node packages live in `frontend/node_modules`. Both are machine-local and must be recreated after switching CPU architecture.
 
-The Phase 7 backend integration tests use real PostgreSQL. Start `postgres`, apply migrations, and then run `make test`; SQLite is intentionally not used as a substitute.
+The Phase 7+ backend integration tests use real PostgreSQL. Start `postgres`, apply migrations, and then run `make test`; SQLite is intentionally not used as a substitute. If npm is not installed in WSL, `make test`, `make lint`, `make format`, and `make typecheck` automatically use the project's `node:24-alpine` frontend image. This Docker fallback uses an isolated `/app/node_modules` volume and does not install or downgrade Node on the host.
 
 ## Commands
 

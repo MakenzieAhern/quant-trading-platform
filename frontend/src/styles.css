@@ -423,6 +423,52 @@ label small,
   border: 1px solid #a67d35;
   background: rgba(243, 189, 85, 0.07);
 }
+.paperBanner {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border: 1px solid #d6a84d;
+  background: rgba(214, 168, 77, 0.12);
+  color: #f4cf83;
+  font-family: "DM Mono", monospace;
+}
+.paperBanner span {
+  color: #bca979;
+}
+.paperControls {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 10px;
+}
+.streamState {
+  color: #789888;
+  font:
+    11px "DM Mono",
+    monospace;
+  text-transform: uppercase;
+}
+.stream-connected {
+  color: #78f7b5;
+}
+.stream-reconnecting {
+  color: #f4cf83;
+}
+.status-interrupted {
+  color: #f4cf83;
+  border-color: #a67d35;
+}
+.status-stopped {
+  color: #9eb4a8;
+  border-color: #557064;
+}
+.status-starting,
+.status-stopping {
+  color: #f4cf83;
+  border-color: #a67d35;
+}
 .failedCallout {
   border-color: #9c443a;
   background: rgba(255, 115, 95, 0.07);

@@ -10,7 +10,7 @@ Architectural ideas are clean-room adaptations of established projects: [LEAN](h
 
 ```text
 Browser (React/TypeScript)
-        │ REST / future WebSocket
+        │ REST / typed WebSocket
         ▼
 FastAPI modular monolith ─── Redis (cache and future transient events)
         │
@@ -20,6 +20,30 @@ FastAPI modular monolith ─── Redis (cache and future transient events)
 Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation. Phase 4 adds a historical simulation clock, event-driven backtest coordination, and deterministic simulated execution. Phase 5 adds downstream portfolio accounting, end-of-Bar valuation, an equity curve, and performance analytics. Phase 6 adds order proposals, deterministic pre-trade risk decisions, an order management system, and sequential risk reservations. Phase 7 adds an application orchestration boundary, PostgreSQL repositories, and thin REST transport adapters without introducing framework dependencies into the Phase 2–6 engine.
 
 Phase 8 adds a display-only React dashboard over the Phase 7 REST boundary. The typed client performs runtime response validation before state reaches components. Financial JSON strings remain strings through transport, state, tables, and metric labels; conversion to JavaScript numbers is isolated to approximate SVG coordinates and has an explicit non-finite fallback. The browser does not regenerate signals, infer execution or risk state, or recalculate accounting and analytics. Request timeouts, effect cleanup, and active-request identity guards prevent abandoned or older routes from overwriting current state. Only `CREATED` and `RUNNING` detail views poll, one completed request at a time, and terminal state or unmount removes the timer.
+
+## Paper trading runtime and delivery boundary
+
+```text
+Registered replay provider -> completed Bar -> per-session EventBus -> StrategyEngine
+                                                              -> RiskEngine -> OMS
+                                                              -> local PaperBroker
+                                                              -> Fill -> PortfolioEngine
+                                                              -> PostgreSQL event journal
+                                                              -> bounded WebSocket fan-out
+REST snapshot ----------------------------------------------------------> React
+```
+
+Phase 9 reuses the reviewed strategy, risk, OMS, simulated next-Bar OPEN execution, and portfolio engines. `PaperTradingRuntime` is independent of `BacktestEngine`; every session constructs its own EventBus, strategies, PaperBroker, OMS reservations, RiskEngine, PortfolioEngine, provider subscription, and task. The process-level manager coordinates these isolated runtimes but is not a shared trading engine. The only provider is the registered, local `ReplayMarketDataProvider`; it emits immutable completed Bars in strict chronological order and never connects to a network vendor or accepts paths/URLs from clients.
+
+Phase 9 runtime collections are bounded by the finite, registered replay dataset; the runtime, provider, strategies, OMS, broker, and their in-memory histories are released when the session task reaches a terminal state. Durable history belongs to PostgreSQL. This finite-replay bound is not a claim that the same collections are ready for an endless vendor feed; any future streaming adapter must introduce explicit rolling retention before it is eligible for use.
+
+The lifecycle is `CREATED -> STARTING -> RUNNING -> STOPPING -> STOPPED`, with terminal `FAILED` and `INTERRUPTED` outcomes. Creation, start, and stop are retry-safe. Lifecycle and typed market/signal/risk/order/fill/portfolio events are appended to PostgreSQL in deterministic sequence. A per-session row lock serializes sequence allocation; lifecycle state and its event commit in one transaction, and each completed-Bar financial batch commits before WebSocket publication. Pending local Orders are explicitly moved from `ACCEPTED` to `CANCELLED` on stop/failure/interruption and their OMS reservations are released before the terminal batch is stored. REST snapshots reconstruct current state from that durable journal and are the recovery authority. An active in-memory runtime is never resumed after process loss: graceful shutdown marks it `INTERRUPTED`, and startup converts any orphaned active row to `INTERRUPTED` before serving traffic.
+
+For each completed replay Bar, the durable delivery order is `market.bar`, any prior accepted Order's `order.updated` to `FILLED`, its `fill.created`, current-Bar `signal.created`, `risk.decision`, newly accepted/rejected `order.updated`, then `portfolio.snapshot`. This reflects next-Bar OPEN execution before the strategy consumes that completed Bar while still recording the newly observed Bar first for consumers. A single transaction stores the whole sequence, and WebSocket publication happens only after commit.
+
+WebSocket delivery is incremental, not authoritative history. Every connection owns a bounded queue of 64 events. Publishing never awaits a browser. When a consumer falls behind, all stale queued items are discarded, then `stream.resync_required` and the newest event occupy the bounded queue; the client closes and reloads REST rather than applying that uncertain increment. Server-side receive monitoring detects a disconnected client even when no market event is being sent, so the queue is removed promptly. The React client connects, hydrates REST, applies only increasing event sequences, deduplicates record identities, strictly validates event envelopes and payloads, and performs authoritative rehydration on reconnect. Terminal sessions close the socket without reconnecting. Origin checks use the configured frontend origin. Payload DTOs expose only explicit JSON fields and Decimal strings—never ORM or arbitrary Python objects.
+
+**There is no live broker connectivity in the Phase 9 MVP.** `PaperBroker` is local simulation only. No brokerage credentials, external order endpoints, dynamic providers, or real-money routes exist.
 
 ## Planned backend modules
 

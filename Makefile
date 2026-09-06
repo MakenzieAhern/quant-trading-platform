@@ -2,6 +2,15 @@ SHELL := /bin/sh
 PYTHON ?= python3.12
 VENV := .venv
 BIN := $(VENV)/bin
+HOST_NPM := $(shell command -v npm 2>/dev/null)
+
+ifeq ($(HOST_NPM),)
+FRONTEND_NPM := docker compose run --rm --build --no-deps -v /app/node_modules frontend npm
+FRONTEND_PREFIX :=
+else
+FRONTEND_NPM := npm
+FRONTEND_PREFIX := --prefix frontend
+endif
 
 .PHONY: help setup dev up down backend frontend test lint format typecheck migrate seed clean
 
@@ -39,22 +48,22 @@ frontend:
 
 test:
 	$(BIN)/pytest backend/tests
-	npm test --prefix frontend -- --run
+	$(FRONTEND_NPM) test $(FRONTEND_PREFIX) -- --run
 
 lint:
 	$(BIN)/ruff check backend
 	$(BIN)/mypy backend/app
-	npm run lint --prefix frontend
-	npm run typecheck --prefix frontend
+	$(FRONTEND_NPM) run lint $(FRONTEND_PREFIX)
+	$(FRONTEND_NPM) run typecheck $(FRONTEND_PREFIX)
 
 format:
 	$(BIN)/ruff format backend
 	$(BIN)/ruff check --fix backend
-	npm run format --prefix frontend
+	$(FRONTEND_NPM) run format $(FRONTEND_PREFIX)
 
 typecheck:
 	$(BIN)/mypy backend/app
-	npm run typecheck --prefix frontend
+	$(FRONTEND_NPM) run typecheck $(FRONTEND_PREFIX)
 
 migrate:
 	cd backend && ../$(BIN)/alembic upgrade head

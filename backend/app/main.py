@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.router import api_router
+from app.api.routes.paper import paper_manager
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 
@@ -20,8 +21,14 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         "Application starting",
         extra={"environment": settings.app_env, "broker_mode": settings.broker_mode},
     )
-    yield
-    logger.info("Application stopping")
+    interrupted = await paper_manager.recover_interrupted()
+    if interrupted:
+        logger.info("Interrupted stale paper sessions", extra={"count": interrupted})
+    try:
+        yield
+    finally:
+        await paper_manager.shutdown()
+        logger.info("Application stopping")
 
 
 app = FastAPI(

@@ -69,11 +69,18 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - Exact Decimal-string rendering, explicitly labeled UTC timestamps, and Docker/browser integration coverage
 - Candlesticks, volume, additional indicators, and trade-marker overlays remain future dashboard enhancements rather than being fabricated from the current Phase 7 API
 
-## Phase 9 — Paper trading
+## Phase 9 — Paper trading (complete)
 
-- Paper broker using shared order, fill, risk, and accounting paths
-- Start/stop controls, account state, positions/orders/PnL, and WebSocket updates
-- Persistent and unmistakable `PAPER TRADING` labeling
+- Local-only PaperBroker using shared Order, Fill, risk, OMS, and portfolio paths
+- Registered completed-Bar replay provider with deterministic next-Bar OPEN semantics
+- Durable session lifecycle and typed event journal with explicit restart interruption
+- REST hydration plus bounded WebSocket updates and conservative reconnect/resync
+- Start/stop controls, portfolio/orders/fills, and unmistakable `PAPER TRADING` labeling
+- Reviewed atomic lifecycle/event persistence, deterministic event ordering, retry-safe commands,
+  accepted-order cancellation, restart recovery, and isolated concurrent sessions
+- Verified bounded slow-client resynchronization, disconnect cleanup, terminal socket closure,
+  browser refresh/reconnect persistence, and repeated-session resource cleanup
+- No live broker connectivity, credentials, external order routing, GPU, or ML dependencies
 
 ## Phase 10 — Hardening
 
