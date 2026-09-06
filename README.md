@@ -8,7 +8,7 @@ The project is a modular monolith: React/Vite provides the dashboard, FastAPI ex
 
 **Stack:** Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL, Redis, React, TypeScript, Vite, pytest, Vitest, and Docker Compose. Pandas, NumPy, SciPy, and TradingView Lightweight Charts join in the phases that first use them.
 
-**Current features:** reproducible Phase 1 environment, safe configuration, structured logs, database migrations, health API, tested frontend shell, and Linux CI. Phases 2–6 provide typed financial contracts, offline CSV ingestion, Decimal indicators, broker-independent strategies, deterministic event-driven backtests, simulated execution, portfolio accounting, analytics, pre-trade risk, and OMS reservations. Phase 7 adds a synchronous backtest application service, PostgreSQL audit persistence, an approved dataset/strategy registry, and paginated REST result APIs. Dashboard and paper execution remain sequenced in the [roadmap](ROADMAP.md).
+**Current features:** reproducible Phase 1 environment, safe configuration, structured logs, database migrations, health API, tested frontend shell, and Linux CI. Phases 2–6 provide typed financial contracts, offline CSV ingestion, Decimal indicators, broker-independent strategies, deterministic event-driven backtests, simulated execution, portfolio accounting, analytics, pre-trade risk, and OMS reservations. Phase 7 adds a synchronous backtest application service, PostgreSQL audit persistence, an approved dataset/strategy registry, and paginated REST result APIs. Phase 8 adds the persisted research dashboard over those APIs. Paper execution remains sequenced in the [roadmap](ROADMAP.md).
 
 ## Quick start
 
@@ -19,7 +19,15 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Open <http://localhost:5173>; API health is at <http://localhost:8000/api/health> and OpenAPI at <http://localhost:8000/docs>. Stop with `docker compose down`.
+Open <http://localhost:5173/backtests>; API health is at <http://localhost:8000/api/health> and OpenAPI at <http://localhost:8000/docs>. Stop with `docker compose down`.
+
+The Phase 8 dashboard uses stable browser routes:
+
+- `/backtests` — paginated persisted run history
+- `/backtests/new` — approved dataset/strategy execution form
+- `/backtests/:runId` — run status, authoritative metrics, equity, signals, risk decisions, orders, and fills
+
+Set the public `VITE_API_BASE_URL` when the API is not available at `http://localhost:8000`. This value is compiled into browser code and must never contain credentials. Docker Compose supplies the local URL; missing or blank values use the localhost default. Successful API payloads are checked at runtime before rendering, active requests time out safely, and route changes invalidate stale responses. The dashboard preserves every financial value as an API Decimal string in transport, state, and textual rendering; only SVG plotting coordinates use JavaScript numbers for approximate presentation. All displayed timestamps are explicitly labeled UTC.
 
 The Compose backend applies Alembic migrations after PostgreSQL becomes healthy. A deterministic example run can be submitted with:
 

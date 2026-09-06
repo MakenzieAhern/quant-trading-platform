@@ -19,6 +19,8 @@ FastAPI modular monolith ─── Redis (cache and future transient events)
 
 Phase 1 contains the operational foundations: configuration, logging, API routing, database session infrastructure, a migration baseline, health endpoint, frontend shell, and container orchestration. Phase 2 adds framework-independent financial contracts, deterministic domain events, and offline market-data ingestion. Phase 3 adds deterministic technical indicators and broker-independent, event-driven signal generation. Phase 4 adds a historical simulation clock, event-driven backtest coordination, and deterministic simulated execution. Phase 5 adds downstream portfolio accounting, end-of-Bar valuation, an equity curve, and performance analytics. Phase 6 adds order proposals, deterministic pre-trade risk decisions, an order management system, and sequential risk reservations. Phase 7 adds an application orchestration boundary, PostgreSQL repositories, and thin REST transport adapters without introducing framework dependencies into the Phase 2–6 engine.
 
+Phase 8 adds a display-only React dashboard over the Phase 7 REST boundary. The typed client performs runtime response validation before state reaches components. Financial JSON strings remain strings through transport, state, tables, and metric labels; conversion to JavaScript numbers is isolated to approximate SVG coordinates and has an explicit non-finite fallback. The browser does not regenerate signals, infer execution or risk state, or recalculate accounting and analytics. Request timeouts, effect cleanup, and active-request identity guards prevent abandoned or older routes from overwriting current state. Only `CREATED` and `RUNNING` detail views poll, one completed request at a time, and terminal state or unmount removes the timer.
+
 ## Planned backend modules
 
 ```text
@@ -239,6 +241,14 @@ Daily strategies see a bar only after it closes. A market order caused by that b
 Strategies target domain interfaces and cannot call a broker or data vendor directly. A runtime composition root will select `BACKTEST` or `PAPER` adapters. `LIVE` is rejected during configuration validation and can only be added through a separately reviewed roadmap item with unmistakable UI labeling and explicit opt-in.
 
 Secrets enter through environment variables and are never logged. Large data, model weights, virtual environments, and architecture-specific dependencies remain outside Git.
+
+## Research dashboard boundary
+
+The Phase 8 React application is a presentation client for the Phase 7 REST API. Its typed transport layer lives under `frontend/src/api`, API response models under `frontend/src/types`, reusable view components under `frontend/src/components`, and route-level orchestration under `frontend/src/pages`. Browser History API routes make persisted runs directly addressable without introducing another application framework.
+
+React never recreates signals, risk decisions, portfolio accounting, fills, or analytics. Financial values remain Decimal strings from request through rendering. Formatting helpers operate on strings; the equity chart converts values to JavaScript numbers only to derive SVG screen coordinates and retains exact strings in its accessible table and labels. UTC API timestamps are displayed through an explicit UTC formatter rather than converted to unlabeled local time.
+
+The create form exposes only the registered `AAPL_fixture` dataset and the two registered strategy discriminators. Each submission receives a browser-generated `Idempotency-Key`, retains that key across a retry of unchanged inputs, and locks concurrent submissions. Active detail pages conservatively poll only `CREATED` or `RUNNING` runs every five seconds. All terminal results reload from PostgreSQL through the API; no quantitative result is kept solely in browser memory.
 
 ## Portability
 
