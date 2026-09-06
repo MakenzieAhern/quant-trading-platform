@@ -87,6 +87,17 @@ class SimulatedBroker:
         )
         return tuple(self._fill(order, bar) for order in executable)
 
+    def cancel_pending(self) -> tuple[Order, ...]:
+        """Cancel every locally pending order without implying external activity."""
+        cancelled: list[Order] = []
+        for order in tuple(self._pending):
+            updated = transition_order(order, OrderStatus.CANCELLED)
+            self._pending.remove(order)
+            self._replace_order(updated)
+            self._publish(EventType.ORDER_CANCELLED, updated)
+            cancelled.append(updated)
+        return tuple(cancelled)
+
     def reset(self) -> None:
         self._orders.clear()
         self._pending.clear()

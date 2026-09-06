@@ -147,6 +147,66 @@ describe("paper trading pages", () => {
     expect(fetch).toHaveBeenCalledTimes(2);
   });
 
+  it("closes terminal session streams without reconnecting", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse(paperSnapshot("RUNNING")),
+    );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    act(() =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "session.status",
+        occurred_at: "2026-09-06T02:01:00Z",
+        payload: { status: "STOPPED" },
+      }),
+    );
+    expect(screen.getByText("STOPPED")).toBeInTheDocument();
+    expect(screen.getByText("WebSocket: closed")).toBeInTheDocument();
+    await act(async () => vi.advanceTimersByTimeAsync(2000));
+    expect(MockWebSocket.instances).toHaveLength(1);
+  });
+
+  it("rejects unknown stream events and rehydrates instead of advancing state", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(paperSnapshot("RUNNING")));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    act(() =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "internal.python.object",
+        occurred_at: "2026-09-06T02:01:00Z",
+        payload: { secret: "must-not-render" },
+      }),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("malformed");
+    expect(screen.queryByText("must-not-render")).not.toBeInTheDocument();
+    expect(screen.getByText("WebSocket: reconnecting")).toBeInTheDocument();
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("aborts hydration and closes the socket when navigating away", async () => {
+    installWebSocket();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockReturnValue(new Promise(() => {}));
+    const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    const signal = fetch.mock.calls[0]?.[1]?.signal;
+    expect(signal?.aborted).toBe(false);
+    view.unmount();
+    expect(signal?.aborted).toBe(true);
+    expect(MockWebSocket.instances[0]!.readyState).toBe(MockWebSocket.CLOSED);
+  });
+
   it("isolates route identity while an old hydration is in flight", async () => {
     installWebSocket();
     let resolveOld!: (response: Response) => void;

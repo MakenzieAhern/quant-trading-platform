@@ -8,7 +8,7 @@ class InvalidOrderTransitionError(ValueError):
 ALLOWED_TRANSITIONS: dict[OrderStatus, frozenset[OrderStatus]] = {
     OrderStatus.CREATED: frozenset({OrderStatus.SUBMITTED}),
     OrderStatus.SUBMITTED: frozenset({OrderStatus.ACCEPTED, OrderStatus.REJECTED}),
-    OrderStatus.ACCEPTED: frozenset({OrderStatus.FILLED}),
+    OrderStatus.ACCEPTED: frozenset({OrderStatus.FILLED, OrderStatus.CANCELLED}),
 }
 
 

@@ -4,7 +4,7 @@ Use Ubuntu under WSL2 as the development environment; Windows remains the host f
 
 1. Enable WSL2 and install Ubuntu (`wsl --install -d Ubuntu` from an elevated PowerShell, then restart if requested).
 2. Install Docker Desktop for Windows, enable the WSL2 engine, and enable integration for the Ubuntu distribution.
-3. Install Git, Python 3.12, Node 24 LTS, and Make **inside Ubuntu**. Use VS Code with the Remote - WSL extension if desired, opening the folder from the WSL terminal with `code .`.
+3. Install Git, Python 3.12, and Make **inside Ubuntu**. Node 24 LTS is recommended for the host application workflow but optional for Docker-first development: canonical frontend validation targets automatically use the pinned Node 24 Compose image when host npm is absent. Use VS Code with the Remote - WSL extension if desired, opening the folder from the WSL terminal with `code .`.
 4. Configure Git name/email and clone within the Linux filesystem:
 
 ```bash
@@ -36,4 +36,4 @@ make backend
 make frontend
 ```
 
-Validate with `make test` and `make lint`. Never share a macOS `.venv` or `node_modules`; restore them from lock files on each machine.
+Validate with `make test` and `make lint`. With no host npm, these commands build and run the frontend checks in `node:24-alpine`; they never fall back to the Ubuntu Node 22 package. Never share a macOS `.venv` or `node_modules`; restore them from lock files on each machine.

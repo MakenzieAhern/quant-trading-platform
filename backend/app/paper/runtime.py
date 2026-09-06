@@ -153,6 +153,10 @@ class PaperTradingRuntime:
             snapshot=snapshot,
         )
 
+    def cancel_pending_orders(self) -> tuple[Order, ...]:
+        """Cancel unfilled local orders and release their OMS reservations on stop."""
+        return self._broker.cancel_pending()
+
     def _on_signal(self, event: Event[Any]) -> None:
         if not isinstance(event.payload, Signal):
             raise TypeError("SIGNAL event payload must be a Signal")

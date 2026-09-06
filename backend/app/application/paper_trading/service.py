@@ -1,6 +1,7 @@
 import asyncio
 import hashlib
 import json
+import logging
 from collections.abc import Callable
 from contextlib import suppress
 from datetime import UTC, datetime
@@ -23,6 +24,7 @@ from app.paper.models import (
     CreatePaperSessionCommand,
     PaperEventRecord,
     PaperSession,
+    PaperSessionConcurrencyError,
     PaperSessionStatus,
 )
 from app.paper.runtime import PaperRuntimeDelta, PaperTradingRuntime, ReplayMarketDataProvider
@@ -37,6 +39,7 @@ class PaperSessionStateError(ValueError):
 
 
 Clock = Callable[[], datetime]
+logger = logging.getLogger(__name__)
 
 
 class PaperTradingManager:
@@ -64,7 +67,10 @@ class PaperTradingManager:
 
     async def recover_interrupted(self) -> int:
         async with self._session_factory() as db:
-            return await SQLAlchemyPaperRepository(db).interrupt_active(self._now())
+            interrupted = await SQLAlchemyPaperRepository(db).interrupt_active(self._now())
+        if interrupted:
+            logger.warning("Interrupted %d orphaned paper session(s) during startup", interrupted)
+        return interrupted
 
     async def create(self, command: CreatePaperSessionCommand) -> PaperSession:
         if command.provider_type != "replay":
@@ -108,7 +114,9 @@ class PaperTradingManager:
                 request_hash=request_hash if command.client_request_id is not None else None,
             )
             try:
-                return await repository.create(session)
+                created = await repository.create(session)
+                logger.info("Created paper session %s", created.id)
+                return created
             except IntegrityError:
                 await db.rollback()
                 if command.client_request_id is None:
@@ -149,6 +157,7 @@ class PaperTradingManager:
             task = asyncio.create_task(self._run(session), name=f"paper-session-{session_id}")
             self._tasks[session_id] = task
             task.add_done_callback(lambda _: self._tasks.pop(session_id, None))
+            logger.info("Started paper session task %s", session_id)
             return session
 
     async def stop(self, session_id: UUID) -> PaperSession:
@@ -159,7 +168,11 @@ class PaperTradingManager:
             if session.status is PaperSessionStatus.STOPPED:
                 return session
             if session.status is PaperSessionStatus.CREATED:
-                return await self._transition(session, PaperSessionStatus.STOPPED, "session.status")
+                stopped = await self._transition(
+                    session, PaperSessionStatus.STOPPED, "session.status"
+                )
+                logger.info("Stopped idle paper session %s", session_id)
+                return stopped
             if session.status is PaperSessionStatus.STOPPING:
                 return session
             if session.status not in {PaperSessionStatus.STARTING, PaperSessionStatus.RUNNING}:
@@ -170,6 +183,7 @@ class PaperTradingManager:
             provider = self._providers.get(session_id)
             if provider is not None:
                 await provider.stop()
+            logger.info("Requested stop for paper session %s", session_id)
             return session
 
     async def shutdown(self) -> None:
@@ -185,16 +199,20 @@ class PaperTradingManager:
     async def _run(self, initial: PaperSession) -> None:
         session = initial
         provider: ReplayMarketDataProvider | None = None
+        runtime: PaperTradingRuntime | None = None
         try:
             provider, runtime = self._build_runtime(session)
             self._providers[session.id] = provider
-            current = await self.get(session.id)
-            if current is None:
-                raise RuntimeError("paper session disappeared")
-            if current.status is PaperSessionStatus.STOPPING:
-                await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
-                return
-            session = await self._transition(current, PaperSessionStatus.RUNNING, "session.status")
+            async with self._lock:
+                current = await self.get(session.id)
+                if current is None:
+                    raise RuntimeError("paper session disappeared")
+                if current.status is PaperSessionStatus.STOPPING:
+                    await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
+                    return
+                session = await self._transition(
+                    current, PaperSessionStatus.RUNNING, "session.status"
+                )
 
             async def process(bar: Bar) -> None:
                 delta = await runtime.process_bar(bar)
@@ -205,12 +223,20 @@ class PaperTradingManager:
                     self.hub.publish(session.id, self._wire_event(event))
 
             await provider.start(process)
-            current = await self.get(session.id)
-            if current is not None and current.status in {
-                PaperSessionStatus.RUNNING,
-                PaperSessionStatus.STOPPING,
-            }:
-                await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
+            async with self._lock:
+                current = await self.get(session.id)
+                if current is not None and current.status in {
+                    PaperSessionStatus.RUNNING,
+                    PaperSessionStatus.STOPPING,
+                }:
+                    cancelled = runtime.cancel_pending_orders()
+                    await self._transition(
+                        current,
+                        PaperSessionStatus.STOPPED,
+                        "session.status",
+                        cancelled_orders=cancelled,
+                    )
+                    logger.info("Paper session %s stopped", session.id)
         except asyncio.CancelledError:
             current = await self.get(session.id)
             if current is not None and current.status in {
@@ -219,26 +245,46 @@ class PaperTradingManager:
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
+                    cancelled = runtime.cancel_pending_orders() if runtime is not None else ()
                     await self._transition(
                         current,
                         PaperSessionStatus.INTERRUPTED,
                         "session.status",
                         "Paper runtime interrupted by backend shutdown.",
+                        cancelled_orders=cancelled,
                     )
+                    logger.warning("Paper session %s interrupted by shutdown", session.id)
             raise
         except Exception as exc:
             current = await self.get(session.id)
+            if (
+                isinstance(exc, PaperSessionConcurrencyError)
+                and current is not None
+                and current.status is PaperSessionStatus.STOPPING
+            ):
+                cancelled = runtime.cancel_pending_orders() if runtime is not None else ()
+                await self._transition(
+                    current,
+                    PaperSessionStatus.STOPPED,
+                    "session.status",
+                    cancelled_orders=cancelled,
+                )
+                logger.info("Paper session %s stopped after a concurrent command", session.id)
+                return
+            logger.error("Paper session %s failed with %s", session.id, type(exc).__name__)
             if current is not None and current.status in {
                 PaperSessionStatus.STARTING,
                 PaperSessionStatus.RUNNING,
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
+                    cancelled = runtime.cancel_pending_orders() if runtime is not None else ()
                     await self._transition(
                         current,
                         PaperSessionStatus.FAILED,
                         "session.status",
                         f"{type(exc).__name__}: paper session failed",
+                        cancelled_orders=cancelled,
                     )
         finally:
             if provider is not None:
@@ -292,18 +338,25 @@ class PaperTradingManager:
         target: PaperSessionStatus,
         event_type: str,
         error_message: str | None = None,
+        cancelled_orders: tuple[Order, ...] = (),
     ) -> PaperSession:
         now = self._now()
+        preceding_events = tuple(
+            ("order.updated", now, self._order(order)) for order in cancelled_orders
+        )
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
-            updated = await repository.transition(
-                session.id, session.status, target, now, error_message
-            )
-            stored = await repository.append_events(
+            updated, stored = await repository.transition_with_event(
                 session.id,
-                ((event_type, now, {"status": target.value}),),
+                session.status,
+                target,
+                now,
+                event_type,
+                error_message,
+                preceding_events,
             )
-        self.hub.publish(session.id, self._wire_event(stored[0]))
+        for event in stored:
+            self.hub.publish(session.id, self._wire_event(event))
         return updated
 
     @classmethod
@@ -313,14 +366,24 @@ class PaperTradingManager:
         events: list[tuple[str, datetime, dict[str, object]]] = [
             ("market.bar", delta.bar.timestamp, cls._bar(delta.bar))
         ]
+        filled_order_ids = {fill.order_id for fill in delta.fills}
+        events.extend(
+            ("order.updated", delta.bar.timestamp, cls._order(item))
+            for item in delta.orders
+            if item.id in filled_order_ids
+        )
+        events.extend(("fill.created", item.timestamp, cls._fill(item)) for item in delta.fills)
         events.extend(
             ("signal.created", item.timestamp, cls._signal(item)) for item in delta.signals
         )
         events.extend(
             ("risk.decision", item.timestamp, cls._decision(item)) for item in delta.decisions
         )
-        events.extend(("order.updated", item.created_at, cls._order(item)) for item in delta.orders)
-        events.extend(("fill.created", item.timestamp, cls._fill(item)) for item in delta.fills)
+        events.extend(
+            ("order.updated", item.created_at, cls._order(item))
+            for item in delta.orders
+            if item.id not in filled_order_ids
+        )
         events.append(
             (
                 "portfolio.snapshot",
@@ -459,4 +522,7 @@ class PaperTradingManager:
         return hashlib.sha256(canonical.encode()).hexdigest()
 
     def _now(self) -> datetime:
-        return self._clock().astimezone(UTC)
+        now = self._clock()
+        if now.tzinfo is None or now.utcoffset() is None:
+            raise ValueError("paper session clock must be timezone-aware")
+        return now.astimezone(UTC)

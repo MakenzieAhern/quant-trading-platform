@@ -94,8 +94,10 @@ export function usePaperStream(sessionId: string) {
     let active = true;
     let socket: WebSocket | null = null;
     let retry: number | undefined;
+    let hydrationController: AbortController | null = null;
     let firstConnection = true;
     let buffered: PaperWireEvent[] = [];
+    let terminal = false;
 
     const connect = () => {
       if (!active) return;
@@ -104,9 +106,10 @@ export function usePaperStream(sessionId: string) {
         `${PAPER_WS_BASE_URL}/api/paper-trading/sessions/ws/${sessionId}`,
       );
       socket.onopen = () => {
-        const controller = new AbortController();
+        hydrationController?.abort();
+        hydrationController = new AbortController();
         void paperApi
-          .snapshot(sessionId, controller.signal)
+          .snapshot(sessionId, hydrationController.signal)
           .then((hydrated) => {
             if (!active || socket?.readyState !== WebSocket.OPEN) return;
             const complete = buffered.reduce(applyPaperEvent, hydrated);
@@ -115,9 +118,21 @@ export function usePaperStream(sessionId: string) {
             setError(null);
             setConnection("connected");
             firstConnection = false;
+            if (
+              ["STOPPED", "FAILED", "INTERRUPTED"].includes(
+                complete.session.status,
+              )
+            ) {
+              terminal = true;
+              setConnection("closed");
+              socket.close();
+            }
           })
           .catch((reason: unknown) => {
-            if (active)
+            if (
+              active &&
+              !(reason instanceof DOMException && reason.name === "AbortError")
+            )
               setError({
                 sessionId,
                 message:
@@ -135,6 +150,14 @@ export function usePaperStream(sessionId: string) {
             socket?.close();
             return;
           }
+          if (
+            event.type === "session.status" &&
+            ["STOPPED", "FAILED", "INTERRUPTED"].includes(
+              String(event.payload.status),
+            )
+          ) {
+            terminal = true;
+          }
           setSnapshot((current) => {
             if (current === null) {
               buffered.push(event);
@@ -142,16 +165,27 @@ export function usePaperStream(sessionId: string) {
             }
             return applyPaperEvent(current, event);
           });
+          if (terminal) {
+            setConnection("closed");
+            socket?.close();
+          }
         } catch {
           setError({
             sessionId,
             message: "A malformed paper stream event was rejected.",
           });
+          socket?.close();
         }
       };
       socket.onerror = () => socket?.close();
       socket.onclose = () => {
         if (!active) return;
+        hydrationController?.abort();
+        hydrationController = null;
+        if (terminal) {
+          setConnection("closed");
+          return;
+        }
         setConnection("reconnecting");
         retry = window.setTimeout(connect, 1000);
       };
@@ -160,6 +194,7 @@ export function usePaperStream(sessionId: string) {
     connect();
     return () => {
       active = false;
+      hydrationController?.abort();
       if (retry !== undefined) window.clearTimeout(retry);
       socket?.close();
     };

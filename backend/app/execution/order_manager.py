@@ -52,6 +52,7 @@ class OrderManager:
         self._event_bus.subscribe(EventType.ORDER_SUBMITTED, self._on_order_state)
         self._event_bus.subscribe(EventType.ORDER_ACCEPTED, self._on_order_state)
         self._event_bus.subscribe(EventType.ORDER_REJECTED, self._on_order_state)
+        self._event_bus.subscribe(EventType.ORDER_CANCELLED, self._on_order_state)
         self._event_bus.subscribe(EventType.ORDER_FILLED, self._on_fill)
 
     @property
@@ -227,7 +228,7 @@ class OrderManager:
         if expected != order:
             raise OrderManagementError(f"order state event changed immutable intent: {order.id}")
         self._orders[order.id] = order
-        if order.status is OrderStatus.REJECTED:
+        if order.status in {OrderStatus.REJECTED, OrderStatus.CANCELLED}:
             self.release_reservation(order.id)
 
     def _on_fill(self, event: Event[Any]) -> None:

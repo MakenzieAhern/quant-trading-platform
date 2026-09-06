@@ -7,6 +7,10 @@ from uuid import UUID
 from app.domain.risk import RiskConfig
 
 
+class PaperSessionConcurrencyError(RuntimeError):
+    """Raised when an atomic lifecycle transition loses a concurrent race."""
+
+
 class PaperSessionStatus(StrEnum):
     CREATED = "CREATED"
     STARTING = "STARTING"

@@ -1,13 +1,14 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import func, select, update
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models.paper import PaperTradingEventModel, PaperTradingSessionModel
 from app.paper.models import (
     PaperEventRecord,
     PaperSession,
+    PaperSessionConcurrencyError,
     PaperSessionStatus,
     require_transition,
 )
@@ -30,24 +31,33 @@ class SQLAlchemyPaperRepository:
         return self._to_domain(model) if model is not None else None
 
     async def create(self, session: PaperSession) -> PaperSession:
+        model = PaperTradingSessionModel(
+            id=session.id,
+            status=session.status.value,
+            provider_type=session.provider_type,
+            dataset_id=session.dataset_id,
+            symbol=session.symbol,
+            strategy_type=session.strategy_type,
+            strategy_parameters=session.strategy_parameters,
+            initial_cash=session.initial_cash,
+            default_order_quantity=session.default_order_quantity,
+            risk=session.risk,
+            created_at=session.created_at,
+            started_at=session.started_at,
+            stopped_at=session.stopped_at,
+            error_message=session.error_message,
+            client_request_id=session.client_request_id,
+            request_hash=session.request_hash,
+        )
+        self._session.add(model)
+        await self._session.flush()
         self._session.add(
-            PaperTradingSessionModel(
-                id=session.id,
-                status=session.status.value,
-                provider_type=session.provider_type,
-                dataset_id=session.dataset_id,
-                symbol=session.symbol,
-                strategy_type=session.strategy_type,
-                strategy_parameters=session.strategy_parameters,
-                initial_cash=session.initial_cash,
-                default_order_quantity=session.default_order_quantity,
-                risk=session.risk,
-                created_at=session.created_at,
-                started_at=session.started_at,
-                stopped_at=session.stopped_at,
-                error_message=session.error_message,
-                client_request_id=session.client_request_id,
-                request_hash=session.request_hash,
+            PaperTradingEventModel(
+                session_id=session.id,
+                sequence=1,
+                event_type="session.status",
+                occurred_at=session.created_at,
+                payload={"status": session.status.value},
             )
         )
         await self._session.commit()
@@ -70,45 +80,60 @@ class SQLAlchemyPaperRepository:
         total = await self._session.scalar(select(func.count(PaperTradingSessionModel.id)))
         return tuple(self._to_domain(model) for model in models), int(total or 0)
 
-    async def transition(
+    async def transition_with_event(
         self,
         session_id: UUID,
         expected: PaperSessionStatus,
         target: PaperSessionStatus,
         timestamp: datetime,
+        event_type: str,
         error_message: str | None = None,
-    ) -> PaperSession:
+        preceding_events: tuple[tuple[str, datetime, dict[str, object]], ...] = (),
+    ) -> tuple[PaperSession, tuple[PaperEventRecord, ...]]:
         require_transition(expected, target)
-        values: dict[str, object] = {
-            "status": target.value,
-            "error_message": error_message,
-        }
+        model = await self._session.scalar(
+            select(PaperTradingSessionModel)
+            .where(PaperTradingSessionModel.id == session_id)
+            .with_for_update()
+        )
+        if model is None:
+            raise LookupError("paper session not found")
+        if model.status != expected.value:
+            raise PaperSessionConcurrencyError("paper session state changed concurrently")
+        model.status = target.value
+        model.error_message = error_message
         if target is PaperSessionStatus.RUNNING:
-            values["started_at"] = timestamp
+            model.started_at = timestamp
         if target in {
             PaperSessionStatus.STOPPED,
             PaperSessionStatus.FAILED,
             PaperSessionStatus.INTERRUPTED,
         }:
-            values["stopped_at"] = timestamp
-        result = await self._session.execute(
-            update(PaperTradingSessionModel)
-            .where(
-                PaperTradingSessionModel.id == session_id,
-                PaperTradingSessionModel.status == expected.value,
-            )
-            .values(**values)
+            model.stopped_at = timestamp
+        records = await self._append_events_locked(
+            session_id,
+            (*preceding_events, (event_type, timestamp, {"status": target.value})),
         )
-        if result.rowcount != 1:  # type: ignore[attr-defined]
-            await self._session.rollback()
-            raise ValueError("paper session state changed concurrently")
         await self._session.commit()
-        updated = await self.get(session_id)
-        if updated is None:
-            raise RuntimeError("paper session disappeared after transition")
-        return updated
+        return self._to_domain(model), records
 
     async def append_events(
+        self,
+        session_id: UUID,
+        events: tuple[tuple[str, datetime, dict[str, object]], ...],
+    ) -> tuple[PaperEventRecord, ...]:
+        model = await self._session.scalar(
+            select(PaperTradingSessionModel.id)
+            .where(PaperTradingSessionModel.id == session_id)
+            .with_for_update()
+        )
+        if model is None:
+            raise LookupError("paper session not found")
+        records = await self._append_events_locked(session_id, events)
+        await self._session.commit()
+        return records
+
+    async def _append_events_locked(
         self,
         session_id: UUID,
         events: tuple[tuple[str, datetime, dict[str, object]], ...],
@@ -135,7 +160,6 @@ class SQLAlchemyPaperRepository:
                 for item in records
             ]
         )
-        await self._session.commit()
         return records
 
     async def list_events(self, session_id: UUID) -> tuple[PaperEventRecord, ...]:
@@ -158,17 +182,52 @@ class SQLAlchemyPaperRepository:
         )
 
     async def interrupt_active(self, timestamp: datetime) -> int:
-        result = await self._session.execute(
-            update(PaperTradingSessionModel)
-            .where(PaperTradingSessionModel.status.in_(["STARTING", "RUNNING", "STOPPING"]))
-            .values(
-                status=PaperSessionStatus.INTERRUPTED.value,
-                stopped_at=timestamp,
-                error_message="Paper runtime interrupted by backend restart.",
-            )
+        models = tuple(
+            (
+                await self._session.scalars(
+                    select(PaperTradingSessionModel)
+                    .where(PaperTradingSessionModel.status.in_(["STARTING", "RUNNING", "STOPPING"]))
+                    .order_by(PaperTradingSessionModel.id)
+                    .with_for_update()
+                )
+            ).all()
         )
+        for model in models:
+            model.status = PaperSessionStatus.INTERRUPTED.value
+            model.stopped_at = timestamp
+            model.error_message = "Paper runtime interrupted by backend restart."
+            order_events = (
+                await self._session.scalars(
+                    select(PaperTradingEventModel)
+                    .where(
+                        PaperTradingEventModel.session_id == model.id,
+                        PaperTradingEventModel.event_type == "order.updated",
+                    )
+                    .order_by(PaperTradingEventModel.sequence)
+                )
+            ).all()
+            latest_orders: dict[str, dict[str, object]] = {}
+            for event in order_events:
+                payload = dict(event.payload)
+                latest_orders[str(payload.get("order_id"))] = payload
+            cancellations = tuple(
+                ("order.updated", timestamp, {**payload, "status": "CANCELLED"})
+                for payload in latest_orders.values()
+                if payload.get("status") == "ACCEPTED"
+            )
+            await self._append_events_locked(
+                model.id,
+                (
+                    *cancellations,
+                    (
+                        "session.status",
+                        timestamp,
+                        {"status": PaperSessionStatus.INTERRUPTED.value},
+                    ),
+                ),
+            )
         await self._session.commit()
-        return int(result.rowcount or 0)  # type: ignore[attr-defined]
+        return len(models)
 
     @staticmethod
     def _to_domain(model: PaperTradingSessionModel) -> PaperSession:

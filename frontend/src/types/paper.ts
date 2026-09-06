@@ -135,7 +135,16 @@ export interface CreatePaperSessionRequest {
 
 export interface PaperWireEvent {
   sequence: number | null;
-  type: string;
+  type:
+    | "stream.connected"
+    | "stream.resync_required"
+    | "session.status"
+    | "market.bar"
+    | "signal.created"
+    | "risk.decision"
+    | "order.updated"
+    | "fill.created"
+    | "portfolio.snapshot";
   occurred_at: string | null;
   payload: Record<string, unknown>;
 }

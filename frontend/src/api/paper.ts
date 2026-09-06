@@ -25,6 +25,17 @@ const STATUSES = new Set<PaperSessionStatus>([
   "FAILED",
   "INTERRUPTED",
 ]);
+const EVENT_TYPES = new Set<PaperWireEvent["type"]>([
+  "stream.connected",
+  "stream.resync_required",
+  "session.status",
+  "market.bar",
+  "signal.created",
+  "risk.decision",
+  "order.updated",
+  "fill.created",
+  "portfolio.snapshot",
+]);
 
 function record(value: unknown): Record<string, unknown> {
   if (typeof value !== "object" || value === null || Array.isArray(value))
@@ -277,11 +288,35 @@ export function parseWireEvent(value: unknown): PaperWireEvent {
   const item = record(value);
   if (item.sequence !== null && !Number.isSafeInteger(item.sequence))
     throw new Error("Invalid paper stream sequence.");
+  const type = requiredString(item.type) as PaperWireEvent["type"];
+  if (!EVENT_TYPES.has(type))
+    throw new Error("Invalid paper stream event type.");
+  const payload = record(item.payload);
+  if (type === "stream.connected" || type === "stream.resync_required") {
+    if (item.sequence !== null)
+      throw new Error("Invalid paper control event sequence.");
+  } else {
+    if (
+      !Number.isSafeInteger(item.sequence) ||
+      typeof item.occurred_at !== "string"
+    )
+      throw new Error("Invalid persisted paper event envelope.");
+    if (type === "session.status") {
+      const status = requiredString(payload.status) as PaperSessionStatus;
+      if (!STATUSES.has(status))
+        throw new Error("Invalid paper session status.");
+    } else if (type === "market.bar") marketBar(payload);
+    else if (type === "signal.created") signal(payload);
+    else if (type === "risk.decision") decision(payload);
+    else if (type === "order.updated") order(payload);
+    else if (type === "fill.created") fill(payload);
+    else if (type === "portfolio.snapshot") portfolio(payload);
+  }
   return {
     sequence: item.sequence as number | null,
-    type: requiredString(item.type),
+    type,
     occurred_at:
       item.occurred_at === null ? null : requiredString(item.occurred_at),
-    payload: record(item.payload),
+    payload,
   };
 }

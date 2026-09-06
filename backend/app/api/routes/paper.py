@@ -1,3 +1,6 @@
+import asyncio
+import logging
+from contextlib import suppress
 from typing import Annotated
 from uuid import UUID
 
@@ -32,6 +35,7 @@ from app.domain.risk import RiskConfig
 from app.paper.models import CreatePaperSessionCommand, PaperEventRecord, PaperSession
 
 settings = get_settings()
+logger = logging.getLogger(__name__)
 paper_manager = PaperTradingManager(
     SessionFactory,
     DatasetRegistry.phase7(settings.backtest_fixture_path),
@@ -194,8 +198,8 @@ async def paper_session_websocket(websocket: WebSocket, session_id: UUID) -> Non
     if await paper_manager.get(session_id) is None:
         await websocket.close(code=4404, reason="paper session not found")
         return
-    await websocket.accept()
     async with paper_manager.hub.subscribe(session_id) as queue:
+        await websocket.accept()
         await websocket.send_json(
             {
                 "sequence": None,
@@ -204,11 +208,38 @@ async def paper_session_websocket(websocket: WebSocket, session_id: UUID) -> Non
                 "payload": {"message": "REST snapshot remains authoritative"},
             }
         )
+        receive_task = asyncio.create_task(websocket.receive())
         try:
             while True:
-                await websocket.send_json(await queue.get())
+                event_task = asyncio.create_task(queue.get())
+                done, _ = await asyncio.wait(
+                    {receive_task, event_task}, return_when=asyncio.FIRST_COMPLETED
+                )
+                if receive_task in done:
+                    event_task.cancel()
+                    with suppress(asyncio.CancelledError):
+                        await event_task
+                    message = receive_task.result()
+                    if message["type"] == "websocket.disconnect":
+                        break
+                    receive_task = asyncio.create_task(websocket.receive())
+                    continue
+                event = event_task.result()
+                await websocket.send_json(event)
+                payload = event.get("payload")
+                if (
+                    event.get("type") == "session.status"
+                    and isinstance(payload, dict)
+                    and payload.get("status") in {"STOPPED", "FAILED", "INTERRUPTED"}
+                ):
+                    await websocket.close(code=1000, reason="paper session is terminal")
+                    break
         except WebSocketDisconnect:
-            pass
+            logger.info("Paper WebSocket disconnected for session %s", session_id)
+        finally:
+            receive_task.cancel()
+            with suppress(asyncio.CancelledError):
+                await receive_task
 
 
 def _event_response(event: PaperEventRecord) -> PaperEventResponse:
