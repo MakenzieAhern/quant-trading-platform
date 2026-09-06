@@ -1,10 +1,63 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { jsonResponse, metrics, run, RUN_ID } from "../test/fixtures";
 import { BacktestDetailPage } from "./BacktestDetailPage";
 
 describe("backtest detail", () => {
+  it("prevents an in-flight old route from overwriting a newer run", async () => {
+    let resolveA!: (response: Response) => void;
+    let resolveB!: (response: Response) => void;
+    const responseA = new Promise<Response>((resolve) => {
+      resolveA = resolve;
+    });
+    const responseB = new Promise<Response>((resolve) => {
+      resolveB = resolve;
+    });
+    vi.spyOn(globalThis, "fetch")
+      .mockReturnValueOnce(responseA)
+      .mockReturnValueOnce(responseB);
+    const view = render(<BacktestDetailPage runId={RUN_ID} />);
+    view.rerender(
+      <BacktestDetailPage runId="a0975744-c58a-49d8-a72d-45f6ed700ca6" />,
+    );
+    resolveB(jsonResponse({ ...run("FAILED"), error_message: "run B failed" }));
+    expect(await screen.findByText("run B failed")).toBeInTheDocument();
+    resolveA(jsonResponse({ ...run("FAILED"), error_message: "stale run A" }));
+    await waitFor(() =>
+      expect(screen.queryByText("stale run A")).not.toBeInTheDocument(),
+    );
+    expect(screen.getByText("run B failed")).toBeInTheDocument();
+  });
+
+  it("polls active runs once per interval and stops on a terminal state", async () => {
+    vi.useFakeTimers();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(run("RUNNING")))
+      .mockResolvedValueOnce(jsonResponse(run("FAILED")));
+    render(<BacktestDetailPage runId={RUN_ID} />);
+    await act(async () => undefined);
+    expect(screen.getByText("Backtest in progress")).toBeInTheDocument();
+    await act(async () => vi.advanceTimersByTimeAsync(5000));
+    expect(screen.getByText("Backtest failed")).toBeInTheDocument();
+    await act(async () => vi.advanceTimersByTimeAsync(10_000));
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("cleans up active polling after unmount", async () => {
+    vi.useFakeTimers();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(run("RUNNING")));
+    const view = render(<BacktestDetailPage runId={RUN_ID} />);
+    await act(async () => undefined);
+    expect(screen.getByText("Backtest in progress")).toBeInTheDocument();
+    view.unmount();
+    await act(async () => vi.advanceTimersByTimeAsync(10_000));
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
   it("shows only sanitized failure state without successful results", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse(run("FAILED")),
@@ -16,6 +69,16 @@ describe("backtest detail", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText("Performance")).not.toBeInTheDocument();
     expect(screen.queryByText("Equity curve")).not.toBeInTheDocument();
+  });
+
+  it("renders backend text as text rather than executable markup", async () => {
+    const markup = '<img src=x onerror="window.__injected=true">';
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({ ...run("FAILED"), error_message: markup }),
+    );
+    render(<BacktestDetailPage runId={RUN_ID} />);
+    expect(await screen.findByText(markup)).toBeInTheDocument();
+    expect(document.querySelector("img")).not.toBeInTheDocument();
   });
 
   it("renders authoritative metrics, N/A values, Decimal strings, and event tables", async () => {

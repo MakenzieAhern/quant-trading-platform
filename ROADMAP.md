@@ -61,7 +61,7 @@ Each phase must be deterministic, documented, linted, and tested before dependen
 - PostgreSQL audit persistence for runs, signals, proposals, decisions, orders, fills, snapshots, metrics, and reservations
 - Alembic migration, exact Decimal/UTC serialization, atomic success writes, and durable failure records
 
-## Phase 8 — Research dashboard (implementation ready for review)
+## Phase 8 — Research dashboard (complete)
 
 - Typed Phase 7 API client, stable history/create/detail routes, and bounded collection pagination
 - Registry-constrained dynamic strategy forms with idempotent submission and safe status/error handling
