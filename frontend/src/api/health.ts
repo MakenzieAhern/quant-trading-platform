@@ -1,9 +1,8 @@
 import type { HealthResponse } from "../types/health";
-
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+import { API_BASE_URL } from "./config";
 
 export async function getHealth(signal?: AbortSignal): Promise<HealthResponse> {
-  const response = await fetch(`${API_URL}/api/health`, { signal });
+  const response = await fetch(`${API_BASE_URL}/api/health`, { signal });
   if (!response.ok) {
     throw new Error(`Health request failed with HTTP ${response.status}`);
   }
@@ -11,5 +10,7 @@ export async function getHealth(signal?: AbortSignal): Promise<HealthResponse> {
 }
 
 export function describeConnection(health: HealthResponse | null): string {
-  return health ? `${health.environment} · ${health.broker_mode}` : "connecting";
+  return health
+    ? `${health.environment} · ${health.broker_mode}`
+    : "connecting";
 }
