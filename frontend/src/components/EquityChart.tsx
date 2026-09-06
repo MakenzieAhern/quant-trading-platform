@@ -13,12 +13,15 @@ export function EquityChart({ points }: { points: EquityPoint[] }) {
   const minimum = finite ? Math.min(...values) : 0;
   const maximum = finite ? Math.max(...values) : 0;
   const spread = Math.max(maximum - minimum, Math.abs(maximum) * 0.001, 1);
-  const coordinates = values.map((value, index) => {
-    const x =
-      PAD + (index / Math.max(points.length - 1, 1)) * (WIDTH - PAD * 2);
-    const y = HEIGHT - PAD - ((value - minimum) / spread) * (HEIGHT - PAD * 2);
-    return `${x},${y}`;
-  });
+  const coordinates = finite
+    ? values.map((value, index) => {
+        const x =
+          PAD + (index / Math.max(points.length - 1, 1)) * (WIDTH - PAD * 2);
+        const y =
+          HEIGHT - PAD - ((value - minimum) / spread) * (HEIGHT - PAD * 2);
+        return `${x},${y}`;
+      })
+    : [];
 
   return (
     <figure className="chartCard">
@@ -33,7 +36,13 @@ export function EquityChart({ points }: { points: EquityPoint[] }) {
         </desc>
         <line x1={PAD} x2={WIDTH - PAD} y1={HEIGHT - PAD} y2={HEIGHT - PAD} />
         <line x1={PAD} x2={PAD} y1={PAD} y2={HEIGHT - PAD} />
-        {finite && <polyline points={coordinates.join(" ")} />}
+        {finite ? (
+          <polyline points={coordinates.join(" ")} />
+        ) : (
+          <text x="50%" y="50%" textAnchor="middle">
+            Chart geometry unavailable; exact values remain below.
+          </text>
+        )}
       </svg>
       <figcaption>
         <span>{formatUtc(points[0]?.timestamp ?? null)}</span>
@@ -50,8 +59,8 @@ export function EquityChart({ points }: { points: EquityPoint[] }) {
             </tr>
           </thead>
           <tbody>
-            {points.map((point) => (
-              <tr key={`${point.timestamp}-${point.equity}`}>
+            {points.map((point, index) => (
+              <tr key={`${point.timestamp}-${index}`}>
                 <td>{formatUtc(point.timestamp)}</td>
                 <td>{point.equity}</td>
               </tr>

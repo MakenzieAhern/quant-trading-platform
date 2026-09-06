@@ -4,7 +4,11 @@ import { backtestsApi } from "../api/backtests";
 import { ApiError } from "../api/client";
 import { Link } from "../components/Link";
 import type { CreateBacktestRequest } from "../types/backtests";
-import { isPositiveDecimal } from "../utils/format";
+import {
+  comparePositiveDecimals,
+  isPositiveDecimal,
+  parsePositiveInteger,
+} from "../utils/format";
 import { navigate } from "../utils/navigation";
 
 type StrategyType = CreateBacktestRequest["strategy"]["type"];
@@ -40,45 +44,48 @@ export function CreateBacktestPage() {
       );
       return;
     }
+    let strategy: CreateBacktestRequest["strategy"];
+    if (strategyType === "moving_average_crossover") {
+      const short = parsePositiveInteger(shortPeriod);
+      const long = parsePositiveInteger(longPeriod);
+      if (short === null || long === null || short >= long) {
+        setError(
+          "Periods must be safe positive integers, with short period below long period.",
+        );
+        return;
+      }
+      strategy = {
+        type: strategyType,
+        parameters: { short_period: short, long_period: long },
+      };
+    } else {
+      const period = parsePositiveInteger(rsiPeriod);
+      const thresholdOrder = comparePositiveDecimals(oversold, overbought);
+      const upperBound = comparePositiveDecimals(overbought, "100");
+      if (
+        period === null ||
+        !isPositiveDecimal(oversold) ||
+        !isPositiveDecimal(overbought) ||
+        thresholdOrder !== -1 ||
+        upperBound !== -1
+      ) {
+        setError(
+          "RSI period must be a safe positive integer and thresholds must satisfy 0 < oversold < overbought < 100.",
+        );
+        return;
+      }
+      strategy = {
+        type: strategyType,
+        parameters: { rsi_period: period, oversold, overbought },
+      };
+    }
     const payload: CreateBacktestRequest = {
       dataset_id: "AAPL_fixture",
       symbol: "AAPL",
       initial_cash: initialCash,
       default_order_quantity: quantity,
-      strategy:
-        strategyType === "moving_average_crossover"
-          ? {
-              type: strategyType,
-              parameters: {
-                short_period: Number(shortPeriod),
-                long_period: Number(longPeriod),
-              },
-            }
-          : {
-              type: strategyType,
-              parameters: {
-                rsi_period: Number(rsiPeriod),
-                oversold,
-                overbought,
-              },
-            },
+      strategy,
     };
-    if (
-      strategyType === "moving_average_crossover" &&
-      Number(shortPeriod) >= Number(longPeriod)
-    ) {
-      setError("Short period must be less than long period.");
-      return;
-    }
-    if (
-      strategyType === "rsi_mean_reversion" &&
-      (!isPositiveDecimal(oversold) ||
-        !isPositiveDecimal(overbought) ||
-        Number(oversold) >= Number(overbought))
-    ) {
-      setError("RSI oversold must be a positive value below overbought.");
-      return;
-    }
 
     requestKey.current ??= crypto.randomUUID();
     submissionLocked.current = true;
@@ -127,6 +134,7 @@ export function CreateBacktestPage() {
         className="formPanel"
         onSubmit={(event) => void submit(event)}
         onChange={changed}
+        aria-describedby={error ? "form-error" : undefined}
       >
         <fieldset disabled={pending}>
           <legend>Dataset</legend>
@@ -255,7 +263,7 @@ export function CreateBacktestPage() {
           )}
         </fieldset>
         {error && (
-          <div className="formError" role="alert">
+          <div id="form-error" className="formError" role="alert">
             {error}
           </div>
         )}

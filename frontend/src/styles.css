@@ -441,6 +441,7 @@ label small,
   border-right: 0;
 }
 .metric strong {
+  overflow-wrap: anywhere;
   font:
     500 22px "DM Mono",
     monospace;
@@ -472,6 +473,12 @@ label small,
   stroke-width: 3;
   vector-effect: non-scaling-stroke;
   filter: drop-shadow(0 0 5px rgba(120, 247, 181, 0.35));
+}
+.chartCard text {
+  fill: #789888;
+  font:
+    12px "DM Mono",
+    monospace;
 }
 .chartCard figcaption {
   display: grid;
