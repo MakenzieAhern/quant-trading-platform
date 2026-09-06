@@ -1,0 +1,173 @@
+import { useEffect, useState } from "react";
+
+import {
+  PAPER_WS_BASE_URL,
+  paperApi,
+  paperParsers,
+  parseWireEvent,
+} from "../api/paper";
+import type { PaperSnapshot, PaperWireEvent } from "../types/paper";
+
+export type PaperConnection =
+  "connecting" | "connected" | "reconnecting" | "closed";
+
+function replaceBy<T>(items: T[], next: T, identity: (item: T) => string): T[] {
+  const key = identity(next);
+  const index = items.findIndex((item) => identity(item) === key);
+  if (index < 0) return [...items, next];
+  return items.map((item, itemIndex) => (itemIndex === index ? next : item));
+}
+
+export function applyPaperEvent(
+  current: PaperSnapshot,
+  event: PaperWireEvent,
+): PaperSnapshot {
+  if (event.sequence === null || event.sequence <= current.last_sequence)
+    return current;
+  const next = { ...current, last_sequence: event.sequence };
+  if (event.type === "session.status") {
+    const status = event.payload.status;
+    if (typeof status === "string")
+      return {
+        ...next,
+        session: {
+          ...current.session,
+          status: status as PaperSnapshot["session"]["status"],
+        },
+      };
+  }
+  if (event.type === "market.bar")
+    return { ...next, latest_bar: paperParsers.marketBar(event.payload) };
+  if (event.type === "signal.created") {
+    const signal = paperParsers.signal(event.payload);
+    return {
+      ...next,
+      signals: replaceBy(
+        current.signals,
+        signal,
+        (item) => `${item.strategy_id}:${item.timestamp}:${item.signal_type}`,
+      ),
+    };
+  }
+  if (event.type === "risk.decision") {
+    const decision = paperParsers.decision(event.payload);
+    return {
+      ...next,
+      risk_decisions: replaceBy(
+        current.risk_decisions,
+        decision,
+        (item) => item.proposal_id,
+      ),
+    };
+  }
+  if (event.type === "order.updated") {
+    const order = paperParsers.order(event.payload);
+    return {
+      ...next,
+      orders: replaceBy(current.orders, order, (item) => item.order_id),
+    };
+  }
+  if (event.type === "fill.created") {
+    const fill = paperParsers.fill(event.payload);
+    return {
+      ...next,
+      fills: replaceBy(current.fills, fill, (item) => item.order_id),
+    };
+  }
+  if (event.type === "portfolio.snapshot")
+    return {
+      ...next,
+      latest_portfolio: paperParsers.portfolio(event.payload),
+    };
+  return next;
+}
+
+export function usePaperStream(sessionId: string) {
+  const [snapshot, setSnapshot] = useState<PaperSnapshot | null>(null);
+  const [connection, setConnection] = useState<PaperConnection>("connecting");
+  const [error, setError] = useState<{
+    sessionId: string;
+    message: string;
+  } | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    let socket: WebSocket | null = null;
+    let retry: number | undefined;
+    let firstConnection = true;
+    let buffered: PaperWireEvent[] = [];
+
+    const connect = () => {
+      if (!active) return;
+      setConnection(firstConnection ? "connecting" : "reconnecting");
+      socket = new WebSocket(
+        `${PAPER_WS_BASE_URL}/api/paper-trading/sessions/ws/${sessionId}`,
+      );
+      socket.onopen = () => {
+        const controller = new AbortController();
+        void paperApi
+          .snapshot(sessionId, controller.signal)
+          .then((hydrated) => {
+            if (!active || socket?.readyState !== WebSocket.OPEN) return;
+            const complete = buffered.reduce(applyPaperEvent, hydrated);
+            buffered = [];
+            setSnapshot(complete);
+            setError(null);
+            setConnection("connected");
+            firstConnection = false;
+          })
+          .catch((reason: unknown) => {
+            if (active)
+              setError({
+                sessionId,
+                message:
+                  reason instanceof Error
+                    ? reason.message
+                    : "Unable to hydrate paper session.",
+              });
+          });
+      };
+      socket.onmessage = (message) => {
+        try {
+          const event = parseWireEvent(JSON.parse(String(message.data)));
+          if (event.type === "stream.connected") return;
+          if (event.type === "stream.resync_required") {
+            socket?.close();
+            return;
+          }
+          setSnapshot((current) => {
+            if (current === null) {
+              buffered.push(event);
+              return current;
+            }
+            return applyPaperEvent(current, event);
+          });
+        } catch {
+          setError({
+            sessionId,
+            message: "A malformed paper stream event was rejected.",
+          });
+        }
+      };
+      socket.onerror = () => socket?.close();
+      socket.onclose = () => {
+        if (!active) return;
+        setConnection("reconnecting");
+        retry = window.setTimeout(connect, 1000);
+      };
+    };
+
+    connect();
+    return () => {
+      active = false;
+      if (retry !== undefined) window.clearTimeout(retry);
+      socket?.close();
+    };
+  }, [sessionId]);
+
+  return {
+    snapshot: snapshot?.session.session_id === sessionId ? snapshot : null,
+    connection,
+    error: error?.sessionId === sessionId ? error.message : null,
+  };
+}

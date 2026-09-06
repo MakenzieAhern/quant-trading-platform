@@ -32,6 +32,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </Link>
         <nav aria-label="Primary navigation">
           <Link href="/backtests">Backtests</Link>
+          <Link href="/paper">Paper trading</Link>
           <Link className="primaryLink" href="/backtests/new">
             New backtest
           </Link>
@@ -43,9 +44,10 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
       <main className="workspace">{children}</main>
       <footer>
-        <strong>RESEARCH / BACKTEST</strong>
+        <strong>RESEARCH / BACKTEST / PAPER</strong>
         <span>
-          Persisted results from the deterministic engine. No live execution.
+          Simulated execution only. No live broker connectivity or real-money
+          orders.
         </span>
       </footer>
     </div>
