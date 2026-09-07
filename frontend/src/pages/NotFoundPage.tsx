@@ -1,13 +1,15 @@
 import { Link } from "../components/Link";
+import { useTranslation } from "react-i18next";
 
 export function NotFoundPage() {
+  const { t } = useTranslation("common");
   return (
     <section className="stateCallout" role="alert">
-      <p className="eyebrow">ROUTE NOT FOUND</p>
-      <h1>Page not found</h1>
-      <p>The requested dashboard route is not available.</p>
+      <p className="eyebrow">{t("routeNotFound")}</p>
+      <h1>{t("pageNotFound")}</h1>
+      <p>{t("pageNotFoundBody")}</p>
       <Link className="button" href="/backtests">
-        Return to backtests
+        {t("returnToBacktests")}
       </Link>
     </section>
   );

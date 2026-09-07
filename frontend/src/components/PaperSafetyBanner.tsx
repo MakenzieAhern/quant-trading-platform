@@ -1,15 +1,11 @@
+import { useTranslation } from "react-i18next";
+
 export function PaperSafetyBanner() {
+  const { t } = useTranslation("paper");
   return (
-    <aside
-      className="paperBanner"
-      role="note"
-      aria-label="Paper trading safety notice"
-    >
-      <strong>PAPER TRADING — SIMULATED EXECUTION ONLY</strong>
-      <span>
-        No live broker connectivity, brokerage credentials, or real-money
-        orders.
-      </span>
+    <aside className="paperBanner" role="note" aria-label={t("safetyLabel")}>
+      <strong>{t("safetyTitle")}</strong>
+      <span>{t("safetyBody")}</span>
     </aside>
   );
 }

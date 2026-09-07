@@ -6,10 +6,12 @@ import { StatusBadge } from "../components/StatusBadge";
 import { useApiResource } from "../hooks/useApiResource";
 import { formatUtc, shortId } from "../utils/format";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const LIMIT = 20;
 
 export function BacktestHistoryPage() {
+  const { t } = useTranslation("backtests");
   const [offset, setOffset] = useState(0);
   const runs = useApiResource(
     (signal) => backtestsApi.list(LIMIT, offset, signal),
@@ -20,40 +22,38 @@ export function BacktestHistoryPage() {
     <>
       <header className="pageHeader">
         <div>
-          <p className="eyebrow">RESEARCH LEDGER</p>
-          <h1>Backtests</h1>
-          <p>Durable, deterministic runs from the Phase 7 API.</p>
+          <p className="eyebrow">{t("eyebrow")}</p>
+          <h1>{t("title")}</h1>
+          <p>{t("description")}</p>
         </div>
         <Link className="button buttonPrimary" href="/backtests/new">
-          Create backtest
+          {t("create")}
         </Link>
       </header>
       <section className="panel" aria-labelledby="history-title">
         <div className="panelHeader">
           <div>
-            <p className="kicker">RUN HISTORY</p>
-            <h2 id="history-title">Persisted executions</h2>
+            <p className="kicker">{t("history")}</p>
+            <h2 id="history-title">{t("persisted")}</h2>
           </div>
         </div>
-        {runs.loading && <LoadingPanel label="backtest history" />}
+        {runs.loading && <LoadingPanel label={t("loading")} />}
         {runs.error && <ErrorPanel message={runs.error} />}
         {runs.data && runs.data.items.length === 0 && (
-          <EmptyState>
-            No backtests yet. Create a deterministic research run to begin.
-          </EmptyState>
+          <EmptyState>{t("empty")}</EmptyState>
         )}
         {runs.data && runs.data.items.length > 0 && (
           <div className="tableScroll">
             <table>
               <thead>
                 <tr>
-                  <th scope="col">Run</th>
-                  <th scope="col">Strategy</th>
-                  <th scope="col">Dataset</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Created</th>
-                  <th scope="col">Started</th>
-                  <th scope="col">Completed</th>
+                  <th scope="col">{t("columns.run")}</th>
+                  <th scope="col">{t("columns.strategy")}</th>
+                  <th scope="col">{t("columns.dataset")}</th>
+                  <th scope="col">{t("columns.status")}</th>
+                  <th scope="col">{t("columns.created")}</th>
+                  <th scope="col">{t("columns.started")}</th>
+                  <th scope="col">{t("columns.completed")}</th>
                 </tr>
               </thead>
               <tbody>

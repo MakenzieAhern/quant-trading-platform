@@ -1,10 +1,13 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
-import { describeConnection, getHealth } from "../api/health";
+import { getHealth } from "../api/health";
 import type { HealthResponse } from "../types/health";
 import { Link } from "./Link";
+import { LanguageSelector } from "./LanguageSelector";
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const { t } = useTranslation(["navigation", "common"]);
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [error, setError] = useState(false);
 
@@ -22,38 +25,43 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="appShell">
       <a className="skipLink" href="#main-content">
-        Skip to main content
+        {t("navigation:skip")}
       </a>
       <header className="topbar">
         <Link
           className="brand"
           href="/backtests"
-          aria-label="Quant Platform backtests"
+          aria-label={t("navigation:brand")}
         >
           <span className="brandMark">Q</span>
           <span>QUANT / PLATFORM</span>
         </Link>
-        <nav aria-label="Primary navigation">
-          <Link href="/backtests">Backtests</Link>
-          <Link href="/paper">Paper trading</Link>
+        <nav aria-label={t("navigation:primary")}>
+          <Link href="/backtests">{t("navigation:backtests")}</Link>
+          <Link href="/paper">{t("navigation:paper")}</Link>
+          <Link href="/research/a-share">{t("navigation:research")}</Link>
           <Link className="primaryLink" href="/backtests/new">
-            New backtest
+            {t("navigation:newBacktest")}
           </Link>
         </nav>
-        <span className={`status ${error ? "statusError" : ""}`}>
-          <i aria-hidden="true" />{" "}
-          {error ? "API unavailable" : describeConnection(health)}
-        </span>
+        <div className="topbarTools">
+          <LanguageSelector />
+          <span className={`status ${error ? "statusError" : ""}`}>
+            <i aria-hidden="true" />{" "}
+            {error
+              ? t("navigation:apiUnavailable")
+              : health
+                ? `${health.environment} · ${health.broker_mode}`
+                : t("common:connecting")}
+          </span>
+        </div>
       </header>
       <main id="main-content" tabIndex={-1} className="workspace">
         {children}
       </main>
       <footer>
-        <strong>RESEARCH / BACKTEST / PAPER</strong>
-        <span>
-          Simulated execution only. No live broker connectivity or real-money
-          orders.
-        </span>
+        <strong>{t("navigation:footerMode")}</strong>
+        <span>{t("navigation:footerSafety")}</span>
       </footer>
     </div>
   );

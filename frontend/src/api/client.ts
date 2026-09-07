@@ -6,27 +6,40 @@ export class ApiError extends Error {
   constructor(
     public readonly status: number,
     message: string,
+    public readonly code?: string | null,
   ) {
     super(message);
     this.name = "ApiError";
   }
 }
 
-function safeErrorMessage(status: number, payload: unknown): string {
+function safeError(
+  status: number,
+  payload: unknown,
+): { message: string; code: string | null } {
+  if (typeof payload === "object" && payload !== null && "code" in payload) {
+    const code = typeof payload.code === "string" ? payload.code : null;
+    const message =
+      "message" in payload && typeof payload.message === "string"
+        ? payload.message
+        : `The API request failed (HTTP ${status}).`;
+    return { message, code };
+  }
   if (typeof payload === "object" && payload !== null && "detail" in payload) {
     const detail = payload.detail;
-    if (typeof detail === "string") return detail;
+    if (typeof detail === "string") return { message: detail, code: null };
     if (
       typeof detail === "object" &&
       detail !== null &&
       "message" in detail &&
       typeof detail.message === "string"
     ) {
-      return detail.message;
+      return { message: detail.message, code: null };
     }
   }
-  if (status === 422) return "Please check the submitted values.";
-  return `The API request failed (HTTP ${status}).`;
+  if (status === 422)
+    return { message: "Please check the submitted values.", code: null };
+  return { message: `The API request failed (HTTP ${status}).`, code: null };
 }
 
 export async function apiRequest<T>(
@@ -68,10 +81,8 @@ export async function apiRequest<T>(
     } catch {
       payload = null;
     }
-    throw new ApiError(
-      response.status,
-      safeErrorMessage(response.status, payload),
-    );
+    const error = safeError(response.status, payload);
+    throw new ApiError(response.status, error.message, error.code);
   }
   let payload: unknown;
   try {

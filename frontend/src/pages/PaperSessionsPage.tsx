@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { paperApi } from "../api/paper";
 import { EmptyState, ErrorPanel, LoadingPanel } from "../components/AsyncPanel";
@@ -12,6 +13,7 @@ import { formatUtc, shortId } from "../utils/format";
 const LIMIT = 20;
 
 export function PaperSessionsPage() {
+  const { t } = useTranslation(["paper", "common", "research"]);
   const [offset, setOffset] = useState(0);
   const sessions = useApiResource(
     (signal) => paperApi.list(LIMIT, offset, signal),
@@ -22,38 +24,33 @@ export function PaperSessionsPage() {
       <PaperSafetyBanner />
       <header className="pageHeader">
         <div>
-          <p className="eyebrow">SIMULATED EXECUTION LEDGER</p>
-          <h1>Paper trading sessions</h1>
-          <p>
-            Local deterministic replay sessions. No external broker is
-            connected.
-          </p>
+          <p className="eyebrow">{t("paper:eyebrow")}</p>
+          <h1>{t("paper:title")}</h1>
+          <p>{t("paper:description")}</p>
         </div>
         <Link className="button buttonPrimary" href="/paper/new">
-          Create paper session
+          {t("paper:create")}
         </Link>
       </header>
       <section className="panel" aria-labelledby="paper-sessions-title">
         <div className="panelHeader">
-          <h2 id="paper-sessions-title">Persisted sessions</h2>
+          <h2 id="paper-sessions-title">{t("paper:persisted")}</h2>
         </div>
-        {sessions.loading && <LoadingPanel label="paper trading sessions" />}
+        {sessions.loading && <LoadingPanel label={t("paper:loading")} />}
         {sessions.error && <ErrorPanel message={sessions.error} />}
         {sessions.data?.items.length === 0 && (
-          <EmptyState>
-            No paper sessions yet. Create a safe replay session to begin.
-          </EmptyState>
+          <EmptyState>{t("paper:empty")}</EmptyState>
         )}
         {sessions.data && sessions.data.items.length > 0 && (
           <div className="tableScroll">
             <table>
               <thead>
                 <tr>
-                  <th scope="col">Session</th>
-                  <th scope="col">Strategy</th>
-                  <th scope="col">Provider</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Created</th>
+                  <th scope="col">{t("common:run")}</th>
+                  <th scope="col">{t("common:strategy")}</th>
+                  <th scope="col">{t("research:provider")}</th>
+                  <th scope="col">{t("common:status")}</th>
+                  <th scope="col">{t("common:created")}</th>
                 </tr>
               </thead>
               <tbody>

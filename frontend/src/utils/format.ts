@@ -1,16 +1,26 @@
+import { i18n } from "../i18n";
+
 const DECIMAL_PATTERN = /^(-?)(\d+)(?:\.(\d+))?$/;
 
 export function formatDecimal(value: string | null): string {
-  if (value === null) return "N/A";
+  if (value === null) return i18n.t("common:unavailable");
   const match = DECIMAL_PATTERN.exec(value);
   if (!match) return value;
   const [, sign, integer = "0", fraction = ""] = match;
-  const grouped = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return `${sign}${grouped}${fraction ? `.${fraction}` : ""}`;
+  const locale = i18n.resolvedLanguage ?? "en-US";
+  const signedInteger = BigInt(`${sign}${integer}`);
+  const grouped = new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 0,
+  }).format(signedInteger);
+  const decimalSeparator =
+    new Intl.NumberFormat(locale)
+      .formatToParts(1.1)
+      .find((part) => part.type === "decimal")?.value ?? ".";
+  return `${grouped}${fraction ? `${decimalSeparator}${fraction}` : ""}`;
 }
 
 export function formatPercent(value: string | null): string {
-  if (value === null) return "N/A";
+  if (value === null) return i18n.t("common:unavailable");
   const match = DECIMAL_PATTERN.exec(value);
   if (!match) return value;
   const negative = match[1] === "-";
@@ -21,14 +31,41 @@ export function formatPercent(value: string | null): string {
   const whole =
     shifted.slice(0, decimalPosition).replace(/^0+(?=\d)/, "") || "0";
   const decimals = shifted.slice(decimalPosition).replace(/0+$/, "");
-  return `${negative ? "-" : ""}${whole}${decimals ? `.${decimals}` : ""}%`;
+  const shiftedValue = `${negative ? "-" : ""}${whole}${decimals ? `.${decimals}` : ""}`;
+  const percentSign =
+    new Intl.NumberFormat(i18n.resolvedLanguage ?? "en-US", {
+      style: "percent",
+    })
+      .formatToParts(0)
+      .find((part) => part.type === "percentSign")?.value ?? "%";
+  return `${formatDecimal(shiftedValue)}${percentSign}`;
 }
 
 export function formatUtc(value: string | null): string {
-  if (value === null) return "N/A";
+  if (value === null) return i18n.t("common:unavailable");
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return `${date.toISOString().replace("T", " ").replace(".000Z", "Z")} (UTC)`;
+  const locale = i18n.resolvedLanguage ?? "en-US";
+  const formatter = new Intl.DateTimeFormat(locale, {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  });
+  if (locale === "en-US") {
+    const parts = Object.fromEntries(
+      formatter
+        .formatToParts(date)
+        .filter((part) => part.type !== "literal")
+        .map((part) => [part.type, part.value]),
+    );
+    return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second}Z (UTC)`;
+  }
+  return `${formatter.format(date)} (UTC)`;
 }
 
 export function shortId(value: string): string {
