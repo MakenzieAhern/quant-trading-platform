@@ -11,9 +11,7 @@ class AKShareSdkSource:
         self._sdk: Any = import_module("akshare")
         self.version = str(self._sdk.__version__)
 
-    def daily_rows(
-        self, symbol: str, start: date, end: date
-    ) -> Iterable[Mapping[str, object]]:
+    def daily_rows(self, symbol: str, start: date, end: date) -> Iterable[Mapping[str, object]]:
         frame: Any = self._sdk.stock_zh_a_hist(
             symbol=symbol,
             period="daily",
