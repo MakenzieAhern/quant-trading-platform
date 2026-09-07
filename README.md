@@ -1,24 +1,84 @@
 # Quant Trading Platform
 
-A local research and demonstration platform for deterministic US-equity backtests and simulated paper replay. It connects typed market data, indicators, strategies, pre-trade risk, OMS, execution, accounting and analytics to durable PostgreSQL history and a React dashboard.
+**v1.0.0 — Local Single-User Paper-Trading MVP**
 
-**NO LIVE TRADING. NO REAL BROKER CONNECTIVITY. NO REAL-MONEY ORDER EXECUTION.**
-This project currently supports simulated paper trading only.
+A deterministic quantitative-research platform that turns registered historical Bars into
+auditable strategy signals, risk decisions, simulated Orders and Fills, portfolio accounting,
+analytics, durable PostgreSQL history, and a React dashboard. It demonstrates correct execution
+sequencing and inspectable financial state without a market-data vendor or brokerage account.
 
-## Supported MVP
+> **PAPER TRADING ONLY. NO LIVE BROKER CONNECTIVITY. NO REAL-MONEY ORDER EXECUTION.**
 
-- Registered daily historical CSV fixtures; SMA, EMA, RSI, MACD and Bollinger Bands.
+## Overview
+
+The project is a typed modular monolith. A shared Python engine powers historical backtests and
+finite paper replay; FastAPI exposes REST/WebSocket contracts; PostgreSQL stores authoritative
+audit history; React presents results without recalculating financial state.
+
+**Stack:** Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL 16, Redis 7,
+React 19, TypeScript 6, Vite 8, Node 24, pytest, Vitest, Docker Compose, and GitHub Actions.
+Redis is provisioned for future cache use but is not the current event transport.
+
+## Features
+
+- Registered daily OHLCV CSV fixtures and strict market-data validation.
+- Decimal SMA, EMA, RSI, MACD and Bollinger Band indicators.
 - Moving-average crossover and RSI mean-reversion strategies.
-- Deterministic next-Bar OPEN execution, transaction-cost models, portfolio accounting and analytics.
-- Pre-trade limits, buying-power reservations, explicit OMS states and auditable rejections.
-- PostgreSQL backtest results, paginated REST APIs and an equity/audit dashboard.
-- Paper replay lifecycle, durable events, bounded WebSocket updates and REST recovery.
+- Deterministic next-Bar OPEN simulated execution with configurable engine cost models.
+- Pre-trade exposure, leverage, notional, drawdown and optional buying-power controls.
+- Explicit OMS lifecycle, reservations, risk/broker rejection separation and idempotency.
+- Long/short portfolio accounting, equity/drawdown curves and performance analytics.
+- Atomic PostgreSQL persistence, stable pagination, REST APIs and typed WebSocket events.
+- Backtest and PAPER TRADING dashboards with exact financial strings and UTC labels.
+- Docker-first WSL2/Linux/macOS workflow and isolated CI/integration databases.
 
-The Python engine supports cost-model and multi-strategy composition. The public demo API uses the registered fixture and fixed default zero-cost execution; it does not expose every engine configuration. LIMIT execution, live feeds, broker margin/borrow rules, options, futures, HFT, distributed workers, ML and GPU are outside this MVP.
+The public demo API uses the registered AAPL fixture and fixed default zero-cost execution; it
+does not expose every engine configuration. LIMIT execution exists in the engine but is not a
+dashboard control.
 
-## Quick start: Windows / WSL2, Linux or macOS
+## Architecture
 
-Requires Git, GNU Make and Docker with Compose v2. On Windows enable Ubuntu integration in Docker Desktop and work inside WSL.
+```text
+Market Data → Indicators → Strategy → Signal → Risk Engine → OMS → Execution
+                                                                    ↓
+Analytics ← Portfolio ← Fill ←──────────────────────────────────────┘
+    ↓
+PostgreSQL → REST / incremental WebSocket → React Dashboard
+```
+
+- Financial values use Python `Decimal`, PostgreSQL `NUMERIC(78, 38)`, and exact JSON/UI strings.
+- Authoritative timestamps are timezone-aware UTC; naive datetimes are rejected.
+- Strategies consume completed Bars only. A signal on Bar T may fill at the next later
+  same-symbol Bar OPEN, never on the signal Bar.
+- Fresh state, fixed fixtures, stable event ordering and deterministic identifiers make runs
+  reproducible.
+- Optional `Idempotency-Key` values converge identical requests and reject conflicting reuse.
+- Successful result graphs commit atomically; paper lifecycle/event sequence allocation is
+  serialized with PostgreSQL row locks.
+- WebSocket delivery is bounded and incremental. REST snapshots are always authoritative.
+- Paper lifecycle is `CREATED → STARTING → RUNNING → STOPPING → STOPPED`, with terminal
+  `FAILED` and restart-safe `INTERRUPTED` outcomes.
+
+Domain engines do not import FastAPI or SQLAlchemy, and React performs no authoritative trading,
+risk, accounting, or analytics calculations. See [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Screenshots
+
+No fabricated or generated screenshots are committed. The recommended capture set is:
+
+1. Backtest history with several independent persisted runs.
+2. Backtest creation with strategy and risk controls visible.
+3. Successful result with performance summary and equity curve.
+4. Risk decisions, Orders and Fills tables on the same result page.
+5. Active PAPER TRADING session showing WebSocket status, latest Bar and portfolio.
+
+Use only deterministic fixtures and simulated sessions; exclude profiles, machine paths, tokens,
+and unrelated windows. See the precise [screenshot plan](docs/SCREENSHOTS.md).
+
+## Quick Start
+
+Requires Git, GNU Make, and Docker with Compose v2.24.4 or newer. On Windows 11, enable Ubuntu
+integration in Docker Desktop and run the commands inside WSL2.
 
 ```bash
 git clone https://github.com/MakenzieAhern/quant-trading-platform.git
@@ -28,63 +88,110 @@ make setup
 make up
 ```
 
-Open [dashboard](http://localhost:5173/backtests), [API health](http://localhost:8000/api/health) or [OpenAPI](http://localhost:8000/docs). Migrations run before the backend starts.
+Open the [dashboard](http://localhost:5173/backtests), [API health](http://localhost:8000/api/health),
+or [OpenAPI](http://localhost:8000/docs). Migrations run automatically. Stop without deleting
+history using `make down`.
+
+## Backtesting
+
+Create a run at `/backtests/new`; inspect history at `/backtests` and an immutable result at
+`/backtests/:runId`. Results expose signals, risk decisions, Orders, Fills, portfolio snapshots,
+equity and analytics. Execution is synchronous and uses registered dataset/strategy identifiers,
+never client-provided paths or dynamic imports.
+
+## Risk and OMS
+
+Signals become immutable proposals before Risk Engine evaluation. A rejected proposal creates no
+broker Order. Approved proposals reserve projected exposure/buying power in deterministic order;
+Fill, rejection, cancellation, or submission failure releases the reservation. Dashboard controls
+expose buying-power enforcement and maximum Order notional while the engine supports additional
+documented limits.
+
+## Portfolio and Analytics
+
+One portfolio engine owns cash, signed positions, cost basis, realized/unrealized PnL,
+commission, market value and equity. Analytics consumes immutable snapshots to calculate return,
+CAGR, drawdown, Sharpe, Sortino, exposure and trade counts. Undefined statistics remain null—never
+infinity or a fabricated value.
+
+## Paper Trading
+
+Paper sessions replay six registered completed Bars through the same Strategy → Risk → OMS →
+simulated Broker → Portfolio path. Start/stop is retry-safe; pending Orders are cancelled on stop.
+Active sessions become `INTERRUPTED` after backend process loss and never silently resume.
+
+This is deterministic local replay, not a live-data feed, brokerage sandbox, or execution venue.
+
+## REST and WebSocket
+
+- `POST /api/backtests`; `GET /api/backtests/{id}` plus result/audit collections.
+- `POST /api/paper-trading/sessions` plus `/{id}/start` and `/{id}/stop`.
+- `GET /api/paper-trading/sessions/{id}/snapshot` and `/events`.
+- `/api/paper-trading/sessions/ws/{id}` for incremental events.
+
+Collections enforce limits of 1–200 and stable ordering. Each browser WebSocket queue is bounded;
+a slow or uncertain client reconnects and reloads authoritative REST state.
+
+## Persistence
+
+Alembic manages a single PostgreSQL schema head. Backtest metadata and audit collections persist
+across backend, PostgreSQL, and Compose restarts. Paper lifecycle and typed event journals are
+durable; a coherent REST snapshot is reconstructed transactionally from them. Audit foreign keys
+use restrictive deletion semantics.
+
+## Testing
+
+The v1.0.0 release baseline is **257 backend tests and 70 frontend tests**, with no skips.
 
 ```bash
-make test       # complete suites; disposable, isolated PostgreSQL
-make lint       # Ruff + format, mypy, ESLint, TypeScript
-make build      # frontend production bundle
-make down       # preserves application database history
+make test       # all suites against disposable PostgreSQL
+make lint       # Ruff, format check, strict mypy, ESLint, TypeScript
+make build      # production frontend bundle
 ```
 
-No host Python or Node install is required for these commands. Test containers use a separate Compose project and temporary database; tests never use the application's database URL. Do not run two `make test` commands simultaneously because they share that disposable project name. Optional host development: [development guide](docs/DEVELOPMENT.md).
+CI also validates development, test, and release Compose configurations. See
+[release validation](docs/RELEASE_VALIDATION.md) and [performance baselines](docs/PERFORMANCE.md).
 
-## Architecture
+## Docker / WSL
 
-```text
-Historical Bars → Strategy → Signal → Risk → OMS → simulated Broker
-                                                         ↓ Fill
-                                              Portfolio → Analytics
-                                                         ↓
-                                                   PostgreSQL
-                                                         ↓
-                                             REST / WebSocket → React
+Canonical commands run in pinned containers; host Python and Node are not required. Tests use the
+separate `quant-mvp-tests` project and never truncate application history. `make down` preserves
+named volumes. Windows details are in [the WSL2 guide](docs/WINDOWS_WSL_SETUP.md); optional host
+development is documented in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
+
+For a local release rehearsal using installed backend code and nginx static assets:
+
+```bash
+docker compose -f docker-compose.yml -f compose.release.yml up --build -d --wait
 ```
 
-Python 3.12 / FastAPI / Pydantic / SQLAlchemy / Alembic; PostgreSQL 16; React / TypeScript / Vite / Node 24; pytest / Vitest / Docker Compose. Redis is provisioned for future cache use; current trading and WebSocket delivery use the in-process event bus, not Redis.
+## Security
 
-Domain engines do not import FastAPI or SQLAlchemy. Financial values remain Decimal in Python and exact strings in JSON and UI state; chart coordinates are approximate presentation only. Authoritative timestamps are aware UTC. See [architecture](ARCHITECTURE.md).
+This is an unauthenticated single-user application intended only for loopback. Compose binds all
+published ports to `127.0.0.1`; do not expose them to a shared or public network. Browser mutation
+origins and WebSocket origins are restricted, HTTP request bodies are capped at 64 KiB, identifiers
+are registry/UUID constrained, validation omits reflected input, and unexpected errors are
+sanitized. `.env`, credentials, databases, dependency trees and build outputs are ignored.
 
-## API and dashboard
+## Limitations
 
-- `/backtests`, `/backtests/new`, `/backtests/:runId`: history, creation, metrics, equity, signals, risk decisions, orders and fills.
-- `/paper`, `/paper/new`, `/paper/:sessionId`: simulated session creation, start/stop and live updates.
-- `POST /api/backtests`: synchronous execution; optional `Idempotency-Key`.
-- `GET /api/backtests/{id}` and `/result`, `/signals`, `/risk-decisions`, `/orders`, `/fills`, `/equity`.
-- `POST /api/paper-trading/sessions` and `/{id}/start`, `/{id}/stop`.
-- `GET /api/paper-trading/sessions/{id}/snapshot` and `/events`.
-- `/api/paper-trading/sessions/ws/{id}`: incremental delivery; REST is authoritative.
+- Local single-user simulated trading only; no authentication or public-internet deployment.
+- No live data, broker connectivity, credentials, real-money Orders, or production HA.
+- A process crash during synchronous backtest execution may leave a stale `RUNNING` record;
+  automatic recovery is not implemented. No result is fabricated for that record.
+- Paper history is durable, but active in-memory execution is interrupted rather than resumed.
+- Registered fixtures are small finite regression/demo inputs, not licensed market-data feeds.
+- No distributed workers, HFT, options, futures, broker margin/borrow model, ML, or GPU strategies.
 
-Collection pages accept limits 1–200. Inputs use registered identifiers, never user-supplied paths or imports. Financial JSON inputs are strings with at most 40 integral and 38 fractional digits.
+## Future Work
 
-## Paper semantics and recovery
+Possible future work—none included in v1.0.0—includes authenticated/public deployment,
+lease-backed asynchronous job recovery, rolling live-data retention, additional asset classes,
+advanced visualizations, and separately reviewed broker/ML/GPU research. Any real-money capability
+requires a new security, compliance, and correctness review.
 
-A signal from completed Bar T may fill only at the next later same-symbol Bar OPEN. Replay never contacts a market-data vendor or broker. Each session owns isolated strategies, risk reservations, broker and portfolio. Stopping cancels pending orders. Shutdown/restart marks active sessions INTERRUPTED and never resumes execution automatically. Financial event batches commit before publication; each browser queue is bounded to 64 events and saturation requests REST resynchronization.
+Use [DEMO.md](DEMO.md) for a 5–10 minute walkthrough, [ROADMAP.md](ROADMAP.md) for completed scope,
+and [RELEASE_NOTES.md](RELEASE_NOTES.md) for v1.0.0 release notes.
 
-Backtests execute synchronously. A process crash may leave a stale RUNNING backtest; its missing result is never fabricated. Automatic backtest job recovery is unsupported. Paper restart interruption is supported. Finite registered replay data bounds runtime history; endless feeds require a future retention design.
-
-## Security and configuration
-
-This is a single-user local MVP without authentication. Compose binds every published port to loopback; do not expose it to a shared network. CORS/WebSocket origins are restricted, HTTP bodies are limited to 64 KiB, validation does not reflect original inputs, and unexpected failures return sanitized JSON. There are no broker credentials or live adapters.
-
-`.env` is ignored. Compose defines safe local container URLs and intentionally local-only development credentials; `.env.example` documents optional host settings. `VITE_API_BASE_URL` is public browser configuration and must contain no secrets. [Configuration and operations](docs/DEVELOPMENT.md), [deployment limits](docs/DEPLOYMENT.md).
-
-## Demo, validation and status
-
-Follow [DEMO.md](DEMO.md) for a 5–10 minute walkthrough and exact expected results. The small registered fixture is for regression/demo use, not a licensed market feed or investment recommendation. No external dataset is downloaded.
-
-[Performance baseline](docs/PERFORMANCE.md) records synthetic measurements for regression comparison. CI runs backend, frontend and Compose checks. [ROADMAP.md](ROADMAP.md) distinguishes implemented MVP work from future capabilities.
-
-[Release validation](docs/RELEASE_VALIDATION.md) records the final local-MVP checks and focused review.
-
-Screenshots can be added from the local deterministic demo; no live account imagery is required.
+> Research and education only. Simulated results do not guarantee future performance and are not
+> financial advice.
