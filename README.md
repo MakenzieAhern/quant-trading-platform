@@ -2,12 +2,17 @@
 
 **v1.0.0 — Local Single-User Paper-Trading MVP**
 
-A deterministic quantitative-research platform that turns registered historical Bars into
-auditable strategy signals, risk decisions, simulated Orders and Fills, portfolio accounting,
-analytics, durable PostgreSQL history, and a React dashboard. It demonstrates correct execution
-sequencing and inspectable financial state without a market-data vendor or brokerage account.
+A deterministic, event-driven quantitative trading platform supporting historical backtesting,
+technical indicators, strategy execution, transaction-cost simulation, portfolio accounting,
+performance analytics, pre-trade risk management, an order management system (OMS), PostgreSQL
+persistence, REST APIs, WebSocket delivery, a React dashboard, and local paper trading.
 
 > **PAPER TRADING ONLY. NO LIVE BROKER CONNECTIVITY. NO REAL-MONEY ORDER EXECUTION.**
+
+**Tech stack:** Python · FastAPI · PostgreSQL · Redis · SQLAlchemy · Alembic · React · TypeScript ·
+Docker · GitHub Actions
+
+**Verified release baseline:** 257 backend tests · 70 frontend tests · no skips
 
 ## Overview
 
@@ -15,9 +20,9 @@ The project is a typed modular monolith. A shared Python engine powers historica
 finite paper replay; FastAPI exposes REST/WebSocket contracts; PostgreSQL stores authoritative
 audit history; React presents results without recalculating financial state.
 
-**Stack:** Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL 16, Redis 7,
-React 19, TypeScript 6, Vite 8, Node 24, pytest, Vitest, Docker Compose, and GitHub Actions.
-Redis is provisioned for future cache use but is not the current event transport.
+The detailed stack is Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL 16, Redis 7,
+React 19, TypeScript 6, Vite 8, Node 24, pytest, Vitest, and Docker Compose. Redis is provisioned
+for future cache use but is not the current event transport.
 
 ## Features
 
@@ -38,12 +43,20 @@ dashboard control.
 
 ## Architecture
 
-```text
-Market Data → Indicators → Strategy → Signal → Risk Engine → OMS → Execution
-                                                                    ↓
-Analytics ← Portfolio ← Fill ←──────────────────────────────────────┘
-    ↓
-PostgreSQL → REST / incremental WebSocket → React Dashboard
+```mermaid
+flowchart TD
+    A[Market Data] --> B[Indicators]
+    B --> C[Strategy Engine]
+    C --> D[Signal]
+    D --> E[Risk Engine]
+    E --> F[OMS]
+    F --> G[Execution]
+    G --> H[Fill]
+    H --> I[Portfolio]
+    I --> J[Analytics]
+    J --> K[Persistence]
+    K --> L[REST / WebSocket]
+    L --> M[React Dashboard]
 ```
 
 - Financial values use Python `Decimal`, PostgreSQL `NUMERIC(78, 38)`, and exact JSON/UI strings.
@@ -64,16 +77,34 @@ risk, accounting, or analytics calculations. See [ARCHITECTURE.md](ARCHITECTURE.
 
 ## Screenshots
 
-No fabricated or generated screenshots are committed. The recommended capture set is:
+These are real captures from the Docker-backed v1.0.0 application using the deterministic
+`AAPL_fixture`. No screenshot is fabricated or AI-generated.
 
-1. Backtest history with several independent persisted runs.
-2. Backtest creation with strategy and risk controls visible.
-3. Successful result with performance summary and equity curve.
-4. Risk decisions, Orders and Fills tables on the same result page.
-5. Active PAPER TRADING session showing WebSocket status, latest Bar and portfolio.
+### Backtest Dashboard
 
-Use only deterministic fixtures and simulated sessions; exclude profiles, machine paths, tokens,
-and unrelated windows. See the precise [screenshot plan](docs/SCREENSHOTS.md).
+![Backtest dashboard with successful Moving Average and RSI runs](docs/screenshots/dashboard.jpg)
+
+### Create a Backtest
+
+![Deterministic backtest creation form](docs/screenshots/create-backtest.jpg)
+
+### Backtest Results
+
+![Successful Moving Average backtest result](docs/screenshots/backtest-result.jpg)
+
+### Equity Curve
+
+![Six-point deterministic equity curve](docs/screenshots/equity-curve.jpg)
+
+### Risk, Orders and Fills
+
+![Approved risk decision, filled order, and simulated fill](docs/screenshots/execution-details.jpg)
+
+### Paper Trading
+
+![Running paper replay with a connected WebSocket and completed market Bar](docs/screenshots/paper-trading.jpg)
+
+See [the capture record](docs/SCREENSHOTS.md) for the reproducible inputs and expected values.
 
 ## Quick Start
 
