@@ -1,19 +1,19 @@
-# README screenshot plan
+# README screenshot capture record
 
-The repository intentionally ships without fabricated screenshots. Capture these manually from
-the Docker-backed v1.0.0 application in Chrome at 1440 × 900 or another consistent desktop size.
-Use the deterministic AAPL fixture only. Keep the address bar, browser profile, desktop, terminal,
-machine paths and any tokens outside the crop.
+These real screenshots were captured from the Docker-backed v1.0.0 application at a consistent
+wide desktop viewport. They use only the registered deterministic AAPL fixture. Browser chrome,
+profile, desktop, terminal, machine paths, tokens, and unrelated windows are outside the captures.
 
-| Filename | Route | Required visible content |
+| Filename | Route | Visible evidence |
 | --- | --- | --- |
-| `docs/images/backtest-history.png` | `/backtests` | Header, production/paper label, at least two persisted runs and status badges |
-| `docs/images/backtest-create.png` | `/backtests/new` | Dataset, strategy parameters, initial capital, quantity and risk controls |
-| `docs/images/backtest-result.png` | `/backtests/{id}` | SUCCEEDED, performance summary, UTC labels and full equity curve |
-| `docs/images/backtest-audit.png` | `/backtests/{id}` | Approved or rejected risk decision with the Orders and Fills sections |
-| `docs/images/paper-realtime.png` | `/paper/{id}` | PAPER safety banner, connected WebSocket, RUNNING status, latest Bar and portfolio |
+| `docs/screenshots/dashboard.jpg` | `/backtests` | Production/paper label plus successful persisted Moving Average and RSI runs |
+| `docs/screenshots/create-backtest.jpg` | `/backtests/new` | Registered dataset, capital, sizing and Moving Average strategy inputs |
+| `docs/screenshots/backtest-result.jpg` | `/backtests/{id}` | SUCCEEDED, UTC lifecycle labels, final equity `100012.2`, and performance summary |
+| `docs/screenshots/equity-curve.jpg` | `/backtests/{id}` | Six-point equity curve and the deterministic BUY signal |
+| `docs/screenshots/execution-details.jpg` | `/backtests/{id}` | APPROVED risk decision, FILLED Order, and Fill at next-Bar OPEN `183.92` |
+| `docs/screenshots/paper-trading.jpg` | `/paper/{id}` | PAPER safety banner, connected WebSocket, RUNNING status, latest Bar, and portfolio |
 
-Before each capture, use `DEMO.md` to create known state. Prefer one successful backtest, one
-maximum-notional rejection run, and a Paper session in progress. Check Chrome's console for zero
-application errors, confirm no private browser UI is visible, and optimize images before commit.
-Add README image links only after the real files exist and have been reviewed.
+The reference backtest uses Moving Average periods `2`/`3`, initial cash `100000`, quantity `10`,
+and buying-power enforcement. A second successful run uses RSI period `2` with `30`/`70`
+thresholds. The paper image was captured during the same finite replay while the WebSocket was
+connected. Browser error logs were checked after capture and contained zero application errors.
