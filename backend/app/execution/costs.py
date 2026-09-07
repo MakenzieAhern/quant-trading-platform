@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from decimal import ROUND_HALF_EVEN, Context, Decimal, localcontext
 from typing import Protocol, runtime_checkable
 
@@ -20,6 +21,17 @@ def _require_decimal(value: Decimal, name: str) -> None:
 @runtime_checkable
 class CommissionModel(Protocol):
     def calculate(self, quantity: Decimal, price: Decimal) -> Decimal: ...
+
+
+@runtime_checkable
+class ContextualCommissionModel(Protocol):
+    def calculate_for_fill(
+        self,
+        quantity: Decimal,
+        price: Decimal,
+        side: OrderSide,
+        timestamp: datetime,
+    ) -> Decimal: ...
 
 
 @runtime_checkable

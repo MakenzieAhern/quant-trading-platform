@@ -4,7 +4,7 @@ from typing import Protocol
 from app.domain.market import Bar
 from app.domain.trading import Fill, Order, OrderSide, OrderStatus, OrderType
 from app.event import Event, EventBus, EventType
-from app.execution.costs import CommissionModel, SlippageModel
+from app.execution.costs import CommissionModel, ContextualCommissionModel, SlippageModel
 from app.execution.state import transition_order
 
 
@@ -106,7 +106,15 @@ class SimulatedBroker:
     def _fill(self, order: Order, bar: Bar) -> Fill:
         fill_price = self._slippage_model.apply(bar.open, order.side)
         self._validate_fill_price(bar.open, fill_price, order.side)
-        commission = self._commission_model.calculate(order.quantity, fill_price)
+        if isinstance(self._commission_model, ContextualCommissionModel):
+            commission = self._commission_model.calculate_for_fill(
+                order.quantity,
+                fill_price,
+                order.side,
+                bar.timestamp,
+            )
+        else:
+            commission = self._commission_model.calculate(order.quantity, fill_price)
         if not isinstance(commission, Decimal):
             raise BrokerExecutionError("commission model must return Decimal")
         if not commission.is_finite() or commission < Decimal(0):

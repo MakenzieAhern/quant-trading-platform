@@ -1,3 +1,4 @@
+from app.research.engine import ResearchExecutionEngine, ResearchExecutionResult, ResearchStrategy
 from app.research.factors import FactorUnavailableError, calculate_factors
 from app.research.models import (
     AdjustedClosePoint,
@@ -5,6 +6,7 @@ from app.research.models import (
     FactorValues,
     PortfolioTarget,
     ResearchPeriodKind,
+    ResearchSession,
     ScoredSecurity,
     TargetPosition,
 )
@@ -22,7 +24,11 @@ __all__ = [
     "FactorUnavailableError",
     "FactorValues",
     "PortfolioTarget",
+    "ResearchExecutionEngine",
+    "ResearchExecutionResult",
     "ResearchPeriodKind",
+    "ResearchSession",
+    "ResearchStrategy",
     "ScoredSecurity",
     "TargetPosition",
     "TemporalPeriod",

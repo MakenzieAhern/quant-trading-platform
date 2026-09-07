@@ -3,6 +3,7 @@ from datetime import date
 from decimal import Decimal
 from enum import StrEnum
 
+from app.data.providers.research import DailyBarRecord, SecurityStatusRecord
 from app.domain.markets import SecurityId
 
 
@@ -59,3 +60,19 @@ class TargetPosition:
 class PortfolioTarget:
     positions: tuple[TargetPosition, ...]
     residual_cash: Decimal
+
+
+@dataclass(frozen=True, slots=True)
+class ResearchSession:
+    trading_date: date
+    bars: tuple[DailyBarRecord, ...]
+    statuses: tuple[SecurityStatusRecord, ...]
+    buy_lot_sizes: tuple[tuple[SecurityId, int], ...]
+
+    def __post_init__(self) -> None:
+        if any(bar.trading_date != self.trading_date for bar in self.bars):
+            raise ValueError("all bars must belong to the research session")
+        if len({str(bar.security_id) for bar in self.bars}) != len(self.bars):
+            raise ValueError("research session contains duplicate bars")
+        if any(status.status.trading_date != self.trading_date for status in self.statuses):
+            raise ValueError("all statuses must belong to the research session")
