@@ -1,5 +1,17 @@
 # Architecture
 
+## v1.1 A-share research extension
+
+The modular-monolith extension flows from isolated provider adapters into normalized immutable
+datasets and manifests, then through point-in-time market/rule resolution, cross-sectional factors
+and portfolio construction. Every proposed delta enters the existing RiskEngine → OMS → broker
+execution → Portfolio accounting path. Research analytics and CSI300 comparison persist exact
+decimal strings and lineage before the REST API serves one bilingual React component tree.
+
+BaoStock/AKShare SDK values terminate at `app/integrations`; `app/domain`, `app/research`, strategies,
+risk, portfolio and execution depend only on immutable internal DTOs. Provider APIs are ingestion
+only. PostgreSQL research tables are additive under the post-v1.0 Alembic revision.
+
 Release scope: **v1.0.0 — Local Single-User Paper-Trading MVP**. PAPER TRADING ONLY;
 no live broker connectivity or real-money execution.
 

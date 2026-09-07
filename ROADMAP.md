@@ -1,5 +1,17 @@
 # Roadmap
 
+## v1.1 — China A-Share Research Edition (feature branch)
+
+Implemented foundations include effective-dated A-share models/rules, provider contracts and
+adapters, immutable catalog/checksums, cross-sectional factors/construction, multi-security routing,
+research persistence/API, exact analytics and bilingual UI. Before studies can run, complete and
+audit corporate-action normalization, historical delisted-security coverage, security-specific rule
+exceptions and deterministic Parquet output, then freeze a real zero-cost dataset.
+
+Development and Validation remain pending the readiness gate. Official OOS is separately approved
+and must run once only after all choices are frozen. PR review precedes any merge/tag. Live trading,
+real broker integration, ML/GPU, HFT and additional asset classes remain explicitly out of scope.
+
 Each phase must be deterministic, documented, linted, and tested before dependent work begins. Correctness takes priority over headline performance.
 
 ## Phase 0 — Repository design (complete)

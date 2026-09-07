@@ -1,8 +1,8 @@
 # Quant Trading Platform
 
-**v1.0.0 — Local Single-User Paper-Trading MVP**
+**v1.1 development — China A-Share Research Edition**
 
-A deterministic, event-driven quantitative trading platform supporting historical backtesting,
+A deterministic, event-driven quantitative research and paper-trading platform supporting historical backtesting,
 technical indicators, strategy execution, transaction-cost simulation, portfolio accounting,
 performance analytics, pre-trade risk management, an order management system (OMS), PostgreSQL
 persistence, REST APIs, WebSocket delivery, a React dashboard, and local paper trading.
@@ -36,6 +36,17 @@ for future cache use but is not the current event transport.
 - Atomic PostgreSQL persistence, stable pagination, REST APIs and typed WebSocket events.
 - Backtest and PAPER TRADING dashboards with exact financial strings and UTC labels.
 - Docker-first WSL2/Linux/macOS workflow and isolated CI/integration databases.
+- Point-in-time China A-share identities, status, calendars and effective-dated market rules.
+- Provider-isolated BaoStock ingestion, optional AKShare validation and immutable checksummed datasets.
+- Cross-sectional momentum/low-volatility research routed through the existing RiskEngine, OMS,
+  execution and Portfolio accounting path.
+- Persisted research lineage/results, CSI300 benchmark comparison, and one bilingual React tree
+  supporting English and Simplified Chinese.
+
+The A-share research dataset readiness gate is currently **blocked** by incomplete corporate-action
+normalization, delisted-security coverage verification and historical rule-exception coverage.
+No Development, Validation, or official OOS performance is claimed. See
+[`docs/research/A_SHARE_DATA_READINESS_REPORT.md`](docs/research/A_SHARE_DATA_READINESS_REPORT.md).
 
 The public demo API uses the registered AAPL fixture and fixed default zero-cost execution; it
 does not expose every engine configuration. LIMIT execution exists in the engine but is not a
