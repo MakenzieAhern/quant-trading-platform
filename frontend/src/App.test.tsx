@@ -7,7 +7,7 @@ import { jsonResponse, RUN_ID } from "./test/fixtures";
 const health = {
   status: "ok",
   service: "Quant Trading Platform",
-  version: "0.1.0",
+  version: "1.0.0",
   environment: "development",
   broker_mode: "paper",
 };

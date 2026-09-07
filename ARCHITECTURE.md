@@ -1,5 +1,8 @@
 # Architecture
 
+Release scope: **v1.0.0 — Local Single-User Paper-Trading MVP**. PAPER TRADING ONLY;
+no live broker connectivity or real-money execution.
+
 ## Goals and boundaries
 
 The MVP supports US equities, daily OHLCV data, deterministic event-driven backtests, and paper trading. It is a modular monolith: module boundaries are explicit but deployment stays simple. Live brokerage, multiple asset classes, machine learning, distributed services, and GPU dependencies are deferred.
