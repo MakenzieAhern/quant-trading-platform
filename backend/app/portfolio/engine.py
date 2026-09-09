@@ -3,6 +3,7 @@ from decimal import ROUND_HALF_EVEN, Context, Decimal, localcontext
 from typing import Any
 
 from app.domain.market import Bar
+from app.domain.markets import CorporateAction, CorporateActionCompleteness, CorporateActionType
 from app.domain.trading import Fill, OrderSide, PortfolioSnapshot, Position
 from app.event import Event, EventBus, EventType
 
@@ -141,6 +142,38 @@ class PortfolioEngine:
             Event(EventType.PORTFOLIO_UPDATED, snapshot, occurred_at=snapshot.timestamp)
         )
         return snapshot
+
+    def apply_corporate_action(
+        self, symbol: str, action: CorporateAction, timestamp: datetime
+    ) -> Position | None:
+        """Apply only complete, economically reconstructable long-position events."""
+        self._require_chronological(timestamp, "corporate action")
+        current = self._positions.get(symbol)
+        if current is None or current.quantity <= ZERO:
+            return current
+        if action.completeness is not CorporateActionCompleteness.COMPLETE:
+            raise PortfolioError("unsupported or incomplete corporate action")
+        if action.action_type is CorporateActionType.CASH_DIVIDEND:
+            self._cash += current.quantity * action.cash_per_share
+            self._last_event_timestamp = timestamp
+            return current
+        if action.action_type in {
+            CorporateActionType.STOCK_DIVIDEND,
+            CorporateActionType.BONUS_SHARE,
+        }:
+            quantity = current.quantity * (Decimal(1) + action.share_ratio)
+            average_price = current.average_price / (Decimal(1) + action.share_ratio)
+            updated = current.model_copy(
+                update={
+                    "quantity": quantity,
+                    "average_price": average_price,
+                    "unrealized_pnl": quantity * (current.market_price - average_price),
+                }
+            )
+            self._positions[symbol] = updated
+            self._last_event_timestamp = timestamp
+            return updated
+        raise PortfolioError("unsupported corporate action type")
 
     def reset(self) -> None:
         self._cash = self._initial_cash

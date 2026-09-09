@@ -95,6 +95,12 @@ class ResearchExecutionEngine:
 
     def _process_session(self, session: ResearchSession) -> None:
         timestamp = datetime.combine(session.trading_date, time(15), tzinfo=UTC)
+        for action in sorted(session.corporate_actions, key=lambda item: str(item.security_id)):
+            if action.ex_date != session.trading_date:
+                raise ValueError("corporate action must belong to the research session")
+            self._portfolio.apply_corporate_action(
+                _domain_symbol(action.security_id), action, timestamp
+            )
         statuses = {item.status.security_id: item.status for item in session.statuses}
         ordered_bars = sorted(session.bars, key=lambda item: str(item.security_id))
         for source in ordered_bars:

@@ -75,6 +75,15 @@ class BenchmarkMembershipRecord(ResearchRecord):
     valid_to: date | None = None
 
 
+class AdjustmentFactorRecord(ResearchRecord):
+    security_id: SecurityId
+    ex_date: date
+    forward_factor: PositiveDecimal
+    backward_factor: PositiveDecimal
+    adjustment_factor: PositiveDecimal
+    source_record_hash: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
 class FundamentalRecord(ResearchRecord):
     security_id: SecurityId
     published_on: date

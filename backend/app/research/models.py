@@ -4,7 +4,7 @@ from decimal import Decimal
 from enum import StrEnum
 
 from app.data.providers.research import DailyBarRecord, SecurityStatusRecord
-from app.domain.markets import SecurityId
+from app.domain.markets import CorporateAction, SecurityId
 
 
 class ResearchPeriodKind(StrEnum):
@@ -68,6 +68,7 @@ class ResearchSession:
     bars: tuple[DailyBarRecord, ...]
     statuses: tuple[SecurityStatusRecord, ...]
     buy_lot_sizes: tuple[tuple[SecurityId, int], ...]
+    corporate_actions: tuple[CorporateAction, ...] = ()
 
     def __post_init__(self) -> None:
         if any(bar.trading_date != self.trading_date for bar in self.bars):

@@ -4,7 +4,7 @@ from decimal import Decimal
 
 import pytest
 
-from app.domain.markets import Board, SecurityId
+from app.domain.markets import Board, CorporateActionCompleteness, CorporateActionType, SecurityId
 from app.integrations.akshare import AKShareProviderError, AKShareValidationAdapter
 from app.integrations.baostock import BaoStockAdapter, BaoStockProviderError
 
@@ -89,6 +89,40 @@ class FakeBaoStock:
     def query_zz500_stocks(self, date: str) -> FakeResult:
         return self.query_hs300_stocks(date)
 
+    def query_adjust_factor(self, code: str, *, start_date: str, end_date: str) -> FakeResult:
+        return FakeResult(
+            ["code", "dividOperateDate", "foreAdjustFactor", "backAdjustFactor", "adjustFactor"],
+            [[code, "2024-01-02", "0.9", "1.1", "1.0"]],
+        )
+
+    def query_dividend_data(self, code: str, *, year: str, yearType: str) -> FakeResult:
+        return FakeResult(
+            [
+                "code",
+                "dividPreNoticeDate",
+                "dividRegistDate",
+                "dividOperateDate",
+                "dividPayDate",
+                "dividStockMarketDate",
+                "dividCashPsBeforeTax",
+                "dividStocksPs",
+                "dividReserveToStockPs",
+            ],
+            [
+                [
+                    code,
+                    "2023-12-01",
+                    "2024-01-01",
+                    "2024-01-02",
+                    "2024-01-05",
+                    "",
+                    "0.10",
+                    "0.20",
+                    "0",
+                ]
+            ],
+        )
+
 
 def test_baostock_adapter_normalizes_raw_and_adjusted_data() -> None:
     adapter = BaoStockAdapter(FakeBaoStock(), provider_version="0.8.9", boards=FakeBoards())
@@ -102,6 +136,22 @@ def test_baostock_adapter_normalizes_raw_and_adjusted_data() -> None:
     assert bar.adjusted_close == Decimal("9.0")
     assert bar.adjustment_factor == Decimal("0.9")
     assert status.status.is_suspended is False
+
+
+def test_baostock_normalizes_adjustment_factors_and_economic_actions() -> None:
+    adapter = BaoStockAdapter(FakeBaoStock(), provider_version="0.8.9", boards=FakeBoards())
+    security_id = SecurityId(value="CN-A:SSE:600000")
+    factors = adapter.adjustment_factors(security_id, date(2024, 1, 1), date(2024, 1, 3))
+    actions = adapter.corporate_actions(security_id, date(2024, 1, 1), date(2024, 1, 3))
+
+    assert factors[0].forward_factor == Decimal("0.9")
+    assert [item.action_type for item in actions] == [
+        CorporateActionType.CASH_DIVIDEND,
+        CorporateActionType.STOCK_DIVIDEND,
+    ]
+    assert all(item.completeness is CorporateActionCompleteness.COMPLETE for item in actions)
+    assert actions[0].cash_per_share == Decimal("0.10")
+    assert actions[1].share_ratio == Decimal("0.20")
 
 
 def test_baostock_adapter_rejects_malformed_rows() -> None:

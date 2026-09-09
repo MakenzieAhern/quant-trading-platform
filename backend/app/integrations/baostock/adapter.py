@@ -3,7 +3,9 @@ from datetime import date
 from decimal import Decimal, InvalidOperation
 from typing import Protocol
 
+from app.data.catalog.checksums import canonical_sha256
 from app.data.providers.research import (
+    AdjustmentFactorRecord,
     BenchmarkBarRecord,
     BenchmarkMembershipRecord,
     DailyBarRecord,
@@ -11,7 +13,15 @@ from app.data.providers.research import (
     SecurityStatusRecord,
     SessionRecord,
 )
-from app.domain.markets import Board, DailySecurityStatus, Exchange, SecurityId
+from app.domain.markets import (
+    Board,
+    CorporateAction,
+    CorporateActionCompleteness,
+    CorporateActionType,
+    DailySecurityStatus,
+    Exchange,
+    SecurityId,
+)
 
 
 class BaoStockResult(Protocol):
@@ -46,6 +56,12 @@ class BaoStockClient(Protocol):
     def query_sz50_stocks(self, date: str) -> BaoStockResult: ...
 
     def query_zz500_stocks(self, date: str) -> BaoStockResult: ...
+
+    def query_adjust_factor(
+        self, code: str, *, start_date: str, end_date: str
+    ) -> BaoStockResult: ...
+
+    def query_dividend_data(self, code: str, *, year: str, yearType: str) -> BaoStockResult: ...
 
 
 class BoardHistoryResolver(Protocol):
@@ -183,10 +199,107 @@ class BaoStockAdapter:
             for row in _rows(result)
         )
 
-    def corporate_actions(self, security_id: SecurityId, start: date, end: date) -> tuple[()]:
-        # BaoStock dividend schemas require a separately versioned normalization pass.
-        # Returning no records is explicit; readiness remains PARTIAL until that pass exists.
-        return ()
+    def adjustment_factors(
+        self, security_id: SecurityId, start: date, end: date
+    ) -> tuple[AdjustmentFactorRecord, ...]:
+        records = []
+        for row in _rows(
+            self._client.query_adjust_factor(
+                _provider_code(security_id),
+                start_date=start.isoformat(),
+                end_date=end.isoformat(),
+            )
+        ):
+            records.append(
+                AdjustmentFactorRecord(
+                    security_id=security_id,
+                    ex_date=_date(row, "dividOperateDate"),
+                    forward_factor=_decimal(row, "foreAdjustFactor"),
+                    backward_factor=_decimal(row, "backAdjustFactor"),
+                    adjustment_factor=_decimal(row, "adjustFactor"),
+                    source_record_hash=canonical_sha256(dict(row)),
+                )
+            )
+        return tuple(sorted(records, key=lambda item: item.ex_date))
+
+    def corporate_actions(
+        self, security_id: SecurityId, start: date, end: date
+    ) -> tuple[CorporateAction, ...]:
+        records: list[CorporateAction] = []
+        for year in range(start.year, end.year + 1):
+            result = self._client.query_dividend_data(
+                _provider_code(security_id), year=str(year), yearType="operate"
+            )
+            for row in _rows(result):
+                records.extend(self._normalize_dividend_row(security_id, row, start, end))
+        return tuple(sorted(records, key=lambda item: (item.ex_date or date.max, item.action_type)))
+
+    def _normalize_dividend_row(
+        self,
+        security_id: SecurityId,
+        row: Mapping[str, str],
+        start: date,
+        end: date,
+    ) -> tuple[CorporateAction, ...]:
+        ex_date = _optional_date(row.get("dividOperateDate", ""))
+        if ex_date is not None and not start <= ex_date <= end:
+            return ()
+        common = {
+            "security_id": security_id,
+            "announcement_date": _first_date(row, "dividPreNoticeDate", "dividPlanAnnounceDate"),
+            "effective_date": ex_date,
+            "record_date": _optional_date(row.get("dividRegistDate", "")),
+            "ex_date": ex_date,
+            "payment_date": _optional_date(row.get("dividPayDate", "")),
+            "listing_date": _optional_date(row.get("dividStockMarketDate", "")),
+            "source_provider": self.provider_name,
+            "source_version": self.provider_version,
+            "source_record_hash": canonical_sha256(dict(row)),
+        }
+        actions = []
+        for action_type, field in (
+            (CorporateActionType.CASH_DIVIDEND, "dividCashPsBeforeTax"),
+            (CorporateActionType.STOCK_DIVIDEND, "dividStocksPs"),
+            (CorporateActionType.BONUS_SHARE, "dividReserveToStockPs"),
+        ):
+            value = _optional_decimal(row.get(field, ""))
+            if value is None or value <= 0:
+                continue
+            complete = ex_date is not None
+            actions.append(
+                CorporateAction.model_validate(
+                    {
+                        **common,
+                        "action_type": action_type,
+                        "cash_per_share": (
+                            value
+                            if action_type is CorporateActionType.CASH_DIVIDEND
+                            else Decimal(0)
+                        ),
+                        "share_ratio": (
+                            value
+                            if action_type is not CorporateActionType.CASH_DIVIDEND
+                            else Decimal(0)
+                        ),
+                        "completeness": (
+                            CorporateActionCompleteness.COMPLETE
+                            if complete
+                            else CorporateActionCompleteness.PARTIAL
+                        ),
+                    }
+                )
+            )
+        if actions:
+            return tuple(actions)
+        return (
+            CorporateAction.model_validate(
+                {
+                    **common,
+                    "action_type": CorporateActionType.UNKNOWN_UNSUPPORTED,
+                    "completeness": CorporateActionCompleteness.UNSUPPORTED,
+                }
+            ),
+        )
 
     def benchmark_bars(
         self, benchmark_id: str, start: date, end: date
@@ -303,6 +416,14 @@ def _optional_date(value: str) -> date | None:
         return date.fromisoformat(value)
     except ValueError as exc:
         raise BaoStockProviderError("BAOSTOCK_DATE_INVALID") from exc
+
+
+def _first_date(row: Mapping[str, str], *keys: str) -> date | None:
+    for key in keys:
+        value = _optional_date(row.get(key, ""))
+        if value is not None:
+            return value
+    return None
 
 
 def _decimal(row: Mapping[str, str], key: str) -> Decimal:

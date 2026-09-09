@@ -1,4 +1,4 @@
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from uuid import UUID
 
@@ -6,6 +6,12 @@ import pytest
 from pydantic import ValidationError
 
 from app.domain.market import Bar
+from app.domain.markets import (
+    CorporateAction,
+    CorporateActionCompleteness,
+    CorporateActionType,
+    SecurityId,
+)
 from app.domain.trading import Fill, OrderSide
 from app.event import EventBus
 from app.portfolio import PortfolioEngine, PortfolioError
@@ -110,6 +116,42 @@ def test_same_direction_fills_use_weighted_average_cost() -> None:
     assert position.average_price == Decimal(110)
     assert position.realized_pnl == Decimal(0)
     assert portfolio.cash == Decimal(-1200)
+
+
+def test_complete_cash_and_stock_actions_update_long_position_economics() -> None:
+    portfolio = PortfolioEngine(EventBus(), Decimal(2000))
+    portfolio.apply_fill(make_fill(1, OrderSide.BUY, "100", "10", symbol="600000.SSE"))
+    common = {
+        "security_id": SecurityId(value="CN-A:SSE:600000"),
+        "announcement_date": date(2024, 1, 1),
+        "ex_date": date(2024, 1, 3),
+        "source_provider": "fixture",
+        "source_version": "1",
+        "source_record_hash": "a" * 64,
+        "completeness": CorporateActionCompleteness.COMPLETE,
+    }
+    portfolio.apply_corporate_action(
+        "600000.SSE",
+        CorporateAction(
+            **common,
+            action_type=CorporateActionType.CASH_DIVIDEND,
+            cash_per_share=Decimal("0.1"),
+        ),
+        START + timedelta(days=3),
+    )
+    position = portfolio.apply_corporate_action(
+        "600000.SSE",
+        CorporateAction(
+            **common,
+            action_type=CorporateActionType.STOCK_DIVIDEND,
+            share_ratio=Decimal("0.2"),
+        ),
+        START + timedelta(days=3),
+    )
+    assert portfolio.cash == Decimal(1010)
+    assert position is not None
+    assert position.quantity == Decimal(120)
+    assert position.average_price == Decimal(10) / Decimal("1.2")
 
 
 def test_same_direction_short_fills_use_absolute_weighted_average_cost() -> None:

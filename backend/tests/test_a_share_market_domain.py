@@ -20,6 +20,8 @@ from app.domain.markets import (
     TradingRuleVersion,
     TradingSession,
     TransactionCostSchedule,
+    historical_cn_a_rules,
+    is_locked_one_price_bar,
 )
 from app.domain.trading import OrderSide, OrderType
 
@@ -51,6 +53,9 @@ def _rule(**overrides: object) -> TradingRuleSet:
         "permitted_order_types": frozenset({OrderType.MARKET, OrderType.LIMIT}),
         "cost_schedule": _cost(),
         "source_version": "sse-rules-2023",
+        "source": "SSE",
+        "source_publication_date": date(2023, 2, 17),
+        "provenance_note": "fixture",
     }
     values.update(overrides)
     return TradingRuleSet(**values)  # type: ignore[arg-type]
@@ -190,3 +195,102 @@ def test_rule_version_rejects_overlapping_ranges_within_same_scope() -> None:
                 _rule(valid_from=date(2024, 1, 1), cost_schedule=_cost(date(2024, 1, 1))),
             ),
         )
+
+
+def test_historical_rule_timeline_versions_chinext_reform_and_star_lots() -> None:
+    resolver = TradingRuleResolver(historical_cn_a_rules())
+    before = resolver.resolve(
+        security_id=SecurityId(value="CN-A:SZSE:300001"),
+        market=Market.CN_A,
+        exchange=Exchange.SZSE,
+        board=Board.SZSE_CHINEXT,
+        trading_date=date(2020, 8, 21),
+        side=OrderSide.BUY,
+        order_type=OrderType.MARKET,
+        security_status=_status(
+            security_id=SecurityId(value="CN-A:SZSE:300001"),
+            trading_date=date(2020, 8, 21),
+        ),
+        listing_age_sessions=100,
+    )
+    after = resolver.resolve(
+        security_id=SecurityId(value="CN-A:SZSE:300001"),
+        market=Market.CN_A,
+        exchange=Exchange.SZSE,
+        board=Board.SZSE_CHINEXT,
+        trading_date=date(2020, 8, 24),
+        side=OrderSide.BUY,
+        order_type=OrderType.MARKET,
+        security_status=_status(
+            security_id=SecurityId(value="CN-A:SZSE:300001"),
+            trading_date=date(2020, 8, 24),
+        ),
+        listing_age_sessions=100,
+    )
+    star = resolver.resolve(
+        security_id=SecurityId(value="CN-A:SSE:688001"),
+        market=Market.CN_A,
+        exchange=Exchange.SSE,
+        board=Board.SSE_STAR,
+        trading_date=date(2020, 8, 24),
+        side=OrderSide.BUY,
+        order_type=OrderType.MARKET,
+        security_status=_status(
+            security_id=SecurityId(value="CN-A:SSE:688001"),
+            trading_date=date(2020, 8, 24),
+        ),
+        listing_age_sessions=100,
+    )
+    assert before.price_limit_rate == Decimal("0.10")
+    assert after.price_limit_rate == Decimal("0.20")
+    assert after.rule_source_version != before.rule_source_version
+    assert star.minimum_buy_quantity == 200
+    assert star.buy_quantity_increment == 1
+
+
+def test_named_chinext_transition_exception_is_conservative_no_fill() -> None:
+    security_id = SecurityId(value="CN-A:SZSE:300216")
+    resolved = TradingRuleResolver(historical_cn_a_rules()).resolve(
+        security_id=security_id,
+        market=Market.CN_A,
+        exchange=Exchange.SZSE,
+        board=Board.SZSE_CHINEXT,
+        trading_date=date(2020, 8, 24),
+        side=OrderSide.SELL,
+        order_type=OrderType.MARKET,
+        security_status=_status(security_id=security_id, trading_date=date(2020, 8, 24)),
+        listing_age_sessions=100,
+    )
+    assert resolved.price_limit_rate == Decimal("0.10")
+    assert resolved.executable is False
+
+
+def test_one_price_limit_lock_requires_a_limit_regime_and_blocks_both_directions() -> None:
+    resolver = TradingRuleResolver(historical_cn_a_rules())
+    rules = resolver.resolve(
+        security_id=SECURITY_ID,
+        market=Market.CN_A,
+        exchange=Exchange.SSE,
+        board=Board.SSE_MAIN,
+        trading_date=date(2020, 1, 2),
+        side=OrderSide.BUY,
+        order_type=OrderType.MARKET,
+        security_status=_status(trading_date=date(2020, 1, 2)),
+        listing_age_sessions=100,
+    )
+    assert is_locked_one_price_bar(
+        raw_open=Decimal("11"),
+        raw_high=Decimal("11"),
+        raw_low=Decimal("11"),
+        raw_close=Decimal("11"),
+        pre_close=Decimal("10"),
+        rules=rules,
+    )
+    assert not is_locked_one_price_bar(
+        raw_open=Decimal("11"),
+        raw_high=Decimal("11.01"),
+        raw_low=Decimal("10.99"),
+        raw_close=Decimal("11"),
+        pre_close=Decimal("10"),
+        rules=rules,
+    )
