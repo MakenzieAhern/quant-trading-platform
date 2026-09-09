@@ -43,8 +43,8 @@ for future cache use but is not the current event transport.
 - Persisted research lineage/results, CSI300 benchmark comparison, and one bilingual React tree
   supporting English and Simplified Chinese.
 
-The A-share research dataset readiness gate is currently **blocked** by incomplete corporate-action
-normalization, delisted-security coverage verification and historical rule-exception coverage.
+The A-share research dataset readiness gate is currently **blocked** by the unfinished historical
+universe/delisted-security audit; the latest BaoStock audit attempt timed out before login.
 No Development, Validation, or official OOS performance is claimed. See
 [`docs/research/A_SHARE_DATA_READINESS_REPORT.md`](docs/research/A_SHARE_DATA_READINESS_REPORT.md).
 

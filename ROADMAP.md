@@ -2,11 +2,10 @@
 
 ## v1.1 — China A-Share Research Edition (feature branch)
 
-Implemented foundations include effective-dated A-share models/rules, provider contracts and
-adapters, immutable catalog/checksums, cross-sectional factors/construction, multi-security routing,
-research persistence/API, exact analytics and bilingual UI. Before studies can run, complete and
-audit corporate-action normalization, historical delisted-security coverage, security-specific rule
-exceptions and deterministic Parquet output, then freeze a real zero-cost dataset.
+Implemented foundations include effective-dated A-share models/rules, provider contracts/adapters,
+deterministic Parquet and logical checksums, normalized corporate actions, cross-sectional research,
+persistence/API, exact analytics and bilingual UI. Before studies can run, complete the historical
+universe/delisted-security audit and freeze a real zero-cost dataset.
 
 Development and Validation remain pending the readiness gate. Official OOS is separately approved
 and must run once only after all choices are frozen. PR review precedes any merge/tag. Live trading,

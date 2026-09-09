@@ -19,7 +19,7 @@
 
 ## 当前科学状态
 
-A 股数据就绪门禁尚未通过：公司行动归一化、退市证券覆盖验证和完整历史例外规则仍有重大缺口。
+A 股数据就绪门禁尚未通过：BaoStock 本轮连接超时，历史证券池与退市证券覆盖审计尚未完成。
 因此开发集、验证集和正式样本外研究均未运行，也没有任何收益、夏普或 Alpha 声明。详见
 [`docs/research/A_SHARE_DATA_READINESS_REPORT.md`](docs/research/A_SHARE_DATA_READINESS_REPORT.md)。
 
