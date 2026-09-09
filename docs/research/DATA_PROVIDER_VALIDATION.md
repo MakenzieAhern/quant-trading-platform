@@ -21,9 +21,22 @@ historical-universe, delisting, adjustment-factor, dividend and benchmark range 
 failure is recorded, not converted into synthetic coverage. The real pilot dataset was not created
 and the research gate remains blocked.
 
+Round 2 introduces official-file composition: SSE/SZSE reference exports define point-in-time
+identity/listing/exit coverage; BaoStock supplies audited daily fields; AKShare remains a non-writing
+spot-check adapter. The official importer accepts CSV, JSON and XLSX, pins source-file checksums and
+versions, and refuses incomplete or changed inputs. No complete 2010–2025 official exports are staged
+yet, so this capability is implemented but not evidenced as complete.
+
+Benchmark selection remains frozen before results: CSI300 is primary, CSI500 is secondary, and
+`ELIGIBLE_EQUAL_WEIGHT` is derived only from the audited `eligible_universe(trading_date)`. The
+provider interface and BaoStock adapter already support CSI300 and CSI500 bars/membership. Missing
+point-in-time membership keeps benchmark readiness PARTIAL; it never triggers post-result
+substitution.
+
 Repeat with:
 
 ```bash
 PYTHONPATH=/path/to/optional/providers python backend/scripts/audit_baostock.py
 PYTHONPATH=backend:/path/to/optional/providers python backend/scripts/ingest_research_data.py --pilot --root /outside/git/data/research
+make audit-universe
 ```

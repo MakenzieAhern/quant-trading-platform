@@ -15,7 +15,11 @@ not be an audit.
 This unknown creates material survivorship risk: the frozen strategy cannot use today's active list
 to reconstruct Development or Validation universes. The official gate remains blocked.
 
-Smallest free resolution: rerun `backend/scripts/audit_baostock.py` when BaoStock is reachable and
-reconcile its exited-code sample against official SSE/SZSE termination-of-listing announcements and
-historical listed-company directories. Any code missing from BaoStock history must be excluded by an
-explicit availability rule, with the resulting coverage bias quantified before research approval.
+Round 2 adds the fail-closed `make audit-universe` command. It verifies effective-date boundaries,
+future-IPO exclusion, exited-security retention, source versions, duplicate/overlapping identities,
+history gaps and canonical checksums. Its current persisted result is
+`SECURITY_MASTER_INPUT_MANIFEST_MISSING`, because no complete official SSE/SZSE exports were supplied.
+
+Smallest free resolution: obtain the two official files described in
+`POINT_IN_TIME_SECURITY_MASTER.md`, stage them with their SHA-256 manifest, and rerun the audit.
+BaoStock can then be reconciled to that reference rather than treated as the authoritative universe.

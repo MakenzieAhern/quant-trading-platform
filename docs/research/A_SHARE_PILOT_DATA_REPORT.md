@@ -17,3 +17,7 @@ AKShare substitution or partial directory was called a real pilot.
 The writer-level reproducibility test passes: identical normalized inputs in reversed input order
 produce byte-identical Parquet, identical per-partition SHA-256 and identical metadata-independent
 logical hashes. This does not claim that an uncreated real pilot has a checksum.
+
+Round 2 adds a prerequisite: the official SSE/SZSE point-in-time security-master audit must pass
+before this command may select the pilot subset. No pilot was created from a current active-stock
+list, BaoStock-only universe, or fabricated official records.

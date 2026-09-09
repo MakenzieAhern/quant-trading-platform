@@ -23,3 +23,9 @@ Incomplete or unsupported events raise a portfolio error rather than silently al
 Short-position corporate-action accounting is outside this long-only study. Reconciliation fixtures
 cover cash and share distributions, but a live known ex-dividend record could not be refreshed during
 the 2026-09-09 BaoStock outage. Corporate-action readiness therefore remains PARTIAL.
+
+Readiness is measured using four explicit counts: securities queried over the declared period,
+source rows returned, complete economically actionable events, and unsupported/incomplete events.
+It also records the number of independently reconciled ex-dates. Coverage remains PARTIAL until the
+2010–2025 provider range is reachable and these denominators are frozen; adjusted-price availability
+does not raise the corporate-action score.

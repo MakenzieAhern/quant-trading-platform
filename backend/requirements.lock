@@ -27,6 +27,8 @@ click==8.5.0
     # via
     #   pip-tools
     #   uvicorn
+et-xmlfile==2.0.0
+    # via openpyxl
 fastapi==0.141.1
     # via quant-trading-platform-backend (backend/pyproject.toml)
 greenlet==3.5.5
@@ -57,6 +59,8 @@ mypy==1.20.2
     # via quant-trading-platform-backend (backend/pyproject.toml)
 mypy-extensions==1.1.0
     # via mypy
+openpyxl==3.1.5
+    # via quant-trading-platform-backend (backend/pyproject.toml)
 packaging==26.3
     # via
     #   build

@@ -11,6 +11,7 @@ dependencies = [
   "alembic>=1.17,<2",
   "asyncpg>=0.31,<0.32",
   "fastapi>=0.141,<0.142",
+  "openpyxl>=3.1,<4",
   "pydantic-settings>=2.15,<3",
   "pyarrow>=25,<26",
   "redis>=7,<8",
