@@ -13,6 +13,7 @@ class DatasetPartition(BaseModel):
     media_type: str = Field(pattern=r"^(text/csv|application/vnd\.apache\.parquet)$")
     row_count: int = Field(ge=0)
     sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    logical_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
     @model_validator(mode="after")
     def validate_relative_path(self) -> "DatasetPartition":
@@ -41,6 +42,7 @@ class DatasetManifest(BaseModel):
     rule_version: str = Field(min_length=1)
     source_lineage: tuple[str, ...]
     partitions: tuple[DatasetPartition, ...]
+    logical_content_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     canonical_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     known_limitations: tuple[str, ...] = ()
 

@@ -9,8 +9,27 @@ from app.data.catalog.models import DatasetManifest, DatasetRevisionError
 
 
 def finalize_manifest(values: dict[str, Any]) -> DatasetManifest:
-    candidate_values = {**values, "canonical_sha256": "0" * 64}
+    candidate_values = {
+        **values,
+        "logical_content_sha256": "0" * 64,
+        "canonical_sha256": "0" * 64,
+    }
     candidate = DatasetManifest.model_validate(candidate_values)
+    logical_checksum = canonical_sha256(
+        {
+            "schema_version": candidate.schema_version,
+            "fields": candidate.fields,
+            "partitions": tuple(
+                {
+                    "relative_path": partition.relative_path,
+                    "row_count": partition.row_count,
+                    "logical_sha256": partition.logical_sha256,
+                }
+                for partition in candidate.partitions
+            ),
+        }
+    )
+    candidate = candidate.model_copy(update={"logical_content_sha256": logical_checksum})
     checksum = canonical_sha256(candidate.canonical_payload())
     return candidate.model_copy(update={"canonical_sha256": checksum})
 

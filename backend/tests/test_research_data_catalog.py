@@ -13,7 +13,7 @@ from app.data.catalog import (
     verify_dataset,
     write_manifest,
 )
-from app.data.catalog.normalized import write_canonical_csv
+from app.data.catalog.normalized import write_canonical_csv, write_canonical_parquet
 from app.data.providers.research import DailyBarRecord
 from app.domain.markets import Exchange, SecurityId
 
@@ -83,6 +83,53 @@ def test_partition_revision_is_detected(tmp_path: Path) -> None:
     manifest = load_manifest(dataset_root / "manifest.json")
     with pytest.raises(DatasetRevisionError, match="DATASET_CHECKSUM_MISMATCH"):
         verify_dataset(dataset_root, manifest)
+
+
+def test_parquet_is_deterministic_without_index_or_writer_metadata_in_logical_hash(
+    tmp_path: Path,
+) -> None:
+    rows = (
+        {
+            "security_id": "CN-A:SSE:600001",
+            "trading_date": date(2024, 1, 3),
+            "value": Decimal("1.2300"),
+            "nullable": None,
+            "timestamp": datetime(2024, 1, 3, 8, tzinfo=UTC),
+        },
+        {
+            "security_id": "CN-A:SSE:600000",
+            "trading_date": date(2024, 1, 2),
+            "value": Decimal("2.00"),
+            "nullable": "",
+            "timestamp": datetime(2024, 1, 2, 16, tzinfo=UTC),
+        },
+    )
+    fields = ("security_id", "trading_date", "value", "nullable", "timestamp")
+    first = write_canonical_parquet(
+        tmp_path / "first.parquet",
+        fieldnames=fields,
+        rows=rows,
+        sort_keys=("security_id", "trading_date"),
+    )
+    second = write_canonical_parquet(
+        tmp_path / "second.parquet",
+        fieldnames=fields,
+        rows=reversed(rows),
+        sort_keys=("security_id", "trading_date"),
+    )
+    assert first.logical_sha256 == second.logical_sha256
+    assert first.sha256 == second.sha256
+    assert (tmp_path / "first.parquet").read_bytes() == (tmp_path / "second.parquet").read_bytes()
+
+
+def test_normalized_writer_rejects_naive_timestamps(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="timezone"):
+        write_canonical_parquet(
+            tmp_path / "invalid.parquet",
+            fieldnames=("timestamp",),
+            rows=({"timestamp": datetime(2024, 1, 1)},),
+            sort_keys=("timestamp",),
+        )
 
 
 def test_manifest_cannot_be_silently_replaced(tmp_path: Path) -> None:

@@ -10,7 +10,10 @@ def main() -> None:
     parser.add_argument("--root", type=Path, default=Path("data/research"))
     args = parser.parse_args()
     manifest = LocalDatasetCatalog(args.root).get(args.dataset_id)
-    print(f"verified {manifest.dataset_id} {manifest.canonical_sha256}")
+    print(
+        f"verified {manifest.dataset_id} manifest={manifest.canonical_sha256} "
+        f"logical={manifest.logical_content_sha256}"
+    )
 
 
 if __name__ == "__main__":
