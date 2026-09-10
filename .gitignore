@@ -45,6 +45,7 @@ temp/
 data/raw/*
 data/processed/*
 data/cache/*
+/data/research/
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/cache/.gitkeep
