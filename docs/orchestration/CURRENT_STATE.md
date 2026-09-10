@@ -1,10 +1,9 @@
 # Current state
 
-R1 AWAITING_HUMAN for push-identity clarification, not Gate A.
-Latest attachment requires MackenzieAhern; actual Git/GitHub identity is
-MakenzieAhern. No identity change or push performed. Branch
-feature/a-share-research-v1.1, PR #12 open/unmerged; starting HEAD
-5e4903a14005019d7058a4b5ff18bee170ae09ae.
+R1 RUNNING. Identity typo resolved by user on 2026-09-11.
+Correct Git/GitHub identity: MakenzieAhern; configuration/history unchanged.
+Branch feature/a-share-research-v1.1, PR #12 open/unmerged.
+Prior local checkpoint: 292281df50330f90eb21330d2969ec93496ec00e.
 
 Master/SSE/SZSE/calendar acceptance preserved without reacquisition.
 Sina adjustment route PASS under frozen sina-multiplicative-asof-v1:
@@ -38,6 +37,6 @@ whole securities to force acceptance. Complete effective-dated mapping and
 regression checks before promoting market rules.
 
 Dataset not created/audited/frozen; no studies/OOS. Gate A NOT reached.
-After identity clarification publish checkpoint and continue R1 -> R2 -> R3.
+Publish approved checkpoint and continue R1 -> R2 -> R3.
 Legacy BaoStock recovery is not required. Machine authority:
-.research/project_state.json; read-only controller returns STOP for this pause.
+.research/project_state.json; read-only controller returns R1.

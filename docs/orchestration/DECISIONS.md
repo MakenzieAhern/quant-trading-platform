@@ -1,5 +1,10 @@
 # Decisions
 
+- 2026-09-11: The previously specified GitHub identity 'MackenzieAhern' was a
+  prompt typo. The intended and authenticated repository identity is
+  'MakenzieAhern'. Existing Git configuration and attribution remain unchanged.
+  PUSH_IDENTITY_MISMATCH = RESOLVED. Resume R1 without further identity approval.
+
 - 2026-09-10 checkpoint: OHLCV/CSI300 route binding passes; market-rule acceptance
   remains UNVERIFIED. Do not begin R2 with unresolved delisting-period semantics.
   Pause publication for the explicit MackenzieAhern/MakenzieAhern spelling
