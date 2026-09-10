@@ -30,8 +30,12 @@ def header_state(pages: list[str], code: str, name: str) -> str:
     codes = re.findall(r"(?:证券|股票)代码\s*[\uff1a:]\s*([\d\s、,，]{6,55})", text)  # noqa: RUF001
     if not any(code in re.findall(r"(?<!\d)\d{6}(?!\d)", s) for s in codes):
         raise ValueError("HEADER_SECURITY_MISMATCH")
-    short = compact(name)
-    if not re.search(r"(?:证券|股票)简称[\uff1a:]" + re.escape(short), compact(text)):
+    translation = str.maketrans("\u2217\uff0a\ufe61", "***")
+    short = compact(name).translate(translation)
+    if not re.search(
+        r"(?:证券简称|股票简称|股票名称|公司简称)[\uff1a:]" + re.escape(short),
+        compact(text).translate(translation),
+    ):
         raise ValueError("HEADER_NAME_MISMATCH")
     return status(short)
 

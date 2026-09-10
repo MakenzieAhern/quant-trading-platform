@@ -1,5 +1,8 @@
 """Offline disclosure fixtures are factual text extracted from six archived CNINFO PDFs."""
 
+# Intentional source punctuation is part of the parser regression fixture.
+# ruff: noqa: RUF001
+
 import copy
 import json
 from pathlib import Path
@@ -67,6 +70,27 @@ def test_missing_explicit_effective_date_is_not_publication_fallback():
     pages = [p.replace("起始日", "日期待定") for p in fixture["pages"]]
     with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
         extract(pages, fixture["record"])
+
+
+def test_ordinary_name_label_and_expanded_name_do_not_merge():
+    record = FIXTURES[1]["record"]
+    baseline = extract(FIXTURES[1]["pages"], record)
+    old, new = baseline["old_name"], baseline["new_name"]
+    header = f"证券代码：{baseline['symbol']} 证券简称：{old} {record['sse']['TITLE']}"
+    date_clause = "实施其他风险警示的起始日：2022年2月9日"
+    # Synthetic malformed quote models the independently verified 688282 source defect.
+    text = (
+        header + f"股票简称由“{old}”变更为“{new}；"
+        f"扩位证券简称由“{old}”变更为“{new}扩”；" + date_clause
+    )
+    with pytest.raises(ValueError, match="NAME_TRANSITION_UNRESOLVED"):
+        extract([text], record)
+    event = extract([text + f"实施后A股简称为{new}，"], record)
+    assert (event["new_name"], event["effective_from"]) == (new, "2022-02-09")
+    valid = header + f"股票简称由“{old}”变更为“{new}”；" + date_clause
+    assert extract([valid + f"扩位证券简称由“{old}”变更为“{new}扩”；"], record)["new_name"] == new
+    with pytest.raises(ValueError, match="CONFLICTING_LABELED_NAME"):
+        extract([valid + "实施后A股简称为ST错误，"], record)
 
 
 def test_explicit_date_label_variants():

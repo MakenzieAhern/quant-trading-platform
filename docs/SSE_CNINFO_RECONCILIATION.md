@@ -466,3 +466,155 @@ are N/A, not zero. PR #12 remains OPEN on `feature/a-share-research-v1.1`.
 event-index/lifecycle evidence, including the 13 unexplained controls, sufficiently
 to justify interval-specific exclusions. The official pilot-start anchor is no
 longer the blocker; provisional quarantine alone is not that missing proof.
+
+## Residual-only closure follow-up (2026-09-10)
+
+This follow-up preserves the previous evidence tree and processes exactly its 93
+residual securities, with all 13 controls reviewed first. It does not repeat the
+pilot-start anchor acquisition. Results are in `sse-st-pilot/residual-20260910`
+under the existing external staging root; no market dataset is committed.
+
+### Controls: all retained, all outside the pilot period
+
+All 13 have genuine historical ST/*ST names; none was relabeled NORMAL or treated
+as a false positive. Each terminal classification is `EVENT_OUTSIDE_RELEVANT_PERIOD`.
+`control-terminal-audit.json` retains every token, issue, boundary, source URL,
+retrieval timestamp and SHA-256. The detailed annotations are in `control-reviews.json`.
+
+| Security | Official evidence bounding the risk-name history |
+| --- | --- |
+| 600109 | SSE 2001 table and CNINFO 2003 removal HTML |
+| 600200 | Explicit *ST implementation 2025-05-06 |
+| 600321 | 2019 STAR-to-ST and 2020 removal; conflicting older entry years not repaired |
+| 600421 | 2012/2014 and 2018–2021 cycles; subsequent entry 2025-04-29 |
+| 600636 | 2017/2018 cycle; subsequent entry 2025-04-29 |
+| 600696 | Official 2001 interim report, 2017–2021 cycle, 2025-04-23 entry |
+| 600702 | 2020-09-22 entry and 2021-05-19 exit |
+| 600705 | 2006 entry, 2012 resumption and 2013-02-06 removal |
+| 600811 | Explicit *ST implementation 2025-03-18 |
+| 600837 | SSE pre-2001 ST/PT evidence and official 2002 restoration HTML |
+| 605081 | Explicit *ST implementation 2025-04-29 |
+| 605199 | Explicit ST implementation 2025-04-30 |
+| 688022 | Ordinary versus expanded name distinguished; ST entry 2026-05-06 |
+
+### Full residual results
+
+```text
+CONTROL_TOTAL = 13
+CONTROL_EXPLAINED = 0
+CONTROL_FALSE_POSITIVE = 0
+CONTROL_OUTSIDE_PERIOD = 13
+CONTROL_EXCLUDED = 0
+CONTROL_UNRESOLVED = 0
+
+RESIDUAL_TOTAL = 93
+EXPLAINED_BY_OFFICIAL_EVENT = 66
+NAME_HISTORY_FALSE_POSITIVE = 0
+NON_RISK_NAME_CHANGE = 0
+EVENT_OUTSIDE_RELEVANT_PERIOD = 26
+CONSERVATIVELY_EXCLUDED = 0
+UNRESOLVED = 1
+
+HISTORICAL_ST_NAMES_FOUND = 218
+HISTORICAL_STAR_ST_NAMES_FOUND = 238
+EXPLAINED_BY_OFFICIAL_EVENTS = 233
+OUTSIDE_PERIOD_TOKENS = 222
+UNEXPLAINED_NAME_HISTORIES = 1
+CONTROL_UNEXPLAINED = 0
+NONCONTROL_UNEXPLAINED = 1
+
+EXCLUDED_SECURITIES = 0
+EXCLUDED_SECURITY_DAYS = 0
+EXCLUDED_UNIVERSE_PERCENTAGE = 0
+```
+
+Control categories are mutually exclusive: `CONTROL_EXPLAINED` here means the
+event-chain category, not all successfully dispositioned controls. The 233 token
+explanations include official anchor-supported replay. The 222 outside-period
+tokens are reported separately, not counted as accepted effective-dated events.
+Duplicate token occurrences remain counted, so 233 + 222 + 1 = 456.
+
+Source reuse closed most gaps. Targeted additions include official 2001/2006/2009
+SSE tables, old CNINFO HTML bundles, issuer-header disclosures and issuer
+restructuring documents with explicit former-name or dated-transition evidence.
+An official dated former-name statement supplies an upper boundary only; its
+undated internal name ordering never supplies effective dates. Non-risk renames
+are documented at token level but aggregate to outside-period or event-chain
+categories where the security also has genuine risk transitions.
+
+Parser v4 separates ordinary names from expanded STAR-board names and rejects
+quoted names containing nested quotation marks or semicolons. An independent
+explicit ordinary A-share name label may resolve malformed quoted prose, but
+conflicting labels are rejected. This corrects 688282's 2024-05-06 entry name;
+the entry date and risk state were already in the previous ledger. Header checks
+also recognize fullwidth asterisks and explicit company/stock-name header labels.
+The resulting ledger contains 345 events, including the same 111 pilot-period
+events. No old source snapshot was overwritten.
+
+### Re-run coverage gate
+
+| Gate | Result |
+| --- | --- |
+| PILOT_START_STATUS | PASS: official anchor unchanged |
+| ENTRY_EFFECTIVE_DATE | PASS for accepted pilot events; exhaustive coverage still PARTIAL |
+| EXIT_EFFECTIVE_DATE | PASS for accepted pilot events; exhaustive coverage still PARTIAL |
+| EVENT_LEDGER_COVERAGE | PARTIAL |
+| HISTORICAL_NAME_CROSSCHECK | PARTIAL: one exact token unresolved |
+| DELISTED_RETENTION | PASS in master/replay, not a dataset audit |
+| FUTURE_EVENT_LEAKAGE | PASS |
+| INPUT_ORDER_REPRODUCIBILITY | PASS |
+
+Replay checks cover 2,287 SSE securities, 382 sessions and 853,328 eligible
+security-days. There are zero structural unknown states, event-chain gaps or
+late-publication transitions. These are **evidence-replay checks**, not proof that
+the remaining oracle gap is harmless. Every emitted interval retains
+`coverage_certified=false` and `dataset_admission_authorized=false`.
+
+No uncertain whole-pilot interval was invented. `exclusions.json` is empty;
+`unresolved-source-gaps.json` separately retains the unresolved security and
+searched evidence, with null boundaries rather than fabricated dates. Consequently
+zero exclusions does **not** mean the complete universe is accepted.
+
+Two fresh offline processes with different Python hash seeds reproduced the
+324-file residual manifest byte-for-byte. Backend: **345 passed**; frontend:
+**74 passed**. Focused parser/oracle regression checks, Ruff/format and strict
+script type checks passed. The first bare-container full-suite invocation lacked
+the test database configuration; the complete suite then passed using the
+repository's isolated `compose.test.yml` database and fixtures.
+
+- Event SHA-256: `842d95eff88bf51e60edbd9d85832404ab371dc0746f29e511bbc63d80d70afc`
+- Residual canonical manifest SHA-256:
+  `188c9ba2f076d334db13380aa304731e6c4f017a4ea7241f9d413c8ad9c0c8da`
+
+Offline replay from `backend`, using preserved staging evidence:
+
+```sh
+python -m scripts.sse_st_residual \
+  --root "$STAGING/sse-st-pilot" \
+  --output "$STAGING/sse-st-pilot/residual-20260910" \
+  --master "$STAGING/security-master-pilot/sse-security-master.csv"
+```
+
+```text
+SSE_HISTORICAL_ST_RECONSTRUCTION = PARTIAL
+PILOT_DATASET_CREATED = NO
+AKSHARE_ACCEPTANCE = PARTIAL (NOT PROMOTED TO PASS_FOR_PILOT)
+PILOT_A_SHARE_DATA_READINESS = BLOCKED
+DATASET_AUDITED = NO
+DATASET_FROZEN = NO
+DEVELOPMENT_STUDY_RUN = NO
+VALIDATION_STUDY_RUN = NO
+OFFICIAL_OOS_RUN = NO
+PR_MERGED = NO
+V1.1.0_CREATED = NO
+```
+
+All 13 requested dataset audits are NOT RUN; dataset counts and dataset hashes
+are N/A. This follow-up did not create, freeze or run a dataset or strategy.
+PR #12 remains OPEN on the existing feature branch; Git identity is unchanged.
+
+**ONE smallest remaining blocker:** an official SSE/CNINFO dated boundary for
+600721's exact `ST百花村` token. Targeted old-name/issuer/date queries found the
+official 2001-04-30 suspension disclosure (CNINFO 509408) and the SSE PT table,
+but neither explicitly identifies the prior ST name. That proves PT history,
+not the missing ST-name boundary. No date is borrowed from third-party name order.

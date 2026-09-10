@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-explicit-start-v2"
+VERSION = "sse-cninfo-ordinary-name-v4"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -84,18 +84,32 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                 raise ValueError("WRONG_CNINFO_ISSUER_COMPANY")
     names = list(
         re.finditer(
-            r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?由?[“\"]([^”\"]{1,20})[”\"]"
-            r"(?:变更|更改|变)为[“\"]([^”\"]{1,20})[”\"]",
+            r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?由?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
+            r"(?:变更|更改|变)为[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
             text,
         )
     )
-    names = [m for m in names if m[1] == compact(issuer_name)]
+    names = [
+        m
+        for m in names
+        if m[1] == compact(issuer_name) and text[max(0, m.start() - 2) : m.start()] != "扩位"
+    ]
     confirmation = False
     if not names:
         name = re.escape(compact(issuer_name))
         names = list(re.finditer(r"(?:股票|证券)简称仍为[“\"](" + name + r")[”\"]", text))
         confirmation = bool(names)
     pairs = {(m[1], m[1] if confirmation else m[2]) for m in names}
+    # A separately labeled ordinary A-share name survives malformed quoted prose.
+    labels = list(
+        re.finditer(r"(?:实施|撤销)后A股简称为([S*ST\u4e00-\u9fff]{1,12})[\uff0c。\uff1b;]", text)
+    )
+    labeled = {(compact(issuer_name), m[1]) for m in labels}
+    if pairs and labeled and pairs != labeled:
+        raise ValueError("CONFLICTING_LABELED_NAME")
+    if not pairs and len(labeled) == 1:
+        pairs = labeled
+        names = labels
     if len(pairs) != 1:
         raise ValueError("NAME_TRANSITION_UNRESOLVED")
     old, new = next(iter(pairs))
@@ -110,7 +124,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         )
     )
     dated = {(date(int(m[1]), int(m[2]), int(m[3])).isoformat()) for m in dates}
-    if not dates and prefix_mode and not confirmation:
+    if not dates and prefix_mode and not confirmation and not labeled:
         # Older layouts date the exact name-change clause rather than a start-date label.
         # Never use a general publication/suspension date or a date from another sentence.
         dates = list(
@@ -170,7 +184,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         "cninfo_document_sha256": record["cninfo_document_sha256"],
         "match_method": record["match_method"],
         "match_confidence": confidence,
-        "parser_version": "sse-cninfo-explicit-clause-v3" if prefix_mode else VERSION,
+        "parser_version": VERSION,
         "support": support,
     }
 
