@@ -1,0 +1,11 @@
+{
+  "release": "v1.1",
+  "oos_authorized": false,
+  "authorization_evidence": null,
+  "methodology_frozen": false,
+  "dataset_sha256": null,
+  "strategy_version": null,
+  "methodology_sha256": null,
+  "official_oos_runs": [],
+  "policy": "Explicit human authorization at Gate B is required. Execute once per frozen methodology; never overwrite prior results."
+}

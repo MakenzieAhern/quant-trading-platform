@@ -1,0 +1,32 @@
+{
+  "release": "v1.1",
+  "current_stage": "R1",
+  "status": "BLOCKED",
+  "branch": "feature/a-share-research-v1.1",
+  "pr": 12,
+  "dataset_frozen": false,
+  "dataset_audited": false,
+  "pilot_dataset_created": false,
+  "pilot_data_readiness": "BLOCKED",
+  "oos_authorized": false,
+  "release_authorized": false,
+  "human_approval_gate": null,
+  "next_action": "Resolve the adjustment methodology authority: recover the audited factor definition or explicitly select and validate a new definition before binding remaining sources.",
+  "blocker": "ADJUSTMENT_METHOD_AUTHORITY_AMBIGUITY: no recovered accepted definition reconciles legacy BaoStock, Sina multiplicative factors and non-equivalent Eastmoney HFQ prices.",
+  "stop_condition": "AUTHORITATIVE_SOURCE_AMBIGUITY",
+  "human_approval_required": true,
+  "source_manifest_path": "source-authority-r1-20260910/source-authority-manifest.json (relative to external staging root)",
+  "source_manifest_sha256": "7eec56c7d3ba16b137851686258b6a65ef59e83d4f7c291bf4b7331e67729fbb",
+  "last_completed_stage": null,
+  "source_authority_preflight": "FAIL",
+  "authorities": {
+    "SECURITY_MASTER": "PASS",
+    "SSE": "PASS",
+    "SZSE": "PASS",
+    "OHLCV": "BOUND_NOT_ACCEPTED",
+    "ADJUSTMENT": "PARTIAL_CANDIDATE",
+    "CALENDAR": "PASS",
+    "BENCHMARK": "UNVERIFIED",
+    "MARKET_RULE": "UNVERIFIED"
+  }
+}
