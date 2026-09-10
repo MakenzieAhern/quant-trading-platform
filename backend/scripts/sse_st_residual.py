@@ -251,7 +251,154 @@ def residual(root: Path, output: Path) -> list[dict[str, Any]]:
     return result
 
 
-def coverage_gate(root: Path, output: Path, master_path: Path) -> dict[str, Any]:
+def anchor_closes_ancient_gap(
+    anchor: dict[str, Any],
+    unresolved_before: str | None,
+    history: list[dict[str, Any]],
+    contradictions: list[str],
+    coverage_complete: bool,
+) -> bool:
+    """Reset only reviewed pre-anchor uncertainty, never an undated arbitrary gap."""
+    if (
+        not unresolved_before
+        or not anchor.get("authoritative")
+        or not anchor.get("complete_for_security")
+        or anchor.get("status") not in {"NORMAL", "ST", "STAR_ST"}
+        or not unresolved_before < anchor["effective_from"] < START
+        or anchor["known_on"] > anchor["effective_from"]
+        or contradictions
+        or not coverage_complete
+    ):
+        return False
+    state = anchor["status"]
+    for event in sorted(history, key=lambda e: (e["effective_from"], canonical(e))):
+        if event["effective_from"] == anchor["effective_from"] and event["status"] != state:
+            return False
+        if anchor["effective_from"] < event["effective_from"] <= END:
+            if (
+                event["old_status"] != state
+                or max(event["sse_publication_date"], event["cninfo_publication_date"])
+                > event["effective_from"]
+            ):
+                return False
+            state = event["status"]
+    return True
+
+
+def pilot_review(root: Path, source: Path, events: list[dict[str, Any]]) -> dict[str, Any]:
+    """600721's reviewed ancient anomaly; no automatic waiver for other tokens."""
+    previous = root / "closure-20260910"
+    for directory, filename in (
+        (source, "residual-manifest.json"),
+        (previous, "closure-manifest.json"),
+    ):
+        manifest = json.loads((directory / filename).read_bytes())
+        for entry in manifest["files"]:
+            if sha((directory / entry["path"]).read_bytes()) != entry["sha256"]:
+                raise ValueError("PILOT_REVIEW_SOURCE_CHANGED")
+    history = [e for e in events if e["symbol"] == "600721"]
+    latest = max(
+        (e for e in history if e["effective_from"] < START),
+        key=lambda e: e["effective_from"],
+    )
+    # This evidence review is deliberately tied to the accepted removal document.
+    if latest["cninfo_document_id"] != "1213213457" or latest["status"] != "NORMAL":
+        raise ValueError("REVIEWED_ANCHOR_CHANGED")
+    anchor = {
+        "authoritative": latest["match_confidence"] == "EXACT",
+        "complete_for_security": True,
+        "effective_from": latest["effective_from"],
+        "known_on": max(latest["sse_publication_date"], latest["cninfo_publication_date"]),
+        "status": latest["status"],
+        "document": latest,
+    }
+    snapshot = json.loads((previous / "pilot-start-anchor.json").read_bytes())["600721"]
+    contradictions = []
+    if snapshot["status"] != anchor["status"]:
+        contradictions.append("YEAR_END_ANCHOR_CONFLICT")
+    # Existing complete issuer-scoped metadata search plus the accepted SSE ledger.
+    queries = [
+        q
+        for q in json.loads((previous / "targeted-history-metadata.json").read_bytes())
+        if any(r["secCode"] == "600721" for r in q.get("records", []))
+    ]
+    later_notices = [
+        r
+        for q in queries
+        for r in q["records"]
+        if r["secCode"] == "600721"
+        and anchor["effective_from"] < r["adjunctUrl"].split("/")[1] <= END
+    ]
+    # A new notice needs a new evidence review, even if it might be non-state-changing.
+    contradictions.extend(r["announcementId"] for r in later_notices)
+    ledger = root / "snapshots/20260910T021848Z"
+    ledger_manifest = json.loads((ledger / "source-manifest.json").read_bytes())
+    pages = ledger_manifest["pages"]
+    expected_months = {
+        f"{year}-{month:02d}"
+        for year in range(2022, 2025)
+        for month in range(1, 13)
+        if f"{year}-{month:02d}" <= END[:7]
+    }
+    if {p["month"] for p in pages} != expected_months:
+        raise ValueError("SSE_LEDGER_MONTH_GAP")
+    for month in expected_months:
+        group = [p for p in pages if p["month"] == month]
+        if {p["page"] for p in group} != set(range(1, group[0]["page_count"] + 1)):
+            raise ValueError("SSE_LEDGER_PAGE_GAP")
+    for page in pages:
+        payload = (ledger / page["relative_path"]).read_bytes()
+        if sha(payload) != page["sha256"]:
+            raise ValueError("SSE_LEDGER_CHECKSUM_MISMATCH")
+        for group in json.loads(payload)["pageHelp"]["data"]:
+            contradictions.extend(
+                r["ORG_BULLETIN_ID"]
+                for r in group
+                if r["SECURITY_CODE"] == "600721" and anchor["effective_from"] < r["SSEDATE"] <= END
+            )
+    observations = json.loads((source / "issuer-name-observations.json").read_bytes())
+    contradictions.extend(
+        o["document"]
+        for o in observations
+        if o["symbol"] == "600721"
+        and anchor["effective_from"] < o["date"] <= END
+        and name_key(o["name_key"]).startswith(("ST", "*ST", "SST", "S*ST", "PT"))
+    )
+    # PT identifies the old lifecycle, not the missing ST entry's effective date.
+    ancient = "residual-20260910/documents/509408.html"
+    raw = (root / ancient).read_bytes()
+    ancient_text = "\n".join(json.loads((source / "text/509408.json").read_bytes()))
+    if not all(t in ancient_text for t in ("600721", "PT百花村")):
+        raise ValueError("ANCIENT_LIFECYCLE_EVIDENCE_CHANGED")
+    closed = anchor_closes_ancient_gap(
+        anchor,
+        "2001-12-31",
+        history,
+        contradictions,
+        bool(queries) and all(q["complete"] for q in queries),
+    )
+    return {
+        "symbol": "600721",
+        "token": "ST百花村",
+        "classification": "FULL_HISTORY_ONLY_UNRESOLVED" if closed else "PILOT_RELEVANT_UNRESOLVED",
+        "ancient_lifecycle_evidence": {"path": ancient, "sha256": sha(raw)},
+        "ancient_st_effective_date": None,
+        "reviewed_ancient_lifecycle_before": "2001-12-31",
+        "latest_pre_pilot_event_anchor": anchor,
+        "official_year_end_snapshot": snapshot,
+        "snapshot_publication_backdated": False,
+        "later_risk_notices": later_notices,
+        "sse_ledger_manifest_sha256": sha((ledger / "source-manifest.json").read_bytes()),
+        "sse_ledger_pages_verified": len(pages),
+        "contradictions": sorted(set(contradictions)),
+        "pilot_events": [e for e in history if START <= e["effective_from"] <= END],
+        "dates_from_name_order": False,
+    }
+
+
+def coverage_gate(
+    root: Path, output: Path, master_path: Path, pilot_source: Path | None = None
+) -> dict[str, Any]:
     """Recheck structural replay without authorizing admission on a partial oracle."""
     previous = root / "closure-20260910"
     baseline = json.loads((previous / "closure-summary.json").read_bytes())
@@ -266,7 +413,8 @@ def coverage_gate(root: Path, output: Path, master_path: Path) -> dict[str, Any]
         r["symbol"]: r["anchor"]
         for r in json.loads((previous / "security-closure-audit.json").read_bytes())
     }
-    events = json.loads((output / "combined-events.json").read_bytes())
+    source = pilot_source or output
+    events = json.loads((source / "combined-events.json").read_bytes())
     for event in events:
         document = event["cninfo_document_id"]
         raw = next(
@@ -284,7 +432,7 @@ def coverage_gate(root: Path, output: Path, master_path: Path) -> dict[str, Any]
             raise ValueError("EVENT_DOCUMENT_CHECKSUM_MISMATCH")
         if any(re.search(r'[;\uff1b“”"]', event[k]) for k in ("old_name", "new_name")):
             raise ValueError("MALFORMED_EVENT_NAME")
-    rows = json.loads((output / "residual-terminal-audit.json").read_bytes())
+    rows = json.loads((source / "residual-terminal-audit.json").read_bytes())
     row_map = {r["symbol"]: r for r in rows}
     crosscheck = []
     for row in json.loads((previous / "name-crosscheck.json").read_bytes()):
@@ -308,6 +456,18 @@ def coverage_gate(root: Path, output: Path, master_path: Path) -> dict[str, Any]
             }
         )
     unresolved = [r for r in crosscheck if r["unexplained"]]
+    review = pilot_review(root, source, events) if pilot_source else None
+    pilot_unresolved = [
+        r
+        for r in unresolved
+        if not (
+            review
+            and review["classification"] == "FULL_HISTORY_ONLY_UNRESOLVED"
+            and r["symbol"] == review["symbol"]
+            and {t["token"] for t in r["tokens"] if t["classification"] == "UNRESOLVED"}
+            == {review["token"]}
+        )
+    ]
     intervals, chains, temporal = [], [], []
     order_ok, leakage_ok = True, True
     for security in sorted(master, key=lambda r: r["security_id"]):
@@ -365,7 +525,7 @@ def coverage_gate(root: Path, output: Path, master_path: Path) -> dict[str, Any]
     total_tokens = [t for r in crosscheck for t in r["tokens"]]
     counts = Counter(r["classification"] for r in rows)
     complete = (
-        not unresolved
+        not (pilot_unresolved if pilot_source else unresolved)
         and not chains
         and not temporal
         and not structural_unknown
@@ -420,6 +580,34 @@ def coverage_gate(root: Path, output: Path, master_path: Path) -> dict[str, Any]
         "AKSHARE_ACCEPTANCE": "PASS_FOR_PILOT" if complete else "PARTIAL",
         "PILOT_A_SHARE_DATA_READINESS": "READY" if complete else "BLOCKED",
     }
+    if pilot_source:
+        summary.update(
+            {
+                "scope": "PILOT_SCOPED_ST_COVERAGE_NOT_DATASET_PUBLICATION",
+                "FULL_HISTORY_UNEXPLAINED_NAME_HISTORIES": len(unresolved),
+                "PILOT_RELEVANT_UNEXPLAINED_NAME_HISTORIES": len(pilot_unresolved),
+                "FULL_HISTORY_ST_COMPLETENESS": "PARTIAL" if unresolved else "PASS",
+                "PILOT_ST_COMPLETENESS": "PASS" if complete else "PARTIAL",
+                "SSE_HISTORICAL_ST_RECONSTRUCTION_FOR_PILOT": "PASS" if complete else "PARTIAL",
+                "SSE_HISTORICAL_ST_RECONSTRUCTION": "PARTIAL" if unresolved else "PASS",
+                "EVENT_LEDGER_COVERAGE": "PARTIAL" if unresolved else "PASS",
+                "EVENT_LEDGER_COVERAGE_FOR_PILOT": "PASS" if complete else "PARTIAL",
+                "HISTORICAL_NAME_CROSSCHECK_FOR_PILOT": "PASS"
+                if not pilot_unresolved
+                else "PARTIAL",
+                "PILOT_A_SHARE_DATA_READINESS": "ST_GATE_PASSED_MATERIALIZATION_PENDING"
+                if complete
+                else "BLOCKED",
+                "exclusion_policy": (
+                    "Exclude only pilot-relevant uncertainty; full-history gaps retained."
+                ),
+            }
+        )
+        for interval in intervals:
+            interval["coverage_certified"] = complete
+            # ST certification alone is not approval of prices, adjustments or publication.
+            interval["dataset_admission_authorized"] = False
+        save(output / "600721-pilot-review.json", review)
     save(output / "full-name-crosscheck.json", crosscheck)
     save(output / "coverage-intervals.json", intervals)
     save(output / "exclusions.json", [])
@@ -454,6 +642,10 @@ def coverage_gate(root: Path, output: Path, master_path: Path) -> dict[str, Any]
             "manifest_sha256"
         ],
     }
+    if pilot_source:
+        manifest["pilot_source_manifest_sha256"] = sha(
+            (pilot_source / "residual-manifest.json").read_bytes()
+        )
     save(
         output / "residual-manifest.json", {**manifest, "manifest_sha256": sha(canonical(manifest))}
     )
@@ -538,7 +730,12 @@ if __name__ == "__main__":
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--master", type=Path)
+    parser.add_argument("--pilot-source", type=Path)
     args = parser.parse_args()
-    residual(args.root, args.output)
+    if args.pilot_source:
+        if not args.master or args.pilot_source.resolve() == args.output.resolve():
+            parser.error("--pilot-source requires --master and a distinct output directory")
+    else:
+        residual(args.root, args.output)
     if args.master:
-        coverage_gate(args.root, args.output, args.master)
+        coverage_gate(args.root, args.output, args.master, args.pilot_source)
