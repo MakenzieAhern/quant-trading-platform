@@ -1,5 +1,11 @@
 # Decisions
 
+- 2026-09-11: Docker runtime failure RESOLVED; existing volumes/containers
+  preserved, API/frontend and database services verified. No accepted data
+  authority was reaudited. Delisting fix .3 passes regression; MARKET_RULE remains
+  PARTIAL because official SZSE 2023 source text could not be recovered. Do not
+  substitute current rules or promote source acceptance from code tests alone.
+
 - 2026-09-11: The previously specified GitHub identity 'MackenzieAhern' was a
   prompt typo. The intended and authenticated repository identity is
   'MakenzieAhern'. Existing Git configuration and attribution remain unchanged.

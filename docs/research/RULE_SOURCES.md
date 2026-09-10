@@ -35,9 +35,14 @@ are split at the 2023 registration reform; STAR starts in 2019; ChiNext is expli
 where daily bars cannot prove executable liquidity. Unknown security-specific suspensions or special
 dispositions remain a documented gap; current rules are never projected backward by default.
 
-R1 remaining regression: [300336 issuer notice 2023-044](https://disc.static.szse.cn/disc/disk03/finalpage/2023-06-27/6aac260a-7444-4164-92f1-927d47039c17.PDF)
+R1 regression fixed in .3: [300336 issuer notice 2023-044](https://disc.static.szse.cn/disc/disk03/finalpage/2023-06-27/6aac260a-7444-4164-92f1-927d47039c17.PDF)
 states that delisting-period trading began on 2023-06-12, with no first-day
-price limit and 20% thereafter. Current DailySecurityStatus has no corresponding
-effective-dated field; both is_st values yield 20% in the ChiNext resolver.
+price limit and 20% thereafter. DailySecurityStatus now retains the explicit
+period start, with first/later-session precedence and suspension regression tests.
 Accepted name/ST histories do not automatically prove market-rule mapping.
-MARKET_RULE_AUTHORITY remains UNVERIFIED pending this mapping and audit.
+MARKET_RULE_AUTHORITY remains PARTIAL: checksum-verifiable official SZSE 2023
+rule text/notice is still unavailable from the discovered official links.
+SSE's [archived 2023 notice](https://www.sse.com.cn/lawandrules/sselawsrules2025/repeal/rules/c/c_20250612_10824490.shtml)
+and linked DOCX were recovered to external staging. Its notice body makes
+implementation conditional on the first registered main-board listing; do not
+use the archive page's generic publication-day metadata as that effective date.

@@ -11,12 +11,20 @@ after session t and can fill no earlier than the next tradable session at raw OP
 one-price limit locks defer fills; pending orders explicitly expire. Buys round down to board lots,
 residual cash remains cash, and sells follow the configured settlement/odd-lot policy.
 
-The encoded `cn-a-2010-2025.2` timeline separates pre/post-registration main-board IPO treatment,
+The encoded `cn-a-2010-2025.3` timeline separates pre/post-registration main-board IPO treatment,
 STAR from 22 July 2019, and ChiNext before/after 24 August 2020. Pre-reform first-session mechanics
 that cannot be reconstructed safely from daily bars are no-fill. STAR uses minimum buy quantity 200
 with one-share increments; other covered boards use 100-share lots. All use RMB 0.01 ticks and
 odd-lot liquidation-only behavior. ChiNext transition names identified by the exchange are explicit
 security-scoped no-fill rules.
+
+Pilot daily status can retain an explicit `delisting_period_start`. Within
+2023-01-01..2024-07-31 the first session resolves no price limit; subsequent
+sessions use the board limit instead of the ordinary ST limit. Suspension is
+still binding. This path rejects dates outside the audited pilot window.
+The field must come from accepted dated evidence, never inferred from undated
+names or missing bars. Full source binding remains PARTIAL; model support and
+passing unit tests do not authorize materialization or strategy execution.
 
 Adjusted values are feature inputs only. Corporate actions must transform holdings and cost basis
 explicitly. Complete source terms can update cash, quantity and cost basis; incomplete terms block
