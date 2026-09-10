@@ -248,6 +248,22 @@ def test_historical_rule_timeline_versions_chinext_reform_and_star_lots() -> Non
     assert star.buy_quantity_increment == 1
 
 
+def test_main_board_registration_uses_effective_date_not_publication_date() -> None:
+    version = historical_cn_a_rules()
+    for board in (Board.SSE_MAIN, Board.SZSE_MAIN):
+        before = next(
+            r for r in version.rules if r.board == board and r.applies_on(date(2023, 3, 1))
+        )
+        after = next(
+            r for r in version.rules if r.board == board and r.applies_on(date(2023, 4, 10))
+        )
+        assert before.ipo_no_limit_sessions == 0
+        assert before.conservative_no_fill_listing_sessions == 1
+        assert after.ipo_no_limit_sessions == 5
+        assert after.source_publication_date == date(2023, 2, 17)
+        assert after.valid_from == date(2023, 4, 10)
+
+
 def test_named_chinext_transition_exception_is_conservative_no_fill() -> None:
     security_id = SecurityId(value="CN-A:SZSE:300216")
     resolved = TradingRuleResolver(historical_cn_a_rules()).resolve(

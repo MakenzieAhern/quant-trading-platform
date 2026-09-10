@@ -1,16 +1,20 @@
 # Blockers
 
-SINGLE_SMALLEST_BLOCKER = ADJUSTMENT_METHOD_AUTHORITY_AMBIGUITY.
+SINGLE_SMALLEST_BLOCKER = PUSH_IDENTITY_MISMATCH.
 
-No recovered acceptance establishes which factor methodology governs the pilot.
-Legacy BaoStock range audit is PARTIAL and current anonymous login fails twice.
-New Sina multiplicative factors repeat across four samples; Eastmoney HFQ is
-not equivalent under a constant scale within one unchanged-factor interval.
-Do not label adjusted-close/raw-close an event factor without deciding its semantics.
+Latest attachment requires MackenzieAhern before each push; Git author and
+authenticated GitHub account are MakenzieAhern, unchanged from the existing
+repository/PR. Confirm spelling before publication; do not change identity
+or target another account. This is not dataset-freeze Gate A.
 
-Required resolution: provide the prior checksum-linked adjustment definition, or
-explicitly resolve whether a newly audited Sina multiplicative-HFQ methodology
-should govern research features. This is not approval to freeze or run a study.
-After resolution, validate the selected method, then continue R1 -> R2 -> R3.
-Raw route is identified but not fully accepted; benchmark and market rules remain
-pending. Resolving this first ambiguity does not automatically make preflight PASS.
+R1 remaining engineering: effective-dated delisting-period/first-session mapping
+and market-rule acceptance. This work does not require engineering approval.
+Raw/factor/benchmark route acceptance is complete; full-dataset coverage and
+suspension audits are not.
+
+## Resolved, retained for traceability
+
+ADJUSTMENT_METHOD_AUTHORITY_AMBIGUITY was resolved by the Sina candidate approval
+and independent acceptance under the frozen as-of convention. Legacy BaoStock
+recovery is no longer required. Eastmoney HFQ and Sina adjustments remain
+different methods; only raw Eastmoney prices are bound to Sina factors.

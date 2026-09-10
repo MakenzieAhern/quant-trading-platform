@@ -11,7 +11,7 @@ after session t and can fill no earlier than the next tradable session at raw OP
 one-price limit locks defer fills; pending orders explicitly expire. Buys round down to board lots,
 residual cash remains cash, and sells follow the configured settlement/odd-lot policy.
 
-The encoded `cn-a-2010-2025.1` timeline separates pre/post-registration main-board IPO treatment,
+The encoded `cn-a-2010-2025.2` timeline separates pre/post-registration main-board IPO treatment,
 STAR from 22 July 2019, and ChiNext before/after 24 August 2020. Pre-reform first-session mechanics
 that cannot be reconstructed safely from daily bars are no-fill. STAR uses minimum buy quantity 200
 with one-share increments; other covered boards use 100-share lots. All use RMB 0.01 ticks and

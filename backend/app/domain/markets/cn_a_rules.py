@@ -54,7 +54,7 @@ _PERIODS = (
         Exchange.SSE,
         Board.SSE_MAIN,
         date(2010, 1, 1),
-        date(2023, 2, 16),
+        date(2023, 4, 9),
         "0.10",
         "0.05",
         0,
@@ -63,7 +63,7 @@ _PERIODS = (
     _BoardPeriod(
         Exchange.SSE,
         Board.SSE_MAIN,
-        date(2023, 2, 17),
+        date(2023, 4, 10),
         None,
         "0.10",
         "0.05",
@@ -75,7 +75,7 @@ _PERIODS = (
         Exchange.SZSE,
         Board.SZSE_MAIN,
         date(2010, 1, 1),
-        date(2023, 2, 16),
+        date(2023, 4, 9),
         "0.10",
         "0.05",
         0,
@@ -84,7 +84,7 @@ _PERIODS = (
     _BoardPeriod(
         Exchange.SZSE,
         Board.SZSE_MAIN,
-        date(2023, 2, 17),
+        date(2023, 4, 10),
         None,
         "0.10",
         "0.05",
@@ -137,7 +137,7 @@ def historical_cn_a_rules() -> TradingRuleVersion:
     rules = [rule for period in _PERIODS for rule in _split_by_cost(period)]
     for symbol in ("300090", "300156", "300216"):
         rules.append(_transitional_delisting_exception(symbol))
-    return TradingRuleVersion(version="cn-a-2010-2025.1", rules=tuple(rules))
+    return TradingRuleVersion(version="cn-a-2010-2025.2", rules=tuple(rules))
 
 
 def _split_by_cost(period: _BoardPeriod) -> tuple[TradingRuleSet, ...]:
