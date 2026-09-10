@@ -1,0 +1,168 @@
+"""Offline checks for historical anchor and independent coverage-oracle boundaries."""
+
+import copy
+import json
+from pathlib import Path
+
+import pytest
+
+from scripts.reconcile_sse_cninfo import canonical, fetch, match, sha
+from scripts.sse_st_closure import anchor_names, controls, explain_names, historical_names
+from scripts.sse_st_events import extract, status
+
+
+def test_anchor_period_unicode_and_duplicates():
+    pages = [""] * 6 + ["2022年1月1日至2022年12月31日"]
+    table = "年末个股股东持股情况\n600260 \u2217ST凯乐 123\n600070 浙江富润 456"
+    rows = anchor_names([*pages, table])
+    assert rows["600260"]["status"] == "STAR_ST"
+    assert rows["600070"]["status"] == "NORMAL"
+    assert status("\uff0aST凯乐") == "STAR_ST"
+    assert status("\ufe61ST贤成") == "STAR_ST"
+    with pytest.raises(ValueError, match="DUPLICATE"):
+        anchor_names([*pages, table, table])
+    with pytest.raises(ValueError, match="WRONG_ANCHOR_PERIOD"):
+        anchor_names([*([""] * 7), table])
+
+
+def test_oracle_supplies_no_dates_and_entry_alone_is_not_closure():
+    raw = ('page_symbol="sh600001";证券简称更名历史</td><td>普通名 ST样本 *ST样本</td>').encode(
+        "gb18030"
+    )
+    assert historical_names(raw, "600001") == ["普通名", "ST样本", "*ST样本"]
+    with pytest.raises(ValueError, match="IDENTITY"):
+        historical_names(raw, "600002")
+    entry = {
+        "old_name": "样本",
+        "new_name": "ST样本",
+        "old_status": "NORMAL",
+        "status": "ST",
+        "effective_from": "2020-01-02",
+        "cninfo_document_id": "entry",
+    }
+    exit_ = {
+        "old_name": "ST样本",
+        "new_name": "样本",
+        "old_status": "ST",
+        "status": "NORMAL",
+        "effective_from": "2021-01-02",
+        "cninfo_document_id": "exit",
+    }
+    assert not explain_names(["ST样本"], [entry], None)[0]["explained"]
+    assert explain_names(["ST样本"], [entry, exit_], None)[0]["explained"]
+    assert not explain_names(["ST样本"], [entry, {**exit_, "effective_from": "2019-01-01"}], None)[
+        0
+    ]["explained"]
+    assert explain_names(["ST样本"], [entry, exit_], None) == explain_names(
+        ["ST样本"], [exit_, entry], None
+    )
+
+
+def test_control_sample_is_stratified_and_order_independent():
+    master = [
+        {
+            "security_id": f"{board}-{date}-{i}",
+            "board": board,
+            "listing_date": date,
+            "delisting_date": "2025-01-01" if i == 29 else "",
+        }
+        for board in ("SSE_MAIN", "STAR")
+        for date in ("2010-01-01", "2022-01-01")
+        for i in range(30)
+    ]
+    selected = controls(master, set())
+    assert len(selected) >= 100
+    assert selected == controls(list(reversed(master)), set())
+    assert all(row in selected for row in master if row["delisting_date"])
+
+
+def test_optional_prefix_matching_stays_exact_and_null_safe():
+    fixtures = json.loads(
+        (Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes()
+    )
+    record = copy.deepcopy(fixtures[1]["record"])
+    record["sse"]["TITLE"] = "样本关于实施风险警示的公告"
+    record["sse"]["SECURITY_NAME"] = None
+    record["cninfo"][0]["secName"] = "样本"
+    record["cninfo"][0]["announcementTitle"] = "关于实施风险警示的公告"
+    assert match(record["sse"], record["cninfo"])[0] == "NO_MATCH"
+    assert match(record["sse"], record["cninfo"], issuer_prefix=True)[0] == "EXACT"
+    record["cninfo"][0]["announcementTitle"] = "关于撤销风险警示的公告"
+    assert match(record["sse"], record["cninfo"], issuer_prefix=True)[0] == "NO_MATCH"
+
+
+def test_missing_sse_name_requires_exact_cninfo_pdf_header_identity():
+    fixtures = json.loads(
+        (Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes()
+    )
+    fixture = copy.deepcopy(fixtures[1])
+    record = fixture["record"]
+    old = record["sse"]["SECURITY_NAME"]
+    record["sse"]["SECURITY_NAME"] = None
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    record["cninfo"][0]["secName"] = old
+    assert extract(fixture["pages"], record)["old_name"] == old
+    record["cninfo"][0]["secName"] = "another issuer"
+    with pytest.raises(ValueError, match="WRONG_ISSUER_NAME"):
+        extract(fixture["pages"], record)
+
+
+def test_pdf_subject_must_match_metadata():
+    fixtures = json.loads(
+        (Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes()
+    )
+    fixture = copy.deepcopy(fixtures[1])
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    record["sse"]["TITLE"] = record["cninfo"][0]["announcementTitle"] = "关于另一项风险警示的公告"
+    with pytest.raises(ValueError, match="PDF_SUBJECT_METADATA_MISMATCH"):
+        extract(fixture["pages"], record)
+
+
+def test_referer_is_part_of_snapshot_identity(tmp_path, monkeypatch):
+    raw = b"snapshot"
+    (tmp_path / "page").write_bytes(raw)
+    (tmp_path / "page.meta.json").write_bytes(
+        canonical(
+            {
+                "url": "https://example.com/query",
+                "params": None,
+                "referer": "https://example.com/public",
+                "sha256": sha(raw),
+            }
+        )
+    )
+
+    def no_network(*args, **kwargs):
+        raise AssertionError("cached snapshot must not use network")
+
+    monkeypatch.setattr("urllib.request.urlopen", no_network)
+    assert (
+        fetch(tmp_path, "page", "https://example.com/query", referer="https://example.com/public")
+        == raw
+    )
+    with pytest.raises(ValueError, match="identity mismatch"):
+        fetch(tmp_path, "page", "https://example.com/query")
+
+
+def test_legacy_clause_does_not_select_adjacent_suspension_date():
+    fixtures = json.loads(
+        (Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes()
+    )
+    fixture = copy.deepcopy(fixtures[1])
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    # Keep the real identity/name-change fixture, replace only its date label syntax.
+    import re
+
+    pages = [
+        re.sub(r"起始日[\uff1a:]?\s*2022\s*年\s*2\s*月\s*9\s*日", "日期另列", p)
+        for p in fixture["pages"]
+    ]
+    old = record["sse"]["SECURITY_NAME"]
+    new = extract(fixture["pages"], record)["new_name"]
+    pages.append(f"2022年2月8日停牌一天,自2022年2月9日起,股票简称由“{old}”变更为“{new}”。")
+    assert extract(pages, record)["effective_from"] == "2022-02-09"
+    pages[-1] = pages[-1].replace("自2022年2月9日起,", "")
+    with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+        extract(pages, record)

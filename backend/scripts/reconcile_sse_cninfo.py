@@ -32,7 +32,14 @@ def save(path: Path, value: object) -> None:
     temporary.replace(path)
 
 
-def fetch(root: Path, name: str, url: str, params: dict[str, object] | None = None) -> bytes:
+def fetch(
+    root: Path,
+    name: str,
+    url: str,
+    params: dict[str, object] | None = None,
+    *,
+    referer: str | None = None,
+) -> bytes:
     """Checkpoint every response; resume timeouts at most three times, never access denial."""
     path = root / name
     meta_path = path.with_suffix(path.suffix + ".meta.json")
@@ -40,7 +47,7 @@ def fetch(root: Path, name: str, url: str, params: dict[str, object] | None = No
     attempt = 1
     if meta_path.exists():
         meta = json.loads(meta_path.read_bytes())
-        if meta["url"] != url or meta["params"] != params:
+        if meta["url"] != url or meta["params"] != params or meta.get("referer") != referer:
             raise ValueError("snapshot request identity mismatch")
         if meta.get("error"):
             if meta["error"] != "TimeoutError" or meta["attempt"] >= 3:
@@ -57,7 +64,9 @@ def fetch(root: Path, name: str, url: str, params: dict[str, object] | None = No
                 raise ValueError("snapshot checksum mismatch")
             return raw
     request = urllib.request.Request(
-        url, data=urllib.parse.urlencode(params).encode() if params else None
+        url,
+        data=urllib.parse.urlencode(params).encode() if params else None,
+        headers={"Referer": referer} if referer else {},
     )
     record: dict[str, Any] = {
         "url": url,
@@ -66,6 +75,8 @@ def fetch(root: Path, name: str, url: str, params: dict[str, object] | None = No
         "previous_attempts": previous,
         "retrieved_at_utc": datetime.now(UTC).isoformat(),
     }
+    if referer:
+        record["referer"] = referer
     try:
         with urllib.request.urlopen(request, timeout=35) as response:
             raw = bytes(response.read())
@@ -113,14 +124,35 @@ def publication(row: dict[str, Any]) -> str:
     )
 
 
-def match(sse: dict[str, Any], rows: list[dict[str, Any]]) -> tuple[str, list[dict[str, Any]]]:
+def issuer_subject(title: str, sse: dict[str, Any], cn: dict[str, Any]) -> str:
+    """Strip one explicit issuer prefix; preserve the entire announcement subject."""
+    prefixes = [
+        p for p in (sse.get("SECURITY_NAME"), cn.get("secName")) if isinstance(p, str) and p
+    ]
+    company = re.match(r"[\u4e00-\u9fff]+(?:股份有限公司|有限责任公司)", title)
+    if company:
+        prefixes.append(company[0])
+    for prefix in sorted(prefixes, key=len, reverse=True):
+        if title.startswith(prefix):
+            title = title[len(prefix) :]
+            break
+    return title_key(title)
+
+
+def match(
+    sse: dict[str, Any], rows: list[dict[str, Any]], *, issuer_prefix: bool = False
+) -> tuple[str, list[dict[str, Any]]]:
     """No keyword-only or fuzzy acceptance; security, date and full title must agree."""
+
+    def key(title: str, cn: dict[str, Any]) -> str:
+        return issuer_subject(title, sse, cn) if issuer_prefix else title_key(title)
+
     matches = {
         r["announcementId"]: r
         for r in rows
         if r["secCode"] == sse["SECURITY_CODE"]
         and publication(r) == sse["SSEDATE"]
-        and title_key(r["announcementTitle"]) == title_key(sse["TITLE"])
+        and key(r["announcementTitle"], r) == key(sse["TITLE"], r)
     }
     result = sorted(matches.values(), key=lambda r: r["announcementId"])
     return ("EXACT" if len(result) == 1 else "AMBIGUOUS" if result else "NO_MATCH", result)

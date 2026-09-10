@@ -15,7 +15,15 @@ from typing import Any
 
 from pypdf import PdfReader
 
-from scripts.reconcile_sse_cninfo import canonical, match, publication, save, sha
+from scripts.reconcile_sse_cninfo import (
+    canonical,
+    issuer_subject,
+    match,
+    publication,
+    save,
+    sha,
+    title_key,
+)
 
 VERSION = "sse-cninfo-explicit-start-v2"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
@@ -26,7 +34,7 @@ def compact(text: str) -> str:
 
 
 def status(name: str) -> str:
-    name = name.strip("【】")
+    name = name.strip("【】").translate(str.maketrans("\u2217\uff0a\ufe61", "***"))
     if re.match(r"^(?:S)?\*ST", name, re.I):
         return "STAR_ST"
     if re.match(r"^(?:S)?ST", name, re.I):
@@ -35,21 +43,45 @@ def status(name: str) -> str:
 
 
 def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
-    """Accept explicit name change plus explicit risk-warning start-date label only."""
+    """Accept an explicit name change and a labeled or tightly linked effective date."""
     sse = record["sse"]
-    confidence, mirrors = match(sse, record["cninfo"])
+    prefix_mode = record.get("match_method") == "security+date+exact_subject+issuer_prefix"
+    confidence, mirrors = match(sse, record["cninfo"], issuer_prefix=prefix_mode)
     if confidence != "EXACT" or record["match_confidence"] != "EXACT":
         raise ValueError("MATCH_NOT_EXACT")
+    issuer_name = sse.get("SECURITY_NAME")
+    if not issuer_name and prefix_mode:
+        issuer_name = mirrors[0].get("secName")
+    if not isinstance(issuer_name, str) or not issuer_name.strip():
+        raise ValueError("MISSING_SSE_ISSUER_NAME")
     text = compact("\n".join(pages))
     header = text[:500]
     codes = re.search(r"(?:证券|股票)代码\s*[：:]\s*([\d\s、,，]{6,55})", "\n".join(pages)[:1000])  # noqa: RUF001
     if not codes or sse["SECURITY_CODE"] not in re.findall(r"(?<!\d)\d{6}(?!\d)", codes[1]):
         raise ValueError("WRONG_SECURITY_CODE")
-    if compact(sse["SECURITY_NAME"]) not in header:
+    if compact(issuer_name) not in header:
         raise ValueError("WRONG_ISSUER_NAME")
+    if not sse.get("SECURITY_NAME") and not re.search(
+        r"(?:证券|股票)(?:简称|名称)[\uff1a:]" + re.escape(compact(issuer_name)), header
+    ):
+        raise ValueError("CNINFO_NAME_NOT_PDF_HEADER")
     issuer = re.search(r"([\u4e00-\u9fff]{4,}(?:股份有限公司|有限责任公司))", sse["TITLE"])
     if issuer and issuer[1] not in text[:1200]:
         raise ValueError("WRONG_ISSUER_COMPANY")
+    if prefix_mode:
+        for cn in mirrors:
+            subject = issuer_subject(cn["announcementTitle"], sse, cn)
+            # Old short names can differ from the issuer prefix printed in metadata.
+            # The entire About-clause must still occur in the verified issuer PDF.
+            if "关于" in subject:
+                subject = subject[subject.index("关于") :]
+            if subject not in title_key(text[:1200]):
+                raise ValueError("PDF_SUBJECT_METADATA_MISMATCH")
+            company = re.match(
+                r"[\u4e00-\u9fff]+(?:股份有限公司|有限责任公司)", cn["announcementTitle"]
+            )
+            if company and company[0] not in text[:1200]:
+                raise ValueError("WRONG_CNINFO_ISSUER_COMPANY")
     names = list(
         re.finditer(
             r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?由?[“\"]([^”\"]{1,20})[”\"]"
@@ -57,17 +89,17 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
             text,
         )
     )
-    names = [m for m in names if m[1] == compact(sse["SECURITY_NAME"])]
+    names = [m for m in names if m[1] == compact(issuer_name)]
     confirmation = False
     if not names:
-        name = re.escape(compact(sse["SECURITY_NAME"]))
+        name = re.escape(compact(issuer_name))
         names = list(re.finditer(r"(?:股票|证券)简称仍为[“\"](" + name + r")[”\"]", text))
         confirmation = bool(names)
     pairs = {(m[1], m[1] if confirmation else m[2]) for m in names}
     if len(pairs) != 1:
         raise ValueError("NAME_TRANSITION_UNRESOLVED")
     old, new = next(iter(pairs))
-    if old != compact(sse["SECURITY_NAME"]):
+    if old != compact(issuer_name):
         raise ValueError("OLD_NAME_NOT_HEADER_IDENTITY")
     # Deliberately narrow: references to old events and unrelated suspension dates are not dates.
     dates = list(
@@ -78,6 +110,15 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         )
     )
     dated = {(date(int(m[1]), int(m[2]), int(m[3])).isoformat()) for m in dates}
+    if not dates and prefix_mode and not confirmation:
+        # Older layouts date the exact name-change clause rather than a start-date label.
+        # Never use a general publication/suspension date or a date from another sentence.
+        dates = list(
+            re.finditer(
+                r"自?" + DATE + r"起[\uff0c,]?[^。\uff1b;\d]{0,40}?" + re.escape(names[0][0]), text
+            )
+        )
+        dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
     if len(dated) != 1:
         raise ValueError("EFFECTIVE_DATE_UNRESOLVED")
     effective = next(iter(dated))
@@ -129,7 +170,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         "cninfo_document_sha256": record["cninfo_document_sha256"],
         "match_method": record["match_method"],
         "match_confidence": confidence,
-        "parser_version": VERSION,
+        "parser_version": "sse-cninfo-explicit-clause-v3" if prefix_mode else VERSION,
         "support": support,
     }
 

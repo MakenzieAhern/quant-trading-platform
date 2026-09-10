@@ -253,3 +253,216 @@ audit scripts in Docker, without modifying installed runtime packages.
 **ONE remaining blocker:** a closed-world, point-in-time SSE baseline/transition
 coverage proof for the pilot universe. The current selected disclosures and dated
 observations cannot establish absence of omitted changes. Dataset creation stays gated.
+
+## SSE ST COVERAGE CLOSURE AND PILOT DATASET REPORT — 2026-09-10
+
+This supersedes the previous baseline finding, not its immutable snapshots.
+The baseline is now established. Full event-index/lifecycle closure is not yet
+established, so the pilot dataset is **not created**. No research was run.
+
+### Official historical anchor
+
+`OFFICIAL_HISTORICAL_ANCHOR_FOUND = YES`
+
+The [official SSE 2023 Statistical Yearbook](https://www.sse.com.cn/aboutus/publication/yearly/documents/c/10791349/files/85c1e61617f44332ac2f04dbbe5cd530.pdf)
+contains the year-end individual-stock shareholder table, PDF pages 758–802.
+Its explanatory notes specify the 2022 reporting period. It is a retrospective
+official 2022 year-end state, **not** a claim that the book was published before 2023.
+
+- `ANCHOR_DATE = 2022-12-31`; last trading session: `2022-12-30`.
+- `ANCHOR_SHA256 = 2487b78b13f1c4bf9a8b010708c375de6170a1a817fc142fd683e954bd6cce13`.
+- Parser: `sse-yearbook-2023-yearend-shareholders-v1`.
+- Independent pypdf/PyMuPDF extraction agrees on all 2,213 code/name pairs.
+- All 2,166 master securities eligible at pilot start are covered; no missing codes.
+- Raw start census: NORMAL 2,121; ST 31; STAR_ST 14; EXCLUDED 0; UNKNOWN 0.
+- The 47 extra table rows are 44 B-shares and three STAR securities already outside
+  the pilot lifecycle. They are not silently added to the A-share universe.
+- The 121 ordinary post-anchor IPOs use the user-authorized initial NORMAL
+  assumption, with the official master listing date/name/source retained. They
+  are not inserted before listing and are not inferred NORMAL from a missing event.
+- Unicode asterisk variants are normalized before status classification.
+
+The normal public Risk Warning Board XHR uses `PL_SSGSXX_FXJSBGPLB`, without a
+historical date parameter. The daily-market overview has a documented `SEARCH_DATE`
+but returns aggregates, not historical ST constituents. Current quote-list endpoints
+are not historical anchors. Saved HTML/JavaScript and raw probes document these
+distinctions; no invented historical parameter or access-control bypass was used.
+The originating public-page Referer is preserved as part of request identity.
+
+### Event index and independent oracle
+
+All 137 candidates and 114 deterministic noncandidate controls were checked: 251
+securities. Controls include at least 25 in each main/STAR × old/recent stratum,
+plus later-delisted controls. Ordering uses a fixed SHA-256 seed, not random sampling.
+The original Sina responses are retained; **no date is inferred from name ordering**.
+
+| Oracle classification | Securities |
+| --- | ---: |
+| HAS_STAR_ST_HISTORY | 106 |
+| HAS_ST_HISTORY | 29 |
+| NO_ST_NAME_HISTORY | 23 |
+| NAME_HISTORY_UNAVAILABLE | 93 |
+
+There are 218 ST and 238 STAR_ST token occurrences, preserving duplicates. Of
+these, 228 have accepted dated entry/exit evidence or a left-censored official
+anchor followed by a dated exit. A dated entry alone does not prove an exit or
+an ongoing right-censored interval. There are 93 securities with unclosed histories,
+including 13 controls; zero such histories are in the provisional resolved subset.
+
+Unexpected history appeared in 15 controls. Investigation fetched 1,346 relevant
+CNINFO metadata records for the initial 88 flagged issuers (87 complete paginations;
+one unresolved organization mapping), then selected only 324 additional possible
+state-change documents on 225 publication dates. No unrelated PDFs were downloaded.
+Issuer/day all-category SSE fallback is necessary: genuine older warnings were
+classified as “其他”, while relevant pilot notices also occur under restructuring
+or termination categories. Identical rows repeated across pages are deduplicated;
+distinct records remain ambiguous. Issuer/day fallback pagination is bounded and
+complete rather than silently accepting only page one.
+
+The original 178 normalized events plus 164 newly accepted records give:
+
+```text
+EARLIEST_EVENT_DATE = 2005-04-26
+LATEST_EVENT_DATE = 2026-06-23
+OFFICIAL_EVENT_RECORDS = 342
+PILOT_EVENT_RECORDS = 111
+EVENT_LEDGER_COVERAGE = PARTIAL
+SECURITIES_CHECKED = 251
+CONTROL_NON_CANDIDATES = 114
+HISTORICAL_ST_NAMES_FOUND = 218
+HISTORICAL_STAR_ST_NAMES_FOUND = 238
+EXPLAINED_BY_OFFICIAL_EVENTS = 228 token occurrences (including anchored left boundaries)
+UNEXPLAINED_NAME_HISTORIES = 93 securities; 0 in provisional resolved subset
+```
+
+Post-2024-07-31 records investigate the oracle only; they never enter pilot replay.
+The v3 parser requires exact security/date/subject reconciliation, PDF issuer/header
+identity and the full disclosure subject in the PDF. An absent SSE short name may
+use the exact CNINFO name only when verified against the PDF header. Older date
+clauses must explicitly date the actual name change; an adjacent suspension date
+cannot be selected. Unsupported/contradictory text remains unaccepted.
+
+Examples of evidence requiring disposition rather than invented transitions:
+
+- CNINFO `1216709184` has risk-implementation metadata but the actual PDF is a
+  suspension/possible-termination notice. It is rejected as a subject mismatch.
+- `1216993697` explicitly keeps *ST明诚 while adding a restructuring reason;
+  it does not establish a new risk-class transition or a new effective date.
+- A separate legacy “特别处理” query finds the official
+  [600109 HTML disclosure 10443712](https://static.cninfo.com.cn/finalpage/2003-04-04/10443712.html),
+  which expressly describes 2001-03-30 entry and 2003-04-07 exit. The corresponding
+  SSE issuer/day metadata query returns zero rows. The HTML is preserved as
+  contextual evidence, not silently inserted into the exactly reconciled ledger.
+  An empty modern “风险警示” search is therefore not proof of no older ST history.
+
+### Provisional replay, not dataset admission
+
+The former blanket 100% exclusion policy is **not** used as the closure result.
+The diagnostic replay separates 2,194 locally resolved securities from 93 residual
+quarantines. These quarantines have not been certified as minimal, genuinely
+unresolved security-date exclusions: legacy aliases and left/right boundaries still
+need disposition. Merely quarantining all observed failures cannot prove the
+candidate index complete, especially with unexplained control histories.
+
+Therefore these are **provisional**, not approved admission/exclusion statistics:
+
+```text
+Pilot start after provisional quarantines:
+NORMAL = 2057
+ST = 11
+STAR_ST = 5
+EXCLUDED = 93
+UNKNOWN = 0
+
+Candidate classification in diagnostic replay:
+TOTAL = 137
+RESOLVED_NORMAL = 28
+RESOLVED_ST_AT_PILOT_START = 1
+RESOLVED_STAR_ST_AT_PILOT_START = 1
+RESOLVED_TRANSITION_TIMELINE = 27
+CONSERVATIVELY_EXCLUDED = 80
+UNRESOLVED = 0 classification labels (not zero lifecycle gaps)
+
+SSE_MASTER_SECURITIES = 2287
+ADMITTED_SSE_SECURITIES = 0 authorized dataset admissions
+PROVISIONAL_RESOLVED_SSE_SECURITIES = 2194
+EXCLUDED_SSE_SECURITIES = 93 provisional quarantines
+EXCLUDED_SECURITY_DAYS = 32097 provisional, of 853328 eligible days
+EXCLUDED_UNIVERSE_PERCENTAGE = 4.066463% provisional
+EXCLUDED_SECURITY_DAY_PERCENTAGE = 3.761391% provisional
+```
+
+No artifact is marked `coverage_certified=true` while the global index gate is
+PARTIAL. `closure-intervals.json` retains diagnostic evidence states and
+`evidence_replay_resolved`, but cannot be consumed as certified pilot coverage.
+Zero authorized admissions is a **publication gate**, not a finding that all
+2,287 securities must be excluded or that their baseline states are unknown.
+
+### Validation and reproducibility
+
+| Gate | Result and scope |
+| --- | --- |
+| PILOT_START_STATUS | PASS: official census, UNKNOWN=0 |
+| ENTRY_EFFECTIVE_DATE | PASS for accepted events; exhaustive coverage PARTIAL |
+| EXIT_EFFECTIVE_DATE | PASS for accepted events; exhaustive coverage PARTIAL |
+| EVENT_LEDGER_COVERAGE | PARTIAL |
+| HISTORICAL_NAME_CROSSCHECK | PARTIAL globally; no unexplained token in provisional resolved subset |
+| DELISTED_RETENTION | PASS in master/replay audit, not a dataset audit |
+| FUTURE_EVENT_LEAKAGE | PASS in pilot replay |
+| INPUT_ORDER_REPRODUCIBILITY | PASS: reversed master/events and repeat audit |
+
+The 382-session structural audit has zero interval gaps or overlaps. Reversing
+the complete master input and event ordering reproduces the manifest byte-for-byte.
+Backend: 343 offline tests passed; frontend: 74 tests passed. Ruff, format, application
+mypy, strict four-script mypy, ESLint, TypeScript and production build passed.
+Tests used isolated Docker containers; no strategy study or application-database
+experiment was performed. No dependency or Git identity was changed.
+
+Evidence is outside Git in `sse-st-pilot/closure-20260910` under the existing staging
+root. It includes 2,577 raw/metadata/derived files, UTC retrieval metadata, PDFs,
+HTML/JS/XHR snapshots, parser audits, name tokens and per-security diagnostics.
+
+- Combined event SHA-256:
+  `3c524bb1dfbc0c8e5be629ecf3e85f4d39f2babe6f4225d612245fc3ee6d2f65`.
+- Canonical closure manifest SHA-256:
+  `cc78e679b7ce82c69a9552a770229b35dd94ad029a325bf814b53387765c6b8c`.
+
+From `backend`, with the existing preserved staging root in `STAGING`, offline replay:
+
+```sh
+python -m scripts.sse_st_closure \
+  --master "$STAGING/security-master-pilot/sse-security-master.csv" \
+  --candidates "$STAGING/sse-st-pilot/completeness-20260910/candidate-audit.json" \
+  --output "$STAGING/sse-st-pilot/closure-20260910" \
+  --audit \
+  --prior "$STAGING/sse-st-pilot/completeness-20260910" \
+  --snapshot "$STAGING/sse-st-pilot/snapshots/20260910T021848Z"
+```
+
+This offline command needs the preserved yearbook extractions and metadata; it
+does not discover a new anchor or promote partial coverage. Optional acquisition
+steps are `--lookups <preserved-cninfo-directory>` and
+`--reconcile <preserved-cninfo-directory>`; neither is a dataset materializer.
+
+```text
+SSE_HISTORICAL_ST_RECONSTRUCTION = PARTIAL
+PILOT_DATASET_CREATED = NO
+AKSHARE_ACCEPTANCE = NOT PROMOTED TO PASS_FOR_PILOT
+PILOT_A_SHARE_DATA_READINESS = BLOCKED
+DATASET_AUDITED = NO
+DATASET_FROZEN = NO
+DEVELOPMENT_STUDY_RUN = NO
+VALIDATION_STUDY_RUN = NO
+OFFICIAL_OOS_RUN = NO
+PR_MERGED = NO
+V1.1.0_CREATED = NO
+```
+
+Dataset ID `cn-a-pilot-akshare-20230101-20240731-v1` remains unmaterialized. Its
+13 dataset audits are NOT RUN; bar counts, observation failures and dataset hashes
+are N/A, not zero. PR #12 remains OPEN on `feature/a-share-research-v1.1`.
+
+**ONE remaining blocker:** independently closing the residual historical
+event-index/lifecycle evidence, including the 13 unexplained controls, sufficiently
+to justify interval-specific exclusions. The official pilot-start anchor is no
+longer the blocker; provisional quarantine alone is not that missing proof.
