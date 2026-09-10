@@ -22,7 +22,17 @@ class DailySecurityStatus(BaseModel):
     is_st: bool
     is_suspended: bool
     is_one_price_limit: bool = False
+    delisting_period_start: date | None = None
     source_version: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_delisting_period(self) -> "DailySecurityStatus":
+        if (
+            self.delisting_period_start is not None
+            and self.delisting_period_start > self.trading_date
+        ):
+            raise ValueError("delisting period cannot start after status date")
+        return self
 
 
 class TransactionCostSchedule(BaseModel):
@@ -138,6 +148,13 @@ class TradingRuleResolver:
         security_status: DailySecurityStatus,
         listing_age_sessions: int,
     ) -> ResolvedTradingRules:
+        if (
+            security_status.security_id != security_id
+            or security_status.trading_date != trading_date
+        ):
+            raise ValueError("SECURITY_STATUS_IDENTITY_MISMATCH")
+        if listing_age_sessions < 0:
+            raise ValueError("INVALID_LISTING_AGE")
         candidates = [
             rule
             for rule in self._version.rules
@@ -151,7 +168,13 @@ class TradingRuleResolver:
             raise LookupError("RULE_VERSION_NOT_FOUND")
         selected = max(candidates, key=_precedence)
         limit_rate = selected.price_limit_rate
-        if listing_age_sessions < selected.ipo_no_limit_sessions:
+        if security_status.delisting_period_start is not None:
+            # Only the pilot regime is audited; do not project it onto older transitions.
+            if not date(2023, 1, 1) <= trading_date <= date(2024, 7, 31):
+                raise LookupError("DELISTING_RULE_OUTSIDE_AUDITED_PERIOD")
+            if trading_date == security_status.delisting_period_start:
+                limit_rate = None
+        elif listing_age_sessions < selected.ipo_no_limit_sessions:
             limit_rate = None
         elif security_status.is_st and selected.st_price_limit_rate is not None:
             limit_rate = selected.st_price_limit_rate

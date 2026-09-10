@@ -137,7 +137,7 @@ def historical_cn_a_rules() -> TradingRuleVersion:
     rules = [rule for period in _PERIODS for rule in _split_by_cost(period)]
     for symbol in ("300090", "300156", "300216"):
         rules.append(_transitional_delisting_exception(symbol))
-    return TradingRuleVersion(version="cn-a-2010-2025.2", rules=tuple(rules))
+    return TradingRuleVersion(version="cn-a-2010-2025.3", rules=tuple(rules))
 
 
 def _split_by_cost(period: _BoardPeriod) -> tuple[TradingRuleSet, ...]:

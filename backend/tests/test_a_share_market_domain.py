@@ -264,6 +264,59 @@ def test_main_board_registration_uses_effective_date_not_publication_date() -> N
         assert after.valid_from == date(2023, 4, 10)
 
 
+def test_delisting_period_overrides_st_without_losing_suspension_or_order_reproducibility() -> None:
+    version = historical_cn_a_rules()
+    for exchange, board, symbol, rate in (
+        (Exchange.SSE, Board.SSE_MAIN, "600000", "0.10"),
+        (Exchange.SZSE, Board.SZSE_MAIN, "000001", "0.10"),
+        (Exchange.SSE, Board.SSE_STAR, "688001", "0.20"),
+        (Exchange.SZSE, Board.SZSE_CHINEXT, "300336", "0.20"),
+    ):
+        sid = SecurityId(value=f"CN-A:{exchange.value}:{symbol}")
+        for day in (date(2023, 6, 12), date(2023, 6, 13)):
+            status = _status(
+                security_id=sid,
+                trading_date=day,
+                is_st=True,
+                is_suspended=True,
+                delisting_period_start=date(2023, 6, 12),
+            )
+            args = dict(
+                security_id=sid,
+                market=Market.CN_A,
+                exchange=exchange,
+                board=board,
+                trading_date=day,
+                side=OrderSide.SELL,
+                order_type=OrderType.MARKET,
+                security_status=status,
+                listing_age_sessions=999,
+            )
+            normal = TradingRuleResolver(version).resolve(**args)
+            reversed_rules = version.model_copy(update={"rules": tuple(reversed(version.rules))})
+            assert normal == TradingRuleResolver(reversed_rules).resolve(**args)
+            assert normal.price_limit_rate == (None if day.day == 12 else Decimal(rate))
+            assert not normal.executable and normal.suspended
+    with pytest.raises(ValidationError, match="cannot start after"):
+        _status(delisting_period_start=date(2025, 1, 1))
+    from scripts.ingest_research_data import _status_row
+
+    assert _status_row(status)["delisting_period_start"] == date(2023, 6, 12)
+    with pytest.raises(ValueError, match="IDENTITY_MISMATCH"):
+        TradingRuleResolver(version).resolve(**dict(args, trading_date=date(2023, 6, 14)))
+    with pytest.raises(ValueError, match="INVALID_LISTING_AGE"):
+        TradingRuleResolver(version).resolve(**dict(args, listing_age_sessions=-1))
+    later = date(2025, 1, 1)
+    with pytest.raises(LookupError, match="OUTSIDE_AUDITED_PERIOD"):
+        TradingRuleResolver(version).resolve(
+            **dict(
+                args,
+                trading_date=later,
+                security_status=status.model_copy(update={"trading_date": later}),
+            )
+        )
+
+
 def test_named_chinext_transition_exception_is_conservative_no_fill() -> None:
     security_id = SecurityId(value="CN-A:SZSE:300216")
     resolved = TradingRuleResolver(historical_cn_a_rules()).resolve(

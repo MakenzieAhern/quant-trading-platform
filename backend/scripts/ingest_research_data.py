@@ -210,6 +210,7 @@ def _status_row(status: DailySecurityStatus) -> dict[str, object]:
         "is_st": status.is_st,
         "is_suspended": status.is_suspended,
         "is_one_price_limit": status.is_one_price_limit,
+        "delisting_period_start": status.delisting_period_start,
         "source_version": status.source_version,
     }
 
