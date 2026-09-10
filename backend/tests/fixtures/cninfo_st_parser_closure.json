@@ -1,0 +1,165 @@
+[
+  {
+    "record": {
+      "cninfo": [
+        {
+          "adjunctSize": 179,
+          "adjunctType": "PDF",
+          "adjunctUrl": "finalpage/2022-04-30/1213268833.PDF",
+          "announcementContent": "",
+          "announcementId": "1213268833",
+          "announcementTime": 1651248000000,
+          "announcementTitle": "湖北凯乐科技股份有限公司关于公司股票被实施退市风险警示暨临时停牌的公告",
+          "announcementType": "01010503||010113||012399||012501",
+          "announcementTypeName": null,
+          "associateAnnouncement": null,
+          "batchNum": null,
+          "columnId": "250401||251302||2705",
+          "id": null,
+          "important": null,
+          "orgId": "gssh0600260",
+          "orgName": null,
+          "pageColumn": "SHZB",
+          "secCode": "600260",
+          "secName": "ST凯乐",
+          "secNameList": null,
+          "shortTitle": "湖北凯乐科技股份有限公司关于公司股票被实施退市风险警示暨临时停牌的公告",
+          "storageTime": null,
+          "tileSecName": "ST凯乐"
+        }
+      ],
+      "cninfo_document_sha256": "17392d2f352f7b91127c0d4b7259283355862c0e31b414836ff43b67e40fe7fc",
+      "match_confidence": "EXACT",
+      "match_method": "security+publication_date+punctuation_normalized_full_title",
+      "sse": {
+        "BULLETIN_TYPE_DESC": "风险警示",
+        "BULLETIN_YEAR": "2022",
+        "IS_HOLDER_DISCLOSE": "0",
+        "ORG_BULLETIN_ID": "8245264204932998",
+        "ORG_FILE_TYPE": 0,
+        "SECURITY_CODE": "600260",
+        "SECURITY_NAME": "ST凯乐",
+        "SSEDATE": "2022-04-30",
+        "TITLE": "湖北凯乐科技股份有限公司关于公司股票被实施退市风险警示暨临时停牌的公告",
+        "URL": "/disclosure/listedinfo/announcement/c/new/2022-04-30/600260_20220430_1_gU3sQtQj.pdf"
+      },
+      "sse_metadata_snapshot_sha256": "6d1179481f39230168e9e06ef77cbc398d43711555379bbe76cde78863a455d2"
+    },
+    "pages": [
+      "证券代码：600260证券简称：ST凯乐编号：临2022-048湖北凯乐科技股份有限公司关于公司股票被实施退市风险警示暨临时停牌的公告本公司董事会及全体董事保证本公告内容不存在任何虚假记载、误导性陈述或者重大遗漏，并对其内容的真实性、准确性和完整性承担个别及连带责任。重要内容提示：●公司股票将于2022年5月5日停牌1天；●实施退市风险警示的起始日：2020年5月6日；●实施退市风险警示后的股票简称为“*ST凯乐”，\n实施退市风险警示的起始日：2020年5月6日\n股票由“ST凯乐”变更为“*ST凯乐”\n实施退市风险警示的起始日：2022年5月6日",
+      "",
+      ""
+    ],
+    "fixture_note": "Factual header/name/effective-date excerpts only; full original PDF hash retained in record. Fixture offsets are not original PDF offsets."
+  },
+  {
+    "record": {
+      "cninfo": [
+        {
+          "adjunctSize": 411,
+          "adjunctType": "PDF",
+          "adjunctUrl": "finalpage/2022-05-05/1213274369.PDF",
+          "announcementContent": "",
+          "announcementId": "1213274369",
+          "announcementTime": 1651680000000,
+          "announcementTitle": "ST中安关于公司股票被实施退市风险警示暨停牌的公告",
+          "announcementType": "01010503||010113||012399||012501",
+          "announcementTypeName": null,
+          "associateAnnouncement": null,
+          "batchNum": null,
+          "columnId": "250401||251302||2705",
+          "id": null,
+          "important": null,
+          "orgId": "gssh0600654",
+          "orgName": null,
+          "pageColumn": "SHZB",
+          "secCode": "600654",
+          "secName": "ST中安",
+          "secNameList": null,
+          "shortTitle": "ST中安关于公司股票被实施退市风险警示暨停牌的公告",
+          "storageTime": null,
+          "tileSecName": "ST中安"
+        }
+      ],
+      "cninfo_document_sha256": "732d15e447a4b1969a005f157dbac94507632734ec2205440a4fde182c56379b",
+      "match_confidence": "EXACT",
+      "match_method": "security+publication_date+punctuation_normalized_full_title",
+      "sse": {
+        "BULLETIN_TYPE_DESC": "风险警示",
+        "BULLETIN_YEAR": "2022",
+        "IS_HOLDER_DISCLOSE": "0",
+        "ORG_BULLETIN_ID": "8445264211274797",
+        "ORG_FILE_TYPE": 0,
+        "SECURITY_CODE": "600654",
+        "SECURITY_NAME": "ST中安",
+        "SSEDATE": "2022-05-05",
+        "TITLE": "ST中安关于公司股票被实施退市风险警示暨停牌的公告",
+        "URL": "/disclosure/listedinfo/announcement/c/new/2022-05-05/600654_20220505_1_dNOo6yTW.pdf"
+      },
+      "sse_metadata_snapshot_sha256": "f41758157c61cac2ac6c6e5197ac68db5fb42a018bbf82c284a83408b621b931"
+    },
+    "pages": [
+      "证券代码：600654证券简称：ST中安公告编号：2022-041债券代码：136821债券简称：16中安消中安科股份有限公司关于公司股票被实施退市风险警示暨停牌的公告本公司董事会及全体董事保证本公告内容不存在任何虚假记载、误导性陈述或者重大遗漏，并对其内容的真实性、准确性和完整性承担个别及连带责任。重要提示：1、实施退市风险警示后的股票简称：*ST中安；股票代码：600654（不变）；股票价格的日涨跌幅限制为5%2\n简称由“ST中安”变更为“*ST中安”\n实施退市风险警示起始日：2022年5月6日",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "fixture_note": "Factual header/name/effective-date excerpts only; full original PDF hash retained in record. Fixture offsets are not original PDF offsets."
+  },
+  {
+    "record": {
+      "cninfo": [
+        {
+          "adjunctSize": 589,
+          "adjunctType": "PDF",
+          "adjunctUrl": "finalpage/2024-04-30/1219926861.PDF",
+          "announcementContent": "",
+          "announcementId": "1219926861",
+          "announcementTime": 1714406400000,
+          "announcementTitle": "关于股票交易实施退市风险警示及其他风险警示暨停牌的提示性公告",
+          "announcementType": "01010503||010113||012399||012501",
+          "announcementTypeName": null,
+          "associateAnnouncement": null,
+          "batchNum": null,
+          "columnId": "250401||251302||2705",
+          "id": null,
+          "important": null,
+          "orgId": "gssh0600112",
+          "orgName": null,
+          "pageColumn": "SHZB",
+          "secCode": "600112",
+          "secName": "ST天成",
+          "secNameList": null,
+          "shortTitle": "关于股票交易实施退市风险警示及其他风险警示暨停牌的提示性公告",
+          "storageTime": null,
+          "tileSecName": "ST天成"
+        }
+      ],
+      "cninfo_document_sha256": "f01e959f6bac00cbb9bb914cec50007547afdfe20c36b8c0d83c3b4bb5bd54ce",
+      "match_confidence": "EXACT",
+      "match_method": "security+publication_date+punctuation_normalized_full_title",
+      "sse": {
+        "BULLETIN_TYPE_DESC": "风险警示",
+        "BULLETIN_YEAR": "2024",
+        "IS_HOLDER_DISCLOSE": "0",
+        "ORG_BULLETIN_ID": "8251678106920202",
+        "ORG_FILE_TYPE": 0,
+        "SECURITY_CODE": "600112",
+        "SECURITY_NAME": "ST天成",
+        "SSEDATE": "2024-04-30",
+        "TITLE": "关于股票交易实施退市风险警示及其他风险警示暨停牌的提示性公告",
+        "URL": "/disclosure/listedinfo/announcement/c/new/2024-04-30/600112_20240430_3900.pdf"
+      },
+      "sse_metadata_snapshot_sha256": "5f35eeb68ebf6ec004cf6623688e1b6fe5e61283cb1dc01d79e42d38e58e81cd"
+    },
+    "pages": [
+      "证券代码：600112证券简称：ST天成公告编号：2024-046贵州长征天成控股股份有限公司关于股票交易实施退市风险警示及其他风险警示暨停牌的提示性公告本公司董事会及全体董事保证本公告内容不存在任何虚假记载、误导性陈述或者重大遗漏，并对其内容的真实性、准确性和完整性承担法律责任。重要内容提示：证券停复牌情况：适用因公司2023年度经审计的净资产为负值且公司2023年度财务会计报告被出具无法表示意见的审计报告（具体",
+      "股票简称：“ST天成”变更为“*ST天成”\n实施风险警示的起始日：2024年5月6日",
+      "",
+      ""
+    ],
+    "fixture_note": "Factual header/name/effective-date excerpts only; full original PDF hash retained in record. Fixture offsets are not original PDF offsets."
+  }
+]

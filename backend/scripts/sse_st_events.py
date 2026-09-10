@@ -17,7 +17,7 @@ from pypdf import PdfReader
 
 from scripts.reconcile_sse_cninfo import canonical, match, publication, save, sha
 
-VERSION = "sse-cninfo-explicit-start-v1"
+VERSION = "sse-cninfo-explicit-start-v2"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -52,7 +52,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("WRONG_ISSUER_COMPANY")
     names = list(
         re.finditer(
-            r"(?:股票|证券)简称[\uff1a:]?将?由[“\"]([^”\"]{1,20})[”\"]"
+            r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?由?[“\"]([^”\"]{1,20})[”\"]"
             r"(?:变更|更改|变)为[“\"]([^”\"]{1,20})[”\"]",
             text,
         )

@@ -73,9 +73,12 @@ def test_explicit_date_label_variants():
     fixture = FIXTURES[1]
     pages = [p.replace("起始日\uff1a", "起始日为\uff1a") for p in fixture["pages"]]
     assert extract(pages, fixture["record"])["effective_from"] == "2022-02-09"
-    for variant in ("股票简称\uff1a由", "股票简称将由"):
+    for variant in ("股票简称\uff1a由", "股票简称将由", "简称由", "股票简称\uff1a", "股票由"):
         pages = [p.replace("股票简称由", variant) for p in fixture["pages"]]
         assert extract(pages, fixture["record"])["status"] == "ST"
+    conflicting = [*fixture["pages"], "实施其他风险警示的起始日为2020年5月6日"]
+    with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+        extract(conflicting, fixture["record"])
 
 
 def test_pilot_boundary_future_leakage_order_checksum_and_exclusion():
@@ -181,3 +184,22 @@ def test_partial_warning_removal_is_not_normal_exit():
     assert event["old_status"] == event["status"] == "STAR_ST"
     assert event["effective_from"] == "2022-01-24"
     assert status_on([event], event["security_id"], "2023-01-01") == "STAR_ST"
+
+
+def test_real_new_name_syntax_and_original_conflicting_dates():
+    fixtures = json.loads(
+        (Path(__file__).parent / "fixtures/cninfo_st_parser_closure.json").read_text()
+    )
+    for fixture in fixtures:
+        record = fixture["record"]
+        identity = record["cninfo"][0]["announcementId"]
+        if identity == "1213268833":
+            with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+                extract(fixture["pages"], record)
+        else:
+            event = extract(fixture["pages"], record)
+            assert event["event_type"] == "ST_TO_STAR_ST"
+            assert (
+                event["effective_from"]
+                == {"1213274369": "2022-05-06", "1219926861": "2024-05-06"}[identity]
+            )
