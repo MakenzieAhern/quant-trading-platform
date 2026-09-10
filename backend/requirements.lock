@@ -61,6 +61,8 @@ mypy-extensions==1.1.0
     # via mypy
 openpyxl==3.1.5
     # via quant-trading-platform-backend (backend/pyproject.toml)
+pypdf==6.16.1
+    # via quant-trading-platform-backend (backend/pyproject.toml)
 packaging==26.3
     # via
     #   build

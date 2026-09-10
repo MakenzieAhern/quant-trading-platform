@@ -19,10 +19,10 @@ Place exactly one file for each exchange in
 - `szse-security-master.csv`, `.json` or `.xlsx`
 - `security-master-input.json`
 
-The exchange files must contain exactly these columns:
+The exchange files contain these required columns and may add row-level `source_url`:
 
 ```text
-security_id,exchange,symbol,name,board,listing_date,delisting_date,effective_from,effective_to,status
+security_id,exchange,symbol,name,board,listing_date,delisting_date,effective_from,effective_to,status,source_url
 ```
 
 Dates use `YYYY-MM-DD`; nullable values are empty. Symbols in spreadsheets must be text so leading
@@ -34,21 +34,15 @@ objects containing `source` (`SSE_OFFICIAL` or `SZSE_OFFICIAL`), `source_version
 file `sha256`, official `source_url`, UTC `retrieval_timestamp`, and source-level `complete`. A false
 or missing completeness declaration blocks universe queries.
 
-Run `make audit-universe`. A successful audit writes immutable `securities.parquet`, `manifest.json`
-and a persisted `audit-report.json` outside Git. Reversed input order must yield the same master and
-snapshot checksums.
+`source_url` falls back to the source manifest URL for compatible older files. Run
+`backend/scripts/fetch_a_share_security_master.py` to capture and reconcile the official pilot
+sources automatically, then run `make audit-universe`. A successful audit writes immutable
+`securities.parquet`, `manifest.json` and a persisted `audit-report.json` outside Git. Reversed input
+order must yield the same master and snapshot checksums.
 
 ## Current official-source boundary
 
-The [SSE public-data directory](https://www.sse.com.cn/market/publicdata/) identifies stock and
-paused/terminated-company lists, and the
-[SSE terminated-company page](https://star.sse.com.cn/assortment/stock/list/delisting/) exposes an
-official download surface. SZSE publishes official listing and termination notices in its
-[listed-company notices](https://www.szse.cn/disclosure/notice/company/index.html). No free,
-machine-readable export found in this pass proved complete point-in-time coverage for all SSE and
-SZSE A-shares and exits from 2010 through 2025. Notices and annual factbooks are valid evidence but
-must be normalized and reconciled before the source can declare `complete: true`.
-
-The required manual input is therefore an official SSE export and an official SZSE export covering
-all A-share listings and terminations effective during 2010-01-01 through 2025-12-31, with source
-URLs/download references retained. Third-party current-stock lists are not acceptable substitutes.
+The automated official-source reconstruction and 2022 SZSE fact-book reconciliation pass for the
+2023-01-01 through 2024-07-31 pilot; see `A_SHARE_SECURITY_MASTER_PILOT_AUDIT.md`. This does not
+declare complete point-in-time coverage for 2010 through 2025. Third-party current-stock lists are
+not acceptable substitutes for that later expansion.

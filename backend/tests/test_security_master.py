@@ -174,6 +174,7 @@ def test_official_csv_and_json_sources_load_with_verified_versions(tmp_path: Pat
                     "effective_from": "2010-01-01",
                     "effective_to": "2020-01-01",
                     "status": "DELISTED",
+                    "source_url": "https://official.example/000010-delisting",
                 }
             ]
         ),
@@ -210,6 +211,9 @@ def test_official_csv_and_json_sources_load_with_verified_versions(tmp_path: Pat
     assert len(master.records) == 2
     assert len(master.eligible_universe(date(2019, 1, 1))) == 2
     assert all(isinstance(item, SecurityId) for item in master.eligible_universe(date(2019, 1, 1)))
+    assert next(item for item in master.records if item.symbol == "000010").provenance == (
+        "https://official.example/000010-delisting",
+    )
 
 
 def test_official_xlsx_source_preserves_text_symbol(tmp_path: Path) -> None:

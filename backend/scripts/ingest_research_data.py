@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from app.data.catalog import finalize_manifest, write_canonical_parquet, write_manifest
+from app.data.security_master import load_security_master
 from app.domain.markets import (
     Board,
     DailySecurityStatus,
@@ -50,7 +51,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Ingest the bounded, non-research A-share pilot")
     parser.add_argument("--pilot", action="store_true", required=True)
     parser.add_argument("--root", type=Path, default=Path("data/research"))
+    parser.add_argument(
+        "--security-master-root",
+        type=Path,
+        default=Path("/home/yuchen/data/research/staging/security-master-pilot"),
+    )
     args = parser.parse_args()
+    master = load_security_master(args.security_master_root)
+    for security_id, board in SECURITIES.items():
+        if security_id not in master.eligible_universe(START):
+            raise SystemExit("PILOT_SECURITY_MASTER_MEMBER_MISSING")
+        if master.board_on(security_id, START) != board:
+            raise SystemExit("PILOT_SECURITY_MASTER_BOARD_MISMATCH")
     socket.setdefaulttimeout(15)
     bs: Any = import_module("baostock")
     login = bs.login()

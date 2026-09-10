@@ -32,9 +32,23 @@ def main() -> None:
     try:
         master = load_security_master(args.staging_root)
         report = _audit(master)
-        if report["status"] == "PASS":
+        snapshot = json.loads(
+            (args.staging_root / "source-snapshot-manifest.json").read_text(encoding="utf-8")
+        )
+        source_unresolved = len(snapshot["reconciliation"]["unresolved_decisions"])
+        report.update(
+            {
+                "source_snapshot_count": len(snapshot["snapshots"]),
+                "source_snapshot_checksum": snapshot["checksum"],
+                "source_conflict_count": len(snapshot["conflicts"]),
+                "source_unresolved_count": source_unresolved,
+            }
+        )
+        if not snapshot["complete"] or snapshot["conflicts"] or source_unresolved:
+            report.update(status="BLOCKED", reason="SOURCE_RECONCILIATION_INCOMPLETE")
+        if report["status"] == "PASS_FOR_PILOT":
             _write_dataset(args.output_root, master, report)
-    except (OSError, ValueError) as exc:
+    except (KeyError, OSError, TypeError, ValueError) as exc:
         report = {
             "schema_version": "1.0",
             "status": "BLOCKED",
@@ -43,7 +57,7 @@ def main() -> None:
         }
     (args.output_root / "audit-report.json").write_bytes(canonical_json_bytes(report) + b"\n")
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
-    if report["status"] != "PASS":
+    if report["status"] != "PASS_FOR_PILOT":
         raise SystemExit(2)
 
 
@@ -88,22 +102,82 @@ def _audit(master: PointInTimeSecurityMaster) -> dict[str, object]:
         source_versions=reversed(master.source_versions),
         records=reversed(master.records),
     )
+    records = tuple(by_security.values())
+    duplicate_symbols = len(records) - len(
+        {(record.exchange.value, record.symbol) for record in records}
+    )
+    missing_provenance = sum(not record.provenance for record in records)
+    stable_ids = all(
+        str(record.security_id) == f"CN-A:{record.exchange.value}:{record.symbol}"
+        for record in records
+    )
+    board_mapping = all(
+        record.board.value
+        == (
+            "SSE_STAR"
+            if record.symbol.startswith(("688", "689"))
+            else "SZSE_CHINEXT"
+            if record.symbol.startswith(("300", "301"))
+            else f"{record.exchange.value}_MAIN"
+        )
+        for record in records
+    )
     passed = (
         reversed_master.checksum == master.checksum
         and retained == retained_expected
         and excluded_after_exit == excluded_after_exit_expected
         and future_exclusions == future_exclusions_expected
+        and missing_provenance == 0
+        and stable_ids
+        and board_mapping
+        and duplicate_symbols == 0
     )
-    status = "PASS" if passed else "BLOCKED"
+    status = "PASS_FOR_PILOT" if passed else "BLOCKED"
     return {
         "schema_version": "1.0",
         "status": status,
-        "reason": None if status == "PASS" else "UNIVERSE_BOUNDARY_OR_CHECKSUM_CHECK_FAILED",
+        "reason": (
+            None if status == "PASS_FOR_PILOT" else "UNIVERSE_BOUNDARY_OR_CHECKSUM_CHECK_FAILED"
+        ),
         "coverage_start": master.coverage_start.isoformat(),
         "coverage_end": master.coverage_end.isoformat(),
         "security_count": len({str(item.security_id) for item in master.records}),
         "record_count": len(master.records),
+        "sse_security_count": sum(record.exchange.value == "SSE" for record in records),
+        "szse_security_count": sum(record.exchange.value == "SZSE" for record in records),
+        "pilot_ipo_count": sum(
+            master.coverage_start <= record.listing_date <= master.coverage_end
+            for record in records
+        ),
+        "pre_pilot_listing_count": sum(
+            record.listing_date < master.coverage_start for record in records
+        ),
+        "post_pilot_listing_count": sum(
+            record.listing_date > master.coverage_end for record in records
+        ),
+        "pilot_delisting_count": sum(
+            record.delisting_date is not None
+            and master.coverage_start <= record.delisting_date <= master.coverage_end
+            for record in records
+        ),
+        "post_pilot_delisting_count": sum(
+            record.delisting_date is not None
+            and record.listing_date <= master.coverage_end < record.delisting_date
+            for record in records
+        ),
+        "pre_pilot_delisting_count": sum(
+            record.delisting_date is not None and record.delisting_date < master.coverage_start
+            for record in records
+        ),
         "exited_security_count": len({str(item.security_id) for item in exited}),
+        "conflict_count": 0,
+        "unresolved_record_count": 0,
+        "missing_provenance_count": missing_provenance,
+        "duplicate_symbol_count": duplicate_symbols,
+        "stable_security_ids": stable_ids,
+        "exchange_board_mapping": board_mapping,
+        "earliest_listing_date": min(record.listing_date for record in records).isoformat(),
+        "latest_listing_date": max(record.listing_date for record in records).isoformat(),
         "exited_pre_delisting_checks": retained,
         "post_delisting_exclusion_checks": excluded_after_exit,
         "future_listing_exclusion_checks": future_exclusions,

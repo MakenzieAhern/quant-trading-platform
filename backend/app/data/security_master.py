@@ -241,14 +241,17 @@ def load_security_master(staging_root: Path) -> PointInTimeSecurityMaster:
         if not path.is_file() or sha256_file(path) != source.sha256:
             raise SecurityMasterError("SECURITY_MASTER_SOURCE_FILE_MISSING_OR_CHANGED")
         for row in _read_rows(path):
+            values = _normalize_row(row)
+            row_source_url = values.pop("source_url", None)
+            provenance = (str(row_source_url or source.source_url),)
             records.append(
                 SecurityMasterRecord.create(
-                    **_normalize_row(row),
+                    **values,
                     source=source.source,
                     source_version=source.source_version,
                     retrieval_timestamp=source.retrieval_timestamp,
                     source_document_sha256=source.sha256,
-                    provenance=(source.source_url,),
+                    provenance=provenance,
                 )
             )
     return PointInTimeSecurityMaster.create(
@@ -297,7 +300,8 @@ def _normalize_row(row: Mapping[str, object]) -> dict[str, object]:
         "effective_to",
         "status",
     }
-    if set(row) != required:
+    optional = {"source_url"}
+    if not required <= set(row) or set(row) - required - optional:
         raise SecurityMasterError("SECURITY_MASTER_SOURCE_SCHEMA_INVALID")
     normalized = {
         key: None if key in {"name", "delisting_date", "effective_to"} and value == "" else value
