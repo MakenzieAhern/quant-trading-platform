@@ -1,5 +1,26 @@
 # Current state
 
+
+## Current: R2 factor availability blocker
+
+R2 BLOCKED; HUMAN_APPROVAL_REQUIRED=YES; HUMAN_APPROVAL_GATE=NONE (not Gate A).
+SINGLE_SMALLEST_BLOCKER=SINA_FACTOR_BASELINE_UNAVAILABLE_689009.
+Accepted Sina HFQ URL returned HTTP200 with total=0/data=[] for689009.
+No baseline can be inferred; no approved substitute/exclusion applies. No retry
+of a non-transport failure, fabricated factor1 or third provider was introduced.
+657 primary +1923 secondary complete inputs preserved;2580 securities partitioned,
+951927 raw rows /6250 factor rows. One factor failure,2597 unattempted;2598 unresolved.
+Worker stopped safely at a complete batch for human source resolution; no background
+worker remains. Resume this checkpoint after resolving689009, never from zero.
+All accepted R1 authorities and Tencent LIMITED_PRECISION_PARITY remain intact.
+Entire available amount sample:17068 potential decisions,zero ambiguous (includes
+7 separately audited decisions from689009's saved382 raw rows). Dataset unpublished,
+unaudited,unfrozen; no studies,merge or release.406 tests/lint/type checks passed.
+Full source/error/checksum evidence:docs/research/R2_SINA_FACTOR_COVERAGE_BLOCKER.md.
+
+## Earlier checkpoints (superseded)
+
+
 ## Current running recovery milestone
 
 R2 RUNNING. Primary657 preserved; secondary848 now materialized, total1,505
