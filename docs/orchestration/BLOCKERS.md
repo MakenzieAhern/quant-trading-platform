@@ -1,6 +1,25 @@
 # Blockers
 
-Latest continuation: failures are NON-TERMINAL PENDING_RETRY while the independent
+## Active terminal blocker after complete bounded recovery
+
+SINGLE_SMALLEST_BLOCKER = R2_RAW_ROUTE_CONNECTION_CLOSED_600070.
+STATUS = BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; not Gate A.
+All 5,178 members were processed; two retry passes recovered 151 then 2 inputs.
+657 inputs/partial partitions retained; 4,521 terminal required raw gaps remain.
+Every remaining failure is final-round RemoteDisconnected before HTTP response,
+including 600070 (five actual requests total). Root cause remains UNKNOWN.
+No accepted raw fallback and no existing exclusion for transport failure exists.
+Do not reissue the exhausted requests, fabricate bars, infer suspension, omit any
+security, or publish the incomplete dataset. Full failure manifest is preserved
+outside Git at pilot-akshare-20260911/recovery-failure-manifest.json, SHA-256
+e1279921716ebf3c3d424acfedceb7b8f70b950dcdd4f6372829e41c811488ce.
+External source-access recovery or an explicit policy decision is now required;
+no generic provider choice or new exclusion threshold has been requested.
+All R1 decisions remain accepted; no dataset audit/freeze/study/merge occurred.
+
+## Earlier active-recovery checkpoint (superseded)
+
+Prior continuation: failures are NON-TERMINAL PENDING_RETRY while the independent
 R2 queue progresses. STATUS = RUNNING; HUMAN_APPROVAL_REQUIRED = NO.
 No new human source choice is requested. The user superseded the prior stop below.
 See external recovery-failure-manifest.json for the full pending set; 600070 is

@@ -1,12 +1,59 @@
 # Autonomous Quant Project Checkpoint
 
-## Active R2 recovery continuation
+## Terminal R2 recovery checkpoint
+
+STATUS = BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; HUMAN_APPROVAL_GATE = NONE.
+SINGLE_SMALLEST_BLOCKER = R2_RAW_ROUTE_CONNECTION_CLOSED_600070.
+Initial pass: 5,178 / 5,178 processed, 504 completed, 4,674 pending.
+First retry: 4,674 / 4,674 processed, 151 recovered, 4,523 pending.
+Final retry: 4,523 / 4,523 processed, 2 recovered (600605, 600739), 4,521 unresolved.
+Last terminal source failure UTC: 2026-09-11T11:49:51.552627+00:00.
+The worker ended with FINAL_PUBLICATION_PROHIBITED; no retry process remains.
+657 RECOVERED_PRIMARY (493 SSE, 164 SZSE); 0 accepted fallback recoveries;
+0 AUTHORITATIVELY_NOT_EXPECTED_TO_HAVE_DATA; 4,521 UNRESOLVED_REQUIRED_DATA
+(1,794 SSE, 2,727 SZSE). Every terminal error is RemoteDisconnected from the
+accepted Eastmoney raw endpoint. Error classification UNKNOWN, not assumed
+anti-bot, outage or lifecycle-driven. 600070 actual requests = 5, all exhausted.
+No accepted fallback or existing transport-gap exclusion permits publication.
+
+All master IDs accounted for exactly once in completed/pending sets; no overlap
+or silent drop. Failure history has unique security/round slots, every pending
+entry is round 2 terminal, and failure manifest exactly matches checkpoint.
+No provider access-denial flag or abandoned .tmp file was found.
+657 partial securities: 244,073 raw rows, 1,565 factor rows, quality failures 0.
+Source/partition SHA checks pass during offline materialization. These are partial
+raw/factor checks, NOT full R3 dataset audits or proof of complete observations.
+No final input-manifest.json exists. All data and failure evidence remain outside Git.
+
+External evidence under pilot-akshare-20260911:
+
+- recovery-checkpoint.json SHA-256: ffdc46937ecbd30f74a28660ef1769d2a7b8506ef65d0f1c2ae45ddac4841a68
+- recovery-failure-manifest.json SHA-256: e1279921716ebf3c3d424acfedceb7b8f70b950dcdd4f6372829e41c811488ce
+- partition-checkpoint.json SHA-256: 7c2916446fc867a39b41aa45a7062c44452be15fd2708a9b0e65882f5e573896
+- 600070-recovery-result.json SHA-256: 115ed5b78155e53e9f71396eab1c3baee21ef746808f14b4be7e360ea5ac4185
+- recovery-completion-report.json SHA-256: be02bd9cba43320007fe7d6731fcdd060f947d63ca23d6d942ee07c6dcafc887
+
+Final offline repeat reproduced the same partition-checkpoint SHA-256 with no
+new network request; six focused recovery tests re-run PASS. Controller JSON
+verified BLOCKED with all dataset/study permissions unchanged. GitHub login
+re-verified MakenzieAhern; branch feature/a-share-research-v1.1.
+
+SOURCE_AUTHORITY_PREFLIGHT = PASS; all R1 authority decisions unchanged.
+PILOT_DATASET_CREATED = NO; PILOT_A_SHARE_DATA_READINESS = BLOCKED.
+DATASET_AUDITED = NO; DATASET_FROZEN = NO; R3 = NOT_RUN.
+DEVELOPMENT_STUDY = NOT_RUN; VALIDATION_STUDY = NOT_RUN; OFFICIAL_OOS = NOT_RUN.
+PR12 remains OPEN/unmerged; no new PR, release or strategy execution.
+Existing feature branch and MakenzieAhern identity retained. Backend 395 tests,
+Ruff/format/strict mypy and preceding milestone CI passed; terminal documentation
+checkpoint CI is checked after its single milestone push.
+
+## Preserved active R2 recovery continuation (superseded by terminal state above)
 
 STATUS = RUNNING; HUMAN_APPROVAL_REQUIRED = NO. Prior stop below superseded.
 Independent queue continues through per-security failures; 600070 = UNRESOLVED_REQUIRED_DATA.
 Three same-construction SSE controls succeeded, 382 rows each. No fallback is in
 the current accepted OHLCV manifest; no new exclusion policy is introduced.
-At this checkpoint: 655 securities partitioned, 243,309 raw rows, 1,560 factor rows;
+At this checkpoint: 657 securities partitioned, 244,073 raw rows, 1,565 factor rows;
 quality failures 0, final publication NO. Periodic counts are checkpoint snapshots,
 not final-universe acceptance. External pilot-akshare-20260911/recovery-checkpoint.json
 and partition-checkpoint.json retain current counts and exact file hashes.
@@ -25,6 +72,8 @@ Its terminal classification is UNRESOLVED_REQUIRED_DATA; root cause UNKNOWN.
 No accepted fallback or existing transport-gap exclusion exists. Evidence is in
 600070-recovery-result.json outside Git. No further 600070 request is authorized;
 other securities continue their independent final pass, with final publication barred.
+Final-pass progress snapshot: 4,390 / 4,523 processed, two additional primary recoveries.
+Milestone feabf7055fab86d72ccde1d0d75ae8ef8d442036 is pushed; CI 34579627544 SUCCESS.
 First-pass milestone bfb89fb26dd39422da14bf2f1eab2e6c1de9637f is pushed;
 CI 34563889226 completed SUCCESS. No PR merge or dataset freeze occurred.
 After recording the source failure at 2026-09-11T05:07:34.160687Z, the Windows

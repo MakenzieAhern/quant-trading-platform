@@ -1,5 +1,14 @@
 # Decisions
 
+- 2026-09-11 bounded R2 recovery completed: all 5,178 members accounted for;
+  657 RECOVERED_PRIMARY and 4,521 UNRESOLVED_REQUIRED_DATA after all three rounds.
+  The final pass recovered 600605 and 600739; it did not resolve 600070, whose five
+  actual requests are exhausted. All terminal failures are RemoteDisconnected,
+  cause UNKNOWN. Existing policy permits neither fallback nor transport-gap
+  exclusion. Stop BLOCKED for source-access/policy resolution, not Gate A; retain
+  all partial partitions and evidence. No further retry, R1 reopening, incomplete
+  publication, dataset freeze, study or PR merge is authorized.
+
 - 2026-09-11 R2 recovery continuation: user explicitly directs successful
   securities to continue while failures queue as PENDING_RETRY. No R1 reopening,
   new provider, new exclusion, synthetic data, freeze or research. Source snapshots

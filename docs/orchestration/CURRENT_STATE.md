@@ -1,6 +1,29 @@
 # Current state
 
-Latest continuation: R2 RUNNING, HUMAN_APPROVAL_REQUIRED = NO.
+## Latest terminal checkpoint: 2026-09-11 R2 recovery exhausted
+
+STATUS = BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; HUMAN_APPROVAL_GATE = NONE.
+SINGLE_SMALLEST_BLOCKER = R2_RAW_ROUTE_CONNECTION_CLOSED_600070. Not Gate A.
+All 5,178 members completed the initial pass and both fixed retry passes.
+657 primary inputs have separate raw/factor Parquet partitions (493 SSE, 164 SZSE):
+244,073 raw rows, 1,565 factor rows, zero partition quality failures.
+4,521 required inputs remain UNRESOLVED_REQUIRED_DATA (1,794 SSE, 2,727 SZSE),
+all final-round RemoteDisconnected from the accepted Eastmoney raw endpoint.
+600070 used five actual requests including three preserved prior diagnostics;
+cause UNKNOWN. No accepted fallback or existing transport-gap exclusion applies.
+No additional retry is authorized by the exhausted policy. No security was dropped.
+R1/source preflight and execution convention remain PASS; no authority re-audit.
+Pilot Dataset NOT created/audited/frozen. R3 and all studies NOT run; PR12 NOT merged.
+Next: external source-access recovery or explicit source-policy resolution, then
+resume from preserved inputs, not from zero. Do not invent a replacement provider.
+Final evidence: external pilot-akshare-20260911/recovery-completion-report.json,
+recovery-failure-manifest.json and recovery-checkpoint.json; hashes in RUN_REPORT
+and .research/project_state.json. Backend 395 tests and CI passed before this
+documentation-only terminal checkpoint; final milestone CI is checked separately.
+
+## Historical checkpoints below (superseded)
+
+Prior continuation: R2 RUNNING, HUMAN_APPROVAL_REQUIRED = NO.
 User authorized independent queue progress and bounded final retries. Original
 600070 evidence is preserved; old BLOCKED checkpoint below is superseded.
 SSE controls 600000/600004/600006 returned 382 rows each with identical construction.
