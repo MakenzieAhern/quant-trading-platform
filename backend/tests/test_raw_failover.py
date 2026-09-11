@@ -4,7 +4,11 @@ from decimal import Decimal
 
 import pytest
 
-from scripts.audit_amount_impact import distribution, interval_decisions
+from scripts.audit_amount_impact import (
+    amount_rule_potentially_reachable,
+    distribution,
+    interval_decisions,
+)
 from scripts.audit_raw_failover import merged, normalized, parity
 from scripts.audit_tencent_amount import comparison
 from scripts.probe_raw_failover import candidate, primary_status, run, tencent_url
@@ -65,6 +69,12 @@ def test_amount_comparison_preserves_precision_and_zero_denominator():
 
 
 def test_amount_interval_propagation_does_not_choose_favorable_boundary():
+    assert amount_rule_potentially_reachable("DELISTING_PERIOD")
+    assert amount_rule_potentially_reachable("NORMAL")
+    assert not amount_rule_potentially_reachable("ST")
+    assert not amount_rule_potentially_reachable("STAR_ST")
+    with pytest.raises(ValueError):
+        amount_rule_potentially_reachable("UNKNOWN")
     rows = [
         dict(trading_date=(date(2023, 1, 1) + timedelta(days=i)).isoformat(), amount="10000000")
         for i in range(20)

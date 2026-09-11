@@ -1,5 +1,22 @@
 # Pilot amount decision-impact acceptance
 
+## Reachability correction and continued audit
+
+The follow-up code trace conservatively includes DELISTING_PERIOD before other
+eligibility gates: a delisting label is not itself is_st=true. The initial available
+sample therefore has4,335 potential checks, not4,334:000996/2024-06-20 adds one
+stable primary-source check. The original artifacts remain immutable; this does
+not change the zero-ambiguity conclusion, thresholds, policy hash or source data.
+The shared recovery/audit guard now explicitly covers NORMAL and DELISTING_PERIOD,
+skips only ST/STAR_ST under the unchanged policy, and rejects unknown status labels.
+
+The --include-recovered audit reads all completed secondary inputs as well as
+primary/candidate evidence and writes separate amount-impact-current-* artifacts,
+never replacing the initial authority report. A follow-up snapshot covered1,040
+available securities/377,808 rows and6,429 potentially evaluated decisions;
+all6,429 were stable, including five delisting-period checks. These are progress
+counts, not a claim of final full-universe acceptance.
+
 ## New decision supersedes the earlier precision-semantics stop
 
 The human continuation explicitly authorizes decision-invariance acceptance.
@@ -93,9 +110,9 @@ Two targeted controls (600666,688211) were selected by proximity to the unchange
 liquidity threshold, not performance. Eight additional bounded Tencent requests
 (two years/two repetitions each) extend the prior evidence; no primary was refetched.
 
-AMOUNT_DEPENDENT_DECISIONS_TOTAL = 4334 (potential scheduled evaluations before
+Original AMOUNT_DEPENDENT_DECISIONS_TOTAL = 4334 (corrected to4335 above; before
 suspension/factor/portfolio gates, across all available histories).
-AMOUNT_DECISIONS_STABLE = 4334.
+Original AMOUNT_DECISIONS_STABLE = 4334 (corrected to4335 above).
 AMOUNT_DECISIONS_AMBIGUOUS = 0.
 SECURITIES_WITH_AMBIGUOUS_AMOUNT_DECISION = 0.
 DATES_WITH_AMBIGUOUS_AMOUNT_DECISION = 0.

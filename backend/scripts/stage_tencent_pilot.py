@@ -11,7 +11,13 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import parse_qs, urlsplit
 
-from scripts.audit_amount_impact import QUANTUM, STRATEGY_SHA, interval_decisions, status_lookup
+from scripts.audit_amount_impact import (
+    QUANTUM,
+    STRATEGY_SHA,
+    amount_rule_potentially_reachable,
+    interval_decisions,
+    status_lookup,
+)
 from scripts.audit_raw_failover import merged, normalized
 from scripts.probe_raw_failover import tencent_url
 from scripts.reconcile_sse_cninfo import canonical, fetch, save, sha
@@ -131,7 +137,9 @@ def recover(
         ambiguous = [
             r
             for r in decisions
-            if not r["stable"] and r["day"] in scheduled and get_status(sid, r["day"]) == "NORMAL"
+            if not r["stable"]
+            and r["day"] in scheduled
+            and amount_rule_potentially_reachable(get_status(sid, r["day"]))
         ]
         if ambiguous:
             record.update(ambiguous_amount_decisions=ambiguous)

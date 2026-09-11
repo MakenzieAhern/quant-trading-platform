@@ -22,6 +22,13 @@ SDK_SHA = "aa9199665d356ba3a054297004e349d3926fa83026abfd2d50c4b7f832226d84"
 STRATEGY_SHA = "14bd3d21a48560faa28527fa061883a4ceb69bcf7a6332176ac06467152dbde0"
 
 
+def amount_rule_potentially_reachable(status: str) -> bool:
+    if status not in {"NORMAL", "ST", "STAR_ST", "DELISTING_PERIOD"}:
+        raise ValueError("UNKNOWN_AMOUNT_RULE_STATUS")
+    # Delisting is not itself an is_st flag; include before other eligibility gates.
+    return status not in {"ST", "STAR_ST"}
+
+
 def interval_decisions(rows: list[dict], width: Decimal) -> list[dict]:
     """Union of floor/ceiling/nearest quantization cells; no favorable rounding mode."""
     if width < 0 or not width.is_finite():
@@ -102,7 +109,9 @@ def status_lookup(staging: Path):
     return status
 
 
-def audit(staging: Path, sdk_root: Path, repository: Path) -> dict:
+def audit(
+    staging: Path, sdk_root: Path, repository: Path, *, include_recovered: bool = False
+) -> dict:
     root = staging / "raw-failover-v1"
     sdk_file = sdk_root / "akshare/stock_feature/stock_hist_tx.py"
     sdk = sdk_file.read_bytes()
@@ -217,6 +226,21 @@ def audit(staging: Path, sdk_root: Path, repository: Path) -> dict:
                 parity_rows.append(
                     dict(security_id=sid, day=d, **comparison(p[6], upstream[d], "10000"))
                 )
+    stem = "amount-impact-current" if include_recovered else "amount-impact"
+    if include_recovered:
+        path = staging / "pilot-akshare-20260911/secondary-checkpoint.json"
+        recovered = json.loads(path.read_bytes())
+        for sid, receipt in sorted(recovered["completed"].items()):
+            raw = (staging / receipt["raw_path"]).read_bytes()
+            if sha(raw) != receipt["raw_sha256"]:
+                raise ValueError("RECOVERED_SOURCE_CHANGED")
+            payload = json.loads(raw)
+            for source in payload["sources"]:
+                if sha((staging / source["path"]).read_bytes()) != source["sha256"]:
+                    raise ValueError("RECOVERED_UPSTREAM_CHANGED")
+            available[sid] = payload["rows"]
+            candidate_ids.add(sid)
+            sources.append(dict(path=receipt["raw_path"], sha256=sha(raw), provider="Tencent"))
     get_status = status_lookup(staging)
     decisions, stress = [], []
     for sid, rows in sorted(available.items()):
@@ -228,7 +252,9 @@ def audit(staging: Path, sdk_root: Path, repository: Path) -> dict:
                 status=get_status(sid, item["day"]),
             )
             # Count a conservative superset before suspension/factor/portfolio gates.
-            item["potential_rule_evaluation"] = item["scheduled"] and item["status"] == "NORMAL"
+            item["potential_rule_evaluation"] = item[
+                "scheduled"
+            ] and amount_rule_potentially_reachable(item["status"])
             if not item["potential_rule_evaluation"]:
                 item["actual_decision_stable"] = True
             else:
@@ -239,9 +265,9 @@ def audit(staging: Path, sdk_root: Path, repository: Path) -> dict:
                 stress.append(dict(security_id=sid, **item))
     ambiguous = [r for r in decisions if not r["actual_decision_stable"]]
     outliers = [r for r in parity_rows if Decimal(r["absolute_difference"]) > QUANTUM]
-    save(root / "amount-impact-decisions.json", decisions)
-    save(root / "amount-impact-parity.json", parity_rows)
-    save(root / "amount-impact-sources.json", sources)
+    save(root / f"{stem}-decisions.json", decisions)
+    save(root / f"{stem}-parity.json", parity_rows)
+    save(root / f"{stem}-sources.json", sources)
     report = dict(
         parser_version=VERSION,
         upstream_unit="10000 CNY",
@@ -287,7 +313,7 @@ def audit(staging: Path, sdk_root: Path, repository: Path) -> dict:
         sources_sha256=sha(canonical(sources)),
         sdk_evidence_sha256=sha((root / "amount-sdk-evidence.json").read_bytes()),
     )
-    save(root / "amount-impact-audit.json", report)
+    save(root / f"{stem}-audit.json", report)
     return report
 
 
@@ -296,5 +322,15 @@ if __name__ == "__main__":
     parser.add_argument("--staging", required=True, type=Path)
     parser.add_argument("--sdk-root", required=True, type=Path)
     parser.add_argument("--repository", required=True, type=Path)
+    parser.add_argument("--include-recovered", action="store_true")
     args = parser.parse_args()
-    print(json.dumps(audit(args.staging, args.sdk_root, args.repository)))
+    print(
+        json.dumps(
+            audit(
+                args.staging,
+                args.sdk_root,
+                args.repository,
+                include_recovered=args.include_recovered,
+            )
+        )
+    )

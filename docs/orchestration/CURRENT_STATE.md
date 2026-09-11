@@ -1,5 +1,25 @@
 # Current state
 
+## Current running recovery milestone
+
+R2 RUNNING. Primary657 preserved; secondary516 now materialized, total1,173
+securities /428,646 raw rows /2,584 factor rows, zero partition failures.
+4,005 inputs remained at this snapshot; live secondary-checkpoint.json is newer
+as the worker continues. No dataset publication, full R3, freeze, studies or merge.
+The original primary partition-report subset still hashes to
+7c2916446fc867a39b41aa45a7062c44452be15fd2708a9b0e65882f5e573896.
+Two-query/one-query normalized equality proved on260 recovered securities;
+future requests omit the redundant second query without changing policy/coverage.
+Delisting-period rule reachability is explicitly included: initial sample4335
+potential checks (one more stable primary check than4334 previously reported).
+The expanded current audit covered6429 checks with zero ambiguity. Old authority
+artifacts retained; current audit writes separate amount-impact-current-* files.
+405 backend tests and lint/type checks passed at acquisition milestone74f8c8c;
+CI34612957718 SUCCESS. Latest refinements receive their own checks/CI.
+
+## Earlier checkpoints (superseded)
+
+
 ## Current decision-invariance acceptance
 
 R2 RUNNING; HUMAN_APPROVAL_REQUIRED = NO. Prior amount-semantics stop RESOLVED
