@@ -7,6 +7,17 @@ class Market(StrEnum):
     CN_A = "CN_A"
 
 
+class InstrumentType(StrEnum):
+    COMMON_STOCK = "COMMON_STOCK"
+    CDR = "CDR"
+    B_SHARE = "B_SHARE"
+    ETF = "ETF"
+    FUND = "FUND"
+    BOND = "BOND"
+    PREFERRED_SHARE = "PREFERRED_SHARE"
+    OTHER = "OTHER"
+
+
 class Exchange(StrEnum):
     SSE = "SSE"
     SZSE = "SZSE"

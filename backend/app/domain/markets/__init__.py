@@ -5,7 +5,7 @@ from app.domain.markets.corporate_actions import (
     CorporateActionCompleteness,
     CorporateActionType,
 )
-from app.domain.markets.identifiers import Board, Exchange, Market, SecurityId
+from app.domain.markets.identifiers import Board, Exchange, InstrumentType, Market, SecurityId
 from app.domain.markets.rules import (
     DailySecurityStatus,
     PriceLimitModel,
@@ -16,7 +16,12 @@ from app.domain.markets.rules import (
     TransactionCostSchedule,
     is_locked_one_price_bar,
 )
-from app.domain.markets.security import EffectiveSymbolPeriod, Security, SecurityListingPeriod
+from app.domain.markets.security import (
+    EffectiveSymbolPeriod,
+    InstrumentClassification,
+    Security,
+    SecurityListingPeriod,
+)
 
 __all__ = [
     "Board",
@@ -26,6 +31,8 @@ __all__ = [
     "DailySecurityStatus",
     "EffectiveSymbolPeriod",
     "Exchange",
+    "InstrumentClassification",
+    "InstrumentType",
     "Market",
     "PriceLimitModel",
     "ResolvedTradingRules",

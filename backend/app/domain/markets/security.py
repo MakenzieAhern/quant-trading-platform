@@ -3,11 +3,38 @@ from itertools import pairwise
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from app.domain.markets.identifiers import Board, Exchange, Market, SecurityId
+from app.domain.common import UtcDateTime
+from app.domain.markets.identifiers import Board, Exchange, InstrumentType, Market, SecurityId
 
 
 class ImmutableModel(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
+
+
+class InstrumentClassification(ImmutableModel):
+    """Sourced instrument fact, independent of any research eligibility decision."""
+
+    security_id: SecurityId
+    instrument_type: InstrumentType
+    effective_from: date
+    effective_to: date | None = None
+    source_url: str = Field(pattern=r"^https://")
+    source_publication_date: date
+    source_document_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    retrieval_timestamp: UtcDateTime
+
+    @model_validator(mode="after")
+    def validate_range(self) -> "InstrumentClassification":
+        if self.effective_to is not None and self.effective_to < self.effective_from:
+            raise ValueError("effective_to must not precede effective_from")
+        return self
+
+    def known_on(self, on_date: date) -> bool:
+        return (
+            self.source_publication_date <= on_date
+            and self.effective_from <= on_date
+            and (self.effective_to is None or on_date <= self.effective_to)
+        )
 
 
 class EffectiveSymbolPeriod(ImmutableModel):

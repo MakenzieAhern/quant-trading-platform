@@ -1,6 +1,29 @@
 # Decisions
 
 
+## Current: instrument-scope decision required
+
+R2 BLOCKED; SINGLE_SMALLEST_BLOCKER=PILOT_INSTRUMENT_SCOPE_REQUIRES_HUMAN_DECISION.
+The pre-blocker97eebf3 contract names CN_A and four boards but does not establish
+ordinary-equities-only versus CDR-inclusive scope. Official SSE notice confirms
+689009 is a CDR, listed2020-10-29; this fact alone does not authorize exclusion.
+Full5178-row type-evidence inventory:1 confirmed CDR,5177 UNCLASSIFIED (not assumed
+ordinary, not excluded). No other nonordinary instrument was positively established;
+this is NOT a complete certified instrument census or zero-leakage PASS.
+New sourced InstrumentClassification model is independent of eligibility. No filter,
+master checksum, scope, strategy, factor baseline or frozen failover policy changed.
+All657 primary/1923 secondary successes and2580 partitions/951927 raw rows unchanged.
+The prior689009 empty-factor evidence remains unresolved if CDR is included.
+Human must specify ordinary A-share-only versus CDR-inclusive Pilot scope before
+classification/eligibility changes and R2 resume. Worker remains stopped.407 tests
+and lint/type checks passed. No dataset publication, R3 PASS, freeze, study or merge.
+Evidence:docs/research/R2_INSTRUMENT_SCOPE_AUDIT.md. HUMAN_APPROVAL_REQUIRED=YES;
+this is not Gate A. Earlier master authority PASS does not certify instrument scope.
+
+## Earlier checkpoints (superseded)
+
+
+
 ## Current: R2 factor availability blocker
 
 R2 BLOCKED; HUMAN_APPROVAL_REQUIRED=YES; HUMAN_APPROVAL_GATE=NONE (not Gate A).
