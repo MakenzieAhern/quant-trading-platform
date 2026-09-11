@@ -1,5 +1,42 @@
 # Autonomous Quant Project Checkpoint
 
+## Latest R2 systemic diagnosis and candidate failover checkpoint
+
+STATUS = BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; HUMAN_APPROVAL_GATE = NONE.
+SINGLE_SMALLEST_BLOCKER = RAW_SECONDARY_AMOUNT_PRECISION_AUTHORITY_UNRESOLVED.
+PRIMARY_ROUTE_STATUS = PRIMARY_SYSTEMIC_TRANSPORT_FAILURE (6/6 fixed probes).
+RAW_OHLCV_PRIMARY_AUTHORITY = PASS; SOURCE_AUTHORITY_PREFLIGHT = PASS (existing,
+unchanged primary manifest, not a secondary promotion).
+SECONDARY_ACCEPTANCE = NOT_PROMOTED; CROSS_SOURCE_PARITY = PARTIAL.
+CN_A_RAW_OHLCV_FAILOVER_V1 = CANDIDATE_NOT_ENABLED.
+
+32 Tencent candidate requests cover 8 securities/two years/two repetitions;
+2,418 normalized candidate rows repeat exactly. Six cached primary controls share
+1,719 dates, with zero material OHLC/date mismatches. Four unexplained amounts
+remain; prior Sina histories plus one targeted 300336 request corroborate the
+rounding base but do not prove the remaining primary vendor precision behavior.
+No additional tolerance, source substitution, arbitrary exclusion or strategy
+performance criterion was introduced. Source snapshots and field-by-field parity
+are external; full details in docs/research/R2_RAW_FAILOVER_ACCEPTANCE.md.
+
+PRIMARY_SUCCEEDED = 657; PRIMARY_FAILED_SECONDARY_RECOVERED = 0;
+PRIMARY_FAILED_SECONDARY_FAILED = 0 (no production secondary attempts);
+AUTHORITATIVELY_NO_DATA_EXPECTED = 0; UNRESOLVED_REQUIRED_DATA = 4521.
+All original raw/factor inputs, Parquet files and checkpoint hashes verified
+unchanged. Partial production raw rows = 244,073. Candidate rows are not admitted.
+No final manifest or Pilot Dataset was published; no R3, freeze, Development,
+Validation, OOS, strategy, PR merge or release occurred. All R1 decisions preserved.
+
+Primary probe SHA256 = 513f04d0ec47408b1f49503af5168eb07d2fbf5270b6a661f4c8e32bf3157d9c
+Candidate audit SHA256 = ff0e31d2ffca13fb174995a1bd31eb3f4a6342c0c013dfc26779708469c3db47
+Policy SHA256 = 47316572b10b3e1f8cc35362614958a7265463be25432f3de2b4a149841d3dcc
+Tests: 11 focused recovery checks PASS; full backend 400 PASS; Ruff/format/mypy PASS.
+Finished probes and persistent access-denial stops cannot restart on rerun.
+Existing feature branch/PR12 retained. No Git identity change. Final milestone CI
+is checked after push; this checkpoint does not claim a future CI result.
+
+## Prior checkpoint (superseded by current failover review)
+
 ## Terminal R2 recovery checkpoint
 
 STATUS = BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; HUMAN_APPROVAL_GATE = NONE.

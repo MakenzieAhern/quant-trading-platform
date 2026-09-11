@@ -1,5 +1,23 @@
 # Blockers
 
+## Current smallest blocker: secondary amount precision authority
+
+RAW_SECONDARY_AMOUNT_PRECISION_AUTHORITY_UNRESOLVED.
+R2 BLOCKED; human input/evidence required; not Gate A.
+The six-member primary probe failed 6/6 before HTTP: operationally systemic,
+not an isolated 600070 issue. Primary historical acceptance remains unchanged.
+Tencent returned eight repeatable candidate histories, including 600070, 300336,
+000732 and new IPO 603125. No sampled OHLC/date mismatch; four amount differences
+exceed direct hundred-CNY display rounding by 0.02–1 CNY. Sina corroborates
+Tencent's rounding base but does not establish the primary vendor's processing.
+Do not force cross-source parity PASS or introduce a blanket expanded tolerance.
+Required resolution: supported precision evidence or explicit limited amount
+precision policy approval. Existing 657 successes remain intact; 4,521 production
+gaps remain. No secondary was promoted or used for production ingestion.
+Details and exact rows: docs/research/R2_RAW_FAILOVER_ACCEPTANCE.md.
+
+## Prior acquisition blocker (superseded by current failover review)
+
 ## Active terminal blocker after complete bounded recovery
 
 SINGLE_SMALLEST_BLOCKER = R2_RAW_ROUTE_CONNECTION_CLOSED_600070.

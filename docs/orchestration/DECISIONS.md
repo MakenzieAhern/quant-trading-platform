@@ -1,5 +1,22 @@
 # Decisions
 
+- Failover candidate review completed: six additional primary diagnostics failed
+  before HTTP; classify operationally SYSTEMIC_TRANSPORT_FAILURE without
+  downgrading primary historical authority. Tencent returned eight repeatable
+  histories and matched 1,719 primary dates/OHLC; four amount differences remain
+  unresolved after reuse of Sina snapshots plus one targeted raw request.
+  CN_A_RAW_OHLCV_FAILOVER_V1 stays disabled; no secondary promotion, production
+  failover, bulk retry or new exclusion. Stop only for the remaining narrow
+  amount-precision evidence/policy decision, preserving all 657 original inputs.
+
+- Current human failover authorization: resume R2 RUNNING for a bounded six-member
+  primary operational diagnostic and independent secondary-route acceptance.
+  Preserve primary historical authority and all 657 successful partitions. No
+  bulk primary retry or automatic provider substitution. Version the selection
+  policy; secondary use requires independent authority and cross-source parity.
+  Prior exhausted-run stop is superseded only within this new diagnostic scope.
+  Dataset publication/freeze, studies and PR merge remain prohibited until gates.
+
 - 2026-09-11 bounded R2 recovery completed: all 5,178 members accounted for;
   657 RECOVERED_PRIMARY and 4,521 UNRESOLVED_REQUIRED_DATA after all three rounds.
   The final pass recovered 600605 and 600739; it did not resolve 600070, whose five

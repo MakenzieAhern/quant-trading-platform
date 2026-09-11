@@ -1,0 +1,73 @@
+{
+  "policy_id": "CN_A_RAW_OHLCV_FAILOVER_V1",
+  "version": 1,
+  "status": "CANDIDATE_NOT_ENABLED",
+  "dataset_id": "cn-a-pilot-akshare-20230101-20240731-v1",
+  "primary": {
+    "provider": "Eastmoney",
+    "interface": "AKShare 1.18.94 stock_zh_a_hist(adjust=empty)",
+    "historical_authority": "PASS",
+    "acceptance_manifest_sha256": "1899343e4ea40727875e6f2058f05794d586918033938b341146dae24258265b",
+    "current_availability": "PRIMARY_SYSTEMIC_TRANSPORT_FAILURE",
+    "existing_successes": "REUSE_CHECKSUM_PINNED_657_PARTITIONS",
+    "bulk_retry": "PROHIBITED_AFTER_EXHAUSTED_BUDGET"
+  },
+  "secondary": {
+    "provider": "Tencent",
+    "interface": "AKShare 1.18.94 stock_zh_a_hist_tx(adjust=empty)",
+    "endpoint": "https://proxy.finance.qq.com/ifzqgtimg/appstock/app/newfqkline/get",
+    "authority": "NOT_PROMOTED",
+    "sdk_source_sha256": "aa9199665d356ba3a054297004e349d3926fa83026abfd2d50c4b7f832226d84",
+    "candidate_parser": "tencent-raw-candidate-v1",
+    "raw_only": "Require day; reject qfqday/hfqday substitution",
+    "candidate_volume_units": "SSE_STAR shares; other sampled A-share boards lots times 100",
+    "sdk_unit_limitation": "Pinned SDK excludes sz000 from lot conversion; candidate corrects this explicitly, not silently",
+    "amount_units": "Tencent field 8 times 10000 CNY; retain original precision",
+    "cross_source_parity": "PARTIAL"
+  },
+  "selection_order": [
+    "Reuse already successful checksum-pinned primary partition without refetch",
+    "For new work use accepted primary only when operationally healthy",
+    "For persisted qualifying primary failure with exhausted bounded budget, use secondary only if independent authority and cross-source parity are PASS",
+    "Otherwise keep UNRESOLVED_REQUIRED_DATA; do not publish"
+  ],
+  "qualifying_failover_reasons": [
+    "CONNECTION_CLOSED_BEFORE_HTTP",
+    "TIMEOUT_AFTER_BOUNDED_RETRY",
+    "PROVIDER_SERVICE_UNAVAILABLE"
+  ],
+  "disallowed_failover_reasons": [
+    "DATA_DISAGREEMENT", "SCHEMA_INCONSISTENCY", "INVALID_OHLC", "AUTHORITY_FAILURE",
+    "ACCESS_DENIAL", "STRATEGY_PERFORMANCE"
+  ],
+  "secondary_budget_if_promoted": {
+    "initial_rounds": 1,
+    "final_recovery_rounds": 1,
+    "timeout_seconds": 35,
+    "workers": 2,
+    "inter_batch_seconds": 2,
+    "final_round_backoff_seconds": 60,
+    "jitter": false,
+    "retry_only_transport_failures": true,
+    "stop_on_access_denial": true
+  },
+  "partition_lineage_required": [
+    "security_id", "provider", "provider_interface", "underlying_source",
+    "retrieval_timestamp_utc", "request_parameters", "raw_content_sha256",
+    "normalized_logical_sha256", "date_coverage", "failover_reason"
+  ],
+  "failure_states": [
+    "PRIMARY_FAILED_SECONDARY_RECOVERED", "PRIMARY_FAILED_SECONDARY_FAILED",
+    "PRIMARY_SUCCEEDED", "AUTHORITATIVELY_NO_DATA_EXPECTED", "UNRESOLVED_REQUIRED_DATA"
+  ],
+  "price_parity": "Exact Decimal OHLC and dates; any material difference blocks",
+  "amount_parity": "Only direct two-decimal ten-thousand-CNY display rounding (half quantum 50 CNY) explained; larger differences unresolved, no expanded tolerance",
+  "volume_parity": "Exact shares except explicitly recorded STAR share-to-whole-lot rounding (half quantum 50 shares)",
+  "exclusion_policy": "UNCHANGED_NO_TRANSPORT_GAP_EXCLUSION",
+  "execution_prices": "RAW_UNADJUSTED_ONLY",
+  "adjustment_authority": "UNCHANGED_SEPARATE_RESEARCH_INPUT",
+  "dataset_publication": "Complete required data and established quality gates only",
+  "dataset_freeze_authorized": false,
+  "study_authorized": false,
+  "pr_merge_authorized": false
+}

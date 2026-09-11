@@ -1,5 +1,26 @@
 # Current state
 
+## Latest checkpoint: systemic primary / secondary parity review
+
+R2 BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; not Gate A.
+SINGLE_SMALLEST_BLOCKER = RAW_SECONDARY_AMOUNT_PRECISION_AUTHORITY_UNRESOLVED.
+Primary historical OHLCV authority remains PASS; operational availability is
+PRIMARY_SYSTEMIC_TRANSPORT_FAILURE (6/6 newly authorized representative probes).
+Tencent candidate: eight securities, 32 bounded requests, all normalized repeats
+match; exited histories and Pilot IPO retained. 1,719 overlapping dates have no
+OHLC/date disagreements. Four amount differences remain UNEXPLAINED after targeted
+Sina corroboration; no new tolerance or production provider substitution is allowed.
+CN_A_RAW_OHLCV_FAILOVER_V1 is CANDIDATE_NOT_ENABLED, secondary NOT_PROMOTED.
+657 successful securities / 244,073 raw rows unchanged; 4,521 required gaps remain.
+All original input and partition checksums verified unchanged. Candidate sample
+rows are not production recoveries. No bulk primary retry, exclusion, R3, dataset
+publication/freeze, study or PR merge. Backend 400 tests and lint/type checks PASS.
+See docs/research/R2_RAW_FAILOVER_ACCEPTANCE.md and new hashes in project_state.json.
+Next: supported vendor precision evidence or an explicit narrow amount-precision
+decision, then re-evaluate secondary authority before resuming pending acquisition.
+
+## Earlier checkpoint (superseded by current failover review)
+
 ## Latest terminal checkpoint: 2026-09-11 R2 recovery exhausted
 
 STATUS = BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; HUMAN_APPROVAL_GATE = NONE.
