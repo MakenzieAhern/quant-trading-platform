@@ -1,7 +1,10 @@
 import json
+from datetime import date, timedelta
+from decimal import Decimal
 
 import pytest
 
+from scripts.audit_amount_impact import distribution, interval_decisions
 from scripts.audit_raw_failover import merged, normalized, parity
 from scripts.audit_tencent_amount import comparison
 from scripts.probe_raw_failover import candidate, primary_status, run, tencent_url
@@ -58,6 +61,27 @@ def test_amount_comparison_preserves_precision_and_zero_denominator():
     for invalid in ("NaN", "Infinity", "-1"):
         with pytest.raises(ValueError):
             comparison(invalid, "1", "10000")
+
+
+def test_amount_interval_propagation_does_not_choose_favorable_boundary():
+    rows = [
+        dict(trading_date=(date(2023, 1, 1) + timedelta(days=i)).isoformat(), amount="10000000")
+        for i in range(20)
+    ]
+    decisions = interval_decisions(rows, Decimal(100))
+    assert all(r["stable"] for r in decisions[:19])  # Presence threshold unchanged.
+    assert decisions[-1]["decision_with_lower_bound"] is False
+    assert decisions[-1]["decision_with_upper_bound"] is True
+    assert interval_decisions(rows, Decimal(0))[-1]["stable"] is True
+    high = [{**r, "amount": "10000100"} for r in rows]
+    assert interval_decisions(high, Decimal(100))[-1]["stable"] is True
+    zero = [{**r, "amount": "0"} for r in rows]
+    assert interval_decisions(zero, Decimal(100))[-1]["lower"] == "0"
+    with pytest.raises(ValueError):
+        interval_decisions(list(reversed(rows)), Decimal(100))
+    with pytest.raises(ValueError):
+        interval_decisions(rows, Decimal(-1))
+    assert distribution([Decimal(1), Decimal(2), Decimal(3), Decimal(4)])["median"] == "2.5"
 
 
 def test_candidate_units_raw_only_and_lifecycle_guards():

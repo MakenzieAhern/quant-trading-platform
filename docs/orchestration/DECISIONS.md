@@ -1,5 +1,26 @@
 # Decisions
 
+## Current decision-invariance acceptance
+
+R2 RUNNING; HUMAN_APPROVAL_REQUIRED = NO. Prior amount-semantics stop RESOLVED
+under the new human-authorized decision-invariance criterion, not guessed rounding.
+Tencent upstream unit=10,000 CNY; AKShare returned unit=CNY; nominal granularity100 CNY.
+659 available securities/244,772 rows,4,334 potentially evaluated amount decisions,
+zero ambiguous decisions. All-date600666/2024-01-19 stress ambiguity is retained,
+not hidden: already ST-excluded and not a scheduled evaluation date.
+Expanded2,478-row overlap has no OHLC/date mismatch or outside-envelope amount outlier.
+SECONDARY_ACCEPTANCE = PASS_FOR_PILOT; LIMITED_PRECISION_PARITY, not exact tick parity.
+CN_A_RAW_OHLCV_FAILOVER_V1 frozen SHA256
+3fb1941b93f127774ec228d27bb78074d48dc2d35ee29e98826a3b207472f740.
+Impact audit SHA256=d950fdc3543fbf8373370c8013f8a8a8579140e8b82523f7d0961033a280323c.
+Every recovered partition must pass the same unchanged rule/interval check before
+admission. Preserve657 primary successes; resume4,521 pending, no primary refetch.
+No new exclusion, dataset freeze, study, merge or release. All R1 authorities intact.
+Full trace/evidence:docs/research/PILOT_AMOUNT_DECISION_IMPACT.md.
+
+## Earlier checkpoints (superseded)
+
+
 - Latest human continuation authorized focused amount acceptance, not tolerance
   widening or automatic Tencent promotion. Controller resumed RUNNING for review.
   Existing strategy code establishes amount REQUIRED for20-observation liquidity

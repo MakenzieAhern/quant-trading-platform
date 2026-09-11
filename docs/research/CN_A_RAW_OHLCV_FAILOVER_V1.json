@@ -1,7 +1,7 @@
 {
   "policy_id": "CN_A_RAW_OHLCV_FAILOVER_V1",
   "version": 1,
-  "status": "CANDIDATE_NOT_ENABLED",
+  "status": "FROZEN_PASS_FOR_PILOT",
   "dataset_id": "cn-a-pilot-akshare-20230101-20240731-v1",
   "primary": {
     "provider": "Eastmoney",
@@ -16,14 +16,18 @@
     "provider": "Tencent",
     "interface": "AKShare 1.18.94 stock_zh_a_hist_tx(adjust=empty)",
     "endpoint": "https://proxy.finance.qq.com/ifzqgtimg/appstock/app/newfqkline/get",
-    "authority": "NOT_PROMOTED",
+    "authority": "PASS_FOR_PILOT",
     "sdk_source_sha256": "aa9199665d356ba3a054297004e349d3926fa83026abfd2d50c4b7f832226d84",
     "candidate_parser": "tencent-raw-candidate-v1",
     "raw_only": "Require day; reject qfqday/hfqday substitution",
     "candidate_volume_units": "SSE_STAR shares; other sampled A-share boards lots times 100",
     "sdk_unit_limitation": "Pinned SDK excludes sz000 from lot conversion; candidate corrects this explicitly, not silently",
-    "amount_units": "Tencent field 8 times 10000 CNY; retain original precision",
-    "cross_source_parity": "PARTIAL"
+    "upstream_amount_unit": "10000 CNY",
+    "akshare_returned_amount_unit": "CNY",
+    "amount_units": "Decimal(raw upstream field 8) * Decimal(10000); never multiply SDK-normalized output again",
+    "cross_source_parity": "PASS_FOR_PILOT_LIMITED_PRECISION",
+    "amount_classification": "LIMITED_PRECISION_PARITY",
+    "amount_impact_audit_sha256": "d950fdc3543fbf8373370c8013f8a8a8579140e8b82523f7d0961033a280323c"
   },
   "selection_order": [
     "Reuse already successful checksum-pinned primary partition without refetch",
@@ -61,7 +65,18 @@
     "PRIMARY_SUCCEEDED", "AUTHORITATIVELY_NO_DATA_EXPECTED", "UNRESOLVED_REQUIRED_DATA"
   ],
   "price_parity": "Exact Decimal OHLC and dates; any material difference blocks",
-  "amount_parity": "Only direct two-decimal ten-thousand-CNY display rounding (half quantum 50 CNY) explained; larger differences unresolved, no expanded tolerance",
+  "amount_parity": "Human-authorized decision-invariance acceptance, not exact tick parity or a claimed rounding mode",
+  "amount_precision": {
+    "upstream_decimal_places": 2,
+    "canonical_quantum_cny": "100",
+    "uncertainty_interval": "[max(0,A-100), A+100] CNY, closed union of floor/ceiling/nearest quantization cells",
+    "boundary": "Existing 20 non-null observations, arithmetic mean >= 10000000 CNY; unchanged",
+    "decision_schedule": "Completed session 253 then every 20 accepted calendar sessions; existing include_st=false",
+    "consumer_sha256": "14bd3d21a48560faa28527fa061883a4ceb69bcf7a6332176ac06467152dbde0",
+    "admission": "Every recovered security must have zero ambiguous potentially evaluated amount decisions; stop and retain affected set otherwise",
+    "cross_source_guard": "Any observed discrepancy outside the precision interval fails separately; no bound on unrelated aggregation errors is claimed",
+    "raw_value": "Original upstream strings and response hashes retained; no imputation or fabricated precision"
+  },
   "volume_parity": "Exact shares except explicitly recorded STAR share-to-whole-lot rounding (half quantum 50 shares)",
   "exclusion_policy": "UNCHANGED_NO_TRANSPORT_GAP_EXCLUSION",
   "execution_prices": "RAW_UNADJUSTED_ONLY",
