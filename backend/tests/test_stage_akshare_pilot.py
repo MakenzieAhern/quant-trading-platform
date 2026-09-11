@@ -1,11 +1,47 @@
 import json
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 
 from scripts.materialize_akshare_partitions import materialize, normalized_bars
 from scripts.reconcile_sse_cninfo import save, sha
 from scripts.stage_akshare_pilot import pilot_members, raw_url, snapshot, stage_one
+
+
+def test_checkpoint_replace_retries_only_publication_and_preserves_failed_write(
+    tmp_path, monkeypatch
+):
+    target = tmp_path / "checkpoint.json"
+    save(target, {"version": 1})
+    replace = Path.replace
+    attempts, delays = [], []
+
+    def busy_once(path, destination):
+        attempts.append(path.read_bytes())
+        if len(attempts) == 1:
+            assert json.loads(target.read_bytes()) == {"version": 1}
+            raise PermissionError("sharing conflict")
+        return replace(path, destination)
+
+    monkeypatch.setattr(Path, "replace", busy_once)
+    monkeypatch.setattr("scripts.reconcile_sse_cninfo.time.sleep", delays.append)
+    save(target, {"version": 2})
+    assert attempts == [b'{"version":2}', b'{"version":2}']
+    assert delays == [0.1]
+
+    def always_busy(path, destination):
+        attempts.append(path.read_bytes())
+        raise PermissionError("persistent conflict")
+
+    attempts.clear()
+    delays.clear()
+    monkeypatch.setattr(Path, "replace", always_busy)
+    with pytest.raises(PermissionError, match="persistent"):
+        save(target, {"version": 3})
+    assert len(attempts) == 5 and delays == [0.1, 0.2, 0.4, 0.8]
+    assert json.loads(target.read_bytes()) == {"version": 2}
+    assert json.loads(target.with_suffix(".json.tmp").read_bytes()) == {"version": 3}
 
 
 def test_raw_partition_is_unadjusted_decimal_order_independent_and_not_synthetic():

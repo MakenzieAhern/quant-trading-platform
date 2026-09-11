@@ -6,7 +6,7 @@ STATUS = RUNNING; HUMAN_APPROVAL_REQUIRED = NO. Prior stop below superseded.
 Independent queue continues through per-security failures; 600070 = PENDING_RETRY.
 Three same-construction SSE controls succeeded, 382 rows each. No fallback is in
 the current accepted OHLCV manifest; no new exclusion policy is introduced.
-At this checkpoint: 504 securities partitioned, 186,608 raw rows, 1,189 factor rows;
+At this checkpoint: 506 securities partitioned, 187,372 raw rows, 1,195 factor rows;
 quality failures 0, final publication NO. Periodic counts are checkpoint snapshots,
 not final-universe acceptance. External pilot-akshare-20260911/recovery-checkpoint.json
 and partition-checkpoint.json retain current counts and exact file hashes.
@@ -15,10 +15,27 @@ Round 1 is now RUNNING against the pending set; bounded retries are not yet
 exhausted. No dataset publication or full R3 audit is claimed. The latest
 additional completion, 300750, reused accepted raw/factor sample snapshots; it
 does not establish a new live network recovery.
+Round-1 progress snapshot: 348 / 4,674 processed, two additional primary recoveries
+(600419 and 600420, each 382 rows). 4,672 inputs remain pending.
+First-pass milestone bfb89fb26dd39422da14bf2f1eab2e6c1de9637f is pushed;
+CI 34563889226 completed SUCCESS. No PR merge or dataset freeze occurred.
+After recording the source failure at 2026-09-11T05:07:34.160687Z, the Windows
+process hit WinError 5 while replacing the WSL-backed checkpoint (no separate
+exact error timestamp was captured). Both old and newer temporary checkpoints were preserved;
+the newer one was verified as the same state plus two failure records and restored
+using WSL-native publication. Exact failure timestamps and provider attempt slots
+were retained; no network request was replayed. Evidence is external
+checkpoint-publication-recovery.json and its before/after snapshots.
+Progress reads now use WSL-native Python, avoiding Windows file-sharing locks.
+The shared atomic save retries only PermissionError during publication of the same
+bytes, at most five attempts with 0.1/0.2/0.4/0.8-second backoff; persistent failure
+still retains the prior checkpoint and temporary bytes. Six focused tests and
+395 backend tests PASS; Ruff, format and strict mypy PASS. R2 resumed from the
+preserved round-1 checkpoint, not from zero.
 The scheduler now uses two workers with two-second inter-batch pacing and a
 20-second cooldown after ten consecutive failed batches. Three fixed rounds,
 30/60-second round backoff, no jitter; no repeated failed request on restart.
-Original failure evidence remains untouched. Backend 394 tests PASS; Ruff,
+Original failure evidence remains untouched. Backend 395 tests PASS; Ruff,
 format and strict mypy PASS. Request construction comparison is external
 request-comparison.json; no proxy, standard Python-urllib/3.12 header, 35s timeout.
 The next budgeted 600070 request used the standard requests 2.34.2 Session on

@@ -29,7 +29,16 @@ def save(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_bytes(canonical(value))
-    temporary.replace(path)
+    # A Windows reader can briefly deny replacement of a WSL-backed checkpoint.
+    # Retry only publication of these same bytes, never the source request.
+    for attempt in range(5):
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError:
+            if attempt == 4:
+                raise
+            time.sleep(0.1 * 2**attempt)
 
 
 def fetch(
