@@ -6,10 +6,15 @@ STATUS = RUNNING; HUMAN_APPROVAL_REQUIRED = NO. Prior stop below superseded.
 Independent queue continues through per-security failures; 600070 = PENDING_RETRY.
 Three same-construction SSE controls succeeded, 382 rows each. No fallback is in
 the current accepted OHLCV manifest; no new exclusion policy is introduced.
-At this checkpoint: 346 securities partitioned, 127,577 raw rows, 792 factor rows;
+At this checkpoint: 504 securities partitioned, 186,608 raw rows, 1,189 factor rows;
 quality failures 0, final publication NO. Periodic counts are checkpoint snapshots,
 not final-universe acceptance. External pilot-akshare-20260911/recovery-checkpoint.json
 and partition-checkpoint.json retain current counts and exact file hashes.
+First acquisition pass completed all 5,178 members: 504 completed, 4,674 pending.
+Round 1 is now RUNNING against the pending set; bounded retries are not yet
+exhausted. No dataset publication or full R3 audit is claimed. The latest
+additional completion, 300750, reused accepted raw/factor sample snapshots; it
+does not establish a new live network recovery.
 The scheduler now uses two workers with two-second inter-batch pacing and a
 20-second cooldown after ten consecutive failed batches. Three fixed rounds,
 30/60-second round backoff, no jitter; no repeated failed request on restart.
@@ -24,6 +29,12 @@ Three prior diagnostic requests plus this request = four actual requests; the
 round-2 slot remains for the final retry pass. Root cause remains UNKNOWN.
 Five focused ingestion tests PASS, including physical checksum repeatability,
 lost-receipt reconstruction and detection of modified partition bytes.
+Recovery-test milestone 6cf7623c05844559540af76d5b3f71af1a9233f5 is pushed to the
+existing feature branch; CI 34554480884 completed SUCCESS. PR #12 remains unmerged.
+Lifecycle-only expected-session check: every one of the 5,178 accepted members
+has at least one calendar session on/after listing and before delisting in the
+Pilot interval. Zero members qualify as having no expected sessions solely from
+listing/delisting boundaries. This does not infer suspension or excuse missing bars.
 
 ## Preserved prior checkpoint (superseded by active R2 recovery above)
 
