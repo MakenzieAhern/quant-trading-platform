@@ -1,5 +1,21 @@
 # Current state
 
+## Current: focused Tencent amount acceptance completed
+
+R2 BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; not Gate A.
+PILOT_AMOUNT_REQUIREMENT = REQUIRED: existing 20-observation / 10M CNY liquidity screen.
+TENCENT_AMOUNT_CLASSIFICATION = INSUFFICIENT_EVIDENCE; SECONDARY_ACCEPTANCE = FAIL.
+Unit mapping is supported; provider rounding/aggregation error bound is not established.
+1,719 preserved overlapping rows, maximum absolute difference51 CNY, maximum relative
+0.0002227431347383828848417993403. No new market requests or tolerance changes.
+SINGLE_SMALLEST_BLOCKER = RAW_SECONDARY_AMOUNT_PRECISION_AUTHORITY_UNRESOLVED.
+657 successes/244,073 primary rows and4,521 pending members unchanged. R1 PASS intact.
+No fallback promotion, publication, R3, freeze, studies or merge. Backend401 tests PASS.
+See docs/research/TENCENT_AMOUNT_ACCEPTANCE.md and amount_audit_sha256 in state JSON.
+
+## Previous candidate checkpoint (superseded)
+
+
 ## Latest checkpoint: systemic primary / secondary parity review
 
 R2 BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; not Gate A.

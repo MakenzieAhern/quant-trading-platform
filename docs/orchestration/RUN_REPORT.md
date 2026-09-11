@@ -1,5 +1,27 @@
 # Autonomous Quant Project Checkpoint
 
+## Current focused amount audit checkpoint
+
+STATUS = BLOCKED; CURRENT_STAGE = R2; HUMAN_APPROVAL_REQUIRED = YES; not Gate A.
+The authorized audit ran RUNNING without an approval pause, then stopped because
+amount is REQUIRED under the pre-existing liquidity screen, not OPTIONAL merely
+because the interchange schema accepts null. No methodology change was made.
+SECONDARY_ACCEPTANCE = FAIL; amount classification INSUFFICIENT_EVIDENCE.
+Six cached primary controls cover four boards, high/low price and volume, ST/*ST,
+and retained adjustment-event periods.1,719 rows have raw strings and Decimal
+unit/difference calculations; max absolute51 CNY, max relative0.0002227431347383828848417993403.
+Observed2 decimals are not a documented provider rounding/error guarantee.
+SINGLE_SMALLEST_BLOCKER = RAW_SECONDARY_AMOUNT_PRECISION_AUTHORITY_UNRESOLVED.
+Amount audit SHA256 = 3807e6cc28f043b3cdff4d2bca22d0ddea8d99b918d09771171b5467e9da3c93.
+Observation SHA256 = b7efbaa5571a63ed4a73e7e4f0adc1d908c9c8517079b234cc6702b6af9d7e96.
+No market-data requests,657 primary securities unchanged,4,521 required gaps retained.
+No dataset creation/audit/freeze, studies or merge. Existing authorities/policy preserved.
+401 backend tests, Ruff/format/strict mypy PASS. GitHub MakenzieAhern verified.
+Full report: docs/research/TENCENT_AMOUNT_ACCEPTANCE.md. CI checked after milestone push.
+
+## Previous candidate checkpoint (superseded)
+
+
 ## Latest R2 systemic diagnosis and candidate failover checkpoint
 
 STATUS = BLOCKED; HUMAN_APPROVAL_REQUIRED = YES; HUMAN_APPROVAL_GATE = NONE.

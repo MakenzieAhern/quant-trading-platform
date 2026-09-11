@@ -3,6 +3,7 @@ import json
 import pytest
 
 from scripts.audit_raw_failover import merged, normalized, parity
+from scripts.audit_tencent_amount import comparison
 from scripts.probe_raw_failover import candidate, primary_status, run, tencent_url
 
 
@@ -46,6 +47,17 @@ MEMBER = dict(
     listing_date="1991-04-03",
     delisting_date="",
 )
+
+
+def test_amount_comparison_preserves_precision_and_zero_denominator():
+    row = comparison("1761249149.98", "176124.92", "10000")
+    assert row["absolute_difference"] == "50.02"
+    assert row["raw_secondary_amount"] == "176124.92"
+    assert comparison("0", "0", "1")["relative_difference"] == "0"
+    assert comparison("0", "1", "1")["relative_difference"] is None
+    for invalid in ("NaN", "Infinity", "-1"):
+        with pytest.raises(ValueError):
+            comparison(invalid, "1", "10000")
 
 
 def test_candidate_units_raw_only_and_lifecycle_guards():

@@ -1,5 +1,18 @@
 # Blockers
 
+## Current focused amount authority blocker
+
+RAW_SECONDARY_AMOUNT_PRECISION_AUTHORITY_UNRESOLVED.
+PILOT_AMOUNT_REQUIREMENT = REQUIRED; SECONDARY_ACCEPTANCE = FAIL.
+Unit10,000 CNY is supported by the pinned SDK; rounding/aggregation semantics and
+an error bound sufficient for the existing liquidity screen remain unestablished.
+An observed51-CNY maximum is not a documented bound; no tolerance is widened.
+Generic schema nullability cannot override required research liquidity inputs.
+See docs/research/TENCENT_AMOUNT_ACCEPTANCE.md. No production fallback or new provider.
+
+## Previous candidate evidence checkpoint (superseded)
+
+
 ## Current smallest blocker: secondary amount precision authority
 
 RAW_SECONDARY_AMOUNT_PRECISION_AUTHORITY_UNRESOLVED.

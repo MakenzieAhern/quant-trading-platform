@@ -1,5 +1,16 @@
 # Decisions
 
+- Latest human continuation authorized focused amount acceptance, not tolerance
+  widening or automatic Tencent promotion. Controller resumed RUNNING for review.
+  Existing strategy code establishes amount REQUIRED for20-observation liquidity
+  screening despite nullable provider schema. Audit reused1,719 rows and preserved
+  every snapshot; unit mapping verified, rounding/error bound still undocumented.
+  Terminal classification INSUFFICIENT_EVIDENCE, SECONDARY_ACCEPTANCE FAIL; stop
+  BLOCKED on RAW_SECONDARY_AMOUNT_PRECISION_AUTHORITY_UNRESOLVED, not Gate A.
+  No methodology change, new provider, primary retry, freeze, study or merge.
+  Details and reproducible metrics: docs/research/TENCENT_AMOUNT_ACCEPTANCE.md.
+
+
 - Failover candidate review completed: six additional primary diagnostics failed
   before HTTP; classify operationally SYSTEMIC_TRANSPORT_FAILURE without
   downgrading primary historical authority. Tencent returned eight repeatable
