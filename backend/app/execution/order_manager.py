@@ -98,11 +98,18 @@ class OrderManager:
 
         marks = self._portfolio.marks
         reference_price = marks.get(proposal.symbol)
+        if (
+            reference_price is not None
+            and proposal.order_type is OrderType.LIMIT
+            and proposal.limit_price is not None
+            and proposal.side is OrderSide.BUY
+        ):
+            reference_price = max(reference_price, proposal.limit_price)
         estimated_cost = ZERO
         if (
             reference_price is not None
             and proposal.quantity > ZERO
-            and proposal.order_type is OrderType.MARKET
+            and proposal.order_type in {OrderType.MARKET, OrderType.LIMIT}
         ):
             estimated_cost = self._commission_model.calculate(proposal.quantity, reference_price)
         reserved_quantities, reserved_cash_delta, reserved_buying_power = self._reservation_state()
@@ -138,6 +145,8 @@ class OrderManager:
                 order_type=proposal.order_type,
                 quantity=proposal.quantity,
                 created_at=proposal.signal_timestamp,
+                price=proposal.limit_price,
+                intended_execution_session=proposal.intended_execution_session,
             )
             with localcontext(OMS_CONTEXT):
                 notional = proposal.quantity * decision.reference_price

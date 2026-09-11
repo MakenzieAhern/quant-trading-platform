@@ -1,5 +1,25 @@
 # Decisions
 
+- 2026-09-11 implementation checkpoint: both source authority and separate
+  CN_A_DAILY_OPENING_LIMIT_V1 validation PASS. Approval section9 permits retained
+  frozen research costs: the unchanged 0.00001 transfer/clearing allowance is
+  explicitly SIMULATION_ASSUMPTION, not a verified statutory rate. Its unresolved
+  old source claim remains preserved in model_assumptions; no data authority
+  was re-audited or weakened. R2 started with the accepted 5,178-member master.
+  Stop at new external blocker R2_RAW_ROUTE_CONNECTION_CLOSED_600070 after three
+  bounded transport failures. No substitution, security omission or incomplete
+  dataset publication. Resume only after source access recovery/authorized route.
+
+- 2026-09-11 human execution approval: PILOT_EXECUTION_CONVENTION_DECISION =
+  APPROVED. Resume RUNNING without another execution-methodology approval.
+  CN_A_DAILY_OPENING_LIMIT_V1 is a SIMULATION_ASSUMPTION, not an official exchange
+  rule or proof of actual auction fills. Precommit parameters using completed t
+  only; evaluate t+1 eligibility separately; raw open may price a fill only after
+  conservative legal/status/liquidity-proxy gates pass. Missing/uncertain evidence
+  means no-fill and explicit expiry. No future inputs may set order parameters.
+  Source authority and execution-convention validation are separate gates; both
+  must pass before R2. Dataset freeze and all studies remain unauthorized.
+
 - 2026-09-11 source-recovery decision supersedes the original-PDF requirement.
   Historical locations return 404 in automated and user normal-browser access;
   classify them SOURCE_LOCATION_RETIRED_OR_UNAVAILABLE, never SOURCE_CONTENT_INVALID.

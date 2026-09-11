@@ -1,5 +1,10 @@
 # Initial A-Share Research Report
 
+Mandatory final-report limitation: the platform uses a conservative daily-bar
+simulated execution convention, not exact historical auction reconstruction.
+Where available data cannot establish its required execution conditions, no fill
+is simulated. See [the versioned contract](DAILY_EXECUTION_CONVENTION.md).
+
 Status: **NOT EXECUTED**  
 Official OOS: **OUT-OF-SAMPLE NOT YET RUN**
 

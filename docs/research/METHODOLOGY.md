@@ -1,5 +1,10 @@
 # Research Methodology
 
+Execution follows [CN_A_DAILY_OPENING_LIMIT_V1](DAILY_EXECUTION_CONVENTION.md), a
+`SIMULATION_ASSUMPTION`, separate from official market-rule authority. Daily OHLCV
+cannot reconstruct exact historical auction fills. Missing required evidence
+means no fill. This limitation must remain in the final strategy report.
+
 The frozen candidate strategy is `cn_a_cross_sectional_momentum_low_vol_v1`. At completed session
 t it computes `MOM_12_1 = adjusted_close[t-21]/adjusted_close[t-252]-1`,
 `TREND_120 = adjusted_close[t]/SMA120[t]-1`, and `LOW_VOL` as the negative population standard

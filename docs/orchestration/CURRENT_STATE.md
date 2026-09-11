@@ -1,39 +1,45 @@
 # Current state
 
-R1 AWAITING_HUMAN: PILOT_EXECUTION_CONVENTION_DECISION_REQUIRED. Not Gate A.
-Original SZSE PDF dependency RETIRED by the user's source-recovery decision.
-Do not retry the three retired URLs or ask the user to download them again.
+R2 BLOCKED: R2_RAW_ROUTE_CONNECTION_CLOSED_600070. Not Gate A.
 
-14 accessible official SZSE sources preserved, including all four supplied
-alternatives. Publication 2023-02-17 / 深证上〔2023〕98号 verified from the later
-official notice; implementation 2023-04-10 verified from technical PDF page 18.
-Later-version behavior is NOT applied to the Pilot. Handbook PDF pages 21-22
-(printed 33-36) visually reviewed. Preceding 2021 rule PDF recovered too.
+The 2026-09-11 execution convention decision is APPROVED and implemented.
+MARKET_RULE_AUTHORITY = PASS_FOR_PILOT (official claims only).
+EXECUTION_CONVENTION_VALIDATION = PASS (CN_A_DAILY_OPENING_LIMIT_V1,
+SIMULATION_ASSUMPTION, not actual auction reconstruction).
+SOURCE_AUTHORITY_PREFLIGHT = PASS. All seven accepted data authorities preserved.
 
-Git ledger: docs/research/SZSE_RULE_CLAIMS.json, 28 claims, 12 explicitly unclosed.
-Backend 356 PASS; Ruff/format/strict mypy PASS. Tests are NOT authority acceptance.
-Version .5 identifies preceding Main rules and distinguishes the first IPO
-session from ordinary 10%, retaining the existing first-day no-fill.
+27 official SZSE claims / 14 preserved sources have no unresolved official claims.
+The retained 0.00001 transfer/clearing allowance remains an explicitly frozen
+research cost assumption, NOT a verified statutory rate; its old unresolved
+provenance is retained in the ledger's model_assumptions inventory. User section
+9 permits already accepted/frozen research costs. No fee was zeroed or changed.
+Full-history rule authority remains PARTIAL; no future regime is imported.
 
-Actual code review found MARKET orders filled at next daily open, although SZSE
-accepts MARKET only in continuous auction for price-limited securities. Daily open
-may itself be a resumed/continuous first trade, not proof of opening-auction fill.
-Quantity caps, tick rounding, expiry, intraday phase/status and relisting handling
-must close under an explicit execution convention, not be declared immaterial.
-Transfer-fee 0.00001 provenance remains incomplete under official-SZSE-only scope;
-the retrieved candidate yearbook is actually 2015 and is not Pilot fee evidence.
+Backend 390 PASS; Ruff, format and strict mypy PASS. V1 uses completed-session
+raw close as its immutable limit, next accepted calendar session only, independent
+eligibility, raw OPEN only after eligibility, zero extra slippage, explicit expiry.
+Tests cover BUY/SELL, ST/boards, IPO/relisting, dates, bounds/ticks/lots, unknown/
+missing/suspended/locked states, costs, replay and reversed input inventories.
 
-Next human decision: approve an explicitly specified conservative limit/auction
-execution convention replacing MARKET-at-open, or retain the current convention
-and remain blocked. Approval alone does not grant PASS: implementation, evidence
-gaps and regression checks must still close before R2/R3.
+R2 input staging enumerated 5,178 eligible master securities, prioritizing
+delisting retention. First scheduled member CN-A:SSE:600070 could not be retrieved:
+Python RemoteDisconnected; PowerShell send failure; curl error 56 / HTTP000.
+This is an external connection failure, not evidence that history is absent.
+A same-route canary CN-A:SZSE:300336 returned 91 raw bars and a valid HFQ curve.
+No security was dropped; no alternate provider, synthetic bars or factors used.
+The canary is NOT a published dataset or a completed full-universe partition.
 
-All seven accepted data authorities preserved; MARKET_RULE PARTIAL, preflight FAIL.
-Docker, PostgreSQL, Redis, backend/API200 and frontend5173/200 verified healthy.
+External roots:
+- pilot-execution-20260911: rule audit, normalized rules, execution validation,
+  source-authority-preflight.json.
+- pilot-akshare-20260911: source snapshots/metadata and failure-manifest.json.
+
+Next: restore the exact accepted route for 600070 (or obtain explicit approval
+for a replacement source), preserve failed attempt evidence, resume R2 input
+staging, then implement/complete partition publication and all R3 audits.
+The staging command is only input acquisition, NOT a finished dataset builder.
+
+Docker/PG/Redis/backend/frontend healthy; API and port5173 HTTP200.
 Branch feature/a-share-research-v1.1; MakenzieAhern; PR12 open/unmerged.
 Dataset not created/audited/frozen. No Development, Validation, OOS or strategy run.
-
-External staging: market-rule-claims-20260911
-Rule ledger canonical SHA256: 6dac2bab94829a6f726f76a185309e5ebca752c285e11d1fc31cc2ae011b81f2
-Normalized rules SHA256: a2910f18646d8670feeb52dcf4af7b593f6f988e880b8cc95d1959dfd4a2b625
-Preflight SHA256: 73030b9314c9ed4582c7c0526c92872bb13b39e359d725a09a58c7792933a92e
+Canonical artifact checksums are in .research/project_state.json and RUN_REPORT.

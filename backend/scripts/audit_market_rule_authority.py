@@ -122,37 +122,29 @@ def audit(ledger: dict[str, Any], staging: Path, repository: Path) -> dict[str, 
     results = {}
     for check in CHECKS:
         relevant = [c for c in claims.values() if check in c["checks"]]
-        states = {c["implementation_status"] for c in relevant}
+        # Source authority is not proof that a daily-bar simulated order actually filled.
         results[check] = (
-            "FAIL"
-            if "FAIL" in states
-            else "PARTIAL"
-            if not relevant
-            or "PARTIAL" in states
-            or any(c["confidence"] != "VERIFIED" for c in relevant)
+            "PARTIAL"
+            if not relevant or any(c["confidence"] != "VERIFIED" for c in relevant)
             else "PASS"
-            if "PASS" in states
-            else "NOT_MATERIAL_TO_PILOT"
         )
     material = [c for c in claims.values() if c["pilot_materiality"] == "MATERIAL"]
     evidence_pass = bool(material) and all(c["confidence"] == "VERIFIED" for c in material)
     implementation_pass = all(c["implementation_status"] == "PASS" for c in material)
     return {
-        "parser_version": "reviewed-rule-claims-v1",
+        "parser_version": "reviewed-rule-claims-v2-source-only",
         "source_manifest_sha256": sha(canonical(ledger)),
         "official_rule_sources_accepted": len(sources),
         "claim_count": len(claims),
         "full_history_rule_authority": "PARTIAL",
-        "pilot_rule_authority": "PASS" if evidence_pass and implementation_pass else "PARTIAL",
+        "pilot_rule_authority": "PASS" if evidence_pass else "PARTIAL",
+        "implementation_review": "PASS" if implementation_pass else "PARTIAL",
+        "execution_convention_validation": "SEPARATE_GATE_REQUIRED",
         "market_rule_authority": "PASS_FOR_PILOT"
-        if evidence_pass and implementation_pass and all(v == "PASS" for v in results.values())
+        if evidence_pass and all(v == "PASS" for v in results.values())
         else "PARTIAL",
         "validation": results,
-        "unclosed_claims": sorted(
-            c["rule_id"]
-            for c in material
-            if c["confidence"] != "VERIFIED" or c["implementation_status"] != "PASS"
-        ),
+        "unclosed_claims": sorted(c["rule_id"] for c in material if c["confidence"] != "VERIFIED"),
     }
 
 

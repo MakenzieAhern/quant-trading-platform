@@ -1,16 +1,20 @@
 from dataclasses import dataclass
 from datetime import UTC, datetime, time
 from decimal import Decimal
+from itertools import pairwise
 from typing import Protocol
 from uuid import NAMESPACE_URL, UUID, uuid5
+from zoneinfo import ZoneInfo
 
 from app.domain.market import Bar
+from app.domain.markets.calendar import TradingCalendar
 from app.domain.risk import OrderProposal, RiskConfig, RiskDecision, RiskReservation
 from app.domain.trading import Fill, Order, OrderSide, OrderType, PortfolioSnapshot
 from app.event import Event, EventBus, EventType
 from app.execution import FixedBasisPointSlippage, OrderManager, SimulatedBroker
 from app.execution.costs import CommissionModel, SlippageModel
 from app.portfolio import PortfolioEngine
+from app.research.execution_convention import VERSION, rejection_reason
 from app.research.models import PortfolioTarget, ResearchSession
 from app.risk import RiskEngine
 
@@ -36,6 +40,8 @@ class ResearchExecutionResult:
     snapshots: tuple[PortfolioSnapshot, ...]
     active_reservations: tuple[RiskReservation, ...]
     expired_order_ids: tuple[UUID, ...]
+    execution_checks: tuple[tuple[UUID, str], ...]
+    execution_convention: str = VERSION
 
 
 class ResearchExecutionEngine:
@@ -47,22 +53,35 @@ class ResearchExecutionEngine:
         *,
         initial_cash: Decimal,
         commission_model: CommissionModel,
+        calendar: TradingCalendar,
         slippage_model: SlippageModel | None = None,
         risk_config: RiskConfig | None = None,
     ) -> None:
         self._strategy = strategy
+        dates = tuple(item.session_date for item in calendar.sessions if item.is_open)
+        self._next_session = dict(pairwise(dates))
+        self._calendar_dates = frozenset(dates)
+        self._active_session: ResearchSession | None = None
+        self._execution_checks: list[tuple[UUID, str]] = []
+        if slippage_model is not None and slippage_model != FixedBasisPointSlippage():
+            raise ValueError("V1 requires raw OPEN pricing and zero additional slippage")
         self._event_bus = EventBus()
         self._portfolio = PortfolioEngine(self._event_bus, initial_cash)
         self._broker = SimulatedBroker(
             self._event_bus,
             commission_model,
             slippage_model or FixedBasisPointSlippage(),
+            limit_fill_eligible=self._fill_eligible,
         )
         self._oms = OrderManager(
             self._event_bus,
             self._broker,
             self._portfolio,
-            RiskEngine(risk_config or RiskConfig(enforce_buying_power=True)),
+            RiskEngine(
+                (risk_config or RiskConfig(enforce_buying_power=True)).model_copy(
+                    update={"allow_limit_orders": True}
+                )
+            ),
             commission_model,
         )
         self._expired_order_ids: list[UUID] = []
@@ -73,6 +92,13 @@ class ResearchExecutionEngine:
         for session in sessions:
             if previous_date is not None and session.trading_date <= previous_date:
                 raise ValueError("research sessions must be strictly chronological")
+            if session.trading_date not in self._calendar_dates:
+                raise ValueError("session outside accepted calendar")
+            if (
+                previous_date is not None
+                and self._next_session.get(previous_date) != session.trading_date
+            ):
+                raise ValueError("missing calendar session must be represented explicitly")
             self._process_session(session)
             previous_date = session.trading_date
         self._expire_pending()
@@ -84,6 +110,7 @@ class ResearchExecutionEngine:
             snapshots=self._portfolio.snapshots,
             active_reservations=self._oms.active_reservations,
             expired_order_ids=tuple(self._expired_order_ids),
+            execution_checks=tuple(self._execution_checks),
         )
 
     def reset(self) -> None:
@@ -92,22 +119,29 @@ class ResearchExecutionEngine:
         self._oms.reset()
         self._portfolio.reset()
         self._expired_order_ids.clear()
+        self._execution_checks.clear()
+        self._active_session = None
 
     def _process_session(self, session: ResearchSession) -> None:
-        timestamp = datetime.combine(session.trading_date, time(15), tzinfo=UTC)
+        self._active_session = session
+        timestamp = datetime.combine(
+            session.trading_date, time(15, 0, 0, 1), tzinfo=ZoneInfo("Asia/Shanghai")
+        ).astimezone(UTC)
+        opening = datetime.combine(
+            session.trading_date, time(9, 25), tzinfo=ZoneInfo("Asia/Shanghai")
+        ).astimezone(UTC)
         for action in sorted(session.corporate_actions, key=lambda item: str(item.security_id)):
             if action.ex_date != session.trading_date:
                 raise ValueError("corporate action must belong to the research session")
             self._portfolio.apply_corporate_action(
-                _domain_symbol(action.security_id), action, timestamp
+                _domain_symbol(action.security_id), action, opening
             )
-        statuses = {item.status.security_id: item.status for item in session.statuses}
         ordered_bars = sorted(session.bars, key=lambda item: str(item.security_id))
         for source in ordered_bars:
+            self._broker.execute_pending(_domain_bar(source, opening))
+        self._expire_pending()
+        for source in ordered_bars:
             bar = _domain_bar(source, timestamp)
-            status = statuses.get(source.security_id)
-            if status is not None and not status.is_suspended and not status.is_one_price_limit:
-                self._broker.execute_pending(bar)
             self._event_bus.publish(Event(EventType.MARKET_DATA, bar, occurred_at=timestamp))
 
         snapshot = self._portfolio.latest_snapshot
@@ -119,18 +153,53 @@ class ResearchExecutionEngine:
         self._expire_pending()
         self._route_target(target, timestamp)
 
+    def _fill_eligible(self, order: Order, bar: Bar) -> bool:
+        session = self._active_session
+        assert session is not None
+        source = next(
+            item for item in session.bars if _domain_symbol(item.security_id) == order.symbol
+        )
+        status = next(
+            (
+                item.status
+                for item in session.statuses
+                if item.status.security_id == source.security_id
+            ),
+            None,
+        )
+        rules = next(
+            (item for item in session.trading_rules if item.security_id == source.security_id), None
+        )
+        held = next(
+            (item.quantity for item in self._portfolio.positions if item.symbol == order.symbol),
+            ZERO,
+        )
+        reason = rejection_reason(order, source, status, rules, held)
+        if any(item.security_id == source.security_id for item in session.corporate_actions):
+            reason = "CORPORATE_ACTION_OPENING_UNCERTAINTY"
+        self._execution_checks.append((order.id, reason or "ELIGIBLE_SIMULATION_ASSUMPTION"))
+        return reason is None
+
     def _route_target(self, target: PortfolioTarget, timestamp: datetime) -> None:
+        session = self._active_session
+        assert session is not None
+        execution_date = self._next_session.get(session.trading_date)
+        if execution_date is None:
+            return
+        prices = {_domain_symbol(item.security_id): item.raw_close for item in session.bars}
         current = {position.symbol: position.quantity for position in self._portfolio.positions}
         target_by_symbol = {
             _domain_symbol(position.security_id): position.quantity for position in target.positions
         }
+        if len(target_by_symbol) != len(target.positions):
+            raise ValueError("duplicate target security")
         deltas = {
             symbol: target_by_symbol.get(symbol, ZERO) - current.get(symbol, ZERO)
             for symbol in set(current) | set(target_by_symbol)
         }
         ordered = sorted(deltas.items(), key=lambda item: (item[1] > ZERO, item[0]))
         for symbol, delta in ordered:
-            if delta == ZERO:
+            if delta == ZERO or symbol not in prices:
                 continue
             side = OrderSide.BUY if delta > ZERO else OrderSide.SELL
             quantity = abs(delta)
@@ -140,18 +209,23 @@ class ResearchExecutionEngine:
                     ":".join(
                         (
                             "quant-trading-platform-research",
+                            VERSION,
                             self._strategy.strategy_id,
                             timestamp.isoformat(),
                             symbol,
                             side.value,
                             format(quantity, "f"),
+                            format(prices[symbol], "f"),
+                            execution_date.isoformat(),
                         )
                     ),
                 ),
                 strategy_id=self._strategy.strategy_id,
                 symbol=symbol,
                 side=side,
-                order_type=OrderType.MARKET,
+                order_type=OrderType.LIMIT,
+                limit_price=prices[symbol],
+                intended_execution_session=execution_date,
                 quantity=quantity,
                 signal_timestamp=timestamp,
             )
@@ -161,6 +235,16 @@ class ResearchExecutionEngine:
 
     def _expire_pending(self) -> None:
         cancelled = self._broker.cancel_pending()
+        checked = {order_id for order_id, _ in self._execution_checks}
+        for order in cancelled:
+            if order.id not in checked:
+                reason = (
+                    "MISSING_OBSERVATION"
+                    if self._active_session is not None
+                    and order.intended_execution_session == self._active_session.trading_date
+                    else "END_OF_RUN"
+                )
+                self._execution_checks.append((order.id, reason))
         self._expired_order_ids.extend(order.id for order in cancelled)
 
 

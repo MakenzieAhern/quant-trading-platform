@@ -40,6 +40,7 @@ def next_stage(state: dict[str, Any], lock: dict[str, Any]) -> str:
         for key in AUTHORITIES
     )
     preflight_pass = state.get("source_authority_preflight") == "PASS"
+    execution_pass = state.get("execution_convention_validation") == "PASS"
     if preflight_pass and not authority_pass:
         raise ValueError("UNSUPPORTED_PREFLIGHT_PASS")
     stage = state.get("current_stage")
@@ -47,6 +48,8 @@ def next_stage(state: dict[str, Any], lock: dict[str, Any]) -> str:
         raise ValueError("FUTURE_STAGE_REQUIRES_APPROVAL")
     if stage != "R1" and not preflight_pass:
         raise ValueError("SOURCE_GATE_NOT_PASSED")
+    if stage != "R1" and not execution_pass:
+        raise ValueError("EXECUTION_CONVENTION_GATE_NOT_PASSED")
     if state["dataset_audited"] and not state["pilot_dataset_created"]:
         raise ValueError("AUDIT_WITHOUT_DATASET")
     if state["dataset_audited"] and state.get("pilot_data_readiness") != "READY":
@@ -58,7 +61,7 @@ def next_stage(state: dict[str, Any], lock: dict[str, Any]) -> str:
     if state.get("status") != "RUNNING":
         raise ValueError("INVALID_CONTROLLER_STATUS")
     if stage == "R1":
-        return "R2" if preflight_pass else "R1"
+        return "R2" if preflight_pass and execution_pass else "R1"
     if stage == "R2":
         return "R3" if state["pilot_dataset_created"] else "R2"
     return "GATE_A" if state["dataset_audited"] else "R3"

@@ -1,3 +1,4 @@
+from datetime import date
 from decimal import Decimal
 from enum import StrEnum
 from typing import Self
@@ -5,7 +6,7 @@ from uuid import UUID
 
 from pydantic import Field, model_validator
 
-from app.domain.common import FiniteDecimal, Symbol, UtcDateTime
+from app.domain.common import FiniteDecimal, PositiveDecimal, Symbol, UtcDateTime
 from app.domain.trading import DomainModel, OrderSide, OrderType
 
 
@@ -31,6 +32,14 @@ class OrderProposal(DomainModel):
     order_type: OrderType
     quantity: FiniteDecimal
     signal_timestamp: UtcDateTime
+    limit_price: PositiveDecimal | None = None
+    intended_execution_session: date | None = None
+
+    @model_validator(mode="after")
+    def validate_market_price(self) -> Self:
+        if self.order_type is OrderType.MARKET and self.limit_price is not None:
+            raise ValueError("market proposal cannot have a limit price")
+        return self
 
 
 class RiskReservation(DomainModel):
@@ -82,6 +91,7 @@ class RiskConfig(DomainModel):
     max_leverage: FiniteDecimal | None = None
     enforce_buying_power: bool = False
     max_drawdown: FiniteDecimal | None = None
+    allow_limit_orders: bool = False
 
     @model_validator(mode="after")
     def validate_limits(self) -> Self:

@@ -1,3 +1,4 @@
+from datetime import date
 from decimal import Decimal
 from enum import StrEnum
 from typing import Self
@@ -61,6 +62,7 @@ class Order(DomainModel):
     price: PositiveDecimal | None = None
     status: OrderStatus = OrderStatus.CREATED
     created_at: UtcDateTime
+    intended_execution_session: date | None = None
 
     @model_validator(mode="after")
     def validate_order_price(self) -> Self:

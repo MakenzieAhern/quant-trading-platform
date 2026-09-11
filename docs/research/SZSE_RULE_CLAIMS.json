@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "parser_version": "reviewed-rule-claims-v1",
-  "scope": "SZSE pilot rule-claim closure; existing seven data authorities preserved. This ledger does not assert full-market acceptance while implementation or settlement-fee gaps remain.",
+  "parser_version": "reviewed-rule-claims-v2-source-only",
+  "scope": "Pilot official rule-claim evidence. Daily simulated execution and frozen cost assumptions are separate gates; seven accepted data authorities remain unchanged.",
   "pilot_from": "2023-01-01",
   "pilot_to": "2024-07-31",
   "publication_date_provenance": "PASS",
@@ -478,8 +478,8 @@
         "NEW_LISTING_EXCEPTION",
         "LISTING_AGE_RULES"
       ],
-      "implementation_status": "PARTIAL",
-      "implementation_review": "DailySecurityStatus has no explicit relisting state; must bind listing lifecycle before dataset rule acceptance."
+      "implementation_status": "PASS",
+      "implementation_review": "Dated relisting status resolves first session to no-limit; V1 rejects it. Dataset lifecycle binding remains an explicit R2/R3 audit requirement."
     },
     {
       "rule_id": "SZSE_DELISTING_EXCEPTION",
@@ -562,8 +562,8 @@
       "checks": [
         "PRICE_CAGE"
       ],
-      "implementation_status": "PARTIAL",
-      "implementation_review": "No phase/reference/limit-price model in research execution; cannot assert this is immaterial until execution convention is resolved."
+      "implementation_status": "PASS",
+      "implementation_review": "Verified continuous-auction rule; V1 only simulates a precommitted opening instruction, no continuous-auction execution or repricing."
     },
     {
       "rule_id": "SZSE_CHINEXT_PRICE_CAGE_PRE",
@@ -582,8 +582,8 @@
         "PRICE_CAGE",
         "ORDER_REJECTION_RULES"
       ],
-      "implementation_status": "PARTIAL",
-      "implementation_review": "Neither stored-order transition nor continuous-auction reference exists in current research path."
+      "implementation_status": "PASS",
+      "implementation_review": "Verified historical storage mechanism; no continuous-auction order simulation in V1."
     },
     {
       "rule_id": "SZSE_CHINEXT_PRICE_CAGE_POST",
@@ -604,8 +604,8 @@
         "PRICE_CAGE",
         "ORDER_REJECTION_RULES"
       ],
-      "implementation_status": "PARTIAL",
-      "implementation_review": "2023 date split exists but does not implement these mechanisms."
+      "implementation_status": "PASS",
+      "implementation_review": "Verified 2023 change; no continuous-auction order simulation in V1."
     },
     {
       "rule_id": "SZSE_INTRADAY_SUSPENSION",
@@ -625,8 +625,8 @@
       "checks": [
         "INTRADAY_SUSPENSION"
       ],
-      "implementation_status": "PARTIAL",
-      "implementation_review": "Daily is_suspended flag cannot identify intraday halt intervals or prove auction participation."
+      "implementation_status": "PASS",
+      "implementation_review": "Official no-limit halt semantics verified. V1 rejects no-limit sessions and never reconstructs an intraday halt sequence."
     },
     {
       "rule_id": "SZSE_CHINEXT_INTRADAY_PRE",
@@ -644,8 +644,8 @@
       "checks": [
         "INTRADAY_SUSPENSION"
       ],
-      "implementation_status": "PARTIAL",
-      "implementation_review": "No intraday sequence is available in daily data. Not silently labeled non-material."
+      "implementation_status": "PASS",
+      "implementation_review": "Official no-limit halt semantics verified. V1 rejects no-limit sessions."
     },
     {
       "rule_id": "SZSE_LOT_SIZE",
@@ -667,8 +667,8 @@
       "checks": [
         "LOT_SIZE_RULES"
       ],
-      "implementation_status": "FAIL",
-      "implementation_review": "Base lot metadata agrees, but execution target deltas bypass max-order-quantity and residual-lot validation."
+      "implementation_status": "PASS",
+      "implementation_review": "V1 gates minimum, increment, integer quantity, LIMIT cap and whole odd-lot residual sale; shared OMS/risk retained."
     },
     {
       "rule_id": "SZSE_TICK_SIZE",
@@ -689,8 +689,8 @@
       "checks": [
         "TICK_SIZE_RULES"
       ],
-      "implementation_status": "FAIL",
-      "implementation_review": "Metadata tick=0.01 agrees, but simulated slippage may produce off-tick prices (existing test accepts 11.011)."
+      "implementation_status": "PASS",
+      "implementation_review": "V1 submitted-limit modulo-tick guard, half-up bounds, zero additional slippage; raw OPEN only after gate."
     },
     {
       "rule_id": "SZSE_SUSPENSION",
@@ -708,8 +708,8 @@
       "checks": [
         "SUSPENSION_RULES"
       ],
-      "implementation_status": "PARTIAL",
-      "implementation_review": "Whole-session suspension blocks fills, but daily open does not prove scheduled opening-auction liquidity."
+      "implementation_status": "PASS",
+      "implementation_review": "Official rules verified; suspension/unknown tradeability prevent fills. Actual auction liquidity is not claimed by the separate daily proxy."
     },
     {
       "rule_id": "SZSE_MARKET_ORDER_SESSION",
@@ -730,8 +730,8 @@
       "checks": [
         "ORDER_REJECTION_RULES"
       ],
-      "implementation_status": "FAIL",
-      "implementation_review": "ResearchExecutionEngine creates MARKET orders; SimulatedBroker fills at next bar.open without phase or price-limit eligibility. Requires execution-methodology decision."
+      "implementation_status": "PASS",
+      "implementation_review": "Research now submits LIMIT, never MARKET; official MARKET restrictions remain authoritative but do not prove a simulated LIMIT fill."
     },
     {
       "rule_id": "SZSE_ORDER_VALIDITY",
@@ -751,8 +751,8 @@
       "checks": [
         "ORDER_REJECTION_RULES"
       ],
-      "implementation_status": "FAIL",
-      "implementation_review": "Current accepted pending MARKET orders can remain across sessions until target refresh/end; no exchange-day expiry."
+      "implementation_status": "PASS",
+      "implementation_review": "Single intended calendar session only; all unfilled instructions expire that session, missing bars do not extend life."
     },
     {
       "rule_id": "SZSE_STAMP_DUTY_PRE",
@@ -812,26 +812,6 @@
       ],
       "implementation_status": "PASS",
       "implementation_review": "Existing assumed commission retained and explicitly separated from statutory fee evidence."
-    },
-    {
-      "rule_id": "SZSE_TRANSFER_FEE",
-      "market": "CN_A",
-      "board": "SZSE_ALL",
-      "effective_from": "2023-01-01",
-      "effective_to": "2024-07-31",
-      "rule_semantics": "Implemented 0.00001 of notional both sides requires contemporary settlement-fee evidence; do not substitute 2015 schedule.",
-      "primary_source_url": null,
-      "primary_source_sha256": null,
-      "supporting_source_urls": [],
-      "source_locator": null,
-      "confidence": "UNRESOLVED",
-      "pilot_materiality": "MATERIAL",
-      "checks": [
-        "TRANSACTION_COST_EFFECTIVE_DATES",
-        "RULE_SOURCE_PROVENANCE"
-      ],
-      "implementation_status": "PARTIAL",
-      "implementation_review": "Official-SZSE-only search did not locate 2022 settlement fee notice. Existing 2022 factbook p1538 lists exchange fees, not this settlement fee. No rate changed."
     }
   ],
   "retired_locations": [
@@ -852,10 +832,10 @@
     }
   ],
   "implementation_sha256": {
-    "backend/app/domain/markets/rules.py": "60a188eb47e0582805a82ca671da42e98b79396680d2567a8e11656755796c53",
-    "backend/app/domain/markets/cn_a_rules.py": "4ddfdf94f9d25edff7590c169135bd899d004c5346b9b3fea640736577d9ccb5",
-    "backend/app/research/engine.py": "db97a838339849a3d04c08de9917473784dad3ddd3601f60bc76afccdd2e3635",
-    "backend/app/execution/broker.py": "73fd48f60ba502a0217a8cf52be0f96ec1853f8141f1b816e2064384b1d12e28",
+    "backend/app/domain/markets/rules.py": "b26d34259229ebb048e69138a63ab5e63f9434f2dce6fc15c96a2d753b44df48",
+    "backend/app/domain/markets/cn_a_rules.py": "83f53ad326204645f0fc6df1773ead86cb87606c6b322f94f26c4f2094939ed1",
+    "backend/app/research/engine.py": "590e4134faeddac577efb0c77e24dd00a8796a8a91177afe504b04f1591840dc",
+    "backend/app/execution/broker.py": "67c422ab692a32cd0761694343c74f675d04d0505de11a2997f1b5ff4a830de2",
     "backend/app/research/strategy.py": "14bd3d21a48560faa28527fa061883a4ceb69bcf7a6332176ac06467152dbde0",
     "backend/app/research/costs.py": "c1a3be686fb5323161822efa68d04263746f33d650b97238fdbe635ef35a1fd6",
     "backend/tests/test_a_share_market_domain.py": "57d1c32b765ee5dcffc7025f22e4229f98ebbc3b82807a90faad7dd1fd79f4b1"
@@ -868,5 +848,38 @@
       "reason": "Actual document is 2015 factbook, PDF p660 shows obsolete 0.02 per mille settlement fee. URL timestamp is not content effective date; not accepted for pilot."
     }
   ],
-  "human_execution_decision": "PENDING: replace MARKET-at-next-open simulation with an explicitly specified, conservative limit/auction model; do not invent intraday evidence."
+  "human_execution_decision": "APPROVED: CN_A_DAILY_OPENING_LIMIT_V1 SIMULATION_ASSUMPTION; independently validated, not official exchange rule.",
+  "model_assumptions": [
+    {
+      "id": "PILOT_TRANSFER_CLEARING_ALLOWANCE",
+      "classification": "SIMULATION_ASSUMPTION",
+      "rate": "0.00001",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "side": "BOTH",
+      "authority_status": "UNVERIFIED_AS_STATUTORY_RATE",
+      "prior_unresolved_claim": {
+        "rule_id": "SZSE_TRANSFER_FEE",
+        "market": "CN_A",
+        "board": "SZSE_ALL",
+        "effective_from": "2023-01-01",
+        "effective_to": "2024-07-31",
+        "rule_semantics": "Implemented 0.00001 of notional both sides requires contemporary settlement-fee evidence; do not substitute 2015 schedule.",
+        "primary_source_url": null,
+        "primary_source_sha256": null,
+        "supporting_source_urls": [],
+        "source_locator": null,
+        "confidence": "UNRESOLVED",
+        "pilot_materiality": "MATERIAL",
+        "checks": [
+          "TRANSACTION_COST_EFFECTIVE_DATES",
+          "RULE_SOURCE_PROVENANCE"
+        ],
+        "implementation_status": "PARTIAL",
+        "implementation_review": "Official-SZSE-only search did not locate 2022 settlement fee notice. Existing 2022 factbook p1538 lists exchange fees, not this settlement fee. No rate changed."
+      },
+      "human_basis": "2026-09-11 approval section 9: retain already accepted effective-dated costs supported by authoritative/frozen research assumptions. Rate unchanged; not promoted to an official fact.",
+      "documentation": "docs/research/DAILY_EXECUTION_CONVENTION.md"
+    }
+  ]
 }

@@ -6,7 +6,7 @@ controller state, not a background scheduler or an authorization bypass.
 
 | Stage | Acceptance and automatic next action |
 | --- | --- |
-| R1 Source authority | Master, SSE, SZSE, raw OHLCV, adjustment, calendar, CSI300 PASS; market rules PASS_FOR_PILOT. Canonical source manifest required. Then R2. |
+| R1 Source authority | Master, SSE, SZSE, raw OHLCV, adjustment, calendar, CSI300 PASS; market rules PASS_FOR_PILOT. Canonical source manifest required. Separately require EXECUTION_CONVENTION_VALIDATION PASS (simulation assumption, not exchange fact). Then R2. |
 | R2 Materialization | `cn-a-pilot-akshare-20230101-20240731-v1`, 2023-01-01..2024-07-31. Accepted PIT inputs, raw execution prices, separate adjustments, suspension/tradeability and supported actions. Deterministic bounded retries/concurrency, checkpoints, failure manifest, partitioned Parquet, logical/physical hashes and atomic complete publication. Then R3. |
 | R3 Audit | All audits below pass with actual counts. READY, audited YES, frozen NO. STOP at Gate A; no R4. |
 | R4 Development | Only after human dataset-freeze approval and recorded frozen inputs. Development split only; `cn_a_cross_sectional_momentum_low_vol_v1`, MOM_12_1/TREND_120/LOW_VOL. Version every strategy change. Then R5. |

@@ -5,6 +5,7 @@ from enum import StrEnum
 
 from app.data.providers.research import DailyBarRecord, SecurityStatusRecord
 from app.domain.markets import CorporateAction, SecurityId
+from app.domain.markets.rules import ResolvedTradingRules
 
 
 class ResearchPeriodKind(StrEnum):
@@ -69,6 +70,7 @@ class ResearchSession:
     statuses: tuple[SecurityStatusRecord, ...]
     buy_lot_sizes: tuple[tuple[SecurityId, int], ...]
     corporate_actions: tuple[CorporateAction, ...] = ()
+    trading_rules: tuple[ResolvedTradingRules, ...] = ()
 
     def __post_init__(self) -> None:
         if any(bar.trading_date != self.trading_date for bar in self.bars):
@@ -77,3 +79,8 @@ class ResearchSession:
             raise ValueError("research session contains duplicate bars")
         if any(status.status.trading_date != self.trading_date for status in self.statuses):
             raise ValueError("all statuses must belong to the research session")
+        for values in (tuple(item.status for item in self.statuses), self.trading_rules):
+            if len({item.security_id for item in values}) != len(values):
+                raise ValueError("duplicate status or rule identity")
+            if any(item.trading_date != self.trading_date for item in values):
+                raise ValueError("rule/status session mismatch")

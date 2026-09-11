@@ -25,6 +25,12 @@ def test_controller_progresses_only_through_evidenced_pre_research_gates():
     state["authorities"] = {
         k: "PASS_FOR_PILOT" if k == "MARKET_RULE" else "PASS" for k in AUTHORITIES
     }
+    assert next_stage(state, lock) == "R1"
+    state["current_stage"] = "R2"
+    with pytest.raises(ValueError, match="EXECUTION_CONVENTION_GATE"):
+        next_stage(state, lock)
+    state["current_stage"] = "R1"
+    state["execution_convention_validation"] = "PASS"
     assert next_stage(state, lock) == "R2"
     state["current_stage"] = "R2"
     assert next_stage(state, lock) == "R2"

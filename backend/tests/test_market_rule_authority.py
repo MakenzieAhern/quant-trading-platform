@@ -58,7 +58,10 @@ def test_claim_audit_is_deterministic_and_cannot_promote_missing_or_failed_revie
     for status in ("PARTIAL", "FAIL", "NOT_MATERIAL_TO_PILOT"):
         failed = deepcopy(ledger)
         failed["claims"][0]["implementation_status"] = status
-        assert audit(failed, tmp_path, tmp_path)["market_rule_authority"] == "PARTIAL"
+        reviewed = audit(failed, tmp_path, tmp_path)
+        assert reviewed["market_rule_authority"] == "PASS_FOR_PILOT"
+        assert reviewed["implementation_review"] == "PARTIAL"
+        assert reviewed["execution_convention_validation"] == "SEPARATE_GATE_REQUIRED"
     missing = deepcopy(ledger)
     missing["claims"][0]["checks"].pop()
     assert audit(missing, tmp_path, tmp_path)["market_rule_authority"] == "PARTIAL"

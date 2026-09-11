@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from decimal import Decimal
 from typing import Protocol
 
@@ -34,10 +35,13 @@ class SimulatedBroker:
         event_bus: EventBus,
         commission_model: CommissionModel,
         slippage_model: SlippageModel,
+        *,
+        limit_fill_eligible: Callable[[Order, Bar], bool] | None = None,
     ) -> None:
         self._event_bus = event_bus
         self._commission_model = commission_model
         self._slippage_model = slippage_model
+        self._limit_fill_eligible = limit_fill_eligible
         self._orders: list[Order] = []
         self._pending: list[Order] = []
         self._fills: list[Fill] = []
@@ -63,7 +67,9 @@ class SimulatedBroker:
             self._orders.append(submitted)
             self._publish(EventType.ORDER_SUBMITTED, submitted)
 
-            if submitted.order_type is not OrderType.MARKET:
+            if submitted.order_type is not OrderType.MARKET and not (
+                submitted.order_type is OrderType.LIMIT and self._limit_fill_eligible is not None
+            ):
                 rejected = transition_order(submitted, OrderStatus.REJECTED)
                 self._replace_order(rejected)
                 self._publish(EventType.ORDER_REJECTED, rejected)
@@ -83,9 +89,20 @@ class SimulatedBroker:
         executable = tuple(
             order
             for order in self._pending
-            if order.symbol == bar.symbol and order.created_at < bar.timestamp
+            if order.symbol == bar.symbol
+            and order.created_at < bar.timestamp
+            and self._eligible(order, bar)
         )
         return tuple(self._fill(order, bar) for order in executable)
+
+    def _eligible(self, order: Order, bar: Bar) -> bool:
+        if order.order_type is OrderType.MARKET:
+            return True
+        if self._limit_fill_eligible is None or not self._limit_fill_eligible(order, bar):
+            return False
+        assert order.price is not None
+        price = self._slippage_model.apply(bar.open, order.side)
+        return price <= order.price if order.side is OrderSide.BUY else price >= order.price
 
     def cancel_pending(self) -> tuple[Order, ...]:
         """Cancel every locally pending order without implying external activity."""

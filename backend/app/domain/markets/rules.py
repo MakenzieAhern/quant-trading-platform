@@ -21,12 +21,16 @@ class DailySecurityStatus(BaseModel):
     trading_date: date
     is_st: bool
     is_suspended: bool
+    is_tradeable: bool | None = None
     is_one_price_limit: bool = False
     delisting_period_start: date | None = None
+    relisting_date: date | None = None
     source_version: str = Field(min_length=1)
 
     @model_validator(mode="after")
     def validate_delisting_period(self) -> "DailySecurityStatus":
+        if self.relisting_date is not None and self.relisting_date > self.trading_date:
+            raise ValueError("relisting date cannot follow status date")
         if (
             self.delisting_period_start is not None
             and self.delisting_period_start > self.trading_date
@@ -61,6 +65,7 @@ class TradingRuleSet(BaseModel):
     minimum_buy_quantity: int | None = Field(default=None, gt=0)
     buy_quantity_increment: int | None = Field(default=None, gt=0)
     minimum_tick: PositiveDecimal
+    maximum_limit_quantity: int | None = Field(default=None, gt=0)
     price_limit_rate: NonNegativeDecimal | None
     st_price_limit_rate: NonNegativeDecimal | None = None
     ipo_no_limit_sessions: int = Field(default=0, ge=0)
@@ -119,6 +124,7 @@ class ResolvedTradingRules(BaseModel):
     buy_quantity_increment: int
     odd_lot_sell_only: bool
     minimum_tick: PositiveDecimal
+    maximum_limit_quantity: int | None = Field(default=None, gt=0)
     price_limit_model: PriceLimitModel
     price_limit_rate: NonNegativeDecimal | None
     suspended: bool
@@ -168,7 +174,9 @@ class TradingRuleResolver:
             raise LookupError("RULE_VERSION_NOT_FOUND")
         selected = max(candidates, key=_precedence)
         limit_rate = selected.price_limit_rate
-        if security_status.delisting_period_start is not None:
+        if security_status.relisting_date == trading_date:
+            limit_rate = None
+        elif security_status.delisting_period_start is not None:
             # Only the pilot regime is audited; do not project it onto older transitions.
             if not date(2023, 1, 1) <= trading_date <= date(2024, 7, 31):
                 raise LookupError("DELISTING_RULE_OUTSIDE_AUDITED_PERIOD")
@@ -193,6 +201,7 @@ class TradingRuleResolver:
             buy_quantity_increment=selected.buy_quantity_increment or selected.buy_lot_size,
             odd_lot_sell_only=selected.odd_lot_sell_only,
             minimum_tick=selected.minimum_tick,
+            maximum_limit_quantity=selected.maximum_limit_quantity,
             price_limit_model=(
                 PriceLimitModel.NONE
                 if limit_rate is None

@@ -2,6 +2,9 @@
 
 **v1.1 development — China A-Share Research Edition**
 
+Research uses a [conservative daily-bar simulated execution convention](docs/research/DAILY_EXECUTION_CONVENTION.md),
+not reconstruction of exact historical auction fills. Unestablished execution conditions mean no fill.
+
 A deterministic, event-driven quantitative research and paper-trading platform supporting historical backtesting,
 technical indicators, strategy execution, transaction-cost simulation, portfolio accounting,
 performance analytics, pre-trade risk management, an order management system (OMS), PostgreSQL

@@ -1,27 +1,29 @@
 # Blockers
 
-SINGLE_SMALLEST_BLOCKER = PILOT_EXECUTION_CONVENTION_DECISION_REQUIRED
-HUMAN_APPROVAL_REQUIRED = YES (execution methodology, not dataset freeze).
+SINGLE_SMALLEST_BLOCKER = R2_RAW_ROUTE_CONNECTION_CLOSED_600070
+HUMAN_APPROVAL_REQUIRED = YES (external source-access recovery, not dataset freeze).
 
-Official SZSE 2021 rules 3.3.5 and 2023 handbook printed page35 restrict MARKET
-submissions to continuous auction and price-limited securities.
-ResearchExecutionEngine instead creates MARKET orders and SimulatedBroker fills
-them at next daily open. Accepted daily OHLCV cannot identify the execution
-phase/order book or establish opening-auction liquidity (2021 rules 4.2.1-4.2.2).
-Do not quietly change the execution convention to manufacture a rule PASS.
+The exact accepted AKShare/Eastmoney raw/unadjusted request for CN-A:SSE:600070,
+2023-01-01 through 2024-07-31, closed before an HTTP response:
+- Python urllib: RemoteDisconnected, "Remote end closed connection without response".
+- Native PowerShell Invoke-WebRequest: "An error occurred while sending the request".
+- Windows curl: error 56, "schannel: server closed abruptly (missing close_notify)";
+  HTTP_STATUS=000.
 
-Smallest next decision: approve a conservative, explicitly priced, next-session
-LIMIT/auction convention using only information known before submission, with
-unprovable compliance/no auction evidence handled as no-fill, or retain the
-existing convention and stop. This is NOT approval to run a strategy/study.
+Three bounded transport diagnostics completed; no repeated retry loop remains.
+Do not interpret this as proof of absent history, or as a Docker failure.
+Do not drop 600070, synthesize missing data, change providers, or downgrade the
+previous accepted OHLCV route decision to manufacture full-universe acceptance.
+The successful 300336 canary proves only that its particular request succeeded.
 
-After that decision, ordinary engineering and evidence closure remain in the
-28-claim ledger: 12 unclosed claims include caps/ticks/expiry, relisting and
-intraday handling, and Pilot settlement-fee provenance. Approval does not erase
-these gaps or automatically pass the source gate. No new provider is selected.
+Required external change: recover access/response for this exact accepted request,
+or explicitly authorize a complementary raw-history route for the gap.
+Preserve the failure metadata when a recovered response is later snapshotted.
+Failure artifact: external staging/pilot-akshare-20260911/failure-manifest.json.
+No full dataset has been published; R3 is not yet runnable.
 
-OLD SZSE_2023_RULE_BYTES_UNAVAILABLE = RETIRED_REQUIREMENT.
-All four replacement official sources retrieved; no dead URL retried.
-DOCKER_RUNTIME_FAILURE = RESOLVED.
-PUSH_IDENTITY_MISMATCH = RESOLVED; MakenzieAhern unchanged.
-Prior seven data authority PASS decisions preserved. This is not Gate A.
+RESOLVED: PILOT_EXECUTION_CONVENTION_DECISION_REQUIRED.
+RETIRED: original SZSE attachment dependency; do not retry retired URLs.
+RESOLVED: DOCKER_RUNTIME_FAILURE and PUSH_IDENTITY_MISMATCH.
+Market source gate and separate execution gate both PASS; seven data authorities
+remain accepted. No strategy/studies/freeze/merge authorized. This is NOT Gate A.

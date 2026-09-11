@@ -163,7 +163,7 @@ def historical_cn_a_rules() -> TradingRuleVersion:
     rules = [rule for period in _PERIODS for rule in _split_by_cost(period)]
     for symbol in ("300090", "300156", "300216"):
         rules.append(_transitional_delisting_exception(symbol))
-    return TradingRuleVersion(version="cn-a-2010-2025.5", rules=tuple(rules))
+    return TradingRuleVersion(version="cn-a-2010-2025.6", rules=tuple(rules))
 
 
 def _split_by_cost(period: _BoardPeriod) -> tuple[TradingRuleSet, ...]:
@@ -185,6 +185,13 @@ def _split_by_cost(period: _BoardPeriod) -> tuple[TradingRuleSet, ...]:
                 minimum_buy_quantity=period.minimum_buy_quantity,
                 buy_quantity_increment=period.increment,
                 minimum_tick=Decimal("0.01"),
+                maximum_limit_quantity=(
+                    100000
+                    if period.board is Board.SSE_STAR
+                    else 300000
+                    if period.board is Board.SZSE_CHINEXT and period.start >= date(2020, 8, 24)
+                    else 1000000
+                ),
                 price_limit_rate=Decimal(period.limit),
                 st_price_limit_rate=Decimal(period.st_limit),
                 ipo_no_limit_sessions=period.ipo_no_limit_sessions,

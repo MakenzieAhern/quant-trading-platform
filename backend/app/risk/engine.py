@@ -47,11 +47,15 @@ class RiskEngine:
             return self._reject(
                 proposal, RiskReasonCode.INVALID_QUANTITY, "quantity must be positive"
             )
-        if proposal.order_type is not OrderType.MARKET:
+        if proposal.order_type is not OrderType.MARKET and not (
+            self._config.allow_limit_orders
+            and proposal.order_type is OrderType.LIMIT
+            and proposal.limit_price is not None
+        ):
             return self._reject(
                 proposal,
                 RiskReasonCode.UNSUPPORTED_ORDER_TYPE,
-                "only MARKET proposals are supported",
+                "order type is not enabled or limit price is missing",
             )
         if snapshot is None:
             return self._reject(
@@ -103,6 +107,9 @@ class RiskEngine:
                 f"a positive observed mark is required for {proposal.symbol}",
             )
         assert reference_price is not None
+        if proposal.order_type is OrderType.LIMIT and proposal.side is OrderSide.BUY:
+            assert proposal.limit_price is not None
+            reference_price = max(reference_price, proposal.limit_price)
 
         with localcontext(RISK_CONTEXT):
             actual_exposures = self._calculate_exposures(actual_quantities, marks, proposal.symbol)
