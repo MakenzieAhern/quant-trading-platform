@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## Active R2 recovery continuation
+
+STATUS = RUNNING; HUMAN_APPROVAL_REQUIRED = NO. Prior stop below superseded.
+Independent queue continues through per-security failures; 600070 = PENDING_RETRY.
+Three same-construction SSE controls succeeded, 382 rows each. No fallback is in
+the current accepted OHLCV manifest; no new exclusion policy is introduced.
+At this checkpoint: 190 securities partitioned, 69,240 raw rows, 395 factor rows;
+quality failures 0, final publication NO. Periodic counts are checkpoint snapshots,
+not final-universe acceptance. External pilot-akshare-20260911/recovery-checkpoint.json
+and partition-checkpoint.json retain current counts and exact file hashes.
+The scheduler now uses two workers with two-second inter-batch pacing and a
+20-second cooldown after ten consecutive failed batches. Three fixed rounds,
+30/60-second round backoff, no jitter; no repeated failed request on restart.
+Original failure evidence remains untouched. Backend 393 tests PASS; Ruff,
+format and strict mypy PASS. Request construction comparison is external
+request-comparison.json; no proxy, standard Python-urllib/3.12 header, 35s timeout.
+
 RUN_ID = 20260911-R1-R2-07
 START_SHA = 14c9f8c4c5a616442775d070f26aa34e858785e6
 END_SHA = Resolve with git log -1 --format=%H -- docs/orchestration/RUN_REPORT.md

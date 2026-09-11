@@ -1,5 +1,15 @@
 # Blockers
 
+Latest continuation: failures are NON-TERMINAL PENDING_RETRY while the independent
+R2 queue progresses. STATUS = RUNNING; HUMAN_APPROVAL_REQUIRED = NO.
+No new human source choice is requested. The user superseded the prior stop below.
+See external recovery-failure-manifest.json for the full pending set; 600070 is
+not silently omitted. Final publication is prohibited until required gaps close.
+R1 remains PASS. Only after the bounded final retry passes and existing-policy
+check may this become a terminal human blocker again.
+
+## Preserved prior checkpoint (superseded)
+
 SINGLE_SMALLEST_BLOCKER = R2_RAW_ROUTE_CONNECTION_CLOSED_600070
 HUMAN_APPROVAL_REQUIRED = YES (external source-access recovery, not dataset freeze).
 

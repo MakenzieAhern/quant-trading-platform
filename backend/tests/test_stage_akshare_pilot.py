@@ -1,9 +1,82 @@
 import json
+from decimal import Decimal
 
 import pytest
 
+from scripts.materialize_akshare_partitions import normalized_bars
 from scripts.reconcile_sse_cninfo import sha
-from scripts.stage_akshare_pilot import pilot_members, raw_url
+from scripts.stage_akshare_pilot import pilot_members, raw_url, snapshot, stage_one
+
+
+def test_raw_partition_is_unadjusted_decimal_order_independent_and_not_synthetic():
+    member = dict(
+        security_id="CN-A:SSE:600004", symbol="600004", listing_date="2000-01-01", delisting_date=""
+    )
+    lines = [
+        "2023-01-03,10,10.5,11,9,123,12300,0,0,0,0",
+        "2023-01-04,11,11,12,10,124,12400,0,0,0,0",
+    ]
+
+    def payload(rows):
+        return json.dumps(dict(data=dict(code="600004", klines=rows))).encode()
+
+    sessions = {"2023-01-03", "2023-01-04", "2023-01-05"}
+    result = normalized_bars(payload(lines), member, sessions)
+    assert result == normalized_bars(payload(list(reversed(lines))), member, sessions)
+    assert result[0]["volume"] == Decimal(12300)
+    assert result[0]["raw_close"] == Decimal("10.5")
+    assert result[0]["adjusted_close"] is None
+    assert len(result) == 2  # Missing Jan 5 is not synthesized or called suspended.
+    with pytest.raises(ValueError, match="DUPLICATE"):
+        normalized_bars(payload(lines + lines), member, sessions)
+    member["delisting_date"] = "2023-01-04"
+    with pytest.raises(ValueError, match="LIFECYCLE"):
+        normalized_bars(payload(lines), member, sessions)
+
+
+def test_failed_symbol_does_not_prevent_an_independent_symbol(tmp_path, monkeypatch):
+    def response(root, name, url, round_no):
+        if name == "600070.json":
+            raise ConnectionError("closed before HTTP")
+        if name.endswith(".json"):
+            return root / name, b'{"data":{"code":"600004","klines":["2023-01-03,10,10,11,9,100"]}}'
+        return root / name, b'var sh600004hfq={"total":1,"data":[{"d":"1900-01-01","f":"1"}]};'
+
+    monkeypatch.setattr("scripts.stage_akshare_pilot.snapshot", response)
+    row = dict(
+        security_id="CN-A:SSE:600070",
+        symbol="600070",
+        exchange="SSE",
+        listing_date="1997-06-04",
+        delisting_date="2025-04-30",
+    )
+    assert stage_one(tmp_path, row, 0)["status"] == "PENDING_RETRY"
+    assert stage_one(tmp_path, row, 2)["status"] == "UNRESOLVED_REQUIRED_DATA"
+    row.update(security_id="CN-A:SSE:600004", symbol="600004")
+    assert stage_one(tmp_path, row, 0)["status"] == "RECOVERED_PRIMARY"
+
+
+def test_snapshot_preserves_failure_and_never_repeats_same_attempt(tmp_path, monkeypatch):
+    calls = []
+
+    def failed_fetch(root, name, url):
+        root.mkdir(parents=True, exist_ok=True)
+        (root / (name + ".meta.json")).write_text(
+            json.dumps(dict(url=url, error="ConnectionError"))
+        )
+        calls.append(url)
+        raise ConnectionError("closed")
+
+    monkeypatch.setattr("scripts.stage_akshare_pilot.fetch", failed_fetch)
+    url = raw_url("SSE", "600070")
+    with pytest.raises(ConnectionError):
+        snapshot(tmp_path, "600070.json", url, 0)
+    with pytest.raises(RuntimeError, match="PERSISTED_ATTEMPT"):
+        snapshot(tmp_path, "600070.json", url, 0)
+    with pytest.raises(ConnectionError):
+        snapshot(tmp_path, "600070.json", url, 1)
+    assert calls == [url, url]
+    assert (tmp_path / "recovery-attempts/0/600070.json.meta.json").exists()
 
 
 def test_pilot_inventory_retains_delisted_and_rejects_future_ipo_and_mutation(tmp_path):

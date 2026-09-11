@@ -1,6 +1,17 @@
 # Current state
 
-R2 BLOCKED: R2_RAW_ROUTE_CONNECTION_CLOSED_600070. Not Gate A.
+Latest continuation: R2 RUNNING, HUMAN_APPROVAL_REQUIRED = NO.
+User authorized independent queue progress and bounded final retries. Original
+600070 evidence is preserved; old BLOCKED checkpoint below is superseded.
+SSE controls 600000/600004/600006 returned 382 rows each with identical construction.
+Cause remains UNKNOWN, not guessed as anti-bot or delisting-induced loss.
+Two bounded workers; three rounds (0,30,60 second backoff), no jitter; immutable
+per-attempt metadata. 600070's prior failure is queued, not immediately retried.
+Partial partitions: 190 securities / 69,240 raw rows / 395 factors at this checkpoint.
+Live external recovery-checkpoint.json and partition-checkpoint.json are authoritative
+for subsequent progress; the final dataset remains unpublished. All R1 PASS unchanged.
+
+Previous checkpoint: R2 BLOCKED: R2_RAW_ROUTE_CONNECTION_CLOSED_600070. Not Gate A.
 
 The 2026-09-11 execution convention decision is APPROVED and implemented.
 MARKET_RULE_AUTHORITY = PASS_FOR_PILOT (official claims only).

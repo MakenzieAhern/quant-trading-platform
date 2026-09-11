@@ -1,5 +1,14 @@
 # Decisions
 
+- 2026-09-11 R2 recovery continuation: user explicitly directs successful
+  securities to continue while failures queue as PENDING_RETRY. No R1 reopening,
+  new provider, new exclusion, synthetic data, freeze or research. Source snapshots
+  and failed-attempt metadata are immutable; final publication requires complete
+  required inputs. Existing OHLCV acceptance defines no fallback. Final failed
+  members must remain UNRESOLVED_REQUIRED_DATA unless actual recovery or existing
+  authoritative policy explains them. Request controls and transport diagnostics
+  do not justify guessing an anti-bot or lifecycle cause.
+
 - 2026-09-11 implementation checkpoint: both source authority and separate
   CN_A_DAILY_OPENING_LIMIT_V1 validation PASS. Approval section9 permits retained
   frozen research costs: the unchanged 0.00001 transfer/clearing allowance is
