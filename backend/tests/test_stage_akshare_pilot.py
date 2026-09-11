@@ -149,7 +149,10 @@ def test_pilot_inventory_retains_delisted_and_rejects_future_ipo_and_mutation(tm
         raw_url("OTHER", "600070")
 
 
-def test_partial_partitions_resume_repeatably_and_reject_changed_bytes(tmp_path, monkeypatch):
+@pytest.mark.parametrize("provider", [None, "Tencent"])
+def test_partial_partitions_resume_repeatably_and_reject_changed_bytes(
+    tmp_path, monkeypatch, provider
+):
     import pyarrow.parquet as parquet
 
     sid = "CN-A:SSE:600004"
@@ -185,11 +188,53 @@ def test_partial_partitions_resume_repeatably_and_reject_changed_bytes(tmp_path,
             }
         ),
     )
+    if provider == "Tencent":
+        from app.data.providers.research import DailyBarRecord
+
+        original = raw.read_bytes()
+        upstream = tmp_path / "upstream.json"
+        upstream.write_bytes(original)
+        item = normalized_bars(original, member, {"2023-01-03"})[0]
+        item.pop("source")
+        item["security_id"] = {"value": sid}
+        bar = DailyBarRecord.model_validate(item).model_dump(mode="json")
+        policy = tmp_path / "policy.json"
+        save(policy, dict(status="FROZEN_PASS_FOR_PILOT"))
+        monkeypatch.setattr("scripts.materialize_akshare_partitions.POLICY_PATH", policy)
+        policy_sha = sha(policy.read_bytes())
+        save(
+            raw,
+            dict(
+                format="TENCENT_RAW_V1",
+                rows=[bar],
+                policy_sha256=policy_sha,
+                sources=[dict(path=upstream.name, sha256=sha(original))],
+            ),
+        )
+        save(root / "recovery-checkpoint.json", dict(completed={}))
+        save(
+            root / "secondary-checkpoint.json",
+            dict(
+                policy_sha256=policy_sha,
+                completed={
+                    sid: dict(
+                        provider="Tencent",
+                        policy_sha256=policy_sha,
+                        raw_path=raw.name,
+                        raw_sha256=sha(raw.read_bytes()),
+                        factor_path=factor.name,
+                        factor_sha256=sha(factor.read_bytes()),
+                    )
+                },
+            ),
+        )
     first = materialize(tmp_path)
     receipt = (root / "partition-checkpoint.json").read_bytes()
     assert first["securities_partitioned"] == 1 and not first["published"]
     assert materialize(tmp_path) == first
     assert (root / "partition-checkpoint.json").read_bytes() == receipt
+    raw_rows = parquet.read_table(root / "dataset-staging/SSE/600004/raw.parquet").to_pylist()
+    assert ("Tencent" if provider else "Eastmoney") in raw_rows[0]["source"]
     factors = root / "dataset-staging/SSE/600004/factors.parquet"
     rows = parquet.read_table(factors).to_pylist()
     assert [row["effective_from"] for row in rows] == ["2000-01-01"]

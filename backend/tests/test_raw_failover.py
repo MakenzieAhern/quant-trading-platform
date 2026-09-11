@@ -8,6 +8,7 @@ from scripts.audit_amount_impact import distribution, interval_decisions
 from scripts.audit_raw_failover import merged, normalized, parity
 from scripts.audit_tencent_amount import comparison
 from scripts.probe_raw_failover import candidate, primary_status, run, tencent_url
+from scripts.stage_tencent_pilot import cached_request, recover
 
 
 def test_primary_status_does_not_guess_network_or_rate_limit():
@@ -82,6 +83,53 @@ def test_amount_interval_propagation_does_not_choose_favorable_boundary():
     with pytest.raises(ValueError):
         interval_decisions(rows, Decimal(-1))
     assert distribution([Decimal(1), Decimal(2), Decimal(3), Decimal(4)])["median"] == "2.5"
+
+
+def test_secondary_failed_slot_is_immutable_and_retry_classification_survives(
+    tmp_path, monkeypatch
+):
+    path = tmp_path / "raw.json"
+    path.with_suffix(".json.meta.json").write_text(
+        json.dumps(dict(url="https://example.test", error="TimeoutError"))
+    )
+    monkeypatch.setattr(
+        "scripts.stage_tencent_pilot.fetch", lambda *a: pytest.fail("must not repeat a failed slot")
+    )
+    with pytest.raises(ConnectionError, match="PERSISTED_TRANSPORT"):
+        cached_request([], path, "https://example.test")
+
+
+def test_secondary_recovery_retains_provider_lineage_without_touching_primary(
+    tmp_path, monkeypatch
+):
+    def request(candidates, target, url):
+        raw = (
+            b'var sz000001hfq={"total":1,"data":[{"d":"1900-01-01","f":"1"}]}'
+            if url.endswith("hfq.js")
+            else sample([["2023-01-03", "10", "11", "12", "9", "100", {}, "1", "11.00"]])
+        )
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(raw)
+        return target, raw, dict(retrieved_at_utc="2026-09-11T00:00:00+00:00")
+
+    monkeypatch.setattr("scripts.stage_tencent_pilot.cached_request", request)
+    result = recover(
+        tmp_path,
+        MEMBER,
+        dict(error_type="RemoteDisconnected", round=2),
+        0,
+        ["2023-01-03"],
+        lambda sid, day: "NORMAL",
+        "policy-hash",
+    )
+    assert result["status"] == "PRIMARY_FAILED_SECONDARY_RECOVERED"
+    assert result["raw_rows"] == 1
+    assert result["underlying_source"] == "Tencent"
+    assert len(result["sources"]) == 2
+    assert not (tmp_path / "pilot-akshare-20260911/recovery-checkpoint.json").exists()
+    content = json.loads((tmp_path / result["raw_path"]).read_bytes())
+    assert content["rows"][0]["amount"] == "110000.00"
+    assert content["rows"][0]["adjusted_close"] is None
 
 
 def test_candidate_units_raw_only_and_lifecycle_guards():

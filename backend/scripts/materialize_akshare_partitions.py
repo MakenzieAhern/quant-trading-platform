@@ -13,6 +13,8 @@ from scripts.reconcile_sse_cninfo import save, sha
 from scripts.sina_adjustment_audit import parse_factors
 from scripts.stage_akshare_pilot import END, START, pilot_members
 
+POLICY_PATH = Path(__file__).resolve().parents[2] / "docs/research/CN_A_RAW_OHLCV_FAILOVER_V1.json"
+
 
 def normalized_bars(raw: bytes, member: dict, sessions: set[str]) -> list[dict]:
     data = json.loads(raw)["data"]
@@ -54,6 +56,15 @@ def normalized_bars(raw: bytes, member: dict, sessions: set[str]) -> list[dict]:
 def materialize(staging: Path) -> dict:
     root = staging / "pilot-akshare-20260911"
     checkpoint = json.loads((root / "recovery-checkpoint.json").read_bytes())
+    completed = dict(checkpoint["completed"])
+    secondary_path = root / "secondary-checkpoint.json"
+    if secondary_path.exists():
+        secondary = json.loads(secondary_path.read_bytes())
+        if secondary["policy_sha256"] != sha(POLICY_PATH.read_bytes()):
+            raise ValueError("SECONDARY_POLICY_CHANGED")
+        if completed.keys() & secondary["completed"].keys():
+            raise ValueError("SECONDARY_MUST_NOT_REPLACE_PRIMARY")
+        completed.update(secondary["completed"])
     members = {r["security_id"]: r for r in pilot_members(staging)}
     sessions = set(
         json.loads(
@@ -70,13 +81,18 @@ def materialize(staging: Path) -> dict:
         else {}
     )
     failures = {}
-    for sid, inputs in sorted(checkpoint["completed"].items()):
+    for sid, inputs in sorted(completed.items()):
         source_hashes = {}
         for kind in ("raw", "factor"):
             path = staging / inputs[kind + "_path"]
             source_hashes[kind] = sha(path.read_bytes())
             if source_hashes[kind] != inputs[kind + "_sha256"]:
                 raise ValueError("SOURCE_BYTES_CHANGED")
+        if inputs.get("provider") == "Tencent":
+            payload = json.loads((staging / inputs["raw_path"]).read_bytes())
+            for source in payload["sources"]:
+                if sha((staging / source["path"]).read_bytes()) != source["sha256"]:
+                    raise ValueError("SECONDARY_UNDERLYING_SOURCE_CHANGED")
         existing = receipts.get(sid)
         if existing and existing["source_hashes"] != source_hashes:
             raise ValueError("PARTITION_SOURCE_VINTAGE_CHANGED")
@@ -89,7 +105,36 @@ def materialize(staging: Path) -> dict:
             raise ValueError("PARTITION_BYTES_CHANGED")
         try:
             member = members[sid]
-            bars = normalized_bars((staging / inputs["raw_path"]).read_bytes(), member, sessions)
+            raw = (staging / inputs["raw_path"]).read_bytes()
+            if inputs.get("provider") == "Tencent":
+                payload = json.loads(raw)
+                if (
+                    payload["format"] != "TENCENT_RAW_V1"
+                    or payload["policy_sha256"] != inputs["policy_sha256"]
+                ):
+                    raise ValueError("SECONDARY_FORMAT_OR_AUTHORITY_CHANGED")
+                bars = []
+                for item in payload["rows"]:
+                    bar = DailyBarRecord.model_validate(item)
+                    day = bar.trading_date.isoformat()
+                    if (
+                        str(bar.security_id) != sid
+                        or day not in sessions
+                        or day < member["listing_date"]
+                        or (member["delisting_date"] and day >= member["delisting_date"])
+                    ):
+                        raise ValueError("SECONDARY_IDENTITY_OR_LIFECYCLE_CHANGED")
+                    row = bar.model_dump(mode="python")
+                    row["security_id"] = sid
+                    row["source"] = "AKShare:stock_zh_a_hist_tx:Tencent:day:raw"
+                    bars.append(row)
+                dates = [b["trading_date"] for b in bars]
+                if not dates or dates != sorted(set(dates)):
+                    raise ValueError("SECONDARY_DUPLICATE_OR_UNSORTED_DATE")
+            elif inputs.get("provider") is None:
+                bars = normalized_bars(raw, member, sessions)
+            else:
+                raise ValueError("UNACCEPTED_PARTITION_PROVIDER")
             symbol = ("sh" if member["exchange"] == "SSE" else "sz") + member["symbol"]
             curve = parse_factors((staging / inputs["factor_path"]).read_bytes(), symbol, "hfq")
             baseline = max((day for day, _ in curve if day <= START), default=None)
