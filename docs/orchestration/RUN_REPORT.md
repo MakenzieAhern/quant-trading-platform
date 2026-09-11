@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## Ongoing R2 observation inventory
+
+1,505 materialized securities /554,152 raw rows /3,450 factor rows; failures0.
+657 original primary successes remain unchanged. Worker continues from its live
+secondary checkpoint. Expanded available-input amount audit:1,544 securities,
+568,116 rows,9,891 potential decisions,zero ambiguous. No strategy invocation.
+New offline observation inventory records3,369 missing lifecycle-session
+observations across213 securities; zero-volume observations0. Missing observations
+are not inferred suspensions. Exact intervals persist outside Git in
+pilot-akshare-20260911/observation-coverage-current.json. Partition snapshot SHA256:
+502a7712bc06840bd2febaa7218e34e23064515f29a7f721be15849f013db66b.
+Inventory validates partition SHA/identity/count and listing/delisting boundaries;
+its runnable test covers disjoint intervals, input reversal and duplicate rejection.
+Dataset remains unpublished, unaudited, unfrozen. No studies or merge.
+
 ## Current running recovery milestone
 
 R2 RUNNING. Primary657 preserved; secondary516 now materialized, total1,173
