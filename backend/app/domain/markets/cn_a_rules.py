@@ -89,6 +89,7 @@ _PERIODS = (
         "0.10",
         "0.05",
         5,
+        source="SZSE Trading Rules (2023 revision), SZSE [2023] No. 98",
         published=date(2023, 2, 17),
         note="registration-system first-five-session IPO exception",
     ),
@@ -122,13 +123,25 @@ _PERIODS = (
         Exchange.SZSE,
         Board.SZSE_CHINEXT,
         date(2020, 8, 24),
-        None,
+        date(2023, 4, 9),
         "0.20",
         "0.20",
         5,
         source="SZSE ChiNext special provisions",
         published=date(2020, 6, 12),
         note="24 Aug 2020 reform for new and existing shares",
+    ),
+    _BoardPeriod(
+        Exchange.SZSE,
+        Board.SZSE_CHINEXT,
+        date(2023, 4, 10),
+        None,
+        "0.20",
+        "0.20",
+        5,
+        source="SZSE Trading Rules (2023 revision), SZSE [2023] No. 98",
+        published=date(2023, 2, 17),
+        note="2023 consolidated rule version; ChiNext numerical limits unchanged",
     ),
 )
 
@@ -137,7 +150,7 @@ def historical_cn_a_rules() -> TradingRuleVersion:
     rules = [rule for period in _PERIODS for rule in _split_by_cost(period)]
     for symbol in ("300090", "300156", "300216"):
         rules.append(_transitional_delisting_exception(symbol))
-    return TradingRuleVersion(version="cn-a-2010-2025.3", rules=tuple(rules))
+    return TradingRuleVersion(version="cn-a-2010-2025.4", rules=tuple(rules))
 
 
 def _split_by_cost(period: _BoardPeriod) -> tuple[TradingRuleSet, ...]:

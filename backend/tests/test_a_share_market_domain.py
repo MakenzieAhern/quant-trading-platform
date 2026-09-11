@@ -264,6 +264,78 @@ def test_main_board_registration_uses_effective_date_not_publication_date() -> N
         assert after.valid_from == date(2023, 4, 10)
 
 
+def test_szse_2023_boundary_status_lots_costs_and_no_future_rule_leakage() -> None:
+    version = historical_cn_a_rules()
+    boundary = date(2023, 4, 10)
+    for board, symbol in ((Board.SZSE_MAIN, "000001"), (Board.SZSE_CHINEXT, "300001")):
+        sid = SecurityId(value=f"CN-A:SZSE:{symbol}")
+        for day in (
+            date(2023, 2, 17),
+            date(2023, 4, 7),
+            boundary,
+            date(2023, 4, 11),
+            date(2023, 4, 12),
+            date(2023, 8, 25),
+            date(2023, 8, 28),
+        ):
+            selected = next(r for r in version.rules if r.board == board and r.applies_on(day))
+            if day < boundary:
+                assert selected.source_publication_date < date(2023, 2, 17)
+                assert selected.valid_to == date(2023, 4, 9)
+            else:
+                assert selected.source_publication_date == date(2023, 2, 17)
+                assert selected.source_version.endswith("2023-04-10")
+            for state in ("NORMAL", "ST", "STAR_ST"):
+                for age in (0, 4, 5):
+                    for suspended in (False, True):
+                        args = dict(
+                            security_id=sid,
+                            market=Market.CN_A,
+                            exchange=Exchange.SZSE,
+                            board=board,
+                            trading_date=day,
+                            side=OrderSide.SELL,
+                            order_type=OrderType.MARKET,
+                            listing_age_sessions=age,
+                            security_status=_status(
+                                security_id=sid,
+                                trading_date=day,
+                                is_st=state != "NORMAL",
+                                is_suspended=suspended,
+                            ),
+                        )
+                        resolved = TradingRuleResolver(version).resolve(**args)
+                        prefix = version.model_copy(
+                            update={
+                                "rules": tuple(
+                                    r for r in reversed(version.rules) if r.valid_from <= day
+                                )
+                            }
+                        )
+                        assert resolved == TradingRuleResolver(prefix).resolve(**args)
+                        unlimited = age < 5 and (board == Board.SZSE_CHINEXT or day >= boundary)
+                        rate = (
+                            "0.20"
+                            if board == Board.SZSE_CHINEXT
+                            else ("0.05" if state != "NORMAL" else "0.10")
+                        )
+                        assert resolved.price_limit_rate == (None if unlimited else Decimal(rate))
+                        assert resolved.buy_lot_size == resolved.minimum_buy_quantity == 100
+                        assert resolved.buy_quantity_increment == 100
+                        assert resolved.minimum_tick == Decimal("0.01")
+                        assert resolved.executable == (
+                            not suspended
+                            and not (board == Board.SZSE_MAIN and day < boundary and age == 0)
+                        )
+                        assert resolved.cost_schedule.sell_stamp_duty_rate == Decimal(
+                            "0.001" if day < date(2023, 8, 28) else "0.0005"
+                        )
+                        assert resolved.cost_schedule.transfer_fee_rate == Decimal("0.00001")
+                        assert resolved.cost_schedule.commission_rate == Decimal("0.0003")
+                        assert resolved.cost_schedule.minimum_commission == 5
+                        assert resolved.t_plus_one_sale
+
+
 def test_delisting_period_overrides_st_without_losing_suspension_or_order_reproducibility() -> None:
     version = historical_cn_a_rules()
     for exchange, board, symbol, rate in (

@@ -1,5 +1,13 @@
 # Decisions
 
+- 2026-09-11 user source resolution: intended SZSE source is the 2023 revision,
+  publication 2023-02-17, 深证上〔2023〕98号, effective 2023-04-10, not publication
+  day. The supplied April 10/11 official listing pages were retrieved and agree.
+  Source identity is resolved. Fresh requests to the supplied notice and both
+  PDF routes still returned 404; PDF bytes/hash remain unavailable. Do not
+  promote MARKET_RULE merely from the user's link identification. Version .4
+  and transition tests are complete; request file attachment to finish provenance.
+
 - 2026-09-11: Docker runtime failure RESOLVED; existing volumes/containers
   preserved, API/frontend and database services verified. No accepted data
   authority was reaudited. Delisting fix .3 passes regression; MARKET_RULE remains

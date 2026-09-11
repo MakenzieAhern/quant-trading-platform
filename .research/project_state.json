@@ -11,13 +11,13 @@
   "oos_authorized": false,
   "release_authorized": false,
   "human_approval_gate": null,
-  "next_action": "Obtain checksum-verifiable official SZSE 2023 rule text/notice; complete market-rule source audit before R2.",
+  "next_action": "Obtain original SZSE 2023 rule PDF bytes and notice copy from user; URLs were rechecked and remain 404. Complete provenance before R2.",
   "adjustment_acceptance_manifest_sha256": "711ba1895a8952cfebcac25f85446d5cc35963f729b0695ca7684e9dfcb23403",
-  "blocker": "SZSE_2023_RULE_SOURCE_UNAVAILABLE",
+  "blocker": "SZSE_2023_RULE_BYTES_UNAVAILABLE",
   "stop_condition": "AUTHORITATIVE_SOURCE_PROVENANCE_UNRESOLVED",
   "human_approval_required": true,
-  "source_manifest_path": "market-rules-20260911/source-authority-preflight.json (relative to external staging root)",
-  "source_manifest_sha256": "bcc43dc1239651b9bb8538d0434cb20acb71c490f074d2b0a31314f9daed94dc",
+  "source_manifest_path": "market-rules-user-resolution-20260911/source-authority-preflight.json (relative to external staging root)",
+  "source_manifest_sha256": "9ceacf24b3ab83007bf8bdba4cee8f7ebb06d66d4d6b63391f9ec13a12ee7ed7",
   "last_completed_stage": null,
   "source_authority_preflight": "FAIL",
   "authorities": {
@@ -33,5 +33,7 @@
   "push_identity_mismatch": "RESOLVED",
   "docker_runtime_failure": "RESOLVED",
   "docker_recovery": "PASS",
-  "market_rule_manifest_sha256": "4910e229314ffe4479af3070dbfc5757236b469d9002db38afb3ef8e453af3d6"
+  "market_rule_manifest_sha256": "cc582b47330923d331e48deb9e3a0818e1d9b2a3e439fa9fbe6315625e85bdce",
+  "szse_rule_source_identity": "RESOLVED_BY_USER",
+  "szse_rule_effective_date": "2023-04-10"
 }

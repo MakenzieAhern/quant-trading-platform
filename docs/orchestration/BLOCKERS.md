@@ -1,19 +1,19 @@
 # Blockers
 
-SINGLE_SMALLEST_BLOCKER = SZSE_2023_RULE_SOURCE_UNAVAILABLE.
-HUMAN_APPROVAL_REQUIRED = YES (source input; not dataset-freeze approval).
+SINGLE_SMALLEST_BLOCKER = SZSE_2023_RULE_BYTES_UNAVAILABLE.
+HUMAN_APPROVAL_REQUIRED = YES (file input, not dataset freeze).
 
-Need checksum-verifiable official Shenzhen Stock Exchange Trading Rules
-(2023 revision), including its originating notice. Prior investor.szse.cn
-notice returned HTTP 404 from Windows; discovered docs.static.szse.cn PDF
-paths under stock/trade and trade/current returned HTTP 404 from WSL.
-Search retrieval could not recover the document. No substitute authority used.
-Supply a valid official download URL or an official copy with its original URL.
+User resolved source identity: official SZSE notice dated 2023-02-17,
+深证上〔2023〕98号, and 2023 Trading Rules. Two official listing announcements
+were successfully retrieved and substantiate 2023-04-10. The supplied notice
+and BOTH supplied PDF URLs were retried in a fresh evidence directory and
+returned HTTP 404. Native Windows download of the new stock/ PDF also returned
+404. PDF_SHA256 is unavailable. Do not hash an error page as the rule PDF.
 
-Recovered SSE sources and all failures/checksums remain outside Git in
-market-rules-20260911. Remaining market-rule audit is not declared PASS merely
-because implementation tests pass. Do not materialize until preflight passes.
+Smallest required input: attach the original official rule PDF and notice copy
+(downloaded by the user), retaining their source URLs. No different provider or
+methodology decision requested. Source identity resolved; actual bytes unavailable.
 
-DOCKER_RUNTIME_FAILURE = RESOLVED (services verified after recovery).
-PUSH_IDENTITY_MISMATCH = RESOLVED; permanent identity MakenzieAhern.
-Legacy BaoStock acceptance recovery is not a blocker.
+DOCKER_RUNTIME_FAILURE = RESOLVED.
+PUSH_IDENTITY_MISMATCH = RESOLVED; MakenzieAhern unchanged.
+Prior seven source authority PASS decisions preserved.
