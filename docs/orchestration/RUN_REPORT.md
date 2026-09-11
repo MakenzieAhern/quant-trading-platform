@@ -3,20 +3,28 @@
 ## Active R2 recovery continuation
 
 STATUS = RUNNING; HUMAN_APPROVAL_REQUIRED = NO. Prior stop below superseded.
-Independent queue continues through per-security failures; 600070 = PENDING_RETRY.
+Independent queue continues through per-security failures; 600070 = UNRESOLVED_REQUIRED_DATA.
 Three same-construction SSE controls succeeded, 382 rows each. No fallback is in
 the current accepted OHLCV manifest; no new exclusion policy is introduced.
-At this checkpoint: 506 securities partitioned, 187,372 raw rows, 1,195 factor rows;
+At this checkpoint: 655 securities partitioned, 243,309 raw rows, 1,560 factor rows;
 quality failures 0, final publication NO. Periodic counts are checkpoint snapshots,
 not final-universe acceptance. External pilot-akshare-20260911/recovery-checkpoint.json
 and partition-checkpoint.json retain current counts and exact file hashes.
 First acquisition pass completed all 5,178 members: 504 completed, 4,674 pending.
-Round 1 is now RUNNING against the pending set; bounded retries are not yet
-exhausted. No dataset publication or full R3 audit is claimed. The latest
-additional completion, 300750, reused accepted raw/factor sample snapshots; it
+Round 1 completed all 4,674 pending members and recovered 151 additional inputs.
+Final round 2 is RUNNING after the fixed 60-second backoff for the remaining 4,523
+members; the full queue's retries are not yet exhausted. No dataset publication or full R3 audit
+is claimed. The last first-pass completion, 300750, reused accepted raw/factor sample snapshots; it
 does not establish a new live network recovery.
-Round-1 progress snapshot: 348 / 4,674 processed, two additional primary recoveries
-(600419 and 600420, each 382 rows). 4,672 inputs remain pending.
+Round-1 result: 4,674 / 4,674 processed, 151 additional primary recoveries.
+The first two were 600419 and 600420, each 382 rows. 4,523 inputs entered final retry.
+600070 exhausted its last authorized request at 2026-09-11T08:29:25.145713Z;
+RemoteDisconnected before HTTP response, recorded at 08:29:26.078749Z. Actual
+requests total five (three prior client diagnostics and two new recovery slots).
+Its terminal classification is UNRESOLVED_REQUIRED_DATA; root cause UNKNOWN.
+No accepted fallback or existing transport-gap exclusion exists. Evidence is in
+600070-recovery-result.json outside Git. No further 600070 request is authorized;
+other securities continue their independent final pass, with final publication barred.
 First-pass milestone bfb89fb26dd39422da14bf2f1eab2e6c1de9637f is pushed;
 CI 34563889226 completed SUCCESS. No PR merge or dataset freeze occurred.
 After recording the source failure at 2026-09-11T05:07:34.160687Z, the Windows
@@ -32,18 +40,20 @@ bytes, at most five attempts with 0.1/0.2/0.4/0.8-second backoff; persistent fai
 still retains the prior checkpoint and temporary bytes. Six focused tests and
 395 backend tests PASS; Ruff, format and strict mypy PASS. R2 resumed from the
 preserved round-1 checkpoint, not from zero.
+Checkpoint-fix milestone b1be221fc793642be07356cbf98764011a34eb08 is pushed;
+CI 34565166603 completed SUCCESS. The active recovery worker uses this fix.
 The scheduler now uses two workers with two-second inter-batch pacing and a
 20-second cooldown after ten consecutive failed batches. Three fixed rounds,
 30/60-second round backoff, no jitter; no repeated failed request on restart.
 Original failure evidence remains untouched. Backend 395 tests PASS; Ruff,
 format and strict mypy PASS. Request construction comparison is external
 request-comparison.json; no proxy, standard Python-urllib/3.12 header, 35s timeout.
-The next budgeted 600070 request used the standard requests 2.34.2 Session on
+The earlier budgeted 600070 request used the standard requests 2.34.2 Session on
 the same accepted URL at 2026-09-11T01:54:36.190841+00:00. It also closed before
 HTTP response (ConnectionError wrapping RemoteDisconnected). This consumes the
 round-1 recovery slot; it is not an additional provider or a repeated slot.
-Three prior diagnostic requests plus this request = four actual requests; the
-round-2 slot remains for the final retry pass. Root cause remains UNKNOWN.
+At that point, three prior diagnostic requests plus this request made four actual
+requests; the round-2 slot subsequently failed as recorded above. Root cause remains UNKNOWN.
 Five focused ingestion tests PASS, including physical checksum repeatability,
 lost-receipt reconstruction and detection of modified partition bytes.
 Recovery-test milestone 6cf7623c05844559540af76d5b3f71af1a9233f5 is pushed to the
