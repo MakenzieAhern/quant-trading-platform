@@ -3,8 +3,8 @@ from decimal import Decimal
 
 import pytest
 
-from scripts.materialize_akshare_partitions import normalized_bars
-from scripts.reconcile_sse_cninfo import sha
+from scripts.materialize_akshare_partitions import materialize, normalized_bars
+from scripts.reconcile_sse_cninfo import save, sha
 from scripts.stage_akshare_pilot import pilot_members, raw_url, snapshot, stage_one
 
 
@@ -111,3 +111,56 @@ def test_pilot_inventory_retains_delisted_and_rejects_future_ipo_and_mutation(tm
     assert "fqt=0&secid=1.600070" in raw_url("SSE", "600070")
     with pytest.raises(ValueError, match="INVALID_REQUEST_IDENTITY"):
         raw_url("OTHER", "600070")
+
+
+def test_partial_partitions_resume_repeatably_and_reject_changed_bytes(tmp_path, monkeypatch):
+    import pyarrow.parquet as parquet
+
+    sid = "CN-A:SSE:600004"
+    member = dict(
+        security_id=sid,
+        symbol="600004",
+        exchange="SSE",
+        listing_date="2000-01-01",
+        delisting_date="",
+    )
+    monkeypatch.setattr("scripts.materialize_akshare_partitions.pilot_members", lambda _: [member])
+    save(
+        tmp_path / "sse-st-pilot/completeness-20260910/calendar/pilot-sessions.json", ["2023-01-03"]
+    )
+    raw = tmp_path / "raw.json"
+    save(raw, dict(data=dict(code="600004", klines=["2023-01-03,10,10.5,11,9,123,12300,0,0,0,0"])))
+    factor = tmp_path / "factor.js"
+    factor.write_bytes(
+        b'var sh600004hfq={"total":2,"data":'
+        b'[{"d":"2000-01-01","f":"2"},{"d":"2025-01-01","f":"4"}]};'
+    )
+    root = tmp_path / "pilot-akshare-20260911"
+    save(
+        root / "recovery-checkpoint.json",
+        dict(
+            completed={
+                sid: dict(
+                    raw_path=raw.name,
+                    raw_sha256=sha(raw.read_bytes()),
+                    factor_path=factor.name,
+                    factor_sha256=sha(factor.read_bytes()),
+                )
+            }
+        ),
+    )
+    first = materialize(tmp_path)
+    receipt = (root / "partition-checkpoint.json").read_bytes()
+    assert first["securities_partitioned"] == 1 and not first["published"]
+    assert materialize(tmp_path) == first
+    assert (root / "partition-checkpoint.json").read_bytes() == receipt
+    factors = root / "dataset-staging/SSE/600004/factors.parquet"
+    rows = parquet.read_table(factors).to_pylist()
+    assert [row["effective_from"] for row in rows] == ["2000-01-01"]
+    # A lost receipt can be rebuilt without changing the physical partition hashes.
+    (root / "partition-checkpoint.json").unlink()
+    assert materialize(tmp_path) == first
+    assert (root / "partition-checkpoint.json").read_bytes() == receipt
+    factors.write_bytes(b"changed")
+    with pytest.raises(ValueError, match="PARTITION_BYTES_CHANGED"):
+        materialize(tmp_path)

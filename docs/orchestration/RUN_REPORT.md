@@ -6,16 +6,26 @@ STATUS = RUNNING; HUMAN_APPROVAL_REQUIRED = NO. Prior stop below superseded.
 Independent queue continues through per-security failures; 600070 = PENDING_RETRY.
 Three same-construction SSE controls succeeded, 382 rows each. No fallback is in
 the current accepted OHLCV manifest; no new exclusion policy is introduced.
-At this checkpoint: 190 securities partitioned, 69,240 raw rows, 395 factor rows;
+At this checkpoint: 346 securities partitioned, 127,577 raw rows, 792 factor rows;
 quality failures 0, final publication NO. Periodic counts are checkpoint snapshots,
 not final-universe acceptance. External pilot-akshare-20260911/recovery-checkpoint.json
 and partition-checkpoint.json retain current counts and exact file hashes.
 The scheduler now uses two workers with two-second inter-batch pacing and a
 20-second cooldown after ten consecutive failed batches. Three fixed rounds,
 30/60-second round backoff, no jitter; no repeated failed request on restart.
-Original failure evidence remains untouched. Backend 393 tests PASS; Ruff,
+Original failure evidence remains untouched. Backend 394 tests PASS; Ruff,
 format and strict mypy PASS. Request construction comparison is external
 request-comparison.json; no proxy, standard Python-urllib/3.12 header, 35s timeout.
+The next budgeted 600070 request used the standard requests 2.34.2 Session on
+the same accepted URL at 2026-09-11T01:54:36.190841+00:00. It also closed before
+HTTP response (ConnectionError wrapping RemoteDisconnected). This consumes the
+round-1 recovery slot; it is not an additional provider or a repeated slot.
+Three prior diagnostic requests plus this request = four actual requests; the
+round-2 slot remains for the final retry pass. Root cause remains UNKNOWN.
+Five focused ingestion tests PASS, including physical checksum repeatability,
+lost-receipt reconstruction and detection of modified partition bytes.
+
+## Preserved prior checkpoint (superseded by active R2 recovery above)
 
 RUN_ID = 20260911-R1-R2-07
 START_SHA = 14c9f8c4c5a616442775d070f26aa34e858785e6
