@@ -18,7 +18,7 @@ controller state, not a background scheduler or an authorization bypass.
 R3 audits: SURVIVORSHIP, FUTURE_IPO, DELISTING_RETENTION, LOOK_AHEAD,
 ST_POINT_IN_TIME, STABLE_ID, OHLC_VALIDITY, TRADING_CALENDAR,
 ADJUSTMENT_SEPARATION, ADJUSTMENT_TEMPORAL_SAFETY, SUSPENSION_HANDLING,
-BENCHMARK_ALIGNMENT, CHECKSUM_REPEATABILITY, INPUT_ORDER_REPRODUCIBILITY,
+BENCHMARK_ALIGNMENT, MARKET_RULE_RESOLUTION, CHECKSUM_REPEATABILITY, INPUT_ORDER_REPRODUCIBILITY,
 RESUME_RESTART. Report securities by exchange, sessions, bars/raw rows, adjustment
 rows, benchmark rows, failures, missing/rejected rows, ST/*ST/suspension observations.
 Missing counts are UNKNOWN, never invented zeroes.

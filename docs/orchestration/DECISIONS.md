@@ -1,5 +1,26 @@
 # Decisions
 
+- 2026-09-11 source-recovery decision supersedes the original-PDF requirement.
+  Historical locations return 404 in automated and user normal-browser access;
+  classify them SOURCE_LOCATION_RETIRED_OR_UNAVAILABLE, never SOURCE_CONTENT_INVALID.
+  Exact retired URLs are in docs/research/SZSE_RULE_CLAIMS.json. No retry this run.
+  Accept reproducible rule-level evidence from accessible official SZSE materials;
+  do not use mirrors or fabricate downloads. All four alternatives downloaded.
+  Technical PDF p18 proves 2023-04-10 implementation; later notice proves publication
+  2023-02-17 / 深证上〔2023〕98号 and 2026-07-06 supersession. It supplies identity,
+  never 2026 behavior. Investor guidance retains its proper source classification.
+  Preserve snapshots outside Git and per-source hashes/claim mapping inside Git.
+
+- 2026-09-11 semantic review: source recovery exposed an execution-methodology
+  mismatch, not just missing source bytes. Existing MARKET-at-next-open is not an
+  exchange MARKET submission at opening auction. Ask for explicit limit/auction
+  convention decision before materially changing that assumption. No decision has
+  yet been received. Do not infer auction liquidity from daily OHLCV. No studies.
+  Rule .5 corrects only preceding-regime identity/IPO classification; existing
+  first-session no-fill preserved. A 2015 yearbook under a 2023 URL is rejected for
+  Pilot fees; 0.0003 commission is a model assumption, not statutory rate. The
+  0.00001 transfer-fee claim remains open, not fabricated or silently zeroed.
+
 - 2026-09-11 user source resolution: intended SZSE source is the 2023 revision,
   publication 2023-02-17, 深证上〔2023〕98号, effective 2023-04-10, not publication
   day. The supplied April 10/11 official listing pages were retrieved and agree.

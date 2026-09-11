@@ -1,31 +1,39 @@
 # Current state
 
-R1 BLOCKED: SZSE_2023_RULE_BYTES_UNAVAILABLE. Not Gate A.
-User source identity resolution recorded. Official notice publication:
-2023-02-17, 深证上〔2023〕98号. Actual effective date: 2023-04-10, verified
-against both successfully downloaded official SZSE listing announcement pages.
-The notice and both supplied PDF URLs still returned 404, including native
-Windows retrieval of the alternative. No PDF hash or full source PASS invented.
+R1 AWAITING_HUMAN: PILOT_EXECUTION_CONVENTION_DECISION_REQUIRED. Not Gate A.
+Original SZSE PDF dependency RETIRED by the user's source-recovery decision.
+Do not retry the three retired URLs or ask the user to download them again.
 
-Rule version cn-a-2010-2025.4 now versions BOTH SZSE Main and ChiNext at
-2023-04-10. Pre-boundary rules retained; numerical ChiNext limits unchanged.
-Regression covers 2023-04-07/10/11/12, publication day, ages 0/4/5, NORMAL/ST/
-STAR_ST, suspension, lots, ticks, stamp-duty transition, and reverse/prefix
-rule input without future leakage. Backend 354 PASS; lint/format/strict mypy PASS.
-Previous frontend baseline 74 PASS; current GitHub CI verified after publication.
+14 accessible official SZSE sources preserved, including all four supplied
+alternatives. Publication 2023-02-17 / 深证上〔2023〕98号 verified from the later
+official notice; implementation 2023-04-10 verified from technical PDF page 18.
+Later-version behavior is NOT applied to the Pilot. Handbook PDF pages 21-22
+(printed 33-36) visually reviewed. Preceding 2021 rule PDF recovered too.
 
-MARKET_RULE = PARTIAL; SOURCE_AUTHORITY_PREFLIGHT = FAIL.
-Other seven accepted authorities remain PASS, without reacquisition.
-Docker recovery remains PASS; no runtime repair or data deletion this turn.
-Branch feature/a-share-research-v1.1, identity MakenzieAhern, PR #12 unmerged.
-Starting HEAD 54f788d072f9e4f1553f2222157bfefe7e39435d.
+Git ledger: docs/research/SZSE_RULE_CLAIMS.json, 28 claims, 12 explicitly unclosed.
+Backend 356 PASS; Ruff/format/strict mypy PASS. Tests are NOT authority acceptance.
+Version .5 identifies preceding Main rules and distinguishes the first IPO
+session from ordinary 10%, retaining the existing first-day no-fill.
 
-External evidence: /home/yuchen/data/research/staging/market-rules-user-resolution-20260911
-Rule manifest: cc582b47330923d331e48deb9e3a0818e1d9b2a3e439fa9fbe6315625e85bdce
-Normalized rules: 24af13b14402931fc569b8d72c5c95bacbb2b00ae5d004c5c322aa1d5c12cd3b
-Source preflight: 9ceacf24b3ab83007bf8bdba4cee8f7ebb06d66d4d6b63391f9ec13a12ee7ed7
+Actual code review found MARKET orders filled at next daily open, although SZSE
+accepts MARKET only in continuous auction for price-limited securities. Daily open
+may itself be a resumed/continuous first trade, not proof of opening-auction fill.
+Quantity caps, tick rounding, expiry, intraday phase/status and relisting handling
+must close under an explicit execution convention, not be declared immaterial.
+Transfer-fee 0.00001 provenance remains incomplete under official-SZSE-only scope;
+the retrieved candidate yearbook is actually 2015 and is not Pilot fee evidence.
 
-Next input: original official PDF/notice files with source URLs, not another
-confirmation of already known URLs. Then validate provenance and finish R1;
-R2/R3 remain conditional on PASS. Dataset not created/audited/frozen.
-No Development, Validation, OOS, strategy performance, merge or release.
+Next human decision: approve an explicitly specified conservative limit/auction
+execution convention replacing MARKET-at-open, or retain the current convention
+and remain blocked. Approval alone does not grant PASS: implementation, evidence
+gaps and regression checks must still close before R2/R3.
+
+All seven accepted data authorities preserved; MARKET_RULE PARTIAL, preflight FAIL.
+Docker, PostgreSQL, Redis, backend/API200 and frontend5173/200 verified healthy.
+Branch feature/a-share-research-v1.1; MakenzieAhern; PR12 open/unmerged.
+Dataset not created/audited/frozen. No Development, Validation, OOS or strategy run.
+
+External staging: market-rule-claims-20260911
+Rule ledger canonical SHA256: 6dac2bab94829a6f726f76a185309e5ebca752c285e11d1fc31cc2ae011b81f2
+Normalized rules SHA256: a2910f18646d8670feeb52dcf4af7b593f6f988e880b8cc95d1959dfd4a2b625
+Preflight SHA256: 73030b9314c9ed4582c7c0526c92872bb13b39e359d725a09a58c7792933a92e

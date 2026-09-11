@@ -75,11 +75,24 @@ _PERIODS = (
         Exchange.SZSE,
         Board.SZSE_MAIN,
         date(2010, 1, 1),
-        date(2023, 4, 9),
+        date(2021, 4, 5),
         "0.10",
         "0.05",
         0,
         conservative_listing_sessions=1,
+    ),
+    _BoardPeriod(
+        Exchange.SZSE,
+        Board.SZSE_MAIN,
+        date(2021, 4, 6),
+        date(2023, 4, 9),
+        "0.10",
+        "0.05",
+        1,
+        conservative_listing_sessions=1,
+        source="SZSE Trading Rules (2021 March revision), SZSE [2021] No. 337",
+        published=date(2021, 3, 31),
+        note="IPO first session is not ordinary 10%; separate first-day controls: no fill",
     ),
     _BoardPeriod(
         Exchange.SZSE,
@@ -150,7 +163,7 @@ def historical_cn_a_rules() -> TradingRuleVersion:
     rules = [rule for period in _PERIODS for rule in _split_by_cost(period)]
     for symbol in ("300090", "300156", "300216"):
         rules.append(_transitional_delisting_exception(symbol))
-    return TradingRuleVersion(version="cn-a-2010-2025.4", rules=tuple(rules))
+    return TradingRuleVersion(version="cn-a-2010-2025.5", rules=tuple(rules))
 
 
 def _split_by_cost(period: _BoardPeriod) -> tuple[TradingRuleSet, ...]:

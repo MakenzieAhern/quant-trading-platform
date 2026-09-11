@@ -257,7 +257,7 @@ def test_main_board_registration_uses_effective_date_not_publication_date() -> N
         after = next(
             r for r in version.rules if r.board == board and r.applies_on(date(2023, 4, 10))
         )
-        assert before.ipo_no_limit_sessions == 0
+        assert before.ipo_no_limit_sessions == (1 if board == Board.SZSE_MAIN else 0)
         assert before.conservative_no_fill_listing_sessions == 1
         assert after.ipo_no_limit_sessions == 5
         assert after.source_publication_date == date(2023, 2, 17)
@@ -313,7 +313,9 @@ def test_szse_2023_boundary_status_lots_costs_and_no_future_rule_leakage() -> No
                             }
                         )
                         assert resolved == TradingRuleResolver(prefix).resolve(**args)
-                        unlimited = age < 5 and (board == Board.SZSE_CHINEXT or day >= boundary)
+                        unlimited = age == 0 or (
+                            age < 5 and (board == Board.SZSE_CHINEXT or day >= boundary)
+                        )
                         rate = (
                             "0.20"
                             if board == Board.SZSE_CHINEXT
