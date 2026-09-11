@@ -125,7 +125,7 @@ def test_secondary_recovery_retains_provider_lineage_without_touching_primary(
     assert result["status"] == "PRIMARY_FAILED_SECONDARY_RECOVERED"
     assert result["raw_rows"] == 1
     assert result["underlying_source"] == "Tencent"
-    assert len(result["sources"]) == 2
+    assert len(result["sources"]) == 1
     assert not (tmp_path / "pilot-akshare-20260911/recovery-checkpoint.json").exists()
     content = json.loads((tmp_path / result["raw_path"]).read_bytes())
     assert content["rows"][0]["amount"] == "110000.00"

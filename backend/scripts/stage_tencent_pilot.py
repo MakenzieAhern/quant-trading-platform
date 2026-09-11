@@ -91,7 +91,9 @@ def recover(
         if member["board"] not in {"SSE_MAIN", "SSE_STAR", "SZSE_MAIN", "SZSE_CHINEXT"}:
             raise ValueError("UNACCEPTED_BOARD_NORMALIZATION")
         parts, sources = [], []
-        for year in (2023, 2024):
+        # This SDK query spans 2023-01-01..2024-12-31, encompassing the full Pilot.
+        # The second year query was identical across 260 recovered histories.
+        for year in (2023,):
             name = f"{symbol}-{year}.json"
             candidates = [
                 staging / "raw-failover-v1" / folder / f"{symbol}-{year}-1.json"

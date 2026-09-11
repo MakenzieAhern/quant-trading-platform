@@ -17,6 +17,14 @@ Policy, consumer and primary-checkpoint hashes are checked before acquisition.
 Only persisted round2 RemoteDisconnected primary failures are scheduled in this
 current recovery state. There is no primary network request in the new command.
 
+The2023 SDK query spans2023-01-01..2024-12-31, already encompassing the full Pilot.
+Offline comparison of260 recovered histories proved its normalized rows identical
+to the two-query merge for every security. New requests omit the redundant2024
+query; all existing two-query evidence remains untouched. This reduces requests,
+not coverage, retry bounds, validation or source authority. The retrieval worker
+was stopped in its two-second inter-batch wait immediately after a complete
+checkpoint replacement, then resumed from that checkpoint.
+
 Two workers, two-second inter-batch spacing,35-second request timeout, one initial
 and one final transport-only retry round with60-second backoff; no jitter or
 access-denial bypass. Failed request slots remain immutable and preserve retry
