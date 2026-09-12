@@ -1,5 +1,20 @@
 # Decisions
 
+## 2026-09-12 UTC: human rights entitlement classification V2 implemented
+
+Approval receipt: .research/approvals/rights-entitlement-classification-v2.json.
+Standard direct subscription is separate from entitlement tradability; NOT_EVIDENCED
+is not non-tradable and does not alone block no-subscription/no-monetization accounting.
+000960 source structure/effective date reverified; former exact blocker RESOLVED.
+Four standard complete events,144 material-source unresolved; census remains PARTIAL.
+No incomplete provider row was promoted simply because policy changed.
+Full-history safety review now stops on600003/2010-02-26 mandatory demerger:
+successor cost allocation/intervening valuation convention not approved. No automatic
+election, synthetic no-effect treatment or exclusion. Required human gate is
+R5_DEMERGER_ACCOUNTING_POLICY, not rights tradability and not dataset freeze.
+R4v2/Pilotv2 and prior authorities unchanged; no formal studies/merge/release.
+See ../research/RIGHTS_ENTITLEMENT_V2_CHECKPOINT.md for evidence and test results.
+
 ## 2026-09-12 UTC: human rights-decline convention implemented; event scope remains fail-closed
 
 Latest approval pins CN_A_RIGHTS_ISSUE_POLICY_V1 / DECLINE_SUBSCRIPTION. Preserve

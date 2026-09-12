@@ -35,7 +35,7 @@ def test_incomplete_rights_issue_never_silently_subscribes_or_forfeits() -> None
         source_record_hash="eacae9cd6c9060ca1739dd5e22129c345daf3461b1e36e30dd4d144b4bb9e141",
         completeness=CorporateActionCompleteness.COMPLETE,
     )
-    with pytest.raises(PortfolioError, match="RIGHTS_EVENT_UNSUPPORTED_VARIANT"):
+    with pytest.raises(PortfolioError, match="EVENT_IDENTITY_UNRESOLVED"):
         portfolio.apply_corporate_action(symbol, action, START + timedelta(days=2))
     after = portfolio.mark_to_market(make_bar(2, "15", symbol=symbol))
     assert after.cash == before.cash

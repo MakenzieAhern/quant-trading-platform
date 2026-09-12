@@ -34,6 +34,23 @@ class RightsVariant(StrEnum):
     UNUSUAL_INSTRUMENT = "UNUSUAL_INSTRUMENT"
 
 
+class RightsEventClass(StrEnum):
+    STANDARD_DIRECT_SUBSCRIPTION_RIGHTS_ISSUE = "STANDARD_DIRECT_SUBSCRIPTION_RIGHTS_ISSUE"
+    SEPARATELY_LISTED_TRADABLE_RIGHT = "SEPARATELY_LISTED_TRADABLE_RIGHT"
+    TRANSFERABLE_RIGHTS_INSTRUMENT = "TRANSFERABLE_RIGHTS_INSTRUMENT"
+    MANDATORY_CONVERSION = "MANDATORY_CONVERSION"
+    CASH_SETTLED_RIGHT = "CASH_SETTLED_RIGHT"
+    AUTOMATIC_COMPENSATION = "AUTOMATIC_COMPENSATION"
+    RIGHTS_WITH_SEPARATE_MARKET_PRICE = "RIGHTS_WITH_SEPARATE_MARKET_PRICE"
+    OTHER_NONSTANDARD_RIGHTS_INSTRUMENT = "OTHER_NONSTANDARD_RIGHTS_INSTRUMENT"
+
+
+class EntitlementTradability(StrEnum):
+    TRADABLE_CONFIRMED = "TRADABLE_CONFIRMED"
+    NON_TRADABLE_CONFIRMED = "NON_TRADABLE_CONFIRMED"
+    NOT_EVIDENCED = "NOT_EVIDENCED"
+
+
 class CorporateAction(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -53,6 +70,8 @@ class CorporateAction(BaseModel):
     subscription_deadline: date | None = None
     eligible_share_basis: PositiveDecimal | None = None
     rights_variant: RightsVariant | None = None
+    rights_event_class: RightsEventClass | None = None
+    entitlement_tradability: EntitlementTradability = EntitlementTradability.NOT_EVIDENCED
     source_document: str | None = Field(default=None, min_length=1)
     source_url: str | None = Field(default=None, pattern=r"^https://\S+$")
     source_document_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
@@ -74,8 +93,8 @@ class CorporateAction(BaseModel):
             raise ValueError("complete corporate actions require an ex-date")
         return self
 
-    def rights_issues(self) -> tuple[str, ...]:
-        """Preserve incomplete/contradictory evidence, but never admit it as standard."""
+    def rights_metadata_gaps(self) -> tuple[str, ...]:
+        """Metadata completeness is independent of no-subscription accounting safety."""
         required = (
             "announcement_date",
             "effective_date",
@@ -92,11 +111,31 @@ class CorporateAction(BaseModel):
             "source_document_sha256",
             "retrieved_at",
         )
+        return tuple(f"MISSING_{name.upper()}" for name in required if getattr(self, name) is None)
+
+    def rights_issues(self) -> tuple[str, ...]:
+        """Material identity/order/provenance only; tradability is not a policy gate."""
+        required = (
+            "ex_date",
+            "effective_date",
+            "source_document",
+            "source_url",
+            "source_document_sha256",
+            "retrieved_at",
+        )
         issues = [f"MISSING_{name.upper()}" for name in required if getattr(self, name) is None]
-        if self.rights_variant is not RightsVariant.ORDINARY_NON_TRADABLE:
-            issues.append("NON_STANDARD_OR_UNKNOWN_VARIANT")
-        if self.completeness is not CorporateActionCompleteness.COMPLETE:
-            issues.append("INCOMPLETE_EVENT")
+        if self.rights_event_class is None:
+            issues.append("EVENT_STRUCTURE_NOT_ESTABLISHED")
+        elif (
+            self.rights_event_class
+            is not RightsEventClass.STANDARD_DIRECT_SUBSCRIPTION_RIGHTS_ISSUE
+        ):
+            issues.append("EXPLICIT_UNSUPPORTED_VARIANT")
+        # Preserve legacy explicit variant evidence; never silently overwrite it.
+        if self.rights_variant not in (None, RightsVariant.ORDINARY_NON_TRADABLE):
+            issues.append("EXPLICIT_UNSUPPORTED_VARIANT")
+        if self.completeness is CorporateActionCompleteness.UNSUPPORTED:
+            issues.append("EXPLICIT_UNSUPPORTED_VARIANT")
         if self.share_ratio is not None and self.share_ratio <= 0:
             issues.append("NON_POSITIVE_RATIO")
         if self.cash_per_share != 0:
@@ -126,6 +165,20 @@ class CorporateAction(BaseModel):
         ):
             issues.append("CONTRADICTORY_LISTING_DATE")
         return tuple(issues)
+
+    @property
+    def rights_classification(self) -> str:
+        issues = self.rights_issues()
+        if "EXPLICIT_UNSUPPORTED_VARIANT" in issues:
+            return "EXPLICIT_UNSUPPORTED_VARIANT"
+        if issues:
+            return "EVENT_IDENTITY_UNRESOLVED"
+        if (
+            self.rights_metadata_gaps()
+            or self.completeness is not CorporateActionCompleteness.COMPLETE
+        ):
+            return "STANDARD_PARTIAL_BUT_ACCOUNTING_SAFE"
+        return "STANDARD_COMPLETE"
 
     @property
     def event_checksum(self) -> str:
@@ -159,9 +212,12 @@ def corporate_action_sort_key(action: CorporateAction) -> tuple[date, str, int, 
 def require_supported_corporate_action(action: CorporateAction) -> None:
     if action.action_type is CorporateActionType.RIGHTS_RELATED_EVENT:
         if issues := action.rights_issues():
-            raise ValueError(
-                f"RIGHTS_EVENT_UNSUPPORTED_VARIANT:{action.security_id}:{action.ex_date}:{','.join(issues)}"
+            code = (
+                "RIGHTS_EVENT_UNSUPPORTED_VARIANT"
+                if "EXPLICIT_UNSUPPORTED_VARIANT" in issues
+                else "EVENT_IDENTITY_UNRESOLVED"
             )
+            raise ValueError(f"{code}:{action.security_id}:{action.ex_date}:{','.join(issues)}")
         return
     if action.completeness is not CorporateActionCompleteness.COMPLETE:
         raise ValueError("unsupported or incomplete corporate action")

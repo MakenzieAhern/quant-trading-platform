@@ -1,0 +1,14 @@
+{
+  "decision": "HUMAN_METHODOLOGY_DECISION_RIGHTS_ENTITLEMENT_CLASSIFICATION_V2",
+  "source_attachment": "f939025a-7742-41e5-b6e7-1e19b06df3ed/pasted-text.txt",
+  "source_sha256": "fab4289695ab44dc82e9897976bfc7c90bf440a7d112beb252d4380658013491",
+  "recorded_at_utc": "2026-09-12T23:19:44Z",
+  "rights_issue_policy": "CN_A_RIGHTS_ISSUE_POLICY_V1",
+  "rights_entitlement_policy": "NO_SUBSCRIPTION_NO_MONETIZATION_V1",
+  "rights_issue_participation": "DECLINE_SUBSCRIPTION",
+  "tradability_not_evidenced_alone_blocks_accounting": false,
+  "explicit_material_instrument_variants_fail_closed": true,
+  "formal_studies_authorized": false,
+  "full_dataset_freeze_authorized": false,
+  "merge_authorized": false
+}

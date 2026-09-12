@@ -1,5 +1,29 @@
 # Current state
 
+## Current: rights entitlement V2 PASS; material demerger methodology STOP
+
+Human V2 separates event structure, tradability evidence and portfolio policy.
+CN_A_RIGHTS_ISSUE_POLICY_V1 / NO_SUBSCRIPTION_NO_MONETIZATION_V1 implemented.
+000960/2010-01-27 verified STANDARD_DIRECT_SUBSCRIPTION_RIGHTS_ISSUE;
+tradability NOT_EVIDENCED; prior exact rights blocker RESOLVED.
+148 events reprocessed:4 STANDARD_COMPLETE,0 STANDARD_PARTIAL_BUT_ACCOUNTING_SAFE,
+0 EXPLICIT_UNSUPPORTED_VARIANT,144 EVENT_IDENTITY_UNRESOLVED source-work queue.
+20 independently identified occurrences match provider records; full census PARTIAL,
+not zero unexplained differences. No source backlog is re-labelled a tradability decision.
+R5 safety review confirms600003/2010-02-26 one-parent/two-successor demerger.
+SINGLE_SMALLEST_BLOCKER=DEMERGER_ACCOUNTING_POLICY_UNAPPROVED:CN-A:SSE:600003:2010-02-26.
+Required methodology: successor historical cost allocation and intervening valuation.
+HUMAN_APPROVAL_GATE=R5_DEMERGER_ACCOUNTING_POLICY; HUMAN_APPROVAL_REQUIRED=YES.
+472 backend/78 frontend tests PASS; replay/Ruff/mypy PASS.
+R4v2 PASS with0 actual fills; no rerun, strategy changes or profitability review.
+Frozen Pilotv2/accepted authorities unchanged; full2010-2025 CREATED/AUDITED/FROZEN=NO.
+Safe start NOT_ESTABLISHED; no formal studies, merge or release. No worker running.
+Report: ../research/RIGHTS_ENTITLEMENT_V2_CHECKPOINT.md;
+machine report: .research/reports/r5-rights-entitlement-v2.json.
+
+## Historical checkpoints below (superseded)
+
+
 ## Current: rights policy engineering PASS; R5 exact event-evidence STOP
 
 CN_A_RIGHTS_ISSUE_POLICY_V1 / DECLINE_SUBSCRIPTION approved and implemented.

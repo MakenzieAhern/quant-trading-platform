@@ -1,5 +1,5 @@
 {
-  "version": "RIGHTS_SOURCE_REVIEW_V1",
+  "version": "RIGHTS_SOURCE_REVIEW_V2",
   "status": "PARTIAL_NOT_FULL_AUTHORITY",
   "selection_policy": "600036 required; earliest target SZSE Main; earliest target ChiNext; latest target event. No STAR event found in this provider inventory, not proof of absence. No performance-based selection.",
   "sources": [
@@ -110,6 +110,12 @@
       "url": "https://static.cninfo.com.cn/finalpage/2010-03-15/57687453.PDF",
       "sha256": "30bc1e988f87036b3cd82940062d26756939524e44ee84a3bc4d1794491e2057",
       "retrieved_at_utc": "2026-09-12T15:54:13.695639+00:00"
+    },
+    {
+      "path": "../full-corporate-action-preflight-v1/official/sse-2011-factbook-rights.pdf",
+      "url": "https://www.sse.com.cn/aboutus/publication/factbook/documents/c/10170571/files/f43f33c247f242d48780c3097548281b.pdf",
+      "sha256": "77e4d1f8024f47456a608c119f2e634e3936f5ae1c245f4aefa45ba59f0d0bbe",
+      "retrieved_at_utc": "2026-09-12T14:29:02.580192+00:00"
     }
   ],
   "events": {
@@ -145,12 +151,15 @@
         "listing_date": null,
         "completeness": "COMPLETE",
         "source_provider": "official-issuer-CNINFO-review",
-        "source_version": "rights-source-review-v1",
+        "source_version": "rights-source-review-v2",
         "source_document": "600036-issuance.pdf",
         "source_url": "https://static.cninfo.com.cn/finalpage/2010-03-02/57640257.PDF",
         "source_document_sha256": "621b8089d90d72d54eba804ec5e9bb77ec7343deaf3dbc55432307a3a5fef928",
-        "retrieved_at": "2026-09-12T15:54:10.863798+00:00"
-      }
+        "retrieved_at": "2026-09-12T15:54:10.863798+00:00",
+        "rights_event_class": "STANDARD_DIRECT_SUBSCRIPTION_RIGHTS_ISSUE",
+        "entitlement_tradability": "NON_TRADABLE_CONFIRMED"
+      },
+      "structure_evidence": "Original-holder proportional subscription of ordinary A shares; issuance, result and listing corroboration. NOT_EVIDENCED tradability is not inferred non-tradable."
     },
     "000960.SZ:2010-01-18": {
       "selection": "earliest target SZSE Main event",
@@ -184,14 +193,17 @@
         "eligible_share_basis": "651086660",
         "rights_variant": null,
         "listing_date": null,
-        "completeness": "PARTIAL",
+        "completeness": "COMPLETE",
         "source_provider": "official-issuer-CNINFO-review",
-        "source_version": "rights-source-review-v1",
+        "source_version": "rights-source-review-v2",
         "source_document": "000960-issuance.pdf",
         "source_url": "https://static.cninfo.com.cn/finalpage/2010-01-13/57498926.PDF",
         "source_document_sha256": "d54ceccd9b163bf071f39a13e08d5f755ab0df8fa4a9ae27e5db3dd8341df0b5",
-        "retrieved_at": "2026-09-12T15:50:11.614406+00:00"
-      }
+        "retrieved_at": "2026-09-12T15:50:11.614406+00:00",
+        "rights_event_class": "STANDARD_DIRECT_SUBSCRIPTION_RIGHTS_ISSUE",
+        "entitlement_tradability": "NOT_EVIDENCED"
+      },
+      "structure_evidence": "Original-holder proportional subscription of ordinary A shares; issuance, result and listing corroboration. NOT_EVIDENCED tradability is not inferred non-tradable."
     },
     "300147.SZ:2015-06-09": {
       "selection": "earliest target ChiNext event",
@@ -221,14 +233,17 @@
         "eligible_share_basis": "509573329",
         "rights_variant": null,
         "listing_date": null,
-        "completeness": "PARTIAL",
+        "completeness": "COMPLETE",
         "source_provider": "official-issuer-CNINFO-review",
-        "source_version": "rights-source-review-v1",
+        "source_version": "rights-source-review-v2",
         "source_document": "300147-issuance.pdf",
         "source_url": "https://static.cninfo.com.cn/finalpage/2015-06-04/1201101116.PDF",
         "source_document_sha256": "16fd6102a10c7a932ed3cccd2abe0fe9841518b86e282c2ce4fc62a3736de102",
-        "retrieved_at": "2026-09-12T15:54:17.163890+00:00"
-      }
+        "retrieved_at": "2026-09-12T15:54:17.163890+00:00",
+        "rights_event_class": "STANDARD_DIRECT_SUBSCRIPTION_RIGHTS_ISSUE",
+        "entitlement_tradability": "NOT_EVIDENCED"
+      },
+      "structure_evidence": "Original-holder proportional subscription of ordinary A shares; issuance, result and listing corroboration. NOT_EVIDENCED tradability is not inferred non-tradable."
     },
     "000049.SZ:2023-11-29": {
       "selection": "latest target event in complete retrieved provider pages",
@@ -260,12 +275,46 @@
         "listing_date": null,
         "completeness": "COMPLETE",
         "source_provider": "official-issuer-CNINFO-review",
-        "source_version": "rights-source-review-v1",
+        "source_version": "rights-source-review-v2",
         "source_document": "000049-20231204.pdf",
         "source_url": "https://static.cninfo.com.cn/finalpage/2023-12-04/1218493835.PDF",
         "source_document_sha256": "059798135c68820e4019b8909cac47960c28404841fd15c593d8827da60c8e0d",
-        "retrieved_at": "2026-09-12T15:46:35.814143+00:00"
-      }
+        "retrieved_at": "2026-09-12T15:46:35.814143+00:00",
+        "rights_event_class": "STANDARD_DIRECT_SUBSCRIPTION_RIGHTS_ISSUE",
+        "entitlement_tradability": "NON_TRADABLE_CONFIRMED"
+      },
+      "structure_evidence": "Original-holder proportional subscription of ordinary A shares; issuance, result and listing corroboration. NOT_EVIDENCED tradability is not inferred non-tradable."
     }
+  },
+  "census": {
+    "scope": "SSE record-year 2010 annual table plus four issuer dossiers. Expanded explicit reconciliation ledger, not newly acquired sources or full 2010-2025 census.",
+    "authoritative_event_ids": [
+      "CN-A:SSE:600036:2010-03-04",
+      "CN-A:SSE:600151:2010-07-02",
+      "CN-A:SSE:600303:2010-11-29",
+      "CN-A:SSE:600343:2010-07-13",
+      "CN-A:SSE:600416:2010-08-20",
+      "CN-A:SSE:600425:2010-08-20",
+      "CN-A:SSE:600518:2010-12-27",
+      "CN-A:SSE:600531:2010-12-13",
+      "CN-A:SSE:600584:2010-10-13",
+      "CN-A:SSE:600601:2010-07-01",
+      "CN-A:SSE:600963:2010-12-17",
+      "CN-A:SSE:601009:2010-11-15",
+      "CN-A:SSE:601166:2010-05-24",
+      "CN-A:SSE:601328:2010-06-09",
+      "CN-A:SSE:601398:2010-11-15",
+      "CN-A:SSE:601939:2010-11-04",
+      "CN-A:SSE:601988:2010-11-02",
+      "CN-A:SZSE:000049:2023-11-29",
+      "CN-A:SZSE:000960:2010-01-18",
+      "CN-A:SZSE:300147:2015-06-09"
+    ],
+    "source_path": "../full-corporate-action-preflight-v1/official/sse-2011-factbook-rights.pdf",
+    "url": "https://www.sse.com.cn/aboutus/publication/factbook/documents/c/10170571/files/f43f33c247f242d48780c3097548281b.pdf",
+    "sha256": "77e4d1f8024f47456a608c119f2e634e3936f5ae1c245f4aefa45ba59f0d0bbe",
+    "retrieved_at_utc": "2026-09-12T14:29:02.580192+00:00",
+    "page": 103,
+    "limitation": "Annual table establishes occurrence and record date, not ex-date or complete subscription/suspension structure. Remaining 128 provider occurrences require independent reconciliation; 16 table-only matches still lack material effective-date authority. Other exchange-years not yet certified."
   }
 }

@@ -82,11 +82,10 @@ def normalize(row, source, review=None):
         source_reported_listing_date=row.get("LISTING_DATE"),
         source_reported_announcement_date=row.get("FIRST_NOTICE_DATE"),
         source_issues=source_issues,
-        classification="SUPPORTED_STANDARD_EVENT" if not action.rights_issues() else "UNRESOLVED",
-        safety_classification=None
-        if not action.rights_issues()
-        else "RIGHTS_EVENT_UNSUPPORTED_VARIANT",
+        classification=action.rights_classification,
+        safety_classification=None if not action.rights_issues() else action.rights_classification,
         issues=action.rights_issues(),
+        metadata_gaps=action.rights_metadata_gaps(),
         official_review=review,
         point_in_time_admission="NOT_ADMITTED_FULL_AUTHORITY_PENDING",
     )
@@ -133,13 +132,14 @@ def inventory(pages, review):
         source_pagination="PASS",
         rights_events_total=len(rows),
         securities_with_rights_events=len({row["event"]["security_id"]["value"] for row in rows}),
-        events_with_complete_terms=statuses["SUPPORTED_STANDARD_EVENT"],
-        events_with_incomplete_terms=statuses["UNRESOLVED"],
-        supported_standard_events=statuses["SUPPORTED_STANDARD_EVENT"],
-        unsupported_variants=sum(
-            row["event"]["rights_variant"] not in (None, "ORDINARY_NON_TRADABLE") for row in rows
-        ),
-        unresolved_events=statuses["UNRESOLVED"],
+        classifications=dict(sorted(statuses.items())),
+        events_with_complete_terms=statuses["STANDARD_COMPLETE"],
+        events_with_incomplete_nonessential_terms=statuses["STANDARD_PARTIAL_BUT_ACCOUNTING_SAFE"],
+        events_with_missing_material_terms=statuses["EVENT_IDENTITY_UNRESOLVED"],
+        supported_standard_events=statuses["STANDARD_COMPLETE"]
+        + statuses["STANDARD_PARTIAL_BUT_ACCOUNTING_SAFE"],
+        unsupported_variants=statuses["EXPLICIT_UNSUPPORTED_VARIANT"],
+        unresolved_events=statuses["EVENT_IDENTITY_UNRESOLVED"],
         rows=rows,
     )
 
@@ -162,6 +162,24 @@ def main():
         if sha256_file(args.sources / claim["path"]) != claim["sha256"]:
             raise ValueError("reviewed official evidence checksum mismatch")
     result = inventory(pages, review["events"])
+    census = review.get("census", {})
+    official_ids = set(census.get("authoritative_event_ids", []))
+    provider_ids = {row["event_id"] for row in result["rows"]}
+    result["census"] = {
+        "status": "PARTIAL_NOT_FULL_CENSUS",
+        "provider_rights_events": len(provider_ids),
+        "authoritative_rights_events": len(official_ids),
+        "matched_events": len(official_ids & provider_ids),
+        "provider_missing_events": sorted(official_ids - provider_ids),
+        "authoritative_event_missing_provider_record": len(official_ids - provider_ids),
+        "provider_events_awaiting_authoritative_reconciliation": sorted(
+            provider_ids - official_ids
+        ),
+        "duplicate_events": 0,  # Pagination/economic identity checks above reject duplicates.
+        "conflicting_events": [row["event_id"] for row in result["rows"] if row["source_issues"]],
+        "unexplained_census_differences": None,  # Unsearched exchange-years are not zeroes.
+        "evidence": census,
+    }
     reversed_pages = [
         (
             {**page, "result": {**page["result"], "data": list(reversed(page["result"]["data"]))}},
@@ -169,10 +187,12 @@ def main():
         )
         for page, meta in reversed(pages)
     ]
-    if result != inventory(reversed_pages, review["events"]):
+    if {k: v for k, v in result.items() if k != "census"} != inventory(
+        reversed_pages, review["events"]
+    ):
         raise ValueError("input order changed inventory")
     result.update(
-        parser_version="RIGHTS_INVENTORY_V1",
+        parser_version="RIGHTS_INVENTORY_V2",
         parser_sha256=sha256_file(Path(__file__)),
         event_model_sha256=sha256_file(
             Path(__file__).parents[1] / "app/domain/markets/corporate_actions.py"

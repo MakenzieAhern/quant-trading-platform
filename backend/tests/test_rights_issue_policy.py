@@ -38,6 +38,8 @@ def rights(**updates):
         share_ratio="0.13",
         eligible_share_basis="15658890016",
         rights_variant="ORDINARY_NON_TRADABLE",
+        rights_event_class="STANDARD_DIRECT_SUBSCRIPTION_RIGHTS_ISSUE",
+        entitlement_tradability="NON_TRADABLE_CONFIRMED",
         completeness="COMPLETE",
         source_document="CMB 2010-008; variant corroborated by 57640259 page 36",
         source_provider="issuer-terms-fixture",
@@ -97,15 +99,8 @@ def test_decline_window_and_lapse_preserve_cash_shares_basis_and_raw_marks(holdi
 @pytest.mark.parametrize(
     "field",
     [
-        "announcement_date",
-        "record_date",
-        "subscription_start_date",
-        "subscription_end_date",
-        "subscription_deadline",
-        "subscription_price",
-        "share_ratio",
-        "eligible_share_basis",
-        "rights_variant",
+        "effective_date",
+        "rights_event_class",
         "source_document",
         "source_url",
         "source_document_sha256",
@@ -114,10 +109,92 @@ def test_decline_window_and_lapse_preserve_cash_shares_basis_and_raw_marks(holdi
 )
 def test_missing_terms_fail_closed_even_without_holdings(field):
     action = rights(**{field: None})
+    with pytest.raises(PortfolioError, match="EVENT_IDENTITY_UNRESOLVED"):
+        PortfolioEngine(EventBus(), Decimal(10000)).apply_corporate_action(
+            "600036", action, datetime(2010, 3, 15, tzinfo=UTC)
+        )
+
+
+@pytest.mark.parametrize(
+    "tradability", ["NOT_EVIDENCED", "NON_TRADABLE_CONFIRMED", "TRADABLE_CONFIRMED"]
+)
+def test_standard_structure_is_separate_from_tradability_and_nonessential_metadata(tradability):
+    action = rights(
+        rights_variant=None,
+        entitlement_tradability=tradability,
+        completeness="PARTIAL",
+        announcement_date=None,
+        record_date=None,
+        subscription_price=None,
+        share_ratio=None,
+        subscription_start_date=None,
+        subscription_end_date=None,
+        subscription_deadline=None,
+        eligible_share_basis=None,
+    )
+    assert action.rights_classification == "STANDARD_PARTIAL_BUT_ACCOUNTING_SAFE"
+    assert action.rights_metadata_gaps()
+    portfolio = PortfolioEngine(EventBus(), Decimal(10000))
+    portfolio.apply_fill(
+        make_fill(1, OrderSide.BUY, "100", "15", symbol="600036").model_copy(
+            update={"timestamp": datetime(2010, 3, 4, tzinfo=UTC)}
+        )
+    )
+    before = (portfolio.cash, portfolio.positions)
+    portfolio.apply_corporate_action("600036", action, datetime(2010, 3, 15, tzinfo=UTC))
+    assert (portfolio.cash, portfolio.positions) == before
+
+
+def test_000960_verified_standard_not_evidenced_regression():
+    action = rights(
+        security_id="CN-A:SZSE:000960",
+        announcement_date="2010-01-13",
+        record_date="2010-01-18",
+        ex_date="2010-01-27",
+        effective_date="2010-01-27",
+        subscription_start_date="2010-01-19",
+        subscription_end_date="2010-01-25",
+        subscription_deadline="2010-01-25",
+        subscription_price="8.98",
+        share_ratio="0.24",
+        eligible_share_basis="651086660",
+        rights_variant=None,
+        entitlement_tradability="NOT_EVIDENCED",
+        source_document="000960 issuer 2010-004; result 2010-010",
+        source_url="https://static.cninfo.com.cn/finalpage/2010-01-13/57498926.PDF",
+        source_document_sha256="d54ceccd9b163bf071f39a13e08d5f755ab0df8fa4a9ae27e5db3dd8341df0b5",
+    )
+    assert action.rights_classification == "STANDARD_COMPLETE"
+    assert action.entitlement_tradability == "NOT_EVIDENCED"
+    portfolio = PortfolioEngine(EventBus(), Decimal(10000))
+    portfolio.apply_corporate_action("000960", action, datetime(2010, 1, 27, tzinfo=UTC))
+    assert portfolio.cash == 10000 and portfolio.positions == ()
+
+
+@pytest.mark.parametrize(
+    "kind",
+    [
+        "SEPARATELY_LISTED_TRADABLE_RIGHT",
+        "TRANSFERABLE_RIGHTS_INSTRUMENT",
+        "MANDATORY_CONVERSION",
+        "CASH_SETTLED_RIGHT",
+        "AUTOMATIC_COMPENSATION",
+        "RIGHTS_WITH_SEPARATE_MARKET_PRICE",
+        "OTHER_NONSTANDARD_RIGHTS_INSTRUMENT",
+    ],
+)
+def test_explicit_instrument_structure_never_becomes_standard(kind):
+    action = rights(rights_event_class=kind)
+    assert action.rights_classification == "EXPLICIT_UNSUPPORTED_VARIANT"
     with pytest.raises(PortfolioError, match="RIGHTS_EVENT_UNSUPPORTED_VARIANT"):
         PortfolioEngine(EventBus(), Decimal(10000)).apply_corporate_action(
             "600036", action, datetime(2010, 3, 15, tzinfo=UTC)
         )
+
+
+def test_missing_ex_date_remains_material_even_for_noop():
+    action = rights(ex_date=None, completeness="PARTIAL")
+    assert action.rights_classification == "EVENT_IDENTITY_UNRESOLVED"
 
 
 @pytest.mark.parametrize(

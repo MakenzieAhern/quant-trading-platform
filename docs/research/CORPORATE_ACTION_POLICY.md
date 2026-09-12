@@ -15,12 +15,12 @@ source fields remain null.
 | `CASH_DIVIDEND` | Apply cash per share only when the economic amount and ex-date are complete. |
 | `STOCK_DIVIDEND` | Increase long quantity and reduce per-share cost basis by the exact supplied ratio. |
 | `BONUS_SHARE` | Same share/cost-basis transformation, preserving its distinct source type. |
-| `RIGHTS_RELATED_EVENT` | `CN_A_RIGHTS_ISSUE_POLICY_V1`: decline subscription only for a verified ordinary non-tradable entitlement. |
+| `RIGHTS_RELATED_EVENT` | Verified standard direct subscription: `CN_A_RIGHTS_ISSUE_POLICY_V1` / `NO_SUBSCRIPTION_NO_MONETIZATION_V1`, independent of tradability evidence. |
 | `SPLIT_OR_SHARE_CHANGE` | Unsupported unless explicit source terms are later available. |
 | `MERGER_REORGANIZATION` | Unsupported; preserve successor/election evidence, never map to a no-effect rights event. |
 | `UNKNOWN_UNSUPPORTED` | Persist provenance; block accounting and eligibility. |
 
-Incomplete or unsupported events raise a portfolio error rather than silently altering holdings.
+Materially unresolved or unsupported events raise a portfolio error rather than silently altering holdings.
 Short-position corporate-action accounting is outside this long-only study. The current BaoStock
 endpoint recovered in the preceding checkpoint; dividend-only responses still do not establish
 rights or full corporate-action coverage. Corporate-action readiness remains PARTIAL.
@@ -47,10 +47,29 @@ raw/unadjusted marks reflect price impact; the engine does not restore a theoret
 value. Adjustment factors/adjusted prices remain feature-only and never enter portfolio cash
 or share accounting. Rights do not remove the underlying security from the historical universe.
 
-Standard status is explicit, never the default for a missing variant. Tradable rights, automatic
-compensation, mandatory conversion, unusual instruments, incomplete or contradictory terms
-fail with `RIGHTS_EVENT_UNSUPPORTED_VARIANT`, including when no position is held. A missing
-listing date alone is not a fabricated listing or a subscription accounting requirement.
+Standard structure is explicit, never inferred from a provider row or missing variant.
+`rights_event_class` and `entitlement_tradability` are independent immutable source facts;
+the portfolio action policy is a separate constant. `NOT_EVIDENCED` remains exactly that,
+never `NON_TRADABLE_CONFIRMED`. A standard direct subscription with any tradability evidence
+state uses no subscription and no monetization. A separately listed/transferable instrument,
+separate entitlement market price, mandatory conversion, cash settlement, automatic compensation
+or another explicit nonstandard structure fails with `RIGHTS_EVENT_UNSUPPORTED_VARIANT`.
+Legacy explicit nonstandard evidence cannot be overridden by assigning a standard class.
+
+### Required fields and downstream dependencies
+
+| Fields | Dependency and acceptance rule |
+|---|---|
+| Stable security ID, rights event structure, ex/effective date, source identity/hash | Essential for event identity, deterministic effective ordering and auditable authority. Missing/contradictory values fail `EVENT_IDENTITY_UNRESOLVED`. |
+| Subscription price/ratio, eligible share basis, deadline, record date | Preserved metadata; no subscription or monetization calculation consumes them. Missing values stay null and may be `STANDARD_PARTIAL_BUT_ACCOUNTING_SAFE`. |
+| Announcement/source availability | Preserve actual publication. Missing availability cannot authorize PIT feature use; accounting-safe classification is not PIT dataset admission. Never backdate later result/listing evidence. |
+| Suspension window/resumption | Must come from independent dated evidence before permitting a fill. Missing subscription metadata does not imply trading permission; existing unknown-tradeability no-fill gate remains. |
+| Adjustment alignment | Uses separately accepted effective-dated factors. Rights accounting classification does not certify factor authority or compute a substitute factor from incomplete terms. |
+| New-share listing | Retain later evidence separately; no subscribed shares exist under this policy. Never use a future listing as an earlier eligibility fact. |
+
+Complete versus partial metadata is reported independently from accounting safety. Known
+contradictory material dates remain blocked; the policy never repairs them by assumption.
+For all standard events, entitlement-sale proceeds and synthetic entitlement value are zero.
 
 ## Deterministic session precedence
 
@@ -69,7 +88,8 @@ No future listing date changes eligibility before the accepted lifecycle says it
 
 Event model/accounting/replay engineering PASS does not certify the full historical inventory.
 See `RIGHTS_ISSUE_POLICY_CHECKPOINT.md` and `RIGHTS_ISSUE_SOURCE_REVIEW.json` for the current
-148-event inventory, four-source sample, unresolved evidence and the exact Section 8 stop.
+historical checkpoint. The current V2 inventory and material full-history stop are in
+`RIGHTS_ENTITLEMENT_V2_CHECKPOINT.md`. No census acceptance follows from policy permissiveness.
 R4 v2 remains PASS with **R4_REAL_DATA_FILL_COUNT = 0**: it proves orchestration, replay,
 no-look-ahead and API/UI parity, not real historical filled-trade corporate-action accounting.
 The focused synthetic execution/portfolio tests are the current fill-path engineering evidence.

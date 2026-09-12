@@ -32,8 +32,8 @@ def test_source_total_capital_never_becomes_eligible_a_share_basis():
     assert result["event"]["eligible_share_basis"] is None
     assert result["event"]["share_ratio"] == "0.13"
     assert result["event"]["subscription_price"] == "8.85"
-    assert result["classification"] == "UNRESOLVED"
-    assert result["safety_classification"] == "RIGHTS_EVENT_UNSUPPORTED_VARIANT"
+    assert result["classification"] == "EVENT_IDENTITY_UNRESOLVED"
+    assert result["safety_classification"] == "EVENT_IDENTITY_UNRESOLVED"
     assert result["source_total_capital_not_eligible_basis"] == 19119490016
     assert result["point_in_time_admission"] == "NOT_ADMITTED_FULL_AUTHORITY_PENDING"
 
@@ -53,7 +53,7 @@ def test_official_sample_terms_are_compared_not_blindly_overlaid():
         checks=dict(subscription_price="8.85", ratio="0.13", record_date="2010-03-04"),
         verified_event_fields={},
     )
-    assert normalize(row(), source(), review)["classification"] == "UNRESOLVED"
+    assert normalize(row(), source(), review)["classification"] == "EVENT_IDENTITY_UNRESOLVED"
     review["checks"]["subscription_price"] = "8.86"
     with pytest.raises(ValueError, match="OFFICIAL_RIGHTS_TERM_MISMATCH"):
         normalize(row(), source(), review)
