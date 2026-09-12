@@ -5,9 +5,10 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from app.domain.markets.identifiers import InstrumentType
 from app.domain.markets.security import InstrumentClassification
 from scripts.reconcile_sse_cninfo import canonical, save, sha
-from scripts.stage_akshare_pilot import pilot_members
+from scripts.stage_akshare_pilot import candidate_members, scope_members, verify_scope_sources
 
 
 def inventory(members: list[dict], facts: list[InstrumentClassification]) -> list[dict]:
@@ -56,7 +57,7 @@ def audit(staging: Path, evidence: Path) -> dict:
         if meta["url"] != fact.source_url or meta["sha256"] != fact.source_document_sha256:
             raise ValueError("CLASSIFICATION_PROVENANCE_CHANGED")
         facts.append(fact)
-    members = pilot_members(staging)
+    members = candidate_members(staging)
     rows = inventory(members, facts)
     if rows != inventory(members[::-1], facts[::-1]):
         raise ValueError("INPUT_ORDER_FAILURE")
@@ -85,9 +86,71 @@ def audit(staging: Path, evidence: Path) -> dict:
     return report
 
 
+def approved_audit(staging: Path, evidence: Path) -> dict:
+    records = json.loads((evidence / "approved-classifications.json").read_bytes())
+    facts = [InstrumentClassification.model_validate(r["classification"]) for r in records]
+    for record in records:
+        fact = InstrumentClassification.model_validate(record["classification"])
+        if not any(
+            s["sha256"] == fact.source_document_sha256 and s["source_url"] == fact.source_url
+            for s in record["sources"]
+        ):
+            raise ValueError("CLASSIFICATION_PRIMARY_SOURCE_NOT_ATTACHED")
+    verify_scope_sources(staging, records)
+    members = candidate_members(staging)
+    admitted = scope_members(members, facts)
+    if admitted != scope_members(members[::-1], facts[::-1]):
+        raise ValueError("SCOPE_INPUT_ORDER_FAILURE")
+    admitted_ids = {r["security_id"] for r in admitted}
+    rows = inventory(members, facts)
+    excluded = []
+    for row in rows:
+        row["pilot_eligibility"] = (
+            "IN_SCOPE" if row["security_id"] in admitted_ids else "OUT_OF_SCOPE"
+        )
+        row["eligibility_changed"] = row["security_id"] not in admitted_ids
+        if row["eligibility_changed"]:
+            excluded.append(
+                dict(
+                    **row,
+                    status="AUTHORITATIVELY_OUT_OF_SCOPE_INSTRUMENT",
+                    reason="HUMAN_APPROVED_ORDINARY_A_SHARE_SCOPE",
+                    market_data_required=False,
+                )
+            )
+    save(evidence / "approved-instrument-inventory.json", rows)
+    save(evidence / "out-of-scope-instruments.json", excluded)
+    counts = Counter(row["instrument_type"] for row in rows)
+    report = dict(
+        status="PASS",
+        pilot_instrument_scope="ORDINARY_A_SHARE_EQUITIES_ONLY",
+        total_master_securities=len(members),
+        post_scope_filter_securities=len(admitted),
+        counts={kind.value: counts[kind.value] for kind in InstrumentType},
+        unclassified_securities=counts["UNCLASSIFIED"],
+        exclusions=len(excluded),
+        input_order_reproducibility="PASS",
+        classifications_sha256=sha((evidence / "approved-classifications.json").read_bytes()),
+        inventory_sha256=sha(canonical(rows)),
+        exclusions_sha256=sha(canonical(excluded)),
+        scope_is_methodology_not_provider_exclusion=True,
+        original_master_preserved=True,
+        dataset_publication_authorized=False,
+        temporal_evidence_basis=(
+            "Explicit original A-listing register fields on nonmixed venues; "
+            "dated original IPO notices on the mixed STAR stock/CDR venue. Retrieval dates are "
+            "not substituted for historical effective dates or invented publication dates."
+        ),
+    )
+    save(evidence / "approved-scope-manifest.json", report)
+    print(json.dumps(report))
+    return report
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--staging", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, required=True)
+    parser.add_argument("--approved", action="store_true")
     args = parser.parse_args()
-    audit(args.staging, args.evidence)
+    (approved_audit if args.approved else audit)(args.staging, args.evidence)

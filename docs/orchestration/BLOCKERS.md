@@ -1,5 +1,18 @@
 # Blockers
 
+## Current: no human blocker; approved scope implementation running
+
+RESOLVED: PILOT_INSTRUMENT_SCOPE_REQUIRES_HUMAN_DECISION.
+RETIRED AS REQUIRED DATA: SINA_FACTOR_BASELINE_UNAVAILABLE_689009.
+The human has approved ordinary A-share equities only. The dated official CDR
+evidence remains valid and its raw/factor failure snapshots remain preserved.
+The full scope gate now PASS: 5178 classified, 5177 ordinary A shares, one CDR,
+zero unclassified. R2 has resumed its remaining 2597 in-scope inputs from the
+existing checkpoint. No additional methodology approval is required.
+R1 acceptances unchanged; no freeze, studies, PR merge or new provider authority.
+
+## Historical blockers below (superseded)
+
 
 ## Current: instrument-scope decision required
 

@@ -5,10 +5,17 @@ import csv
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from itertools import batched
 from pathlib import Path
 
+from app.domain.markets.security import (
+    EffectiveSymbolPeriod,
+    InstrumentClassification,
+    Security,
+    SecurityListingPeriod,
+    ordinary_a_share_on,
+)
 from scripts.project_controller import next_stage
 from scripts.reconcile_sse_cninfo import fetch, save, sha
 from scripts.sina_adjustment_audit import factor_at, parse_factors
@@ -17,7 +24,7 @@ START, END = "2023-01-01", "2024-07-31"
 DATASET_ID = "cn-a-pilot-akshare-20230101-20240731-v1"
 
 
-def pilot_members(staging: Path) -> list[dict[str, str]]:
+def candidate_members(staging: Path) -> list[dict[str, str]]:
     root = staging / "security-master-pilot"
     manifest = json.loads((root / "security-master-input.json").read_bytes())
     if (
@@ -42,6 +49,73 @@ def pilot_members(staging: Path) -> list[dict[str, str]]:
         raise ValueError("DUPLICATE_MASTER_IDENTITY")
     # Test retention risks first; selection is fixed, never performance dependent.
     return sorted(rows, key=lambda row: (not bool(row["delisting_date"]), row["security_id"]))
+
+
+def scope_members(members: list[dict], facts: list[InstrumentClassification]) -> list[dict]:
+    by_id = {str(fact.security_id): fact for fact in facts}
+    if len(by_id) != len(facts) or set(by_id) != {m["security_id"] for m in members}:
+        raise ValueError("INSTRUMENT_CLASSIFICATION_MISSING_OR_DUPLICATED")
+    admitted = []
+    for member in members:
+        fact = by_id[member["security_id"]]
+        first = date.fromisoformat(max(START, member["listing_date"]))
+        last = date.fromisoformat(min(END, member["delisting_date"] or END))
+        # One full-lifecycle fact is required for this Pilot version. Never silently
+        # shorten a security's lifecycle to fit incomplete classification evidence.
+        if not fact.known_on(first) or not fact.known_on(last):
+            raise ValueError("INSTRUMENT_EFFECTIVE_COVERAGE_GAP:" + member["security_id"])
+        security = Security(
+            security_id=fact.security_id,
+            exchange=member["exchange"],
+            name=member["name"],
+            symbol_periods=(
+                EffectiveSymbolPeriod(
+                    symbol=member["symbol"],
+                    exchange=member["exchange"],
+                    valid_from=member["listing_date"],
+                    valid_to=member["delisting_date"] or None,
+                ),
+            ),
+            listing_periods=(
+                SecurityListingPeriod(
+                    board=member["board"],
+                    listed_from=member["listing_date"],
+                    delisted_on=member["delisting_date"] or None,
+                ),
+            ),
+        )
+        if ordinary_a_share_on(security, (fact,), first):
+            admitted.append(member)
+    return sorted(admitted, key=lambda row: (not bool(row["delisting_date"]), row["security_id"]))
+
+
+def verify_scope_sources(staging: Path, records: list[dict]) -> None:
+    verified = {}
+    base = staging.resolve()
+    for record in records:
+        for source in record["sources"]:
+            relative = source["path"]
+            if relative not in verified:
+                path = (staging / relative).resolve()
+                if not path.is_relative_to(base):
+                    raise ValueError("INSTRUMENT_SCOPE_SOURCE_CHANGED")
+                verified[relative] = sha(path.read_bytes())
+            if verified[relative] != source["sha256"]:
+                raise ValueError("INSTRUMENT_SCOPE_SOURCE_CHANGED")
+
+
+def pilot_members(staging: Path) -> list[dict[str, str]]:
+    root = staging / "instrument-scope-20260912"
+    manifest = json.loads((root / "approved-scope-manifest.json").read_bytes())
+    path = root / "approved-classifications.json"
+    if manifest["status"] != "PASS" or sha(path.read_bytes()) != manifest["classifications_sha256"]:
+        raise ValueError("INSTRUMENT_SCOPE_NOT_ACCEPTED_OR_CHANGED")
+    records = json.loads(path.read_bytes())
+    verify_scope_sources(staging, records)
+    return scope_members(
+        candidate_members(staging),
+        [InstrumentClassification.model_validate(r["classification"]) for r in records],
+    )
 
 
 def raw_url(exchange: str, symbol: str) -> str:

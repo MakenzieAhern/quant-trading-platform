@@ -232,7 +232,11 @@ def main() -> None:
         raise ValueError("PERSISTED_SECONDARY_STOP_REQUIRES_REVIEW")
     completed, failures = checkpoint.get("completed", {}), checkpoint.get("failures", {})
     history = checkpoint.get("history", [])
-    for result in completed.values():
+    required = pilot_members(args.staging)
+    required_ids = {m["security_id"] for m in required}
+    for sid, result in completed.items():
+        if sid not in required_ids:
+            continue
         if result["policy_sha256"] != policy_sha:
             raise ValueError("COMPLETED_POLICY_CHANGED")
         for kind in ("raw", "factor"):
@@ -247,8 +251,54 @@ def main() -> None:
         ).read_bytes()
     )
     get_status = status_lookup(args.staging)
-    members = [m for m in pilot_members(args.staging) if m["security_id"] in primary["pending"]]
+    members = [m for m in required if m["security_id"] in primary["pending"]]
+    out_of_scope_failures = {
+        **checkpoint.get("out_of_scope_failures", {}),
+        **{sid: r for sid, r in failures.items() if sid not in required_ids},
+    }
+    out_of_scope_completed = {
+        **checkpoint.get("out_of_scope_completed", {}),
+        **{sid: r for sid, r in completed.items() if sid not in required_ids},
+    }
+    failures = {sid: r for sid, r in failures.items() if sid in required_ids}
+    completed = {sid: r for sid, r in completed.items() if sid in required_ids}
+    primary_success = len(primary["completed"].keys() & required_ids)
     stopped, processed = False, 0
+
+    def persist() -> None:
+        save(
+            checkpoint_path,
+            dict(
+                dataset_id=DATASET_ID,
+                policy_sha256=policy_sha,
+                primary_checkpoint_sha256=sha(primary_path.read_bytes()),
+                primary_success=primary_success,
+                required_securities=len(required),
+                out_of_scope_failures=out_of_scope_failures,
+                out_of_scope_completed=out_of_scope_completed,
+                secondary_success=len(completed),
+                unresolved_required_data=len(members) - len(completed),
+                completed=completed,
+                failures=failures,
+                history=history,
+                stop=stopped,
+                published=False,
+            ),
+        )
+        save(
+            root / "secondary-failure-manifest.json",
+            dict(
+                failures=failures,
+                out_of_scope_failures=out_of_scope_failures,
+                not_recovered=sorted(
+                    m["security_id"] for m in members if m["security_id"] not in completed
+                ),
+                unresolved_required_data=len(members) - len(completed),
+                published=False,
+            ),
+        )
+
+    persist()
     for round_no in range(2):
         done = {(r["security_id"], r["round"]) for r in history}
         remaining = [
@@ -289,31 +339,7 @@ def main() -> None:
                     else:
                         failures[sid] = result
                         stopped = stopped or result["stop"]
-                record = dict(
-                    dataset_id=DATASET_ID,
-                    policy_sha256=policy_sha,
-                    primary_checkpoint_sha256=sha(primary_path.read_bytes()),
-                    primary_success=len(primary["completed"]),
-                    secondary_success=len(completed),
-                    unresolved_required_data=len(members) - len(completed),
-                    completed=completed,
-                    failures=failures,
-                    history=history,
-                    stop=stopped,
-                    published=False,
-                )
-                save(checkpoint_path, record)
-                save(
-                    root / "secondary-failure-manifest.json",
-                    dict(
-                        failures=failures,
-                        not_recovered=sorted(
-                            m["security_id"] for m in members if m["security_id"] not in completed
-                        ),
-                        unresolved_required_data=len(members) - len(completed),
-                        published=False,
-                    ),
-                )
+                persist()
                 processed += len(batch)
                 print(
                     f"round={round_no} secondary={len(completed)} attempted_failed={len(failures)} "

@@ -1,5 +1,26 @@
 # Autonomous Quant Project Checkpoint
 
+## Current running milestone: approved instrument scope
+
+Human decision recorded in DECISIONS and research methodology. R2 RUNNING,
+approval not required. Shared explicit COMMON_A_SHARE gate preserves four boards
+and listing/delisting; unknown/late/overlapping classification fails closed.
+Source inventory reuses existing master snapshots and checksums; targeted SSE
+SEC_TYPE/IPO metadata supplies the mixed STAR stock/CDR distinction. A current
+SEC_TYPE snapshot alone is not accepted as historical classification.
+Full scope gate PASS: 5178 candidates, 5177 COMMON_A_SHARE, one CDR (689009),
+all other instrument categories zero; zero unclassified. Classification checksum:
+`28d56696d2dc3de6d3c217dc557b9d8139729b3389245beb8fa580897ce8b7d7`.
+The previous complete suite passed 415 tests; the added shared-source integrity
+regression also passes, with Ruff and strict typing. R2 has resumed the remaining
+2597 required securities. Existing 657 primary /1923 secondary inputs and 2580
+partitions are retained. Historical failure evidence remains separate from the
+scope-filtered required-data denominator.
+Dataset not created/audited/frozen; no strategy, studies, merge or release.
+This is an intermediate engineering milestone, not the terminal Gate A report.
+
+## Historical checkpoints below (superseded)
+
 
 ## Current: instrument-scope decision required
 

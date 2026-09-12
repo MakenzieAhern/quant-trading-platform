@@ -6,7 +6,7 @@ import pytest
 
 from scripts.materialize_akshare_partitions import materialize, normalized_bars
 from scripts.reconcile_sse_cninfo import save, sha
-from scripts.stage_akshare_pilot import pilot_members, raw_url, snapshot, stage_one
+from scripts.stage_akshare_pilot import candidate_members, raw_url, snapshot, stage_one
 
 
 def test_checkpoint_replace_retries_only_publication_and_preserves_failed_write(
@@ -137,16 +137,46 @@ def test_pilot_inventory_retains_delisted_and_rejects_future_ipo_and_mutation(tm
             )
         )
     )
-    assert [row["security_id"] for row in pilot_members(tmp_path)] == [
+    assert [row["security_id"] for row in candidate_members(tmp_path)] == [
         "CN-A:SSE:600070",
         "CN-A:SSE:600000",
     ]
     path.write_bytes(raw + b"changed")
     with pytest.raises(ValueError, match="CHECKSUM_CHANGED"):
-        pilot_members(tmp_path)
+        candidate_members(tmp_path)
     assert "fqt=0&secid=1.600070" in raw_url("SSE", "600070")
     with pytest.raises(ValueError, match="INVALID_REQUEST_IDENTITY"):
         raw_url("OTHER", "600070")
+
+
+def test_out_of_scope_data_is_not_required_and_checkpoint_is_preserved(tmp_path, monkeypatch):
+    monkeypatch.setattr("scripts.materialize_akshare_partitions.pilot_members", lambda _: [])
+    root = tmp_path / "pilot-akshare-20260911"
+    # Deliberately unavailable market data must not be opened after a scope exclusion.
+    save(
+        root / "recovery-checkpoint.json",
+        dict(
+            completed={
+                "CN-A:SSE:123456": dict(
+                    raw_path="not-required.json",
+                    raw_sha256="a" * 64,
+                    factor_path="not-required.js",
+                    factor_sha256="b" * 64,
+                )
+            }
+        ),
+    )
+    before = (root / "recovery-checkpoint.json").read_bytes()
+    save(
+        tmp_path / "sse-st-pilot/completeness-20260910/calendar/pilot-sessions.json", ["2023-01-03"]
+    )
+    archived = dict(files=[], source_hashes={}, raw_rows=1, factor_rows=1)
+    save(root / "partition-checkpoint.json", dict(partitions={"CN-A:SSE:123456": archived}))
+    first = materialize(tmp_path)
+    assert first["failures"] == {} and first["securities_partitioned"] == 0
+    assert first["out_of_scope_preserved_partitions"] == {"CN-A:SSE:123456": archived}
+    assert materialize(tmp_path) == first
+    assert (root / "recovery-checkpoint.json").read_bytes() == before
 
 
 @pytest.mark.parametrize("provider", [None, "Tencent"])

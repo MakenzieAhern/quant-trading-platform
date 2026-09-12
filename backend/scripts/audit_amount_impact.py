@@ -152,11 +152,14 @@ def audit(
     )
     scheduled = {d for i, d in enumerate(sessions, 1) if i >= 253 and (i - 253) % 20 == 0}
     members = {r["symbol"]: r for r in pilot_members(staging)}
+    required_ids = {r["security_id"] for r in members.values()}
     checkpoint = json.loads(
         (staging / "pilot-akshare-20260911/recovery-checkpoint.json").read_bytes()
     )
     available, primary_raw, sources = {}, {}, []
     for sid, receipt in sorted(checkpoint["completed"].items()):
+        if sid not in required_ids:
+            continue
         raw = (staging / receipt["raw_path"]).read_bytes()
         if sha(raw) != receipt["raw_sha256"]:
             raise ValueError("PRIMARY_HASH_CHANGED")
@@ -169,6 +172,8 @@ def audit(
         sources.append(dict(path=receipt["raw_path"], sha256=sha(raw), provider="Eastmoney"))
     parity_rows, candidate_ids = [], set()
     for symbol in (*TENCENT_SAMPLE, *EXTRA_SAMPLE):
+        if symbol not in members:
+            continue
         member = members[symbol]
         sid = member["security_id"]
         candidate_ids.add(sid)
@@ -231,6 +236,8 @@ def audit(
         path = staging / "pilot-akshare-20260911/secondary-checkpoint.json"
         recovered = json.loads(path.read_bytes())
         for sid, receipt in sorted(recovered["completed"].items()):
+            if sid not in required_ids:
+                continue
             raw = (staging / receipt["raw_path"]).read_bytes()
             if sha(raw) != receipt["raw_sha256"]:
                 raise ValueError("RECOVERED_SOURCE_CHANGED")

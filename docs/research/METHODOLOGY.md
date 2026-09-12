@@ -1,5 +1,27 @@
 # Research Methodology
 
+## Approved v1.1 instrument scope
+
+PILOT_INSTRUMENT_SCOPE = ORDINARY_A_SHARE_EQUITIES_ONLY.
+Human methodology decision approved on2026-09-12: CN_A means ordinary
+RMB-denominated A-share equities on SSE/SZSE Main, STAR and ChiNext boards.
+Board and instrument type are independent. CDRs, B-shares, ETFs/funds,
+bonds/convertible bonds, preferred shares, warrants and other instruments are
+outside v1.1 scope before market-data requirements are evaluated. Future versions
+require explicit separate instrument support. This is a human scope decision,
+not an assertion that the previously ambiguous contract already said this, and
+not a performance- or provider-convenience-based exclusion. No strategy results
+were inspected. Classification requires authoritative dated evidence; unknown
+types cannot be admitted into the final Pilot Dataset.
+
+Instrument evidence distinguishes dated notices from explicit original A-share
+listing-register records. For the latter, the exchange's A-share code and A-share
+listing date identify the original listed instrument; an undated register is not
+given an invented publication date. Retrieval time remains separately preserved.
+The mixed STAR stock/CDR register requires dated original IPO evidence, not merely
+today's SEC_TYPE paired with an old listing date. Future-effective changes cannot
+alter earlier membership, and incomplete/overlapping temporal evidence fails closed.
+
 Execution follows [CN_A_DAILY_OPENING_LIMIT_V1](DAILY_EXECUTION_CONVENTION.md), a
 `SIMULATION_ASSUMPTION`, separate from official market-rule authority. Daily OHLCV
 cannot reconstruct exact historical auction fills. Missing required evidence

@@ -66,6 +66,9 @@ def materialize(staging: Path) -> dict:
             raise ValueError("SECONDARY_MUST_NOT_REPLACE_PRIMARY")
         completed.update(secondary["completed"])
     members = {r["security_id"]: r for r in pilot_members(staging)}
+    # Scope is applied before data requirements. Inputs remain in their immutable
+    # provider checkpoints even when a later approved release scope does not use them.
+    completed = {sid: result for sid, result in completed.items() if sid in members}
     sessions = set(
         json.loads(
             (
@@ -75,11 +78,13 @@ def materialize(staging: Path) -> dict:
     )
     destination = root / "dataset-staging"
     receipts_path = root / "partition-checkpoint.json"
-    receipts = (
-        json.loads(receipts_path.read_bytes()).get("partitions", {})
-        if receipts_path.exists()
-        else {}
-    )
+    previous = json.loads(receipts_path.read_bytes()) if receipts_path.exists() else {}
+    receipts = previous.get("partitions", {})
+    out_of_scope_receipts = {
+        **previous.get("out_of_scope_preserved_partitions", {}),
+        **{sid: record for sid, record in receipts.items() if sid not in members},
+    }
+    receipts = {sid: record for sid, record in receipts.items() if sid in members}
     failures = {}
     for sid, inputs in sorted(completed.items()):
         source_hashes = {}
@@ -171,7 +176,14 @@ def materialize(staging: Path) -> dict:
                 factor_rows=len(factors),
                 status="PARTIAL_INPUTS_NOT_PUBLISHED",
             )
-            save(receipts_path, dict(partitions=receipts, published=False))
+            save(
+                receipts_path,
+                dict(
+                    partitions=receipts,
+                    published=False,
+                    out_of_scope_preserved_partitions=out_of_scope_receipts,
+                ),
+            )
         except (ValueError, KeyError, IndexError) as exc:
             failures[sid] = dict(error=type(exc).__name__, reason=str(exc))
     report = dict(
@@ -183,6 +195,7 @@ def materialize(staging: Path) -> dict:
         published=False,
         dataset_audited=False,
         dataset_frozen=False,
+        out_of_scope_preserved_partitions=out_of_scope_receipts,
     )
     save(receipts_path, report)
     print(json.dumps({k: v for k, v in report.items() if k != "partitions"}))

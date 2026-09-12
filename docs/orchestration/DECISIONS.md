@@ -1,5 +1,20 @@
 # Decisions
 
+## Approved human methodology decision: ordinary A-share equities only
+
+2026-09-12: PILOT_INSTRUMENT_SCOPE=ORDINARY_A_SHARE_EQUITIES_ONLY;
+PILOT_INSTRUMENT_SCOPE_DECISION=APPROVED. Scope decision blocker is resolved;
+STATUS=RUNNING, HUMAN_APPROVAL_REQUIRED=NO while applying the approved policy.
+Ordinary RMB equities on Main/STAR/ChiNext remain potentially eligible. CDR,
+B-share, ETF/fund, bond/convertible, preferred, warrant and other instruments
+are outside this release before data completeness is evaluated. No results or
+profitability inform this decision. Source-backed classification and generic
+eligibility must precede denominator correction; unknown types stay explicit.
+689009's preserved SSE CDR listing evidence establishes its out-of-scope type;
+its absent Sina factor is not required by the approved Pilot scope. Existing
+source/checkpoint artifacts must be retained, not rewritten to hide earlier counts.
+Continue existing R2 then R3; no freeze, study, OOS, PR merge or release authorized.
+
 
 ## Current: instrument-scope decision required
 

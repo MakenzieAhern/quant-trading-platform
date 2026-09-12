@@ -23,6 +23,14 @@ RESUME_RESTART. Report securities by exchange, sessions, bars/raw rows, adjustme
 rows, benchmark rows, failures, missing/rejected rows, ST/*ST/suspension observations.
 Missing counts are UNKNOWN, never invented zeroes.
 
+Approved v1.1 instrument scope: ordinary RMB A-share equities only, independent
+of board. Explicit original listing/type evidence is required before inclusion;
+CDR/B-share/fund/bond/preferred/warrant/other instruments are out of scope before
+market-data requirements. Preserve the broader master and every exclusion.
+R3 additionally requires INSTRUMENT_TYPE_SCOPE, NON_A_SHARE_INSTRUMENT_LEAKAGE=0,
+INSTRUMENT_CLASSIFICATION_REPRODUCIBILITY, PROVIDER_LINEAGE, CROSS_SOURCE_PARITY
+and AMOUNT_SEMANTIC_VALIDATION. No strategy performance is inspected for scope.
+
 R5 metrics: return/CAGR, volatility, Sharpe/Sortino, drawdown/Calmar, win rate,
 profit factor, turnover/holding period/costs, benchmark/excess return, tracking
 error/information ratio, rolling/monthly metrics and regime stability.

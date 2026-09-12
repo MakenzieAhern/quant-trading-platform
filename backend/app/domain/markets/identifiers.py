@@ -8,13 +8,16 @@ class Market(StrEnum):
 
 
 class InstrumentType(StrEnum):
+    COMMON_A_SHARE = "COMMON_A_SHARE"
     COMMON_STOCK = "COMMON_STOCK"
     CDR = "CDR"
     B_SHARE = "B_SHARE"
     ETF = "ETF"
     FUND = "FUND"
     BOND = "BOND"
+    CONVERTIBLE_BOND = "CONVERTIBLE_BOND"
     PREFERRED_SHARE = "PREFERRED_SHARE"
+    WARRANT = "WARRANT"
     OTHER = "OTHER"
 
 

@@ -1,5 +1,6 @@
 from datetime import date
 from itertools import pairwise
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -19,7 +20,9 @@ class InstrumentClassification(ImmutableModel):
     effective_from: date
     effective_to: date | None = None
     source_url: str = Field(pattern=r"^https://")
-    source_publication_date: date
+    source_publication_date: date | None
+    evidence_basis: Literal["DATED_NOTICE", "ORIGINAL_TYPED_LISTING_REGISTER"] = "DATED_NOTICE"
+    source_listing_date: date | None = None
     source_document_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     retrieval_timestamp: UtcDateTime
 
@@ -27,11 +30,21 @@ class InstrumentClassification(ImmutableModel):
     def validate_range(self) -> "InstrumentClassification":
         if self.effective_to is not None and self.effective_to < self.effective_from:
             raise ValueError("effective_to must not precede effective_from")
+        if self.evidence_basis == "DATED_NOTICE" and self.source_publication_date is None:
+            raise ValueError("dated notice requires publication date")
+        if self.evidence_basis == "ORIGINAL_TYPED_LISTING_REGISTER" and (
+            self.source_publication_date is not None
+            or self.source_listing_date != self.effective_from
+        ):
+            raise ValueError(
+                "typed original listing requires its explicit listing date, "
+                "not a fabricated publication date"
+            )
         return self
 
     def known_on(self, on_date: date) -> bool:
         return (
-            self.source_publication_date <= on_date
+            (self.source_publication_date is None or self.source_publication_date <= on_date)
             and self.effective_from <= on_date
             and (self.effective_to is None or on_date <= self.effective_to)
         )
@@ -88,6 +101,28 @@ class Security(ImmutableModel):
         if any(period.exchange is not self.exchange for period in self.symbol_periods):
             raise ValueError("symbol-period exchange must match security exchange")
         return self
+
+
+def ordinary_a_share_on(
+    security: Security, classifications: tuple[InstrumentClassification, ...], on_date: date
+) -> bool:
+    """Instrument/lifecycle gate only; downstream ST, liquidity and execution gates still apply."""
+    facts = [
+        fact
+        for fact in classifications
+        if fact.security_id == security.security_id and fact.known_on(on_date)
+    ]
+    if len(facts) > 1:
+        raise ValueError("overlapping instrument classifications")
+    return bool(
+        facts
+        and facts[0].instrument_type is InstrumentType.COMMON_A_SHARE
+        and any(period.contains(on_date) for period in security.listing_periods)
+        and any(
+            period.valid_from <= on_date and (period.valid_to is None or on_date <= period.valid_to)
+            for period in security.symbol_periods
+        )
+    )
 
 
 def _assert_non_overlapping(periods: tuple[tuple[date, date | None], ...], label: str) -> None:

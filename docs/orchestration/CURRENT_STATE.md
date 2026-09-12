@@ -1,5 +1,26 @@
 # Current state
 
+## Current: approved ordinary-A-share scope implementation
+
+R2 RUNNING; HUMAN_APPROVAL_REQUIRED=NO. Scope decision APPROVED:
+ORDINARY_A_SHARE_EQUITIES_ONLY. The former CDR methodology question is resolved.
+689009 is AUTHORITATIVELY_OUT_OF_SCOPE_INSTRUMENT, not a required factor failure.
+Generic scope gate and preserved out-of-scope failure ledger are implemented;
+Full register/type/dated-IPO classification and the scope gate PASS:
+5178 candidates, 5177 COMMON_A_SHARE, 1 CDR, 0 unclassified.
+The only nonordinary instrument is CN-A:SSE:689009 (CDR).
+Explicit original A-listing columns support nonmixed venues; STAR requires dated
+original stock/CDR IPO metadata rather than backdating a current SEC_TYPE snapshot.
+657 primary,1923 secondary,2580 partitions and951927 raw rows remain preserved.
+Market-data worker has restarted from the accepted checkpoint for 2597 remaining
+ordinary A-share securities. No successful input is re-fetched.
+Approved scope manifest SHA-256:
+`0b7fa3f26b99ffc19c179bc19a492693d6eb1c5249f4779251d8d9b03427334d`.
+No dataset publication/audit/freeze, study or merge. Continue automatically to
+R2/R3 and Gate A after this engineering gate, without another CDR scope question.
+
+## Historical checkpoints below (superseded)
+
 
 ## Current: instrument-scope decision required
 
