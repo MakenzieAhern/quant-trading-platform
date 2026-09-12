@@ -1,5 +1,34 @@
 # Current state
 
+## Current: revised Pilot v2 audited; STOP at revised freeze gate
+
+R3_REVISED_PILOT_AUDIT=PASS (25 checks); v2 CREATED=YES, AUDITED=YES,
+FROZEN=NO, readiness READY. HUMAN_APPROVAL_REQUIRED=YES at
+GATE_A_REVISED_DATASET_FREEZE. No freeze, R4 v2, R5 or formal study is authorized.
+V1 remains frozen/superseded/acceptance INVALIDATED; bytes and visible warning preserved.
+V2:5180 ordinary A shares,1922643 bars,382 sessions;15528 partitions reused,
+12 rebuilt,9 new. Added688086,688287,688555;600190 listing date corrected;
+no removed Pilot members or unexplained master differences. Independent exchange
+year-end baselines reconcile with zero missing/extra A-share codes.
+Manifest187b8c31d333fa33c5784d31bca60949e44a0c3a0c37a021235e49115bf92600.
+See `../research/REVISED_PILOT_DATASET_REVIEW.md` and
+`.research/reports/revised-pilot-v2.json` for exact lists, lineage and hashes.
+
+## Historical checkpoints below (superseded)
+
+## Current: revised Pilot rebuild approved, in progress
+
+Human approval authorizes v2 rebuild and fresh R3 only. V1 remains frozen,
+superseded and research-acceptance INVALIDATED (SECURITY_MASTER_COMPLETENESS_DEFECT);
+its original files, manifest, freeze, R3 and R4 evidence remain unchanged.
+R2_REVISED_PILOT_MASTER_REBUILD is RUNNING. All-board inventory discovered an
+additional A/B listing-date conflation and a post-Pilot SZSE code transition;
+neither provisional counts nor the old R3 verdict are v2 acceptance.
+Stop unfrozen at GATE_A_REVISED_DATASET_FREEZE after all fresh audits pass.
+R5=BLOCKED_PENDING_REVISED_PILOT_ACCEPTANCE. No R4 on v2 or formal studies.
+
+## Historical checkpoints below (superseded)
+
 ## Current: R5 stopped on new frozen Pilot master counterexample
 
 Pilot v1 was frozen exactly as approved; all bytes and freeze receipt remain

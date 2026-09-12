@@ -21,7 +21,7 @@ from pypdf import PdfReader
 PILOT_START = date(2023, 1, 1)
 PILOT_END = date(2024, 7, 31)
 RETRIEVAL_END = date.today()
-PARSER_VERSION = "official-a-share-pilot-v1"
+PARSER_VERSION = "official-a-share-pilot-v2-a-only-exits"
 SSE_PAGE = "https://www.sse.com.cn/assortment/stock/list/share/"
 SSE_DELIST_PAGE = "https://www.sse.com.cn/assortment/stock/list/delisting/"
 SZSE_LIST_PAGE = "https://www.szse.cn/market/product/stock/list/index.html"
@@ -277,11 +277,12 @@ def _fetch_sse(fetcher: OfficialFetcher) -> list[dict[str, str]]:
                     "SSE", symbol, str(item["COMPANY_ABBR"]), board, listing, None, SSE_PAGE
                 )
     params["sqlId"] = "COMMON_SSE_CP_GPJCTPZ_GPLB_ZZGP_L"
-    params["STOCK_TYPE"] = "1,2,8"
+    # Type 2 is B shares: its LIST_DATE can differ for the same A_STOCK_CODE.
+    params["STOCK_TYPE"] = "1,8"
     params["COMPANY_STATUS"] = "3"
     url = "https://query.sse.com.cn/sseQuery/commonQuery.do?" + urllib.parse.urlencode(params)
     payload = fetcher.get(
-        "sse-terminated-all-boards.json", url, exchange="SSE", referer=SSE_DELIST_PAGE
+        "sse-terminated-a-boards.json", url, exchange="SSE", referer=SSE_DELIST_PAGE
     )
     for item in _sse_data(payload):
         symbol = str(item["A_STOCK_CODE"])

@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## Current: revised Pilot Dataset review
+
+V2 CREATED=YES; AUDITED=YES; FROZEN=NO; readiness READY.
+25 fresh R3 checks PASS; cross-source2478 rows replayed from original snapshots,
+not a copied verdict. All1755700 secondary-source Pilot rows had amount precision
+rechecked.433 backend tests passed; full Ruff/format/mypy passed.
+5180 ordinary shares;1922643 bars;382 sessions. Candidate master5178 ->5181;
+three added STAR exits,zero removed,one corrected A/B listing date (600190).
+15528 reused partitions,12 rebuilt,9 new. Complete lists and all hashes:
+`../research/REVISED_PILOT_DATASET_REVIEW.md`, `.research/reports/revised-pilot-v2.json`.
+V1 immutable checksum verification PASS; original manifest/freeze/R3/R4 preserved.
+STOP at GATE_A_REVISED_DATASET_FREEZE. R4 v2 NOT_RUN; R5 blocked; no formal studies.
+
+## Historical checkpoints below (superseded)
+
 ## Current: frozen Pilot retained; R4 engineering passed; R5 counterexample
 
 PILOT_DATASET_FROZEN=YES; immutable0696a5c7...manifest remains unchanged.

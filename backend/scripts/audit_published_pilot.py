@@ -207,17 +207,19 @@ def check_rule_resolution(version, members, sessions, history, get_status, start
     return len(seen)
 
 
-def audit(staging: Path, dataset: Path) -> dict:
+def audit(staging: Path, dataset: Path, *, revision: dict | None = None) -> dict:
     manifest = load_manifest(dataset / "manifest.json")
-    require(manifest.dataset_id == DATASET_ID, "WRONG_DATASET")
+    dataset_id = revision["dataset_id"] if revision else DATASET_ID
+    accepted_inputs = revision["accepted_inputs"] if revision else ACCEPTED_INPUTS
+    require(manifest.dataset_id == dataset_id, "WRONG_DATASET")
     verify_dataset(dataset, manifest)
     require(
         {p.relative_to(dataset).as_posix() for p in dataset.rglob("*.parquet")}
         == {p.relative_path for p in manifest.partitions},
         "UNMANIFESTED_DATA_PARTITION",
     )
-    members = pilot_members(staging)
-    candidates = candidate_members(staging)
+    members = revision["members"] if revision else pilot_members(staging)
+    candidates = revision["candidates"] if revision else candidate_members(staging)
     require(
         manifest.coverage_start.isoformat() == START
         and manifest.coverage_end.isoformat() == END
@@ -227,8 +229,12 @@ def audit(staging: Path, dataset: Path) -> dict:
     )
     facts = [
         InstrumentClassification.model_validate(r["classification"])
-        for r in json.loads(
-            (staging / "instrument-scope-20260912/approved-classifications.json").read_bytes()
+        for r in (
+            revision["facts"]
+            if revision
+            else json.loads(
+                (staging / "instrument-scope-20260912/approved-classifications.json").read_bytes()
+            )
         )
     ]
     require(scope_members(candidates[::-1], facts[::-1]) == members, "INSTRUMENT_ORDER_DEPENDENCE")
@@ -256,9 +262,9 @@ def audit(staging: Path, dataset: Path) -> dict:
     )
     contracts = {r["name"]: json.loads(r["payload"]) for r in read("contracts.parquet")}
     require(
-        contracts["ACCEPTED_INPUT_HASHES"] == ACCEPTED_INPUTS, "ACCEPTED_INPUT_CONTRACT_CHANGED"
+        contracts["ACCEPTED_INPUT_HASHES"] == accepted_inputs, "ACCEPTED_INPUT_CONTRACT_CHANGED"
     )
-    for relative, expected in ACCEPTED_INPUTS.items():
+    for relative, expected in accepted_inputs.items():
         require(sha((staging / relative).read_bytes()) == expected, "ACCEPTED_INPUT_BYTES_CHANGED")
     sessions = [r["session_date"] for r in read("calendar.parquet")]
     require(
@@ -293,8 +299,8 @@ def audit(staging: Path, dataset: Path) -> dict:
         sha(canonical(history)) == contracts["CALENDAR_HISTORY_PROVENANCE"]["history_sha256"],
         "LISTING_AGE_HISTORY_CHANGED",
     )
-    get_status = status_lookup(staging)
-    starts = delisting_starts(staging)
+    get_status = revision["get_status"] if revision else status_lookup(staging)
+    starts = revision["starts"] if revision else delisting_starts(staging)
     lineage = {
         r["security_id"]: json.loads(r["input_lineage_json"]) for r in read("lineage.parquet")
     }
@@ -308,6 +314,8 @@ def audit(staging: Path, dataset: Path) -> dict:
         else {}
     )
     policy_sha = sha(POLICY_PATH.read_bytes()) if secondary_present else None
+    if revision:
+        primary_pending = revision["primary_pending"]
     for row in read("lineage.parquet"):
         require(
             json.loads(row["source_metadata_json"])
@@ -317,6 +325,8 @@ def audit(staging: Path, dataset: Path) -> dict:
     receipts = json.loads(
         (staging / "pilot-akshare-20260911/partition-checkpoint.json").read_bytes()
     )["partitions"]
+    if revision:
+        receipts = revision["receipts"]
     published = {p.relative_path: p.model_dump(mode="json") for p in manifest.partitions}
     totals, missing, providers = Counter(), [], Counter()
     expected_paths = {p.relative_path for p in manifest.partitions if "/" not in p.relative_path}
@@ -467,8 +477,8 @@ def audit(staging: Path, dataset: Path) -> dict:
                 "PARTITION_REPLAY_CHANGED",
             )
     require(finalize_manifest(manifest.model_dump()) == manifest, "MANIFEST_REPEATABILITY")
-    root = staging / "pilot-akshare-20260911"
-    preserved = verify_preserved_checkpoint(root)
+    preserved = verify_preserved_checkpoint(staging / "pilot-akshare-20260911")
+    root = revision["root"] if revision else staging / "pilot-akshare-20260911"
     resume = json.loads((root / "publication-resume-verification.json").read_bytes())
     publication = json.loads((root / "publication-report.json").read_bytes())
     require(
@@ -480,7 +490,7 @@ def audit(staging: Path, dataset: Path) -> dict:
         "PUBLICATION_RESUME_NOT_VERIFIED",
     )
     report = dict(
-        dataset_id=DATASET_ID,
+        dataset_id=dataset_id,
         manifest_sha256=manifest.canonical_sha256,
         securities=len(members),
         candidate_securities=len(candidates),
@@ -525,7 +535,32 @@ def audit(staging: Path, dataset: Path) -> dict:
             "RESUME_RESTART",
         ],
     )
-    save(staging / "pilot-akshare-20260911/dataset-audit.json", report)
+    if revision:
+        from scripts.audit_revised_cross_source import audit as audit_cross_source
+
+        report["fresh_cross_source_replay"] = audit_cross_source(staging)
+        impact = json.loads((staging / "pilot-v2-master/master-impact.json").read_bytes())
+        require(not impact["removed"] and not impact["conflicts"], "REVISED_MASTER_CONFLICT")
+        require(
+            all(
+                not d["missing"] and not d["extra"]
+                for d in impact["independent_baseline_differences"].values()
+            ),
+            "INDEPENDENT_MASTER_BASELINE_GAP",
+        )
+        require(
+            set(impact["boards"]) == {"SSE_MAIN", "SSE_STAR", "SZSE_MAIN", "SZSE_CHINEXT"},
+            "BOARD_SEGMENT_GAP",
+        )
+        require(
+            set(impact["new_active_during_pilot"]) <= required, "EXIT_MEMBER_RETROACTIVELY_DROPPED"
+        )
+        report["completed_checks"].extend(
+            ["SECURITY_MASTER_COMPLETENESS", "BOARD_COVERAGE", "STAR_EXIT_COVERAGE"]
+        )
+        report["parent_dataset_id"] = DATASET_ID
+        report["supersedes_reason"] = "SECURITY_MASTER_COMPLETENESS_DEFECT"
+    save(root / "dataset-audit.json", report)
     return report
 
 

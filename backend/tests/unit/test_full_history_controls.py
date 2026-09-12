@@ -11,8 +11,8 @@ def test_sse_master_includes_star_exits_without_overwriting_old_snapshot():
             query = parse_qs(urlsplit(url).query)
             rows = []
             if query["COMPANY_STATUS"] == ["3"]:
-                assert query["STOCK_TYPE"] == ["1,2,8"]
-                assert name == "sse-terminated-all-boards.json"
+                assert query["STOCK_TYPE"] == ["1,8"]
+                assert name == "sse-terminated-a-boards.json"
                 rows = [
                     dict(
                         A_STOCK_CODE=code,

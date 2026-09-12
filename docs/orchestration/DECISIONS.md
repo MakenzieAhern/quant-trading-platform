@@ -1,5 +1,23 @@
 # Decisions
 
+## 2026-09-12: human approves revised Pilot rebuild, not freeze
+
+Approval authorizes a full impact audit, corrected v2 materialization and fresh
+R3 audit, with cryptographically qualified partition reuse. Preserve frozen v1
+as superseded, research-acceptance INVALIDATED evidence. The next approval gate
+is GATE_A_REVISED_DATASET_FREEZE; do not freeze v2, rerun R4, resume R5, merge,
+release or run formal studies. R5 remains blocked pending revised Pilot acceptance.
+
+Full four-board inventory additionally identified SSE A/B listing-date conflation:
+STOCK_TYPE=2 must not supply A-share LIST_DATE even when A_STOCK_CODE is populated.
+Use A-only types 1,8, with new source filenames. The new source corrects 600190
+from 1998-05-19 to 1999-06-09. This is a lifecycle change, not a reusable v1
+partition by default. Official SZSE notice 2025-027 preserves 300114 in Pilot;
+302132 becomes effective 2025-02-17, never retrospectively. Evidence hashes and
+effective-dated mapping are in `../research/PILOT_CODE_TRANSITIONS.json`.
+These are source-backed engineering corrections, not changes to accepted
+instrument/provider/execution methodology. Candidate census is not R3 acceptance.
+
 ## 2026-09-12: independent counterevidence after approved freeze
 
 Gate A approval was executed only after exact read-only R3 identity/hash checks.

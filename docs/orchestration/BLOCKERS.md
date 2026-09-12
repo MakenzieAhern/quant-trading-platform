@@ -1,5 +1,17 @@
 # Blockers
 
+## Current: only human approval for revised Pilot freeze
+
+SINGLE_SMALLEST_BLOCKER=HUMAN_APPROVAL_REQUIRED_FOR_V2_FREEZE.
+GATE_A_REVISED_DATASET_FREEZE; HUMAN_APPROVAL_REQUIRED=YES.
+V2 has been independently materialized and fully audited (25 checks PASS),
+but remains unfrozen. The master completeness defect is remediated in v2,
+not repaired inside v1. V1 stays frozen, superseded and acceptance INVALIDATED.
+R5=BLOCKED_PENDING_REVISED_PILOT_ACCEPTANCE; R4 v2 NOT_RUN.
+No Development/Validation/OOS, merge, release, live or ML/GPU authorization.
+
+## Historical checkpoints below (superseded)
+
 ## Current: material frozen-universe omission requires revised review
 
 FROZEN_PILOT_MASTER_OMITS_STAR_EXIT_SECURITIES: official SSE STOCK_TYPE=8 exit

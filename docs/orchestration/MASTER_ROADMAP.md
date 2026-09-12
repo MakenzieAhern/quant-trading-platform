@@ -1,5 +1,16 @@
 # v1.1 controller roadmap
 
+## Current override: revised Pilot gate (2026-09-12)
+
+Human-approved repair completed through v2 materialization and full revised R3.
+V2 CREATED/AUDITED=YES, FROZEN=NO, readiness READY. Stop at
+GATE_A_REVISED_DATASET_FREEZE; explicit human approval required.
+Do not execute the historical R4/R5 automatic path below. R4 v2 is NOT_RUN;
+R5 remains BLOCKED_PENDING_REVISED_PILOT_ACCEPTANCE. V1 is frozen, superseded,
+research acceptance invalidated. See `../research/REVISED_PILOT_DATASET_REVIEW.md`.
+
+## Historical v1 roadmap and checkpoints (superseded by override)
+
 Current exception (2026-09-12): R4 engineering completed, but R5 uncovered a
 frozen Pilot master omission of three STAR exits. Historical R1/R2/R3 completion
 does not remain a current completeness acceptance. Pause at revised Gate A

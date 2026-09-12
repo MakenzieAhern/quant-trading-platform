@@ -23,6 +23,7 @@ from app.data.catalog import (
     write_canonical_parquet,
     write_manifest,
 )
+from app.data.catalog.normalized import _canonical_rows
 from scripts.audit_amount_impact import status_lookup
 from scripts.audit_pilot_observations import missing_intervals
 from scripts.reconcile_sse_cninfo import canonical, save, sha
@@ -209,15 +210,38 @@ def publication_inputs(staging: Path, repository: Path) -> tuple[list[dict], dic
     return members, completed, preflight
 
 
-def publish(staging: Path, repository: Path) -> dict:
-    members, completed, preflight = publication_inputs(staging, repository)
-    for relative, expected in ACCEPTED_INPUTS.items():
+def publish(staging: Path, repository: Path, *, revision: dict | None = None) -> dict:
+    if revision is None:
+        members, completed, preflight = publication_inputs(staging, repository)
+    else:
+        state = json.loads((repository / ".research/project_state.json").read_bytes())
+        if state.get("revised_pilot_rebuild_decision") != "APPROVED" or state.get(
+            "revised_pilot_dataset_frozen"
+        ):
+            raise ValueError("REVISED_PUBLICATION_NOT_AUTHORIZED")
+        if (
+            revision["dataset_id"] != state.get("revised_pilot_dataset_id")
+            or revision["dataset_id"] == DATASET_ID
+        ):
+            raise ValueError("REVISED_DATASET_ID_NOT_AUTHORIZED")
+        members, completed, preflight = (
+            revision["members"],
+            revision["completed"],
+            revision["preflight"],
+        )
+    dataset_id = revision["dataset_id"] if revision else DATASET_ID
+    accepted_inputs = revision["accepted_inputs"] if revision else ACCEPTED_INPUTS
+    for relative, expected in accepted_inputs.items():
         if sha((staging / relative).read_bytes()) != expected:
             raise ValueError("ACCEPTED_PILOT_INPUT_CHANGED:" + relative)
-    root = staging / "pilot-akshare-20260911"
+    root = revision["root"] if revision else staging / "pilot-akshare-20260911"
     source_root = root / "dataset-staging"
     receipts = json.loads((root / "partition-checkpoint.json").read_bytes())["partitions"]
-    amount = json.loads((staging / "raw-failover-v1/amount-impact-current-audit.json").read_bytes())
+    amount = (
+        revision["amount"]
+        if revision
+        else json.loads((staging / "raw-failover-v1/amount-impact-current-audit.json").read_bytes())
+    )
     if (
         amount["available_securities"] != len(members)
         or amount["available_rows"] != sum(r["raw_rows"] for r in receipts.values())
@@ -227,8 +251,16 @@ def publish(staging: Path, repository: Path) -> dict:
     ):
         raise ValueError("FULL_IN_SCOPE_AMOUNT_AUDIT_NOT_PASS")
     scope_root = staging / "instrument-scope-20260912"
-    scope = json.loads((scope_root / "approved-scope-manifest.json").read_bytes())
-    facts = json.loads((scope_root / "approved-classifications.json").read_bytes())
+    scope = (
+        revision["scope"]
+        if revision
+        else json.loads((scope_root / "approved-scope-manifest.json").read_bytes())
+    )
+    facts = (
+        revision["facts"]
+        if revision
+        else json.loads((scope_root / "approved-classifications.json").read_bytes())
+    )
     by_id = {r["classification"]["security_id"]["value"]: r for r in facts}
     sessions = json.loads(
         (staging / "sse-st-pilot/completeness-20260910/calendar/pilot-sessions.json").read_bytes()
@@ -240,8 +272,8 @@ def publish(staging: Path, repository: Path) -> dict:
         or sessions[-1] > END
     ):
         raise ValueError("INVALID_ACCEPTED_CALENDAR")
-    get_status = status_lookup(staging)
-    starts = delisting_starts(staging)
+    get_status = revision["get_status"] if revision else status_lookup(staging)
+    starts = revision["starts"] if revision else delisting_starts(staging)
     calendar_history = json.loads((root / "calendar-history.json").read_bytes())
     calendar_provenance = json.loads((root / "calendar-history-provenance.json").read_bytes())
     if (
@@ -250,7 +282,7 @@ def publish(staging: Path, repository: Path) -> dict:
     ):
         raise ValueError("LISTING_AGE_CALENDAR_CHANGED")
     build = root / "catalog-build"
-    final = staging.parent / DATASET_ID
+    final = staging.parent / dataset_id
     input_digest = sha(
         canonical(
             dict(
@@ -260,7 +292,7 @@ def publish(staging: Path, repository: Path) -> dict:
                 receipts=receipts,
                 amount=amount,
                 calendar_provenance=calendar_provenance,
-                accepted_input_hashes=ACCEPTED_INPUTS,
+                accepted_input_hashes=accepted_inputs,
             )
         )
     )
@@ -374,11 +406,27 @@ def publish(staging: Path, repository: Path) -> dict:
             counts["star_st_observations"] += int(day in present and risk == "STAR_ST")
         counts["suspension_status_unknown"] += len(states)
         counts["tradeability_status_unknown"] += len(states)
-        partitions.append(
-            write_table(
-                build, relative + "/daily-state.parquet", states, ("security_id", "trading_date")
+        daily_path = relative + "/daily-state.parquet"
+        old_daily = revision.get("reused_daily", {}).get(sid) if revision else None
+        if old_daily:
+            source = staging.parent / DATASET_ID / daily_path
+            table = parquet.read_table(source)
+            if sha(source.read_bytes()) != old_daily[
+                "sha256"
+            ] or table.to_pylist() != _canonical_rows(
+                tuple(table.schema.names), states, ("security_id", "trading_date")
+            ):
+                raise ValueError("DAILY_REUSE_INTERPRETATION_CHANGED")
+            target = build / daily_path
+            if not target.exists():
+                shutil.copyfile(source, target)
+            if sha(target.read_bytes()) != old_daily["sha256"]:
+                raise ValueError("REUSED_DAILY_CHANGED")
+            partitions.append(DatasetPartition.model_validate(old_daily))
+        else:
+            partitions.append(
+                write_table(build, daily_path, states, ("security_id", "trading_date"))
             )
-        )
         counts["total_bars"] += len(bars)
         counts["adjustment_rows"] += receipt["factor_rows"]
         provider = "Tencent" if completed[sid].get("provider") == "Tencent" else "Eastmoney"
@@ -432,7 +480,11 @@ def publish(staging: Path, repository: Path) -> dict:
             [dict(**m, instrument_type="COMMON_A_SHARE") for m in members],
             ("security_id",),
         ),
-        ("candidate-master.parquet", candidate_members(staging), ("security_id",)),
+        (
+            "candidate-master.parquet",
+            revision["candidates"] if revision else candidate_members(staging),
+            ("security_id",),
+        ),
         (
             "out-of-scope.parquet",
             [
@@ -466,7 +518,7 @@ def publish(staging: Path, repository: Path) -> dict:
                 dict(name="INSTRUMENT_SCOPE", payload=canonical(scope).decode()),
                 dict(name="EFFECTIVE_MARKET_RULES", payload=rule_bytes.decode()),
                 dict(name="AMOUNT_PRECISION_AUDIT", payload=canonical(amount).decode()),
-                dict(name="ACCEPTED_INPUT_HASHES", payload=canonical(ACCEPTED_INPUTS).decode()),
+                dict(name="ACCEPTED_INPUT_HASHES", payload=canonical(accepted_inputs).decode()),
                 dict(
                     name="CALENDAR_HISTORY_PROVENANCE",
                     payload=canonical(calendar_provenance).decode(),
@@ -479,7 +531,7 @@ def publish(staging: Path, repository: Path) -> dict:
         partitions.append(write_table(build, relative, rows, keys))
     manifest = finalize_manifest(
         dict(
-            dataset_id=DATASET_ID,
+            dataset_id=dataset_id,
             provider="AKShare:Eastmoney+Tencent;Sina;SSE;SZSE",
             provider_version="1.18.94",
             retrieval_timestamp=checkpoint["retrieval_timestamp"],
@@ -496,6 +548,14 @@ def publish(staging: Path, repository: Path) -> dict:
                 "instrument-scope:" + sha(canonical(scope)),
                 "frozen-raw-failover:"
                 + sha((repository / "docs/research/CN_A_RAW_OHLCV_FAILOVER_V1.json").read_bytes()),
+                *(
+                    (
+                        "parent-dataset:" + DATASET_ID,
+                        "supersedes-reason:SECURITY_MASTER_COMPLETENESS_DEFECT",
+                    )
+                    if revision
+                    else ()
+                ),
             ),
             partitions=tuple(sorted(partitions, key=lambda p: p.relative_path)),
             known_limitations=(
@@ -514,7 +574,7 @@ def publish(staging: Path, repository: Path) -> dict:
     write_manifest(build / "manifest.json", manifest)
     verify_dataset(build, manifest)
     report = dict(
-        dataset_id=DATASET_ID,
+        dataset_id=dataset_id,
         coverage=[START, END],
         securities=len(members),
         pre_scope_filter_candidates=scope["total_master_securities"],
