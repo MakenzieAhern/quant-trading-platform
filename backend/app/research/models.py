@@ -9,6 +9,7 @@ from app.domain.markets.rules import ResolvedTradingRules
 
 
 class ResearchPeriodKind(StrEnum):
+    PILOT_SMOKE = "PILOT_SMOKE"
     DEVELOPMENT = "DEVELOPMENT"
     VALIDATION = "VALIDATION"
     OUT_OF_SAMPLE = "OUT_OF_SAMPLE"

@@ -24,6 +24,7 @@ def write_immutable(path: Path, content: bytes) -> None:
         stream.flush()
         os.fsync(stream.fileno())
     try:
+        temporary.chmod(0o444)
         try:
             os.link(temporary, path)
         except FileExistsError:

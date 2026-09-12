@@ -3,7 +3,13 @@ from decimal import Decimal
 
 from app.domain.markets import SecurityId
 from app.research.factors import FactorUnavailableError, calculate_factors
-from app.research.models import AdjustedClosePoint, PortfolioTarget, ResearchSession
+from app.research.models import (
+    AdjustedClosePoint,
+    CrossSectionResult,
+    FactorValues,
+    PortfolioTarget,
+    ResearchSession,
+)
 from app.research.portfolio_construction import (
     construct_equal_weight_portfolio,
     score_cross_section,
@@ -30,6 +36,8 @@ class ChinaAMomentumLowVolResearchStrategy:
         self._history: dict[SecurityId, list[AdjustedClosePoint]] = defaultdict(list)
         self._amount_history: dict[SecurityId, list[Decimal]] = defaultdict(list)
         self._completed_sessions = 0
+        self.last_factors: tuple[FactorValues, ...] = ()
+        self.last_cross_section = CrossSectionResult(scores=())
 
     def target_for_completed_session(
         self, session: ResearchSession, available_equity: Decimal
@@ -79,6 +87,8 @@ class ChinaAMomentumLowVolResearchStrategy:
             prices[bar.security_id] = bar.raw_close
 
         scored = score_cross_section(tuple(factors))
+        self.last_factors = tuple(factors)
+        self.last_cross_section = scored
         selected = select_top_decile(scored, maximum_holdings=self.config.maximum_holdings)
         lot_sizes = dict(session.buy_lot_sizes)
         return construct_equal_weight_portfolio(
@@ -92,3 +102,5 @@ class ChinaAMomentumLowVolResearchStrategy:
         self._history.clear()
         self._amount_history.clear()
         self._completed_sessions = 0
+        self.last_factors = ()
+        self.last_cross_section = CrossSectionResult(scores=())

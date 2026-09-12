@@ -128,6 +128,34 @@ const point = (value: unknown): ResearchPoint => {
   return item as unknown as ResearchPoint;
 };
 
+async function completePoints(
+  path: string,
+  signal?: AbortSignal,
+): Promise<ResearchPage<ResearchPoint>> {
+  const items: ResearchPoint[] = [];
+  let total: number | undefined;
+  do {
+    const result = await apiRequest(
+      `${path}?limit=200&offset=${items.length}`,
+      {},
+      signal,
+      (value) => page(value, point),
+    );
+    if (
+      result.total < 0 ||
+      result.total > 100_000 ||
+      (total !== undefined && total !== result.total) ||
+      result.offset !== items.length ||
+      (result.items.length === 0 && result.total > items.length)
+    )
+      throw new ApiContractError();
+    total = result.total;
+    items.push(...result.items);
+    if (items.length > total) throw new ApiContractError();
+  } while (items.length < total);
+  return { items, total, offset: 0, limit: items.length };
+}
+
 export const researchApi = {
   datasets: (signal?: AbortSignal) =>
     apiRequest("/api/research/datasets", {}, signal, (value) =>
@@ -171,11 +199,9 @@ export const researchApi = {
     kind: "equity" | "benchmark" | "drawdown",
     signal?: AbortSignal,
   ) =>
-    apiRequest(
+    completePoints(
       `/api/research/runs/${encodeURIComponent(runId)}/${kind}`,
-      {},
       signal,
-      (value) => page(value, point),
     ),
   monthlyReturns: (runId: string, signal?: AbortSignal) =>
     apiRequest(

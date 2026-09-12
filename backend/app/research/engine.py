@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime, time
 from decimal import Decimal
@@ -86,7 +87,7 @@ class ResearchExecutionEngine:
         )
         self._expired_order_ids: list[UUID] = []
 
-    def run(self, sessions: tuple[ResearchSession, ...]) -> ResearchExecutionResult:
+    def run(self, sessions: Iterable[ResearchSession]) -> ResearchExecutionResult:
         self.reset()
         previous_date = None
         for session in sessions:

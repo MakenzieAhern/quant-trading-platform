@@ -207,6 +207,16 @@ async def create_run(
 ) -> ResearchRunResponse | JSONResponse:
     if payload.strategy_id != STRATEGY_ID:
         return _error(request, 422, "RESEARCH_STRATEGY_NOT_FOUND", "Research strategy not found")
+    if (
+        payload.dataset_id.startswith("cn-a-pilot-")
+        or payload.period_kind is ResearchPeriodKind.PILOT_SMOKE
+    ):
+        return _error(
+            request,
+            409,
+            "PILOT_NOT_FORMAL_RESEARCH",
+            "Use the approved engineering-smoke command; formal studies remain locked",
+        )
     if payload.benchmark_id not in {"CSI300", "CSI500", "ELIGIBLE_EQUAL_WEIGHT"}:
         return _error(request, 422, "BENCHMARK_DATA_MISSING", "Benchmark is not registered")
     dataset = await session.get(ResearchDatasetModel, payload.dataset_id)

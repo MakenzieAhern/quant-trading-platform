@@ -20,7 +20,7 @@ class DailySecurityStatus(BaseModel):
     security_id: SecurityId
     trading_date: date
     is_st: bool
-    is_suspended: bool
+    is_suspended: bool | None
     is_tradeable: bool | None = None
     is_one_price_limit: bool = False
     delisting_period_start: date | None = None
@@ -127,7 +127,7 @@ class ResolvedTradingRules(BaseModel):
     maximum_limit_quantity: int | None = Field(default=None, gt=0)
     price_limit_model: PriceLimitModel
     price_limit_rate: NonNegativeDecimal | None
-    suspended: bool
+    suspended: bool | None
     executable: bool
     t_plus_one_sale: bool
     permitted_order_types: frozenset[OrderType]
@@ -187,7 +187,7 @@ class TradingRuleResolver:
         elif security_status.is_st and selected.st_price_limit_rate is not None:
             limit_rate = selected.st_price_limit_rate
         executable = (
-            not security_status.is_suspended
+            security_status.is_suspended is False
             and not security_status.is_one_price_limit
             and not selected.conservative_no_fill
             and listing_age_sessions >= selected.conservative_no_fill_listing_sessions

@@ -1,5 +1,14 @@
 # Blockers
 
+## Current: Gate A approved; no active human blocker
+
+Pilot v1 frozen, R4 engineering smoke in progress. The old Gate A wait is resolved.
+Next gate is GATE_FULL_RESEARCH_DATASET_FREEZE after R5 full historical audit.
+Unknown executable liquidity remains NO FILL, not a newly relaxed authority claim.
+Formal studies, OOS, merge and release remain locked.
+
+## Historical checkpoints below (superseded)
+
 ## Current: no engineering blocker; Gate A approval required
 
 R2 complete and R3 all22 checks PASS. SINGLE_SMALLEST_BLOCKER=NONE.

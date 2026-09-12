@@ -5,8 +5,8 @@ each continuation. Preserve newer evidence. These small files are the persistent
 controller state, not a background scheduler or an authorization bypass.
 
 Current checkpoint (2026-09-12 UTC): R1 PASS, R2 atomic publication complete,
-R3 all22 checks PASS. STOP at GATE_A_DATASET_FREEZE; human approval required.
-5177 ordinary A shares,1922088 raw bars; READY/AUDITED YES, FROZEN NO.
+R3 all22 checks PASS. Gate A APPROVED; Pilot v1 frozen after read-only verification.
+5177 ordinary A shares,1922088 raw bars; READY/AUDITED/FROZEN YES.
 Official daily suspension/tradeability is still unknown and fail-closed under
 the approved execution convention; this is not execution-readiness certification.
 See [final R2/R3 report](../research/R2_R3_ORDINARY_A_SHARE_REPORT.md).
@@ -15,9 +15,9 @@ See [final R2/R3 report](../research/R2_R3_ORDINARY_A_SHARE_REPORT.md).
 | --- | --- |
 | R1 Source authority | Master, SSE, SZSE, raw OHLCV, adjustment, calendar, CSI300 PASS; market rules PASS_FOR_PILOT. Canonical source manifest required. Separately require EXECUTION_CONVENTION_VALIDATION PASS (simulation assumption, not exchange fact). Then R2. |
 | R2 Materialization | `cn-a-pilot-akshare-20230101-20240731-v1`, 2023-01-01..2024-07-31. Accepted PIT inputs, raw execution prices, separate adjustments, suspension/tradeability and supported actions. Deterministic bounded retries/concurrency, checkpoints, failure manifest, partitioned Parquet, logical/physical hashes and atomic complete publication. Then R3. |
-| R3 Audit | All audits below pass with actual counts. READY, audited YES, frozen NO. STOP at Gate A; no R4. |
-| R4 Development | Only after human dataset-freeze approval and recorded frozen inputs. Development split only; `cn_a_cross_sectional_momentum_low_vol_v1`, MOM_12_1/TREND_120/LOW_VOL. Version every strategy change. Then R5. |
-| R5 Validation | Validation split only; predeclared metrics and stability checks, no endless optimization or OOS access. Then R6. |
+| R3 Audit | COMPLETE, all22 checks PASS. Gate A subsequently approved; Pilot v1 frozen. |
+| R4 Pilot engineering smoke | Frozen real Pilot through PIT/factors/ranking/construction/RiskEngine/OMS/execution/portfolio/analytics/persistence/API/UI. PILOT_ENGINEERING_SMOKE_ONLY, never formal research evidence. Unchanged strategy; deterministic replay and NO FILL on unknown executable liquidity. |
+| R5 Full historical dataset | Target2010-01-01..2025-12-31 subject to audited coverage, same scope/PIT/lineage standards with historical regime boundaries. Reuse resumable pipeline; never extrapolate Pilot authority backward. Materialize/audit then STOP at GATE_FULL_RESEARCH_DATASET_FREEZE, unfrozen. Formal research remains locked. |
 | R6 Methodology freeze | Hash dataset, strategy/factors, universe, rules, costs, rebalance, construction, benchmark and splits. OOS lock remains unauthorized. STOP at Gate B. |
 | R7 Official OOS | Explicit authorization and frozen methodology only; exactly once, immutable result lineage. Never replace a bad result. Then R8. |
 | R8 Portfolio release | Bilingual UI/results, benchmark/equity/drawdown/heatmap/rolling views, methodology, reproducibility, limitations, architecture, READMEs, screenshots and release notes. STOP at Gate C before merge/tag/public visibility change. |
@@ -38,7 +38,7 @@ R3 additionally requires INSTRUMENT_TYPE_SCOPE, NON_A_SHARE_INSTRUMENT_LEAKAGE=0
 INSTRUMENT_CLASSIFICATION_REPRODUCIBILITY, PROVIDER_LINEAGE, CROSS_SOURCE_PARITY
 and AMOUNT_SEMANTIC_VALIDATION. No strategy performance is inspected for scope.
 
-R5 metrics: return/CAGR, volatility, Sharpe/Sortino, drawdown/Calmar, win rate,
+Future formal metrics (locked): return/CAGR, volatility, Sharpe/Sortino, drawdown/Calmar, win rate,
 profit factor, turnover/holding period/costs, benchmark/excess return, tracking
 error/information ratio, rolling/monthly metrics and regime stability.
 
@@ -52,4 +52,5 @@ data-integrity failure. Record the exact exception and next action.
 Only push existing `feature/a-share-research-v1.1` / PR #12. Never change main,
 merge, release, expose secrets/raw datasets, silently substitute providers, fabricate
 data/results, enable live trading or ML/GPU. Do not repeat accepted SSE/SZSE audits
-without regression; do not revisit ancient 600721 history. No studies before Gate A.
+without regression; do not revisit ancient 600721 history unless relevant to the newly requested full period.
+No formal studies before the Full Research Dataset freeze gate.

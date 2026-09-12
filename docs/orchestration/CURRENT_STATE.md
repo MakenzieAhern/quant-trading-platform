@@ -1,5 +1,18 @@
 # Current state
 
+## Current: Gate A approved, Pilot frozen, R4 engineering smoke running
+
+Human Gate A approval supersedes the stop below. Final read-only verification
+PASS; Pilot v1 frozen with unchanged0696a5c7...manifest. Freeze record canonical
+SHA74870e7d64a9197bd75a6ee32e7bf019aecaf5159d7ed9d1023078df7ce0ad31.
+STATUS=RUNNING; CURRENT_STAGE=R4_PILOT_ENGINEERING_SMOKE_STUDY.
+No formal Development/Validation/OOS is authorized. R4 only uses unchanged
+predeclared strategy and fail-closed unknown execution states. Next R5 is full
+2010-2025 historical materialization/audit, not formal strategy tuning; next gate
+GATE_FULL_RESEARCH_DATASET_FREEZE. See PILOT_FREEZE_AND_SMOKE.md.
+
+## Historical checkpoints below (superseded)
+
 ## Current: R3 complete; STOP at Gate A
 
 2026-09-12 UTC: STATUS=AWAITING_HUMAN_APPROVAL; CURRENT_STAGE=R3;

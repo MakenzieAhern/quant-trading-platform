@@ -1,5 +1,17 @@
 # Autonomous Quant Project Checkpoint
 
+## Current: approved freeze complete; R4 underway
+
+Pilot freeze PASS after final read-only R3 identity/partition/source verification.
+Original manifest/partitions unchanged. Freeze record74870e7d...committed separately.
+R4 runs PILOT_ENGINEERING_SMOKE_ONLY with full/reversed/prefix replay and existing
+research persistence/API/UI; no economic parameter changes or assumed fills.
+Backend422 tests,frontend76 tests,lint/type/build checks pass at this checkpoint.
+Full R4 acceptance remains pending actual persisted API/UI parity. No formal
+Development/Validation/OOS,merge/release. Next stage is R5 full historical data.
+
+## Historical checkpoints below (superseded)
+
 ## Current: R2 published and R3 audited; Gate A stop
 
 RUN_ID=20260912-R2-R3-ORDINARY-A-SHARE; CURRENT_STAGE=R3;

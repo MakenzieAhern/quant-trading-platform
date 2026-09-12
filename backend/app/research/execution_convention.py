@@ -29,7 +29,11 @@ def rejection_reason(
         for item in (status, rules)
     ):
         return "IDENTITY_MISMATCH"
-    if status.is_tradeable is not True or status.is_suspended or rules.suspended:
+    if (
+        status.is_tradeable is not True
+        or status.is_suspended is not False
+        or rules.suspended is not False
+    ):
         return "NOT_CONFIRMED_TRADEABLE"
     if not rules.executable or OrderType.LIMIT not in rules.permitted_order_types:
         return "RULE_NOT_EXECUTABLE"

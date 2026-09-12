@@ -1,5 +1,9 @@
 export type ResearchPeriod =
-  "DEVELOPMENT" | "VALIDATION" | "OUT_OF_SAMPLE" | "FULL_PERIOD";
+  | "DEVELOPMENT"
+  | "VALIDATION"
+  | "OUT_OF_SAMPLE"
+  | "FULL_PERIOD"
+  | "PILOT_SMOKE";
 
 export interface ResearchPage<T> {
   items: T[];
