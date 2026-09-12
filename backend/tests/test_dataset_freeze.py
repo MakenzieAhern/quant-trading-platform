@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -37,3 +38,38 @@ def test_control_record_is_atomic_idempotent_and_not_replaceable(tmp_path: Path)
         write_immutable(path, b"replacement")
     assert path.read_bytes() == b"original"
     assert list(tmp_path.iterdir()) == [path]
+
+
+@pytest.mark.parametrize("changed", ["review", "context"])
+def test_revised_freeze_rejects_changed_approved_evidence(tmp_path: Path, changed: str) -> None:
+    from app.data.catalog.checksums import sha256_file
+    from scripts.freeze_pilot import freeze
+
+    dataset = tmp_path / "cn-a-pilot-akshare-20230101-20240731-v2"
+    dataset.mkdir()
+    approvals = tmp_path / ".research/approvals"
+    reports = tmp_path / ".research/reports"
+    build = tmp_path / "pilot-v2-build"
+    for directory in (approvals, reports, build):
+        directory.mkdir(parents=True)
+    paths = {
+        "review": reports / "revised-pilot-v2.json",
+        "context": build / "revision-context.json",
+    }
+    for path in paths.values():
+        path.write_text("{}")
+    (approvals / "gate-a-pilot-v2.json").write_text(
+        json.dumps(
+            dict(
+                decision="APPROVED",
+                dataset_id=dataset.name,
+                review_sha256=sha256_file(paths["review"]),
+                context_sha256=sha256_file(paths["context"]),
+            )
+        )
+    )
+    paths[changed].write_text('{"changed": true}')
+    with pytest.raises(ValueError, match="PRE_FREEZE_APPROVED_V2_EVIDENCE_CHANGED"):
+        freeze(tmp_path, dataset, tmp_path)
+    assert not (dataset / MARKER).exists()
+    assert not (tmp_path / ".research/freezes").exists()

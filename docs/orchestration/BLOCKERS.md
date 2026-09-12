@@ -1,5 +1,15 @@
 # Blockers
 
+## Current: revised freeze approved; final verification PASS
+
+Latest human approval supersedes prior revised-freeze STOP. All eight approved
+component hashes, partition bytes, counts,25 R3 checks and preserved v1 verify.
+Freeze execution pending; then unchanged R4 v2 and, on PASS, R5 full-history
+materialization/audit. Next gate GATE_FULL_RESEARCH_DATASET_FREEZE, unfrozen.
+No formal studies, PR merge or release. Previous acceptance decisions unchanged.
+
+## Historical checkpoints below (superseded)
+
 ## Current: only human approval for revised Pilot freeze
 
 SINGLE_SMALLEST_BLOCKER=HUMAN_APPROVAL_REQUIRED_FOR_V2_FREEZE.

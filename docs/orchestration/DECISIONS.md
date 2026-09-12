@@ -1,5 +1,19 @@
 # Decisions
 
+## 2026-09-13: human approves exact revised Pilot v2 freeze and engineering continuation
+
+GATE_A_REVISED_DATASET_FREEZE is APPROVED for manifest187b8c31...92600 only.
+Approval receipt `.research/approvals/gate-a-pilot-v2.json` pins the unchanged
+audited review and revision context. Final read-only verification must reproduce
+all approved component hashes and25 R3 checks before the existing immutable writer
+publishes separate v2 freeze metadata. Preserve v1 permanently, frozen/superseded
+and acceptance INVALIDATED. No in-place v2 corrections after freeze; use v3/review.
+Then rerun unchanged R4 on v2 only, labelled PILOT_ENGINEERING_SMOKE_ONLY,
+including authorized v1/v2 engineering counts/equity/return diagnostics, no tuning.
+On R4 PASS continue R5 targeting2010-2025 with genuinely historical authorities;
+do not extrapolate Pilot rules/sources. Stop at full dataset freeze gate, unfrozen,
+or a genuine blocker. Formal Development/Validation/OOS, merge/release remain locked.
+
 ## 2026-09-12: human approves revised Pilot rebuild, not freeze
 
 Approval authorizes a full impact audit, corrected v2 materialization and fresh

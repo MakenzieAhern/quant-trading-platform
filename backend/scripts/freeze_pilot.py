@@ -43,6 +43,10 @@ CHECKS = frozenset(
 
 
 def verify(staging: Path, dataset: Path, repository: Path) -> dict:
+    if dataset.name == "cn-a-pilot-akshare-20230101-20240731-v2":
+        from scripts.freeze_revised_pilot import verify_revised
+
+        return verify_revised(staging, dataset, repository)
     approval = json.loads((repository / ".research/approvals/gate-a-pilot-v1.json").read_bytes())
     state = json.loads((repository / ".research/project_state.json").read_bytes())
     root = staging / "pilot-akshare-20260911"
