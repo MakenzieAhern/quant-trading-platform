@@ -2,6 +2,17 @@
 
 ## Current running milestone: approved instrument scope
 
+Latest running snapshot:4074 completed inputs (657 primary,3417 secondary),1103
+remaining,zero required failures;4020 Parquet securities/1498998 raw rows.
+Original2580 partition receipts still reproduce
+`ff844abd20b651ae9a962515a6feb6cc551f90468daf7b984959da7121149ca6`.
+Incremental amount audit:4032 securities/1503570 rows,26922 potentially reachable
+decisions,zero ambiguity/outliers; SHA-256
+`052c1067c455f0d9cdb4556509c0409c29ca02cbbbac61141175a73baedcafbd`.
+Live worker remains active; external checkpoint supersedes these snapshot counts.
+Publication/audit code based on8d6a835 passes419 tests, lint and typing. The offline
+synthetic full publication/resume/audit test is not an actual Pilot audit PASS.
+
 Human decision recorded in DECISIONS and research methodology. R2 RUNNING,
 approval not required. Shared explicit COMMON_A_SHARE gate preserves four boards
 and listing/delisting; unknown/late/overlapping classification fails closed.

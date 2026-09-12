@@ -8,7 +8,7 @@ import pytest
 from app.data.catalog import load_manifest, verify_dataset
 from app.domain.markets.cn_a_rules import historical_cn_a_rules
 from scripts.audit_published_pilot import audit as audit_catalog
-from scripts.publish_akshare_pilot import publication_inputs, publish, write_table
+from scripts.publish_akshare_pilot import publication_inputs, publish, source_metadata, write_table
 from scripts.reconcile_sse_cninfo import canonical, save, sha
 from scripts.stage_akshare_pilot import DATASET_ID
 
@@ -56,6 +56,15 @@ def test_publication_is_complete_atomic_resumable_and_preserves_unknowns(tmp_pat
     ]
     save(staging / "original-raw.json", raw)
     save(staging / "original-factor.json", factors)
+    for kind, payload in (("raw", raw), ("factor", factors)):
+        save(
+            staging / f"original-{kind}.json.meta.json",
+            dict(
+                sha256=sha(canonical(payload)),
+                retrieved_at_utc="2026-09-12T00:00:00Z",
+                url=f"https://fixture.invalid/{kind}",
+            ),
+        )
     completed = {
         sid: dict(
             raw_path="original-raw.json",
@@ -223,3 +232,28 @@ def test_publication_controller_cannot_cross_frozen_or_non_r2_gate(tmp_path):
     assert (
         json.loads((tmp_path / ".research/project_state.json").read_bytes())["status"] == "BLOCKED"
     )
+
+
+def test_source_metadata_reuses_accepted_combined_manifest(tmp_path):
+    (tmp_path / "original.json").write_bytes(b"source")
+    checksum = sha(b"source")
+    source = dict(
+        file="original.json",
+        sha256=checksum,
+        retrieval_completed_utc="2026-09-12T00:00:00Z",
+        url="https://fixture.invalid/raw",
+    )
+    manifest = dict(sources=[source])
+    save(
+        tmp_path / "acceptance-manifest.json",
+        {**manifest, "canonical_sha256": sha(canonical(manifest))},
+    )
+    inputs = dict(
+        raw_path="original.json",
+        factor_path="original.json",
+        raw_sha256=checksum,
+        factor_sha256=checksum,
+    )
+    assert len(source_metadata(tmp_path, inputs)) == 2
+    with pytest.raises(ValueError, match="PROVENANCE_CHANGED"):
+        source_metadata(tmp_path, {**inputs, "raw_sha256": "b" * 64})

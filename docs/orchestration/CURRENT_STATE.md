@@ -2,6 +2,15 @@
 
 ## Current: approved ordinary-A-share scope implementation
 
+Running recovery snapshot: 657 primary +3417 secondary inputs (4074 total),
+1103 remaining, zero required failures. External secondary checkpoint advances
+and supersedes these counters. Incremental Parquet:4020 securities/1498998 rows,
+zero failures. All original2580 receipts reproduce the original `ff844abd...` hash.
+Amount audit covers4032 securities/1503570 rows,26922 potentially reachable
+decisions,zero ambiguous decisions/outliers; not yet the final full-universe audit.
+R2 composer and R3 audit implementation/tests are based on8d6a835;419 tests
+pass locally. No real Pilot publication or full R3 completion is claimed yet.
+
 R2 RUNNING; HUMAN_APPROVAL_REQUIRED=NO. Scope decision APPROVED:
 ORDINARY_A_SHARE_EQUITIES_ONLY. The former CDR methodology question is resolved.
 689009 is AUTHORITATIVELY_OUT_OF_SCOPE_INSTRUMENT, not a required factor failure.

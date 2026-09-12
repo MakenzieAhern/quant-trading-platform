@@ -11,6 +11,7 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from importlib import import_module
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 import pyarrow.parquet as parquet
 
@@ -123,6 +124,48 @@ def delisting_starts(staging: Path) -> dict[str, str]:
             sid, start = entry["security_id"], entry["effective_from"]
             result[sid] = min(start, result.get(sid, start))
     return result
+
+
+def source_metadata(staging: Path, inputs: dict) -> list[dict]:
+    files = [dict(path=inputs["factor_path"], sha256=inputs["factor_sha256"], provider="Sina")]
+    if inputs.get("provider") == "Tencent":
+        files.extend(dict(**s, provider="Tencent") for s in inputs["sources"])
+    else:
+        files.append(
+            dict(path=inputs["raw_path"], sha256=inputs["raw_sha256"], provider="Eastmoney")
+        )
+    result = []
+    for item in files:
+        path = staging / item["path"]
+        metadata_path = path.with_suffix(path.suffix + ".meta.json")
+        if metadata_path.exists():
+            meta = json.loads(metadata_path.read_bytes())
+        else:
+            # The accepted native-Windows route stores metadata in one acceptance manifest.
+            accepted = json.loads((path.parent / "acceptance-manifest.json").read_bytes())
+            signature = accepted.pop("canonical_sha256")
+            if sha(canonical(accepted)) != signature:
+                raise ValueError("ACCEPTED_SOURCE_MANIFEST_CHANGED")
+            meta = next(r for r in accepted["sources"] if r["file"] == path.name)
+            meta = {**meta, "retrieved_at_utc": meta["retrieval_completed_utc"]}
+        timestamp = datetime.fromisoformat(meta["retrieved_at_utc"])
+        if (
+            meta["sha256"] != item["sha256"]
+            or sha(path.read_bytes()) != item["sha256"]
+            or timestamp.utcoffset() != UTC.utcoffset(timestamp)
+        ):
+            raise ValueError("SOURCE_METADATA_PROVENANCE_CHANGED")
+        result.append(
+            dict(
+                path=item["path"],
+                provider=item["provider"],
+                raw_content_sha256=item["sha256"],
+                request_url=meta["url"],
+                request_parameters=parse_qs(urlsplit(meta["url"]).query),
+                retrieval_timestamp_utc=meta["retrieved_at_utc"],
+            )
+        )
+    return sorted(result, key=lambda r: r["path"])
 
 
 def publication_inputs(staging: Path, repository: Path) -> tuple[list[dict], dict, dict]:
@@ -346,7 +389,19 @@ def publish(staging: Path, repository: Path) -> dict:
             dict(
                 security_id=sid,
                 provider=provider,
+                underlying_source=provider,
                 input_lineage_json=canonical(completed[sid]).decode(),
+                source_metadata_json=canonical(source_metadata(staging, completed[sid])).decode(),
+                provider_interface="AKShare 1.18.94 stock_zh_a_hist_tx"
+                if provider == "Tencent"
+                else "AKShare 1.18.94 stock_zh_a_hist(adjust=empty)",
+                normalized_logical_sha256=next(
+                    p["logical_sha256"]
+                    for p in receipt["files"]
+                    if p["relative_path"].endswith("/raw.parquet")
+                ),
+                date_coverage_json=canonical([dates[0], dates[-1]]).decode(),
+                failover_reason=completed[sid].get("failover_reason", "PRIMARY_SUCCEEDED"),
                 instrument_classification_json=canonical(by_id[sid]).decode(),
             )
         )

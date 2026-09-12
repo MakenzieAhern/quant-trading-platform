@@ -25,8 +25,9 @@ from app.domain.markets.security import InstrumentClassification
 from app.domain.trading import OrderSide, OrderType
 from scripts.audit_amount_impact import status_lookup
 from scripts.audit_pilot_observations import missing_intervals
-from scripts.materialize_akshare_partitions import normalized_bars
-from scripts.publish_akshare_pilot import ACCEPTED_INPUTS, delisting_starts
+from scripts.audit_raw_failover import merged, normalized
+from scripts.materialize_akshare_partitions import POLICY_PATH, normalized_bars
+from scripts.publish_akshare_pilot import ACCEPTED_INPUTS, delisting_starts, source_metadata
 from scripts.reconcile_sse_cninfo import canonical, save, sha
 from scripts.sina_adjustment_audit import factor_at, feature_close, parse_factors
 from scripts.stage_akshare_pilot import (
@@ -45,7 +46,12 @@ def require(condition: bool, reason: str) -> None:
 
 
 def verify_preserved_checkpoint(root: Path) -> str:
-    primary = json.loads((root / "recovery-checkpoint.json").read_bytes())
+    primary_bytes = (root / "recovery-checkpoint.json").read_bytes()
+    require(
+        sha(primary_bytes) == "ffdc46937ecbd30f74a28660ef1769d2a7b8506ef65d0f1c2ae45ddac4841a68",
+        "ORIGINAL_PRIMARY_CHECKPOINT_CHANGED",
+    )
+    primary = json.loads(primary_bytes)
     secondary = json.loads((root / "secondary-checkpoint.json").read_bytes())
     original = set(primary["completed"]) | {
         r["security_id"]
@@ -212,6 +218,13 @@ def audit(staging: Path, dataset: Path) -> dict:
     )
     members = pilot_members(staging)
     candidates = candidate_members(staging)
+    require(
+        manifest.coverage_start.isoformat() == START
+        and manifest.coverage_end.isoformat() == END
+        and manifest.security_count == len(members)
+        and manifest.symbols == tuple(sorted(m["symbol"] for m in members)),
+        "MANIFEST_SCOPE_METADATA_CHANGED",
+    )
     facts = [
         InstrumentClassification.model_validate(r["classification"])
         for r in json.loads(
@@ -249,6 +262,9 @@ def audit(staging: Path, dataset: Path) -> dict:
         require(sha((staging / relative).read_bytes()) == expected, "ACCEPTED_INPUT_BYTES_CHANGED")
     sessions = [r["session_date"] for r in read("calendar.parquet")]
     require(
+        all(r["is_open"] == "1" for r in read("calendar.parquet")), "CALENDAR_OPEN_FLAG_CHANGED"
+    )
+    require(
         sessions
         == json.loads(
             (
@@ -283,6 +299,25 @@ def audit(staging: Path, dataset: Path) -> dict:
         r["security_id"]: json.loads(r["input_lineage_json"]) for r in read("lineage.parquet")
     }
     require(set(lineage) == required, "PROVIDER_LINEAGE_INCOMPLETE")
+    secondary_present = any(r.get("provider") == "Tencent" for r in lineage.values())
+    primary_pending = (
+        json.loads((staging / "pilot-akshare-20260911/recovery-checkpoint.json").read_bytes())[
+            "pending"
+        ]
+        if secondary_present
+        else {}
+    )
+    policy_sha = sha(POLICY_PATH.read_bytes()) if secondary_present else None
+    for row in read("lineage.parquet"):
+        require(
+            json.loads(row["source_metadata_json"])
+            == source_metadata(staging, lineage[row["security_id"]]),
+            "SOURCE_METADATA_CHANGED",
+        )
+    receipts = json.loads(
+        (staging / "pilot-akshare-20260911/partition-checkpoint.json").read_bytes()
+    )["partitions"]
+    published = {p.relative_path: p.model_dump(mode="json") for p in manifest.partitions}
     totals, missing, providers = Counter(), [], Counter()
     expected_paths = {p.relative_path for p in manifest.partitions if "/" not in p.relative_path}
     for n, member in enumerate(members, 1):
@@ -310,6 +345,15 @@ def audit(staging: Path, dataset: Path) -> dict:
             for g in result["gaps"]
         )
         inputs = lineage[sid]
+        receipt = receipts[sid]
+        require(
+            receipt["source_hashes"] == {k: inputs[k + "_sha256"] for k in ("raw", "factor")},
+            "RECEIPT_SOURCE_LINEAGE_CHANGED",
+        )
+        require(
+            all(published[r["relative_path"]] == r for r in receipt["files"]),
+            "PRESERVED_PARTITION_CHANGED_IN_PUBLICATION",
+        )
         for kind in ("raw", "factor"):
             require(
                 sha((staging / inputs[kind + "_path"]).read_bytes()) == inputs[kind + "_sha256"],
@@ -327,6 +371,20 @@ def audit(staging: Path, dataset: Path) -> dict:
         require(provider in {"Eastmoney", "Tencent"}, "UNACCEPTED_PROVIDER")
         raw = (staging / inputs["raw_path"]).read_bytes()
         if provider == "Tencent":
+            payload = json.loads(raw)
+            require(
+                inputs["policy_sha256"] == policy_sha == payload["policy_sha256"]
+                and "frozen-raw-failover:" + policy_sha in manifest.source_lineage
+                and payload["primary_failure_sha256"] == sha(canonical(primary_pending[sid])),
+                "FROZEN_FAILOVER_PROOF_CHANGED",
+            )
+            replayed = merged(
+                [
+                    normalized((staging / s["path"]).read_bytes(), member, set(sessions))
+                    for s in inputs["sources"]
+                ]
+            )
+            require(replayed == json.loads(raw)["rows"], "UPSTREAM_NORMALIZATION_CHANGED")
             expected_bars = []
             for row in json.loads(raw)["rows"]:
                 expected_bar = DailyBarRecord.model_validate(row).model_dump(mode="python")
