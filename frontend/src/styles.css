@@ -516,6 +516,13 @@ label small,
 }
 .detailHeader h1 {
   font-size: 52px;
+  overflow-wrap: anywhere;
+}
+.detailHeader > div {
+  min-width: 0;
+}
+.detailHeader .splitBadge {
+  flex-shrink: 0;
 }
 .detailHeader .statusBadge {
   font-size: 13px;
@@ -533,7 +540,7 @@ label small,
 }
 .runFacts {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-bottom: 24px;
   border: 1px solid #244437;
 }
@@ -557,6 +564,7 @@ label small,
   text-transform: uppercase;
 }
 .runFacts strong {
+  overflow-wrap: anywhere;
   color: #bfd2c8;
   font-size: 12px;
   font-weight: 500;

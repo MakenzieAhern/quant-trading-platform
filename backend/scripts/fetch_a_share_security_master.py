@@ -277,10 +277,12 @@ def _fetch_sse(fetcher: OfficialFetcher) -> list[dict[str, str]]:
                     "SSE", symbol, str(item["COMPANY_ABBR"]), board, listing, None, SSE_PAGE
                 )
     params["sqlId"] = "COMMON_SSE_CP_GPJCTPZ_GPLB_ZZGP_L"
-    params["STOCK_TYPE"] = "1,2"
+    params["STOCK_TYPE"] = "1,2,8"
     params["COMPANY_STATUS"] = "3"
     url = "https://query.sse.com.cn/sseQuery/commonQuery.do?" + urllib.parse.urlencode(params)
-    payload = fetcher.get("sse-terminated.json", url, exchange="SSE", referer=SSE_DELIST_PAGE)
+    payload = fetcher.get(
+        "sse-terminated-all-boards.json", url, exchange="SSE", referer=SSE_DELIST_PAGE
+    )
     for item in _sse_data(payload):
         symbol = str(item["A_STOCK_CODE"])
         if not re.fullmatch(r"6\d{5}", symbol):

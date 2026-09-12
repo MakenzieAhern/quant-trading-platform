@@ -34,7 +34,11 @@ export function ResearchMetricGrid({ metrics }: { metrics: ResearchMetric[] }) {
               ? formatPercent(metric.value)
               : formatDecimal(metric.value)}
           </strong>
-          <small>{metric.period_kind}</small>
+          <small>
+            {metric.period_kind === "PILOT_SMOKE"
+              ? "PILOT_ENGINEERING_SMOKE_ONLY"
+              : metric.period_kind}
+          </small>
         </div>
       ))}
     </div>

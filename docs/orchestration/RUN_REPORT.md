@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## Current: frozen Pilot retained; R4 engineering passed; R5 counterexample
+
+PILOT_DATASET_FROZEN=YES; immutable0696a5c7...manifest remains unchanged.
+R4 pipeline/replay/no-look-ahead/metric/API/UI parity checks PASS on the supplied
+data:382 sessions,7 rebalances,140 orders,0 fills. All results remain explicitly
+PILOT_ENGINEERING_SMOKE_ONLY. No strategy economics changed.
+R5 source expansion independently proved three absent STAR exit candidates.
+Current dataset acceptance INVALIDATED; original R3 receipts preserved as history.
+Full dataset CREATED=NO, AUDITED=NO, FROZEN=NO; all full counts/hash unavailable.
+Stop for revised Gate A review, not full freeze approval of an unbuilt dataset.
+Blocker=FROZEN_PILOT_MASTER_OMITS_STAR_EXIT_SECURITIES.
+Detailed evidence and completed/unfinished work:
+`../research/PILOT_FREEZE_R4_R5_CHECKPOINT.md`.
+
+## Historical checkpoints below (superseded)
+
 ## Current: approved freeze complete; R4 underway
 
 Pilot freeze PASS after final read-only R3 identity/partition/source verification.

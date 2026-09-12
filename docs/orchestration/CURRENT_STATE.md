@@ -1,5 +1,22 @@
 # Current state
 
+## Current: R5 stopped on new frozen Pilot master counterexample
+
+Pilot v1 was frozen exactly as approved; all bytes and freeze receipt remain
+unchanged. R4 engineering/API/UI checks passed. R5 independently discovered
+three omitted STAR exit securities:688086,688555,688287. Frozen candidate,
+securities and exclusion Parquet tables contain none of them. Root query omitted
+STOCK_TYPE=8; code and regression check are now fixed, but no dataset rewritten.
+Current Pilot readiness and source-master completeness acceptance are INVALIDATED.
+R4=ENGINEERING_PASS_DATASET_ACCEPTANCE_INVALIDATED. R5 full dataset not created.
+STATUS=BLOCKED_REVISED_FREEZE_REVIEW; HUMAN_APPROVAL_REQUIRED=YES;
+HUMAN_APPROVAL_GATE=GATE_A_REVISED_DATASET_REVIEW.
+SINGLE_SMALLEST_BLOCKER=FROZEN_PILOT_MASTER_OMITS_STAR_EXIT_SECURITIES.
+See `../research/PILOT_FREEZE_R4_R5_CHECKPOINT.md`. This is not approval to freeze
+an unbuilt v2 or run formal studies. No Development/Validation/OOS, merge or release.
+
+## Historical checkpoints below (superseded)
+
 ## Current: Gate A approved, Pilot frozen, R4 engineering smoke running
 
 Human Gate A approval supersedes the stop below. Final read-only verification

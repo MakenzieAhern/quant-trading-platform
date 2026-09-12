@@ -15,7 +15,7 @@ export function DrawdownChart({ points }: { points: ResearchPoint[] }) {
             key={`${point.trading_date}-${index}`}
             title={`${point.trading_date}: ${point.value}`}
             style={{
-              height: `${Math.max(2, (Number(point.value) / minimum) * 100)}%`,
+              height: `${minimum === 0 ? 2 : Math.max(2, (Number(point.value) / minimum) * 100)}%`,
             }}
           />
         ))}

@@ -1,5 +1,20 @@
 # Decisions
 
+## 2026-09-12: independent counterevidence after approved freeze
+
+Gate A approval was executed only after exact read-only R3 identity/hash checks.
+R4 engineering passed without tuning or optimistic fills. During R5, the official
+STAR exit census independently proved three securities omitted before Pilot
+publication. The original byte-equality audit did not certify a complete universe.
+Withdraw current master/readiness acceptance; preserve v1 frozen bytes and all
+historical receipts. Do not transfer Gate A approval to a corrected version/hash.
+Pause for revised dataset review. This is an engineering evidence disposition,
+NOT a newly granted human approval and NOT a new conservative scope exclusion.
+Fix the common source-query cause, preserve old source filenames, retain targeted
+repair probes. A v2 still needs source closure and full audit before freeze review.
+Full research acceptance remains unestablished and all formal studies locked.
+Evidence: `../research/PILOT_FREEZE_R4_R5_CHECKPOINT.md`.
+
 ## Human Gate A approval and revised stage scope
 
 2026-09-12: Human explicitly approved freezing the exact audited Pilot manifest

@@ -81,6 +81,11 @@ export function ResearchRunPage({ runId }: { runId: string }) {
       {run.data.period_kind !== "OUT_OF_SAMPLE" && (
         <div className="oosGuard">{t("research:oosNotRun")}</div>
       )}
+      {Boolean(run.data.diagnostics.dataset_acceptance_warning) && (
+        <div className="oosGuard" role="alert">
+          {String(run.data.diagnostics.dataset_acceptance_warning)}
+        </div>
+      )}
       {run.data.period_kind === "PILOT_SMOKE" && (
         <div className="oosGuard" role="note">
           PILOT_ENGINEERING_SMOKE_ONLY — 仅工程验证；非 Development / Validation

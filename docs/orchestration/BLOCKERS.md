@@ -1,5 +1,22 @@
 # Blockers
 
+## Current: material frozen-universe omission requires revised review
+
+FROZEN_PILOT_MASTER_OMITS_STAR_EXIT_SECURITIES: official SSE STOCK_TYPE=8 exit
+register proves688086,688555,688287 overlap the Pilot lifecycle yet are absent
+from all frozen candidate/securities/exclusion tables. Source checksum and dates:
+`.research/reports/pilot-v1-master-omissions.json`.
+Root query now includes1,2,8; regression test passes. The frozen dataset itself
+is intentionally not corrected in place. Source-master/survivorship/retention
+acceptance is invalidated, and the old5177-security approval cannot be silently
+transferred to a corrected version. Review a new Pilot version and repeat source
+closure/audits/freeze approval; v2 is NOT yet built or ready for freeze.
+HUMAN_APPROVAL_GATE=GATE_A_REVISED_DATASET_REVIEW; HUMAN_APPROVAL_REQUIRED=YES.
+R5 full materialization stopped. Not a Docker failure or claimed provider outage.
+No formal studies, full freeze, merge or release.
+
+## Historical checkpoints below (superseded)
+
 ## Current: Gate A approved; no active human blocker
 
 Pilot v1 frozen, R4 engineering smoke in progress. The old Gate A wait is resolved.

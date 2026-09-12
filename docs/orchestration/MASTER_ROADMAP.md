@@ -1,5 +1,13 @@
 # v1.1 controller roadmap
 
+Current exception (2026-09-12): R4 engineering completed, but R5 uncovered a
+frozen Pilot master omission of three STAR exits. Historical R1/R2/R3 completion
+does not remain a current completeness acceptance. Pause at revised Gate A
+dataset review; preserve frozen v1, repair via a new version and new audit/freeze
+review. R5 full2010-2025 materialization/audit remains unfinished. Intended next
+full-dataset gate remains GATE_FULL_RESEARCH_DATASET_FREEZE after valid completion.
+See `../research/PILOT_FREEZE_R4_R5_CHECKPOINT.md` before following stage rows below.
+
 Read `.research/project_state.json`, CURRENT_STATE, RUN_REPORT and BLOCKERS before
 each continuation. Preserve newer evidence. These small files are the persistent
 controller state, not a background scheduler or an authorization bypass.

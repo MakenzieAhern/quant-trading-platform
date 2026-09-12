@@ -11,11 +11,12 @@ function coordinates(
   points: ResearchPoint[],
   width: number,
   height: number,
+  scaleValues: number[],
 ): ChartPoint[] {
   const values = points.map((point) => Number(point.value));
-  if (values.some((value) => !Number.isFinite(value))) return [];
-  const minimum = Math.min(...values);
-  const maximum = Math.max(...values);
+  if (scaleValues.some((value) => !Number.isFinite(value))) return [];
+  const minimum = Math.min(...scaleValues);
+  const maximum = Math.max(...scaleValues);
   const range = maximum - minimum || 1;
   return values.map((value, index) => ({
     x: points.length === 1 ? width / 2 : (index / (points.length - 1)) * width,
@@ -37,8 +38,16 @@ export function BenchmarkChart({
   const { t } = useTranslation("accessibility");
   const width = 900;
   const height = 260;
-  const strategyCoordinates = coordinates(strategy, width, height);
-  const benchmarkCoordinates = coordinates(benchmark, width, height);
+  const scaleValues = [...strategy, ...benchmark].map((point) =>
+    Number(point.value),
+  );
+  const strategyCoordinates = coordinates(strategy, width, height, scaleValues);
+  const benchmarkCoordinates = coordinates(
+    benchmark,
+    width,
+    height,
+    scaleValues,
+  );
   return (
     <figure className="researchChart" aria-label={t("benchmarkChart")}>
       <svg viewBox={`0 0 ${width} ${height}`} role="img">
