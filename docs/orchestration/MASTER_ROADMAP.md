@@ -1,10 +1,11 @@
 # v1.1 controller roadmap
 
-## Current: revised freeze approved; final verification PASS
+## Current: revised Pilot v2 frozen; R4 v2 RUNNING
 
 Latest human approval supersedes prior revised-freeze STOP. All eight approved
 component hashes, partition bytes, counts,25 R3 checks and preserved v1 verify.
-Freeze execution pending; then unchanged R4 v2 and, on PASS, R5 full-history
+V2 freeze complete, canonical receipt f9add5f2...635bcb3. Unchanged R4 v2 running;
+R1 COMPLETE; R2/R3 v2 COMPLETE; R2 v1 SUPERSEDED, R3 v1 INVALIDATED. On PASS, R5 full-history
 materialization/audit. Next gate GATE_FULL_RESEARCH_DATASET_FREEZE, unfrozen.
 No formal studies, PR merge or release. Previous acceptance decisions unchanged.
 
