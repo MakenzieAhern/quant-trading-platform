@@ -19,6 +19,29 @@ from app.portfolio import PortfolioEngine, PortfolioError
 START = datetime(2024, 1, 1, tzinfo=UTC)
 
 
+def test_rights_issue_never_silently_subscribes_or_forfeits() -> None:
+    portfolio = PortfolioEngine(EventBus(), Decimal(10000))
+    symbol = "600036"
+    portfolio.apply_fill(make_fill(1, OrderSide.BUY, "100", "15", symbol=symbol))
+    before = portfolio.mark_to_market(make_bar(1, "15", symbol=symbol))
+    action = CorporateAction(
+        security_id=SecurityId(value="CN-A:SSE:600036"),
+        action_type=CorporateActionType.RIGHTS_RELATED_EVENT,
+        ex_date=date(2024, 1, 3),  # Synthetic timestamp; official terms are retained separately.
+        share_ratio=Decimal("0.13"),
+        subscription_price=Decimal("8.85"),
+        source_provider="official-terms-regression",
+        source_version="test-v1",
+        source_record_hash="eacae9cd6c9060ca1739dd5e22129c345daf3461b1e36e30dd4d144b4bb9e141",
+        completeness=CorporateActionCompleteness.COMPLETE,
+    )
+    with pytest.raises(PortfolioError, match="unsupported corporate action type"):
+        portfolio.apply_corporate_action(symbol, action, START + timedelta(days=2))
+    after = portfolio.mark_to_market(make_bar(2, "15", symbol=symbol))
+    assert after.cash == before.cash
+    assert after.positions[0].quantity == before.positions[0].quantity
+
+
 def make_fill(
     sequence: int,
     side: OrderSide,

@@ -1,5 +1,23 @@
 # Current state
 
+## Current: Pilot v2 frozen; R4 v2 PASS; R5 methodology decision STOP
+
+R1 COMPLETE; R2 v1 SUPERSEDED; R3 v1 INVALIDATED; R2/R3 v2 COMPLETE.
+GATE_A_REVISED_DATASET_FREEZE APPROVED and executed, v2 current accepted/frozen.
+R4 v2 PASS including fresh replay/no-look-ahead, persistence/API/actual UI.
+R5 resumed source preflight, then STOP: FULL_HISTORY_RIGHTS_ISSUE_TREATMENT_REQUIRES_HUMAN_DECISION.
+Official6000362010 paid rights issue is absent from the dividend-only response;
+existing accounting policy rejects rights. No automatic subscription, forfeiture,
+cash injection or exclusion decision. HUMAN_APPROVAL_REQUIRED=YES for this policy,
+not full dataset freeze. Full2010-2025 dataset CREATED/AUDITED/FROZEN=NO;
+verified research-safe start NOT_ESTABLISHED. No formal studies/merge/release.
+Current BaoStock endpoint recovered;124 exited-security factor baselines verified.
+Other full-history authorities remain unfinished, not inferred from Pilot PASS.
+See `../research/PILOT_V2_FREEZE_R4_R5_CHECKPOINT.md` and
+`.research/reports/r5-source-preflight.json`. All probes complete; no worker running.
+
+## Historical checkpoints below (superseded)
+
 ## Current: revised Pilot v2 frozen; R4 v2 RUNNING
 
 Latest human approval supersedes prior revised-freeze STOP. All eight approved

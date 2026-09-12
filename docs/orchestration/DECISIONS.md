@@ -1,5 +1,19 @@
 # Decisions
 
+## 2026-09-12 UTC: v2 frozen, fresh R4 passed, R5 rights policy decision required
+
+Executed the latest human approval: exact v2 immutable freeze, unchanged strategy
+full/reversed/prefix replay, persisted API/UI parity PASS. R4 v2 acceptance is new,
+not reused v1 acceptance. V1 remains permanently frozen/superseded/INVALIDATED.
+R5 resumed existing evidence: current BaoStock0.9.3 endpoint works,124 exited
+security factor baselines present; no accepted Pilot authority replaced.
+Official6000362010 rights issue proves dividend-query coverage is insufficient.
+Existing RIGHTS_RELATED_EVENT policy is explicitly unsupported. Do not choose
+subscription/forfeiture/cash funding or a new exclusion rule autonomously.
+Stop for the single methodology decision documented in
+`../research/PILOT_V2_FREEZE_R4_R5_CHECKPOINT.md`. This is not a v2 defect and not
+the full-dataset freeze gate; no full dataset or research-safe start is certified.
+
 ## 2026-09-13: human approves exact revised Pilot v2 freeze and engineering continuation
 
 GATE_A_REVISED_DATASET_FREEZE is APPROVED for manifest187b8c31...92600 only.
