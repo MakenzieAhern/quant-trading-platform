@@ -1,5 +1,22 @@
 # Decisions
 
+## 2026-09-12 UTC: human rights-decline convention implemented; event scope remains fail-closed
+
+Latest approval pins CN_A_RIGHTS_ISSUE_POLICY_V1 / DECLINE_SUBSCRIPTION. Preserve
+the security and raw mark impact; no subscription, capital/cash reservation, added shares,
+cost-basis transfer or compensation. Event data and participation remain separate.
+Receipt: .research/approvals/rights-issue-policy-v1.json. Existing shared accounting
+and deterministic pre-open ordering extended; no dependency or strategy change.
+Engineering PASS resolves FULL_HISTORY_RIGHTS_ISSUE_TREATMENT_REQUIRES_HUMAN_DECISION.
+Do not extrapolate the policy to unverified or materially different event types.
+Source inventory148/137 is not a full census;2 supported,146 unresolved. The exact
+earliest reviewed gap is000960/2010-01-27 entitlement non-transferability, not a new
+choice to subscribe. Stop under user section8 pending source/classification resolution;
+do not silently accept, omit or exclude it. No other source acceptance changed.
+R4 v2 PASS explicitly has0 real-data fills; synthetic tests are fill-path evidence.
+No full dataset, verified safe start, full freeze, formal study, merge or release.
+See ../research/RIGHTS_ISSUE_POLICY_CHECKPOINT.md for all evidence and limitations.
+
 ## 2026-09-12 UTC: v2 frozen, fresh R4 passed, R5 rights policy decision required
 
 Executed the latest human approval: exact v2 immutable freeze, unchanged strategy

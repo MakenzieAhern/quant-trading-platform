@@ -1,5 +1,22 @@
 # Current state
 
+## Current: rights policy engineering PASS; R5 exact event-evidence STOP
+
+CN_A_RIGHTS_ISSUE_POLICY_V1 / DECLINE_SUBSCRIPTION approved and implemented.
+Event model/accounting/reproducibility PASS; old participation-methodology blocker RESOLVED.
+Inventory148 events/137 securities:2 supported,146 unresolved,0 positively confirmed
+non-standard variants. No rights-based exclusion or full authority promotion.
+User section8 STOP: RIGHTS_EVENT_UNSUPPORTED_VARIANT:CN-A:SZSE:000960:2010-01-27.
+Its entitlement non-transferability remains unverified; this is not a finding of tradability.
+HUMAN_APPROVAL_GATE=R5_RIGHTS_EVENT_VARIANT_REVIEW; HUMAN_APPROVAL_REQUIRED=YES.
+R4_V2_STATUS=PASS, R4_REAL_DATA_FILL_COUNT=0; no R4 rerun or frozen Pilot modification.
+Full2010-2025 CREATED/AUDITED/FROZEN=NO; verified safe start NOT_ESTABLISHED.
+No formal studies, strategy changes, profitability review, PR merge or release.
+Current report: ../research/RIGHTS_ISSUE_POLICY_CHECKPOINT.md;
+machine state: .research/reports/r5-rights-policy.json. No background worker remains.
+
+## Historical checkpoints below (superseded)
+
 ## Current: Pilot v2 frozen; R4 v2 PASS; R5 methodology decision STOP
 
 R1 COMPLETE; R2 v1 SUPERSEDED; R3 v1 INVALIDATED; R2/R3 v2 COMPLETE.

@@ -9,6 +9,10 @@ from zoneinfo import ZoneInfo
 
 from app.domain.market import Bar
 from app.domain.markets.calendar import TradingCalendar
+from app.domain.markets.corporate_actions import (
+    corporate_action_sort_key,
+    require_supported_corporate_action,
+)
 from app.domain.risk import OrderProposal, RiskConfig, RiskDecision, RiskReservation
 from app.domain.trading import Fill, Order, OrderSide, OrderType, PortfolioSnapshot
 from app.event import Event, EventBus, EventType
@@ -131,9 +135,12 @@ class ResearchExecutionEngine:
         opening = datetime.combine(
             session.trading_date, time(9, 25), tzinfo=ZoneInfo("Asia/Shanghai")
         ).astimezone(UTC)
-        for action in sorted(session.corporate_actions, key=lambda item: str(item.security_id)):
+        actions = sorted(session.corporate_actions, key=corporate_action_sort_key)
+        for action in actions:
             if action.ex_date != session.trading_date:
                 raise ValueError("corporate action must belong to the research session")
+            require_supported_corporate_action(action)
+        for action in actions:
             self._portfolio.apply_corporate_action(
                 _domain_symbol(action.security_id), action, opening
             )

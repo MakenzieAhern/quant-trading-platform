@@ -1,0 +1,271 @@
+{
+  "version": "RIGHTS_SOURCE_REVIEW_V1",
+  "status": "PARTIAL_NOT_FULL_AUTHORITY",
+  "selection_policy": "600036 required; earliest target SZSE Main; earliest target ChiNext; latest target event. No STAR event found in this provider inventory, not proof of absence. No performance-based selection.",
+  "sources": [
+    {
+      "path": "official/000049-20230408.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2023-04-08/1216353343.PDF",
+      "sha256": "3ae0c5dc5c44bda0f77d87acaa2789861ce625b8863d214e08d8bbf23158769a",
+      "retrieved_at_utc": "2026-09-12T15:46:39.197852+00:00"
+    },
+    {
+      "path": "official/000049-20231204.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2023-12-04/1218493835.PDF",
+      "sha256": "059798135c68820e4019b8909cac47960c28404841fd15c593d8827da60c8e0d",
+      "retrieved_at_utc": "2026-09-12T15:46:35.814143+00:00"
+    },
+    {
+      "path": "official/000049-listing.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2023-12-22/1218684102.PDF",
+      "sha256": "a5534f3353079dcea3b30ce7978c04c01dadf8df04e258fb274c18d86a1a8c28",
+      "retrieved_at_utc": "2026-09-12T15:54:24.700023+00:00"
+    },
+    {
+      "path": "official/000049-result.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2023-12-08/1218545401.PDF",
+      "sha256": "f7a08a5bd01ea439211e8ddf98f00d7dc307d5808e07e364aaad9b8bd60fae6b",
+      "retrieved_at_utc": "2026-09-12T15:54:22.391766+00:00"
+    },
+    {
+      "path": "official/000960-20100113.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-01-13/57498927.PDF",
+      "sha256": "545ab8da78440c31098c39fbf52f0ae6027919a2f30053aad4abed7f71dd9747",
+      "retrieved_at_utc": "2026-09-12T15:46:14.655657+00:00"
+    },
+    {
+      "path": "official/000960-issuance.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-01-13/57498926.PDF",
+      "sha256": "d54ceccd9b163bf071f39a13e08d5f755ab0df8fa4a9ae27e5db3dd8341df0b5",
+      "retrieved_at_utc": "2026-09-12T15:50:11.614406+00:00"
+    },
+    {
+      "path": "official/000960-listing.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-02-02/57568546.PDF",
+      "sha256": "64aa4bca21f57e5c71d89ed54bd86a6864fb739202e5c77613178de88b64a96f",
+      "retrieved_at_utc": "2026-09-12T15:50:16.056893+00:00"
+    },
+    {
+      "path": "official/000960-prospectus.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-01-13/57498925.PDF",
+      "sha256": "732b496ac4a52e8f819d7fb08565be9323a071c238a756a3b8c65f526299384a",
+      "retrieved_at_utc": "2026-09-12T15:58:59.629480+00:00"
+    },
+    {
+      "path": "official/000960-result.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-01-27/57547253.PDF",
+      "sha256": "bd8d951f0206a4c8b66dce6b9c7ee8ef7ae69292a3e50421eb074ff8f87ad924",
+      "retrieved_at_utc": "2026-09-12T15:50:14.467105+00:00"
+    },
+    {
+      "path": "official/300147-20150604.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-06-04/1201101119.PDF",
+      "sha256": "d6e7ea1e2781dab85e996540be05f83160dc517ad4b1f5e63ff72992eda5519b",
+      "retrieved_at_utc": "2026-09-12T15:46:18.857589+00:00"
+    },
+    {
+      "path": "official/300147-issuance.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-06-04/1201101116.PDF",
+      "sha256": "16fd6102a10c7a932ed3cccd2abe0fe9841518b86e282c2ce4fc62a3736de102",
+      "retrieved_at_utc": "2026-09-12T15:54:17.163890+00:00"
+    },
+    {
+      "path": "official/300147-listing.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-06-30/1201212248.PDF",
+      "sha256": "72c619d241a0cdf3061dc08b14ac5377da77c1b45b78ec1c31701660f9900cb6",
+      "retrieved_at_utc": "2026-09-12T15:54:20.413394+00:00"
+    },
+    {
+      "path": "official/300147-result.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-06-18/1201164681.PDF",
+      "sha256": "d70909f0adbccbef5ebf2ee4b9188818b269e36990997dd4f4125d0f31980945",
+      "retrieved_at_utc": "2026-09-12T15:54:18.787755+00:00"
+    },
+    {
+      "path": "official/600003-demerger.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-18/57700808.PDF",
+      "sha256": "e1caeeb68562ca5efc1f7d469df5026adf85d8ae1fa7d98cd2c59079b72a5c0e",
+      "retrieved_at_utc": "2026-09-12T15:54:28.311964+00:00"
+    },
+    {
+      "path": "official/600036-issuance.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-02/57640257.PDF",
+      "sha256": "621b8089d90d72d54eba804ec5e9bb77ec7343deaf3dbc55432307a3a5fef928",
+      "retrieved_at_utc": "2026-09-12T15:54:10.863798+00:00"
+    },
+    {
+      "path": "official/600036-listing.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-17/57696202.PDF",
+      "sha256": "251661df1da4f1b12530f2135e317cda6905fce4c81ae35292f0f6868596958a",
+      "retrieved_at_utc": "2026-09-12T15:54:15.669661+00:00"
+    },
+    {
+      "path": "official/600036-prospectus.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-02/57640259.PDF",
+      "sha256": "ca43f49f7f2747293b2afb18499e1ce66bdbb8954322ab73c3329f85167c7a49",
+      "retrieved_at_utc": "2026-09-12T15:53:48.676922+00:00"
+    },
+    {
+      "path": "official/600036-result.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-15/57687453.PDF",
+      "sha256": "30bc1e988f87036b3cd82940062d26756939524e44ee84a3bc4d1794491e2057",
+      "retrieved_at_utc": "2026-09-12T15:54:13.695639+00:00"
+    }
+  ],
+  "events": {
+    "600036.SH:2010-03-04": {
+      "selection": "required historical control",
+      "checks": {
+        "subscription_price": "8.85",
+        "ratio": "0.13",
+        "record_date": "2010-03-04",
+        "subscription_start_date": "2010-03-05",
+        "subscription_end_date": "2010-03-11",
+        "ex_date": "2010-03-15",
+        "new_share_listing_date": "2010-03-19"
+      },
+      "evidence_pages": {
+        "terms": "issuance pp.3-5",
+        "variant": "prospectus p.36",
+        "result": "result",
+        "listing": "listing"
+      },
+      "evidence": [
+        "official/600036-issuance.pdf",
+        "official/600036-prospectus.pdf",
+        "official/600036-result.pdf",
+        "official/600036-listing.pdf"
+      ],
+      "known_time_note": "Retain source publication dates. Later listing announcements corroborate realized outcome only; do not backfill listing_date into the ex-date event. No full PIT admission is granted by this review.",
+      "verified_event_fields": {
+        "announcement_date": "2010-03-02",
+        "subscription_deadline": "2010-03-11",
+        "eligible_share_basis": "15658890016",
+        "rights_variant": "ORDINARY_NON_TRADABLE",
+        "listing_date": null,
+        "completeness": "COMPLETE",
+        "source_provider": "official-issuer-CNINFO-review",
+        "source_version": "rights-source-review-v1",
+        "source_document": "600036-issuance.pdf",
+        "source_url": "https://static.cninfo.com.cn/finalpage/2010-03-02/57640257.PDF",
+        "source_document_sha256": "621b8089d90d72d54eba804ec5e9bb77ec7343deaf3dbc55432307a3a5fef928",
+        "retrieved_at": "2026-09-12T15:54:10.863798+00:00"
+      }
+    },
+    "000960.SZ:2010-01-18": {
+      "selection": "earliest target SZSE Main event",
+      "checks": {
+        "subscription_price": "8.98",
+        "ratio": "0.24",
+        "record_date": "2010-01-18",
+        "subscription_start_date": "2010-01-19",
+        "subscription_end_date": "2010-01-25",
+        "ex_date": "2010-01-27",
+        "new_share_listing_date": "2010-02-04"
+      },
+      "evidence_pages": {
+        "terms": "issuance pp.3-5",
+        "basis": "result p.1",
+        "result": "result p.3",
+        "listing": "listing p.2",
+        "variant": "Non-transferability not established after issuer issuance, 232-page prospectus, summary, result and listing review. Issuance pp.4-5 proves holder-based subscription and lapse, not explicit independent-rights transferability."
+      },
+      "evidence": [
+        "official/000960-issuance.pdf",
+        "official/000960-result.pdf",
+        "official/000960-listing.pdf",
+        "official/000960-20100113.pdf",
+        "official/000960-prospectus.pdf"
+      ],
+      "known_time_note": "Retain source publication dates. Later listing announcements corroborate realized outcome only; do not backfill listing_date into the ex-date event. No full PIT admission is granted by this review.",
+      "verified_event_fields": {
+        "announcement_date": "2010-01-13",
+        "subscription_deadline": "2010-01-25",
+        "eligible_share_basis": "651086660",
+        "rights_variant": null,
+        "listing_date": null,
+        "completeness": "PARTIAL",
+        "source_provider": "official-issuer-CNINFO-review",
+        "source_version": "rights-source-review-v1",
+        "source_document": "000960-issuance.pdf",
+        "source_url": "https://static.cninfo.com.cn/finalpage/2010-01-13/57498926.PDF",
+        "source_document_sha256": "d54ceccd9b163bf071f39a13e08d5f755ab0df8fa4a9ae27e5db3dd8341df0b5",
+        "retrieved_at": "2026-09-12T15:50:11.614406+00:00"
+      }
+    },
+    "300147.SZ:2015-06-09": {
+      "selection": "earliest target ChiNext event",
+      "checks": {
+        "subscription_price": "10.46",
+        "ratio": "0.3",
+        "record_date": "2015-06-09",
+        "subscription_start_date": "2015-06-10",
+        "subscription_end_date": "2015-06-16",
+        "ex_date": "2015-06-18",
+        "new_share_listing_date": "2015-07-02"
+      },
+      "evidence_pages": {
+        "terms": "prospectus pp.15,17; issuance p.4",
+        "variant": "explicit non-transferability not established in retained documents"
+      },
+      "evidence": [
+        "official/300147-issuance.pdf",
+        "official/300147-20150604.pdf",
+        "official/300147-result.pdf",
+        "official/300147-listing.pdf"
+      ],
+      "known_time_note": "Retain source publication dates. Later listing announcements corroborate realized outcome only; do not backfill listing_date into the ex-date event. No full PIT admission is granted by this review.",
+      "verified_event_fields": {
+        "announcement_date": "2015-06-04",
+        "subscription_deadline": "2015-06-16",
+        "eligible_share_basis": "509573329",
+        "rights_variant": null,
+        "listing_date": null,
+        "completeness": "PARTIAL",
+        "source_provider": "official-issuer-CNINFO-review",
+        "source_version": "rights-source-review-v1",
+        "source_document": "300147-issuance.pdf",
+        "source_url": "https://static.cninfo.com.cn/finalpage/2015-06-04/1201101116.PDF",
+        "source_document_sha256": "16fd6102a10c7a932ed3cccd2abe0fe9841518b86e282c2ce4fc62a3736de102",
+        "retrieved_at": "2026-09-12T15:54:17.163890+00:00"
+      }
+    },
+    "000049.SZ:2023-11-29": {
+      "selection": "latest target event in complete retrieved provider pages",
+      "checks": {
+        "subscription_price": "21.16",
+        "ratio": "0.3",
+        "record_date": "2023-11-29",
+        "subscription_start_date": "2023-11-30",
+        "subscription_end_date": "2023-12-06",
+        "ex_date": "2023-12-08",
+        "new_share_listing_date": "2023-12-25"
+      },
+      "evidence_pages": {
+        "terms": "reminder pp.2-4",
+        "variant": "April prospectus pp.6,26"
+      },
+      "evidence": [
+        "official/000049-20231204.pdf",
+        "official/000049-20230408.pdf",
+        "official/000049-result.pdf",
+        "official/000049-listing.pdf"
+      ],
+      "known_time_note": "Retain source publication dates. Later listing announcements corroborate realized outcome only; do not backfill listing_date into the ex-date event. No full PIT admission is granted by this review.",
+      "verified_event_fields": {
+        "announcement_date": "2023-12-04",
+        "subscription_deadline": "2023-12-06",
+        "eligible_share_basis": "299386862",
+        "rights_variant": "ORDINARY_NON_TRADABLE",
+        "listing_date": null,
+        "completeness": "COMPLETE",
+        "source_provider": "official-issuer-CNINFO-review",
+        "source_version": "rights-source-review-v1",
+        "source_document": "000049-20231204.pdf",
+        "source_url": "https://static.cninfo.com.cn/finalpage/2023-12-04/1218493835.PDF",
+        "source_document_sha256": "059798135c68820e4019b8909cac47960c28404841fd15c593d8827da60c8e0d",
+        "retrieved_at": "2026-09-12T15:46:35.814143+00:00"
+      }
+    }
+  }
+}

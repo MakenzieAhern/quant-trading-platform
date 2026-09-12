@@ -3,12 +3,15 @@ from decimal import ROUND_HALF_EVEN, Context, Decimal, localcontext
 from typing import Any
 
 from app.domain.market import Bar
-from app.domain.markets import CorporateAction, CorporateActionCompleteness, CorporateActionType
+from app.domain.markets import CorporateAction, CorporateActionType
+from app.domain.markets.corporate_actions import require_supported_corporate_action
 from app.domain.trading import Fill, OrderSide, PortfolioSnapshot, Position
 from app.event import Event, EventBus, EventType
 
 PORTFOLIO_CONTEXT = Context(prec=28, rounding=ROUND_HALF_EVEN)
 ZERO = Decimal(0)
+RIGHTS_ISSUE_POLICY = "CN_A_RIGHTS_ISSUE_POLICY_V1"
+RIGHTS_ISSUE_PARTICIPATION = "DECLINE_SUBSCRIPTION"
 
 
 class PortfolioError(ValueError):
@@ -148,11 +151,19 @@ class PortfolioEngine:
     ) -> Position | None:
         """Apply only complete, economically reconstructable long-position events."""
         self._require_chronological(timestamp, "corporate action")
+        try:
+            require_supported_corporate_action(action)
+        except ValueError as exc:
+            raise PortfolioError(str(exc)) from exc
         current = self._positions.get(symbol)
+        if action.action_type is CorporateActionType.RIGHTS_RELATED_EVENT:
+            if current is not None and current.quantity < ZERO:
+                raise PortfolioError("rights policy is long-only")
+            # Decline subscription: no entitlement asset, cash, shares, orders or fills.
+            self._last_event_timestamp = timestamp
+            return current
         if current is None or current.quantity <= ZERO:
             return current
-        if action.completeness is not CorporateActionCompleteness.COMPLETE:
-            raise PortfolioError("unsupported or incomplete corporate action")
         if action.action_type is CorporateActionType.CASH_DIVIDEND:
             self._cash += current.quantity * action.cash_per_share
             self._last_event_timestamp = timestamp
@@ -161,6 +172,7 @@ class PortfolioEngine:
             CorporateActionType.STOCK_DIVIDEND,
             CorporateActionType.BONUS_SHARE,
         }:
+            assert action.share_ratio is not None
             quantity = current.quantity * (Decimal(1) + action.share_ratio)
             average_price = current.average_price / (Decimal(1) + action.share_ratio)
             updated = current.model_copy(
