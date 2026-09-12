@@ -1,5 +1,43 @@
 # Autonomous Quant Project Checkpoint
 
+## Current: R2 published and R3 audited; Gate A stop
+
+RUN_ID=20260912-R2-R3-ORDINARY-A-SHARE; CURRENT_STAGE=R3;
+STATUS=AWAITING_HUMAN_APPROVAL. GitHub account MakenzieAhern verified.
+Implementation HEAD=5be77b05fa0b674c0f37bc04e19267bdac50b24b;
+419 backend tests/Ruff/mypy PASS; CI34665563160 backend/frontend/compose SUCCESS.
+Final report-only commit: resolve with `git log -1 --format=%H -- docs/orchestration/RUN_REPORT.md`;
+verify its CI separately. Branch feature/a-share-research-v1.1; PR12 OPEN/UNMERGED.
+
+R2 resumed from the original657+1923 inputs;2597 remaining ordinary A shares
+recovered, not reacquired from zero. Final657 primary +4520 secondary,5177
+securities/1922088 raw rows/12528 factor rows. Required failures/unresolved=0.
+Missing observations4210 remain explicit; rejected observations0. Full amount
+audit34799 reachable scheduled decisions,0 ambiguous,0 outliers; two all-date
+stress ambiguities retained, not used to change policy. Full source-policy pins intact.
+
+Real atomic publication completed. Second invocation verified resume without
+source fetch or partition rewrite. Real published-data R3 exited0:22 checks PASS,
+5725 rule cases, zero unclassified/non-A-share leakage. Original2580 receipt
+reconstruction exactly matches ff844abd20b651ae9a962515a6feb6cc551f90468daf7b984959da7121149ca6.
+Canonical manifest0696a5c7454f044a3f0ea8886b1c08fbe2228b19598894ddb44ac54498978490;
+audit artifact88fa6df2892876bb7318ceabd24883539ca9b7920ec7abf1f2d88be5e9d892d1.
+
+SOURCE_AUTHORITY_PREFLIGHT=PASS; PILOT_DATASET_CREATED=YES;
+PILOT_A_SHARE_DATA_READINESS=READY; DATASET_AUDITED=YES; DATASET_FROZEN=NO.
+HUMAN_APPROVAL_GATE=GATE_A_DATASET_FREEZE; HUMAN_APPROVAL_REQUIRED=YES.
+SINGLE_SMALLEST_BLOCKER=NONE (intentional human approval gate).
+DEVELOPMENT_STUDY=NOT_RUN; VALIDATION_STUDY=NOT_RUN; OFFICIAL_OOS=NOT_RUN;
+PR_MERGED=NO; V1.1.0_CREATED=NO. Stop; no background data worker remains.
+
+Official daily suspension/tradeability remains unknown/null on1926298 lifecycle
+security-sessions. No missing bar was labeled suspended; no fill may be assumed
+without separate official evidence. This approved fail-closed handling is audited,
+not complete execution coverage. Detailed counts,22 checks,classification evidence,
+limitations and hashes: [full checkpoint](../research/R2_R3_ORDINARY_A_SHARE_REPORT.md).
+
+## Historical checkpoints below (superseded)
+
 ## Current running milestone: approved instrument scope
 
 Latest running snapshot:4074 completed inputs (657 primary,3417 secondary),1103

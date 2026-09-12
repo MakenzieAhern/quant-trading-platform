@@ -1,5 +1,32 @@
 # Current state
 
+## Current: R3 complete; STOP at Gate A
+
+2026-09-12 UTC: STATUS=AWAITING_HUMAN_APPROVAL; CURRENT_STAGE=R3;
+last completed stage=R3. SOURCE_AUTHORITY_PREFLIGHT=PASS, all prior authorities
+unchanged. PILOT_DATASET_CREATED=YES; PILOT_A_SHARE_DATA_READINESS=READY;
+DATASET_AUDITED=YES; DATASET_FROZEN=NO.
+HUMAN_APPROVAL_GATE=GATE_A_DATASET_FREEZE; HUMAN_APPROVAL_REQUIRED=YES.
+No active engineering/source blocker; do not proceed without human freeze approval.
+
+All5177 ordinary A shares complete:657 Eastmoney +4520 Tencent,1922088 raw bars,
+382 sessions,12528 factor rows,4210 explicit missing observations; zero required
+security failures/unresolved inputs/rejected rows. Candidate master5178 includes
+one out-of-scope CDR689009; zero unclassified/non-A-share leakage. Original2580
+partitions/951927 rows preserved. Atomic publication and no-refetch/no-rewrite
+restart PASS; all22 R3 checks PASS, including5725 market-rule cases.
+Manifest canonical SHA256:
+`0696a5c7454f044a3f0ea8886b1c08fbe2228b19598894ddb44ac54498978490`.
+
+Important: official daily suspension/tradeability remains unknown for1926298
+lifecycle security-sessions. Missing bars are not inferred suspensions. Independent
+official evidence is still required for fills under the approved convention;
+audit/readiness here does not assert execution readiness or complete suspension history.
+No Development/Validation/OOS, freeze, merge or release was performed.
+Full report: [R2/R3 ordinary A-share checkpoint](../research/R2_R3_ORDINARY_A_SHARE_REPORT.md).
+
+## Historical checkpoints below (superseded)
+
 ## Current: approved ordinary-A-share scope implementation
 
 Running recovery snapshot: 657 primary +3417 secondary inputs (4074 total),

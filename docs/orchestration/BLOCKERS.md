@@ -1,5 +1,19 @@
 # Blockers
 
+## Current: no engineering blocker; Gate A approval required
+
+R2 complete and R3 all22 checks PASS. SINGLE_SMALLEST_BLOCKER=NONE.
+STATUS=AWAITING_HUMAN_APPROVAL; HUMAN_APPROVAL_GATE=GATE_A_DATASET_FREEZE;
+HUMAN_APPROVAL_REQUIRED=YES. This is the requested approval boundary, not a new
+source-recovery or CDR-scope question. All5177 required ordinary A-share inputs
+are complete; 689009 is out of scope under the approved methodology.
+DATASET_AUDITED=YES; PILOT_A_SHARE_DATA_READINESS=READY; DATASET_FROZEN=NO.
+Official daily suspension/tradeability remains unknown and execution fail-closed
+under the existing approved convention. No optimistic fill assumption is authorized.
+Do not freeze, run any study, merge PR12 or release. Await explicit Gate A approval.
+
+## Historical blockers below (superseded)
+
 ## Current: no human blocker; approved scope implementation running
 
 RESOLVED: PILOT_INSTRUMENT_SCOPE_REQUIRES_HUMAN_DECISION.

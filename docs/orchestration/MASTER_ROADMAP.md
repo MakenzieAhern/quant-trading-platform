@@ -4,6 +4,13 @@ Read `.research/project_state.json`, CURRENT_STATE, RUN_REPORT and BLOCKERS befo
 each continuation. Preserve newer evidence. These small files are the persistent
 controller state, not a background scheduler or an authorization bypass.
 
+Current checkpoint (2026-09-12 UTC): R1 PASS, R2 atomic publication complete,
+R3 all22 checks PASS. STOP at GATE_A_DATASET_FREEZE; human approval required.
+5177 ordinary A shares,1922088 raw bars; READY/AUDITED YES, FROZEN NO.
+Official daily suspension/tradeability is still unknown and fail-closed under
+the approved execution convention; this is not execution-readiness certification.
+See [final R2/R3 report](../research/R2_R3_ORDINARY_A_SHARE_REPORT.md).
+
 | Stage | Acceptance and automatic next action |
 | --- | --- |
 | R1 Source authority | Master, SSE, SZSE, raw OHLCV, adjustment, calendar, CSI300 PASS; market rules PASS_FOR_PILOT. Canonical source manifest required. Separately require EXECUTION_CONVENTION_VALIDATION PASS (simulation assumption, not exchange fact). Then R2. |

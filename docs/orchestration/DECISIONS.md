@@ -1,5 +1,19 @@
 # Decisions
 
+## Gate A checkpoint: approved scope applied; no freeze decision made
+
+2026-09-12 UTC: existing ordinary-A-share decision implemented across the full
+5178-member candidate master:5177 COMMON_A_SHARE,1 CDR,0 unclassified.
+No additional methodology/provider/tolerance/performance decision was introduced.
+Existing valid2580 partitions preserved; remaining2597 ordinary securities recovered
+under frozen failover policy. R2 atomic catalog published; real full R3 all22 checks
+PASS. READY/AUDITED YES, FROZEN NO. STOP at GATE_A_DATASET_FREEZE; approval required.
+This records an observed engineering outcome, not human dataset-freeze approval.
+Unknown official daily suspension/tradeability remains null/no-fill under the
+already approved execution convention; audit PASS does not promote unknown facts
+to tradeable states. No studies, OOS, PR merge or release authorized/performed.
+Detailed evidence: [R2/R3 report](../research/R2_R3_ORDINARY_A_SHARE_REPORT.md).
+
 ## Approved human methodology decision: ordinary A-share equities only
 
 2026-09-12: PILOT_INSTRUMENT_SCOPE=ORDINARY_A_SHARE_EQUITIES_ONLY;
