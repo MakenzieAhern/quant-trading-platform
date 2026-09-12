@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from app.data.catalog.checksums import canonical_sha256, sha256_file
+from app.data.catalog.freeze import require_unfrozen
 from app.data.catalog.models import DatasetPartition
 
 
@@ -17,6 +18,7 @@ def write_canonical_csv(
     rows: Iterable[Mapping[str, object]],
     sort_keys: Sequence[str],
 ) -> DatasetPartition:
+    require_unfrozen(path)
     normalized = _canonical_rows(fieldnames, rows, sort_keys)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as stream:
@@ -43,6 +45,7 @@ def write_canonical_parquet(
     sort_keys: Sequence[str],
 ) -> DatasetPartition:
     """Write normalized strings/nulls with a metadata-independent logical hash."""
+    require_unfrozen(path)
     pa: Any = import_module("pyarrow")
     parquet: Any = import_module("pyarrow.parquet")
     normalized = _canonical_rows(fieldnames, rows, sort_keys)

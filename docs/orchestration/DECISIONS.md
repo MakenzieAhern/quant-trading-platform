@@ -1,5 +1,19 @@
 # Decisions
 
+## Human Gate A approval and revised stage scope
+
+2026-09-12: Human explicitly approved freezing the exact audited Pilot manifest
+0696a5c7454f044a3f0ea8886b1c08fbe2228b19598894ddb44ac54498978490.
+Approval receipt: `.research/approvals/gate-a-pilot-v1.json`. Verify unchanged
+R3 evidence and all partition hashes read-only before writing a separate immutable
+freeze record. Unknown executable liquidity remains NO FILL. Future corrections
+require another dataset version/hash; never overwrite Pilot v1.
+After freeze, R4 is PILOT_ENGINEERING_SMOKE_ONLY, not formal Development, despite
+overlap with intended future OOS dates. No economic parameter changes are authorized.
+Then R5 builds/audits a full 2010-2025 dataset, subject to actual source coverage.
+Next approval gate is GATE_FULL_RESEARCH_DATASET_FREEZE. Formal Development,
+Validation, Official OOS, live/ML/GPU, merge/release/publicity remain unauthorized.
+
 ## Gate A checkpoint: approved scope applied; no freeze decision made
 
 2026-09-12 UTC: existing ordinary-A-share decision implemented across the full

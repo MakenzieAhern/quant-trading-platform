@@ -5,6 +5,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
+from app.data.catalog.freeze import require_unfrozen
 from app.data.catalog.models import DatasetManifest, DatasetRevisionError
 
 
@@ -35,6 +36,7 @@ def finalize_manifest(values: dict[str, Any]) -> DatasetManifest:
 
 
 def write_manifest(path: Path, manifest: DatasetManifest) -> None:
+    require_unfrozen(path)
     if path.exists():
         existing = load_manifest(path)
         if existing != manifest:

@@ -1,0 +1,39 @@
+from pathlib import Path
+
+import pytest
+
+from app.data.catalog import DatasetRevisionError, load_manifest, write_manifest
+from app.data.catalog.freeze import MARKER, write_immutable
+from app.data.catalog.normalized import write_canonical_csv, write_canonical_parquet
+from tests.test_research_data_catalog import _build_dataset
+
+
+def test_frozen_catalog_rejects_every_shared_writer(tmp_path: Path) -> None:
+    root = tmp_path / _build_dataset(tmp_path)
+    manifest = load_manifest(root / "manifest.json")
+    before = (root / "daily-bars.csv").read_bytes()
+    write_immutable(root / MARKER, b"freeze-control\n")
+    for writer, name in (
+        (write_canonical_csv, "daily-bars.csv"),
+        (write_canonical_parquet, "new/partition.parquet"),
+    ):
+        with pytest.raises(DatasetRevisionError, match="DATASET_FROZEN"):
+            writer(root / name, fieldnames=("id",), rows=({"id": 1},), sort_keys=("id",))
+    with pytest.raises(DatasetRevisionError, match="DATASET_FROZEN"):
+        write_manifest(root / "manifest.json", manifest)
+    assert (root / "daily-bars.csv").read_bytes() == before
+    assert not (root / "new").exists()
+    # A correction remains possible only in another dataset directory/version.
+    write_canonical_csv(
+        tmp_path / "v2/bars.csv", fieldnames=("id",), rows=({"id": 1},), sort_keys=("id",)
+    )
+
+
+def test_control_record_is_atomic_idempotent_and_not_replaceable(tmp_path: Path) -> None:
+    path = tmp_path / "record.json"
+    write_immutable(path, b"original")
+    write_immutable(path, b"original")
+    with pytest.raises(DatasetRevisionError, match="IMMUTABLE_RECORD_CHANGED"):
+        write_immutable(path, b"replacement")
+    assert path.read_bytes() == b"original"
+    assert list(tmp_path.iterdir()) == [path]
