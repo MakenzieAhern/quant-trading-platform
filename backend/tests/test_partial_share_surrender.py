@@ -79,6 +79,41 @@ def test_approved_boundary_requires_provenance_not_an_invented_registry_date():
             MandatoryPartialShareSurrenderEvent.model_validate({**e.model_dump(), **update})
 
 
+def test_frozen_opening_rule_reachable_quantity_lattice():
+    from uuid import UUID
+
+    from app.domain.trading import Order, OrderType
+    from app.research.execution_convention import rejection_reason
+    from tests.test_research_execution_engine import _session
+
+    session = _session(date(2024, 1, 3), opening="10")
+    bar = session.bars[0].model_copy(update={"volume": Decimal(1000000)})
+    accepted = []
+    for q in range(1, 1001):
+        order = Order(
+            id=UUID(int=q),
+            strategy_id="quantity_diagnostic",
+            symbol="600000.SSE",
+            side=OrderSide.BUY,
+            order_type=OrderType.LIMIT,
+            quantity=Decimal(q),
+            price=Decimal(10),
+            created_at=at("2024-01-02"),
+            intended_execution_session=session.trading_date,
+        )
+        reason = rejection_reason(
+            order, bar, session.statuses[0].status, session.trading_rules[0], Decimal(0)
+        )
+        assert (reason is None) == (q % 100 == 0)
+        if reason is None:
+            accepted.append(q)
+            assert Decimal(q) * Decimal("0.2") % 1 == 0
+    assert accepted == list(range(100, 1001, 100))
+    # Inductive closure for the unchanged historical path: only100-share fills;
+    # no pre-surrender quantity distributions in the retained600462 annual chain.
+    assert all((a + b) % 100 == 0 and (a - b) % 100 == 0 for a in accepted for b in accepted)
+
+
 def test_resumption_mutation_precedes_bar_and_is_price_independent(monkeypatch):
     from dataclasses import replace
 

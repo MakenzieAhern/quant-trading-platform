@@ -1,5 +1,21 @@
 # Decisions
 
+## Current:600462 PASS; R5 new600817 pass-through methodology gate
+
+600462 boundary and ceiling convention accepted/tested; original registry source
+blocker RESOLVED. Historical timestamp/fraction facts remain NOT_PUBLICLY_EVIDENCED.
+R5 resumed2010 merger leads and the preserved capital-adjustment queue.
+600817 official notices establish temporary25% bonus credit then transfer to the
+administrator, while original shares remain. Gross bonus/surrender versus net
+issuer-level pass-through would allocate basis differently. Neither selected.
+SINGLE_SMALLEST_BLOCKER=RESTRUCTURING_BONUS_PASS_THROUGH_BASIS_POLICY_UNAPPROVED:CN-A:SSE:600817.
+HUMAN_APPROVAL_GATE=R5_RESTRUCTURING_BONUS_PASS_THROUGH_ACCOUNTING;
+HUMAN_APPROVAL_REQUIRED=YES; HUMAN_SOURCE_INPUT_REQUIRED=NO.
+528 backend tests/Ruff/format/mypy PASS. Full dataset CREATED/AUDITED/FROZEN=NO;
+safe start/full coverage NOT_ESTABLISHED. No studies, profitability review or merge.
+Report: ../research/600462_CONVENTION_R5_CHECKPOINT.md.
+No background worker. Resume preserved queues after this new methodology decision.
+
 ## Current:600462 approved boundary/fraction convention PASS; R5 RUNNING
 
 Human decision6f14546633e87d4a3dfec3564d92e03de07b6778b0636e4f86193994772f03b1
