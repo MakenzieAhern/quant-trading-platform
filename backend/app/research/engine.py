@@ -14,7 +14,11 @@ from app.domain.markets.corporate_actions import (
     require_supported_corporate_action,
 )
 from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
-from app.domain.markets.surrenders import PARTIAL_SURRENDER_POLICY
+from app.domain.markets.surrenders import (
+    PARTIAL_SURRENDER_BOUNDARY_POLICY,
+    PARTIAL_SURRENDER_FRACTION_POLICY,
+    PARTIAL_SURRENDER_POLICY,
+)
 from app.domain.risk import OrderProposal, RiskConfig, RiskDecision, RiskReservation
 from app.domain.trading import Fill, Order, OrderSide, OrderType, PortfolioSnapshot
 from app.event import Event, EventBus, EventType
@@ -52,6 +56,8 @@ class ResearchExecutionResult:
     merger_policy: str = MERGER_POLICY
     zero_whole_share_policy: str = ZERO_WHOLE_SHARE_POLICY
     partial_surrender_policy: str = PARTIAL_SURRENDER_POLICY
+    partial_surrender_fraction_policy: str = PARTIAL_SURRENDER_FRACTION_POLICY
+    partial_surrender_boundary_policy: str = PARTIAL_SURRENDER_BOUNDARY_POLICY
 
 
 class ResearchExecutionEngine:
@@ -156,8 +162,24 @@ class ResearchExecutionEngine:
             raise ValueError("partial surrender concurrent action ordering unsupported")
         for surrender in surrenders:
             surrender.require_supported()
-            if surrender.effective_date != session.trading_date:
+            if surrender.application_date != session.trading_date:
                 raise ValueError("partial surrender session mismatch")
+            if surrender.research_effective_date is not None:
+                status = next(
+                    (
+                        s.status
+                        for s in session.statuses
+                        if s.status.security_id == surrender.security_id
+                    ),
+                    None,
+                )
+                if (
+                    not any(b.security_id == surrender.security_id for b in session.bars)
+                    or status is None
+                    or status.is_tradeable is not True
+                    or status.is_suspended is not False
+                ):
+                    raise ValueError("SURRENDER_FIRST_TRADABLE_BOUNDARY_REQUIRED")
             if session.surrender_holder_class != surrender.affected_holder_class:
                 raise ValueError("PARTIAL_SURRENDER_HOLDER_APPLICABILITY_UNVERIFIED")
         for merger in mergers:

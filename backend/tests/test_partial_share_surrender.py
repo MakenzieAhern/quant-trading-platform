@@ -26,6 +26,124 @@ def action():
     return evidence().model_copy(update={"effective_date": date(2024, 1, 4)})
 
 
+def approved_convention():
+    return MandatoryPartialShareSurrenderEvent.model_validate_json(
+        (Path(__file__).parent / "fixtures/600462_surrender_convention_v1.json").read_bytes()
+    )
+
+
+@pytest.mark.parametrize("q,retained", [("1", "0"), ("6", "4"), ("101", "80"), ("100", "80")])
+def test_approved_ceil_surrender_preserves_basis_and_zero_position(q, retained):
+    e = approved_convention().model_copy(update={"research_effective_date": date(2024, 1, 4)})
+    p, emitted = funded(q)
+    before = p.latest_snapshot
+    p.apply_partial_surrender(e, at("2024-01-04"), holder_class=e.affected_holder_class)
+    after = p.snapshot_at(at("2024-01-04"))
+    a = after.partial_surrender_audits[0]
+    assert a.retained_quantity == Decimal(retained)
+    assert a.surrendered_quantity + a.retained_quantity == Decimal(q)
+    assert a.retained_basis == Decimal(retained) * 10
+    assert a.retained_basis + a.surrendered_basis == Decimal(q) * 10
+    assert after.corporate_action_realized_pnl == -a.surrendered_basis
+    assert after.realized_pnl == before.realized_pnl == 0
+    assert after.cash == before.cash and not emitted
+    assert after.total_pnl == after.equity - p.initial_cash
+    assert before.equity - after.equity == a.market_value_removed
+    assert after.positions[0].average_price == (10 if Decimal(retained) else 0)
+    assert a.historical_registry_date is None
+    assert a.research_fraction_rule == "CEIL_SURRENDER_FLOOR_RETAINED_V1"
+    assert a.extra_shares_vs_floor == (0 if Decimal(q) % 5 == 0 else 1)
+    assert a.estimated_value_difference == a.extra_shares_vs_floor * 15
+    assert PortfolioSnapshot.model_validate_json(after.model_dump_json()) == after
+
+
+def test_approved_boundary_requires_provenance_not_an_invented_registry_date():
+    e = approved_convention()
+    assert e.effective_date is None and e.application_date == date(2012, 11, 19)
+    assert (
+        e.event_checksum
+        == e.model_copy(
+            update={
+                "sources": tuple(reversed(e.sources)),
+                "confirmation_sources": tuple(reversed(e.confirmation_sources)),
+                "boundary_sources": tuple(reversed(e.boundary_sources)),
+            }
+        ).event_checksum
+    )
+    for update in (
+        {"boundary_sources": ()},
+        {"convention_approval_sha256": None},
+        {"nontrading_from": date(2012, 11, 19)},
+    ):
+        with pytest.raises(ValueError):
+            MandatoryPartialShareSurrenderEvent.model_validate({**e.model_dump(), **update})
+
+
+def test_resumption_mutation_precedes_bar_and_is_price_independent(monkeypatch):
+    from dataclasses import replace
+
+    from app.domain.markets.calendar import TradingCalendar, TradingSession
+    from app.domain.markets.identifiers import Market
+    from app.execution import FixedCommission
+    from app.research import ResearchExecutionEngine, ResearchSession
+    from tests.test_research_execution_engine import SECURITY_ID, OneTargetStrategy, _session
+
+    days = [
+        date(2012, 2, 7),
+        date(2012, 2, 8),
+        date(2012, 11, 16),
+        date(2012, 11, 19),
+        date(2012, 11, 20),
+    ]
+    # Sparse calendar is an ordering fixture, not full historical-calendar evidence.
+    calendar = TradingCalendar(
+        market=Market.CN_A,
+        sessions=tuple(
+            TradingSession(session_date=d, is_open=True, source_version="boundary_fixture")
+            for d in days
+        ),
+    )
+    e = approved_convention().model_copy(update={"security_id": SECURITY_ID})
+    original = PortfolioEngine.apply_partial_surrender
+    observed = []
+
+    def apply(p, event, timestamp, *, holder_class):
+        assert p.positions[0].quantity == 100
+        assert p.marks["600000.SSE"] == Decimal("9.9")
+        original(p, event, timestamp, holder_class=holder_class)
+        assert p.positions[0].quantity == 80
+        observed.append(p.partial_surrender_audits[0])
+
+    monkeypatch.setattr(PortfolioEngine, "apply_partial_surrender", apply)
+    for opening in ("5", "20"):
+        engine = ResearchExecutionEngine(
+            OneTargetStrategy(),
+            initial_cash=Decimal(10000),
+            commission_model=FixedCommission(),
+            calendar=calendar,
+        )
+        sessions = [
+            _session(days[0], opening="10"),
+            _session(days[1], opening="9.9"),
+            ResearchSession(trading_date=days[2], bars=(), statuses=(), buy_lot_sizes=()),
+            replace(
+                _session(days[3], opening=opening),
+                partial_surrenders=(e,),
+                surrender_holder_class=e.affected_holder_class,
+            ),
+            _session(days[4], opening=opening),
+        ]
+        result = engine.run(sessions)
+        assert len(result.fills) == len(result.orders) == 1
+        assert result.snapshots[-1].positions[0].quantity == 80
+        assert result.snapshots[-1].positions[0].aggregate_cost_basis == 792
+        assert result.partial_surrender_boundary_policy == "FIRST_POST_EVENT_TRADING_BOUNDARY_V1"
+    assert observed[0] == observed[1]
+    bad = replace(sessions[3], bars=())
+    with pytest.raises(ValueError, match="FIRST_TRADABLE_BOUNDARY_REQUIRED"):
+        engine.run([*sessions[:3], bad])
+
+
 def funded(q="100", price="10"):
     bus = EventBus()
     events = []

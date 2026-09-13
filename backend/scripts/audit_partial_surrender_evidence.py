@@ -16,9 +16,18 @@ from scripts.audit_demerger_evidence import verify_sources
 def audit(review, event, staging):
     if review["policy"] != PARTIAL_SURRENDER_POLICY:
         raise ValueError("PARTIAL_SURRENDER_POLICY_MISMATCH")
-    documents = verify_sources(review, (*event.sources, *event.confirmation_sources), staging)
+    documents = verify_sources(
+        review, (*event.sources, *event.confirmation_sources, *event.boundary_sources), staging
+    )
+    convention = (
+        event.research_effective_date is not None or event.research_fraction_rule is not None
+    )
+    if convention:
+        event.require_supported()
+        if review.get("convention_approval_sha256") != event.convention_approval_sha256:
+            raise ValueError("CONVENTION_APPROVAL_RECEIPT_MISMATCH")
     normalized = event.model_dump(mode="json")
-    for key in ("sources", "confirmation_sources"):
+    for key in ("sources", "confirmation_sources", "boundary_sources"):
         normalized[key].sort(key=lambda s: (s["sha256"], s["url"]))
     gaps = []
     if event.effective_date is None:
@@ -28,7 +37,7 @@ def audit(review, event, staging):
     if event.consideration_type != "NONE" or event.consideration_value != 0:
         gaps.append("PARTIAL_SURRENDER_CONSIDERATION_POLICY_UNRESOLVED")
     body = dict(
-        parser_version="PARTIAL_SURRENDER_EVIDENCE_V1",
+        parser_version="PARTIAL_SURRENDER_EVIDENCE_V2",
         policy=PARTIAL_SURRENDER_POLICY,
         review={**review, "documents": documents},
         event=normalized,
@@ -36,6 +45,9 @@ def audit(review, event, staging):
         source_bytes_verified=True,
         unresolved_source_requirements=gaps,
         historical_event_admission="PARTIAL" if gaps else "ELIGIBLE_FOR_SEPARATE_DATASET_AUDIT",
+        research_convention_admission="PASS_UNDER_APPROVED_CONVENTION"
+        if convention
+        else "NOT_USED",
         full_census_certified=False,
     )
     return {**body, "manifest_sha256": canonical_sha256(body)}
@@ -55,6 +67,7 @@ if __name__ == "__main__":
             update={
                 "sources": tuple(reversed(event.sources)),
                 "confirmation_sources": tuple(reversed(event.confirmation_sources)),
+                "boundary_sources": tuple(reversed(event.boundary_sources)),
             }
         ),
         args.staging,

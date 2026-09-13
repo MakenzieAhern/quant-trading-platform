@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from decimal import ROUND_HALF_EVEN, Context, Decimal, localcontext
+from decimal import ROUND_CEILING, ROUND_FLOOR, ROUND_HALF_EVEN, Context, Decimal, localcontext
 from typing import Any
 
 from app.domain.market import Bar
@@ -113,7 +113,7 @@ class PortfolioEngine:
     ) -> None:
         self._require_chronological(timestamp, "partial share surrender")
         event.require_supported()
-        if timestamp.date() != event.effective_date:
+        if timestamp.date() != event.application_date:
             raise PortfolioError("partial surrender session mismatch")
         if holder_class != event.affected_holder_class:
             raise PortfolioError("PARTIAL_SURRENDER_HOLDER_APPLICABILITY_UNVERIFIED")
@@ -134,7 +134,13 @@ class PortfolioEngine:
                         quantity_context.prec,
                         len(q.as_tuple().digits) + len(event.surrender_ratio.as_tuple().digits) + 1,
                     )
-                    surrendered = q * event.surrender_ratio
+                    theoretical = q * event.surrender_ratio
+                    lower = theoretical.to_integral_value(rounding=ROUND_FLOOR)
+                    surrendered = (
+                        min(q, theoretical.to_integral_value(rounding=ROUND_CEILING))
+                        if event.research_fraction_rule is not None
+                        else theoretical
+                    )
                     retained = q - surrendered
                 # Issuer-level issuance rounding cannot define this holder-level transfer.
                 if surrendered != surrendered.to_integral_value():
@@ -142,16 +148,20 @@ class PortfolioEngine:
                 basis = current.aggregate_cost_basis
                 if basis is None:
                     basis = q * current.average_price
-                surrendered_basis = basis * event.surrender_ratio
-                retained_basis = basis - surrendered_basis
+                if event.research_fraction_rule is not None:
+                    retained_basis = basis * retained / q
+                    surrendered_basis = basis - retained_basis
+                else:
+                    surrendered_basis = basis * event.surrender_ratio
+                    retained_basis = basis - surrendered_basis
                 price = self._marks.get(symbol, current.market_price)
                 average = basis / q
-                if retained_basis / retained != average:
+                if retained and retained_basis / retained != average:
                     raise PortfolioError("PARTIAL_SURRENDER_DECIMAL_INVARIANT_UNREPRESENTABLE")
                 updated = Position(
                     symbol=symbol,
                     quantity=retained,
-                    average_price=average,
+                    average_price=average if retained else ZERO,
                     aggregate_cost_basis=retained_basis,
                     market_price=price,
                     unrealized_pnl=retained * price - retained_basis,
@@ -169,6 +179,23 @@ class PortfolioEngine:
                     surrendered_basis=surrendered_basis,
                     retained_basis=retained_basis,
                     market_value_removed=surrendered * price,
+                    historical_registry_date=event.effective_date,
+                    research_boundary=(
+                        "FIRST_POST_EVENT_TRADING_BOUNDARY_V1"
+                        if event.research_effective_date
+                        else None
+                    ),
+                    official_fraction_rule=(
+                        "NOT_EVIDENCED"
+                        if event.quantity_rounding_rule == "UNRESOLVED"
+                        else event.quantity_rounding_rule
+                    ),
+                    research_fraction_rule=event.research_fraction_rule,
+                    convention_approval_sha256=event.convention_approval_sha256,
+                    theoretical_surrender=theoretical,
+                    lower_surrender_bound=lower,
+                    extra_shares_vs_floor=surrendered - lower,
+                    estimated_value_difference=(surrendered - lower) * price,
                 )
                 realized = self._corporate_action_realized - surrendered_basis
         # No state changes until every account quantity/basis/provenance check passes.
@@ -195,6 +222,19 @@ class PortfolioEngine:
                     (a.surrendered_basis for a in self._surrender_audits), default=ZERO
                 ),
                 "events_with_compensation": 0,
+                "fractional_surrender_cases": sum(
+                    a.theoretical_surrender != a.lower_surrender_bound
+                    for a in self._surrender_audits
+                ),
+                "zero_retained_cases": sum(
+                    a.retained_quantity == ZERO for a in self._surrender_audits
+                ),
+                "max_extra_share_surrendered_vs_floor": max(
+                    (a.extra_shares_vs_floor for a in self._surrender_audits), default=ZERO
+                ),
+                "max_estimated_economic_difference": max(
+                    (a.estimated_value_difference for a in self._surrender_audits), default=ZERO
+                ),
                 "scope": "APPLIED_SUPPORTED_EVENTS_ONLY_NOT_FULL_SOURCE_INVENTORY",
             }
 

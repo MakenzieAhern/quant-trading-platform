@@ -30,11 +30,20 @@ class PartialShareSurrenderAudit(BaseModel):
     )
     original_quantity: PositiveDecimal
     surrendered_quantity: PositiveDecimal
-    retained_quantity: PositiveDecimal
+    retained_quantity: NonNegativeDecimal
     original_basis: NonNegativeDecimal
     surrendered_basis: NonNegativeDecimal
     retained_basis: NonNegativeDecimal
     market_value_removed: NonNegativeDecimal
+    historical_registry_date: date | None = None
+    research_boundary: str | None = None
+    official_fraction_rule: str | None = None
+    research_fraction_rule: str | None = None
+    convention_approval_sha256: str | None = None
+    theoretical_surrender: NonNegativeDecimal | None = None
+    lower_surrender_bound: NonNegativeDecimal | None = None
+    extra_shares_vs_floor: NonNegativeDecimal = Decimal(0)
+    estimated_value_difference: NonNegativeDecimal = Decimal(0)
 
 
 class SignalType(StrEnum):

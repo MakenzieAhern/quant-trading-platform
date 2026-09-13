@@ -1,5 +1,23 @@
 # Current state
 
+## Current:600462 approved boundary/fraction convention PASS; R5 RUNNING
+
+Human decision6f14546633e87d4a3dfec3564d92e03de07b6778b0636e4f86193994772f03b1
+approves FIRST_POST_EVENT_TRADING_BOUNDARY_V1 and CEIL_SURRENDER_FLOOR_RETAINED_V1.
+Historical registry date and official fraction rule remain NOT_PUBLICLY_EVIDENCED.
+Research application before2012-11-19 resumed tradable Bar; no future-price input
+to quantity/basis. Generic ceiling and zero-retained accounting/replay/persistence PASS.
+600462 source blocker RESOLVED_BY_APPROVED_CONVENTION, not by fabricated historical facts.
+18 source PDF receipts verified; flat-start2010 quantity lattice remains100*n before
+surrender, so reachable fractional/positive-zero-retained cases0, economic bound0.
+Edge stress Q1/6/101 separately tests ceiling; not historical strategy holdings.
+528 backend tests/Ruff/format/mypy PASS. No schema migration needed for JSON audit extension.
+HUMAN_APPROVAL_REQUIRED=NO; HUMAN_SOURCE_INPUT_REQUIRED=NO; STATUS=RUNNING.
+Resume preserved R5 queues. Full dataset CREATED/AUDITED/FROZEN=NO; coverage/safe start
+not established. No studies/profitability inspection/merge/release.
+Review/lineage: ../research/600462_APPROVED_CONVENTION_REVIEW_V1.json.
+Evidence manifest a4d49ac37c9bff57485be7087122707ad0e03b788cfc39d776e509fdb00fd83a.
+
 ## Latest registry recovery: trading boundary and aggregate totals verified
 
 Official first post-event trading boundary2012-11-19 established; exact registry

@@ -76,7 +76,15 @@ def request_body(initial_cash: str = "100000") -> dict[str, object]:
 
 
 @pytest.mark.parametrize(
-    "conversion", ["demerger", "merger", "zero_whole_merger", "partial_surrender"]
+    "conversion",
+    [
+        "demerger",
+        "merger",
+        "zero_whole_merger",
+        "partial_surrender",
+        "ceil_surrender_zero",
+        "ceil_surrender_odd",
+    ],
 )
 async def test_mandatory_conversion_survives_repository_roundtrip(
     client: AsyncClient,
@@ -126,10 +134,19 @@ async def test_mandatory_conversion_survives_repository_roundtrip(
 
         portfolio, _ = surrender_funded()
         e = surrender_event()
+        if conversion.startswith("ceil_surrender"):
+            from tests.test_partial_share_surrender import approved_convention
+
+            portfolio, _ = surrender_funded("1" if conversion.endswith("zero") else "6")
+            e = approved_convention().model_copy(
+                update={"research_effective_date": date(2024, 1, 4)}
+            )
         portfolio.apply_partial_surrender(e, at("2024-01-04"), holder_class=e.affected_holder_class)
         pending = portfolio.snapshot_at(at("2024-01-04"))
         active = portfolio.snapshot_at(at("2024-01-05"))
         expected_basis = Decimal(800)
+        if conversion.startswith("ceil_surrender"):
+            expected_basis = Decimal(0 if conversion.endswith("zero") else 40)
     baseline = BacktestEngine(
         CSVDataProvider(FIXTURES),
         (MovingAverageCrossoverStrategy("fixture", "AAPL", 2, 3),),
