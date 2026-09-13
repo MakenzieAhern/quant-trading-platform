@@ -9,10 +9,13 @@ from app.domain.markets.demergers import (
     DemergerEvent,
     accounting_symbol,
 )
+from app.domain.markets.mergers import MergerEvent
 from app.domain.trading import (
     Fill,
+    MergerRoundingAudit,
     OrderSide,
     PendingDemergerEntitlement,
+    PendingMergerEntitlement,
     PortfolioSnapshot,
     Position,
 )
@@ -50,6 +53,9 @@ class PortfolioEngine:
         self._pending_demergers: dict[str, PendingDemergerEntitlement] = {}
         self._demerger_events: dict[str, DemergerEvent] = {}
         self._retired_realized = ZERO
+        self._merger_events: dict[str, MergerEvent] = {}
+        self._pending_mergers: dict[str, PendingMergerEntitlement] = {}
+        self._merger_audits: dict[str, MergerRoundingAudit] = {}
         self._event_bus.subscribe(EventType.ORDER_FILLED, self._on_fill)
         self._event_bus.subscribe(EventType.MARKET_DATA, self._on_market_data)
 
@@ -86,7 +92,13 @@ class PortfolioEngine:
         return tuple(self._pending_demergers[k] for k in sorted(self._pending_demergers))
 
     def is_orderable(self, symbol: str) -> bool:
-        if symbol in self._demerger_events:
+        if symbol in self._demerger_events or symbol in self._merger_events:
+            return False
+        if self._last_event_timestamp is not None and any(
+            symbol == accounting_symbol(e.successor_security)
+            and self._last_event_timestamp.date() < e.activation_date
+            for e in self._merger_events.values()
+        ):
             return False
         if self._last_event_timestamp is not None and any(
             symbol == accounting_symbol(s.security_id)
@@ -95,7 +107,161 @@ class PortfolioEngine:
             for s in e.successors
         ):
             return False
-        return not any(symbol == s for p in self.pending_demergers for s in p.successor_symbols)
+        return not any(
+            symbol == s
+            for p in (*self.pending_demergers, *self.pending_mergers)
+            for s in p.successor_symbols
+        )
+
+    @property
+    def pending_mergers(self) -> tuple[PendingMergerEntitlement, ...]:
+        return tuple(self._pending_mergers[k] for k in sorted(self._pending_mergers))
+
+    @property
+    def merger_rounding_audits(self) -> tuple[MergerRoundingAudit, ...]:
+        return tuple(self._merger_audits[k] for k in sorted(self._merger_audits))
+
+    def merger_materiality(self) -> dict[str, int | Decimal | None]:
+        """Observed account conversions only, never a full-dataset census or strategy metric."""
+        audits = self.merger_rounding_audits
+        values = [a.maximum_estimated_discarded_value for a in audits]
+        bounds = [a.maximum_floor_ceil_value_difference for a in audits]
+        with localcontext(PORTFOLIO_CONTEXT):
+            return {
+                "fractional_merger_events_total": sum(bool(a.fractional_remainder) for a in audits),
+                "total_discarded_fractional_shares": sum(
+                    (a.fractional_remainder for a in audits), ZERO
+                ),
+                "max_single_event_discarded_share_fraction": max(
+                    (a.fractional_remainder for a in audits), default=ZERO
+                ),
+                "max_single_event_estimated_value": None
+                if None in values
+                else max((v for v in values if v is not None), default=ZERO),
+                "aggregate_estimated_discarded_value": None
+                if None in values
+                else sum((v for v in values if v is not None), ZERO),
+                "max_floor_ceil_value_difference": None
+                if None in bounds
+                else max((v for v in bounds if v is not None), default=ZERO),
+                "aggregate_floor_ceil_value_difference": None
+                if None in bounds
+                else sum((v for v in bounds if v is not None), ZERO),
+            }
+
+    def recognize_merger(self, event: MergerEvent, session_date: date, timestamp: datetime) -> None:
+        self._require_chronological(timestamp, "merger")
+        event.require_supported()
+        if session_date != event.effective_date:
+            raise PortfolioError("merger must belong to its effective session")
+        parent = accounting_symbol(event.parent_security)
+        successor = accounting_symbol(event.successor_security)
+        if parent in self._merger_events or parent in self._demerger_events:
+            raise PortfolioError("duplicate mandatory conversion")
+        current = self._positions.get(parent)
+        pending, audit = None, None
+        if current is not None and current.quantity:
+            theoretical, whole, remainder = event.quantities(current.quantity)
+            price = self._marks.get(parent)
+            if price is None or self._mark_dates.get(parent) != event.parent_last_trading_date:
+                raise PortfolioError("MERGER_PARENT_LAST_RAW_CLOSE_UNAVAILABLE")
+            with localcontext(PORTFOLIO_CONTEXT):
+                basis = current.aggregate_cost_basis
+                if basis is None:
+                    basis = current.quantity * current.average_price
+                pending = PendingMergerEntitlement(
+                    parent_symbol=parent,
+                    successor_symbols=(successor,),
+                    event_checksum=event.event_checksum,
+                    parent_quantity=current.quantity,
+                    aggregate_cost_basis=basis,
+                    carrying_value=current.quantity * price,
+                    whole_successor_quantity=whole,
+                )
+                audit = MergerRoundingAudit(
+                    event_checksum=event.event_checksum,
+                    parent_symbol=parent,
+                    successor_symbol=successor,
+                    parent_quantity=current.quantity,
+                    theoretical_successor_quantity=theoretical,
+                    whole_successor_quantity=whole,
+                    fractional_remainder=remainder,
+                    floor_ceil_quantity_difference=Decimal(1) if remainder else ZERO,
+                )
+        self._merger_events[parent] = event
+        if pending is not None and audit is not None:
+            self._pending_mergers[parent] = pending
+            self._merger_audits[parent] = audit
+        if current is not None:
+            with localcontext(PORTFOLIO_CONTEXT):
+                self._retired_realized += current.realized_pnl
+        self._positions.pop(parent, None)
+        self._marks.pop(parent, None)
+        self._mark_dates.pop(parent, None)
+        self._last_event_timestamp = timestamp
+
+    def activate_mergers(
+        self, session_date: date, raw_opens: dict[str, Decimal], timestamp: datetime
+    ) -> None:
+        self._require_chronological(timestamp, "merger activation")
+        updates: dict[str, Position] = {}
+        completed = []
+        with localcontext(PORTFOLIO_CONTEXT):
+            for parent, pending in sorted(self._pending_mergers.items()):
+                event = self._merger_events[parent]
+                if session_date < event.activation_date:
+                    continue
+                symbol = accounting_symbol(event.successor_security)
+                price = raw_opens.get(symbol)
+                if not isinstance(price, Decimal) or not price.is_finite() or price <= ZERO:
+                    raise PortfolioError("MERGER_SUCCESSOR_RAW_PRICE_UNAVAILABLE")
+                current = updates.get(symbol, self._positions.get(symbol))
+                if current is not None and current.quantity < ZERO:
+                    raise PortfolioError("merger policy is long-only")
+                quantity = pending.whole_successor_quantity
+                basis = pending.aggregate_cost_basis
+                realized = ZERO
+                if current is not None:
+                    quantity += current.quantity
+                    basis += (
+                        current.aggregate_cost_basis
+                        if current.aggregate_cost_basis is not None
+                        else current.quantity * current.average_price
+                    )
+                    realized = current.realized_pnl
+                updates[symbol] = Position(
+                    symbol=symbol,
+                    quantity=quantity,
+                    average_price=basis / quantity,
+                    aggregate_cost_basis=basis,
+                    market_price=price,
+                    unrealized_pnl=quantity * price - basis,
+                    realized_pnl=realized,
+                )
+                completed.append(parent)
+        self._positions.update(updates)
+        self._marks.update({symbol: position.market_price for symbol, position in updates.items()})
+        for parent in completed:
+            del self._pending_mergers[parent]
+            symbol = accounting_symbol(self._merger_events[parent].successor_security)
+            self._observe_merger_price(symbol, raw_opens[symbol])
+        self._last_event_timestamp = timestamp
+
+    def _observe_merger_price(self, symbol: str, raw_price: Decimal) -> None:
+        with localcontext(PORTFOLIO_CONTEXT):
+            for parent, audit in self._merger_audits.items():
+                if parent in self._pending_mergers or audit.successor_symbol != symbol:
+                    continue
+                maximum = max(audit.maximum_observed_raw_price or raw_price, raw_price)
+                self._merger_audits[parent] = audit.model_copy(
+                    update={
+                        "first_available_raw_price": audit.first_available_raw_price or raw_price,
+                        "maximum_observed_raw_price": maximum,
+                        "maximum_estimated_discarded_value": maximum * audit.fractional_remainder,
+                        "maximum_floor_ceil_value_difference": maximum
+                        * audit.floor_ceil_quantity_difference,
+                    }
+                )
 
     def recognize_demerger(
         self, event: DemergerEvent, session_date: date, timestamp: datetime
@@ -105,7 +271,7 @@ class PortfolioEngine:
         if session_date != event.effective_date:
             raise PortfolioError("demerger must belong to its effective session")
         parent = accounting_symbol(event.parent_security)
-        if parent in self._demerger_events:
+        if parent in self._demerger_events or parent in self._merger_events:
             raise PortfolioError("duplicate demerger")
         current = self._positions.get(parent)
         if current is not None and current.quantity < ZERO:
@@ -271,6 +437,7 @@ class PortfolioEngine:
 
         self._marks[bar.symbol] = bar.close
         self._mark_dates[bar.symbol] = bar.timestamp.date()
+        self._observe_merger_price(bar.symbol, bar.high)
         current = self._positions.get(bar.symbol)
         if current is not None:
             with localcontext(PORTFOLIO_CONTEXT):
@@ -289,9 +456,11 @@ class PortfolioEngine:
             positions = self.positions
             market_value = sum(
                 (position.quantity * position.market_price for position in positions), ZERO
-            ) + sum((p.carrying_value for p in self.pending_demergers), ZERO)
+            ) + sum(
+                (p.carrying_value for p in (*self.pending_demergers, *self.pending_mergers)), ZERO
+            )
             unrealized_pnl = sum((position.unrealized_pnl for position in positions), ZERO) + sum(
-                (p.unrealized_pnl for p in self.pending_demergers), ZERO
+                (p.unrealized_pnl for p in (*self.pending_demergers, *self.pending_mergers)), ZERO
             )
             realized_pnl = sum(
                 (position.realized_pnl for position in positions), self._retired_realized
@@ -311,6 +480,8 @@ class PortfolioEngine:
             cumulative_commission=self._cumulative_commission,
             drawdown=drawdown,
             pending_demergers=self.pending_demergers,
+            pending_mergers=self.pending_mergers,
+            merger_rounding_audits=self.merger_rounding_audits,
         )
         self._running_peak = running_peak
         self._last_event_timestamp = timestamp
@@ -375,6 +546,9 @@ class PortfolioEngine:
         self._pending_demergers.clear()
         self._demerger_events.clear()
         self._retired_realized = ZERO
+        self._merger_events.clear()
+        self._pending_mergers.clear()
+        self._merger_audits.clear()
 
     def _require_chronological(self, timestamp: datetime, event_name: str) -> None:
         if self._last_event_timestamp is not None and timestamp < self._last_event_timestamp:

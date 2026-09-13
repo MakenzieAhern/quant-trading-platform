@@ -75,21 +75,39 @@ def request_body(initial_cash: str = "100000") -> dict[str, object]:
     }
 
 
-async def test_demerger_pending_and_allocated_basis_survive_repository_roundtrip(
+@pytest.mark.parametrize("conversion", ["demerger", "merger"])
+async def test_mandatory_conversion_survives_repository_roundtrip(
     client: AsyncClient,
     monkeypatch: pytest.MonkeyPatch,
+    conversion: str,
 ) -> None:
     from datetime import date
 
     from tests.test_demerger_accounting import at, event, funded
 
-    portfolio, _ = funded("137")
-    portfolio.recognize_demerger(event(), date(2010, 2, 26), at("2010-02-26"))
-    pending = portfolio.snapshot_at(at("2010-02-26"))
-    portfolio.activate_demergers(
-        date(2010, 3, 19), {"601188.SSE": Decimal(5), "601518.SSE": Decimal(4)}, at("2010-03-19")
-    )
-    active = portfolio.snapshot_at(at("2010-03-19"))
+    if conversion == "demerger":
+        portfolio, _ = funded("137")
+        portfolio.recognize_demerger(event(), date(2010, 2, 26), at("2010-02-26"))
+        pending = portfolio.snapshot_at(at("2010-02-26"))
+        portfolio.activate_demergers(
+            date(2010, 3, 19),
+            {"601188.SSE": Decimal(5), "601518.SSE": Decimal(4)},
+            at("2010-03-19"),
+        )
+        active = portfolio.snapshot_at(at("2010-03-19"))
+        expected_basis = Decimal(411)
+    else:
+        from tests.test_merger_accounting import event as merger_event
+        from tests.test_merger_accounting import funded as merger_funded
+
+        portfolio, _ = merger_funded()
+        portfolio.recognize_merger(merger_event(), date(2015, 12, 30), at("2015-12-30"))
+        pending = portfolio.snapshot_at(at("2015-12-30"))
+        portfolio.activate_mergers(
+            date(2015, 12, 30), {"001979.SZSE": Decimal(25)}, at("2015-12-30")
+        )
+        active = portfolio.snapshot_at(at("2015-12-30"))
+        expected_basis = Decimal(3000)
     baseline = BacktestEngine(
         CSVDataProvider(FIXTURES),
         (MovingAverageCrossoverStrategy("fixture", "AAPL", 2, 3),),
@@ -105,7 +123,7 @@ async def test_demerger_pending_and_allocated_basis_survive_repository_roundtrip
             UUID(response.json()["run_id"]), 100, 0
         )
     assert snapshots.items == (pending, active)
-    assert sum(p.aggregate_cost_basis for p in snapshots.items[1].positions) == Decimal(411)
+    assert sum(p.aggregate_cost_basis for p in snapshots.items[1].positions) == expected_basis
 
 
 async def test_api_persists_reference_result_and_exact_decimals(

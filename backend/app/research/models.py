@@ -6,6 +6,7 @@ from enum import StrEnum
 from app.data.providers.research import DailyBarRecord, SecurityStatusRecord
 from app.domain.markets import CorporateAction, SecurityId
 from app.domain.markets.demergers import DemergerEvent
+from app.domain.markets.mergers import MergerEvent
 from app.domain.markets.rules import ResolvedTradingRules
 
 
@@ -74,6 +75,7 @@ class ResearchSession:
     corporate_actions: tuple[CorporateAction, ...] = ()
     trading_rules: tuple[ResolvedTradingRules, ...] = ()
     demergers: tuple[DemergerEvent, ...] = ()
+    mergers: tuple[MergerEvent, ...] = ()
 
     def __post_init__(self) -> None:
         if any(bar.trading_date != self.trading_date for bar in self.bars):

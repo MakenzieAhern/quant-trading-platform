@@ -1,0 +1,49 @@
+{
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "official_facts": {
+    "ratio": "1.6008",
+    "fraction_method": "GLOBAL_REMAINDER_RANKING_WITH_RANDOM_TIEBREAK_WHERE_REQUIRED",
+    "record_date": "2015-12-29",
+    "effective_date": "2015-12-30",
+    "successor_listing_date": "2015-12-30",
+    "source_pages": {
+      "000024-conversion.pdf": [
+        1,
+        4,
+        5,
+        7
+      ],
+      "001979-listing.pdf": [
+        1
+      ],
+      "000024-termination.pdf": [
+        1
+      ]
+    }
+  },
+  "research_convention": "FLOOR_NO_CASH_COMPENSATION",
+  "historical_account_specific_rounding": "NOT_RECONSTRUCTIBLE_WITHOUT_COMPLETE_SHAREHOLDER_REGISTRY",
+  "documents": [
+    {
+      "path": "000024-conversion.pdf",
+      "published_on": "2015-12-28",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-12-28/1201863627.PDF",
+      "sha256": "82b4aad17e1a7305e4987a714933d974ed349a84c8eae99149d0cc00fe8f0648",
+      "retrieved_at_utc": "2026-09-12T23:50:30.460089+00:00"
+    },
+    {
+      "path": "001979-listing.pdf",
+      "published_on": "2015-12-29",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-12-29/1201871229.PDF",
+      "sha256": "fa854710d134cc7e438638148ab74ba56819bd684ed7b18975597162822ba806",
+      "retrieved_at_utc": "2026-09-12T23:50:12.712696+00:00"
+    },
+    {
+      "path": "000024-termination.pdf",
+      "published_on": "2015-12-28",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-12-28/1201867754.PDF",
+      "sha256": "7919396e23ca62507d87821008e5b868b1c45f3e1d89d89524da30318eda82ec",
+      "retrieved_at_utc": "2026-09-12T23:50:10.828925+00:00"
+    }
+  ]
+}

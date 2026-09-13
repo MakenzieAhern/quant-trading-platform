@@ -1,0 +1,101 @@
+{
+  "inventory_version": "MERGER_REVIEW_V1",
+  "requested_coverage": [
+    "2010-01-01",
+    "2025-12-31"
+  ],
+  "full_census_status": "NOT_ESTABLISHED",
+  "count_scope": "TWO_OFFICIALLY_REVIEWED_EVENTS_NOT_EXHAUSTIVE",
+  "events": [
+    {
+      "parent_security": "CN-A:SZSE:000024",
+      "successor_security": "CN-A:SZSE:001979",
+      "event_class": "MANDATORY_STOCK_FOR_STOCK_MERGER",
+      "fractional_classification": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "conversion_ratio": "1.6008",
+      "effective_date": "2015-12-30",
+      "accounting": "PASS",
+      "source_review": "MERGER_000024_SOURCE_REVIEW.json",
+      "event_checksum": "503d20efc9b739e5d4cf5ce74ce5ed491b0c3175ab9e8ea1a4e8f995fb888365",
+      "manifest_sha256": "72433bfccf310767f34710b57a3592b903d2caa4705969932e75110ff552c604"
+    },
+    {
+      "parent_security": "CN-A:SSE:600005",
+      "successor_security": "CN-A:SSE:600019",
+      "event_class": "MANDATORY_STOCK_FOR_STOCK_MERGER",
+      "fractional_classification": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "conversion_ratio": "0.56",
+      "record_date": "2017-02-14",
+      "parent_delisting_date": "2017-02-14",
+      "conversion_implementation_date": "2017-02-17",
+      "converted_shares_tradable_from": "2017-02-27",
+      "accounting": "UNRESOLVED_ZERO_WHOLE_SHARE_BASIS",
+      "whole_share_positive_case": "SAME_APPROVED_FLOOR_CONVENTION_NOT_A_NEW_ROUNDING_DECISION",
+      "zero_whole_counterexample": {
+        "scope": "SYNTHETIC_BOUNDARY_NOT_OBSERVED_STRATEGY_HOLDING",
+        "parent_quantity": "1",
+        "theoretical_successor_quantity": "0.56",
+        "whole_successor_quantity": "0",
+        "fractional_remainder": "0.56",
+        "parent_basis": "B > 0",
+        "unresolved": "B / 0 is undefined; no approved disposal or residual-basis policy"
+      },
+      "source_documents": [
+        {
+          "path": "full-merger-v1/600005-conversion.pdf",
+          "url": "https://static.cninfo.com.cn/finalpage/2017-02-16/1203085931.PDF",
+          "sha256": "73e51dca1e5fdc4d687cef7176da275dbd642e2c1a643d4aa2887d7a8338b04c",
+          "published_on": "2017-02-16",
+          "retrieved_at_utc": "2026-09-13T00:35:32.672350+00:00",
+          "document_number": "2017-016",
+          "pages": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "path": "full-merger-v1/600005-completion.pdf",
+          "url": "https://static.cninfo.com.cn/finalpage/2017-02-22/1203098192.PDF",
+          "sha256": "3a4f73ce61ef81c24430822974321d4d45e38948bc09c2135908e010ffbb3b23",
+          "published_on": "2017-02-22",
+          "retrieved_at_utc": "2026-09-13T00:35:35.742653+00:00",
+          "document_number": "2017-018",
+          "pages": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "timing_note": "Feb22 completion notice is retrospective for Feb17 registration and prospective for Feb27 tradability; do not backdate disclosure or treat existing acquirer's original listing as converted-share eligibility. Full event admission remains pending source chronology review."
+    }
+  ],
+  "unreviewed_source_leads": [
+    {
+      "parent_security": "CN-A:SSE:600553",
+      "status": "UNRESOLVED_EVENT_SOURCE_QUEUE",
+      "locator": "https://static.cninfo.com.cn/finalpage/2011-01-31/58968228.PDF"
+    },
+    {
+      "parent_security": "CN-A:SSE:600991",
+      "status": "UNRESOLVED_EVENT_SOURCE_QUEUE",
+      "locator": "https://www.sse.com.cn/aboutus/mediacenter/hotandd/c/c_20150912_3987623.shtml"
+    },
+    {
+      "parent_security": "CN-A:SSE:601299",
+      "status": "UNRESOLVED_EVENT_SOURCE_QUEUE",
+      "locator": "https://www.crrcgc.cc/crrcgc/71_4833/71_4874/71_4954/61868b6a-56.html"
+    }
+  ],
+  "classification_vocabulary": [
+    "EXACT_INTEGER_CONVERSION",
+    "OFFICIAL_CASH_IN_LIEU",
+    "OFFICIAL_DETERMINISTIC_FRACTION_RULE",
+    "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+    "UNSUPPORTED_VARIANT",
+    "UNRESOLVED_EVENT"
+  ],
+  "notes": "Leads are retained without admission or counting as fully reviewed. No whole-security exclusion, methodology-dependent safe start, registry reconstruction or performance selection."
+}

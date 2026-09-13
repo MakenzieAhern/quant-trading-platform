@@ -120,7 +120,13 @@ class RiskEngine:
                     "every non-flat position requires a positive observed mark",
                 )
             _, _, actual_net_exposure = actual_exposures
-            pending_value = sum((p.carrying_value for p in snapshot.pending_demergers), ZERO)
+            pending_value = sum(
+                (
+                    p.carrying_value
+                    for p in (*snapshot.pending_demergers, *snapshot.pending_mergers)
+                ),
+                ZERO,
+            )
             actual_net_exposure += pending_value
             if (
                 snapshot.market_value != actual_net_exposure

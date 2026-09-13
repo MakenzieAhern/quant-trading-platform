@@ -137,6 +137,16 @@ class ResearchExecutionEngine:
         ).astimezone(UTC)
         actions = sorted(session.corporate_actions, key=corporate_action_sort_key)
         demergers = sorted(session.demergers, key=lambda e: str(e.parent_security))
+        mergers = sorted(session.mergers, key=lambda e: str(e.parent_security))
+        parents = [str(e.parent_security) for e in demergers] + [
+            str(e.parent_security) for e in mergers
+        ]
+        if len(parents) != len(set(parents)):
+            raise ValueError("duplicate session mandatory conversion")
+        for merger in mergers:
+            merger.require_supported()
+            if merger.effective_date != session.trading_date:
+                raise ValueError("merger session mismatch")
         if len({str(e.parent_security) for e in demergers}) != len(demergers):
             raise ValueError("duplicate session demerger")
         for event in demergers:
@@ -153,19 +163,28 @@ class ResearchExecutionEngine:
             )
         for event in demergers:
             self._portfolio.recognize_demerger(event, session.trading_date, opening)
+        for merger in mergers:
+            self._portfolio.recognize_merger(merger, session.trading_date, opening)
         self._portfolio.activate_demergers(
             session.trading_date,
             {_domain_symbol(b.security_id): b.raw_open for b in session.bars},
             opening,
         )
         ordered_bars = sorted(session.bars, key=lambda item: str(item.security_id))
+        self._portfolio.activate_mergers(
+            session.trading_date,
+            {_domain_symbol(b.security_id): b.raw_open for b in session.bars},
+            opening,
+        )
         for source in ordered_bars:
             self._broker.execute_pending(_domain_bar(source, opening))
         self._expire_pending()
         for source in ordered_bars:
             bar = _domain_bar(source, timestamp)
             self._event_bus.publish(Event(EventType.MARKET_DATA, bar, occurred_at=timestamp))
-        if not ordered_bars and self._portfolio.pending_demergers:
+        if not ordered_bars and (
+            self._portfolio.pending_demergers or self._portfolio.pending_mergers
+        ):
             self._portfolio.snapshot_at(timestamp)
 
         snapshot = self._portfolio.latest_snapshot
@@ -173,7 +192,7 @@ class ResearchExecutionEngine:
             return
         # Accounting evidence (including later allocation sources) is never a factor input.
         target = self._strategy.target_for_completed_session(
-            replace(session, demergers=()), snapshot.equity
+            replace(session, demergers=(), mergers=()), snapshot.equity
         )
         if target is None:
             return

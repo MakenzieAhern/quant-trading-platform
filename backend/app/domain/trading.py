@@ -113,6 +113,28 @@ class PendingDemergerEntitlement(DomainModel):
         return self.carrying_value - self.aggregate_cost_basis
 
 
+class PendingMergerEntitlement(PendingDemergerEntitlement):
+    whole_successor_quantity: PositiveDecimal
+
+
+class MergerRoundingAudit(DomainModel):
+    event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    parent_symbol: Symbol
+    successor_symbol: Symbol
+    parent_quantity: PositiveDecimal
+    theoretical_successor_quantity: PositiveDecimal
+    whole_successor_quantity: PositiveDecimal
+    fractional_remainder: Decimal = Field(ge=0, lt=1, allow_inf_nan=False)
+    label: Literal["UNREALIZED_HISTORICAL_ROUNDING_REMAINDER"] = (
+        "UNREALIZED_HISTORICAL_ROUNDING_REMAINDER"
+    )
+    first_available_raw_price: PositiveDecimal | None = None
+    maximum_observed_raw_price: PositiveDecimal | None = None
+    maximum_estimated_discarded_value: NonNegativeDecimal | None = None
+    floor_ceil_quantity_difference: NonNegativeDecimal
+    maximum_floor_ceil_value_difference: NonNegativeDecimal | None = None
+
+
 class PortfolioSnapshot(DomainModel):
     timestamp: UtcDateTime
     cash: FiniteDecimal
@@ -124,3 +146,5 @@ class PortfolioSnapshot(DomainModel):
     cumulative_commission: NonNegativeDecimal = Decimal(0)
     drawdown: FiniteDecimal
     pending_demergers: tuple[PendingDemergerEntitlement, ...] = ()
+    pending_mergers: tuple[PendingMergerEntitlement, ...] = ()
+    merger_rounding_audits: tuple[MergerRoundingAudit, ...] = ()

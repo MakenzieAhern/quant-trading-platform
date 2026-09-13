@@ -1,5 +1,28 @@
 # Current state
 
+## Current: 000024 merger PASS; R5 zero-whole-share basis decision STOP
+
+CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1 implemented; 000024 evidence/accounting/replay PASS.
+Prior MERGER_FRACTIONAL_SHARE_POLICY_UNAPPROVED:CN-A:SZSE:000024:2015-12-30 RESOLVED.
+Official global allocation remains distinct from approved deterministic floor/no-cash accounting.
+Full parent basis transfers to whole successor shares; remainder and CEIL bounds are audit-only.
+R5 resumed the historical inventory; five candidates, two official reviews, one supported,
+four unresolved including three retained source leads. Full census/materiality NOT_ESTABLISHED.
+Official 600005 ratio0.56 exposes hypothetical Q=1 ->0 whole shares: positive B/0 is undefined.
+No actual strategy holding is claimed; no loss, residual asset, cash, extra share or exclusion chosen.
+SINGLE_SMALLEST_BLOCKER=MERGER_ZERO_WHOLE_SHARES_BASIS_UNAPPROVED:CN-A:SSE:600005:2017-02-17.
+HUMAN_APPROVAL_GATE=R5_MERGER_ZERO_WHOLE_SHARE_BASIS_POLICY; HUMAN_APPROVAL_REQUIRED=YES.
+494 backend/78 frontend tests; source replay, lint/format/types and additive schema checks PASS.
+Rights V2/600003/prior authorities/frozen Pilotv2/R4v2 unchanged. R4 actual fills remain0.
+Full2010-2025 CREATED/AUDITED/FROZEN=NO; safe start/verified coverage NOT_ESTABLISHED.
+No formal studies, profitability inspection, PR12 merge, release or background worker.
+Report: ../research/MERGER_POLICY_V1_CHECKPOINT.md;
+machine report: .research/reports/r5-merger-policy-v1.json.
+Next after zero-whole basis decision: resume preserved R5 sources/materialization/audit;
+stop at GATE_FULL_RESEARCH_DATASET_FREEZE without freezing.
+
+## Historical checkpoints below (superseded)
+
 ## Current:600003 demerger PASS; R5 merger fractional-allocation decision STOP
 
 CN_A_MANDATORY_DEMERGER_POLICY_V1 implemented;600003 accounting/replay/source audit PASS.

@@ -12,10 +12,7 @@ from app.data.catalog.freeze import write_immutable
 from app.domain.markets.demergers import DEMERGER_POLICY, DemergerEvent
 
 
-def audit(review, event, staging):
-    if review["policy"] != DEMERGER_POLICY:
-        raise ValueError("DEMERGER_POLICY_MISMATCH")
-    event.require_supported()
+def verify_sources(review, sources, staging):
     documents = sorted(review["documents"], key=lambda d: d["path"])
     if len({d["path"] for d in documents}) != len(documents):
         raise ValueError("DUPLICATE_SOURCE_PATH")
@@ -30,7 +27,7 @@ def audit(review, event, staging):
             raise ValueError("SOURCE_RECEIPT_MISMATCH")
         if sha256_file(path) != document["sha256"] or not path.read_bytes().startswith(b"%PDF"):
             raise ValueError("SOURCE_BYTES_MISMATCH")
-    for source in (event.conversion_source, *event.allocation_sources):
+    for source in sources:
         matches = [d for d in documents if d["sha256"] == source.sha256]
         if len(matches) != 1 or (
             matches[0]["url"] != source.url
@@ -38,6 +35,16 @@ def audit(review, event, staging):
             or matches[0]["retrieved_at_utc"] != source.retrieved_at.isoformat()
         ):
             raise ValueError("EVENT_SOURCE_NOT_RECONCILED")
+    return documents
+
+
+def audit(review, event, staging):
+    if review["policy"] != DEMERGER_POLICY:
+        raise ValueError("DEMERGER_POLICY_MISMATCH")
+    event.require_supported()
+    documents = verify_sources(
+        review, (event.conversion_source, *event.allocation_sources), staging
+    )
     normalized = event.model_dump(mode="json")
     normalized["successors"].sort(key=lambda s: s["security_id"]["value"])
     normalized["allocation_sources"].sort(key=lambda s: s["sha256"])

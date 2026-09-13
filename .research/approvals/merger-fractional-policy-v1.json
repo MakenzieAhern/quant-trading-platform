@@ -1,0 +1,17 @@
+{
+  "decision": "HUMAN_METHODOLOGY_DECISION_R5_MERGER_FRACTIONAL_SHARE_POLICY",
+  "source_attachment": "133190be-0891-41d5-95b3-9f3ac06d6562/pasted-text.txt",
+  "source_sha256": "42f75ebe501d9b53d2ad8059bafc8e66f0da2f9ba9f268b64bb228160d54945e",
+  "recorded_at_utc": "2026-09-13T00:41:18Z",
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "fractional_share_method": "FLOOR_TO_WHOLE_SHARE_NO_CASH_COMPENSATION",
+  "basis_policy": "FULL_PARENT_BASIS_TRANSFERRED_TO_WHOLE_SUCCESSOR_SHARES",
+  "fractional_remainder_asset": "NONE",
+  "cash_compensation": "0",
+  "cash_election_policy": "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE",
+  "zero_whole_share_basis_treatment": "NOT_SPECIFIED",
+  "formal_studies_authorized": false,
+  "full_dataset_freeze_authorized": false,
+  "merge_authorized": false,
+  "next_gate": "GATE_FULL_RESEARCH_DATASET_FREEZE_OR_GENUINELY_NEW_MATERIAL_METHODOLOGY_BLOCKER"
+}

@@ -1,5 +1,27 @@
 # Decisions
 
+## 2026-09-13 UTC: merger fractional-share V1 approved and implemented
+
+Human receipt .research/approvals/merger-fractional-policy-v1.json pins the approval.
+Retained000024 official notices reverified:1.6008, global remainder ranking/random ties,
+December29 record and December30 conversion/listing. Research floor is not historical truth.
+Generic immutable event and central Portfolio use exact Decimal floor, whole-share pending
+claim, full basis transfer, unchanged cash/realizations/orders/fills and raw successor marks.
+Remainders/CEIL uncertainty are audit-only; no new dependency or board-lot policy change.
+000024 accounting/replay/source checks PASS; previous fractional-approval blocker RESOLVED.
+
+R5 resumed existing inventory. Two official event reviews plus three source leads remain
+a partial census.600005 official ratio0.56 gives zero credited shares for hypothetical Q=1;
+positive B/0 is undefined. This is not an observed strategy position. No unapproved loss,
+cash/share award, residual basis asset, exclusion or manipulated parent quantity selected.
+Single new blocker:MERGER_ZERO_WHOLE_SHARES_BASIS_UNAPPROVED:CN-A:SSE:600005:2017-02-17.
+Gate R5_MERGER_ZERO_WHOLE_SHARE_BASIS_POLICY; the approved floor method is not reopened.
+Full-dataset materiality remains NOT_ESTABLISHED, never filled using synthetic fixture totals.
+494 backend/78 frontend tests pass, with additive migration0007 and schema/source/type checks.
+Prior authorities/frozen Pilotv2/R4v2/rights/demerger decisions unchanged. No full freeze,
+formal studies, profitability inspection, PR12 merge, release or background worker.
+Details: ../research/MERGER_POLICY_V1_CHECKPOINT.md.
+
 ## 2026-09-13 UTC: mandatory demerger policy V1 verified and implemented
 
 Human receipt .research/approvals/mandatory-demerger-policy-v1.json pins the approval.

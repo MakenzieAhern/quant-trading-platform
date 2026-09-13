@@ -35,11 +35,13 @@ from app.domain.analytics import EquityPoint, PerformanceMetrics
 from app.domain.risk import OrderProposal, RiskDecision, RiskReasonCode, RiskReservation
 from app.domain.trading import (
     Fill,
+    MergerRoundingAudit,
     Order,
     OrderSide,
     OrderStatus,
     OrderType,
     PendingDemergerEntitlement,
+    PendingMergerEntitlement,
     PortfolioSnapshot,
     Position,
     Signal,
@@ -371,6 +373,12 @@ class SQLAlchemyBacktestRepository:
                     pending_demergers=tuple(
                         PendingDemergerEntitlement.model_validate(p) for p in row.pending_demergers
                     ),
+                    pending_mergers=tuple(
+                        PendingMergerEntitlement.model_validate(p) for p in row.pending_mergers
+                    ),
+                    merger_rounding_audits=tuple(
+                        MergerRoundingAudit.model_validate(p) for p in row.merger_rounding_audits
+                    ),
                     market_value=row.market_value,
                     equity=row.equity,
                     realized_pnl=row.realized_pnl,
@@ -536,6 +544,14 @@ class SQLAlchemyBacktestRepository:
                     pending_demergers=[
                         {key: _decimal_json(value) for key, value in p.model_dump().items()}
                         for p in item.pending_demergers
+                    ],
+                    pending_mergers=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.pending_mergers
+                    ],
+                    merger_rounding_audits=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.merger_rounding_audits
                     ],
                 )
                 for index, item in enumerate(result.portfolio_snapshots)
