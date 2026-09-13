@@ -197,6 +197,9 @@ class BacktestPortfolioSnapshotModel(Base):
     partial_surrender_audits: Mapped[list[dict[str, object]]] = mapped_column(
         JSONB, nullable=False, default=list, server_default="[]"
     )
+    pass_through_audits: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
 
 
 class BacktestMetricsModel(Base):

@@ -42,6 +42,7 @@ from app.db.models.research import (
 )
 from app.db.session import get_session
 from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
+from app.domain.markets.pass_through import PASS_THROUGH_BASIS_POLICY, PASS_THROUGH_POLICY
 from app.domain.markets.surrenders import (
     PARTIAL_SURRENDER_BOUNDARY_POLICY,
     PARTIAL_SURRENDER_FRACTION_POLICY,
@@ -284,6 +285,8 @@ async def create_run(
         created_at=now,
         diagnostics={
             "accounting_policies": {
+                "pass_through_policy": PASS_THROUGH_POLICY,
+                "pass_through_basis_policy": PASS_THROUGH_BASIS_POLICY,
                 "merger_policy": MERGER_POLICY,
                 "zero_whole_share_policy": ZERO_WHOLE_SHARE_POLICY,
                 "partial_surrender_policy": PARTIAL_SURRENDER_POLICY,

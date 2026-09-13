@@ -1,5 +1,36 @@
 # Decisions
 
+## Current:600817 PASS; R5 new600381 consolidation gate
+
+600817 approved net pass-through accounting/source/replay/persistence PASS; old blocker RESOLVED.
+R5 reviewed21 further retained-queue plan documents and two600381 implementation/reference PDFs.
+600381 ordinary100 ->16 share consolidation occurred2014-06-25, distinct from later12% surrender.
+Historical aggregate basis treatment of the consolidation is not covered by accepted policies.
+SINGLE_SMALLEST_BLOCKER=RESTRUCTURING_SHARE_CONSOLIDATION_BASIS_POLICY_UNAPPROVED:CN-A:SSE:600381.
+HUMAN_APPROVAL_GATE=R5_RESTRUCTURING_SHARE_CONSOLIDATION_ACCOUNTING;
+HUMAN_APPROVAL_REQUIRED=YES; HUMAN_SOURCE_INPUT_REQUIRED=NO.
+544 backend/78 frontend tests; Ruff/format/mypy and migration checks PASS.
+Full dataset CREATED/AUDITED/FROZEN=NO; safe start/full coverage NOT_ESTABLISHED.
+No studies, profitability review, PR12 merge or release. No background worker.
+Report: ../research/PASS_THROUGH_R5_CHECKPOINT.md. Resume preserved queues after decision.
+
+
+
+## Current:600817 approved net pass-through PASS; R5 RUNNING
+
+Human decision b42ec74db5f29f3a1434b96bdc04f9833dcb572a20198ee5b6fe69e3fe7293d6
+approves CN_A_RESTRUCTURING_BONUS_PASS_THROUGH_POLICY_V1 /
+NET_PASS_THROUGH_NO_BASIS_ALLOCATION. Five official PDF receipts verify25% bonus,
+registration2012-07-31, transfer2012-08-01, unchanged originals and suspension.
+Generic metadata-only accounting, persistence and raw-price separation checks PASS.
+Old600817 methodology blocker RESOLVED; HUMAN_APPROVAL_REQUIRED=NO.
+R5 resumes retained census/source queues; no prior acceptance is repeated or changed.
+Full dataset CREATED/AUDITED/FROZEN=NO; safe start/full coverage NOT_ESTABLISHED.
+No Development/Validation/OOS, profitability inspection, PR merge or release.
+Evidence: ../research/RESTRUCTURING_PASS_THROUGH_V1.md.
+
+
+
 ## Current:600462 PASS; R5 new600817 pass-through methodology gate
 
 600462 boundary and ceiling convention accepted/tested; original registry source

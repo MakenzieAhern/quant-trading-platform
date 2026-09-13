@@ -15,6 +15,34 @@ from app.domain.common import (
 )
 
 
+class RestructuringBonusPassThroughAudit(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    security_id: str = Field(pattern=r"^CN-A:(SSE|SZSE):[0-9]{6}$")
+    effective_date: date
+    temporary_registration_date: date
+    transfer_date: date
+    transfer_recipient: str
+    original_quantity: NonNegativeDecimal
+    original_basis: NonNegativeDecimal
+    bonus_ratio: PositiveDecimal
+    temporary_bonus_quantity: NonNegativeDecimal
+    quantity_measure: Literal["THEORETICAL_RATIO_NOT_REGISTRY_ALLOCATION"] = (
+        "THEORETICAL_RATIO_NOT_REGISTRY_ALLOCATION"
+    )
+    temporary_legal_registration: Literal[True] = True
+    portfolio_tradable_holding: Literal[False] = False
+    portfolio_cost_basis_allocated: Literal[False] = False
+    policy: Literal["CN_A_RESTRUCTURING_BONUS_PASS_THROUGH_POLICY_V1"] = (
+        "CN_A_RESTRUCTURING_BONUS_PASS_THROUGH_POLICY_V1"
+    )
+    basis_policy: Literal["NET_PASS_THROUGH_NO_BASIS_ALLOCATION"] = (
+        "NET_PASS_THROUGH_NO_BASIS_ALLOCATION"
+    )
+    convention_approval_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
 class PartialShareSurrenderAudit(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -186,6 +214,7 @@ class PortfolioSnapshot(DomainModel):
     pending_mergers: tuple[PendingMergerEntitlement, ...] = ()
     merger_rounding_audits: tuple[MergerRoundingAudit, ...] = ()
     partial_surrender_audits: tuple[PartialShareSurrenderAudit, ...] = ()
+    pass_through_audits: tuple[RestructuringBonusPassThroughAudit, ...] = ()
     corporate_action_realized_pnl: FiniteDecimal = Decimal(0)
     total_pnl: FiniteDecimal = Decimal(0)
 

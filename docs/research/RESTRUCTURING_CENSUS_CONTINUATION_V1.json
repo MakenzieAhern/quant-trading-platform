@@ -1,0 +1,243 @@
+{
+  "checkpoint": "600817_PASS_R5_RESUMED_CONSOLIDATION_GATE",
+  "query_manifest_sha256": "1da654fbb1b42ca94df1afe7c311e3f9441655893ab9a48aec6848a2d3d4aa7e",
+  "documents": [
+    {
+      "path": "000017-capital-plan-2013.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2013-08-06/62910014.PDF",
+      "sha256": "cf558a678707e1a931510d4e19c5d0becca071fe053cf4ccb7b59fc0f6e9576c",
+      "retrieved_at_utc": "2026-09-13T06:10:33.621600+00:00",
+      "published_on": "2013-08-06"
+    },
+    {
+      "path": "000030-capital-plan-2010.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-09-27/58466633.PDF",
+      "sha256": "f80ee0043c44c9dfb01df1d3a6d230a19ed2489ea525f5f47420de80c1b81b58",
+      "retrieved_at_utc": "2026-09-13T06:07:12.480557+00:00",
+      "published_on": "2010-09-27"
+    },
+    {
+      "path": "000033-capital-plan-2015.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-11-27/1201791353.PDF",
+      "sha256": "83463a9a6a4ad8a2471b3853f4bcd6d2bdf7a3d5fab447765d91f8da70bbefd8",
+      "retrieved_at_utc": "2026-09-13T06:11:11.786843+00:00",
+      "published_on": "2015-11-27"
+    },
+    {
+      "path": "000034-capital-plan-2010.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-04-14/57808315.PDF",
+      "sha256": "09b81994e076e66bbb042f89b1cc3e05c20ad0f058ca94f535feb66299b4330d",
+      "retrieved_at_utc": "2026-09-13T06:06:42.753681+00:00",
+      "published_on": "2010-04-14"
+    },
+    {
+      "path": "000035-capital-plan-2012.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-04-11/60811321.PDF",
+      "sha256": "238e54bcaca88c4718f821e6f78e9c40f6438e9929808571fc53c4cf620b428c",
+      "retrieved_at_utc": "2026-09-13T06:08:03.948849+00:00",
+      "published_on": "2012-04-11"
+    },
+    {
+      "path": "000557-capital-plan-2011.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2011-07-05/59633434.PDF",
+      "sha256": "08d66f0b67134721ea439e8fa2b40584a9b5988775b1d5a3eddc19aa05bbe02a",
+      "retrieved_at_utc": "2026-09-13T06:07:41.886584+00:00",
+      "published_on": "2011-07-05"
+    },
+    {
+      "path": "000587-capital-plan-2010.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-04-17/57825778.PDF",
+      "sha256": "e97c336bd337c1c0b7479ea65a3280b0d44ed858995b2cab7610ccd0ed2bdceb",
+      "retrieved_at_utc": "2026-09-13T06:06:46.216307+00:00",
+      "published_on": "2010-04-17"
+    },
+    {
+      "path": "000677-capital-plan-2012.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-13/61650618.PDF",
+      "sha256": "0ff0dcc4c7458145e1d03c83441814dae05346f3ae4bd358fdbc50cca694c6c3",
+      "retrieved_at_utc": "2026-09-13T06:10:29.513950+00:00",
+      "published_on": "2012-10-13"
+    },
+    {
+      "path": "000757-capital-plan-2011.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2011-04-20/59296840.PDF",
+      "sha256": "156bd97a6cf88e5c7ae915c21fbdbf50096e90fa88fa06aff417f6697cff14a7",
+      "retrieved_at_utc": "2026-09-13T06:07:40.902426+00:00",
+      "published_on": "2011-04-20"
+    },
+    {
+      "path": "000787-capital-plan-2011.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2011-03-02/59064071.PDF",
+      "sha256": "0c67261b88651b93b0dd4727cd5066056d4f47868490bb9ee24a9efff52638d3",
+      "retrieved_at_utc": "2026-09-13T06:07:37.171806+00:00",
+      "published_on": "2011-03-02"
+    },
+    {
+      "path": "000818-capital-plan-2010.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-07-24/58213118.PDF",
+      "sha256": "446871d9d54dba9c3311c75c381f86874236cd096a1b6eb23162d88309e29d64",
+      "retrieved_at_utc": "2026-09-13T06:06:48.118146+00:00",
+      "published_on": "2010-07-24"
+    },
+    {
+      "path": "000820-capital-plan-2012.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-09-27/61613041.PDF",
+      "sha256": "ed79b443c7c50dff2ba026635fead6e309bb94058266c73402b9edb0a1a31649",
+      "retrieved_at_utc": "2026-09-13T06:08:06.697874+00:00",
+      "published_on": "2012-09-27"
+    },
+    {
+      "path": "000972-capital-plan-2012.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-12-08/61885457.PDF",
+      "sha256": "70b6c5ab9fb30fa8dd11c6f6c6d6297ff009e7265b77c62b3fcdf46b7c426964",
+      "retrieved_at_utc": "2026-09-13T06:10:32.723155+00:00",
+      "published_on": "2012-12-08"
+    },
+    {
+      "path": "002015-capital-plan-2015.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-04-01/1200775112.PDF",
+      "sha256": "a86ce4df70504b3d3901d2ac668462a3df057c76f92835e8bbc692ecb97048b8",
+      "retrieved_at_utc": "2026-09-13T06:11:08.044873+00:00",
+      "published_on": "2015-04-01"
+    },
+    {
+      "path": "002145-capital-plan-2012.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-07-11/61250477.PDF",
+      "sha256": "744e8d19d3a69e4622b96a47c1e1e5d770eb686d89063273bc0d2aec97aad06e",
+      "retrieved_at_utc": "2026-09-13T06:08:01.639824+00:00",
+      "published_on": "2012-07-11"
+    },
+    {
+      "path": "600074-capital-plan-2013.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2013-09-28/63118534.PDF",
+      "sha256": "6cc8decfb92f4b2f38ae285f43f4a7170ae80f21c06d570b58d67b6a59120a20",
+      "retrieved_at_utc": "2026-09-13T06:10:34.984613+00:00",
+      "published_on": "2013-09-28"
+    },
+    {
+      "path": "600145-capital-plan-2015.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-11-25/1201787393.PDF",
+      "sha256": "0f96db3a70783951d2598fad89654656e7972c49ffa21715187eea8139d2484d",
+      "retrieved_at_utc": "2026-09-13T06:11:09.473421+00:00",
+      "published_on": "2015-11-25"
+    },
+    {
+      "path": "600381-capital-plan-2013.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2013-12-03/63330033.PDF",
+      "sha256": "6ecb6b9938c68ff5b522c43275225d6d30edf66bc5418e04dcbc52a8295f490f",
+      "retrieved_at_utc": "2026-09-13T06:11:03.873172+00:00",
+      "published_on": "2013-12-03"
+    },
+    {
+      "path": "600678-capital-plan-2012.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-05-19/61019220.PDF",
+      "sha256": "616a1c4378fbc7133a201e517f2365fefd6d92f7106e80b98117da6f16bd2091",
+      "retrieved_at_utc": "2026-09-13T06:08:04.935998+00:00",
+      "published_on": "2012-05-19"
+    },
+    {
+      "path": "600699-capital-plan-2010.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-07-28/58226574.PDF",
+      "sha256": "6c37c38b08447f988cefe21e96b384261895c987cfc89a627a253dd3ba394c94",
+      "retrieved_at_utc": "2026-09-13T06:07:10.286269+00:00",
+      "published_on": "2010-07-28"
+    },
+    {
+      "path": "600757-capital-plan-2010.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-11-04/58620785.PDF",
+      "sha256": "1f2f46023df3482135ab00ace61d9fb273d36f41bea4e4db81c038456482773f",
+      "retrieved_at_utc": "2026-09-13T06:07:14.150059+00:00",
+      "published_on": "2010-11-04"
+    },
+    {
+      "path": "600381-consolidation-implementation.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2014-06-27/1200011113.PDF",
+      "sha256": "1946a7f10e6fba57ed4954c5cde65c73d32964d215bdd66fb870696f2bff13aa",
+      "retrieved_at_utc": "2026-09-13T06:11:47.263529+00:00",
+      "published_on": "2014-06-27"
+    },
+    {
+      "path": "600381-consolidation-reference.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2014-06-27/1200011114.PDF",
+      "sha256": "1772e9fafbae031984a716f8a29b9a8cf57796a84e04cd63802ba2bb53f15558",
+      "retrieved_at_utc": "2026-09-13T06:12:35.323444+00:00",
+      "published_on": "2014-06-27"
+    }
+  ],
+  "plan_documents_reviewed": 21,
+  "source_review_only": true,
+  "full_census_complete": false,
+  "pass_through_supported_events": 1,
+  "pass_through_full_events_total": null,
+  "pass_through_full_unresolved_total": null,
+  "analogous_source_leads": [
+    "000818",
+    "000757",
+    "000035",
+    "000972",
+    "600074",
+    "002015",
+    "600145"
+  ],
+  "lead_note": "Potential all-new-share diversion or mixed capitalization. Temporary legal registration and eligibility not established for these leads; not seven accepted/pass-through events.",
+  "classifications": {
+    "original_surrender_source_leads": [
+      "000034",
+      "000587",
+      "600699",
+      "000030",
+      "600757",
+      "000787",
+      "000557",
+      "600678",
+      "000820",
+      "000677",
+      "000017"
+    ],
+    "controller_only_proposal": [
+      "002145"
+    ],
+    "ordinary_retained_bonus_controller_surrender": [
+      "000033"
+    ],
+    "new_material_consolidation": [
+      "600381"
+    ]
+  },
+  "blocker": "RESTRUCTURING_SHARE_CONSOLIDATION_BASIS_POLICY_UNAPPROVED:CN-A:SSE:600381",
+  "blocker_facts": {
+    "implemented_date": "2014-06-25",
+    "ex_reference_date": "2014-06-27",
+    "ordinary_holder_retained_ratio": "0.16",
+    "special_holder_retained_ratios": [
+      "0.02",
+      "0.10"
+    ],
+    "pre_total": 1601845390,
+    "post_total": 198925752,
+    "subsequent_surrender_ratio": "0.12",
+    "subsequent_surrender_execution_date": "NOT_ESTABLISHED",
+    "continued_suspension": true,
+    "last_close": "2.08",
+    "reference_price": "16.75",
+    "cash_dividend": "0",
+    "reference_not_fill": true
+  },
+  "decision_needed": "Historical aggregate basis treatment of the restructuring consolidation leg, distinct from later12% surrender. Existing generic share-change type fails closed; no accepted consolidation accounting convention exists.",
+  "diagnostic_not_strategy": {
+    "original_quantity": "10000",
+    "original_basis": "100000",
+    "post_consolidation_quantity": "1600",
+    "basis_preserving_option": {
+      "basis": "100000",
+      "average": "62.5",
+      "corporate_action_pnl": "0"
+    },
+    "surrender_loss_option": {
+      "basis": "16000",
+      "average": "10",
+      "corporate_action_pnl": "-84000"
+    },
+    "no_option_applied": true
+  }
+}

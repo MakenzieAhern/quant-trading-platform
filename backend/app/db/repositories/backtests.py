@@ -45,6 +45,7 @@ from app.domain.trading import (
     PendingMergerEntitlement,
     PortfolioSnapshot,
     Position,
+    RestructuringBonusPassThroughAudit,
     Signal,
     SignalType,
 )
@@ -386,6 +387,10 @@ class SQLAlchemyBacktestRepository:
                         PartialShareSurrenderAudit.model_validate(p)
                         for p in row.partial_surrender_audits
                     ),
+                    pass_through_audits=tuple(
+                        RestructuringBonusPassThroughAudit.model_validate(p)
+                        for p in row.pass_through_audits
+                    ),
                     market_value=row.market_value,
                     equity=row.equity,
                     realized_pnl=row.realized_pnl,
@@ -569,6 +574,10 @@ class SQLAlchemyBacktestRepository:
                     partial_surrender_audits=[
                         {key: _decimal_json(value) for key, value in p.model_dump().items()}
                         for p in item.partial_surrender_audits
+                    ],
+                    pass_through_audits=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.pass_through_audits
                     ],
                 )
                 for index, item in enumerate(result.portfolio_snapshots)

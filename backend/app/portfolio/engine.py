@@ -10,6 +10,7 @@ from app.domain.markets.demergers import (
     accounting_symbol,
 )
 from app.domain.markets.mergers import MergerEvent
+from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
 from app.domain.markets.surrenders import (
     MandatoryPartialShareSurrenderEvent,
 )
@@ -22,6 +23,7 @@ from app.domain.trading import (
     PendingMergerEntitlement,
     PortfolioSnapshot,
     Position,
+    RestructuringBonusPassThroughAudit,
 )
 from app.event import Event, EventBus, EventType
 
@@ -63,6 +65,7 @@ class PortfolioEngine:
         self._merger_audits: dict[str, MergerRoundingAudit] = {}
         self._surrender_events: dict[tuple[str, date], str] = {}
         self._surrender_audits: list[PartialShareSurrenderAudit] = []
+        self._pass_through_audits: dict[tuple[str, date], RestructuringBonusPassThroughAudit] = {}
         self._event_bus.subscribe(EventType.ORDER_FILLED, self._on_fill)
         self._event_bus.subscribe(EventType.MARKET_DATA, self._on_market_data)
 
@@ -103,6 +106,56 @@ class PortfolioEngine:
         return tuple(
             sorted(self._surrender_audits, key=lambda a: (a.effective_date, str(a.security_id)))
         )
+
+    @property
+    def pass_through_audits(self) -> tuple[RestructuringBonusPassThroughAudit, ...]:
+        return tuple(self._pass_through_audits[k] for k in sorted(self._pass_through_audits))
+
+    def apply_pass_through(
+        self, event: RestructuringBonusPassThroughEvent, timestamp: datetime
+    ) -> None:
+        self._require_chronological(timestamp, "restructuring pass-through")
+        event.require_supported()
+        if timestamp.date() != event.effective_date:
+            raise PortfolioError("pass-through session mismatch")
+        symbol = accounting_symbol(event.security_id)
+        key = (symbol, event.effective_date)
+        if key in self._pass_through_audits:
+            raise PortfolioError("duplicate restructuring pass-through")
+        current = self._positions.get(symbol)
+        q = current.quantity if current else ZERO
+        if q < ZERO or q != q.to_integral_value():
+            raise PortfolioError("pass-through requires whole long shares")
+        with localcontext(PORTFOLIO_CONTEXT) as context:
+            context.prec = max(
+                context.prec,
+                len(q.as_tuple().digits) + len(event.bonus_ratio.as_tuple().digits) + 1,
+            )
+            basis = (
+                (
+                    current.aggregate_cost_basis
+                    if current.aggregate_cost_basis is not None
+                    else q * current.average_price
+                )
+                if current
+                else ZERO
+            )
+            audit = RestructuringBonusPassThroughAudit(
+                event_checksum=event.event_checksum,
+                security_id=str(event.security_id),
+                effective_date=event.effective_date,
+                temporary_registration_date=event.temporary_registration_date,
+                transfer_date=event.transfer_date,
+                transfer_recipient=event.transfer_recipient,
+                original_quantity=q,
+                original_basis=basis,
+                bonus_ratio=event.bonus_ratio,
+                temporary_bonus_quantity=q * event.bonus_ratio,
+                convention_approval_sha256=event.convention_approval_sha256,
+            )
+        # Metadata only: do not touch positions, basis, cash, marks, PnL or execution.
+        self._pass_through_audits[key] = audit
+        self._last_event_timestamp = timestamp
 
     def apply_partial_surrender(
         self,
@@ -537,6 +590,7 @@ class PortfolioEngine:
 
     def apply_fill(self, fill: Fill) -> Position:
         self._require_chronological(fill.timestamp, "fill")
+        self._reject_pass_through_trading(fill.symbol, fill.timestamp)
         if not self.is_orderable(fill.symbol):
             raise PortfolioError("CORPORATE_ACTION_NON_ORDERABLE")
         current = self._positions.get(fill.symbol)
@@ -601,6 +655,7 @@ class PortfolioEngine:
 
     def mark_to_market(self, bar: Bar) -> PortfolioSnapshot:
         self._require_chronological(bar.timestamp, "market data")
+        self._reject_pass_through_trading(bar.symbol, bar.timestamp)
         if not self.is_orderable(bar.symbol):
             raise PortfolioError("pending or retired security cannot receive a market quote")
 
@@ -656,6 +711,7 @@ class PortfolioEngine:
             corporate_action_realized_pnl=self._corporate_action_realized,
             total_pnl=total_pnl,
             partial_surrender_audits=self.partial_surrender_audits,
+            pass_through_audits=self.pass_through_audits,
         )
         self._running_peak = running_peak
         self._last_event_timestamp = timestamp
@@ -729,6 +785,15 @@ class PortfolioEngine:
         self._merger_audits.clear()
         self._surrender_events.clear()
         self._surrender_audits.clear()
+        self._pass_through_audits.clear()
+
+    def _reject_pass_through_trading(self, symbol: str, timestamp: datetime) -> None:
+        for (event_symbol, _), audit in self._pass_through_audits.items():
+            if (
+                symbol == event_symbol
+                and audit.temporary_registration_date <= timestamp.date() <= audit.transfer_date
+            ):
+                raise PortfolioError("PASS_THROUGH_TRADING_OBSERVATION_CONFLICT")
 
     def _require_chronological(self, timestamp: datetime, event_name: str) -> None:
         if self._last_event_timestamp is not None and timestamp < self._last_event_timestamp:

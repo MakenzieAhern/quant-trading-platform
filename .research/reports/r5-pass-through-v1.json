@@ -1,0 +1,23 @@
+{
+  "stage": "R5_FULL_RESEARCH_DATASET",
+  "status": "BLOCKED_NEW_MATERIAL_METHODOLOGY",
+  "600817_accounting": "PASS",
+  "600817_source_manifest_sha256": "0e100b6ec0a586daa97b7bd599ce2669ab88cae22a83da72365dd5396b3ff2f2",
+  "census_continuation_manifest_sha256": "8838106a1a876d155374cd9bac671552eea12d8201d6acc43ed1f6deeeddfa9f",
+  "backend_tests_passed": 544,
+  "frontend_tests_passed": 78,
+  "ruff": "PASS",
+  "mypy": "PASS",
+  "migration_roundtrip": "PASS_ISOLATED_TEST_DATABASE",
+  "full_dataset_source_preflight": "PARTIAL",
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "blocker": "RESTRUCTURING_SHARE_CONSOLIDATION_BASIS_POLICY_UNAPPROVED:CN-A:SSE:600381",
+  "human_approval_required": true,
+  "human_source_input_required": false,
+  "development_study_run": false,
+  "validation_study_run": false,
+  "official_oos_run": false,
+  "pr_merged": false
+}

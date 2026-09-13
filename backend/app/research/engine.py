@@ -14,6 +14,7 @@ from app.domain.markets.corporate_actions import (
     require_supported_corporate_action,
 )
 from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
+from app.domain.markets.pass_through import PASS_THROUGH_POLICY
 from app.domain.markets.surrenders import (
     PARTIAL_SURRENDER_BOUNDARY_POLICY,
     PARTIAL_SURRENDER_FRACTION_POLICY,
@@ -58,6 +59,7 @@ class ResearchExecutionResult:
     partial_surrender_policy: str = PARTIAL_SURRENDER_POLICY
     partial_surrender_fraction_policy: str = PARTIAL_SURRENDER_FRACTION_POLICY
     partial_surrender_boundary_policy: str = PARTIAL_SURRENDER_BOUNDARY_POLICY
+    pass_through_policy: str = PASS_THROUGH_POLICY
 
 
 class ResearchExecutionEngine:
@@ -150,16 +152,25 @@ class ResearchExecutionEngine:
         demergers = sorted(session.demergers, key=lambda e: str(e.parent_security))
         mergers = sorted(session.mergers, key=lambda e: str(e.parent_security))
         surrenders = sorted(session.partial_surrenders, key=lambda e: str(e.security_id))
+        pass_through = sorted(session.pass_through_events, key=lambda e: str(e.security_id))
+        pass_ids = [str(e.security_id) for e in pass_through]
         parents = [str(e.parent_security) for e in demergers] + [
             str(e.parent_security) for e in mergers
         ]
         if len(parents) != len(set(parents)):
             raise ValueError("duplicate session mandatory conversion")
-        structural_ids = parents + [str(e.security_id) for e in surrenders]
+        structural_ids = parents + [str(e.security_id) for e in surrenders] + pass_ids
         if len(structural_ids) != len(set(structural_ids)) or any(
-            str(a.security_id) in {str(e.security_id) for e in surrenders} for a in actions
+            str(a.security_id) in {str(e.security_id) for e in surrenders} | set(pass_ids)
+            for a in actions
         ):
             raise ValueError("partial surrender concurrent action ordering unsupported")
+        for pass_event in pass_through:
+            pass_event.require_supported()
+            if pass_event.effective_date != session.trading_date:
+                raise ValueError("pass-through session mismatch")
+            if any(b.security_id == pass_event.security_id for b in session.bars):
+                raise ValueError("PASS_THROUGH_TRADING_OBSERVATION_CONFLICT")
         for surrender in surrenders:
             surrender.require_supported()
             if surrender.application_date != session.trading_date:
@@ -208,6 +219,8 @@ class ResearchExecutionEngine:
             self._portfolio.apply_partial_surrender(
                 surrender, opening, holder_class=session.surrender_holder_class
             )
+        for pass_event in pass_through:
+            self._portfolio.apply_pass_through(pass_event, opening)
         self._portfolio.activate_demergers(
             session.trading_date,
             {_domain_symbol(b.security_id): b.raw_open for b in session.bars},
@@ -230,6 +243,7 @@ class ResearchExecutionEngine:
             or self._portfolio.pending_mergers
             or mergers
             or surrenders
+            or pass_through
         ):
             self._portfolio.snapshot_at(timestamp)
 
@@ -244,6 +258,7 @@ class ResearchExecutionEngine:
                 mergers=(),
                 partial_surrenders=(),
                 surrender_holder_class=None,
+                pass_through_events=(),
             ),
             snapshot.equity,
         )

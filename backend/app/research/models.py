@@ -7,6 +7,7 @@ from app.data.providers.research import DailyBarRecord, SecurityStatusRecord
 from app.domain.markets import CorporateAction, SecurityId
 from app.domain.markets.demergers import DemergerEvent
 from app.domain.markets.mergers import MergerEvent
+from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
 from app.domain.markets.rules import ResolvedTradingRules
 from app.domain.markets.surrenders import MandatoryPartialShareSurrenderEvent
 
@@ -79,6 +80,7 @@ class ResearchSession:
     mergers: tuple[MergerEvent, ...] = ()
     partial_surrenders: tuple[MandatoryPartialShareSurrenderEvent, ...] = ()
     surrender_holder_class: str | None = None
+    pass_through_events: tuple[RestructuringBonusPassThroughEvent, ...] = ()
 
     def __post_init__(self) -> None:
         if any(bar.trading_date != self.trading_date for bar in self.bars):
