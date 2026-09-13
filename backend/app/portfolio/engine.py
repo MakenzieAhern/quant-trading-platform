@@ -10,10 +10,14 @@ from app.domain.markets.demergers import (
     accounting_symbol,
 )
 from app.domain.markets.mergers import MergerEvent
+from app.domain.markets.surrenders import (
+    MandatoryPartialShareSurrenderEvent,
+)
 from app.domain.trading import (
     Fill,
     MergerRoundingAudit,
     OrderSide,
+    PartialShareSurrenderAudit,
     PendingDemergerEntitlement,
     PendingMergerEntitlement,
     PortfolioSnapshot,
@@ -57,6 +61,8 @@ class PortfolioEngine:
         self._merger_events: dict[str, MergerEvent] = {}
         self._pending_mergers: dict[str, PendingMergerEntitlement] = {}
         self._merger_audits: dict[str, MergerRoundingAudit] = {}
+        self._surrender_events: dict[tuple[str, date], str] = {}
+        self._surrender_audits: list[PartialShareSurrenderAudit] = []
         self._event_bus.subscribe(EventType.ORDER_FILLED, self._on_fill)
         self._event_bus.subscribe(EventType.MARKET_DATA, self._on_market_data)
 
@@ -91,6 +97,106 @@ class PortfolioEngine:
     @property
     def pending_demergers(self) -> tuple[PendingDemergerEntitlement, ...]:
         return tuple(self._pending_demergers[k] for k in sorted(self._pending_demergers))
+
+    @property
+    def partial_surrender_audits(self) -> tuple[PartialShareSurrenderAudit, ...]:
+        return tuple(
+            sorted(self._surrender_audits, key=lambda a: (a.effective_date, str(a.security_id)))
+        )
+
+    def apply_partial_surrender(
+        self,
+        event: MandatoryPartialShareSurrenderEvent,
+        timestamp: datetime,
+        *,
+        holder_class: str | None,
+    ) -> None:
+        self._require_chronological(timestamp, "partial share surrender")
+        event.require_supported()
+        if timestamp.date() != event.effective_date:
+            raise PortfolioError("partial surrender session mismatch")
+        if holder_class != event.affected_holder_class:
+            raise PortfolioError("PARTIAL_SURRENDER_HOLDER_APPLICABILITY_UNVERIFIED")
+        symbol = accounting_symbol(event.security_id)
+        key = (symbol, timestamp.date())
+        if key in self._surrender_events:
+            raise PortfolioError("duplicate partial surrender")
+        current = self._positions.get(symbol)
+        audit = None
+        updated = None
+        if current is not None and current.quantity:
+            with localcontext(PORTFOLIO_CONTEXT):
+                q = current.quantity
+                if q < ZERO or q != q.to_integral_value():
+                    raise PortfolioError("partial surrender requires whole long shares")
+                with localcontext(PORTFOLIO_CONTEXT) as quantity_context:
+                    quantity_context.prec = max(
+                        quantity_context.prec,
+                        len(q.as_tuple().digits) + len(event.surrender_ratio.as_tuple().digits) + 1,
+                    )
+                    surrendered = q * event.surrender_ratio
+                    retained = q - surrendered
+                # Issuer-level issuance rounding cannot define this holder-level transfer.
+                if surrendered != surrendered.to_integral_value():
+                    raise PortfolioError("PARTIAL_SURRENDER_FRACTIONAL_ALLOCATION_UNRESOLVED")
+                basis = current.aggregate_cost_basis
+                if basis is None:
+                    basis = q * current.average_price
+                surrendered_basis = basis * event.surrender_ratio
+                retained_basis = basis - surrendered_basis
+                price = self._marks.get(symbol, current.market_price)
+                average = basis / q
+                if retained_basis / retained != average:
+                    raise PortfolioError("PARTIAL_SURRENDER_DECIMAL_INVARIANT_UNREPRESENTABLE")
+                updated = Position(
+                    symbol=symbol,
+                    quantity=retained,
+                    average_price=average,
+                    aggregate_cost_basis=retained_basis,
+                    market_price=price,
+                    unrealized_pnl=retained * price - retained_basis,
+                    realized_pnl=current.realized_pnl,
+                )
+                audit = PartialShareSurrenderAudit(
+                    event_checksum=event.event_checksum,
+                    security_id=str(event.security_id),
+                    effective_date=timestamp.date(),
+                    affected_holder_class=holder_class,
+                    original_quantity=q,
+                    surrendered_quantity=surrendered,
+                    retained_quantity=retained,
+                    original_basis=basis,
+                    surrendered_basis=surrendered_basis,
+                    retained_basis=retained_basis,
+                    market_value_removed=surrendered * price,
+                )
+                realized = self._corporate_action_realized - surrendered_basis
+        # No state changes until every account quantity/basis/provenance check passes.
+        if updated is not None and audit is not None:
+            self._positions[symbol] = updated
+            self._corporate_action_realized = realized
+            self._surrender_audits.append(audit)
+        self._surrender_events[key] = event.event_checksum
+        self._last_event_timestamp = timestamp
+
+    def partial_surrender_materiality(self) -> dict[str, Any]:
+        with localcontext(PORTFOLIO_CONTEXT):
+            return {
+                "events_total": len(self._surrender_events),
+                "securities_with_partial_surrender": len({k[0] for k in self._surrender_events}),
+                "position_occurrences": len(self._surrender_audits),
+                "total_shares_surrendered": sum(
+                    (a.surrendered_quantity for a in self._surrender_audits), ZERO
+                ),
+                "total_basis_written_off": sum(
+                    (a.surrendered_basis for a in self._surrender_audits), ZERO
+                ),
+                "max_single_event_basis_write_off": max(
+                    (a.surrendered_basis for a in self._surrender_audits), default=ZERO
+                ),
+                "events_with_compensation": 0,
+                "scope": "APPLIED_SUPPORTED_EVENTS_ONLY_NOT_FULL_SOURCE_INVENTORY",
+            }
 
     def is_orderable(self, symbol: str) -> bool:
         if symbol in self._demerger_events or symbol in self._merger_events:
@@ -509,6 +615,7 @@ class PortfolioEngine:
             merger_rounding_audits=self.merger_rounding_audits,
             corporate_action_realized_pnl=self._corporate_action_realized,
             total_pnl=total_pnl,
+            partial_surrender_audits=self.partial_surrender_audits,
         )
         self._running_peak = running_peak
         self._last_event_timestamp = timestamp
@@ -580,6 +687,8 @@ class PortfolioEngine:
         self._merger_events.clear()
         self._pending_mergers.clear()
         self._merger_audits.clear()
+        self._surrender_events.clear()
+        self._surrender_audits.clear()
 
     def _require_chronological(self, timestamp: datetime, event_name: str) -> None:
         if self._last_event_timestamp is not None and timestamp < self._last_event_timestamp:

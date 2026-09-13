@@ -75,7 +75,9 @@ def request_body(initial_cash: str = "100000") -> dict[str, object]:
     }
 
 
-@pytest.mark.parametrize("conversion", ["demerger", "merger", "zero_whole_merger"])
+@pytest.mark.parametrize(
+    "conversion", ["demerger", "merger", "zero_whole_merger", "partial_surrender"]
+)
 async def test_mandatory_conversion_survives_repository_roundtrip(
     client: AsyncClient,
     monkeypatch: pytest.MonkeyPatch,
@@ -108,7 +110,7 @@ async def test_mandatory_conversion_survives_repository_roundtrip(
         )
         active = portfolio.snapshot_at(at("2015-12-30"))
         expected_basis = Decimal(3000)
-    else:
+    elif conversion == "zero_whole_merger":
         from tests.test_zero_whole_merger import event as zero_event
         from tests.test_zero_whole_merger import funded as zero_funded
 
@@ -118,6 +120,16 @@ async def test_mandatory_conversion_survives_repository_roundtrip(
         portfolio.activate_mergers(date(2017, 2, 27), {"600019.SSE": Decimal(6)}, at("2017-02-27"))
         active = portfolio.snapshot_at(at("2017-02-27"))
         expected_basis = Decimal(0)
+    else:
+        from tests.test_partial_share_surrender import action as surrender_event
+        from tests.test_partial_share_surrender import funded as surrender_funded
+
+        portfolio, _ = surrender_funded()
+        e = surrender_event()
+        portfolio.apply_partial_surrender(e, at("2024-01-04"), holder_class=e.affected_holder_class)
+        pending = portfolio.snapshot_at(at("2024-01-04"))
+        active = portfolio.snapshot_at(at("2024-01-05"))
+        expected_basis = Decimal(800)
     baseline = BacktestEngine(
         CSVDataProvider(FIXTURES),
         (MovingAverageCrossoverStrategy("fixture", "AAPL", 2, 3),),

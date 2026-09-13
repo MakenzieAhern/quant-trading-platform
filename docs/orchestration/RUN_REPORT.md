@@ -1,5 +1,26 @@
 # Autonomous Quant Project Checkpoint
 
+## Current: partial-surrender policy implemented;600462 source evidence unresolved
+
+CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1 APPROVED.
+Generic exact-whole-quantity accounting/replay/persistence PASS; historical600462
+admission PARTIAL. Ordinary nonexempt20% surrender and separate30% issuer issuance
+verified; no direct holder compensation. Do not apply the issuance fractional rule.
+Registry effective date and surrender-specific allocation remain unverified after
+targeted plan/progress/court/annual-report review. No historical date is invented.
+SINGLE_SMALLEST_BLOCKER=PARTIAL_SURRENDER_REGISTRY_EXECUTION_EVIDENCE_UNVERIFIED:CN-A:SSE:600462.
+This is source recovery, NOT a repeated basis approval or established new fractional mechanism.
+HUMAN_APPROVAL_GATE=NONE; HUMAN_APPROVAL_REQUIRED=NO; HUMAN_SOURCE_INPUT_REQUIRED=YES.
+518 backend/78 frontend tests PASS; source replay/Ruff/mypy/schema checks PASS.
+Prior Pilotv2/R4v2, rights/demerger/merger/source acceptances remain unchanged.
+Full2010-2025 CREATED/AUDITED/FROZEN=NO; safe start/full coverage NOT_ESTABLISHED.
+No formal studies, profitability inspection, PR12 merge or release.
+Report: ../research/PARTIAL_SURRENDER_CHECKPOINT.md.
+Resume preserved R5 source queues after registry evidence recovery; do not restart.
+Next dataset gate remains GATE_FULL_RESEARCH_DATASET_FREEZE, not reached.
+
+## Historical checkpoints below (superseded)
+
 ## Current: 600005 zero-whole PASS; R5 partial-surrender methodology STOP
 
 Approved WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1 implemented in shared

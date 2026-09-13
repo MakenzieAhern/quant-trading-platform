@@ -15,6 +15,28 @@ from app.domain.common import (
 )
 
 
+class PartialShareSurrenderAudit(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    security_id: str = Field(pattern=r"^CN-A:(SSE|SZSE):[0-9]{6}$")
+    effective_date: date
+    affected_holder_class: str
+    policy: Literal["CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1"] = (
+        "CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1"
+    )
+    classification: Literal["CORPORATE_ACTION_MANDATORY_SHARE_SURRENDER_LOSS"] = (
+        "CORPORATE_ACTION_MANDATORY_SHARE_SURRENDER_LOSS"
+    )
+    original_quantity: PositiveDecimal
+    surrendered_quantity: PositiveDecimal
+    retained_quantity: PositiveDecimal
+    original_basis: NonNegativeDecimal
+    surrendered_basis: NonNegativeDecimal
+    retained_basis: NonNegativeDecimal
+    market_value_removed: NonNegativeDecimal
+
+
 class SignalType(StrEnum):
     BUY = "BUY"
     SELL = "SELL"
@@ -154,6 +176,7 @@ class PortfolioSnapshot(DomainModel):
     pending_demergers: tuple[PendingDemergerEntitlement, ...] = ()
     pending_mergers: tuple[PendingMergerEntitlement, ...] = ()
     merger_rounding_audits: tuple[MergerRoundingAudit, ...] = ()
+    partial_surrender_audits: tuple[PartialShareSurrenderAudit, ...] = ()
     corporate_action_realized_pnl: FiniteDecimal = Decimal(0)
     total_pnl: FiniteDecimal = Decimal(0)
 

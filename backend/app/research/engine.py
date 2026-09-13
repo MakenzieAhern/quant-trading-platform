@@ -14,6 +14,7 @@ from app.domain.markets.corporate_actions import (
     require_supported_corporate_action,
 )
 from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
+from app.domain.markets.surrenders import PARTIAL_SURRENDER_POLICY
 from app.domain.risk import OrderProposal, RiskConfig, RiskDecision, RiskReservation
 from app.domain.trading import Fill, Order, OrderSide, OrderType, PortfolioSnapshot
 from app.event import Event, EventBus, EventType
@@ -50,6 +51,7 @@ class ResearchExecutionResult:
     execution_convention: str = VERSION
     merger_policy: str = MERGER_POLICY
     zero_whole_share_policy: str = ZERO_WHOLE_SHARE_POLICY
+    partial_surrender_policy: str = PARTIAL_SURRENDER_POLICY
 
 
 class ResearchExecutionEngine:
@@ -141,11 +143,23 @@ class ResearchExecutionEngine:
         actions = sorted(session.corporate_actions, key=corporate_action_sort_key)
         demergers = sorted(session.demergers, key=lambda e: str(e.parent_security))
         mergers = sorted(session.mergers, key=lambda e: str(e.parent_security))
+        surrenders = sorted(session.partial_surrenders, key=lambda e: str(e.security_id))
         parents = [str(e.parent_security) for e in demergers] + [
             str(e.parent_security) for e in mergers
         ]
         if len(parents) != len(set(parents)):
             raise ValueError("duplicate session mandatory conversion")
+        structural_ids = parents + [str(e.security_id) for e in surrenders]
+        if len(structural_ids) != len(set(structural_ids)) or any(
+            str(a.security_id) in {str(e.security_id) for e in surrenders} for a in actions
+        ):
+            raise ValueError("partial surrender concurrent action ordering unsupported")
+        for surrender in surrenders:
+            surrender.require_supported()
+            if surrender.effective_date != session.trading_date:
+                raise ValueError("partial surrender session mismatch")
+            if session.surrender_holder_class != surrender.affected_holder_class:
+                raise ValueError("PARTIAL_SURRENDER_HOLDER_APPLICABILITY_UNVERIFIED")
         for merger in mergers:
             merger.require_supported()
             if merger.effective_date != session.trading_date:
@@ -168,6 +182,10 @@ class ResearchExecutionEngine:
             self._portfolio.recognize_demerger(event, session.trading_date, opening)
         for merger in mergers:
             self._portfolio.recognize_merger(merger, session.trading_date, opening)
+        for surrender in surrenders:
+            self._portfolio.apply_partial_surrender(
+                surrender, opening, holder_class=session.surrender_holder_class
+            )
         self._portfolio.activate_demergers(
             session.trading_date,
             {_domain_symbol(b.security_id): b.raw_open for b in session.bars},
@@ -186,7 +204,10 @@ class ResearchExecutionEngine:
             bar = _domain_bar(source, timestamp)
             self._event_bus.publish(Event(EventType.MARKET_DATA, bar, occurred_at=timestamp))
         if not ordered_bars and (
-            self._portfolio.pending_demergers or self._portfolio.pending_mergers or mergers
+            self._portfolio.pending_demergers
+            or self._portfolio.pending_mergers
+            or mergers
+            or surrenders
         ):
             self._portfolio.snapshot_at(timestamp)
 
@@ -195,7 +216,14 @@ class ResearchExecutionEngine:
             return
         # Accounting evidence (including later allocation sources) is never a factor input.
         target = self._strategy.target_for_completed_session(
-            replace(session, demergers=(), mergers=()), snapshot.equity
+            replace(
+                session,
+                demergers=(),
+                mergers=(),
+                partial_surrenders=(),
+                surrender_holder_class=None,
+            ),
+            snapshot.equity,
         )
         if target is None:
             return
@@ -227,7 +255,9 @@ class ResearchExecutionEngine:
             ZERO,
         )
         reason = rejection_reason(order, source, status, rules, held)
-        if any(item.security_id == source.security_id for item in session.corporate_actions):
+        if any(item.security_id == source.security_id for item in session.corporate_actions) or any(
+            item.security_id == source.security_id for item in session.partial_surrenders
+        ):
             reason = "CORPORATE_ACTION_OPENING_UNCERTAINTY"
         self._execution_checks.append((order.id, reason or "ELIGIBLE_SIMULATION_ASSUMPTION"))
         return reason is None

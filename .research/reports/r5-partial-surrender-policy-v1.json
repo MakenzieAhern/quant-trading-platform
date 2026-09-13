@@ -1,0 +1,38 @@
+{
+  "stage": "R5_FULL_RESEARCH_DATASET",
+  "status": "BLOCKED_SOURCE_EVIDENCE",
+  "partial_surrender_policy": "CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1",
+  "engineering_accounting": "PASS_EXACT_WHOLE_QUANTITY",
+  "historical_600462_admission": "PARTIAL",
+  "identified_events": 1,
+  "identified_securities": 1,
+  "full_census_status": "NOT_ESTABLISHED",
+  "full_materiality": {
+    "events_total": null,
+    "securities": null,
+    "shares_surrendered": null,
+    "basis_written_off": null,
+    "max_basis_write_off": null,
+    "events_with_compensation": null,
+    "events_with_unresolved_consideration": null
+  },
+  "reviewed_600462": {
+    "surrender_ratio": "0.20",
+    "consideration": "NONE",
+    "effective_date": null,
+    "fractional_allocation": "UNVERIFIED",
+    "separate_issuance_holder_entitlement": false
+  },
+  "backend_tests": 518,
+  "frontend_tests": 78,
+  "source_manifest_sha256": "1619c597b7703c1b39aae080ce1a45ff88d719dae0442614fb4541e58cf2b883",
+  "single_smallest_blocker": "PARTIAL_SURRENDER_REGISTRY_EXECUTION_EVIDENCE_UNVERIFIED:CN-A:SSE:600462",
+  "human_source_input_required": true,
+  "human_approval_required": false,
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "development_study": "NOT_RUN",
+  "validation_study": "NOT_RUN",
+  "official_oos": "NOT_RUN"
+}

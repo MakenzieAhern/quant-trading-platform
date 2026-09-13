@@ -194,6 +194,9 @@ class BacktestPortfolioSnapshotModel(Base):
     merger_rounding_audits: Mapped[list[dict[str, object]]] = mapped_column(
         JSONB, nullable=False, default=list, server_default="[]"
     )
+    partial_surrender_audits: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
 
 
 class BacktestMetricsModel(Base):

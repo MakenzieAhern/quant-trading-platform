@@ -8,6 +8,7 @@ from app.domain.markets import CorporateAction, SecurityId
 from app.domain.markets.demergers import DemergerEvent
 from app.domain.markets.mergers import MergerEvent
 from app.domain.markets.rules import ResolvedTradingRules
+from app.domain.markets.surrenders import MandatoryPartialShareSurrenderEvent
 
 
 class ResearchPeriodKind(StrEnum):
@@ -76,6 +77,8 @@ class ResearchSession:
     trading_rules: tuple[ResolvedTradingRules, ...] = ()
     demergers: tuple[DemergerEvent, ...] = ()
     mergers: tuple[MergerEvent, ...] = ()
+    partial_surrenders: tuple[MandatoryPartialShareSurrenderEvent, ...] = ()
+    surrender_holder_class: str | None = None
 
     def __post_init__(self) -> None:
         if any(bar.trading_date != self.trading_date for bar in self.bars):

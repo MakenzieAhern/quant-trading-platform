@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import Any, TypeVar
 from uuid import UUID
@@ -40,6 +40,7 @@ from app.domain.trading import (
     OrderSide,
     OrderStatus,
     OrderType,
+    PartialShareSurrenderAudit,
     PendingDemergerEntitlement,
     PendingMergerEntitlement,
     PortfolioSnapshot,
@@ -54,6 +55,8 @@ ModelT = TypeVar("ModelT")
 def _decimal_json(value: object) -> object:
     if isinstance(value, Decimal):
         return canonical_decimal(validate_storage_decimal(value, "JSONB Decimal"))
+    if isinstance(value, date):
+        return value.isoformat()
     return value
 
 
@@ -379,6 +382,10 @@ class SQLAlchemyBacktestRepository:
                     merger_rounding_audits=tuple(
                         MergerRoundingAudit.model_validate(p) for p in row.merger_rounding_audits
                     ),
+                    partial_surrender_audits=tuple(
+                        PartialShareSurrenderAudit.model_validate(p)
+                        for p in row.partial_surrender_audits
+                    ),
                     market_value=row.market_value,
                     equity=row.equity,
                     realized_pnl=row.realized_pnl,
@@ -558,6 +565,10 @@ class SQLAlchemyBacktestRepository:
                     merger_rounding_audits=[
                         {key: _decimal_json(value) for key, value in p.model_dump().items()}
                         for p in item.merger_rounding_audits
+                    ],
+                    partial_surrender_audits=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.partial_surrender_audits
                     ],
                 )
                 for index, item in enumerate(result.portfolio_snapshots)

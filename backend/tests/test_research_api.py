@@ -123,6 +123,9 @@ async def test_created_run_persists_complete_lineage_and_survives_new_session(
         assert persisted.git_commit == "c" * 40
         assert persisted.dataset_checksum == "a" * 64
         assert persisted.random_seed == 0
+        assert persisted.diagnostics["accounting_policies"]["partial_surrender_policy"] == (
+            "CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1"
+        )
         assert persisted.diagnostics["accounting_policies"]["zero_whole_share_policy"] == (
             "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1"
         )

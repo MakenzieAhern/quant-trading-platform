@@ -42,6 +42,7 @@ from app.db.models.research import (
 )
 from app.db.session import get_session
 from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
+from app.domain.markets.surrenders import PARTIAL_SURRENDER_POLICY
 from app.research import INITIAL_SPLIT
 from app.research.models import ResearchPeriodKind
 from app.strategies.research import (
@@ -281,6 +282,7 @@ async def create_run(
             "accounting_policies": {
                 "merger_policy": MERGER_POLICY,
                 "zero_whole_share_policy": ZERO_WHOLE_SHARE_POLICY,
+                "partial_surrender_policy": PARTIAL_SURRENDER_POLICY,
             }
         },
     )
