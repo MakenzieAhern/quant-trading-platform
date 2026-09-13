@@ -1,0 +1,136 @@
+{
+  "version": "SSE_DISTRIBUTION_CONFLICT_RESOLUTIONS_V1",
+  "scope": "ORDINARY_SECONDARY_MARKET_A_SHARE_HOLDINGS",
+  "policy": "CORPORATE_ACTION_POLICY_MATRIX_V1_CASH_DIVIDEND",
+  "full_census_accepted": false,
+  "records": [
+    {
+      "symbol": "600989",
+      "record_date": "2019-09-26",
+      "ex_date": "2019-09-27",
+      "payment_date": "2019-09-27",
+      "cash_per_share": "0.32091",
+      "classification": "ORDINARY_UNRESTRICTED_HOLDER_RATE",
+      "publication_date": "2019-09-23",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2019-09-23/1206941900.PDF",
+      "source_file": "1206941900.pdf",
+      "source_sha256": "bbcb897f303105ec71ed3cc539c94eab457b13a6eb204c26faeb4759a4e977e3",
+      "reviewed_pdf_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "symbol": "600989",
+      "record_date": "2022-12-26",
+      "ex_date": "2022-12-27",
+      "payment_date": "2022-12-27",
+      "cash_per_share": "0.1841",
+      "classification": "ORDINARY_UNRESTRICTED_HOLDER_RATE",
+      "publication_date": "2022-12-21",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2022-12-21/1215408119.PDF",
+      "source_file": "1215408119.pdf",
+      "source_sha256": "d0ce17862db32ba2dde975b62dcc2286d16188ee59e287589f1969edaad909d0",
+      "reviewed_pdf_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "symbol": "601966",
+      "record_date": "2024-06-13",
+      "ex_date": "2024-06-14",
+      "payment_date": "2024-06-14",
+      "cash_per_share": "0.377",
+      "classification": "OFFICIAL_COMBINED_DISTRIBUTIONS",
+      "publication_date": "2024-06-07",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2024-06-07/1220288229.PDF",
+      "source_file": "1220288229.pdf",
+      "source_sha256": "f7659034cb64362e870f2f16f25f89ca683b10a779bb18e6e14ac6ea4d5b97a5",
+      "reviewed_pdf_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "symbol": "600989",
+      "record_date": "2024-07-23",
+      "ex_date": "2024-07-24",
+      "payment_date": "2024-07-24",
+      "cash_per_share": "0.3158",
+      "classification": "ORDINARY_SMALL_HOLDER_RATE",
+      "publication_date": "2024-07-18",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2024-07-18/1220664181.PDF",
+      "source_file": "1220664181.pdf",
+      "source_sha256": "d47db5c0b7d2c9bfc37dbc71cfdd2e34ed299948baaad08e7fadedb6fa2dde86",
+      "reviewed_pdf_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "symbol": "601898",
+      "record_date": "2024-08-19",
+      "ex_date": "2024-08-20",
+      "payment_date": "2024-08-20",
+      "cash_per_share": "0.555",
+      "classification": "OFFICIAL_COMBINED_DISTRIBUTIONS",
+      "publication_date": "2024-08-13",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2024-08-13/1220848913.PDF",
+      "source_file": "1220848913.pdf",
+      "source_sha256": "a4f0ab455d78f3ff1681b5de6583a8957cc6127eb455a57168b5e8f835a575cc",
+      "reviewed_pdf_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "symbol": "601966",
+      "record_date": "2025-07-09",
+      "ex_date": "2025-07-10",
+      "payment_date": "2025-07-10",
+      "cash_per_share": "0.084",
+      "classification": "OFFICIAL_COMBINED_DISTRIBUTIONS",
+      "publication_date": "2025-07-03",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2025-07-03/1224067624.PDF",
+      "source_file": "1224067624.pdf",
+      "source_sha256": "75ae0bb2d5a1a2715aaca1d26b15f0f296dc2ce9848e8cc074ed52ede183eab2",
+      "reviewed_pdf_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "symbol": "603259",
+      "record_date": "2025-05-20",
+      "ex_date": "2025-05-21",
+      "payment_date": "2025-05-21",
+      "cash_per_share": "1.33169",
+      "classification": "OFFICIAL_COMBINED_DISTRIBUTIONS",
+      "publication_date": "2025-05-15",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2025-05-15/1223543249.PDF",
+      "source_file": "1223543249.pdf",
+      "source_sha256": "903021b449b18291b6b4604495141085c7fc98336161ed556b73d0a22b6dd895",
+      "reviewed_pdf_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "symbol": "600989",
+      "record_date": "2025-05-12",
+      "ex_date": "2025-05-13",
+      "payment_date": "2025-05-13",
+      "cash_per_share": "0.4598",
+      "classification": "ORDINARY_SMALL_HOLDER_RATE",
+      "publication_date": "2025-05-07",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2025-05-07/1223476469.PDF",
+      "source_file": "1223476469.pdf",
+      "source_sha256": "1a9e10e1bd1ba1e5ea3493a8c8dab9e1a70e2211de015c60c4ec97312a968f60",
+      "reviewed_pdf_pages": [
+        1,
+        2
+      ]
+    }
+  ]
+}

@@ -1,6 +1,18 @@
 # v1.1 controller roadmap
 
-## Current: R5 full-range source extension; batch closure continues
+## Current: R5 exchange distribution census; batch closure continues
+
+All 192 official SZSE monthly tables retrieved: 23,682 source rows; all 74
+rights candidates match the existing official event ledger, no source-only or
+ledger-only entries. SSE eight cash collisions resolved to exact issuer terms.
+These are source/census checks, not full cash precision or dataset acceptance.
+CNINFO API probe is supplementary only: average cash fields and missing delisted
+history cannot replace official issuer evidence. 561 backend tests and quality
+checks PASS. See ../research/R5_EXCHANGE_DISTRIBUTION_CENSUS_V1.md.
+R5 RUNNING_BATCH_CLOSURE; no new human gate, no dataset creation/audit/freeze.
+Remaining independent source and accounting queues continue; no studies/merge.
+
+## Prior milestone: R5 full-range source extension
 
 Calendar: 3,886 target sessions verified. Official CSI300 close history aligns
 exactly, matches all 382 accepted Pilot closes and passes deterministic Parquet

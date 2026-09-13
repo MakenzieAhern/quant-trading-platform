@@ -71,6 +71,35 @@ contain subsequent IPOs. No paused or delisted security is silently dropped.
 
 ## Verification and remaining work
 
+### Subsequent distribution row reconciliation
+
+The source-row audit yields 17,862 dividend groups and 2,484 bonus/conversion
+groups, plus three retained B-only rows. Exact duplicate source rows are retained
+as evidence rather than double-paid. All seven old-code mismatches are records
+shown under current 601360 before its legal code change; reviewed stable identity
+is distinct from the as-of symbol. No current name/code is backdated.
+
+Eight dividend amount collisions were reviewed against issuer implementation
+PDFs. Four are holder-class differences (600989); four combine separate declared
+distribution periods (601966 twice, 601898, 603259). Exact ordinary-holder cash
+terms are retained in SSE_DISTRIBUTION_CONFLICT_RESOLUTIONS_V1.json.
+For example, official 600989 2019 unrestricted cash is 0.32091, not the rounded
+table 0.321; 603259 2025 combined cash is 1.33169, not 0.982 + 0.350.
+Gross shareholder cash must not be replaced by the issuer's synthetic ex-price
+reference dividend. These are deterministic applications of the approved cash
+class, not a new methodology request.
+
+Reviewed audit:
+`/home/yuchen/data/research/staging/full-distribution-census-v1/row-audit-reviewed-v3.json`
+canonical SHA-256
+`3cd18a039e79f74bae4931e7b842f1d62c5c62bda792e0d0b588d43c545f5039`.
+All eight collisions explained; zero normalization errors. This does NOT accept
+the remaining table amounts at display precision or declare the full corporate-
+action census complete. Required follow-up includes exact official terms,
+historical stable-ID mapping, restructuring retention and exchange census parity.
+559 backend tests and quality checks PASS after this audit extension.
+Prior milestone CI 34752892295 PASS at aa372accf7ecb3db29bf16297e6643199ca0ea5c.
+
 558 backend tests PASS; Ruff, format and mypy PASS. 78 frontend tests, lint and
 production build PASS. No studies or profitability inspection were performed.
 Full corporate-action census, master/ST/suspension/rule-regime and raw/factor

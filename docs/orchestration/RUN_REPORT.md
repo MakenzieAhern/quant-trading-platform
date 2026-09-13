@@ -1,6 +1,29 @@
 # Autonomous Quant Project Checkpoint
 
-## Current: R5 full-range source extension; batch closure continues
+## R5 distribution row audit continuation
+
+20,346 candidate groups, three retained B-only rows, no normalization errors.
+Eight cash collisions reconciled to official issuer PDFs with exact gross
+ordinary-holder amounts; full source-table precision is not accepted automatically.
+Four holder-class differences and four combined-period distributions map to the
+approved cash policy. Synthetic ex-price reference cash is not shareholder cash.
+559 backend tests and quality checks PASS; prior aa372ac CI PASS.
+R5 continues independent yearbook rights-census checks; no human gate or study.
+Evidence: ../research/R5_FULL_RANGE_SOURCE_EXTENSION_V1.md.
+
+## Current: R5 exchange distribution census; batch closure continues
+
+All 192 official SZSE monthly tables retrieved: 23,682 source rows; all 74
+rights candidates match the existing official event ledger, no source-only or
+ledger-only entries. SSE eight cash collisions resolved to exact issuer terms.
+These are source/census checks, not full cash precision or dataset acceptance.
+CNINFO API probe is supplementary only: average cash fields and missing delisted
+history cannot replace official issuer evidence. 561 backend tests and quality
+checks PASS. See ../research/R5_EXCHANGE_DISTRIBUTION_CENSUS_V1.md.
+R5 RUNNING_BATCH_CLOSURE; no new human gate, no dataset creation/audit/freeze.
+Remaining independent source and accounting queues continue; no studies/merge.
+
+## Prior milestone: R5 full-range source extension
 
 Calendar: 3,886 target sessions verified. Official CSI300 close history aligns
 exactly, matches all 382 accepted Pilot closes and passes deterministic Parquet
