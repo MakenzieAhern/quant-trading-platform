@@ -13,6 +13,7 @@ from app.domain.markets.corporate_actions import (
     corporate_action_sort_key,
     require_supported_corporate_action,
 )
+from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
 from app.domain.risk import OrderProposal, RiskConfig, RiskDecision, RiskReservation
 from app.domain.trading import Fill, Order, OrderSide, OrderType, PortfolioSnapshot
 from app.event import Event, EventBus, EventType
@@ -47,6 +48,8 @@ class ResearchExecutionResult:
     expired_order_ids: tuple[UUID, ...]
     execution_checks: tuple[tuple[UUID, str], ...]
     execution_convention: str = VERSION
+    merger_policy: str = MERGER_POLICY
+    zero_whole_share_policy: str = ZERO_WHOLE_SHARE_POLICY
 
 
 class ResearchExecutionEngine:
@@ -183,7 +186,7 @@ class ResearchExecutionEngine:
             bar = _domain_bar(source, timestamp)
             self._event_bus.publish(Event(EventType.MARKET_DATA, bar, occurred_at=timestamp))
         if not ordered_bars and (
-            self._portfolio.pending_demergers or self._portfolio.pending_mergers
+            self._portfolio.pending_demergers or self._portfolio.pending_mergers or mergers
         ):
             self._portfolio.snapshot_at(timestamp)
 

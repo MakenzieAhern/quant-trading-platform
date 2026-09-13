@@ -75,7 +75,7 @@ def request_body(initial_cash: str = "100000") -> dict[str, object]:
     }
 
 
-@pytest.mark.parametrize("conversion", ["demerger", "merger"])
+@pytest.mark.parametrize("conversion", ["demerger", "merger", "zero_whole_merger"])
 async def test_mandatory_conversion_survives_repository_roundtrip(
     client: AsyncClient,
     monkeypatch: pytest.MonkeyPatch,
@@ -96,7 +96,7 @@ async def test_mandatory_conversion_survives_repository_roundtrip(
         )
         active = portfolio.snapshot_at(at("2010-03-19"))
         expected_basis = Decimal(411)
-    else:
+    elif conversion == "merger":
         from tests.test_merger_accounting import event as merger_event
         from tests.test_merger_accounting import funded as merger_funded
 
@@ -108,6 +108,16 @@ async def test_mandatory_conversion_survives_repository_roundtrip(
         )
         active = portfolio.snapshot_at(at("2015-12-30"))
         expected_basis = Decimal(3000)
+    else:
+        from tests.test_zero_whole_merger import event as zero_event
+        from tests.test_zero_whole_merger import funded as zero_funded
+
+        portfolio, _ = zero_funded(1)
+        portfolio.recognize_merger(zero_event(), date(2017, 2, 17), at("2017-02-17"))
+        pending = portfolio.snapshot_at(at("2017-02-17"))
+        portfolio.activate_mergers(date(2017, 2, 27), {"600019.SSE": Decimal(6)}, at("2017-02-27"))
+        active = portfolio.snapshot_at(at("2017-02-27"))
+        expected_basis = Decimal(0)
     baseline = BacktestEngine(
         CSVDataProvider(FIXTURES),
         (MovingAverageCrossoverStrategy("fixture", "AAPL", 2, 3),),

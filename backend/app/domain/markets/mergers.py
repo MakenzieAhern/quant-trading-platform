@@ -14,6 +14,7 @@ from app.domain.markets.demergers import DemergerSource
 from app.domain.markets.identifiers import SecurityId
 
 MERGER_POLICY = "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1"
+ZERO_WHOLE_SHARE_POLICY = "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1"
 
 
 class FractionalShareMethod(StrEnum):
@@ -46,6 +47,11 @@ class MergerEvent(BaseModel):
         "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE"
     )
     sources: tuple[DemergerSource, ...] = Field(min_length=1)
+    activation_sources: tuple[DemergerSource, ...] = ()
+    successor_shares_tradable_from: date | None = None
+    zero_whole_share_policy: (
+        Literal["WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1"] | None
+    ) = None
 
     @field_validator("conversion_ratio", mode="before")
     @classmethod
@@ -62,6 +68,8 @@ class MergerEvent(BaseModel):
             raise ValueError("invalid merger lifecycle")
         if max(s.published_on for s in self.sources) >= self.effective_date:
             raise ValueError("MERGER_PRE_EFFECTIVE_EVIDENCE_UNAVAILABLE")
+        if any(s.published_on >= self.activation_date for s in self.activation_sources):
+            raise ValueError("MERGER_PRE_ACTIVATION_EVIDENCE_UNAVAILABLE")
         return self
 
     def require_supported(self) -> None:
@@ -94,18 +102,30 @@ class MergerEvent(BaseModel):
             and remainder
         ):
             raise ValueError("OFFICIAL_INTEGER_CONVERSION_CONTRADICTED")
-        if parent_quantity and not whole:
+        if parent_quantity and not whole and self.zero_whole_share_policy is None:
             raise ValueError("MERGER_ZERO_WHOLE_SHARES_BASIS_UNRESOLVED")
         return theoretical, whole, remainder
 
     @property
     def activation_date(self) -> date:
-        return max(self.effective_date, self.successor_listing_date)
+        return max(
+            self.effective_date,
+            self.successor_listing_date,
+            self.successor_shares_tradable_from or self.successor_listing_date,
+        )
 
     @property
     def event_checksum(self) -> str:
         data = self.model_dump(mode="json")
         data["sources"].sort(key=lambda s: (s["sha256"], s["url"]))
+        # Preserve accepted legacy event identities when the extension is absent.
+        if data["activation_sources"]:
+            data["activation_sources"].sort(key=lambda s: (s["sha256"], s["url"]))
+        else:
+            data.pop("activation_sources")
+        for key in ("successor_shares_tradable_from", "zero_whole_share_policy"):
+            if data[key] is None:
+                data.pop(key)
         return hashlib.sha256(
             json.dumps(data, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest()

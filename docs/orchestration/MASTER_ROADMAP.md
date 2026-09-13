@@ -1,5 +1,32 @@
 # v1.1 controller roadmap
 
+## Current: 600005 zero-whole PASS; R5 partial-surrender methodology STOP
+
+Approved WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1 implemented in shared
+Portfolio accounting. Official600005 ->600019 ratio0.56, conversion2017-02-17,
+new-share activation2017-02-27 reverified. Zero parent basis is written off only
+as corporate-action PnL; cash/trading PnL/orders/fills remain unchanged.
+MERGER_ZERO_WHOLE_SHARES_BASIS_UNAPPROVED:CN-A:SSE:600005:2017-02-17 RESOLVED.
+504 backend/78 frontend tests, source replay, lint/format/types and schema checks PASS.
+R5 resumed:95 pages/2849 merger announcements,69 implementation-document leads;
+five prior candidates updated,2 supported/3 source-unresolved. Full census unknown.
+Broader review:6 pages/175 capital-adjustment notices; official600462 confirms20%
+ordinary-holder compulsory surrender, with30% issuance diverted to bankruptcy account.
+This is not a merger or zero-successor case; partial-surrender historical-basis treatment
+requires a new explicit policy. No loss/full-basis retention, bonus credit or exclusion chosen.
+SINGLE_SMALLEST_BLOCKER=MANDATORY_PARTIAL_SHARE_SURRENDER_BASIS_POLICY_UNAPPROVED:CN-A:SSE:600462.
+HUMAN_APPROVAL_GATE=R5_MANDATORY_PARTIAL_SHARE_SURRENDER_BASIS_POLICY;
+HUMAN_APPROVAL_REQUIRED=YES. Exact surrender transfer chronology remains separate source work.
+Full dataset CREATED/AUDITED/FROZEN=NO; verified safe start/coverage NOT_ESTABLISHED.
+Preserved Pilotv2, R4v2, rights/demerger/prior source decisions remain unchanged.
+No Development/Validation/OOS, full freeze, PR12 merge or release.
+Report: ../research/ZERO_WHOLE_SHARE_CHECKPOINT.md;
+machine report: .research/reports/r5-zero-whole-policy-v1.json.
+After human decision resume preserved R5 queues, not acquisition from zero.
+No background worker remains. Full freeze gate has not been reached.
+
+## Historical checkpoints below (superseded)
+
 ## Current: 000024 merger PASS; R5 zero-whole-share basis decision STOP
 
 CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1 implemented; 000024 evidence/accounting/replay PASS.

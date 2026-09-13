@@ -14,11 +14,12 @@ def audit(review, event, staging):
     if review["policy"] != MERGER_POLICY:
         raise ValueError("MERGER_POLICY_MISMATCH")
     event.require_supported()
-    documents = verify_sources(review, event.sources, staging)
+    documents = verify_sources(review, (*event.sources, *event.activation_sources), staging)
     normalized = event.model_dump(mode="json")
     normalized["sources"].sort(key=lambda s: (s["sha256"], s["url"]))
+    normalized["activation_sources"].sort(key=lambda s: (s["sha256"], s["url"]))
     body = dict(
-        parser_version="MERGER_EVIDENCE_V1",
+        parser_version="MERGER_EVIDENCE_V2_ZERO_WHOLE",
         policy=MERGER_POLICY,
         review={**review, "documents": documents},
         event=normalized,
@@ -39,7 +40,12 @@ if __name__ == "__main__":
     report = audit(review, event, args.staging)
     reverse = audit(
         {**review, "documents": list(reversed(review["documents"]))},
-        event.model_copy(update={"sources": tuple(reversed(event.sources))}),
+        event.model_copy(
+            update={
+                "sources": tuple(reversed(event.sources)),
+                "activation_sources": tuple(reversed(event.activation_sources)),
+            }
+        ),
         args.staging,
     )
     if report != reverse:

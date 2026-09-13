@@ -382,6 +382,8 @@ class SQLAlchemyBacktestRepository:
                     market_value=row.market_value,
                     equity=row.equity,
                     realized_pnl=row.realized_pnl,
+                    corporate_action_realized_pnl=row.corporate_action_realized_pnl,
+                    total_pnl=row.total_pnl,
                     unrealized_pnl=row.unrealized_pnl,
                     cumulative_commission=row.cumulative_commission,
                     drawdown=row.drawdown,
@@ -532,6 +534,10 @@ class SQLAlchemyBacktestRepository:
                     market_value=_numeric(item.market_value, "snapshot.market_value"),
                     equity=_numeric(item.equity, "snapshot.equity"),
                     realized_pnl=_numeric(item.realized_pnl, "snapshot.realized_pnl"),
+                    corporate_action_realized_pnl=_numeric(
+                        item.corporate_action_realized_pnl, "snapshot.corporate_action_realized_pnl"
+                    ),
+                    total_pnl=_numeric(item.total_pnl, "snapshot.total_pnl"),
                     unrealized_pnl=_numeric(item.unrealized_pnl, "snapshot.unrealized_pnl"),
                     cumulative_commission=_numeric(
                         item.cumulative_commission, "snapshot.cumulative_commission"

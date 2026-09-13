@@ -1,5 +1,37 @@
 # Decisions
 
+## 2026-09-13 UTC: new partial-surrender gate identified, no policy selected
+
+R5 continued beyond zero-whole accounting. Full-period CNINFO merger-title query
+completed95 pages/2849 announcements;69 implementation/listing document leads remain
+separate from accepted events. Capital-adjustment query completed6 pages/175 notices.
+These query inventories are not full corporate-action census acceptance.
+Official600462 notice2012-71 confirms20% compulsory surrender for ordinary holders
+outside four named holders and30% capital-reserve shares diverted to a bankruptcy
+disposal account. Source review retains PDF/hash/date and both-page visual verification.
+Approved merger full-successor-basis transfer and zero-successor loss do not select
+basis treatment for partial surrender in the same security. No extension was inferred.
+HUMAN_APPROVAL_GATE=R5_MANDATORY_PARTIAL_SHARE_SURRENDER_BASIS_POLICY.
+This is a methodology choice, not another source-availability or rounding-policy request.
+The notice's capital-reserve ex-date is not assumed to date the earlier surrender transfer.
+No whole-security exclusion, full freeze, strategy study, PR merge or release authorized.
+
+## 2026-09-13 UTC: zero-whole successor policy approved and verified
+
+Human attachment SHA256 098914ab7b25587a5774c107cd9f335e0027831e2c4d073d3cf501522373892d
+approves WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1 as an extension to
+CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1. W=0 extinguishes parent with no successor,
+pending asset or compensation; corporate-action realized PnL=-B, trading delta=0,
+cash unchanged. W>0 retains full-basis transfer. Known official compensation never
+falls through to this fallback; unimplemented compensation variants fail closed.
+Separate corporate-action/trading/unrealized/total PnL persists with result lineage.
+Dividend cash income is classified in corporate-action PnL without changing cash economics.
+600005 source review and source-byte replay PASS; event SHA256
+456fc000cf23e493384bb0857deeffde046a21977d0ce4c90454bed3e232aa30.
+January16 last-trade year typo is superseded by January24 official confirmation.
+February22 completion evidence is separately dated, not represented as known before February17.
+Full inventory/account materiality remain unestablished; no strategy execution authorized.
+
 ## 2026-09-13 UTC: merger fractional-share V1 approved and implemented
 
 Human receipt .research/approvals/merger-fractional-policy-v1.json pins the approval.

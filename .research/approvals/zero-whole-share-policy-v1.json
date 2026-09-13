@@ -1,0 +1,22 @@
+{
+  "decision": "HUMAN_METHODOLOGY_DECISION_ZERO_WHOLE_SUCCESSOR_SHARES",
+  "source_attachment": "e5de74d6-11b7-4c77-be76-3e1f2d8bbbc8/pasted-text.txt",
+  "source_sha256": "098914ab7b25587a5774c107cd9f335e0027831e2c4d073d3cf501522373892d",
+  "recorded_at_utc": "2026-09-13T01:59:09Z",
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "zero_whole_share_policy": "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1",
+  "classification": "CORPORATE_ACTION_FRACTIONAL_FORFEITURE_LOSS",
+  "corporate_action_realized_pnl_delta": "-B",
+  "trading_realized_pnl_delta": "0",
+  "cash_compensation": "0",
+  "successor_shares": "0",
+  "successor_cost_basis": "0",
+  "unallocated_cost_basis": "0",
+  "pending_successor_asset": "NONE",
+  "official_compensation_precedence": true,
+  "positive_whole_share_case": "FULL_PARENT_BASIS_TRANSFERRED_TO_WHOLE_SUCCESSOR_SHARES",
+  "scope": "MANDATORY_STOCK_FOR_STOCK_CONVERSION_ONLY; NOT_PARTIAL_SURRENDER_IN_SAME_SECURITY",
+  "formal_studies_authorized": false,
+  "full_dataset_freeze_authorized": false,
+  "merge_authorized": false
+}

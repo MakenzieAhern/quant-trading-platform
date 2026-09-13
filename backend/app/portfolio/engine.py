@@ -53,6 +53,7 @@ class PortfolioEngine:
         self._pending_demergers: dict[str, PendingDemergerEntitlement] = {}
         self._demerger_events: dict[str, DemergerEvent] = {}
         self._retired_realized = ZERO
+        self._corporate_action_realized = ZERO
         self._merger_events: dict[str, MergerEvent] = {}
         self._pending_mergers: dict[str, PendingMergerEntitlement] = {}
         self._merger_audits: dict[str, MergerRoundingAudit] = {}
@@ -96,7 +97,7 @@ class PortfolioEngine:
             return False
         if self._last_event_timestamp is not None and any(
             symbol == accounting_symbol(e.successor_security)
-            and self._last_event_timestamp.date() < e.activation_date
+            and self._last_event_timestamp.date() < e.successor_listing_date
             for e in self._merger_events.values()
         ):
             return False
@@ -107,11 +108,7 @@ class PortfolioEngine:
             for s in e.successors
         ):
             return False
-        return not any(
-            symbol == s
-            for p in (*self.pending_demergers, *self.pending_mergers)
-            for s in p.successor_symbols
-        )
+        return not any(symbol == s for p in self.pending_demergers for s in p.successor_symbols)
 
     @property
     def pending_mergers(self) -> tuple[PendingMergerEntitlement, ...]:
@@ -126,8 +123,18 @@ class PortfolioEngine:
         audits = self.merger_rounding_audits
         values = [a.maximum_estimated_discarded_value for a in audits]
         bounds = [a.maximum_floor_ceil_value_difference for a in audits]
+        zero_whole = [a for a in audits if a.whole_successor_quantity == ZERO]
         with localcontext(PORTFOLIO_CONTEXT):
             return {
+                "zero_whole_share_events": len({a.event_checksum for a in zero_whole}),
+                "zero_whole_share_position_occurrences": len(zero_whole),
+                "total_basis_written_off": sum((a.basis_written_off for a in zero_whole), ZERO),
+                "max_single_write_off": max(
+                    (a.basis_written_off for a in zero_whole), default=ZERO
+                ),
+                "total_market_value_removed_at_events": sum(
+                    (a.market_value_removed for a in zero_whole), ZERO
+                ),
                 "fractional_merger_events_total": sum(bool(a.fractional_remainder) for a in audits),
                 "total_discarded_fractional_shares": sum(
                     (a.fractional_remainder for a in audits), ZERO
@@ -169,14 +176,18 @@ class PortfolioEngine:
                 basis = current.aggregate_cost_basis
                 if basis is None:
                     basis = current.quantity * current.average_price
-                pending = PendingMergerEntitlement(
-                    parent_symbol=parent,
-                    successor_symbols=(successor,),
-                    event_checksum=event.event_checksum,
-                    parent_quantity=current.quantity,
-                    aggregate_cost_basis=basis,
-                    carrying_value=current.quantity * price,
-                    whole_successor_quantity=whole,
+                pending = (
+                    PendingMergerEntitlement(
+                        parent_symbol=parent,
+                        successor_symbols=(successor,),
+                        event_checksum=event.event_checksum,
+                        parent_quantity=current.quantity,
+                        aggregate_cost_basis=basis,
+                        carrying_value=current.quantity * price,
+                        whole_successor_quantity=whole,
+                    )
+                    if whole
+                    else None
                 )
                 audit = MergerRoundingAudit(
                     event_checksum=event.event_checksum,
@@ -187,11 +198,20 @@ class PortfolioEngine:
                     whole_successor_quantity=whole,
                     fractional_remainder=remainder,
                     floor_ceil_quantity_difference=Decimal(1) if remainder else ZERO,
+                    zero_whole_share_policy=event.zero_whole_share_policy,
+                    accounting_classification="CORPORATE_ACTION_FRACTIONAL_FORFEITURE_LOSS"
+                    if not whole
+                    else None,
+                    basis_written_off=basis if not whole else ZERO,
+                    market_value_removed=current.quantity * price if not whole else ZERO,
                 )
         self._merger_events[parent] = event
-        if pending is not None and audit is not None:
+        if pending is not None:
             self._pending_mergers[parent] = pending
+        if audit is not None:
             self._merger_audits[parent] = audit
+            with localcontext(PORTFOLIO_CONTEXT):
+                self._corporate_action_realized -= audit.basis_written_off
         if current is not None:
             with localcontext(PORTFOLIO_CONTEXT):
                 self._retired_realized += current.realized_pnl
@@ -243,14 +263,17 @@ class PortfolioEngine:
         self._marks.update({symbol: position.market_price for symbol, position in updates.items()})
         for parent in completed:
             del self._pending_mergers[parent]
-            symbol = accounting_symbol(self._merger_events[parent].successor_security)
-            self._observe_merger_price(symbol, raw_opens[symbol])
+        for symbol, price in sorted(raw_opens.items()):
+            if isinstance(price, Decimal) and price.is_finite() and price > ZERO:
+                self._observe_merger_price(symbol, price, session_date)
         self._last_event_timestamp = timestamp
 
-    def _observe_merger_price(self, symbol: str, raw_price: Decimal) -> None:
+    def _observe_merger_price(self, symbol: str, raw_price: Decimal, session_date: date) -> None:
         with localcontext(PORTFOLIO_CONTEXT):
             for parent, audit in self._merger_audits.items():
                 if parent in self._pending_mergers or audit.successor_symbol != symbol:
+                    continue
+                if session_date < self._merger_events[parent].activation_date:
                     continue
                 maximum = max(audit.maximum_observed_raw_price or raw_price, raw_price)
                 self._merger_audits[parent] = audit.model_copy(
@@ -437,7 +460,8 @@ class PortfolioEngine:
 
         self._marks[bar.symbol] = bar.close
         self._mark_dates[bar.symbol] = bar.timestamp.date()
-        self._observe_merger_price(bar.symbol, bar.high)
+        self._observe_merger_price(bar.symbol, bar.open, bar.timestamp.date())
+        self._observe_merger_price(bar.symbol, bar.high, bar.timestamp.date())
         current = self._positions.get(bar.symbol)
         if current is not None:
             with localcontext(PORTFOLIO_CONTEXT):
@@ -468,6 +492,7 @@ class PortfolioEngine:
             equity = self._cash + market_value
             running_peak = max(self._running_peak, equity)
             drawdown = equity / running_peak - Decimal(1)
+            total_pnl = equity - self._initial_cash
 
         snapshot = PortfolioSnapshot(
             timestamp=timestamp,
@@ -482,6 +507,8 @@ class PortfolioEngine:
             pending_demergers=self.pending_demergers,
             pending_mergers=self.pending_mergers,
             merger_rounding_audits=self.merger_rounding_audits,
+            corporate_action_realized_pnl=self._corporate_action_realized,
+            total_pnl=total_pnl,
         )
         self._running_peak = running_peak
         self._last_event_timestamp = timestamp
@@ -510,7 +537,10 @@ class PortfolioEngine:
         if current is None or current.quantity <= ZERO:
             return current
         if action.action_type is CorporateActionType.CASH_DIVIDEND:
-            self._cash += current.quantity * action.cash_per_share
+            with localcontext(PORTFOLIO_CONTEXT):
+                income = current.quantity * action.cash_per_share
+                self._cash += income
+                self._corporate_action_realized += income
             self._last_event_timestamp = timestamp
             return current
         if action.action_type in {
@@ -546,6 +576,7 @@ class PortfolioEngine:
         self._pending_demergers.clear()
         self._demerger_events.clear()
         self._retired_realized = ZERO
+        self._corporate_action_realized = ZERO
         self._merger_events.clear()
         self._pending_mergers.clear()
         self._merger_audits.clear()

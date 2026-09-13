@@ -123,7 +123,7 @@ class MergerRoundingAudit(DomainModel):
     successor_symbol: Symbol
     parent_quantity: PositiveDecimal
     theoretical_successor_quantity: PositiveDecimal
-    whole_successor_quantity: PositiveDecimal
+    whole_successor_quantity: NonNegativeDecimal
     fractional_remainder: Decimal = Field(ge=0, lt=1, allow_inf_nan=False)
     label: Literal["UNREALIZED_HISTORICAL_ROUNDING_REMAINDER"] = (
         "UNREALIZED_HISTORICAL_ROUNDING_REMAINDER"
@@ -133,6 +133,12 @@ class MergerRoundingAudit(DomainModel):
     maximum_estimated_discarded_value: NonNegativeDecimal | None = None
     floor_ceil_quantity_difference: NonNegativeDecimal
     maximum_floor_ceil_value_difference: NonNegativeDecimal | None = None
+    zero_whole_share_policy: (
+        Literal["WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1"] | None
+    ) = None
+    accounting_classification: Literal["CORPORATE_ACTION_FRACTIONAL_FORFEITURE_LOSS"] | None = None
+    basis_written_off: NonNegativeDecimal = Decimal(0)
+    market_value_removed: NonNegativeDecimal = Decimal(0)
 
 
 class PortfolioSnapshot(DomainModel):
@@ -148,3 +154,14 @@ class PortfolioSnapshot(DomainModel):
     pending_demergers: tuple[PendingDemergerEntitlement, ...] = ()
     pending_mergers: tuple[PendingMergerEntitlement, ...] = ()
     merger_rounding_audits: tuple[MergerRoundingAudit, ...] = ()
+    corporate_action_realized_pnl: FiniteDecimal = Decimal(0)
+    total_pnl: FiniteDecimal = Decimal(0)
+
+    def pnl_breakdown(self) -> dict[str, Decimal]:
+        """Legacy realized_pnl remains trading-only; total is net of commissions."""
+        return {
+            "TRADING_REALIZED_PNL": self.realized_pnl,
+            "CORPORATE_ACTION_REALIZED_PNL": self.corporate_action_realized_pnl,
+            "UNREALIZED_PNL": self.unrealized_pnl,
+            "TOTAL_PNL": self.total_pnl,
+        }

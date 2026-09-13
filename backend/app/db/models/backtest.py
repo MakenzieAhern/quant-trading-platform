@@ -177,6 +177,10 @@ class BacktestPortfolioSnapshotModel(Base):
     market_value: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     equity: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     realized_pnl: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
+    corporate_action_realized_pnl: Mapped[Decimal] = mapped_column(
+        MONEY, nullable=False, server_default="0"
+    )
+    total_pnl: Mapped[Decimal] = mapped_column(MONEY, nullable=False, server_default="0")
     unrealized_pnl: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     cumulative_commission: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     drawdown: Mapped[Decimal] = mapped_column(MONEY, nullable=False)

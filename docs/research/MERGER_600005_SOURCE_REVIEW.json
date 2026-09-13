@@ -1,0 +1,39 @@
+{
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "zero_whole_share_policy": "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1",
+  "source_semantics": {
+    "conversion_ratio": "0.56",
+    "record_and_parent_termination": "2017-02-14",
+    "conversion_implementation": "2017-02-17",
+    "converted_shares_tradable_from": "2017-02-27",
+    "effective_date_confirmation": "Feb17 implementation notice and Feb22 completion confirm historical registration; these are not backdated disclosures or strategy features.",
+    "last_trade_typo_resolution": "Jan16 notice says2016; later Jan24 notice confirms2017-01-23. Use the later explicit correction.",
+    "existing_acquirer_listing": "2000-12-12, retained official point-in-time master; distinct from new-share tradability"
+  },
+  "documents": [
+    {
+      "path": "600005-conversion.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2017-02-16/1203085931.PDF",
+      "sha256": "73e51dca1e5fdc4d687cef7176da275dbd642e2c1a643d4aa2887d7a8338b04c",
+      "published_on": "2017-02-16",
+      "retrieved_at_utc": "2026-09-13T00:35:32.672350+00:00",
+      "document": "2017-016, pages1-4: ratio, identities, record/termination, global remainder and random ties"
+    },
+    {
+      "path": "600005-final-halt.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2017-01-24/1203042886.PDF",
+      "sha256": "1965d3bf964b5b77ffa3a7d288b3423ad9960266cd7977848db3f5fc58777214",
+      "published_on": "2017-01-24",
+      "retrieved_at_utc": "2026-09-13T01:36:24.596940+00:00",
+      "document": "2017-006, page1: final trading date2017-01-23; supersedes earlier notice year typo"
+    },
+    {
+      "path": "600005-completion.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2017-02-22/1203098192.PDF",
+      "sha256": "3a4f73ce61ef81c24430822974321d4d45e38948bc09c2135908e010ffbb3b23",
+      "published_on": "2017-02-22",
+      "retrieved_at_utc": "2026-09-13T00:35:35.742653+00:00",
+      "document": "2017-018, pages1-3: retrospective confirmationFeb17 conversion; prospective Feb27 new-share tradability. Never backdate disclosure."
+    }
+  ]
+}

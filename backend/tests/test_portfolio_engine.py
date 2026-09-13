@@ -175,6 +175,15 @@ def test_complete_cash_and_stock_actions_update_long_position_economics() -> Non
     assert position is not None
     assert position.quantity == Decimal(120)
     assert position.average_price == Decimal(10) / Decimal("1.2")
+    snapshot = portfolio.snapshot_at(START + timedelta(days=3))
+    assert snapshot.corporate_action_realized_pnl == Decimal(10)
+    assert snapshot.realized_pnl == 0
+    assert snapshot.total_pnl == (
+        snapshot.realized_pnl
+        + snapshot.corporate_action_realized_pnl
+        + snapshot.unrealized_pnl
+        - snapshot.cumulative_commission
+    )
 
 
 def test_same_direction_short_fills_use_absolute_weighted_average_cost() -> None:

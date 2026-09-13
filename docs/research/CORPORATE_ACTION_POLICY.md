@@ -1,5 +1,54 @@
 # Corporate Action Policy
 
+## Current approved merger accounting extension
+
+`CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1` uses exact Decimal T=Q*R, W=floor(T),
+F=T-W for verified mandatory stock-for-stock events with unreconstructible global
+remainder allocation. W>0 transfers all parent aggregate basis B into W whole shares;
+F is an audit-only conservative forfeiture, not an asset or cash payment.
+`WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1` explicitly extends W=0:
+extinguish parent, no successor/pending asset, successor and unallocated basis zero,
+corporate-action realized PnL delta=-B, trading realized PnL delta=0, cash unchanged.
+Classification: `CORPORATE_ACTION_FRACTIONAL_FORFEITURE_LOSS`. No Order, Fill,
+fee, synthetic compensation, second market-value deduction or closed strategy trade.
+Known official compensation cannot fall through to this convention; unsupported
+deterministic compensation mechanisms remain fail-closed until implemented from terms.
+
+Snapshots persist legacy `realized_pnl` as TRADING_REALIZED_PNL, separate
+`corporate_action_realized_pnl`, `unrealized_pnl`, and `total_pnl=equity-initial_cash`.
+`pnl_breakdown()` names the four reporting components explicitly. With no external
+cash flows: TOTAL_PNL=TRADING_REALIZED_PNL+CORPORATE_ACTION_REALIZED_PNL+
+UNREALIZED_PNL-cumulative_commission. Cash dividend income enters corporate-action
+PnL; its pre-tax cash economics remain unchanged. Zero-share loss changes equity once
+through removal of parent market value; realized basis reclassification is not cash.
+Trade count, fill count, closed-trade win rate and profit factor are not enlarged by it.
+
+Policies are pinned in source manifests, immutable event checksums, audit snapshots,
+research execution results/replay and persisted research-run diagnostics. Existing
+accepted source/dataset manifests and frozen Pilot bytes are not rewritten. Additive
+schema0008 stores the two new totals; legacy total PnL is backfilled from equity and
+the run's initial cash, not from newly simulated results.
+
+600005 ->600019 ratio0.56 is the historical fixture. Last trade2017-01-23,
+termination/record2017-02-14, conversion2017-02-17, new-share tradability2017-02-27.
+600019 original listing2000-12-12 is not the new-share activation date. Existing
+acquirer holdings remain separately orderable; pending merger claims are not shares.
+Later completion evidence retains its actual publication date in activation sources;
+it is not a pre-conversion signal or full-history PIT acceptance.
+
+Full-account zero-event/position/writeoff/removed-value statistics remain unknown until
+an authorized account path exists. Synthetic Q=1/2/100/3 checks do not establish full
+historical materiality. No strategy or profitability inspection is authorized.
+
+This policy does NOT select basis treatment for compulsory PARTIAL surrender in the
+same continuing security. Verified600462's ordinary-holder20% surrender and diverted
+30% capital-reserve issuance require separate methodology; see
+`MANDATORY_SHARE_SURRENDER_SOURCE_REVIEW.json`. It must not be normalized as an
+ordinary30% bonus-share credit or a mandatory merger to a new successor.
+
+The historical paragraphs below are superseded where they describe merger rounding
+as unapproved. All unrelated accepted rights/demerger/source decisions remain intact.
+
 ## Separate price and accounting paths
 
 Adjusted close (`adjustflag=2`) is used only for factor features. Raw, unadjusted OHLC

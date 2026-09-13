@@ -41,6 +41,7 @@ from app.db.models.research import (
     ResearchTradeModel,
 )
 from app.db.session import get_session
+from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
 from app.research import INITIAL_SPLIT
 from app.research.models import ResearchPeriodKind
 from app.strategies.research import (
@@ -276,7 +277,12 @@ async def create_run(
         temporal_split=split,
         random_seed=0,
         created_at=now,
-        diagnostics={},
+        diagnostics={
+            "accounting_policies": {
+                "merger_policy": MERGER_POLICY,
+                "zero_whole_share_policy": ZERO_WHOLE_SHARE_POLICY,
+            }
+        },
     )
     session.add(model)
     await session.commit()
