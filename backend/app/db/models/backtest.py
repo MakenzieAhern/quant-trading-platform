@@ -181,6 +181,9 @@ class BacktestPortfolioSnapshotModel(Base):
     cumulative_commission: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     drawdown: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     positions: Mapped[list[dict[str, str]]] = mapped_column(JSONB, nullable=False)
+    pending_demergers: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
 
 
 class BacktestMetricsModel(Base):

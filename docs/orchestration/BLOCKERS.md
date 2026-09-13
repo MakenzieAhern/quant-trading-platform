@@ -1,5 +1,26 @@
 # Blockers
 
+## Current:600003 demerger PASS; R5 merger fractional-allocation decision STOP
+
+CN_A_MANDATORY_DEMERGER_POLICY_V1 implemented;600003 accounting/replay/source audit PASS.
+Prior DEMERGER_ACCOUNTING_POLICY_UNAPPROVED:CN-A:SSE:600003:2010-02-26 RESOLVED.
+One identified demerger supported; full event census NOT_ESTABLISHED.
+R5 resumed existing lifecycle/inventory evidence and verified000024 ->001979 merger.
+Official1:1.6008 conversion requires all-holder remainder ranking with random ties.
+SINGLE_SMALLEST_BLOCKER=MERGER_FRACTIONAL_SHARE_POLICY_UNAPPROVED:CN-A:SZSE:000024:2015-12-30.
+HUMAN_APPROVAL_GATE=R5_MERGER_FRACTIONAL_SHARE_POLICY; HUMAN_APPROVAL_REQUIRED=YES.
+No arbitrary rounding, cash-in-lieu, fractional trading or exclusion was chosen.
+484 backend/78 frontend tests, Ruff/format/mypy, schema and source replay checks PASS.
+Rights V2 queue/accepted authorities/frozen Pilotv2 unchanged; R4v2 remains PASS with0 fills.
+Full2010-2025 CREATED/AUDITED/FROZEN=NO; safe start/verified coverage NOT_ESTABLISHED.
+No formal studies, profitability inspection, PR merge, release or background worker.
+Report: ../research/DEMERGER_POLICY_V1_CHECKPOINT.md;
+machine report: .research/reports/r5-demerger-policy-v1.json.
+Next after decision: resume preserved R5 source queues, materialize/audit, stop at full freeze gate.
+
+## Historical checkpoints below (superseded)
+
+
 ## Current: rights entitlement V2 PASS; material demerger methodology STOP
 
 Human V2 separates event structure, tradability evidence and portfolio policy.

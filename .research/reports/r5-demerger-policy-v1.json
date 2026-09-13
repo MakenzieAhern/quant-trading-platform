@@ -1,0 +1,160 @@
+{
+  "recorded_at_utc": "2026-09-13T00:01:25Z",
+  "demerger_policy": "CN_A_MANDATORY_DEMERGER_POLICY_V1",
+  "600003_event_class": "MANDATORY_DEMERGER",
+  "600003_conversion": "1x601188 + 1x601518 per parent share",
+  "600003_reference_values": {
+    "601188": "2.08",
+    "601518": "1.79",
+    "sum": "3.87"
+  },
+  "600003_parent_last_trading_date": "2009-03-13",
+  "600003_parent_last_raw_close": "3.87",
+  "600003_termination": "2010-02-26",
+  "600003_completion": "2010-03-01",
+  "600003_successor_listing": "2010-03-19",
+  "600003_basis_allocation": "OFFICIAL_REFERENCE_VALUE",
+  "600003_pending_valuation": "CORPORATE_ACTION_PENDING_CARRY_VALUE:Q*3.87",
+  "600003_accounting": "PASS",
+  "demerger_reproducibility": "PASS",
+  "total_cost_basis_conserved": "PASS",
+  "share_conversion_ratio": "PASS",
+  "cash_conservation": "PASS",
+  "realized_pnl_delta_at_conversion": "0",
+  "synthetic_orders_created": 0,
+  "synthetic_fills_created": 0,
+  "cash_election_policy": "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE",
+  "total_demerger_events": 1,
+  "supported_demerger_events": 1,
+  "unresolved_demerger_events": 0,
+  "demerger_counts_scope": "ONE_IDENTIFIED_EVENT_NOT_EXHAUSTIVE_CENSUS",
+  "source_review": "docs/research/DEMERGER_SOURCE_REVIEW.json",
+  "event_fixture": "backend/tests/fixtures/600003_demerger.json",
+  "source_manifest_path": "full-demerger-v1/accepted-event-manifest.json",
+  "event_sha256": "7937ae6c3ed5c97c648b5f6a601390267e38a1a20d62b5b8b128ffc2115314a1",
+  "manifest_sha256": "8b75852bb5f716e87a97e408903eb978aff02318168486a4c31bbabd712a45ad",
+  "manifest_file_sha256": "e1c726bc6c34304599197c09f9c30e71718ad8cf68be291269fcbd1372af1f25",
+  "official_documents_reverified": 8,
+  "source_checksum_repeatability": "PASS",
+  "input_order_reproducibility": "PASS",
+  "source_availability": "Pre-effective conversion source2010-02-24; allocation evidence2010-03-18 is not backdated. Pending aggregate basis/carry uses no future allocation/reference or actual market price.",
+  "corporate_action_inventory": {
+    "CASH_DIVIDEND": {
+      "TOTAL_EVENTS": null,
+      "SUPPORTED_EVENTS": null,
+      "UNRESOLVED_EVENTS": null,
+      "UNSUPPORTED_VARIANTS": null,
+      "COUNT_SCOPE": "FULL_CENSUS_NOT_ESTABLISHED"
+    },
+    "STOCK_DIVIDEND": {
+      "TOTAL_EVENTS": null,
+      "SUPPORTED_EVENTS": null,
+      "UNRESOLVED_EVENTS": null,
+      "UNSUPPORTED_VARIANTS": null,
+      "COUNT_SCOPE": "FULL_CENSUS_NOT_ESTABLISHED"
+    },
+    "BONUS_SHARE": {
+      "TOTAL_EVENTS": null,
+      "SUPPORTED_EVENTS": null,
+      "UNRESOLVED_EVENTS": null,
+      "UNSUPPORTED_VARIANTS": null,
+      "COUNT_SCOPE": "FULL_CENSUS_NOT_ESTABLISHED"
+    },
+    "RIGHTS_ISSUE": {
+      "TOTAL_EVENTS": 148,
+      "SUPPORTED_EVENTS": 4,
+      "UNRESOLVED_EVENTS": 144,
+      "UNSUPPORTED_VARIANTS": 0,
+      "COUNT_SCOPE": "PRESERVED_PROVIDER_OBSERVED_SET_NOT_FULL_CENSUS"
+    },
+    "DEMERGER": {
+      "TOTAL_EVENTS": 1,
+      "SUPPORTED_EVENTS": 1,
+      "UNRESOLVED_EVENTS": 0,
+      "UNSUPPORTED_VARIANTS": 0,
+      "COUNT_SCOPE": "IDENTIFIED_REVIEWED_EVENTS_NOT_FULL_CENSUS"
+    },
+    "MERGER": {
+      "TOTAL_EVENTS": 1,
+      "SUPPORTED_EVENTS": 0,
+      "UNRESOLVED_EVENTS": 1,
+      "UNSUPPORTED_VARIANTS": 1,
+      "COUNT_SCOPE": "IDENTIFIED_REVIEWED_EVENTS_NOT_FULL_CENSUS",
+      "variant": "REGISTER_DEPENDENT_FRACTIONAL_SHARE_ALLOCATION"
+    },
+    "SPLIT_OR_SHARE_CHANGE": {
+      "TOTAL_EVENTS": null,
+      "SUPPORTED_EVENTS": null,
+      "UNRESOLVED_EVENTS": null,
+      "UNSUPPORTED_VARIANTS": null,
+      "COUNT_SCOPE": "FULL_CENSUS_NOT_ESTABLISHED"
+    },
+    "MANDATORY_CONVERSION": {
+      "TOTAL_EVENTS": null,
+      "SUPPORTED_EVENTS": null,
+      "UNRESOLVED_EVENTS": null,
+      "UNSUPPORTED_VARIANTS": null,
+      "COUNT_SCOPE": "FULL_CENSUS_NOT_ESTABLISHED",
+      "subtype_note": "The600003 demerger and000024 merger are classified by primary category above; not double-counted as standalone conversions."
+    },
+    "UNKNOWN_VARIANT": {
+      "TOTAL_EVENTS": null,
+      "SUPPORTED_EVENTS": null,
+      "UNRESOLVED_EVENTS": null,
+      "UNSUPPORTED_VARIANTS": null,
+      "COUNT_SCOPE": "FULL_CENSUS_NOT_ESTABLISHED"
+    }
+  },
+  "inventory_note": "Null means NOT_ESTABLISHED, never zero. Merger unsupported-variant count is a subset of its unresolved count. No full corporate-action census or full PIT admission is claimed.",
+  "rights_inventory_manifest_sha256": "97e709090751f515a5a4da7ecd47fa7bbb1f563566731c8025c1103dc2deee07",
+  "rights_authoritative_occurrences": 20,
+  "rights_full_census_status": "PARTIAL",
+  "resolved_blocker": "DEMERGER_ACCOUNTING_POLICY_UNAPPROVED:CN-A:SSE:600003:2010-02-26",
+  "single_smallest_blocker": "MERGER_FRACTIONAL_SHARE_POLICY_UNAPPROVED:CN-A:SZSE:000024:2015-12-30",
+  "blocker_evidence": {
+    "security_id": "CN-A:SZSE:000024",
+    "successor": "CN-A:SZSE:001979",
+    "record_date": "2015-12-29",
+    "effective_date": "2015-12-30",
+    "primary_category": "MERGER",
+    "subtype": "MANDATORY_SECURITY_CONVERSION",
+    "ratio": "1.6008",
+    "fractional_rule": "ALL_HOLDER_REMAINDER_RANKING_WITH_RANDOM_TIES",
+    "status": "METHOD_REQUIRES_HUMAN_DECISION",
+    "synthetic_example": {
+      "parent_shares": "100",
+      "unrounded_entitlement": "160.0800",
+      "actual_integer_shares": "160_OR_161_DEPENDENT_ON_FULL_REGISTER"
+    },
+    "decision_needed": "Approve a deterministic simulated-account fractional-share treatment for mandatory merger conversion when the official allocation depends on the complete shareholder register and random tie outcomes. No floor, ceiling, fractional tradable share, synthetic cash, exclusion, or random sampling has been chosen."
+  },
+  "r5_full_dataset_status": "BLOCKED_MATERIAL_CORPORATE_ACTION_METHODOLOGY",
+  "requested_full_coverage": [
+    "2010-01-01",
+    "2025-12-31"
+  ],
+  "verified_safe_start_date": null,
+  "verified_full_coverage": null,
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "human_approval_gate": "R5_MERGER_FRACTIONAL_SHARE_POLICY",
+  "human_approval_required": true,
+  "next_freeze_gate": "GATE_FULL_RESEARCH_DATASET_FREEZE",
+  "development_study": "NOT_RUN",
+  "validation_study": "NOT_RUN",
+  "official_oos": "NOT_RUN",
+  "oos_authorized": false,
+  "pr_merged": false,
+  "r4_v2_status": "PASS_UNCHANGED",
+  "r4_real_data_fill_count": 0,
+  "pilot_v2_frozen": true,
+  "pilot_v2_manifest_sha256": "187b8c31d333fa33c5784d31bca60949e44a0c3a0c37a021235e49115bf92600",
+  "backend_tests_passed": 484,
+  "frontend_tests_passed": 78,
+  "ruff": "PASS",
+  "mypy": "PASS",
+  "alembic_check": "PASS",
+  "snapshot_migration": "20260913_0006",
+  "limitations": "This is tested accounting and verified event evidence, not a full-history dataset or historical strategy run. Other R5 source queues remain preserved; no performance-based choice, security exclusion or background worker."
+}

@@ -39,6 +39,7 @@ from app.domain.trading import (
     OrderSide,
     OrderStatus,
     OrderType,
+    PendingDemergerEntitlement,
     PortfolioSnapshot,
     Position,
     Signal,
@@ -361,8 +362,14 @@ class SQLAlchemyBacktestRepository:
                             market_price=Decimal(position["market_price"]),
                             unrealized_pnl=Decimal(position["unrealized_pnl"]),
                             realized_pnl=Decimal(position["realized_pnl"]),
+                            aggregate_cost_basis=Decimal(position["aggregate_cost_basis"])
+                            if position.get("aggregate_cost_basis") is not None
+                            else None,
                         )
                         for position in row.positions
+                    ),
+                    pending_demergers=tuple(
+                        PendingDemergerEntitlement.model_validate(p) for p in row.pending_demergers
                     ),
                     market_value=row.market_value,
                     equity=row.equity,
@@ -525,6 +532,10 @@ class SQLAlchemyBacktestRepository:
                     positions=[
                         {key: _decimal_json(value) for key, value in position.model_dump().items()}
                         for position in item.positions
+                    ],
+                    pending_demergers=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.pending_demergers
                     ],
                 )
                 for index, item in enumerate(result.portfolio_snapshots)

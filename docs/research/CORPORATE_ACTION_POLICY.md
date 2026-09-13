@@ -18,12 +18,53 @@ source fields remain null.
 | `RIGHTS_RELATED_EVENT` | Verified standard direct subscription: `CN_A_RIGHTS_ISSUE_POLICY_V1` / `NO_SUBSCRIPTION_NO_MONETIZATION_V1`, independent of tradability evidence. |
 | `SPLIT_OR_SHARE_CHANGE` | Unsupported unless explicit source terms are later available. |
 | `MERGER_REORGANIZATION` | Unsupported; preserve successor/election evidence, never map to a no-effect rights event. |
+| `DemergerEvent` | Separately verified mandatory demerger: approved reference-value allocation and non-tradable pending carrying state. Never infer one from a generic reorganization row. |
 | `UNKNOWN_UNSUPPORTED` | Persist provenance; block accounting and eligibility. |
 
 Materially unresolved or unsupported events raise a portfolio error rather than silently altering holdings.
 Short-position corporate-action accounting is outside this long-only study. The current BaoStock
 endpoint recovered in the preceding checkpoint; dividend-only responses still do not establish
 rights or full corporate-action coverage. Corporate-action readiness remains PARTIAL.
+
+## Human-approved mandatory demerger convention
+
+`CN_A_MANDATORY_DEMERGER_POLICY_V1` applies to a verified immutable `DemergerEvent`,
+not to every merger/reorganization row. No production symbol special case exists.
+600003 is the historical regression fixture; its official source review is in
+`DEMERGER_SOURCE_REVIEW.json`. Full event census remains unfinished.
+
+At effective conversion, remove the parent from order eligibility/marks/ordinary
+positions and retain Q, aggregate cost B and Q times the last verified raw close in
+`PendingDemergerEntitlement`. The accounting label is
+`CORPORATE_ACTION_PENDING_CARRY_VALUE`; it is never a quote, signal, factor, order,
+fill, cash proceeds or executable liquidity. Risk exposure includes the carrying
+value; buying power does not treat it as cash. No parent feature history is copied.
+
+600003 termination is2010-02-26; legal completion2010-03-01; both successors list
+2010-03-19. Pre-effective conversion evidence is separate from later pre-listing
+reference evidence published2010-03-18. Preserve aggregate basis while pending;
+allocate only after that evidence is available, before ordinary trading logic.
+601188 receives B*2.08/3.87;601518 receives the Decimal residual of B, equivalent
+to B*1.79/3.87 within the fixed28-digit accounting context. Sorted stable IDs fix
+residual assignment. Aggregate basis is authoritative after conversion, including
+partial sales and distributions; display average price does not replace it.
+
+Activation requires legal/listing eligibility and actual positive raw openings for
+every successor. A missing opening fails closed without partial ownership mutation.
+After activation raw marks determine unrealized PnL; later actual fills determine
+realized PnL. Conversion creates no realized PnL, synthetic orders/fills or cash.
+`NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE`: mandatory path only here.
+
+Unsupported allocation methods, asynchronous successor activation, fractional
+successor quantities, pre-existing successor-position collisions or unavailable
+pre-listing allocation evidence fail closed; no fallback is silently selected.
+The explicit allocation enum does not authorize its unimplemented alternatives.
+Snapshot JSON preserves pending entitlements and exact aggregate basis; additive
+Alembic20260913_0006 adds default-empty JSONB without rewriting historical results.
+
+R5 later identified000024's materially different1:1.6008 merger. Official integer
+allocation depends on all holders' remainders and random ties. No deterministic
+simulated-account convention has been approved. See `DEMERGER_POLICY_V1_CHECKPOINT.md`.
 
 ## Human-approved rights convention
 

@@ -120,6 +120,8 @@ class RiskEngine:
                     "every non-flat position requires a positive observed mark",
                 )
             _, _, actual_net_exposure = actual_exposures
+            pending_value = sum((p.carrying_value for p in snapshot.pending_demergers), ZERO)
+            actual_net_exposure += pending_value
             if (
                 snapshot.market_value != actual_net_exposure
                 or snapshot.equity != snapshot.cash + actual_net_exposure
@@ -155,6 +157,8 @@ class RiskEngine:
                     estimated_transaction_cost=estimated_transaction_cost,
                 )
             symbol_exposure, gross_exposure, net_exposure = exposures
+            gross_exposure += pending_value
+            net_exposure += pending_value
             effective_cash = snapshot.cash + reserved_cash_delta
             trade_cash_delta = (
                 -order_notional if proposal.side is OrderSide.BUY else order_notional

@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime, time
 from decimal import Decimal
 from itertools import pairwise
@@ -136,6 +136,13 @@ class ResearchExecutionEngine:
             session.trading_date, time(9, 25), tzinfo=ZoneInfo("Asia/Shanghai")
         ).astimezone(UTC)
         actions = sorted(session.corporate_actions, key=corporate_action_sort_key)
+        demergers = sorted(session.demergers, key=lambda e: str(e.parent_security))
+        if len({str(e.parent_security) for e in demergers}) != len(demergers):
+            raise ValueError("duplicate session demerger")
+        for event in demergers:
+            event.require_supported()
+            if event.effective_date != session.trading_date:
+                raise ValueError("demerger session mismatch")
         for action in actions:
             if action.ex_date != session.trading_date:
                 raise ValueError("corporate action must belong to the research session")
@@ -144,6 +151,13 @@ class ResearchExecutionEngine:
             self._portfolio.apply_corporate_action(
                 _domain_symbol(action.security_id), action, opening
             )
+        for event in demergers:
+            self._portfolio.recognize_demerger(event, session.trading_date, opening)
+        self._portfolio.activate_demergers(
+            session.trading_date,
+            {_domain_symbol(b.security_id): b.raw_open for b in session.bars},
+            opening,
+        )
         ordered_bars = sorted(session.bars, key=lambda item: str(item.security_id))
         for source in ordered_bars:
             self._broker.execute_pending(_domain_bar(source, opening))
@@ -151,11 +165,16 @@ class ResearchExecutionEngine:
         for source in ordered_bars:
             bar = _domain_bar(source, timestamp)
             self._event_bus.publish(Event(EventType.MARKET_DATA, bar, occurred_at=timestamp))
+        if not ordered_bars and self._portfolio.pending_demergers:
+            self._portfolio.snapshot_at(timestamp)
 
         snapshot = self._portfolio.latest_snapshot
         if snapshot is None:
             return
-        target = self._strategy.target_for_completed_session(session, snapshot.equity)
+        # Accounting evidence (including later allocation sources) is never a factor input.
+        target = self._strategy.target_for_completed_session(
+            replace(session, demergers=()), snapshot.equity
+        )
         if target is None:
             return
         self._expire_pending()
@@ -164,6 +183,9 @@ class ResearchExecutionEngine:
     def _fill_eligible(self, order: Order, bar: Bar) -> bool:
         session = self._active_session
         assert session is not None
+        if not self._portfolio.is_orderable(order.symbol):
+            self._execution_checks.append((order.id, "CORPORATE_ACTION_NON_ORDERABLE"))
+            return False
         source = next(
             item for item in session.bars if _domain_symbol(item.security_id) == order.symbol
         )
@@ -207,7 +229,7 @@ class ResearchExecutionEngine:
         }
         ordered = sorted(deltas.items(), key=lambda item: (item[1] > ZERO, item[0]))
         for symbol, delta in ordered:
-            if delta == ZERO or symbol not in prices:
+            if delta == ZERO or symbol not in prices or not self._portfolio.is_orderable(symbol):
                 continue
             side = OrderSide.BUY if delta > ZERO else OrderSide.SELL
             quantity = abs(delta)

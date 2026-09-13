@@ -1,0 +1,125 @@
+{
+  "review_version": "MANDATORY_DEMERGER_SOURCE_REVIEW_V1",
+  "policy": "CN_A_MANDATORY_DEMERGER_POLICY_V1",
+  "event_fixture": "tests/fixtures/600003_demerger.json",
+  "semantic_review": "Original official PDF text inspected and key reference/fractional-allocation pages rendered; hashes verify bytes, not semantic extraction.",
+  "documents": [
+    {
+      "path": "full-demerger-v1/600003-termination.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-02-24/57619981.PDF",
+      "sha256": "e9b51f33609b3018fd928e1d76003724609cdd2eab6ebdcb5f13ec35ec4ed428",
+      "published_on": "2010-02-24",
+      "retrieved_at_utc": "2026-09-12T23:40:24.377991+00:00",
+      "pdf_pages": [
+        1,
+        2
+      ],
+      "claim": "Pre-effective termination and mandatory one-to-each conversion."
+    },
+    {
+      "path": "full-demerger-v1/600003-plan.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-02-11/57604018.PDF",
+      "sha256": "e653ab49b091a099fbf9b754cd83e7aec9e65f9ba68df451e956828de15232d7",
+      "published_on": "2010-02-11",
+      "retrieved_at_utc": "2026-09-12T23:40:26.806040+00:00",
+      "pdf_pages": [
+        6,
+        192
+      ],
+      "claim": "Dissenting cash election is conditional; suspension began 2009-03-16, following last session 2009-03-13."
+    },
+    {
+      "path": "full-demerger-v1/601188-listing.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-18/57700807.PDF",
+      "sha256": "a8a781075ecff6b8e73b61f17d81dd9faab240a6799c0a5c5ec4f29f4fcf52c3",
+      "published_on": "2010-03-18",
+      "retrieved_at_utc": "2026-09-12T23:35:29.015157+00:00",
+      "pdf_pages": [
+        3,
+        4,
+        11
+      ],
+      "claim": "One-to-one entitlement, March 19 listing, March 1 incorporation, 2.08 reference and 3.87 parent raw last close."
+    },
+    {
+      "path": "full-demerger-v1/601518-cninfo-listing.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-18/57700809.PDF",
+      "sha256": "612bf2e19e11f1ab117d4413626044bb2e0d53c68c5820cff2640102e366ac33",
+      "published_on": "2010-03-18",
+      "retrieved_at_utc": "2026-09-12T23:50:50.778488+00:00",
+      "pdf_pages": [
+        3,
+        4,
+        11
+      ],
+      "claim": "One-to-one entitlement, March 19 listing, March 1 incorporation, 1.79 reference and 3.87 parent raw last close."
+    },
+    {
+      "path": "full-rights-inventory-v1/official/600003-demerger.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-18/57700808.PDF",
+      "sha256": "e1caeeb68562ca5efc1f7d469df5026adf85d8ae1fa7d98cd2c59079b72a5c0e",
+      "published_on": "2010-03-18",
+      "retrieved_at_utc": "2026-09-12T15:54:28.311964+00:00",
+      "pdf_pages": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "claim": "Later corroboration of mandatory conversion, February 26 termination and March 1 legal completion; not pre-effective evidence."
+    },
+    {
+      "path": "full-demerger-v1/000024-termination.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-12-28/1201867754.PDF",
+      "sha256": "7919396e23ca62507d87821008e5b868b1c45f3e1d89d89524da30318eda82ec",
+      "published_on": "2015-12-28",
+      "retrieved_at_utc": "2026-09-12T23:50:10.828925+00:00",
+      "pdf_pages": [
+        1
+      ],
+      "claim": "SZSE decision dated December 25; A-share termination effective 2015-12-30."
+    },
+    {
+      "path": "full-demerger-v1/001979-listing.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-12-29/1201871229.PDF",
+      "sha256": "fa854710d134cc7e438638148ab74ba56819bd684ed7b18975597162822ba806",
+      "published_on": "2015-12-29",
+      "retrieved_at_utc": "2026-09-12T23:50:12.712696+00:00",
+      "pdf_pages": [
+        1
+      ],
+      "claim": "A-share ratio 1.6008, conversion after December 29 close and successor listing December 30."
+    },
+    {
+      "path": "full-demerger-v1/000024-conversion.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-12-28/1201863627.PDF",
+      "sha256": "82b4aad17e1a7305e4987a714933d974ed349a84c8eae99149d0cc00fe8f0648",
+      "published_on": "2015-12-28",
+      "retrieved_at_utc": "2026-09-12T23:50:30.460089+00:00",
+      "pdf_pages": [
+        1,
+        4,
+        5,
+        7
+      ],
+      "claim": "Final implementation notice CMPD2015-177: integer allocation uses all-holder fractional-remainder ranking and random ties. Hypothetical single-account allocation cannot be recovered from ratio alone."
+    }
+  ],
+  "new_blocker": {
+    "security_id": "CN-A:SZSE:000024",
+    "successor": "CN-A:SZSE:001979",
+    "record_date": "2015-12-29",
+    "effective_date": "2015-12-30",
+    "primary_category": "MERGER",
+    "subtype": "MANDATORY_SECURITY_CONVERSION",
+    "ratio": "1.6008",
+    "fractional_rule": "ALL_HOLDER_REMAINDER_RANKING_WITH_RANDOM_TIES",
+    "status": "METHOD_REQUIRES_HUMAN_DECISION",
+    "synthetic_example": {
+      "parent_shares": "100",
+      "unrounded_entitlement": "160.0800",
+      "actual_integer_shares": "160_OR_161_DEPENDENT_ON_FULL_REGISTER"
+    },
+    "decision_needed": "Approve a deterministic simulated-account fractional-share treatment for mandatory merger conversion when the official allocation depends on the complete shareholder register and random tie outcomes. No floor, ceiling, fractional tradable share, synthetic cash, exclusion, or random sampling has been chosen."
+  }
+}

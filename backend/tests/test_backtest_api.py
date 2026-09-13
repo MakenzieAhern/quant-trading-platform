@@ -75,6 +75,39 @@ def request_body(initial_cash: str = "100000") -> dict[str, object]:
     }
 
 
+async def test_demerger_pending_and_allocated_basis_survive_repository_roundtrip(
+    client: AsyncClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from datetime import date
+
+    from tests.test_demerger_accounting import at, event, funded
+
+    portfolio, _ = funded("137")
+    portfolio.recognize_demerger(event(), date(2010, 2, 26), at("2010-02-26"))
+    pending = portfolio.snapshot_at(at("2010-02-26"))
+    portfolio.activate_demergers(
+        date(2010, 3, 19), {"601188.SSE": Decimal(5), "601518.SSE": Decimal(4)}, at("2010-03-19")
+    )
+    active = portfolio.snapshot_at(at("2010-03-19"))
+    baseline = BacktestEngine(
+        CSVDataProvider(FIXTURES),
+        (MovingAverageCrossoverStrategy("fixture", "AAPL", 2, 3),),
+        BacktestConfig(initial_cash=Decimal(10000), default_order_quantity=Decimal(10)),
+    ).run("AAPL")
+    # Stub only the test runner result to exercise the production persistence path.
+    expected = replace(baseline, portfolio_snapshots=(pending, active))
+    monkeypatch.setattr(BacktestEngine, "run", lambda *args, **kwargs: expected)
+    response = await client.post("/api/backtests", json=request_body())
+    assert response.status_code == 201, response.text
+    async with SessionFactory() as session:
+        snapshots = await SQLAlchemyBacktestRepository(session).list_snapshots(
+            UUID(response.json()["run_id"]), 100, 0
+        )
+    assert snapshots.items == (pending, active)
+    assert sum(p.aggregate_cost_basis for p in snapshots.items[1].positions) == Decimal(411)
+
+
 async def test_api_persists_reference_result_and_exact_decimals(
     client: AsyncClient,
 ) -> None:

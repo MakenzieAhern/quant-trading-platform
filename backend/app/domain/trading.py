@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 from enum import StrEnum
-from typing import Self
+from typing import Literal, Self
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -91,6 +91,26 @@ class Position(DomainModel):
     market_price: NonNegativeDecimal
     unrealized_pnl: FiniteDecimal
     realized_pnl: FiniteDecimal
+    aggregate_cost_basis: NonNegativeDecimal | None = None
+
+
+class PendingDemergerEntitlement(DomainModel):
+    parent_symbol: Symbol
+    successor_symbols: tuple[Symbol, ...]
+    event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    parent_quantity: PositiveDecimal
+    aggregate_cost_basis: NonNegativeDecimal
+    carrying_value: NonNegativeDecimal
+    valuation_label: Literal["CORPORATE_ACTION_PENDING_CARRY_VALUE"] = (
+        "CORPORATE_ACTION_PENDING_CARRY_VALUE"
+    )
+    tradable: Literal[False] = False
+    orderable: Literal[False] = False
+    executable: Literal[False] = False
+
+    @property
+    def unrealized_pnl(self) -> Decimal:
+        return self.carrying_value - self.aggregate_cost_basis
 
 
 class PortfolioSnapshot(DomainModel):
@@ -103,3 +123,4 @@ class PortfolioSnapshot(DomainModel):
     unrealized_pnl: FiniteDecimal = Decimal(0)
     cumulative_commission: NonNegativeDecimal = Decimal(0)
     drawdown: FiniteDecimal
+    pending_demergers: tuple[PendingDemergerEntitlement, ...] = ()

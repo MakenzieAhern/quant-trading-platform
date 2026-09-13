@@ -1,0 +1,36 @@
+{
+  "parent_security": {"value": "CN-A:SSE:600003"},
+  "effective_date": "2010-02-26",
+  "completion_date": "2010-03-01",
+  "parent_last_close": "3.87",
+  "parent_last_trading_date": "2009-03-13",
+  "successors": [
+    {"security_id": {"value": "CN-A:SSE:601188"}, "conversion_ratio": "1", "listing_date": "2010-03-19", "reference_value": "2.08"},
+    {"security_id": {"value": "CN-A:SSE:601518"}, "conversion_ratio": "1", "listing_date": "2010-03-19", "reference_value": "1.79"}
+  ],
+  "basis_allocation": "OFFICIAL_REFERENCE_VALUE",
+  "conversion_source": {
+    "url": "https://static.cninfo.com.cn/finalpage/2010-02-24/57619981.PDF",
+    "sha256": "e9b51f33609b3018fd928e1d76003724609cdd2eab6ebdcb5f13ec35ec4ed428",
+    "published_on": "2010-02-24",
+    "retrieved_at": "2026-09-12T23:40:24.377991+00:00",
+    "document": "600003 termination announcement, PDF pages 1-2"
+  },
+  "allocation_sources": [
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-18/57700807.PDF",
+      "sha256": "a8a781075ecff6b8e73b61f17d81dd9faab240a6799c0a5c5ec4f29f4fcf52c3",
+      "published_on": "2010-03-18",
+      "retrieved_at": "2026-09-12T23:35:29.015157+00:00",
+      "document": "601188 listing announcement, PDF pages 3-4, 11"
+    },
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2010-03-18/57700809.PDF",
+      "sha256": "612bf2e19e11f1ab117d4413626044bb2e0d53c68c5820cff2640102e366ac33",
+      "published_on": "2010-03-18",
+      "retrieved_at": "2026-09-12T23:50:50.778488+00:00",
+      "document": "601518 listing announcement, PDF pages 3-4, 11"
+    }
+  ],
+  "cash_election_offered": true
+}

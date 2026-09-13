@@ -97,6 +97,8 @@ class OrderManager:
             )
 
         marks = self._portfolio.marks
+        if not self._portfolio.is_orderable(proposal.symbol):
+            raise OrderManagementError("CORPORATE_ACTION_NON_ORDERABLE")
         reference_price = marks.get(proposal.symbol)
         if (
             reference_price is not None

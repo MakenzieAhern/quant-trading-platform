@@ -1,5 +1,27 @@
 # Decisions
 
+## 2026-09-13 UTC: mandatory demerger policy V1 verified and implemented
+
+Human receipt .research/approvals/mandatory-demerger-policy-v1.json pins the approval.
+600003 ->601188+601518 uses official pre-listing references2.08/1.79, preserving
+aggregate cost B and pending raw carrying value Q*3.87. No cash election, synthetic
+order/fill, realized conversion PnL, factor history transfer or exclusion.
+Pre-effective conversion evidence is separate from laterMar18 allocation evidence;
+pending snapshots expose no future reference weights. Activation precedes trading.
+Generic event/central Portfolio path; exact pending/basis persistence via additive migration.
+600003 blocker RESOLVED; accounting/replay PASS; full census is not certified.
+
+R5 continued targeted inventory against retained master and official notices.
+000024 mandatory merger ratio1.6008 requires integer allocations using every
+holder's remainder and random ties (final CMPD2015-177, PDF page5).
+Single-account Q alone cannot recover that outcome. No rounding/monetization/
+fractional-trading/exclusion convention was selected without approval.
+New exact blocker: MERGER_FRACTIONAL_SHARE_POLICY_UNAPPROVED:CN-A:SZSE:000024:2015-12-30.
+Gate R5_MERGER_FRACTIONAL_SHARE_POLICY, not a renewed rights/demerger approval.
+484 backend/78 frontend tests and source/schema/lint/type checks PASS.
+Frozen Pilotv2/rights V2/prior authorities unchanged; no full freeze, formal studies,
+profitability review, PR12 merge or release. See ../research/DEMERGER_POLICY_V1_CHECKPOINT.md.
+
 ## 2026-09-12 UTC: human rights entitlement classification V2 implemented
 
 Approval receipt: .research/approvals/rights-entitlement-classification-v2.json.
