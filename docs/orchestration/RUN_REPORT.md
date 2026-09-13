@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+Registry recovery validation:520 backend tests, Ruff/format and mypy119 files PASS.
+Frontend unchanged; no rerun this turn. No production accounting code changed.
+
+## Latest registry recovery: trading boundary and aggregate totals verified
+
+Official first post-event trading boundary2012-11-19 established; exact registry
+book-entry/daily valuation mutation date remains unverified. Actual aggregate
+share-capital reconciliation PASS/difference0; plan-to-actual gap28163 and
+non-exhaustive exception arithmetic residual116 remain distinct.
+Fractional rule NOT_EVIDENCED; generic Portfolio odd quantities reachable,
+actual600462 historical reachability NOT_ESTABLISHED (round-lot-only subset safe).
+16 official PDF receipts/checksums reverified;3 targeted PDFs added, no restart.
+Report: ../research/600462_REGISTRY_RECOVERY.md; manifest
+231c167a765e79673cdb5517ec95e4b7a27eecdc53c4451d7014fe63ae3e0aa2.
+Original source blocker remains. No new methodology approval; human source input YES.
+Approved accounting and all prior acceptance decisions unchanged; no formal studies/freeze/merge.
+
 ## Current: partial-surrender policy implemented;600462 source evidence unresolved
 
 CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1 APPROVED.

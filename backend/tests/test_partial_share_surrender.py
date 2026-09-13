@@ -120,6 +120,41 @@ def test_zero_position_and_same_security_remains_orderable():
     assert p.is_orderable("600462.SSE")
 
 
+def test_quantity_residue_reachability_not_a_historical_position_certificate():
+    # All integer holdings reduce to five residues for S=1/5. These are account
+    # domain witnesses, not proof of an actual historical strategy position.
+    e = action()
+    for q in range(1, 1001):
+        p, _ = funded(str(q))
+        if q % 5:
+            before = p.latest_snapshot
+            with pytest.raises(ValueError, match="FRACTIONAL_ALLOCATION_UNRESOLVED"):
+                p.apply_partial_surrender(e, at("2024-01-04"), holder_class=e.affected_holder_class)
+            assert p.latest_snapshot == before
+        else:
+            p.apply_partial_surrender(e, at("2024-01-04"), holder_class=e.affected_holder_class)
+            assert p.positions[0].quantity == Decimal(q) * Decimal("0.8")
+    assert all((Decimal(q) * Decimal("0.2")) % 1 == 0 for q in range(0, 100001, 100))
+
+
+def test_official_aggregate_counts_do_not_establish_holder_rounding_or_registry_date():
+    import json
+
+    chain = json.loads(
+        (Path(__file__).parent / "fixtures/600462_registry_evidence_chain_v1.json").read_bytes()
+    )
+    c = chain["counts"]
+    assert c["pre_event_total"] + c["separate_issuance"] == c["post_total"]
+    assert c["pre_event_total"] - c["actual_surrender_all_classes"] == c["post_unrestricted"]
+    assert c["actual_surrender_all_classes"] + c["separate_issuance"] == c["post_restricted"]
+    assert c["post_unrestricted"] + c["post_restricted"] == c["post_total"]
+    assert c["expected_all_classes"] - c["actual_surrender_all_classes"] == 28163
+    assert 28163 - sum(c["listed_unexecuted_quantities"]) == 116
+    assert chain["timing"]["first_post_event_trading_boundary"] == "2012-11-19"
+    assert chain["timing"]["exact_registry_date"] is None
+    assert chain["fractional_execution_rule"] == "NOT_EVIDENCED"
+
+
 def test_fractional_quantity_compensation_unknown_date_and_holder_fail_without_mutation():
     for e, holder, q, error in [
         (action(), action().affected_holder_class, "6", "FRACTIONAL_ALLOCATION_UNRESOLVED"),
