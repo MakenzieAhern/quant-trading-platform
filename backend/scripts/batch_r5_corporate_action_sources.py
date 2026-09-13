@@ -2,19 +2,56 @@
 
 import argparse
 import json
+import re
+import unicodedata
 from concurrent.futures import ThreadPoolExecutor
-from datetime import UTC, datetime
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
 from scripts.reconcile_sse_cninfo import fetch
 
-VERSION = "R5_CA_SOURCE_BATCH_V1"
+VERSION = "R5_CA_SOURCE_BATCH_V3"
+BATCH = "batch-v3"
+
+
+def publication_date(milliseconds: int) -> str:
+    # CNINFO historical epochs can be midnight in Shanghai, not midnight UTC.
+    return datetime.fromtimestamp(milliseconds / 1000, ZoneInfo("Asia/Shanghai")).date().isoformat()
 
 
 def leads(root: Path) -> list[dict]:
     rows = {}
+    rights_pages = sorted((root / "batch-v1/metadata").glob("rights-issuance-p???.json"))
+    if rights_pages:
+        announcements = {}
+        totals = set()
+        for path in rights_pages:
+            meta = json.loads(Path(str(path) + ".meta.json").read_bytes())
+            if sha256_file(path) != meta["sha256"]:
+                raise ValueError("SOURCE_CHECKSUM_MISMATCH")
+            page = json.loads(path.read_bytes())
+            totals.add(page["totalAnnouncement"])
+            for item in page["announcements"]:
+                announcements[item["announcementId"]] = item
+        if totals != {len(announcements)}:
+            raise ValueError("RIGHTS_METADATA_PAGINATION_INCOMPLETE")
+        for item in announcements.values():
+            title = unicodedata.normalize("NFKC", item["announcementTitle"])
+            if not (
+                re.search(r"配股(?:\(A股\)|公开)?发行(?:的)?公告", title) or "配股发行结果" in title
+            ):
+                continue
+            url = "https://static.cninfo.com.cn/" + item["adjunctUrl"]
+            rows[url] = dict(
+                url=url,
+                issuer=item["secCode"],
+                title=item["announcementTitle"],
+                published_on=publication_date(item["announcementTime"]),
+                queue_type="RIGHTS_ISSUANCE_AND_RESULT",
+            )
     for path in sorted((root / "metadata").glob("capital-adjustment-p???.json")):
         meta = json.loads(path.with_suffix(path.suffix + ".meta.json").read_bytes())
         if sha256_file(path) != meta["sha256"]:
@@ -25,13 +62,15 @@ def leads(root: Path) -> list[dict]:
                 url=url,
                 issuer=item["secCode"],
                 title=item["announcementTitle"],
-                published_on=datetime.fromtimestamp(item["announcementTime"] / 1000, UTC)
-                .date()
-                .isoformat(),
+                published_on=publication_date(item["announcementTime"]),
                 queue_type="RESTRUCTURING_CAPITAL_ADJUSTMENT",
             )
-    for item in json.loads((root / "merger-implementation-leads-v1.json").read_bytes()):
-        rows.setdefault(item["url"], {**item, "queue_type": "MERGER_CONVERSION"})
+    merger_leads = root / "merger-implementation-leads-v1.json"
+    if merger_leads.exists():
+        for item in json.loads(merger_leads.read_bytes()):
+            rows.setdefault(item["url"], {**item, "queue_type": "MERGER_CONVERSION"})
+    if not rows:
+        raise ValueError("NO_SOURCE_QUEUE")
     return sorted(rows.values(), key=lambda r: (r["queue_type"], r["published_on"], r["url"]))
 
 
@@ -50,7 +89,7 @@ def run(root: Path) -> dict:
         if not url.startswith("https://static.cninfo.com.cn/finalpage/"):
             raise ValueError("NON_OFFICIAL_SOURCE")
         key = canonical_sha256(url)
-        receipt = root / "batch-v1" / "receipts" / (key + ".json")
+        receipt = root / BATCH / "receipts" / (key + ".json")
         if receipt.exists():
             result = json.loads(receipt.read_bytes())
             if result["url"] != url:
@@ -69,16 +108,26 @@ def run(root: Path) -> dict:
         try:
             path = existing.get(url)
             if path is None:
-                path = root / "batch-v1" / "pdf" / (key + ".pdf")
+                legacy = root / "batch-v1" / "receipts" / (key + ".json")
+                if legacy.exists():
+                    previous = json.loads(legacy.read_bytes())
+                    if previous["retrieval_status"] == "UNAVAILABLE":
+                        raise ValueError(
+                            "PRESERVED_EXHAUSTED_RETRIEVAL:" + previous.get("reason", "")
+                        )
+                path = root / BATCH / "pdf" / (key + ".pdf")
                 fetch(root, path.relative_to(root).as_posix(), url)
             meta = json.loads(Path(str(path) + ".meta.json").read_bytes())
-            if not path.read_bytes().startswith(b"%PDF") or sha256_file(path) != meta["sha256"]:
-                raise ValueError("PDF_OR_CHECKSUM_INVALID")
+            if sha256_file(path) != meta["sha256"]:
+                raise ValueError("SOURCE_CHECKSUM_INVALID")
+            is_pdf = path.read_bytes().startswith(b"%PDF")
+            if url.lower().endswith(".pdf") and not is_pdf:
+                raise ValueError("PDF_INVALID")
             result.update(
                 source_path=path.relative_to(root).as_posix(),
                 source_sha256=meta["sha256"],
                 retrieved_at_utc=meta["retrieved_at_utc"],
-                retrieval_status="PASS",
+                retrieval_status="PASS" if is_pdf else "NON_PDF_ATTACHMENT",
             )
         except Exception as exc:
             # Persist exhausted bounded attempts; reruns do not hammer an unavailable URL.
@@ -104,10 +153,11 @@ def run(root: Path) -> dict:
         document_leads=len(results),
         accepted_events=None,
         census_status="PARTIAL_SOURCE_DOCUMENTS_NOT_EVENT_CENSUS",
-        failures=sum(r["retrieval_status"] != "PASS" for r in results),
+        failures=sum(r["retrieval_status"] == "UNAVAILABLE" for r in results),
+        non_pdf_attachments=sum(r["retrieval_status"] == "NON_PDF_ATTACHMENT" for r in results),
     )
     report["manifest_sha256"] = canonical_sha256(report)
-    write_immutable(root / "batch-v1/source-manifest.json", canonical_json_bytes(report) + b"\n")
+    write_immutable(root / BATCH / "source-manifest.json", canonical_json_bytes(report) + b"\n")
     return report
 
 

@@ -1,6 +1,16 @@
 # Autonomous Quant Project Checkpoint
 
-## Current: R5 autonomous batch execution; consolidation decision resolved
+## Current: R5 rights batch reconciled; independent full-period queues continue
+
+153 identified rights events / 142 securities now reconcile to official direct-subscription
+notices; material unresolved in this identified queue = 0, metadata-only incomplete = 149.
+Full exchange census remains PARTIAL. Source documents and code-transition candidates
+are not full-dataset acceptance. 554 backend tests and quality checks PASS.
+See ../research/R5_BATCH_SOURCE_CLOSURE_V1.md and
+.research/reports/r5-batch-source-closure-v1.json. R5 remains RUNNING_BATCH_CLOSURE;
+no human gate, no full dataset creation/audit/freeze, no studies, merge or release.
+
+## Prior milestone: consolidation decision resolved
 
 The approved 15-class policy catalog is frozen (not the dataset):
 `CORPORATE_ACTION_POLICY_MATRIX_V1`, file SHA-256

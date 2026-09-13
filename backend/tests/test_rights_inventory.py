@@ -3,6 +3,7 @@ from copy import deepcopy
 import pytest
 
 from scripts.inventory_full_rights import inventory, normalize
+from scripts.reconcile_official_rights_batch import effective_date, reconcile
 
 
 def source():
@@ -82,3 +83,34 @@ def test_inventory_pagination_replay_duplicates_and_prior_year_lifecycle_overlap
     duplicate[1][0]["result"]["data"][0] = row()
     with pytest.raises(ValueError, match="pagination"):
         inventory(duplicate, {})
+
+
+def test_official_result_date_structure_and_record_must_match_before_promotion():
+    original = normalize(row(), source())
+    notice = dict(
+        issuer="600036",
+        title="A股配股发行结果公告",
+        published_on="2010-03-16",
+        url="https://static.cninfo.com.cn/finalpage/2010-03-16/result.PDF",
+        source_sha256="b" * 64,
+        retrieved_at_utc="2026-09-13T00:00:00Z",
+    )
+    issuance = {**notice, "title": "A股配股发行公告", "published_on": "2010-03-02"}
+    text = (
+        "证券代码600036。股权登记日2010年3月4日。按每10股配1.3股。认购缴款工作已于2010年3月11日结束。"
+        "本公告见报当日(2010年3月15日)即为A股发行成功的除权基准日。"
+    )
+    assert effective_date(text, notice["published_on"])[0] == "2010-03-15"
+    documents = [(notice, text), (issuance, "股权登记日2010年3月4日")]
+    result = reconcile([original], documents)[0]
+    assert not result["issues"]
+    assert result["event"]["ex_date"] == "2010-03-15"
+    assert result["event"]["subscription_price"] is None  # Unverified vendor term retained below.
+    assert result["prior_oracle_row"]["event"]["subscription_price"] == "8.85"
+    assert result == reconcile([original], list(reversed(documents)))[0]
+    wrong_record = [(notice, text.replace("3月4日", "3月5日")), documents[1]]
+    assert reconcile([original], wrong_record)[0]["issues"]
+    assert reconcile([original], [(notice, text)])[0]["issues"]
+    assert reconcile(
+        [original], [({**notice, "title": "H股配股发行结果公告"}, text), documents[1]]
+    )[0]["issues"]

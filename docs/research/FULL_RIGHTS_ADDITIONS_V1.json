@@ -1,0 +1,12 @@
+{
+  "review_version": "OFFICIAL_RIGHTS_PROVIDER_OMISSIONS_V1",
+  "scope": "Five independently evidenced omissions; not a complete exchange census",
+  "policy": "NO_SUBSCRIPTION_NO_MONETIZATION",
+  "events": [
+    {"security_id": "CN-A:SSE:600005", "record_date": "2011-03-25", "ex_date": "2011-04-07", "share_ratio": "0.3", "subscription_price": "3.70", "subscription_end_date": "2011-04-01", "issuance_sha256": "e1c9bb35a366753c8e2cf791a3f41145d2ed87507024499645b890658ecb7cbc", "result_sha256": "654d1bce364b347e2d38e5bff736ac651d150e172018098394b92b0ea799c1c8", "record_and_ratio_page": 1, "effective_date_page": 2},
+    {"security_id": "CN-A:SSE:601299", "record_date": "2012-02-24", "ex_date": "2012-03-06", "share_ratio": "0.25", "subscription_price": "3.42", "subscription_end_date": "2012-03-02", "issuance_sha256": "cd2db4db5a487592b9def7fd3860c1c03c081fdcd7fd4bc6e4ef459338464f71", "result_sha256": "fc37246264a5e49aa44a5f4c92ca6623d82c0c9c5949dd19fbb8cfd2d29e9212", "record_and_ratio_page": 1, "effective_date_page": 2},
+    {"security_id": "CN-A:SZSE:000982", "record_date": "2012-08-27", "ex_date": "2012-09-05", "share_ratio": "0.3", "subscription_price": "3.89", "subscription_end_date": "2012-09-03", "issuance_sha256": "85bd2a937452d3b421d6470272d357612a87f450dbb1283ab8f9dd6ad2cb7c83", "result_sha256": "e7e93e1a30c9bb1c7b7c6d9dcbbfa60ccc1a572cf5c025c7ea1024453beb305a", "record_and_ratio_page": 1, "effective_date_page": 2},
+    {"security_id": "CN-A:SSE:600978", "record_date": "2014-02-17", "ex_date": "2014-02-26", "share_ratio": "0.3", "subscription_price": "4.03", "subscription_end_date": "2014-02-24", "issuance_sha256": "f426d1fd898d41ce29ebe30217ff1e26dd142f0a5418d586bd3405c7342b4c6c", "result_sha256": "1037a2d54f7b9ff62b1a8e1269c752233dbaf755d2fc82c0a2e57c0a968c0387", "record_and_ratio_page": 1, "effective_date_page": 2},
+    {"security_id": "CN-A:SZSE:002089", "record_date": "2014-06-12", "ex_date": "2014-06-23", "share_ratio": "0.3", "subscription_price": "3.61", "subscription_end_date": "2014-06-19", "issuance_sha256": "99631d4a2e0d5870752bc1e8c021cad9cfa64a599d49e15752cfc41e19f746ff", "result_sha256": "e52931105889c9ae771d24bcd01b14c6e84ca3af72319f65afadb0134a3d8f11", "record_and_ratio_page": 1, "effective_date_page": 3}
+  ]
+}
