@@ -202,3 +202,79 @@ def test_szse_monthly_rights_dates_and_b_share_retention():
     assert extract(html([""] * 14), "2010-01") == []
     with pytest.raises(ValueError, match="UNPARSED"):
         extract(html(["", "partial"] + [""] * 12), "2010-01")
+
+
+def test_official_distribution_notice_pagination_cannot_silently_truncate():
+    import pytest
+
+    from scripts.collect_distribution_notices import complete_announcements
+
+    pages = [
+        dict(totalAnnouncement=2, hasMore=True, announcements=[dict(announcementId="b")]),
+        dict(totalAnnouncement=2, hasMore=False, announcements=[dict(announcementId="a")]),
+    ]
+    assert [r["announcementId"] for r in complete_announcements(pages)] == ["a", "b"]
+    assert complete_announcements(pages) == complete_announcements(list(reversed(pages)))
+    with pytest.raises(ValueError, match="PAGINATION"):
+        complete_announcements(pages[:1])
+    with pytest.raises(ValueError, match="DUPLICATED"):
+        complete_announcements([pages[0], {**pages[1], "announcements": pages[0]["announcements"]}])
+
+
+def test_notice_worker_stops_immediately_on_repeated_page(tmp_path, monkeypatch):
+    from app.data.catalog.checksums import sha256_file
+    from scripts import collect_distribution_notices as notices
+
+    category = tmp_path / "list-search.json"
+    category.write_text(
+        json.dumps({"sse": {"category": [{"key": "category_qyfpxzcs_szsh", "value": "权益分派"}]}})
+    )
+    (tmp_path / "list-search.json.meta.json").write_text(
+        json.dumps({"sha256": sha256_file(category)})
+    )
+    calls = []
+
+    def repeated(root, name, url, params):
+        calls.append((params["seDate"], params["pageNum"]))
+        (root / (name + ".meta.json")).write_text("{}")
+        return json.dumps(
+            dict(totalAnnouncement=60, hasMore=True, announcements=[dict(announcementId="same")])
+        ).encode()
+
+    monkeypatch.setattr(notices, "fetch", repeated)
+    monkeypatch.setattr(sys, "argv", ["notices", "--root", str(tmp_path)])
+    notices.main()
+    assert len(calls) == 32 and max(page for _, page in calls) == 2
+    report = json.loads((tmp_path / "implementation-metadata-v2.json").read_bytes())
+    assert len(report["failure_manifest"]) == 16
+    assert all("REPEATED_PAGE_STOP" in r["error"] for r in report["failure_manifest"])
+
+
+def test_notice_recovery_reuses_tail_and_includes_partial_boundary_day():
+    from datetime import UTC, date, datetime
+
+    import pytest
+
+    from scripts.recover_distribution_metadata import reconcile, recovery_ranges
+
+    def row(day, key):
+        return dict(
+            announcementId=key,
+            secCode="600000",
+            adjunctUrl=key + ".PDF",
+            announcementTime=int(datetime(2023, 5, day, tzinfo=UTC).timestamp() * 1000),
+        )
+
+    retained = [row(23, "a"), row(22, "b")]
+    ranges = recovery_ranges(2023, retained)
+    assert len(ranges) == 5
+    assert ranges[-1] == (date(2023, 5, 1), date(2023, 5, 22))
+    combined = [*retained, row(22, "b"), row(22, "c")]
+    assert reconcile(combined, 3) == reconcile(list(reversed(combined)), 3)
+    with pytest.raises(ValueError, match="COUNT_MISMATCH"):
+        reconcile(combined, 4)
+    with pytest.raises(ValueError, match="CONFLICTING"):
+        reconcile([*combined, {**retained[0], "secCode": "600001"}], 3)
+    with pytest.raises(ValueError, match="NOT_DESCENDING"):
+        recovery_ranges(2023, list(reversed(retained)))
+    assert len(recovery_ranges(2023, [])) == 12

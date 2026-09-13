@@ -74,14 +74,29 @@ def leads(root: Path) -> list[dict]:
     return sorted(rows.values(), key=lambda r: (r["queue_type"], r["published_on"], r["url"]))
 
 
-def run(root: Path) -> dict:
+def run(
+    root: Path,
+    *,
+    queue: Path | None = None,
+    batch: str = BATCH,
+    source_roots: tuple[Path, ...] = (),
+) -> dict:
     existing = {}
-    for path in sorted(root.rglob("*.pdf.meta.json")):
+    receipts = sorted(
+        {
+            path
+            for source_root in (root, *source_roots)
+            for path in source_root.rglob("*.pdf.meta.json")
+        }
+    )
+    for path in receipts:
         meta = json.loads(path.read_bytes())
         pdf = Path(str(path).removesuffix(".meta.json"))
         if pdf.exists() and meta.get("http_status") == 200:
             if sha256_file(pdf) != meta["sha256"]:
                 raise ValueError("SOURCE_CHECKSUM_MISMATCH")
+            if meta["url"] in existing and sha256_file(existing[meta["url"]]) != meta["sha256"]:
+                raise ValueError("CONFLICTING_SOURCE_SNAPSHOTS")
             existing[meta["url"]] = pdf
 
     def acquire(row: dict) -> dict:
@@ -89,7 +104,7 @@ def run(root: Path) -> dict:
         if not url.startswith("https://static.cninfo.com.cn/finalpage/"):
             raise ValueError("NON_OFFICIAL_SOURCE")
         key = canonical_sha256(url)
-        receipt = root / BATCH / "receipts" / (key + ".json")
+        receipt = root / batch / "receipts" / (key + ".json")
         if receipt.exists():
             result = json.loads(receipt.read_bytes())
             if result["url"] != url:
@@ -115,7 +130,7 @@ def run(root: Path) -> dict:
                         raise ValueError(
                             "PRESERVED_EXHAUSTED_RETRIEVAL:" + previous.get("reason", "")
                         )
-                path = root / BATCH / "pdf" / (key + ".pdf")
+                path = root / batch / "pdf" / (key + ".pdf")
                 fetch(root, path.relative_to(root).as_posix(), url)
             meta = json.loads(Path(str(path) + ".meta.json").read_bytes())
             if sha256_file(path) != meta["sha256"]:
@@ -124,7 +139,9 @@ def run(root: Path) -> dict:
             if url.lower().endswith(".pdf") and not is_pdf:
                 raise ValueError("PDF_INVALID")
             result.update(
-                source_path=path.relative_to(root).as_posix(),
+                source_path=(
+                    path.relative_to(root) if path.is_relative_to(root) else path
+                ).as_posix(),
                 source_sha256=meta["sha256"],
                 retrieved_at_utc=meta["retrieved_at_utc"],
                 retrieval_status="PASS" if is_pdf else "NON_PDF_ATTACHMENT",
@@ -146,7 +163,11 @@ def run(root: Path) -> dict:
         return result
 
     with ThreadPoolExecutor(max_workers=2) as pool:
-        results = list(pool.map(acquire, leads(root)))
+        candidates = json.loads(queue.read_bytes()) if queue else leads(root)
+        candidates = sorted(
+            candidates, key=lambda r: (r["queue_type"], r["published_on"], r["url"])
+        )
+        results = list(pool.map(acquire, candidates))
     report = dict(
         parser_version=VERSION,
         documents=results,
@@ -156,16 +177,23 @@ def run(root: Path) -> dict:
         failures=sum(r["retrieval_status"] == "UNAVAILABLE" for r in results),
         non_pdf_attachments=sum(r["retrieval_status"] == "NON_PDF_ATTACHMENT" for r in results),
     )
+    if queue:
+        report["input_queue_sha256"] = sha256_file(queue)
     report["manifest_sha256"] = canonical_sha256(report)
-    write_immutable(root / BATCH / "source-manifest.json", canonical_json_bytes(report) + b"\n")
+    write_immutable(root / batch / "source-manifest.json", canonical_json_bytes(report) + b"\n")
     return report
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--queue", type=Path)
+    parser.add_argument("--batch", default=BATCH)
+    parser.add_argument("--source-root", type=Path, action="append", default=[])
     args = parser.parse_args()
-    report = run(args.root)
+    report = run(
+        args.root, queue=args.queue, batch=args.batch, source_roots=tuple(args.source_root)
+    )
     print(json.dumps({k: v for k, v in report.items() if k != "documents"}))
 
 

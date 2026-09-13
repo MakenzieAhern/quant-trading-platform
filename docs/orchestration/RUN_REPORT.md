@@ -1,5 +1,14 @@
 # Autonomous Quant Project Checkpoint
 
+## R5 retained distribution notice recovery
+
+2010: 1,113 PDFs indexed, one explicit HTTP 502 failure. 2018–2020: 8,590
+document leads downloading with source/checkpoint reuse. Missing-date-range
+recovery reuses retained pages; 2011/2012 reconcile to original annual totals.
+566 backend tests/quality checks PASS; recovery focused source suite 11 PASS.
+See ../research/R5_DISTRIBUTION_NOTICE_RECOVERY_V1.md and external manifests.
+R5 RUNNING_BATCH_CLOSURE; no new gate, dataset creation/audit/freeze or studies.
+
 ## R5 distribution row audit continuation
 
 20,346 candidate groups, three retained B-only rows, no normalization errors.

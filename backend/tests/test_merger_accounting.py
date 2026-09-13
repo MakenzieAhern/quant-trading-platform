@@ -355,3 +355,17 @@ def test_reciprocal_official_ratio_uses_exact_fraction_before_floor():
         assert ratio_only.quantities(Decimal(100))[1] == Decimal(
             case["hundred_parent_whole_quantity"]
         )
+
+
+def test_official_rounded_ratio_is_not_recomputed_from_exchange_prices():
+    # 000562 implementation, 2015-01-22, PDF pages 3-4; official ratio has nine decimals.
+    # Source SHA: aaa254af495f145537662817acb96d646990f626a84754cd90f2e84fa1f11b6d.
+    official = event().model_copy(update={"conversion_ratio": Decimal("2.049382716")})
+    recomputed = event().model_copy(
+        update={"conversion_ratio": Decimal("9.96"), "conversion_denominator": Decimal("4.86")}
+    )
+    for precision in (3, 28, 60):
+        with localcontext() as context:
+            context.prec = precision
+            assert official.quantities(Decimal(81))[1] == 165
+            assert recomputed.quantities(Decimal(81))[1] == 166

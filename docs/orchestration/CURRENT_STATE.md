@@ -1,5 +1,13 @@
 # Current state
 
+## Current: R5 retained distribution notice recovery
+
+2010: 1,113 PDFs indexed, one explicit HTTP 502 failure. 2018–2020: 8,590
+document leads downloading with source/checkpoint reuse. Missing-date-range
+recovery reuses retained pages; 2011/2012 reconcile to original annual totals.
+See ../research/R5_DISTRIBUTION_NOTICE_RECOVERY_V1.md and external manifests.
+R5 RUNNING_BATCH_CLOSURE; no new gate, dataset creation/audit/freeze or studies.
+
 ## Current: R5 exchange distribution census; batch closure continues
 
 All 192 official SZSE monthly tables retrieved: 23,682 source rows; all 74

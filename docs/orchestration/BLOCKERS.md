@@ -1,5 +1,12 @@
 # Blockers
 
+## Current: R5 source queues continue independently
+
+Annual CNINFO pagination/transport failures remain explicit, not empty history.
+Missing-range recovery and retained PDF processing proceed independently.
+No new material methodology gate. See
+../research/R5_DISTRIBUTION_NOTICE_RECOVERY_V1.md. Full acceptance remains partial.
+
 ## Current: R5 exchange distribution census; batch closure continues
 
 All 192 official SZSE monthly tables retrieved: 23,682 source rows; all 74
