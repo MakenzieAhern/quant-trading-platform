@@ -15,6 +15,26 @@ from app.domain.common import (
 )
 
 
+class ShareConsolidationAudit(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    security_id: str
+    effective_date: date
+    original_quantity: NonNegativeDecimal
+    theoretical_quantity: NonNegativeDecimal
+    new_quantity: NonNegativeDecimal
+    discarded_fraction: NonNegativeDecimal
+    original_basis: NonNegativeDecimal
+    retained_basis: NonNegativeDecimal
+    basis_written_off: NonNegativeDecimal
+    policy: Literal["CN_A_SHARE_CONSOLIDATION_POLICY_V1"] = "CN_A_SHARE_CONSOLIDATION_POLICY_V1"
+    fractional_treatment: Literal["EXACT", "OFFICIAL_FLOOR", "RESEARCH_FLOOR"]
+    zero_whole_policy: Literal["WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1"] = (
+        "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1"
+    )
+
+
 class RestructuringBonusPassThroughAudit(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -215,6 +235,7 @@ class PortfolioSnapshot(DomainModel):
     merger_rounding_audits: tuple[MergerRoundingAudit, ...] = ()
     partial_surrender_audits: tuple[PartialShareSurrenderAudit, ...] = ()
     pass_through_audits: tuple[RestructuringBonusPassThroughAudit, ...] = ()
+    consolidation_audits: tuple[ShareConsolidationAudit, ...] = ()
     corporate_action_realized_pnl: FiniteDecimal = Decimal(0)
     total_pnl: FiniteDecimal = Decimal(0)
 

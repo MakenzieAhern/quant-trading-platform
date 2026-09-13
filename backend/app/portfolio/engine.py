@@ -4,6 +4,7 @@ from typing import Any
 
 from app.domain.market import Bar
 from app.domain.markets import CorporateAction, CorporateActionType
+from app.domain.markets.consolidations import ShareConsolidationEvent
 from app.domain.markets.corporate_actions import require_supported_corporate_action
 from app.domain.markets.demergers import (
     DemergerEvent,
@@ -24,6 +25,7 @@ from app.domain.trading import (
     PortfolioSnapshot,
     Position,
     RestructuringBonusPassThroughAudit,
+    ShareConsolidationAudit,
 )
 from app.event import Event, EventBus, EventType
 
@@ -65,6 +67,7 @@ class PortfolioEngine:
         self._merger_audits: dict[str, MergerRoundingAudit] = {}
         self._surrender_events: dict[tuple[str, date], str] = {}
         self._surrender_audits: list[PartialShareSurrenderAudit] = []
+        self._consolidation_audits: dict[tuple[str, date], ShareConsolidationAudit] = {}
         self._pass_through_audits: dict[tuple[str, date], RestructuringBonusPassThroughAudit] = {}
         self._event_bus.subscribe(EventType.ORDER_FILLED, self._on_fill)
         self._event_bus.subscribe(EventType.MARKET_DATA, self._on_market_data)
@@ -110,6 +113,79 @@ class PortfolioEngine:
     @property
     def pass_through_audits(self) -> tuple[RestructuringBonusPassThroughAudit, ...]:
         return tuple(self._pass_through_audits[k] for k in sorted(self._pass_through_audits))
+
+    @property
+    def consolidation_audits(self) -> tuple[ShareConsolidationAudit, ...]:
+        return tuple(self._consolidation_audits[k] for k in sorted(self._consolidation_audits))
+
+    def apply_consolidation(
+        self, event: ShareConsolidationEvent, timestamp: datetime, *, holder_class: str | None
+    ) -> None:
+        self._require_chronological(timestamp, "share consolidation")
+        event.require_supported()
+        if timestamp.date() != event.effective_date or holder_class != event.affected_holder_class:
+            raise PortfolioError("CONSOLIDATION_BOUNDARY_OR_HOLDER_MISMATCH")
+        symbol = accounting_symbol(event.security_id)
+        key = (symbol, event.effective_date)
+        if key in self._consolidation_audits:
+            raise PortfolioError("duplicate share consolidation")
+        current = self._positions.get(symbol)
+        q = current.quantity if current else ZERO
+        theoretical, whole = event.quantities(q)
+        with localcontext(PORTFOLIO_CONTEXT):
+            basis = (
+                (
+                    current.aggregate_cost_basis
+                    if current.aggregate_cost_basis is not None
+                    else q * current.average_price
+                )
+                if current
+                else ZERO
+            )
+            retained = basis if whole else ZERO
+            lost = basis - retained
+            updated = None
+            if current is not None:
+                # Preserve carrying value through the non-trading unit conversion. This
+                # is not a price observation; the next actual raw Bar replaces the mark.
+                carrying = q * self._marks.get(symbol, current.market_price)
+                mark = carrying / whole if whole else ZERO
+                updated = Position(
+                    symbol=symbol,
+                    quantity=whole,
+                    average_price=retained / whole if whole else ZERO,
+                    aggregate_cost_basis=retained,
+                    market_price=mark,
+                    unrealized_pnl=carrying - retained if whole else ZERO,
+                    realized_pnl=current.realized_pnl,
+                )
+            audit = ShareConsolidationAudit(
+                event_checksum=event.event_checksum,
+                security_id=str(event.security_id),
+                effective_date=event.effective_date,
+                original_quantity=q,
+                theoretical_quantity=theoretical,
+                new_quantity=whole,
+                discarded_fraction=theoretical - whole,
+                original_basis=basis,
+                retained_basis=retained,
+                basis_written_off=lost,
+                fractional_treatment="EXACT"
+                if theoretical == whole
+                else (
+                    "OFFICIAL_FLOOR"
+                    if event.official_fraction_method == "FLOOR"
+                    else "RESEARCH_FLOOR"
+                ),
+            )
+        if updated is not None:
+            self._positions[symbol] = updated
+            self._marks.pop(symbol, None)
+            self._mark_dates.pop(symbol, None)
+        with localcontext(PORTFOLIO_CONTEXT):
+            self._corporate_action_realized -= lost
+        self._consolidation_audits[key] = audit
+        self._last_event_timestamp = timestamp
 
     def apply_pass_through(
         self, event: RestructuringBonusPassThroughEvent, timestamp: datetime
@@ -291,7 +367,12 @@ class PortfolioEngine:
                 "scope": "APPLIED_SUPPORTED_EVENTS_ONLY_NOT_FULL_SOURCE_INVENTORY",
             }
 
-    def is_orderable(self, symbol: str) -> bool:
+    def is_orderable(self, symbol: str, *, require_observed_unit_price: bool = True) -> bool:
+        if require_observed_unit_price and any(
+            event_symbol == symbol and self._mark_dates.get(symbol, date.min) < effective
+            for event_symbol, effective in self._consolidation_audits
+        ):
+            return False
         if symbol in self._demerger_events or symbol in self._merger_events:
             return False
         if self._last_event_timestamp is not None and any(
@@ -656,7 +737,7 @@ class PortfolioEngine:
     def mark_to_market(self, bar: Bar) -> PortfolioSnapshot:
         self._require_chronological(bar.timestamp, "market data")
         self._reject_pass_through_trading(bar.symbol, bar.timestamp)
-        if not self.is_orderable(bar.symbol):
+        if not self.is_orderable(bar.symbol, require_observed_unit_price=False):
             raise PortfolioError("pending or retired security cannot receive a market quote")
 
         self._marks[bar.symbol] = bar.close
@@ -712,6 +793,7 @@ class PortfolioEngine:
             total_pnl=total_pnl,
             partial_surrender_audits=self.partial_surrender_audits,
             pass_through_audits=self.pass_through_audits,
+            consolidation_audits=self.consolidation_audits,
         )
         self._running_peak = running_peak
         self._last_event_timestamp = timestamp
@@ -786,6 +868,7 @@ class PortfolioEngine:
         self._surrender_events.clear()
         self._surrender_audits.clear()
         self._pass_through_audits.clear()
+        self._consolidation_audits.clear()
 
     def _reject_pass_through_trading(self, symbol: str, timestamp: datetime) -> None:
         for (event_symbol, _), audit in self._pass_through_audits.items():

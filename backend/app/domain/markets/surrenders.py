@@ -22,7 +22,7 @@ class MandatoryPartialShareSurrenderEvent(BaseModel):
 
     security_id: SecurityId
     affected_holder_class: str = Field(min_length=1)
-    record_date: date
+    record_date: date | None
     effective_date: date | None
     research_effective_date: date | None = None
     nontrading_from: date | None = None
@@ -49,13 +49,14 @@ class MandatoryPartialShareSurrenderEvent(BaseModel):
     @model_validator(mode="after")
     def validate_dates(self) -> "MandatoryPartialShareSurrenderEvent":
         if self.effective_date is not None:
-            if self.effective_date < self.record_date:
+            if self.record_date is not None and self.effective_date < self.record_date:
                 raise ValueError("surrender precedes record date")
             if any(s.published_on >= self.effective_date for s in self.sources):
                 raise ValueError("SURRENDER_PRE_EFFECTIVE_EVIDENCE_UNAVAILABLE")
         if self.research_effective_date is not None:
             if (
                 self.effective_date is not None
+                or self.record_date is None
                 or self.nontrading_from is None
                 or not self.record_date < self.nontrading_from < self.research_effective_date
                 or not self.boundary_sources

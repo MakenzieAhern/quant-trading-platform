@@ -85,6 +85,7 @@ def request_body(initial_cash: str = "100000") -> dict[str, object]:
         "ceil_surrender_zero",
         "ceil_surrender_odd",
         "pass_through",
+        "consolidation",
     ],
 )
 async def test_mandatory_conversion_survives_repository_roundtrip(
@@ -129,6 +130,19 @@ async def test_mandatory_conversion_survives_repository_roundtrip(
         portfolio.activate_mergers(date(2017, 2, 27), {"600019.SSE": Decimal(6)}, at("2017-02-27"))
         active = portfolio.snapshot_at(at("2017-02-27"))
         expected_basis = Decimal(0)
+    elif conversion == "consolidation":
+        from tests.test_consolidation_accounting import event as consolidation_event
+        from tests.test_consolidation_accounting import funded as consolidation_funded
+
+        portfolio, _ = consolidation_funded()
+        portfolio.apply_consolidation(
+            consolidation_event(),
+            at("2014-06-25"),
+            holder_class=consolidation_event().affected_holder_class,
+        )
+        pending = portfolio.snapshot_at(at("2014-06-25"))
+        active = portfolio.snapshot_at(at("2014-06-26"))
+        expected_basis = Decimal(1000)
     elif conversion == "pass_through":
         from tests.test_pass_through_accounting import event as pass_event
         from tests.test_pass_through_accounting import funded as pass_funded

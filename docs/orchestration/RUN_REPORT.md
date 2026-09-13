@@ -1,6 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
-## Current:600817 PASS; R5 new600381 consolidation gate
+## Current: R5 autonomous batch execution; consolidation decision resolved
+
+The approved 15-class policy catalog is frozen (not the dataset):
+`CORPORATE_ACTION_POLICY_MATRIX_V1`, file SHA-256
+`3784d6817fb7ab30081e57d9693bc1ac7adbfbaccebe200e2903e7021d8a0352`.
+600381 consolidation June 25 and separate surrender June 30, 2014 have source-byte,
+Decimal accounting, replay and persistence checks. Source receipt:
+`dcfa8e2a408629a0be0b8ab9b101ab08206642eaaae621cc5412b94f96a93383`.
+Its prior human methodology blocker is RESOLVED. R5 remains RUNNING_BATCH_CLOSURE;
+no new human approval requested. Rights, merger/restructuring, master and remaining
+full-period authority queues remain independent. Document leads are not accepted events.
+Full Dataset CREATED/AUDITED/FROZEN=NO; safe start NOT_ESTABLISHED. No studies,
+profitability inspection, merge or release. Accepted Pilot v2 remains unchanged.
+The retained merger/capital-adjustment source worker checkpoints under external
+`full-merger-v1/batch-v1`; unavailable sources cannot silently pass.
+
+## Historical checkpoint (superseded): 600817 PASS; former 600381 gate
 
 600817 approved net pass-through accounting/source/replay/persistence PASS; old blocker RESOLVED.
 R5 reviewed21 further retained-queue plan documents and two600381 implementation/reference PDFs.

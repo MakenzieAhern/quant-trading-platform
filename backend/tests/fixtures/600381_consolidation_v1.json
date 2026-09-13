@@ -1,0 +1,15 @@
+{
+  "security_id": {"value": "CN-A:SSE:600381"},
+  "effective_date": "2014-06-25",
+  "affected_holder_class": "ORDINARY_NON_RESPONSIBLE_HOLDER",
+  "new_shares_per_old_share": "0.16",
+  "holder_consideration": "NONE",
+  "official_fraction_method": "UNRESOLVED",
+  "convention_approval_sha256": "9362f32566013841a3a45fd5946abbc9c128fd4f66b5ea20e23c902180a8a4ad",
+  "sources": [
+    {"url":"https://static.cninfo.com.cn/finalpage/2013-12-03/63330033.PDF","sha256":"6ecb6b9938c68ff5b522c43275225d6d30edf66bc5418e04dcbc52a8295f490f","published_on":"2013-12-03","retrieved_at":"2026-09-13T06:11:03.873172+00:00","document":"600381-capital-plan-2013.pdf; ordinary 100:16 consolidation, separate 12 percent surrender"}
+  ],
+  "confirmation_sources": [
+    {"url":"https://static.cninfo.com.cn/finalpage/2014-06-27/1200011113.PDF","sha256":"1946a7f10e6fba57ed4954c5cde65c73d32964d215bdd66fb870696f2bff13aa","published_on":"2014-06-27","retrieved_at":"2026-09-13T06:11:47.263529+00:00","document":"600381-consolidation-implementation.pdf; June 25 completion"}
+  ]
+}

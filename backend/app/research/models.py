@@ -5,6 +5,7 @@ from enum import StrEnum
 
 from app.data.providers.research import DailyBarRecord, SecurityStatusRecord
 from app.domain.markets import CorporateAction, SecurityId
+from app.domain.markets.consolidations import ShareConsolidationEvent
 from app.domain.markets.demergers import DemergerEvent
 from app.domain.markets.mergers import MergerEvent
 from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
@@ -81,6 +82,8 @@ class ResearchSession:
     partial_surrenders: tuple[MandatoryPartialShareSurrenderEvent, ...] = ()
     surrender_holder_class: str | None = None
     pass_through_events: tuple[RestructuringBonusPassThroughEvent, ...] = ()
+    consolidations: tuple[ShareConsolidationEvent, ...] = ()
+    consolidation_holder_class: str | None = None
 
     def __post_init__(self) -> None:
         if any(bar.trading_date != self.trading_date for bar in self.bars):

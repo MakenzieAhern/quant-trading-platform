@@ -200,6 +200,9 @@ class BacktestPortfolioSnapshotModel(Base):
     pass_through_audits: Mapped[list[dict[str, object]]] = mapped_column(
         JSONB, nullable=False, default=list, server_default="[]"
     )
+    consolidation_audits: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
 
 
 class BacktestMetricsModel(Base):

@@ -46,6 +46,7 @@ from app.domain.trading import (
     PortfolioSnapshot,
     Position,
     RestructuringBonusPassThroughAudit,
+    ShareConsolidationAudit,
     Signal,
     SignalType,
 )
@@ -391,6 +392,9 @@ class SQLAlchemyBacktestRepository:
                         RestructuringBonusPassThroughAudit.model_validate(p)
                         for p in row.pass_through_audits
                     ),
+                    consolidation_audits=tuple(
+                        ShareConsolidationAudit.model_validate(p) for p in row.consolidation_audits
+                    ),
                     market_value=row.market_value,
                     equity=row.equity,
                     realized_pnl=row.realized_pnl,
@@ -578,6 +582,10 @@ class SQLAlchemyBacktestRepository:
                     pass_through_audits=[
                         {key: _decimal_json(value) for key, value in p.model_dump().items()}
                         for p in item.pass_through_audits
+                    ],
+                    consolidation_audits=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.consolidation_audits
                     ],
                 )
                 for index, item in enumerate(result.portfolio_snapshots)

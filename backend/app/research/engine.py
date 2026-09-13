@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 
 from app.domain.market import Bar
 from app.domain.markets.calendar import TradingCalendar
+from app.domain.markets.consolidations import CONSOLIDATION_POLICY
 from app.domain.markets.corporate_actions import (
     corporate_action_sort_key,
     require_supported_corporate_action,
@@ -60,6 +61,7 @@ class ResearchExecutionResult:
     partial_surrender_fraction_policy: str = PARTIAL_SURRENDER_FRACTION_POLICY
     partial_surrender_boundary_policy: str = PARTIAL_SURRENDER_BOUNDARY_POLICY
     pass_through_policy: str = PASS_THROUGH_POLICY
+    consolidation_policy: str = CONSOLIDATION_POLICY
 
 
 class ResearchExecutionEngine:
@@ -154,17 +156,26 @@ class ResearchExecutionEngine:
         surrenders = sorted(session.partial_surrenders, key=lambda e: str(e.security_id))
         pass_through = sorted(session.pass_through_events, key=lambda e: str(e.security_id))
         pass_ids = [str(e.security_id) for e in pass_through]
+        consolidations = sorted(session.consolidations, key=lambda e: str(e.security_id))
+        consolidation_ids = [str(e.security_id) for e in consolidations]
         parents = [str(e.parent_security) for e in demergers] + [
             str(e.parent_security) for e in mergers
         ]
         if len(parents) != len(set(parents)):
             raise ValueError("duplicate session mandatory conversion")
-        structural_ids = parents + [str(e.security_id) for e in surrenders] + pass_ids
+        structural_ids = (
+            parents + [str(e.security_id) for e in surrenders] + pass_ids + consolidation_ids
+        )
         if len(structural_ids) != len(set(structural_ids)) or any(
-            str(a.security_id) in {str(e.security_id) for e in surrenders} | set(pass_ids)
-            for a in actions
+            str(a.security_id) in set(structural_ids) for a in actions
         ):
             raise ValueError("partial surrender concurrent action ordering unsupported")
+        for consolidation in consolidations:
+            consolidation.require_supported()
+            if consolidation.effective_date != session.trading_date:
+                raise ValueError("consolidation session mismatch")
+            if session.consolidation_holder_class != consolidation.affected_holder_class:
+                raise ValueError("CONSOLIDATION_HOLDER_APPLICABILITY_UNVERIFIED")
         for pass_event in pass_through:
             pass_event.require_supported()
             if pass_event.effective_date != session.trading_date:
@@ -215,6 +226,10 @@ class ResearchExecutionEngine:
             self._portfolio.recognize_demerger(event, session.trading_date, opening)
         for merger in mergers:
             self._portfolio.recognize_merger(merger, session.trading_date, opening)
+        for consolidation in consolidations:
+            self._portfolio.apply_consolidation(
+                consolidation, opening, holder_class=session.consolidation_holder_class
+            )
         for surrender in surrenders:
             self._portfolio.apply_partial_surrender(
                 surrender, opening, holder_class=session.surrender_holder_class
@@ -244,6 +259,7 @@ class ResearchExecutionEngine:
             or mergers
             or surrenders
             or pass_through
+            or consolidations
         ):
             self._portfolio.snapshot_at(timestamp)
 
@@ -259,6 +275,8 @@ class ResearchExecutionEngine:
                 partial_surrenders=(),
                 surrender_holder_class=None,
                 pass_through_events=(),
+                consolidations=(),
+                consolidation_holder_class=None,
             ),
             snapshot.equity,
         )
