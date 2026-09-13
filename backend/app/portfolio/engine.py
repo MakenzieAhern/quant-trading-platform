@@ -449,6 +449,7 @@ class PortfolioEngine:
         pending, audit = None, None
         if current is not None and current.quantity:
             theoretical, whole, remainder = event.quantities(current.quantity)
+            exact = event.theoretical_fraction(current.quantity)
             price = self._marks.get(parent)
             if price is None or self._mark_dates.get(parent) != event.parent_last_trading_date:
                 raise PortfolioError("MERGER_PARENT_LAST_RAW_CLOSE_UNAVAILABLE")
@@ -475,6 +476,8 @@ class PortfolioEngine:
                     successor_symbol=successor,
                     parent_quantity=current.quantity,
                     theoretical_successor_quantity=theoretical,
+                    exact_theoretical_numerator=exact.numerator,
+                    exact_theoretical_denominator=exact.denominator,
                     whole_successor_quantity=whole,
                     fractional_remainder=remainder,
                     floor_ceil_quantity_difference=Decimal(1) if remainder else ZERO,

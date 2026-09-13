@@ -52,8 +52,8 @@ ACCEPTED_INPUTS = {
 }
 
 
-def prepare_calendar_history(staging: Path, sdk_root: Path) -> dict:
-    """Decode the accepted snapshot offline; retain pre-Pilot IPO sessions."""
+def decode_calendar_snapshot(staging: Path, sdk_root: Path) -> tuple[list, dict, str]:
+    """Decode the pinned source offline without changing any accepted Pilot artifacts."""
     source = staging / "sse-st-pilot/completeness-20260910/calendar/sina-trading-calendar.txt"
     metadata = json.loads(source.with_suffix(".txt.meta.json").read_bytes())
     if sha(source.read_bytes()) != metadata["sha256"]:
@@ -79,6 +79,13 @@ def prepare_calendar_history(staging: Path, sdk_root: Path) -> dict:
     runtime = import_module("py_mini_racer").MiniRacer()
     runtime.eval(code)
     decoded = runtime.call("d", source.read_text().split("=")[1].split(";")[0].replace('"', ""))
+    return decoded, metadata, sha(decoder.read_bytes())
+
+
+def prepare_calendar_history(staging: Path, sdk_root: Path) -> dict:
+    """Decode the accepted snapshot offline; retain pre-Pilot IPO sessions."""
+    decoded, metadata, decoder_sha256 = decode_calendar_snapshot(staging, sdk_root)
+    source = staging / "sse-st-pilot/completeness-20260910/calendar/sina-trading-calendar.txt"
     history = sorted({d[:10] for d in decoded if "2022-12-01" <= d[:10] <= END})
     pilot = json.loads((source.parent / "pilot-sessions.json").read_bytes())
     if [d for d in history if START <= d <= END] != pilot:
@@ -88,7 +95,7 @@ def prepare_calendar_history(staging: Path, sdk_root: Path) -> dict:
     provenance = dict(
         source_snapshot_sha256=metadata["sha256"],
         source_metadata=metadata,
-        decoder_sha256=sha(decoder.read_bytes()),
+        decoder_sha256=decoder_sha256,
         sdk_version="1.18.94",
         history_sha256=sha(canonical(history)),
         sessions=len(history),

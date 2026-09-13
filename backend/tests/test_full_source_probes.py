@@ -52,3 +52,54 @@ def test_exit_factor_probe_does_not_drop_missing_baseline(tmp_path, monkeypatch)
     report = json.loads((tmp_path / "exit-factor-report.json").read_bytes())
     assert report["checked"] == 1
     assert report["results"][0]["status"] == "UNRESOLVED"
+
+
+def test_full_calendar_clips_future_and_rejects_duplicates():
+    import pytest
+
+    from scripts.extend_full_calendar import sessions
+
+    data = ["2009-12-31T00:00:00Z", "2010-01-04T00:00:00Z", "2026-01-05T00:00:00Z"]
+    assert sessions(data) == (["2009-12-31", "2010-01-04"], ["2010-01-04"])
+    assert sessions(data) == sessions(list(reversed(data)))
+    with pytest.raises(ValueError, match="DUPLICATE"):
+        sessions(data + data[:1])
+    with pytest.raises(ValueError, match="WEEKEND"):
+        sessions(["2010-01-03"])
+
+
+def test_full_benchmark_identity_calendar_and_decimal_prices():
+    from decimal import Decimal
+
+    import pytest
+
+    from scripts.audit_full_benchmark import normalize
+
+    row = dict(
+        indexCode="000300", tradeDate="20100104", open="10", high="11", low="9", close="10.50"
+    )
+    payload = dict(code="200", data=[row])
+    assert normalize(payload, ["2010-01-04"])[0]["close"] == Decimal("10.50")
+    with pytest.raises(ValueError, match="CALENDAR"):
+        normalize(payload, ["2010-01-01"])
+    with pytest.raises(ValueError, match="CALENDAR"):
+        normalize(dict(code="200", data=[row, row]), ["2010-01-04"])
+    with pytest.raises(ValueError, match="IDENTITY"):
+        normalize(dict(code="200", data=[{**row, "indexCode": "000905"}]), ["2010-01-04"])
+    with pytest.raises(ValueError, match="OHLC"):
+        normalize(dict(code="200", data=[{**row, "close": "NaN"}]), ["2010-01-04"])
+
+
+def test_distribution_source_pagination_is_complete_and_order_independent():
+    import pytest
+
+    from scripts.collect_sse_distributions import checked_rows
+
+    pages = [
+        dict(pageHelp=dict(total=2), result=[dict(code=code)]) for code in ("600000", "600001")
+    ]
+    assert checked_rows(pages) == checked_rows(list(reversed(pages)))
+    with pytest.raises(ValueError, match="PAGINATION"):
+        checked_rows(pages[:1])
+    with pytest.raises(ValueError, match="DUPLICATED"):
+        checked_rows([pages[0], pages[0]])

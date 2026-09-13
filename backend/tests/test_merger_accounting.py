@@ -296,3 +296,62 @@ def test_merger_source_audit_checksum_and_order(tmp_path):
     (tmp_path / "0.pdf").write_bytes(b"%PDF changed")
     with pytest.raises(ValueError, match="SOURCE_BYTES_MISMATCH"):
         audit(review, action, tmp_path)
+
+
+def test_reciprocal_official_ratio_uses_exact_fraction_before_floor():
+    import json
+    from fractions import Fraction
+
+    original = event()
+    assert (
+        original.model_copy(update={"conversion_denominator": Decimal("1.00")}).event_checksum
+        == original.event_checksum
+    )
+    action = original.model_copy(
+        update={"conversion_ratio": Decimal(1), "conversion_denominator": Decimal("2.90")}
+    )
+    for precision in (3, 28, 60):
+        with localcontext() as context:
+            context.prec = precision
+            assert action.quantities(Decimal(29)) == (Decimal(10), Decimal(10), Decimal(0))
+            assert action.theoretical_fraction(Decimal(100)) == Fraction(1000, 29)
+            assert action.quantities(Decimal(100))[1] == 34
+            p, emitted = funded()
+            cash = p.cash
+            p.recognize_merger(action, date(2015, 12, 30), at("2015-12-30"))
+            audit = p.merger_rounding_audits[0]
+            assert (audit.exact_theoretical_numerator, audit.exact_theoretical_denominator) == (
+                1000,
+                29,
+            )
+            p.activate_mergers(date(2015, 12, 30), {"001979.SZSE": Decimal(25)}, at("2015-12-30"))
+            assert p.positions[0].quantity == 34 and p.positions[0].aggregate_cost_basis == 3000
+            assert p.cash == cash and emitted == []
+            assert (
+                PortfolioSnapshot.model_validate_json(
+                    p.snapshot_at(at("2015-12-30")).model_dump_json()
+                ).merger_rounding_audits
+                == p.merger_rounding_audits
+            )
+    with pytest.raises(ValueError, match="whole long"):
+        action.quantities(Decimal("1.5"))
+    values = original.model_dump(mode="json")
+    values["conversion_denominator"] = 2.9
+    with pytest.raises(ValidationError, match="binary float"):
+        MergerEvent.model_validate(values)
+    cases = json.loads(
+        (Path(__file__).parent / "fixtures/reciprocal_merger_ratios.json").read_bytes()
+    )
+    for case in cases["cases"]:
+        ratio_only = original.model_copy(
+            update={
+                "conversion_ratio": Decimal(case["numerator"]),
+                "conversion_denominator": Decimal(case["denominator"]),
+            }
+        )
+        assert ratio_only.quantities(Decimal(case["exact_parent_quantity"]))[1] == Decimal(
+            case["exact_successor_quantity"]
+        )
+        assert ratio_only.quantities(Decimal(100))[1] == Decimal(
+            case["hundred_parent_whole_quantity"]
+        )

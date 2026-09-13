@@ -202,6 +202,8 @@ class MergerRoundingAudit(DomainModel):
     successor_symbol: Symbol
     parent_quantity: PositiveDecimal
     theoretical_successor_quantity: PositiveDecimal
+    exact_theoretical_numerator: int | None = Field(default=None, gt=0)
+    exact_theoretical_denominator: int | None = Field(default=None, gt=0)
     whole_successor_quantity: NonNegativeDecimal
     fractional_remainder: Decimal = Field(ge=0, lt=1, allow_inf_nan=False)
     label: Literal["UNREALIZED_HISTORICAL_ROUNDING_REMAINDER"] = (

@@ -3,8 +3,9 @@
 import hashlib
 import json
 from datetime import date
-from decimal import ROUND_FLOOR, Decimal, localcontext
+from decimal import Decimal, localcontext
 from enum import StrEnum
+from fractions import Fraction
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -33,6 +34,7 @@ class MergerEvent(BaseModel):
     parent_security: SecurityId
     successor_security: SecurityId
     conversion_ratio: PositiveDecimal
+    conversion_denominator: PositiveDecimal = Decimal(1)
     parent_last_trading_date: date
     record_date: date
     effective_date: date
@@ -53,7 +55,7 @@ class MergerEvent(BaseModel):
         Literal["WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1"] | None
     ) = None
 
-    @field_validator("conversion_ratio", mode="before")
+    @field_validator("conversion_ratio", "conversion_denominator", mode="before")
     @classmethod
     def no_binary_float(cls, value: object) -> object:
         if isinstance(value, (float, bool)):
@@ -81,22 +83,30 @@ class MergerEvent(BaseModel):
         }:
             raise ValueError("MERGER_VARIANT_UNRESOLVED")
 
-    def quantities(self, parent_quantity: Decimal) -> tuple[Decimal, Decimal, Decimal]:
+    def theoretical_fraction(self, parent_quantity: Decimal) -> Fraction:
         self.require_supported()
         if not isinstance(parent_quantity, Decimal) or not parent_quantity.is_finite():
             raise ValueError("parent quantity must be finite Decimal")
-        if parent_quantity < 0:
-            raise ValueError("merger policy is long-only")
+        if parent_quantity < 0 or parent_quantity != parent_quantity.to_integral_value():
+            raise ValueError("merger policy requires whole long shares")
+        return (
+            Fraction(parent_quantity)
+            * Fraction(self.conversion_ratio)
+            / Fraction(self.conversion_denominator)
+        )
+
+    def quantities(self, parent_quantity: Decimal) -> tuple[Decimal, Decimal, Decimal]:
+        exact = self.theoretical_fraction(parent_quantity)
+        whole = Decimal(exact.numerator // exact.denominator)
+        fractional = exact % 1
         with localcontext() as context:
             context.prec = max(
                 28,
-                len(parent_quantity.as_tuple().digits)
-                + len(self.conversion_ratio.as_tuple().digits)
-                + 1,
+                len(str(exact.numerator)) + len(str(exact.denominator)) + 1,
             )
-            theoretical = parent_quantity * self.conversion_ratio
-            whole = theoretical.to_integral_value(rounding=ROUND_FLOOR)
-            remainder = theoretical - whole
+            # Recurring decimals are audit displays only; exact rational arithmetic decides Q.
+            theoretical = Decimal(exact.numerator) / Decimal(exact.denominator)
+            remainder = Decimal(fractional.numerator) / Decimal(fractional.denominator)
         if (
             self.official_fractional_method is FractionalShareMethod.OFFICIAL_EXACT_INTEGER
             and remainder
@@ -117,6 +127,8 @@ class MergerEvent(BaseModel):
     @property
     def event_checksum(self) -> str:
         data = self.model_dump(mode="json")
+        if self.conversion_denominator == 1:
+            data.pop("conversion_denominator")  # Preserve accepted finite-ratio event identities.
         data["sources"].sort(key=lambda s: (s["sha256"], s["url"]))
         # Preserve accepted legacy event identities when the extension is absent.
         if data["activation_sources"]:

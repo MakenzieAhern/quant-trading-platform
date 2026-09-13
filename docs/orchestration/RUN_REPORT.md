@@ -1,6 +1,19 @@
 # Autonomous Quant Project Checkpoint
 
-## Current: R5 rights batch reconciled; independent full-period queues continue
+## Current: R5 full-range source extension; batch closure continues
+
+Calendar: 3,886 target sessions verified. Official CSI300 close history aligns
+exactly, matches all 382 accepted Pilot closes and passes deterministic Parquet
+replay. Accepted Pilot and raw stock authorities are unchanged.
+SSE distribution source tables collected: 17,920 dividend rows / 2,500 bonus
+rows including B-only records; source rows are NOT accepted accounting events.
+Exact rational merger flooring implemented without changing accepted event IDs.
+558 backend / 78 frontend tests and quality checks PASS.
+See ../research/R5_FULL_RANGE_SOURCE_EXTENSION_V1.md.
+R5 remains RUNNING_BATCH_CLOSURE, no human gate or new methodology blocker.
+Full dataset CREATED/AUDITED/FROZEN=NO; remaining source queues continue.
+
+## Prior milestone: R5 rights batch reconciled
 
 153 identified rights events / 142 securities now reconcile to official direct-subscription
 notices; material unresolved in this identified queue = 0, metadata-only incomplete = 149.
