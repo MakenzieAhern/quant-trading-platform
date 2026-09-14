@@ -1,5 +1,26 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 cached cash syntax and page-boundary revalidation
+
+Integrity audit v6 revalidates 22,832 unchanged event identities and retains 32
+quarantined records. Only complete, consistently formatted leading page-number
+sequences are stripped; body digits and partial sequences are never deleted.
+Explicit RMB without a redundant yuan suffix, gross-tax punctuation, and the
+distribution verb are recognized without rounding or old-proposal fallback.
+Audit canonical SHA f1a0d1be29a1b7a19bf4ce1d66a824b65d2c1f3faaa74fa0719814a204f040ee;
+external cash-current-terms-revalidated-v2.json canonical SHA
+2c57b57f927a564d62e2dec206f33e2fe3d72194f2d77ef706a7a86d5addad02.
+Prior immutable audit and ledger versions remain available. These are bounded
+revalidated candidates, not full corporate-action census acceptance.
+
+A broader unqualified section-heading experiment increased review to 112 and
+was reverted; its immutable audit v5 is diagnostic only. Manual inspection shows
+002737 2018 contains unrelated historical dividends later in the same PDF;
+300002 2015 and 300014 2017 have genuinely changed final per-share amounts.
+No ambiguous record is readmitted by choosing the first/last number.
+PID 434 remains suspended with receipts intact; no denied-source retries.
+Full dataset uncreated/unfrozen and studies not run. Offline closure continues.
+
 ## 2026-09-14 proposal/current-implementation integrity audit
 
 The explicit current-section parser found a genuine integrity reason to revisit

@@ -560,17 +560,34 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         "每10股派2元人民币(含税)",
         "每10股分派现金股利人民币2元(含税)",
         "每10股派2元人民币现金[含税;扣税后1.8元]",
+        "每10股派2元人民币现金。(含税;扣税后1.8元)",
+        "每10股派2元人民币现金,(含税;扣税后1.8元)",
+        "每10股分配现金红利2元(含税;扣税后1.8元)",
+        "每10股派2元人民币现金、送3股红股(含税;扣税后1.5元)",
+        "每10股派发现金红利人民币2(含税)",
     ):
         assert gross_cash([header + clause], "600000") == Decimal("0.2")
     for invalid in (
         text + implementation,
         text.replace("二、本次实施的权益分派方案", "二、拟议方案"),
         text.replace("每10股派2元", "每10股派4元(含税) 每10股派2元"),
-        text.replace("每10股派2元人民币现金(含税)", "每10股派发现金红利人民币0.403129(含税)"),
+        text.replace("每10股派2元人民币现金(含税)", "每10股派发现金红利0.403129(含税)"),
         "差异化分红送转:是\n" + text,
     ):
         with pytest.raises(ValueError):
             gross_cash([invalid], "600000")
+    assert gross_cash(
+        [text.replace("每10股派2元人民币现金(含税)", "每10股派发现金红利人民币0.403129(含税)")],
+        "600000",
+    ) == Decimal("0.0403129")
+    for counter in ("{page}", "{page} / 2", "- {page} -"):
+        pages = [
+            counter.format(page=1) + "\n" + header + "每10股派0.62元人民币",
+            counter.format(page=2) + "\n现金(含税)",
+        ]
+        assert gross_cash(pages, "600000") == Decimal("0.062")
+        with pytest.raises(ValueError):
+            gross_cash([pages[0], pages[1].replace("2", "9")], "600000")
 
 
 def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accounting():

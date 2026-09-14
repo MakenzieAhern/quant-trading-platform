@@ -66,7 +66,21 @@ def cash_event(row, members, ordinary_ids):
 
 
 def gross_cash(pages, symbol):
-    normalized = unicodedata.normalize("NFKC", "\n".join(pages))
+    normalized_pages = [unicodedata.normalize("NFKC", p) for p in pages]
+    # Strip only a complete, consistently formatted page-number sequence at page starts.
+    # Never delete standalone digits from the body or an unverified partial sequence.
+    if len(pages) > 1:
+        for template in (r"{page}", r"{page}\s*/\s*{total}", r"-\s*{page}\s*-"):
+            counters = [
+                re.match(r"^\s*" + template.format(page=i, total=len(pages)) + r"[ \t]*\n", p)
+                for i, p in enumerate(normalized_pages, 1)
+            ]
+            if all(counters):
+                normalized_pages = [
+                    p[m.end() :] for p, m in zip(normalized_pages, counters, strict=True)
+                ]
+                break
+    normalized = "\n".join(normalized_pages)
     header = re.search(
         r"(?:证券|股票|公司)代码(?:\(A/H\))?\s*:\s*((?:\d[ \t]*){6})(?!\d)",
         normalized[:600],
@@ -92,13 +106,18 @@ def gross_cash(pages, symbol):
     base = r"每(10|1)?股(?:送(?:红股)?\d+(?:\.\d+)?股[、,])?"
     matches = []
     for pattern in (
-        base + r"(?:派发|派送|分派|派)?(?:人民币)?(?:现金红利|现金股利|现金股息|红利|股息|现金)"
+        base + r"(?:派发|派送|分派|分配|派)?(?:人民币)?"
+        r"(?:现金红利|现金股利|现金股息|红利|股息|现金)"
         r"(?:人民币)?" + number + r"元(?:人民币)?(?:现金(?:红利|股利)?)?[([]含税[);,:\]]",
         base
         + r"派(?:发|送)?(?:人民币)?"
         + number
-        + r"元(?:人民币)?现金(?:红利|股利)?[([]含税[);,:\]]",
+        + r"元(?:人民币)?现金(?:红利|股利)?(?:、送\d+(?:\.\d+)?股红股)?[。,]?[([]含税[);,:\]]",
         base + r"派(?:发|送)?(?:人民币)?" + number + r"元(?:人民币)?[([]含税[);,:\]]",
+        base
+        + r"(?:派发|派送|分派|派)?(?:现金红利|现金股利|现金股息|红利|股息|现金)人民币"
+        + number
+        + r"(?:元)?[([]含税[);,:\]]",
     ):
         for denominator, value in re.findall(pattern, text):
             with localcontext() as ctx:
