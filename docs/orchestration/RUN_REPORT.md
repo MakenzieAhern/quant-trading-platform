@@ -1,5 +1,29 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 proposal/current-implementation integrity audit
+
+The explicit current-section parser found a genuine integrity reason to revisit
+prior full-range cash candidates: 000555 2022 proposal 0.04 versus current
+implementation 0.0403129. An accepted-prior gate correctly refused publication;
+no final ledger was written by that failed command. This is not permission to
+preserve erroneous cash merely for checksum continuity.
+
+Offline audit of all 22,864 prior supported events: initial strict syntax left
+83 review cases. Narrow RMB/gross-tax punctuation normalization revalidated 33 net
+cases; final 22,814 unchanged / 50 quarantined. Two explicit amount differences
+(300034 2020, 002973 2022); 48 current-section extraction/term gaps. No tolerance,
+rounded table amount or old proposal fallback. Existing 2010-2014 counts unchanged.
+Audit v2 226decc829844befdc37e42335805c14d941717ea598f40066d6292fdf581eb6;
+revalidated subset 419b1c04183a27ad324187b0b068b401b60c494dd01f9de173f45f25537eca4e.
+Old records remain immutable, with per-event quarantine reasons/source hashes.
+Frozen Pilot v2 covers a different period and was not modified. No full dataset
+or strategy run. This is an engineering/data-integrity correction, not a new
+methodology approval or terminal stop. 607 backend tests / quality checks PASS.
+
+The first audit launch stopped before output on a stable-ID/old-code alias lookup;
+source URL plus record/ex dates correctly identifies the retained row without
+rewriting stable identities. Corrected audit completed with duplicate guards.
+
 ## 2026-09-14 access-denial suspension and offline receipt preservation
 
 Latest twenty main-worker receipts were HTTP 403 Forbidden, not transient DNS.

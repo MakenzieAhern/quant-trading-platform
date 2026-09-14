@@ -1,5 +1,20 @@
 # Current state
 
+## Current: offline cash implementation integrity closure
+
+Prior 22,864 supported cash entries required integrity review after confirmed
+proposal-versus-implementation selection defect in 000555 (2022). Revalidation
+preserves 22,814 exact event identities; fifty quarantined, not admitted. Original
+year-ledger counts below are historical and not current acceptance. New strict
+implementation-section candidate ledgers are not replacements for the audited
+revalidated subset. Current ledger canonical SHA
+419b1c04183a27ad324187b0b068b401b60c494dd01f9de173f45f25537eca4e.
+Two explicitly parsed amount differences: 300034 2020 (0.12 vs 0.1198169),
+002973 2022 (0.10 vs 0.0999999); forty-eight remaining extraction/term gaps.
+No rounding tolerance or synthetic ex-price cash accepted. 607 backend tests and
+quality checks PASS. Frozen Pilot v2 unchanged; no strategy or dataset publication.
+CNINFO PID 434 remains suspended for HTTP 403; source-access input requested.
+
 ## Current: CNINFO access denial; offline R5 continues
 
 PID 434 is SIGSTOP-suspended, not terminated, following twenty consecutive HTTP

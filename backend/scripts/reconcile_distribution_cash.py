@@ -76,14 +76,29 @@ def gross_cash(pages, symbol):
     text = re.sub(r"\s+", "", normalized)
     if re.search(r"差异化分红送转:是", text):
         raise ValueError("DIFFERENTIATED_DISTRIBUTION_REQUIRES_REVIEW")
+    sections = list(
+        re.finditer(
+            r"(?m)^\s*[一二三四五六七八九十]+、\s*本次实施的(?:权益分派|利润分配)方案\s*$",
+            normalized,
+        )
+    )
+    if len(sections) > 1:
+        raise ValueError("MULTIPLE_CURRENT_IMPLEMENTATION_SECTIONS")
+    if sections:
+        remaining = normalized[sections[0].end() :]
+        next_heading = re.search(r"(?m)^\s*[一二三四五六七八九十]+、", remaining)
+        text = re.sub(r"\s+", "", remaining[: next_heading.start()] if next_heading else remaining)
     number = r"(\d+(?:\.\d+)?)"
     base = r"每(10|1)?股(?:送(?:红股)?\d+(?:\.\d+)?股[、,])?"
     matches = []
     for pattern in (
-        base + r"(?:派发|派送|派)?(?:现金红利|现金股利|现金股息|红利|股息|现金)"
-        r"(?:人民币)?" + number + r"元(?:人民币)?(?:现金红利)?\(含税[);,]",
-        base + r"派(?:发|送)?(?:人民币)?" + number + r"元(?:人民币)?现金(?:红利|股利)?\(含税[);,]",
-        base + r"派(?:发|送)?" + number + r"元\(含税[);,]",
+        base + r"(?:派发|派送|分派|派)?(?:人民币)?(?:现金红利|现金股利|现金股息|红利|股息|现金)"
+        r"(?:人民币)?" + number + r"元(?:人民币)?(?:现金(?:红利|股利)?)?[([]含税[);,:\]]",
+        base
+        + r"派(?:发|送)?(?:人民币)?"
+        + number
+        + r"元(?:人民币)?现金(?:红利|股利)?[([]含税[);,:\]]",
+        base + r"派(?:发|送)?(?:人民币)?" + number + r"元(?:人民币)?[([]含税[);,:\]]",
     ):
         for denominator, value in re.findall(pattern, text):
             with localcontext() as ctx:
@@ -112,11 +127,13 @@ def preserve_accepted_events(current, prior, source_keys):
         return event["security_id"]["value"], event["ex_date"], event["action_type"]
 
     def terms(row):
-        return {
+        result = {
             k: v
             for k, v in row["event"].items()
             if not k.startswith("source_") and k not in {"announcement_date", "retrieved_at"}
         }
+        result["cash_per_share"] = Decimal(result["cash_per_share"])
+        return result
 
     rows = {key(row): row for row in current}
     if len(rows) != len(current) or len({key(row) for row in prior}) != len(prior):

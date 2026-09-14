@@ -550,6 +550,27 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
             gross_cash([header + content], "600000")
     with pytest.raises(ValueError, match="ISSUER"):
         gross_cash([header + "每股现金红利0.1元(含税)"], "600004")
+    implementation = "二、本次实施的权益分派方案\n每10股派2元人民币现金(含税)\n"
+    text = header + "一、原方案\n每10股派1元人民币现金(含税)\n" + implementation
+    text += "三、其他资料\n每10股派3元人民币现金(含税)\n"
+    assert gross_cash([text], "600000") == Decimal("0.2")
+    for clause in (
+        "每10股派发人民币现金2元(含税;扣税后1.8元)",
+        "每10股派发现金股利2元人民币现金(含税:扣税后1.8元)",
+        "每10股派2元人民币(含税)",
+        "每10股分派现金股利人民币2元(含税)",
+        "每10股派2元人民币现金[含税;扣税后1.8元]",
+    ):
+        assert gross_cash([header + clause], "600000") == Decimal("0.2")
+    for invalid in (
+        text + implementation,
+        text.replace("二、本次实施的权益分派方案", "二、拟议方案"),
+        text.replace("每10股派2元", "每10股派4元(含税) 每10股派2元"),
+        text.replace("每10股派2元人民币现金(含税)", "每10股派发现金红利人民币0.403129(含税)"),
+        "差异化分红送转:是\n" + text,
+    ):
+        with pytest.raises(ValueError):
+            gross_cash([invalid], "600000")
 
 
 def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accounting():
@@ -617,6 +638,11 @@ def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accoun
     source_keys = {(source["url"], source["source_sha256"])}
     assert current["event_checksum"] != prior["event_checksum"]
     assert preserve_accepted_events([current], [prior], source_keys) == [prior]
+    assert preserve_accepted_events(
+        [{**current, "event": {**current["event"], "cash_per_share": "0.100000"}}],
+        [prior],
+        source_keys,
+    ) == [prior]
     for candidates, old, sources in (
         ([], [prior], source_keys),
         ([current], [prior], set()),
