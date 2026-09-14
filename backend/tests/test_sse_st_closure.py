@@ -179,8 +179,9 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
     old, new = baseline["old_name"], baseline["new_name"]
     header = f"证券代码:{baseline['symbol']} 证券简称:{old} {record['sse']['TITLE']}。"
     clause = f"股票简称由“{old}”变更为“{new}”。"
-    text = header + "2022年2月8日停牌一天,2022年2月9日复牌,公司的" + clause
-    assert extract([text], record)["effective_from"] == "2022-02-09"
+    for prefix in ("公司的", "公司", "公司A股", ""):
+        text = header + "2022年2月8日停牌一天,2022年2月9日复牌," + prefix + clause
+        assert extract([text], record)["effective_from"] == "2022-02-09"
     for text in (
         header + "2022年2月9日复牌。公司的" + clause,
         header + "2022年2月9日停牌,公司的" + clause,

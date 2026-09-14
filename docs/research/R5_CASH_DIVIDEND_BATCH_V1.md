@@ -1,5 +1,19 @@
 # R5 exact cash-dividend batch
 
+## Latest: 2010–2020 bounded reconciliation
+
+18,263 supported / 3,121 unresolved cash groups across eleven processed years.
+2017 adds 2,241 supported / 233 unresolved using unchanged cash/date parsers.
+All 2,564 2017 source PDFs verified; date links 2,451/2,538, four date-parser errors
+remain explicit. No retrieval repeated, accepted earlier events unchanged.
+Root subdirectory `distribution-2017-snapshot-v1`:
+
+- source-manifest.json: `2aa39d6880264ce43e3843a67835fd8f1a4de6b92a5d108cbbb3230c3b52fb83`
+- date-links-2017-v6.json: `9ba4162f899da0775e1c5955d949383bfbc2c506898bafcb81eeef04a00519be`
+- cash-ledger-2017-v1.json: `d508f0fd10d572f6fa6942ad564e1483b7a3650a06333872d7bbf9d68c8e184a`
+
+Full census remains PARTIAL. Earlier snapshots below retain their historical counts.
+
 7,702 cash events supported under `EXISTING_ACCEPTED_CASH_DIVIDEND`; full census
 remains PARTIAL. 1,527 cash groups remain unresolved in these four source years.
 This is not full dataset creation, source preflight PASS or a strategy study.

@@ -1,5 +1,16 @@
 # Current state
 
+## Current: R5 2017 cash and deterministic bonus accounting
+
+Completed 2017 source attempts: 2,564 PDFs, zero retrieval failures. Existing
+cash parser adds 2,241 supported / 233 unresolved; eleven-year bounded total
+18,263 / 3,121. Worker continues 2021 onward without duplication.
+SSE metadata normalization preserves all 1,555 matches and adds two; 677
+provisional transitions, 880 parser cases and three reviewed metadata differences
+remain unaccepted. Bonus arithmetic now uses existing portfolio decimal context
+and explicitly conserves aggregate basis; no fractional allocation policy chosen.
+592 backend tests/quality PASS. Full dataset remains not created/audited/frozen.
+
 ## Current: R5 cached SSE evidence reconciliation continues
 
 All selected 1,560 PDFs indexed; 1,555 exact metadata matches and five explicit

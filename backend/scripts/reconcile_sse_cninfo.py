@@ -135,8 +135,12 @@ def publication(row: dict[str, Any]) -> str:
 
 def issuer_subject(title: str, sse: dict[str, Any], cn: dict[str, Any]) -> str:
     """Strip one explicit issuer prefix; preserve the entire announcement subject."""
+    # Normalize spacing before prefix comparison, not only after stripping it.
+    title = re.sub(r"\s+", "", title.removeprefix(r"\n"))
     prefixes = [
-        p for p in (sse.get("SECURITY_NAME"), cn.get("secName")) if isinstance(p, str) and p
+        re.sub(r"\s+", "", p)
+        for p in (sse.get("SECURITY_NAME"), cn.get("secName"))
+        if isinstance(p, str) and p
     ]
     company = re.match(r"[\u4e00-\u9fff]+(?:股份有限公司|有限责任公司)", title)
     if company:

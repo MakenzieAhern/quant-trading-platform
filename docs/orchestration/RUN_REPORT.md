@@ -1,5 +1,26 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 2017 cash and missing-case parser continuation
+
+2017 source snapshot verified against its 2,564 queue URLs and PDF hashes.
+Date links 2,451/2,538; cash supported 2,241 / unresolved 233. Eleven processed
+years total 18,263 supported / 3,121 unresolved cash groups, full census PARTIAL.
+Source/date/cash manifests are in distribution-2017-snapshot-v1; cash SHA
+d508f0fd10d572f6fa6942ad564e1483b7a3650a06333872d7bbf9d68c8e184a.
+SSE whitespace/leading escaped-newline normalization resolves two metadata
+matches; all 1,555 earlier exact matches preserved. Homophone and old/new-name
+differences remain explicit review cases, not fuzzy matches. Parser v6 accepts
+only direct resumption/name clauses with company/A-share prefixes: 677 provisional
+transitions, 880 parser gaps, three metadata gaps. Full-v4 SHA
+03509aa33b03694fcc571efb0731d584d2cb2500755d84680794941b79df358f.
+Full-v3 intermediate matcher regression preserved; punctuation boundaries restored
+before publication of v4. 600392 annual table says May 3, 2012; retained issuer
+notice says May 2. This date conflict remains unresolved, not silently preferred.
+Bonus accounting regression failed under ambient precision and missing explicit
+basis. Fixed at shared portfolio path using existing context and original basis;
+no fractional-share choice or strategy run. 592 backend tests/quality PASS.
+Prior milestone CI 34808558506 SUCCESS; PR12 remains OPEN. Continue independent R5.
+
 ## 2026-09-14 SSE pagination and alternate PDF extraction
 
 52 repeated-page failures recovered using beginPage and grouped result counts;

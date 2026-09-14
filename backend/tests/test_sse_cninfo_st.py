@@ -9,7 +9,14 @@ from pathlib import Path
 
 import pytest
 
-from scripts.reconcile_sse_cninfo import canonical, fetch, load_candidates, match, sha
+from scripts.reconcile_sse_cninfo import (
+    canonical,
+    fetch,
+    issuer_subject,
+    load_candidates,
+    match,
+    sha,
+)
 from scripts.sse_st_events import extract, normalize, status_on
 
 FIXTURES = json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_text())
@@ -21,6 +28,22 @@ EXPECTED = [
     ("ST", "STAR_ST", "2022-04-26"),
     ("NORMAL", "STAR_ST", "2022-04-28"),
 ]
+
+
+def test_issuer_prefix_spacing_and_leading_escaped_newline():
+    sse = {"SECURITY_NAME": None}
+    cn = {"secName": "ST春 兰"}
+    assert issuer_subject("ST春兰关于撤销风险警示", sse, cn) == "关于撤销风险警示"
+    company = "上海龙韵传媒集团股份有限公司"
+    assert issuer_subject(r"\n" + company + "股票实施其他风险警示", sse, cn) == (
+        issuer_subject("\n" + company + "股票实施其他风险警示", sse, cn)
+    )
+    assert issuer_subject("*ST春兰关于撤销风险警示", sse, cn).startswith("*ST")
+    assert issuer_subject("关于撤消风险警示", sse, cn) != issuer_subject(
+        "关于撤销风险警示", sse, cn
+    )
+    subject = "会计师对《关于对西安宏盛科技发展股份有限公司的问询函》的说明"
+    assert issuer_subject(subject, sse, cn) == issuer_subject("ST春兰：" + subject, sse, cn)
 
 
 @pytest.mark.parametrize(("fixture", "expected"), list(zip(FIXTURES, EXPECTED, strict=True)))

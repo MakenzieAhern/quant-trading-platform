@@ -836,17 +836,19 @@ class PortfolioEngine:
             CorporateActionType.BONUS_SHARE,
         }:
             assert action.share_ratio is not None
-            quantity = current.quantity * (Decimal(1) + action.share_ratio)
-            average_price = current.average_price / (Decimal(1) + action.share_ratio)
-            updated = current.model_copy(
-                update={
-                    "quantity": quantity,
-                    "average_price": average_price,
-                    "unrealized_pnl": quantity * current.market_price - current.aggregate_cost_basis
-                    if current.aggregate_cost_basis is not None
-                    else quantity * (current.market_price - average_price),
-                }
-            )
+            with localcontext(PORTFOLIO_CONTEXT):
+                basis = current.aggregate_cost_basis
+                if basis is None:
+                    basis = current.quantity * current.average_price
+                quantity = current.quantity * (Decimal(1) + action.share_ratio)
+                updated = current.model_copy(
+                    update={
+                        "quantity": quantity,
+                        "average_price": basis / quantity,
+                        "aggregate_cost_basis": basis,
+                        "unrealized_pnl": quantity * current.market_price - basis,
+                    }
+                )
             self._positions[symbol] = updated
             self._last_event_timestamp = timestamp
             return updated

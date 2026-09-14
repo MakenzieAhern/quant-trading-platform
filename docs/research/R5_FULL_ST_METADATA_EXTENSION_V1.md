@@ -1,5 +1,20 @@
 # Full-period SSE ST evidence extension
 
+## Latest missing-case continuation
+
+677 provisional transitions / 880 parser gaps / three metadata gaps. Full-v4:
+`03509aa33b03694fcc571efb0731d584d2cb2500755d84680794941b79df358f`.
+All previous 660 events preserved. Five original unmatched sources reviewed in
+metadata-five-review-v1.json (`1089fde5ea0493872b43478eb7ab6583e6abc71829146ea130c5dfc2d1a0c1e1`).
+Spacing and literal leading newline normalize to two exact matches; all 1,555
+earlier exact matches preserved. Other name/titling differences stay reviewed but
+not automatically accepted. Full-v3 intermediate matcher regression retained,
+punctuation-boundary fix verified before v4. No original metadata was rewritten.
+600392's annual table effective 2012-05-03 conflicts with issuer PDF 2012-05-02;
+neither is silently discarded. Further official reconciliation required.
+Parser v6 only adds directly attached company/A-share resumption-name clauses.
+Full authority remains PARTIAL; 592 backend tests and quality checks PASS.
+
 ## Latest bounded reconciliation
 
 All 52 repeated-page failures now recovered separately: SSE requires beginPage

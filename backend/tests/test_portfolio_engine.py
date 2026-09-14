@@ -1,5 +1,5 @@
 from datetime import UTC, date, datetime, timedelta
-from decimal import Decimal
+from decimal import Decimal, localcontext
 from uuid import UUID
 
 import pytest
@@ -184,6 +184,33 @@ def test_complete_cash_and_stock_actions_update_long_position_economics() -> Non
         + snapshot.unrealized_pnl
         - snapshot.cumulative_commission
     )
+
+
+def test_retained_bonus_is_independent_of_ambient_decimal_precision() -> None:
+    positions = []
+    for precision in (6, 50):
+        portfolio = PortfolioEngine(EventBus(), Decimal(2000))
+        portfolio.apply_fill(make_fill(1, OrderSide.BUY, "101", "10", symbol="600000.SSE"))
+        action = CorporateAction(
+            security_id=SecurityId(value="CN-A:SSE:600000"),
+            action_type=CorporateActionType.BONUS_SHARE,
+            ex_date=date(2024, 1, 3),
+            share_ratio=Decimal("2"),
+            source_provider="fixture",
+            source_version="1",
+            source_record_hash="b" * 64,
+            completeness=CorporateActionCompleteness.COMPLETE,
+        )
+        with localcontext() as ctx:
+            ctx.prec = precision
+            position = portfolio.apply_corporate_action(
+                "600000.SSE", action, START + timedelta(days=3)
+            )
+        assert position is not None
+        assert position.quantity == 303 and position.aggregate_cost_basis == 1010
+        assert portfolio.cash == 990
+        positions.append(position)
+    assert positions[0] == positions[1]
 
 
 def test_same_direction_short_fills_use_absolute_weighted_average_cost() -> None:
