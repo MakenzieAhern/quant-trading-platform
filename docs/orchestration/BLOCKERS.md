@@ -1,5 +1,16 @@
 # Blockers
 
+## 2026-09-14 distribution source coverage progress
+
+2010 exchange date groups now have located evidence: 1,056 date links, three
+supported rights, one structural capital reform. Economic-term/full accounting
+acceptance remains unfinished. 600728 public-holder retained bonus is 0.9 per old
+share, not its valuation-equivalent consideration or the controller's 0.55 ratio.
+Official global fractional allocation, first-tradable boundary and contingent
+future commitments require separate treatment. No new human gate is opened.
+Candidate instrument classification is closed (5,431 ordinary A + one CDR);
+full master/name/ST/suspension completeness is not implied. Other queues continue.
+
 ## Current: 2009 membership coverage reconciled, full audits pending
 
 The 18 SZSE directory gaps now have reviewed annual-report membership evidence;

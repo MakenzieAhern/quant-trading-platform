@@ -1,0 +1,160 @@
+{
+  "scope": "DATE_COVERAGE_ONLY_NOT_ECONOMIC_TERMS_OR_ACCOUNTING",
+  "rows": [
+    {
+      "symbol": "000055",
+      "record_date": "2010-04-02",
+      "ex_date": "2010-04-06",
+      "source_sha256": "a4e81cbf82993705ab000e0f5337335355418dc77ad95b64d76cc8535fb87eae",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "A_SHARE_SECTION_NOT_B_SHARE_REGISTER"
+    },
+    {
+      "symbol": "600565",
+      "record_date": "2010-05-27",
+      "ex_date": "2010-05-28",
+      "source_sha256": "a10d66b00374b5109a8495a31159c93056b691413d9d1bef8f11cb391613f38b",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "PDFIUM_VISUAL_OVERPRINTED_TEXT"
+    },
+    {
+      "symbol": "600628",
+      "record_date": "2010-08-18",
+      "ex_date": "2010-08-19",
+      "source_sha256": "ba79b614de37c8726345d9e355ff1202a8a3f966587a486a8c0bfea56fcdff39",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "PDFIUM_VISUAL_SUMMARY_2010_BODY_2009_TYPO_CORROBORATED_BY_EXCHANGE"
+    },
+    {
+      "symbol": "600631",
+      "record_date": "2010-07-22",
+      "ex_date": "2010-07-23",
+      "source_sha256": "ae0fdefe5fab7f5c60ca92c0085d96cc170d36ea6819e2ab11b0eee0e7652c40",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "PDFIUM_VISUAL_BODY_2010_SUMMARY_2001_TYPO_CORROBORATED_BY_EXCHANGE"
+    },
+    {
+      "symbol": "600639",
+      "record_date": "2010-08-12",
+      "ex_date": "2010-08-13",
+      "source_sha256": "446c42dbff76ceaea9010eba5beaf481475dedb3814212656390cb8e51e678d6",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "EXPLICIT_A_SHARE_HOLDER_DATE_NOT_B_DATE"
+    },
+    {
+      "symbol": "600741",
+      "record_date": "2010-06-17",
+      "ex_date": "2010-06-18",
+      "source_sha256": "42cc45c730ccfeed52925d0cbfe9b6c7b08d29fd22f1608ed153f7fe319e6fce",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "DATES_EXPLICITLY_COMMON_TO_HOLDER_CLASSES_TERMS_NOT_ACCEPTED"
+    },
+    {
+      "symbol": "600801",
+      "record_date": "2010-06-04",
+      "ex_date": "2010-06-07",
+      "source_sha256": "7f7c0d29b0098e2b4e562f662b53e2806fdfe4dea476ba0a935d7e5f16e30300",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "EXPLICIT_A_SHARE_HOLDER_DATE_NOT_B_DATE"
+    },
+    {
+      "symbol": "600810",
+      "record_date": "2010-07-01",
+      "ex_date": "2010-07-02",
+      "source_sha256": "a4b7f90575120c5e13da548e1c3eaa3eb4d49ff08835247213377bbc2c8a8ccf",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "PDFIUM_VISUAL_OVERPRINTED_TEXT"
+    },
+    {
+      "symbol": "600818",
+      "record_date": "2010-04-23",
+      "ex_date": "2010-04-26",
+      "source_sha256": "c400ea994660e82413d2605bc8e1a4a988d709cbf3772698795884ea217cb855",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "EXPLICIT_A_SHARE_HOLDER_DATE_NOT_B_DATE"
+    },
+    {
+      "symbol": "600822",
+      "record_date": "2010-06-07",
+      "ex_date": "2010-06-08",
+      "source_sha256": "09d8c952be5492cb6e3d172bac9989098533b3ac1857bae3f939ce0aa6fc4560",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "EXPLICIT_A_SHARE_HOLDER_DATE_NOT_B_DATE"
+    },
+    {
+      "symbol": "600835",
+      "record_date": "2010-06-21",
+      "ex_date": "2010-06-22",
+      "source_sha256": "5466048b9401f7dda4832a81f322cba7766b4a0abc82a73319b3d7839a1ab453",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "EXPLICIT_A_SHARE_HOLDER_DATE_NOT_B_DATE"
+    },
+    {
+      "symbol": "600845",
+      "record_date": "2010-06-02",
+      "ex_date": "2010-06-03",
+      "source_sha256": "124ff23390c21f245fe9d6355f5c16548bbe754b82c48d6a4cb99e891fa7539e",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "EXPLICIT_A_SHARE_HOLDER_DATE_NOT_B_DATE"
+    },
+    {
+      "symbol": "600987",
+      "record_date": "2010-05-31",
+      "ex_date": "2010-06-01",
+      "source_sha256": "61645d113f75c4790d0b1ea227454f8c108a29b47df6f890faa1ddd98223a9a6",
+      "pages": [
+        1,
+        2
+      ],
+      "reason": "PDFIUM_VISUAL_OVERPRINTED_TEXT"
+    },
+    {
+      "symbol": "601988",
+      "record_date": "2010-06-03",
+      "ex_date": "2010-06-04",
+      "source_sha256": "fbe08403c56b0db17d1f40bfd205b4eee04054fbe9382c27bc4e576a09280318",
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "reason": "EXPLICIT_DIVIDEND_DATE_NOT_SEPARATE_CONVERTIBLE_PRIORITY_ALLOCATION"
+    }
+  ]
+}

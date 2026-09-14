@@ -322,6 +322,14 @@ def test_notice_recovery_reuses_tail_and_includes_partial_boundary_day():
 def test_distribution_notice_dates_require_bound_labels_not_unrelated_dates():
     from scripts.link_distribution_notices import notice_dates
 
+    assert notice_dates(
+        ["1 \n \n股权登记日为2010年8月5日,除息日为2010年8月6", "2 \n \n日。每10股4.80元"]
+    ) == (["2010-08-05"], ["2010-08-06"])
+    # A standalone digit without the complete ordinal-header pattern is content.
+    assert notice_dates(["除息日为2010年8月", "2\n日。"])[1] == ["2010-08-02"]
+    assert notice_dates(["权益登记日为2010年5月24日,除息日为2010年5月25日"])[0] == ["2010-05-24"]
+    assert notice_dates(["股权登记日:A股为2010年6月7日,B股为2010年6月10日"])[0] == ["2010-06-07"]
+
     assert notice_dates(["股权登记日:2010 年 03 月 02 日;除权除息日为:2010年3月3日"]) == (
         ["2010-03-02"],
         ["2010-03-03"],
@@ -357,6 +365,28 @@ def test_merger_raw_boundaries_use_unadjusted_rows_and_reject_duplicate_dates():
             "2011-03-01",
             "2011-03-02",
         )
+
+
+def test_reviewed_distribution_dates_require_pinned_identity_pages_and_chronology():
+    import pytest
+
+    from scripts.link_distribution_notices import reviewed_dates
+
+    source = dict(issuer="600000", source_sha256="a" * 64, published_on="2010-05-01")
+    review = dict(
+        symbol="600000",
+        source_sha256="a" * 64,
+        pages=[1, 2],
+        record_date="2010-05-06",
+        ex_date="2010-05-07",
+    )
+    assert reviewed_dates(review, source, 2) == (["2010-05-06"], ["2010-05-07"])
+    with pytest.raises(ValueError, match="IDENTITY"):
+        reviewed_dates(review, {**source, "source_sha256": "b" * 64}, 2)
+    with pytest.raises(ValueError, match="PAGE"):
+        reviewed_dates(review, source, 1)
+    with pytest.raises(ValueError, match="DATE_ORDER"):
+        reviewed_dates({**review, "ex_date": "2001-05-07"}, source, 2)
 
 
 def test_master_baseline_excludes_future_and_exited_intervals_without_dropping_paused():

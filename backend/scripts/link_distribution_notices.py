@@ -19,13 +19,37 @@ def labeled_dates(text, label):
 
 def notice_dates(pages):
     # Require dates attached to labels, not unrelated dates elsewhere in an annual report.
+    # Strip a page-number header only when every page has the matching ordinal
+    # followed by a blank line. Otherwise retain all numeric text unchanged.
+    headers = [re.compile(rf"^\s*{n}[ \t]*\n[ \t]*\n") for n in range(1, len(pages) + 1)]
+    if len(pages) > 1 and all(
+        pattern.match(page) for pattern, page in zip(headers, pages, strict=True)
+    ):
+        pages = [
+            pattern.sub("", page, count=1) for pattern, page in zip(headers, pages, strict=True)
+        ]
     text = "\n".join(pages)
     return (
-        labeled_dates(text, r"A股股权登记日") or labeled_dates(text, r"股权登记日"),
+        labeled_dates(text, r"A股(?:股权|权益)登记日")
+        or labeled_dates(text, r"(?:股权|权益)登记日[:为]*A股")
+        or labeled_dates(text, r"(?:股权|权益)登记日"),
         labeled_dates(
             text, r"(?:除权\(除息\)日|除权\(除息日\)|除权\(息\)日|除权除息日|除息日|除权日)"
         ),
     )
+
+
+def reviewed_dates(review, source, page_count):
+    if review["symbol"] != source["issuer"] or review["source_sha256"] != source["source_sha256"]:
+        raise ValueError("REVIEW_SOURCE_IDENTITY_MISMATCH")
+    if not review["pages"] or any(not 1 <= p <= page_count for p in review["pages"]):
+        raise ValueError("REVIEW_PAGE_INVALID")
+    record, ex = review["record_date"], review["ex_date"]
+    if not source["published_on"] <= record < ex:
+        raise ValueError("REVIEW_DATE_ORDER_INVALID")
+    date.fromisoformat(record)
+    date.fromisoformat(ex)
+    return [record], [ex]
 
 
 def main():
@@ -35,6 +59,8 @@ def main():
     parser.add_argument("--sse-audit", type=Path, required=True)
     parser.add_argument("--szse-audit", type=Path, required=True)
     parser.add_argument("--year", type=int, required=True)
+    parser.add_argument("--report")
+    parser.add_argument("--date-review", type=Path)
     args = parser.parse_args()
     inputs = [args.root / args.batch / "source-manifest.json", args.sse_audit, args.szse_audit]
     manifests = []
@@ -47,6 +73,15 @@ def main():
             raise ValueError("INPUT_MANIFEST_CHANGED")
         manifests.append(value)
     documents, sse, szse = manifests
+    reviews = {}
+    if args.date_review:
+        review = json.loads(args.date_review.read_bytes())
+        if review["scope"] != "DATE_COVERAGE_ONLY_NOT_ECONOMIC_TERMS_OR_ACCOUNTING":
+            raise ValueError("REVIEW_SCOPE_INVALID")
+        reviews = {r["source_sha256"]: r for r in review["rows"]}
+        if len(reviews) != len(review["rows"]):
+            raise ValueError("DUPLICATE_REVIEW")
+        inputs.append(args.date_review)
     index = {}
     extraction_gaps = []
     parsing_errors = []
@@ -64,7 +99,10 @@ def main():
         if extracted["source_sha256"] != row["source_sha256"]:
             raise ValueError("EXTRACTION_IDENTITY_CHANGED")
         try:
-            record, ex = notice_dates(extracted["pages"])
+            if reviewed := reviews.get(row["source_sha256"]):
+                record, ex = reviewed_dates(reviewed, row, len(extracted["pages"]))
+            else:
+                record, ex = notice_dates(extracted["pages"])
         except ValueError as exc:
             parsing_errors.append(dict(source_sha256=row["source_sha256"], error=str(exc)))
             continue
@@ -85,6 +123,12 @@ def main():
     for row in szse["rows"]:
         if row["symbol"].startswith(("0", "3")):
             targets.add((row["symbol"], row["record_date"], row["ex_date"]))
+    if any((r["symbol"], r["record_date"], r["ex_date"]) not in targets for r in reviews.values()):
+        raise ValueError("REVIEW_NOT_CORROBORATED_BY_EXCHANGE")
+    if reviews.keys() - {
+        r["source_sha256"] for r in documents["documents"] if r["retrieval_status"] == "PASS"
+    }:
+        raise ValueError("REVIEW_DOCUMENT_MISSING")
     results = []
     for symbol, record, ex in sorted(targets):
         if not ex.startswith(str(args.year) + "-"):
@@ -102,7 +146,7 @@ def main():
             )
         )
     report = dict(
-        parser_version="DISTRIBUTION_NOTICE_DATE_LINK_V2",
+        parser_version="DISTRIBUTION_NOTICE_DATE_LINK_V4",
         parser_sha256=sha256_file(Path(__file__)),
         inputs=[dict(path=str(p), sha256=sha256_file(p)) for p in inputs],
         year=args.year,
@@ -122,7 +166,7 @@ def main():
     )
     report["manifest_sha256"] = canonical_sha256(report)
     write_immutable(
-        args.root / args.batch / f"date-links-{args.year}-v2.json",
+        args.root / args.batch / (args.report or f"date-links-{args.year}-v4.json"),
         canonical_json_bytes(report) + b"\n",
     )
     print(json.dumps({k: v for k, v in report.items() if k not in ("results", "inputs")}))

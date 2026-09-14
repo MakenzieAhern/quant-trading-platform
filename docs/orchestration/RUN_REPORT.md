@@ -1,5 +1,14 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 targeted 2010 distribution coverage
+
+45 issuer/date metadata windows complete; 75 plus seven document leads acquired
+or reused, no failures. Reconciled source union: 1,179 documents. 14 reviewed date
+ambiguities are source-pinned and exchange-corroborated, including visual PDF QA.
+1,056 date links + three existing rights + one structural queue = 1,060 groups.
+No ordinary dividend events promoted. 16 focused tests PASS; instrument CI PASS.
+See ../research/R5_DISTRIBUTION_2010_DATE_CLOSURE_V1.md. R5 continues.
+
 ## 2026-09-14 candidate instrument extension
 
 All 251 missing candidate classifications supported; accepted 5,181 facts reused.

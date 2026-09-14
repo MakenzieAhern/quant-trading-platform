@@ -1,5 +1,13 @@
 # Current state
 
+## Current: R5 2010 exchange-row notice coverage reconciled
+
+1,056 date-linked notices, three existing supported rights entries, one separately
+queued structural reform: all 1,060 exchange date groups have located evidence.
+This is not dividend-term/accounting acceptance. 600728 requires holder-specific
+retained-bonus and boundary reconciliation; no ordinary dividend was fabricated.
+See ../research/R5_DISTRIBUTION_2010_DATE_CLOSURE_V1.md. Independent R5 work continues.
+
 ## Current: R5 candidate instrument classification closed
 
 5,432 candidates: 5,431 ordinary A shares and one separately excluded CDR.
