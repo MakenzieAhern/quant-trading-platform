@@ -1,5 +1,21 @@
 # Current state
 
+## Current: R5 cash-dividend batch supported under existing policy
+
+7,702 reconciled cash events across 2010/2018/2019/2020 have exact official gross
+terms, exchange-date corroboration, stable lifecycle/instrument checks and
+existing immutable event serialization. 1,527 groups remain unresolved in these
+four years; full census remains PARTIAL. Existing ex-date cash accounting reused,
+not a new tax/payment-date model. 584 backend / 78 frontend tests and quality PASS.
+See ../research/R5_CASH_DIVIDEND_BATCH_V1.md. Independent R5 work continues.
+
+## Current: R5 SZSE dated-state replay verified
+
+7,876,813 security-sessions replayed; UNKNOWN=0 under the existing accepted Pilot
+IPO initialization. Prestart corroboration, reversed input and future-event
+truncation agree. Overall full ST acceptance remains PARTIAL, not a suspension
+or full independent historical-name acceptance. Independent R5 queues continue.
+
 ## Current: R5 SZSE prestart risk-state corroboration
 
 All 836 starting members independently corroborated: 820 yearbook trading-table

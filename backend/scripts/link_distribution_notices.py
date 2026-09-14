@@ -29,7 +29,7 @@ def notice_dates(pages):
             pattern.sub("", page, count=1) for pattern, page in zip(headers, pages, strict=True)
         ]
     text = "\n".join(pages)
-    return (
+    record, ex = (
         labeled_dates(text, r"A股(?:股权|权益)登记日")
         or labeled_dates(text, r"(?:股权|权益)登记日[:为]*A股")
         or labeled_dates(text, r"(?:股权|权益)登记日"),
@@ -37,6 +37,20 @@ def notice_dates(pages):
             text, r"(?:除权\(除息\)日|除权\(除息日\)|除权\(息\)日|除权除息日|除息日|除权日)"
         ),
     )
+    compact = re.sub(r"\s+", "", unicodedata.normalize("NFKC", text))
+    slash_date = r"(20\d{2}/\d{1,2}/\d{1,2})"
+    # Fixed official table order: record / last trade / ex / cash or new shares.
+    # The A-share last-trade placeholder is required; never shift B-share columns.
+    tables = re.findall(
+        r"股份类别股权登记日最后交易日除权\(息\)日"
+        r"(?:现金红利发放日|新增无限售条件流通股份上市日){1,2}"
+        r"A股" + slash_date + r"[-—]" + slash_date + r"(?=20\d{2}/|\D|$)",
+        compact,
+    )
+    for recorded, effective in tables:
+        record.append(date(*map(int, recorded.split("/"))).isoformat())
+        ex.append(date(*map(int, effective.split("/"))).isoformat())
+    return sorted(set(record)), sorted(set(ex))
 
 
 def reviewed_dates(review, source, page_count):
@@ -146,7 +160,7 @@ def main():
             )
         )
     report = dict(
-        parser_version="DISTRIBUTION_NOTICE_DATE_LINK_V4",
+        parser_version="DISTRIBUTION_NOTICE_DATE_LINK_V6",
         parser_sha256=sha256_file(Path(__file__)),
         inputs=[dict(path=str(p), sha256=sha256_file(p)) for p in inputs],
         year=args.year,
@@ -166,10 +180,15 @@ def main():
     )
     report["manifest_sha256"] = canonical_sha256(report)
     write_immutable(
-        args.root / args.batch / (args.report or f"date-links-{args.year}-v4.json"),
+        args.root / args.batch / (args.report or f"date-links-{args.year}-v6.json"),
         canonical_json_bytes(report) + b"\n",
     )
-    print(json.dumps({k: v for k, v in report.items() if k not in ("results", "inputs")}))
+    print(
+        json.dumps(
+            {k: v for k, v in report.items() if k not in ("results", "inputs", "parsing_errors")}
+        )
+    )
+    print("PARSING_ERRORS", len(parsing_errors))
 
 
 if __name__ == "__main__":

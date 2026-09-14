@@ -45,3 +45,21 @@ Reversed dated-source/master input reproduces the probe. Header tests reject
 wrong issuers, body-only matches and missing risk labels. Full-period IPO status
 initialization, daily replay and independent completeness checks remain pending.
 Full dataset CREATED/AUDITED/FROZEN=NO. No research study, merge or release.
+
+## Subsequent interval replay
+
+Current extended probe: `full-szse-st-v1/dated-name-coverage-probe-v8.json`,
+canonical SHA-256 `30af5f8fde6ce8e4ba3114c3cffb297aa71498ad54a3cd795a711db981cd43a8`.
+V6 remains the completed prestart-only result. V8 reuses the accepted Pilot
+SZSE listing-date NORMAL initialization; it does not infer it from a missing
+name-history row. Earliest dated old-status conflicts would force UNKNOWN;
+none were found. Missing independent prestart corroboration also forces UNKNOWN.
+
+The existing status_on helper evaluates constant-state intervals; session counts
+use the accepted 3,886-session calendar and inclusive delisting boundaries.
+7,876,813 security-sessions: 7,613,493 NORMAL, 91,659 ST, 169,881 STAR_ST,
+1,780 DELISTING_PERIOD, zero UNKNOWN. All effective-date rows are on calendar
+sessions. Reversed-input and removal of future events agree. Regression checks
+cover future events, delisting cutoffs, IPO conflicts and missing prestart data.
+This is dated-source replay, not full independent historical-name completeness
+or suspension authority; the overall source authority remains PARTIAL.

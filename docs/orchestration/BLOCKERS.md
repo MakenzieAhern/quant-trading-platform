@@ -1,5 +1,12 @@
 # Blockers
 
+## 2026-09-14 cash batch progress, not census completion
+
+7,702 cash events supported under the unchanged cash policy; 1,527 source groups
+remain unresolved in 2010/2018/2019/2020, with reasons persisted. Other years and
+stock/bonus/structural actions remain independent pending queues. No new human
+gate; neither exact-cash subset nor dated SZSE replay establishes full readiness.
+
 ## 2026-09-14 SZSE starting risk-state evidence reconciled
 
 836/836 starting members corroborated; no unresolved starting-member risk-state

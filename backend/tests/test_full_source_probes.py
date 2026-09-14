@@ -465,3 +465,161 @@ def test_prestart_notice_header_requires_issuer_and_does_not_scan_body():
         notice_header("公司年度报告" + "正文" * 100 + page, "000732")
     with pytest.raises(ValueError, match="AMBIGUOUS"):
         notice_header("证券代码:000732 证券简称:三农", "000732")
+
+
+def test_full_szse_interval_replay_matches_daily_states_and_retains_unknown():
+    from scripts.probe_full_szse_st import replay
+
+    member = dict(
+        security_id="CN-A:SZSE:000001",
+        symbol="000001",
+        listing_date="2000-01-01",
+        delisting_date="2010-01-06",
+        effective_from="2000-01-01",
+    )
+    anchor = dict(security_id=member["security_id"], anchor={"status": "NORMAL"})
+    event = dict(symbol="000001", effective_from="2010-01-05", old_status="NORMAL", status="ST")
+    future = dict(event, effective_from="2026-01-01", old_status="ST", status="STAR_ST")
+    sessions = ["2010-01-04", "2010-01-05", "2010-01-06", "2010-01-07"]
+    result = replay([member], [future, event], [anchor], sessions)
+    assert result == replay([member], [event, future], [anchor], sessions)
+    assert result["security_days"] == {"NORMAL": 1, "ST": 2}
+    assert result["future_event_leakage"] == "PASS"
+    assert replay([member], [event], [], sessions)["security_days"] == {"UNKNOWN": 3}
+    ipo = {**member, "listing_date": "2010-01-04"}
+    assert replay([ipo], [event], [], sessions)["security_days"] == {"NORMAL": 1, "ST": 2}
+    conflict = {**event, "old_status": "STAR_ST"}
+    bad = replay([ipo], [conflict], [], sessions)
+    assert bad["security_days"] == {"UNKNOWN": 3}
+    assert len(bad["ipo_initialization_conflicts"]) == 1
+
+
+def test_distribution_table_dates_require_fixed_columns_and_a_share_placeholder():
+    from scripts.link_distribution_notices import notice_dates
+
+    header = "股份类别 股权登记日 最后交易日 除权(息)日 现金红利发放日\n"
+    assert notice_dates([header + "A股 2018/7/5 - 2018/7/6 2018/7/6"]) == (
+        ["2018-07-05"],
+        ["2018-07-06"],
+    )
+    assert notice_dates([header + "A股 2018/7/12 - 2018/7/13 2018/7/13"]) == (
+        ["2018-07-12"],
+        ["2018-07-13"],
+    )
+
+    assert notice_dates([header + "B股 2018/7/17 2018/7/12 2018/7/13"]) == ([], [])
+    assert notice_dates([header + "A股 2018/7/12 2018/7/13 2018/7/13"]) == ([], [])
+    assert notice_dates([header + "A股 2018/7/12 - 2018/7/13\n股权登记日:2018年7月11日"]) == (
+        ["2018-07-11", "2018-07-12"],
+        ["2018-07-13"],
+    )
+
+
+def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms():
+    from decimal import Decimal, localcontext
+
+    import pytest
+
+    from scripts.reconcile_distribution_cash import gross_cash
+
+    header = "证券代码:600000 证券简称:浦发银行\n"
+    assert gross_cash(
+        ["证券代码:000011 200011\n向全体股东每10股派3元人民币现金(含税;扣税后2.7元)"], "000011"
+    ) == Decimal("0.3")
+    with localcontext() as ctx:
+        ctx.prec = 3
+        assert gross_cash([header + "每10股派发现金红利1.234567元(含税)"], "600000") == Decimal(
+            "0.1234567"
+        )
+    assert gross_cash([header + "每股派发现金红利0.1元(含税) 每股税后0.09元"], "600000") == Decimal(
+        "0.1"
+    )
+    for content in (
+        "每股派发现金红利0.09元(税后)",
+        "每股现金红利0.1元",
+        "每股现金红利0.1元(含税) 每股现金红利0.2元(含税)",
+        "差异化分红送转:是 每股现金红利0.1元(含税)",
+    ):
+        with pytest.raises(ValueError):
+            gross_cash([header + content], "600000")
+    with pytest.raises(ValueError, match="ISSUER"):
+        gross_cash([header + "每股现金红利0.1元(含税)"], "600004")
+
+
+def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accounting():
+    from datetime import UTC, datetime
+    from decimal import Decimal
+    from uuid import UUID
+
+    import pytest
+
+    from app.domain.trading import Fill, OrderSide
+    from app.event import EventBus, EventType
+    from app.portfolio import PortfolioEngine
+    from scripts.reconcile_distribution_cash import cash_event
+
+    # Retained 600000 official 2017 distribution implementation, published 2018-07-06.
+    source = dict(
+        url="https://static.cninfo.com.cn/finalpage/2018-07-06/1205128052.PDF",
+        published_on="2018-07-06",
+        title="2017 annual distribution implementation",
+        source_sha256="a04586a37fecb9ad0e3d6ab6506c45b5992ad037a3f81b8dd7036cdf94846bea",
+        retrieved_at_utc="2026-09-14T00:00:00+00:00",
+    )
+    row = dict(
+        symbol="600000",
+        record_date="2018-07-12",
+        ex_date="2018-07-13",
+        status="EXACT_GROSS_CASH_CORROBORATED",
+        exchange_amounts=["0.1"],
+        unresolved_documents=[],
+        evidence=[dict(cash_per_share="0.1", source=source)],
+    )
+    member = dict(
+        symbol="600000",
+        security_id="CN-A:SSE:600000",
+        listing_date="1999-11-10",
+        effective_from="1999-11-10",
+        effective_to=None,
+        delisting_date=None,
+    )
+    event = cash_event(row, [member], {member["security_id"]})
+    for members, ordinary in (
+        ([{**member, "listing_date": "2018-07-13"}], {member["security_id"]}),
+        ([member], set()),
+        ([member, member], {member["security_id"]}),
+    ):
+        with pytest.raises(ValueError, match="LIFECYCLE"):
+            cash_event(row, members, ordinary)
+    for quantity in ("1", "81", "100"):
+        bus = EventBus()
+        emitted = []
+        for kind in (EventType.ORDER_FILLED, EventType.ORDER_CREATED, EventType.ORDER_PROPOSAL):
+            bus.subscribe(kind, emitted.append)
+        portfolio = PortfolioEngine(bus, Decimal(10000))
+        # Engineering seed only; verify that the corporate action adds no fill/order.
+        portfolio.apply_fill(
+            Fill(
+                order_id=UUID(int=1),
+                strategy_id="accounting-fixture",
+                symbol="600000.SSE",
+                side=OrderSide.BUY,
+                quantity=Decimal(quantity),
+                price=Decimal(10),
+                commission=Decimal(0),
+                timestamp=datetime(2018, 7, 12, tzinfo=UTC),
+            )
+        )
+        before = portfolio.snapshot_at(datetime(2018, 7, 12, tzinfo=UTC))
+        position = portfolio.apply_corporate_action(
+            "600000.SSE", event, datetime(2018, 7, 13, tzinfo=UTC)
+        )
+        after = portfolio.snapshot_at(datetime(2018, 7, 13, tzinfo=UTC))
+        assert position == before.positions[0]
+        assert after.cash - before.cash == Decimal(quantity) * Decimal("0.1")
+        assert (
+            after.corporate_action_realized_pnl - before.corporate_action_realized_pnl
+            == Decimal(quantity) * Decimal("0.1")
+        )
+        assert after.realized_pnl == before.realized_pnl
+        assert emitted == []

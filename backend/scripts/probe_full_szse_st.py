@@ -4,14 +4,74 @@ import argparse
 import json
 import re
 import unicodedata
+from bisect import bisect_left
 from collections import Counter, defaultdict
+from datetime import date, timedelta
+from itertools import pairwise
 from pathlib import Path
 
 from openpyxl import load_workbook
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
-from scripts.szse_st_recovery import normalize, risk_state
+from scripts.szse_st_recovery import normalize, risk_state, status_on
+
+
+def replay(members, events, anchors, sessions):
+    """Count every session via constant-state intervals using the accepted replay helper."""
+    if not sessions or sessions != sorted(set(sessions)):
+        raise ValueError("INVALID_REPLAY_CALENDAR")
+    aliases = {r["symbol"]: r["security_id"] for r in members}
+    byid = {r["security_id"]: r for r in sorted(members, key=lambda r: r["effective_from"])}
+    histories = defaultdict(list)
+    for event in events:
+        histories[aliases[event["symbol"]]].append(event)
+    starting = {r["security_id"]: r["anchor"] for r in anchors}
+    intervals, counts, ipo_conflicts = [], Counter(), []
+    future_ok = True
+    for sid, member in sorted(byid.items()):
+        history = histories[sid]
+        start = max("2010-01-01", member["listing_date"])
+        end = min("2025-12-31", member["delisting_date"] or "2025-12-31")
+        if member["listing_date"] < "2010-01-01":
+            prior = starting.get(sid)
+            anchor = dict(
+                effective_from="2009-12-31", status=prior["status"] if prior else "UNKNOWN"
+            )
+        else:
+            # Same IPO initialization as the accepted Pilot SZSE auditor; not a new rule.
+            anchor = dict(effective_from=member["listing_date"], status="NORMAL")
+            first = sorted(history, key=lambda e: e["effective_from"])
+            if first and first[0]["old_status"] != "NORMAL":
+                ipo_conflicts.append(dict(security_id=sid, first_event=first[0]))
+                anchor["status"] = "UNKNOWN"
+        stop = (date.fromisoformat(end) + timedelta(days=1)).isoformat()
+        boundaries = sorted(
+            {start, stop}
+            | {e["effective_from"] for e in history if start < e["effective_from"] <= end}
+        )
+        for left, right in pairwise(boundaries):
+            state = status_on(anchor, history, left)
+            future_ok &= state == status_on(
+                anchor, [e for e in history if e["effective_from"] <= left], left
+            )
+            days = bisect_left(sessions, right) - bisect_left(sessions, left)
+            counts[state] += days
+            intervals.append(
+                dict(
+                    security_id=sid,
+                    effective_from=left,
+                    effective_to=(date.fromisoformat(right) - timedelta(days=1)).isoformat(),
+                    status=state,
+                    trading_sessions=days,
+                )
+            )
+    return dict(
+        intervals=intervals,
+        security_days=dict(sorted(counts.items())),
+        ipo_initialization_conflicts=ipo_conflicts,
+        future_event_leakage="PASS" if future_ok else "FAIL",
+    )
 
 
 def notice_header(page, issuer):
@@ -214,6 +274,21 @@ def main():
         sorted(Counter(r["result"] for r in supplemental).items())
     )
     report["notice_manifest_sha256"] = notice_manifest
+    calendar_path = staging / "full-calendar-v1/calendar-manifest-v3.json"
+    calendar = json.loads(calendar_path.read_bytes())
+    if calendar["manifest_sha256"] != canonical_sha256(
+        {k: v for k, v in calendar.items() if k != "manifest_sha256"}
+    ):
+        raise ValueError("CALENDAR_MANIFEST_CHANGED")
+    agreed = {r["security_id"] for r in corroboration + supplemental if r["result"] == "AGREES"}
+    replay_anchors = [r for r in report["anchors"] if r["security_id"] in agreed]
+    replayed = replay(members, events, replay_anchors, calendar["sessions"])
+    if replayed != replay(
+        list(reversed(members)), list(reversed(events)), replay_anchors, calendar["sessions"]
+    ):
+        raise ValueError("REPLAY_INPUT_ORDER_CHANGED")
+    report["daily_replay"] = replayed
+    report["calendar_manifest_sha256"] = calendar["manifest_sha256"]
     report["yearbook_sha256"] = sha256_file(yearbook_path)
     report["yearbook_source"] = yearbook_source
     report["yearbook_extraction_sha256"] = sha256_file(text_path)
@@ -250,6 +325,7 @@ def main():
                     "yearbook_corroboration",
                     "yearbook_source",
                     "notice_corroboration",
+                    "daily_replay",
                 )
             }
         )
@@ -260,6 +336,7 @@ def main():
         "OUTSIDE_LIFECYCLE",
         len(report["outside_lifecycle"]),
     )
+    print("REPLAY", json.dumps({k: v for k, v in replayed.items() if k != "intervals"}))
 
 
 if __name__ == "__main__":

@@ -1,5 +1,32 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 exact cash-dividend batch
+
+7,702 supported cash events / 1,527 unresolved source groups in four audited source
+years. No rounded-price tolerance, net/gross substitution or ambiguous document
+discard. Reuses existing CorporateAction/PortfolioEngine; no new domain policy.
+1/81/100-share accounting regression checks conserve quantity/basis and create no
+order/fill; source-record and event serialization/checksum checks pass. All 7,005
+2018–2020 events reproduce under reversed evidence/master order. 584 backend and
+78 frontend tests, lint/type/build PASS. See ../research/R5_CASH_DIVIDEND_BATCH_V1.md.
+
+## 2026-09-14 2018–2020 source recovery and date-table links
+
+All 32 DNS failures recovered once in a separate batch; 8,590/8,590 source PDFs
+now verified/indexed. Original receipts and manifest remain unchanged. Fixed
+official A-share table columns increase date links to 8,113/8,409 groups.
+296 gaps and 15 malformed-text parsing errors remain explicit, not accepted
+events. No economic terms promoted. See ../research/R5_DISTRIBUTION_2018_2020_V1.md.
+
+## 2026-09-14 SZSE interval replay
+
+3,028 candidates / 7,876,813 lifecycle security-sessions; no UNKNOWN, no IPO
+old-state conflicts, no future-event or ordering differences. Existing accepted
+Pilot IPO initialization reused explicitly. Overall full authority still PARTIAL.
+Probe v8 hash is recorded in project_state.json. Prestart milestone CI 34802149128 PASS.
+2018–2020 download manifest completed: 8,558 PASS, 32 DNS failures. The failed-only
+32-document recovery has a separate immutable queue; original receipts preserved.
+
 ## 2026-09-14 SZSE prestart risk-state corroboration
 
 Reused official dated export and yearbook; only 16 missing trading-table issuers
