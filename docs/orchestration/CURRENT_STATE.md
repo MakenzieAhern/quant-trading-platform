@@ -1,5 +1,18 @@
 # Current state
 
+## Current: R5 bounded retained-bonus reconciliation
+
+169 supported integer-ratio retained-bonus events under the approved
+BASIS_CONSERVED_RETAINED_BONUS policy. 119 of 288 candidates unresolved;
+7,119 oracle rows outside this bounded subset remain deferred, not excluded.
+Ratios 1/2; integer holdings and next-session scheduled listing only. No assertion
+of actual tradability or full corporate-action completeness. Reverse input-file
+order reproduces the manifest. Cash/aggregate basis unchanged; no generated orders.
+598 backend tests and quality checks PASS. Historical fee authority remains
+PARTIAL: retained 2012 bulletin has a printed denominator discrepancy and does
+not establish the full investor fee/minimum. Full dataset remains uncreated;
+original distribution worker continues, all studies/freeze/merge remain locked.
+
 ## Current: R5 relisting evidence continuation
 
 705 provisional SSE event records; 872 parser cases and three metadata variants

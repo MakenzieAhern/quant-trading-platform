@@ -13,7 +13,7 @@ from app.domain.markets import (
     SecurityId,
 )
 from app.domain.trading import Fill, OrderSide
-from app.event import EventBus
+from app.event import EventBus, EventType
 from app.portfolio import PortfolioEngine, PortfolioError
 
 START = datetime(2024, 1, 1, tzinfo=UTC)
@@ -186,16 +186,22 @@ def test_complete_cash_and_stock_actions_update_long_position_economics() -> Non
     )
 
 
-def test_retained_bonus_is_independent_of_ambient_decimal_precision() -> None:
+@pytest.mark.parametrize("ratio", (Decimal(1), Decimal(2)))
+def test_retained_bonus_is_independent_of_ambient_decimal_precision(ratio: Decimal) -> None:
     positions = []
     for precision in (6, 50):
-        portfolio = PortfolioEngine(EventBus(), Decimal(2000))
+        bus = EventBus()
+        emitted_orders = []
+        for kind in EventType:
+            if kind.value.startswith("ORDER_"):
+                bus.subscribe(kind, emitted_orders.append)
+        portfolio = PortfolioEngine(bus, Decimal(2000))
         portfolio.apply_fill(make_fill(1, OrderSide.BUY, "101", "10", symbol="600000.SSE"))
         action = CorporateAction(
             security_id=SecurityId(value="CN-A:SSE:600000"),
             action_type=CorporateActionType.BONUS_SHARE,
             ex_date=date(2024, 1, 3),
-            share_ratio=Decimal("2"),
+            share_ratio=ratio,
             source_provider="fixture",
             source_version="1",
             source_record_hash="b" * 64,
@@ -207,8 +213,9 @@ def test_retained_bonus_is_independent_of_ambient_decimal_precision() -> None:
                 "600000.SSE", action, START + timedelta(days=3)
             )
         assert position is not None
-        assert position.quantity == 303 and position.aggregate_cost_basis == 1010
+        assert position.quantity == 101 * (1 + ratio) and position.aggregate_cost_basis == 1010
         assert portfolio.cash == 990
+        assert not emitted_orders
         positions.append(position)
     assert positions[0] == positions[1]
 

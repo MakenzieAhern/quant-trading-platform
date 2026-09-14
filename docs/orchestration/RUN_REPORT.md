@@ -1,5 +1,31 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 integer retained-bonus subset and historical fee evidence
+
+288 candidates use integer ratios, already retained 2010–2021 issuer notices,
+and a next-accepted-session scheduled new-share listing. 169 supported events
+(159 ratio-one, ten ratio-two), 119 unresolved candidates; remaining 7,119 oracle
+rows are deferred/outside this subset, not assumed absent or excluded.
+Policy BASIS_CONSERVED_RETAINED_BONUS unchanged. Source/date/master/instrument
+checks, exact official/exchange ratio agreement, event serialization and hashes
+required. Cash components remain separately reconciled; no double-crediting.
+Ledger v2 SHA bf1ac5428237ff2a4980242a02637e1940b741b50948f7b24f260512fc61b703;
+v1 event checksums preserved, reverse date-link-file ordering/idempotent publication
+reproduces v2. Accounting regressions cover both admitted ratios at precision 6/50,
+integer quantity and aggregate-basis conservation, unchanged cash, no order events.
+598 backend tests plus Ruff/format/mypy PASS. Full census/actual tradability NOT PASS.
+
+CSRC 2012-08 bulletin PDF retained, SHA
+b556e44b3784d03922c04cb5b77e9f5fcf9bbec9439b0e20ca9512f94c161bc2.
+PDF page127 / printed114 visually reviewed because text extraction yields glyph
+names. Article dated 2012-08-02, transition 2012-09-01. Printed transfer denominator
+conflicts with face-value evidence; full investor fee/broker component/minimum
+not established. Review SHA 16cb65e50bdf0fa5b71474c1f283c5bbadbf206216615ea03218c52b82f38767.
+Two HTML retrieval failures preserved (DNS, HTTP403); no HTML retry. Separate annual
+report timeout recovery returned non-PDF and is rejected, no further retry:
+d9e4506d37357440c60016218a802e195b3fbd5adc4f792294bcd56b77528762.
+No historical fee-model change, full dataset publication, strategy or merge.
+
 ## 2026-09-14 remaining restoration parser review
 
 Coordinate extraction removes overprinted glyphs from 59806624 and 60050789
