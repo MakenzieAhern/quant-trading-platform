@@ -1,5 +1,26 @@
 # Current state
 
+## Current: R5 cash reconciliation extended through six retained years
+
+2011–2016 adds 8,134 supported cash events using unchanged parsers/accounting.
+Ten processed years now total 16,022 supported / 2,888 unresolved groups.
+All 35 transient failures recovered; 128 JavaScript summaries remain non-PDF
+source leads. Full census remains PARTIAL. Factor baseline checks cover 5,436
+code intervals, not full adjustment authority. ST and distribution queues continue.
+
+## Current: R5 missing-period ST metadata recovered
+
+All 346 keyword/month queries now complete as queries only. One April 2022 HTTP
+502 was recovered in a separate immutable attempt; the original failure remains.
+6,724 unique leads are retained, including 2,911 SSE-code leads. A disjoint queue
+of 1,560 transition-document leads reuses retained PDFs; 1,348 SSE warning or
+application leads and three unexpected attachments remain explicit review work.
+No event acceptance or full ST completeness is implied. Distribution worker
+continues without duplication. CI 34804569207 passed for cc4b7b9.
+External routing manifest: full-sse-st-v1/transition-routing-v1.json,
+SHA 5abebf6499c32d740eed394fae1beaa1cfbeccfa84206993a380b42088e74059.
+Full dataset remains CREATED/AUDITED/FROZEN=NO; no studies or merge.
+
 ## Current: R5 SSE starting-state evidence and missing-period metadata
 
 860 starting SSE members: 778 NORMAL / 51 ST / 31 STAR_ST, zero missing/conflicting

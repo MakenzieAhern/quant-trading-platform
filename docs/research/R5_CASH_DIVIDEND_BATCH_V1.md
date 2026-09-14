@@ -74,3 +74,27 @@ Differentiated/rounded/conflicting source cases remain unresolved, not relaxed.
 
 Paths use `cash-ledger-{year}-v2.json` in the same respective directories.
 Current totals: 7,888 supported, 1,341 unresolved. Full census still PARTIAL.
+
+## 2011–2016 continuation
+
+Existing parsers, policy and accounting reused without changes. All 35 transient
+retrieval failures recovered in a separate batch; original receipts preserved.
+11,679 source leads comprise 11,551 PDFs and 128 JavaScript summaries. Summaries
+are not full-document authority and remain outside this cash reconciliation.
+Reconciled source manifest SHA-256:
+`254face386cc968d97a6ebcd11c2ade34749f85a2403992f584664426104e9e6`.
+
+| Year | Supported | Unresolved | Canonical manifest SHA-256 |
+| --- | ---: | ---: | --- |
+| 2011 | 916 | 271 | dd678fd6810a82b09e742e49b813e420b720496e4f58f7a9d7fc6a3248d1c07a |
+| 2012 | 1,343 | 211 | a25caf4ed9f9b73b4db17f63de59449acbca39a73aaed65912263a93eb14d34d |
+| 2013 | 1,492 | 242 | a07dbc835ef7071288325e7f5b24969335d12f6649f60eb21331aa92035d2064 |
+| 2014 | 961 | 182 | 27c043d58a28ae16bc175dbe530d61e6e2241ca240f2d44d8d9921e05be32ef6 |
+| 2015 | 1,695 | 322 | 84276a40aadbb2e16dc88357bacccc868d4f3f46317b9234c2699b8e7c2db9be |
+| 2016 | 1,727 | 319 | 7462b48a4f952d753f0663f419f40ddf868f97899e9a03eef2cb1aaffa8b19f8 |
+
+Paths: `distribution-2011-2016-reconciled-v1/cash-ledger-{year}-v1.json`.
+Combined ten-year bounded result: 16,022 supported / 2,888 unresolved groups.
+This is not a full-market count: absent exchange rows, source gaps, bonus terms
+and other corporate-action classes remain independent completeness work. Nineteen
+unique malformed-date PDF errors remain, not six times nineteen unique errors.

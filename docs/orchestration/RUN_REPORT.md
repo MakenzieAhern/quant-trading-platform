@@ -1,5 +1,33 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 six-year cash batch continuation
+
+2011–2016 source reconciliation completed: 11,551 PDFs / 128 JavaScript summaries,
+zero remaining retrieval failures after 35 separate transient recoveries.
+Existing date and gross-cash parsers produce 8,134 additional supported events,
+1,547 unresolved groups. Combined bounded ten-year result: 16,022 supported /
+2,888 unresolved. All event serializations validated by the existing pipeline.
+No code, policy, accepted Pilot, strategy or freeze change. Full census PARTIAL.
+See ../research/R5_CASH_DIVIDEND_BATCH_V1.md for immutable hashes.
+
+## 2026-09-14 missing-only factor and ST source extension
+
+Cached factor evidence supplies 5,301 full-target code-interval baselines;
+135 missing intervals were fetched separately using the existing parser and
+bounded source helper. All have a baseline, including old code aliases, but
+baseline presence does not certify full factor completeness or corporate-action
+alignment. No accepted Pilot artifacts were changed. External manifests and
+checksums are recorded in project_state.json.
+
+346 ST keyword/month windows now have complete query responses; one HTTP 502
+was recovered in a separate immutable checkpoint. 6,724 unique leads remain
+source leads. 1,560 transition PDFs are queued, with warnings/applications and
+unexpected attachments retained separately. Full ST authority remains PARTIAL.
+2011–2016 distribution receipts form a verified 11,679-row snapshot; 35 transient
+failures are being retried separately, and 128 JavaScript summary attachments
+are not treated as full PDF evidence. Indexing and other queues continue.
+CI 34804569207 SUCCESS for cc4b7b9; no domain code changed in this continuation.
+
 ## 2026-09-14 SSE starting anchor / cash missing-only extension
 
 SSE official 2009 yearbook capital table supplies 860 starting risk names; a split
