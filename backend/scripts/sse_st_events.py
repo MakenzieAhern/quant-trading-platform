@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v12"
+VERSION = "sse-cninfo-ordinary-name-v13"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -62,7 +62,11 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     if compact(issuer_name) not in header:
         raise ValueError("WRONG_ISSUER_NAME")
     if not sse.get("SECURITY_NAME") and not re.search(
-        r"(?:证券|股票)(?:简称|名称)[\uff1a:]" + re.escape(compact(issuer_name)), header
+        r"(?:(?:证券|股票)(?:简称|名称)|(?:证券|股票)代码[\uff1a:]"
+        + re.escape(sse["SECURITY_CODE"])
+        + r"简称)[\uff1a:]"
+        + re.escape(compact(issuer_name)),
+        header,
     ):
         raise ValueError("CNINFO_NAME_NOT_PDF_HEADER")
     issuer = re.search(r"([\u4e00-\u9fff]{4,}(?:股份有限公司|有限责任公司))", sse["TITLE"])
@@ -96,7 +100,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     names = list(
         re.finditer(
             r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?[由从]?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
-            r"(?:变更|更改|变)为[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
+            r"(?:(?:变更|更改|变)为|变成)[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
             text,
         )
     )

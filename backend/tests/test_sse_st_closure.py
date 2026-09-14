@@ -119,6 +119,28 @@ def test_pdf_subject_must_match_metadata():
         extract(fixture["pages"], record)
 
 
+def test_short_header_name_requires_adjacent_matching_security_code():
+    fixture = copy.deepcopy(
+        json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[1]
+    )
+    record = fixture["record"]
+    old = record["sse"]["SECURITY_NAME"]
+    symbol = record["sse"]["SECURITY_CODE"]
+    record["sse"]["SECURITY_NAME"] = None
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    record["cninfo"][0]["secName"] = old
+    body = f"{record['sse']['TITLE']}。股票简称由“{old}”变更为“*ST样本”。"
+    body += "实施退市风险警示的起始日:2022年2月9日。"
+    assert extract([f"证券代码:{symbol} 简称:{old}\n" + body], record)["status"] == "STAR_ST"
+    for header in (
+        f"证券代码:{symbol} 债券代码:122060 简称:{old}",
+        f"证券代码:{symbol} 另文简称:{old}",
+        f"证券代码:{symbol} 证券代码:600999 简称:{old}",
+    ):
+        with pytest.raises(ValueError, match="CNINFO_NAME_NOT_PDF_HEADER"):
+            extract([header + "\n" + body], record)
+
+
 def test_referer_is_part_of_snapshot_identity(tmp_path, monkeypatch):
     raw = b"snapshot"
     (tmp_path / "page").write_bytes(raw)
@@ -182,7 +204,11 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
     for prefix in ("公司的", "公司", "公司A股", ""):
         text = header + "2022年2月8日停牌一天,2022年2月9日复牌," + prefix + clause
         assert extract([text], record)["effective_from"] == "2022-02-09"
-    for names in (f"股票简称将从“{old}”变更为“{new}”。", f"股票简称由{old}变更为{new}。"):
+    for names in (
+        f"股票简称将从“{old}”变更为“{new}”。",
+        f"股票简称由{old}变更为{new}。",
+        f"股票简称由“{old}”变成“{new}”。",
+    ):
         text = header + "2022年2月9日复牌,公司的" + names
         assert extract([text], record)["new_name"] == new
         with pytest.raises(ValueError, match="NAME_TRANSITION_UNRESOLVED"):

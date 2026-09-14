@@ -1,5 +1,32 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 cached SSE syntax and terminal recovery reconciliation
+
+Parser v13 supports abbreviated name only directly after the matching security
+code, plus explicit quoted name transition verb 变成. Identity, exact subject and
+effective-date guards preserved. Three cached transitions newly provisional:
+600069 2015-03-24, 600130 2012-07-17, 600365 2012-08-16. The separate 600069 bond
+risk notice is not an A-share event. 600131 printed 2009/2010 date contradiction
+remains unresolved; no silent correction. Full parser report v14 SHA
+dae5500665aa468e48c42c9c21bdfa0f21577101befa41df3a11e0f82dbad6d6:
+708 provisional / 869 parser unresolved / three metadata variants, accepted zero.
+Chain diagnostic v7 SHA ad950a4161396b4dffaa55ac87d9ee070ab78cd2055e756234f64947e1fc7c1a:
+325 chains / 91 gaps / zero conflicts, reverse-order PASS. Previous event records
+preserved. 606 backend tests PASS; format corrected, Ruff/format/mypy PASS.
+
+408-request terminal DNS recovery completed with 301 PASS / 107 temporary DNS
+failures, all originals retained. Recovery manifest
+2594b22b0e2e62279662e9ea887e002c5d93d04f16f1644ad95ff1d87a09be6e.
+Partial 2022 snapshot v2 reuses the same 2,425 terminal requests, replacing only
+failed entries with recovered bytes: 2,318 PASS / 107 unresolved, SHA
+9829b3ce408fa267b90b2d2cec489369644131d006d34df90593088457c9dbcd.
+Date links 1,941/3,404, zero parsing/extraction errors, SHA
+a1ff2ef9f76f9206454a29fc215ea18f9e47dba063b9a68180dae486f9670617.
+Cash 1,698 supported / 1,657 unresolved, unchanged parser, SHA
+77a6df59758722c2f84c2a3459e4dd37b12049b2a1d20ba42218a3f9dfa0e01f.
+This supersedes partial v1, not additive and not year/full-census acceptance.
+Original PID 434 continues; no duplicate main-queue worker or research run.
+
 ## 2026-09-14 2025 and 000780 merger evidence closure
 
 600837 to 601211 ratio 0.62, new-share boundary 2025-03-17; 601989 to

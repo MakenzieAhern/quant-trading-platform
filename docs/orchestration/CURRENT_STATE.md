@@ -1,5 +1,18 @@
 # Current state
 
+## Current: R5 cached transition and partial 2022 continuation
+
+708 provisional SSE transitions / 869 parser unresolved / three metadata variants.
+325 diagnostic chains / 91 gaps / zero conflicts; full authority remains PARTIAL.
+Cached 600069 stock entry, 600130 and 600365 exits recovered by narrow header/verb
+syntax support; bond notices and conflicting dates remain unaccepted. 606 backend
+tests and quality checks PASS. CI 34818532899 for 17117c7 SUCCESS.
+The 408-request recovery completed: 301 PDFs retained/indexed, 107 terminal DNS
+failures preserved. Original worker PID 434 remains the only main-queue writer.
+Partial 2022 snapshot v2: 2,318 retained PDFs, 1,698 supported cash events /
+1,657 unresolved groups; not a complete year and not additive to prior snapshots.
+R5 RUNNING_BATCH_CLOSURE; full dataset/studies/freeze/merge unchanged.
+
 ## Current: R5 merger and live-source continuation
 
 Fourteen supported reviewed mergers; four reviewed unresolved chains; full census
