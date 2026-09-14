@@ -303,6 +303,23 @@ def test_historical_name_pair_requires_its_own_explicit_past_date():
             extract([header + invalid_past + current], record)
 
 
+def test_date_inside_name_clause_is_not_an_adjacent_suspension_date():
+    fixture = copy.deepcopy(
+        json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[0]
+    )
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    header = "证券代码:600595 证券简称:*ST中孚 " + record["sse"]["TITLE"] + "。"
+    for middle in ("", "发生变更,"):
+        clause = f"证券简称自2022年1月14日起{middle}由“*ST中孚”变更为”ST中孚”。"
+        result = extract([header + "2022年1月13日停牌。" + clause], record)
+        assert (result["status"], result["effective_from"]) == ("ST", "2022-01-14")
+        with pytest.raises(ValueError):
+            extract([header + clause.replace("*ST中孚", "*ST他人")], record)
+        with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+            extract([header + clause + clause.replace("1月14日", "1月17日")], record)
+
+
 def test_legacy_new_name_label_requires_explicit_date_and_security():
     fixture = copy.deepcopy(
         json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[1]

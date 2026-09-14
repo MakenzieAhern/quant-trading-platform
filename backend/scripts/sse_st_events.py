@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v18"
+VERSION = "sse-cninfo-ordinary-name-v19"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -44,7 +44,7 @@ def status(name: str) -> str:
 
 def linked_name_dates(text: str, clauses: str) -> list[re.Match[str]]:
     """Only dates directly introducing an exact name-change clause."""
-    return [
+    dates = [
         match_date
         for prefix in (
             r"自?" + DATE + r"(?:[\uff08(](?:星期|周)[一二三四五六日天][\uff09)])?"
@@ -53,6 +53,8 @@ def linked_name_dates(text: str, clauses: str) -> list[re.Match[str]]:
         )
         for match_date in re.finditer(prefix + clauses, text)
     ]
+    dates.extend(re.finditer(r"(?=" + clauses + r")(?:股票|证券)简称自" + DATE + r"起", text))
+    return dates
 
 
 def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
@@ -117,6 +119,14 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         re.finditer(
             r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?[由从]?原?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
             r"(?:(?:变更|更改|变)为|变成)[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
+            text,
+        )
+    )
+    names.extend(
+        re.finditer(
+            r"(?:股票|证券)简称自20\d{2}年\d{1,2}月\d{1,2}日起"
+            r"(?:发生变更[\uff0c,])?由[“\"]([^“”\"]{1,20})[”\"]"
+            r"变更为[“”\"]([^“”\"]{1,20})[”\"]",
             text,
         )
     )

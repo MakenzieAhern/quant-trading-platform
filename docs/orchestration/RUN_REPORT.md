@@ -1,5 +1,19 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 effective date inside exact name clause
+
+Explicit embedded dates recover 600083 60902291 (2012-04-26), 600115 57998913
+(2010-05-28), 600149 60724334 (2012-03-27), 600716 57760132 (2010-04-02).
+The clause's own date is required; adjacent suspension dates are not substituted.
+Wrong issuers and two conflicting embedded dates fail closed.
+Parser v27 canonical 2b5f81c16f1baf222482341bfeb45ca5175556e775223515abb49ae9353f5e1d:
+757 provisional / 820 parser unresolved / three metadata variants.
+Chain v20 canonical 91468bf2c31f6a35f5e0fc7b0edb041efdfb848af69597e438a47bd3c1a0ef98:
+334 chains, 76 gaps, zero conflicts, no full authority acceptance.
+Integrity v4 canonical eabbb1a938d1eeddf5c603c45ffc8d08bc291f6d24fd6ee4dcaa402da9e10dfc:
+all 741 main-parser events unchanged. 612 backend tests PASS; formatter applied
+to a line-wrap-only difference, followed by quality checks. No source acquisition.
+
 ## 2026-09-14 space-delimited issuer code field
 
 Retained notices print an exact six-digit security code after whitespace without
