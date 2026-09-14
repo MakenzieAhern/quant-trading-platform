@@ -1,5 +1,17 @@
 # Current state
 
+## Current: R5 restoration coverage recovery
+
+Retained annual fact books identify 17 restoration rows absent from the current
+keyword-selected ledger. Targeted CNINFO queries recovered 38 metadata leads;
+20 selected PDFs are retained and indexed. Separate SSE corroboration completed:
+three cached exact matches, 16 issuer/day DNS failures preserved, no promotion.
+The provisional chain diagnostic now covers 322 chains with 102 gaps and zero
+same-day conflicts; this is not complete daily-state acceptance. 594 backend
+tests and Ruff/format/mypy PASS. CI 34810743949 succeeded for 76d4851.
+Original distribution worker remains active without duplication. Continue R5;
+full dataset not created/audited/frozen, all strategy studies remain locked.
+
 ## Current: R5 independent source-oracle and bounded parser continuation
 
 689 provisional SSE transitions / 868 parser cases / three metadata variants;

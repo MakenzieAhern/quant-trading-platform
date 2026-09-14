@@ -1,5 +1,26 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 restoration coverage and chain diagnostic
+
+Fact-book restoration inventory: 17 explicit dated rows, no accepted events;
+SHA 5a67fdb7cde1757e975ddb33fa545406bd10b32583078205da1aa40d2a907ad0.
+CNINFO routing: 38 leads, 20 selected documents, 18 other leads retained.
+PDF manifest SHA b089eb8e259b46178ec1731431fc221d65c8a7bd30c4596b2fdba02605aaeea4;
+all 20 retained/indexed, zero PDF retrieval failures. Separate SSE batch has
+three cached exact matches and 16 explicit DNS failures, not source acceptance;
+manifest SHA 88ff4194d02dc8daa470d4d568c737913fe327914197e4221efe26e3aaaaabd3.
+No repeated DNS retry or denied static-mirror retry. 600057 PDF 59855729 prints
+600870 in its header but 600057 in body: identity conflict remains explicit.
+600385 correction 1200096190 changes first-day intraday suspension rules, not
+the restoration date/name; retain correction SHA
+e679eb09cc7a4b2fb4b024489d0f32d5fac713174b3420aeec35e8105b6bff17.
+Chain diagnostic v2 SHA 6b8e5516183881a0382ac8de04fb3d16dabc4ffafa21ebce20fb846ec3ddd95c:
+322 chains, 102 missing-transition gaps, zero same-day conflicts, zero unmapped
+events; 15 pre-target observations counted separately. This does not certify
+no-event securities or daily states. Reversed event order check PASS.
+594 backend tests and all quality checks PASS; 76d4851 CI 34810743949 SUCCESS.
+Existing distribution worker continues. No full publication/freeze/studies/merge.
+
 ## 2026-09-14 source-oracle and ST constraint continuation
 
 Provisional SSE transitions 689; 868 parser cases and three metadata variants

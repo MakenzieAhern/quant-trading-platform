@@ -38,8 +38,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--prior", type=Path, required=True)
+    parser.add_argument("--metadata", type=Path, action="append")
+    parser.add_argument("--queue", type=Path)
+    parser.add_argument("--batch", help="Separate checkpoint/page/manifest namespace")
     args = parser.parse_args()
-    inputs = [
+    inputs = args.metadata or [
         args.root / "metadata-manifest-v1.json",
         args.root / "metadata-recovery-v1/risk/2022-04-checkpoint.json",
     ]
@@ -50,10 +53,13 @@ def main():
         ):
             raise ValueError("CNINFO_MANIFEST_CHANGED")
     windows = [
-        r for r in metadata[0]["results"] if r["status"] == "COMPLETE_FOR_QUERY_NOT_EVENT_CENSUS"
-    ] + [metadata[1]]
+        r
+        for data in metadata
+        for r in data.get("results", [data])
+        if r.get("status") == "COMPLETE_FOR_QUERY_NOT_EVENT_CENSUS"
+    ]
     cninfo = {r["announcementId"]: r for window in windows for r in window["records"]}
-    queue_path = args.root / "queues/transition-pdfs-v1.json"
+    queue_path = args.queue or args.root / "queues/transition-pdfs-v1.json"
     queue = json.loads(queue_path.read_bytes())
     selected = [cninfo[r["announcement_id"]] for r in queue]
     cached, hashes, cached_source_gaps = [], {}, []
@@ -84,7 +90,12 @@ def main():
 
     def reconcile(job):
         code, day = job
-        checkpoint = args.root / "sse-reconciliation-v1" / f"{code}-{day}.json"
+        checkpoint_root = (
+            args.root / args.batch / "checkpoints"
+            if args.batch
+            else args.root / "sse-reconciliation-v1"
+        )
+        checkpoint = checkpoint_root / f"{code}-{day}.json"
         if checkpoint.exists():
             result = json.loads(checkpoint.read_bytes())
             if result["manifest_sha256"] != canonical_sha256(
@@ -119,7 +130,8 @@ def main():
                     }
                     raw = fetch(
                         args.root,
-                        f"sse-metadata-v1/{code}-{day}-p{page:03}.json",
+                        f"{args.batch + '/pages' if args.batch else 'sse-metadata-v1'}/"
+                        f"{code}-{day}-p{page:03}.json",
                         "https://query.sse.com.cn/security/stock/queryCompanyBulletinNew.do?"
                         + urlencode(params),
                         referer="https://www.sse.com.cn/disclosure/listedinfo/announcement/",
@@ -177,7 +189,10 @@ def main():
     )
     report["manifest_sha256"] = canonical_sha256(report)
     write_immutable(
-        args.root / "sse-reconciliation-manifest-v1.json", canonical_json_bytes(report) + b"\n"
+        args.root / args.batch / "manifest.json"
+        if args.batch
+        else args.root / "sse-reconciliation-manifest-v1.json",
+        canonical_json_bytes(report) + b"\n",
     )
 
 
