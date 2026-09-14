@@ -1,5 +1,16 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 ST PDF source batch and bounded parser continuation
+
+1,560 selected ST PDFs retrieved/indexed; zero retrieval failures. SSE metadata
+corroboration continues with cache reuse and issuer/day-only queries. Snapshot
+193 explicit transitions remain provisional, not complete ST authority. Thirteen
+additional dates use directly connected resumption/name-change clauses; existing
+180 records preserved. Backend 588 / quality checks PASS. See ST extension report.
+All 128 distribution JS summaries identified as retained-PDF companions; no new
+event or retrieval. Existing economic/date gaps remain, including 300137 typo.
+CI 34805678054 PASS at 8a34438. Full dataset not created/audited/frozen; no studies.
+
 ## 2026-09-14 six-year cash batch continuation
 
 2011–2016 source reconciliation completed: 11,551 PDFs / 128 JavaScript summaries,

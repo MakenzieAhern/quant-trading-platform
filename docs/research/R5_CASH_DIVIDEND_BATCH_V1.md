@@ -98,3 +98,11 @@ Combined ten-year bounded result: 16,022 supported / 2,888 unresolved groups.
 This is not a full-market count: absent exchange rows, source gaps, bonus terms
 and other corporate-action classes remain independent completeness work. Nineteen
 unique malformed-date PDF errors remain, not six times nineteen unique errors.
+
+All 128 JavaScript summaries are companions to retained full PDFs: same issuer,
+publication date and normalized title, with one explicitly reviewed terminology
+variant (300189). No additional acquisition or duplicate event is required.
+Companion manifest SHA-256:
+`a261066405b7fdba9d7e087d0e5ee42b2eb350ac1e56c12d4f40c260d7b91fb0`.
+This resolves attachment identity only. In particular, 300137 repeats the PDF's
+2013 ex-date typo; neither summary nor this review authorizes changing that date.

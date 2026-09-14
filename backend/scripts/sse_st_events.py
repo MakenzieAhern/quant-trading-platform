@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v4"
+VERSION = "sse-cninfo-ordinary-name-v5"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -133,6 +133,13 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
             )
         )
         dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if not dates:
+            # A resumed-trading date must directly introduce this exact name change.
+            # An unrelated resumption sentence is not an effective-date source.
+            dates = list(
+                re.finditer(DATE + r"复牌[\uff0c,](?:公司的)?" + re.escape(names[0][0]), text)
+            )
+            dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
     if len(dated) != 1:
         raise ValueError("EFFECTIVE_DATE_UNRESOLVED")
     effective = next(iter(dated))

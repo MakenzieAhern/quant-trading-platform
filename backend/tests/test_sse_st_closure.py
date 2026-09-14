@@ -166,3 +166,24 @@ def test_legacy_clause_does_not_select_adjacent_suspension_date():
     pages[-1] = pages[-1].replace("自2022年2月9日起,", "")
     with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
         extract(pages, record)
+
+
+def test_resumption_date_requires_direct_exact_name_change_clause():
+    fixtures = json.loads(
+        (Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes()
+    )
+    fixture = copy.deepcopy(fixtures[1])
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    baseline = extract(fixture["pages"], record)
+    old, new = baseline["old_name"], baseline["new_name"]
+    header = f"证券代码:{baseline['symbol']} 证券简称:{old} {record['sse']['TITLE']}。"
+    clause = f"股票简称由“{old}”变更为“{new}”。"
+    text = header + "2022年2月8日停牌一天,2022年2月9日复牌,公司的" + clause
+    assert extract([text], record)["effective_from"] == "2022-02-09"
+    for text in (
+        header + "2022年2月9日复牌。公司的" + clause,
+        header + "2022年2月9日停牌,公司的" + clause,
+    ):
+        with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+            extract([text], record)
