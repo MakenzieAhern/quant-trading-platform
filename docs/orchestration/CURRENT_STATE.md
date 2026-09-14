@@ -1,5 +1,13 @@
 # Current state
 
+## Current: R5 2009 membership cross-check reconciled
+
+860 SSE and 836 SZSE active master entries covered; 18 SZSE annual-report identity
+supplements verified. Yearbook temporal extras and B-only aliases stay explicit.
+This is membership-only: full master/ST/tradability acceptance remains partial.
+576 backend tests PASS. See ../research/R5_MASTER_BASELINE_CROSSCHECK_V1.md.
+R5 continues; safe start NOT_ESTABLISHED, full dataset CREATED/AUDITED/FROZEN=NO.
+
 ## Current: R5 prior merger chronology gaps closed
 
 Nine reviewed candidates now supported; zero unresolved within that bounded set.

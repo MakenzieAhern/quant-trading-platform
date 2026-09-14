@@ -1,5 +1,14 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 baseline membership source closure
+
+Both exchange baseline membership cross-checks PASS; 18 directory omissions now
+have reviewed annual-report identity evidence. 28 targeted PDFs retained, zero
+retrieval failures. CNINFO keyword/category false negatives and PDF text issues
+are documented, not interpreted as absent issuers. Backend 576 PASS; lint/type PASS.
+See ../research/R5_MASTER_BASELINE_CROSSCHECK_V1.md. Full acceptance remains partial.
+Previous milestone CI 34797320955 PASS. R5 independent queues continue.
+
 ## 2026-09-14 merger suspension batch
 
 600553/600991 retained evidence and three targeted 601299 official notices close

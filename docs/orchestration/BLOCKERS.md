@@ -1,5 +1,12 @@
 # Blockers
 
+## Current: 2009 membership coverage reconciled, full audits pending
+
+The 18 SZSE directory gaps now have reviewed annual-report membership evidence;
+SSE temporal extras and SZSE B-company aliases are explicitly reconciled.
+This does not clear full historical ST, suspension, lifecycle/instrument, rule,
+corporate-action or raw/factor audit requirements. No new human methodology gate.
+
 ## Current: R5 wider census remains incomplete
 
 Prior 600553/600991/601299 chronology gaps are RESOLVED under the approved

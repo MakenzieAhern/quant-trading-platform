@@ -318,3 +318,37 @@ def test_merger_raw_boundaries_use_unadjusted_rows_and_reject_duplicate_dates():
             "2011-03-01",
             "2011-03-02",
         )
+
+
+def test_master_baseline_excludes_future_and_exited_intervals_without_dropping_paused():
+    import pytest
+
+    from scripts.audit_full_master_baseline import active_codes, yearbook_codes
+
+    records = [
+        dict(
+            symbol="600001", exchange="SSE", effective_from="1998-01-01", effective_to="2009-12-29"
+        ),
+        dict(symbol="601117", exchange="SSE", effective_from="2010-01-07", effective_to=""),
+        dict(
+            symbol="600057",
+            exchange="SSE",
+            effective_from="1997-01-01",
+            effective_to="",
+            status="PAUSED",
+        ),
+    ]
+    assert (
+        active_codes(records, "SSE") == active_codes(list(reversed(records)), "SSE") == {"600057"}
+    )
+    assert yearbook_codes(
+        ["公司表\n\uff16\uff10\uff10\uff10\uff15\uff17 *ST 示例\n"], "公司表"
+    ) == {"600057": 1}
+    assert yearbook_codes(["公司表\n001696 名称\n001896 名称\n"], "公司表") == {
+        "001696": 1,
+        "001896": 1,
+    }
+    # The existing master model uses inclusive effective_to dates.
+    assert active_codes([{**records[2], "effective_to": "2009-12-31"}], "SSE") == {"600057"}
+    with pytest.raises(ValueError, match="DUPLICATE_DIRECTORY_CODE"):
+        yearbook_codes(["公司表\n600057 名称\n600057 名称\n"], "公司表")
