@@ -1,5 +1,14 @@
 # Blockers
 
+## 2026-09-14 active source-access blocker
+
+CNINFO static downloads changed from intermittent DNS failure to consecutive HTTP
+403 denials. PID 434 was suspended with SIGSTOP, not killed; do not automatically
+resume or retry denied URLs using another transport. Runtime receipt
+full-distribution-notices-v1/runtime-access-denial-20260914.json, canonical SHA
+e69890ebeaa22b46b5dc92ef73c9290d91e97e39293b83153b13bf2a6cc4652b.
+Independent cached-evidence processing continues. Full dataset remains uncreated.
+
 ## Current R5 gaps — independent work continues, no terminal human gate
 
 Cash bounded 2010–2020: 18,263 supported / 3,121 unresolved; later downloads

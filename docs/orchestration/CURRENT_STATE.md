@@ -1,5 +1,16 @@
 # Current state
 
+## Current: CNINFO access denial; offline R5 continues
+
+PID 434 is SIGSTOP-suspended, not terminated, following twenty consecutive HTTP
+403 receipts. Do not automatically resume or route denied requests through another
+host. Original receipts and in-memory worker preserved; no duplicate writer.
+Runtime manifest e69890ebeaa22b46b5dc92ef73c9290d91e97e39293b83153b13bf2a6cc4652b.
+21,029 original receipts; 2022 has 3,581/3,600 terminal receipts, including 2,704
+PASS and 877 failures. Prior separate recovery adds 301 retained PDFs: partial
+v3 contains 3,005 PASS / 576 unresolved. Final nineteen leads remain uncompleted.
+Offline index/reconciliation continues; no year-completeness or full-readiness claim.
+
 ## Current: R5 600591 merger closure
 
 Fifteen supported reviewed mergers / three reviewed unresolved chains; inventory V7

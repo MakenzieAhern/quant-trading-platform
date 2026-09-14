@@ -104,6 +104,40 @@ def verified(path):
     return content
 
 
+def preserve_accepted_events(current, prior, source_keys):
+    """Keep accepted identities only after fresh source and economic corroboration."""
+
+    def key(row):
+        event = row["event"]
+        return event["security_id"]["value"], event["ex_date"], event["action_type"]
+
+    def terms(row):
+        return {
+            k: v
+            for k, v in row["event"].items()
+            if not k.startswith("source_") and k not in {"announcement_date", "retrieved_at"}
+        }
+
+    rows = {key(row): row for row in current}
+    if len(rows) != len(current) or len({key(row) for row in prior}) != len(prior):
+        raise ValueError("DUPLICATE_CASH_EVENT")
+    for row in prior:
+        action = CorporateAction.model_validate(row["event"])
+        require_supported_corporate_action(action)
+        if (
+            action.event_checksum != row["event_checksum"]
+            or row["policy_id"] != "EXISTING_ACCEPTED_CASH_DIVIDEND"
+            or (action.source_url, action.source_document_sha256) not in source_keys
+            or key(row) not in rows
+            or terms(row) != terms(rows[key(row)])
+            or action.record_date is None
+            or action.announcement_date > action.record_date
+        ):
+            raise ValueError("PRIOR_CASH_EVENT_NOT_RECORROBORATED")
+        rows[key(row)] = row
+    return [rows[k] for k in sorted(rows)]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
@@ -114,6 +148,9 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--master", type=Path)
     parser.add_argument("--instruments", type=Path)
+    parser.add_argument(
+        "--accepted-prior", type=Path, help="Preserve recorroborated event identities"
+    )
     parser.add_argument(
         "--prior", type=Path, help="Reuse previously corroborated rows without reparsing their PDFs"
     )
@@ -249,6 +286,10 @@ def main():
             except ValueError as exc:
                 row["acceptance_issue"] = str(exc)
         inputs.extend([args.master, args.instruments, policy])
+    if args.accepted_prior:
+        accepted_prior = verified(args.accepted_prior)
+        accepted = preserve_accepted_events(accepted, accepted_prior["events"], set(documents))
+        inputs.append(args.accepted_prior)
     report = dict(
         parser_version="DISTRIBUTION_GROSS_CASH_RECONCILIATION_V1",
         parser_sha256=sha256_file(Path(__file__)),

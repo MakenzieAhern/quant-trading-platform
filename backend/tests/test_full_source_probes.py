@@ -562,7 +562,7 @@ def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accoun
     from app.domain.trading import Fill, OrderSide
     from app.event import EventBus, EventType
     from app.portfolio import PortfolioEngine
-    from scripts.reconcile_distribution_cash import cash_event
+    from scripts.reconcile_distribution_cash import cash_event, preserve_accepted_events
 
     # Retained 600000 official 2017 distribution implementation, published 2018-07-06.
     source = dict(
@@ -590,6 +590,47 @@ def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accoun
         delisting_date=None,
     )
     event = cash_event(row, [member], {member["security_id"]})
+    prior = dict(
+        event=event.model_dump(mode="json"),
+        event_checksum=event.event_checksum,
+        policy_id="EXISTING_ACCEPTED_CASH_DIVIDEND",
+    )
+    expanded = cash_event(
+        {
+            **row,
+            "evidence": [
+                *row["evidence"],
+                dict(
+                    cash_per_share="0.1",
+                    source={**source, "url": source["url"].replace("1205128052", "1205128051")},
+                ),
+            ],
+        },
+        [member],
+        {member["security_id"]},
+    )
+    current = {
+        **prior,
+        "event": expanded.model_dump(mode="json"),
+        "event_checksum": expanded.event_checksum,
+    }
+    source_keys = {(source["url"], source["source_sha256"])}
+    assert current["event_checksum"] != prior["event_checksum"]
+    assert preserve_accepted_events([current], [prior], source_keys) == [prior]
+    for candidates, old, sources in (
+        ([], [prior], source_keys),
+        ([current], [prior], set()),
+        ([current, current], [prior], source_keys),
+        ([current], [prior, prior], source_keys),
+        (
+            [{**current, "event": {**current["event"], "cash_per_share": "0.2"}}],
+            [prior],
+            source_keys,
+        ),
+        ([current], [{**prior, "event_checksum": "0" * 64}], source_keys),
+    ):
+        with pytest.raises(ValueError):
+            preserve_accepted_events(candidates, old, sources)
     for members, ordinary in (
         ([{**member, "listing_date": "2018-07-13"}], {member["security_id"]}),
         ([member], set()),

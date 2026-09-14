@@ -1,5 +1,32 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 access-denial suspension and offline receipt preservation
+
+Latest twenty main-worker receipts were HTTP 403 Forbidden, not transient DNS.
+PID 434 suspended with SIGSTOP at 21,029 durable receipts; process preserved,
+not killed. No automatic resume or alternate-host access-denial retry. A proposed
+Windows DNS-only distribution queue failed its assertion when non-DNS failures
+appeared; no queue or requests were created. Its attempted CLI launch exited for
+missing queue before requests. Targeted Windows merger downloads preceded the
+access-denial discovery. Runtime manifest
+e69890ebeaa22b46b5dc92ef73c9290d91e97e39293b83153b13bf2a6cc4652b.
+
+All 3,005 successful PDFs in partial 2022 v3 indexed; 576 failures and nineteen
+uncompleted original leads remain explicit. Date links 2,541/3,404, zero parsing
+or extraction gaps, SHA 8a013623175e7994d77bf2a220afa049855f2a547d312cf025c31b7aeca9072f.
+Cash 2,181 supported / 1,174 unresolved. A supersession check detected one event
+identity drift: 002950 selected its newly recovered earlier implementation rather
+than the original correction notice. Economics were identical. Optional
+accepted-prior reuse now requires fresh source/economic corroboration, checksum
+validation and no duplicate keys; missing/conflicting prior events fail closed.
+All original 1,478 event records are preserved in final partial v3 cash ledger v2;
+intermediate v2/v3 ledger v1 snapshots are superseded, not additive.
+Ledger 099582114271ea081508ad8f95fa95786aa354c868c9fc480f6b8def124758c3;
+preservation audit eedd5c946ab9ae176abdb170c13ce4379308bcd5056fd953a760aa0744305831.
+607 backend tests and Ruff/format/mypy PASS. CI 34820748059 passed for d4a5b75.
+Full R5 closure remains incomplete; source-access suspension is not a freeze gate
+or a claim that all independent offline work is exhausted.
+
 ## 2026-09-14 600591 source recovery and merger reconciliation
 
 One bounded August 2009 issuer query returned five notices (complete response),
