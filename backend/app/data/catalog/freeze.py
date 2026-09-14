@@ -24,7 +24,9 @@ def write_immutable(path: Path, content: bytes) -> None:
         stream.flush()
         os.fsync(stream.fileno())
     try:
-        temporary.chmod(0o444)
+        # Windows cannot unlink a read-only temporary hard link.
+        if os.name != "nt":
+            temporary.chmod(0o444)
         try:
             os.link(temporary, path)
         except FileExistsError:
@@ -32,3 +34,5 @@ def write_immutable(path: Path, content: bytes) -> None:
                 raise DatasetRevisionError("IMMUTABLE_RECORD_CHANGED") from None
     finally:
         temporary.unlink()
+    if os.name == "nt":
+        path.chmod(0o444)

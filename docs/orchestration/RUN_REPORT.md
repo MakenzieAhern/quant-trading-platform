@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 SSE pagination and alternate PDF extraction
+
+52 repeated-page failures recovered using beginPage and grouped result counts;
+all original failures preserved. Exact metadata 1,555 / unmatched five.
+133 identity/header failures received separate coordinate-deduplicated text;
+16 additional provisional transitions, total 660 / parser unresolved 895.
+No accepted event or full authority promotion. Earlier 644 records unchanged;
+reverse-input normalization PASS. Windows immutable writer now removes its
+temporary hard link before applying Windows read-only attributes; actual Windows
+idempotence/replacement rejection check PASS, existing Linux regression PASS.
+590 backend tests, Ruff/format/mypy PASS. CI 34806671415 PASS for prior 63353cc.
+Nine fact books retained/indexed; 389 dated name rows (366 A-code), 105 risk
+changes require event reconciliation. No undated-name ordering or backdated
+source publication. External hashes in ST report/state. Continue independent R5.
+
 ## 2026-09-14 ST PDF source batch and bounded parser continuation
 
 1,560 selected ST PDFs retrieved/indexed; zero retrieval failures. SSE metadata

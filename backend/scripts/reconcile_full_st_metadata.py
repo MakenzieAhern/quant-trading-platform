@@ -108,6 +108,7 @@ def main():
                         "isPagination": "true",
                         "pageHelp.pageSize": 25,
                         "pageHelp.pageNo": page,
+                        "pageHelp.beginPage": page,
                         "pageHelp.cacheSize": 1,
                         "START_DATE": day,
                         "END_DATE": day,

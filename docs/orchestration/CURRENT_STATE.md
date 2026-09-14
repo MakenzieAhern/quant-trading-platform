@@ -1,5 +1,16 @@
 # Current state
 
+## Current: R5 cached SSE evidence reconciliation continues
+
+All selected 1,560 PDFs indexed; 1,555 exact metadata matches and five explicit
+normalization/identity review gaps. Pagination recovery preserves original failed
+receipts and validates grouped totals. Coordinate-based alternate extraction adds
+16 provisional transitions; prior 644 unchanged, total 660. Another 895 parser
+cases remain unresolved, not accepted NORMAL states. Nine retained fact books
+provide dated name evidence, not contemporaneous publication timestamps.
+590 backend tests and quality checks PASS. Distribution worker remains alive;
+no duplicate writer. Full dataset CREATED/AUDITED/FROZEN=NO; no studies or merge.
+
 ## Current: R5 cash reconciliation extended through six retained years
 
 2011–2016 adds 8,134 supported cash events using unchanged parsers/accounting.
