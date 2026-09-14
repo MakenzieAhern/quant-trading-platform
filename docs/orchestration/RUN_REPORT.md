@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 retained merger batch
+
+Four official implementation records normalized; nine reviewed candidates now have
+six supported events and three retained gaps. Full census is not established.
+Source hashes and lifecycle corroboration PASS; two metadata-only cash-offer unknowns.
+Backend 571 / frontend 78 PASS; frontend lint/build and backend lint/type checks PASS.
+See ../research/R5_MERGER_BATCH_CLOSURE_V1.md. R5 continues; no new approval gate.
+
+## 2026-09-14 runtime recovery
+
+WORKER_RECOVERY_STATUS=PASS_RESUMED_DURABLE_RECEIPTS; DUPLICATE_WORKER_PREVENTED=YES.
+No live old workers, PID/lock files or temporary manifests found. Verified 44,504
+unique, disjoint queued URLs and all processed PDF hashes. Two existing batch
+names resumed from 1,977 and 584 processed receipts respectively; 2010 not restarted.
+14 focused local source tests PASS. Docker was not started; Desktop launched
+without reset/deletion for the isolated full suite. No research acceptance changes.
+See .research/reports/r5-worker-recovery-20260914.json for the timestamped snapshot.
+
 ## R5 retained distribution notice recovery
 
 2010: 1,113 PDFs indexed, one explicit HTTP 502 failure. 2018–2020: 8,590

@@ -1,0 +1,331 @@
+{
+  "inventory_version": "MERGER_REVIEW_V3_IMPLEMENTATION_BATCH",
+  "supersedes": "MERGER_INVENTORY_V2.json (preserved)",
+  "requested_coverage": [
+    "2010-01-01",
+    "2025-12-31"
+  ],
+  "full_census_status": "NOT_ESTABLISHED",
+  "identified_candidate_count": 9,
+  "supported_identified_events": 6,
+  "unresolved_identified_candidates": 3,
+  "count_scope": "NINE_REVIEWED_CANDIDATES_ONLY; FULL_MARKET_EVENT_COUNT_UNKNOWN",
+  "events": [
+    {
+      "parent_security": "CN-A:SZSE:000024",
+      "successor_security": "CN-A:SZSE:001979",
+      "conversion_ratio": "1.6008",
+      "effective_date": "2015-12-30",
+      "classification": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "accounting": "PASS_APPROVED_FLOOR_CONVENTION",
+      "source_review": "MERGER_000024_SOURCE_REVIEW.json",
+      "event_checksum": "503d20efc9b739e5d4cf5ce74ce5ed491b0c3175ab9e8ea1a4e8f995fb888365"
+    },
+    {
+      "parent_security": "CN-A:SSE:600005",
+      "successor_security": "CN-A:SSE:600019",
+      "conversion_ratio": "0.56",
+      "effective_date": "2017-02-17",
+      "parent_delisting_date": "2017-02-14",
+      "successor_original_listing_date": "2000-12-12",
+      "converted_shares_tradable_from": "2017-02-27",
+      "classification": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "accounting": "PASS_APPROVED_FLOOR_AND_ZERO_WHOLE_CONVENTION",
+      "quantity_dependent_cases": [
+        "EXACT_INTEGER_CONVERSION",
+        "FRACTIONAL_WITH_WHOLE_SUCCESSOR_SHARES",
+        "ZERO_WHOLE_SUCCESSOR_SHARES"
+      ],
+      "source_review": "MERGER_600005_SOURCE_REVIEW.json",
+      "event_checksum": "456fc000cf23e493384bb0857deeffde046a21977d0ce4c90454bed3e232aa30",
+      "manifest_sha256": "a83c54b5a6e25e641eed8941a47b7d83d54da99e2b2f63765d45c129822718a2"
+    },
+    {
+      "parent_security": "CN-A:SSE:600553",
+      "successor_security": "CN-A:SSE:601992",
+      "conversion_ratio": "1.2",
+      "last_trading_date": "2011-02-01",
+      "parent_delisting_date": "2011-02-18",
+      "successor_listing_date": "2011-03-01",
+      "effective_date": null,
+      "classification": "UNRESOLVED_EVENT",
+      "fractional_source_finding": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "remaining_gap": "EXACT_CONVERSION_REGISTRATION_CHRONOLOGY; NOT_ANOTHER_FRACTIONAL_POLICY_REQUEST",
+      "sources": [
+        {
+          "path": "full-merger-v1/600553-implementation.pdf",
+          "published_on": "2011-01-31",
+          "pages": [
+            1,
+            2,
+            9
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2011-01-31/58968171.PDF",
+          "sha256": "bb282302ea2e2677c070eba0f5fc27329d55f9b96df8356013639b9f68a967b9",
+          "retrieved_at_utc": "2026-09-13T01:42:47.985835+00:00"
+        },
+        {
+          "path": "full-merger-v1/600553-termination.pdf",
+          "published_on": "2011-02-16",
+          "pages": [
+            1,
+            2
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2011-02-16/59002480.PDF",
+          "sha256": "79eceb993458a7ff84ef4aa80d9b92c6f2dde8ccd1ef9ec4da0456c1b63a553f",
+          "retrieved_at_utc": "2026-09-13T01:51:26.874365+00:00"
+        },
+        {
+          "path": "full-merger-v1/601992-listing.pdf",
+          "published_on": "2011-02-28",
+          "pages": [
+            5
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2011-02-28/59055022.PDF",
+          "sha256": "3e49053fde0f06de774185bd5ee56fddbe5838ed6f2d85808f6304be1ec00734",
+          "retrieved_at_utc": "2026-09-13T01:51:29.883575+00:00"
+        }
+      ]
+    },
+    {
+      "parent_security": "CN-A:SSE:600991",
+      "successor_security": "CN-A:SSE:601238",
+      "conversion_ratio": "1.6",
+      "last_trading_date": "2012-03-06",
+      "parent_delisting_date": "2012-03-20",
+      "successor_listing_date": "2012-03-29",
+      "effective_date": null,
+      "classification": "UNRESOLVED_EVENT",
+      "fractional_source_finding": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "remaining_gap": "EXACT_CONVERSION_REGISTRATION_CHRONOLOGY; NOT_ANOTHER_FRACTIONAL_POLICY_REQUEST",
+      "sources": [
+        {
+          "path": "full-merger-v1/600991-implementation.pdf",
+          "published_on": "2012-03-05",
+          "pages": [
+            1,
+            2,
+            7
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2012-03-05/60623792.PDF",
+          "sha256": "be61c5f9c6641ba15ca66143c64ca0cebee40a74c1534d7a35a1f9adb7b5b1d9",
+          "retrieved_at_utc": "2026-09-13T01:42:50.945420+00:00"
+        },
+        {
+          "path": "full-merger-v1/600991-termination.pdf",
+          "published_on": "2012-03-16",
+          "pages": [
+            1,
+            2
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2012-03-16/60678056.PDF",
+          "sha256": "13dc58299d810847ec5f7e108dbbca1ebcd74151d29d1a9d68b3a4314652214b",
+          "retrieved_at_utc": "2026-09-13T01:51:30.872301+00:00"
+        },
+        {
+          "path": "full-merger-v1/601238-listing.pdf",
+          "published_on": "2012-03-27",
+          "pages": [
+            4
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2012-03-27/60732167.PDF",
+          "sha256": "1d67a9b737efc9b68e16dd2fa6c2dd5324722d4d77c1aa2105d48ebeae145d60",
+          "retrieved_at_utc": "2026-09-13T01:51:32.071570+00:00"
+        }
+      ]
+    },
+    {
+      "parent_security": "CN-A:SSE:601299",
+      "successor_security": "CN-A:SSE:601766",
+      "conversion_ratio": "1.10",
+      "record_date": "2015-05-20",
+      "parent_delisting_date": "2015-05-20",
+      "a_share_registration_completed": "2015-05-28",
+      "h_share_conversion_date_not_for_a_shares": "2015-05-26",
+      "classification": "UNRESOLVED_EVENT",
+      "remaining_gap": "PRE_EFFECTIVE_SOURCE_TIMING_FRACTIONAL_TERMS_NEW_SHARE_ELIGIBILITY",
+      "sources": [
+        {
+          "path": "full-merger-v1/601299-completion.pdf",
+          "published_on": "2015-06-01",
+          "pages": [
+            9,
+            13,
+            15
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2015-06-01/1201085317.PDF",
+          "sha256": "9f175b30df8b0ebffac904e4eaa8df6dbdff8d972d08084bd76af18b881ed741",
+          "retrieved_at_utc": "2026-09-13T01:55:19.649664+00:00"
+        }
+      ]
+    },
+    {
+      "activation_sources": [],
+      "basis_policy": "FULL_PARENT_BASIS_TRANSFERRED_TO_WHOLE_SUCCESSOR_SHARES",
+      "cash_election_offered": true,
+      "cash_election_policy": "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE",
+      "conversion_denominator": "1",
+      "conversion_ratio": "0.3447",
+      "effective_date": "2013-09-18",
+      "official_fractional_method": "GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE",
+      "parent_last_trading_date": "2013-08-14",
+      "parent_security": {
+        "value": "CN-A:SZSE:000527"
+      },
+      "record_date": "2013-09-17",
+      "research_fractional_method": "FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION",
+      "sources": [
+        {
+          "document": "Official issuer merger implementation notice",
+          "published_on": "2013-09-12",
+          "retrieved_at": "2026-09-13T09:23:15.105264Z",
+          "sha256": "289d141bc55320ed4cc6c1ce7fcf1ad414e0921fb741c76bd6393270ed20544f",
+          "url": "https://static.cninfo.com.cn/finalpage/2013-09-12/63073801.PDF"
+        }
+      ],
+      "successor_listing_date": "2013-09-18",
+      "successor_security": {
+        "value": "CN-A:SZSE:000333"
+      },
+      "successor_shares_tradable_from": null,
+      "zero_whole_share_policy": "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1",
+      "classification": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "accounting": "PASS_APPROVED_FLOOR_AND_ZERO_WHOLE_CONVENTION",
+      "event_checksum": "726746d9b597e0e214c1fb9463dcd04e53d58fc52ceb742dddc9bd451ba2a7ba",
+      "source_review": "backend/tests/fixtures/merger_implementation_batch_v1.json",
+      "source_manifest_sha256": "ea6feddc44ae61e3540916c03354d070f2c04b11887f4b321f694634c7ba6397",
+      "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE"
+    },
+    {
+      "activation_sources": [],
+      "basis_policy": "FULL_PARENT_BASIS_TRANSFERRED_TO_WHOLE_SUCCESSOR_SHARES",
+      "cash_election_offered": null,
+      "cash_election_policy": "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE",
+      "conversion_denominator": "1",
+      "conversion_ratio": "2.049382716",
+      "effective_date": "2015-01-26",
+      "official_fractional_method": "GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE",
+      "parent_last_trading_date": "2014-12-09",
+      "parent_security": {
+        "value": "CN-A:SZSE:000562"
+      },
+      "record_date": "2015-01-23",
+      "research_fractional_method": "FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION",
+      "sources": [
+        {
+          "document": "Official issuer merger implementation notice",
+          "published_on": "2015-01-22",
+          "retrieved_at": "2026-09-13T09:23:17.686478Z",
+          "sha256": "aaa254af495f145537662817acb96d646990f626a84754cd90f2e84fa1f11b6d",
+          "url": "https://static.cninfo.com.cn/finalpage/2015-01-22/1200566718.PDF"
+        }
+      ],
+      "successor_listing_date": "2015-01-26",
+      "successor_security": {
+        "value": "CN-A:SZSE:000166"
+      },
+      "successor_shares_tradable_from": null,
+      "zero_whole_share_policy": "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1",
+      "classification": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "accounting": "PASS_APPROVED_FLOOR_AND_ZERO_WHOLE_CONVENTION",
+      "event_checksum": "827acb031cc8b02d3672c8fc812c15f016521044c43f867d5902762139ba00a7",
+      "source_review": "backend/tests/fixtures/merger_implementation_batch_v1.json",
+      "source_manifest_sha256": "ea6feddc44ae61e3540916c03354d070f2c04b11887f4b321f694634c7ba6397",
+      "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE"
+    },
+    {
+      "activation_sources": [],
+      "basis_policy": "FULL_PARENT_BASIS_TRANSFERRED_TO_WHOLE_SUCCESSOR_SHARES",
+      "cash_election_offered": null,
+      "cash_election_policy": "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE",
+      "conversion_denominator": "1",
+      "conversion_ratio": "0.8070",
+      "effective_date": "2015-11-02",
+      "official_fractional_method": "GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE",
+      "parent_last_trading_date": "2015-10-16",
+      "parent_security": {
+        "value": "CN-A:SZSE:300186"
+      },
+      "record_date": "2015-10-30",
+      "research_fractional_method": "FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION",
+      "sources": [
+        {
+          "document": "Official issuer merger implementation notice",
+          "published_on": "2015-10-29",
+          "retrieved_at": "2026-09-13T09:23:20.130258Z",
+          "sha256": "53b500208370d7496faa15ce61ce0763ea7eef3a3a6f31d6740ceaf518c94333",
+          "url": "https://static.cninfo.com.cn/finalpage/2015-10-29/1201740791.PDF"
+        }
+      ],
+      "successor_listing_date": "2015-11-02",
+      "successor_security": {
+        "value": "CN-A:SZSE:300498"
+      },
+      "successor_shares_tradable_from": null,
+      "zero_whole_share_policy": "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1",
+      "classification": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "accounting": "PASS_APPROVED_FLOOR_AND_ZERO_WHOLE_CONVENTION",
+      "event_checksum": "873be94fc9627abbb69a18a905dfe0fadbc3d225e4cb041912dc07aeb3aac875",
+      "source_review": "backend/tests/fixtures/merger_implementation_batch_v1.json",
+      "source_manifest_sha256": "ea6feddc44ae61e3540916c03354d070f2c04b11887f4b321f694634c7ba6397",
+      "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE"
+    },
+    {
+      "activation_sources": [],
+      "basis_policy": "FULL_PARENT_BASIS_TRANSFERRED_TO_WHOLE_SUCCESSOR_SHARES",
+      "cash_election_offered": true,
+      "cash_election_policy": "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE",
+      "conversion_denominator": "1",
+      "conversion_ratio": "0.6956",
+      "effective_date": "2017-12-25",
+      "official_fractional_method": "GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE",
+      "parent_last_trading_date": "2017-12-04",
+      "parent_security": {
+        "value": "CN-A:SZSE:000916"
+      },
+      "record_date": "2017-12-22",
+      "research_fractional_method": "FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION",
+      "sources": [
+        {
+          "document": "Official issuer merger implementation notice",
+          "published_on": "2017-12-21",
+          "retrieved_at": "2026-09-13T09:23:20.967726Z",
+          "sha256": "ffc38eb9fa7f9482c25f67c83f9a4ef5f01369356e0e8316fa780ac6595de595",
+          "url": "https://static.cninfo.com.cn/finalpage/2017-12-21/1204242423.PDF"
+        }
+      ],
+      "successor_listing_date": "2017-12-25",
+      "successor_security": {
+        "value": "CN-A:SZSE:001965"
+      },
+      "successor_shares_tradable_from": null,
+      "zero_whole_share_policy": "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1",
+      "classification": "GLOBAL_ALLOCATION_UNREPRODUCIBLE",
+      "accounting": "PASS_APPROVED_FLOOR_AND_ZERO_WHOLE_CONVENTION",
+      "event_checksum": "43dfd65ae9ce0d66790d8f07408094f74987b091a1a6b334bbbd45ff37a6725f",
+      "source_review": "backend/tests/fixtures/merger_implementation_batch_v1.json",
+      "source_manifest_sha256": "ea6feddc44ae61e3540916c03354d070f2c04b11887f4b321f694634c7ba6397",
+      "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE"
+    }
+  ],
+  "query_inventory": {
+    "announcements": 2849,
+    "pages": 95,
+    "unique_announcement_ids": 2849,
+    "pagination_complete": true,
+    "manifest_sha256": "66c774ead5744c8a72597a8f9dc58591c84b32a652c1a771ef85215e6d186eaf",
+    "manifest_path": "full-merger-v1/full-period-query-audit-v1.json",
+    "unreviewed_implementation_document_leads": 69,
+    "leads_path": "full-merger-v1/merger-implementation-leads-v1.json",
+    "warning": "Metadata includes completed events, proposals, cancelled deals, B-share parents and unlisted subsidiaries. Document lead counts are NOT event counts; market-wide completeness is not established."
+  },
+  "full_account_materiality": {
+    "zero_whole_share_events": null,
+    "zero_whole_share_position_occurrences": null,
+    "total_basis_written_off": null,
+    "max_single_write_off": null,
+    "total_market_value_removed_at_events": null,
+    "status": "NOT_ESTABLISHED_NO_ACCOUNT_PATH_GENERATED"
+  },
+  "quantity_classification_note": "EXACT/FRACTIONAL/ZERO depend on Q; global registry mechanism is an event-level fact. Do not assign observed holding outcomes to an entire event without account quantities."
+}

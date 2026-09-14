@@ -44,7 +44,8 @@ class MergerEvent(BaseModel):
     basis_policy: Literal["FULL_PARENT_BASIS_TRANSFERRED_TO_WHOLE_SUCCESSOR_SHARES"] = (
         "FULL_PARENT_BASIS_TRANSFERRED_TO_WHOLE_SUCCESSOR_SHARES"
     )
-    cash_election_offered: bool
+    # Unknown offer metadata never authorizes an election or changes mandatory conversion.
+    cash_election_offered: bool | None
     cash_election_policy: Literal["NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE"] = (
         "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE"
     )

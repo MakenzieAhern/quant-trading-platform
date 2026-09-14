@@ -278,3 +278,23 @@ def test_notice_recovery_reuses_tail_and_includes_partial_boundary_day():
     with pytest.raises(ValueError, match="NOT_DESCENDING"):
         recovery_ranges(2023, list(reversed(retained)))
     assert len(recovery_ranges(2023, [])) == 12
+
+
+def test_distribution_notice_dates_require_bound_labels_not_unrelated_dates():
+    from scripts.link_distribution_notices import notice_dates
+
+    assert notice_dates(["股权登记日:2010 年 03 月 02 日;除权除息日为:2010年3月3日"]) == (
+        ["2010-03-02"],
+        ["2010-03-03"],
+    )
+    assert notice_dates(["股权登记日与除权除息日", "董事会2010年3月2日"]) == ([], [])
+    assert notice_dates(["A股股权登记日为2010年5月17日;B股股权登记日为2010年5月20日"])[0] == [
+        "2010-05-17"
+    ]
+    assert notice_dates(["除权(息)日:2010年3月24日;除权(除息日):2010年3月24日"])[1] == [
+        "2010-03-24"
+    ]
+    assert notice_dates(["除权(除息)日:2010年3月2日;除息日:2010年3月3日"])[1] == [
+        "2010-03-02",
+        "2010-03-03",
+    ]

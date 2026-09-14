@@ -1,3 +1,4 @@
+import json
 from datetime import date
 from decimal import Decimal, localcontext
 from pathlib import Path
@@ -369,3 +370,61 @@ def test_official_rounded_ratio_is_not_recomputed_from_exchange_prices():
             context.prec = precision
             assert official.quantities(Decimal(81))[1] == 165
             assert recomputed.quantities(Decimal(81))[1] == 166
+
+
+@pytest.mark.parametrize(
+    "review",
+    json.loads(
+        (Path(__file__).parent / "fixtures/merger_implementation_batch_v1.json").read_bytes()
+    )["cases"],
+    ids=lambda r: r["parent"],
+)
+def test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(review):
+    from scripts.reconcile_merger_implementation_batch import event_from_review
+
+    action = event_from_review(review)
+    assert MergerEvent.model_validate_json(action.model_dump_json()) == action
+    assert (
+        action.event_checksum
+        == action.model_copy(update={"sources": tuple(reversed(action.sources))}).event_checksum
+    )
+    for quantity in (Decimal(1), Decimal(81), Decimal(100)):
+        bus, emitted = EventBus(), []
+        bus.subscribe(EventType.ORDER_CREATED, emitted.append)
+        bus.subscribe(EventType.ORDER_FILLED, emitted.append)
+        portfolio = PortfolioEngine(bus, Decimal(10000))
+        parent, successor = review["parent"] + ".SZSE", review["successor"] + ".SZSE"
+        portfolio.apply_fill(
+            make_fill(1, OrderSide.BUY, str(quantity), "10", symbol=parent).model_copy(
+                update={"timestamp": at(review["parent_last_trading_date"])}
+            )
+        )
+        portfolio.mark_to_market(
+            make_bar(1, "10", symbol=parent).model_copy(
+                update={"timestamp": at(review["parent_last_trading_date"])}
+            )
+        )
+        cash = portfolio.cash
+        portfolio.recognize_merger(action, action.effective_date, at(review["effective_date"]))
+        portfolio.activate_mergers(
+            action.activation_date, {successor: Decimal(20)}, at(review["effective_date"])
+        )
+        _, whole, _ = action.quantities(quantity)
+        assert portfolio.cash == cash and emitted == []
+        result = portfolio.snapshot_at(at(review["effective_date"]))
+        assert PortfolioSnapshot.model_validate_json(result.model_dump_json()) == result
+        assert result.realized_pnl == 0
+        if whole:
+            position = next(p for p in portfolio.positions if p.symbol == successor)
+            assert position.quantity == whole
+            assert position.aggregate_cost_basis == quantity * 10
+            assert result.corporate_action_realized_pnl == 0
+        else:
+            assert not portfolio.positions
+            assert result.corporate_action_realized_pnl == -quantity * 10
+        assert not portfolio.is_orderable(parent)
+    if review["cash_election_offered"] is None:
+        assert action.cash_election_offered is None
+        assert (
+            action.cash_election_policy == "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE"
+        )

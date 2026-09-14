@@ -44,6 +44,41 @@ def reconcile(rows, total):
     return sorted(unique.values(), key=lambda r: r["announcementId"])
 
 
+def collect_window(root, start, end, receipts):
+    pages, seen = [], set()
+    for number in range(1, 101):
+        params = dict(
+            pageNum=number,
+            pageSize=30,
+            column="sse",
+            tabName="fulltext",
+            stock="",
+            searchkey="实施",
+            secid="",
+            plate="",
+            category="category_qyfpxzcs_szsh",
+            trade="",
+            seDate=f"{start}~{end}",
+            sortName="",
+            sortType="",
+            isHLtitle="false",
+        )
+        name = f"recovery-v1/{start}-{end}-p{number:03}.json"
+        page = json.loads(fetch(root, name, QUERY, params))
+        receipts.append(json.loads((root / (name + ".meta.json")).read_bytes()))
+        rows = page.get("announcements") or []
+        ids = {r["announcementId"] for r in rows}
+        if seen & ids:
+            raise ValueError("REPEATED_PAGE_STOP")
+        if any(not str(start) <= publication_date(r["announcementTime"]) <= str(end) for r in rows):
+            raise ValueError("QUERY_DATE_RANGE_LEAKAGE")
+        seen.update(ids)
+        pages.append(page)
+        if not page["hasMore"]:
+            break
+    return complete_announcements(pages)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
@@ -75,41 +110,7 @@ def main():
             ranges = recovery_ranges(year, retained)
             recovered = []
             for start, end in ranges:
-                pages, seen = [], set()
-                for number in range(1, 101):
-                    params = dict(
-                        pageNum=number,
-                        pageSize=30,
-                        column="sse",
-                        tabName="fulltext",
-                        stock="",
-                        searchkey="实施",
-                        secid="",
-                        plate="",
-                        category="category_qyfpxzcs_szsh",
-                        trade="",
-                        seDate=f"{start}~{end}",
-                        sortName="",
-                        sortType="",
-                        isHLtitle="false",
-                    )
-                    name = f"recovery-v1/{start}-{end}-p{number:03}.json"
-                    page = json.loads(fetch(args.root, name, QUERY, params))
-                    receipts.append(json.loads((args.root / (name + ".meta.json")).read_bytes()))
-                    rows = page.get("announcements") or []
-                    ids = {r["announcementId"] for r in rows}
-                    if seen & ids:
-                        raise ValueError("REPEATED_PAGE_STOP")
-                    if any(
-                        not str(start) <= publication_date(r["announcementTime"]) <= str(end)
-                        for r in rows
-                    ):
-                        raise ValueError("QUERY_DATE_RANGE_LEAKAGE")
-                    seen.update(ids)
-                    pages.append(page)
-                    if not page["hasMore"]:
-                        break
-                recovered.extend(complete_announcements(pages))
+                recovered.extend(collect_window(args.root, start, end, receipts))
             if len(totals) > 1:
                 raise ValueError("RETAINED_TOTAL_CHANGED")
             # With no retained pages all twelve independently complete month queries cover the year.

@@ -1,0 +1,51 @@
+{
+  "checkpoint_commit": "f1d3119964f87ac31b188031364d53596a28ea82",
+  "observed_at_utc": "2026-09-14T01:06:51Z",
+  "worker_recovery_status": "PASS_RESUMED_DURABLE_RECEIPTS",
+  "active_r5_workers_before_resume": 0,
+  "active_download_processes_before_resume": 0,
+  "active_recovery_processes_before_resume": 0,
+  "lock_files_found": 0,
+  "pid_files_found": 0,
+  "partial_manifest_promoted": false,
+  "duplicate_worker_prevented": true,
+  "queue_urls_unique_and_disjoint": true,
+  "processed_receipt_identity_and_pdf_checksums": "PASS",
+  "metadata_leads": 44504,
+  "metadata_manifest_sha256": "280d59a8a48915173b1187c96b89e988b52ba23e3a21d8a69f9af768243eb3fc",
+  "metadata_status": "QUERY_COVERAGE_NOT_ACCEPTED_EVENTS",
+  "annual_2022_total_anomaly": "3599_OR_3600_IN_ORIGINAL_PAGES; 3600_IN_INDEPENDENT_COMPLETE_NONOVERLAPPING_DATE_PARTITIONS",
+  "completed_batch": {
+    "name": "distribution-2010-v1",
+    "processed": 1114,
+    "success": 1113,
+    "unavailable": 1
+  },
+  "resumed_batches": [
+    {
+      "name": "distribution-2018-2020-v1",
+      "processed_at_recovery": 1977,
+      "unprocessed_at_recovery": 6613,
+      "last_processed_publication_date": "2018-06-25",
+      "pid_at_observation": 427
+    },
+    {
+      "name": "distribution-remaining-years-v1",
+      "processed_at_recovery": 584,
+      "unprocessed_at_recovery": 34216,
+      "unavailable_at_recovery": 1,
+      "last_processed_publication_date": "2011-05-19",
+      "pid_at_observation": 434
+    }
+  ],
+  "working_tree_at_recovery": [
+    "M backend/scripts/recover_distribution_metadata.py",
+    "M backend/tests/test_full_source_probes.py",
+    "?? backend/scripts/link_distribution_notices.py"
+  ],
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "studies_run": false,
+  "pr_merged": false
+}

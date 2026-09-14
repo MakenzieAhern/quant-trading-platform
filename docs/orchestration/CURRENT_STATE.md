@@ -1,5 +1,25 @@
 # Current state
 
+## Current: R5 four retained merger implementations closed
+
+Reviewed merger inventory: nine candidates, six supported, three unresolved;
+full-market completeness remains NOT_ESTABLISHED. Four additions use existing
+approved accounting, not new methodology. Two unknown cash-offer metadata fields
+remain null and cannot authorize participation. Backend 571 / frontend 78 PASS.
+See ../research/R5_MERGER_BATCH_CLOSURE_V1.md. Two distribution workers continue.
+R5 RUNNING_BATCH_CLOSURE; full dataset CREATED/AUDITED/FROZEN=NO; no studies/merge.
+
+## Current: 2026-09-14 durable worker recovery PASS
+
+No old worker was alive. Queue identity, URL disjointness, receipts and retained
+PDF hashes verified before resuming two disjoint batches. No duplicate writer.
+At recovery: 2018–2020 processed 1,977/8,590; remaining-years 584/34,800.
+Existing failures are retained, not silently retried or promoted.
+44,504 metadata leads recovered across 2010–2025; 2022 unstable annual totals
+remain documented alongside complete independent date partitions. No event promotion.
+Runtime record: .research/reports/r5-worker-recovery-20260914.json.
+R5 RUNNING_BATCH_CLOSURE. Full dataset CREATED/AUDITED/FROZEN=NO; no studies/merge.
+
 ## Current: R5 retained distribution notice recovery
 
 2010: 1,113 PDFs indexed, one explicit HTTP 502 failure. 2018–2020: 8,590
