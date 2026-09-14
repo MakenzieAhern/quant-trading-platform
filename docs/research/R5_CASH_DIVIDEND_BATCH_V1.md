@@ -56,3 +56,21 @@ Ruff/format/mypy and frontend lint/build PASS. No domain-accounting code changed
 
 Full safe start remains NOT_ESTABLISHED. Full dataset CREATED/AUDITED/FROZEN=NO;
 Development/Validation/Official OOS NOT_RUN. PR #12 remains open and unmerged.
+
+## Missing-only continuation
+
+V2 reuses all 7,702 previously corroborated rows without PDF reparsing; their
+event checksums remain unchanged. It adds 186 exact cases from spaced code
+headers, explicit A/H labels and tightly linked per-ten-share cash wording.
+The first labeled issuer code is required, not another issuer mentioned later.
+Differentiated/rounded/conflicting source cases remain unresolved, not relaxed.
+
+| Year | Supported v2 | Unresolved v2 | V2 canonical manifest SHA-256 |
+| --- | ---: | ---: | --- |
+| 2010 | 784 | 200 | fb56da8ef89a8f319df620ca8ce532c8a606a9787776c6bf9ce2e26529edb2a1 |
+| 2018 | 2,562 | 272 | 538d1f20abb1bbfc9b78f90fd02e292a81c3bb4aec36dbfa4d3b31cb796d9b4e |
+| 2019 | 2,227 | 402 | 2a574412e17f401fbb8c494becc9867af131fa22f074fb84648fa54f36aea02c |
+| 2020 | 2,315 | 467 | b7919d4155103f61f3a17381ad602f88e095d84014be84bc0e862120c33a5cf4 |
+
+Paths use `cash-ledger-{year}-v2.json` in the same respective directories.
+Current totals: 7,888 supported, 1,341 unresolved. Full census still PARTIAL.

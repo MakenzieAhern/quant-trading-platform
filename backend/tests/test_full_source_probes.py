@@ -524,6 +524,12 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
 
     header = "证券代码:600000 证券简称:浦发银行\n"
     assert gross_cash(
+        ["证券代码:6 0 0 0 0 0\n每10股送5股、派发现金股利1.2元(含税,扣税后0.58元)"], "600000"
+    ) == Decimal("0.12")
+    assert gross_cash([header + "每10股派0.35元(含税,扣税后0.315元)"], "600000") == Decimal("0.035")
+    with pytest.raises(ValueError, match="ISSUER"):
+        gross_cash(["证券代码:600004\n其他公司证券代码:600000\n每股现金红利0.1元(含税)"], "600000")
+    assert gross_cash(
         ["证券代码:000011 200011\n向全体股东每10股派3元人民币现金(含税;扣税后2.7元)"], "000011"
     ) == Decimal("0.3")
     with localcontext() as ctx:
@@ -623,3 +629,31 @@ def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accoun
         )
         assert after.realized_pnl == before.realized_pnl
         assert emitted == []
+
+
+def test_sse_yearbook_risk_names_are_scoped_to_historical_tables():
+    import pytest
+
+    from scripts.probe_full_sse_st import table_names
+
+    page = "上市公司基本信息 Listed Companies in 2009\n600681 S*ST 万鸿 0.0 0.0\n"
+    assert table_names([page], "company")["600681"]["status"] == "STAR_ST"
+    assert (
+        table_names([page + "600800 S\nT 磁卡 3606.5 2084.5\n"], "company")["600800"]["status"]
+        == "ST"
+    )
+    assert table_names([page], "price") == {}
+    assert table_names(["当期公司列表\n600681 正常名称 1.0"], "company") == {}
+    with pytest.raises(ValueError, match="DUPLICATE"):
+        table_names([page, page], "company")
+
+
+def test_full_st_metadata_extension_never_requeries_accepted_pilot_months():
+    from scripts.collect_full_st_notices import missing_windows
+
+    windows = [(str(a), str(b)) for a, b in missing_windows()]
+    assert len(windows) == 173
+    assert windows[0] == ("2010-01-01", "2010-01-31")
+    assert windows[-1] == ("2025-12-01", "2025-12-31")
+    assert all(end < "2023-01-01" or start > "2024-07-31" for start, end in windows)
+    assert ("2024-08-01", "2024-08-31") in windows

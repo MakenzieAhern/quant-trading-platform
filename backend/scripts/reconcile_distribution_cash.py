@@ -67,25 +67,28 @@ def cash_event(row, members, ordinary_ids):
 
 def gross_cash(pages, symbol):
     normalized = unicodedata.normalize("NFKC", "\n".join(pages))
-    header = re.search(r"(?:证券|股票)代码\s*:\s*((?:\d{6}[ \t、,]*){1,3})", normalized[:600])
-    if not header or symbol not in re.findall(r"\d{6}", header[1]):
+    header = re.search(
+        r"(?:证券|股票|公司)代码(?:\(A/H\))?\s*:\s*((?:\d[ \t]*){6})(?!\d)",
+        normalized[:600],
+    )
+    if not header or re.sub(r"\s+", "", header[1]) != symbol:
         raise ValueError("CASH_ISSUER_HEADER_MISMATCH")
     text = re.sub(r"\s+", "", normalized)
     if re.search(r"差异化分红送转:是", text):
         raise ValueError("DIFFERENTIATED_DISTRIBUTION_REQUIRES_REVIEW")
     number = r"(\d+(?:\.\d+)?)"
+    base = r"每(10|1)?股(?:送(?:红股)?\d+(?:\.\d+)?股[、,])?"
     matches = []
     for pattern in (
-        r"每(10|1)?股(?:派发|派送|派)?(?:现金红利|现金股利|现金股息|红利|股息|现金)"
-        r"(?:人民币)?" + number + r"元(?:现金红利)?\(含税[);,]",
-        r"每(10|1)?股派(?:发|送)?(?:人民币)?"
-        + number
-        + r"元(?:人民币)?现金(?:红利|股利)?\(含税[);,]",
+        base + r"(?:派发|派送|派)?(?:现金红利|现金股利|现金股息|红利|股息|现金)"
+        r"(?:人民币)?" + number + r"元(?:人民币)?(?:现金红利)?\(含税[);,]",
+        base + r"派(?:发|送)?(?:人民币)?" + number + r"元(?:人民币)?现金(?:红利|股利)?\(含税[);,]",
+        base + r"派(?:发|送)?" + number + r"元\(含税[);,]",
     ):
-        for base, value in re.findall(pattern, text):
+        for denominator, value in re.findall(pattern, text):
             with localcontext() as ctx:
                 ctx.prec = 50
-                matches.append(Decimal(value) / Decimal(base or "1"))
+                matches.append(Decimal(value) / Decimal(denominator or "1"))
     values = set(matches)
     if len(values) != 1 or next(iter(values)) <= 0:
         raise ValueError("NO_UNIQUE_EXPLICIT_GROSS_CASH")
@@ -111,9 +114,24 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--master", type=Path)
     parser.add_argument("--instruments", type=Path)
+    parser.add_argument(
+        "--prior", type=Path, help="Reuse previously corroborated rows without reparsing their PDFs"
+    )
     args = parser.parse_args()
     inputs = [args.source_manifest, args.date_links, args.sse_audit, args.szse_audit]
     sources, links, sse, szse = map(verified, inputs)
+    prior_rows = {}
+    if args.prior:
+        prior = verified(args.prior)
+        prior_inputs = {r["path"]: r["sha256"] for r in prior["inputs"]}
+        if any(prior_inputs.get(str(p)) != sha256_file(p) for p in inputs):
+            raise ValueError("PRIOR_CASH_INPUTS_CHANGED")
+        prior_rows = {
+            (r["symbol"], r["record_date"], r["ex_date"]): r
+            for r in prior["results"]
+            if r["status"] == "EXACT_GROSS_CASH_CORROBORATED"
+        }
+        inputs.append(args.prior)
     documents = {
         (r["url"], r["source_sha256"]): r
         for r in sources["documents"]
@@ -143,6 +161,9 @@ def main():
     ):
         key = link["symbol"], link["record_date"], link["ex_date"]
         if key not in exchange:
+            continue
+        if key in prior_rows:
+            results.append(prior_rows[key])
             continue
         amounts = exchange[key]
         evidence, failures = [], []
@@ -235,6 +256,7 @@ def main():
         counts=dict(sorted(Counter(r["status"] for r in results).items())),
         inputs=[dict(path=str(p), sha256=sha256_file(p)) for p in inputs],
         accepted_events=len(accepted),
+        reused_corroborated_rows=len(prior_rows),
         events=accepted,
         full_dataset_created=False,
         scope="EXISTING_GROSS_EX_DATE_CASH_POLICY_ONLY_NOT_FULL_CORPORATE_ACTION_CENSUS",

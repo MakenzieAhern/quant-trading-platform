@@ -1,5 +1,16 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 SSE starting anchor / cash missing-only extension
+
+SSE official 2009 yearbook capital table supplies 860 starting risk names; a split
+S/newline/T cell is normalized, with regression test. Three paused issuer rows
+visually checked. PDF and extraction hashes preserved; publication date unknown,
+not backdated. Separate ST metadata collector has 173 missing months × two keyword
+queries, skips accepted 2023-01..2024-07, verifies counts/order and keeps failures.
+Cash v2 adds 186 events while reusing 7,702 accepted rows and preserving their IDs.
+586 backend tests/Ruff/format/mypy PASS; prior milestone CI 34803545764 SUCCESS.
+See ../research/R5_SSE_PRESTART_ANCHOR_V1.md and cash report continuation.
+
 ## 2026-09-14 exact cash-dividend batch
 
 7,702 supported cash events / 1,527 unresolved source groups in four audited source

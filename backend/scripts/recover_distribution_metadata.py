@@ -44,7 +44,16 @@ def reconcile(rows, total):
     return sorted(unique.values(), key=lambda r: r["announcementId"])
 
 
-def collect_window(root, start, end, receipts):
+def collect_window(
+    root,
+    start,
+    end,
+    receipts,
+    *,
+    keyword="实施",
+    category="category_qyfpxzcs_szsh",
+    prefix="recovery-v1",
+):
     pages, seen = [], set()
     for number in range(1, 101):
         params = dict(
@@ -53,17 +62,17 @@ def collect_window(root, start, end, receipts):
             column="sse",
             tabName="fulltext",
             stock="",
-            searchkey="实施",
+            searchkey=keyword,
             secid="",
             plate="",
-            category="category_qyfpxzcs_szsh",
+            category=category,
             trade="",
             seDate=f"{start}~{end}",
             sortName="",
             sortType="",
             isHLtitle="false",
         )
-        name = f"recovery-v1/{start}-{end}-p{number:03}.json"
+        name = f"{prefix}/{start}-{end}-p{number:03}.json"
         page = json.loads(fetch(root, name, QUERY, params))
         receipts.append(json.loads((root / (name + ".meta.json")).read_bytes()))
         rows = page.get("announcements") or []

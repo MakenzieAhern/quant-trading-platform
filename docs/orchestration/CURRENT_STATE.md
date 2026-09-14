@@ -1,5 +1,15 @@
 # Current state
 
+## Current: R5 SSE starting-state evidence and missing-period metadata
+
+860 starting SSE members: 778 NORMAL / 51 ST / 31 STAR_ST, zero missing/conflicting
+anchor names. Retained 2009 company table and 857 trading-table names agree;
+three paused members remain in the company table. This is not full ST coverage.
+A separate two-thread metadata worker extends periods outside the accepted Pilot
+window; original remaining-years PDF worker continues without duplicate writers.
+Cash v2 extends only unresolved rows: 7,888 supported / 1,341 pending in four years;
+all prior 7,702 event checksums preserved. Backend 586 and quality checks PASS.
+
 ## Current: R5 cash-dividend batch supported under existing policy
 
 7,702 reconciled cash events across 2010/2018/2019/2020 have exact official gross
