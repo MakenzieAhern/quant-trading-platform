@@ -2,6 +2,14 @@
 
 ## Current: offline cash implementation integrity closure
 
+Full offline replay of existing 2010-2021 and partial-2022 source/date inputs now
+supports 23,208 cash events: 376 new, all 22,832 revalidated identities preserved.
+4,639 linked cash-term groups remain unresolved; no quarantined prior event is
+readmitted. Canonical combined ledger SHA
+0aea2a9f09b470f52169aebd420a34ddeb17ef96b23202d060d561f1fc075837.
+Reverse input order, supported policy validation and event checksums PASS.
+No source downloads or full-census acceptance were implied by this replay.
+
 Prior 22,864 supported cash entries required integrity review after confirmed
 proposal-versus-implementation selection defect in 000555 (2022). Revalidation
 preserves 22,832 exact event identities; 32 quarantined, not admitted. Original
@@ -38,7 +46,7 @@ still running; no full-census PASS, dataset publication, research study or merge
 
 ## Current: R5 cached transition and partial 2022 continuation
 
-708 provisional SSE transitions / 869 parser unresolved / three metadata variants.
+709 provisional SSE transitions / 868 parser unresolved / three metadata variants.
 325 diagnostic chains / 91 gaps / zero conflicts; full authority remains PARTIAL.
 Cached 600069 stock entry, 600130 and 600365 exits recovered by narrow header/verb
 syntax support; bond notices and conflicting dates remain unaccepted. 606 backend

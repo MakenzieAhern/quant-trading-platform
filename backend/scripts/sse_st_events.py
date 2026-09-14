@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v13"
+VERSION = "sse-cninfo-ordinary-name-v14"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -99,7 +99,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                 raise ValueError("WRONG_CNINFO_ISSUER_COMPANY")
     names = list(
         re.finditer(
-            r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?[由从]?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
+            r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?[由从]?原?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
             r"(?:(?:变更|更改|变)为|变成)[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
             text,
         )
@@ -231,6 +231,19 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                 )
             )
             dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        r"[自从]"
+                        + DATE
+                        + r"起(?:实施|实行)"
+                        + warning
+                        + r"(?:的特别处理)?。具体处理措施为[\uff1a:]"
+                        + re.escape(names[0][0]),
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
     if len(dated) != 1:
         raise ValueError("EFFECTIVE_DATE_UNRESOLVED")
     effective = next(iter(dated))

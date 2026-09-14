@@ -1,5 +1,36 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 cached SSE explicit-measures clause
+
+CNINFO 59060232 (600083), both pages read, explicitly dates ST-to-*ST at
+2011-03-02, separately from its 2011-03-01 suspension. Exact old-name syntax
+"由原" and the directly linked "具体处理措施为" clause are now recognized.
+PDF c00e0c91aa4164d9f481f6146e49023393295d445b45aa1da8a69c211a2c378b.
+Wrong risk category/issuer and adjacent unrelated dates remain rejected.
+Thirty ST tests PASS. Unresolved-only replay preserves all previous events:
+709 provisional transitions, 868 parser unresolved, three metadata variants.
+Parser manifest 4bee4340793840ccd215267a679598bdf2ef417889c32eb37cfa4484fde488ca;
+chain diagnostic bca9dceb4b2a996cb0c20ef218237c1e79e0ea24491093ad6c09ec60be9a677e.
+325 chains / 91 gaps / zero conflicts; accepted full-authority events remain zero.
+Initial diagnostic command used a duplicated staging-directory prefix and exited
+before publication; corrected root completed offline with deterministic ordering.
+
+## 2026-09-14 complete cached cash input replay
+
+Replayed all thirteen existing yearly cash input sets (2010-2021 and partial
+2022), with zero prior-row shortcut and no acquisition. Source, extraction,
+policy, lifecycle and exact exchange-amount guards remain active. Immutable
+cash-current-implementation-replay-YYYY-v1.json files retain individual results.
+Combined cash-current-implementation-ledger-v1.json supports 23,208 events;
+376 newly reconciled, all 22,832 revalidated event identities preserved exactly.
+The 32 quarantined prior events are disjoint from the new accepted set.
+4,639 cash-term groups remain unresolved, not metadata-only or silently excluded.
+Combined canonical SHA
+0aea2a9f09b470f52169aebd420a34ddeb17ef96b23202d060d561f1fc075837.
+Reverse input order, duplicate protection, model/policy and event checksum checks
+PASS. This is a bounded ledger, not complete 2010-2025 coverage. All study/freeze
+locks remain in force. Commit db74a25 CI 34823766586 SUCCESS; PR12 remains open.
+
 ## 2026-09-14 cached cash syntax and page-boundary revalidation
 
 Integrity audit v6 revalidates 22,832 unchanged event identities and retains 32

@@ -208,6 +208,7 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
         f"股票简称将从“{old}”变更为“{new}”。",
         f"股票简称由{old}变更为{new}。",
         f"股票简称由“{old}”变成“{new}”。",
+        f"股票简称由原“{old}”变为“{new}”。",
     ):
         text = header + "2022年2月9日复牌,公司的" + names
         assert extract([text], record)["new_name"] == new
@@ -221,6 +222,12 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
             extract([text], record)
     text = header + "公司股票将于2022年2月9日实施其他风险警示。" + clause
     assert extract([text], record)["effective_from"] == "2022-02-09"
+    measures = (
+        header + "2022年2月8日停牌一天,从2022年2月9日起实行其他风险警示。具体处理措施为:" + clause
+    )
+    assert extract([measures], record)["effective_from"] == "2022-02-09"
+    with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+        extract([measures.replace("起实行其他风险警示", "起实行退市风险警示")], record)
     for invalid in (
         text.replace("实施其他风险警示。", "实施退市风险警示。"),
         text.replace("公司股票将于", "关联公司股票将于"),
