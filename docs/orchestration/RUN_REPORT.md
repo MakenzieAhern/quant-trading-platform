@@ -1,5 +1,29 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 explicit bare risk-start labels and cached merger review
+
+Cached correction notices 1203488074 (600877) and 1203476445 (600733) correct
+the cited risk-trigger rules, not effective dates or name-transition clauses.
+They do not resolve the original date/name gaps; no backdated event synthesized.
+
+The exact bare field "退市风险警示起始日" and quoted "改为" verb retain all issuer,
+date-conflict and name-pair checks. Parser v28 canonical
+0cde9e3b73649d4530dcf784b92e30bc6a539a37cf46ad7b82750e83b0c6022e:
+760 provisional / 817 parser unresolved / three metadata variants.
+Chain v21 canonical 0ddfebc4f7709f6509c2062db3a5d08af592ffc51cf077467b5e194a81163ba4:
+335 chains / 74 gaps / zero conflicts, input-order PASS, full acceptance zero.
+Integrity v5 canonical fcb8645b65deabc60d552eb2a6fb96e3c998ad9425b5fc72015e48ae57e00a6d:
+all 744 main-parser provisional records unchanged. 612 backend tests and all
+quality checks PASS. No frozen Pilot authority altered.
+
+Parallel read-only cached merger review found no new fractional allocation proof
+for 600253 or 600631. SHA-verified 62552849, 62823703, 62559538, 59839566 and
+59762741 corroborate ratios and halt/delist dates, not every registry/tradability
+boundary or fraction treatment. No assumption fills those gaps. Cached metadata
+identifies absent PDFs 62874558/62848719 and 59888838/59839426; these remain source
+leads only. No download attempted against the denied endpoint, no accepted merger
+event changed. Fifteen supported mergers remain a bounded subset, not a census.
+
 ## 2026-09-14 effective date inside exact name clause
 
 Explicit embedded dates recover 600083 60902291 (2012-04-26), 600115 57998913

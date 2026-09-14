@@ -239,6 +239,7 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
         f"股票简称由{old}变更为{new}。",
         f"股票简称由“{old}”变成“{new}”。",
         f"股票简称由原“{old}”变为“{new}”。",
+        f"股票简称由“{old}”改为“{new}”。",
     ):
         text = header + "2022年2月9日复牌,公司的" + names
         assert extract([text], record)["new_name"] == new
@@ -345,6 +346,10 @@ def test_legacy_new_name_label_requires_explicit_date_and_security():
     dated_label += "2022年2月9日起实行退市风险警示。"
     dated_label += "实行退市风险警示后公司股票的简称:*ST样本,"
     assert extract([header + dated_label], record)["effective_from"] == "2022-02-09"
+    bare = "退市风险警示起始日:2022年2月9日。实行退市风险警示后股票简称:*ST样本。"
+    assert extract([header + bare], record)["effective_from"] == "2022-02-09"
+    with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+        extract([header + bare + "退市风险警示起始日:2022年2月10日。"], record)
     for variant in (
         dated_label.replace("将于", "于").replace("2022年2月9日起实行", "自2022年2月9日起实行"),
         dated_label.replace("公司股票", "公司", 1),

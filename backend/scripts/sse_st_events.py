@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v19"
+VERSION = "sse-cninfo-ordinary-name-v20"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -118,7 +118,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     names = list(
         re.finditer(
             r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?[由从]?原?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
-            r"(?:(?:变更|更改|变)为|变成)[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
+            r"(?:(?:变更|更改|改|变)为|变成)[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
             text,
         )
     )
@@ -247,6 +247,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
             text,
         )
     )
+    dates.extend(re.finditer(r"(?<![\u4e00-\u9fff])退市风险警示起始日[\uff1a:]" + DATE, text))
     dates.extend(
         re.finditer(
             r"实行退市风险警示的起始日[\uff1a:]公司(?:股票)?将?于"
