@@ -5,7 +5,7 @@
 PID 434 is suspended after HTTP 403, with original receipts intact; no automatic
 resume or duplicate acquisition. Current cached cash ledger: 23,199 supported
 events, 4,648 unresolved groups, 96 prior records explicitly quarantined. SSE:
-731 provisional transitions, 83 chain gaps, zero conflicts; full acceptance is
+752 provisional transitions, 79 chain gaps, zero conflicts; full acceptance is
 still PARTIAL. Fifteen reviewed mergers and 169 integer retained-bonus events
 remain supported bounded subsets, not a complete corporate-action census.
 Reuse accepted calendar, benchmark and Pilot v2 authorities. Continue cached

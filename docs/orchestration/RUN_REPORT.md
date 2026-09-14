@@ -1,5 +1,27 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 linked dates and provisional replay integrity
+
+Parser report v25 canonical SHA
+2192e63cf9c1683240ab73405918e180750193ba71b34fd5d85e4f6fba66b5ed:
+752 provisional (736 main parser plus 16 restoration), 825 parser unresolved,
+three metadata variants. Chain diagnostic v18 canonical SHA
+64a07e1c200e21b21210e9a806b88eb48e1391a5c2aea54c2bb1ea856cb47aab:
+332 chains, 79 gaps, zero conflicts; full authority acceptance remains zero.
+Explicit linked dates are collected across name-clause variants; weekday conflicts
+fail closed. Historical pairs are discarded only with their own explicit past
+dates and one independently dated current pair; undated ambiguity remains blocked.
+
+Integrity replay v1's 16 header/title discrepancies were audit extraction-selection
+errors: those records bind alternate_extraction_sha256, not extraction_sha256.
+Reusing the exact SHA-verified saved extraction resolves all 16 without relaxing
+the parser. Immutable current-parser-integrity-v2.json reports all 736 main-parser
+events with unchanged terms; canonical SHA
+a428b57cadeddbd81b53b855ffb5f8be333a3efd0f539da39ad5d6235b3efe94.
+The first report is retained, superseded only for extraction selection.
+610 backend tests PASS; Ruff, formatting and mypy PASS. PID 434 remains suspended;
+no source retries, full dataset publication, freeze, or strategy execution.
+
 ## 2026-09-14 short implementation headings fail closed
 
 Inspection of 000723's 2010 notice established that its unqualified numbered

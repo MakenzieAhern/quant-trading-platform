@@ -185,6 +185,15 @@ def test_legacy_clause_does_not_select_adjacent_suspension_date():
     new = extract(fixture["pages"], record)["new_name"]
     pages.append(f"2022年2月8日停牌一天,自2022年2月9日起,股票简称由“{old}”变更为“{new}”。")
     assert extract(pages, record)["effective_from"] == "2022-02-09"
+    for weekday in ("星期三", "周三"):
+        assert (
+            extract([*pages[:-1], pages[-1].replace("日起,", f"日({weekday})开始,")], record)[
+                "effective_from"
+            ]
+            == "2022-02-09"
+        )
+    with pytest.raises(ValueError, match="WEEKDAY_DATE_CONFLICT"):
+        extract([*pages[:-1], pages[-1].replace("日起,", "日(星期二)开始,")], record)
     assert (
         extract([*pages[:-1], pages[-1].replace("日起,", "日开始,")], record)["effective_from"]
         == "2022-02-09"
@@ -208,6 +217,8 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
     for prefix in ("公司的", "公司", "公司A股", ""):
         text = header + "2022年2月8日停牌一天,2022年2月9日复牌," + prefix + clause
         assert extract([text], record)["effective_from"] == "2022-02-09"
+        alternate_name = clause.replace("股票简称", "证券简称")
+        assert extract([header + alternate_name + text], record)["effective_from"] == "2022-02-09"
     for names in (
         f"股票简称将从“{old}”变更为“{new}”。",
         f"股票简称由{old}变更为{new}。",
@@ -258,6 +269,25 @@ def test_explicit_removal_date_requires_issuer_and_single_date():
             extract([invalid], record)
 
 
+def test_historical_name_pair_requires_its_own_explicit_past_date():
+    fixture = copy.deepcopy(
+        json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[0]
+    )
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    header = "证券代码:600595 证券简称:*ST中孚 " + record["sse"]["TITLE"] + "。"
+    past = "自2020年1月1日起,股票简称由“*ST中孚”变更为“中孚”。"
+    current = "2022年1月14日复牌,公司股票简称由“*ST中孚”变更为“ST中孚”。"
+    result = extract([header + past + current], record)
+    assert (result["status"], result["effective_from"]) == ("ST", "2022-01-14")
+    for invalid_past in (
+        past.replace("自2020年1月1日起,", ""),
+        past.replace("2020年1月1日", "2022年1月17日"),
+    ):
+        with pytest.raises(ValueError, match="NAME_TRANSITION_UNRESOLVED"):
+            extract([header + invalid_past + current], record)
+
+
 def test_legacy_new_name_label_requires_explicit_date_and_security():
     fixture = copy.deepcopy(
         json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[1]
@@ -283,3 +313,9 @@ def test_legacy_new_name_label_requires_explicit_date_and_security():
     dated_label += "2022年2月9日起实行退市风险警示。"
     dated_label += "实行退市风险警示后公司股票的简称:*ST样本,"
     assert extract([header + dated_label], record)["effective_from"] == "2022-02-09"
+    for variant in (
+        dated_label.replace("将于", "于").replace("2022年2月9日起实行", "自2022年2月9日起实行"),
+        dated_label.replace("公司股票", "公司", 1),
+        dated_label.replace("日起实行退市风险警示。", "日实行“退市风险警示”。"),
+    ):
+        assert extract([header + variant], record)["effective_from"] == "2022-02-09"

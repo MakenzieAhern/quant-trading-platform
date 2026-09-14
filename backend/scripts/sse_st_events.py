@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v16"
+VERSION = "sse-cninfo-ordinary-name-v17"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -40,6 +40,19 @@ def status(name: str) -> str:
     if re.match(r"^(?:S)?ST", name, re.I):
         return "ST"
     return "NORMAL"
+
+
+def linked_name_dates(text: str, clauses: str) -> list[re.Match[str]]:
+    """Only dates directly introducing an exact name-change clause."""
+    return [
+        match_date
+        for prefix in (
+            r"自?" + DATE + r"(?:[\uff08(](?:星期|周)[一二三四五六日天][\uff09)])?"
+            r"(?:起|开始)[\uff0c,]?[^。\uff1b;\d]{0,40}?",
+            DATE + r"复牌[\uff0c,](?:公司(?:的|A股)?)?",
+        )
+        for match_date in re.finditer(prefix + clauses, text)
+    ]
 
 
 def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
@@ -123,6 +136,26 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         names = list(re.finditer(r"(?:股票|证券)简称仍为[“\"](" + name + r")[”\"]", text))
         confirmation = bool(names)
     pairs = {(m[1], m[1] if confirmation else m[2]) for m in names}
+    if len(pairs) > 1 and prefix_mode and not confirmation:
+        current_pairs = set()
+        for pair in pairs:
+            clauses = (
+                "(?:"
+                + "|".join(sorted({re.escape(m[0]) for m in names if (m[1], m[2]) == pair}))
+                + ")"
+            )
+            linked = linked_name_dates(text, clauses)
+            periods = {
+                date(int(m[1]), int(m[2]), int(m[3])).isoformat() >= sse["SSEDATE"] for m in linked
+            }
+            if len(periods) != 1:
+                break  # Undated or mixed-period pairs cannot be silently discarded.
+            if True in periods:
+                current_pairs.add(pair)
+        else:
+            if len(current_pairs) == 1:
+                pairs = current_pairs
+                names = [m for m in names if (m[1], m[2]) in pairs]
     # A separately labeled ordinary A-share name survives malformed quoted prose.
     labels = list(
         re.finditer(r"(?:实施|撤销)后A股简称为([S*ST\u4e00-\u9fff]{1,12})[\uff0c。\uff1b;]", text)
@@ -192,6 +225,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     old, new = next(iter(pairs))
     if old != compact(issuer_name):
         raise ValueError("OLD_NAME_NOT_HEADER_IDENTITY")
+    name_clauses = "(?:" + "|".join(sorted({re.escape(m[0]) for m in names})) + ")"
     # Deliberately narrow: references to old events and unrelated suspension dates are not dates.
     dates = list(
         re.finditer(
@@ -202,8 +236,10 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     )
     dates.extend(
         re.finditer(
-            r"实行退市风险警示的起始日[\uff1a:]公司股票将于"
-            r"20\d{2}年\d{1,2}月\d{1,2}日停牌一天[\uff0c,]" + DATE + r"起实行退市风险警示",
+            r"实行退市风险警示的起始日[\uff1a:]公司(?:股票)?将?于"
+            r"20\d{2}年\d{1,2}月\d{1,2}日停牌一天[\uff0c,]自?"
+            + DATE
+            + r"起?实行[“\"]?退市风险警示",
             text,
         )
     )
@@ -224,25 +260,8 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     if not dates and prefix_mode and not confirmation and not restoration:
         # Older layouts date the exact name-change clause rather than a start-date label.
         # Never use a general publication/suspension date or a date from another sentence.
-        dates = list(
-            re.finditer(
-                r"自?"
-                + DATE
-                + r"(?:起|开始)[\uff0c,]?[^。\uff1b;\d]{0,40}?"
-                + re.escape(names[0][0]),
-                text,
-            )
-        )
+        dates = linked_name_dates(text, name_clauses)
         dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
-        if not dates:
-            # A resumed-trading date must directly introduce this exact name change.
-            # An unrelated resumption sentence is not an effective-date source.
-            dates = list(
-                re.finditer(
-                    DATE + r"复牌[\uff0c,](?:公司(?:的|A股)?)?" + re.escape(names[0][0]), text
-                )
-            )
-            dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
         if not dates and status(new) in {"ST", "STAR_ST"}:
             warning = (
                 "退市风险警示" if status(new) == "STAR_ST" else "(?:其他风险警示|其他特别处理)"
@@ -265,7 +284,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                         + r"起(?:实施|实行)"
                         + warning
                         + r"(?:的特别处理)?。具体处理措施为[\uff1a:]"
-                        + re.escape(names[0][0]),
+                        + name_clauses,
                         text,
                     )
                 )
@@ -285,6 +304,14 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
             dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
     if len(dated) != 1:
         raise ValueError("EFFECTIVE_DATE_UNRESOLVED")
+    for match_date in dates:
+        weekday = re.search(
+            DATE + r"[\uff08(](?:星期|周)([一二三四五六日天])[\uff09)]", match_date[0]
+        )
+        if weekday:
+            actual = date(int(weekday[1]), int(weekday[2]), int(weekday[3])).weekday()
+            if "一二三四五六日"[actual] != weekday[4].replace("天", "日"):
+                raise ValueError("WEEKDAY_DATE_CONFLICT")
     effective = next(iter(dated))
     if effective < sse["SSEDATE"]:
         raise ValueError("RETROSPECTIVE_EVENT_REQUIRES_REVIEW")

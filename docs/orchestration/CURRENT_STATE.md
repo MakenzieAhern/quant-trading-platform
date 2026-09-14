@@ -10,8 +10,9 @@ Both short and explicit implementation headings now prevent proposal fallback;
 counts are allowed to decrease. Original 22,864-event audit: 22,768 recorroborated,
 96 review cases. Combined ledger canonical SHA
 1167033ec372bdb5860c3ba2365dd8cf8eaec8105716d286add1a1a2a5ee895b.
-SSE parser v21: 731 provisional / 846 unresolved / three metadata variants;
-327 chains / 83 gaps / zero conflicts. Full authority remains PARTIAL.
+SSE parser v25: 752 provisional / 825 unresolved / three metadata variants;
+332 chains / 79 gaps / zero conflicts. All 736 main-parser provisional events
+retain unchanged terms in checksum-bound extraction replay. Full authority remains PARTIAL.
 PID 434 suspended; authorized source access/local official archives requested.
 No full dataset, freeze or studies. Older cash counts below are superseded.
 
@@ -59,7 +60,7 @@ not substituted for merger registration. Restricted shares separately identified
 607 backend tests / Ruff / format / mypy PASS. Original distribution downloader
 still running; no full-census PASS, dataset publication, research study or merge.
 
-## Current: R5 cached transition and partial 2022 continuation
+## Prior: R5 cached transition and partial 2022 continuation
 
 731 provisional SSE transitions / 846 parser unresolved / three metadata variants.
 327 diagnostic chains / 83 gaps / zero conflicts; full authority remains PARTIAL.
