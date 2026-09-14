@@ -96,6 +96,13 @@ def gross_cash(pages, symbol):
             normalized,
         )
     )
+    if not sections:
+        sections = list(
+            re.finditer(
+                r"(?m)^\s*[一二三四五六七八九十]+、\s*(?:权益分派|利润分配)方案\s*$",
+                normalized,
+            )
+        )
     if len(sections) > 1:
         raise ValueError("MULTIPLE_CURRENT_IMPLEMENTATION_SECTIONS")
     if sections:
@@ -108,16 +115,16 @@ def gross_cash(pages, symbol):
     for pattern in (
         base + r"(?:派发|派送|分派|分配|派)?(?:人民币)?"
         r"(?:现金红利|现金股利|现金股息|红利|股息|现金)"
-        r"(?:人民币)?" + number + r"元(?:人民币)?(?:现金(?:红利|股利)?)?[([]含税[);,:\]]",
+        r"(?:人民币)?" + number + r"元(?:人民币)?(?:现金(?:红利|股利)?)?[([]含税[);,:。\]]",
         base
         + r"派(?:发|送)?(?:人民币)?"
         + number
-        + r"元(?:人民币)?现金(?:红利|股利)?(?:、送\d+(?:\.\d+)?股红股)?[。,]?[([]含税[);,:\]]",
-        base + r"派(?:发|送)?(?:人民币)?" + number + r"元(?:人民币)?[([]含税[);,:\]]",
+        + r"元(?:人民币)?现金(?:红利|股利)?(?:、送\d+(?:\.\d+)?股红股)?[。,]?[([]含税[);,:。\]]",
+        base + r"派(?:发|送)?(?:人民币)?" + number + r"元(?:人民币)?[([]含税[);,:。\]]",
         base
         + r"(?:派发|派送|分派|派)?(?:现金红利|现金股利|现金股息|红利|股息|现金)人民币"
         + number
-        + r"(?:元)?[([]含税[);,:\]]",
+        + r"(?:元)?[([]含税[);,:。\]]",
     ):
         for denominator, value in re.findall(pattern, text):
             with localcontext() as ctx:

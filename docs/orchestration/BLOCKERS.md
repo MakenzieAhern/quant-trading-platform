@@ -11,9 +11,11 @@ Independent cached-evidence processing continues. Full dataset remains uncreated
 
 ## Current R5 gaps — independent work continues, no terminal human gate
 
-Cash bounded 2010–2020: 18,263 supported / 3,121 unresolved; later downloads
-continue. SSE ST: 689 provisional transitions, 868 parser cases and three
-reviewed metadata differences; coverage/chain completeness not accepted.
+Cash bounded 2010-2021 and partial 2022: 23,199 supported / 4,648 unresolved;
+96 prior records quarantined after current-implementation integrity review.
+Later downloads are suspended for HTTP 403, not progressing. SSE ST: 731
+provisional transitions, 846 parser cases and three metadata differences;
+83 chain gaps remain, coverage/chain completeness not accepted.
 600392 2012 effective-date conflict remains explicit. Two SSE PDF mirror access
 denials and one timeout retained; no further retries against those denied mirrors.
 Bonus census needs issuer terms, fractional mechanics and true tradability;

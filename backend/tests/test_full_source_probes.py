@@ -554,6 +554,9 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
     text = header + "一、原方案\n每10股派1元人民币现金(含税)\n" + implementation
     text += "三、其他资料\n每10股派3元人民币现金(含税)\n"
     assert gross_cash([text], "600000") == Decimal("0.2")
+    assert gross_cash(
+        [text.replace("本次实施的权益分派方案", "权益分派方案")], "600000"
+    ) == Decimal("0.2")
     for clause in (
         "每10股派发人民币现金2元(含税;扣税后1.8元)",
         "每10股派发现金股利2元人民币现金(含税:扣税后1.8元)",
@@ -563,6 +566,7 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         "每10股派2元人民币现金。(含税;扣税后1.8元)",
         "每10股派2元人民币现金,(含税;扣税后1.8元)",
         "每10股分配现金红利2元(含税;扣税后1.8元)",
+        "每10股分配现金红利2元(含税。扣税后1.8元)",
         "每10股派2元人民币现金、送3股红股(含税;扣税后1.5元)",
         "每10股派发现金红利人民币2(含税)",
     ):
@@ -572,6 +576,9 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         text.replace("二、本次实施的权益分派方案", "二、拟议方案"),
         text.replace("每10股派2元", "每10股派4元(含税) 每10股派2元"),
         text.replace("每10股派2元人民币现金(含税)", "每10股派发现金红利0.403129(含税)"),
+        text.replace("本次实施的权益分派方案", "权益分派方案").replace(
+            "每10股派2元人民币现金(含税)", "每10股派发现金红利0.403129(含税)"
+        ),
         "差异化分红送转:是\n" + text,
     ):
         with pytest.raises(ValueError):

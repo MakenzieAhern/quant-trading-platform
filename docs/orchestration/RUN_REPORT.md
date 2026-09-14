@@ -1,5 +1,57 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 short implementation headings fail closed
+
+Inspection of 000723's 2010 notice established that its unqualified numbered
+"权益分派方案" heading is the final implementation section. The earlier broad
+heading experiment's revert is superseded: increased quarantine count is not a
+reason to ignore a final section. Explicit "本次实施" headings take precedence;
+otherwise a unique short implementation heading is required when present.
+Unparseable section terms never fall back to the introductory proposal/summary.
+The notice's gross-tax full stop is normalized without changing its amount.
+
+Audit v7 of original 22,864 records: 22,768 unchanged / 96 quarantined.
+Canonical ba48a88125402d4cec978566079fe5ef7793fff0b85e564b6e94723dd6cc7aaf;
+revalidated subset v3 cc709a9bcb2ea453ed6e67983d8ad37cc069c2e4c8cb36233b2f63db4c6ac53c.
+Thirteen source-input replays v2 produce 23,199 supported / 4,648 unresolved.
+Combined cash-current-implementation-ledger-v2.json canonical SHA
+1167033ec372bdb5860c3ba2365dd8cf8eaec8105716d286add1a1a2a5ee895b.
+23,144 historical identities preserved; 96 quarantined with current evidence.
+Versus combined v1: 57 additions (two reinstatements), 66 quarantine removals;
+55 genuinely new identities. Restored 002737 2018 and 002810 2019 match current
+section terms exactly. No conflicting candidate forced through. Reverse ordering
+PASS; full dataset still uncreated. One replay launch waited on an unpublished
+audit path and failed before writing; the corrected launch reused existing input
+receipts. Consolidation completed without a duplicate writer; future reporting
+uses a precomputed key set instead of repeated set construction.
+
+## 2026-09-14 further dated SSE labels
+
+Label variants and explicit suspension-then-effective-date fields recover nine
+additional provisional events beyond v19. The suspension date is never used as
+the warning start. Parser v21 canonical SHA
+356507f2875c70a5f65619e8398362fb587743bb21d5730b39cc7d899df9ebaa;
+chain v14 60e5b522f9fad9bf53e369e6d35f58f5effd7559676ecbd88a5740cebbd6f347.
+731 provisional / 846 parser unresolved / three metadata variants; 327 chains,
+83 gaps, zero conflicts. Full authority acceptance remains zero.
+Cached gap queue v1 (based on earlier parser v20, not a completion assertion):
+93 document leads, canonical 821277b4dbf1509f2170c04e0c31b1c7644161ed1bc9e72b026db5a5147fee31.
+No denied-source acquisition, dataset publication, freeze or study execution.
+
+## 2026-09-14 explicit legacy issuer-name labels
+
+Two additional retained notices close provisional entry gaps: 600077 effective
+2010-03-01 (57628128, PDF 60a5c4ae8cfdc5eabc851205847f5b8cbeaf6403a83f580fc54e8196b0d2aaa6)
+and 600179 effective 2010-04-16 (57813819,
+95a0505090e90a43384e743ae623c0604f2fdb9d935b588ce81f253ac08ba0f5).
+Both two-page notices were read. New-name-only prose requires an adjacent exact
+security code or the explicit issuer post-warning label, plus an independently
+explicit effective date. Undated historical-name ordering supplies neither.
+Parser v19 0bcca9b7b31449de0f00a87828dbd02733a73e8d5cd27104ace7925c30b5bb4c;
+chain v12 b22e50ea46ba6f184d179b2dce0231b2da19e743c20aa3951755f43b4d8e76fa.
+722 provisional / 855 parser unresolved / three metadata variants; 326 chains,
+85 gaps, zero conflicts. Thirty-two focused ST tests PASS. No full acceptance.
+
 ## 2026-09-14 checksum-bound title reconciliation batch
 
 Seven first-page title reviews reuse the existing checksum/announcement-bound

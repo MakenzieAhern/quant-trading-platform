@@ -1,6 +1,21 @@
 # Current state
 
-## Current: offline cash implementation integrity closure
+## Current: stricter final cash sections and cached SSE replay
+
+Current cash ledger v2 supports 23,199 bounded events / 4,648 unresolved groups.
+96 historical entries are quarantined, not admitted; 23,144 historical identities
+are freshly corroborated and preserved. Versus ledger v1: 57 additions (including
+two reinstated original records) and 66 removals to quarantine, not silent drops.
+Both short and explicit implementation headings now prevent proposal fallback;
+counts are allowed to decrease. Original 22,864-event audit: 22,768 recorroborated,
+96 review cases. Combined ledger canonical SHA
+1167033ec372bdb5860c3ba2365dd8cf8eaec8105716d286add1a1a2a5ee895b.
+SSE parser v21: 731 provisional / 846 unresolved / three metadata variants;
+327 chains / 83 gaps / zero conflicts. Full authority remains PARTIAL.
+PID 434 suspended; authorized source access/local official archives requested.
+No full dataset, freeze or studies. Older cash counts below are superseded.
+
+## Prior: offline cash implementation integrity closure
 
 Full offline replay of existing 2010-2021 and partial-2022 source/date inputs now
 supports 23,208 cash events: 376 new, all 22,832 revalidated identities preserved.
@@ -46,8 +61,8 @@ still running; no full-census PASS, dataset publication, research study or merge
 
 ## Current: R5 cached transition and partial 2022 continuation
 
-720 provisional SSE transitions / 857 parser unresolved / three metadata variants.
-326 diagnostic chains / 87 gaps / zero conflicts; full authority remains PARTIAL.
+731 provisional SSE transitions / 846 parser unresolved / three metadata variants.
+327 diagnostic chains / 83 gaps / zero conflicts; full authority remains PARTIAL.
 Cached 600069 stock entry, 600130 and 600365 exits recovered by narrow header/verb
 syntax support; bond notices and conflicting dates remain unaccepted. 606 backend
 tests and quality checks PASS. CI 34818532899 for 17117c7 SUCCESS.

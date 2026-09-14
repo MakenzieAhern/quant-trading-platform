@@ -149,6 +149,12 @@ def test_explicit_date_label_variants():
     fixture = FIXTURES[1]
     pages = [p.replace("起始日\uff1a", "起始日为\uff1a") for p in fixture["pages"]]
     assert extract(pages, fixture["record"])["effective_from"] == "2022-02-09"
+    assert (
+        extract([p.replace("起始日为\uff1a", "起始日\uff1a自") for p in pages], fixture["record"])[
+            "effective_from"
+        ]
+        == "2022-02-09"
+    )
     for variant in ("股票简称\uff1a由", "股票简称将由", "简称由", "股票简称\uff1a", "股票由"):
         pages = [p.replace("股票简称由", variant) for p in fixture["pages"]]
         assert extract(pages, fixture["record"])["status"] == "ST"

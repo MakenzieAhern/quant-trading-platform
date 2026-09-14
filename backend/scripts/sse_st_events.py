@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v15"
+VERSION = "sse-cninfo-ordinary-name-v16"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -127,6 +127,21 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     labels = list(
         re.finditer(r"(?:实施|撤销)后A股简称为([S*ST\u4e00-\u9fff]{1,12})[\uff0c。\uff1b;]", text)
     )
+    labels.extend(
+        re.finditer(
+            r"实行退市风险警示后(?:本?公司)?股票的?简称为?[\uff1a:]"
+            r"(S?\*ST[\u4e00-\u9fff]{1,10})(?=[\uff0c,。\uff1b;]|实行退市风险警示后)",
+            text,
+        )
+    )
+    labels.extend(
+        re.finditer(
+            r"股票简称变更为([S*ST\u4e00-\u9fff]{1,12})[\uff0c,]股票代码"
+            + re.escape(sse["SECURITY_CODE"])
+            + r"(?!\d)",
+            text,
+        )
+    )
     labeled = {(compact(issuer_name), m[1]) for m in labels}
     if pairs and labeled and pairs != labeled:
         raise ValueError("CONFLICTING_LABELED_NAME")
@@ -181,7 +196,14 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     dates = list(
         re.finditer(
             r"(?:撤销|实施|实行)[^。\uff1b;\uff1a:]{0,60}风险警示"
-            r"[^。\uff1b;\uff1a:]{0,15}起始日(?:期)?为?[\uff1a:]?" + DATE,
+            r"[^。\uff1b;\uff1a:]{0,15}起始日(?:期)?为?[\uff1a:]?自?" + DATE,
+            text,
+        )
+    )
+    dates.extend(
+        re.finditer(
+            r"实行退市风险警示的起始日[\uff1a:]公司股票将于"
+            r"20\d{2}年\d{1,2}月\d{1,2}日停牌一天[\uff0c,]" + DATE + r"起实行退市风险警示",
             text,
         )
     )
@@ -199,7 +221,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         if dated and dated != restoration_dated:
             raise ValueError("CONFLICTING_RESTORATION_EFFECTIVE_DATE")
         dated = restoration_dated
-    if not dates and prefix_mode and not confirmation and not labeled and not restoration:
+    if not dates and prefix_mode and not confirmation and not restoration:
         # Older layouts date the exact name-change clause rather than a start-date label.
         # Never use a general publication/suspension date or a date from another sentence.
         dates = list(

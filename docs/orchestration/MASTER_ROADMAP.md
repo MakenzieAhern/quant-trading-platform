@@ -1,6 +1,19 @@
 # v1.1 controller roadmap
 
-## Current: R5 exchange distribution census; batch closure continues
+## Current: R5 offline closure during CNINFO access suspension
+
+PID 434 is suspended after HTTP 403, with original receipts intact; no automatic
+resume or duplicate acquisition. Current cached cash ledger: 23,199 supported
+events, 4,648 unresolved groups, 96 prior records explicitly quarantined. SSE:
+731 provisional transitions, 83 chain gaps, zero conflicts; full acceptance is
+still PARTIAL. Fifteen reviewed mergers and 169 integer retained-bonus events
+remain supported bounded subsets, not a complete corporate-action census.
+Reuse accepted calendar, benchmark and Pilot v2 authorities. Continue cached
+evidence queues; external source access is requested. Full safe start remains
+NOT_ESTABLISHED. Full dataset CREATED/AUDITED/FROZEN=NO; no studies/merge/release.
+Precise current immutable manifests are in CURRENT_STATE and project_state.json.
+
+## Prior: R5 exchange distribution census; batch closure continues
 
 All 192 official SZSE monthly tables retrieved: 23,682 source rows; all 74
 rights candidates match the existing official event ledger, no source-only or
