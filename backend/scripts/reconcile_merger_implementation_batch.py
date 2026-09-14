@@ -10,16 +10,27 @@ from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY, M
 from scripts.audit_merger_evidence import audit
 
 
+def raw_boundaries(payload, exchange, code, start, end):
+    key = {"SSE": "sh", "SZSE": "sz"}[exchange] + code
+    rows = json.loads(payload.decode().split("=", 1)[-1])["data"][key]["day"]
+    dates = [r[0] for r in rows if start <= r[0] <= end]
+    if not dates or dates != sorted(set(dates)):
+        raise ValueError("RAW_BOUNDARY_DATES_INVALID")
+    return dates[0], dates[-1]
+
+
 def event_from_review(row):
+    exchange = row.get("exchange", "SZSE")
     return MergerEvent.model_validate(
         dict(
-            parent_security={"value": "CN-A:SZSE:" + row["parent"]},
-            successor_security={"value": "CN-A:SZSE:" + row["successor"]},
+            parent_security={"value": f"CN-A:{exchange}:" + row["parent"]},
+            successor_security={"value": f"CN-A:{exchange}:" + row["successor"]},
             conversion_ratio=row["conversion_ratio"],
             parent_last_trading_date=row["parent_last_trading_date"],
             record_date=row["record_date"],
             effective_date=row["effective_date"],
             successor_listing_date=row["successor_listing_date"],
+            successor_shares_tradable_from=row.get("successor_shares_tradable_from"),
             official_fractional_method="GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE",
             research_fractional_method="FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION",
             cash_election_offered=row["cash_election_offered"],
@@ -31,7 +42,8 @@ def event_from_review(row):
                     published_on=row["publication_date"],
                     retrieved_at=row["retrieved_at"],
                     document="Official issuer merger implementation notice",
-                )
+                ),
+                *row.get("additional_event_sources", []),
             ],
         )
     )
@@ -45,6 +57,8 @@ def main():
     reviews = json.loads(args.reviews.read_bytes())
     if reviews["policy"] != MERGER_POLICY:
         raise ValueError("POLICY_MISMATCH")
+    if reviews["boundary_policy"] != "FIRST_POST_EVENT_TRADING_BOUNDARY_V1":
+        raise ValueError("BOUNDARY_POLICY_MISMATCH")
     paths = [args.root / "batch-v2/source-manifest.json", args.master, args.boundaries]
     values = []
     for path in paths:
@@ -62,13 +76,28 @@ def main():
         matches = [
             s for s in sources["documents"] if s.get("source_sha256") == row["source_sha256"]
         ]
+        if not matches and row.get("source_path"):
+            matches = [
+                dict(
+                    source_path=row["source_path"],
+                    url=row["source_url"],
+                    source_sha256=row["source_sha256"],
+                    issuer=row["parent"],
+                    published_on=row["publication_date"],
+                    retrieved_at_utc=row["retrieved_at"],
+                )
+            ]
         if len(matches) != 1:
             raise ValueError("SOURCE_IDENTITY_AMBIGUOUS")
         source = matches[0]
         if source["issuer"] != row["parent"] or source["published_on"] != row["publication_date"]:
             raise ValueError("ISSUER_OR_PUBLICATION_MISMATCH")
         for code, expected, field in [
-            (row["parent"], row["effective_date"], "delisting_date"),
+            (
+                row["parent"],
+                row.get("parent_delisting_date", row["effective_date"]),
+                "delisting_date",
+            ),
             (row["successor"], row["successor_listing_date"], "listing_date"),
         ]:
             records = [m for m in master["records"] if m["symbol"] == code]
@@ -79,20 +108,27 @@ def main():
                 raise ValueError("TRADABLE_BOUNDARY_UNVERIFIED")
             b = raw[0]
             payload = args.boundaries.parent / f"{code}-{b['start']}-{b['end']}.json"
+            payload = Path(b.get("source_path", payload)).resolve()
+            if not payload.is_relative_to(args.root.resolve()):
+                raise ValueError("RAW_BOUNDARY_OUTSIDE_STAGING")
             if sha256_file(payload) != b["source"]["sha256"]:
                 raise ValueError("RAW_BOUNDARY_SOURCE_CHANGED")
+            if raw_boundaries(
+                payload.read_bytes(), row.get("exchange", "SZSE"), code, b["start"], b["end"]
+            ) != (b["first_date"], b["last_date"]):
+                raise ValueError("RAW_BOUNDARY_RECEIPT_MISMATCH")
             observed = b["last_date"] if code == row["parent"] else b["first_date"]
             expected = (
                 row["parent_last_trading_date"]
                 if code == row["parent"]
-                else row["successor_listing_date"]
+                else row.get("first_post_event_trading_date", row["successor_listing_date"])
             )
             if observed != expected:
                 raise ValueError("TRADABLE_BOUNDARY_MISMATCH")
         if (
             not row["parent_last_trading_date"]
             < row["continuous_suspension_from"]
-            <= row["record_date"]
+            <= row["effective_date"]
         ):
             raise ValueError("SUSPENSION_BOUNDARY_MISMATCH")
         document = dict(
@@ -104,7 +140,7 @@ def main():
         )
         review = dict(
             policy=MERGER_POLICY,
-            documents=[document],
+            documents=[document, *row.get("additional_review_documents", [])],
             reviewed_terms=row,
             boundary_policy=reviews["boundary_policy"],
             registry_timestamp="NOT_INFERRED",
@@ -119,7 +155,7 @@ def main():
     if len({r["event_checksum"] for r in results}) != len(results):
         raise ValueError("DUPLICATE_EVENT")
     report = dict(
-        parser_version="REVIEWED_MERGER_IMPLEMENTATION_BATCH_V1",
+        parser_version="REVIEWED_MERGER_IMPLEMENTATION_BATCH_V2",
         parser_sha256=sha256_file(Path(__file__)),
         reviews_sha256=sha256_file(args.reviews),
         inputs=[dict(path=str(p), sha256=sha256_file(p)) for p in paths],

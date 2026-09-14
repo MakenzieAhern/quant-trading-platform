@@ -1,5 +1,13 @@
 # Current state
 
+## Current: R5 prior merger chronology gaps closed
+
+Nine reviewed candidates now supported; zero unresolved within that bounded set.
+Full-market merger census remains NOT_ESTABLISHED. 600553/600991/601299 use the
+approved suspension-boundary policy; June 8 is the 601299 daily boundary, not
+May 26 H-share conversion or June 4 new-share listing. No backdated disclosures.
+See ../research/R5_MERGER_SUSPENSION_BATCH_V1.md. Acquisition continues; no studies.
+
 ## Current: R5 four retained merger implementations closed
 
 Reviewed merger inventory: nine candidates, six supported, three unresolved;

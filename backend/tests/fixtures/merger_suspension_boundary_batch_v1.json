@@ -1,0 +1,134 @@
+{
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "boundary_policy": "FIRST_POST_EVENT_TRADING_BOUNDARY_V1",
+  "cases": [
+    {
+      "parent": "600553",
+      "successor": "601992",
+      "exchange": "SSE",
+      "conversion_ratio": "1.2",
+      "parent_last_trading_date": "2011-02-01",
+      "parent_delisting_date": "2011-02-18",
+      "record_date": "2011-02-01",
+      "continuous_suspension_from": "2011-02-09",
+      "effective_date": "2011-03-01",
+      "successor_listing_date": "2011-03-01",
+      "cash_election_offered": true,
+      "source_path": "600553-implementation.pdf",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2011-01-31/58968171.PDF",
+      "source_sha256": "bb282302ea2e2677c070eba0f5fc27329d55f9b96df8356013639b9f68a967b9",
+      "publication_date": "2011-01-31",
+      "retrieved_at": "2026-09-13T01:42:47.985835+00:00",
+      "reviewed_pages": [
+        1,
+        2,
+        9
+      ],
+      "additional_review_documents": [
+        {
+          "path": "600553-termination.pdf",
+          "published_on": "2011-02-16",
+          "pages": [
+            1,
+            2
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2011-02-16/59002480.PDF",
+          "sha256": "79eceb993458a7ff84ef4aa80d9b92c6f2dde8ccd1ef9ec4da0456c1b63a553f",
+          "retrieved_at_utc": "2026-09-13T01:51:26.874365+00:00"
+        },
+        {
+          "path": "601992-listing.pdf",
+          "published_on": "2011-02-28",
+          "pages": [
+            5
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2011-02-28/59055022.PDF",
+          "sha256": "3e49053fde0f06de774185bd5ee56fddbe5838ed6f2d85808f6304be1ec00734",
+          "retrieved_at_utc": "2026-09-13T01:51:29.883575+00:00"
+        }
+      ],
+      "additional_event_sources": [
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2011-02-16/59002480.PDF",
+          "sha256": "79eceb993458a7ff84ef4aa80d9b92c6f2dde8ccd1ef9ec4da0456c1b63a553f",
+          "published_on": "2011-02-16",
+          "retrieved_at": "2026-09-13T01:51:26.874365+00:00",
+          "document": "Official termination or successor listing notice"
+        },
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2011-02-28/59055022.PDF",
+          "sha256": "3e49053fde0f06de774185bd5ee56fddbe5838ed6f2d85808f6304be1ec00734",
+          "published_on": "2011-02-28",
+          "retrieved_at": "2026-09-13T01:51:29.883575+00:00",
+          "document": "Official termination or successor listing notice"
+        }
+      ],
+      "scope": "ORDINARY_A_SHARE_HOLDER_NO_CASH_ELECTION",
+      "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE"
+    },
+    {
+      "parent": "600991",
+      "successor": "601238",
+      "exchange": "SSE",
+      "conversion_ratio": "1.6",
+      "parent_last_trading_date": "2012-03-06",
+      "parent_delisting_date": "2012-03-20",
+      "record_date": "2012-03-06",
+      "continuous_suspension_from": "2012-03-07",
+      "effective_date": "2012-03-29",
+      "successor_listing_date": "2012-03-29",
+      "cash_election_offered": true,
+      "source_path": "600991-implementation.pdf",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2012-03-05/60623792.PDF",
+      "source_sha256": "be61c5f9c6641ba15ca66143c64ca0cebee40a74c1534d7a35a1f9adb7b5b1d9",
+      "publication_date": "2012-03-05",
+      "retrieved_at": "2026-09-13T01:42:50.945420+00:00",
+      "reviewed_pages": [
+        1,
+        2,
+        7
+      ],
+      "additional_review_documents": [
+        {
+          "path": "600991-termination.pdf",
+          "published_on": "2012-03-16",
+          "pages": [
+            1,
+            2
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2012-03-16/60678056.PDF",
+          "sha256": "13dc58299d810847ec5f7e108dbbca1ebcd74151d29d1a9d68b3a4314652214b",
+          "retrieved_at_utc": "2026-09-13T01:51:30.872301+00:00"
+        },
+        {
+          "path": "601238-listing.pdf",
+          "published_on": "2012-03-27",
+          "pages": [
+            4
+          ],
+          "url": "https://static.cninfo.com.cn/finalpage/2012-03-27/60732167.PDF",
+          "sha256": "1d67a9b737efc9b68e16dd2fa6c2dd5324722d4d77c1aa2105d48ebeae145d60",
+          "retrieved_at_utc": "2026-09-13T01:51:32.071570+00:00"
+        }
+      ],
+      "additional_event_sources": [
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2012-03-16/60678056.PDF",
+          "sha256": "13dc58299d810847ec5f7e108dbbca1ebcd74151d29d1a9d68b3a4314652214b",
+          "published_on": "2012-03-16",
+          "retrieved_at": "2026-09-13T01:51:30.872301+00:00",
+          "document": "Official termination or successor listing notice"
+        },
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2012-03-27/60732167.PDF",
+          "sha256": "1d67a9b737efc9b68e16dd2fa6c2dd5324722d4d77c1aa2105d48ebeae145d60",
+          "published_on": "2012-03-27",
+          "retrieved_at": "2026-09-13T01:51:32.071570+00:00",
+          "document": "Official termination or successor listing notice"
+        }
+      ],
+      "scope": "ORDINARY_A_SHARE_HOLDER_NO_CASH_ELECTION",
+      "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE"
+    }
+  ]
+}

@@ -374,9 +374,14 @@ def test_official_rounded_ratio_is_not_recomputed_from_exchange_prices():
 
 @pytest.mark.parametrize(
     "review",
-    json.loads(
-        (Path(__file__).parent / "fixtures/merger_implementation_batch_v1.json").read_bytes()
-    )["cases"],
+    [
+        row
+        for name in (
+            "merger_implementation_batch_v1.json",
+            "merger_suspension_boundary_batch_v2.json",
+        )
+        for row in json.loads((Path(__file__).parent / "fixtures" / name).read_bytes())["cases"]
+    ],
     ids=lambda r: r["parent"],
 )
 def test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(review):
@@ -384,6 +389,8 @@ def test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(review)
 
     action = event_from_review(review)
     assert MergerEvent.model_validate_json(action.model_dump_json()) == action
+    assert action.activation_date >= action.effective_date
+    assert all(source.published_on < action.effective_date for source in action.sources)
     assert (
         action.event_checksum
         == action.model_copy(update={"sources": tuple(reversed(action.sources))}).event_checksum
@@ -393,7 +400,8 @@ def test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(review)
         bus.subscribe(EventType.ORDER_CREATED, emitted.append)
         bus.subscribe(EventType.ORDER_FILLED, emitted.append)
         portfolio = PortfolioEngine(bus, Decimal(10000))
-        parent, successor = review["parent"] + ".SZSE", review["successor"] + ".SZSE"
+        exchange = review.get("exchange", "SZSE")
+        parent, successor = review["parent"] + "." + exchange, review["successor"] + "." + exchange
         portfolio.apply_fill(
             make_fill(1, OrderSide.BUY, str(quantity), "10", symbol=parent).model_copy(
                 update={"timestamp": at(review["parent_last_trading_date"])}

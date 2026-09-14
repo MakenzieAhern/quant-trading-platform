@@ -1,5 +1,13 @@
 # Blockers
 
+## Current: R5 wider census remains incomplete
+
+Prior 600553/600991/601299 chronology gaps are RESOLVED under the approved
+suspension-boundary convention. Nine reviewed merger candidates supported; this
+does not certify the wider market census. Distribution metadata recovery now
+contains 44,504 distinct leads; document downloads and economic review continue.
+No new material methodology gate. Full source readiness remains partial.
+
 ## Current: R5 source queues continue independently
 
 Annual CNINFO pagination/transport failures remain explicit, not empty history.

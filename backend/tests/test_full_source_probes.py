@@ -298,3 +298,23 @@ def test_distribution_notice_dates_require_bound_labels_not_unrelated_dates():
         "2010-03-02",
         "2010-03-03",
     ]
+
+
+def test_merger_raw_boundaries_use_unadjusted_rows_and_reject_duplicate_dates():
+    import pytest
+
+    from scripts.reconcile_merger_implementation_batch import raw_boundaries
+
+    payload = b'kline_day2011={"data":{"sh601992":{"day":[["2011-03-01"],["2011-03-02"]]}}}'
+    assert raw_boundaries(payload, "SSE", "601992", "2011-03-01", "2011-03-01") == (
+        "2011-03-01",
+        "2011-03-01",
+    )
+    with pytest.raises(ValueError, match="RAW_BOUNDARY_DATES_INVALID"):
+        raw_boundaries(
+            payload.replace(b"2011-03-02", b"2011-03-01"),
+            "SSE",
+            "601992",
+            "2011-03-01",
+            "2011-03-02",
+        )

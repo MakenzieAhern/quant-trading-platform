@@ -1,5 +1,14 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 merger suspension batch
+
+600553/600991 retained evidence and three targeted 601299 official notices close
+the prior three chronology gaps under approved policy. Nine reviewed candidates
+supported, full-market census still incomplete. Source audit manifest:
+62f5d5a3068cb1ee02e9d36523e08f58e1d5aa5e4454507d7db8fc028009b676.
+31 focused tests PASS. Previous milestone CI 34796787068 PASS. Workers continue.
+See ../research/R5_MERGER_SUSPENSION_BATCH_V1.md. No new gate or studies/merge.
+
 ## 2026-09-14 retained merger batch
 
 Four official implementation records normalized; nine reviewed candidates now have
