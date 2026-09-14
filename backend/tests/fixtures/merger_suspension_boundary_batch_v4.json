@@ -1,0 +1,114 @@
+{
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "boundary_policy": "FIRST_POST_EVENT_TRADING_BOUNDARY_V1",
+  "cases": [
+    {
+      "parent": "600837",
+      "successor": "601211",
+      "exchange": "SSE",
+      "conversion_ratio": "0.62",
+      "parent_last_trading_date": "2025-02-05",
+      "continuous_suspension_from": "2025-02-06",
+      "record_date": "2025-03-03",
+      "parent_delisting_date": "2025-03-04",
+      "successor_listing_date": "2015-06-26",
+      "effective_date": "2025-03-17",
+      "successor_shares_tradable_from": "2025-03-17",
+      "first_post_event_trading_date": "2025-03-17",
+      "cash_election_offered": true,
+      "source_url": "https://static.cninfo.com.cn/finalpage/2025-03-01/1222675645.PDF",
+      "source_path": "batch-v1/pdf/009bbe3d5f58beaac352d0f0f8c7f6902c6dbcb5cbe51287fc4e2b0c905b4dad.pdf",
+      "source_sha256": "03f5abc259cc172db972aa613b223d77d034aeaeb7a9375548ee13925521c9a5",
+      "publication_date": "2025-03-01",
+      "retrieved_at": "2026-09-13T09:23:57.573416+00:00",
+      "scope": "ORDINARY_UNRESTRICTED_A_SHARE_HOLDER_NO_CASH_ELECTION",
+      "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE",
+      "additional_event_sources": [
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-14/1222789432.PDF",
+          "sha256": "a9de1279a9079a3515a35eda9951b21b281ac6b8a2092bef72e8881ce2dcb391",
+          "published_on": "2025-03-14",
+          "retrieved_at": "2026-09-13T09:24:04.783617+00:00",
+          "document": "Official suspension or new-share listing notice"
+        },
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2025-01-27/1222441387.PDF",
+          "sha256": "0f31eb913e35bed91b7e8df6bfe880953a18b45a2e60a0db43d1e0f5389de51d",
+          "published_on": "2025-01-27",
+          "retrieved_at": "2026-09-14T07:24:47.720404+00:00",
+          "document": "Official suspension or new-share listing notice"
+        }
+      ],
+      "additional_review_documents": [
+        {
+          "path": "batch-v1/pdf/008e897847319ddfd3b1e8709f708d2987ced420e963f33e650699d731fb1f10.pdf",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-14/1222789432.PDF",
+          "sha256": "a9de1279a9079a3515a35eda9951b21b281ac6b8a2092bef72e8881ce2dcb391",
+          "published_on": "2025-03-14",
+          "retrieved_at_utc": "2026-09-13T09:24:04.783617+00:00"
+        },
+        {
+          "path": "suspension-evidence-v5/1222441387.pdf",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-01-27/1222441387.PDF",
+          "sha256": "0f31eb913e35bed91b7e8df6bfe880953a18b45a2e60a0db43d1e0f5389de51d",
+          "published_on": "2025-01-27",
+          "retrieved_at_utc": "2026-09-14T07:24:47.720404+00:00"
+        }
+      ]
+    },
+    {
+      "parent": "601989",
+      "successor": "600150",
+      "exchange": "SSE",
+      "conversion_ratio": "0.1339",
+      "parent_last_trading_date": "2025-08-12",
+      "continuous_suspension_from": "2025-08-13",
+      "record_date": "2025-09-04",
+      "parent_delisting_date": "2025-09-05",
+      "successor_listing_date": "1998-05-20",
+      "effective_date": "2025-09-16",
+      "successor_shares_tradable_from": "2025-09-16",
+      "first_post_event_trading_date": "2025-09-16",
+      "cash_election_offered": true,
+      "source_url": "https://static.cninfo.com.cn/finalpage/2025-09-04/1224636675.PDF",
+      "source_path": "batch-v1/pdf/ec521d15884f5542d67403927d269c345f2776a1a86cef34b28deb6d03530185.pdf",
+      "source_sha256": "79034d091a72c16f0a58f32e84e4e64bbf0873f690deeab075d3de15477a2f98",
+      "publication_date": "2025-09-04",
+      "retrieved_at": "2026-09-13T09:24:08.217500+00:00",
+      "scope": "ORDINARY_UNRESTRICTED_A_SHARE_HOLDER_NO_CASH_ELECTION",
+      "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE",
+      "additional_event_sources": [
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2025-09-12/1224653312.PDF",
+          "sha256": "4abf8ed1d5933ba4469ab020fc3f5ac31b6f5f0542e6614defcd601452c35354",
+          "published_on": "2025-09-12",
+          "retrieved_at": "2026-09-13T09:24:10.351487+00:00",
+          "document": "Official suspension or new-share listing notice"
+        },
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2025-08-06/1224401435.PDF",
+          "sha256": "fd4e4343c5e2327bc84637c65eec77cb013ef91d077f2ff4fec38c451e045b84",
+          "published_on": "2025-08-06",
+          "retrieved_at": "2026-09-14T07:24:47.720617+00:00",
+          "document": "Official suspension or new-share listing notice"
+        }
+      ],
+      "additional_review_documents": [
+        {
+          "path": "batch-v1/pdf/12b1be9a1a278f387e715e2336568704c5a21d6b248aaa9bc6188d2987f8daa0.pdf",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-09-12/1224653312.PDF",
+          "sha256": "4abf8ed1d5933ba4469ab020fc3f5ac31b6f5f0542e6614defcd601452c35354",
+          "published_on": "2025-09-12",
+          "retrieved_at_utc": "2026-09-13T09:24:10.351487+00:00"
+        },
+        {
+          "path": "suspension-evidence-v5/1224401435.pdf",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-08-06/1224401435.PDF",
+          "sha256": "fd4e4343c5e2327bc84637c65eec77cb013ef91d077f2ff4fec38c451e045b84",
+          "published_on": "2025-08-06",
+          "retrieved_at_utc": "2026-09-14T07:24:47.720617+00:00"
+        }
+      ]
+    }
+  ]
+}

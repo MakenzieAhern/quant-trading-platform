@@ -1,5 +1,36 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 2025 and 000780 merger evidence closure
+
+600837 to 601211 ratio 0.62, new-share boundary 2025-03-17; 601989 to
+600150 ratio 0.1339, boundary 2025-09-16. Official parent implementation,
+suspension and successor listing sources verified. Existing 601211 shares traded
+before converted shares became tradable; original raw response retained and the
+official new-share window separately filtered, never treating old shares as the
+new entitlement. Two-event audit ebbd2af9c8d6b73008dbbd735b4eba726b985eba7508503e4632eced1202633d.
+000780 to 001289 ratio 0.3407, record 2022-01-21, first ordinary-holder trading
+2022-01-24; controller lockup separately identified. Audit
+037f32be7e436a6244cb0f7147fca061b2a1677fab3e3fa1ff0ab52307f3b921.
+Inventory V6 preserves eleven prior events; fourteen supported/four unresolved,
+full market count unknown. 605 backend tests, Ruff/format/mypy PASS.
+
+000578 targeted six-lead query complete, four implementation/correction PDFs
+retained. Actual extra-share transfer delayed to 2011-03-09 from 2011-03-01;
+ratio 2.071671 per ten, referenced CSDC fractional rules not reconciled. Extraction
+d6772e6af1e94dc82facf8e474aaff36927f4abc5e3e4b6ea758e2c7f0fdfe5f.
+002013 official account guide requires confirmation or assigned sell-only account
+plus trading designation; no assumed account completion or unrestricted buy path.
+Guide/boundary evidence df22bdfe8aaebafe71bcc30d8786295fedd1936f3025e27eb14f6e8f710e498a.
+
+2022 live snapshot 2,425 receipts: 2,017 PASS indexed, 408 terminal DNS failures
+(402 temporary resolution, six name/service unknown). Snapshot SHA
+36758c1f00c18a02d2715a7de834c5ef6b0121d4ac022e7817166f17ea6be09d.
+Separate failed-only queue SHA 844dce1a8e2cf5c9fae9d13cd3c7fd8ec96883d0a1f79eb869c1da54aa649bfb.
+Initial recovery launch had no queue because the assertion recognized only one
+DNS wording; it exited before issuing requests. Both DNS variants verified,
+queue published, one valid recovery worker launched. Original receipts unchanged;
+original downloader retains all remaining work. No year-completeness claim.
+
 ## 2026-09-14 two further supported mergers and explicit remaining chains
 
 600317 to 601880: official ratio 1.5030, merger record 2021-01-28,

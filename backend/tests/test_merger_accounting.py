@@ -411,6 +411,8 @@ def test_official_rounded_ratio_is_not_recomputed_from_exchange_prices():
             "merger_implementation_batch_v1.json",
             "merger_suspension_boundary_batch_v2.json",
             "merger_suspension_boundary_batch_v3.json",
+            "merger_suspension_boundary_batch_v4.json",
+            "merger_suspension_boundary_batch_v5.json",
         )
         for row in json.loads((Path(__file__).parent / "fixtures" / name).read_bytes())["cases"]
     ],

@@ -1,5 +1,17 @@
 # Current state
 
+## Current: R5 merger and live-source continuation
+
+Fourteen supported reviewed mergers; four reviewed unresolved chains; full census
+unknown. New verified ordinary-holder boundaries: 600837/601211 2025-03-17,
+601989/600150 2025-09-16, 000780/001289 2022-01-24. Controller/private-placement
+lockups are not applied to the ordinary unrestricted holder class or ignored for
+their actual holders. 002013 cross-market account conversion remains unresolved.
+605 backend tests and quality checks PASS. PR12 OPEN; 94818c2 CI SUCCESS.
+Original distribution worker continues. A separate recovery owns only 408 terminal
+2022 DNS-failed requests, not the original worker's remaining queue. Partial 2022
+snapshot indexed 2,017 successful PDFs; year not complete. Studies remain locked.
+
 ## Current: R5 bounded merger continuation
 
 Eleven supported reviewed mergers; three further reviewed chains unresolved
