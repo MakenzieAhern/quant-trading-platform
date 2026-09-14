@@ -1,5 +1,15 @@
 # Current state
 
+## Current: R5 relisting evidence continuation
+
+705 provisional SSE event records; 872 parser cases and three metadata variants
+remain unresolved. Six further document records resolved using retained evidence,
+including two coordinate-deduplicated PDFs. 325 diagnostic chains / 92 gaps,
+zero same-day conflicts. Full authority remains PARTIAL, not daily-state PASS.
+600057 header mismatch visually confirmed as printed in the PDF; original SSE
+mirror denied access and is not retried. No identity guard waived.
+596 backend tests PASS. Continue independent R5; no full publication or studies.
+
 ## Current: R5 2021 cash and restored SSE metadata
 
 2021: 3,205 PDFs retained/indexed after 18 separate DNS recoveries; originals

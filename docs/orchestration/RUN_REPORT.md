@@ -1,5 +1,25 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 remaining restoration parser review
+
+Coordinate extraction removes overprinted glyphs from 59806624 and 60050789
+without changing source bytes; both now yield provisional dated STAR_ST-to-ST.
+Optional A-share wording and explicit next-day phrases resolve three more
+document records. 600633 normal relisting requires an explicit exchange approval
+removing risk treatment; normal-looking names alone remain rejected.
+Restoration v3: 16 provisional documents, four unresolved, SHA
+8d366f27e5cf4de171ad38f4dc19da360a9feb17d809dba30631d109bbb4f021.
+Full v12 preserves all prior records: 705 provisional / 872 parser unresolved /
+three metadata variants, SHA 5d37f9da5cd7e09f821093fc1af0d1162db302d5530d744b92b1bf26c4ca2b38.
+325 chains / 92 gaps, zero conflicts, reverse-order PASS; not full authority.
+600057 PDF header visibly prints 600870 while body and official metadata say
+600057. Header guard remains intact. Targeted original SSE mirror denied access;
+no retry, manifest e83f6b5dae8dda6446aba118766c8d5f0c0b2b9b9f50187d899c13d1c3338428.
+Windows-to-WSL hard-link publication is unsupported; alternate extraction was
+published locally on Windows then imported with the existing WSL immutable writer.
+No source overwrite or replacement fallback. 596 tests PASS; intentional fixture
+punctuation lint annotation added. ed209a9 CI 34813352211 SUCCESS. Continue R5.
+
 ## 2026-09-14 2021 cash and restoration recovery completed
 
 2021 snapshot 3,187 PASS / 18 DNS failures; all 18 recovered separately.

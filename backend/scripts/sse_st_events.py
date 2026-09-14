@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v10"
+VERSION = "sse-cninfo-ordinary-name-v12"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -134,13 +134,14 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         # Relisting's N prefix is not NORMAL: require both first-day NST and later ST names.
         first_names = list(
             re.finditer(
-                r"恢复上市首日(?:的|[\uff0c,]公司A股)?(?:股票简称为)[“\"](NST[^“”\"]{1,10})[”\"]",
+                r"恢复上市首日(?:的|[\uff0c,]公司(?:A股)?)?股票简称为[“\"](NST[^“”\"]{1,10})[”\"]",
                 text,
             )
         )
         later_names = list(
             re.finditer(
-                r"(?:以后公司(?:的)?|自第二个交易日起公司(?:的)?|从恢复上市的第二个交易日起[\uff0c,]公司A股)"
+                r"(?:以后公司(?:的)?|自第二个交易日起公司(?:的)?|"
+                r"(?:从恢复上市的第二个交易日起|恢复上市次日起)[\uff0c,]公司(?:A股)?)"
                 r"股票简称为[“\"](ST[^“”\"]{1,10})[”\"]",
                 text,
             )
@@ -150,6 +151,23 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
             pairs = {(compact(issuer_name), next(iter(first_values)))}
             names = first_names
             restoration = True
+        if not restoration and (
+            "上海证券交易所批准了撤销对本公司股票实行的退市风险警示或者其他特别处理" in text
+        ):
+            # A normal relisting may abbreviate its first-day display name. Require
+            # explicit exchange approval removing both risk-treatment categories.
+            normal_first = list(
+                re.finditer(r"恢复上市首日的股票简称为[“\"](N[\u4e00-\u9fff]{2,10})[”\"]", text)
+            )
+            normal_later = list(
+                re.finditer(
+                    r"自第二个交易日起公司的股票简称为[“\"]([\u4e00-\u9fff]{2,10})[”\"]", text
+                )
+            )
+            if len({m[1] for m in normal_first}) == len({m[1] for m in normal_later}) == 1:
+                pairs = {(compact(issuer_name), normal_later[0][1])}
+                names = normal_later
+                restoration = True
     if len(pairs) != 1:
         raise ValueError("NAME_TRANSITION_UNRESOLVED")
     old, new = next(iter(pairs))

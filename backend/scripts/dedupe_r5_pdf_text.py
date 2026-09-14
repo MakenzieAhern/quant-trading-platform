@@ -15,17 +15,26 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--staging", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--source-manifest", type=Path)
+    parser.add_argument("--document-id", action="append")
     args = parser.parse_args()
     root = args.staging / "full-sse-st-v1"
-    prior = json.loads((root / "transition-parser-full-v1.json").read_bytes())
     reasons = {
         "WRONG_SECURITY_CODE",
         "PDF_SUBJECT_METADATA_MISMATCH",
         "CNINFO_NAME_NOT_PDF_HEADER",
         "WRONG_ISSUER_NAME",
     }
-    selected = {r["announcement_id"] for r in prior["results"] if r.get("reason") in reasons}
-    source = json.loads((root / "transition-pdfs-v1/source-manifest.json").read_bytes())
+    if args.document_id:
+        selected = set(args.document_id)
+    else:
+        prior = json.loads((root / "transition-parser-full-v1.json").read_bytes())
+        selected = {r["announcement_id"] for r in prior["results"] if r.get("reason") in reasons}
+    source = json.loads(
+        (args.source_manifest or root / "transition-pdfs-v1/source-manifest.json").read_bytes()
+    )
+    if selected - {r["announcement_id"] for r in source["documents"]}:
+        raise ValueError("SELECTED_DOCUMENT_NOT_IN_SOURCE_MANIFEST")
     for row in source["documents"]:
         if row["announcement_id"] not in selected:
             continue
