@@ -1,5 +1,14 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 SZSE prestart risk-state corroboration
+
+Reused official dated export and yearbook; only 16 missing trading-table issuers
+received targeted 2009 metadata queries. All 32 PDFs PASS; all 16 headers agree
+on STAR_ST. 820 yearbook names agree independently. No current-name backfill,
+future event use or assumed NORMAL gaps. Full ST authority remains PARTIAL.
+580 backend tests PASS; follow-up formatting/type checks recorded at milestone.
+See ../research/R5_SZSE_PRESTART_CORROBORATION_V1.md. No stop gate reached.
+
 ## 2026-09-14 targeted 2010 distribution coverage
 
 45 issuer/date metadata windows complete; 75 plus seven document leads acquired

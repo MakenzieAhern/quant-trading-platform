@@ -1,5 +1,11 @@
 # Blockers
 
+## 2026-09-14 SZSE starting risk-state evidence reconciled
+
+836/836 starting members corroborated; no unresolved starting-member risk-state
+conflict. Full SZSE IPO initialization and daily replay still pending; this is
+not a full ST acceptance. Other independent R5 source/accounting queues continue.
+
 ## 2026-09-14 distribution source coverage progress
 
 2010 exchange date groups now have located evidence: 1,056 date links, three

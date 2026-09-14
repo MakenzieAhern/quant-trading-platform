@@ -1,5 +1,13 @@
 # Current state
 
+## Current: R5 SZSE prestart risk-state corroboration
+
+All 836 starting members independently corroborated: 820 yearbook trading-table
+names and 16 paused issuers with 32 retained 2009 notice headers. Dated source
+has 1,276 target risk transitions, zero detected risk-chain/lifecycle conflicts.
+Full ST remains PARTIAL: IPO initialization and daily replay are not accepted.
+See ../research/R5_SZSE_PRESTART_CORROBORATION_V1.md. R5 queues continue.
+
 ## Current: R5 2010 exchange-row notice coverage reconciled
 
 1,056 date-linked notices, three existing supported rights entries, one separately

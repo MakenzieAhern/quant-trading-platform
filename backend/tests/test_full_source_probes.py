@@ -6,6 +6,34 @@ from scripts import probe_full_corporate_actions as probe
 from scripts import probe_full_exit_factors as factors
 
 
+def test_full_szse_name_probe_keeps_unknown_anchor_and_rejects_future_leakage():
+    import pytest
+
+    from scripts.probe_full_szse_st import probe, yearbook_names
+
+    page = "PRICE CHANGE OF STOCKS\n1 000034\n\ue012ST 深泰\n1\n"
+    assert yearbook_names([page])["000034"]["status"] == "STAR_ST"
+    with pytest.raises(ValueError, match="DUPLICATE"):
+        yearbook_names([page, page])
+
+    member = dict(
+        symbol="000001",
+        security_id="CN-A:SZSE:000001",
+        listing_date="1991-01-01",
+        delisting_date="",
+        effective_from="1991-01-01",
+    )
+    event = dict(symbol="000001", effective_from="2010-05-01", old_status="NORMAL", status="ST")
+    future = {**event, "effective_from": "2026-01-01", "old_status": "NORMAL"}
+    assert probe([member], [event]) == probe([member], [future, event])
+    result = probe([member], [event])
+    assert result["anchors"][0]["anchor"] is None
+    assert result["anchors"][0]["status"] == "NO_PRESTART_DATED_ANCHOR"
+    conflict = {**event, "effective_from": "2011-01-01", "old_status": "NORMAL"}
+    assert len(probe([member], [event, conflict])["risk_chain_gaps"]) == 1
+    assert probe([member], [event, conflict]) == probe([member], [conflict, event])
+
+
 def test_instrument_resume_checks_identity_lifecycle_and_source_bytes(tmp_path):
     import pytest
 
@@ -421,3 +449,19 @@ def test_master_baseline_excludes_future_and_exited_intervals_without_dropping_p
     assert active_codes([{**records[2], "effective_to": "2009-12-31"}], "SSE") == {"600057"}
     with pytest.raises(ValueError, match="DUPLICATE_DIRECTORY_CODE"):
         yearbook_codes(["公司表\n600057 名称\n600057 名称\n"], "公司表")
+
+
+def test_prestart_notice_header_requires_issuer_and_does_not_scan_body():
+    import pytest
+
+    from scripts.probe_full_szse_st import notice_header
+
+    page = "证券代码\uff1a0 0 0 7 3 2 证券简称;*ST 三农 公告编号:2009-75"
+    assert notice_header(page, "000732")["status"] == "STAR_ST"
+    assert notice_header(page + "正文" * 100 + "证券代码:600505", "000732")["name"] == "*ST三农"
+    with pytest.raises(ValueError, match="AMBIGUOUS"):
+        notice_header(page, "600505")
+    with pytest.raises(ValueError, match="AMBIGUOUS"):
+        notice_header("公司年度报告" + "正文" * 100 + page, "000732")
+    with pytest.raises(ValueError, match="AMBIGUOUS"):
+        notice_header("证券代码:000732 证券简称:三农", "000732")
