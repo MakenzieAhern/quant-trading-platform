@@ -1,5 +1,19 @@
 # Current state
 
+## Current: R5 2021 cash and restored SSE metadata
+
+2021: 3,205 PDFs retained/indexed after 18 separate DNS recoveries; originals
+preserved. 2,420 supported cash events / 688 unresolved groups; twelve-year
+bounded cash total 20,683 / 3,809. Unchanged approved cash parser/policy.
+SSE DNS recovered; all 20 restoration documents now exactly corroborated.
+Ten provisional relisting transitions added, requiring dated restoration plus
+first-day NST and later ST names. 699 provisional transitions overall; 878
+parser cases and three metadata variants remain. 324 diagnostic chains / 95
+gaps, zero same-day conflicts; full ST authority still PARTIAL.
+596 backend tests and quality checks PASS. e4e5bbf CI 34812475961 SUCCESS.
+Original distribution worker continues later years, no duplicate writer.
+Full dataset not created/audited/frozen; all studies locked; PR12 open/unmerged.
+
 ## Current: R5 restoration coverage recovery
 
 Retained annual fact books identify 17 restoration rows absent from the current

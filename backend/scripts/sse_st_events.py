@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v9"
+VERSION = "sse-cninfo-ordinary-name-v10"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -129,6 +129,27 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     if not pairs and len(labeled) == 1:
         pairs = labeled
         names = labels
+    restoration = False
+    if not pairs and prefix_mode:
+        # Relisting's N prefix is not NORMAL: require both first-day NST and later ST names.
+        first_names = list(
+            re.finditer(
+                r"恢复上市首日(?:的|[\uff0c,]公司A股)?(?:股票简称为)[“\"](NST[^“”\"]{1,10})[”\"]",
+                text,
+            )
+        )
+        later_names = list(
+            re.finditer(
+                r"(?:以后公司(?:的)?|自第二个交易日起公司(?:的)?|从恢复上市的第二个交易日起[\uff0c,]公司A股)"
+                r"股票简称为[“\"](ST[^“”\"]{1,10})[”\"]",
+                text,
+            )
+        )
+        first_values = {m[1][1:] for m in first_names}
+        if first_values and first_values == {m[1] for m in later_names} and len(first_values) == 1:
+            pairs = {(compact(issuer_name), next(iter(first_values)))}
+            names = first_names
+            restoration = True
     if len(pairs) != 1:
         raise ValueError("NAME_TRANSITION_UNRESOLVED")
     old, new = next(iter(pairs))
@@ -143,7 +164,20 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         )
     )
     dated = {(date(int(m[1]), int(m[2]), int(m[3])).isoformat()) for m in dates}
-    if not dates and prefix_mode and not confirmation and not labeled:
+    if restoration:
+        dates = list(
+            re.finditer(
+                r"(?:本)?公司A?股?股票将?(?:于|自)"
+                + DATE
+                + r"起?在(?:上海证券交易所|上交所)恢复(?:上市)?交易",
+                text,
+            )
+        )
+        restoration_dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if dated and dated != restoration_dated:
+            raise ValueError("CONFLICTING_RESTORATION_EFFECTIVE_DATE")
+        dated = restoration_dated
+    if not dates and prefix_mode and not confirmation and not labeled and not restoration:
         # Older layouts date the exact name-change clause rather than a start-date label.
         # Never use a general publication/suspension date or a date from another sentence.
         dates = list(

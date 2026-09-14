@@ -67,6 +67,11 @@ def main():
         meta = json.loads(meta_path.read_bytes())
         if "query.sse.com.cn/security/stock/queryCompanyBulletinNew.do" not in meta.get("url", ""):
             continue
+        if meta.get("error") and "sha256" not in meta:
+            cached_source_gaps.append(
+                dict(path=str(meta_path), reason="RETAINED_FAILED_RETRIEVAL", error=meta["error"])
+            )
+            continue
         path = Path(str(meta_path).removesuffix(".meta.json"))
         if not path.exists():
             path = Path(str(path) + ".json")  # Legacy probe receipt omitted the data suffix.

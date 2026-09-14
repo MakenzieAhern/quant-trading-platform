@@ -1,5 +1,30 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 2021 cash and restoration recovery completed
+
+2021 snapshot 3,187 PASS / 18 DNS failures; all 18 recovered separately.
+Reconciled 3,205-PDF manifest SHA
+328436fd05258da983c276c4bf968bdd9780112981f0bbc3fcf5b3a0f17a7c2c.
+Date links 2,859/3,139, four parsing errors, zero extraction gaps; SHA
+24a5ab92080b5d7927d4b9d26e7040a1d2797c93362083899e8a5d03d7c6ef8c.
+Cash 2,420 supported / 688 unresolved, ledger SHA
+b022439bb1784333004eaaaa9126706d532ab4b58a0c749e3e850122e435f7bd.
+Total twelve-year bounded cash 20,683/3,809; full census remains PARTIAL.
+After confirmed DNS recovery, one missing-only SSE retry resolved 17 documents
+across 16 failed issuer/days; three earlier cached matches retained. Recovery SHA
+9ce1657ab1ec59758b880c75273d303be68ea4c4ca2c9ade1329924c3a12ad55.
+Failed fetch metadata is retained as a gap, not opened as a nonexistent response;
+regression covers this checkpoint recovery path. Original failures unchanged.
+Narrow relisting parsing requires explicit dates and matching first-day NST/later
+ST names. Ten provisional events; ten documents remain unresolved. Union SHA
+5ac88e9c4f1d795f5223165fde392e1dc5116d9b513313f9a1c963e8f25b18cd;
+all prior 689 event records preserved, total 699. Chain v3 has 324 chains, 95 gaps,
+zero conflicts; SHA 884352702f607f6559cdbb0e6dfac276b2011b07247509fe62f99a44e954b2a7.
+18 year-window Tencent controls returned target rows without duplicate dates;
+outside-year rows require explicit filtering. Not accepted full raw authority.
+Probe SHA 56911f5929916c06b6c606fbc909fea6fae19dca781b07777789c5b0a7c30c5f.
+596 backend tests/quality PASS; e4e5bbf CI 34812475961 SUCCESS. Continue R5.
+
 ## 2026-09-14 restoration coverage and chain diagnostic
 
 Fact-book restoration inventory: 17 explicit dated rows, no accepted events;
