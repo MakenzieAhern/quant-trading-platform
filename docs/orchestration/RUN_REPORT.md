@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 two further supported mergers and explicit remaining chains
+
+600317 to 601880: official ratio 1.5030, merger record 2021-01-28,
+delisting 2021-01-29, unrestricted new-share boundary 2021-02-09.
+600723 to 600859: official ratio 0.3058, merger record 2021-10-21,
+delisting 2021-10-22, unrestricted new-share boundary 2021-11-02.
+Both explicitly use global remainder ranking/random ties; approved floor and
+zero-whole policies unchanged. Parent cash-option notices separately establish
+last trading and continuous suspension, not merger record dates. Six targeted raw
+controls corroborate dates; manifest 82335f430129fea3875c25e6c30ca9512bceef54bbf5d91803153e9a21482df8.
+Audited two-event manifest 82c0c256e2aa767e811d2b49333123892b41944cc68b9141a956d000ce4728fb.
+Inventory V5 preserves nine prior events: eleven supported, three reviewed
+unresolved, full census unknown. 000578 ratio 1/2.90 and listing boundary verified,
+but its additional pre-merger share transfer remains separately unresolved.
+No complete-chain claim. Adapter now retains existing denominator/activation
+fields. 602 backend tests, Ruff/format/mypy PASS. No strategy or publication.
+
 ## 2026-09-14 cross-exchange merger routing and retained evidence gaps
 
 Parent/successor exchanges are now independently routed through event identity,

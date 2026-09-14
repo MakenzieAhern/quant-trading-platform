@@ -1,5 +1,16 @@
 # Current state
 
+## Current: R5 bounded merger continuation
+
+Eleven supported reviewed mergers; three further reviewed chains unresolved
+(000578 additional pre-merger share transfer, 600591 referenced fraction rules,
+000522 account-registration-dependent tradability). Full market count unknown.
+600317 and 600723 source-byte, master and raw-boundary checks pass under the
+existing first-post-event trading boundary, not an inferred registry timestamp.
+602 backend tests and quality checks PASS. Existing event identities preserved;
+review adapter passes through reciprocal ratios and activation evidence.
+R5 remains RUNNING_BATCH_CLOSURE. No full publication, freeze, study or merge.
+
 ## Current: R5 bounded retained-bonus reconciliation
 
 169 supported integer-ratio retained-bonus events under the approved

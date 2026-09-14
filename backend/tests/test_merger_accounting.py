@@ -373,6 +373,22 @@ def test_cross_exchange_identity_routing_preserves_same_exchange_event_identity(
     test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(cross)
 
 
+def test_review_adapter_preserves_reciprocal_terms_and_activation_evidence():
+    from scripts.reconcile_merger_implementation_batch import event_from_review
+
+    review = json.loads(
+        (Path(__file__).parent / "fixtures/merger_implementation_batch_v1.json").read_bytes()
+    )["cases"][0]
+    source = event_from_review(review).sources[0].model_dump(mode="json")
+    reciprocal = dict(
+        review, conversion_ratio="1", conversion_denominator="2.90", activation_sources=[source]
+    )
+    action = event_from_review(reciprocal)
+    assert action.quantities(Decimal(29))[1] == 10
+    assert action.activation_sources[0].sha256 == source["sha256"]
+    test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(reciprocal)
+
+
 def test_official_rounded_ratio_is_not_recomputed_from_exchange_prices():
     # 000562 implementation, 2015-01-22, PDF pages 3-4; official ratio has nine decimals.
     # Source SHA: aaa254af495f145537662817acb96d646990f626a84754cd90f2e84fa1f11b6d.
@@ -394,6 +410,7 @@ def test_official_rounded_ratio_is_not_recomputed_from_exchange_prices():
         for name in (
             "merger_implementation_batch_v1.json",
             "merger_suspension_boundary_batch_v2.json",
+            "merger_suspension_boundary_batch_v3.json",
         )
         for row in json.loads((Path(__file__).parent / "fixtures" / name).read_bytes())["cases"]
     ],
