@@ -1,5 +1,13 @@
 # Current state
 
+## Current: R5 candidate instrument classification closed
+
+5,432 candidates: 5,431 ordinary A shares and one separately excluded CDR.
+Reused 5,181 accepted facts, including the frozen v2 listing correction; only
+251 missing candidates extended. Zero unresolved classifications. This does not
+certify full master/ST/event coverage. See ../research/R5_INSTRUMENT_EXTENSION_V1.md.
+R5 continues; full dataset CREATED/AUDITED/FROZEN=NO, no studies or merge.
+
 ## Current: R5 2009 membership cross-check reconciled
 
 860 SSE and 836 SZSE active master entries covered; 18 SZSE annual-report identity

@@ -1,5 +1,13 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 candidate instrument extension
+
+All 251 missing candidate classifications supported; accepted 5,181 facts reused.
+Two connection-reset failures recovered with targeted requests, original receipts
+preserved. Prior 600190 correction reused from frozen v2 evidence, not reopened.
+15 focused source tests PASS; baseline milestone CI 34798601016 PASS.
+See ../research/R5_INSTRUMENT_EXTENSION_V1.md. Independent R5 work continues.
+
 ## 2026-09-14 baseline membership source closure
 
 Both exchange baseline membership cross-checks PASS; 18 directory omissions now

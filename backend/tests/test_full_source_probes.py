@@ -6,6 +6,45 @@ from scripts import probe_full_corporate_actions as probe
 from scripts import probe_full_exit_factors as factors
 
 
+def test_instrument_resume_checks_identity_lifecycle_and_source_bytes(tmp_path):
+    import pytest
+
+    from app.data.catalog.checksums import sha256_file
+    from scripts.classify_pilot_instruments import classify
+    from scripts.extend_full_instrument_scope import validate_receipt
+
+    source = tmp_path / "register.json"
+    source.write_text("{}")
+    member = dict(
+        security_id="CN-A:SSE:600000",
+        symbol="600000",
+        exchange="SSE",
+        board="SSE_MAIN",
+        listing_date="1999-11-10",
+        instrument_type="COMMON_A_SHARE",
+        sources=[
+            dict(
+                path=source.name,
+                sha256=sha256_file(source),
+                source_url="https://www.sse.com.cn/register",
+                retrieval_timestamp_utc="2026-09-14T00:00:00Z",
+            )
+        ],
+        source_fields=dict(A_STOCK_CODE="600000", LIST_DATE="19991110"),
+    )
+    receipt = dict(
+        security_id=member["security_id"], status="CLASSIFIED", result=classify(tmp_path, member)
+    )
+    assert validate_receipt(tmp_path, member, receipt) == receipt
+    with pytest.raises(ValueError, match="IDENTITY"):
+        validate_receipt(tmp_path, {**member, "security_id": "CN-A:SSE:600001"}, receipt)
+    with pytest.raises(ValueError, match="CLASSIFICATION"):
+        validate_receipt(tmp_path, {**member, "listing_date": "1999-11-11"}, receipt)
+    source.write_text("changed")
+    with pytest.raises(ValueError, match="SOURCE"):
+        validate_receipt(tmp_path, member, receipt)
+
+
 def test_corporate_probe_stops_on_access_denial_and_reuses_checkpoint(tmp_path, monkeypatch):
     sdk = tmp_path / "sdk/baostock"
     sdk.mkdir(parents=True)
