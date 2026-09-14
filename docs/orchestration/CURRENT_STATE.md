@@ -46,8 +46,8 @@ still running; no full-census PASS, dataset publication, research study or merge
 
 ## Current: R5 cached transition and partial 2022 continuation
 
-709 provisional SSE transitions / 868 parser unresolved / three metadata variants.
-325 diagnostic chains / 91 gaps / zero conflicts; full authority remains PARTIAL.
+720 provisional SSE transitions / 857 parser unresolved / three metadata variants.
+326 diagnostic chains / 87 gaps / zero conflicts; full authority remains PARTIAL.
 Cached 600069 stock entry, 600130 and 600365 exits recovered by narrow header/verb
 syntax support; bond notices and conflicting dates remain unaccepted. 606 backend
 tests and quality checks PASS. CI 34818532899 for 17117c7 SUCCESS.

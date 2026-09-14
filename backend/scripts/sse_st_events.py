@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v14"
+VERSION = "sse-cninfo-ordinary-name-v15"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -204,7 +204,11 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         # Never use a general publication/suspension date or a date from another sentence.
         dates = list(
             re.finditer(
-                r"自?" + DATE + r"起[\uff0c,]?[^。\uff1b;\d]{0,40}?" + re.escape(names[0][0]), text
+                r"自?"
+                + DATE
+                + r"(?:起|开始)[\uff0c,]?[^。\uff1b;\d]{0,40}?"
+                + re.escape(names[0][0]),
+                text,
             )
         )
         dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
@@ -244,6 +248,19 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                     )
                 )
                 dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if not dates and status(new) == "NORMAL":
+            warning = (
+                "退市风险警示"
+                if status(issuer_name) == "STAR_ST"
+                else "(?:其他风险警示|其他特别处理)"
+            )
+            dates = list(
+                re.finditer(
+                    r"自" + DATE + r"起撤销(?:本公司|公司)股票(?:交易)?" + warning,
+                    text,
+                )
+            )
+            dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
     if len(dated) != 1:
         raise ValueError("EFFECTIVE_DATE_UNRESOLVED")
     effective = next(iter(dated))

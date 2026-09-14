@@ -185,6 +185,10 @@ def test_legacy_clause_does_not_select_adjacent_suspension_date():
     new = extract(fixture["pages"], record)["new_name"]
     pages.append(f"2022年2月8日停牌一天,自2022年2月9日起,股票简称由“{old}”变更为“{new}”。")
     assert extract(pages, record)["effective_from"] == "2022-02-09"
+    assert (
+        extract([*pages[:-1], pages[-1].replace("日起,", "日开始,")], record)["effective_from"]
+        == "2022-02-09"
+    )
     pages[-1] = pages[-1].replace("自2022年2月9日起,", "")
     with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
         extract(pages, record)
@@ -231,6 +235,24 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
     for invalid in (
         text.replace("实施其他风险警示。", "实施退市风险警示。"),
         text.replace("公司股票将于", "关联公司股票将于"),
+    ):
+        with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+            extract([invalid], record)
+
+
+def test_explicit_removal_date_requires_issuer_and_single_date():
+    fixture = copy.deepcopy(
+        json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[0]
+    )
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    text = "证券代码:600595 证券简称:*ST中孚 " + record["sse"]["TITLE"] + "。"
+    text += "自2022年1月14日起撤销本公司股票交易退市风险警示。"
+    text += "股票简称由“*ST中孚”变更为“中孚”。"
+    assert extract([text], record)["effective_from"] == "2022-01-14"
+    for invalid in (
+        text.replace("撤销本公司", "撤销关联公司"),
+        text + "自2022年1月17日起撤销本公司股票交易退市风险警示。",
     ):
         with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
             extract([invalid], record)

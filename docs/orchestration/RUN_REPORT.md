@@ -1,5 +1,37 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 checksum-bound title reconciliation batch
+
+Seven first-page title reviews reuse the existing checksum/announcement-bound
+review mechanism; all three earlier reviews are preserved. Five more provisional
+events parse (600696, 600702, 600781 twice, 603007); 600180 still needs an explicit
+name chain, and 600239 retains conflicting printed 2020/2021 effective years.
+No identity or date guard was relaxed. 600191's non-About filename title and
+600733's pre-loss forecast remain outside this narrow title-review mechanism.
+Parser v18 canonical SHA
+9934aad3aaf7424281025df313f8b300a74418f2f0707367502acb3592ac725e;
+chain v11 20429849b0271c37abf518bad51f2b4c40683fa29f8d80053dc173abeba12d68.
+720 provisional, 857 parser unresolved, three metadata variants; 326 chains,
+87 gaps, zero conflicts. Full-authority acceptance remains zero.
+Backend 608 tests and lint/format/mypy PASS before this data-only review addition.
+CI 34824298020 SUCCESS for 90c3863; PR12 OPEN, no merge or study execution.
+
+## 2026-09-14 targeted cached chain-date closure
+
+Cross-referencing 91 chain gaps with retained unresolved notices identified 111
+candidate documents; source leads remain distinct from accepted transitions.
+The directly linked date word "开始" adds five provisional transitions (600179,
+600217, 600538, 600699, 600769); explicit dated removal of the issuer's own risk
+treatment adds 600209. No publication-date substitution or conflicting-date
+override is allowed. The 600198 notice has contradictory 2018/2019 printed dates
+and remains unresolved; 600221's undated continuing warning also remains unresolved.
+Parser v17 manifest 648b4fefd9ea954482cb4aa5b3b8ff7a2d0c8b1b9cf7dae8cea65876e63010b4;
+chain v10 f9dc15931a9c411258fa1aea73ca59e6f216dcf3c3390505fd3dc5d330d9cf68.
+715 provisional / 862 parser unresolved / three metadata variants; 326 chains,
+91 gaps, zero conflicts. New evidence can expose additional missing chains; the
+gap count is never a target to force downward. Full-authority acceptance remains
+zero. All prior event records preserved by unresolved-only replay.
+
 ## 2026-09-14 cached SSE explicit-measures clause
 
 CNINFO 59060232 (600083), both pages read, explicitly dates ST-to-*ST at
