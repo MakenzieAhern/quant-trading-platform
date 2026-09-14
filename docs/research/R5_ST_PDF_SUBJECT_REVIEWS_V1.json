@@ -1,0 +1,29 @@
+{
+  "scope": "DOCUMENT_BOUND_TITLE_EQUIVALENCE_ONLY_NOT_EVENT_ACCEPTANCE",
+  "records": [
+    {
+      "announcement_id": "1209877776",
+      "source_sha256": "0a159af4d13992484fc30f9331f9fb523cc32ac9918ba8fee814fb75ee17efad",
+      "metadata_subject": "关于公司股票被实施退市风险警示暨停牌的公告",
+      "pdf_subject": "关于公司股票被实施退市风险警示暨临时停牌的公告",
+      "reason": "PDF title adds 临时; code, issuer and complete risk-warning subject agree. Dates/status still require ordinary parsing.",
+      "page": 1
+    },
+    {
+      "announcement_id": "1209877821",
+      "source_sha256": "a4aa9f7daaaba2e70e88fc80ffe40ae906526d1cd1607e77417efae4896d3ead",
+      "metadata_subject": "关于公司股票被实施退市风险警示暨停牌的公告",
+      "pdf_subject": "关于公司股票被实施退市风险警示暨临时停牌的公告",
+      "reason": "PDF title adds 临时; code, issuer and complete risk-warning subject agree. Dates/status still require ordinary parsing.",
+      "page": 1
+    },
+    {
+      "announcement_id": "1210418527",
+      "source_sha256": "79c001af2e2b4b4858b9c128b8ca0bafba8873f263f52aeecdfc957478254528",
+      "metadata_subject": "关于公司股票被实施退市风险警示暨停牌的公告",
+      "pdf_subject": "关于公司股票被实施退市风险警示暨停复牌的公告",
+      "reason": "PDF title explicitly includes resumption. No suspension or resumption date is inferred from either title; body supplies the dated transition.",
+      "page": 1
+    }
+  ]
+}

@@ -1,5 +1,19 @@
 # Current state
 
+## Current: R5 independent source-oracle and bounded parser continuation
+
+689 provisional SSE transitions / 868 parser cases / three metadata variants;
+full authority remains PARTIAL. Three document-hash-bound title reviews preserve
+ordinary issuer/date/name checks; no general fuzzy title rule. 593 backend tests
+and quality checks PASS. Prior CI 34809275007 succeeded for 220d75c.
+Bonus oracle: 7,407 source rows, 7,369 lifecycle-mapped candidates / 38 B-share
+rows out of scope. Scheduled listing dates are not actual tradability evidence;
+600817 is the existing accepted pass-through, not a new retained-bonus event.
+Tencent long-range 640-row query truncates; 5,000 returns no daily history in
+two controls. Retain year-bounded route; no bulk ingestion/source promotion.
+Existing distribution worker continues. Full dataset remains not created/audited/
+frozen, no studies or merge. See R5_BONUS_SOURCE_ORACLE_V1.md and ST report.
+
 ## Current: R5 2017 cash and deterministic bonus accounting
 
 Completed 2017 source attempts: 2,564 PDFs, zero retrieval failures. Existing

@@ -1,5 +1,25 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 source-oracle and ST constraint continuation
+
+Provisional SSE transitions 689; 868 parser cases and three metadata variants
+remain unaccepted. Full-v8 SHA 8bdb95ce9d11060909315d056bddadc555bbe081989674bbb4cca90ea8728e22.
+v7/v8 preserve prior event rows; v9 parser adds document-bound reviewed title
+equivalence only. Wrong document/code remains rejected. Full backend 593 and
+Ruff/format/mypy PASS. Prior 220d75c CI 34809275007 SUCCESS.
+Earlier 683-transition plus 345-retained-evidence chain diagnostic: 321 chains,
+103 gaps, zero same-date state conflicts; 15 pre-target observations retained
+outside target. Diagnostic is not complete daily state/authority acceptance.
+Source-mirror gap probe: two access-denial responses, one timeout; no further
+mirror retries. Existing CNINFO evidence preserved. Mirror manifest SHA
+9cf3c0d2ca8dbb87c5d1ed0fc366efe9cb11b7135b78e344350de49bb8e30d7f.
+Bonus oracle/lifecycle/boundary joins reuse accepted source tables and master;
+no accepted Pilot recomputation. See bonus report. Four bounded Tencent requests
+show 640-row truncation and empty 5,000-count daily payloads; empty is not proof
+of missing history. Root full-raw-coverage-v1/long-range-count-probe-v1;
+manifest SHA bd67f0a9307123698bc9be9f78a571df012af7e21866b835465b1cbc561fe8f0.
+No strategy, full dataset publication, freeze or merge. Continue independent R5.
+
 ## 2026-09-14 2017 cash and missing-case parser continuation
 
 2017 source snapshot verified against its 2,564 queue URLs and PDF hashes.

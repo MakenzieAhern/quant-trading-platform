@@ -70,6 +70,35 @@ def test_duplicate_rows_and_mirrors_are_not_duplicate_transitions():
         extract(fixture["pages"], record)
 
 
+def test_pdf_subject_review_is_bound_to_document_and_preserves_other_checks():
+    fixture = copy.deepcopy(FIXTURES[0])
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    cn = record["cninfo"][0]
+    subject = issuer_subject(cn["announcementTitle"], record["sse"], cn)
+    subject = subject[subject.index("关于") :]
+    changed = subject.replace("公告", "特别公告")
+    record["sse"]["TITLE"] = changed
+    cn["announcementTitle"] = changed
+    with pytest.raises(ValueError, match="PDF_SUBJECT_METADATA_MISMATCH"):
+        extract(fixture["pages"], record)
+    record["pdf_subject_review"] = dict(
+        announcement_id=cn["announcementId"],
+        source_sha256=record["cninfo_document_sha256"],
+        metadata_subject=changed,
+        pdf_subject=subject,
+        page=1,
+    )
+    assert extract(fixture["pages"], record)["status"] == "ST"
+    with pytest.raises(ValueError, match="WRONG_SECURITY_CODE"):
+        extract(
+            [p.replace(record["sse"]["SECURITY_CODE"], "600000") for p in fixture["pages"]], record
+        )
+    record["pdf_subject_review"]["source_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="PDF_SUBJECT_METADATA_MISMATCH"):
+        extract(fixture["pages"], record)
+
+
 def test_wrong_security_date_title_and_issuer_rejected():
     fixture = FIXTURES[0]
     for field, value in (

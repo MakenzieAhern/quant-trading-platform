@@ -182,9 +182,22 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
     for prefix in ("公司的", "公司", "公司A股", ""):
         text = header + "2022年2月8日停牌一天,2022年2月9日复牌," + prefix + clause
         assert extract([text], record)["effective_from"] == "2022-02-09"
+    for names in (f"股票简称将从“{old}”变更为“{new}”。", f"股票简称由{old}变更为{new}。"):
+        text = header + "2022年2月9日复牌,公司的" + names
+        assert extract([text], record)["new_name"] == new
+        with pytest.raises(ValueError, match="NAME_TRANSITION_UNRESOLVED"):
+            extract([text.replace(names, names.replace(old, "错误名称"))], record)
     for text in (
         header + "2022年2月9日复牌。公司的" + clause,
         header + "2022年2月9日停牌,公司的" + clause,
     ):
         with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
             extract([text], record)
+    text = header + "公司股票将于2022年2月9日实施其他风险警示。" + clause
+    assert extract([text], record)["effective_from"] == "2022-02-09"
+    for invalid in (
+        text.replace("实施其他风险警示。", "实施退市风险警示。"),
+        text.replace("公司股票将于", "关联公司股票将于"),
+    ):
+        with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+            extract([invalid], record)

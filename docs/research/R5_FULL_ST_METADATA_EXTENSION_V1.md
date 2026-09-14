@@ -1,5 +1,26 @@
 # Full-period SSE ST evidence extension
 
+## Latest: document-bound title review and cached replay
+
+689 provisional transitions / 868 parser cases / three metadata variants.
+Full-v8 canonical SHA:
+`8bdb95ce9d11060909315d056bddadc555bbe081989674bbb4cca90ea8728e22`.
+Reparse CLI resumes an explicit prior manifest, preserves every earlier event,
+checks source/manifest hashes, and writes a separate immutable output. No Pilot
+rebuild. Parser v9 includes narrow from/unquoted name clauses, directly dated
+issuer risk implementation, and three individually reviewed PDF-title variants.
+Reviews are tied to announcement ID, PDF SHA and exact full metadata/PDF subjects;
+they cannot waive issuer/name/date checks. 593 backend tests and quality PASS.
+
+Earlier chain diagnostic with 683 new and 345 retained event observations finds
+103 chain gaps in 321 represented securities, zero same-day state conflicts.
+Not a full-universe coverage or daily-state audit. Manifest:
+`48cb3407aaea6a3b72e903034c78f91ad0b17b50da735b79ce8cb5fa5e917744`.
+Three original unmatched-source SSE mirrors failed (two access denials, one
+timeout), originals retained; no additional denied-mirror retries. Manifest:
+`9cf3c0d2ca8dbb87c5d1ed0fc366efe9cb11b7135b78e344350de49bb8e30d7f`.
+600392 table/PDF date conflict remains explicit, visually checked in table p129.
+
 ## Latest missing-case continuation
 
 677 provisional transitions / 880 parser gaps / three metadata gaps. Full-v4:

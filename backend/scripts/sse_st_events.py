@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v6"
+VERSION = "sse-cninfo-ordinary-name-v9"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -76,7 +76,18 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
             if "关于" in subject:
                 subject = subject[subject.index("关于") :]
             if subject not in title_key(text[:1200]):
-                raise ValueError("PDF_SUBJECT_METADATA_MISMATCH")
+                review = record.get("pdf_subject_review", {})
+                if not (
+                    review.get("announcement_id") == cn["announcementId"]
+                    and re.fullmatch(r"[0-9a-f]{64}", str(review.get("source_sha256", "")))
+                    and review.get("source_sha256") == record.get("cninfo_document_sha256")
+                    and review.get("metadata_subject") == subject
+                    and review.get("pdf_subject", "").startswith("关于")
+                    and len(review.get("pdf_subject", "")) >= 12
+                    and review.get("page") == 1
+                    and review["pdf_subject"] in title_key(compact(pages[0])[:1200])
+                ):
+                    raise ValueError("PDF_SUBJECT_METADATA_MISMATCH")
             company = re.match(
                 r"[\u4e00-\u9fff]+(?:股份有限公司|有限责任公司)", cn["announcementTitle"]
             )
@@ -84,8 +95,16 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                 raise ValueError("WRONG_CNINFO_ISSUER_COMPANY")
     names = list(
         re.finditer(
-            r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?由?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
+            r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?[由从]?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
             r"(?:变更|更改|变)为[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
+            text,
+        )
+    )
+    names.extend(
+        re.finditer(
+            r"(?:股票简称|证券简称)[\uff1a:]?将?[由从]("
+            + re.escape(compact(issuer_name))
+            + r")(?:变更|更改|变)为([A-Za-z*\u4e00-\u9fff]{1,12})(?=[\uff0c,。\uff1b;])",
             text,
         )
     )
@@ -142,6 +161,20 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                 )
             )
             dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if not dates and status(new) in {"ST", "STAR_ST"}:
+            warning = (
+                "退市风险警示" if status(new) == "STAR_ST" else "(?:其他风险警示|其他特别处理)"
+            )
+            dates = list(
+                re.finditer(
+                    r"(?<![\u4e00-\u9fff])(?:本)?公司股票(?:交易)?将?(?:于|自)"
+                    + DATE
+                    + r"起?被?(?:实施|实行)[“\"]?"
+                    + warning,
+                    text,
+                )
+            )
+            dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
     if len(dated) != 1:
         raise ValueError("EFFECTIVE_DATE_UNRESOLVED")
     effective = next(iter(dated))
@@ -171,7 +204,7 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         support.append({"page": page_number, "compact_page_offset": offset, "text": item[0]})
     cn = mirrors[0]
     number = re.search(r"(?:公告编号|编号)\s*[\uff1a:]([^\n]{1,60})", "\n".join(pages)[:1000])
-    return {
+    result = {
         "security_id": "CN-A:SSE:" + sse["SECURITY_CODE"],
         "symbol": sse["SECURITY_CODE"],
         "old_status": old_status,
@@ -196,6 +229,9 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         "parser_version": VERSION,
         "support": support,
     }
+    if record.get("pdf_subject_review"):
+        result["pdf_subject_review_sha256"] = sha(canonical(record["pdf_subject_review"]))
+    return result
 
 
 def normalize(events: list[dict[str, Any]]) -> list[dict[str, Any]]:

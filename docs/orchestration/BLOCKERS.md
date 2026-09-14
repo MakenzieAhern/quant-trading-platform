@@ -1,5 +1,18 @@
 # Blockers
 
+## Current R5 gaps — independent work continues, no terminal human gate
+
+Cash bounded 2010–2020: 18,263 supported / 3,121 unresolved; later downloads
+continue. SSE ST: 689 provisional transitions, 868 parser cases and three
+reviewed metadata differences; coverage/chain completeness not accepted.
+600392 2012 effective-date conflict remains explicit. Two SSE PDF mirror access
+denials and one timeout retained; no further retries against those denied mirrors.
+Bonus census needs issuer terms, fractional mechanics and true tradability;
+source-scheduled listing dates cannot override suspensions or known pass-through.
+Raw full-period ingestion requires bounded date windows; larger row count did
+not produce full history in controls. None of these findings promotes a source,
+forces NORMAL, or permits dataset freeze/studies. Other authority gaps remain.
+
 ## 2026-09-14 cash batch progress, not census completion
 
 7,702 cash events supported under the unchanged cash policy; 1,527 source groups
