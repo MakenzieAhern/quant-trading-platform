@@ -1,5 +1,27 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 cross-exchange merger routing and retained evidence gaps
+
+Parent/successor exchanges are now independently routed through event identity,
+master validation and raw-boundary parsing. Legacy same-exchange event checksums
+are preserved. Synthetic cross-exchange accounting regression passes; 599 backend
+tests, Ruff, formatting and mypy PASS. No additional merger is accepted.
+
+600591 prospectus 57457359 (2009-12-31), SHA
+95e116eed63402e4a90068c5d5a51fc0e521f26d4ccdee1a3a16e2c392870c66,
+states integer shares and residual treatment under SSE rules, not the explicit
+global-allocation mechanism required by the current supported classification.
+Cash-option record date must not be substituted for merger registration timing.
+Termination notice SHA 517bcc60840f6dae7c8d1003224a276353892da66dd3fea1b620a1081cd835a3;
+cash-option notice SHA 3d2d18890ce2863d71a00df5be68c439712edf2f874dca6ac60177de225de0be.
+Same official URL retrieved through Windows after WSL DNS failure; both receipts
+preserved under full-merger-v1/600591-boundary-recovery-v1. No guard relaxation.
+000522/600332 retained listing notice makes trading dependent on account
+registration; unconfirmed holders cannot be assumed tradable on listing day.
+These gaps remain unresolved while independent R5 work continues. Original
+distribution worker PID 434 remains alive; no duplicate worker launched.
+No full dataset publication, freeze, strategy, merge or release.
+
 ## 2026-09-14 integer retained-bonus subset and historical fee evidence
 
 288 candidates use integer ratios, already retained 2010–2021 issuer notices,

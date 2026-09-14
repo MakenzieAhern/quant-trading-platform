@@ -21,10 +21,12 @@ def raw_boundaries(payload, exchange, code, start, end):
 
 def event_from_review(row):
     exchange = row.get("exchange", "SZSE")
+    parent_exchange = row.get("parent_exchange", exchange)
+    successor_exchange = row.get("successor_exchange", exchange)
     return MergerEvent.model_validate(
         dict(
-            parent_security={"value": f"CN-A:{exchange}:" + row["parent"]},
-            successor_security={"value": f"CN-A:{exchange}:" + row["successor"]},
+            parent_security={"value": f"CN-A:{parent_exchange}:" + row["parent"]},
+            successor_security={"value": f"CN-A:{successor_exchange}:" + row["successor"]},
             conversion_ratio=row["conversion_ratio"],
             parent_last_trading_date=row["parent_last_trading_date"],
             record_date=row["record_date"],
@@ -92,15 +94,23 @@ def main():
         source = matches[0]
         if source["issuer"] != row["parent"] or source["published_on"] != row["publication_date"]:
             raise ValueError("ISSUER_OR_PUBLICATION_MISMATCH")
-        for code, expected, field in [
+        for code, expected, field, exchange in [
             (
                 row["parent"],
                 row.get("parent_delisting_date", row["effective_date"]),
                 "delisting_date",
+                row.get("parent_exchange", row.get("exchange", "SZSE")),
             ),
-            (row["successor"], row["successor_listing_date"], "listing_date"),
+            (
+                row["successor"],
+                row["successor_listing_date"],
+                "listing_date",
+                row.get("successor_exchange", row.get("exchange", "SZSE")),
+            ),
         ]:
-            records = [m for m in master["records"] if m["symbol"] == code]
+            records = [
+                m for m in master["records"] if m["symbol"] == code and m["exchange"] == exchange
+            ]
             if len(records) != 1 or records[0][field] != expected:
                 raise ValueError("MASTER_LIFECYCLE_MISMATCH")
             raw = [b for b in boundaries["results"] if b["symbol"] == code]
@@ -113,9 +123,10 @@ def main():
                 raise ValueError("RAW_BOUNDARY_OUTSIDE_STAGING")
             if sha256_file(payload) != b["source"]["sha256"]:
                 raise ValueError("RAW_BOUNDARY_SOURCE_CHANGED")
-            if raw_boundaries(
-                payload.read_bytes(), row.get("exchange", "SZSE"), code, b["start"], b["end"]
-            ) != (b["first_date"], b["last_date"]):
+            if raw_boundaries(payload.read_bytes(), exchange, code, b["start"], b["end"]) != (
+                b["first_date"],
+                b["last_date"],
+            ):
                 raise ValueError("RAW_BOUNDARY_RECEIPT_MISMATCH")
             observed = b["last_date"] if code == row["parent"] else b["first_date"]
             expected = (

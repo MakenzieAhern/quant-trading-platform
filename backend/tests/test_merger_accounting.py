@@ -358,6 +358,21 @@ def test_reciprocal_official_ratio_uses_exact_fraction_before_floor():
         )
 
 
+def test_cross_exchange_identity_routing_preserves_same_exchange_event_identity():
+    from scripts.reconcile_merger_implementation_batch import event_from_review
+
+    review = json.loads(
+        (Path(__file__).parent / "fixtures/merger_implementation_batch_v1.json").read_bytes()
+    )["cases"][0]
+    legacy = event_from_review(review)
+    explicit = dict(review, parent_exchange="SZSE", successor_exchange="SZSE")
+    assert event_from_review(explicit).event_checksum == legacy.event_checksum
+    # Synthetic routing fixture, not source evidence for an actual merger.
+    cross = dict(review, successor="600000", parent_exchange="SZSE", successor_exchange="SSE")
+    assert str(event_from_review(cross).successor_security) == "CN-A:SSE:600000"
+    test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(cross)
+
+
 def test_official_rounded_ratio_is_not_recomputed_from_exchange_prices():
     # 000562 implementation, 2015-01-22, PDF pages 3-4; official ratio has nine decimals.
     # Source SHA: aaa254af495f145537662817acb96d646990f626a84754cd90f2e84fa1f11b6d.
@@ -401,7 +416,8 @@ def test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(review)
         bus.subscribe(EventType.ORDER_FILLED, emitted.append)
         portfolio = PortfolioEngine(bus, Decimal(10000))
         exchange = review.get("exchange", "SZSE")
-        parent, successor = review["parent"] + "." + exchange, review["successor"] + "." + exchange
+        parent = review["parent"] + "." + review.get("parent_exchange", exchange)
+        successor = review["successor"] + "." + review.get("successor_exchange", exchange)
         portfolio.apply_fill(
             make_fill(1, OrderSide.BUY, str(quantity), "10", symbol=parent).model_copy(
                 update={"timestamp": at(review["parent_last_trading_date"])}
