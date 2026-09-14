@@ -13,9 +13,9 @@ Independent cached-evidence processing continues. Full dataset remains uncreated
 
 Cash bounded 2010-2021 and partial 2022: 23,199 supported / 4,648 unresolved;
 96 prior records quarantined after current-implementation integrity review.
-Later downloads are suspended for HTTP 403, not progressing. SSE ST: 752
-provisional transitions, 825 parser cases and three metadata differences;
-79 chain gaps remain, coverage/chain completeness not accepted.
+Later downloads are suspended for HTTP 403, not progressing. SSE ST: 753
+provisional transitions, 824 parser cases and three metadata differences;
+78 chain gaps remain, coverage/chain completeness not accepted.
 600392 2012 effective-date conflict remains explicit. Two SSE PDF mirror access
 denials and one timeout retained; no further retries against those denied mirrors.
 Bonus census needs issuer terms, fractional mechanics and true tradability;

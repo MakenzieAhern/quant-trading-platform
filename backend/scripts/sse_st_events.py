@@ -25,7 +25,7 @@ from scripts.reconcile_sse_cninfo import (
     title_key,
 )
 
-VERSION = "sse-cninfo-ordinary-name-v17"
+VERSION = "sse-cninfo-ordinary-name-v18"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
 
 
@@ -69,7 +69,10 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("MISSING_SSE_ISSUER_NAME")
     text = compact("\n".join(pages))
     header = text[:500]
-    codes = re.search(r"(?:证券|股票)代码\s*[：:]\s*([\d\s、,，]{6,55})", "\n".join(pages)[:1000])  # noqa: RUF001
+    codes = re.search(
+        r"(?:证券|股票)代码(?:\s*[：:]\s*|\s+)([\d\s、,，]{6,55})",  # noqa: RUF001
+        "\n".join(pages)[:1000],
+    )
     if not codes or sse["SECURITY_CODE"] not in re.findall(r"(?<!\d)\d{6}(?!\d)", codes[1]):
         raise ValueError("WRONG_SECURITY_CODE")
     if compact(issuer_name) not in header:

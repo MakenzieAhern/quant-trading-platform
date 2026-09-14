@@ -10,8 +10,8 @@ Both short and explicit implementation headings now prevent proposal fallback;
 counts are allowed to decrease. Original 22,864-event audit: 22,768 recorroborated,
 96 review cases. Combined ledger canonical SHA
 1167033ec372bdb5860c3ba2365dd8cf8eaec8105716d286add1a1a2a5ee895b.
-SSE parser v25: 752 provisional / 825 unresolved / three metadata variants;
-332 chains / 79 gaps / zero conflicts. All 736 main-parser provisional events
+SSE parser v26: 753 provisional / 824 unresolved / three metadata variants;
+332 chains / 78 gaps / zero conflicts. All 737 main-parser provisional events
 retain unchanged terms in checksum-bound extraction replay. Full authority remains PARTIAL.
 PID 434 suspended; authorized source access/local official archives requested.
 No full dataset, freeze or studies. Older cash counts below are superseded.

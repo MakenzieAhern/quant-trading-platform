@@ -1,5 +1,18 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 space-delimited issuer code field
+
+Retained notices print an exact six-digit security code after whitespace without
+a colon. Accept that field separator, preserving digit boundaries and all issuer,
+subject, name and effective-date checks. Wrong and seven-digit codes fail tests.
+Parser v26 canonical ea3b7f79e9634741cde4781f8bcbfdb1f67875b7a928a4d472a57631e5a9462f:
+753 provisional / 824 parser unresolved / three metadata variants.
+Chain v19 canonical ccec8e8efdf82702b8a5aa88fe623fddce0eabf9fac800666147afa8595a5177:
+332 chains / 78 gaps / zero conflicts, input-order PASS, accepted full events zero.
+Integrity v3 canonical b285d60a6092efcc6379adf9803d524199b455e3d01049e4a4562372fa0be5fb:
+737 main-parser provisional events retain unchanged terms. 611 backend tests PASS;
+initial lint found only a long line, reformatted without semantic change.
+
 ## 2026-09-14 linked dates and provisional replay integrity
 
 Parser report v25 canonical SHA

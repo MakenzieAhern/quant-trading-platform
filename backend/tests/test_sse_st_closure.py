@@ -107,6 +107,21 @@ def test_missing_sse_name_requires_exact_cninfo_pdf_header_identity():
         extract(fixture["pages"], record)
 
 
+def test_space_delimited_security_code_still_requires_exact_digits():
+    fixture = copy.deepcopy(
+        json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[1]
+    )
+    record = fixture["record"]
+    symbol = record["sse"]["SECURITY_CODE"]
+    body = "\n".join(fixture["pages"])
+    for label in ("证券代码", "股票代码"):
+        pages = [f"{label} {symbol}\n" + body]
+        assert extract(pages, record)["symbol"] == symbol
+        for wrong in ("600999", symbol + "0", "0" + symbol):
+            with pytest.raises(ValueError, match="WRONG_SECURITY_CODE"):
+                extract([f"{label} {wrong}\n" + body], record)
+
+
 def test_pdf_subject_must_match_metadata():
     fixtures = json.loads(
         (Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes()
