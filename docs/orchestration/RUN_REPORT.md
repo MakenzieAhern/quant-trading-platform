@@ -1,5 +1,31 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-14 600591 source recovery and merger reconciliation
+
+One bounded August 2009 issuer query returned five notices (complete response),
+recovering official CNINFO 55643861: SHA
+55d3d2db9f21eefc0c8b0f2eb70edb8be04f5931be028eb62a847582c08d2f49.
+PDF page 29 explicitly ranks fractional remainders and uses computer lottery for
+ties; no invented exchange-rule enum. Page 19 defines exchange day as registry
+registration to holders; retained result 57556389 confirms completion 2010-01-28
+and unrestricted new-share listing 2010-02-02. Original successor IPO 1997-11-05;
+parent last trading 2010-01-11, suspension 2010-01-12, delisting 2010-01-25.
+Ordinary unrestricted holder/no cash election only; 288,888,860 restricted shares
+with 2012-06-25 listing remain distinct. Approved floor/basis policy unchanged.
+
+WSL DNS failure preserved; Windows same-official-URL transport retained the PDF
+and two previously unavailable older-merger documents, without overwriting failed
+receipts. Extraction manifest 7d2bda915f502da30ba3144ed8d29553f3cb789757f73a1b52c5b7dab279b30e.
+600253 prospectus and 600832 termination recovered but not accepted as closed
+chains; referenced fractional rules and further boundaries still require review.
+Two targeted raw controls corroborate dates, manifest
+1fe4d8bb24f3cae0bf0b596fba595e47f8add39be12720dd5760a183e0b5c831.
+600591 audit ef0c924421dcd1ebba2abdce214a2ae8880b3fde711ffd912c9e04e2fd69044b;
+fixture SHA 6f655e4f5a981363629dbb609980d2bce180e1ed851167304f826bb9fc5f382e.
+Inventory V7 fifteen supported / three reviewed unresolved, prior fourteen event
+records preserved exactly; full market census unknown. 607 backend tests and
+Ruff/format/mypy PASS. Original worker continues; no valid stop gate reached.
+
 ## 2026-09-14 cached SSE syntax and terminal recovery reconciliation
 
 Parser v13 supports abbreviated name only directly after the matching security

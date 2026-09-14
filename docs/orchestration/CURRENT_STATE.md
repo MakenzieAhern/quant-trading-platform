@@ -1,5 +1,15 @@
 # Current state
 
+## Current: R5 600591 merger closure
+
+Fifteen supported reviewed mergers / three reviewed unresolved chains; inventory V7
+preserves fourteen accepted events and resolves 600591 with official global
+fraction allocation evidence. Ratio 1.3, registration/exchange 2010-01-28,
+ordinary new-share trading boundary 2010-02-02. Cash-option record 2010-01-11 is
+not substituted for merger registration. Restricted shares separately identified.
+607 backend tests / Ruff / format / mypy PASS. Original distribution downloader
+still running; no full-census PASS, dataset publication, research study or merge.
+
 ## Current: R5 cached transition and partial 2022 continuation
 
 708 provisional SSE transitions / 869 parser unresolved / three metadata variants.
