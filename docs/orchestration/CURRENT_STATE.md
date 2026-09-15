@@ -1,5 +1,25 @@
 # Current state
 
+## Current: official P0 export access is the sole acquisition blocker
+
+The immutable V2 manifest revalidates at file SHA
+`e9b7bb31868958c4bffd1dd9a31b26c33f0ad71c3b46c2e83adb7dd691b37559`
+and canonical SHA
+`96839c742cb12c9e0ea0c8301b990474554f64bfd2abf34579f8190b2e8017c7`.
+P0 remains 0/2. SSEInfo historical/basic master delivery requires a business
+application and agreement. CNINFO package 98 proves that historical stock/name/
+listing-status data exist and previews normally, but data export requires login and
+may charge. These are real user/organization access steps, not transport failures.
+
+P1 is 16,320 event requirements / 16,304 unique documents. Five bulk collection
+families cover the queue. Seven official CNINFO PDFs with prior HTTP-200 receipts
+were found in existing archives, checksum-revalidated and placed in the exact V2
+destinations; P1 net-new is 16,297. No generic intake exists, so no duplicate
+framework was built before P0 arrives. Full unresolved material source documents
+after all known local evidence are 16,303. Full safe start remains unestablished;
+full dataset CREATED/AUDITED/FROZEN=NO. Docker is deferred/non-blocking for source
+acquisition. No methodology approval, study, profitability inspection or PR merge.
+
 ## Current: differentiated cash closed; minimal official source input required
 
 The approved `DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1` rule was replayed over all

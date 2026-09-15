@@ -1,5 +1,23 @@
 # v1.1 controller roadmap
 
+## Current: P0 official full-export access required; P1 reduced to bulk collections
+
+V2 checksum validation passes unchanged. P0 is 0/2: public SSE/SZSE surfaces do
+not deliver the two complete 2010-2025 point-in-time master exports anonymously.
+SSEInfo documents historical `证券基本信息`/`主参考数据`, but delivery requires a
+business application, approval and agreement. CNINFO package 98 exposes historical
+company/stock/name/listing-status interfaces and a working free preview, but full
+export requires login and may charge.
+
+P1 is now an executable five-collection plan, not 16,304 manual clicks. CNINFO
+package 11 documents daily/market pagination, 20,000-record responses and `maxID`
+resume with official PDF addresses. An existing-archive scan recovered seven exact
+HTTP-200 CNINFO PDFs and receipts into their manifest destinations. P1 counts are
+16,320 event back-references / 16,304 unique / 16 duplicates / 7 local / 16,297
+net-new. Stop at the real P0 account/business-application boundary; no purchase or
+application was submitted. Docker is deferred and non-blocking for this source task.
+No methodology, accepted Pilot/R4 authority, study, dataset freeze or PR state changes.
+
 ## Current: R5 methodology closed; case-2 official source input required
 
 `CN_A_DIFFERENTIATED_CASH_DISTRIBUTION_POLICY_V1` is accepted and implemented for

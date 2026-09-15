@@ -1,5 +1,31 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-15 P0 official access verification and P1 bulk plan
+
+V2 file/canonical checksums pass. Exact P0 rows were preserved: complete 2010-2025
+point-in-time SSE and SZSE listing/delisting/code/name/board histories. Public
+current lists and annual books were not promoted to complete history. SSEInfo's
+official product/application path was verified; it requires business application,
+approval, agreement and delivered media. CNINFO package 98 was verified through its
+normal browser: historical company/stock/name/listing-status APIs preview data, but
+full export opens a login dialog and warns that paid downloads deduct fees. No form,
+account or purchase action was submitted.
+
+P1 was compressed operationally into five source-family collections. CNINFO package
+11 explicitly supports one-day market queries, up to 20,000 records, `maxID` resume,
+and returns official PDF addresses. The 16,320 back-references are 16,304 unique
+documents after 16 duplicate requests. A local-archive URL/filename scan found seven
+valid PDF/HTTP-200 receipt pairs missed by the V2 access label; their bytes and
+receipts were copied to exact manifest destinations. P1 already-local=7 and
+net-new=16,297. Report:
+`.research/reports/r5-source-acquisition-p0-p1-v1.json`; plan:
+`../research/P1_BULK_COLLECTION_PLAN_V1.md`.
+
+P0 is still 0/2. The smallest blocker is authorized official full-export access,
+not code or methodology. Full safe start remains unestablished and full dataset
+CREATED/AUDITED/FROZEN=NO. Docker was not retried; it is deferred/non-blocking for
+this source task. No studies, profitability inspection, PR merge or release.
+
 ## 2026-09-15 differentiated cash decision and source-input compression
 
 The human-approved ordinary public A-share differentiated cash rule passes all 664

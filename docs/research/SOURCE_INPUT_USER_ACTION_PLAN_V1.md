@@ -1,16 +1,20 @@
 # Source input user action plan v1
 
-`SOURCE_INPUT_REQUIREMENTS_V2_MINIMAL` compresses 16,328 event-level requests into
-16,312 unique official documents. It preserves every event back-reference and does
-not require 16,328 one-by-one manual actions. One P3 metadata-only document is
-non-blocking; one official rule artifact is already cached. The 16,311 material
-unique documents include 16,310 items that currently require a user-provided local
-copy or restored authorized official access.
+`SOURCE_INPUT_REQUIREMENTS_V2_MINIMAL` remains the immutable checklist: 16,328
+event-level requests, 16,312 unique official documents, P0=2, P1=16,304, P2=5 and
+P3=1. The approved 664 differentiated-cash groups are not source gaps.
 
-One source event is covered by an already-cached official artifact; 16,326 material
-event requirements still require new source bytes. The separately approved 664
-differentiated-cash methodology groups are resolved from cached evidence and are
-not source gaps.
+## Smallest human action
+
+1. Use an organization able to contract for [SSEInfo historical/basic data](https://www.sseinfo.com/services/assortment/historical/) and request a 2010-01-01 through 2025-12-31 SSE point-in-time security-master export containing listing, delisting, code, name and board history. Put the delivered original files in `/home/yuchen/data/research/manual-official-input/sse/cross-year/`.
+2. Log in to [CNINFO Data Service](https://webapi.cninfo.com.cn/n#/product/package?packageId=98) and obtain the full historical outputs for company basic information, stock basic information, institution/name changes, security-abbreviation changes and company listing-status changes. Filter the SZSE records into the same 2010-2025 lifecycle scope and put the original export in `/home/yuchen/data/research/manual-official-input/szse/cross-year/`.
+3. In the same CNINFO account, obtain authorized access to the [announcement information package](https://webapi.cninfo.com.cn/n#/product/package?packageId=11) for the P1 2011-2025 archive. Use its date/market/`maxID` bulk interface; do not download 16,226 documents by hand. Save returned original PDFs under the manifest's `cninfo/{year}` destinations.
+
+The official pages are public and previews work, but SSE full delivery requires a
+business application and CNINFO full export requires login and may deduct fees.
+No purchase, account creation or business application was submitted automatically.
+Once access or exported bytes are supplied, resume from the V2 manifest; do not
+restart source acquisition.
 
 Machine manifest:
 `/home/yuchen/data/research/staging/source-input-requirements-v2-minimal/manifest-v2.json`
@@ -42,9 +46,11 @@ Machine manifest:
 
 ## Access disposition
 
-One document is already cached. Current receipts classify 229 official URLs as
-HTTP 403 and 351 as DNS failures; 15,731 documents require local official copies.
-No denial is bypassed and no unofficial mirror is accepted.
+One P2 document was already cached. A new exact filename/official-URL archive scan
+found seven additional P1 CNINFO PDFs with prior HTTP-200 receipts. They were copied
+with their receipts to the exact manifest destinations, leaving 16,297 net-new P1
+documents. Current receipts otherwise retain 229 official HTTP-403 results and 351
+DNS failures; no denial is bypassed and no unofficial mirror is accepted.
 
 Provide original official files or an official bulk archive, or restore authorized
 access to the listed official endpoints. Keep original filenames; manual renaming
@@ -53,8 +59,6 @@ folders rooted at:
 
 `/home/yuchen/data/research/manual-official-input/`
 
-The intake process will match files by official URL, title, security/date, and
-SHA-256, then use the preserved back-references to update affected events. Start
-with P0, then P1. The machine manifest is the authoritative item-by-item checklist,
-including expected titles/filenames, known URLs, document types, rationale, years,
-priority, access option, destination and all affected events.
+The machine manifest remains the authoritative item-by-item checklist. The bulk
+collection plan is `docs/research/P1_BULK_COLLECTION_PLAN_V1.md`. No generic intake
+implementation exists yet; add only the minimum matcher after P0 bytes arrive.

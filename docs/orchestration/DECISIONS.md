@@ -1,5 +1,21 @@
 # Decisions
 
+## Current: use official bulk products; do not perform thousands of manual downloads
+
+P0 evidence must remain a complete effective-dated master export. SSEInfo's official
+historical/basic-data business application is the accepted acquisition route for
+SSE. CNINFO's official package 98 is the accepted candidate route for the SZSE
+master because it exposes company/stock basic, name and listing-status histories;
+free preview is evidence of availability, not authority completion. Full exports
+require the human's account/business authority and may incur fees.
+
+P1 uses five bulk collection families. CNINFO package 11 is the preferred bulk
+route for 16,226 announcement documents because its documented daily/market/
+`maxID` interface returns official PDF addresses. Seven exact archived PDFs are
+reused with receipts; no redownload. No unofficial mirror, denial bypass, inferred
+price, new tolerance or methodology change is permitted. This is a source-input
+decision only; the accepted Pilot/R4 and all prior authority decisions are unchanged.
+
 ## Current: differentiated cash policy approved; source request compressed
 
 Human decision `CN_A_DIFFERENTIATED_CASH_DISTRIBUTION_POLICY_V1` is implemented as

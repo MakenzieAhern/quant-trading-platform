@@ -1,5 +1,22 @@
 # Blockers
 
+## 2026-09-15 P0 full-export account/business-application blocker
+
+P0 is 0/2 after exhausting anonymous official paths. SSEInfo publicly confirms
+historical securities-basic/master-reference products, but its delivery workflow
+requires an organization application, approval and agreement. CNINFO package 98
+provides a working historical preview for listing/status/name data, but full export
+requires login and may deduct fees. No purchase or application was submitted.
+
+P1 is no longer a one-document-at-a-time problem: five collection families cover
+16,304 unique official documents, and seven were recovered from existing local
+archives. P1 net-new is 16,297. After the one already-cached P2 source and these
+seven PDFs, 16,303 material unique source documents remain unavailable. The single
+smallest blocker is `OFFICIAL_FULL_EXPORT_ACCOUNT_OR_BUSINESS_APPLICATION_REQUIRED_FOR_P0`.
+No methodology approval is pending. Docker is deferred/non-blocking for this source
+task. Full safe start and full security-master authority remain unestablished; full
+dataset CREATED/AUDITED/FROZEN=NO; no studies or merge.
+
 ## 2026-09-15 source-input-only blocker after methodology closure
 
 The differentiated-distribution methodology blocker is RESOLVED: all 664 cached
