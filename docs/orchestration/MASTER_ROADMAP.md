@@ -4,10 +4,11 @@
 
 The former PID 434 ended with the WSL restart; its HTTP-403 denial receipt and
 21,029 durable receipts remain intact. It was not resumed and no duplicate writer
-was launched. Current cached cash ledger: 23,485 supported events, 4,362 unresolved
+was launched. Current cached cash ledger: 23,585 supported events, 4,262 unresolved
 groups, 83 prior records explicitly quarantined. SSE: 787 provisional transitions,
 59 chain gaps, zero conflicts; full acceptance is still PARTIAL. Fifteen reviewed
-mergers and 169 integer retained-bonus events remain supported bounded subsets,
+mergers and 218 integer retained-bonus events remain supported bounded subsets;
+70 bounded bonus candidates remain unresolved. These remain bounded subsets,
 not a complete corporate-action census. Docker Desktop currently fails before
 engine startup on the recreated `sailor-ingest.sock` stale-file rename; no reset or
 destructive recovery was attempted, so database-backed validation remains pending.

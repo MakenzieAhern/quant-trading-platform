@@ -11,6 +11,20 @@ def test_exact_retained_components_and_fail_closed_identity():
         context.prec = 6
         assert retained_ratio([header + "每10股送红股2股,每10股转增8股"], "600000") == 1
         assert retained_ratio([header + "每10股转增1.234567股"], "600000") == Decimal("0.1234567")
+        for terms in (
+            "每股送股0.2股,每股转增0.8股",
+            "每10股送股数2每10股转增股数8",
+            "每10股派送股票2股,每10股转增比例8股",
+            "每股分配比例:现金0.1元,转增0.8股;每10股送股数2",
+        ):
+            assert retained_ratio([header + terms], "600000") == 1
+        assert (
+            retained_ratio(
+                ["股票股票股票股票代码代码代码代码:: ::600000 600000\n每10股转增10股"],
+                "600000",
+            )
+            == 1
+        )
     for body in ("每10股转增10股,每10股转增5股", "重整每10股转增10股", "无分配方案"):
         with pytest.raises(ValueError):
             retained_ratio([header + body], "600000")

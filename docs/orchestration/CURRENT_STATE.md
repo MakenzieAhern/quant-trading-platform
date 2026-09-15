@@ -2,17 +2,22 @@
 
 ## Current: offline cash/ST parser closure milestone
 
-Current cash ledger v4 supports 23,485 bounded events / 4,362 unresolved groups.
-83 historical entries remain quarantined, not admitted; all 23,485 accepted event
+Current cash ledger v7 supports 23,585 bounded events / 4,262 unresolved groups.
+83 historical entries remain quarantined, not admitted; all 23,585 accepted event
 identities are freshly corroborated and preserved. The narrow cached-evidence fixes
 admit repeated OCR issuer-code headers, explicit literal gross-tax markers and
 consistent repeated implementation sections while rejecting mismatched codes,
 conflicting section amounts and unparseable cash clauses. Relative to ledger v2,
-286 events are added, including 13 previously quarantined identities. Remaining:
-1,879 missing implementation sources, 828 exact-authority conflicts and 1,655
+386 events are added, including 13 previously quarantined identities. Remaining:
+1,879 missing implementation sources, 842 exact-authority conflicts and 1,541
 parser/policy-review groups. No rounding tolerance or differentiated-holder policy
 was introduced. Combined ledger canonical SHA
-c08c5fc185f9e095ce559380090c40aa1ed2fc7249b694b5d6aa145a857283c3.
+b3b5b0397b85d522e4611a26e0ee43eab462bd42db7cf0a7ad9a3019d046ef02.
+
+The bounded integer retained-bonus replay now supports 218 of 288 candidates and
+leaves 70 explicit: 16 lack linked implementation evidence and 54 remain parser,
+term-conflict or nonstandard-entitlement review. Canonical SHA
+671f715b0ce96273b3d927a626ee1ef620e94686125289be32e812edb3a4aa41.
 
 SSE parser v36: 787 provisional / 790 parser-or-restoration unresolved / three
 metadata variants; 337 chains / 59 gaps / zero conflicts. All 771 main-parser

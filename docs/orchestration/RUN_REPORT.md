@@ -2,15 +2,21 @@
 
 ## 2026-09-15 offline cash/ST closure milestone
 
-Cached-only cash replay v4 supports 23,485 events and leaves 4,362 unresolved;
+Cached-only cash replay v7 supports 23,585 events and leaves 4,262 unresolved;
 83 historical records remain quarantined. Relative to ledger v2, 286 events were
-added and 13 quarantined identities were re-admitted only after exact current
+added in v4; subsequent strict header variants raise the total delta to 386 while
+the same 13 quarantined identities were re-admitted only after exact current
 implementation terms and original source identity were re-corroborated. Ledger
-canonical SHA c08c5fc185f9e095ce559380090c40aa1ed2fc7249b694b5d6aa145a857283c3;
-parser SHA aa96afd37e56c9c73c0af01240383c3b873c8f7728017e330ef64a90e45a26b7.
-Remaining cash groups partition to 1,879 missing source, 828 exact authority
-conflicts and 1,655 parser/policy review. No tolerance or differentiated-distribution
+canonical SHA b3b5b0397b85d522e4611a26e0ee43eab462bd42db7cf0a7ad9a3019d046ef02;
+parser SHA 6dabac51baede1692ddcf5a7b16fc26ecc5fcc88aa559210f7655f21f9c4224d.
+Remaining cash groups partition to 1,879 missing source, 842 exact authority
+conflicts and 1,541 parser/policy review. No tolerance or differentiated-distribution
 policy was added.
+
+Bounded bonus ledger v5 supports 218 of 288 integer next-session candidates and
+leaves 70 explicit: 16 missing linked implementation evidence, 39 nonstandard
+entitlements and 15 parser/term-conflict reviews. Canonical SHA
+671f715b0ce96273b3d927a626ee1ef620e94686125289be32e812edb3a4aa41.
 
 SSE parser v36 has 771 main plus 16 restoration provisional transitions, 786 main
 parser plus four restoration unresolved and three metadata variants. Chain v26:
@@ -20,7 +26,7 @@ f8118dd2a6912067e40bf2d4158720c92efdeb036d5af2fdfdbe843d43cd3033,
 chain 9006c5b9f99912ac45f5794c0329e66e2af11c875e4ce5a8370455ff1b2b977a,
 integrity b9591e52257d076dffa4c0a60fa493e62f2a73ec4440d1a14d6b0e6aad27fd25.
 
-Focused parser tests: 41 PASS. Full local run reached 551 PASS, then 62 errors and
+Focused parser tests: 42 PASS. Full local run reached 551 PASS, then 62 errors and
 one failure because PostgreSQL was unavailable. Docker Desktop startup reproduced
 the exact `sailor-ingest.sock` stale-rename access error; no destructive recovery or
 repeat loop. Quality/frontend verification waits for a healthy engine. Former PID

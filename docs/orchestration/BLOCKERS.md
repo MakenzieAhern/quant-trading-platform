@@ -2,9 +2,12 @@
 
 ## 2026-09-15 offline closure progress and runtime limitation
 
-Cash now has 23,485 supported / 4,362 unresolved groups; 83 prior records remain
-quarantined. Exact unresolved partition: 1,879 missing implementation sources, 828
-official-term/exchange exact-value conflicts and 1,655 parser or policy review.
+Cash now has 23,585 supported / 4,262 unresolved groups; 83 prior records remain
+quarantined. Exact unresolved partition: 1,879 missing implementation sources, 842
+official-term/exchange exact-value conflicts and 1,541 parser or policy review.
+The bounded bonus subset has 218 supported / 70 unresolved; 16 lack a linked source
+and 54 remain nonstandard, parser or exact-term review. Neither subset is a complete
+full-period corporate-action census.
 SSE has 787 provisional transitions, 790 parser/restoration unresolved plus three
 metadata variants, and 59 chain gaps with zero conflicts. These remain material
 full-census gaps and are not relabeled as normal or accepted through tolerance.

@@ -530,11 +530,20 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         ["证券代码证券代码证券代码证券代码:: ::600000 600000\n每股现金红利0.1元(税前)"],
         "600000",
     ) == Decimal("0.1")
+    for identity in (
+        "股票股票股票股票代码代码代码代码:: ::600000 600000",
+        "A股代码 600000 H股代码 00600",
+        "证券代码:(A 股)600000",
+        "证劵代码:600000",
+    ):
+        assert gross_cash([identity + "\n每股现金红利0.1元(含税)"], "600000") == Decimal("0.1")
     with pytest.raises(ValueError, match="ISSUER"):
         gross_cash(
             ["证券代码证券代码证券代码证券代码:: ::600004 600004\n每股现金红利0.1元(税前)"],
             "600000",
         )
+    with pytest.raises(ValueError, match="ISSUER"):
+        gross_cash(["证券代码:凯诺科技 证券简称:600000\n每股现金红利0.1元(含税)"], "600000")
     assert gross_cash([header + "每10股派0.35元(含税,扣税后0.315元)"], "600000") == Decimal("0.035")
     with pytest.raises(ValueError, match="ISSUER"):
         gross_cash(["证券代码:600004\n其他公司证券代码:600000\n每股现金红利0.1元(含税)"], "600000")

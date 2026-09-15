@@ -13,6 +13,18 @@ from app.data.catalog.freeze import write_immutable
 from app.domain.markets.corporate_actions import CorporateAction, require_supported_corporate_action
 
 
+def issuer_code_matches(normalized, symbol):
+    header = re.search(
+        r"(?:(?:A\s*股|证(?:券|\u52b5)|股票|公司)\s*){1,4}(?:代码\s*){1,4}"
+        r"(?:\(A/H\))?\s*:?\s*([^\n]{0,120})",
+        normalized[:600],
+    )
+    code_field = re.split(r"简称|编号|债券代码", header[1], maxsplit=1)[0] if header else ""
+    exact = re.search(r"(?<!\d)" + r"[ \t]*".join(symbol) + r"(?!\d)", code_field)
+    digits = re.sub(r"\D", "", code_field)
+    return bool(exact or (len(digits) == 12 and digits.startswith(symbol)))
+
+
 def cash_event(row, members, ordinary_ids):
     values = {Decimal(e["cash_per_share"]) for e in row["evidence"]}
     if (
@@ -81,12 +93,7 @@ def gross_cash(pages, symbol):
                 ]
                 break
     normalized = "\n".join(normalized_pages)
-    header = re.search(
-        r"(?:(?:证券|股票|公司)代码(?:\(A/H\))?\s*){1,4}(?::\s*)+"
-        r"((?:\d[ \t]*){6})(?!\d)",
-        normalized[:600],
-    )
-    if not header or re.sub(r"\s+", "", header[1]) != symbol:
+    if not issuer_code_matches(normalized, symbol):
         raise ValueError("CASH_ISSUER_HEADER_MISMATCH")
     text = re.sub(r"\s+", "", normalized)
     if re.search(r"差异化分红送转:是", text):
