@@ -15,14 +15,16 @@ from app.domain.markets.corporate_actions import CorporateAction, require_suppor
 
 def issuer_code_matches(normalized, symbol):
     header = re.search(
-        r"(?:(?:A\s*股|证(?:券|\u52b5)|股票|公司)\s*){1,4}(?:代码\s*){1,4}"
+        r"(?:(?:A\s*股|证\s*(?:券|劵)|(?<!债)券|股\s*票|公\s*司)\s*){1,4}"
+        r"(?:(?:代\s*码|代\s*号|号\s*码)\s*){1,4}"
         r"(?:\(A/H\))?\s*:?\s*([^\n]{0,120})",
         normalized[:600],
     )
     code_field = re.split(r"简称|编号|债券代码", header[1], maxsplit=1)[0] if header else ""
     exact = re.search(r"(?<!\d)" + r"[ \t]*".join(symbol) + r"(?!\d)", code_field)
     digits = re.sub(r"\D", "", code_field)
-    return bool(exact or (len(digits) == 12 and digits.startswith(symbol)))
+    repeated = len(digits) in (12, 18, 24) and digits == symbol * (len(digits) // 6)
+    return bool(exact or repeated or (len(digits) == 12 and digits.startswith(symbol)))
 
 
 def cash_event(row, members, ordinary_ids):

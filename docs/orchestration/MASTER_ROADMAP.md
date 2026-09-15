@@ -1,21 +1,26 @@
 # v1.1 controller roadmap
 
-## Current: R5 offline closure during CNINFO access suspension
+## Current: R5 offline closure complete; human methodology and source input required
 
 The former PID 434 ended with the WSL restart; its HTTP-403 denial receipt and
 21,029 durable receipts remain intact. It was not resumed and no duplicate writer
-was launched. Current cached cash ledger: 23,585 supported events, 4,262 unresolved
-groups, 83 prior records explicitly quarantined. SSE: 787 provisional transitions,
-59 chain gaps, zero conflicts; full acceptance is still PARTIAL. Fifteen reviewed
-mergers and 218 integer retained-bonus events remain supported bounded subsets;
-70 bounded bonus candidates remain unresolved. These remain bounded subsets,
-not a complete corporate-action census. Docker Desktop currently fails before
-engine startup on the recreated `sailor-ingest.sock` stale-file rename; no reset or
-destructive recovery was attempted, so database-backed validation remains pending.
-Reuse accepted calendar, benchmark and Pilot v2 authorities. Continue cached
-evidence queues; external source access is requested. Full safe start remains
-NOT_ESTABLISHED. Full dataset CREATED/AUDITED/FROZEN=NO; no studies/merge/release.
-Precise current immutable manifests are in CURRENT_STATE and project_state.json.
+was launched. Final cached cash ledger: 23,642 supported events, 4,205 unresolved
+groups and 83 explicitly quarantined records. The bounded bonus ledger supports
+254 of 288 candidates and leaves 34 explicit. SSE remains PARTIAL at 787
+provisional transitions, 790 parser/restoration unresolved plus three metadata
+variants, and 59 chain gaps with zero conflicts. All 69 cached merger leads now
+have terminal classifications; none of the eight new source-incomplete parent
+events was admitted without execution evidence.
+
+All safe offline queues are exhausted. `SOURCE_INPUT_REQUIREMENTS_V1` contains
+16,328 authoritative-source items and 664 material methodology items; canonical
+SHA `e20492797f1249ecf2dc8dd5ef8b06f252199df2883425dca4c82a1045365edc`.
+The one methodology class is the ordinary-A holder-class/per-share cash policy
+for differentiated distributions. R5 therefore stops under the genuine-blocker
+condition. Full safe start remains NOT_ESTABLISHED. Full dataset
+CREATED/AUDITED/FROZEN=NO; no studies, merge or release. Docker still has the
+recorded `sailor-ingest.sock` stale-file rename failure; no destructive recovery
+was attempted. Preserve Pilot v2, R4 and all accepted authorities.
 
 ## Prior: R5 exchange distribution census; batch closure continues
 

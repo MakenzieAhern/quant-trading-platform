@@ -12,7 +12,7 @@ def retained_ratio(pages, symbol):
     if not issuer_code_matches(normalized, symbol):
         raise ValueError("BONUS_ISSUER_HEADER_MISMATCH")
     text = re.sub(r"\s+", "", normalized)
-    if re.search(r"差异化|让渡|重整|转赠|缩股|吸收合并", text):
+    if re.search(r"差异化分红送转:?是|让渡|重整|转赠|缩股|吸收合并", text):
         raise ValueError("NONSTANDARD_ENTITLEMENT_REQUIRES_REVIEW")
     components = []
     for patterns in (

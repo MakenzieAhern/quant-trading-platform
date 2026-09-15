@@ -1,23 +1,34 @@
 # Blockers
 
-## 2026-09-15 offline closure progress and runtime limitation
+## 2026-09-15 final offline closure blockers
 
-Cash now has 23,585 supported / 4,262 unresolved groups; 83 prior records remain
-quarantined. Exact unresolved partition: 1,879 missing implementation sources, 842
-official-term/exchange exact-value conflicts and 1,541 parser or policy review.
-The bounded bonus subset has 218 supported / 70 unresolved; 16 lack a linked source
-and 54 remain nonstandard, parser or exact-term review. Neither subset is a complete
-full-period corporate-action census.
+Cash has 23,642 supported / 4,205 unresolved groups; 83 prior records remain
+quarantined. Exact unresolved partition: 1,879 missing implementation sources, 844
+official-term/exchange exact-value conflicts and 1,482 parser or policy review.
+The bounded bonus subset has 254 supported / 34 unresolved: 16 missing linked
+sources, 14 parser/exact-term conflicts and four nonstandard cases. Neither subset
+is a complete full-period corporate-action census.
 SSE has 787 provisional transitions, 790 parser/restoration unresolved plus three
 metadata variants, and 59 chain gaps with zero conflicts. These remain material
 full-census gaps and are not relabeled as normal or accepted through tolerance.
 
+All 69 cached merger leads are terminally classified, but eight newly identified
+ordinary-A parent events remain source-incomplete and were not admitted. Full
+corporate-action census, master lifecycle, suspension, long-range raw/factor and
+historical-rule authorities remain incomplete.
+
+All safe offline queues are exhausted. The single consolidated immutable source
+manifest contains 16,328 exact source items; the separate material methodology
+class contains 664 differentiated-distribution cash groups. Required human decision:
+`ORDINARY_A_SHARE_HOLDER_CLASS_AND_PER_SHARE_CASH_POLICY_FOR_DIFFERENTIATED_DISTRIBUTIONS`.
+Do not choose a policy based on future strategy performance.
+
 The former CNINFO PID 434 ended during the WSL restart; its receipts and denial
 manifest remain durable. No retry, bypass or duplicate writer was launched. Docker
 Desktop separately aborts at startup with `sailor-ingest.sock` -> `.stale`: "The
-file cannot be accessed by the system." No factory reset, runtime deletion, volume
-deletion or repeated retry was performed. This prevents database-backed local test
-completion but does not invalidate cached research evidence.
+file cannot be accessed by the system." No destructive recovery was attempted.
+This prevents database-backed local test completion but does not invalidate cached
+research evidence. R5 status is `BLOCKED_HUMAN_METHODOLOGY_AND_SOURCE_INPUT`.
 
 ## 2026-09-14 active source-access blocker
 

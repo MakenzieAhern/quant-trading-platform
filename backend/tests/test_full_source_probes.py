@@ -535,6 +535,10 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         "A股代码 600000 H股代码 00600",
         "证券代码:(A 股)600000",
         "证劵代码:600000",
+        "证 券 代 号 : 600000",
+        "券代码:600000",
+        "股票股票股票股票代码代码代码代码:: ::600000600000600000600000",
+        "债券代码:143039 债券简称:17北方01\n股票代码:600000",
     ):
         assert gross_cash([identity + "\n每股现金红利0.1元(含税)"], "600000") == Decimal("0.1")
     with pytest.raises(ValueError, match="ISSUER"):

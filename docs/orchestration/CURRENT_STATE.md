@@ -1,23 +1,21 @@
 # Current state
 
-## Current: offline cash/ST parser closure milestone
+## Current: R5 final offline closure checkpoint
 
-Current cash ledger v7 supports 23,585 bounded events / 4,262 unresolved groups.
-83 historical entries remain quarantined, not admitted; all 23,585 accepted event
-identities are freshly corroborated and preserved. The narrow cached-evidence fixes
-admit repeated OCR issuer-code headers, explicit literal gross-tax markers and
-consistent repeated implementation sections while rejecting mismatched codes,
-conflicting section amounts and unparseable cash clauses. Relative to ledger v2,
-386 events are added, including 13 previously quarantined identities. Remaining:
-1,879 missing implementation sources, 842 exact-authority conflicts and 1,541
-parser/policy-review groups. No rounding tolerance or differentiated-holder policy
-was introduced. Combined ledger canonical SHA
-b3b5b0397b85d522e4611a26e0ee43eab462bd42db7cf0a7ad9a3019d046ef02.
+Cash ledger v12 supports 23,642 bounded events / 4,205 unresolved groups. The 83
+historical quarantines remain excluded. The final unresolved partition is 1,879
+missing implementation sources, 844 exact-authority conflicts and 1,482 parser or
+policy-review groups. The shared strict issuer parser accepts additional official
+OCR/header variants without accepting swapped identity fields, wrong documents or
+title-only inference. No tolerance or differentiated-holder policy was introduced.
+Combined canonical SHA
+`cb9164039dfb21bc1a1ab38bb158bfb1f826b8063fbd9f193c26f2fa1668220c`.
 
-The bounded integer retained-bonus replay now supports 218 of 288 candidates and
-leaves 70 explicit: 16 lack linked implementation evidence and 54 remain parser,
-term-conflict or nonstandard-entitlement review. Canonical SHA
-671f715b0ce96273b3d927a626ee1ef620e94686125289be32e812edb3a4aa41.
+The bounded integer retained-bonus ledger v8 supports 254 of 288 candidates and
+leaves 34 explicit: 16 missing linked sources, 14 parser/exact-term conflicts and
+four nonstandard-entitlement cases. Explicit `差异化分红送转:否` is no longer
+misclassified as a differentiated event. Canonical SHA
+`3815a14cc22c5a3a28291ce6ce6775aacfcdb6f8475be63ef3aaa2e2d31a7e6b`.
 
 SSE parser v36: 787 provisional / 790 parser-or-restoration unresolved / three
 metadata variants; 337 chains / 59 gaps / zero conflicts. All 771 main-parser
@@ -26,6 +24,24 @@ replay. Parser canonical SHA f8118dd2a6912067e40bf2d4158720c92efdeb036d5af2fdfdb
 chain canonical SHA 9006c5b9f99912ac45f5794c0329e66e2af11c875e4ce5a8370455ff1b2b977a;
 integrity canonical SHA b9591e52257d076dffa4c0a60fa493e62f2a73ec4440d1a14d6b0e6aad27fd25.
 Full authority remains PARTIAL.
+
+All 69 cached merger implementation leads are closed deterministically: 34
+supported-event evidence duplicates, 13 source-incomplete leads for three existing
+chains, nine source-incomplete leads covering eight new ordinary-A parent events,
+eight B-share-only parents and five unlisted absorbed targets without listed-parent
+mutation. Closure canonical SHA
+`d78f13e3a1cf817a9e8ea2aaa7773ea758e3bc0251674124f5d8039703dd2cfb`.
+The supported identified merger count remains 15 and the full census remains
+NOT_ESTABLISHED.
+
+All independent safe offline work is exhausted. The detailed immutable
+`SOURCE_INPUT_REQUIREMENTS_V1` manifest contains 16,328 source items and 664
+methodology-decision items; canonical SHA
+`e20492797f1249ecf2dc8dd5ef8b06f252199df2883425dca4c82a1045365edc`.
+The only methodology class is
+`ORDINARY_A_SHARE_HOLDER_CLASS_AND_PER_SHARE_CASH_POLICY_FOR_DIFFERENTIATED_DISTRIBUTIONS`.
+R5 is `BLOCKED_HUMAN_METHODOLOGY_AND_SOURCE_INPUT`; safe start is not established
+and the full dataset remains uncreated, unaudited and unfrozen.
 
 The former PID 434 no longer exists after the WSL restart. Its denial manifest and
 durable receipts remain preserved; no automatic resume, bypass or duplicate writer.

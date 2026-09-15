@@ -1,22 +1,17 @@
 # Autonomous Quant Project Checkpoint
 
-## 2026-09-15 offline cash/ST closure milestone
+## 2026-09-15 final offline closure and consolidated source manifest
 
-Cached-only cash replay v7 supports 23,585 events and leaves 4,262 unresolved;
-83 historical records remain quarantined. Relative to ledger v2, 286 events were
-added in v4; subsequent strict header variants raise the total delta to 386 while
-the same 13 quarantined identities were re-admitted only after exact current
-implementation terms and original source identity were re-corroborated. Ledger
-canonical SHA b3b5b0397b85d522e4611a26e0ee43eab462bd42db7cf0a7ad9a3019d046ef02;
-parser SHA 6dabac51baede1692ddcf5a7b16fc26ecc5fcc88aa559210f7655f21f9c4224d.
-Remaining cash groups partition to 1,879 missing source, 842 exact authority
-conflicts and 1,541 parser/policy review. No tolerance or differentiated-distribution
-policy was added.
+Cached cash replay v12 supports 23,642 events and leaves 4,205 unresolved; 83
+historical records remain quarantined. The unresolved partition is 1,879 missing
+source, 844 exact-authority conflicts and 1,482 parser/policy review. Ledger
+canonical SHA `cb9164039dfb21bc1a1ab38bb158bfb1f826b8063fbd9f193c26f2fa1668220c`.
+No tolerance or differentiated-distribution policy was added.
 
-Bounded bonus ledger v5 supports 218 of 288 integer next-session candidates and
-leaves 70 explicit: 16 missing linked implementation evidence, 39 nonstandard
-entitlements and 15 parser/term-conflict reviews. Canonical SHA
-671f715b0ce96273b3d927a626ee1ef620e94686125289be32e812edb3a4aa41.
+Bounded bonus ledger v8 supports 254 of 288 integer next-session candidates and
+leaves 34 explicit: 16 missing linked sources, 14 parser/exact-term conflicts and
+four nonstandard cases. Canonical SHA
+`3815a14cc22c5a3a28291ce6ce6775aacfcdb6f8475be63ef3aaa2e2d31a7e6b`.
 
 SSE parser v36 has 771 main plus 16 restoration provisional transitions, 786 main
 parser plus four restoration unresolved and three metadata variants. Chain v26:
@@ -26,12 +21,21 @@ f8118dd2a6912067e40bf2d4158720c92efdeb036d5af2fdfdbe843d43cd3033,
 chain 9006c5b9f99912ac45f5794c0329e66e2af11c875e4ce5a8370455ff1b2b977a,
 integrity b9591e52257d076dffa4c0a60fa493e62f2a73ec4440d1a14d6b0e6aad27fd25.
 
-Focused parser tests: 42 PASS. Full local run reached 551 PASS, then 62 errors and
-one failure because PostgreSQL was unavailable. Docker Desktop startup reproduced
-the exact `sailor-ingest.sock` stale-rename access error; no destructive recovery or
-repeat loop. Quality/frontend verification waits for a healthy engine. Former PID
-434 is absent after WSL restart; source denial and durable receipts remain preserved,
-with no downloader resume or duplicate writer. Full dataset/studies/freeze unchanged.
+All 69 cached merger leads received terminal classifications. Closure canonical
+SHA `d78f13e3a1cf817a9e8ea2aaa7773ea758e3bc0251674124f5d8039703dd2cfb`:
+34 supported-event evidence duplicates, 13 source-incomplete existing-chain leads,
+nine source-incomplete new-chain leads, eight B-share-only parents and five
+out-of-scope unlisted targets. No unsupported event was admitted.
+
+The consolidated immutable `SOURCE_INPUT_REQUIREMENTS_V1` contains 16,328 exact
+source items and 664 differentiated-distribution methodology items. Canonical SHA
+`e20492797f1249ecf2dc8dd5ef8b06f252199df2883425dca4c82a1045365edc`; file SHA
+`20dcd8d612927dc91080d91c55fe2ac1d7da110099f021900de19940eefcbf53`.
+Former PID 434 remains absent and was not resumed or bypassed. Full dataset,
+studies and freeze remain unchanged. Focused backend tests: 42 PASS; Ruff, format
+and strict mypy PASS. The prior full local run remains 551 PASS / one failure / 62
+errors, all service-dependent after PostgreSQL became unavailable. Frontend was not
+rerun locally while Docker remains unavailable; CI is recorded after push.
 
 ## 2026-09-14 explicit bare risk-start labels and cached merger review
 
