@@ -75,9 +75,16 @@ def test_headers_and_nonprimary_purpose_do_not_invent_transitions():
     record = {"sse": {"TITLE": "申请撤销风险警示", "SECURITY_NAME": "ST测试"}}
     assert non_primary(record, pages)[0] == "APPLICATION_ONLY"
     for title, body, expected in (
+        ("关于公司债券实施风险警示的公告", "", "NON_EQUITY_INSTRUMENT"),
+        ("关于收到实施风险警示监管工作函的公告", "", "NON_EVENT_CORRESPONDENCE"),
+        ("筹划撤销公司股票其他风险警示", "", "APPLICATION_ONLY"),
+        ("暂停上市事项影响消除的公告", "", "ELIGIBILITY_ONLY"),
         ("相关事项进展公告", "", "PROGRESS_NOTICE"),
         ("可能实施风险警示", "", "NON_STATE_RISK_NOTICE"),
+        ("将被实施风险警示的第二次提示性公告", "", "NON_STATE_RISK_NOTICE"),
+        ("实施其他风险警示继续停牌", "", "SUSPENSION_NOTICE"),
         ("继续实施其他风险警示", "继续实施其他风险警示", "STATUS_CONFIRMATION"),
+        ("股票仍将被实施其他风险警示", "仍被实施其他风险警示", "STATUS_CONFIRMATION"),
         ("叠加实施其他风险警示", "", "NO_EFFECTIVE_CHANGE"),
         ("被实施退市风险警示", "2020年5月6日及2022年5月6日", "CONFLICTING_EVIDENCE"),
     ):

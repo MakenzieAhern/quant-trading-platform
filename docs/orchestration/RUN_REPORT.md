@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-16 full official SSE/SZSE ST authority closure
+
+SSE is `PASS_PUBLIC_OFFICIAL_RECONSTRUCTION` for all 2,403 P0 identities. The
+full public title census closes 6,724 leads and the selected-document corpus closes
+1,580 documents with zero unresolved classifications. The 1,242 accepted official
+events replay into 3,414 state intervals with zero chain gaps, conflicts, unmapped
+events or UNKNOWN states. Authority manifest:
+`0b11bd3fcf4f62b530a551365dfa974b7db3cef63156d5a311e0f714ae0b012f`.
+
+SZSE is `PASS_PUBLIC_OFFICIAL_RECONSTRUCTION` for all 3,028 P0 identities. The
+official dated abbreviation source yields 1,276 risk transitions; 836/836 prestart
+members are independently corroborated. Replay covers 7,876,813 security-sessions
+with no chain gap, lifecycle error, IPO conflict, UNKNOWN state or future leakage.
+Authority manifest:
+`8cb0c481cd8bd004dc689eee3370eb2fd9f592daec6ced717b40c45d1401c3a8`.
+
+P1 official CNINFO acquisition remains the active workstream. No full dataset was
+created, audited or frozen; no study or PR merge was run.
+
 ## 2026-09-15 free official P0 reconstruction and P1 scope reduction
 
 P0 public reconstruction passes for SSE 2,403/2,403 and SZSE 3,028/3,028, with

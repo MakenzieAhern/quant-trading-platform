@@ -1,5 +1,16 @@
 # Decisions
 
+## Current: accept full official SSE/SZSE ST reconstruction only after closed gates
+
+SSE acceptance requires the P0 identity set, official prestart anchor, complete
+public title routing, terminal selected-document classifications, deterministic
+official-event replay, and zero chain gaps, conflicts, unmapped events or UNKNOWN
+states. SZSE acceptance requires the same P0 identity set, the official effective-
+dated abbreviation-change export, independent corroboration for every prestart
+member, deterministic daily replay, and zero chain gaps, lifecycle violations, IPO
+conflicts, UNKNOWN states or future-event leakage. Undated current/display names
+remain excluded from both effective-date authorities.
+
 ## Current: retained official PDF OCR is evidence recovery, never standalone authority
 
 The autonomous completion mandate permits OCR only when the original official PDF

@@ -174,12 +174,20 @@ def match(
     def key(title: str, cn: dict[str, Any]) -> str:
         return issuer_subject(title, sse, cn) if issuer_prefix else title_key(title)
 
+    def same_subject(cn: dict[str, Any]) -> bool:
+        left, right = cn["announcementTitle"], sse["TITLE"]
+        if key(left, cn) == key(right, cn):
+            return True
+        if not issuer_prefix or "关于" not in left or "关于" not in right:
+            return False
+        return title_key(left[left.index("关于") :]) == title_key(right[right.index("关于") :])
+
     matches = {
         r["announcementId"]: r
         for r in rows
         if r["secCode"] == sse["SECURITY_CODE"]
         and publication(r) == sse["SSEDATE"]
-        and key(r["announcementTitle"], r) == key(sse["TITLE"], r)
+        and same_subject(r)
     }
     result = sorted(matches.values(), key=lambda r: r["announcementId"])
     return ("EXACT" if len(result) == 1 else "AMBIGUOUS" if result else "NO_MATCH", result)

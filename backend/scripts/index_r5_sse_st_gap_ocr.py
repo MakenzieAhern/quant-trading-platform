@@ -22,6 +22,7 @@ def select_candidates(queue: dict, chain: dict) -> list[dict]:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--source-root", type=Path)
     parser.add_argument("--queue", type=Path, required=True)
     parser.add_argument("--chain", type=Path, required=True)
     parser.add_argument("--source-manifest", type=Path, required=True)
@@ -32,6 +33,7 @@ def main() -> None:
 
     inputs = [args.queue, args.chain, args.source_manifest]
     queue, chain, sources = map(verified, inputs)
+    source_root = (args.source_root or args.root).resolve()
     by_id = {
         str(row["announcement_id"]): row
         for row in sources["documents"]
@@ -43,7 +45,7 @@ def main() -> None:
         if not source or source["source_sha256"] != row["sha"]:
             raise ValueError(f"SOURCE_NOT_CHECKSUM_BOUND:{row['id']}")
         pdf = (args.root / source["source_path"]).resolve()
-        if not pdf.is_relative_to(args.root.resolve()) or sha256_file(pdf) != row["sha"]:
+        if not pdf.is_relative_to(source_root) or sha256_file(pdf) != row["sha"]:
             raise ValueError(f"SOURCE_CHECKSUM_MISMATCH:{row['id']}")
         cache = args.output_root / f"{row['sha']}.json"
         _, cache_sha256 = ocr_pages(pdf, cache, row["sha"], runtime, engine)

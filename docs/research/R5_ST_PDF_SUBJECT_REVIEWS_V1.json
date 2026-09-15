@@ -80,6 +80,14 @@
       "pdf_subject": "关于公司股票被实施退市风险警示暨停复牌的公告",
       "reason": "PDF title explicitly includes resumption. No suspension or resumption date is inferred from either title; body supplies the dated transition.",
       "page": 1
+    },
+    {
+      "announcement_id": "1209857307",
+      "source_sha256": "027f58607c5de73b348dd58510aa513cdc3467728f6e7c9a5c2c0389c5a66850",
+      "metadata_subject": "股票实施退市风险警示公告.doc",
+      "pdf_subject": "股票实施退市风险警示公告",
+      "reason": "The metadata preserves a source .doc suffix while the checksum-bound PDF prints the same non-About subject. Exact issuer, code, effective date and name transition remain mandatory.",
+      "page": 1
     }
   ]
 }

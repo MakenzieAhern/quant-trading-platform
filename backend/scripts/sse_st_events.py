@@ -8,7 +8,7 @@ import io
 import json
 import re
 from collections import Counter
-from datetime import date
+from datetime import date, timedelta
 from itertools import pairwise
 from pathlib import Path
 from typing import Any
@@ -27,6 +27,7 @@ from scripts.reconcile_sse_cninfo import (
 
 VERSION = "sse-cninfo-ordinary-name-v25"
 DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
+STAR_TRANSLATION = str.maketrans("\u2217\uff0a\ufe61\u2605", "****")
 
 
 def compact(text: str) -> str:
@@ -34,7 +35,7 @@ def compact(text: str) -> str:
 
 
 def status(name: str) -> str:
-    name = name.strip("【】").translate(str.maketrans("\u2217\uff0a\ufe61", "***"))
+    name = name.strip("【】").translate(STAR_TRANSLATION)
     if re.match(r"^(?:S)?\*ST", name, re.I):
         return "STAR_ST"
     if re.match(r"^(?:S)?ST", name, re.I):
@@ -49,12 +50,14 @@ def linked_name_dates(text: str, clauses: str) -> list[re.Match[str]]:
         for prefix in (
             r"自?" + DATE + r"(?:[\uff08(](?:星期|周)[一二三四五六日天][\uff09)])?"
             r"(?:起|开始)[\uff0c,]?[^。\uff1b;\d]{0,40}?",
-            DATE + r"复牌[\uff0c,](?:公司(?:的|A股)?)?",
+            DATE + r"(?:复牌|恢复交易)[\uff0c,](?:公司(?:的)?(?:A股)?)?",
             DATE + r"复牌并撤销退市风险警示[\uff0c,](?:公司(?:的)?)?",
         )
         for match_date in re.finditer(prefix + clauses, text)
     ]
-    dates.extend(re.finditer(r"(?=" + clauses + r")(?:股票|证券)简称自" + DATE + r"起", text))
+    dates.extend(
+        re.finditer(r"(?=" + clauses + r")(?:公司)?(?:股票|证券)简称自" + DATE + r"起", text)
+    )
     return dates
 
 
@@ -67,13 +70,15 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("MATCH_NOT_EXACT")
     issuer_name = sse.get("SECURITY_NAME")
     if not issuer_name and prefix_mode:
+        issuer_name = record.get("derived_security_name_from_sse_title")
+    if not issuer_name and prefix_mode:
         issuer_name = mirrors[0].get("secName")
     if not isinstance(issuer_name, str) or not issuer_name.strip():
         raise ValueError("MISSING_SSE_ISSUER_NAME")
     text = compact("\n".join(pages))
     header = text[:500]
     codes = re.search(
-        r"(?:证券|股票)代码(?:\s*[：:]\s*|\s+)([\d\s、,，]{6,55})",  # noqa: RUF001
+        r"(?:证券|股票)代码(?:\s*[：:]\s*|\s*)A?([\d\s、,，]{6,55})",  # noqa: RUF001
         "\n".join(pages)[:1000],
     )
     if not codes or sse["SECURITY_CODE"] not in re.findall(r"(?<!\d)\d{6}(?!\d)", codes[1]):
@@ -84,13 +89,15 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("WRONG_ISSUER_NAME")
 
     def header_has_name(name: str) -> bool:
+        normalized_header = header.translate(STAR_TRANSLATION)
+        normalized_name = compact(name).translate(STAR_TRANSLATION)
         return bool(
             re.search(
                 r"(?:(?:证券|股票|公司)(?:简称|名称)|(?:证券|股票)代码[\uff1a:]?"
                 + re.escape(sse["SECURITY_CODE"])
                 + r"简称)[\uff1a:]?"
-                + re.escape(compact(name)),
-                header,
+                + re.escape(normalized_name),
+                normalized_header,
                 re.I,
             )
         )
@@ -112,8 +119,9 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                     and re.fullmatch(r"[0-9a-f]{64}", str(review.get("source_sha256", "")))
                     and review.get("source_sha256") == record.get("cninfo_document_sha256")
                     and review.get("metadata_subject") == subject
-                    and review.get("pdf_subject", "").startswith("关于")
                     and len(review.get("pdf_subject", "")) >= 12
+                    and review.get("pdf_subject", "").startswith("关于")
+                    == subject.startswith("关于")
                     and review.get("page") == 1
                     and review["pdf_subject"] in title_key(compact(pages[0])[:1200])
                 ):
@@ -125,8 +133,17 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                 raise ValueError("WRONG_CNINFO_ISSUER_COMPANY")
     names = list(
         re.finditer(
+            r"(?:公司)?股票A[、,]B股简称将由[“\"]([^、,\uff0c“”\"]{1,20})"
+            r"[、,\uff0c][^“”\"]{1,20}[”\"]变更为[“\"]([^、,\uff0c“”\"]{1,20})"
+            r"[、,\uff0c][^“”\"]{1,20}[”\"]",
+            text,
+        )
+    )
+    names.extend(
+        re.finditer(
             r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?[由从]?原?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
-            r"(?:(?:变更|更改|改|变)为|变成)[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
+            r"(?:[\u3001,\uff0c][“\"][^“”\"\uff1b;]{1,20}[”\"]|[\uff0c,])?"
+            r"(?:(?:变更|更改|改|变|恢复)为|变成)[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
             text,
         )
     )
@@ -184,14 +201,48 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     if not pairs:
         labels.extend(
             re.finditer(
-                r"公司股票简称将?变更为[“\"]([S*ST\u4e00-\u9fff]{1,12})[”\"]",
+                r"(?:公司)?(?:A股)?(?:股票|证券)简称(?:将|经)?(?:变更|更改|改|恢复)为[\uff1a:]?"
+                r"[“”\"]([S*ST\u4e00-\u9fff]{1,12})[“”\"]",
+                text,
+            )
+        )
+        labels.extend(
+            re.finditer(
+                r"(?:公司)?股票简称(?:将|经)?(?:变更|更改|改)为"
+                r"([S*ST\u4e00-\u9fff]{1,12})[\uff0c,](?:股票|证券)代码"
+                r"(?:不变)?仍?为?[\uff1a:]?[“\"]?" + re.escape(sse["SECURITY_CODE"]) + r"(?!\d)",
+                text,
+            )
+        )
+        labels.extend(
+            re.finditer(
+                r"(?:公司)?股票简称自20\d{2}年\d{1,2}月\d{1,2}日起"
+                r"(?:经)?变更为[“”\"]([S*ST\u4e00-\u9fff]{1,12})[“”\"]",
+                text,
+            )
+        )
+        labels.extend(
+            re.finditer(
+                r"A股[\uff0c,]简称[\uff1a:]([S*ST\u4e00-\u9fff]{1,12})"
+                r"[\uff0c,]证券代码[\uff1a:]" + re.escape(sse["SECURITY_CODE"]) + r"(?!\d)",
                 text,
             )
         )
     labels.extend(
         re.finditer(
+            r"(?:(?:实施|实行)[“”\"]?)?"
+            r"(?:退市风险警示|其他风险警示|风险警示|其他特别处理|特别处理)[“”\"]?"
+            r"后(?:的|本?公司)?(?:A股)?股票(?:的)?简称(?:为)?[\uff1a:]?[“”\"]?"
+            r"([S*ST\u4e00-\u9fff]{1,12}?)[“”\"]?"
+            r"(?=[、\uff0c,。\uff1b;]|股票代码|[一二三四五六七八九十\d]+[、.]|"
+            r"(?:退市|实施|实行)[“”\"]?(?:.{0,12}风险.{0,3}警.{0,3}示|(?:其他)?特别处理))",
+            text,
+        )
+    )
+    labels.extend(
+        re.finditer(
             r"实行退市风险警示后(?:本?公司)?股票的?简称为?[\uff1a:]"
-            r"(S?\*ST[\u4e00-\u9fff]{1,10})(?=[\uff0c,。\uff1b;]|实行退市风险警示后)",
+            r"(S?\*ST[\u4e00-\u9fff]{1,10})(?=[、\uff0c,。\uff1b;]|实行退市风险警示后)",
             text,
         )
     )
@@ -204,10 +255,19 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         )
     )
     labeled = {(compact(issuer_name), m[1]) for m in labels}
+    name_variants = None
     if pairs and labeled and pairs != labeled:
         raise ValueError("CONFLICTING_LABELED_NAME")
     if not pairs and len(labeled) == 1:
         pairs = labeled
+        names = labels
+    if (
+        not pairs
+        and len(labeled) > 1
+        and len({(status(old), status(new)) for old, new in labeled}) == 1
+    ):
+        name_variants = sorted(new for _, new in labeled)
+        pairs = {min(labeled)}
         names = labels
     restoration = False
     if not pairs and prefix_mode:
@@ -296,11 +356,11 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
         dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
         if not dates and status(new) in {"ST", "STAR_ST"}:
             warning = (
-                "退市风险警示" if status(new) == "STAR_ST" else "(?:其他风险警示|其他特别处理)"
+                "退市风险警示" if status(new) == "STAR_ST" else "(?:其他风险警示|(?:其他)?特别处理)"
             )
             dates = list(
                 re.finditer(
-                    r"(?<![\u4e00-\u9fff])(?:本)?公司股票(?:交易)?将?(?:于|自)"
+                    r"(?<![\u4e00-\u9fff])(?:本)?公司股票(?:交易)?将?(?:于|自|从)"
                     + DATE
                     + r"起?被?(?:实施|实行)[“\"]?"
                     + warning,
@@ -308,6 +368,35 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                 )
             )
             dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        r"(?<![\u4e00-\u9fff])自"
+                        + DATE
+                        + r"起(?:被)?(?:实施|实行)[“\"]?"
+                        + warning
+                        + r"[”\"]?(?:的特别处理)?",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        DATE + r"起(?:被)?(?:实施|实行)[“\"]?" + warning + r"[”\"]?(?:的特别处理)?",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        DATE + r"起复牌[\uff0c,](?:本)?公司股票(?:交易)?(?:将)?(?:被)?"
+                        r"(?:实施|实行)[“\"]?" + warning + r"[”\"]?",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
             if not dates:
                 dates = list(
                     re.finditer(
@@ -351,12 +440,33 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                     )
                 )
                 dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        r"自" + DATE + r"起撤销本公司股票交易实行的退市风险警示[\uff0c,]"
+                        r"同时继续对公司股票实行其他特别处理",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
         if not dates and status(new) == "NORMAL":
             warning = (
                 "退市风险警示"
                 if status(issuer_name) == "STAR_ST"
                 else "(?:其他风险警示|其他特别处理)"
             )
+            dates = list(
+                re.finditer(
+                    r"(?:(?:本)?公司股票(?:将)?(?:于)?)?"
+                    + DATE
+                    + r"(?:起)?复牌并撤销"
+                    + warning
+                    + r"(?:及其他风险警示)?",
+                    text,
+                )
+            )
+            dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if not dates and status(new) == "NORMAL":
             dates = list(
                 re.finditer(
                     r"自" + DATE + r"起撤销(?:本公司|公司)股票(?:交易)?" + warning,
@@ -372,6 +482,49 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
                     )
                 )
                 dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+    # A stale label can coexist with a live, directly stated transition date.
+    if len(dated) == 1 and next(iter(dated)) < sse["SSEDATE"]:
+        live_matches = list(
+            re.finditer(
+                DATE
+                + r"起(?:被)?(?:实施|实行)[“\"]?(?:退市风险警示|其他风险警示|(?:其他)?特别处理)",
+                text,
+            )
+        )
+        live_dates = {
+            date(int(m[1]), int(m[2]), int(m[3])).isoformat()
+            for m in live_matches
+            if sse["SSEDATE"]
+            <= date(int(m[1]), int(m[2]), int(m[3])).isoformat()
+            <= (date.fromisoformat(sse["SSEDATE"]) + timedelta(days=14)).isoformat()
+        }
+        if len(live_dates) == 1:
+            dated |= live_dates
+            dates.extend(
+                m
+                for m in live_matches
+                if date(int(m[1]), int(m[2]), int(m[3])).isoformat() in live_dates
+            )
+    # Narrow only an exact one-year typo beside one live near-publication date.
+    # Other competing dates remain unresolved.
+    if len(dated) == 2:
+        published = date.fromisoformat(sse["SSEDATE"])
+        near = {
+            item
+            for item in dated
+            if published <= date.fromisoformat(item) <= published + timedelta(days=14)
+        }
+        stale = dated - near
+        if len(near) == len(stale) == 1:
+            live, typo = map(date.fromisoformat, (next(iter(near)), next(iter(stale))))
+            if (live.month, live.day) == (typo.month, typo.day) and live.year == typo.year + 1:
+                dated = near
+                dates = [
+                    match_date
+                    for match_date in dates
+                    if date(int(match_date[1]), int(match_date[2]), int(match_date[3])).isoformat()
+                    in near
+                ]
     if len(dated) != 1:
         raise ValueError("EFFECTIVE_DATE_UNRESOLVED")
     for match_date in dates:
@@ -436,6 +589,8 @@ def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
     }
     if record.get("pdf_subject_review"):
         result["pdf_subject_review_sha256"] = sha(canonical(record["pdf_subject_review"]))
+    if name_variants:
+        result["official_same_status_name_variants"] = name_variants
     return result
 
 
@@ -446,8 +601,8 @@ def normalize(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
         key=lambda e: (
             e["security_id"],
             e["effective_from"],
-            e["sse_publication_date"],
-            e["sse_announcement_id"],
+            e.get("official_publication_date", e.get("sse_publication_date", "")),
+            e.get("official_document_id", e.get("sse_announcement_id", "")),
         ),
     )
 
@@ -466,7 +621,13 @@ def status_on(
         e
         for e in normalize(events)
         if e["security_id"] == security_id
-        and max(e["sse_publication_date"], e["cninfo_publication_date"], e["effective_from"]) <= day
+        and max(
+            e.get("official_publication_date", ""),
+            e.get("sse_publication_date", ""),
+            e.get("cninfo_publication_date", ""),
+            e["effective_from"],
+        )
+        <= day
     ]
     if not eligible:
         return "UNKNOWN"

@@ -9,10 +9,11 @@ zero true unresolved facts; no product purchase or application is required.
 P1 public acquisition is active and is not a human blocker. Its scoped remainder
 is 15,559 fact requirements / 15,543 unique documents: 13,590 public CNINFO PDFs
 plus 1,953 other targeted official-source gaps. A document is not accepted as an
-event merely because its bytes were acquired. SSE ST still has 59 chain gaps and
-cash remains 24,306 supported / 3,541 unresolved / 83 quarantined pending the
-fact-level closure. Docker is separately deferred/non-blocking. Full safe start and
-full dataset creation/audit/freeze remain NO; no study or merge is authorized.
+event merely because its bytes were acquired. Full SSE and SZSE ST authorities are
+now closed with zero chain gaps or UNKNOWN states. Cash remains 24,306 supported /
+3,541 unresolved / 83 quarantined pending fact-level closure. Docker is separately
+deferred/non-blocking. Full safe start and full dataset creation/audit/freeze remain
+NO; no study or merge is authorized.
 
 ## 2026-09-15 P0 full-export account/business-application blocker
 

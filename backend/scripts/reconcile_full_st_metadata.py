@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import re
 from concurrent.futures import ThreadPoolExecutor
 from hashlib import sha256
 from pathlib import Path
@@ -163,12 +164,16 @@ def main():
                     match_method="security+date+exact_subject+issuer_prefix",
                 )
                 if len(matches) == 1:
+                    title = re.sub(r"\s+", "", matches[0]["TITLE"])
+                    prefix = title[: title.index("关于")] if "关于" in title else ""
                     record.update(
                         sse=matches[0],
                         sse_metadata_snapshot_sha256=source_hashes[
                             canonical_json_bytes(matches[0])
                         ],
                     )
+                    if not matches[0].get("SECURITY_NAME") and 1 <= len(prefix) <= 12:
+                        record["derived_security_name_from_sse_title"] = prefix
                 result["records"].append(record)
             result["status"] = "METADATA_RECONCILED_NOT_EVENT_ACCEPTANCE"
         except Exception as exc:

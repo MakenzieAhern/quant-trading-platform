@@ -1,12 +1,18 @@
 # v1.1 controller roadmap
 
-## Current: P0 public reconstruction passed; continue R5 fact closure
+## Current: P0 and full SSE/SZSE ST passed; continue R5 fact closure
 
 `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` passes both P0 exchanges without a
 commercial export: SSE 2,403/2,403, SZSE 3,028/3,028, true unresolved facts zero.
 Core security-master authority, survivorship, future-IPO prevention, delisting
 retention, stable identity and deterministic replay pass. Historical display-name
 enrichment remains separate and cannot alter ST state.
+
+Full official SSE and SZSE ST reconstruction now also passes. SSE closes all 6,724
+public title leads and 1,580 selected documents before deterministic replay of
+1,242 official events. SZSE replays 1,276 risk transitions over all 3,028 P0
+identities with independent prestart corroboration. Both have zero chain gaps and
+zero UNKNOWN point-in-time states.
 
 P1 fact scoping establishes 761 requirements without new economic documents:
 757 are non-applicable outside ordinary-A scope and four yearbook facts are already

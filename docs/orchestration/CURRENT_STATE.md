@@ -1,6 +1,6 @@
 # Current state
 
-## Current: public-official P0 reconstruction passed; scoped P1 acquisition running
+## Current: full SSE/SZSE ST reconstruction passed; scoped P1 acquisition running
 
 `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` replaces the two assumed paid-export
 file requirements with audited fact sets. SSE is 2,403/2,403 and SZSE is
@@ -11,6 +11,19 @@ reverse-order replay. Both exchanges are
 The 5,431 undated historical display-name boundaries remain explicit non-material
 metadata gaps and do not supply ST state. No paid product was used. Evidence:
 `../research/P0_PUBLIC_RECONSTRUCTION_REPORT_V1.md`.
+
+Full SSE ST reconstruction is now `PASS_PUBLIC_OFFICIAL_RECONSTRUCTION`: all 2,403
+P0 identities map, 1,242 official events replay with zero chain gaps, conflicts,
+unmapped events or UNKNOWN intervals, and all 1,580 selected documents plus 6,724
+title-routing leads have terminal classifications. Authority manifest:
+`0b11bd3fcf4f62b530a551365dfa974b7db3cef63156d5a311e0f714ae0b012f`.
+
+Full SZSE ST reconstruction is also `PASS_PUBLIC_OFFICIAL_RECONSTRUCTION`: all
+3,028 P0 identities map to the official dated abbreviation history; all 836
+prestart members have independent official corroboration; 1,276 risk transitions
+replay across 7,876,813 security-sessions with zero gaps, lifecycle violations,
+IPO conflicts, UNKNOWN states or future-event leakage. Authority manifest:
+`8cb0c481cd8bd004dc689eee3370eb2fd9f592daec6ced717b40c45d1401c3a8`.
 
 P1 fact-level scope reconciliation removes 757 official CNINFO notices for
 non-ordinary-A instruments and directly resolves four SZSE yearbook facts. The

@@ -9,6 +9,7 @@ import pytest
 from scripts.reconcile_sse_cninfo import canonical, fetch, match, sha
 from scripts.sse_st_closure import anchor_names, controls, explain_names, historical_names
 from scripts.sse_st_events import extract, status
+from scripts.verify_r5_sse_event_reviews import date_is_bound
 
 
 def test_anchor_period_unicode_and_duplicates():
@@ -19,6 +20,7 @@ def test_anchor_period_unicode_and_duplicates():
     assert rows["600070"]["status"] == "NORMAL"
     assert status("\uff0aST凯乐") == "STAR_ST"
     assert status("\ufe61ST贤成") == "STAR_ST"
+    assert status("★ST园城") == "STAR_ST"
     with pytest.raises(ValueError, match="DUPLICATE"):
         anchor_names([*pages, table, table])
     with pytest.raises(ValueError, match="WRONG_ANCHOR_PERIOD"):
@@ -89,6 +91,8 @@ def test_optional_prefix_matching_stays_exact_and_null_safe():
     assert match(record["sse"], record["cninfo"], issuer_prefix=True)[0] == "EXACT"
     record["cninfo"][0]["announcementTitle"] = "关于撤销风险警示的公告"
     assert match(record["sse"], record["cninfo"], issuer_prefix=True)[0] == "NO_MATCH"
+    record["sse"]["TITLE"] = "历史简称关于撤销风险警示的公告"
+    assert match(record["sse"], record["cninfo"], issuer_prefix=True)[0] == "EXACT"
 
 
 def test_missing_sse_name_requires_exact_cninfo_pdf_header_identity():
@@ -117,6 +121,8 @@ def test_space_delimited_security_code_still_requires_exact_digits():
     for label in ("证券代码", "股票代码"):
         pages = [f"{label} {symbol}\n" + body]
         assert extract(pages, record)["symbol"] == symbol
+        assert extract([f"{label}{symbol}\n" + body], record)["symbol"] == symbol
+        assert extract([f"{label}:A{symbol}\n" + body], record)["symbol"] == symbol
         for wrong in ("600999", symbol + "0", "0" + symbol):
             with pytest.raises(ValueError, match="WRONG_SECURITY_CODE"):
                 extract([f"{label} {wrong}\n" + body], record)
@@ -235,7 +241,7 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
     old, new = baseline["old_name"], baseline["new_name"]
     header = f"证券代码:{baseline['symbol']} 证券简称:{old} {record['sse']['TITLE']}。"
     clause = f"股票简称由“{old}”变更为“{new}”。"
-    for prefix in ("公司的", "公司", "公司A股", ""):
+    for prefix in ("公司的", "公司", "公司A股", "公司的A股", ""):
         text = header + "2022年2月8日停牌一天,2022年2月9日复牌," + prefix + clause
         assert extract([text], record)["effective_from"] == "2022-02-09"
         alternate_name = clause.replace("股票简称", "证券简称")
@@ -261,6 +267,18 @@ def test_resumption_date_requires_direct_exact_name_change_clause():
     assert extract([text], record)["effective_from"] == "2022-02-09"
     withdrawal_text = header + "2022年2月9日复牌并撤销退市风险警示,公司的" + clause
     assert extract([withdrawal_text], record)["effective_from"] == "2022-02-09"
+    assert (
+        extract([header + "2022年2月9日恢复交易," + clause], record)["effective_from"]
+        == "2022-02-09"
+    )
+    direct = header + "公司股票停牌一天,自2022年2月9日起实施其他风险警示。" + clause
+    assert extract([direct], record)["effective_from"] == "2022-02-09"
+    plain = header + "公司股票停牌一天,自2022年2月9日起实施特别处理。" + clause
+    assert extract([plain], record)["effective_from"] == "2022-02-09"
+    resumed = header + "2022年2月9日起复牌,公司股票实行其他风险警示。" + clause
+    assert extract([resumed], record)["effective_from"] == "2022-02-09"
+    direct_entry = header + "2022年2月9日起被实施其他风险警示的特别处理。" + clause
+    assert extract([direct_entry], record)["effective_from"] == "2022-02-09"
     measures = (
         header + "2022年2月8日停牌一天,从2022年2月9日起实行其他风险警示。具体处理措施为:" + clause
     )
@@ -285,6 +303,13 @@ def test_explicit_removal_date_requires_issuer_and_single_date():
     text += "自2022年1月14日起撤销本公司股票交易退市风险警示。"
     text += "股票简称由“*ST中孚”变更为“中孚”。"
     assert extract([text], record)["effective_from"] == "2022-01-14"
+    resumption = "证券代码:600595 证券简称:*ST中孚 " + record["sse"]["TITLE"] + "。"
+    resumption += "公司股票将于2022年1月14日复牌并撤销退市风险警示。"
+    resumption += "股票简称由“*ST中孚”变更为“中孚”。"
+    assert extract([resumption], record)["effective_from"] == "2022-01-14"
+    assert extract([resumption.replace("公司股票将于", "")], record)["effective_from"] == (
+        "2022-01-14"
+    )
     for invalid in (
         text.replace("撤销本公司", "撤销关联公司"),
         text + "自2022年1月17日起撤销本公司股票交易退市风险警示。",
@@ -397,3 +422,76 @@ def test_legacy_new_name_label_requires_explicit_date_and_security():
         dated_label.replace("实行退市风险警示的起始日", "首日退市风险警示实施日期"),
     ):
         assert extract([header + variant], record)["effective_from"] == "2022-02-09"
+
+
+def test_legacy_post_treatment_and_ab_share_name_layouts():
+    fixture = copy.deepcopy(
+        json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[1]
+    )
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    symbol, old = record["sse"]["SECURITY_CODE"], record["sse"]["SECURITY_NAME"]
+    header = f"证券代码:{symbol} 证券简称:{old} {record['sse']['TITLE']}。"
+    date_clause = "退市风险警示起始日:2022年2月9日。"
+    for label in (
+        "退市风险警示后的股票简称:*ST样本。",
+        "退市风险警示后的股票简称:*ST样本退市风险警示后股票日涨跌幅限制为5%。",
+        "实施“其他风险警示”后公司股票简称为:ST样本。",
+        "实施其他风险警示后公司股票简称为:ST样本二、实施其他风险警示的原因。",
+        "股票简称改为“*ST样本”、“*ST样本B”。",
+        f"股票简称变更为*ST样本,证券代码不变仍为{symbol}。",
+        "公司股票简称将变更为”*ST样本”。",
+        "公司股票简称自2022年2月9日起变更为”ST样本”。",
+        f"股票简称:由“{old}”、“{old}B”变更为“*ST样本”、“*ST样本B”。",
+        f"公司股票为在上海证券交易所上市的A股,简称:*ST样本,证券代码:{symbol}。",
+    ):
+        assert extract([header + date_clause + label], record)["effective_from"] == "2022-02-09"
+
+    star_fixture = copy.deepcopy(
+        json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[0]
+    )
+    star_record = star_fixture["record"]
+    star_record["sse"]["SECURITY_NAME"] = None
+    star_record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    old = star_record["cninfo"][0]["secName"]
+    star_header = f"证券代码:600595 证券简称:★{old[1:]} {star_record['sse']['TITLE']}。"
+    body = "自2022年1月14日起撤销公司股票交易退市风险警示并实行其他特别处理。"
+    body += f"股票简称由“{old}”变更为“ST中孚”。"
+    assert extract([star_header + body], star_record)["status"] == "ST"
+
+    paired = star_header + "自2022年1月14日起恢复交易,"
+    paired += "公司股票A、B股简称将由“*ST中孚、*ST中孚B”变更为“ST中孚、ST中孚B”。"
+    assert extract([paired], star_record)["status"] == "ST"
+
+
+def test_exact_one_year_date_typo_uses_only_near_publication_date():
+    fixture = copy.deepcopy(
+        json.loads((Path(__file__).parent / "fixtures/cninfo_st_disclosures.json").read_bytes())[1]
+    )
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    baseline = extract(fixture["pages"], record)
+    old, new = baseline["old_name"], baseline["new_name"]
+    header = f"证券代码:{baseline['symbol']} 证券简称:{old} {record['sse']['TITLE']}。"
+    names = f"股票简称由“{old}”变更为“{new}”。"
+    text = header + names + "实施其他风险警示的起始日:2022年2月9日。"
+    text += "实施其他风险警示的起始日:2021年2月9日。"
+    assert extract([text], record)["effective_from"] == "2022-02-09"
+    with pytest.raises(ValueError, match="EFFECTIVE_DATE_UNRESOLVED"):
+        extract([text.replace("2021年2月9日", "2021年2月8日")], record)
+
+
+def test_reviewed_effective_date_modes_are_bounded():
+    exact = {"effective_from": "2021-07-22"}
+    month_day = {
+        "effective_from": "2010-04-22",
+        "effective_date_evidence": "PUBLICATION_YEAR_PLUS_MONTH_DAY",
+    }
+    typo = {
+        "effective_from": "2011-03-04",
+        "effective_date_evidence": "ONE_YEAR_SOURCE_TYPO_CORRECTED_BY_PUBLICATION_YEAR",
+    }
+    assert date_is_bound(exact, "自2021年7月22日起", "2021-07-20")
+    assert date_is_bound(month_day, "4月22日实施;2010年公告", "2010-04-21")
+    assert date_is_bound(typo, "自2010年3月4日起;2011年3月2日", "2011-03-03")
+    assert not date_is_bound(typo, "自2010年3月4日起", "2012-03-03")

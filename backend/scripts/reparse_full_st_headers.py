@@ -15,6 +15,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--alternate", type=Path)
+    parser.add_argument("--alternate-output", type=Path)
     parser.add_argument("--prior", default="transition-parser-full-v1.json")
     parser.add_argument("--report", default="transition-parser-full-v2.json")
     parser.add_argument("--subject-reviews", type=Path)
@@ -63,7 +64,11 @@ def main():
         source = sources[original["announcement_id"]]
         if sha256_file(args.root / source["source_path"]) != original["source_sha256"]:
             raise ValueError("PDF_SOURCE_CHANGED")
-        target = args.root / "alternate-text-v1" / path.name if args.alternate else path
+        target = (
+            (args.alternate_output or args.root / "alternate-text-v1") / path.name
+            if args.alternate
+            else path
+        )
         if args.alternate:
             write_immutable(target, raw)
         inputs.append(dict(path=str(target), sha256=sha256_file(target)))

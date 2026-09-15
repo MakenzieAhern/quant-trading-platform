@@ -44,12 +44,33 @@ def non_primary(record: dict[str, Any], pages: list[str]) -> tuple[str, str]:
     """Document-purpose rules, with body checks; classifications do not create transitions."""
     title = compact(record["sse"]["TITLE"])
     body = compact("\n".join(pages))
-    if "申请" in title or "撤回" in title:
+    if "债券" in title:
+        return "NON_EQUITY_INSTRUMENT", "Corporate-bond warning does not change A-share status."
+    if "专项说明" in title or "监管工作函" in title:
+        return (
+            "NON_EVENT_CORRESPONDENCE",
+            "Audit or regulatory correspondence is not implementation.",
+        )
+    if "申请" in title or "撤回" in title or "筹划撤销" in title:
         return "APPLICATION_ONLY", "Application/withdrawal is not exchange implementation."
+    if "影响消除" in title:
+        return "ELIGIBILITY_ONLY", "Reports eligibility conditions, not exchange implementation."
     if "进展" in title or "得到清偿" in title or "相关事项的进展公告" in body[:250]:
         return "PROGRESS_NOTICE", "Reports remediation progress, not a new effective transition."
-    if "可能" in title or "股票交易风险提示" in title or "预计将于" in body[:1000]:
+    if (
+        "可能" in title
+        or "股票交易风险提示" in title
+        or "第二次提示" in title
+        or "第三次提示" in title
+        or "预亏" in title
+        or "预计将于" in body[:1000]
+    ):
         return "NON_STATE_RISK_NOTICE", "Conditional risk warning, not definitive implementation."
+    if "继续停牌" in title:
+        return (
+            "SUSPENSION_NOTICE",
+            "Trading suspension notice does not create a risk-class transition.",
+        )
     if "补充公告" in title and "2022年5月6日起被实施退市风险警示" in body:
         return "DUPLICATE_EVIDENCE", "Restates the already indexed implementation of 2022-05-06."
     if "2020年5月6日" in body and "2022年5月6日" in body:
@@ -57,7 +78,9 @@ def non_primary(record: dict[str, Any], pages: list[str]) -> tuple[str, str]:
             "CONFLICTING_EVIDENCE",
             "Original PDF explicitly states both 2020 and 2022 start dates.",
         )
-    if "继续" in title and re.search(r"(?:继续|仍)[^。]{0,25}(?:风险警示|ST|简称)", body):
+    if ("继续" in title or "仍将" in title or "不能撤销" in title) and re.search(
+        r"(?:继续|仍|不能撤销)[^。]{0,25}(?:风险警示|ST|简称)", body
+    ):
         return "STATUS_CONFIRMATION", "Confirms continuing warning; no new class change inferred."
     if "叠加" in title and status(record["sse"]["SECURITY_NAME"]) != "NORMAL":
         return "NO_EFFECTIVE_CHANGE", "Additional warning reason while the existing class remains."

@@ -19,7 +19,7 @@ def diagnose(events, initial, last):
     for day, rows in sorted(dates.items()):
         finals = {r["status"] for r in rows}
         pairs = {(r["old_status"], r["status"]) for r in rows if r["old_status"] != r["status"]}
-        documents = sorted({r["cninfo_document_id"] for r in rows})
+        documents = sorted({r.get("official_document_id", r["cninfo_document_id"]) for r in rows})
         if len(finals) != 1 or len(pairs) > 1:
             conflicts.append(dict(date=day, document_ids=documents))
             current, last = "UNKNOWN", day
@@ -43,20 +43,21 @@ def diagnose(events, initial, last):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--staging", type=Path, required=True)
-    parser.add_argument("--parsed", required=True)
+    parser.add_argument("--parsed", action="append", required=True)
     parser.add_argument("--report", required=True)
     args = parser.parse_args()
     root = args.staging / "full-sse-st-v1"
-    paths = [
-        root / args.parsed,
+    parsed_paths = [root / path for path in args.parsed]
+    evidence_paths = [
         args.staging / "sse-st-pilot/residual-20260910/combined-events.json",
         root / "prestart-anchor-v2.json",
         args.staging / "full-code-transitions-v1/master-code-intervals.json",
     ]
-    parsed, anchor, master = (verified(paths[i]) for i in (0, 2, 3))
-    events = [r["event"] for r in parsed["results"] if "event" in r] + json.loads(
-        paths[1].read_bytes()
-    )
+    parsed = [verified(path) for path in parsed_paths]
+    anchor, master = (verified(evidence_paths[i]) for i in (1, 2))
+    events = [
+        row["event"] for document in parsed for row in document["results"] if "event" in row
+    ] + json.loads(evidence_paths[0].read_bytes())
     anchors = {r["symbol"]: r["status"] for r in anchor["anchors"]}
     by_symbol, by_id = defaultdict(list), defaultdict(list)
     for member in master["records"]:
@@ -90,7 +91,10 @@ def main():
         rows.append(dict(security_id=sid, **result))
     report = dict(
         scope="PROVISIONAL_CHAIN_DIAGNOSTIC_NOT_AUTHORITY_OR_DAILY_STATE_ACCEPTANCE",
-        inputs=[dict(path=str(p), sha256=sha256_file(p)) for p in paths],
+        inputs=[
+            dict(path=str(path), sha256=sha256_file(path))
+            for path in [*parsed_paths, *evidence_paths]
+        ],
         parser_sha256=sha256_file(Path(__file__)),
         rows=rows,
         unmapped=unmapped,

@@ -99,6 +99,23 @@ def test_pdf_subject_review_is_bound_to_document_and_preserves_other_checks():
         extract(fixture["pages"], record)
 
 
+def test_pdf_subject_review_accepts_matching_non_about_title_form():
+    fixture = copy.deepcopy(FIXTURES[0])
+    record = fixture["record"]
+    record["match_method"] = "security+date+exact_subject+issuer_prefix"
+    cn = record["cninfo"][0]
+    cn["announcementTitle"] = record["sse"]["TITLE"] = "*ST中孚股票实施退市风险警示公告.doc"
+    record["pdf_subject_review"] = dict(
+        announcement_id=cn["announcementId"],
+        source_sha256=record["cninfo_document_sha256"],
+        metadata_subject="股票实施退市风险警示公告.doc",
+        pdf_subject="股票实施退市风险警示公告",
+        page=1,
+    )
+    fixture["pages"][0] = "股票实施退市风险警示公告" + fixture["pages"][0]
+    assert extract(fixture["pages"], record)["status"] == "ST"
+
+
 def test_wrong_security_date_title_and_issuer_rejected():
     fixture = FIXTURES[0]
     for field, value in (
@@ -143,6 +160,12 @@ def test_ordinary_name_label_and_expanded_name_do_not_merge():
     assert extract([valid + f"扩位证券简称由“{old}”变更为“{new}扩”；"], record)["new_name"] == new
     with pytest.raises(ValueError, match="CONFLICTING_LABELED_NAME"):
         extract([valid + "实施后A股简称为ST错误，"], record)
+
+    same_status = header + date_clause + "实施后A股简称为ST样本，"
+    same_status += "实施后A股简称为ST样本公司，"
+    event = extract([same_status], record)
+    assert event["status"] == "ST"
+    assert event["official_same_status_name_variants"] == ["ST样本", "ST样本公司"]
 
 
 def test_explicit_date_label_variants():

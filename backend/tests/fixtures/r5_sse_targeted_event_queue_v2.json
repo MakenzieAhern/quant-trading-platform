@@ -1,0 +1,23 @@
+[
+  {
+    "issuer": "600145",
+    "published_on": "2012-08-28",
+    "queue_type": "SSE_ST_TARGETED_EVENT_CLOSURE",
+    "title": "关于撤消股票交易其他风险警示的公告",
+    "url": "https://static.cninfo.com.cn/finalpage/2012-08-28/61491831.PDF"
+  },
+  {
+    "issuer": "601399",
+    "published_on": "2020-05-30",
+    "queue_type": "SSE_ST_TARGETED_EVENT_CLOSURE",
+    "title": "关于公司股票重新上市的公告",
+    "url": "https://static.cninfo.com.cn/finalpage/2020-05-30/1207878481.PDF"
+  },
+  {
+    "issuer": "600260",
+    "published_on": "2022-12-28",
+    "queue_type": "SSE_ST_TARGETED_EVENT_CLOSURE",
+    "title": "关于公司股票可能被终止上市的风险提示公告",
+    "url": "https://static.cninfo.com.cn/finalpage/2022-12-28/1215463667.PDF"
+  }
+]

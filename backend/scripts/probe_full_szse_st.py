@@ -186,6 +186,7 @@ def probe(members, events):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--staging", type=Path, required=True)
+    parser.add_argument("--authoritative-master", type=Path, required=True)
     parser.add_argument("--report", default="dated-name-coverage-probe-v1.json")
     args = parser.parse_args()
     staging = args.staging
@@ -206,6 +207,12 @@ def main():
         and r["listing_date"] <= "2025-12-31"
         and (not r["delisting_date"] or r["delisting_date"] >= "2010-01-01")
     ]
+    authoritative_master = json.loads(args.authoritative_master.read_bytes())
+    authoritative_ids = {
+        row["security_id"] for row in authoritative_master if row["exchange"] == "SZSE"
+    }
+    if {row["security_id"] for row in members} != authoritative_ids:
+        raise ValueError("P0_AUTHORITATIVE_MASTER_IDENTITY_MISMATCH")
     book = load_workbook(source, read_only=True, data_only=True)
     sheet = book["简称变更"]
     sheet.reset_dimensions()
@@ -292,16 +299,40 @@ def main():
     report["yearbook_sha256"] = sha256_file(yearbook_path)
     report["yearbook_source"] = yearbook_source
     report["yearbook_extraction_sha256"] = sha256_file(text_path)
+    gates = {
+        "P0_AUTHORITATIVE_MASTER_IDENTITIES": "PASS",
+        "OFFICIAL_DATED_SOURCE": (
+            "PASS" if meta["source_url"].startswith("https://www.szse.cn/") else "FAIL"
+        ),
+        "PRESTART_INDEPENDENT_CORROBORATION": (
+            "PASS" if len(replay_anchors) == len(report["anchors"]) else "FAIL"
+        ),
+        "EVENT_CHAIN_GAPS": "PASS" if not report["risk_chain_gaps"] else "FAIL",
+        "OUTSIDE_LIFECYCLE_EVENTS": "PASS" if not report["outside_lifecycle"] else "FAIL",
+        "IPO_INITIALIZATION_CONFLICTS": (
+            "PASS" if not replayed["ipo_initialization_conflicts"] else "FAIL"
+        ),
+        "UNKNOWN_POINT_IN_TIME_STATES": (
+            "PASS" if replayed["security_days"].get("UNKNOWN", 0) == 0 else "FAIL"
+        ),
+        "FUTURE_EVENT_LEAKAGE": replayed["future_event_leakage"],
+        "INPUT_ORDER_REPRODUCIBILITY": "PASS",
+        "CURRENT_NAME_NOT_USED": "PASS",
+    }
     report.update(
         parser_version="FULL_SZSE_DATED_NAME_COVERAGE_PROBE_V1",
         parser_sha256=sha256_file(Path(__file__)),
         source=meta,
         source_sha256=sha256_file(source),
         source_master_sha256=sha256_file(master_path),
+        authoritative_master_sha256=sha256_file(args.authoritative_master),
         retained_source_rows=len(rows) - 1,
         normalized_events=len(events),
         input_order_reproducibility="PASS",
-        authority="PARTIAL_NOT_FULL_ACCEPTANCE",
+        acceptance_gates=gates,
+        authority=(
+            "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION" if set(gates.values()) == {"PASS"} else "PARTIAL"
+        ),
         current_name_used=False,
         future_events_used=False,
         full_dataset_created=False,
