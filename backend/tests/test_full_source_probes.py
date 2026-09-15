@@ -527,6 +527,10 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         ["证券代码:6 0 0 0 0 0\n每10股送5股、派发现金股利1.2元(含税,扣税后0.58元)"], "600000"
     ) == Decimal("0.12")
     assert gross_cash(
+        ["股票代码:000006\n二、利润分配方案\n每10股送3股派发现金股利0.4元(含税)"],
+        "000006",
+    ) == Decimal("0.04")
+    assert gross_cash(
         ["证券代码证券代码证券代码证券代码:: ::600000 600000\n每股现金红利0.1元(税前)"],
         "600000",
     ) == Decimal("0.1")

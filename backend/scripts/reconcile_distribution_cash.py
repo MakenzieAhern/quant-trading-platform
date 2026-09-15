@@ -201,7 +201,7 @@ def gross_cash(pages, symbol):
     else:
         section_texts = [text]
     number = r"(\d+(?:\.\d+)?)"
-    base = r"每(10|1)?股(?:送(?:红股)?\d+(?:\.\d+)?股[、,])?"
+    base = r"每(10|1)?股(?:送(?:红股)?\d+(?:\.\d+)?股[、,]?)?"
     gross_basis = r"[。,]?(?:\(|\[)(?:含税|税前|含适用税项)"
     matches = []
     for section_text in section_texts:

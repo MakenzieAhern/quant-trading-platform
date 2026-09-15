@@ -1,5 +1,16 @@
 # Decisions
 
+## Current: retained official PDF OCR is evidence recovery, never standalone authority
+
+The autonomous completion mandate permits OCR only when the original official PDF
+bytes and checksum-bound receipt are retained. `P1_CASH_PUBLIC_SUBSTITUTION_OCR_V1`
+therefore admits a cash fact only when the official issuer identity, record date,
+ex-date and gross ordinary-A cash term all exactly match independent official
+exchange evidence. OCR errors, missing labels, invalid dates, printed source
+conflicts and non-unique terms fail closed. The OCR engine, rendering version,
+model checksums, source checksum and extraction checksum are persisted; no model
+weights, PDF corpus or extraction cache is committed to Git.
+
 ## Current: use free official public reconstruction; no paid P0 purchase
 
 Human decision `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` is implemented. A

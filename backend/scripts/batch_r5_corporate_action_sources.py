@@ -9,6 +9,7 @@ import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
+from threading import Event, Lock
 from zoneinfo import ZoneInfo
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
@@ -85,6 +86,8 @@ def run(
     workers: int = 2,
 ) -> dict:
     existing = {}
+    circuit, circuit_lock = Event(), Lock()
+    consecutive_unavailable = 0
     receipts = sorted(
         {
             path
@@ -103,6 +106,9 @@ def run(
             existing[meta["url"]] = pdf
 
     def acquire(row: dict) -> dict:
+        nonlocal consecutive_unavailable
+        if circuit.is_set():
+            raise RuntimeError("ACCESS_CIRCUIT_OPEN")
         url = row["url"]
         if not url.startswith("https://static.cninfo.com.cn/finalpage/"):
             raise ValueError("NON_OFFICIAL_SOURCE")
@@ -163,6 +169,12 @@ def run(
             ),
             flush=True,
         )
+        with circuit_lock:
+            consecutive_unavailable = (
+                consecutive_unavailable + 1 if result["retrieval_status"] == "UNAVAILABLE" else 0
+            )
+            if consecutive_unavailable >= 20:
+                circuit.set()
         return result
 
     with ThreadPoolExecutor(max_workers=workers) as pool:

@@ -44,3 +44,29 @@ def test_batch_reuses_verified_external_pdf_without_download(tmp_path, monkeypat
     assert report == batch.run(
         tmp_path / "output", queue=queue, batch="test", source_roots=(retained,)
     )
+
+
+def test_batch_opens_circuit_after_consecutive_source_failures(tmp_path, monkeypatch):
+    import json
+
+    import pytest
+
+    from scripts import batch_r5_corporate_action_sources as batch
+
+    queue = tmp_path / "queue.json"
+    queue.write_text(
+        json.dumps(
+            [
+                {
+                    "issuer": "600000",
+                    "queue_type": "DISTRIBUTION",
+                    "published_on": "2022-01-01",
+                    "url": f"https://static.cninfo.com.cn/finalpage/2022-01-01/{i}.PDF",
+                }
+                for i in range(100)
+            ]
+        )
+    )
+    monkeypatch.setattr(batch, "fetch", lambda *args: (_ for _ in ()).throw(OSError("offline")))
+    with pytest.raises(RuntimeError, match="ACCESS_CIRCUIT_OPEN"):
+        batch.run(tmp_path / "output", queue=queue, batch="test")
