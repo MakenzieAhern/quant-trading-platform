@@ -22,6 +22,7 @@
   "r5_suspended_worker_pid": null,
   "r5_source_worker_status": "RUNNING_PID_472_P1_PUBLIC_ACQUISITION_V10",
   "r5_cash_ocr_worker_status": "RUNNING_PID_3435_P1_PUBLIC_CASH_SUBSTITUTION_V1",
+  "r5_sse_gap_ocr_worker_status": "WAITING_PID_4111_AFTER_CASH_OCR",
   "human_source_input_required": false,
   "human_source_input_reason": null,
   "official_public_source_reconstruction_policy": "OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1",

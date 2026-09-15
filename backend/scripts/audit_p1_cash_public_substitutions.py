@@ -120,6 +120,19 @@ def ocr_pages(
     return pages, sha256_file(cache)
 
 
+def ocr_runtime() -> dict:
+    import rapidocr
+
+    models = sorted((Path(rapidocr.__file__).parent / "models").glob("*.onnx"))
+    return {
+        "render_scale": "2.5",
+        "rapidocr_version": version("rapidocr"),
+        "onnxruntime_version": version("onnxruntime"),
+        "pypdfium2_version": version("pypdfium2"),
+        "models": [{"name": path.name, "sha256": sha256_file(path)} for path in models],
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--requirements", type=Path, required=True)
@@ -131,7 +144,6 @@ def main() -> None:
     parser.add_argument("--output-root", type=Path, required=True)
     args = parser.parse_args()
 
-    import rapidocr
     from rapidocr import RapidOCR
 
     inputs = [
@@ -152,14 +164,7 @@ def main() -> None:
             raise ValueError("CONFLICTING_SOURCE_SNAPSHOTS")
         source_rows[key] = row
     amounts = exchange_cash(sse, szse)
-    models = sorted((Path(rapidocr.__file__).parent / "models").glob("*.onnx"))
-    runtime = {
-        "render_scale": "2.5",
-        "rapidocr_version": version("rapidocr"),
-        "onnxruntime_version": version("onnxruntime"),
-        "pypdfium2_version": version("pypdfium2"),
-        "models": [{"name": p.name, "sha256": sha256_file(p)} for p in models],
-    }
+    runtime = ocr_runtime()
     engine = RapidOCR()
 
     targets = []
