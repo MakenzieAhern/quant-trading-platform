@@ -1,5 +1,35 @@
 # Current state
 
+## Current: differentiated cash closed; minimal official source input required
+
+The approved `DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1` rule was replayed over all
+664 cached differentiated final implementation documents. All 664 produce one
+exact gross ordinary/public A-share cash term; no record is non-applicable,
+ambiguous, missing-final or conflicting. Cash ledger v14 supports 24,306 events,
+leaves 3,541 unresolved and retains 83 quarantines. The unresolved partition is
+1,879 missing final sources, 844 exact-authority conflicts and 818 parser/policy
+review groups. Prior accepted economic terms are unchanged. Canonical SHA:
+`91e9ff1d6f064eb5ca0bc3d1dd97fb3b041b74e112fe95d7b78c6d4766da289a`.
+
+The immutable `SOURCE_INPUT_REQUIREMENTS_V2_MINIMAL` manifest compresses 16,328
+event-level requests into 16,312 unique official documents while preserving every
+back-reference. Priorities are P0=2, P1=16,304, P2=5 and P3=1. Exactly 16,311 are
+material; 16,310 currently require a user-provided official copy or restored
+authorized access and one is already cached. The P3 metadata-only mirror is not a
+readiness blocker. Canonical SHA:
+`96839c742cb12c9e0ea0c8301b990474554f64bfd2abf34579f8190b2e8017c7`.
+
+R5 is `BLOCKED_SOURCE_INPUT_V2_MINIMAL`, stop condition case 2. There is no pending
+methodology approval. SSE still has 59 chain gaps; full security-master authority
+and a verified safe start remain unestablished. Full dataset CREATED/AUDITED/FROZEN
+= NO. Docker is tracked separately and does not change source evidence. No studies,
+profitability inspection or PR merge.
+
+A single safe Docker Desktop start was attempted without altering runtime files or
+data. Windows processes started, but `docker-desktop` remained stopped and Ubuntu
+had neither `/var/run/docker.sock` nor the Docker CLI. Recovery is still required;
+no factory reset, runtime deletion or repeated retry was performed.
+
 ## Current: R5 final offline closure checkpoint
 
 Cash ledger v12 supports 23,642 bounded events / 4,205 unresolved groups. The 83

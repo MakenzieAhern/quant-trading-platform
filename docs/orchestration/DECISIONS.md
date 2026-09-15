@@ -1,5 +1,23 @@
 # Decisions
 
+## Current: differentiated cash policy approved; source request compressed
+
+Human decision `CN_A_DIFFERENTIATED_CASH_DISTRIBUTION_POLICY_V1` is implemented as
+`DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1`. Only exact gross final implementation
+cash for an ordinary exchange-traded public A-share holder is admitted. All 664
+cached differentiated notices support one terminal public-A term; non-applicable,
+ambiguous, missing-final and conflicting counts are zero. Cash ledger v14 supports
+24,306 events, leaves 3,541 unresolved and retains 83 quarantines; canonical SHA
+`91e9ff1d6f064eb5ca0bc3d1dd97fb3b041b74e112fe95d7b78c6d4766da289a`.
+
+`SOURCE_INPUT_REQUIREMENTS_V2_MINIMAL` deduplicates 16,328 event requests to
+16,312 official documents with complete back-references: P0=2, P1=16,304, P2=5,
+P3=1. There are 16,311 material unique documents; 16,310 currently require user
+copies or restored authorized access because one is already cached. The P3 item is
+metadata-only and non-blocking. No 403 bypass, unofficial mirror or manual rename
+is permitted. R5 stops under case 2: source input only; no human methodology gate,
+full-dataset freeze, study or merge.
+
 ## R5 distribution row audit continuation
 
 20,346 candidate groups, three retained B-only rows, no normalization errors.

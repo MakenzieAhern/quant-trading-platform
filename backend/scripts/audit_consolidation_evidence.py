@@ -13,7 +13,7 @@ from scripts.audit_demerger_evidence import verify_sources
 
 def audit(consolidation, surrender, root, catalog):
     matrix = json.loads(catalog.read_bytes())
-    expected = "3784d6817fb7ab30081e57d9693bc1ac7adbfbaccebe200e2903e7021d8a0352"
+    expected = "8e4269e5b62a7a738e4e46a0f0caada47fe07af98b482ae3f81fd946cf759c79"
     if sha256_file(catalog) != expected:
         raise ValueError("FROZEN_POLICY_CATALOG_CHANGED")
     if not consolidation.effective_date < surrender.application_date:

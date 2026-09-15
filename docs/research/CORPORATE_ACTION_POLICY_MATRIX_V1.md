@@ -4,10 +4,15 @@ Frozen **policy catalog**, not a frozen Full Dataset. Authority: human mandate S
 `9362f32566013841a3a45fd5946abbc9c128fd4f66b5ea20e23c902180a8a4ad`.
 The machine-readable catalog is `.research/corporate_action_policy_matrix_v1.json`.
 Policy approval does not imply that an implementation, event source or full-period census passes.
+Revision 2 preserves revision 1 file SHA-256
+`3784d6817fb7ab30081e57d9693bc1ac7adbfbaccebe200e2903e7021d8a0352` and adds
+human-approved differentiated-cash decision SHA-256
+`869cdc3159ee770d06c29ecca4965d9b554382bb73c0fdd7e9c64724525d05c5`.
 
 | Event class | Approved accounting |
 | --- | --- |
 | Cash dividend | Existing authoritative cash entitlement; no adjusted-price double count. |
+| Differentiated cash | `DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1`: exact gross final-implementation term for the ordinary exchange-tradable public A-share holder; public/unrestricted A over restricted or special classes; no averages, tolerance, tax-net values or synthetic ex-price inference. |
 | Retained bonus | Official quantity increase, unchanged aggregate basis unless official basis/tax terms require otherwise. |
 | Restructuring pass-through | Net pass-through, no basis allocation; original holdings unchanged. |
 | Rights | No subscription, no monetization, no injected cash; metadata preserved. |

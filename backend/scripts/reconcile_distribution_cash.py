@@ -27,14 +27,91 @@ def issuer_code_matches(normalized, symbol):
     return bool(exact or repeated or (len(digits) == 12 and digits.startswith(symbol)))
 
 
+def normalized_document(pages):
+    normalized_pages = [unicodedata.normalize("NFKC", p) for p in pages]
+    if len(pages) > 1:
+        for template in (r"{page}", r"{page}\s*/\s*{total}", r"-\s*{page}\s*-"):
+            counters = [
+                re.match(r"^\s*" + template.format(page=i, total=len(pages)) + r"[ \t]*\n", p)
+                for i, p in enumerate(normalized_pages, 1)
+            ]
+            if all(counters):
+                normalized_pages = [
+                    p[m.end() :] for p, m in zip(normalized_pages, counters, strict=True)
+                ]
+                break
+    return "\n".join(normalized_pages)
+
+
+def differentiated_cash(pages, symbol, title):
+    normalized = normalized_document(pages)
+    if not issuer_code_matches(normalized, symbol):
+        raise ValueError("CONFLICTING_AUTHORITY")
+    text = re.sub(r"\s+", "", normalized)
+    if "差异化分红送转:是" not in text:
+        raise ValueError("CONFLICTING_AUTHORITY")
+    if "实施公告" not in title:
+        raise ValueError("MISSING_FINAL_IMPLEMENTATION_TERMS")
+    match = re.search(r"每股分配比例(.{0,500}?)(?:相关日期|差异化分红送转)", text)
+    if not match:
+        raise ValueError("MISSING_FINAL_IMPLEMENTATION_TERMS")
+    summary = match[1]
+    per_share = r"每股(?:实际)?(?:分派|分配|派发)?现金红利(?:人民币)?(\d+(?:\.\d+)?)元"
+    per_ten = (
+        r"每10股(?:派发|派送|分配|分派|派)?(?:现金红利|现金股利)?"
+        r"(?:人民币)?(\d+(?:\.\d+)?)元"
+    )
+    public_label = (
+        r"(?:社会公众股(?:股东)?|无限售(?:条件)?(?:流通)?(?:A股|股)?股东|"
+        r"流通A股股东|普通A股股东|A股公众股东|境内上市人民币普通股股东|"
+        r"持有首次公开发行A股股票的流通股股东|流通股股东)"
+    )
+
+    def amounts_for(prefix):
+        return [
+            Decimal(value) for value in re.findall(prefix + r".{0,30}?" + per_share, summary)
+        ] + [
+            Decimal(value) / Decimal(10)
+            for value in re.findall(prefix + r".{0,30}?" + per_ten, summary)
+        ]
+
+    special = (
+        r"控股股东|实际控制人|国有股东|法人发起人|限售(?:条件)?(?:A股|股)?股东|"
+        r"非公开发行|定向增发|员工持股|董事|监事|高级管理人员|债权人|重整|补偿"
+    )
+    amounts = amounts_for(public_label)
+    if not amounts and not re.search(special, summary):
+        amounts = amounts_for(r"A股")
+    if not amounts and re.search(r"股份类别.{0,80}?A股", text) and not re.search(special, summary):
+        amounts = amounts_for("")
+    values = set(amounts)
+    if len(values) > 1:
+        raise ValueError("DIFFERENTIATED_PUBLIC_A_CLASS_AMBIGUOUS")
+    if not values:
+        if re.search(r"股份类别.{0,80}?(?:B股|H股)", text) and "A股" not in summary:
+            raise ValueError("OUT_OF_SCOPE_INSTRUMENT")
+        if re.search(special, summary):
+            raise ValueError("NON_APPLICABLE_SPECIAL_HOLDER_CLASS")
+        raise ValueError("MISSING_FINAL_IMPLEMENTATION_TERMS")
+    if not any(marker in text for marker in ("含税", "税前", "暂不扣缴个人所得税")):
+        raise ValueError("MISSING_FINAL_IMPLEMENTATION_TERMS")
+    return next(iter(values))
+
+
 def cash_event(row, members, ordinary_ids):
     values = {Decimal(e["cash_per_share"]) for e in row["evidence"]}
-    if (
-        row["status"] != "EXACT_GROSS_CASH_CORROBORATED"
-        or row["unresolved_documents"]
-        or len(values) != 1
-        or values != {Decimal(a) for a in row["exchange_amounts"]}
-    ):
+    differentiated = row["status"] == "SUPPORTED_ORDINARY_A_PUBLIC_TERM"
+    if row["unresolved_documents"] or len(values) != 1:
+        raise ValueError("CASH_TERMS_NOT_RECONCILED")
+    if differentiated:
+        if (
+            row.get("policy_id") != "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"
+            or row.get("holder_class") != "ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER"
+        ):
+            raise ValueError("DIFFERENTIATED_CASH_POLICY_NOT_BOUND")
+    elif row["status"] != "EXACT_GROSS_CASH_CORROBORATED" or values != {
+        Decimal(a) for a in row["exchange_amounts"]
+    }:
         raise ValueError("CASH_TERMS_NOT_RECONCILED")
     applicable = [
         m
@@ -47,7 +124,13 @@ def cash_event(row, members, ordinary_ids):
     ]
     if len(applicable) != 1 or applicable[0]["security_id"] not in ordinary_ids:
         raise ValueError("CASH_LIFECYCLE_OR_INSTRUMENT_UNRESOLVED")
-    evidence = sorted(row["evidence"], key=lambda e: e["source"]["url"])
+    evidence = sorted(
+        row["evidence"],
+        key=lambda e: (
+            e.get("policy_id") != "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1",
+            e["source"]["url"],
+        ),
+    )
     canonical_row = {
         **row,
         "evidence": evidence,
@@ -67,8 +150,16 @@ def cash_event(row, members, ordinary_ids):
             source_url=source["url"],
             source_document_sha256=source["source_sha256"],
             retrieved_at=source["retrieved_at_utc"],
-            source_provider="OFFICIAL_ISSUER_CNINFO_EXCHANGE_RECONCILED",
-            source_version="GROSS_CASH_OFFICIAL_V1",
+            source_provider=(
+                "OFFICIAL_ISSUER_CNINFO_DIFFERENTIATED_PUBLIC_A"
+                if differentiated
+                else "OFFICIAL_ISSUER_CNINFO_EXCHANGE_RECONCILED"
+            ),
+            source_version=(
+                "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"
+                if differentiated
+                else "GROSS_CASH_OFFICIAL_V1"
+            ),
             source_record_hash=canonical_sha256(canonical_row),
             completeness="COMPLETE",
         )
@@ -80,21 +171,7 @@ def cash_event(row, members, ordinary_ids):
 
 
 def gross_cash(pages, symbol):
-    normalized_pages = [unicodedata.normalize("NFKC", p) for p in pages]
-    # Strip only a complete, consistently formatted page-number sequence at page starts.
-    # Never delete standalone digits from the body or an unverified partial sequence.
-    if len(pages) > 1:
-        for template in (r"{page}", r"{page}\s*/\s*{total}", r"-\s*{page}\s*-"):
-            counters = [
-                re.match(r"^\s*" + template.format(page=i, total=len(pages)) + r"[ \t]*\n", p)
-                for i, p in enumerate(normalized_pages, 1)
-            ]
-            if all(counters):
-                normalized_pages = [
-                    p[m.end() :] for p, m in zip(normalized_pages, counters, strict=True)
-                ]
-                break
-    normalized = "\n".join(normalized_pages)
+    normalized = normalized_document(pages)
     if not issuer_code_matches(normalized, symbol):
         raise ValueError("CASH_ISSUER_HEADER_MISMATCH")
     text = re.sub(r"\s+", "", normalized)
@@ -270,7 +347,7 @@ def main():
             results.append(prior_rows[key])
             continue
         amounts = exchange[key]
-        evidence, failures = [], []
+        evidence, failures, differentiated_documents = [], [], 0
         for matched in sorted(link["documents"], key=lambda d: (d["url"], d["source_sha256"])):
             sha = matched["source_sha256"]
             doc = documents[matched["url"], sha]
@@ -288,27 +365,53 @@ def main():
                 raise ValueError("CASH_EXTRACTION_CHANGED")
             extracted = json.loads(cache.read_bytes())
             try:
-                amount = gross_cash(extracted["pages"], link["symbol"])
-                evidence.append(dict(cash_per_share=str(amount), source=doc))
+                compact = re.sub(r"\s+", "", normalized_document(extracted["pages"]))
+                if "差异化分红送转:是" in compact:
+                    differentiated_documents += 1
+                    amount = differentiated_cash(extracted["pages"], link["symbol"], doc["title"])
+                    evidence.append(
+                        dict(
+                            cash_per_share=str(amount),
+                            holder_class="ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER",
+                            policy_id="DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1",
+                            source=doc,
+                        )
+                    )
+                else:
+                    amount = gross_cash(extracted["pages"], link["symbol"])
+                    evidence.append(dict(cash_per_share=str(amount), source=doc))
             except ValueError as exc:
                 failures.append(dict(source_sha256=sha, reason=str(exc)))
         values = {Decimal(e["cash_per_share"]) for e in evidence}
-        status = (
-            "EXACT_GROSS_CASH_CORROBORATED"
-            if len(values) == 1 and values == amounts and not failures
-            else "UNRESOLVED_CASH_TERMS"
+        row = dict(
+            symbol=key[0],
+            record_date=key[1],
+            ex_date=key[2],
+            exchange_amounts=sorted(str(a) for a in amounts),
+            evidence=evidence,
+            unresolved_documents=failures,
         )
-        results.append(
-            dict(
-                symbol=key[0],
-                record_date=key[1],
-                ex_date=key[2],
-                exchange_amounts=sorted(str(a) for a in amounts),
-                evidence=evidence,
-                unresolved_documents=failures,
-                status=status,
+        if differentiated_documents:
+            reasons = {failure["reason"] for failure in failures}
+            if evidence and failures:
+                row["status"] = "CONFLICTING_AUTHORITY"
+            elif len(values) == 1 and not failures:
+                row.update(
+                    status="SUPPORTED_ORDINARY_A_PUBLIC_TERM",
+                    holder_class="ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER",
+                    policy_id="DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1",
+                )
+            elif len(reasons) == 1:
+                row["status"] = next(iter(reasons))
+            else:
+                row["status"] = "CONFLICTING_AUTHORITY"
+        else:
+            row["status"] = (
+                "EXACT_GROSS_CASH_CORROBORATED"
+                if len(values) == 1 and values == amounts and not failures
+                else "UNRESOLVED_CASH_TERMS"
             )
-        )
+        results.append(row)
     accepted = []
     if bool(args.master) != bool(args.instruments):
         raise ValueError("BOTH_MASTER_AND_INSTRUMENTS_REQUIRED")
@@ -322,7 +425,7 @@ def main():
         )
         if (
             sha256_file(policy)
-            != "3784d6817fb7ab30081e57d9693bc1ac7adbfbaccebe200e2903e7021d8a0352"
+            != "8e4269e5b62a7a738e4e46a0f0caada47fe07af98b482ae3f81fd946cf759c79"
         ):
             raise ValueError("APPROVED_CASH_POLICY_CHANGED")
         by_symbol = defaultdict(list)
@@ -334,7 +437,10 @@ def main():
             if r["classification"]["instrument_type"] == "COMMON_A_SHARE"
         }
         for row in results:
-            if row["status"] != "EXACT_GROSS_CASH_CORROBORATED":
+            if row["status"] not in {
+                "EXACT_GROSS_CASH_CORROBORATED",
+                "SUPPORTED_ORDINARY_A_PUBLIC_TERM",
+            }:
                 continue
             try:
                 event = cash_event(row, by_symbol[row["symbol"]], ordinary)
@@ -344,8 +450,12 @@ def main():
                     dict(
                         event=event.model_dump(mode="json"),
                         event_checksum=event.event_checksum,
-                        policy_id="EXISTING_ACCEPTED_CASH_DIVIDEND",
-                        support_state="SUPPORTED_EXISTING_EX_DATE_CASH_POLICY",
+                        policy_id=row.get("policy_id", "EXISTING_ACCEPTED_CASH_DIVIDEND"),
+                        support_state=(
+                            "SUPPORTED_DIFFERENTIATED_ORDINARY_PUBLIC_A_EX_DATE_CASH_POLICY"
+                            if row["status"] == "SUPPORTED_ORDINARY_A_PUBLIC_TERM"
+                            else "SUPPORTED_EXISTING_EX_DATE_CASH_POLICY"
+                        ),
                         metadata_only_gaps=["PAYMENT_DATE_NOT_NORMALIZED"],
                         source_terms_sha256=canonical_sha256(row),
                     )
@@ -358,7 +468,7 @@ def main():
         accepted = preserve_accepted_events(accepted, accepted_prior["events"], set(documents))
         inputs.append(args.accepted_prior)
     report = dict(
-        parser_version="DISTRIBUTION_GROSS_CASH_RECONCILIATION_V1",
+        parser_version="DISTRIBUTION_GROSS_CASH_RECONCILIATION_V2",
         parser_sha256=sha256_file(Path(__file__)),
         results=results,
         counts=dict(sorted(Counter(r["status"] for r in results).items())),

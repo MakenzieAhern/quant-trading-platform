@@ -1,5 +1,24 @@
 # v1.1 controller roadmap
 
+## Current: R5 methodology closed; case-2 official source input required
+
+`CN_A_DIFFERENTIATED_CASH_DISTRIBUTION_POLICY_V1` is accepted and implemented for
+the ordinary exchange-traded public A-share holder. All 664 cached differentiated
+final notices pass. Cash ledger v14 supports 24,306 events / 3,541 unresolved / 83
+quarantined; no prior accepted economic term changed.
+
+`SOURCE_INPUT_REQUIREMENTS_V2_MINIMAL` compresses the 16,328 event-level requests
+to 16,312 unique official documents with full back-references. Priorities: P0=2,
+P1=16,304, P2=5, P3=1. The material blocker is 16,311 unique documents; 16,310
+require user input and one is cached. Resume R5 intake from the V2 manifest after
+original official files or authorized official access are supplied. Do not bypass
+denied endpoints or use unofficial mirrors.
+
+Stop condition is case 2: source input only. HUMAN_APPROVAL_REQUIRED=NO;
+HUMAN_SOURCE_INPUT_REQUIRED=YES. Full safe start is NOT_ESTABLISHED and full
+dataset CREATED/AUDITED/FROZEN=NO. Preserve Pilot v2 and all accepted R4 authority;
+no Development, Validation, Official OOS, PR merge or release.
+
 ## Current: R5 offline closure complete; human methodology and source input required
 
 The former PID 434 ended with the WSL restart; its HTTP-403 denial receipt and

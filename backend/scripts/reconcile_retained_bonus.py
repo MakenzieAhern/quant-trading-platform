@@ -35,7 +35,7 @@ def main():
     policy = (
         Path(__file__).resolve().parents[2] / ".research/corporate_action_policy_matrix_v1.json"
     )
-    if sha256_file(policy) != "3784d6817fb7ab30081e57d9693bc1ac7adbfbaccebe200e2903e7021d8a0352":
+    if sha256_file(policy) != "8e4269e5b62a7a738e4e46a0f0caada47fe07af98b482ae3f81fd946cf759c79":
         raise ValueError("APPROVED_POLICY_CHANGED")
     paths.extend([policy, *args.date_links])
     boundary = {(r["symbol"], r["ex_date"]): r for r in boundaries["rows"]}

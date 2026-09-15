@@ -623,6 +623,50 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
             gross_cash([pages[0], pages[1].replace("2", "9")], "600000")
 
 
+def test_differentiated_cash_selects_only_exact_public_a_final_terms():
+    from decimal import Decimal
+
+    import pytest
+
+    from scripts.reconcile_distribution_cash import differentiated_cash
+
+    title = "2021年年度权益分派实施公告"
+    prefix = "证券代码:600000 2021年年度权益分派实施公告\n"
+    suffix = "\n相关日期 股份类别 A股 2022/6/1\n差异化分红送转:是"
+
+    def parse(summary, *, document_title=title, extra=""):
+        return differentiated_cash(
+            [prefix + "每股分配比例" + summary + suffix + extra],
+            "600000",
+            document_title,
+        )
+
+    assert parse(
+        "无限售股股东每股分配现金红利0.32091元(含税),限售股股东每股分配现金红利0.26472元(含税)"
+    ) == Decimal("0.32091")
+    assert parse("A股每股现金红利0.32元(含税),H股每股现金红利0.28港元") == Decimal("0.32")
+    assert parse("A股每股现金红利0.32元(含税),B股每股现金红利0.04美元") == Decimal("0.32")
+    assert parse(
+        "A股每股现金红利0.32元(含税)",
+        extra="董事会预案曾为每10股派9元",
+    ) == Decimal("0.32")
+    assert parse("社会公众股每股实际分派现金红利0.32元(含税)") == Decimal("0.32")
+    assert parse("A股每10股派3.20元(含税)") == Decimal("0.32")
+
+    with pytest.raises(ValueError, match="NON_APPLICABLE"):
+        parse("控股股东每股分配现金红利0.50元(含税)")
+    with pytest.raises(ValueError, match="NON_APPLICABLE"):
+        parse("非公开发行A股股东每股分配现金红利0.50元(含税)")
+    with pytest.raises(ValueError, match="AMBIGUOUS"):
+        parse("社会公众股每股实际分派现金红利0.32元(含税),无限售股股东每股分配现金红利0.31元(含税)")
+    with pytest.raises(ValueError, match="MISSING_FINAL"):
+        parse("A股每股现金红利0.32元(含税)", document_title="利润分配预案")
+    with pytest.raises(ValueError, match="MISSING_FINAL"):
+        parse("A股每股现金红利0.29元(税后)")
+    with pytest.raises(ValueError, match="MISSING_FINAL"):
+        parse("", extra="虚拟分派的每股现金红利0.32元(含税)")
+
+
 def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accounting():
     from datetime import UTC, datetime
     from decimal import Decimal
@@ -661,6 +705,51 @@ def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accoun
         delisting_date=None,
     )
     event = cash_event(row, [member], {member["security_id"]})
+    differentiated_row = {
+        **row,
+        "status": "SUPPORTED_ORDINARY_A_PUBLIC_TERM",
+        "exchange_amounts": ["0.321"],
+        "holder_class": "ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER",
+        "policy_id": "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1",
+        "evidence": [
+            {
+                "cash_per_share": "0.32091",
+                "holder_class": "ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER",
+                "policy_id": "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1",
+                "source": source,
+            }
+        ],
+    }
+    differentiated = cash_event(differentiated_row, [member], {member["security_id"]})
+    assert differentiated.cash_per_share == Decimal("0.32091")
+    assert differentiated.source_version == "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"
+    assert (
+        differentiated.event_checksum
+        == cash_event(differentiated_row, [member], {member["security_id"]}).event_checksum
+    )
+    corroborated = {
+        **differentiated_row,
+        "evidence": [
+            *differentiated_row["evidence"],
+            {
+                "cash_per_share": "0.32091",
+                "holder_class": "ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER",
+                "policy_id": "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1",
+                "source": {
+                    **source,
+                    "url": source["url"].replace("1205128052", "1205128053"),
+                },
+            },
+        ],
+    }
+    assert cash_event(corroborated, [member], {member["security_id"]}) == cash_event(
+        {**corroborated, "evidence": list(reversed(corroborated["evidence"]))},
+        [member],
+        {member["security_id"]},
+    )
+    for field in ("holder_class", "policy_id"):
+        with pytest.raises(ValueError, match="POLICY_NOT_BOUND"):
+            cash_event({**differentiated_row, field: "WRONG"}, [member], {member["security_id"]})
     prior = dict(
         event=event.model_dump(mode="json"),
         event_checksum=event.event_checksum,

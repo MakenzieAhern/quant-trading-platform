@@ -1,5 +1,30 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-15 differentiated cash decision and source-input compression
+
+The human-approved ordinary public A-share differentiated cash rule passes all 664
+cached final implementation documents. Ledger v14 supports 24,306 events, leaves
+3,541 unresolved and retains 83 quarantines. Its canonical SHA is
+`91e9ff1d6f064eb5ca0bc3d1dd97fb3b041b74e112fe95d7b78c6d4766da289a`;
+input-order replay and prior-event preservation pass.
+
+The V2 minimal machine manifest maps 16,328 event requirements to 16,312 unique
+official documents: P0=2, P1=16,304, P2=5, P3=1; 16,311 are material and 16,310
+currently need user input. Canonical SHA
+`96839c742cb12c9e0ea0c8301b990474554f64bfd2abf34579f8190b2e8017c7`.
+R5 is blocked on source input only. Full safe start remains unestablished; full
+dataset creation, audit and freeze remain NO. Development, Validation and Official
+OOS remain NOT_RUN; PR #12 remains open and unmerged.
+
+Docker recovery remains separate: after one safe Desktop start, Windows backend
+processes existed but the `docker-desktop` WSL distribution stayed stopped and
+Ubuntu exposed neither the Docker socket nor CLI. No destructive recovery or
+repeated retry was attempted.
+
+Focused cash/accounting tests: 32 PASS. Ruff, format and strict mypy PASS. The
+full local backend run reached 552 PASS; one failure and 62 setup errors require
+PostgreSQL at `127.0.0.1:5432` and are blocked by the separate Docker failure.
+
 ## 2026-09-15 final offline closure and consolidated source manifest
 
 Cached cash replay v12 supports 23,642 events and leaves 4,205 unresolved; 83

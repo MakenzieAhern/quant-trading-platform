@@ -1,5 +1,27 @@
 # Blockers
 
+## 2026-09-15 source-input-only blocker after methodology closure
+
+The differentiated-distribution methodology blocker is RESOLVED: all 664 cached
+final notices pass `DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1`. Remaining cash is
+3,541 groups: 1,879 missing final implementation sources, 844 exact-authority
+conflicts and 818 parser/policy-review cases. SSE retains 59 chain gaps; full
+security-master and other full-period authority gaps remain material.
+
+The actionable blocker is `SOURCE_INPUT_REQUIREMENTS_V2_MINIMAL`: 16,311 material
+unique official documents, of which 16,310 need a user-provided official copy or
+restored authorized access and one is already cached. P0=2, P1=16,304, P2=5,
+P3=1; the P3 metadata-only item is non-blocking. No HTTP-403 bypass or unofficial
+mirror is allowed. This is case 2, source input only; human methodology approval is
+not required. Docker remains a separately recorded engineering dependency and does
+not invalidate cached evidence. Full dataset CREATED/AUDITED/FROZEN=NO; no studies
+or merge.
+
+Current Docker error after one safe start: Windows Docker processes are present,
+but `docker-desktop` is stopped and Ubuntu has no Docker CLI or
+`/var/run/docker.sock`. `DOCKER_RECOVERY_REQUIRED=YES`; no factory reset or data
+deletion was performed.
+
 ## 2026-09-15 final offline closure blockers
 
 Cash has 23,642 supported / 4,205 unresolved groups; 83 prior records remain
