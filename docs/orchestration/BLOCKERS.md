@@ -1,9 +1,25 @@
 # Blockers
 
+## 2026-09-15 offline closure progress and runtime limitation
+
+Cash now has 23,485 supported / 4,362 unresolved groups; 83 prior records remain
+quarantined. Exact unresolved partition: 1,879 missing implementation sources, 828
+official-term/exchange exact-value conflicts and 1,655 parser or policy review.
+SSE has 787 provisional transitions, 790 parser/restoration unresolved plus three
+metadata variants, and 59 chain gaps with zero conflicts. These remain material
+full-census gaps and are not relabeled as normal or accepted through tolerance.
+
+The former CNINFO PID 434 ended during the WSL restart; its receipts and denial
+manifest remain durable. No retry, bypass or duplicate writer was launched. Docker
+Desktop separately aborts at startup with `sailor-ingest.sock` -> `.stale`: "The
+file cannot be accessed by the system." No factory reset, runtime deletion, volume
+deletion or repeated retry was performed. This prevents database-backed local test
+completion but does not invalidate cached research evidence.
+
 ## 2026-09-14 active source-access blocker
 
 CNINFO static downloads changed from intermittent DNS failure to consecutive HTTP
-403 denials. PID 434 was suspended with SIGSTOP, not killed; do not automatically
+403 denials. PID 434 was suspended with SIGSTOP at that checkpoint; do not automatically
 resume or retry denied URLs using another transport. Runtime receipt
 full-distribution-notices-v1/runtime-access-denial-20260914.json, canonical SHA
 e69890ebeaa22b46b5dc92ef73c9290d91e97e39293b83153b13bf2a6cc4652b.

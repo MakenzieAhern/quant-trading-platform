@@ -1,5 +1,32 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-15 offline cash/ST closure milestone
+
+Cached-only cash replay v4 supports 23,485 events and leaves 4,362 unresolved;
+83 historical records remain quarantined. Relative to ledger v2, 286 events were
+added and 13 quarantined identities were re-admitted only after exact current
+implementation terms and original source identity were re-corroborated. Ledger
+canonical SHA c08c5fc185f9e095ce559380090c40aa1ed2fc7249b694b5d6aa145a857283c3;
+parser SHA aa96afd37e56c9c73c0af01240383c3b873c8f7728017e330ef64a90e45a26b7.
+Remaining cash groups partition to 1,879 missing source, 828 exact authority
+conflicts and 1,655 parser/policy review. No tolerance or differentiated-distribution
+policy was added.
+
+SSE parser v36 has 771 main plus 16 restoration provisional transitions, 786 main
+parser plus four restoration unresolved and three metadata variants. Chain v26:
+337 chains / 59 gaps / zero conflicts. All 771 main provisional terms reproduce
+under the current parser. Canonical SHAs: parser
+f8118dd2a6912067e40bf2d4158720c92efdeb036d5af2fdfdbe843d43cd3033,
+chain 9006c5b9f99912ac45f5794c0329e66e2af11c875e4ce5a8370455ff1b2b977a,
+integrity b9591e52257d076dffa4c0a60fa493e62f2a73ec4440d1a14d6b0e6aad27fd25.
+
+Focused parser tests: 41 PASS. Full local run reached 551 PASS, then 62 errors and
+one failure because PostgreSQL was unavailable. Docker Desktop startup reproduced
+the exact `sailor-ingest.sock` stale-rename access error; no destructive recovery or
+repeat loop. Quality/frontend verification waits for a healthy engine. Former PID
+434 is absent after WSL restart; source denial and durable receipts remain preserved,
+with no downloader resume or duplicate writer. Full dataset/studies/freeze unchanged.
+
 ## 2026-09-14 explicit bare risk-start labels and cached merger review
 
 Cached correction notices 1203488074 (600877) and 1203476445 (600733) correct

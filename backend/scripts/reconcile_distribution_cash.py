@@ -82,7 +82,8 @@ def gross_cash(pages, symbol):
                 break
     normalized = "\n".join(normalized_pages)
     header = re.search(
-        r"(?:证券|股票|公司)代码(?:\(A/H\))?\s*:\s*((?:\d[ \t]*){6})(?!\d)",
+        r"(?:(?:证券|股票|公司)代码(?:\(A/H\))?\s*){1,4}(?::\s*)+"
+        r"((?:\d[ \t]*){6})(?!\d)",
         normalized[:600],
     )
     if not header or re.sub(r"\s+", "", header[1]) != symbol:
@@ -103,33 +104,47 @@ def gross_cash(pages, symbol):
                 normalized,
             )
         )
-    if len(sections) > 1:
-        raise ValueError("MULTIPLE_CURRENT_IMPLEMENTATION_SECTIONS")
+    section_texts = []
     if sections:
-        remaining = normalized[sections[0].end() :]
-        next_heading = re.search(r"(?m)^\s*[一二三四五六七八九十]+、", remaining)
-        text = re.sub(r"\s+", "", remaining[: next_heading.start()] if next_heading else remaining)
+        for section in sections:
+            remaining = normalized[section.end() :]
+            next_heading = re.search(r"(?m)^\s*[一二三四五六七八九十]+、", remaining)
+            section_texts.append(
+                re.sub(r"\s+", "", remaining[: next_heading.start()] if next_heading else remaining)
+            )
+    else:
+        section_texts = [text]
     number = r"(\d+(?:\.\d+)?)"
     base = r"每(10|1)?股(?:送(?:红股)?\d+(?:\.\d+)?股[、,])?"
+    gross_basis = r"[。,]?(?:\(|\[)(?:含税|税前|含适用税项)"
     matches = []
-    for pattern in (
-        base + r"(?:派发|派送|分派|分配|派)?(?:人民币)?"
-        r"(?:现金红利|现金股利|现金股息|红利|股息|现金)"
-        r"(?:人民币)?" + number + r"元(?:人民币)?(?:现金(?:红利|股利)?)?[([]含税[);,:。\]]",
-        base
-        + r"派(?:发|送)?(?:人民币)?"
-        + number
-        + r"元(?:人民币)?现金(?:红利|股利)?(?:、送\d+(?:\.\d+)?股红股)?[。,]?[([]含税[);,:。\]]",
-        base + r"派(?:发|送)?(?:人民币)?" + number + r"元(?:人民币)?[([]含税[);,:。\]]",
-        base
-        + r"(?:派发|派送|分派|派)?(?:现金红利|现金股利|现金股息|红利|股息|现金)人民币"
-        + number
-        + r"(?:元)?[([]含税[);,:。\]]",
-    ):
-        for denominator, value in re.findall(pattern, text):
-            with localcontext() as ctx:
-                ctx.prec = 50
-                matches.append(Decimal(value) / Decimal(denominator or "1"))
+    for section_text in section_texts:
+        section_matches = []
+        for pattern in (
+            base + r"(?:派发|派送|分派|分配|派)?(?:人民币)?"
+            r"(?:现金红利|现金股利|现金股息|红利|股息|现金)"
+            r"(?:人民币)?" + number + r"元(?:人民币)?(?:现金(?:红利|股利)?)?" + gross_basis,
+            base
+            + r"派(?:发|送)?(?:人民币)?"
+            + number
+            + r"元(?:人民币)?现金(?:红利|股利)?(?:、送\d+(?:\.\d+)?股红股)?"
+            + gross_basis,
+            base + r"派(?:发|送)?(?:人民币)?" + number + r"元(?:人民币)?" + gross_basis,
+            base
+            + r"(?:派发|派送|分派|派)?(?:现金红利|现金股利|现金股息|红利|股息|现金)人民币"
+            + number
+            + r"(?:元)?"
+            + gross_basis,
+        ):
+            for denominator, value in re.findall(pattern, section_text):
+                with localcontext() as ctx:
+                    ctx.prec = 50
+                    section_matches.append(Decimal(value) / Decimal(denominator or "1"))
+        if not section_matches and re.search(
+            r"每(?:10|1)?股[^。;]{0,100}\d[^。;]{0,40}元", section_text
+        ):
+            raise ValueError("NO_UNIQUE_EXPLICIT_GROSS_CASH")
+        matches.extend(section_matches)
     values = set(matches)
     if len(values) != 1 or next(iter(values)) <= 0:
         raise ValueError("NO_UNIQUE_EXPLICIT_GROSS_CASH")

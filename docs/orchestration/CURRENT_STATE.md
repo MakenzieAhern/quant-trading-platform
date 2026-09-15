@@ -1,20 +1,34 @@
 # Current state
 
-## Current: stricter final cash sections and cached SSE replay
+## Current: offline cash/ST parser closure milestone
 
-Current cash ledger v2 supports 23,199 bounded events / 4,648 unresolved groups.
-96 historical entries are quarantined, not admitted; 23,144 historical identities
-are freshly corroborated and preserved. Versus ledger v1: 57 additions (including
-two reinstated original records) and 66 removals to quarantine, not silent drops.
-Both short and explicit implementation headings now prevent proposal fallback;
-counts are allowed to decrease. Original 22,864-event audit: 22,768 recorroborated,
-96 review cases. Combined ledger canonical SHA
-1167033ec372bdb5860c3ba2365dd8cf8eaec8105716d286add1a1a2a5ee895b.
-SSE parser v28: 760 provisional / 817 unresolved / three metadata variants;
-335 chains / 74 gaps / zero conflicts. All 744 main-parser provisional events
-retain unchanged terms in checksum-bound extraction replay. Full authority remains PARTIAL.
-PID 434 suspended; authorized source access/local official archives requested.
-No full dataset, freeze or studies. Older cash counts below are superseded.
+Current cash ledger v4 supports 23,485 bounded events / 4,362 unresolved groups.
+83 historical entries remain quarantined, not admitted; all 23,485 accepted event
+identities are freshly corroborated and preserved. The narrow cached-evidence fixes
+admit repeated OCR issuer-code headers, explicit literal gross-tax markers and
+consistent repeated implementation sections while rejecting mismatched codes,
+conflicting section amounts and unparseable cash clauses. Relative to ledger v2,
+286 events are added, including 13 previously quarantined identities. Remaining:
+1,879 missing implementation sources, 828 exact-authority conflicts and 1,655
+parser/policy-review groups. No rounding tolerance or differentiated-holder policy
+was introduced. Combined ledger canonical SHA
+c08c5fc185f9e095ce559380090c40aa1ed2fc7249b694b5d6aa145a857283c3.
+
+SSE parser v36: 787 provisional / 790 parser-or-restoration unresolved / three
+metadata variants; 337 chains / 59 gaps / zero conflicts. All 771 main-parser
+provisional events retain unchanged economic terms in checksum-bound current-parser
+replay. Parser canonical SHA f8118dd2a6912067e40bf2d4158720c92efdeb036d5af2fdfdbe843d43cd3033;
+chain canonical SHA 9006c5b9f99912ac45f5794c0329e66e2af11c875e4ce5a8370455ff1b2b977a;
+integrity canonical SHA b9591e52257d076dffa4c0a60fa493e62f2a73ec4440d1a14d6b0e6aad27fd25.
+Full authority remains PARTIAL.
+
+The former PID 434 no longer exists after the WSL restart. Its denial manifest and
+durable receipts remain preserved; no automatic resume, bypass or duplicate writer.
+Docker Desktop now aborts before engine startup because the recreated
+`sailor-ingest.sock` cannot be renamed to `.stale`; no reset or destructive recovery
+was attempted. Local database-backed tests are pending, while 551 non-database tests
+passed before the service-dependent failures. No full dataset, freeze or studies.
+Older cash/ST counts below are superseded.
 
 ## Prior: offline cash implementation integrity closure
 

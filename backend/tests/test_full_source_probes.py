@@ -526,6 +526,15 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
     assert gross_cash(
         ["证券代码:6 0 0 0 0 0\n每10股送5股、派发现金股利1.2元(含税,扣税后0.58元)"], "600000"
     ) == Decimal("0.12")
+    assert gross_cash(
+        ["证券代码证券代码证券代码证券代码:: ::600000 600000\n每股现金红利0.1元(税前)"],
+        "600000",
+    ) == Decimal("0.1")
+    with pytest.raises(ValueError, match="ISSUER"):
+        gross_cash(
+            ["证券代码证券代码证券代码证券代码:: ::600004 600004\n每股现金红利0.1元(税前)"],
+            "600000",
+        )
     assert gross_cash([header + "每10股派0.35元(含税,扣税后0.315元)"], "600000") == Decimal("0.035")
     with pytest.raises(ValueError, match="ISSUER"):
         gross_cash(["证券代码:600004\n其他公司证券代码:600000\n每股现金红利0.1元(含税)"], "600000")
@@ -557,6 +566,10 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
     assert gross_cash(
         [text.replace("本次实施的权益分派方案", "权益分派方案")], "600000"
     ) == Decimal("0.2")
+    duplicate = text + implementation
+    assert gross_cash([duplicate], "600000") == Decimal("0.2")
+    payment_section = "五、权益分派方案\n本次现金红利将划入股东资金账户。\n"
+    assert gross_cash([text + payment_section], "600000") == Decimal("0.2")
     for clause in (
         "每10股派发人民币现金2元(含税;扣税后1.8元)",
         "每10股派发现金股利2元人民币现金(含税:扣税后1.8元)",
@@ -572,7 +585,7 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
     ):
         assert gross_cash([header + clause], "600000") == Decimal("0.2")
     for invalid in (
-        text + implementation,
+        text + implementation.replace("每10股派2元", "每10股派4元"),
         text.replace("二、本次实施的权益分派方案", "二、拟议方案"),
         text.replace("每10股派2元", "每10股派4元(含税) 每10股派2元"),
         text.replace("每10股派2元人民币现金(含税)", "每10股派发现金红利0.403129(含税)"),

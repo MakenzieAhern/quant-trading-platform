@@ -2,12 +2,15 @@
 
 ## Current: R5 offline closure during CNINFO access suspension
 
-PID 434 is suspended after HTTP 403, with original receipts intact; no automatic
-resume or duplicate acquisition. Current cached cash ledger: 23,199 supported
-events, 4,648 unresolved groups, 96 prior records explicitly quarantined. SSE:
-760 provisional transitions, 74 chain gaps, zero conflicts; full acceptance is
-still PARTIAL. Fifteen reviewed mergers and 169 integer retained-bonus events
-remain supported bounded subsets, not a complete corporate-action census.
+The former PID 434 ended with the WSL restart; its HTTP-403 denial receipt and
+21,029 durable receipts remain intact. It was not resumed and no duplicate writer
+was launched. Current cached cash ledger: 23,485 supported events, 4,362 unresolved
+groups, 83 prior records explicitly quarantined. SSE: 787 provisional transitions,
+59 chain gaps, zero conflicts; full acceptance is still PARTIAL. Fifteen reviewed
+mergers and 169 integer retained-bonus events remain supported bounded subsets,
+not a complete corporate-action census. Docker Desktop currently fails before
+engine startup on the recreated `sailor-ingest.sock` stale-file rename; no reset or
+destructive recovery was attempted, so database-backed validation remains pending.
 Reuse accepted calendar, benchmark and Pilot v2 authorities. Continue cached
 evidence queues; external source access is requested. Full safe start remains
 NOT_ESTABLISHED. Full dataset CREATED/AUDITED/FROZEN=NO; no studies/merge/release.
