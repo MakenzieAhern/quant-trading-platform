@@ -59,7 +59,15 @@ def fetch(
         if meta["url"] != url or meta["params"] != params or meta.get("referer") != referer:
             raise ValueError("snapshot request identity mismatch")
         if meta.get("error"):
-            if meta["error"] != "TimeoutError" or meta["attempt"] >= 3:
+            dns_error = meta["error"] == "URLError" and any(
+                message in meta.get("error_reason", "")
+                for message in (
+                    "Name or service not known",
+                    "Temporary failure in name resolution",
+                    "getaddrinfo failed",
+                )
+            )
+            if (meta["error"] != "TimeoutError" and not dns_error) or meta["attempt"] >= 3:
                 raise RuntimeError("previous request failed; no automatic retry")
             previous = [
                 *meta.get("previous_attempts", []),
@@ -72,10 +80,15 @@ def fetch(
             if sha(raw) != meta["sha256"]:
                 raise ValueError("snapshot checksum mismatch")
             return raw
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; QuantTradingResearch/1.1)"}
+    if referer:
+        headers["Referer"] = referer
+    elif url.startswith(STATIC):
+        headers["Referer"] = "https://www.cninfo.com.cn/"
     request = urllib.request.Request(
         url,
         data=urllib.parse.urlencode(params).encode() if params else None,
-        headers={"Referer": referer} if referer else {},
+        headers=headers,
     )
     record: dict[str, Any] = {
         "url": url,
@@ -117,6 +130,7 @@ def fetch(
         return raw
     except Exception as exc:
         record["error"] = type(exc).__name__
+        record["error_reason"] = str(exc)
         save(meta_path, record)
         raise
 

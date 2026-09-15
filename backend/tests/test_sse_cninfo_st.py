@@ -257,6 +257,39 @@ def test_denial_is_never_retried(tmp_path, monkeypatch):
         fetch(tmp_path, "denied", "https://static.cninfo.com.cn/example")
 
 
+def test_transient_dns_failure_is_retried(tmp_path, monkeypatch):
+    (tmp_path / "snapshot.meta.json").write_bytes(
+        canonical(
+            {
+                "url": "https://static.cninfo.com.cn/example",
+                "params": None,
+                "attempt": 1,
+                "error": "URLError",
+                "error_reason": "<urlopen error [Errno -2] Name or service not known>",
+            }
+        )
+    )
+
+    class Response:
+        status = 200
+
+        def __init__(self):
+            self.headers = {}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return None
+
+        def read(self):
+            return b"%PDF"
+
+    monkeypatch.setattr("time.sleep", lambda _: None)
+    monkeypatch.setattr("urllib.request.urlopen", lambda *args, **kwargs: Response())
+    assert fetch(tmp_path, "snapshot", "https://static.cninfo.com.cn/example") == b"%PDF"
+
+
 def test_partial_warning_removal_is_not_normal_exit():
     fixture = json.loads(
         (Path(__file__).parent / "fixtures/cninfo_st_confirmation.json").read_text()

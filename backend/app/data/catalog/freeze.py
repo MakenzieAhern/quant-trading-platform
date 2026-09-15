@@ -32,6 +32,19 @@ def write_immutable(path: Path, content: bytes) -> None:
         except FileExistsError:
             if path.read_bytes() != content:
                 raise DatasetRevisionError("IMMUTABLE_RECORD_CHANGED") from None
+        except OSError as exc:
+            if os.name != "nt" or getattr(exc, "winerror", None) != 50:
+                raise
+            try:
+                descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL)
+            except FileExistsError:
+                if path.read_bytes() != content:
+                    raise DatasetRevisionError("IMMUTABLE_RECORD_CHANGED") from None
+            else:
+                with os.fdopen(descriptor, "wb") as target:
+                    target.write(content)
+                    target.flush()
+                    os.fsync(target.fileno())
     finally:
         temporary.unlink()
     if os.name == "nt":

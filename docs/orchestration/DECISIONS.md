@@ -1,5 +1,24 @@
 # Decisions
 
+## Current: use free official public reconstruction; no paid P0 purchase
+
+Human decision `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` is implemented. A
+reproducible combination of official SSE/SZSE directories, termination records,
+yearbooks and retained notices establishes the core point-in-time ordinary-A
+master without claiming equivalence to a commercial export. Core identity,
+membership, listing/delisting lifecycle, exchange, board and code intervals may
+pass independently from cosmetic historical-name enrichment. Undated name order
+never creates effective dates; ST and `*ST` remain separate effective-dated rule
+facts. The commercial product was not used or purchased.
+
+P1 is also a fact set. The accepted public-official master makes 757 CNINFO
+documents non-applicable because their issuers are outside ordinary-A scope; four
+yearbook requirements are directly established by the P0 evidence. This is scope
+resolution, not an economic-term substitution. Therefore
+`P1_RESOLVED_BY_OFFICIAL_SUBSTITUTION=0`. Only the 13,590 in-scope public CNINFO
+documents are queued; source bytes remain document leads until parsed and
+reconciled. No unofficial mirror or access-control bypass is allowed.
+
 ## Current: use official bulk products; do not perform thousands of manual downloads
 
 P0 evidence must remain a complete effective-dated master export. SSEInfo's official

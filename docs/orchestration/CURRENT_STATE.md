@@ -1,5 +1,26 @@
 # Current state
 
+## Current: public-official P0 reconstruction passed; scoped P1 acquisition running
+
+`OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` replaces the two assumed paid-export
+file requirements with audited fact sets. SSE is 2,403/2,403 and SZSE is
+3,028/3,028 reconstructed securities, with zero true unresolved P0 facts, zero
+official-source conflicts, 269 delisted securities retained and deterministic
+reverse-order replay. Both exchanges are
+`PASS_PUBLIC_OFFICIAL_RECONSTRUCTION`; `SECURITY_MASTER_CORE_AUTHORITY=PASS`.
+The 5,431 undated historical display-name boundaries remain explicit non-material
+metadata gaps and do not supply ST state. No paid product was used. Evidence:
+`../research/P0_PUBLIC_RECONSTRUCTION_REPORT_V1.md`.
+
+P1 fact-level scope reconciliation removes 757 official CNINFO notices for
+non-ordinary-A instruments and directly resolves four SZSE yearbook facts. The
+remaining counts are 15,559 fact requirements / 15,543 unique documents; 13,590
+are in-scope public CNINFO PDFs and 1,953 are other targeted source gaps. The
+correctly identity-bound, checksum-preserving public queue is running from durable
+receipts. Acquired bytes are not accepted as event facts before parsing and
+official exchange reconciliation. Docker remains deferred/non-blocking; full safe
+start and the full dataset remain unestablished. No studies, freeze or PR merge.
+
 ## Current: official P0 export access is the sole acquisition blocker
 
 The immutable V2 manifest revalidates at file SHA

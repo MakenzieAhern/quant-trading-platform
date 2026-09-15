@@ -1,5 +1,21 @@
 # v1.1 controller roadmap
 
+## Current: P0 public reconstruction passed; continue R5 fact closure
+
+`OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` passes both P0 exchanges without a
+commercial export: SSE 2,403/2,403, SZSE 3,028/3,028, true unresolved facts zero.
+Core security-master authority, survivorship, future-IPO prevention, delisting
+retention, stable identity and deterministic replay pass. Historical display-name
+enrichment remains separate and cannot alter ST state.
+
+P1 fact scoping establishes 761 requirements without new economic documents:
+757 are non-applicable outside ordinary-A scope and four yearbook facts are already
+officially established. The live R5 path is the 13,590 in-scope public CNINFO queue,
+then fact parsing/reconciliation and the remaining 1,953 targeted official gaps.
+Continue SSE ST, cash/corporate-action, raw/factor, rules and safe-start checks only
+as evidence permits. Stop at a genuine irreducible fact gap or audited Full Dataset;
+do not freeze, run studies, merge PR #12 or purchase data automatically.
+
 ## Current: P0 official full-export access required; P1 reduced to bulk collections
 
 V2 checksum validation passes unchanged. P0 is 0/2: public SSE/SZSE surfaces do

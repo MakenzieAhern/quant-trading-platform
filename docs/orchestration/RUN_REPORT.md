@@ -1,5 +1,26 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-15 free official P0 reconstruction and P1 scope reduction
+
+P0 public reconstruction passes for SSE 2,403/2,403 and SZSE 3,028/3,028, with
+no missing security, official conflict or true unresolved P0 fact. Annual official
+yearbooks independently reproduce every year-end membership set after explicit
+B-share alias and event-boundary classification. Survivorship, future IPO,
+delisting retention, stable identity and reverse input order pass; 269 delisted
+securities remain present. The immutable report canonical SHA is
+`3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235cc6d98e12a8150faf8`;
+the reconstructed master canonical SHA is
+`c1a78056947232249fa4b139dd4d4ceb09636cd221863d7e64a0a56574ae1b48`.
+
+P1 fact reassessment reduces 16,320 raw requirements to 15,559 material facts and
+15,543 unique documents. Exactly 757 CNINFO documents are outside the accepted
+ordinary-A master and four yearbook facts are already established; there is no
+economic-term source substitution. The 13,590 in-scope CNINFO URLs are being
+acquired through the existing bounded, resumable checksum pipeline. A standard
+request header fixed the original public 403; a process-local stdlib DNS cache
+fixed repeat resolution failure without changing the official domain or TLS.
+Downloaded documents remain unaccepted leads until parsed and reconciled.
+
 ## 2026-09-15 P0 official access verification and P1 bulk plan
 
 V2 file/canonical checksums pass. Exact P0 rows were preserved: complete 2010-2025

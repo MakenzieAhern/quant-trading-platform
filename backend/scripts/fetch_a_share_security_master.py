@@ -15,9 +15,6 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
-from openpyxl import load_workbook
-from pypdf import PdfReader
-
 PILOT_START = date(2023, 1, 1)
 PILOT_END = date(2024, 7, 31)
 RETRIEVAL_END = date.today()
@@ -305,6 +302,8 @@ def _fetch_sse(fetcher: OfficialFetcher) -> list[dict[str, str]]:
 
 
 def _fetch_szse(fetcher: OfficialFetcher) -> tuple[list[dict[str, str]], dict[str, object]]:
+    from openpyxl import load_workbook
+
     list_url = "https://www.szse.cn/api/report/ShowReport?SHOWTYPE=xlsx&CATALOGID=1110&TABKEY=tab1"
     payload = fetcher.get("szse-current.xlsx", list_url, exchange="SZSE", referer=SZSE_LIST_PAGE)
     active: dict[str, dict[str, str]] = {}
@@ -574,6 +573,8 @@ def _final_delisting_notices(fetcher: OfficialFetcher) -> list[dict[str, Any]]:
 
 
 def _yearbook_baseline(fetcher: OfficialFetcher) -> tuple[set[str], set[str]]:
+    from pypdf import PdfReader
+
     pdf = fetcher.get(
         "szse-yearbook-2022.pdf",
         SZSE_YEARBOOK_URL,
@@ -614,6 +615,8 @@ def _factbook_b_share(code: str, short_name: str, line: str) -> bool:
 
 
 def extract_delisting_date(pdf: bytes) -> date:
+    from pypdf import PdfReader
+
     text = "\n".join(page.extract_text() or "" for page in PdfReader(io.BytesIO(pdf)).pages)
     return _delisting_date_from_text(text)
 

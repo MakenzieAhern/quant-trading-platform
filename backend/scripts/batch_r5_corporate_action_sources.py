@@ -1,8 +1,10 @@
 """Resume retained corporate-action document queues by type, without promoting leads."""
 
 import argparse
+import functools
 import json
 import re
+import socket
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
@@ -13,8 +15,8 @@ from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, s
 from app.data.catalog.freeze import write_immutable
 from scripts.reconcile_sse_cninfo import fetch
 
-VERSION = "R5_CA_SOURCE_BATCH_V3"
-BATCH = "batch-v3"
+VERSION = "R5_CA_SOURCE_BATCH_V4"
+BATCH = "batch-v4"
 
 
 def publication_date(milliseconds: int) -> str:
@@ -80,6 +82,7 @@ def run(
     queue: Path | None = None,
     batch: str = BATCH,
     source_roots: tuple[Path, ...] = (),
+    workers: int = 2,
 ) -> dict:
     existing = {}
     receipts = sorted(
@@ -162,7 +165,7 @@ def run(
         )
         return result
 
-    with ThreadPoolExecutor(max_workers=2) as pool:
+    with ThreadPoolExecutor(max_workers=workers) as pool:
         candidates = json.loads(queue.read_bytes()) if queue else leads(root)
         candidates = sorted(
             candidates, key=lambda r: (r["queue_type"], r["published_on"], r["url"])
@@ -190,9 +193,17 @@ def main() -> None:
     parser.add_argument("--queue", type=Path)
     parser.add_argument("--batch", default=BATCH)
     parser.add_argument("--source-root", type=Path, action="append", default=[])
+    parser.add_argument("--workers", type=int, choices=range(1, 3), default=2)
     args = parser.parse_args()
+    # ponytail: cache DNS for this bounded batch; re-run a batch if the CDN endpoint changes.
+    socket.getaddrinfo = functools.lru_cache(maxsize=32)(socket.getaddrinfo)
+    socket.getaddrinfo("static.cninfo.com.cn", 443)
     report = run(
-        args.root, queue=args.queue, batch=args.batch, source_roots=tuple(args.source_root)
+        args.root,
+        queue=args.queue,
+        batch=args.batch,
+        source_roots=tuple(args.source_root),
+        workers=args.workers,
     )
     print(json.dumps({k: v for k, v in report.items() if k != "documents"}))
 
