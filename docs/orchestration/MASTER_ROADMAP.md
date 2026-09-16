@@ -3,7 +3,8 @@
 Latest R5 cash replay v39 accepts the retained 600157 differentiated-public-A
 final notice at its actual 0.00555/share holder payout; the issuer-only count
 is 102 and the 40,376 exchange targets remain fully covered, but full census
-is PARTIAL. P1 now has 645 unresolved facts / 629 documents, including 325
+is PARTIAL. Three differentiated notices with both entitlement dates in 2026
+are out of the 2010–2025 scope. P1 now has 642 unresolved facts / 626 documents, including 322
 retained distribution PDFs. No Full Dataset gate is unlocked. The dated
 paragraph below records the earlier v38/40,477 checkpoint for lineage.
 

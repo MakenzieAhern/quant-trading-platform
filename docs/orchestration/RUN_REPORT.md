@@ -15,8 +15,12 @@ targets, retains 102 issuer-only additions separately, and has zero duplicate
 accepted dates, checksum and reverse-order PASS (manifest
 `00e2780d2777904e4ebaf4c21667203e9e8cce397b93ebca6e2e71290b3ac2a8`,
 file SHA-256 `750a18877cabd5d071a5f97390c285b00e3fe16f70df1f00ad7985347da7c5ea`).
-Full issuer cash census remains PARTIAL. P1 15,675/16,320 established or out
-of scope, 645 residual facts / 629 documents (325 retained distribution docs).
+Three differentiated final notices with both record and ex-dates in January
+2026 were explicitly excluded from the 2010–2025 dataset window. They are
+disjoint from the earlier 23 out-of-period notices, one P1 fact each. This
+does not exclude either 2025-12-31 record-date case. Full issuer cash census
+remains PARTIAL. P1 15,678/16,320 established or out of scope, 642 residual
+facts / 626 documents (322 retained distribution docs).
 P0/ST and the 1,921 unresolved SZSE resumption boundaries are unchanged.
 Full Dataset, freeze and all studies remain unrun; PR #12 stays open.
 

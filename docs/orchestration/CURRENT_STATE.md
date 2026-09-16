@@ -14,9 +14,13 @@ strict classification manifest `2ff343d68a7edc5638fd1fa6a6ab7d7dfb95623911148f75
 Cash v39 has 40,478 accepted events, 40,376/40,376 exchange targets covered,
 102 separately identified issuer-only additions, zero target gaps and
 checksum/input-order PASS (manifest `00e2780d2777904e4ebaf4c21667203e9e8cce397b93ebca6e2e71290b3ac2a8`).
-Full cash census remains PARTIAL. P1 is now 15,675/16,320 established or out
-of scope, with 1,678 official substitutions; 645 facts / 629 unique documents
-remain, including 325 retained distribution notices. No dataset or study gate
+Three other strict differentiated notices have both record and ex-dates in
+January 2026, are disjoint from the earlier 23 out-of-period documents and
+each carries one P1 fact. They are excluded only from the 2010–2025 window;
+the two 2025-12-31 record-date cases remain open. Full cash census remains
+PARTIAL. P1 is now 15,678/16,320 established or out of scope, with 1,678
+official substitutions; 642 facts / 626 unique documents remain, including
+322 retained distribution notices. No dataset or study gate
 was unlocked.
 Of the 22 notices that the differentiated-cash parser could not classify as
 final cash terms, a separate source-bound bonus audit matches all 22 issuer

@@ -5,7 +5,9 @@
 The 600157 official differentiated-cash final notice adds one issuer-only
 event under the pre-approved ordinary-public-A policy. Cash v39 has 40,478
 events with exchange target coverage intact, but does not prove a complete
-issuer-notice census. The P1 gap is 645 facts / 629 documents, including 325
+issuer-notice census. Three other differentiated notices have both entitlement
+dates in 2026 and are explicitly out of the 2010–2025 scope. The P1 gap is
+642 facts / 626 documents, including 322
 retained distribution PDFs. SZSE resumption still has 1,921 unresolved exact
 boundaries. These remain source/engineering work, not approval to buy data or
 advance to Full Dataset freeze. The sections below retain prior checkpoints.
