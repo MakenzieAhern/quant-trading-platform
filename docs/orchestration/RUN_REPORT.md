@@ -47,11 +47,14 @@ candidates were initially withheld. Fifty of those PDFs do contain the exact
 dates among multiple extracted dates; an official exchange row uniquely
 disambiguates them. Reusing the previously approved ordinary-public-A
 differentiated-cash policy then closed 96 more notices (52 with exact issuer
-dates and 44 with exchange-completed dates). The 1,063-document composite
-manifest is `f4147e29cf13e8c336d214d530d6dd699c4b658ca378752240d6393b0e878342`.
-Its rejected-candidate ledger retains 93 exact-source notices: 67 official
-date conflicts, 20 nonunique cash terms, four issuer-header mismatches and
-two invalid page sequences. These remain within the 721 unresolved facts.
+dates and 44 with exchange-completed dates). Thirteen more exact gross terms
+were selected from multi-amount issuer notices by the already existing parser
+using official exchange amounts, with exact post-parse equality required.
+The 1,076-document composite manifest is
+`ebe5118b7dd612fa1193f0e31f0cb19af9b9f2b245a1dae616abaa305e36e645`.
+Its rejected-candidate ledger retains 80 exact-source notices: 71 official
+date conflicts, three nonunique cash terms, four issuer-header mismatches and
+two invalid page sequences. These remain within the 647 unresolved facts.
 An independent non-title SZSE resumption probe checked the first unresolved
 event, 000516 at 2010-01-04 13:00. The retained official January SZSE table
 has a blank resume field (SHA-256
@@ -66,8 +69,8 @@ The accepted official SSE ST fact-set authority also closes 61 obsolete P1
 ST-document requests (59 chain gaps and two legacy PDF mirror links) with
 per-request mapping and no new ST event (manifest
 `1b3cbf245ee1212499eec315a218cc1de182ee0a6514e3046653c7ad23d1ebc8`).
-The current provisional P1 count is 15,660/16,320 established or out of scope;
-1,664 are explicit official substitutions and 660 facts / 644 unique
+The current provisional P1 count is 15,673/16,320 established or out of scope;
+1,677 are explicit official substitutions and 647 facts / 631 unique
 documents remain. Three mixed notices have their
 cash leg reconciled but their bonus leg remains pending. Cash full-census authority
 and dependent P1 fact closure remain PARTIAL/provisional. P0/ST authorities remain

@@ -59,20 +59,22 @@ Fifty more issuer PDFs contain the exact exchange-corroborated dates within a
 multi-date set; the official exchange row uniquely disambiguates the target.
 The previously approved ordinary-public-A differentiated-cash policy closed
 96 more exact issuer notices: 52 with complete matching issuer dates and 44
-with exchange-completed dates. The resulting 1,063-document composite manifest
-is `f4147e29cf13e8c336d214d530d6dd699c4b658ca378752240d6393b0e878342`.
-Its source-checksummed rejected-candidate ledger retains 93 notices: 67
-issuer/exchange date conflicts (56 ex-date, 11 record-date), 20 nonunique cash
-terms, four issuer-header mismatches and two invalid page sequences. No new
-economic event or holder-class policy was created. The provisional P1 count is
-15,599/16,320 established or explicitly out of scope, including 1,603 recorded
+with exchange-completed dates. The existing gross-cash parser, supplied with
+exact exchange targets and then checked for exact equality, closed 13 further
+multi-amount issuer notices. The resulting 1,076-document composite manifest
+is `ebe5118b7dd612fa1193f0e31f0cb19af9b9f2b245a1dae616abaa305e36e645`.
+Its source-checksummed rejected-candidate ledger retains 80 notices: 71
+issuer/exchange date conflicts, three nonunique cash terms, four issuer-header
+mismatches and two invalid page sequences. No new economic event, holder-class
+policy or amount tolerance was created. The provisional P1 count is
+15,612/16,320 established or explicitly out of scope, including 1,616 recorded
 official substitutions at the cash stage. A separate fact-set replay against
 the accepted official SSE ST authority closes 61 obsolete P1 ST-document
 requests (59 former chain gaps and two unavailable legacy SSE PDF links),
 with exact official event-corpus evidence for the latter two (manifest
 `1b3cbf245ee1212499eec315a218cc1de182ee0a6514e3046653c7ad23d1ebc8`).
-The current total is 15,660/16,320 established or out of scope, including
-1,664 official substitutions; 660 facts / 644 unique documents remain. Three
+The current total is 15,673/16,320 established or out of scope, including
+1,677 official substitutions; 647 facts / 631 unique documents remain. Three
 additional mixed cash-plus-bonus notices
 have their cash leg reconciled, but the bonus leg remains open and those source
 requirements are not marked complete. The SSE composite substitution parser now

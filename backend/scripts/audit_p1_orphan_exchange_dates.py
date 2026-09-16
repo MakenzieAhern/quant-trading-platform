@@ -133,29 +133,41 @@ def main() -> None:
         extracted = json.loads(cache.read_bytes())
         if extracted["source_sha256"] != row["substitute_source_sha256"]:
             raise ValueError("P1_COMPOSITE_TEXT_CACHE_CHANGED")
-        differentiated = False
+        differentiated = amount_disambiguated = False
         try:
             amount = gross_cash(extracted["pages"], row["issuer"])
         except ValueError as exc:
-            if str(exc) != "DIFFERENTIATED_DISTRIBUTION_REQUIRES_REVIEW":
+            if str(exc) == "NO_UNIQUE_EXPLICIT_GROSS_CASH":
+                try:
+                    amount = gross_cash(
+                        extracted["pages"], row["issuer"], expected_amounts=targets[key]
+                    )
+                except ValueError as precision_error:
+                    rejected.append({**rejection, "reason": str(precision_error)})
+                    continue
+                amount_disambiguated = True
+            elif str(exc) != "DIFFERENTIATED_DISTRIBUTION_REQUIRES_REVIEW":
                 rejected.append({**rejection, "reason": str(exc)})
                 continue
-            try:
-                amount = differentiated_cash(
-                    extracted["pages"],
-                    row["issuer"],
-                    source_titles[row["substitute_source_url"]],
-                )
-            except ValueError as policy_error:
-                rejected.append({**rejection, "reason": str(policy_error)})
-                continue
-            differentiated = True
+            else:
+                try:
+                    amount = differentiated_cash(
+                        extracted["pages"],
+                        row["issuer"],
+                        source_titles[row["substitute_source_url"]],
+                    )
+                except ValueError as policy_error:
+                    rejected.append({**rejection, "reason": str(policy_error)})
+                    continue
+                differentiated = True
         try:
             records, ex_dates = notice_dates(extracted["pages"])
         except ValueError as exc:
             rejected.append({**rejection, "reason": str(exc)})
             continue
         classification = classify_dates(row, records, ex_dates, differentiated=differentiated)
+        if classification and amount_disambiguated:
+            classification = "EXACT_EXCHANGE_DISAMBIGUATED_GROSS_" + classification
         if amount != Decimal(row["cash_per_share"]):
             rejected.append({**rejection, "reason": "ISSUER_CASH_AMOUNT_CONFLICT"})
             continue
