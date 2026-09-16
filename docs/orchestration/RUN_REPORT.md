@@ -20,6 +20,18 @@ of scope, 645 residual facts / 629 documents (325 retained distribution docs).
 P0/ST and the 1,921 unresolved SZSE resumption boundaries are unchanged.
 Full Dataset, freeze and all studies remain unrun; PR #12 stays open.
 
+The 22 differentiated final notices rejected as cash events were then
+cross-checked against original SHA-verified issuer PDF text and official SSE
+bonus source rows. All 22 have matching pre-record issuer dates and exact
+ratios with unique ordinary-A master identity. Seventeen explicitly state no
+cash; five have a cash leg not yet established. Twenty-one are capital-reserve
+conversions; 688466 is a red-stock dividend with tax terms that must not be
+silently modeled as tax-free capital reserve. No economic bonus action or P1
+closure was claimed. Evidence manifest
+`759cbe55a1d6fecf73d5c09d57b28545d74612d2a3714efb33e70a536dbdbfaa`
+(file SHA-256 `459b2570a468e5580a470a0d40e51682d63a374a54033455ea3ccb8be16b316a`);
+input-order reverse replay was not run for this diagnostic report.
+
 ## 2026-09-16 official P1 counterexamples and day-91–180 SZSE coverage
 
 The prior cash v35 40,376/40,376 result remains a reproducible replay of its

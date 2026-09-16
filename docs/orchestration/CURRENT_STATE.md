@@ -18,6 +18,14 @@ Full cash census remains PARTIAL. P1 is now 15,675/16,320 established or out
 of scope, with 1,678 official substitutions; 645 facts / 629 unique documents
 remain, including 325 retained distribution notices. No dataset or study gate
 was unlocked.
+Of the 22 notices that the differentiated-cash parser could not classify as
+final cash terms, a separate source-bound bonus audit matches all 22 issuer
+date/ratio pairs to official SSE bonus rows. Seventeen explicitly say cash is
+zero; five retain an unresolved cash leg. The 22 comprise 21 capital-reserve
+conversions and one red-stock dividend with issuer tax terms. Manifest
+`759cbe55a1d6fecf73d5c09d57b28545d74612d2a3714efb33e70a536dbdbfaa`.
+No bonus event or P1 fact was counted accepted; allocation, tax and accounting
+remain to be resolved under the existing approved policy matrix.
 
 ## Authoritative 2026-09-16 R5 correction — official cash counterexamples
 
