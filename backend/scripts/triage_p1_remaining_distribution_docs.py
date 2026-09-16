@@ -81,7 +81,7 @@ def main() -> None:
     rows.sort(key=lambda row: row["document_id"])
     counts = dict(sorted(Counter(row["candidate_class"] for row in rows).items()))
     report = {
-        "parser_version": "P1_REMAINING_DISTRIBUTION_DOCUMENT_TRIAGE_V2",
+        "parser_version": "P1_REMAINING_DISTRIBUTION_DOCUMENT_TRIAGE_V3",
         "parser_sha256": sha256_file(Path(__file__)),
         "date_parser_sha256": sha256_file(Path(__file__).with_name("link_distribution_notices.py")),
         "closure_sha256": sha256_file(args.closure),

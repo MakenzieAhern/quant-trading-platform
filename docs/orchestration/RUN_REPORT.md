@@ -1,5 +1,31 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 additional official issuer cash event
+
+The retained 002852 2023-11-17 primary implementation notice uniquely
+establishes record 2023-11-24, ex 2023-11-27 and gross ordinary-A cash
+0.22/share. Its SHA-verified PDF is accepted as one newly absent event by
+primary ledger v4 (108 notices, 102 missing-census additions, six precise
+corrections; manifest `142a427e3c2bcf7c31f0577f379bea278bd3b06973577bf9fb4045bf9f66b7d9`).
+Cash replay v40 has 40,479 events and 40,376/40,376 exchange targets covered,
+103 issuer-only additions, checksum/order PASS (manifest
+`187938f5ad214c9d8ad0e9620ed74a03df8171df505a7bda47febbec65897abb`).
+Full issuer census is not certified. P1 cumulative v4: 628 residual facts /
+612 documents, including 308 retained distribution PDFs and 304 others;
+manifest `f1f66d06b7333b2a8e48a351536f7bd2f69336f7c3fb8beb58cc416010125b87`.
+Repository-wide Ruff/check and Ruff-format pass. Local full backend pytest
+reached 619 passing tests, 62 setup errors and one golden-path failure, all
+at PostgreSQL `127.0.0.1:5432` connection refused; no test assertion
+regression was demonstrated. The focused parser/source tests pass and the
+current PR's prior CI run was green. `docker info` in this Ubuntu WSL distro
+currently reports that `docker` is not installed and recommends enabling
+Docker Desktop WSL integration. Docker is a separate nonblocking recovery
+item before final release; no reset or deletion was attempted.
+Separately, 301262's official 2023-10-24 PDF visibly misprints its ex-date;
+a later annual report is an official corroboration lead but its bytes are not
+locally verifiable yet (CNINFO HTTP 403; issuer-host timeout). No 301262 event
+was added. Dataset, freeze and studies remain locked.
+
 ## 2026-09-17 shared cash-table date replay
 
 The common official issuer-date parser was fixed for unlabelled SSE

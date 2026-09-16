@@ -1,5 +1,13 @@
 # v1.1 controller roadmap
 
+Current 2026-09-17 primary-notice replay adds one previously absent 002852
+ordinary-A cash event, bringing cash v40 to 40,479 accepted events with all
+40,376 exchange targets covered, but full issuer census still PARTIAL. P1
+has 628 unresolved facts / 612 documents (308 distribution, 304 other).
+301262's official primary PDF contains a visibly malformed ex-date and remains
+unaccepted pending checksum-bound official corroboration. Full Dataset gate
+remains closed; prior paragraphs below are immutable historical checkpoints.
+
 Current 2026-09-17 shared official cash-table replay establishes one more
 existing 688533 cash fact and excludes one more fully post-2025 688059 fact.
 P1 has 629 unresolved facts / 613 documents (309 distribution PDFs, 304

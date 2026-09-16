@@ -174,7 +174,7 @@ def main():
     ) != len(events):
         raise ValueError("DUPLICATE_P1_PRIMARY_CASH_EVENT")
     report = {
-        "report_version": "P1_PRIMARY_OFFICIAL_CASH_NOTICE_LEDGER_V1",
+        "report_version": "P1_PRIMARY_OFFICIAL_CASH_NOTICE_LEDGER_V2",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)

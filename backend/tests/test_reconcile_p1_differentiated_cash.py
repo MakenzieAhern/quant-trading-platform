@@ -34,6 +34,9 @@ def test_unlabeled_star_cash_table_needs_one_valid_date_chain():
     assert notice_dates([four]) == (["2025-06-04"], ["2025-06-05"])
     assert notice_dates([table, four]) == ([], [])
     assert star_cash_dates(["股份类别" + table]) == ([], [])
+    assert notice_dates(
+        ["股权登记日期为:2023 年 11 月 24 日;除权除息日为:2023 年 11 月 27 日"]
+    ) == (["2023-11-24"], ["2023-11-27"])
     assert star_cash_dates(
         [table, "股权登记日 除权(息)日 现金红利发放日\n2024/7/1 2024/7/2 2024/7/2"]
     ) == ([], [])

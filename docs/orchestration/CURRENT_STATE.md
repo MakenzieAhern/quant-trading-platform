@@ -1,5 +1,36 @@
 # Current state
 
+## Current R5 newly recovered issuer cash event — 2026-09-17
+
+The shared date parser now also recognizes the explicit SZSE label
+`股权登记日期`. Retained official CNINFO 002852 implementation PDF, published
+2023-11-17, establishes ordinary-A gross cash 0.22/share, record 2023-11-24
+and ex 2023-11-27; PDF SHA-256
+`3e11fb3fefa0286876f71479b637c480f912530fd8b983d403a58e304978284f`.
+The strict primary-notice replay adds exactly this one previously absent
+event. Cash v40 has 40,479 accepted events, covers 40,376/40,376 official
+exchange targets and holds 103 separately identified issuer-only events,
+without duplicate dates (manifest
+`187938f5ad214c9d8ad0e9620ed74a03df8171df505a7bda47febbec65897abb`,
+file SHA-256 `1f2825b24594fe81d0b1b26589f6f77d741b396a46720393ba2afe9bce01eb8f`).
+Full issuer cash census is still PARTIAL. Cumulative P1 fact replay v4
+establishes/out-scopes 15,692/16,320, leaving 628 facts / 612 documents:
+308 distribution PDFs and 304 other documents (manifest
+`f1f66d06b7333b2a8e48a351536f7bd2f69336f7c3fb8beb58cc416010125b87`,
+file SHA-256 `f6d0651c467aab833409f148daac8ac9d8a45cc3c6d80c358777e6a153259d20`).
+
+Another official primary notice, 301262 on 2023-10-24 (PDF SHA-256
+`af26edcd6277bc7212d9d43e9208650e119c33be27698f86a9457647b523d4c9`),
+visibly prints `2023 年 10 年 31 日` for the ex-date. A later official
+[CNINFO annual report](https://static.cninfo.com.cn/finalpage/2024-04-26/1219838683.PDF)
+indicates 2023-10-31, but CNINFO returned HTTP 403 and the
+[issuer-hosted annual PDF](https://www.ihicon.com/upload/portal/20240506/e32136fcee04ac4d0f7a4e175f486070.pdf)
+timed out before source bytes/checksum could be retained. This event remains
+UNACCEPTED pending independent official-byte verification; no date was
+inferred from the misprint, payment date or missing bars. P0, ST and SZSE
+resumption (1,921 unresolved boundaries) are unchanged. No Full Dataset,
+freeze or study.
+
 ## Current R5 cash-table replay — 2026-09-17
 
 The shared official notice date parser now reads unlabelled SSE cash schedules

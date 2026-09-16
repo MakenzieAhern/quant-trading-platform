@@ -1,5 +1,22 @@
 # Blockers
 
+## Current 2026-09-17 source gaps — independent work continues
+
+The accepted 002852 issuer-only cash event raises v40 to 40,479 while full
+issuer cash census remains PARTIAL. P1 residual is 628 facts / 612 documents
+(308 distribution, 304 other); SZSE still has 1,921 exact resumption
+boundaries unresolved. The 301262 2023-10-24 official primary PDF visibly
+prints an invalid ex-date, and a later official annual report naming the
+likely date could not yet be retained/checksummed (CNINFO HTTP 403; issuer
+host timed out). Do not infer this date or call cash census PASS. This is a
+targeted official evidence-recovery task, not authorization to buy data or
+advance to Full Dataset freeze.
+Local integration tests also cannot connect to PostgreSQL at
+`127.0.0.1:5432`; Docker/database recovery stays separate and must be
+verified before final release. The Ubuntu WSL `docker info` command currently
+reports that Docker CLI/WSL integration is unavailable; no Docker volumes or
+images were deleted and no factory reset was attempted.
+
 ## Current 2026-09-17 R5 gates — no human input requested
 
 The shared official date parser closes one exact already-accepted 688533
