@@ -1,5 +1,32 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-16 full cash acceptance and targeted SZSE suspension recovery
+
+The full cash audit v35 accepted 40,376/40,376 official ordinary-A cash events,
+with zero unresolved or accepted extras, checksum repeatability PASS and reverse
+input order PASS. Canonical manifest SHA:
+`679f003562068bbacbc7de884c522339d07313d77ed5c9df22c5e014f487b7fb`.
+
+The official suspension audit has SSE 16,393 events / zero unresolved and SZSE
+22,077 events / 2,380 unresolved, with zero conflicts and 8,425 official document
+supplements. Canonical manifest SHA:
+`3f2c20f62468fa02942fd80a83e4f6fff017ee619351ccdba0e9b585e542fdd2`.
+The all-announcement CNINFO query completed 2,686/2,696 initial 14-day windows;
+nine failed windows were closed in a new immutable retry batch, while unstable
+pagination for 002665 was resolved by two disjoint seven-day official queries.
+Its 34 announcement IDs are unique. The aggregate official-query closure audit
+verifies all 2,696 original windows, 21,809 official records, zero unclosed
+windows and source checksums (manifest
+`1e8cd5c9c7965620008466bf990cc2ca6bcf47f22fabadb9ea36796a6884f760`).
+This is metadata coverage, not resumption acceptance. The self-check result PDF provides an exact
+2014-03-27 resumption; the suspension audit accepted that single boundary.
+The 2,011-document first title queue completed with zero download failures and
+315 newly bound exact resumptions (first-pass reconciliation manifest
+`2092a8224da2a424542ba63c35b82b07049d5f8ec140d977e890f1d0bfd130f5`).
+The disjoint 1,209-document second queue remains in progress. These are retrieval
+priorities, not complete coverage.
+Full dataset and research studies remain unstarted; no freeze or PR merge.
+
 ## 2026-09-16 full official SSE/SZSE ST authority closure
 
 SSE is `PASS_PUBLIC_OFFICIAL_RECONSTRUCTION` for all 2,403 P0 identities. The

@@ -209,7 +209,6 @@ def main() -> None:
     args = parser.parse_args()
     # ponytail: cache DNS for this bounded batch; re-run a batch if the CDN endpoint changes.
     socket.getaddrinfo = functools.lru_cache(maxsize=32)(socket.getaddrinfo)
-    socket.getaddrinfo("static.cninfo.com.cn", 443)
     report = run(
         args.root,
         queue=args.queue,

@@ -1,5 +1,16 @@
 # Blockers
 
+## 2026-09-16 current — no human blocker; official SZSE resumption facts remain
+
+P0 public reconstruction, SSE/SZSE ST and full ordinary-A cash are PASS. The
+current material R5 gap is 2,380 unresolved SZSE official resumption/lifecycle
+boundaries out of 22,077 target suspension events; SSE suspension has zero gaps.
+The bounded official CNINFO all-announcement acquisition and exact-date
+reconciliation are active, so this is not yet an irreducible source-input blocker.
+Title-filtered queues are prioritization only; no absent title is presumed NORMAL
+or resumed. Full dataset and safe-start gates remain unproven. Docker is separately
+deferred/nonblocking for source work. Older blocker sections below are historical.
+
 ## 2026-09-15 P0 paid-export blocker resolved; no active human blocker
 
 The former `OFFICIAL_FULL_EXPORT_ACCOUNT_OR_BUSINESS_APPLICATION_REQUIRED_FOR_P0`

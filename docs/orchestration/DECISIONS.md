@@ -1,5 +1,16 @@
 # Decisions
 
+## 2026-09-16 official SZSE resumption evidence triage
+
+Official CNINFO all-announcement metadata may be queried in bounded windows using
+the verified issuer org ID. Duplicate/incomplete pagination is a failed window,
+never an empty result; disjoint narrower queries may close it with independent
+receipts. Document titles only prioritize retrieval. An official PDF/attachment
+supplies a resumption boundary only when its text identifies one exact effective
+date within the corresponding suspension lifecycle; source URL, receipt, SHA-256
+and deterministic binding are retained. No inferred boundary from missing bars,
+title alone, or future announcement order is allowed.
+
 ## Current: accept full official SSE/SZSE ST reconstruction only after closed gates
 
 SSE acceptance requires the P0 identity set, official prestart anchor, complete

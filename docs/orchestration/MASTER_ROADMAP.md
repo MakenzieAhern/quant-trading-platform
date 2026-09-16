@@ -1,5 +1,17 @@
 # v1.1 controller roadmap
 
+## Authoritative 2026-09-16 R5 route
+
+P0, SSE/SZSE ST, and the full 40,376-event ordinary-A cash ledger are accepted.
+The active R5 task is official SZSE resumption-boundary closure (2,380 unresolved
+of 22,077 target events), then the remaining full-range authority, safe-start,
+materialization and audit gates. The first checksum-bound CNINFO document batch
+has closed 315 new boundaries; the second batch is running. No title or raw
+document is accepted as an event fact without exact
+official effective-dated evidence. Docker remains a separate deferred engineering
+issue. The full dataset is not created, audited or frozen and no research study has
+run. The historical roadmap sections below are superseded where counts differ.
+
 ## Current: P0 and full SSE/SZSE ST passed; continue R5 fact closure
 
 `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` passes both P0 exchanges without a

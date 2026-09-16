@@ -28,4 +28,5 @@ def test_candidate_window_and_exact_cross_source_classification():
     invalid_date = pages[0].replace("2012年7月11日", "2012年2月31日")
     invalid = classify([invalid_date], "000006", "2012-07-10", "2012-07-11", {Decimal("0.04")})
     assert invalid["classification"] == "TEMPORAL_BOUNDARY_AMBIGUITY"
-    assert invalid["date_parser_error"] == "day is out of range for month"
+    assert invalid["parsed_ex_dates"] == []
+    assert invalid["date_parser_error"] is None

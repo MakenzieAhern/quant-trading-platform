@@ -1,5 +1,42 @@
 # Current state
 
+## Authoritative 2026-09-16 R5 checkpoint — cash closed, SZSE resumptions active
+
+Older sections below are historical checkpoints, not current blockers or counters.
+The free official P0 master and SSE/SZSE ST authorities remain PASS; no paid
+product was used. Full cash coverage v35 reconciles all 40,376 official ordinary-A
+cash events to 40,376 accepted events with zero unresolved, zero accepted extras,
+and checksum/input-order repeatability PASS (manifest
+`679f003562068bbacbc7de884c522339d07313d77ed5c9df22c5e014f487b7fb`).
+
+Full official suspension audit currently has SSE 16,393 target events / zero
+unresolved and SZSE 22,077 target events / 2,380 unresolved official resumption
+boundaries, zero conflicts, 8,425 official supplemental resumptions. Authority is
+`PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES` (manifest
+`3f2c20f62468fa02942fd80a83e4f6fff017ee619351ccdba0e9b585e542fdd2`).
+One newly verified example is 002665: the official CNINFO self-check result
+announcement gives 2014-03-27 resumption after 2014-03-21 suspension. The original
+14-day CNINFO metadata pass completed 2,686/2,696 windows; targeted retries closed
+nine, and two nonoverlapping seven-day official queries closed the final unstable
+pagination window. Its 34 announcement IDs are unique. An independent checksum-
+verified closure audit proves all 2,696 original metadata query windows complete,
+with 21,809 official records, zero unclosed windows and input-order PASS (manifest
+`1e8cd5c9c7965620008466bf990cc2ca6bcf47f22fabadb9ea36796a6884f760`).
+This proves query coverage only, not the missing resumption dates. Two disjoint prioritized
+official PDF queues (2,011 direct suspension titles; 1,209 broader material titles)
+were built from durable receipts: the 2,011-document first batch is complete
+with zero failures and 315 exact new resumptions; the 1,209-document second batch
+is still active. Title routing does not establish any resumption fact; only exact
+dated official text can do so. Across the 21,607
+unique leads, 18,386 remain outside these title-priority queues; longer suspension
+intervals also remain open.
+
+Full dataset created/audited/frozen = NO; verified safe start remains unresolved.
+Development, Validation and Official OOS are NOT_RUN. PR #12 remains open and
+unmerged. Docker is deferred/nonblocking for current source work. No active
+human-input blocker is established while official acquisition and reconciliation
+continue.
+
 ## Current: full SSE/SZSE ST reconstruction passed; scoped P1 acquisition running
 
 `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` replaces the two assumed paid-export

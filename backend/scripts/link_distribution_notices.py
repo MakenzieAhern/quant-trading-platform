@@ -4,17 +4,49 @@ import argparse
 import json
 import re
 import unicodedata
+from contextlib import suppress
 from datetime import date
 from pathlib import Path
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
 
+BOARD_GUARANTEE = (
+    r"本公司及董事会全体成员保证(?:公告|信息披露的)?内容真实、?准确(?:、|和)?完整"
+    r"[,\.\uff0c]?(?:不存在|没有)虚假记载、?误导性陈述(?:或|或者)重大遗漏[。.]?"
+)
+RECORD_LABELS = (
+    r"A股(?:股权|权益)登记日",
+    r"(?:股权|权益)登记日[:为]*A股",
+    r"(?:股权|权益)登记日",
+)
+EX_LABEL = (
+    r"(?:除权\(除息\)日|除权日\(除息日\)|除息\(除权\)日|除权\(除息日\)|"
+    r"除权\(息\)日|除权除息日|除息日|除权日)"
+)
+LABEL_DATE_GAP = r"[:为]*(?:[-—]\d+[-—])?"
+
+
+def compact_document(text):
+    compact = re.sub(r"[\x00-\x1f\x7f]|\s+", "", unicodedata.normalize("NFKC", text))
+    return re.sub(BOARD_GUARANTEE, "", compact)
+
 
 def labeled_dates(text, label):
-    compact = re.sub(r"\s+", "", unicodedata.normalize("NFKC", text))
-    pattern = label + r"[:为]*(20\d{2})年(\d{1,2})月(\d{1,2})日"
-    return sorted({date(*map(int, match)).isoformat() for match in re.findall(pattern, compact)})
+    compact = compact_document(text)
+    pattern = label + LABEL_DATE_GAP + r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
+    values = set()
+    for match in re.findall(pattern, compact):
+        try:
+            values.add(date(*map(int, match)).isoformat())
+        except ValueError:
+            continue
+    return sorted(values)
+
+
+def labeled_month_days(text, label):
+    pattern = label + LABEL_DATE_GAP + r"(?!20\d{2}年)(\d{1,2})月(\d{1,2})日"
+    return sorted(set(re.findall(pattern, compact_document(text))))
 
 
 def notice_dates(pages):
@@ -29,15 +61,9 @@ def notice_dates(pages):
             pattern.sub("", page, count=1) for pattern, page in zip(headers, pages, strict=True)
         ]
     text = "\n".join(pages)
-    record, ex = (
-        labeled_dates(text, r"A股(?:股权|权益)登记日")
-        or labeled_dates(text, r"(?:股权|权益)登记日[:为]*A股")
-        or labeled_dates(text, r"(?:股权|权益)登记日"),
-        labeled_dates(
-            text, r"(?:除权\(除息\)日|除权\(除息日\)|除权\(息\)日|除权除息日|除息日|除权日)"
-        ),
-    )
-    compact = re.sub(r"\s+", "", unicodedata.normalize("NFKC", text))
+    record = next((values for label in RECORD_LABELS if (values := labeled_dates(text, label))), [])
+    ex = labeled_dates(text, EX_LABEL)
+    compact = compact_document(text)
     slash_date = r"(20\d{2}/\d{1,2}/\d{1,2})"
     # Fixed official table order: record / last trade / ex / cash or new shares.
     # The A-share last-trade placeholder is required; never shift B-share columns.
@@ -51,6 +77,46 @@ def notice_dates(pages):
         record.append(date(*map(int, recorded.split("/"))).isoformat())
         ex.append(date(*map(int, effective.split("/"))).isoformat())
     return sorted(set(record)), sorted(set(ex))
+
+
+def current_notice_dates(pages, published_on):
+    record, ex = notice_dates(pages)
+    text = "\n".join(pages)
+    years = {date.fromisoformat(value).year for value in [*record, *ex]}
+    if years:
+        record_month_days = next(
+            (values for label in RECORD_LABELS if (values := labeled_month_days(text, label))), []
+        )
+        ex_month_days = labeled_month_days(text, EX_LABEL)
+        if not record:
+            for year in years | {year - 1 for year in years}:
+                for month, day in record_month_days:
+                    with suppress(ValueError):
+                        record.append(date(year, int(month), int(day)).isoformat())
+        if not ex:
+            for year in years | {year + 1 for year in years}:
+                for month, day in ex_month_days:
+                    with suppress(ValueError):
+                        ex.append(date(year, int(month), int(day)).isoformat())
+    pairs = {
+        (recorded, effective)
+        for recorded in record
+        for effective in ex
+        if published_on <= recorded < effective
+    }
+    if pairs:
+        shortest = min(
+            (date.fromisoformat(effective) - date.fromisoformat(recorded)).days
+            for recorded, effective in pairs
+        )
+        pairs = {
+            (recorded, effective)
+            for recorded, effective in pairs
+            if (date.fromisoformat(effective) - date.fromisoformat(recorded)).days == shortest
+        }
+    return sorted({recorded for recorded, _ in pairs}), sorted(
+        {effective for _, effective in pairs}
+    )
 
 
 def reviewed_dates(review, source, page_count):
@@ -116,7 +182,7 @@ def main():
             if reviewed := reviews.get(row["source_sha256"]):
                 record, ex = reviewed_dates(reviewed, row, len(extracted["pages"]))
             else:
-                record, ex = notice_dates(extracted["pages"])
+                record, ex = current_notice_dates(extracted["pages"], row["published_on"])
         except ValueError as exc:
             parsing_errors.append(dict(source_sha256=row["source_sha256"], error=str(exc)))
             continue

@@ -10,8 +10,10 @@ requires-python = "==3.12.*"
 dependencies = [
   "alembic>=1.17,<2",
   "asyncpg>=0.31,<0.32",
+  "cryptography>=46,<47",
   "fastapi>=0.141,<0.142",
   "openpyxl>=3.1,<4",
+  "pymupdf>=1.26,<2",
   "pypdf>=6,<7",
   "pydantic-settings>=2.15,<3",
   "pyarrow>=25,<26",

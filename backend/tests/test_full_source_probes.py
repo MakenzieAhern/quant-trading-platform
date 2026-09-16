@@ -348,7 +348,7 @@ def test_notice_recovery_reuses_tail_and_includes_partial_boundary_day():
 
 
 def test_distribution_notice_dates_require_bound_labels_not_unrelated_dates():
-    from scripts.link_distribution_notices import notice_dates
+    from scripts.link_distribution_notices import current_notice_dates, notice_dates
 
     assert notice_dates(
         ["1 \n \n股权登记日为2010年8月5日,除息日为2010年8月6", "2 \n \n日。每10股4.80元"]
@@ -373,6 +373,29 @@ def test_distribution_notice_dates_require_bound_labels_not_unrelated_dates():
         "2010-03-02",
         "2010-03-03",
     ]
+    assert current_notice_dates(
+        ["股权登记日:2023年6月14日;除息日:2022年6月15日;除息日:2023年6月15日"],
+        "2023-06-09",
+    ) == (["2023-06-14"], ["2023-06-15"])
+    assert current_notice_dates(["股权登记日5月13日;除权(除息)日:2011年5月16日"], "2011-05-10") == (
+        ["2011-05-13"],
+        ["2011-05-16"],
+    )
+    assert current_notice_dates(
+        ["股权登记日:2011年6月10日;除息(除权)日:2011年6月13日"], "2011-06-07"
+    ) == (["2011-06-10"], ["2011-06-13"])
+    assert current_notice_dates(
+        ["股权登记日:2011年5月26日;除权除息日为:—2—2011年5月27日"], "2011-05-20"
+    ) == (["2011-05-26"], ["2011-05-27"])
+    assert current_notice_dates(
+        [
+            "股权登记日为2011年4月12日,除权除息日",
+            "本公司及董事会全体成员保证公告内容真实、准确和完整,"
+            "不存在虚假记载、误导性陈述或者重大遗漏。\x7f为2011年4月13日。",
+        ],
+        "2011-04-07",
+    ) == (["2011-04-12"], ["2011-04-13"])
+    assert notice_dates(["除息日:2023年13月1日;除息日:2023年6月15日"])[1] == ["2023-06-15"]
 
 
 def test_merger_raw_boundaries_use_unadjusted_rows_and_reject_duplicate_dates():
@@ -522,6 +545,11 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
 
     from scripts.reconcile_distribution_cash import gross_cash
 
+    assert gross_cash(
+        ["公司年度报告\n600337\n2011年年度报告\n每10股派发现金红利0.50元(含税)"],
+        "600337",
+    ) == Decimal("0.05")
+
     header = "证券代码:600000 证券简称:浦发银行\n"
     assert gross_cash(
         ["证券代码:6 0 0 0 0 0\n每10股送5股、派发现金股利1.2元(含税,扣税后0.58元)"], "600000"
@@ -542,9 +570,31 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         "证 券 代 号 : 600000",
         "券代码:600000",
         "股票股票股票股票代码代码代码代码:: ::600000600000600000600000",
+        "证券代码:\n6\n0\n0\n0\n0\n0\n证券简称:浦发银行",
+        "证证券券代代码码::660000000000",
         "债券代码:143039 债券简称:17北方01\n股票代码:600000",
+        "公司公告首页未显示代码\n" + "正文" * 400 + "\n证券代码:600000",
+        "600000 浦发银行 2010年度利润分配实施公告\n证券代码:浦发银行",
     ):
         assert gross_cash([identity + "\n每股现金红利0.1元(含税)"], "600000") == Decimal("0.1")
+    for identity in ("证券代码:660000000000",):
+        assert gross_cash([identity + "\n每股现金红利0.1元(含税)"], "600000") == Decimal("0.1")
+    assert gross_cash(
+        ["证券代码:浦发银行 证券简称:600000 公告编号:1\n每股现金红利0.1元(含税)"],
+        "600000",
+        trusted_issuer=True,
+    ) == Decimal("0.1")
+    assert gross_cash(
+        ["证券代码:60000\n每股现金红利0.1元(含税)"],
+        "600000",
+        trusted_issuer=True,
+    ) == Decimal("0.1")
+    with pytest.raises(ValueError, match="ISSUER"):
+        gross_cash(
+            ["证券代码:600004\n每股现金红利0.1元(含税)"],
+            "600000",
+            trusted_issuer=True,
+        )
     with pytest.raises(ValueError, match="ISSUER"):
         gross_cash(
             ["证券代码证券代码证券代码证券代码:: ::600004 600004\n每股现金红利0.1元(税前)"],
@@ -566,6 +616,10 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
     assert gross_cash([header + "每股派发现金红利0.1元(含税) 每股税后0.09元"], "600000") == Decimal(
         "0.1"
     )
+    assert gross_cash(
+        [header + "每10股派1元人民币现金(含税)\uff1b扣税后每10股派0.9元\uff1b每10股补缴税款0.1元"],
+        "600000",
+    ) == Decimal("0.1")
     for content in (
         "每股派发现金红利0.09元(税后)",
         "每股现金红利0.1元",
@@ -574,6 +628,20 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
     ):
         with pytest.raises(ValueError):
             gross_cash([header + content], "600000")
+    assert gross_cash(
+        [header + "每股现金红利0.1元(含税) 每股现金红利0.2元(含税)"],
+        "600000",
+        {Decimal("0.2")},
+    ) == Decimal("0.2")
+    assert gross_cash(
+        [
+            header
+            + "向全体股东每10股派发现金红利3.20元(含税);扣税后每10股派2.88元;"
+            + "持股不足一个月每10股补缴税款0.64元"
+        ],
+        "600000",
+        {Decimal("0.320")},
+    ) == Decimal("0.320")
     with pytest.raises(ValueError, match="ISSUER"):
         gross_cash([header + "每股现金红利0.1元(含税)"], "600004")
     implementation = "二、本次实施的权益分派方案\n每10股派2元人民币现金(含税)\n"
@@ -587,7 +655,150 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
     assert gross_cash([duplicate], "600000") == Decimal("0.2")
     payment_section = "五、权益分派方案\n本次现金红利将划入股东资金账户。\n"
     assert gross_cash([text + payment_section], "600000") == Decimal("0.2")
+    assert gross_cash(
+        [
+            header + "一、原方案\n每10股派1元人民币现金(含税)\n"
+            "二、分红派息方案\n每10股派2元人民币现金含税\n"
+        ],
+        "600000",
+    ) == Decimal("0.2")
+    assert gross_cash(
+        [
+            header + "二、权益分派方案\n每10股派2元人民币现金"
+            "本公司及董事会全体成员保证信息披露的内容真实、准确、完整,"
+            "没有虚假记载、误导性陈述或重大遗漏。(含税)\n"
+        ],
+        "600000",
+    ) == Decimal("0.2")
+    assert gross_cash(
+        [
+            header
+            + "一、股东大会方案\n每10股派2元人民币现金(含税)\n"
+            + "二、权益分派方案\n每10股派1.987158元人民币现金,"
+            + "共计派发现金红利100元(含税;扣税后,QFII实际每10股派1.788442元)\n"
+        ],
+        "600000",
+    ) == Decimal("0.1987158")
+    assert gross_cash(
+        [
+            header
+            + "一、权益分派方案\n原方案每10股派2元人民币现金(含税)。"
+            + "股本调整后,本次实施的权益分派方案为向全体股东"
+            + "每10股派1.9元人民币现金(含税)。\n"
+        ],
+        "600000",
+    ) == Decimal("0.19")
+    assert gross_cash(
+        [
+            header
+            + "一、权益分派方案\n原方案每10股派0.5元人民币现金(含税)。"
+            + "公司年度权益分派按照如下方案实施:向全体股东"
+            + "每10股派0.49538元人民币现金(含税)。"
+        ],
+        "600000",
+    ) == Decimal("0.049538")
+    assert gross_cash(
+        [
+            header
+            + "二、权益分派方案\n每10股派0.221379元人民币现金(含税)。"
+            + "【注:股东大会原方案为每10股派0.22元人民币现金(含税)。】"
+            + "三、其他事项\n"
+        ],
+        "600000",
+    ) == Decimal("0.0221379")
+    assert gross_cash(
+        [
+            header
+            + "一、权益分派方案\n原方案每10股派1元人民币现金(含税)。"
+            + "调整后,本公司年度权益分派方案为:向全体股东"
+            + "每10股派0.99元人民币现金(含税)。"
+        ],
+        "600000",
+    ) == Decimal("0.099")
+    assert gross_cash(
+        [
+            header
+            + "一、权益分派方案\n原方案每10股派2元人民币现金(含税)。"
+            + "分配比例由每10股派发2元(含税),变动至每10股派发约1.986770元(含税)。"
+        ],
+        "600000",
+    ) == Decimal("0.198677")
+    assert gross_cash(
+        [
+            header
+            + "一、权益分派方案\n原方案每10股派1.7元人民币现金(含税)。"
+            + "现金分红总额固定不变。以公司现有总股本206805000股为基数,"
+            + "向全体股东每10股派1.644060元人民币现金(含税)。"
+        ],
+        "600000",
+    ) == Decimal("0.164406")
+    assert gross_cash(
+        [header + "原方案每10股派1.5元(含税),最终每10股派1.505684元(含税)"],
+        "600000",
+        {Decimal("0.151")},
+    ) == Decimal("0.1505684")
+    assert gross_cash(
+        [header + "本次权益分派方案为向全体股东每10股派现金股利1.505684元"],
+        "600000",
+        {Decimal("0.151")},
+    ) == Decimal("0.1505684")
     for clause in (
+        "向全体股东每10股转增5股;同时,派1元人民币现金(含税)",
+        "实际发放现金红利为每股人民币0.1元",
+        "向全体股东10股派1.000000元人民币现金",
+        "每10股派现金红利1.00(含税)",
+    ):
+        assert gross_cash([header + clause], "600000", {Decimal("0.100")}) == Decimal("0.1")
+    assert gross_cash(
+        [header + "以上1、2项合计向普通流通股每10股转增10股派发现金1.02064元(含税)"],
+        "600000",
+    ) == Decimal("0.102064")
+    assert gross_cash(
+        [header + "每10股派送现金红利0.491元(含税),每10股派送现金红利2.75元(含税)"],
+        "600000",
+        {Decimal("0.324")},
+    ) == Decimal("0.3241")
+    assert gross_cash(
+        [header + ("每股现金红利" * 4) + ("扣税前" * 4) + ("0.15" * 4)],
+        "600000",
+        {Decimal("0.150")},
+    ) == Decimal("0.15")
+    assert gross_cash(
+        [
+            header
+            + "除权参考价格计算时每股现金红利应以0.0176363元,"
+            + "向全体股东每10股派0.18元人民币现金"
+        ],
+        "600000",
+        {Decimal("0.018")},
+    ) == Decimal("0.018")
+    assert gross_cash(
+        [
+            header + "每股分配比例\nA股每股现金红利4.30元(含税)\n"
+            "一、通过方案\n二、分配方案\n每股派发现金红利4.30(含税)\n"
+        ],
+        "600000",
+    ) == Decimal("4.30")
+    assert gross_cash(
+        [
+            header + "每股分配比例\n不同股东每股派1元\n"
+            "一、通过方案\n二、权益分派方案\n每10股派2元人民币现金(含税)\n"
+        ],
+        "600000",
+    ) == Decimal("0.2")
+    for clause in (
+        "扣税前每股现金红利0.2元,扣税后每股现金红利0.18元",
+        "每股税前红利金额0.2元,每股税后红利金额0.18元",
+        "每10股送红股3股并派发现金红利2元(含税)",
+        "每10股送2股红股,派2元人民币现金(含税)",
+        "每10股派送红股3股、现金红利2元人民币(含税)",
+        "每10股送现金2元(含税)",
+        "每10股派息2元(含税)",
+        "每10股派现2元(含税)",
+        "每10股现金分红2元(含税)",
+        "每股现金红利:0.2元人民币(扣税前)",
+        "每股现金红利(扣税前)0.2",
+        "扣税前与扣税后每股现金红利:0.2元(税前),0.18元(税后)",
         "每10股派发人民币现金2元(含税;扣税后1.8元)",
         "每10股派发现金股利2元人民币现金(含税:扣税后1.8元)",
         "每10股派2元人民币(含税)",
@@ -599,6 +810,10 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         "每10股分配现金红利2元(含税。扣税后1.8元)",
         "每10股派2元人民币现金、送3股红股(含税;扣税后1.5元)",
         "每10股派发现金红利人民币2(含税)",
+        "每10.00股派发现金红利2元(含税)",
+        "每10股派发2人民币现金(含税)",
+        "分配现金股利为每10股2元(含税)",
+        "以每10股派2元人民币的方式进行利润分配(含税)",
     ):
         assert gross_cash([header + clause], "600000") == Decimal("0.2")
     for invalid in (
@@ -617,6 +832,22 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         [text.replace("每10股派2元人民币现金(含税)", "每10股派发现金红利人民币0.403129(含税)")],
         "600000",
     ) == Decimal("0.0403129")
+    assert gross_cash(
+        [header + "派发现金股息:每股人民币0.530元(含税),扣税后每股人民币0.477元"],
+        "600000",
+    ) == Decimal("0.530")
+    assert gross_cash(
+        [header + "派发现金红利(税前):每股人民币0.03元。扣税后每股人民币0.027元"],
+        "600000",
+    ) == Decimal("0.03")
+    assert gross_cash(
+        [
+            header + "一、权益分派方案\n原方案每10股派1元人民币现金(含税)。"
+            "现金分红总额、送红股总额固定不变,本公司权益分派方案为:"
+            "每10股送红股5股;向全体股东每10股派0.99元人民币现金(含税)。"
+        ],
+        "600000",
+    ) == Decimal("0.099")
     for counter in ("{page}", "{page} / 2", "- {page} -"):
         pages = [
             counter.format(page=1) + "\n" + header + "每10股派0.62元人民币",
@@ -625,6 +856,24 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         assert gross_cash(pages, "600000") == Decimal("0.062")
         with pytest.raises(ValueError):
             gross_cash([pages[0], pages[1].replace("2", "9")], "600000")
+    assert gross_cash(
+        [
+            "证券代码:000582 2018年度分红派息实施公告 "
+            "股东大会原方案向全体股东每10股派发现金1.14元(含税)。"
+            "按照现金分红总额不变的原则重新计算,公司2018年度利润分配方案实际为:"
+            "向全体股东每10股派1.142101元(含税)。"
+        ],
+        "000582",
+        {Decimal("0.114")},
+    ) == Decimal("0.1142101")
+    assert gross_cash(
+        [
+            "证券代码:000797 2017年度分红派息转增股本实施公告 "
+            "每10股派送现金红利0.60元(含税)变更为0.600119元(含税)。"
+        ],
+        "000797",
+        {Decimal("0.060")},
+    ) == Decimal("0.0600119")
 
 
 def test_differentiated_cash_selects_only_exact_public_a_final_terms():
@@ -656,6 +905,32 @@ def test_differentiated_cash_selects_only_exact_public_a_final_terms():
     ) == Decimal("0.32")
     assert parse("社会公众股每股实际分派现金红利0.32元(含税)") == Decimal("0.32")
     assert parse("A股每10股派3.20元(含税)") == Decimal("0.32")
+    assert differentiated_cash(
+        [
+            prefix
+            + "是否涉及差异化分红送转:是\n每股分配比例每股现金红利0.30元(含税)\n"
+            + "相关日期 股权登记日 2022/6/1\n回购专用证券账户不参与分配"
+        ],
+        "600000",
+        title,
+    ) == Decimal("0.30")
+    assert parse(
+        ",每股转增比例每股现金红利1.00元",
+        extra="向全体股东每10股派发现金红利10.00元(含税)",
+    ) == Decimal("1.00")
+    assert parse(
+        "中小股东每股派发现金红利0.4598元(含税),大股东每股派发现金红利0.3891元(含税)"
+    ) == Decimal("0.4598")
+    assert parse(
+        "A股每股现金红利1.33169元(含税),"
+        "其中A股每股现金红利0.98169元(含税),"
+        "A股每股现金红利0.35000元(含税)"
+    ) == Decimal("1.33169")
+    assert parse(
+        "A股每股现金红利0.31元",
+        document_title="关于2023年年度权益分派的公告",
+        extra="公司暂不扣缴所得税",
+    ) == Decimal("0.31")
 
     with pytest.raises(ValueError, match="NON_APPLICABLE"):
         parse("控股股东每股分配现金红利0.50元(含税)")
@@ -709,6 +984,15 @@ def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accoun
         delisting_date=None,
     )
     event = cash_event(row, [member], {member["security_id"]})
+    precise_issuer_row = {
+        **row,
+        "status": "SUPPORTED_OFFICIAL_IMPLEMENTATION_TERM",
+        "exchange_amounts": ["0.130"],
+        "evidence": [dict(cash_per_share="0.13003", source=source)],
+    }
+    precise_issuer = cash_event(precise_issuer_row, [member], {member["security_id"]})
+    assert precise_issuer.cash_per_share == Decimal("0.13003")
+    assert precise_issuer.source_version == "OFFICIAL_ISSUER_GROSS_CASH_EXCHANGE_DATES_V1"
     differentiated_row = {
         **row,
         "status": "SUPPORTED_ORDINARY_A_PUBLIC_TERM",
