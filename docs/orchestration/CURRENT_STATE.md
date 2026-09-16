@@ -20,10 +20,10 @@ remain, including 325 retained distribution notices. No dataset or study gate
 was unlocked.
 Of the 22 notices that the differentiated-cash parser could not classify as
 final cash terms, a separate source-bound bonus audit matches all 22 issuer
-date/ratio pairs to official SSE bonus rows. Seventeen explicitly say cash is
-zero; five retain an unresolved cash leg. The 22 comprise 21 capital-reserve
+date/ratio pairs to official SSE bonus rows. Twenty explicitly say cash is
+zero; two retain an unresolved cash leg. The 22 comprise 21 capital-reserve
 conversions and one red-stock dividend with issuer tax terms. Manifest
-`759cbe55a1d6fecf73d5c09d57b28545d74612d2a3714efb33e70a536dbdbfaa`.
+`e3169ff82117534bfcaa03870966433c16261580c41a9409ce3941b54eed1f25`.
 No bonus event or P1 fact was counted accepted; allocation, tax and accounting
 remain to be resolved under the existing approved policy matrix.
 

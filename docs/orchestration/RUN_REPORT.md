@@ -23,13 +23,13 @@ Full Dataset, freeze and all studies remain unrun; PR #12 stays open.
 The 22 differentiated final notices rejected as cash events were then
 cross-checked against original SHA-verified issuer PDF text and official SSE
 bonus source rows. All 22 have matching pre-record issuer dates and exact
-ratios with unique ordinary-A master identity. Seventeen explicitly state no
-cash; five have a cash leg not yet established. Twenty-one are capital-reserve
+ratios with unique ordinary-A master identity. Twenty explicitly state no
+cash; two have a cash leg not yet established. Twenty-one are capital-reserve
 conversions; 688466 is a red-stock dividend with tax terms that must not be
 silently modeled as tax-free capital reserve. No economic bonus action or P1
 closure was claimed. Evidence manifest
-`759cbe55a1d6fecf73d5c09d57b28545d74612d2a3714efb33e70a536dbdbfaa`
-(file SHA-256 `459b2570a468e5580a470a0d40e51682d63a374a54033455ea3ccb8be16b316a`);
+`e3169ff82117534bfcaa03870966433c16261580c41a9409ce3941b54eed1f25`
+(file SHA-256 `ad634eedf842e044923f7ff40687a338f108771359cf2ab5684b998fc2883725`);
 input-order reverse replay was not run for this diagnostic report.
 
 ## 2026-09-16 official P1 counterexamples and day-91–180 SZSE coverage
