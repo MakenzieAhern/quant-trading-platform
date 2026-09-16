@@ -2,7 +2,10 @@
 
 import argparse
 import json
+import re
+import unicodedata
 from collections import Counter, defaultdict
+from datetime import date
 from decimal import Decimal
 from pathlib import Path
 
@@ -17,6 +20,26 @@ from scripts.reconcile_distribution_cash import differentiated_cash
 POLICY = "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"
 
 
+def star_cash_dates(pages):
+    """Read only the unlabeled A-share cash table with one unambiguous date chain."""
+    text = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "\n".join(pages)))
+    slash = r"(20\d{2})/(\d{1,2})/(\d{1,2})"
+    pairs = set()
+    for middle, count in (("", 3), ("新增无限售条件流通股份上市日", 4)):
+        table = r"股权登记日除权\(息\)日" + middle + "现金红利发放日" + slash * count
+        for match in re.findall(table, text):
+            try:
+                dates = [
+                    date(*map(int, match[n : n + 3])).isoformat() for n in range(0, len(match), 3)
+                ]
+            except ValueError:
+                continue
+            record, ex, pay = dates[0], dates[1], dates[-1]
+            if record < ex <= pay:
+                pairs.add((record, ex))
+    return ([next(iter(pairs))[0]], [next(iter(pairs))[1]]) if len(pairs) == 1 else ([], [])
+
+
 def decision(peers, record, amount):
     if not peers:
         return "NEW_OFFICIAL_ISSUER_EVENT"
@@ -27,6 +50,21 @@ def decision(peers, record, amount):
     ):
         return "EXACT_ACCEPTED_EVENT"
     return "ACCEPTED_EVENT_CONFLICT"
+
+
+def official_correction(peer, original, replacement):
+    event = peer["event"]
+    return (
+        replacement is not None
+        and "更正版" in replacement["title"]
+        and replacement["issuer"] == original["issuer"]
+        and original["published_on"] < replacement["published_on"] <= event["record_date"]
+        and replacement["published_on"] == event["announcement_date"]
+        and replacement["source_sha256"] == event["source_document_sha256"]
+        and replacement["title"] == event["source_document"]
+        and replacement["retrieval_status"] == "PASS"
+        and event["source_provider"] == "OFFICIAL_ISSUER_CNINFO_DIFFERENTIATED_PUBLIC_A"
+    )
 
 
 def reconcile(triage, requirements, cash, master, sources, root):
@@ -74,6 +112,10 @@ def reconcile(triage, requirements, cash, master, sources, root):
                 extracted["pages"], requirement["issuer"], requirement["title"]
             )
             records, ex_dates = notice_dates(extracted["pages"])
+            date_authority = "ISSUER_STANDARD_NOTICE_DATE"
+            if not records and not ex_dates:
+                records, ex_dates = star_cash_dates(extracted["pages"])
+                date_authority = "ISSUER_STAR_THREE_COLUMN_CASH_TABLE"
         except ValueError as exc:
             results.append({**result, "status": str(exc)})
             continue
@@ -127,7 +169,37 @@ def reconcile(triage, requirements, cash, master, sources, root):
             ex_date=ex,
             cash_per_share=str(amount),
             text_cache_sha256=row["text_cache_sha256"],
+            date_authority=date_authority,
         )
+        if status == "EXACT_ACCEPTED_EVENT":
+            result["accepted_event_checksum"] = peers[sid, ex][0]["event_checksum"]
+            result["accepted_source_url"] = peers[sid, ex][0]["event"]["source_url"]
+        elif status == "ACCEPTED_EVENT_CONFLICT":
+            result["accepted_peers"] = [
+                {
+                    "event_checksum": peer["event_checksum"],
+                    "cash_per_share": peer["event"]["cash_per_share"],
+                    "source_url": peer["event"]["source_url"],
+                }
+                for peer in peers[sid, ex]
+            ]
+            if len(peers[sid, ex]) == 1:
+                peer = peers[sid, ex][0]
+                corrected = by_url.get(peer["event"]["source_url"])
+                if official_correction(peer, requirement, corrected):
+                    replacement_pdf = Path(corrected["source_path"])
+                    if not replacement_pdf.is_absolute():
+                        replacement_pdf = root / replacement_pdf
+                    replacement_pdf = replacement_pdf.resolve()
+                    if (
+                        not replacement_pdf.is_relative_to(root.parent.resolve())
+                        or sha256_file(replacement_pdf) != corrected["source_sha256"]
+                    ):
+                        raise ValueError("OFFICIAL_CORRECTION_SOURCE_CHANGED")
+                    result["status"] = "SUPERSEDED_BY_OFFICIAL_CORRECTION"
+                    result["superseding_document_sha256"] = corrected["source_sha256"]
+                    result["superseding_document_url"] = corrected["url"]
+                    result["superseding_published_on"] = corrected["published_on"]
         results.append(result)
         if status != "NEW_OFFICIAL_ISSUER_EVENT":
             continue
@@ -205,7 +277,7 @@ def main() -> None:
     if (results, events) != reconcile(*(list(reversed(rows)) for rows in inputs), args.source_root):
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "report_version": "P1_DIFFERENTIATED_OFFICIAL_CASH_NOTICE_V1",
+        "report_version": "P1_DIFFERENTIATED_OFFICIAL_CASH_NOTICE_V4",
         "parser_sha256": sha256_file(Path(__file__)),
         "cash_parser_sha256": sha256_file(
             Path(__file__).with_name("reconcile_distribution_cash.py")

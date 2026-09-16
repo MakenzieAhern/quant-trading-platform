@@ -1,5 +1,13 @@
 # v1.1 controller roadmap
 
+Latest 2026-09-17 official differentiated-cash cross-check closes eight
+additional P1 fact requests (seven exact accepted v39 events and one issuer
+pre-record corrected notice superseding an old amount). P1 now has 634
+unresolved facts / 618 documents, including 314 retained distribution PDFs.
+No new cash event was created; full cash census remains PARTIAL. SZSE exact
+resumption boundaries remain 1,921 unresolved. No Full Dataset gate is open.
+The earlier v39 paragraph below is retained for lineage.
+
 Latest R5 cash replay v39 accepts the retained 600157 differentiated-public-A
 final notice at its actual 0.00555/share holder payout; the issuer-only count
 is 102 and the 40,376 exchange targets remain fully covered, but full census

@@ -1,5 +1,26 @@
 # Current state
 
+## Latest R5 official differentiated notice cross-check — 2026-09-17
+
+SHA-verified issuer PDFs and cash v39 were replayed against all 37 retained
+differentiated-cash candidates. Eight notices exactly corroborate accepted
+ordinary-A cash events (one is the already-counted 600157 v39 addition); seven
+more P1 facts are now established. An earlier 688320 notice states 0.11/share,
+but an official issuer **corrected version** published the next day, before the
+record date, states 0.11038/share and is already the accepted v39 event. The
+earlier notice is explicitly superseded, not accepted at 0.11, closing one
+additional P1 request by official substitution. Three notices remain fully
+post-2025, 22 lack accepted final cash terms and three are non-primary.
+Original/correction PDF checksums, source URLs and dates are in cross-check
+manifest `008648c4c7c55a0abc0eb775f19ac16b8683b88bc780006240a587ee6f00f620`
+(file SHA-256 `294303d16f25534da4301e0f20447b3b1075ee26fe9c9b9ae53cc6d37d948e1c`).
+Reverse input order and repeat checksum pass. P1 is now 15,686/16,320
+established/out of scope, 1,679 official substitutions, 634 facts / 618 unique
+documents unresolved, including 314 retained distribution PDFs. Cash v39
+itself has no new event from this cross-check and full issuer census remains
+PARTIAL; 1,921 SZSE exact resumption boundaries remain unresolved. No R5
+dataset, freeze or study gate is unlocked.
+
 ## Latest R5 differentiated-cash correction — 2026-09-16
 
 The already approved ordinary-public-A differentiated-cash policy was applied

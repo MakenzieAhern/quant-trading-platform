@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 differentiated issuer cross-check
+
+Official SHA-verified retained issuer PDFs were compared to immutable cash v39.
+The four-column STAR date-table parser now handles the two combined cash/bonus
+notices without date inference. Of 37 candidates: eight exact accepted-event
+matches, one earlier 688320 cash amount superseded by the issuer's official
+pre-record corrected implementation notice, three post-2025 entitlement
+chains, 22 without final cash terms, and three non-primary documents. Seven
+exact matches are new P1 fact closures; 600157 was counted in v39 already.
+The 688320 correction closes one P1 requirement by official substitution,
+without replacing the accepted 0.11038/share event with the earlier 0.11.
+Cross-check manifest `008648c4c7c55a0abc0eb775f19ac16b8683b88bc780006240a587ee6f00f620`
+(file SHA-256 `294303d16f25534da4301e0f20447b3b1075ee26fe9c9b9ae53cc6d37d948e1c`),
+input-order and repeat checksum PASS. P1 residual 634 facts / 618 documents,
+314 retained distribution PDFs. Cash full census remains PARTIAL; SZSE
+resumption residual remains 1,921. No research dataset/study or freeze.
+
 ## 2026-09-16 differentiated public-A cash correction
 
 The existing approved differentiated-cash parser reviewed 37 retained P1

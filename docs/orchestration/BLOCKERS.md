@@ -1,5 +1,18 @@
 # Blockers
 
+## Latest 2026-09-17 R5 source gates — active, no human action
+
+Official retained differentiated-cash notices establish seven additional
+already-accepted cash facts. A pre-record official corrected 688320 notice
+supersedes its earlier 0.11/share version with the accepted 0.11038/share
+version; no unresolved issuer amount choice remains for that case. P1 residual
+is 634 facts / 618 documents (314 retained distribution PDFs). Full issuer
+cash census remains PARTIAL; SZSE exact resumption boundaries remain 1,921
+unresolved. The evidence and checksum-bound classifications are in
+`p1-differentiated-cash-notice-ledger-v4.json` under the retained staging
+directory. No paid source, methodology choice, dataset freeze or study is
+authorized by this incremental closure.
+
 ## Latest 2026-09-16 R5 source gates — still active
 
 The 600157 official differentiated-cash final notice adds one issuer-only
