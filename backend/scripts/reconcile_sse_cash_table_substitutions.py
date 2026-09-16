@@ -4,12 +4,13 @@ import argparse
 import json
 import re
 from collections import Counter, defaultdict
+from decimal import Decimal
 from pathlib import Path
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
 from app.domain.markets.corporate_actions import CorporateAction, require_supported_corporate_action
-from scripts.reconcile_distribution_cash import normalized_document, verified
+from scripts.reconcile_distribution_cash import gross_cash, normalized_document, verified
 
 POLICY = "SSE_GROSS_A_TABLE_PLUS_EXPLICIT_NON_DIFFERENTIATED_NOTICE_V1"
 
@@ -20,6 +21,10 @@ def distribution_class(pages):
     return {"是": "DIFFERENTIATED", "否": "NON_DIFFERENTIATED"}.get(
         next(iter(found)) if len(found) == 1 else "", "CONFLICT" if found else "UNMARKED"
     )
+
+
+def notice_amount_conflicts(notices, table_amount):
+    return any(amount is not None and amount != Decimal(table_amount) for _, amount in notices)
 
 
 def raw_sources(root):
@@ -80,9 +85,15 @@ def reconcile(root, gaps, groups, master, documents, sources, superseded=frozens
         if extracted["source_sha256"] != document["source_sha256"]:
             raise ValueError("ISSUER_NOTICE_EXTRACTION_CHANGED")
         classification = distribution_class(extracted["pages"])
+        try:
+            notice_amount = gross_cash(extracted["pages"], document["issuer"])
+        except ValueError:
+            notice_amount = None
         for event in document["affected_events"]:
             if event.startswith("CASH:") and len(event.split(":")) == 4:
-                by_event[tuple(event.split(":")[1:])].append((classification, document))
+                by_event[tuple(event.split(":")[1:])].append(
+                    (classification, document, notice_amount)
+                )
 
     events, outcomes = [], []
     for gap in gaps:
@@ -115,12 +126,16 @@ def reconcile(root, gaps, groups, master, documents, sources, superseded=frozens
         else:
             notices = sorted(
                 (
-                    document
-                    for classification, document in candidates
+                    (document, notice_amount)
+                    for classification, document, notice_amount in candidates
                     if classification == "NON_DIFFERENTIATED"
                     and document["published_on"] <= gap["record_date"]
                 ),
-                key=lambda row: (row["published_on"], row["url"], row["source_sha256"]),
+                key=lambda row: (
+                    row[0]["published_on"],
+                    row[0]["url"],
+                    row[0]["source_sha256"],
+                ),
             )
             evidence = audited[key]
             table = sources.get(canonical_sha256(evidence["raw_row"]))
@@ -128,10 +143,12 @@ def reconcile(root, gaps, groups, master, documents, sources, superseded=frozens
                 outcome["status"] = "NOTICE_AFTER_RECORD_DATE"
             elif table is None:
                 outcome["status"] = "SSE_TABLE_RECEIPT_NOT_FOUND"
+            elif notice_amount_conflicts(notices, evidence["normalized"]["amount"]):
+                outcome["status"] = "ISSUER_NOTICE_TABLE_CASH_AMOUNT_CONFLICT"
             elif (gap["security_id"], gap["ex_date"], "CASH_DIVIDEND") in superseded:
                 outcome["status"] = "SUPERSEDED_BY_PRECISE_ISSUER_NOTICE"
             else:
-                notice = notices[0]
+                notice = notices[0][0]
                 combined = {
                     "policy_id": POLICY,
                     "sse_table": {

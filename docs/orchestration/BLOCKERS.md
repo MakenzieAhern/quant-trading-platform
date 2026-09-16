@@ -1,16 +1,36 @@
 # Blockers
 
+## 2026-09-16 current — two active source-reconciliation gates, no human input
+
+The official P1 primary-document cross-check invalidates the prior assertion
+that cash v35 was a full census: 101 in-period SZSE ex-date events are absent,
+and six SSE composite entries use exchange-table cash amounts contrary to the
+retained issuer implementation notices. The exact 107 cases, source URLs and
+SHA-256 values are in immutable manifest
+`d99465a98a534fd4449a6d89f0750bb7295ca2baf4781ca732fc585bc6f1c58f`.
+All 107 known primary notices have now been revalidated and incorporated in cash
+v37 (40,477 events). Another 133 official preferred-share notices were excluded
+from ordinary-A scope; 387 P1 distribution-document requests remain to be
+classified before full-census authority can be restored. This is an active
+engineering/source reconciliation task, not a request to buy data or a
+human-methodology blocker. Previously matched P1 cash facts remain provisional
+for the full source gate. The earlier 1,932 unresolved
+SZSE resumption boundaries also remain; day-91–180 official metadata coverage
+is now closed and all 895 targeted documents were acquired; exact-date review
+is active. Full Dataset gates
+remain locked. Older sections below are superseded where they call cash PASS.
+
 ## 2026-09-16 current — no human blocker; official SZSE resumption facts remain
 
 P0 public reconstruction, SSE/SZSE ST and full ordinary-A cash are PASS.
 P1 fact-level same-source cash reconciliation leaves 2,594 unestablished facts
 across 2,578 unique document requirements; this is not a paid-export mandate.
-The current material R5 gap is 1,952 unresolved SZSE official resumption/lifecycle
+The current material R5 gap is 1,932 unresolved SZSE official resumption/lifecycle
 boundaries out of 22,077 target suspension events; SSE suspension has zero gaps.
-The bounded official CNINFO day-45–90 metadata extension is complete, while
-its prioritized PDF review and exact-date reconciliation are active. Another
-43 exact boundaries have been accepted by the combined authority audit. The
-remaining official review is active, so this is not yet an irreducible
+The bounded official CNINFO day-45–90 metadata extension and 1,313-document
+priority PDF review are complete; 20 further exact boundaries were accepted
+after the 43 hearing/review-result boundaries. Lower-priority documents and
+longer intervals remain open, so this is not yet an irreducible
 source-input blocker.
 Title-filtered queues are prioritization only; no absent title is presumed NORMAL
 or resumed. Full dataset and safe-start gates remain unproven. Docker is separately

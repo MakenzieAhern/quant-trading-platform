@@ -32,6 +32,18 @@ def test_merge_events_replaces_obsolete_price_adjustment_notice():
     assert merge_events([obsolete], [[implementation]]) == [implementation]
 
 
+def test_merge_events_only_replaces_exact_named_composite_with_primary_notice():
+    old = row("0.326")
+    old["event_checksum"] = "old-checksum"
+    precise = row("0.3261")
+    precise["event"]["source_provider"] = "OFFICIAL_ISSUER_CNINFO_PRIMARY_IMPLEMENTATION"
+    precise["supersedes_event_checksum"] = "old-checksum"
+    assert merge_events([old], [[precise]]) == [precise]
+    precise["supersedes_event_checksum"] = "wrong-checksum"
+    with pytest.raises(ValueError, match="CONFLICTING_ACCEPTED_CASH_EVENT"):
+        merge_events([old], [[precise]])
+
+
 def test_security_at_uses_stable_id_for_backfilled_current_symbol():
     master = [
         {

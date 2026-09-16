@@ -37,6 +37,15 @@ def merge_events(baseline, additions):
     ):
         key = accepted_event_key(row)
         if key in rows and accepted_event_terms(row) != accepted_event_terms(rows[key]):
+            if (
+                row.get("supersedes_event_checksum")
+                and row["supersedes_event_checksum"] == rows[key].get("event_checksum")
+                and row["event"]["source_provider"]
+                == "OFFICIAL_ISSUER_CNINFO_PRIMARY_IMPLEMENTATION"
+                and row["event"]["record_date"] == rows[key]["event"]["record_date"]
+            ):
+                rows[key] = row
+                continue
             prior_title = rows[key]["event"].get("source_document", "")
             current_title = row["event"].get("source_document", "")
             obsolete = r"调整.*(?:转股|回购).*价格"

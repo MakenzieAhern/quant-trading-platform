@@ -1,16 +1,32 @@
 # v1.1 controller roadmap
 
+## Authoritative 2026-09-16 R5 correction
+
+An official P1 primary-notice cross-check uncovered 101 missing in-period cash
+events and six exact issuer-versus-SSE-table cash conflicts. Cash v35 remains
+immutable historical evidence, while v37 reconciles all 107 known counterexamples
+and holds 40,477 official events. Another 133 preferred-share documents are
+out of ordinary-A scope. Full-census status remains PARTIAL, not PASS, because
+387 P1 distribution-document requests are unclassified. Close those
+fact-level requests and rerun the full cash gate; do not repeat accepted
+P0/SSE-ST/SZSE-ST work. In parallel, day-91–180 SZSE resumption
+metadata is fully closed (949 windows, 18,129 official records) and a disjoint
+895-document PDF queue was acquired with zero failures; exact-date review is
+active. The verified unresolved SZSE boundary
+count is still 1,932 until exact issuer-dated PDFs are accepted. Full Dataset,
+safe-start, study, freeze and merge gates remain locked.
+
 ## Authoritative 2026-09-16 R5 route
 
 P0, SSE/SZSE ST, and the full 40,376-event ordinary-A cash ledger are accepted.
 Direct same-source P1 replay now establishes 13,726/16,320 facts, leaving 2,594
 facts / 2,578 unique document requirements explicit; no source substitution
 was claimed.
-The active R5 task is official SZSE resumption-boundary closure (1,952 unresolved
+The active R5 task is official SZSE resumption-boundary closure (1,932 unresolved
 of 22,077 target events), then the remaining full-range authority, safe-start,
-materialization and audit gates. Six checksum-bound CNINFO document batches
-have closed 315 + 354 + 29 + 2 + 43 new boundaries. The day-45–90 metadata
-extension is complete and its 1,313-document prioritized PDF review is active.
+materialization and audit gates. Seven checksum-bound CNINFO document batches
+have closed 315 + 354 + 29 + 2 + 43 + 20 new boundaries. The day-45–90 metadata
+extension and its 1,313-document prioritized PDF review are complete.
 No title or raw document is accepted as an event fact without exact official
 effective-dated evidence. Docker remains a separate deferred engineering
 issue. The full dataset is not created, audited or frozen and no research study has

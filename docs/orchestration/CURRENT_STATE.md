@@ -1,5 +1,55 @@
 # Current state
 
+## Authoritative 2026-09-16 R5 correction — official cash counterexamples
+
+The retained P1 issuer PDFs falsify the prior *full-census* interpretation of
+cash v35. An expanded conservative title/ordinary-A cross-check identified 142
+primary, parseable official implementation notices: ten match v35, 25 have
+2026 ex-dates outside the 2010–2025 target, **101 in-period SZSE notices have no
+accepted event on their ex-date**, and **six in-period SSE notices contradict
+the accepted cash amount**. Two examples are 601998 on 2024-07-10 (issuer 0.3261,
+SSE table 0.326) and 2024-12-11 (issuer 0.1825, SSE table 0.183). The first
+missing example, 001226 on 2023-11-30, is a final ordinary-A implementation
+notice specifying record date 2023-11-29 and gross cash 0.40/share. The report
+is immutable, source-hash-bound, and reverse-order reproducible: latest manifest
+`d99465a98a534fd4449a6d89f0750bb7295ca2baf4781ca732fc585bc6f1c58f`.
+
+Thus `CASH_DIVIDEND_FULL_CENSUS_STATUS=PARTIAL_OFFICIAL_COUNTEREXAMPLES_REQUIRE_RECONCILIATION`.
+The v35 ledger and its 40,376 accepted entries remain unchanged as historical
+audited inputs, but 40,376/40,376 was **not** a proven full census. Each of the
+107 corrective notices was then revalidated against retained official PDF bytes,
+text cache, exact terms and point-in-time ordinary-A identity. The immutable
+primary-notice ledger contains 101 additional events and six precise replacements
+(manifest `67ee85513cc2a83e2d4a1929ff03555b15b6ef71edf02b303abe19772d1fcb7c`).
+Cash replay v37 contains 40,477 accepted events, covers all 40,376 old exchange
+targets, and retains the 101 official issuer-only additions separately (manifest
+`0928e86d1dd208f6796b31be98ede517ce9724a27eaf8f1df8f00cb421c5f6b3`).
+This repairs the **known** counterexamples but does not establish full-census
+PASS. A separate official-document instrument check then classified 133
+preferred-share dividend notices as outside ordinary-A scope, with zero A-share
+events created (manifest `9d8b65e122f7bdce208605e7ef002be3b745c2dbffd3aa6123bd5dd53665c863`).
+Thus 387 of the original 625 P1 distribution-document requests remain to be
+classified. The cumulative direct P1 cash matches are 13,070 documents and
+13,964/16,320 facts are established or excluded by scope, provisional for the
+full source gate; 2,356 facts / 2,340 unique documents remain explicit. Two
+additional mixed cash-plus-bonus notices
+have their cash leg reconciled, but the bonus leg remains open and those source
+requirements are not marked complete. The SSE composite substitution parser now
+rejects a parseable issuer-notice amount that conflicts with the exchange table.
+P0 and SSE/SZSE ST decisions are unaffected.
+
+The independent SZSE resumption workflow also closed all 949 applicable day-91–180
+official metadata windows through six bounded split-seven-day retries (18,129
+records; zero unclosed; manifest
+`d1c5cbc12b800334f948a0ae6c712d626287db8645833fb087cf8fc3d57ebc4f`).
+The disjoint 895-document title-priority queue was fully acquired with zero
+failures (894 PDFs, one supported JS attachment; source manifest
+`5eb282502d6a4b90dd3b5e1014ea0847481fad8ff4c5a289a8a552ebc34f4abb`).
+Text indexing and exact-date reconciliation are active; metadata and titles
+are not accepted resumption facts. Until exact PDFs are reconciled, the
+last 1,932 unresolved SZSE boundaries remain the verified authority count.
+Full Dataset created/audited/frozen = NO; studies NOT_RUN; PR #12 OPEN/unmerged.
+
 ## Authoritative 2026-09-16 R5 checkpoint — cash closed, SZSE resumptions active
 
 Older sections below are historical checkpoints, not current blockers or counters.
@@ -15,12 +65,23 @@ date and terms checks. This establishes 13,726/16,320 original P1 facts and
 leaves 2,594 facts / 2,578 unique document requirements explicit; no new
 official-source substitution was claimed. Immutable manifest:
 `ff54f0e67bce7331f02d8d29fae926b7900f695a696d45bf4851c62ebf0f9eda`.
+All 625 still-unestablished cash-queue documents have retained official bytes
+with matching SHA-256 in the existing acquisition manifest
+`ef5727f122b10b4ccba84d959cfaf178b951d0a7b64ea1316219dce4f185c28b`;
+availability is not acceptance of their economic terms. Three redundant downloads
+were identified against the older smoke cache and verified byte-identical.
+Diagnostic-only PDF parsing of all 625 found 303 cash-only, 92 bonus-only, ten
+mixed and 220 neither candidates, with 126 preferred-instrument markers. These
+are not event classifications or substitutions; 40 amount/date matches were
+specifically withheld because adjustment-after-distribution notices may omit
+implementation terms. Triage manifest:
+`6c6ce88078e760787e341669fa192e398e14e5094879ff02c95c0b026791f361`.
 
 Full official suspension audit currently has SSE 16,393 target events / zero
-unresolved and SZSE 22,077 target events / 1,952 unresolved official resumption
-boundaries, zero conflicts, 8,853 official supplemental resumptions. Authority is
+unresolved and SZSE 22,077 target events / 1,932 unresolved official resumption
+boundaries, zero conflicts, 8,873 official supplemental resumptions. Authority is
 `PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES` (manifest
-`d58f8b4ff203db8d8c922e675810e727a7978836e04a0e3c74fbe38dc36b71a2`).
+`a4bd5b71700d5182e583812f2e0a32a21e89d0f6a63610586c77ae38dde259ae`).
 One newly verified example is 002665: the official CNINFO self-check result
 announcement gives 2014-03-27 resumption after 2014-03-21 suspension. The original
 14-day CNINFO metadata pass completed 2,686/2,696 windows; targeted retries closed
@@ -46,8 +107,10 @@ three failed windows were retried in 21 bounded seven-day queries; query-closure
 manifest `f5a4e5d43c0c2ee5a70cccf3722b461471ca3dc8cfff064a2115930f22152925`.
 Separately, 87 hearing-result and five review-outcome official PDFs added 38 + 5
 exact resumption boundaries, accepted by the combined reverse-order suspension
-audit. A disjoint 1,313-document priority batch from the day-45–90 metadata is
-now in progress.
+audit. A disjoint 1,313-document priority batch from the day-45–90 metadata
+completed with zero download failures (1,311 PDFs, two supported JS attachments)
+and added 20 more exact boundaries. Reconciliation manifest:
+`b9b18a5fb44e2ef12d36d44c6c1483b433d2890bcc13c3e39f7a7289428a8f3a`.
 Title routing and metadata coverage do not establish resumption facts; only exact
 dated official text can do so. Many lower-priority document leads and longer
 suspension intervals remain open.

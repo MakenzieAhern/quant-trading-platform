@@ -1,5 +1,39 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-16 official P1 counterexamples and day-91–180 SZSE coverage
+
+The prior cash v35 40,376/40,376 result remains a reproducible replay of its
+input census, **not a complete ordinary-A cash authority**. An expanded strict
+audit of retained primary implementation PDFs found 101 in-period SZSE cash
+events absent on their ex-dates and six precise SSE issuer-amount conflicts,
+alongside ten exact matches and 25 2026 out-of-period notices. Immutable
+cross-check manifest: `d99465a98a534fd4449a6d89f0750bb7295ca2baf4781ca732fc585bc6f1c58f`.
+The source PDFs are already retained; no commercial source or repeat acquisition
+is needed. The SSE table-substitution code has a regression guard against
+issuer/table amount disagreement. An official-primary ledger independently
+validated and accepted the 101 absent events and six precise issuer replacements
+(manifest `67ee85513cc2a83e2d4a1929ff03555b15b6ef71edf02b303abe19772d1fcb7c`).
+The v37 replay now has 40,477 events, 40,376 exchange-census targets covered,
+101 issuer-only additions, zero duplicate accepted dates, and checksum/order PASS
+(manifest `0928e86d1dd208f6796b31be98ede517ce9724a27eaf8f1df8f00cb421c5f6b3`).
+The repaired exchange census still does not prove a full issuer-source census.
+An independent official-PDF instrument check classified 133 preferred-share
+notices outside ordinary-A scope (manifest
+`9d8b65e122f7bdce208605e7ef002be3b745c2dbffd3aa6123bd5dd53665c863`),
+leaving 387 P1 distribution documents unclassified. Two mixed notices have their
+cash leg reconciled but their bonus leg remains pending. Cash full-census authority
+and dependent P1 fact closure remain PARTIAL/provisional. P0/ST authorities remain
+PASS; no dataset/study/freeze/merge was performed.
+
+Separately, all 949 applicable official CNINFO day-91–180 resumption metadata
+windows were closed (18,129 records; zero query gaps; checksum/order PASS), with
+closure manifest `d1c5cbc12b800334f948a0ae6c712d626287db8645833fb087cf8fc3d57ebc4f`.
+A nonoverlapping 895-document PDF queue was fully acquired with zero failures
+(source manifest `5eb282502d6a4b90dd3b5e1014ea0847481fad8ff4c5a289a8a552ebc34f4abb`).
+Text indexing and exact-date reconciliation are active; only explicit
+issuer/effective-date evidence can be accepted. The last verified SZSE
+resumption count remains 1,932 unresolved pending that reconciliation.
+
 ## 2026-09-16 full cash acceptance and targeted SZSE suspension recovery
 
 The full cash audit v35 accepted 40,376/40,376 official ordinary-A cash events,
@@ -12,11 +46,21 @@ effective-dated master identity. Established P1 facts are now 13,726/16,320;
 2,594 facts / 2,578 unique documents remain unestablished, with zero new
 source substitutions claimed. Canonical manifest SHA:
 `ff54f0e67bce7331f02d8d29fae926b7900f695a696d45bf4851c62ebf0f9eda`.
+The 625 unestablished cash-queue documents are all retained with checksum-valid
+official bytes in existing P1 acquisition v10; none requires a new source
+download merely to inspect it. Three later redundant official downloads were
+byte-identical to the older smoke cache and did not change acceptance.
+Diagnostic-only parsing of the 625 remaining documents found 303 cash-only, 92
+bonus-only, ten mixed and 220 neither candidates (126 preferred markers). No
+new economic event or source substitution was accepted: the 40 exact amount/date
+overlaps include post-distribution price-adjustment notices that are not
+equivalent to final implementation terms. Triage manifest:
+`6c6ce88078e760787e341669fa192e398e14e5094879ff02c95c0b026791f361`.
 
 The official suspension audit has SSE 16,393 events / zero unresolved and SZSE
-22,077 events / 1,952 unresolved, with zero conflicts and 8,853 official document
+22,077 events / 1,932 unresolved, with zero conflicts and 8,873 official document
 supplements. Canonical manifest SHA:
-`d58f8b4ff203db8d8c922e675810e727a7978836e04a0e3c74fbe38dc36b71a2`.
+`a4bd5b71700d5182e583812f2e0a32a21e89d0f6a63610586c77ae38dde259ae`.
 The all-announcement CNINFO query completed 2,686/2,696 initial 14-day windows;
 nine failed windows were closed in a new immutable retry batch, while unstable
 pagination for 002665 was resolved by two disjoint seven-day official queries.
@@ -46,10 +90,12 @@ to be a continuing-suspension notice. The day-45–90 targeted query closed all
 queries, with 15,071 official metadata records and zero unclosed windows
 (closure manifest `f5a4e5d43c0c2ee5a70cccf3722b461471ca3dc8cfff064a2115930f22152925`).
 Ninety-two disjoint hearing/review-result official PDFs added 43 exact resumption
-boundaries (38 + 5); the combined authority audit accepted them, leaving 1,952.
-The
-day-45–90 title-priority PDF batch has 1,313 leads and is active. Query and
-title coverage are not event acceptance.
+boundaries (38 + 5). The disjoint day-45–90 priority batch completed all 1,313
+leads without retrieval failure (1,311 PDFs, two supported JS attachments),
+adding 20 more exact boundaries. Its reconciliation manifest is
+`b9b18a5fb44e2ef12d36d44c6c1483b433d2890bcc13c3e39f7a7289428a8f3a`.
+The combined reverse-order authority audit accepted all 63 incremental
+boundaries, leaving 1,932. Query and title coverage are not event acceptance.
 Full dataset and research studies remain unstarted; no freeze or PR merge.
 
 ## 2026-09-16 full official SSE/SZSE ST authority closure
