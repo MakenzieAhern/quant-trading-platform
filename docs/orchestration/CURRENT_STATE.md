@@ -10,10 +10,10 @@ and checksum/input-order repeatability PASS (manifest
 `679f003562068bbacbc7de884c522339d07313d77ed5c9df22c5e014f487b7fb`).
 
 Full official suspension audit currently has SSE 16,393 target events / zero
-unresolved and SZSE 22,077 target events / 2,380 unresolved official resumption
-boundaries, zero conflicts, 8,425 official supplemental resumptions. Authority is
+unresolved and SZSE 22,077 target events / 2,026 unresolved official resumption
+boundaries, zero conflicts, 8,779 official supplemental resumptions. Authority is
 `PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES` (manifest
-`3f2c20f62468fa02942fd80a83e4f6fff017ee619351ccdba0e9b585e542fdd2`).
+`cc4b6cae2aa2402d629f936e08f93b6963cb5756f4c04ebcfe7629cbb1fa9eee`).
 One newly verified example is 002665: the official CNINFO self-check result
 announcement gives 2014-03-27 resumption after 2014-03-21 suspension. The original
 14-day CNINFO metadata pass completed 2,686/2,696 windows; targeted retries closed
@@ -24,12 +24,13 @@ with 21,809 official records, zero unclosed windows and input-order PASS (manife
 `1e8cd5c9c7965620008466bf990cc2ca6bcf47f22fabadb9ea36796a6884f760`).
 This proves query coverage only, not the missing resumption dates. Two disjoint prioritized
 official PDF queues (2,011 direct suspension titles; 1,209 broader material titles)
-were built from durable receipts: the 2,011-document first batch is complete
-with zero failures and 315 exact new resumptions; the 1,209-document second batch
-is still active. Title routing does not establish any resumption fact; only exact
-dated official text can do so. Across the 21,607
-unique leads, 18,386 remain outside these title-priority queues; longer suspension
-intervals also remain open.
+were built from durable receipts. The first batch closed 315 exact new resumptions;
+the second closed another 354. Its sole HTTP 502 was recovered in a separate
+checksum-bound retry, but that document did not establish an exact resumption.
+An official metadata extension now queries days 15–44 after the 2,380 pre-second-pass
+unresolved events. Title routing does not establish any resumption fact; only exact
+dated official text can do so. Across the 21,607 unique original leads, 18,386
+remain outside these title-priority queues; longer suspension intervals remain open.
 
 Full dataset created/audited/frozen = NO; verified safe start remains unresolved.
 Development, Validation and Official OOS are NOT_RUN. PR #12 remains open and

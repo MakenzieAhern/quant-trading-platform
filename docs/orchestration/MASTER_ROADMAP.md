@@ -3,10 +3,10 @@
 ## Authoritative 2026-09-16 R5 route
 
 P0, SSE/SZSE ST, and the full 40,376-event ordinary-A cash ledger are accepted.
-The active R5 task is official SZSE resumption-boundary closure (2,380 unresolved
+The active R5 task is official SZSE resumption-boundary closure (2,026 unresolved
 of 22,077 target events), then the remaining full-range authority, safe-start,
-materialization and audit gates. The first checksum-bound CNINFO document batch
-has closed 315 new boundaries; the second batch is running. No title or raw
+materialization and audit gates. Two checksum-bound CNINFO document batches
+have closed 315 + 354 new boundaries; the day-15–44 extension is running. No title or raw
 document is accepted as an event fact without exact
 official effective-dated evidence. Docker remains a separate deferred engineering
 issue. The full dataset is not created, audited or frozen and no research study has

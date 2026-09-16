@@ -15,6 +15,7 @@ from app.data.catalog.freeze import write_immutable
 from scripts.batch_r5_corporate_action_sources import publication_date
 from scripts.collect_distribution_notices import complete_announcements
 from scripts.reconcile_sse_cninfo import QUERY, fetch
+from scripts.reconcile_szse_resumptions import unresolved_facts
 
 
 def query_windows(unresolved: list[dict], suspensions: list[dict], days: int) -> list[dict]:
@@ -85,6 +86,13 @@ def offset_windows(windows: list[dict], offset_days: int) -> list[dict]:
     return result
 
 
+def check_page_progress(page: dict, seen: set[tuple[str, ...]]) -> None:
+    signature = tuple(str(row["announcementId"]) for row in page.get("announcements") or [])
+    if page["hasMore"] and (not signature or signature in seen):
+        raise ValueError("TARGETED_RESUMPTION_PAGINATION_NONPROGRESS")
+    seen.add(signature)
+
+
 def org_ids(root: Path, symbols: set[str]) -> dict[str, str]:
     values = defaultdict(set)
     for path in sorted(root.rglob("*.json")):
@@ -126,7 +134,7 @@ def main() -> None:
 
     socket.getaddrinfo = functools.lru_cache(maxsize=32)(socket.getaddrinfo)
     socket.getaddrinfo("www.cninfo.com.cn", 443)
-    unresolved = json.loads(args.unresolved.read_bytes())
+    unresolved = unresolved_facts(json.loads(args.unresolved.read_bytes()))
     suspensions = json.loads(args.suspensions.read_bytes())["szse"]
     windows = offset_windows(
         query_windows(unresolved, suspensions, args.window_days + args.window_offset_days),
@@ -158,7 +166,7 @@ def main() -> None:
             return value
         if circuit.is_set():
             return {**window, "status": "NOT_ATTEMPTED_AFTER_TRANSIENT_NETWORK_CIRCUIT"}
-        pages, sources = [], []
+        pages, sources, seen_pages = [], [], set()
         try:
             for number in range(1, 101):
                 params = {
@@ -180,6 +188,7 @@ def main() -> None:
                 name = f"metadata-v1/{window['symbol']}-{identity}-p{number:03}.json"
                 page = json.loads(fetch(args.root, name, QUERY, params))
                 sources.append(json.loads((args.root / (name + ".meta.json")).read_bytes()))
+                check_page_progress(page, seen_pages)
                 pages.append(page)
                 if not page["hasMore"]:
                     break

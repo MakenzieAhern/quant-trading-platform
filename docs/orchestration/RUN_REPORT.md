@@ -8,9 +8,9 @@ input order PASS. Canonical manifest SHA:
 `679f003562068bbacbc7de884c522339d07313d77ed5c9df22c5e014f487b7fb`.
 
 The official suspension audit has SSE 16,393 events / zero unresolved and SZSE
-22,077 events / 2,380 unresolved, with zero conflicts and 8,425 official document
+22,077 events / 2,026 unresolved, with zero conflicts and 8,779 official document
 supplements. Canonical manifest SHA:
-`3f2c20f62468fa02942fd80a83e4f6fff017ee619351ccdba0e9b585e542fdd2`.
+`cc4b6cae2aa2402d629f936e08f93b6963cb5756f4c04ebcfe7629cbb1fa9eee`.
 The all-announcement CNINFO query completed 2,686/2,696 initial 14-day windows;
 nine failed windows were closed in a new immutable retry batch, while unstable
 pagination for 002665 was resolved by two disjoint seven-day official queries.
@@ -23,7 +23,12 @@ This is metadata coverage, not resumption acceptance. The self-check result PDF 
 The 2,011-document first title queue completed with zero download failures and
 315 newly bound exact resumptions (first-pass reconciliation manifest
 `2092a8224da2a424542ba63c35b82b07049d5f8ec140d977e890f1d0bfd130f5`).
-The disjoint 1,209-document second queue remains in progress. These are retrieval
+The disjoint 1,209-document second queue closed 354 more exact boundaries
+(reconciliation manifest `4b00c2482e07c4c4ccbca0c1edeffc8c61e05fdbfd2e9ba3006081d0689e4534`).
+One HTTP 502 was recovered with a one-document official retry; it established no
+additional exact date. The source audit now actually replays both exchanges in
+reverse input order. A nonoverlapping day-15–44 official metadata extension is
+running against the pre-second-pass 2,380-event gap set. These are retrieval
 priorities, not complete coverage.
 Full dataset and research studies remain unstarted; no freeze or PR merge.
 

@@ -226,10 +226,23 @@ def main() -> None:
             raise ValueError("REUSED_MENU_BYTES_CHANGED")
     index = _identity_index(master)
     supplements, resumption_hashes = load_resumption_supplements(args.szse_resumptions)
-    sse, sse_non_target, sse_duplicates = normalize_sse(observations["sse"], index, source_hashes)
-    szse, unresolved, conflicts, szse_non_target, szse_duplicates = normalize_szse(
-        observations["szse"], index, source_hashes, _lifecycle_ends(master), supplements
+    lifecycle_end = _lifecycle_ends(master)
+    sse_result = normalize_sse(observations["sse"], index, source_hashes)
+    szse_result = normalize_szse(
+        observations["szse"], index, source_hashes, lifecycle_end, supplements
     )
+    if sse_result != normalize_sse(list(reversed(observations["sse"])), index, source_hashes):
+        raise ValueError("SSE_SUSPENSION_INPUT_ORDER_CHANGED")
+    if szse_result != normalize_szse(
+        list(reversed(observations["szse"])),
+        index,
+        source_hashes,
+        lifecycle_end,
+        supplements,
+    ):
+        raise ValueError("SZSE_SUSPENSION_INPUT_ORDER_CHANGED")
+    sse, sse_non_target, sse_duplicates = sse_result
+    szse, unresolved, conflicts, szse_non_target, szse_duplicates = szse_result
     authority = {
         "parser_version": "FULL_OFFICIAL_SUSPENSION_AUDIT_V1",
         "parser_sha256": sha256_file(Path(__file__)),

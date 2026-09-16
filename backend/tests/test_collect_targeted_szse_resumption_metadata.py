@@ -1,4 +1,7 @@
+import pytest
+
 from scripts.collect_targeted_szse_resumption_metadata import (
+    check_page_progress,
     offset_windows,
     query_windows,
     queue_rows,
@@ -35,3 +38,11 @@ def test_query_windows_stop_before_next_suspension_and_queue_deduplicates():
     assert len(queue_rows([result, result], set())) == 1
     assert retry_windows(windows, {"failures": [windows[0]]}) == windows
     assert offset_windows(query_windows(unresolved, suspensions, 14), 3)[0]["start"] == "2010-01-07"
+
+
+def test_repeated_official_page_is_not_mistaken_for_complete_coverage():
+    seen = set()
+    page = {"hasMore": True, "announcements": [{"announcementId": "1"}]}
+    check_page_progress(page, seen)
+    with pytest.raises(ValueError, match="PAGINATION_NONPROGRESS"):
+        check_page_progress(page, seen)
