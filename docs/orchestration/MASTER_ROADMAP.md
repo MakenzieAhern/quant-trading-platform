@@ -26,14 +26,14 @@ That extension closed 528/528 applicable official windows (9,280 records,
 zero query gaps; manifest
 `fbbd59452682fd3480a0f6ac7ad44fd0250d2fdacfcd89b2bc87fab5aceeceac`),
 and a disjoint 217-document priority batch completed with zero failures but no
-new exact resumption boundary. SZSE remains 1,921 unresolved. Separately, 511
+new exact resumption boundary. SZSE remains 1,921 unresolved. Separately, 512
 URL-less P1 cash requests were resolved by exact official issuer-notice
 substitutions. Another 1,076 exact issuer-amount/official exchange-date composites
 (including 50 exchange-disambiguated multi-date notices and 96 approved-policy
 differentiated-public-A notices and 13 exact multi-amount notices) reduced the
 provisional P1 remainder to 708 facts / 692 unique documents. Reuse of the
 already accepted official SSE ST fact-set authority closes 61 stale P1 document
-requirements, leaving 647 facts / 631 unique documents.
+requirements, leaving 646 facts / 630 unique documents.
 Full Dataset,
 safe-start, study, freeze and merge gates remain locked.
 

@@ -48,6 +48,18 @@ def test_url_less_requirement_uses_exact_official_issuer_notice():
     rows = select([requirement], [], [], [event], master, [source])
     assert len(rows) == 1
     assert rows[0]["classification"] == "AUTHORITATIVE_OFFICIAL_SOURCE_SUBSTITUTION"
+    event["event"]["source_provider"] = "OFFICIAL_SZSE_EXCHANGE_CENSUS"
+    event["event"]["source_url"] = "https://www.szse.cn/exchange-row"
+    rows = select([requirement], [], [], [event], master, [source])
+    assert rows[0]["classification"] == "INDEPENDENT_OFFICIAL_ISSUER_SOURCE_SUBSTITUTION"
+    event["event"]["source_provider"] = "OFFICIAL_ISSUER_CNINFO_EXCHANGE_RECONCILED"
+    event["event"]["source_document"] = "转债转股价格调整公告"
+    assert select([requirement], [], [], [event], master, [source])[0]["classification"] == (
+        "INDEPENDENT_OFFICIAL_ISSUER_SOURCE_SUBSTITUTION"
+    )
+    assert (
+        select([requirement], [], [], [event], master, [source, {**source, "url": url + "2"}]) == []
+    )
     source["title"] = "提议分红公告"
     assert select([requirement], [], [], [event], master, [source]) == []
 

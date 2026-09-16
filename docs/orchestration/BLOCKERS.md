@@ -28,7 +28,7 @@ bounded retries; its disjoint 360-document batch finished with zero failures.
 Day-271–360 targeted official metadata closed all 528 applicable windows;
 the disjoint 217-document priority batch finished with zero retrieval failures
 but no exact new resumption. A separate exact official-PDF substitution pass
-closed 511 URL-less P1 cash requests. A second issuer-amount plus official
+closed 512 URL-less P1 cash requests. A second issuer-amount plus official
 exchange-date reconciliation closed another 1,076, including 50 issuer PDFs
 with multiple dates uniquely disambiguated by an official exchange row and
 96 notices handled under the already approved ordinary-public-A differentiated
@@ -36,12 +36,12 @@ cash policy plus 13 exact multi-amount issuer notices. Other conflicting issuer
 dates remain open. The provisional P1 gap is 708 facts / 692 unique
 documents.
 The strict rejected-candidate audit (manifest
-`ebe5118b7dd612fa1193f0e31f0cb19af9b9f2b245a1dae616abaa305e36e645`)
+`680fb5c58f672dcb24687247581bd482e0d215ee83d0093ac1d6393f496a9d31`)
 leaves 71 issuer/exchange date conflicts unaccepted; no source precedence or
 economic policy was invented. The already accepted SSE ST fact set separately
 closes 61 stale P1 source-file requests (manifest
 `1b3cbf245ee1212499eec315a218cc1de182ee0a6514e3046653c7ad23d1ebc8`),
-reducing the residual P1 gap to 647 facts / 631 unique documents.
+reducing the residual P1 gap to 646 facts / 630 unique documents.
 Full Dataset gates
 remain locked. Older sections below are superseded where they call cash PASS.
 

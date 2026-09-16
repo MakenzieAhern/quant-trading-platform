@@ -4,6 +4,7 @@ import argparse
 import json
 import re
 from collections import defaultdict
+from datetime import date
 from decimal import Decimal
 from pathlib import Path
 
@@ -39,6 +40,9 @@ def select(requirements, public, out_of_scope, cash, master, sources):
         row["document_id"] for row in out_of_scope
     }
     by_source = {row["url"]: row for row in sources}
+    sources_by_symbol = defaultdict(list)
+    for row in sources:
+        sources_by_symbol[row["issuer"]].append(row)
     by_cash = defaultdict(list)
     by_symbol = defaultdict(list)
     for row in cash:
@@ -75,20 +79,38 @@ def select(requirements, public, out_of_scope, cash, master, sources):
             continue
         accepted = peers[0]
         event = accepted["event"]
-        if (
-            not event["source_provider"].startswith("OFFICIAL_ISSUER_CNINFO_")
-            or not event["source_url"].startswith("https://static.cninfo.com.cn/finalpage/")
-            or not final_issuer_title(event["source_document"])
-        ):
-            continue
-        source = by_source.get(event["source_url"])
+        same_source = event["source_provider"].startswith(
+            "OFFICIAL_ISSUER_CNINFO_"
+        ) and final_issuer_title(event["source_document"])
+        if same_source:
+            source = by_source.get(event["source_url"])
+        else:
+            candidates = [
+                row
+                for row in sources_by_symbol[symbol]
+                if row["retrieval_status"] == "PASS"
+                and row["published_on"] <= record
+                and (date.fromisoformat(record) - date.fromisoformat(row["published_on"])).days
+                <= 60
+                and final_issuer_title(row["title"])
+            ]
+            if len(candidates) != 1:
+                continue
+            source = candidates[0]
         if not source or (
             source["retrieval_status"] != "PASS"
+            or not source["url"].startswith("https://static.cninfo.com.cn/finalpage/")
             or source["issuer"] != symbol
-            or source["title"] != event["source_document"]
-            or source["published_on"] != event["announcement_date"]
+            or not final_issuer_title(source["title"])
             or source["published_on"] > record
-            or source["source_sha256"] != event["source_document_sha256"]
+            or (
+                same_source
+                and (
+                    source["title"] != event["source_document"]
+                    or source["published_on"] != event["announcement_date"]
+                    or source["source_sha256"] != event["source_document_sha256"]
+                )
+            )
         ):
             continue
         selected.append(
@@ -104,7 +126,11 @@ def select(requirements, public, out_of_scope, cash, master, sources):
                 "substitute_source_url": source["url"],
                 "substitute_source_sha256": source["source_sha256"],
                 "substitute_source_path": source["source_path"],
-                "classification": "AUTHORITATIVE_OFFICIAL_SOURCE_SUBSTITUTION",
+                "classification": (
+                    "AUTHORITATIVE_OFFICIAL_SOURCE_SUBSTITUTION"
+                    if same_source
+                    else "INDEPENDENT_OFFICIAL_ISSUER_SOURCE_SUBSTITUTION"
+                ),
             }
         )
     return sorted(selected, key=lambda row: row["document_id"])

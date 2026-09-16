@@ -36,10 +36,13 @@ notices remain open (manifest
 The provisional fact-level count is now 14,025/16,320 established or excluded
 by scope; 2,295 facts / 2,279 unique documents remain, including 326
 distribution documents at this step. A further source-hash and text-verified
-substitution audit linked 511 URL-less cash requests to already retained final
+substitution audit linked 512 URL-less cash requests to already retained final
 CNINFO issuer notices with exact point-in-time identity, record/ex dates and
 gross amount (manifest
-`32e3fc7d17687ea6f22e2d8a4f1dc1f567af7de59ef148ea62ef842da028f9ed`).
+`b668a82fa6313ae92af873c0efd63750925f9e2b815204c8340c9b39060f3cb3`).
+The additional 002859 requirement uses an independent retained final issuer
+notice instead of the accepted event's derivative bond-price adjustment source;
+official PDF gross cash and both entitlement dates match exactly.
 For another 917 URL-less cash requests, the official issuer PDF independently
 establishes the exact gross amount and the accepted official exchange census
 establishes missing record/ex dates; 116 issuer-date conflicts or multi-date
@@ -51,10 +54,10 @@ dates and 44 with exchange-completed dates). Thirteen more exact gross terms
 were selected from multi-amount issuer notices by the already existing parser
 using official exchange amounts, with exact post-parse equality required.
 The 1,076-document composite manifest is
-`ebe5118b7dd612fa1193f0e31f0cb19af9b9f2b245a1dae616abaa305e36e645`.
+`680fb5c58f672dcb24687247581bd482e0d215ee83d0093ac1d6393f496a9d31`.
 Its rejected-candidate ledger retains 80 exact-source notices: 71 official
 date conflicts, three nonunique cash terms, four issuer-header mismatches and
-two invalid page sequences. These remain within the 647 unresolved facts.
+two invalid page sequences. These remain within the 646 unresolved facts.
 An independent non-title SZSE resumption probe checked the first unresolved
 event, 000516 at 2010-01-04 13:00. The retained official January SZSE table
 has a blank resume field (SHA-256
@@ -69,8 +72,8 @@ The accepted official SSE ST fact-set authority also closes 61 obsolete P1
 ST-document requests (59 chain gaps and two legacy PDF mirror links) with
 per-request mapping and no new ST event (manifest
 `1b3cbf245ee1212499eec315a218cc1de182ee0a6514e3046653c7ad23d1ebc8`).
-The current provisional P1 count is 15,673/16,320 established or out of scope;
-1,677 are explicit official substitutions and 647 facts / 631 unique
+The current provisional P1 count is 15,674/16,320 established or out of scope;
+1,678 are explicit official substitutions and 646 facts / 630 unique
 documents remain. Three mixed notices have their
 cash leg reconciled but their bonus leg remains pending. Cash full-census authority
 and dependent P1 fact closure remain PARTIAL/provisional. P0/ST authorities remain
