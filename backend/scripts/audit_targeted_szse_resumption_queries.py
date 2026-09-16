@@ -23,6 +23,15 @@ def contiguous(expected: dict, windows: list[dict]) -> bool:
     return cursor == end + timedelta(days=1)
 
 
+def expected_query_windows(
+    unresolved: list[dict], suspensions: list[dict], days: int, offset: int
+) -> dict[tuple[str, str], dict]:
+    from scripts.collect_targeted_szse_resumption_metadata import offset_windows, query_windows
+
+    windows = offset_windows(query_windows(unresolved, suspensions, days + offset), offset)
+    return {(row["security_id"], row["suspended_at"]): row for row in windows}
+
+
 def load(root: Path) -> tuple[dict, list[dict]]:
     path = root / "metadata-manifest-v1.json"
     report = json.loads(path.read_bytes())
@@ -58,6 +67,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, action="append", required=True)
     parser.add_argument("--unresolved", type=Path, required=True)
+    parser.add_argument("--suspensions", type=Path)
+    parser.add_argument("--window-days", type=int, default=14)
+    parser.add_argument("--window-offset-days", type=int, default=0)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     unresolved = json.loads(args.unresolved.read_bytes())
@@ -65,8 +77,25 @@ def main() -> None:
         unresolved = unresolved["remaining_unresolved"]
     _, batches = zip(*(load(root) for root in args.root), strict=True)
     originals = {(row["security_id"], row["suspended_at"]): row for row in batches[0]}
-    expected = {(row["security_id"], row["suspended_at"]) for row in unresolved}
-    if set(originals) != expected or len(originals) != len(batches[0]):
+    if args.suspensions:
+        expected_windows = expected_query_windows(
+            unresolved,
+            json.loads(args.suspensions.read_bytes())["szse"],
+            args.window_days,
+            args.window_offset_days,
+        )
+    else:
+        expected_windows = {(row["security_id"], row["suspended_at"]): row for row in unresolved}
+    expected = set(expected_windows)
+    if (
+        set(originals) != expected
+        or len(originals) != len(batches[0])
+        or any(
+            (originals[key]["start"], originals[key]["end"]) != (row["start"], row["end"])
+            for key, row in expected_windows.items()
+            if "start" in row
+        )
+    ):
         raise ValueError("METADATA_ORIGINAL_FACT_SET_MISMATCH")
     complete = defaultdict(list)
     for batch in batches:
@@ -87,6 +116,11 @@ def main() -> None:
         "parser_version": "SZSE_TARGETED_RESUMPTION_QUERY_CLOSURE_V1",
         "parser_sha256": sha256_file(Path(__file__)),
         "unresolved_input_sha256": sha256_file(args.unresolved),
+        "suspensions_input_sha256": sha256_file(args.suspensions) if args.suspensions else None,
+        "window_days": args.window_days,
+        "window_offset_days": args.window_offset_days,
+        "input_unresolved_facts": len(unresolved),
+        "offset_inapplicable_facts": len(unresolved) - len(expected),
         "metadata_manifest_sha256s": [
             sha256_file(root / "metadata-manifest-v1.json") for root in args.root
         ],

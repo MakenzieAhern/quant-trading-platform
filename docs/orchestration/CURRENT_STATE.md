@@ -8,12 +8,19 @@ product was used. Full cash coverage v35 reconciles all 40,376 official ordinary
 cash events to 40,376 accepted events with zero unresolved, zero accepted extras,
 and checksum/input-order repeatability PASS (manifest
 `679f003562068bbacbc7de884c522339d07313d77ed5c9df22c5e014f487b7fb`).
+The P1 fact-level replay now directly matches 12,965 previously open CNINFO
+implementation-document requests to the same official URLs in that accepted
+cash ledger, with point-in-time identity (including symbol changes), issuer,
+date and terms checks. This establishes 13,726/16,320 original P1 facts and
+leaves 2,594 facts / 2,578 unique document requirements explicit; no new
+official-source substitution was claimed. Immutable manifest:
+`ff54f0e67bce7331f02d8d29fae926b7900f695a696d45bf4851c62ebf0f9eda`.
 
 Full official suspension audit currently has SSE 16,393 target events / zero
-unresolved and SZSE 22,077 target events / 2,026 unresolved official resumption
-boundaries, zero conflicts, 8,779 official supplemental resumptions. Authority is
+unresolved and SZSE 22,077 target events / 1,952 unresolved official resumption
+boundaries, zero conflicts, 8,853 official supplemental resumptions. Authority is
 `PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES` (manifest
-`cc4b6cae2aa2402d629f936e08f93b6963cb5756f4c04ebcfe7629cbb1fa9eee`).
+`d58f8b4ff203db8d8c922e675810e727a7978836e04a0e3c74fbe38dc36b71a2`).
 One newly verified example is 002665: the official CNINFO self-check result
 announcement gives 2014-03-27 resumption after 2014-03-21 suspension. The original
 14-day CNINFO metadata pass completed 2,686/2,696 windows; targeted retries closed
@@ -27,10 +34,23 @@ official PDF queues (2,011 direct suspension titles; 1,209 broader material titl
 were built from durable receipts. The first batch closed 315 exact new resumptions;
 the second closed another 354. Its sole HTTP 502 was recovered in a separate
 checksum-bound retry, but that document did not establish an exact resumption.
-An official metadata extension now queries days 15–44 after the 2,380 pre-second-pass
-unresolved events. Title routing does not establish any resumption fact; only exact
-dated official text can do so. Across the 21,607 unique original leads, 18,386
-remain outside these title-priority queues; longer suspension intervals remain open.
+The day-15–44 official metadata extension closed all 2,022 applicable windows
+after a page-size-30 correction to CNINFO pagination. It verified 17,062 official
+query records, zero unclosed windows and checksum/input-order repeatability
+(closure manifest `f489b7ce45a97cbfcec8f3f5980cd298cd3c41ee7edb90f8d5240970134747b1`).
+Two disjoint title-priority PDF batches (1,389 + 127 documents) added 29 + 2
+exactly bound resumptions. Their one transient HTTP 502 was separately recovered;
+it was a continuing-suspension notice, not a resumption. The day-45–90 official
+metadata extension closed all 1,278 applicable windows (15,071 records) after
+three failed windows were retried in 21 bounded seven-day queries; query-closure
+manifest `f5a4e5d43c0c2ee5a70cccf3722b461471ca3dc8cfff064a2115930f22152925`.
+Separately, 87 hearing-result and five review-outcome official PDFs added 38 + 5
+exact resumption boundaries, accepted by the combined reverse-order suspension
+audit. A disjoint 1,313-document priority batch from the day-45–90 metadata is
+now in progress.
+Title routing and metadata coverage do not establish resumption facts; only exact
+dated official text can do so. Many lower-priority document leads and longer
+suspension intervals remain open.
 
 Full dataset created/audited/frozen = NO; verified safe start remains unresolved.
 Development, Validation and Official OOS are NOT_RUN. PR #12 remains open and

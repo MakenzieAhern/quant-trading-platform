@@ -6,6 +6,7 @@ from scripts.collect_targeted_szse_resumption_metadata import (
     query_windows,
     queue_rows,
     retry_windows,
+    split_failed_windows,
 )
 
 
@@ -46,3 +47,20 @@ def test_repeated_official_page_is_not_mistaken_for_complete_coverage():
     check_page_progress(page, seen)
     with pytest.raises(ValueError, match="PAGINATION_NONPROGRESS"):
         check_page_progress(page, seen)
+
+
+def test_failed_window_splits_into_disjoint_daily_queries():
+    failure = {
+        "status": "FAILED",
+        "security_id": "CN-A:SZSE:000001",
+        "symbol": "000001",
+        "suspended_at": "2010/01/04 09:30",
+        "start": "2010-01-18",
+        "end": "2010-01-20",
+    }
+    windows = split_failed_windows({"failures": [failure]}, 1)
+    assert [(row["start"], row["end"]) for row in windows] == [
+        ("2010-01-18", "2010-01-18"),
+        ("2010-01-19", "2010-01-19"),
+        ("2010-01-20", "2010-01-20"),
+    ]

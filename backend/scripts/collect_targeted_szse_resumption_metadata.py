@@ -77,6 +77,24 @@ def retry_windows(windows: list[dict], report: dict) -> list[dict]:
     return [row for row in windows if (row["security_id"], row["suspended_at"]) in failed]
 
 
+def split_failed_windows(report: dict, days: int) -> list[dict]:
+    if days < 1:
+        raise ValueError("SPLIT_DAYS_MUST_BE_POSITIVE")
+    windows = []
+    for failure in report["failures"]:
+        if failure["status"] != "FAILED":
+            raise ValueError("SPLIT_REQUIRES_FAILED_WINDOW")
+        start, end = date.fromisoformat(failure["start"]), date.fromisoformat(failure["end"])
+        if start > end:
+            raise ValueError("FAILED_WINDOW_REVERSED")
+        identity = {key: failure[key] for key in ("security_id", "symbol", "suspended_at")}
+        while start <= end:
+            boundary = min(start + timedelta(days=days - 1), end)
+            windows.append({**identity, "start": str(start), "end": str(boundary)})
+            start = boundary + timedelta(days=1)
+    return sorted(windows, key=lambda row: (row["start"], row["security_id"]))
+
+
 def offset_windows(windows: list[dict], offset_days: int) -> list[dict]:
     result = []
     for row in windows:
@@ -124,6 +142,7 @@ def main() -> None:
     parser.add_argument("--unresolved", type=Path, required=True)
     parser.add_argument("--existing-manifest", type=Path, action="append", default=[])
     parser.add_argument("--retry-failures-from", type=Path)
+    parser.add_argument("--split-failed-windows-days", type=int)
     parser.add_argument("--window-days", type=int, default=14)
     parser.add_argument("--window-offset-days", type=int, default=0)
     parser.add_argument("--page-size", type=int, choices=(30, 100), default=30)
@@ -136,12 +155,25 @@ def main() -> None:
     socket.getaddrinfo("www.cninfo.com.cn", 443)
     unresolved = unresolved_facts(json.loads(args.unresolved.read_bytes()))
     suspensions = json.loads(args.suspensions.read_bytes())["szse"]
-    windows = offset_windows(
-        query_windows(unresolved, suspensions, args.window_days + args.window_offset_days),
-        args.window_offset_days,
-    )
-    if args.retry_failures_from:
-        windows = retry_windows(windows, json.loads(args.retry_failures_from.read_bytes()))
+    if args.split_failed_windows_days is not None:
+        if not args.retry_failures_from:
+            raise ValueError("SPLIT_REQUIRES_FAILURE_MANIFEST")
+        prior = json.loads(args.retry_failures_from.read_bytes())
+        if prior["manifest_sha256"] != canonical_sha256(
+            {key: value for key, value in prior.items() if key != "manifest_sha256"}
+        ):
+            raise ValueError("FAILURE_MANIFEST_CHANGED")
+        windows = split_failed_windows(prior, args.split_failed_windows_days)
+        identities = {(row["security_id"], row["suspended_at"]) for row in unresolved}
+        if any((row["security_id"], row["suspended_at"]) not in identities for row in windows):
+            raise ValueError("FAILED_WINDOW_OUTSIDE_UNRESOLVED_SET")
+    else:
+        windows = offset_windows(
+            query_windows(unresolved, suspensions, args.window_days + args.window_offset_days),
+            args.window_offset_days,
+        )
+        if args.retry_failures_from:
+            windows = retry_windows(windows, json.loads(args.retry_failures_from.read_bytes()))
     organizations = org_ids(args.org_metadata_root, {row["symbol"] for row in windows})
     processed_urls = {
         row["url"]
@@ -255,8 +287,15 @@ def main() -> None:
         "retry_failures_from_sha256": (
             sha256_file(args.retry_failures_from) if args.retry_failures_from else None
         ),
-        "window_days": args.window_days,
-        "window_offset_days": args.window_offset_days,
+        "window_days": (
+            args.split_failed_windows_days
+            if args.split_failed_windows_days is not None
+            else args.window_days
+        ),
+        "window_offset_days": (
+            None if args.split_failed_windows_days is not None else args.window_offset_days
+        ),
+        "split_failed_windows_days": args.split_failed_windows_days,
         "page_size": args.page_size,
         "query_windows": len(windows),
         "complete_windows": len(results) - len(failures),

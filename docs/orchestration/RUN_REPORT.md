@@ -6,11 +6,17 @@ The full cash audit v35 accepted 40,376/40,376 official ordinary-A cash events,
 with zero unresolved or accepted extras, checksum repeatability PASS and reverse
 input order PASS. Canonical manifest SHA:
 `679f003562068bbacbc7de884c522339d07313d77ed5c9df22c5e014f487b7fb`.
+The P1 fact-level replay conservatively closes 12,965 open requests against
+the same official cash-document URLs, checking publication date and the
+effective-dated master identity. Established P1 facts are now 13,726/16,320;
+2,594 facts / 2,578 unique documents remain unestablished, with zero new
+source substitutions claimed. Canonical manifest SHA:
+`ff54f0e67bce7331f02d8d29fae926b7900f695a696d45bf4851c62ebf0f9eda`.
 
 The official suspension audit has SSE 16,393 events / zero unresolved and SZSE
-22,077 events / 2,026 unresolved, with zero conflicts and 8,779 official document
+22,077 events / 1,952 unresolved, with zero conflicts and 8,853 official document
 supplements. Canonical manifest SHA:
-`cc4b6cae2aa2402d629f936e08f93b6963cb5756f4c04ebcfe7629cbb1fa9eee`.
+`d58f8b4ff203db8d8c922e675810e727a7978836e04a0e3c74fbe38dc36b71a2`.
 The all-announcement CNINFO query completed 2,686/2,696 initial 14-day windows;
 nine failed windows were closed in a new immutable retry batch, while unstable
 pagination for 002665 was resolved by two disjoint seven-day official queries.
@@ -28,8 +34,22 @@ The disjoint 1,209-document second queue closed 354 more exact boundaries
 One HTTP 502 was recovered with a one-document official retry; it established no
 additional exact date. The source audit now actually replays both exchanges in
 reverse input order. A nonoverlapping day-15–44 official metadata extension is
-running against the pre-second-pass 2,380-event gap set. These are retrieval
-priorities, not complete coverage.
+complete for all 2,022 applicable original windows, after a targeted 67-window
+page-size-30 retry corrected the official API's repeated-page behavior. The
+independent query-closure audit verifies 17,062 official records, zero unclosed
+windows, checksums and input order (manifest
+`f489b7ce45a97cbfcec8f3f5980cd298cd3c41ee7edb90f8d5240970134747b1`).
+Title-priority PDF batches of 1,389 and 127 official leads added 29 and two
+accepted exact dates respectively. One transient 502 was recovered and proved
+to be a continuing-suspension notice. The day-45–90 targeted query closed all
+1,278 applicable windows after three failures were recovered in 21 seven-day
+queries, with 15,071 official metadata records and zero unclosed windows
+(closure manifest `f5a4e5d43c0c2ee5a70cccf3722b461471ca3dc8cfff064a2115930f22152925`).
+Ninety-two disjoint hearing/review-result official PDFs added 43 exact resumption
+boundaries (38 + 5); the combined authority audit accepted them, leaving 1,952.
+The
+day-45–90 title-priority PDF batch has 1,313 leads and is active. Query and
+title coverage are not event acceptance.
 Full dataset and research studies remain unstarted; no freeze or PR merge.
 
 ## 2026-09-16 full official SSE/SZSE ST authority closure

@@ -2,11 +2,16 @@
 
 ## 2026-09-16 current — no human blocker; official SZSE resumption facts remain
 
-P0 public reconstruction, SSE/SZSE ST and full ordinary-A cash are PASS. The
-current material R5 gap is 2,026 unresolved SZSE official resumption/lifecycle
+P0 public reconstruction, SSE/SZSE ST and full ordinary-A cash are PASS.
+P1 fact-level same-source cash reconciliation leaves 2,594 unestablished facts
+across 2,578 unique document requirements; this is not a paid-export mandate.
+The current material R5 gap is 1,952 unresolved SZSE official resumption/lifecycle
 boundaries out of 22,077 target suspension events; SSE suspension has zero gaps.
-The bounded official CNINFO day-15–44 extension and exact-date
-reconciliation are active, so this is not yet an irreducible source-input blocker.
+The bounded official CNINFO day-45–90 metadata extension is complete, while
+its prioritized PDF review and exact-date reconciliation are active. Another
+43 exact boundaries have been accepted by the combined authority audit. The
+remaining official review is active, so this is not yet an irreducible
+source-input blocker.
 Title-filtered queues are prioritization only; no absent title is presumed NORMAL
 or resumed. Full dataset and safe-start gates remain unproven. Docker is separately
 deferred/nonblocking for source work. Older blocker sections below are historical.
