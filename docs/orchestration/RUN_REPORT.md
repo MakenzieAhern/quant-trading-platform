@@ -47,7 +47,21 @@ candidates were initially withheld. Fifty of those PDFs do contain the exact
 dates among multiple extracted dates; an official exchange row uniquely
 disambiguates them. The 66 with missing or contradictory expected dates remain
 open. Combined composite manifest:
-`e1b3a501cf24c5b89c16aea80317f96919e9bfe3472b26f835133aa186bbfced`.
+`30b57f1cea59097dff5577d5e59be98f4f0727cadcb77f3640e679764ebcea21`.
+The same report classifies all 189 remaining exact-source candidates without
+silently admitting them: 96 differentiated-holder reviews, 67 official date
+conflicts, 20 nonunique cash terms, four issuer-header mismatches and two
+invalid page sequences. These remain within the 817 unresolved facts.
+An independent non-title SZSE resumption probe checked the first unresolved
+event, 000516 at 2010-01-04 13:00. The retained official January SZSE table
+has a blank resume field (SHA-256
+`ff12178efac04b300ed3b19f6ce6c0125c6e938d46bced4110d2a9db6812b9f3`);
+three exact CNINFO issuer notices published 2010-01-05 were retrieved and
+text-checked (PDF SHA-256 `345d2c52d3d8f59fd715058691240a57c72081b64c76d2a274591d32dcf16427`,
+`4ed43f959839382977fa78b9c0f6ae909103bda6df9feead1c50ade78c4daaf3`,
+`2070812d6948063fa775671b7679d327e8bd6cf91d605ff704d94bcb8b414fec`).
+None states an exact resumption boundary; later same-symbol suspension is not
+treated as proof of this earlier resumption.
 The current provisional P1 count is 15,503/16,320 established or out of scope;
 1,507 are explicit official substitutions and 817 facts / 801 unique
 documents remain. Three mixed notices have their

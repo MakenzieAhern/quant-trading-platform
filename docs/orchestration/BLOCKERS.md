@@ -33,6 +33,10 @@ exchange-date reconciliation closed another 967, including 50 issuer PDFs
 with multiple dates uniquely disambiguated by an official exchange row. Other
 conflicting issuer dates remain open. The provisional P1 gap is 817 facts / 801 unique
 documents.
+The strict rejected-candidate audit (manifest
+`30b57f1cea59097dff5577d5e59be98f4f0727cadcb77f3640e679764ebcea21`)
+leaves 96 differentiated-holder terms and 67 issuer/exchange date conflicts
+unaccepted; no source precedence or economic policy was invented.
 Full Dataset gates
 remain locked. Older sections below are superseded where they call cash PASS.
 

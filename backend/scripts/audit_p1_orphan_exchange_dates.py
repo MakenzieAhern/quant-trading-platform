@@ -97,12 +97,18 @@ def main() -> None:
     )
     if targets != reversed_targets:
         raise ValueError("EXCHANGE_INPUT_ORDER_CHANGED")
-    closed = []
+    closed, rejected = [], []
     for row in candidates:
         if row["document_id"] in closed_ids:
             continue
+        rejection = {
+            "document_id": row["document_id"],
+            "substitute_source_url": row["substitute_source_url"],
+            "substitute_source_sha256": row["substitute_source_sha256"],
+        }
         key = row["security_id"], row["record_date"], row["ex_date"]
         if key not in targets:
+            rejected.append({**rejection, "reason": "NO_EXACT_OFFICIAL_EXCHANGE_TARGET"})
             continue
         pdf = Path(row["substitute_source_path"])
         if not pdf.is_absolute():
@@ -121,10 +127,24 @@ def main() -> None:
         try:
             amount = gross_cash(extracted["pages"], row["issuer"])
             records, ex_dates = notice_dates(extracted["pages"])
-        except ValueError:
+        except ValueError as exc:
+            rejected.append({**rejection, "reason": str(exc)})
             continue
         classification = classify_dates(row, records, ex_dates)
-        if amount != Decimal(row["cash_per_share"]) or classification is None:
+        if amount != Decimal(row["cash_per_share"]):
+            rejected.append({**rejection, "reason": "ISSUER_CASH_AMOUNT_CONFLICT"})
+            continue
+        if classification is None:
+            rejected.append(
+                {
+                    **rejection,
+                    "reason": "ISSUER_DATE_CONFLICT",
+                    "official_exchange_record_date": row["record_date"],
+                    "official_exchange_ex_date": row["ex_date"],
+                    "issuer_record_dates": records,
+                    "issuer_ex_dates": ex_dates,
+                }
+            )
             continue
         closed.append(
             {
@@ -136,8 +156,10 @@ def main() -> None:
                 "classification": classification,
             }
         )
+    if len(candidates) != len(closed_ids) + len(closed) + len(rejected):
+        raise ValueError("P1_CANDIDATE_CLASSIFICATION_INCOMPLETE")
     report = {
-        "report_version": "P1_ORPHAN_CASH_OFFICIAL_COMPOSITE_DATES_V1",
+        "report_version": "P1_ORPHAN_CASH_OFFICIAL_COMPOSITE_DATES_V2",
         "parser_sha256": sha256_file(Path(__file__)),
         "cash_parser_sha256": sha256_file(
             Path(__file__).with_name("reconcile_distribution_cash.py")
@@ -163,6 +185,9 @@ def main() -> None:
         },
         "closed_documents": len(closed),
         "closed_facts": sum(len(row["affected_events"]) for row in closed),
+        "rejected_documents": len(rejected),
+        "rejected_counts": dict(sorted(Counter(row["reason"] for row in rejected).items())),
+        "rejected": rejected,
         "classification_counts": dict(
             sorted(Counter(row["classification"] for row in closed).items())
         ),
@@ -173,7 +198,11 @@ def main() -> None:
     }
     report["manifest_sha256"] = canonical_sha256(report)
     write_immutable(args.output, canonical_json_bytes(report) + b"\n")
-    print(json.dumps({key: value for key, value in report.items() if key != "closed"}))
+    print(
+        json.dumps(
+            {key: value for key, value in report.items() if key not in {"closed", "rejected"}}
+        )
+    )
 
 
 if __name__ == "__main__":

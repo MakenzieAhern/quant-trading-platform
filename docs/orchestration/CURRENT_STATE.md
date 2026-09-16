@@ -58,7 +58,11 @@ conflicting issuer date was admitted (708 SSE, 209 SZSE; manifest
 Fifty more issuer PDFs contain the exact exchange-corroborated dates within a
 multi-date set; the official exchange row uniquely disambiguates the target.
 Mismatching issuer dates remain open. The combined 967-document composite
-manifest is `e1b3a501cf24c5b89c16aea80317f96919e9bfe3472b26f835133aa186bbfced`.
+manifest is `30b57f1cea59097dff5577d5e59be98f4f0727cadcb77f3640e679764ebcea21`.
+Its source-checksummed rejected-candidate ledger records 189 additional issuer notices:
+96 differentiated-distribution holder-class reviews, 67 issuer/exchange date
+conflicts (56 ex-date, 11 record-date), 20 nonunique cash terms, four issuer-header
+mismatches and two invalid page sequences. None was accepted as a new fact.
 The current provisional P1 count is therefore 15,503/16,320 established or
 explicitly out of scope, including 1,507 recorded official substitutions; 817
 facts / 801 unique documents remain. Three
