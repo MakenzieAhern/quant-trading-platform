@@ -2,6 +2,7 @@
 
 import argparse
 import json
+from collections import Counter
 from decimal import Decimal
 from pathlib import Path
 
@@ -14,12 +15,20 @@ from scripts.link_distribution_notices import notice_dates
 from scripts.reconcile_distribution_cash import gross_cash
 
 
-def compatible_partial_date(row: dict, records: list[str], ex_dates: list[str]) -> bool:
-    return (
+def classify_dates(row: dict, records: list[str], ex_dates: list[str]) -> str | None:
+    if (
         (not records or records == [row["record_date"]])
         and (not ex_dates or ex_dates == [row["ex_date"]])
         and (not records or not ex_dates)
-    )
+    ):
+        return "OFFICIAL_ISSUER_AMOUNT_PLUS_OFFICIAL_EXCHANGE_DATES"
+    if (
+        row["record_date"] in records
+        and row["ex_date"] in ex_dates
+        and (len(records) > 1 or len(ex_dates) > 1)
+    ):
+        return "OFFICIAL_EXCHANGE_DISAMBIGUATED_ISSUER_DATE_SET"
+    return None
 
 
 def main() -> None:
@@ -114,9 +123,8 @@ def main() -> None:
             records, ex_dates = notice_dates(extracted["pages"])
         except ValueError:
             continue
-        if amount != Decimal(row["cash_per_share"]) or not compatible_partial_date(
-            row, records, ex_dates
-        ):
+        classification = classify_dates(row, records, ex_dates)
+        if amount != Decimal(row["cash_per_share"]) or classification is None:
             continue
         closed.append(
             {
@@ -125,7 +133,7 @@ def main() -> None:
                 "issuer_notice_record_dates": records,
                 "issuer_notice_ex_dates": ex_dates,
                 "official_exchange_amounts": sorted(str(amount) for amount in targets[key]),
-                "classification": "OFFICIAL_ISSUER_AMOUNT_PLUS_OFFICIAL_EXCHANGE_DATES",
+                "classification": classification,
             }
         )
     report = {
@@ -155,6 +163,9 @@ def main() -> None:
         },
         "closed_documents": len(closed),
         "closed_facts": sum(len(row["affected_events"]) for row in closed),
+        "classification_counts": dict(
+            sorted(Counter(row["classification"] for row in closed).items())
+        ),
         "closed": closed,
         "source_checksum_repeatability": "PASS",
         "input_order_reproducibility": "PASS",

@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import re
 from collections import defaultdict
 from decimal import Decimal
 from pathlib import Path
@@ -14,6 +15,23 @@ from scripts.link_distribution_notices import notice_dates
 from scripts.reconcile_distribution_cash import gross_cash
 
 REQUIREMENT = "FINAL_IMPLEMENTATION_NOTICE_WITH_GROSS_ORDINARY_A_SHARE_CASH"
+LEGACY_FINAL = re.compile(
+    r"(?:分红派息公告|权益分派公告|利润分配实施的公告|权益分派的公告|"
+    r"现金红利实施公告|权益派息实施公告|分红公告)$"
+)
+LEGACY_NOT_FINAL = re.compile(
+    r"预案|提议|董事会|股东大会|调整|回购|提示|更正|修订|进展|实施后|停止转股"
+)
+
+
+def final_issuer_title(title: str) -> bool:
+    return bool(
+        not SECONDARY.search(title)
+        and (
+            PRIMARY.search(title)
+            or (LEGACY_FINAL.search(title) and not LEGACY_NOT_FINAL.search(title))
+        )
+    )
 
 
 def select(requirements, public, out_of_scope, cash, master, sources):
@@ -60,8 +78,7 @@ def select(requirements, public, out_of_scope, cash, master, sources):
         if (
             not event["source_provider"].startswith("OFFICIAL_ISSUER_CNINFO_")
             or not event["source_url"].startswith("https://static.cninfo.com.cn/finalpage/")
-            or not PRIMARY.search(event["source_document"])
-            or SECONDARY.search(event["source_document"])
+            or not final_issuer_title(event["source_document"])
         ):
             continue
         source = by_source.get(event["source_url"])

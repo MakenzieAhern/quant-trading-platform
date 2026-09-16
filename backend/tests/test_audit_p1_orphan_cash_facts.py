@@ -1,4 +1,4 @@
-from scripts.audit_p1_orphan_cash_facts import select
+from scripts.audit_p1_orphan_cash_facts import final_issuer_title, select
 
 
 def test_url_less_requirement_uses_exact_official_issuer_notice():
@@ -50,3 +50,8 @@ def test_url_less_requirement_uses_exact_official_issuer_notice():
     assert rows[0]["classification"] == "AUTHORITATIVE_OFFICIAL_SOURCE_SUBSTITUTION"
     source["title"] = "提议分红公告"
     assert select([requirement], [], [], [event], master, [source]) == []
+
+
+def test_legacy_final_title_does_not_admit_proposal():
+    assert final_issuer_title("2010年度分红派息公告")
+    assert not final_issuer_title("董事会关于提议2010年度分红公告")

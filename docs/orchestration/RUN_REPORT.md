@@ -36,17 +36,20 @@ notices remain open (manifest
 The provisional fact-level count is now 14,025/16,320 established or excluded
 by scope; 2,295 facts / 2,279 unique documents remain, including 326
 distribution documents at this step. A further source-hash and text-verified
-substitution audit linked 510 URL-less cash requests to already retained final
+substitution audit linked 511 URL-less cash requests to already retained final
 CNINFO issuer notices with exact point-in-time identity, record/ex dates and
 gross amount (manifest
-`2f024cd9c9f28821036cab0acae3b6519e324ffb0156603df75209dfd41fca65`).
+`32e3fc7d17687ea6f22e2d8a4f1dc1f567af7de59ef148ea62ef842da028f9ed`).
 For another 917 URL-less cash requests, the official issuer PDF independently
 establishes the exact gross amount and the accepted official exchange census
 establishes missing record/ex dates; 116 issuer-date conflicts or multi-date
-candidates remain unaccepted. Composite manifest:
-`dc128413f6c57959156c42180bb741b97cc01bc1f60f0c2de78ee7c58908469b`.
-The current provisional P1 count is 15,452/16,320 established or out of scope;
-1,456 are explicit official substitutions and 868 facts / 852 unique
+candidates were initially withheld. Fifty of those PDFs do contain the exact
+dates among multiple extracted dates; an official exchange row uniquely
+disambiguates them. The 66 with missing or contradictory expected dates remain
+open. Combined composite manifest:
+`e1b3a501cf24c5b89c16aea80317f96919e9bfe3472b26f835133aa186bbfced`.
+The current provisional P1 count is 15,503/16,320 established or out of scope;
+1,507 are explicit official substitutions and 817 facts / 801 unique
 documents remain. Three mixed notices have their
 cash leg reconciled but their bonus leg remains pending. Cash full-census authority
 and dependent P1 fact closure remain PARTIAL/provisional. P0/ST authorities remain

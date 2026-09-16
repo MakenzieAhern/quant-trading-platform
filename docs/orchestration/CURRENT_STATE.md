@@ -46,19 +46,22 @@ Two notices with a 2025-12-31 record date remain open. Thus 326 of the original
 direct P1 cash matches are 13,079 documents and 14,025/16,320 facts are
 established or excluded by scope, provisional for the full source gate; 2,295
 facts / 2,279 unique documents remained at this step. A separate exact
-official-source substitution pass then linked 510 URL-less P1 cash requests
+official-source substitution pass then linked 511 URL-less P1 cash requests
 to previously retained primary CNINFO issuer PDFs, requiring a unique
 point-in-time identity, the same record/ex dates and gross amount parsed from
 verified bytes (manifest
-`2f024cd9c9f28821036cab0acae3b6519e324ffb0156603df75209dfd41fca65`).
+`32e3fc7d17687ea6f22e2d8a4f1dc1f567af7de59ef148ea62ef842da028f9ed`).
 Another 917 of those URL-less requests have an exact gross amount re-parsed from
 the official issuer PDF while one or both issuer-PDF dates are absent; the
 accepted official exchange census supplies the exact record/ex dates, and no
 conflicting issuer date was admitted (708 SSE, 209 SZSE; manifest
-`dc128413f6c57959156c42180bb741b97cc01bc1f60f0c2de78ee7c58908469b`).
-The current provisional P1 count is therefore 15,452/16,320 established or
-explicitly out of scope, including 1,456 recorded official substitutions; 868
-facts / 852 unique documents remain. Three
+Fifty more issuer PDFs contain the exact exchange-corroborated dates within a
+multi-date set; the official exchange row uniquely disambiguates the target.
+Mismatching issuer dates remain open. The combined 967-document composite
+manifest is `e1b3a501cf24c5b89c16aea80317f96919e9bfe3472b26f835133aa186bbfced`.
+The current provisional P1 count is therefore 15,503/16,320 established or
+explicitly out of scope, including 1,507 recorded official substitutions; 817
+facts / 801 unique documents remain. Three
 additional mixed cash-plus-bonus notices
 have their cash leg reconciled, but the bonus leg remains open and those source
 requirements are not marked complete. The SSE composite substitution parser now

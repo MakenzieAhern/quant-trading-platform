@@ -28,9 +28,10 @@ bounded retries; its disjoint 360-document batch finished with zero failures.
 Day-271–360 targeted official metadata closed all 528 applicable windows;
 the disjoint 217-document priority batch finished with zero retrieval failures
 but no exact new resumption. A separate exact official-PDF substitution pass
-closed 510 URL-less P1 cash requests. A second issuer-amount plus official
-exchange-date reconciliation closed another 917 without accepting conflicting
-issuer dates. The remaining provisional P1 gap is 868 facts / 852 unique
+closed 511 URL-less P1 cash requests. A second issuer-amount plus official
+exchange-date reconciliation closed another 967, including 50 issuer PDFs
+with multiple dates uniquely disambiguated by an official exchange row. Other
+conflicting issuer dates remain open. The provisional P1 gap is 817 facts / 801 unique
 documents.
 Full Dataset gates
 remain locked. Older sections below are superseded where they call cash PASS.
