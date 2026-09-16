@@ -1,0 +1,169 @@
+"""Close cash-source gaps with exact issuer amount plus official exchange dates."""
+
+import argparse
+import json
+from decimal import Decimal
+from pathlib import Path
+
+from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
+from app.data.catalog.freeze import write_immutable
+from scripts.audit_full_cash_ledger import official_targets
+from scripts.audit_p1_orphan_cash_facts import select
+from scripts.audit_p1_public_fact_requirements import verified
+from scripts.link_distribution_notices import notice_dates
+from scripts.reconcile_distribution_cash import gross_cash
+
+
+def compatible_partial_date(row: dict, records: list[str], ex_dates: list[str]) -> bool:
+    return (
+        (not records or records == [row["record_date"]])
+        and (not ex_dates or ex_dates == [row["ex_date"]])
+        and (not records or not ex_dates)
+    )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--requirements", type=Path, required=True)
+    parser.add_argument("--public-queue", type=Path, required=True)
+    parser.add_argument("--public-reassessment", type=Path, required=True)
+    parser.add_argument("--cash-ledger", type=Path, required=True)
+    parser.add_argument("--master", type=Path, required=True)
+    parser.add_argument("--instruments", type=Path, required=True)
+    parser.add_argument("--sse-audit", type=Path, required=True)
+    parser.add_argument("--szse-audit", type=Path, required=True)
+    parser.add_argument("--source-manifest", type=Path, required=True)
+    parser.add_argument("--text-root", type=Path, required=True)
+    parser.add_argument("--strict-report", type=Path, required=True)
+    parser.add_argument("--staging", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    requirements, reassessment, cash, instruments, sse, szse, sources, strict = (
+        verified(path)
+        for path in (
+            args.requirements,
+            args.public_reassessment,
+            args.cash_ledger,
+            args.instruments,
+            args.sse_audit,
+            args.szse_audit,
+            args.source_manifest,
+            args.strict_report,
+        )
+    )
+    public = json.loads(args.public_queue.read_bytes())
+    master = json.loads(args.master.read_bytes())
+    for name, path in (
+        ("requirements", args.requirements),
+        ("public_queue", args.public_queue),
+        ("public_reassessment", args.public_reassessment),
+        ("cash_ledger", args.cash_ledger),
+        ("master", args.master),
+        ("source_manifest", args.source_manifest),
+    ):
+        if strict["input_sha256s"][name] != sha256_file(path):
+            raise ValueError("P1_STRICT_SOURCE_INPUT_CHANGED")
+    closed_ids = {row["document_id"] for row in strict["closed"]}
+    instrument_types = {
+        row["classification"]["security_id"]["value"]: row["classification"]["instrument_type"]
+        for row in instruments["classifications"]
+    }
+    targets, _ = official_targets(master, instrument_types, sse, szse)
+    inputs = (
+        requirements["documents"],
+        public,
+        reassessment["out_of_scope_cninfo_documents"],
+        cash["events"],
+        master,
+        sources["documents"],
+    )
+    candidates = select(*inputs)
+    if candidates != select(*(list(reversed(rows)) for rows in inputs)):
+        raise ValueError("INPUT_ORDER_CHANGED")
+    reversed_targets, _ = official_targets(
+        list(reversed(master)),
+        instrument_types,
+        {**sse, "groups": list(reversed(sse["groups"]))},
+        {**szse, "rows": list(reversed(szse["rows"]))},
+    )
+    if targets != reversed_targets:
+        raise ValueError("EXCHANGE_INPUT_ORDER_CHANGED")
+    closed = []
+    for row in candidates:
+        if row["document_id"] in closed_ids:
+            continue
+        key = row["security_id"], row["record_date"], row["ex_date"]
+        if key not in targets:
+            continue
+        pdf = Path(row["substitute_source_path"])
+        if not pdf.is_absolute():
+            pdf = args.source_manifest.parent.parent / pdf
+        pdf = pdf.resolve()
+        cache = args.text_root / f"{row['substitute_source_sha256']}.json"
+        if (
+            not pdf.is_relative_to(args.staging.resolve())
+            or sha256_file(pdf) != row["substitute_source_sha256"]
+            or not cache.is_file()
+        ):
+            raise ValueError("P1_COMPOSITE_OFFICIAL_SOURCE_CHANGED")
+        extracted = json.loads(cache.read_bytes())
+        if extracted["source_sha256"] != row["substitute_source_sha256"]:
+            raise ValueError("P1_COMPOSITE_TEXT_CACHE_CHANGED")
+        try:
+            amount = gross_cash(extracted["pages"], row["issuer"])
+            records, ex_dates = notice_dates(extracted["pages"])
+        except ValueError:
+            continue
+        if amount != Decimal(row["cash_per_share"]) or not compatible_partial_date(
+            row, records, ex_dates
+        ):
+            continue
+        closed.append(
+            {
+                **{key: value for key, value in row.items() if key != "substitute_source_path"},
+                "substitute_text_cache_sha256": sha256_file(cache),
+                "issuer_notice_record_dates": records,
+                "issuer_notice_ex_dates": ex_dates,
+                "official_exchange_amounts": sorted(str(amount) for amount in targets[key]),
+                "classification": "OFFICIAL_ISSUER_AMOUNT_PLUS_OFFICIAL_EXCHANGE_DATES",
+            }
+        )
+    report = {
+        "report_version": "P1_ORPHAN_CASH_OFFICIAL_COMPOSITE_DATES_V1",
+        "parser_sha256": sha256_file(Path(__file__)),
+        "cash_parser_sha256": sha256_file(
+            Path(__file__).with_name("reconcile_distribution_cash.py")
+        ),
+        "date_parser_sha256": sha256_file(Path(__file__).with_name("link_distribution_notices.py")),
+        "exchange_parser_sha256": sha256_file(
+            Path(__file__).with_name("audit_full_cash_ledger.py")
+        ),
+        "input_sha256s": {
+            name: sha256_file(path)
+            for name, path in (
+                ("requirements", args.requirements),
+                ("public_queue", args.public_queue),
+                ("public_reassessment", args.public_reassessment),
+                ("cash_ledger", args.cash_ledger),
+                ("master", args.master),
+                ("instruments", args.instruments),
+                ("sse_audit", args.sse_audit),
+                ("szse_audit", args.szse_audit),
+                ("source_manifest", args.source_manifest),
+                ("strict_report", args.strict_report),
+            )
+        },
+        "closed_documents": len(closed),
+        "closed_facts": sum(len(row["affected_events"]) for row in closed),
+        "closed": closed,
+        "source_checksum_repeatability": "PASS",
+        "input_order_reproducibility": "PASS",
+        "new_economic_events_created": 0,
+    }
+    report["manifest_sha256"] = canonical_sha256(report)
+    write_immutable(args.output, canonical_json_bytes(report) + b"\n")
+    print(json.dumps({key: value for key, value in report.items() if key != "closed"}))
+
+
+if __name__ == "__main__":
+    main()

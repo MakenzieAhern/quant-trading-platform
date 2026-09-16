@@ -10,14 +10,29 @@ SHA-256 values are in immutable manifest
 `d99465a98a534fd4449a6d89f0750bb7295ca2baf4781ca732fc585bc6f1c58f`.
 All 107 known primary notices have now been revalidated and incorporated in cash
 v37 (40,477 events). Another 133 official preferred-share notices were excluded
-from ordinary-A scope; 387 P1 distribution-document requests remain to be
+from ordinary-A scope; 39 additional exact official cash-fact matches close
+ten primary notices and 29 derivative notices against stronger accepted issuer
+sources. Another 23 official primary notices have both entitlement dates after
+2025, while two year-end record-date cases remain open. 326 P1
+distribution-document requests remain to be
 classified before full-census authority can be restored. This is an active
 engineering/source reconciliation task, not a request to buy data or a
 human-methodology blocker. Previously matched P1 cash facts remain provisional
-for the full source gate. The earlier 1,932 unresolved
-SZSE resumption boundaries also remain; day-91–180 official metadata coverage
-is now closed and all 895 targeted documents were acquired; exact-date review
-is active. Full Dataset gates
+for the full source gate. Cash v38 further corrects 15 cached SSE table-rounding
+amounts (21 precise issuer replacements total) but does not close the issuer
+source census. The SZSE resumption authority still has 1,921
+unresolved boundaries after an additional exact official date was accepted;
+day-91–180 official metadata and all 895 targeted documents are complete.
+The day-181–270 metadata extension now covers all 659 applicable windows after
+bounded retries; its disjoint 360-document batch finished with zero failures.
+Day-271–360 targeted official metadata closed all 528 applicable windows;
+the disjoint 217-document priority batch finished with zero retrieval failures
+but no exact new resumption. A separate exact official-PDF substitution pass
+closed 510 URL-less P1 cash requests. A second issuer-amount plus official
+exchange-date reconciliation closed another 917 without accepting conflicting
+issuer dates. The remaining provisional P1 gap is 868 facts / 852 unique
+documents.
+Full Dataset gates
 remain locked. Older sections below are superseded where they call cash PASS.
 
 ## 2026-09-16 current — no human blocker; official SZSE resumption facts remain

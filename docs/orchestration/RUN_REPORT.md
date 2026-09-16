@@ -16,11 +16,38 @@ validated and accepted the 101 absent events and six precise issuer replacements
 The v37 replay now has 40,477 events, 40,376 exchange-census targets covered,
 101 issuer-only additions, zero duplicate accepted dates, and checksum/order PASS
 (manifest `0928e86d1dd208f6796b31be98ede517ce9724a27eaf8f1df8f00cb421c5f6b3`).
+Replaying the SSE table-substitution path with exact issuer-amount checks exposed
+15 additional table-rounding cases already present in official cached PDFs.
+All 15 matched exact issuer record/ex dates and were replaced in v38, which still
+contains 40,477 events (21 precise replacements total; manifest
+`5ff94f3178d874abcb02017476adbe2f781ff48ebdcc7b78cad3e218b70e74a4`).
 The repaired exchange census still does not prove a full issuer-source census.
 An independent official-PDF instrument check classified 133 preferred-share
 notices outside ordinary-A scope (manifest
 `9d8b65e122f7bdce208605e7ef002be3b745c2dbffd3aa6123bd5dd53665c863`),
-leaving 387 P1 distribution documents unclassified. Two mixed notices have their
+An exact official-source comparison then closed 39 more cash-only documents:
+ten primary corroborations and 29 substitutions by stronger accepted official
+issuer implementation notices (manifest
+`1b85bbeaca6dd59292348055e2e02ef652b4a800a003cbbe08b0f55e2305be40`).
+An additional checksum-verified date/scope audit excluded 23 primary cash
+notices with both record and ex-dates after 2025; two 2025-12-31 record-date
+notices remain open (manifest
+`0f6188b41f08160572c8542642282f9ab67e2fda626d59d3a0d360c6ca621a4d`).
+The provisional fact-level count is now 14,025/16,320 established or excluded
+by scope; 2,295 facts / 2,279 unique documents remain, including 326
+distribution documents at this step. A further source-hash and text-verified
+substitution audit linked 510 URL-less cash requests to already retained final
+CNINFO issuer notices with exact point-in-time identity, record/ex dates and
+gross amount (manifest
+`2f024cd9c9f28821036cab0acae3b6519e324ffb0156603df75209dfd41fca65`).
+For another 917 URL-less cash requests, the official issuer PDF independently
+establishes the exact gross amount and the accepted official exchange census
+establishes missing record/ex dates; 116 issuer-date conflicts or multi-date
+candidates remain unaccepted. Composite manifest:
+`dc128413f6c57959156c42180bb741b97cc01bc1f60f0c2de78ee7c58908469b`.
+The current provisional P1 count is 15,452/16,320 established or out of scope;
+1,456 are explicit official substitutions and 868 facts / 852 unique
+documents remain. Three mixed notices have their
 cash leg reconciled but their bonus leg remains pending. Cash full-census authority
 and dependent P1 fact closure remain PARTIAL/provisional. P0/ST authorities remain
 PASS; no dataset/study/freeze/merge was performed.
@@ -30,9 +57,34 @@ windows were closed (18,129 records; zero query gaps; checksum/order PASS), with
 closure manifest `d1c5cbc12b800334f948a0ae6c712d626287db8645833fb087cf8fc3d57ebc4f`.
 A nonoverlapping 895-document PDF queue was fully acquired with zero failures
 (source manifest `5eb282502d6a4b90dd3b5e1014ea0847481fad8ff4c5a289a8a552ebc34f4abb`).
-Text indexing and exact-date reconciliation are active; only explicit
-issuer/effective-date evidence can be accepted. The last verified SZSE
-resumption count remains 1,932 unresolved pending that reconciliation.
+Text indexing found 12 unique exact dates, ten of which bound new unresolved
+events (reconciliation manifest
+`4b08a511cdf652ac2c238ec6722451de01b6f4c6c8663d6950a1c90ce28bb3db`).
+The complete authority replay now has SZSE 1,922 unresolved, zero conflicts,
+8,883 supplements; SSE remains zero unresolved (manifest
+`c88ce498b2c394023b2398282d944d087d508bea41d3a0f6cd71ebffbe021569`).
+The day-181–270 official metadata extension closed all 659 applicable windows
+after eight failed first-pass windows were retried in 104 seven-day slices:
+12,523 official records, zero query gaps, checksum/order PASS (manifest
+`2a6b17bcf9d0b6f406d9d4fe35c05bcdd961f12671e2fe1276dfb929b318c887`).
+A disjoint 360-document priority batch completed with zero retrieval failures
+(359 PDFs, one supported JS attachment; source manifest
+`4bc8aa040a19f3c4627884f51bba2e837e23b9471705e80c3920ab197aa04b5a`).
+Only one exact new resumption boundary was accepted by reverse-order full
+replay, leaving SZSE 1,921 unresolved with zero conflicts (manifest
+`f7cd758325d177e4c0a923938a90b193abaad18ef79cfab9bba2c8c16f67756a`).
+The bounded day-271–360 official metadata extension then closed all 528
+applicable windows after two 90-day failures and one seven-day HTTP 502 were
+recovered in bounded retries. Its 9,280 official records have zero query gaps,
+checksum and input-order PASS (manifest
+`fbbd59452682fd3480a0f6ac7ad44fd0250d2fdacfcd89b2bc87fab5aceeceac`).
+A disjoint 217-document title-priority batch completed with zero retrieval
+failures (215 PDFs, two supported JS attachments; manifest
+`74b11b9301c8d23ee214f390b19d14f0d185f9645d436d6f0d572a14bfbf2526`).
+All PDFs were indexed, but exact-date review added zero boundaries. Full
+reverse-order authority replay remains SZSE 1,921 unresolved, zero conflicts,
+PARTIAL (manifest `81c8fab217945ffaf180560f4ad970790eff29382bd2a5cc9fb1ee57215fea33`).
+Titles and metadata are not event facts.
 
 ## 2026-09-16 full cash acceptance and targeted SZSE suspension recovery
 

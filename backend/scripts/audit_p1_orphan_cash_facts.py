@@ -1,0 +1,202 @@
+"""Close URL-less P1 cash requests with another exact official issuer notice."""
+
+import argparse
+import json
+from collections import defaultdict
+from decimal import Decimal
+from pathlib import Path
+
+from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
+from app.data.catalog.freeze import write_immutable
+from scripts.audit_p1_cash_census_counterexamples import PRIMARY, SECONDARY
+from scripts.audit_p1_public_fact_requirements import verified
+from scripts.link_distribution_notices import notice_dates
+from scripts.reconcile_distribution_cash import gross_cash
+
+REQUIREMENT = "FINAL_IMPLEMENTATION_NOTICE_WITH_GROSS_ORDINARY_A_SHARE_CASH"
+
+
+def select(requirements, public, out_of_scope, cash, master, sources):
+    known_ids = {row["document_id"] for row in public} | {
+        row["document_id"] for row in out_of_scope
+    }
+    by_source = {row["url"]: row for row in sources}
+    by_cash = defaultdict(list)
+    by_symbol = defaultdict(list)
+    for row in cash:
+        event = row["event"]
+        by_cash[(event["security_id"]["value"], event["record_date"], event["ex_date"])].append(row)
+    for row in master:
+        by_symbol[row["symbol"]].append(row)
+    selected = []
+    for requirement in requirements:
+        if (
+            requirement["priority"] != "P1"
+            or requirement["source_group"] != "CNINFO"
+            or requirement["document_id"] in known_ids
+            or requirement["known_urls"]
+            or requirement["required_document_types"] != [REQUIREMENT]
+            or len(requirement["affected_events"]) != 1
+        ):
+            continue
+        parts = requirement["affected_events"][0].split(":")
+        if len(parts) != 4 or parts[0] != "CASH":
+            continue
+        symbol, record, ex = parts[1:]
+        identities = {
+            row["security_id"]
+            for row in by_symbol[symbol]
+            if row["effective_from"] <= record <= (row["effective_to"] or "2025-12-31")
+            and row["instrument_type"] == "COMMON_A_SHARE"
+        }
+        if len(identities) != 1:
+            continue
+        sid = next(iter(identities))
+        peers = by_cash[(sid, record, ex)]
+        if len(peers) != 1:
+            continue
+        accepted = peers[0]
+        event = accepted["event"]
+        if (
+            not event["source_provider"].startswith("OFFICIAL_ISSUER_CNINFO_")
+            or not event["source_url"].startswith("https://static.cninfo.com.cn/finalpage/")
+            or not PRIMARY.search(event["source_document"])
+            or SECONDARY.search(event["source_document"])
+        ):
+            continue
+        source = by_source.get(event["source_url"])
+        if not source or (
+            source["retrieval_status"] != "PASS"
+            or source["issuer"] != symbol
+            or source["title"] != event["source_document"]
+            or source["published_on"] != event["announcement_date"]
+            or source["published_on"] > record
+            or source["source_sha256"] != event["source_document_sha256"]
+        ):
+            continue
+        selected.append(
+            {
+                "document_id": requirement["document_id"],
+                "affected_events": requirement["affected_events"],
+                "security_id": sid,
+                "issuer": symbol,
+                "record_date": record,
+                "ex_date": ex,
+                "cash_per_share": event["cash_per_share"],
+                "accepted_event_checksum": accepted["event_checksum"],
+                "substitute_source_url": source["url"],
+                "substitute_source_sha256": source["source_sha256"],
+                "substitute_source_path": source["source_path"],
+                "classification": "AUTHORITATIVE_OFFICIAL_SOURCE_SUBSTITUTION",
+            }
+        )
+    return sorted(selected, key=lambda row: row["document_id"])
+
+
+def verify_terms(rows, staging: Path, source_root: Path, text_root: Path) -> list[dict]:
+    accepted = []
+    for row in rows:
+        pdf = Path(row["substitute_source_path"])
+        if not pdf.is_absolute():
+            pdf = source_root / pdf
+        pdf = pdf.resolve()
+        cache = text_root / f"{row['substitute_source_sha256']}.json"
+        if (
+            not pdf.is_relative_to(staging.resolve())
+            or sha256_file(pdf) != row["substitute_source_sha256"]
+            or not cache.is_file()
+        ):
+            raise ValueError("P1_ORPHAN_OFFICIAL_PDF_CHANGED")
+        extracted = json.loads(cache.read_bytes())
+        if extracted["source_sha256"] != row["substitute_source_sha256"]:
+            raise ValueError("P1_ORPHAN_TEXT_CACHE_CHANGED")
+        try:
+            amount = gross_cash(extracted["pages"], row["issuer"])
+            records, ex_dates = notice_dates(extracted["pages"])
+        except ValueError:
+            continue
+        if (
+            amount == Decimal(row["cash_per_share"])
+            and records == [row["record_date"]]
+            and ex_dates == [row["ex_date"]]
+        ):
+            accepted.append(
+                {
+                    **{key: value for key, value in row.items() if key != "substitute_source_path"},
+                    "substitute_text_cache_sha256": sha256_file(cache),
+                }
+            )
+    return accepted
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--requirements", type=Path, required=True)
+    parser.add_argument("--public-queue", type=Path, required=True)
+    parser.add_argument("--public-reassessment", type=Path, required=True)
+    parser.add_argument("--cash-ledger", type=Path, required=True)
+    parser.add_argument("--master", type=Path, required=True)
+    parser.add_argument("--source-manifest", type=Path, required=True)
+    parser.add_argument("--staging", type=Path, required=True)
+    parser.add_argument("--text-root", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    requirements, reassessment, cash, sources = (
+        verified(path)
+        for path in (
+            args.requirements,
+            args.public_reassessment,
+            args.cash_ledger,
+            args.source_manifest,
+        )
+    )
+    public = json.loads(args.public_queue.read_bytes())
+    master = json.loads(args.master.read_bytes())
+    inputs = (
+        requirements["documents"],
+        public,
+        reassessment["out_of_scope_cninfo_documents"],
+        cash["events"],
+        master,
+        sources["documents"],
+    )
+    candidates = select(*inputs)
+    if candidates != select(*(list(reversed(rows)) for rows in inputs)):
+        raise ValueError("INPUT_ORDER_CHANGED")
+    closed = verify_terms(
+        candidates, args.staging, args.source_manifest.parent.parent, args.text_root
+    )
+    report = {
+        "report_version": "P1_ORPHAN_OFFICIAL_CASH_FACT_SUBSTITUTION_V1",
+        "parser_sha256": sha256_file(Path(__file__)),
+        "gross_cash_parser_sha256": sha256_file(
+            Path(__file__).with_name("reconcile_distribution_cash.py")
+        ),
+        "notice_date_parser_sha256": sha256_file(
+            Path(__file__).with_name("link_distribution_notices.py")
+        ),
+        "input_sha256s": {
+            name: sha256_file(path)
+            for name, path in (
+                ("requirements", args.requirements),
+                ("public_queue", args.public_queue),
+                ("public_reassessment", args.public_reassessment),
+                ("cash_ledger", args.cash_ledger),
+                ("master", args.master),
+                ("source_manifest", args.source_manifest),
+            )
+        },
+        "candidate_documents": len(candidates),
+        "closed_documents": len(closed),
+        "closed_facts": sum(len(row["affected_events"]) for row in closed),
+        "closed": closed,
+        "input_order_reproducibility": "PASS",
+        "new_economic_events_created": 0,
+    }
+    report["manifest_sha256"] = canonical_sha256(report)
+    write_immutable(args.output, canonical_json_bytes(report) + b"\n")
+    print(json.dumps({key: value for key, value in report.items() if key != "closed"}))
+
+
+if __name__ == "__main__":
+    main()

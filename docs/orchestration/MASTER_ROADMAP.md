@@ -5,15 +5,32 @@
 An official P1 primary-notice cross-check uncovered 101 missing in-period cash
 events and six exact issuer-versus-SSE-table cash conflicts. Cash v35 remains
 immutable historical evidence, while v37 reconciles all 107 known counterexamples
-and holds 40,477 official events. Another 133 preferred-share documents are
+and holds 40,477 official events. Cash v38 then corrects 15 further precise
+issuer cash amounts previously rounded by SSE tables, without changing event
+count. Another 133 preferred-share documents are
 out of ordinary-A scope. Full-census status remains PARTIAL, not PASS, because
-387 P1 distribution-document requests are unclassified. Close those
+326 P1 distribution-document requests are unclassified after 39 exact official
+cash-fact matches (ten primary corroborations, 29 stronger-source substitutions)
+and 23 fully post-2025 record/ex-date notices excluded by verified scope.
+Close those
 fact-level requests and rerun the full cash gate; do not repeat accepted
 P0/SSE-ST/SZSE-ST work. In parallel, day-91–180 SZSE resumption
 metadata is fully closed (949 windows, 18,129 official records) and a disjoint
-895-document PDF queue was acquired with zero failures; exact-date review is
-active. The verified unresolved SZSE boundary
-count is still 1,932 until exact issuer-dated PDFs are accepted. Full Dataset,
+895-document PDF queue was acquired with zero failures. Ten exact dated
+resumptions were accepted by full replay, reducing SZSE unresolved to 1,922
+without conflicts. The next 659 applicable day-181–270 windows are fully closed
+in official metadata (12,523 records); its 360-document official batch added
+only one exact resumption, reducing SZSE unresolved to 1,921. Day-271–360
+metadata collection is active.
+That extension closed 528/528 applicable official windows (9,280 records,
+zero query gaps; manifest
+`fbbd59452682fd3480a0f6ac7ad44fd0250d2fdacfcd89b2bc87fab5aceeceac`),
+and a disjoint 217-document priority batch completed with zero failures but no
+new exact resumption boundary. SZSE remains 1,921 unresolved. Separately, 510
+URL-less P1 cash requests were resolved by exact official issuer-notice
+substitutions. Another 917 exact issuer-amount/official exchange-date composites
+reduced the provisional P1 remainder to 868 facts / 852 unique documents.
+Full Dataset,
 safe-start, study, freeze and merge gates remain locked.
 
 ## Authoritative 2026-09-16 R5 route
