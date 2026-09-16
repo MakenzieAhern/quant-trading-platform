@@ -1,5 +1,12 @@
 # v1.1 controller roadmap
 
+Latest R5 cash replay v39 accepts the retained 600157 differentiated-public-A
+final notice at its actual 0.00555/share holder payout; the issuer-only count
+is 102 and the 40,376 exchange targets remain fully covered, but full census
+is PARTIAL. P1 now has 645 unresolved facts / 629 documents, including 325
+retained distribution PDFs. No Full Dataset gate is unlocked. The dated
+paragraph below records the earlier v38/40,477 checkpoint for lineage.
+
 ## Authoritative 2026-09-16 R5 correction
 
 An official P1 primary-notice cross-check uncovered 101 missing in-period cash

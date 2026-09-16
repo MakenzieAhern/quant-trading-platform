@@ -1,5 +1,25 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-16 differentiated public-A cash correction
+
+The existing approved differentiated-cash parser reviewed 37 retained P1
+issuer notices under immutable original PDF/text checks. Exactly one new
+ordinary-A cash event passed strict final-title, unique issuer dates,
+pre-record publication and point-in-time master checks: 600157 record
+2024-08-23, ex 2024-08-26, actual cash 0.00555/share. The same notice's
+0.00551/share diluted value is an ex-price reference, not a holder payout.
+Classification manifest `2ff343d68a7edc5638fd1fa6a6ab7d7dfb95623911148f755ceb57254556c7bb`
+(file SHA-256 `3fde9e305d23c35f85b6ac4b8ba709f4e973670cd0606b1b8efd64ced7b9f296`).
+Cash v39 replay accepts 40,478 events, covers all 40,376 official exchange
+targets, retains 102 issuer-only additions separately, and has zero duplicate
+accepted dates, checksum and reverse-order PASS (manifest
+`00e2780d2777904e4ebaf4c21667203e9e8cce397b93ebca6e2e71290b3ac2a8`,
+file SHA-256 `750a18877cabd5d071a5f97390c285b00e3fe16f70df1f00ad7985347da7c5ea`).
+Full issuer cash census remains PARTIAL. P1 15,675/16,320 established or out
+of scope, 645 residual facts / 629 documents (325 retained distribution docs).
+P0/ST and the 1,921 unresolved SZSE resumption boundaries are unchanged.
+Full Dataset, freeze and all studies remain unrun; PR #12 stays open.
+
 ## 2026-09-16 official P1 counterexamples and day-91–180 SZSE coverage
 
 The prior cash v35 40,376/40,376 result remains a reproducible replay of its

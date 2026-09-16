@@ -1,5 +1,24 @@
 # Current state
 
+## Latest R5 differentiated-cash correction — 2026-09-16
+
+The already approved ordinary-public-A differentiated-cash policy was applied
+to 37 previously unparsed retained issuer notices. Thirty-six remain outside
+the strict new-event gate (three post-2025 entitlement chains, eight nonunique
+dates, 22 without accepted final terms, three non-primary notices). One official
+600157 final notice, published 2024-08-20 before its 2024-08-23 record date,
+establishes a 2024-08-26 cash event of 0.00555/share to entitled holders;
+0.00551/share in the same PDF is only a diluted ex-price reference. Source
+PDF SHA-256 `896b402fe2a43bcd4398eee9ae1e0f8118c85aec817f0405a1c8a79e3c135b7f`;
+strict classification manifest `2ff343d68a7edc5638fd1fa6a6ab7d7dfb95623911148f755ceb57254556c7bb`.
+Cash v39 has 40,478 accepted events, 40,376/40,376 exchange targets covered,
+102 separately identified issuer-only additions, zero target gaps and
+checksum/input-order PASS (manifest `00e2780d2777904e4ebaf4c21667203e9e8cce397b93ebca6e2e71290b3ac2a8`).
+Full cash census remains PARTIAL. P1 is now 15,675/16,320 established or out
+of scope, with 1,678 official substitutions; 645 facts / 629 unique documents
+remain, including 325 retained distribution notices. No dataset or study gate
+was unlocked.
+
 ## Authoritative 2026-09-16 R5 correction — official cash counterexamples
 
 The retained P1 issuer PDFs falsify the prior *full-census* interpretation of

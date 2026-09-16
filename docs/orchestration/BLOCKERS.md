@@ -1,5 +1,15 @@
 # Blockers
 
+## Latest 2026-09-16 R5 source gates — still active
+
+The 600157 official differentiated-cash final notice adds one issuer-only
+event under the pre-approved ordinary-public-A policy. Cash v39 has 40,478
+events with exchange target coverage intact, but does not prove a complete
+issuer-notice census. The P1 gap is 645 facts / 629 documents, including 325
+retained distribution PDFs. SZSE resumption still has 1,921 unresolved exact
+boundaries. These remain source/engineering work, not approval to buy data or
+advance to Full Dataset freeze. The sections below retain prior checkpoints.
+
 ## 2026-09-16 current — two active source-reconciliation gates, no human input
 
 The official P1 primary-document cross-check invalidates the prior assertion
