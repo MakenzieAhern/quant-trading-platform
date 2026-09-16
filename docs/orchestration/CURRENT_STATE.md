@@ -82,6 +82,13 @@ additional mixed cash-plus-bonus notices
 have their cash leg reconciled, but the bonus leg remains open and those source
 requirements are not marked complete. The SSE composite substitution parser now
 rejects a parseable issuer-notice amount that conflicts with the exchange table.
+An independent checksum-bound replay corroborates the bonus ratio and both dates
+of 60 retained issuer implementation PDFs against official SSE/SZSE tables
+(manifest `dba59fcca0a03dddf19c6ab1744da3ab20affd356b917ccdc2a14ac19118426e`).
+Three additional apparent date/ratio matches were withheld because their issuer
+PDFs were published on or after the record date. This is a source-terms
+cross-check, not complete corporate-action accounting or P1 closure; the
+646-fact residual count is unchanged.
 P0 and SSE/SZSE ST decisions are unaffected.
 
 The independent SZSE resumption workflow also closed all 949 applicable day-91–180

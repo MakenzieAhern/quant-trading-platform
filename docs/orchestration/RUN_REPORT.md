@@ -79,6 +79,16 @@ cash leg reconciled but their bonus leg remains pending. Cash full-census author
 and dependent P1 fact closure remain PARTIAL/provisional. P0/ST authorities remain
 PASS; no dataset/study/freeze/merge was performed.
 
+The retained-distribution bonus cross-check re-parsed SHA-verified issuer PDFs
+and compared exact record/ex dates and ratios to the official SSE/SZSE source
+oracle. Sixty pre-record implementation notices match with unique point-in-time
+ordinary-A identities; three otherwise matching documents were published on or
+after the record date and were not admitted as pre-event authority. Manifest
+`dba59fcca0a03dddf19c6ab1744da3ab20affd356b917ccdc2a14ac19118426e`
+(file SHA-256 `e75919ba1d93455350f602d5300f4bf653e806abd5447364a7ea1b4c26ac22b9`).
+No bonus economic event was created, no P1 requirement counted closed, and
+fractional allocation/tradability/cash-leg accounting remain separate R5 work.
+
 Separately, all 949 applicable official CNINFO day-91–180 resumption metadata
 windows were closed (18,129 records; zero query gaps; checksum/order PASS), with
 closure manifest `d1c5cbc12b800334f948a0ae6c712d626287db8645833fb087cf8fc3d57ebc4f`.
