@@ -1,5 +1,26 @@
 # Current state
 
+## Current R5 cash-table replay — 2026-09-17
+
+The shared official notice date parser now reads unlabelled SSE cash schedules
+with three or four date columns, without shifting B-share columns. Replaying
+all 625 retained distribution PDFs changed dates for exactly ten notices: eight
+already explained in differentiated-cash v5, plus 688533's exact accepted
+0.45/share event on 2025-06-09 and 688059's record/ex chain on
+2026-01-07/08, fully outside the dataset period. The latter is not the two
+still-open cases with 2025-12-31 record dates. The 688533 official primary
+notice is a same-event corroboration, not a new cash event. Full cash census
+remains PARTIAL.
+
+Cumulative disjoint-set replay v3 closes 1,965/2,578 baseline unresolved
+documents/facts, leaving 629 facts / 613 documents: 309 retained distribution
+PDFs and 304 other documents. P1 established/out-of-scope is 15,691/16,320;
+official substitutions remain 1,679. Cumulative manifest
+`487c2f52fbc55668892a5be4f7bbb25d00f9f2e4c0a182b5badb981b6e86759d`
+(file SHA-256 `8df78d53961fa3ea4367b3ab186e9c705a0c0c0d2b08194a1d1e3df721a7b5cd`).
+P0, ST and cash v39 events are unchanged; 1,921 exact SZSE resumption
+boundaries still lack official closure. No full dataset, freeze or study.
+
 ## Latest R5 official differentiated notice cross-check — 2026-09-17
 
 SHA-verified issuer PDFs and cash v39 were replayed against all 37 retained

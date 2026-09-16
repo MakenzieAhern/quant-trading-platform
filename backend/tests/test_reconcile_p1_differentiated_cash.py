@@ -1,7 +1,8 @@
 from decimal import Decimal
 
+from scripts.link_distribution_notices import notice_dates, star_cash_dates
 from scripts.reconcile_distribution_cash import differentiated_cash
-from scripts.reconcile_p1_differentiated_cash import decision, official_correction, star_cash_dates
+from scripts.reconcile_p1_differentiated_cash import decision, official_correction
 
 
 def test_differentiated_cash_never_overrides_conflicting_accepted_event():
@@ -29,6 +30,10 @@ def test_unlabeled_star_cash_table_needs_one_valid_date_chain():
         "2025/6/4 2025/6/5 2025/6/5 2025/6/5"
     )
     assert star_cash_dates([four, four]) == (["2025-06-04"], ["2025-06-05"])
+    assert notice_dates([table]) == (["2024-06-13"], ["2024-06-14"])
+    assert notice_dates([four]) == (["2025-06-04"], ["2025-06-05"])
+    assert notice_dates([table, four]) == ([], [])
+    assert star_cash_dates(["股份类别" + table]) == ([], [])
     assert star_cash_dates(
         [table, "股权登记日 除权(息)日 现金红利发放日\n2024/7/1 2024/7/2 2024/7/2"]
     ) == ([], [])

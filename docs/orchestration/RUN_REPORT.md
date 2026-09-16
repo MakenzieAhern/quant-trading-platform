@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 shared cash-table date replay
+
+The common official issuer-date parser was fixed for unlabelled SSE
+three-/four-column schedules and B-share guarding; 29 parser/probe tests
+passed. A full 625-document triage replay changed ten date classifications:
+eight already closed by the differentiated cash report, one exact existing
+688533 cash event and one fully post-2025 688059 event. Matched primary
+notices rise 39→40 (11 exact, 29 substitutions); out-of-period primary
+notices rise 23→24. The two 2025-12-31 record-date cases stay open. No
+economic event was added or overwritten. Cumulative closure v3 has
+1,965 disjoint facts/documents closed and 629 facts / 613 documents remaining
+(309 distribution, 304 other); 15,691/16,320 P1 facts established/out of
+scope. Manifest `487c2f52fbc55668892a5be4f7bbb25d00f9f2e4c0a182b5badb981b6e86759d`
+(file SHA-256 `8df78d53961fa3ea4367b3ab186e9c705a0c0c0d2b08194a1d1e3df721a7b5cd`).
+Cash full census remains PARTIAL; SZSE exact resumption residual remains
+1,921. Full dataset, freeze and all studies remain locked.
+
 ## 2026-09-17 differentiated issuer cross-check
 
 Official SHA-verified retained issuer PDFs were compared to immutable cash v39.

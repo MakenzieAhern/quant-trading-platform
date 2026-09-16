@@ -116,7 +116,7 @@ def main() -> None:
     if findings != crosscheck(*(list(reversed(rows)) for rows in inputs)):
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "report_version": "P1_OFFICIAL_PRIMARY_CASH_CENSUS_CROSSCHECK_V1",
+        "report_version": "P1_OFFICIAL_PRIMARY_CASH_CENSUS_CROSSCHECK_V2",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)

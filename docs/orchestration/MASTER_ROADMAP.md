@@ -1,5 +1,13 @@
 # v1.1 controller roadmap
 
+Current 2026-09-17 shared official cash-table replay establishes one more
+existing 688533 cash fact and excludes one more fully post-2025 688059 fact.
+P1 has 629 unresolved facts / 613 documents (309 distribution PDFs, 304
+other documents); 15,691/16,320 established or out of scope. No economic
+event changed. Full cash census remains PARTIAL, SZSE exact resumption gaps
+remain 1,921, and the Full Dataset gate remains closed. The paragraphs below
+are earlier immutable checkpoints.
+
 Latest 2026-09-17 official differentiated-cash cross-check closes eight
 additional P1 fact requests (seven exact accepted v39 events and one issuer
 pre-record corrected notice superseding an old amount). A cumulative

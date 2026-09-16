@@ -157,7 +157,7 @@ def main() -> None:
         raise ValueError("INPUT_ORDER_CHANGED")
     counts = dict(sorted(Counter(row["classification"] for row in closed).items()))
     report = {
-        "report_version": "P1_MATCHED_OFFICIAL_CASH_FACT_CLOSURE_V1",
+        "report_version": "P1_MATCHED_OFFICIAL_CASH_FACT_CLOSURE_V2",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)

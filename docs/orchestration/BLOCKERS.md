@@ -1,5 +1,15 @@
 # Blockers
 
+## Current 2026-09-17 R5 gates — no human input requested
+
+The shared official date parser closes one exact already-accepted 688533
+primary cash fact and one fully post-2025 688059 cash notice; the two
+2025-12-31 record-date cases remain open. Nine-report cumulative closure v3
+leaves 629 facts / 613 documents (309 distribution, 304 other). Full issuer
+cash census remains PARTIAL and 1,921 SZSE exact resumption boundaries remain
+unresolved. No paid source or new methodology choice is implied. The previous
+section is the earlier v2 checkpoint.
+
 ## Latest 2026-09-17 R5 source gates — active, no human action
 
 Official retained differentiated-cash notices establish seven additional

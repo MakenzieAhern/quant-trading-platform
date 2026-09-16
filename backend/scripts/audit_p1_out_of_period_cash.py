@@ -101,7 +101,7 @@ def main() -> None:
         ):
             raise ValueError("OUT_OF_PERIOD_REPARSE_CHANGED")
     report = {
-        "report_version": "P1_OFFICIAL_CASH_OUT_OF_PERIOD_SCOPE_V1",
+        "report_version": "P1_OFFICIAL_CASH_OUT_OF_PERIOD_SCOPE_V2",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)
