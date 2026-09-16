@@ -2,8 +2,10 @@
 
 Latest 2026-09-17 official differentiated-cash cross-check closes eight
 additional P1 fact requests (seven exact accepted v39 events and one issuer
-pre-record corrected notice superseding an old amount). P1 now has 634
-unresolved facts / 618 documents, including 314 retained distribution PDFs.
+pre-record corrected notice superseding an old amount). A cumulative
+nine-report recount additionally restores three omitted post-2025 scope
+closures: P1 now has 631 unresolved facts / 615 documents, including 311
+retained distribution PDFs and 304 other documents.
 No new cash event was created; full cash census remains PARTIAL. SZSE exact
 resumption boundaries remain 1,921 unresolved. No Full Dataset gate is open.
 The earlier v39 paragraph below is retained for lineage.

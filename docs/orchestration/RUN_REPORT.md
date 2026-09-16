@@ -13,8 +13,13 @@ The 688320 correction closes one P1 requirement by official substitution,
 without replacing the accepted 0.11038/share event with the earlier 0.11.
 Cross-check manifest `008648c4c7c55a0abc0eb775f19ac16b8683b88bc780006240a587ee6f00f620`
 (file SHA-256 `294303d16f25534da4301e0f20447b3b1075ee26fe9c9b9ae53cc6d37d948e1c`),
-input-order and repeat checksum PASS. P1 residual 634 facts / 618 documents,
-314 retained distribution PDFs. Cash full census remains PARTIAL; SZSE
+input-order and repeat checksum PASS. A nine-report disjoint-set recount
+also catches three earlier omitted post-2025 scope closures. Authoritative P1
+residual: 631 facts / 615 documents, 311 retained distribution PDFs and 304
+other documents; 15,689/16,320 established/out of scope, 1,679 substitutions.
+Cumulative manifest `1f0f42e908b70ed71f059e0d22fa535aff0e20e3b914aa1279e3f8ebd85be59e`
+(file SHA-256 `3a586dbe403cbba7f64e06340699b367802f85074a6363f43a7bfc965d9a9d26`),
+reverse input and repeat checksum PASS. Cash full census remains PARTIAL; SZSE
 resumption residual remains 1,921. No research dataset/study or freeze.
 
 ## 2026-09-16 differentiated public-A cash correction

@@ -14,9 +14,14 @@ post-2025, 22 lack accepted final cash terms and three are non-primary.
 Original/correction PDF checksums, source URLs and dates are in cross-check
 manifest `008648c4c7c55a0abc0eb775f19ac16b8683b88bc780006240a587ee6f00f620`
 (file SHA-256 `294303d16f25534da4301e0f20447b3b1075ee26fe9c9b9ae53cc6d37d948e1c`).
-Reverse input order and repeat checksum pass. P1 is now 15,686/16,320
-established/out of scope, 1,679 official substitutions, 634 facts / 618 unique
-documents unresolved, including 314 retained distribution PDFs. Cash v39
+Reverse input order and repeat checksum pass. A cumulative set-level recount
+of all nine official closure reports found three post-2025 differentiated
+notices missing from an earlier arithmetic update; no economic event changed.
+The audited remainder is 15,689/16,320 established/out of scope, 1,679
+official substitutions, 631 facts / 615 unique documents unresolved, including
+311 retained distribution PDFs and 304 other documents. Cumulative manifest
+`1f0f42e908b70ed71f059e0d22fa535aff0e20e3b914aa1279e3f8ebd85be59e`
+(file SHA-256 `3a586dbe403cbba7f64e06340699b367802f85074a6363f43a7bfc965d9a9d26`). Cash v39
 itself has no new event from this cross-check and full issuer census remains
 PARTIAL; 1,921 SZSE exact resumption boundaries remain unresolved. No R5
 dataset, freeze or study gate is unlocked.
