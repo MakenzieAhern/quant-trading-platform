@@ -12,22 +12,28 @@ from scripts.audit_full_cash_ledger import official_targets
 from scripts.audit_p1_orphan_cash_facts import select
 from scripts.audit_p1_public_fact_requirements import verified
 from scripts.link_distribution_notices import notice_dates
-from scripts.reconcile_distribution_cash import gross_cash
+from scripts.reconcile_distribution_cash import differentiated_cash, gross_cash
 
 
-def classify_dates(row: dict, records: list[str], ex_dates: list[str]) -> str | None:
+def classify_dates(
+    row: dict, records: list[str], ex_dates: list[str], *, differentiated: bool = False
+) -> str | None:
+    if differentiated and records == [row["record_date"]] and ex_dates == [row["ex_date"]]:
+        return "DIFFERENTIATED_PUBLIC_A_EXACT_ISSUER_DATES"
     if (
         (not records or records == [row["record_date"]])
         and (not ex_dates or ex_dates == [row["ex_date"]])
         and (not records or not ex_dates)
     ):
-        return "OFFICIAL_ISSUER_AMOUNT_PLUS_OFFICIAL_EXCHANGE_DATES"
+        result = "OFFICIAL_ISSUER_AMOUNT_PLUS_OFFICIAL_EXCHANGE_DATES"
+        return "DIFFERENTIATED_PUBLIC_A_" + result if differentiated else result
     if (
         row["record_date"] in records
         and row["ex_date"] in ex_dates
         and (len(records) > 1 or len(ex_dates) > 1)
     ):
-        return "OFFICIAL_EXCHANGE_DISAMBIGUATED_ISSUER_DATE_SET"
+        result = "OFFICIAL_EXCHANGE_DISAMBIGUATED_ISSUER_DATE_SET"
+        return "DIFFERENTIATED_PUBLIC_A_" + result if differentiated else result
     return None
 
 
@@ -89,6 +95,9 @@ def main() -> None:
     candidates = select(*inputs)
     if candidates != select(*(list(reversed(rows)) for rows in inputs)):
         raise ValueError("INPUT_ORDER_CHANGED")
+    source_titles = {row["url"]: row["title"] for row in sources["documents"]}
+    if len(source_titles) != len(sources["documents"]):
+        raise ValueError("DUPLICATE_OFFICIAL_SOURCE_URL")
     reversed_targets, _ = official_targets(
         list(reversed(master)),
         instrument_types,
@@ -124,13 +133,29 @@ def main() -> None:
         extracted = json.loads(cache.read_bytes())
         if extracted["source_sha256"] != row["substitute_source_sha256"]:
             raise ValueError("P1_COMPOSITE_TEXT_CACHE_CHANGED")
+        differentiated = False
         try:
             amount = gross_cash(extracted["pages"], row["issuer"])
+        except ValueError as exc:
+            if str(exc) != "DIFFERENTIATED_DISTRIBUTION_REQUIRES_REVIEW":
+                rejected.append({**rejection, "reason": str(exc)})
+                continue
+            try:
+                amount = differentiated_cash(
+                    extracted["pages"],
+                    row["issuer"],
+                    source_titles[row["substitute_source_url"]],
+                )
+            except ValueError as policy_error:
+                rejected.append({**rejection, "reason": str(policy_error)})
+                continue
+            differentiated = True
+        try:
             records, ex_dates = notice_dates(extracted["pages"])
         except ValueError as exc:
             rejected.append({**rejection, "reason": str(exc)})
             continue
-        classification = classify_dates(row, records, ex_dates)
+        classification = classify_dates(row, records, ex_dates, differentiated=differentiated)
         if amount != Decimal(row["cash_per_share"]):
             rejected.append({**rejection, "reason": "ISSUER_CASH_AMOUNT_CONFLICT"})
             continue
@@ -154,6 +179,11 @@ def main() -> None:
                 "issuer_notice_ex_dates": ex_dates,
                 "official_exchange_amounts": sorted(str(amount) for amount in targets[key]),
                 "classification": classification,
+                **(
+                    {"holder_policy": "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"}
+                    if differentiated
+                    else {}
+                ),
             }
         )
     if len(candidates) != len(closed_ids) + len(closed) + len(rejected):

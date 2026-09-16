@@ -54,18 +54,19 @@ verified bytes (manifest
 Another 917 of those URL-less requests have an exact gross amount re-parsed from
 the official issuer PDF while one or both issuer-PDF dates are absent; the
 accepted official exchange census supplies the exact record/ex dates, and no
-conflicting issuer date was admitted (708 SSE, 209 SZSE; manifest
+conflicting issuer date was admitted (708 SSE, 209 SZSE).
 Fifty more issuer PDFs contain the exact exchange-corroborated dates within a
 multi-date set; the official exchange row uniquely disambiguates the target.
-Mismatching issuer dates remain open. The combined 967-document composite
-manifest is `30b57f1cea59097dff5577d5e59be98f4f0727cadcb77f3640e679764ebcea21`.
-Its source-checksummed rejected-candidate ledger records 189 additional issuer notices:
-96 differentiated-distribution holder-class reviews, 67 issuer/exchange date
-conflicts (56 ex-date, 11 record-date), 20 nonunique cash terms, four issuer-header
-mismatches and two invalid page sequences. None was accepted as a new fact.
-The current provisional P1 count is therefore 15,503/16,320 established or
-explicitly out of scope, including 1,507 recorded official substitutions; 817
-facts / 801 unique documents remain. Three
+The previously approved ordinary-public-A differentiated-cash policy closed
+96 more exact issuer notices: 52 with complete matching issuer dates and 44
+with exchange-completed dates. The resulting 1,063-document composite manifest
+is `f4147e29cf13e8c336d214d530d6dd699c4b658ca378752240d6393b0e878342`.
+Its source-checksummed rejected-candidate ledger retains 93 notices: 67
+issuer/exchange date conflicts (56 ex-date, 11 record-date), 20 nonunique cash
+terms, four issuer-header mismatches and two invalid page sequences. No new
+economic event or holder-class policy was created. The provisional P1 count is
+15,599/16,320 established or explicitly out of scope, including 1,603 recorded
+official substitutions; 721 facts / 705 unique documents remain. Three
 additional mixed cash-plus-bonus notices
 have their cash leg reconciled, but the bonus leg remains open and those source
 requirements are not marked complete. The SSE composite substitution parser now

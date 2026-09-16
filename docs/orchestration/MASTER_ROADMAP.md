@@ -28,9 +28,10 @@ zero query gaps; manifest
 and a disjoint 217-document priority batch completed with zero failures but no
 new exact resumption boundary. SZSE remains 1,921 unresolved. Separately, 511
 URL-less P1 cash requests were resolved by exact official issuer-notice
-substitutions. Another 967 exact issuer-amount/official exchange-date composites
-(including 50 exchange-disambiguated multi-date notices) reduced the provisional
-P1 remainder to 817 facts / 801 unique documents.
+substitutions. Another 1,063 exact issuer-amount/official exchange-date composites
+(including 50 exchange-disambiguated multi-date notices and 96 approved-policy
+differentiated-public-A notices) reduced the provisional P1 remainder to 721
+facts / 705 unique documents.
 Full Dataset,
 safe-start, study, freeze and merge gates remain locked.
 
