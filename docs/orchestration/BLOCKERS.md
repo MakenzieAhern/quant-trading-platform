@@ -37,7 +37,10 @@ documents.
 The strict rejected-candidate audit (manifest
 `f4147e29cf13e8c336d214d530d6dd699c4b658ca378752240d6393b0e878342`)
 leaves 67 issuer/exchange date conflicts unaccepted; no source precedence or
-economic policy was invented.
+economic policy was invented. The already accepted SSE ST fact set separately
+closes 61 stale P1 source-file requests (manifest
+`1b3cbf245ee1212499eec315a218cc1de182ee0a6514e3046653c7ad23d1ebc8`),
+reducing the residual P1 gap to 660 facts / 644 unique documents.
 Full Dataset gates
 remain locked. Older sections below are superseded where they call cash PASS.
 

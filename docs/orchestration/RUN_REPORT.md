@@ -62,8 +62,12 @@ text-checked (PDF SHA-256 `345d2c52d3d8f59fd715058691240a57c72081b64c76d2a274591
 `2070812d6948063fa775671b7679d327e8bd6cf91d605ff704d94bcb8b414fec`).
 None states an exact resumption boundary; later same-symbol suspension is not
 treated as proof of this earlier resumption.
-The current provisional P1 count is 15,599/16,320 established or out of scope;
-1,603 are explicit official substitutions and 721 facts / 705 unique
+The accepted official SSE ST fact-set authority also closes 61 obsolete P1
+ST-document requests (59 chain gaps and two legacy PDF mirror links) with
+per-request mapping and no new ST event (manifest
+`1b3cbf245ee1212499eec315a218cc1de182ee0a6514e3046653c7ad23d1ebc8`).
+The current provisional P1 count is 15,660/16,320 established or out of scope;
+1,664 are explicit official substitutions and 660 facts / 644 unique
 documents remain. Three mixed notices have their
 cash leg reconciled but their bonus leg remains pending. Cash full-census authority
 and dependent P1 fact closure remain PARTIAL/provisional. P0/ST authorities remain

@@ -31,7 +31,9 @@ URL-less P1 cash requests were resolved by exact official issuer-notice
 substitutions. Another 1,063 exact issuer-amount/official exchange-date composites
 (including 50 exchange-disambiguated multi-date notices and 96 approved-policy
 differentiated-public-A notices) reduced the provisional P1 remainder to 721
-facts / 705 unique documents.
+facts / 705 unique documents. Reuse of the already accepted official SSE ST
+fact-set authority closes 61 stale P1 document requirements, leaving 660 facts
+/ 644 unique documents.
 Full Dataset,
 safe-start, study, freeze and merge gates remain locked.
 

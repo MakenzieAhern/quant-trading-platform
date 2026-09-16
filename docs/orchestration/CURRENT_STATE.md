@@ -66,7 +66,13 @@ issuer/exchange date conflicts (56 ex-date, 11 record-date), 20 nonunique cash
 terms, four issuer-header mismatches and two invalid page sequences. No new
 economic event or holder-class policy was created. The provisional P1 count is
 15,599/16,320 established or explicitly out of scope, including 1,603 recorded
-official substitutions; 721 facts / 705 unique documents remain. Three
+official substitutions at the cash stage. A separate fact-set replay against
+the accepted official SSE ST authority closes 61 obsolete P1 ST-document
+requests (59 former chain gaps and two unavailable legacy SSE PDF links),
+with exact official event-corpus evidence for the latter two (manifest
+`1b3cbf245ee1212499eec315a218cc1de182ee0a6514e3046653c7ad23d1ebc8`).
+The current total is 15,660/16,320 established or out of scope, including
+1,664 official substitutions; 660 facts / 644 unique documents remain. Three
 additional mixed cash-plus-bonus notices
 have their cash leg reconciled, but the bonus leg remains open and those source
 requirements are not marked complete. The SSE composite substitution parser now
