@@ -199,8 +199,9 @@ def main():
         "full_dataset_created": False,
     }
     if report["counts"] != {
-        "EXACT_INTEGER_RETAINED_BONUS": 278,
-        "UNRESOLVED_TERMS_OR_LIFECYCLE": 10,
+        "EXACT_INTEGER_RETAINED_BONUS": prior["accepted_events"] + len(selected),
+        "UNRESOLVED_TERMS_OR_LIFECYCLE": prior["counts"]["UNRESOLVED_TERMS_OR_LIFECYCLE"]
+        - len(selected),
     }:
         raise ValueError("BONUS_SUPPLEMENT_COUNTS_CHANGED")
     report["manifest_sha256"] = canonical_sha256(report)

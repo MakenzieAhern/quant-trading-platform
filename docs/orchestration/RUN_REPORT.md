@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 retained official bonus term reconciliation
+
+The shared official-issuer terms parser now handles an explicit final
+post-total/increase share-capital crosscheck for superseded or duplicate
+component labels and a narrow capital-reserve `转赠股本` heading typo when the
+body states the actual transfer. Three previously unresolved cases (600056,
+601233, 603686) now agree with independent exchange ratios and stable ordinary-A
+identities. The immutable v24 bounded ledger accepts 281/288 (up from 278),
+preserves all 278 prior event checksums, and leaves seven explicit unresolved
+plus 7,119 outside scope. Reversed input order reproduced identical base bytes.
+Ledger SHA-256 `08ae99961bfeb74d81d94144881db3a5faca1732993bbcc768a8b344dca5a107`;
+manifest `8f3ebac218ae4f335cc305bbfd246031db73af2e13dc85b0cc394e3cdfb2ffed`.
+All 635 database-independent backend tests and focused Ruff/format checks pass.
+The 63 database-backed cases cannot pass locally while PostgreSQL is unavailable
+(full run: 635 passed, 62 errors, one failure). No commercial source, Full
+Dataset, freeze, strategy study or PR merge followed.
+
 ## 2026-09-18 official CNINFO recovery of two bounded bonus source gaps
 
 Previously inaccessible SSE-hosted implementation PDFs for 603315 and 603889

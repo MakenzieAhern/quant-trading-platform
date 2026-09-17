@@ -1,5 +1,16 @@
 # Blockers
 
+## Current 2026-09-18 gate after retained bonus term reconciliation
+
+Bounded integer/next-session bonus is 281/288; seven cases remain explicit:
+three nonstandard restructuring/holder-entitlement cases and four conflicting
+component/allocation cases. Another 7,119 oracle rows are outside this narrow
+subset. P1 still lacks 329 facts / 313 documents (263 distribution, 50 other),
+and 1,921 SZSE exact resumption boundaries remain unresolved. Full cash and
+bonus censuses, local Docker/database integration, Full Dataset and all study
+gates remain partial or closed. The three new term closures are not evidence
+that the entire corporate-action census is complete.
+
 ## Current 2026-09-18 gates after official CNINFO bonus-source recovery
 
 The two named SSE-hosted implementation PDFs remain inaccessible, but their

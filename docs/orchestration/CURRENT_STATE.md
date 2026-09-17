@@ -1,5 +1,23 @@
 # Current state
 
+## Current R5 retained bonus term reconciliation — 2026-09-18
+
+Three previously unresolved bounded integer/next-session cases now reconcile
+against retained official issuer implementation PDFs: 600056 and 601233 have
+explicit post-implementation total-share/increase arithmetic corroborating the
+one-for-one quantity despite conflicting earlier/component labels; 603686 has
+an isolated `转赠股本` heading typo but an explicit `每10股转增10股` body. The
+shared parser accepts only the exact generic evidence patterns and still
+rejects unsupported restructuring and unresolved component conflicts. Official
+exchange ratios, entitlement dates, ordinary-A identities and the approved
+accounting policy remain separate checks. Bounded ledger v24 supports 281/288,
+with seven unresolved and 7,119 oracle rows outside scope. All 278 previously
+accepted event checksums are unchanged; reversed date-link order reproduced
+identical base-ledger bytes. Ledger SHA-256
+`08ae99961bfeb74d81d94144881db3a5faca1732993bbcc768a8b344dca5a107`,
+manifest `8f3ebac218ae4f335cc305bbfd246031db73af2e13dc85b0cc394e3cdfb2ffed`.
+This is not full bonus census or Full Dataset readiness.
+
 ## Current R5 bounded bonus official-source recovery — 2026-09-18
 
 The two SSE implementation-PDF URLs previously denied by the SSE host are no
