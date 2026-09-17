@@ -1,5 +1,18 @@
 # Decisions
 
+## 2026-09-18 equivalent official issuer implementation source
+
+Apply approved `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` to the two bounded
+bonus source gaps 603315 and 603889. The SSE-hosted PDF URLs remain denied,
+but the already retained contemporaneous official CNINFO issuer notices state
+the same one-for-one transfer ratio, record/ex-dates and scheduled new-share
+listing. Accept them only with original PDF/text checksums, implementation-body
+evidence, official exchange oracle agreement, point-in-time ordinary-A
+identity and existing integer/next-session policy. This is fact-level official
+source substitution, not a claim that the SSE URLs were retrieved or that the
+full bonus census is complete. Ledger v20 manifest
+`82fcdf1d558adfa1e81f6486ab74f73fcfdf920bfdf7a13c1cff6e615db603f0`.
+
 ## 2026-09-17 application of existing official cash source precedence
 
 The already accepted fact-level official-source substitution rule applies to

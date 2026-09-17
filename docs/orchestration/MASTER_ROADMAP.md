@@ -1,5 +1,12 @@
 # v1.1 controller roadmap
 
+Current 2026-09-18 official-public-source recovery resolves two source gaps in
+the bounded integer/next-session bonus ledger from retained CNINFO issuer
+notices. Bonus support rises to 278/288, with 10 bounded cases unresolved;
+7,119 oracle rows remain outside the subset. This is not full bonus census or
+a Full Dataset gate. No paid source was used; prior SSE-hosted PDF access
+failure no longer requires user-supplied bytes for these two facts.
+
 Current 2026-09-18 issuer-body finality review closes 13 more source-bound
 P1 cash requests without inventing events. P1 now has 329 unresolved facts /
 313 documents (263 distribution, 50 other), with 15,991/16,320 established

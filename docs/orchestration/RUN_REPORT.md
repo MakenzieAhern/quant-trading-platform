@@ -1,5 +1,18 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 official CNINFO recovery of two bounded bonus source gaps
+
+Previously inaccessible SSE-hosted implementation PDFs for 603315 and 603889
+were replaced, for the same facts, by already retained official CNINFO issuer
+implementation notices. Source PDF/text hashes, implementation-body finality,
+one-for-one transfer ratio, record/ex-dates, official exchange oracle, stable
+ordinary-A identity and scheduled next-session listing all pass. The 276 prior
+bonus events are unchanged; v20 accepts these two source-bound events and
+leaves 10/288 bounded cases unresolved, plus 7,119 oracle rows outside the
+integer next-session subset. Manifest
+`82fcdf1d558adfa1e81f6486ab74f73fcfdf920bfdf7a13c1cff6e615db603f0`.
+No commercial source, full bonus census, Full Dataset or study was accepted.
+
 ## 2026-09-18 issuer-body finality cross-check
 
 Thirteen generic-titled retained issuer PDFs supply explicit implementation

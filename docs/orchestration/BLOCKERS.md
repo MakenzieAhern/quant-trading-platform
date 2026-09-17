@@ -1,5 +1,16 @@
 # Blockers
 
+## Current 2026-09-18 gates after official CNINFO bonus-source recovery
+
+The two named SSE-hosted implementation PDFs remain inaccessible, but their
+facts are established by SHA-verified official CNINFO issuer notices; they are
+no longer human source-input blockers. Bounded integer bonus is 278/288, with
+ten conflicting/nonstandard cases and 7,119 oracle rows outside the subset.
+P1 still lacks 329 facts / 313 documents (263 distribution, 50 other), and
+SZSE still has 1,921 unresolved exact resumption boundaries. Full cash/bonus
+censuses remain partial. Local Docker Linux-engine startup is a separate
+runtime issue. Full Dataset and studies remain locked.
+
 ## Current 2026-09-18 gate after issuer-body finality review
 
 P1 lacks 329 facts / 313 documents (263 distribution, 50 other). Thirteen

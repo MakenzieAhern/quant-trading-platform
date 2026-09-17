@@ -1,5 +1,20 @@
 # Current state
 
+## Current R5 bounded bonus official-source recovery — 2026-09-18
+
+The two SSE implementation-PDF URLs previously denied by the SSE host are no
+longer required for their facts: contemporaneous official CNINFO issuer PDFs
+were already retained for 603315 and 603889. Each original PDF and text cache
+is SHA-verified and states one transferred share per held share, exact
+record/ex-dates and the next-session scheduled new-share listing. The official
+exchange oracle, point-in-time ordinary-A identity and approved accounting
+policy also reconcile. Bounded integer/next-session bonus v20 now supports
+278/288 cases, with ten still unresolved and 7,119 oracle rows outside this
+subset; 276 prior events remain unchanged. Ledger manifest
+`82fcdf1d558adfa1e81f6486ab74f73fcfdf920bfdf7a13c1cff6e615db603f0`.
+This does not establish full bonus census, actual new-share tradability or a
+Full Dataset. No paid source was used or purchased.
+
 ## Current R5 issuer-body finality reconciliation — 2026-09-18
 
 Thirteen more retained official CNINFO cash notices had abbreviated or generic
