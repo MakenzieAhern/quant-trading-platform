@@ -3,6 +3,7 @@
 import argparse
 import json
 import re
+import unicodedata
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -20,9 +21,32 @@ MIDTERM_TITLE = re.compile(r"实施\d{4}年(?:度)?中期分红")
 NO_DISTRIBUTION_TITLE = re.compile(r"(?:拟不实施.*利润分配|不实施.*中期现金分红)")
 DEFERRED_TITLE = re.compile(r"推迟.*利润分配实施")
 CONDITIONAL_TEXT = re.compile(r"尚需|不确定|后续.*方案|届时.*公告|提请.*授权|具体.*另行公告")
+SCHEDULE_TITLE = re.compile(r"利润分配实施的提示性公告")
 
 
-def classify(requirements, triage, already_closed, cash=()):
+def a_share_schedule(pages):
+    text = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "\n".join(pages)))
+    sections = re.findall(
+        r"(?:[12][.、]|[一二]、)A股利润分配(?:预计)?时间安排"
+        r"(.{0,220}?)(?:公司.*?A股.*?实施公告将在)",
+        text,
+    )
+    if len(sections) != 1 or "另行发布" not in text:
+        return None
+    dates = []
+    for label in ("股权登记日", "除息日、现金红利发放日"):
+        matches = re.findall(label + r":(20\d{2})年(\d{1,2})月(\d{1,2})日", sections[0])
+        if len(matches) != 1:
+            return None
+        try:
+            dates.append(date(*map(int, matches[0])).isoformat())
+        except ValueError:
+            return None
+    return tuple(dates) if dates[0] < dates[1] else None
+
+
+def classify(requirements, triage, already_closed, cash=(), schedules=None):
+    schedules = schedules or {}
     by_id = {row["document_id"]: row for row in triage}
     final_by_symbol = {}
     for accepted in cash:
@@ -41,14 +65,47 @@ def classify(requirements, triage, already_closed, cash=()):
         title = requirement["title"]
         no_distribution = bool(NO_DISTRIBUTION_TITLE.search(title))
         deferred = bool(DEFERRED_TITLE.search(title))
+        dated_schedule = SCHEDULE_TITLE.search(title) and document_id in schedules
         if document_id in already_closed or not (
             PROPOSAL_TITLE.search(title)
             or MIDTERM_TITLE.search(title)
             or no_distribution
             or deferred
+            or dated_schedule
         ):
             continue
         row = by_id[document_id]
+        if dated_schedule:
+            record, ex = schedules[document_id]
+            matches = [
+                accepted
+                for accepted in final_by_symbol.get(requirement["issuer"], [])
+                if accepted["event"]["record_date"] == record
+                and accepted["event"]["ex_date"] == ex
+                and requirement["published_on"] < accepted["event"]["announcement_date"] <= record
+            ]
+            if row["preferred_instrument_marker"] or len(matches) != 1:
+                continue
+            accepted = matches[0]
+            rows.append(
+                {
+                    "document_id": document_id,
+                    "affected_events": requirement["affected_events"],
+                    "issuer": requirement["issuer"],
+                    "title": title,
+                    "url": requirement["url"],
+                    "source_sha256": row["source_sha256"],
+                    "text_cache_sha256": row["text_cache_sha256"],
+                    "classification": (
+                        "NONFINAL_A_SHARE_SCHEDULE_MATCHED_LATER_FINAL_IMPLEMENTATION"
+                    ),
+                    "record_date": record,
+                    "ex_date": ex,
+                    "accepted_event_checksum": accepted["event_checksum"],
+                    "accepted_primary_source_url": accepted["event"]["source_url"],
+                }
+            )
+            continue
         if (
             row["candidate_class"] not in {"NEITHER", "CASH_ONLY"}
             or ((no_distribution or deferred) and row["candidate_class"] != "NEITHER")
@@ -106,6 +163,7 @@ def main():
     parser.add_argument("--triage", type=Path, required=True)
     parser.add_argument("--prior", type=Path, required=True)
     parser.add_argument("--prior-proposals", type=Path)
+    parser.add_argument("--queue", type=Path)
     parser.add_argument("--source-manifest", type=Path, required=True)
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--cash-ledger", type=Path, required=True)
@@ -116,20 +174,59 @@ def main():
         for path in (args.closure, args.triage, args.prior, args.source_manifest, args.cash_ledger)
     )
     earlier = verified(args.prior_proposals) if args.prior_proposals else {"closed": []}
-    if triage["closure_sha256"] != sha256_file(args.closure):
+    requirements = (
+        json.loads(args.queue.read_bytes()) if args.queue else closure["remaining_cash_documents"]
+    )
+    baseline = {row["document_id"]: row for row in closure["remaining_cash_documents"]}
+    if (
+        triage["source_requirements_sha256" if args.queue else "closure_sha256"]
+        != sha256_file(args.queue or args.closure)
+        or triage["source_manifest_sha256"] != sha256_file(args.source_manifest)
+        or len({row["document_id"] for row in requirements}) != len(requirements)
+        or len(triage["documents"]) != len(requirements)
+        or {row["document_id"] for row in triage["documents"]}
+        != {row["document_id"] for row in requirements}
+        or any(baseline.get(row["document_id"]) != row for row in requirements)
+    ):
         raise ValueError("TRIAGE_CLOSURE_CHANGED")
     excluded = {row["document_id"] for row in prior["closed"]}
-    rows = classify(
-        closure["remaining_cash_documents"], triage["documents"], excluded, cash["events"]
-    )
+    by_url = {row["url"]: row for row in sources["documents"]}
+    schedules = {}
+    for requirement in requirements:
+        if not SCHEDULE_TITLE.search(requirement["title"]):
+            continue
+        source = by_url[requirement["url"]]
+        pdf = args.source_root / source["source_path"]
+        cache = args.source_root / "batch-v1/text" / f"{source['source_sha256']}.json"
+        if (
+            source["retrieval_status"] != "PASS"
+            or source["issuer"] != requirement["issuer"]
+            or source["title"] != requirement["title"]
+            or source["published_on"] != requirement["published_on"]
+            or sha256_file(pdf) != source["source_sha256"]
+            or sha256_file(cache)
+            != next(
+                row["text_cache_sha256"]
+                for row in triage["documents"]
+                if row["document_id"] == requirement["document_id"]
+            )
+        ):
+            raise ValueError("NONFINAL_SCHEDULE_SOURCE_CHANGED")
+        extracted = json.loads(cache.read_bytes())
+        if extracted["source_sha256"] != source["source_sha256"]:
+            raise ValueError("NONFINAL_SCHEDULE_EXTRACTION_CHANGED")
+        parsed = a_share_schedule(extracted["pages"])
+        if parsed:
+            schedules[requirement["document_id"]] = parsed
+    rows = classify(requirements, triage["documents"], excluded, cash["events"], schedules)
     if rows != classify(
-        list(reversed(closure["remaining_cash_documents"])),
+        list(reversed(requirements)),
         list(reversed(triage["documents"])),
         excluded,
         list(reversed(cash["events"])),
+        schedules,
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
-    by_url = {row["url"]: row for row in sources["documents"]}
     for row in rows:
         source = by_url[row["url"]]
         pdf = args.source_root / source["source_path"]
@@ -157,8 +254,16 @@ def main():
         if (
             extracted["source_sha256"] != row["source_sha256"]
             or parsed["candidate_class"] not in {"NEITHER", "CASH_ONLY"}
-            or parsed["record_dates"]
-            or parsed["ex_dates"]
+            or (
+                row["classification"]
+                != "NONFINAL_A_SHARE_SCHEDULE_MATCHED_LATER_FINAL_IMPLEMENTATION"
+                and (parsed["record_dates"] or parsed["ex_dates"])
+            )
+            or (
+                row["classification"]
+                == "NONFINAL_A_SHARE_SCHEDULE_MATCHED_LATER_FINAL_IMPLEMENTATION"
+                and schedules[row["document_id"]] != (row["record_date"], row["ex_date"])
+            )
             or (
                 row["classification"]
                 == "NONFINAL_CASH_PROPOSAL_MATCHED_LATER_OFFICIAL_IMPLEMENTATION"
@@ -167,7 +272,12 @@ def main():
             or (
                 required_marker not in compact
                 if required_marker
-                else not CONDITIONAL_TEXT.search(compact)
+                else not (
+                    "另行发布" in compact
+                    if row["classification"]
+                    == "NONFINAL_A_SHARE_SCHEDULE_MATCHED_LATER_FINAL_IMPLEMENTATION"
+                    else CONDITIONAL_TEXT.search(compact)
+                )
             )
         ):
             raise ValueError("PROPOSAL_NOT_NONFINAL")
@@ -184,8 +294,10 @@ def main():
     }
     if args.prior_proposals:
         inputs["prior_proposals"] = args.prior_proposals
+    if args.queue:
+        inputs["queue"] = args.queue
     report = {
-        "report_version": "P1_OFFICIAL_NONFINAL_PROPOSAL_SCOPE_V4",
+        "report_version": "P1_OFFICIAL_NONFINAL_PROPOSAL_SCOPE_V5",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {key: sha256_file(path) for key, path in inputs.items()},
         "closed_documents": len(rows),

@@ -1,5 +1,19 @@
 # Decisions
 
+## 2026-09-18 preliminary A/H schedule and PIT typo boundary
+
+A dated A-share schedule in an official A/H preliminary notice is a nonfinal
+reference, not a new dividend, only when its checksum-verified text explicitly
+promises a later A-share implementation announcement and exactly one accepted
+official issuer final notice for the same security and A-share record/ex dates
+was published later but no later than record date. Do not use H-share dates or
+derive a cash amount from the preliminary notice. Seven 601186/601390 notices
+meet this existing source-scope rule. Conversely, the later SZSE yearbook and
+annual report corroborating 301262's probable ex-date cannot retroactively
+repair a malformed date in its contemporaneous final notice. Keep 301262 open
+unless contemporaneous official correction/independent evidence is recovered.
+This is fact-level classification, not a new research methodology approval.
+
 ## 2026-09-18 official secondary cash-leg and derivative-reference handling
 
 For an already accepted ordinary-A primary cash event, a secondary official

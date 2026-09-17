@@ -1,5 +1,31 @@
 # Current state
 
+## Current R5 P1 nonfinal A-share schedule closure — 2026-09-18
+
+Seven checksum-verified official 601186/601390 A/H-share notices provide
+preliminary A-share record/ex-date schedules and explicitly promise a later
+final A-share implementation announcement. Each has exactly one later accepted
+official issuer primary notice with the same security and exact A-share dates,
+published before the record date. The H-share schedule is not substituted for
+the A-share event; no new cash or bonus event is created. Nonfinal-scope v5
+closes 30 documents total (23 prior + 7), file SHA-256
+`fc0ca2c1901493dee85ecce10ab96d4611838e0944359e6239dc38ad52db43b0`,
+manifest `65741fb57ca0394ed5d4fed49b389293a3736cad869d8216d62ea91c3fc19447`.
+Cumulative P1 v42 establishes **16,061/16,320** facts, with 1,984 official
+substitutions and **259 facts / 258 documents** still open (243 acquired
+distribution PDFs, 15 other). Its file SHA-256 is
+`37aed2cd4acaf9c0d54779c122e0bb7a4a2ba4b5655620f4cd11f59225c16592`,
+manifest `e48e0a00c98bf66ef6f1a112fa2827a1c3ed1f47bbf2825ede4e9535c3d6e873`.
+Queue v4 SHA-256 is
+`7c7ef6c3f18e5cfaa6e91e190485141d3fa73385f11524e4a6bf4890655bc5ec`;
+its source-bound triage v14 has 94 bonus-only, 1 both, 5 cash-only and 143
+neither. Replay/input-order checks pass. The contemporaneous 301262 issuer
+notice has a malformed ex-date; later official yearbook/annual-report data
+corroborate the likely date only retrospectively, so it remains unaccepted
+under point-in-time rules. P0 remains PASS; full cash/bonus census, verified
+safe start and Full Dataset remain unresolved. The retained-bonus fractional
+methodology gate remains active; no freeze or study was run.
+
 ## Current R5 P1 fact-level closure — 2026-09-18
 
 P0 official-public reconstruction remains PASS for 2,403 SSE and 3,028 SZSE

@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 R5 nonfinal A-share schedule scope closure
+
+Reused the already acquired official CNINFO PDFs. Seven 601186/601390 A/H
+preliminary schedule notices are nonfinal references: each explicitly defers
+the final A-share implementation announcement and exactly matches one later
+accepted issuer primary A-share event by security, record date and ex-date.
+The parser isolates A-share dates from H-share dates and rejects nonunique or
+unmatched cases. No economic event or cash amount was inferred from a hint.
+Nonfinal v5 closes 30 documents (23 prior + 7), manifest
+`65741fb57ca0394ed5d4fed49b389293a3736cad869d8216d62ea91c3fc19447`.
+Cumulative v42 establishes 16,061/16,320 facts, 1,984 official substitutions;
+259 facts / 258 documents remain (243 acquired queue, 15 other), manifest
+`e48e0a00c98bf66ef6f1a112fa2827a1c3ed1f47bbf2825ede4e9535c3d6e873`.
+Ruff and focused tests pass; immutable input-order checks pass. The 301262
+retrospective yearbook/annual-report ex-date crosscheck does not repair its
+contemporaneous issuer typo for PIT acceptance, and no related event was
+promoted. Full Dataset, freeze, studies and PR merge remain blocked/unrun.
+
 ## 2026-09-18 R5 exact cash-leg and derivative scope closure
 
 Reused the 257 acquired, SHA-bound official CNINFO PDFs. Shared labeled-date

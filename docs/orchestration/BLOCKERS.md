@@ -1,5 +1,17 @@
 # Blockers
 
+## Current P1 remainder after nonfinal A-share schedule closure — 2026-09-18
+
+Official-public P0 remains PASS without a paid export. P1 cumulative v42 has
+259 facts / 258 documents open: 243 already acquired distribution documents
+and 15 other source requests. Seven 601186/601390 preliminary A-share schedule
+notices are now classified as nonfinal references only after exact matching to
+later official final issuer notices; they add no events. The 301262 original
+ex-date typo remains unresolved for PIT acceptance despite later official
+retrospective corroboration. Full cash/bonus census and verified safe start
+remain partial. The retained-bonus fractional-share human methodology decision
+below is still active. No Full Dataset, freeze or strategy study exists.
+
 ## Current P1 source-fact remainder — 2026-09-18
 
 Official-public P0 is already PASS, so paid P0 exports are not the blocker.
