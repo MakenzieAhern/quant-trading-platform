@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 retained bonus source-replay correction
+
+Official 601558 issuer text confirms per-share bonus/transfer ratios at both
+the 2011-06-07 and 2012-06-26 ex-dates. Two generic extraction defects were
+corrected without a symbol-specific production rule. Replaying the complete
+bounded subset now yields 276/288 supported, 12 unresolved, and preserves all
+274 previously accepted event keys and checksums. Reverse input order and
+canonical bytes match (ledger v19 SHA-256
+`acdfbc219cb826471769ea229482f8ada4eb9b728d50f0905cf8d66c69f29edb`,
+manifest `edacba885961547fb484a20a82dd2e6e635e6df5e00c16f568ad9f77a3161788`).
+The full 7,407-row oracle remains PARTIAL; P1 stays at 593 missing facts,
+SZSE exact resumption at 1,921, and full issuer cash census PARTIAL. CI for
+the preceding cash-precision milestone passed backend/compose/frontend.
+No Full Dataset was created, audited, frozen or used for strategy research.
+
 ## 2026-09-17 retained official issuer precision and current R5 gate
 
 Fresh source replay restored all 32 old 2016 cash events previously missed by

@@ -8,12 +8,17 @@ from scripts.reconcile_distribution_cash import issuer_code_matches
 
 
 def retained_ratio(pages, symbol):
-    normalized = unicodedata.normalize("NFKC", "\n".join(pages))
+    normalized_pages = [unicodedata.normalize("NFKC", page) for page in pages]
+    normalized = "\n".join(normalized_pages)
     if not issuer_code_matches(normalized, symbol):
         raise ValueError("BONUS_ISSUER_HEADER_MISMATCH")
-    text = re.sub(r"\s+", "", normalized)
+    # Keep page boundaries so a page number cannot turn "10" + "2股" into "102股".
+    text = "§".join(re.sub(r"\s+", "", page) for page in normalized_pages)
+    text = text.replace("每§股", "每股")
     if re.search(r"差异化分红送转:?是|让渡|重整|转赠|缩股|吸收合并", text):
         raise ValueError("NONSTANDARD_ENTITLEMENT_REQUIRES_REVIEW")
+    if "每每每每" in text and "一、" in text:
+        text = text[text.index("一、") :]
     components = []
     for patterns in (
         (

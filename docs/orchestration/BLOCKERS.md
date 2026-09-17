@@ -1,6 +1,16 @@
 # Blockers
 
-## Current 2026-09-17 R5 gates after issuer cash precision replay
+## Current 2026-09-17 R5 gate after bonus source replay
+
+The bounded integer/next-session bonus ledger now supports 276/288, with 12
+unresolved (two inaccessible official implementation PDFs, six term/exchange
+conflicts, four nonstandard entitlements). Another 7,119 oracle rows are not
+certified by this subset. P1 still lacks 593 facts / 577 documents, the full
+issuer cash census remains PARTIAL, and 1,921 SZSE exact resumption boundaries
+remain unresolved. The two PDF access denials were not bypassed. Continue
+independent official-source closure; no Full Dataset or research gate opens.
+
+## Earlier 2026-09-17 R5 gates after issuer cash precision replay
 
 The 23 bounded rounded-vs-exact cash discrepancies are closed in v43 using
 retained official issuer notices. This does not close the issuer-wide cash
@@ -15,7 +25,7 @@ consolidated external input or a Full Dataset gate. The Full Dataset and
 research studies remain locked; cash exchange target coverage alone is not a
 full issuer/corporate-action census.
 
-## Current 2026-09-17 integer retained-bonus subset
+## Earlier 2026-09-17 integer retained-bonus subset
 
 274 / 288 bounded integer/next-session events are supported, up from 254;
 14 remain: two missing issuer PDFs, eight term/parser conflicts, four nonstandard

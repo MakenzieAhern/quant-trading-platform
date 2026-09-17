@@ -1,5 +1,23 @@
 # Current state
 
+## Current R5 retained-bonus PDF boundary correction — 2026-09-17
+
+The retained official 601558 implementation PDFs exposed two extraction
+artifacts: a page counter joining `10` into `102股`, and a quadrupled OCR
+headline. The shared terms parser now preserves page boundaries, rejoins an
+exact `每`/`股` page split, and ignores only the demonstrably quadrupled
+headline when the implementation body is present. Replaying all 288 bounded
+integer/next-session candidates supports 276 (up from 274); the two newly
+supported 601558 events are dated 2011-06-07 and 2012-06-26. None of the
+previous 274 accepted event keys or checksums was lost. Reverse date-link
+ordering reproduced identical ledger bytes. Ledger v19 SHA-256
+`acdfbc219cb826471769ea229482f8ada4eb9b728d50f0905cf8d66c69f29edb`,
+manifest `edacba885961547fb484a20a82dd2e6e635e6df5e00c16f568ad9f77a3161788`.
+Twelve remain unresolved: two missing official implementation PDFs, six
+term/exchange conflicts, and four nonstandard entitlement cases. The other
+7,119 oracle rows remain outside this narrow subset; no full bonus census,
+Full Dataset, freeze or strategy study is accepted.
+
 ## Current R5 retained issuer cash precision — 2026-09-17
 
 The 2010–2022 v7 date-link replay now uses the existing exchange amount only
@@ -32,7 +50,7 @@ This closes the bounded precision gap, **not** the full issuer cash census:
 P1 remains 593 facts / 577 documents, and bonus/SZSE resumption work remains
 partial. Full Dataset, freeze and strategy studies remain locked.
 
-## Current R5 retained-bonus integer subset — 2026-09-17
+## Earlier R5 retained-bonus integer subset — 2026-09-17
 
 Replayed the existing 288 integer, next-session candidates against retained
 SHA-verified official issuer notices, exchange ratios, lifecycle, and approved
