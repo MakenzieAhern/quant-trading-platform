@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 603023 tax-component parser correction
+
+The exact official 603023 PDF was already retained; a targeted duplicate
+fetch matched its SHA-256 and introduced no new authority. Its tax section
+describes 1.3 tax-free plus 0.2 taxable shares within the 1.5 capital-reserve
+transfer, not an additional entitlement. The shared parser now excludes tax
+explanation from ratio extraction while preserving full-document nonstandard
+guards. Full 288-candidate replay leaves all prior 281 event checksums intact
+and adds only 603023: bounded ledger v28 is 282 supported / 6 unresolved,
+manifest `2b65dfe5bd7807363f833e5a7d00a686fc8a798dccc4c5330022a039a2260027`.
+The issuer notice has conflicting new-share listing dates, and actual
+tradability is not independently proven. The 603023 two-leg P1 requirement
+therefore stays open; cumulative v50, accepted 15-event merger inventory,
+full-census, Full Dataset and research locks are unchanged.
+
 ## 2026-09-18 河北钢铁 false-parent identity audit and 600253 follow-up
 
 Reused the original 000709 issuer implementation PDF and obtained a single

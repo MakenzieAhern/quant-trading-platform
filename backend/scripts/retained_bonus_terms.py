@@ -22,6 +22,10 @@ def retained_ratio(pages, symbol):
         text = text.replace("转赠股本实施办法", "转增股本实施办法")
     if re.search(r"差异化分红送转:?是|让渡|重整|转赠|缩股|吸收合并", text):
         raise ValueError("NONSTANDARD_ENTITLEMENT_REQUIRES_REVIEW")
+    if "扣税说明" in text:
+        start = text.index("扣税说明")
+        next_section = re.search(r"[一二三四五六七八九十]、", text[start:])
+        text = text[:start] + (text[start + next_section.start() :] if next_section else "")
     if "每每每每" in text and "一、" in text:
         text = text[text.index("一、") :]
     components = []

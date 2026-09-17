@@ -1,5 +1,18 @@
 # Current state
 
+## Current R5 603023 bounded bonus parser correction — 2026-09-18
+
+Replaying the already retained official issuer PDF resolves a parser-only
+false conflict: its 0.5 share dividend plus 1.5 capital-reserve shares total
+2.0; later tax subcomponents 1.3 and 0.2 are not additional entitlements.
+The 288-candidate bounded ledger v28 preserves all prior 281 accepted event
+checksums and adds only 603023, for **282 supported / 6 unresolved**; 7,119
+source-oracle rows remain outside scope. The 603023 dual-leg P1 request remains
+open because the same notice gives conflicting new-share listing dates (cover
+2016-06-16, body 2016-04-16). A next-session schedule does not certify actual
+tradability. No Full Dataset, freeze or strategy run is authorized. See
+`../research/R5_BONUS_SOURCE_ORACLE_V1.md`.
+
 ## Current R5 false 河北钢铁 parent-identity closure — 2026-09-18
 
 The 000709 issuer implementation report names its acquired parents as 邯郸钢铁

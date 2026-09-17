@@ -2,6 +2,12 @@
 
 ## Current R5 P1 and methodology gates — 2026-09-18
 
+Bounded integer/next-session bonus now supports 282/288 (6 unresolved), with
+the prior 281 accepted event checksums preserved. The corrected 603023 tax
+component parser does not resolve its notice's contradictory new-share listing
+dates or establish actual tradability, so its two-leg P1 request remains open.
+Full census and Full Dataset still fail closed.
+
 Official source cross-check rejects two wrongly attributed 000709 parent
 requests (000761 and 000898); actual delisted parents were SSE 600001 and
 600357. P1 v50 leaves **249 facts / 248 documents** open: 241 already acquired

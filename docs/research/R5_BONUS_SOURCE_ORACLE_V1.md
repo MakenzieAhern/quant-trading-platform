@@ -1,5 +1,30 @@
 # R5 bonus source-oracle review
 
+## 603023 bounded parser correction — 2026-09-18
+
+The retained original [2016-06-04 CNINFO issuer notice](https://static.cninfo.com.cn/finalpage/2016-06-04/1202356226.PDF)
+(SHA-256 `b54bfa9d42641fd1d3f0bf2c0e45e7cd0730bd7797c058a117cc293a9e513b73`)
+states gross cash **0.15 CNY/share**, stock dividend **0.5 share/share** and
+capital-reserve transfer **1.5 shares/share**, total retained-share ratio
+**2.0**; record 2016-06-14 and ex/cash 2016-06-15. The shared term parser
+mistook the later tax discussion's split **1.3 tax-free + 0.2 taxable**
+capital-reserve shares for competing entitlement ratios. It now excludes the
+tax-explanation section from entitlement extraction while still fail-closing
+on nonstandard markers in the full document. Deterministic replay of all 288
+bounded candidates preserves the prior 281 event checksums and adds only
+603023: v28 **282/288** supported, **6** unresolved and **7,119** source-oracle
+rows outside the integer/next-session subset. Immutable v28 file SHA-256
+`9df2264ba93ca5cd0a0abee1074b38f281143d3c9a61fb495967f3e785714a0d`,
+manifest `2b65dfe5bd7807363f833e5a7d00a686fc8a798dccc4c5330022a039a2260027`.
+
+This does **not** close the 603023 dual-leg P1 request: the notice's cover
+gives new unrestricted-share listing **2016-06-16**, while its body says
+**2016-04-16**, a date before the record date. The latter is chronologically
+impossible, but independent official confirmation of actual tradability is
+not yet recorded. The bounded event remains explicitly
+`scheduled_listing_not_actual_tradability`; full census and Full Dataset are
+not admitted. P1 v50 stays **249 facts / 248 documents** open.
+
 Retained SSE/SZSE tables yield 7,407 source date groups, not accepted events.
 7,368 directly match one full-master interval; one more maps through the already
 verified 601313/601360 code transition and dated original issuer PDF. 38 B-share

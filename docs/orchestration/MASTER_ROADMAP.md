@@ -1,5 +1,11 @@
 # v1.1 controller roadmap
 
+Current 2026-09-18 bounded bonus ledger v28 supports 282/288 candidates after
+a shared-parser correction for 603023 tax components, preserving all 281
+previous event checksums. This does not close its dual-leg P1 request because
+actual new-share tradability remains source-conflicted; P1 v50 and all Full
+Dataset gates are unchanged. Earlier bonus counts below are historical.
+
 Current 2026-09-18 P1 v50 resolves two erroneous 000761/000898→000709
 parent requests as official-identity false positives, not substitutions or
 economic events. **16,071/16,320** requirements are now established, closed

@@ -16,6 +16,17 @@ def test_exact_retained_components_and_fail_closed_identity():
         assert (
             retained_ratio(
                 [
+                    header + "每股送红股0.5股;每股转增1.5股。二、方案每股送红股0.5股;"
+                    "每股转增1.5股。(四)扣税说明:每股转增1.3股免税,"
+                    "每股转增0.2股需扣税。三、实施日期:股权登记日"
+                ],
+                "600000",
+            )
+            == 2
+        )
+        assert (
+            retained_ratio(
+                [
                     header + "重要内容提示重要内容提示每每每每10101010股送红股10101010股"
                     "一、通过分配方案二、分配方案每10股送红股10股"
                 ],
@@ -82,6 +93,7 @@ def test_exact_retained_components_and_fail_closed_identity():
         "每10股转增10股。每10股转增5股。实施后总股本为200股,增加100股",
         "每10股转增10股。实施后总股本为300股,增加200股",
         "股权转赠每10股转增10股",
+        "每10股转增10股。(四)扣税说明:重整股份另行处理。三、实施日期",
     ):
         with pytest.raises(ValueError):
             retained_ratio([header + body], "600000")
