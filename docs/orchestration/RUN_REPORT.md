@@ -1,5 +1,17 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 next older SSE merger lead, not accepted
+
+Targeted CNINFO metadata for the 600607 and 600842 parent chains was saved
+under external `full-merger-v1/targeted-parent-fraction-v4/`, eight issuer
+announcements per parent across 2010-01-29 to 2010-03-10. The 600607
+cash-choice implementation PDF (official ID `57568627`, SHA-256
+`cd462a91bcb21f3110cfafddeb260654f1534984d763c29dfe4b63babd0b7dc1`)
+was acquired with its receipt. A later targeted PDF request failed with
+temporary WSL DNS resolution; its failure receipt is retained for bounded
+resume. No 600607/600842 chain or P1 request was closed, and no count or
+accepted event changed. Do not restart metadata acquisition from zero.
+
 ## 2026-09-18 targeted 600631 merger source-chain audit
 
 Reused the official CNINFO report, parent halt, successor progress/result

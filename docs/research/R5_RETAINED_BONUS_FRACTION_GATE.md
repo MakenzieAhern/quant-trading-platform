@@ -44,7 +44,8 @@ on remaining whole shares, and record the discarded fractional bound.
 Alternatively, exclude affected security-date
 holdings until exact allocation is evidenced. Neither choice is approved here.
 
-This gate does not close the 257 remaining P1 facts in cumulative v44, the
-600337 final-implementation source gap, the corporate-action census, or the
-verified safe-start date. Subsequent cash-leg and derivative-reference closures
-did not promote any bonus source term to an accepted economic event.
+This gate does not close the **253 remaining P1 facts in cumulative v48**, the
+corporate-action census, or the verified safe-start date. The 600337 original
+designated-disclosure notice and two bounded merger source requests have since
+closed independently, without promoting any fractional retained-bonus source
+term to an accepted economic event.
