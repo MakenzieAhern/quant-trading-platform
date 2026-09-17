@@ -1,6 +1,25 @@
 # Current state
 
-## Current R5 official cash-correction source closure — 2026-09-18
+## Current R5 two nonfinal bank notices scoped — 2026-09-18
+
+The original official 601009 issuer PDF is a shareholder proposal for a
+possible 2024 midterm distribution, still subject to approval and with no
+executable amount or entitlement dates. The 600919 issuer's convertible-halt
+PDF explicitly promises its final ordinary-A implementation notice on
+2023-07-11; exactly one accepted official cash event matches that issuer,
+date and final title. Both PDFs mention preferred securities only in the
+identification header, not in the entitlement body. Source bytes, extraction,
+header/body distinction, final-event checksum and reverse order are audited
+in nonfinal-scope report v8 (34 cumulative notices; manifest
+`aff961accf0b3743c903f70b28a0c7064fdf48e283813e97be236e4004abc58c`).
+Neither creates or changes an economic event. Cumulative P1 v57 establishes
+**16,068/16,320** facts and leaves **252 facts / 247 documents** open (236
+acquired distribution, 11 other); manifest
+`7de0765893210ae796b24c1acd84edb7254051ca6f28f4d0b0a40c5485ba2896`.
+The retained-bonus fractional methodology gate, full-census and research
+locks are unchanged.
+
+## Previous R5 official cash-correction source closure — 2026-09-18
 
 Three already acquired issuer correction PDFs were independently reconciled
 against their original official notices and accepted ordinary-A cash events:

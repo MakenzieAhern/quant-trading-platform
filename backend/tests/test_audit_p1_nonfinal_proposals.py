@@ -1,6 +1,11 @@
 """Proposal-only notices must never substitute for final cash facts."""
 
-from scripts.audit_p1_nonfinal_proposals import a_share_schedule, classify, convertible_halt_final
+from scripts.audit_p1_nonfinal_proposals import (
+    a_share_schedule,
+    classify,
+    convertible_halt_final,
+    preferred_header_only,
+)
 
 
 def test_only_undated_nonfinal_proposal_is_out_of_scope():
@@ -219,3 +224,88 @@ def test_convertible_halt_hint_does_not_set_final_cash_amount():
         )
         == []
     )
+
+
+def test_preferred_code_only_in_header_does_not_turn_a_share_proposal_into_preferred_event():
+    pages = [
+        "证券代码:601009 优先股代码:360019 本公司董事会保证真实。"
+        "大股东提议实施中期利润分配,尚需股东大会审议。"
+    ]
+    assert preferred_header_only(pages)
+    assert not preferred_header_only([pages[0] + "优先股股息另行派发。"])
+    requirement = {
+        "document_id": "proposal",
+        "affected_events": ["CNINFO:proposal"],
+        "issuer": "601009",
+        "published_on": "2024-08-01",
+        "title": "关于收到大股东提议实施中期利润分配方案的公告",
+        "url": "official-proposal",
+    }
+    triage = {
+        "document_id": "proposal",
+        "candidate_class": "NEITHER",
+        "record_dates": [],
+        "ex_dates": [],
+        "preferred_instrument_marker": True,
+        "source_sha256": "sha",
+        "text_cache_sha256": "cache",
+    }
+    assert classify([requirement], [triage], set()) == []
+    assert (
+        classify([requirement], [triage], set(), header_only_preferred={"proposal"})[0][
+            "classification"
+        ]
+        == "NONFINAL_PROPOSAL_NO_EXECUTABLE_CASH_OR_BONUS_TERMS"
+    )
+
+
+def test_convertible_halt_announces_unique_later_final_without_indicative_cash():
+    final_title = "江苏银行股份有限公司2022年年度权益分派实施公告"
+    pages = [
+        "证券代码:600919 优先股代码:360026 本公司董事会保证真实。"
+        "苏银转债将停止转股,转股价格将调整。"
+        "本行将于2023年7月11日刊登《" + final_title + "》。"
+    ]
+    promised = convertible_halt_final(pages)
+    assert promised == ("2023-07-11", final_title)
+    requirement = {
+        "document_id": "hint",
+        "affected_events": ["CNINFO:hint"],
+        "issuer": "600919",
+        "published_on": "2023-07-05",
+        "title": "关于A股分红派息实施暨苏银转债转股连续停牌的提示性公告",
+        "url": "official-hint",
+    }
+    triage = {
+        "document_id": "hint",
+        "candidate_class": "NEITHER",
+        "record_dates": [],
+        "ex_dates": [],
+        "preferred_instrument_marker": True,
+        "cash_candidate_per_share": None,
+        "source_sha256": "sha",
+        "text_cache_sha256": "cache",
+    }
+    final = {
+        "event_checksum": "final",
+        "event": {
+            "security_id": {"value": "CN-A:SSE:600919"},
+            "record_date": "2023-07-14",
+            "ex_date": "2023-07-17",
+            "announcement_date": "2023-07-11",
+            "cash_per_share": "0.4907",
+            "source_url": "https://static.cninfo.com.cn/finalpage/final.PDF",
+            "source_provider": "OFFICIAL_ISSUER_CNINFO_PRIMARY",
+            "source_document": "江苏银行2022年年度权益分派实施公告",
+        },
+    }
+    result = classify(
+        [requirement],
+        [triage],
+        set(),
+        [final],
+        bond_notices={"hint": promised},
+        header_only_preferred={"hint"},
+    )
+    assert result[0]["accepted_event_checksum"] == "final"
+    assert result[0]["indicative_cash_per_share"] is None

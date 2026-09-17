@@ -22,7 +22,24 @@ NO_DISTRIBUTION_TITLE = re.compile(r"(?:拟不实施.*利润分配|不实施.*�
 DEFERRED_TITLE = re.compile(r"推迟.*利润分配实施")
 CONDITIONAL_TEXT = re.compile(r"尚需|不确定|后续.*方案|届时.*公告|提请.*授权|具体.*另行公告")
 SCHEDULE_TITLE = re.compile(r"利润分配实施的提示性公告")
-CONVERTIBLE_HALT_TITLE = re.compile(r"转债.*停止转股的提示性公告")
+CONVERTIBLE_HALT_TITLE = re.compile(r"转债.*(?:停止转股|转股连续停牌)的提示性公告")
+
+
+def preferred_header_only(pages):
+    text = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "\n".join(pages)))
+    if "本公司董事会" not in text:
+        return False
+    header, body = text.split("本公司董事会", 1)
+    return (
+        bool(re.search(r"证券代码:?\d{6}", header)) and "优先股" in header and "优先股" not in body
+    )
+
+
+def final_title_matches(notice_title, accepted_title):
+    compact = lambda value: re.sub(r"\s+", "", unicodedata.normalize("NFKC", value))  # noqa: E731
+    return compact(notice_title).replace("股份有限公司", "") == compact(accepted_title).replace(
+        "股份有限公司", ""
+    )
 
 
 def a_share_schedule(pages):
@@ -52,7 +69,14 @@ def convertible_halt_final(pages):
         r"将于(20\d{2})年(\d{1,2})月(\d{1,2})日.{0,250}?发布《([^》]*A股普通股[^》]*分红派息实施公告)》",
         text,
     )
-    if len(matches) != 1 or "相应调整每股分配比例" not in text:
+    if not matches:
+        matches = re.findall(
+            r"将于(20\d{2})年(\d{1,2})月(\d{1,2})日.{0,250}?刊登《([^》]*年度权益分派实施公告)》",
+            text,
+        )
+    if len(matches) != 1 or not (
+        "相应调整每股分配比例" in text or ("停止转股" in text and "调整" in text)
+    ):
         return None
     try:
         return date(*map(int, matches[0][:3])).isoformat(), matches[0][3]
@@ -60,7 +84,15 @@ def convertible_halt_final(pages):
         return None
 
 
-def classify(requirements, triage, already_closed, cash=(), schedules=None, bond_notices=None):
+def classify(
+    requirements,
+    triage,
+    already_closed,
+    cash=(),
+    schedules=None,
+    bond_notices=None,
+    header_only_preferred=frozenset(),
+):
     schedules = schedules or {}
     bond_notices = bond_notices or {}
     by_id = {row["document_id"]: row for row in triage}
@@ -99,14 +131,14 @@ def classify(requirements, triage, already_closed, cash=(), schedules=None, bond
                 accepted
                 for accepted in final_by_symbol.get(requirement["issuer"], [])
                 if accepted["event"]["announcement_date"] == announced_on
-                and accepted["event"]["source_document"] == final_title
+                and final_title_matches(final_title, accepted["event"]["source_document"])
                 and requirement["published_on"] < announced_on <= accepted["event"]["record_date"]
             ]
             if (
-                row["candidate_class"] != "CASH_ONLY"
+                row["candidate_class"] not in {"CASH_ONLY", "NEITHER"}
                 or row["record_dates"]
                 or row["ex_dates"]
-                or row["preferred_instrument_marker"]
+                or (row["preferred_instrument_marker"] and document_id not in header_only_preferred)
                 or len(matches) != 1
             ):
                 continue
@@ -166,7 +198,7 @@ def classify(requirements, triage, already_closed, cash=(), schedules=None, bond
             or ((no_distribution or deferred) and row["candidate_class"] != "NEITHER")
             or row["record_dates"]
             or row["ex_dates"]
-            or row["preferred_instrument_marker"]
+            or (row["preferred_instrument_marker"] and document_id not in header_only_preferred)
         ):
             continue
         linked = None
@@ -246,11 +278,16 @@ def main():
         raise ValueError("TRIAGE_CLOSURE_CHANGED")
     excluded = {row["document_id"] for row in prior["closed"]}
     by_url = {row["url"]: row for row in sources["documents"]}
-    schedules, bond_notices = {}, {}
+    schedules, bond_notices, header_only_preferred = {}, {}, set()
+    triage_by_id = {row["document_id"]: row for row in triage["documents"]}
     for requirement in requirements:
         if not (
             SCHEDULE_TITLE.search(requirement["title"])
             or CONVERTIBLE_HALT_TITLE.search(requirement["title"])
+            or (
+                PROPOSAL_TITLE.search(requirement["title"])
+                and triage_by_id[requirement["document_id"]]["preferred_instrument_marker"]
+            )
         ):
             continue
         source = by_url[requirement["url"]]
@@ -273,6 +310,8 @@ def main():
         extracted = json.loads(cache.read_bytes())
         if extracted["source_sha256"] != source["source_sha256"]:
             raise ValueError("NONFINAL_SCHEDULE_EXTRACTION_CHANGED")
+        if preferred_header_only(extracted["pages"]):
+            header_only_preferred.add(requirement["document_id"])
         parsed = a_share_schedule(extracted["pages"])
         if parsed:
             schedules[requirement["document_id"]] = parsed
@@ -280,7 +319,13 @@ def main():
         if parsed_bond:
             bond_notices[requirement["document_id"]] = parsed_bond
     rows = classify(
-        requirements, triage["documents"], excluded, cash["events"], schedules, bond_notices
+        requirements,
+        triage["documents"],
+        excluded,
+        cash["events"],
+        schedules,
+        bond_notices,
+        header_only_preferred,
     )
     if rows != classify(
         list(reversed(requirements)),
@@ -289,6 +334,7 @@ def main():
         list(reversed(cash["events"])),
         schedules,
         bond_notices,
+        header_only_preferred,
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     for row in rows:
@@ -319,6 +365,13 @@ def main():
             extracted["source_sha256"] != row["source_sha256"]
             or parsed["candidate_class"] not in {"NEITHER", "CASH_ONLY"}
             or (
+                parsed["preferred_instrument_marker"]
+                and (
+                    row["document_id"] not in header_only_preferred
+                    or not preferred_header_only(extracted["pages"])
+                )
+            )
+            or (
                 row["classification"]
                 != "NONFINAL_A_SHARE_SCHEDULE_MATCHED_LATER_FINAL_IMPLEMENTATION"
                 and (parsed["record_dates"] or parsed["ex_dates"])
@@ -345,7 +398,10 @@ def main():
                     "另行发布" in compact
                     if row["classification"]
                     == "NONFINAL_A_SHARE_SCHEDULE_MATCHED_LATER_FINAL_IMPLEMENTATION"
-                    else "相应调整每股分配比例" in compact
+                    else (
+                        "相应调整每股分配比例" in compact
+                        or ("停止转股" in compact and "调整" in compact)
+                    )
                     if row["classification"]
                     == "NONFINAL_CONVERTIBLE_HALT_MATCHED_LATER_FINAL_IMPLEMENTATION"
                     else CONDITIONAL_TEXT.search(compact)
@@ -369,7 +425,7 @@ def main():
     if args.queue:
         inputs["queue"] = args.queue
     report = {
-        "report_version": "P1_OFFICIAL_NONFINAL_PROPOSAL_SCOPE_V7",
+        "report_version": "P1_OFFICIAL_NONFINAL_PROPOSAL_SCOPE_V8",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {key: sha256_file(path) for key, path in inputs.items()},
         "closed_documents": len(rows),

@@ -1,6 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
-## 2026-09-18 three official cash-correction sources closed
+## 2026-09-18 two official nonfinal bank notices scoped
+
+The already retained 601009 shareholder-proposal PDF has no executable
+cash/bonus ratio or entitlement dates and explicitly requires later approval.
+The 600919 convertible-halt PDF explicitly names its later final ordinary-A
+implementation publication day; the accepted 2023-07-11 issuer event is the
+unique exact-date/title match. In both documents, preferred-security words
+occur only in the code header, not the entitlement body. They are nonfinal
+references, not additional dividends. Source/checksum and reverse-order audit
+is nonfinal report v8, manifest
+`aff961accf0b3743c903f70b28a0c7064fdf48e283813e97be236e4004abc58c`.
+Cumulative P1 v57: 16,068/16,320 established, 1,989 substitutions,
+252 facts / 247 documents open (236 distribution, 11 other), manifest
+`7de0765893210ae796b24c1acd84edb7254051ca6f28f4d0b0a40c5485ba2896`.
+Current triage: 94 bonus-only, 1 both, 3 cash-only, 138 neither. No Full
+Dataset, freeze or study.
+
+## Previous 2026-09-18 three official cash-correction sources closed
 
 Reused original checksum-verified CNINFO issuer notices and their accepted
 cash-event checksums to audit three correction PDFs without redownloading:

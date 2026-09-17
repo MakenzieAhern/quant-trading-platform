@@ -5,7 +5,7 @@ Status: **HUMAN_DECISION_REQUIRED**. No Full Dataset or strategy run is authoriz
 The 2026-09-18 component-integrality replay extends this same gate to 39
 formerly accepted integer-total bonus events with fractional stock-dividend
 or capital-transfer components. The bounded current ledger is v30: 243/288
-supported, 45 unresolved. Cumulative P1 v56 has 254 facts / 249 documents
+supported, 45 unresolved. Cumulative P1 v57 has 252 facts / 247 documents
 open. See `R5_BONUS_SOURCE_ORACLE_V1.md`; the older v48 count below is a
 historical checkpoint.
 

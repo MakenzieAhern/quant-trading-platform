@@ -2,6 +2,17 @@
 
 ## Current R5 P1 and methodology gates — 2026-09-18
 
+Nonfinal issuer source audit v8 removes two preferred-header false alarms
+without changing any accepted economic event. Cumulative P1 v57 leaves
+**252 facts / 247 documents** open: 236 acquired distribution PDFs and
+11 other requests. The bounded bonus ledger remains 243/288 supported;
+the retained-bonus fractional-share human methodology gate below is still
+active. Full corporate-action, suspension/raw/factor and safe-start gates
+remain partial; no Full Dataset or research study. The v56 paragraph below
+is historical.
+
+### Previous v56 checkpoint
+
 After three source-bound official cash-correction closures, cumulative P1
 v56 leaves **254 facts / 249 documents** open: 238 already acquired
 distribution PDFs and 11 other requests. The bounded bonus ledger stays

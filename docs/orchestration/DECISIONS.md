@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-09-18 preferred header is not preferred entitlement
+
+For a nonfinal ordinary-A issuer notice, a preferred-stock code/abbreviation
+in the identification header does not by itself make the **body** a preferred
+distribution. Recheck original official PDF bytes and require that no
+preferred entitlement terms occur after the company guarantee. A proposal
+still needs explicit conditional language and no executable amount/dates;
+a convertible-halt hint still needs a uniquely matched later final ordinary-A
+implementation notice. The 601009 and 600919 documents meet these strict
+source-scope tests. This is not permission to accept a preferred dividend
+as an ordinary-A event.
+
 ## 2026-09-18 official correction fact scope
 
 A secondary issuer correction may close an exact P1 source requirement
