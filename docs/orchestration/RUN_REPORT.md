@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 exact issuer A-share gross cash replacement
+
+Four SHA-verified, pre-record official CNINFO implementation PDFs separately
+state a unique A-share headline and identical final gross-cash body amount,
+with matching official record/ex-dates and no accepted bonus leg. The exact
+0.16502, 0.19006, 0.24014 (600459) and 0.07471 (603200) amounts supersede
+four rounded SSE-table cells with checksum-bound old-event references.
+Source report SHA-256
+`7cbb62c819804e12d08d06eebec291f2cf0991836c6b6a248fff0eee90a24b79`,
+manifest `de97170d183b81f349a99e8ed2a724d96d7ed6b49a5c447f5c90140fd6542737`.
+Cash v41 SHA-256 `edc51e1f5da16efe2d4a52454a102ba9501921d13bcb990ffedeabda424a773a`,
+manifest `8b35132432a3ca6400eb401ce9a7dc34a907ca0c3dfa9da7230b34608df33073`:
+40,479 accepted events, 40,376/40,376 exchange targets, no duplicate dates,
+checksum and input-order PASS. Cumulative P1 v11 SHA-256
+`7b51b3409c93a4a17c83e644e2575290b06f7a2979b7bbafee5374d7ab8ba9ea`,
+manifest `3453857f0e7a1a85285720449ffc4991800349eaaa50100edc951158c8313e85`:
+601 facts / 585 documents unresolved. Full issuer cash census remains PARTIAL;
+no dataset or study.
+
 ## 2026-09-17 exact-date orphan cash replay
 
 The common official-source composite classifier previously rejected exact

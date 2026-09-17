@@ -1,5 +1,14 @@
 # Blockers
 
+## Current 2026-09-17 precise issuer cash overrides — census still partial
+
+Four source-hash-bound precise final gross cash amounts replace rounded SSE
+rows, not additional events. P1 remains 601 facts / 585 documents (285
+distribution, 300 other). The exchange table is complete as a target list,
+but full issuer-notice/corporate-action reconciliation is still PARTIAL.
+The unrelated 301262 malformed ex-date and 1,921 SZSE resumption boundaries
+remain open; no Full Dataset or research study may run.
+
 ## Current 2026-09-17 orphan cash exact-date replay
 
 Four retained official issuer notices now corroborate existing accepted

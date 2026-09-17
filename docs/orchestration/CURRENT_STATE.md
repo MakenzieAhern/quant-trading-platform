@@ -1,5 +1,26 @@
 # Current state
 
+## Current R5 precise official issuer cash corrections — 2026-09-17
+
+Four previously open SSE final implementation notices publish exact ordinary-A
+tax-before cash terms finer than the accepted exchange table: 600459
+2023-07-05 **0.16502** vs 0.165; 2024-07-04 **0.19006** vs 0.190;
+2025-07-07 **0.24014** vs 0.240; and 603200 2023-04-27 **0.07471**
+vs 0.075. Each issuer PDF was published before record, has matching
+record/ex-dates, a unique A-share headline amount corroborated by the final
+implementation body, no accepted bonus leg, and its precise amount rounds
+to the old exchange-cell precision. Old proposal amounts in the same PDFs
+were not accepted as final terms. Source report manifest
+`de97170d183b81f349a99e8ed2a724d96d7ed6b49a5c447f5c90140fd6542737`.
+Cash v41 atomically replaces these four accepted event amounts under the
+existing checksum-linked supersession path: 40,479 events, 40,376/40,376
+exchange targets, 103 issuer-only events, input order and checksum PASS;
+manifest `8b35132432a3ca6400eb401ce9a7dc34a907ca0c3dfa9da7230b34608df33073`.
+Cumulative P1 v11 leaves 601 facts / 585 documents (285 distribution,
+300 other), 15,719/16,320 established/out of scope, 1,692 official
+substitutions; manifest `3453857f0e7a1a85285720449ffc4991800349eaaa50100edc951158c8313e85`.
+Full issuer cash census remains PARTIAL; no Full Dataset or study.
+
 ## Current R5 exact-date orphan cash replay — 2026-09-17
 
 The common orphan cash classification now accepts **both** explicitly

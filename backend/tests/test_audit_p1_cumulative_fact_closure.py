@@ -26,6 +26,7 @@ def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
             "differentiated",
             "correction",
             "proposal",
+            "precise",
         )
     }
     reports["base"] = baseline
