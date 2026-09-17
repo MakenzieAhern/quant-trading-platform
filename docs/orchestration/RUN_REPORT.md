@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 R5 official bonus-source corroboration
+
+The 257 retained official PDFs were not reacquired. Exact SSE listing-table
+dates and a documented SZSE `转增股` spelling now parse 94 bonus-only notices;
+92 have independently matching official exchange ratio/date rows and PIT
+ordinary-A identity. The 60 previously corroborated source terms retain the
+same identity, dates, ratio and source/exchange hashes; 32 are new. The
+remaining 002982 lacks the matching exchange oracle row, and 688692 is a
+secondary implementation-result notice. Immutable bonus-source v4 replayed
+byte-identically (file SHA-256
+`09fb6e2368b70e9275926588b5a66cc52ceb731c66ae470e24c5b8ba0eb10f29`,
+manifest `77c70f05b5aa7a14c48915b3bdeae8754c626fc431e797d2d389544c2ee58097`).
+This is source-term corroboration only: no bonus event/accounting acceptance,
+no P1 denominator change, no Full Dataset, freeze or study.
+
 ## 2026-09-18 R5 targeted official P1 source recovery and exact cash closure
 
 The exact 257-URL unresolved distribution queue was generated from the

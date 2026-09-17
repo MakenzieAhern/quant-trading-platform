@@ -52,12 +52,16 @@ def labeled_month_days(text, label):
 
 
 def star_cash_dates(pages):
-    """Unlabeled SSE cash schedule; never shift a B-share or listing column."""
+    """Unlabeled SSE distribution schedule; never shift a B-share or listing column."""
     text = compact_document("\n".join(pages))
     slash = r"(20\d{2})/(\d{1,2})/(\d{1,2})"
     pairs = set()
-    for middle, count in (("", 3), ("新增无限售条件流通股份上市日", 4)):
-        table = r"(?<!股份类别)股权登记日除权\(息\)日" + middle + "现金红利发放日" + slash * count
+    for tail, count in (
+        ("现金红利发放日", 3),
+        ("新增无限售条件流通股份上市日现金红利发放日", 4),
+        ("新增无限售条件流通股份上市日", 3),
+    ):
+        table = r"(?<!股份类别)股权登记日除权\(息\)日" + tail + slash * count
         for match in re.findall(table, text):
             try:
                 dates = [
@@ -65,8 +69,8 @@ def star_cash_dates(pages):
                 ]
             except ValueError:
                 continue
-            record, ex, pay = dates[0], dates[1], dates[-1]
-            if record < ex <= pay:
+            record, ex, last = dates[0], dates[1], dates[-1]
+            if record < ex <= last:
                 pairs.add((record, ex))
     return ([next(iter(pairs))[0]], [next(iter(pairs))[1]]) if len(pairs) == 1 else ([], [])
 

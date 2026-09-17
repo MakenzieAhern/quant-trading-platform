@@ -69,24 +69,35 @@ def corroborate(triage, requirements, oracle, master):
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--triage", type=Path, required=True)
-    parser.add_argument("--closure", type=Path, required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--closure", type=Path)
+    source.add_argument("--queue", type=Path)
     parser.add_argument("--oracle", type=Path, required=True)
     parser.add_argument("--master", type=Path, required=True)
     parser.add_argument("--source-manifest", type=Path, required=True)
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    triage, closure, oracle, sources = (
-        verified(path) for path in (args.triage, args.closure, args.oracle, args.source_manifest)
+    triage, oracle, sources = (
+        verified(path) for path in (args.triage, args.oracle, args.source_manifest)
+    )
+    requirements = (
+        verified(args.closure)["remaining_cash_documents"]
+        if args.closure
+        else json.loads(args.queue.read_bytes())
     )
     master = json.loads(args.master.read_bytes())
     if (
-        triage["closure_sha256"] != sha256_file(args.closure)
+        triage["closure_sha256" if args.closure else "source_requirements_sha256"]
+        != sha256_file(args.closure or args.queue)
         or triage["source_manifest_sha256"] != sha256_file(args.source_manifest)
-        or sha256_file(args.master) != closure["input_sha256s"]["master"]
+        or (
+            args.closure
+            and sha256_file(args.master) != verified(args.closure)["input_sha256s"]["master"]
+        )
     ):
         raise ValueError("BONUS_CROSSCHECK_INPUT_CHANGED")
-    inputs = (triage["documents"], closure["remaining_cash_documents"], oracle["rows"], master)
+    inputs = (triage["documents"], requirements, oracle["rows"], master)
     rows = corroborate(*inputs)
     if rows != corroborate(*(list(reversed(value)) for value in inputs)):
         raise ValueError("INPUT_ORDER_CHANGED")
@@ -115,13 +126,15 @@ def main() -> None:
         ):
             raise ValueError(f"P1_BONUS_TERMS_CHANGED:{row['document_id']}")
     report = {
-        "report_version": "P1_OFFICIAL_BONUS_SOURCE_TERMS_V1",
+        "report_version": "P1_OFFICIAL_BONUS_SOURCE_TERMS_V2"
+        if args.queue
+        else "P1_OFFICIAL_BONUS_SOURCE_TERMS_V1",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)
             for name, path in (
                 ("triage", args.triage),
-                ("closure", args.closure),
+                ("queue" if args.queue else "closure", args.queue or args.closure),
                 ("oracle", args.oracle),
                 ("master", args.master),
                 ("source_manifest", args.source_manifest),

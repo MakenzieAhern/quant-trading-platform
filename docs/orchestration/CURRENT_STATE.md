@@ -1,5 +1,25 @@
 # Current state
 
+## Current R5 bonus-source term corroboration — 2026-09-18
+
+The acquired 257-document official queue was re-triaged with an exact SSE
+three-date bonus/listing-table parser and the issuer's `每10股转增股N股` form.
+Source-bound triage v10 has 94 bonus-only, 7 cash-only, 6 both and 150 neither;
+its parser dependencies and source hashes are pinned (manifest
+`528c5aea4c5d94eeef216a9c10322f6a1ca3dfb41cd8a13ef18fc5e9a9222425`).
+Official issuer PDF terms, point-in-time ordinary-A identity and exact exchange
+record/ex-date ratio now corroborate 92/94 bonus-only notices: the previous
+60 remain unchanged and 32 are newly corroborated. Bonus-source v4 file
+SHA-256 is
+`09fb6e2368b70e9275926588b5a66cc52ceb731c66ae470e24c5b8ba0eb10f29`;
+manifest is `77c70f05b5aa7a14c48915b3bdeae8754c626fc431e797d2d389544c2ee58097`.
+The other two are 002982 (issuer-only, no matching exchange oracle row) and
+688692's secondary result/上市 notice (its primary implementation notice is
+already among the 92). No new economic event or P1 fact was accepted from
+this source-only corroboration; P1 remains 16,047/16,320, 273 facts open.
+Corporate-action fractional/holder accounting and the remaining source classes
+continue in R5. Full Dataset, freeze and studies remain NO.
+
 ## Current R5 targeted official-source recovery — 2026-09-18
 
 The previously denied CNINFO PDF endpoint now returns official PDF bytes for

@@ -97,9 +97,13 @@ def main() -> None:
     rows.sort(key=lambda row: row["document_id"])
     counts = dict(sorted(Counter(row["candidate_class"] for row in rows).items()))
     report = {
-        "parser_version": "P1_REMAINING_DISTRIBUTION_DOCUMENT_TRIAGE_V6",
+        "parser_version": "P1_REMAINING_DISTRIBUTION_DOCUMENT_TRIAGE_V7",
         "parser_sha256": sha256_file(Path(__file__)),
         "date_parser_sha256": sha256_file(Path(__file__).with_name("link_distribution_notices.py")),
+        "cash_parser_sha256": sha256_file(
+            Path(__file__).with_name("reconcile_distribution_cash.py")
+        ),
+        "bonus_parser_sha256": sha256_file(Path(__file__).with_name("retained_bonus_terms.py")),
         "source_requirements_sha256": sha256_file(args.closure or args.queue),
         "source_manifest_sha256": sha256_file(args.source_manifest),
         "total_documents": len(rows),

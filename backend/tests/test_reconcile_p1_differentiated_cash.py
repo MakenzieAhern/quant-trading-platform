@@ -37,6 +37,15 @@ def test_unlabeled_star_cash_table_needs_one_valid_date_chain():
     assert notice_dates([table]) == (["2024-06-13"], ["2024-06-14"])
     assert notice_dates([four]) == (["2025-06-04"], ["2025-06-05"])
     assert notice_dates([table, four]) == ([], [])
+    bonus = "股权登记日 除权(息)日 新增无限售条件流通股份上市日\n2022/6/1 2022/6/2 2022/6/6"
+    assert notice_dates([bonus, bonus]) == (["2022-06-01"], ["2022-06-02"])
+    assert notice_dates(
+        [bonus, "股权登记日 除权(息)日 新增无限售条件流通股份上市日\n2022/6/8 2022/6/9 2022/6/10"]
+    ) == ([], [])
+    assert notice_dates(["股份类别" + bonus]) == ([], [])
+    assert notice_dates(
+        ["股权登记日 除权(息)日 新增无限售条件流通股份上市日\n2022/6/2 2022/6/1 2022/6/6"]
+    ) == ([], [])
     assert star_cash_dates(["股份类别" + table]) == ([], [])
     assert notice_dates(
         ["股权登记日期为:2023 年 11 月 24 日;除权除息日为:2023 年 11 月 27 日"]

@@ -1,5 +1,17 @@
 # Blockers
 
+## Current 2026-09-18 bonus-source boundary
+
+The 257-document queue is acquired; 92/94 bonus-only official issuer notices
+now have exact exchange ratio/date and ordinary-A identity corroboration.
+No fractional/holder-accounting or full corporate-action acceptance is inferred
+from these source terms. The remaining 002982 has no exact exchange oracle row;
+688692's later implementation-result notice is not a second event. The 6 mixed,
+7 cash-only and 150 neither notices, plus 15 non-queue source requests, still
+require fact-level closure. Cumulative P1 is unchanged at 273 facts / 272
+documents open, including 600337 without a final implementation notice.
+No single new human decision or commercial-data purchase is asserted here.
+
 ## Current 2026-09-18 gate after targeted P1 official PDF acquisition
 
 The 257-document remaining distribution queue is no longer blocked by CNINFO
