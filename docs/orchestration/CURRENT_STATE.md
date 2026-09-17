@@ -1,5 +1,18 @@
 # Current state
 
+## Current R5 older SSE merger-report recovery — 2026-09-18
+
+Recovered the exact official full issuer reports for the 600607/600842→600849
+(stable 601607), 600631→600827 and 600832→600637 parent chains from retained
+CNINFO metadata. Original PDF receipts and source SHA-256 are recorded in
+`../research/R5_MERGER_LEAD_CLOSURE_V1.md`. Report, progress and result
+notices establish ratios and several termination/registration/listing dates,
+but not every actual tradability boundary, parent/holder scope or registry
+fractional award. All four parent chains remain source-incomplete; no economic event, P1
+fact, accepted inventory or dataset gate was promoted. P0 public master remains
+PASS and no paid source was used. The retained-bonus fractional-share human
+methodology gate remains active.
+
 ## Current R5 000418 official merger-chain audit — 2026-09-18
 
 Four issuer PDFs, including the final post-dividend ratio and listing notice,

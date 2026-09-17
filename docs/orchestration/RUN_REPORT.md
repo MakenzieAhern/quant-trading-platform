@@ -1,5 +1,15 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 older SSE merger source-chain recovery
+
+Retained CNINFO metadata yielded three exact full official reports for the
+600849, 600827 and 600637 surviving-company chains. Original PDF receipts and
+source hashes were verified; existing progress/result notices were reconciled.
+Ratios and several effective boundaries are evidenced, while actual first/last
+trading boundaries and holder/lock scope remain incomplete. This is an audited
+source lead, not a new event or P1 closure. Current P1 v46 and all R5 gates
+remain unchanged; details are in `../research/R5_MERGER_LEAD_CLOSURE_V1.md`.
+
 ## 2026-09-18 targeted 000418 merger source-chain audit
 
 Recovered three exact missing CNINFO issuer PDFs and reused the already cached

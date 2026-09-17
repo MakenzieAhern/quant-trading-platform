@@ -1,5 +1,37 @@
 # R5 Merger Implementation Lead Closure V1
 
+## Targeted older SSE parent-chain source recovery — 2026-09-18
+
+Three previously missing full issuer merger reports were recovered from the
+already retained CNINFO metadata, with HTTP-200 original-PDF receipts and
+SHA-256 checks in the external `full-merger-v1/targeted-parent-fraction-v2/`
+staging directory. Existing implementation-progress/result documents were
+cross-checked against the same official bytes; this is source recovery, **not**
+new-event or P1 acceptance.
+
+| Parent → surviving security | Newly verified full report | Official terms and implementation crosscheck | Still not established |
+| --- | --- | --- | --- |
+| 600607 and 600842 → stable 601607 (symbol 600849 at conversion) | [2010-02-02 issuer report](https://static.cninfo.com.cn/finalpage/2010-02-02/57568719.PDF), SHA-256 `a00c485a4082561ef2b6ac8febc915e5209acf1e9ecc6a43e65ed61dbb392b36` | PDF p.82 states 1:1.61 and 1:0.96, whole successor shares and exchange-rule residual treatment. The [progress notice](https://static.cninfo.com.cn/finalpage/2010-02-11/57603961.PDF) confirms both parents terminate on 2010-02-12; the [result notice](https://static.cninfo.com.cn/finalpage/2010-02-25/57623766.PDF) says registry conversion completed 2010-02-23, with unrestricted shares listed 2010-03-01 and the [2010-03-08 resumption notice](https://static.cninfo.com.cn/finalpage/2010-03-08/57663591.PDF) plus [2010-03-09 reminder](https://static.cninfo.com.cn/finalpage/2010-03-09/57667679.PDF) confirm actual trading resumes 2010-03-09. | Exact last-parent trading sessions, parent-specific unrestricted/locked holder treatment, and account-level residual-share award. The master correctly retains one surviving identity across the later 600849→601607 symbol change. |
+| 600631 → 600827 | [2011-07-29 revised issuer report](https://static.cninfo.com.cn/finalpage/2011-07-29/59741684.PDF), SHA-256 `1c98b676277a58dc8af791c3f63ff24703f83cb29d954636b589b54e1f51ffb0` | PDF pp.76–77 states each parent A share converts to 0.861 successor A shares, with whole-share and exchange-rule residual treatment. The already retained [progress notice](https://static.cninfo.com.cn/finalpage/2011-08-19/59839426.PDF) confirms parent termination effective 2011-08-23; the [result notice](https://static.cninfo.com.cn/finalpage/2011-08-29/59888838.PDF) says conversion completed 2011-08-26 and newly unrestricted shares list 2011-08-31, while expressly distinguishing locked controlling-holder shares. | Exact last parent trading session, holder-scope/lock treatment, and account-level residual-share award. |
+| 600832 → 600637 | [2015-04-22 revised issuer report](https://static.cninfo.com.cn/finalpage/2015-04-22/1200884193.PDF), SHA-256 `7f550aaa4620fc748cc7150a650c5e912e589552f325d782cc6c96273cb287db` | PDF pp.47–48 gives 3.05 parent shares per 1 successor share and whole-share/registry-rule residual treatment. The [2015-05-22 implementation notice](https://static.cninfo.com.cn/finalpage/2015-05-22/1201045132.PDF) identifies a continuous parent halt from 2015-04-30 and termination/record 2015-05-20, and the registry-wide largest-remainder/random-tie rule. The already retained [result notice](https://static.cninfo.com.cn/finalpage/2015-05-29/1201078513.PDF) says registry completed 2015-05-27 and newly unrestricted shares were expected to list 2015-06-03. | Exact last parent trading session, actual first tradable successor session and cash-election/holder scope; exact account-level random award is unknowable but the approved merger research floor is available. |
+
+The registry-wide exact account allocation is not inferred from projected total
+shares or a generic rule reference. The separately approved **merger research
+floor** can model an unknowable fraction only after the ordinary-A event and
+its tradability boundary pass their own source audit; it is not evidence of an
+actual account award. These four parent chains remain `SOURCE_INCOMPLETE_NEW_CHAIN`.
+The original 601607 resumption PDF hashes are
+`f51fea0d6a996ba4c8b9cae6e7551358460789933edf6278702cdf772d6be5ac`
+(March 8) and
+`1a49666319954ff295783a362050fca396ce4e7b3b4db26a6b2567d7f608fc77`
+(March 9); both are checkpointed outside Git.
+The 600637 May 22 implementation PDF SHA-256 is
+`9143a1fd213b6de73429cfbc9eb35a2e58f045b6a7506d2154e1e0afbb22ea9b`;
+its explicit remainder rule supersedes the full report's generic registry-rule
+reference for this bounded event.
+The existing 15-event accepted inventory, P1 cumulative v46 (16,065/16,320),
+full-merger census and Full Dataset status are unchanged. No paid source was used.
+
 ## Targeted 000418→000333 source-chain audit — 2026-09-18
 
 The formerly source-incomplete ordinary-A chain now has four original CNINFO
