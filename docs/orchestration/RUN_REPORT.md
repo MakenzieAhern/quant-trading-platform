@@ -11,6 +11,10 @@ date-link inputs reproduces file SHA-256
 The two absent PDF sources have exact official SSE catalog leads, but each
 download returned `ACCESS_DENIED_STOP`; no source terms were inferred from a
 title. Retrieval receipts remain under `bonus-targeted-source-recovery-v1`.
+`HUMAN_SOURCE_INPUT_REQUIRED=YES` for authentic copies of
+`603315_20160601_1.pdf` and `603889_20160412_1.pdf`, or equivalent official
+implementation evidence. Other P1, cash, SZSE suspension and fractional-bonus
+gaps remain partial; no Full Dataset is created or frozen.
 The shared date-label parser recovered 849 additional official links across
 2011–2022, with zero old matches lost. The 2016 gross-cash diagnostic moved
 from 1,786 to 1,827 accepted on fresh parsing, but the preservation guard
