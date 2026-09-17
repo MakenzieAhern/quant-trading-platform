@@ -28,6 +28,63 @@ PROVIDERS = {
 }
 FINAL_VARIANT = re.compile(r"(?:实施(?:的)?公告|实施方案|实施报告|派发.*(?:股息|股利).*公告)$")
 NONFINAL_VARIANT = re.compile(r"董事会|股东大会|预案|决议|停牌|提示")
+AB_CURRENCY_CASES = {
+    # issuer PDF SHA: stable ID, historical code, record, ex, A cash, B FX, SZSE DPS, SZSE SHA
+    "5ee3949582e2c5c967b4a3059c2b8c7a8077d50b0067608af584542b5deabee6": (
+        "CN-A:SZSE:001872",
+        "000022",
+        "2012-07-19",
+        "2012-07-20",
+        "0.4",
+        "0.8149",
+        "0.491",
+        "0f13e92f0907611a3cdc26bbb29c096301ad4f43924915d6fefd5211ceb5976d",
+    ),
+    "d13d3e8442b8dd5aa1b19779da584db530daaacb6f0107f04cc0ceb02028f7f3": (
+        "CN-A:SZSE:000028",
+        "000028",
+        "2012-06-18",
+        "2012-06-19",
+        "0.13",
+        "0.8078",
+        "0.161",
+        "80ef456982db2dd05542ffc7cd1024f0481d096c85952c5e34e6fe81321e9c02",
+    ),
+    "e613a32b97c2bbf36fa025ad39616b291b118362da208caeee927ccd978d0cd1": (
+        "CN-A:SZSE:000530",
+        "000530",
+        "2012-05-22",
+        "2012-05-23",
+        "0.15",
+        "0.8106",
+        "0.185",
+        "75aa41299d54169c3010c73d4d43c5e45fc2b74e1613a0c7d46c63af1d808398",
+    ),
+    "bb9898638f6cfe2e6dda1c8a08565c542ab0ffcaee295339094a7e63947ecba7": (
+        "CN-A:SZSE:000570",
+        "000570",
+        "2012-06-12",
+        "2012-06-13",
+        "0.02",
+        "0.8145",
+        "0.025",
+        "80ef456982db2dd05542ffc7cd1024f0481d096c85952c5e34e6fe81321e9c02",
+    ),
+    "b8ef0150ce1b052171a7f7de7553ab6ddae8224ddac077e235223025b04b7e2c": (
+        "CN-A:SZSE:000581",
+        "000581",
+        "2012-07-17",
+        "2012-07-18",
+        "0.3",
+        "0.8145",
+        "0.368",
+        "0f13e92f0907611a3cdc26bbb29c096301ad4f43924915d6fefd5211ceb5976d",
+    ),
+}
+DATE_CORRECTION_600378 = (
+    "https://static.cninfo.com.cn/finalpage/2015-05-19/1201031428.PDF",
+    "0125c03f41c9f57e60a69b8204ecc17ddf5acf1dd99a00effddc1ce19acca9bd",
+)
 
 
 def retained_final_title(title):
@@ -111,18 +168,44 @@ def eligible(requirements, excluded, cash, master=()):
     return rows, events
 
 
+def exact_final_companion(doc, event):
+    symbol = event["security_id"]["value"].split(":")[-1]
+    return (
+        doc.get("issuer") == symbol
+        and doc.get("affected_events")
+        == [f"CASH:{symbol}:{event['record_date']}:{event['ex_date']}"]
+        and event["announcement_date"] <= doc.get("published_on", "") <= event["record_date"]
+        and doc.get("url", "").startswith("https://static.cninfo.com.cn/finalpage/")
+        and not re.search(r"优先股|B股|H股|可转债", doc.get("title", ""))
+        and retained_final_title(doc.get("title", ""))
+    )
+
+
+def exact_date_correction_source(doc):
+    return (
+        (doc.get("url"), doc.get("source_sha256")) == DATE_CORRECTION_600378
+        and doc.get("issuer") == "600378"
+        and doc.get("title") == "2014年度利润分配实施更正公告"
+        and doc.get("published_on") == "2015-05-19"
+        and doc.get("affected_events") == ["CASH:600378:2015-05-21:2015-05-22"]
+    )
+
+
 def retained_sources(staging, events):
     direct = {}
     composite = {}
+    companions = {}
     for row in events:
         event = row["event"]
+        symbol = event["security_id"]["value"].split(":")[-1]
         direct[(event["source_url"], event["source_document_sha256"])] = (
             event["source_document"],
             event["announcement_date"],
         )
+        companions[f"CASH:{symbol}:{event['record_date']}:{event['ex_date']}"] = event
         if event["source_provider"] == "OFFICIAL_SSE_TABLE_CNINFO_NOTICE_COMPOSITE":
             record = event["record_date"]
-            composite.setdefault(event["security_id"]["value"].split(":")[-1], []).append(
+            composite.setdefault(symbol, []).append(
                 ((date.fromisoformat(record) - timedelta(days=60)).isoformat(), record)
             )
     found = {}
@@ -142,7 +225,15 @@ def retained_sources(staging, events):
                     for start, record in composite.get(doc.get("issuer"), [])
                 )
             )
-            if (not direct_match and not composite_match) or doc.get("retrieval_status") != "PASS":
+            affected = doc.get("affected_events", [])
+            companion = companions.get(affected[0]) if len(affected) == 1 else None
+            companion_match = companion is not None and exact_final_companion(doc, companion)
+            if (
+                not direct_match
+                and not composite_match
+                and not companion_match
+                and not exact_date_correction_source(doc)
+            ) or doc.get("retrieval_status") != "PASS":
                 continue
             if key in found:
                 earlier = found[key][1]
@@ -186,31 +277,31 @@ def exchange_amount_matches(amount, targets):
 
 
 def ab_currency_dps_conflict(row, amount, pages, szse):
-    if (
-        row["security_id"] != "CN-A:SZSE:001872"
-        or (row["issuer"], row["record_date"], row["ex_date"])
-        != ("000022", "2012-07-19", "2012-07-20")
-        or row["substitute_source_sha256"]
-        != "5ee3949582e2c5c967b4a3059c2b8c7a8077d50b0067608af584542b5deabee6"
-        or amount != Decimal("0.4")
-    ):
+    case = AB_CURRENCY_CASES.get(row["substitute_source_sha256"])
+    if case is None:
+        return None
+    security_id, issuer, record, ex, cash, rate, dps, exchange_sha = case
+    if (row["security_id"], row["issuer"], row["record_date"], row["ex_date"]) != (
+        security_id,
+        issuer,
+        record,
+        ex,
+    ) or amount != Decimal(cash):
         return None
     text = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "".join(pages)))
-    if not all(
-        marker in text
-        for marker in (
-            "股票代码:000022、200022",
-            "每10股派4.00元人民币现金",
-            "A股股权登记日为2012年7月19日",
-            "B股股息折算汇率",
-            "1港币=0.8149元人民币",
-        )
+    rates = re.findall(r"1港(?:币|元)=(?:人民币)?(0\.\d+)(?:元)?(?:人民币)?", text)
+    if (
+        issuer not in text
+        or "A股股权登记日" not in text
+        or "B股" not in text
+        or "每10股" not in text
+        or rates != [rate]
     ):
         return None
     rows = [
         item
         for item in szse["rows"]
-        if item["symbol"] == "000022"
+        if item["symbol"] == issuer
         and item["record_date"] == row["record_date"]
         and item["ex_date"] == row["ex_date"]
     ]
@@ -218,24 +309,144 @@ def ab_currency_dps_conflict(row, amount, pages, szse):
         return None
     exchange = rows[0]
     cells = exchange["raw_cells"]
-    if len(cells) != 14:
+    if len(cells) != 14 or exchange["source_sha256"] != exchange_sha:
         return None
-    dps = Decimal(cells[5])
+    reported_dps = Decimal(cells[5])
     if (
-        dps != Decimal("0.491")
+        reported_dps != Decimal(dps)
         or Decimal(cells[13]) - Decimal(cells[12]) != amount
-        or (amount / Decimal("0.8149")).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP) != dps
+        or (amount / Decimal(rate)).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP)
+        != reported_dps
     ):
         return None
     return {
         "policy": "A_SHARE_FINAL_ISSUER_TERMS_OVER_EXCHANGE_AB_CURRENCY_DPS_CONFLICT",
         "exchange_source_url": exchange["source_url"],
         "exchange_source_sha256": exchange["source_sha256"],
-        "exchange_reported_dps": str(dps),
+        "exchange_reported_dps": str(reported_dps),
         "exchange_ex_price_delta": str(Decimal(cells[13]) - Decimal(cells[12])),
         "issuer_gross_a_cash_per_share": str(amount),
-        "official_b_hkd_conversion_rate": "0.8149",
+        "official_b_hkd_conversion_rate": rate,
     }
+
+
+def date_correction_terms(original_pages, corrected_pages):
+    original = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "".join(original_pages)))
+    corrected = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "".join(corrected_pages)))
+    return all(
+        marker in original
+        for marker in ("股权登记日:2014年5月21日", "除息及现金红利发放日:2014年5月22日")
+    ) and all(
+        marker in corrected
+        for marker in (
+            "2015年5月15日",
+            "2014年度利润分配实施公告",
+            "由于工作疏忽",
+            "更正为“1、股权登记日:2015年5月21日;2、除息及现金红利发放日:2015年5月22日。",
+            "其他内容保持不变",
+        )
+    )
+
+
+def official_date_correction(row, original_pages, found, staging):
+    if (
+        (row["security_id"], row["issuer"], row["record_date"], row["ex_date"])
+        != ("CN-A:SSE:600378", "600378", "2015-05-21", "2015-05-22")
+        or row["substitute_source_sha256"]
+        != "9fe4928323880236582959001105c5b188379b98e490e7b52f9262b56ae4eaf6"
+        or DATE_CORRECTION_600378 not in found
+    ):
+        return None
+    manifest, doc = found[DATE_CORRECTION_600378]
+    if not exact_date_correction_source(doc):
+        return None
+    root = manifest.parents[1]
+    pdf = (root / doc["source_path"]).resolve()
+    cache = root / "batch-v1/text" / f"{doc['source_sha256']}.json"
+    if (
+        not pdf.is_relative_to(staging.resolve())
+        or sha256_file(pdf) != doc["source_sha256"]
+        or not cache.is_file()
+    ):
+        raise ValueError("OFFICIAL_DATE_CORRECTION_SOURCE_CHANGED")
+    extracted = json.loads(cache.read_bytes())
+    if extracted["source_sha256"] != doc["source_sha256"] or not date_correction_terms(
+        original_pages, extracted["pages"]
+    ):
+        return None
+    return {
+        "source_url": doc["url"],
+        "source_sha256": doc["source_sha256"],
+        "source_manifest_sha256": sha256_file(manifest),
+        "source_text_sha256": sha256_file(cache),
+        "corrected_record_date": row["record_date"],
+        "corrected_ex_date": row["ex_date"],
+    }
+
+
+def cash_terms_with_alternates(extracted, doc, issuer, targets, differentiated, root, staging):
+    pages = extracted["pages"]
+    try:
+        amount = (
+            differentiated_cash(pages, issuer, doc["title"])
+            if differentiated
+            else gross_cash(pages, issuer, targets, trusted_issuer=True)
+        )
+        records, ex_dates = notice_dates(pages)
+        return amount, records, ex_dates, pages, None
+    except ValueError as exc:
+        if differentiated or str(exc) != "NO_UNIQUE_EXPLICIT_GROSS_CASH":
+            raise
+    sha = doc["source_sha256"]
+    alternatives = (
+        ("PYMUPDF_NFKC_PAGE_EXTRACTION_V1", root / "batch-v1/text-pymupdf" / f"{sha}.json"),
+        (
+            "P1_CASH_PUBLIC_SUBSTITUTION_OCR_V1",
+            staging / "p1-public-cash-substitution-v1/ocr" / f"{sha}.json",
+        ),
+    )
+    parsed = []
+    for version, path in alternatives:
+        if not path.is_file():
+            continue
+        data = json.loads(path.read_bytes())
+        if (
+            data.get("source_sha256") != sha
+            or data.get("event_acceptance") != "NOT_PERFORMED"
+            or not data.get("parser_version", "").startswith(version)
+        ):
+            raise RuntimeError(f"ALTERNATE_OFFICIAL_TEXT_CHANGED:{sha}")
+        try:
+            amount = gross_cash(data["pages"], issuer, targets, trusted_issuer=True)
+            records, ex_dates = notice_dates(data["pages"])
+        except ValueError:
+            continue
+        parsed.append(
+            (
+                amount,
+                records,
+                ex_dates,
+                data["pages"],
+                {
+                    "parser_version": data["parser_version"],
+                    "source_text_sha256": sha256_file(path),
+                },
+            )
+        )
+    if not parsed:
+        raise ValueError("NO_UNIQUE_EXPLICIT_GROSS_CASH")
+    if (
+        len(
+            {
+                (amount, tuple(records), tuple(ex_dates))
+                for amount, records, ex_dates, _, _ in parsed
+            }
+        )
+        != 1
+    ):
+        raise ValueError("ALTERNATE_EXTRACTION_CONFLICT")
+    amount, records, ex_dates, pages, _ = parsed[0]
+    return amount, records, ex_dates, pages, [item[4] for item in parsed]
 
 
 def exchange_resolves_year_conflict(row, records, ex_dates, published_on):
@@ -371,14 +582,15 @@ def main():
             if extracted["source_sha256"] != doc["source_sha256"]:
                 raise ValueError(f"RETAINED_OFFICIAL_TEXT_CHANGED:{row['document_id']}")
             try:
-                amount = (
-                    differentiated_cash(extracted["pages"], row["issuer"], doc["title"])
-                    if differentiated
-                    else gross_cash(
-                        extracted["pages"], row["issuer"], targets[key], trusted_issuer=True
-                    )
+                amount, records, ex_dates, term_pages, alternate_text = cash_terms_with_alternates(
+                    extracted,
+                    doc,
+                    row["issuer"],
+                    targets[key],
+                    differentiated,
+                    source_root,
+                    args.staging,
                 )
-                records, ex_dates = notice_dates(extracted["pages"])
             except ValueError as exc:
                 reason = str(exc)
             else:
@@ -386,8 +598,13 @@ def main():
                     row, records, ex_dates, differentiated=differentiated
                 )
                 conflict_resolution = (
-                    ab_currency_dps_conflict(row, amount, extracted["pages"], szse)
+                    ab_currency_dps_conflict(row, amount, term_pages, szse)
                     if not exchange_amount_matches(amount, targets[key])
+                    else None
+                )
+                date_correction = (
+                    official_date_correction(row, extracted["pages"], found, args.staging)
+                    if classification is None
                     else None
                 )
                 if classification is None and exchange_resolves_year_conflict(
@@ -398,6 +615,8 @@ def main():
                         if differentiated
                         else "OFFICIAL_EXCHANGE_RESOLVED_SOURCE_YEAR_CONFLICT"
                     )
+                if classification is None and date_correction:
+                    classification = "OFFICIAL_ISSUER_DATE_CORRECTION_EXACT"
                 if not retained_final_title(doc["title"]) and not body_finality:
                     reason = "NO_FINAL_IMPLEMENTATION_BODY"
                 elif amount != Decimal(row["cash_per_share"]):
@@ -431,6 +650,16 @@ def main():
                                 if conflict_resolution
                                 else {}
                             ),
+                            **(
+                                {"official_date_correction": date_correction}
+                                if date_correction
+                                else {}
+                            ),
+                            **(
+                                {"alternate_text_extractions": alternate_text}
+                                if alternate_text
+                                else {}
+                            ),
                             "source_manifest_sha256": sha256_file(manifest),
                             "source_text_sha256": sha256_file(cache),
                         }
@@ -440,7 +669,7 @@ def main():
     if len(closed) + len(rejected) != len(requests):
         raise ValueError("RETAINED_P1_CANDIDATES_NOT_PARTITIONED")
     report = {
-        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V12",
+        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V18",
         "candidate_documents": len(requests),
         "selected_documents": len(selected),
         "closed_documents": len(closed),

@@ -1,5 +1,34 @@
 # Current state
 
+## Current R5 official cash-source recovery — 2026-09-18
+
+P0 SSE/SZSE public reconstruction remains PASS (2,403 / 3,028 securities,
+zero P0 facts unresolved). A source-pinned extension of the existing 000022
+A/B-share cash conflict reconciles four more 2012 notices (000028, 000530,
+000570, 000581): each final issuer PDF states ordinary-A gross CNY cash and
+the B-share HKD rate, while its exact SZSE monthly row reports the rounded
+currency-converted figure but an A-share pre-close/ex-price delta equal to the
+issuer's CNY amount. Both values and original source hashes remain explicit.
+The retained 601818 ordinary-A final notice is distinguished from a preferred-
+share companion for the same event. For 600378, the retained official issuer
+correction explicitly replaces wrong 2014 entitlement years with 2015. Six
+garbled/image PDF text layers are resolved using existing SHA-bound PyMuPDF/
+OCR evidence; agreeing alternate extractions are recorded, and the 300041
+scan was visually checked. No event is newly created or globally overridden.
+
+Immutable retained-source v18 closes 263/271 candidates; eight remain (seven
+issuer-date conflicts, one missing final source). All prior 257 v16 closures
+remain byte-identical. File SHA-256
+`3a326b2e2a65fee2a2806ed221226bf691cad529f8a76fd43fb0653c05e005b6`,
+manifest `6c3504821626b2c9342528af51e2f5d6a50f67e3a0ac8d0d3ea9edb6983239b3`.
+P1 cumulative v36 establishes 16,040/16,320 facts with 1,972 official
+substitutions; 280 facts / 279 unique documents remain (257 cash-queue, 22
+other). File SHA-256
+`80e49f25fd99f3256406d81c1fcfdf3c3ff0037c020af86b83d29b2ff9755e06`,
+manifest `2a02f9dcb6b0e3204321cb7957f8ca30780a4ae4b3744599218de220e8b9f72e`.
+Both reports reproduced byte-identically. Full cash/bonus census, safe start,
+Full Dataset and all research studies remain blocked; no paid source was used.
+
 ## Current R5 recovered historical-code A/B cash fact — 2026-09-18
 
 The 000022 2012-07-12 CNINFO final implementation PDF was already retained in

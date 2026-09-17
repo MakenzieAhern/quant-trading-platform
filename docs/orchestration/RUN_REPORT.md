@@ -1,5 +1,29 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 retained official cash-source milestone
+
+Official public evidence closes 12 additional retained-source candidates
+since v12: four source-pinned 2012 A/B currency-column conflicts; the 601818
+final ordinary-A notice; the 600378 issuer date-correction pair; and six
+garbled/image-text PDFs with source-bound PyMuPDF/OCR cash/date extraction.
+The 300041 scanned PDF was visually checked after targeted offline OCR.
+Every accepted amount and date still matches the existing event and official
+exchange audit; no new economic event was created. Previously closed v16
+rows are unchanged in v18. The eight retained rejections remain explicit
+(seven issuer-date conflicts and one no-final-source case).
+
+Retained-source v18: 263/271, PDF/text/manifest hashes retained, input-order
+and repeated-output checks PASS. File SHA-256
+`3a326b2e2a65fee2a2806ed221226bf691cad529f8a76fd43fb0653c05e005b6`,
+manifest `6c3504821626b2c9342528af51e2f5d6a50f67e3a0ac8d0d3ea9edb6983239b3`.
+Cumulative v36: 16,040/16,320 facts established; 1,972 official
+substitutions; 280 facts / 279 documents remain (257 cash-queue, 22 other).
+File SHA-256
+`80e49f25fd99f3256406d81c1fcfdf3c3ff0037c020af86b83d29b2ff9755e06`,
+manifest `2a02f9dcb6b0e3204321cb7957f8ca30780a4ae4b3744599218de220e8b9f72e`.
+Focused tests and Ruff pass. This does not establish Full Dataset readiness,
+and no dataset, freeze, study, purchase or PR merge was performed.
+
 ## 2026-09-18 historical 000022 official cash-source conflict closure
 
 An earlier retained official CNINFO final PDF (`61255655.PDF`, SHA-256

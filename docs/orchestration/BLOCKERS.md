@@ -1,5 +1,17 @@
 # Blockers
 
+## Current 2026-09-18 gate after retained cash-source recovery
+
+P0 remains PASS, but P1 still lacks 280 facts / 279 unique documents: 257
+cash-queue notices and 22 other source requests. Eight of the 271 retained
+cash-source candidates remain unclosed: seven issuer/exchange entitlement-
+date conflicts and 600337 without a retained final implementation notice.
+Source v18 and cumulative v36 preserve each rejection instead of inferring
+normal terms. Bounded bonus remains 281/288 with 7,119 oracle rows outside
+the subset; exact SZSE resumption boundaries and full cash/bonus censuses
+remain partial. Docker/PostgreSQL is a separate local validation gap. Full
+Dataset, safe start and research gates remain closed; no paid source requested.
+
 ## Current 2026-09-18 gate after 000022 official A/B reconciliation
 
 The 000022 cash-source request is no longer blocked by DNS: its original

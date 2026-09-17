@@ -1,5 +1,24 @@
 # Decisions
 
+## 2026-09-18 source-pinned retained cash fact reconciliation
+
+Extend the exact 000022 A/B-share conflict handling only to 000028, 000530,
+000570 and 000581 after checking each original issuer PDF SHA, ordinary-A
+gross CNY cash, B-share conversion rate, dates, matching SZSE monthly-row
+SHA, three-decimal conversion and A-share pre-close/ex-price delta. Record
+both conflicting values; do not globally reinterpret the exchange DPS field.
+For a nonfinal accepted source, a separate final ordinary-A issuer PDF may
+substitute only when its official metadata binds the exact event, it precedes
+the record date, and preferred/B/H/convertible notices are excluded. The
+601818 companion meets this rule. The 600378 original date typo is resolved
+only with its SHA-verified official correction, which explicitly supplies
+the 2015 record/ex dates and leaves other terms unchanged. When a PDF text
+layer is unusable, existing source-bound PyMuPDF/OCR caches may supply
+terms only if valid parses agree and the accepted amount, exchange authority
+and exact entitlement dates still match. Retain each extraction checksum.
+These are fact-level source substitutions, not new economic events or a
+complete corporate-action census.
+
 ## 2026-09-18 explicit 000022 A/B cash-column conflict resolution
 
 For the 2012-07-19/20 ordinary-A cash event of historical symbol 000022
