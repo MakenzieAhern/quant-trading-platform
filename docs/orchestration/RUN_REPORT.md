@@ -1,5 +1,19 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 nonfinal official cash proposal closure
+
+Seven more P1 notices with undated tentative gross-cash amounts are closed as
+nonfinal, not as economic events: each source has contingent implementation
+language and an exact unique later official final issuer event. Original PDFs,
+text checksums and accepted final event checksums were verified; reverse input
+order passed. Proposal scope v3 closes 19 documents total; manifest
+`8d259671fa7ec84ebf0e2de53451e3db5e989d456786082d07e7d1171f9820a9`.
+P1 cumulative v13 now leaves 586 missing facts / 570 documents of 16,320
+raw requirements; 15,734 are established or out of scope, with 1,692 official
+substitutions. Cumulative manifest
+`eeaa54e9616416d443705bb0184c7cb8ce445c702fb188516941936fe5b9835a`.
+No new economic event, Full Dataset, freeze, or strategy run followed.
+
 ## 2026-09-17 retained bonus source-replay correction
 
 Official 601558 issuer text confirms per-share bonus/transfer ratios at both

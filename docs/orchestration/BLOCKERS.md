@@ -1,6 +1,17 @@
 # Blockers
 
-## Current 2026-09-17 R5 gate after bonus source replay
+## Current 2026-09-17 R5 gate after nonfinal cash-notice reconciliation
+
+P1 now has 586 missing facts / 570 documents (270 distribution, 300 other).
+The seven newly scoped proposal notices do not supply final point-in-time
+terms; unique later official implementation notices do. Full issuer cash census
+remains PARTIAL. The bounded bonus subset supports 276/288; 7,119 oracle rows
+are outside it. SZSE still has 1,921 exact resumption boundaries unresolved.
+The 603315 and 603889 original SSE PDF bytes remain unavailable; a targeted
+official public-surface search did not provide a contemporaneous, checksumable
+replacement. No Full Dataset or research gate opens.
+
+## Earlier 2026-09-17 R5 gate after bonus source replay
 
 The bounded integer/next-session bonus ledger now supports 276/288, with 12
 unresolved (two inaccessible official implementation PDFs, six term/exchange

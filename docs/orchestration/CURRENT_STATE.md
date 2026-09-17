@@ -1,5 +1,21 @@
 # Current state
 
+## Current R5 nonfinal cash-notice reconciliation — 2026-09-17
+
+Seven additional retained official issuer notices state a tentative cash
+amount but no record/ex-date; each contains an explicit approval/implementation
+contingency and matches exactly one later separately sourced official issuer
+implementation event (same ordinary-A issuer and gross amount, final notice
+published before its ex-date and within 180 days). These proposal notices are
+**not** used as effective-dated cash events. Original PDF and extraction SHA-256,
+the final event checksum, and input-order checks are recorded in proposal
+scope v3 (19 closed, up from 12), manifest
+`8d259671fa7ec84ebf0e2de53451e3db5e989d456786082d07e7d1171f9820a9`.
+Cumulative P1 v13 establishes 15,734/16,320 facts and leaves 586 facts /
+570 documents (270 distribution, 300 other); official substitutions remain
+1,692. Manifest `eeaa54e9616416d443705bb0184c7cb8ce445c702fb188516941936fe5b9835a`.
+Cash/bonus/SZSE full-period gates remain PARTIAL; no Full Dataset is created.
+
 ## Current R5 retained-bonus PDF boundary correction — 2026-09-17
 
 The retained official 601558 implementation PDFs exposed two extraction
@@ -18,7 +34,7 @@ term/exchange conflicts, and four nonstandard entitlement cases. The other
 7,119 oracle rows remain outside this narrow subset; no full bonus census,
 Full Dataset, freeze or strategy study is accepted.
 
-## Current R5 retained issuer cash precision — 2026-09-17
+## Earlier R5 retained issuer cash precision — 2026-09-17
 
 The 2010–2022 v7 date-link replay now uses the existing exchange amount only
 to disambiguate **explicit** issuer gross-cash terms; it never manufactures a

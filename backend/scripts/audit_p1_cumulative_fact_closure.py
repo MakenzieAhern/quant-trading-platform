@@ -19,7 +19,7 @@ REPORTS = {
     "sse_st": "p1-official-sse-st-fact-closure-v1.json",
     "differentiated": "p1-differentiated-cash-notice-ledger-v7.json",
     "correction": "p1-correction-cash-facts-v5.json",
-    "proposal": "p1-nonfinal-proposal-scope-v2.json",
+    "proposal": "p1-nonfinal-proposal-scope-v3.json",
     "precise": "p1-precise-sse-cash-v1.json",
     "derivative": "p1-derivative-notice-scope-v1.json",
 }
@@ -146,7 +146,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V12",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V13",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",
