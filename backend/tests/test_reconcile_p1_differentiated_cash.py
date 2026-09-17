@@ -2,7 +2,11 @@ from decimal import Decimal
 
 from scripts.link_distribution_notices import notice_dates, star_cash_dates
 from scripts.reconcile_distribution_cash import differentiated_cash
-from scripts.reconcile_p1_differentiated_cash import decision, official_correction
+from scripts.reconcile_p1_differentiated_cash import (
+    decision,
+    official_correction,
+    revised_final_notice,
+)
 
 
 def test_differentiated_cash_never_overrides_conflicting_accepted_event():
@@ -63,3 +67,10 @@ def test_only_pre_record_official_issuer_correction_supersedes_old_amount():
     assert official_correction(peer, original, corrected)
     assert not official_correction(peer, original, {**corrected, "title": "未更正公告"})
     assert not official_correction(peer, original, {**corrected, "published_on": "2024-06-14"})
+
+
+def test_revised_full_notice_is_not_a_derivative_or_a_new_event_without_review():
+    assert revised_final_notice("2023年年度权益分派实施公告\uff08修订版\uff09")
+    assert revised_final_notice("2023年年度权益分派实施公告(修订版)")
+    assert not revised_final_notice("关于调整回购价格的实施公告\uff08修订版\uff09")
+    assert not revised_final_notice("2023年年度权益分派实施公告的更正公告")

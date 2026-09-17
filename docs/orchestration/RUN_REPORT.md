@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 revised differentiated issuer cash cross-check
+
+Retained 603506 and 600837 official “修订版” implementation PDFs uniquely
+corroborate the existing ordinary-A cash amount and entitlement dates, with no
+bonus leg and no new event. Revised notices are rejected as new-event sources
+unless separately reviewed. The 37-source differentiated replay v7 adds two
+exact accepted-event matches and leaves all other classifications unchanged
+(manifest `dc79e47128618c4c5e064ae5f9ab2d06bab8c8ff2ad67d41800916442783b3b3`,
+file SHA-256 `e7d24161c0e9dcfdd0d5359f51a78ebadbde9fd8c9e7370fd8d2e4c044539eb1`).
+Cumulative v6 leaves 622 P1 facts / 606 documents (302 distribution,
+304 other), with 15,698/16,320 established/out of scope and 1,683
+substitutions (manifest `5042155dd92d723e67ff45f8f6543152391104e376241847dd30f0affd036469`,
+file SHA-256 `4fb8de9aa946f14f0e31d818495f112baffdb050a5c68a203d129b8374bceda4`).
+Input-order reproducibility and checksum repeatability pass. No Full Dataset,
+freeze or study; cash full census is still PARTIAL.
+
 ## 2026-09-17 official correction source replay
 
 Four retained issuer correction/supplement PDFs and their original accepted

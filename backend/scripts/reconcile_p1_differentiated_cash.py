@@ -2,6 +2,8 @@
 
 import argparse
 import json
+import re
+import unicodedata
 from collections import Counter, defaultdict
 from decimal import Decimal
 from pathlib import Path
@@ -15,6 +17,14 @@ from scripts.link_distribution_notices import notice_dates, star_cash_dates
 from scripts.reconcile_distribution_cash import differentiated_cash
 
 POLICY = "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"
+
+
+def revised_final_notice(title):
+    normalized = unicodedata.normalize("NFKC", title)
+    original = re.sub(r"\(修订版\)$", "", normalized)
+    return (
+        original != normalized and bool(PRIMARY.search(original)) and not SECONDARY.search(original)
+    )
 
 
 def decision(peers, record, amount):
@@ -81,8 +91,14 @@ def reconcile(triage, requirements, cash, master, sources, root):
         extracted = json.loads(cache.read_bytes())
         if extracted["source_sha256"] != row["source_sha256"]:
             raise ValueError("DIFFERENTIATED_TEXT_CHANGED")
-        if not PRIMARY.search(requirement["title"]) or SECONDARY.search(requirement["title"]):
+        revised = revised_final_notice(requirement["title"])
+        if not PRIMARY.search(requirement["title"]) or (
+            SECONDARY.search(requirement["title"]) and not revised
+        ):
             results.append({**result, "status": "NOT_PRIMARY_FINAL_NOTICE"})
+            continue
+        if revised and row["bonus_candidate_per_share"] is not None:
+            results.append({**result, "status": "REVISED_BONUS_LEG_REQUIRES_REVIEW"})
             continue
         try:
             amount = differentiated_cash(
@@ -141,6 +157,8 @@ def reconcile(triage, requirements, cash, master, sources, root):
             continue
         sid = next(iter(members))
         status = decision(peers[sid, ex], record, amount)
+        if revised and status == "NEW_OFFICIAL_ISSUER_EVENT":
+            status = "REVISED_UNMATCHED_EVENT_REQUIRES_REVIEW"
         result.update(
             status=status,
             security_id=sid,
@@ -256,7 +274,7 @@ def main() -> None:
     if (results, events) != reconcile(*(list(reversed(rows)) for rows in inputs), args.source_root):
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "report_version": "P1_DIFFERENTIATED_OFFICIAL_CASH_NOTICE_V5",
+        "report_version": "P1_DIFFERENTIATED_OFFICIAL_CASH_NOTICE_V7",
         "parser_sha256": sha256_file(Path(__file__)),
         "cash_parser_sha256": sha256_file(
             Path(__file__).with_name("reconcile_distribution_cash.py")

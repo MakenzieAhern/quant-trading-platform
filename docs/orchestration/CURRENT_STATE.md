@@ -1,5 +1,23 @@
 # Current state
 
+## Current R5 revised differentiated-cash notices — 2026-09-17
+
+Two complete issuer implementation notices marked “修订版” (603506 and
+600837) are now parsed as final revised sources, not dismissed as derivative
+notices. Their public-A gross cash, record dates and ex-dates exactly match
+the already accepted issuer events; neither has a bonus leg. Revision notices
+without a matching accepted event or with a bonus leg remain fail-closed.
+The 37-document differentiated replay v7 has ten exact accepted-event
+corroborations, one prior notice superseded by an official correction, three
+fully post-2025 chains, 22 missing final terms and one non-primary notice.
+No new event was created. Its manifest is
+`dc79e47128618c4c5e064ae5f9ab2d06bab8c8ff2ad67d41800916442783b3b3`.
+Ten-report cumulative v6: 15,698/16,320 established/out of scope,
+1,683 substitutions, 622 facts / 606 documents open (302 distribution,
+304 other); manifest
+`5042155dd92d723e67ff45f8f6543152391104e376241847dd30f0affd036469`.
+Full cash census remains PARTIAL; the Full Dataset/study gates remain locked.
+
 ## Current R5 official correction fact closure — 2026-09-17
 
 SHA-bound original/changed issuer PDFs establish that 002026's share-count

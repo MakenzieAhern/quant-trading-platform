@@ -1,5 +1,11 @@
 # v1.1 controller roadmap
 
+Current 2026-09-17 differentiated revision replay adds two official exact
+same-event cash corroborations (603506, 600837). P1 now has 622 unresolved
+facts / 606 documents (302 distribution, 304 other), cash full census
+PARTIAL, and 1,921 SZSE exact resumption boundaries open. The Full Dataset
+gate remains closed; no event or accepted authority was reset.
+
 Current 2026-09-17 source-bound correction replay closes four previously
 unresolved P1 distribution documents without creating or changing an economic
 event. P1 now has 624 unresolved facts / 608 documents (304 distribution,

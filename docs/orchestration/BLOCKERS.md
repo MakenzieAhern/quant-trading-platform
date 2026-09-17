@@ -1,5 +1,13 @@
 # Blockers
 
+## Current 2026-09-17 revised notice closure — no human input requested
+
+Two revised official differentiated-cash notices add exact same-event source
+corroborations. P1 still has 622 facts / 606 documents unresolved (302
+distribution, 304 other); full issuer cash census remains PARTIAL. The
+remaining material bonus corrections, 301262 malformed ex-date, 1,921 SZSE
+resumption boundaries and separate Docker/database issue remain as below.
+
 ## Current 2026-09-17 P1 correction closure — independent source work continues
 
 Four official corrections/supplements now close four already-established
