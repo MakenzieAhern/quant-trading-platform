@@ -28,6 +28,7 @@ def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
             "proposal",
             "precise",
             "derivative",
+            "retained_cash",
         )
     }
     reports["base"] = baseline

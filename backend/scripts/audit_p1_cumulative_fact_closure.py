@@ -22,6 +22,7 @@ REPORTS = {
     "proposal": "p1-nonfinal-proposal-scope-v3.json",
     "precise": "p1-precise-sse-cash-v1.json",
     "derivative": "p1-derivative-notice-scope-v3.json",
+    "retained_cash": "p1-retained-full-cash-source-closure-v3.json",
 }
 
 
@@ -81,6 +82,7 @@ def recount(reports):
     add("proposal", reports["proposal"]["closed"], require_cash=True)
     add("precise", reports["precise"]["closed"], require_cash=True)
     add("derivative", reports["derivative"]["closed"], require_cash=True)
+    add("retained_cash", reports["retained_cash"]["closed"], require_cash=False)
     rows = sorted(closed.values(), key=lambda row: row["document_id"])
     closed_facts = sum(len(row["affected_events"]) for row in rows)
     unresolved_cash = len(cash) - sum(row["document_id"] in cash for row in rows)
@@ -102,6 +104,7 @@ def recount(reports):
         )
         + len(reports["correction"]["closed"])
         + len(reports["precise"]["closed"])
+        + len(reports["retained_cash"]["closed"])
     )
     return {
         "closed_documents": len(rows),
@@ -146,7 +149,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V15",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V18",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",

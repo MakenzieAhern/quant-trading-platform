@@ -1,5 +1,25 @@
 # Current state
 
+## Current R5 retained official full-cash source closure — 2026-09-17
+
+Reused retained CNINFO source manifests, original issuer PDFs and text caches
+against cash v43, point-in-time master and official SSE/SZSE exchange targets.
+Of 253 previously URL-less P1 final cash candidates, 107 pass the existing
+exact issuer-date rules. Another 62 have an impossible issuer-PDF year before
+that notice's publication, while both month-days match the authoritative
+exchange dates; these are classified as official exchange-resolved source-year
+conflicts, with both original dates preserved. Thus 169 close and 84 remain
+explicit: 67 title/master unmatched, seven issuer-date conflicts, four amount
+conflicts, and six without a unique explicit gross cash amount. No new
+economic events were created. Source report v3 manifest
+`e5012d557b66f826ee3b6c31dad5f4f5ca0dec2c4ccaf4508d1fb891b7057a6f`.
+P1 cumulative v18 establishes 15,910/16,320 facts, with 410 facts / 394
+documents unresolved (263 distribution, 131 other) and 1,861 official
+substitutions; manifest
+`799e1797dd81a31797597c02868b2426e914b3f46ba3e4441601e786ad1a3beb`.
+Full issuer cash census, bonus census and SZSE resumption remain PARTIAL. No
+Full Dataset, freeze or strategy study is accepted.
+
 ## Current R5 historical derivative-reference closure — 2026-09-17
 
 Four further official notices are non-primary references, not new dividends:
