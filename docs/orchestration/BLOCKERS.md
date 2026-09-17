@@ -2,13 +2,16 @@
 
 ## Current 2026-09-17 integer retained-bonus subset
 
-261 / 288 bounded integer/next-session events are supported, up from 254;
-27 remain: 16 missing issuer links, seven term conflicts, four nonstandard
+273 / 288 bounded integer/next-session events are supported, up from 254;
+15 remain: two missing issuer links, nine term/parser conflicts, four nonstandard
 entitlements. No whole-dataset bonus authority follows from this subset; the
 full oracle includes 7,119 further deferred rows. Do not default unknown
 fractional registry allocation or restructuring rights to the ordinary bonus
 policy. Ledger manifest
-`40c78cd7e2ca655517307ccc259d4f271e819d0abb964293e79cafbd251b6b10`.
+`70f6d914b176d3c0670a1a0c24d06018d757fb527307ee1f7cd9deb2d8c3ac51`.
+Across 2010–2022, 849 date links were newly recovered with zero old matches
+lost. Cash v41 is unchanged: replay must first classify secondary timing-only
+notices and preserve 32 prior events missed even by the old-link fresh parser.
 
 ## Current 2026-09-17 derivative notices — no new cash events
 

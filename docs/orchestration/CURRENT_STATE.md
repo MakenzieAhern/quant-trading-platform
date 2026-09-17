@@ -4,15 +4,19 @@
 
 Replayed the existing 288 integer, next-session candidates against retained
 SHA-verified official issuer notices, exchange ratios, lifecycle, and approved
-basis-conservation policy. Parser support for explicit paired send/transfer and
-capital-reserve wording adds seven accepted events (600169, 600252, 600353,
-600547, 600990, 600993, 601699). All 254 prior event checksums remain identical.
-The ledger now supports 261 / 288 and leaves 27 unresolved: 16 lack a linked
-issuer implementation source, seven have exact-term conflicts, four are
-nonstandard/restructuring entitlements. Reversed input order produces identical
-ledger bytes. File SHA-256
-`d37986e5201b6f6f6f6c818aa4698149060d9f52fdaad2aa9de0c47e12116e58`,
-manifest `40c78cd7e2ca655517307ccc259d4f271e819d0abb964293e79cafbd251b6b10`.
+basis-conservation policy. Explicit send/transfer and capital-reserve terms
+add seven events; a compound ex-date / payment-date label links another 12.
+All 254 prior event checksums remain identical. The ledger supports 273 / 288
+and leaves 15 unresolved: two lack a linked issuer implementation source, nine
+have term/parser conflicts, and four are nonstandard/restructuring entitlements.
+Reversed input order produces identical ledger bytes. File SHA-256
+`62eaf9d0c6e051905f0d4219fa4a21673ada0e418d1d78cc2aa408fc55ce3d2e`,
+manifest `70f6d914b176d3c0670a1a0c24d06018d757fb527307ee1f7cd9deb2d8c3ac51`.
+Replaying 2010–2022 date links found 849 new official matches and lost zero
+old matches. These are date evidence only; full cash v41 is unchanged. Its
+2016 diagnostic replay exposed three secondary A/H timing notices with no
+cash terms and 32 already-existing raw-parser non-recorroborations. The
+accepted-prior guard rejected publication of a replacement cash ledger.
 This bounded subset is not a full-period bonus census; 7,119 oracle rows remain
 outside the integer/next-session scope. Dataset freeze and research stay locked.
 

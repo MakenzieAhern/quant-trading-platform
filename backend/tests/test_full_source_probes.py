@@ -396,6 +396,15 @@ def test_distribution_notice_dates_require_bound_labels_not_unrelated_dates():
         "2011-04-07",
     ) == (["2011-04-12"], ["2011-04-13"])
     assert notice_dates(["除息日:2023年13月1日;除息日:2023年6月15日"])[1] == ["2023-06-15"]
+    for separator, payment in (
+        ("、", "现金红利发放日"),
+        ("&", "现金红利发放日"),
+        ("、", "红利发放日"),
+    ):
+        assert notice_dates(
+            [f"股权登记日:2016年5月20日;除权(除息)日{separator}{payment}:2016年5月23日"]
+        ) == (["2016-05-20"], ["2016-05-23"])
+    assert notice_dates(["除权(除息)日、现金红利发放日另行公告:2016年5月23日"]) == ([], [])
 
 
 def test_merger_raw_boundaries_use_unadjusted_rows_and_reject_duplicate_dates():

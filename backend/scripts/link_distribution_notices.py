@@ -24,6 +24,7 @@ RECORD_LABELS = (
 EX_LABEL = (
     r"(?:除权\(除息\)日|除权日\(除息日\)|除息\(除权\)日|除权\(除息日\)|"
     r"除权\(息\)日|除权除息日|除息日|除权日)"
+    r"(?:[、&](?:现金)?红利发放日)?"
 )
 LABEL_DATE_GAP = r"[:为]*(?:[-—]\d+[-—])?"
 
@@ -250,7 +251,7 @@ def main():
             )
         )
     report = dict(
-        parser_version="DISTRIBUTION_NOTICE_DATE_LINK_V6",
+        parser_version="DISTRIBUTION_NOTICE_DATE_LINK_V7",
         parser_sha256=sha256_file(Path(__file__)),
         inputs=[dict(path=str(p), sha256=sha256_file(p)) for p in inputs],
         year=args.year,
@@ -270,7 +271,7 @@ def main():
     )
     report["manifest_sha256"] = canonical_sha256(report)
     write_immutable(
-        args.root / args.batch / (args.report or f"date-links-{args.year}-v6.json"),
+        args.root / args.batch / (args.report or f"date-links-{args.year}-v7.json"),
         canonical_json_bytes(report) + b"\n",
     )
     print(
