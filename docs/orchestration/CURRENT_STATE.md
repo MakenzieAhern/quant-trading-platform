@@ -1,5 +1,22 @@
 # Current state
 
+## Current R5 official correction fact closure — 2026-09-17
+
+SHA-bound original/changed issuer PDFs establish that 002026's share-count
+supplement leaves its 0.06/share cash, record and ex dates unchanged; three
+other notices (300800, 002895, 002812) correct only payment dates and leave
+their accepted cash facts unchanged. The strict before/after comparison closes
+four distinct P1 documents, creates no event and does not normalize payment
+dates into the accounting ledger. Correction report manifest
+`b5d45da39b0874594b8871146b9fdaa90633b03baa5e4fefc1d37b62511b7aa0`;
+cumulative ten-report v5 manifest
+`6a18008cb6414714ce5201a9375ffe06c09a8716341a84830445c3a8222643d0`.
+P1 now has 15,696/16,320 established/out of scope, 1,683 official
+substitutions and 624 facts / 608 documents unresolved (304 retained
+distribution PDFs, 304 other). Corrections that change bonus terms (301106,
+003041) remain open. Cash full census is PARTIAL; 1,921 SZSE exact resumption
+boundaries remain. No Full Dataset, freeze or study.
+
 ## Current R5 newly recovered issuer cash event — 2026-09-17
 
 The shared date parser now also recognizes the explicit SZSE label

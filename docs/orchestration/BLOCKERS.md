@@ -1,5 +1,16 @@
 # Blockers
 
+## Current 2026-09-17 P1 correction closure — independent source work continues
+
+Four official corrections/supplements now close four already-established
+cash-document facts by immutable, source-hash-bound comparison. P1 still has
+624 facts / 608 documents unresolved (304 distribution and 304 other).
+Actual bonus-term corrections for 301106/003041 remain open; do not treat their
+unchanged cash leg as full corporate-action closure. Cash full census is
+PARTIAL, and 1,921 SZSE exact resumption boundaries remain unresolved.
+The 301262 malformed official ex-date and Docker/database issues below are
+unchanged. No human decision is requested yet.
+
 ## Current 2026-09-17 source gaps — independent work continues
 
 The accepted 002852 issuer-only cash event raises v40 to 40,479 while full

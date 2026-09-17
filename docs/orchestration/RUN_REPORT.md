@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 official correction source replay
+
+Four retained issuer correction/supplement PDFs and their original accepted
+notices were checksum-verified. One share-count-only supplement (002026) and
+three payment-date-only corrections (300800, 002895, 002812) leave the accepted
+gross per-share cash and entitlement dates unchanged. No economic event was
+created. The correction manifest is
+`b5d45da39b0874594b8871146b9fdaa90633b03baa5e4fefc1d37b62511b7aa0`
+(file SHA-256 `fdc1ad5584bbee6173149ea36a673c42f69c8d558c4a3b01fa40706d4cd62d66`).
+Ten-report disjoint P1 replay v5 closes 1,970 baseline fact requests and
+leaves 624 facts / 608 documents (304 distribution, 304 other), with
+15,696/16,320 established/out of scope and 1,683 official substitutions.
+Its manifest is `6a18008cb6414714ce5201a9375ffe06c09a8716341a84830445c3a8222643d0`
+(file SHA-256 `5efa63fd01c24e6dc19fec06c90a2d0bc28a248e7e8fa90d8942184878e113ea`);
+input-order replay and repeat manifest checks pass. This is not a bonus
+reconciliation; 301106/003041 corrections change bonus facts and remain open.
+Full cash census remains PARTIAL. No Full Dataset, freeze or study.
+
 ## 2026-09-17 additional official issuer cash event
 
 The retained 002852 2023-11-17 primary implementation notice uniquely

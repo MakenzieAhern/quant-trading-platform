@@ -24,6 +24,7 @@ def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
             "orphan_exchange",
             "sse_st",
             "differentiated",
+            "correction",
         )
     }
     reports["base"] = baseline

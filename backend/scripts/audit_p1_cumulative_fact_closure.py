@@ -18,6 +18,7 @@ REPORTS = {
     "orphan_exchange": "p1-orphan-exchange-dated-cash-v9.json",
     "sse_st": "p1-official-sse-st-fact-closure-v1.json",
     "differentiated": "p1-differentiated-cash-notice-ledger-v5.json",
+    "correction": "p1-correction-cash-facts-v4.json",
 }
 
 
@@ -73,6 +74,7 @@ def recount(reports):
         )
     ]
     add("differentiated", differentiated, require_cash=True)
+    add("correction", reports["correction"]["closed"], require_cash=True)
     rows = sorted(closed.values(), key=lambda row: row["document_id"])
     closed_facts = sum(len(row["affected_events"]) for row in rows)
     unresolved_cash = len(cash) - sum(row["document_id"] in cash for row in rows)
@@ -92,6 +94,7 @@ def recount(reports):
             row["status"] == "SUPERSEDED_BY_OFFICIAL_CORRECTION"
             for row in reports["differentiated"]["classifications"]
         )
+        + len(reports["correction"]["closed"])
     )
     return {
         "closed_documents": len(rows),
@@ -136,7 +139,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V4",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V5",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",

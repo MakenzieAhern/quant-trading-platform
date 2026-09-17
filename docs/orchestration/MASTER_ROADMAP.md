@@ -1,5 +1,12 @@
 # v1.1 controller roadmap
 
+Current 2026-09-17 source-bound correction replay closes four previously
+unresolved P1 distribution documents without creating or changing an economic
+event. P1 now has 624 unresolved facts / 608 documents (304 distribution,
+304 other); cash issuer census remains PARTIAL. Actual bonus changes in
+301106/003041 still require accounting review, and SZSE has 1,921 exact
+resumption boundaries. The full dataset gate remains closed.
+
 Current 2026-09-17 primary-notice replay adds one previously absent 002852
 ordinary-A cash event, bringing cash v40 to 40,479 accepted events with all
 40,376 exchange targets covered, but full issuer census still PARTIAL. P1
