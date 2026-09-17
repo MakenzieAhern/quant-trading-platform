@@ -1,5 +1,39 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 nonfinal issuer proposal scope
+
+Twelve official proposal/authorization documents have no final executable
+cash or bonus ratio, record date or ex-date, and explicitly reserve terms for
+future approval. Original PDF bytes, cached text and source manifests are
+SHA-256 checked, then terms reparsed; input-order replay passes. Cash-bearing
+or instrument-ambiguous proposals are retained unresolved. Report v2 SHA-256
+`1f2ef146a8c03f334a9547bf4b4bfc35da72cc4fa0922477080b601697762997`,
+manifest `33dc149fac61d102ae0820c3b33bf9739c63672e2bd74fd88173e48534dc66b6`.
+Eleven-report cumulative v9 SHA-256
+`8bbed1f222e5bb170f6e0c700724cccd45a129bed34ce0011a6bab07ec9f5256`,
+manifest `f8044228720156d103e6e8f351d1751339c3abe5fad60d59dbeb0031a51164db`:
+15,711/16,320 established or out of scope, 1,684 official substitutions,
+609 facts / 593 documents unresolved (289 distribution, 304 other). This is
+scope closure only; no event, dataset publication, freeze or study.
+
+## 2026-09-17 301262 bounded official evidence recovery
+
+Windows-side official CNINFO retrieval recovered the 189-page 2023 annual
+report (published 2024-04-26, PDF SHA-256
+`63c5b7258c4355c6219300d8dfc1a103519bc7bcfcf43c758f4bc8b4e4491144`).
+Page 45 independently confirms the 2023-10-30 record and 2023-10-31 ex-date,
+but only retrospectively. An official CNINFO issuer announcement query for
+2023-10-24–2023-12-31 has six results and no correction to the original
+misprinted ex-date; response SHA-256
+`b6277239a95aab132fc72a73e95164a3ce1f85ffe1d31ab3eefd18ba4efbf14e`.
+The contemporaneous 2023-10-27 Q3 report (PDF SHA-256
+`815338812cb9381cfb4e668a080838ef4fa6eb0f8ce6a3192ff701c5bab6a30b`)
+does not establish the date. Source receipts and UTC times remain outside Git
+at `/home/yuchen/data/research/staging/p1-301262-annual-evidence-v1/`.
+The 301262 cash event remains UNACCEPTED; no inference from a malformed date
+or a post-event source, no P1 closure claim, no change to cash v40 or full
+dataset gates. Independent R5 source work continues.
+
 ## 2026-09-17 003041 bonus false-positive correction
 
 Retained issuer original PDF SHA-256

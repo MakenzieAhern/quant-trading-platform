@@ -1,5 +1,24 @@
 # Blockers
 
+## Current 2026-09-17 nonfinal notice scope — independent source work
+
+Twelve final-event false positives are now out of scope by official PDF,
+conditional proposal text, and absence of executable terms or effective
+dates. P1 remains 609 facts / 593 documents (289 distribution, 304 other).
+No source substitution or new economic event was asserted. Cash/corporate
+action census and SZSE exact resumption boundaries remain PARTIAL; continue
+official-source work without paid products or an invented date.
+
+## Current 2026-09-17 301262 evidence — PIT date still unresolved
+
+The official 2023 annual report and source bytes have been recovered and
+checksummed (page 45 confirms 2023-10-31 retrospectively). The bounded
+2023-10-24–2023-12-31 official CNINFO announcement query has six results,
+no corrected implementation notice; the official Q3 report adds no date.
+The 2023-10-24 primary notice's malformed `2023 年 10 年 31 日` ex-date remains
+unaccepted for point-in-time replay. This is one documented source gap among
+independent R5 work, not a reason to infer dates or call full census PASS.
+
 ## Current 2026-09-17 bonus correction split — source work continues
 
 003041's spurious 0.2 bonus clause is officially removed and no bonus event

@@ -1,5 +1,36 @@
 # Current state
 
+## Current R5 official nonfinal proposal scope — 2026-09-17
+
+Twelve retained official issuer documents are proposals or authorizations,
+not final distribution implementation notices. Each source PDF and cached
+extraction is checksum-verified; each has no unique gross cash or bonus ratio,
+no effective record/ex-date, and explicit conditional wording. Two further
+proposal-like documents contain a cash amount and remain open; another has a
+preferred instrument marker and remains open. No new event is created and no
+existing event is altered. Proposal report v2 manifest
+`33dc149fac61d102ae0820c3b33bf9739c63672e2bd74fd88173e48534dc66b6`;
+disjoint cumulative v9 manifest
+`f8044228720156d103e6e8f351d1751339c3abe5fad60d59dbeb0031a51164db`.
+P1 now has 15,711/16,320 established or out of scope, with 1,684 official
+substitutions; 609 facts / 593 documents remain (289 distribution, 304 other).
+Full cash/corporate-action census remains PARTIAL. No Full Dataset or study.
+
+## Current R5 301262 official annual corroboration — 2026-09-17
+
+The official CNINFO 2023 annual report is now retained and SHA-verified
+(`63c5b7258c4355c6219300d8dfc1a103519bc7bcfcf43c758f4bc8b4e4491144`),
+with page 45 visually and textually confirming a 2023-10-30 record date and
+2023-10-31 ex-date. It was published 2024-04-26, after the event. A complete
+date-bounded CNINFO issuer announcement query (2023-10-24 through 2023-12-31;
+six results, no further page) finds no corrected implementation notice; the
+official 2023-10-27 Q3 report has no distribution date. The query snapshot,
+Q3 PDF, annual PDF, retrieval times and SHA-256 receipts are retained under
+`/home/yuchen/data/research/staging/p1-301262-annual-evidence-v1/`.
+This retrospective corroboration does not make the malformed original ex-date
+point-in-time authoritative. The event remains **UNACCEPTED** and full cash
+census remains PARTIAL. No Full Dataset, freeze or study.
+
 ## Current R5 bonus-removal correction — 2026-09-17
 
 The 003041 issuer's official 2024-05-30 pre-record correction removes only
