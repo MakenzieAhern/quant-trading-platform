@@ -5,13 +5,19 @@
 Replayed the existing 288 integer, next-session candidates against retained
 SHA-verified official issuer notices, exchange ratios, lifecycle, and approved
 basis-conservation policy. Explicit send/transfer and capital-reserve terms
-add seven events; a compound ex-date / payment-date label links another 12.
-All 254 prior event checksums remain identical. The ledger supports 273 / 288
-and leaves 15 unresolved: two lack a linked issuer implementation source, nine
+add seven events; a compound ex-date / payment-date label links another 12;
+the explicit stock-dividend leg supports one more. All 254 prior event checksums
+remain identical. The ledger supports 274 / 288 and leaves 14 unresolved:
+two lack a linked issuer implementation source, eight
 have term/parser conflicts, and four are nonstandard/restructuring entitlements.
 Reversed input order produces identical ledger bytes. File SHA-256
-`62eaf9d0c6e051905f0d4219fa4a21673ada0e418d1d78cc2aa408fc55ce3d2e`,
-manifest `70f6d914b176d3c0670a1a0c24d06018d757fb527307ee1f7cd9deb2d8c3ac51`.
+`f8bc4b47c0df4f13ed23ceefd2ed1d1666f0c9b726318d2e83a9d905a34ea76b`,
+manifest `fec13a70ee44df54d2bbe714731af5fbfecff263c9a354df869874cf75dcffd2`.
+The two absent cached issuer notices are 603315 (2016-06-07) and 603889
+(2016-04-19). SSE official directory metadata identifies the implementation
+PDFs published 2016-06-01 and 2016-04-12, respectively, but each PDF returned
+`ACCESS_DENIED_STOP` at its official SSE URL; the one-attempt denial receipts
+are under `bonus-targeted-source-recovery-v1`. Metadata is not event terms.
 Replaying 2010–2022 date links found 849 new official matches and lost zero
 old matches. These are date evidence only; full cash v41 is unchanged. Its
 2016 diagnostic replay exposed three secondary A/H timing notices with no

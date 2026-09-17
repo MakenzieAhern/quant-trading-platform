@@ -2,13 +2,16 @@
 
 ## Current 2026-09-17 integer retained-bonus subset
 
-273 / 288 bounded integer/next-session events are supported, up from 254;
-15 remain: two missing issuer links, nine term/parser conflicts, four nonstandard
+274 / 288 bounded integer/next-session events are supported, up from 254;
+14 remain: two missing issuer PDFs, eight term/parser conflicts, four nonstandard
 entitlements. No whole-dataset bonus authority follows from this subset; the
 full oracle includes 7,119 further deferred rows. Do not default unknown
 fractional registry allocation or restructuring rights to the ordinary bonus
 policy. Ledger manifest
-`70f6d914b176d3c0670a1a0c24d06018d757fb527307ee1f7cd9deb2d8c3ac51`.
+`fec13a70ee44df54d2bbe714731af5fbfecff263c9a354df869874cf75dcffd2`.
+Official SSE metadata locates 603315 (2016-06-01) and 603889 (2016-04-12)
+implementation PDFs; both direct PDF responses trigger `ACCESS_DENIED_STOP`.
+They are source leads, not accepted event terms. No alternate transport retry.
 Across 2010–2022, 849 date links were newly recovered with zero old matches
 lost. Cash v41 is unchanged: replay must first classify secondary timing-only
 notices and preserve 32 prior events missed even by the old-link fresh parser.

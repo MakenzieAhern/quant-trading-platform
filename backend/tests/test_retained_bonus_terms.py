@@ -21,6 +21,7 @@ def test_exact_retained_components_and_fail_closed_identity():
             "每10股送4股,转增6股",
             "向全体股东实施10股送5股,每10股转增5股",
             "每10股派现金红利0.50元,送2股,转增8股",
+            "每10股派发股票股利1股;每10股转增9股",
         ):
             assert retained_ratio([header + terms], "600000") == 1
         assert (

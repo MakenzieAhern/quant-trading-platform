@@ -3,11 +3,14 @@
 ## 2026-09-17 retained integer-bonus source reconciliation
 
 Existing retained official source receipts, exchange ratio oracle and
-effective-dated master establish 19 additional exact integer/next-session
+effective-dated master establish 20 additional exact integer/next-session
 bonus events. The 254 preexisting event checksums did not change; the new
-ledger has 273 accepted / 15 unresolved of 288 candidates. Reversing all
+ledger has 274 accepted / 14 unresolved of 288 candidates. Reversing all
 date-link inputs reproduces file SHA-256
-`62eaf9d0c6e051905f0d4219fa4a21673ada0e418d1d78cc2aa408fc55ce3d2e`.
+`f8bc4b47c0df4f13ed23ceefd2ed1d1666f0c9b726318d2e83a9d905a34ea76b`.
+The two absent PDF sources have exact official SSE catalog leads, but each
+download returned `ACCESS_DENIED_STOP`; no source terms were inferred from a
+title. Retrieval receipts remain under `bonus-targeted-source-recovery-v1`.
 The shared date-label parser recovered 849 additional official links across
 2011–2022, with zero old matches lost. The 2016 gross-cash diagnostic moved
 from 1,786 to 1,827 accepted on fresh parsing, but the preservation guard
