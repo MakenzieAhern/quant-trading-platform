@@ -24,6 +24,20 @@ def test_exact_retained_components_and_fail_closed_identity():
             )
             == 2
         )
+        with pytest.raises(ValueError, match="FRACTIONAL_COMPONENT_ALLOCATION_UNRESOLVED"):
+            retained_ratio(
+                [header + "每股送红股0.5股;每股转增1.5股"],
+                "600000",
+                require_integral_components=True,
+            )
+        assert (
+            retained_ratio(
+                [header + "每股送红股1股;每股转增1股"],
+                "600000",
+                require_integral_components=True,
+            )
+            == 2
+        )
         assert (
             retained_ratio(
                 [

@@ -103,7 +103,7 @@ def main():
         if (
             extracted["source_sha256"] != doc["source_sha256"]
             or not finality
-            or retained_ratio(extracted["pages"], symbol) != ratio
+            or retained_ratio(extracted["pages"], symbol, require_integral_components=True) != ratio
             or notice_dates(extracted["pages"]) != ([record], [ex])
         ):
             raise ValueError(f"BONUS_OFFICIAL_TERMS_CHANGED:{symbol}")

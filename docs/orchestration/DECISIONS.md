@@ -1,6 +1,21 @@
 # Decisions
 
-## 2026-09-18 603023 listing-date conflict: retrospective audit only
+## 2026-09-18 bounded bonus component-integrality guard
+
+The existing retained-bonus approval preserves basis but does not approve a
+fractional-share convention. For the narrow `INTEGER_HOLDINGS_NO_FRACTION`
+ledger, require each separately stated stock-dividend and capital-transfer
+ratio to yield whole shares for any integer pre-event holding; an integral
+*sum* is insufficient. Quarantine mixed-component cases unless official
+evidence proves combined account-level allocation or the human approves a
+research convention. This is a fail-closed audit rule, **not** a claim that
+the registry actually allocated the components separately. The correction
+supersedes ledger v28 and dependent P1 reports v6/v53 with v30/v7/v54;
+old immutable evidence remains retained. The source ratio and 603023's
+retrospective listing-date finding are unchanged. No paid data or new
+economic event is asserted.
+
+## Previous 2026-09-18 603023 listing-date conflict: retrospective audit only
 
 For the exact 603023 2016-06-14/15 cash-plus-bonus source request, retain both
 listing dates in the contemporaneous issuer implementation PDF (cover

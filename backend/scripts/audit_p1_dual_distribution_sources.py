@@ -275,7 +275,7 @@ def main():
         if reason:
             rejected.append({"document_id": row["document_id"], "reason": reason})
     report = {
-        "report_version": "P1_OFFICIAL_DUAL_DISTRIBUTION_SOURCE_CLOSURE_V6",
+        "report_version": "P1_OFFICIAL_DUAL_DISTRIBUTION_SOURCE_CLOSURE_V7",
         "candidate_documents": len(candidates),
         "closed_documents": len(accepted),
         "closed_facts": sum(len(row["affected_events"]) for row in accepted),

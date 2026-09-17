@@ -2,6 +2,21 @@
 
 ## Current R5 P1 and methodology gates — 2026-09-18
 
+Bounded ledger v30 conservatively removes 39 formerly accepted
+integer-total/mixed-component bonus events because their individual
+stock-dividend or capital-transfer components may require unknown
+registry-level fractional allocation. It supports **243/288** candidates;
+**45** remain unresolved. Dual source audit v7 closes **11/16** notices;
+cumulative P1 v54 leaves **257 facts / 252 documents** open (241 acquired
+distribution, 11 other). The 603023 later official report still confirms
+the listing date retrospectively, but its two-leg accounting/source request
+is reopened. The smallest human methodology gate is the same fractional
+retained-bonus policy choice already documented below; it now also covers
+mixed-component cases. Full census, Full Dataset, freeze and studies remain
+closed. Prior v28/v6/v53 figures in the next paragraph are historical only.
+
+### Previous v53 checkpoint
+
 The exact 603023 dual-leg P1 source request is now closed by the original
 official issuer PDF plus its later official half-year report's audit-only
 confirmation of the 2016-06-16 new-share listing date. The original notice's

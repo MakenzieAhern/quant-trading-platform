@@ -1,6 +1,28 @@
 # Autonomous Quant Project Checkpoint
 
-## 2026-09-18 603023 retrospective official source closure
+## 2026-09-18 retained-bonus component-integrality replay
+
+Rechecked the original CNINFO issuer notices behind all 288 bounded candidates.
+The prior 282 accepted events included 39 whose total ratio was integral but
+whose individual stock-dividend or capital-transfer ratio was fractional.
+The existing approved policy cannot guarantee account-level whole shares for
+those components. A strict option in the shared terms parser now fails closed
+only for the bounded accounting ledger; source-term extraction still retains
+the exact total. Targeted tests pass. Immutable ledger v30: 243 accepted, 45
+unresolved, 7,119 outside the subset; file SHA-256
+`05421d892782d219316c47952e21f3e87ce16c6b55acf8041b01132f9b6d939d`,
+manifest `e5df58295be544873872d40b10dc82a591d921f8dd2108ac4144943afcd0e2e4`.
+No official source bytes were reacquired.
+
+The dependent source replay keeps 11/16 exact dual notices closed, 5 open;
+dual v7 manifest `d188d0c169a6adc81c501c01fa13dc211a017ff2534ad0ac2f76e5205b369838`.
+Cumulative P1 v54 has 16,063/16,320 facts established, 1,986 substitutions,
+257 facts / 252 documents open (241 acquired distribution, 11 other), manifest
+`f87e6ac60c05397794891891651f3195cd11d92ed029bf938f825e07a2b63d25`.
+The old v28/v6/v53 reports remain immutable historical checkpoints, not
+current acceptance. Full Dataset and studies remain locked.
+
+## Previous 2026-09-18 603023 retrospective official source closure
 
 The original issuer PDF lists new unrestricted shares on 2016-06-16 in its
 cover and the impossible 2016-04-16 in its body. A separately retrieved,

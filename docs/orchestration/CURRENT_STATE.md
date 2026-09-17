@@ -1,6 +1,31 @@
 # Current state
 
-## Current R5 603023 official retrospective listing-date corroboration — 2026-09-18
+## Current R5 retained-bonus component-integrality correction — 2026-09-18
+
+The approved retained-bonus policy has no convention for unobservable
+registry-level fractional share allocation. Earlier bounded ledger v28 checked
+only that the **sum** of stock-dividend and capital-transfer ratios was an
+integer. Original official notices show 39 previously accepted events have
+fractional **components** despite integer totals (for example 603023: 0.5 +
+1.5). An integer total alone does not establish that both components credit
+whole shares to every possible integer-holding account. These 39 events are
+conservatively quarantined pending authoritative combined-allocation evidence
+or the human fractional-bonus methodology decision; no actual registry award
+is inferred. Immutable bounded ledger v30 supports **243/288**, leaves **45**
+unresolved and still excludes 7,119 oracle rows from this subset. Manifest
+`e5df58295be544873872d40b10dc82a591d921f8dd2108ac4144943afcd0e2e4`.
+
+The dependent dual-source audit v7 now closes **11/16** notices (22 facts) and
+leaves five mixed-component notices open, including 603023. Cumulative P1 v54
+has **16,063/16,320** facts established, **1,986** official substitutions and
+**257 facts / 252 documents** open (241 acquired distribution, 11 other).
+Its manifest is `f87e6ac60c05397794891891651f3195cd11d92ed029bf938f825e07a2b63d25`.
+The 603023 retrospective listing-date corroboration remains valid as an audit
+fact, but no longer closes the two-leg source/accounting requirement. Full
+Dataset, freeze and studies remain locked. See
+`../research/R5_BONUS_SOURCE_ORACLE_V1.md`.
+
+## Previous R5 603023 official retrospective listing-date corroboration — 2026-09-18
 
 The retained issuer implementation PDF's new-share listing dates conflict:
 2016-06-16 on its cover versus impossible 2016-04-16 in its body. The issuer's

@@ -1,6 +1,29 @@
 # R5 bonus source-oracle review
 
-## 603023 bounded parser correction — 2026-09-18
+## Component-integrality correction — 2026-09-18
+
+The original official source terms remain 603023's 0.5 stock dividend plus
+1.5 capital-reserve shares. Their sum is two, but the earlier v28 ledger did
+not prove that each integer-holding account receives two whole shares when
+the components are registered. The same issue occurs in 38 other previously
+accepted bounded events. This is uncertainty about account allocation, not
+about the published ratio or the retrospectively confirmed listing date.
+No document establishes a universal combined-allocation rule for the event
+dates. The existing policy does not authorize a fractional retained-bonus
+convention, so all 39 are now explicitly unresolved rather than assumed safe.
+
+The source-byte-verified, deterministic replay is `integer-bonus-ledger-v30.json`
+(file SHA-256 `05421d892782d219316c47952e21f3e87ce16c6b55acf8041b01132f9b6d939d`,
+manifest `e5df58295be544873872d40b10dc82a591d921f8dd2108ac4144943afcd0e2e4`):
+**243 supported / 45 unresolved** of 288 bounded candidates. Each rejected
+source SHA and reason is in the ledger's `unresolved_documents`. The narrower
+dual P1 audit v7 closes **11/16** source requests (22 facts), rejects five
+missing an accepted bonus leg, and cumulative v54 leaves **257 facts / 252
+documents** open. v28/v6/v53 below are immutable *historical* results now
+superseded for current acceptance. The 7,119 oracle rows outside the bounded
+subset remain unassessed; no full corporate-action census is claimed.
+
+## Previous 603023 bounded parser correction — 2026-09-18
 
 The retained original [2016-06-04 CNINFO issuer notice](https://static.cninfo.com.cn/finalpage/2016-06-04/1202356226.PDF)
 (SHA-256 `b54bfa9d42641fd1d3f0bf2c0e45e7cd0730bd7797c058a117cc293a9e513b73`)

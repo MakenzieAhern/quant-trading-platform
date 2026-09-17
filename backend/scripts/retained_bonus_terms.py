@@ -7,7 +7,7 @@ from decimal import Decimal, localcontext
 from scripts.reconcile_distribution_cash import issuer_code_matches
 
 
-def retained_ratio(pages, symbol):
+def retained_ratio(pages, symbol, *, require_integral_components=False):
     normalized_pages = [unicodedata.normalize("NFKC", page) for page in pages]
     normalized = "\n".join(normalized_pages)
     if not issuer_code_matches(normalized, symbol):
@@ -60,6 +60,10 @@ def retained_ratio(pages, symbol):
         components.append(min(values) if values else Decimal(0))
     if not any(components):
         raise ValueError("NO_EXPLICIT_BONUS_RATIO")
+    if require_integral_components and any(
+        value != value.to_integral_value() for value in components
+    ):
+        raise ValueError("FRACTIONAL_COMPONENT_ALLOCATION_UNRESOLVED")
     with localcontext() as context:
         context.prec = 50
         parsed = sum(components, Decimal(0))

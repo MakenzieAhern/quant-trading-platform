@@ -89,7 +89,11 @@ def main():
             ):
                 raise ValueError("BONUS_SOURCE_IDENTITY_CHANGED")
             try:
-                terms = retained_ratio(json.loads(cache.read_bytes())["pages"], key[0])
+                terms = retained_ratio(
+                    json.loads(cache.read_bytes())["pages"],
+                    key[0],
+                    require_integral_components=True,
+                )
                 if terms != ratio:
                     raise ValueError("BONUS_EXCHANGE_TERMS_DISAGREE")
                 evidence.append(doc)
