@@ -1,5 +1,17 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 differentiated-public-A official cash receipts
+
+Six existing differentiated-public-A cash events are corroborated by the same
+retained final issuer notices, exact holder-specific gross payout, issuer
+entitlement dates and official exchange targets. No event or holder policy was
+invented. Source v7 closes 226/259; 33 candidates remain explicit. Manifest
+`8edb4a40f7c53aaebc83e346c7765ea60845221c913a75373c5753dc1063a8c7`.
+Cumulative P1 v22 establishes 15,967/16,320 facts, leaving 353 facts / 337
+documents, including 263 retained distribution PDFs requiring separate
+corporate-action classification. Manifest
+`be12aaf8a9c6c5e038dc6e22740b8686bcb738b155159c4ea2e100ba56730cf1`.
+
 ## 2026-09-18 historical-code official cash receipts
 
 Six 601360 stable-ID P1 requests are supported by the issuer's historical

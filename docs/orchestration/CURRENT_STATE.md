@@ -1,5 +1,21 @@
 # Current state
 
+## Current R5 differentiated-public-A source closure — 2026-09-18
+
+Six additional URL-less P1 cash requests have retained official CNINFO final
+implementation PDFs and already accepted differentiated-public-A cash events.
+The approved holder-specific parser, not the generic gross-cash parser,
+reproduces each exact public-A amount and issuer record/ex-dates; official
+exchange amounts/dates and original PDF/text hashes also reconcile. This
+scope is gated by policy `DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1` and does not
+create new economic events. Retained-source v7 closes 226/259 candidates;
+33 remain explicit. Manifest
+`8edb4a40f7c53aaebc83e346c7765ea60845221c913a75373c5753dc1063a8c7`.
+P1 cumulative v22 establishes 15,967/16,320 facts, leaving 353 facts / 337
+documents (263 distribution, 74 other) and 1,918 substitutions; manifest
+`be12aaf8a9c6c5e038dc6e22740b8686bcb738b155159c4ea2e100ba56730cf1`.
+Full Dataset and research gates remain closed.
+
 ## Current R5 historical-code cash reconciliation — 2026-09-18
 
 The official point-in-time master maps historical SSE code 601313 to stable

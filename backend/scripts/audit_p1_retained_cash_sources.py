@@ -15,12 +15,13 @@ from scripts.audit_p1_orphan_cash_facts import REQUIREMENT, final_issuer_title, 
 from scripts.audit_p1_orphan_exchange_dates import classify_dates
 from scripts.audit_p1_public_fact_requirements import verified
 from scripts.link_distribution_notices import notice_dates
-from scripts.reconcile_distribution_cash import gross_cash
+from scripts.reconcile_distribution_cash import differentiated_cash, gross_cash
 
 PROVIDERS = {
     "OFFICIAL_ISSUER_CNINFO_EXCHANGE_DATED",
     "OFFICIAL_ISSUER_CNINFO_EXCHANGE_RECONCILED",
     "OFFICIAL_ISSUER_CNINFO_PRIMARY_IMPLEMENTATION",
+    "OFFICIAL_ISSUER_CNINFO_DIFFERENTIATED_PUBLIC_A",
 }
 FINAL_VARIANT = re.compile(r"(?:实施(?:的)?公告|实施方案|实施报告|派发.*(?:股息|股利).*公告)$")
 NONFINAL_VARIANT = re.compile(r"董事会|股东大会|预案|决议|停牌|提示")
@@ -58,7 +59,15 @@ def eligible(requirements, excluded, cash):
         if len(parts) != 4 or parts[0] != "CASH":
             continue
         matches = by_key.get(tuple(parts[1:]), [])
-        if len(matches) == 1 and matches[0]["event"]["source_provider"] in PROVIDERS:
+        if (
+            len(matches) == 1
+            and matches[0]["event"]["source_provider"] in PROVIDERS
+            and (
+                matches[0]["event"]["source_provider"]
+                != "OFFICIAL_ISSUER_CNINFO_DIFFERENTIATED_PUBLIC_A"
+                or matches[0].get("policy_id") == "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"
+            )
+        ):
             rows.append(row)
             events.append(matches[0])
     return rows, events
@@ -191,6 +200,9 @@ def main():
         for row in instruments["classifications"]
     }
     targets, _ = official_targets(master, instrument_types, sse, szse)
+    by_checksum = {item["event_checksum"]: item for item in events}
+    if len(by_checksum) != len(events):
+        raise ValueError("DUPLICATE_ACCEPTED_CASH_CHECKSUM")
     closed = []
     selected_ids = {row["document_id"] for row in selected}
     rejected = [
@@ -200,6 +212,10 @@ def main():
     ]
     for row in selected:
         key = row["security_id"], row["record_date"], row["ex_date"]
+        accepted = by_checksum[row["accepted_event_checksum"]]
+        differentiated = (
+            accepted["event"]["source_provider"] == "OFFICIAL_ISSUER_CNINFO_DIFFERENTIATED_PUBLIC_A"
+        )
         reason = None
         if key not in targets:
             reason = "NO_EXACT_OFFICIAL_EXCHANGE_TARGET"
@@ -219,18 +235,28 @@ def main():
             if extracted["source_sha256"] != doc["source_sha256"]:
                 raise ValueError(f"RETAINED_OFFICIAL_TEXT_CHANGED:{row['document_id']}")
             try:
-                amount = gross_cash(
-                    extracted["pages"], row["issuer"], targets[key], trusted_issuer=True
+                amount = (
+                    differentiated_cash(extracted["pages"], row["issuer"], doc["title"])
+                    if differentiated
+                    else gross_cash(
+                        extracted["pages"], row["issuer"], targets[key], trusted_issuer=True
+                    )
                 )
                 records, ex_dates = notice_dates(extracted["pages"])
             except ValueError as exc:
                 reason = str(exc)
             else:
-                classification = classify_dates(row, records, ex_dates)
+                classification = classify_dates(
+                    row, records, ex_dates, differentiated=differentiated
+                )
                 if classification is None and exchange_resolves_year_conflict(
                     row, records, ex_dates, doc["published_on"]
                 ):
-                    classification = "OFFICIAL_EXCHANGE_RESOLVED_SOURCE_YEAR_CONFLICT"
+                    classification = (
+                        "DIFFERENTIATED_PUBLIC_A_OFFICIAL_EXCHANGE_RESOLVED_SOURCE_YEAR_CONFLICT"
+                        if differentiated
+                        else "OFFICIAL_EXCHANGE_RESOLVED_SOURCE_YEAR_CONFLICT"
+                    )
                 if amount != Decimal(row["cash_per_share"]):
                     reason = "ISSUER_CASH_AMOUNT_CONFLICT"
                 elif not exchange_amount_matches(amount, targets[key]):
@@ -242,6 +268,11 @@ def main():
                         {
                             **{k: v for k, v in row.items() if k != "substitute_source_path"},
                             "classification": classification,
+                            **(
+                                {"holder_policy": "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"}
+                                if differentiated
+                                else {}
+                            ),
                             "issuer_notice_record_dates": records,
                             "issuer_notice_ex_dates": ex_dates,
                             "official_exchange_amounts": sorted(
@@ -256,7 +287,7 @@ def main():
     if len(closed) + len(rejected) != len(requests):
         raise ValueError("RETAINED_P1_CANDIDATES_NOT_PARTITIONED")
     report = {
-        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V6",
+        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V7",
         "candidate_documents": len(requests),
         "selected_documents": len(selected),
         "closed_documents": len(closed),

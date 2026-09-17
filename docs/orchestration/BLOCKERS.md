@@ -1,5 +1,15 @@
 # Blockers
 
+## Current 2026-09-18 gate after differentiated cash receipts
+
+P1 lacks 353 facts / 337 documents (263 distribution, 74 other). Six
+holder-specific public-A cash receipts close with approved parser and official
+exchange corroboration, but the 33 retained-source rejects remain explicit.
+Full cash/bonus censuses and 1,921 SZSE resumption boundaries remain partial.
+The two official SSE implementation PDFs are still inaccessible; Docker's
+Linux engine is unavailable locally without a service start. No dataset,
+freeze or study gate opens.
+
 ## Current 2026-09-18 R5 source and local-runtime gates
 
 P1 still lacks 359 facts / 343 documents (263 distribution, 80 other).
