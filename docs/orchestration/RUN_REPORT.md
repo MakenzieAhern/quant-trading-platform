@@ -1,5 +1,17 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 buyback-notice wording closure
+
+Three previously unmatched official notices about adjusting a share-repurchase
+price cap after a dividend are non-primary cash records. The accepted final
+issuer notices uniquely corroborate issuer, exact gross amount and dates;
+source PDF and text checksums pass. Derivative scope v2 closes 11 notices in
+total, manifest `f6be92067cd621017bb93441118e4bd1b4b763d1bd0007e23068b65283ac9fd7`.
+P1 cumulative v14 leaves 583 facts / 567 documents (267 distribution, 300
+other), with 15,737/16,320 established and 1,692 official substitutions.
+Manifest `aaab2b753fe70f6b2aafdbfce6bb4e920e50e4397c422150fd06432630bf8b19`.
+No new economic event or Full Dataset was created.
+
 ## 2026-09-17 nonfinal official cash proposal closure
 
 Seven more P1 notices with undated tentative gross-cash amounts are closed as

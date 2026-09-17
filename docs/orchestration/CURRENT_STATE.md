@@ -1,6 +1,20 @@
 # Current state
 
-## Current R5 nonfinal cash-notice reconciliation — 2026-09-17
+## Current R5 non-primary buyback-notice closure — 2026-09-17
+
+Three retained official repurchase-price notices use the phrase `回购股份价格上限`
+previously missed by the narrow non-primary filter. Each has no independent
+record/ex-date and matches a unique separately accepted official issuer cash
+implementation event by ordinary-A symbol and exact gross amount within the
+bounded publication window. PDFs, extracted text and accepted-event checksums
+were verified. Derivative scope v2 closes 11 notices (up from 8), manifest
+`f6be92067cd621017bb93441118e4bd1b4b763d1bd0007e23068b65283ac9fd7`.
+Cumulative P1 v14 now establishes 15,737/16,320 facts; 583 facts / 567
+documents remain (267 distribution, 300 other), with substitutions unchanged
+at 1,692. Manifest `aaab2b753fe70f6b2aafdbfce6bb4e920e50e4397c422150fd06432630bf8b19`.
+No new event, Full Dataset or research gate is accepted.
+
+## Earlier R5 nonfinal cash-notice reconciliation — 2026-09-17
 
 Seven additional retained official issuer notices state a tentative cash
 amount but no record/ex-date; each contains an explicit approval/implementation

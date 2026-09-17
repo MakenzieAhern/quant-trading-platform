@@ -31,6 +31,17 @@ def test_derivative_requires_unique_existing_exact_issuer_cash():
         },
     }
     assert len(classify([requirement], [triage], set(), [accepted])) == 1
+    assert (
+        len(
+            classify(
+                [dict(requirement, title="关于实施分红后调整回购股份价格上限的公告")],
+                [triage],
+                set(),
+                [accepted],
+            )
+        )
+        == 1
+    )
     assert classify([requirement], [triage], set(), [accepted, accepted]) == []
     assert (
         classify(

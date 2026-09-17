@@ -1,6 +1,16 @@
 # Blockers
 
-## Current 2026-09-17 R5 gate after nonfinal cash-notice reconciliation
+## Current 2026-09-17 R5 gate after non-primary buyback closure
+
+P1 now lacks 583 facts / 567 documents (267 distribution, 300 other).
+Buyback-price notices are classified only against unique accepted final cash
+events; this adds no economic terms. Full issuer cash census remains PARTIAL.
+The bounded bonus subset supports 276/288; 7,119 oracle rows remain outside
+that scope, and 1,921 SZSE exact resumption boundaries remain unresolved.
+Two named SSE PDF source gaps persist. Full Dataset, freeze and studies remain
+locked.
+
+## Earlier 2026-09-17 R5 gate after nonfinal cash-notice reconciliation
 
 P1 now has 586 missing facts / 570 documents (270 distribution, 300 other).
 The seven newly scoped proposal notices do not supply final point-in-time

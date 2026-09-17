@@ -13,7 +13,7 @@ from app.data.catalog.freeze import write_immutable
 from scripts.audit_p1_public_fact_requirements import verified
 from scripts.triage_p1_remaining_distribution_docs import diagnose
 
-DERIVATIVE = re.compile(r"停止转股|转股价格|股票期权.*行权价格|回购价格上限")
+DERIVATIVE = re.compile(r"停止转股|转股价格|股票期权.*行权价格|回购(?:股份)?价格上限")
 
 
 def classify(requirements, triage, prior_ids, cash):
@@ -128,7 +128,7 @@ def main():
         ):
             raise ValueError("DERIVATIVE_NOTICE_TERMS_CHANGED")
     report = {
-        "report_version": "P1_NON_PRIMARY_DERIVATIVE_CASH_SCOPE_V1",
+        "report_version": "P1_NON_PRIMARY_DERIVATIVE_CASH_SCOPE_V2",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)
