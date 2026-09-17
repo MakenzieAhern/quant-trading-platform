@@ -1,5 +1,21 @@
 # Current state
 
+## Current R5 issuer-body finality reconciliation — 2026-09-18
+
+Twelve more retained official CNINFO cash notices had abbreviated or generic
+index titles, but their original PDF bodies contain implementation-method
+terms. Every accepted notice has the exact issuer, ordinary-A gross cash,
+record/ex-date and official exchange target; source PDF, extracted text and
+manifest checksums are retained. A warning about a convertible-bond trading
+pause, a shareholder resolution, and a generic notice without implementation
+body evidence remain unaccepted. Source v9 preserves all 237 v8 closures and
+closes 249/270 candidates, with 21 rejected explicitly; manifest
+`47decc901ecf3797fc6718b61b7119c2a913a25baed8cf46b250efead8663355`.
+P1 cumulative v24 establishes 15,990/16,320 facts, leaving 330 facts / 314
+documents (263 distribution, 51 other) and 1,941 official substitutions;
+manifest `aecbc2f9c9a6168f8c2ecd72f3230bfb70f4a374d17defb43d4cc8d716666783`.
+Full Dataset, freeze and research gates remain closed.
+
 ## Current R5 SSE-composite issuer cash receipts — 2026-09-18
 
 Eleven URL-less P1 cash requests with accepted SSE-table/CNINFO-composite

@@ -1,5 +1,19 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 issuer-body finality cross-check
+
+Twelve generic-titled retained issuer PDFs supply explicit implementation
+method text, exact ordinary-A cash and entitlement dates matching accepted
+events and independent exchange targets. Their source-body finality marker and
+original PDF/text SHA-256 are preserved in each new closure. All prior 237
+closures remain identical. Source v9 closes 249/270 candidates; 21 remain
+explicitly rejected. Manifest
+`47decc901ecf3797fc6718b61b7119c2a913a25baed8cf46b250efead8663355`.
+Cumulative P1 v24 establishes 15,990/16,320 facts and leaves 330 facts / 314
+documents (263 distribution, 51 other); 1,941 official substitutions.
+Manifest `aecbc2f9c9a6168f8c2ecd72f3230bfb70f4a374d17defb43d4cc8d716666783`.
+No new economic event or Full Dataset was accepted.
+
 ## 2026-09-18 SSE-composite official issuer cash receipts
 
 Eleven accepted SSE-table/CNINFO-composite cash events were cross-checked

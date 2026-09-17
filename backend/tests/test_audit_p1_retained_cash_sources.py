@@ -5,6 +5,7 @@ from scripts.audit_p1_retained_cash_sources import (
     eligible,
     exchange_amount_matches,
     exchange_resolves_year_conflict,
+    issuer_body_finality,
     retained_final_title,
 )
 
@@ -62,6 +63,8 @@ def test_retained_final_title_accepts_final_variants_not_proposals_or_tips():
     assert not retained_final_title("2011年度权益分派方案公告")
     assert not retained_final_title("董事会2015年度分红派息公告")
     assert not retained_final_title("A股分红派息实施暨停牌提示性公告")
+    assert issuer_body_finality("2014年度利润分配公告", ["三、利润分配实施办法"]) == "实施办法"
+    assert issuer_body_finality("分红派息提示性公告", ["利润分配实施办法"]) is None
 
 
 def test_official_historical_code_alias_needs_point_in_time_master_receipt():

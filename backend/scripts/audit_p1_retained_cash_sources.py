@@ -37,6 +37,20 @@ def retained_final_title(title):
     )
 
 
+def issuer_body_finality(title, pages):
+    if SECONDARY.search(title) and not re.search(r"利润分配实施.*调整.*公告$", title):
+        return None
+    text = re.sub(r"\s+", "", "".join(pages))
+    return next(
+        (
+            token
+            for token in ("实施办法", "分派方法", "具体实施", "实施方案", "分配实施")
+            if token in text
+        ),
+        None,
+    )
+
+
 def eligible(requirements, excluded, cash):
     by_key = {}
     for accepted in cash:
@@ -123,10 +137,18 @@ def retained_sources(staging, events):
         if url in by_url and by_url[url] != sha:
             raise ValueError(f"CONFLICTING_OFFICIAL_SOURCE_BYTES:{url}")
         by_url[url] = sha
+        finality = None
+        if not retained_final_title(doc["title"]):
+            cache = manifest.parents[1] / "batch-v1/text" / f"{sha}.json"
+            if cache.is_file():
+                extracted = json.loads(cache.read_bytes())
+                if extracted["source_sha256"] == sha:
+                    finality = issuer_body_finality(doc["title"], extracted["pages"])
         source_docs.append(
             {
                 **doc,
                 "source_path": str((manifest.parents[1] / doc["source_path"]).resolve()),
+                **({"issuer_body_finality_marker": finality} if finality else {}),
             }
         )
     return found, source_docs
@@ -198,6 +220,17 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     found, source_docs = retained_sources(args.staging, events)
+    finality_by_source = {
+        (doc["url"], doc["source_sha256"]): doc.get("issuer_body_finality_marker")
+        for doc in source_docs
+    }
+    body_confirmed_titles = {
+        doc["title"] for doc in source_docs if doc.get("issuer_body_finality_marker")
+    }
+
+    def final_title(title):
+        return retained_final_title(title) or title in body_confirmed_titles
+
     selected = select(
         requests,
         [],
@@ -205,7 +238,7 @@ def main():
         events,
         master,
         source_docs,
-        final_title=retained_final_title,
+        final_title=final_title,
         historical_alias=True,
     )
     if selected != select(
@@ -215,7 +248,7 @@ def main():
         list(reversed(events)),
         list(reversed(master)),
         list(reversed(source_docs)),
-        final_title=retained_final_title,
+        final_title=final_title,
         historical_alias=True,
     ):
         raise ValueError("SOURCE_INPUT_ORDER_CHANGED")
@@ -246,6 +279,7 @@ def main():
         else:
             source_key = row["substitute_source_url"], row["substitute_source_sha256"]
             manifest, doc = found[source_key]
+            body_finality = finality_by_source[source_key]
             source_root = manifest.parents[1]
             pdf = (source_root / doc["source_path"]).resolve()
             cache = source_root / "batch-v1/text" / f"{doc['source_sha256']}.json"
@@ -281,7 +315,9 @@ def main():
                         if differentiated
                         else "OFFICIAL_EXCHANGE_RESOLVED_SOURCE_YEAR_CONFLICT"
                     )
-                if amount != Decimal(row["cash_per_share"]):
+                if not retained_final_title(doc["title"]) and not body_finality:
+                    reason = "NO_FINAL_IMPLEMENTATION_BODY"
+                elif amount != Decimal(row["cash_per_share"]):
                     reason = "ISSUER_CASH_AMOUNT_CONFLICT"
                 elif not exchange_amount_matches(amount, targets[key]):
                     reason = "ISSUER_EXCHANGE_AMOUNT_CONFLICT"
@@ -295,6 +331,11 @@ def main():
                             **(
                                 {"holder_policy": "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"}
                                 if differentiated
+                                else {}
+                            ),
+                            **(
+                                {"issuer_body_finality_marker": body_finality}
+                                if not retained_final_title(doc["title"])
                                 else {}
                             ),
                             "issuer_notice_record_dates": records,
@@ -311,7 +352,7 @@ def main():
     if len(closed) + len(rejected) != len(requests):
         raise ValueError("RETAINED_P1_CANDIDATES_NOT_PARTITIONED")
     report = {
-        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V8",
+        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V9",
         "candidate_documents": len(requests),
         "selected_documents": len(selected),
         "closed_documents": len(closed),

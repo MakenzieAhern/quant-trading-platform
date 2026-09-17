@@ -1,5 +1,12 @@
 # v1.1 controller roadmap
 
+Current 2026-09-18 issuer-body finality review closes 12 more source-bound
+P1 cash requests without inventing events. P1 now has 330 unresolved facts /
+314 documents (263 distribution, 51 other), with 15,990/16,320 established
+or out of scope. Full cash/bonus census and SZSE resumption gates remain
+partial; Full Dataset and research gates stay closed. Earlier paragraphs below
+are historical checkpoints.
+
 Current 2026-09-18 SSE-composite issuer receipt replay closes 11 more P1
 cash requests, preserving all 226 earlier retained-source closures. P1 now
 has 342 unresolved facts / 326 documents (263 distribution, 63 other) and
