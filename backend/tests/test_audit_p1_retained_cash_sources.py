@@ -7,6 +7,7 @@ from scripts.audit_p1_orphan_cash_facts import select
 from scripts.audit_p1_retained_cash_sources import (
     ab_currency_dps_conflict,
     cash_terms_with_alternates,
+    correction_600801_terms,
     date_correction_terms,
     eligible,
     exact_date_correction_source,
@@ -14,7 +15,9 @@ from scripts.audit_p1_retained_cash_sources import (
     exchange_amount_matches,
     exchange_resolves_year_conflict,
     issuer_body_finality,
+    issuer_internal_date_corroboration,
     retained_final_title,
+    supplement_300207_terms,
 )
 
 
@@ -117,6 +120,90 @@ def test_official_date_correction_requires_original_error_and_explicit_replaceme
     assert date_correction_terms(original, correction)
     assert not date_correction_terms(
         original, [correction[0].replace("2015年5月22日", "2015年5月23日")]
+    )
+
+
+def test_300207_supplement_requires_exact_original_and_replacement_dates():
+    doc = {
+        "url": "https://static.cninfo.com.cn/finalpage/2017-04-14/1203299879.PDF",
+        "source_sha256": "432ececce5cd96195b954f32d524a0f7828fd751942cd018efdfd3d9993f72a1",
+        "issuer": "300207",
+        "title": "关于2016年年度权益分派实施的补充公告",
+        "published_on": "2017-04-14",
+        "affected_events": ["CASH:300207:2017-04-20:2017-04-21"],
+    }
+    original = ["股权登记日为:2017年4月18日,除权除息日为:2017年4月19日"]
+    supplement = [
+        "证券代码:300207 关于2016年年度权益分派实施的补充公告。"
+        "2017年4月11日。原披露内容:股权登记日为:2017年4月18日,"
+        "除权除息日为:2017年4月19日。补充披露后:"
+        "股权登记日为:2017年4月20日,除权除息日为:2017年4月21日。"
+        "其他内容不变。"
+    ]
+    assert exact_date_correction_source(doc)
+    assert supplement_300207_terms(original, supplement)
+    assert not supplement_300207_terms(
+        original, [supplement[0].replace("2017年4月21日", "2017年4月22日")]
+    )
+    assert not exact_date_correction_source({**doc, "source_sha256": "wrong"})
+
+
+def test_600801_correction_requires_exact_original_and_replacement_ex_date():
+    doc = {
+        "url": "https://static.cninfo.com.cn/finalpage/2014-06-12/64127751.PDF",
+        "source_sha256": "487d25df48ab08e892e90699af09b42f89fe38d5c3aac0f38b3c7af4e1e603b4",
+        "issuer": "600801",
+        "title": "更正公告",
+        "published_on": "2014-06-12",
+        "affected_events": ["CASH:600801:2014-06-16:2014-06-17"],
+    }
+    original = ["证券代码:600801、900933 除权(除息)日:2014年6月18日"]
+    correction = [
+        "证券代码:600801、900933 华新水泥股份有限公司于2014年6月11日披露。"
+        "除权(除息)日为2014年6月18日有误,应更正为"
+        "除权(除息)日为2014年6月17日。"
+    ]
+    assert exact_date_correction_source(doc)
+    assert correction_600801_terms(original, correction)
+    assert not correction_600801_terms(
+        original, [correction[0].replace("2014年6月17日", "2014年6月19日")]
+    )
+
+
+def test_internal_date_conflict_needs_exact_issuer_and_exchange_corroboration():
+    row = {
+        "substitute_source_sha256": (
+            "623e3a4a2bf718b0e5e74818c1e89e00cc845f41982f60744ec86bcbaf24bfb9"
+        ),
+        "security_id": "CN-A:SZSE:000826",
+        "issuer": "000826",
+        "record_date": "2012-05-08",
+        "ex_date": "2012-05-09",
+        "cash_per_share": "0.1",
+    }
+    pages = [
+        "股权登记日:2015年5月8日;除权除息日:2012年5月9日。"
+        "截止2012年5月8日在册。现金红利将于2012年5月9日发放。"
+    ]
+    exchange = {
+        "symbol": "000826",
+        "record_date": "2012-05-08",
+        "ex_date": "2012-05-09",
+        "raw_cells": ["", "", "", "", "", "0.100"],
+        "source_url": "https://docs.static.szse.cn/official",
+        "source_sha256": "75aa41299d54169c3010c73d4d43c5e45fc2b74e1613a0c7d46c63af1d808398",
+    }
+    args = row, pages, ["2015-05-08"], ["2012-05-09"]
+    assert issuer_internal_date_corroboration(*args, {"rows": [exchange]})
+    assert not issuer_internal_date_corroboration(
+        *args, {"rows": [{**exchange, "source_sha256": "wrong"}]}
+    )
+    assert not issuer_internal_date_corroboration(
+        row,
+        [pages[0].replace("截止2012年5月8日", "截止2013年5月8日")],
+        ["2015-05-08"],
+        ["2012-05-09"],
+        {"rows": [exchange]},
     )
 
 

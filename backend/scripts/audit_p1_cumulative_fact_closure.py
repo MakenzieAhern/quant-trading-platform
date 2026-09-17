@@ -22,7 +22,7 @@ REPORTS = {
     "proposal": "p1-nonfinal-proposal-scope-v4.json",
     "precise": "p1-precise-sse-cash-v1.json",
     "derivative": "p1-derivative-notice-scope-v3.json",
-    "retained_cash": "p1-retained-full-cash-source-closure-v18.json",
+    "retained_cash": "p1-retained-full-cash-source-closure-v22.json",
     "dual": "p1-official-dual-distribution-source-closure-v3.json",
 }
 
@@ -126,6 +126,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--remaining-cash-queue", type=Path)
     args = parser.parse_args()
     paths = {name: args.report_root / filename for name, filename in REPORTS.items()}
     reports = {name: verified(path) for name, path in paths.items()}
@@ -151,13 +152,26 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V36",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V39",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",
     )
     result["manifest_sha256"] = canonical_sha256(result)
     write_immutable(args.output, canonical_json_bytes(result) + b"\n")
+    if args.remaining_cash_queue:
+        closed_ids = {row["document_id"] for row in result["closed"]}
+        queue = sorted(
+            (
+                row
+                for row in reports["base"]["remaining_cash_documents"]
+                if row["document_id"] not in closed_ids
+            ),
+            key=lambda row: (row["queue_type"], row["published_on"], row["url"]),
+        )
+        if len(queue) != result["p1_unresolved_cash_documents"]:
+            raise ValueError("REMAINING_CASH_QUEUE_COUNT_MISMATCH")
+        write_immutable(args.remaining_cash_queue, canonical_json_bytes(queue) + b"\n")
     print(json.dumps({key: value for key, value in result.items() if key != "closed"}))
 
 

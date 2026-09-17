@@ -73,9 +73,9 @@ def star_cash_dates(pages):
 
 def notice_dates(pages):
     # Require dates attached to labels, not unrelated dates elsewhere in an annual report.
-    # Strip a page-number header only when every page has the matching ordinal
-    # followed by a blank line. Otherwise retain all numeric text unchanged.
-    headers = [re.compile(rf"^\s*{n}[ \t]*\n[ \t]*\n") for n in range(1, len(pages) + 1)]
+    # Strip an ordinal page header only when every page has the matching
+    # ordinal on its first line. A date can continue immediately after it.
+    headers = [re.compile(rf"^\s*{n}[ \t]*\n") for n in range(1, len(pages) + 1)]
     if len(pages) > 1 and all(
         pattern.match(page) for pattern, page in zip(headers, pages, strict=True)
     ):

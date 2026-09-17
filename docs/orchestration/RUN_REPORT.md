@@ -1,5 +1,46 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 R5 targeted official P1 source recovery and exact cash closure
+
+The exact 257-URL unresolved distribution queue was generated from the
+immutable P1 base/closure reports (queue SHA-256
+`0de6e2121d218e950c82abf09303f4f1cb7fcf7fc0cde1306859c45f93a02a55`).
+CNINFO static PDF access returned valid official bytes again. The existing
+bounded/resumable batch reused five prior verified PDFs and retrieved 252;
+all 257 receipts are PASS, zero failures/non-PDFs. Replaying the batch was
+byte-identical. Source-manifest file SHA-256
+`7fc0e792322b50ba7ce09d82d57b66308585c09691a5a379bf117f971a5fb5c2`,
+canonical manifest SHA-256
+`b5f786f7888e9828452e200a01e0d9cfee0abe7974f2717aabd5e2686fbde9be`.
+Original PDF checksums bind page-addressable text. Conservative triage v6
+finds 7 cash-only, 93 bonus-only, 6 both and 151 neither; these are parser
+candidates, **not** newly accepted economic events.
+
+Two official issuer correction PDFs were retrieved with metadata/UTC/SHA
+receipts: 300207 replaces 2017-04-18/19 with 2017-04-20/21; 600801 replaces
+its 2014-06-18 ex-date with 2014-06-17. A shared ordinal-page-header parser
+fix recovers 000776 and 002050 dates split across PDF pages. Three exact
+original issuer PDFs (000826, 300384, 300852) each contain a wrong date but
+also independent correct holder/payment/application timing, corroborated by
+one official SZSE monthly row and gross amount. No blanket override or new
+event was introduced. The original 263 accepted economic identities, cash
+amounts and dates are unchanged; 000756's classification tightens to exact.
+
+Retained cash v22 closes 270/271 (file SHA-256
+`0fd7bcc62fcf2dcd8162b08845f5cfa557d75777ce2e11d05a94fa00f2f79430`,
+manifest `35a757cc218fd0bd94b323626240d0742939fa1cb736383187560665bc10cbce`).
+Cumulative P1 v39 establishes 16,047/16,320 facts with 1,979 official
+substitutions; 273 facts / 272 documents remain (257 queue, 15 other), file
+SHA-256 `eb33e2dcd35d80e5ee04df2ffa5c0344904dd7a9c60614a30e46b659e8549281`,
+manifest `b79f7870c9c7bd3fcca4cf641d7f01834328d41e4dc2594fc6ed78c2eac431d6`.
+Input-order checks pass. Full corporate-action census, Full Dataset, freeze
+and studies remain blocked/unrun.
+Focused parser/closure tests and repository-wide Ruff pass. The local full
+backend suite is not green: 652 passed, 62 setup errors and one failure because
+PostgreSQL at `127.0.0.1:5432` refused connections; `docker` is unavailable in
+this WSL session. This is a separate nonblocking runtime/CI validation gap,
+not evidence that database-dependent tests passed.
+
 ## 2026-09-18 retained official cash-source milestone
 
 Official public evidence closes 12 additional retained-source candidates

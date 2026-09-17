@@ -1,5 +1,29 @@
 # Current state
 
+## Current R5 targeted official-source recovery — 2026-09-18
+
+The previously denied CNINFO PDF endpoint now returns official PDF bytes for
+the exact remaining 257-document P1 distribution queue. Resumable acquisition
+reused five prior PDFs and obtained the other 252; all 257 have verified PDF
+receipts and page-addressable text caches, with zero retrieval failures. The
+immutable source manifest SHA-256 is
+`b5f786f7888e9828452e200a01e0d9cfee0abe7974f2717aabd5e2686fbde9be`.
+This is source acquisition, **not** event/fact acceptance. Conservative triage
+finds 7 cash-only, 93 bonus-only, 6 both and 151 neither under existing strict
+parsers; differentiated/structural actions still need separate accounting.
+
+Seven of eight prior retained-cash rejects are now closed: official issuer
+corrections for 300207 and 600801, PDF page-number/date-boundary repair for
+000776 and 002050, and exact source-bound issuer-internal timing plus SZSE
+monthly corroboration for 000826, 300384 and 300852. The prior 263 accepted
+economic identities, amounts and record/ex dates are unchanged. Retained-source
+v22 closes 270/271; 600337 still lacks a final implementation source and its
+payment/holder terms are not silently supplied by a shareholder resolution.
+Cumulative P1 v39 establishes 16,047/16,320 facts with 1,979 explicit official
+substitutions; 273 facts / 272 documents remain (257 distribution queue, 15
+other). Full cash/bonus census, verified safe start and Full Dataset remain
+PARTIAL/NO. No commercial source, dataset freeze or study was used/run.
+
 ## Current R5 official cash-source recovery — 2026-09-18
 
 P0 SSE/SZSE public reconstruction remains PASS (2,403 / 3,028 securities,

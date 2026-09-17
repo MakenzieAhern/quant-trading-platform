@@ -353,6 +353,14 @@ def test_distribution_notice_dates_require_bound_labels_not_unrelated_dates():
     assert notice_dates(
         ["1 \n \n股权登记日为2010年8月5日,除息日为2010年8月6", "2 \n \n日。每10股4.80元"]
     ) == (["2010-08-05"], ["2010-08-06"])
+    assert notice_dates(["1\n股权登记日为2014年7月8日,除息日为2014年7月", "2\n9日。"]) == (
+        ["2014-07-08"],
+        ["2014-07-09"],
+    )
+    assert notice_dates(["1\n股权登记日为2018年5月31日,除息日为2018年6月", "2\n1日。"]) == (
+        ["2018-05-31"],
+        ["2018-06-01"],
+    )
     # A standalone digit without the complete ordinal-header pattern is content.
     assert notice_dates(["除息日为2010年8月", "2\n日。"])[1] == ["2010-08-02"]
     assert notice_dates(["权益登记日为2010年5月24日,除息日为2010年5月25日"])[0] == ["2010-05-24"]

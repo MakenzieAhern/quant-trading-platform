@@ -85,6 +85,53 @@ DATE_CORRECTION_600378 = (
     "https://static.cninfo.com.cn/finalpage/2015-05-19/1201031428.PDF",
     "0125c03f41c9f57e60a69b8204ecc17ddf5acf1dd99a00effddc1ce19acca9bd",
 )
+DATE_CORRECTION_300207 = (
+    "https://static.cninfo.com.cn/finalpage/2017-04-14/1203299879.PDF",
+    "432ececce5cd96195b954f32d524a0f7828fd751942cd018efdfd3d9993f72a1",
+)
+DATE_CORRECTION_600801 = (
+    "https://static.cninfo.com.cn/finalpage/2014-06-12/64127751.PDF",
+    "487d25df48ab08e892e90699af09b42f89fe38d5c3aac0f38b3c7af4e1e603b4",
+)
+INTERNAL_DATE_CASES = {
+    # Exact issuer PDF SHA: stable ID, code, record, ex, SZSE monthly SHA, conflicting
+    # date text, and independent issuer-body timing corroboration.
+    "623e3a4a2bf718b0e5e74818c1e89e00cc845f41982f60744ec86bcbaf24bfb9": (
+        "CN-A:SZSE:000826",
+        "000826",
+        "2012-05-08",
+        "2012-05-09",
+        "75aa41299d54169c3010c73d4d43c5e45fc2b74e1613a0c7d46c63af1d808398",
+        ("股权登记日:2015年5月8日",),
+        ("截止2012年5月8日", "除权除息日:2012年5月9日", "现金红利将于2012年5月9日"),
+    ),
+    "37b8e09a9377d779779843b14ddca358d42299c4b22ca04f33dc9a160d6c346e": (
+        "CN-A:SZSE:300384",
+        "300384",
+        "2019-06-27",
+        "2019-06-28",
+        "2435499de09a130e445073b20f668e01ff3fb4c326b2d75e63f0bb5941dda774",
+        ("股权除息日为:2018年6月28日",),
+        (
+            "股权登记日为:2019年6月27日",
+            "申请日:2019年6月20日至登记日:2019年6月27日",
+            "现金红利将于2019年6月28日",
+        ),
+    ),
+    "379daf0876a8278fad267343d4f7fbd149291ec3e98949492680b9cc5bb58d8f": (
+        "CN-A:SZSE:300852",
+        "300852",
+        "2022-04-22",
+        "2022-04-25",
+        "656a47e2365f817e80a1fe7be52aa9f566cac75bccd4e5cf27f983e11b66c15f",
+        ("股权登记日:2021年4月22日", "除权除息日:2021年4月25日"),
+        (
+            "截止2022年4月22日",
+            "现金红利将于2022年4月25日",
+            "申请日2022年4月15日至股权登记日2022年4月22日",
+        ),
+    ),
+}
 
 
 def retained_final_title(title):
@@ -182,13 +229,28 @@ def exact_final_companion(doc, event):
 
 
 def exact_date_correction_source(doc):
-    return (
+    old = (
         (doc.get("url"), doc.get("source_sha256")) == DATE_CORRECTION_600378
         and doc.get("issuer") == "600378"
         and doc.get("title") == "2014年度利润分配实施更正公告"
         and doc.get("published_on") == "2015-05-19"
         and doc.get("affected_events") == ["CASH:600378:2015-05-21:2015-05-22"]
     )
+    new = (
+        (doc.get("url"), doc.get("source_sha256")) == DATE_CORRECTION_300207
+        and doc.get("issuer") == "300207"
+        and doc.get("title") == "关于2016年年度权益分派实施的补充公告"
+        and doc.get("published_on") == "2017-04-14"
+        and doc.get("affected_events") == ["CASH:300207:2017-04-20:2017-04-21"]
+    )
+    sse = (
+        (doc.get("url"), doc.get("source_sha256")) == DATE_CORRECTION_600801
+        and doc.get("issuer") == "600801"
+        and doc.get("title") == "更正公告"
+        and doc.get("published_on") == "2014-06-12"
+        and doc.get("affected_events") == ["CASH:600801:2014-06-16:2014-06-17"]
+    )
+    return old or new or sse
 
 
 def retained_sources(staging, events):
@@ -348,16 +410,84 @@ def date_correction_terms(original_pages, corrected_pages):
     )
 
 
+def supplement_300207_terms(original_pages, corrected_pages):
+    original = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "".join(original_pages)))
+    corrected = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "".join(corrected_pages)))
+    return all(
+        marker in original
+        for marker in ("股权登记日为:2017年4月18日", "除权除息日为:2017年4月19日")
+    ) and all(
+        marker in corrected
+        for marker in (
+            "证券代码:300207",
+            "关于2016年年度权益分派实施的补充公告",
+            "2017年4月11日",
+            "原披露内容",
+            "股权登记日为:2017年4月18日",
+            "除权除息日为:2017年4月19日",
+            "补充披露后",
+            "股权登记日为:2017年4月20日",
+            "除权除息日为:2017年4月21日",
+            "其他内容不变",
+        )
+    )
+
+
+def correction_600801_terms(original_pages, corrected_pages):
+    original = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "".join(original_pages)))
+    corrected = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "".join(corrected_pages)))
+    return all(
+        marker in original for marker in ("证券代码:600801、900933", "除权(除息)日:2014年6月18日")
+    ) and all(
+        marker in corrected
+        for marker in (
+            "证券代码:600801、900933",
+            "华新水泥股份有限公司",
+            "2014年6月11日",
+            "除权(除息)日为2014年6月18日",
+            "应更正为",
+            "除权(除息)日为2014年6月17日",
+        )
+    )
+
+
 def official_date_correction(row, original_pages, found, staging):
-    if (
-        (row["security_id"], row["issuer"], row["record_date"], row["ex_date"])
-        != ("CN-A:SSE:600378", "600378", "2015-05-21", "2015-05-22")
-        or row["substitute_source_sha256"]
-        != "9fe4928323880236582959001105c5b188379b98e490e7b52f9262b56ae4eaf6"
-        or DATE_CORRECTION_600378 not in found
-    ):
+    key = (
+        row["security_id"],
+        row["issuer"],
+        row["record_date"],
+        row["ex_date"],
+        row["substitute_source_sha256"],
+    )
+    cases = {
+        (
+            "CN-A:SSE:600378",
+            "600378",
+            "2015-05-21",
+            "2015-05-22",
+            "9fe4928323880236582959001105c5b188379b98e490e7b52f9262b56ae4eaf6",
+        ): (DATE_CORRECTION_600378, date_correction_terms),
+        (
+            "CN-A:SZSE:300207",
+            "300207",
+            "2017-04-20",
+            "2017-04-21",
+            "976bc6226f9d124c721994b482a1eb28bd5e1022aba1798b845815735afd2818",
+        ): (DATE_CORRECTION_300207, supplement_300207_terms),
+        (
+            "CN-A:SSE:600801",
+            "600801",
+            "2014-06-16",
+            "2014-06-17",
+            "bd0d7e1100fa27fc04b9083608cc8d9552bb4d78121246f43051428f30d0d2f6",
+        ): (DATE_CORRECTION_600801, correction_600801_terms),
+    }
+    if key not in cases:
         return None
-    manifest, doc = found[DATE_CORRECTION_600378]
+    correction_key, terms_match = cases[key]
+    if correction_key not in found:
+        return None
+    manifest, doc = found[correction_key]
     if not exact_date_correction_source(doc):
         return None
     root = manifest.parents[1]
@@ -370,7 +500,7 @@ def official_date_correction(row, original_pages, found, staging):
     ):
         raise ValueError("OFFICIAL_DATE_CORRECTION_SOURCE_CHANGED")
     extracted = json.loads(cache.read_bytes())
-    if extracted["source_sha256"] != doc["source_sha256"] or not date_correction_terms(
+    if extracted["source_sha256"] != doc["source_sha256"] or not terms_match(
         original_pages, extracted["pages"]
     ):
         return None
@@ -381,6 +511,42 @@ def official_date_correction(row, original_pages, found, staging):
         "source_text_sha256": sha256_file(cache),
         "corrected_record_date": row["record_date"],
         "corrected_ex_date": row["ex_date"],
+    }
+
+
+def issuer_internal_date_corroboration(row, pages, records, ex_dates, szse):
+    case = INTERNAL_DATE_CASES.get(row["substitute_source_sha256"])
+    if case is None:
+        return None
+    security_id, issuer, record, ex, exchange_sha, conflict, corroboration = case
+    if (row["security_id"], row["issuer"], row["record_date"], row["ex_date"]) != (
+        security_id,
+        issuer,
+        record,
+        ex,
+    ):
+        return None
+    text = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "".join(pages)))
+    if not all(marker in text for marker in (*conflict, *corroboration)):
+        return None
+    matches = [
+        item
+        for item in szse["rows"]
+        if item["symbol"] == issuer
+        and item["record_date"] == record
+        and item["ex_date"] == ex
+        and item["source_sha256"] == exchange_sha
+        and Decimal(item["raw_cells"][5]) == Decimal(row["cash_per_share"])
+    ]
+    if len(matches) != 1:
+        return None
+    return {
+        "policy": "EXACT_ISSUER_INTERNAL_TIMING_PLUS_OFFICIAL_SZSE_DATE_AND_AMOUNT",
+        "issuer_conflicting_record_dates": records,
+        "issuer_conflicting_ex_dates": ex_dates,
+        "issuer_body_corroboration": list(corroboration),
+        "exchange_source_url": matches[0]["source_url"],
+        "exchange_source_sha256": exchange_sha,
     }
 
 
@@ -607,6 +773,11 @@ def main():
                     if classification is None
                     else None
                 )
+                internal_dates = (
+                    issuer_internal_date_corroboration(row, term_pages, records, ex_dates, szse)
+                    if classification is None
+                    else None
+                )
                 if classification is None and exchange_resolves_year_conflict(
                     row, records, ex_dates, doc["published_on"]
                 ):
@@ -617,6 +788,8 @@ def main():
                     )
                 if classification is None and date_correction:
                     classification = "OFFICIAL_ISSUER_DATE_CORRECTION_EXACT"
+                if classification is None and internal_dates:
+                    classification = "OFFICIAL_ISSUER_INTERNAL_AND_EXCHANGE_DATE_CORROBORATION"
                 if not retained_final_title(doc["title"]) and not body_finality:
                     reason = "NO_FINAL_IMPLEMENTATION_BODY"
                 elif amount != Decimal(row["cash_per_share"]):
@@ -656,6 +829,11 @@ def main():
                                 else {}
                             ),
                             **(
+                                {"issuer_internal_date_corroboration": internal_dates}
+                                if internal_dates
+                                else {}
+                            ),
+                            **(
                                 {"alternate_text_extractions": alternate_text}
                                 if alternate_text
                                 else {}
@@ -669,7 +847,7 @@ def main():
     if len(closed) + len(rejected) != len(requests):
         raise ValueError("RETAINED_P1_CANDIDATES_NOT_PARTITIONED")
     report = {
-        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V18",
+        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V22",
         "candidate_documents": len(requests),
         "selected_documents": len(selected),
         "closed_documents": len(closed),

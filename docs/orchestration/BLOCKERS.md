@@ -1,5 +1,19 @@
 # Blockers
 
+## Current 2026-09-18 gate after targeted P1 official PDF acquisition
+
+The 257-document remaining distribution queue is no longer blocked by CNINFO
+PDF access: every exact official URL was acquired or reused with checksumed
+receipts. This does **not** close the corresponding event facts. Strict triage
+classifies 7 cash-only, 93 bonus-only, 6 both and 151 neither; differentiated
+distributions, nonstandard restructuring entitlements and nonfinal references
+must be reconciled at fact level against official exchange sources and approved
+accounting rules. Cumulative P1 still has 273 facts / 272 documents open,
+including 15 non-queue documents. The last retained-cash source case, 600337,
+has an approved issuer shareholder resolution and SSE dividend row, but no
+verified final implementation/payment/holder notice; it remains open. Full
+corporate-action census, safe start and Full Dataset are not certified.
+
 ## Current 2026-09-18 gate after retained cash-source recovery
 
 P0 remains PASS, but P1 still lacks 280 facts / 279 unique documents: 257

@@ -1,5 +1,21 @@
 # Decisions
 
+## 2026-09-18 bounded official date repair and source-acquisition boundary
+
+For 300207 and 600801, accept the exact original CNINFO implementation PDF
+plus a contemporaneous, SHA-verified official issuer supplement/correction
+that explicitly replaces only the erroneous entitlement dates. For 000776
+and 002050, remove ordinal page headers only when every PDF page starts with
+its matching ordinal; this prevents a page number from joining a date split
+across pages. For 000826, 300384 and 300852, accept an internally conflicting
+issuer date only when the exact original PDF SHA also states independent
+correct record/payment/application timing and one exact SZSE monthly row
+corroborates security, dates and gross cash. Retain the conflicting text and
+both source hashes in each closure receipt. Do not generalize these to other
+issuer/exchange conflicts. Acquiring a PDF or finding a parser candidate is
+not itself an accepted economic event; the 257 newly accessible P1 queue
+remains under separate fact-level review. No paid source was used.
+
 ## 2026-09-18 source-pinned retained cash fact reconciliation
 
 Extend the exact 000022 A/B-share conflict handling only to 000028, 000530,
