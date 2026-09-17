@@ -20,9 +20,12 @@ PDFs published 2016-06-01 and 2016-04-12, respectively, but each PDF returned
 are under `bonus-targeted-source-recovery-v1`. Metadata is not event terms.
 Replaying 2010–2022 date links found 849 new official matches and lost zero
 old matches. These are date evidence only; full cash v41 is unchanged. Its
-2016 diagnostic replay exposed three secondary A/H timing notices with no
-cash terms and 32 already-existing raw-parser non-recorroborations. The
-accepted-prior guard rejected publication of a replacement cash ledger.
+2016 diagnostic replay explicitly classifies three secondary A/H timing
+notices as date-only, with separate final issuer cash notices for each. It
+still leaves 32 earlier accepted events not independently recorroborated by
+the current raw parser. The accepted-prior guard rejects replacement of the
+cash ledger; diagnostic manifest
+`f65f391f75e150a9807c4af2fb1e72aa2d2614d0bf0581a19b7358ddcc350563`.
 This bounded subset is not a full-period bonus census; 7,119 oracle rows remain
 outside the integer/next-session scope. Dataset freeze and research stay locked.
 

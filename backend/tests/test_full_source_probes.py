@@ -407,6 +407,21 @@ def test_distribution_notice_dates_require_bound_labels_not_unrelated_dates():
     assert notice_dates(["除权(除息)日、现金红利发放日另行公告:2016年5月23日"]) == ([], [])
 
 
+def test_ah_timing_tip_cannot_replace_final_cash_implementation():
+    from scripts.reconcile_distribution_cash import secondary_timing_only
+
+    doc = {"title": "关于2015年度利润分配实施的提示性公告"}
+    pages = [
+        "A股利润分配时间安排 股权登记日:2016年6月30日 "
+        "除息日、现金红利发放日:2016年7月1日 "
+        "公司2015年度A股利润分配实施公告将在规定时间内另行发布。"
+    ]
+    assert secondary_timing_only(doc, pages, True)
+    assert not secondary_timing_only(doc, pages, False)
+    assert not secondary_timing_only({"title": "利润分配实施公告"}, pages, True)
+    assert not secondary_timing_only(doc, ["A股利润分配实施公告已发布"], True)
+
+
 def test_merger_raw_boundaries_use_unadjusted_rows_and_reject_duplicate_dates():
     import pytest
 

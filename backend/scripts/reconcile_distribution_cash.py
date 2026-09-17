@@ -542,6 +542,17 @@ def exchange_cash_amounts(sse, szse):
     return exchange
 
 
+def secondary_timing_only(doc, pages, has_primary):
+    if not has_primary or "提示性公告" not in doc["title"]:
+        return False
+    text = re.sub(r"\s+", "", normalized_document(pages))
+    return (
+        "A股利润分配时间安排" in text
+        and "A股利润分配实施公告将在" in text
+        and "另行发布" in text
+    )
+
+
 def accepted_event_key(row):
     event = row["event"]
     return event["security_id"]["value"], event["ex_date"], event["action_type"]
@@ -629,6 +640,11 @@ def main():
             continue
         amounts = exchange[key]
         evidence, failures, differentiated_documents = [], [], 0
+        secondary = []
+        has_primary = any(
+            "提示性公告" not in documents[item["url"], item["source_sha256"]]["title"]
+            for item in link["documents"]
+        )
         for matched in sorted(link["documents"], key=lambda d: (d["url"], d["source_sha256"])):
             sha = matched["source_sha256"]
             doc = documents[matched["url"], sha]
@@ -646,6 +662,15 @@ def main():
                 raise ValueError("CASH_EXTRACTION_CHANGED")
             extracted = json.loads(cache.read_bytes())
             try:
+                if secondary_timing_only(doc, extracted["pages"], has_primary):
+                    secondary.append(
+                        dict(
+                            source_sha256=sha,
+                            url=doc["url"],
+                            reason="A_H_DATE_ONLY_FINAL_TO_FOLLOW",
+                        )
+                    )
+                    continue
                 compact = re.sub(r"\s+", "", normalized_document(extracted["pages"]))
                 if "差异化分红送转:是" in compact:
                     differentiated_documents += 1
@@ -672,6 +697,8 @@ def main():
             evidence=evidence,
             unresolved_documents=failures,
         )
+        if secondary:
+            row["secondary_date_only_documents"] = secondary
         if differentiated_documents:
             reasons = {failure["reason"] for failure in failures}
             if evidence and failures:

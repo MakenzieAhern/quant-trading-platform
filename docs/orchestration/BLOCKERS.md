@@ -13,8 +13,10 @@ Official SSE metadata locates 603315 (2016-06-01) and 603889 (2016-04-12)
 implementation PDFs; both direct PDF responses trigger `ACCESS_DENIED_STOP`.
 They are source leads, not accepted event terms. No alternate transport retry.
 Across 2010–2022, 849 date links were newly recovered with zero old matches
-lost. Cash v41 is unchanged: replay must first classify secondary timing-only
-notices and preserve 32 prior events missed even by the old-link fresh parser.
+lost. Cash v41 is unchanged: three secondary timing-only notices are now
+classified as non-economic date corroboration. The current raw parser still
+does not recorroborate 32 previously accepted events; no fresh ledger was
+published through the guard.
 
 ## Current 2026-09-17 derivative notices — no new cash events
 

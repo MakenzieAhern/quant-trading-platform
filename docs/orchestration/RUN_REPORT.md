@@ -14,9 +14,10 @@ title. Retrieval receipts remain under `bonus-targeted-source-recovery-v1`.
 The shared date-label parser recovered 849 additional official links across
 2011–2022, with zero old matches lost. The 2016 gross-cash diagnostic moved
 from 1,786 to 1,827 accepted on fresh parsing, but the preservation guard
-blocked replacement of 35 old events: 32 already absent from an old-link
-fresh parse and three secondary A/H timing-only notices. Cash v41 is not
-superseded; no new cash event is accepted on this basis.
+initially blocked replacement of 35 old events. Three are now explicitly
+classified A/H date-only tips with matching final implementation notices;
+the remaining 32 were already absent from an old-link fresh parse. Cash v41
+is not superseded; no new cash event is accepted on this basis.
 No fraction, nonstandard entitlement or missing issuer source was accepted.
 The wider bonus census, P1 fact closure and Full Dataset remain incomplete.
 
