@@ -12,15 +12,20 @@ from scripts.reconcile_merger_implementation_batch import event_from_review
 EVENT = "MERGER_NEW:000418:000333"
 
 
-def close(requirements: dict, audit: dict, fixture: dict, fixture_sha: str) -> dict:
-    matches = [row for row in requirements["documents"] if row.get("affected_events") == [EVENT]]
+def close(
+    requirements: dict, audit: dict, fixture: dict, fixture_sha: str, event_id: str = EVENT
+) -> dict:
+    case = fixture["case"]
+    if event_id != f"MERGER_NEW:{case['parent']}:{case['successor']}":
+        raise ValueError("P1_MERGER_EVENT_ID_MISMATCH")
+    matches = [row for row in requirements["documents"] if row.get("affected_events") == [event_id]]
     if len(matches) != 1 or matches[0]["priority"] != "P1":
         raise ValueError("P1_MERGER_REQUIREMENT_NOT_UNIQUE")
-    event = event_from_review(fixture["case"])
+    event = event_from_review(case)
     if (
         audit["event_checksum"] != event.event_checksum
         or audit["review_sha256"] != fixture_sha
-        or audit["scope"] != fixture["case"]["scope"]
+        or audit["scope"] != case["scope"]
         or not audit["source_bytes_verified"]
         or not audit["source_terms_verified"]
         or audit["input_order_reproducibility"] != "PASS"
@@ -32,7 +37,7 @@ def close(requirements: dict, audit: dict, fixture: dict, fixture_sha: str) -> d
         "closed": [
             {
                 "document_id": matches[0]["document_id"],
-                "affected_events": [EVENT],
+                "affected_events": [event_id],
                 "source_audit_manifest_sha256": audit["manifest_sha256"],
                 "event_checksum": event.event_checksum,
             }
@@ -47,12 +52,13 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("requirements", "audit", "fixture", "output"):
         parser.add_argument("--" + name, required=True, type=Path)
+    parser.add_argument("--event", default=EVENT)
     args = parser.parse_args()
     requirements, audit = (verified(path) for path in (args.requirements, args.audit))
     fixture = json.loads(args.fixture.read_bytes())
-    report = close(requirements, audit, fixture, sha256_file(args.fixture))
+    report = close(requirements, audit, fixture, sha256_file(args.fixture), args.event)
     report.update(
-        report_version="P1_MERGER_000418_OFFICIAL_SOURCE_CLOSURE_V1",
+        report_version=f"P1_MERGER_{fixture['case']['parent']}_OFFICIAL_SOURCE_CLOSURE_V1",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={
             name: sha256_file(path)

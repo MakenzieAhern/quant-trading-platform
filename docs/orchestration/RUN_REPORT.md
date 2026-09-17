@@ -1,5 +1,28 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 targeted 600832 merger source-chain audit
+
+Reused official CNINFO PDF receipts and fetched only the identified missing
+cash-choice result and retrospective tradability confirmation. Four
+contemporaneous issuer documents establish the bounded ordinary unrestricted
+A-share, non-cash-electing 600832→600637 event: 3.05:1 old-to-new ratio,
+last parent trading 2015-04-29, continuous halt from 2015-04-30, record and
+termination 2015-05-20, registration 2015-05-27, and new unrestricted-share
+trading 2015-06-03. A 2016 issuer confirmation corroborates tradability only
+in the audit, not as a point-in-time event source. Official PDF bytes/terms,
+master lifecycle, targeted raw date boundary and reversed input order pass.
+Event checksum `9a3e05a534759822e51bb0427cfe219997c7f0084325f6763b6c58786d6d7e94`;
+immutable event-audit manifest
+`4a539fd39a893150cbb24bac65efe4a207c55ce06f163f27013b5905a893a850`.
+The exact `MERGER_NEW:600832:600637` P1 source request closes with no new
+economic event; source-closure manifest
+`0d3a410876d651310da37c51b11229c49ef292596f9ef987ba11d2a957d3b274`.
+Cumulative v47 is 16,066/16,320 established, 1,987 official substitutions,
+254 facts / 253 documents open (241 acquired distribution PDFs, 12 other),
+manifest `95aca74de51b365239c05a858884eddbccdce3518ea8cc6c7a778cfbe987aeeb`.
+The 15-event accepted inventory, full merger census, retained-bonus human
+gate, Full Dataset and study locks are unchanged.
+
 ## 2026-09-18 older SSE merger source-chain recovery
 
 Retained CNINFO metadata yielded three exact full official reports for the

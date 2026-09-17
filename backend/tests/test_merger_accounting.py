@@ -417,6 +417,28 @@ def test_000418_official_terms_fail_closed_on_earlier_ratio():
         require_terms(pages)
 
 
+def test_600832_official_terms_fail_closed_on_cash_choice_and_ratio():
+    from scripts.audit_merger_600832 import TERMS, require_terms
+
+    pages = {
+        path: {page: " ".join(terms) for page, terms in expected.items()}
+        for path, expected in TERMS.items()
+    }
+    require_terms(pages)
+    cash = next(path for path in pages if "cash-choice" in path)
+    pages[cash][0] = "有异议股东申报行使现金选择权"
+    with pytest.raises(ValueError, match="OFFICIAL_MERGER_TERM_MISMATCH"):
+        require_terms(pages)
+    pages = {
+        path: {page: " ".join(terms) for page, terms in expected.items()}
+        for path, expected in TERMS.items()
+    }
+    report = next(path for path in pages if "revised-merger-report" in path)
+    pages[report][46] = "换股比例为3.00:1"
+    with pytest.raises(ValueError, match="OFFICIAL_MERGER_TERM_MISMATCH"):
+        require_terms(pages)
+
+
 @pytest.mark.parametrize(
     "review",
     [
@@ -434,6 +456,11 @@ def test_000418_official_terms_fail_closed_on_earlier_ratio():
     + [
         json.loads(
             (Path(__file__).parent / "fixtures/merger_000418_recovery_v1.json").read_bytes()
+        )["case"]
+    ]
+    + [
+        json.loads(
+            (Path(__file__).parent / "fixtures/merger_600832_recovery_v1.json").read_bytes()
         )["case"]
     ],
     ids=lambda r: r["parent"],

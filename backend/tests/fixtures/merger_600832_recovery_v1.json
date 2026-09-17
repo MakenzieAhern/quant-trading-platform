@@ -1,0 +1,88 @@
+{
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "boundary_policy": "FIRST_POST_EVENT_TRADING_BOUNDARY_V1",
+  "case": {
+    "parent": "600832",
+    "successor": "600637",
+    "exchange": "SSE",
+    "conversion_ratio": "1",
+    "conversion_denominator": "3.05",
+    "parent_last_trading_date": "2015-04-29",
+    "continuous_suspension_from": "2015-04-30",
+    "record_date": "2015-05-20",
+    "parent_delisting_date": "2015-05-20",
+    "registry_date": "2015-05-27",
+    "successor_listing_date": "1993-03-16",
+    "successor_shares_tradable_from": "2015-06-03",
+    "effective_date": "2015-06-03",
+    "cash_election_offered": true,
+    "scope": "ORDINARY_UNRESTRICTED_A_SHARE_HOLDER_NO_CASH_ELECTION",
+    "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE",
+    "source_url": "https://static.cninfo.com.cn/finalpage/2015-05-29/1201078513.PDF",
+    "source_path": "targeted-parent-fraction-v2/600637-2015-result.pdf",
+    "source_sha256": "c55b69a992202ea52b8f1b71522865ce582e8b98661229cca77414be9d593444",
+    "publication_date": "2015-05-29",
+    "retrieved_at": "2026-09-17T20:38:32.139035+00:00",
+    "additional_event_sources": [
+      {
+        "url": "https://static.cninfo.com.cn/finalpage/2015-04-22/1200884193.PDF",
+        "sha256": "7f550aaa4620fc748cc7150a650c5e912e589552f325d782cc6c96273cb287db",
+        "published_on": "2015-04-22",
+        "retrieved_at": "2026-09-17T20:34:38.606693+00:00",
+        "document": "Official revised issuer merger report; final reciprocal ratio"
+      },
+      {
+        "url": "https://static.cninfo.com.cn/finalpage/2015-05-11/1200992519.PDF",
+        "sha256": "8cd3414be2c128a502ff75d5852edde74e1d2b882387fbde9236a5a4ff0de129",
+        "published_on": "2015-05-11",
+        "retrieved_at": "2026-09-17T20:52:19.932788+00:00",
+        "document": "Official parent cash-choice completion; no dissenter election, two predeclared affiliates elected"
+      },
+      {
+        "url": "https://static.cninfo.com.cn/finalpage/2015-05-22/1201045132.PDF",
+        "sha256": "9143a1fd213b6de73429cfbc9eb35a2e58f045b6a7506d2154e1e0afbb22ea9b",
+        "published_on": "2015-05-22",
+        "retrieved_at": "2026-09-17T20:45:53.188011+00:00",
+        "document": "Official conversion implementation; halt, record date, and registry-wide remainder rule"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "path": "targeted-parent-fraction-v2/600637-2015-revised-merger-report.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-04-22/1200884193.PDF",
+      "sha256": "7f550aaa4620fc748cc7150a650c5e912e589552f325d782cc6c96273cb287db",
+      "published_on": "2015-04-22",
+      "retrieved_at_utc": "2026-09-17T20:34:38.606693+00:00"
+    },
+    {
+      "path": "targeted-parent-fraction-v2/600832-2015-cash-choice-result.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-05-11/1200992519.PDF",
+      "sha256": "8cd3414be2c128a502ff75d5852edde74e1d2b882387fbde9236a5a4ff0de129",
+      "published_on": "2015-05-11",
+      "retrieved_at_utc": "2026-09-17T20:52:19.932788+00:00"
+    },
+    {
+      "path": "targeted-parent-fraction-v2/600637-2015-progress.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-05-22/1201045132.PDF",
+      "sha256": "9143a1fd213b6de73429cfbc9eb35a2e58f045b6a7506d2154e1e0afbb22ea9b",
+      "published_on": "2015-05-22",
+      "retrieved_at_utc": "2026-09-17T20:45:53.188011+00:00"
+    },
+    {
+      "path": "targeted-parent-fraction-v2/600637-2015-result.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2015-05-29/1201078513.PDF",
+      "sha256": "c55b69a992202ea52b8f1b71522865ce582e8b98661229cca77414be9d593444",
+      "published_on": "2015-05-29",
+      "retrieved_at_utc": "2026-09-17T20:38:32.139035+00:00"
+    },
+    {
+      "path": "targeted-parent-fraction-v2/600637-2016-tradability-confirmation.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2016-05-12/1202317584.PDF",
+      "sha256": "081cafcb78baa83800c61b69751502203f91e0a45deea074ce2cd98b1a85b561",
+      "published_on": "2016-05-12",
+      "retrieved_at_utc": "2026-09-17T20:54:40.259756+00:00",
+      "audit_only_after_effective_date": true
+    }
+  ]
+}

@@ -1,5 +1,25 @@
 # Current state
 
+## Current R5 600832 official merger-chain audit — 2026-09-18
+
+The ordinary unrestricted A-share, non-cash-electing 600832→600637 chain is
+now source-byte, page-term, master-lifecycle, raw-boundary and input-order
+audited. The final ratio is 3.05 old shares to one new share; the last parent
+trading day is 2015-04-29, continuous suspension begins 2015-04-30, record
+and termination are 2015-05-20, registration is 2015-05-27, and new
+unrestricted successor shares first trade 2015-06-03. The 2016 issuer
+confirmation is audit-only and does not leak into the point-in-time event.
+The approved merger-specific floor models unknowable individual registry
+remainders; it is not a claim about the actual award. External immutable
+event-audit manifest SHA-256 is
+`4a539fd39a893150cbb24bac65efe4a207c55ce06f163f27013b5905a893a850`.
+The matching P1 source request closes, but the 15-event accepted inventory
+and full-merger census do not change. Cumulative v47 is **16,066/16,320**
+established, **1,987** official substitutions and **254 facts / 253 documents**
+open (241 acquired distribution PDFs, 12 other). Full Dataset and studies
+remain locked; the retained-bonus fractional methodology gate remains active.
+See `../research/R5_MERGER_LEAD_CLOSURE_V1.md`.
+
 ## Current R5 older SSE merger-report recovery — 2026-09-18
 
 Recovered the exact official full issuer reports for the 600607/600842→600849
@@ -8,10 +28,9 @@ CNINFO metadata. Original PDF receipts and source SHA-256 are recorded in
 `../research/R5_MERGER_LEAD_CLOSURE_V1.md`. Report, progress and result
 notices establish ratios and several termination/registration/listing dates,
 but not every actual tradability boundary, parent/holder scope or registry
-fractional award. All four parent chains remain source-incomplete; no economic event, P1
-fact, accepted inventory or dataset gate was promoted. P0 public master remains
-PASS and no paid source was used. The retained-bonus fractional-share human
-methodology gate remains active.
+fractional award. This historical checkpoint preceded the separate 600832
+bounded source audit above; the other three parent chains remain incomplete.
+P0 public master remains PASS and no paid source was used.
 
 ## Current R5 000418 official merger-chain audit — 2026-09-18
 

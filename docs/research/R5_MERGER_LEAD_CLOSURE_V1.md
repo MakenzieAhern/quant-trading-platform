@@ -1,6 +1,47 @@
 # R5 Merger Implementation Lead Closure V1
 
+## Targeted 600832→600637 source-chain audit — 2026-09-18
+
+The bounded ordinary unrestricted 600832 A-share holder **without a cash
+election** is source-complete. Four contemporaneous CNINFO issuer documents
+are the event evidence: [revised merger report](https://static.cninfo.com.cn/finalpage/2015-04-22/1200884193.PDF)
+(final 3.05 old shares to 1 new share), [parent cash-choice result](https://static.cninfo.com.cn/finalpage/2015-05-11/1200992519.PDF)
+(no dissenting holder elected, while two predeclared affiliates did),
+[conversion implementation](https://static.cninfo.com.cn/finalpage/2015-05-22/1201045132.PDF)
+(continuous halt, record date, registry-wide fractional rule), and
+[registration/listing result](https://static.cninfo.com.cn/finalpage/2015-05-29/1201078513.PDF).
+The [2016 issuer advisor confirmation](https://static.cninfo.com.cn/finalpage/2016-05-12/1202317584.PDF)
+corroborates actual 2015-06-03 unrestricted listing **only after the event**;
+it is excluded from point-in-time event sources.
+
+The last parent trading date is 2015-04-29; continuous suspension starts
+2015-04-30; termination/record is 2015-05-20; registry completed 2015-05-27;
+new unrestricted successor shares first trade 2015-06-03. The official master
+and targeted raw-date boundary agree. The registry's global remainder ranking
+and random tie-breaking cannot establish an individual allocation; only the
+separately approved merger **research floor** may be used for a bounded replay.
+B/restricted holders, affiliated electors and actual account awards are not
+claimed. Source bytes, exact page terms, chronology, raw boundary and reversed
+input order passed `backend/scripts/audit_merger_600832.py`.
+
+The immutable external audit is
+`full-merger-v1/targeted-parent-fraction-v2/600832-official-event-audit-v2.json`;
+file SHA-256 `d09a152f9075ccd980bedda1d8d4b5d00b4e3d595e9512877f2222a227ed850b`,
+manifest `4a539fd39a893150cbb24bac65efe4a207c55ce06f163f27013b5905a893a850`,
+event checksum `9a3e05a534759822e51bb0427cfe219997c7f0084325f6763b6c58786d6d7e94`.
+The exact `MERGER_NEW:600832:600637` P1 request is closed by immutable
+source-closure manifest
+`0d3a410876d651310da37c51b11229c49ef292596f9ef987ba11d2a957d3b274`.
+Cumulative P1 v47 is **16,066/16,320** established, **1,987** substitutions,
+**254 facts / 253 documents** open; manifest
+`95aca74de51b365239c05a858884eddbccdce3518ea8cc6c7a778cfbe987aeeb`.
+No new economic event was published into the accepted 15-event inventory; full
+merger census and Full Dataset remain unestablished.
+
 ## Targeted older SSE parent-chain source recovery — 2026-09-18
+
+This section is the earlier source-lead snapshot, before the bounded 600832
+audit above.
 
 Three previously missing full issuer merger reports were recovered from the
 already retained CNINFO metadata, with HTTP-200 original-PDF receipts and

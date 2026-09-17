@@ -2,6 +2,15 @@
 
 ## Current R5 P1 and methodology gates — 2026-09-18
 
+The bounded official 600832→600637 ordinary-A non-electing merger chain is
+now audited and its exact P1 source request closed. Cumulative P1 v47 leaves
+**254 facts / 253 documents** open: 241 acquired distribution PDFs and 12
+other requests. The 15-event accepted inventory and full merger census are
+unchanged. The human retained-bonus fractional-share decision below remains
+the immediate methodology gate; no Full Dataset, freeze or study is admitted.
+
+### Previous checkpoint after 000418 source closure
+
 The 600337 final implementation/holder source gap is resolved by its original
 signed announcement in the issuer's designated disclosure paper, independently
 matched to the official SSE announcement index and prior CNINFO issuer report.
