@@ -1,5 +1,17 @@
 # Blockers
 
+## Current P1 source-fact remainder — 2026-09-18
+
+Official-public P0 is already PASS, so paid P0 exports are not the blocker.
+After exact, source-bound cash-leg and derivative-reference closure, cumulative
+P1 v41 has 266 facts / 265 documents open: 250 documents in the already
+acquired distribution queue and 15 other source requests. A source PDF is not
+automatically an accepted economic event. Remaining mixed/bonus/restructuring
+items need exact entitlement and holder-accounting review; 600337 still lacks
+a final implementation/payment/holder notice. No commercial purchase is
+authorized or needed to claim the P0 result. The separate retained-bonus
+fractional-share policy gate below remains the current human decision.
+
 ## Active 2026-09-18 material methodology gate
 
 `RETAINED_BONUS_FRACTIONAL_REGISTRY_ALLOCATION_UNRECONSTRUCTABLE:CN-A:SSE:688339:2024-07-22`.
@@ -12,7 +24,7 @@ exact source hashes and a concrete reachable quantity path are in
 `../research/R5_RETAINED_BONUS_FRACTION_GATE.md`. This is a methodology gate,
 not a request to purchase data. Existing P1 facts remain open and preserved.
 
-## Current 2026-09-18 bonus-source boundary
+## Prior 2026-09-18 bonus-source boundary (before P1 v41)
 
 The 257-document queue is acquired; 92/94 bonus-only official issuer notices
 now have exact exchange ratio/date and ordinary-A identity corroboration.
@@ -24,7 +36,7 @@ require fact-level closure. Cumulative P1 is unchanged at 273 facts / 272
 documents open, including 600337 without a final implementation notice.
 No single new human decision or commercial-data purchase is asserted here.
 
-## Current 2026-09-18 gate after targeted P1 official PDF acquisition
+## Prior 2026-09-18 gate after targeted P1 official PDF acquisition
 
 The 257-document remaining distribution queue is no longer blocked by CNINFO
 PDF access: every exact official URL was acquired or reused with checksumed

@@ -11,7 +11,7 @@ from scripts.audit_p1_public_fact_requirements import verified
 REPORTS = {
     "base": "p1-accepted-cash-fact-closure-v1.json",
     "preferred": "p1-preferred-share-scope-v1.json",
-    "matched": "p1-matched-official-cash-facts-v2.json",
+    "matched": "p1-matched-official-cash-facts-v4.json",
     "out_of_period": "p1-out-of-period-cash-v3.json",
     "primary": "p1-primary-cash-notice-ledger-v4.json",
     "orphan_issuer": "p1-orphan-cash-gap-substitutions-v4.json",
@@ -21,7 +21,7 @@ REPORTS = {
     "correction": "p1-correction-cash-facts-v7.json",
     "proposal": "p1-nonfinal-proposal-scope-v4.json",
     "precise": "p1-precise-sse-cash-v1.json",
-    "derivative": "p1-derivative-notice-scope-v3.json",
+    "derivative": "p1-derivative-notice-scope-v4.json",
     "retained_cash": "p1-retained-full-cash-source-closure-v22.json",
     "dual": "p1-official-dual-distribution-source-closure-v3.json",
 }
@@ -152,7 +152,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V39",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V41",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",

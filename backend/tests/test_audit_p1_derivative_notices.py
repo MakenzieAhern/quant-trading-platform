@@ -1,4 +1,4 @@
-from scripts.audit_p1_derivative_notices import classify
+from scripts.audit_p1_derivative_notices import classify, completed_dates
 
 
 def test_derivative_requires_unique_existing_exact_issuer_cash():
@@ -110,3 +110,40 @@ def test_historical_option_adjustment_requires_matching_dividend_year():
         )
         == []
     )
+
+
+def test_derivative_late_reference_requires_exact_completed_date_and_record():
+    requirement = {
+        "document_id": "late",
+        "affected_events": ["CNINFO:late"],
+        "issuer": "600339",
+        "title": "关于实施利润分配后调整向特定对象发行A股股票价格的公告",
+        "published_on": "2025-10-18",
+    }
+    triage = {
+        "document_id": "late",
+        "candidate_class": "CASH_ONLY",
+        "cash_candidate_per_share": "0.013",
+        "record_dates": ["2025-09-29"],
+        "ex_dates": [],
+        "preferred_instrument_marker": False,
+        "url": "derivative",
+        "source_sha256": "sha",
+        "text_cache_sha256": "cache",
+    }
+    accepted = {
+        "event_checksum": "accepted",
+        "event": {
+            "security_id": {"value": "CN-A:SSE:600339"},
+            "record_date": "2025-09-29",
+            "ex_date": "2025-09-30",
+            "cash_per_share": "0.0130",
+            "source_provider": "OFFICIAL_ISSUER_CNINFO_PRIMARY",
+            "source_url": "https://static.cninfo.com.cn/finalpage/primary.PDF",
+        },
+    }
+    assert completed_dates(["本次权益分配于2025 年 9 月30 日实施完毕。"]) == {"2025-09-30"}
+    assert classify([requirement], [triage], set(), [accepted]) == []
+    assert len(classify([requirement], [triage], set(), [accepted], {"late": {"2025-09-30"}})) == 1
+    triage["record_dates"] = ["2025-09-28"]
+    assert classify([requirement], [triage], set(), [accepted], {"late": {"2025-09-30"}}) == []

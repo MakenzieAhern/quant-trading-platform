@@ -36,13 +36,16 @@ def compact_document(text):
 
 def labeled_dates(text, label):
     compact = compact_document(text)
-    pattern = label + LABEL_DATE_GAP + r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
     values = set()
-    for match in re.findall(pattern, compact):
-        try:
-            values.add(date(*map(int, match)).isoformat())
-        except ValueError:
-            continue
+    for suffix in (
+        r"(20\d{2})年(\d{1,2})月(\d{1,2})日",
+        r"(20\d{2})/(\d{1,2})/(\d{1,2})",
+    ):
+        for match in re.findall(label + LABEL_DATE_GAP + suffix, compact):
+            try:
+                values.add(date(*map(int, match)).isoformat())
+            except ValueError:
+                continue
     return sorted(values)
 
 

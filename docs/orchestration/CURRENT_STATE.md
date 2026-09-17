@@ -1,5 +1,31 @@
 # Current state
 
+## Current R5 P1 fact-level closure — 2026-09-18
+
+P0 official-public reconstruction remains PASS for 2,403 SSE and 3,028 SZSE
+securities, with zero unresolved core facts; no paid product was used. The 257
+official CNINFO PDFs previously acquired remain checksum-bound and were not
+downloaded again. Five non-primary/mixed distribution notices exactly match
+accepted primary ordinary-A cash events (security, cash amount, record and
+ex-date); their bonus components remain source terms only, pending accounting.
+Two more derivative price-adjustment notices explicitly state that the same
+accepted distribution completed on its ex-date. These are seven fact/scope
+closures, not seven new economic events.
+
+Immutable matched-cash v4 closes 45 documents (11 exact primary corroborations,
+34 stronger-official substitutions); derivative v4 closes 17. Cumulative P1
+v41 establishes **16,054/16,320** facts with 1,984 explicit official
+substitutions; **266 facts / 265 documents** remain (250 distribution queue,
+15 other). The v41 file SHA-256 is
+`bc2e7ee19fbeb5d7e51a6720043a08e040103e684c5519f2f72c474669e2bd2c`,
+canonical manifest `343efeadddbed6d381e4f0be5f2def2168ac56926e404d2f0b64652014571ed3`.
+The remaining-queue v3 file SHA-256 is
+`f64ac1d19bddbec85ccf111f0cb997efb11ecc1c0a4d29dd662e99a194092b62`.
+Input-order and immutable replay checks pass. Full cash/bonus census and
+verified safe start remain unresolved; no Full Dataset, freeze or study exists.
+The separate retained-bonus fractional-share human methodology gate remains
+active.
+
 ## Current R5 human methodology gate — 2026-09-18
 
 Official 688339 implementation notices and the existing portfolio accounting
@@ -11,8 +37,9 @@ account's allocation. Approved retained-bonus policy preserves basis but does
 not specify this quantity convention; the merger-specific floor policy is not
 silently extended. `R5_STATUS=BLOCKED_RETAINED_BONUS_FRACTION_POLICY_HUMAN_DECISION`;
 `HUMAN_APPROVAL_GATE=R5_RETAINED_BONUS_FRACTION_POLICY`. See
-`../research/R5_RETAINED_BONUS_FRACTION_GATE.md`. P1/source counts below are
-unchanged; Full Dataset, freeze and studies remain NO.
+`../research/R5_RETAINED_BONUS_FRACTION_GATE.md`. Earlier P1/source snapshots
+below are retained as history; the current counts are in the section above.
+Full Dataset, freeze and studies remain NO.
 
 ## Current R5 bonus-source term corroboration — 2026-09-18
 

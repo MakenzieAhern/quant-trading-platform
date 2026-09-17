@@ -1,5 +1,20 @@
 # Decisions
 
+## 2026-09-18 official secondary cash-leg and derivative-reference handling
+
+For an already accepted ordinary-A primary cash event, a secondary official
+implementation result or dated adjustment notice can close only the exact
+cash fact it independently repeats: same security, gross cash per share,
+record and ex-date, with checksum-bound PDF and point-in-time master identity.
+A mixed notice's bonus leg remains source terms pending its own accounting
+policy; no second economic event is created. A retrospective derivative
+price-adjustment notice is a reference, not a dividend, only when its exact
+official PDF states the accepted event completed on the accepted ex-date and
+the cash amount and any stated record/ex dates match. The seven new closures
+meet these source tests. Unmatched or incomplete notices remain open. This
+applies the existing official-source substitution principle and does not
+approve a new fractional bonus convention.
+
 ## 2026-09-18 bounded official date repair and source-acquisition boundary
 
 For 300207 and 600801, accept the exact original CNINFO implementation PDF

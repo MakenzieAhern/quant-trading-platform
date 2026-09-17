@@ -1,5 +1,28 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 R5 exact cash-leg and derivative scope closure
+
+Reused the 257 acquired, SHA-bound official CNINFO PDFs. Shared labeled-date
+parsing now accepts slash dates only under exact record/ex labels. Five more
+non-primary/mixed notices match the accepted issuer primary cash ledger on
+ordinary-A identity, gross cash, record and ex-date: 688556, 688093, 688583,
+688615 and 002129. The mixed notice's bonus leg remains accounting-pending;
+none creates a new economic event. Two derivative notices, 600339 and 688767,
+explicitly state that a matching accepted distribution had completed on the
+same ex-date. Their price-adjustment references are not distributions.
+
+Matched-cash v4: 45 closed, file SHA-256
+`f57ae2a4430aadc05438dc9a57a9e1199f76e6a34dc11f496db9e585576a0f5d`,
+manifest `784637aea78238d62017268e696cb0868a887eb8a38eb8960f18b0229a3b1ffc`.
+Derivative-scope v4: 17 closed, file SHA-256
+`627c03be8a63fed18ccf21b7f360bd694f1de32fb3ac8e03a8c18a786d8a7620`,
+manifest `24d8a42f9d26a1a671500deeab121511ac593601f0b18ea1ca3da2129851c7bf`.
+Cumulative P1 v41: 16,054/16,320 established, 1,984 official substitutions,
+266 missing facts / 265 documents (250 remaining acquired distribution PDFs,
+15 other); byte-identical immutable replay and reverse-input check pass.
+Focused tests: 31 passed; Ruff check/format pass. The fractional retained-bonus
+methodology gate remains pending, and no Full Dataset, freeze or study was run.
+
 ## 2026-09-18 R5 stop on retained-bonus fractional-allocation policy
 
 After the independent official-source corroboration below, R5 reached a new

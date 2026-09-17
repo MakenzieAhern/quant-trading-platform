@@ -27,7 +27,7 @@ def close_facts(triage, requirements, cash, master, source_manifest, source_root
     closed = []
     for row in triage:
         requirement = by_id[row["document_id"]]
-        if row["url"] in excluded or row["candidate_class"] != "CASH_ONLY":
+        if row["url"] in excluded or row["candidate_class"] not in {"CASH_ONLY", "BOTH"}:
             continue
         if (
             row["preferred_instrument_marker"]
@@ -86,7 +86,7 @@ def close_facts(triage, requirements, cash, master, source_manifest, source_root
             raise ValueError("P1_MATCHED_CASH_EXTRACTION_CHANGED")
         parsed = diagnose(extracted["pages"], requirement["issuer"])
         if (
-            parsed["candidate_class"] != "CASH_ONLY"
+            parsed["candidate_class"] != row["candidate_class"]
             or parsed["record_dates"] != row["record_dates"]
             or parsed["ex_dates"] != row["ex_dates"]
             or Decimal(parsed["cash_candidate_per_share"])
@@ -105,6 +105,11 @@ def close_facts(triage, requirements, cash, master, source_manifest, source_root
                 "record_date": row["record_dates"][0],
                 "ex_date": ex,
                 "cash_per_share": str(Decimal(row["cash_candidate_per_share"])),
+                "bonus_component_status": (
+                    "SOURCE_TERMS_ONLY_ACCOUNTING_PENDING"
+                    if row["candidate_class"] == "BOTH"
+                    else "NONE_DETECTED"
+                ),
                 "classification": (
                     "OFFICIAL_PRIMARY_NOTICE_EXACT_CORROBORATION"
                     if primary
@@ -119,12 +124,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--triage", type=Path, required=True)
     parser.add_argument("--closure", type=Path, required=True)
+    parser.add_argument("--queue", type=Path)
     parser.add_argument("--cash-ledger", type=Path, required=True)
     parser.add_argument("--master", type=Path, required=True)
     parser.add_argument("--source-manifest", type=Path, required=True)
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--primary-cash", type=Path, required=True)
     parser.add_argument("--preferred", type=Path, required=True)
+    parser.add_argument("--prior", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
@@ -140,12 +147,29 @@ def main() -> None:
         )
     )
     master = json.loads(args.master.read_bytes())
+    requirements = (
+        json.loads(args.queue.read_bytes()) if args.queue else closure["remaining_cash_documents"]
+    )
+    baseline = {row["document_id"]: row for row in closure["remaining_cash_documents"]}
+    if (
+        len(baseline) != len(closure["remaining_cash_documents"])
+        or len({row["document_id"] for row in requirements}) != len(requirements)
+        or any(baseline.get(row["document_id"]) != row for row in requirements)
+        or len(triage["documents"]) != len(requirements)
+        or {row["document_id"] for row in triage["documents"]}
+        != {row["document_id"] for row in requirements}
+        or triage["source_requirements_sha256" if args.queue else "closure_sha256"]
+        != sha256_file(args.queue or args.closure)
+        or triage["source_manifest_sha256"] != sha256_file(args.source_manifest)
+        or sha256_file(args.master) != closure["input_sha256s"]["master"]
+    ):
+        raise ValueError("P1_MATCHED_CASH_INPUT_CHANGED")
     excluded = {row["event"]["source_url"] for row in primary_cash["events"]} | {
         row["url"] for row in preferred["excluded"]
     }
     inputs = (
         triage["documents"],
-        closure["remaining_cash_documents"],
+        requirements,
         cash["events"],
         master,
         source_manifest["documents"],
@@ -155,20 +179,35 @@ def main() -> None:
         *(list(reversed(rows)) for rows in inputs), args.source_root, excluded
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
+    if args.prior:
+        prior = verified(args.prior)
+        prior_rows = prior["closed"]
+        ids = [row["document_id"] for row in [*prior_rows, *closed]]
+        if not prior["no_new_economic_event_created"] or len(ids) != len(set(ids)):
+            raise ValueError("P1_MATCHED_CASH_PRIOR_CONFLICT")
+        closed = sorted([*prior_rows, *closed], key=lambda row: row["document_id"])
     counts = dict(sorted(Counter(row["classification"] for row in closed).items()))
     report = {
-        "report_version": "P1_MATCHED_OFFICIAL_CASH_FACT_CLOSURE_V2",
+        "report_version": (
+            "P1_MATCHED_OFFICIAL_CASH_FACT_CLOSURE_V4"
+            if args.prior
+            else "P1_MATCHED_OFFICIAL_CASH_FACT_CLOSURE_V3"
+            if args.queue
+            else "P1_MATCHED_OFFICIAL_CASH_FACT_CLOSURE_V2"
+        ),
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)
             for name, path in (
                 ("triage", args.triage),
                 ("closure", args.closure),
+                *([("queue", args.queue)] if args.queue else []),
                 ("cash_ledger", args.cash_ledger),
                 ("master", args.master),
                 ("source_manifest", args.source_manifest),
                 ("primary_cash", args.primary_cash),
                 ("preferred", args.preferred),
+                *([("prior", args.prior)] if args.prior else []),
             )
         },
         "closed_documents": len(closed),

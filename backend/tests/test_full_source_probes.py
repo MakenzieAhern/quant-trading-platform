@@ -370,6 +370,14 @@ def test_distribution_notice_dates_require_bound_labels_not_unrelated_dates():
         ["2010-03-02"],
         ["2010-03-03"],
     )
+    assert notice_dates(["股权登记日:2022/6/2;除权日:2022/6/6;上市日:2022/6/7"]) == (
+        ["2022-06-02"],
+        ["2022-06-06"],
+    )
+    assert notice_dates(["股权登记日:2022/13/2;除权日:2022/6/6"]) == (
+        [],
+        ["2022-06-06"],
+    )
     assert notice_dates(["股权登记日与除权除息日", "董事会2010年3月2日"]) == ([], [])
     assert notice_dates(["A股股权登记日为2010年5月17日;B股股权登记日为2010年5月20日"])[0] == [
         "2010-05-17"

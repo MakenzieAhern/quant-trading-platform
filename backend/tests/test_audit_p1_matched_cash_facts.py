@@ -82,3 +82,18 @@ def test_exact_cash_fact_closes_by_primary_or_stronger_official_notice(tmp_path)
     requirements[0]["title"] = sources[0]["title"] = "关于分红派息实施后调整回购价格的公告"
     derivative = close_facts(triage, requirements, cash, master, sources, tmp_path, set())
     assert derivative[0]["classification"] == "STRONGER_ACCEPTED_OFFICIAL_NOTICE_SUBSTITUTION"
+    cache.write_text(
+        json.dumps(
+            {
+                "source_sha256": source_sha,
+                "pages": [
+                    "证券代码:000001\n每10股派发现金4.00元(含税),每10股转增4股。\n"
+                    "股权登记日:2023年11月29日;除权除息日:2023年11月30日。"
+                ],
+            }
+        )
+    )
+    triage[0]["text_cache_sha256"] = sha256_file(cache)
+    triage[0]["candidate_class"] = "BOTH"
+    mixed = close_facts(triage, requirements, cash, master, sources, tmp_path, set())
+    assert mixed[0]["bonus_component_status"] == "SOURCE_TERMS_ONLY_ACCOUNTING_PENDING"
