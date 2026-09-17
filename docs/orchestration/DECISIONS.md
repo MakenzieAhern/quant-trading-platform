@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-09-18 convertible-bond halt hint is not final dividend authority
+
+An official conversion-halt notice with a conditional per-share amount may
+close a P1 source-document requirement as a nonfinal reference only if its
+original PDF explicitly schedules a later ordinary-A final implementation
+notice, and exactly one already accepted official issuer event has that exact
+publication date and title before its record date. The two 601998 hints meet
+this source-scope rule, but their indicative amounts differ from final issuer
+amounts. Preserve both figures and source checksums; accept only the final
+amount already present in the cash ledger. Do not create another dividend or
+infer a bond-tradability event for the ordinary-A dataset.
+
 ## 2026-09-18 preliminary A/H schedule and PIT typo boundary
 
 A dated A-share schedule in an official A/H preliminary notice is a nonfinal

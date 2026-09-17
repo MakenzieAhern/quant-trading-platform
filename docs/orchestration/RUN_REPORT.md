@@ -1,5 +1,32 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 Docker Desktop/WSL non-destructive recovery
+
+The Docker Engine was unreachable and `docker-desktop` WSL integration had
+stopped; backend error identified the recurring stale `sailor-ingest.sock`
+rename failure. A normal Desktop stop failed, so the already failed process
+was force-stopped. Its two-entry runtime directory was preserved as
+`run.recovery-20260918-quant-r5.bak`, and Desktop recreated a working runtime.
+No Docker image, volume, PostgreSQL/Redis data, project file or frozen dataset
+was removed. Engine 29.7.2, Compose v5.5.0 and Ubuntu WSL integration pass.
+Existing Compose services restarted without rebuilding: PostgreSQL and Redis
+healthy, Redis PONG, backend healthy, API health 200, frontend 200 on 5173.
+This repairs local integration testing only; R5 source/census gates are unchanged.
+
+## 2026-09-18 R5 convertible-halt preliminary cash reference closure
+
+Two retained official 601998 notices schedule an exact later final A-share
+implementation notice while warning that the per-share distribution can
+change with convertible-bond share count. Each later accepted issuer notice
+matches the scheduled publication date and full title. Indicative 0.356 and
+0.1847 CNY/share differ from final 0.3261 and 0.1825; the hints are not
+economic-event authorities. Nonfinal scope v7: 32 closed, manifest
+`4fd9861ea5eb5524b5b89b7a8208c120d78117d94662e56081ef49e14dd7511c`.
+Cumulative v44: 16,063/16,320 established, 1,984 official substitutions,
+257 facts / 256 documents unresolved (241 acquired queue, 15 other), manifest
+`f62f73a38ed45060f55b9c641445b7465c77c8e65bc507672f1c45b06dfcb0b9`.
+Input-order replay passed; no new economic event, Full Dataset, freeze or study.
+
 ## 2026-09-18 R5 nonfinal A-share schedule scope closure
 
 Reused the already acquired official CNINFO PDFs. Seven 601186/601390 A/H

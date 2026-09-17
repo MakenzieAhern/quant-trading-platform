@@ -1,5 +1,40 @@
 # Current state
 
+## Current Docker/WSL runtime recovery — 2026-09-18
+
+Docker Desktop's engine had stopped after the same `sailor-ingest.sock`
+runtime-socket rename error; WSL Ubuntu was running but its Docker CLI
+integration was absent. After stopping the failed Desktop processes, the
+two-entry runtime `run` directory was moved intact to a recoverable sibling
+backup, then Docker Desktop was started normally. No image, volume, database,
+project file or frozen dataset was deleted. Windows and WSL clients reach
+Docker Engine 29.7.2 / Docker Desktop 4.89.0 and Compose v5.5.0. Existing
+project containers were restarted without a rebuild: PostgreSQL and Redis
+healthy, Redis PONG, backend healthy, `/api/health` HTTP 200 and frontend
+HTTP 200 on its configured port 5173. This clears the separate local Docker
+runtime blocker; it changes no data-authority or methodology decision.
+
+## Current R5 convertible-halt notice closure — 2026-09-18
+
+Two official 601998 convertible-bond conversion-halt notices are nonfinal
+ordinary-A dividend references. Each expressly scheduled a later final issuer
+A-share implementation notice, and exactly one accepted final event has that
+publication date and title. Their indicative cash amounts (0.356 and 0.1847)
+**differ** from final amounts (0.3261 and 0.1825), so no amount is sourced
+from the hints. Nonfinal-scope v7 closes 32 documents total, SHA-256
+`703d28b09c9c6b166ea65f98a05fcf6c6a5627d17cbd47ff92f8e253b18e600f`,
+manifest `4fd9861ea5eb5524b5b89b7a8208c120d78117d94662e56081ef49e14dd7511c`.
+Cumulative P1 v44 establishes **16,063/16,320** facts, with 1,984 official
+substitutions and **257 facts / 256 documents** still open (241 acquired
+distribution PDFs, 15 other). File SHA-256
+`c2d91ce7c41b6a1c4d3c73e182ad88f73008b616ab76ab9b6984a0d0fe92a9fc`,
+manifest `f62f73a38ed45060f55b9c641445b7465c77c8e65bc507672f1c45b06dfcb0b9`.
+Current queue v6 SHA-256 is
+`2469c4d53d7c9584137240285ca7aaf78e1d2c45fc6b396782a4cec7299a820a`;
+source-bound triage v16 has 94 bonus-only, 1 both, 3 cash-only and 143 neither.
+No new event, full census, safe-start or dataset acceptance is inferred.
+The retained-bonus fractional methodology gate remains active.
+
 ## Current R5 P1 nonfinal A-share schedule closure — 2026-09-18
 
 Seven checksum-verified official 601186/601390 A/H-share notices provide

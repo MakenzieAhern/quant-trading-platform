@@ -1,6 +1,6 @@
 """Proposal-only notices must never substitute for final cash facts."""
 
-from scripts.audit_p1_nonfinal_proposals import a_share_schedule, classify
+from scripts.audit_p1_nonfinal_proposals import a_share_schedule, classify, convertible_halt_final
 
 
 def test_only_undated_nonfinal_proposal_is_out_of_scope():
@@ -157,6 +157,65 @@ def test_dated_a_share_hint_requires_later_exact_final_notice():
             set(),
             [dict(final, event=dict(final["event"], ex_date="2024-07-27"))],
             {"hint": schedule},
+        )
+        == []
+    )
+
+
+def test_convertible_halt_hint_does_not_set_final_cash_amount():
+    title = "中信银行股份有限公司2023年年度A股普通股分红派息实施公告"
+    pages = [
+        "若本行总股本在股权登记日前发生变动,相应调整每股分配比例。"
+        "本行将于2024年7月3日在上海证券交易所网站发布《" + title + "》。"
+    ]
+    promised = convertible_halt_final(pages)
+    assert promised == ("2024-07-03", title)
+    requirement = {
+        "document_id": "bond-hint",
+        "affected_events": ["CNINFO:bond-hint"],
+        "issuer": "601998",
+        "published_on": "2024-06-27",
+        "title": "关于A股普通股分红派息实施时中信转债停止转股的提示性公告",
+        "url": "official-bond-hint",
+    }
+    triage = {
+        "document_id": "bond-hint",
+        "candidate_class": "CASH_ONLY",
+        "record_dates": [],
+        "ex_dates": [],
+        "preferred_instrument_marker": False,
+        "cash_candidate_per_share": "0.356",
+        "source_sha256": "sha",
+        "text_cache_sha256": "cache",
+    }
+    final = {
+        "event_checksum": "final",
+        "event": {
+            "security_id": {"value": "CN-A:SSE:601998"},
+            "record_date": "2024-07-09",
+            "ex_date": "2024-07-10",
+            "announcement_date": "2024-07-03",
+            "cash_per_share": "0.3261",
+            "source_url": "https://static.cninfo.com.cn/finalpage/final.PDF",
+            "source_provider": "OFFICIAL_ISSUER_CNINFO_PRIMARY",
+            "source_document": title,
+        },
+    }
+    result = classify([requirement], [triage], set(), [final], bond_notices={"bond-hint": promised})
+    assert result[0]["classification"] == (
+        "NONFINAL_CONVERTIBLE_HALT_MATCHED_LATER_FINAL_IMPLEMENTATION"
+    )
+    assert (result[0]["indicative_cash_per_share"], result[0]["final_cash_per_share"]) == (
+        "0.356",
+        "0.3261",
+    )
+    assert (
+        classify(
+            [requirement],
+            [triage],
+            set(),
+            [dict(final, event=dict(final["event"], announcement_date="2024-07-04"))],
+            bond_notices={"bond-hint": promised},
         )
         == []
     )

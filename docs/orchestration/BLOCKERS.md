@@ -1,5 +1,23 @@
 # Blockers
 
+## Docker runtime issue resolved again — 2026-09-18
+
+The recurrent stale `sailor-ingest.sock` error was repaired non-destructively:
+the old runtime directory was preserved, Docker Desktop recreated it, Ubuntu
+WSL integration and Engine/Compose respond, and PostgreSQL, Redis, backend,
+API health and frontend are healthy. Docker is not the active R5 blocker.
+
+## Current P1 remainder after convertible-halt scope closure — 2026-09-18
+
+Official-public P0 remains PASS. P1 cumulative v44 has 257 facts / 256
+documents open: 241 acquired distribution documents and 15 other requests.
+Two 601998 convertible-bond suspension hints are closed only as preliminary
+references to exact later final ordinary-A issuer notices; their differing
+indicative cash amounts were not admitted. Three cash-only queue documents
+remain: the 301262 contemporaneous ex-date typo and two record-2025-12-31 /
+ex-2026-01-05 notices. Full cash/bonus census and safe start remain partial.
+The retained-bonus fractional-share human decision below is still active.
+
 ## Current P1 remainder after nonfinal A-share schedule closure — 2026-09-18
 
 Official-public P0 remains PASS without a paid export. P1 cumulative v42 has
