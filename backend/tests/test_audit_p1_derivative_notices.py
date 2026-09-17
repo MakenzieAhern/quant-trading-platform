@@ -42,6 +42,17 @@ def test_derivative_requires_unique_existing_exact_issuer_cash():
         )
         == 1
     )
+    assert (
+        len(
+            classify(
+                [dict(requirement, title="关于转股连续停牌的提示性公告")],
+                [triage],
+                set(),
+                [accepted],
+            )
+        )
+        == 1
+    )
     assert classify([requirement], [triage], set(), [accepted, accepted]) == []
     assert (
         classify(
@@ -49,6 +60,53 @@ def test_derivative_requires_unique_existing_exact_issuer_cash():
             [triage],
             set(),
             [dict(accepted, event=dict(accepted["event"], cash_per_share="0.2"))],
+        )
+        == []
+    )
+
+
+def test_historical_option_adjustment_requires_matching_dividend_year():
+    requirement = {
+        "document_id": "a",
+        "affected_events": ["CNINFO:a"],
+        "issuer": "600180",
+        "title": "关于根据2022年度利润分配实施方案调整公司2023年股票期权激励计划行权价格的公告",
+        "published_on": "2024-04-26",
+    }
+    triage = {
+        "document_id": "a",
+        "candidate_class": "CASH_ONLY",
+        "cash_candidate_per_share": "0.133",
+        "record_dates": [],
+        "ex_dates": [],
+        "preferred_instrument_marker": False,
+        "url": "derivative",
+        "source_sha256": "sha",
+        "text_cache_sha256": "cache",
+    }
+    accepted = {
+        "event_checksum": "event",
+        "event": {
+            "security_id": {"value": "CN-A:SSE:600180"},
+            "ex_date": "2023-06-07",
+            "cash_per_share": "0.133",
+            "source_provider": "OFFICIAL_ISSUER_CNINFO_PRIMARY",
+            "source_url": "https://static.cninfo.com.cn/finalpage/primary.PDF",
+            "source_document": "瑞茂通2022年年度权益分派实施公告",
+        },
+    }
+    assert len(classify([requirement], [triage], set(), [accepted])) == 1
+    assert (
+        classify(
+            [requirement],
+            [triage],
+            set(),
+            [
+                dict(
+                    accepted,
+                    event=dict(accepted["event"], source_document="2021年年度权益分派实施公告"),
+                )
+            ],
         )
         == []
     )

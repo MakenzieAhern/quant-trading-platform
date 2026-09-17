@@ -1,5 +1,19 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 historical derivative-reference scope
+
+Four additional retained official derivative/employee-plan notices are linked
+to unique accepted final issuer distributions without becoming new events.
+Older cash references require the exact distribution year in the notice and
+final implementation title; the convertible-pause notice uses the existing
+bounded forward window. Source bytes and text checksums pass. Derivative scope
+v3 closes 15 notices; manifest
+`832e9c7d9643ba231eeb7c51d9151c3039673f472607dcc80deb01593935abcd`.
+P1 cumulative v15 leaves 579 facts / 563 documents (263 distribution, 300
+other); 15,741/16,320 are established, with 1,692 substitutions. Manifest
+`ea29e9ddc363f4f7a652487de22815b51f0e49d7d0439d3930a34e774501e931`.
+No Full Dataset, freeze or strategy study follows this partial closure.
+
 ## 2026-09-17 buyback-notice wording closure
 
 Three previously unmatched official notices about adjusting a share-repurchase

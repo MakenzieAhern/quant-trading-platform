@@ -13,7 +13,9 @@ from app.data.catalog.freeze import write_immutable
 from scripts.audit_p1_public_fact_requirements import verified
 from scripts.triage_p1_remaining_distribution_docs import diagnose
 
-DERIVATIVE = re.compile(r"停止转股|转股价格|股票期权.*行权价格|回购(?:股份)?价格上限")
+DERIVATIVE = re.compile(
+    r"停止转股|转股连续停牌|转股价格|股票期权.*行权价格|回购(?:股份)?价格上限|员工持股计划.*购买价格调整"
+)
 
 
 def classify(requirements, triage, prior_ids, cash):
@@ -36,15 +38,32 @@ def classify(requirements, triage, prior_ids, cash):
             or row["preferred_instrument_marker"]
         ):
             continue
+        historical_year = re.search(r"(?:根据|因)(\d{4})年", requirement["title"])
         candidates = [
             accepted
             for accepted in by_symbol[requirement["issuer"]]
-            if -10
-            <= (
-                date.fromisoformat(accepted["event"]["ex_date"])
-                - date.fromisoformat(requirement["published_on"])
-            ).days
-            <= 75
+            if (
+                -10
+                <= (
+                    date.fromisoformat(accepted["event"]["ex_date"])
+                    - date.fromisoformat(requirement["published_on"])
+                ).days
+                <= 75
+                or (
+                    historical_year
+                    and 0
+                    <= (
+                        date.fromisoformat(requirement["published_on"])
+                        - date.fromisoformat(accepted["event"]["ex_date"])
+                    ).days
+                    <= 400
+                    and historical_year[1] in accepted["event"]["source_document"]
+                    and (
+                        "半年度" not in requirement["title"]
+                        or "半年度" in accepted["event"]["source_document"]
+                    )
+                )
+            )
             and Decimal(accepted["event"]["cash_per_share"])
             == Decimal(row["cash_candidate_per_share"])
             and accepted["event"]["source_url"].startswith(
@@ -128,7 +147,7 @@ def main():
         ):
             raise ValueError("DERIVATIVE_NOTICE_TERMS_CHANGED")
     report = {
-        "report_version": "P1_NON_PRIMARY_DERIVATIVE_CASH_SCOPE_V2",
+        "report_version": "P1_NON_PRIMARY_DERIVATIVE_CASH_SCOPE_V3",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)

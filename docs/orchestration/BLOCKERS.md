@@ -1,6 +1,15 @@
 # Blockers
 
-## Current 2026-09-17 R5 gate after non-primary buyback closure
+## Current 2026-09-17 R5 gate after derivative-reference closure
+
+P1 lacks 579 facts / 563 documents (263 distribution, 300 other). The four
+newly linked derivative/employee-plan notices are non-primary and do not fill
+actual cash or bonus census gaps. Full issuer cash census remains PARTIAL;
+bounded bonus is 276/288 with 7,119 other oracle rows, and SZSE has 1,921
+exact resumption boundaries unresolved. Two named SSE PDF gaps persist.
+Full Dataset, freeze and all strategy studies remain locked.
+
+## Earlier 2026-09-17 R5 gate after non-primary buyback closure
 
 P1 now lacks 583 facts / 567 documents (267 distribution, 300 other).
 Buyback-price notices are classified only against unique accepted final cash

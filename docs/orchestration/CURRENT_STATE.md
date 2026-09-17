@@ -1,6 +1,23 @@
 # Current state
 
-## Current R5 non-primary buyback-notice closure — 2026-09-17
+## Current R5 historical derivative-reference closure — 2026-09-17
+
+Four further official notices are non-primary references, not new dividends:
+two 600180 option-price notices cite the prior 2021/2022 annual implementation
+plans, a 002543 employee-plan price notice cites its 2024 half-year
+distribution, and a 603707 convertible-bond pause notice precedes the final
+2024 annual cash implementation. Exact issuer/gross amounts, explicit
+distribution-year labels where the original event is older, unique accepted
+issuer events, PDF/text checksums and bounded chronology are verified.
+Derivative scope v3 closes 15 notices in all, manifest
+`832e9c7d9643ba231eeb7c51d9151c3039673f472607dcc80deb01593935abcd`.
+P1 cumulative v15 establishes 15,741/16,320 facts, with 579 facts / 563
+documents unresolved (263 distribution, 300 other). Substitutions remain
+1,692; manifest `ea29e9ddc363f4f7a652487de22815b51f0e49d7d0439d3930a34e774501e931`.
+No future final event is treated as known at an earlier proposal date, and no
+new economic event is created. Full-period source gates remain PARTIAL.
+
+## Earlier R5 non-primary buyback-notice closure — 2026-09-17
 
 Three retained official repurchase-price notices use the phrase `回购股份价格上限`
 previously missed by the narrow non-primary filter. Each has no independent
