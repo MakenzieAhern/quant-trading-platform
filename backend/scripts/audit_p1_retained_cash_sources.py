@@ -44,7 +44,7 @@ def issuer_body_finality(title, pages):
     return next(
         (
             token
-            for token in ("实施办法", "分派方法", "具体实施", "实施方案", "分配实施")
+            for token in ("实施办法", "分派方法", "具体实施", "实施方案", "分配实施", "分配方法")
             if token in text
         ),
         None,
@@ -352,7 +352,7 @@ def main():
     if len(closed) + len(rejected) != len(requests):
         raise ValueError("RETAINED_P1_CANDIDATES_NOT_PARTITIONED")
     report = {
-        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V9",
+        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V10",
         "candidate_documents": len(requests),
         "selected_documents": len(selected),
         "closed_documents": len(closed),

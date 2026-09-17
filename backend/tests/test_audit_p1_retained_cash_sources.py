@@ -64,6 +64,7 @@ def test_retained_final_title_accepts_final_variants_not_proposals_or_tips():
     assert not retained_final_title("董事会2015年度分红派息公告")
     assert not retained_final_title("A股分红派息实施暨停牌提示性公告")
     assert issuer_body_finality("2014年度利润分配公告", ["三、利润分配实施办法"]) == "实施办法"
+    assert issuer_body_finality("2011年中期利润分配公告", ["四、分配方法"]) == "分配方法"
     assert issuer_body_finality("分红派息提示性公告", ["利润分配实施办法"]) is None
 
 

@@ -2,9 +2,9 @@
 
 ## Current 2026-09-18 gate after issuer-body finality review
 
-P1 lacks 330 facts / 314 documents (263 distribution, 51 other). Twelve
+P1 lacks 329 facts / 313 documents (263 distribution, 50 other). Thirteen
 generic-titled official PDFs close only with explicit implementation body,
-exact cash and dates, and exchange corroboration; 21 retained-source
+exact cash and dates, and exchange corroboration; 20 retained-source
 candidates remain rejected. Full cash/bonus censuses, 1,921 SZSE resumption
 boundaries, two inaccessible SSE implementation PDFs, and local Docker
 Linux-engine startup remain independent gaps. Full Dataset and studies stay

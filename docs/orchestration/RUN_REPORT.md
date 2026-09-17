@@ -2,16 +2,16 @@
 
 ## 2026-09-18 issuer-body finality cross-check
 
-Twelve generic-titled retained issuer PDFs supply explicit implementation
+Thirteen generic-titled retained issuer PDFs supply explicit implementation
 method text, exact ordinary-A cash and entitlement dates matching accepted
 events and independent exchange targets. Their source-body finality marker and
 original PDF/text SHA-256 are preserved in each new closure. All prior 237
-closures remain identical. Source v9 closes 249/270 candidates; 21 remain
+closures remain identical. Source v10 closes 250/270 candidates; 20 remain
 explicitly rejected. Manifest
-`47decc901ecf3797fc6718b61b7119c2a913a25baed8cf46b250efead8663355`.
-Cumulative P1 v24 establishes 15,990/16,320 facts and leaves 330 facts / 314
-documents (263 distribution, 51 other); 1,941 official substitutions.
-Manifest `aecbc2f9c9a6168f8c2ecd72f3230bfb70f4a374d17defb43d4cc8d716666783`.
+`134db8ba9c28f4a60f62c6f599aa94c4838f7ff9473e833d82bb3969004047bd`.
+Cumulative P1 v25 establishes 15,991/16,320 facts and leaves 329 facts / 313
+documents (263 distribution, 50 other); 1,942 official substitutions.
+Manifest `04cc6edc70787f8ec17f6877ce2db480147b62ee066fb9324d9a680276e995d3`.
 No new economic event or Full Dataset was accepted.
 
 ## 2026-09-18 SSE-composite official issuer cash receipts
