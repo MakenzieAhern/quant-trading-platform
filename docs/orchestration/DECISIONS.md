@@ -1,6 +1,17 @@
 # Decisions
 
-## 2026-09-18 preferred header is not preferred entitlement
+## 2026-09-18 derivative notice is not a second distribution
+
+Scope an official issuer's private-placement price/quantity adjustment after
+an implemented annual distribution, or a pre-final convertible conversion-halt
+hint, as non-primary only when its source bytes are retained and exactly one
+accepted final issuer implementation matches the security, annual period and
+chronology. Check any quoted record/ex-date against that event; do not create
+a second cash or bonus event from the derivative notice. Five v6 notices meet
+these guards. This is source-document reconciliation, not a new accounting
+policy or permission to impute missing final entitlement terms.
+
+## Previous 2026-09-18 preferred header is not preferred entitlement
 
 For a nonfinal ordinary-A issuer notice, a preferred-stock code/abbreviation
 in the identification header does not by itself make the **body** a preferred

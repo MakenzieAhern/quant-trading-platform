@@ -1,6 +1,24 @@
 # Current state
 
-## Current R5 two nonfinal bank notices scoped — 2026-09-18
+## Current R5 five derivative notices scoped — 2026-09-18
+
+Five already acquired official issuer PDFs are not independent ordinary-A
+distributions: 002521 and 688065 adjust private-placement terms after the
+distribution, while 300517, 601860 and 001283 announce temporary convertible
+conversion halts before final implementation. Each matches exactly one
+previously accepted official issuer implementation by security, distribution
+year, chronology and, where present, record/ex-dates. Original PDF and text
+hashes, accepted event checksums and reverse-order replay are bound in
+derivative-scope report v6 (22 cumulative notices; manifest
+`534de27e99a8075012a3242c5650350d71351d8e846e1f135e430b20bc4108f2`).
+No new economic event was created. Cumulative P1 v58 establishes
+**16,073/16,320** facts and leaves **247 facts / 242 documents** open (231
+acquired distribution, 11 other); manifest
+`0e5bb98ed6daf54ba29e48bef2b6ad6201ab4b1482dfdf96b277800067641e9c`.
+The bounded bonus ledger remains 243/288, with the fractional-share human
+methodology gate, full-census and research locks unchanged.
+
+## Previous R5 two nonfinal bank notices scoped — 2026-09-18
 
 The original official 601009 issuer PDF is a shareholder proposal for a
 possible 2024 midterm distribution, still subject to approval and with no

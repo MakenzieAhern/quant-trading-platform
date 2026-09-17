@@ -14,7 +14,7 @@ from scripts.audit_p1_public_fact_requirements import verified
 from scripts.triage_p1_remaining_distribution_docs import diagnose
 
 DERIVATIVE = re.compile(
-    r"停止转股|转股连续停牌|转股价格|股票期权.*行权价格|回购(?:股份)?价格上限|"
+    r"停止转股|暂停转股|转股连续停牌|转股价格|股票期权.*行权价格|回购(?:股份)?价格上限|"
     r"员工持股计划.*购买价格调整|调整.*员工持股计划.*购买价格|调整.*向特定对象发行.*价格"
 )
 COMPLETED_DATE = re.compile(r"(20\d{2})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日\s*实施完毕")
@@ -30,8 +30,9 @@ def completed_dates(pages):
     return dates
 
 
-def classify(requirements, triage, prior_ids, cash, completed_dates=None):
+def classify(requirements, triage, prior_ids, cash, completed_dates=None, source_texts=None):
     completed_dates = completed_dates or {}
+    source_texts = source_texts or {}
     by_id = {row["document_id"]: row for row in triage}
     by_symbol = defaultdict(list)
     for row in cash:
@@ -43,6 +44,85 @@ def classify(requirements, triage, prior_ids, cash, completed_dates=None):
         if document_id in prior_ids or not DERIVATIVE.search(requirement["title"]):
             continue
         row = by_id[document_id]
+        if row["candidate_class"] == "NEITHER":
+            text = source_texts.get(document_id, "")
+            scheduled = bool(re.search(r"暂停转股|转股连续停牌", requirement["title"]))
+            adjusted = bool(re.search(r"实施后调整向特定对象发行.*价格", requirement["title"]))
+            title_year = re.search(r"(20\d{2})年?年度", requirement["title"])
+            text_years = set(re.findall(r"(20\d{2})年?年度利润分配", text)) if scheduled else set()
+            year = (
+                title_year[1]
+                if title_year
+                else next(iter(text_years))
+                if len(text_years) == 1
+                else None
+            )
+            if (
+                not year
+                or row["cash_candidate_per_share"] is not None
+                or row["bonus_candidate_per_share"] is not None
+                or (scheduled and (row["record_dates"] or row["ex_dates"]))
+                or row["preferred_instrument_marker"]
+                or not (
+                    (scheduled and "利润分配" in text and "股权登记日" in text)
+                    or (adjusted and "已实施" in text and "发行价格" in text)
+                )
+            ):
+                continue
+            published = date.fromisoformat(requirement["published_on"])
+            matches = [
+                accepted
+                for accepted in by_symbol[requirement["issuer"]]
+                if accepted["event"]["source_url"].startswith(
+                    "https://static.cninfo.com.cn/finalpage/"
+                )
+                and accepted["event"]["source_provider"].startswith("OFFICIAL_ISSUER_CNINFO_")
+                and accepted["event"]["source_url"] != row["url"]
+                and re.search(rf"{year}年?年度", accepted["event"]["source_document"])
+                and "实施公告" in accepted["event"]["source_document"]
+                and (
+                    not row["record_dates"]
+                    or accepted["event"]["record_date"] in row["record_dates"]
+                )
+                and (not row["ex_dates"] or accepted["event"]["ex_date"] in row["ex_dates"])
+                and (
+                    0
+                    < (date.fromisoformat(accepted["event"]["announcement_date"]) - published).days
+                    <= 30
+                    if scheduled
+                    else 0
+                    <= (published - date.fromisoformat(accepted["event"]["ex_date"])).days
+                    <= 30
+                    and (
+                        not completed_dates.get(document_id)
+                        or accepted["event"]["ex_date"] in completed_dates[document_id]
+                    )
+                )
+            ]
+            if len(matches) != 1:
+                continue
+            accepted = matches[0]
+            closed.append(
+                {
+                    "document_id": document_id,
+                    "affected_events": requirement["affected_events"],
+                    "issuer": requirement["issuer"],
+                    "title": requirement["title"],
+                    "published_on": requirement["published_on"],
+                    "url": row["url"],
+                    "source_sha256": row["source_sha256"],
+                    "text_cache_sha256": row["text_cache_sha256"],
+                    "accepted_event_checksum": accepted["event_checksum"],
+                    "accepted_event_ex_date": accepted["event"]["ex_date"],
+                    "accepted_primary_source_url": accepted["event"]["source_url"],
+                    "classification": (
+                        "NONFINAL_CONVERTIBLE_HALT_MATCHED_FINAL"
+                        if scheduled
+                        else "NON_PRIMARY_POST_DISTRIBUTION_ADJUSTMENT_MATCHED_FINAL"
+                    ),
+                }
+            )
+            continue
         if (
             row["candidate_class"] != "CASH_ONLY"
             or row["cash_candidate_per_share"] is None
@@ -157,7 +237,7 @@ def main():
     ids = {row["document_id"] for row in prior["closed"]}
     by_url = {row["url"]: row for row in sources["documents"]}
     by_id = {row["document_id"]: row for row in triage["documents"]}
-    historical = {}
+    historical, source_texts = {}, {}
     for requirement in requirements:
         if not DERIVATIVE.search(requirement["title"]):
             continue
@@ -176,10 +256,15 @@ def main():
         if extracted["source_sha256"] != row["source_sha256"]:
             raise ValueError("DERIVATIVE_OFFICIAL_EXTRACTION_CHANGED")
         historical[requirement["document_id"]] = completed_dates(extracted["pages"])
+        source_texts[requirement["document_id"]] = re.sub(r"\s+", "", "".join(extracted["pages"]))
     inputs = (requirements, triage["documents"], cash["events"])
-    closed = classify(*inputs[:2], ids, inputs[2], historical)
+    closed = classify(*inputs[:2], ids, inputs[2], historical, source_texts)
     if closed != classify(
-        *(list(reversed(rows)) for rows in inputs[:2]), ids, list(reversed(inputs[2])), historical
+        *(list(reversed(rows)) for rows in inputs[:2]),
+        ids,
+        list(reversed(inputs[2])),
+        historical,
+        source_texts,
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     for row in closed:
@@ -200,17 +285,21 @@ def main():
         parsed = diagnose(extracted["pages"], row["issuer"])
         if (
             extracted["source_sha256"] != row["source_sha256"]
-            or parsed["candidate_class"] != "CASH_ONLY"
+            or parsed["candidate_class"]
+            != ("NEITHER" if row["classification"].endswith("MATCHED_FINAL") else "CASH_ONLY")
             or parsed["record_dates"] != by_id[row["document_id"]]["record_dates"]
             or parsed["ex_dates"] != by_id[row["document_id"]]["ex_dates"]
-            or Decimal(parsed["cash_candidate_per_share"]) != Decimal(row["cash_per_share"])
+            or (
+                parsed["candidate_class"] == "CASH_ONLY"
+                and Decimal(parsed["cash_candidate_per_share"]) != Decimal(row["cash_per_share"])
+            )
         ):
             raise ValueError("DERIVATIVE_NOTICE_TERMS_CHANGED")
     combined = sorted([*prior["closed"], *closed], key=lambda row: row["document_id"])
     if len(combined) != len({row["document_id"] for row in combined}):
         raise ValueError("DERIVATIVE_PRIOR_CONFLICT")
     report = {
-        "report_version": "P1_NON_PRIMARY_DERIVATIVE_CASH_SCOPE_V4",
+        "report_version": "P1_NON_PRIMARY_DERIVATIVE_CASH_SCOPE_V6",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)

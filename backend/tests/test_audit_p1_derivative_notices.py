@@ -147,3 +147,84 @@ def test_derivative_late_reference_requires_exact_completed_date_and_record():
     assert len(classify([requirement], [triage], set(), [accepted], {"late": {"2025-09-30"}})) == 1
     triage["record_dates"] = ["2025-09-28"]
     assert classify([requirement], [triage], set(), [accepted], {"late": {"2025-09-30"}}) == []
+
+
+def test_non_cash_derivative_requires_official_final_and_source_context():
+    requirement = {
+        "document_id": "notice",
+        "affected_events": ["CNINFO:notice"],
+        "issuer": "001283",
+        "title": "关于实施2024年度利润分配期间转债暂停转股的提示性公告",
+        "published_on": "2025-06-04",
+    }
+    triage = {
+        "document_id": "notice",
+        "candidate_class": "NEITHER",
+        "cash_candidate_per_share": None,
+        "bonus_candidate_per_share": None,
+        "record_dates": [],
+        "ex_dates": [],
+        "preferred_instrument_marker": False,
+        "url": "https://static.cninfo.com.cn/finalpage/notice.PDF",
+        "source_sha256": "source",
+        "text_cache_sha256": "cache",
+    }
+    accepted = {
+        "event_checksum": "final",
+        "event": {
+            "security_id": {"value": "CN-A:SZSE:001283"},
+            "announcement_date": "2025-06-05",
+            "ex_date": "2025-06-12",
+            "source_document": "2024年度利润分配实施公告",
+            "source_provider": "OFFICIAL_ISSUER_CNINFO_PRIMARY",
+            "source_url": "https://static.cninfo.com.cn/finalpage/final.PDF",
+        },
+    }
+    text = {"notice": "公司将实施2024年度利润分配,至股权登记日暂停转股。"}
+    result = classify([requirement], [triage], set(), [accepted], source_texts=text)
+    assert [row["accepted_event_checksum"] for row in result] == ["final"]
+    assert classify([requirement], [triage], set(), [accepted], source_texts={}) == []
+    assert classify([requirement], [triage], set(), [accepted, accepted], source_texts=text) == []
+    assert (
+        len(
+            classify(
+                [dict(requirement, title="关于实施利润分配期间转债暂停转股的提示性公告")],
+                [triage],
+                set(),
+                [accepted],
+                source_texts=text,
+            )
+        )
+        == 1
+    )
+    adjusted = dict(
+        requirement,
+        title="关于2023年年度权益分派实施后调整向特定对象发行股票发行价格的公告",
+        published_on="2024-07-30",
+    )
+    earlier = dict(
+        accepted,
+        event=dict(
+            accepted["event"],
+            announcement_date="2024-07-18",
+            ex_date="2024-07-24",
+            source_document="2023年年度权益分派实施公告",
+        ),
+    )
+    adjusted_text = {"notice": "权益分派已实施完毕,发行价格调整。"}
+    assert len(classify([adjusted], [triage], set(), [earlier], source_texts=adjusted_text)) == 1
+    triage["record_dates"] = ["2024-07-23"]
+    triage["ex_dates"] = ["2024-07-24", "2023-06-19"]
+    earlier["event"]["record_date"] = "2024-07-23"
+    assert len(classify([adjusted], [triage], set(), [earlier], source_texts=adjusted_text)) == 1
+    assert (
+        classify(
+            [adjusted],
+            [triage],
+            set(),
+            [earlier],
+            {"notice": {"2024-07-23"}},
+            adjusted_text,
+        )
+        == []
+    )

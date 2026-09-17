@@ -1,6 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
-## 2026-09-18 two official nonfinal bank notices scoped
+## 2026-09-18 five official non-primary derivative notices scoped
+
+Reused five checksum-verified issuer PDFs and accepted cash events: two
+post-distribution private-placement price/quantity adjustments (002521,
+688065) and three pre-final convertible conversion-halt hints (300517,
+601860, 001283). Strict source-type, annual-period, timing and unique-event
+guards close only their P1 document requests. Derivative report v6 closes 22
+cumulative notices, creates zero events, and passes reverse-order replay;
+manifest `534de27e99a8075012a3242c5650350d71351d8e846e1f135e430b20bc4108f2`.
+P1 cumulative v58: **16,073/16,320** facts established, **247 facts / 242
+documents** open (231 distribution, 11 other), manifest
+`0e5bb98ed6daf54ba29e48bef2b6ad6201ab4b1482dfdf96b277800067641e9c`.
+Queue v11 triage: 94 bonus-only, 1 both, 3 cash-only, 133 neither. No Full
+Dataset, freeze or study.
+
+## Previous 2026-09-18 two official nonfinal bank notices scoped
 
 The already retained 601009 shareholder-proposal PDF has no executable
 cash/bonus ratio or entitlement dates and explicitly requires later approval.
