@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 official dual-leg distribution source closure
+
+The retained CNINFO corpus contains the identical original source PDF for
+both accepted cash and bounded bonus legs of 15 P1 requests. The new source
+audit rechecks PDF/text bytes, finality, issuer/date/terms, exchange cash
+targets, bonus oracle ratio and event checksums. It partitions all 16
+candidates: 15 closed (30 facts) and 603023 rejected for missing accepted
+bonus evidence. The 600845 A/B date set is disambiguated by its A-share
+exchange dates using the pre-existing dated-source rule. Dual report v3
+SHA-256 `b05b809985dd8c8ad1c6ba5bed3c849220b0afa503c85970c3057e1923ab898a`,
+manifest `aec400280226fcb64b4e8c99ff1aba36c8993b289a29984c0f621bc10a87891e`.
+P1 cumulative v27 establishes 16,021/16,320 and leaves 299 facts / 298
+documents (263 cash-queue, 35 other, including one dual-leg request); 1,957
+substitutions. All prior 2,265 closures are identical. Cumulative SHA-256
+`882d73197051ea24064d5fc80ae39b936c48cef82e6c42388557c121a31d8e49`,
+manifest `9924282d5b416b67b0f99b87fc77f03be0e06973cefa414966d975be0d2bf95e`.
+No new economic event, Full Dataset, freeze, study or PR merge follows.
+
 ## 2026-09-18 retained official bonus term reconciliation
 
 The shared official-issuer terms parser now handles an explicit final

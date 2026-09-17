@@ -1,5 +1,25 @@
 # Current state
 
+## Current R5 dual cash-and-bonus official source closure — 2026-09-18
+
+Fifteen previously URL-less P1 dual-leg requests have one retained final
+official CNINFO issuer PDF whose original SHA-256 is shared by accepted cash
+and bounded bonus events. Re-reading each checksum-verified PDF/text confirms
+issuer, ordinary-A identity, gross cash, retained share ratio and record/ex
+dates against independent SSE cash/bonus rows. Fourteen issuer notices state
+the exact dates; 600845 also lists a separate B-share record date, resolved
+under the existing exchange-date disambiguation rule rather than borrowed as
+the A-share date. The sixteenth request, 603023, remains open because its
+bonus component/allocation conflict has no accepted bonus leg. Dual source
+report v3 closes 15 documents / 30 facts, manifest
+`aec400280226fcb64b4e8c99ff1aba36c8993b289a29984c0f621bc10a87891e`.
+P1 cumulative v27 now establishes 16,021/16,320 facts, leaving 299 facts /
+298 documents (263 cash-queue, 35 other, including one dual-leg request)
+and records 1,957 official substitutions; manifest
+`9924282d5b416b67b0f99b87fc77f03be0e06973cefa414966d975be0d2bf95e`.
+All prior 2,265 P1 closures are unchanged. No new economic event, full
+corporate-action census or Full Dataset is asserted.
+
 ## Current R5 retained bonus term reconciliation — 2026-09-18
 
 Three previously unresolved bounded integer/next-session cases now reconcile

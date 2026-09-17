@@ -1,5 +1,15 @@
 # Blockers
 
+## Current 2026-09-18 gate after dual-leg official source closure
+
+P1 lacks 299 facts / 298 documents: 263 cash-queue notices and 35 other
+source requests. Of 16 dual cash-and-bonus source requests, 15 are closed by
+the same verified official issuer PDF; 603023 remains open because its bonus
+component/allocation terms are unresolved. The bounded bonus subset remains
+281/288, with 7,119 oracle rows outside scope. Full cash/bonus censuses and
+1,921 exact SZSE resumption boundaries remain partial. Docker/PostgreSQL is a
+separate local validation gap. No Full Dataset or research gate opens.
+
 ## Current 2026-09-18 gate after retained bonus term reconciliation
 
 Bounded integer/next-session bonus is 281/288; seven cases remain explicit:
