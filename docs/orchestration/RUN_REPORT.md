@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 河北钢铁 false-parent identity audit and 600253 follow-up
+
+Reused the original 000709 issuer implementation PDF and obtained a single
+targeted official SSE notice. The issuer names 邯郸钢铁 and 承德钒钛; SSE assigns
+them 600001 and 600357. The audited official SZSE master gives unrelated
+continuing identities 000761 本钢板材 and 000898 鞍钢股份. Two P1 requests were
+rejected as false parent identities, not official substitutions. Immutable
+source-rejection manifest
+`adb7ef14c48a69dfc7a02e270d338d4ef7a352f69d630236dc4306e67c9faa80`.
+Cumulative v50 is 16,071/16,320 handled (including these two out-of-scope
+requests), 1,990 substitutions, 249 facts / 248 documents open (241 acquired
+distribution, 7 other), manifest
+`9261b0dcae51b3330bcb7644e8b617e1f2649fa824ce3359510b057e6f1f0a08`.
+Targeted 600253 cash-choice and successor notices establish last parent trading
+2013-06-06 and 1,122,431 valid elected shares; no official account-fractional
+allocation/compensation treatment was found. It remains source-incomplete.
+The 15-event inventory, full census, retained-bonus methodology gate, Full
+Dataset and study locks are unchanged.
+
 ## 2026-09-18 dual-parent 600607/600842 official source closure
 
 Resumed the targeted CNINFO fetch from the retained metadata and recovered

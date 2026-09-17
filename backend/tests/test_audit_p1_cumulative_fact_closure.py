@@ -4,6 +4,36 @@ from scripts.audit_p1_cumulative_fact_closure import recount
 from scripts.audit_p1_merger_000418_closure import EVENT, close
 
 
+def test_false_hebei_parent_identity_requires_both_official_sources():
+    from scripts.audit_p1_false_hebei_merger_parents import classify
+
+    requirements = [
+        {
+            "document_id": code,
+            "affected_events": [f"MERGER_NEW:{code}:000709"],
+            "priority": "P1",
+            "why_required": ["Complete cached HEBEI_STEEL lead"],
+        }
+        for code in ("000761", "000898")
+    ]
+    master = [
+        {
+            "security_id": f"CN-A:SZSE:{code}",
+            "symbol": code,
+            "source_observed_name": name,
+            "effective_from": "1997-01-01",
+            "effective_to": None,
+            "instrument_type": "COMMON_A_SHARE",
+        }
+        for code, name in (("000761", "本钢板材"), ("000898", "鞍钢股份"))
+    ]
+    issuer = "股票代码:000709;换股吸收合并邯郸钢铁和承德钒钛"
+    sse = "邯郸钢铁(600001)和承德钒钛(600357)因吸收合并退市"
+    assert len(classify(requirements, master, issuer, sse)) == 2
+    with pytest.raises(ValueError, match="SSE_PARENT_IDENTITIES_CHANGED"):
+        classify(requirements, master, issuer, sse.replace("600357", "000898"))
+
+
 def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
     baseline = {
         "remaining_cash_documents": [
@@ -37,6 +67,7 @@ def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
             "merger_600631",
             "merger_600607",
             "merger_600842",
+            "false_hebei_parents",
         )
     }
     reports["base"] = baseline

@@ -1,5 +1,14 @@
 # v1.1 controller roadmap
 
+Current 2026-09-18 P1 v50 resolves two erroneous 000761/000898→000709
+parent requests as official-identity false positives, not substitutions or
+economic events. **16,071/16,320** requirements are now established, closed
+or explicitly out of scope; **249 facts / 248 documents** remain (241 acquired
+distribution PDFs, 7 other). The 600253 chain remains open for actual
+holder-fraction treatment despite recovered cash-election and boundary terms.
+Full Dataset and strategy gates remain closed; the retained-bonus fractional
+methodology decision is still needed. Earlier counts below are historical.
+
 Current 2026-09-18 P1 v49 has 16,069/16,320 source facts established or
 otherwise closed, leaving 251 facts / 250 documents (241 acquired distribution
 PDFs and 9 other requests). Two bounded 2010 official parent-merger chains

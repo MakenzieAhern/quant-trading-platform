@@ -2,6 +2,16 @@
 
 ## Current R5 P1 and methodology gates — 2026-09-18
 
+Official source cross-check rejects two wrongly attributed 000709 parent
+requests (000761 and 000898); actual delisted parents were SSE 600001 and
+600357. P1 v50 leaves **249 facts / 248 documents** open: 241 already acquired
+distribution PDFs and 7 other requests. This is not an official substitution
+or new economic event. 600253 remains incomplete for individual fractional
+treatment. The retained-bonus fractional-share human decision remains the
+immediate methodology gate; Full Dataset, freeze and studies remain closed.
+
+### Previous checkpoint after 600607/600842 source closure
+
 The two bounded 600607/600842→stable 601607 ordinary-A non-electing source
 chains are now audited and their exact P1 requests closed. Cumulative P1 v49
 leaves **251 facts / 250 documents** open: 241 acquired distribution PDFs and

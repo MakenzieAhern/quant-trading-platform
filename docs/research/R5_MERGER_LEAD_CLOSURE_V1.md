@@ -1,5 +1,32 @@
 # R5 Merger Implementation Lead Closure V1
 
+## 000709 false-parent source requirements — 2026-09-18
+
+The original [000709 issuer implementation report](https://static.cninfo.com.cn/finalpage/2010-01-20/57521518.PDF)
+(SHA-256 `36cef8840d3714e3abf3600ebb10db6c41d91e8a2404a9241559404339a08f33`)
+identifies its merger parents as 邯郸钢铁 and 承德钒钛. The independent
+[official SSE notice](https://www.sse.com.cn/market/sseindex/diclosure/c/c_20150911_3984987.shtml)
+(source-page SHA-256 `433219bfd0b425ec4dbdd3e331671e650e1560c4918d5e7aee5d5a71e0e41cca`)
+assigns those companies SSE codes **600001** and **600357**. The already
+audited P0 SZSE master identifies **000761 本钢板材** and **000898 鞍钢股份** as
+distinct continuing ordinary-A securities. Thus the two P1 requests
+`MERGER_NEW:000761:000709` and `MERGER_NEW:000898:000709` arose from an
+incorrect parent-identity mapping, not missing implementation PDFs. The
+underlying 2009 cross-exchange merger is real; these **particular** parent IDs
+are false. No 000761/000898 holding is converted into 000709.
+
+`backend/scripts/audit_p1_false_hebei_merger_parents.py` verifies both original
+official bytes/receipts, exact identity terms, P0 master checksum, each exact
+P1 request and reversed input order. The immutable rejection file SHA-256 is
+`d3b5227173ee8dc4de11aa0aa2af642811b73ca3b0027781bfffbd71933918c9`,
+manifest `adb7ef14c48a69dfc7a02e270d338d4ef7a352f69d630236dc4306e67c9faa80`.
+This is an out-of-scope correction, **not** an official-source substitution
+or economic-event acceptance. Cumulative P1 v50 has **16,071/16,320**
+requirements handled (including two false positives), **1,990** substitutions
+and **249 facts / 248 documents** open; manifest
+`9261b0dcae51b3330bcb7644e8b617e1f2649fa824ce3359510b057e6f1f0a08`.
+The 15-event accepted inventory and Full Dataset gates do not change.
+
 ## Targeted 600607/600842→stable 601607 source-chain audit — 2026-09-18
 
 The [2010-02-02 surviving-company report](https://static.cninfo.com.cn/finalpage/2010-02-02/57568719.PDF)
@@ -200,6 +227,22 @@ unchanged pending separate inventory publication.
 
 ## Targeted 600253→600056 follow-up — 2026-09-18
 
+Further targeted original [parent halt](https://static.cninfo.com.cn/finalpage/2013-06-05/62559538.PDF),
+[cash-choice implementation](https://static.cninfo.com.cn/finalpage/2013-06-05/62559539.PDF),
+[cash-choice result](https://static.cninfo.com.cn/finalpage/2013-06-19/62593413.PDF),
+[cash-choice settlement](https://static.cninfo.com.cn/finalpage/2013-06-26/62613302.PDF)
+and [successor reminder](https://static.cninfo.com.cn/finalpage/2013-07-19/62848719.PDF)
+were recovered with HTTP-200 receipts and SHA-256 hashes in external
+`full-merger-v1/targeted-parent-fraction-v5/`. The parent last traded and had
+its cash-choice record on 2013-06-06, then halted from 2013-06-07. The issuer
+reported 39 eligible electing accounts with **1,122,431 valid elected shares**
+(171,600 invalid); the successor later confirms transfer of the valid shares
+on 2013-06-28. The non-electing ordinary-A path must exclude those electors.
+The reviewed issuer report and new notices still do not establish an
+individual fractional allocation or a deterministic compensation rule.
+Therefore this targeted recovery does **not** close the P1 request, publish an
+accepted event or revise the cumulative count.
+
 Reused the cached 2013 implementation-result notice and recovered only the
 identified missing [full revised issuer merger report](https://static.cninfo.com.cn/finalpage/2013-06-04/62552848.PDF)
 (412 pages; source SHA-256
@@ -225,11 +268,13 @@ and deterministic terminal classifications. The immutable closure artifact is:
 - Out-of-scope B-share parents: 8
 - Out-of-scope unlisted absorbed targets without listed-parent mutation: 5
 
-The eight new source-incomplete parent events are 000898→000709,
-000761→000709, 600607→600849, 600842→600849, 600631→600827,
-600253→600056, 600832→600637 and 000418→000333. Their structures map to the
-approved merger policy, but exact holder, fractional and tradability evidence is
-not complete, so none was admitted as a supported event.
+At that earlier lead-screen checkpoint, the eight provisional parent IDs were
+000898→000709, 000761→000709, 600607→600849, 600842→600849,
+600631→600827, 600253→600056, 600832→600637 and 000418→000333.
+The first two have since been rejected as false identities by the official
+cross-source audit above; the separate bounded audits above supersede several
+other source-incomplete labels. This historical lead classification was not an
+accepted economic-event inventory.
 
 The full merger/restructuring census remains `NOT_ESTABLISHED`; the existing 15
 supported identified events are unchanged.

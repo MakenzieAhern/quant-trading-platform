@@ -30,6 +30,7 @@ REPORTS = {
     "merger_600631": "p1-merger-600631-official-source-closure-v2.json",
     "merger_600607": "p1-merger-600607-official-source-closure-v1.json",
     "merger_600842": "p1-merger-600842-official-source-closure-v1.json",
+    "false_hebei_parents": "p1-false-hebei-merger-parents-v1.json",
 }
 
 
@@ -83,6 +84,7 @@ def recount(reports):
         "merger_600631",
         "merger_600607",
         "merger_600842",
+        "false_hebei_parents",
     ):
         add(kind, reports[kind]["closed"], require_cash=False)
     differentiated = [
@@ -175,7 +177,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V49",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V50",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",

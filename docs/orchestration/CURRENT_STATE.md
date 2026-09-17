@@ -1,5 +1,21 @@
 # Current state
 
+## Current R5 false 河北钢铁 parent-identity closure — 2026-09-18
+
+The 000709 issuer implementation report names its acquired parents as 邯郸钢铁
+and 承德钒钛. A contemporaneous official SSE notice assigns them codes 600001
+and 600357; the audited SZSE master independently identifies 000761 本钢板材
+and 000898 鞍钢股份 as separate continuing companies. The two P1 requests
+`MERGER_NEW:000761:000709` and `MERGER_NEW:000898:000709` are therefore
+source-identity false positives, not missing merger PDFs. Their rejection is
+byte/receipt, official-term, master-checksum and input-order audited; no new
+event or official substitution is claimed. Cumulative v50 is **16,071/16,320**
+handled, including these two out-of-scope items, with **1,990** substitutions
+and **249 facts / 248 documents** still open (241 acquired distribution, 7
+other). The separate 600253 targeted notices confirm 1,122,431 effective
+cash-choice shares, but no account-level fractional rule or compensation; that
+chain remains open. Full Dataset and studies remain locked.
+
 ## Current R5 dual-parent 2010 official merger-chain audit — 2026-09-18
 
 The bounded ordinary unrestricted, non-cash-electing 600607 and 600842 A-share
