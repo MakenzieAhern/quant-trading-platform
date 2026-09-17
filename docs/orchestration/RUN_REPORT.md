@@ -1,5 +1,18 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 R5 stop on retained-bonus fractional-allocation policy
+
+After the independent official-source corroboration below, R5 reached a new
+material methodology gate. Three official 688339 retained-bonus notices have
+0.4/share ratios; the 2024 issuer notice specifies registry-wide whole-share
+remainder allocation with random tie-breaking. An illustrative 100-share
+position becomes 140, 196, then 274.4 theoretical shares under the current
+engine. Existing approved policy covers basis preservation but not this
+fractional quantity; merger floor cannot be transferred by assumption. The
+human decision is documented in
+`../research/R5_RETAINED_BONUS_FRACTION_GATE.md`. No fractional bonus event
+was accepted, no dataset created/frozen, and no study or PR merge occurred.
+
 ## 2026-09-18 R5 official bonus-source corroboration
 
 The 257 retained official PDFs were not reacquired. Exact SSE listing-table

@@ -1,5 +1,17 @@
 # Blockers
 
+## Active 2026-09-18 material methodology gate
+
+`RETAINED_BONUS_FRACTIONAL_REGISTRY_ALLOCATION_UNRECONSTRUCTABLE:CN-A:SSE:688339:2024-07-22`.
+The official 2023/2024 688339 notices specify registry-wide ranking with
+random tie-breaking for sub-share entitlements, whereas the current retained-
+bonus engine can carry fractional ordinary-A shares. The accepted merger
+floor convention does not authorize a bonus-share convention. Human choice is
+required before accepting fractional retained-bonus economic events. Evidence,
+exact source hashes and a concrete reachable quantity path are in
+`../research/R5_RETAINED_BONUS_FRACTION_GATE.md`. This is a methodology gate,
+not a request to purchase data. Existing P1 facts remain open and preserved.
+
 ## Current 2026-09-18 bonus-source boundary
 
 The 257-document queue is acquired; 92/94 bonus-only official issuer notices

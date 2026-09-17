@@ -1,5 +1,19 @@
 # Current state
 
+## Current R5 human methodology gate — 2026-09-18
+
+Official 688339 implementation notices and the existing portfolio accounting
+path expose a material retained-bonus fractional-share ambiguity: a reachable
+100-share sequence becomes 140, 196, then 274.4 theoretical shares, while the
+official registry allocates only whole residual shares using cross-account
+ranking and random ties. Public issuer/exchange data cannot reproduce a single
+account's allocation. Approved retained-bonus policy preserves basis but does
+not specify this quantity convention; the merger-specific floor policy is not
+silently extended. `R5_STATUS=BLOCKED_RETAINED_BONUS_FRACTION_POLICY_HUMAN_DECISION`;
+`HUMAN_APPROVAL_GATE=R5_RETAINED_BONUS_FRACTION_POLICY`. See
+`../research/R5_RETAINED_BONUS_FRACTION_GATE.md`. P1/source counts below are
+unchanged; Full Dataset, freeze and studies remain NO.
+
 ## Current R5 bonus-source term corroboration — 2026-09-18
 
 The acquired 257-document official queue was re-triaged with an exact SSE
