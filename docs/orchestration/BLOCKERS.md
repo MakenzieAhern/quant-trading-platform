@@ -1,5 +1,16 @@
 # Blockers
 
+## Official raw-route controls do not close full-range authority — 2026-09-18
+
+Bounded checksum-archived SSE per-security day bars and SZSE per-day XLSX
+snapshots show plausible free official-public routes back to 2010, including
+one exited SSE security. They have **not** been acquired or audited for the
+full identity/date census. SZSE's own report aggregates all trading methods;
+its 2023-04-10 000001 volume/amount differ materially from the frozen Pilot
+feed despite matching OHLC. No source has been silently substituted, and
+`RAW:FULL_UNIVERSE` remains one of the 11 open non-distribution P1 facts.
+The human retained-bonus fractional-allocation gate remains separately active.
+
 ## Current R5 P1 and methodology gates — 2026-09-18
 
 Derivative source audit v6 closes five more non-primary notices without
@@ -9,6 +20,10 @@ bounded bonus ledger remains 243/288 supported and the retained-bonus
 fractional-share human methodology gate below remains active. Full
 corporate-action, suspension/raw/factor and safe-start gates remain partial;
 no Full Dataset or research study. The v57 paragraph below is historical.
+The 11 other requirements are four merger/account chains (000522, 000578,
+002013, 600253), five dual cash-plus-bonus chains (600106, 600231, 601012,
+603019, 603023), full-universe raw coverage and exact daily suspension/
+resumption. These are separate material facts, not a count of PDFs to buy.
 
 ### Previous v57 checkpoint
 

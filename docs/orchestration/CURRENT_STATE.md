@@ -1,5 +1,32 @@
 # Current state
 
+## Current R5 official-public raw daily controls — 2026-09-18
+
+Official exchange pages expose two bounded public raw-data routes, now
+checksum-snapshotted without bulk acquisition or authority promotion. The
+[SSE company chart](https://www.sse.com.cn/assortment/stock/list/info/company/index.shtml?COMPANY_CODE=600000)
+calls the SSE-hosted `yunhq.sse.com.cn:32042/v1/sh1/dayk` API; controls
+600000, delisted 600553 and STAR 688001 return respectively 3,839, 212 and
+1,566 bars within 2010–2025. The 600553 series stops on 2011-02-01; 600000
+and 688001 overlap the frozen Pilot on 2023-04-10 with matching OHLC and
+amount within feed precision (600000 volume differs by seven shares). The
+[SZSE stock history](https://www.szse.cn/market/trend/archive/index.html)
+exports complete daily XLSX snapshots: 872, 2,812, 2,913, 2,913 and 2,924
+unique codes on 2010-01-04, 2023-04-10, 2025-08-29, 2025-09-01 and
+2025-12-31. These are the report's stock-tab rows, not an audited ordinary-A
+universe count; the 2010 export also includes `200...` codes. The last two
+days use the official post-archive catalog. Its
+export declares volume in 10,000 shares and amount in 10,000 yuan; on
+2023-04-10, 000001's OHLC matches Pilot, but official all-trading-methods
+volume/amount exceed Pilot by 999,900 shares / CNY 12,029,952.38. These
+are differing source scopes, not an authorized overwrite. Source responses,
+UTC receipts and SHA-256s are under
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/{sse,szse}-official-day-controls-v1/`;
+report checksums are `f6c5a7f7d8f061d6be2b9244f26f57e3f87cadfbb71fe02a8d894d3bb69bd3f2`
+and `f7e1af8b165e332c3648d261be0319c5263570927dce75e6a53cc4922d412de9`.
+Neither route has passed full-universe, full-period completeness, source
+parity, or transaction-scope acceptance. `RAW:FULL_UNIVERSE` remains open.
+
 ## Current R5 five derivative notices scoped — 2026-09-18
 
 Five already acquired official issuer PDFs are not independent ordinary-A
@@ -17,6 +44,14 @@ acquired distribution, 11 other); manifest
 `0e5bb98ed6daf54ba29e48bef2b6ad6201ab4b1482dfdf96b277800067641e9c`.
 The bounded bonus ledger remains 243/288, with the fractional-share human
 methodology gate, full-census and research locks unchanged.
+
+The 11 non-distribution P1 residual requests are exactly four merger/account
+chains (000522, 000578, 002013, 600253), five mixed cash-plus-bonus chains
+(600106, 600231, 601012, 603019, 603023), `RAW:FULL_UNIVERSE`, and
+`SUSPENSION:FULL_DAILY`. This is a fact-request inventory, not a claim that
+one purchased export or 11 new files will close them. Existing Tencent annual
+window probes are coverage-only; the accepted failover policy is Pilot-only
+and does not authorize full-range raw-data promotion.
 
 ## Previous R5 two nonfinal bank notices scoped — 2026-09-18
 

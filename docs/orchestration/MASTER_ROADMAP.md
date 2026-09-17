@@ -1,6 +1,28 @@
 # v1.1 controller roadmap
 
-Current 2026-09-18 bounded bonus ledger v28 supports 282/288 candidates after
+## Authoritative R5 checkpoint — 2026-09-18
+
+P0 official-public Security Master is accepted: 2,403 SSE and 3,028 SZSE
+ordinary-A identities, zero unresolved P0 facts. The current bounded retained-
+bonus ledger is **v30: 243/288 supported, 45 unresolved**; v28 was superseded
+because 39 integer-total events have fractional individual bonus components.
+The current cumulative source-fact report is **P1 v58: 16,073/16,320 facts
+established, 247 facts / 242 documents open**. Its residual is 231 acquired
+distribution PDFs plus 11 other requirements (four merger/account chains,
+five dual cash-plus-bonus chains, full-universe raw data and daily suspension/
+resumption authority). The exact human methodology gate is retained-bonus
+fractional allocation, not an implied extension of the merger floor policy.
+Bounded official SSE day-bar and SZSE daily-export probes now show feasible
+public raw-data routes, but full-range identity/date completeness and differing
+SZSE all-methods volume/amount scope remain unaudited; raw authority stays
+open, with no dataset overwrite.
+SZSE still has 1,921 unresolved exact resumption boundaries. Full Dataset
+creation, audit, freeze and all R6–R10 work remain gated. PR #12 stays open.
+
+The following chronology is historical; its older “Current” labels describe
+their original checkpoint, not today's accepted state.
+
+Earlier 2026-09-18 bounded bonus ledger v28 supports 282/288 candidates after
 a shared-parser correction for 603023 tax components, preserving all 281
 previous event checksums. This does not close its dual-leg P1 request because
 actual new-share tradability remains source-conflicted; P1 v50 and all Full

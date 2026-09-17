@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 bounded official exchange raw-data route controls
+
+Added replayable bounded probes `backend/scripts/probe_sse_official_daily.py`
+and `backend/scripts/probe_szse_official_daily.py`, reusing the existing
+checkpointing fetcher and retaining original JSON/XLSX bytes, UTC receipts,
+request URLs and SHA-256s outside Git. SSE controls cover a survivor, a
+2011-exited stock and STAR; SZSE controls span the 2025-09-01 archive/catalog
+boundary. Five SZSE days return 872/2812/2913/2913/2924 unique rows;
+these stock-tab counts are not ordinary-A census counts. The three SSE
+controls return 3839/212/1566 bars inside 2010–2025.
+SSE 600000's 2023-04-10 OHLC and amount match the frozen Pilot, with only
+seven shares' volume precision difference. SZSE 000001's OHLC matches but
+official all-methods volume/amount exceed Pilot by 999,900 shares and
+CNY 12,029,952.38. The responses remain **probes only**: full-universe
+completeness and source-scope parity are not established; no dataset was
+created or frozen. Probe report SHA-256s: SSE
+`f6c5a7f7d8f061d6be2b9244f26f57e3f87cadfbb71fe02a8d894d3bb69bd3f2`,
+SZSE `f7e1af8b165e332c3648d261be0319c5263570927dce75e6a53cc4922d412de9`.
+
 ## 2026-09-18 five official non-primary derivative notices scoped
 
 Reused five checksum-verified issuer PDFs and accepted cash events: two
@@ -14,6 +33,13 @@ documents** open (231 distribution, 11 other), manifest
 `0e5bb98ed6daf54ba29e48bef2b6ad6201ab4b1482dfdf96b277800067641e9c`.
 Queue v11 triage: 94 bonus-only, 1 both, 3 cash-only, 133 neither. No Full
 Dataset, freeze or study.
+
+The disjoint 11 non-distribution requests were checked against the current
+P1 v58 closed-ID set and original P1 manifest: four merger/account chains,
+five cash-plus-bonus dual chains, raw full-universe coverage and exact daily
+suspension/resumption. This prevents interpreting “11 other” as 11 missing
+PDF downloads. Full-range Tencent control responses exist, but only as
+coverage probes: `CN_A_RAW_OHLCV_FAILOVER_V1` is explicitly Pilot-only.
 
 ## Previous 2026-09-18 two official nonfinal bank notices scoped
 
