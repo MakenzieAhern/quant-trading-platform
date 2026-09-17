@@ -1,6 +1,6 @@
 import pytest
 
-from scripts.audit_p1_dual_distribution_sources import DUAL_TYPES, dual_candidates
+from scripts.audit_p1_dual_distribution_sources import DUAL_TYPES, dual_candidates, normalized_dates
 
 
 def test_dual_source_request_requires_both_distinct_facts_and_is_order_stable():
@@ -24,3 +24,9 @@ def test_dual_source_request_requires_both_distinct_facts_and_is_order_stable():
         dual_candidates(
             [{**row, "affected_events": [row["affected_events"][0]]}], set(), cash, bonus
         )
+
+
+def test_retroactive_listing_date_mentions_preserve_pdf_page_positions():
+    pages = ["新增无限售条件流通股份上市日为2016\n年6月16日", "other", "2016 年 4 月 16 日"]
+    assert normalized_dates(pages, "2016年6月16日") == [1]
+    assert normalized_dates(pages, "2016年4月16日") == [3]

@@ -2,9 +2,12 @@
 
 import argparse
 import json
+import re
 from collections import Counter
 from decimal import Decimal
 from pathlib import Path
+
+import pymupdf
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
@@ -26,6 +29,59 @@ DUAL_TYPES = [
     "FINAL_BONUS_OR_CONVERSION_IMPLEMENTATION_NOTICE",
     "FINAL_IMPLEMENTATION_NOTICE_WITH_GROSS_ORDINARY_A_SHARE_CASH",
 ]
+
+
+def normalized_dates(pages, date):
+    return [index + 1 for index, page in enumerate(pages) if date in re.sub(r"\s+", "", page)]
+
+
+def corroborate_603023_listing(staging, original_pages):
+    if normalized_dates(original_pages, "2016年6月16日") != [1] or normalized_dates(
+        original_pages, "2016年4月16日"
+    ) != [3]:
+        raise ValueError("603023_ORIGINAL_LISTING_DATE_CONFLICT_CHANGED")
+    root = staging / "full-distribution-notices-v1/targeted-603023-v1"
+    pdf = root / "603023-2016-halfyear-revised.pdf"
+    receipt = pdf.with_name(pdf.name + ".meta.json")
+    metadata = root / "cninfo-603023-2016-halfyear-metadata.json"
+    metadata_receipt = metadata.with_name(metadata.name + ".meta.json")
+    meta = json.loads(receipt.read_bytes())
+    metadata_meta = json.loads(metadata_receipt.read_bytes())
+    announcements = json.loads(metadata.read_bytes())["announcements"]
+    url = "https://static.cninfo.com.cn/finalpage/2016-09-02/1202669225.PDF"
+    if (
+        meta["url"] != url
+        or meta["http_status"] != 200
+        or meta["sha256"] != sha256_file(pdf)
+        or metadata_meta["url"] != "https://www.cninfo.com.cn/new/hisAnnouncement/query"
+        or metadata_meta["http_status"] != 200
+        or metadata_meta["sha256"] != sha256_file(metadata)
+        or not any(
+            row["secCode"] == "603023"
+            and row["announcementId"] == "1202669225"
+            and row["announcementTitle"] == "2016年半年度报告(修订版)"
+            and row["announcementTime"] == 1472745600000
+            and row["adjunctUrl"] == "finalpage/2016-09-02/1202669225.PDF"
+            for row in announcements
+        )
+    ):
+        raise ValueError("603023_RETROSPECTIVE_OFFICIAL_SOURCE_CHANGED")
+    with pymupdf.open(pdf) as document:
+        pages = [page.get_text() for page in document]
+    phrase = "新增无限售条件流通股份上市日为2016年6月16日"
+    if normalized_dates(pages, phrase) != [15, 21, 61]:
+        raise ValueError("603023_RETROSPECTIVE_LISTING_DATE_NOT_CORROBORATED")
+    return {
+        "official_source_url": url,
+        "official_pdf_sha256": meta["sha256"],
+        "receipt_sha256": sha256_file(receipt),
+        "metadata_sha256": sha256_file(metadata),
+        "metadata_receipt_sha256": sha256_file(metadata_receipt),
+        "published_on": "2016-09-02",
+        "confirmed_listing_date": "2016-06-16",
+        "page_numbers": [15, 21, 61],
+        "role": "RETROSPECTIVE_AUDIT_ONLY_NOT_POINT_IN_TIME_SIGNAL",
+    }
 
 
 def event_index(rows):
@@ -179,35 +235,47 @@ def main():
                         ):
                             reason = "DUAL_ISSUER_TERMS_OR_DATES_DISAGREE"
                         else:
-                            accepted.append(
-                                {
-                                    "document_id": row["document_id"],
-                                    "affected_events": row["affected_events"],
-                                    "classification": "SAME_OFFICIAL_ISSUER_PDF_CASH_AND_BONUS",
-                                    "security_id": sid,
-                                    "record_date": key[1],
-                                    "ex_date": key[2],
-                                    "official_source_url": source_key[0],
-                                    "official_pdf_sha256": source_key[1],
-                                    "text_cache_sha256": sha256_file(cache),
-                                    "source_manifest_sha256": sha256_file(manifest),
-                                    "cash_event_checksum": cash_row["event_checksum"],
-                                    "bonus_event_checksum": bonus_row["event_checksum"],
-                                    "cash_per_share": str(amount),
-                                    "bonus_ratio": str(ratio),
-                                    "issuer_date_classification": date_classification,
-                                    "issuer_notice_record_dates": record_dates,
-                                    "issuer_notice_ex_dates": ex_dates,
-                                    "exchange_cash_targets": sorted(
-                                        str(value) for value in targets[target_key]
-                                    ),
-                                    "bonus_oracle_evidence_sha256": oracle_row["evidence_sha256"],
-                                }
-                            )
+                            listing_audit = None
+                            if sid == "CN-A:SSE:603023":
+                                try:
+                                    listing_audit = corroborate_603023_listing(args.staging, pages)
+                                except ValueError as exc:
+                                    reason = str(exc)
+                            if reason:
+                                rejected.append(
+                                    {"document_id": row["document_id"], "reason": reason}
+                                )
+                                continue
+                            closed = {
+                                "document_id": row["document_id"],
+                                "affected_events": row["affected_events"],
+                                "classification": "SAME_OFFICIAL_ISSUER_PDF_CASH_AND_BONUS",
+                                "security_id": sid,
+                                "record_date": key[1],
+                                "ex_date": key[2],
+                                "official_source_url": source_key[0],
+                                "official_pdf_sha256": source_key[1],
+                                "text_cache_sha256": sha256_file(cache),
+                                "source_manifest_sha256": sha256_file(manifest),
+                                "cash_event_checksum": cash_row["event_checksum"],
+                                "bonus_event_checksum": bonus_row["event_checksum"],
+                                "cash_per_share": str(amount),
+                                "bonus_ratio": str(ratio),
+                                "issuer_date_classification": date_classification,
+                                "issuer_notice_record_dates": record_dates,
+                                "issuer_notice_ex_dates": ex_dates,
+                                "exchange_cash_targets": sorted(
+                                    str(value) for value in targets[target_key]
+                                ),
+                                "bonus_oracle_evidence_sha256": oracle_row["evidence_sha256"],
+                            }
+                            if listing_audit:
+                                closed["retrospective_listing_audit"] = listing_audit
+                            accepted.append(closed)
         if reason:
             rejected.append({"document_id": row["document_id"], "reason": reason})
     report = {
-        "report_version": "P1_OFFICIAL_DUAL_DISTRIBUTION_SOURCE_CLOSURE_V2",
+        "report_version": "P1_OFFICIAL_DUAL_DISTRIBUTION_SOURCE_CLOSURE_V6",
         "candidate_documents": len(candidates),
         "closed_documents": len(accepted),
         "closed_facts": sum(len(row["affected_events"]) for row in accepted),

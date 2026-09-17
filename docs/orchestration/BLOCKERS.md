@@ -2,6 +2,20 @@
 
 ## Current R5 P1 and methodology gates — 2026-09-18
 
+The exact 603023 dual-leg P1 source request is now closed by the original
+official issuer PDF plus its later official half-year report's audit-only
+confirmation of the 2016-06-16 new-share listing date. The original notice's
+impossible 2016-04-16 body date remains visible in the evidence record; no
+later report was backdated into a point-in-time signal. Cumulative P1 v53
+leaves **247 facts / 247 documents** open: 241 already acquired distribution
+PDFs and 6 other requests. Bounded integer/next-session bonus is still only
+282/288 supported, with 7,119 source-oracle rows outside scope. The retained-
+bonus fractional-share human decision for 688339 on 2024-07-22 remains the
+immediate methodology gate. Full census, Full Dataset, freeze and studies
+remain closed.
+
+### Previous P1 v50 checkpoint
+
 Bounded integer/next-session bonus now supports 282/288 (6 unresolved), with
 the prior 281 accepted event checksums preserved. The corrected 603023 tax
 component parser does not resolve its notice's contradictory new-share listing

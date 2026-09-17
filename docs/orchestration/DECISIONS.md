@@ -1,5 +1,19 @@
 # Decisions
 
+## 2026-09-18 603023 listing-date conflict: retrospective audit only
+
+For the exact 603023 2016-06-14/15 cash-plus-bonus source request, retain both
+listing dates in the contemporaneous issuer implementation PDF (cover
+2016-06-16, body 2016-04-16). Accept the issuer's separately published
+2016-09-02 official half-year report (revised) as **retrospective corroboration**
+that new unrestricted shares listed 2016-06-16. It repeats that date on PDF
+pages 15, 21 and 61 and is bound to CNINFO issuer metadata, HTTP receipt and
+PDF SHA-256. This closes only the exact P1 source fact after the already
+accepted contemporaneous cash/bonus terms match exchange dates and master
+identity. Do not use the September report as information available on the
+June ex-date, infer individual fractional awards, generalize date repair to
+other issuers, or claim full corporate-action census readiness.
+
 ## 2026-09-18 original designated-paper issuer disclosure as official evidence
 
 For the exact 600337 2010 distribution, the issuer's signed 2011-06-08

@@ -1,6 +1,22 @@
 # Current state
 
-## Current R5 603023 bounded bonus parser correction — 2026-09-18
+## Current R5 603023 official retrospective listing-date corroboration — 2026-09-18
+
+The retained issuer implementation PDF's new-share listing dates conflict:
+2016-06-16 on its cover versus impossible 2016-04-16 in its body. The issuer's
+official 2016 half-year report (revised, published 2016-09-02) retrospectively
+states 2016-06-16 on pages 15, 21 and 61. Source bytes, CNINFO metadata,
+retrieval receipt, both contradictory original dates and input order are
+audited. This later report is **audit-only**, never a point-in-time signal.
+The exact 603023 cash-plus-bonus P1 source request now closes; dual v6 has
+16/16 documents and 32 facts, with prior 15 closures preserved. Cumulative
+v53 has **16,073/16,320** handled, **1,991** official substitutions and
+**247 facts / 247 documents** open (241 acquired distribution, 6 other).
+The bounded bonus event still has its integer-holdings/next-session scope;
+full census, Full Dataset, freeze and studies remain closed. See
+`../research/R5_BONUS_SOURCE_ORACLE_V1.md`.
+
+## Previous R5 603023 bounded bonus parser correction — 2026-09-18
 
 Replaying the already retained official issuer PDF resolves a parser-only
 false conflict: its 0.5 share dividend plus 1.5 capital-reserve shares total

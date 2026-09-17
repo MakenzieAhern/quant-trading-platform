@@ -17,13 +17,22 @@ rows outside the integer/next-session subset. Immutable v28 file SHA-256
 `9df2264ba93ca5cd0a0abee1074b38f281143d3c9a61fb495967f3e785714a0d`,
 manifest `2b65dfe5bd7807363f833e5a7d00a686fc8a798dccc4c5330022a039a2260027`.
 
-This does **not** close the 603023 dual-leg P1 request: the notice's cover
-gives new unrestricted-share listing **2016-06-16**, while its body says
-**2016-04-16**, a date before the record date. The latter is chronologically
-impossible, but independent official confirmation of actual tradability is
-not yet recorded. The bounded event remains explicitly
-`scheduled_listing_not_actual_tradability`; full census and Full Dataset are
-not admitted. P1 v50 stays **249 facts / 248 documents** open.
+The notice's cover gives new unrestricted-share listing **2016-06-16**, while
+its body says **2016-04-16**, before the record date. The later official
+[2016 half-year report (revised)](https://static.cninfo.com.cn/finalpage/2016-09-02/1202669225.PDF)
+(SHA-256 `e66612fa75a69524c32469c563618dfde70867a3bd7eee089b8339f25d2e8d30`)
+retrospectively states **2016-06-16** on PDF pages 15, 21 and 61. Its CNINFO
+metadata and original download receipt are retained and SHA-verified. This
+resolves the exact two-leg P1 source request as an **audit-only** corroboration,
+never a signal available on the 2016 ex-date. The existing bounded event
+still carries `scheduled_listing_not_actual_tradability`; it does not infer
+individual account-level awards or certify the full bonus census. P1 dual
+source closure v6 is **16/16 documents, 32 facts**, manifest
+`343002c25a3c070cb451678f6e07dbcaedb5f18937a675055ba3f25dfccb1271`.
+Cumulative v53 is **16,073/16,320** handled, **1,991** official substitutions,
+**247 facts / 247 documents** open (241 acquired distribution, 6 other),
+manifest `3a7d57f3b3c8ce4839cdad846bdc0e1a20c0e8246e2578d40432fbacf6776db3`.
+Full census and Full Dataset remain unadmitted.
 
 Retained SSE/SZSE tables yield 7,407 source date groups, not accepted events.
 7,368 directly match one full-master interval; one more maps through the already

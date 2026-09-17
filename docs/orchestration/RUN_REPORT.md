@@ -1,6 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
-## 2026-09-18 603023 tax-component parser correction
+## 2026-09-18 603023 retrospective official source closure
+
+The original issuer PDF lists new unrestricted shares on 2016-06-16 in its
+cover and the impossible 2016-04-16 in its body. A separately retrieved,
+official CNINFO issuer half-year report (revised, published 2016-09-02;
+SHA-256 `e66612fa75a69524c32469c563618dfde70867a3bd7eee089b8339f25d2e8d30`)
+retrospectively confirms 2016-06-16 on PDF pages 15, 21 and 61. The exact
+issuer metadata, HTTP receipt, original conflicting terms and page positions
+are source-bound; the later report is audit-only, not a backdated trading
+signal. P1 dual v6 closes all 16 documents/32 facts, preserving its previous
+15 closures, manifest
+`343002c25a3c070cb451678f6e07dbcaedb5f18937a675055ba3f25dfccb1271`.
+Cumulative v53 has **16,073/16,320** handled, **1,991** substitutions and
+**247 facts / 247 documents** open (241 acquired distribution, 6 other),
+manifest `3a7d57f3b3c8ce4839cdad846bdc0e1a20c0e8246e2578d40432fbacf6776db3`.
+No new economic event, full-census acceptance, Full Dataset, freeze or study.
+
+## Previous 2026-09-18 603023 tax-component parser correction
 
 The exact official 603023 PDF was already retained; a targeted duplicate
 fetch matched its SHA-256 and introduced no new authority. Its tax section
