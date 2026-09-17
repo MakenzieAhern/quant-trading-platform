@@ -1,5 +1,11 @@
 # v1.1 controller roadmap
 
+Current 2026-09-17 correction replay removes the 003041 false 0.2 bonus
+token by official pre-record issuer evidence without creating an event.
+P1 has 621 unresolved facts / 605 documents (301 distribution, 304 other).
+301106's actual 0.4 bonus still needs account-level fraction/tradability
+review; no Full Dataset gate is open.
+
 Current 2026-09-17 differentiated revision replay adds two official exact
 same-event cash corroborations (603506, 600837). P1 now has 622 unresolved
 facts / 606 documents (302 distribution, 304 other), cash full census

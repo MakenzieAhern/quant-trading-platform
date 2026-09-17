@@ -1,5 +1,22 @@
 # Current state
 
+## Current R5 bonus-removal correction — 2026-09-17
+
+The 003041 issuer's official 2024-05-30 pre-record correction removes only
+the erroneously included 2-for-10 capital-reserve conversion clause from its
+2024-05-29 implementation notice; the full normalized before/after cash terms
+are identical. The original plan already stated no bonus, and cash v40 has the
+same accepted 0.4/share event on 2024-06-05. This is an official correction of
+a false bonus token, **not** a 0.2/share bonus event. The source-bound
+correction report v5 closes one additional P1 document without changing an
+economic event (manifest
+`295259b4bd4e7e209dfd92c670484953f4b58ea27f46d29c549ed99413dcab9c`).
+Cumulative v7 leaves 621 facts / 605 documents (301 distribution, 304 other),
+15,699/16,320 established/out of scope, 1,684 substitutions; manifest
+`8b166012a405f99c0f2da303000d0bc36a521a5feda216187e7356df95d17ec4`.
+The separate 301106 correction **adds** an actual 4-for-10 conversion and
+remains open for quantity, fraction and tradability accounting. No Full Dataset.
+
 ## Current R5 revised differentiated-cash notices — 2026-09-17
 
 Two complete issuer implementation notices marked “修订版” (603506 and

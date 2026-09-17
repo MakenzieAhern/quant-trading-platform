@@ -1,5 +1,15 @@
 # Blockers
 
+## Current 2026-09-17 bonus correction split — source work continues
+
+003041's spurious 0.2 bonus clause is officially removed and no bonus event
+is added; P1 source closure rises by one. Residual is 621 facts / 605
+documents (301 distribution, 304 other). By contrast, 301106's official
+pre-record correction adds a genuine 0.4 conversion corroborated by the
+SZSE monthly row and needs fractional/allocation accounting before acceptance.
+Full bonus/cash census is PARTIAL; no human input is yet requested while
+other safe source work continues.
+
 ## Current 2026-09-17 revised notice closure — no human input requested
 
 Two revised official differentiated-cash notices add exact same-event source

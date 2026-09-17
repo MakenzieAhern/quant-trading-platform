@@ -2,6 +2,7 @@ import json
 
 from app.data.catalog.checksums import sha256_file
 from scripts.audit_p1_cash_corrections import (
+    bonus_removed_without_cash_change,
     close_supplements,
     unchanged_except_payment_date,
     unchanged_except_share_count,
@@ -91,3 +92,15 @@ def test_only_payment_date_may_change():
     }
     changed_amount = pages[0].replace("更正后:", "更正后:每10股派1元现金;")
     assert unchanged_except_payment_date([changed_amount]) is None
+
+
+def test_official_bonus_removal_cannot_change_cash_terms():
+    pages = [
+        "更正前:向全体股东每10股派4元人民币现金(含税),"
+        "同时,以资本公积金向全体股东每10股转增2股。"
+        "更正后:向全体股东每10股派4元人民币现金(含税)。"
+        "除上述更正内容外,原公告其他内容不变。"
+    ]
+    assert bonus_removed_without_cash_change(pages) == {"removed_bonus_ratio": "0.2"}
+    changed_cash = pages[0].replace("更正后:向全体股东每10股派4元", "更正后:向全体股东每10股派5元")
+    assert bonus_removed_without_cash_change([changed_cash]) is None

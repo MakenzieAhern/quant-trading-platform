@@ -14,6 +14,10 @@ from scripts.triage_p1_remaining_distribution_docs import diagnose
 
 SHARE_COUNT = re.compile(r"\d{1,3}(?:,\d{3})+股")
 PAYMENT_DATE = re.compile(r"现金红利将于(\d{4})年(\d{1,2})月(\d{1,2})日")
+REMOVED_BONUS = re.compile(r",同时,以资本公积金向全体股东每10股转增(\d+(?:\.\d+)?)股")
+PAGE_GUARANTEE = (
+    "本公司及董事会全体成员保证信息披露的内容真实、准确、完整,没有虚假记载、误导性陈述或重大遗漏。"
+)
 
 
 def normalized(text):
@@ -53,6 +57,21 @@ def unchanged_except_payment_date(pages):
     }
 
 
+def bonus_removed_without_cash_change(pages):
+    text = normalized("\n".join(pages))
+    sections = re.split(r"更正前:|更正后:", text)
+    if len(sections) != 3 or "除上述更正内容外,原公告其他内容不变" not in sections[2]:
+        return None
+    before = sections[1].replace(PAGE_GUARANTEE, "")
+    after = sections[2].split("除上述更正内容外")[0].replace(PAGE_GUARANTEE, "")
+    found = REMOVED_BONUS.findall(before)
+    if len(found) != 1 or REMOVED_BONUS.search(after):
+        return None
+    if REMOVED_BONUS.sub("", before) != after:
+        return None
+    return {"removed_bonus_ratio": str(Decimal(found[0]) / Decimal(10))}
+
+
 def close_supplements(triage, requirements, cash, sources, root, already_closed):
     by_id = {row["document_id"]: row for row in requirements}
     by_url = {row["url"]: row for row in sources}
@@ -63,9 +82,10 @@ def close_supplements(triage, requirements, cash, sources, root, already_closed)
         requirement = by_id[row["document_id"]]
         share_count = "补充公告" in requirement["title"] and row["candidate_class"] == "CASH_ONLY"
         payment = "更正公告" in requirement["title"] and row["candidate_class"] == "NEITHER"
+        bonus_removal = "更正公告" in requirement["title"] and row["candidate_class"] == "BOTH"
         if (
-            not (share_count or payment)
-            or row["bonus_candidate_per_share"] is not None
+            not (share_count or payment or bonus_removal)
+            or (not bonus_removal and row["bonus_candidate_per_share"] is not None)
             or row["record_dates"]
             or row["ex_dates"]
             or row["preferred_instrument_marker"]
@@ -94,8 +114,13 @@ def close_supplements(triage, requirements, cash, sources, root, already_closed)
             unchanged_except_share_count(extracted["pages"])
             if share_count
             else unchanged_except_payment_date(extracted["pages"])
+            if payment
+            else bonus_removed_without_cash_change(extracted["pages"])
         )
-        if not change:
+        if not change or (
+            bonus_removal
+            and Decimal(change["removed_bonus_ratio"]) != Decimal(row["bonus_candidate_per_share"])
+        ):
             continue
         accepted = []
         for item in cash:
@@ -114,7 +139,7 @@ def close_supplements(triage, requirements, cash, sources, root, already_closed)
                 and original["published_on"] <= requirement["published_on"] < event["record_date"]
                 and event["record_date"] < event["ex_date"] <= "2025-12-31"
                 and (
-                    not share_count
+                    payment
                     or Decimal(event["cash_per_share"]) == Decimal(row["cash_candidate_per_share"])
                 )
                 and (not payment or change["corrected_payment_date"] >= event["ex_date"])
@@ -134,6 +159,8 @@ def close_supplements(triage, requirements, cash, sources, root, already_closed)
                     "OFFICIAL_SHARE_COUNT_SUPPLEMENT_CASH_UNCHANGED"
                     if share_count
                     else "OFFICIAL_PAYMENT_DATE_CORRECTION_CASH_UNCHANGED"
+                    if payment
+                    else "OFFICIAL_BONUS_REMOVAL_CASH_UNCHANGED"
                 ),
                 "url": row["url"],
                 "source_sha256": row["source_sha256"],
@@ -184,7 +211,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "report_version": "P1_CORRECTION_CASH_FACT_CLOSURE_V4",
+        "report_version": "P1_CORRECTION_CASH_FACT_CLOSURE_V5",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)

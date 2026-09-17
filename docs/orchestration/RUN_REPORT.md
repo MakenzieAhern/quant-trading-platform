@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 003041 bonus false-positive correction
+
+Retained issuer original PDF SHA-256
+`81a580bf7b2c76999c9a75432c3425a2e55b5b643f7ec28925f3cac3d782ab70`
+and correction SHA-256
+`273e2deb2e394d15176aae036f45b3f695ef9129d0d972388cf9911f7c98a27a`
+were compared before/after publication on 2024-05-29/30, before record
+2024-06-04. The correction deletes only “每10股转增2股”; gross cash 0.4/share
+and ex-date 2024-06-05 remain the existing accepted event. No bonus event
+was created. Correction v5 manifest
+`295259b4bd4e7e209dfd92c670484953f4b58ea27f46d29c549ed99413dcab9c`;
+cumulative v7 manifest
+`8b166012a405f99c0f2da303000d0bc36a521a5feda216187e7356df95d17ec4`.
+P1 remains 621 facts / 605 documents (301 distribution, 304 other), with
+15,699/16,320 established/out of scope and 1,684 substitutions.
+Actual 301106 4-for-10 conversion is not closed by this cash-only correction;
+full corporate-action census/accounting still PARTIAL. No dataset or studies.
+
 ## 2026-09-17 revised differentiated issuer cash cross-check
 
 Retained 603506 and 600837 official “修订版” implementation PDFs uniquely
