@@ -1,5 +1,14 @@
 # v1.1 controller roadmap
 
+Current 2026-09-18 P1 v45 has 16,064/16,320 source facts established or
+otherwise closed, leaving 256 facts / 255 documents (241 acquired distribution
+PDFs and 14 other requests). The 600337 final dividend terms were recovered
+from the issuer's original signed notice in its designated disclosure paper,
+with official SSE publication-index and prior issuer designation corroboration.
+No SSE PDF bytes or new economic event were asserted; Full Dataset and strategy
+gates remain closed. The retained-bonus fractional-share human methodology
+gate remains active. Earlier counts below are historical.
+
 Current 2026-09-18 official-public-source recovery resolves two source gaps in
 the bounded integer/next-session bonus ledger from retained CNINFO issuer
 notices. Bonus support rises to 278/288, with 10 bounded cases unresolved;

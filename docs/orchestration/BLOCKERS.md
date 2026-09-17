@@ -1,5 +1,18 @@
 # Blockers
 
+## Current R5 P1 and methodology gates — 2026-09-18
+
+The 600337 final implementation/holder source gap is resolved by its original
+signed announcement in the issuer's designated disclosure paper, independently
+matched to the official SSE announcement index and prior CNINFO issuer report.
+No direct SSE PDF bytes were accepted. Cumulative P1 v45 leaves 256 facts /
+255 documents open: 241 already acquired distribution PDFs and 14 other
+requests. Full cash/bonus census, 1,921 exact SZSE resumption boundaries,
+raw/factor readiness and verified safe start remain partial. The current
+human methodology gate is retained-bonus fractional-share handling below;
+no Full Dataset, freeze or strategy study has been run. Earlier P1 counts below
+are historical checkpoints.
+
 ## Docker runtime issue resolved again — 2026-09-18
 
 The recurrent stale `sailor-ingest.sock` error was repaired non-destructively:

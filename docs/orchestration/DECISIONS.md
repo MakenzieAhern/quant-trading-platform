@@ -1,5 +1,19 @@
 # Decisions
 
+## 2026-09-18 original designated-paper issuer disclosure as official evidence
+
+For the exact 600337 2010 distribution, the issuer's signed 2011-06-08
+implementation announcement in the original `《证券时报》` issue is official
+issuer disclosure, not a third-party mirror or editorial summary: its earlier
+CNINFO annual report names that paper as its designated disclosure outlet, and
+the official SSE publication index matches security, title and day. Accept
+the announcement's gross ordinary-A cash, record/ex, payment and holder
+disbursement terms as an official-public-source substitution for the missing
+direct SSE-hosted PDF. Preserve all three source hashes and retrieval times;
+explicitly mark SSE PDF bytes unverified after bot denial. This closes one
+source requirement only, creates no new dividend, and does not authorize
+non-designated newspaper, mirror or retrospective-source substitution.
+
 ## 2026-09-18 convertible-bond halt hint is not final dividend authority
 
 An official conversion-halt notice with a conditional per-share amount may

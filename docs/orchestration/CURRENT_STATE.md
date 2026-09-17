@@ -1,5 +1,27 @@
 # Current state
 
+## Current R5 600337 original designated-disclosure recovery — 2026-09-18
+
+The 2011-06-08 official SSE publication index has exactly one 600337 entry
+for the 2010 distribution implementation announcement. The issuer's
+2010 annual report, published on CNINFO before that date, names
+`《证券时报》` as its designated disclosure newspaper. Its original 2011-06-08
+page carries the signed issuer notice (临2011-022): gross 0.05 CNY/share,
+record 2011-06-13, ex 2011-06-14, payment 2011-06-20, with explicit direct
+versus CSDC-disbursed holder classes. The announcement was isolated from
+adjacent issuers before parsing and visually checked. This closes exactly one
+non-queue P1 source fact against the already accepted cash event; it creates
+no new event. SSE PDF bytes were bot-denied and remain marked unverified, not
+silently substituted. Original designated-paper report v2 SHA-256
+`7455aa578e57af8f230e396e5304d065efbf82feb80c83a6006244557f79aae6`,
+manifest `2f04cc4e369e865d464b3ef2bd9defaf5b6713d267c8cd4f20e81635b3150876`.
+Cumulative P1 v45 establishes **16,064/16,320**, including 1,985 official
+substitutions, leaving **256 facts / 255 documents** (241 acquired distribution
+PDFs, 14 other); manifest
+`8c5df32f7ae0a6113ee946c8e917974d96d3152dcd6f741c588c5a8f8a7bdf1f`.
+The fractional retained-bonus human methodology gate and full-census/safe-start
+gates remain unchanged. Earlier P1 counts below are historical.
+
 ## Current Docker/WSL runtime recovery — 2026-09-18
 
 Docker Desktop's engine had stopped after the same `sailor-ingest.sock`

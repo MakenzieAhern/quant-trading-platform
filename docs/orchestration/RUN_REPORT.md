@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 R5 600337 final dividend source recovery
+
+Recovered the original signed 600337 issuer implementation notice on the
+2011-06-08 edition of its designated `《证券时报》` disclosure paper. Official
+SSE query metadata confirms exact security/title/publication day, and the
+issuer's earlier CNINFO annual report confirms the designated paper. Parsed
+only the issuer's boxed announcement, not neighboring companies. Gross cash
+0.05 CNY/share, record/ex 2011-06-13/14, payment 2011-06-20 and holder
+disbursement terms agree with the preexisting accepted event and exchange
+oracle. The direct SSE PDF returned `denied by bot`; its bytes are **not**
+claimed as verified. Report v2 is immutable and repeatable, with no new event;
+P1 cumulative v45 is 16,064/16,320 established, 1,985 official substitutions,
+256 facts / 255 documents open (241 acquired queue, 14 other). Full Dataset,
+safe start, freeze and studies remain locked. Source checksums and retrieval
+timestamps are in `p1-original-designated-disclosure-cash-v2.json` outside Git.
+Immutable replay and reverse-input checks pass; the local backend suite passes
+719/719 tests and Ruff check/format passes.
+
 ## 2026-09-18 Docker Desktop/WSL non-destructive recovery
 
 The Docker Engine was unreachable and `docker-desktop` WSL integration had
@@ -11,7 +29,10 @@ No Docker image, volume, PostgreSQL/Redis data, project file or frozen dataset
 was removed. Engine 29.7.2, Compose v5.5.0 and Ubuntu WSL integration pass.
 Existing Compose services restarted without rebuilding: PostgreSQL and Redis
 healthy, Redis PONG, backend healthy, API health 200, frontend 200 on 5173.
-This repairs local integration testing only; R5 source/census gates are unchanged.
+The now-database-backed local backend suite passes 718/718 tests; frontend
+passes 78/78, Ruff check/format, strict mypy (121 files), ESLint, TypeScript
+and production Vite build pass. This repairs local integration testing only;
+R5 source/census gates are unchanged.
 
 ## 2026-09-18 R5 convertible-halt preliminary cash reference closure
 
