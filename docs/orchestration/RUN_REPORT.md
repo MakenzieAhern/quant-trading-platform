@@ -1,5 +1,29 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 targeted 600631 merger source-chain audit
+
+Reused the official CNINFO report, parent halt, successor progress/result
+notices and recovered only the identified 2011-08-03 cash-choice implementation
+and 2011-08-11 zero-election result PDFs. For ordinary unrestricted 600631
+A shares with no cash election, the official ratio is 1:0.861; 2011-08-04
+is the last parent trading/cash-choice record day, continuous halt begins
+2011-08-05, parent terminates 2011-08-23, registration completes 2011-08-26,
+and converted unrestricted 600827 shares list 2011-08-31. Six original issuer
+PDF bytes, exact page terms, master lifecycle, targeted raw-date boundary and
+reversed input order pass. The official individual residual allocation remains
+unknowable; only the merger-specific research floor is available. Event
+checksum `b3779bae7912ae8f38c2d553d5e73d019cb213a3e18c8293c7c6c7a9b9c723e5`;
+immutable event-audit manifest
+`03e73decd34373a09f32e62d61561f5dc57ca40780011371a518b25cbc5a00e9`.
+The exact `MERGER_NEW:600631:600827` P1 source request closes with no new
+economic event; source-closure manifest
+`332efe2929f28923fbcd85927b4f862c087c7496c97196779f559ff8bf5a2427`.
+Cumulative v48 is 16,067/16,320 established, 1,988 official substitutions,
+253 facts / 252 documents open (241 acquired distribution PDFs, 11 other),
+manifest `967a6459073e6d2a45a77fa7d41bec030b2630be946b17441dd769050c146a63`.
+The 15-event accepted inventory, full merger census, retained-bonus human
+gate, Full Dataset and study locks are unchanged.
+
 ## 2026-09-18 targeted 600832 merger source-chain audit
 
 Reused official CNINFO PDF receipts and fetched only the identified missing

@@ -1,5 +1,40 @@
 # R5 Merger Implementation Lead Closure V1
 
+## Targeted 600631→600827 source-chain audit — 2026-09-18
+
+The bounded ordinary unrestricted 600631 A-share holder **without a cash
+election** is source-complete. Six contemporaneous CNINFO issuer documents
+establish the chain: [revised merger report](https://static.cninfo.com.cn/finalpage/2011-07-29/59741684.PDF)
+(1:0.861 ratio and whole-share/residual rule), [cash-choice implementation](https://static.cninfo.com.cn/finalpage/2011-08-03/59762740.PDF)
+and [continuous-halt notice](https://static.cninfo.com.cn/finalpage/2011-08-03/59762741.PDF)
+(2011-08-04 last parent trading and cash-choice record, 2011-08-05 continuous
+halt), [cash-choice result](https://static.cninfo.com.cn/finalpage/2011-08-11/59801076.PDF)
+(zero shareholders elected), [successor progress](https://static.cninfo.com.cn/finalpage/2011-08-19/59839426.PDF)
+(parent terminates 2011-08-23), and [registration/listing result](https://static.cninfo.com.cn/finalpage/2011-08-29/59888838.PDF)
+(merger registered/completed 2011-08-26; new unrestricted 600827 shares list
+2011-08-31). The official master and targeted raw-date boundary agree. The
+issuer's reference to exchange/registry handling of fractional residuals
+does **not** establish an individual award. Only the separately approved
+merger **research floor** may be used for bounded replay. B shares, locked
+controlling holders, electing accounts and actual fractional awards are not
+claimed.
+
+`backend/scripts/audit_merger_600631.py` verifies the six original PDFs and
+receipts, exact page terms, chronology, master lifecycle, raw boundary and
+reversed input order. Immutable external audit:
+`full-merger-v1/targeted-parent-fraction-v3/600631-official-event-audit-v2.json`,
+file SHA-256 `5b90c7fdd7aa263af47de920a1c491d2ad8c5071315e8168732c54c5b8c42d91`,
+manifest `03e73decd34373a09f32e62d61561f5dc57ca40780011371a518b25cbc5a00e9`,
+event checksum `b3779bae7912ae8f38c2d553d5e73d019cb213a3e18c8293c7c6c7a9b9c723e5`.
+The exact `MERGER_NEW:600631:600827` P1 source request is closed by immutable
+source-closure manifest
+`332efe2929f28923fbcd85927b4f862c087c7496c97196779f559ff8bf5a2427`.
+Cumulative P1 v48 is **16,067/16,320** established, **1,988** substitutions,
+**253 facts / 252 documents** open; manifest
+`967a6459073e6d2a45a77fa7d41bec030b2630be946b17441dd769050c146a63`.
+No new economic event was published into the accepted 15-event inventory;
+full merger census and Full Dataset remain unestablished.
+
 ## Targeted 600832→600637 source-chain audit — 2026-09-18
 
 The bounded ordinary unrestricted 600832 A-share holder **without a cash

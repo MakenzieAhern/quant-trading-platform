@@ -439,6 +439,20 @@ def test_600832_official_terms_fail_closed_on_cash_choice_and_ratio():
         require_terms(pages)
 
 
+def test_600631_official_terms_fail_closed_on_cash_choice():
+    from scripts.audit_merger_600631 import TERMS, require_terms
+
+    pages = {
+        path: {page: " ".join(terms) for page, terms in expected.items()}
+        for path, expected in TERMS.items()
+    }
+    require_terms(pages)
+    cash = next(path for path in pages if "cash-choice-result" in path)
+    pages[cash][0] = "有股东申报行使现金选择权"
+    with pytest.raises(ValueError, match="OFFICIAL_MERGER_TERM_MISMATCH"):
+        require_terms(pages)
+
+
 @pytest.mark.parametrize(
     "review",
     [
@@ -461,6 +475,11 @@ def test_600832_official_terms_fail_closed_on_cash_choice_and_ratio():
     + [
         json.loads(
             (Path(__file__).parent / "fixtures/merger_600832_recovery_v1.json").read_bytes()
+        )["case"]
+    ]
+    + [
+        json.loads(
+            (Path(__file__).parent / "fixtures/merger_600631_recovery_v1.json").read_bytes()
         )["case"]
     ],
     ids=lambda r: r["parent"],

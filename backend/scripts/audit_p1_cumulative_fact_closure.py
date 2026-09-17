@@ -27,6 +27,7 @@ REPORTS = {
     "designated": "p1-original-designated-disclosure-cash-v2.json",
     "merger_new": "p1-merger-000418-official-source-closure-v1.json",
     "merger_600832": "p1-merger-600832-official-source-closure-v1.json",
+    "merger_600631": "p1-merger-600631-official-source-closure-v2.json",
 }
 
 
@@ -77,6 +78,7 @@ def recount(reports):
         "designated",
         "merger_new",
         "merger_600832",
+        "merger_600631",
     ):
         add(kind, reports[kind]["closed"], require_cash=False)
     differentiated = [
@@ -121,6 +123,7 @@ def recount(reports):
         + len(reports["designated"]["closed"])
         + len(reports["merger_new"]["closed"])
         + len(reports["merger_600832"]["closed"])
+        + len(reports["merger_600631"]["closed"])
     )
     return {
         "closed_documents": len(rows),
@@ -166,7 +169,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V47",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V48",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",

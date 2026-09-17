@@ -53,12 +53,13 @@ def main() -> None:
     for name in ("requirements", "audit", "fixture", "output"):
         parser.add_argument("--" + name, required=True, type=Path)
     parser.add_argument("--event", default=EVENT)
+    parser.add_argument("--revision", type=int, choices=(1, 2), default=1)
     args = parser.parse_args()
     requirements, audit = (verified(path) for path in (args.requirements, args.audit))
     fixture = json.loads(args.fixture.read_bytes())
     report = close(requirements, audit, fixture, sha256_file(args.fixture), args.event)
     report.update(
-        report_version=f"P1_MERGER_{fixture['case']['parent']}_OFFICIAL_SOURCE_CLOSURE_V1",
+        report_version=f"P1_MERGER_{fixture['case']['parent']}_OFFICIAL_SOURCE_CLOSURE_V{args.revision}",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={
             name: sha256_file(path)

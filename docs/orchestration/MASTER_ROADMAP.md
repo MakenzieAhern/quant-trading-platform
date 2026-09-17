@@ -1,5 +1,21 @@
 # v1.1 controller roadmap
 
+Current 2026-09-18 P1 v48 has 16,067/16,320 source facts established or
+otherwise closed, leaving 253 facts / 252 documents (241 acquired distribution
+PDFs and 11 other requests). The bounded official 600631 merger chain closes
+one additional P1 source request, without changing the 15-event accepted
+inventory, full merger census or Full Dataset gate. The retained-bonus
+fractional-share human methodology gate remains active. Earlier counts below
+are historical checkpoints.
+
+Current 2026-09-18 P1 v47 has 16,066/16,320 source facts established or
+otherwise closed, leaving 254 facts / 253 documents (241 acquired distribution
+PDFs and 12 other requests). The bounded official 600832 merger chain closes
+one additional P1 source request, without changing the 15-event accepted
+inventory, full merger census or Full Dataset gate. The retained-bonus
+fractional-share human methodology gate remains active. Earlier counts below
+are historical checkpoints.
+
 Current 2026-09-18 P1 v46 has 16,065/16,320 source facts established or
 otherwise closed, leaving 255 facts / 254 documents (241 acquired distribution
 PDFs and 13 other requests). The 000418 official merger source chain closes

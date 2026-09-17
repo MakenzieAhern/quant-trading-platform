@@ -1,5 +1,24 @@
 # Current state
 
+## Current R5 600631 official merger-chain audit — 2026-09-18
+
+The ordinary unrestricted A-share, non-cash-electing 600631→600827 chain is
+now source-byte, page-term, master-lifecycle, targeted raw-boundary and
+input-order audited from six official contemporaneous issuer PDFs. The ratio
+is 1 old share to 0.861 new shares. The 2011-08-04 cash-choice record day is
+also the last parent trading day; continuous suspension begins 2011-08-05,
+parent termination is 2011-08-23, merger registration completed 2011-08-26,
+and new unrestricted successor shares list 2011-08-31. The issuer reported
+zero cash-choice elections. The approved merger research floor cannot recover
+an individual's actual residual-share award. External immutable audit manifest
+SHA-256 is `03e73decd34373a09f32e62d61561f5dc57ca40780011371a518b25cbc5a00e9`.
+The exact P1 source request closes with no change to the 15-event accepted
+inventory or full-merger census. Cumulative v48 is **16,067/16,320**
+established, **1,988** official substitutions and **253 facts / 252 documents**
+open (241 acquired distribution PDFs, 11 other). Full Dataset and studies
+remain locked; the retained-bonus fractional methodology gate remains active.
+See `../research/R5_MERGER_LEAD_CLOSURE_V1.md`.
+
 ## Current R5 600832 official merger-chain audit — 2026-09-18
 
 The ordinary unrestricted A-share, non-cash-electing 600832→600637 chain is
