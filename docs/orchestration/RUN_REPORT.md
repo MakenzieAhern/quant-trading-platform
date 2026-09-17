@@ -1,5 +1,16 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 retained integer-bonus source reconciliation
+
+Existing retained official source receipts, exchange ratio oracle and
+effective-dated master establish seven additional exact integer/next-session
+bonus events. The 254 preexisting event checksums did not change; the new
+ledger has 261 accepted / 27 unresolved of 288 candidates. Reversing all
+date-link inputs reproduces file SHA-256
+`d37986e5201b6f6f6f6c818aa4698149060d9f52fdaad2aa9de0c47e12116e58`.
+No fraction, nonstandard entitlement or missing issuer source was accepted.
+The wider bonus census, P1 fact closure and Full Dataset remain incomplete.
+
 ## 2026-09-17 non-primary derivative source scope
 
 Eight official notices about convertible conversion pauses/prices, employee

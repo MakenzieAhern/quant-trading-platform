@@ -1,5 +1,21 @@
 # Current state
 
+## Current R5 retained-bonus integer subset — 2026-09-17
+
+Replayed the existing 288 integer, next-session candidates against retained
+SHA-verified official issuer notices, exchange ratios, lifecycle, and approved
+basis-conservation policy. Parser support for explicit paired send/transfer and
+capital-reserve wording adds seven accepted events (600169, 600252, 600353,
+600547, 600990, 600993, 601699). All 254 prior event checksums remain identical.
+The ledger now supports 261 / 288 and leaves 27 unresolved: 16 lack a linked
+issuer implementation source, seven have exact-term conflicts, four are
+nonstandard/restructuring entitlements. Reversed input order produces identical
+ledger bytes. File SHA-256
+`d37986e5201b6f6f6f6c818aa4698149060d9f52fdaad2aa9de0c47e12116e58`,
+manifest `40c78cd7e2ca655517307ccc259d4f271e819d0abb964293e79cafbd251b6b10`.
+This bounded subset is not a full-period bonus census; 7,119 oracle rows remain
+outside the integer/next-session scope. Dataset freeze and research stay locked.
+
 ## Current R5 derivative-notice scope — 2026-09-17
 
 Eight retained official convertible-bond, option-exercise or repurchase-price

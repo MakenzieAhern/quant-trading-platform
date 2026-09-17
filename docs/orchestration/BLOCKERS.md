@@ -1,5 +1,15 @@
 # Blockers
 
+## Current 2026-09-17 integer retained-bonus subset
+
+261 / 288 bounded integer/next-session events are supported, up from 254;
+27 remain: 16 missing issuer links, seven term conflicts, four nonstandard
+entitlements. No whole-dataset bonus authority follows from this subset; the
+full oracle includes 7,119 further deferred rows. Do not default unknown
+fractional registry allocation or restructuring rights to the ordinary bonus
+policy. Ledger manifest
+`40c78cd7e2ca655517307ccc259d4f271e819d0abb964293e79cafbd251b6b10`.
+
 ## Current 2026-09-17 derivative notices — no new cash events
 
 Eight source-bound derivative documents now have exact already accepted
