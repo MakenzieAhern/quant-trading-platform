@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 non-primary derivative source scope
+
+Eight official notices about convertible conversion pauses/prices, employee
+option exercise prices or repurchase limits quote the same gross cash as a
+unique accepted issuer implementation event, but provide no independent
+entitlement date. Original PDF SHA-256 and cached-text SHA-256 are verified;
+accepted-event checksum and primary source URL are recorded per document.
+These are non-primary derivative facts, not an authority substitution or new
+ordinary-A cash event. Four unmatched/conflicting derivative notices remain.
+Report SHA-256 `f9a8830ebbaedc267e00d4253c286086bbe255a8e92055a4e92f9f0625331cee`,
+manifest `0b807f1ae4529416b99589b20256801ae9142d474602bf6b2845f84b2a0fc848`.
+Cumulative v12 SHA-256
+`76b5e5a492164ece79323002da9f6114a0b26200ecb6eb20a023b6603ab85649`,
+manifest `f69bf64aec243e9c91387e4b2b9913093eb5887d7d9f7dcc769a156347e21f91`:
+593 facts / 577 documents remain. Input order and checksum PASS; no Full
+Dataset, freeze or study.
+
 ## 2026-09-17 exact issuer A-share gross cash replacement
 
 Four SHA-verified, pre-record official CNINFO implementation PDFs separately

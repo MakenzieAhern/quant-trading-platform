@@ -1,5 +1,14 @@
 # Blockers
 
+## Current 2026-09-17 derivative notices — no new cash events
+
+Eight source-bound derivative documents now have exact already accepted
+issuer-event corroboration and are out of final ordinary-A implementation
+scope. Four amount-discordant or unmatched derivative notices remain open.
+P1 is 593 facts / 577 documents (277 distribution, 300 other); cash full
+census and exact SZSE resumption remain partial. No paid product, freeze,
+research run or merge follows from this scope closure.
+
 ## Current 2026-09-17 precise issuer cash overrides — census still partial
 
 Four source-hash-bound precise final gross cash amounts replace rounded SSE

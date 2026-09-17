@@ -1,5 +1,21 @@
 # Current state
 
+## Current R5 derivative-notice scope — 2026-09-17
+
+Eight retained official convertible-bond, option-exercise or repurchase-price
+notices are non-primary for ordinary-A cash entitlement. Each has no unique
+record/ex-date in the derivative notice and an exact gross amount that maps
+uniquely to an already accepted, separately sourced issuer implementation
+event within a bounded publication window. Both source PDFs and cached
+extractions are SHA-verified and reparsed. Four other derivative-like notices
+with discordant amounts or no unique accepted match remain open. No derivative
+was substituted for a final cash notice; no event was created. Report manifest
+`0b807f1ae4529416b99589b20256801ae9142d474602bf6b2845f84b2a0fc848`.
+Cumulative v12 leaves 593 facts / 577 documents (277 distribution, 300 other),
+15,727/16,320 established or out of scope, 1,692 substitutions; manifest
+`f69bf64aec243e9c91387e4b2b9913093eb5887d7d9f7dcc769a156347e21f91`.
+Cash full census remains PARTIAL; Full Dataset and studies remain locked.
+
 ## Current R5 precise official issuer cash corrections — 2026-09-17
 
 Four previously open SSE final implementation notices publish exact ordinary-A
