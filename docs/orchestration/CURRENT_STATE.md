@@ -25,7 +25,7 @@ notices as date-only, with separate final issuer cash notices for each. It
 still leaves 32 earlier accepted events not independently recorroborated by
 the current raw parser. The accepted-prior guard rejects replacement of the
 cash ledger; diagnostic manifest
-`f65f391f75e150a9807c4af2fb1e72aa2d2614d0bf0581a19b7358ddcc350563`.
+`66884f2dd84aab353462148424c6941b0fb183914ec4f7d3e88e27c091e14d39`.
 This bounded subset is not a full-period bonus census; 7,119 oracle rows remain
 outside the integer/next-session scope. Dataset freeze and research stay locked.
 

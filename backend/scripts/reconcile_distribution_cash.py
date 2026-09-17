@@ -547,9 +547,7 @@ def secondary_timing_only(doc, pages, has_primary):
         return False
     text = re.sub(r"\s+", "", normalized_document(pages))
     return (
-        "A股利润分配时间安排" in text
-        and "A股利润分配实施公告将在" in text
-        and "另行发布" in text
+        "A股利润分配时间安排" in text and "A股利润分配实施公告将在" in text and "另行发布" in text
     )
 
 
