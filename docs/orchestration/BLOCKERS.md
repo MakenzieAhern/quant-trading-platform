@@ -1,5 +1,20 @@
 # Blockers
 
+## Current 2026-09-17 R5 gates after issuer cash precision replay
+
+The 23 bounded rounded-vs-exact cash discrepancies are closed in v43 using
+retained official issuer notices. This does not close the issuer-wide cash
+census: 593 P1 facts / 577 documents still require classification, including
+distribution and other source families. The retained bonus replay covers only
+274/288 bounded integer next-session candidates, with 14 still unresolved and
+7,119 oracle rows outside that subset. SZSE still has 1,921 unresolved exact
+resumption boundaries. Authentic 603315 and 603889 SSE implementation PDFs
+remain inaccessible at the official direct URLs; no denial bypass or optimistic
+event was used. Continue independent official-source closure before requesting
+consolidated external input or a Full Dataset gate. The Full Dataset and
+research studies remain locked; cash exchange target coverage alone is not a
+full issuer/corporate-action census.
+
 ## Current 2026-09-17 integer retained-bonus subset
 
 274 / 288 bounded integer/next-session events are supported, up from 254;

@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-09-17 application of existing official cash source precedence
+
+The already accepted fact-level official-source substitution rule applies to
+the 23 bounded gross-cash precision discrepancies. A final, pre-record CNINFO
+issuer implementation notice with SHA-verified original bytes, exact
+record/ex-dates, and explicit ordinary-A gross holder terms supersedes a
+rounded exchange-table cash cell for the **same** event. Twenty-one cases use
+the same original issuer source as the previous event; two replace an SSE
+table/CNINFO composite with the primary issuer notice. The old event checksum
+is persisted in each supersession receipt. This changes no research policy,
+does not add an event, and does not establish a full issuer cash census.
+
 ## 2026-09-16 official SZSE resumption evidence triage
 
 Official CNINFO all-announcement metadata may be queried in bounded windows using

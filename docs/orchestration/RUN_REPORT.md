@@ -1,5 +1,25 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 retained official issuer precision and current R5 gate
+
+Fresh source replay restored all 32 old 2016 cash events previously missed by
+raw parsing; 2016 now has 1,872 source-supported events versus 1,784 in the
+old year replay. The complete cash ledger already contained those exchange
+events, so this did not raise its event count. The 2018 diagnostic's old-prior
+guard remained fail-closed on the real 300387 0.11 versus 0.1100224 precision
+discrepancy. A deterministic full-ledger supersession, with original PDFs,
+extraction checksums and date/amount reparse, corrected that event and 22
+other rounded amounts. Cash v43 has 40,479 accepted events, 40,376/40,376
+exchange target coverage, 103 issuer-only events, zero exchange gaps,
+input-order PASS and checksum PASS. Its SHA-256 is
+`ac2e996fcd8b9e20578e1b8ea08f6725e545bec8b6cb7152c0119b1bcbb3e191`;
+manifest `e95886c38a38deca04f3d530f3a93a2e132156f670f5b6b17df8e3040b547cb8`.
+Full issuer notice/corporate-action census is still PARTIAL. The retained
+bonus subset is 274/288, with 7,119 oracle rows outside it; P1 still has 593
+facts / 577 documents, and SZSE has 1,921 exact resumption boundaries open.
+No Full Dataset was created, audited, frozen or used for any study. PR #12
+remains open.
+
 ## 2026-09-17 retained integer-bonus source reconciliation
 
 Existing retained official source receipts, exchange ratio oracle and

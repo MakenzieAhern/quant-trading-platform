@@ -64,11 +64,22 @@ def normalized_document(pages):
                 ]
                 counters_removed = True
                 break
-        if not counters_removed and all(
-            re.match(r"^\s*(?:\d+\s*/\s*\d+|-\s*\d+\s*-|\d{1,3})[ \t]*\n", page)
-            for page in normalized_pages
-        ):
-            raise ValueError("INVALID_PAGE_COUNTER_SEQUENCE")
+        if not counters_removed:
+            counters = [
+                re.match(r"^\s*(?:\d+\s*/\s*\d+|-\s*\d+\s*-|\d{1,3})[ \t]*\n", page)
+                for page in normalized_pages
+            ]
+            if all(counters):
+                numbers = [int(re.search(r"\d+", match[0])[0]) for match in counters]
+                repeated_margin = len(set(numbers)) == 1 and numbers[0] > len(pages)
+                reset_footer = (
+                    len(pages) >= 4
+                    and numbers[:-1] == list(range(1, len(pages)))
+                    and numbers[-1] == 2
+                    and not re.search(r"每(?:10|1)?股|现金红利|现金股利", normalized_pages[-1])
+                )
+                if not (repeated_margin or reset_footer):
+                    raise ValueError("INVALID_PAGE_COUNTER_SEQUENCE")
     return "\n".join(normalized_pages)
 
 
@@ -241,6 +252,16 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
     text = re.sub(r"\s+", "", normalized)
     if re.search(r"差异化分红送转:是", text):
         raise ValueError("DIFFERENTIATED_DISTRIBUTION_REQUIRES_REVIEW")
+    headline = re.search(r"重要内容提示:(.*?)(?:一、|二、|1、)", text)
+    headline_gross = {
+        Decimal(value)
+        for value in re.findall(
+            r"每股派发现金红利\(含税\):?(?:人民币)?(\d+(?:\.\d+)?)元",
+            headline[1] if headline else "",
+        )
+    }
+    if len(headline_gross) == 1:
+        return next(iter(headline_gross))
 
     def matches_exchange_precision(amount):
         return any(
@@ -284,7 +305,10 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
             context = text[max(0, match.start() - 45) : match.start()] + match[2]
             if re.search(
                 r"现金|红利|股息|股利|派息|派现|派发|派送|分派|分配|派", match[2]
-            ) and not re.search(r"扣税后|税后|先按|补缴|应纳税|应扣税|除权|参考价格|应以", context):
+            ) and not re.search(
+                r"扣税后|税后|先按|补缴|应纳税|应扣税|除权|参考价格|应以|摊薄|计算公式",
+                context,
+            ):
                 amount = Decimal(match[3]) / Decimal(match[1] or "1")
                 if matches_exchange_precision(amount):
                     expected_matches.add(amount)
@@ -543,11 +567,36 @@ def exchange_cash_amounts(sse, szse):
 
 
 def secondary_timing_only(doc, pages, has_primary):
-    if not has_primary or "提示性公告" not in doc["title"]:
+    if not has_primary:
         return False
     text = re.sub(r"\s+", "", normalized_document(pages))
+    if "更正公告" in doc["title"]:
+        return all(
+            token in text
+            for token in ("更正前", "更正后", "其他内容不变", "股权登记日", "除权除息日")
+        ) and not any(
+            token in text
+            for token in (
+                "每股派",
+                "每10股派",
+                "现金红利",
+                "现金股利",
+                "现金分红",
+                "派现",
+                "转增",
+                "送股",
+                "送红股",
+                "配股",
+                "让渡",
+                "合并",
+            )
+        )
+    if "提示性公告" not in doc["title"]:
+        return False
     return (
-        "A股利润分配时间安排" in text and "A股利润分配实施公告将在" in text and "另行发布" in text
+        "A股利润分配时间安排" in text
+        and re.search(r"A股(?:\d{4}年年度)?(?:利润分配|权益分派)实施公告将在", text)
+        and "另行发布" in text
     )
 
 
@@ -577,9 +626,11 @@ def preserve_accepted_events(current, prior, source_keys):
         require_supported_corporate_action(action)
         if (
             action.event_checksum != row["event_checksum"]
-            or row["policy_id"] != "EXISTING_ACCEPTED_CASH_DIVIDEND"
+            or row["policy_id"]
+            not in {"EXISTING_ACCEPTED_CASH_DIVIDEND", "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"}
             or (action.source_url, action.source_document_sha256) not in source_keys
             or accepted_event_key(row) not in rows
+            or row["policy_id"] != rows[accepted_event_key(row)]["policy_id"]
             or accepted_event_terms(row) != accepted_event_terms(rows[accepted_event_key(row)])
             or action.record_date is None
             or action.announcement_date > action.record_date
@@ -665,7 +716,11 @@ def main():
                         dict(
                             source_sha256=sha,
                             url=doc["url"],
-                            reason="A_H_DATE_ONLY_FINAL_TO_FOLLOW",
+                            reason=(
+                                "DATE_ONLY_CORRECTION_FINAL_PRIMARY_PRESENT"
+                                if "更正公告" in doc["title"]
+                                else "A_H_DATE_ONLY_FINAL_TO_FOLLOW"
+                            ),
                         )
                     )
                     continue
@@ -682,7 +737,7 @@ def main():
                         )
                     )
                 else:
-                    amount = gross_cash(extracted["pages"], link["symbol"])
+                    amount = gross_cash(extracted["pages"], link["symbol"], amounts)
                     evidence.append(dict(cash_per_share=str(amount), source=doc))
             except ValueError as exc:
                 failures.append(dict(source_sha256=sha, reason=str(exc)))

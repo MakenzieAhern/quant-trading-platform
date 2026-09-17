@@ -1,5 +1,37 @@
 # Current state
 
+## Current R5 retained issuer cash precision — 2026-09-17
+
+The 2010–2022 v7 date-link replay now uses the existing exchange amount only
+to disambiguate **explicit** issuer gross-cash terms; it never manufactures a
+term. It recognizes repeated PDF margin numbers, a non-economic appendix page
+counter reset, separate A/H date-only tips, and date-only correction notices.
+The accepted-prior guard preserves earlier ordinary and differentiated cash
+events where their economics remain identical. The 2018 old guard correctly
+rejected 300387's rounded 0.11/share against the primary issuer's exact
+0.1100224/share, so that diagnostic was not published as a replacement.
+
+An exact-precision cross-check found 1,162 single-notice issuer amounts that
+round to an exchange cell: 1,139 were already exact in cash v41. The 23 still
+rounded entries were rechecked against retained original official issuer PDF
+bytes, linked extraction checksums, unique record/ex-dates, final implementation
+titles and current gross-term parsing. Twenty-one supersede an accepted event
+whose source PDF is **the same**; two replace SSE-table/CNINFO composite source
+records with a corroborated primary CNINFO issuer notice. No security-specific
+production rule or new economic event was introduced. Cash v43 contains
+40,479 events, covers all 40,376 official exchange cash targets, and retains
+103 issuer-only accepted events. Exactly 23 event checksums changed, with the
+same event keys. Input-order and checksum checks pass; manifest
+`e95886c38a38deca04f3d530f3a93a2e132156f670f5b6b17df8e3040b547cb8`,
+file SHA-256
+`ac2e996fcd8b9e20578e1b8ea08f6725e545bec8b6cb7152c0119b1bcbb3e191`.
+The two source-bound precision receipts have manifests
+`35fd52aa32953f0183b9d06cc50038f3247f3ce6cb088d944009e4b7d7bd2021`
+and `37b1dd71e6bf8d023e420ad78daf3ebb0541d9dea2c6e3447327d4727faf3ebf`.
+This closes the bounded precision gap, **not** the full issuer cash census:
+P1 remains 593 facts / 577 documents, and bonus/SZSE resumption work remains
+partial. Full Dataset, freeze and strategy studies remain locked.
+
 ## Current R5 retained-bonus integer subset — 2026-09-17
 
 Replayed the existing 288 integer, next-session candidates against retained

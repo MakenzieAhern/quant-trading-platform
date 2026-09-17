@@ -420,6 +420,27 @@ def test_ah_timing_tip_cannot_replace_final_cash_implementation():
     assert not secondary_timing_only(doc, pages, False)
     assert not secondary_timing_only({"title": "利润分配实施公告"}, pages, True)
     assert not secondary_timing_only(doc, ["A股利润分配实施公告已发布"], True)
+    assert secondary_timing_only(
+        doc,
+        ["A股利润分配时间安排。公司A股2020年年度权益分派实施公告将在规定时间内另行发布。"],
+        True,
+    )
+    correction = {"title": "年度权益分派实施公告的更正公告"}
+    assert secondary_timing_only(
+        correction,
+        ["更正前股权登记日与除权除息日有误;更正后日期已更新;其他内容不变。"],
+        True,
+    )
+    assert not secondary_timing_only(
+        correction,
+        ["更正前每10股派1元;更正后每10股派2元;股权登记日与除权除息日;其他内容不变。"],
+        True,
+    )
+    assert not secondary_timing_only(
+        correction,
+        ["更正前每10股转增2股;更正后每10股转增3股;股权登记日与除权除息日;其他内容不变。"],
+        True,
+    )
 
 
 def test_merger_raw_boundaries_use_unadjusted_rows_and_reject_duplicate_dates():
@@ -774,6 +795,30 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
     ):
         assert gross_cash([header + clause], "600000", {Decimal("0.100")}) == Decimal("0.1")
     assert gross_cash(
+        [header + "A股每股派发现金红利0.08元(含税);QFII扣税后每股派发现金红利0.072元"],
+        "600000",
+        {Decimal("0.080")},
+    ) == Decimal("0.08")
+    assert gross_cash(
+        [
+            header + "重要内容提示:每股派发现金红利(含税):人民币0.005元;"
+            "扣税后每股人民币0.00475元。一、利润分配方案\n"
+            "每10股派发现金红利0.05元(含税),扣税后每10股派发现金红利0.0475元。"
+        ],
+        "600000",
+        {Decimal("0.005")},
+    ) == Decimal("0.005")
+    assert gross_cash(
+        [
+            header + "特别提示:每10股派发现金红利1.96元(含税)。"
+            "二、权益分派方案\n向全体股东每10股派1.96元(含税)人民币现金。"
+            "六、调整相关参数\n上述公式中现金红利指根据总股本摊薄调整后计算的"
+            "每股现金红利。计算公式如下:每股现金红利=现金分红总额÷总股本≈0.195730元/股。"
+        ],
+        "600000",
+        {Decimal("0.196")},
+    ) == Decimal("0.196")
+    assert gross_cash(
         [header + "以上1、2项合计向普通流通股每10股转增10股派发现金1.02064元(含税)"],
         "600000",
     ) == Decimal("0.102064")
@@ -880,6 +925,18 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
         assert gross_cash(pages, "600000") == Decimal("0.062")
         with pytest.raises(ValueError):
             gross_cash([pages[0], pages[1].replace("2", "9")], "600000")
+    assert gross_cash(
+        ["26\n" + header + "每10股派2元人民币现金(含税)", "26\n签署页"], "600000"
+    ) == Decimal("0.2")
+    assert gross_cash(
+        [
+            "1\n" + header + "每10股派2元人民币现金(含税)",
+            "2\n实施日期",
+            "3\n派发对象",
+            "2\n备查文件与签署",
+        ],
+        "600000",
+    ) == Decimal("0.2")
     assert gross_cash(
         [
             "证券代码:000582 2018年度分红派息实施公告 "
@@ -1089,6 +1146,14 @@ def test_reconciled_cash_event_requires_lifecycle_and_roundtrips_existing_accoun
     source_keys = {(source["url"], source["source_sha256"])}
     assert current["event_checksum"] != prior["event_checksum"]
     assert preserve_accepted_events([current], [prior], source_keys) == [prior]
+    differentiated_prior = {
+        "event": differentiated.model_dump(mode="json"),
+        "event_checksum": differentiated.event_checksum,
+        "policy_id": "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1",
+    }
+    assert preserve_accepted_events(
+        [differentiated_prior], [differentiated_prior], source_keys
+    ) == [differentiated_prior]
     assert preserve_accepted_events(
         [{**current, "event": {**current["event"], "cash_per_share": "0.100000"}}],
         [prior],
