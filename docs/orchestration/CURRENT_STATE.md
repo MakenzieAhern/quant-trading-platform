@@ -1,5 +1,23 @@
 # Current state
 
+## Current R5 official correction reconciliation — 2026-09-18
+
+Two retained official CNINFO corrections now reconcile with already accepted
+cash events and their original issuer PDFs. For 002866, the corrected 2023-05-15
+record and 2023-05-16 ex dates replace an erroneous 2022 year in the original
+notice. For 600586, corrected gross cash is CNY 0.03/share rather than the
+original CNY 0.00298/share. The parser requires exact before/after-only edits,
+source PDF/text checksums, original-source linkage and a unique matching
+accepted event; all five prior correction rows remain unchanged. Correction
+report v7 closes 7 documents, SHA-256
+`c67b0ce0beb9ef5c09f0a75350ef6165b204f210b8c40dd68fec324549c34ebe`,
+manifest `720c4032fecd0996be6d8514efb3a11d5c52172ff62f35f46100484f7d5a7e00`.
+P1 cumulative v29 establishes 16,027/16,320 facts, leaving 293 facts /
+292 documents (257 cash-queue, 35 other) and 1,959 official substitutions;
+SHA-256 `9174b3461a28cf1a63be40c071c271e48d82a136a76da909bee29332d4ae38de`,
+manifest `c4d4e0d7d842a74e1ddb92509670a407d4c52de1d3c118597730df7906f81f5d`.
+This does not establish a complete cash or corporate-action census.
+
 ## Current R5 nonfinal official-notice scope — 2026-09-18
 
 Four more SHA-verified retained CNINFO PDFs are non-executable notices:

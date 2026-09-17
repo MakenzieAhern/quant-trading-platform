@@ -72,6 +72,59 @@ def bonus_removed_without_cash_change(pages):
     return {"removed_bonus_ratio": str(Decimal(found[0]) / Decimal(10))}
 
 
+def corrected_entitlement_year(pages):
+    text = normalized("\n".join(pages))
+    sections = re.split(r"补充更正前:|补充更正后:", text)
+    if len(sections) != 3 or "除上述补充更正内容外" not in sections[2]:
+        return None
+    before = sections[1][sections[1].find("三、股权登记日") :]
+    after = sections[2].split("除上述补充更正内容外")[0]
+    after = after[after.find("三、股权登记日") :]
+    if not before.startswith("三、股权登记日") or not after.startswith("三、股权登记日"):
+        return None
+    old, new = (
+        re.findall(r"股权登记日为:(\d{4})年(\d{1,2})月(\d{1,2})日", before),
+        re.findall(r"股权登记日为:(\d{4})年(\d{1,2})月(\d{1,2})日", after),
+    )
+    ex_old, ex_new = (
+        re.findall(r"除权除息日为:(\d{4})年(\d{1,2})月(\d{1,2})日", before),
+        re.findall(r"除权除息日为:(\d{4})年(\d{1,2})月(\d{1,2})日", after),
+    )
+    if (
+        len(old) != 1
+        or len(new) != 1
+        or len(ex_old) != 1
+        or len(ex_new) != 1
+        or old[0][0] != ex_old[0][0]
+        or new[0][0] != ex_new[0][0]
+        or int(new[0][0]) != int(old[0][0]) + 1
+        or before.replace(old[0][0] + "年", new[0][0] + "年") != after
+    ):
+        return None
+    return {
+        "original_record_date": f"{old[0][0]}-{int(old[0][1]):02d}-{int(old[0][2]):02d}",
+        "corrected_record_date": f"{new[0][0]}-{int(new[0][1]):02d}-{int(new[0][2]):02d}",
+        "original_ex_date": f"{ex_old[0][0]}-{int(ex_old[0][1]):02d}-{int(ex_old[0][2]):02d}",
+        "corrected_ex_date": f"{ex_new[0][0]}-{int(ex_new[0][1]):02d}-{int(ex_new[0][2]):02d}",
+    }
+
+
+def corrected_cash_amount(pages):
+    text = normalized("\n".join(pages))
+    sections = re.split(r"原披露内容:|现更正为:", text)
+    if len(sections) != 3 or "除上述更正外" not in sections[2]:
+        return None
+    before, after = sections[1], sections[2].split("除上述更正外")[0]
+    pattern = r"每10股派发现金红利(\d+(?:\.\d+)?)元\(含税\)"
+    old, new = re.findall(pattern, before), re.findall(pattern, after)
+    if len(old) != 1 or len(new) != 1 or old == new or before.replace(old[0], new[0]) != after:
+        return None
+    return {
+        "original_cash_per_share": str(Decimal(old[0]) / 10),
+        "corrected_cash_per_share": str(Decimal(new[0]) / 10),
+    }
+
+
 def close_supplements(triage, requirements, cash, sources, root, already_closed):
     by_id = {row["document_id"]: row for row in requirements}
     by_url = {row["url"]: row for row in sources}
@@ -83,11 +136,14 @@ def close_supplements(triage, requirements, cash, sources, root, already_closed)
         share_count = "补充公告" in requirement["title"] and row["candidate_class"] == "CASH_ONLY"
         payment = "更正公告" in requirement["title"] and row["candidate_class"] == "NEITHER"
         bonus_removal = "更正公告" in requirement["title"] and row["candidate_class"] == "BOTH"
+        entitlement_year = (
+            "补充更正公告" in requirement["title"] and row["candidate_class"] == "NEITHER"
+        )
+        cash_amount = "更正公告" in requirement["title"] and row["candidate_class"] == "NEITHER"
         if (
-            not (share_count or payment or bonus_removal)
+            not (share_count or payment or bonus_removal or entitlement_year or cash_amount)
             or (not bonus_removal and row["bonus_candidate_per_share"] is not None)
-            or row["record_dates"]
-            or row["ex_dates"]
+            or ((row["record_dates"] or row["ex_dates"]) and not entitlement_year)
             or row["preferred_instrument_marker"]
         ):
             continue
@@ -111,15 +167,34 @@ def close_supplements(triage, requirements, cash, sources, root, already_closed)
         if any(parsed[key] != row[key] for key in parsed):
             raise ValueError("P1_SUPPLEMENT_TERMS_CHANGED")
         change = (
-            unchanged_except_share_count(extracted["pages"])
+            corrected_entitlement_year(extracted["pages"])
+            if entitlement_year
+            else unchanged_except_share_count(extracted["pages"])
             if share_count
-            else unchanged_except_payment_date(extracted["pages"])
-            if payment
             else bonus_removed_without_cash_change(extracted["pages"])
+            if bonus_removal
+            else corrected_cash_amount(extracted["pages"])
+            or unchanged_except_payment_date(extracted["pages"])
         )
-        if not change or (
-            bonus_removal
-            and Decimal(change["removed_bonus_ratio"]) != Decimal(row["bonus_candidate_per_share"])
+        if change:
+            cash_amount = "corrected_cash_per_share" in change
+            payment = "corrected_payment_date" in change
+        if (
+            not change
+            or (
+                bonus_removal
+                and Decimal(change["removed_bonus_ratio"])
+                != Decimal(row["bonus_candidate_per_share"])
+            )
+            or (
+                entitlement_year
+                and (
+                    set(row["record_dates"])
+                    != {change["original_record_date"], change["corrected_record_date"]}
+                    or set(row["ex_dates"])
+                    != {change["original_ex_date"], change["corrected_ex_date"]}
+                )
+            )
         ):
             continue
         accepted = []
@@ -134,15 +209,41 @@ def close_supplements(triage, requirements, cash, sources, root, already_closed)
                 and event["source_document_sha256"] == original["source_sha256"]
                 and event["source_provider"].startswith("OFFICIAL_ISSUER_CNINFO_")
                 and event["announcement_date"] == original["published_on"]
-                and normalized(original["title"]).removesuffix("公告")
-                in normalized(requirement["title"])
+                and (
+                    normalized(original["title"]).removesuffix("公告")
+                    in normalized(requirement["title"])
+                    or (
+                        cash_amount
+                        and re.sub(
+                            r"(?=\d{4}年)",
+                            "关于",
+                            normalized(original["title"]).removesuffix("公告"),
+                            count=1,
+                        )
+                        in normalized(requirement["title"])
+                    )
+                )
                 and original["published_on"] <= requirement["published_on"] < event["record_date"]
                 and event["record_date"] < event["ex_date"] <= "2025-12-31"
                 and (
                     payment
+                    or entitlement_year
+                    or cash_amount
                     or Decimal(event["cash_per_share"]) == Decimal(row["cash_candidate_per_share"])
                 )
                 and (not payment or change["corrected_payment_date"] >= event["ex_date"])
+                and (
+                    not entitlement_year
+                    or (
+                        event["record_date"] == change["corrected_record_date"]
+                        and event["ex_date"] == change["corrected_ex_date"]
+                    )
+                )
+                and (
+                    not cash_amount
+                    or Decimal(event["cash_per_share"])
+                    == Decimal(change["corrected_cash_per_share"])
+                )
             ):
                 accepted.append((item, original))
         if len(accepted) != 1:
@@ -156,7 +257,11 @@ def close_supplements(triage, requirements, cash, sources, root, already_closed)
                 "document_id": row["document_id"],
                 "affected_events": requirement["affected_events"],
                 "classification": (
-                    "OFFICIAL_SHARE_COUNT_SUPPLEMENT_CASH_UNCHANGED"
+                    "OFFICIAL_ENTITLEMENT_YEAR_CORRECTION"
+                    if entitlement_year
+                    else "OFFICIAL_GROSS_CASH_CORRECTION"
+                    if cash_amount
+                    else "OFFICIAL_SHARE_COUNT_SUPPLEMENT_CASH_UNCHANGED"
                     if share_count
                     else "OFFICIAL_PAYMENT_DATE_CORRECTION_CASH_UNCHANGED"
                     if payment
@@ -186,6 +291,7 @@ def main():
     parser.add_argument("--source-manifest", type=Path, required=True)
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--cumulative", type=Path, required=True)
+    parser.add_argument("--prior-corrections", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     triage, closure, cash, sources, cumulative = (
@@ -198,6 +304,7 @@ def main():
             args.cumulative,
         )
     )
+    earlier = verified(args.prior_corrections) if args.prior_corrections else {"closed": []}
     inputs = (
         triage["documents"],
         closure["remaining_cash_documents"],
@@ -210,19 +317,25 @@ def main():
         *(list(reversed(rows)) for rows in inputs), args.source_root, already_closed
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
+    prior_ids = {row["document_id"] for row in earlier["closed"]}
+    if not prior_ids.issubset(already_closed) or any(
+        row["document_id"] in prior_ids for row in closed
+    ):
+        raise ValueError("PRIOR_CORRECTION_LINEAGE_CHANGED")
+    closed = sorted([*earlier["closed"], *closed], key=lambda row: row["document_id"])
+    input_paths = {
+        "triage": args.triage,
+        "closure": args.closure,
+        "cash_ledger": args.cash_ledger,
+        "source_manifest": args.source_manifest,
+        "cumulative": args.cumulative,
+    }
+    if args.prior_corrections:
+        input_paths["prior_corrections"] = args.prior_corrections
     report = {
-        "report_version": "P1_CORRECTION_CASH_FACT_CLOSURE_V5",
+        "report_version": "P1_CORRECTION_CASH_FACT_CLOSURE_V7",
         "parser_sha256": sha256_file(Path(__file__)),
-        "input_sha256s": {
-            name: sha256_file(path)
-            for name, path in (
-                ("triage", args.triage),
-                ("closure", args.closure),
-                ("cash_ledger", args.cash_ledger),
-                ("source_manifest", args.source_manifest),
-                ("cumulative", args.cumulative),
-            )
-        },
+        "input_sha256s": {name: sha256_file(path) for name, path in input_paths.items()},
         "closed_documents": len(closed),
         "closed_facts": sum(len(row["affected_events"]) for row in closed),
         "closed": closed,

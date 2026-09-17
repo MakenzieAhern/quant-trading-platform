@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 official cash correction reconciliation
+
+The retained original/corrective CNINFO PDFs for 002866 and 600586 pass exact
+before/after parsing, PDF/text SHA verification, original-source lineage and
+unique accepted-event amount/date matching. 002866 corrects a 2022-to-2023
+entitlement-year typo; 600586 corrects gross cash to CNY 0.03/share. Correction
+v7 keeps five prior rows and adds two, SHA-256
+`c67b0ce0beb9ef5c09f0a75350ef6165b204f210b8c40dd68fec324549c34ebe`,
+manifest `720c4032fecd0996be6d8514efb3a11d5c52172ff62f35f46100484f7d5a7e00`.
+Cumulative v29 establishes 16,027/16,320 facts, 1,959 official substitutions
+and leaves 293 facts / 292 documents (257 cash-queue, 35 other), SHA-256
+`9174b3461a28cf1a63be40c071c271e48d82a136a76da909bee29332d4ae38de`,
+manifest `c4d4e0d7d842a74e1ddb92509670a407d4c52de1d3c118597730df7906f81f5d`.
+No new event, dataset, freeze, study or PR merge followed.
+
 ## 2026-09-18 nonfinal notice classification and targeted cash source probe
 
 Original retained official PDFs/text and source-manifest hashes establish four

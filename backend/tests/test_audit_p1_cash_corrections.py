@@ -4,6 +4,8 @@ from app.data.catalog.checksums import sha256_file
 from scripts.audit_p1_cash_corrections import (
     bonus_removed_without_cash_change,
     close_supplements,
+    corrected_cash_amount,
+    corrected_entitlement_year,
     unchanged_except_payment_date,
     unchanged_except_share_count,
 )
@@ -104,3 +106,32 @@ def test_official_bonus_removal_cannot_change_cash_terms():
     assert bonus_removed_without_cash_change(pages) == {"removed_bonus_ratio": "0.2"}
     changed_cash = pages[0].replace("更正后:向全体股东每10股派4元", "更正后:向全体股东每10股派5元")
     assert bonus_removed_without_cash_change([changed_cash]) is None
+
+
+def test_corrected_entitlement_year_requires_exact_before_after_match():
+    page = (
+        "补充更正前:三、股权登记日与除权除息日股权登记日为:2022年5月15日;"
+        "除权除息日为:2022年5月16日。补充更正后:三、股权登记日与除权除息日"
+        "股权登记日为:2023年5月15日;除权除息日为:2023年5月16日。"
+        "除上述补充更正内容外,公告其他内容不变。"
+    )
+    assert corrected_entitlement_year([page]) == {
+        "original_record_date": "2022-05-15",
+        "corrected_record_date": "2023-05-15",
+        "original_ex_date": "2022-05-16",
+        "corrected_ex_date": "2023-05-16",
+    }
+    assert corrected_entitlement_year([page.replace("2023年5月16日", "2023年5月17日")]) is None
+
+
+def test_corrected_cash_amount_requires_only_amount_change():
+    page = (
+        "原披露内容:二、分配方案每10股派发现金红利0.0298元(含税)。"
+        "现更正为:二、分配方案每10股派发现金红利0.3元(含税)。"
+        "除上述更正外,其他内容不变。"
+    )
+    assert corrected_cash_amount([page]) == {
+        "original_cash_per_share": "0.00298",
+        "corrected_cash_per_share": "0.03",
+    }
+    assert corrected_cash_amount([page.replace("现更正为:二、", "现更正为:三、")]) is None

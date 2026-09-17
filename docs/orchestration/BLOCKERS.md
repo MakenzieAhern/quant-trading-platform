@@ -1,5 +1,16 @@
 # Blockers
 
+## Current 2026-09-18 gate after official cash corrections
+
+P1 lacks 293 facts / 292 documents: 257 cash-queue notices and 35 other
+requests. The 002866 and 600586 corrections are closed by original/corrective
+issuer evidence, but other corrections involving reference-price formulas,
+aggregate eligible shares or unpaired entitlement terms remain open. The
+000022 final implementation PDF remains inaccessible through current DNS.
+Bounded bonus is 281/288 with 7,119 oracle rows outside scope; full censuses
+and 1,921 exact SZSE resumption boundaries remain partial. No Full Dataset
+or research gate opens.
+
 ## Current 2026-09-18 gate after nonfinal notice classification
 
 P1 still lacks 295 facts / 294 documents: 259 cash-queue notices and 35
