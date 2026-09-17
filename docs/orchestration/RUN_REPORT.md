@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 nonfinal notice classification and targeted cash source probe
+
+Original retained official PDFs/text and source-manifest hashes establish four
+additional no-executable-terms notices: 301233, 002611, 600157 and 603363.
+The 601009 proposal remains unclosed because it includes a preferred-share
+marker. Scope v4 closes 23 documents total, preserving its 19 prior rows;
+SHA-256 `c8fdbeeea3bab0bae92559d45cf15f14efb972b825bd266586983a84008f34ad`,
+manifest `d93ff588b4c20abdd318a9aa8009d6aad6c3e633d1ec280b7279e136795f2e18`.
+Cumulative v28 establishes 16,025/16,320 facts, leaving 295 facts / 294
+documents (259 cash-queue, 35 other); substitution count stays 1,957.
+SHA-256 `446a732b0d78a90fd844f4c09acd850f2356861b64e6ea52b3ac0e0020291228`,
+manifest `3ba4c92765883614c34ecd1877d8135cd7ca7a3796a3cde204c18f038aa659d5`.
+No new economic event was created. Targeted CNINFO metadata identified the
+2012-07-12 000022 implementation notice, but the PDF URL failed DNS on three
+bounded attempts; its amount/date facts remain unaccepted pending original
+source bytes. No purchase, Full Dataset, freeze or study followed.
+
 ## 2026-09-18 official dual-leg distribution source closure
 
 The retained CNINFO corpus contains the identical original source PDF for

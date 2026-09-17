@@ -1,5 +1,15 @@
 # Blockers
 
+## Current 2026-09-18 gate after nonfinal notice classification
+
+P1 still lacks 295 facts / 294 documents: 259 cash-queue notices and 35
+other source requests. CNINFO metadata found the 000022 2012 final cash
+notice, but DNS prevented retrieval of its original PDF; metadata/title are
+insufficient to accept the event. The preferred-marked 601009 proposal and
+all unresolved executable-source gaps stay open. Bounded bonus remains
+281/288 with 7,119 oracle rows outside scope; exact SZSE resumption and full
+cash/bonus censuses remain partial. No Full Dataset or research gate opens.
+
 ## Current 2026-09-18 gate after dual-leg official source closure
 
 P1 lacks 299 facts / 298 documents: 263 cash-queue notices and 35 other

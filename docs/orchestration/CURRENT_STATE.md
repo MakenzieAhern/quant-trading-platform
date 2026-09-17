@@ -1,5 +1,27 @@
 # Current state
 
+## Current R5 nonfinal official-notice scope — 2026-09-18
+
+Four more SHA-verified retained CNINFO PDFs are non-executable notices:
+301233 seeks authority to formulate a later interim plan, 002611 and 603363
+explicitly announce no distribution, and 600157 defers implementation. None
+has parsed cash/bonus terms or entitlement dates. The 601009 bank proposal is
+not closed because its PDF has a preferred-instrument marker. Immutable scope
+v4 preserves all 19 prior closures and adds four (23 total), file SHA-256
+`c8fdbeeea3bab0bae92559d45cf15f14efb972b825bd266586983a84008f34ad`,
+manifest `d93ff588b4c20abdd318a9aa8009d6aad6c3e633d1ec280b7279e136795f2e18`.
+P1 cumulative v28 establishes 16,025/16,320 facts and leaves 295 facts /
+294 documents (259 cash-queue, 35 other); 1,957 official substitutions are
+unchanged. Cumulative file SHA-256
+`446a732b0d78a90fd844f4c09acd850f2356861b64e6ea52b3ac0e0020291228`,
+manifest `3ba4c92765883614c34ecd1877d8135cd7ca7a3796a3cde204c18f038aa659d5`.
+No economic event or full cash census is inferred from these notices.
+
+Targeted official CNINFO metadata locates 000022's 2012-07-12 final dividend
+notice, but the original PDF could not be fetched after three bounded DNS
+failures. Metadata alone is not accepted as a cash event. Retrieval receipt is
+retained at `/home/yuchen/data/research/staging/p1-targeted-cash-000022-2012-v1/`.
+
 ## Current R5 dual cash-and-bonus official source closure — 2026-09-18
 
 Fifteen previously URL-less P1 dual-leg requests have one retained final

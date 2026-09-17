@@ -74,3 +74,32 @@ def test_undated_cash_proposal_requires_unique_later_final_issuer_event():
         == []
     )
     assert classify([requirement], [triage], set(), [final, final]) == []
+
+
+def test_no_distribution_and_deferral_require_no_executable_terms():
+    requirement = {
+        "document_id": "a",
+        "affected_events": ["CNINFO:1"],
+        "issuer": "600157",
+        "published_on": "2024-08-29",
+        "title": "关于推迟2023年度利润分配实施的公告",
+        "url": "official-url",
+    }
+    triage = {
+        "document_id": "a",
+        "candidate_class": "NEITHER",
+        "record_dates": [],
+        "ex_dates": [],
+        "preferred_instrument_marker": False,
+        "source_sha256": "sha",
+        "text_cache_sha256": "cache",
+    }
+    assert classify([requirement], [triage], set())[0]["classification"] == (
+        "NONFINAL_DEFERRED_IMPLEMENTATION_NOTICE"
+    )
+    assert classify([requirement], [dict(triage, candidate_class="CASH_ONLY")], set()) == []
+    assert classify([requirement], [dict(triage, preferred_instrument_marker=True)], set()) == []
+    requirement["title"] = "关于2024年不实施中期现金分红的公告"
+    assert classify([requirement], [triage], set())[0]["classification"] == (
+        "NONFINAL_NO_DISTRIBUTION_NOTICE"
+    )
