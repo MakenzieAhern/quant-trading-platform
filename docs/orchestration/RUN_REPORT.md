@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-17 exact-date orphan cash replay
+
+The common official-source composite classifier previously rejected exact
+issuer and exchange record/ex-date pairs for ordinary cash, despite accepting
+that same case for differentiated cash. Three 600705 original implementation
+notices have exact issuer/exchange dates, gross 0.07/0.07/0.086 per share,
+published before entitlement. A full checksum-verified replay also resolves
+688388's issuer date set via the official exchange target. No event was added.
+Composite v10 file SHA-256
+`a294a26eb846101957ca1be4b8d3bfc78dd9354b2ed0984ab2a685b27942e3d2`,
+manifest `23daf8481aeae8de4dba09986c7f22a7aea90e56ffeac1dfd475461110ffdba0`;
+1,080 closed, 76 rejected, input-order/checksum PASS. Cumulative v10 file
+SHA-256 `3334df807a0a2cf7dcd6e2b89575721f0b68b4d5abcca6805b49362c4bb52d1e`,
+manifest `b5ab47e0a99f4617a23dda4c798a620beb3332f3c9edfba2a4d9235b0773956a`;
+605 facts / 589 documents remain. Dataset gates unchanged.
+
 ## 2026-09-17 nonfinal issuer proposal scope
 
 Twelve official proposal/authorization documents have no final executable

@@ -18,8 +18,12 @@ from scripts.reconcile_distribution_cash import differentiated_cash, gross_cash
 def classify_dates(
     row: dict, records: list[str], ex_dates: list[str], *, differentiated: bool = False
 ) -> str | None:
-    if differentiated and records == [row["record_date"]] and ex_dates == [row["ex_date"]]:
-        return "DIFFERENTIATED_PUBLIC_A_EXACT_ISSUER_DATES"
+    if records == [row["record_date"]] and ex_dates == [row["ex_date"]]:
+        return (
+            "DIFFERENTIATED_PUBLIC_A_EXACT_ISSUER_DATES"
+            if differentiated
+            else "OFFICIAL_ISSUER_AND_EXCHANGE_EXACT_DATES"
+        )
     if (
         (not records or records == [row["record_date"]])
         and (not ex_dates or ex_dates == [row["ex_date"]])
@@ -201,7 +205,7 @@ def main() -> None:
     if len(candidates) != len(closed_ids) + len(closed) + len(rejected):
         raise ValueError("P1_CANDIDATE_CLASSIFICATION_INCOMPLETE")
     report = {
-        "report_version": "P1_ORPHAN_CASH_OFFICIAL_COMPOSITE_DATES_V2",
+        "report_version": "P1_ORPHAN_CASH_OFFICIAL_COMPOSITE_DATES_V3",
         "parser_sha256": sha256_file(Path(__file__)),
         "cash_parser_sha256": sha256_file(
             Path(__file__).with_name("reconcile_distribution_cash.py")

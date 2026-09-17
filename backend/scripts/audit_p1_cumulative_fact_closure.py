@@ -15,7 +15,7 @@ REPORTS = {
     "out_of_period": "p1-out-of-period-cash-v3.json",
     "primary": "p1-primary-cash-notice-ledger-v4.json",
     "orphan_issuer": "p1-orphan-cash-gap-substitutions-v4.json",
-    "orphan_exchange": "p1-orphan-exchange-dated-cash-v9.json",
+    "orphan_exchange": "p1-orphan-exchange-dated-cash-v10.json",
     "sse_st": "p1-official-sse-st-fact-closure-v1.json",
     "differentiated": "p1-differentiated-cash-notice-ledger-v7.json",
     "correction": "p1-correction-cash-facts-v5.json",
@@ -141,7 +141,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V9",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V10",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",

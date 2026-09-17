@@ -1,5 +1,22 @@
 # Current state
 
+## Current R5 exact-date orphan cash replay — 2026-09-17
+
+The common orphan cash classification now accepts **both** explicitly
+printed issuer entitlement dates when they exactly match the same official
+exchange row and accepted gross amount. This closes three previously
+misclassified 600705 final implementation PDFs (2014-07-23, 2015-08-10,
+2016-01-14). Replaying the already-retained source corpus also closed one
+688388 notice (2022-05-06) using an exchange-disambiguated date set after
+the earlier shared date parser improvement. All four were pre-record official
+issuer publications and are existing-event source corroborations, not new
+economic events. Orphan composite v10: 1,080 closed, 76 rejected; manifest
+`23daf8481aeae8de4dba09986c7f22a7aea90e56ffeac1dfd475461110ffdba0`.
+Cumulative v10: 15,715/16,320 established/out of scope; 1,688 official
+substitutions; 605 facts / 589 documents unresolved (289 distribution,
+300 other); manifest `b5ab47e0a99f4617a23dda4c798a620beb3332f3c9edfba2a4d9235b0773956a`.
+Full cash census remains PARTIAL; no Full Dataset or study.
+
 ## Current R5 official nonfinal proposal scope — 2026-09-17
 
 Twelve retained official issuer documents are proposals or authorizations,

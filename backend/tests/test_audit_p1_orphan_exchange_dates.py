@@ -9,7 +9,9 @@ def test_exchange_dates_only_fill_missing_issuer_dates():
         "OFFICIAL_EXCHANGE_DISAMBIGUATED_ISSUER_DATE_SET"
     )
     assert classify_dates(row, ["2023-11-28"], []) is None
-    assert classify_dates(row, ["2023-11-29"], ["2023-11-30"]) is None
+    assert classify_dates(row, ["2023-11-29"], ["2023-11-30"]) == (
+        "OFFICIAL_ISSUER_AND_EXCHANGE_EXACT_DATES"
+    )
     assert (
         classify_dates(row, ["2023-11-29"], ["2023-11-30"], differentiated=True)
         == "DIFFERENTIATED_PUBLIC_A_EXACT_ISSUER_DATES"

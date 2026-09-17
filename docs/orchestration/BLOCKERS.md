@@ -1,5 +1,14 @@
 # Blockers
 
+## Current 2026-09-17 orphan cash exact-date replay
+
+Four retained official issuer notices now corroborate existing accepted
+cash events after an exact-date classification correction and source replay.
+P1 remainder: 605 facts / 589 documents (289 distribution, 300 other).
+The 76 still-rejected orphan composite candidates remain rejected; no
+conflicting date or amount was silently normalized. Full cash and SZSE
+resumption census gates remain open; this is not a paid-source requirement.
+
 ## Current 2026-09-17 nonfinal notice scope — independent source work
 
 Twelve final-event false positives are now out of scope by official PDF,
