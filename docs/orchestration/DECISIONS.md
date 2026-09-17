@@ -1,5 +1,20 @@
 # Decisions
 
+## 2026-09-18 explicit 000022 A/B cash-column conflict resolution
+
+For the 2012-07-19/20 ordinary-A cash event of historical symbol 000022
+(stable identity `CN-A:SZSE:001872`), the retained contemporaneous final CNINFO
+issuer PDF explicitly states gross CNY 4.00 per 10 shares (CNY 0.40/share)
+and the A-share dates. The official SZSE monthly table reports `0.491` in its
+A-row DPS column, but its own pre-close/ex-price difference is CNY 0.400; the
+issuer's B-share HKD conversion rate `0.8149` maps CNY 0.40 to HKD 0.491 at
+the table's three-decimal precision. Treat this as an explicitly retained
+official-source conflict, not a generic exchange-field override. Accept the
+holder-class-specific issuer A cash only for this exact PDF SHA, point-in-time
+code-transition receipt, date pair and exchange row/price/FX crosscheck.
+Keep both reported values and source hashes in the closure receipt; no new
+economic event is created and no broader cash-census authority follows.
+
 ## 2026-09-18 equivalent official issuer implementation source
 
 Apply approved `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1` to the two bounded

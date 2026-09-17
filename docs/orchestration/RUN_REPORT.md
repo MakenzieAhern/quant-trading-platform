@@ -1,5 +1,25 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 historical 000022 official cash-source conflict closure
+
+An earlier retained official CNINFO final PDF (`61255655.PDF`, SHA-256
+`5ee3949582e2c5c967b4a3059c2b8c7a8077d50b0067608af584542b5deabee6`)
+explicitly establishes CNY 0.40/share for A holders and the 2012-07-19/20
+dates. The P0 point-in-time master binds historical 000022 to stable 001872,
+and the accepted ledger event references the same PDF. The official SZSE row
+reports A DPS 0.491, while its pre-close/ex-price difference is 0.400 and
+the issuer's B-share HKD conversion rate maps 0.40 to 0.491. A narrowly
+source-pinned exception records that conflict and accepts the issuer's A
+holder-class term; no generic override or new event was introduced. All 250
+prior retained-source closure rows are unchanged. Source v12 file SHA-256
+`019e59611c9aad04c07f056b7578cd3397a967b264519220497f117b6d524e69`,
+manifest `fc8005c3097f95166dd448c9e2bcb940ed9e784b0f39fc282c0de0ef869a70be`.
+Cumulative v30 establishes 16,028/16,320, leaving 292 facts / 291 documents
+(257 cash-queue, 34 other), 1,960 official substitutions; file SHA-256
+`9fe049e0c315d427f56a65d11ceefea62ff411e544baa67d08abc37cd1298918`,
+manifest `2ab3a12fad49b846d7b6d59091fa47ed63be95648347ffc071541614a06251f6`.
+This does not establish a full cash or corporate-action census.
+
 ## 2026-09-18 official cash correction reconciliation
 
 The retained original/corrective CNINFO PDFs for 002866 and 600586 pass exact
@@ -27,10 +47,10 @@ Cumulative v28 establishes 16,025/16,320 facts, leaving 295 facts / 294
 documents (259 cash-queue, 35 other); substitution count stays 1,957.
 SHA-256 `446a732b0d78a90fd844f4c09acd850f2356861b64e6ea52b3ac0e0020291228`,
 manifest `3ba4c92765883614c34ecd1877d8135cd7ca7a3796a3cde204c18f038aa659d5`.
-No new economic event was created. Targeted CNINFO metadata identified the
-2012-07-12 000022 implementation notice, but the PDF URL failed DNS on three
-bounded attempts; its amount/date facts remain unaccepted pending original
-source bytes. No purchase, Full Dataset, freeze or study followed.
+No new economic event was created. A newer targeted CNINFO download of the
+2012-07-12 000022 notice failed DNS on three bounded attempts; the original
+PDF was later located in a previously retained official batch and reconciled
+above. No purchase, Full Dataset, freeze or study followed.
 
 ## 2026-09-18 official dual-leg distribution source closure
 

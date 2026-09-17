@@ -101,7 +101,10 @@ def select(
             (row.get("code_transition_source_url"), row.get("code_transition_source_sha256"))
             for row in active
         }
-        if issuer_symbol != symbol and len(alias_evidence) != 1:
+        historical_code = sid.rsplit(":", 1)[-1] != symbol
+        if (issuer_symbol != symbol or historical_code) and (
+            len(alias_evidence) != 1 or not all(next(iter(alias_evidence)))
+        ):
             continue
         peers = by_cash[(sid, record, ex)]
         if len(peers) != 1:
@@ -152,11 +155,14 @@ def select(
                     {
                         "official_code_transition_url": next(iter(alias_evidence))[0],
                         "official_code_transition_sha256": next(iter(alias_evidence))[1],
-                        "requirement_stable_symbol": symbol,
+                        **(
+                            {"requirement_stable_symbol": symbol} if issuer_symbol != symbol else {}
+                        ),
                     }
-                    if issuer_symbol != symbol
+                    if issuer_symbol != symbol or historical_code
                     else {}
                 ),
+                **({"requirement_historical_symbol": symbol} if historical_code else {}),
                 "record_date": record,
                 "ex_date": ex,
                 "cash_per_share": event["cash_per_share"],

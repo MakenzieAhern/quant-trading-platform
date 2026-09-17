@@ -3,6 +3,7 @@
 import argparse
 import json
 import re
+import unicodedata
 from collections import Counter
 from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
@@ -51,8 +52,9 @@ def issuer_body_finality(title, pages):
     )
 
 
-def eligible(requirements, excluded, cash):
+def eligible(requirements, excluded, cash, master=()):
     by_key = {}
+    by_historical = {}
     for accepted in cash:
         event = accepted["event"]
         key = (
@@ -61,6 +63,9 @@ def eligible(requirements, excluded, cash):
             event["ex_date"],
         )
         by_key.setdefault(key, []).append(accepted)
+    for row in master:
+        if row["instrument_type"] == "COMMON_A_SHARE":
+            by_historical.setdefault(row["symbol"], []).append(row)
     rows, events = [], []
     for row in sorted(requirements, key=lambda item: item["document_id"]):
         if (
@@ -74,7 +79,24 @@ def eligible(requirements, excluded, cash):
         parts = row["affected_events"][0].split(":")
         if len(parts) != 4 or parts[0] != "CASH":
             continue
-        matches = by_key.get(tuple(parts[1:]), [])
+        symbol, record, ex = parts[1:]
+        matches = by_key.get((symbol, record, ex), [])
+        if not matches:
+            identities = {
+                row["security_id"]
+                for row in by_historical.get(symbol, [])
+                if row["effective_from"] <= record <= (row["effective_to"] or "2025-12-31")
+                and (
+                    row["security_id"].rsplit(":", 1)[-1] == symbol
+                    or (
+                        row.get("code_transition_source_url")
+                        and row.get("code_transition_source_sha256")
+                    )
+                )
+            }
+            if len(identities) == 1:
+                sid = next(iter(identities))
+                matches = by_key.get((sid.rsplit(":", 1)[-1], record, ex), [])
         if (
             len(matches) == 1
             and matches[0]["event"]["source_provider"] in PROVIDERS
@@ -163,6 +185,59 @@ def exchange_amount_matches(amount, targets):
     )
 
 
+def ab_currency_dps_conflict(row, amount, pages, szse):
+    if (
+        row["security_id"] != "CN-A:SZSE:001872"
+        or (row["issuer"], row["record_date"], row["ex_date"])
+        != ("000022", "2012-07-19", "2012-07-20")
+        or row["substitute_source_sha256"]
+        != "5ee3949582e2c5c967b4a3059c2b8c7a8077d50b0067608af584542b5deabee6"
+        or amount != Decimal("0.4")
+    ):
+        return None
+    text = re.sub(r"\s+", "", unicodedata.normalize("NFKC", "".join(pages)))
+    if not all(
+        marker in text
+        for marker in (
+            "股票代码:000022、200022",
+            "每10股派4.00元人民币现金",
+            "A股股权登记日为2012年7月19日",
+            "B股股息折算汇率",
+            "1港币=0.8149元人民币",
+        )
+    ):
+        return None
+    rows = [
+        item
+        for item in szse["rows"]
+        if item["symbol"] == "000022"
+        and item["record_date"] == row["record_date"]
+        and item["ex_date"] == row["ex_date"]
+    ]
+    if len(rows) != 1:
+        return None
+    exchange = rows[0]
+    cells = exchange["raw_cells"]
+    if len(cells) != 14:
+        return None
+    dps = Decimal(cells[5])
+    if (
+        dps != Decimal("0.491")
+        or Decimal(cells[13]) - Decimal(cells[12]) != amount
+        or (amount / Decimal("0.8149")).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP) != dps
+    ):
+        return None
+    return {
+        "policy": "A_SHARE_FINAL_ISSUER_TERMS_OVER_EXCHANGE_AB_CURRENCY_DPS_CONFLICT",
+        "exchange_source_url": exchange["source_url"],
+        "exchange_source_sha256": exchange["source_sha256"],
+        "exchange_reported_dps": str(dps),
+        "exchange_ex_price_delta": str(Decimal(cells[13]) - Decimal(cells[12])),
+        "issuer_gross_a_cash_per_share": str(amount),
+        "official_b_hkd_conversion_rate": "0.8149",
+    }
+
+
 def exchange_resolves_year_conflict(row, records, ex_dates, published_on):
     if (len(records), len(ex_dates)) != (1, 1):
         return False
@@ -214,9 +289,12 @@ def main():
         | {row["document_id"] for row in base["accepted_cash_matches"]}
         | {row["document_id"] for row in prior["closed"]}
     )
-    requests, events = eligible(requirements["documents"], excluded, cash["events"])
+    requests, events = eligible(requirements["documents"], excluded, cash["events"], master)
     if (requests, events) != eligible(
-        list(reversed(requirements["documents"])), excluded, list(reversed(cash["events"]))
+        list(reversed(requirements["documents"])),
+        excluded,
+        list(reversed(cash["events"])),
+        list(reversed(master)),
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     found, source_docs = retained_sources(args.staging, events)
@@ -307,6 +385,11 @@ def main():
                 classification = classify_dates(
                     row, records, ex_dates, differentiated=differentiated
                 )
+                conflict_resolution = (
+                    ab_currency_dps_conflict(row, amount, extracted["pages"], szse)
+                    if not exchange_amount_matches(amount, targets[key])
+                    else None
+                )
                 if classification is None and exchange_resolves_year_conflict(
                     row, records, ex_dates, doc["published_on"]
                 ):
@@ -319,7 +402,7 @@ def main():
                     reason = "NO_FINAL_IMPLEMENTATION_BODY"
                 elif amount != Decimal(row["cash_per_share"]):
                     reason = "ISSUER_CASH_AMOUNT_CONFLICT"
-                elif not exchange_amount_matches(amount, targets[key]):
+                elif not exchange_amount_matches(amount, targets[key]) and not conflict_resolution:
                     reason = "ISSUER_EXCHANGE_AMOUNT_CONFLICT"
                 elif classification is None:
                     reason = "ISSUER_DATE_CONFLICT"
@@ -343,6 +426,11 @@ def main():
                             "official_exchange_amounts": sorted(
                                 str(value) for value in targets[key]
                             ),
+                            **(
+                                {"official_exchange_amount_conflict": conflict_resolution}
+                                if conflict_resolution
+                                else {}
+                            ),
                             "source_manifest_sha256": sha256_file(manifest),
                             "source_text_sha256": sha256_file(cache),
                         }
@@ -352,12 +440,18 @@ def main():
     if len(closed) + len(rejected) != len(requests):
         raise ValueError("RETAINED_P1_CANDIDATES_NOT_PARTITIONED")
     report = {
-        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V10",
+        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V12",
         "candidate_documents": len(requests),
         "selected_documents": len(selected),
         "closed_documents": len(closed),
         "closed_facts": sum(len(row["affected_events"]) for row in closed),
-        "historical_code_alias_closures": sum("requirement_stable_symbol" in row for row in closed),
+        "historical_code_alias_closures": sum(
+            "requirement_stable_symbol" in row or "requirement_historical_symbol" in row
+            for row in closed
+        ),
+        "explicit_exchange_amount_conflicts_resolved": sum(
+            "official_exchange_amount_conflict" in row for row in closed
+        ),
         "classification_counts": dict(
             sorted(Counter(row["classification"] for row in closed).items())
         ),

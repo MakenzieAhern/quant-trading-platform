@@ -1,5 +1,27 @@
 # Current state
 
+## Current R5 recovered historical-code A/B cash fact — 2026-09-18
+
+The 000022 2012-07-12 CNINFO final implementation PDF was already retained in
+an earlier official cash-gap batch; only a newer targeted redownload failed
+DNS. Its original SHA-256 is
+`5ee3949582e2c5c967b4a3059c2b8c7a8077d50b0067608af584542b5deabee6`.
+The notice gives gross ordinary-A cash CNY 0.40/share, record 2012-07-19 and
+ex 2012-07-20. P0 master maps historical 000022 to stable
+`CN-A:SZSE:001872` with an official code-transition receipt; the already
+accepted event has the same source SHA and facts. The SZSE monthly table's
+A-row DPS `0.491` conflicts with the issuer, but its pre-close/ex-price delta
+is CNY 0.400 and the issuer's B-share HKD conversion rate maps 0.40 to 0.491.
+The one-event, source-pinned reconciliation records both values and hashes,
+without creating a new event or globally overriding exchange data. Retained
+source v12 closes 251/271 candidates, preserving all prior 250 rows; file
+SHA-256 `019e59611c9aad04c07f056b7578cd3397a967b264519220497f117b6d524e69`,
+manifest `fc8005c3097f95166dd448c9e2bcb940ed9e784b0f39fc282c0de0ef869a70be`.
+P1 cumulative v30 establishes 16,028/16,320 facts and leaves 292 facts /
+291 documents (257 cash-queue, 34 other), with 1,960 official substitutions;
+file SHA-256 `9fe049e0c315d427f56a65d11ceefea62ff411e544baa67d08abc37cd1298918`,
+manifest `2ab3a12fad49b846d7b6d59091fa47ed63be95648347ffc071541614a06251f6`.
+
 ## Current R5 official correction reconciliation — 2026-09-18
 
 Two retained official CNINFO corrections now reconcile with already accepted
@@ -35,10 +57,10 @@ unchanged. Cumulative file SHA-256
 manifest `3ba4c92765883614c34ecd1877d8135cd7ca7a3796a3cde204c18f038aa659d5`.
 No economic event or full cash census is inferred from these notices.
 
-Targeted official CNINFO metadata locates 000022's 2012-07-12 final dividend
-notice, but the original PDF could not be fetched after three bounded DNS
-failures. Metadata alone is not accepted as a cash event. Retrieval receipt is
-retained at `/home/yuchen/data/research/staging/p1-targeted-cash-000022-2012-v1/`.
+The later targeted 000022 redownload failed DNS after three bounded attempts;
+an older checksum-verified original PDF was subsequently found and reconciled
+above. The failed retrieval receipt remains in the archive, but is not the
+source of accepted cash facts.
 
 ## Current R5 dual cash-and-bonus official source closure — 2026-09-18
 

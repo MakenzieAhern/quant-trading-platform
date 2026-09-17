@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from scripts.audit_p1_orphan_cash_facts import select
 from scripts.audit_p1_retained_cash_sources import (
+    ab_currency_dps_conflict,
     eligible,
     exchange_amount_matches,
     exchange_resolves_year_conflict,
@@ -117,6 +118,116 @@ def test_official_historical_code_alias_needs_point_in_time_master_receipt():
     assert rows[0]["issuer"] == "601313"
     assert rows[0]["security_id"] == "CN-A:SSE:601360"
     assert rows[0]["official_code_transition_sha256"] == "transition-sha"
+    assert not select(
+        [requirement],
+        [],
+        [],
+        [event],
+        [{**master[0], "code_transition_source_sha256": None}],
+        [source],
+        historical_alias=True,
+    )
+
+
+def test_ab_currency_conflict_requires_issuer_and_exchange_price_crosscheck():
+    row = {
+        "security_id": "CN-A:SZSE:001872",
+        "issuer": "000022",
+        "record_date": "2012-07-19",
+        "ex_date": "2012-07-20",
+        "substitute_source_sha256": (
+            "5ee3949582e2c5c967b4a3059c2b8c7a8077d50b0067608af584542b5deabee6"
+        ),
+    }
+    pages = [
+        "股票代码\uff1a000022、200022 向全体股东每10股派4.00元人民币现金。"
+        "A股股权登记日为2012年7月19日\uff0cB股股息折算汇率 1港币\uff1d0.8149元人民币。"
+    ]
+    exchange = {
+        "rows": [
+            {
+                "symbol": "000022",
+                "record_date": "2012-07-19",
+                "ex_date": "2012-07-20",
+                "source_url": "https://investor.szse.cn/official.html",
+                "source_sha256": "exchange-sha",
+                "raw_cells": [
+                    "000022",
+                    "深赤湾A",
+                    "0",
+                    "0.000",
+                    "185,947,320",
+                    "0.491",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "2012/07/20",
+                    "2012/07/19",
+                    "9.480",
+                    "9.880",
+                ],
+            }
+        ]
+    }
+    result = ab_currency_dps_conflict(row, Decimal("0.4"), pages, exchange)
+    assert result["exchange_reported_dps"] == "0.491"
+    assert result["exchange_ex_price_delta"] == "0.400"
+    assert ab_currency_dps_conflict(row, Decimal("0.49"), pages, exchange) is None
+    changed = {**exchange["rows"][0], "raw_cells": [*exchange["rows"][0]["raw_cells"]]}
+    changed["raw_cells"][12] = "9.470"
+    assert ab_currency_dps_conflict(row, Decimal("0.4"), pages, {"rows": [changed]}) is None
+
+
+def test_historical_requirement_symbol_links_only_with_official_transition():
+    requirement = {
+        "priority": "P1",
+        "source_group": "CNINFO",
+        "document_id": "historical-code-cash",
+        "known_urls": [],
+        "required_document_types": ["FINAL_IMPLEMENTATION_NOTICE_WITH_GROSS_ORDINARY_A_SHARE_CASH"],
+        "affected_events": ["CASH:000022:2012-07-19:2012-07-20"],
+    }
+    event = {
+        "event": {
+            "security_id": {"value": "CN-A:SZSE:001872"},
+            "record_date": "2012-07-19",
+            "ex_date": "2012-07-20",
+            "cash_per_share": "0.4",
+            "source_provider": "OFFICIAL_ISSUER_CNINFO_EXCHANGE_DATED",
+            "source_url": "https://static.cninfo.com.cn/finalpage/notice.PDF",
+            "source_document": "2011年度分红派息实施公告",
+            "source_document_sha256": "pdf-sha",
+            "announcement_date": "2012-07-12",
+        },
+        "event_checksum": "event-sha",
+    }
+    master = [
+        {
+            "symbol": "000022",
+            "security_id": "CN-A:SZSE:001872",
+            "effective_from": "1993-05-05",
+            "effective_to": "2018-12-25",
+            "instrument_type": "COMMON_A_SHARE",
+            "code_transition_source_url": "https://static.cninfo.com.cn/finalpage/change.PDF",
+            "code_transition_source_sha256": "transition-sha",
+        }
+    ]
+    source = {
+        "url": event["event"]["source_url"],
+        "retrieval_status": "PASS",
+        "issuer": "000022",
+        "title": event["event"]["source_document"],
+        "published_on": "2012-07-12",
+        "source_sha256": "pdf-sha",
+        "source_path": "notice.pdf",
+    }
+    assert eligible([requirement], set(), [event]) == ([], [])
+    assert eligible([requirement], set(), [event], master) == ([requirement], [event])
+    selected = select([requirement], [], [], [event], master, [source], historical_alias=True)
+    assert selected[0]["security_id"] == "CN-A:SZSE:001872"
+    assert selected[0]["requirement_historical_symbol"] == "000022"
+    assert selected[0]["official_code_transition_sha256"] == "transition-sha"
     assert not select(
         [requirement],
         [],

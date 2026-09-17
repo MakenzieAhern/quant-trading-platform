@@ -1,12 +1,24 @@
 # Blockers
 
+## Current 2026-09-18 gate after 000022 official A/B reconciliation
+
+The 000022 cash-source request is no longer blocked by DNS: its original
+official PDF was already retained and reconciled with historical stable-ID,
+issuer A-holder terms and the exchange's internally conflicting A DPS/price
+cells. P1 still lacks 292 facts / 291 documents (257 cash-queue, 34 other).
+The remaining 20 retained-source candidates are explicitly rejected or
+unmatched; bounded bonus remains 281/288 with 7,119 oracle rows outside scope,
+and 1,921 exact SZSE resumption boundaries remain partial. No Full Dataset or
+research gate opens.
+
 ## Current 2026-09-18 gate after official cash corrections
 
 P1 lacks 293 facts / 292 documents: 257 cash-queue notices and 35 other
 requests. The 002866 and 600586 corrections are closed by original/corrective
 issuer evidence, but other corrections involving reference-price formulas,
 aggregate eligible shares or unpaired entitlement terms remain open. The
-000022 final implementation PDF remains inaccessible through current DNS.
+The later targeted 000022 redownload failed DNS, but its earlier retained
+original PDF has since been found and reconciled.
 Bounded bonus is 281/288 with 7,119 oracle rows outside scope; full censuses
 and 1,921 exact SZSE resumption boundaries remain partial. No Full Dataset
 or research gate opens.
@@ -14,9 +26,9 @@ or research gate opens.
 ## Current 2026-09-18 gate after nonfinal notice classification
 
 P1 still lacks 295 facts / 294 documents: 259 cash-queue notices and 35
-other source requests. CNINFO metadata found the 000022 2012 final cash
-notice, but DNS prevented retrieval of its original PDF; metadata/title are
-insufficient to accept the event. The preferred-marked 601009 proposal and
+other source requests. A later targeted 000022 redownload failed DNS, but
+its earlier retained original PDF has since been found and reconciled. The
+preferred-marked 601009 proposal and
 all unresolved executable-source gaps stay open. Bounded bonus remains
 281/288 with 7,119 oracle rows outside scope; exact SZSE resumption and full
 cash/bonus censuses remain partial. No Full Dataset or research gate opens.
