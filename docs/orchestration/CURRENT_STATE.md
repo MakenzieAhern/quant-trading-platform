@@ -4,19 +4,21 @@
 
 Reused retained CNINFO source manifests, original issuer PDFs and text caches
 against cash v43, point-in-time master and official SSE/SZSE exchange targets.
-Of 253 previously URL-less P1 final cash candidates, 107 pass the existing
-exact issuer-date rules. Another 62 have an impossible issuer-PDF year before
-that notice's publication, while both month-days match the authoritative
-exchange dates; these are classified as official exchange-resolved source-year
-conflicts, with both original dates preserved. Thus 169 close and 84 remain
-explicit: 67 title/master unmatched, seven issuer-date conflicts, four amount
-conflicts, and six without a unique explicit gross cash amount. No new
-economic events were created. Source report v3 manifest
-`e5012d557b66f826ee3b6c31dad5f4f5ca0dec2c4ccaf4508d1fb891b7057a6f`.
-P1 cumulative v18 establishes 15,910/16,320 facts, with 410 facts / 394
-documents unresolved (263 distribution, 131 other) and 1,861 official
+Of 253 previously URL-less P1 final cash candidates, a narrow additional
+final-implementation/actual-payout title rule identifies 45 more than the
+prior 169. Every acceptance still requires retained official issuer bytes,
+identity, exact gross amount, and official exchange date/amount corroboration.
+The 214 closed include 63 issuer-PDF year conflicts before publication whose
+month-days match the authoritative exchange dates; both raw source dates are
+preserved, and the effective dates come only from the exchange. Thirty-nine
+remain explicit: 21 title/master unmatched, eight issuer-date conflicts, four
+amount conflicts, six without a unique explicit gross amount. No new economic
+events were created. Source report v4 manifest
+`83551f6d84c11db717f88c134347b9dfc039b75d19d05e90889a0e263ba90e5e`.
+P1 cumulative v19 establishes 15,955/16,320 facts, with 365 facts / 349
+documents unresolved (263 distribution, 86 other) and 1,906 official
 substitutions; manifest
-`799e1797dd81a31797597c02868b2426e914b3f46ba3e4441601e786ad1a3beb`.
+`ab39ff3a3acdf8c61b2cb07651fcda472d37fdb363a8aaafeec1a29335ea8d97`.
 Full issuer cash census, bonus census and SZSE resumption remain PARTIAL. No
 Full Dataset, freeze or strategy study is accepted.
 

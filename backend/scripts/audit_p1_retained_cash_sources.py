@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import re
 from collections import Counter
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
@@ -9,7 +10,8 @@ from pathlib import Path
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
 from scripts.audit_full_cash_ledger import official_targets
-from scripts.audit_p1_orphan_cash_facts import REQUIREMENT, select
+from scripts.audit_p1_cash_census_counterexamples import SECONDARY
+from scripts.audit_p1_orphan_cash_facts import REQUIREMENT, final_issuer_title, select
 from scripts.audit_p1_orphan_exchange_dates import classify_dates
 from scripts.audit_p1_public_fact_requirements import verified
 from scripts.link_distribution_notices import notice_dates
@@ -20,6 +22,16 @@ PROVIDERS = {
     "OFFICIAL_ISSUER_CNINFO_EXCHANGE_RECONCILED",
     "OFFICIAL_ISSUER_CNINFO_PRIMARY_IMPLEMENTATION",
 }
+FINAL_VARIANT = re.compile(r"(?:实施(?:的)?公告|实施方案|实施报告|派发.*(?:股息|股利).*公告)$")
+NONFINAL_VARIANT = re.compile(r"董事会|股东大会|预案|决议|停牌|提示")
+
+
+def retained_final_title(title):
+    return final_issuer_title(title) or bool(
+        FINAL_VARIANT.search(title)
+        and not SECONDARY.search(title)
+        and not NONFINAL_VARIANT.search(title)
+    )
 
 
 def eligible(requirements, excluded, cash):
@@ -153,9 +165,17 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     found, source_docs = retained_sources(args.staging, events)
-    selected = select(requests, [], [], events, master, source_docs)
+    selected = select(
+        requests, [], [], events, master, source_docs, final_title=retained_final_title
+    )
     if selected != select(
-        list(reversed(requests)), [], [], list(reversed(events)), master, source_docs
+        list(reversed(requests)),
+        [],
+        [],
+        list(reversed(events)),
+        master,
+        source_docs,
+        final_title=retained_final_title,
     ):
         raise ValueError("SOURCE_INPUT_ORDER_CHANGED")
     instrument_types = {
@@ -228,7 +248,7 @@ def main():
     if len(closed) + len(rejected) != len(requests):
         raise ValueError("RETAINED_P1_CANDIDATES_NOT_PARTITIONED")
     report = {
-        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V3",
+        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V4",
         "candidate_documents": len(requests),
         "selected_documents": len(selected),
         "closed_documents": len(closed),

@@ -3,18 +3,20 @@
 ## 2026-09-17 retained official full-cash source closure
 
 Original retained official issuer PDFs, text hashes and source-manifest hashes
-closed 169 URL-less P1 final cash fact requests against unique accepted cash
-events and independent official exchange targets. Of these, 62 source PDFs
-label the correct month-days with a year before publication; the exact
-effective dates come from official exchange targets, not an inferred issuer
-year. All 253 candidates are partitioned: 169 closed, 84 rejected without
-default acceptance (67 title/master unmatched, seven date conflicts, four
-amount conflicts, six nonunique gross-cash terms). Source v3 manifest
-`e5012d557b66f826ee3b6c31dad5f4f5ca0dec2c4ccaf4508d1fb891b7057a6f`.
-P1 v18 leaves 410 facts / 394 documents (263 distribution, 131 other),
-with 15,910 facts established and 1,861 substitutions. Manifest
-`799e1797dd81a31797597c02868b2426e914b3f46ba3e4441601e786ad1a3beb`.
-All 632 database-independent backend tests pass. The full suite cannot pass
+closed 214 URL-less P1 final cash fact requests against unique accepted cash
+events and independent official exchange targets. The scoped final-title
+extension permits clear implementation or actual-payout variants, never
+proposals, board resolutions or tips. Sixty-three source PDFs label the
+correct month-days with a year before publication; the exact effective dates
+come from official exchange targets, not an inferred issuer year. All 253
+candidates are partitioned: 214 closed, 39 rejected (21 title/master
+unmatched, eight date conflicts, four amount conflicts, six nonunique gross
+cash terms). Source v4 manifest
+`83551f6d84c11db717f88c134347b9dfc039b75d19d05e90889a0e263ba90e5e`.
+P1 v19 leaves 365 facts / 349 documents (263 distribution, 86 other),
+with 15,955 facts established and 1,906 substitutions. Manifest
+`ab39ff3a3acdf8c61b2cb07651fcda472d37fdb363a8aaafeec1a29335ea8d97`.
+All 633 database-independent backend tests pass. The full suite cannot pass
 locally while PostgreSQL at `127.0.0.1:5432` refuses connections; Docker
 recovery remains deferred and separate from research-source acceptance.
 No new economic event, Full Dataset, freeze or research study followed.

@@ -2,10 +2,10 @@
 
 ## Current 2026-09-17 R5 gate after retained full-cash source closure
 
-P1 lacks 410 facts / 394 documents (263 distribution, 131 other). The
-retained-PDF pass closed 169 official issuer/exchange cash requests, including
-62 impossible prior-year labels resolved by exact official exchange dates,
-but leaves 84 candidates explicit rather than assuming final title, date or
+P1 lacks 365 facts / 349 documents (263 distribution, 86 other). The
+retained-PDF pass closed 214 official issuer/exchange cash requests, including
+63 impossible prior-year labels resolved by exact official exchange dates,
+but leaves 39 candidates explicit rather than assuming final title, date or
 amount.
 Full issuer cash and bonus censuses remain PARTIAL; bounded bonus is 276/288
 with 7,119 oracle rows outside the subset; SZSE has 1,921 exact resumption

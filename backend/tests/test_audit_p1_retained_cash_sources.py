@@ -4,6 +4,7 @@ from scripts.audit_p1_retained_cash_sources import (
     eligible,
     exchange_amount_matches,
     exchange_resolves_year_conflict,
+    retained_final_title,
 )
 
 
@@ -46,3 +47,11 @@ def test_year_conflict_needs_impossible_issuer_year_and_exact_exchange_month_day
     assert not exchange_resolves_year_conflict(
         row, ["2015-06-25", "2014-06-25"], ["2014-06-26"], "2015-06-18"
     )
+
+
+def test_retained_final_title_accepts_final_variants_not_proposals_or_tips():
+    assert retained_final_title("2021年年度权益分派及资本公积转增股本方案实施公告")
+    assert retained_final_title("关于派发2017年度末期股息的公告")
+    assert not retained_final_title("2011年度权益分派方案公告")
+    assert not retained_final_title("董事会2015年度分红派息公告")
+    assert not retained_final_title("A股分红派息实施暨停牌提示性公告")
