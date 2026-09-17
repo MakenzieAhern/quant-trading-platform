@@ -26,7 +26,11 @@ def event_from_review(row):
     return MergerEvent.model_validate(
         dict(
             parent_security={"value": f"CN-A:{parent_exchange}:" + row["parent"]},
-            successor_security={"value": f"CN-A:{successor_exchange}:" + row["successor"]},
+            successor_security={
+                "value": row.get(
+                    "successor_security_id", f"CN-A:{successor_exchange}:" + row["successor"]
+                )
+            },
             conversion_ratio=row["conversion_ratio"],
             conversion_denominator=row.get("conversion_denominator", "1"),
             parent_last_trading_date=row["parent_last_trading_date"],

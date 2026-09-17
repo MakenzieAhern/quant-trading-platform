@@ -453,6 +453,22 @@ def test_600631_official_terms_fail_closed_on_cash_choice():
         require_terms(pages)
 
 
+@pytest.mark.parametrize("parent", ["600607", "600842"])
+def test_2010_dual_parent_official_terms_fail_closed_on_ratio(parent):
+    from scripts.audit_merger_2010_dual_parent import COMMON_TERMS, PARENT_TERMS, require_terms
+
+    pages = {
+        path: {page: " ".join(terms) for page, terms in expected.items()}
+        for path, expected in {**COMMON_TERMS, **PARENT_TERMS[parent]}.items()
+    }
+    require_terms(pages, parent)
+    report = next(path for path in pages if "merger-report" in path)
+    ratio = "1:1.61" if parent == "600607" else "1:0.96"
+    pages[report][81] = pages[report][81].replace(ratio, "1:0.95")
+    with pytest.raises(ValueError, match="OFFICIAL_MERGER_TERM_MISMATCH"):
+        require_terms(pages, parent)
+
+
 @pytest.mark.parametrize(
     "review",
     [
@@ -481,6 +497,12 @@ def test_600631_official_terms_fail_closed_on_cash_choice():
         json.loads(
             (Path(__file__).parent / "fixtures/merger_600631_recovery_v1.json").read_bytes()
         )["case"]
+    ]
+    + [
+        json.loads(
+            (Path(__file__).parent / f"fixtures/merger_{parent}_recovery_v1.json").read_bytes()
+        )["case"]
+        for parent in ("600607", "600842")
     ],
     ids=lambda r: r["parent"],
 )
@@ -502,7 +524,10 @@ def test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(review)
         portfolio = PortfolioEngine(bus, Decimal(10000))
         exchange = review.get("exchange", "SZSE")
         parent = review["parent"] + "." + review.get("parent_exchange", exchange)
-        successor = review["successor"] + "." + review.get("successor_exchange", exchange)
+        successor_code = (
+            review.get("successor_security_id", "").split(":")[-1] or review["successor"]
+        )
+        successor = successor_code + "." + review.get("successor_exchange", exchange)
         portfolio.apply_fill(
             make_fill(1, OrderSide.BUY, str(quantity), "10", symbol=parent).model_copy(
                 update={"timestamp": at(review["parent_last_trading_date"])}

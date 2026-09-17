@@ -1,5 +1,56 @@
 # R5 Merger Implementation Lead Closure V1
 
+## Targeted 600607/600842→stable 601607 source-chain audit — 2026-09-18
+
+The [2010-02-02 surviving-company report](https://static.cninfo.com.cn/finalpage/2010-02-02/57568719.PDF)
+sets 600607's 1:1.61 and 600842's 1:0.96 old-to-new ratios, with whole-share
+conversion and registry/exchange handling of residuals. The respective
+[600607](https://static.cninfo.com.cn/finalpage/2010-02-02/57568627.PDF) and
+[600842](https://static.cninfo.com.cn/finalpage/2010-02-02/57568646.PDF)
+cash-choice implementation notices set 2010-02-03 as last parent trading and
+cash-choice record day, then continuous suspension from 2010-02-04. The
+[600607 result](https://static.cninfo.com.cn/finalpage/2010-02-05/57581588.PDF)
+and [execution](https://static.cninfo.com.cn/finalpage/2010-02-11/57603947.PDF)
+confirm affiliated YKB elected cash for 160,440,885 shares but no other
+holder did; the [600842 result](https://static.cninfo.com.cn/finalpage/2010-02-05/57581598.PDF)
+reports no elections. Parent [600607](https://static.cninfo.com.cn/finalpage/2010-02-11/57603948.PDF)
+and [600842](https://static.cninfo.com.cn/finalpage/2010-02-11/57603960.PDF)
+terminate on 2010-02-12.
+
+The [successor result](https://static.cninfo.com.cn/finalpage/2010-02-25/57623766.PDF)
+says registry conversion completed 2010-02-23 and new unrestricted shares
+listed 2010-03-01; this is **not** the actual trading date. The
+[code notice](https://static.cninfo.com.cn/finalpage/2010-03-03/57644871.PDF)
+changes the same company's symbol from 600849 to 601607 on 2010-03-05, and
+the [resumption notice](https://static.cninfo.com.cn/finalpage/2010-03-08/57663591.PDF)
+sets actual unrestricted-share trading to 2010-03-09. The already audited
+security master uses stable ID `CN-A:SSE:601607` on both symbol intervals;
+targeted raw dates corroborate the parent last sessions and successor
+resumption, but do not replace official economic authority.
+
+`backend/scripts/audit_merger_2010_dual_parent.py` verifies original PDF
+receipts/terms, chronology, exact master intervals, raw date boundary and
+reverse input ordering. Immutable external 600607 audit file SHA-256
+`b0fcec91e22e4fb4c1f764f09038969e7e603be809c23f20b5249e1254349a07`,
+manifest `c5c2912a936b6d8bd473f2fd7ae088a480da75fef2a891526a0379c09bea158a`,
+event checksum `ccf13037cd19929a4bd5cc7586322c96d19f526530567d515238f06e84082e70`.
+600842 audit file SHA-256
+`8a457afcbcd834a470e0bde93204a9e87ac0e6af3dcef08a683fc44e216057c9`,
+manifest `42031dd15328cfd8ab100058d6e3a03957c7525d98ca9a4fd5e2620e1fe7f8a1`,
+event checksum `d4acf59f76066a2f250cc1ec93298448881522c30c86d16acca6bd1bd87a097b`.
+Source URLs, individual PDF hashes and UTC retrieval times are in the reviewed
+fixtures; original bytes and immutable reports remain outside Git. This is
+only ordinary unrestricted A-share non-cash-election scope. The associated
+P1 closure manifests are
+`2ea11bf6b7b9d858d91e9c317cc3c10083609651c5e0c8493f41629137b37617`
+and `8c041ec1516451dbf2a18ab6277fe156cfd8e63e359ee19a120ec329c12a687d`.
+The approved merger research floor is not an assertion about an individual's
+actual fractional award. Cumulative P1 v49 is **16,069/16,320** established,
+**1,990** substitutions, **251 facts / 250 documents** open; manifest
+`81b39252d789a38af4e1d0b001adcc727291ac84ec9a3870ec45720bd84b2994`. No new event enters
+the accepted 15-event inventory; no full merger census, Full Dataset or
+strategy gate is claimed.
+
 ## Targeted 600631→600827 source-chain audit — 2026-09-18
 
 The bounded ordinary unrestricted 600631 A-share holder **without a cash
@@ -95,7 +146,9 @@ The registry-wide exact account allocation is not inferred from projected total
 shares or a generic rule reference. The separately approved **merger research
 floor** can model an unknowable fraction only after the ordinary-A event and
 its tradability boundary pass their own source audit; it is not evidence of an
-actual account award. These four parent chains remain `SOURCE_INCOMPLETE_NEW_CHAIN`.
+actual account award. At this earlier source-lead checkpoint, the four parent
+chains were `SOURCE_INCOMPLETE_NEW_CHAIN`; the bounded audits above supersede
+that status.
 The original 601607 resumption PDF hashes are
 `f51fea0d6a996ba4c8b9cae6e7551358460789933edf6278702cdf772d6be5ac`
 (March 8) and

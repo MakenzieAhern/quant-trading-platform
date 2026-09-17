@@ -35,6 +35,8 @@ def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
             "merger_new",
             "merger_600832",
             "merger_600631",
+            "merger_600607",
+            "merger_600842",
         )
     }
     reports["base"] = baseline
@@ -86,16 +88,19 @@ def test_000418_source_closure_requires_audited_chain():
         close(requirements, {**audit, "source_terms_verified": False}, fixture, "fixture-sha")
 
 
-def test_600832_source_closure_requires_exact_event_and_recounts():
+@pytest.mark.parametrize(
+    "parent,successor", [("600832", "600637"), ("600607", "600849"), ("600842", "600849")]
+)
+def test_recovered_merger_source_closure_requires_exact_event(parent, successor):
     import json
     from pathlib import Path
 
     from scripts.reconcile_merger_implementation_batch import event_from_review
 
     fixture = json.loads(
-        (Path(__file__).parent / "fixtures/merger_600832_recovery_v1.json").read_bytes()
+        (Path(__file__).parent / f"fixtures/merger_{parent}_recovery_v1.json").read_bytes()
     )
-    event_id = "MERGER_NEW:600832:600637"
+    event_id = f"MERGER_NEW:{parent}:{successor}"
     requirements = {
         "documents": [
             {"document_id": "parent-source", "affected_events": [event_id], "priority": "P1"}

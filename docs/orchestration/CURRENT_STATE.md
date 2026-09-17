@@ -1,5 +1,24 @@
 # Current state
 
+## Current R5 dual-parent 2010 official merger-chain audit — 2026-09-18
+
+The bounded ordinary unrestricted, non-cash-electing 600607 and 600842 A-share
+conversions into the same surviving company are now source-byte, page-term,
+master-lifecycle, raw-boundary and input-order audited. The respective ratios
+are 1:1.61 and 1:0.96. Both parents last traded 2010-02-03, halted from
+2010-02-04 and terminated 2010-02-12; registration completed 2010-02-23.
+New unrestricted shares were listed on 2010-03-01, the surviving company's
+code changed 600849→601607 on 2010-03-05 without changing its stable ID, and
+trading resumed only on 2010-03-09. An affiliated 600607 holder elected cash
+for 160,440,885 shares and is expressly outside the non-electing audit; no
+600842 holder elected. Individual registry fractional awards are not claimed.
+The two exact P1 source requests close without adding an accepted economic
+event or certifying a full merger census. Cumulative v49 is **16,069/16,320**
+established, **1,990** official substitutions and **251 facts / 250 documents**
+open (241 acquired distribution PDFs, 9 other). Full Dataset and studies stay
+locked; the retained-bonus fractional methodology gate remains active. See
+`../research/R5_MERGER_LEAD_CLOSURE_V1.md`.
+
 ## Current R5 600631 official merger-chain audit — 2026-09-18
 
 The ordinary unrestricted A-share, non-cash-electing 600631→600827 chain is
@@ -47,8 +66,8 @@ CNINFO metadata. Original PDF receipts and source SHA-256 are recorded in
 `../research/R5_MERGER_LEAD_CLOSURE_V1.md`. Report, progress and result
 notices establish ratios and several termination/registration/listing dates,
 but not every actual tradability boundary, parent/holder scope or registry
-fractional award. This historical checkpoint preceded the separate 600832
-bounded source audit above; the other three parent chains remain incomplete.
+fractional award. This historical checkpoint preceded the bounded audits
+above; the four leads were incomplete at that time.
 P0 public master remains PASS and no paid source was used.
 
 ## Current R5 000418 official merger-chain audit — 2026-09-18

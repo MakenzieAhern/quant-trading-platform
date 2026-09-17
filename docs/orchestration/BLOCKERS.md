@@ -2,6 +2,15 @@
 
 ## Current R5 P1 and methodology gates — 2026-09-18
 
+The two bounded 600607/600842→stable 601607 ordinary-A non-electing source
+chains are now audited and their exact P1 requests closed. Cumulative P1 v49
+leaves **251 facts / 250 documents** open: 241 acquired distribution PDFs and
+9 other requests. The accepted 15-event inventory and full merger census are
+unchanged. The active human decision is still retained-bonus fractional-share
+handling for 688339 on 2024-07-22; no Full Dataset, freeze or study is admitted.
+
+### Previous checkpoint after 600631 source closure
+
 The bounded official 600631→600827 ordinary-A non-electing merger chain is
 now audited and its exact P1 source request closed. Cumulative P1 v48 leaves
 **253 facts / 252 documents** open: 241 acquired distribution PDFs and 11

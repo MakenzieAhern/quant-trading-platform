@@ -1,5 +1,26 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 dual-parent 600607/600842 official source closure
+
+Resumed the targeted CNINFO fetch from the retained metadata and recovered
+only the missing 2010 issuer PDFs; the transient DNS failure below is resolved.
+Eight original documents for 600607 and seven for 600842, including shared
+successor disclosures, passed byte/receipt and exact-term checks. The official
+master's stable `CN-A:SSE:601607` identity spans the 600849→601607 code change.
+The issuer distinguishes the 2010-03-01 listing of new unrestricted shares
+from actual 2010-03-09 trading resumption. Cash choice was exercised for
+160,440,885 affiliated 600607 shares, excluded from the reviewed ordinary-A
+non-electing scope; 600842 reported no elections. Per-account fractional
+awards remain unobservable. Exact P1 requests `MERGER_NEW:600607:600849` and
+`MERGER_NEW:600842:600849` close, with no new accepted economic event.
+Audits: 600607 manifest `c5c2912a936b6d8bd473f2fd7ae088a480da75fef2a891526a0379c09bea158a`;
+600842 manifest `42031dd15328cfd8ab100058d6e3a03957c7525d98ca9a4fd5e2620e1fe7f8a1`.
+Cumulative v49: 16,069/16,320 established, 1,990 substitutions, 251 facts /
+250 documents open (241 acquired distribution, 9 other), manifest
+`81b39252d789a38af4e1d0b001adcc727291ac84ec9a3870ec45720bd84b2994`. The 15-event
+inventory, full-merger census, retained-bonus methodology gate, Full Dataset
+and study locks remain unchanged.
+
 ## 2026-09-18 next older SSE merger lead, not accepted
 
 Targeted CNINFO metadata for the 600607 and 600842 parent chains was saved
