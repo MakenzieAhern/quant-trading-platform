@@ -40,6 +40,8 @@ def test_retained_cash_candidates_require_exact_event_and_official_issuer_source
     assert eligible(requirements, set(), cash) == ([], [])
     cash[0]["policy_id"] = "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"
     assert eligible(requirements, set(), cash) == (requirements, cash)
+    cash[0]["event"]["source_provider"] = "OFFICIAL_SSE_TABLE_CNINFO_NOTICE_COMPOSITE"
+    assert eligible(requirements, set(), cash) == (requirements, cash)
     assert exchange_amount_matches(Decimal("0.100022"), {Decimal("0.1000")})
     assert not exchange_amount_matches(Decimal("0.1006"), {Decimal("0.1000")})
 

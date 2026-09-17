@@ -91,7 +91,7 @@ def notice_dates(pages):
     # The A-share last-trade placeholder is required; never shift B-share columns.
     tables = re.findall(
         r"股份类别股权登记日最后交易日除权\(息\)日"
-        r"(?:现金红利发放日|新增无限售条件流通股份上市日){1,2}"
+        r"(?:现金红利发放日|特殊股息现金发放日|新增无限售条件流通股份上市日){1,2}"
         r"A股" + slash_date + r"[-—]" + slash_date + r"(?=20\d{2}/|\D|$)",
         compact,
     )

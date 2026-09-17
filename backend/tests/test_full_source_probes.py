@@ -577,6 +577,12 @@ def test_distribution_table_dates_require_fixed_columns_and_a_share_placeholder(
 
     assert notice_dates([header + "B股 2018/7/17 2018/7/12 2018/7/13"]) == ([], [])
     assert notice_dates([header + "A股 2018/7/12 2018/7/13 2018/7/13"]) == ([], [])
+    assert notice_dates(
+        [
+            "股份类别 股权登记日 最后交易日 除权(息)日 特殊股息现金发放日 "
+            "A股 2020/10/22 - 2020/10/23 2020/10/23"
+        ]
+    ) == (["2020-10-22"], ["2020-10-23"])
     assert notice_dates([header + "A股 2018/7/12 - 2018/7/13\n股权登记日:2018年7月11日"]) == (
         ["2018-07-11", "2018-07-12"],
         ["2018-07-13"],

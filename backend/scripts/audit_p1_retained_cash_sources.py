@@ -4,6 +4,7 @@ import argparse
 import json
 import re
 from collections import Counter
+from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
@@ -22,6 +23,7 @@ PROVIDERS = {
     "OFFICIAL_ISSUER_CNINFO_EXCHANGE_RECONCILED",
     "OFFICIAL_ISSUER_CNINFO_PRIMARY_IMPLEMENTATION",
     "OFFICIAL_ISSUER_CNINFO_DIFFERENTIATED_PUBLIC_A",
+    "OFFICIAL_SSE_TABLE_CNINFO_NOTICE_COMPOSITE",
 }
 FINAL_VARIANT = re.compile(r"(?:实施(?:的)?公告|实施方案|实施报告|派发.*(?:股息|股利).*公告)$")
 NONFINAL_VARIANT = re.compile(r"董事会|股东大会|预案|决议|停牌|提示")
@@ -74,7 +76,19 @@ def eligible(requirements, excluded, cash):
 
 
 def retained_sources(staging, events):
-    keys = {(row["event"]["source_url"], row["event"]["source_document_sha256"]) for row in events}
+    direct = {}
+    composite = {}
+    for row in events:
+        event = row["event"]
+        direct[(event["source_url"], event["source_document_sha256"])] = (
+            event["source_document"],
+            event["announcement_date"],
+        )
+        if event["source_provider"] == "OFFICIAL_SSE_TABLE_CNINFO_NOTICE_COMPOSITE":
+            record = event["record_date"]
+            composite.setdefault(event["security_id"]["value"].split(":")[-1], []).append(
+                ((date.fromisoformat(record) - timedelta(days=60)).isoformat(), record)
+            )
     found = {}
     for manifest in sorted(staging.rglob("source-manifest.json")):
         data = json.loads(manifest.read_bytes())
@@ -82,7 +96,17 @@ def retained_sources(staging, events):
             continue
         for doc in data.get("documents", []):
             key = doc.get("url"), doc.get("source_sha256")
-            if key not in keys or doc.get("retrieval_status") != "PASS":
+            published = doc.get("published_on", "")
+            direct_match = key in direct and (doc.get("title"), published) == direct[key]
+            composite_match = (
+                doc.get("url", "").startswith("https://static.cninfo.com.cn/finalpage/")
+                and retained_final_title(doc.get("title", ""))
+                and any(
+                    start <= published <= record
+                    for start, record in composite.get(doc.get("issuer"), [])
+                )
+            )
+            if (not direct_match and not composite_match) or doc.get("retrieval_status") != "PASS":
                 continue
             if key in found:
                 earlier = found[key][1]
@@ -287,7 +311,7 @@ def main():
     if len(closed) + len(rejected) != len(requests):
         raise ValueError("RETAINED_P1_CANDIDATES_NOT_PARTITIONED")
     report = {
-        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V7",
+        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V8",
         "candidate_documents": len(requests),
         "selected_documents": len(selected),
         "closed_documents": len(closed),

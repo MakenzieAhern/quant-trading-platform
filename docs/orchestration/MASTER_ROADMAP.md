@@ -1,5 +1,12 @@
 # v1.1 controller roadmap
 
+Current 2026-09-18 SSE-composite issuer receipt replay closes 11 more P1
+cash requests, preserving all 226 earlier retained-source closures. P1 now
+has 342 unresolved facts / 326 documents (263 distribution, 63 other) and
+15,978/16,320 established or out of scope. Cash/bonus census and SZSE
+resumption gates remain partial; Full Dataset and research gates stay closed.
+Earlier paragraphs below are historical checkpoints.
+
 Current 2026-09-17 correction replay removes the 003041 false 0.2 bonus
 token by official pre-record issuer evidence without creating an event.
 P1 has 621 unresolved facts / 605 documents (301 distribution, 304 other).

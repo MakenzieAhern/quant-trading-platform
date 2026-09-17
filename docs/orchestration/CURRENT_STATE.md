@@ -1,5 +1,21 @@
 # Current state
 
+## Current R5 SSE-composite issuer cash receipts — 2026-09-18
+
+Eleven URL-less P1 cash requests with accepted SSE-table/CNINFO-composite
+events now have unique retained final CNINFO issuer notices within 60 days of
+their record dates. Original PDFs and text hashes, issuer identity, exact
+ordinary-A gross cash, and official exchange amounts and dates all reconcile.
+One 2020 special-dividend notice uses a slash-date table with a distinct
+`特殊股息现金发放日` heading; the date parser now recognizes that exact official
+table shape. Earlier 226 closures are unchanged. Source v8 closes 237/270
+candidates, with 33 rejected explicitly; manifest
+`1a3246c76ec777da95e91c4ebec4413a8fb4d10844373edf79a72e829c9f17a8`.
+P1 cumulative v23 establishes 15,978/16,320 facts, leaving 342 facts / 326
+documents (263 distribution, 63 other) and 1,929 official substitutions;
+manifest `abc8888f39801cbe3fe47aae0d297e3869202bc7e510712e39b8bd5bf0c1da54`.
+No new economic event, Full Dataset, freeze or study was accepted.
+
 ## Current R5 differentiated-public-A source closure — 2026-09-18
 
 Six additional URL-less P1 cash requests have retained official CNINFO final

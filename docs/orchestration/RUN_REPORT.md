@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 SSE-composite official issuer cash receipts
+
+Eleven accepted SSE-table/CNINFO-composite cash events were cross-checked
+against unique retained final issuer PDFs. Each original source amount and
+record/ex-date matches the accepted event and official exchange target; the
+2020 special-dividend slash-date table needed a narrow header variant in the
+existing date parser. Previous 226 closures remain byte-for-byte identical.
+Source v8 closes 237/270 candidates, 33 rejected; manifest
+`1a3246c76ec777da95e91c4ebec4413a8fb4d10844373edf79a72e829c9f17a8`.
+Cumulative P1 v23 establishes 15,978/16,320 facts; 342 facts / 326 documents
+remain, including 263 distribution notices and 63 other documents. Official
+substitutions total 1,929; manifest
+`abc8888f39801cbe3fe47aae0d297e3869202bc7e510712e39b8bd5bf0c1da54`.
+No new economic event or Full Dataset was created.
+
 ## 2026-09-18 differentiated-public-A official cash receipts
 
 Six existing differentiated-public-A cash events are corroborated by the same

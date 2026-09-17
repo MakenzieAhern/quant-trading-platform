@@ -1,5 +1,15 @@
 # Blockers
 
+## Current 2026-09-18 gate after SSE-composite issuer receipts
+
+P1 lacks 342 facts / 326 documents (263 distribution, 63 other). Eleven
+retained official issuer notices close SSE-table/CNINFO-composite cash
+requests against accepted exchange amounts and dates, while 33 other
+retained-source candidates remain explicitly rejected. Full issuer cash and
+bonus censuses, 1,921 SZSE resumption boundaries, two inaccessible official
+SSE implementation PDFs, and local Docker Linux-engine startup remain
+independent gaps. Full Dataset, freeze and study gates remain locked.
+
 ## Current 2026-09-18 gate after differentiated cash receipts
 
 P1 lacks 353 facts / 337 documents (263 distribution, 74 other). Six
