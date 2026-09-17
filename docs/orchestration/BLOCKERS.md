@@ -1,5 +1,16 @@
 # Blockers
 
+## Current 2026-09-18 R5 source and local-runtime gates
+
+P1 still lacks 359 facts / 343 documents (263 distribution, 80 other).
+The six 601313/601360 historical-code issuer receipts close as exact source
+substitutions; 33 retained-source candidates remain explicitly rejected.
+Full cash issuer and bonus censuses, 1,921 SZSE resumption boundaries, and
+two inaccessible SSE implementation PDFs remain independent R5 source gaps.
+Docker Desktop's Linux engine is unavailable after this reboot; service-start
+permission failed without any destructive action. Dataset, freeze and study
+gates remain locked.
+
 ## Current 2026-09-17 R5 gate after retained full-cash source closure
 
 P1 lacks 365 facts / 349 documents (263 distribution, 86 other). The

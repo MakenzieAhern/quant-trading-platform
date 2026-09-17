@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 historical-code official cash receipts
+
+Six 601360 stable-ID P1 requests are supported by the issuer's historical
+601313 implementation notices and the official point-in-time code-transition
+receipt. All six have exact issuer cash and entitlement dates, accepted event
+checksums and official exchange corroboration. Source v6 closes 220/253;
+33 remain explicit (15 title/master, eight date, four amount, six nonunique
+gross-cash). Manifest `d125a9d83737bf6251efbb3c82148a819378c7e0e89db9be374db46fce20d095`.
+Cumulative P1 v21 leaves 359 facts / 343 documents, with 15,961/16,320
+established and 1,912 substitutions. Manifest
+`1a9987a52b879be1b6338e252e5d5cbc21d77cb7212152eb592b09fbf000e0c3`.
+All 634 database-independent backend tests, Ruff, formatting and input-order
+checks pass. Database-backed tests remain unrun locally until Docker recovers.
+The current Windows Docker Desktop processes started after reboot but the
+Linux engine pipe and WSL CLI integration remained absent. A non-destructive
+`com.docker.service` start returned `Cannot open ... service`; no reset,
+volume deletion or database mutation was attempted.
+
 ## 2026-09-17 retained official full-cash source closure
 
 Original retained official issuer PDFs, text hashes and source-manifest hashes

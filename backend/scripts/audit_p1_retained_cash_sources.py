@@ -166,16 +166,24 @@ def main():
         raise ValueError("INPUT_ORDER_CHANGED")
     found, source_docs = retained_sources(args.staging, events)
     selected = select(
-        requests, [], [], events, master, source_docs, final_title=retained_final_title
+        requests,
+        [],
+        [],
+        events,
+        master,
+        source_docs,
+        final_title=retained_final_title,
+        historical_alias=True,
     )
     if selected != select(
         list(reversed(requests)),
         [],
         [],
         list(reversed(events)),
-        master,
-        source_docs,
+        list(reversed(master)),
+        list(reversed(source_docs)),
         final_title=retained_final_title,
+        historical_alias=True,
     ):
         raise ValueError("SOURCE_INPUT_ORDER_CHANGED")
     instrument_types = {
@@ -248,11 +256,12 @@ def main():
     if len(closed) + len(rejected) != len(requests):
         raise ValueError("RETAINED_P1_CANDIDATES_NOT_PARTITIONED")
     report = {
-        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V4",
+        "report_version": "P1_RETAINED_OFFICIAL_FULL_CASH_SOURCE_CLOSURE_V6",
         "candidate_documents": len(requests),
         "selected_documents": len(selected),
         "closed_documents": len(closed),
         "closed_facts": sum(len(row["affected_events"]) for row in closed),
+        "historical_code_alias_closures": sum("requirement_stable_symbol" in row for row in closed),
         "classification_counts": dict(
             sorted(Counter(row["classification"] for row in closed).items())
         ),
@@ -277,6 +286,7 @@ def main():
             str(path): sha256_file(path) for path in sorted({item[0] for item in found.values()})
         },
         "parser_sha256": sha256_file(Path(__file__)),
+        "selector_sha256": sha256_file(Path(__file__).with_name("audit_p1_orphan_cash_facts.py")),
         "cash_parser_sha256": sha256_file(
             Path(__file__).with_name("reconcile_distribution_cash.py")
         ),

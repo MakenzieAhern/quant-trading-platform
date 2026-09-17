@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from scripts.audit_p1_orphan_cash_facts import select
 from scripts.audit_p1_retained_cash_sources import (
     eligible,
     exchange_amount_matches,
@@ -55,3 +56,63 @@ def test_retained_final_title_accepts_final_variants_not_proposals_or_tips():
     assert not retained_final_title("2011年度权益分派方案公告")
     assert not retained_final_title("董事会2015年度分红派息公告")
     assert not retained_final_title("A股分红派息实施暨停牌提示性公告")
+
+
+def test_official_historical_code_alias_needs_point_in_time_master_receipt():
+    requirement = {
+        "priority": "P1",
+        "source_group": "CNINFO",
+        "document_id": "historical-cash",
+        "known_urls": [],
+        "required_document_types": ["FINAL_IMPLEMENTATION_NOTICE_WITH_GROSS_ORDINARY_A_SHARE_CASH"],
+        "affected_events": ["CASH:601360:2012-04-23:2012-04-24"],
+    }
+    url = "https://static.cninfo.com.cn/finalpage/2012-04-18/notice.PDF"
+    event = {
+        "event": {
+            "security_id": {"value": "CN-A:SSE:601360"},
+            "record_date": "2012-04-23",
+            "ex_date": "2012-04-24",
+            "cash_per_share": "0.15",
+            "source_provider": "OFFICIAL_ISSUER_CNINFO_EXCHANGE_RECONCILED",
+            "source_url": url,
+            "source_document": "分红派息实施公告",
+            "source_document_sha256": "issuer-sha",
+            "announcement_date": "2012-04-18",
+        },
+        "event_checksum": "event-sha",
+    }
+    master = [
+        {
+            "symbol": "601313",
+            "security_id": "CN-A:SSE:601360",
+            "effective_from": "2012-01-16",
+            "effective_to": "2018-02-22",
+            "instrument_type": "COMMON_A_SHARE",
+            "code_transition_source_url": "https://static.cninfo.com.cn/finalpage/change.PDF",
+            "code_transition_source_sha256": "transition-sha",
+        }
+    ]
+    source = {
+        "url": url,
+        "retrieval_status": "PASS",
+        "issuer": "601313",
+        "title": "分红派息实施公告",
+        "published_on": "2012-04-18",
+        "source_sha256": "issuer-sha",
+        "source_path": "notice.pdf",
+    }
+    assert not select([requirement], [], [], [event], master, [source])
+    rows = select([requirement], [], [], [event], master, [source], historical_alias=True)
+    assert rows[0]["issuer"] == "601313"
+    assert rows[0]["security_id"] == "CN-A:SSE:601360"
+    assert rows[0]["official_code_transition_sha256"] == "transition-sha"
+    assert not select(
+        [requirement],
+        [],
+        [],
+        [event],
+        [{**master[0], "code_transition_source_sha256": None}],
+        [source],
+        historical_alias=True,
+    )

@@ -1,5 +1,21 @@
 # Current state
 
+## Current R5 historical-code cash reconciliation — 2026-09-18
+
+The official point-in-time master maps historical SSE code 601313 to stable
+security ID `CN-A:SSE:601360` until 2018-02-22, with an official code-change
+receipt. Six previously unresolved final issuer PDFs use that historical code;
+their original bytes, gross cash and record/ex-dates independently match the
+accepted stable-ID events and official exchange targets. The retained-source
+selector now permits this alias only with an effective-dated master transition
+receipt; legacy selector callers retain their prior behavior. Source v6 closes
+220/253 candidates, leaving 33 explicit; manifest
+`d125a9d83737bf6251efbb3c82148a819378c7e0e89db9be374db46fce20d095`.
+P1 cumulative v21 establishes 15,961/16,320 facts, leaving 359 facts / 343
+documents (263 distribution, 80 other); 1,912 official substitutions are
+recorded. Manifest `1a9987a52b879be1b6338e252e5d5cbc21d77cb7212152eb592b09fbf000e0c3`.
+No new economic event, Full Dataset, freeze or study was accepted.
+
 ## Current R5 retained official full-cash source closure — 2026-09-17
 
 Reused retained CNINFO source manifests, original issuer PDFs and text caches

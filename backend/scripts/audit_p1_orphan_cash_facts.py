@@ -36,7 +36,15 @@ def final_issuer_title(title: str) -> bool:
 
 
 def select(
-    requirements, public, out_of_scope, cash, master, sources, *, final_title=final_issuer_title
+    requirements,
+    public,
+    out_of_scope,
+    cash,
+    master,
+    sources,
+    *,
+    final_title=final_issuer_title,
+    historical_alias=False,
 ):
     known_ids = {row["document_id"] for row in public} | {
         row["document_id"] for row in out_of_scope
@@ -47,11 +55,14 @@ def select(
         sources_by_symbol[row["issuer"]].append(row)
     by_cash = defaultdict(list)
     by_symbol = defaultdict(list)
+    by_stable_symbol = defaultdict(list)
     for row in cash:
         event = row["event"]
         by_cash[(event["security_id"]["value"], event["record_date"], event["ex_date"])].append(row)
     for row in master:
         by_symbol[row["symbol"]].append(row)
+        if historical_alias:
+            by_stable_symbol[row["security_id"].split(":")[-1]].append(row)
     selected = []
     for requirement in requirements:
         if (
@@ -67,15 +78,31 @@ def select(
         if len(parts) != 4 or parts[0] != "CASH":
             continue
         symbol, record, ex = parts[1:]
-        identities = {
-            row["security_id"]
+        active = [
+            row
             for row in by_symbol[symbol]
             if row["effective_from"] <= record <= (row["effective_to"] or "2025-12-31")
             and row["instrument_type"] == "COMMON_A_SHARE"
-        }
+        ]
+        if not active and historical_alias:
+            active = [
+                row
+                for row in by_stable_symbol[symbol]
+                if row["effective_from"] <= record <= (row["effective_to"] or "2025-12-31")
+                and row["instrument_type"] == "COMMON_A_SHARE"
+                and row.get("code_transition_source_url")
+                and row.get("code_transition_source_sha256")
+            ]
+        identities = {(row["security_id"], row["symbol"]) for row in active}
         if len(identities) != 1:
             continue
-        sid = next(iter(identities))
+        sid, issuer_symbol = next(iter(identities))
+        alias_evidence = {
+            (row.get("code_transition_source_url"), row.get("code_transition_source_sha256"))
+            for row in active
+        }
+        if issuer_symbol != symbol and len(alias_evidence) != 1:
+            continue
         peers = by_cash[(sid, record, ex)]
         if len(peers) != 1:
             continue
@@ -89,7 +116,7 @@ def select(
         else:
             candidates = [
                 row
-                for row in sources_by_symbol[symbol]
+                for row in sources_by_symbol[issuer_symbol]
                 if row["retrieval_status"] == "PASS"
                 and row["published_on"] <= record
                 and (date.fromisoformat(record) - date.fromisoformat(row["published_on"])).days
@@ -102,7 +129,7 @@ def select(
         if not source or (
             source["retrieval_status"] != "PASS"
             or not source["url"].startswith("https://static.cninfo.com.cn/finalpage/")
-            or source["issuer"] != symbol
+            or source["issuer"] != issuer_symbol
             or not final_title(source["title"])
             or source["published_on"] > record
             or (
@@ -120,7 +147,16 @@ def select(
                 "document_id": requirement["document_id"],
                 "affected_events": requirement["affected_events"],
                 "security_id": sid,
-                "issuer": symbol,
+                "issuer": issuer_symbol,
+                **(
+                    {
+                        "official_code_transition_url": next(iter(alias_evidence))[0],
+                        "official_code_transition_sha256": next(iter(alias_evidence))[1],
+                        "requirement_stable_symbol": symbol,
+                    }
+                    if issuer_symbol != symbol
+                    else {}
+                ),
                 "record_date": record,
                 "ex_date": ex,
                 "cash_per_share": event["cash_per_share"],
