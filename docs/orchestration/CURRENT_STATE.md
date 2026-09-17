@@ -1,6 +1,25 @@
 # Current state
 
-## Current R5 retained-bonus component-integrality correction — 2026-09-18
+## Current R5 official cash-correction source closure — 2026-09-18
+
+Three already acquired issuer correction PDFs were independently reconciled
+against their original official notices and accepted ordinary-A cash events:
+002457 swaps the incorrect payment and liability-clause record dates while
+the accepted entitlement record/ex and per-share cash remain unchanged;
+603087 corrects only the virtual ex-price formula, not the 0.5 gross cash;
+601678 updates repurchased/participating share counts and aggregate payout,
+with exact 0.03 cash per participating share on both sides. PDF and text
+bytes, original source identity, field-diff, event checksum and reversed input
+order are bound in correction report v9 (10 cumulative corrections; manifest
+`ba642def749d419361cde7d996e57da68b138b2799e83f126d279f18ba5e4571`).
+No new economic event was created. Cumulative P1 v56 establishes
+**16,066/16,320** facts, with **1,989** substitutions and **254 facts / 249
+documents** open (238 acquired distribution, 11 other); manifest
+`a0640f11699434ed644add3426f861b0244c29dd58e765c2a5167f625dbf2545`.
+The bounded retained-bonus ledger remains 243/288 accepted; the human
+fractional-bonus decision and Full Dataset/research locks remain unchanged.
+
+## Previous R5 retained-bonus component-integrality correction — 2026-09-18
 
 The approved retained-bonus policy has no convention for unobservable
 registry-level fractional share allocation. Earlier bounded ledger v28 checked

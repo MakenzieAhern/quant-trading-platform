@@ -6,6 +6,9 @@ from scripts.audit_p1_cash_corrections import (
     close_supplements,
     corrected_cash_amount,
     corrected_entitlement_year,
+    corrected_payment_and_record_date,
+    corrected_reference_price_only,
+    corrected_repurchase_share_count_only,
     unchanged_except_payment_date,
     unchanged_except_share_count,
 )
@@ -135,3 +138,59 @@ def test_corrected_cash_amount_requires_only_amount_change():
         "corrected_cash_per_share": "0.03",
     }
     assert corrected_cash_amount([page.replace("现更正为:二、", "现更正为:三、")]) is None
+
+
+def test_payment_and_record_metadata_correction_requires_only_swapped_dates():
+    page = (
+        "更正前:现金红利将于2024年5月13日划入账户。"
+        "申请日至股权登记日:2024年5月14日,责任由公司承担。"
+        "更正后:现金红利将于2024年5月14日划入账户。"
+        "申请日至股权登记日:2024年5月13日,责任由公司承担。"
+        "除上述事项外,原公告其他内容不变。"
+    )
+    assert corrected_payment_and_record_date([page]) == {
+        "original_payment_date": "2024-05-13",
+        "corrected_payment_date": "2024-05-14",
+        "original_record_date": "2024-05-14",
+        "corrected_record_date": "2024-05-13",
+    }
+    assert (
+        corrected_payment_and_record_date([page.replace("更正后:现金", "更正后:每股增派现金")])
+        is None
+    )
+
+
+def test_reference_price_correction_does_not_change_gross_cash():
+    page = (
+        "现就公告中除权(息)参考价格内容进行更正。"
+        "更正前:分派的现金红利=(参与分配的股本总数\u00d7实际分派的每股现金红利)"
+        "÷总股本=600,668,390\u00d70.5÷601,065,290。"
+        "更正后:虚拟分派的现金红利=(参与分配的股本总数\u00d7实际分派的每股现金红利)"
+        "÷总股本=600,668,390\u00d70.5÷601,065,290;前收盘价格调整。"
+        "除上述更正内容外,原公告其他内容不变。"
+    )
+    assert corrected_reference_price_only([page]) == {"gross_cash_per_share_unchanged": "0.5"}
+    assert (
+        corrected_reference_price_only([page.replace("390\u00d70.5÷", "390\u00d70.6÷", 1)]) is None
+    )
+
+
+def test_repurchase_count_correction_preserves_per_share_cash():
+    page = (
+        "一、关于权益分派实施公告的更正"
+        "更正前:公司回购股份余额为42,470,626股,实际参与分配的股份为"
+        "2,014,365,650股,共计派发现金红利60,430,969.50元。"
+        "更正后:公司回购股份余额为43,470,626股,实际参与分配的股份为"
+        "2,013,365,650股,共计派发现金红利60,400,969.50元。"
+        "除上述更正外,其他内容保持不变。二、关于回购价格的更正"
+    )
+    assert corrected_repurchase_share_count_only([page]) == {
+        "corrected_repurchased_shares": 43_470_626,
+        "corrected_participating_shares": 2_013_365_650,
+        "corrected_total_cash": "60400969.50",
+        "gross_cash_per_share_unchanged": "0.03",
+    }
+    assert (
+        corrected_repurchase_share_count_only([page.replace("60,400,969.50", "60,500,969.50")])
+        is None
+    )

@@ -2,6 +2,17 @@
 
 ## Current R5 P1 and methodology gates — 2026-09-18
 
+After three source-bound official cash-correction closures, cumulative P1
+v56 leaves **254 facts / 249 documents** open: 238 already acquired
+distribution PDFs and 11 other requests. The bounded bonus ledger stays
+243/288 supported, with 39 previously accepted mixed-component events
+quarantined. The retained-bonus fractional-share methodology choice below
+remains the human gate. Full corporate-action and suspension/raw/factor
+censuses, verified 2010 start, Full Dataset, freeze and studies remain partial
+or unrun. The v54 paragraph below is a prior checkpoint.
+
+### Previous v54 checkpoint
+
 Bounded ledger v30 conservatively removes 39 formerly accepted
 integer-total/mixed-component bonus events because their individual
 stock-dividend or capital-transfer components may require unknown

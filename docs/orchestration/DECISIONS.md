@@ -1,5 +1,18 @@
 # Decisions
 
+## 2026-09-18 official correction fact scope
+
+A secondary issuer correction may close an exact P1 source requirement
+without creating another dividend only when its original and corrected
+sections prove the economic per-share cash and accepted entitlement dates
+unchanged, or explicitly identify a metadata/virtual-reference correction.
+Match the original official PDF, issuer, publication timing and accepted
+cash-event checksum; retain both source bytes and text-cache hashes. The
+002457, 603087 and 601678 corrections satisfy these checks. A changed gross
+cash or unresolved entitlement date still fails closed. This applies the
+existing official-source substitution policy, not a new corporate-action
+accounting method.
+
 ## 2026-09-18 bounded bonus component-integrality guard
 
 The existing retained-bonus approval preserves basis but does not approve a

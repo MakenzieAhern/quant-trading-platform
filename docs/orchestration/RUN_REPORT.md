@@ -1,6 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
-## 2026-09-18 retained-bonus component-integrality replay
+## 2026-09-18 three official cash-correction sources closed
+
+Reused original checksum-verified CNINFO issuer notices and their accepted
+cash-event checksums to audit three correction PDFs without redownloading:
+002457 (payment/liability record metadata swap), 603087 (virtual ex-price
+formula only), and 601678 (repurchase/participating counts and aggregate
+payout, same 0.03 gross cash per participating share). The 002457/601678
+before/after sections reject other changed text; 603087's explicit
+reference-only correction repeats the unchanged gross term. The old and new
+601678 payouts each equal participating shares times 0.03. Correction report v9
+adds three closures to prior seven, with no new economic event; manifest
+`ba642def749d419361cde7d996e57da68b138b2799e83f126d279f18ba5e4571`.
+Cumulative P1 v56: 16,066/16,320 established, 1,989 substitutions,
+254 facts / 249 documents open (238 distribution, 11 other); manifest
+`a0640f11699434ed644add3426f861b0244c29dd58e765c2a5167f625dbf2545`.
+The remaining 238-document triage is deterministic: 94 bonus-only, 1 both,
+3 cash-only, 140 neither. No Full Dataset, freeze or study.
+
+## Previous 2026-09-18 retained-bonus component-integrality replay
 
 Rechecked the original CNINFO issuer notices behind all 288 bounded candidates.
 The prior 282 accepted events included 39 whose total ratio was integral but
