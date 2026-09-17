@@ -5,9 +5,11 @@
 The 600337 final implementation/holder source gap is resolved by its original
 signed announcement in the issuer's designated disclosure paper, independently
 matched to the official SSE announcement index and prior CNINFO issuer report.
-No direct SSE PDF bytes were accepted. Cumulative P1 v45 leaves 256 facts /
-255 documents open: 241 already acquired distribution PDFs and 14 other
-requests. Full cash/bonus census, 1,921 exact SZSE resumption boundaries,
+No direct SSE PDF bytes were accepted. A separately audited official 000418
+merger source chain closes one more P1 request without changing the accepted
+event inventory. Cumulative P1 v46 leaves 255 facts / 254 documents open:
+241 already acquired distribution PDFs and 13 other requests. Full cash/bonus
+census, 1,921 exact SZSE resumption boundaries,
 raw/factor readiness and verified safe start remain partial. The current
 human methodology gate is retained-bonus fractional-share handling below;
 no Full Dataset, freeze or strategy study has been run. Earlier P1 counts below

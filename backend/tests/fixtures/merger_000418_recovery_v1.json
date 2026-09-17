@@ -1,0 +1,78 @@
+{
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "boundary_policy": "FIRST_POST_EVENT_TRADING_BOUNDARY_V1",
+  "case": {
+    "parent": "000418",
+    "successor": "000333",
+    "exchange": "SZSE",
+    "conversion_ratio": "1.15144821",
+    "parent_last_trading_date": "2019-05-07",
+    "continuous_suspension_from": "2019-05-08",
+    "record_date": "2019-06-20",
+    "parent_delisting_date": "2019-06-21",
+    "successor_listing_date": "2013-09-18",
+    "successor_shares_tradable_from": "2019-06-21",
+    "effective_date": "2019-06-21",
+    "cash_election_offered": true,
+    "scope": "ORDINARY_UNRESTRICTED_A_SHARE_HOLDER_NO_CASH_ELECTION",
+    "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE",
+    "source_url": "https://static.cninfo.com.cn/finalpage/2019-06-19/1206364891.PDF",
+    "source_path": "batch-v1/pdf/6048ff33976e18cdaef41ff453c641707615e7251aad02eb86775eb11f258e5a.pdf",
+    "source_sha256": "d439d28fd27ecece5b014e8e282f04dab7af0c1d72fa3e70b22662fee6c2d911",
+    "publication_date": "2019-06-19",
+    "retrieved_at": "2026-09-13T09:23:24.725247+00:00",
+    "additional_event_sources": [
+      {
+        "url": "https://static.cninfo.com.cn/finalpage/2019-03-14/1205897690.PDF",
+        "sha256": "a856f7b10a11ca91ec99a1a86e88db9d78e2e8784b84e2a92b882d377c5e170f",
+        "published_on": "2019-03-14",
+        "retrieved_at": "2026-09-17T20:12:52.934705+00:00",
+        "document": "Official revised issuer merger report; global fractional allocation rule"
+      },
+      {
+        "url": "https://static.cninfo.com.cn/finalpage/2019-04-26/1206101714.PDF",
+        "sha256": "b81a35badcb56500008b6f32116a114842c84df09f7c57041a0a72edf1d0c415",
+        "published_on": "2019-04-26",
+        "retrieved_at": "2026-09-17T20:17:20.346150+00:00",
+        "document": "Official parent last-trading and continuous-halt notice"
+      },
+      {
+        "url": "https://static.cninfo.com.cn/finalpage/2019-05-23/1206296146.PDF",
+        "sha256": "99c388f848ce5c45ecb8d6b2ba777ecb95d000f9b29e6a58f5daad606b3a9a6a",
+        "published_on": "2019-05-23",
+        "retrieved_at": "2026-09-17T20:17:23.308455+00:00",
+        "document": "Official final post-dividend A-share conversion-ratio adjustment"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "path": "targeted-parent-fraction-v1/000418-2019-revised-merger-report.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2019-03-14/1205897690.PDF",
+      "sha256": "a856f7b10a11ca91ec99a1a86e88db9d78e2e8784b84e2a92b882d377c5e170f",
+      "published_on": "2019-03-14",
+      "retrieved_at_utc": "2026-09-17T20:12:52.934705+00:00"
+    },
+    {
+      "path": "targeted-parent-fraction-v1/000418-2019-continuous-halt.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2019-04-26/1206101714.PDF",
+      "sha256": "b81a35badcb56500008b6f32116a114842c84df09f7c57041a0a72edf1d0c415",
+      "published_on": "2019-04-26",
+      "retrieved_at_utc": "2026-09-17T20:17:20.346150+00:00"
+    },
+    {
+      "path": "targeted-parent-fraction-v1/000333-2019-final-ratio-adjustment.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2019-05-23/1206296146.PDF",
+      "sha256": "99c388f848ce5c45ecb8d6b2ba777ecb95d000f9b29e6a58f5daad606b3a9a6a",
+      "published_on": "2019-05-23",
+      "retrieved_at_utc": "2026-09-17T20:17:23.308455+00:00"
+    },
+    {
+      "path": "batch-v1/pdf/6048ff33976e18cdaef41ff453c641707615e7251aad02eb86775eb11f258e5a.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2019-06-19/1206364891.PDF",
+      "sha256": "d439d28fd27ecece5b014e8e282f04dab7af0c1d72fa3e70b22662fee6c2d911",
+      "published_on": "2019-06-19",
+      "retrieved_at_utc": "2026-09-13T09:23:24.725247+00:00"
+    }
+  ]
+}

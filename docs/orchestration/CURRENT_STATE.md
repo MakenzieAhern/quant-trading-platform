@@ -1,5 +1,21 @@
 # Current state
 
+## Current R5 000418 official merger-chain audit — 2026-09-18
+
+Four issuer PDFs, including the final post-dividend ratio and listing notice,
+are source-byte and page-term verified for the ordinary unrestricted A-share
+non-electing path. The audited 000418→000333 ratio is 1:1.15144821, with last
+parent trading 2019-05-07, record 2019-06-20 and first converted-share
+listing 2019-06-21. Immutable external manifest SHA-256 is
+`aa76da4feb7265b7e5376fd1388f7a0a7d86933fd219e8b663f824377af1a4f7`.
+The matching `MERGER_NEW:000418:000333` P1 source request is now closed, making
+cumulative v46 **16,065/16,320** established with **255 facts / 254 documents**
+open (241 acquired distribution PDFs, 13 other). This **does not** claim actual
+account-level registry fractional awards, B or restricted-share closure,
+accepted-inventory revision, full merger census or Full Dataset readiness.
+The existing retained-bonus fractional methodology approval gate remains the
+immediate R5 stop.
+
 ## Current R5 600337 original designated-disclosure recovery — 2026-09-18
 
 The 2011-06-08 official SSE publication index has exactly one 600337 entry

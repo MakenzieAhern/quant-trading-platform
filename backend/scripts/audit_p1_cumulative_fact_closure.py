@@ -25,6 +25,7 @@ REPORTS = {
     "retained_cash": "p1-retained-full-cash-source-closure-v22.json",
     "dual": "p1-official-dual-distribution-source-closure-v3.json",
     "designated": "p1-original-designated-disclosure-cash-v2.json",
+    "merger_new": "p1-merger-000418-official-source-closure-v1.json",
 }
 
 
@@ -67,7 +68,7 @@ def recount(reports):
             raise ValueError(f"PRIMARY_NOT_IN_BASE_CASH:{source_url}")
         primary.append(by_url[source_url])
     add("primary", primary, require_cash=True)
-    for kind in ("orphan_issuer", "orphan_exchange", "sse_st", "dual", "designated"):
+    for kind in ("orphan_issuer", "orphan_exchange", "sse_st", "dual", "designated", "merger_new"):
         add(kind, reports[kind]["closed"], require_cash=False)
     differentiated = [
         cash[row["document_id"]]
@@ -109,6 +110,7 @@ def recount(reports):
         + len(reports["retained_cash"]["closed"])
         + len(reports["dual"]["closed"])
         + len(reports["designated"]["closed"])
+        + len(reports["merger_new"]["closed"])
     )
     return {
         "closed_documents": len(rows),
@@ -154,7 +156,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V45",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V46",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",

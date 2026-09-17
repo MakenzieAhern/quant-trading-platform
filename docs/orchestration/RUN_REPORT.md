@@ -1,5 +1,38 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 targeted 000418 merger source-chain audit
+
+Recovered three exact missing CNINFO issuer PDFs and reused the already cached
+final implementation/listing PDF. The final 000418 A-share conversion ratio
+is 1:1.15144821 after both companies' distributions; 2019-05-07 is the last
+parent trading day, 2019-06-20 the conversion record date, and 2019-06-21 the
+new 000333-share listing date. Global fractional allocation remains
+unreconstructible per account; the approved merger research floor is separate
+from historical registry truth. Source-byte, exact-term, master, raw-boundary,
+chronology and reverse-order audits pass. Event checksum
+`a52b4e6c971686f85b17212ca06cf04120e0983fe48ea531b620a50f13113871`;
+immutable source audit manifest
+`aa76da4feb7265b7e5376fd1388f7a0a7d86933fd219e8b663f824377af1a4f7`.
+The reviewed case is ordinary unrestricted A shares without a cash election;
+it does not admit B/restricted/electing accounts, change the 15-event accepted
+inventory or establish the full merger census. Its matching P1 official-source
+request closes with no new economic event. Cumulative v46 is 16,065/16,320
+established, 1,986 official substitutions and 255 facts / 254 documents open
+(241 acquired distribution PDFs, 13 other). See
+`../research/R5_MERGER_LEAD_CLOSURE_V1.md`.
+
+## 2026-09-18 targeted 600253 merger report recovery
+
+Recovered the exact official CNINFO 2013-06-04 full revised merger report
+`62552848.PDF` from the retained metadata lead, SHA-256
+`6863c67f6032a118518bd99af0532c9d53a316b7193981f9422fedaa209d8422`.
+The full 412-page report still does not establish account-level fractional
+conversion; it explicitly excludes fractional handling from projected share
+totals. The existing final result notice confirms ratio and registry/trading
+boundaries but distinguishes restricted shares. The 600253→600056 event is
+still source-incomplete, with no new event/P1/dataset acceptance. See
+`../research/R5_MERGER_LEAD_CLOSURE_V1.md` for the exact residual fact.
+
 ## 2026-09-18 R5 600337 final dividend source recovery
 
 Recovered the original signed 600337 issuer implementation notice on the

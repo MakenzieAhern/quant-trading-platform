@@ -1,8 +1,10 @@
 # v1.1 controller roadmap
 
-Current 2026-09-18 P1 v45 has 16,064/16,320 source facts established or
-otherwise closed, leaving 256 facts / 255 documents (241 acquired distribution
-PDFs and 14 other requests). The 600337 final dividend terms were recovered
+Current 2026-09-18 P1 v46 has 16,065/16,320 source facts established or
+otherwise closed, leaving 255 facts / 254 documents (241 acquired distribution
+PDFs and 13 other requests). The 000418 official merger source chain closes
+one additional P1 request without accepting a new economic event or a full
+merger census. The 600337 final dividend terms were recovered
 from the issuer's original signed notice in its designated disclosure paper,
 with official SSE publication-index and prior issuer designation corroboration.
 No SSE PDF bytes or new economic event were asserted; Full Dataset and strategy

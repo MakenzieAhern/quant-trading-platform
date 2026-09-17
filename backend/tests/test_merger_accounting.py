@@ -403,6 +403,20 @@ def test_official_rounded_ratio_is_not_recomputed_from_exchange_prices():
             assert recomputed.quantities(Decimal(81))[1] == 166
 
 
+def test_000418_official_terms_fail_closed_on_earlier_ratio():
+    from scripts.audit_merger_000418 import TERMS, require_terms
+
+    pages = {
+        path: {page: " ".join(terms) for page, terms in expected.items()}
+        for path, expected in TERMS.items()
+    }
+    require_terms(pages)
+    final_notice = next(path for path in pages if path.startswith("batch-v1/pdf/"))
+    pages[final_notice][3] = pages[final_notice][3].replace("1:1.15144821", "1:1.2110")
+    with pytest.raises(ValueError, match="OFFICIAL_MERGER_TERM_MISMATCH"):
+        require_terms(pages)
+
+
 @pytest.mark.parametrize(
     "review",
     [
@@ -416,6 +430,11 @@ def test_official_rounded_ratio_is_not_recomputed_from_exchange_prices():
             "merger_suspension_boundary_batch_v6.json",
         )
         for row in json.loads((Path(__file__).parent / "fixtures" / name).read_bytes())["cases"]
+    ]
+    + [
+        json.loads(
+            (Path(__file__).parent / "fixtures/merger_000418_recovery_v1.json").read_bytes()
+        )["case"]
     ],
     ids=lambda r: r["parent"],
 )

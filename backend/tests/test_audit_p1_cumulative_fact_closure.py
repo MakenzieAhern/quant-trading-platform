@@ -1,6 +1,7 @@
 import pytest
 
 from scripts.audit_p1_cumulative_fact_closure import recount
+from scripts.audit_p1_merger_000418_closure import EVENT, close
 
 
 def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
@@ -31,6 +32,7 @@ def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
             "retained_cash",
             "dual",
             "designated",
+            "merger_new",
         )
     }
     reports["base"] = baseline
@@ -41,3 +43,35 @@ def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
     reports["matched"]["closed"] = [baseline["remaining_cash_documents"][0]]
     with pytest.raises(ValueError, match="DUPLICATE_P1_CLOSURE"):
         recount(reports)
+
+
+def test_000418_source_closure_requires_audited_chain():
+    import json
+    from pathlib import Path
+
+    from scripts.reconcile_merger_implementation_batch import event_from_review
+
+    fixture = json.loads(
+        (Path(__file__).parent / "fixtures/merger_000418_recovery_v1.json").read_bytes()
+    )
+    requirements = {
+        "documents": [
+            {"document_id": "parent-source", "affected_events": [EVENT], "priority": "P1"}
+        ]
+    }
+    audit = {
+        "event_checksum": event_from_review(fixture["case"]).event_checksum,
+        "review_sha256": "fixture-sha",
+        "scope": fixture["case"]["scope"],
+        "source_bytes_verified": True,
+        "source_terms_verified": True,
+        "input_order_reproducibility": "PASS",
+        "full_census_certified": False,
+        "full_dataset_created": False,
+        "manifest_sha256": "audit-sha",
+    }
+    result = close(requirements, audit, fixture, "fixture-sha")
+    assert result["closed"][0]["affected_events"] == [EVENT]
+    assert not result["inventory_admitted"]
+    with pytest.raises(ValueError, match="P1_MERGER_SOURCE_AUDIT_NOT_ACCEPTED"):
+        close(requirements, {**audit, "source_terms_verified": False}, fixture, "fixture-sha")
