@@ -1,5 +1,60 @@
 # Current state
 
+## R5 SZSE official daily row-absence diagnostic — 2026-09-19
+
+A receipt-verified replay of all 3,886 cached official SZSE daily files
+reconciles the previously reported **15,655** absent active-master rows.
+**10,606** fall in bounded, dated official halt-source intervals; **145**
+are on accepted master delisting-effective dates. The remaining **4,904**
+security-dates across **58** symbols are **not closed**: 1,186 have an
+official halt source but no accepted resumption date, and 3,718 have no
+matching halt source. All unresolved dates lie in 2010–2014 (1,141, 1,541,
+1,070, 892 and 260 by year). The largest symbol, 000693, has 461; an
+issuer official notice identifies a pre-2012 suspended listing, but the
+effective-dated start/restoration chain has not yet been accepted.
+
+The external per-date report is
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-v1.json`;
+file SHA-256 `5c54e94fc10e35d16c37257aab22afdb47046f6a416418134eab42d17e9ae713`,
+canonical manifest `7442324d22eb169599d8d04ab68b9a39205d812410487fdc8033153278b847b2`.
+Replay script `backend/scripts/audit_szse_official_row_gaps.py`; focused
+test and lint pass. This is source-presence triage only: unknown resumption
+is never treated as a continuing accepted halt, and no absent row is
+optimistically called tradable or suspended. SZSE raw transaction-method
+scope and exact suspension authority remain partial; no Full Dataset or
+strategy gate changes.
+
+## R5 SSE official daily bar-presence closure — 2026-09-19
+
+The checksum-bound 2,405-record SSE snapshot was replayed against the
+accepted P0 master, 3,886-session calendar and normalized exchange halt
+observations. Of **5,684,496** active master/security sessions, **5,550,031**
+have an in-interval official bar. All **134,465** no-bar sessions are now
+accounted for as: 133,771 inside SSE open-blocked source intervals; 646 for
+600705's pre-2010 suspended listing through its official 2012-08-30
+restoration; 19 in four issuer-dated halt windows (600053: 15, 600240: 1,
+601360: 3); and 29 exactly on accepted delisting-effective dates. The 29
+terminal dates retain their master identities but have no inferred trade or
+suspension. **Unclassified source-presence gaps: 0.**
+
+The 600705 bounds are visible in the archived [2009 SSE factbook](https://www.sse.com.cn/aboutus/publication/factbook/documents/c/10170573/files/073e042b8b87407b919e3d8e75ee91a5.pdf)
+(PDF p. 86) and [2013 SSE factbook](https://www.sse.com.cn/aboutus/publication/factbook/documents/c/10170569/files/cdccf6c0b46a4c0cadc0a531ecc3aad7.pdf)
+(PDF p. 130). Additional exact-dated CNINFO issuer PDFs and their original
+URLs, UTC receipts and SHA-256s are listed in external report
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/sse-official-bar-gaps-v1.json`.
+Report file SHA-256 `7ba780bf09e8e1f684247cf698d348c6ea2fb25ec24356aba792bbcd8ca14668`,
+canonical manifest `f7e28d9e67c2a889e72c370e8919586cafef4c29b52b6cb0f4924b089f7f4d65`;
+cached repeat yields identical bytes. Replay script:
+`backend/scripts/audit_sse_official_bar_gaps.py`.
+
+This closes **SSE bar-presence accounting only**. It does not establish exact
+daily suspension/resumption for both exchanges, SZSE auction-only raw
+volume/amount, corporate-action completeness, or `RAW:FULL_UNIVERSE`; no
+Full Dataset or study is promoted. The focused tests and lint pass. A full
+backend run reached 689 passed, 62 database-setup errors and one database-
+dependent failure because PostgreSQL at `127.0.0.1:5432` refused connection;
+Docker is not currently integrated into this WSL distro.
+
 ## R5 complete official daily source-scope checkpoint — 2026-09-19
 
 Resumed the existing checksum caches; no official P0/ST/adjustment/benchmark

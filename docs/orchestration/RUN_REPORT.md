@@ -1,5 +1,34 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE official row-absence source triage
+
+Replayed all 3,886 cached SZSE daily XLSX files with SHA-256 checks against
+the accepted P0 master, calendar and normalized halt-event evidence. Of
+15,655 missing active-master stock rows, 10,606 match bounded dated halt
+intervals, 145 match delisting dates, and 4,904 remain unresolved across
+58 symbols (1,186 unknown resumption; 3,718 no matching halt source).
+All unresolved dates are in 2010–2014; the per-date external report has
+file SHA-256 `5c54e94fc10e35d16c37257aab22afdb47046f6a416418134eab42d17e9ae713`
+and manifest `7442324d22eb169599d8d04ab68b9a39205d812410487fdc8033153278b847b2`.
+No missing row was inferred suspended, no raw authority was promoted, and
+no dataset or study was run.
+
+## 2026-09-19 SSE official bar-presence reconciliation
+
+Reused the completed official SSE chart cache, accepted master/calendar and
+exchange halt cache, then added only targeted public CNINFO issuer notices.
+The deterministic audit accounts for all 134,465 no-bar active SSE sessions:
+133,771 source open-blocked interval dates, 646 official 600705 suspended-
+listing dates, 19 dated issuer halt dates, and 29 master delisting dates.
+Unclassified source-presence gaps are zero; report file SHA-256
+`7ba780bf09e8e1f684247cf698d348c6ea2fb25ec24356aba792bbcd8ca14668`,
+manifest `f7e28d9e67c2a889e72c370e8919586cafef4c29b52b6cb0f4924b089f7f4d65`.
+No suspension/resumption or full raw authority was promoted. `ruff` and
+focused tests pass; full backend validation is partial (689 passed, 62
+database-setup errors, one database-dependent failure) because PostgreSQL
+is unavailable and Docker WSL integration is absent. No Full Dataset, freeze,
+strategy study or PR merge followed.
+
 ## 2026-09-19 complete exchange source-scope checkpoint, no raw promotion
 
 The existing SSE/SZSE official caches were completed after targeted bounded

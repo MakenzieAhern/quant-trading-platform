@@ -1,5 +1,28 @@
 # Blockers
 
+## SZSE historical no-row/resumption chain remains open — 2026-09-19
+
+The complete official daily cache has 4,904 absent active-master rows
+without accepted dated closure, all in 2010–2014 across 58 symbols. Of
+these, 1,186 are associated with source events lacking verified resumption
+and 3,718 have no matching halt source. A separate 10,606 dates have
+bounded source intervals and 145 are delisting boundaries; these do not
+authorize `RAW:FULL_UNIVERSE` or exact execution status. Target only the
+58 historical securities using archived official SZSE/CNINFO evidence; do
+not reacquire the entire daily series or infer a state from row absence.
+
+## SSE bar-presence gap closed; full authorities still partial — 2026-09-19
+
+The complete SSE official chart cache now has zero unclassified missing-bar
+dates after source-bound reconciliation. The 29 no-bar delisting-effective
+dates are explicitly terminal and not inferred as ordinary trades or
+suspensions. This is a **source-presence closure**, not a resolution of exact
+exchange-wide resumption execution dates, SZSE auction-only transaction
+scope, the 247 open P1 facts, or the retained-bonus fractional-share human
+methodology gate. PostgreSQL-backed local tests remain unvalidated while
+Docker WSL integration is absent; no service reset or data deletion was
+attempted. Dataset and study locks remain in force.
+
 ## Official daily snapshots complete, raw authority still partial — 2026-09-19
 
 The two existing collectors now cover all 2,405 SSE symbol records and all
