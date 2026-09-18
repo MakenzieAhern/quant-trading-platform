@@ -1,5 +1,21 @@
 # Blockers
 
+## Three terminal SZSE chains closed; 34 symbols remain — 2026-09-19
+
+Original issuer notices explain 363 additional absent rows for 000805,
+000787 and 000594. The v7 report leaves **153** dates across **34**
+symbols unresolved (48 unknown resumption; 105 no matching halt source).
+The three multi-day residuals 000156, 002075 and 000732 total 122 dates;
+their official disclosure leads are identified, but the first 000156 PDF
+hit its bounded transient-DNS retry limit and the others were not fetched.
+One Windows-side targeted retry also failed DNS resolution.
+The other
+31 residual securities each have one missing day; no common-day mass halt
+is inferred. This remains source-presence triage only, not full raw or
+execution authority. Auction-only SZSE amount/volume, full corporate-
+action census and the retained-bonus fractional-share methodology gate
+remain open. Full Dataset and studies remain locked.
+
 ## Five 2010-plus SZSE chains closed; 37 historical symbols remain — 2026-09-19
 
 The v6 official CNINFO overlay explains 505 more absent daily rows for

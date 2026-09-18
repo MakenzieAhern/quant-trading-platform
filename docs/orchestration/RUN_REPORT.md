@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 three terminal-listing source-presence closures
+
+Issuer CNINFO originals, visually checked and receipt/SHA-bound, explain
+**363** more SZSE no-row dates for 000805, 000787 and 000594. The v7
+overlay conserves all 15,655 dates and leaves **153** unresolved across
+**34** symbols (48 unknown resumption; 105 no matching halt source).
+File SHA-256 `b44fe8de96244136055a090c03f71644aed226b0c23f99643af1873b05d7ec89`,
+manifest `e4da16bfa9d8ac2be3264bcfc6c9588be46c073662b441c37fa4c7cac62f11af`.
+Focused test, lint and byte-identical replay pass. Additional official
+leads for 000156, 002075 and 000732 were not promoted: the first 000156
+PDF hit bounded transient-DNS retries and the others were not fetched.
+One Windows-side targeted retry also failed DNS resolution.
+No exact execution/raw authority, Full
+Dataset, freeze, study or PR merge was promoted.
+
 ## 2026-09-19 five 2010-plus official source-presence closures
 
 Five targeted CNINFO issuer/sponsor PDFs, visually checked at their

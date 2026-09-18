@@ -1,5 +1,32 @@
 # Current state
 
+## R5 three terminal SZSE listing-suspension histories — 2026-09-19
+
+Original CNINFO issuer PDFs for **000805** establish the 2006-05-15
+suspended-listing start, the rejected proposal to enter delisting trading,
+and 2013-03-27 delisting. Issuer PDFs for **000787** establish its
+2007-05-24 suspension and 2013-02-08 delisting. For **000594**, issuer
+PDFs establish 2014-07-17 suspension and a 2015-05-21 termination
+decision; only 2014 missing rows are reclassified. Pages were visually
+checked. The v7 report binds URL, UTC receipt and SHA-256 for each PDF,
+explaining exactly **363** more absent official daily rows (212, 114, 37).
+
+Current report:
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-v7.json`;
+file SHA-256 `b44fe8de96244136055a090c03f71644aed226b0c23f99643af1873b05d7ec89`,
+manifest `e4da16bfa9d8ac2be3264bcfc6c9588be46c073662b441c37fa4c7cac62f11af`.
+Repeat replay is byte-identical; focused test and lint pass. Of the fixed
+**15,655** no-row sessions, **153** across **34** symbols remain unresolved
+(48 unknown resumption, 105 no matching halt source). **000156** (53),
+**002075** (47) and **000732** (22) have targeted official disclosure
+leads. The first 000156 PDF hit its bounded transient-DNS retry limit;
+the other PDFs were not fetched. A Windows-side targeted retry also failed
+DNS resolution. None is accepted into the v7 ledger.
+The remaining 31 symbols have one-day
+gaps. No absent row becomes a tradable bar or exact execution authority.
+Replay: `backend/scripts/close_szse_terminal_listing_row_gaps.py`.
+Full Dataset, freeze and studies remain locked.
+
 ## R5 five 2010-plus official listing-suspension histories — 2026-09-19
 
 Targeted CNINFO issuer/sponsor PDFs for **000545, 000722, 000751, 000831
