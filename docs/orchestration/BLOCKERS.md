@@ -1,5 +1,16 @@
 # Blockers
 
+## Five 2010-plus SZSE chains closed; 37 historical symbols remain — 2026-09-19
+
+The v6 official CNINFO overlay explains 505 more absent daily rows for
+000545, 000722, 000751, 000831 and 002506. **516** dates across **37**
+symbols remain unresolved: 85 unknown-resumption dates and 431 without a
+matching halt source. This does not establish exact trading status or full
+raw authority. Target remaining bounded official evidence; do not infer
+suspension from absence. The independent auction-only transaction scope,
+full corporate-action census and retained-bonus fractional-share human
+methodology gate remain open. Full Dataset and studies remain locked.
+
 ## Six further SZSE chains closed; 42 historical symbols remain — 2026-09-19
 
 The v5 official CNINFO overlay closes 1,012 more absent SZSE daily rows

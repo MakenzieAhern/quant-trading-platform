@@ -1,5 +1,17 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 five 2010-plus official source-presence closures
+
+Five targeted CNINFO issuer/sponsor PDFs, visually checked at their
+suspension and actual first-trading passages, explain **505** more SZSE
+daily source-absence dates. The v6 SHA-verified overlay conserves the
+15,655-row total and leaves **516** unresolved dates across **37** symbols
+(85 unknown resumption; 431 no matching halt source). File SHA-256
+`e450c15f1ff3f3ddbc193106450f51b32bacb3975c0237633dc35b0984ef1b81`,
+manifest `0ea44f9ed6fbe484cce9327f41470ddc551a24cd636baa04c0bc5fa0ccc2ce68`.
+Focused test, lint and byte-identical replay pass. No exact execution/raw
+authority, Full Dataset, freeze, study or PR merge was promoted.
+
 ## 2026-09-19 six-security official source-presence closure
 
 Six more CNINFO issuer/sponsor disclosures establish actual pause and first
