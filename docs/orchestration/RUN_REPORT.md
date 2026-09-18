@@ -1,5 +1,17 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 six-security official source-presence closure
+
+Six more CNINFO issuer/sponsor disclosures establish actual pause and first
+trading dates. The v5 SHA-verified overlay closes 1,012 source-absence
+dates, preserving the 15,655-row total and distinguishing 323 post-2009
+listing-suspension dates from 3,560 pre-2010 ones. **1,021** dates across
+**42** symbols remain unexplained. File SHA-256
+`8b286641b05ab550b1e25b154b2f179d181c10c2718532435addee588dcbaea2`,
+manifest `e9b6c6b0eee99535d6c012f07cbd12ddf155b2876c1f3a16f734706a4c6ee07f`.
+Focused test, lint and deterministic replay pass. No exact execution/raw
+authority, Full Dataset, freeze, study or PR merge was promoted.
+
 ## 2026-09-19 three-security official source-presence closure
 
 Official CNINFO disclosures bound 000038, 000670 and 000719 from their

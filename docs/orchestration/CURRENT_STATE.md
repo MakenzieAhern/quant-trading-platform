@@ -1,5 +1,26 @@
 # Current state
 
+## R5 six further official listing-suspension histories — 2026-09-19
+
+Targeted CNINFO issuer/sponsor documents now bound **000620, 000657, 000681,
+000820, 000863 and 000981**. PDF pages were visually checked at the
+pause/restoration passages; URL, UTC receipt and SHA-256 evidence are in
+the external v5 report. The checksum-bound overlay on immutable v4
+explains exactly **1,012** more absent official SZSE daily rows. It keeps
+the two post-2009 suspension starts (000657, 000820) in a distinct
+`OFFICIAL_2010PLUS_LISTING_SUSPENSION` category, rather than misclassifying
+them as pre-2010 histories. The current report is
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-v5.json`;
+file SHA-256 `8b286641b05ab550b1e25b154b2f179d181c10c2718532435addee588dcbaea2`,
+manifest `e9b6c6b0eee99535d6c012f07cbd12ddf155b2876c1f3a16f734706a4c6ee07f`.
+Repeat replay is byte-identical. Among the fixed **15,655** no-row
+sessions, 3,560 are now bounded official pre-2010 listing suspensions and
+323 are bounded 2010-plus listing suspensions; **1,021** dates across
+**42** symbols remain unresolved (590 unknown resumption, 431 no matching
+halt source). Replay: `backend/scripts/close_szse_six_listing_row_gaps.py`.
+This remains a source-presence report, **not** full raw or exact execution
+authority. Dataset/freeze/study locks remain unchanged.
+
 ## R5 three more official suspended-listing histories — 2026-09-19
 
 Archived CNINFO disclosures for **000038, 000670 and 000719** establish
