@@ -1,5 +1,30 @@
 # Current state
 
+## R5 three more official suspended-listing histories — 2026-09-19
+
+Archived CNINFO disclosures for **000038, 000670 and 000719** establish
+pre-2010 suspension starts and actual first trading dates. The receipts,
+PDF hashes, UTC retrieval times and checked page numbers are preserved in
+the external v4 report. A checksum-bound overlay on immutable v3 explains
+**683** more absent official SZSE daily rows (241, 217, 225), only inside
+their individual suspended-listing intervals. Replay yields identical bytes.
+The current report is
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-v4.json`;
+file SHA-256 `86905153277c0ca28ef26347fd86ca702a814e1d9664317d1357fe236cb5b847`,
+manifest `d60480a6ac37bdeda7e1630eb16f15ddb2e5a43b3b9ec24b0c834827bc07cb0b`.
+Of the fixed **15,655** no-row sessions, **2,871** now have official
+pre-2010 suspended-listing bounds; **2,033** dates across **48** symbols
+remain unresolved (913 unknown resumption, 1,120 no matching halt source).
+Replay: `backend/scripts/close_szse_three_listing_row_gaps.py`.
+
+This is **source-absence classification, not an execution-status census**.
+The monthly short-halt feed contains entries for some of these long-suspended
+securities, including 000719; its short-term `resumed_at` cannot override
+the issuer's actual restoration-of-listing date. Existing bounded-source
+counts are untouched, and no absent row is inferred tradable or treated as
+an OHLCV bar. `RAW:FULL_UNIVERSE`, exact trading-suspension authority,
+Full Dataset, freeze and studies remain locked.
+
 ## R5 six-security official suspended-listing batch — 2026-09-19
 
 Archived CNINFO issuer restoration announcements now bound the historical
