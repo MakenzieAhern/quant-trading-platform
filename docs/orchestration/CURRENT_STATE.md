@@ -1,5 +1,39 @@
 # Current state
 
+## R5 complete official daily source-scope checkpoint — 2026-09-19
+
+Resumed the existing checksum caches; no official P0/ST/adjustment/benchmark
+authority was rebuilt. Bounded same-request retries recovered six SSE and one
+SZSE transient transport failures. The final collection reports cover all
+**2,405/2,405** SSE master-symbol records and **3,886/3,886** SZSE sessions,
+with zero transport failures. Their file SHA-256s are respectively
+`d56d8abef4ff8a3f347d3f247feaf5ed8eb15367430eb3db91e36715048a5940`
+and `3edca545dd7b4173c7c95381bb68dd2bb5fd20769faf0930e17da7640edf84ea`.
+The separately accepted 600003 pre-2010 halt/exit has no target-period bar;
+this is explicit, not silently classified as a failed source.
+
+Independent full-range SSE source audit accepts **5,550,031** bars within
+point-in-time symbol intervals and quarantines **2,306** old/new-code alias
+labels (600849: 915; 601360: 1,368; 601607: 23). File SHA-256
+`b3d8119f6c4b165fbcfc0303ca343a350e02d86b4c9edab85400a949d75d88db`,
+canonical manifest `eb0517052f20e26603059a86da3a0fdaeb38d1fcea21bc7b3776ce42aefd391a`.
+The frozen Pilot-v2 overlap covers all **2,289** SSE partitions and **852,354**
+bars, with zero OHLC differences, zero volume/amount gaps beyond 100 shares /
+CNY 100, no source symbol missing and no missing day in either direction;
+file SHA-256 `7ce2ea461b21726897659f111e3efc0a88e546c36ddade577cd6940232fcf8d8`.
+
+Independent full-range SZSE source audit covers **3,886** sessions and
+**7,861,158** point-in-time ordinary-A rows: **7,589,490** traded and
+**271,668** zero-turnover, with zero unmatched A-prefix candidates. The
+**15,655** active-master/session pairs without a stock row are *not* inferred
+as suspensions. File SHA-256
+`71fec3fa0018162041b462a1e85f602a0b87147b733bac6de681a2a2b3a169de`,
+canonical manifest `adbb7faa6ded6de13c1b795fdc4e408cb2592cd9e1eb1bcd0adfb95cb1aa567b`.
+These are complete **source-snapshot scope** audits, not acceptance of
+auction-only SZSE volume/amount, exact daily suspension, corporate-action
+completeness, or `RAW:FULL_UNIVERSE`. No Full Dataset, freeze or study follows.
+The older partial checkpoints below remain historical.
+
 ## R5 official-public raw collection checkpoint — 2026-09-19
 
 The SSE and SZSE collectors were paused at the unresolved retained-bonus

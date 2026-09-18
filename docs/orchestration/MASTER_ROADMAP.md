@@ -1,5 +1,19 @@
 # v1.1 controller roadmap
 
+## Authoritative R5 source-scope update — 2026-09-19
+
+The free official-public P0 master remains PASS: 2,403 SSE / 3,028 SZSE
+identities, zero unresolved P0 facts. The original SSE/SZSE official daily
+caches now cover all 2,405 master-symbol records and 3,886 sessions with
+zero transport failures. Separate full source-scope audits and complete
+SSE/Pilot-v2 overlap are recorded in `CURRENT_STATE.md`. This closes the
+*acquisition-scope* subtask, not `RAW:FULL_UNIVERSE`: SZSE transaction-method
+volume/amount and exact suspension remain unsettled. P1 v58 stays at
+16,073/16,320 established and 247 residual facts; the 243/288 bounded
+bonus ledger and retained-bonus fractional human gate are unchanged.
+Full Dataset, freeze, R6/R7/OOS and release remain locked. The older
+checkpoint below is historical.
+
 ## Authoritative R5 checkpoint — 2026-09-18
 
 P0 official-public Security Master is accepted: 2,403 SSE and 3,028 SZSE

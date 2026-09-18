@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 complete exchange source-scope checkpoint, no raw promotion
+
+The existing SSE/SZSE official caches were completed after targeted bounded
+retries: 2,405/2,405 symbol records and 3,886/3,886 sessions, zero transport
+failures. Full SSE interval audit admits 5,550,031 bars, quarantines the same
+2,306 cross-code aliases and retains the 600003 no-target-bar control. Every
+frozen Pilot-v2 SSE partition has a source: 852,354 overlapping bars show no
+OHLC mismatch, no volume/amount gap beyond display precision, and no missing
+days. Full SZSE audit counts 7,861,158 point-in-time ordinary-A daily rows,
+zero unmatched A-prefix candidates; 15,655 active rows absent from the daily
+export are not inferred as suspensions. Checksums and exact source-scope
+boundaries are in `CURRENT_STATE.md`. Source collection is complete but the
+SZSE all-methods versus auction-only transaction scope, exact suspension,
+and full corporate-action census remain open. No source or dataset was
+promoted and no strategy was run. The older section below is historical.
+
 ## 2026-09-19 official raw source checkpoint at human gate
 
 Reused the existing SSE per-symbol and SZSE per-session caches, recovered

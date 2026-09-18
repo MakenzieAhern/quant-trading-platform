@@ -286,6 +286,7 @@ def test_denial_is_never_retried(tmp_path, monkeypatch):
         ("URLError", "<urlopen error [Errno -2] Name or service not known>"),
         ("URLError", "<urlopen error [Errno 104] Connection reset by peer>"),
         ("URLError", "<urlopen error [Errno 101] Network is unreachable>"),
+        ("URLError", "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred>"),
         ("URLError", "<urlopen error _ssl.c:993: The handshake operation timed out>"),
         ("RemoteDisconnected", "Remote end closed connection without response"),
     ],

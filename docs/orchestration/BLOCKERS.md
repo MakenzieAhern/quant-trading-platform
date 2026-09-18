@@ -1,5 +1,20 @@
 # Blockers
 
+## Official daily snapshots complete, raw authority still partial — 2026-09-19
+
+The two existing collectors now cover all 2,405 SSE symbol records and all
+3,886 SZSE sessions with zero transport failures. Independent source audits
+PASS for snapshot/identity scope only. The SSE 2,306 old/new-code aliases are
+quarantined by accepted point-in-time symbol intervals; the one no-target-bar
+600003 is preserved. The SZSE daily file's all-methods volume/amount does
+not establish exact auction-only values for all dates, and 15,655 absent
+master/session rows are not proof of suspension. The 223 unresolved ChiNext
+one-day residuals still lack direct official per-security after-hours evidence.
+`RAW:FULL_UNIVERSE`, exact suspension/resumption, corporate-action completeness
+and the retained-bonus fractional methodology choice remain open. No Full
+Dataset or strategy admission. The partial-collection section below is a
+historical checkpoint, not an active acquisition blocker.
+
 ## Official raw checkpoint remains partial — 2026-09-19
 
 At the retained-bonus fractional-allocation human gate, source collection is

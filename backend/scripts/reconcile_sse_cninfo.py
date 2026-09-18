@@ -69,6 +69,7 @@ def fetch(
                         "getaddrinfo failed",
                         "Connection reset by peer",
                         "Network is unreachable",
+                        "UNEXPECTED_EOF_WHILE_READING",
                         "timed out",
                     )
                 )
