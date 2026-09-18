@@ -1,26 +1,33 @@
 # Current state
 
-## R5 official-public raw collection resumed — 2026-09-18
+## R5 official-public raw collection checkpoint — 2026-09-19
 
-The SSE symbol and SZSE session collectors are running against their existing
-checksum-resumable source roots. The 575/2,405 and 825/3,886 figures below
-are the **prior** checkpoint, not the live acquisition state; their reports
-change atomically as collection proceeds. No raw authority or Full Dataset
-has been promoted. A source-bound audit of a later 1,195-symbol SSE snapshot
-found 938 bars outside the accepted symbol interval: 915 under old code
-600849 after its boundary and 23 under successor 601607 before its boundary;
-each set exactly matches the counterpart code's same-date source bars. Its
-file SHA-256 is
-`0f24f62cc31bb8780bffee3a9e7f2657be2e3dccea27d481888ed961b48adbb7`,
-manifest `57f8261fccbbaaa9c000a02385bf62ebf2c954a8b3a50c3fd94669fa84ddb641`.
-A 1,921-session SZSE source-scope replay found zero unmatched ordinary-A
-prefix candidates, but 15,520 active-master/session pairs without a stock
-row; these are **not** inferred suspension dates. Its file SHA-256 is
-`58ba5e5a558b7c001ce4f716efc20cfa48ee10a476ddda503137d7583958f71c`,
-manifest `b6f3ed0b40c37d7312185854e149982ca947399117a7e48db40a0dca009d0feb`.
-Network failures retain their source receipts and can receive only bounded
-retries. Neither partial replay proves full-range OHLCV coverage or trading
-method equivalence.
+The SSE and SZSE collectors were paused at the unresolved retained-bonus
+fractional-share human methodology gate, preserving their existing
+checksum-resumable source roots. Cached replay verifies **1,525/2,405** SSE
+master-symbol records and **3,275/3,886** SZSE calendar sessions with zero
+transport failures in the bounded checkpoints. SSE 600003 has no target-period
+trade bar, consistent with its separately accepted halt/termination history;
+it is not silently counted as a missing identity. Collection report SHA-256s
+are SSE `be40f03027b4fe4440fb6fdace9b05c92960d08d1ebcea0ed1a8058da3dd0ba9`
+and SZSE `bed2dae2ea08bb80677dba0a600d05fa8f31f99d261a7f5d636079addf799108`.
+
+The source-bound SSE audit finds **4,438,675** in-interval target bars and
+quarantines **2,306** cross-symbol-interval labels: 915 post-boundary 600849,
+23 pre-boundary 601607, and 1,368 pre-boundary 601360. Every quarantined
+set exactly duplicates its accepted counterpart code's same-date source bars
+(601607, 600849, and 601313 respectively). File SHA-256
+`5f777d573a4c2076d4d32872cf08e43b0ea33c81d7fc4e1f1bbcf5ce53c5ff91`,
+manifest `216e0482b47058e41620791c5b9464c71a64afb425d9efdb118a787d21ffc48d`.
+The SZSE audit finds **6,121,757** point-in-time ordinary-A stock rows,
+including **5,854,424** traded and **267,333** zero-turnover rows, with zero
+unmatched A-prefix candidates. The **15,582** active-master/session pairs
+without a stock row are not inferred as suspensions. File SHA-256
+`20acecc784f541d1bdb3c73f8ef4e1d140b2006fed9a8688e029527a9b5796e4`,
+manifest `64fa65af9ef6c921eb9837418c7bb7bdd6e86812c869d37fcc53cf92d288448c`.
+The older smaller checkpoints below are historical. Neither partial audit
+proves full-range raw coverage, auction-only transaction scope, or exact
+suspension/resumption. No raw authority or Full Dataset is promoted.
 
 ## R5 restructuring non-entitlement diagnostic — 2026-09-18
 

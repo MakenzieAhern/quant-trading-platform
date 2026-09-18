@@ -1,12 +1,14 @@
 # Blockers
 
-## Official raw acquisition in progress, full source authority open — 2026-09-18
+## Official raw checkpoint remains partial — 2026-09-19
 
-SSE/SZSE collectors have resumed from the retained cache. Interim source
-audits quarantine both sides of the 600849/601607 code transition and do not
-infer suspensions from missing SZSE rows. The old paused checkpoint below is
-historical. Full-period coverage, exact transaction scope, and the separate
-retained-bonus fractional-allocation human decision remain open.
+At the retained-bonus fractional-allocation human gate, source collection is
+paused with 1,525/2,405 SSE symbol records and 3,275/3,886 SZSE sessions
+checksum-verified, zero transport failures in those scopes. The remaining
+880 symbol records and 611 sessions are uncollected, not accepted gaps.
+Source audits quarantine 2,306 old/new-code duplicate labels and do not infer
+suspensions from missing SZSE rows. Full-period coverage and exact transaction
+scope remain open. The older paused checkpoint below is historical.
 
 ## P1 restructuring diagnostic cannot close whole documents — 2026-09-18
 

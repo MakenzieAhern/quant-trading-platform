@@ -59,15 +59,18 @@ def fetch(
         if meta["url"] != url or meta["params"] != params or meta.get("referer") != referer:
             raise ValueError("snapshot request identity mismatch")
         if meta.get("error"):
-            transient_network_error = meta["error"] == "URLError" and any(
-                message in meta.get("error_reason", "")
-                for message in (
-                    "Name or service not known",
-                    "Temporary failure in name resolution",
-                    "getaddrinfo failed",
-                    "Connection reset by peer",
-                    "Network is unreachable",
-                    "timed out",
+            transient_network_error = meta["error"] == "RemoteDisconnected" or (
+                meta["error"] == "URLError"
+                and any(
+                    message in meta.get("error_reason", "")
+                    for message in (
+                        "Name or service not known",
+                        "Temporary failure in name resolution",
+                        "getaddrinfo failed",
+                        "Connection reset by peer",
+                        "Network is unreachable",
+                        "timed out",
+                    )
                 )
             )
             if (meta["error"] != "TimeoutError" and not transient_network_error) or meta[

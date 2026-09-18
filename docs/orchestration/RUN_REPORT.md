@@ -1,15 +1,18 @@
 # Autonomous Quant Project Checkpoint
 
-## 2026-09-18 resumed official raw source collection
+## 2026-09-19 official raw source checkpoint at human gate
 
-Reused the existing SSE per-symbol and SZSE per-session source caches; live
-checkpoint reports are atomic and mutable until collection ends. Independent
-partial replays prove 938 temporally mislabeled 600849/601607 source bars
-must be quarantined and find zero unmatched A-prefix SZSE codes across 1,921
-audited sessions. They do not establish full raw authority, transaction-scope
-parity, or suspension status. Bounded transient-network retries were extended
-to connection resets, network-unreachable and TLS handshake timeouts; access
-denials remain non-retryable.
+Reused the existing SSE per-symbol and SZSE per-session caches, recovered
+transient failures only through bounded same-request retries, then re-parsed
+the retained files. Atomic reports now cover 1,525/2,405 SSE master-symbol
+records and 3,275/3,886 SZSE sessions, with zero transport failures in those
+scopes. Independent source replays find 4,438,675 accepted-interval SSE bars,
+2,306 quarantined duplicate code-interval labels, 6,121,757 point-in-time
+SZSE ordinary-A stock rows, and zero unmatched A-prefix candidates. SZSE
+absent rows are not treated as proof of suspension. Full raw authority,
+transaction-scope parity and Full Dataset readiness remain open. Collectors
+are stopped at the retained-bonus fractional-share methodology gate without
+losing cached sources; no strategy study was run.
 
 ## 2026-09-18 source-bound restructuring diagnostic, no P1 closure
 
