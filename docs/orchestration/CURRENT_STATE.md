@@ -1,5 +1,92 @@
 # Current state
 
+## R5 official-public raw collection resumed — 2026-09-18
+
+The SSE symbol and SZSE session collectors are running against their existing
+checksum-resumable source roots. The 575/2,405 and 825/3,886 figures below
+are the **prior** checkpoint, not the live acquisition state; their reports
+change atomically as collection proceeds. No raw authority or Full Dataset
+has been promoted. A source-bound audit of a later 1,195-symbol SSE snapshot
+found 938 bars outside the accepted symbol interval: 915 under old code
+600849 after its boundary and 23 under successor 601607 before its boundary;
+each set exactly matches the counterpart code's same-date source bars. Its
+file SHA-256 is
+`0f24f62cc31bb8780bffee3a9e7f2657be2e3dccea27d481888ed961b48adbb7`,
+manifest `57f8261fccbbaaa9c000a02385bf62ebf2c954a8b3a50c3fd94669fa84ddb641`.
+A 1,921-session SZSE source-scope replay found zero unmatched ordinary-A
+prefix candidates, but 15,520 active-master/session pairs without a stock
+row; these are **not** inferred suspension dates. Its file SHA-256 is
+`58ba5e5a558b7c001ce4f716efc20cfa48ee10a476ddda503137d7583958f71c`,
+manifest `b6f3ed0b40c37d7312185854e149982ca947399117a7e48db40a0dca009d0feb`.
+Network failures retain their source receipts and can receive only bounded
+retries. Neither partial replay proves full-range OHLCV coverage or trading
+method equivalence.
+
+## R5 restructuring non-entitlement diagnostic — 2026-09-18
+
+Forty-eight already cached CNINFO issuer PDFs explicitly state that the
+restructuring capital-transfer shares are **not distributed to original
+shareholders** and that these notices have **no cash dividend**. Source
+PDF/text hashes, issuer, title, date, parser output and reverse input order
+were checked. This is narrow negative-entitlement evidence only: some same
+notices also determine issuer-specific opening reference prices and
+resumption boundaries. The current P1 ledger cannot split one document's
+candidate into those separate facts, so **zero P1 documents or facts were
+closed**. Cumulative v58 remains authoritative at **16,073/16,320** facts,
+with **247 facts / 242 documents** open. Diagnostic v2 file SHA-256
+`60a787eecb596768abf1233ce34fb1d4d0e80f5601c0fccbb4eea9b92a6cb91a`,
+manifest `429101ff2485174b834ecbebd97b2d80d2101e8c4cfaeb4350446a8df6584626`.
+Draft v59 and queue v12/triage v21 generated during this audit are
+**superseded and not accepted**; current queue v11/triage v20 remain in use.
+No economic event, bonus policy or research gate changed.
+
+## R5 SSE official day-bar temporal-scope control — 2026-09-18
+
+A read-only replay of a 875/2,405-symbol acquisition checkpoint checks
+original SSE JSON bytes and UTC/SHA-256 receipts against the accepted P0
+symbol intervals and 3,886-session calendar. It found 3,067,830
+in-interval 2010–2025 bars and quarantined **915** out-of-interval bars
+under old code 600849. The accepted code transition makes 600849 end on
+2010-03-04 and successor 601607 begin 2010-03-05; all 915 old-code
+post-boundary bars exactly duplicate successor-code bars already available
+from the official endpoint. Thus the SSE endpoint code label alone is not
+a point-in-time identity and source normalization must filter by accepted
+symbol interval. The one no-target-bar 600003 control remains explicit.
+Replay script `backend/scripts/audit_sse_official_daily_scope.py`; partial
+report SHA-256
+`367ec87b51e73f6245657a4a35620bd721a55b4379f8fc992930a0d4adb21c16`,
+canonical manifest SHA-256
+`7f1af85a8c2fede82867875168e9b3097ef11d4e4e84c9a12a55db12041d3c4e`.
+This does not promote full raw-data authority or assert full coverage.
+
+## R5 SZSE daily transaction-scope control — 2026-09-18
+
+The [official SZSE equity block-trade export](https://www.szse.cn/disclosure/deal/block/equity/index.html)
+is available as XLSX even though its JSON report currently returns an error.
+The 2023-04-10 checksum-archived exports contain 42 securities in the
+summary, 57 agreement trades and zero block-trade fixed-price rows. Summary
+and trade detail agree within CNY 100 of published rounding. For 000001,
+the two official block trades total 1,000,000 shares / CNY 12,030,000,
+matching the previously observed official-daily-minus-Pilot gap within
+daily-export precision. Across 2,761 matched A-share Pilot bars, 2,504
+daily totals already match within precision, 34 additional rows reconcile
+after official block subtraction, and 223 ChiNext rows retain a residual
+consistent with close-price transactions and 0/100-share display rounding.
+This last pattern is **not** an official per-security after-hours transaction
+record and therefore is not accepted as exact reconstructed volume/amount.
+The [SZSE technical notice](https://www.szse.cn/marketServices/technicalservice/notice/t20200508_576947.html)
+distinguishes ChiNext after-hours fixed-price trading from the auction feed;
+the [SZSE investor explanation](https://investor.szse.cn/knowledge/stock/deal/t20191225_572858.html)
+states that block trades enter daily totals. The replayable scope audit is
+`backend/scripts/audit_szse_daily_transaction_scope.py`; source bytes,
+UTC receipts and SHA-256s are under
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-block-20230410-v1/`.
+Its report SHA-256 is
+`2a6251120f7ac80b371a5889653f61d2b5c44c4c6a41f0c995cbfd06b3aef78a`
+and canonical manifest SHA-256 is
+`762a0d3c4fd9f6b61586cb9498755bc8b146685b1ec60a12ba54320bbe08c47e`.
+This is one-day source-scope evidence, not full-range raw-data authority.
+
 ## Current R5 official-public raw daily controls — 2026-09-18
 
 Official exchange pages expose two public raw-data routes, now

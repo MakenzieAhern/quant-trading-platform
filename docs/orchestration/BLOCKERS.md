@@ -1,5 +1,43 @@
 # Blockers
 
+## Official raw acquisition in progress, full source authority open — 2026-09-18
+
+SSE/SZSE collectors have resumed from the retained cache. Interim source
+audits quarantine both sides of the 600849/601607 code transition and do not
+infer suspensions from missing SZSE rows. The old paused checkpoint below is
+historical. Full-period coverage, exact transaction scope, and the separate
+retained-bonus fractional-allocation human decision remain open.
+
+## P1 restructuring diagnostic cannot close whole documents — 2026-09-18
+
+The 48 official no-original-holder-award/no-cash-dividend findings do not
+settle issuer-specific opening reference prices, resumption dates or other
+mandatory effects in the same notices. No P1 fact was removed. Cumulative
+v58 still leaves **247 facts / 242 documents** (231 acquired distribution,
+11 other); the briefly generated v59 draft is superseded, not accepted.
+The retained-bonus fractional-share human gate and full-census/raw/suspension
+gaps remain open. No Full Dataset or strategy study.
+
+## SSE official chart codes require accepted temporal filtering — 2026-09-18
+
+The partial 875-symbol official raw replay found 915 bars labeled old
+symbol 600849 after its accepted 2010-03-04 code boundary; all are exact
+duplicates of successor 601607 bars. The read-only audit quarantines them.
+The endpoint is usable only after point-in-time symbol-interval filtering;
+full source coverage and acceptance remain open. See `CURRENT_STATE.md`.
+
+## SZSE official daily totals have a remaining ChiNext scope gap — 2026-09-18
+
+An official 2023-04-10 block-trade XLSX reconciles 34 of the 257
+official-daily/Pilot material amount gaps after display precision. Another
+223 ChiNext residuals fit a close-price/0-or-100-share pattern, consistent
+with SZSE's separate after-hours fixed-price mechanism, but no direct
+per-security official after-hours record was obtained. This pattern is not
+accepted as an exact fact or as full-range raw authority. The report and
+sources are identified in `CURRENT_STATE.md`; no commercial source was used.
+The independently active retained-bonus fractional-share methodology gate
+and `RAW:FULL_UNIVERSE` remain open.
+
 ## Official raw-route controls do not close full-range authority — 2026-09-18
 
 Checksum-archived SSE per-security day bars and SZSE per-day XLSX snapshots

@@ -1,5 +1,58 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 resumed official raw source collection
+
+Reused the existing SSE per-symbol and SZSE per-session source caches; live
+checkpoint reports are atomic and mutable until collection ends. Independent
+partial replays prove 938 temporally mislabeled 600849/601607 source bars
+must be quarantined and find zero unmatched A-prefix SZSE codes across 1,921
+audited sessions. They do not establish full raw authority, transaction-scope
+parity, or suspension status. Bounded transient-network retries were extended
+to connection resets, network-unreachable and TLS handshake timeouts; access
+denials remain non-retryable.
+
+## 2026-09-18 source-bound restructuring diagnostic, no P1 closure
+
+Reused 48 checksum-verified CNINFO issuer PDFs/text caches to prove only
+their no-original-holder-share and no-cash-dividend clauses. A cross-check
+found issuer-specific opening-price and resumption facts in the same notices;
+the current P1 record cannot safely split those obligations. The initial
+v59 recount and queue v12/triage v21 were therefore **not promoted**.
+Diagnostic v2 records 48 narrow findings, zero P1 facts/documents closed,
+zero events created and reverse-order PASS; file SHA-256
+`60a787eecb596768abf1233ce34fb1d4d0e80f5601c0fccbb4eea9b92a6cb91a`.
+Authoritative cumulative P1 remains v58: 16,073/16,320 established;
+247 facts / 242 documents open. This correction prevents a false readiness
+claim while preserving the new source evidence.
+
+## 2026-09-18 SSE old-symbol chart alias quarantined
+
+Replayed an atomic 875/2,405-symbol official source checkpoint against
+accepted point-in-time code intervals and the full calendar. Of 3,068,745
+target-date bars, 3,067,830 are inside the matching symbol interval; 915
+post-boundary 600849 bars are quarantined and match successor 601607 exactly.
+No master identity was changed and no source was promoted. Partial audit
+SHA-256 `367ec87b51e73f6245657a4a35620bd721a55b4379f8fc992930a0d4adb21c16`;
+manifest `7f1af85a8c2fede82867875168e9b3097ef11d4e4e84c9a12a55db12041d3c4e`.
+
+## 2026-09-18 SZSE official block-trade scope reconciliation
+
+Recovered the exchange-hosted 2023-04-10 block-trade XLSX summary and
+agreement/fixed-price detail, preserving original URLs, UTC receipts and
+SHA-256s. The deterministic one-day audit compares them with the previously
+checksum-bound SZSE/Pilot overlap: 2,504/2,761 direct matches, 34 more
+reconciled by official block trades, 223 ChiNext close-price-pattern gaps
+still **unproven** by direct after-hours records, and zero other scope gaps
+under the bounded 0/100-share diagnostic. The 000001 control's two block
+trades total 1,000,000 shares / CNY 12,030,000. Report SHA-256
+`2a6251120f7ac80b371a5889653f61d2b5c44c4c6a41f0c995cbfd06b3aef78a`;
+canonical manifest SHA-256
+`762a0d3c4fd9f6b61586cb9498755bc8b146685b1ec60a12ba54320bbe08c47e`.
+This is not full-period, full-universe authority and does not alter Pilot
+data, source acceptance, freeze, or research locks. A prior statement below
+that no single-day rows were unexplained meant only that OHLC/day-presence
+matched; it did not resolve volume/amount scope.
+
 ## 2026-09-18 partial official raw-source acquisition, paused at human gate
 
 Reused the accepted P0 master (2,405 SSE symbol intervals / 2,403 identities)

@@ -280,7 +280,16 @@ def test_denial_is_never_retried(tmp_path, monkeypatch):
         fetch(tmp_path, "denied", "https://static.cninfo.com.cn/example")
 
 
-def test_transient_dns_failure_is_retried(tmp_path, monkeypatch):
+@pytest.mark.parametrize(
+    "error_reason",
+    [
+        "<urlopen error [Errno -2] Name or service not known>",
+        "<urlopen error [Errno 104] Connection reset by peer>",
+        "<urlopen error [Errno 101] Network is unreachable>",
+        "<urlopen error _ssl.c:993: The handshake operation timed out>",
+    ],
+)
+def test_transient_network_failure_is_retried(tmp_path, monkeypatch, error_reason):
     (tmp_path / "snapshot.meta.json").write_bytes(
         canonical(
             {
@@ -288,7 +297,7 @@ def test_transient_dns_failure_is_retried(tmp_path, monkeypatch):
                 "params": None,
                 "attempt": 1,
                 "error": "URLError",
-                "error_reason": "<urlopen error [Errno -2] Name or service not known>",
+                "error_reason": error_reason,
             }
         )
     )
