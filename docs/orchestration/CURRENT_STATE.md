@@ -1,5 +1,28 @@
 # Current state
 
+## R5 targeted 000693 official suspended-listing closure — 2026-09-19
+
+The archived [2013-08-05 CNINFO issuer notice](https://static.cninfo.com.cn/finalpage/2013-08-05/62900545.PDF)
+states that 000693 had been suspended since **2007-05-23**. Its
+[2014-01-10 restoration notice](https://static.cninfo.com.cn/finalpage/2014-01-10/63471125.PDF)
+sets the **first actual trading day to 2014-01-10**; the 2012-12-31
+approval was not a trading resumption. Both PDFs are archived with original
+URLs, UTC receipts and SHA-256 checks. A deterministic overlay on the
+unchanged v1 row-gap report closes only its **461** 000693 no-row dates,
+all within `[2007-05-23, 2014-01-10)`. It does not label unrelated dates
+or infer a raw price/volume observation.
+
+The latest SZSE source-presence report is
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-v2.json`;
+file SHA-256 `b9d8250bce1fa18362f7c81f78b302a14a5123907ee40499ccca973ef0940719`,
+canonical manifest `1cef5be1bdc702dc9a21ed1e32ca46dc772a8162231dd446cc3c349ad2cf26b9`.
+Of 15,655 absent rows, 10,606 have bounded source halt intervals, 461 have
+this official pre-2010 suspended-listing chain, and 145 are delisting
+boundaries. **4,443** dates across **57** other symbols remain unresolved:
+1,186 unknown-resumption and 3,257 no-matching-halt-source dates. Raw and
+exact daily execution authority remain partial; Full Dataset, freeze and
+studies remain locked. Replay: `backend/scripts/close_szse_000693_row_gaps.py`.
+
 ## R5 SZSE official daily row-absence diagnostic — 2026-09-19
 
 A receipt-verified replay of all 3,886 cached official SZSE daily files

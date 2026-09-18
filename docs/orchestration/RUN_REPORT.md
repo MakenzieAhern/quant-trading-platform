@@ -1,5 +1,18 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 000693 bounded official source closure
+
+Two archived CNINFO issuer PDFs establish 000693's 2007-05-23 suspended-
+listing start and 2014-01-10 first actual trading day. A SHA-verified overlay
+on the immutable full SZSE row-gap v1 audit reclassifies exactly 461 dates
+inside that interval. The v2 report preserves all 15,655 missing-row records
+by category and leaves 4,443 unresolved across 57 symbols (1,186 unknown
+resumption; 3,257 without a matching halt source). File SHA-256
+`b9d8250bce1fa18362f7c81f78b302a14a5123907ee40499ccca973ef0940719`,
+manifest `1cef5be1bdc702dc9a21ed1e32ca46dc772a8162231dd446cc3c349ad2cf26b9`.
+Focused tests pass. No raw/execution authority, Full Dataset, freeze or study
+was promoted.
+
 ## 2026-09-19 SZSE official row-absence source triage
 
 Replayed all 3,886 cached SZSE daily XLSX files with SHA-256 checks against

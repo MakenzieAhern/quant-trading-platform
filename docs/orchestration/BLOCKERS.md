@@ -1,5 +1,15 @@
 # Blockers
 
+## 000693 interval closed; 57 SZSE historical chains still open — 2026-09-19
+
+Official CNINFO issuer notices close 000693's 461 no-row dates between
+2007-05-23 suspension and its first actual 2014-01-10 trading day. The
+source-bound v2 audit leaves **4,443** absent active-master rows across **57**
+other symbols unresolved: 1,186 with no accepted resumption and 3,257
+without a matching halt source. Target only these residual securities using
+archived or specifically identified official SZSE/CNINFO evidence. Do not
+classify absence as suspension/tradability or reacquire the daily cache.
+
 ## SZSE historical no-row/resumption chain remains open — 2026-09-19
 
 The complete official daily cache has 4,904 absent active-master rows
