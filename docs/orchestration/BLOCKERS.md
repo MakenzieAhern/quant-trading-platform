@@ -1,5 +1,16 @@
 # Blockers
 
+## R5 differentiated-transfer source facts closed, accounting gate remains — 2026-09-19
+
+The prior 688368 and 603703 zero-cash **source-term** gaps are now closed by
+archived contemporary official issuer disclosures, official SSE publication
+indexes and final CNINFO implementation notices. All 22 differentiated
+stock-transfer candidates have zero-cash source corroboration. This does not
+resolve account-level fractional-share allocation/settlement; the retained-
+bonus human methodology gate is unchanged. Do not book these events, mark P1
+requirements closed, or treat the Full Dataset as ready. Separately, the 239
+ChiNext 2011-07-25 per-security raw-source gaps below remain open.
+
 ## Current corrected SZSE residual: 239 ChiNext dates — 2026-09-19
 
 Original exchange-signed notices close 002075's 216 absent daily rows

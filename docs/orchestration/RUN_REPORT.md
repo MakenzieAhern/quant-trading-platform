@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 two official differentiated-transfer zero-cash chains
+
+Archived original 688368 CNINFO shareholder material and the 603703
+issuer-signed designated-paper disclosure with UTC receipts and SHA-256;
+visually checked the relevant pages. Unique official SSE publication indexes
+tie both plans to the issuers. Existing final CNINFO implementation notices
+corroborate shareholder approval, ratio, record/ex dates and repurchase
+exclusions; 603703 also prints zero cash in its ex-rights price formula.
+The deterministic report closes the two remaining **source-term cash** gaps
+within 22 differentiated bonus candidates, with byte-identical reverse-order
+replay. Report file SHA-256
+`1a681467fae8df49c1f774f374d1204f7d2e35508048db713b41a0afce2697d4`,
+manifest `fb496eb138be22caad38c96c7959962c320b9c27382d61789f522e92eca1eab1`.
+SSE-hosted plan PDF bytes were not obtained and are not claimed verified.
+No P1 accounting requirement or event was promoted; cumulative P1 v58 and
+R5 fractional-entitlement human gate remain unchanged. No dataset/study/freeze.
+
 ## 2026-09-19 002075 original SZSE suspension/restoration notices
 
 Two original `证券时报` page PDFs carry SZSE-signed notices establishing

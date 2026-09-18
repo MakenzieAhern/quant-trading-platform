@@ -1,5 +1,19 @@
 # Decisions
 
+## 2026-09-19 original issuer zero-cash plans corroborate two final transfers
+
+Treat the 688368 CNINFO-hosted 2024-05-08 shareholder material and 603703
+original 2023-04-21 issuer-signed designated-paper disclosure as official
+evidence of the **plan's** zero-cash terms, not as standalone final execution.
+The final CNINFO implementation notices independently identify shareholder
+approval and the same 0.4 transfer and repurchase exclusion; 603703's final
+reference-price formula explicitly substitutes zero cash. The official SSE
+publication index uniquely identifies both plan titles, but SSE-hosted plan
+PDF bytes were not obtained. Retain this distinction in the immutable audit
+and keep the 22 account-level fractional-share events unaccepted pending the
+existing human methodology decision. Do not infer cash terms from a formula
+placeholder alone or alter the cumulative P1 ledger.
+
 ## 2026-09-19 original SZSE-signed newspaper notices for 002075
 
 The 2010-04-30 and 2011-03-30 original `证券时报` page PDFs carry notices

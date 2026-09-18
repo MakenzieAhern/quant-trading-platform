@@ -1,5 +1,33 @@
 # Current state
 
+## R5 differentiated transfer zero-cash source closure — 2026-09-19
+
+The 22 differentiated stock-transfer candidates now have official zero-cash
+source terms: 20 explicit in the final implementation notices and two
+corroborated by contemporary issuer plans plus the final notices. For 688368,
+the 2024-05-08 issuer shareholder material explicitly says no cash and 0.4
+transfer per share; the final 2024-06-06 notice records shareholder approval,
+the same ratio and the adjusted repurchase exclusion. For 603703, the
+original 2023-04-21 issuer-signed `中国证券报` disclosure explicitly says no
+cash and 0.4 transfer per share; the official SSE announcement index uniquely
+identifies its plan notice, and the final 2023-06-13 CNINFO notice records
+shareholder approval, the same ratio/base and zero cash in the reference-price
+formula. The SSE plan PDF URLs are preserved but their bytes were inaccessible;
+the contemporaneous alternative official issuer disclosures are archived.
+Neither proposed plan was used as a final event by itself.
+
+Immutable report:
+`/home/yuchen/data/research/staging/p1-differentiated-bonus-zero-cash-v1/official-zero-cash-corroboration-v2.json`,
+file SHA-256 `1a681467fae8df49c1f774f374d1204f7d2e35508048db713b41a0afce2697d4`,
+manifest `fb496eb138be22caad38c96c7959962c320b9c27382d61789f522e92eca1eab1`.
+Reverse-order replay passes. Source-term cash uncertainty is zero for this
+22-document subset, but **zero P1 requirements and zero economic events** were
+closed here: all have fractional per-share entitlements and account-level
+rounding/settlement remains a material human methodology gate. Cumulative P1
+v58 stays 16,073/16,320 with 247 facts open. Full Dataset, freeze and studies
+remain locked. The v4 baseline's two cash-source-unresolved labels are
+superseded for source-term evidence only, not for accounting acceptance.
+
 ## R5 original SZSE exchange notices close 002075 — 2026-09-19
 
 **Current corrected SZSE source-presence report is v5; v4 below is historical.**
