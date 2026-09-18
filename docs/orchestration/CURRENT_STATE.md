@@ -1,5 +1,44 @@
 # Current state
 
+## R5 official 000156 listing-suspension source closure — 2026-09-19
+
+**Current corrected SZSE source-presence report is v3; v2 below is historical.**
+An archived SZSE-hosted issuer report (2020-11-04, PDF pages 93–94) quotes
+the 2006-04-13 listing suspension and SZSE restoration decision
+`深证上[2012]343`, with trading restored 2012-10-19 under unchanged code
+000156. The report is retrospective historical evidence, never a 2010
+signal input. All 665 unexplained 000156 dates (2010-01-04 through
+2012-10-18) are strictly inside that interval. A checksum-bound overlay
+reclassifies only those dates; it does not create bars or promote raw or
+execution authority. **632** dates across **241** securities remain
+unresolved: 002075 (216), 000732 (177), and 239 ChiNext securities on
+2011-07-25. Of those, 378 have no matching halt source and 254 have
+unknown resumption. The 15,655-row total is conserved.
+
+Current report:
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-corrected-v3.json`;
+file SHA-256 `c0612a6f95e0726c16caa42217a7e563eda876fd273f40c1b3f8de7f8d53fc8a`,
+manifest `9fe0011dc16b7ac285eae3e6bc70c315bc6b079bedfa5987059d277ff65cfbca`.
+Official PDF SHA-256
+`807f2d79b15e88af65ea5ed0e0083704305795ea05f9b07a9606b4e8d6026110`,
+retrieved 2026-09-18T19:30:29.477959+00:00. Byte-identical replay,
+focused lint and all **763 backend tests** pass. The official SZSE-hosted
+002075 half-year report confirms 2011-04-08 restoration but not the
+2010 suspension start; 000732 remains without a complete source-bound
+interval. Full Dataset, freeze and studies stay locked.
+
+## Docker runtime recovered without data deletion — 2026-09-19
+
+After Docker Desktop recurred on stale `sailor-ingest.sock` and then
+`docker-secrets-engine/engine.sock`, only zero-byte socket runtime folders
+were moved to timestamped, recoverable siblings with Docker processes
+stopped. No image, volume, database or project file was removed. Ubuntu WSL
+integration now exposes Docker 29.7.2 and Compose v5.5.0; the existing
+PostgreSQL and Redis containers are healthy, backend is healthy,
+`/api/health` and the frontend on port 5173 return HTTP 200. This closes
+the current Docker startup issue only; final clean-rebuild and restart
+durability checks remain release-gate work.
+
 ## R5 corrected SZSE daily source-presence audit — 2026-09-19
 
 **Use this section, not the historical v1–v7 counts below.** The old audit

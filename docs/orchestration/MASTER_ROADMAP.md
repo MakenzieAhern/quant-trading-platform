@@ -1,5 +1,20 @@
 # v1.1 controller roadmap
 
+## R5 official row-gap evidence progress — 2026-09-19
+
+The current corrected SZSE source-presence audit is v3: a SHA-bound
+SZSE-hosted issuer report closes 000156's 665 bounded suspension dates.
+The residual is 632 dates across 241 securities, so full raw/execution
+authority and the Full Dataset gate remain blocked. This does not alter
+accepted P0, Pilot v2, or other R5 source decisions.
+
+## Docker engineering dependency recovered — 2026-09-19
+
+The current Docker Desktop/Ubuntu Engine and all four existing project
+services are healthy after non-destructive socket-runtime isolation.
+This does not change R5 source authority, dataset or research gates;
+final release rebuild/restart QA remains due.
+
 ## Authoritative R5 source-scope update — 2026-09-19
 
 The free official-public P0 master remains PASS: 2,403 SSE / 3,028 SZSE

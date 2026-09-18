@@ -1,5 +1,28 @@
 # Blockers
 
+## Current corrected SZSE residual: 632 dates across 241 securities — 2026-09-19
+
+Official SZSE-hosted issuer evidence now closes 000156's 665 absent daily
+rows inside its 2006-04-13 to 2012-10-19 suspended-listing interval.
+The v3 checksum-bound source-presence report leaves 002075 (216), 000732
+(177) and the 2011-07-25 ChiNext export omission (239 securities) open.
+002075 has an archived official restoration date, but its original
+2010-05-07 suspension notice is not yet archived; neither one-sided
+evidence nor the index snippet closes the interval. Do not infer trades,
+halt status, or volume/amount from absent exchange rows. Full raw and
+execution authority, P1 cash/bonus census and the separate retained-
+bonus fractional human gate remain unresolved; Full Dataset and studies
+stay locked. The older v2 blocker below is superseded.
+
+## Docker runtime issue recovered — 2026-09-19
+
+The recurrence of stale Ingest and Secrets Engine socket failures was
+resolved by preserving only their zero-byte runtime socket directories
+under timestamped names. Docker Engine/Ubuntu integration and the four
+existing project services now respond; PostgreSQL, Redis and backend are
+healthy, while API and frontend return HTTP 200. Docker is not an active
+R5 source blocker. Final release rebuild/restart QA is still pending.
+
 ## Corrected SZSE source-presence gap supersedes v1–v7 — 2026-09-19
 
 The slash-formatted resumption-date comparison defect invalidated the

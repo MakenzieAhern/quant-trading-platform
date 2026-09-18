@@ -1,5 +1,29 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 000156 official retrospective interval
+
+The SZSE-hosted issuer report was archived with a UTC receipt and SHA-256,
+then visually checked at its 2006-04-13 suspension and 2012-10-19
+restoration passages. The corrected-v3 overlay reclassifies exactly 665
+000156 no-row dates, conserves all 15,655 absent active-master rows,
+and leaves 632 unresolved dates across 241 symbols. File SHA-256
+`c0612a6f95e0726c16caa42217a7e563eda876fd273f40c1b3f8de7f8d53fc8a`,
+manifest `9fe0011dc16b7ac285eae3e6bc70c315bc6b079bedfa5987059d277ff65cfbca`.
+Byte-identical replay, lint and 763 backend tests pass. The report
+remains source-presence only; no raw/execution authority or Full Dataset
+gate was promoted. The prior corrected-v2 report remains immutable.
+
+## 2026-09-19 non-destructive Docker recovery
+
+After two stale Unix-socket failures, Docker was stopped, the zero-byte
+socket-only `Docker/run` and `docker-secrets-engine` runtime folders were
+preserved as timestamped siblings, and Docker Desktop was restarted.
+Ubuntu integration, Engine 29.7.2 and Compose v5.5.0 respond. The existing
+PostgreSQL/Redis/backend/frontend stack started without rebuilding or
+removing volumes; database readiness, Redis PONG, backend health,
+`/api/health` HTTP 200 and frontend HTTP 200 passed. Final release
+rebuild and restart-durability checks are not yet claimed.
+
 ## 2026-09-19 corrected SZSE source-presence replay
 
 A regression test caught slash-formatted `resumed_at` values incorrectly

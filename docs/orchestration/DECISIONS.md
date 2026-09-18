@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-09-19 retrospective official listing history explains source absence only
+
+The SZSE-hosted 2020 issuer report quotes 000156's 2006-04-13 listing
+suspension and 2012-10-19 restoration decision. Its archived PDF and UTC
+receipt support a bounded historical reconstruction of **daily export row
+absence** for that security, consistent with the approved free official-
+public-source policy. The report's 2020 publication is preserved: it is
+not a point-in-time 2010 signal, a fabricated contemporaneous notice,
+proof of a tradable OHLCV bar, or full execution authority. Only the 665
+previously unresolved dates strictly within the official interval change
+classification; all other gaps remain open.
+
 ## 2026-09-18 derivative notice is not a second distribution
 
 Scope an official issuer's private-placement price/quantity adjustment after
