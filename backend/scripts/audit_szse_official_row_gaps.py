@@ -4,6 +4,7 @@ import argparse
 import json
 import warnings
 from collections import Counter, defaultdict
+from datetime import date
 from io import BytesIO
 from pathlib import Path
 
@@ -16,12 +17,16 @@ from scripts.reconcile_sse_cninfo import canonical, save, sha
 SOURCE_REPORT_SHA = "3edca545dd7b4173c7c95381bb68dd2bb5fd20769faf0930e17da7640edf84ea"
 
 
+def event_day(value: str) -> str:
+    return date.fromisoformat(value[:10].replace("/", "-")).isoformat()
+
+
 def classify(day: str, effective_to: str | None, events: list[tuple[str, str | None]]) -> str:
     if day == effective_to:
         return "MASTER_DELISTING_BOUNDARY_NO_ROW"
-    if any(start <= day < end for start, end in events if end is not None):
+    if any(event_day(start) <= day < event_day(end) for start, end in events if end is not None):
         return "DATED_SOURCE_HALT_INTERVAL"
-    if any(start <= day for start, end in events if end is None):
+    if any(event_day(start) <= day for start, end in events if end is None):
         return "UNKNOWN_RESUMPTION_NOT_CLOSED"
     return "NO_MATCHING_HALT_SOURCE"
 
@@ -52,9 +57,7 @@ def main() -> None:
     suspension_bytes = args.suspensions.read_bytes()
     events = defaultdict(list)
     for event in json.loads(suspension_bytes)["szse"]:
-        events[event["symbol"]].append(
-            (event["suspended_at"][:10].replace("/", "-"), event.get("resumed_at"))
-        )
+        events[event["symbol"]].append((event["suspended_at"], event.get("resumed_at")))
     counts = Counter()
     unresolved = []
     by_symbol = Counter()

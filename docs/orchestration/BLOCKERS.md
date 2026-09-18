@@ -1,5 +1,24 @@
 # Blockers
 
+## Corrected SZSE source-presence gap supersedes v1–v7 — 2026-09-19
+
+The slash-formatted resumption-date comparison defect invalidated the
+previous 10,606 dated-halt and 153-unresolved counts. Full source replay
+and SHA-bound reapplication of 24 official listing intervals leave
+**1,297** absent rows across **242** securities unresolved: 000156 (665),
+002075 (216), 000732 (177), and 239 ChiNext securities each on
+2011-07-25. That day's official export omits the entire 245-security
+ChiNext block; only six have a bounded halt covering it. Independent
+official per-security daily evidence is still needed: alternate official
+stock-export parameters reproduce the same rows and `tab2` is an empty
+fund table. Do not infer a
+board-wide halt or fabricate prices. Targeted CNINFO PDF retrieval for
+the three multi-day chains hit bounded DNS failures and a 403 bot denial,
+so those leads remain unaccepted. Full raw/execution authority, auction-
+only transaction scope, corporate-action census and the independent
+retained-bonus fractional methodology gate remain open. Full Dataset and
+studies stay locked. Earlier sections below are historical only.
+
 ## Three terminal SZSE chains closed; 34 symbols remain — 2026-09-19
 
 Original issuer notices explain 363 additional absent rows for 000805,

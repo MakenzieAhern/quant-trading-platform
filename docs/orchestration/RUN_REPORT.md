@@ -1,5 +1,25 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 corrected SZSE source-presence replay
+
+A regression test caught slash-formatted `resumed_at` values incorrectly
+compared to ISO dates. A complete SHA-checked replay of 3,886 cached
+official SZSE daily XLSX files corrected the 15,655-row classification:
+227 bounded dated halts, 145 delisting boundaries, 11,448 no matching
+halt and 3,835 unknown-resumption rows before official interval overlay.
+Corrected base file SHA-256
+`45bd345c122d9ced5807be65ae427b61b6ef6fe63a6c9f1e7da2719126596aca`.
+The 24 prior PDF-verified intervals were re-applied with strict date
+bounds and conservation checks, leaving **1,297** unresolved dates across
+**242** symbols; overlay file SHA-256
+`23038aa4068abddaf475ba027c3afa78e0a0bd4e1424337f3ee045eea1f3982b`,
+manifest `78634cdb2e076e0938f60ea130eaf0848fe7c67863c5cb0de3f20b57d64898bf`.
+The old v1–v7 row-gap counts are superseded, not acceptance evidence.
+Focused tests, lint and byte-identical overlay replay pass. Three
+multi-day official PDF leads are not accepted without archived bytes;
+targeted retrieval hit DNS and HTTP 403 bot denial. No raw/execution
+authority, Full Dataset, freeze, study or PR merge was promoted.
+
 ## 2026-09-19 three terminal-listing source-presence closures
 
 Issuer CNINFO originals, visually checked and receipt/SHA-bound, explain

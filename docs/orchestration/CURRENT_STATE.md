@@ -1,5 +1,47 @@
 # Current state
 
+## R5 corrected SZSE daily source-presence audit — 2026-09-19
+
+**Use this section, not the historical v1–v7 counts below.** The old audit
+compared slash-formatted `resumed_at` values (for example
+`2011/04/13 09:30`) lexically with `YYYY-MM-DD` session dates, so an
+expired halt could be counted as still active. A regression test now
+normalizes both endpoints to dates. All **3,886** immutable SZSE official
+daily XLSX snapshots were SHA-checked and replayed against the same P0
+master, calendar and suspension source. The **15,655** absent active-
+master rows are unchanged, but the direct dated-halt category falls from
+the invalid **10,606** to **227**. Corrected base file SHA-256
+`45bd345c122d9ced5807be65ae427b61b6ef6fe63a6c9f1e7da2719126596aca`,
+manifest `57eb21a6955b03d42a9d333d0783ace70683e35ac48c9f14da28f266df791b9b`.
+
+Reapplying only the **24** previously PDF-verified official listing-
+suspension/terminal intervals explains 9,628 pre-2010, 2,802 2010-plus
+and 1,556 terminal-suspension absent rows. Another 145 are delisting
+boundaries and 227 have a correctly bounded dated halt. **1,297** dates
+across **242** symbols remain unresolved (1,043 no matching halt source;
+254 unknown resumption). The three multi-day histories are 000156 (665),
+002075 (216) and 000732 (177). The other **239** securities each lack
+the same 2011-07-25 ChiNext row: that official export has **zero** 300-
+series rows versus 245 on each adjacent session; only six of its 245
+active ChiNext securities have a bounded halt covering the day. No mass
+halt or tradable price is inferred. Corrected overlay file SHA-256
+`23038aa4068abddaf475ba027c3afa78e0a0bd4e1424337f3ee045eea1f3982b`,
+manifest `78634cdb2e076e0938f60ea130eaf0848fe7c67863c5cb0de3f20b57d64898bf`;
+byte-identical overlay replay passes. Replay scripts:
+`backend/scripts/audit_szse_official_row_gaps.py` and
+`backend/scripts/reconcile_szse_corrected_row_gaps.py`.
+An alternate official `tab1` export with an explicit end date yields
+identical rows and still no 300-series code; official `tab2` is an empty
+fund table, not a replacement stock source.
+
+Official issuer leads for the three multi-day histories have been
+identified, but their PDFs were **not** admitted without archived bytes:
+the first targeted CNINFO fetch exhausted bounded transient-DNS retries,
+and a direct-address check returned HTTP 403 bot denial. Do not bypass
+the denial or promote raw/execution authority. The v1–v7 reports remain
+immutable error-history artifacts only. Full Dataset, freeze and studies
+remain locked; P0 and accepted official event facts are unchanged.
+
 ## R5 three terminal SZSE listing-suspension histories — 2026-09-19
 
 Original CNINFO issuer PDFs for **000805** establish the 2006-05-15
@@ -11,7 +53,7 @@ decision; only 2014 missing rows are reclassified. Pages were visually
 checked. The v7 report binds URL, UTC receipt and SHA-256 for each PDF,
 explaining exactly **363** more absent official daily rows (212, 114, 37).
 
-Current report:
+Historical superseded v7 report:
 `/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-v7.json`;
 file SHA-256 `b44fe8de96244136055a090c03f71644aed226b0c23f99643af1873b05d7ec89`,
 manifest `e4da16bfa9d8ac2be3264bcfc6c9588be46c073662b441c37fa4c7cac62f11af`.
