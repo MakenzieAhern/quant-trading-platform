@@ -1,5 +1,17 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 six-security official pre-2010 interval batch
+
+Six targeted CNINFO issuer PDFs, visually checked at the pause and first-
+trading-day passages, close 1,727 further missing SZSE daily rows. The
+checksum-bound v3 overlay conserves the 15,655-row total and leaves 2,716
+unresolved dates across 51 securities (913 unknown resumption; 1,803 no
+matching halt source). File SHA-256
+`9f42a73d16e70d9665fd9966718c93a131aa0789cc81a7ad4d259a478232c1b1`,
+manifest `0c456a64a54131b49b7a2d38c132b3d75a08832a9364d3793e4ccc5eac2bab78`.
+Focused tests and lint pass; raw and exact execution authority remain partial.
+No Full Dataset, freeze, study or PR merge followed.
+
 ## 2026-09-19 000693 bounded official source closure
 
 Two archived CNINFO issuer PDFs establish 000693's 2007-05-23 suspended-

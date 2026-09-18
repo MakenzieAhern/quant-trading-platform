@@ -1,5 +1,29 @@
 # Current state
 
+## R5 six-security official suspended-listing batch — 2026-09-19
+
+Archived CNINFO issuer restoration announcements now bound the historical
+suspended-listing intervals for **000403, 000498, 000622, 000672, 000688 and
+000757**. Each announcement states its actual first trading day and its
+original pause date; receipt URL, retrieval UTC and PDF SHA-256 are preserved
+in the external report. A checksum-verified overlay on the immutable v2
+report explains exactly **1,727** more absent official daily rows, including
+273 previously marked unknown-resumption dates for 000688. No other security
+or date is relabeled.
+
+The current report is
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-v3.json`;
+file SHA-256 `9f42a73d16e70d9665fd9966718c93a131aa0789cc81a7ad4d259a478232c1b1`,
+manifest `0c456a64a54131b49b7a2d38c132b3d75a08832a9364d3793e4ccc5eac2bab78`.
+The total official source-absence set remains **15,655** rows: 10,606
+bounded dated halt-source intervals, 2,188 official pre-2010 suspended-
+listing dates (including 000693), 145 delisting boundaries and **2,716**
+unresolved dates across **51** symbols. Of those unresolved dates, 913 lack
+accepted resumption and 1,803 have no matching halt source. No raw-price,
+volume, auction-only transaction or exact execution authority is promoted;
+Full Dataset, freeze and studies remain locked. Replay:
+`backend/scripts/close_szse_pre2010_row_gaps.py`.
+
 ## R5 targeted 000693 official suspended-listing closure — 2026-09-19
 
 The archived [2013-08-05 CNINFO issuer notice](https://static.cninfo.com.cn/finalpage/2013-08-05/62900545.PDF)
@@ -12,7 +36,7 @@ unchanged v1 row-gap report closes only its **461** 000693 no-row dates,
 all within `[2007-05-23, 2014-01-10)`. It does not label unrelated dates
 or infer a raw price/volume observation.
 
-The latest SZSE source-presence report is
+The v2 SZSE source-presence checkpoint was
 `/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-v2.json`;
 file SHA-256 `b9d8250bce1fa18362f7c81f78b302a14a5123907ee40499ccca973ef0940719`,
 canonical manifest `1cef5be1bdc702dc9a21ed1e32ca46dc772a8162231dd446cc3c349ad2cf26b9`.
