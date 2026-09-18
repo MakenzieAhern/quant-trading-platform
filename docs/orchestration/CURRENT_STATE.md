@@ -2,8 +2,8 @@
 
 ## Current R5 official-public raw daily controls — 2026-09-18
 
-Official exchange pages expose two bounded public raw-data routes, now
-checksum-snapshotted without bulk acquisition or authority promotion. The
+Official exchange pages expose two public raw-data routes, now
+partly checkpointed without authority promotion. The
 [SSE company chart](https://www.sse.com.cn/assortment/stock/list/info/company/index.shtml?COMPANY_CODE=600000)
 calls the SSE-hosted `yunhq.sse.com.cn:32042/v1/sh1/dayk` API; controls
 600000, delisted 600553 and STAR 688001 return respectively 3,839, 212 and
@@ -26,6 +26,38 @@ report checksums are `f6c5a7f7d8f061d6be2b9244f26f57e3f87cadfbb71fe02a8d894d3bb6
 and `f7e1af8b165e332c3648d261be0319c5263570927dce75e6a53cc4922d412de9`.
 Neither route has passed full-universe, full-period completeness, source
 parity, or transaction-scope acceptance. `RAW:FULL_UNIVERSE` remains open.
+
+A read-only whole-day SZSE/Pilot-v2 overlap audit for 2023-04-10 uses the
+accepted P0 point-in-time master, the checksum-verified official XLSX and the
+frozen Pilot manifest. It identifies 2,765 official ordinary-A rows: 2,761
+have matching Pilot bars and **zero OHLC mismatches**. After allowing 100
+shares / CNY 100 for combined display precision, 211 volume and 257 amount
+values still differ, always with the official all-methods total higher. The
+other four official rows have zero volume/amount and no Pilot raw bar; they
+are no-trade observations, not inferred suspension states. Audit SHA-256
+`29401b9649ed77f3207871d85404cdc7cce4b88927000f5cf3d52841ec66e84a`.
+The [SZSE's official trading FAQ](https://investor.szse.cn/knowledge/stock/deal/t20191225_572858.html)
+states that block trades are excluded from the instantaneous quote but added
+to the security's daily total after block trading ends. This is consistent
+with the positive official-minus-Pilot volume gaps, but the exact gaps have
+not been matched to official per-security block-trade records; no auction-only
+volume/amount has been reconstructed or accepted.
+Acquisition is safely paused at the existing fractional-bonus methodology
+gate. The deterministic, checksum-resumable checkpoints contain 575/2,405
+SSE master-symbol requests (574 target-bearing; 600003 has no 2010-2025
+trade bar, consistent with its accepted pre-2010 halt/termination evidence)
+and 825/3,886 SZSE calendar sessions, with no transport failures. Checkpoint
+file SHA-256s are respectively
+`72039f8fdc9a4755a0e479ef4c279943315be77b49cbb0958421aeb65a413d6c`
+and `28dc9c5076be33750b46d7918c902938358ed46edefeba98cd438194f4f08f1c`.
+The read-only SSE/Pilot-v2 cross-check covers 201,711 bars from available
+partitions: zero OHLC mismatches, zero volume or amount gaps beyond 100
+shares / CNY 100, and zero missing days within compared partitions. Its
+partial report SHA-256 is
+`a1ac7fed4ce5415a36873d49a89a3f0eefe1cafd342b863cd8c8f7314ba23455`;
+1,752 Pilot SSE partitions still lack a snapshotted source, so this is not
+a full-universe result. No raw source was promoted, no dataset was changed,
+and `RAW:FULL_UNIVERSE` stays open.
 
 ## Current R5 five derivative notices scoped — 2026-09-18
 

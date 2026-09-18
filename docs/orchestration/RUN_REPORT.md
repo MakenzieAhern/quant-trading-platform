@@ -1,5 +1,37 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-18 partial official raw-source acquisition, paused at human gate
+
+Reused the accepted P0 master (2,405 SSE symbol intervals / 2,403 identities)
+and 3,886-session calendar to checkpoint official SSE day-chart JSON and SZSE
+daily XLSX outside Git. Acquisition paused cleanly at the existing retained-
+bonus fractional-share decision gate: 575/2,405 SSE requests (574 with target
+bars; the 600003 no-bar case agrees with its accepted pre-2010 halt and
+2010 termination), 825/3,886 SZSE sessions, no transport failures. Every
+cached response has its original URL, UTC receipt and SHA-256; rerunning the
+collectors checks and reuses cached bytes. Partial collection-report SHA-256s:
+SSE `72039f8fdc9a4755a0e479ef4c279943315be77b49cbb0958421aeb65a413d6c`,
+SZSE `28dc9c5076be33750b46d7918c902938358ed46edefeba98cd438194f4f08f1c`.
+The counts are canonical report rows; four more sequential SSE and four more
+sequential SZSE responses were cached after the last 25-row checkpoint,
+besides earlier controls. Every cached payload has a matching receipt; the
+next run reuses it. No collection worker remains active.
+
+Read-only SSE/Pilot-v2 parity on 201,711 available overlapping bars found
+zero OHLC discrepancies, zero volume/amount discrepancies beyond combined
+100-share/CNY-100 display precision, and zero day-presence discrepancies
+within compared partitions. The partial report SHA-256 is
+`a1ac7fed4ce5415a36873d49a89a3f0eefe1cafd342b863cd8c8f7314ba23455`;
+1,752 Pilot SSE partitions are not yet snapshotted. The SZSE official
+[trading FAQ](https://investor.szse.cn/knowledge/stock/deal/t20191225_572858.html)
+explains why post-session block-trade totals can exceed instantaneous-feed
+volume, but the observed 211/257 same-day gaps are not yet matched to
+official per-security block records. Full raw authority and suspension/
+resumption authority stay open. No dataset, freeze or study was run; PR #12
+remains open. The single smallest human blocker is still the deterministic
+retained-bonus fractional-share convention documented in
+`../research/R5_RETAINED_BONUS_FRACTION_GATE.md`.
+
 ## 2026-09-18 bounded official exchange raw-data route controls
 
 Added replayable bounded probes `backend/scripts/probe_sse_official_daily.py`
@@ -18,6 +50,16 @@ completeness and source-scope parity are not established; no dataset was
 created or frozen. Probe report SHA-256s: SSE
 `f6c5a7f7d8f061d6be2b9244f26f57e3f87cadfbb71fe02a8d894d3bb69bd3f2`,
 SZSE `f7e1af8b165e332c3648d261be0319c5263570927dce75e6a53cc4922d412de9`.
+
+An independent read-only overlap audit of the entire 2023-04-10 SZSE
+official export against frozen Pilot-v2 matched 2,761 of 2,765
+point-in-time ordinary-A rows. All matched OHLC prices agree. Beyond the
+sources' combined 100-share / CNY-100 display precision, 211 volume and
+257 amount gaps remain, all official-higher; 4 official zero-turnover rows
+correctly have no Pilot raw bar. Zero rows remain unexplained within this
+single-day comparison, but it is not a 2010-2025 authority pass. Audit file
+SHA-256 `29401b9649ed77f3207871d85404cdc7cce4b88927000f5cf3d52841ec66e84a`.
+Subsequent partial acquisition is reported above; no raw source was promoted.
 
 ## 2026-09-18 five official non-primary derivative notices scoped
 

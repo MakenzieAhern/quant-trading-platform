@@ -12,11 +12,19 @@ distribution PDFs plus 11 other requirements (four merger/account chains,
 five dual cash-plus-bonus chains, full-universe raw data and daily suspension/
 resumption authority). The exact human methodology gate is retained-bonus
 fractional allocation, not an implied extension of the merger floor policy.
-Bounded official SSE day-bar and SZSE daily-export probes now show feasible
-public raw-data routes, but full-range identity/date completeness and differing
-SZSE all-methods volume/amount scope remain unaudited; raw authority stays
-open, with no dataset overwrite.
-SZSE still has 1,921 unresolved exact resumption boundaries. Full Dataset
+Official SSE day-bar and SZSE daily-export routes are partly checksum-
+checkpointed (575/2,405 SSE symbol requests, 825/3,886 SZSE sessions).
+Available SSE/Pilot overlap has 201,711 matching OHLC bars and no volume/
+amount gap beyond display precision, but 1,752 Pilot SSE partitions remain
+unsnapshotted. Full-range identity/date completeness and differing SZSE
+all-methods volume/amount scope remain unaudited; raw authority stays open,
+with no dataset overwrite.
+The bounded 2023-04-10 official/Pilot overlap now verifies 2,761 identical
+OHLC rows while isolating 211 material volume and 257 material amount
+scope differences; this does not settle the full-range convention.
+Acquisition is paused at the existing fractional-bonus human gate; cached
+bytes are resumable. SZSE still has 1,921 unresolved exact resumption
+boundaries. Full Dataset
 creation, audit, freeze and all R6–R10 work remain gated. PR #12 stays open.
 
 The following chronology is historical; its older “Current” labels describe

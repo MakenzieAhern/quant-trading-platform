@@ -1,6 +1,7 @@
 """Bounded official SZSE daily-OHLCV controls; no full-range source promotion."""
 
 import argparse
+import warnings
 from io import BytesIO
 from pathlib import Path
 from urllib.parse import urlencode
@@ -32,8 +33,10 @@ HEADERS = (
 )
 
 
-def inspect(raw: bytes, day: str) -> dict[str, object]:
-    workbook = load_workbook(BytesIO(raw), read_only=True, data_only=True)
+def inspect(raw: bytes, day: str, *, require_control: bool = True) -> dict[str, object]:
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", message="Workbook contains no default style")
+        workbook = load_workbook(BytesIO(raw), read_only=True, data_only=True)
     sheet = workbook.active
     # SZSE currently emits an incorrect <dimension ref="A1" />.
     sheet.reset_dimensions()
@@ -50,9 +53,28 @@ def inspect(raw: bytes, day: str) -> dict[str, object]:
         count += 1
         if row[1] == "000001":
             sample = dict(zip(HEADERS, row, strict=True))
-    if not count or sample is None:
+    if not count or (require_control and sample is None):
         raise ValueError("empty official SZSE daily export or missing control")
     return {"rows": count, "unique_codes": len(codes), "control_000001": sample}
+
+
+def request(day: str) -> tuple[str, str, str]:
+    catalog = "1815_stock" if day < "2025-09-01" else "1815_stock_snapshot"
+    query = {
+        "SHOWTYPE": "XLSX",
+        "CATALOGID": catalog,
+        "txtBeginDate": day,
+        "TABKEY": "tab1",
+    }
+    if catalog == "1815_stock_snapshot":
+        query["txtEndDate"] = day
+    url = "https://www.szse.cn/api/report/ShowReport?" + urlencode(query)
+    referer = (
+        "https://www.szse.cn/market/trend/"
+        + ("archive/" if catalog == "1815_stock" else "")
+        + "index.html"
+    )
+    return url, catalog, referer
 
 
 def main() -> None:
@@ -60,21 +82,10 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     report = {"status": "BOUNDED_PROBE_ONLY_NOT_ACCEPTED", "controls": []}
-    for day, catalog in CONTROLS:
-        query = {
-            "SHOWTYPE": "XLSX",
-            "CATALOGID": catalog,
-            "txtBeginDate": day,
-            "TABKEY": "tab1",
-        }
-        if catalog == "1815_stock_snapshot":
-            query["txtEndDate"] = day
-        url = "https://www.szse.cn/api/report/ShowReport?" + urlencode(query)
-        referer = (
-            "https://www.szse.cn/market/trend/"
-            + ("archive/" if catalog == "1815_stock" else "")
-            + "index.html"
-        )
+    for day, expected_catalog in CONTROLS:
+        url, catalog, referer = request(day)
+        if catalog != expected_catalog:
+            raise ValueError("official archive catalog boundary changed")
         raw = fetch(args.output, day + ".xlsx", url, referer=referer)
         result = {"date": day, "catalog": catalog, **inspect(raw, day)}
         report["controls"].append(result)

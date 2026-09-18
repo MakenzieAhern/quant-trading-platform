@@ -2,13 +2,22 @@
 
 ## Official raw-route controls do not close full-range authority — 2026-09-18
 
-Bounded checksum-archived SSE per-security day bars and SZSE per-day XLSX
-snapshots show plausible free official-public routes back to 2010, including
-one exited SSE security. They have **not** been acquired or audited for the
-full identity/date census. SZSE's own report aggregates all trading methods;
+Checksum-archived SSE per-security day bars and SZSE per-day XLSX snapshots
+show plausible free official-public routes back to 2010, including one exited
+SSE security. Acquisition paused at 575/2,405 SSE symbol requests and
+825/3,886 SZSE sessions at the existing human methodology gate; the full
+identity/date census is **not** acquired or audited. A 201,711-bar partial
+SSE/Pilot overlap has no OHLC mismatch or volume/amount gap beyond display
+precision, but 1,752 Pilot SSE partitions still lack a source snapshot.
+SZSE's own report aggregates all trading methods;
 its 2023-04-10 000001 volume/amount differ materially from the frozen Pilot
 feed despite matching OHLC. No source has been silently substituted, and
 `RAW:FULL_UNIVERSE` remains one of the 11 open non-distribution P1 facts.
+The full-day official/Pilot overlap confirms this is not a lone control:
+2,761 matched A-share bars have no OHLC differences, while 211 volume and
+257 amount comparisons exceed combined display precision, all in the
+official-higher direction. Four official zero-turnover rows have no Pilot
+raw bar. Full-period coverage and the volume/amount convention remain open.
 The human retained-bonus fractional-allocation gate remains separately active.
 
 ## Current R5 P1 and methodology gates — 2026-09-18
