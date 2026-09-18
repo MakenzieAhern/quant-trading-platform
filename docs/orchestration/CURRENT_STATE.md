@@ -1,8 +1,73 @@
 # Current state
 
+## R5 original SZSE exchange notices close 002075 — 2026-09-19
+
+**Current corrected SZSE source-presence report is v5; v4 below is historical.**
+The original 2010-04-30 `证券时报` page carries a SZSE-signed notice
+setting 002075's listing suspension to 2010-05-07. The original
+2011-03-30 page carries a SZSE-signed notice restoring the same issuer
+(renamed 江苏沙钢股份有限公司) from 2011-04-08. Both exchange notices were
+visually checked, and their original page PDFs have archived bytes, UTC
+receipts and SHA-256. The official SZSE-hosted 2011 issuer report had
+already independently corroborated the restoration date. The overlay
+reclassifies only **216** 002075 dates strictly inside the suspension
+interval. **239** dates across **239** ChiNext securities remain, all on
+2011-07-25; 201 lack a matching halt source and 38 have unknown resumption.
+All 15,655 absent active-master rows are conserved. The remaining one-day
+block is not evidence of mass suspension or tradable bars. A separately
+archived official SZSE 2011 statistical yearbook (PDF page 165, printed
+page 149) reports **48.48 ten-thousand ChiNext deals** on 2011-07-25,
+visually checked: the board traded that day, so the daily export's zero
+300-series rows are an omission, not a board-wide trading halt. Yearbook
+PDF SHA-256 `38289a861878de122015747d09ca3dc1f7e05de127c572ae2ac4792206460bd4`,
+retrieved 2026-09-18T20:04:12.261327+00:00. The aggregate cannot
+identify which individual securities traded or supply their OHLCV.
+
+Current report:
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-corrected-v5.json`;
+file SHA-256 `e34597c37fcfea2bfc193d165a40a8f56537b9bf247f809f8317ddbe6f3ac09d`,
+manifest `36120ebb15c625e936bd77b8584230f7dc9c5d885af3a848ead5281c7e6f3127`.
+Original notice PDF SHA-256 values are
+`1f248ba308629a85ac6436bf0c83a1adfcfd81d7a2045d0bd6460e92ad083b02`
+and `da36a8ecbd4a3e91ec2f46dc79a30600dc9176ef1d8c6abdb1fe43e7309bd8c2`.
+Byte-identical replay, focused test and lint pass. This source-presence
+classification does not promote full raw or execution authority. Full
+Dataset, freeze and studies stay locked. A targeted `1815_stock_snapshot`
+2011-07-25 alternate query returned "没有找到符合条件的数据！"; the current
+per-symbol SZSE chart API returned only its recent 201 sessions even
+with a 2011 date range, so neither is a replacement source.
+
+## R5 official 000732 issuer-notice source closure — 2026-09-19
+
+**Historical corrected SZSE source-presence report v4; v3 below is older.**
+The original issuer-signed 2010-09-21 `证券时报` disclosure states that
+000732 was suspended from listing on 2007-05-11 and trading would resume
+2010-09-30 under SZSE decision `深证上[2010]310号`. The official CNINFO index
+uniquely identifies that issuer notice; a SZSE-hosted issuer PDF names
+`证券时报` as a designated disclosure paper. All three source surfaces have
+archived bytes or index response, UTC receipt and SHA-256. The original
+CNINFO PDF bytes remain unverified; no third-party mirror is substituted.
+The checksum-bound overlay reclassifies only **177** 000732 absent rows
+strictly within the interval. **455** dates across **240** securities remain:
+002075 (216), and 239 ChiNext securities on 2011-07-25. Of those, 201 have
+no matching halt source and 254 have unknown resumption. All 15,655 absent
+rows are conserved. This is retrospective source-presence evidence, not
+a 2007 signal or raw/execution authority.
+
+Historical v4 report:
+`/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-corrected-v4.json`;
+file SHA-256 `85d19024f2781cdaa50a766ebbe1e6302938830005ec088a9b798dd22dc07a44`,
+manifest `4b0b729fba816ece90a3a8c8f2c0fbc3e836530435fb936c1533773963b56826`.
+The designated-paper PDF SHA-256 is
+`50d68eb468aeb32a226d53ecc2057c510c945d4a35bb2d44a61601105b9eb23d`;
+the SZSE issuer-designation PDF SHA-256 is
+`351795ac6f8626a1891c6f099a2b22b33d7b809be356f22cd2208380ca8d1b33`.
+Byte-identical replay, focused test and lint pass. Full Dataset, freeze and
+studies remain locked.
+
 ## R5 official 000156 listing-suspension source closure — 2026-09-19
 
-**Current corrected SZSE source-presence report is v3; v2 below is historical.**
+**Historical corrected SZSE source-presence report v3; v2 below is older.**
 An archived SZSE-hosted issuer report (2020-11-04, PDF pages 93–94) quotes
 the 2006-04-13 listing suspension and SZSE restoration decision
 `深证上[2012]343`, with trading restored 2012-10-19 under unchanged code
@@ -15,7 +80,7 @@ unresolved: 002075 (216), 000732 (177), and 239 ChiNext securities on
 2011-07-25. Of those, 378 have no matching halt source and 254 have
 unknown resumption. The 15,655-row total is conserved.
 
-Current report:
+Historical v3 report:
 `/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-official-row-gaps-corrected-v3.json`;
 file SHA-256 `c0612a6f95e0726c16caa42217a7e563eda876fd273f40c1b3f8de7f8d53fc8a`,
 manifest `9fe0011dc16b7ac285eae3e6bc70c315bc6b079bedfa5987059d277ff65cfbca`.

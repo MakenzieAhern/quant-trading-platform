@@ -1,5 +1,31 @@
 # Decisions
 
+## 2026-09-19 original SZSE-signed newspaper notices for 002075
+
+The 2010-04-30 and 2011-03-30 original `证券时报` page PDFs carry notices
+signed by 深圳证券交易所, not journalist summaries. They state the effective
+2010-05-07 listing suspension and 2011-04-08 restoration of the same
+002075 issuer after its name change. Retain the original page bytes,
+publication dates, UTC receipts and SHA-256, and apply these narrowly
+to the 216 corrected source-absent dates strictly within that interval.
+Do not infer prices, volume/amount, execution availability or a mass
+ChiNext halt. The retrospective audit classification is not permission
+to leak later restoration knowledge backward into a 2010 signal.
+
+## 2026-09-19 original designated-paper issuer notice for 000732
+
+The issuer-signed 2010-09-21 `证券时报` notice is original designated-paper
+disclosure, not a media summary: it names that paper as an issuer disclosure
+outlet, the unique official CNINFO index identifies the same issuer notice,
+and a SZSE-hosted issuer PDF independently names the outlet. Its original
+PDF and the supporting source bytes/index are SHA- and receipt-bound.
+Apply the previously accepted 600337 designated-paper source-substitution
+principle only to 000732's bounded historical listing-suspension interval:
+2007-05-11 through the day before 2010-09-30 restoration. The 2010 notice
+is retrospective for 2007, not point-in-time signal data. Original CNINFO
+PDF bytes are still unverified. Do not infer missing bars, tradability,
+volume, amount or a broader source-substitution policy.
+
 ## 2026-09-19 retrospective official listing history explains source absence only
 
 The SZSE-hosted 2020 issuer report quotes 000156's 2006-04-13 listing

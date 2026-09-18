@@ -1,5 +1,39 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 002075 original SZSE suspension/restoration notices
+
+Two original `证券时报` page PDFs carry SZSE-signed notices establishing
+002075's 2010-05-07 suspension and 2011-04-08 restoration. Their PDF
+bytes, UTC receipts, SHA-256 and publication dates are bound in the v5
+report; pages were visually checked. Exactly 216 002075 absent daily rows
+are reclassified within that interval, conserving all 15,655 rows and
+leaving only 239 dates across 239 ChiNext securities on 2011-07-25.
+File SHA-256 `e34597c37fcfea2bfc193d165a40a8f56537b9bf247f809f8317ddbe6f3ac09d`,
+manifest `36120ebb15c625e936bd77b8584230f7dc9c5d885af3a848ead5281c7e6f3127`.
+Byte-identical replay, focused test and lint pass. No mass halt, bar,
+raw/execution authority, Full Dataset, freeze, study or PR merge is inferred.
+The official SZSE 2011 statistical yearbook was separately archived and
+visually checked at PDF page 165: 2011-07-25 had 48.48 ten-thousand
+ChiNext deals. PDF SHA-256
+`38289a861878de122015747d09ca3dc1f7e05de127c572ae2ac4792206460bd4`.
+This confirms a daily-export omission, not per-security prices or fills.
+
+## 2026-09-19 000732 original issuer-notice interval
+
+An original issuer-signed designated-paper notice, its unique official
+CNINFO index entry and a SZSE-hosted issuer designation PDF were archived
+with UTC receipts and SHA-256. The issuer notice was visually checked.
+The corrected-v4 overlay reclassifies exactly 177 000732 absent daily rows
+inside the 2007-05-11 to 2010-09-30 suspended-listing interval, conserves
+all 15,655 source-absent rows, and leaves 455 dates across 240 symbols
+unresolved. Report file SHA-256
+`85d19024f2781cdaa50a766ebbe1e6302938830005ec088a9b798dd22dc07a44`,
+manifest `4b0b729fba816ece90a3a8c8f2c0fbc3e836530435fb936c1533773963b56826`.
+Byte-identical replay, focused test and lint pass. Original CNINFO PDF bytes
+were not obtained; retrospective source-presence evidence is not a 2007
+signal or raw/execution authority. Full Dataset, freeze, study and PR merge
+were not promoted.
+
 ## 2026-09-19 000156 official retrospective interval
 
 The SZSE-hosted issuer report was archived with a UTC receipt and SHA-256,

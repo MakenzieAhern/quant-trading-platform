@@ -1,6 +1,38 @@
 # Blockers
 
-## Current corrected SZSE residual: 632 dates across 241 securities — 2026-09-19
+## Current corrected SZSE residual: 239 ChiNext dates — 2026-09-19
+
+Original exchange-signed notices close 002075's 216 absent daily rows
+inside its 2010-05-07 to 2011-04-08 suspended-listing interval. Corrected
+v5 leaves only the 2011-07-25 ChiNext export omission, one date for each
+of 239 securities. An alternate official stock-export query reproduced
+the missing block; its `tab2` is a fund table, not a stock substitute.
+The official SZSE 2011 yearbook reports 48.48 ten-thousand ChiNext deals
+on that date, ruling out a board-wide halt but not resolving any one
+security's OHLCV. A targeted old-date snapshot returned no data and the
+per-symbol chart API served only recent sessions. Independent official
+per-security daily evidence is still required. Do not fill a bar or
+promote full raw/execution authority from absent exchange rows.
+Separately, P1 corporate-action
+census and the retained-bonus fractional human methodology gate remain
+open; Full Dataset and studies stay locked. The v4 blocker below is
+superseded.
+
+## Historical corrected SZSE residual: 455 dates across 240 securities — 2026-09-19
+
+Original issuer disclosure, the official CNINFO notice index and a
+SZSE-hosted issuer designation close 000732's 177 absent daily rows inside
+its 2007-05-11 to 2010-09-30 suspended-listing interval. Corrected v4
+leaves 002075 (216) and the 2011-07-25 ChiNext export omission (239
+securities) open. The 002075 restoration date is archived, but its original
+2010-05-07 suspension evidence is still missing. The ChiNext block still
+needs independent official per-security daily evidence. Neither absent
+rows nor retrospective notices establish tradable bars or exact execution
+status. Separately, P1 cash/bonus census and the retained-bonus fractional
+human methodology gate remain unresolved; Full Dataset and studies stay
+locked. The older v3 blocker below is superseded.
+
+## Historical corrected SZSE residual: 632 dates across 241 securities — 2026-09-19
 
 Official SZSE-hosted issuer evidence now closes 000156's 665 absent daily
 rows inside its 2006-04-13 to 2012-10-19 suspended-listing interval.

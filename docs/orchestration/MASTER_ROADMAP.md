@@ -1,5 +1,23 @@
 # v1.1 controller roadmap
 
+## R5 original exchange-notice progress — 2026-09-19
+
+Corrected SZSE v5 binds original SZSE-signed suspension/restoration
+notices for 002075 and closes 216 bounded source-absent dates. The only
+remaining corrected SZSE source-presence residual is 239 ChiNext
+securities on 2011-07-25. This is neither full raw nor execution
+authority. P0, Pilot v2 and other accepted R5 decisions are unchanged;
+Full Dataset, freeze, studies and release remain locked.
+
+## R5 official 000732 source-presence progress — 2026-09-19
+
+Corrected SZSE v4 binds the original issuer-signed designated-paper notice,
+the official CNINFO index and SZSE-hosted issuer paper designation. It closes
+177 bounded 000732 source-absent dates; 455 dates across 240 securities
+remain unresolved. Source presence is not raw or execution authority. P0,
+Pilot v2 and other accepted R5 decisions are unchanged. Full Dataset,
+freeze, studies and release remain locked.
+
 ## R5 official row-gap evidence progress — 2026-09-19
 
 The current corrected SZSE source-presence audit is v3: a SHA-bound
