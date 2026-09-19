@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 ChinaClear transaction-cost closure / preflight v10
+
+- original ChinaClear operative notices retained: 2
+- 2012 SSE transfer base: TRADED FACE VALUE
+- exact rates/boundaries: 0.375 per mille from 2012-06-01; 0.3 per mille from 2012-09-01
+- 2012 SZSE transfer rate: 0.0255 per mille of traded amount, unchanged
+- transfer-base contradiction: RESOLVED
+- unresolved transaction-cost claim groups: 4
+- transaction-cost report file SHA-256: `1db43941e25bb65bc2f40185a5593af4cb5c66f743043b0ca12225d764e007cc`
+- transaction-cost report manifest SHA-256: `56e6d5e59a28c859333b5d15cce0bdb4c12e9798175a011176752911694bf9bb`
+- full-source preflight: BLOCKED_MATERIAL_AUTHORITY_AND_METHODOLOGY_GAPS
+- preflight manifest SHA-256: `b8d912eb72b4e8625cb974db74c7b40b622f076cb10125ada1c89a67c433d474`
+- executable rules changed: NO
+- backend / frontend tests: 804 / 78 PASS
+- Ruff / format / mypy / ESLint / TypeScript / production build: PASS
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 SZSE official aggregate crosscheck / preflight v9
 
 - fixed candidate rows completed: 239 / 239

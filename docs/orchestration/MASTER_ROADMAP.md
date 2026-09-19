@@ -1,5 +1,16 @@
 # v1.1 controller roadmap
 
+## R5 ChinaClear transaction-cost closure / preflight v10 — 2026-09-20
+
+Original ChinaClear notices close the 2012 SSE transfer-base contradiction in
+favor of traded face value and reduce unresolved transaction-cost claim groups
+from five to four. The executable model stays unchanged because minimums,
+pre-2015 interval completeness and commission component scope remain open.
+Resume from the consolidated suspension, raw, adjustment-economics and
+historical-cost authority blocker in
+`../research/R5_TRANSACTION_COST_OFFICIAL_SOURCES_V4.md`. Do not create or
+freeze the Full Dataset or run a study while any component remains partial.
+
 ## R5 official raw aggregate crosscheck / preflight v9 — 2026-09-20
 
 The fixed 239-row 2011-07-25 ChiNext residual now passes dual-source value

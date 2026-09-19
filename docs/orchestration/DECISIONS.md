@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-09-20 — ChinaClear operative notices resolve the 2012 transfer base
+
+Accept the checksum-bound ChinaClear notices dated 2012-04-30 and 2012-08-02
+as the operative authority for the SSE A-share transfer-fee base. They specify
+traded face value at 0.375 per mille from 2012-06-01 and 0.3 per mille from
+2012-09-01; SZSE remains 0.0255 per mille of traded amount. Preserve the CSRC
+news compilation's incompatible traded-amount wording as a source conflict,
+but do not let a news summary override the fee collector's original operative
+notice. This does not resolve fee minimums, the full pre-2012 interval, the
+broker-retained component or the research commission's net/all-in scope, so the
+executable model remains unchanged.
+
 ## 2026-09-20 — official aggregate prevents raw candidate promotion
 
 Accept the fixed 239-row Tencent/Sina replay as a reproducible diagnostic: OHLC

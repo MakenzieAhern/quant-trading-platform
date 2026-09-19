@@ -12,6 +12,32 @@ from app.data.catalog.freeze import write_immutable
 
 SOURCES = (
     {
+        "file": "chinaclear-transfer-fee-2012-04.pdf",
+        "url": "https://www.chinaclear.cn/old_files/1335773025208.pdf",
+        "retrieved_at_utc": "2026-09-19T18:20:36.290254+00:00",
+        "sha256": "c569a05620befe5bd008d3bb9aed07c883d2e30b82fbb6b88ba46e626e4aab60",
+        "format": "PDF",
+        "page": 1,
+        "validation": "SHA256_PLUS_VISUAL_PAGE_REVIEW",
+        "claims": [
+            "SSE_TRANSFER_2012_06_01_FACE_VALUE_0.375_PER_MILLE",
+            "SZSE_TRANSFER_NOTIONAL_0.0255_PER_MILLE_UNCHANGED",
+        ],
+    },
+    {
+        "file": "chinaclear-transfer-fee-2012-08.pdf",
+        "url": "https://www.chinaclear.cn/old_files/1343899420865.pdf",
+        "retrieved_at_utc": "2026-09-19T18:20:35.685819+00:00",
+        "sha256": "755ec86ff5974f62c9b001f5a5a7f4fa46e91ff8b2181ebadbfe8abb45657e6e",
+        "format": "PDF",
+        "page": 1,
+        "validation": "SHA256_PLUS_VISUAL_PAGE_REVIEW",
+        "claims": [
+            "SSE_TRANSFER_2012_09_01_FACE_VALUE_0.3_PER_MILLE",
+            "SZSE_TRANSFER_NOTIONAL_0.0255_PER_MILLE_UNCHANGED",
+        ],
+    },
+    {
         "file": "csrc-2012-04-30.html",
         "url": "https://www.csrc.gov.cn/csrc/c100028/c1002502/content.shtml",
         "retrieved_at_utc": "2026-09-19T17:06:05Z",
@@ -60,28 +86,43 @@ def validate_tokens(text: str, tokens: tuple[str, ...]) -> None:
         raise ValueError(f"OFFICIAL_SOURCE_TOKENS_MISSING:{missing}")
 
 
+def validate_source(source_root: Path, item: dict) -> None:
+    path = source_root / item["file"]
+    if sha256_file(path) != item["sha256"]:
+        raise ValueError(f"OFFICIAL_SOURCE_CHANGED:{item['file']}")
+    if tokens := item.get("tokens"):
+        validate_tokens(normalized_text(path.read_bytes()), tokens)
+
+
 def audit(source_root: Path) -> dict:
     sources = []
     for item in SOURCES:
-        path = source_root / item["file"]
-        if sha256_file(path) != item["sha256"]:
-            raise ValueError(f"OFFICIAL_SOURCE_CHANGED:{item['file']}")
-        validate_tokens(normalized_text(path.read_bytes()), item["tokens"])
+        validate_source(source_root, item)
         sources.append({key: value for key, value in item.items() if key != "tokens"})
     body = {
-        "report_id": "FULL_TRANSACTION_COST_OFFICIAL_SOURCES_V3",
-        "status": "PARTIAL_CONTRADICTORY_TRANSFER_BASE_AND_COMMISSION_SCOPE",
+        "report_id": "FULL_TRANSACTION_COST_OFFICIAL_SOURCES_V4",
+        "status": "PARTIAL_COMMISSION_AND_INTERVAL_SCOPE",
         "requested_coverage": ["2010-01-01", "2025-12-31"],
+        "parser_version": "transaction-cost-official-pages-v4",
         "sources": sources,
         "accepted_claims": [
+            "SSE_TRANSFER_2012_06_01_FACE_VALUE_0.375_PER_MILLE",
+            "SSE_TRANSFER_2012_09_01_FACE_VALUE_0.3_PER_MILLE",
+            "SZSE_TRANSFER_NOTIONAL_0.0255_PER_MILLE_UNCHANGED_IN_2012",
             "HANDLING_2012_06_01",
             "REGULATOR_2012_01_01",
             "HANDLING_2012_09_01",
             "HANDLING_AND_TRANSFER_2015_08_01",
             "POST_2015_TRANSFER_INCLUDED_IN_COMMISSION_ACCOUNT_EXAMPLE",
         ],
+        "resolved_claim_groups": ["TRANSFER_2012_BASE_CONTRADICTION"],
+        "authority_resolution": {
+            "conflict": "CSRC_2012_NEWS_SAID_TRADED_AMOUNT",
+            "accepted_source": "CHINACLEAR_2012_OPERATIVE_NOTICES",
+            "accepted_basis": "TRADED_FACE_VALUE",
+            "reason": "FEE_COLLECTOR_ORIGINAL_OPERATIVE_NOTICE_CONTROLS_NEWS_SUMMARY",
+        },
         "remaining_gaps": [
-            "TRANSFER_2012_BASE_CONTRADICTION",
             "TRANSFER_MINIMUM_AFTER_REDUCTIONS",
             "TRANSFER_PRE_2015_EFFECTIVE_INTERVALS",
             "CUSTOMER_COMMISSION_COMPONENT_SCOPE",

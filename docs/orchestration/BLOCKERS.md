@@ -1,5 +1,21 @@
 # Blockers
 
+## Current R5 blocker after ChinaClear transfer-base closure — 2026-09-20
+
+The original ChinaClear 2012-04-30 and 2012-08-02 operative notices resolve
+the SSE transfer charging base as traded face value. Four transaction-cost
+claim groups remain: post-reduction minimums, full pre-2015 intervals,
+customer/broker commission component scope and continuous non-handling
+coverage. The executable notional-only model is unchanged.
+
+The consolidated material blocker is now: 2,009 unresolved SZSE suspension
+boundaries; official per-security raw authority for 239 candidate rows and the
+separate 223-symbol transaction-scope boundary; 478 gross cash-plus-bonus
+adjustment conflicts/eight provider conventions; and the four remaining
+historical transaction-cost groups. No paid product has been shown necessary
+or sufficient. Full Dataset creation, audit, freeze and all studies remain
+locked.
+
 ## Current R5 blocker after official raw aggregate crosscheck — 2026-09-20
 
 The bounded 239-row ChiNext value diagnostic now passes dual-source parity and

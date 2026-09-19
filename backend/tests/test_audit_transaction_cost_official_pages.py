@@ -1,6 +1,8 @@
+from hashlib import sha256
+
 import pytest
 
-from scripts.audit_transaction_cost_official_pages import validate_tokens
+from scripts.audit_transaction_cost_official_pages import validate_source, validate_tokens
 
 
 def test_validate_tokens_fails_closed() -> None:
@@ -8,3 +10,13 @@ def test_validate_tokens_fails_closed() -> None:
 
     with pytest.raises(ValueError, match="OFFICIAL_SOURCE_TOKENS_MISSING"):
         validate_tokens("2012年1月2日起0.02‰", ("2012年1月1日起",))
+
+
+def test_validate_source_accepts_checksum_bound_visual_pdf(tmp_path) -> None:
+    payload = b"%PDF-visual-review-fixture"
+    (tmp_path / "notice.pdf").write_bytes(payload)
+
+    validate_source(
+        tmp_path,
+        {"file": "notice.pdf", "sha256": sha256(payload).hexdigest()},
+    )

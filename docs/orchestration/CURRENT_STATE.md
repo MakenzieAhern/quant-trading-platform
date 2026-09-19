@@ -1,5 +1,21 @@
 # Current state
 
+## R5 ChinaClear transaction-cost closure / preflight v10 — 2026-09-20
+
+Two original ChinaClear operative notices resolve the 2012 SSE transfer-base
+contradiction in favor of traded face value: 0.375 per mille from 2012-06-01
+and 0.3 per mille from 2012-09-01. The SZSE rate remains 0.0255 per mille of
+traded amount. The conflicting CSRC news wording is preserved but does not
+override the fee collector's original notice.
+
+Historical transaction-cost gaps fall from five to four. Minimums, full
+pre-2015 intervals, broker/customer commission component scope and continuous
+non-handling coverage remain incomplete; no executable rule changed. Full-
+source preflight V10 remains blocked by suspension, raw authority, adjustment
+economics and historical transaction-cost authority. Backend 804/804 and
+frontend 78/78 tests, lint, type checks and the frontend production build pass.
+See `../research/R5_TRANSACTION_COST_OFFICIAL_SOURCES_V4.md`.
+
 ## R5 SZSE official aggregate crosscheck / preflight v9 — 2026-09-20
 
 The fixed 239-row ChiNext residual was replayed from checksum-bound Tencent and
