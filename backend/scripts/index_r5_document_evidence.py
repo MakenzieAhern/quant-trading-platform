@@ -12,15 +12,16 @@ from app.data.catalog.freeze import write_immutable
 def cached_extractions(roots: list[Path]) -> dict[str, bytes]:
     result = {}
     for root in roots:
-        for path in root.rglob("batch-v1/text/*.json"):
+        for path in sorted(root.rglob("batch-v1/text/*.json")):
             raw = path.read_bytes()
             value = json.loads(raw)
             source_sha256 = value.get("source_sha256")
             if source_sha256 != path.stem:
                 raise ValueError("EXTRACTION_CACHE_IDENTITY_MISMATCH")
-            if source_sha256 in result and result[source_sha256] != raw:
+            previous = result.get(source_sha256)
+            if previous and json.loads(previous).get("pages") != value.get("pages"):
                 raise ValueError("CONFLICTING_EXTRACTION_CACHES")
-            result[source_sha256] = raw
+            result[source_sha256] = min(previous, raw) if previous else raw
     return result
 
 

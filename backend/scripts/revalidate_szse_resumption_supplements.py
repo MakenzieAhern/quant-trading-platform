@@ -12,6 +12,7 @@ from scripts.audit_full_suspensions import _identity_index, _lifecycle_ends, nor
 from scripts.reconcile_szse_resumptions import (
     REJECTED_TITLE,
     bind_resumptions,
+    continued_halt_restoration_dates,
     exact_restoration_dates,
     exact_resume_dates,
     official_document_text,
@@ -92,6 +93,7 @@ def main() -> None:
     states = Counter()
     source_manifests = []
     parsed = {}
+    continued_halts = {}
     for manifest_path in sorted(args.staging.glob("full-szse-resumption*/**/source-manifest.json")):
         manifest = _verified(manifest_path)
         source_manifests.append({"path": str(manifest_path), "sha256": sha256_file(manifest_path)})
@@ -115,11 +117,18 @@ def main() -> None:
             identity = (document["source_sha256"], document["published_on"])
             if identity not in parsed:
                 text = official_document_text(root, document)
-                parsed[identity] = sorted(
-                    set(exact_resume_dates(text, document["published_on"]))
-                    | set(exact_restoration_dates(text))
+                parsed[identity] = (
+                    sorted(
+                        set(exact_resume_dates(text, document["published_on"]))
+                        | set(exact_restoration_dates(text))
+                    ),
+                    continued_halt_restoration_dates(text),
                 )
-            dates = parsed[identity]
+            dates, halted_dates = parsed[identity]
+            marker = (document["published_on"], document["source_sha256"])
+            for day in halted_dates:
+                key = (document["issuer"], day)
+                continued_halts[key] = max(continued_halts.get(key, ("", "")), marker)
             state = (
                 "EXACT_DATE" if len(dates) == 1 else "AMBIGUOUS_DATES" if dates else "NO_EXACT_DATE"
             )
@@ -138,7 +147,13 @@ def main() -> None:
             evidence[json.dumps(row, ensure_ascii=False, sort_keys=True)] = row
 
     evidence_rows = sorted(
-        evidence.values(), key=lambda row: (row["symbol"], row["resumed_at"], row["source_sha256"])
+        (
+            row
+            for row in evidence.values()
+            if (row["published_on"], row["source_sha256"])
+            > continued_halts.get((row["symbol"], row["resumed_at"]), ("", ""))
+        ),
+        key=lambda row: (row["symbol"], row["resumed_at"], row["source_sha256"]),
     )
     accepted, remaining = bind_resumptions(unresolved, normalized, evidence_rows)
     if (accepted, remaining) != bind_resumptions(

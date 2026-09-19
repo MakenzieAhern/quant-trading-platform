@@ -1,5 +1,19 @@
 # Current state
 
+## R5 targeted SZSE resumption recovery v11 — 2026-09-19
+
+Reused 2,292 retained official documents and acquired 380 bounded official
+CNINFO documents with zero failures. Strict content replay closes ten true
+boundaries relative to v10. A cross-document precedence defect was also fixed:
+000520's restoration-of-listing date is not a trading resumption because a
+later official notice says it remained suspended that day. Current authority
+has **7,303** exact resumptions, 58 terminal closures, zero conflicts and
+**3,444** unresolved SZSE boundaries. Forward/reverse replay is byte-identical.
+High-yield title families are exhausted; the current low-precision residual is
+74,569 unprocessed leads across 1,923 facts, while 1,521 facts have no remaining
+candidate in retained metadata. Authority stays PARTIAL. See
+`../research/R5_SZSE_TARGETED_RESUMPTION_RECOVERY_V11.md`.
+
 ## R5 strict SZSE resumption revalidation v10 — 2026-09-19
 
 All retained official resumption evidence was replayed under a fail-closed

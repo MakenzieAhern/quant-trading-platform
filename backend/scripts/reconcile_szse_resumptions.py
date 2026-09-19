@@ -160,9 +160,8 @@ def exact_resume_dates(text: str, published_on: str) -> list[str]:
     return sorted(values)
 
 
-def exact_restoration_dates(text: str) -> list[str]:
+def _restoration_dates(compact: str) -> list[str]:
     values = set()
-    compact = re.sub(r"\s+", "", text)
     for segment in re.split(r"[。\uff01\uff1f\uff1b;]", compact):
         for pattern in RESTORATION_PATTERNS:
             for match in pattern.finditer(segment):
@@ -174,6 +173,16 @@ def exact_restoration_dates(text: str) -> list[str]:
                 except ValueError:
                     continue
     return sorted(values)
+
+
+def continued_halt_restoration_dates(text: str) -> list[str]:
+    compact = re.sub(r"\s+", "", text)
+    return _restoration_dates(compact) if "继续停牌" in compact else []
+
+
+def exact_restoration_dates(text: str) -> list[str]:
+    compact = re.sub(r"\s+", "", text)
+    return [] if "继续停牌" in compact else _restoration_dates(compact)
 
 
 def official_document_text(root: Path, document: dict) -> str:
@@ -255,7 +264,7 @@ def main() -> None:
     source_manifest = json.loads(source_manifest_path.read_bytes())
     suspensions = json.loads(args.suspensions.read_bytes())["szse"]
     unresolved = unresolved_facts(json.loads(args.unresolved.read_bytes()))
-    evidence, document_results = [], []
+    evidence, document_results, continued_halts = [], [], {}
     for document in source_manifest["documents"]:
         result = {
             "source_sha256": document.get("source_sha256"),
@@ -270,6 +279,10 @@ def main() -> None:
             result["status"] = "NON_EQUITY_RESUMPTION"
         else:
             text = official_document_text(args.root, document)
+            marker = (document["published_on"], document["source_sha256"])
+            for day in continued_halt_restoration_dates(text):
+                key = (document["issuer"], day)
+                continued_halts[key] = max(continued_halts.get(key, ("", "")), marker)
             dates = sorted(
                 set(exact_resume_dates(text, document["published_on"]))
                 | set(exact_restoration_dates(text))
@@ -296,6 +309,12 @@ def main() -> None:
                 )
         document_results.append(result)
 
+    evidence = [
+        row
+        for row in evidence
+        if (row["published_on"], row["source_sha256"])
+        > continued_halts.get((row["symbol"], row["resumed_at"]), ("", ""))
+    ]
     evidence.sort(key=lambda row: (row["symbol"], row["resumed_at"], row["source_sha256"]))
     accepted, remaining = bind_resumptions(unresolved, suspensions, evidence)
     reversed_result = bind_resumptions(

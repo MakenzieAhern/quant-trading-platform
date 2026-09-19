@@ -3,6 +3,7 @@ import json
 
 from scripts.reconcile_szse_resumptions import (
     bind_resumptions,
+    continued_halt_restoration_dates,
     exact_restoration_dates,
     exact_resume_dates,
     official_document_text,
@@ -92,6 +93,9 @@ def test_exact_restoration_dates_require_an_effective_trading_boundary():
     ]
     assert exact_restoration_dates("公司于2021年4月8日向深交所申请恢复上市。") == []
     assert exact_restoration_dates("公司股票已于2020年5月13日起暂停上市。") == []
+    continued = "公司股票自2015年8月18日起恢复上市,因重大事项自同日开市起继续停牌。"
+    assert exact_restoration_dates(continued) == []
+    assert continued_halt_restoration_dates(continued) == ["2015-08-18"]
 
 
 def test_official_cninfo_javascript_attachment(tmp_path):

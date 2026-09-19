@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 targeted SZSE resumption recovery v11
+
+- retained official documents reused: 2,292
+- bounded official documents newly acquired: 380
+- acquisition failures: 0
+- true new exact boundaries: 10
+- restoration/continued-halt false positives rejected: 1 (000520)
+- strict exact resumptions: 7,303
+- terminal closures: 58
+- final unresolved: 3,444
+- conflicts: 0
+- residual facts with unprocessed metadata candidates: 1,923
+- residual facts without unprocessed metadata candidates: 1,521
+- unprocessed low-precision leads: 74,569
+- forward/reverse supplement ordering: byte-identical PASS
+- authority: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- Full Dataset/freeze/studies: NOT RUN
+
 ## 2026-09-19 strict retained SZSE resumption replay
 
 - parser regression tests: PASS

@@ -35,6 +35,16 @@ def test_candidate_queue_is_limited_to_unresolved_intervals():
             },
             source,
         ),
+        (
+            {
+                "announcementId": "1",
+                "secCode": "000001",
+                "announcementTime": 1262620800000,
+                "announcementTitle": "<em>公告</em>",
+                "adjunctUrl": "finalpage/2010-01-05/1.PDF",
+            },
+            source,
+        ),
     ]
     queue = candidate_queue(announcements, suspension_intervals(unresolved, suspensions), set())
     assert [row["announcement_id"] for row in queue] == ["1"]

@@ -29,6 +29,17 @@ def test_batch_reuses_verified_external_pdf_without_download(tmp_path, monkeypat
             )
         )
     )
+    (retained / "unrelated.pdf").write_bytes(b"changed")
+    (retained / "unrelated.pdf.meta.json").write_text(
+        json.dumps(
+            dict(
+                url="https://static.cninfo.com.cn/finalpage/unrelated.PDF",
+                http_status=200,
+                sha256="not-the-current-bytes",
+                retrieved_at_utc="2026-09-13T00:00:00Z",
+            )
+        )
+    )
     queue = tmp_path / "queue.json"
     queue.write_text(
         json.dumps(

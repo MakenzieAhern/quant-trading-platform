@@ -85,6 +85,9 @@ def run(
     source_roots: tuple[Path, ...] = (),
     workers: int = 2,
 ) -> dict:
+    candidates = json.loads(queue.read_bytes()) if queue else leads(root)
+    candidates = sorted(candidates, key=lambda r: (r["queue_type"], r["published_on"], r["url"]))
+    wanted_urls = {row["url"] for row in candidates}
     existing = {}
     circuit, circuit_lock = Event(), Lock()
     consecutive_unavailable = 0
@@ -97,6 +100,8 @@ def run(
     )
     for path in receipts:
         meta = json.loads(path.read_bytes())
+        if meta.get("url") not in wanted_urls:
+            continue
         pdf = Path(str(path).removesuffix(".meta.json"))
         if pdf.exists() and meta.get("http_status") == 200:
             if sha256_file(pdf) != meta["sha256"]:
@@ -178,10 +183,6 @@ def run(
         return result
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        candidates = json.loads(queue.read_bytes()) if queue else leads(root)
-        candidates = sorted(
-            candidates, key=lambda r: (r["queue_type"], r["published_on"], r["url"])
-        )
         results = list(pool.map(acquire, candidates))
     report = dict(
         parser_version=VERSION,

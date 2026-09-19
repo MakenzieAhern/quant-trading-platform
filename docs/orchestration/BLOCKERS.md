@@ -1,5 +1,17 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 3,444 — 2026-09-19
+
+Strict v11 replay closes ten boundaries from 2,672 reused/acquired official
+documents and rejects 000520's false restoration-as-trading boundary because a
+later notice says the stock remained suspended. Current authority has 7,303
+true resumptions, 58 terminal closures and zero conflicts. The retained
+metadata leaves 74,569 low-precision unprocessed leads for 1,923 facts and no
+remaining unprocessed candidate for 1,521 facts. High-yield title families are
+exhausted, so blind bulk retrieval is not accepted as closure. Suspension
+authority and Full Dataset readiness remain PARTIAL; the independent retained-
+bonus fractional methodology gate is unchanged.
+
 ## SZSE strict revalidation reopens 1,627 boundaries — 2026-09-19
 
 Historical accepted supplements included deadline-only and application-only

@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -34,6 +35,7 @@ def candidate_queue(
         if symbol not in intervals or not item.get("adjunctUrl"):
             continue
         published_on = publication_date(item["announcementTime"])
+        title = re.sub(r"</?em>", "", item["announcementTitle"])
         affected = [
             value["fact"]
             for value in intervals[symbol]
@@ -42,7 +44,7 @@ def candidate_queue(
         url = CNINFO_STATIC + item["adjunctUrl"]
         if not affected or url in processed_urls:
             continue
-        identity = (symbol, published_on, item["announcementTitle"], url)
+        identity = (symbol, published_on, title, url)
         key = str(item["announcementId"])
         previous = rows.get(key)
         if previous and previous["identity"] != identity:
@@ -52,7 +54,7 @@ def candidate_queue(
             "announcement_id": key,
             "url": url,
             "issuer": symbol,
-            "title": item["announcementTitle"],
+            "title": title,
             "published_on": published_on,
             "queue_type": "SZSE_TARGETED_RESUMPTION_INTERVAL_EVIDENCE",
             "affected_suspensions": sorted(
@@ -93,7 +95,8 @@ def main() -> None:
     parser.add_argument("--source-root", type=Path, action="append", default=[])
     parser.add_argument("--suspensions", type=Path, required=True)
     parser.add_argument("--unresolved", type=Path, required=True)
-    parser.add_argument("--existing-manifest", type=Path, action="append", required=True)
+    parser.add_argument("--existing-manifest", type=Path, action="append", default=[])
+    parser.add_argument("--existing-manifest-root", type=Path, action="append", default=[])
     parser.add_argument("--cached-queue", type=Path, required=True)
     parser.add_argument("--retrieval-queue", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
@@ -102,10 +105,20 @@ def main() -> None:
     suspensions = json.loads(args.suspensions.read_bytes())["szse"]
     unresolved = json.loads(args.unresolved.read_bytes())
     intervals = suspension_intervals(unresolved, suspensions)
+    manifest_paths = sorted(
+        {
+            *args.existing_manifest,
+            *(
+                path
+                for root in args.existing_manifest_root
+                for path in root.glob("full-szse-resumption*/**/source-manifest.json")
+            ),
+        }
+    )
+    if not manifest_paths:
+        raise ValueError("EXISTING_RESUMPTION_MANIFEST_REQUIRED")
     processed_urls = {
-        row["url"]
-        for path in args.existing_manifest
-        for row in json.loads(path.read_bytes())["documents"]
+        row["url"] for path in manifest_paths for row in json.loads(path.read_bytes())["documents"]
     }
     announcements, metadata_pages = [], []
     for path in sorted(args.metadata_root.rglob("*.json")):
@@ -137,11 +150,11 @@ def main() -> None:
     write_immutable(args.retrieval_queue, canonical_json_bytes(retrieval) + b"\n")
     covered = {tuple(fact) for row in queue for fact in row["affected_suspensions"]}
     report = {
-        "parser_version": "SZSE_CACHED_RESUMPTION_GAP_QUEUE_V1",
+        "parser_version": "SZSE_CACHED_RESUMPTION_GAP_QUEUE_V2",
         "parser_sha256": sha256_file(Path(__file__)),
         "suspensions_input_sha256": sha256_file(args.suspensions),
         "unresolved_input_sha256": sha256_file(args.unresolved),
-        "existing_manifest_sha256s": [sha256_file(path) for path in args.existing_manifest],
+        "existing_manifest_sha256s": [sha256_file(path) for path in manifest_paths],
         "metadata_page_count": len(metadata_pages),
         "metadata_page_manifest_sha256": canonical_sha256(metadata_pages),
         "unresolved_facts": len(unresolved),
