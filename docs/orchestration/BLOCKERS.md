@@ -1,14 +1,15 @@
 # Blockers
 
-## Current R5 blocker after raw candidate closure — 2026-09-20
+## Current R5 blocker after official raw aggregate crosscheck — 2026-09-20
 
 The bounded 239-row ChiNext value diagnostic now passes dual-source parity and
-liquidity-decision invariance, but Tencent and Sina cannot be promoted to
-official authority under the approved public-source policy. The official SZSE
-workbook omits that date's whole ChiNext block, and the independent 223-symbol
-all-methods versus auction/raw transaction-scope difference remains unresolved.
+liquidity-decision invariance. Two official SZSE block trades close its
+yearbook aggregate difference at published precision, so the 2011-07-25
+board-level scope diagnostic is explained. The per-security OHLC values remain
+non-official, and the independent 223-symbol all-methods versus auction/raw
+transaction-scope difference remains unresolved.
 
-Full-source preflight V8 therefore remains blocked by one consolidated material
+Full-source preflight V9 therefore remains blocked by one consolidated material
 authority/methodology set: 2,009 unresolved SZSE suspension boundaries; official
 raw authority for the 239 candidate rows plus the 223-symbol scope boundary;
 478 gross cash-plus-bonus adjustment conflicts and eight unresolved provider

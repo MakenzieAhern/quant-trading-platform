@@ -1,21 +1,28 @@
 # Current state
 
-## R5 SZSE 2011-07-25 raw candidate closure / preflight v8 — 2026-09-20
+## R5 SZSE official aggregate crosscheck / preflight v9 — 2026-09-20
 
 The fixed 239-row ChiNext residual was replayed from checksum-bound Tencent and
 Sina responses. All 239 rows have exact OHLC and volume parity; every amount is
 inside the accepted plus-or-minus 100 CNY interval, with a maximum difference
 of 52 CNY. All 4,684 contiguous 20-observation windows containing the target
 date keep the same liquidity decision; the minimum threshold distance is 365
-CNY. Input-order reproducibility passes and the candidate report SHA-256 is
-`314d8953ebdb3171e38f7ebca92027d25521d376316627d8f615476864ab53d8`.
+CNY. Input-order reproducibility passes.
 
-This evidence is deliberately not promoted: both providers are non-official,
-the official SZSE workbook omits the entire ChiNext block that day, and the
-separate 223-symbol transaction-scope difference remains. Full-source preflight
-V8 therefore stays blocked on suspension, raw authority, adjustment economics
-and historical transaction-cost authority. See
-`../research/R5_SZSE_20110725_RAW_CANDIDATE_V1.md`.
+The checksum-bound official SZSE 2011 yearbook reports 432.73 million shares and
+9,673.76 million CNY for ChiNext on 2011-07-25. The 239 candidate rows sum to
+431.34 million shares and 9,649.92 million CNY. Two official SZSE agreement
+block trades for 300020 and 300166 total 1,390,000 shares and 23,837,000 CNY;
+adding them closes both providers to the yearbook's published precision.
+
+The report SHA-256 is
+`1afdab62bb7b244beef5be97604bf6a47f37ea43bdac7d73b0a101b3e8372919`.
+This closes the date's aggregate transaction-scope diagnostic, not per-security
+official OHLC authority or the separate 223-symbol after-hours scope. Full-
+source preflight V9 therefore stays blocked on suspension, raw authority,
+adjustment economics and historical transaction-cost authority. See
+`../research/R5_SZSE_20110725_RAW_CANDIDATE_V1.md`. Backend 803/803, Ruff,
+format and strict mypy pass.
 
 ## R5 public-source closure v68 and preflight v7 — 2026-09-20
 

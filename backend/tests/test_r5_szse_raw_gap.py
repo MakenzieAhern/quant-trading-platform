@@ -3,6 +3,9 @@ from datetime import date, timedelta
 
 from scripts.probe_r5_szse_raw_gap import (
     TARGET_DATE,
+    _chinext_detail_totals,
+    _july_day_25,
+    aggregate_comparison,
     comparison,
     liquidity_window_check,
     parse_tencent_target,
@@ -11,6 +14,15 @@ from scripts.probe_r5_szse_raw_gap import (
 
 
 def test_tencent_target_parser_and_cross_source_precision():
+    assert _july_day_25([" \uff12\uff15  1 2 3 4 5 432.73 7 8 9"]) == "432.73"
+    assert _chinext_detail_totals(
+        [(TARGET_DATE, "300020", "issuer", "12.66", "120.00", "1519.20")], 5
+    ) == {
+        "rows": 1,
+        "symbols": ["300020"],
+        "volume_shares": "1200000.00",
+        "amount_cny": "15192000.00",
+    }
     start = date.fromisoformat(TARGET_DATE) - timedelta(days=10)
     rows = [
         [
@@ -50,3 +62,9 @@ def test_tencent_target_parser_and_cross_source_precision():
         "liquidity_decision_invariant": True,
         "minimum_distance_to_threshold_cny": "10942320.00",
     }
+    aggregate = aggregate_comparison(
+        [{"tencent": tencent, "sina": {**tencent, "amount": "38846300"}}],
+        {"volume_million_shares": "1.87", "amount_million_cny": "38.85"},
+    )
+    assert aggregate["all_provider_aggregates_match_official"] is True
+    assert aggregate["sina"]["official_minus_total_amount_cny"] == "3700.00"

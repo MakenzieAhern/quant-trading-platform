@@ -1,6 +1,6 @@
 # Autonomous Quant Project Checkpoint
 
-## 2026-09-20 SZSE 2011-07-25 raw candidate closure / preflight v8
+## 2026-09-20 SZSE official aggregate crosscheck / preflight v9
 
 - fixed candidate rows completed: 239 / 239
 - OHLC / volume parity: 239 / 239
@@ -8,10 +8,16 @@
 - liquidity decision invariance: 239 / 239 across 4,684 windows
 - minimum liquidity-threshold distance: 365 CNY
 - input-order reproducibility: PASS
-- candidate report file SHA-256: `314d8953ebdb3171e38f7ebca92027d25521d376316627d8f615476864ab53d8`
+- official ChiNext aggregate: 432.73 million shares / 9,673.76 million CNY
+- candidate aggregate: 431.34 million shares / 9,649.92 million CNY
+- official minus candidate: 1,385,518 shares / 23,836,400 CNY (Tencent)
+- official ChiNext block trades: 2 rows / 1,390,000 shares / 23,837,000 CNY
+- candidate plus official blocks at yearbook precision: PASS
+- candidate report file SHA-256: `1afdab62bb7b244beef5be97604bf6a47f37ea43bdac7d73b0a101b3e8372919`
 - provider authority promoted: NO
 - full-source preflight: BLOCKED_MATERIAL_AUTHORITY_AND_METHODOLOGY_GAPS
-- preflight manifest SHA-256: `50ba47095dec816dc747aa9ccd6b22ca4dbabef34e6ea8c8d1eb7143dab8cd29`
+- preflight manifest SHA-256: `310a9cb944c5ce9a2ec326746b9e6ae1f9f131f00539069fa3a75a656deb688f`
+- backend tests / Ruff / format / strict mypy: 803 PASS / PASS / PASS / PASS
 - Full Dataset created / audited / frozen: NO / NO / NO
 - Development / Validation / Official OOS: NOT RUN
 - PR #12: OPEN, UNMERGED

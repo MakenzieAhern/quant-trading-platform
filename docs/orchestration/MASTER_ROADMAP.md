@@ -1,13 +1,16 @@
 # v1.1 controller roadmap
 
-## R5 raw candidate closure / preflight v8 — 2026-09-20
+## R5 official raw aggregate crosscheck / preflight v9 — 2026-09-20
 
 The fixed 239-row 2011-07-25 ChiNext residual now passes dual-source value
-parity, accepted amount-interval checks and liquidity-decision invariance. It is
-candidate evidence, not official authority. Resume only from the consolidated
-full-range authority/methodology blocker: suspension boundaries, official raw
-transaction scope, adjustment-factor economics and historical costs. Do not
-create/freeze the Full Dataset or run a study until all four components pass.
+parity, accepted amount-interval checks and liquidity-decision invariance.
+Official 2011-07-25 block-trade detail closes the candidate/yearbook aggregate
+difference at published precision. This settles that date's aggregate scope,
+not non-official per-security OHLC authority or the separate 223-symbol
+after-hours scope. Resume only from the consolidated full-range authority/
+methodology blocker: suspension boundaries, official raw authority, adjustment-
+factor economics and historical costs. Do not create/freeze the Full Dataset or
+run a study until all four components pass.
 
 ## R5 public-source closure stop — 2026-09-20
 

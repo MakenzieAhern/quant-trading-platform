@@ -1,14 +1,16 @@
 # Decisions
 
-## 2026-09-20 — retain raw dual-source parity as candidate evidence only
+## 2026-09-20 — official aggregate prevents raw candidate promotion
 
 Accept the fixed 239-row Tencent/Sina replay as a reproducible diagnostic: OHLC
 and volume match exactly, amount differences stay inside the accepted
 plus-or-minus 100 CNY interval, and every relevant 20-observation liquidity
-window is decision-invariant. Do not promote either provider to official
-authority, infer a mass suspension from the missing official block, or treat
-the separate 223-symbol transaction-scope difference as closed. Keep
-`RAW:FULL_UNIVERSE` open.
+window is decision-invariant. The official SZSE yearbook total is larger by
+1,385,518 shares and approximately 23.84 million CNY; two official SZSE block
+trades close that aggregate difference at published precision. Accept this as
+transaction-scope evidence only. Do not promote either candidate provider's
+per-security OHLC, infer a mass suspension, or treat the separate 223-symbol
+after-hours scope difference as closed. Keep `RAW:FULL_UNIVERSE` open.
 
 ## 2026-09-20 — close corporate-action P1 without promoting other authorities
 
