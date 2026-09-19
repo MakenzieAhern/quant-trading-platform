@@ -1,5 +1,16 @@
 # Current state
 
+## R5 SZSE media-clarification recovery v21 — 2026-09-19
+
+Three bounded official CNINFO title families contributed 37 attachments with
+zero final acquisition failures. Acquisition/asset-transfer completion notices
+yielded no boundary; media/rumour/concern clarification notices closed eight
+exact boundaries with no prior loss or change. Authority now has **8,726** exact
+resumptions, 58 terminal closures, zero conflicts and **2,021** unresolved SZSE
+boundaries. Source checksum and reverse-order replay pass. Suspension authority
+remains PARTIAL and the retained-bonus methodology gate is unchanged. See
+`../research/R5_SZSE_MEDIA_CLARIFICATION_RECOVERY_V21.md`.
+
 ## R5 SZSE residual regulatory-review screen v20 — 2026-09-19
 
 A bounded 26-document official CNINFO regulatory-review title screen completed

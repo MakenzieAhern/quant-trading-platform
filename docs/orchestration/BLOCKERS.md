@@ -1,5 +1,15 @@
 # Blockers
 
+## SZSE media-clarification recovery leaves 2,021 — 2026-09-19
+
+Thirty-seven bounded official CNINFO documents close eight exact resumption
+boundaries from media/rumour/concern clarification notices. Acquisition and
+asset-transfer completion notices add no boundary. No prior accepted boundary
+was lost or changed. Authority now has 8,726 exact resumptions, 58 terminal
+closures, zero conflicts and **2,021** unresolved boundaries. Suspension
+authority remains PARTIAL; the independent retained-bonus fractional methodology
+gate remains active.
+
 ## SZSE regulatory-review title family exhausted — 2026-09-19
 
 A bounded 26-document official CNINFO review-result screen completed without
