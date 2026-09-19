@@ -1,5 +1,13 @@
 # Decisions
 
+## 2026-09-19 — supersede historical SZSE resumption acceptance counts
+
+Decision: use strict retained-evidence revalidation v4 as the sole resumption
+supplement for current suspension authority, together with terminal closure
+reports v1-v4. Preserve prior reports as immutable audit history, but do not
+admit their deadline, conditional or application-only boundaries. This is a
+source-integrity correction, not a methodology change and not a data freeze.
+
 ## 2026-09-19 accept explicit intraday timing, not inferred duration
 
 An official notice may close a suspension on the same date when it explicitly

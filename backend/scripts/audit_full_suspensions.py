@@ -192,7 +192,7 @@ def _lifecycle_ends(master: list[dict]) -> dict[str, str | None]:
 def load_resumption_supplements(paths: list[Path]) -> tuple[dict[tuple[str, str], dict], list[str]]:
     supplements = {}
     hashes = []
-    for path in paths:
+    for path in sorted(paths):
         report = json.loads(path.read_bytes())
         if report["manifest_sha256"] != canonical_sha256(
             {key: value for key, value in report.items() if key != "manifest_sha256"}
@@ -214,6 +214,7 @@ def load_resumption_supplements(paths: list[Path]) -> tuple[dict[tuple[str, str]
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--output-root", type=Path)
     parser.add_argument("--master", type=Path, required=True)
     parser.add_argument("--szse-resumptions", type=Path, action="append", default=[])
     args = parser.parse_args()
@@ -255,7 +256,7 @@ def main() -> None:
     sse, sse_non_target, sse_duplicates = sse_result
     szse, unresolved, conflicts, szse_non_target, szse_duplicates = szse_result
     authority = {
-        "parser_version": "FULL_OFFICIAL_SUSPENSION_AUDIT_V2",
+        "parser_version": "FULL_OFFICIAL_SUSPENSION_AUDIT_V3",
         "parser_sha256": sha256_file(Path(__file__)),
         "source_manifest_sha256": sha256_file(source_manifest_path),
         "observations_sha256": sha256_file(observations_path),
@@ -286,10 +287,11 @@ def main() -> None:
         ),
     }
     authority["manifest_sha256"] = canonical_sha256(authority)
-    save(args.root / "normalized-suspension-events-v1.json", {"sse": sse, "szse": szse})
-    save(args.root / "unresolved-szse-resumption-facts-v1.json", unresolved)
-    save(args.root / "szse-resumption-conflicts-v1.json", conflicts)
-    save(args.root / "suspension-authority-v1.json", authority)
+    output_root = args.output_root or args.root
+    save(output_root / "normalized-suspension-events-v1.json", {"sse": sse, "szse": szse})
+    save(output_root / "unresolved-szse-resumption-facts-v1.json", unresolved)
+    save(output_root / "szse-resumption-conflicts-v1.json", conflicts)
+    save(output_root / "suspension-authority-v1.json", authority)
     print(json.dumps(authority))
 
 

@@ -15,7 +15,7 @@ SUBJECT = r"(?:本公司|公司)?(?:股票|证券|A股股票|B股股票|A股|B�
 FULL_DATE = r"(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})日?"
 MONTH_DAY = r"(?<![年\d])(\d{1,2})月(\d{1,2})日"
 REJECTED_TITLE = re.compile(r"延期复牌|继续停牌|停牌期满|暂不复牌|不复牌|申请复牌")
-UNCERTAIN = re.compile(r"预计|不晚于|最晚于|争取|拟于")
+UNCERTAIN = re.compile(r"预计|不迟于|不晚于|最迟于|最晚于|争取|拟于")
 CONDITIONAL = re.compile(r"若|如果|如未")
 FULL_PATTERNS = (
     re.compile(r"(?:并)?将于" + FULL_DATE + r"[^。\uff1b;]{0,30}?" + TERM),
@@ -102,12 +102,17 @@ def _is_certain(segment: str, match: re.Match) -> bool:
     text = _match_text(match)
     context = segment[max(0, match.start() - 10) : match.start()] + text
     wide_context = segment[max(0, match.start() - 40) : match.start()] + text
+    final_after_application = bool(
+        re.search(r"经(?:公司)?申请", wide_context)
+        and re.search(SUBJECT + r"将于" + FULL_DATE + r"[^。\uff1b;]{0,30}?" + TERM, text)
+    )
     return (
         not UNCERTAIN.search(context)
         and not CONDITIONAL.search(wide_context)
         and len(re.findall(FULL_DATE, text)) + len(re.findall(MONTH_DAY, text)) <= 1
         and not re.search(r"停牌|会议|议案", text)
-        and not re.search(r"申请[^。\uff1b;]{0,30}复牌", wide_context)
+        and (final_after_application or not re.search(r"申请[^。\uff1b;]{0,30}复牌", wide_context))
+        and not re.search(r"(?:但是|但|然而).*?停牌", segment[match.end() :])
         and not ("B股" in segment and "A股" not in segment)
     )
 
@@ -218,7 +223,7 @@ def bind_resumptions(unresolved: list[dict], events: list[dict], evidence: list[
         resumed_at = candidates[0]
         sources = sorted(
             by_symbol[fact["symbol"]][resumed_at],
-            key=lambda row: (row["url"], row["source_sha256"]),
+            key=canonical_json_bytes,
         )
         accepted.append(
             {
@@ -299,7 +304,7 @@ def main() -> None:
     if (accepted, remaining) != reversed_result:
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V9",
+        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V10",
         "parser_sha256": sha256_file(Path(__file__)),
         "source_manifest_sha256": sha256_file(source_manifest_path),
         "suspensions_input_sha256": sha256_file(args.suspensions),

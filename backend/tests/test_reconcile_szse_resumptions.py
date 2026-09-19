@@ -19,6 +19,17 @@ def test_exact_resumption_dates_reject_plans_and_stop_dates():
         "2013-01-29",
     ) == ["2013-01-29"]
     assert exact_resume_dates("公司股票预计于2011年8月4日公告并复牌。", "2011-08-03") == []
+    assert exact_resume_dates("公司股票不迟于2015年11月20日前复牌。", "2015-11-18") == []
+    assert exact_resume_dates(
+        "经公司申请,公司股票将于2015年11月18日开市起复牌。", "2015-11-18"
+    ) == ["2015-11-18"]
+    assert (
+        exact_resume_dates(
+            "公司股票定于2014年4月25日开市起复牌,但是因重大事项自2014年4月25日开市起停牌。",
+            "2014-04-25",
+        )
+        == []
+    )
     assert exact_resume_dates("公司股票自本公告公布当日起复牌。", "2011-10-28") == ["2011-10-28"]
 
 
@@ -124,3 +135,27 @@ def test_resumption_binding_stops_before_the_next_suspension():
     accepted, remaining = bind_resumptions(unresolved, events, evidence)
     assert accepted == [] and remaining == unresolved
     assert unresolved_facts({"remaining_unresolved": unresolved}) == unresolved
+
+
+def test_resumption_binding_is_stable_for_duplicate_source_identity():
+    events = [{"symbol": "000001", "suspended_at": "2010/01/04 09:30"}]
+    unresolved = [
+        {
+            "security_id": "CN-A:SZSE:000001",
+            "symbol": "000001",
+            "suspended_at": "2010/01/04 09:30",
+        }
+    ]
+    evidence = [
+        {
+            "symbol": "000001",
+            "resumed_at": "2010-01-05",
+            "url": "u",
+            "source_sha256": "a",
+            "title": title,
+        }
+        for title in ("b", "a")
+    ]
+    assert bind_resumptions(unresolved, events, evidence) == bind_resumptions(
+        unresolved, events, list(reversed(evidence))
+    )

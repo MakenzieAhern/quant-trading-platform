@@ -1,5 +1,17 @@
 # Current state
 
+## R5 strict SZSE resumption revalidation v10 — 2026-09-19
+
+All retained official resumption evidence was replayed under a fail-closed
+parser after deadline/application language was found in historical accepted
+supplements. The corrected authority has **7,293** exact resumptions, 58
+terminal closures, zero conflicts and **3,454** unresolved SZSE boundaries.
+Of 8,913 prior accepted rows, 7,276 retain the same date, 10 receive a corrected
+date and 1,627 are reopened; seven additional exact final notices close. Reverse
+supplement order produces byte-identical outputs. Earlier v1-v9 acceptance
+counts are historical only. See
+`../research/R5_SZSE_RESUMPTION_STRICT_REVALIDATION_V10.md`.
+
 ## R5 intraday and named resumptions v9 — 2026-09-19
 
 Four retained official notices close under three narrow forms: an explicitly

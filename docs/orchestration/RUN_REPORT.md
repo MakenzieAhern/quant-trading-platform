@@ -1,5 +1,18 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 strict retained SZSE resumption replay
+
+- parser regression tests: PASS
+- prior supplement inputs located and checksum-verified: 26/26
+- baseline unresolved facts: 10,805
+- strict exact resumptions: 7,293
+- terminal closures: 58
+- final unresolved: 3,454
+- conflicts: 0
+- forward/reverse supplement ordering: byte-identical PASS
+- authority: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- Full Dataset/studies: NOT RUN
+
 ## 2026-09-19 intraday and named resumption parser v9
 
 Added only three explicit official forms: `复牌时间为` plus a full date,

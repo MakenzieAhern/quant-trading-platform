@@ -99,6 +99,7 @@ def test_resumption_supplements_merge_without_losing_prior_batches(tmp_path):
     supplements, hashes = load_resumption_supplements(paths)
 
     assert len(supplements) == len(hashes) == 2
+    assert (supplements, hashes) == load_resumption_supplements(list(reversed(paths)))
 
 
 def test_terminal_suspension_closes_without_inventing_a_resumption(tmp_path):

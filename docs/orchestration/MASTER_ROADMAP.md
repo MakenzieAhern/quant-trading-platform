@@ -1,5 +1,12 @@
 # v1.1 controller roadmap
 
+## R5 correction — strict SZSE resumption authority replay (2026-09-19)
+
+Retained official evidence has been revalidated under parser v10. Current
+authority is 7,293 exact resumptions plus 58 terminal closures, zero conflicts
+and 3,454 unresolved boundaries. All earlier per-pass acceptance totals are
+superseded for authority; R5 remains active and the Full Dataset remains locked.
+
 ## R5 explicit intraday boundary progress v9 — 2026-09-19
 
 Four exact retained official boundaries close from named-date or explicit

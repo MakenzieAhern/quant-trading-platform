@@ -1,5 +1,13 @@
 # Blockers
 
+## SZSE strict revalidation reopens 1,627 boundaries — 2026-09-19
+
+Historical accepted supplements included deadline-only and application-only
+language. A checksum-bound replay of all retained official bytes keeps 7,276
+prior dates, corrects 10, adds seven exact final notices and reopens 1,627.
+After 58 terminal closures, **3,454** exact SZSE boundaries remain unresolved.
+Authority stays PARTIAL; old v1-v9 acceptance counts must not be used.
+
 ## SZSE exact resumption residual reduced to 1,834 — 2026-09-19
 
 Four retained official intraday/named-date notices close exact boundaries.
