@@ -1,5 +1,14 @@
 # v1.1 controller roadmap
 
+## R5 SZSE generic-clarification recovery v22 — 2026-09-19
+
+Nineteen bounded official explanation/self-check notices close two exact
+resumption boundaries without changing a prior accepted fact. Authority now has
+8,728 exact resumptions, 58 terminal closures, zero conflicts and 2,019
+unresolved facts. Suspension authority remains PARTIAL; Full Dataset creation,
+freeze and all studies remain locked. See
+`../research/R5_SZSE_GENERIC_CLARIFICATION_RECOVERY_V22.md`.
+
 ## R5 SZSE media-clarification recovery v21 — 2026-09-19
 
 Thirty-seven bounded official CNINFO documents close eight exact media-

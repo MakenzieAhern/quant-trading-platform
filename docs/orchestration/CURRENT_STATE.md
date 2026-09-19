@@ -1,5 +1,15 @@
 # Current state
 
+## R5 SZSE generic-clarification recovery v22 — 2026-09-19
+
+Nineteen bounded official CNINFO explanation/self-check PDFs were acquired with
+zero failures. Generic explanation notices close 000602 and 002526; transaction
+explanations and staged self-check results add no unique date. No prior boundary
+was lost or changed. Authority now has **8,728** exact resumptions, 58 terminal
+closures, zero conflicts and **2,019** unresolved SZSE boundaries. Suspension
+authority remains PARTIAL and the retained-bonus methodology gate is unchanged.
+See `../research/R5_SZSE_GENERIC_CLARIFICATION_RECOVERY_V22.md`.
+
 ## R5 SZSE media-clarification recovery v21 — 2026-09-19
 
 Three bounded official CNINFO title families contributed 37 attachments with

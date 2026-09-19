@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE generic-clarification recovery v22
+
+- bounded official PDFs acquired: 19
+- acquisition failures: 0
+- newly closed boundaries: 2
+- accepted boundaries removed or changed: 0
+- exact resumptions: 8,728
+- terminal closures: 58
+- final unresolved: 2,019
+- conflicts: 0
+- source checksum repeatability: PASS
+- input-order reproducibility: PASS
+- authority status: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- report: `../research/R5_SZSE_GENERIC_CLARIFICATION_RECOVERY_V22.md`
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE media-clarification recovery v21
 
 - bounded official attachments acquired: 37 (36 PDF, 1 non-PDF)

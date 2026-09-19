@@ -1,5 +1,13 @@
 # Blockers
 
+## SZSE generic-clarification recovery leaves 2,019 — 2026-09-19
+
+Nineteen bounded official explanation/self-check notices close exact boundaries
+for 000602 and 002526. No prior accepted boundary was lost or changed. Authority
+now has 8,728 exact resumptions, 58 terminal closures, zero conflicts and
+**2,019** unresolved boundaries. Suspension authority remains PARTIAL; the
+independent retained-bonus fractional methodology gate remains active.
+
 ## SZSE media-clarification recovery leaves 2,021 — 2026-09-19
 
 Thirty-seven bounded official CNINFO documents close eight exact resumption
