@@ -10,12 +10,13 @@ from pathlib import Path
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
 
-TERM = r"(?:复牌|恢复交易)"
+TERM = r"(?:复牌|恢复(?:正常)?交易)"
 SUBJECT = r"(?:本公司|公司)?(?:股票|证券|A股股票|B股股票|A股|B股)"
 FULL_DATE = r"(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})日?"
 MONTH_DAY = r"(?<![年\d])(\d{1,2})月(\d{1,2})日"
 REJECTED_TITLE = re.compile(r"延期复牌|继续停牌|停牌期满|暂不复牌|不复牌|申请复牌")
 UNCERTAIN = re.compile(r"预计|不晚于|最晚于|争取|拟于")
+CONDITIONAL = re.compile(r"若|如果|如未")
 FULL_PATTERNS = (
     re.compile(r"(?:并)?将于" + FULL_DATE + r"[^。\uff1b;]{0,30}?" + TERM),
     re.compile(
@@ -92,9 +93,13 @@ def _match_text(match: re.Match) -> str:
 def _is_certain(segment: str, match: re.Match) -> bool:
     text = _match_text(match)
     context = segment[max(0, match.start() - 10) : match.start()] + text
+    wide_context = segment[max(0, match.start() - 40) : match.start()] + text
     return (
         not UNCERTAIN.search(context)
+        and not CONDITIONAL.search(wide_context)
+        and len(re.findall(FULL_DATE, text)) + len(re.findall(MONTH_DAY, text)) <= 1
         and not re.search(r"停牌|会议|议案", text)
+        and not re.search(r"申请[^。\uff1b;]{0,30}复牌", wide_context)
         and not ("B股" in segment and "A股" not in segment)
     )
 
@@ -280,7 +285,7 @@ def main() -> None:
     if (accepted, remaining) != reversed_result:
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V5",
+        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V8",
         "parser_sha256": sha256_file(Path(__file__)),
         "source_manifest_sha256": sha256_file(source_manifest_path),
         "suspensions_input_sha256": sha256_file(args.suspensions),

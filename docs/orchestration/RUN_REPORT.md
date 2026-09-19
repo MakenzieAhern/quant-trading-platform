@@ -1,5 +1,14 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 exact normal-trading boundary parser v8
+
+Added the retained official `恢复正常交易` form and removed multi-date false
+matches by requiring one date per matched resumption clause. Application and
+conditional contexts remain excluded. Four exact boundaries close; the
+conditional 000981 and `最迟` 002217 notices remain unresolved. Full replay
+reaches 8,909 true resumptions, 58 terminal closures, 1,838 residuals and zero
+conflicts. Focused tests and input-order checks pass; authority stays PARTIAL.
+
 ## 2026-09-19 SZSE targeted resumption recovery v6
 
 Reused 13,515 retained official metadata pages and routed 150 of 75,579

@@ -1,5 +1,13 @@
 # Decisions
 
+## 2026-09-19 normal-trading clauses require one attached date
+
+Treat official `恢复正常交易` as a resumption only when a single date is attached
+to that clause. In a sentence with disclosure, meeting and resumption dates,
+do not let an earlier date bind through a broad text window. Reject conditional
+and application-only resumption language. This conservative grammar closes
+four facts and deliberately leaves 000981 and 002217 unresolved.
+
 ## 2026-09-19 restoration to listed trading is a resumption boundary
 
 Treat an official `恢复上市` date as the suspension exit only when the text

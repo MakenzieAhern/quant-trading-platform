@@ -1,5 +1,12 @@
 # v1.1 controller roadmap
 
+## R5 normal-trading grammar progress v8 — 2026-09-19
+
+Four exact retained official boundaries close after adding `恢复正常交易` and
+removing multi-date/conditional false matches. The SZSE residual is **1,838**,
+with 8,909 true resumptions, 58 terminal closures and zero conflicts. This is
+partial R5 progress only.
+
 ## R5 targeted resumption and restoration progress v6 — 2026-09-19
 
 Bounded official acquisition closes 13 delisting-consolidation resumptions and

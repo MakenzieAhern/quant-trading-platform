@@ -1,5 +1,13 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 1,838 — 2026-09-19
+
+Four retained official normal-trading notices now close exact boundaries under
+parser v8. Full replay has 8,909 true resumptions, 58 terminal closures, zero
+conflicts and **1,838** unresolved SZSE boundaries. Conditional/application
+notices are explicitly not facts. Suspension authority remains PARTIAL; raw,
+corporate-action and fractional-accounting blockers remain separate.
+
 ## SZSE exact resumption residual reduced to 1,842 — 2026-09-19
 
 Targeted official acquisition and the strict restoration parser close 21 true

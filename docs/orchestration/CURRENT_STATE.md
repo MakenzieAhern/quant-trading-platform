@@ -1,5 +1,16 @@
 # Current state
 
+## R5 exact normal-trading boundaries v8 — 2026-09-19
+
+Strict parsing now recognizes official `恢复正常交易` and prevents an earlier
+disclosure/meeting date in the same sentence from masquerading as the trading
+boundary. Conditional and application-only phrases remain rejected. Four
+retained official notices close 000100, 300043, 000625 and 000423. Full replay
+has **8,909** true resumptions, 58 terminal closures, zero conflicts and
+**1,838** unresolved SZSE boundaries. Authority stays PARTIAL. Manifest
+`aade1e18a17347dae231a6fbd3d834ea3cabf9c481a2a1322fe2e7649dffb6fb`.
+See `../research/R5_SZSE_NORMAL_TRADING_BOUNDARY_V8.md`.
+
 ## R5 targeted resumption recovery v6 — 2026-09-19
 
 A 13,515-page retained CNINFO metadata join was reduced from 75,579 interval
