@@ -120,16 +120,21 @@ def normalize_szse(
             )
         resume = resumes[0] if len(resumes) == 1 else None
         supplement = supplements.get((identity["security_id"], timestamp))
-        if resume is None and supplement:
+        terminal = supplement.get("terminal_at") if supplement else None
+        if resume is None and supplement and not terminal:
             resume = supplement["resumed_at"]
         end = lifecycle_end[identity["security_id"]]
         closure = (
-            "OFFICIAL_RESUMPTION_DOCUMENT"
+            "OFFICIAL_TERMINATION_NO_DELISTING_PERIOD"
+            if terminal
+            else "OFFICIAL_RESUMPTION_DOCUMENT"
             if supplement and resume == supplement["resumed_at"]
             else "OFFICIAL_RESUMPTION"
             if resume
             else None
         )
+        if terminal and (resume or terminal != end or terminal < start):
+            raise ValueError("INVALID_TERMINAL_SUSPENSION_CLOSURE")
         if resume is None and end is not None and end <= start:
             closure = "MASTER_LIFECYCLE_END"
         event = {
@@ -143,7 +148,9 @@ def normalize_szse(
             "source_sha256": sorted({source_hashes[item["source_file"]] for item in observations}),
         }
         if supplement:
-            event["resumption_evidence"] = supplement["evidence"]
+            event["closure_evidence"] = supplement["evidence"]
+        if terminal:
+            event["terminal_at"] = terminal
         events.append(event)
         if closure is None:
             unresolved.append(
@@ -192,10 +199,14 @@ def load_resumption_supplements(paths: list[Path]) -> tuple[dict[tuple[str, str]
         ):
             raise ValueError("RESUMPTION_MANIFEST_CHECKSUM_MISMATCH")
         hashes.append(sha256_file(path))
-        for row in report["accepted_resumptions"]:
+        rows = [
+            *report.get("accepted_resumptions", []),
+            *report.get("accepted_terminal_closures", []),
+        ]
+        for row in rows:
             key = (row["security_id"], row["suspended_at"])
             if key in supplements and supplements[key] != row:
-                raise ValueError("CONFLICTING_RESUMPTION_SUPPLEMENTS")
+                raise ValueError("CONFLICTING_SUSPENSION_CLOSURE_SUPPLEMENTS")
             supplements[key] = row
     return supplements, hashes
 
@@ -244,7 +255,7 @@ def main() -> None:
     sse, sse_non_target, sse_duplicates = sse_result
     szse, unresolved, conflicts, szse_non_target, szse_duplicates = szse_result
     authority = {
-        "parser_version": "FULL_OFFICIAL_SUSPENSION_AUDIT_V1",
+        "parser_version": "FULL_OFFICIAL_SUSPENSION_AUDIT_V2",
         "parser_sha256": sha256_file(Path(__file__)),
         "source_manifest_sha256": sha256_file(source_manifest_path),
         "observations_sha256": sha256_file(observations_path),
@@ -261,7 +272,10 @@ def main() -> None:
         "szse_non_target_rows": szse_non_target,
         "szse_resume_conflicts": len(conflicts),
         "szse_unresolved_facts": len(unresolved),
-        "szse_supplemental_resumptions": len(supplements),
+        "szse_supplemental_resumptions": sum("resumed_at" in row for row in supplements.values()),
+        "szse_supplemental_terminal_closures": sum(
+            "terminal_at" in row for row in supplements.values()
+        ),
         "szse_resumption_manifest_sha256s": resumption_hashes,
         "source_checksum_repeatability": "PASS",
         "input_order_reproducibility": "PASS",

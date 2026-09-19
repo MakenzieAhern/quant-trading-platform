@@ -1,5 +1,16 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 1,879 — 2026-09-19
+
+Forty-two prior false residuals were direct-to-delisting suspensions, not
+missing resumptions. Retained official issuer PDFs state their exact halt dates
+and no-delisting-period treatment; the accepted official master supplies each
+terminal lifecycle boundary. The audit now records these separately without a
+fabricated resumption date. SZSE suspension authority remains PARTIAL with
+**1,879** exact resumption boundaries unresolved and zero conflicts. The 239
+ChiNext raw-source dates, P1 corporate-action facts and retained-bonus
+fractional human gate remain separate blockers. Do not promote the Full Dataset.
+
 ## R5 differentiated-transfer source facts closed, accounting gate remains — 2026-09-19
 
 The prior 688368 and 603703 zero-cash **source-term** gaps are now closed by

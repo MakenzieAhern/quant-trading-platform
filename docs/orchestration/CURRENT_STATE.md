@@ -1,5 +1,22 @@
 # Current state
 
+## R5 official terminal-suspension closure — 2026-09-19
+
+The suspension audit now distinguishes a true official resumption from a
+direct-to-delisting terminal boundary. Across 3,391 retained official CNINFO
+documents, 42 unresolved SZSE events have an exact official halt date, an
+explicit no-delisting-period statement, and one matching official-master
+terminal lifecycle date. They are recorded as terminal closures; no synthetic
+`resumed_at` is created. Full deterministic replay retains 8,884 official
+resumption supplements, adds 42 terminal closures, has zero conflicts, and
+reduces SZSE unresolved exact boundaries from 1,921 to **1,879**. SSE remains
+16,393/0 unresolved. Authority is still PARTIAL. Report manifest
+`70ef1ae3b94e908dcf84db8592606e7cd4051793b38f9b2620651b00930f0522`;
+full authority manifest
+`5cc9d7a86dd57342d2f8d0da8addb4ad5ab5b70ee1db949518891295701a21a0`.
+See `../research/R5_SZSE_TERMINAL_SUSPENSION_CLOSURE_V1.md`. Full Dataset,
+freeze and studies remain locked.
+
 ## R5 differentiated transfer zero-cash source closure — 2026-09-19
 
 The 22 differentiated stock-transfer candidates now have official zero-cash

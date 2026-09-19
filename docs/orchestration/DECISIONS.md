@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-09-19 direct-to-delisting is a terminal closure, not a resumption
+
+When a retained official issuer PDF states the exact suspension date and that
+the security will not enter a delisting-consolidation period, and the accepted
+official point-in-time master supplies one matching lifecycle end, record an
+`OFFICIAL_TERMINATION_NO_DELISTING_PERIOD` closure with `terminal_at`. Never
+populate `resumed_at` for that event. Preserve both source chains, hashes and
+retrieval timestamps. This source-bound rule closes 42 false resumption gaps;
+it does not infer terminal treatment from a missing bar, a title, or a delisted
+name and does not apply where the official notice permits a consolidation
+trading period.
+
 ## 2026-09-19 original issuer zero-cash plans corroborate two final transfers
 
 Treat the 688368 CNINFO-hosted 2024-05-08 shareholder material and 603703

@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## R5 terminal-suspension progress — 2026-09-19
+
+The full suspension replay now models official no-delisting-period terminal
+closures separately from resumptions. Forty-two retained-PDF/master-bound
+events close deterministically, reducing SZSE unresolved exact resumption
+boundaries from 1,921 to **1,879** with zero conflicts. This is partial R5
+progress only: full suspension authority, raw authority, corporate actions and
+the retained-bonus fractional methodology gate remain open. No dataset or
+research gate is promoted.
+
 ## R5 original exchange-notice progress — 2026-09-19
 
 Corrected SZSE v5 binds original SZSE-signed suspension/restoration

@@ -99,3 +99,40 @@ def test_resumption_supplements_merge_without_losing_prior_batches(tmp_path):
     supplements, hashes = load_resumption_supplements(paths)
 
     assert len(supplements) == len(hashes) == 2
+
+
+def test_terminal_suspension_closes_without_inventing_a_resumption(tmp_path):
+    report = {
+        "accepted_terminal_closures": [
+            {
+                "security_id": "CN-A:SZSE:000001",
+                "suspended_at": "2010/01/04 09:30",
+                "terminal_at": "2010-01-20",
+                "evidence": [{"source_sha256": "official"}],
+            }
+        ]
+    }
+    report["manifest_sha256"] = canonical_sha256(report)
+    path = tmp_path / "terminal.json"
+    path.write_text(json.dumps(report), encoding="utf-8")
+    supplements, _ = load_resumption_supplements([path])
+
+    szse, unresolved, *_ = normalize_szse(
+        [
+            {
+                "symbol": "000001",
+                "suspended_at": "2010/01/04 09:30",
+                "resumed_at": "9999/12/31 00:00",
+                "source_file": "c.html",
+            }
+        ],
+        MASTER,
+        {"c.html": "c"},
+        {"CN-A:SZSE:000001": "2010-01-20"},
+        supplements,
+    )
+
+    assert unresolved == []
+    assert szse[0]["resumed_at"] is None
+    assert szse[0]["terminal_at"] == "2010-01-20"
+    assert szse[0]["closure"] == "OFFICIAL_TERMINATION_NO_DELISTING_PERIOD"

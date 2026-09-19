@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE direct-to-delisting suspension closure
+
+Added an explicit terminal-closure path rather than mislabeling delisting as a
+resumption. A deterministic scan of 3,391 retained official CNINFO documents
+accepts 42 events only where the PDF states the exact halt date and no
+delisting-consolidation period, and the official point-in-time master supplies
+the matching terminal lifecycle date. Focused tests, Ruff, format and reverse-
+order replay pass. The full 22,077-event SZSE audit moves from 1,921 to 1,879
+unresolved exact boundaries, with 8,884 true resumption supplements, 42
+terminal closures and zero conflicts. Terminal report file SHA-256
+`5fc6f264c028b9a6064913860bafa0459e3e1221763bb5eaa33f9ab261184b7e`,
+manifest `70ef1ae3b94e908dcf84db8592606e7cd4051793b38f9b2620651b00930f0522`;
+full authority manifest
+`5cc9d7a86dd57342d2f8d0da8addb4ad5ab5b70ee1db949518891295701a21a0`.
+No Full Dataset, freeze or strategy run follows from this partial closure.
+
 ## 2026-09-19 two official differentiated-transfer zero-cash chains
 
 Archived original 688368 CNINFO shareholder material and the 603703
