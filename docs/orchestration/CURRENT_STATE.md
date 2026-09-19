@@ -1,5 +1,26 @@
 # Current state
 
+## R5 public-source fact closure v65 — 2026-09-20
+
+Retained official bytes close two additional merger facts without a commercial
+product: `MERGER:000578:000792` and `MERGER_NEW:600253:600056`. Cumulative P1
+now establishes **16,313 / 16,320** facts with **2,031** explicit official-source
+substitutions. Seven exact facts remain: three cash notices, two cross-market
+successor-account mappings, full-universe raw authority and full daily
+suspension authority. The cash subset supports **13,587 / 13,590** documents.
+
+The retained-bonus fraction policy is implemented and its methodology gate is
+resolved. Full-source preflight V6 nevertheless remains blocked by irreducible
+official-source and methodology gaps: 2,010 SZSE suspension boundaries, 239
+SZSE source rows, adjustment economics, two cross-market account paths and six
+transaction-cost claim groups. Verified safe start is unresolved. Full Dataset
+creation/audit/freeze and all studies remain NO/NOT RUN. See
+`../research/R5_PUBLIC_SOURCE_FACT_CLOSURE_V1.md`.
+
+Verification: backend 799/799, frontend 78/78, Ruff, format, mypy, ESLint,
+TypeScript, production build and all Compose configurations pass. PostgreSQL,
+Redis, backend, frontend and `/api/health` are healthy.
+
 ## Local Docker runtime recurrence recovered — 2026-09-20
 
 Docker Desktop repeated the stale `sailor-ingest.sock` and secrets-engine socket

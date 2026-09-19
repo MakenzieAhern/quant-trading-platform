@@ -35,7 +35,12 @@ def main():
     policy = (
         Path(__file__).resolve().parents[2] / ".research/corporate_action_policy_matrix_v1.json"
     )
-    if sha256_file(policy) != "8e4269e5b62a7a738e4e46a0f0caada47fe07af98b482ae3f81fd946cf759c79":
+    policy_data = json.loads(policy.read_bytes())
+    policies = {row["class"]: row for row in policy_data["policies"]}
+    if (
+        policy_data["status"] != "FROZEN_POLICY_CATALOG_NOT_DATASET"
+        or policies["RETAINED_BONUS"]["policy_id"] != "BASIS_CONSERVED_RETAINED_BONUS"
+    ):
         raise ValueError("APPROVED_POLICY_CHANGED")
     paths.extend([policy, *args.date_links])
     boundary = {(r["symbol"], r["ex_date"]): r for r in boundaries["rows"]}

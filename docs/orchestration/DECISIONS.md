@@ -1,5 +1,16 @@
 # Decisions
 
+## 2026-09-20 — public-source closure stops at exact evidence boundaries
+
+Reuse `CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1` for the fully evidenced
+000578-to-000792 and 600253-to-600056 chains. Do not extend that quantity rule
+into a cross-market account-registration rule for 000522-to-600332 or
+002013-to-600372: the official documents establish ratios and dates but not a
+generic portfolio's registered successor account. Keep the three malformed or
+out-of-range cash facts, full raw/suspension requirements, adjustment economics
+and transaction-cost intervals open. No paid product is required on current
+evidence, and no paid-source option report is justified yet.
+
 ## 2026-09-20 — visual date review is checksum-bound and date-only
 
 Use direct rendered-page review only for named official documents whose

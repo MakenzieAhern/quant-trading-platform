@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## R5 public-source closure stop — 2026-09-20
+
+P0 remains PASS under `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1`. P1 cumulative
+V65 establishes 16,313 / 16,320 facts and leaves seven exact facts; retained-
+bonus fractional accounting is resolved. R5 now stops under the authorized
+manual-source/new-methodology condition. Resume only from full-source preflight
+V6 after resolving the exact residual in
+`../research/R5_PUBLIC_SOURCE_FACT_CLOSURE_V1.md`; do not create or freeze the
+Full Dataset and do not run any study meanwhile.
+
 ## R5 current full-source preflight v2 — 2026-09-19
 
 Offline retained-source work closed two scan-only SZSE resumption boundaries,

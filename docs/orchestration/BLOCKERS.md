@@ -1,5 +1,20 @@
 # Blockers
 
+## Current R5 blocker — irreducible authority and methodology gaps — 2026-09-20
+
+Public official-source reuse establishes 16,313 of 16,320 P1 facts. The exact
+seven-fact residual is three cash notices (301262, 601607, 603408), two
+cross-market merger account paths (000522 to 600332, 002013 to 600372),
+`RAW:FULL_UNIVERSE` and `SUSPENSION:FULL_DAILY`. The broader preflight also
+retains 2,010 SZSE suspension boundaries, 239 SZSE source rows, 478 unresolved
+gross cash-plus-bonus factor conflicts and six transaction-cost claim groups.
+
+Further progress requires official manual source input or explicit conservative
+methodology for cross-market successor-account delivery and the research
+commission scope. This is not a paid-product requirement: no paid product has
+been shown necessary or sufficient. Full Dataset creation, audit, freeze and
+all studies remain locked.
+
 ## Current consolidated R5 source preflight remains PARTIAL — 2026-09-19
 
 The latest checksum-bound preflight has five mandatory incomplete components:

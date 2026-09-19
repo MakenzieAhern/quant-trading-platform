@@ -2,10 +2,11 @@
   "catalog_id": "CORPORATE_ACTION_POLICY_MATRIX_V1",
   "status": "FROZEN_POLICY_CATALOG_NOT_DATASET",
   "approval_sha256": "9362f32566013841a3a45fd5946abbc9c128fd4f66b5ea20e23c902180a8a4ad",
-  "revision": 2,
+  "revision": 3,
   "lineage": {
-    "prior_file_sha256": "3784d6817fb7ab30081e57d9693bc1ac7adbfbaccebe200e2903e7021d8a0352",
-    "differentiated_cash_approval_sha256": "869cdc3159ee770d06c29ecca4965d9b554382bb73c0fdd7e9c64724525d05c5"
+    "prior_file_sha256": "8e4269e5b62a7a738e4e46a0f0caada47fe07af98b482ae3f81fd946cf759c79",
+    "differentiated_cash_approval_sha256": "869cdc3159ee770d06c29ecca4965d9b554382bb73c0fdd7e9c64724525d05c5",
+    "retained_bonus_fraction_approval_sha256": "26bf7dafd15bf2eca4476b2dfeaa09b5fc95ee90dbe2769637ae9a21bfa603e5"
   },
   "coverage": ["2010-01-01", "2025-12-31"],
   "scope": "ORDINARY_A_SHARE_EQUITIES_ONLY",
@@ -14,6 +15,7 @@
     {"class":"CASH_DIVIDEND","policy_id":"EXISTING_ACCEPTED_CASH_DIVIDEND","accounting":"Authoritative entitlement cash; no Order/Fill; no adjusted-price double count."},
     {"class":"DIFFERENTIATED_CASH","policy_id":"DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1","accounting":"Exact gross final-implementation cash for the ordinary exchange-tradable public A-share holder; unrestricted/public A term over restricted or special-holder terms; no averaging, tolerance, tax-net substitution or synthetic ex-price inference."},
     {"class":"RETAINED_BONUS","policy_id":"BASIS_CONSERVED_RETAINED_BONUS","accounting":"Official quantity ratio; aggregate basis preserved unless authoritative tax/basis terms require otherwise; cash unchanged."},
+    {"class":"RETAINED_BONUS_FRACTION","policy_id":"CN_A_RETAINED_BONUS_FRACTIONAL_SHARE_POLICY_V1","accounting":"Use an exact official whole-share allocation when individually evidenced; otherwise floor the theoretical post-event quantity, book no synthetic cash or tradable fraction, preserve aggregate basis on the remaining whole shares, and audit the discarded fractional bound."},
     {"class":"RESTRUCTURING_PASS_THROUGH","policy_id":"CN_A_RESTRUCTURING_BONUS_PASS_THROUGH_POLICY_V1","accounting":"NET_PASS_THROUGH_NO_BASIS_ALLOCATION; original quantity and basis unchanged; no synthetic value or loss."},
     {"class":"RIGHTS","policy_id":"CN_A_RIGHTS_ISSUE_POLICY_V1","accounting":"NO_SUBSCRIPTION_NO_MONETIZATION_V1; no capital injection; preserve metadata."},
     {"class":"SPLIT_CONSOLIDATION","policy_id":"CN_A_SHARE_CONSOLIDATION_POLICY_V1","accounting":"Official ratio; authoritative fractional mechanism first, otherwise floor/no fabricated cash or shares; basis retained if whole quantity positive, otherwise zero-whole write-off."},

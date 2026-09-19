@@ -25,6 +25,7 @@ from app.domain.trading import (
     PortfolioSnapshot,
     Position,
     RestructuringBonusPassThroughAudit,
+    RetainedBonusRoundingAudit,
     ShareConsolidationAudit,
 )
 from app.event import Event, EventBus, EventType
@@ -34,6 +35,9 @@ ZERO = Decimal(0)
 RIGHTS_ISSUE_POLICY = "CN_A_RIGHTS_ISSUE_POLICY_V1"
 RIGHTS_ENTITLEMENT_POLICY = "NO_SUBSCRIPTION_NO_MONETIZATION_V1"
 RIGHTS_ISSUE_PARTICIPATION = "DECLINE_SUBSCRIPTION"
+RETAINED_BONUS_FRACTION_APPROVAL_SHA256 = (
+    "26bf7dafd15bf2eca4476b2dfeaa09b5fc95ee90dbe2769637ae9a21bfa603e5"
+)
 
 
 class PortfolioError(ValueError):
@@ -69,6 +73,7 @@ class PortfolioEngine:
         self._surrender_audits: list[PartialShareSurrenderAudit] = []
         self._consolidation_audits: dict[tuple[str, date], ShareConsolidationAudit] = {}
         self._pass_through_audits: dict[tuple[str, date], RestructuringBonusPassThroughAudit] = {}
+        self._retained_bonus_audits: dict[str, RetainedBonusRoundingAudit] = {}
         self._event_bus.subscribe(EventType.ORDER_FILLED, self._on_fill)
         self._event_bus.subscribe(EventType.MARKET_DATA, self._on_market_data)
 
@@ -117,6 +122,10 @@ class PortfolioEngine:
     @property
     def consolidation_audits(self) -> tuple[ShareConsolidationAudit, ...]:
         return tuple(self._consolidation_audits[k] for k in sorted(self._consolidation_audits))
+
+    @property
+    def retained_bonus_rounding_audits(self) -> tuple[RetainedBonusRoundingAudit, ...]:
+        return tuple(self._retained_bonus_audits[k] for k in sorted(self._retained_bonus_audits))
 
     def apply_consolidation(
         self, event: ShareConsolidationEvent, timestamp: datetime, *, holder_class: str | None
@@ -797,6 +806,7 @@ class PortfolioEngine:
             partial_surrender_audits=self.partial_surrender_audits,
             pass_through_audits=self.pass_through_audits,
             consolidation_audits=self.consolidation_audits,
+            retained_bonus_rounding_audits=self.retained_bonus_rounding_audits,
         )
         self._running_peak = running_peak
         self._last_event_timestamp = timestamp
@@ -836,11 +846,15 @@ class PortfolioEngine:
             CorporateActionType.BONUS_SHARE,
         }:
             assert action.share_ratio is not None
+            assert action.ex_date is not None
+            if action.event_checksum in self._retained_bonus_audits:
+                raise PortfolioError("duplicate retained bonus")
             with localcontext(PORTFOLIO_CONTEXT):
                 basis = current.aggregate_cost_basis
                 if basis is None:
                     basis = current.quantity * current.average_price
-                quantity = current.quantity * (Decimal(1) + action.share_ratio)
+                theoretical = current.quantity * (Decimal(1) + action.share_ratio)
+                quantity = theoretical.to_integral_value(rounding=ROUND_FLOOR)
                 updated = current.model_copy(
                     update={
                         "quantity": quantity,
@@ -848,6 +862,22 @@ class PortfolioEngine:
                         "aggregate_cost_basis": basis,
                         "unrealized_pnl": quantity * current.market_price - basis,
                     }
+                )
+                self._retained_bonus_audits[action.event_checksum] = RetainedBonusRoundingAudit(
+                    event_checksum=action.event_checksum,
+                    security_id=str(action.security_id),
+                    effective_date=action.ex_date,
+                    original_quantity=current.quantity,
+                    share_ratio=action.share_ratio,
+                    theoretical_quantity=theoretical,
+                    whole_quantity=quantity,
+                    discarded_fraction=theoretical - quantity,
+                    original_basis=basis,
+                    retained_basis=basis,
+                    fractional_treatment=(
+                        "EXACT" if theoretical == quantity else "RESEARCH_FLOOR_NO_CASH"
+                    ),
+                    convention_approval_sha256=RETAINED_BONUS_FRACTION_APPROVAL_SHA256,
                 )
             self._positions[symbol] = updated
             self._last_event_timestamp = timestamp
@@ -874,6 +904,7 @@ class PortfolioEngine:
         self._surrender_audits.clear()
         self._pass_through_audits.clear()
         self._consolidation_audits.clear()
+        self._retained_bonus_audits.clear()
 
     def _reject_pass_through_trading(self, symbol: str, timestamp: datetime) -> None:
         for (event_symbol, _), audit in self._pass_through_audits.items():

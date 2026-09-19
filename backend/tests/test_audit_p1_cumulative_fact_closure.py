@@ -68,6 +68,11 @@ def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
             "merger_600607",
             "merger_600842",
             "false_hebei_parents",
+            "restructuring_no_entitlement",
+            "residual_restructuring",
+            "bonus",
+            "residual_bonus",
+            "residual_merger",
         )
     }
     reports["base"] = baseline

@@ -35,6 +35,27 @@ class ShareConsolidationAudit(BaseModel):
     )
 
 
+class RetainedBonusRoundingAudit(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    security_id: str = Field(pattern=r"^CN-A:(SSE|SZSE):[0-9]{6}$")
+    effective_date: date
+    original_quantity: PositiveDecimal
+    share_ratio: PositiveDecimal
+    theoretical_quantity: PositiveDecimal
+    whole_quantity: PositiveDecimal
+    discarded_fraction: Decimal = Field(ge=0, lt=1, allow_inf_nan=False)
+    original_basis: NonNegativeDecimal
+    retained_basis: NonNegativeDecimal
+    cash_compensation: Literal[0] = 0
+    policy: Literal["CN_A_RETAINED_BONUS_FRACTIONAL_SHARE_POLICY_V1"] = (
+        "CN_A_RETAINED_BONUS_FRACTIONAL_SHARE_POLICY_V1"
+    )
+    fractional_treatment: Literal["EXACT", "RESEARCH_FLOOR_NO_CASH"]
+    convention_approval_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
 class RestructuringBonusPassThroughAudit(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -238,6 +259,7 @@ class PortfolioSnapshot(DomainModel):
     partial_surrender_audits: tuple[PartialShareSurrenderAudit, ...] = ()
     pass_through_audits: tuple[RestructuringBonusPassThroughAudit, ...] = ()
     consolidation_audits: tuple[ShareConsolidationAudit, ...] = ()
+    retained_bonus_rounding_audits: tuple[RetainedBonusRoundingAudit, ...] = ()
     corporate_action_realized_pnl: FiniteDecimal = Decimal(0)
     total_pnl: FiniteDecimal = Decimal(0)
 

@@ -220,6 +220,38 @@ def test_retained_bonus_is_independent_of_ambient_decimal_precision(ratio: Decim
     assert positions[0] == positions[1]
 
 
+def test_retained_bonus_floors_unreconstructable_fraction_without_cash_or_basis_loss() -> None:
+    portfolio = PortfolioEngine(EventBus(), Decimal(2000))
+    symbol = "688339.SSE"
+    portfolio.apply_fill(make_fill(1, OrderSide.BUY, "196", "10", symbol=symbol))
+    action = CorporateAction(
+        security_id=SecurityId(value="CN-A:SSE:688339"),
+        action_type=CorporateActionType.BONUS_SHARE,
+        ex_date=date(2024, 7, 22),
+        share_ratio=Decimal("0.4"),
+        source_provider="fixture",
+        source_version="1",
+        source_record_hash="c" * 64,
+        completeness=CorporateActionCompleteness.COMPLETE,
+    )
+
+    position = portfolio.apply_corporate_action(symbol, action, START + timedelta(days=3))
+
+    assert position is not None
+    assert position.quantity == 274
+    assert position.aggregate_cost_basis == 1960
+    assert portfolio.cash == 40
+    audit = portfolio.retained_bonus_rounding_audits[0]
+    assert audit.theoretical_quantity == Decimal("274.4")
+    assert audit.whole_quantity == 274
+    assert audit.discarded_fraction == Decimal("0.4")
+    assert audit.cash_compensation == 0
+    assert audit.retained_basis == 1960
+    assert audit.fractional_treatment == "RESEARCH_FLOOR_NO_CASH"
+    with pytest.raises(PortfolioError, match="duplicate retained bonus"):
+        portfolio.apply_corporate_action(symbol, action, START + timedelta(days=3))
+
+
 def test_same_direction_short_fills_use_absolute_weighted_average_cost() -> None:
     portfolio = PortfolioEngine(EventBus(), Decimal(3000))
 

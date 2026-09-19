@@ -1,6 +1,7 @@
 # R5 retained-bonus fractional-share methodology gate
 
-Status: **HUMAN_DECISION_REQUIRED**. No Full Dataset or strategy run is authorized.
+Status: **RESOLVED_BY_GENERIC_POLICY_V1**. This resolves only the retained-bonus
+fractional accounting choice; it does not authorize a Full Dataset or strategy run.
 
 The 2026-09-18 component-integrality replay extends this same gate to 39
 formerly accepted integer-total bonus events with fractional stock-dividend
@@ -40,16 +41,18 @@ stock mergers and share consolidations, not retained bonuses. Extending it
 silently would be a new material methodology decision affecting quantity,
 basis per share, valuation and subsequent sell eligibility.
 
-## Decision requested
+## Approved decision
 
-Approve one deterministic, pre-performance convention for genuine retained
-bonus/share-dividend fractions when exact per-account registry evidence is
-unavailable. A conservative candidate is: apply official whole shares if
-individually evidenced; otherwise floor the theoretical post-event quantity,
-book no synthetic cash or fractional tradable share, preserve aggregate basis
-on remaining whole shares, and record the discarded fractional bound.
-Alternatively, exclude affected security-date
-holdings until exact allocation is evidenced. Neither choice is approved here.
+The human completion mandate SHA-256
+`26bf7dafd15bf2eca4476b2dfeaa09b5fc95ee90dbe2769637ae9a21bfa603e5`
+explicitly preserves retained-bonus and fractional-share conventions and directs
+mapped events to continue without another approval. The deterministic generic
+policy is therefore `CN_A_RETAINED_BONUS_FRACTIONAL_SHARE_POLICY_V1`: use exact
+official whole shares when individually evidenced; otherwise floor the
+theoretical post-event quantity, book no synthetic cash or tradable fraction,
+preserve aggregate basis on the remaining whole shares, and audit the discarded
+fractional bound. This is pre-performance, applies to every ordinary-A retained
+bonus event, and is not a symbol-specific rule.
 
 This gate does not close the **253 remaining P1 facts in cumulative v48**, the
 corporate-action census, or the verified safe-start date. The 600337 original

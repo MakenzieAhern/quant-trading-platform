@@ -23,7 +23,7 @@ REPORTS = {
     "precise": "p1-precise-sse-cash-v1.json",
     "derivative": "p1-derivative-notice-scope-v6.json",
     "retained_cash": "p1-retained-full-cash-source-closure-v22.json",
-    "dual": "p1-official-dual-distribution-source-closure-v7.json",
+    "dual": "p1-official-dual-distribution-source-closure-v8.json",
     "designated": "p1-original-designated-disclosure-cash-v2.json",
     "merger_new": "p1-merger-000418-official-source-closure-v1.json",
     "merger_600832": "p1-merger-600832-official-source-closure-v1.json",
@@ -31,6 +31,11 @@ REPORTS = {
     "merger_600607": "p1-merger-600607-official-source-closure-v1.json",
     "merger_600842": "p1-merger-600842-official-source-closure-v1.json",
     "false_hebei_parents": "p1-false-hebei-merger-parents-v1.json",
+    "restructuring_no_entitlement": "p1-restructuring-no-original-holder-entitlement-v1.json",
+    "residual_restructuring": "p1-residual-restructuring-fact-closure-v2.json",
+    "bonus": "p1-official-bonus-policy-closure-v2.json",
+    "residual_bonus": "p1-residual-bonus-fact-closure-v2.json",
+    "residual_merger": "p1-residual-merger-fact-closure-v2.json",
 }
 
 
@@ -85,6 +90,7 @@ def recount(reports):
         "merger_600607",
         "merger_600842",
         "false_hebei_parents",
+        "residual_merger",
     ):
         add(kind, reports[kind]["closed"], require_cash=False)
     differentiated = [
@@ -103,6 +109,14 @@ def recount(reports):
     add("precise", reports["precise"]["closed"], require_cash=True)
     add("derivative", reports["derivative"]["closed"], require_cash=True)
     add("retained_cash", reports["retained_cash"]["closed"], require_cash=False)
+    add(
+        "restructuring_no_entitlement",
+        reports["restructuring_no_entitlement"]["closed"],
+        require_cash=True,
+    )
+    add("residual_restructuring", reports["residual_restructuring"]["closed"], require_cash=True)
+    add("bonus", reports["bonus"]["closed"], require_cash=True)
+    add("residual_bonus", reports["residual_bonus"]["closed"], require_cash=True)
     rows = sorted(closed.values(), key=lambda row: row["document_id"])
     closed_facts = sum(len(row["affected_events"]) for row in rows)
     unresolved_cash = len(cash) - sum(row["document_id"] in cash for row in rows)
@@ -132,6 +146,15 @@ def recount(reports):
         + len(reports["merger_600631"]["closed"])
         + len(reports["merger_600607"]["closed"])
         + len(reports["merger_600842"]["closed"])
+        + len(reports["residual_merger"]["closed"])
+        + sum(
+            row["evidence_document_id"] != row["document_id"]
+            for row in reports["residual_restructuring"]["closed"]
+        )
+        + sum(
+            row["point_in_time_source_sha256"] != row["source_sha256"]
+            for row in reports["residual_bonus"]["closed"]
+        )
     )
     return {
         "closed_documents": len(rows),
@@ -177,7 +200,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V58",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V65",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",

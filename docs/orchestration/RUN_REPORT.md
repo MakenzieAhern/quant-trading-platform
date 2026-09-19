@@ -1,5 +1,27 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 public-source P1 closure v65
+
+- P1 established / raw requirements: 16,313 / 16,320
+- official-source substitutions: 2,031
+- residual facts / documents: 7 / 7
+- residual cash / other documents: 3 / 4
+- P1 cash documents supported / unresolved: 13,587 / 3
+- newly closed official merger facts: 2
+- cumulative file / manifest SHA-256: `372312f16e9265306e6e341f8131b58719771d72c6fa127eb3e6ea960fef017c` / `e6d87aa5a2f16422ca063d5ff9ce3a9a38a2cfaef3e8f8d465c151f561963792`
+- residual-merger file / manifest SHA-256: `df7268d1caa6f6a56debe0c84fc6510febd681d410c0961c522a575842ba20f2` / `3587ba3501c4dda63f1c48098a2f256abfadb767b3c8caadc0e3729c6e47ec25`
+- input-order reproducibility: PASS
+- retained-bonus fraction gate: RESOLVED
+- full-source preflight: BLOCKED_IRREDUCIBLE_AUTHORITY_AND_METHODOLOGY_GAPS
+- verified safe start: UNRESOLVED
+- backend / frontend tests: 799 / 78 PASS
+- Ruff / format / mypy / ESLint / TypeScript / production build: PASS
+- PostgreSQL / Redis / backend / frontend / API: HEALTHY
+- paid source used / required on current evidence: NO / NO
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 local Docker recurrence recovery
 
 - Docker Engine / WSL integration: PASS (29.7.2)

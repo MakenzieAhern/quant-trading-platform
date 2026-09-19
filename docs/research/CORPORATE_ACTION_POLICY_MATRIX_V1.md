@@ -8,12 +8,18 @@ Revision 2 preserves revision 1 file SHA-256
 `3784d6817fb7ab30081e57d9693bc1ac7adbfbaccebe200e2903e7021d8a0352` and adds
 human-approved differentiated-cash decision SHA-256
 `869cdc3159ee770d06c29ecca4965d9b554382bb73c0fdd7e9c64724525d05c5`.
+Revision 3 preserves revision 2 file SHA-256
+`8e4269e5b62a7a738e4e46a0f0caada47fe07af98b482ae3f81fd946cf759c79`
+and applies the human mandate SHA-256
+`26bf7dafd15bf2eca4476b2dfeaa09b5fc95ee90dbe2769637ae9a21bfa603e5`
+to the existing retained-bonus and fractional-share classes.
 
 | Event class | Approved accounting |
 | --- | --- |
 | Cash dividend | Existing authoritative cash entitlement; no adjusted-price double count. |
 | Differentiated cash | `DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1`: exact gross final-implementation term for the ordinary exchange-tradable public A-share holder; public/unrestricted A over restricted or special classes; no averages, tolerance, tax-net values or synthetic ex-price inference. |
 | Retained bonus | Official quantity increase, unchanged aggregate basis unless official basis/tax terms require otherwise. |
+| Retained-bonus fraction | Exact official whole-share allocation when individually evidenced; otherwise floor the theoretical post-event quantity, no synthetic cash or tradable fraction, preserve aggregate basis, audit the discarded fractional bound. |
 | Restructuring pass-through | Net pass-through, no basis allocation; original holdings unchanged. |
 | Rights | No subscription, no monetization, no injected cash; metadata preserved. |
 | Split/consolidation | Official ratio, basis conserved; official fractions first, otherwise floor/no cash; zero whole shares write off basis. |
