@@ -1,5 +1,15 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 1,842 — 2026-09-19
+
+Targeted official acquisition and the strict restoration parser close 21 true
+resumptions plus five terminal chains. Full replay retains 8,905 true
+resumptions, 58 terminal closures and zero conflicts; **1,842** exact SZSE
+boundaries remain unresolved. The residual cached-metadata join has official
+document leads for 1,690 of the 1,850 pre-restoration residual facts and no
+candidate for 160, but titles are not facts. Suspension authority remains
+PARTIAL. Raw, corporate-action and fractional-accounting blockers are separate.
+
 ## SZSE exact resumption residual reduced to 1,868 — 2026-09-19
 
 The complete retained scan of 9,626 official documents with exact suspension

@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-09-19 restoration to listed trading is a resumption boundary
+
+Treat an official `恢复上市` date as the suspension exit only when the text
+explicitly states that the stock itself resumes listed trading on a full date.
+Reject dates for applications, exchange acceptance, progress reports,
+supervision, measures, aspirations and the original suspension. Bind the
+accepted date to the current suspension interval and preserve all official
+source hashes. This closes eight long-duration listing suspensions without
+equating an application date with a trading date.
+
 ## 2026-09-19 identical official bytes merge event bindings deterministically
 
 When the same official PDF SHA-256 appears in multiple acquisition manifests,

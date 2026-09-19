@@ -1,5 +1,18 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE targeted resumption recovery v6
+
+Reused 13,515 retained official metadata pages and routed 150 of 75,579
+interval documents by explicit resumption/termination titles. All 150 PDFs
+were acquired with zero failures; exact content accepted 13 true resumptions
+and five terminal closures. A 126-document restoration screen then exposed an
+existing parser gap. Strict `恢复上市` effective-date parsing rejects application,
+acceptance, progress, supervision and suspension contexts and accepts eight
+retained official restoration chains. Full replay reaches 8,905 resumptions,
+58 terminal closures, 1,842 residuals and zero conflicts. Focused tests and
+reverse-order checks pass. Authority remains PARTIAL; no dataset, freeze or
+study was run.
+
 ## 2026-09-19 complete retained bound-document terminal scan v3
 
 Expanded the exact-event terminal scan from 4,598 to 9,626 unique retained

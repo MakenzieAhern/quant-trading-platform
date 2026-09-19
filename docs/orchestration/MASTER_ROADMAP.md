@@ -1,5 +1,13 @@
 # v1.1 controller roadmap
 
+## R5 targeted resumption and restoration progress v6 — 2026-09-19
+
+Bounded official acquisition closes 13 delisting-consolidation resumptions and
+five no-consolidation terminal chains. Strict effective-date parsing of the
+distinct `恢复上市` form closes eight more retained official chains. The SZSE
+exact-boundary residual is now **1,842**, with 8,905 true resumptions, 58
+terminal closures and zero conflicts. This is partial R5 progress only.
+
 ## R5 complete retained terminal scan v3 — 2026-09-19
 
 All 9,626 retained official documents with exact suspension bindings have been

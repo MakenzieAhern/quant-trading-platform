@@ -67,6 +67,18 @@ RELATIVE_PATTERNS = (
         r"(?:公司)?股票?" + TERM
     ),
 )
+RESTORATION_REJECTED = re.compile(r"申请|受理|进展|保荐|督导|措施|暂停上市|无法|争取")
+RESTORATION_PATTERNS = (
+    re.compile(
+        SUBJECT
+        + r"[^。\uff1b;]{0,80}?(?:将于|于|自)"
+        + FULL_DATE
+        + r"起[^。\uff1b;]{0,35}?恢复上市(?:交易)?"
+    ),
+    re.compile(
+        FULL_DATE + r"(?:起)?[^。\uff1b;]{0,25}?" + SUBJECT + r"[^。\uff1b;]{0,35}?恢复上市交易"
+    ),
+)
 
 
 def _near_publication(day: date, published: date) -> bool:
@@ -121,6 +133,22 @@ def exact_resume_dates(text: str, published_on: str) -> list[str]:
             match = pattern.search(segment)
             if match and _is_certain(segment, match):
                 values.add(published.isoformat())
+    return sorted(values)
+
+
+def exact_restoration_dates(text: str) -> list[str]:
+    values = set()
+    compact = re.sub(r"\s+", "", text)
+    for segment in re.split(r"[。\uff01\uff1f\uff1b;]", compact):
+        for pattern in RESTORATION_PATTERNS:
+            for match in pattern.finditer(segment):
+                evidence = _match_text(match)
+                if RESTORATION_REJECTED.search(evidence):
+                    continue
+                try:
+                    values.add(date(*map(int, match.groups()[-3:])).isoformat())
+                except ValueError:
+                    continue
     return sorted(values)
 
 
@@ -217,8 +245,10 @@ def main() -> None:
         elif "债券" in document["title"] and not re.search(r"股票|A股", document["title"]):
             result["status"] = "NON_EQUITY_RESUMPTION"
         else:
-            dates = exact_resume_dates(
-                official_document_text(args.root, document), document["published_on"]
+            text = official_document_text(args.root, document)
+            dates = sorted(
+                set(exact_resume_dates(text, document["published_on"]))
+                | set(exact_restoration_dates(text))
             )
             result["dates"] = dates
             result["status"] = (
@@ -250,7 +280,7 @@ def main() -> None:
     if (accepted, remaining) != reversed_result:
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V4",
+        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V5",
         "parser_sha256": sha256_file(Path(__file__)),
         "source_manifest_sha256": sha256_file(source_manifest_path),
         "suspensions_input_sha256": sha256_file(args.suspensions),

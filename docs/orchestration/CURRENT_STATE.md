@@ -1,5 +1,19 @@
 # Current state
 
+## R5 targeted resumption recovery v6 — 2026-09-19
+
+A 13,515-page retained CNINFO metadata join was reduced from 75,579 interval
+leads to a bounded 150-document official batch. All PDFs were acquired; exact
+text accepted 13 delisting-consolidation resumptions and five separate
+no-consolidation terminal closures. A second 126-document restoration screen
+exposed the distinct `恢复上市` form; strict parser v5 rejects applications and
+progress language and accepted eight effective trading restorations from
+already retained official documents. Full replay now has **8,905** true
+resumptions, **58** terminal closures, zero conflicts and **1,842** unresolved
+SZSE boundaries. SSE remains 16,393/0. Authority stays PARTIAL. Full authority
+manifest `9d1a6e9101d5ebdf95ac0511b8745d0dc2802aaa22f92f53e6fc96a4a218dcbe`.
+See `../research/R5_SZSE_RESUMPTION_RECOVERY_V6.md`.
+
 ## R5 all-retained bound terminal scan v3 — 2026-09-19
 
 The exact-event terminal rule has now run across every retained SZSE resumption
