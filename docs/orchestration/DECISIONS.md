@@ -1,5 +1,14 @@
 # Decisions
 
+## 2026-09-20 — visual date review is checksum-bound and date-only
+
+Use direct rendered-page review only for named official documents whose
+retained text extraction is ambiguous. Bind each review to symbol, source
+SHA-256 and page numbers; keep its scope limited to record/ex dates. Do not use
+the review to invent economic terms, repair an internally contradictory year
+without corroboration, or shift an official event date to fit a provider factor
+step.
+
 ## 2026-09-19 — gross official terms do not define historical provider factor cash basis
 
 Reuse all retained CNINFO bytes before network acquisition. Treat exact

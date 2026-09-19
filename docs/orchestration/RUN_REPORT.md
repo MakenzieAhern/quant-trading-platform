@@ -1,5 +1,30 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 local Docker recurrence recovery
+
+- Docker Engine / WSL integration: PASS (29.7.2)
+- PostgreSQL / Redis / backend / frontend: HEALTHY / PONG / HEALTHY / HTTP 200
+- backend tests: 790 passed
+- frontend tests: 78 passed
+- frontend production build: PASS
+- recovery: WSL shutdown plus timestamped runtime-directory isolation only
+- images / volumes / database data / project files deleted: NO
+
+## 2026-09-20 retained adjustment-date review v4
+
+- retained official documents reused / downloaded: 1,421 / 0
+- checksum-bound official date reviews: 6
+- unique exact official term candidates / no exact terms: 1,348 / 35
+- remaining restructuring / date mismatch or OCR / complex holder: 27 / 6 / 2
+- gross cash-plus-bonus factor checks / conflicts: 478 / 478
+- term-candidate manifest SHA-256: `47c02d367dfa64d0afee1f7f9f40a5df6d02c0e8dcc99c9367e2d053b5c85aba`
+- residual-classification manifest SHA-256: `69c04cc149bba49207cf6b3c550a2527e1c6aea96ecc39d81302bb36489df3e4`
+- gross-economics manifest SHA-256: `ff30322ea98b80da89e9b73a2019090f9a69908af7385e21785061b003fb88f8`
+- full adjustment authority: PARTIAL
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 retained adjustment-term recovery v3
 
 - retained official documents reused / downloaded: 1,421 / 0

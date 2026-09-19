@@ -34,14 +34,15 @@ registry allocation, the seven conflicts and the unrouted residual still block
 full adjustment authority.
 
 Retained-source reuse narrows the 1,416 unrouted dates further: 1,383 have
-official CNINFO candidates and 1,343 now have a unique exact-date term signature.
+official CNINFO candidates and 1,348 now have a unique exact-date term signature.
 The prior 33 no-candidate rows now have bounded official coverage: 25 capital
 mechanics match the factor step and seven exact gross-cash terms are recovered.
 Eight provider conventions remain unresolved (those seven cash cases plus
-000156's additional-issue normalization). Shared fail-closed parsing reduces
-the earlier 72 no-exact-term cases to 40: 27 restructuring/directed-capital
-mechanics, 12 date-mismatch/OCR boundaries and one complex-holder distribution.
-All 477 gross-cash-plus-bonus checks still conflict. Gross shareholder cash is
+000156's additional-issue normalization). Shared fail-closed parsing and six
+checksum-bound visual date reviews reduce the earlier 72 no-exact-term cases to
+35: 27 restructuring/directed-capital mechanics, six date-mismatch/OCR
+boundaries and two complex-holder distributions. All 478 gross-cash-plus-bonus
+checks still conflict. Gross shareholder cash is
 not replaced with an unevidenced tax-net or
 provider convention; correction precedence, lifecycle admission and registry
 allocation remain open.
@@ -305,14 +306,14 @@ execution authority, P1 cash/bonus census and the separate retained-
 bonus fractional human gate remain unresolved; Full Dataset and studies
 stay locked. The older v2 blocker below is superseded.
 
-## Docker runtime issue recovered — 2026-09-19
+## Docker runtime issue recovered — 2026-09-20
 
-The recurrence of stale Ingest and Secrets Engine socket failures was
-resolved by preserving only their zero-byte runtime socket directories
-under timestamped names. Docker Engine/Ubuntu integration and the four
-existing project services now respond; PostgreSQL, Redis and backend are
-healthy, while API and frontend return HTTP 200. Docker is not an active
-R5 source blocker. Final release rebuild/restart QA is still pending.
+The stale Ingest and Secrets Engine socket failure recurred and was resolved
+after a WSL shutdown by preserving only the runtime socket directories under
+timestamped names. Docker Engine/Ubuntu integration and the four existing
+project services now respond; PostgreSQL, Redis and backend are healthy, while
+API and frontend return HTTP 200. Docker is not an active R5 source blocker.
+Final release rebuild/restart QA is still pending.
 
 ## Corrected SZSE source-presence gap supersedes v1–v7 — 2026-09-19
 

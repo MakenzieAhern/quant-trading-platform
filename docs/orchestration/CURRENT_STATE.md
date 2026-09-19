@@ -1,5 +1,24 @@
 # Current state
 
+## Local Docker runtime recurrence recovered — 2026-09-20
+
+Docker Desktop repeated the stale `sailor-ingest.sock` and secrets-engine socket
+failure. After stopping Docker, shutting down WSL and moving only those runtime
+folders to timestamped recoverable siblings, Engine 29.7.2 and Ubuntu
+integration recovered. PostgreSQL, Redis, backend and frontend are healthy;
+Redis returns PONG and both `/api/health` and port 5173 return HTTP 200. Backend
+tests pass 790/790; frontend tests pass 78/78 and the production build passes.
+No image, volume, database or project data was deleted.
+
+## R5 retained adjustment-date review v4 — 2026-09-20
+
+Checksum-bound visual review closes six ambiguous official notice dates without
+supplying economic terms. Five become unique exact candidates, taking totals to
+**1,348** unique and **35** no-exact cases. Residuals are now 27 restructuring,
+six date mismatch/OCR and two complex-holder cases. All 478 combined gross
+cash-plus-bonus checks conflict, so no event or authority is promoted. See
+`../research/R5_FULL_ADJUSTMENT_DATE_REVIEW_V4.md`.
+
 ## R5 retained adjustment-term recovery v3 — 2026-09-20
 
 Two additional deterministic PDF-text artifacts are removed, taking the total

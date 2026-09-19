@@ -1,0 +1,65 @@
+{
+  "scope": "DATE_COVERAGE_ONLY_NOT_ECONOMIC_TERMS_OR_ACCOUNTING",
+  "rows": [
+    {
+      "symbol": "300007",
+      "record_date": "2012-06-19",
+      "ex_date": "2012-06-20",
+      "source_sha256": "a1407882c688a7e2af67c3f0139e4850618d563d348d6410d9c18c75e5f79ac9",
+      "pages": [
+        1
+      ],
+      "reason": "PDFIUM_VISUAL_RECORD_AND_EX_DATES_TEXT_EXTRACTION_AMBIGUOUS"
+    },
+    {
+      "symbol": "300018",
+      "record_date": "2011-05-25",
+      "ex_date": "2011-05-26",
+      "source_sha256": "4abee59579afec817c7a290778b75486417b8e7b9cb634f557df6bd7fd16d363",
+      "pages": [
+        1
+      ],
+      "reason": "PDFIUM_VISUAL_RECORD_AND_EX_DATES_TEXT_EXTRACTION_AMBIGUOUS"
+    },
+    {
+      "symbol": "300127",
+      "record_date": "2011-05-03",
+      "ex_date": "2011-05-04",
+      "source_sha256": "fe15728acbc5a6b5a2acea4bc1d5156328f22b409a11360a905d528677c7e706",
+      "pages": [
+        1
+      ],
+      "reason": "PDFIUM_VISUAL_RECORD_AND_EX_DATES_TEXT_EXTRACTION_AMBIGUOUS"
+    },
+    {
+      "symbol": "300127",
+      "record_date": "2012-04-06",
+      "ex_date": "2012-04-09",
+      "source_sha256": "3a4b461521e1d66a8d26e8197d138063a7201241f694cc2e33825d06f8a664bf",
+      "pages": [
+        1
+      ],
+      "reason": "PDFIUM_VISUAL_RECORD_AND_EX_DATES_TEXT_EXTRACTION_AMBIGUOUS"
+    },
+    {
+      "symbol": "300127",
+      "record_date": "2014-04-11",
+      "ex_date": "2014-04-14",
+      "source_sha256": "a49fca2952dba07efa617011c0e1752f72542e98be025fe9e2533ceb36bea8de",
+      "pages": [
+        1
+      ],
+      "reason": "PDFIUM_VISUAL_RECORD_AND_EX_DATES_TEXT_EXTRACTION_AMBIGUOUS"
+    },
+    {
+      "symbol": "300206",
+      "record_date": "2011-09-22",
+      "ex_date": "2011-09-23",
+      "source_sha256": "9b82f24db9a7355588c18a975e47ca27ce7d8c0ec4631dc044679f3bd54e2878",
+      "pages": [
+        1
+      ],
+      "reason": "PDFIUM_VISUAL_RECORD_AND_EX_DATES_TEXT_EXTRACTION_AMBIGUOUS"
+    }
+  ]
+}

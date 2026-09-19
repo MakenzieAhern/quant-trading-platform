@@ -10,7 +10,7 @@ import pymupdf
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
-from scripts.link_distribution_notices import current_notice_dates
+from scripts.link_distribution_notices import current_notice_dates, reviewed_dates
 from scripts.reconcile_cash_gap_candidates import is_final_implementation_document
 from scripts.reconcile_distribution_cash import (
     differentiated_cash,
@@ -20,7 +20,7 @@ from scripts.reconcile_distribution_cash import (
 from scripts.retained_bonus_terms import retained_ratio
 
 
-def classify_document(document: dict, pages: list[str]) -> dict:
+def classify_document(document: dict, pages: list[str], review: dict | None = None) -> dict:
     outcome = {
         "issuer": document["issuer"],
         "title": document["title"],
@@ -31,7 +31,13 @@ def classify_document(document: dict, pages: list[str]) -> dict:
     capital_implementation = re.search(r"(?:年度)?资本公积金?转增股本实施公告$", document["title"])
     if not (is_final_implementation_document(document["title"], text) or capital_implementation):
         return {**outcome, "status": "NOT_FINAL_IMPLEMENTATION_DOCUMENT"}
-    records, ex_dates = current_notice_dates(pages, document["published_on"])
+    records, ex_dates = (
+        reviewed_dates(review, document, len(pages))
+        if review
+        else current_notice_dates(pages, document["published_on"])
+    )
+    if review:
+        outcome["date_source"] = "CHECKSUM_BOUND_VISUAL_REVIEW"
     affected = set(document["affected_factor_changes"])
     matched = [event for event in affected if event.rsplit(":", 1)[-1] in ex_dates]
     if len(records) != 1 or len(ex_dates) != 1 or not matched:
@@ -97,11 +103,14 @@ def cache_index(staging: Path) -> dict[str, Path]:
 
 
 def pages_for(
-    staging: Path, document: dict, caches: dict[str, Path]
+    staging: Path,
+    document: dict,
+    caches: dict[str, Path],
+    prefer_source: bool = False,
 ) -> tuple[list[str] | None, dict]:
     source_sha = document["source_sha256"]
     cache = caches.get(source_sha)
-    if cache:
+    if cache and not prefer_source:
         extracted = json.loads(cache.read_bytes())
         if extracted["source_sha256"] != source_sha:
             raise ValueError("TEXT_CACHE_SOURCE_CHANGED")
@@ -121,19 +130,32 @@ def pages_for(
             "text_sha256": None,
         }
     return pages, {
-        "text_source": "DETERMINISTIC_PYMUPDF_FALLBACK",
+        "text_source": "DETERMINISTIC_PYMUPDF_SOURCE",
         "text_path": None,
         "text_sha256": canonical_sha256(pages),
     }
 
 
-def audit(staging: Path, documents: list[dict], caches: dict[str, Path]) -> dict:
+def audit(
+    staging: Path,
+    documents: list[dict],
+    caches: dict[str, Path],
+    reviews: dict[str, dict] | None = None,
+) -> dict:
+    reviews = reviews or {}
+    if reviews.keys() - {row["source_sha256"] for row in documents}:
+        raise ValueError("REVIEW_DOCUMENT_MISSING")
     outcomes = []
     for document in sorted(documents, key=lambda row: (row["url"], row["source_sha256"])):
         pdf = staging / document["source_path"]
         if sha256_file(pdf) != document["source_sha256"]:
             raise ValueError("OFFICIAL_SOURCE_CHANGED")
-        pages, receipt = pages_for(staging, document, caches)
+        pages, receipt = pages_for(
+            staging,
+            document,
+            caches,
+            prefer_source=document["source_sha256"] in reviews,
+        )
         if pages is None:
             outcomes.append(
                 {
@@ -146,7 +168,12 @@ def audit(staging: Path, documents: list[dict], caches: dict[str, Path]) -> dict
                 }
             )
             continue
-        outcomes.append({**classify_document(document, pages), **receipt})
+        outcomes.append(
+            {
+                **classify_document(document, pages, reviews.get(document["source_sha256"])),
+                **receipt,
+            }
+        )
     by_factor = defaultdict(list)
     for row in outcomes:
         if row["status"] == "EXACT_DATE_OFFICIAL_TERMS_CANDIDATE":
@@ -206,6 +233,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--staging", type=Path, required=True)
     parser.add_argument("--inventory", type=Path, required=True)
+    parser.add_argument("--date-review", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     inventory = json.loads(args.inventory.read_bytes())
@@ -217,13 +245,23 @@ def main() -> None:
         documents = inventory["documents"]
     else:
         documents = inventory
+    reviews = {}
+    inputs = [args.inventory]
+    if args.date_review:
+        review = json.loads(args.date_review.read_bytes())
+        if review["scope"] != "DATE_COVERAGE_ONLY_NOT_ECONOMIC_TERMS_OR_ACCOUNTING":
+            raise ValueError("REVIEW_SCOPE_INVALID")
+        reviews = {row["source_sha256"]: row for row in review["rows"]}
+        if len(reviews) != len(review["rows"]):
+            raise ValueError("DUPLICATE_REVIEW")
+        inputs.append(args.date_review)
     caches = cache_index(args.staging)
-    report = audit(args.staging, documents, caches)
-    if report != audit(args.staging, list(reversed(documents)), caches):
+    report = audit(args.staging, documents, caches, reviews)
+    if report != audit(args.staging, list(reversed(documents)), caches, reviews):
         raise ValueError("INPUT_ORDER_CHANGED")
     report.update(
         input_order_reproducibility="PASS",
-        inputs=[{"path": str(args.inventory), "sha256": sha256_file(args.inventory)}],
+        inputs=[{"path": str(path), "sha256": sha256_file(path)} for path in inputs],
         parser_sha256=sha256_file(Path(__file__)),
     )
     report["manifest_sha256"] = canonical_sha256(report)

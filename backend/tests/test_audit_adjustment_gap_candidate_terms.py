@@ -1,3 +1,7 @@
+import json
+
+import pymupdf
+
 from scripts.audit_adjustment_gap_candidate_terms import classify_document, pages_for
 
 
@@ -20,6 +24,36 @@ def test_exact_official_terms_remain_candidates_only() -> None:
     assert result["status"] == "EXACT_DATE_OFFICIAL_TERMS_CANDIDATE"
     assert result["cash_per_share"] == "0.10"
     assert result["bonus_share_ratio"] == "0.2"
+    assert result["matched_factor_changes"] == document["affected_factor_changes"]
+
+
+def test_checksum_bound_date_review_resolves_ambiguous_extraction() -> None:
+    document = {
+        "issuer": "300127",
+        "published_on": "2011-04-26",
+        "title": "2010年度权益分派实施公告",
+        "url": "https://static.cninfo.com.cn/finalpage/one.PDF",
+        "source_sha256": "a" * 64,
+        "affected_factor_changes": ["FACTOR:CN-A:SZSE:300127:2011-05-04"],
+    }
+    pages = [
+        "证券代码:300127 证券简称:测试\n"
+        "本公司及董事会全体成员保证公告内容真实、准确和完整,没有虚假记载、误导性陈述或者重大遗漏。\n"
+        "本公司2010年度权益分派方案为:向全体股东每10股派1.00元人民币现金(含税),"
+        "同时每10股转增2股。\n股权登记日:2010年5月3日。除权除息日:2010年5月4日。"
+    ]
+    review = {
+        "symbol": "300127",
+        "source_sha256": "a" * 64,
+        "record_date": "2011-05-03",
+        "ex_date": "2011-05-04",
+        "pages": [1],
+    }
+
+    result = classify_document(document, pages, review)
+
+    assert result["status"] == "EXACT_DATE_OFFICIAL_TERMS_CANDIDATE"
+    assert result["date_source"] == "CHECKSUM_BOUND_VISUAL_REVIEW"
     assert result["matched_factor_changes"] == document["affected_factor_changes"]
 
 
@@ -54,3 +88,25 @@ def test_unparseable_retained_bytes_fail_closed(tmp_path) -> None:
     )
     assert pages is None
     assert receipt["text_source"] == "SOURCE_BYTES_NOT_PARSEABLE_AS_PDF"
+
+
+def test_visual_review_prefers_source_text_over_corrupt_cache(tmp_path) -> None:
+    source = tmp_path / "source.pdf"
+    with pymupdf.open() as pdf:
+        pdf.new_page().insert_text((72, 72), "300127 official source")
+        pdf.save(source)
+    cache = tmp_path / ("a" * 64 + ".json")
+    cache.write_text(
+        json.dumps({"source_sha256": "a" * 64, "pages": ["corrupt cache"]}),
+        encoding="utf-8",
+    )
+
+    pages, receipt = pages_for(
+        tmp_path,
+        {"source_sha256": "a" * 64, "source_path": source.name},
+        {"a" * 64: cache},
+        prefer_source=True,
+    )
+
+    assert "300127 official source" in pages[0]
+    assert receipt["text_source"] == "DETERMINISTIC_PYMUPDF_SOURCE"
