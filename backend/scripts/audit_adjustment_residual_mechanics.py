@@ -233,9 +233,7 @@ def audit(adjustment: dict, terms: dict, residual: dict, sources: dict[str, dict
     residual_events = {row["factor_change"] for row in residual["results"]}
     partitions = [set(MECHANICS), set(cash), set(UNRESOLVED)]
     overlap = any(
-        left & right
-        for index, left in enumerate(partitions)
-        for right in partitions[index + 1 :]
+        left & right for index, left in enumerate(partitions) for right in partitions[index + 1 :]
     )
     if overlap:
         raise ValueError("RESIDUAL_CLASSIFICATION_OVERLAP")

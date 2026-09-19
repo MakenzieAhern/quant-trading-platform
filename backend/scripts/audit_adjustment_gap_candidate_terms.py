@@ -28,13 +28,8 @@ def classify_document(document: dict, pages: list[str]) -> dict:
         "source_sha256": document["source_sha256"],
     }
     text = normalized_document(pages)
-    capital_implementation = re.search(
-        r"(?:年度)?资本公积金?转增股本实施公告$", document["title"]
-    )
-    if not (
-        is_final_implementation_document(document["title"], text)
-        or capital_implementation
-    ):
+    capital_implementation = re.search(r"(?:年度)?资本公积金?转增股本实施公告$", document["title"])
+    if not (is_final_implementation_document(document["title"], text) or capital_implementation):
         return {**outcome, "status": "NOT_FINAL_IMPLEMENTATION_DOCUMENT"}
     records, ex_dates = current_notice_dates(pages, document["published_on"])
     affected = set(document["affected_factor_changes"])

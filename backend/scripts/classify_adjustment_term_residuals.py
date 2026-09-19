@@ -10,9 +10,7 @@ from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, s
 from app.data.catalog.freeze import write_immutable
 from scripts.reconcile_distribution_cash import verified
 
-RESTRUCTURING = re.compile(
-    r"重整|定向转增|股东权益调整|开盘参考价|资本公积金转增股票"
-)
+RESTRUCTURING = re.compile(r"重整|定向转增|股东权益调整|开盘参考价|资本公积金转增股票")
 
 
 def classify(terms: dict, sources: list[dict]) -> dict:
@@ -84,8 +82,7 @@ def main() -> None:
     report.update(
         input_order_reproducibility="PASS",
         inputs=[
-            {"path": str(path), "sha256": sha256_file(path)}
-            for path in (args.terms, args.sources)
+            {"path": str(path), "sha256": sha256_file(path)} for path in (args.terms, args.sources)
         ],
         parser_sha256=sha256_file(Path(__file__)),
     )
