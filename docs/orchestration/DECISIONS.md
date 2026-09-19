@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-09-20 — retain raw dual-source parity as candidate evidence only
+
+Accept the fixed 239-row Tencent/Sina replay as a reproducible diagnostic: OHLC
+and volume match exactly, amount differences stay inside the accepted
+plus-or-minus 100 CNY interval, and every relevant 20-observation liquidity
+window is decision-invariant. Do not promote either provider to official
+authority, infer a mass suspension from the missing official block, or treat
+the separate 223-symbol transaction-scope difference as closed. Keep
+`RAW:FULL_UNIVERSE` open.
+
 ## 2026-09-20 — close corporate-action P1 without promoting other authorities
 
 Accept the retained official evidence for 000522-to-600332 and

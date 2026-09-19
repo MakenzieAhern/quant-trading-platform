@@ -1,5 +1,14 @@
 # v1.1 controller roadmap
 
+## R5 raw candidate closure / preflight v8 — 2026-09-20
+
+The fixed 239-row 2011-07-25 ChiNext residual now passes dual-source value
+parity, accepted amount-interval checks and liquidity-decision invariance. It is
+candidate evidence, not official authority. Resume only from the consolidated
+full-range authority/methodology blocker: suspension boundaries, official raw
+transaction scope, adjustment-factor economics and historical costs. Do not
+create/freeze the Full Dataset or run a study until all four components pass.
+
 ## R5 public-source closure stop — 2026-09-20
 
 P0 remains PASS and corporate-action P1 source facts are closed at cumulative

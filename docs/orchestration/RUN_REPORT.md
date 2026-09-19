@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 SZSE 2011-07-25 raw candidate closure / preflight v8
+
+- fixed candidate rows completed: 239 / 239
+- OHLC / volume parity: 239 / 239
+- amount interval pass: 239 / 239; maximum difference 52 CNY
+- liquidity decision invariance: 239 / 239 across 4,684 windows
+- minimum liquidity-threshold distance: 365 CNY
+- input-order reproducibility: PASS
+- candidate report file SHA-256: `314d8953ebdb3171e38f7ebca92027d25521d376316627d8f615476864ab53d8`
+- provider authority promoted: NO
+- full-source preflight: BLOCKED_MATERIAL_AUTHORITY_AND_METHODOLOGY_GAPS
+- preflight manifest SHA-256: `50ba47095dec816dc747aa9ccd6b22ca4dbabef34e6ea8c8d1eb7143dab8cd29`
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 public-source closure v68 / preflight v7
 
 - P1 established / raw requirements: 16,318 / 16,320
