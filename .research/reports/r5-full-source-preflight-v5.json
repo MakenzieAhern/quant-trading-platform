@@ -1,0 +1,124 @@
+{
+  "report_id": "R5_FULL_SOURCE_PREFLIGHT_V5",
+  "requested_coverage": ["2010-01-01", "2025-12-31"],
+  "dataset_id": "cn-a-research-20100101-20251231-v1",
+  "status": "PARTIAL",
+  "verified_safe_start_date": null,
+  "components": {
+    "security_master": {
+      "status": "PASS",
+      "securities": 5431,
+      "intervals": 5436,
+      "report_manifest_sha256": "3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235cc6d98e12a8150faf8"
+    },
+    "st_history": {
+      "status": "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
+      "sse_manifest_sha256": "0b11bd3fcf4f62b530a551365dfa974b7db3cef63156d5a311e0f714ae0b012f",
+      "szse_probe_sha256": "8cb0c481cd8bd004dc689eee3370eb2fd9f592daec6ced717b40c45d1401c3a8"
+    },
+    "suspension_history": {
+      "status": "PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES",
+      "sse_unresolved": 0,
+      "szse_unresolved": 2010,
+      "authority_file_sha256": "275c94706bf60ab6b402c658e27bf2e7cd0921932204d5a44d0a478342e79dcb",
+      "authority_manifest_sha256": "da9be561718a0783112c5ce083d5183e411d5c535407c7c3217da86b89ee8d67"
+    },
+    "raw_ohlcv": {
+      "status": "PARTIAL_SOURCE_SNAPSHOTS_NOT_RAW_AUTHORITY",
+      "sse_unclassified_missing_sessions": 0,
+      "szse_unresolved_source_rows": 239,
+      "szse_afterhours_scope_unproven": 223,
+      "sse_gap_manifest_sha256": "f7e28d9e67c2a889e72c370e8919586cafef4c29b52b6cb0f4924b089f7f4d65",
+      "szse_gap_file_sha256": "7350f64444a39b10b43dc1b4650174628272c773c29df4079e210fbec37da9ed",
+      "szse_gap_manifest_sha256": "5ad2a1aac5ad867c724bcf45a48fdac6aec8566ccab20c2d35733c20b95e1cda",
+      "szse_v32_residual_scope_changed": false,
+      "szse_v32_residual_reason_changes": 2
+    },
+    "adjustment_factors": {
+      "status": "PARTIAL_ECONOMIC_ALIGNMENT_AND_EVENT_COMPLETENESS_NOT_ESTABLISHED",
+      "verified_intervals": 5436,
+      "conflicting_intervals": 0,
+      "unmatched_factor_change_dates": 2328,
+      "supported_events_without_factor_change": 6,
+      "retained_official_bonus_date_routes": 912,
+      "displayed_price_bounds_pass": 621,
+      "displayed_price_bounds_conflict": 7,
+      "displayed_price_unavailable": 284,
+      "zero_cash_bonus_ratio_bounds_pass": 616,
+      "zero_cash_bonus_ratio_bounds_conflict": 12,
+      "unrouted_factor_change_dates": 1416,
+      "factor_changes_with_prior_cninfo_candidates": 1383,
+      "factor_changes_without_prior_cninfo_candidates": 33,
+      "residual_official_source_covered": 33,
+      "residual_source_uncovered": 0,
+      "residual_official_mechanics_factor_parity": 25,
+      "residual_official_gross_cash_terms": 7,
+      "residual_provider_factor_basis_unresolved": 8,
+      "retained_candidate_documents": 1421,
+      "missing_candidate_documents": 0,
+      "unique_exact_official_terms_candidates": 1343,
+      "no_exact_official_terms_candidates": 40,
+      "exact_terms_cash_only": 825,
+      "exact_terms_cash_and_bonus": 477,
+      "exact_terms_bonus_only": 41,
+      "gross_terms_factor_checks": 477,
+      "gross_terms_factor_conflicts": 477,
+      "remaining_restructuring_or_directed_capital": 27,
+      "remaining_distribution_date_mismatch_or_ocr": 12,
+      "remaining_complex_holder_terms": 1,
+      "routing_manifest_sha256": "f36461f55bdc9e8a4dce26bf4ed6c6de9fae5406ffb693a27ef2d958d912be9d",
+      "retained_terms_file_sha256": "22da493a9e1ea0bec3baf0e9e175c129fbfbdec63a07401e0e3795c806e8f1e5",
+      "retained_terms_manifest_sha256": "f934e27f416ebf1fe760cd69070e8a12b571b8d200afa04b5baf36a498427c68",
+      "retained_term_residual_manifest_sha256": "083bc89bb456580a838c1f752ea23950379cc7bc9044f230fa94a68c0cb85628",
+      "residual_metadata_manifest_sha256": "2d43f65f4f6e2933b529fc27bd894628cd3df0613defdbce797efc241436304a",
+      "residual_source_manifest_sha256": "8d9ab6f60239fcbbd8e82804a5554600d63e6f885ed527ec447cae35843fb9a9",
+      "residual_supplement_manifest_sha256": "7175e453c00057ca9dec866dc3eed3b411d7af2881ae39a8989008bdc1f9986a",
+      "residual_terms_manifest_sha256": "5b1573e5b45181a9eee522cc13a83587cf66b7153fb7de3cf07fcbec3398068a",
+      "residual_mechanics_manifest_sha256": "a38d55a2a3a5b4b6d6c0a672cac48ee4a9565efbc57fa13a2abc237916f7f35a",
+      "economics_report_file_sha256": "1c7d9c5d8d7ae3994521ebd7992958e6dc7f223a853a2a91087a7c71839a21f9",
+      "economics_report_manifest_sha256": "e34d1bd6758942e7f107079c007812ec2681ac39aec02a361754765b616b560e",
+      "report_manifest_sha256": "31859c826876ae5830fb5dc95f03b6591d389300b3f85014c60a95789842bd87"
+    },
+    "corporate_actions": {
+      "status": "PARTIAL",
+      "p1_established_facts": 16073,
+      "p1_missing_facts": 247,
+      "p1_missing_documents": 242,
+      "integer_bonus_supported": 243,
+      "bonus_unresolved": 45,
+      "active_human_gate": "R5_RETAINED_BONUS_FRACTION_POLICY"
+    },
+    "market_rules_and_transaction_costs": {
+      "status": "PARTIAL",
+      "new_executable_rules_accepted": 0,
+      "unresolved_claim_groups": 6,
+      "szse_yearbooks_verified": 16,
+      "szse_2023_handling_boundary": "PASS_SOURCE_CLAIM_2023_08_28",
+      "report_manifest_sha256": "9e6023fef613d9f8c08218c1e2290d786f8843f357c07c8957c629eb0df33a89"
+    },
+    "trading_calendar": {
+      "status": "PASS",
+      "sessions": 3886,
+      "manifest_sha256": "d3c681d7d2020d3c7a8111d9600092e79a18ff28234b02e5f5020644506620b8"
+    },
+    "csi300_benchmark": {
+      "status": "PASS_FOR_FULL_RANGE_CLOSE_SERIES",
+      "manifest_sha256": "ced39152f1fb94def77faca1414ca80c661dc827803ae275f935ccc294e91c88"
+    }
+  },
+  "mandatory_incomplete_components": [
+    "SUSPENSION_HISTORY",
+    "RAW_OHLCV_AUTHORITY",
+    "ADJUSTMENT_ECONOMIC_ALIGNMENT",
+    "CORPORATE_ACTION_COMPLETENESS_AND_ACCOUNTING",
+    "HISTORICAL_MARKET_RULES_AND_TRANSACTION_COSTS"
+  ],
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "development_study_run": false,
+  "validation_study_run": false,
+  "official_oos_run": false,
+  "input_order_reproducibility": "PASS_FOR_COMPONENTS_WHERE_REPORTED",
+  "manifest_sha256": "3ac08db9a27340f021cae7e8ff627b4eef984e7ee63a047a00bb6560f6a2d4e8"
+}

@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 retained adjustment-term recovery v3
+
+- retained official documents reused / downloaded: 1,421 / 0
+- newly recovered exact-date candidates versus v1: 32
+- unique exact official term candidates / no exact terms: 1,343 / 40
+- remaining restructuring / date mismatch or OCR / complex holder: 27 / 12 / 1
+- exact term shapes cash-only / both / bonus-only: 825 / 477 / 41
+- gross cash-plus-bonus factor checks / conflicts: 477 / 477
+- term-candidate manifest SHA-256: `f934e27f416ebf1fe760cd69070e8a12b571b8d200afa04b5baf36a498427c68`
+- residual-classification manifest SHA-256: `083bc89bb456580a838c1f752ea23950379cc7bc9044f230fa94a68c0cb85628`
+- gross-economics manifest SHA-256: `e34d1bd6758942e7f107079c007812ec2681ac39aec02a361754765b616b560e`
+- full adjustment authority: PARTIAL
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 retained adjustment-term recovery v2
 
 - retained official documents reused / downloaded: 1,421 / 0

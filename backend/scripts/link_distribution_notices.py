@@ -13,7 +13,7 @@ from app.data.catalog.freeze import write_immutable
 
 BOARD_GUARANTEE = (
     r"(?:本)?公司及董事会全体成员保证(?:公告|信息披露(?:的)?)?内容(?:的)?真实、?"
-    r"准确(?:、|和)?完整[,\.\uff0c]?(?:不存在|没有)虚假(?:性)?记载、?"
+    r"准确(?:、|和)?完整[,\.\uff0c]?(?:不存在|没有)虚假(?:性)?记载[,\uff0c、]?"
     r"误导性陈述(?:或|或者)重大遗漏[。.]?"
 )
 RECORD_LABELS = (
@@ -34,6 +34,12 @@ LABEL_DATE_GAP = r"[:为]*(?:[-—]\d+[-—])?"
 def compact_document(text):
     compact = re.sub(r"[\x00-\x1f\x7f]|\s+", "", unicodedata.normalize("NFKC", text))
     compact = re.sub(BOARD_GUARANTEE, "", compact)
+    compact = re.sub(
+        r"董事XXX因\(具体和明确的理由\)不能保证公告内容真实、准确、完整。"
+        r"[^。]{0,80}?公告\(20\d{2}\)\d?",
+        "",
+        compact,
+    )
     compact = re.sub(r"第\d+页共\d+页", "", compact)
     return re.sub(r"(20\d{2})-\d+-(?=年)", r"\1", compact)
 
