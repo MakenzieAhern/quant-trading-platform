@@ -1,5 +1,14 @@
 # v1.1 controller roadmap
 
+## R5 SZSE application-boundary revalidation v17 — 2026-09-19
+
+The retained official corpus now accepts completed exchange-application
+resumption clauses while rejecting requests, plans, deadlines and truncated
+day tokens. Current authority has 8,716 exact resumptions, 58 terminal closures,
+zero conflicts and 2,031 unresolved facts. Suspension authority remains
+PARTIAL; Full Dataset creation, freeze and all studies remain locked. See
+`../research/R5_SZSE_APPLICATION_BOUNDARY_REVALIDATION_V17.md`.
+
 ## R5 SZSE broad-subject date precedence v16 — 2026-09-19
 
 The shared parser now treats broad subject/date wording as fallback-only. One

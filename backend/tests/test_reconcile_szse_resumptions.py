@@ -21,9 +21,37 @@ def test_exact_resumption_dates_reject_plans_and_stop_dates():
     ) == ["2013-01-29"]
     assert exact_resume_dates("公司股票预计于2011年8月4日公告并复牌。", "2011-08-03") == []
     assert exact_resume_dates("公司股票不迟于2015年11月20日前复牌。", "2015-11-18") == []
+    assert exact_resume_dates("公司证券最晚将于2013年11月10日恢复交易。", "2013-10-31") == []
+    assert exact_resume_dates("公司股票将于2016年12月13日前复牌。", "2016-12-10") == []
+    assert exact_resume_dates("决定延期至不超过2013年3月18日复牌。", "2013-03-14") == []
+    assert exact_resume_dates("决定延期至2013年4月18日复牌。", "2013-04-08") == []
+    assert (
+        exact_resume_dates(
+            "决定延期至2013年5月4日披露相关公告并于2013年5月6日复牌。",
+            "2013-05-03",
+        )
+        == []
+    )
     assert exact_resume_dates(
         "经公司申请,公司股票将于2015年11月18日开市起复牌。", "2015-11-18"
     ) == ["2015-11-18"]
+    assert exact_resume_dates(
+        "经向深圳证券交易所申请,公司股票自2016年8月15日开市起复牌。",
+        "2016-08-13",
+    ) == ["2016-08-15"]
+    assert (
+        exact_resume_dates(
+            "经公司申请,本公司股票自2012年5月8日起停牌,"
+            "待刊登相关公告后,计划于2012年5月11日申请复牌。",
+            "2012-05-08",
+        )
+        == []
+    )
+    assert exact_resume_dates(
+        "特别提示:公司股票自2013年7月10日开市起恢复交易。"
+        "经向深圳证券交易所申请,公司股票自2013年7月11日开市起复牌。",
+        "2013-07-11",
+    ) == ["2013-07-10", "2013-07-11"]
     assert (
         exact_resume_dates(
             "公司股票定于2014年4月25日开市起复牌,但是因重大事项自2014年4月25日开市起停牌。",
@@ -42,6 +70,11 @@ def test_exact_resumption_dates_reject_plans_and_stop_dates():
         "公司股票将于2015年10月8日上午开市起复牌。",
         "2015-09-30",
     ) == ["2015-10-08"]
+    assert exact_resume_dates(
+        "公司于2016年10月28日披露《关于延期复牌的公告》。"
+        "公司股票将于2016年10月31日上午开市起复牌。",
+        "2016-10-29",
+    ) == ["2016-10-31"]
 
 
 def test_exact_resumption_dates_cover_observed_official_forms():

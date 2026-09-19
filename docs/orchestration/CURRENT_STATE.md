@@ -1,5 +1,17 @@
 # Current state
 
+## R5 SZSE application-boundary revalidation v17 — 2026-09-19
+
+Strict replay now distinguishes final `经/向交易所申请后自某日复牌` clauses
+from plans or applications to resume, and prevents multi-digit days from being
+truncated by time grammar. Against v16, 1,397 cached official boundaries are
+recovered, 40 false/non-final rows reopen and four dates are corrected.
+Authority now has **8,716** exact resumptions, 58 terminal closures, zero
+conflicts and **2,031** unresolved SZSE boundaries. No source was downloaded or
+symbol-specific rule added. Suspension authority remains PARTIAL; the retained-
+bonus gate is unchanged. See
+`../research/R5_SZSE_APPLICATION_BOUNDARY_REVALIDATION_V17.md`.
+
 ## R5 SZSE broad-subject date precedence v16 — 2026-09-19
 
 The broad subject/date resumption form is now fallback-only when a narrower

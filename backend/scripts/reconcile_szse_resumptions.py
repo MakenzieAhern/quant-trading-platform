@@ -12,10 +12,12 @@ from app.data.catalog.freeze import write_immutable
 
 TERM = r"(?:复牌|恢复(?:正常)?交易)"
 SUBJECT = r"(?:本公司|公司)?(?:股票|证券|A股股票|B股股票|A股|B股)"
-FULL_DATE = r"(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})日?"
-MONTH_DAY = r"(?<![年\d])(\d{1,2})月(\d{1,2})日"
+FULL_DATE = r"(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})(?!\d)日?"
+MONTH_DAY = r"(?<![年\d])(\d{1,2})月(\d{1,2})(?!\d)日"
 REJECTED_TITLE = re.compile(r"延期复牌|继续停牌|停牌期满|暂不复牌|不复牌|申请复牌")
-UNCERTAIN = re.compile(r"预计|不迟于|不晚于|最迟于|最晚于|争取|拟于")
+UNCERTAIN = re.compile(
+    r"预计|计划|不迟于|不晚于|不超过|最迟于|最晚(?:于)?|延期至|延期复牌|争取|拟于|前(?=复牌|恢复)"
+)
 CONDITIONAL = re.compile(r"若|如果|如未")
 FULL_PATTERNS = (
     re.compile(r"进入退市整理期(?:交易)?的起始日为" + FULL_DATE),
@@ -104,11 +106,21 @@ def _is_certain(segment: str, match: re.Match) -> bool:
     context = segment[max(0, match.start() - 10) : match.start()] + text
     wide_context = segment[max(0, match.start() - 40) : match.start()] + text
     final_after_application = bool(
-        re.search(r"经(?:公司)?申请", wide_context)
-        and re.search(SUBJECT + r"将于" + FULL_DATE + r"[^。\uff1b;]{0,30}?" + TERM, text)
+        re.search(r"经(?:公司)?(?:向[^,\uff0c。\uff1b;]{0,20})?申请", wide_context)
+        and not re.search(r"(?:申请|计划)[^。\uff1b;]{0,10}复牌", text)
+        and re.search(
+            SUBJECT
+            + r"[^。\uff1b;]{0,20}?(?:将于|自|于|从)"
+            + FULL_DATE
+            + r"[^。\uff1b;]{0,30}?"
+            + TERM,
+            wide_context,
+        )
     )
+    planned_prefix = re.search(r"延期至[^,\uff0c。\uff1b;]{0,40}$", segment[: match.start()])
     return (
         not UNCERTAIN.search(context)
+        and not planned_prefix
         and not CONDITIONAL.search(wide_context)
         and len(re.findall(FULL_DATE, text)) + len(re.findall(MONTH_DAY, text)) <= 1
         and not re.search(r"停牌|会议|议案", text)

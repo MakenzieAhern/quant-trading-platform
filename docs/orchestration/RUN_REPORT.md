@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE application-boundary revalidation v17
+
+- new source downloads: 0
+- exact resumptions: 8,716
+- terminal closures: 58
+- newly recovered versus v16: 1,397
+- false/non-final v16 boundaries reopened: 40
+- v16 boundaries corrected to explicit final dates: 4
+- final unresolved: 2,031
+- conflicts: 0
+- source checksum repeatability: PASS
+- input-order reproducibility: PASS
+- focused parser tests: 6 passed
+- authority status: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- report: `../research/R5_SZSE_APPLICATION_BOUNDARY_REVALIDATION_V17.md`
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE broad-subject date precedence v16
 
 - new source downloads: 0

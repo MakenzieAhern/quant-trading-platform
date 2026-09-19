@@ -1,5 +1,15 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 2,031 — 2026-09-19
+
+Strict all-retained replay now accepts final exchange-application resumption
+clauses and rejects truncated dates, deadlines, postponements and plans to
+apply. Authority has 8,716 exact resumptions, 58 terminal closures, zero
+conflicts and **2,031** unresolved boundaries. Forty prior false/non-final rows
+are explicitly reopened rather than preserved for monotonic counts. Suspension
+authority remains PARTIAL; the independent retained-bonus fractional
+methodology gate remains active.
+
 ## SZSE exact resumption residual reduced to 3,388 — 2026-09-19
 
 Broad subject/date wording is now fallback-only behind narrower effective-date
