@@ -1,5 +1,20 @@
 # Current state
 
+## R5 all-retained bound terminal scan v3 — 2026-09-19
+
+The exact-event terminal rule has now run across every retained SZSE resumption
+manifest carrying `affected_suspensions` bindings: 9,626 unique official
+documents. SHA-identical repeat acquisitions merge bindings deterministically
+while conflicting source metadata fail closed. Five merger suspensions
+(000024, 000522, 000527, 000562, 300186) close through official
+suspended-until-termination notices and master lifecycle ends. Full replay now
+has 8,884 true resumptions, 53 terminal closures, zero conflicts and **1,868**
+unresolved SZSE boundaries. Authority remains PARTIAL. V3 manifest
+`f3ccdfcb9b53e83b1e688a7d8174c3874a5b68c6551a8e238b449b76151e9d72`;
+full authority manifest
+`0583bb29a1e7963f6f2fc247e096ba6486778d8a5338f8f1f4fad9ca5a0aecf7`.
+See `../research/R5_SZSE_TERMINAL_SUSPENSION_CLOSURE_V3.md`.
+
 ## R5 bound terminal-suspension closure v2 — 2026-09-19
 
 The terminal pass now uses each retained official document's immutable

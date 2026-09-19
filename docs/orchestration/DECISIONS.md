@@ -1,5 +1,13 @@
 # Decisions
 
+## 2026-09-19 identical official bytes merge event bindings deterministically
+
+When the same official PDF SHA-256 appears in multiple acquisition manifests,
+union its exact `affected_suspensions` bindings and retain the earliest UTC
+receipt. Require issuer, publication date, title, URL and extracted text to be
+identical; otherwise fail closed. This avoids treating repeat retrievals as
+conflicting evidence without weakening semantic provenance.
+
 ## 2026-09-19 terminal treatment must bind to the manifest event
 
 Accept an SZSE terminal suspension only when the retained official document's

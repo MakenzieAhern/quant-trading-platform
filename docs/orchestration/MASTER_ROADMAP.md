@@ -1,5 +1,13 @@
 # v1.1 controller roadmap
 
+## R5 complete retained terminal scan v3 — 2026-09-19
+
+All 9,626 retained official documents with exact suspension bindings have been
+screened under the terminal rule. Five merger chains close, cumulative terminal
+closures reach 53 and the SZSE exact-boundary residual becomes **1,868** with
+zero conflicts. Further closure requires targeted official evidence; this is
+partial R5 progress and does not unlock the Full Dataset or studies.
+
 ## R5 exact-bound terminal-suspension progress v2 — 2026-09-19
 
 Retained official document manifests now bind terminal language to exact

@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 complete retained bound-document terminal scan v3
+
+Expanded the exact-event terminal scan from 4,598 to 9,626 unique retained
+official documents across all resumption manifests with event bindings.
+SHA-identical duplicate acquisitions now merge bindings and keep the earliest
+UTC receipt; semantic metadata conflicts still fail closed. Five official
+share-exchange-merger chains close, bringing cumulative terminal closures to
+53 and reducing unresolved SZSE boundaries to 1,868, with 8,884 true
+resumptions and zero conflicts. V3 file SHA-256
+`70cb97e0e27ef67d29cb308c02371649e736dc1507ab09120e5b5552e0919d10`,
+manifest `f3ccdfcb9b53e83b1e688a7d8174c3874a5b68c6551a8e238b449b76151e9d72`;
+full authority manifest
+`0583bb29a1e7963f6f2fc247e096ba6486778d8a5338f8f1f4fad9ca5a0aecf7`.
+No Full Dataset, freeze or strategy run follows from partial authority.
+
 ## 2026-09-19 exact-bound terminal-suspension closure v2
 
 Replaced nearest-halt inference with existing immutable source-manifest event

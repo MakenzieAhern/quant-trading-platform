@@ -1,5 +1,15 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 1,868 — 2026-09-19
+
+The complete retained scan of 9,626 official documents with exact suspension
+bindings closes five merger-related terminal chains. Cumulative terminal
+closures are 53; 8,884 true resumptions remain accepted, conflicts are zero,
+and **1,868** exact SZSE boundaries remain unresolved. No further retained
+bound document satisfies the accepted terminal-treatment rule, so additional
+closure now needs targeted official evidence. Full suspension authority stays
+PARTIAL; the raw, corporate-action and fractional-accounting blockers remain.
+
 ## SZSE exact resumption residual reduced to 1,873 — 2026-09-19
 
 Six additional retained official chains explicitly continue suspension through

@@ -80,6 +80,28 @@ def build_terminal_closures(
     ]
 
 
+def _merge_document(previous: dict | None, document: dict) -> dict:
+    if previous is None:
+        return document
+    affected = previous["affected_suspensions"] + document["affected_suspensions"]
+    retrieved = min(previous["retrieved_at_utc"], document["retrieved_at_utc"])
+
+    def comparable(row: dict) -> dict:
+        return {
+            key: value
+            for key, value in row.items()
+            if key not in {"affected_suspensions", "retrieved_at_utc"}
+        }
+
+    if comparable(previous) != comparable(document):
+        raise ValueError("CONFLICTING_TERMINAL_SUSPENSION_DOCUMENT")
+    return {
+        **document,
+        "retrieved_at_utc": retrieved,
+        "affected_suspensions": sorted({tuple(row) for row in affected}),
+    }
+
+
 def load_documents(roots: list[Path]) -> tuple[list[dict], list[str]]:
     documents, manifest_hashes = {}, []
     caches = {path.stem: path for root in roots for path in sorted(root.rglob("text/*.json"))}
@@ -115,15 +137,7 @@ def load_documents(roots: list[Path]) -> tuple[list[dict], list[str]]:
                 "affected_suspensions": sorted(row.get("affected_suspensions", [])),
                 "text": "\n".join(extracted["pages"]),
             }
-            previous = documents.get(source_sha)
-            if previous is not None:
-                affected = previous.pop("affected_suspensions") + document.pop(
-                    "affected_suspensions"
-                )
-                if previous != document:
-                    raise ValueError("CONFLICTING_TERMINAL_SUSPENSION_DOCUMENT")
-                document["affected_suspensions"] = sorted({tuple(row) for row in affected})
-            documents[source_sha] = document
+            documents[source_sha] = _merge_document(documents.get(source_sha), document)
     return sorted(documents.values(), key=lambda row: row["source_sha256"]), sorted(
         set(manifest_hashes)
     )

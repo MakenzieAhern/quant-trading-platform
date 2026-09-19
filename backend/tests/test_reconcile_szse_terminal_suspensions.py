@@ -1,4 +1,4 @@
-from scripts.reconcile_szse_terminal_suspensions import build_terminal_closures
+from scripts.reconcile_szse_terminal_suspensions import _merge_document, build_terminal_closures
 
 
 def test_terminal_closure_requires_bound_suspension_and_official_lifecycle_end():
@@ -42,3 +42,22 @@ def test_terminal_closure_requires_bound_suspension_and_official_lifecycle_end()
         build_terminal_closures([{**document, "affected_suspensions": []}], unresolved, master)
         == []
     )
+
+
+def test_duplicate_source_bytes_merge_bindings_and_keep_earliest_receipt():
+    document = {
+        "source_sha256": "same-bytes",
+        "issuer": "000001",
+        "retrieved_at_utc": "2026-09-19T02:00:00+00:00",
+        "affected_suspensions": [["CN-A:SZSE:000001", "2024/03/06 09:30"]],
+    }
+    merged = _merge_document(
+        {
+            **document,
+            "retrieved_at_utc": "2026-09-19T01:00:00+00:00",
+            "affected_suspensions": [["CN-A:SZSE:000001", "2023/03/06 09:30"]],
+        },
+        document,
+    )
+    assert merged["retrieved_at_utc"] == "2026-09-19T01:00:00+00:00"
+    assert len(merged["affected_suspensions"]) == 2
