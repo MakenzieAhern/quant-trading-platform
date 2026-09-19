@@ -1,5 +1,14 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 3,389 — 2026-09-19
+
+Anchored official effective-date patterns now outrank broad contextual date
+lookaheads, closing 10 cached boundaries without losing or changing any prior
+accepted date. Authority has 7,358 exact resumptions, 58 terminal closures,
+zero conflicts and **3,389** unresolved boundaries. True dual anchored dates
+remain unresolved. Suspension authority remains PARTIAL; the independent
+retained-bonus fractional methodology gate remains the active human decision.
+
 ## SZSE exact resumption residual reduced to 3,399 — 2026-09-19
 
 Replaying the v13 final-form rule over all retained official bytes closes 14

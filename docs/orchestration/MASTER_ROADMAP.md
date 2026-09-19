@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## R5 SZSE resumption-date precedence v15 — 2026-09-19
+
+Anchored official trading-boundary wording now takes precedence over the broad
+date lookahead used only as a fallback. Ten retained official notices close
+without changing any prior accepted date. Current authority has 7,358 exact
+resumptions, 58 terminal closures, zero conflicts and 3,389 unresolved facts.
+Suspension authority remains PARTIAL; Full Dataset creation, freeze and all
+studies remain locked. See
+`../research/R5_SZSE_RESUMPTION_DATE_PRECEDENCE_V15.md`.
+
 ## R5 all-retained SZSE delisting-boundary replay v14 — 2026-09-19
 
 The v13 final-form parser now replays across every retained official SZSE

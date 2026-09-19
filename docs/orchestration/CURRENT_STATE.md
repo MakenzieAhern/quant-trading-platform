@@ -1,5 +1,16 @@
 # Current state
 
+## R5 SZSE resumption-date precedence v15 — 2026-09-19
+
+The broad resumption-date lookahead is now fallback-only when an anchored
+effective trading-boundary pattern succeeds. Full retained-source replay closes
+10 exact boundaries with no loss or date change among the prior 7,348.
+Authority now has **7,358** exact resumptions, 58 terminal closures, zero
+conflicts and **3,389** unresolved SZSE boundaries. Input-order replay, source
+checksums and focused tests pass. True dual anchored dates remain unresolved.
+Suspension authority remains PARTIAL; the retained-bonus gate is unchanged.
+See `../research/R5_SZSE_RESUMPTION_DATE_PRECEDENCE_V15.md`.
+
 ## R5 all-retained SZSE delisting-boundary replay v14 — 2026-09-19
 
 The v13 shared parser rule was replayed over every retained official source,

@@ -121,6 +121,7 @@ def _is_certain(segment: str, match: re.Match) -> bool:
 def exact_resume_dates(text: str, published_on: str) -> list[str]:
     published = date.fromisoformat(published_on)
     values = set()
+    fallback_values = set()
     compact = re.sub(r"\s+", "", text)
     for segment in re.split(r"[。\uff01\uff1f\uff1b;]", compact):
         for pattern in INTRADAY_PATTERNS:
@@ -129,7 +130,7 @@ def exact_resume_dates(text: str, published_on: str) -> list[str]:
                     values.add(date(*map(int, match.groups()[-3:])).isoformat())
                 except ValueError:
                     continue
-        for pattern in FULL_PATTERNS:
+        for index, pattern in enumerate(FULL_PATTERNS):
             for match in pattern.finditer(segment):
                 if not _is_certain(segment, match):
                     continue
@@ -138,8 +139,8 @@ def exact_resume_dates(text: str, published_on: str) -> list[str]:
                 except ValueError:
                     continue
                 if _near_publication(day, published):
-                    values.add(day.isoformat())
-        for pattern in MONTH_DAY_PATTERNS:
+                    (fallback_values if index == 6 else values).add(day.isoformat())
+        for index, pattern in enumerate(MONTH_DAY_PATTERNS):
             for match in pattern.finditer(segment):
                 if not _is_certain(segment, match):
                     continue
@@ -153,12 +154,12 @@ def exact_resume_dates(text: str, published_on: str) -> list[str]:
                     if _near_publication(day, published):
                         candidates.append(day)
                 if len(candidates) == 1:
-                    values.add(candidates[0].isoformat())
+                    (fallback_values if index == 3 else values).add(candidates[0].isoformat())
         for pattern in RELATIVE_PATTERNS:
             match = pattern.search(segment)
             if match and _is_certain(segment, match):
                 values.add(published.isoformat())
-    return sorted(values)
+    return sorted(values or fallback_values)
 
 
 def _restoration_dates(compact: str) -> list[str]:

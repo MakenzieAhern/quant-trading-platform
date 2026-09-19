@@ -32,6 +32,11 @@ def test_exact_resumption_dates_reject_plans_and_stop_dates():
         == []
     )
     assert exact_resume_dates("公司股票自本公告公布当日起复牌。", "2011-10-28") == ["2011-10-28"]
+    assert exact_resume_dates(
+        "公司于2018年5月31日接到《关于筹划重大事项复牌的通知》。"
+        "公司股票将于2018年6月1日上午开市起复牌。",
+        "2018-06-01",
+    ) == ["2018-06-01"]
 
 
 def test_exact_resumption_dates_cover_observed_official_forms():
