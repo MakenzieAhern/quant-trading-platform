@@ -15,6 +15,49 @@ from scripts.audit_p1_public_fact_requirements import verified
 POLICY = "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1"
 
 CASES = {
+    "MERGER:000522:600332": {
+        "classification": "OFFICIAL_CROSS_MARKET_MERGER_WITH_PENDING_ENTITLEMENT",
+        "facts": {
+            "parent_security_id": "CN-A:SZSE:000522",
+            "successor_security_id": "CN-A:SSE:600332",
+            "merger_record_date": "2013-04-26",
+            "parent_termination_date": "2013-04-26",
+            "conversion_ratio": "0.95",
+            "converted_shares_tradable_from": "2013-05-23",
+            "official_fractional_method": "NOT_INDIVIDUALLY_REPRODUCIBLE",
+            "research_fractional_method": ("FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION"),
+            "accounting_policy": "NON_TRADABLE_PENDING_ACCOUNTING_V1",
+            "boundary_policy": "FIRST_POST_EVENT_TRADING_BOUNDARY_V1",
+            "account_scope": "EXISTING_ORDINARY_A_SHARE_CASH_ACCOUNT_MODEL",
+            "exception_treatment": "SUPPLEMENTAL_REGISTRATION_PENDING",
+        },
+        "documents": (
+            (
+                (
+                    "batch-v1/pdf/"
+                    "0b2e3b903227144634fd83910b7cc3302c1048f5636982feeb63d3c3bd300718.pdf"
+                ),
+                "8224260c2906e450c17f93eb9d4c95d35fbc06df1763d9b4ce22901badb7172d",
+                (
+                    "本次换股吸收合并的换股股权登记日为2013年4月26日",
+                    "每1股白云山股份可换取0.95股广州药业的A股股份",
+                    "余股补登记完成后",
+                    "相应股份于次一交易日内在上海证券交易所上市流通",
+                ),
+            ),
+            (
+                (
+                    "batch-v1/pdf/"
+                    "34003fd31bf24d8b767f7503e4eded2356bd50e17ec26cb70973a930ecf19891.pdf"
+                ),
+                "8107b66af8cae17d5ba950f9cf0304a7f794c40659450fdb58290e882e766ab9",
+                (
+                    "广州药业本次新增A股股份上市流通日期为2013年5月23日",
+                    "未完成初始登记的原白云山投资者所持有的转换后的广州药业A股股票暂时不能上市交易",
+                ),
+            ),
+        ),
+    },
     "MERGER:000578:000792": {
         "classification": "OFFICIAL_LINKED_DISTRIBUTION_AND_MERGER_CHAIN",
         "facts": {
@@ -101,6 +144,58 @@ CASES = {
             ),
         ),
     },
+    "MERGER:002013:600372": {
+        "classification": "OFFICIAL_CROSS_MARKET_MERGER_WITH_PENDING_ENTITLEMENT",
+        "facts": {
+            "parent_security_id": "CN-A:SZSE:002013",
+            "successor_security_id": "CN-A:SSE:600372",
+            "merger_record_date": "2023-03-16",
+            "parent_termination_date": "2023-03-17",
+            "conversion_ratio": "0.6647",
+            "registration_completed_date": "2023-04-13",
+            "converted_shares_tradable_from": "2023-04-19",
+            "official_fractional_method": "GLOBAL_REMAINDER_RANKING_RANDOM_TIES",
+            "research_fractional_method": ("FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION"),
+            "accounting_policy": "NON_TRADABLE_PENDING_ACCOUNTING_V1",
+            "boundary_policy": "FIRST_POST_EVENT_TRADING_BOUNDARY_V1",
+            "account_scope": "EXISTING_ORDINARY_A_SHARE_CASH_ACCOUNT_MODEL",
+            "exception_treatment": "SELL_ONLY_ACCOUNT_OR_SUPPLEMENTAL_REGISTRATION_PENDING",
+        },
+        "documents": (
+            (
+                (
+                    "batch-v1/pdf/"
+                    "7ef89e89f492b6bf51bae6e565da291259c1ebc105aa934249682b96dbf5849a.pdf"
+                ),
+                "81694ee8c91683932fa759c1559cd7ece5a712c821d19917fb74b8bed45af7d0",
+                (
+                    "本次吸收合并的换股股权登记日为2023年3月16日",
+                    "每1股中航机电股票将转换为0.6647股中航电子股票",
+                    "向每一位股东依次发放一股",
+                ),
+            ),
+            (
+                "2022-2023-boundary-v1/1216135996.pdf",
+                "4b9718e035130bb6fc69049cff969cdeebda0a65f8c5bc6e9ac44f4ca9085c9b",
+                (
+                    "配发账户仅能用于持有、卖出证券",
+                    "投资者后续取得原托管机构确认后",
+                    "向中航电子提交补登记申请",
+                ),
+            ),
+            (
+                (
+                    "batch-v1/pdf/"
+                    "e1b76287da64503647d354649122a8640ef4bb61d146348fb5b8c1fab267cd41.pdf"
+                ),
+                "bf814210966eface055120ca0ae96601299837278396c53b0f412ae2c0afd578",
+                (
+                    "2023年4月13日取得中国证券登记结算有限责任公司上海分公司出具的《证券变更登记证明》",
+                    "本次合并后新增无限售流通股的上市流通日期为2023年4月19日",
+                ),
+            ),
+        ),
+    },
 }
 
 
@@ -182,7 +277,7 @@ def main() -> None:
     if report != close(requirements, dict(reversed(tuple(evidence.items())))):
         raise ValueError("INPUT_ORDER_CHANGED")
     report.update(
-        report_version="P1_RESIDUAL_MERGER_FACT_CLOSURE_V2",
+        report_version="P1_RESIDUAL_MERGER_FACT_CLOSURE_V3",
         parser_sha256=sha256_file(Path(__file__)),
         requirements_sha256=sha256_file(args.requirements),
     )

@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 public-source closure v68 / preflight v7
+
+- P1 established / raw requirements: 16,318 / 16,320
+- official-source substitutions: 2,034
+- residual cash / non-corporate requirements: 0 / 2
+- cash documents supported: 13,590 / 13,590
+- cumulative file / manifest SHA-256: `455d5cea86036679c55e49f1eb0aab71108556d5e0413345b333e544f69c03f9` / `bff24c37eca440a94cb89ed4357d60bd68d15ce4fac1fc0c6243d6fdd0b06890`
+- SZSE exact resumptions / terminal closures / unresolved: 8,738 / 58 / 2,009
+- suspension audit file / manifest SHA-256: `7777c98218be1ef99ced14787b86ed5cb1dcd71482e5923a0ab6dd27fba69e59` / `965c4b18eb37cbefcfa3f00d9c217f199bfcee9f50cc9436dabb40131075794b`
+- transaction-cost official pages: 5 checksum-bound; unresolved claim groups: 5
+- full-source preflight: BLOCKED_MATERIAL_AUTHORITY_AND_METHODOLOGY_GAPS
+- preflight manifest SHA-256: `e3fcd777abd72dae9b8591244beebcdadafffc8bde5a73dd8a392041dd55ce34`
+- backend / frontend tests: 802 / 78 PASS
+- Ruff / format / mypy / frontend production build: PASS
+- PostgreSQL / Redis / backend / frontend / API: HEALTHY
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 public-source P1 closure v65
 
 - P1 established / raw requirements: 16,313 / 16,320

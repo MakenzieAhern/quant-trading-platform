@@ -1,6 +1,33 @@
 # Decisions
 
-## 2026-09-20 — public-source closure stops at exact evidence boundaries
+## 2026-09-20 — close corporate-action P1 without promoting other authorities
+
+Accept the retained official evidence for 000522-to-600332 and
+002013-to-600372 under the already-approved merger policies. Accept 301262's
+2023-10-31 accounting boundary only through issuer notice plus official SZSE
+factbook corroboration, retaining the malformed notice date. Classify 601607
+and 603408 by their 2026-01-05 ex/accounting date as outside the requested
+coverage. Corporate-action source facts pass; raw and suspension requirements
+remain independently open.
+
+## 2026-09-20 — accept official SZSE disclosure host, fail closed elsewhere
+
+Accept `disc.static.szse.cn/disc/` as an official SZSE disclosure surface with
+the SZSE referer, alongside the existing CNINFO static surface. Keep the
+allowlist exact and reject arbitrary hosts. The 002186 notice closes one
+2013-10-11 market-open resumption; it does not generalize a parser or promote
+the remaining 2,009 boundaries.
+
+## 2026-09-20 — retain official transaction-cost contradiction
+
+Accept the five checksum-bound CSRC/SSE/SZSE pages as claim-level evidence and
+close the exact 2012-01-01 regulator-fee boundary. Do not choose between the
+official face-value and traded-amount descriptions of the 2012 SSE transfer
+charge, and do not infer whether the approved research commission is net or
+all-in from an unrelated account decision. Keep the executable model unchanged
+and full transaction-cost authority PARTIAL.
+
+## 2026-09-20 — superseded v65 public-source checkpoint
 
 Reuse `CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1` for the fully evidenced
 000578-to-000792 and 600253-to-600056 chains. Do not extend that quantity rule
@@ -10,6 +37,9 @@ generic portfolio's registered successor account. Keep the three malformed or
 out-of-range cash facts, full raw/suspension requirements, adjustment economics
 and transaction-cost intervals open. No paid product is required on current
 evidence, and no paid-source option report is justified yet.
+
+This checkpoint is superseded by cumulative V68 and the decisions above; its
+open cash and cross-market paths are preserved only as audit history.
 
 ## 2026-09-20 — visual date review is checksum-bound and date-only
 

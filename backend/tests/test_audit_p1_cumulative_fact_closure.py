@@ -50,6 +50,7 @@ def test_cumulative_p1_closure_rejects_duplicate_and_recounts_facts():
             "preferred",
             "matched",
             "out_of_period",
+            "cash_301262",
             "primary",
             "orphan_issuer",
             "orphan_exchange",

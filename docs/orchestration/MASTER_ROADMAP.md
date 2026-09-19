@@ -2,13 +2,14 @@
 
 ## R5 public-source closure stop — 2026-09-20
 
-P0 remains PASS under `OFFICIAL_PUBLIC_SOURCE_RECONSTRUCTION_V1`. P1 cumulative
-V65 establishes 16,313 / 16,320 facts and leaves seven exact facts; retained-
-bonus fractional accounting is resolved. R5 now stops under the authorized
-manual-source/new-methodology condition. Resume only from full-source preflight
-V6 after resolving the exact residual in
-`../research/R5_PUBLIC_SOURCE_FACT_CLOSURE_V1.md`; do not create or freeze the
-Full Dataset and do not run any study meanwhile.
+P0 remains PASS and corporate-action P1 source facts are closed at cumulative
+V68. Full-source preflight V7 is still blocked by suspension, raw OHLCV,
+adjustment economics and historical transaction-cost authority. The exact P1
+residual labels are `RAW:FULL_UNIVERSE` and `SUSPENSION:FULL_DAILY`; they are not
+corporate-action gaps. Resume from the material authority/methodology blocker in
+`../research/R5_TRANSACTION_COST_OFFICIAL_SOURCES_V3.md` and the 2,009-boundary
+suspension residual. Do not create or freeze the Full Dataset and do not run a
+study meanwhile.
 
 ## R5 current full-source preflight v2 — 2026-09-19
 

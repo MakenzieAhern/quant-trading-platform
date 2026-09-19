@@ -1,5 +1,25 @@
 # Current state
 
+## R5 public-source closure v68 and preflight v7 — 2026-09-20
+
+Corporate-action P1 facts are closed: **16,318 / 16,320** requirements are
+established with **2,034** official substitutions, all **13,590** cash documents
+are supported, and the two residual requirements are only
+`RAW:FULL_UNIVERSE` and `SUSPENSION:FULL_DAILY`. One newly accepted official
+SZSE disclosure moves suspension authority to 8,738 exact resumptions, 58
+terminal closures and **2,009** unresolved boundaries, still PARTIAL.
+
+Five newly retained official CSRC/SSE/SZSE fee pages close the exact regulator
+boundary but confirm a material 2012 SSE transfer-base contradiction and do not
+define the research-account commission scope. Full-source preflight V7 remains
+blocked by suspension, raw, adjustment-economics and historical transaction-
+cost authority. The Full Dataset is not created, audited or frozen; no study has
+run. Backend 802/802, frontend 78/78, Ruff, format, mypy and the frontend
+production build pass; PostgreSQL, Redis, backend, frontend and `/api/health`
+are healthy. See `../research/R5_PUBLIC_SOURCE_FACT_CLOSURE_V2.md`,
+`../research/R5_SZSE_OFFICIAL_SURFACE_RECOVERY_V25.md` and
+`../research/R5_TRANSACTION_COST_OFFICIAL_SOURCES_V3.md`.
+
 ## R5 public-source fact closure v65 — 2026-09-20
 
 Retained official bytes close two additional merger facts without a commercial

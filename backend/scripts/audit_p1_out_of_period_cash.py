@@ -1,4 +1,4 @@
-"""Close official cash notices whose record and ex-dates both follow 2025."""
+"""Close official cash notices whose accounting effective date follows 2025."""
 
 import argparse
 import json
@@ -31,9 +31,6 @@ def classify(
             or row["cash_candidate_per_share"] != item["cash_candidate_per_share"]
         ):
             raise ValueError("OUT_OF_PERIOD_PRIMARY_TERMS_CHANGED")
-        if item["record_date"] <= "2025-12-31":
-            boundary_open.append(item["document_id"])
-            continue
         if not item["record_date"] <= item["ex_date"] or item["ex_date"] <= "2025-12-31":
             raise ValueError("OUT_OF_PERIOD_DATE_CHAIN_INVALID")
         closed.append(
@@ -45,7 +42,8 @@ def classify(
                 "source_sha256": item["source_sha256"],
                 "record_date": item["record_date"],
                 "ex_date": item["ex_date"],
-                "classification": "BOTH_ENTITLEMENT_DATES_AFTER_FULL_DATASET_END",
+                "record_date_in_scope": item["record_date"] <= "2025-12-31",
+                "classification": "ACCOUNTING_EFFECTIVE_DATE_AFTER_FULL_DATASET_END",
             }
         )
     return sorted(closed, key=lambda row: row["document_id"]), sorted(boundary_open)
@@ -101,7 +99,7 @@ def main() -> None:
         ):
             raise ValueError("OUT_OF_PERIOD_REPARSE_CHANGED")
     report = {
-        "report_version": "P1_OFFICIAL_CASH_OUT_OF_PERIOD_SCOPE_V2",
+        "report_version": "P1_OFFICIAL_CASH_OUT_OF_PERIOD_SCOPE_V3",
         "parser_sha256": sha256_file(Path(__file__)),
         "input_sha256s": {
             name: sha256_file(path)

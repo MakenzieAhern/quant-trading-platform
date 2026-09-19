@@ -1,11 +1,23 @@
 from datetime import UTC, datetime
 
-from scripts.batch_r5_corporate_action_sources import publication_date
+import pytest
+
+from scripts.batch_r5_corporate_action_sources import official_referer, publication_date
 
 
 def test_cninfo_local_publication_date_does_not_shift_back_one_day():
     epoch = int(datetime(2014, 2, 25, 16, tzinfo=UTC).timestamp() * 1000)
     assert publication_date(epoch) == "2014-02-26"
+
+
+def test_source_batch_accepts_only_audited_official_disclosure_surfaces():
+    assert official_referer("https://static.cninfo.com.cn/finalpage/x.PDF") is None
+    assert (
+        official_referer("https://disc.static.szse.cn/disc/disk01/finalpage/x.PDF")
+        == "https://www.szse.cn/"
+    )
+    with pytest.raises(ValueError, match="NON_OFFICIAL_SOURCE"):
+        official_referer("https://example.com/disc/x.PDF")
 
 
 def test_batch_reuses_verified_external_pdf_without_download(tmp_path, monkeypatch):
@@ -59,8 +71,6 @@ def test_batch_reuses_verified_external_pdf_without_download(tmp_path, monkeypat
 
 def test_batch_opens_circuit_after_consecutive_source_failures(tmp_path, monkeypatch):
     import json
-
-    import pytest
 
     from scripts import batch_r5_corporate_action_sources as batch
 

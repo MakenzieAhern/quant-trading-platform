@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 from threading import Event, Lock
+from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
@@ -18,6 +19,23 @@ from scripts.reconcile_sse_cninfo import fetch
 
 VERSION = "R5_CA_SOURCE_BATCH_V4"
 BATCH = "batch-v4"
+
+
+def official_referer(url: str) -> str | None:
+    parsed = urlsplit(url)
+    if (
+        parsed.scheme == "https"
+        and parsed.netloc == "static.cninfo.com.cn"
+        and parsed.path.startswith("/finalpage/")
+    ):
+        return None
+    if (
+        parsed.scheme == "https"
+        and parsed.netloc == "disc.static.szse.cn"
+        and parsed.path.startswith("/disc/")
+    ):
+        return "https://www.szse.cn/"
+    raise ValueError("NON_OFFICIAL_SOURCE")
 
 
 def publication_date(milliseconds: int) -> str:
@@ -115,8 +133,7 @@ def run(
         if circuit.is_set():
             raise RuntimeError("ACCESS_CIRCUIT_OPEN")
         url = row["url"]
-        if not url.startswith("https://static.cninfo.com.cn/finalpage/"):
-            raise ValueError("NON_OFFICIAL_SOURCE")
+        referer = official_referer(url)
         key = canonical_sha256(url)
         receipt = root / batch / "receipts" / (key + ".json")
         if receipt.exists():
@@ -145,7 +162,7 @@ def run(
                             "PRESERVED_EXHAUSTED_RETRIEVAL:" + previous.get("reason", "")
                         )
                 path = root / batch / "pdf" / (key + ".pdf")
-                fetch(root, path.relative_to(root).as_posix(), url)
+                fetch(root, path.relative_to(root).as_posix(), url, referer=referer)
             meta = json.loads(Path(str(path) + ".meta.json").read_bytes())
             if sha256_file(path) != meta["sha256"]:
                 raise ValueError("SOURCE_CHECKSUM_INVALID")

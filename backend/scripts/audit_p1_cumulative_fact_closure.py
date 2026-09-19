@@ -12,7 +12,8 @@ REPORTS = {
     "base": "p1-accepted-cash-fact-closure-v1.json",
     "preferred": "p1-preferred-share-scope-v1.json",
     "matched": "p1-matched-official-cash-facts-v4.json",
-    "out_of_period": "p1-out-of-period-cash-v3.json",
+    "out_of_period": "p1-out-of-period-cash-v4.json",
+    "cash_301262": "p1-301262-cash-fact-closure-v1.json",
     "primary": "p1-primary-cash-notice-ledger-v4.json",
     "orphan_issuer": "p1-orphan-cash-gap-substitutions-v4.json",
     "orphan_exchange": "p1-orphan-exchange-dated-cash-v10.json",
@@ -35,7 +36,7 @@ REPORTS = {
     "residual_restructuring": "p1-residual-restructuring-fact-closure-v2.json",
     "bonus": "p1-official-bonus-policy-closure-v2.json",
     "residual_bonus": "p1-residual-bonus-fact-closure-v2.json",
-    "residual_merger": "p1-residual-merger-fact-closure-v2.json",
+    "residual_merger": "p1-residual-merger-fact-closure-v3.json",
 }
 
 
@@ -69,6 +70,7 @@ def recount(reports):
         ("preferred", "excluded"),
         ("matched", "closed"),
         ("out_of_period", "excluded"),
+        ("cash_301262", "closed"),
     ):
         add(kind, reports[kind][field], require_cash=True)
     primary = []
@@ -128,6 +130,7 @@ def recount(reports):
         len(reports["orphan_issuer"]["closed"])
         + len(reports["orphan_exchange"]["closed"])
         + len(reports["sse_st"]["closed"])
+        + len(reports["cash_301262"]["closed"])
         + sum(
             row["classification"] == "STRONGER_ACCEPTED_OFFICIAL_NOTICE_SUBSTITUTION"
             for row in reports["matched"]["closed"]
@@ -200,7 +203,7 @@ def main():
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     result.update(
-        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V65",
+        report_version="P1_CUMULATIVE_OFFICIAL_FACT_CLOSURE_V68",
         parser_sha256=sha256_file(Path(__file__)),
         input_sha256s={name: sha256_file(path) for name, path in paths.items()},
         input_order_reproducibility="PASS",

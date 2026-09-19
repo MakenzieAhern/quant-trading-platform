@@ -1,7 +1,7 @@
 from scripts.audit_p1_out_of_period_cash import classify
 
 
-def test_only_post_2025_record_and_ex_dates_close():
+def test_only_post_2025_effective_dates_close():
     findings = [
         {
             "document_id": key,
@@ -35,5 +35,9 @@ def test_only_post_2025_record_and_ex_dates_close():
         for item in findings
     ]
     closed, open_items = classify(findings, triage, requirements)
-    assert [row["document_id"] for row in closed] == ["closed"]
-    assert open_items == ["open"]
+    assert [row["document_id"] for row in closed] == ["closed", "open"]
+    assert {row["document_id"]: row["record_date_in_scope"] for row in closed} == {
+        "closed": False,
+        "open": True,
+    }
+    assert not open_items
