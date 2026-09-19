@@ -1,5 +1,15 @@
 # Blockers
 
+## SZSE event-outcome recovery leaves 2,012 — 2026-09-19
+
+Twenty-three bounded official outcome documents close seven exact boundaries.
+No prior accepted boundary was lost or changed. Authority now has 8,735 exact
+resumptions, 58 terminal closures, zero conflicts and **2,012** unresolved
+boundaries. The screened high-information title routes are exhausted; broad
+generic retrieval would not be evidence-led. Suspension authority remains
+PARTIAL and the independent retained-bonus fractional methodology gate remains
+active.
+
 ## SZSE generic-clarification recovery leaves 2,019 — 2026-09-19
 
 Nineteen bounded official explanation/self-check notices close exact boundaries

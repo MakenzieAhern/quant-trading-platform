@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## R5 SZSE event-outcome recovery v23 — 2026-09-19
+
+Twenty-three bounded official production, regulatory, tender-offer and
+reorganization outcome PDFs close seven exact resumption boundaries without
+changing a prior accepted fact. Authority now has 8,735 exact resumptions, 58
+terminal closures, zero conflicts and 2,012 unresolved facts. The screened
+high-information title routes are exhausted; suspension authority remains
+PARTIAL. Full Dataset creation, freeze and all studies remain locked. See
+`../research/R5_SZSE_EVENT_OUTCOME_RECOVERY_V23.md`.
+
 ## R5 SZSE generic-clarification recovery v22 — 2026-09-19
 
 Nineteen bounded official explanation/self-check notices close two exact

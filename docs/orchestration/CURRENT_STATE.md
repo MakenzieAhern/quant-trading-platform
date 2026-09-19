@@ -1,5 +1,16 @@
 # Current state
 
+## R5 SZSE event-outcome recovery v23 — 2026-09-19
+
+Twenty-three bounded official CNINFO PDFs across six high-information outcome
+families were acquired with zero failures. Seven exact boundaries were added;
+no prior boundary was lost or changed. Authority now has **8,735** exact
+resumptions, 58 terminal closures, zero conflicts and **2,012** unresolved SZSE
+boundaries. The screened title routes are exhausted and broad generic metadata
+retrieval remains unjustified. Suspension authority is still PARTIAL and the
+retained-bonus methodology gate is unchanged. See
+`../research/R5_SZSE_EVENT_OUTCOME_RECOVERY_V23.md`.
+
 ## R5 SZSE generic-clarification recovery v22 — 2026-09-19
 
 Nineteen bounded official CNINFO explanation/self-check PDFs were acquired with

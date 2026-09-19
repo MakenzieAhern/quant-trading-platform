@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE event-outcome recovery v23
+
+- bounded official PDFs acquired: 23
+- acquisition failures: 0
+- newly closed boundaries: 7
+- accepted boundaries removed or changed: 0
+- exact resumptions: 8,735
+- terminal closures: 58
+- final unresolved: 2,012
+- conflicts: 0
+- source checksum repeatability: PASS
+- input-order reproducibility: PASS
+- authority status: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- high-information screened title routes: EXHAUSTED
+- report: `../research/R5_SZSE_EVENT_OUTCOME_RECOVERY_V23.md`
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE generic-clarification recovery v22
 
 - bounded official PDFs acquired: 19
