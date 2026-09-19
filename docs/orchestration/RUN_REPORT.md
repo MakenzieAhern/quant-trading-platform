@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 exact-bound terminal-suspension closure v2
+
+Replaced nearest-halt inference with existing immutable source-manifest event
+bindings and broadened explicit terminal treatment to include suspension
+through termination. A deterministic scan of 4,598 retained official documents
+accepts six additional terminal events, for 48 cumulative. Full replay has
+8,884 true resumptions, 1,873 unresolved SZSE boundaries and zero conflicts.
+V2 report file SHA-256
+`ea331011b4dc6f59314560cf9b9ce7ca0e2d90d1eb7fe41cd71cd3e35afcf449`,
+manifest `0c4a55c663cac28b9457c5aec0a403d840f222baf8628b6c812b84399da8e573`;
+full authority file SHA-256
+`ffdef25e58fe8fb42b55a6385e513ec171edd21adb27ad9f30f71a6e93a6cd90`,
+manifest `8bc8cdd204f3a3be96eee8c92ebf8d4dc2e37e0368ed11d5bfdd848ac78e7cb9`.
+Focused regression test, reverse-order replay and checks pass. Authority stays
+PARTIAL; no Full Dataset, freeze or strategy run follows.
+
 ## 2026-09-19 SZSE direct-to-delisting suspension closure
 
 Added an explicit terminal-closure path rather than mislabeling delisting as a

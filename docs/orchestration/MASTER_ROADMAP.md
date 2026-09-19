@@ -1,5 +1,13 @@
 # v1.1 controller roadmap
 
+## R5 exact-bound terminal-suspension progress v2 — 2026-09-19
+
+Retained official document manifests now bind terminal language to exact
+suspension events. Six more direct-to-termination chains close without a
+fabricated resumption, bringing cumulative terminal closures to 48 and the
+SZSE exact-boundary residual to **1,873**, with zero conflicts. This is partial
+R5 progress only; Full Dataset, freeze and studies remain locked.
+
 ## R5 terminal-suspension progress — 2026-09-19
 
 The full suspension replay now models official no-delisting-period terminal

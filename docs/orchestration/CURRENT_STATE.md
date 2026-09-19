@@ -1,5 +1,21 @@
 # Current state
 
+## R5 bound terminal-suspension closure v2 — 2026-09-19
+
+The terminal pass now uses each retained official document's immutable
+`affected_suspensions` binding instead of choosing a nearby halt. Explicit
+no-delisting-period or suspended-through-termination language plus the
+official master lifecycle closes six additional events: 000418, 000671,
+000748, 000780, 000916 and 002013. No resumption is invented. Full replay has
+8,884 true resumptions, 48 terminal closures, zero conflicts and **1,873**
+unresolved SZSE boundaries across 22,077 events; SSE remains 16,393/0.
+Authority remains PARTIAL. V2 manifest
+`0c4a55c663cac28b9457c5aec0a403d840f222baf8628b6c812b84399da8e573`;
+full authority manifest
+`8bc8cdd204f3a3be96eee8c92ebf8d4dc2e37e0368ed11d5bfdd848ac78e7cb9`.
+See `../research/R5_SZSE_TERMINAL_SUSPENSION_CLOSURE_V2.md`. Full Dataset,
+freeze and studies remain locked.
+
 ## R5 official terminal-suspension closure — 2026-09-19
 
 The suspension audit now distinguishes a true official resumption from a

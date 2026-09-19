@@ -1,5 +1,16 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 1,873 — 2026-09-19
+
+Six additional retained official chains explicitly continue suspension through
+termination or preclude a delisting-consolidation period, and bind to exact
+source-manifest suspension events plus official-master lifecycle ends. They are
+terminal closures, not resumptions. Cumulative terminal closures are 48;
+8,884 true resumption supplements remain accepted, conflicts are zero and
+**1,873** exact SZSE boundaries remain unresolved. Full suspension authority
+therefore remains PARTIAL. The 239 ChiNext raw-source dates, P1 gaps and the
+retained-bonus fractional human gate remain separate blockers.
+
 ## SZSE exact resumption residual reduced to 1,879 — 2026-09-19
 
 Forty-two prior false residuals were direct-to-delisting suspensions, not

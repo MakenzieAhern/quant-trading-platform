@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-09-19 terminal treatment must bind to the manifest event
+
+Accept an SZSE terminal suspension only when the retained official document's
+immutable `affected_suspensions` field names the exact event, the document
+explicitly says either no delisting-consolidation period or suspension through
+termination, and the official master supplies one matching lifecycle end.
+Do not choose the nearest prior halt from publication timing and do not create
+a `resumed_at` value. This v2 rule adds six closures while preserving the v1
+42 and leaves authority PARTIAL.
+
 ## 2026-09-19 direct-to-delisting is a terminal closure, not a resumption
 
 When a retained official issuer PDF states the exact suspension date and that

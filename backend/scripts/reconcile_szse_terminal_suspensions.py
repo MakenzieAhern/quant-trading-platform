@@ -10,75 +10,57 @@ from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, s
 from app.data.catalog.freeze import write_immutable
 
 OFFICIAL_PDF = "https://static.cninfo.com.cn/finalpage/"
-NO_DELISTING_PERIOD = re.compile(r"不(?:再)?进入退市整理期|不设退市整理期")
+TERMINAL_TREATMENT = re.compile(r"不(?:再)?进入退市整理期|不设退市整理期|(?:继续)?停牌直至终止上市")
 
 
 def _compact(text: str) -> str:
     return re.sub(r"\s+", "", text)
 
 
-def _states_exact_suspension(text: str, start: str) -> bool:
-    year, month, day = map(int, start.split("-"))
-    return bool(
-        re.search(
-            rf"{year}年0?{month}月0?{day}日[^\u3002\uff1b;]{{0,120}}停牌",
-            _compact(text),
-        )
-    )
-
-
 def build_terminal_closures(
     documents: list[dict], unresolved: list[dict], master: list[dict]
 ) -> list[dict]:
-    facts = defaultdict(list)
-    for row in unresolved:
-        facts[row["symbol"]].append(row)
+    facts = {(row["security_id"], row["suspended_at"]): row for row in unresolved}
     identities = defaultdict(list)
     for row in master:
         identities[row["security_id"]].append(row)
 
     grouped = defaultdict(list)
     for document in documents:
-        match = NO_DELISTING_PERIOD.search(_compact(document["text"]))
+        match = TERMINAL_TREATMENT.search(_compact(document["text"]))
         if match is None:
             continue
         published = document["published_on"]
-        candidates = [
-            row
-            for row in facts[document["issuer"]]
-            if row["suspended_at"][:10].replace("/", "-") <= published
-        ]
-        if not candidates:
-            continue
-        fact = max(candidates, key=lambda row: row["suspended_at"])
-        start = fact["suspended_at"][:10].replace("/", "-")
-        if not _states_exact_suspension(document["text"], start):
-            continue
-        rows = [
-            row
-            for row in identities[fact["security_id"]]
-            if row["effective_from"] <= start
-            and row["effective_to"] is not None
-            and published <= row["effective_to"]
-        ]
-        terminal_dates = {row["effective_to"] for row in rows}
-        if len(terminal_dates) != 1:
-            continue
-        master_row = min(rows, key=lambda row: (row["effective_from"], row["source_sha256"]))
-        key = (fact["security_id"], fact["suspended_at"], next(iter(terminal_dates)))
-        grouped[key].append(
-            {
-                "published_on": published,
-                "retrieved_at_utc": document["retrieved_at_utc"],
-                "source_sha256": document["source_sha256"],
-                "title": document["title"],
-                "url": document["url"],
-                "terminal_treatment": match.group(0),
-                "master_source_id": master_row["source_id"],
-                "master_source_sha256": master_row["source_sha256"],
-                "master_source_url": master_row["source_url"],
-            }
-        )
+        for affected in document["affected_suspensions"]:
+            fact = facts.get(tuple(affected))
+            if fact is None or fact["symbol"] != document["issuer"]:
+                continue
+            start = fact["suspended_at"][:10].replace("/", "-")
+            rows = [
+                row
+                for row in identities[fact["security_id"]]
+                if row["effective_from"] <= start
+                and row["effective_to"] is not None
+                and published <= row["effective_to"]
+            ]
+            terminal_dates = {row["effective_to"] for row in rows}
+            if len(terminal_dates) != 1:
+                continue
+            master_row = min(rows, key=lambda row: (row["effective_from"], row["source_sha256"]))
+            key = (fact["security_id"], fact["suspended_at"], next(iter(terminal_dates)))
+            grouped[key].append(
+                {
+                    "published_on": published,
+                    "retrieved_at_utc": document["retrieved_at_utc"],
+                    "source_sha256": document["source_sha256"],
+                    "title": document["title"],
+                    "url": document["url"],
+                    "terminal_treatment": match.group(0),
+                    "master_source_id": master_row["source_id"],
+                    "master_source_sha256": master_row["source_sha256"],
+                    "master_source_url": master_row["source_url"],
+                }
+            )
 
     return [
         {
@@ -87,7 +69,7 @@ def build_terminal_closures(
             "suspended_at": suspended_at,
             "terminal_at": terminal_at,
             "binding_policy": (
-                "EXACT_SUSPENSION_PLUS_NO_DELISTING_PERIOD_AND_OFFICIAL_LIFECYCLE_END_V1"
+                "OFFICIAL_SUSPENSION_QUEUE_PLUS_TERMINAL_TREATMENT_AND_LIFECYCLE_END_V2"
             ),
             "evidence": sorted(
                 {row["source_sha256"]: row for row in evidence}.values(),
@@ -100,6 +82,7 @@ def build_terminal_closures(
 
 def load_documents(roots: list[Path]) -> tuple[list[dict], list[str]]:
     documents, manifest_hashes = {}, []
+    caches = {path.stem: path for root in roots for path in sorted(root.rglob("text/*.json"))}
     for manifest_path in sorted(
         path for root in roots for path in root.rglob("source-manifest.json")
     ):
@@ -116,8 +99,8 @@ def load_documents(roots: list[Path]) -> tuple[list[dict], list[str]]:
             source = Path(row["source_path"])
             if not source.is_absolute():
                 source = manifest_path.parent.parent / source
-            cache = manifest_path.parent / "text" / f"{source_sha}.json"
-            if not source.exists() or not cache.exists() or sha256_file(source) != source_sha:
+            cache = caches.get(source_sha)
+            if not source.exists() or cache is None or sha256_file(source) != source_sha:
                 continue
             extracted = json.loads(cache.read_bytes())
             if extracted.get("source_sha256") != source_sha:
@@ -129,11 +112,17 @@ def load_documents(roots: list[Path]) -> tuple[list[dict], list[str]]:
                 "source_sha256": source_sha,
                 "title": row["title"],
                 "url": row["url"],
+                "affected_suspensions": sorted(row.get("affected_suspensions", [])),
                 "text": "\n".join(extracted["pages"]),
             }
             previous = documents.get(source_sha)
-            if previous is not None and previous != document:
-                raise ValueError("CONFLICTING_TERMINAL_SUSPENSION_DOCUMENT")
+            if previous is not None:
+                affected = previous.pop("affected_suspensions") + document.pop(
+                    "affected_suspensions"
+                )
+                if previous != document:
+                    raise ValueError("CONFLICTING_TERMINAL_SUSPENSION_DOCUMENT")
+                document["affected_suspensions"] = sorted({tuple(row) for row in affected})
             documents[source_sha] = document
     return sorted(documents.values(), key=lambda row: row["source_sha256"]), sorted(
         set(manifest_hashes)
@@ -157,7 +146,7 @@ def main() -> None:
     ):
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "parser_version": "SZSE_OFFICIAL_TERMINAL_SUSPENSION_CLOSURE_V1",
+        "parser_version": "SZSE_OFFICIAL_TERMINAL_SUSPENSION_CLOSURE_V2",
         "parser_sha256": sha256_file(Path(__file__)),
         "source_manifest_sha256s": manifest_hashes,
         "unresolved_input_sha256": sha256_file(args.unresolved),

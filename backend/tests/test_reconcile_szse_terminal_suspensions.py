@@ -1,7 +1,7 @@
 from scripts.reconcile_szse_terminal_suspensions import build_terminal_closures
 
 
-def test_terminal_closure_requires_exact_suspension_and_official_lifecycle_end():
+def test_terminal_closure_requires_bound_suspension_and_official_lifecycle_end():
     document = {
         "issuer": "000001",
         "published_on": "2024-03-06",
@@ -9,7 +9,8 @@ def test_terminal_closure_requires_exact_suspension_and_official_lifecycle_end()
         "source_sha256": "document",
         "title": "终止上市暨停牌风险提示",
         "url": "https://static.cninfo.com.cn/finalpage/example.PDF",
-        "text": "公司股票自2024年3月6日开市起停牌,且不进入退市整理期。",
+        "affected_suspensions": [["CN-A:SZSE:000001", "2024/03/06 09:30"]],
+        "text": "公司股票不进入退市整理期。",
     }
     unresolved = [
         {
@@ -35,5 +36,9 @@ def test_terminal_closure_requires_exact_suspension_and_official_lifecycle_end()
     assert result[0]["terminal_at"] == "2024-04-26"
     assert (
         build_terminal_closures([{**document, "text": "公司可能终止上市。"}], unresolved, master)
+        == []
+    )
+    assert (
+        build_terminal_closures([{**document, "affected_suspensions": []}], unresolved, master)
         == []
     )
