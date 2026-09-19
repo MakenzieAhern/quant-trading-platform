@@ -1,5 +1,14 @@
 # v1.1 controller roadmap
 
+## R5 SZSE residual regulatory-review screen v20 — 2026-09-19
+
+Twenty-six bounded official review-result attachments were acquired with zero
+failures. Full retained-byte replay changes no accepted boundary: authority
+remains at 8,718 exact resumptions, 58 terminal closures, zero conflicts and
+2,029 unresolved facts. The screened title family is exhausted; suspension
+authority remains PARTIAL and all Full Dataset/study gates remain locked. See
+`../research/R5_SZSE_RESIDUAL_REVIEW_SCREEN_V20.md`.
+
 ## R5 SZSE residual clarification screen v19 — 2026-09-19
 
 Four bounded official clarification documents close two exact boundaries with

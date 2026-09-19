@@ -1,5 +1,16 @@
 # Current state
 
+## R5 SZSE residual regulatory-review screen v20 — 2026-09-19
+
+A bounded 26-document official CNINFO regulatory-review title screen completed
+with zero acquisition failures. Retained-byte replay produced zero new, removed
+or changed accepted boundaries, so authority remains at **8,718** exact
+resumptions, 58 terminal closures, zero conflicts and **2,029** unresolved SZSE
+boundaries. The title family is exhausted; its 72,598 generic remainder is not a
+justified blind acquisition queue. Suspension authority remains PARTIAL and the
+retained-bonus methodology gate is unchanged. See
+`../research/R5_SZSE_RESIDUAL_REVIEW_SCREEN_V20.md`.
+
 ## R5 SZSE residual clarification screen v19 — 2026-09-19
 
 The corrected residual was rejoined to all retained official CNINFO metadata.

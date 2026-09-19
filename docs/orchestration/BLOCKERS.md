@@ -1,5 +1,15 @@
 # Blockers
 
+## SZSE regulatory-review title family exhausted — 2026-09-19
+
+A bounded 26-document official CNINFO review-result screen completed without
+acquisition failure but yielded no unique final resumption boundary. Full replay
+lost or changed no accepted fact. Authority therefore remains at 8,718 exact
+resumptions, 58 terminal closures, zero conflicts and **2,029** unresolved
+boundaries. The remaining 72,598 generic leads are not a justified blind queue.
+Suspension authority remains PARTIAL; the independent retained-bonus fractional
+methodology gate remains active.
+
 ## SZSE exact resumption residual reduced to 2,029 — 2026-09-19
 
 Four fact-bounded official clarification documents close 000030 and 000541.

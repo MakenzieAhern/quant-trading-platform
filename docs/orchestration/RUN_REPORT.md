@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE residual regulatory-review screen v20
+
+- bounded official attachments acquired: 26 (24 PDF, 2 non-PDF)
+- acquisition failures: 0
+- newly closed boundaries: 0
+- accepted boundaries removed or changed: 0
+- exact resumptions: 8,718
+- terminal closures: 58
+- final unresolved: 2,029
+- conflicts: 0
+- source checksum repeatability: PASS
+- input-order reproducibility: PASS
+- authority status: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- report: `../research/R5_SZSE_RESIDUAL_REVIEW_SCREEN_V20.md`
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE residual clarification screen v19
 
 - current residual facts joined to retained metadata: 2,031
