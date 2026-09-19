@@ -1,5 +1,17 @@
 # Current state
 
+## R5 bounded SZSE implementation-title screen v12 — 2026-09-19
+
+Two exact-title families supplied 40 official CNINFO PDFs with zero acquisition
+failures. One document states an exact date, but 000509's 2014-01-09 resumption
+cannot close its 2013-12-19 halt because a distinct official halt starts at
+2014-01-09 09:30. The other 39 documents contain no exact bound resumption
+date. No new boundary is accepted: authority remains 7,303 exact resumptions,
+58 terminal closures, zero conflicts and 3,444 unresolved SZSE boundaries.
+The implementation/listing-title route is exhausted; do not widen it into a
+blind low-precision bulk retrieval. See
+`../research/R5_SZSE_IMPLEMENTATION_TITLE_SCREEN_V12.md`.
+
 ## R5 targeted SZSE resumption recovery v11 — 2026-09-19
 
 Reused 2,292 retained official documents and acquired 380 bounded official

@@ -1,5 +1,17 @@
 # Blockers
 
+## Bounded implementation-title screen adds no SZSE boundary — 2026-09-19
+
+Forty official CNINFO implementation/listing documents were acquired without
+failure. Thirty-nine contain no exact resumption date. The sole exact-date
+notice, for 000509, says 2014-01-09 but a distinct official halt also begins at
+2014-01-09 09:30, so it cannot prove a tradable interval or close the bound
+2013-12-19 halt. Accepted authority remains 7,303 exact resumptions, 58
+terminal closures and 3,444 unresolved boundaries. This title route is now
+exhausted; blind expansion into 74,569 low-precision leads is not an accepted
+closure path. Suspension authority stays PARTIAL, independently of the
+retained-bonus fractional methodology gate.
+
 ## SZSE exact resumption residual reduced to 3,444 — 2026-09-19
 
 Strict v11 replay closes ten boundaries from 2,672 reused/acquired official

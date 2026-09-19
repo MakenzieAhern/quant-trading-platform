@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 bounded SZSE implementation-title screen v12
+
+- official CNINFO PDFs acquired: 40
+- acquisition failures: 0
+- exact-date documents: 1
+- new accepted boundaries: 0
+- same-day re-halt rejection: 1 (000509)
+- strict exact resumptions: 7,303
+- terminal closures: 58
+- final unresolved: 3,444
+- conflicts: 0
+- route decision: implementation/listing-title families exhausted; no blind bulk retrieval
+- authority: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- Full Dataset/freeze/studies: NOT RUN
+
 ## 2026-09-19 targeted SZSE resumption recovery v11
 
 - retained official documents reused: 2,292
