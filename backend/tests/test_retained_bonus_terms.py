@@ -7,6 +7,14 @@ from scripts.retained_bonus_terms import retained_ratio
 
 def test_exact_retained_components_and_fail_closed_identity():
     header = "证券代码:600000\n"
+    assert retained_ratio(
+        [
+            header
+            + "原方案每10股转增10股。公司按最新股本计算的2013年度权益分派方案为:"
+            + "以公司现有总股本为基数,向全体股东每10股转增9.138541股。"
+        ],
+        "600000",
+    ) == Decimal("0.9138541")
     with localcontext() as context:
         context.prec = 6
         assert retained_ratio([header + "每10股送红股2股,每10股转增8股"], "600000") == 1

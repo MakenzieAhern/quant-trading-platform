@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 retained adjustment-term recovery v2
+
+- retained official documents reused / downloaded: 1,421 / 0
+- newly recovered exact-date candidates: 30
+- unique exact official term candidates / no exact terms: 1,341 / 42
+- exact term shapes cash-only / both / bonus-only: 824 / 476 / 41
+- differentiated ordinary-public-A candidates: 3
+- gross cash-plus-bonus factor checks / conflicts: 476 / 476
+- term-candidate manifest SHA-256: `fa5f479ce02574b25939bd0115b242fd1f0a2414aea5f12efe274dc6de47955c`
+- gross-economics manifest SHA-256: `48de239de63c97c986e0720fff14de09e71375d2ae6d87ce2b10c3afe840993e`
+- full adjustment authority: PARTIAL
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 adjustment residual official-source closure
 
 - prior no-candidate factor changes: 33
@@ -30,7 +45,7 @@
 - Development / Validation / Official OOS: NOT RUN
 - PR #12: OPEN, UNMERGED
 
-## 2026-09-19 current full-source preflight v3
+## 2026-09-20 current full-source preflight v4
 
 - retained scan PDFs / exact dates: 29 / 2
 - exact SZSE resumptions / terminal closures: 8,737 / 58
@@ -50,13 +65,13 @@
 - residual mechanics parity / gross-cash terms / provider-basis unresolved: 25 / 7 / 8
 - residual mechanics manifest SHA-256: `a38d55a2a3a5b4b6d6c0a672cac48ee4a9565efbc57fa13a2abc237916f7f35a`
 - retained / missing candidate documents: 1,421 / 0
-- unique exact official term candidates / no exact terms: 1,311 / 72
-- exact term shapes cash-only / both / bonus-only: 817 / 463 / 32
-- gross cash-plus-bonus factor checks / conflicts: 463 / 463
+- unique exact official term candidates / no exact terms: 1,341 / 42
+- exact term shapes cash-only / both / bonus-only: 824 / 476 / 41
+- gross cash-plus-bonus factor checks / conflicts: 476 / 476
 - candidate report manifest SHA-256: `b7dac748c4c0228e1c1d233efe3767555e5f251e598508b914f9c6280ee2d678`
 - retained-source report manifest SHA-256: `db7a9ac94d423fc3542c2a999f2178c3b03a122c2d6f2bbc7ef0856bc3776cf4`
-- term-candidate report manifest SHA-256: `0af35ecddac88311712ce7fbb67a24ee40393f78298ed0c676ac3dbb494b437e`
-- gross-economics report manifest SHA-256: `ba1f7b04b9f27ce01e76599441ed1616846b2c702ab99021b3c7a1dd96d86b8a`
+- term-candidate report manifest SHA-256: `fa5f479ce02574b25939bd0115b242fd1f0a2414aea5f12efe274dc6de47955c`
+- gross-economics report manifest SHA-256: `48de239de63c97c986e0720fff14de09e71375d2ae6d87ce2b10c3afe840993e`
 - official SZSE fee yearbooks verified: 16 (2010-2025)
 - exact SZSE 2023 handling boundary: PASS_SOURCE_CLAIM_2023_08_28
 - full transaction-cost authority: PARTIAL (6 unresolved claim groups, no executable change)

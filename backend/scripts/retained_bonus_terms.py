@@ -28,6 +28,15 @@ def retained_ratio(pages, symbol, *, require_integral_components=False):
         text = text[:start] + (text[start + next_section.start() :] if next_section else "")
     if "每每每每" in text and "一、" in text:
         text = text[text.index("一、") :]
+    corrected = list(
+        re.finditer(
+            r"(?:公司)?按(?:公司)?(?:最新|现有)股本计算的"
+            r"[^。;]{0,120}?(?:权益分派|利润分配|分配)方案为:?",
+            text,
+        )
+    )
+    if corrected:
+        text = text[corrected[-1].end() :]
     components = []
     explicit_values = set()
     conflicting = False

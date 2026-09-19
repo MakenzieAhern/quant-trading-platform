@@ -27,10 +27,13 @@ def issuer_code_matches(normalized, symbol):
     doubled = "".join(character * 2 for character in symbol) in digits
     leading = re.match(r"^\s*" + r"[ \t]*".join(symbol) + r"(?:\s+|\n)", normalized)
     visible_header = normalized[:1200]
+    compact_visible = re.sub(r"\s+", "", visible_header)
     labeled_spaced = re.match(
         r"^\s*(?:证券|股票)\s*代码\s*:?\s*" + r"\s*".join(symbol) + r"(?!\d)",
         visible_header,
     )
+    compact_codes = set(re.findall(r"(?:证券|股票)代码:?([036]\d{5})(?!\d)", compact_visible))
+    compact_labeled = compact_codes == {symbol}
     doubled_visible = "代代码码" in visible_header and (
         "".join(character * 2 for character in symbol) in re.sub(r"\D", "", visible_header)
     )
@@ -41,6 +44,7 @@ def issuer_code_matches(normalized, symbol):
         or repeated
         or doubled
         or labeled_spaced
+        or compact_labeled
         or doubled_visible
         or leading_visible
         or standalone_visible
@@ -282,6 +286,15 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
             text,
         )
     }
+    adjusted.update(
+        Decimal(value) / Decimal(denominator)
+        for denominator, value in re.findall(
+            r"(?:公司)?按(?:公司)?(?:最新|现有)股本计算的[^。\uff1b;]{0,220}?"
+            r"每(10|1)股(?:派发|派送|分派|分配|派)?(?:现金红利)?"
+            r"(\d+(?:\.\d+)?)元[^。\uff1b;]{0,30}(?:含税|税前|扣税前)",
+            text,
+        )
+    )
     if len(adjusted) == 1:
         return next(iter(adjusted))
     combined = {
@@ -416,7 +429,10 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
     summary = normalized[: first_heading.start()] if first_heading else ""
     number = r"(\d+(?:\.\d+)?)"
     base = r"每(10(?:\.0+)?|1(?:\.0+)?)?股(?:送(?:红股)?\d+(?:\.\d+)?股[、,]?)?"
-    gross_basis = r"[。,]?(?:\(|\[)?(?:含税|扣税前|税前|含适用税项)"
+    gross_basis = (
+        r"(?:[。,]?(?:\(|\[)?(?:含税|扣税前|税前|含适用税项)|"
+        r"(?=\((?:扣税后|税后)[,\uff0c]))"
+    )
 
     def extract(texts):
         matches = []
@@ -450,6 +466,7 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
                 + r"元(?:人民币)?现金(?:红利|股利)?(?:、送\d+(?:\.\d+)?股红股)?"
                 + gross_basis,
                 base + r"派(?:发|送)?(?:人民币)?" + number + r"元(?:人民币)?" + gross_basis,
+                base + number + r"元人民币现金" + gross_basis,
                 base + r"派(?:发|送)?" + number + r"人民币现金" + gross_basis,
                 r"(?:分配)?(?:现金股利|现金红利|现金股息)为" + base + number + r"元" + gross_basis,
                 base + r"派" + number + r"元人民币的方式进行利润分配" + gross_basis,
@@ -474,7 +491,7 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
             for match in declared.finditer(section_text):
                 prefix = section_text[max(0, match.start() - 80) : match.start()]
                 suffix = section_text[match.end() : match.end() + 240]
-                if re.search(r"扣税后[^。;\uff1b]{0,80}$|实际$", prefix) or not re.search(
+                if re.search(r"(?:扣税后|税后)[^。;\uff1b]{0,80}$", prefix) or not re.search(
                     r"含税|税前", suffix
                 ):
                     continue
@@ -486,7 +503,8 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
                 context = section_text[max(0, match.start() - 300) : match.start()]
                 if re.search(
                     r"(?:实际向全体股东|股本调整后|调整后(?:的)?(?:权益分派|利润分配|分配)?方案|"
-                    r"按(?:公司)?(?:最新|现有)股本计算的[^。;\uff1b]{0,120}方案|"
+                    r"(?:公司)?按(?:公司)?(?:最新|现有)股本计算的"
+                    r"[^。;\uff1b]{0,120}方案|"
                     r"按(?:公司)?(?:最新|现有)股本(?:总额)?计算的"
                     r"[^。;\uff1b]{0,120}(?:方案|分配比例)(?:调整)?为|"
                     r"以现有总股本计算的[^。;\uff1b]{0,100}方案为|"
@@ -499,6 +517,7 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
                     r"(?:分派变更如下|方案调整如下)[^。;\uff1b]{0,260}向全体股东|"
                     r"(?:总额|金额)固定不变[^。;\uff1b]{0,220}"
                     r"(?:方案(?:为|如下)|分配比例(?:调整)?为)|"
+                    r"按照(?:现金分红)?总额固定不变的原则,?实际|"
                     r"(?:调整后|调整为|变动至|实施调整为|重新计算(?:后|的)|最终确定|方案实际为)"
                     r"[^。;\uff1b]{0,180})[^。;\uff1b]{0,120}$",
                     context,

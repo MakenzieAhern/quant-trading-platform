@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -9,9 +10,13 @@ import pymupdf
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
-from scripts.link_distribution_notices import notice_dates
+from scripts.link_distribution_notices import current_notice_dates
 from scripts.reconcile_cash_gap_candidates import is_final_implementation_document
-from scripts.reconcile_distribution_cash import gross_cash, normalized_document
+from scripts.reconcile_distribution_cash import (
+    differentiated_cash,
+    gross_cash,
+    normalized_document,
+)
 from scripts.retained_bonus_terms import retained_ratio
 
 
@@ -23,9 +28,15 @@ def classify_document(document: dict, pages: list[str]) -> dict:
         "source_sha256": document["source_sha256"],
     }
     text = normalized_document(pages)
-    if not is_final_implementation_document(document["title"], text):
+    capital_implementation = re.search(
+        r"(?:年度)?资本公积金?转增股本实施公告$", document["title"]
+    )
+    if not (
+        is_final_implementation_document(document["title"], text)
+        or capital_implementation
+    ):
         return {**outcome, "status": "NOT_FINAL_IMPLEMENTATION_DOCUMENT"}
-    records, ex_dates = notice_dates(pages)
+    records, ex_dates = current_notice_dates(pages, document["published_on"])
     affected = set(document["affected_factor_changes"])
     matched = [event for event in affected if event.rsplit(":", 1)[-1] in ex_dates]
     if len(records) != 1 or len(ex_dates) != 1 or not matched:
@@ -37,11 +48,28 @@ def classify_document(document: dict, pages: list[str]) -> dict:
         }
     terms = {}
     failures = {}
-    for name, parser in (("cash_per_share", gross_cash), ("bonus_share_ratio", retained_ratio)):
+    differentiated = "差异化分红送转:是" in re.sub(r"\s+", "", text)
+    parsers = (
+        (
+            "cash_per_share",
+            lambda source, issuer: (
+                differentiated_cash(source, issuer, document["title"])
+                if differentiated
+                else gross_cash(source, issuer)
+            ),
+        ),
+        ("bonus_share_ratio", retained_ratio),
+    )
+    for name, parser in parsers:
         try:
             terms[name] = str(parser(pages, document["issuer"]))
         except ValueError as exc:
             failures[name] = str(exc)
+    if differentiated and "cash_per_share" in terms:
+        terms.update(
+            cash_holder_class="ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER",
+            cash_policy_id="DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1",
+        )
     if not terms:
         return {
             **outcome,
@@ -129,7 +157,14 @@ def audit(staging: Path, documents: list[dict], caches: dict[str, Path]) -> dict
         if row["status"] == "EXACT_DATE_OFFICIAL_TERMS_CANDIDATE":
             signature = {
                 key: row.get(key)
-                for key in ("record_date", "ex_date", "cash_per_share", "bonus_share_ratio")
+                for key in (
+                    "record_date",
+                    "ex_date",
+                    "cash_per_share",
+                    "bonus_share_ratio",
+                    "cash_holder_class",
+                    "cash_policy_id",
+                )
             }
             for event in row["matched_factor_changes"]:
                 by_factor[event].append({**signature, "source_sha256": row["source_sha256"]})

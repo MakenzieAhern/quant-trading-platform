@@ -12,18 +12,20 @@ from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, s
 from app.data.catalog.freeze import write_immutable
 
 BOARD_GUARANTEE = (
-    r"本公司及董事会全体成员保证(?:公告|信息披露的)?内容真实、?准确(?:、|和)?完整"
-    r"[,\.\uff0c]?(?:不存在|没有)虚假记载、?误导性陈述(?:或|或者)重大遗漏[。.]?"
+    r"(?:本)?公司及董事会全体成员保证(?:公告|信息披露(?:的)?)?内容(?:的)?真实、?"
+    r"准确(?:、|和)?完整[,\.\uff0c]?(?:不存在|没有)虚假(?:性)?记载、?"
+    r"误导性陈述(?:或|或者)重大遗漏[。.]?"
 )
 RECORD_LABELS = (
     r"A股(?:股权|权益)登记日",
     r"(?:股权|权益)登记日[:为]*A股",
     r"(?:股权|权益)登记日期",
+    r"股权登日记",
     r"(?:股权|权益)登记日",
 )
 EX_LABEL = (
     r"(?:除权\(除息\)日|除权日\(除息日\)|除息\(除权\)日|除权\(除息日\)|"
-    r"除权\(息\)日|除权除息日|除息日|除权日)"
+    r"除权\(息\)日|除权除息日|除权出息日|除息日|除权日)"
     r"(?:[、&](?:现金)?红利发放日)?"
 )
 LABEL_DATE_GAP = r"[:为]*(?:[-—]\d+[-—])?"
@@ -31,14 +33,16 @@ LABEL_DATE_GAP = r"[:为]*(?:[-—]\d+[-—])?"
 
 def compact_document(text):
     compact = re.sub(r"[\x00-\x1f\x7f]|\s+", "", unicodedata.normalize("NFKC", text))
-    return re.sub(BOARD_GUARANTEE, "", compact)
+    compact = re.sub(BOARD_GUARANTEE, "", compact)
+    compact = re.sub(r"第\d+页共\d+页", "", compact)
+    return re.sub(r"(20\d{2})-\d+-(?=年)", r"\1", compact)
 
 
 def labeled_dates(text, label):
     compact = compact_document(text)
     values = set()
     for suffix in (
-        r"(20\d{2})年(\d{1,2})月(\d{1,2})日",
+        r"(20\d{2})年(\d{1,2})(?:月|年)(\d{1,2})日",
         r"(20\d{2})/(\d{1,2})/(\d{1,2})",
     ):
         for match in re.findall(label + LABEL_DATE_GAP + suffix, compact):

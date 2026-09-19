@@ -1,5 +1,16 @@
 # Current state
 
+## R5 retained adjustment-term recovery v2 — 2026-09-20
+
+Fail-closed shared parser fixes recover 30 additional exact-date official term
+candidates from the existing 1,421 checksum-bound CNINFO documents. Unique
+terms rise from 1,311 to **1,341** and no-exact-term cases fall from 72 to
+**42**. The recovered shapes total 824 cash-only, 476 cash-plus-bonus and 41
+bonus-only; three differentiated cash candidates retain their exact ordinary
+public-A holder policy. All 476 gross cash-plus-bonus checks still conflict with
+the historical provider factor step, so no event or authority is promoted. See
+`../research/R5_FULL_ADJUSTMENT_TERMS_RECOVERY_V2.md`.
+
 ## R5 adjustment residual official-source closure — 2026-09-19
 
 All 33 factor changes that lacked a retained implementation candidate now have
@@ -11,10 +22,10 @@ normalization. This is a source-discovery closure, not adjustment-authority
 promotion. Full adjustment authority stays PARTIAL. See
 `../research/R5_ADJUSTMENT_RESIDUAL_MECHANICS_V1.md`.
 
-## R5 current full-source preflight v3 — 2026-09-19
+## R5 current full-source preflight v4 — 2026-09-20
 
 The obsolete batch-preflight pointer is replaced by
-`.research/reports/r5-full-source-preflight-v3.json`. Security master, both ST
+`.research/reports/r5-full-source-preflight-v4.json`. Security master, both ST
 authorities, calendar and CSI300 close series remain accepted. Required Full
 Dataset inputs still PARTIAL are suspension (2,010 SZSE boundaries), raw OHLCV
 (239 source rows and a separate 223-symbol after-hours scope gap), adjustment
@@ -35,8 +46,8 @@ dates and left **33** source-uncovered. A targeted bounded official query now
 covers all 33: 25 capital/share mechanics match the factor step and seven exact
 gross-cash terms are recovered. Eight provider factor conventions remain
 unresolved, including those seven cash cases and 000156. The original strict
-candidate corpus still has **1,311** unique exact term signatures and **72**
-without one. The 463 cases carrying both gross cash and bonus terms all conflict
+candidate corpus now has **1,341** unique exact term signatures and **42**
+without one. The 476 cases carrying both gross cash and bonus terms all conflict
 with the historical provider factor step under the gross-cash formula, so no
 tax-net/provider convention is silently substituted into the accepted ledger.
 
@@ -72,6 +83,7 @@ executable rule was changed.
 See `../research/R5_FULL_ADJUSTMENT_INVENTORY_V1.md` and
 `../research/R5_FULL_ADJUSTMENT_ROUTING_V3.md` and
 `../research/R5_FULL_ADJUSTMENT_SOURCE_RECOVERY_V1.md` and
+`../research/R5_FULL_ADJUSTMENT_TERMS_RECOVERY_V2.md` and
 `../research/R5_FULL_TRANSACTION_COST_GAPS_V2.md`.
 
 ## R5 SZSE event-outcome recovery v23 — 2026-09-19

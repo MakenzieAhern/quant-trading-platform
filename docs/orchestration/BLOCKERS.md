@@ -34,13 +34,13 @@ registry allocation, the seven conflicts and the unrouted residual still block
 full adjustment authority.
 
 Retained-source reuse narrows the 1,416 unrouted dates further: 1,383 have
-official CNINFO candidates and 1,311 have a unique exact-date term signature.
+official CNINFO candidates and 1,341 now have a unique exact-date term signature.
 The prior 33 no-candidate rows now have bounded official coverage: 25 capital
 mechanics match the factor step and seven exact gross-cash terms are recovered.
 Eight provider conventions remain unresolved (those seven cash cases plus
-000156's additional-issue normalization). The earlier 72 no-exact-term cases
-outside this targeted residual and all 463 gross-cash-plus-bonus conflicts also
-remain. Gross shareholder cash is not replaced with an unevidenced tax-net or
+000156's additional-issue normalization). Shared fail-closed parsing reduces
+the earlier 72 no-exact-term cases to 42, while all 476 gross-cash-plus-bonus
+checks still conflict. Gross shareholder cash is not replaced with an unevidenced tax-net or
 provider convention; correction precedence, lifecycle admission and registry
 allocation remain open.
 
