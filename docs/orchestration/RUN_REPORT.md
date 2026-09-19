@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE non-equity evidence screen v18
+
+- new source downloads: 0
+- retained document occurrences newly classified NON_EQUITY: 16
+- exact resumptions: 8,716
+- terminal closures: 58
+- final unresolved: 2,031
+- conflicts: 0
+- 002477 equity date retained through separate stock notice: PASS
+- source checksum repeatability: PASS
+- input-order reproducibility: PASS
+- focused parser tests: 7 passed
+- authority status: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- report: `../research/R5_SZSE_NON_EQUITY_EVIDENCE_SCREEN_V18.md`
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE application-boundary revalidation v17
 
 - new source downloads: 0

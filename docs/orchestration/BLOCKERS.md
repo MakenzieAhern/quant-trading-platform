@@ -1,5 +1,15 @@
 # Blockers
 
+## Bond-only documents removed from equity evidence — 2026-09-19
+
+Sixteen retained document occurrences naming only a corporate bond or
+convertible-instrument resumption are now classified NON_EQUITY. Accepted
+authority remains 8,716 exact resumptions, 58 terminal closures, zero conflicts
+and **2,031** unresolved boundaries because every affected accepted date either
+had separate official equity evidence or was not bound. Suspension authority
+remains PARTIAL; the independent retained-bonus fractional methodology gate
+remains active.
+
 ## SZSE exact resumption residual reduced to 2,031 — 2026-09-19
 
 Strict all-retained replay now accepts final exchange-application resumption

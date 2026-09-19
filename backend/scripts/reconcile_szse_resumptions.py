@@ -15,6 +15,7 @@ SUBJECT = r"(?:本公司|公司)?(?:股票|证券|A股股票|B股股票|A股|B�
 FULL_DATE = r"(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})(?!\d)日?"
 MONTH_DAY = r"(?<![年\d])(\d{1,2})月(\d{1,2})(?!\d)日"
 REJECTED_TITLE = re.compile(r"延期复牌|继续停牌|停牌期满|暂不复牌|不复牌|申请复牌")
+NON_EQUITY_TITLE = re.compile(r"债券|(?:转债|债[”\"]?|转\d+)[^暨]{0,20}复牌")
 UNCERTAIN = re.compile(
     r"预计|计划|不迟于|不晚于|不超过|最迟于|最晚(?:于)?|延期至|延期复牌|争取|拟于|前(?=复牌|恢复)"
 )
@@ -95,6 +96,10 @@ INTRADAY_PATTERNS = (
 
 def _near_publication(day: date, published: date) -> bool:
     return -1 <= (day - published).days <= 14
+
+
+def non_equity_resumption_title(title: str) -> bool:
+    return bool(NON_EQUITY_TITLE.search(title)) and not re.search(r"股票|A股", title)
 
 
 def _match_text(match: re.Match) -> str:
@@ -289,7 +294,7 @@ def main() -> None:
             result["status"] = document["retrieval_status"]
         elif REJECTED_TITLE.search(document["title"]):
             result["status"] = "NOT_FINAL_RESUMPTION_TITLE"
-        elif "债券" in document["title"] and not re.search(r"股票|A股", document["title"]):
+        elif non_equity_resumption_title(document["title"]):
             result["status"] = "NON_EQUITY_RESUMPTION"
         else:
             text = official_document_text(args.root, document)

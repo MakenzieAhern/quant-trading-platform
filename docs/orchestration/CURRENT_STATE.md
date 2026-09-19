@@ -1,5 +1,16 @@
 # Current state
 
+## R5 SZSE non-equity evidence screen v18 — 2026-09-19
+
+The shared resumption classifier now rejects bounded bond-only title forms such
+as named bond/convertible resumptions when no stock or A-share subject is named.
+Sixteen retained document occurrences move to NON_EQUITY. Accepted authority
+stays at **8,716** exact resumptions, 58 terminal closures, zero conflicts and
+**2,031** unresolved SZSE boundaries; 002477 keeps its date through a separate
+official stock-resumption notice instead of the bond notice. Suspension
+authority remains PARTIAL; the retained-bonus gate is unchanged. See
+`../research/R5_SZSE_NON_EQUITY_EVIDENCE_SCREEN_V18.md`.
+
 ## R5 SZSE application-boundary revalidation v17 — 2026-09-19
 
 Strict replay now distinguishes final `经/向交易所申请后自某日复牌` clauses

@@ -2,7 +2,6 @@
 
 import argparse
 import json
-import re
 from collections import Counter
 from pathlib import Path
 
@@ -15,6 +14,7 @@ from scripts.reconcile_szse_resumptions import (
     continued_halt_restoration_dates,
     exact_restoration_dates,
     exact_resume_dates,
+    non_equity_resumption_title,
     official_document_text,
 )
 
@@ -111,7 +111,7 @@ def main() -> None:
             if REJECTED_TITLE.search(document["title"]):
                 states["REJECTED_TITLE"] += 1
                 continue
-            if "债券" in document["title"] and not re.search(r"股票|A股", document["title"]):
+            if non_equity_resumption_title(document["title"]):
                 states["NON_EQUITY"] += 1
                 continue
             identity = (document["source_sha256"], document["published_on"])

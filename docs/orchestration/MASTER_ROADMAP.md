@@ -1,5 +1,13 @@
 # v1.1 controller roadmap
 
+## R5 SZSE non-equity evidence screen v18 — 2026-09-19
+
+Sixteen retained bond-only document occurrences are excluded from equity
+resumption evidence. Accepted counts remain 8,716 exact resumptions plus 58
+terminal closures, with zero conflicts and 2,031 unresolved facts. Suspension
+authority remains PARTIAL; Full Dataset creation, freeze and all studies remain
+locked. See `../research/R5_SZSE_NON_EQUITY_EVIDENCE_SCREEN_V18.md`.
+
 ## R5 SZSE application-boundary revalidation v17 — 2026-09-19
 
 The retained official corpus now accepts completed exchange-application

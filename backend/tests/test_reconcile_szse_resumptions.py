@@ -6,9 +6,17 @@ from scripts.reconcile_szse_resumptions import (
     continued_halt_restoration_dates,
     exact_restoration_dates,
     exact_resume_dates,
+    non_equity_resumption_title,
     official_document_text,
     unresolved_facts,
 )
+
+
+def test_non_equity_resumption_titles_require_an_equity_subject():
+    assert non_equity_resumption_title("关于“14雏鹰债”复牌的公告")
+    assert non_equity_resumption_title("关于中装转2复牌及恢复转股的提示性公告")
+    assert not non_equity_resumption_title("关于筹划控制权变更事项进展暨复牌及恢复转股的公告")
+    assert not non_equity_resumption_title("关于公司股票及可转换公司债券复牌的公告")
 
 
 def test_exact_resumption_dates_reject_plans_and_stop_dates():
