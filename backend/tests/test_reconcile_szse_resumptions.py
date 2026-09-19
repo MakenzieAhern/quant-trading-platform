@@ -36,6 +36,9 @@ def test_exact_resumption_dates_reject_plans_and_stop_dates():
 
 def test_exact_resumption_dates_cover_observed_official_forms():
     assert exact_resume_dates(
+        "公司股票进入退市整理期交易的起始日为2019年8月27日。", "2019-08-20"
+    ) == ["2019-08-27"]
+    assert exact_resume_dates(
         "公司股票于2012年4月23日停牌,公告日即2012年4月24日开市起即复牌。",
         "2012-04-24",
     ) == ["2012-04-24"]

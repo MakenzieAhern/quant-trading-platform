@@ -1,5 +1,16 @@
 # Current state
 
+## R5 SZSE delisting-consolidation recovery v13 — 2026-09-19
+
+A bounded exact-title screen acquired 31 official CNINFO notices containing
+`进入退市整理期`, with zero failures. Their shared final wording names a unique
+effective trading start. A one-pattern shared-parser fix closes all 31 bound
+halts, taking exact SZSE resumptions from 7,303 to **7,334** and unresolved
+boundaries from 3,444 to **3,413**. The 58 terminal closures remain, conflicts
+remain zero, and reversed supplement order reproduces byte-identical authority
+outputs. Suspension authority stays PARTIAL. See
+`../research/R5_SZSE_DELISTING_CONSOLIDATION_RECOVERY_V13.md`.
+
 ## R5 bounded SZSE implementation-title screen v12 — 2026-09-19
 
 Two exact-title families supplied 40 official CNINFO PDFs with zero acquisition

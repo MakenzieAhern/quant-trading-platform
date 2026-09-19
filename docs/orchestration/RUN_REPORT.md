@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE delisting-consolidation recovery v13
+
+- exact-title official CNINFO PDFs acquired: 31
+- acquisition failures: 0
+- exact-date documents: 31
+- new accepted boundaries: 31
+- strict exact resumptions: 7,334
+- terminal closures: 58
+- final unresolved: 3,413
+- conflicts: 0
+- focused tests: 6 passed
+- lint/format: PASS
+- forward/reverse authority replay: byte-identical PASS
+- authority: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- Full Dataset/freeze/studies: NOT RUN
+
 ## 2026-09-19 bounded SZSE implementation-title screen v12
 
 - official CNINFO PDFs acquired: 40

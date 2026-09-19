@@ -18,6 +18,7 @@ REJECTED_TITLE = re.compile(r"延期复牌|继续停牌|停牌期满|暂不复�
 UNCERTAIN = re.compile(r"预计|不迟于|不晚于|最迟于|最晚于|争取|拟于")
 CONDITIONAL = re.compile(r"若|如果|如未")
 FULL_PATTERNS = (
+    re.compile(r"进入退市整理期(?:交易)?的起始日为" + FULL_DATE),
     re.compile(r"(?:并)?将于" + FULL_DATE + r"[^。\uff1b;]{0,30}?" + TERM),
     re.compile(
         SUBJECT

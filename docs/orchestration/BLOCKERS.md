@@ -1,5 +1,15 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 3,413 — 2026-09-19
+
+Thirty-one official delisting-consolidation notices state one exact start date
+for trading in the delisting period. The shared strict parser now recognizes
+only that final official form; all 31 dates bind before any later halt.
+Authority has 7,334 exact resumptions, 58 terminal closures, zero conflicts and
+**3,413** unresolved SZSE boundaries. Forward/reverse replay is byte-identical.
+Suspension authority remains PARTIAL, and the retained-bonus fractional
+methodology gate remains independent.
+
 ## Bounded implementation-title screen adds no SZSE boundary — 2026-09-19
 
 Forty official CNINFO implementation/listing documents were acquired without
