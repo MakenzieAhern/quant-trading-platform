@@ -1,5 +1,24 @@
 # Decisions
 
+## 2026-09-19 — gross official terms do not define historical provider factor cash basis
+
+Reuse all retained CNINFO bytes before network acquisition. Treat exact
+implementation dates and parsed gross cash/bonus terms as candidates until
+correction precedence, lifecycle and accounting are closed. Do not replace
+gross shareholder cash with a tax-net or synthetic ex-price amount merely to
+fit a historical factor step: all 463 combined-term checks currently conflict
+under the gross formula, so the provider convention remains unresolved and no
+authority is promoted.
+
+## 2026-09-19 — adjustment date routing is evidence, not event acceptance
+
+Join unmatched retained factor changes to the checksum-bound official bonus
+source oracle by accepted security identity and exact ex-date. Use the accepted
+A-share `0.01` price tick to bound displayed pre-close/ex-price rounding, but do
+not infer exact issuer terms, registry allocation or economic authority from a
+date or displayed-price match. Preserve all conflicts and dates without an
+official route instead of classifying them as normal.
+
 ## 2026-09-19 — yearbook fee snapshots corroborate, but do not invent intervals
 
 Use the sixteen checksum-bound SZSE yearbooks as official annual fee snapshots.

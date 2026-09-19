@@ -25,6 +25,22 @@ transfer and regulator fees are included in commission; the project has no
 account-contract evidence showing whether its approved `0.0003` commission is
 net or all-in. Transfer and regulator effective intervals also remain partial.
 
+The adjustment residual is now routed rather than treated as one opaque count:
+912 dates match retained official bonus-source rows, including 621 SZSE factor
+steps consistent with displayed-price tick bounds, seven conflicts and 284 SSE
+rows without a comparable price display. Another 1,416 dates have no retained
+official bonus date. None is promoted to an accepted event; exact issuer terms,
+registry allocation, the seven conflicts and the unrouted residual still block
+full adjustment authority.
+
+Retained-source reuse narrows the 1,416 unrouted dates further: 1,383 have
+official CNINFO candidates and 1,311 have a unique exact-date term signature.
+However, 72 still lack exact terms, 33 have no retained candidate, and every
+one of the 463 exact gross-cash-plus-bonus cases conflicts with the historical
+factor step under the gross formula. This is not resolved by replacing gross
+shareholder cash with an unevidenced tax-net/provider convention. Correction
+precedence, lifecycle admission and registry allocation also remain open.
+
 ## SZSE retained-scan recovery leaves 2,010 — 2026-09-19
 
 Bounded OCR and direct original-page review close 000545 and 002033 without new

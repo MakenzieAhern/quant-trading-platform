@@ -9,8 +9,22 @@ claims. The current source preflight remains **PARTIAL**: suspension, raw OHLCV,
 adjustment economic alignment, corporate actions and historical rule/cost
 authority are incomplete. The Full Dataset has not been created or frozen and
 no study may run. See `../research/R5_SZSE_SCAN_RECOVERY_V24.md`,
-`../research/R5_FULL_ADJUSTMENT_INVENTORY_V1.md` and
+`../research/R5_FULL_ADJUSTMENT_INVENTORY_V1.md`,
+`../research/R5_FULL_ADJUSTMENT_ROUTING_V3.md` and
+`../research/R5_FULL_ADJUSTMENT_SOURCE_RECOVERY_V1.md` and
 `../research/R5_FULL_TRANSACTION_COST_GAPS_V2.md`.
+
+Adjustment-gap routing maps 912 of 2,328 unmatched factor dates to retained
+official bonus-source dates. The tick-bounded displayed-price crosscheck passes
+621 SZSE rows, flags seven conflicts and is unavailable for 284 SSE rows; 1,416
+dates remain unrouted. This narrows follow-up work but does not promote source
+rows into accepted events or clear adjustment authority.
+
+All 1,421 CNINFO documents selected for 1,383 of the unrouted dates already
+exist in retained staging. Exact parsing yields 1,311 unique official term
+candidates and leaves 72 without exact terms; the other 33 dates have no
+candidate. Gross-term factor economics conflict in all 463 combined
+cash/bonus cases, so the provider's historical cash basis remains unresolved.
 
 The v32 suspension ledger has also been replayed against all 3,886 retained
 SZSE daily workbooks. It reclassifies 377 rows from unknown resumption to dated

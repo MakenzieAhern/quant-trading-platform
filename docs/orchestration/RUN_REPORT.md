@@ -25,6 +25,21 @@
 - retained adjustment intervals verified / conflicting: 5,436 / 0
 - factor change dates matched / unmatched: 40,691 / 2,328
 - supported events without factor change: 6
+- unmatched dates routed to official bonus-source dates: 912
+- displayed-price ratio bounds pass / conflict / unavailable: 621 / 7 / 284
+- zero-cash bonus-ratio bounds pass / conflict: 616 / 12
+- unmatched dates without retained official bonus date: 1,416
+- adjustment routing file SHA-256: `52f947fd14291caa39496d2771ab061ac03b02857f1cc1e66391ff4cf04966f6`
+- adjustment routing manifest SHA-256: `f36461f55bdc9e8a4dce26bf4ed6c6de9fae5406ffb693a27ef2d958d912be9d`
+- unrouted dates with / without CNINFO candidates: 1,383 / 33
+- retained / missing candidate documents: 1,421 / 0
+- unique exact official term candidates / no exact terms: 1,311 / 72
+- exact term shapes cash-only / both / bonus-only: 817 / 463 / 32
+- gross cash-plus-bonus factor checks / conflicts: 463 / 463
+- candidate report manifest SHA-256: `b7dac748c4c0228e1c1d233efe3767555e5f251e598508b914f9c6280ee2d678`
+- retained-source report manifest SHA-256: `db7a9ac94d423fc3542c2a999f2178c3b03a122c2d6f2bbc7ef0856bc3776cf4`
+- term-candidate report manifest SHA-256: `0af35ecddac88311712ce7fbb67a24ee40393f78298ed0c676ac3dbb494b437e`
+- gross-economics report manifest SHA-256: `ba1f7b04b9f27ce01e76599441ed1616846b2c702ab99021b3c7a1dd96d86b8a`
 - official SZSE fee yearbooks verified: 16 (2010-2025)
 - exact SZSE 2023 handling boundary: PASS_SOURCE_CLAIM_2023_08_28
 - full transaction-cost authority: PARTIAL (6 unresolved claim groups, no executable change)

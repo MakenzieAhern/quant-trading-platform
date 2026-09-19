@@ -12,6 +12,22 @@ without a curve change), corporate-action completeness/accounting, and full
 historical rules/transaction costs. Verified safe start remains unresolved;
 Full Dataset creation/audit/freeze and all studies remain NO/NOT RUN.
 
+Deterministic adjustment-gap routing now maps 912 of the 2,328 unmatched
+factor dates to exact retained official bonus-source dates. Of 628 SZSE rows
+with displayed pre-close/ex-price fields, 621 fit the factor step within the
+accepted `0.01` price-tick bounds and seven conflict; 284 SSE rows lack that
+displayed-price crosscheck and 1,416 changes have no retained official bonus
+date. These remain diagnostics, not accepted events or authority promotion.
+
+The remaining 1,416 dates were then joined to retained official CNINFO
+implementation metadata. **1,383** have candidates, **33** do not; all **1,421**
+candidate documents were already present as checksum-bound official bytes, so
+no network retrieval was needed. Strict parsing gives **1,311** factor changes
+with one exact official term signature and **72** without one. The 463 cases
+carrying both gross cash and bonus terms all conflict with the historical
+provider factor step under the gross-cash formula, so neither those terms nor a
+tax-net/provider convention is silently substituted into the accepted ledger.
+
 The current v32 suspension ledger was replayed through every retained SZSE
 daily workbook and the 27 existing official listing intervals. It moves 377
 rows from `UNKNOWN_RESUMPTION_NOT_CLOSED` to `DATED_SOURCE_HALT_INTERVAL`, but
@@ -42,6 +58,8 @@ including the 2012 SSE transfer-base contradiction and whether the approved
 research commission is net or all-in. Both authorities remain PARTIAL; no
 executable rule was changed.
 See `../research/R5_FULL_ADJUSTMENT_INVENTORY_V1.md` and
+`../research/R5_FULL_ADJUSTMENT_ROUTING_V3.md` and
+`../research/R5_FULL_ADJUSTMENT_SOURCE_RECOVERY_V1.md` and
 `../research/R5_FULL_TRANSACTION_COST_GAPS_V2.md`.
 
 ## R5 SZSE event-outcome recovery v23 — 2026-09-19

@@ -42,3 +42,13 @@ Immutable report:
 - input-order reproducibility: **PASS**
 
 No dataset, strategy result or authority PASS was produced.
+
+The follow-on deterministic routing is documented in
+`R5_FULL_ADJUSTMENT_ROUTING_V3.md`: 912 of the 2,328 unmatched dates have an
+exact retained official bonus-source date, while 1,416 remain unrouted. This
+does not change the PARTIAL authority decision.
+
+The follow-on retained-source audit is documented in
+`R5_FULL_ADJUSTMENT_SOURCE_RECOVERY_V1.md`. It finds one exact official term
+signature for 1,311 of the 1,416 dates, but does not admit those candidates or
+resolve historical factor cash-basis semantics.
