@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 all-retained SZSE delisting-boundary replay v14
+
+- new source downloads: 0
+- exact resumptions: 7,348
+- terminal closures: 58
+- newly closed versus accepted v11 + v13 authority: 14
+- final unresolved: 3,399
+- conflicts: 0
+- source checksum repeatability: PASS
+- input-order reproducibility: PASS
+- focused parser tests: 6 passed
+- authority status: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- report: `../research/R5_SZSE_ALL_RETAINED_DELISTING_REPLAY_V14.md`
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE delisting-consolidation recovery v13
 
 - exact-title official CNINFO PDFs acquired: 31

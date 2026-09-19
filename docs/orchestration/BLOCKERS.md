@@ -1,5 +1,14 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 3,399 — 2026-09-19
+
+Replaying the v13 final-form rule over all retained official bytes closes 14
+additional cached boundaries. Authority now has 7,348 exact resumptions, 58
+terminal closures, zero conflicts and **3,399** unresolved SZSE boundaries.
+No new source acquisition or symbol-specific rule was used. Suspension
+authority remains PARTIAL. The independent retained-bonus fractional
+methodology gate remains the active human decision.
+
 ## SZSE exact resumption residual reduced to 3,413 — 2026-09-19
 
 Thirty-one official delisting-consolidation notices state one exact start date

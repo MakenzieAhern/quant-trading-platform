@@ -1,5 +1,16 @@
 # Current state
 
+## R5 all-retained SZSE delisting-boundary replay v14 — 2026-09-19
+
+The v13 shared parser rule was replayed over every retained official source,
+not only the 31 newly acquired notices. Fourteen additional cached official
+documents close exact suspension boundaries without new downloads or
+symbol-specific logic. Current authority has **7,348** exact resumptions, 58
+terminal closures, zero conflicts and **3,399** unresolved SZSE boundaries.
+Input-order replay and source checksums pass. Suspension authority remains
+PARTIAL; the retained-bonus fractional methodology gate is unchanged. See
+`../research/R5_SZSE_ALL_RETAINED_DELISTING_REPLAY_V14.md`.
+
 ## R5 SZSE delisting-consolidation recovery v13 — 2026-09-19
 
 A bounded exact-title screen acquired 31 official CNINFO notices containing

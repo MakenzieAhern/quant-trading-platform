@@ -1,5 +1,14 @@
 # v1.1 controller roadmap
 
+## R5 all-retained SZSE delisting-boundary replay v14 — 2026-09-19
+
+The v13 final-form parser now replays across every retained official SZSE
+source. Fourteen additional cached boundaries close, taking exact resumptions
+to 7,348 and the unresolved residual to 3,399 with 58 terminal closures and
+zero conflicts. Suspension authority remains PARTIAL. Full Dataset creation,
+freeze and all studies remain locked; the retained-bonus methodology gate is
+unchanged. See `../research/R5_SZSE_ALL_RETAINED_DELISTING_REPLAY_V14.md`.
+
 ## R5 correction — strict SZSE resumption authority replay (2026-09-19)
 
 Retained official evidence has been revalidated under parser v10. Current
