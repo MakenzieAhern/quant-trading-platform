@@ -1,9 +1,20 @@
 # Current state
 
-## R5 current full-source preflight v2 — 2026-09-19
+## R5 adjustment residual official-source closure — 2026-09-19
+
+All 33 factor changes that lacked a retained implementation candidate now have
+checksum-bound official CNINFO coverage. Twenty-five official capital/share
+mechanics match the retained factor step; seven exact gross-cash terms were
+recovered; source-uncovered residuals are zero. Eight provider conventions
+remain unresolved: the seven cash-factor bases and 000156's additional-issue
+normalization. This is a source-discovery closure, not adjustment-authority
+promotion. Full adjustment authority stays PARTIAL. See
+`../research/R5_ADJUSTMENT_RESIDUAL_MECHANICS_V1.md`.
+
+## R5 current full-source preflight v3 — 2026-09-19
 
 The obsolete batch-preflight pointer is replaced by
-`.research/reports/r5-full-source-preflight-v2.json`. Security master, both ST
+`.research/reports/r5-full-source-preflight-v3.json`. Security master, both ST
 authorities, calendar and CSI300 close series remain accepted. Required Full
 Dataset inputs still PARTIAL are suspension (2,010 SZSE boundaries), raw OHLCV
 (239 source rows and a separate 223-symbol after-hours scope gap), adjustment
@@ -19,13 +30,14 @@ accepted `0.01` price-tick bounds and seven conflict; 284 SSE rows lack that
 displayed-price crosscheck and 1,416 changes have no retained official bonus
 date. These remain diagnostics, not accepted events or authority promotion.
 
-The remaining 1,416 dates were then joined to retained official CNINFO
-implementation metadata. **1,383** have candidates, **33** do not; all **1,421**
-candidate documents were already present as checksum-bound official bytes, so
-no network retrieval was needed. Strict parsing gives **1,311** factor changes
-with one exact official term signature and **72** without one. The 463 cases
-carrying both gross cash and bonus terms all conflict with the historical
-provider factor step under the gross-cash formula, so neither those terms nor a
+The original retained-metadata join gave candidates for **1,383** of the 1,416
+dates and left **33** source-uncovered. A targeted bounded official query now
+covers all 33: 25 capital/share mechanics match the factor step and seven exact
+gross-cash terms are recovered. Eight provider factor conventions remain
+unresolved, including those seven cash cases and 000156. The original strict
+candidate corpus still has **1,311** unique exact term signatures and **72**
+without one. The 463 cases carrying both gross cash and bonus terms all conflict
+with the historical provider factor step under the gross-cash formula, so no
 tax-net/provider convention is silently substituted into the accepted ledger.
 
 The current v32 suspension ledger was replayed through every retained SZSE

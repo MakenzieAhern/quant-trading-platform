@@ -1,5 +1,19 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 adjustment residual official-source closure
+
+- prior no-candidate factor changes: 33
+- official source covered / uncovered: 33 / 0
+- official mechanics factor parity: 25
+- exact official gross-cash terms recovered: 7
+- provider factor-basis semantics unresolved: 8
+- residual mechanics manifest SHA-256: `a38d55a2a3a5b4b6d6c0a672cac48ee4a9565efbc57fa13a2abc237916f7f35a`
+- input-order reproducibility: PASS
+- full adjustment authority: PARTIAL
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE raw-gap v32 replay
 
 - retained official daily workbooks revalidated: 3,886
@@ -16,7 +30,7 @@
 - Development / Validation / Official OOS: NOT RUN
 - PR #12: OPEN, UNMERGED
 
-## 2026-09-19 current full-source preflight v2
+## 2026-09-19 current full-source preflight v3
 
 - retained scan PDFs / exact dates: 29 / 2
 - exact SZSE resumptions / terminal closures: 8,737 / 58
@@ -31,7 +45,10 @@
 - unmatched dates without retained official bonus date: 1,416
 - adjustment routing file SHA-256: `52f947fd14291caa39496d2771ab061ac03b02857f1cc1e66391ff4cf04966f6`
 - adjustment routing manifest SHA-256: `f36461f55bdc9e8a4dce26bf4ed6c6de9fae5406ffb693a27ef2d958d912be9d`
-- unrouted dates with / without CNINFO candidates: 1,383 / 33
+- unrouted dates with / without prior CNINFO candidates: 1,383 / 33
+- targeted residual official source covered / uncovered: 33 / 0
+- residual mechanics parity / gross-cash terms / provider-basis unresolved: 25 / 7 / 8
+- residual mechanics manifest SHA-256: `a38d55a2a3a5b4b6d6c0a672cac48ee4a9565efbc57fa13a2abc237916f7f35a`
 - retained / missing candidate documents: 1,421 / 0
 - unique exact official term candidates / no exact terms: 1,311 / 72
 - exact term shapes cash-only / both / bonus-only: 817 / 463 / 32

@@ -178,7 +178,15 @@ def main() -> None:
     parser.add_argument("--inventory", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    documents = json.loads(args.inventory.read_bytes())
+    inventory = json.loads(args.inventory.read_bytes())
+    if isinstance(inventory, dict):
+        if inventory["manifest_sha256"] != canonical_sha256(
+            {key: value for key, value in inventory.items() if key != "manifest_sha256"}
+        ):
+            raise ValueError("SOURCE_MANIFEST_CHANGED")
+        documents = inventory["documents"]
+    else:
+        documents = inventory
     caches = cache_index(args.staging)
     report = audit(args.staging, documents, caches)
     if report != audit(args.staging, list(reversed(documents)), caches):

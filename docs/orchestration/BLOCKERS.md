@@ -35,11 +35,14 @@ full adjustment authority.
 
 Retained-source reuse narrows the 1,416 unrouted dates further: 1,383 have
 official CNINFO candidates and 1,311 have a unique exact-date term signature.
-However, 72 still lack exact terms, 33 have no retained candidate, and every
-one of the 463 exact gross-cash-plus-bonus cases conflicts with the historical
-factor step under the gross formula. This is not resolved by replacing gross
-shareholder cash with an unevidenced tax-net/provider convention. Correction
-precedence, lifecycle admission and registry allocation also remain open.
+The prior 33 no-candidate rows now have bounded official coverage: 25 capital
+mechanics match the factor step and seven exact gross-cash terms are recovered.
+Eight provider conventions remain unresolved (those seven cash cases plus
+000156's additional-issue normalization). The earlier 72 no-exact-term cases
+outside this targeted residual and all 463 gross-cash-plus-bonus conflicts also
+remain. Gross shareholder cash is not replaced with an unevidenced tax-net or
+provider convention; correction precedence, lifecycle admission and registry
+allocation remain open.
 
 ## SZSE retained-scan recovery leaves 2,010 — 2026-09-19
 
