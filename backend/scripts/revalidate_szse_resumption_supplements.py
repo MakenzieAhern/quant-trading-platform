@@ -14,6 +14,7 @@ from scripts.reconcile_szse_resumptions import (
     continued_halt_restoration_dates,
     exact_restoration_dates,
     exact_resume_dates,
+    execution_open_blocked,
     non_equity_resumption_title,
     official_document_text,
 )
@@ -70,11 +71,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--staging", type=Path, required=True)
     parser.add_argument("--suspension-root", type=Path, required=True)
+    parser.add_argument("--authority", type=Path)
     parser.add_argument("--master", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
-    authority_path = args.suspension_root / "suspension-authority-v1.json"
+    authority_path = args.authority or args.suspension_root / "suspension-authority-v1.json"
     authority = _verified(authority_path)
     reports = _current_reports(args.staging, authority)
     normalized, unresolved = _baseline(args.suspension_root, args.master)
@@ -143,6 +145,9 @@ def main() -> None:
                 "published_on": document["published_on"],
                 "retrieved_at_utc": document["retrieved_at_utc"],
                 "source_sha256": document["source_sha256"],
+                "execution_open_blocked": execution_open_blocked(
+                    official_document_text(root, document), dates[0]
+                ),
             }
             evidence[json.dumps(row, ensure_ascii=False, sort_keys=True)] = row
 
@@ -175,7 +180,7 @@ def main() -> None:
     ]
     new = [row for key, row in sorted(accepted_by_key.items()) if key not in prior]
     report = {
-        "parser_version": "SZSE_RETAINED_OFFICIAL_RESUMPTION_REVALIDATION_V4",
+        "parser_version": "SZSE_RETAINED_OFFICIAL_RESUMPTION_REVALIDATION_V5",
         "parser_sha256": sha256_file(Path(__file__)),
         "resumption_parser_sha256": sha256_file(
             Path(__file__).with_name("reconcile_szse_resumptions.py")

@@ -1,5 +1,49 @@
 # Current state
 
+## R5 current full-source preflight v2 — 2026-09-19
+
+The obsolete batch-preflight pointer is replaced by
+`.research/reports/r5-full-source-preflight-v2.json`. Security master, both ST
+authorities, calendar and CSI300 close series remain accepted. Required Full
+Dataset inputs still PARTIAL are suspension (2,010 SZSE boundaries), raw OHLCV
+(239 source rows and a separate 223-symbol after-hours scope gap), adjustment
+economic alignment (2,328 unmatched change dates plus six supported events
+without a curve change), corporate-action completeness/accounting, and full
+historical rules/transaction costs. Verified safe start remains unresolved;
+Full Dataset creation/audit/freeze and all studies remain NO/NOT RUN.
+
+The current v32 suspension ledger was replayed through every retained SZSE
+daily workbook and the 27 existing official listing intervals. It moves 377
+rows from `UNKNOWN_RESUMPTION_NOT_CLOSED` to `DATED_SOURCE_HALT_INTERVAL`, but
+the final residual key set is unchanged: 239 securities, one row each on
+2011-07-25. Two rows exchange their reason labels; neither is added or removed.
+The checksum-bound replay manifest is
+`5ad2a1aac5ad867c724bcf45a48fdac6aec8566ccab20c2d35733c20b95e1cda`.
+
+## R5 retained-scan SZSE recovery v24 — 2026-09-19
+
+Twenty-nine retained low-text official PDFs were processed offline. Original
+page review confirms two exact 2011-09-15 resumptions (000545 and 002033); the
+other 27 remain unaccepted. Authority now has **8,737** exact resumptions, 58
+terminal closures, zero date conflicts and **2,010** unresolved boundaries.
+Explicit open/afternoon timing is preserved so a date boundary is not silently
+treated as opening eligibility. See
+`../research/R5_SZSE_SCAN_RECOVERY_V24.md`.
+
+## R5 adjustment and cost inventories — 2026-09-19
+
+All 5,436 accepted-master intervals have one checksum-consistent retained
+factor curve, and all 153 supported rights events align by date, but full
+economic alignment is not established. Separately,
+retained official fee sources establish dated 2012 and 2015 claims while
+sixteen official SZSE yearbooks additionally establish the annual snapshot path
+and exact 2023-08-28 handling boundary. Six claim groups remain unresolved,
+including the 2012 SSE transfer-base contradiction and whether the approved
+research commission is net or all-in. Both authorities remain PARTIAL; no
+executable rule was changed.
+See `../research/R5_FULL_ADJUSTMENT_INVENTORY_V1.md` and
+`../research/R5_FULL_TRANSACTION_COST_GAPS_V2.md`.
+
 ## R5 SZSE event-outcome recovery v23 — 2026-09-19
 
 Twenty-three bounded official CNINFO PDFs across six high-information outcome

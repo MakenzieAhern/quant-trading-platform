@@ -143,6 +143,9 @@ def normalize_szse(
             "symbol": symbol,
             "suspended_at": timestamp,
             "resumed_at": resume,
+            "execution_open_blocked": supplement.get("execution_open_blocked")
+            if supplement
+            else None,
             "closure": closure,
             "source_files": sorted({item["source_file"] for item in observations}),
             "source_sha256": sorted({source_hashes[item["source_file"]] for item in observations}),
@@ -256,7 +259,7 @@ def main() -> None:
     sse, sse_non_target, sse_duplicates = sse_result
     szse, unresolved, conflicts, szse_non_target, szse_duplicates = szse_result
     authority = {
-        "parser_version": "FULL_OFFICIAL_SUSPENSION_AUDIT_V3",
+        "parser_version": "FULL_OFFICIAL_SUSPENSION_AUDIT_V4",
         "parser_sha256": sha256_file(Path(__file__)),
         "source_manifest_sha256": sha256_file(source_manifest_path),
         "observations_sha256": sha256_file(observations_path),

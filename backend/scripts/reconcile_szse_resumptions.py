@@ -179,6 +179,28 @@ def exact_resume_dates(text: str, published_on: str) -> list[str]:
     return sorted(values or fallback_values)
 
 
+def execution_open_blocked(text: str, resumed_at: str) -> bool | None:
+    """Preserve explicit intraday timing; an unstated time remains unknown."""
+    year, month, day = map(int, resumed_at.split("-"))
+    dated = re.compile(rf"{year}年0?{month}月0?{day}日?")
+    states = set()
+    compact = re.sub(r"\s+", "", text)
+    for segment in re.split(r"[。\uff01\uff1f\uff1b;]", compact):
+        match = dated.search(segment)
+        if match is None:
+            continue
+        tail = segment[match.end() :]
+        resumption = re.search(TERM, tail)
+        if resumption is None:
+            continue
+        timing = tail[: resumption.start()]
+        if re.search(r"下午|13[:\uff1a时]", timing):
+            states.add(True)
+        elif re.search(r"(?:上午)?开市(?:起|时)?|9(?:[:\uff1a]30|点30分?)", timing):
+            states.add(False)
+    return next(iter(states)) if len(states) == 1 else None
+
+
 def _restoration_dates(compact: str) -> list[str]:
     values = set()
     for segment in re.split(r"[。\uff01\uff1f\uff1b;]", compact):
@@ -253,12 +275,23 @@ def bind_resumptions(unresolved: list[dict], events: list[dict], evidence: list[
             by_symbol[fact["symbol"]][resumed_at],
             key=canonical_json_bytes,
         )
+        open_states = {
+            source["execution_open_blocked"]
+            for source in sources
+            if source.get("execution_open_blocked") is not None
+        }
         accepted.append(
             {
                 "security_id": fact["security_id"],
                 "symbol": fact["symbol"],
                 "suspended_at": fact["suspended_at"],
                 "resumed_at": resumed_at,
+                "execution_open_blocked": True
+                if True in open_states
+                else False
+                if False in open_states
+                else None,
+                "execution_open_status_conflict": len(open_states) > 1,
                 "binding_policy": "EARLIEST_EXACT_RESUMPTION_BEFORE_NEXT_SUSPENSION_V1",
                 "evidence": sources,
             }
@@ -324,6 +357,7 @@ def main() -> None:
                         "published_on": document["published_on"],
                         "retrieved_at_utc": document["retrieved_at_utc"],
                         "source_sha256": document["source_sha256"],
+                        "execution_open_blocked": execution_open_blocked(text, dates[0]),
                     }
                 )
         document_results.append(result)
@@ -342,7 +376,7 @@ def main() -> None:
     if (accepted, remaining) != reversed_result:
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V10",
+        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V11",
         "parser_sha256": sha256_file(Path(__file__)),
         "source_manifest_sha256": sha256_file(source_manifest_path),
         "suspensions_input_sha256": sha256_file(args.suspensions),

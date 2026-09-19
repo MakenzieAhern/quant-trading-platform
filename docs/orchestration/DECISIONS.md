@@ -1,5 +1,40 @@
 # Decisions
 
+## 2026-09-19 — yearbook fee snapshots corroborate, but do not invent intervals
+
+Use the sixteen checksum-bound SZSE yearbooks as official annual fee snapshots.
+Accept an effective boundary only when the yearbook itself states the date, as
+the 2025 book does for 2023-08-28. Do not turn a change between adjacent annual
+tables into an inferred daily boundary. The 2015 inclusion footnote is evidence
+that separate component charges can double count commission, not permission to
+reinterpret the approved research-account commission assumption.
+
+## 2026-09-19 — replay suspension improvements without promoting raw authority
+
+Reapply the accepted 27 listing intervals to the v32 full suspension ledger and
+bind both inputs by file and canonical-manifest hashes. Better suspension
+classification may explain source-absent rows, but it cannot establish raw
+OHLCV values. The replay changes 377 base classifications while preserving the
+same 239 residual security-date keys, so raw authority remains PARTIAL.
+
+## 2026-09-19 — preserve resumption date separately from opening eligibility
+
+An official date closes a suspension interval but does not by itself prove the
+security was executable at that session's open. Preserve explicit `开市` as
+open-confirmed, explicit afternoon/13:00 as open-blocked, and unstated timing as
+unknown. If same-date evidence represents both an opening resumption and a new
+intraday halt, keep the conflict and conservatively mark opening execution
+blocked. This applies the already-approved daily-opening convention; it does
+not create a new fill assumption.
+
+## 2026-09-19 — scan-only official pages require bounded visual corroboration
+
+OCR is a routing/extraction aid, not standalone authority. Accept a scan-only
+resumption date only when the retained official PDF checksum, deterministic OCR
+cache, strict date parser and direct rendered-page review agree. Applying this
+rule to 29 current low-text documents accepts 000545 and 002033 only; the other
+27 remain unresolved.
+
 ## 2026-09-19 — supersede historical SZSE resumption acceptance counts
 
 Decision: use strict retained-evidence revalidation v4 as the sole resumption

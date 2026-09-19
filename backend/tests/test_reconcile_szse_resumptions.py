@@ -6,6 +6,7 @@ from scripts.reconcile_szse_resumptions import (
     continued_halt_restoration_dates,
     exact_restoration_dates,
     exact_resume_dates,
+    execution_open_blocked,
     non_equity_resumption_title,
     official_document_text,
     unresolved_facts,
@@ -130,6 +131,11 @@ def test_exact_resumption_dates_cover_observed_official_forms():
         "2012-01-05"
     ]
     assert exact_resume_dates("公司股票复牌时间为:2011年4月20日。", "2011-04-13") == ["2011-04-20"]
+    assert execution_open_blocked("公司股票将于2014年5月23日13:00起复牌。", "2014-05-23")
+    assert execution_open_blocked("公司股票将于2011年9月15日开市起复牌。", "2011-09-15") is False
+    assert execution_open_blocked("公司股票将于2011年9月15日恢复交易。", "2011-09-15") is None
+    correction = "公司于2015年1月21日披露《复牌公告》,1月20日下午接到通知。"
+    assert execution_open_blocked(correction, "2015-01-21") is None
     assert exact_resume_dates("本公司股票自2011年4月11日复牌。", "2012-04-11") == []
     assert exact_resume_dates("公司B股股票将于2011年5月4日复牌。", "2011-05-04") == []
     assert (
@@ -217,3 +223,21 @@ def test_resumption_binding_is_stable_for_duplicate_source_identity():
     assert bind_resumptions(unresolved, events, evidence) == bind_resumptions(
         unresolved, events, list(reversed(evidence))
     )
+
+
+def test_resumption_binding_blocks_open_when_same_date_evidence_has_two_intraday_episodes():
+    events = [{"symbol": "000001", "suspended_at": "2010/01/04 09:30"}]
+    unresolved = [
+        {
+            "security_id": "CN-A:SZSE:000001",
+            "symbol": "000001",
+            "suspended_at": "2010/01/04 09:30",
+        }
+    ]
+    evidence = [
+        {"symbol": "000001", "resumed_at": "2010-01-05", "execution_open_blocked": False},
+        {"symbol": "000001", "resumed_at": "2010-01-05", "execution_open_blocked": True},
+    ]
+    accepted, _ = bind_resumptions(unresolved, events, evidence)
+    assert accepted[0]["execution_open_blocked"] is True
+    assert accepted[0]["execution_open_status_conflict"] is True

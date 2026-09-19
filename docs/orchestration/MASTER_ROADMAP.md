@@ -1,5 +1,29 @@
 # v1.1 controller roadmap
 
+## R5 current full-source preflight v2 — 2026-09-19
+
+Offline retained-source work closed two scan-only SZSE resumption boundaries,
+preserved explicit open-versus-afternoon timing, verified all 5,436 retained
+adjustment intervals without byte conflicts, and inventoried full-history fee
+claims. The current source preflight remains **PARTIAL**: suspension, raw OHLCV,
+adjustment economic alignment, corporate actions and historical rule/cost
+authority are incomplete. The Full Dataset has not been created or frozen and
+no study may run. See `../research/R5_SZSE_SCAN_RECOVERY_V24.md`,
+`../research/R5_FULL_ADJUSTMENT_INVENTORY_V1.md` and
+`../research/R5_FULL_TRANSACTION_COST_GAPS_V2.md`.
+
+The v32 suspension ledger has also been replayed against all 3,886 retained
+SZSE daily workbooks. It reclassifies 377 rows from unknown resumption to dated
+official halt intervals, but after the existing 27 accepted listing intervals
+the residual scope remains exactly 239 security-days on 2011-07-25. Raw OHLCV
+authority therefore remains PARTIAL rather than being promoted by a suspension
+classification change.
+
+Sixteen retained official SZSE yearbooks now establish the annual handling-fee
+snapshot sequence through 2025. The 2025 book directly closes the 2023-08-28
+change from 0.0487 to 0.0341 per mille, but transfer, regulator and commission-
+contract boundaries remain incomplete; no executable cost rule is changed.
+
 ## R5 SZSE event-outcome recovery v23 — 2026-09-19
 
 Twenty-three bounded official production, regulatory, tender-offer and

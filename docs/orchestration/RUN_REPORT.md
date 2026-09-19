@@ -1,5 +1,39 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE raw-gap v32 replay
+
+- retained official daily workbooks revalidated: 3,886
+- active-without-row observations conserved: 15,655
+- rows newly classified as dated official halt intervals: 377
+- accepted listing intervals reapplied: 27
+- final unresolved rows / securities: 239 / 239
+- residual key-set change: NO
+- residual reason-label changes: 2
+- replay file SHA-256: `7350f64444a39b10b43dc1b4650174628272c773c29df4079e210fbec37da9ed`
+- replay manifest SHA-256: `5ad2a1aac5ad867c724bcf45a48fdac6aec8566ccab20c2d35733c20b95e1cda`
+- raw OHLCV authority: PARTIAL
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
+## 2026-09-19 current full-source preflight v2
+
+- retained scan PDFs / exact dates: 29 / 2
+- exact SZSE resumptions / terminal closures: 8,737 / 58
+- unresolved SZSE boundaries: 2,010
+- explicit open / blocked / unknown SZSE event states: 8,185 / 59 / 13,833
+- retained adjustment intervals verified / conflicting: 5,436 / 0
+- factor change dates matched / unmatched: 40,691 / 2,328
+- supported events without factor change: 6
+- official SZSE fee yearbooks verified: 16 (2010-2025)
+- exact SZSE 2023 handling boundary: PASS_SOURCE_CLAIM_2023_08_28
+- full transaction-cost authority: PARTIAL (6 unresolved claim groups, no executable change)
+- current full source preflight: PARTIAL
+- verified safe start: UNRESOLVED
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE event-outcome recovery v23
 
 - bounded official PDFs acquired: 23

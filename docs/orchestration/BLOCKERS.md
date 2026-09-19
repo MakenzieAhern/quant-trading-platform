@@ -1,5 +1,38 @@
 # Blockers
 
+## Current consolidated R5 source preflight remains PARTIAL — 2026-09-19
+
+The latest checksum-bound preflight has five mandatory incomplete components:
+SZSE suspension closure (2,010 boundaries), raw OHLCV authority (239 unresolved
+source rows plus a distinct 223-symbol after-hours scope gap), adjustment-factor
+economic alignment (2,328 unmatched change dates and six supported events
+without a curve change), corporate-action completeness/accounting, and full
+historical market-rule/transaction-cost authority. The retained-bonus fraction
+rule remains a separate human methodology gate; mixed-component events require
+an explicit combined-total versus per-component rounding choice. Full Dataset
+materialization, freeze and every study remain locked.
+
+The v32 suspension replay does not reduce the raw-source residual. It verifies
+all 3,886 retained SZSE workbooks and reclassifies 377 previously unknown rows
+as dated halt intervals, but the final unresolved key set remains exactly 239
+security-days on 2011-07-25. The raw blocker is therefore unchanged and is not
+silently cleared by better suspension evidence.
+
+The retained SZSE yearbook sequence closes the 2023-08-28 handling-fee source
+boundary and supplies annual snapshots through 2025, but it does not clear the
+transaction-cost blocker. The 2015 official table states that handling,
+transfer and regulator fees are included in commission; the project has no
+account-contract evidence showing whether its approved `0.0003` commission is
+net or all-in. Transfer and regulator effective intervals also remain partial.
+
+## SZSE retained-scan recovery leaves 2,010 — 2026-09-19
+
+Bounded OCR and direct original-page review close 000545 and 002033 without new
+downloads. Twenty-seven other low-text documents yielded no unique strict date.
+Explicit intraday timing is now retained; 59 events block opening execution and
+13,833 full-ledger events remain timing-unknown rather than optimistically
+tradeable. Suspension authority remains PARTIAL.
+
 ## SZSE event-outcome recovery leaves 2,012 — 2026-09-19
 
 Twenty-three bounded official outcome documents close seven exact boundaries.

@@ -1,0 +1,110 @@
+{
+  "report_id": "R5_FULL_TRANSACTION_COST_GAPS_V2",
+  "status": "PARTIAL_SOURCE_CLAIMS_ONLY",
+  "scope": "BOUNDED_OFFLINE_RETAINED_FEE_SOURCES_AND_YEARBOOK_SEQUENCE_NOT_FULL_PERIOD_ACCEPTANCE",
+  "review_baseline_commit": "e5383d7209f3a6e983bb9e0d7410181bb72a50d5",
+  "requested_coverage": ["2010-01-01", "2025-12-31"],
+  "external_path_base": "staging/full-rule-preflight-v1",
+  "review_method": "SHA256_RECEIPT_CHECK_YEARBOOK_SEQUENCE_AND_DIRECT_RENDERED_PAGE_INSPECTION",
+  "sources": [
+    {
+      "id": "SSE_FACTBOOK_2009",
+      "path": "sse-factbook-2009.pdf",
+      "url": "https://www.sse.com.cn/aboutus/publication/factbook/documents/c/10170573/files/073e042b8b87407b919e3d8e75ee91a5.pdf",
+      "sha256": "c962379b144ace00f189065ce7d1d32ea8f5d7fe47e3e617adc8383a291262c2",
+      "retrieved_at_utc": "2026-09-14T04:25:50.655705+00:00",
+      "publication_date": null,
+      "edition_year": 2009,
+      "pdf_pages_reviewed": [19, 20, 22],
+      "printed_pages_relevant": [28, 31, 34]
+    },
+    {
+      "id": "SSE_FACTBOOK_2012",
+      "path": "sse-factbook-2012.pdf",
+      "url": "https://www.sse.com.cn/aboutus/publication/factbook/documents/c/10170570/files/9a7b8e0d00e84d358d02fbba056f7bda.pdf",
+      "sha256": "d1283b557d51b298300b3cb46c1125aabeac0ae86e94cea7ecb15de9befff0bb",
+      "retrieved_at_utc": "2026-09-14T04:38:31.748289+00:00",
+      "publication_date": null,
+      "edition_year": 2012,
+      "pdf_pages_reviewed": [27, 30],
+      "printed_pages_relevant": [21, 24]
+    },
+    {
+      "id": "SSE_FACTBOOK_2013",
+      "path": "sse-factbook-2013.pdf",
+      "url": "https://www.sse.com.cn/aboutus/publication/factbook/documents/c/10170569/files/cdccf6c0b46a4c0cadc0a531ecc3aad7.pdf",
+      "sha256": "5971dc407dff2aefb15ef203b684fba056e56ac351034d0a8f483472278cc4ff",
+      "retrieved_at_utc": "2026-09-14T04:38:03.035611+00:00",
+      "publication_date": null,
+      "edition_year": 2013,
+      "pdf_pages_reviewed": [14, 15, 29],
+      "printed_pages_relevant": [6, 7, 21]
+    },
+    {
+      "id": "CSRC_2012_AUGUST_PRESS",
+      "path": "2012-fee-sources-v1/csrc-august-press.pdf",
+      "url": "https://www.csrc.gov.cn/csrc/c100024/c1492228/1492228/files/9265c0ec40074dcda1d45fc652106328.pdf",
+      "sha256": "b556e44b3784d03922c04cb5b77e9f5fcf9bbec9439b0e20ca9512f94c161bc2",
+      "retrieved_at_utc": "2026-09-14T06:34:22.233374+00:00",
+      "publication_date": "2012-08-02",
+      "pdf_pages_reviewed": [127],
+      "printed_pages_relevant": [114],
+      "text_extraction_accepted": false
+    },
+    {
+      "id": "SSE_2015_FEE_TRANSITION",
+      "path": "sse-20150701-fee-transition.html",
+      "url": "https://www.sse.com.cn/aboutus/mediacenter/hotandd/c/c_20150912_3988866.shtml",
+      "sha256": "68d86fbded6d151eac74501ed285ce7c24a0746cd09a791ea927d81172266796",
+      "retrieved_at_utc": "2026-09-12T14:34:12.516404+00:00",
+      "publication_date": "2015-07-01",
+      "effective_date": "2015-08-01",
+      "locator": "article date and answer body; URL archive date not used"
+    }
+  ],
+  "dated_claims": [
+    {"kind": "HANDLING_FEE", "exchange": "SSE", "effective_from": "2012-06-01", "base": "TRADED_AMOUNT", "rate_before": "0.00011", "rate_after": "0.000087", "source_id": "SSE_FACTBOOK_2013", "pdf_page": 14, "status": "SOURCE_CLAIM_ESTABLISHED"},
+    {"kind": "HANDLING_FEE", "exchange": "SSE_SZSE", "effective_from": "2012-09-01", "base": "TRADED_AMOUNT", "rate_after": "0.0000696", "both_sides": true, "source_ids": ["CSRC_2012_AUGUST_PRESS", "SSE_FACTBOOK_2013"], "status": "SOURCE_CLAIM_ESTABLISHED"},
+    {"kind": "SSE_TRANSFER_FEE", "effective_from": "2012-09-01", "rate_after": "0.0003", "printed_base": "TRADED_AMOUNT", "source_id": "CSRC_2012_AUGUST_PRESS", "status": "BASE_CONTRADICTS_LATER_SSE_FACE_VALUE_EVIDENCE"},
+    {"kind": "HANDLING_FEE", "exchange": "SSE_SZSE", "effective_from": "2015-08-01", "base": "TRADED_AMOUNT", "rate_before": "0.0000696", "rate_after": "0.0000487", "both_sides": true, "source_id": "SSE_2015_FEE_TRANSITION", "status": "SOURCE_CLAIM_ESTABLISHED"},
+    {"kind": "TRANSFER_FEE", "exchange": "SSE_SZSE", "effective_from": "2015-08-01", "base_after": "TRADED_AMOUNT", "rate_after": "0.00002", "both_sides": true, "sse_base_before": "TRADED_FACE_VALUE", "sse_rate_before": "0.0003", "szse_base_before": "TRADED_AMOUNT", "szse_rate_before": "0.0000255", "minimum_after": null, "source_id": "SSE_2015_FEE_TRANSITION", "status": "SOURCE_CLAIM_ESTABLISHED_MINIMUM_NOT_ESTABLISHED"},
+    {"kind": "HANDLING_FEE", "exchange": "SZSE", "effective_from": "2023-08-28", "base": "TRADED_AMOUNT", "rate_before": "0.0000487", "rate_after": "0.0000341", "both_sides": true, "source_id": "SZSE_YEARBOOK_2025", "pdf_page": 1903, "status": "SOURCE_CLAIM_ESTABLISHED"}
+  ],
+  "szse_yearbook_inventory": {
+    "path": "/home/yuchen/data/research/staging/full-rule-preflight-v1/szse-yearbook-fee-inventory-v1.json",
+    "file_sha256": "284f2adab59752330aeeac6e4a6046fd81e65d371800d8296822fe27c9052fc4",
+    "manifest_sha256": "fb9b2e6b5e84d5ce041afe5797effa5f2759d125648f183500679046e63c2cc7",
+    "yearbooks_verified": 16,
+    "coverage": [2010, 2025],
+    "full_fee_table_years": [2010, 2021],
+    "exchange_fee_table_years": [2022, 2025],
+    "accepted_effective_boundaries": 1,
+    "input_order_reproducibility": "PASS"
+  },
+  "snapshot_claims": {
+    "sse_2009_transfer": {"base": "TRADED_FACE_VALUE", "rate": "0.001", "minimum_cny": "1", "effective_interval": null, "source_id": "SSE_FACTBOOK_2009", "pdf_page": 19},
+    "sse_2009_commission": {"base": "TRADED_AMOUNT", "ceiling_rate": "0.003", "minimum_cny": "5", "actual_account_rate": null, "source_id": "SSE_FACTBOOK_2009", "pdf_page": 19},
+    "sse_regulator_fee_2009_2012": {"base": "TRADED_AMOUNT", "rate": "0.00004", "both_sides": true, "effective_interval": null},
+    "sse_regulator_fee_2013": {"base": "TRADED_AMOUNT", "rate": "0.00002", "both_sides": true, "effective_interval": null},
+    "sse_stamp_duty": {"base": "TRADED_AMOUNT", "rate": "0.001", "seller_only_explicit_source": "SSE_FACTBOOK_2009", "effective_interval": null}
+  },
+  "unresolved": [
+    {"id": "TRANSFER_2012_BASE_CONTRADICTION", "resolved_by_selected_cache": false},
+    {"id": "TRANSFER_MINIMUM_AFTER_REDUCTIONS", "resolved_by_selected_cache": false},
+    {"id": "TRANSFER_PRE_2015_INTERVALS", "resolved_by_selected_cache": false},
+    {"id": "CUSTOMER_COMMISSION_COMPONENT_SCOPE", "resolved_by_selected_cache": false},
+    {"id": "REGULATOR_FEE_EFFECTIVE_BOUNDARY", "resolved_by_selected_cache": false},
+    {"id": "FULL_PERIOD_INTERVAL_COMPLETENESS", "resolved_by_selected_cache": false, "wider_cache_absence_claimed": false, "szse_handling_fee_through_2025_established": true, "non_handling_intervals_complete": false}
+  ],
+  "preserved_receipts": [
+    {"path": "2012-fee-sources-v1/visual-review-v1.json", "sha256": "5eddd2ab473c6d85eb1d5708862f164041b2f6580ec32302181c053c42429480"},
+    {"path": "2012-fee-sources-v1/manifest.json", "sha256": "5a635becaaa4b68f8967f4e8795f6465ed475c8aa5021fa9607e829758dcc9f2", "failures": ["APRIL30_DNS_FAILED", "GUANGDONG_AUG24_HTTP403"]},
+    {"path": "annual-2012-recovery-v1/manifest.json", "sha256": "2139eff8b041dbb3fa5588069e9fdb98316f062903bab8ff93655b2c17cc7d5f", "status": "FAILED_NO_FURTHER_RETRY_NOT_PDF"}
+  ],
+  "new_executable_rules_accepted": 0,
+  "methodology_changed": false,
+  "downloads_performed": 0,
+  "dataset_created": false,
+  "strategy_run": false,
+  "manifest_sha256": "9e6023fef613d9f8c08218c1e2290d786f8843f357c07c8957c629eb0df33a89"
+}
