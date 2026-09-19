@@ -1,5 +1,15 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 3,388 — 2026-09-19
+
+Broad subject/date wording is now fallback-only behind narrower effective-date
+forms, closing 300316 without losing or changing any prior boundary. Authority
+has 7,359 exact resumptions, 58 terminal closures, zero conflicts and **3,388**
+unresolved boundaries. 000422 remains explicit: one official notice spans two
+adjacent halt episodes, so its later date cannot close the earlier halt across
+the intervening suspension. Suspension authority remains PARTIAL; the
+independent retained-bonus fractional methodology gate remains active.
+
 ## SZSE exact resumption residual reduced to 3,389 — 2026-09-19
 
 Anchored official effective-date patterns now outrank broad contextual date

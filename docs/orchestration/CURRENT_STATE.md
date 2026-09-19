@@ -1,5 +1,17 @@
 # Current state
 
+## R5 SZSE broad-subject date precedence v16 — 2026-09-19
+
+The broad subject/date resumption form is now fallback-only when a narrower
+effective-date form succeeds. Full retained replay closes 300316 with no loss
+or date change among the prior 7,358 boundaries. Authority now has **7,359**
+exact resumptions, 58 terminal closures, zero conflicts and **3,388**
+unresolved SZSE boundaries. 000422 remains unresolved because one notice
+describes two adjacent suspension episodes and the accepted one-date evidence
+model cannot cross the intervening halt. Suspension authority remains PARTIAL;
+the retained-bonus gate is unchanged. See
+`../research/R5_SZSE_BROAD_SUBJECT_PRECEDENCE_V16.md`.
+
 ## R5 SZSE resumption-date precedence v15 — 2026-09-19
 
 The broad resumption-date lookahead is now fallback-only when an anchored

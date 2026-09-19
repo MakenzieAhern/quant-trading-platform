@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE broad-subject date precedence v16
+
+- new source downloads: 0
+- exact resumptions: 7,359
+- terminal closures: 58
+- newly closed versus v15: 1 (300316)
+- prior accepted boundaries lost or changed: 0
+- adjacent-boundary case retained unresolved: 1 (000422)
+- final unresolved: 3,388
+- conflicts: 0
+- source checksum repeatability: PASS
+- input-order reproducibility: PASS
+- focused parser tests: 6 passed
+- authority status: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- report: `../research/R5_SZSE_BROAD_SUBJECT_PRECEDENCE_V16.md`
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE resumption-date precedence v15
 
 - new source downloads: 0

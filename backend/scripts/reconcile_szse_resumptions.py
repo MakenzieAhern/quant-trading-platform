@@ -139,7 +139,7 @@ def exact_resume_dates(text: str, published_on: str) -> list[str]:
                 except ValueError:
                     continue
                 if _near_publication(day, published):
-                    (fallback_values if index == 6 else values).add(day.isoformat())
+                    (fallback_values if index in {2, 6} else values).add(day.isoformat())
         for index, pattern in enumerate(MONTH_DAY_PATTERNS):
             for match in pattern.finditer(segment):
                 if not _is_certain(segment, match):
@@ -154,7 +154,7 @@ def exact_resume_dates(text: str, published_on: str) -> list[str]:
                     if _near_publication(day, published):
                         candidates.append(day)
                 if len(candidates) == 1:
-                    (fallback_values if index == 3 else values).add(candidates[0].isoformat())
+                    (fallback_values if index in {1, 3} else values).add(candidates[0].isoformat())
         for pattern in RELATIVE_PATTERNS:
             match = pattern.search(segment)
             if match and _is_certain(segment, match):

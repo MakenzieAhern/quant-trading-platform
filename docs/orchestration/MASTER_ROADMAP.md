@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## R5 SZSE broad-subject date precedence v16 — 2026-09-19
+
+The shared parser now treats broad subject/date wording as fallback-only. One
+cached official notice closes 300316 without changing any v15 boundary.
+Current authority has 7,359 exact resumptions, 58 terminal closures, zero
+conflicts and 3,388 unresolved facts. The adjacent-boundary 000422 case stays
+open rather than crossing a new halt. Suspension authority remains PARTIAL;
+Full Dataset creation, freeze and all studies remain locked. See
+`../research/R5_SZSE_BROAD_SUBJECT_PRECEDENCE_V16.md`.
+
 ## R5 SZSE resumption-date precedence v15 — 2026-09-19
 
 Anchored official trading-boundary wording now takes precedence over the broad
