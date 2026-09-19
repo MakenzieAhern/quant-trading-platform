@@ -1,5 +1,14 @@
 # Decisions
 
+## 2026-09-19 accept explicit intraday timing, not inferred duration
+
+An official notice may close a suspension on the same date when it explicitly
+states morning halt/afternoon resumption or one-hour/half-day halt then
+resumption. An explicit `复牌时间为` full date is also accepted. Do not infer a
+date from `一天`, a disclosure dependency, a deadline, an application or a
+condition. This closes four facts without converting relative promises into
+trading boundaries.
+
 ## 2026-09-19 normal-trading clauses require one attached date
 
 Treat official `恢复正常交易` as a resumption only when a single date is attached

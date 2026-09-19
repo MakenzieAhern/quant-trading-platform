@@ -56,6 +56,14 @@ def test_exact_resumption_dates_cover_observed_official_forms():
         )
         == []
     )
+    assert exact_resume_dates(
+        "本公司股票2011年2月14日上午停牌,下午13:00复牌。",
+        "2011-02-14",
+    ) == ["2011-02-14"]
+    assert exact_resume_dates("公司股票于2012年1月5日停牌一小时后复牌。", "2012-01-05") == [
+        "2012-01-05"
+    ]
+    assert exact_resume_dates("公司股票复牌时间为:2011年4月20日。", "2011-04-13") == ["2011-04-20"]
     assert exact_resume_dates("本公司股票自2011年4月11日复牌。", "2012-04-11") == []
     assert exact_resume_dates("公司B股股票将于2011年5月4日复牌。", "2011-05-04") == []
     assert (

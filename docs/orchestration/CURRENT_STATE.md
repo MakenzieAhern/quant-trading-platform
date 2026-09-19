@@ -1,5 +1,16 @@
 # Current state
 
+## R5 intraday and named resumptions v9 — 2026-09-19
+
+Four retained official notices close under three narrow forms: an explicitly
+named resumption date, same-date afternoon trading after a morning halt, and
+same-date trading after a stated one-hour halt. No disclosure-dependent,
+conditional, deadline-only or one-day inference is admitted. Full replay has
+**8,913** true resumptions, 58 terminal closures, zero conflicts and **1,834**
+unresolved SZSE boundaries. Authority remains PARTIAL. Manifest
+`0c2678ac55fd0384e82d7c28601cf2f1e3e621c1d5d28e1067d92f606090fe42`.
+See `../research/R5_SZSE_INTRADAY_AND_NAMED_RESUMPTION_V9.md`.
+
 ## R5 exact normal-trading boundaries v8 — 2026-09-19
 
 Strict parsing now recognizes official `恢复正常交易` and prevents an earlier

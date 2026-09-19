@@ -1,5 +1,11 @@
 # v1.1 controller roadmap
 
+## R5 explicit intraday boundary progress v9 — 2026-09-19
+
+Four exact retained official boundaries close from named-date or explicit
+same-day intraday forms. The SZSE residual is **1,834**, with 8,913 true
+resumptions, 58 terminal closures and zero conflicts. This remains partial R5.
+
 ## R5 normal-trading grammar progress v8 — 2026-09-19
 
 Four exact retained official boundaries close after adding `恢复正常交易` and

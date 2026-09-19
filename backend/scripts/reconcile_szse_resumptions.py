@@ -39,7 +39,7 @@ FULL_PATTERNS = (
     ),
     re.compile(FULL_DATE + r"[^。\uff1b;]{0,60}?" + SUBJECT + r"[^。\uff1b;]{0,20}?同日复牌"),
     re.compile(r"(?=(" + FULL_DATE + r"[^。\uff1b;]{0,40}?" + TERM + r"))"),
-    re.compile(TERM + r"(?:时间)?(?:定为|安排为)" + FULL_DATE),
+    re.compile(TERM + r"(?:时间)?(?:为|定为|安排为)[:\uff1a]?" + FULL_DATE),
 )
 MONTH_DAY_PATTERNS = (
     re.compile(r"(?:并)?将于" + MONTH_DAY + r"[^。\uff1b;]{0,30}?" + TERM),
@@ -80,6 +80,14 @@ RESTORATION_PATTERNS = (
         FULL_DATE + r"(?:起)?[^。\uff1b;]{0,25}?" + SUBJECT + r"[^。\uff1b;]{0,35}?恢复上市交易"
     ),
 )
+INTRADAY_PATTERNS = (
+    re.compile(
+        FULL_DATE
+        + r"[^。\uff1b;]{0,25}?上午[^。\uff1b;]{0,15}?停牌"
+        + r"[^。\uff1b;]{0,25}?下午[^。\uff1b;]{0,15}?复牌"
+    ),
+    re.compile(FULL_DATE + r"[^。\uff1b;]{0,25}?停牌(?:一小时|半天)后复牌"),
+)
 
 
 def _near_publication(day: date, published: date) -> bool:
@@ -109,6 +117,12 @@ def exact_resume_dates(text: str, published_on: str) -> list[str]:
     values = set()
     compact = re.sub(r"\s+", "", text)
     for segment in re.split(r"[。\uff01\uff1f\uff1b;]", compact):
+        for pattern in INTRADAY_PATTERNS:
+            for match in pattern.finditer(segment):
+                try:
+                    values.add(date(*map(int, match.groups()[-3:])).isoformat())
+                except ValueError:
+                    continue
         for pattern in FULL_PATTERNS:
             for match in pattern.finditer(segment):
                 if not _is_certain(segment, match):
@@ -285,7 +299,7 @@ def main() -> None:
     if (accepted, remaining) != reversed_result:
         raise ValueError("INPUT_ORDER_CHANGED")
     report = {
-        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V8",
+        "parser_version": "SZSE_EXACT_OFFICIAL_RESUMPTION_RECONCILIATION_V9",
         "parser_sha256": sha256_file(Path(__file__)),
         "source_manifest_sha256": sha256_file(source_manifest_path),
         "suspensions_input_sha256": sha256_file(args.suspensions),

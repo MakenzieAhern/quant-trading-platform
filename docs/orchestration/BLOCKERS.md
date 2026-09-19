@@ -1,5 +1,12 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 1,834 — 2026-09-19
+
+Four retained official intraday/named-date notices close exact boundaries.
+Full replay has 8,913 true resumptions, 58 terminal closures, zero conflicts
+and **1,834** unresolved SZSE boundaries. Relative and deadline-only notices
+remain non-facts. Suspension authority stays PARTIAL; other R5 blockers remain.
+
 ## SZSE exact resumption residual reduced to 1,838 — 2026-09-19
 
 Four retained official normal-trading notices now close exact boundaries under

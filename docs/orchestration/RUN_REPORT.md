@@ -1,5 +1,14 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 intraday and named resumption parser v9
+
+Added only three explicit official forms: `复牌时间为` plus a full date,
+same-date afternoon resumption after a morning halt, and same-date resumption
+after a stated one-hour/half-day halt. Four boundaries close; relative,
+conditional and deadline-only wording stays unresolved. Full replay reaches
+8,913 true resumptions, 58 terminal closures, 1,834 residuals and zero
+conflicts. Focused tests and input-order checks pass; authority stays PARTIAL.
+
 ## 2026-09-19 exact normal-trading boundary parser v8
 
 Added the retained official `恢复正常交易` form and removed multi-date false
