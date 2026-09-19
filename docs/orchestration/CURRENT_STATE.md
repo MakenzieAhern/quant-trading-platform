@@ -1,5 +1,16 @@
 # Current state
 
+## R5 SZSE residual clarification screen v19 — 2026-09-19
+
+The corrected residual was rejoined to all retained official CNINFO metadata.
+A bounded four-document clarification screen acquired four official PDFs with
+zero failures and closes 000030 and 000541. Authority now has **8,718** exact
+resumptions, 58 terminal closures, zero conflicts and **2,029** unresolved SZSE
+boundaries. The remaining 72,620 generic document leads are not a justified
+blind acquisition queue. Suspension authority remains PARTIAL; the retained-
+bonus gate is unchanged. See
+`../research/R5_SZSE_RESIDUAL_CLARIFICATION_SCREEN_V19.md`.
+
 ## R5 SZSE non-equity evidence screen v18 — 2026-09-19
 
 The shared resumption classifier now rejects bounded bond-only title forms such

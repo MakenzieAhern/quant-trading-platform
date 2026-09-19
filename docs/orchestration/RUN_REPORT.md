@@ -1,5 +1,26 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-19 SZSE residual clarification screen v19
+
+- current residual facts joined to retained metadata: 2,031
+- facts with unprocessed metadata candidates: 1,778
+- facts without unprocessed metadata candidates: 253
+- unprocessed document leads: 72,624
+- bounded clarification PDFs acquired: 4
+- acquisition failures: 0
+- newly closed boundaries: 2 (000030, 000541)
+- exact resumptions: 8,718
+- terminal closures: 58
+- final unresolved: 2,029
+- conflicts: 0
+- source checksum repeatability: PASS
+- input-order reproducibility: PASS
+- authority status: PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES
+- report: `../research/R5_SZSE_RESIDUAL_CLARIFICATION_SCREEN_V19.md`
+- Full Dataset created/audited/frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-19 SZSE non-equity evidence screen v18
 
 - new source downloads: 0

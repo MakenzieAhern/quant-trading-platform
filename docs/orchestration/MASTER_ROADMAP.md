@@ -1,5 +1,13 @@
 # v1.1 controller roadmap
 
+## R5 SZSE residual clarification screen v19 — 2026-09-19
+
+Four bounded official clarification documents close two exact boundaries with
+zero acquisition failures. Current authority has 8,718 exact resumptions, 58
+terminal closures, zero conflicts and 2,029 unresolved facts. Suspension
+authority remains PARTIAL; Full Dataset creation, freeze and all studies remain
+locked. See `../research/R5_SZSE_RESIDUAL_CLARIFICATION_SCREEN_V19.md`.
+
 ## R5 SZSE non-equity evidence screen v18 — 2026-09-19
 
 Sixteen retained bond-only document occurrences are excluded from equity

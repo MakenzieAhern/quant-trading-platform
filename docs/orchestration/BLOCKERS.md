@@ -1,5 +1,14 @@
 # Blockers
 
+## SZSE exact resumption residual reduced to 2,029 — 2026-09-19
+
+Four fact-bounded official clarification documents close 000030 and 000541.
+Authority has 8,718 exact resumptions, 58 terminal closures, zero conflicts and
+**2,029** unresolved boundaries. The residual metadata join leaves 72,620
+unprocessed generic document leads and 253 facts with no metadata candidate;
+blind bulk acquisition is not accepted. Suspension authority remains PARTIAL;
+the independent retained-bonus fractional methodology gate remains active.
+
 ## Bond-only documents removed from equity evidence — 2026-09-19
 
 Sixteen retained document occurrences naming only a corporate bond or
