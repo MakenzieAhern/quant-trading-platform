@@ -7,6 +7,7 @@ from app.domain.markets import CorporateAction, CorporateActionType
 from app.domain.markets.consolidations import ShareConsolidationEvent
 from app.domain.markets.corporate_actions import require_supported_corporate_action
 from app.domain.markets.demergers import (
+    BasisAllocationMethod,
     DemergerEvent,
     accounting_symbol,
 )
@@ -16,6 +17,7 @@ from app.domain.markets.surrenders import (
     MandatoryPartialShareSurrenderEvent,
 )
 from app.domain.trading import (
+    DemergerRoundingAudit,
     Fill,
     MergerRoundingAudit,
     OrderSide,
@@ -64,6 +66,7 @@ class PortfolioEngine:
         self._last_event_timestamp: datetime | None = None
         self._pending_demergers: dict[str, PendingDemergerEntitlement] = {}
         self._demerger_events: dict[str, DemergerEvent] = {}
+        self._demerger_audits: dict[tuple[str, str], DemergerRoundingAudit] = {}
         self._retired_realized = ZERO
         self._corporate_action_realized = ZERO
         self._merger_events: dict[str, MergerEvent] = {}
@@ -114,6 +117,10 @@ class PortfolioEngine:
         return tuple(
             sorted(self._surrender_audits, key=lambda a: (a.effective_date, str(a.security_id)))
         )
+
+    @property
+    def demerger_rounding_audits(self) -> tuple[DemergerRoundingAudit, ...]:
+        return tuple(self._demerger_audits[k] for k in sorted(self._demerger_audits))
 
     @property
     def pass_through_audits(self) -> tuple[RestructuringBonusPassThroughAudit, ...]:
@@ -268,16 +275,26 @@ class PortfolioEngine:
                 if q < ZERO or q != q.to_integral_value():
                     raise PortfolioError("partial surrender requires whole long shares")
                 with localcontext(PORTFOLIO_CONTEXT) as quantity_context:
+                    ratios = [
+                        event.surrender_ratio,
+                        *(band.surrender_ratio for band in event.quantity_bands),
+                    ]
                     quantity_context.prec = max(
                         quantity_context.prec,
-                        len(q.as_tuple().digits) + len(event.surrender_ratio.as_tuple().digits) + 1,
+                        len(q.as_tuple().digits)
+                        + max(len(ratio.as_tuple().digits) for ratio in ratios if ratio is not None)
+                        + 1,
                     )
-                    theoretical = q * event.surrender_ratio
+                    theoretical = event.theoretical_surrender(q)
                     lower = theoretical.to_integral_value(rounding=ROUND_FLOOR)
                     surrendered = (
-                        min(q, theoretical.to_integral_value(rounding=ROUND_CEILING))
-                        if event.research_fraction_rule is not None
-                        else theoretical
+                        lower
+                        if event.quantity_rounding_rule == "OFFICIAL_FLOOR_SURRENDER"
+                        else (
+                            min(q, theoretical.to_integral_value(rounding=ROUND_CEILING))
+                            if event.research_fraction_rule is not None
+                            else theoretical
+                        )
                     )
                     retained = q - surrendered
                 # Issuer-level issuance rounding cannot define this holder-level transfer.
@@ -286,12 +303,8 @@ class PortfolioEngine:
                 basis = current.aggregate_cost_basis
                 if basis is None:
                     basis = q * current.average_price
-                if event.research_fraction_rule is not None:
-                    retained_basis = basis * retained / q
-                    surrendered_basis = basis - retained_basis
-                else:
-                    surrendered_basis = basis * event.surrender_ratio
-                    retained_basis = basis - surrendered_basis
+                retained_basis = basis * retained / q
+                surrendered_basis = basis - retained_basis
                 price = self._marks.get(symbol, current.market_price)
                 average = basis / q
                 if retained and retained_basis / retained != average:
@@ -382,8 +395,13 @@ class PortfolioEngine:
             for event_symbol, effective in self._consolidation_audits
         ):
             return False
-        if symbol in self._demerger_events or symbol in self._merger_events:
+        if symbol in self._merger_events:
             return False
+        if symbol in self._demerger_events:
+            event = self._demerger_events[symbol]
+            retained = any(accounting_symbol(s.security_id) == symbol for s in event.successors)
+            if not retained:
+                return False
         if self._last_event_timestamp is not None and any(
             symbol == accounting_symbol(e.successor_security)
             and self._last_event_timestamp.date() < e.successor_listing_date
@@ -583,7 +601,7 @@ class PortfolioEngine:
     ) -> None:
         self._require_chronological(timestamp, "demerger")
         event.require_supported()
-        if session_date != event.effective_date:
+        if session_date != event.application_date:
             raise PortfolioError("demerger must belong to its effective session")
         parent = accounting_symbol(event.parent_security)
         if parent in self._demerger_events or parent in self._merger_events:
@@ -601,7 +619,10 @@ class PortfolioEngine:
             with localcontext(PORTFOLIO_CONTEXT):
                 for successor in event.successors:
                     quantity = current.quantity * successor.conversion_ratio
-                    if quantity != quantity.to_integral_value():
+                    if (
+                        quantity != quantity.to_integral_value()
+                        and event.research_fractional_method is None
+                    ):
                         raise PortfolioError("DEMERGER_FRACTIONAL_QUANTITY_UNRESOLVED")
                 basis = current.aggregate_cost_basis
                 if basis is None:
@@ -632,7 +653,9 @@ class PortfolioEngine:
     ) -> None:
         self._require_chronological(timestamp, "demerger activation")
         updates: dict[str, Position] = {}
+        audits: dict[tuple[str, str], DemergerRoundingAudit] = {}
         completed = []
+        basis_written_off = ZERO
         with localcontext(PORTFOLIO_CONTEXT):
             for parent, pending in sorted(self._pending_demergers.items()):
                 event = self._demerger_events[parent]
@@ -642,9 +665,17 @@ class PortfolioEngine:
                 event.require_supported()
                 if max(s.published_on for s in event.allocation_sources) >= session_date:
                     raise PortfolioError("demerger allocation evidence unavailable")
-                total = sum((s.conversion_ratio * s.reference_value for s in successors), ZERO)
+                weights = [
+                    (
+                        s.basis_allocation_weight or ZERO
+                        if event.basis_allocation == BasisAllocationMethod.OFFICIAL_ASSET_ALLOCATION
+                        else s.conversion_ratio * s.reference_value
+                    )
+                    for s in successors
+                ]
+                total = sum(weights, ZERO)
                 remaining = pending.aggregate_cost_basis
-                for index, successor in enumerate(successors):
+                for index, (successor, weight) in enumerate(zip(successors, weights, strict=True)):
                     symbol = accounting_symbol(successor.security_id)
                     price = raw_opens.get(symbol)
                     if not isinstance(price, Decimal) or not price.is_finite() or price <= ZERO:
@@ -654,29 +685,49 @@ class PortfolioEngine:
                     basis = (
                         remaining
                         if index == len(successors) - 1
-                        else (
-                            pending.aggregate_cost_basis
-                            * successor.conversion_ratio
-                            * successor.reference_value
-                            / total
-                        )
+                        else (pending.aggregate_cost_basis * weight / total)
                     )
                     remaining -= basis
-                    quantity = pending.parent_quantity * successor.conversion_ratio
-                    updates[symbol] = Position(
-                        symbol=symbol,
-                        quantity=quantity,
-                        average_price=basis / quantity,
-                        aggregate_cost_basis=basis,
-                        market_price=price,
-                        unrealized_pnl=quantity * price - basis,
-                        realized_pnl=ZERO,
+                    theoretical = pending.parent_quantity * successor.conversion_ratio
+                    quantity = (
+                        theoretical.to_integral_value(rounding=ROUND_FLOOR)
+                        if event.research_fractional_method is not None
+                        else theoretical
                     )
+                    if event.research_fractional_method is not None:
+                        written_off = basis if not quantity else ZERO
+                        audits[(parent, symbol)] = DemergerRoundingAudit(
+                            event_checksum=event.event_checksum,
+                            parent_symbol=parent,
+                            successor_symbol=symbol,
+                            parent_quantity=pending.parent_quantity,
+                            theoretical_successor_quantity=theoretical,
+                            whole_successor_quantity=quantity,
+                            fractional_remainder=theoretical - quantity,
+                            branch_basis=basis,
+                            basis_transferred=basis - written_off,
+                            basis_written_off=written_off,
+                            official_fractional_method=event.official_fractional_method,
+                            research_fractional_method=event.research_fractional_method,
+                        )
+                        basis_written_off += written_off
+                    if quantity:
+                        updates[symbol] = Position(
+                            symbol=symbol,
+                            quantity=quantity,
+                            average_price=basis / quantity,
+                            aggregate_cost_basis=basis,
+                            market_price=price,
+                            unrealized_pnl=quantity * price - basis,
+                            realized_pnl=ZERO,
+                        )
                 assert remaining == ZERO
                 completed.append(parent)
         # Validate every successor before publishing any ownership change.
         self._positions.update(updates)
         self._marks.update({s: p.market_price for s, p in updates.items()})
+        self._demerger_audits.update(audits)
+        self._corporate_action_realized -= basis_written_off
         for parent in completed:
             del self._pending_demergers[parent]
         self._last_event_timestamp = timestamp
@@ -801,6 +852,7 @@ class PortfolioEngine:
             pending_demergers=self.pending_demergers,
             pending_mergers=self.pending_mergers,
             merger_rounding_audits=self.merger_rounding_audits,
+            demerger_rounding_audits=self.demerger_rounding_audits,
             corporate_action_realized_pnl=self._corporate_action_realized,
             total_pnl=total_pnl,
             partial_surrender_audits=self.partial_surrender_audits,
@@ -895,6 +947,7 @@ class PortfolioEngine:
         self._last_event_timestamp = None
         self._pending_demergers.clear()
         self._demerger_events.clear()
+        self._demerger_audits.clear()
         self._retired_realized = ZERO
         self._corporate_action_realized = ZERO
         self._merger_events.clear()

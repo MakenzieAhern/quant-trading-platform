@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-21 R5 Full Dataset audit PASS / Gate B pending
+
+- dataset: `cn-a-research-20100101-20251231-v1`
+- coverage / securities / intervals / sessions: 2010-01-01..2025-12-31 / 5,431 / 5,436 / 3,886
+- raw rows / SSE / SZSE: 13,411,189 / 5,550,031 / 7,861,158
+- feature-only non-tradable / failed sources / unresolved required data: 239 / 0 / 0
+- adjustment / corporate-action / suspension rows: 48,458 / 42,792 / 38,470
+- structural events: rights 153; mergers 24; demergers 2; partial surrenders 13; pass-through 1; consolidation 1
+- audit gates: 15 PASS / 0 FAIL
+- canonical / file manifest SHA-256: `48276cad75f430840565f974899331692b49bf613faf85f417025ff3a98dc484` / `6016b579ad621654fe36d9018c404be13385d52836e46043ce16781fc4d8675a`
+- audit file SHA-256: `ac14eb6c7e76c6a85223d8f7a494269d4a54e2044bdbb05c4573316f44c92e05`
+- Full Dataset created / audited / frozen: YES / YES / NO
+- Gate B: CONDITIONALLY PRE-AUTHORIZED; pending repository validation and coherent commit
+- Development / Validation / Official OOS: NOT RUN
+- single smallest blocker: NONE
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-21 R5 Full Dataset candidate / fail-closed audit
 
 - dataset candidate: `cn-a-research-20100101-20251231-v1`
@@ -12,7 +29,10 @@
 - restart and checksum repeatability: PASS
 - audit gates: 14 PASS / 1 FAIL
 - sole failed gate: `STRUCTURAL_CORPORATE_ACTION_CENSUS`
-- rights / merger / demerger / partial surrender / pass-through census: PARTIAL / NOT_ESTABLISHED / NOT_ESTABLISHED / NOT_ESTABLISHED / NOT_ESTABLISHED
+- rights / merger / demerger / partial surrender / pass-through census: PASS / NOT_ESTABLISHED / NOT_ESTABLISHED / NOT_ESTABLISHED / NOT_ESTABLISHED
+- rights official query / result notices / events / securities: 770 / 156 / 153 / 142
+- rights unclassified result notices / unresolved events: 0 / 0
+- rights census canonical / file SHA-256: `80d8db91057683ae3f504642e2eb0ac14ab382f5636d663b9cf44841373263f6` / `77cdf533cfad0366d470f3d800a6e0205f624bbb0d4adc1bfaaff8c655a314a0`
 - Full Dataset created / audited / frozen: NO / NO / NO (candidate only)
 - Development / Validation / Official OOS: NOT RUN
 - single smallest blocker: `FULL_MARKET_STRUCTURAL_CORPORATE_ACTION_CENSUS_NOT_ESTABLISHED`

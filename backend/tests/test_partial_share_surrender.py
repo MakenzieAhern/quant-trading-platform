@@ -7,6 +7,7 @@ import pytest
 from app.domain.markets.surrenders import (
     PARTIAL_SURRENDER_POLICY,
     MandatoryPartialShareSurrenderEvent,
+    SurrenderQuantityBand,
 )
 from app.domain.trading import OrderSide, PortfolioSnapshot
 from app.event import EventBus, EventType
@@ -57,9 +58,48 @@ def test_approved_ceil_surrender_preserves_basis_and_zero_position(q, retained):
     assert PortfolioSnapshot.model_validate_json(after.model_dump_json()) == after
 
 
+def test_official_floor_surrender_uses_source_rule_without_research_rounding():
+    e = action().model_copy(update={"quantity_rounding_rule": "OFFICIAL_FLOOR_SURRENDER"})
+    p, _ = funded("19")
+    p.apply_partial_surrender(e, at("2024-01-04"), holder_class=e.affected_holder_class)
+    audit = p.partial_surrender_audits[0]
+    assert (audit.theoretical_surrender, audit.surrendered_quantity) == (
+        Decimal("3.8"),
+        Decimal(3),
+    )
+    assert audit.retained_quantity == 16
+    assert audit.official_fraction_rule == "OFFICIAL_FLOOR_SURRENDER"
+    assert audit.research_fraction_rule is None
+
+
+@pytest.mark.parametrize(
+    "quantity,surrendered", [("8000", "0"), ("15000", "1000"), ("60000", "10000")]
+)
+def test_quantity_band_schedule_applies_each_rate_only_to_its_band(quantity, surrendered):
+    e = MandatoryPartialShareSurrenderEvent.model_validate(
+        {
+            **action().model_dump(),
+            "surrender_ratio": None,
+            "quantity_bands": (
+                SurrenderQuantityBand(up_to_quantity=Decimal(10000), surrender_ratio=Decimal(0)),
+                SurrenderQuantityBand(up_to_quantity=None, surrender_ratio=Decimal("0.20")),
+            ),
+            "quantity_rounding_rule": "OFFICIAL_FLOOR_SURRENDER",
+        }
+    )
+    p, _ = funded(quantity)
+    p.apply_partial_surrender(e, at("2024-01-04"), holder_class=e.affected_holder_class)
+    audit = p.partial_surrender_audits[0]
+    assert audit.surrendered_quantity == Decimal(surrendered)
+    assert audit.retained_quantity == Decimal(quantity) - Decimal(surrendered)
+    assert audit.retained_basis + audit.surrendered_basis == audit.original_basis
+
+
 def test_approved_boundary_requires_provenance_not_an_invented_registry_date():
     e = approved_convention()
     assert e.effective_date is None and e.application_date == date(2012, 11, 19)
+    # Long suspensions may begin before the later restructuring record date.
+    assert e.model_copy(update={"nontrading_from": date(2010, 1, 1)})
     assert (
         e.event_checksum
         == e.model_copy(
@@ -77,6 +117,20 @@ def test_approved_boundary_requires_provenance_not_an_invented_registry_date():
     ):
         with pytest.raises(ValueError):
             MandatoryPartialShareSurrenderEvent.model_validate({**e.model_dump(), **update})
+
+
+def test_verified_halt_needs_no_invented_record_date_and_accepts_same_day_boundary():
+    e = approved_convention()
+    same_day = e.boundary_sources[0].model_copy(update={"published_on": e.research_effective_date})
+    resolved = MandatoryPartialShareSurrenderEvent.model_validate(
+        {
+            **e.model_dump(),
+            "record_date": None,
+            "boundary_sources": (same_day,),
+        }
+    )
+    assert resolved.record_date is None
+    assert resolved.application_date == e.research_effective_date
 
 
 def test_frozen_opening_rule_reachable_quantity_lattice():

@@ -1,5 +1,26 @@
 # Decisions
 
+## 2026-09-21 — accept the complete structural census and audited Full Dataset
+
+Accept the retained official-evidence reconstruction as a complete, deterministic
+2010-2025 structural corporate-action census: 153 rights issues, 24 mergers,
+two demergers, 13 mandatory partial surrenders, one restructuring bonus pass-
+through and one share consolidation, with zero unresolved candidate events.
+Promote the rebuilt Full Dataset from fail-closed candidate to audited status
+because all 15 audit gates pass and unresolved required data is zero. Do not
+freeze until repository validation and the audited implementation commit are
+complete; do not inspect strategy results before the resulting Gate B freeze.
+
+## 2026-09-21 — accept the official full rights census
+
+Accept the complete checksum-bound CNINFO query and official issuer result
+notices as the authority for 153 ordinary-A rights events during 2010-2025.
+All 156 in-scope result notices map deterministically to one of those events;
+there are no unclassified notices or unresolved events. The third-party row
+inventory remains a coverage oracle only. Apply the already approved
+decline-subscription/no-monetization policy; do not infer subscription or
+entitlement economics from missing optional metadata.
+
 ## 2026-09-21 — treat the materialization as a fail-closed candidate
 
 Retain the byte-stable 2010-2025 output because it proves the accepted raw,

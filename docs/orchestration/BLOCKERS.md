@@ -1,14 +1,23 @@
 # Blockers
 
+## Current R5 status — 2026-09-21
+
+No active source, methodology or dataset-integrity blocker remains. The full
+structural corporate-action census is PASS, the rebuilt Full Dataset has zero
+unresolved required data, and all 15 audit gates pass. Gate B is conditionally
+pre-authorized; the remaining work is an ordinary controlled transition:
+repository validation, coherent commit, immutable freeze and freeze-receipt
+verification. Formal studies remain locked until that transition completes.
+
 ## Current R5 blocker — 2026-09-21
 
 `FULL_MARKET_STRUCTURAL_CORPORATE_ACTION_CENSUS_NOT_ESTABLISHED` is the only
 remaining Full Dataset audit blocker. The source preflight was sufficient to
 build a deterministic candidate, but it did not establish a complete
-full-market census for rights, mergers, demergers, mandatory partial share
-surrenders and restructuring bonus pass-through events. The explicit retained
-statuses are PARTIAL / NOT_ESTABLISHED / NOT_ESTABLISHED / NOT_ESTABLISHED /
-NOT_ESTABLISHED.
+full-market census for mergers, demergers, mandatory partial share surrenders
+and restructuring bonus pass-through events. The official CNINFO rights
+result-notice census now passes with 153 events and no unexplained result
+notice. The four remaining explicit statuses are all `NOT_ESTABLISHED`.
 
 The existing 40,765 cash/bonus rows must not be represented as a complete
 corporate-action ledger. Reuse the retained official disclosures, adjustment

@@ -423,30 +423,165 @@ def factor_at(rows: list[dict[str, str]], security_id: str, day: str) -> Decimal
     return Decimal(scoped[index]["hfq_factor"])
 
 
-def event_rows(path: Path) -> list[dict[str, str | None]]:
+def action_row(
+    event: dict[str, Any],
+    event_checksum: str,
+    *,
+    event_kind: str,
+    application_date: str,
+    security_id: str | dict[str, str],
+    acceptance: dict[str, Any],
+) -> dict[str, str | None]:
+    if isinstance(security_id, dict):
+        security_id = security_id["value"]
+    sources = event.get("sources") or event.get("allocation_sources") or ()
+    first_source = sources[0] if sources else event.get("conversion_source") or {}
+    return {
+        "security_id": security_id,
+        "event_kind": event_kind,
+        "action_type": event.get("action_type", event_kind),
+        "application_date": application_date,
+        "effective_date": event.get("effective_date", application_date),
+        "ex_date": event.get("ex_date"),
+        "cash_per_share": event.get("cash_per_share"),
+        "share_ratio": event.get("share_ratio"),
+        "event_checksum": event_checksum,
+        "policy_id": acceptance.get("policy_id", event.get("policy", event_kind)),
+        "source_document_sha256": event.get("source_document_sha256") or first_source.get("sha256"),
+        "source_url": event.get("source_url") or first_source.get("url"),
+        "event_json": canonical(event).decode(),
+        "acceptance_json": canonical(acceptance).decode(),
+    }
+
+
+def event_rows(path: Path, *, event_kind: str = "CORPORATE_ACTION") -> list[dict[str, str | None]]:
     result = []
     for item in json.loads(path.read_bytes())["events"]:
         event = item["event"]
         security = event["security_id"]
+        acceptance = {key: value for key, value in item.items() if key != "event"}
         result.append(
-            {
-                "security_id": security["value"] if isinstance(security, dict) else security,
-                "action_type": event["action_type"],
-                "effective_date": event["effective_date"],
-                "ex_date": event["ex_date"],
-                "cash_per_share": event.get("cash_per_share"),
-                "share_ratio": event.get("share_ratio"),
-                "event_checksum": item["event_checksum"],
-                "policy_id": item.get("policy_id", "OFFICIAL_CORRECTION_SUPERSESSION"),
-                "source_document_sha256": event.get("source_document_sha256"),
-                "source_url": event.get("source_url"),
-                "event_json": canonical(event).decode(),
-                "acceptance_json": canonical(
-                    {key: value for key, value in item.items() if key != "event"}
-                ).decode(),
-            }
+            action_row(
+                event,
+                item["event_checksum"],
+                event_kind=event_kind,
+                application_date=event["effective_date"],
+                security_id=security["value"] if isinstance(security, dict) else security,
+                acceptance=acceptance,
+            )
         )
     return result
+
+
+def structural_event_rows(
+    repository: Path, rights_path: Path, merger_path: Path, structural_path: Path
+) -> list[dict[str, str | None]]:
+    rows = []
+    rights_report = json.loads(rights_path.read_bytes())
+    rights_inventory = json.loads(Path(rights_report["inventory_path"]).read_bytes())
+    for item in rights_inventory["rows"]:
+        event = item["event"]
+        rows.append(
+            action_row(
+                event,
+                item["event_checksum"],
+                event_kind="RIGHTS_ISSUE",
+                application_date=event["effective_date"],
+                security_id=event["security_id"]["value"],
+                acceptance={key: value for key, value in item.items() if key != "event"},
+            )
+        )
+
+    merger_inventory = json.loads(
+        (repository / "docs/research/MERGER_INVENTORY_V7.json").read_bytes()
+    )
+    for event in merger_inventory["events"]:
+        rows.append(
+            action_row(
+                event,
+                event["event_checksum"],
+                event_kind="MERGER",
+                application_date=event["effective_date"],
+                security_id=event["parent_security"],
+                acceptance={
+                    "accounting": event["accounting"],
+                    "classification": event["classification"],
+                },
+            )
+        )
+    merger_census = json.loads(merger_path.read_bytes())
+    for item in merger_census["newly_admitted_events"]:
+        event = item["event"]
+        rows.append(
+            action_row(
+                event,
+                item["event_checksum"],
+                event_kind="MERGER",
+                application_date=event.get("successor_shares_tradable_from")
+                or event["successor_listing_date"],
+                security_id=event["parent_security"]["value"],
+                acceptance={key: value for key, value in item.items() if key != "event"},
+            )
+        )
+    for item in merger_census["newly_admitted_fact_closures"]:
+        event = item["facts"]
+        rows.append(
+            action_row(
+                event,
+                item["fact_checksum"],
+                event_kind="MERGER",
+                application_date=event["converted_shares_tradable_from"],
+                security_id=event["parent_security_id"],
+                acceptance={
+                    key: value for key, value in item.items() if key not in {"facts", "documents"}
+                },
+            )
+        )
+    if sum(row["event_kind"] == "MERGER" for row in rows) != 24:
+        raise ValueError("MERGER_LEDGER_COUNT_CHANGED")
+
+    structural = json.loads(structural_path.read_bytes())
+    for section, event_kind, security_key, date_keys in (
+        (
+            "demerger_full_census",
+            "DEMERGER",
+            "parent_security",
+            ("research_effective_date", "effective_date"),
+        ),
+        (
+            "partial_surrender_full_census",
+            "PARTIAL_SURRENDER",
+            "security_id",
+            ("research_effective_date", "effective_date"),
+        ),
+        (
+            "bonus_pass_through_full_census",
+            "BONUS_PASS_THROUGH",
+            "security_id",
+            ("effective_date",),
+        ),
+        (
+            "share_consolidation_full_census",
+            "SHARE_CONSOLIDATION",
+            "security_id",
+            ("effective_date",),
+        ),
+    ):
+        for item in structural[section]["events"]:
+            event = item["event"]
+            security = event[security_key]
+            application_date = next(event[key] for key in date_keys if event.get(key))
+            rows.append(
+                action_row(
+                    event,
+                    item["event_checksum"],
+                    event_kind=event_kind,
+                    application_date=application_date,
+                    security_id=security["value"] if isinstance(security, dict) else security,
+                    acceptance={"census": section, "status": "PASS"},
+                )
+            )
+    return rows
 
 
 def materialize(staging: Path, repository: Path) -> dict[str, Any]:
@@ -550,10 +685,23 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
 
     cash_path = staging / "full-distribution-notices-v1/cash-full-coverage-v43.json"
     bonus_path = staging / "full-bonus-inventory-v1/retained-bonus-ledger-v32.json"
-    corporate_actions = event_rows(cash_path) + event_rows(bonus_path)
+    gap_distribution_path = (
+        staging / "full-adjustment-audit-v1/accepted-gap-distribution-ledger-v1.json"
+    )
+    rights_path = staging / "full-rights-inventory-v1/full-rights-census-v1.json"
+    merger_path = staging / "full-merger-v1/merger-candidate-census-v3.json"
+    structural_path = staging / "full-structural-census-v1/structural-action-census-v1.json"
+    corporate_actions = (
+        event_rows(cash_path)
+        + event_rows(bonus_path)
+        + event_rows(gap_distribution_path)
+        + structural_event_rows(repository, rights_path, merger_path, structural_path)
+    )
+    if len({row["event_checksum"] for row in corporate_actions}) != len(corporate_actions):
+        raise ValueError("DUPLICATE_CORPORATE_ACTION")
     corporate_actions.sort(
         key=lambda row: (
-            row["effective_date"] or "",
+            row["application_date"] or "",
             row["security_id"] or "",
             row["event_checksum"] or "",
         )
@@ -601,6 +749,30 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
             "BONUS_ACTIONS",
             bonus_path,
             json.loads(bonus_path.read_bytes())["manifest_sha256"],
+            "PASS",
+        ),
+        (
+            "GAP_DISTRIBUTION_ACTIONS",
+            gap_distribution_path,
+            json.loads(gap_distribution_path.read_bytes())["manifest_sha256"],
+            "PASS",
+        ),
+        (
+            "RIGHTS_ACTIONS",
+            rights_path,
+            json.loads(rights_path.read_bytes())["manifest_sha256"],
+            "PASS",
+        ),
+        (
+            "MERGER_ACTIONS",
+            merger_path,
+            json.loads(merger_path.read_bytes())["manifest_sha256"],
+            "PASS",
+        ),
+        (
+            "STRUCTURAL_ACTIONS",
+            structural_path,
+            json.loads(structural_path.read_bytes())["manifest_sha256"],
             "PASS",
         ),
         ("CALENDAR", calendar_path, calendar["manifest_sha256"], "PASS"),
@@ -668,7 +840,7 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
         (
             "corporate-actions.parquet",
             corporate_actions,
-            ("effective_date", "security_id", "event_checksum"),
+            ("application_date", "security_id", "event_checksum"),
         ),
         ("source-lineage.parquet", lineage, ("exchange", "source_path")),
         ("rejected-observations.parquet", rejected, ("trading_date", "security_id")),

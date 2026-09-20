@@ -212,7 +212,7 @@ class ResearchExecutionEngine:
             raise ValueError("duplicate session demerger")
         for event in demergers:
             event.require_supported()
-            if event.effective_date != session.trading_date:
+            if event.application_date != session.trading_date:
                 raise ValueError("demerger session mismatch")
         for action in actions:
             if action.ex_date != session.trading_date:

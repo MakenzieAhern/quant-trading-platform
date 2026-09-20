@@ -98,7 +98,7 @@ class PartialShareSurrenderAudit(BaseModel):
         "CORPORATE_ACTION_MANDATORY_SHARE_SURRENDER_LOSS"
     )
     original_quantity: PositiveDecimal
-    surrendered_quantity: PositiveDecimal
+    surrendered_quantity: NonNegativeDecimal
     retained_quantity: NonNegativeDecimal
     original_basis: NonNegativeDecimal
     surrendered_basis: NonNegativeDecimal
@@ -243,6 +243,21 @@ class MergerRoundingAudit(DomainModel):
     market_value_removed: NonNegativeDecimal = Decimal(0)
 
 
+class DemergerRoundingAudit(DomainModel):
+    event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    parent_symbol: Symbol
+    successor_symbol: Symbol
+    parent_quantity: PositiveDecimal
+    theoretical_successor_quantity: PositiveDecimal
+    whole_successor_quantity: NonNegativeDecimal
+    fractional_remainder: Decimal = Field(ge=0, lt=1, allow_inf_nan=False)
+    branch_basis: NonNegativeDecimal
+    basis_transferred: NonNegativeDecimal
+    basis_written_off: NonNegativeDecimal
+    official_fractional_method: Literal["GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE"]
+    research_fractional_method: Literal["FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION"]
+
+
 class PortfolioSnapshot(DomainModel):
     timestamp: UtcDateTime
     cash: FiniteDecimal
@@ -256,6 +271,7 @@ class PortfolioSnapshot(DomainModel):
     pending_demergers: tuple[PendingDemergerEntitlement, ...] = ()
     pending_mergers: tuple[PendingMergerEntitlement, ...] = ()
     merger_rounding_audits: tuple[MergerRoundingAudit, ...] = ()
+    demerger_rounding_audits: tuple[DemergerRoundingAudit, ...] = ()
     partial_surrender_audits: tuple[PartialShareSurrenderAudit, ...] = ()
     pass_through_audits: tuple[RestructuringBonusPassThroughAudit, ...] = ()
     consolidation_audits: tuple[ShareConsolidationAudit, ...] = ()

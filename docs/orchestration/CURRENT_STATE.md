@@ -1,5 +1,23 @@
 # Current state
 
+## R5 Full Dataset audit PASS / Gate B pre-authorized — 2026-09-21
+
+The rebuilt `cn-a-research-20100101-20251231-v1` is created and audited but
+not yet frozen. It contains 5,431 securities, 3,886 sessions, 13,411,189 raw
+rows and 42,792 corporate-action rows for 2010-01-01 through 2025-12-31.
+All 15 deterministic audit gates pass, including the full structural corporate-
+action census; unresolved required data and failed sources are zero.
+
+Canonical / file manifest SHA-256:
+`48276cad75f430840565f974899331692b49bf613faf85f417025ff3a98dc484` /
+`6016b579ad621654fe36d9018c404be13385d52836e46043ce16781fc4d8675a`.
+Audit report SHA-256:
+`ac14eb6c7e76c6a85223d8f7a494269d4a54e2044bdbb05c4573316f44c92e05`.
+
+No active R5 data blocker remains. Complete repository validation and a
+coherent audited milestone commit, then execute the conditionally pre-authorized
+Gate B immutable freeze. Development, Validation and Official OOS remain not run.
+
 ## R5 Full Dataset candidate audit — 2026-09-21
 
 The deterministic candidate `cn-a-research-20100101-20251231-v1` now exists
@@ -12,8 +30,8 @@ remain feature-only and non-tradable.
 The full audit passes 14 of 15 gates. Delisted-security retention is verified
 against the accepted point-in-time status authority, including all 254
 delisted security IDs. The sole failure is
-`STRUCTURAL_CORPORATE_ACTION_CENSUS`: rights remain PARTIAL and the full-market
-merger, demerger, mandatory partial-surrender and restructuring pass-through
+`STRUCTURAL_CORPORATE_ACTION_CENSUS`: the rights census now passes, while the
+full-market merger, demerger, mandatory partial-surrender and restructuring pass-through
 censuses are not established. The existing action table therefore contains
 only the 40,765 accepted cash/bonus rows and is not a complete full-history
 portfolio ledger.
@@ -22,6 +40,12 @@ This is a fail-closed candidate, not an accepted Full Dataset. R5 remains
 blocked on `FULL_MARKET_STRUCTURAL_CORPORATE_ACTION_CENSUS_NOT_ESTABLISHED`.
 `FULL_DATASET_CREATED/AUDITED/FROZEN = NO/NO/NO`; verified safe start remains
 unestablished at the dataset level. No strategy study has run.
+
+The rights sub-gate is closed by a checksum-bound official CNINFO result-notice
+census: 770 query records, 156 in-scope result notices, 153 events across 142
+securities, zero unclassified notices and zero unresolved events. Reverse input
+ordering and checksum replay pass. The retained third-party inventory remains
+a coverage oracle only; official issuer notices are the authority.
 
 ## R5 consolidated methodology approval / preflight v19 — 2026-09-20
 

@@ -23,6 +23,12 @@ def event():
     )
 
 
+def retained_parent_event():
+    return DemergerEvent.model_validate_json(
+        (Path(__file__).parent / "fixtures/600649_demerger.json").read_bytes()
+    )
+
+
 def funded(quantity="1", price="3"):
     bus = EventBus()
     emitted = []
@@ -110,6 +116,43 @@ def test_replay_order_and_no_future_price_basis():
         assert actual[0][2] == Decimal(3) * Decimal("2.08") / Decimal("3.87")
         p.reset()
         assert p.positions == p.pending_demergers == ()
+
+
+def test_600649_retained_parent_floor_replay_and_zero_whole_writeoff():
+    action = retained_parent_event()
+    for quantity in (Decimal(100), Decimal(1)):
+        p = PortfolioEngine(EventBus(), Decimal(10000))
+        p.apply_fill(
+            make_fill(1, OrderSide.BUY, str(quantity), "20", symbol="600649.SSE").model_copy(
+                update={"timestamp": at("2016-12-02")}
+            )
+        )
+        p.mark_to_market(
+            make_bar(1, "20.34", symbol="600649.SSE").model_copy(
+                update={"timestamp": at("2016-12-05")}
+            )
+        )
+        p.recognize_demerger(action, action.application_date, at("2017-03-31"))
+        p.activate_demergers(
+            action.application_date,
+            {"600649.SSE": Decimal("18.31"), "601200.SSE": Decimal("24.41")},
+            at("2017-03-31"),
+        )
+        audits = p.demerger_rounding_audits
+        assert len(audits) == 2 and not p.pending_demergers
+        if quantity == 100:
+            positions = {position.symbol: position for position in p.positions}
+            assert {symbol: position.quantity for symbol, position in positions.items()} == {
+                "600649.SSE": Decimal(78),
+                "601200.SSE": Decimal(21),
+            }
+            assert sum(position.aggregate_cost_basis for position in positions.values()) == 2000
+            assert p.is_orderable("600649.SSE") and p.is_orderable("601200.SSE")
+            assert sum(audit.basis_written_off for audit in audits) == 0
+        else:
+            assert not p.positions
+            assert sum(audit.basis_written_off for audit in audits) == 20
+            assert p.snapshot_at(at("2017-03-31")).corporate_action_realized_pnl == -20
 
 
 def test_missing_price_activation_is_atomic_and_other_methods_fail_closed():

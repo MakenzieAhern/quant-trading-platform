@@ -13,6 +13,12 @@ from typing import Any
 import pyarrow.parquet as pq
 
 from app.data.catalog import finalize_manifest, load_manifest, verify_dataset
+from app.domain.markets.consolidations import ShareConsolidationEvent
+from app.domain.markets.corporate_actions import CorporateAction, require_supported_corporate_action
+from app.domain.markets.demergers import DemergerEvent
+from app.domain.markets.mergers import MergerEvent
+from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
+from app.domain.markets.surrenders import MandatoryPartialShareSurrenderEvent
 from scripts.materialize_full_dataset import (
     DATASET_ID,
     END,
@@ -142,13 +148,49 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
     event_ids = [row["event_checksum"] for row in actions]
     if len(event_ids) != len(set(event_ids)):
         raise ValueError("DUPLICATE_CORPORATE_ACTION")
-    if any(
-        row["effective_date"] != row["ex_date"]
-        or not START <= row["effective_date"] <= END
-        or row["action_type"] not in {"CASH_DIVIDEND", "BONUS_SHARE"}
-        for row in actions
-    ):
-        raise ValueError("INVALID_MATERIALIZED_CORPORATE_ACTION")
+    action_kinds = Counter(row["event_kind"] for row in actions)
+    expected_kinds = {
+        "CORPORATE_ACTION": 42_598,
+        "RIGHTS_ISSUE": 153,
+        "MERGER": 24,
+        "DEMERGER": 2,
+        "PARTIAL_SURRENDER": 13,
+        "BONUS_PASS_THROUGH": 1,
+        "SHARE_CONSOLIDATION": 1,
+    }
+    if action_kinds != expected_kinds:
+        raise ValueError(f"CORPORATE_ACTION_CENSUS_CHANGED:{dict(action_kinds)}")
+    for row in actions:
+        if not START <= row["application_date"] <= END or not row["acceptance_json"]:
+            raise ValueError("INVALID_MATERIALIZED_CORPORATE_ACTION")
+        event = json.loads(row["event_json"])
+        kind = row["event_kind"]
+        if kind in {"CORPORATE_ACTION", "RIGHTS_ISSUE"}:
+            parsed = CorporateAction.model_validate(event)
+            require_supported_corporate_action(parsed)
+        elif kind == "MERGER" and {
+            key for key, field in MergerEvent.model_fields.items() if field.is_required()
+        }.issubset(event):
+            parsed = MergerEvent.model_validate(
+                {key: value for key, value in event.items() if key in MergerEvent.model_fields}
+            )
+            parsed.require_supported()
+        elif kind == "DEMERGER":
+            parsed = DemergerEvent.model_validate(event)
+            parsed.require_supported()
+        elif kind == "PARTIAL_SURRENDER":
+            parsed = MandatoryPartialShareSurrenderEvent.model_validate(event)
+            parsed.require_supported()
+        elif kind == "BONUS_PASS_THROUGH":
+            parsed = RestructuringBonusPassThroughEvent.model_validate(event)
+            parsed.require_supported()
+        elif kind == "SHARE_CONSOLIDATION":
+            parsed = ShareConsolidationEvent.model_validate(event)
+            parsed.require_supported()
+        else:
+            continue
+        if parsed.event_checksum != row["event_checksum"]:
+            raise ValueError(f"CORPORATE_ACTION_CHECKSUM_CHANGED:{row['event_checksum']}")
     suspensions = pq.read_table(dataset / "suspension-events.parquet").to_pylist()
     if not suspensions or any(
         row["execution_open_blocked"] not in {None, "0", "1"}
