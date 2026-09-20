@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## R5 SZSE post-close scope closure / preflight v11 — 2026-09-20
+
+The separate 223-symbol 2023-04-10 transaction-scope gap is closed by two
+checksum-bound official SZSE pages and deterministic replay: post-close
+fixed-price quantities trade at the close and enter the final daily total but
+are absent from the spot close file. No scope differences remain unexplained.
+Keep official per-security raw authority open for the distinct 239-row
+2011-07-25 gap; do not promote candidate-provider rows or create/freeze the Full
+Dataset while the consolidated authority set remains partial.
+
 ## R5 ChinaClear transaction-cost closure / preflight v10 — 2026-09-20
 
 Original ChinaClear notices close the 2012 SSE transfer-base contradiction in

@@ -1,5 +1,19 @@
 # Blockers
 
+## Current R5 blocker after SZSE post-close scope closure — 2026-09-20
+
+The separate 223-symbol 2023-04-10 transaction-scope gap is resolved: official
+SZSE materials establish the post-close fixed-price mechanism and deterministic
+replay leaves zero unexplained scope differences. This does not promote the
+non-official 239-row 2011-07-25 candidate to per-security OHLCV authority.
+
+The consolidated material blocker is now: 2,009 unresolved SZSE suspension
+boundaries; official per-security raw authority for 239 candidate rows; 478
+gross cash-plus-bonus adjustment conflicts/eight provider conventions; and the
+four remaining historical transaction-cost groups. No paid product has been
+shown necessary or sufficient. Full Dataset creation, audit, freeze and all
+studies remain locked.
+
 ## Current R5 blocker after ChinaClear transfer-base closure — 2026-09-20
 
 The original ChinaClear 2012-04-30 and 2012-08-02 operative notices resolve

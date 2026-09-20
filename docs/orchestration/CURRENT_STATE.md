@@ -1,5 +1,27 @@
 # Current state
 
+## R5 SZSE post-close scope closure / preflight v11 — 2026-09-20
+
+Official SZSE guidance and technical notices explain all 223 separate
+2023-04-10 ChiNext scope differences: post-close fixed-price trades execute at
+the close and enter the final daily total, while the official spot close file
+excludes them. Of 2,761 comparisons, 2,504 match directly, 34 reconcile to
+official block trades, 223 have this deterministic signature and zero remain
+unexplained.
+
+This closes the transaction-scope diagnostic only. It does not promote the
+239 separate 2011-07-25 Tencent/Sina candidate rows to official per-security
+OHLCV authority. Full-source preflight V11 remains blocked by those 239 rows,
+2,009 SZSE suspension boundaries, adjustment economics and four historical
+transaction-cost claim groups. See
+`../research/R5_SZSE_POST_CLOSE_SCOPE_V2.md`.
+
+Local offline-safe validation passes: 742 backend tests, Ruff, format, strict
+mypy, 78 frontend tests, ESLint, TypeScript and an isolated production build.
+The 63 PostgreSQL-backed backend tests could not be validated because the
+Docker Engine was offline; no Docker data or generated root-owned build output
+was altered.
+
 ## R5 ChinaClear transaction-cost closure / preflight v10 — 2026-09-20
 
 Two original ChinaClear operative notices resolve the 2012 SSE transfer-base

@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-09-20 — classify the 223-row difference as post-close scope
+
+Accept the checksum-bound official SZSE guidance that ChiNext post-close
+fixed-price trades execute at the day's close and are added to the final daily
+total, together with the technical notice that the spot close file excludes
+those trades. Deterministic replay leaves zero unexplained transaction-scope
+gaps on 2023-04-10. This closes only the 223-row scope classification; it does
+not directly observe those trades, promote a non-official provider, or resolve
+the separate 239-row 2011-07-25 official-source gap.
+
 ## 2026-09-20 — ChinaClear operative notices resolve the 2012 transfer base
 
 Accept the checksum-bound ChinaClear notices dated 2012-04-30 and 2012-08-02

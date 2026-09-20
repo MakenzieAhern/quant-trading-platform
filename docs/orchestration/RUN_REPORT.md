@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 SZSE post-close transaction-scope closure / preflight v11
+
+- compared rows: 2,761
+- direct / official-block / post-close signatures: 2,504 / 34 / 223
+- unexplained transaction-scope gaps: 0
+- official guidance SHA-256: `747f6ed2d82fd3036de57d51444eee66bfdc70969585536305519c21f7efbc14`
+- official technical-notice SHA-256: `400fc548fb053eb4f08791e8d088f68579328e9969c15c7b02670eaa23f661fe`
+- scope audit file / manifest SHA-256: `3f715a039a7d7fca78961f36f0c8d32745e645194a1f57ba7150d80cea3333ba` / `4c9a314bb10fc84719da13f46c1c463f9e2f0ecd0d5ad3611e84466b09532da7`
+- full-source preflight file / manifest SHA-256: `0ee4bd5c279cdb0b754041597548f05e4cd0963fb1640e7aa2aba6336239d138` / `f98e4e34668478403674a747065b5a5d018198287017b92a78600b6a3d1fed4c`
+- candidate provider promoted: NO
+- separate unresolved official raw rows: 239
+- backend offline-safe tests: 742 PASS; 63 PostgreSQL-backed tests unavailable while Docker Engine is offline
+- Ruff / format / strict mypy: PASS
+- frontend ESLint / TypeScript / tests / isolated production build: PASS / PASS / 78 PASS / PASS
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 ChinaClear transaction-cost closure / preflight v10
 
 - original ChinaClear operative notices retained: 2

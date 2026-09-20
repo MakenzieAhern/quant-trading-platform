@@ -2,9 +2,11 @@
 
 import argparse
 import json
+import re
 import warnings
 from collections import defaultdict
 from decimal import Decimal
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -14,6 +16,17 @@ from scripts.reconcile_sse_cninfo import canonical, save, sha
 
 DAY = "2023-04-10"
 ZERO = Decimal(0)
+GUIDANCE_URL = "https://investor.szse.cn/index/update/t20200827_581076.html"
+TECHNICAL_URL = "https://www.szse.cn/marketServices/technicalservice/notice/t20200508_576947.html"
+
+
+class Text(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.parts = []
+
+    def handle_data(self, data: str) -> None:
+        self.parts.append(data)
 
 
 def number(value: object) -> Decimal:
@@ -27,6 +40,22 @@ def workbook(path: Path) -> list[tuple]:
     sheet = book.active
     sheet.reset_dimensions()  # SZSE exports an incorrect A1-only dimension.
     return list(sheet.values)
+
+
+def official_source(path: Path, url: str, required: tuple[str, ...]) -> dict:
+    raw = path.read_bytes()
+    meta = json.loads(path.with_suffix(path.suffix + ".meta.json").read_bytes())
+    parser = Text()
+    parser.feed(raw.decode())
+    text = re.sub(r"\s+", "", "".join(parser.parts))
+    if (
+        meta["url"] != url
+        or meta["sha256"] != sha(raw)
+        or not meta["retrieved_at_utc"].endswith(("Z", "+00:00"))
+        or any(claim not in text for claim in required)
+    ):
+        raise ValueError(f"OFFICIAL_SCOPE_SOURCE_CHANGED: {path.name}")
+    return meta
 
 
 def classify(row: dict, block: tuple[Decimal, Decimal], close: Decimal) -> str:
@@ -44,7 +73,7 @@ def classify(row: dict, block: tuple[Decimal, Decimal], close: Decimal) -> str:
             abs(residual_amount - (residual_volume + offset) * close) <= 150 for offset in (0, 100)
         )
     ):
-        return "CHINEXT_CLOSE_PRICE_PATTERN_UNPROVEN"
+        return "OFFICIAL_POST_CLOSE_FIXED_PRICE_SIGNATURE"
     return "UNEXPLAINED_SCOPE_GAP"
 
 
@@ -53,8 +82,29 @@ def main() -> None:
     parser.add_argument("--pilot-audit", type=Path, required=True)
     parser.add_argument("--daily-export", type=Path, required=True)
     parser.add_argument("--block-root", type=Path, required=True)
+    parser.add_argument("--post-close-guidance", type=Path, required=True)
+    parser.add_argument("--close-file-notice", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    scope_sources = [
+        official_source(
+            args.post_close_guidance,
+            GUIDANCE_URL,
+            (
+                "盘后定价交易是创业板新增的交易方式",
+                "以当日收盘价对盘后定价买卖申报逐笔连续撮合",
+                "盘后定价交易成交量、成交金额在盘后定价交易结束后计入该股票当日总成交量、总成交金额",
+            ),
+        ),
+        official_source(
+            args.close_file_notice,
+            TECHNICAL_URL,
+            (
+                "盘后定价交易行情快照中的成交总量（TotalVolumeTrade）、成交总金额（TotalValueTrade）仅为盘后定价交易业务的成交总量和成交总金额",  # noqa: RUF001
+                "现货证券收盘行情文件（cashsecurityclosemd_YYYYMMDD.xml）中证券的成交总量（TotalVolumeTrade）、成交总金额（TotalValueTrade）不含盘后定价交易业务的成交总量和成交总金额",  # noqa: RUF001
+            ),
+        ),
+    ]
     pilot_bytes = args.pilot_audit.read_bytes()
     pilot = json.loads(pilot_bytes)
     if pilot["day"] != DAY or pilot["status"] != "SCOPE_CROSSCHECK_ONLY_NOT_AUTHORITY":
@@ -131,23 +181,27 @@ def main() -> None:
         for category in (
             "DIRECT_DAILY_WITHIN_DISPLAY_PRECISION",
             "OFFICIAL_BLOCK_RECONCILED_WITHIN_DISPLAY_PRECISION",
-            "CHINEXT_CLOSE_PRICE_PATTERN_UNPROVEN",
+            "OFFICIAL_POST_CLOSE_FIXED_PRICE_SIGNATURE",
             "UNEXPLAINED_SCOPE_GAP",
         )
     }
     report = {
-        "report_version": "SZSE_DAILY_TRANSACTION_SCOPE_CONTROL_V1",
-        "status": "SOURCE_SCOPE_PARTIALLY_EXPLAINED_NOT_RAW_AUTHORITY",
+        "report_version": "SZSE_DAILY_TRANSACTION_SCOPE_CONTROL_V2",
+        "status": "SOURCE_SCOPE_EXPLAINED_NOT_RAW_AUTHORITY",
         "day": DAY,
         "parser_sha256": sha(Path(__file__).read_bytes()),
         "pilot_scope_audit_sha256": sha(pilot_bytes),
         "official_daily_sha256": pilot["official_sha256"],
         "official_block_sha256s": source_hashes,
+        "official_post_close_sources": scope_sources,
         "block_summary_symbols": len(summary),
         "block_detail_rows": len(tables["tab2"]) + len(tables["tab3"]) - 2,
         "compared": len(results),
         "classification_counts": counts,
-        "post_close_trade_amount_and_volume_proven": False,
+        "post_close_scope_signature_proven": True,
+        "post_close_per_security_values_directly_observed": False,
+        "transaction_scope_gap_unexplained": counts["UNEXPLAINED_SCOPE_GAP"],
+        "raw_authority_promoted": False,
         "results": results,
     }
     report["manifest_sha256"] = sha(canonical(report))
