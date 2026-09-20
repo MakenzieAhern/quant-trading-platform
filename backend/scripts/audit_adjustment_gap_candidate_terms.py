@@ -66,12 +66,20 @@ def classify_document(document: dict, pages: list[str], review: dict | None = No
             terms[name] = str(parser(pages, document["issuer"]))
         except ValueError as exc:
             failures[name] = str(exc)
+            if (
+                str(exc)
+                == {
+                    "cash_per_share": "NO_EXPLICIT_GROSS_CASH",
+                    "bonus_share_ratio": "NO_EXPLICIT_BONUS_RATIO",
+                }[name]
+            ):
+                terms[name] = "0"
     if differentiated and "cash_per_share" in terms:
         terms.update(
             cash_holder_class="ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER",
             cash_policy_id="DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1",
         )
-    if not terms:
+    if not any(terms.get(name) not in (None, "0") for name, _ in parsers):
         return {
             **outcome,
             "status": "EXACT_DATE_NO_SUPPORTED_TERMS",

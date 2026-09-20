@@ -1,5 +1,28 @@
 # Current state
 
+## R5 full adjustment authority closure / preflight v16 — 2026-09-20
+
+All 43,019 retained provider factor changes are now partitioned without overlap
+or omission: 40,691 supported-event dates, 892 official bonus-oracle matches,
+20 special mechanics, 1,348 exact gross-term economics, 33 residual mechanics
+and 35 remaining mechanics. Unresolved factor changes are zero.
+
+The six official events without a same-date provider factor are also closed:
+three bind to a first later positive-volume factor boundary and three persist a
+deterministic official-cash overlay for materialization. Provider factors remain
+feature normalization only and never create portfolio entitlements.
+`FULL_ADJUSTMENT_AUTHORITY = PASS_FOR_FULL_DATASET`. See
+`../research/R5_FULL_ADJUSTMENT_AUTHORITY_V1.md`.
+
+Full-source preflight V16 now has two incomplete components only: raw OHLCV
+authority for the 239 SZSE rows on 2011-07-25, including its 253-session factor
+treatment, and historical market-rule/transaction-cost authority, including
+the two pre-2015 SSE investor-total transfer gaps and account-specific commission
+convention. Full Dataset creation/audit/freeze and all studies remain locked.
+Offline-safe backend validation is **754 passed**; Ruff, format and strict mypy
+pass. The 63 PostgreSQL-backed tests remain unvalidated because Docker integration
+is unavailable in this WSL session.
+
 ## R5 official historical-cost interval closure / preflight v15 — 2026-09-20
 
 Checksum-bound official Ministry of Finance, State Tax Administration,

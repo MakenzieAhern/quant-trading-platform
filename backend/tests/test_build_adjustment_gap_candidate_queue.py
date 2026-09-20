@@ -16,6 +16,13 @@ def test_candidates_are_bounded_by_security_date_and_do_not_accept_events() -> N
                 "effective_date": "2014-06-12",
                 "route": "NO_RETAINED_OFFICIAL_BONUS_DATE",
             },
+            {
+                "security_id": "CN-A:SSE:600001",
+                "symbol": "sh600001",
+                "effective_date": "2014-06-12",
+                "route": "RETAINED_OFFICIAL_BONUS_SOURCE_DATE",
+                "factor_economic_alignment_status": "OFFICIAL_BONUS_FACTOR_ALIGNMENT_CONFLICT",
+            },
         ]
     }
     metadata = {
@@ -34,6 +41,12 @@ def test_candidates_are_bounded_by_security_date_and_do_not_accept_events() -> N
                         "title": "too old",
                         "url": "https://static.cninfo.com.cn/finalpage/b.PDF",
                     },
+                    {
+                        "issuer": "600001",
+                        "published_on": "2014-06-11",
+                        "title": "重整转增实施公告",
+                        "url": "https://static.cninfo.com.cn/finalpage/c.PDF",
+                    },
                 ]
             }
         ]
@@ -47,7 +60,15 @@ def test_candidates_are_bounded_by_security_date_and_do_not_accept_events() -> N
             "queue_type": "OFFICIAL_ADJUSTMENT_GAP_CANDIDATE_PDF",
             "title": "2013年度权益分派实施公告",
             "url": "https://static.cninfo.com.cn/finalpage/a.PDF",
-        }
+        },
+        {
+            "affected_factor_changes": ["FACTOR:CN-A:SSE:600001:2014-06-12"],
+            "issuer": "600001",
+            "published_on": "2014-06-11",
+            "queue_type": "OFFICIAL_ADJUSTMENT_GAP_CANDIDATE_PDF",
+            "title": "重整转增实施公告",
+            "url": "https://static.cninfo.com.cn/finalpage/c.PDF",
+        },
     ]
     assert uncovered == [
         {

@@ -305,6 +305,14 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
             text,
         )
     }
+    combined.update(
+        Decimal(value) / Decimal(denominator or "1")
+        for denominator, value in re.findall(
+            r"合并实施方案为[^。]{0,220}?每(10|1)?股合计派"
+            r"(\d+(?:\.\d+)?)元(?:人民币)?现金\(含税",
+            text,
+        )
+    )
     if len(combined) == 1:
         return next(iter(combined))
     if expected_amounts:
@@ -392,10 +400,15 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
     heading = (
         r"(?:本次实施的(?:权益分派|利润分配|分红派息|分配)|"
         r"本次(?:权益分派|分红派息)实施|"
-        r"权益分派|利润分配|分红派息|分配(?:、转增股本)?)方案"
+        r"权益分派|利润分配(?:及转增股本|和资本公积金?转增股本)?|"
+        r"分红派息|分配(?:、转增股本)?|"
+        r"(?:资本公积金?)?转增股本)方案"
     )
     sections = list(
-        re.finditer(r"(?m)^\s*[一二三四五六七八九十]+、\s*" + heading + r"\s*$", normalized)
+        re.finditer(
+            r"(?m)^\s*[一二三四五六七八九十]+、\s*(?:\d{4}\s*年(?:度)?\s*)?" + heading + r"\s*$",
+            normalized,
+        )
     )
     if not sections:
         sections = list(
@@ -481,7 +494,7 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
                         ctx.prec = 50
                         section_matches.append(Decimal(value) / Decimal(denominator or "1"))
             declared = re.compile(
-                r"每(10(?:\.0+)?|1(?:\.0+)?)?股(?=[^。;\uff1b]{0,90}(?:现金|红利|股息|股利|派息|派现))[^。;\uff1b]{0,70}?"
+                r"每(10(?:\.0+)?|1(?:\.0+)?)?股(?=[^。;\uff1b]{0,90}(?:现金|红利|股息|股利|派息|派现))[^。;\uff1b元]{0,70}?"
                 r"(?:(?:派送|送)红股\d+(?:\.\d+)?股[、,](?:并)?(?:派发)?现金红利|"
                 r"(?:派发|派送|分派|分配|派息|派现|派|送现金|现金分红)"
                 r"(?:现金红利|现金股利|现金股息|红利|股息|现金)?)"
@@ -538,9 +551,10 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
             matches.extend(section_matches)
         return matches
 
-    if summary:
+    compact_summary = re.sub(r"\s+", "", summary)
+    if summary and not re.search(r"原方案|调整|变更|固定不变", compact_summary):
         try:
-            summary_values = set(extract([re.sub(r"\s+", "", summary)]))
+            summary_values = set(extract([compact_summary]))
         except ValueError:
             summary_values = set()
         if len(summary_values) == 1 and next(iter(summary_values)) > 0:
@@ -549,6 +563,20 @@ def gross_cash(pages, symbol, expected_amounts=None, trusted_issuer=False):
     values = set(matches)
     if len(values) != 1 and expected_amounts is not None:
         values = {value for value in values if matches_exchange_precision(value)}
+    if not values and not any(
+        re.search(r"现金红利|现金股利|现金股息|派息|派现|股息", section_text)
+        for section_text in section_texts
+    ):
+        raise ValueError("NO_EXPLICIT_GROSS_CASH")
+    if not values and any(
+        re.search(
+            r"不(?:进行|分配)?(?:现金分红|现金股利|派发现金|派现)|"
+            r"现金红利为0",
+            section_text,
+        )
+        for section_text in section_texts
+    ):
+        return Decimal(0)
     if len(values) != 1 or next(iter(values)) <= 0:
         raise ValueError("NO_UNIQUE_EXPLICIT_GROSS_CASH")
     return next(iter(values))

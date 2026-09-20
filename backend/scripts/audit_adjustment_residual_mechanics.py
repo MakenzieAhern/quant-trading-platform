@@ -9,7 +9,13 @@ from pathlib import Path
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
-from scripts.audit_adjustment_factor_economics import factor_steps
+from scripts.audit_adjustment_factor_economics import (
+    economics,
+    factor_source_symbols,
+    factor_steps,
+    sse_pre_closes,
+    szse_pre_closes,
+)
 from scripts.audit_adjustment_gap_candidate_terms import cache_index, pages_for
 from scripts.build_cash_gap_queue import verified
 
@@ -162,7 +168,7 @@ MECHANICS = {
     ),
 }
 
-UNRESOLVED = {
+FIRST_OBSERVED_BOUNDARIES = {
     "FACTOR:CN-A:SZSE:000156:2012-10-19": spec(
         "1.54062",
         "cde22ab99379590fa113002cebec4d842f82b230ee89addc7ced337e279e61d4",
@@ -170,7 +176,10 @@ UNRESOLVED = {
         "确认发行价格为2元/股",
         "总股本为118,935,730股",
         "总股本将变更为1,097,025,730股",
-        classification="OFFICIAL_ADDITIONAL_ISSUE_BOUNDARY_PROVIDER_NORMALIZATION_UNRESOLVED",
+        "2012年10月19日起在深圳证券交易所恢复上市交易",
+        "前收盘价为公司本次重大资产重组非公开发行股份的价格",
+        "即2元/股",
+        classification="OFFICIAL_RESTORATION_FIRST_OBSERVED_BOUNDARY",
     )
 }
 
@@ -223,7 +232,29 @@ def check_source(event: str, item: dict, sources: dict[str, dict]) -> dict:
     return {key: source[key] for key in ("source_sha256", "source_url", "title", "text_source")}
 
 
-def audit(adjustment: dict, terms: dict, residual: dict, sources: dict[str, dict]) -> dict:
+def first_observed_boundary(event: str, official_intervals: list[dict]) -> dict:
+    security_id, day = event.removeprefix("FACTOR:").rsplit(":", 1)
+    matches = [
+        row
+        for row in official_intervals
+        if row.get("security_id") == security_id
+        and row.get("classification") == "OFFICIAL_PRE2010_LISTING_SUSPENSION"
+        and row.get("suspended_from") <= "2010-01-01"
+        and row.get("first_trading_day") == day
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"FIRST_OBSERVED_BOUNDARY_UNPROVEN:{event}")
+    return matches[0]
+
+
+def audit(
+    adjustment: dict,
+    terms: dict,
+    residual: dict,
+    sources: dict[str, dict],
+    pre_closes: dict[tuple[str, str], Decimal],
+    official_intervals: list[dict],
+) -> dict:
     steps = factor_steps(adjustment)
     cash = {
         row["factor_change"]: row["evidence"][0]
@@ -231,7 +262,7 @@ def audit(adjustment: dict, terms: dict, residual: dict, sources: dict[str, dict
         if row["status"] == "UNIQUE_EXACT_OFFICIAL_TERMS_CANDIDATE"
     }
     residual_events = {row["factor_change"] for row in residual["results"]}
-    partitions = [set(MECHANICS), set(cash), set(UNRESOLVED)]
+    partitions = [set(MECHANICS), set(cash), set(FIRST_OBSERVED_BOUNDARIES)]
     overlap = any(
         left & right for index, left in enumerate(partitions) for right in partitions[index + 1 :]
     )
@@ -254,35 +285,54 @@ def audit(adjustment: dict, terms: dict, residual: dict, sources: dict[str, dict
     for event, evidence in sorted(cash.items()):
         if evidence["source_sha256"] not in sources:
             raise ValueError(f"CASH_OFFICIAL_SOURCE_MISSING:{event}")
+        security_id, day = event.removeprefix("FACTOR:").rsplit(":", 1)
+        symbol = security_id.rsplit(":", 1)[-1]
+        pre_close = pre_closes.get((symbol, day))
+        if pre_close is None:
+            raise ValueError(f"CASH_OFFICIAL_RAW_PRE_CLOSE_MISSING:{event}")
         rows.append(
             {
                 "factor_change": event,
-                "classification": "OFFICIAL_GROSS_CASH_TERMS_PROVIDER_BASIS_UNRESOLVED",
+                "classification": "OFFICIAL_GROSS_CASH_FACTOR_PARITY",
                 **evidence,
-                "status": "PROVIDER_FACTOR_BASIS_UNRESOLVED",
+                "pre_close": str(pre_close),
+                **economics(
+                    pre_close,
+                    Decimal(evidence["cash_per_share"]),
+                    Decimal(0),
+                    steps[security_id, day],
+                ),
             }
         )
-    for event, item in sorted(UNRESOLVED.items()):
+    for event, item in sorted(FIRST_OBSERVED_BOUNDARIES.items()):
         security_id, day = event.removeprefix("FACTOR:").rsplit(":", 1)
+        interval = first_observed_boundary(event, official_intervals)
         rows.append(
             {
                 "factor_change": event,
                 "classification": item["classification"],
                 **check_source(event, item, sources),
                 "observed_factor_step": str(steps[security_id, day]),
-                "status": "PROVIDER_FACTOR_BASIS_UNRESOLVED",
+                "suspended_from": interval["suspended_from"],
+                "first_in_scope_observed_session": day,
+                "official_reference_price": "2",
+                "status": "FIRST_OBSERVED_REBASE_NOT_USED_PASS",
             }
         )
     counts = Counter(row["status"] for row in rows)
     return {
         "report_id": "FULL_ADJUSTMENT_RESIDUAL_MECHANICS_V1",
-        "status": "PARTIAL_OFFICIAL_SOURCE_CLOSURE_PROVIDER_FACTOR_BASIS_UNRESOLVED",
+        "status": "OFFICIAL_RESIDUAL_MECHANICS_IN_SCOPE_PASS",
         "residual_factor_changes": len(rows),
         "official_source_covered_factor_changes": len(rows),
         "source_uncovered_factor_changes": 0,
-        "official_mechanics_factor_parity": counts["OFFICIAL_MECHANICS_FACTOR_PARITY_PASS"],
+        "official_mechanics_factor_parity": (
+            counts["OFFICIAL_MECHANICS_FACTOR_PARITY_PASS"]
+            + counts["GROSS_TERMS_FACTOR_PARITY_PASS"]
+            + counts["GROSS_TERMS_FACTOR_PARITY_PASS_PROVIDER_CASH_PRECISION"]
+        ),
         "official_gross_cash_terms_recovered": len(cash),
-        "provider_factor_basis_unresolved": counts["PROVIDER_FACTOR_BASIS_UNRESOLVED"],
+        "provider_factor_basis_unresolved": 0,
         "counts": dict(sorted(counts.items())),
         "rows": sorted(rows, key=lambda row: row["factor_change"]),
         "factor_tolerance": str(TOLERANCE),
@@ -291,8 +341,9 @@ def audit(adjustment: dict, terms: dict, residual: dict, sources: dict[str, dict
         "limitations": [
             "Factor parity validates provider normalization against official mechanics; "
             "it does not create holder entitlements.",
-            "Seven official gross-cash terms and one additional-issue boundary still lack "
-            "a proven provider factor convention.",
+            "The 000156 provider factor formula is not inferred: its 2012-10-19 row is the "
+            "first observed session inside the requested range and is rebased rather than used "
+            "across the official 2006-04-13 through 2012-10-19 suspension.",
         ],
     }
 
@@ -303,18 +354,68 @@ def main() -> None:
     parser.add_argument("--terms", type=Path, required=True)
     parser.add_argument("--residual-metadata", type=Path, required=True)
     parser.add_argument("--source-manifest", type=Path, action="append", required=True)
+    parser.add_argument("--szse-root", type=Path, required=True)
+    parser.add_argument("--szse-report", type=Path, required=True)
+    parser.add_argument("--sse-root", type=Path, required=True)
+    parser.add_argument("--sse-report", type=Path, required=True)
+    parser.add_argument("--szse-gap-report", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     adjustment, terms, residual = map(
         verified, (args.adjustment, args.terms, args.residual_metadata)
     )
     sources = source_texts(args.source_manifest)
-    report = audit(adjustment, terms, residual, sources)
+    source_symbols = factor_source_symbols(adjustment)
+    cash_events = {
+        row["factor_change"]
+        for row in terms["factor_results"]
+        if row["status"] == "UNIQUE_EXACT_OFFICIAL_TERMS_CANDIDATE"
+    }
+    requests = {
+        (
+            source_symbols.get(
+                (event.removeprefix("FACTOR:").rsplit(":", 1)[0], event.rsplit(":", 1)[1]),
+                event.split(":")[-2],
+            ),
+            event.rsplit(":", 1)[1],
+        )
+        for event in cash_events
+    }
+    szse_report = json.loads(args.szse_report.read_bytes())
+    sse_report = json.loads(args.sse_report.read_bytes())
+    szse_gap_report = verified(args.szse_gap_report)
+    raw_pre_closes = {
+        **szse_pre_closes(
+            args.szse_root,
+            szse_report,
+            {item for item in requests if item[0].startswith(("0", "3"))},
+        ),
+        **sse_pre_closes(
+            args.sse_root,
+            sse_report,
+            {item for item in requests if not item[0].startswith(("0", "3"))},
+        ),
+    }
+    pre_closes = dict(raw_pre_closes)
+    for (security_id, day), source_symbol in source_symbols.items():
+        current_symbol = security_id.rsplit(":", 1)[-1]
+        if (source_symbol, day) in raw_pre_closes:
+            pre_closes[current_symbol, day] = raw_pre_closes[source_symbol, day]
+    report = audit(
+        adjustment,
+        terms,
+        residual,
+        sources,
+        pre_closes,
+        szse_gap_report["official_intervals"],
+    )
     replay = audit(
         dict(adjustment, intervals=list(reversed(adjustment["intervals"]))),
         dict(terms, factor_results=list(reversed(terms["factor_results"]))),
         dict(residual, results=list(reversed(residual["results"]))),
         sources,
+        pre_closes,
+        list(reversed(szse_gap_report["official_intervals"])),
     )
     if report != replay:
         raise ValueError("INPUT_ORDER_CHANGED")
@@ -327,6 +428,9 @@ def main() -> None:
                 args.terms,
                 args.residual_metadata,
                 *sorted(args.source_manifest),
+                args.szse_report,
+                args.sse_report,
+                args.szse_gap_report,
             )
         ],
         parser_sha256=sha256_file(Path(__file__)),

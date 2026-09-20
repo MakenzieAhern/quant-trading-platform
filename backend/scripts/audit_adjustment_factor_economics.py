@@ -4,7 +4,7 @@ import argparse
 import json
 import warnings
 from collections import Counter
-from decimal import Decimal, localcontext
+from decimal import ROUND_HALF_EVEN, Decimal, localcontext
 from io import BytesIO
 from itertools import pairwise
 from pathlib import Path
@@ -26,16 +26,42 @@ def economics(pre_close: Decimal, cash: Decimal, bonus: Decimal, factor_step: De
         context.prec = 50
         expected = pre_close * (Decimal(1) + bonus) / (pre_close - cash)
         delta = abs(expected - factor_step)
-    return {
+        normalized_cash = cash.quantize(Decimal("0.000001"), rounding=ROUND_HALF_EVEN)
+        normalized_expected = pre_close * (Decimal(1) + bonus) / (pre_close - normalized_cash)
+        normalized_delta = abs(normalized_expected - factor_step)
+    exact = delta <= ROUNDING_TOLERANCE
+    cash_normalized = cash.as_tuple().exponent < -6 and normalized_delta <= ROUNDING_TOLERANCE
+    result = {
         "expected_factor_step": str(expected),
         "observed_factor_step": str(factor_step),
         "absolute_delta": str(delta),
         "status": (
             "GROSS_TERMS_FACTOR_PARITY_PASS"
-            if delta <= ROUNDING_TOLERANCE
-            else "GROSS_TERMS_FACTOR_PARITY_CONFLICT"
+            if exact
+            else (
+                "GROSS_TERMS_FACTOR_PARITY_PASS_PROVIDER_CASH_PRECISION"
+                if cash_normalized
+                else "GROSS_TERMS_FACTOR_PARITY_CONFLICT"
+            )
         ),
     }
+    if cash_normalized and not exact:
+        result.update(
+            provider_normalized_cash_per_share=str(normalized_cash),
+            provider_normalized_expected_factor_step=str(normalized_expected),
+            provider_normalized_absolute_delta=str(normalized_delta),
+        )
+    return result
+
+
+def factor_source_symbols(adjustment: dict) -> dict[tuple[str, str], str]:
+    result = {}
+    for interval in adjustment["intervals"]:
+        symbol = interval["symbol"][-6:]
+        for variant in interval["in_interval_variants"].values():
+            for day in variant["change_dates"]:
+                result[interval["security_id"], day] = symbol
+    return result
 
 
 def factor_steps(adjustment: dict) -> dict[tuple[str, str], Decimal]:
@@ -55,14 +81,17 @@ def factor_steps(adjustment: dict) -> dict[tuple[str, str], Decimal]:
 
 
 def szse_pre_closes(root: Path, report: dict, requests: set[tuple[str, str]]) -> dict:
+    receipts = {row["date"]: row for row in report["results"]}
+    sessions = sorted(receipts)
+    previous = {day: sessions[index - 1] for index, day in enumerate(sessions) if index}
     by_day = {}
     for symbol, day in requests:
-        by_day.setdefault(day, set()).add(symbol)
-    receipts = {row["date"]: row for row in report["results"]}
+        if prior_day := previous.get(day):
+            by_day.setdefault(prior_day, {}).setdefault(symbol, set()).add(day)
     result = {}
-    for day, symbols in sorted(by_day.items()):
-        path = root / f"{day}.xlsx"
-        if sha256_file(path) != receipts[day]["source_sha256"]:
+    for prior_day, targets in sorted(by_day.items()):
+        path = root / f"{prior_day}.xlsx"
+        if sha256_file(path) != receipts[prior_day]["source_sha256"]:
             raise ValueError("SZSE_DAILY_SOURCE_CHANGED")
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", message="Workbook contains no default style")
@@ -73,8 +102,11 @@ def szse_pre_closes(root: Path, report: dict, requests: set[tuple[str, str]]) ->
         if tuple(next(rows)) != HEADERS:
             raise ValueError("SZSE_DAILY_COLUMNS_CHANGED")
         for row in rows:
-            if row[1] in symbols:
-                result[row[1], day] = Decimal(str(row[3]))
+            if row[1] in targets:
+                # On an ex-date, 前收 is already the adjusted reference price.
+                # The economic formula needs the prior session's actual 今收.
+                for target_day in targets[row[1]]:
+                    result[row[1], target_day] = Decimal(str(row[7]))
         workbook.close()
     return result
 
@@ -164,16 +196,39 @@ def main() -> None:
         and row["evidence"][0]["cash_per_share"] is not None
         and row["evidence"][0]["bonus_share_ratio"] is not None
     ]
+    source_symbols = factor_source_symbols(adjustment)
     requests = {
-        (row["factor_change"].split(":")[-2], row["factor_change"].split(":")[-1])
+        (
+            source_symbols.get(
+                (
+                    row["factor_change"].removeprefix("FACTOR:").rsplit(":", 1)[0],
+                    row["factor_change"].split(":")[-1],
+                ),
+                row["factor_change"].split(":")[-2],
+            ),
+            row["factor_change"].split(":")[-1],
+        )
         for row in eligible
     }
     szse_requests = {item for item in requests if item[0].startswith(("0", "3"))}
     sse_requests = requests - szse_requests
-    pre_closes = {
+    raw_pre_closes = {
         **szse_pre_closes(args.szse_root, szse_report, szse_requests),
         **sse_pre_closes(args.sse_root, sse_report, sse_requests),
     }
+    pre_closes = dict(raw_pre_closes)
+    aliases = []
+    for (security_id, day), source_symbol in sorted(source_symbols.items()):
+        current_symbol = security_id.rsplit(":", 1)[-1]
+        if source_symbol != current_symbol and (source_symbol, day) in raw_pre_closes:
+            pre_closes[current_symbol, day] = raw_pre_closes[source_symbol, day]
+            aliases.append(
+                {
+                    "security_id": security_id,
+                    "date": day,
+                    "source_symbol": source_symbol,
+                }
+            )
     report = audit(adjustment, terms, pre_closes)
     replay = audit(
         dict(adjustment, intervals=list(reversed(adjustment["intervals"]))),
@@ -183,6 +238,7 @@ def main() -> None:
     if report != replay:
         raise ValueError("INPUT_ORDER_CHANGED")
     report.update(
+        historical_symbol_aliases=aliases,
         input_order_reproducibility="PASS",
         inputs=[
             {"path": str(path), "sha256": sha256_file(path)}

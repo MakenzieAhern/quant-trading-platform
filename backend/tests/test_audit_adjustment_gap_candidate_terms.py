@@ -27,6 +27,38 @@ def test_exact_official_terms_remain_candidates_only() -> None:
     assert result["matched_factor_changes"] == document["affected_factor_changes"]
 
 
+def test_final_scheme_absent_component_is_explicit_zero() -> None:
+    document = {
+        "issuer": "300001",
+        "published_on": "2014-06-05",
+        "title": "2013年度权益分派实施公告",
+        "url": "https://static.cninfo.com.cn/finalpage/zero.PDF",
+        "source_sha256": "c" * 64,
+        "affected_factor_changes": ["FACTOR:CN-A:SZSE:300001:2014-06-12"],
+    }
+    result = classify_document(
+        document,
+        [
+            "证券代码:300001\n一、2013年资本公积金转增股本方案\n每10股转增2股。\n"
+            "二、股权登记日与除权除息日\n股权登记日:2014年6月11日。"
+            "除权除息日:2014年6月12日。"
+        ],
+    )
+    assert result["cash_per_share"] == "0"
+    assert result["bonus_share_ratio"] == "0.2"
+    assert result["term_failures"] == {"cash_per_share": "NO_EXPLICIT_GROSS_CASH"}
+
+    unsupported = classify_document(
+        {**document, "affected_factor_changes": ["FACTOR:CN-A:SZSE:300001:2014-06-13"]},
+        [
+            "证券代码:300001\n一、权益分派方案\n本年度不进行权益分派。\n"
+            "二、股权登记日与除权除息日\n股权登记日:2014年6月12日。"
+            "除权除息日:2014年6月13日。"
+        ],
+    )
+    assert unsupported["status"] == "EXACT_DATE_NO_SUPPORTED_TERMS"
+
+
 def test_checksum_bound_date_review_resolves_ambiguous_extraction() -> None:
     document = {
         "issuer": "300127",

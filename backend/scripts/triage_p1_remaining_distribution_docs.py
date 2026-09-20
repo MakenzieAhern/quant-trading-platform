@@ -18,8 +18,9 @@ def diagnose(pages: list[str], symbol: str, title: str = "") -> dict:
     result = {}
     for name, parser in (("cash", gross_cash), ("bonus", retained_ratio)):
         try:
-            result[f"{name}_candidate_per_share"] = str(parser(pages, symbol))
-            result[f"{name}_parser_error"] = None
+            value = parser(pages, symbol)
+            result[f"{name}_candidate_per_share"] = str(value) if value > 0 else None
+            result[f"{name}_parser_error"] = None if value > 0 else "EXPLICIT_ZERO"
         except ValueError as exc:
             result[f"{name}_candidate_per_share"] = None
             result[f"{name}_parser_error"] = str(exc)

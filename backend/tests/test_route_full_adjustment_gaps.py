@@ -59,7 +59,14 @@ def test_routes_bonus_oracle_without_promoting_authority() -> None:
             }
         ],
     }
-    report = route(adjustment, {"rows": [oracle_row]})
+    cash_ledger = {
+        "coverage": ["2010-01-01", "2025-12-31"],
+        "unresolved_official_cash_events": 0,
+        "input_order_reproducibility": "PASS",
+        "checksum_repeatability": "PASS",
+        "events": [],
+    }
+    report = route(adjustment, {"rows": [oracle_row]}, cash_ledger)
     assert report["route_counts"] == {
         "NO_RETAINED_OFFICIAL_BONUS_DATE": 1,
         "RETAINED_OFFICIAL_BONUS_SOURCE_DATE": 1,
@@ -67,6 +74,9 @@ def test_routes_bonus_oracle_without_promoting_authority() -> None:
     assert report["bonus_ratio_classes"] == {"INTEGER": 1}
     assert report["displayed_price_ratio_statuses"] == {"DISPLAYED_PRICE_RATIO_BOUNDS_PASS": 1}
     assert report["zero_cash_bonus_ratio_statuses"] == {"ZERO_CASH_BONUS_RATIO_BOUNDS_PASS": 1}
+    assert report["factor_economic_alignment_statuses"] == {
+        "OFFICIAL_BONUS_FACTOR_ALIGNMENT_PASS": 1
+    }
     assert report["adjustment_authority_promoted"] is False
     assert report == route(
         dict(
@@ -75,4 +85,5 @@ def test_routes_bonus_oracle_without_promoting_authority() -> None:
             intervals=list(reversed(adjustment["intervals"])),
         ),
         {"rows": [oracle_row]},
+        cash_ledger,
     )

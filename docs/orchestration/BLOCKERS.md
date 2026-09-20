@@ -1,5 +1,20 @@
 # Blockers
 
+## Current R5 blocker after full adjustment authority closure — 2026-09-20
+
+Adjustment authority is no longer active: 43,019 factor changes are classified
+exactly once, unresolved changes are zero, and all six supported events without
+a same-date provider factor have an explicit deferred boundary or official-cash
+overlay.
+
+Two independent components remain. First, 239 official per-security raw rows
+for SZSE on 2011-07-25 still require an explicit choice between official-only
+strict continuity and candidate feature-only use; silent observed-only horizon
+drift is rejected. Second, historical costs still need the pre-2015 SSE
+investor-total transfer charge/minimum and the account-specific commission
+convention. The smallest current human decision remains the 239-row factor-window
+treatment. Full Dataset creation, audit, freeze and all studies remain locked.
+
 ## Current R5 blocker after official historical-cost interval closure — 2026-09-20
 
 Official sources now close stamp duty across 2010-2025, transfer fees from

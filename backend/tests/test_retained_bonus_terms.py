@@ -10,6 +10,47 @@ def test_exact_retained_components_and_fail_closed_identity():
     assert retained_ratio(
         [
             header
+            + "一、权益分派方案\n每10股派现金1元、送红股3股(含税),"
+            + "并以资本公积金每10股转增2股。\n二、股权登记日"
+        ],
+        "600000",
+    ) == Decimal("0.5")
+    with pytest.raises(ValueError, match="NO_EXPLICIT_BONUS_RATIO"):
+        retained_ratio(
+            [
+                header
+                + "一、权益分派方案\n每10股派现金1元(含税)。\n"
+                + "五、调整相关参数\n历史方案每10股送红股1.8股。"
+            ],
+            "600000",
+        )
+    assert retained_ratio(
+        [
+            header
+            + "二、利润分配及转增股本方案\n每10股转增15股。\n"
+            + "三、利润分配方案具体实施日期\n除权除息日"
+        ],
+        "600000",
+    ) == Decimal("1.5")
+    assert retained_ratio(
+        [header + "一、2013年资本公积金转增股本方案\n每10股转增2股。\n二、实施日期"],
+        "600000",
+    ) == Decimal("0.2")
+    with pytest.raises(ValueError, match="NO_EXPLICIT_BONUS_RATIO"):
+        retained_ratio(
+            [header + "一、权益分派方案\n每10股派现金1元。\n二、吸收合并税务说明"],
+            "600000",
+        )
+    assert (
+        retained_ratio(
+            [header + "一、权益分派方案\n每10股派现金1元,不送红股,不以公积金转增股本。"],
+            "600000",
+        )
+        == 0
+    )
+    assert retained_ratio(
+        [
+            header
             + "原方案每10股转增10股。公司按最新股本计算的2013年度权益分派方案为:"
             + "以公司现有总股本为基数,向全体股东每10股转增9.138541股。"
         ],

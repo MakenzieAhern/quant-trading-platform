@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 full adjustment authority closure / preflight v16
+
+- verified intervals / provider factor changes: 5,436 / 43,019
+- supported-event / bonus-oracle / special-mechanics changes: 40,691 / 892 / 20
+- gross-term / residual / remaining-mechanics changes: 1,348 / 33 / 35
+- unresolved factor changes: 0
+- supported events without same-date provider factor: 6
+- deferred factor boundaries / official cash overlays: 3 / 3
+- adjustment authority: PASS_FOR_FULL_DATASET
+- authority file / manifest SHA-256: `14eabedf0ab539632dc2fe41e10239ca69afb9073c1e3362565e45af95a97f60` / `0d6666849cafbd61b05e0396691c5f63ed128c5a2622b92147be5cf72e8b9bc0`
+- preflight V16 file / manifest SHA-256: `6ed44a379da93886224209e9c7f41ae4c80d63501b2aa99f0c22196f589ee594` / `47eb9614f6b5885f2fb04b8a9b33f3b62b2db9e2255becfc891a1656a54391d1`
+- remaining incomplete components: raw OHLCV; historical market rules/costs
+- validation: 754 offline-safe backend PASS; Ruff / format / strict mypy PASS
+- PostgreSQL-backed tests: NOT VALIDATED (Docker integration unavailable)
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 official historical-cost interval closure / preflight v15
 
 - stamp-duty requested interval: PASS (seller-only 1 per mille through 2023-08-27; 0.5 per mille from 2023-08-28)

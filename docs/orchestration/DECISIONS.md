@@ -1,5 +1,16 @@
 # Decisions
 
+## 2026-09-20 — accept full adjustment authority with explicit cash overlays
+
+Accept the deterministic 43,019-change partition after official-source replay:
+supported-event date binding, bonus parity, special mechanics, exact gross-term
+economics and the two residual mechanics sets are disjoint and exhaustive. For
+the six official events without a same-date provider change, bind three to the
+first later positive-volume factor boundary and persist official-cash overlays
+for the other three. Apply an overlay from its official ex-date forward; never
+turn it into a portfolio cash or share entitlement. This closes adjustment
+authority only. Raw OHLCV and historical costs remain independent blockers.
+
 ## 2026-09-20 — close only effective-dated historical cost intervals
 
 Accept the checksum-bound Ministry of Finance, State Tax Administration,

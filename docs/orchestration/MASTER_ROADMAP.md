@@ -1,5 +1,16 @@
 # v1.1 controller roadmap
 
+## R5 full adjustment authority closure / preflight v16 — 2026-09-20
+
+Accept the checksum-bound full adjustment partition: all 43,019 provider factor
+changes are classified exactly once, unresolved changes are zero, and all six
+official events without a same-date provider change have an explicit deferred
+boundary or official-cash overlay. `FULL_ADJUSTMENT_AUTHORITY` is now
+`PASS_FOR_FULL_DATASET`; remove adjustment economics from active blockers.
+Continue only raw OHLCV and historical market-rule/transaction-cost authority.
+Do not create or freeze the Full Dataset and do not run any study while either
+remaining component is partial.
+
 ## R5 historical-cost interval closure / preflight v15 — 2026-09-20
 
 Accept the official 2008/2023 stamp-duty boundaries, 2015/2022 ChinaClear

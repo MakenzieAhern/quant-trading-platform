@@ -561,7 +561,10 @@ def cash_terms_with_alternates(extracted, doc, issuer, targets, differentiated, 
         records, ex_dates = notice_dates(pages)
         return amount, records, ex_dates, pages, None
     except ValueError as exc:
-        if differentiated or str(exc) != "NO_UNIQUE_EXPLICIT_GROSS_CASH":
+        if differentiated or str(exc) not in {
+            "NO_EXPLICIT_GROSS_CASH",
+            "NO_UNIQUE_EXPLICIT_GROSS_CASH",
+        }:
             raise
     sha = doc["source_sha256"]
     alternatives = (

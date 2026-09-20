@@ -19,7 +19,13 @@ def candidates(routing: dict, metadata: dict, days: int = 60) -> tuple[list[dict
     queued = {}
     uncovered = []
     for row in sorted(
-        (item for item in routing["rows"] if item["route"] == "NO_RETAINED_OFFICIAL_BONUS_DATE"),
+        (
+            item
+            for item in routing["rows"]
+            if item["route"] == "NO_RETAINED_OFFICIAL_BONUS_DATE"
+            or item.get("factor_economic_alignment_status")
+            == "OFFICIAL_BONUS_FACTOR_ALIGNMENT_CONFLICT"
+        ),
         key=lambda item: (item["effective_date"], item["security_id"]),
     ):
         effective = date.fromisoformat(row["effective_date"])

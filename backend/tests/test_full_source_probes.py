@@ -720,6 +720,40 @@ def test_gross_cash_parser_requires_explicit_tax_basis_identity_and_unique_terms
     assert gross_cash(
         ["证券代码:000011 200011\n向全体股东每10股派3元人民币现金(含税;扣税后2.7元)"], "000011"
     ) == Decimal("0.3")
+    assert gross_cash(
+        [
+            "证券代码:300038\n二、权益分配、转增股本方案\n"
+            "每10股派人民币现金1.00元(含税,扣税后,个人实际每10股派0.9元);"
+            "共分配现金股利9,157,000元(含税)。\n三、股权登记日"
+        ],
+        "300038",
+    ) == Decimal("0.1")
+    assert gross_cash(
+        [
+            header
+            + "原方案每10股派0.25元(含税)。\n一、权益分派方案\n"
+            + "按现有股本调整后每10股派0.247411元(含税)。\n二、登记日"
+        ],
+        "600000",
+    ) == Decimal("0.0247411")
+    assert gross_cash(
+        [
+            header
+            + "一、权益分派方案\n年度方案每10股派0.21元(含税),"
+            + "中期方案每10股派0.41元(含税),"
+            + "两项合并实施方案为每10股合计派0.62元人民币现金(含税)。\n二、登记日"
+        ],
+        "600000",
+    ) == Decimal("0.062")
+    with pytest.raises(ValueError, match="NO_EXPLICIT_GROSS_CASH"):
+        gross_cash(
+            [
+                header
+                + "一、资本公积金转增股本方案\n每10股转增6股。\n"
+                + "二、除权日\n转增后每股收益0.1元。"
+            ],
+            "600000",
+        )
     with localcontext() as ctx:
         ctx.prec = 3
         assert gross_cash([header + "每10股派发现金红利1.234567元(含税)"], "600000") == Decimal(
