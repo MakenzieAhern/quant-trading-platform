@@ -4,11 +4,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
+from datetime import date
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
 from app.data.catalog.freeze import write_immutable
+from app.domain.markets.demergers import DemergerSource
+from app.domain.markets.mergers import ZERO_WHOLE_SHARE_POLICY, MergerEvent
 from scripts.reconcile_merger_implementation_batch import event_from_review
 
 PARENTS = ("000418", "600607", "600631", "600832", "600842")
@@ -18,6 +23,102 @@ FACT_CLOSURES = {
     "MERGER:002013:600372",
     "MERGER_NEW:600253:600056",
 }
+LAST_TRADING_DATES = {
+    "CN-A:SZSE:000522": "2013-03-13",
+    "CN-A:SZSE:002013": "2023-02-07",
+}
+
+
+def _security_value(value: str | dict[str, str]) -> str:
+    return value["value"] if isinstance(value, dict) else value
+
+
+def _source(document: dict[str, Any]) -> DemergerSource:
+    matched = re.search(r"/(\d{4}-\d{2}-\d{2})/", document["url"])
+    if matched is None:
+        raise ValueError("MERGER_SOURCE_PUBLICATION_DATE_UNAVAILABLE")
+    return DemergerSource(
+        url=document["url"],
+        sha256=document["sha256"],
+        published_on=date.fromisoformat(matched.group(1)),
+        retrieved_at=document["retrieved_at_utc"],
+        document=document["path"],
+    )
+
+
+def event_from_fact_closure(item: dict[str, Any]) -> MergerEvent:
+    facts = item["facts"]
+    ratio = str(facts["conversion_ratio"])
+    numerator, _, denominator = ratio.partition("/")
+    denominator = denominator or "1"
+    parent = facts["parent_security_id"]
+    effective = facts["converted_shares_tradable_from"]
+    event = MergerEvent(
+        parent_security={"value": parent},
+        successor_security={"value": facts["successor_security_id"]},
+        conversion_ratio=Decimal(numerator),
+        conversion_denominator=Decimal(denominator),
+        parent_last_trading_date=facts.get("parent_last_trading_date")
+        or LAST_TRADING_DATES[parent],
+        record_date=facts.get("merger_record_date") or facts["parent_termination_date"],
+        effective_date=effective,
+        successor_listing_date=effective,
+        official_fractional_method="GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE",
+        research_fractional_method="FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION",
+        cash_election_offered=None,
+        sources=tuple(_source(document) for document in item["documents"]),
+        zero_whole_share_policy=ZERO_WHOLE_SHARE_POLICY,
+    )
+    event.require_supported()
+    event.quantities(Decimal(1))
+    return event
+
+
+def executable_events(
+    prior: dict[str, Any],
+    admitted: list[dict[str, Any]],
+    fact_rows: dict[str, dict[str, Any]],
+    fixtures: Path,
+) -> list[dict[str, Any]]:
+    result = []
+    for row in prior["events"]:
+        parent = _security_value(row["parent_security"])
+        code = parent.rsplit(":", 1)[-1]
+        if code in {"000024", "600005"}:
+            event = MergerEvent.model_validate_json((fixtures / f"{code}_merger.json").read_bytes())
+        else:
+            event = MergerEvent.model_validate(
+                {key: value for key, value in row.items() if key in MergerEvent.model_fields}
+            )
+        event.require_supported()
+        if event.event_checksum != row["event_checksum"]:
+            raise ValueError(f"PRIOR_MERGER_EVENT_CHANGED:{parent}")
+        result.append(
+            {
+                "event": event.model_dump(mode="json"),
+                "event_checksum": event.event_checksum,
+                "accounting": row["accounting"],
+                "classification": row["classification"],
+                "source": "MERGER_INVENTORY_V7",
+            }
+        )
+    result.extend(admitted)
+    for key in sorted(fact_rows):
+        item = fact_rows[key]
+        event = event_from_fact_closure(item)
+        result.append(
+            {
+                "event": event.model_dump(mode="json"),
+                "event_checksum": event.event_checksum,
+                "accounting": "PASS_APPROVED_FLOOR_AND_ZERO_WHOLE_CONVENTION",
+                "classification": item["classification"],
+                "source": "P1_RESIDUAL_MERGER_FACT_CLOSURE_V3",
+                "source_fact_checksum": item["fact_checksum"],
+            }
+        )
+    if len(result) != 24 or len({row["event_checksum"] for row in result}) != 24:
+        raise ValueError("EXECUTABLE_MERGER_LEDGER_CHANGED")
+    return sorted(result, key=lambda row: str(row["event"]["parent_security"]))
 
 
 def verified(path: Path) -> dict[str, Any]:
@@ -92,8 +193,9 @@ def consolidate(
     if len({row["event_checksum"] for row in admitted}) != len(PARENTS):
         raise ValueError("DUPLICATE_ADMITTED_MERGER")
 
+    complete_events = executable_events(prior, admitted, fact_rows, fixtures)
     report = {
-        "report_id": "R5_MERGER_CANDIDATE_CENSUS_V3",
+        "report_id": "R5_MERGER_CANDIDATE_CENSUS_V4",
         "coverage": prior["requested_coverage"],
         "official_query_announcements": 2849,
         "official_query_pages": 95,
@@ -103,6 +205,8 @@ def consolidate(
         "prior_supported_events": 15,
         "newly_admitted_events": admitted,
         "newly_admitted_fact_closures": [fact_rows[key] for key in sorted(fact_rows)],
+        "executable_events": complete_events,
+        "executable_event_count": len(complete_events),
         "supported_events": 24,
         "unresolved_candidates": [],
         "unresolved_candidate_count": 0,
@@ -115,7 +219,7 @@ def consolidate(
             {"path": str(path), "sha256": sha256_file(path)}
             for path in (prior_path, lead_path, false_parent_path, fact_closure_path)
         ],
-        "parser_version": "MERGER_CANDIDATE_CENSUS_V3",
+        "parser_version": "MERGER_CANDIDATE_CENSUS_V4",
         "parser_sha256": sha256_file(Path(__file__)),
     }
     report["manifest_sha256"] = canonical_sha256(report)

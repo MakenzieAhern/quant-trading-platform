@@ -3,8 +3,9 @@
 ## R5 Full Dataset audit PASS / Gate B transition — 2026-09-21
 
 The full structural census is closed and the rebuilt 2010-2025 dataset passes
-all 15 deterministic audit gates with zero unresolved required data. Preserve
-manifest `48276cad75f430840565f974899331692b49bf613faf85f417025ff3a98dc484`.
+all 29 mandatory R5 audit gates, including the six accounting invariants, with
+zero unresolved required data. All 24 mergers are executable domain events.
+Preserve manifest `1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e`.
 Validate the repository, commit the audited R5 milestone, then execute and
 verify the conditionally pre-authorized immutable Gate B freeze. Only after a
 valid freeze receipt may the controller enter R6 Development; Official OOS

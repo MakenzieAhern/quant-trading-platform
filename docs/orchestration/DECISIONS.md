@@ -6,8 +6,11 @@ Accept the retained official-evidence reconstruction as a complete, deterministi
 2010-2025 structural corporate-action census: 153 rights issues, 24 mergers,
 two demergers, 13 mandatory partial surrenders, one restructuring bonus pass-
 through and one share consolidation, with zero unresolved candidate events.
-Promote the rebuilt Full Dataset from fail-closed candidate to audited status
-because all 15 audit gates pass and unresolved required data is zero. Do not
+Normalize the six legacy merger fact records from retained official evidence so
+all 24 mergers use the executable `MergerEvent` contract; no economic event or
+methodology is added. Promote the rebuilt Full Dataset from fail-closed candidate
+to audited status because all 29 mandatory R5 gates and six accounting invariants
+pass and unresolved required data is zero. Do not
 freeze until repository validation and the audited implementation commit are
 complete; do not inspect strategy results before the resulting Gate B freeze.
 

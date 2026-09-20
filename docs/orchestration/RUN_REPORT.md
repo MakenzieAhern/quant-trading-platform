@@ -8,9 +8,10 @@
 - feature-only non-tradable / failed sources / unresolved required data: 239 / 0 / 0
 - adjustment / corporate-action / suspension rows: 48,458 / 42,792 / 38,470
 - structural events: rights 153; mergers 24; demergers 2; partial surrenders 13; pass-through 1; consolidation 1
-- audit gates: 15 PASS / 0 FAIL
-- canonical / file manifest SHA-256: `48276cad75f430840565f974899331692b49bf613faf85f417025ff3a98dc484` / `6016b579ad621654fe36d9018c404be13385d52836e46043ce16781fc4d8675a`
-- audit file SHA-256: `ac14eb6c7e76c6a85223d8f7a494269d4a54e2044bdbb05c4573316f44c92e05`
+- executable merger events: 24 / 24
+- audit gates / accounting invariants: 29 PASS / 0 FAIL; 6 PASS / 0 FAIL
+- canonical / file manifest SHA-256: `1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e` / `693c0b81d942d9532c6ec6c6455fbafab76921a40c8093bace32f1fac9cf2cd0`
+- audit file SHA-256: `1b37987483955b2e486c670f372429c341fb1c88780293a455a48d7f28daf543`
 - Full Dataset created / audited / frozen: YES / YES / NO
 - Gate B: CONDITIONALLY PRE-AUTHORIZED; pending repository validation and coherent commit
 - Development / Validation / Official OOS: NOT RUN

@@ -492,49 +492,17 @@ def structural_event_rows(
             )
         )
 
-    merger_inventory = json.loads(
-        (repository / "docs/research/MERGER_INVENTORY_V7.json").read_bytes()
-    )
-    for event in merger_inventory["events"]:
-        rows.append(
-            action_row(
-                event,
-                event["event_checksum"],
-                event_kind="MERGER",
-                application_date=event["effective_date"],
-                security_id=event["parent_security"],
-                acceptance={
-                    "accounting": event["accounting"],
-                    "classification": event["classification"],
-                },
-            )
-        )
     merger_census = json.loads(merger_path.read_bytes())
-    for item in merger_census["newly_admitted_events"]:
+    for item in merger_census["executable_events"]:
         event = item["event"]
         rows.append(
             action_row(
                 event,
                 item["event_checksum"],
                 event_kind="MERGER",
-                application_date=event.get("successor_shares_tradable_from")
-                or event["successor_listing_date"],
+                application_date=event["effective_date"],
                 security_id=event["parent_security"]["value"],
                 acceptance={key: value for key, value in item.items() if key != "event"},
-            )
-        )
-    for item in merger_census["newly_admitted_fact_closures"]:
-        event = item["facts"]
-        rows.append(
-            action_row(
-                event,
-                item["fact_checksum"],
-                event_kind="MERGER",
-                application_date=event["converted_shares_tradable_from"],
-                security_id=event["parent_security_id"],
-                acceptance={
-                    key: value for key, value in item.items() if key not in {"facts", "documents"}
-                },
             )
         )
     if sum(row["event_kind"] == "MERGER" for row in rows) != 24:
@@ -689,7 +657,7 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
         staging / "full-adjustment-audit-v1/accepted-gap-distribution-ledger-v1.json"
     )
     rights_path = staging / "full-rights-inventory-v1/full-rights-census-v1.json"
-    merger_path = staging / "full-merger-v1/merger-candidate-census-v3.json"
+    merger_path = staging / "full-merger-v1/merger-candidate-census-v4.json"
     structural_path = staging / "full-structural-census-v1/structural-action-census-v1.json"
     corporate_actions = (
         event_rows(cash_path)

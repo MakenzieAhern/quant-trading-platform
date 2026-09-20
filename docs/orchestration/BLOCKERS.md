@@ -4,7 +4,8 @@
 
 No active source, methodology or dataset-integrity blocker remains. The full
 structural corporate-action census is PASS, the rebuilt Full Dataset has zero
-unresolved required data, and all 15 audit gates pass. Gate B is conditionally
+unresolved required data, all 24 merger events are executable domain events,
+and all 29 mandatory R5 audit gates pass. Gate B is conditionally
 pre-authorized; the remaining work is an ordinary controlled transition:
 repository validation, coherent commit, immutable freeze and freeze-receipt
 verification. Formal studies remain locked until that transition completes.

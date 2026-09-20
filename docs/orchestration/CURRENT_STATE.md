@@ -5,14 +5,15 @@
 The rebuilt `cn-a-research-20100101-20251231-v1` is created and audited but
 not yet frozen. It contains 5,431 securities, 3,886 sessions, 13,411,189 raw
 rows and 42,792 corporate-action rows for 2010-01-01 through 2025-12-31.
-All 15 deterministic audit gates pass, including the full structural corporate-
-action census; unresolved required data and failed sources are zero.
+All 29 mandatory R5 audit gates pass, including the full structural corporate-
+action census and all six accounting invariants. The merger ledger is executable
+for 24/24 events; unresolved required data and failed sources are zero.
 
 Canonical / file manifest SHA-256:
-`48276cad75f430840565f974899331692b49bf613faf85f417025ff3a98dc484` /
-`6016b579ad621654fe36d9018c404be13385d52836e46043ce16781fc4d8675a`.
+`1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e` /
+`693c0b81d942d9532c6ec6c6455fbafab76921a40c8093bace32f1fac9cf2cd0`.
 Audit report SHA-256:
-`ac14eb6c7e76c6a85223d8f7a494269d4a54e2044bdbb05c4573316f44c92e05`.
+`1b37987483955b2e486c670f372429c341fb1c88780293a455a48d7f28daf543`.
 
 No active R5 data blocker remains. Complete repository validation and a
 coherent audited milestone commit, then execute the conditionally pre-authorized

@@ -562,3 +562,33 @@ def test_reviewed_merger_batch_reuses_basis_floor_and_no_election_policy(review)
         assert (
             action.cash_election_policy == "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE"
         )
+
+
+def test_fact_closure_becomes_executable_merger_event():
+    from scripts.consolidate_merger_candidate_census import event_from_fact_closure
+
+    action = event_from_fact_closure(
+        {
+            "facts": {
+                "parent_security_id": "CN-A:SZSE:000522",
+                "successor_security_id": "CN-A:SSE:600332",
+                "merger_record_date": "2013-04-26",
+                "conversion_ratio": "0.95",
+                "converted_shares_tradable_from": "2013-05-23",
+            },
+            "documents": [
+                {
+                    "path": "official.pdf",
+                    "url": "https://static.cninfo.com.cn/finalpage/2013-05-18/62503174.PDF",
+                    "sha256": "0" * 64,
+                    "retrieved_at_utc": "2026-09-13T09:23:14Z",
+                }
+            ],
+        }
+    )
+    theoretical, whole, remainder = action.quantities(Decimal(1))
+    assert (action.parent_last_trading_date, action.effective_date) == (
+        date(2013, 3, 13),
+        date(2013, 5, 23),
+    )
+    assert (theoretical, whole, remainder) == (Decimal("0.95"), Decimal(0), Decimal("0.95"))
