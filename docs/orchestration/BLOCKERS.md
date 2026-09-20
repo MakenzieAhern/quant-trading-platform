@@ -1,5 +1,21 @@
 # Blockers
 
+## Current R5 blocker after official monthly raw-gap reconstruction — 2026-09-20
+
+The factor effect of the 239 SZSE rows is no longer unknown: official evidence
+fixes every close and proves every liquidity decision invariant over the full
+official amount interval. Silent calendar-horizon drift and non-official
+candidate promotion remain rejected.
+
+The raw component is still incomplete because exact execution-grade open/high/
+low/volume/amount fields cannot be reconstructed for all rows from the current
+free public surfaces. The smallest raw-data decision is to approve partial
+official feature rows with execution permanently prohibited, or provide/
+authorize a manual SZSE/SSIC archival extract. The other independent blocker is
+historical costs: two pre-2015 SSE investor-total transfer groups plus the
+account-specific commission convention. Full Dataset creation, audit, freeze
+and all studies remain locked.
+
 ## Current R5 blocker after full adjustment authority closure — 2026-09-20
 
 Adjustment authority is no longer active: 43,019 factor changes are classified

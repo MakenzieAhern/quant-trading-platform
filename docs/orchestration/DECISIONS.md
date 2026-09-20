@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-09-20 — accept official factor facts, not a complete raw bar
+
+Accept the checksum-bound SZSE monthly/daily subtraction as conservative
+official interval evidence. The next session fixes every target close, and the
+full amount intervals preserve every 20-session liquidity decision. Do not turn
+interval membership into an exact official amount or volume, do not invent
+open/high/low, and do not promote Tencent/Sina. Retain the one 300058 official
+monthly-low conflict because it does not determine the target-day low. A partial
+non-tradable feature row is a material methodology choice and remains unapproved.
+An SSIC archival product is only an option pending manual scope/price confirmation;
+no purchase is authorized or shown necessary.
+
 ## 2026-09-20 — accept full adjustment authority with explicit cash overlays
 
 Accept the deterministic 43,019-change partition after official-source replay:

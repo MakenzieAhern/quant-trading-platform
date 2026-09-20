@@ -1,5 +1,16 @@
 # v1.1 controller roadmap
 
+## R5 official monthly raw-gap reconstruction / preflight v17 — 2026-09-20
+
+Accept the V6 immutable reconstruction as official interval evidence: 239/239
+closes and 239/239 factor-relevant liquidity decisions are established without
+promoting Tencent or Sina. Keep raw OHLCV authority partial because exact open,
+high, low, volume and amount remain incomplete. Continue only after explicit
+approval of a partial non-tradable feature-row convention or receipt of an
+official archival extract. Historical transfer-fee evidence and commission
+scope remain separate gates. Do not create/freeze the Full Dataset or run a
+study while either component is partial.
+
 ## R5 full adjustment authority closure / preflight v16 — 2026-09-20
 
 Accept the checksum-bound full adjustment partition: all 43,019 provider factor

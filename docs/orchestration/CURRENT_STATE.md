@@ -1,5 +1,29 @@
 # Current state
 
+## R5 SZSE official monthly reconstruction / preflight v17 — 2026-09-20
+
+Free official SZSE monthly publications, the retained 21-session daily corpus,
+the next session's official pre-close and official target-day block trades now
+close the factor-relevant facts for all 239 residual 2011-07-25 ChiNext rows.
+Exact close is established for 239/239; volume and amount are bounded for
+239/239. Propagating each full official amount interval through the 20-session
+liquidity rule leaves 239/239 decisions invariant (maximum average perturbation
+CNY 170 versus minimum threshold margin CNY 365).
+
+Full raw authority remains partial: exact official open/high/low are available
+for 0/4/11 rows, leaving 239/235/228 unresolved respectively, and exact volume
+and amount remain unavailable for all 239. The target date is neither a fixed
+rebalance nor an execution session. The candidate is not promoted. A partial,
+non-tradable official feature row requires explicit methodology approval, or an
+official SZSE/SSIC archival extract must supply exact fields. Historical costs
+remain independently partial. See `../research/R5_SZSE_MONTHLY_RAW_GAP_V1.md`
+and `../research/PAID_SOURCE_OPTION_REPORT_V1.md`.
+
+Validation: immutable reconstruction replay and checksum repeatability PASS;
+offline-safe backend **755 passed**; Ruff, format and strict mypy PASS. The
+PostgreSQL-backed tests remain outside this nonblocking source-reconstruction
+checkpoint.
+
 ## R5 full adjustment authority closure / preflight v16 — 2026-09-20
 
 All 43,019 retained provider factor changes are now partitioned without overlap

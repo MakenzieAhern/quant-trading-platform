@@ -1,5 +1,28 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 SZSE official monthly reconstruction / preflight v17
+
+- residual rows / date: 239 / 2011-07-25
+- official exact close / bounded volume / bounded amount: 239 / 239 / 239
+- full-interval liquidity decisions invariant: 239; maximum 20-session average perturbation CNY 170
+- exact official open / high / low: 0 / 4 / 11
+- unresolved exact open / high / low: 239 / 235 / 228
+- unresolved exact volume / amount: 239 / 239
+- target date rebalance / execution: NO / NO
+- current history API available / unavailable: 221 / 18
+- official cross-surface price conflicts / target-affecting: 1 / 0
+- candidate provider / raw authority promoted: NO / NO
+- reconstruction file / manifest SHA-256: `f66b4a5237f1310aa1702b48f46f5887a86458f5f50660033605dc167a3e9f64` / `ec29601a5b3d0968374aa34db8dc2720a4a9c461a8886289d9ab03c504b3738f`
+- preflight V17 file / manifest SHA-256: `a0b46d92812d9ad3f12fe9ac3efda0550016db5327fcddfea42eba275ad77e07` / `e258ba9b8b188c40d9a4a10be1ea3628ed369a83d7c22e67a11724b7f8df5f76`
+- input-order / checksum repeatability: PASS / PASS
+- paid source required / purchased: NO / NO
+- smallest raw gate: approve partial non-tradable official feature rows, or provide/authorize an exact official SZSE/SSIC archival extract
+- separate cost gate: two pre-2015 SSE investor-total transfer groups plus account-specific commission convention
+- validation: 755 offline-safe backend PASS; Ruff / format / strict mypy PASS
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 full adjustment authority closure / preflight v16
 
 - verified intervals / provider factor changes: 5,436 / 43,019
