@@ -5,7 +5,12 @@ from types import SimpleNamespace
 import pytest
 
 from app.data.catalog.checksums import canonical_sha256
-from scripts.run_research import _raw_paths, load_candidate_freeze, stable_result
+from scripts.run_research import (
+    _raw_paths,
+    load_candidate_freeze,
+    load_methodology_freeze,
+    stable_result,
+)
 
 
 def test_development_partition_lock_never_selects_validation_or_oos() -> None:
@@ -50,3 +55,22 @@ def test_validation_rejects_changed_candidate_freeze(tmp_path) -> None:
     path.write_text(json.dumps(record))
     with pytest.raises(ValueError, match="CANDIDATE_FREEZE_CHANGED"):
         load_candidate_freeze(path, "dataset")
+
+
+def test_oos_rejects_changed_methodology_freeze(tmp_path) -> None:
+    record = {
+        "freeze_id": "FROZEN_STRATEGY_SPEC_V1",
+        "status": "FROZEN",
+        "dataset_id": "cn-a-research-20100101-20251231-v1",
+        "dataset_sha256": "dataset",
+        "oos_period": {"start": "2022-01-01", "end": "2025-12-31"},
+        "selected_candidate": "S4",
+        "selected_strategy_id": "changed",
+        "selected_config": {"factor_names": ["MOM_12_1", "TREND_120", "LOW_VOL"]},
+    }
+    record["selected_config_sha256"] = canonical_sha256(record["selected_config"])
+    record["freeze_record_sha256"] = canonical_sha256(record)
+    path = tmp_path / "methodology.json"
+    path.write_text(json.dumps(record))
+    with pytest.raises(ValueError, match="METHODOLOGY_FREEZE_CHANGED"):
+        load_methodology_freeze(path, "dataset")

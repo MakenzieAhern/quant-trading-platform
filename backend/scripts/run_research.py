@@ -120,6 +120,27 @@ def load_candidate_freeze(path: Path, dataset_sha256: str) -> dict:
     return record
 
 
+def load_methodology_freeze(path: Path, dataset_sha256: str) -> dict:
+    record = json.loads(path.read_bytes())
+    digest = record.pop("freeze_record_sha256")
+    candidate = record["selected_candidate"]
+    strategy_id, factor_names = CANDIDATES[candidate]
+    if (
+        canonical_sha256(record) != digest
+        or record["status"] != "FROZEN"
+        or record["freeze_id"] != "FROZEN_STRATEGY_SPEC_V1"
+        or record["dataset_id"] != DATASET_ID
+        or record["dataset_sha256"] != dataset_sha256
+        or record["oos_period"] != {"start": "2022-01-01", "end": "2025-12-31"}
+        or record["selected_strategy_id"] != strategy_id
+        or tuple(record["selected_config"]["factor_names"]) != factor_names
+        or canonical_sha256(record["selected_config"]) != record["selected_config_sha256"]
+    ):
+        raise ValueError("METHODOLOGY_FREEZE_CHANGED")
+    record["freeze_record_sha256"] = digest
+    return record
+
+
 def frozen_inputs(dataset: Path, repository: Path):
     marker = (dataset / MARKER).read_bytes()
     receipt = repository / ".research" / "freezes" / f"{dataset.name}.json"
@@ -774,6 +795,7 @@ def run_study(
     replay: bool,
     checkpoints: Path | None = None,
     candidate_freeze: dict | None = None,
+    methodology_freeze: dict | None = None,
 ):
     record, manifest = frozen_inputs(dataset, repository)
     implementation_sha = implementation_sha256(repository)
@@ -815,7 +837,12 @@ def run_study(
                     implementation_sha256=implementation_sha,
                     period=period,
                 )
-    for candidate in CANDIDATES:
+    candidate_names = (
+        (methodology_freeze["selected_candidate"],)
+        if methodology_freeze is not None
+        else tuple(CANDIDATES)
+    )
+    for candidate in candidate_names:
         existing = (
             _checkpoint(
                 checkpoints,
@@ -852,6 +879,10 @@ def run_study(
         for name in candidate_freeze["candidate_order"]
     ):
         raise ValueError("VALIDATION_CANDIDATE_CONFIG_CHANGED")
+    if methodology_freeze is not None:
+        selected = methodology_freeze["selected_candidate"]
+        if results[selected]["config_sha256"] != methodology_freeze["selected_config_sha256"]:
+            raise ValueError("OOS_STRATEGY_CONFIG_CHANGED")
     payload = {
         "report_id": f"R6_R7_FIXED_FAMILY_{kind.value}_V1",
         "period_kind": kind.value,
@@ -865,10 +896,13 @@ def run_study(
             "LOCKED" if kind is not ResearchPeriodKind.OUT_OF_SAMPLE else "UNLOCKED_BY_GATE_C"
         ),
         "official_oos_accessed": kind is ResearchPeriodKind.OUT_OF_SAMPLE,
-        "candidate_order": ["S0", "S1", "S2", "S3", "S4"],
-        "selection_pool": ["S2", "S3", "S4"],
+        "candidate_order": ["S0", "S1", *candidate_names],
+        "selection_pool": list(candidate_names),
         "candidate_freeze_sha256": (
             candidate_freeze["freeze_record_sha256"] if candidate_freeze is not None else None
+        ),
+        "methodology_freeze_sha256": (
+            methodology_freeze["freeze_record_sha256"] if methodology_freeze is not None else None
         ),
         "results": results,
     }
@@ -877,7 +911,7 @@ def run_study(
         replay_data = FullDataset(dataset, manifest, period)
         replay_baselines, replay_common = run_baselines(replay_data)
         replay_results = {**replay_baselines}
-        for candidate in CANDIDATES:
+        for candidate in candidate_names:
             replay_results[candidate] = run_candidate(replay_data, candidate, replay_common)
         if canonical_sha256(results) != canonical_sha256(replay_results):
             raise ValueError("STRATEGY_RESULT_REPLAY_MISMATCH")
@@ -913,12 +947,44 @@ def main() -> None:
             raise SystemExit("VALIDATION_LOCKED: Development candidate freeze is required")
         manifest = load_manifest(args.dataset / "manifest.json")
         candidate_freeze = load_candidate_freeze(args.candidate_freeze, manifest.canonical_sha256)
+    methodology_freeze = None
+    oos_claim = None
     if args.period is ResearchPeriodKind.OUT_OF_SAMPLE:
+        if args.verify_replay:
+            raise SystemExit("OOS_EXACTLY_ONCE: replay is prohibited")
         if args.methodology_freeze is None:
             raise SystemExit("OOS_LOCKED: Gate C methodology freeze is required")
-        frozen = json.loads(args.methodology_freeze.read_bytes())
-        if frozen.get("status") != "FROZEN" or frozen.get("dataset_id") != DATASET_ID:
-            raise SystemExit("OOS_LOCKED: invalid Gate C methodology freeze")
+        manifest = load_manifest(args.dataset / "manifest.json")
+        methodology_freeze = load_methodology_freeze(
+            args.methodology_freeze, manifest.canonical_sha256
+        )
+        lock = json.loads((args.repository / ".research/oos_lock.json").read_bytes())
+        if (
+            not lock["oos_authorized"]
+            or not lock["methodology_frozen"]
+            or lock["methodology_sha256"] != methodology_freeze["freeze_record_sha256"]
+            or lock["official_oos_runs"]
+        ):
+            raise SystemExit("OOS_LOCKED: Gate C authorization is invalid or already consumed")
+        claim_path = args.repository / ".research/official-oos-v1-claim.json"
+        claim = {
+            "claim_id": "OFFICIAL_OOS_V1_EXACTLY_ONCE",
+            "dataset_id": DATASET_ID,
+            "methodology_sha256": methodology_freeze["freeze_record_sha256"],
+            "output": str(args.output.resolve()),
+            "git_commit": subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=args.repository, text=True
+            ).strip(),
+        }
+        claim["claim_sha256"] = canonical_sha256(claim)
+        if claim_path.exists():
+            if json.loads(claim_path.read_bytes()) != claim:
+                raise SystemExit("OOS_ALREADY_CLAIMED")
+            if (args.output / "receipt.json").exists():
+                raise SystemExit("OOS_ALREADY_COMPLETED")
+        else:
+            write_immutable(claim_path, canonical_json_bytes(claim) + b"\n")
+        oos_claim = claim
     result = run_study(
         args.dataset,
         args.repository,
@@ -926,6 +992,7 @@ def main() -> None:
         replay=args.verify_replay,
         checkpoints=args.output,
         candidate_freeze=candidate_freeze,
+        methodology_freeze=methodology_freeze,
     )
     git_commit = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=args.repository, text=True
@@ -946,6 +1013,8 @@ def main() -> None:
         "strategy_result_replay": result["strategy_result_replay"],
         "official_oos_accessed": result["official_oos_accessed"],
         "candidate_freeze_sha256": result["candidate_freeze_sha256"],
+        "methodology_freeze_sha256": result["methodology_freeze_sha256"],
+        "oos_claim_sha256": oos_claim["claim_sha256"] if oos_claim is not None else None,
         "status": "PASS",
     }
     write_immutable(args.output / "receipt.json", canonical_json_bytes(receipt) + b"\n")
