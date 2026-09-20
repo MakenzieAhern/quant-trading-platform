@@ -59,6 +59,16 @@ def test_invalid_factor_dispersion_stops_selection() -> None:
     assert result.unavailable_factors == ("MOM_12_1",)
 
 
+def test_fixed_candidate_uses_only_its_registered_factors() -> None:
+    values = (
+        FactorValues(_security(1), date(2024, 1, 2), Decimal(1), Decimal(7), Decimal(2)),
+        FactorValues(_security(2), date(2024, 1, 2), Decimal(2), Decimal(7), Decimal(2)),
+    )
+    result = score_cross_section(values, factor_names=("MOM_12_1",))
+    assert tuple(item.security_id for item in result.scores) == (_security(2), _security(1))
+    assert all(item.trend_120_z == item.low_vol_z == 0 for item in result.scores)
+
+
 def test_equal_weight_portfolio_rounds_down_to_board_lots_and_keeps_cash() -> None:
     selected = score_cross_section(tuple(_factor(index) for index in range(10))).scores[:2]
     prices = {score.security_id: Decimal("10.01") for score in selected}

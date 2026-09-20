@@ -86,6 +86,7 @@ class ResearchSession:
     mergers: tuple[MergerEvent, ...] = ()
     partial_surrenders: tuple[MandatoryPartialShareSurrenderEvent, ...] = ()
     surrender_holder_class: str | None = None
+    surrender_holder_classes: tuple[tuple[SecurityId, str], ...] = ()
     pass_through_events: tuple[RestructuringBonusPassThroughEvent, ...] = ()
     consolidations: tuple[ShareConsolidationEvent, ...] = ()
     consolidation_holder_class: str | None = None
@@ -112,3 +113,7 @@ class ResearchSession:
                 raise ValueError("duplicate status or rule identity")
             if any(item.trading_date != self.trading_date for item in values):
                 raise ValueError("rule/status session mismatch")
+        if len({security_id for security_id, _ in self.surrender_holder_classes}) != len(
+            self.surrender_holder_classes
+        ):
+            raise ValueError("duplicate surrender holder-class identity")

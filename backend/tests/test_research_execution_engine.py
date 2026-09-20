@@ -189,6 +189,28 @@ def test_one_price_limit_bar_is_not_assumed_executable() -> None:
     assert len(result.expired_order_ids) == 1
 
 
+def test_zero_volume_suspension_placeholder_does_not_advance_portfolio_mark() -> None:
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+    )
+    placeholder = _session(date(2024, 1, 4), opening="20")
+    placeholder = replace(
+        placeholder,
+        bars=(placeholder.bars[0].model_copy(update={"volume": Decimal(0)}),),
+    )
+    result = engine.run(
+        (
+            _session(date(2024, 1, 2), opening="10"),
+            _session(date(2024, 1, 3), opening="9.9"),
+            placeholder,
+        )
+    )
+    assert result.snapshots[-1].equity == result.snapshots[-2].equity
+
+
 @pytest.mark.parametrize("gap", ["missing", "unknown", "limit", "volume", "rules", "flat"])
 def test_v1_rejects_insufficient_evidence_and_never_carries_order(gap):
     second = _session(date(2024, 1, 3), opening="9.9")

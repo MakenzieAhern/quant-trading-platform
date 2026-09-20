@@ -797,7 +797,7 @@ class PortfolioEngine:
         self._last_event_timestamp = fill.timestamp
         return updated
 
-    def mark_to_market(self, bar: Bar) -> PortfolioSnapshot:
+    def mark_to_market(self, bar: Bar, *, snapshot: bool = True) -> PortfolioSnapshot | None:
         self._require_chronological(bar.timestamp, "market data")
         self._reject_pass_through_trading(bar.symbol, bar.timestamp)
         if not self.is_orderable(bar.symbol, require_observed_unit_price=False):
@@ -817,7 +817,17 @@ class PortfolioEngine:
                 update={"market_price": bar.close, "unrealized_pnl": unrealized}
             )
 
-        return self.snapshot_at(bar.timestamp)
+        return self.snapshot_at(bar.timestamp) if snapshot else None
+
+    def compact_closed_positions(self) -> None:
+        """Retain realized PnL while dropping zero-quantity research bookkeeping."""
+        closed = tuple(
+            symbol for symbol, position in self._positions.items() if not position.quantity
+        )
+        for symbol in closed:
+            self._retired_realized += self._positions.pop(symbol).realized_pnl
+            self._marks.pop(symbol, None)
+            self._mark_dates.pop(symbol, None)
 
     def snapshot_at(self, timestamp: datetime) -> PortfolioSnapshot:
         self._require_chronological(timestamp, "snapshot")

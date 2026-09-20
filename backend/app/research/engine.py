@@ -202,7 +202,10 @@ class ResearchExecutionEngine:
                     or status.is_suspended is not False
                 ):
                     raise ValueError("SURRENDER_FIRST_TRADABLE_BOUNDARY_REQUIRED")
-            if session.surrender_holder_class != surrender.affected_holder_class:
+            holder_class = dict(session.surrender_holder_classes).get(
+                surrender.security_id, session.surrender_holder_class
+            )
+            if holder_class != surrender.affected_holder_class:
                 raise ValueError("PARTIAL_SURRENDER_HOLDER_APPLICABILITY_UNVERIFIED")
         for merger in mergers:
             merger.require_supported()
@@ -231,9 +234,10 @@ class ResearchExecutionEngine:
                 consolidation, opening, holder_class=session.consolidation_holder_class
             )
         for surrender in surrenders:
-            self._portfolio.apply_partial_surrender(
-                surrender, opening, holder_class=session.surrender_holder_class
+            holder_class = dict(session.surrender_holder_classes).get(
+                surrender.security_id, session.surrender_holder_class
             )
+            self._portfolio.apply_partial_surrender(surrender, opening, holder_class=holder_class)
         for pass_event in pass_through:
             self._portfolio.apply_pass_through(pass_event, opening)
         self._portfolio.activate_demergers(
@@ -251,9 +255,11 @@ class ResearchExecutionEngine:
             self._broker.execute_pending(_domain_bar(source, opening))
         self._expire_pending()
         for source in ordered_bars:
-            bar = _domain_bar(source, timestamp)
-            self._event_bus.publish(Event(EventType.MARKET_DATA, bar, occurred_at=timestamp))
-        if not ordered_bars and (
+            # Official zero-volume rows preserve feature continuity during suspension;
+            # they are not a new tradable mark or a new merger last-trade boundary.
+            if source.volume > ZERO:
+                self._portfolio.mark_to_market(_domain_bar(source, timestamp), snapshot=False)
+        if ordered_bars or (
             self._portfolio.pending_demergers
             or self._portfolio.pending_mergers
             or mergers
@@ -274,6 +280,7 @@ class ResearchExecutionEngine:
                 mergers=(),
                 partial_surrenders=(),
                 surrender_holder_class=None,
+                surrender_holder_classes=(),
                 pass_through_events=(),
                 consolidations=(),
                 consolidation_holder_class=None,
@@ -281,9 +288,11 @@ class ResearchExecutionEngine:
             snapshot.equity,
         )
         if target is None:
+            self._portfolio.compact_closed_positions()
             return
         self._expire_pending()
         self._route_target(target, timestamp)
+        self._portfolio.compact_closed_positions()
 
     def _fill_eligible(self, order: Order, bar: Bar) -> bool:
         session = self._active_session

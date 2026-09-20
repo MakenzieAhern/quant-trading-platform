@@ -16,7 +16,16 @@ ZERO = Decimal(0)
 ONE = Decimal(1)
 
 
-def score_cross_section(values: tuple[FactorValues, ...]) -> CrossSectionResult:
+FACTOR_NAMES = ("MOM_12_1", "TREND_120", "LOW_VOL")
+
+
+def score_cross_section(
+    values: tuple[FactorValues, ...], *, factor_names: tuple[str, ...] = FACTOR_NAMES
+) -> CrossSectionResult:
+    if not factor_names or len(set(factor_names)) != len(factor_names):
+        raise ValueError("factor_names must be unique and non-empty")
+    if unknown := set(factor_names) - set(FACTOR_NAMES):
+        raise ValueError(f"unknown factor names: {sorted(unknown)}")
     unique: dict[str, FactorValues] = {}
     for item in values:
         key = str(item.security_id)
@@ -30,7 +39,8 @@ def score_cross_section(values: tuple[FactorValues, ...]) -> CrossSectionResult:
     }
     standardized: dict[str, dict[str, Decimal]] = {}
     unavailable: list[str] = []
-    for name, factor in raw_factors.items():
+    for name in factor_names:
+        factor = raw_factors[name]
         result = population_z_scores(robust_winsorize(factor))
         if result is None:
             unavailable.append(name)
@@ -43,15 +53,11 @@ def score_cross_section(values: tuple[FactorValues, ...]) -> CrossSectionResult:
         scores = tuple(
             ScoredSecurity(
                 security_id=value.security_id,
-                alpha_score=(
-                    standardized["MOM_12_1"][key]
-                    + standardized["TREND_120"][key]
-                    + standardized["LOW_VOL"][key]
-                )
-                / Decimal(3),
-                mom_12_1_z=standardized["MOM_12_1"][key],
-                trend_120_z=standardized["TREND_120"][key],
-                low_vol_z=standardized["LOW_VOL"][key],
+                alpha_score=sum((standardized[name][key] for name in factor_names), ZERO)
+                / Decimal(len(factor_names)),
+                mom_12_1_z=standardized.get("MOM_12_1", {}).get(key, ZERO),
+                trend_120_z=standardized.get("TREND_120", {}).get(key, ZERO),
+                low_vol_z=standardized.get("LOW_VOL", {}).get(key, ZERO),
             )
             for key, value in unique.items()
         )

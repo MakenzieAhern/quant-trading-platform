@@ -1,4 +1,5 @@
-from collections import defaultdict
+from collections import defaultdict, deque
+from datetime import date
 from decimal import Decimal
 
 from app.domain.markets import SecurityId
@@ -11,6 +12,7 @@ from app.research.models import (
     ResearchSession,
 )
 from app.research.portfolio_construction import (
+    FACTOR_NAMES,
     construct_equal_weight_portfolio,
     score_cross_section,
     select_top_decile,
@@ -28,13 +30,28 @@ class ChinaAMomentumLowVolResearchStrategy:
         config: ChinaAMomentumLowVolConfig | None = None,
         *,
         minimum_average_daily_amount: Decimal = Decimal("10000000"),
+        factor_names: tuple[str, ...] = FACTOR_NAMES,
+        active_from: date | None = None,
+        strategy_id: str | None = None,
     ) -> None:
         self.config = config or ChinaAMomentumLowVolConfig()
         if minimum_average_daily_amount < ZERO:
             raise ValueError("minimum_average_daily_amount must be non-negative")
+        if not factor_names or len(set(factor_names)) != len(factor_names):
+            raise ValueError("factor_names must be unique and non-empty")
+        if set(factor_names) - set(FACTOR_NAMES):
+            raise ValueError("unknown factor name")
         self.minimum_average_daily_amount = minimum_average_daily_amount
-        self._history: dict[SecurityId, list[AdjustedClosePoint]] = defaultdict(list)
-        self._amount_history: dict[SecurityId, list[tuple[Decimal, Decimal]]] = defaultdict(list)
+        self.factor_names = factor_names
+        self.active_from = active_from
+        if strategy_id is not None:
+            self.strategy_id = strategy_id
+        self._history: dict[SecurityId, deque[AdjustedClosePoint]] = defaultdict(
+            lambda: deque(maxlen=253)
+        )
+        self._amount_history: dict[SecurityId, deque[tuple[Decimal, Decimal]]] = defaultdict(
+            lambda: deque(maxlen=20)
+        )
         self._completed_sessions = 0
         self.last_factors: tuple[FactorValues, ...] = ()
         self.last_cross_section = CrossSectionResult(scores=())
@@ -64,6 +81,8 @@ class ChinaAMomentumLowVolResearchStrategy:
             return None
         if (self._completed_sessions - 253) % self.config.rebalance_sessions:
             return None
+        if self.active_from is not None and session.trading_date < self.active_from:
+            return None
 
         factors = []
         prices: dict[SecurityId, Decimal] = {}
@@ -75,7 +94,7 @@ class ChinaAMomentumLowVolResearchStrategy:
                 or (status.is_st and not self.config.include_st)
             ):
                 continue
-            amounts = self._amount_history[bar.security_id][-20:]
+            amounts = tuple(self._amount_history[bar.security_id])
             if len(amounts) < 20:
                 continue
             average_lower = sum((lower for lower, _ in amounts), ZERO) / Decimal(len(amounts))
@@ -96,7 +115,7 @@ class ChinaAMomentumLowVolResearchStrategy:
                 continue
             prices[bar.security_id] = bar.raw_close
 
-        scored = score_cross_section(tuple(factors))
+        scored = score_cross_section(tuple(factors), factor_names=self.factor_names)
         self.last_factors = tuple(factors)
         self.last_cross_section = scored
         selected = select_top_decile(scored, maximum_holdings=self.config.maximum_holdings)
