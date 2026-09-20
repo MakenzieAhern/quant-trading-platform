@@ -1,5 +1,24 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 suspension authority closure / preflight v14
+
+- residual input / closed / remaining: 2,009 / 2,009 / 0
+- official later-trade conservative boundaries: 2,003
+- official lifecycle terminal closures: 2
+- coverage-end right-censored active suspensions: 4
+- SSE / SZSE unresolved facts: 0 / 0
+- SZSE resumption conflicts: 0
+- reconciliation byte-identical replay: PASS
+- suspension authority status: PASS_PUBLIC_OFFICIAL_RECONSTRUCTION
+- reconciliation file / manifest SHA-256: `dbad34426ccda8f875b10ccc5613820acafe0c29d6274ff2420ef1246df17b81` / `ec86a5849a894ab304548ba7ae5d2778fb0f424ffc9208442a2709a7f18d7db9`
+- authority file / manifest SHA-256: `26b72b333a6de0d541c29a665132c810ec11de344f00c124da94558565031433` / `b495a9e17337549b37b39e23d699ad2295e7c3168a7f37ef237d61744fab322a`
+- preflight V14 file / manifest SHA-256: `873a0921a05570439074b108fd1184c697d49d94964d5708332472d4c301ac9c` / `77a8eda1f106f0c4ce66297a5c86b321c54c0ce47ed58e27ef57d569ff107a48`
+- remaining P1 fact: RAW:FULL_UNIVERSE
+- backend offline-safe tests / Ruff / format / strict mypy: 745 PASS / PASS / PASS / PASS
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 SZSE raw-gap factor impact / preflight v13
 
 - unresolved rows / date: 239 / 2011-07-25

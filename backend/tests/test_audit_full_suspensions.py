@@ -1,4 +1,5 @@
 import json
+from collections import deque
 
 from app.data.catalog.checksums import canonical_sha256
 from scripts.audit_full_suspensions import (
@@ -6,6 +7,7 @@ from scripts.audit_full_suspensions import (
     normalize_sse,
     normalize_szse,
 )
+from scripts.reconcile_szse_daily_trade_resumptions import CLOSURE, accept_traded_day
 
 MASTER = {
     ("SSE", "600000"): [
@@ -137,3 +139,75 @@ def test_terminal_suspension_closes_without_inventing_a_resumption(tmp_path):
     assert szse[0]["resumed_at"] is None
     assert szse[0]["terminal_at"] == "2010-01-20"
     assert szse[0]["closure"] == "OFFICIAL_TERMINATION_NO_DELISTING_PERIOD"
+
+
+def test_daily_trade_closure_is_strictly_later_and_keeps_conservative_label():
+    pending = {
+        "CN-A:SZSE:000001": deque(
+            [
+                {
+                    "security_id": "CN-A:SZSE:000001",
+                    "suspended_at": "2010/01/04 09:30",
+                }
+            ]
+        )
+    }
+    accepted = []
+    evidence = {"source_sha256": "official"}
+
+    accept_traded_day(pending, accepted, "CN-A:SZSE:000001", "2010-01-04", evidence)
+    assert accepted == []
+    accept_traded_day(pending, accepted, "CN-A:SZSE:000001", "2010-01-05", evidence)
+
+    assert accepted == [
+        {
+            "security_id": "CN-A:SZSE:000001",
+            "suspended_at": "2010/01/04 09:30",
+            "resumed_at": "2010-01-05",
+            "execution_open_blocked": True,
+            "closure": CLOSURE,
+            "evidence": [evidence],
+        }
+    ]
+
+    szse, unresolved, *_ = normalize_szse(
+        [
+            {
+                "symbol": "000001",
+                "suspended_at": "2010/01/04 09:30",
+                "resumed_at": "9999/12/31 00:00",
+                "source_file": "c.html",
+            }
+        ],
+        MASTER,
+        {"c.html": "c"},
+        {"CN-A:SZSE:000001": None},
+        {("CN-A:SZSE:000001", "2010/01/04 09:30"): accepted[0]},
+    )
+    assert unresolved == []
+    assert szse[0]["closure"] == CLOSURE
+
+    censored = {
+        **accepted[0],
+        "resumed_at": None,
+        "censored_at": "2025-12-31",
+        "closure": "COVERAGE_END_RIGHT_CENSORED_ACTIVE_SUSPENSION",
+    }
+    del censored["resumed_at"]
+    szse, unresolved, *_ = normalize_szse(
+        [
+            {
+                "symbol": "000001",
+                "suspended_at": "2010/01/04 09:30",
+                "resumed_at": "9999/12/31 00:00",
+                "source_file": "c.html",
+            }
+        ],
+        MASTER,
+        {"c.html": "c"},
+        {"CN-A:SZSE:000001": None},
+        {("CN-A:SZSE:000001", "2010/01/04 09:30"): censored},
+    )
+    assert unresolved == []
+    assert szse[0]["censored_at"] == "2025-12-31"
+    assert szse[0]["resumed_at"] is None

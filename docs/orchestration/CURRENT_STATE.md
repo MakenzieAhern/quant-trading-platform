@@ -1,5 +1,23 @@
 # Current state
 
+## R5 suspension authority closure / preflight v14 — 2026-09-20
+
+The full 3,886-session checksum-bound SZSE official daily corpus closes all
+2,009 residual resumption facts conservatively: 2,003 at the first later day
+with positive turnover while blocking that day's open, two at accepted official
+lifecycle ends, and four as active suspensions right-censored at 2025-12-31.
+Same-day rows never close a suspension and no exact intraday time is claimed.
+
+Reconciliation and authority replay byte-identically. SSE unresolved = 0, SZSE
+unresolved = 0, SZSE conflicts = 0, so suspension authority is
+`PASS_PUBLIC_OFFICIAL_RECONSTRUCTION`. P1 established facts are now 16,319 /
+16,320 and the only remaining P1 label is `RAW:FULL_UNIVERSE`. Full-source
+preflight V14 remains blocked by raw OHLCV authority, adjustment economics and
+historical market-rule/transaction-cost authority. See
+`../research/R5_SZSE_DAILY_TRADE_SUSPENSION_CLOSURE_V1.md`.
+Offline-safe backend validation is 745 tests PASS; Ruff, format and strict mypy
+also pass. No frontend code changed in this checkpoint.
+
 ## R5 SZSE raw-gap factor impact / preflight v13 — 2026-09-20
 
 The 239 unresolved per-security rows all fall on 2011-07-25. A deterministic

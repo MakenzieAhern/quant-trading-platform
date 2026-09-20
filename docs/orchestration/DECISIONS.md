@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-09-20 — accept conservative official daily-trade suspension boundaries
+
+Accept a later positive-turnover row in the complete official SZSE daily corpus
+as proof that the security traded during that day, but keep execution blocked at
+the open because the intraday resumption time is not established. Never use a
+same-day row to close a suspension. Where no later trade exists, close only at
+an accepted official lifecycle end or right-censor an active suspension at the
+research coverage end. This closes suspension authority without inventing a
+resumption timestamp or promoting daily prices to raw OHLCV authority.
+
 ## 2026-09-20 — reject silent observed-only factor-window drift
 
 The 2011-07-25 SZSE raw gap is not neutral under the current 253-observation

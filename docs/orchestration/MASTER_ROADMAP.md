@@ -1,5 +1,17 @@
 # v1.1 controller roadmap
 
+## R5 suspension authority closure / preflight v14 — 2026-09-20
+
+Accept the complete official SZSE daily-trade replay as a conservative boundary
+authority for the 2,009 residual suspension events: 2,003 first-later-trade
+boundaries with opening blocked, two official lifecycle terminations and four
+coverage-end right-censored active suspensions. SSE/SZSE unresolved facts and
+SZSE conflicts are now zero; remove `SUSPENSION_HISTORY` and
+`SUSPENSION:FULL_DAILY` from active blockers. Continue only the independent raw
+OHLCV, adjustment-economics and historical transaction-cost work. Do not create
+or freeze the Full Dataset and do not run a study while preflight remains
+partial.
+
 ## R5 SZSE raw-gap factor treatment gate / preflight v13 — 2026-09-20
 
 The 239 unresolved 2011-07-25 per-security rows cannot be omitted under the

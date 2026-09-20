@@ -1,5 +1,21 @@
 # Blockers
 
+## Current R5 blocker after suspension authority closure — 2026-09-20
+
+Suspension history is no longer an active blocker: all 2,009 residual SZSE
+events are conservatively closed, SSE/SZSE unresolved facts are zero, conflicts
+are zero and byte-identical replay passes. `SUSPENSION:FULL_DAILY` is removed
+from the P1 residual.
+
+The consolidated blocker is now three independent components: official raw
+OHLCV authority for 239 rows on 2011-07-25 and its factor treatment; 478 gross
+cash-plus-bonus adjustment conflicts/eight provider conventions; and three
+historical public transaction-cost evidence groups plus the account-specific
+commission convention. The smallest current methodology decision remains the
+239-row raw-gap treatment: official-only strict continuity with unavailable
+affected factor windows, or explicit feature-only use of the existing dual-
+provider candidate. No dataset creation, freeze or study is authorized.
+
 ## Current R5 blocker after SZSE raw-gap factor-impact audit — 2026-09-20
 
 The 239 official per-security gaps are confined to 2011-07-25, but omission is
