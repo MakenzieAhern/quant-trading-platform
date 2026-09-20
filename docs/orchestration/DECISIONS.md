@@ -1,5 +1,13 @@
 # Decisions
 
+## 2026-09-20 — consolidate the two remaining R5 methodology choices
+
+Route the bounded partial-row treatment and the research-account cost treatment
+to one explicit approval packet,
+`../research/R5_CONSOLIDATED_METHODOLOGY_GATE_V1.md`. This records a recommended
+continuation of already-tested deterministic behavior but does not approve or
+implement it. Public official facts remain distinct from simulation conventions.
+
 ## 2026-09-20 — accept original ChinaClear fee tables for public-rule closure
 
 Accept the checksum-bound original ChinaClear fee-table bytes for the

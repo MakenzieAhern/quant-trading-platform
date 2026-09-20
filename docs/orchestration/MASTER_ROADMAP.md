@@ -11,6 +11,10 @@ commission and account-minimum treatment. Continue only the independent raw
 OHLCV gate and that account convention; do not create/freeze the Full Dataset
 or run a study while either remains incomplete.
 
+The two choices are consolidated in
+`../research/R5_CONSOLIDATED_METHODOLOGY_GATE_V1.md`. Implement neither until
+the user explicitly approves `R5 RESEARCH CONVENTIONS V1`.
+
 ## R5 official monthly raw-gap reconstruction / preflight v17 — 2026-09-20
 
 Accept the V6 immutable reconstruction as official interval evidence: 239/239

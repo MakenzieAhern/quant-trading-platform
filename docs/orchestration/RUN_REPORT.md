@@ -11,6 +11,8 @@
 - preflight V18 file / manifest SHA-256: `a817fe53c6d9c14540259fae2ae07862a3b912a3f696bf73504d11731ef4e3a0` / `039c47b110311fdbdea3783e7014a0b46f2eebb9e7d5ec4b4e48735ae54c2c9a`
 - executable rules changed: NO
 - remaining incomplete components: raw OHLCV; account cost convention
+- consolidated approval packet: `../research/R5_CONSOLIDATED_METHODOLOGY_GATE_V1.md`
+- minimum user action: `APPROVE R5 RESEARCH CONVENTIONS V1`
 - validation: report replay / preflight manifest / 754 offline-safe backend / Ruff / format / strict mypy PASS
 - PostgreSQL-backed tests: 64 NOT VALIDATED (Docker CLI absent in Ubuntu WSL)
 - Full Dataset created / audited / frozen: NO / NO / NO

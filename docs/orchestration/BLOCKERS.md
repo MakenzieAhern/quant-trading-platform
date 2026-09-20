@@ -13,6 +13,11 @@ official SZSE/SSIC archival extract. Separately, supply an account contract or
 approve a research commission/account-minimum convention. Full Dataset
 creation, audit, freeze and all studies remain locked.
 
+The minimum consolidated user action is now one approval:
+`APPROVE R5 RESEARCH CONVENTIONS V1`, defined in
+`../research/R5_CONSOLIDATED_METHODOLOGY_GATE_V1.md`. No convention is inferred
+from silence and no implementation begins before that approval.
+
 ## Current R5 blocker after official monthly raw-gap reconstruction — 2026-09-20
 
 The factor effect of the 239 SZSE rows is no longer unknown: official evidence

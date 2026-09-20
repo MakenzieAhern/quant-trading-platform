@@ -19,6 +19,12 @@ for the 239 SZSE rows on 2011-07-25, and the research-account cost convention.
 Full Dataset creation/audit/freeze and all studies remain locked. See
 `../research/R5_TRANSACTION_COST_OFFICIAL_SOURCES_V7.md`.
 
+All independent work is now consolidated into one explicit approval packet:
+`../research/R5_CONSOLIDATED_METHODOLOGY_GATE_V1.md`. It combines the bounded
+non-tradable treatment of the 239 partial rows with extension of the frozen
+Pilot research-account cost convention. Neither convention is implemented
+before approval.
+
 Validation: report replay and preflight manifest PASS; offline-safe backend
 **754 passed**; Ruff, format and strict mypy PASS. The 64 PostgreSQL-backed
 tests remain unvalidated because Docker WSL integration is currently absent.
