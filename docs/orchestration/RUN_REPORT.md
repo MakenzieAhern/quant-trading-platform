@@ -8,6 +8,8 @@
 - full-source preflight file / manifest SHA-256: `50fbd8ea751a75423225cee0c5a24764a97ea2926b1094c9649914c11fd28bce` / `f200c69d8208fb895a71b50061d9ad63d3b9f9429a6243dad4406a440760d945`
 - public transaction-cost claim groups remaining: 3
 - account contract or explicit research convention required: YES
+- minimal user action: extend the frozen Pilot cost model to full-history R5, or provide an account-specific replacement
+- Docker recovery: DEFERRED_NONBLOCKING
 - executable rules changed: NO
 - backend offline-safe tests / Ruff / format / strict mypy: 743 PASS / PASS / PASS / PASS
 - frontend ESLint / TypeScript / tests / isolated production build: PASS / PASS / 78 PASS / PASS

@@ -20,6 +20,11 @@ mypy, 78 frontend tests, ESLint, TypeScript and an isolated production build.
 The PostgreSQL-backed subset remains unavailable while Docker Engine is
 offline.
 
+The smallest new methodology gate is whether the already frozen Pilot cost
+model applies unchanged to the 2010-2025 R5 study or is replaced by an
+account-specific net-versus-all-in convention. Docker recovery is separately
+`DEFERRED_NONBLOCKING`.
+
 ## R5 SZSE post-close scope closure / preflight v11 — 2026-09-20
 
 Official SZSE guidance and technical notices explain all 223 separate

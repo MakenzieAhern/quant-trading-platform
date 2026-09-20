@@ -15,6 +15,12 @@ conflicts/eight provider conventions; the three historical cost groups; and
 the account-specific commission convention. Full Dataset creation, audit,
 freeze and all studies remain locked.
 
+Smallest current human decision: either extend the already frozen Pilot cost
+model (commission `max(0.0003 * notional, CNY 5)` plus the separate `0.00001`
+transfer/clearing allowance) to the 2010-2025 R5 study, or provide a replacement
+account-specific net-versus-all-in convention. No model change is made pending
+that choice.
+
 ## Current R5 blocker after SZSE post-close scope closure — 2026-09-20
 
 The separate 223-symbol 2023-04-10 transaction-scope gap is resolved: official
