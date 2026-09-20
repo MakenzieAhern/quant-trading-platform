@@ -562,7 +562,7 @@ def run_baselines(data: FullDataset):
         if day >= start:
             returns = [
                 current[sid] / previous[sid] - ONE
-                for sid in eligible
+                for sid in sorted(eligible)
                 if sid in current and sid in previous
             ]
             if returns:
