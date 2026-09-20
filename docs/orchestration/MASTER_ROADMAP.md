@@ -1,5 +1,16 @@
 # v1.1 controller roadmap
 
+## R5 SZSE raw-gap factor treatment gate / preflight v13 — 2026-09-20
+
+The 239 unresolved 2011-07-25 per-security rows cannot be omitted under the
+current 253-observation implementation without silently changing calendar
+horizons. Preserve the exact gate: either official-only strict continuity makes
+affected factors unavailable through 2012-08-07, or explicit approval permits
+the existing dual-provider candidate for feature history only. Do not promote
+candidate rows, synthesize data, or choose by strategy performance. Continue
+independent suspension, adjustment-economics and public cost-source work; do
+not create/freeze the Full Dataset or run a study while authority remains partial.
+
 ## R5 commission-scope route closure / preflight v12 — 2026-09-20
 
 The official Guangdong CSRC notice establishes that net-versus-all-in

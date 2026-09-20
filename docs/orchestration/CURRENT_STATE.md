@@ -1,5 +1,26 @@
 # Current state
 
+## R5 SZSE raw-gap factor impact / preflight v13 — 2026-09-20
+
+The 239 unresolved per-security rows all fall on 2011-07-25. A deterministic
+calendar/lifecycle replay establishes an affected 253-session window through
+2012-08-07: 60,467 lifecycle security-days. The current factor implementation
+would silently bridge the missing session in 40,935 otherwise warm factor
+evaluations for all 239 securities, including 1,940 evaluations across 12
+fixed rebalance sessions. This is calendar-horizon drift, not no-fill.
+
+`CURRENT_OBSERVED_ONLY` is therefore rejected. Official-only strict continuity
+would conservatively make those factor windows unavailable; using the existing
+239-row Tencent/Sina candidate for feature history would require explicit source
+methodology approval. The candidate remains unpromoted, no strategy or
+profitability was run, and Full Dataset creation remains blocked. External
+impact report file / manifest SHA-256:
+`58aac8769e365222f1a3d022d1108e88913a4dc34225d14046c5f1541318d1c6` /
+`a29bad03ed9080a579534a8eb425123592e0f66f4bc686df6a49e83e3cdf6f00`.
+Offline-safe backend validation is 744 tests PASS; Ruff, format and strict
+mypy also pass. PostgreSQL-backed validation remains unavailable with Docker
+separately deferred.
+
 ## R5 commission-scope route closure / preflight v12 — 2026-09-20
 
 The checksum-bound 2012 Guangdong CSRC notice explicitly distinguishes net

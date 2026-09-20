@@ -1,5 +1,25 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 SZSE raw-gap factor impact / preflight v13
+
+- unresolved rows / date: 239 / 2011-07-25
+- affected factor window: 2011-07-25 through 2012-08-07 (253 sessions)
+- lifecycle security-days: 60,467
+- observed-only silent bridge security-days: 40,935 across all 239 securities
+- affected fixed rebalance sessions / evaluations: 12 / 1,940
+- current observed-only treatment: REJECTED (calendar-horizon drift)
+- official-only strict-contiguity treatment: conservative factor unavailable
+- candidate feature-only treatment: explicit source methodology approval required
+- impact report file / manifest SHA-256: `58aac8769e365222f1a3d022d1108e88913a4dc34225d14046c5f1541318d1c6` / `a29bad03ed9080a579534a8eb425123592e0f66f4bc686df6a49e83e3cdf6f00`
+- preflight V13 file / manifest SHA-256: `576e43efea102d9be81d45549b1fa3e6057987fe596b246034620491c5bb663e` / `ebbc676d6f174773a7478cf99f1758e91d678ffeb1197d76bbd0c29e436e0c17`
+- focused regression / deterministic replay: PASS / PASS
+- backend offline-safe tests / Ruff / format / strict mypy: 744 PASS / PASS / PASS / PASS
+- candidate provider promoted: NO
+- strategy or profitability run: NO
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 commission-scope route closure / preflight v12
 
 - official Guangdong CSRC source date: 2012-08-24

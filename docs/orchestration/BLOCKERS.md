@@ -1,5 +1,20 @@
 # Blockers
 
+## Current R5 blocker after SZSE raw-gap factor-impact audit — 2026-09-20
+
+The 239 official per-security gaps are confined to 2011-07-25, but omission is
+not neutral. The existing observed-only factor history would silently bridge
+40,935 warm security-days through 2012-08-07 and 1,940 evaluations on 12 fixed
+rebalance sessions. That behavior is rejected as calendar-horizon drift.
+
+The raw-gap methodology choice is now exact: keep official-only inputs and make
+the affected 253-session factor windows conservatively unavailable, or explicitly
+approve the dual-provider candidate rows for feature history only. The latter
+does not promote them to official raw authority. The consolidated blocker still
+also contains 2,009 SZSE suspension boundaries, 478 gross cash-plus-bonus
+adjustment conflicts/eight provider conventions, three historical cost groups,
+and the full-history account-specific commission convention. No study may run.
+
 ## Current R5 blocker after commission-scope route closure — 2026-09-20
 
 Official Guangdong CSRC evidence proves that net-versus-all-in commission is

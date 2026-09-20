@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-09-20 — reject silent observed-only factor-window drift
+
+The 2011-07-25 SZSE raw gap is not neutral under the current 253-observation
+factor implementation. Reject silently skipping the calendar session and using
+an older observation. Preserve two auditable choices for explicit approval:
+official-only strict continuity with conservative factor unavailability, or
+feature-only use of the existing dual-provider candidate. Do not promote the
+candidate to official raw authority, synthesize a row, or inspect strategy
+performance to choose between treatments.
+
 ## 2026-09-20 — stop generic public search for customer commission scope
 
 Accept the checksum-bound Guangdong CSRC notice as authority that net-versus-
