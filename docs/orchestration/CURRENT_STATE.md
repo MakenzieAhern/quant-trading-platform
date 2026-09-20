@@ -1,5 +1,26 @@
 # Current state
 
+## R6 Development complete / R7 Validation ready — 2026-09-21
+
+The fixed S0-S4 Development family completed on 2010-01-01 through 2017-12-31.
+Independent replay and a separate-process S0/S1 comparison pass; Official OOS
+was not accessed. Result / result-file / receipt-file SHA-256 are
+`7f73a0ef7ac9ee571be87bf996b002a074cb2512400822d82001e3885d418c29`,
+`511dd4e53b55feb791d05483e30e6f4782a0ddcd1234594708366a07e8c22db6`, and
+`93be9be9e55609ee87e27cfb032390e8565e66c89e9f15eb320c0b0767e50742`.
+
+Development total return / Sharpe / max drawdown: S0 `14.02% / 0.191 / -46.70%`;
+S1 `104.44% / 0.461 / -54.06%`; S2 `0.36% / 0.039 / -4.09%`; S3
+`-22.52% / -0.560 / -29.56%`; S4 `-21.75% / -0.434 / -32.56%`.
+These results were not used to alter the candidate family.
+
+The immutable `R6_DEVELOPMENT_CANDIDATES_V1` record freezes all configurations,
+the 2018-2021 Validation period, quantitative robustness gates, deterministic
+selection order and S4 fallback. Freeze record / file SHA-256 are
+`e3a3916429962a39b3eaf79d845ab9135768980a5df6aff9ac5c2bc8bd0e060f` /
+`6382ca453a525d7ef175e4fd2e85124bb4e5e129f138fdd69464333db90aae0a`.
+R7 may run once per frozen candidate. OOS remains locked through Gate C.
+
 ## R5 complete / Gate B Full Dataset freeze PASS — 2026-09-21
 
 The rebuilt `cn-a-research-20100101-20251231-v1` is created, audited and

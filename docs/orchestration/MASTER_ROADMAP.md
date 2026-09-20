@@ -1,5 +1,16 @@
 # v1.1 controller roadmap
 
+## R6 Development complete / R7 Validation active — 2026-09-21
+
+Development 2010-2017 completed for the fixed S0-S4 family with independent
+result replay and cross-process S0/S1 reproducibility PASS. Formal result SHA is
+`7f73a0ef7ac9ee571be87bf996b002a074cb2512400822d82001e3885d418c29`, bound to
+Git commit `c26a4d04858bd9774f0b6ac3434d20001f607482`. Candidate configurations and
+Validation gates are immutably frozen at record
+`e3a3916429962a39b3eaf79d845ab9135768980a5df6aff9ac5c2bc8bd0e060f`.
+Run every frozen candidate exactly once on 2018-2021, do not retune, and apply
+the frozen deterministic selection rule. Official OOS remains locked.
+
 ## Gate B complete / R6 Development active — 2026-09-21
 
 The Full Dataset is immutably frozen at manifest

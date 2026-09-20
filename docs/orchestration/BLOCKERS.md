@@ -1,5 +1,14 @@
 # Blockers
 
+## Current R7 status — 2026-09-21
+
+No research, source or methodology blocker is active. R6 Development and replay
+are complete, and the candidate/configuration/Validation protocol freeze is
+immutable. Run S2-S4 once on 2018-2021 and keep Official OOS locked. Docker
+Desktop is not currently exposed inside Ubuntu WSL (`docker: command not found`),
+so PostgreSQL-backed full-suite and final Docker QA remain deferred independent
+work; this does not block the database-independent R7 study.
+
 ## Current R6 status — 2026-09-21
 
 No active source, methodology or dataset-integrity blocker remains. The full

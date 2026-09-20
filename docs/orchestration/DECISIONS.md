@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-09-21 — freeze the Development candidates before Validation
+
+Accept the checksum-bound R6 Development result after independent replay and
+cross-process comparator reproduction. Freeze exactly S2, S3 and S4 for one
+Validation run each; keep S0/S1 as comparators. Define “essentially all” as one
+positive year contributing more than 90% of the sum of positive annual returns.
+Pre-register annualized turnover <=24 and annualized transaction-cost ratio
+<=5% as economic-plausibility limits. Apply the ordered IR, Sharpe, drawdown,
+turnover and simplicity selection rule with 0.01 close/tie bands. If no candidate
+passes every robustness gate, freeze unchanged S4 as the honest negative/neutral
+reference. This decision does not unlock Official OOS.
+
 ## 2026-09-21 — execute pre-authorized Gate B Full Dataset freeze
 
 All conditional Gate B requirements are satisfied: the Full Dataset is created

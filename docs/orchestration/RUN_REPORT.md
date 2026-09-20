@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-21 R6 Development PASS / candidates frozen
+
+- period / sessions: 2010-01-01..2017-12-31 / 1,944
+- candidates: S0, S1 comparators; S2, S3, S4 Validation pool
+- strategy result replay / cross-process baseline replay: PASS / PASS
+- result SHA-256: `7f73a0ef7ac9ee571be87bf996b002a074cb2512400822d82001e3885d418c29`
+- result / receipt file SHA-256: `511dd4e53b55feb791d05483e30e6f4782a0ddcd1234594708366a07e8c22db6` / `93be9be9e55609ee87e27cfb032390e8565e66c89e9f15eb320c0b0767e50742`
+- development Git commit: `c26a4d04858bd9774f0b6ac3434d20001f607482`
+- candidate freeze record / file SHA-256: `e3a3916429962a39b3eaf79d845ab9135768980a5df6aff9ac5c2bc8bd0e060f` / `6382ca453a525d7ef175e4fd2e85124bb4e5e129f138fdd69464333db90aae0a`
+- S2 total / excess / Sharpe / MDD: 0.36% / -13.66% / 0.039 / -4.09%
+- S3 total / excess / Sharpe / MDD: -22.52% / -36.54% / -0.560 / -29.56%
+- S4 total / excess / Sharpe / MDD: -21.75% / -35.77% / -0.434 / -32.56%
+- Development / Validation / Official OOS: COMPLETE / NOT RUN / NOT RUN
+- OOS lock: LOCKED through Gate C
+- current stage: R7 Validation Study
+- Docker/PG integration: DEFERRED QA ISSUE; Ubuntu currently has no `docker` command
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-21 Gate B Full Dataset freeze PASS / R6 ready
 
 - Full Dataset created / audited / frozen: YES / YES / YES
