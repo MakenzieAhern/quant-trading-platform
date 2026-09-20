@@ -1,5 +1,19 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-21 Gate B Full Dataset freeze PASS / R6 ready
+
+- Full Dataset created / audited / frozen: YES / YES / YES
+- dataset / coverage: `cn-a-research-20100101-20251231-v1` / 2010-01-01..2025-12-31
+- manifest SHA-256: `1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e`
+- freeze record / file SHA-256: `1a89b5d8b6e9bc7b3cc079f0bd426afac294383cfdce0a25af8eb9c980513fc3` / `228569f1dcbb099e8b7225ef72f6960660f5741bb7298c051809bbb1ab3739bd`
+- freeze Git commit: `f9d760d714eb282b88d13be750a5e07c62db05fd`
+- Gate B: COMPLETE
+- current stage: R6 Development Study
+- Development / Validation / Official OOS: NOT RUN / NOT RUN / NOT RUN
+- OOS lock: LOCKED through Gate C
+- single smallest blocker: NONE
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-21 R5 Full Dataset audit PASS / Gate B pending
 
 - dataset: `cn-a-research-20100101-20251231-v1`

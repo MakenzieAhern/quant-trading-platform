@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-09-21 — execute pre-authorized Gate B Full Dataset freeze
+
+All conditional Gate B requirements are satisfied: the Full Dataset is created
+and audited, unresolved required data is zero, all 29 mandatory R5 gates and six
+accounting invariants pass, checksum replay is stable and no material source
+ambiguity remains. Freeze `cn-a-research-20100101-20251231-v1` immutably at
+manifest `1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e`,
+bound to Git commit `f9d760d714eb282b88d13be750a5e07c62db05fd`. Any later correction requires a
+new dataset version. Authorize R6 Development only; keep Official OOS locked.
+
 ## 2026-09-21 — accept the complete structural census and audited Full Dataset
 
 Accept the retained official-evidence reconstruction as a complete, deterministic

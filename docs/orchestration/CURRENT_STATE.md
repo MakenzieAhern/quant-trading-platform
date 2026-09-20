@@ -1,9 +1,9 @@
 # Current state
 
-## R5 Full Dataset audit PASS / Gate B pre-authorized — 2026-09-21
+## R5 complete / Gate B Full Dataset freeze PASS — 2026-09-21
 
-The rebuilt `cn-a-research-20100101-20251231-v1` is created and audited but
-not yet frozen. It contains 5,431 securities, 3,886 sessions, 13,411,189 raw
+The rebuilt `cn-a-research-20100101-20251231-v1` is created, audited and
+immutably frozen. It contains 5,431 securities, 3,886 sessions, 13,411,189 raw
 rows and 42,792 corporate-action rows for 2010-01-01 through 2025-12-31.
 All 29 mandatory R5 audit gates pass, including the full structural corporate-
 action census and all six accounting invariants. The merger ledger is executable
@@ -15,9 +15,14 @@ Canonical / file manifest SHA-256:
 Audit report SHA-256:
 `1b37987483955b2e486c670f372429c341fb1c88780293a455a48d7f28daf543`.
 
-No active R5 data blocker remains. Complete repository validation and a
-coherent audited milestone commit, then execute the conditionally pre-authorized
-Gate B immutable freeze. Development, Validation and Official OOS remain not run.
+Freeze record / file SHA-256:
+`1a89b5d8b6e9bc7b3cc079f0bd426afac294383cfdce0a25af8eb9c980513fc3` /
+`228569f1dcbb099e8b7225ef72f6960660f5741bb7298c051809bbb1ab3739bd`.
+The receipt is bound to Git commit
+`f9d760d714eb282b88d13be750a5e07c62db05fd`.
+
+R6 Development is now authorized for 2010-2017 only. Validation and Official
+OOS remain not run; 2022-2025 stays locked until Gate C.
 
 ## R5 Full Dataset candidate audit — 2026-09-21
 

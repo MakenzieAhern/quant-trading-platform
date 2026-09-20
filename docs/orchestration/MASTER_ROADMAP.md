@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## Gate B complete / R6 Development active — 2026-09-21
+
+The Full Dataset is immutably frozen at manifest
+`1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e` and
+freeze record `1a89b5d8b6e9bc7b3cc079f0bd426afac294383cfdce0a25af8eb9c980513fc3`.
+Run the pre-registered S0-S4 family on Development 2010-2017, persisting every
+configuration. Then run each frozen candidate once on Validation 2018-2021 and
+apply the deterministic selection rule. Official OOS 2022-2025 remains locked
+until Gate C.
+
 ## R5 Full Dataset audit PASS / Gate B transition — 2026-09-21
 
 The full structural census is closed and the rebuilt 2010-2025 dataset passes
