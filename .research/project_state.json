@@ -1131,6 +1131,8 @@
   "release_authorized": false,
   "human_approval_gate": null,
   "next_dataset_freeze_gate": "GATE_FULL_RESEARCH_DATASET_FREEZE",
+  "gate_b_decision": "CONDITIONALLY_PREAUTHORIZED_BY_USER",
+  "gate_b_conditions": "PASS",
   "next_action": "Commit the executable merger-ledger and 29-gate audit milestone, then execute the pre-authorized Gate B immutable freeze. Do not run Development before the freeze receipt is verified.",
   "pilot_dataset_id": "cn-a-pilot-akshare-20230101-20240731-v2",
   "pilot_dataset_path": "/home/yuchen/data/research/cn-a-pilot-akshare-20230101-20240731-v2",
