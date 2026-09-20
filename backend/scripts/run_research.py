@@ -98,6 +98,28 @@ def implementation_sha256(repository: Path) -> str:
     return canonical_sha256({path: sha256_file(repository / path) for path in IMPLEMENTATION_FILES})
 
 
+def load_candidate_freeze(path: Path, dataset_sha256: str) -> dict:
+    record = json.loads(path.read_bytes())
+    digest = record.pop("freeze_record_sha256")
+    if (
+        canonical_sha256(record) != digest
+        or record["status"] != "FROZEN"
+        or record["dataset_id"] != DATASET_ID
+        or record["dataset_sha256"] != dataset_sha256
+        or record["validation_period"] != {"start": "2018-01-01", "end": "2021-12-31"}
+        or record["candidate_order"] != ["S0", "S1", "S2", "S3", "S4"]
+        or record["selection_pool"] != ["S2", "S3", "S4"]
+        or any(
+            record["candidates"][name]["strategy_id"] != strategy_id
+            or tuple(record["candidates"][name]["config"]["factor_names"]) != factor_names
+            for name, (strategy_id, factor_names) in CANDIDATES.items()
+        )
+    ):
+        raise ValueError("CANDIDATE_FREEZE_CHANGED")
+    record["freeze_record_sha256"] = digest
+    return record
+
+
 def frozen_inputs(dataset: Path, repository: Path):
     marker = (dataset / MARKER).read_bytes()
     receipt = repository / ".research" / "freezes" / f"{dataset.name}.json"
@@ -751,6 +773,7 @@ def run_study(
     *,
     replay: bool,
     checkpoints: Path | None = None,
+    candidate_freeze: dict | None = None,
 ):
     record, manifest = frozen_inputs(dataset, repository)
     implementation_sha = implementation_sha256(repository)
@@ -824,6 +847,11 @@ def run_study(
             f"{kind.value} {candidate} complete sha256={canonical_sha256(results[candidate])}",
             flush=True,
         )
+    if candidate_freeze is not None and any(
+        results[name]["config_sha256"] != candidate_freeze["candidates"][name]["config_sha256"]
+        for name in candidate_freeze["candidate_order"]
+    ):
+        raise ValueError("VALIDATION_CANDIDATE_CONFIG_CHANGED")
     payload = {
         "report_id": f"R6_R7_FIXED_FAMILY_{kind.value}_V1",
         "period_kind": kind.value,
@@ -839,6 +867,9 @@ def run_study(
         "official_oos_accessed": kind is ResearchPeriodKind.OUT_OF_SAMPLE,
         "candidate_order": ["S0", "S1", "S2", "S3", "S4"],
         "selection_pool": ["S2", "S3", "S4"],
+        "candidate_freeze_sha256": (
+            candidate_freeze["freeze_record_sha256"] if candidate_freeze is not None else None
+        ),
         "results": results,
     }
     replay_status = "NOT_REQUESTED"
@@ -873,8 +904,15 @@ def main() -> None:
         required=True,
     )
     parser.add_argument("--verify-replay", action="store_true")
+    parser.add_argument("--candidate-freeze", type=Path)
     parser.add_argument("--methodology-freeze", type=Path)
     args = parser.parse_args()
+    candidate_freeze = None
+    if args.period is ResearchPeriodKind.VALIDATION:
+        if args.candidate_freeze is None:
+            raise SystemExit("VALIDATION_LOCKED: Development candidate freeze is required")
+        manifest = load_manifest(args.dataset / "manifest.json")
+        candidate_freeze = load_candidate_freeze(args.candidate_freeze, manifest.canonical_sha256)
     if args.period is ResearchPeriodKind.OUT_OF_SAMPLE:
         if args.methodology_freeze is None:
             raise SystemExit("OOS_LOCKED: Gate C methodology freeze is required")
@@ -887,6 +925,7 @@ def main() -> None:
         args.period,
         replay=args.verify_replay,
         checkpoints=args.output,
+        candidate_freeze=candidate_freeze,
     )
     git_commit = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=args.repository, text=True
@@ -906,6 +945,7 @@ def main() -> None:
         "result_sha256": result["result_sha256"],
         "strategy_result_replay": result["strategy_result_replay"],
         "official_oos_accessed": result["official_oos_accessed"],
+        "candidate_freeze_sha256": result["candidate_freeze_sha256"],
         "status": "PASS",
     }
     write_immutable(args.output / "receipt.json", canonical_json_bytes(receipt) + b"\n")
