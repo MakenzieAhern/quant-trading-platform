@@ -1,5 +1,16 @@
 # v1.1 controller roadmap
 
+## R5 public historical-cost authority closure / preflight v18 — 2026-09-20
+
+Accept the checksum-bound original ChinaClear fee tables and effective-dated
+1/0.75/0.6-per-mille SSE investor-total transfer intervals. The archival
+surface transports the original bytes but is not promoted as the authority.
+Public official market-rule gaps are zero. Keep the executable model unchanged
+until an account contract or explicit human research convention selects the
+commission and account-minimum treatment. Continue only the independent raw
+OHLCV gate and that account convention; do not create/freeze the Full Dataset
+or run a study while either remains incomplete.
+
 ## R5 official monthly raw-gap reconstruction / preflight v17 — 2026-09-20
 
 Accept the V6 immutable reconstruction as official interval evidence: 239/239

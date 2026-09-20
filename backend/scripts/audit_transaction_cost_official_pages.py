@@ -38,6 +38,60 @@ SOURCES = (
         ],
     },
     {
+        "file": "chinaclear-sse-fee-table-2010-12.pdf",
+        "url": "http://www.chinaclear.cn/main/10/1010/1291369257453.pdf",
+        "retrieval_transport_url": (
+            "https://web.archive.org/web/20110626024946id_/"
+            "http://www.chinaclear.cn:80/main/10/1010/1291369257453.pdf"
+        ),
+        "archived_at_utc": "2011-06-26T02:49:46Z",
+        "retrieved_at_utc": "2026-09-20T09:41:39Z",
+        "sha256": "b4d76d4ff31d20e84ba56795229b051d11e52f4f42027a3d868437583f9f3350",
+        "format": "PDF",
+        "page": 2,
+        "validation": "SHA256_PLUS_TEXT_EXTRACTION_REVIEW",
+        "claims": [
+            "SSE_INVESTOR_TRANSFER_FACE_VALUE_1_PER_MILLE_TOTAL",
+            "SSE_TRANSFER_SPLIT_CHINACLEAR_50_PERCENT_SETTLEMENT_UNIT_50_PERCENT",
+        ],
+    },
+    {
+        "file": "chinaclear-sse-fee-table-2012-09.pdf",
+        "url": "http://www.chinaclear.cn/main/10/1010/1346392662360.pdf",
+        "retrieval_transport_url": (
+            "https://web.archive.org/web/20121202015326id_/"
+            "http://www.chinaclear.cn:80/main/10/1010/1346392662360.pdf"
+        ),
+        "archived_at_utc": "2012-12-02T01:53:26Z",
+        "retrieved_at_utc": "2026-09-20T09:41:39Z",
+        "sha256": "256e6aaab90312497321cf5b1551b366a21d4fa21677051a4c42c3e3ee18e082",
+        "format": "PDF",
+        "page": 2,
+        "validation": "SHA256_PLUS_TEXT_EXTRACTION_REVIEW",
+        "claims": [
+            "SSE_CHINACLEAR_TRANSFER_2012_09_01_FACE_VALUE_0.3_PER_MILLE",
+            "SSE_BROKER_RETAINED_TRANSFER_2012_09_01_FACE_VALUE_0.3_PER_MILLE",
+        ],
+    },
+    {
+        "file": "chinaclear-sse-fee-table-2013-01.pdf",
+        "url": "http://www.chinaclear.cn/main/10/1010/1357259883159.pdf",
+        "retrieval_transport_url": (
+            "https://web.archive.org/web/20130123121632id_/"
+            "http://www.chinaclear.cn:80/main/10/1010/1357259883159.pdf"
+        ),
+        "archived_at_utc": "2013-01-23T12:16:32Z",
+        "retrieved_at_utc": "2026-09-20T09:41:39Z",
+        "sha256": "5a0d4bbafcf6f3efd3694f6adbb9aec4204af5bec8eb6128d3c9e0cc21a0907e",
+        "format": "PDF",
+        "page": 2,
+        "validation": "SHA256_PLUS_TEXT_EXTRACTION_REVIEW",
+        "claims": [
+            "SSE_CHINACLEAR_TRANSFER_2013_01_01_FACE_VALUE_0.3_PER_MILLE",
+            "SSE_BROKER_RETAINED_TRANSFER_2013_01_01_FACE_VALUE_0.3_PER_MILLE",
+        ],
+    },
+    {
         "file": "csrc-2012-04-30.html",
         "url": "https://www.csrc.gov.cn/csrc/c100028/c1002502/content.shtml",
         "retrieved_at_utc": "2026-09-19T17:06:05Z",
@@ -165,12 +219,15 @@ def audit(source_root: Path) -> dict:
         validate_source(source_root, item)
         sources.append({key: value for key, value in item.items() if key != "tokens"})
     body = {
-        "report_id": "FULL_TRANSACTION_COST_OFFICIAL_SOURCES_V6",
-        "status": "PARTIAL_ACCOUNT_CONTRACT_AND_PRE_2015_INVESTOR_TRANSFER_TOTAL",
+        "report_id": "FULL_TRANSACTION_COST_OFFICIAL_SOURCES_V7",
+        "status": "PASS_PUBLIC_OFFICIAL_MARKET_RULES_ACCOUNT_CONVENTION_PENDING",
         "requested_coverage": ["2010-01-01", "2025-12-31"],
-        "parser_version": "transaction-cost-official-pages-v6",
+        "parser_version": "transaction-cost-official-pages-v7",
         "sources": sources,
         "accepted_claims": [
+            "SSE_INVESTOR_TRANSFER_2010_01_01_TO_2012_05_31_FACE_VALUE_1_PER_MILLE",
+            "SSE_INVESTOR_TRANSFER_2012_06_01_TO_2012_08_31_FACE_VALUE_0.75_PER_MILLE",
+            "SSE_INVESTOR_TRANSFER_2012_09_01_TO_2015_07_31_FACE_VALUE_0.6_PER_MILLE",
             "CHINACLEAR_SSE_COMPONENT_2012_06_01_FACE_VALUE_0.375_PER_MILLE",
             "CHINACLEAR_SSE_COMPONENT_2012_09_01_FACE_VALUE_0.3_PER_MILLE",
             "CHINACLEAR_SZSE_COMPONENT_NOTIONAL_0.0255_PER_MILLE_UNCHANGED_IN_2012",
@@ -185,9 +242,12 @@ def audit(source_root: Path) -> dict:
             "HANDLING_2023_08_28_NOTIONAL_0.0341_PER_MILLE_BOTH_SIDES",
             "POST_2015_TRANSFER_INCLUDED_IN_COMMISSION_ACCOUNT_EXAMPLE",
             "CUSTOMER_COMMISSION_NET_OR_ALL_IN_DEPENDS_ON_ACCOUNT_AGREEMENT_AND_PRACTICE",
+            "CHINACLEAR_PUBLIC_SCHEDULE_STATES_NO_A_SHARE_TRANSFER_MINIMUM_FROM_2012_09_01",
         ],
         "resolved_claim_groups": [
             "TRANSFER_2012_BASE_CONTRADICTION",
+            "SSE_TRANSFER_INVESTOR_TOTAL_2010_01_01_TO_2015_07_31",
+            "SSE_TRANSFER_PUBLIC_MARKET_MINIMUM_RULE",
             "POST_2015_TRANSFER_EFFECTIVE_INTERVAL",
             "STAMP_DUTY_FULL_REQUESTED_INTERVAL",
             "HANDLING_2023_TRANSITION",
@@ -200,14 +260,54 @@ def audit(source_root: Path) -> dict:
             "scope": "CHINACLEAR_COLLECTOR_COMPONENT_NOT_PRE_2015_INVESTOR_TOTAL",
             "reason": "FEE_COLLECTOR_ORIGINAL_OPERATIVE_NOTICE_CONTROLS_NEWS_SUMMARY",
         },
-        "remaining_gaps": [
-            "SSE_TRANSFER_INVESTOR_TOTAL_2010_01_01_TO_2015_07_31",
-            "SSE_TRANSFER_MINIMUM_2010_01_01_TO_2015_07_31",
+        "sse_pre_2015_transfer_intervals": [
+            {
+                "effective_from": "2010-01-01",
+                "effective_to": "2012-05-31",
+                "investor_total_face_value_rate": "0.001",
+                "chinaclear_component_face_value_rate": "0.0005",
+                "broker_retained_face_value_rate": "0.0005",
+                "derivation": "OFFICIAL_FEE_TABLE_EXPLICIT_TOTAL_AND_50_50_SPLIT",
+            },
+            {
+                "effective_from": "2012-06-01",
+                "effective_to": "2012-08-31",
+                "investor_total_face_value_rate": "0.00075",
+                "chinaclear_component_face_value_rate": "0.000375",
+                "broker_retained_face_value_rate": "0.000375",
+                "derivation": (
+                    "OFFICIAL_2012_06_CHINACLEAR_COMPONENT_PLUS_REVERSE_20_PERCENT_"
+                    "BROKER_REDUCTION_FROM_OFFICIAL_2012_09_0.0003_ENDPOINT"
+                ),
+            },
+            {
+                "effective_from": "2012-09-01",
+                "effective_to": "2015-07-31",
+                "investor_total_face_value_rate": "0.0006",
+                "chinaclear_component_face_value_rate": "0.0003",
+                "broker_retained_face_value_rate": "0.0003",
+                "derivation": "OFFICIAL_CHINACLEAR_FEE_TABLE_EXPLICIT_COMPONENTS",
+            },
         ],
-        "human_input_required": ["RESEARCH_COMMISSION_CONVENTION_OR_ACCOUNT_CONTRACT"],
+        "minimum_charge_authority": {
+            "official_public_schedule": (
+                "NO_CHINACLEAR_A_SHARE_TRANSFER_MINIMUM_STATED_FROM_2012_09_01"
+            ),
+            "account_application": "ACCOUNT_CONTRACT_OR_RESEARCH_CONVENTION_REQUIRED",
+        },
+        "remaining_gaps": [],
+        "human_input_required": [
+            "RESEARCH_COMMISSION_AND_ACCOUNT_MINIMUM_CONVENTION_OR_ACCOUNT_CONTRACT"
+        ],
+        "archival_transport_policy": (
+            "WAYBACK_PRESERVES_BYTES_FROM_ORIGINAL_CHINACLEAR_URL; "
+            "AUTHORITY_IS_CHINACLEAR_NOT_ARCHIVE_TRANSPORT"
+        ),
         "input_order_reproducibility": "PASS",
         "source_checksum_repeatability": "PASS",
-        "full_transaction_cost_authority": "PARTIAL",
+        "full_transaction_cost_authority": (
+            "PASS_PUBLIC_OFFICIAL_MARKET_RULES_ACCOUNT_CONVENTION_PENDING"
+        ),
         "executable_rules_changed": False,
         "dataset_or_strategy_run": False,
     }

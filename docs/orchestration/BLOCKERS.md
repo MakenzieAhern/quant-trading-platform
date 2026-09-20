@@ -1,5 +1,18 @@
 # Blockers
 
+## Current R5 blocker after public historical-cost authority closure — 2026-09-20
+
+Public official market-rule evidence is no longer an active blocker: the full
+2010-2025 stamp-duty, transfer-fee and handling-fee intervals are closed, and
+no public transaction-cost claim group remains unresolved.
+
+Two independent components remain. The smallest current gate is the 239 SZSE
+rows on 2011-07-25: approve their official bounded facts as non-tradable feature
+rows with execution permanently prohibited, or provide/authorize an exact
+official SZSE/SSIC archival extract. Separately, supply an account contract or
+approve a research commission/account-minimum convention. Full Dataset
+creation, audit, freeze and all studies remain locked.
+
 ## Current R5 blocker after official monthly raw-gap reconstruction — 2026-09-20
 
 The factor effect of the 239 SZSE rows is no longer unknown: official evidence

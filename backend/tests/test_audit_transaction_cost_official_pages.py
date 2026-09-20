@@ -29,10 +29,17 @@ def test_commission_scope_is_routed_to_account_evidence() -> None:
     assert "全佣金" in "".join(source["tokens"])
 
 
-def test_v6_narrows_official_interval_gaps(tmp_path, monkeypatch) -> None:
+def test_v7_closes_public_market_rule_gaps(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(transaction_cost_audit, "validate_source", lambda *_: None)
     report = transaction_cost_audit.audit(tmp_path)
-    assert report["remaining_gaps"] == [
-        "SSE_TRANSFER_INVESTOR_TOTAL_2010_01_01_TO_2015_07_31",
-        "SSE_TRANSFER_MINIMUM_2010_01_01_TO_2015_07_31",
+    assert report["remaining_gaps"] == []
+    assert [
+        row["investor_total_face_value_rate"] for row in report["sse_pre_2015_transfer_intervals"]
+    ] == [
+        "0.001",
+        "0.00075",
+        "0.0006",
+    ]
+    assert report["human_input_required"] == [
+        "RESEARCH_COMMISSION_AND_ACCOUNT_MINIMUM_CONVENTION_OR_ACCOUNT_CONTRACT"
     ]

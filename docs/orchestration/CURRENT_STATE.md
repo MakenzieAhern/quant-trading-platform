@@ -1,5 +1,28 @@
 # Current state
 
+## R5 public historical-cost authority closure / preflight v18 — 2026-09-20
+
+Three checksum-bound original ChinaClear fee tables close the remaining public
+SSE investor-transfer intervals: 1 per mille through 2012-05-31, 0.75 per
+mille from 2012-06-01 and 0.6 per mille from 2012-09-01 through 2015-07-31,
+all on face value. The historical files were recovered byte-for-byte through
+archival transport; the original ChinaClear publications remain the authority.
+
+Public official market-rule gaps are now zero and transaction-cost authority is
+`PASS_PUBLIC_OFFICIAL_MARKET_RULES_ACCOUNT_CONVENTION_PENDING`. The public
+schedule states no ChinaClear A-share transfer minimum from 2012-09-01; broker
+minimums and net-versus-all-in commission remain account-specific and require
+an account contract or explicit research convention. No executable rule changed.
+
+Full-source preflight V18 has two incomplete components: raw OHLCV authority
+for the 239 SZSE rows on 2011-07-25, and the research-account cost convention.
+Full Dataset creation/audit/freeze and all studies remain locked. See
+`../research/R5_TRANSACTION_COST_OFFICIAL_SOURCES_V7.md`.
+
+Validation: report replay and preflight manifest PASS; offline-safe backend
+**754 passed**; Ruff, format and strict mypy PASS. The 64 PostgreSQL-backed
+tests remain unvalidated because Docker WSL integration is currently absent.
+
 ## R5 SZSE official monthly reconstruction / preflight v17 — 2026-09-20
 
 Free official SZSE monthly publications, the retained 21-session daily corpus,

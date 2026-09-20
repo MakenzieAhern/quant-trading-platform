@@ -1,5 +1,19 @@
 # Decisions
 
+## 2026-09-20 — accept original ChinaClear fee tables for public-rule closure
+
+Accept the checksum-bound original ChinaClear fee-table bytes for the
+effective-dated SSE investor-total transfer schedule. Treat the archive only as
+retrieval transport and retain the original ChinaClear URLs as authority. The
+official 2012-09 and 2013-01 tables explicitly state 0.3-per-mille ChinaClear
+plus 0.3-per-mille broker-retained components; the official September reduction
+also uniquely fixes the preceding broker component at 0.375 per mille.
+
+This closes public market-rule source gaps but not account practice. Do not
+infer a broker minimum or net-versus-all-in commission from silence in the
+public schedule. Require an account contract or explicit human research
+convention before changing executable costs.
+
 ## 2026-09-20 — accept official factor facts, not a complete raw bar
 
 Accept the checksum-bound SZSE monthly/daily subtraction as conservative

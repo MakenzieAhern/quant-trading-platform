@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 public historical-cost authority closure / preflight v18
+
+- pre-2015 SSE investor-total intervals: PASS (1 / 0.75 / 0.6 per mille)
+- remaining public transaction-cost claim groups: 0
+- public official market-rule authority: PASS
+- account commission/minimum convention: HUMAN METHODOLOGY DECISION REQUIRED
+- archival transport / authority: preserved original bytes / ChinaClear
+- transaction-cost report file / manifest SHA-256: `7d4f7ebd80e697c31bbfe93b5a0e6a49d824008175842a78802eb78359adf928` / `a82ba13093b4ab7b698a525097c9c503c17480f26a4a929e93cc55138c0457de`
+- preflight V18 file / manifest SHA-256: `a817fe53c6d9c14540259fae2ae07862a3b912a3f696bf73504d11731ef4e3a0` / `039c47b110311fdbdea3783e7014a0b46f2eebb9e7d5ec4b4e48735ae54c2c9a`
+- executable rules changed: NO
+- remaining incomplete components: raw OHLCV; account cost convention
+- validation: report replay / preflight manifest / 754 offline-safe backend / Ruff / format / strict mypy PASS
+- PostgreSQL-backed tests: 64 NOT VALIDATED (Docker CLI absent in Ubuntu WSL)
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 SZSE official monthly reconstruction / preflight v17
 
 - residual rows / date: 239 / 2011-07-25
