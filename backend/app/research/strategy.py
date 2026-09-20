@@ -34,7 +34,7 @@ class ChinaAMomentumLowVolResearchStrategy:
             raise ValueError("minimum_average_daily_amount must be non-negative")
         self.minimum_average_daily_amount = minimum_average_daily_amount
         self._history: dict[SecurityId, list[AdjustedClosePoint]] = defaultdict(list)
-        self._amount_history: dict[SecurityId, list[Decimal]] = defaultdict(list)
+        self._amount_history: dict[SecurityId, list[tuple[Decimal, Decimal]]] = defaultdict(list)
         self._completed_sessions = 0
         self.last_factors: tuple[FactorValues, ...] = ()
         self.last_cross_section = CrossSectionResult(scores=())
@@ -51,7 +51,14 @@ class ChinaAMomentumLowVolResearchStrategy:
                 AdjustedClosePoint(bar.trading_date, bar.adjusted_close)
             )
             if bar.amount is not None:
-                self._amount_history[bar.security_id].append(bar.amount)
+                self._amount_history[bar.security_id].append((bar.amount, bar.amount))
+        for observation in session.feature_only_observations:
+            self._history[observation.security_id].append(
+                AdjustedClosePoint(observation.trading_date, observation.adjusted_close)
+            )
+            self._amount_history[observation.security_id].append(
+                (observation.amount_lower, observation.amount_upper)
+            )
 
         if self._completed_sessions < 253:
             return None
@@ -71,9 +78,12 @@ class ChinaAMomentumLowVolResearchStrategy:
             amounts = self._amount_history[bar.security_id][-20:]
             if len(amounts) < 20:
                 continue
-            average_amount = sum(amounts, ZERO) / Decimal(len(amounts))
-            if average_amount < self.minimum_average_daily_amount:
+            average_lower = sum((lower for lower, _ in amounts), ZERO) / Decimal(len(amounts))
+            average_upper = sum((upper for _, upper in amounts), ZERO) / Decimal(len(amounts))
+            if average_lower < self.minimum_average_daily_amount:
+                # Fail closed when the official interval straddles the eligibility threshold.
                 continue
+            assert average_upper >= self.minimum_average_daily_amount
             try:
                 factors.append(
                     calculate_factors(

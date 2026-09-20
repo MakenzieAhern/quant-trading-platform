@@ -1,5 +1,14 @@
 # v1.1 controller roadmap
 
+## R5 conventions approved / Full Dataset materialization — 2026-09-20
+
+`R5 RESEARCH CONVENTIONS V1` is approved. Implement the official partial
+feature-only, non-tradable row type and extend the frozen Pilot research-account
+cost model across 2010-2025. Full-source preflight V19 is the authority gate for
+resumable Full Dataset materialization. Do not promote partial rows to complete
+OHLCV, freeze before the complete audit passes, or inspect strategy results
+before Gate B.
+
 ## R5 public historical-cost authority closure / preflight v18 — 2026-09-20
 
 Accept the checksum-bound original ChinaClear fee tables and effective-dated

@@ -3,7 +3,11 @@ from datetime import date
 from decimal import Decimal
 from enum import StrEnum
 
-from app.data.providers.research import DailyBarRecord, SecurityStatusRecord
+from app.data.providers.research import (
+    DailyBarRecord,
+    FeatureOnlyDailyObservation,
+    SecurityStatusRecord,
+)
 from app.domain.markets import CorporateAction, SecurityId
 from app.domain.markets.consolidations import ShareConsolidationEvent
 from app.domain.markets.demergers import DemergerEvent
@@ -75,6 +79,7 @@ class ResearchSession:
     bars: tuple[DailyBarRecord, ...]
     statuses: tuple[SecurityStatusRecord, ...]
     buy_lot_sizes: tuple[tuple[SecurityId, int], ...]
+    feature_only_observations: tuple[FeatureOnlyDailyObservation, ...] = ()
     corporate_actions: tuple[CorporateAction, ...] = ()
     trading_rules: tuple[ResolvedTradingRules, ...] = ()
     demergers: tuple[DemergerEvent, ...] = ()
@@ -90,6 +95,16 @@ class ResearchSession:
             raise ValueError("all bars must belong to the research session")
         if len({str(bar.security_id) for bar in self.bars}) != len(self.bars):
             raise ValueError("research session contains duplicate bars")
+        if any(
+            observation.trading_date != self.trading_date
+            for observation in self.feature_only_observations
+        ):
+            raise ValueError("all feature-only observations must belong to the research session")
+        feature_ids = {observation.security_id for observation in self.feature_only_observations}
+        if len(feature_ids) != len(self.feature_only_observations):
+            raise ValueError("research session contains duplicate feature-only observations")
+        if feature_ids & {bar.security_id for bar in self.bars}:
+            raise ValueError("complete and feature-only observations must be disjoint")
         if any(status.status.trading_date != self.trading_date for status in self.statuses):
             raise ValueError("all statuses must belong to the research session")
         for values in (tuple(item.status for item in self.statuses), self.trading_rules):

@@ -18,6 +18,7 @@ from app.domain.markets.rules import (
 from app.domain.trading import Order, OrderSide, OrderType
 from app.execution import FixedBasisPointSlippage, FixedCommission
 from app.research import (
+    FeatureOnlyDailyObservation,
     PortfolioTarget,
     ResearchExecutionEngine,
     ResearchSession,
@@ -249,6 +250,36 @@ def test_v1_rejects_extra_slippage_and_missing_calendar_session():
         engine.run(
             (_session(date(2024, 1, 2), opening="10"), _session(date(2024, 1, 4), opening="9.9"))
         )
+
+
+def test_feature_only_observation_never_executes() -> None:
+    first = _session(date(2024, 1, 2), opening="10")
+    second = replace(
+        _session(date(2024, 1, 3), opening="9.9"),
+        bars=(),
+        feature_only_observations=(
+            FeatureOnlyDailyObservation(
+                security_id=SECURITY_ID,
+                trading_date=date(2024, 1, 3),
+                raw_close=Decimal("9.9"),
+                adjusted_close=Decimal("9.9"),
+                volume_lower=Decimal(9000),
+                volume_upper=Decimal(11000),
+                amount_lower=Decimal(90000),
+                amount_upper=Decimal(110000),
+                lineage="OFFICIAL_PARTIAL_FEATURE_ONLY_NON_TRADABLE",
+            ),
+        ),
+    )
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+    )
+    result = engine.run((first, second))
+    assert result.fills == ()
+    assert result.execution_checks[0][1] == "MISSING_OBSERVATION"
 
 
 @pytest.mark.parametrize(

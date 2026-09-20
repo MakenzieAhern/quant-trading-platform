@@ -1,5 +1,20 @@
 # Current state
 
+## R5 consolidated methodology approval / preflight v19 — 2026-09-20
+
+`R5 RESEARCH CONVENTIONS V1` is approved. The 239 SZSE observations on
+2011-07-25 are admitted only as
+`OFFICIAL_PARTIAL_FEATURE_ONLY_NON_TRADABLE`: exact official close and official
+volume/amount bounds are retained, unknown execution fields remain null, and
+the execution path rejects the rows. The frozen Pilot research-account cost
+model now applies unchanged across 2010-2025.
+
+The two V18 methodology gaps are closed without promoting incomplete OHLCV,
+buying data, or changing public-source claims. Full-source preflight V19 passes
+with verified safe start `2010-01-01`. R5 continues into deterministic,
+checkpointed Full Dataset materialization; the dataset remains uncreated,
+unaudited and unfrozen until that pipeline completes.
+
 ## R5 public historical-cost authority closure / preflight v18 — 2026-09-20
 
 Three checksum-bound original ChinaClear fee tables close the remaining public

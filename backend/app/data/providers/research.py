@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from datetime import date
 from decimal import Decimal
-from typing import Protocol
+from typing import Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -55,6 +55,26 @@ class DailyBarRecord(ResearchRecord):
             raise ValueError("raw_high must be at least open, close, and low")
         if self.raw_low > min(self.raw_open, self.raw_close):
             raise ValueError("raw_low must be at most open and close")
+        return self
+
+
+class FeatureOnlyDailyObservation(ResearchRecord):
+    """Official close/bounds usable for factors, never for order execution."""
+
+    security_id: SecurityId
+    trading_date: date
+    raw_close: PositiveDecimal
+    adjusted_close: PositiveDecimal
+    volume_lower: NonNegativeDecimal
+    volume_upper: NonNegativeDecimal
+    amount_lower: NonNegativeDecimal
+    amount_upper: NonNegativeDecimal
+    lineage: Literal["OFFICIAL_PARTIAL_FEATURE_ONLY_NON_TRADABLE"]
+
+    @model_validator(mode="after")
+    def validate_bounds(self) -> "FeatureOnlyDailyObservation":
+        if self.volume_upper < self.volume_lower or self.amount_upper < self.amount_lower:
+            raise ValueError("official feature-only bounds must be ordered")
         return self
 
 

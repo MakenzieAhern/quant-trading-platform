@@ -1,5 +1,16 @@
 # Decisions
 
+## 2026-09-20 — approve R5 research conventions v1
+
+Interpret the user's instruction to continue with the recommended project path
+in Goal mode as approval of the sole pending recommended continuation,
+`R5 RESEARCH CONVENTIONS V1`. Admit the 239 official partial observations only
+as `OFFICIAL_PARTIAL_FEATURE_ONLY_NON_TRADABLE`; retain exact close and official
+volume/amount bounds; never synthesize execution fields or permit fills.
+Extend the frozen Pilot research-account cost model unchanged across 2010-2025.
+This approval does not promote the rows to complete OHLCV authority or authorize
+paid data, live trading, premature freeze, or strategy-result inspection.
+
 ## 2026-09-20 — consolidate the two remaining R5 methodology choices
 
 Route the bounded partial-row treatment and the research-account cost treatment

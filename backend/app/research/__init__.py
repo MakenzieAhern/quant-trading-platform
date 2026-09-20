@@ -1,3 +1,4 @@
+from app.data.providers.research import FeatureOnlyDailyObservation
 from app.research.engine import ResearchExecutionEngine, ResearchExecutionResult, ResearchStrategy
 from app.research.factors import FactorUnavailableError, calculate_factors
 from app.research.models import (
@@ -23,6 +24,7 @@ __all__ = [
     "CrossSectionResult",
     "FactorUnavailableError",
     "FactorValues",
+    "FeatureOnlyDailyObservation",
     "PortfolioTarget",
     "ResearchExecutionEngine",
     "ResearchExecutionResult",

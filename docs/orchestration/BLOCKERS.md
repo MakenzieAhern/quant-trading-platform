@@ -1,5 +1,12 @@
 # Blockers
 
+## Resolved R5 methodology blocker — 2026-09-20
+
+The user approved the recommended `R5 RESEARCH CONVENTIONS V1` continuation.
+The V18 partial-row and account-cost methodology gates are resolved. There is
+currently no human-input blocker; deterministic Full Dataset materialization
+and audit are the active R5 work. Any new blocker must be evidenced separately.
+
 ## Current R5 blocker after public historical-cost authority closure — 2026-09-20
 
 Public official market-rule evidence is no longer an active blocker: the full

@@ -63,3 +63,18 @@ def test_cost_schedule_rejects_overlap() -> None:
                 _schedule(valid_from=date(2023, 1, 1), valid_to=None, stamp="0.0005"),
             )
         )
+
+
+def test_approved_research_account_cost_convention_covers_full_dataset() -> None:
+    model = EffectiveDatedAShareCommission(
+        (
+            _schedule(valid_from=date(2008, 9, 19), valid_to=date(2023, 8, 27), stamp="0.001"),
+            _schedule(valid_from=date(2023, 8, 28), valid_to=None, stamp="0.0005"),
+        )
+    )
+    assert model.calculate_for_fill(
+        Decimal(1000), Decimal(10), OrderSide.SELL, datetime(2010, 1, 4, tzinfo=UTC)
+    ) == Decimal("15.10000")
+    assert model.calculate_for_fill(
+        Decimal(1000), Decimal(10), OrderSide.SELL, datetime(2025, 12, 31, tzinfo=UTC)
+    ) == Decimal("10.10000")

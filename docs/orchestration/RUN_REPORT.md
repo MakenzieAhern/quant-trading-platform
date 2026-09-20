@@ -1,5 +1,19 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 R5 research conventions approval / preflight v19
+
+- `R5 RESEARCH CONVENTIONS V1`: APPROVED
+- partial-row lineage: `OFFICIAL_PARTIAL_FEATURE_ONLY_NON_TRADABLE`
+- exact official close / bounded volume / bounded amount: 239 / 239 / 239
+- synthesized execution fields / execution eligibility: 0 / PROHIBITED
+- full-history research-account cost convention: APPROVED, unchanged from Pilot
+- verified safe start: 2010-01-01
+- full-source preflight: PASS
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- next action: deterministic resumable Full Dataset materialization
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 public historical-cost authority closure / preflight v18
 
 - pre-2015 SSE investor-total intervals: PASS (1 / 0.75 / 0.6 per mille)
