@@ -1,5 +1,14 @@
 # Decisions
 
+## 2026-09-20 — stop generic public search for customer commission scope
+
+Accept the checksum-bound Guangdong CSRC notice as authority that net-versus-
+all-in commission depends on the written customer agreement and, where absent,
+actual account practice. Classify the remaining research-account choice as
+`ACCOUNT_CONTRACT_OR_RESEARCH_CONVENTION_REQUIRED`. Do not infer a universal
+commission composition, change the executable fee model or run a study from
+this source alone.
+
 ## 2026-09-20 — classify the 223-row difference as post-close scope
 
 Accept the checksum-bound official SZSE guidance that ChiNext post-close

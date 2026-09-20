@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 commission-scope route closure / preflight v12
+
+- official Guangdong CSRC source date: 2012-08-24
+- official source SHA-256: `63fac201a039ae3f0ff044d5e92f907c5cd5cee51d8b5928883892078ed352e0`
+- transaction-cost report file / manifest SHA-256: `a8d8276238e0c2c8b743490db9b30c0900eff6e699c2928f8672f227186adb84` / `103084e3cd6c8324cbd34f5fd1a9cd1098a5e537301e94f478ef8259c3a20ef0`
+- full-source preflight file / manifest SHA-256: `50fbd8ea751a75423225cee0c5a24764a97ea2926b1094c9649914c11fd28bce` / `f200c69d8208fb895a71b50061d9ad63d3b9f9429a6243dad4406a440760d945`
+- public transaction-cost claim groups remaining: 3
+- account contract or explicit research convention required: YES
+- executable rules changed: NO
+- backend offline-safe tests / Ruff / format / strict mypy: 743 PASS / PASS / PASS / PASS
+- frontend ESLint / TypeScript / tests / isolated production build: PASS / PASS / 78 PASS / PASS
+- PostgreSQL-backed backend tests: unavailable while Docker Engine is offline
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 SZSE post-close transaction-scope closure / preflight v11
 
 - compared rows: 2,761

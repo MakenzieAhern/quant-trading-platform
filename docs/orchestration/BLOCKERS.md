@@ -1,5 +1,20 @@
 # Blockers
 
+## Current R5 blocker after commission-scope route closure — 2026-09-20
+
+Official Guangdong CSRC evidence proves that net-versus-all-in commission is
+set by customer agreement and actual account practice. The generic public-rule
+search for that item is closed; accepting the research convention now requires
+an account contract or explicit human methodology decision. Three public
+transaction-cost groups remain: post-reduction transfer minimums, pre-2015
+transfer intervals and continuous non-handling coverage.
+
+The consolidated blocker remains: 2,009 SZSE suspension boundaries; official
+per-security raw authority for 239 rows; 478 gross cash-plus-bonus adjustment
+conflicts/eight provider conventions; the three historical cost groups; and
+the account-specific commission convention. Full Dataset creation, audit,
+freeze and all studies remain locked.
+
 ## Current R5 blocker after SZSE post-close scope closure — 2026-09-20
 
 The separate 223-symbol 2023-04-10 transaction-scope gap is resolved: official

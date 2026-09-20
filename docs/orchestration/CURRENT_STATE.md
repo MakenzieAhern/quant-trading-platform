@@ -1,5 +1,25 @@
 # Current state
 
+## R5 commission-scope route closure / preflight v12 — 2026-09-20
+
+The checksum-bound 2012 Guangdong CSRC notice explicitly distinguishes net
+commission from all-in commission and requires treatment according to the
+customer agreement or actual account practice. Generic official public rules
+therefore cannot select the research account convention. The public-source
+transaction-cost residual falls from four groups to three; the executable
+model is unchanged and an account contract or explicit human research
+convention remains required.
+
+Full-source preflight V12 remains blocked by 239 official raw rows, 2,009 SZSE
+suspension boundaries, adjustment economics, three historical transaction-cost
+evidence groups and the account-specific commission convention. See
+`../research/R5_TRANSACTION_COST_OFFICIAL_SOURCES_V5.md`.
+
+Local offline-safe validation passes: 743 backend tests, Ruff, format, strict
+mypy, 78 frontend tests, ESLint, TypeScript and an isolated production build.
+The PostgreSQL-backed subset remains unavailable while Docker Engine is
+offline.
+
 ## R5 SZSE post-close scope closure / preflight v11 — 2026-09-20
 
 Official SZSE guidance and technical notices explain all 223 separate

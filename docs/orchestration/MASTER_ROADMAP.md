@@ -1,5 +1,17 @@
 # v1.1 controller roadmap
 
+## R5 commission-scope route closure / preflight v12 — 2026-09-20
+
+The official Guangdong CSRC notice establishes that net-versus-all-in
+commission treatment follows the customer agreement and actual account
+practice. Stop searching generic public rules for a universal answer. Keep the
+approved executable assumption unchanged and route full-history acceptance to
+an account-contract input or explicit human research convention. Three public
+transaction-cost evidence groups remain: transfer minimums, pre-2015 transfer
+intervals and full non-handling interval completeness. Do not create/freeze the
+Full Dataset or run a study while the consolidated authority set remains
+partial.
+
 ## R5 SZSE post-close scope closure / preflight v11 — 2026-09-20
 
 The separate 223-symbol 2023-04-10 transaction-scope gap is closed by two
