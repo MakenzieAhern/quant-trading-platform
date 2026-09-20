@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-21 R5 Full Dataset candidate / fail-closed audit
+
+- dataset candidate: `cn-a-research-20100101-20251231-v1`
+- coverage / securities / intervals / sessions: 2010-01-01..2025-12-31 / 5,431 / 5,436 / 3,886
+- raw rows / SSE / SZSE: 13,411,189 / 5,550,031 / 7,861,158
+- raw partitions / failed sources: 384 / 0
+- feature-only non-tradable rows: 239
+- adjustment rows / cash-plus-bonus action rows / suspension events: 48,458 / 40,765 / 38,470
+- canonical / file manifest SHA-256: `7d6394cc32083926a6512f4e55d30ff5f0528de4babdcfcc435527bd962d7e26` / `d9e0e6d7438a75747fc69b043e2af041db8102073850bff3c2fc97a78214f3d0`
+- restart and checksum repeatability: PASS
+- audit gates: 14 PASS / 1 FAIL
+- sole failed gate: `STRUCTURAL_CORPORATE_ACTION_CENSUS`
+- rights / merger / demerger / partial surrender / pass-through census: PARTIAL / NOT_ESTABLISHED / NOT_ESTABLISHED / NOT_ESTABLISHED / NOT_ESTABLISHED
+- Full Dataset created / audited / frozen: NO / NO / NO (candidate only)
+- Development / Validation / Official OOS: NOT RUN
+- single smallest blocker: `FULL_MARKET_STRUCTURAL_CORPORATE_ACTION_CENSUS_NOT_ESTABLISHED`
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 R5 research conventions approval / preflight v19
 
 - `R5 RESEARCH CONVENTIONS V1`: APPROVED

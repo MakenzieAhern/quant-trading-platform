@@ -1,5 +1,22 @@
 # Blockers
 
+## Current R5 blocker — 2026-09-21
+
+`FULL_MARKET_STRUCTURAL_CORPORATE_ACTION_CENSUS_NOT_ESTABLISHED` is the only
+remaining Full Dataset audit blocker. The source preflight was sufficient to
+build a deterministic candidate, but it did not establish a complete
+full-market census for rights, mergers, demergers, mandatory partial share
+surrenders and restructuring bonus pass-through events. The explicit retained
+statuses are PARTIAL / NOT_ESTABLISHED / NOT_ESTABLISHED / NOT_ESTABLISHED /
+NOT_ESTABLISHED.
+
+The existing 40,765 cash/bonus rows must not be represented as a complete
+corporate-action ledger. Reuse the retained official disclosures, adjustment
+inventory and lifecycle evidence to establish the structural candidate universe,
+close each candidate, materialize accepted events and rerun the audit. This is
+currently a source-completeness blocker, not a new methodology or purchase
+decision. Full Dataset freeze and all studies remain locked.
+
 ## Resolved R5 methodology blocker — 2026-09-20
 
 The user approved the recommended `R5 RESEARCH CONVENTIONS V1` continuation.

@@ -108,7 +108,7 @@
     "trading_calendar": {
       "status": "PASS",
       "sessions": 3886,
-      "manifest_sha256": "d3c681d7d2020d3c7a8111d9600092e79a18ff28234e02e5f5020644506620b8"
+      "manifest_sha256": "d3c681d7d2020d3c7a8111d9600092e79a18ff28234b02e5f5020644506620b8"
     },
     "csi300_benchmark": {
       "status": "PASS_FOR_FULL_RANGE_CLOSE_SERIES",
@@ -129,5 +129,5 @@
   "validation_study_run": false,
   "official_oos_run": false,
   "input_order_reproducibility": "PASS",
-  "manifest_sha256": "49754ee446d3b66d50e096e49efa18754edb5259f33fbde40777755532d37fcd"
+  "manifest_sha256": "ff632aefb099a048ca53ff769779243a0e93d7480cc080eae94c57bd3be33bc9"
 }

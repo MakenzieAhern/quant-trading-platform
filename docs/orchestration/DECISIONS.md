@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-09-21 — treat the materialization as a fail-closed candidate
+
+Retain the byte-stable 2010-2025 output because it proves the accepted raw,
+point-in-time, adjustment, suspension, calendar, benchmark and cost inputs can
+be materialized reproducibly. Do not promote it to the Full Dataset: the audit
+must require a complete official full-market structural corporate-action
+census, and the current retained evidence explicitly says that census is not
+established. Preserve all approved event-accounting policies, add no
+symbol-specific exception, and keep freeze and strategy execution locked.
+
 ## 2026-09-20 — approve R5 research conventions v1
 
 Interpret the user's instruction to continue with the recommended project path

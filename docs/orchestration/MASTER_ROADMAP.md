@@ -1,5 +1,14 @@
 # v1.1 controller roadmap
 
+## R5 Full Dataset candidate fail-closed audit — 2026-09-21
+
+Preserve the byte-stable 2010-2025 candidate and resume from its existing
+manifest; do not rematerialize accepted raw, ST, suspension, adjustment,
+calendar, benchmark or cost authorities. Close the one remaining mandatory
+gate by establishing an official full-market structural corporate-action
+census and materializing every accepted structural event. Then rerun the full
+audit. Freeze and all formal studies remain prohibited until every gate passes.
+
 ## R5 conventions approved / Full Dataset materialization — 2026-09-20
 
 `R5 RESEARCH CONVENTIONS V1` is approved. Implement the official partial

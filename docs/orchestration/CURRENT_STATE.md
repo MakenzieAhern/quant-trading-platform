@@ -1,5 +1,28 @@
 # Current state
 
+## R5 Full Dataset candidate audit — 2026-09-21
+
+The deterministic candidate `cn-a-research-20100101-20251231-v1` now exists
+outside Git with 5,431 securities, 3,886 sessions and 13,411,189 official raw
+rows. Its manifest is reproducible (`7d6394cc...d962d7e26` canonical;
+`d9e0e6d7...214f3d0` file), restart verification is byte-stable, and all
+source files resolve without failures. The 239 approved partial observations
+remain feature-only and non-tradable.
+
+The full audit passes 14 of 15 gates. Delisted-security retention is verified
+against the accepted point-in-time status authority, including all 254
+delisted security IDs. The sole failure is
+`STRUCTURAL_CORPORATE_ACTION_CENSUS`: rights remain PARTIAL and the full-market
+merger, demerger, mandatory partial-surrender and restructuring pass-through
+censuses are not established. The existing action table therefore contains
+only the 40,765 accepted cash/bonus rows and is not a complete full-history
+portfolio ledger.
+
+This is a fail-closed candidate, not an accepted Full Dataset. R5 remains
+blocked on `FULL_MARKET_STRUCTURAL_CORPORATE_ACTION_CENSUS_NOT_ESTABLISHED`.
+`FULL_DATASET_CREATED/AUDITED/FROZEN = NO/NO/NO`; verified safe start remains
+unestablished at the dataset level. No strategy study has run.
+
 ## R5 consolidated methodology approval / preflight v19 — 2026-09-20
 
 `R5 RESEARCH CONVENTIONS V1` is approved. The 239 SZSE observations on
