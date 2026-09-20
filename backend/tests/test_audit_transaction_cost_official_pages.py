@@ -2,6 +2,7 @@ from hashlib import sha256
 
 import pytest
 
+import scripts.audit_transaction_cost_official_pages as transaction_cost_audit
 from scripts.audit_transaction_cost_official_pages import SOURCES, validate_source, validate_tokens
 
 
@@ -26,3 +27,12 @@ def test_commission_scope_is_routed_to_account_evidence() -> None:
     source = next(item for item in SOURCES if item["file"].startswith("csrc-guangdong"))
     assert "净佣金" in "".join(source["tokens"])
     assert "全佣金" in "".join(source["tokens"])
+
+
+def test_v6_narrows_official_interval_gaps(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(transaction_cost_audit, "validate_source", lambda *_: None)
+    report = transaction_cost_audit.audit(tmp_path)
+    assert report["remaining_gaps"] == [
+        "SSE_TRANSFER_INVESTOR_TOTAL_2010_01_01_TO_2015_07_31",
+        "SSE_TRANSFER_MINIMUM_2010_01_01_TO_2015_07_31",
+    ]

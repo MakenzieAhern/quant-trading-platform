@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-09-20 — close only effective-dated historical cost intervals
+
+Accept the checksum-bound Ministry of Finance, State Tax Administration,
+ChinaClear and CSRC notices for their stated stamp-duty, transfer-fee and
+handling-fee dates. Treat the SSE 2010 factbook as a point-in-time snapshot.
+Treat the 2012 ChinaClear rates as collector-component evidence because the
+same official record identifies a separate broker-retained component. Do not
+infer a continuous pre-2015 investor-total transfer charge or minimum, and do
+not change the account commission convention from public rules alone.
+
 ## 2026-09-20 — accept conservative official daily-trade suspension boundaries
 
 Accept a later positive-turnover row in the complete official SZSE daily corpus

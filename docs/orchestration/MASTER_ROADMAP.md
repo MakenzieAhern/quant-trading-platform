@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## R5 historical-cost interval closure / preflight v15 — 2026-09-20
+
+Accept the official 2008/2023 stamp-duty boundaries, 2015/2022 ChinaClear
+transfer-fee boundaries and 2023 handling-fee boundary. Keep the executable
+model unchanged. Continue only the two pre-2015 SSE investor-total transfer
+charge/minimum gaps and the already-routed account-specific commission choice;
+do not conflate ChinaClear's 2012 collector component with the investor total.
+Raw OHLCV and adjustment economics also remain active blockers. Do not create
+or freeze the Full Dataset and do not run a study while preflight is partial.
+
 ## R5 suspension authority closure / preflight v14 — 2026-09-20
 
 Accept the complete official SZSE daily-trade replay as a conservative boundary

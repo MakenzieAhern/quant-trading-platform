@@ -1,5 +1,28 @@
 # Current state
 
+## R5 official historical-cost interval closure / preflight v15 — 2026-09-20
+
+Checksum-bound official Ministry of Finance, State Tax Administration,
+ChinaClear, CSRC and SSE materials close the full requested stamp-duty path,
+the post-2015 transfer-fee path and the 2023 handling-fee transition. Public
+transaction-cost gaps fall from three groups to two, both confined to the SSE
+investor-total transfer charge and minimum before 2015-08-01. The 2012
+ChinaClear notices are explicitly collector-component evidence, not an
+unevidenced all-in investor total.
+
+Full-source preflight V15 remains blocked by raw OHLCV authority, adjustment
+economics and historical market-rule/transaction-cost authority. The separate
+account-specific commission convention still needs explicit human resolution;
+the executable model is unchanged. See
+`../research/R5_TRANSACTION_COST_OFFICIAL_SOURCES_V6.md`.
+
+Validation: transaction-cost report replay and preflight manifest PASS;
+offline-safe backend **746 passed**; Ruff, format and strict mypy PASS;
+frontend **78 passed**, ESLint, TypeScript and isolated production build PASS.
+The PostgreSQL-backed suite was not validated because the local host service
+was unavailable (`127.0.0.1:5432` connection refused); Docker remains the
+separately deferred, nonblocking runtime track.
+
 ## R5 suspension authority closure / preflight v14 — 2026-09-20
 
 The full 3,886-session checksum-bound SZSE official daily corpus closes all

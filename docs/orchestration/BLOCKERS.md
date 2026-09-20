@@ -1,5 +1,19 @@
 # Blockers
 
+## Current R5 blocker after official historical-cost interval closure — 2026-09-20
+
+Official sources now close stamp duty across 2010-2025, transfer fees from
+2015-08-01 onward and the 2023 handling transition. The remaining public cost
+evidence is limited to the SSE investor-total transfer charge and minimum from
+2010-01-01 through 2015-07-31; the 2012 ChinaClear rates describe its collector
+component and do not by themselves establish the all-in investor charge.
+
+The consolidated blocker remains three components: 239 official per-security
+raw rows plus their factor treatment, adjustment-factor economic alignment,
+and historical costs including the separate account-specific commission
+convention. The smallest current methodology decision remains the raw-gap
+factor treatment. Full Dataset creation, freeze and all studies remain locked.
+
 ## Current R5 blocker after suspension authority closure — 2026-09-20
 
 Suspension history is no longer an active blocker: all 2,009 residual SZSE

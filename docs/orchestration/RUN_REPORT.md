@@ -1,5 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-20 official historical-cost interval closure / preflight v15
+
+- stamp-duty requested interval: PASS (seller-only 1 per mille through 2023-08-27; 0.5 per mille from 2023-08-28)
+- transfer-fee post-2015 interval: PASS (0.02 per mille through 2022-04-28; 0.01 per mille from 2022-04-29)
+- 2023 handling transition: PASS (0.0341 per mille from 2023-08-28)
+- remaining public transaction-cost claim groups: 2
+- pre-2015 SSE investor-total transfer charge / minimum: PARTIAL / PARTIAL
+- account-specific commission convention: HUMAN METHODOLOGY DECISION REQUIRED
+- transaction-cost report file / manifest SHA-256: `fabfe88adcbc77c3a3692958c2c2a0b27e00a68dfe308477739d159155d3e6f1` / `fa46e42fb57ea91962c0def607741dd90420e09158e9a189f032b883aaa21dd7`
+- preflight V15 file / manifest SHA-256: `088cf724f2b4cc2aeea3f8733e1cb372f30894e3837eb6c11ca7f2e3c8381102` / `e60eb20f3547490c33f0f8465ba9b584f7342de6a2833c6e2119c52edda588fb`
+- validation: report replay PASS; backend offline-safe 746 PASS; Ruff / format /
+  strict mypy PASS; frontend 78 / ESLint / TypeScript / isolated build PASS;
+  PostgreSQL-backed tests NOT VALIDATED (local port 5432 refused)
+- executable rules changed: NO
+- Full Dataset created / audited / frozen: NO / NO / NO
+- Development / Validation / Official OOS: NOT RUN
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-20 suspension authority closure / preflight v14
 
 - residual input / closed / remaining: 2,009 / 2,009 / 0
