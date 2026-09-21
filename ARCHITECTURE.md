@@ -52,7 +52,14 @@ Registered replay provider -> completed Bar -> per-session EventBus -> StrategyE
 REST snapshot ----------------------------------------------------------> React
 ```
 
-Phase 9 reuses the reviewed strategy, risk, OMS, simulated next-Bar OPEN execution, and portfolio engines. `PaperTradingRuntime` is independent of `BacktestEngine`; every session constructs its own EventBus, strategies, PaperBroker, OMS reservations, RiskEngine, PortfolioEngine, provider subscription, and task. The process-level manager coordinates these isolated runtimes but is not a shared trading engine. The only provider is the registered, local `ReplayMarketDataProvider`; it emits immutable completed Bars in strict chronological order and never connects to a network vendor or accepts paths/URLs from clients.
+Phase 9 reuses the reviewed strategy, risk, OMS, simulated next-Bar OPEN execution, and portfolio engines. `PaperTradingRuntime` is independent of `BacktestEngine`; every session constructs its own EventBus, strategies, PaperBroker, OMS reservations, RiskEngine, PortfolioEngine, provider subscription, and task. The process-level manager coordinates these isolated runtimes but is not a shared trading engine. The registered, local `ReplayMarketDataProvider` emits immutable completed Bars in strict chronological order and never connects to a network vendor or accepts paths/URLs from clients.
+
+Phase 10 adds a second registered simulation route for the frozen A-share strategy.
+`SimulatedAShareSessionProvider` supplies deterministic completed cross-sectional sessions to
+`ASharePaperTradingRuntime`, which incrementally reuses the research proposal logic and the same
+`RiskEngine -> OMS -> PaperBroker -> PortfolioEngine` path. Its fixed 2030 data are a synthetic
+product fixture, not an extension of the audited dataset or formal research evidence. This route
+does not read, rerun, or replace the consumed Official OOS artifact.
 
 Phase 9 runtime collections are bounded by the finite, registered replay dataset; the runtime, provider, strategies, OMS, broker, and their in-memory histories are released when the session task reaches a terminal state. Durable history belongs to PostgreSQL. This finite-replay bound is not a claim that the same collections are ready for an endless vendor feed; any future streaming adapter must introduce explicit rolling retention before it is eligible for use.
 

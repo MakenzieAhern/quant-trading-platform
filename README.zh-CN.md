@@ -61,7 +61,9 @@
 - `/research/a-share/strategies`：因子公式、冻结配置和方法说明。
 - `/research/a-share/datasets/:id`：规范化数据谱系和清单。
 - `/research/a-share/runs/:id`：指标、CSI300 对比、曲线和审计表。
-- `/paper`：持久化的本地 PAPER/模拟会话、REST 快照与 WebSocket 更新。
+- `/paper`：持久化的本地 PAPER/模拟会话，可选择已注册的 AAPL 回放，或在确定性 2030
+  合成情景中运行冻结 A 股策略，并通过 REST 快照与 WebSocket 更新状态。该合成情景只用于
+  产品验证，不属于研究证据，也不会重放正式 OOS。
 - `/backtests`：v1.0 保留的确定性注册样例回测。
 
 ## 启动与验证

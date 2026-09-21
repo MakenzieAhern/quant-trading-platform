@@ -25,6 +25,9 @@
 
 - Paper trading is local simulation only; there is no live broker, real-money order path or broker
   credential support.
+- The A-share Paper route uses a deterministic synthetic 2030 scenario because v1.1 has no
+  authoritative post-2025 live feed. It validates the product execution path only; it is not
+  research evidence and never replays Official OOS.
 - The application is unauthenticated, single-user and loopback-only; it is not approved for public
   internet exposure or production high availability.
 - A backend restart marks active paper execution `INTERRUPTED`; it does not silently resume stale

@@ -15,6 +15,8 @@
 - Bilingual A-share research UI with dataset lineage, methodology, CSI300 comparison, equity,
   drawdown, rolling metrics, monthly returns, holdings, rebalances and fills.
 - Idempotent publication of immutable Development, Validation and OOS artifacts to PostgreSQL.
+- Bilingual local Paper simulation for the frozen A-share strategy on a deterministic synthetic
+  2030 scenario, reusing the reviewed risk, OMS, simulated execution and portfolio path.
 
 ## Result boundary
 
@@ -25,9 +27,11 @@ is consumed; no retuning occurred.
 
 ## Compatibility and safety
 
-The v1.0 deterministic backtest and local Paper runtime remain available. v1.1 adds no live-broker
-adapter, brokerage credentials, public-internet deployment, real-money execution, ML/GPU strategy,
-or Hong Kong/US market scope. Large market datasets and formal run artifacts remain outside Git.
+The v1.0 deterministic backtest and local Paper runtime remain available. The A-share Paper
+scenario is product validation, not research evidence, and does not replay Official OOS. v1.1 adds
+no live-broker adapter, brokerage credentials, public-internet deployment, real-money execution,
+ML/GPU strategy, or Hong Kong/US market scope. Large market datasets and formal run artifacts
+remain outside Git.
 
 See [dataset](docs/research/DATASET.md), [methodology](docs/research/METHODOLOGY.md),
 [strategy](docs/research/STRATEGY_REPORT.md), [OOS](docs/research/OOS_REPORT.md),

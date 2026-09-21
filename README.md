@@ -74,7 +74,10 @@ state. See [ARCHITECTURE.md](ARCHITECTURE.md).
 - `/research/a-share/strategies` — formulas, frozen configuration and methodology notes.
 - `/research/a-share/datasets/:id` — canonical lineage and manifest.
 - `/research/a-share/runs/:id` — metrics, CSI300 comparison, curves and audit tables.
-- `/paper` — durable local paper/simulated sessions with REST snapshots and WebSocket updates.
+- `/paper` — durable local paper/simulated sessions for the registered AAPL replay or the frozen
+  A-share strategy on a deterministic synthetic 2030 scenario, with REST snapshots and WebSocket
+  updates. The synthetic scenario is product validation, not research evidence, and never replays
+  Official OOS.
 - `/backtests` — deterministic registered-fixture regression/demo backtests retained from v1.0.
 
 ## Quick start
