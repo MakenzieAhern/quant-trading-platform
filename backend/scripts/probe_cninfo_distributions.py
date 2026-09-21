@@ -1,6 +1,8 @@
 """Bounded official CNINFO distribution probe using the existing AKShare public client."""
 
 import argparse
+import base64
+import csv
 import json
 import sys
 import urllib.request
@@ -12,6 +14,27 @@ from app.data.catalog.checksums import canonical_json_bytes, sha256_file
 from app.data.catalog.freeze import write_immutable
 
 
+def verified_javascript(sdk_root: Path) -> Path:
+    javascript = sdk_root / "akshare/data/cninfo.js"
+    records = tuple(sdk_root.glob("akshare-*.dist-info/RECORD"))
+    if len(records) != 1:
+        raise ValueError("PINNED_CNINFO_SDK_RECORD_UNAVAILABLE")
+    expected = next(
+        (
+            row[1]
+            for row in csv.reader(records[0].read_text().splitlines())
+            if row[0] == "akshare/data/cninfo.js"
+        ),
+        None,
+    )
+    actual = "sha256=" + base64.urlsafe_b64encode(
+        bytes.fromhex(sha256_file(javascript))
+    ).decode().rstrip("=")
+    if expected != actual:
+        raise ValueError("PINNED_CNINFO_JAVASCRIPT_CHANGED")
+    return javascript
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sdk-root", type=Path, required=True)
@@ -21,7 +44,7 @@ def main():
     from py_mini_racer import MiniRacer
 
     sdk = args.sdk_root / "akshare"
-    javascript = sdk / "data/cninfo.js"
+    javascript = verified_javascript(args.sdk_root)
     client = sdk / "stock/stock_dividend_cninfo.py"
     runtime = MiniRacer()
     runtime.eval(javascript.read_text())
