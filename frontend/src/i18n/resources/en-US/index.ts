@@ -79,6 +79,8 @@ export const enUS = {
     strategies: {
       moving_average_crossover: "Moving average crossover",
       rsi_mean_reversion: "RSI mean reversion",
+      cn_a_cross_sectional_momentum_low_vol_v1:
+        "Frozen A-share momentum + low-volatility strategy",
     },
     createPage: {
       eyebrow: "NEW LOCAL REPLAY",
@@ -87,6 +89,7 @@ export const enUS = {
       safeProvider: "Safe provider",
       provider: "Provider",
       replayLocal: "Replay (local)",
+      aShareSimulation: "A-share simulation (local)",
       dataset: "Dataset",
       fixture: "AAPL fixture",
       symbol: "Symbol",
@@ -95,6 +98,8 @@ export const enUS = {
       orderQuantity: "Order quantity",
       buyingPowerHint:
         "Buying-power risk enforcement is enabled. All values remain Decimal strings.",
+      aShareScenarioHint:
+        "Deterministic 2030 scenario data only — not research evidence or an OOS rerun.",
       registeredStrategy: "Registered strategy",
       strategyType: "Strategy type",
       shortPeriod: "Short period",
@@ -148,6 +153,11 @@ export const enUS = {
       volume: "Volume",
       utcTime: "UTC time",
       noBars: "No completed replay Bars received yet.",
+      latestSession: "LATEST COMPLETED A-SHARE SESSION",
+      marketSession: "Market session",
+      sessionDate: "Session date",
+      securities: "Securities",
+      source: "Source",
       portfolioKicker: "AUTHORITATIVE PORTFOLIO",
       portfolio: "Paper portfolio",
       cash: "Cash",
@@ -157,6 +167,11 @@ export const enUS = {
       unrealizedPnl: "Unrealized PnL",
       commission: "Commission",
       noPortfolio: "Portfolio initializes on the first completed Bar.",
+      positions: "Positions",
+      noPositions: "No simulated positions are open.",
+      averagePrice: "Average price",
+      unrealizedPnlShort: "Unrealized PnL",
+      realizedPnlShort: "Realized PnL",
       signals: "Signals",
       noSignals: "No signals emitted.",
       strategy: "Strategy",

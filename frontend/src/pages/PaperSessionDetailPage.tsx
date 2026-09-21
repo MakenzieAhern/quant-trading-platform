@@ -33,7 +33,12 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   if (!snapshot && !error) return <LoadingPanel label={t("detail.loading")} />;
   if (!snapshot && error) return <ErrorPanel message={error} />;
   if (!snapshot) return null;
-  const { session, latest_bar: bar, latest_portfolio: portfolio } = snapshot;
+  const {
+    session,
+    latest_bar: bar,
+    latest_session: marketSession,
+    latest_portfolio: portfolio,
+  } = snapshot;
   const active = session.status === "STARTING" || session.status === "RUNNING";
 
   return (
@@ -109,11 +114,36 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
       <section className="panel">
         <div className="panelHeader">
           <div>
-            <p className="kicker">{t("detail.latestBar")}</p>
-            <h2>{t("detail.marketData")}</h2>
+            <p className="kicker">
+              {marketSession
+                ? t("detail.latestSession")
+                : t("detail.latestBar")}
+            </p>
+            <h2>
+              {marketSession
+                ? t("detail.marketSession")
+                : t("detail.marketData")}
+            </h2>
           </div>
         </div>
-        {bar ? (
+        {marketSession ? (
+          <div className="metricsGrid">
+            <Metric
+              label={t("detail.sessionDate")}
+              value={marketSession.trading_date}
+              raw
+            />
+            <Metric
+              label={t("detail.securities")}
+              value={String(marketSession.security_count)}
+            />
+            <Metric
+              label={t("detail.source")}
+              value={marketSession.source}
+              raw
+            />
+          </div>
+        ) : bar ? (
           <div className="metricsGrid">
             <Metric label={t("detail.open")} value={bar.open} />
             <Metric label={t("detail.high")} value={bar.high} />
@@ -162,6 +192,26 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           <p className="emptyState">{t("detail.noPortfolio")}</p>
         )}
       </section>
+      <PaperTable
+        title={t("detail.positions")}
+        empty={t("detail.noPositions")}
+        headings={[
+          t("createPage.symbol"),
+          t("detail.quantity"),
+          t("detail.averagePrice"),
+          t("detail.price"),
+          t("detail.unrealizedPnlShort"),
+          t("detail.realizedPnlShort"),
+        ]}
+        rows={(portfolio?.positions ?? []).map((item) => [
+          item.symbol,
+          item.quantity,
+          item.average_price,
+          item.market_price,
+          item.unrealized_pnl,
+          item.realized_pnl,
+        ])}
+      />
       <PaperTable
         title={t("detail.signals")}
         empty={t("detail.noSignals")}

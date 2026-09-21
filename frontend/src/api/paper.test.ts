@@ -43,5 +43,17 @@ describe("paper API contracts", () => {
     expect(() =>
       parseWireEvent({ sequence: "3", type: "x", payload: {} }),
     ).toThrow("sequence");
+    expect(
+      parseWireEvent({
+        sequence: 4,
+        type: "market.session",
+        occurred_at: "2030-12-23T07:00:00Z",
+        payload: {
+          trading_date: "2030-12-23",
+          security_count: 10,
+          source: "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1",
+        },
+      }).type,
+    ).toBe("market.session");
   });
 });

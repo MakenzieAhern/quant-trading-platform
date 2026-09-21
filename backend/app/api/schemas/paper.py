@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
-from typing import Literal
+from typing import Annotated, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -17,7 +17,7 @@ from app.api.schemas.backtests import (
 from app.paper.models import PaperSessionStatus
 
 
-class CreatePaperSessionRequest(StrictModel):
+class ReplayPaperSessionRequest(StrictModel):
     provider_type: Literal["replay"] = "replay"
     dataset_id: Literal["AAPL_fixture"] = "AAPL_fixture"
     symbol: Literal["AAPL"] = "AAPL"
@@ -25,6 +25,31 @@ class CreatePaperSessionRequest(StrictModel):
     initial_cash: PositiveDecimalString = Field(default=Decimal("100000"))
     default_order_quantity: PositiveDecimalString = Field(default=Decimal("10"))
     risk: RiskRequest = Field(default_factory=RiskRequest)
+
+
+class FrozenAShareParameters(StrictModel):
+    pass
+
+
+class FrozenAShareStrategy(StrictModel):
+    type: Literal["cn_a_cross_sectional_momentum_low_vol_v1"]
+    parameters: FrozenAShareParameters = Field(default_factory=FrozenAShareParameters)
+
+
+class SimulatedASharePaperSessionRequest(StrictModel):
+    provider_type: Literal["simulated_a_share"]
+    dataset_id: Literal["CN_A_SIMULATED_PAPER_FIXTURE_V1"]
+    symbol: Literal["CN-A"]
+    strategy: FrozenAShareStrategy
+    initial_cash: PositiveDecimalString = Field(default=Decimal("100000000"))
+    default_order_quantity: PositiveDecimalString = Field(default=Decimal(1))
+    risk: RiskRequest = Field(default_factory=lambda: RiskRequest(enforce_buying_power=True))
+
+
+CreatePaperSessionRequest = Annotated[
+    ReplayPaperSessionRequest | SimulatedASharePaperSessionRequest,
+    Field(discriminator="provider_type"),
+]
 
 
 class PaperSessionResponse(BaseModel):
@@ -65,6 +90,12 @@ class MarketBarPayload(BaseModel):
     volume: str
 
 
+class MarketSessionPayload(BaseModel):
+    trading_date: date
+    security_count: int = Field(ge=0)
+    source: Literal["SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1"]
+
+
 class PaperOrderResponse(BaseModel):
     order_id: UUID
     strategy_id: str
@@ -101,6 +132,7 @@ class PortfolioPayload(BaseModel):
 PaperPayload = (
     SessionStatusPayload
     | MarketBarPayload
+    | MarketSessionPayload
     | SignalResponse
     | RiskDecisionResponse
     | PaperOrderResponse
@@ -114,6 +146,7 @@ class PaperEventResponse(BaseModel):
     type: Literal[
         "session.status",
         "market.bar",
+        "market.session",
         "signal.created",
         "risk.decision",
         "order.updated",
@@ -128,6 +161,7 @@ class PaperSnapshotResponse(BaseModel):
     session: PaperSessionResponse
     last_sequence: int
     latest_bar: MarketBarPayload | None
+    latest_session: MarketSessionPayload | None = None
     signals: list[SignalResponse]
     risk_decisions: list[RiskDecisionResponse]
     orders: list[PaperOrderResponse]

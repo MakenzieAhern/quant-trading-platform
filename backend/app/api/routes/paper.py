@@ -10,6 +10,7 @@ from sqlalchemy.exc import IntegrityError
 from app.api.schemas.paper import (
     CreatePaperSessionRequest,
     MarketBarPayload,
+    MarketSessionPayload,
     PaperEventResponse,
     PaperOrderResponse,
     PaperSessionPage,
@@ -153,6 +154,7 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found")
     session, events = snapshot
     latest_bar: MarketBarPayload | None = None
+    latest_session: MarketSessionPayload | None = None
     latest_portfolio: PortfolioPayload | None = None
     signals = []
     decisions = []
@@ -162,6 +164,8 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
         payload = event.payload
         if event.event_type == "market.bar":
             latest_bar = MarketBarPayload.model_validate(payload)
+        elif event.event_type == "market.session":
+            latest_session = MarketSessionPayload.model_validate(payload)
         elif event.event_type == "signal.created":
             from app.api.schemas.backtests import SignalResponse
 
@@ -183,6 +187,7 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
         session=_session_response(session),
         last_sequence=events[-1].sequence if events else 0,
         latest_bar=latest_bar,
+        latest_session=latest_session,
         signals=signals,
         risk_decisions=decisions,
         orders=list(orders.values()),

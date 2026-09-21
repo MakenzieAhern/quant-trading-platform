@@ -5,16 +5,15 @@ from typing import Any
 
 import pytest
 
+from app.application.paper_trading import PaperTradingManager
 from app.backtest import BacktestConfig, BacktestEngine
 from app.data.providers import CSVDataProvider
-from app.data.providers.research import DailyBarRecord, SecurityStatusRecord
 from app.domain.market import Bar
-from app.domain.markets import DailySecurityStatus, Market, SecurityId
-from app.domain.markets.calendar import TradingCalendar, TradingSession
 from app.domain.risk import RiskConfig, RiskReasonCode
 from app.domain.trading import Order, OrderSide, OrderStatus, OrderType
 from app.event import EventBus
 from app.execution import FixedBasisPointSlippage, FixedCommission
+from app.paper.a_share_fixture import simulated_a_share_fixture
 from app.paper.hub import PaperEventHub
 from app.paper.models import PaperSessionStatus, require_transition
 from app.paper.runtime import (
@@ -26,7 +25,6 @@ from app.paper.runtime import (
     ReplayProviderError,
     SimulatedAShareSessionProvider,
 )
-from app.research import ResearchExecutionDelta, ResearchSession
 from app.strategies import MovingAverageCrossoverStrategy, RSIMeanReversionStrategy
 
 FIXTURES = Path(__file__).parents[2] / "data" / "fixtures"
@@ -72,69 +70,48 @@ async def _append(target: list[Bar], item: Bar) -> None:
 
 
 async def test_frozen_a_share_runtime_consumes_only_completed_simulated_sessions() -> None:
-    day = START.date()
-    security_id = SecurityId(value="CN-A:SSE:600000")
-    session = ResearchSession(
-        trading_date=day,
-        bars=(
-            DailyBarRecord(
-                security_id=security_id,
-                trading_date=day,
-                raw_open=Decimal(10),
-                raw_high=Decimal(11),
-                raw_low=Decimal(9),
-                raw_close=Decimal(10),
-                volume=Decimal(10000),
-                amount=Decimal(100000),
-                adjusted_close=Decimal(10),
-                pre_close=Decimal(10),
-            ),
-        ),
-        statuses=(
-            SecurityStatusRecord(
-                status=DailySecurityStatus(
-                    security_id=security_id,
-                    trading_date=day,
-                    is_st=False,
-                    is_suspended=False,
-                    is_tradeable=True,
-                    is_one_price_limit=False,
-                    source_version="paper-fixture",
-                )
-            ),
-        ),
-        buy_lot_sizes=((security_id, 100),),
-    )
-    calendar = TradingCalendar(
-        market=Market.CN_A,
-        sessions=(TradingSession(session_date=day, is_open=True, source_version="fixture"),),
-    )
+    calendar, sessions, commission = simulated_a_share_fixture()
     runtime = ASharePaperTradingRuntime(
-        initial_cash=Decimal(100000),
-        commission_model=FixedCommission(),
+        initial_cash=Decimal(100000000),
+        commission_model=commission,
         calendar=calendar,
     )
-    provider = SimulatedAShareSessionProvider((session,), 0)
-    deltas: list[ResearchExecutionDelta] = []
-    await provider.start(lambda item: _append_session(deltas, runtime, item))
+    provider = SimulatedAShareSessionProvider(sessions, 0)
+    deltas = []
+
+    async def process(item):
+        deltas.append(await runtime.process_session(item))
+
+    await provider.start(process)
 
     assert runtime.strategy_id == FROZEN_A_SHARE_STRATEGY_ID
-    assert len(deltas) == 1
-    assert deltas[0].session is session
-    assert deltas[0].snapshot is not None
+    assert len(deltas) == 254
+    assert sum(len(item.proposals) for item in deltas) == 1
+    assert sum(len(item.decisions) for item in deltas) == 1
+    assert sum(len(item.fills) for item in deltas) == 1
+    assert deltas[-1].fills[0].symbol.endswith(".SSE")
+    proposal_event_types = [
+        item[0] for item in PaperTradingManager._serialize_a_share_delta(deltas[-2])
+    ]
+    assert proposal_event_types == [
+        "market.session",
+        "signal.created",
+        "risk.decision",
+        "order.updated",
+        "portfolio.snapshot",
+    ]
+    event_types = [item[0] for item in PaperTradingManager._serialize_a_share_delta(deltas[-1])]
+    assert event_types == [
+        "market.session",
+        "order.updated",
+        "fill.created",
+        "portfolio.snapshot",
+    ]
     assert runtime.cancel_pending_orders() == ()
     with pytest.raises(ReplayProviderError, match="already stopped"):
-        await runtime.process_session(session)
+        await runtime.process_session(sessions[-1])
     with pytest.raises(ReplayProviderError, match="strictly chronological"):
-        SimulatedAShareSessionProvider((session, session))
-
-
-async def _append_session(
-    target: list[ResearchExecutionDelta],
-    runtime: ASharePaperTradingRuntime,
-    session: ResearchSession,
-) -> None:
-    target.append(await runtime.process_session(session))
+        SimulatedAShareSessionProvider((sessions[0], sessions[0]))
 
 
 def test_paper_broker_is_local_next_bar_and_explicitly_rejects_limit_orders() -> None:

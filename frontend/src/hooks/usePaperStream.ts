@@ -39,6 +39,11 @@ export function applyPaperEvent(
   }
   if (event.type === "market.bar")
     return { ...next, latest_bar: paperParsers.marketBar(event.payload) };
+  if (event.type === "market.session")
+    return {
+      ...next,
+      latest_session: paperParsers.marketSession(event.payload),
+    };
   if (event.type === "signal.created") {
     const signal = paperParsers.signal(event.payload);
     return {
