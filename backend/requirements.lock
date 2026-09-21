@@ -29,7 +29,7 @@ click==8.5.0
     # via
     #   pip-tools
     #   uvicorn
-cryptography==46.0.7
+cryptography==50.0.1
     # via quant-trading-platform-backend (backend/pyproject.toml)
 et-xmlfile==2.0.0
     # via openpyxl
