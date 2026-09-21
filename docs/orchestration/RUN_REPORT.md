@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-21 R7 Validation complete / Gate C PASS
+
+- period: 2018-01-01..2021-12-31
+- candidate executions: S2, S3, S4 exactly once each
+- Validation result / evaluation SHA-256: `d210739e00c0aa229b0aeaf767230e2dba3dec1764279b0f6c2c2453906a23ee` / `802e92e196052b49028bc45bdfe1da996e7eae8901ee0859c772a015730f399f`
+- S2 total / excess / Sharpe / MDD: 0.00% / -20.87% / null / 0.00%
+- S3 total / excess / Sharpe / MDD: 1.36% / -19.51% / 0.110 / -4.25%
+- S4 total / excess / Sharpe / MDD: -5.17% / -26.04% / -0.141 / -11.98%
+- passing candidates: NONE
+- robust historical alpha established: NO
+- selected strategy: S4 `cn_a_cross_sectional_momentum_low_vol_v1` (unchanged fallback)
+- Gate C / methodology frozen: PASS / YES
+- methodology record / file SHA-256: `91b08cd9190f49dcbc3f8862f00a12b1e6e2db0cc767aa522ac731fb90c7936b` / `bafaf53ef26359e996e866461c3c8c63a25731bed2165456f9a09220b2798201`
+- Official OOS: NOT RUN; unlocked for exactly one run
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-21 R6 Development PASS / candidates frozen
 
 - period / sessions: 2010-01-01..2017-12-31 / 1,944

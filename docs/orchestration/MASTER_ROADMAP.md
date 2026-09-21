@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## R7 complete / Gate C frozen / R8 Official OOS ready — 2026-09-21
+
+Every frozen candidate ran once on Validation 2018-2021. No candidate passed all
+robustness gates; therefore the pre-registered S4 strategy is frozen unchanged as
+the honest negative/neutral reference. Gate C conditions pass without any OOS
+access. `FROZEN_STRATEGY_SPEC_V1` record SHA is
+`91b08cd9190f49dcbc3f8862f00a12b1e6e2db0cc767aa522ac731fb90c7936b`.
+Run S4 exactly once on 2022-2025 under the immutable OOS claim; never retune or
+replace an unfavorable result.
+
 ## R6 Development complete / R7 Validation active — 2026-09-21
 
 Development 2010-2017 completed for the fixed S0-S4 family with independent

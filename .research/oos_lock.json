@@ -1,11 +1,11 @@
 {
   "release": "v1.1",
-  "oos_authorized": false,
-  "authorization_evidence": null,
-  "methodology_frozen": false,
-  "dataset_sha256": null,
-  "strategy_version": null,
-  "methodology_sha256": null,
+  "oos_authorized": true,
+  "authorization_evidence": ".research/freezes/frozen-strategy-spec-v1.json",
+  "methodology_frozen": true,
+  "dataset_sha256": "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e",
+  "strategy_version": "cn_a_cross_sectional_momentum_low_vol_v1",
+  "methodology_sha256": "91b08cd9190f49dcbc3f8862f00a12b1e6e2db0cc767aa522ac731fb90c7936b",
   "official_oos_runs": [],
-  "policy": "Explicit human authorization at Gate B is required. Execute once per frozen methodology; never overwrite prior results."
+  "policy": "Gate C was conditionally pre-authorized and all conditions passed. Execute the frozen strategy exactly once; never overwrite or retune after results."
 }

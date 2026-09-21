@@ -1,5 +1,14 @@
 # Decisions
 
+## 2026-09-21 — execute pre-authorized Gate C with unchanged S4 fallback
+
+Validation completed once per frozen candidate and no Official OOS result was
+accessed. None of S2-S4 passed every robustness gate, chiefly because all failed
+positive excess return versus CSI300. Follow the pre-registered fallback instead
+of fabricating success: freeze unchanged S4 as the negative/neutral reference.
+Gate C is complete and authorizes exactly one 2022-2025 Official OOS run. The
+result must be retained regardless of performance and cannot trigger retuning.
+
 ## 2026-09-21 — freeze the Development candidates before Validation
 
 Accept the checksum-bound R6 Development result after independent replay and

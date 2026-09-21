@@ -1,5 +1,13 @@
 # Blockers
 
+## Current R8 status — 2026-09-21
+
+No research or methodology blocker is active. R7 is complete, no candidate
+established robust historical alpha, and unchanged S4 is frozen under Gate C as
+the required negative/neutral reference. Official OOS is authorized for exactly
+one immutable 2022-2025 run. Docker/WSL integration remains a deferred final-QA
+issue and does not block this database-independent OOS run.
+
 ## Current R7 status — 2026-09-21
 
 No research, source or methodology blocker is active. R6 Development and replay

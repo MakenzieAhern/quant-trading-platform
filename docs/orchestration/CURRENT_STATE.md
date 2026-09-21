@@ -1,5 +1,24 @@
 # Current state
 
+## R7 Validation complete / Gate C PASS — 2026-09-21
+
+The frozen S2-S4 candidates each ran once on 2018-01-01 through 2021-12-31;
+Official OOS was not accessed. Validation result / evaluation SHA-256 are
+`d210739e00c0aa229b0aeaf767230e2dba3dec1764279b0f6c2c2453906a23ee` /
+`802e92e196052b49028bc45bdfe1da996e7eae8901ee0859c772a015730f399f`.
+
+Validation total return / excess / Sharpe / max drawdown: S2
+`0.00% / -20.87% / null / 0.00%`; S3
+`1.36% / -19.51% / 0.110 / -4.25%`; S4
+`-5.17% / -26.04% / -0.141 / -11.98%`. No candidate passed every gate,
+so Validation did not establish robust historical alpha. The deterministic
+fallback selects original S4 unchanged as a negative/neutral OOS reference.
+
+All pre-authorized Gate C conditions pass. `FROZEN_STRATEGY_SPEC_V1` record /
+file SHA-256 are `91b08cd9190f49dcbc3f8862f00a12b1e6e2db0cc767aa522ac731fb90c7936b` /
+`bafaf53ef26359e996e866461c3c8c63a25731bed2165456f9a09220b2798201`.
+Official OOS is unlocked for exactly one immutable run of frozen S4.
+
 ## R6 Development complete / R7 Validation ready — 2026-09-21
 
 The fixed S0-S4 Development family completed on 2010-01-01 through 2017-12-31.
