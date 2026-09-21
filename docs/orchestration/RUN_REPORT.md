@@ -10,7 +10,7 @@
 - backend focused local checks: 63 PASS after CI fixes
 - frontend local checks: 80 PASS; TypeScript/ESLint/Prettier/build PASS
 - dependency audits: npm 0 known vulnerabilities; Python lock 0 known vulnerabilities
-- CI: run `35624643975` PASS at `e2ece4b`; backend 845, frontend 80, Compose PASS
+- CI: run `35625042049` PASS at `418e8b7`; backend 846, frontend 80, Compose PASS
 - PR #12: OPEN, CLEAN, MERGEABLE, UNMERGED
 - Docker final QA: BLOCKED; Linux engine pipe and Ubuntu integration absent
 - current stage: FINAL_QA

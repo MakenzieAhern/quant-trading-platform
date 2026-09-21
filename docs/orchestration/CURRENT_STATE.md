@@ -9,7 +9,7 @@ that is explicitly not research evidence. It reuses RiskEngine, OMS, simulated e
 Portfolio accounting, durable REST snapshots and bounded WebSocket delivery. No live broker,
 credentials, real-money path, OOS replay or strategy retuning was added.
 
-CI `35624643975` passes at `e2ece4b`: 845 backend tests, 80 frontend tests, Ruff, format, strict
+CI `35625042049` passes at `418e8b7`: 846 backend tests, 80 frontend tests, Ruff, format, strict
 mypy, ESLint, TypeScript, production build and all Compose configuration checks. npm production and
 Python lock dependency audits report zero known vulnerabilities. PR #12 is OPEN, CLEAN and
 MERGEABLE, but must not merge before final local QA.

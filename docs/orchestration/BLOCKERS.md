@@ -6,8 +6,8 @@
 release blocker. Windows Docker CLI 29.7.2 and Compose 5.5.0 exist, but the Linux-engine named pipe
 is missing. Ubuntu currently has neither the `docker` command nor the Docker Desktop proxy socket.
 
-R9 is complete and R10 implementation plus offline validation are complete. CI `35624643975` is
-green (845 backend / 80 frontend tests), PR #12 is clean and mergeable, and dependency audits are
+R9 is complete and R10 implementation plus offline validation are complete. CI `35625042049` is
+green (846 backend / 80 frontend tests), PR #12 is clean and mergeable, and dependency audits are
 clean. Safe independent work is exhausted. Recover Docker Desktop/Ubuntu integration without a
 factory reset or deletion of images, volumes, PostgreSQL, Redis or project files; then complete
 database-backed integration, service/restart durability and Chrome QA. PR #12, tag and release

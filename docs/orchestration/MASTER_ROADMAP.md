@@ -7,7 +7,7 @@ are complete. The frozen A-share strategy is integrated into the local Paper run
 deterministic synthetic 2030 scenario and the reviewed RiskEngine, OMS, simulated execution and
 Portfolio path. The scenario is product validation only and never accesses Official OOS.
 
-CI run `35624643975` passes at `e2ece4b` with 845 backend and 80 frontend tests plus lint, strict
+CI run `35625042049` passes at `418e8b7` with 846 backend and 80 frontend tests plus lint, strict
 types, production build and Compose validation. npm and Python dependency audits report zero known
 vulnerabilities after the cryptography lock update. Final release QA remains gated by the local
 Docker Desktop Linux engine pipe and missing Ubuntu WSL integration; recover them non-destructively,
