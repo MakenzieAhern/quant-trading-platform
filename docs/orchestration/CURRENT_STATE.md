@@ -14,12 +14,13 @@ mypy, ESLint, TypeScript, production build and all Compose configuration checks.
 Python lock dependency audits report zero known vulnerabilities. PR #12 is OPEN, CLEAN and
 MERGEABLE, but must not merge before final local QA.
 
-The remaining final-release blocker is local Docker availability. Windows Docker CLI 29.7.2 and
-Compose 5.5.0 are installed, but the `dockerDesktopLinuxEngine` named pipe is absent; Ubuntu has no
-`docker` command and its Docker Desktop proxy socket is absent. Do not factory-reset or delete
-images, volumes, PostgreSQL, Redis or project data. After non-destructive recovery, publish the
-formal ledger to PostgreSQL, run the database-backed integration/restart checks and complete real
-Chrome bilingual/research/Paper/WebSocket QA.
+The remaining final-release blocker is local Docker availability. Docker Desktop 4.89.0 crashes
+while initializing its Ingest server because `sailor-ingest.sock` cannot be renamed to `.stale`.
+The Linux engine pipe is therefore absent and Ubuntu has neither the `docker` command nor the Docker
+Desktop proxy socket. Quit Docker Desktop without factory reset, then recover the runtime socket
+non-destructively. Do not delete images, volumes, PostgreSQL, Redis or project data. After recovery,
+publish the formal ledger to PostgreSQL, run the database-backed integration/restart checks and
+complete real Chrome bilingual/research/Paper/WebSocket QA.
 
 ## R8 Official OOS complete exactly once — 2026-09-21
 

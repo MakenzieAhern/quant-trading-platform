@@ -12,7 +12,7 @@
 - dependency audits: npm 0 known vulnerabilities; Python lock 0 known vulnerabilities
 - CI: run `35625042049` PASS at `418e8b7`; backend 846, frontend 80, Compose PASS
 - PR #12: OPEN, CLEAN, MERGEABLE, UNMERGED
-- Docker final QA: BLOCKED; Linux engine pipe and Ubuntu integration absent
+- Docker final QA: BLOCKED; stale `sailor-ingest.sock` access failure crashes backend startup
 - current stage: FINAL_QA
 - release/tag: NOT CREATED
 
