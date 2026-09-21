@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 from dataclasses import dataclass, replace
-from datetime import UTC, datetime, time
+from datetime import UTC, date, datetime, time
 from decimal import Decimal
 from itertools import pairwise
 from typing import Protocol
@@ -64,6 +64,18 @@ class ResearchExecutionResult:
     consolidation_policy: str = CONSOLIDATION_POLICY
 
 
+@dataclass(frozen=True, slots=True)
+class ResearchExecutionDelta:
+    session: ResearchSession
+    proposals: tuple[OrderProposal, ...]
+    decisions: tuple[RiskDecision, ...]
+    orders: tuple[Order, ...]
+    fills: tuple[Fill, ...]
+    snapshot: PortfolioSnapshot | None
+    expired_order_ids: tuple[UUID, ...]
+    execution_checks: tuple[tuple[UUID, str], ...]
+
+
 class ResearchExecutionEngine:
     """Multi-security daily engine reusing the existing risk/OMS/broker/portfolio path."""
 
@@ -82,6 +94,7 @@ class ResearchExecutionEngine:
         self._next_session = dict(pairwise(dates))
         self._calendar_dates = frozenset(dates)
         self._active_session: ResearchSession | None = None
+        self._previous_date: date | None = None
         self._execution_checks: list[tuple[UUID, str]] = []
         if slippage_model is not None and slippage_model != FixedBasisPointSlippage():
             raise ValueError("V1 requires raw OPEN pricing and zero additional slippage")
@@ -108,19 +121,50 @@ class ResearchExecutionEngine:
 
     def run(self, sessions: Iterable[ResearchSession]) -> ResearchExecutionResult:
         self.reset()
-        previous_date = None
         for session in sessions:
-            if previous_date is not None and session.trading_date <= previous_date:
-                raise ValueError("research sessions must be strictly chronological")
-            if session.trading_date not in self._calendar_dates:
-                raise ValueError("session outside accepted calendar")
-            if (
-                previous_date is not None
-                and self._next_session.get(previous_date) != session.trading_date
-            ):
-                raise ValueError("missing calendar session must be represented explicitly")
-            self._process_session(session)
-            previous_date = session.trading_date
+            self.process_session(session)
+        return self.finish()
+
+    def process_session(self, session: ResearchSession) -> ResearchExecutionDelta:
+        """Process one completed session without exposing any future session."""
+
+        if self._previous_date is not None and session.trading_date <= self._previous_date:
+            raise ValueError("research sessions must be strictly chronological")
+        if session.trading_date not in self._calendar_dates:
+            raise ValueError("session outside accepted calendar")
+        if (
+            self._previous_date is not None
+            and self._next_session.get(self._previous_date) != session.trading_date
+        ):
+            raise ValueError("missing calendar session must be represented explicitly")
+        proposal_count = len(self._oms.proposals)
+        decision_count = len(self._oms.decisions)
+        fill_count = len(self._broker.fills)
+        expired_count = len(self._expired_order_ids)
+        check_count = len(self._execution_checks)
+        self._process_session(session)
+        self._previous_date = session.trading_date
+        proposals = self._oms.proposals[proposal_count:]
+        fills = self._broker.fills[fill_count:]
+        order_ids = (
+            {item.proposal_id for item in proposals}
+            | {item.order_id for item in fills}
+            | set(self._expired_order_ids[expired_count:])
+        )
+        return ResearchExecutionDelta(
+            session=session,
+            proposals=proposals,
+            decisions=self._oms.decisions[decision_count:],
+            orders=tuple(item for item in self._oms.orders if item.id in order_ids),
+            fills=fills,
+            snapshot=self._portfolio.latest_snapshot,
+            expired_order_ids=tuple(self._expired_order_ids[expired_count:]),
+            execution_checks=tuple(self._execution_checks[check_count:]),
+        )
+
+    def finish(self) -> ResearchExecutionResult:
+        """Cancel any remaining simulated orders and return the cumulative result."""
+
         self._expire_pending()
         return ResearchExecutionResult(
             proposals=self._oms.proposals,
@@ -141,6 +185,7 @@ class ResearchExecutionEngine:
         self._expired_order_ids.clear()
         self._execution_checks.clear()
         self._active_session = None
+        self._previous_date = None
 
     def _process_session(self, session: ResearchSession) -> None:
         self._active_session = session

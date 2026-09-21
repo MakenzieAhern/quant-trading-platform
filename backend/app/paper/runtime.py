@@ -2,22 +2,34 @@ import asyncio
 from collections.abc import Awaitable, Callable, Sequence
 from contextlib import suppress
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
+from decimal import Decimal
 from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
 from app.backtest import BacktestConfig
 from app.domain.common import normalize_symbol
 from app.domain.market import Bar
-from app.domain.risk import OrderProposal, RiskDecision
+from app.domain.markets.calendar import TradingCalendar
+from app.domain.risk import OrderProposal, RiskConfig, RiskDecision
 from app.domain.trading import Fill, Order, OrderSide, OrderType, PortfolioSnapshot, Signal
 from app.event import Event, EventBus, EventType
 from app.execution import OrderManager, SimulatedBroker
+from app.execution.costs import CommissionModel
 from app.portfolio import PortfolioEngine
+from app.research import (
+    ResearchExecutionDelta,
+    ResearchExecutionEngine,
+    ResearchExecutionResult,
+    ResearchSession,
+)
+from app.research.strategy import ChinaAMomentumLowVolResearchStrategy
 from app.risk import RiskEngine
 from app.strategies import BaseStrategy, StrategyEngine
 
 BarHandler = Callable[[Bar], Awaitable[None]]
+AShareSessionHandler = Callable[[ResearchSession], Awaitable[None]]
+FROZEN_A_SHARE_STRATEGY_ID = "cn_a_cross_sectional_momentum_low_vol_v1"
 
 
 class ReplayProviderError(ValueError):
@@ -63,6 +75,46 @@ class ReplayMarketDataProvider:
                 if bar.symbol in self._subscriptions:
                     await handler(bar)
                 if index + 1 < len(self._bars) and self._interval_seconds:
+                    with suppress(TimeoutError):
+                        await asyncio.wait_for(self._stop.wait(), timeout=self._interval_seconds)
+        finally:
+            self._running = False
+
+    async def stop(self) -> None:
+        self._stop.set()
+
+
+class SimulatedAShareSessionProvider:
+    """Replay completed cross-sectional sessions; no broker or live feed exists."""
+
+    def __init__(self, sessions: Sequence[ResearchSession], interval_seconds: float = 0.5) -> None:
+        if interval_seconds < 0:
+            raise ValueError("interval_seconds must be non-negative")
+        self._sessions = tuple(sessions)
+        self._interval_seconds = interval_seconds
+        self._running = False
+        self._stop = asyncio.Event()
+        previous: date | None = None
+        for session in self._sessions:
+            if previous is not None and session.trading_date <= previous:
+                raise ReplayProviderError("A-share sessions must be strictly chronological")
+            previous = session.trading_date
+
+    @property
+    def running(self) -> bool:
+        return self._running
+
+    async def start(self, handler: AShareSessionHandler) -> None:
+        if self._running:
+            raise ReplayProviderError("A-share session provider is already running")
+        self._running = True
+        self._stop.clear()
+        try:
+            for index, session in enumerate(self._sessions):
+                if self._stop.is_set():
+                    break
+                await handler(session)
+                if index + 1 < len(self._sessions) and self._interval_seconds:
                     with suppress(TimeoutError):
                         await asyncio.wait_for(self._stop.wait(), timeout=self._interval_seconds)
         finally:
@@ -194,3 +246,47 @@ class PaperTradingRuntime:
         self._event_bus.publish(
             Event(EventType.ORDER_PROPOSAL, proposal, occurred_at=proposal.signal_timestamp)
         )
+
+
+class ASharePaperTradingRuntime:
+    """Frozen A-share strategy on the shared Risk/OMS/simulated execution path."""
+
+    def __init__(
+        self,
+        *,
+        initial_cash: Decimal,
+        commission_model: CommissionModel,
+        calendar: TradingCalendar,
+        risk_config: RiskConfig | None = None,
+    ) -> None:
+        strategy = ChinaAMomentumLowVolResearchStrategy()
+        if strategy.strategy_id != FROZEN_A_SHARE_STRATEGY_ID:
+            raise ValueError("frozen A-share strategy identity changed")
+        self._engine = ResearchExecutionEngine(
+            strategy,
+            initial_cash=initial_cash,
+            commission_model=commission_model,
+            calendar=calendar,
+            risk_config=risk_config,
+        )
+        self._engine.reset()
+        self._result: ResearchExecutionResult | None = None
+
+    @property
+    def strategy_id(self) -> str:
+        return FROZEN_A_SHARE_STRATEGY_ID
+
+    async def process_session(self, session: ResearchSession) -> ResearchExecutionDelta:
+        if self._result is not None:
+            raise ReplayProviderError("A-share paper runtime is already stopped")
+        return self._engine.process_session(session)
+
+    def finish(self) -> ResearchExecutionResult:
+        if self._result is None:
+            self._result = self._engine.finish()
+        return self._result
+
+    def cancel_pending_orders(self) -> tuple[Order, ...]:
+        result = self.finish()
+        expired = set(result.expired_order_ids)
+        return tuple(item for item in result.orders if item.id in expired)

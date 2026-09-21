@@ -1,5 +1,10 @@
 from app.data.providers.research import FeatureOnlyDailyObservation
-from app.research.engine import ResearchExecutionEngine, ResearchExecutionResult, ResearchStrategy
+from app.research.engine import (
+    ResearchExecutionDelta,
+    ResearchExecutionEngine,
+    ResearchExecutionResult,
+    ResearchStrategy,
+)
 from app.research.factors import FactorUnavailableError, calculate_factors
 from app.research.models import (
     AdjustedClosePoint,
@@ -26,6 +31,7 @@ __all__ = [
     "FactorValues",
     "FeatureOnlyDailyObservation",
     "PortfolioTarget",
+    "ResearchExecutionDelta",
     "ResearchExecutionEngine",
     "ResearchExecutionResult",
     "ResearchPeriodKind",

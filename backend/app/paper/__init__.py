@@ -4,9 +4,16 @@ from app.paper.models import (
     PaperSession,
     PaperSessionStatus,
 )
-from app.paper.runtime import PaperBroker, PaperTradingRuntime, ReplayMarketDataProvider
+from app.paper.runtime import (
+    ASharePaperTradingRuntime,
+    PaperBroker,
+    PaperTradingRuntime,
+    ReplayMarketDataProvider,
+    SimulatedAShareSessionProvider,
+)
 
 __all__ = [
+    "ASharePaperTradingRuntime",
     "CreatePaperSessionCommand",
     "PaperBroker",
     "PaperEventRecord",
@@ -14,4 +21,5 @@ __all__ = [
     "PaperSessionStatus",
     "PaperTradingRuntime",
     "ReplayMarketDataProvider",
+    "SimulatedAShareSessionProvider",
 ]

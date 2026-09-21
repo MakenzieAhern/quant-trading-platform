@@ -154,6 +154,33 @@ def test_research_order_uses_existing_risk_oms_broker_fill_and_portfolio_path() 
     assert result.active_reservations == ()
 
 
+def test_incremental_research_execution_matches_batch_without_future_access() -> None:
+    sessions = (
+        _session(date(2024, 1, 2), opening="10"),
+        _session(date(2024, 1, 3), opening="9.9"),
+    )
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(Decimal(5)),
+        calendar=CALENDAR,
+    )
+    engine.reset()
+    first = engine.process_session(sessions[0])
+    second = engine.process_session(sessions[1])
+    incremental = engine.finish()
+    batch = engine.run(sessions)
+
+    assert len(first.proposals) == len(first.decisions) == len(first.orders) == 1
+    assert first.fills == ()
+    assert len(second.fills) == len(second.orders) == 1
+    assert second.fills[0].price == Decimal("9.9")
+    assert [item.model_dump() for item in incremental.fills] == [
+        item.model_dump() for item in batch.fills
+    ]
+    assert incremental.snapshots == batch.snapshots
+
+
 def test_suspension_expires_order_in_its_intended_session() -> None:
     engine = ResearchExecutionEngine(
         OneTargetStrategy(),
