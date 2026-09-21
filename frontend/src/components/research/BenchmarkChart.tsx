@@ -31,11 +31,17 @@ function polyline(points: ChartPoint[]): string {
 export function BenchmarkChart({
   strategy,
   benchmark,
+  strategyLabel,
+  benchmarkLabel,
+  ariaLabel,
 }: {
   strategy: ResearchPoint[];
   benchmark: ResearchPoint[];
+  strategyLabel?: string;
+  benchmarkLabel?: string;
+  ariaLabel?: string;
 }) {
-  const { t } = useTranslation("accessibility");
+  const { t } = useTranslation(["accessibility", "research"]);
   const width = 900;
   const height = 260;
   const scaleValues = [...strategy, ...benchmark].map((point) =>
@@ -49,7 +55,10 @@ export function BenchmarkChart({
     scaleValues,
   );
   return (
-    <figure className="researchChart" aria-label={t("benchmarkChart")}>
+    <figure
+      className="researchChart"
+      aria-label={ariaLabel ?? t("accessibility:benchmarkChart")}
+    >
       <svg viewBox={`0 0 ${width} ${height}`} role="img">
         <polyline
           className="strategyLine"
@@ -61,8 +70,12 @@ export function BenchmarkChart({
         />
       </svg>
       <figcaption>
-        <span className="strategyLegend">Strategy</span>
-        <span className="benchmarkLegend">Benchmark</span>
+        <span className="strategyLegend">
+          {strategyLabel ?? t("research:strategySeries")}
+        </span>
+        <span className="benchmarkLegend">
+          {benchmarkLabel ?? t("research:benchmark")}
+        </span>
       </figcaption>
     </figure>
   );

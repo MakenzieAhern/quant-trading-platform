@@ -30,6 +30,9 @@ export function ResearchHomePage() {
           {t("research:openStrategy")}
         </Link>
       </header>
+      <div className="oosGuard" role="note">
+        {t("research:evidenceSummary")}
+      </div>
       <section className="panel">
         <div className="panelHeader">
           <h2>{t("research:datasets")}</h2>
@@ -54,7 +57,14 @@ export function ResearchHomePage() {
               <tbody>
                 {datasets.data.items.map((dataset) => (
                   <tr key={dataset.dataset_id}>
-                    <td className="mono">{dataset.dataset_id}</td>
+                    <td>
+                      <Link
+                        className="monoLink"
+                        href={`/research/a-share/datasets/${encodeURIComponent(dataset.dataset_id)}`}
+                      >
+                        {dataset.dataset_id}
+                      </Link>
+                    </td>
                     <td>
                       {dataset.provider} / {dataset.provider_version}
                     </td>

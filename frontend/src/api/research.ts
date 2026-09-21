@@ -128,18 +128,27 @@ const point = (value: unknown): ResearchPoint => {
   return item as unknown as ResearchPoint;
 };
 
-async function completePoints(
+const rollingMetric = (value: unknown): RollingMetric => {
+  const item = record(value);
+  text(item.trading_date);
+  text(item.metric_name);
+  decimal(item.value, true);
+  return item as unknown as RollingMetric;
+};
+
+async function completePage<T>(
   path: string,
+  parse: (item: unknown) => T,
   signal?: AbortSignal,
-): Promise<ResearchPage<ResearchPoint>> {
-  const items: ResearchPoint[] = [];
+): Promise<ResearchPage<T>> {
+  const items: T[] = [];
   let total: number | undefined;
   do {
     const result = await apiRequest(
       `${path}?limit=200&offset=${items.length}`,
       {},
       signal,
-      (value) => page(value, point),
+      (value) => page(value, parse),
     );
     if (
       result.total < 0 ||
@@ -160,6 +169,13 @@ export const researchApi = {
   datasets: (signal?: AbortSignal) =>
     apiRequest("/api/research/datasets", {}, signal, (value) =>
       page(value, dataset),
+    ),
+  dataset: (datasetId: string, signal?: AbortSignal) =>
+    apiRequest(
+      `/api/research/datasets/${encodeURIComponent(datasetId)}`,
+      {},
+      signal,
+      dataset,
     ),
   strategies: (signal?: AbortSignal) =>
     apiRequest<ResearchStrategy[]>(
@@ -199,8 +215,9 @@ export const researchApi = {
     kind: "equity" | "benchmark" | "drawdown",
     signal?: AbortSignal,
   ) =>
-    completePoints(
+    completePage(
       `/api/research/runs/${encodeURIComponent(runId)}/${kind}`,
+      point,
       signal,
     ),
   monthlyReturns: (runId: string, signal?: AbortSignal) =>
@@ -211,18 +228,16 @@ export const researchApi = {
       (value) => page(value, (item) => item as MonthlyReturn),
     ),
   rollingMetrics: (runId: string, signal?: AbortSignal) =>
-    apiRequest(
+    completePage(
       `/api/research/runs/${encodeURIComponent(runId)}/rolling-metrics`,
-      {},
+      rollingMetric,
       signal,
-      (value) => page(value, (item) => item as RollingMetric),
     ),
   holdings: (runId: string, signal?: AbortSignal) =>
-    apiRequest(
+    completePage(
       `/api/research/runs/${encodeURIComponent(runId)}/holdings`,
-      {},
+      (item) => item as ResearchHolding,
       signal,
-      (value) => page(value, (item) => item as ResearchHolding),
     ),
   rebalances: (runId: string, signal?: AbortSignal) =>
     apiRequest(

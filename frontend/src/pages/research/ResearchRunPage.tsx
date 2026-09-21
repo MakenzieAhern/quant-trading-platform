@@ -21,7 +21,12 @@ import {
 } from "../../utils/format";
 
 export function ResearchRunPage({ runId }: { runId: string }) {
-  const { t } = useTranslation(["research", "common"]);
+  const { t } = useTranslation([
+    "research",
+    "common",
+    "metrics",
+    "accessibility",
+  ]);
   const run = useApiResource(
     (signal) => researchApi.run(runId, signal),
     [runId],
@@ -46,6 +51,10 @@ export function ResearchRunPage({ runId }: { runId: string }) {
     (signal) => researchApi.monthlyReturns(runId, signal),
     [runId],
   );
+  const rolling = useApiResource(
+    (signal) => researchApi.rollingMetrics(runId, signal),
+    [runId],
+  );
   const holdings = useApiResource(
     (signal) => researchApi.holdings(runId, signal),
     [runId],
@@ -63,6 +72,25 @@ export function ResearchRunPage({ runId }: { runId: string }) {
   if (!run.data) return null;
   const emptyCharts =
     !equity.data?.items.length && !benchmark.data?.items.length;
+  const rollingByDate = new Map<string, Record<string, string>>();
+  for (const item of rolling.data?.items ?? []) {
+    if (item.value === null) continue;
+    const values = rollingByDate.get(item.trading_date) ?? {};
+    values[item.metric_name] = item.value;
+    rollingByDate.set(item.trading_date, values);
+  }
+  const completeRolling = [...rollingByDate].filter(
+    ([, values]) =>
+      values.sharpe !== undefined && values.drawdown !== undefined,
+  );
+  const rollingPoints = (metricName: "sharpe" | "drawdown") =>
+    completeRolling.map(([trading_date, values], sequence) => ({
+      sequence,
+      trading_date,
+      value: values[metricName],
+    }));
+  const rollingSharpe = rollingPoints("sharpe");
+  const rollingDrawdown = rollingPoints("drawdown");
   return (
     <>
       <Link className="backLink" href="/research/a-share">
@@ -78,8 +106,12 @@ export function ResearchRunPage({ runId }: { runId: string }) {
         </div>
         <SplitBadge period={run.data.period_kind} />
       </header>
-      {run.data.period_kind !== "OUT_OF_SAMPLE" && (
-        <div className="oosGuard">{t("research:oosNotRun")}</div>
+      {run.data.period_kind !== "PILOT_SMOKE" && (
+        <div className="oosGuard" role="note">
+          {run.data.period_kind === "OUT_OF_SAMPLE"
+            ? t("research:oosResultCaution")
+            : t("research:preOosEvidence")}
+        </div>
       )}
       {Boolean(run.data.diagnostics.dataset_acceptance_warning) && (
         <div className="oosGuard" role="alert">
@@ -96,7 +128,14 @@ export function ResearchRunPage({ runId }: { runId: string }) {
       <section className="runFacts" aria-label={t("research:lineage")}>
         <div>
           <span>{t("common:dataset")}</span>
-          <strong>{run.data.dataset_id}</strong>
+          <strong>
+            <Link
+              className="monoLink"
+              href={`/research/a-share/datasets/${encodeURIComponent(run.data.dataset_id)}`}
+            >
+              {run.data.dataset_id}
+            </Link>
+          </strong>
         </div>
         <div>
           <span>{t("research:provider")}</span>
@@ -121,6 +160,18 @@ export function ResearchRunPage({ runId }: { runId: string }) {
         <div>
           <span>{t("common:created")}</span>
           <strong>{formatUtc(run.data.created_at)}</strong>
+        </div>
+        <div>
+          <span>{t("research:gitCommit")}</span>
+          <strong className="mono" title={run.data.git_commit}>
+            {shortId(run.data.git_commit)}
+          </strong>
+        </div>
+        <div>
+          <span>{t("research:strategyConfig")}</span>
+          <strong className="mono" title={run.data.strategy_config_hash}>
+            {shortId(run.data.strategy_config_hash)}
+          </strong>
         </div>
       </section>
       <section className="panel">
@@ -166,9 +217,35 @@ export function ResearchRunPage({ runId }: { runId: string }) {
           <EmptyState>{t("common:noData")}</EmptyState>
         )}
       </section>
+      <section className="panel">
+        <div className="panelHeader">
+          <h2>{t("research:rollingMetrics")}</h2>
+        </div>
+        {rolling.loading && (
+          <LoadingPanel label={t("research:rollingMetrics")} />
+        )}
+        {rolling.error && <ErrorPanel message={rolling.error} />}
+        {rollingSharpe.length || rollingDrawdown.length ? (
+          <BenchmarkChart
+            strategy={rollingSharpe}
+            benchmark={rollingDrawdown}
+            strategyLabel={t("metrics:sharpe_ratio")}
+            benchmarkLabel={t("research:rollingDrawdown")}
+            ariaLabel={t("accessibility:rollingChart")}
+          />
+        ) : (
+          !rolling.loading && <EmptyState>{t("common:noData")}</EmptyState>
+        )}
+      </section>
       <ResearchTable
         title={t("research:holdings")}
-        headings={["Date", "Security", "Quantity", "Weight", "Market value"]}
+        headings={[
+          t("research:columns.date"),
+          t("research:columns.security"),
+          t("research:columns.quantity"),
+          t("research:columns.weight"),
+          t("research:columns.marketValue"),
+        ]}
         rows={
           holdings.data?.items.map((item) => [
             item.trading_date,
@@ -181,7 +258,11 @@ export function ResearchRunPage({ runId }: { runId: string }) {
       />
       <ResearchTable
         title={t("research:rebalances")}
-        headings={["Date", "Turnover", "Transaction cost"]}
+        headings={[
+          t("research:columns.date"),
+          t("research:columns.turnover"),
+          t("research:columns.transactionCost"),
+        ]}
         rows={
           rebalances.data?.items.map((item) => [
             item.trading_date,
@@ -192,7 +273,14 @@ export function ResearchRunPage({ runId }: { runId: string }) {
       />
       <ResearchTable
         title={t("research:trades")}
-        headings={["UTC time", "Security", "Side", "Quantity", "Price", "Cost"]}
+        headings={[
+          t("research:columns.utcTime"),
+          t("research:columns.security"),
+          t("research:columns.side"),
+          t("research:columns.quantity"),
+          t("research:columns.price"),
+          t("research:columns.cost"),
+        ]}
         rows={
           trades.data?.items.map((item) => [
             formatUtc(item.timestamp),

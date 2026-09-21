@@ -6,6 +6,7 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 import { CreatePaperSessionPage } from "./pages/CreatePaperSessionPage";
 import { PaperSessionDetailPage } from "./pages/PaperSessionDetailPage";
 import { PaperSessionsPage } from "./pages/PaperSessionsPage";
+import { ResearchDatasetPage } from "./pages/research/ResearchDatasetPage";
 import { ResearchHomePage } from "./pages/research/ResearchHomePage";
 import { ResearchRunPage } from "./pages/research/ResearchRunPage";
 import { ResearchStrategiesPage } from "./pages/research/ResearchStrategiesPage";
@@ -26,6 +27,8 @@ export function App() {
     /^\/research\/a-share\/runs\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?$/i.exec(
       pathname,
     );
+  const researchDatasetMatch =
+    /^\/research\/a-share\/datasets\/([^/]+)\/?$/i.exec(pathname);
   const researchStrategyMatch =
     /^\/research\/a-share\/strategies\/([^/]+)\/?$/i.exec(pathname);
   let page = <NotFoundPage />;
@@ -59,6 +62,12 @@ export function App() {
     page = <ResearchStrategiesPage />;
   else if (researchRunMatch?.[1])
     page = <ResearchRunPage runId={researchRunMatch[1]} />;
+  else if (researchDatasetMatch?.[1])
+    page = (
+      <ResearchDatasetPage
+        datasetId={decodeURIComponent(researchDatasetMatch[1])}
+      />
+    );
   else if (researchStrategyMatch?.[1])
     page = (
       <ResearchStrategyPage

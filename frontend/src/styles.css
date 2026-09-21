@@ -240,6 +240,14 @@ nav .primaryLink {
   overflow-wrap: anywhere;
   color: #78f7b5;
 }
+.manifestJson {
+  max-height: 640px;
+  margin: 0;
+  padding: 24px;
+  overflow: auto;
+  color: #b8ead1;
+  white-space: pre-wrap;
+}
 .workspace {
   padding: 54px 0 36px;
 }
@@ -551,6 +559,9 @@ label small,
 }
 .runFacts > div:last-child {
   border: 0;
+}
+.runFacts > div:nth-child(4n) {
+  border-right: 0;
 }
 .runFacts span,
 .metric span {
