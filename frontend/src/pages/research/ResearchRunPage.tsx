@@ -120,9 +120,7 @@ export function ResearchRunPage({ runId }: { runId: string }) {
       )}
       {run.data.period_kind === "PILOT_SMOKE" && (
         <div className="oosGuard" role="note">
-          PILOT_ENGINEERING_SMOKE_ONLY — 仅工程验证；非 Development / Validation
-          / OOS 证据。 Unknown executable liquidity = NO FILL.
-          未知可成交状态不得假定成交。
+          {t("research:pilotSmokeWarning")}
         </div>
       )}
       <section className="runFacts" aria-label={t("research:lineage")}>

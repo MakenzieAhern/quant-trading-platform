@@ -82,6 +82,12 @@ export const zhCN = {
     strategyNameZh:
       "China A-Share Cross-Sectional Momentum and Low-Volatility Strategy",
     methodology: "冻结方法",
+    methodologyNotes: "时间点与会计说明",
+    pointInTimeNote: "历史证券池、ST、停牌和规则均按每个交易日解析。",
+    corporateActionNote:
+      "强制公司行动作为明确的 Portfolio 会计事件处理，不进入因子输入。",
+    priceLayerNote: "复权历史仅用于因子；模拟执行与估值始终使用原始价格。",
+    configurationChecksum: "配置 SHA-256",
     factors: "因子公式",
     rebalance: "每 20 个有效交易日再平衡",
     equalWeight: "等权 · 前十分位 · 最多 20 只持仓",
@@ -114,6 +120,8 @@ export const zhCN = {
     preOosEvidence: "此处仅为开发期/验证期证据；锁定的样本外结果单独报告。",
     oosResultCaution:
       "正式样本外测试仅运行一次：绝对收益弱正，但不足以证明稳健盈利能力。",
+    pilotSmokeWarning:
+      "PILOT_ENGINEERING_SMOKE_ONLY — 仅工程验证，不属于 Development、Validation 或 OOS 证据；未知可成交状态一律不成交。",
     gitCommit: "Git 提交",
     strategyConfig: "策略配置",
     columns: {

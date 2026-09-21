@@ -38,5 +38,6 @@ sorted descending with `security_id` as tie-breaker. The top decile, capped at 2
 equal-weighted and rounded down to valid lots. Orders traverse the existing RiskEngine, OMS,
 execution broker and Portfolio path.
 
-The initial split is Development 2010–2017, Validation 2018–2021, and OOS 2022–2025. It is a
-methodology definition, not evidence that data coverage is ready or that any period has run.
+The immutable split is Development 2010–2017, Validation 2018–2021, and OOS 2022–2025. Development
+and Validation completed under frozen inputs. Gate C then froze unchanged S4 and authorized one
+Official OOS run; that authorization is now consumed. No post-OOS retuning is permitted.

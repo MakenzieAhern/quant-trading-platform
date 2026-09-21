@@ -9,5 +9,5 @@
 - Stable tie-breaking and Decimal arithmetic make rankings and accounting deterministic.
 - Development, validation and OOS periods do not overlap. Parameter search is absent. OOS requires
   explicit approval after every research choice and the dataset checksum are frozen.
-- Corporate-action and coverage uncertainties currently trip the executable readiness gate, so no
-  study can be mislabeled official.
+- The full dataset passed all mandatory R5 gates before its immutable Gate B freeze. Development,
+  Validation and the one authorized Official OOS run bind to that same manifest checksum.

@@ -50,8 +50,16 @@ export function ResearchStrategyPage({ strategyId }: { strategyId: string }) {
             <strong>{t("equalWeight")}</strong>
           </div>
           <div>
-            <span>Configuration SHA-256</span>
+            <span>{t("configurationChecksum")}</span>
             <strong className="mono">{strategy.data.configuration_hash}</strong>
+          </div>
+          <div>
+            <span>{t("methodologyNotes")}</span>
+            <ul>
+              <li>{t("pointInTimeNote")}</li>
+              <li>{t("corporateActionNote")}</li>
+              <li>{t("priceLayerNote")}</li>
+            </ul>
           </div>
         </div>
       </section>

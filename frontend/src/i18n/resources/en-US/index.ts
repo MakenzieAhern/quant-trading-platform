@@ -84,6 +84,14 @@ export const enUS = {
       "China A-Share Cross-Sectional Momentum and Low-Volatility Strategy",
     strategyNameZh: "中国A股横截面动量与低波动策略",
     methodology: "Frozen methodology",
+    methodologyNotes: "Point-in-time and accounting notes",
+    pointInTimeNote:
+      "Historical membership, ST, suspension and rules are resolved as of each session.",
+    corporateActionNote:
+      "Mandatory corporate actions are explicit portfolio-accounting events, never factor inputs.",
+    priceLayerNote:
+      "Adjusted history is used for factors; simulated execution and valuation use raw prices.",
+    configurationChecksum: "Configuration SHA-256",
     factors: "Factor formulas",
     rebalance: "Every 20 valid trading sessions",
     equalWeight: "Equal weight · top decile · maximum 20 holdings",
@@ -118,6 +126,8 @@ export const enUS = {
       "Development/Validation evidence only; the locked OOS result is reported separately.",
     oosResultCaution:
       "Official OOS was run exactly once: weak positive absolute return, not robust profitability evidence.",
+    pilotSmokeWarning:
+      "PILOT_ENGINEERING_SMOKE_ONLY — engineering validation, not Development, Validation or OOS evidence. Unknown executable liquidity means no fill.",
     gitCommit: "Git commit",
     strategyConfig: "Strategy configuration",
     columns: {

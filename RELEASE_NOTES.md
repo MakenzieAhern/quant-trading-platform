@@ -1,3 +1,41 @@
+# v1.1.0 — China A-Share Research Edition
+
+> **PAPER / SIMULATED ONLY. NO LIVE BROKER. NO REAL-MONEY EXECUTION.**
+
+## Highlights
+
+- Immutable 2010–2025 ordinary A-share dataset: 5,431 securities, 3,886 sessions,
+  13,411,189 raw daily rows and 42,792 corporate-action rows.
+- Point-in-time identity, listing/delisting, ST/*ST, suspension, market-rule and transaction-cost
+  resolution with explicit source lineage and checksums.
+- Corporate-action-aware research accounting for cash/rights events, mergers, demergers,
+  mandatory partial surrenders, restructuring pass-through and share consolidations.
+- Frozen S0–S4 Development family, one-run Validation protocol, Gate C methodology freeze and an
+  exactly-once Official OOS lock.
+- Bilingual A-share research UI with dataset lineage, methodology, CSI300 comparison, equity,
+  drawdown, rolling metrics, monthly returns, holdings, rebalances and fills.
+- Idempotent publication of immutable Development, Validation and OOS artifacts to PostgreSQL.
+
+## Result boundary
+
+No candidate passed every Validation gate. Unchanged S4 was the pre-declared fallback. Official
+OOS returned 0.76% with Sharpe 0.067, maximum drawdown -15.70% and 6.61% excess versus a declining
+CSI300. This is weak evidence and is not a profitability or future-return claim. The OOS run limit
+is consumed; no retuning occurred.
+
+## Compatibility and safety
+
+The v1.0 deterministic backtest and local Paper runtime remain available. v1.1 adds no live-broker
+adapter, brokerage credentials, public-internet deployment, real-money execution, ML/GPU strategy,
+or Hong Kong/US market scope. Large market datasets and formal run artifacts remain outside Git.
+
+See [dataset](docs/research/DATASET.md), [methodology](docs/research/METHODOLOGY.md),
+[strategy](docs/research/STRATEGY_REPORT.md), [OOS](docs/research/OOS_REPORT.md),
+[reproducibility](docs/research/REPRODUCIBILITY.md) and
+[limitations](docs/research/LIMITATIONS.md).
+
+---
+
 # v1.0.0 — Quant Trading Platform MVP
 
 **Local Single-User Paper-Trading MVP**
