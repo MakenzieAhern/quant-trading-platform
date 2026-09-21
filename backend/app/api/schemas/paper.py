@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Annotated, Literal
+from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -46,10 +46,7 @@ class SimulatedASharePaperSessionRequest(StrictModel):
     risk: RiskRequest = Field(default_factory=lambda: RiskRequest(enforce_buying_power=True))
 
 
-CreatePaperSessionRequest = Annotated[
-    ReplayPaperSessionRequest | SimulatedASharePaperSessionRequest,
-    Field(discriminator="provider_type"),
-]
+CreatePaperSessionRequest = ReplayPaperSessionRequest | SimulatedASharePaperSessionRequest
 
 
 class PaperSessionResponse(BaseModel):

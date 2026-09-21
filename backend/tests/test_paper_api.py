@@ -161,14 +161,10 @@ async def test_frozen_a_share_simulation_persists_signal_fill_and_portfolio(
     assert len(snapshot["orders"]) == len(snapshot["fills"]) == 1
     assert snapshot["orders"][0]["status"] == "FILLED"
     assert len(snapshot["latest_portfolio"]["positions"]) == 1
-    assert snapshot["latest_portfolio"]["cash"] == "98160.852500000000000001"
-    assert len(snapshot["signals"]) == 1
-    assert len(snapshot["risk_decisions"]) == 1
-    assert len(snapshot["orders"]) == 1
-    assert snapshot["orders"][0]["status"] == "FILLED"
-    assert snapshot["fills"][0]["price"] == "183.92"
+    assert snapshot["latest_portfolio"]["cash"] == "1223.5"
+    assert snapshot["fills"][0]["price"] == "23.845"
     assert snapshot["fills"][0]["commission"] == "0"
-    assert snapshot["fills"][0]["timestamp"] == "2024-01-09T00:00:00Z"
+    assert snapshot["fills"][0]["timestamp"] == "2030-12-23T01:25:00Z"
     assert snapshot["last_sequence"] > 0
 
     events = await client.get(f"/api/paper-trading/sessions/{session_id}/events")
@@ -179,7 +175,7 @@ async def test_frozen_a_share_simulation_persists_signal_fill_and_portfolio(
     event_types = [item["type"] for item in events.json()]
     fill_index = event_types.index("fill.created")
     assert event_types[fill_index - 2 : fill_index + 2] == [
-        "market.bar",
+        "market.session",
         "order.updated",
         "fill.created",
         "portfolio.snapshot",

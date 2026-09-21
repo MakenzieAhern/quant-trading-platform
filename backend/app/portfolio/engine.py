@@ -695,6 +695,7 @@ class PortfolioEngine:
                         else theoretical
                     )
                     if event.research_fractional_method is not None:
+                        assert event.official_fractional_method is not None
                         written_off = basis if not quantity else ZERO
                         audits[(parent, symbol)] = DemergerRoundingAudit(
                             event_checksum=event.event_checksum,
