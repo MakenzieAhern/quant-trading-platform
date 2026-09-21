@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { paperApi } from "../api/paper";
 import { ErrorPanel, LoadingPanel } from "../components/AsyncPanel";
@@ -9,6 +10,7 @@ import { usePaperStream } from "../hooks/usePaperStream";
 import { formatDecimal, formatUtc, shortId } from "../utils/format";
 
 export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
+  const { t } = useTranslation("paper");
   const { snapshot, connection, error } = usePaperStream(sessionId);
   const [commandPending, setCommandPending] = useState(false);
   const [commandError, setCommandError] = useState<string | null>(null);
@@ -19,17 +21,16 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     setCommandError(null);
     try {
       await paperApi[action](sessionId);
-    } catch (reason) {
+    } catch {
       setCommandError(
-        reason instanceof Error ? reason.message : `Unable to ${action}.`,
+        t(action === "start" ? "detail.startError" : "detail.stopError"),
       );
     } finally {
       setCommandPending(false);
     }
   };
 
-  if (!snapshot && !error)
-    return <LoadingPanel label="paper session snapshot" />;
+  if (!snapshot && !error) return <LoadingPanel label={t("detail.loading")} />;
   if (!snapshot && error) return <ErrorPanel message={error} />;
   if (!snapshot) return null;
   const { session, latest_bar: bar, latest_portfolio: portfolio } = snapshot;
@@ -41,17 +42,17 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
       <header className="detailHeader">
         <div>
           <Link className="backLink" href="/paper">
-            ← All paper sessions
+            {t("detail.back")}
           </Link>
           <p className="eyebrow">
-            PAPER SESSION / {shortId(session.session_id)}
+            {t("detail.eyebrow")} / {shortId(session.session_id)}
           </p>
-          <h1>{session.strategy_type.replaceAll("_", " ")}</h1>
+          <h1>{t(`strategies.${session.strategy_type}`)}</h1>
           <p className="runId">{session.session_id}</p>
         </div>
         <div className="paperControls">
           <span className={`streamState stream-${connection}`}>
-            WebSocket: {connection}
+            {t("detail.websocket")}: {t(`detail.connection.${connection}`)}
           </span>
           <StatusBadge status={session.status} />
           {session.status === "CREATED" && (
@@ -60,7 +61,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
               disabled={commandPending}
               onClick={() => void command("start")}
             >
-              Start replay
+              {t("detail.start")}
             </button>
           )}
           {active && (
@@ -69,89 +70,107 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
               disabled={commandPending}
               onClick={() => void command("stop")}
             >
-              Stop replay
+              {t("detail.stop")}
             </button>
           )}
         </div>
       </header>
       {(error || commandError) && (
-        <ErrorPanel message={commandError ?? error ?? "Unknown error"} />
+        <ErrorPanel
+          message={commandError ?? error ?? t("detail.unknownError")}
+        />
       )}
-      <section className="runFacts" aria-label="Paper session details">
+      <section className="runFacts" aria-label={t("detail.detailsLabel")}>
         <div>
-          <span>Provider</span>
+          <span>{t("detail.provider")}</span>
           <strong>
             {session.provider_type} / {session.dataset_id}
           </strong>
         </div>
         <div>
-          <span>Created</span>
+          <span>{t("detail.created")}</span>
           <strong>{formatUtc(session.created_at)}</strong>
         </div>
         <div>
-          <span>Started</span>
+          <span>{t("detail.started")}</span>
           <strong>{formatUtc(session.started_at)}</strong>
         </div>
         <div>
-          <span>Stopped</span>
+          <span>{t("detail.stopped")}</span>
           <strong>{formatUtc(session.stopped_at)}</strong>
         </div>
       </section>
       {session.error_message && (
         <section className="stateCallout failedCallout" role="alert">
-          <h2>Paper session ended safely</h2>
+          <h2>{t("detail.failedTitle")}</h2>
           <p>{session.error_message}</p>
         </section>
       )}
       <section className="panel">
         <div className="panelHeader">
           <div>
-            <p className="kicker">LATEST COMPLETED BAR</p>
-            <h2>Market data</h2>
+            <p className="kicker">{t("detail.latestBar")}</p>
+            <h2>{t("detail.marketData")}</h2>
           </div>
         </div>
         {bar ? (
           <div className="metricsGrid">
-            <Metric label="Open" value={bar.open} />
-            <Metric label="High" value={bar.high} />
-            <Metric label="Low" value={bar.low} />
-            <Metric label="Close" value={bar.close} />
-            <Metric label="Volume" value={bar.volume} />
-            <Metric label="UTC time" value={formatUtc(bar.timestamp)} raw />
+            <Metric label={t("detail.open")} value={bar.open} />
+            <Metric label={t("detail.high")} value={bar.high} />
+            <Metric label={t("detail.low")} value={bar.low} />
+            <Metric label={t("detail.close")} value={bar.close} />
+            <Metric label={t("detail.volume")} value={bar.volume} />
+            <Metric
+              label={t("detail.utcTime")}
+              value={formatUtc(bar.timestamp)}
+              raw
+            />
           </div>
         ) : (
-          <p className="emptyState">No completed replay Bars received yet.</p>
+          <p className="emptyState">{t("detail.noBars")}</p>
         )}
       </section>
       <section className="panel">
         <div className="panelHeader">
           <div>
-            <p className="kicker">AUTHORITATIVE PORTFOLIO</p>
-            <h2>Paper portfolio</h2>
+            <p className="kicker">{t("detail.portfolioKicker")}</p>
+            <h2>{t("detail.portfolio")}</h2>
           </div>
         </div>
         {portfolio ? (
           <div className="metricsGrid">
-            <Metric label="Cash" value={portfolio.cash} />
-            <Metric label="Market value" value={portfolio.market_value} />
-            <Metric label="Equity" value={portfolio.equity} />
-            <Metric label="Realized PnL" value={portfolio.realized_pnl} />
-            <Metric label="Unrealized PnL" value={portfolio.unrealized_pnl} />
+            <Metric label={t("detail.cash")} value={portfolio.cash} />
             <Metric
-              label="Commission"
+              label={t("detail.marketValue")}
+              value={portfolio.market_value}
+            />
+            <Metric label={t("detail.equity")} value={portfolio.equity} />
+            <Metric
+              label={t("detail.realizedPnl")}
+              value={portfolio.realized_pnl}
+            />
+            <Metric
+              label={t("detail.unrealizedPnl")}
+              value={portfolio.unrealized_pnl}
+            />
+            <Metric
+              label={t("detail.commission")}
               value={portfolio.cumulative_commission}
             />
           </div>
         ) : (
-          <p className="emptyState">
-            Portfolio initializes on the first completed Bar.
-          </p>
+          <p className="emptyState">{t("detail.noPortfolio")}</p>
         )}
       </section>
       <PaperTable
-        title="Signals"
-        empty="No signals emitted."
-        headings={["UTC time", "Strategy", "Symbol", "Signal"]}
+        title={t("detail.signals")}
+        empty={t("detail.noSignals")}
+        headings={[
+          t("detail.utcTime"),
+          t("detail.strategy"),
+          t("createPage.symbol"),
+          t("detail.signal"),
+        ]}
         rows={snapshot.signals.map((item) => [
           formatUtc(item.timestamp),
           item.strategy_id,
@@ -160,20 +179,31 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         ])}
       />
       <PaperTable
-        title="Risk decisions"
-        empty="No risk decisions recorded."
-        headings={["Proposal", "Decision", "Reason", "Message"]}
+        title={t("detail.riskDecisions")}
+        empty={t("detail.noRiskDecisions")}
+        headings={[
+          t("detail.proposal"),
+          t("detail.decision"),
+          t("detail.reason"),
+          t("detail.message"),
+        ]}
         rows={snapshot.risk_decisions.map((item) => [
           shortId(item.proposal_id),
-          item.approved ? "APPROVED" : "RISK REJECTED",
+          item.approved ? t("detail.approved") : t("detail.riskRejected"),
           item.reason_code,
           item.message,
         ])}
       />
       <PaperTable
-        title="Paper orders"
-        empty="No simulated orders recorded."
-        headings={["Order", "Side / type", "Quantity", "Status", "UTC time"]}
+        title={t("detail.orders")}
+        empty={t("detail.noOrders")}
+        headings={[
+          t("detail.order"),
+          t("detail.sideType"),
+          t("detail.quantity"),
+          t("detail.status"),
+          t("detail.utcTime"),
+        ]}
         rows={snapshot.orders.map((item) => [
           shortId(item.order_id),
           `${item.side} / ${item.order_type}`,
@@ -183,15 +213,15 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         ])}
       />
       <PaperTable
-        title="Paper fills"
-        empty="No simulated fills recorded."
+        title={t("detail.fills")}
+        empty={t("detail.noFills")}
         headings={[
-          "Order",
-          "Side",
-          "Quantity",
-          "Price",
-          "Commission",
-          "UTC time",
+          t("detail.order"),
+          t("detail.side"),
+          t("detail.quantity"),
+          t("detail.price"),
+          t("detail.commission"),
+          t("detail.utcTime"),
         ]}
         rows={snapshot.fills.map((item) => [
           shortId(item.order_id),

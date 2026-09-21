@@ -37,7 +37,7 @@ export function PaperSessionsPage() {
           <h2 id="paper-sessions-title">{t("paper:persisted")}</h2>
         </div>
         {sessions.loading && <LoadingPanel label={t("paper:loading")} />}
-        {sessions.error && <ErrorPanel message={sessions.error} />}
+        {sessions.error && <ErrorPanel message={t("paper:requestError")} />}
         {sessions.data?.items.length === 0 && (
           <EmptyState>{t("paper:empty")}</EmptyState>
         )}
@@ -65,7 +65,7 @@ export function PaperSessionsPage() {
                         {shortId(item.session_id)}
                       </Link>
                     </td>
-                    <td>{item.strategy_type.replaceAll("_", " ")}</td>
+                    <td>{t(`paper:strategies.${item.strategy_type}`)}</td>
                     <td>
                       {item.provider_type} / {item.dataset_id}
                     </td>

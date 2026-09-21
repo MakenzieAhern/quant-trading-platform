@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   PAPER_WS_BASE_URL,
@@ -83,6 +84,7 @@ export function applyPaperEvent(
 }
 
 export function usePaperStream(sessionId: string) {
+  const { t } = useTranslation("paper");
   const [snapshot, setSnapshot] = useState<PaperSnapshot | null>(null);
   const [connection, setConnection] = useState<PaperConnection>("connecting");
   const [error, setError] = useState<{
@@ -121,15 +123,12 @@ export function usePaperStream(sessionId: string) {
           setConnection(terminal ? "closed" : "connected");
           if (terminal) socket?.close();
         })
-        .catch((reason: unknown) => {
+        .catch(() => {
           if (!active || controller.signal.aborted) return;
           hydrating = false;
           setError({
             sessionId,
-            message:
-              reason instanceof Error
-                ? reason.message
-                : "Unable to hydrate paper session.",
+            message: t("detail.hydrateError"),
           });
         });
     };
@@ -181,7 +180,7 @@ export function usePaperStream(sessionId: string) {
         } catch {
           setError({
             sessionId,
-            message: "A malformed paper stream event was rejected.",
+            message: t("detail.malformedEvent"),
           });
           socket?.close();
         }
@@ -207,7 +206,7 @@ export function usePaperStream(sessionId: string) {
       if (retry !== undefined) window.clearTimeout(retry);
       socket?.close();
     };
-  }, [sessionId]);
+  }, [sessionId, t]);
 
   return {
     snapshot: snapshot?.session.session_id === sessionId ? snapshot : null,
