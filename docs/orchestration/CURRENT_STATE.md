@@ -1,5 +1,25 @@
 # Current state
 
+## R8 Official OOS complete exactly once — 2026-09-21
+
+Frozen S4 ran once on 2022-01-01 through 2025-12-31 under immutable claim
+`9493f89cfbc93514aa3629da04d9410627954aabb026e422c8046a9d7bb407a5`.
+Result / result-file / receipt-file SHA-256 are
+`ccf5bd2f82f145c9d14bb6ffb912bf035d276b46b8056883b8a18a61a2d92e8c`,
+`bdf36f33906ea6ab27343c3c86bd401f9f60a84f209a4a33e92174fc59d208e8`, and
+`75a1bb486fae1b59836cbce2a417055320f629ae32203f93b6800d1bc8376e98`.
+The OOS lock is consumed and a second official run is prohibited.
+
+S4 total return `0.76%`, CAGR `0.20%`, Sharpe `0.067`, Sortino `0.089`, max
+drawdown `-15.70%`, Calmar `0.013`, win rate `45.45%`, profit factor `1.213`,
+turnover `4.230`, and transaction costs `262,132.74`. CSI300 returned `-5.85%`;
+S4 excess return was `6.61%` with information ratio `0.035`. This is weak positive
+performance, not robust profitability evidence. The immutable report includes
+969 equity/drawdown observations, 48 monthly returns, 717 rolling observations,
+48 rebalance/holdings snapshots and 88 fills.
+
+R9 Research Edition is active. No strategy retuning is permitted.
+
 ## R7 Validation complete / Gate C PASS — 2026-09-21
 
 The frozen S2-S4 candidates each ran once on 2018-01-01 through 2021-12-31;

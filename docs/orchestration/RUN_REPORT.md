@@ -1,5 +1,22 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-21 R8 Official OOS complete exactly once
+
+- run / period: `OFFICIAL_OOS_V1` / 2022-01-01..2025-12-31
+- strategy: S4 `cn_a_cross_sectional_momentum_low_vol_v1`
+- claim / result SHA-256: `9493f89cfbc93514aa3629da04d9410627954aabb026e422c8046a9d7bb407a5` / `ccf5bd2f82f145c9d14bb6ffb912bf035d276b46b8056883b8a18a61a2d92e8c`
+- report record / file SHA-256: `600292a13a98b5d9fe47d7d95f48f0c2e02a2a513eecd5e4174bcbbe4506b963` / `be87b2a84cc20a90e7b5de73697264bba247bafe316acad1368ee9824854ae50`
+- total return / CAGR: 0.76% / 0.20%
+- Sharpe / Sortino: 0.067 / 0.089
+- max drawdown / Calmar: -15.70% / 0.013
+- win rate / profit factor: 45.45% / 1.213
+- turnover / transaction cost: 4.230 / 262,132.74
+- CSI300 / excess / information ratio: -5.85% / 6.61% / 0.035
+- conclusion: weak positive return; no robust profitability claim
+- official OOS runs: 1 / 1; second run prohibited
+- current stage: R9 Research Edition
+- PR #12: OPEN, UNMERGED
+
 ## 2026-09-21 R7 Validation complete / Gate C PASS
 
 - period: 2018-01-01..2021-12-31

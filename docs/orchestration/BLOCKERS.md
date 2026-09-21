@@ -1,5 +1,13 @@
 # Blockers
 
+## Current R9 status — 2026-09-21
+
+No research blocker is active. Official OOS completed exactly once and its lock
+is consumed. R9 may build the bilingual presentation and reproducibility layer
+from immutable artifacts; strategy retuning and a second OOS run are prohibited.
+Docker/WSL integration remains a deferred final-QA blocker for database-backed
+tests and the eventual release gate.
+
 ## Current R8 status — 2026-09-21
 
 No research or methodology blocker is active. R7 is complete, no candidate

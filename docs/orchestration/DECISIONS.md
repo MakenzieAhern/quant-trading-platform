@@ -1,5 +1,14 @@
 # Decisions
 
+## 2026-09-21 — retain the single Official OOS result without retuning
+
+The frozen S4 strategy completed its only Official OOS run. Retain the original
+result: +0.76% total return, +6.61% excess versus a -5.85% CSI300, but Sharpe only
+0.067 and Validation previously failed to establish robust alpha. Describe this
+as weak positive historical performance, not proven profitability. Consume the
+OOS authorization, prohibit a second official run, and continue only product,
+documentation and paper-trading work with the unchanged strategy.
+
 ## 2026-09-21 — execute pre-authorized Gate C with unchanged S4 fallback
 
 Validation completed once per frozen candidate and no Official OOS result was

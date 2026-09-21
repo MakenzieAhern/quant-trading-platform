@@ -1,11 +1,26 @@
 {
   "release": "v1.1",
-  "oos_authorized": true,
+  "oos_authorized": false,
   "authorization_evidence": ".research/freezes/frozen-strategy-spec-v1.json",
   "methodology_frozen": true,
   "dataset_sha256": "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e",
   "strategy_version": "cn_a_cross_sectional_momentum_low_vol_v1",
   "methodology_sha256": "91b08cd9190f49dcbc3f8862f00a12b1e6e2db0cc767aa522ac731fb90c7936b",
-  "official_oos_runs": [],
+  "official_oos_runs": [
+    {
+      "run_id": "OFFICIAL_OOS_V1",
+      "status": "COMPLETE",
+      "period": [
+        "2022-01-01",
+        "2025-12-31"
+      ],
+      "claim_sha256": "9493f89cfbc93514aa3629da04d9410627954aabb026e422c8046a9d7bb407a5",
+      "result_sha256": "ccf5bd2f82f145c9d14bb6ffb912bf035d276b46b8056883b8a18a61a2d92e8c",
+      "result_file_sha256": "bdf36f33906ea6ab27343c3c86bd401f9f60a84f209a4a33e92174fc59d208e8",
+      "receipt_file_sha256": "75a1bb486fae1b59836cbce2a417055320f629ae32203f93b6800d1bc8376e98",
+      "report_sha256": "600292a13a98b5d9fe47d7d95f48f0c2e02a2a513eecd5e4174bcbbe4506b963",
+      "report_file_sha256": "be87b2a84cc20a90e7b5de73697264bba247bafe316acad1368ee9824854ae50"
+    }
+  ],
   "policy": "Gate C was conditionally pre-authorized and all conditions passed. Execute the frozen strategy exactly once; never overwrite or retune after results."
 }

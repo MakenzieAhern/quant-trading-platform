@@ -1,5 +1,15 @@
 # v1.1 controller roadmap
 
+## R8 Official OOS complete / R9 Research Edition active — 2026-09-21
+
+The exactly-once Official OOS claim was consumed for frozen S4 on 2022-2025.
+Result SHA is `ccf5bd2f82f145c9d14bb6ffb912bf035d276b46b8056883b8a18a61a2d92e8c`;
+the OOS report SHA is
+`600292a13a98b5d9fe47d7d95f48f0c2e02a2a513eecd5e4174bcbbe4506b963`.
+The run produced weak positive absolute return and positive excess versus a
+negative CSI300, not evidence of robust profitability. The OOS lock is consumed;
+never rerun or retune. Continue with the bilingual research presentation layer.
+
 ## R7 complete / Gate C frozen / R8 Official OOS ready — 2026-09-21
 
 Every frozen candidate ran once on Validation 2018-2021. No candidate passed all
