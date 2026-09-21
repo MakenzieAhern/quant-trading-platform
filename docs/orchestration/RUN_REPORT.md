@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-09-22 R9/R10 implementation complete / final QA active
+
+- R9 bilingual Research Edition: COMPLETE
+- R10 frozen A-share Paper implementation: COMPLETE; final DB/browser QA pending
+- A-share Paper dataset: `CN_A_SIMULATED_PAPER_FIXTURE_V1` (synthetic 2030, not research evidence)
+- execution path: frozen strategy -> RiskEngine -> OMS -> simulated execution -> Portfolio
+- Official OOS rerun/replay: NO; consumed lock unchanged
+- backend focused local checks: 63 PASS after CI fixes
+- frontend local checks: 80 PASS; TypeScript/ESLint/Prettier/build PASS
+- dependency audits: npm 0 known vulnerabilities; Python lock 0 known vulnerabilities
+- CI: run `35624643975` PASS at `e2ece4b`; backend 845, frontend 80, Compose PASS
+- PR #12: OPEN, CLEAN, MERGEABLE, UNMERGED
+- Docker final QA: BLOCKED; Linux engine pipe and Ubuntu integration absent
+- current stage: FINAL_QA
+- release/tag: NOT CREATED
+
 ## 2026-09-21 R8 Official OOS complete exactly once
 
 - run / period: `OFFICIAL_OOS_V1` / 2022-01-01..2025-12-31

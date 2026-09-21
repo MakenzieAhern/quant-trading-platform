@@ -1,5 +1,18 @@
 # Blockers
 
+## Current final-QA blocker — 2026-09-22
+
+`DOCKER_DESKTOP_LINUX_ENGINE_PIPE_MISSING_AND_WSL_INTEGRATION_ABSENT` is the single remaining
+release blocker. Windows Docker CLI 29.7.2 and Compose 5.5.0 exist, but the Linux-engine named pipe
+is missing. Ubuntu currently has neither the `docker` command nor the Docker Desktop proxy socket.
+
+R9 is complete and R10 implementation plus offline validation are complete. CI `35624643975` is
+green (845 backend / 80 frontend tests), PR #12 is clean and mergeable, and dependency audits are
+clean. Safe independent work is exhausted. Recover Docker Desktop/Ubuntu integration without a
+factory reset or deletion of images, volumes, PostgreSQL, Redis or project files; then complete
+database-backed integration, service/restart durability and Chrome QA. PR #12, tag and release
+remain intentionally pending.
+
 ## Current R9 status — 2026-09-21
 
 No research blocker is active. Official OOS completed exactly once and its lock

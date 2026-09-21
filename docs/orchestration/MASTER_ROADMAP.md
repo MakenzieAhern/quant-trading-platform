@@ -1,5 +1,18 @@
 # v1.1 controller roadmap
 
+## R9 complete / R10 implementation complete / final QA active — 2026-09-22
+
+The bilingual Research Edition, immutable formal-study ledger and recruiter-facing documentation
+are complete. The frozen A-share strategy is integrated into the local Paper runtime using a
+deterministic synthetic 2030 scenario and the reviewed RiskEngine, OMS, simulated execution and
+Portfolio path. The scenario is product validation only and never accesses Official OOS.
+
+CI run `35624643975` passes at `e2ece4b` with 845 backend and 80 frontend tests plus lint, strict
+types, production build and Compose validation. npm and Python dependency audits report zero known
+vulnerabilities after the cryptography lock update. Final release QA remains gated by the local
+Docker Desktop Linux engine pipe and missing Ubuntu WSL integration; recover them non-destructively,
+then run database publication/integration, restart durability and Chrome QA before merging PR #12.
+
 ## R8 Official OOS complete / R9 Research Edition active — 2026-09-21
 
 The exactly-once Official OOS claim was consumed for frozen S4 on 2022-2025.

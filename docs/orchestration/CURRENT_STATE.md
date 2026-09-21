@@ -1,5 +1,26 @@
 # Current state
 
+## R9 complete / R10 implementation complete / final QA blocked by Docker — 2026-09-22
+
+The bilingual Research Edition and all immutable Development, Validation and Official OOS views,
+lineage and limitations are implemented. The frozen A-share strategy now runs incrementally in the
+local Paper product over `CN_A_SIMULATED_PAPER_FIXTURE_V1`, a deterministic 2030 synthetic scenario
+that is explicitly not research evidence. It reuses RiskEngine, OMS, simulated execution,
+Portfolio accounting, durable REST snapshots and bounded WebSocket delivery. No live broker,
+credentials, real-money path, OOS replay or strategy retuning was added.
+
+CI `35624643975` passes at `e2ece4b`: 845 backend tests, 80 frontend tests, Ruff, format, strict
+mypy, ESLint, TypeScript, production build and all Compose configuration checks. npm production and
+Python lock dependency audits report zero known vulnerabilities. PR #12 is OPEN, CLEAN and
+MERGEABLE, but must not merge before final local QA.
+
+The remaining final-release blocker is local Docker availability. Windows Docker CLI 29.7.2 and
+Compose 5.5.0 are installed, but the `dockerDesktopLinuxEngine` named pipe is absent; Ubuntu has no
+`docker` command and its Docker Desktop proxy socket is absent. Do not factory-reset or delete
+images, volumes, PostgreSQL, Redis or project data. After non-destructive recovery, publish the
+formal ledger to PostgreSQL, run the database-backed integration/restart checks and complete real
+Chrome bilingual/research/Paper/WebSocket QA.
+
 ## R8 Official OOS complete exactly once — 2026-09-21
 
 Frozen S4 ran once on 2022-01-01 through 2025-12-31 under immutable claim
