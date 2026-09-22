@@ -151,6 +151,10 @@ const explanations: Record<string, [string, string]> = {
   ],
   APPROVED: ["Approved by the risk checks", "通过风险检查"],
   ALLOWED: ["Approved by the risk checks", "通过风险检查"],
+  ELIGIBLE_SIMULATION_ASSUMPTION: [
+    "Passed conservative daily-bar simulation execution checks. This is a simulation assumption, not proof of a real market fill.",
+    "通过保守日线模拟执行检查。这属于模拟假设，不是真实市场成交的证明。",
+  ],
   MISSING_OBSERVATION: [
     "No eligible price observation was available",
     "缺少可用价格记录",
@@ -239,7 +243,7 @@ export function explainExperimentCode(code: string, language: string): string {
   return (
     explanations[code]?.[chinese ? 1 : 0] ??
     (chinese
-      ? "此记录包含额外的执行限制；请展开技术详情查看原始原因。"
-      : "An additional execution constraint applies; expand technical details for the original reason.")
+      ? "此代码尚无已登记的通俗解释；请展开技术详情查看原始代码。"
+      : "No plain-language explanation is registered for this code; expand technical details to inspect it.")
   );
 }

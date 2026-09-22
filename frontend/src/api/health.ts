@@ -1,12 +1,8 @@
 import type { HealthResponse } from "../types/health";
-import { API_BASE_URL } from "./config";
+import { apiRequest } from "./client";
 
 export async function getHealth(signal?: AbortSignal): Promise<HealthResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/health`, { signal });
-  if (!response.ok) {
-    throw new Error(`Health request failed with HTTP ${response.status}`);
-  }
-  const payload: unknown = await response.json();
+  const payload = await apiRequest<unknown>("/api/health", {}, signal);
   if (
     typeof payload !== "object" ||
     payload === null ||

@@ -2,14 +2,19 @@ import { useEffect, useState } from "react";
 import { Link } from "../../components/Link";
 import { Pagination } from "../../components/Pagination";
 import { formatUtc } from "../../utils/format";
+import { navigate } from "../../utils/navigation";
 import { experimentApi } from "./api";
 import { useExperimentCopy } from "./copy";
+import { comparisonUrl } from "./comparison";
+import { useComparisonCopy } from "./comparisonCopy";
 import { isActiveExperiment } from "./useExperiment";
 import type { Experiment, Page } from "./types";
 import "./experiments.css";
 
 export function ExperimentsPage() {
   const c = useExperimentCopy();
+  const u = useComparisonCopy();
+  const [selected, setSelected] = useState<{ id: string; name: string }[]>([]);
   const [offset, setOffset] = useState(0);
   const [revision, setRevision] = useState(0);
   const [jobs, setJobs] = useState<{
@@ -60,6 +65,43 @@ export function ExperimentsPage() {
           </button>
         </div>
       </header>
+      <section
+        className="experimentPanel experimentCompareSelection"
+        aria-label={u.compare}
+      >
+        <div>
+          <h2>{u.compare}</h2>
+          <p className="experimentHelp">{u.selectHelp}</p>
+          <p role="status">
+            {u.selected}: {selected.length} / 3
+          </p>
+        </div>
+        <div className="experimentActions">
+          {selected.map((item) => (
+            <button
+              className="button secondary"
+              key={item.id}
+              aria-label={`${u.remove} ${item.name}`}
+              onClick={() =>
+                setSelected((items) =>
+                  items.filter((entry) => entry.id !== item.id),
+                )
+              }
+            >
+              {item.name} ×
+            </button>
+          ))}
+          <button
+            className="button"
+            disabled={selected.length < 2}
+            onClick={() =>
+              navigate(comparisonUrl(selected.map((item) => item.id)))
+            }
+          >
+            {u.compare}
+          </button>
+        </div>
+      </section>
       {!jobs.data && !jobs.error && <p role="status">{c.loading}</p>}
       {jobs.error && (
         <div className="experimentNotice" role="alert">
@@ -105,6 +147,29 @@ export function ExperimentsPage() {
                     </p>
                   </div>
                   <div className="experimentListAction">
+                    <label className="experimentCheck">
+                      <input
+                        type="checkbox"
+                        aria-label={`${u.select}: ${job.name}`}
+                        checked={selected.some(
+                          (item) => item.id === job.job_id,
+                        )}
+                        disabled={
+                          job.status !== "SUCCEEDED" ||
+                          !job.result_available ||
+                          (selected.length === 3 &&
+                            !selected.some((item) => item.id === job.job_id))
+                        }
+                        onChange={(event) =>
+                          setSelected((items) =>
+                            event.target.checked
+                              ? [...items, { id: job.job_id, name: job.name }]
+                              : items.filter((item) => item.id !== job.job_id),
+                          )
+                        }
+                      />
+                      {u.select}
+                    </label>
                     <span
                       className={`experimentStatus experimentStatus--${job.status.toLowerCase()}`}
                     >

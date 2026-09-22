@@ -121,6 +121,7 @@ export interface ExperimentTrade {
   price: string;
   transaction_cost: string;
   timestamp: string;
+  trading_date?: string;
 }
 export interface ExperimentDecision {
   sequence: number;
@@ -130,10 +131,41 @@ export interface ExperimentDecision {
   reason_code: string;
   message: string;
   timestamp: string;
+  trading_date?: string;
+}
+export interface DateRange {
+  start_date?: string;
+  end_date?: string;
+}
+export type ExperimentCollection =
+  "equity" | "trades" | "holdings" | "decisions";
+export interface ExperimentHolding {
+  sequence: number;
+  trading_date: string;
+  timestamp: string;
+  cash: string;
+  equity: string;
+  market_value: string;
+  realized_pnl: string;
+  unrealized_pnl: string;
+  cumulative_commission: string;
+  pending_corporate_action_value: string;
+  corporate_action_realized_pnl?: string | null;
+  total_pnl?: string | null;
+  positions: {
+    security_id: string;
+    quantity: string;
+    average_price: string;
+    market_price: string;
+    market_value: string;
+    weight: string | null;
+  }[];
 }
 export interface Page<T> {
   items: T[];
   total: number;
   limit: number;
   offset: number;
+  availability?: "AVAILABLE" | "NOT_RECORDED" | "NOT_READY";
+  reason_code?: string | null;
 }

@@ -3,20 +3,122 @@ import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
-import { experimentApi } from "./api";
+import { experimentApi, tradingDate } from "./api";
 import { useExperimentCopy } from "./copy";
 import { explainExperimentCode } from "./codes";
-import type { ExperimentEquity } from "./types";
+import { useComparisonCopy } from "./comparisonCopy";
+import { ExperimentExports } from "./ExperimentExports";
+import { ExperimentHoldings } from "./ExperimentHoldings";
+import type { DateRange, ExperimentEquity } from "./types";
 
 export function ExperimentCollections({ jobId }: { jobId: string }) {
   const c = useExperimentCopy();
+  const u = useComparisonCopy();
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
+  const [range, setRange] = useState<DateRange>({});
+  const [invalid, setInvalid] = useState(false);
+  const [focused, setFocused] = useState("");
+  const filter = focused ? { start_date: focused, end_date: focused } : range;
+  return (
+    <>
+      <section className="experimentPanel">
+        <h2>{u.filterTitle}</h2>
+        <p className="experimentHelp">{u.rangeHelp}</p>
+        <form
+          className="experimentActions"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (start && end && start > end) {
+              setInvalid(true);
+              return;
+            }
+            setInvalid(false);
+            setFocused("");
+            setRange({
+              ...(start ? { start_date: start } : {}),
+              ...(end ? { end_date: end } : {}),
+            });
+          }}
+        >
+          <label>
+            {c.start}
+            <input
+              type="date"
+              value={start}
+              onChange={(event) => setStart(event.target.value)}
+            />
+          </label>
+          <label>
+            {c.end}
+            <input
+              type="date"
+              value={end}
+              onChange={(event) => setEnd(event.target.value)}
+            />
+          </label>
+          <button className="button secondary" type="submit">
+            {u.apply}
+          </button>
+          <button
+            className="button secondary"
+            type="button"
+            onClick={() => {
+              setStart("");
+              setEnd("");
+              setRange({});
+              setFocused("");
+              setInvalid(false);
+            }}
+          >
+            {u.reset}
+          </button>
+        </form>
+        {invalid && <p role="alert">{u.invalidRange}</p>}
+        {focused && (
+          <div className="experimentActions">
+            <p role="status">
+              {u.focusedDate}: <strong>{focused}</strong> · Asia/Shanghai
+            </p>
+            <button className="button secondary" onClick={() => setFocused("")}>
+              {u.clearFocus}
+            </button>
+          </div>
+        )}
+      </section>
+      <FilteredCollections
+        key={`${jobId}-${filter.start_date}-${filter.end_date}`}
+        jobId={jobId}
+        range={filter}
+        focused={focused}
+        onFocusDate={setFocused}
+      />
+      <ExperimentExports jobId={jobId} range={filter} />
+    </>
+  );
+}
+
+function FilteredCollections({
+  jobId,
+  range,
+  focused,
+  onFocusDate,
+}: {
+  jobId: string;
+  range: DateRange;
+  focused: string;
+  onFocusDate: (date: string) => void;
+}) {
+  const c = useExperimentCopy();
+  const u = useComparisonCopy();
   const [offset, setOffset] = useState(0);
   const [revision, setRevision] = useState(0);
-  const [showTrades, setShowTrades] = useState(false);
+  const [showTrades, setShowTrades] = useState(Boolean(focused));
   const [showDecisions, setShowDecisions] = useState(false);
+  const [showHoldings, setShowHoldings] = useState(Boolean(focused));
   const equity = useApiResource(
-    (signal) => experimentApi.equity(jobId, signal, offset),
-    [jobId, offset, revision],
+    (signal) => experimentApi.equity(jobId, signal, offset, range),
+    [jobId, offset, range.start_date, range.end_date, revision],
   );
   return (
     <>
@@ -40,6 +142,7 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             <EquityDisplay
               key={`${jobId}-${offset}`}
               points={equity.data.items}
+              onFocusDate={onFocusDate}
             />
             <Pagination
               offset={equity.data.offset}
@@ -52,28 +155,50 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
       </section>
       <details
         className="experimentPanel"
+        open={showTrades}
         onToggle={(event) => setShowTrades(event.currentTarget.open)}
       >
         <summary>{c.trades}</summary>
-        {showTrades && <TradeCollection jobId={jobId} />}
+        {showTrades && (
+          <TradeCollection
+            jobId={jobId}
+            range={range}
+            onFocusDate={onFocusDate}
+          />
+        )}
+      </details>
+      <details
+        className="experimentPanel"
+        open={showHoldings}
+        onToggle={(event) => setShowHoldings(event.currentTarget.open)}
+      >
+        <summary>{u.holdings}</summary>
+        {showHoldings && <ExperimentHoldings jobId={jobId} range={range} />}
       </details>
       <details
         className="experimentPanel"
         onToggle={(event) => setShowDecisions(event.currentTarget.open)}
       >
         <summary>{c.decisions}</summary>
-        {showDecisions && <DecisionCollection jobId={jobId} />}
+        {showDecisions && <DecisionCollection jobId={jobId} range={range} />}
       </details>
     </>
   );
 }
 
-function EquityDisplay({ points }: { points: ExperimentEquity[] }) {
+function EquityDisplay({
+  points,
+  onFocusDate,
+}: {
+  points: ExperimentEquity[];
+  onFocusDate: (date: string) => void;
+}) {
   const c = useExperimentCopy();
+  const u = useComparisonCopy();
   const id = useId();
   const [showBenchmark, setShowBenchmark] = useState(true);
   const [selected, setSelected] = useState(points.at(-1)?.trading_date ?? "");
-  if (!points.length) return <p>{c.emptyCollection}</p>;
+  if (!points.length) return <p>{u.filteredEmpty}</p>;
   const point = points.find((item) => item.trading_date === selected);
   // Only SVG positions use Number. Financial labels and tables retain server strings.
   const values = points.flatMap((item) => [
@@ -142,6 +267,13 @@ function EquityDisplay({ points }: { points: ExperimentEquity[] }) {
             ))}
           </select>
         </label>
+        <button
+          className="button secondary"
+          disabled={!selected}
+          onClick={() => onFocusDate(selected)}
+        >
+          {u.inspectActivity}
+        </button>
       </div>
       <figure className="experimentChart">
         <svg
@@ -197,7 +329,7 @@ function EquityDisplay({ points }: { points: ExperimentEquity[] }) {
                   cx={x(index)}
                   cy={y(item.equity)}
                   r="4"
-                  className="experimentChartPoint"
+                  className={`experimentChartPoint${item.trading_date === selected ? " isSelected" : ""}`}
                   onMouseEnter={() => setSelected(item.trading_date)}
                 >
                   <title>
@@ -281,13 +413,22 @@ function EquityDisplay({ points }: { points: ExperimentEquity[] }) {
   );
 }
 
-function TradeCollection({ jobId }: { jobId: string }) {
+function TradeCollection({
+  jobId,
+  range,
+  onFocusDate,
+}: {
+  jobId: string;
+  range: DateRange;
+  onFocusDate: (date: string) => void;
+}) {
   const c = useExperimentCopy();
+  const u = useComparisonCopy();
   const [offset, setOffset] = useState(0);
   const [revision, setRevision] = useState(0);
   const data = useApiResource(
-    (signal) => experimentApi.trades(jobId, signal, offset),
-    [jobId, offset, revision],
+    (signal) => experimentApi.trades(jobId, signal, offset, range),
+    [jobId, offset, range.start_date, range.end_date, revision],
   );
   if (data.loading) return <p role="status">{c.loading}</p>;
   if (data.error)
@@ -307,7 +448,7 @@ function TradeCollection({ jobId }: { jobId: string }) {
     <>
       <p className="experimentHelp">{c.tableScroll}</p>
       {data.data.items.length === 0 ? (
-        <p>{c.emptyCollection}</p>
+        <p>{u.filteredEmpty}</p>
       ) : (
         <div
           className="experimentTableScroll"
@@ -334,7 +475,20 @@ function TradeCollection({ jobId }: { jobId: string }) {
             <tbody>
               {data.data.items.map((item) => (
                 <tr key={item.sequence}>
-                  <td>{formatUtc(item.timestamp)}</td>
+                  <td>
+                    {formatUtc(item.timestamp)}
+                    {tradingDate(item) && (
+                      <>
+                        <br />
+                        <button
+                          className="experimentDateButton"
+                          onClick={() => onFocusDate(tradingDate(item)!)}
+                        >
+                          {u.viewTradeDate}: {tradingDate(item)}
+                        </button>
+                      </>
+                    )}
+                  </td>
                   <td>{item.security_id}</td>
                   <td>
                     {item.side === "BUY"
@@ -362,14 +516,20 @@ function TradeCollection({ jobId }: { jobId: string }) {
   );
 }
 
-function DecisionCollection({ jobId }: { jobId: string }) {
+function DecisionCollection({
+  jobId,
+  range,
+}: {
+  jobId: string;
+  range: DateRange;
+}) {
   const c = useExperimentCopy();
   const { i18n } = useTranslation();
   const [offset, setOffset] = useState(0);
   const [revision, setRevision] = useState(0);
   const data = useApiResource(
-    (signal) => experimentApi.decisions(jobId, signal, offset),
-    [jobId, offset, revision],
+    (signal) => experimentApi.decisions(jobId, signal, offset, range),
+    [jobId, offset, range.start_date, range.end_date, revision],
   );
   if (data.loading) return <p role="status">{c.loading}</p>;
   if (data.error)

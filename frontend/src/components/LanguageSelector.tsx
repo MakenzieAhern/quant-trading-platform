@@ -7,7 +7,6 @@ export function LanguageSelector() {
   const change = (locale: SupportedLocale) => {
     persistLocale(locale);
     void i18n.changeLanguage(locale);
-    document.documentElement.lang = locale;
   };
   return (
     <div className="languageSelector" role="group" aria-label={t("language")}>

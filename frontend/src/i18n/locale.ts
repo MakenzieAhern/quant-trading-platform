@@ -18,12 +18,14 @@ export function normalizeLocale(
 }
 
 export function resolveInitialLocale(): SupportedLocale {
-  const stored = normalizeLocale(
-    window.localStorage.getItem(LOCALE_STORAGE_KEY),
-  );
+  const stored = normalizeLocale(readPresentationSetting(LOCALE_STORAGE_KEY));
   return stored ?? normalizeLocale(window.navigator.language) ?? "en-US";
 }
 
 export function persistLocale(locale: SupportedLocale): void {
-  window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+  writePresentationSetting(LOCALE_STORAGE_KEY, locale);
 }
+import {
+  readPresentationSetting,
+  writePresentationSetting,
+} from "../utils/presentationStorage";

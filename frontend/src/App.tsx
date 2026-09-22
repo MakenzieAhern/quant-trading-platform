@@ -22,6 +22,8 @@ import {
 import { CreateExperimentPage } from "./product/experiments/CreateExperimentPage";
 import { ExperimentsPage } from "./product/experiments/ExperimentsPage";
 import { ExperimentDetailPage } from "./product/experiments/ExperimentDetailPage";
+import { ExperimentComparePage } from "./product/experiments/ExperimentComparePage";
+import { ProductDataProvider } from "./product/ProductDataProvider";
 
 export function App() {
   const pathname = usePathname();
@@ -54,8 +56,15 @@ export function App() {
   else if (pathname === "/help") page = <HelpPage />;
   else if (pathname === "/settings") page = <SettingsPage />;
   else if (pathname === "/research/new") page = <CreateExperimentPage />;
-  else if (pathname === "/experiments" || pathname === "/experiments/") page = <ExperimentsPage />;
-  else if (/^\/experiments\/[0-9a-f-]{36}\/?$/i.test(pathname)) page = <ExperimentDetailPage jobId={pathname.split("/")[2]} />;
+  else if (
+    pathname === "/experiments/compare" ||
+    pathname === "/experiments/compare/"
+  )
+    page = <ExperimentComparePage />;
+  else if (pathname === "/experiments" || pathname === "/experiments/")
+    page = <ExperimentsPage />;
+  else if (/^\/experiments\/[0-9a-f-]{36}\/?$/i.test(pathname))
+    page = <ExperimentDetailPage jobId={pathname.split("/")[2]} />;
   else if (pathname === "/backtests" || pathname === "/backtests/")
     page = <BacktestHistoryPage />;
   else if (pathname === "/backtests/new" || pathname === "/backtests/new/")
@@ -94,5 +103,9 @@ export function App() {
         strategyId={decodeURIComponent(researchStrategyMatch[1])}
       />
     );
-  return <AppShell>{page}</AppShell>;
+  return (
+    <ProductDataProvider>
+      <AppShell>{page}</AppShell>
+    </ProductDataProvider>
+  );
 }

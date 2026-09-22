@@ -9,6 +9,7 @@ import {
   isPositiveDecimal,
 } from "../../utils/format";
 import { navigate, useNavigationGuard } from "../../utils/navigation";
+import { usePageDataContext } from "../dataContext";
 import { experimentApi } from "./api";
 import { useExperimentCopy } from "./copy";
 import {
@@ -174,6 +175,10 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     (item) => item.dataset_id === form.dataset_id,
   );
   const chinese = i18n.language.startsWith("zh");
+  usePageDataContext(
+    dataset?.mode ?? null,
+    form.end_date || dataset?.coverage_end || null,
+  );
   const nameOfStrategy = strategy
     ? chinese
       ? strategy.name_zh

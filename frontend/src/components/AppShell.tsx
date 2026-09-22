@@ -5,22 +5,45 @@ import { usePathname } from "../utils/navigation";
 import { useProductCopy } from "../product/copy";
 import { usePreferences } from "../product/preferences";
 import { CommandPalette } from "../product/CommandPalette";
+import { experimentApi } from "../product/experiments/api";
+import { useCurrentPageData } from "../product/dataContext";
 import { Link } from "./Link";
 import { LanguageSelector } from "./LanguageSelector";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const copy = useProductCopy();
   const pathname = usePathname();
-  const { preferences, update } = usePreferences();
+  const { preferences, update, unsaved } = usePreferences();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const sidebar = useRef<HTMLElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const [refresh, setRefresh] = useState(0);
+  const lastCheck = useRef(0);
+  const pageData = useCurrentPageData();
   const closeMenu = () => {
     setMenuOpen(false);
-    menuButton.current?.focus();
+    requestAnimationFrame(() => menuButton.current?.focus());
   };
-  const health = useApiResource((signal) => getHealth(signal), []);
+  const health = useApiResource(
+    async (signal) => {
+      lastCheck.current = Date.now();
+      const result = await getHealth(signal);
+      return { ...result, checkedAt: new Date().toISOString() };
+    },
+    [refresh],
+  );
+  const data = useApiResource(
+    (signal) => experimentApi.capabilities(signal),
+    [refresh],
+  );
+  const available =
+    data.data?.datasets.find(
+      (item) => item.mode === "historical_exploration" && item.available,
+    ) ?? data.data?.datasets.find((item) => item.available);
+  const displayedData =
+    pageData ??
+    (available ? { mode: available.mode, asOf: available.as_of } : null);
   const links = [
     { href: "/", label: copy.home, icon: "◫" },
     { href: "/strategies", label: copy.strategies, icon: "◇" },
@@ -45,6 +68,25 @@ export function AppShell({ children }: { children: ReactNode }) {
     if (menuOpen) sidebar.current?.querySelector("a")?.focus();
   }, [menuOpen]);
   useEffect(() => {
+    const desktop = window.matchMedia?.("(min-width: 801px)");
+    const leaveMobile = () => {
+      if (desktop?.matches) setMenuOpen(false);
+    };
+    desktop?.addEventListener("change", leaveMobile);
+    return () => desktop?.removeEventListener("change", leaveMobile);
+  }, []);
+  useEffect(() => {
+    const refreshOnFocus = () => {
+      if (
+        document.visibilityState !== "hidden" &&
+        Date.now() - lastCheck.current >= 10_000
+      )
+        setRefresh((value) => value + 1);
+    };
+    window.addEventListener("focus", refreshOnFocus);
+    return () => window.removeEventListener("focus", refreshOnFocus);
+  }, []);
+  useEffect(() => {
     document.getElementById("main-content")?.focus();
   }, [pathname]);
   useEffect(() => {
@@ -54,28 +96,57 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [preferences]);
   useEffect(() => {
     const handle = (event: KeyboardEvent) => {
+      if (sidebar.current?.classList.contains("sidebarOpen")) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeMenu();
+        }
+        if (event.key === "Tab") {
+          const items = sidebar.current.querySelectorAll<HTMLElement>(
+            "a[href], button:not([disabled])",
+          );
+          const first = items[0];
+          const last = items[items.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last?.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first?.focus();
+          }
+        }
+        return;
+      }
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         setSearchOpen((open) => !open);
       }
+    };
+    const closeAfterNavigation = (event: PopStateEvent) => {
       if (
-        event.key === "Escape" &&
-        sidebar.current?.classList.contains("sidebarOpen") &&
-        sidebar.current?.contains(document.activeElement)
+        window.location.pathname !== pathname ||
+        event.state?.quantNavigationApproved
       )
-        closeMenu();
+        setMenuOpen(false);
     };
     window.addEventListener("keydown", handle);
-    return () => window.removeEventListener("keydown", handle);
-  }, []);
+    window.addEventListener("popstate", closeAfterNavigation);
+    return () => {
+      window.removeEventListener("keydown", handle);
+      window.removeEventListener("popstate", closeAfterNavigation);
+    };
+  }, [pathname]);
   return (
     <div className="appShell">
-      <a className="skipLink" href="#main-content">
+      <a className="skipLink" href="#main-content" inert={menuOpen}>
         {copy.skipContent}
       </a>
       <aside
         ref={sidebar}
         className={`sidebar ${menuOpen ? "sidebarOpen" : ""}`}
+        role={menuOpen ? "dialog" : undefined}
+        aria-modal={menuOpen ? true : undefined}
+        aria-label={menuOpen ? copy.navigation : undefined}
       >
         {menuOpen && (
           <button
@@ -86,12 +157,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             ×
           </button>
         )}
-        <Link
-          className="brand"
-          href="/"
-          aria-label={`QUANT ${copy.brand}`}
-          onClick={() => setMenuOpen(false)}
-        >
+        <Link className="brand" href="/" aria-label={`QUANT ${copy.brand}`}>
           <span className="brandMark">Q</span>
           <span>
             QUANT<span className="brandSubtitle">{copy.brand}</span>
@@ -103,7 +169,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             A-SHARE<span>{copy.simulation}</span>
           </span>
         </div>
-        <nav aria-label={copy.navigation} onClick={() => setMenuOpen(false)}>
+        <nav aria-label={copy.navigation}>
           {links.map((item) => (
             <Link
               key={item.href}
@@ -118,7 +184,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
         <div className="sidebarBottom">
-          <nav aria-label={copy.help} onClick={() => setMenuOpen(false)}>
+          <nav aria-label={copy.help}>
             <Link
               href="/help"
               aria-current={pathname === "/help" ? "page" : undefined}
@@ -146,9 +212,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           className="sidebarBackdrop"
           aria-label={copy.close}
           onClick={closeMenu}
+          tabIndex={-1}
         />
       )}
-      <div className="appBody">
+      <div className="appBody" inert={menuOpen}>
         <header className="topbar">
           <button
             ref={menuButton}
@@ -169,9 +236,29 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span>{copy.search}</span>
             <kbd>⌘ K</kbd>
           </button>
+          <Link className="topbarData" href="/data" title={copy.dateZone}>
+            <span>
+              {pageData
+                ? pageData.dateKind === "observed"
+                  ? copy.pageData
+                  : copy.requestedData
+                : copy.catalogue}
+            </span>
+            <strong>
+              {displayedData
+                ? `${displayedData.mode === "synthetic_demo" ? copy.demo : copy.historical} · ${displayedData.asOf ?? copy.notRecorded}`
+                : data.loading
+                  ? copy.loading
+                  : copy.unavailable}
+            </strong>
+          </Link>
           <div className="topbarTools">
-            <span
+            <button
+              type="button"
               className={`serviceState ${health.error ? "serviceOffline" : ""}`}
+              aria-label={copy.refreshStatus}
+              disabled={health.loading}
+              onClick={() => setRefresh((value) => value + 1)}
               title={
                 health.data
                   ? `${health.data.environment} · ${health.data.broker_mode}`
@@ -179,12 +266,19 @@ export function AppShell({ children }: { children: ReactNode }) {
               }
             >
               <i aria-hidden="true" />
-              {health.error
-                ? copy.offline
-                : health.data
-                  ? copy.online
-                  : copy.connecting}
-            </span>
+              <span className="serviceText" role="status">
+                {health.error
+                  ? copy.offline
+                  : health.data
+                    ? copy.online
+                    : copy.connecting}
+              </span>
+              {health.data && (
+                <span className="srOnly">
+                  {copy.checkedAt}: {health.data.checkedAt} UTC
+                </span>
+              )}
+            </button>
             <LanguageSelector />
             <label className="themeControl">
               <span className="srOnly">{copy.theme}</span>
@@ -204,6 +298,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             </label>
           </div>
         </header>
+        {unsaved && pathname !== "/settings" && (
+          <p className="preferenceWarning" role="status">
+            {copy.unsaved}
+          </p>
+        )}
         <main
           id="main-content"
           tabIndex={-1}

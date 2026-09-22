@@ -4,8 +4,10 @@ import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
 import { navigate } from "../../utils/navigation";
+import { usePageDataContext } from "../dataContext";
 import { experimentApi } from "./api";
 import { useExperimentCopy } from "./copy";
+import { useComparisonCopy } from "./comparisonCopy";
 import { explainExperimentCode } from "./codes";
 import { experimentError } from "./errors";
 import { ExperimentCollections } from "./ExperimentCollections";
@@ -21,6 +23,12 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
   const c = useExperimentCopy();
   const { i18n } = useTranslation();
   const job = useExperiment(jobId);
+  const [observedEnd, setObservedEnd] = useState<string | null>(null);
+  usePageDataContext(
+    job.data?.mode ?? null,
+    observedEnd ?? job.data?.configuration.end_date ?? null,
+    observedEnd ? "observed" : "requested",
+  );
   const [action, setAction] = useState<"cancel" | "retry" | null>(null);
   const [actionError, setActionError] = useState<unknown>(null);
   const locked = useRef(false);
@@ -141,7 +149,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
             </div>
           )}
           {data.result_available ? (
-            <ExperimentResults job={data} />
+            <ExperimentResults job={data} onObservedEnd={setObservedEnd} />
           ) : (
             <p className="experimentHelp">{c.resultPending}</p>
           )}
@@ -225,14 +233,26 @@ function JobProgress({ job }: { job: Experiment }) {
   );
 }
 
-function ExperimentResults({ job }: { job: Experiment }) {
+function ExperimentResults({
+  job,
+  onObservedEnd,
+}: {
+  job: Experiment;
+  onObservedEnd: (value: string | null) => void;
+}) {
   const c = useExperimentCopy();
+  const u = useComparisonCopy();
+  const [fullPrecision, setFullPrecision] = useState(false);
+  const places = fullPrecision ? undefined : 2;
   const { i18n } = useTranslation();
   const [revision, setRevision] = useState(0);
   const result = useApiResource(
     (signal) => experimentApi.result(job.job_id, signal),
     [job.job_id, revision],
   );
+  useEffect(() => {
+    onObservedEnd(result.data?.date_end ?? null);
+  }, [onObservedEnd, result.data?.date_end]);
   if (result.loading) return <p role="status">{c.loading}</p>;
   if (result.error)
     return (
@@ -250,17 +270,29 @@ function ExperimentResults({ job }: { job: Experiment }) {
   const data = result.data;
   const signedPercent = (value: string | null) =>
     value !== null && !value.startsWith("-") && /[1-9]/.test(value)
-      ? `+${formatPercent(value)}`
-      : formatPercent(value);
+      ? `+${formatPercent(value, places)}`
+      : formatPercent(value, places);
   return (
     <>
       <section aria-label={c.resultTitle}>
         <h2>{c.resultTitle}</h2>
+        <label className="experimentCheck">
+          <input
+            type="checkbox"
+            checked={fullPrecision}
+            onChange={(event) => setFullPrecision(event.target.checked)}
+          />
+          {u.fullPrecision}
+        </label>
+        <p className="experimentHelp">{u.roundedSummary}</p>
         <dl className="experimentMetrics">
           {[
             [c.return, signedPercent(data.metrics.cumulative_return)],
-            [c.drawdownMetric, formatPercent(data.metrics.maximum_drawdown)],
-            [c.cost, formatDecimal(data.metrics.transaction_costs)],
+            [
+              c.drawdownMetric,
+              formatPercent(data.metrics.maximum_drawdown, places),
+            ],
+            [c.cost, formatDecimal(data.metrics.transaction_costs, places)],
             [c.benchmark, signedPercent(data.metrics.benchmark_return)],
           ].map(([label, value]) => (
             <div className="experimentPanel" key={label}>
@@ -270,7 +302,7 @@ function ExperimentResults({ job }: { job: Experiment }) {
           ))}
         </dl>
         <p className="experimentHelp">
-          {c.capitalEnd}: {formatDecimal(data.metrics.final_equity)} ·{" "}
+          {c.capitalEnd}: {formatDecimal(data.metrics.final_equity, places)} ·{" "}
           {c.excess}: {signedPercent(data.metrics.excess_return)} ·{" "}
           {data.benchmark_id}
         </p>

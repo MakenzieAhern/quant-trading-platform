@@ -1,4 +1,5 @@
-import { apiRequest } from "../../api/client";
+import { ApiError, apiRequest, REQUEST_TIMEOUT_MS } from "../../api/client";
+import { API_BASE_URL } from "../../api/config";
 import { ApiContractError } from "../../api/contracts";
 import type {
   Capabilities,
@@ -8,6 +9,9 @@ import type {
   ExperimentEquity,
   ExperimentResult,
   ExperimentTrade,
+  ExperimentHolding,
+  ExperimentCollection,
+  DateRange,
   Page,
 } from "./types";
 
@@ -184,11 +188,26 @@ function page<T>(value: unknown, parse: (entry: unknown) => T): Page<T> {
   integer(item.total);
   integer(item.limit);
   integer(item.offset);
+  if (
+    item.availability !== undefined &&
+    !["AVAILABLE", "NOT_RECORDED", "NOT_READY"].includes(
+      String(item.availability),
+    )
+  )
+    throw new ApiContractError();
+  if (item.reason_code !== undefined && item.reason_code !== null)
+    text(item.reason_code);
   return {
     items: item.items.map(parse),
     total: item.total,
     limit: item.limit,
     offset: item.offset,
+    ...(item.availability === undefined
+      ? {}
+      : {
+          availability: item.availability as Page<T>["availability"],
+          reason_code: item.reason_code as string | null,
+        }),
   };
 }
 function equity(value: unknown): ExperimentEquity {
@@ -203,6 +222,7 @@ function equity(value: unknown): ExperimentEquity {
 function trade(value: unknown): ExperimentTrade {
   const item = record(value);
   integer(item.sequence);
+  if (item.trading_date !== undefined) text(item.trading_date);
   for (const key of ["order_id", "security_id", "side", "timestamp"])
     text(item[key]);
   for (const key of ["quantity", "price", "transaction_cost"])
@@ -212,6 +232,7 @@ function trade(value: unknown): ExperimentTrade {
 function decision(value: unknown): ExperimentDecision {
   const item = record(value);
   integer(item.sequence);
+  if (item.trading_date !== undefined) text(item.trading_date);
   for (const key of [
     "proposal_id",
     "security_id",
@@ -222,6 +243,58 @@ function decision(value: unknown): ExperimentDecision {
     text(item[key]);
   if (typeof item.approved !== "boolean") throw new ApiContractError();
   return item as unknown as ExperimentDecision;
+}
+function holding(value: unknown): ExperimentHolding {
+  const item = record(value);
+  integer(item.sequence);
+  text(item.trading_date);
+  text(item.timestamp);
+  for (const key of ["corporate_action_realized_pnl", "total_pnl"])
+    if (item[key] !== undefined) decimal(item[key], true);
+  for (const key of [
+    "cash",
+    "equity",
+    "market_value",
+    "realized_pnl",
+    "unrealized_pnl",
+    "cumulative_commission",
+    "pending_corporate_action_value",
+  ])
+    decimal(item[key]);
+  if (!Array.isArray(item.positions)) throw new ApiContractError();
+  for (const value of item.positions) {
+    const position = record(value);
+    text(position.security_id);
+    for (const key of [
+      "quantity",
+      "average_price",
+      "market_price",
+      "market_value",
+    ])
+      decimal(position[key]);
+    decimal(position.weight, true);
+  }
+  return item as unknown as ExperimentHolding;
+}
+export function tradingDate(item: {
+  trading_date?: string;
+  timestamp: string;
+}) {
+  if (item.trading_date) return item.trading_date;
+  const date = new Date(item.timestamp);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+function dateQuery(range: DateRange = {}) {
+  const query = new URLSearchParams();
+  if (range.start_date) query.set("start_date", range.start_date);
+  if (range.end_date) query.set("end_date", range.end_date);
+  return query.size ? `&${query}` : "";
 }
 const path = (id: string) => `/api/experiments/${encodeURIComponent(id)}`;
 export const experimentApi = {
@@ -263,25 +336,86 @@ export const experimentApi = {
     ),
   result: (id: string, signal?: AbortSignal) =>
     apiRequest(`${path(id)}/result`, {}, signal, parseResult),
-  equity: (id: string, signal?: AbortSignal, offset = 0) =>
+  equity: (id: string, signal?: AbortSignal, offset = 0, range?: DateRange) =>
     apiRequest(
-      `${path(id)}/equity?limit=100&offset=${offset}`,
+      `${path(id)}/equity?limit=100&offset=${offset}${dateQuery(range)}`,
       {},
       signal,
       (value) => page(value, equity),
     ),
-  trades: (id: string, signal?: AbortSignal, offset = 0) =>
+  trades: (id: string, signal?: AbortSignal, offset = 0, range?: DateRange) =>
     apiRequest(
-      `${path(id)}/trades?limit=20&offset=${offset}`,
+      `${path(id)}/trades?limit=20&offset=${offset}${dateQuery(range)}`,
       {},
       signal,
       (value) => page(value, trade),
     ),
-  decisions: (id: string, signal?: AbortSignal, offset = 0) =>
+  decisions: (
+    id: string,
+    signal?: AbortSignal,
+    offset = 0,
+    range?: DateRange,
+  ) =>
     apiRequest(
-      `${path(id)}/decisions?limit=20&offset=${offset}`,
+      `${path(id)}/decisions?limit=20&offset=${offset}${dateQuery(range)}`,
       {},
       signal,
       (value) => page(value, decision),
     ),
+  holdings: (id: string, signal?: AbortSignal, offset = 0, range?: DateRange) =>
+    apiRequest(
+      `${path(id)}/holdings?limit=1&offset=${offset}${dateQuery(range)}`,
+      {},
+      signal,
+      (value) => {
+        const parsed = page(value, holding);
+        if (!parsed.availability) throw new ApiContractError();
+        return parsed;
+      },
+    ),
+  export: async (
+    id: string,
+    format: "json" | "csv",
+    collection: ExperimentCollection,
+    range?: DateRange,
+  ): Promise<Blob> => {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(
+      () => controller.abort(),
+      REQUEST_TIMEOUT_MS,
+    );
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}${path(id)}/export?format=${format}&collection=${collection}${dateQuery(range)}`,
+        {
+          signal: controller.signal,
+          headers: {
+            Accept: format === "json" ? "application/json" : "text/csv",
+          },
+        },
+      );
+      if (!response.ok) {
+        const payload: unknown = await response.json().catch(() => null);
+        const code =
+          payload &&
+          typeof payload === "object" &&
+          "code" in payload &&
+          typeof payload.code === "string"
+            ? payload.code
+            : null;
+        throw new ApiError(
+          response.status,
+          "The report could not be downloaded.",
+          code,
+        );
+      }
+      return await response.blob();
+    } catch (error) {
+      if (controller.signal.aborted)
+        throw new ApiError(408, "The report download timed out.");
+      throw error;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  },
 };
