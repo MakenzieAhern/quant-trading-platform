@@ -31,9 +31,12 @@ class Settings(BaseSettings):
     market_data_provider: str = "csv"
     market_data_path: Path = Field(default=PROJECT_DIR / "data" / "raw")
     backtest_fixture_path: Path = Field(default=PROJECT_DIR / "data" / "fixtures")
+    research_data_path: Path = Field(default=Path("/workspace/research"))
     frontend_origin: str = "http://localhost:5173"
 
-    @field_validator("market_data_path", "backtest_fixture_path", mode="after")
+    @field_validator(
+        "market_data_path", "backtest_fixture_path", "research_data_path", mode="after"
+    )
     @classmethod
     def resolve_project_path(cls, value: Path) -> Path:
         """Resolve configured relative paths from the repository, not the current shell."""

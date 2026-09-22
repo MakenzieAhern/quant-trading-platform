@@ -11,6 +11,7 @@ from app.db.models.backtest import (
     BacktestRunModel,
     BacktestSignalModel,
 )
+from app.db.models.experiments import ExperimentJobModel, ExperimentResultRowModel
 from app.db.models.paper import PaperTradingEventModel, PaperTradingSessionModel
 from app.db.models.research import (
     BenchmarkMembershipModel,
@@ -55,6 +56,8 @@ __all__ = [
     "BoardModel",
     "CorporateActionModel",
     "ExchangeModel",
+    "ExperimentJobModel",
+    "ExperimentResultRowModel",
     "MarketModel",
     "MarketRuleSetModel",
     "MarketRuleVersionModel",

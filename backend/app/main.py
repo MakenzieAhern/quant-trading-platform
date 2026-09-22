@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 
 from app.api.middleware import RequestBodyLimitMiddleware
 from app.api.router import api_router
+from app.api.routes.experiments import experiment_manager
 from app.api.routes.paper import paper_manager
 from app.core.config import get_settings
 from app.core.logging import configure_logging
@@ -27,10 +28,14 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     interrupted = await paper_manager.recover_interrupted()
     if interrupted:
         logger.info("Interrupted stale paper sessions", extra={"count": interrupted})
+    await experiment_manager.start()
     try:
         yield
     finally:
-        await paper_manager.shutdown()
+        try:
+            await experiment_manager.shutdown()
+        finally:
+            await paper_manager.shutdown()
         logger.info("Application stopping")
 
 
