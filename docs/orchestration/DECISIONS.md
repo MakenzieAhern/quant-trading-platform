@@ -1,5 +1,33 @@
 # Decisions
 
+## v1.2 U4 browser closure and U5 reader review — 2026-09-22
+
+Actual Chrome-created synthetic and historical personal experiments now complete.
+Historical task `5f26f84f-b6da-4eac-805a-fbc28fd27af4` preserves its identity after
+leaving, reopening and reloading; requested2011-03-01..28, processed297 sessions
+including warm-up, final equity99528.8134, costs30.1866. These are QA observations,
+not strategy selection or new unseen evidence. Formal1 dataset/3 runs/310 trades
+remain unchanged. Display-date filtering does not recalculate full-run metrics.
+
+Real visual inspection found excessive summary decimal length. Use optional
+BigInt/string presentation rounding only, with an accessible full-precision toggle;
+server values, chart detail, comparisons of configuration, and exports stay exact.
+Native date-input automation changed visible DOM but not React state; keyboard
+commit plus configuration-summary verification avoided submitting unintended dates.
+Do not infer task settings from an attempted fill. Browser download preparation is
+not proof of an artifact: API reports pass independently, browser completion remains
+unverified. A restricted browser downloads page was not bypassed.
+
+Independent U5 review found official suspension rows use mixed dates/timestamps,
+and same-day SSE records differ from resume endpoints. Correct only the product
+reader; preserve raw evidence, uncertain endpoints as null, and zero-volume carried
+prices as non-executable. Do not silently rewrite the frozen dataset or formal
+reader. Cached market display does not promote a new data source or complete U5/U7.
+
+PR13 CI now passes with an explicit isolated test database and test environment.
+The database-name safety guard remains intact. Review, actual browser evidence and
+compatibility are still merge gates; CI alone does not authorize release.
+
 ## v1.2 M1 review and actual integration — 2026-09-22
 
 The independent personal-experiment path reuses the existing engine and read-only
