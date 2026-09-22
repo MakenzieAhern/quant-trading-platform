@@ -5,6 +5,7 @@ import { ApiError, REQUEST_TIMEOUT_MS } from "./client";
 import { ApiContractError } from "./contracts";
 import { jsonResponse, RUN_ID } from "../test/fixtures";
 import { formatDecimal, formatPercent, formatUtc } from "../utils/format";
+import { i18n } from "../i18n";
 
 describe("typed backtest API", () => {
   it("preserves Decimal response strings exactly", async () => {
@@ -88,6 +89,25 @@ describe("typed backtest API", () => {
 });
 
 describe("display formatting", () => {
+  it.each(["en-US", "zh-CN"])(
+    "retains fractional loss signs in %s",
+    async (locale) => {
+      await i18n.changeLanguage(locale);
+      try {
+        expect(formatDecimal("-0.000000000000000001")).toBe(
+          "-0.000000000000000001",
+        );
+        expect(formatDecimal("-1234.50")).toBe("-1,234.50");
+        expect(formatPercent("-0.000122")).toBe("-0.0122%");
+        expect(formatPercent("-0.000000000000000001")).toBe(
+          "-0.0000000000000001%",
+        );
+      } finally {
+        await i18n.changeLanguage("en-US");
+      }
+    },
+  );
+
   it("formats without changing stored Decimal strings", () => {
     const source = "105.052500000000000001";
     expect(formatDecimal(source)).toBe("105.052500000000000001");

@@ -8,7 +8,9 @@ export function formatDecimal(value: string | null): string {
   if (!match) return value;
   const [, sign, integer = "0", fraction = ""] = match;
   const locale = i18n.resolvedLanguage ?? "en-US";
-  const signedInteger = BigInt(`${sign}${integer}`);
+  // BigInt has no negative zero: retain the sign for exact fractional losses.
+  const signedInteger =
+    sign === "-" && BigInt(integer) === 0n ? -0 : BigInt(`${sign}${integer}`);
   const grouped = new Intl.NumberFormat(locale, {
     maximumFractionDigits: 0,
   }).format(signedInteger);

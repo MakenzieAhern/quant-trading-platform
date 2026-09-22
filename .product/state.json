@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "release_target": "v1.2.0 Product Experience Edition",
+  "updated_at_utc": "2026-09-22T08:21:00Z",
+  "milestone": "M1_LIVE_VERTICAL_SLICE",
+  "status": "IN_PROGRESS",
+  "product_goal_complete": false,
+  "baseline": {
+    "tag": "v1.1.0",
+    "commit": "f88b5c60d29fc1a928b59daf1c2e7818395b7702",
+    "pr": 12,
+    "pr_state": "MERGED",
+    "verified_at_utc": "2026-09-22T07:38:00Z"
+  },
+  "workspace": {
+    "host": "DESKTOP-3EOROGR",
+    "distro": "Ubuntu",
+    "path": "/home/yuchen/projects/quant-trading-platform",
+    "branch": "feature/product-experience-v1.2",
+    "identity": "MakenzieAhern"
+  },
+  "ownership": {
+    "repository_writer": "root product controller",
+    "database_writer": "running app backend; no test process; parent API integration only",
+    "queue_writer": "app experiment manager idle; 3 successful personal QA jobs, 1 cancelled, 1 interrupted",
+    "agents": {},
+    "verified_processes": "2026-09-22: 4 healthy/available project services; 2 stopped paper sessions; no formal study",
+    "process_ids_are_not_reusable_authority": true
+  },
+  "last_success": [
+    "M0 live Chrome populated/new/empty DB/offline baselines and all six official references",
+    "v1.1 remote release/main/tag and Docker 4.92 verified; no installer/UAC pending",
+    "M1 backend pre-review 856 tests and reversible migration on isolated database",
+    "M1 wizard slice 14 tests, TypeScript and owned ESLint pass before navigation changes",
+    "Fractional-negative exact Decimal formatter regression: 13 transport/display tests pass",
+    "Compose read-only audited historical data mount configured and config validated",
+    "Formal ledger before app migration: 1 dataset, 3 runs, 310 trades; frozen file/manifest SHA unchanged",
+    "Application migration0012 and read-only archive mount verified live",
+    "API demo and real historical personal experiments succeeded with exact outputs; no formal studies rerun",
+    "Actual running cancellation and server restart interruption preserve no-partial-results semantics",
+    "Post-review full frontend108 tests/lint/types/build and backend862 tests/lint/types PASS",
+    "Independent review fixes rechecked; exact API prefix regression now covered",
+    "Chrome home/guide/strategy/draft/locale/mobile basic checks passed",
+    "Restarted personal experiment retried to SUCCEEDED; frozen manifest/freeze SHA and formal ledger counts unchanged"
+  ],
+  "observed_failures": [
+    "Browser native confirmation control timeout prevents full UI submission/recovery proof; no application failure inferred"
+  ],
+  "external_blockers": [
+    {
+      "scope": "Chrome acceptance",
+      "code": "NATIVE_CONFIRM_CONTROL_TIMEOUT",
+      "human_action": "Click Cancel in existing quant platform confirmation if visible; requested once asynchronously",
+      "blocks_entire_project": false
+    }
+  ],
+  "not_run": [
+    "Full M1 live browser submit/result and Back/Forward confirm handling",
+    "Feature PR CI",
+    "M2-M5 remaining mandatory acceptance"
+  ],
+  "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
+  "next_task": "Checkpoint reviewed M1 slice as draft feature PR; resume existing browser confirmation then finish full UI vertical path before merge",
+  "next_command": "Review git staged files, commit/push feature/product-experience-v1.2; open draft feature PR with exact incomplete browser gate",
+  "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
+  "milestones": {
+    "M0": "PASS",
+    "M1": "IN_PROGRESS",
+    "M2": "NOT_RUN",
+    "M3": "NOT_RUN",
+    "M4": "NOT_RUN",
+    "M5": "NOT_RUN"
+  }
+}

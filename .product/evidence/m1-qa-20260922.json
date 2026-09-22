@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "at_utc": "2026-09-22T08:20:00Z",
+  "milestone": "M1",
+  "status": "IN_PROGRESS",
+  "environment": {
+    "host": "DESKTOP-3EOROGR",
+    "browser": "Chrome existing profile",
+    "backend": "Docker Python3.12",
+    "frontend": "Docker Node24",
+    "dataset": "cn-a-research-20100101-20251231-v1"
+  },
+  "tests": {
+    "backend": 862,
+    "frontend": 108,
+    "backend_ruff": "PASS",
+    "backend_format": "PASS",
+    "backend_mypy": "PASS",
+    "frontend_lint": "PASS",
+    "frontend_types": "PASS",
+    "frontend_build": "PASS",
+    "independent_frontend_targeted": 22,
+    "independent_review": "reported defects fixed and code rechecked",
+    "migration": "0012 upgrade/downgrade/upgrade on disposable DB PASS; app upgrade PASS"
+  },
+  "api_runs": {
+    "demo": {
+      "job_id": "c4a46658-24c5-40eb-a211-53038aaa6580",
+      "status": "SUCCEEDED",
+      "sessions": 340,
+      "fills": 5,
+      "idempotent_duplicate": "SAME_JOB",
+      "market_evidence": false
+    },
+    "historical": {
+      "job_id": "3cb4ff95-d8c3-4e4d-ad62-039b60c66885",
+      "status": "SUCCEEDED",
+      "requested_range": [
+        "2011-04-01",
+        "2011-04-29"
+      ],
+      "sessions_including_warmup": 319,
+      "fills": 4,
+      "mode": "historical_exploration",
+      "formal_study": false
+    },
+    "cancelled": {
+      "job_id": "b78965ad-e917-45eb-b915-df7c927629ca",
+      "status": "CANCELLED",
+      "observed_running_before_cancel": true,
+      "result_available": false
+    },
+    "restarted": {
+      "job_id": "5861fbb5-5fdc-4d6c-870d-9b122ab7d70a",
+      "status": "INTERRUPTED",
+      "observed_running_before_restart": true,
+      "result_available": false,
+      "repeated_parent_retry": "SAME_LINKED_JOB"
+    },
+    "resumed": {
+      "job_id": "3db4b679-1c8d-4988-8d12-6ec0860c063e",
+      "status": "SUCCEEDED",
+      "attempt": 3
+    }
+  },
+  "immutable_evidence": {
+    "manifest_file_sha256": "693c0b81d942d9532c6ec6c6455fbafab76921a40c8093bace32f1fac9cf2cd0",
+    "freeze_file_sha256": "228569f1dcbb099e8b7225ef72f6960660f5741bb7298c051809bbb1ab3739bd",
+    "formal_before_after_counts": {
+      "datasets": 1,
+      "runs": 3,
+      "trades": 310
+    },
+    "research_git_diff": "EMPTY",
+    "archive_mount_read_only": true,
+    "official_oos_rerun": false
+  },
+  "browser": {
+    "passed": [
+      "Loaded real workbench date and empty personal history",
+      "Guide four modes; Esc restores trigger focus",
+      "Registered strategy drawer explains risks and weak formal evidence",
+      "Draft restoration and locale switch preserve name/capital/data dates",
+      "Mobile390px page width375px, hidden sidebar not keyboard reachable",
+      "Mobile menu focus, Esc restoration and named search"
+    ],
+    "unverified": [
+      "End-to-end submit/result through UI",
+      "Browser Back/Forward rejection and acceptance",
+      "Full viewport/theme/language matrix",
+      "200% zoom and p95"
+    ],
+    "interruption": "Native confirm detected while testing dirty exit; dialog control timed out and binding same tab also timed out. User asynchronously asked to click Cancel. No browser PASS inferred."
+  },
+  "screenshots": [
+    "m1/home-zh-light-1440.png",
+    "m1/guide-zh-light.png",
+    "m1/strategy-en-light.png"
+  ],
+  "remaining": "Full M1 browser vertical slice and M2-M5 acceptance remain required; no v1.2 release"
+}

@@ -11,3 +11,9 @@ These instructions apply throughout the repository.
 7. Add or update focused tests with behavior changes. Run relevant tests and lint/type checks before completion; run `docker compose config` for orchestration changes. Update documentation whenever commands, architecture, configuration, or assumptions change.
 8. Use Alembic for database schema changes and keep migrations reversible when practical. Do not edit an already-shared migration to change deployed schema.
 9. Prefer small typed modules, explicit interfaces, dependency injection at boundaries, and clear names. Avoid global mutable state, circular imports, giant classes, duplicated business rules, and premature optimization.
+
+## v1.2 product work
+
+Read `docs/product/PRODUCT_MASTER.md` and `.product/state.json` at each work unit/recovery.
+Design and proof live in `docs/product/DESIGN_SYSTEM.md` and `docs/product/ACCEPTANCE.md`.
+Update the product checkpoint at milestones; preserve frozen `.research` history and OOS lock.

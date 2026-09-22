@@ -1,5 +1,45 @@
 # Decisions
 
+## v1.2 M1 review and actual integration — 2026-09-22
+
+The independent personal-experiment path reuses the existing engine and read-only
+archive; actual synthetic and 2011 historical API runs completed without writing
+formal studies. Live cancellation and backend restart leave unsuccessful attempts
+without published partial results. Retry identity is stable per parent attempt.
+Review caught and corrected ownership/terminal-write/shutdown races, false-zero
+turnover, abandoned-response draft deletion, and refresh-sensitive retry identity.
+Real browser testing caught a missing API URL prefix not covered by the original
+mocks; HTTP-boundary tests now assert all paths and idempotency headers. Exact
+subunit negative decimal formatting was corrected at the shared helper.
+
+Browser home/guide/strategy/draft/locale/mobile checks are evidence, not full M1
+acceptance. Native leave-confirmation control timed out; the user was asked once
+to cancel the dialog while API, restart and regression checks continued. No
+browser result or new-market forward evidence is inferred from API/synthetic runs.
+See `.product/evidence/m1-qa-20260922.json`; M2–M5 remain required.
+
+## 2026-09-22 — v1.2 product workflow and isolated exploratory jobs
+
+User authorizes M0–M5 and U1–U8 Product Experience Edition from verified published
+v1.1.0/main f88b5c6. Product facts live in docs/product and .product, never overwrite
+frozen research checkpoints. Select one neutral sidebar/workspace design; use existing
+React/i18n, CSS variables, native dialog and system fonts without new UI dependencies.
+The old research POST only creates formal metadata, so it is not the guided run API.
+Add an independently named/stored durable exploratory job space over the existing
+ResearchExecutionEngine, RiskEngine, OMS and Portfolio. Keep explicit demo versus
+inspected-history labels, real progress, idempotency/cancellation/interruption and
+server financial validation. Formal study CLI and Official OOS lock stay untouched.
+
+Baseline UI was actually visited in Chrome; root is legacy history, form is English
+under Chinese navigation, 390px viewport has 880px document, and isolated service
+failure exposes untranslated Failed to fetch. Existing app/DB were preserved; empty
+state and failure used disposable product_v12_baseline DB and dedicated containers.
+
+Public BaoStock official per-security EOD endpoint is a candidate for incremental
+private local ingestion after two bounded probes; one bulk request failed, a smaller
+official query passed. This is historical integration evidence only, not forward
+acceptance. SOURCE_READINESS.md records limits; no broad archive reacquisition.
+
 ## 2026-09-22 — accept final local release QA and proceed to PR integration
 
 Accept the non-destructive Docker Desktop 4.92.0 recovery with all existing images, volumes and

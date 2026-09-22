@@ -1,0 +1,515 @@
+.experimentWorkspace {
+  color: var(--text);
+  width: 100%;
+  min-width: 0;
+  max-width: 1280px;
+  margin-inline: auto;
+}
+.experimentWorkspace h1 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.25;
+  margin: 0.5rem 0 1rem;
+}
+.experimentWorkspace h2 {
+  font-size: 1.25rem;
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+.experimentWorkspace h3 {
+  font-size: 1.05rem;
+  margin: 0 0 0.6rem;
+}
+.experimentWorkspace p {
+  line-height: 1.65;
+}
+.experimentHeader {
+  margin-bottom: 1.5rem;
+}
+.experimentHeader > p {
+  max-width: 78ch;
+  color: var(--muted);
+}
+.experimentEyebrow,
+.experimentMode {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.experimentPanel {
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  border-radius: 12px;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  min-width: 0;
+  margin-block: 1rem;
+}
+.experimentSteps {
+  padding: 0;
+  margin: 1.5rem 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.experimentSteps li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--muted);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+.experimentSteps span {
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  flex: 0 0 auto;
+}
+.experimentSteps [aria-current="step"] {
+  color: var(--primary);
+  border-color: var(--primary);
+  font-weight: 650;
+}
+.experimentSteps [aria-current="step"] span {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+.experimentWizardLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 0.4fr);
+  align-items: start;
+  gap: 1.25rem;
+}
+.experimentSummary {
+  position: sticky;
+  top: 1rem;
+}
+.experimentSummary dl,
+.experimentAudit dl {
+  margin: 0;
+}
+.experimentSummary dt,
+.experimentAudit dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+.experimentSummary dd,
+.experimentAudit dd {
+  margin: 0.25rem 0 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.experimentForm fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.experimentForm label,
+.experimentChartControls > label:not(.experimentCheck) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  font-weight: 550;
+}
+.experimentForm input:not([type="checkbox"]):not([type="radio"]),
+.experimentForm select,
+.experimentChartControls select {
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 0.7rem 0.8rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+.experimentForm input:focus-visible,
+.experimentForm select:focus-visible,
+.experimentWorkspace button:focus-visible,
+.experimentWorkspace summary:focus-visible,
+.experimentWorkspace a:focus-visible,
+.experimentTableScroll:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+.experimentWorkspace button,
+.experimentWorkspace summary {
+  cursor: pointer;
+}
+.experimentWorkspace button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.experimentFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.experimentHelp {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.experimentForm .experimentHelp {
+  margin: -0.3rem 0 1rem;
+}
+.experimentChoice {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 0.9rem !important;
+  padding: 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.experimentChoice.isSelected {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+.experimentChoice input {
+  margin-top: 0.25rem;
+  flex: 0 0 auto;
+  accent-color: var(--primary);
+}
+.experimentChoice strong,
+.experimentChoice span span,
+.experimentChoice small {
+  display: block;
+}
+.experimentChoice span span {
+  margin: 0.65rem 0;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.experimentChoice small {
+  color: var(--muted);
+  font-weight: 400;
+}
+.experimentActions,
+.experimentDraftActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+.experimentForm .experimentActions {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  justify-content: flex-end;
+}
+.experimentDraftActions {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.experimentCheck {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 0.65rem !important;
+  font-weight: 400 !important;
+  line-height: 1.6;
+}
+.experimentCheck input {
+  margin-top: 0.3rem;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+.experimentNotice {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--warning);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.experimentError {
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.experimentRestored {
+  color: var(--muted);
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.experimentWorkspace details > summary {
+  min-height: 44px;
+  padding-block: 0.65rem;
+  font-weight: 600;
+}
+.experimentListCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.experimentListCard h2 {
+  margin: 0.5rem 0;
+  overflow-wrap: anywhere;
+}
+.experimentListCard h2 a {
+  color: var(--text);
+  text-decoration: none;
+}
+.experimentListCard h2 a:hover {
+  text-decoration: underline;
+}
+.experimentListAction {
+  display: flex;
+  gap: 0.8rem;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.experimentStatus {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  background: var(--surface);
+}
+.experimentStatus--running,
+.experimentStatus--queued {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.experimentStatus--failed,
+.experimentStatus--interrupted {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.experimentBack {
+  display: inline-block;
+  min-height: 44px;
+  padding-block: 0.5rem;
+  color: var(--primary);
+}
+.experimentTaskId,
+.experimentTechnical {
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+}
+.experimentWorkspace progress {
+  width: 100%;
+  height: 12px;
+  accent-color: var(--primary);
+}
+.experimentMetrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+.experimentMetrics dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.experimentMetrics dd {
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  margin: 0.8rem 0 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.experimentChartControls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+.experimentChart {
+  margin: 1rem 0;
+}
+.experimentChart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.experimentChart polyline {
+  fill: none;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.experimentEquityLine {
+  stroke: var(--primary);
+}
+.experimentBenchmarkLine {
+  stroke: var(--muted);
+  stroke-dasharray: 5 4;
+}
+.experimentDrawdownLine {
+  stroke: var(--warning);
+}
+.experimentChartAxis {
+  stroke: var(--border);
+}
+.experimentSelectedLine {
+  stroke: var(--muted);
+  stroke-dasharray: 2 5;
+}
+.experimentChartPoint {
+  fill: var(--primary);
+  opacity: 0;
+}
+.experimentChartPoint:hover {
+  opacity: 1;
+}
+.experimentChart figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.experimentChart figcaption span::before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.25rem;
+  margin-right: 0.4rem;
+  border-top: 2px solid var(--primary);
+}
+.experimentChart .experimentBenchmarkLegend::before {
+  border-color: var(--muted);
+  border-top-style: dashed;
+}
+.experimentChart .experimentDrawdownLegend::before {
+  border-color: var(--warning);
+}
+.experimentChartReadout {
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.experimentTableScroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 6px;
+}
+.experimentTableScroll table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.experimentTableScroll th,
+.experimentTableScroll td {
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.experimentTableScroll th {
+  background: var(--surface);
+  font-weight: 600;
+}
+.experimentTableScroll tr.isSelected td,
+.experimentTableScroll tr.isSelected th {
+  background: var(--primary-soft);
+}
+.experimentDateButton {
+  min-height: 32px;
+  color: var(--primary);
+  background: transparent;
+  border: 0;
+  font: inherit;
+}
+.experimentExecution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.experimentExecution dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.experimentExecution dd {
+  margin: 0.35rem 0;
+  font-variant-numeric: tabular-nums;
+}
+.experimentAudit pre {
+  overflow-x: auto;
+  max-width: 100%;
+  font-size: 0.85rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+@media (max-width: 1000px) {
+  .experimentWizardLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .experimentSummary {
+    position: static;
+  }
+  .experimentSummary dl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.7rem 1rem;
+  }
+  .experimentSummary dt {
+    margin: 0;
+  }
+  .experimentSummary dd {
+    margin: 0;
+  }
+  .experimentMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .experimentSteps {
+    gap: 0.5rem;
+  }
+  .experimentSteps li {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.75rem;
+  }
+  .experimentFields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .experimentListCard {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .experimentListAction {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .experimentMetrics {
+    gap: 0.65rem;
+  }
+  .experimentMetrics .experimentPanel {
+    padding: 0.9rem;
+  }
+  .experimentChartControls > label {
+    width: 100%;
+  }
+}
