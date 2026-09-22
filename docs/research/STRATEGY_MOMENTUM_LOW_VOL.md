@@ -1,7 +1,9 @@
 # Momentum and Low-Volatility Strategy
 
-**ID:** `cn_a_cross_sectional_momentum_low_vol_v1`  
-**English:** China A-Share Cross-Sectional Momentum and Low-Volatility Strategy  
+**ID:** `cn_a_cross_sectional_momentum_low_vol_v1`
+
+**English:** China A-Share Cross-Sectional Momentum and Low-Volatility Strategy
+
 **中文:** 中国A股横截面动量与低波动策略
 
 This is a long-only research strategy, not a profitability claim. It combines twelve-to-one-month

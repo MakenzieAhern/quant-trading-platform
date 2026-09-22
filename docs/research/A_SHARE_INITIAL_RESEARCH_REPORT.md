@@ -5,7 +5,8 @@ simulated execution convention, not exact historical auction reconstruction.
 Where available data cannot establish its required execution conditions, no fill
 is simulated. See [the versioned contract](DAILY_EXECUTION_CONVENTION.md).
 
-Status: **NOT EXECUTED**  
+Status: **NOT EXECUTED**
+
 Official OOS: **OUT-OF-SAMPLE NOT YET RUN**
 
 The research implementation, methodology and reporting schema exist, but no production A-share
