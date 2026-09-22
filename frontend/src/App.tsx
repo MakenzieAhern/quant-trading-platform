@@ -24,6 +24,7 @@ import { ExperimentsPage } from "./product/experiments/ExperimentsPage";
 import { ExperimentDetailPage } from "./product/experiments/ExperimentDetailPage";
 import { ExperimentComparePage } from "./product/experiments/ExperimentComparePage";
 import { ProductDataProvider } from "./product/ProductDataProvider";
+import { MarketsPage } from "./product/markets";
 
 export function App() {
   const pathname = usePathname();
@@ -45,6 +46,8 @@ export function App() {
     /^\/research\/a-share\/strategies\/([^/]+)\/?$/i.exec(pathname);
   let page = <NotFoundPage />;
   if (pathname === "/") page = <WorkbenchPage />;
+  else if (pathname === "/markets" || pathname === "/markets/")
+    page = <MarketsPage />;
   else if (pathname === "/strategies") page = <ProductStrategiesPage />;
   else if (pathname.startsWith("/strategies/"))
     page = (

@@ -20,6 +20,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
   );
   const commands = [
     { label: copy.home, href: "/" },
+    { label: copy.markets, href: "/markets" },
     { label: copy.start, href: "/research/new" },
     { label: copy.strategies, href: "/strategies" },
     { label: copy.research, href: "/experiments" },

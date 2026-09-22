@@ -9,7 +9,7 @@ import {
 export interface PageData {
   mode: "historical_exploration" | "synthetic_demo";
   asOf: string | null;
-  dateKind: "requested" | "observed";
+  dateKind: "requested" | "observed" | "snapshot";
 }
 export const ProductDataContext = createContext<{
   current: PageData | null;
