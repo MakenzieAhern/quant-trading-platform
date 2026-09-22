@@ -46,3 +46,5 @@ class ExperimentCollection(StrictModel):
     total: int
     limit: int
     offset: int
+    availability: Literal["AVAILABLE", "NOT_RECORDED", "NOT_READY"]
+    reason_code: str | None

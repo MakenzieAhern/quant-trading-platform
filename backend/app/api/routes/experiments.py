@@ -1,11 +1,12 @@
 """Thin transport for the independent self-service research workspace."""
 
 import asyncio
+from datetime import date
 from typing import Annotated, Any, Literal
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Header, Query, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
 from app.api.schemas.experiments import (
     CreateExperimentRequest,
@@ -14,7 +15,13 @@ from app.api.schemas.experiments import (
     ExperimentResponse,
 )
 from app.application.experiments.data import ExperimentDatasetRegistry, ExperimentInputError
-from app.application.experiments.service import ExperimentConflictError, ExperimentManager
+from app.application.experiments.export import export_csv, export_json
+from app.application.experiments.service import (
+    ExperimentConflictError,
+    ExperimentManager,
+    collection_availability,
+    validate_display_dates,
+)
 from app.core.config import get_settings
 from app.db.models.experiments import ExperimentJobModel
 from app.db.session import SessionFactory, engine
@@ -139,16 +146,67 @@ async def experiment_result(job_id: UUID, request: Request) -> dict[str, Any] | 
         return _error(request, exc)
 
 
+@router.get("/experiments/{job_id}/export", response_model=None)
+async def export_experiment(
+    job_id: UUID,
+    request: Request,
+    format: Literal["json", "csv"] = "json",
+    collection: Literal["equity", "trades", "holdings", "decisions"] = "trades",
+    start_date: date | None = None,
+    end_date: date | None = None,
+) -> StreamingResponse | JSONResponse:
+    try:
+        validate_display_dates(start_date, end_date)
+        row = await experiment_manager.get(job_id)
+        if row.status != "SUCCEEDED" or row.summary is None:
+            raise ExperimentConflictError("RESULT_NOT_READY")
+        availability, reason = collection_availability(row, collection)
+        if format == "csv" and availability != "AVAILABLE":
+            raise ExperimentConflictError(reason)
+        content = (
+            export_json(experiment_manager, row, start_date, end_date)
+            if format == "json"
+            else export_csv(experiment_manager, row, collection, start_date, end_date)
+        )
+        return StreamingResponse(
+            content,
+            media_type="application/json" if format == "json" else "text/csv",
+            headers={
+                "Content-Disposition": f'attachment; filename="experiment-{job_id}.{format}"',
+                "X-Content-Type-Options": "nosniff",
+                "Cache-Control": "no-store",
+            },
+        )
+    except (LookupError, ExperimentInputError, ExperimentConflictError) as exc:
+        return _error(request, exc)
+
+
 @router.get("/experiments/{job_id}/{collection}", response_model=ExperimentCollection)
 async def experiment_collection(
     job_id: UUID,
-    collection: Literal["equity", "trades", "decisions"],
+    collection: Literal["equity", "trades", "decisions", "holdings"],
     request: Request,
     limit: Limit = 200,
     offset: Offset = 0,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> ExperimentCollection | JSONResponse:
     try:
-        items, total = await experiment_manager.collection(job_id, collection, limit, offset)
-        return ExperimentCollection(items=items, total=total, limit=limit, offset=offset)
-    except LookupError as exc:
+        items, total = await experiment_manager.collection(
+            job_id, collection, limit, offset, start_date, end_date
+        )
+        availability, reason = collection_availability(
+            await experiment_manager.get(job_id), collection
+        )
+        return ExperimentCollection.model_validate(
+            {
+                "items": items,
+                "total": total,
+                "limit": limit,
+                "offset": offset,
+                "availability": availability,
+                "reason_code": reason,
+            }
+        )
+    except (LookupError, ExperimentInputError) as exc:
         return _error(request, exc)

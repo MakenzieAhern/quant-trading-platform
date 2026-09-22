@@ -69,6 +69,11 @@ def test_real_engine_demo_has_exact_money_costs_progress_and_repeatable_results(
     assert phases[-1] == ("EXECUTING", 340, 340)
     assert output.summary == repeat.summary
     assert output.rows["equity"] == repeat.rows["equity"]
+    assert output.rows["holdings"] == repeat.rows["holdings"]
+    assert len(output.summary["implementation_sha256"]) == 64
+    assert output.summary["provenance"]["provider"] == "DETERMINISTIC_SYNTHETIC_GENERATOR"
+    assert output.summary["effective_transaction_cost_schedules"][0]["commission_rate"] == "0.0003"
+    assert output.summary["effective_risk_limits"]["max_position_weight"] == "0.1"
     assert output.summary["execution"]["fills"] > 0
     assert Decimal(output.summary["metrics"]["transaction_costs"]) > 0
     traded = sum(
@@ -86,6 +91,27 @@ def test_real_engine_demo_has_exact_money_costs_progress_and_repeatable_results(
         assert isinstance(fill["quantity"], str)
         assert Decimal(fill["quantity"]) % 100 == 0
         assert fill["timestamp"][:10] >= request.start_date.isoformat()
+        assert fill["trading_date"] == fill["timestamp"][:10]
+    assert any(s["positions"] for s in output.rows["holdings"])
+    for snapshot, point in zip(output.rows["holdings"], output.rows["equity"], strict=True):
+        assert snapshot["equity"] == point["equity"]
+        assert snapshot["trading_date"] == point["trading_date"]
+        assert Decimal(snapshot["cash"]) + Decimal(snapshot["market_value"]) == Decimal(
+            snapshot["equity"]
+        )
+        position_value = sum(
+            (Decimal(p["market_value"]) for p in snapshot["positions"]), Decimal(0)
+        )
+        assert position_value + Decimal(snapshot["pending_corporate_action_value"]) == Decimal(
+            snapshot["market_value"]
+        )
+        for position in snapshot["positions"]:
+            assert Decimal(position["market_value"]) == Decimal(position["quantity"]) * Decimal(
+                position["market_price"]
+            )
+            assert Decimal(position["weight"]) == Decimal(position["market_value"]) / Decimal(
+                snapshot["equity"]
+            )
 
 
 def test_cancellation_interrupts_at_completed_session_boundary(tmp_path):
@@ -114,3 +140,59 @@ def test_cost_configuration_changes_actual_result_and_not_just_metadata(tmp_path
     assert free.summary["metrics"]["transaction_costs"] == "0"
     assert Decimal(normal.summary["metrics"]["transaction_costs"]) > 0
     assert normal.summary["metrics"]["final_equity"] != free.summary["metrics"]["final_equity"]
+
+
+def test_no_fills_preserves_real_all_cash_snapshots(tmp_path):
+    output = run_experiment(
+        ExperimentDatasetRegistry(tmp_path),
+        demo_request(
+            start_date="2030-01-02", end_date="2030-01-10", initial_cash="100000.123456789123456789"
+        ),
+        DEMO_SHA,
+        Event(),
+        lambda *p: None,
+    )
+    assert output.rows["trades"] == []
+    assert output.rows["holdings"]
+    for snapshot in output.rows["holdings"]:
+        assert snapshot["cash"] == snapshot["equity"] == "100000.123456789123456789"
+        assert snapshot["positions"] == []
+        assert snapshot["market_value"] == snapshot["pending_corporate_action_value"] == "0"
+
+
+@pytest.mark.parametrize(
+    "value",
+    ['=HYPERLINK("x")', "+SUM(1,2)", "-1+2", "@SUM(A1)", "  =1+1", "\tformula", "\n=1+1", "\r=1+1"],
+)
+def test_csv_neutralizes_formula_cells(value):
+    from app.application.experiments.export import csv_cell
+
+    assert csv_cell(value) == "'" + value
+
+
+def test_csv_preserves_exact_numbers_unicode_and_null():
+    from app.application.experiments.export import csv_cell
+
+    for value in ["-0.123456789123456789", "999999999999999999999.123", "0", '收益,测试"一"']:
+        assert csv_cell(value) == value
+    assert csv_cell(None) == ""
+
+
+def test_holdings_retains_pending_corporate_action_value_without_inventing_tradable_positions():
+    from app.application.experiments.runner import _holdings_row
+    from tests.test_demerger_accounting import at, event, funded
+
+    portfolio, _ = funded("100")
+    portfolio.recognize_demerger(event(), date(2010, 2, 26), at("2010-02-26"))
+    actual = portfolio.snapshot_at(at("2010-03-01"))
+    snapshot = _holdings_row(0, actual)
+    assert snapshot["positions"] == []
+    assert snapshot["pending_corporate_action_value"] == snapshot["market_value"] == "387"
+    assert (
+        Decimal(snapshot["cash"]) + Decimal(snapshot["pending_corporate_action_value"])
+        == actual.equity
+    )
+    assert (
+        Decimal(snapshot["corporate_action_realized_pnl"]) == actual.corporate_action_realized_pnl
+    )
+    assert Decimal(snapshot["total_pnl"]) == actual.total_pnl

@@ -8,9 +8,10 @@ from threading import Event
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import func, select, text
+from sqlalchemy import Date, DateTime, cast, func, select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, async_sessionmaker
+from sqlalchemy.sql.elements import ColumnElement
 
 from app.application.experiments.data import ExperimentDatasetRegistry, ExperimentInputError
 from app.application.experiments.models import CreateExperimentRequest
@@ -21,6 +22,20 @@ from app.db.models.experiments import ExperimentJobModel, ExperimentResultRowMod
 logger = logging.getLogger(__name__)
 TERMINAL = {"SUCCEEDED", "FAILED", "CANCELLED", "INTERRUPTED"}
 OWNER_LOCK = 12001234
+COLLECTIONS = ("equity", "trades", "holdings", "decisions")
+
+
+def collection_availability(row: ExperimentJobModel, collection: str) -> tuple[str, str | None]:
+    if row.status != "SUCCEEDED" or row.summary is None:
+        return "NOT_READY", "RESULT_NOT_READY"
+    if collection == "holdings" and collection not in row.summary.get("available_collections", []):
+        return "NOT_RECORDED", "HOLDINGS_NOT_RECORDED_FOR_THIS_RUN"
+    return "AVAILABLE", None
+
+
+def validate_display_dates(start_date: date | None, end_date: date | None) -> None:
+    if start_date and end_date and end_date < start_date:
+        raise ExperimentInputError("INVALID_DISPLAY_DATE_RANGE")
 
 
 class ExperimentConflictError(ValueError):
@@ -249,14 +264,43 @@ class ExperimentManager:
         )
 
     async def collection(
-        self, identifier: UUID, collection: str, limit: int, offset: int
+        self,
+        identifier: UUID,
+        collection: str,
+        limit: int,
+        offset: int,
+        start_date: date | None = None,
+        end_date: date | None = None,
     ) -> tuple[list[dict[str, Any]], int]:
+        validate_display_dates(start_date, end_date)
         await self.get(identifier)
         async with self.factory() as db:
             query = select(ExperimentResultRowModel).where(
                 ExperimentResultRowModel.job_id == identifier,
                 ExperimentResultRowModel.collection == collection,
             )
+            trading_date: ColumnElement[date] = cast(
+                ExperimentResultRowModel.payload["trading_date"].astext, Date
+            )
+            if collection in {"trades", "decisions"}:
+                # Old personal results have UTC timestamps but no explicit market date.
+                trading_date = func.coalesce(
+                    trading_date,
+                    cast(
+                        func.timezone(
+                            "Asia/Shanghai",
+                            cast(
+                                ExperimentResultRowModel.payload["timestamp"].astext,
+                                DateTime(timezone=True),
+                            ),
+                        ),
+                        Date,
+                    ),
+                )
+            if start_date is not None:
+                query = query.where(trading_date >= start_date)
+            if end_date is not None:
+                query = query.where(trading_date <= end_date)
             total = await db.scalar(select(func.count()).select_from(query.subquery()))
             rows = (
                 await db.scalars(
