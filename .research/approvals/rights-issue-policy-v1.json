@@ -1,0 +1,12 @@
+{
+  "policy": "CN_A_RIGHTS_ISSUE_POLICY_V1",
+  "participation": "DECLINE_SUBSCRIPTION",
+  "decision": "HUMAN_APPROVED",
+  "recorded_at_utc": "2026-09-12T16:06:27Z",
+  "approval_attachment_sha256": "19ea8355e52047d84e181a4b559ffc0d0cb39ef4111367a7b4e32a7b8faaecc6",
+  "scope": "Verified ordinary A-share non-tradable subscription entitlements only; no security exclusion, cash injection, subscription, additional shares, cost-basis change or artificial compensation.",
+  "special_case_rule": "Preserve incomplete/contradictory or unsupported variants; stop on a material exact event under user section 8.",
+  "formal_studies_authorized": false,
+  "full_dataset_freeze_authorized": false,
+  "merge_authorized": false
+}

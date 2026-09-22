@@ -3,6 +3,7 @@ import { API_BASE_URL } from "./config";
 import type {
   CreatePaperSessionRequest,
   MarketBar,
+  MarketSession,
   PaperFill,
   PaperOrder,
   PaperPortfolio,
@@ -30,6 +31,7 @@ const EVENT_TYPES = new Set<PaperWireEvent["type"]>([
   "stream.resync_required",
   "session.status",
   "market.bar",
+  "market.session",
   "signal.created",
   "risk.decision",
   "order.updated",
@@ -70,18 +72,24 @@ function session(value: unknown): PaperSession {
   const item = record(value);
   const status = requiredString(item.status) as PaperSessionStatus;
   if (!STATUSES.has(status)) throw new Error("Invalid paper session status.");
-  if (item.provider_type !== "replay")
+  const provider = requiredString(
+    item.provider_type,
+  ) as PaperSession["provider_type"];
+  if (provider !== "replay" && provider !== "simulated_a_share")
     throw new Error("Invalid paper provider.");
-  const strategy = requiredString(item.strategy_type);
+  const strategy = requiredString(
+    item.strategy_type,
+  ) as PaperSession["strategy_type"];
   if (
     strategy !== "moving_average_crossover" &&
-    strategy !== "rsi_mean_reversion"
+    strategy !== "rsi_mean_reversion" &&
+    strategy !== "cn_a_cross_sectional_momentum_low_vol_v1"
   )
     throw new Error("Invalid paper strategy.");
   return {
     session_id: requiredString(item.session_id),
     status,
-    provider_type: "replay",
+    provider_type: provider,
     dataset_id: requiredString(item.dataset_id),
     symbol: requiredString(item.symbol),
     strategy_type: strategy,
@@ -111,6 +119,22 @@ const marketBar = (value: unknown): MarketBar => {
     low: decimal(item.low),
     close: decimal(item.close),
     volume: decimal(item.volume),
+  };
+};
+
+const marketSession = (value: unknown): MarketSession => {
+  const item = record(value);
+  if (
+    !Number.isSafeInteger(item.security_count) ||
+    Number(item.security_count) < 0
+  )
+    throw new Error("Invalid A-share market session.");
+  if (item.source !== "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1")
+    throw new Error("Invalid A-share simulation source.");
+  return {
+    trading_date: requiredString(item.trading_date),
+    security_count: item.security_count as number,
+    source: item.source,
   };
 };
 
@@ -198,6 +222,8 @@ function snapshot(value: unknown): PaperSnapshot {
     session: session(item.session),
     last_sequence: item.last_sequence as number,
     latest_bar: item.latest_bar === null ? null : marketBar(item.latest_bar),
+    latest_session:
+      item.latest_session == null ? null : marketSession(item.latest_session),
     signals: array(item.signals, signal),
     risk_decisions: array(item.risk_decisions, decision),
     orders: array(item.orders, order),
@@ -277,6 +303,7 @@ export const paperParsers = {
   session,
   snapshot,
   marketBar,
+  marketSession,
   signal,
   decision,
   order,
@@ -306,6 +333,7 @@ export function parseWireEvent(value: unknown): PaperWireEvent {
       if (!STATUSES.has(status))
         throw new Error("Invalid paper session status.");
     } else if (type === "market.bar") marketBar(payload);
+    else if (type === "market.session") marketSession(payload);
     else if (type === "signal.created") signal(payload);
     else if (type === "risk.decision") decision(payload);
     else if (type === "order.updated") order(payload);

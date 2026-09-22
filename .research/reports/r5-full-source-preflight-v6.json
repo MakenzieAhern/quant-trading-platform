@@ -1,0 +1,119 @@
+{
+  "report_id": "R5_FULL_SOURCE_PREFLIGHT_V6",
+  "requested_coverage": ["2010-01-01", "2025-12-31"],
+  "dataset_id": "cn-a-research-20100101-20251231-v1",
+  "status": "BLOCKED_IRREDUCIBLE_AUTHORITY_AND_METHODOLOGY_GAPS",
+  "verified_safe_start_date": null,
+  "components": {
+    "security_master": {
+      "status": "PASS",
+      "securities": 5431,
+      "intervals": 5436,
+      "sse_reconstructed_securities": 2403,
+      "szse_reconstructed_securities": 3028,
+      "true_p0_unresolved_facts": 0,
+      "report_manifest_sha256": "3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235cc6d98e12a8150faf8"
+    },
+    "st_history": {
+      "status": "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
+      "sse_chain_gaps": 0,
+      "sse_manifest_sha256": "0b11bd3fcf4f62b530a551365dfa974b7db3cef63156d5a311e0f714ae0b012f",
+      "szse_probe_sha256": "8cb0c481cd8bd004dc689eee3370eb2fd9f592daec6ced717b40c45d1401c3a8"
+    },
+    "suspension_history": {
+      "status": "PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES",
+      "sse_unresolved": 0,
+      "szse_unresolved": 2010,
+      "authority_file_sha256": "275c94706bf60ab6b402c658e27bf2e7cd0921932204d5a44d0a478342e79dcb",
+      "authority_manifest_sha256": "da9be561718a0783112c5ce083d5183e411d5c535407c7c3217da86b89ee8d67"
+    },
+    "raw_ohlcv": {
+      "status": "PARTIAL_SOURCE_SNAPSHOTS_NOT_RAW_AUTHORITY",
+      "sse_unclassified_missing_sessions": 0,
+      "szse_unresolved_source_rows": 239,
+      "szse_afterhours_scope_unproven": 223,
+      "szse_gap_file_sha256": "7350f64444a39b10b43dc1b4650174628272c773c29df4079e210fbec37da9ed",
+      "szse_gap_manifest_sha256": "5ad2a1aac5ad867c724bcf45a48fdac6aec8566ccab20c2d35733c20b95e1cda"
+    },
+    "adjustment_factors": {
+      "status": "PARTIAL_ECONOMIC_ALIGNMENT_AND_EVENT_COMPLETENESS_NOT_ESTABLISHED",
+      "verified_intervals": 5436,
+      "conflicting_intervals": 0,
+      "unmatched_factor_change_dates": 2328,
+      "supported_events_without_factor_change": 6,
+      "unique_exact_official_terms_candidates": 1348,
+      "no_exact_official_terms_candidates": 35,
+      "gross_terms_factor_checks": 478,
+      "gross_terms_factor_conflicts": 478,
+      "remaining_restructuring_or_directed_capital": 27,
+      "remaining_distribution_date_mismatch_or_ocr": 6,
+      "remaining_complex_holder_terms": 2,
+      "terms_manifest_sha256": "47c02d367dfa64d0afee1f7f9f40a5df6d02c0e8dcc99c9367e2d053b5c85aba",
+      "residual_manifest_sha256": "69c04cc149bba49207cf6b3c550a2527e1c6aea96ecc39d81302bb36489df3e4",
+      "economics_manifest_sha256": "ff30322ea98b80da89e9b73a2019090f9a69908af7385e21785061b003fb88f8"
+    },
+    "corporate_actions": {
+      "status": "PARTIAL_SEVEN_EXACT_FACT_GAPS",
+      "p1_raw_requirements": 16320,
+      "p1_facts_already_established": 16313,
+      "p1_resolved_by_official_substitution": 2031,
+      "p1_true_missing_source_facts": 7,
+      "p1_unresolved_unique_documents": 7,
+      "p1_unresolved_cash_documents": 3,
+      "p1_unresolved_other_documents": 4,
+      "cash_documents_supported": 13587,
+      "retained_bonus_fraction_policy": "CN_A_RETAINED_BONUS_FRACTIONAL_SHARE_POLICY_V1",
+      "retained_bonus_fraction_gate": "RESOLVED",
+      "cross_market_account_path_methodology_gaps": [
+        "MERGER:000522:600332",
+        "MERGER:002013:600372"
+      ],
+      "cumulative_report_file_sha256": "372312f16e9265306e6e341f8131b58719771d72c6fa127eb3e6ea960fef017c",
+      "cumulative_report_manifest_sha256": "e6d87aa5a2f16422ca063d5ff9ce3a9a38a2cfaef3e8f8d465c151f561963792"
+    },
+    "market_rules_and_transaction_costs": {
+      "status": "PARTIAL",
+      "new_executable_rules_accepted": 0,
+      "unresolved_claim_groups": 6,
+      "research_commission_scope_methodology_gap": true,
+      "report_manifest_sha256": "9e6023fef613d9f8c08218c1e2290d786f8843f357c07c8957c629eb0df33a89"
+    },
+    "trading_calendar": {
+      "status": "PASS",
+      "sessions": 3886,
+      "manifest_sha256": "d3c681d7d2020d3c7a8111d9600092e79a18ff28234b02e5f5020644506620b8"
+    },
+    "csi300_benchmark": {
+      "status": "PASS_FOR_FULL_RANGE_CLOSE_SERIES",
+      "manifest_sha256": "ced39152f1fb94def77faca1414ca80c661dc827803ae275f935ccc294e91c88"
+    }
+  },
+  "remaining_p1_facts": [
+    "CASH:301262:2023-10-24_MALFORMED_CONTEMPORANEOUS_EX_DATE",
+    "CASH:601607:2025-12-31_RECORD_DATE_2026-01-05_EX_DATE",
+    "CASH:603408:2025-12-31_RECORD_DATE_2026-01-05_EX_DATE",
+    "MERGER:000522:600332_CROSS_MARKET_ACCOUNT_REGISTRATION",
+    "MERGER:002013:600372_CROSS_MARKET_ACCOUNT_MAPPING",
+    "RAW:FULL_UNIVERSE",
+    "SUSPENSION:FULL_DAILY"
+  ],
+  "mandatory_incomplete_components": [
+    "SUSPENSION_HISTORY",
+    "RAW_OHLCV_AUTHORITY",
+    "ADJUSTMENT_ECONOMIC_ALIGNMENT",
+    "CORPORATE_ACTION_COMPLETENESS_AND_ACCOUNTING",
+    "HISTORICAL_MARKET_RULES_AND_TRANSACTION_COSTS"
+  ],
+  "paid_source_required": false,
+  "paid_source_option_report": "NOT_CREATED_NOT_REQUIRED_ON_CURRENT_EVIDENCE",
+  "human_source_input_required": true,
+  "human_methodology_decision_required": true,
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "development_study_run": false,
+  "validation_study_run": false,
+  "official_oos_run": false,
+  "input_order_reproducibility": "PASS_FOR_COMPONENTS_WHERE_REPORTED",
+  "manifest_sha256": "8e749905db42732baa1247ca60b5def47c827c4d4cee183473f2e65b9c3e0f00"
+}

@@ -75,6 +75,120 @@ def request_body(initial_cash: str = "100000") -> dict[str, object]:
     }
 
 
+@pytest.mark.parametrize(
+    "conversion",
+    [
+        "demerger",
+        "merger",
+        "zero_whole_merger",
+        "partial_surrender",
+        "ceil_surrender_zero",
+        "ceil_surrender_odd",
+        "pass_through",
+        "consolidation",
+    ],
+)
+async def test_mandatory_conversion_survives_repository_roundtrip(
+    client: AsyncClient,
+    monkeypatch: pytest.MonkeyPatch,
+    conversion: str,
+) -> None:
+    from datetime import date
+
+    from tests.test_demerger_accounting import at, event, funded
+
+    if conversion == "demerger":
+        portfolio, _ = funded("137")
+        portfolio.recognize_demerger(event(), date(2010, 2, 26), at("2010-02-26"))
+        pending = portfolio.snapshot_at(at("2010-02-26"))
+        portfolio.activate_demergers(
+            date(2010, 3, 19),
+            {"601188.SSE": Decimal(5), "601518.SSE": Decimal(4)},
+            at("2010-03-19"),
+        )
+        active = portfolio.snapshot_at(at("2010-03-19"))
+        expected_basis = Decimal(411)
+    elif conversion == "merger":
+        from tests.test_merger_accounting import event as merger_event
+        from tests.test_merger_accounting import funded as merger_funded
+
+        portfolio, _ = merger_funded()
+        portfolio.recognize_merger(merger_event(), date(2015, 12, 30), at("2015-12-30"))
+        pending = portfolio.snapshot_at(at("2015-12-30"))
+        portfolio.activate_mergers(
+            date(2015, 12, 30), {"001979.SZSE": Decimal(25)}, at("2015-12-30")
+        )
+        active = portfolio.snapshot_at(at("2015-12-30"))
+        expected_basis = Decimal(3000)
+    elif conversion == "zero_whole_merger":
+        from tests.test_zero_whole_merger import event as zero_event
+        from tests.test_zero_whole_merger import funded as zero_funded
+
+        portfolio, _ = zero_funded(1)
+        portfolio.recognize_merger(zero_event(), date(2017, 2, 17), at("2017-02-17"))
+        pending = portfolio.snapshot_at(at("2017-02-17"))
+        portfolio.activate_mergers(date(2017, 2, 27), {"600019.SSE": Decimal(6)}, at("2017-02-27"))
+        active = portfolio.snapshot_at(at("2017-02-27"))
+        expected_basis = Decimal(0)
+    elif conversion == "consolidation":
+        from tests.test_consolidation_accounting import event as consolidation_event
+        from tests.test_consolidation_accounting import funded as consolidation_funded
+
+        portfolio, _ = consolidation_funded()
+        portfolio.apply_consolidation(
+            consolidation_event(),
+            at("2014-06-25"),
+            holder_class=consolidation_event().affected_holder_class,
+        )
+        pending = portfolio.snapshot_at(at("2014-06-25"))
+        active = portfolio.snapshot_at(at("2014-06-26"))
+        expected_basis = Decimal(1000)
+    elif conversion == "pass_through":
+        from tests.test_pass_through_accounting import event as pass_event
+        from tests.test_pass_through_accounting import funded as pass_funded
+
+        portfolio, _ = pass_funded()
+        portfolio.apply_pass_through(pass_event(), at("2012-07-31"))
+        pending = portfolio.snapshot_at(at("2012-07-31"))
+        active = portfolio.snapshot_at(at("2012-08-01"))
+        expected_basis = Decimal(1000)
+    else:
+        from tests.test_partial_share_surrender import action as surrender_event
+        from tests.test_partial_share_surrender import funded as surrender_funded
+
+        portfolio, _ = surrender_funded()
+        e = surrender_event()
+        if conversion.startswith("ceil_surrender"):
+            from tests.test_partial_share_surrender import approved_convention
+
+            portfolio, _ = surrender_funded("1" if conversion.endswith("zero") else "6")
+            e = approved_convention().model_copy(
+                update={"research_effective_date": date(2024, 1, 4)}
+            )
+        portfolio.apply_partial_surrender(e, at("2024-01-04"), holder_class=e.affected_holder_class)
+        pending = portfolio.snapshot_at(at("2024-01-04"))
+        active = portfolio.snapshot_at(at("2024-01-05"))
+        expected_basis = Decimal(800)
+        if conversion.startswith("ceil_surrender"):
+            expected_basis = Decimal(0 if conversion.endswith("zero") else 40)
+    baseline = BacktestEngine(
+        CSVDataProvider(FIXTURES),
+        (MovingAverageCrossoverStrategy("fixture", "AAPL", 2, 3),),
+        BacktestConfig(initial_cash=Decimal(10000), default_order_quantity=Decimal(10)),
+    ).run("AAPL")
+    # Stub only the test runner result to exercise the production persistence path.
+    expected = replace(baseline, portfolio_snapshots=(pending, active))
+    monkeypatch.setattr(BacktestEngine, "run", lambda *args, **kwargs: expected)
+    response = await client.post("/api/backtests", json=request_body())
+    assert response.status_code == 201, response.text
+    async with SessionFactory() as session:
+        snapshots = await SQLAlchemyBacktestRepository(session).list_snapshots(
+            UUID(response.json()["run_id"]), 100, 0
+        )
+    assert snapshots.items == (pending, active)
+    assert sum(p.aggregate_cost_basis for p in snapshots.items[1].positions) == expected_basis
+
+
 async def test_api_persists_reference_result_and_exact_decimals(
     client: AsyncClient,
 ) -> None:

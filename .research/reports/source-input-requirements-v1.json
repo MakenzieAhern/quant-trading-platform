@@ -1,0 +1,13 @@
+{
+  "as_of_date": "2026-09-15",
+  "canonical_manifest_sha256": "e20492797f1249ecf2dc8dd5ef8b06f252199df2883425dca4c82a1045365edc",
+  "detailed_manifest": "/home/yuchen/data/research/staging/source-input-requirements-v1/manifest.json",
+  "file_sha256": "20dcd8d612927dc91080d91c55fe2ac1d7da110099f021900de19940eefcbf53",
+  "full_dataset_audited": false,
+  "full_dataset_created": false,
+  "full_dataset_frozen": false,
+  "manifest_version": "SOURCE_INPUT_REQUIREMENTS_V1",
+  "methodology_decision": "ORDINARY_A_SHARE_HOLDER_CLASS_AND_PER_SHARE_CASH_POLICY_FOR_DIFFERENTIATED_DISTRIBUTIONS",
+  "methodology_decision_items": 664,
+  "required_source_items": 16328
+}

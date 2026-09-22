@@ -1,0 +1,144 @@
+import json
+
+import pymupdf
+
+from scripts.audit_adjustment_gap_candidate_terms import classify_document, pages_for
+
+
+def test_exact_official_terms_remain_candidates_only() -> None:
+    document = {
+        "issuer": "000001",
+        "published_on": "2014-06-05",
+        "title": "2013年度权益分派实施公告",
+        "url": "https://static.cninfo.com.cn/finalpage/one.PDF",
+        "source_sha256": "a" * 64,
+        "affected_factor_changes": ["FACTOR:CN-A:SZSE:000001:2014-06-12"],
+    }
+    pages = [
+        "证券代码:000001 证券简称:测试\n"
+        "本公司及董事会全体成员保证公告内容真实、准确和完整,没有虚假记载、误导性陈述或者重大遗漏。\n"
+        "本公司2013年度权益分派方案为:向全体股东每10股派1.00元人民币现金(含税),"
+        "同时每10股转增2股。\n股权登记日:2014年6月11日。除权除息日:2014年6月12日。"
+    ]
+    result = classify_document(document, pages)
+    assert result["status"] == "EXACT_DATE_OFFICIAL_TERMS_CANDIDATE"
+    assert result["cash_per_share"] == "0.10"
+    assert result["bonus_share_ratio"] == "0.2"
+    assert result["matched_factor_changes"] == document["affected_factor_changes"]
+
+
+def test_final_scheme_absent_component_is_explicit_zero() -> None:
+    document = {
+        "issuer": "300001",
+        "published_on": "2014-06-05",
+        "title": "2013年度权益分派实施公告",
+        "url": "https://static.cninfo.com.cn/finalpage/zero.PDF",
+        "source_sha256": "c" * 64,
+        "affected_factor_changes": ["FACTOR:CN-A:SZSE:300001:2014-06-12"],
+    }
+    result = classify_document(
+        document,
+        [
+            "证券代码:300001\n一、2013年资本公积金转增股本方案\n每10股转增2股。\n"
+            "二、股权登记日与除权除息日\n股权登记日:2014年6月11日。"
+            "除权除息日:2014年6月12日。"
+        ],
+    )
+    assert result["cash_per_share"] == "0"
+    assert result["bonus_share_ratio"] == "0.2"
+    assert result["term_failures"] == {"cash_per_share": "NO_EXPLICIT_GROSS_CASH"}
+
+    unsupported = classify_document(
+        {**document, "affected_factor_changes": ["FACTOR:CN-A:SZSE:300001:2014-06-13"]},
+        [
+            "证券代码:300001\n一、权益分派方案\n本年度不进行权益分派。\n"
+            "二、股权登记日与除权除息日\n股权登记日:2014年6月12日。"
+            "除权除息日:2014年6月13日。"
+        ],
+    )
+    assert unsupported["status"] == "EXACT_DATE_NO_SUPPORTED_TERMS"
+
+
+def test_checksum_bound_date_review_resolves_ambiguous_extraction() -> None:
+    document = {
+        "issuer": "300127",
+        "published_on": "2011-04-26",
+        "title": "2010年度权益分派实施公告",
+        "url": "https://static.cninfo.com.cn/finalpage/one.PDF",
+        "source_sha256": "a" * 64,
+        "affected_factor_changes": ["FACTOR:CN-A:SZSE:300127:2011-05-04"],
+    }
+    pages = [
+        "证券代码:300127 证券简称:测试\n"
+        "本公司及董事会全体成员保证公告内容真实、准确和完整,没有虚假记载、误导性陈述或者重大遗漏。\n"
+        "本公司2010年度权益分派方案为:向全体股东每10股派1.00元人民币现金(含税),"
+        "同时每10股转增2股。\n股权登记日:2010年5月3日。除权除息日:2010年5月4日。"
+    ]
+    review = {
+        "symbol": "300127",
+        "source_sha256": "a" * 64,
+        "record_date": "2011-05-03",
+        "ex_date": "2011-05-04",
+        "pages": [1],
+    }
+
+    result = classify_document(document, pages, review)
+
+    assert result["status"] == "EXACT_DATE_OFFICIAL_TERMS_CANDIDATE"
+    assert result["date_source"] == "CHECKSUM_BOUND_VISUAL_REVIEW"
+    assert result["matched_factor_changes"] == document["affected_factor_changes"]
+
+
+def test_differentiated_cash_candidate_keeps_holder_policy() -> None:
+    document = {
+        "issuer": "600000",
+        "published_on": "2019-05-16",
+        "title": "2018年年度权益分派实施公告",
+        "url": "https://static.cninfo.com.cn/finalpage/two.PDF",
+        "source_sha256": "b" * 64,
+        "affected_factor_changes": ["FACTOR:CN-A:SSE:600000:2019-05-23"],
+    }
+    pages = [
+        "证券代码:600000 证券简称:测试\n"
+        "每股分配比例 A股每股现金红利0.06元(含税) 相关日期\n"
+        "差异化分红送转:是\n"
+        "股权登记日:2019年5月22日。除权除息日:2019年5月23日。"
+    ]
+    result = classify_document(document, pages)
+    assert result["cash_per_share"] == "0.06"
+    assert result["cash_holder_class"] == "ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER"
+    assert result["cash_policy_id"] == "DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1"
+
+
+def test_unparseable_retained_bytes_fail_closed(tmp_path) -> None:
+    source = tmp_path / "bad.pdf"
+    source.write_bytes(b"not a pdf")
+    pages, receipt = pages_for(
+        tmp_path,
+        {"source_sha256": "a" * 64, "source_path": source.name},
+        {},
+    )
+    assert pages is None
+    assert receipt["text_source"] == "SOURCE_BYTES_NOT_PARSEABLE_AS_PDF"
+
+
+def test_visual_review_prefers_source_text_over_corrupt_cache(tmp_path) -> None:
+    source = tmp_path / "source.pdf"
+    with pymupdf.open() as pdf:
+        pdf.new_page().insert_text((72, 72), "300127 official source")
+        pdf.save(source)
+    cache = tmp_path / ("a" * 64 + ".json")
+    cache.write_text(
+        json.dumps({"source_sha256": "a" * 64, "pages": ["corrupt cache"]}),
+        encoding="utf-8",
+    )
+
+    pages, receipt = pages_for(
+        tmp_path,
+        {"source_sha256": "a" * 64, "source_path": source.name},
+        {"a" * 64: cache},
+        prefer_source=True,
+    )
+
+    assert "300127 official source" in pages[0]
+    assert receipt["text_source"] == "DETERMINISTIC_PYMUPDF_SOURCE"

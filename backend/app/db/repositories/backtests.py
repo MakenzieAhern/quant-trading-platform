@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import Any, TypeVar
 from uuid import UUID
@@ -35,12 +35,18 @@ from app.domain.analytics import EquityPoint, PerformanceMetrics
 from app.domain.risk import OrderProposal, RiskDecision, RiskReasonCode, RiskReservation
 from app.domain.trading import (
     Fill,
+    MergerRoundingAudit,
     Order,
     OrderSide,
     OrderStatus,
     OrderType,
+    PartialShareSurrenderAudit,
+    PendingDemergerEntitlement,
+    PendingMergerEntitlement,
     PortfolioSnapshot,
     Position,
+    RestructuringBonusPassThroughAudit,
+    ShareConsolidationAudit,
     Signal,
     SignalType,
 )
@@ -51,6 +57,8 @@ ModelT = TypeVar("ModelT")
 def _decimal_json(value: object) -> object:
     if isinstance(value, Decimal):
         return canonical_decimal(validate_storage_decimal(value, "JSONB Decimal"))
+    if isinstance(value, date):
+        return value.isoformat()
     return value
 
 
@@ -361,12 +369,37 @@ class SQLAlchemyBacktestRepository:
                             market_price=Decimal(position["market_price"]),
                             unrealized_pnl=Decimal(position["unrealized_pnl"]),
                             realized_pnl=Decimal(position["realized_pnl"]),
+                            aggregate_cost_basis=Decimal(position["aggregate_cost_basis"])
+                            if position.get("aggregate_cost_basis") is not None
+                            else None,
                         )
                         for position in row.positions
+                    ),
+                    pending_demergers=tuple(
+                        PendingDemergerEntitlement.model_validate(p) for p in row.pending_demergers
+                    ),
+                    pending_mergers=tuple(
+                        PendingMergerEntitlement.model_validate(p) for p in row.pending_mergers
+                    ),
+                    merger_rounding_audits=tuple(
+                        MergerRoundingAudit.model_validate(p) for p in row.merger_rounding_audits
+                    ),
+                    partial_surrender_audits=tuple(
+                        PartialShareSurrenderAudit.model_validate(p)
+                        for p in row.partial_surrender_audits
+                    ),
+                    pass_through_audits=tuple(
+                        RestructuringBonusPassThroughAudit.model_validate(p)
+                        for p in row.pass_through_audits
+                    ),
+                    consolidation_audits=tuple(
+                        ShareConsolidationAudit.model_validate(p) for p in row.consolidation_audits
                     ),
                     market_value=row.market_value,
                     equity=row.equity,
                     realized_pnl=row.realized_pnl,
+                    corporate_action_realized_pnl=row.corporate_action_realized_pnl,
+                    total_pnl=row.total_pnl,
                     unrealized_pnl=row.unrealized_pnl,
                     cumulative_commission=row.cumulative_commission,
                     drawdown=row.drawdown,
@@ -517,6 +550,10 @@ class SQLAlchemyBacktestRepository:
                     market_value=_numeric(item.market_value, "snapshot.market_value"),
                     equity=_numeric(item.equity, "snapshot.equity"),
                     realized_pnl=_numeric(item.realized_pnl, "snapshot.realized_pnl"),
+                    corporate_action_realized_pnl=_numeric(
+                        item.corporate_action_realized_pnl, "snapshot.corporate_action_realized_pnl"
+                    ),
+                    total_pnl=_numeric(item.total_pnl, "snapshot.total_pnl"),
                     unrealized_pnl=_numeric(item.unrealized_pnl, "snapshot.unrealized_pnl"),
                     cumulative_commission=_numeric(
                         item.cumulative_commission, "snapshot.cumulative_commission"
@@ -525,6 +562,30 @@ class SQLAlchemyBacktestRepository:
                     positions=[
                         {key: _decimal_json(value) for key, value in position.model_dump().items()}
                         for position in item.positions
+                    ],
+                    pending_demergers=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.pending_demergers
+                    ],
+                    pending_mergers=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.pending_mergers
+                    ],
+                    merger_rounding_audits=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.merger_rounding_audits
+                    ],
+                    partial_surrender_audits=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.partial_surrender_audits
+                    ],
+                    pass_through_audits=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.pass_through_audits
+                    ],
+                    consolidation_audits=[
+                        {key: _decimal_json(value) for key, value in p.model_dump().items()}
+                        for p in item.consolidation_audits
                     ],
                 )
                 for index, item in enumerate(result.portfolio_snapshots)

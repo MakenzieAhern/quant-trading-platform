@@ -54,6 +54,21 @@ def request_body(initial_cash: str = "100000") -> dict[str, object]:
     }
 
 
+def a_share_request_body() -> dict[str, object]:
+    return {
+        "provider_type": "simulated_a_share",
+        "dataset_id": "CN_A_SIMULATED_PAPER_FIXTURE_V1",
+        "symbol": "CN-A",
+        "strategy": {
+            "type": "cn_a_cross_sectional_momentum_low_vol_v1",
+            "parameters": {},
+        },
+        "initial_cash": "100000000",
+        "default_order_quantity": "1",
+        "risk": {"enforce_buying_power": True},
+    }
+
+
 async def test_create_idempotency_validation_and_safe_lookup(client: AsyncClient) -> None:
     headers = {"Idempotency-Key": "paper-create-reference"}
     first = await client.post("/api/paper-trading/sessions", json=request_body(), headers=headers)
@@ -118,14 +133,38 @@ async def test_reference_session_runs_to_persisted_exact_snapshot(
     snapshot = (await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")).json()
     assert snapshot["session"]["initial_cash"] == "100000.052500000000000001"
     assert snapshot["latest_portfolio"]["equity"] == "100012.252500000000000001"
-    assert snapshot["latest_portfolio"]["cash"] == "98160.852500000000000001"
-    assert len(snapshot["signals"]) == 1
-    assert len(snapshot["risk_decisions"]) == 1
-    assert len(snapshot["orders"]) == 1
+
+
+async def test_frozen_a_share_simulation_persists_signal_fill_and_portfolio(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    created = await client.post("/api/paper-trading/sessions", json=a_share_request_body())
+    assert created.status_code == 201
+    session_id = created.json()["session_id"]
+    assert (await client.post(f"/api/paper-trading/sessions/{session_id}/start")).status_code == 200
+
+    detail: dict[str, object] = {}
+    for _ in range(500):
+        detail = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if detail["status"] == "STOPPED":
+            break
+        await asyncio.sleep(0.01)
+    assert detail["status"] == "STOPPED"
+    snapshot = (await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")).json()
+    assert snapshot["latest_session"] == {
+        "trading_date": "2030-12-23",
+        "security_count": 10,
+        "source": "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1",
+    }
+    assert len(snapshot["signals"]) == len(snapshot["risk_decisions"]) == 1
+    assert len(snapshot["orders"]) == len(snapshot["fills"]) == 1
     assert snapshot["orders"][0]["status"] == "FILLED"
-    assert snapshot["fills"][0]["price"] == "183.92"
+    assert len(snapshot["latest_portfolio"]["positions"]) == 1
+    assert snapshot["latest_portfolio"]["cash"] == "1223.5"
+    assert snapshot["fills"][0]["price"] == "23.845"
     assert snapshot["fills"][0]["commission"] == "0"
-    assert snapshot["fills"][0]["timestamp"] == "2024-01-09T00:00:00Z"
+    assert snapshot["fills"][0]["timestamp"] == "2030-12-23T01:25:00Z"
     assert snapshot["last_sequence"] > 0
 
     events = await client.get(f"/api/paper-trading/sessions/{session_id}/events")
@@ -136,7 +175,7 @@ async def test_reference_session_runs_to_persisted_exact_snapshot(
     event_types = [item["type"] for item in events.json()]
     fill_index = event_types.index("fill.created")
     assert event_types[fill_index - 2 : fill_index + 2] == [
-        "market.bar",
+        "market.session",
         "order.updated",
         "fill.created",
         "portfolio.snapshot",

@@ -10,10 +10,13 @@ export type PaperSessionStatus =
 export interface PaperSession {
   session_id: string;
   status: PaperSessionStatus;
-  provider_type: "replay";
+  provider_type: "replay" | "simulated_a_share";
   dataset_id: string;
   symbol: string;
-  strategy_type: "moving_average_crossover" | "rsi_mean_reversion";
+  strategy_type:
+    | "moving_average_crossover"
+    | "rsi_mean_reversion"
+    | "cn_a_cross_sectional_momentum_low_vol_v1";
   strategy_parameters: Record<string, unknown>;
   initial_cash: string;
   default_order_quantity: string;
@@ -32,6 +35,12 @@ export interface MarketBar {
   low: string;
   close: string;
   volume: string;
+}
+
+export interface MarketSession {
+  trading_date: string;
+  security_count: number;
+  source: "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1";
 }
 
 export interface PaperSignal {
@@ -97,6 +106,7 @@ export interface PaperSnapshot {
   session: PaperSession;
   last_sequence: number;
   latest_bar: MarketBar | null;
+  latest_session: MarketSession | null;
   signals: PaperSignal[];
   risk_decisions: PaperRiskDecision[];
   orders: PaperOrder[];
@@ -111,27 +121,40 @@ export interface PaperSessionPage {
   total: number;
 }
 
-export interface CreatePaperSessionRequest {
-  provider_type: "replay";
-  dataset_id: "AAPL_fixture";
-  symbol: "AAPL";
-  strategy:
-    | {
-        type: "moving_average_crossover";
-        parameters: { short_period: number; long_period: number };
-      }
-    | {
-        type: "rsi_mean_reversion";
-        parameters: {
-          rsi_period: number;
-          oversold: string;
-          overbought: string;
-        };
+export type CreatePaperSessionRequest =
+  | {
+      provider_type: "replay";
+      dataset_id: "AAPL_fixture";
+      symbol: "AAPL";
+      strategy:
+        | {
+            type: "moving_average_crossover";
+            parameters: { short_period: number; long_period: number };
+          }
+        | {
+            type: "rsi_mean_reversion";
+            parameters: {
+              rsi_period: number;
+              oversold: string;
+              overbought: string;
+            };
+          };
+      initial_cash: string;
+      default_order_quantity: string;
+      risk: { enforce_buying_power: boolean };
+    }
+  | {
+      provider_type: "simulated_a_share";
+      dataset_id: "CN_A_SIMULATED_PAPER_FIXTURE_V1";
+      symbol: "CN-A";
+      strategy: {
+        type: "cn_a_cross_sectional_momentum_low_vol_v1";
+        parameters: Record<string, never>;
       };
-  initial_cash: string;
-  default_order_quantity: string;
-  risk: { enforce_buying_power: boolean };
-}
+      initial_cash: string;
+      default_order_quantity: string;
+      risk: { enforce_buying_power: true };
+    };
 
 export interface PaperWireEvent {
   sequence: number | null;
@@ -140,6 +163,7 @@ export interface PaperWireEvent {
     | "stream.resync_required"
     | "session.status"
     | "market.bar"
+    | "market.session"
     | "signal.created"
     | "risk.decision"
     | "order.updated"

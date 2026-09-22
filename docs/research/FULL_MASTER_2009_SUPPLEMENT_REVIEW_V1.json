@@ -1,0 +1,283 @@
+{
+  "version": "SZSE_2009_BASELINE_IDENTITY_REVIEW_V1",
+  "scope": "MASTER_MEMBERSHIP_ONLY_NOT_ST_OR_TRADABILITY",
+  "b_only_company_code_aliases": {
+    "000053": "200053", "000054": "200054", "000152": "200152",
+    "000160": "200160", "000168": "200168", "000468": "200468",
+    "000512": "200512", "000706": "200706", "000770": "200770",
+    "000771": "200771", "000986": "200986", "000992": "200992"
+  },
+  "records": [
+    {
+      "security_id": "CN-A:SZSE:000038",
+      "symbol": "000038",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-04-24/57864076.PDF",
+      "source_sha256": "745baa8b5f92891e673a14e346b46abb042bec56f0aa908c2e781f87150a75c5",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/00a2319600b6593d2d05e456d40b1cf65f9714a9f910cbdc1be5ce684ae4a4d2.pdf",
+      "published_on": "2010-04-24",
+      "retrieved_at_utc": "2026-09-14T02:02:57.469017+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000156",
+      "symbol": "000156",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-02-09/57594594.PDF",
+      "source_sha256": "7d3ad13792c3101d944742c4b054d251d4e91b4603c44da0c2ca20161b293c72",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/9eb6df417f271d82cbca2731790e217e2f7851be6d94af6457395b7e8ea0efcd.pdf",
+      "published_on": "2010-02-09",
+      "retrieved_at_utc": "2026-09-14T02:02:41.884073+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000403",
+      "symbol": "000403",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-04-29/57890857.PDF",
+      "source_sha256": "99a3510d433b06a059c231a1138a087d7a1199e10b7014dd27a4b5de2f88c616",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/a48edfeeb64145ddb52530e47b48f35b016fec52e22feffbf2bc6c604dc04f54.pdf",
+      "published_on": "2010-04-29",
+      "retrieved_at_utc": "2026-09-14T02:03:08.026154+00:00",
+      "reviewed_identity_pages": [
+        5
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000498",
+      "symbol": "000498",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-04-27/57876347.PDF",
+      "source_sha256": "1bf5b63206b2908a2b97d3d0f3e4dc41c81fb301d447ed739efb1c166ea43bde",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/f9669f02c2eb2f8a7b49d9945819001d84d6ee73501164a7b31b293a23f34d51.pdf",
+      "published_on": "2010-04-27",
+      "retrieved_at_utc": "2026-09-14T02:03:00.053252+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000620",
+      "symbol": "000620",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-01-29/57556077.PDF",
+      "source_sha256": "9abe87c6df5116a6e1be358d60059e95e6dc5df4b4820d34255212c0b1a4edaf",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/78fe05a44b0ff8c242e2144dc23ae956a5687f187a75a61b4e0205d6c2e3c6a5.pdf",
+      "published_on": "2010-01-29",
+      "retrieved_at_utc": "2026-09-14T02:02:39.591847+00:00",
+      "reviewed_identity_pages": [
+        1,
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000622",
+      "symbol": "000622",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-04-28/57883941.PDF",
+      "source_sha256": "2ca7bb39dd953935d6cfe25f3a9b9808d7f3e4e233b2350db990e0518bc343d1",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/160aa3e10ad1aabd403b55a64632b9eb258d8fd81e7aa10a04a941b8f546374e.pdf",
+      "published_on": "2010-04-28",
+      "retrieved_at_utc": "2026-09-14T02:03:00.192498+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000670",
+      "symbol": "000670",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-02-05/57581200.PDF",
+      "source_sha256": "0dd03238a8405ec5ce38442b3ec9eb3513a68415df907adfff54945aa053a8dd",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/dda8e54d7eb932f9019d87db262b50fd271eff90b2dc8b85a028c1e4a25ff6b5.pdf",
+      "published_on": "2010-02-05",
+      "retrieved_at_utc": "2026-09-14T02:02:39.673333+00:00",
+      "reviewed_identity_pages": [
+        3
+      ],
+      "review_method": "PDFIUM_RENDER_VISUAL",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000672",
+      "symbol": "000672",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-04-15/57813127.PDF",
+      "source_sha256": "3e9ed204c4fcc69630ad98602dc7e9d1e867f378de23d8cc07dc76efdad92d4c",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/15bef3bff8340ea269c9c912b8ffcb9ba091e61d78af6393a3336234db70f2d9.pdf",
+      "published_on": "2010-04-15",
+      "retrieved_at_utc": "2026-09-14T02:02:53.607346+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000681",
+      "symbol": "000681",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-04-24/57862995.PDF",
+      "source_sha256": "b399edc05c1444b22a3d87766885471cfb0e67925e7da42f9c88439d8bf5bbdd",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/f4d392d794cb0c0a64c41fb5d8cf25e8b527759675b9d024ce884b57d8be89e8.pdf",
+      "published_on": "2010-04-24",
+      "retrieved_at_utc": "2026-09-14T02:02:57.211279+00:00",
+      "reviewed_identity_pages": [
+        3
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000688",
+      "symbol": "000688",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-03-05/57653926.PDF",
+      "source_sha256": "b0720cf25a6c5e5b765da93c6fee66508462e7665ec607035c330659d80c2d4f",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/d83e3c7f31beee149423871abad3398f02f5b52aa93901b965997bdb4b06b6ca.pdf",
+      "published_on": "2010-03-05",
+      "retrieved_at_utc": "2026-09-14T02:02:42.123863+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000693",
+      "symbol": "000693",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-03-19/57704414.PDF",
+      "source_sha256": "09b48f00539fff85de0af08d14dd44b3d6732d08b3afb01d65b2e9042ad8b40f",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/58ed392d6d47be8f3ef7413c17c93f88ebe0ca376df777ab28a4c7aa5052258e.pdf",
+      "published_on": "2010-03-19",
+      "retrieved_at_utc": "2026-09-14T02:02:49.389635+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000719",
+      "symbol": "000719",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-03-10/57670961.PDF",
+      "source_sha256": "6eb875115f80965a2d5fc8190f93d2cc794aba2e1dbbe2d6cbb3282ecd0f5bbf",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/d5009d6defba9ca1a693a2b71b31be82f71d054cce818df10b5a02ccd276aa0e.pdf",
+      "published_on": "2010-03-10",
+      "retrieved_at_utc": "2026-09-14T02:02:45.611195+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000732",
+      "symbol": "000732",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-03-30/57746439.PDF",
+      "source_sha256": "913e926cfd867137f8208520f7c647cfd8416897e8d502910babf265e0eca272",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/652e6fadd3e93a275f7a1be283a2df99b1c56aa6f5660aeba80f03cb7ce21ccd.pdf",
+      "published_on": "2010-03-30",
+      "retrieved_at_utc": "2026-09-14T02:02:50.180191+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000757",
+      "symbol": "000757",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-04-10/57795129.PDF",
+      "source_sha256": "124bcf14cc946a49c8c4e43585071d52554d946e1c07f0ff287b2948dde75926",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/cbe60f2a3fa27370b85853d613ca81ae8c6c8382d0dc94a403b1d5f29b17af70.pdf",
+      "published_on": "2010-04-10",
+      "retrieved_at_utc": "2026-09-14T02:02:51.921355+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000787",
+      "symbol": "000787",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-04-30/57897735.PDF",
+      "source_sha256": "e6727e1d08370ba1f8174d80f9c5110b4c79d0b87cc66db19f5682ff9b9dc753",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/9de84da39b9127877f03aae4d19e1e65c43648a5048d7e7b57f1a76897175085.pdf",
+      "published_on": "2010-04-30",
+      "retrieved_at_utc": "2026-09-14T02:03:11.386928+00:00",
+      "reviewed_identity_pages": [
+        5
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000805",
+      "symbol": "000805",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-03-09/57667378.PDF",
+      "source_sha256": "246dbc027874e3fb8664ba27bb5ac7eeb62e0c93f67eeea2441c370824babd7a",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/7501efeb6e2f240a2e9cd701892e01715143afe71a30936423eee110421ad032.pdf",
+      "published_on": "2010-03-09",
+      "retrieved_at_utc": "2026-09-14T02:02:44.439330+00:00",
+      "reviewed_identity_pages": [
+        5
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000863",
+      "symbol": "000863",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-04-28/57884127.PDF",
+      "source_sha256": "cac53a254c843690dbfd229b4f33b0be167dd3f248242d50192ea34efd9c3ab7",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/ea25b6f4057dd3338d6f5c116b0d9fbe29d327d68fbd6975c77b015c93edc421.pdf",
+      "published_on": "2010-04-28",
+      "retrieved_at_utc": "2026-09-14T02:03:04.555419+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    },
+    {
+      "security_id": "CN-A:SZSE:000981",
+      "symbol": "000981",
+      "source_url": "https://static.cninfo.com.cn/finalpage/2010-05-20/57971625.PDF",
+      "source_sha256": "5d321a754660ce9fcaf04be64bfed1f83967b00b1a8d10f9f8d9582e8eb77f40",
+      "source_path": "/home/yuchen/data/research/staging/full-master-szse-baseline-v2/annual2009-v1/pdf/44b99cd1eab44516bdbd51753fddea631eec3e70f242c6eb5a7b542d4bc2f3f0.pdf",
+      "published_on": "2010-05-20",
+      "retrieved_at_utc": "2026-09-14T02:03:15.959891+00:00",
+      "reviewed_identity_pages": [
+        4
+      ],
+      "review_method": "REVIEWED_LABELED_STOCK_CODE_AND_EXCHANGE",
+      "classification": "ANNUAL_2009_LISTED_COMPANY_IDENTITY_RETAINED",
+      "status_history_acceptance": false
+    }
+  ]
+}

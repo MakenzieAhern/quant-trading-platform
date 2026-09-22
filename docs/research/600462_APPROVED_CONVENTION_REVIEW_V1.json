@@ -1,0 +1,232 @@
+{
+  "policy": "CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1",
+  "convention_approval_sha256": "6f14546633e87d4a3dfec3564d92e03de07b6778b0636e4f86193994772f03b1",
+  "limitation": "The exact account-level CSDC book-entry date and fractional allocation rule for the 600462 restructuring are not publicly evidenced in the retained sources. Because the security was non-trading through the relevant transition, the research engine applies the corporate action immediately before the first post-event tradable Bar. Fractional surrender is conservatively rounded upward at the surrendered-share level.",
+  "documents": [
+    {
+      "path": "600462-plan.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-06-28/61190189.PDF",
+      "title": "出资人权益调整方案的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-06-28",
+      "document_date": "2012-06-27",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:24:34.514037+00:00",
+      "sha256": "4cdfb7a22a7bf164a1a92d03b34b34c23d2dc2d2f087185b7eb5bfdc32cc16ff"
+    },
+    {
+      "path": "600462-plan-explanation.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-07-10/61245121.PDF",
+      "title": "出资人权益调整相关问题的说明",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-07-10",
+      "document_date": "2012-07-09",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:24:35.863405+00:00",
+      "sha256": "7cc1bd3d5d9e5ffcce1b93f43f51ea61ce283a809a7edb7d16de653c3ad0d455"
+    },
+    {
+      "path": "600462-court-approval.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-08-08/61388417.PDF",
+      "title": "关于法院批准重整计划及继续停牌的公告（附重整计划）",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-08-08",
+      "document_date": "2012-08-07",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:44:20.129176+00:00",
+      "sha256": "2c4e5afe8bdb98d6f914bd1245dc1f5444330e8929225c5e072250077905bb72"
+    },
+    {
+      "path": "600462-progress-oct20.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-20/61678960.PDF",
+      "title": "关于公司执行重整计划进展公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-10-20",
+      "document_date": "2012-10-19",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:24:37.793854+00:00",
+      "sha256": "6aac7ca6c6ea82e47502a70cb1be08bd111eab63d8bf107c3462795d0779ebeb"
+    },
+    {
+      "path": "600462-transfer.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-27/61721428.PDF",
+      "title": "关于公司执行重整计划及股份冻结、划转情况的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-10-27",
+      "document_date": "2012-10-26",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:24:32.718120+00:00",
+      "sha256": "c4dcb25d6dce7d11f08862d10b2ae174a732cfafebcdd2792980eb5bcb62e4f6"
+    },
+    {
+      "path": "600462-progress-oct30.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-30/61732609.PDF",
+      "title": "关于执行重整计划进展公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-10-30",
+      "document_date": "2012-10-29",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:25:03.792097+00:00",
+      "sha256": "0d0fa5e1c6773d8a834516af2426e8d5adb4de0b9c69213462489d73bd7b809f"
+    },
+    {
+      "path": "600462-capital-adjustment-implementation.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-31/61741320.PDF",
+      "title": "关于重整计划中涉及出资人权益调整事项实施公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-10-31",
+      "document_date": "2012-10-30",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T01:55:17.903619+00:00",
+      "sha256": "9d53f1ea78030b5ee3581af4316f37d6511c4af853623c6b7ea07e42e00cad9a"
+    },
+    {
+      "path": "600462-progress-nov2.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-02/61751948.PDF",
+      "title": "关于公司执行重整计划进展公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-02",
+      "document_date": "2012-11-01",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:25:05.685997+00:00",
+      "sha256": "8c962ee074c999135144732d5733323b9b57ec565bb540499f08f47f0e648427"
+    },
+    {
+      "path": "600462-progress-nov6.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-06/61763932.PDF",
+      "title": "关于公司执行重整计划进展公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-06",
+      "document_date": "2012-11-05",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:25:07.143762+00:00",
+      "sha256": "d91ec000d3b220faf761eb5c2bbae2c40db8fc65009a5efce24e2bfb08c0d63c"
+    },
+    {
+      "path": "600462-progress-nov8.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-08/61773662.PDF",
+      "title": "关于公司重整计划执行及股份冻结情况的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-08",
+      "document_date": "2012-11-07",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:25:08.262167+00:00",
+      "sha256": "2050242d4af602d15e67f062bdafba9d7707af1236f8213d33d919add541cf79"
+    },
+    {
+      "path": "600462-transfer-complete.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-09/61779221.PDF",
+      "title": "关于公司股权司法划转完成的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-09",
+      "document_date": "2012-11-08",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:53:40.989114+00:00",
+      "sha256": "b69fb0005f0e6d9d23c555f24da753a7eb9f51cffaa8d09869abb84b0b24356f"
+    },
+    {
+      "path": "600462-suspension.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-02-09/60518742.PDF",
+      "title": "关于公司股票停牌的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-02-09",
+      "document_date": "2012-02-08",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:53:37.070362+00:00",
+      "sha256": "9ce1cc1e53f636cd8621f2dd26631d2688be686c44782536e581b656c7beed82"
+    },
+    {
+      "path": "600462-resumption.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-17/61808819.PDF",
+      "title": "关于公司股票复牌的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-17",
+      "document_date": "2012-11-16",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:53:39.905310+00:00",
+      "sha256": "80010f9ec6b4cb0ea2c2432d8a8a6b096862674080b02e90b346380f3321d804"
+    },
+    {
+      "path": "600462-court-completion.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-12-14/61907640.PDF",
+      "title": "关于法院裁定公司重整计划执行完毕的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-12-14",
+      "document_date": "2012-12-13",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:44:16.332184+00:00",
+      "sha256": "5d67e395f9ed467dffa858ef0ac929913d6bdde573f2b27fb13fa5cb6a336461"
+    },
+    {
+      "path": "600462-annual-62294359.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2013-03-29/62294359.PDF",
+      "title": "2012年年度报告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2013-03-29",
+      "document_date": null,
+      "document_date_note": "Separate signature date not established in this review; publication date retained without substitution.",
+      "retrieved_at_utc": "2026-09-13T03:27:19.699409+00:00",
+      "sha256": "a999d0f601b0eb2674fdd03f667e3cd7c970f007d3918445b8de57db6e954da0"
+    },
+    {
+      "path": "600462-annual-62406177.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2013-04-23/62406177.PDF",
+      "title": "2012年年度报告（修订版）",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2013-04-23",
+      "document_date": null,
+      "document_date_note": "Separate signature date not established in this review; publication date retained without substitution.",
+      "retrieved_at_utc": "2026-09-13T03:27:12.171866+00:00",
+      "sha256": "f9c71099b5f686dc0136d56c81d369761c957bd4e4d6ab4578ac44387ebe9256"
+    },
+    {
+      "path": "600462-annual-2010.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2011-03-19/59144400.PDF",
+      "published_on": "2011-03-19",
+      "sha256": "b327735a14d32ab81345a52bf785024880a8aed12b696f9b9e3ec9d08af1e201",
+      "retrieved_at_utc": "2026-09-13T04:08:12.407171+00:00"
+    },
+    {
+      "path": "600462-annual-2011.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-04-27/60921739.PDF",
+      "published_on": "2012-04-27",
+      "sha256": "0022541e8ec2f454d2a07f31a6fd5ae2788c21a232aa1951162a56db7d6f2ed6",
+      "retrieved_at_utc": "2026-09-13T04:07:48.227463+00:00"
+    }
+  ],
+  "reachability": {
+    "scope": "FULL_600462_QUANTITY_TRANSITION_LATTICE_FOR_FLAT_START_2010_ORDINARY_CASH_ACCOUNT",
+    "pre_surrender_quantities": "Subset of {100*n | integer n>=0}; capital/liquidity constraints only remove members",
+    "proof": [
+      "Research engine resets Portfolio flat.",
+      "Accepted SSE Main Board opening convention permits whole100-share increments and all-or-nothing fills; odd-lot liquidation cannot create an odd holding from multiples100.",
+      "2010 annual pp6-7 and2011 pp6-7 confirm no stock/rights quantity distributions.2010 unlock reclassifies existing shares only.",
+      "2012 annual pp28-29 and retained event chain identify only2012 surrender and separate issuer issuance; suspension prevents intervening trades. Nontrade external transfers are not supported research operations.",
+      "Cash dividends and declined subscriptions cannot alter quantity. No prior600462 merger/demerger/share distribution occurs in retained2010-to-event evidence.",
+      "Hence all reachable pre-surrender quantities are divisible5. Applying20% yields integer20*n surrendered and80*n retained. No actual strategy performance/path is evaluated."
+    ],
+    "integer_surrender_cases": "ALL_REACHABLE_POSITIVE_QUANTITIES",
+    "fractional_surrender_cases": 0,
+    "zero_retained_positive_position_cases": 0,
+    "max_extra_shares_vs_floor": "0",
+    "max_estimated_economic_difference": "0",
+    "general_policy_stress_cases": "Q1/6/101 are separate engineered edge cases, not claimed historical600462 positions",
+    "invalidated_by": "Imported holdings, new incoming conversion evidence, new quantity-changing event, or changed partial-fill/lot policy requires rerun."
+  }
+}

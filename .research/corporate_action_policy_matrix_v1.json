@@ -1,0 +1,38 @@
+{
+  "catalog_id": "CORPORATE_ACTION_POLICY_MATRIX_V1",
+  "status": "FROZEN_POLICY_CATALOG_NOT_DATASET",
+  "approval_sha256": "9362f32566013841a3a45fd5946abbc9c128fd4f66b5ea20e23c902180a8a4ad",
+  "revision": 3,
+  "lineage": {
+    "prior_file_sha256": "8e4269e5b62a7a738e4e46a0f0caada47fe07af98b482ae3f81fd946cf759c79",
+    "differentiated_cash_approval_sha256": "869cdc3159ee770d06c29ecca4965d9b554382bb73c0fdd7e9c64724525d05c5",
+    "retained_bonus_fraction_approval_sha256": "26bf7dafd15bf2eca4476b2dfeaa09b5fc95ee90dbe2769637ae9a21bfa603e5"
+  },
+  "coverage": ["2010-01-01", "2025-12-31"],
+  "scope": "ORDINARY_A_SHARE_EQUITIES_ONLY",
+  "acceptance_rule": "Policy approval is not source completeness or dataset acceptance. Exact effective-dated official terms and applicable holder class are required.",
+  "policies": [
+    {"class":"CASH_DIVIDEND","policy_id":"EXISTING_ACCEPTED_CASH_DIVIDEND","accounting":"Authoritative entitlement cash; no Order/Fill; no adjusted-price double count."},
+    {"class":"DIFFERENTIATED_CASH","policy_id":"DIFFERENTIATED_CASH_ORDINARY_PUBLIC_A_V1","accounting":"Exact gross final-implementation cash for the ordinary exchange-tradable public A-share holder; unrestricted/public A term over restricted or special-holder terms; no averaging, tolerance, tax-net substitution or synthetic ex-price inference."},
+    {"class":"RETAINED_BONUS","policy_id":"BASIS_CONSERVED_RETAINED_BONUS","accounting":"Official quantity ratio; aggregate basis preserved unless authoritative tax/basis terms require otherwise; cash unchanged."},
+    {"class":"RETAINED_BONUS_FRACTION","policy_id":"CN_A_RETAINED_BONUS_FRACTIONAL_SHARE_POLICY_V1","accounting":"Use an exact official whole-share allocation when individually evidenced; otherwise floor the theoretical post-event quantity, book no synthetic cash or tradable fraction, preserve aggregate basis on the remaining whole shares, and audit the discarded fractional bound."},
+    {"class":"RESTRUCTURING_PASS_THROUGH","policy_id":"CN_A_RESTRUCTURING_BONUS_PASS_THROUGH_POLICY_V1","accounting":"NET_PASS_THROUGH_NO_BASIS_ALLOCATION; original quantity and basis unchanged; no synthetic value or loss."},
+    {"class":"RIGHTS","policy_id":"CN_A_RIGHTS_ISSUE_POLICY_V1","accounting":"NO_SUBSCRIPTION_NO_MONETIZATION_V1; no capital injection; preserve metadata."},
+    {"class":"SPLIT_CONSOLIDATION","policy_id":"CN_A_SHARE_CONSOLIDATION_POLICY_V1","accounting":"Official ratio; authoritative fractional mechanism first, otherwise floor/no fabricated cash or shares; basis retained if whole quantity positive, otherwise zero-whole write-off."},
+    {"class":"PARTIAL_SURRENDER","policy_id":"CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1","accounting":"Remove proportional basis with uncompensated original shares; loss is corporate-action PnL; approved fractional convention when official mechanics unavailable."},
+    {"class":"FULL_OR_ZERO_WHOLE_EXTINGUISHMENT","policy_id":"WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1","accounting":"Remove nonexistent position and all orphan basis; corporate-action loss; no Order/Fill."},
+    {"class":"STOCK_MERGER","policy_id":"CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1","accounting":"Basis transferred to successor; approved floor/no cash for unreproducible allocation; zero-whole basis write-off."},
+    {"class":"DEMERGER","policy_id":"CN_A_MANDATORY_DEMERGER_POLICY_V1","accounting":"Official tax allocation, reference values or valuation ratios; never invent a multi-asset basis split."},
+    {"class":"MANDATORY_CASH_ONLY","policy_id":"MANDATORY_EXACT_CASH_CONSIDERATION_V1","accounting":"Nonelective exact cash per share times eligible quantity; remove shares and basis; corporate-action PnL equals cash minus basis; trading PnL zero."},
+    {"class":"MANDATORY_MIXED_CONSIDERATION","policy_id":"OFFICIAL_EXACT_CONSIDERATION_AND_BASIS_ALLOCATION_V1","accounting":"Apply exact official consideration and basis allocation; materially ambiguous multi-asset allocation follows human-stop rule."},
+    {"class":"VOLUNTARY_ELECTION","policy_id":"NO_PARTICIPATION_DEFAULT_V1","accounting":"No participation unless existing predeclared policy states otherwise; no hindsight election."},
+    {"class":"TEMPORARY_ENTITLEMENT","policy_id":"NON_TRADABLE_PENDING_ACCOUNTING_V1","accounting":"Preserve accounting continuity only; non-orderable, non-executable, excluded from factor ranking."},
+    {"class":"VERIFIED_SUSPENSION_BOUNDARY","policy_id":"FIRST_POST_EVENT_TRADING_BOUNDARY_V1","accounting":"Official identity/terms, verified inability to trade through uncertainty, authoritative first tradable Bar required; apply before that Bar without inventing registry time."},
+    {"class":"UNKNOWN_MATERIAL_STRUCTURE","policy_id":"CONSOLIDATED_HUMAN_METHODOLOGY_GATE_V1","accounting":"Stop only when material to quantity/cash/basis/eligibility, unmappable to approved policy, official evidence nondeterministic, and alternatives materially change results; finish independent work first."}
+  ],
+  "invariants": ["QUANTITY_RECONCILIATION","CASH_RECONCILIATION","BASIS_RECONCILIATION","CORPORATE_ACTION_PNL_RECONCILIATION","NO_SYNTHETIC_ORDER_FILL","NO_ORPHAN_BASIS"],
+  "dataset_frozen": false,
+  "development_authorized": false,
+  "validation_authorized": false,
+  "oos_authorized": false
+}

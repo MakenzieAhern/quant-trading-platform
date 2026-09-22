@@ -1,0 +1,99 @@
+{
+  "report_id": "R5_FULL_SOURCE_PREFLIGHT_V7",
+  "requested_coverage": ["2010-01-01", "2025-12-31"],
+  "dataset_id": "cn-a-research-20100101-20251231-v1",
+  "status": "BLOCKED_MATERIAL_AUTHORITY_AND_METHODOLOGY_GAPS",
+  "verified_safe_start_date": null,
+  "components": {
+    "security_master": {
+      "status": "PASS",
+      "securities": 5431,
+      "intervals": 5436,
+      "true_p0_unresolved_facts": 0,
+      "report_manifest_sha256": "3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235cc6d98e12a8150faf8"
+    },
+    "st_history": {
+      "status": "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
+      "sse_chain_gaps": 0,
+      "sse_manifest_sha256": "0b11bd3fcf4f62b530a551365dfa974b7db3cef63156d5a311e0f714ae0b012f",
+      "szse_probe_sha256": "8cb0c481cd8bd004dc689eee3370eb2fd9f592daec6ced717b40c45d1401c3a8"
+    },
+    "suspension_history": {
+      "status": "PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES",
+      "sse_unresolved": 0,
+      "szse_unresolved": 2009,
+      "szse_exact_resumptions": 8738,
+      "szse_terminal_closures": 58,
+      "authority_file_sha256": "7777c98218be1ef99ced14787b86ed5cb1dcd71482e5923a0ab6dd27fba69e59",
+      "authority_manifest_sha256": "965c4b18eb37cbefcfa3f00d9c217f199bfcee9f50cc9436dabb40131075794b"
+    },
+    "raw_ohlcv": {
+      "status": "PARTIAL_SOURCE_SNAPSHOTS_NOT_RAW_AUTHORITY",
+      "sse_unclassified_missing_sessions": 0,
+      "szse_unresolved_source_rows": 239,
+      "szse_afterhours_scope_unproven": 223,
+      "szse_gap_file_sha256": "7350f64444a39b10b43dc1b4650174628272c773c29df4079e210fbec37da9ed",
+      "szse_gap_manifest_sha256": "5ad2a1aac5ad867c724bcf45a48fdac6aec8566ccab20c2d35733c20b95e1cda"
+    },
+    "adjustment_factors": {
+      "status": "PARTIAL_ECONOMIC_ALIGNMENT_AND_EVENT_COMPLETENESS_NOT_ESTABLISHED",
+      "verified_intervals": 5436,
+      "conflicting_intervals": 0,
+      "unmatched_factor_change_dates": 2328,
+      "supported_events_without_factor_change": 6,
+      "gross_terms_factor_checks": 478,
+      "gross_terms_factor_conflicts": 478,
+      "provider_conventions_unresolved": 8,
+      "terms_manifest_sha256": "47c02d367dfa64d0afee1f7f9f40a5df6d02c0e8dcc99c9367e2d053b5c85aba",
+      "economics_manifest_sha256": "ff30322ea98b80da89e9b73a2019090f9a69908af7385e21785061b003fb88f8"
+    },
+    "corporate_actions": {
+      "status": "PASS_PUBLIC_SOURCE_FACT_CLOSURE",
+      "p1_raw_requirements": 16320,
+      "p1_facts_already_established": 16318,
+      "p1_resolved_by_official_substitution": 2034,
+      "p1_true_missing_source_facts": 2,
+      "p1_unresolved_cash_documents": 0,
+      "cash_documents_supported": 13590,
+      "remaining_non_corporate_requirements": ["RAW:FULL_UNIVERSE", "SUSPENSION:FULL_DAILY"],
+      "cumulative_report_file_sha256": "455d5cea86036679c55e49f1eb0aab71108556d5e0413345b333e544f69c03f9",
+      "cumulative_report_manifest_sha256": "bff24c37eca440a94cb89ed4357d60bd68d15ce4fac1fc0c6243d6fdd0b06890"
+    },
+    "market_rules_and_transaction_costs": {
+      "status": "PARTIAL",
+      "new_executable_rules_accepted": 0,
+      "unresolved_claim_groups": 5,
+      "transfer_2012_base_contradiction": true,
+      "research_commission_scope_methodology_gap": true,
+      "report_file_sha256": "bd0caf5ab5dcd784eefbd6a0600009f30667b63a4ba5a72951f3cf0fc9a7b275",
+      "report_manifest_sha256": "79524795cd5eca54f2361a45c8a18d80588040369591fb248033eaccfe3be8f3"
+    },
+    "trading_calendar": {
+      "status": "PASS",
+      "sessions": 3886,
+      "manifest_sha256": "d3c681d7d2020d3c7a8111d9600092e79a18ff28234b02e5f5020644506620b8"
+    },
+    "csi300_benchmark": {
+      "status": "PASS_FOR_FULL_RANGE_CLOSE_SERIES",
+      "manifest_sha256": "ced39152f1fb94def77faca1414ca80c661dc827803ae275f935ccc294e91c88"
+    }
+  },
+  "remaining_p1_facts": ["RAW:FULL_UNIVERSE", "SUSPENSION:FULL_DAILY"],
+  "mandatory_incomplete_components": [
+    "SUSPENSION_HISTORY",
+    "RAW_OHLCV_AUTHORITY",
+    "ADJUSTMENT_ECONOMIC_ALIGNMENT",
+    "HISTORICAL_MARKET_RULES_AND_TRANSACTION_COSTS"
+  ],
+  "paid_source_required": false,
+  "human_source_input_required": true,
+  "human_methodology_decision_required": true,
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "development_study_run": false,
+  "validation_study_run": false,
+  "official_oos_run": false,
+  "input_order_reproducibility": "PASS_FOR_COMPONENTS_WHERE_REPORTED",
+  "manifest_sha256": "e3fcd777abd72dae9b8591244beebcdadafffc8bde5a73dd8a392041dd55ce34"
+}

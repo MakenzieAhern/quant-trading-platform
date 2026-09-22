@@ -1,5 +1,7 @@
 import { useRef, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
+import { ApiError } from "../api/client";
 import { paperApi } from "../api/paper";
 import { Link } from "../components/Link";
 import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
@@ -11,9 +13,16 @@ import {
 } from "../utils/format";
 import { navigate } from "../utils/navigation";
 
-type StrategyType = CreatePaperSessionRequest["strategy"]["type"];
+type ReplayRequest = Extract<
+  CreatePaperSessionRequest,
+  { provider_type: "replay" }
+>;
+type StrategyType = ReplayRequest["strategy"]["type"];
+type ProviderType = CreatePaperSessionRequest["provider_type"];
 
 export function CreatePaperSessionPage() {
+  const { t } = useTranslation("paper");
+  const [providerType, setProviderType] = useState<ProviderType>("replay");
   const [strategyType, setStrategyType] = useState<StrategyType>(
     "moving_average_crossover",
   );
@@ -39,22 +48,41 @@ export function CreatePaperSessionPage() {
     if (locked.current) return;
     setError(null);
     if (!isPositiveDecimal(initialCash) || !isPositiveDecimal(quantity)) {
-      setError("Initial cash and quantity must be positive Decimal strings.");
+      setError(t("createPage.decimalError"));
       return;
     }
-    let strategy: CreatePaperSessionRequest["strategy"];
-    if (strategyType === "moving_average_crossover") {
+    let request: CreatePaperSessionRequest;
+    if (providerType === "simulated_a_share") {
+      request = {
+        provider_type: providerType,
+        dataset_id: "CN_A_SIMULATED_PAPER_FIXTURE_V1",
+        symbol: "CN-A",
+        strategy: {
+          type: "cn_a_cross_sectional_momentum_low_vol_v1",
+          parameters: {},
+        },
+        initial_cash: initialCash,
+        default_order_quantity: quantity,
+        risk: { enforce_buying_power: true },
+      };
+    } else if (strategyType === "moving_average_crossover") {
       const short = parsePositiveInteger(shortPeriod);
       const long = parsePositiveInteger(longPeriod);
       if (short === null || long === null || short >= long) {
-        setError(
-          "Periods must be safe positive integers with short below long.",
-        );
+        setError(t("createPage.periodError"));
         return;
       }
-      strategy = {
-        type: strategyType,
-        parameters: { short_period: short, long_period: long },
+      request = {
+        provider_type: providerType,
+        dataset_id: "AAPL_fixture",
+        symbol: "AAPL",
+        strategy: {
+          type: strategyType,
+          parameters: { short_period: short, long_period: long },
+        },
+        initial_cash: initialCash,
+        default_order_quantity: quantity,
+        risk: { enforce_buying_power: true },
       };
     } else {
       const period = parsePositiveInteger(rsiPeriod);
@@ -64,36 +92,37 @@ export function CreatePaperSessionPage() {
         comparePositiveDecimals(oversold, overbought) !== -1 ||
         comparePositiveDecimals(overbought, "100") !== -1
       ) {
-        setError("RSI values must satisfy 0 < oversold < overbought < 100.");
+        setError(t("createPage.rsiError"));
         return;
       }
-      strategy = {
-        type: strategyType,
-        parameters: { rsi_period: period, oversold, overbought },
+      request = {
+        provider_type: providerType,
+        dataset_id: "AAPL_fixture",
+        symbol: "AAPL",
+        strategy: {
+          type: strategyType,
+          parameters: { rsi_period: period, oversold, overbought },
+        },
+        initial_cash: initialCash,
+        default_order_quantity: quantity,
+        risk: { enforce_buying_power: true },
       };
     }
     key.current ??= crypto.randomUUID();
     locked.current = true;
     setPending(true);
     try {
-      const created = await paperApi.create(
-        {
-          provider_type: "replay",
-          dataset_id: "AAPL_fixture",
-          symbol: "AAPL",
-          strategy,
-          initial_cash: initialCash,
-          default_order_quantity: quantity,
-          risk: { enforce_buying_power: true },
-        },
-        key.current,
-      );
+      const created = await paperApi.create(request, key.current);
       navigate(`/paper/${created.session_id}`);
     } catch (reason) {
       setError(
-        reason instanceof Error
-          ? reason.message
-          : "Unable to create paper session.",
+        reason instanceof ApiError && reason.status === 404
+          ? t("createPage.datasetError")
+          : reason instanceof ApiError && reason.status === 409
+            ? t("createPage.conflictError")
+            : reason instanceof ApiError && reason.status === 422
+              ? t("createPage.validationError")
+              : t("createPage.submitError"),
       );
     } finally {
       locked.current = false;
@@ -106,11 +135,11 @@ export function CreatePaperSessionPage() {
       <PaperSafetyBanner />
       <header className="pageHeader compactHeader">
         <div>
-          <p className="eyebrow">NEW LOCAL REPLAY</p>
-          <h1>Create paper session</h1>
+          <p className="eyebrow">{t("createPage.eyebrow")}</p>
+          <h1>{t("createPage.title")}</h1>
         </div>
         <Link className="button" href="/paper">
-          Cancel
+          {t("createPage.cancel")}
         </Link>
       </header>
       <form
@@ -120,71 +149,108 @@ export function CreatePaperSessionPage() {
         aria-describedby={error ? "paper-form-error" : undefined}
       >
         <fieldset disabled={pending}>
-          <legend>Safe provider</legend>
+          <legend>{t("createPage.safeProvider")}</legend>
           <div className="formGrid threeColumns">
             <label>
-              Provider
-              <select value="replay" disabled>
-                <option>Replay (local)</option>
+              {t("createPage.provider")}
+              <select
+                value={providerType}
+                onChange={(event) => {
+                  const value = event.target.value as ProviderType;
+                  setProviderType(value);
+                  setInitialCash(
+                    value === "simulated_a_share" ? "100000000" : "100000",
+                  );
+                  setQuantity(value === "simulated_a_share" ? "1" : "10");
+                }}
+              >
+                <option value="simulated_a_share">
+                  {t("createPage.aShareSimulation")}
+                </option>
+                <option value="replay">{t("createPage.replayLocal")}</option>
               </select>
             </label>
             <label>
-              Dataset
-              <select value="AAPL_fixture" disabled>
-                <option>AAPL fixture</option>
-              </select>
+              {t("createPage.dataset")}
+              <input
+                value={
+                  providerType === "simulated_a_share"
+                    ? "CN_A_SIMULATED_PAPER_FIXTURE_V1"
+                    : "AAPL_fixture"
+                }
+                readOnly
+              />
             </label>
             <label>
-              Symbol
-              <input value="AAPL" readOnly />
+              {t("createPage.symbol")}
+              <input
+                value={providerType === "simulated_a_share" ? "CN-A" : "AAPL"}
+                readOnly
+              />
             </label>
           </div>
         </fieldset>
         <fieldset disabled={pending}>
-          <legend>Capital and sizing</legend>
+          <legend>{t("createPage.capitalSizing")}</legend>
           <div className="formGrid">
             <label>
-              Initial cash
+              {t("createPage.initialCash")}
               <input
                 value={initialCash}
                 onChange={(event) => setInitialCash(event.target.value)}
                 required
               />
             </label>
-            <label>
-              Order quantity
-              <input
-                value={quantity}
-                onChange={(event) => setQuantity(event.target.value)}
-                required
-              />
-            </label>
+            {providerType === "replay" && (
+              <label>
+                {t("createPage.orderQuantity")}
+                <input
+                  value={quantity}
+                  onChange={(event) => setQuantity(event.target.value)}
+                  required
+                />
+              </label>
+            )}
           </div>
           <p className="fieldHint">
-            Buying-power risk enforcement is enabled. All values remain Decimal
-            strings.
+            {providerType === "simulated_a_share"
+              ? t("createPage.aShareScenarioHint")
+              : t("createPage.buyingPowerHint")}
           </p>
         </fieldset>
         <fieldset disabled={pending}>
-          <legend>Registered strategy</legend>
-          <label>
-            Strategy type
-            <select
-              value={strategyType}
-              onChange={(event) =>
-                setStrategyType(event.target.value as StrategyType)
-              }
-            >
-              <option value="moving_average_crossover">
-                Moving average crossover
-              </option>
-              <option value="rsi_mean_reversion">RSI mean reversion</option>
-            </select>
-          </label>
-          {strategyType === "moving_average_crossover" ? (
+          <legend>{t("createPage.registeredStrategy")}</legend>
+          {providerType === "simulated_a_share" ? (
+            <label>
+              {t("createPage.strategyType")}
+              <input
+                value={t("strategies.cn_a_cross_sectional_momentum_low_vol_v1")}
+                readOnly
+              />
+            </label>
+          ) : (
+            <label>
+              {t("createPage.strategyType")}
+              <select
+                value={strategyType}
+                onChange={(event) =>
+                  setStrategyType(event.target.value as StrategyType)
+                }
+              >
+                <option value="moving_average_crossover">
+                  {t("strategies.moving_average_crossover")}
+                </option>
+                <option value="rsi_mean_reversion">
+                  {t("strategies.rsi_mean_reversion")}
+                </option>
+              </select>
+            </label>
+          )}
+          {providerType === "replay" &&
+          strategyType === "moving_average_crossover" ? (
             <div className="formGrid">
               <label>
-                Short period
+                {t("createPage.shortPeriod")}
                 <input
                   type="number"
                   min="1"
@@ -195,7 +261,7 @@ export function CreatePaperSessionPage() {
                 />
               </label>
               <label>
-                Long period
+                {t("createPage.longPeriod")}
                 <input
                   type="number"
                   min="2"
@@ -206,10 +272,10 @@ export function CreatePaperSessionPage() {
                 />
               </label>
             </div>
-          ) : (
+          ) : providerType === "replay" ? (
             <div className="formGrid threeColumns">
               <label>
-                RSI period
+                {t("createPage.rsiPeriod")}
                 <input
                   type="number"
                   min="1"
@@ -220,7 +286,7 @@ export function CreatePaperSessionPage() {
                 />
               </label>
               <label>
-                Oversold
+                {t("createPage.oversold")}
                 <input
                   value={oversold}
                   onChange={(event) => setOversold(event.target.value)}
@@ -228,7 +294,7 @@ export function CreatePaperSessionPage() {
                 />
               </label>
               <label>
-                Overbought
+                {t("createPage.overbought")}
                 <input
                   value={overbought}
                   onChange={(event) => setOverbought(event.target.value)}
@@ -236,7 +302,7 @@ export function CreatePaperSessionPage() {
                 />
               </label>
             </div>
-          )}
+          ) : null}
         </fieldset>
         {error && (
           <div id="paper-form-error" className="formError" role="alert">
@@ -245,9 +311,9 @@ export function CreatePaperSessionPage() {
         )}
         <div className="formActions">
           <button className="button buttonPrimary" disabled={pending}>
-            {pending ? "Creating…" : "Create paper session"}
+            {pending ? t("createPage.creating") : t("createPage.submit")}
           </button>
-          <span>Creation is idempotent and does not start execution.</span>
+          <span>{t("createPage.idempotentHint")}</span>
         </div>
       </form>
     </>

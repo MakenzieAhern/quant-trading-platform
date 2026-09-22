@@ -19,6 +19,12 @@ from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.domain.market import Bar
 from app.domain.risk import RiskConfig, RiskDecision
 from app.domain.trading import Fill, Order, PortfolioSnapshot, Signal
+from app.paper.a_share_fixture import (
+    SIMULATED_A_SHARE_DATASET_ID,
+    SIMULATED_A_SHARE_SYMBOL,
+    SIMULATED_SOURCE,
+    simulated_a_share_fixture,
+)
 from app.paper.hub import PaperEventHub
 from app.paper.models import (
     CreatePaperSessionCommand,
@@ -27,7 +33,15 @@ from app.paper.models import (
     PaperSessionConcurrencyError,
     PaperSessionStatus,
 )
-from app.paper.runtime import PaperRuntimeDelta, PaperTradingRuntime, ReplayMarketDataProvider
+from app.paper.runtime import (
+    FROZEN_A_SHARE_STRATEGY_ID,
+    ASharePaperTradingRuntime,
+    PaperRuntimeDelta,
+    PaperTradingRuntime,
+    ReplayMarketDataProvider,
+    SimulatedAShareSessionProvider,
+)
+from app.research import ResearchExecutionDelta, ResearchSession
 
 
 class PaperSessionConflictError(ValueError):
@@ -62,7 +76,7 @@ class PaperTradingManager:
         self._clock = clock or (lambda: datetime.now(UTC))
         self.hub = hub or PaperEventHub()
         self._tasks: dict[UUID, asyncio.Task[None]] = {}
-        self._providers: dict[UUID, ReplayMarketDataProvider] = {}
+        self._providers: dict[UUID, ReplayMarketDataProvider | SimulatedAShareSessionProvider] = {}
         self._lock = asyncio.Lock()
 
     async def recover_interrupted(self) -> int:
@@ -73,17 +87,25 @@ class PaperTradingManager:
         return interrupted
 
     async def create(self, command: CreatePaperSessionCommand) -> PaperSession:
-        if command.provider_type != "replay":
+        if command.provider_type not in {"replay", "simulated_a_share"}:
             raise ValueError("unknown paper market data provider")
         validate_storage_decimal(command.initial_cash, "initial_cash")
         validate_storage_decimal(command.default_order_quantity, "default_order_quantity")
-        self._datasets.resolve(command.dataset_id, command.symbol)
-        self._strategies.build(
-            command.strategy_type,
-            f"{command.strategy_type}:{command.symbol}",
-            command.symbol,
-            command.strategy_parameters,
-        )
+        if command.provider_type == "replay":
+            self._datasets.resolve(command.dataset_id, command.symbol)
+            self._strategies.build(
+                command.strategy_type,
+                f"{command.strategy_type}:{command.symbol}",
+                command.symbol,
+                command.strategy_parameters,
+            )
+        elif (
+            command.dataset_id != SIMULATED_A_SHARE_DATASET_ID
+            or command.symbol != SIMULATED_A_SHARE_SYMBOL
+            or command.strategy_type != FROZEN_A_SHARE_STRATEGY_ID
+            or command.strategy_parameters
+        ):
+            raise ValueError("invalid frozen A-share paper configuration")
         request_hash = self._request_hash(command)
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
@@ -204,8 +226,8 @@ class PaperTradingManager:
 
     async def _run(self, initial: PaperSession) -> None:
         session = initial
-        provider: ReplayMarketDataProvider | None = None
-        runtime: PaperTradingRuntime | None = None
+        provider: ReplayMarketDataProvider | SimulatedAShareSessionProvider | None = None
+        runtime: PaperTradingRuntime | ASharePaperTradingRuntime | None = None
         try:
             provider, runtime = self._build_runtime(session)
             self._providers[session.id] = provider
@@ -220,15 +242,30 @@ class PaperTradingManager:
                     current, PaperSessionStatus.RUNNING, "session.status"
                 )
 
-            async def process(bar: Bar) -> None:
-                delta = await runtime.process_bar(bar)
-                events = self._serialize_delta(delta)
+            async def persist(
+                events: tuple[tuple[str, datetime, dict[str, object]], ...],
+            ) -> None:
                 async with self._session_factory() as db:
                     stored = await SQLAlchemyPaperRepository(db).append_events(session.id, events)
                 for event in stored:
                     self.hub.publish(session.id, self._wire_event(event))
 
-            await provider.start(process)
+            if isinstance(provider, ReplayMarketDataProvider):
+                assert isinstance(runtime, PaperTradingRuntime)
+
+                async def process_bar(bar: Bar) -> None:
+                    await persist(self._serialize_delta(await runtime.process_bar(bar)))
+
+                await provider.start(process_bar)
+            else:
+                assert isinstance(runtime, ASharePaperTradingRuntime)
+
+                async def process_session(item: ResearchSession) -> None:
+                    await persist(
+                        self._serialize_a_share_delta(await runtime.process_session(item))
+                    )
+
+                await provider.start(process_session)
             async with self._lock:
                 current = await self.get(session.id)
                 if current is not None and current.status in {
@@ -299,7 +336,22 @@ class PaperTradingManager:
 
     def _build_runtime(
         self, session: PaperSession
-    ) -> tuple[ReplayMarketDataProvider, PaperTradingRuntime]:
+    ) -> tuple[
+        ReplayMarketDataProvider | SimulatedAShareSessionProvider,
+        PaperTradingRuntime | ASharePaperTradingRuntime,
+    ]:
+        risk = self._risk_config(session)
+        if session.provider_type == "simulated_a_share":
+            calendar, sessions, commission = simulated_a_share_fixture()
+            return (
+                SimulatedAShareSessionProvider(sessions, self._replay_interval_seconds),
+                ASharePaperTradingRuntime(
+                    initial_cash=session.initial_cash,
+                    commission_model=commission,
+                    calendar=calendar,
+                    risk_config=risk,
+                ),
+            )
         historical = self._datasets.resolve(session.dataset_id, session.symbol)
         bars = historical.get_historical_bars(session.symbol, None, None, Timeframe.DAY_1)
         parameters = dict(session.strategy_parameters)
@@ -313,19 +365,6 @@ class PaperTradingManager:
             parameters,
         )
 
-        def optional_decimal(name: str) -> Decimal | None:
-            value = session.risk.get(name)
-            return Decimal(str(value)) if value is not None else None
-
-        risk = RiskConfig(
-            max_order_notional=optional_decimal("max_order_notional"),
-            max_position_quantity=optional_decimal("max_position_quantity"),
-            max_symbol_exposure=optional_decimal("max_symbol_exposure"),
-            max_gross_exposure=optional_decimal("max_gross_exposure"),
-            max_leverage=optional_decimal("max_leverage"),
-            enforce_buying_power=bool(session.risk.get("enforce_buying_power", False)),
-            max_drawdown=optional_decimal("max_drawdown"),
-        )
         runtime = PaperTradingRuntime(
             (strategy,),
             BacktestConfig(
@@ -337,6 +376,22 @@ class PaperTradingManager:
         provider = ReplayMarketDataProvider(bars, self._replay_interval_seconds)
         provider.subscribe(session.symbol)
         return provider, runtime
+
+    @staticmethod
+    def _risk_config(session: PaperSession) -> RiskConfig:
+        def optional_decimal(name: str) -> Decimal | None:
+            value = session.risk.get(name)
+            return Decimal(str(value)) if value is not None else None
+
+        return RiskConfig(
+            max_order_notional=optional_decimal("max_order_notional"),
+            max_position_quantity=optional_decimal("max_position_quantity"),
+            max_symbol_exposure=optional_decimal("max_symbol_exposure"),
+            max_gross_exposure=optional_decimal("max_gross_exposure"),
+            max_leverage=optional_decimal("max_leverage"),
+            enforce_buying_power=bool(session.risk.get("enforce_buying_power", False)),
+            max_drawdown=optional_decimal("max_drawdown"),
+        )
 
     async def _transition(
         self,
@@ -397,6 +452,55 @@ class PaperTradingManager:
                 cls._snapshot(delta.snapshot),
             )
         )
+        return tuple(events)
+
+    @classmethod
+    def _serialize_a_share_delta(
+        cls, delta: ResearchExecutionDelta
+    ) -> tuple[tuple[str, datetime, dict[str, object]], ...]:
+        if delta.snapshot is None:
+            raise RuntimeError("A-share session did not produce a portfolio snapshot")
+        timestamp = delta.snapshot.timestamp
+        events: list[tuple[str, datetime, dict[str, object]]] = [
+            (
+                "market.session",
+                timestamp,
+                {
+                    "trading_date": delta.session.trading_date.isoformat(),
+                    "security_count": len(delta.session.bars),
+                    "source": SIMULATED_SOURCE,
+                },
+            )
+        ]
+        filled_order_ids = {fill.order_id for fill in delta.fills}
+        events.extend(
+            ("order.updated", timestamp, cls._order(item))
+            for item in delta.orders
+            if item.id in filled_order_ids
+        )
+        events.extend(("fill.created", item.timestamp, cls._fill(item)) for item in delta.fills)
+        events.extend(
+            (
+                "signal.created",
+                item.signal_timestamp,
+                {
+                    "strategy_id": item.strategy_id,
+                    "symbol": item.symbol,
+                    "timestamp": item.signal_timestamp.isoformat(),
+                    "signal_type": item.side.value,
+                },
+            )
+            for item in delta.proposals
+        )
+        events.extend(
+            ("risk.decision", item.timestamp, cls._decision(item)) for item in delta.decisions
+        )
+        events.extend(
+            ("order.updated", item.created_at, cls._order(item))
+            for item in delta.orders
+            if item.id not in filled_order_ids
+        )
+        events.append(("portfolio.snapshot", timestamp, cls._snapshot(delta.snapshot)))
         return tuple(events)
 
     @staticmethod

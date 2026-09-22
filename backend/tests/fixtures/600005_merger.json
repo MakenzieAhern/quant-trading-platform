@@ -1,0 +1,43 @@
+{
+  "parent_security": {
+    "value": "CN-A:SSE:600005"
+  },
+  "successor_security": {
+    "value": "CN-A:SSE:600019"
+  },
+  "conversion_ratio": "0.56",
+  "parent_last_trading_date": "2017-01-23",
+  "record_date": "2017-02-14",
+  "effective_date": "2017-02-17",
+  "successor_listing_date": "2000-12-12",
+  "successor_shares_tradable_from": "2017-02-27",
+  "zero_whole_share_policy": "WRITE_OFF_PARENT_BASIS_AS_CORPORATE_ACTION_LOSS_V1",
+  "official_fractional_method": "GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE",
+  "research_fractional_method": "FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION",
+  "cash_election_offered": true,
+  "sources": [
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2017-02-16/1203085931.PDF",
+      "sha256": "73e51dca1e5fdc4d687cef7176da275dbd642e2c1a643d4aa2887d7a8338b04c",
+      "published_on": "2017-02-16",
+      "retrieved_at": "2026-09-13T00:35:32.672350+00:00",
+      "document": "2017-016, pages1-4: ratio, identities, record/termination, global remainder and random ties"
+    },
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2017-01-24/1203042886.PDF",
+      "sha256": "1965d3bf964b5b77ffa3a7d288b3423ad9960266cd7977848db3f5fc58777214",
+      "published_on": "2017-01-24",
+      "retrieved_at": "2026-09-13T01:36:24.596940+00:00",
+      "document": "2017-006, page1: final trading date2017-01-23; supersedes earlier notice year typo"
+    }
+  ],
+  "activation_sources": [
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2017-02-22/1203098192.PDF",
+      "sha256": "3a4f73ce61ef81c24430822974321d4d45e38948bc09c2135908e010ffbb3b23",
+      "published_on": "2017-02-22",
+      "retrieved_at": "2026-09-13T00:35:35.742653+00:00",
+      "document": "2017-018, pages1-3: retrospective confirmationFeb17 conversion; prospective Feb27 new-share tradability. Never backdate disclosure."
+    }
+  ]
+}

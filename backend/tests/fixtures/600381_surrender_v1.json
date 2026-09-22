@@ -1,0 +1,20 @@
+{
+  "security_id": {"value": "CN-A:SSE:600381"},
+  "affected_holder_class": "ORDINARY_NON_RESPONSIBLE_HOLDER",
+  "record_date": null,
+  "effective_date": "2014-06-30",
+  "surrender_ratio": "0.12",
+  "consideration_type": "NONE",
+  "consideration_value": "0",
+  "quantity_rounding_rule": "UNRESOLVED",
+  "research_fraction_rule": "CEIL_SURRENDER_FLOOR_RETAINED_V1",
+  "convention_approval_sha256": "9362f32566013841a3a45fd5946abbc9c128fd4f66b5ea20e23c902180a8a4ad",
+  "recipient": "RESTRUCTURING_PLAN_RECIPIENTS",
+  "disposition": "TRANSFERRED",
+  "sources": [
+    {"url":"https://static.cninfo.com.cn/finalpage/2014-06-27/1200011113.PDF","sha256":"1946a7f10e6fba57ed4954c5cde65c73d32964d215bdd66fb870696f2bff13aa","published_on":"2014-06-27","retrieved_at":"2026-09-13T06:11:47.263529+00:00","document":"600381-consolidation-implementation.pdf; subsequent 12 percent of consolidated shares"}
+  ],
+  "confirmation_sources": [
+    {"url":"https://static.cninfo.com.cn/finalpage/2014-07-01/1200021765.PDF","sha256":"29de61605ba96cc940d24e42c0d40b9f3101b06672a26cf6fd71d20a3436f73c","published_on":"2014-07-01","retrieved_at":"2026-09-13T09:10:10.455268+00:00","document":"600381-surrender-implementation.pdf; June 30 completed transfer of 23872317 shares"}
+  ]
+}

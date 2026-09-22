@@ -1,0 +1,23 @@
+{
+  "security_id": {"value": "CN-A:SSE:600817"},
+  "effective_date": "2012-07-31",
+  "original_quantity_preserved": true,
+  "bonus_ratio": "0.25",
+  "temporary_registration_date": "2012-07-31",
+  "transfer_date": "2012-08-01",
+  "transfer_recipient": "Xi'an Hongsheng bankruptcy estate disposal account",
+  "mandatory_transfer": true,
+  "holder_compensation": "NONE",
+  "tradability_during_pass_through": "NONE",
+  "monetization_during_pass_through": "NONE",
+  "convention_approval_sha256": "b42ec74db5f29f3a1434b96bdc04f9833dcb572a20198ee5b6fe69e3fe7293d6",
+  "sources": [
+    {"url":"https://static.cninfo.com.cn/finalpage/2012-07-30/61340010.PDF","sha256":"46140abfb81baf3a1540c7a433f4aa4fce2673a6f20f3e56b006d52e5538f5cf","published_on":"2012-07-30","retrieved_at":"2026-09-13T04:14:17.771066+00:00","document":"2012-031 restructuring capitalization implementation, pages 1-2"},
+    {"url":"https://static.cninfo.com.cn/finalpage/2012-03-28/60742405.PDF","sha256":"562fdfad098645b889370477a69844aa5e267cb73d9096043e9f7392104919f7","published_on":"2012-03-28","retrieved_at":"2026-09-13T04:15:40.098943+00:00","document":"2012-008 shareholder equity adjustment explanation"}
+  ],
+  "confirmation_sources": [
+    {"url":"https://static.cninfo.com.cn/finalpage/2012-08-03/61364899.PDF","sha256":"d4d3dea3cdd21de04b74052c8cc2692404a0c27e4032ef69603150ec98c6cf85","published_on":"2012-08-03","retrieved_at":"2026-09-13T05:57:46.836671+00:00","document":"2012-032 actual August 1 transfer confirmation"},
+    {"url":"https://static.cninfo.com.cn/finalpage/2013-02-01/62093188.PDF","sha256":"fd49bc8b2c4010de9b412d779d79be1fbfa297b40a9ccadef15ab066bfbd23be","published_on":"2013-02-01","retrieved_at":"2026-09-13T05:57:48.963599+00:00","document":"2013-006 resumption reference, pages 2-3: capitalization and original holdings"},
+    {"url":"https://static.cninfo.com.cn/finalpage/2013-02-01/62093187.PDF","sha256":"1ac085717478e280d7823d0c8dae943e06b191497b961372c69b5b33e67b312b","published_on":"2013-02-01","retrieved_at":"2026-09-13T05:57:50.307596+00:00","document":"2013-005 resumption: page 4 suspension, page 10 registration/transfer"}
+  ]
+}

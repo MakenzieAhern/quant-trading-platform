@@ -30,6 +30,7 @@ export function paperSnapshot(
     session: paperSession(status),
     last_sequence: 0,
     latest_bar: null,
+    latest_session: null,
     signals: [],
     risk_decisions: [],
     orders: [],

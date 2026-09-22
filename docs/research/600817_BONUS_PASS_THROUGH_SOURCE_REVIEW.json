@@ -1,0 +1,53 @@
+{
+  "security_id": "CN-A:SSE:600817",
+  "classification": "TEMPORARY_BONUS_CREDIT_THEN_ADMINISTRATOR_TRANSFER",
+  "status": "UNSUPPORTED_PENDING_METHODOLOGY",
+  "policy_not_selected": true,
+  "existing_partial_surrender_policy_unchanged": true,
+  "source_facts": {
+    "bonus_ratio": "0.25",
+    "pre_total": 128728066,
+    "new_shares": 32182016,
+    "post_total": 160910082,
+    "new_shares_to_creditors": 6436403,
+    "new_shares_for_issuer_asset_exchange": 25745613,
+    "issuer_asset_received": "45% equity in Laiyinda International Financial Leasing; not Portfolio property",
+    "automatic_credit_then_transfer": true,
+    "ordinary_original_shares_reduced_by_this_leg": false,
+    "wording": "Explanation calls all-holder transfer voluntary; implementation specifies automatic credit and transfer. No individual participation behavior invented.",
+    "record_date_conflict": "Implementation headline/section3 says2012-07-30;section4 says2012-07-26. Retained unresolved, not the methodology blocker."
+  },
+  "diagnostic_not_executed": {
+    "before_q": "100",
+    "before_basis": "1000",
+    "temporary_new_shares": "25",
+    "net_retained_original_q": "100",
+    "net_pass_through_basis": "1000",
+    "gross_bonus_then_proportional_surrender_basis": "800",
+    "basis_difference": "200",
+    "warning": "Alternatives illustrate unresolved classification, not approved Portfolio mutations or strategy performance."
+  },
+  "documents": [
+    {
+      "path": "600817-capital-adjustment-implementation.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-07-30/61340010.PDF",
+      "title": "关于重整计划中涉及出资人权益调整事项实施公告",
+      "document_number": "临2012-031",
+      "published_on": "2012-07-30",
+      "document_date": "2012-07-27",
+      "sha256": "46140abfb81baf3a1540c7a433f4aa4fce2673a6f20f3e56b006d52e5538f5cf",
+      "retrieved_at_utc": "2026-09-13T04:14:17.771066+00:00"
+    },
+    {
+      "path": "600817-equity-adjustment-explanation.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-03-28/60742405.PDF",
+      "title": "关于出资人权益调整事项的说明",
+      "document_number": "临2012-008",
+      "published_on": "2012-03-28",
+      "document_date": "2012-03-26",
+      "sha256": "562fdfad098645b889370477a69844aa5e267cb73d9096043e9f7392104919f7",
+      "retrieved_at_utc": "2026-09-13T04:15:40.098943+00:00"
+    }
+  ],
+  "single_smallest_blocker": "RESTRUCTURING_BONUS_PASS_THROUGH_BASIS_POLICY_UNAPPROVED:CN-A:SSE:600817"
+}

@@ -5,6 +5,7 @@ from typing import Any
 
 import pytest
 
+from app.application.paper_trading import PaperTradingManager
 from app.backtest import BacktestConfig, BacktestEngine
 from app.data.providers import CSVDataProvider
 from app.domain.market import Bar
@@ -12,13 +13,17 @@ from app.domain.risk import RiskConfig, RiskReasonCode
 from app.domain.trading import Order, OrderSide, OrderStatus, OrderType
 from app.event import EventBus
 from app.execution import FixedBasisPointSlippage, FixedCommission
+from app.paper.a_share_fixture import simulated_a_share_fixture
 from app.paper.hub import PaperEventHub
 from app.paper.models import PaperSessionStatus, require_transition
 from app.paper.runtime import (
+    FROZEN_A_SHARE_STRATEGY_ID,
+    ASharePaperTradingRuntime,
     PaperBroker,
     PaperTradingRuntime,
     ReplayMarketDataProvider,
     ReplayProviderError,
+    SimulatedAShareSessionProvider,
 )
 from app.strategies import MovingAverageCrossoverStrategy, RSIMeanReversionStrategy
 
@@ -62,6 +67,51 @@ async def test_replay_provider_subscribe_stop_and_future_protection() -> None:
 
 async def _append(target: list[Bar], item: Bar) -> None:
     target.append(item)
+
+
+async def test_frozen_a_share_runtime_consumes_only_completed_simulated_sessions() -> None:
+    calendar, sessions, commission = simulated_a_share_fixture()
+    runtime = ASharePaperTradingRuntime(
+        initial_cash=Decimal(100000000),
+        commission_model=commission,
+        calendar=calendar,
+    )
+    provider = SimulatedAShareSessionProvider(sessions, 0)
+    deltas = []
+
+    async def process(item):
+        deltas.append(await runtime.process_session(item))
+
+    await provider.start(process)
+
+    assert runtime.strategy_id == FROZEN_A_SHARE_STRATEGY_ID
+    assert len(deltas) == 254
+    assert sum(len(item.proposals) for item in deltas) == 1
+    assert sum(len(item.decisions) for item in deltas) == 1
+    assert sum(len(item.fills) for item in deltas) == 1
+    assert deltas[-1].fills[0].symbol.endswith(".SSE")
+    proposal_event_types = [
+        item[0] for item in PaperTradingManager._serialize_a_share_delta(deltas[-2])
+    ]
+    assert proposal_event_types == [
+        "market.session",
+        "signal.created",
+        "risk.decision",
+        "order.updated",
+        "portfolio.snapshot",
+    ]
+    event_types = [item[0] for item in PaperTradingManager._serialize_a_share_delta(deltas[-1])]
+    assert event_types == [
+        "market.session",
+        "order.updated",
+        "fill.created",
+        "portfolio.snapshot",
+    ]
+    assert runtime.cancel_pending_orders() == ()
+    with pytest.raises(ReplayProviderError, match="already stopped"):
+        await runtime.process_session(sessions[-1])
+    with pytest.raises(ReplayProviderError, match="strictly chronological"):
+        SimulatedAShareSessionProvider((sessions[0], sessions[0]))
 
 
 def test_paper_broker_is_local_next_bar_and_explicitly_rejects_limit_orders() -> None:

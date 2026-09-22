@@ -1,0 +1,59 @@
+{
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "boundary_policy": "FIRST_POST_EVENT_TRADING_BOUNDARY_V1",
+  "cases": [
+    {
+      "parent": "000780",
+      "successor": "001289",
+      "exchange": "SZSE",
+      "conversion_ratio": "0.3407",
+      "parent_last_trading_date": "2021-12-16",
+      "continuous_suspension_from": "2021-12-17",
+      "record_date": "2022-01-21",
+      "parent_delisting_date": "2022-01-24",
+      "successor_listing_date": "2022-01-24",
+      "effective_date": "2022-01-24",
+      "first_post_event_trading_date": "2022-01-24",
+      "cash_election_offered": true,
+      "source_url": "https://static.cninfo.com.cn/finalpage/2021-12-10/1211866615.PDF",
+      "source_path": "2022-2023-boundary-v1/1211866615.pdf",
+      "source_sha256": "a1a51f4736f28a0cf5fadfe267a3935ac6351ab12bfda7c24da22b5f212915da",
+      "publication_date": "2021-12-10",
+      "retrieved_at": "2026-09-14T07:31:34.183154+00:00",
+      "scope": "ORDINARY_UNRESTRICTED_A_SHARE_HOLDER_NO_CASH_ELECTION",
+      "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE",
+      "additional_event_sources": [
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2022-01-21/1212230575.PDF",
+          "sha256": "85259a0180c63143b2fc763c5c8bcbf195cf0bbb3656256022a13cc68e73149f",
+          "published_on": "2022-01-21",
+          "retrieved_at": "2026-09-13T09:23:47.240808+00:00",
+          "document": "Official merger implementation or listing notice"
+        },
+        {
+          "url": "https://static.cninfo.com.cn/finalpage/2022-01-21/1212230587.PDF",
+          "sha256": "5b43db7c070bd3785407e87fe531f3fd1394974599dc3d7d5e76fe6e6bf909f1",
+          "published_on": "2022-01-21",
+          "retrieved_at": "2026-09-14T07:31:33.369014+00:00",
+          "document": "Official merger implementation or listing notice"
+        }
+      ],
+      "additional_review_documents": [
+        {
+          "path": "batch-v1/pdf/7ab3046f3af9456ad2d669e99ec7fde5c5ec4e78dc969f93ee921e222e3e7d4d.pdf",
+          "url": "https://static.cninfo.com.cn/finalpage/2022-01-21/1212230575.PDF",
+          "sha256": "85259a0180c63143b2fc763c5c8bcbf195cf0bbb3656256022a13cc68e73149f",
+          "published_on": "2022-01-21",
+          "retrieved_at_utc": "2026-09-13T09:23:47.240808+00:00"
+        },
+        {
+          "path": "2022-2023-boundary-v1/1212230587.pdf",
+          "url": "https://static.cninfo.com.cn/finalpage/2022-01-21/1212230587.PDF",
+          "sha256": "5b43db7c070bd3785407e87fe531f3fd1394974599dc3d7d5e76fe6e6bf909f1",
+          "published_on": "2022-01-21",
+          "retrieved_at_utc": "2026-09-14T07:31:33.369014+00:00"
+        }
+      ]
+    }
+  ]
+}

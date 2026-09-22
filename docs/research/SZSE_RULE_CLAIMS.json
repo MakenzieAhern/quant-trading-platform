@@ -1,0 +1,885 @@
+{
+  "schema_version": 1,
+  "parser_version": "reviewed-rule-claims-v2-source-only",
+  "scope": "Pilot official rule-claim evidence. Daily simulated execution and frozen cost assumptions are separate gates; seven accepted data authorities remain unchanged.",
+  "pilot_from": "2023-01-01",
+  "pilot_to": "2024-07-31",
+  "publication_date_provenance": "PASS",
+  "effective_date_provenance": "PASS",
+  "sources": [
+    {
+      "source_url": "https://investor.szse.cn/institute/rules/t20230621_601279.html",
+      "source_type": "OFFICIAL_INVESTOR_GUIDANCE",
+      "title": "全面实行注册制丨主板投资入市手册（十三）：主板股票交易机制（一）",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2023-06-21",
+      "effective_date": "2023-04-10",
+      "retrieved_at_utc": "2026-09-11T00:22:35.451796+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/main-guidance.html",
+      "sha256": "5b5cedc06a5fcf5ceb9e0d88afe6b708b1e7e045341f3b8ce8b7efa93202a024",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_RULE_EFFECTIVE_DATE",
+        "SZSE_SOURCE_BYTES",
+        "SZSE_MAIN_PRICE_CAGE",
+        "SZSE_CHINEXT_PRICE_CAGE_POST",
+        "SZSE_INTRADAY_SUSPENSION"
+      ]
+    },
+    {
+      "source_url": "https://www.szse.cn/www/marketServices/technicalservice/doc/P020230724535729507237.pdf",
+      "source_type": "OFFICIAL_TECHNICAL_CONFIRMATION",
+      "title": "深市交易结算2023年上半年运行情况（技术交流材料，封面日期2023-07-19）",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2023-07-19",
+      "effective_date": "2023-04-10",
+      "retrieved_at_utc": "2026-09-11T00:22:35.452237+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/technical.pdf",
+      "sha256": "9540ba342ab92b6cb464d24cd2e7acfa45db2847ea3a6832a8767bc60f6c9029",
+      "parser_version": "pypdf-text-and-pypdfium2-visual-review-v1",
+      "rule_ids_supported": [
+        "SZSE_RULE_EFFECTIVE_DATE",
+        "SZSE_INTRADAY_SUSPENSION"
+      ]
+    },
+    {
+      "source_url": "https://www.szse.cn/lawrules/rule/trade/current/t20260424_620190.html",
+      "source_type": "LATER_OFFICIAL_VERSION_REFERENCE",
+      "title": "关于发布《深圳证券交易所交易规则（2026年修订）》的通知",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2026-04-24",
+      "effective_date": "2026-07-06",
+      "retrieved_at_utc": "2026-09-11T00:22:35.452694+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/later-notice.html",
+      "sha256": "08d05a9d3f9c7dac31e8ac33712bac26b3995585718031e99a953e9128eec2d2",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_RULE_PUBLICATION_IDENTITY"
+      ]
+    },
+    {
+      "source_url": "https://investor.szse.cn/institute/bookshelf/manualseriesbook/P020230403389861343977.pdf",
+      "source_type": "OFFICIAL_INVESTOR_GUIDANCE",
+      "title": "深交所主板投资入市手册",
+      "issuer": "深圳证券交易所",
+      "publication_date": null,
+      "effective_date": "2023-04-10",
+      "retrieved_at_utc": "2026-09-11T00:22:37.050519+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/main-handbook.pdf",
+      "sha256": "ee7eb1021f2d9e9cf27bd79262d27dbb3ab882b752cceee667cc1a6cea5e51a2",
+      "parser_version": "pypdfium2-visual-review-v1",
+      "rule_ids_supported": [
+        "SZSE_SOURCE_BYTES",
+        "SZSE_MAIN_PRICE_LIMIT",
+        "SZSE_NEW_LISTING_POST",
+        "SZSE_MAIN_PRICE_CAGE",
+        "SZSE_CHINEXT_PRICE_CAGE_POST",
+        "SZSE_LOT_SIZE",
+        "SZSE_TICK_SIZE",
+        "SZSE_MARKET_ORDER_SESSION"
+      ]
+    },
+    {
+      "source_url": "https://investor.szse.cn/institute/rules/t20230629_601434.html",
+      "source_type": "OFFICIAL_INVESTOR_GUIDANCE",
+      "title": "全面实行注册制丨主板投资入市手册（十四）：主板股票交易机制（二）",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2023-06-29",
+      "effective_date": "2023-04-10",
+      "retrieved_at_utc": "2026-09-11T00:24:57.480052+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/main-mechanism-2.html",
+      "sha256": "8d6095f9a858e79fa165c5c133055a5b58c102e4f0698d94a165589236866f7d",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_MAIN_PRICE_LIMIT",
+        "SZSE_CHINEXT_POST_PRICE_LIMIT",
+        "SZSE_NEW_LISTING_POST",
+        "SZSE_RELISTING",
+        "SZSE_DELISTING_EXCEPTION",
+        "SZSE_ST_PRICE_LIMIT"
+      ]
+    },
+    {
+      "source_url": "https://investor.szse.cn/institute/rules/t20230706_601604.html",
+      "source_type": "OFFICIAL_INVESTOR_GUIDANCE",
+      "title": "全面实行注册制丨主板投资入市手册（十五）：主板股票交易机制（三）",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2023-07-06",
+      "effective_date": "2023-04-10",
+      "retrieved_at_utc": "2026-09-11T00:24:57.480381+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/main-mechanism-3.html",
+      "sha256": "89e04919809f4d4f514915a4850966d4f638c88ff76674adb7d3ef51d9d86621",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_LOT_SIZE",
+        "SZSE_TICK_SIZE",
+        "SZSE_MARKET_ORDER_SESSION"
+      ]
+    },
+    {
+      "source_url": "https://www.szse.cn/disclosure/notice/general/t20230827_602970.html",
+      "source_type": "OFFICIAL_IMPLEMENTATION_GUIDANCE",
+      "title": "关于做好证券交易印花税减半征收工作的通知",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2023-08-27",
+      "effective_date": "2023-08-28",
+      "retrieved_at_utc": "2026-09-11T00:24:57.480802+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/stamp-duty.html",
+      "sha256": "0c8375e63c398ad69c86643f0f1980cccf3aa051d4814d2d3fe47bebeca298e2",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_STAMP_DUTY_POST"
+      ]
+    },
+    {
+      "source_url": "https://investor.szse.cn/column/qa/t20230306_599093.html",
+      "source_type": "OFFICIAL_INVESTOR_GUIDANCE",
+      "title": "深交所投教丨投资者服务热线问答（2023年第2期）关于主板股票交易（上）",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2023-03-06",
+      "effective_date": "2023-04-10",
+      "retrieved_at_utc": "2026-09-11T00:24:58.849203+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/main-qa.html",
+      "sha256": "22b0dbdcddf0a23bcc55ab813f3711b9193f40c12854f321853e9f72742618b2",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_MAIN_PRICE_CAGE",
+        "SZSE_ORDER_VALIDITY"
+      ]
+    },
+    {
+      "source_url": "https://investor.szse.cn/institute/rules/t20200807_580310.html",
+      "source_type": "OFFICIAL_INVESTOR_GUIDANCE",
+      "title": "深交所创业板改革｜交易特别规定ABC（一）",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2020-08-07",
+      "effective_date": null,
+      "retrieved_at_utc": "2026-09-11T00:27:00.735720+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/chinext-2020.html",
+      "sha256": "2461b1906837abba74263c703bdd0a88556549a6f7e648f3e31a4dc56347c154",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_PRECEDING_VERSION",
+        "SZSE_BOARD_PRECEDENCE",
+        "SZSE_ST_PRICE_LIMIT"
+      ]
+    },
+    {
+      "source_url": "https://investor.szse.cn/thematic/chinext/article/t20200813_580574.html",
+      "source_type": "OFFICIAL_INVESTOR_GUIDANCE",
+      "title": "深交所创业板改革｜交易特别规定ABC（二）",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2020-08-13",
+      "effective_date": null,
+      "retrieved_at_utc": "2026-09-11T00:27:00.736161+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/chinext-quantity.html",
+      "sha256": "848711aac9583e5769a2868bad557d917db686841c63f0c009545f96526f30d2",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_CHINEXT_PRICE_CAGE_PRE",
+        "SZSE_LOT_SIZE"
+      ]
+    },
+    {
+      "source_url": "https://investor.szse.cn/institute/rules/t20200821_580899.html",
+      "source_type": "OFFICIAL_INVESTOR_GUIDANCE",
+      "title": "深交所创业板改革｜交易特别规定ABC（三）",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2020-08-21",
+      "effective_date": null,
+      "retrieved_at_utc": "2026-09-11T00:27:00.736605+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/chinext-halts.html",
+      "sha256": "8cefff283ac158ff3e192bfd9aade76279d19510d2c573c5d5056c364aa02808",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_CHINEXT_INTRADAY_PRE"
+      ]
+    },
+    {
+      "source_url": "https://investor.szse.cn/warning/activities/stockintroduction/t20190531_567540.html",
+      "source_type": "OFFICIAL_INVESTOR_GUIDANCE",
+      "title": "“股市入门300问”系列之十“景点游览”指南",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2019-05-31",
+      "effective_date": null,
+      "retrieved_at_utc": "2026-09-11T00:27:01.847831+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/fee-guidance.html",
+      "sha256": "e9177f2d46bf96d1395cd609108de347a6a3081afffb271c7b152a13780c1758",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_STAMP_DUTY_PRE",
+        "SZSE_STAMP_DUTY_POST",
+        "SZSE_COMMISSION_ASSUMPTION"
+      ]
+    },
+    {
+      "source_url": "https://www.szse.cn/lawrules/rule/trade/current/t20210331_585336.html",
+      "source_type": "PRIMARY_RULE_NOTICE",
+      "title": "关于修改《深圳证券交易所交易规则》的通知",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2021-03-31",
+      "effective_date": "2021-04-06",
+      "retrieved_at_utc": "2026-09-11T00:27:40.975550+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/preceding-notice.html",
+      "sha256": "2699bdb13506dd2f57c908333907208b84c5c7ed7b3b62a51a4f0fbc28e5fdcc",
+      "parser_version": "stdlib-html-text-review-v1",
+      "rule_ids_supported": [
+        "SZSE_PRECEDING_VERSION",
+        "SZSE_MAIN_PRE_PRICE_LIMIT",
+        "SZSE_ST_PRICE_LIMIT"
+      ]
+    },
+    {
+      "source_url": "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+      "source_type": "OFFICIAL_RULE_DOCUMENT",
+      "title": "深圳证券交易所交易规则（2021年3月修订），含发布通知、修订对照表、暂缓实施条文",
+      "issuer": "深圳证券交易所",
+      "publication_date": "2021-03-31",
+      "effective_date": "2021-04-06",
+      "retrieved_at_utc": "2026-09-11T00:27:40.975875+00:00",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/preceding-rules.pdf",
+      "sha256": "3a7e3e378b169248bb9314accd749586a10af24028909e66ae0f1759d5151c3d",
+      "parser_version": "pypdf-text-and-pypdfium2-visual-review-v1",
+      "rule_ids_supported": [
+        "SZSE_PRECEDING_VERSION",
+        "SZSE_MAIN_PRE_PRICE_LIMIT",
+        "SZSE_MAIN_NEW_LISTING_PRE",
+        "SZSE_DELISTING_EXCEPTION",
+        "SZSE_ST_DEFERRED_PROVISIONS",
+        "SZSE_LOT_SIZE",
+        "SZSE_TICK_SIZE",
+        "SZSE_SUSPENSION",
+        "SZSE_MARKET_ORDER_SESSION",
+        "SZSE_ORDER_VALIDITY"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "rule_id": "SZSE_RULE_PUBLICATION_IDENTITY",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-04-10",
+      "effective_to": "2026-07-05",
+      "rule_semantics": "Publication 2023-02-17; 深证上〔2023〕98号. Later notice repeals this version on 2026-07-06, not a source of pilot trading behavior.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/trade/current/t20260424_620190.html",
+      "primary_source_sha256": "08d05a9d3f9c7dac31e8ac33712bac26b3995585718031e99a953e9128eec2d2",
+      "supporting_source_urls": [],
+      "source_locator": "notice body paragraph 2",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "RULE_VERSION_BOUNDARY"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Version .4 records publication 2023-02-17 separately; no 2026 behavior imported."
+    },
+    {
+      "rule_id": "SZSE_RULE_EFFECTIVE_DATE",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-04-10",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "2023 revision implemented on 2023-04-10, not publication day.",
+      "primary_source_url": "https://www.szse.cn/www/marketServices/technicalservice/doc/P020230724535729507237.pdf",
+      "primary_source_sha256": "9540ba342ab92b6cb464d24cd2e7acfa45db2847ea3a6832a8767bc60f6c9029",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/rules/t20230621_601279.html"
+      ],
+      "source_locator": "PDF page 18; visual and text inspected",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "RULE_VERSION_BOUNDARY"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Both Main and ChiNext have 2023-04-10 boundary; boundary/prefix unit checks."
+    },
+    {
+      "rule_id": "SZSE_PRECEDING_VERSION",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2023-04-09",
+      "rule_semantics": "Preceding 2021-03 revision effective 2021-04-06, with ChiNext special provisions taking precedence.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/trade/current/t20210331_585336.html",
+      "primary_source_sha256": "2699bdb13506dd2f57c908333907208b84c5c7ed7b3b62a51a4f0fbc28e5fdcc",
+      "supporting_source_urls": [
+        "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+        "https://investor.szse.cn/institute/rules/t20200807_580310.html"
+      ],
+      "source_locator": "notice items 1-3",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "RULE_VERSION_BOUNDARY"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Version .5 explicitly records Main 2021-04-06 source/publication; ChiNext retains overriding special provisions."
+    },
+    {
+      "rule_id": "SZSE_SOURCE_BYTES",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Rule claims may be evidenced by official guidance; unavailable historical URLs are not invalid rule content.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20230621_601279.html",
+      "primary_source_sha256": "5b5cedc06a5fcf5ceb9e0d88afe6b708b1e7e045341f3b8ce8b7efa93202a024",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/bookshelf/manualseriesbook/P020230403389861343977.pdf"
+      ],
+      "source_locator": "questions 2-3",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "RULE_SOURCE_PROVENANCE"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "14 official snapshots reviewed; types not conflated; checksum validation mandatory."
+    },
+    {
+      "rule_id": "SZSE_BOARD_PRECEDENCE",
+      "market": "CN_A",
+      "board": "SZSE_CHINEXT",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "ChiNext special provisions prevail over inconsistent general provisions; 20% applies to ST/*ST as well.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20200807_580310.html",
+      "primary_source_sha256": "2461b1906837abba74263c703bdd0a88556549a6f7e648f3e31a4dc56347c154",
+      "supporting_source_urls": [],
+      "source_locator": "questions 1 and 4",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "BOARD_PRECEDENCE",
+        "CHINEXT_PRICE_LIMIT"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Resolver selects board-specific rules; all .4 ChiNext pilot periods use 20% normal/ST."
+    },
+    {
+      "rule_id": "SZSE_MAIN_PRICE_LIMIT",
+      "market": "CN_A",
+      "board": "SZSE_MAIN",
+      "effective_from": "2023-04-10",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Normal 10%, ST/*ST 5%, delisting-period 10%; exceptions separately classified.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20230629_601434.html",
+      "primary_source_sha256": "8d6095f9a858e79fa165c5c133055a5b58c102e4f0698d94a165589236866f7d",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/bookshelf/manualseriesbook/P020230403389861343977.pdf"
+      ],
+      "source_locator": "question 3",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "MAIN_BOARD_PRICE_LIMIT"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Configured rates and delisting-over-ST precedence agree."
+    },
+    {
+      "rule_id": "SZSE_MAIN_PRE_PRICE_LIMIT",
+      "market": "CN_A",
+      "board": "SZSE_MAIN",
+      "effective_from": "2023-01-01",
+      "effective_to": "2023-04-09",
+      "rule_semantics": "Normal 10%, risk-warning 5%, delisting-period 10%.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+      "primary_source_sha256": "3a7e3e378b169248bb9314accd749586a10af24028909e66ae0f1759d5151c3d",
+      "supporting_source_urls": [
+        "https://www.szse.cn/lawrules/rule/trade/current/t20210331_585336.html"
+      ],
+      "source_locator": "pages 14 and 28; 3.3.15, 4.5.5",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "MAIN_BOARD_PRICE_LIMIT"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Configured rates agree."
+    },
+    {
+      "rule_id": "SZSE_CHINEXT_POST_PRICE_LIMIT",
+      "market": "CN_A",
+      "board": "SZSE_CHINEXT",
+      "effective_from": "2023-04-10",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "All ChiNext ordinary/risk-warning/delisting stock uses 20% except explicit no-limit sessions.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20230629_601434.html",
+      "primary_source_sha256": "8d6095f9a858e79fa165c5c133055a5b58c102e4f0698d94a165589236866f7d",
+      "supporting_source_urls": [],
+      "source_locator": "question 3",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "CHINEXT_PRICE_LIMIT"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Configured rates agree."
+    },
+    {
+      "rule_id": "SZSE_NEW_LISTING_POST",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-04-10",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "First five IPO trading sessions have no price limit; applies to Main and ChiNext.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20230629_601434.html",
+      "primary_source_sha256": "8d6095f9a858e79fa165c5c133055a5b58c102e4f0698d94a165589236866f7d",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/bookshelf/manualseriesbook/P020230403389861343977.pdf"
+      ],
+      "source_locator": "question 3",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "NEW_LISTING_EXCEPTION",
+        "LISTING_AGE_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Resolver ages 0..4 have no limit; age 5 reverts to board rate."
+    },
+    {
+      "rule_id": "SZSE_MAIN_NEW_LISTING_PRE",
+      "market": "CN_A",
+      "board": "SZSE_MAIN",
+      "effective_from": "2023-01-01",
+      "effective_to": "2023-04-09",
+      "rule_semantics": "First IPO session is distinct from ordinary 10% daily-limit regime; separately effective IPO controls also require consideration.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+      "primary_source_sha256": "3a7e3e378b169248bb9314accd749586a10af24028909e66ae0f1759d5151c3d",
+      "supporting_source_urls": [],
+      "source_locator": "page 14, 3.3.17",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "NEW_LISTING_EXCEPTION",
+        "LISTING_AGE_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Version .5: first session is not ordinary 10%; existing no-fill first session retained for separate IPO controls. No claim to simulate first-day price controls."
+    },
+    {
+      "rule_id": "SZSE_RELISTING",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-04-10",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "First relisting session has no price limit.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20230629_601434.html",
+      "primary_source_sha256": "8d6095f9a858e79fa165c5c133055a5b58c102e4f0698d94a165589236866f7d",
+      "supporting_source_urls": [],
+      "source_locator": "question 3",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "NEW_LISTING_EXCEPTION",
+        "LISTING_AGE_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Dated relisting status resolves first session to no-limit; V1 rejects it. Dataset lifecycle binding remains an explicit R2/R3 audit requirement."
+    },
+    {
+      "rule_id": "SZSE_DELISTING_EXCEPTION",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "First delisting-period trading session has no limit, later Main 10%/ChiNext 20%, overriding ST rate.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+      "primary_source_sha256": "3a7e3e378b169248bb9314accd749586a10af24028909e66ae0f1759d5151c3d",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/rules/t20230629_601434.html"
+      ],
+      "source_locator": "pages 28-29, 4.5.5-4.5.6",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "ST_RULE_INTEGRATION"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "delisting_period_start resolution agrees and is bounded to pilot."
+    },
+    {
+      "rule_id": "SZSE_ST_PRICE_LIMIT",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Main ST/*ST 5%; ChiNext ST/*ST 20%; not normal classification and not a new ST authority audit.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/trade/current/t20210331_585336.html",
+      "primary_source_sha256": "2699bdb13506dd2f57c908333907208b84c5c7ed7b3b62a51a4f0fbc28e5fdcc",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/rules/t20200807_580310.html",
+        "https://investor.szse.cn/institute/rules/t20230629_601434.html"
+      ],
+      "source_locator": "item 1",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "ST_RULE_INTEGRATION"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Both ST strings map to risk-warning price regime; accepted event authorities unchanged."
+    },
+    {
+      "rule_id": "SZSE_ST_DEFERRED_PROVISIONS",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2023-04-09",
+      "rule_semantics": "2021 annex defers 4.5.4 500,000-share daily risk-warning buy cap and specified risk-warning disclosure/acknowledgement provisions.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+      "primary_source_sha256": "3a7e3e378b169248bb9314accd749586a10af24028909e66ae0f1759d5151c3d",
+      "supporting_source_urls": [],
+      "source_locator": "pages 45-46, Annex 3",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "ST_RULE_INTEGRATION"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "No backfilled 500,000-share cap from unimplemented text. Later implementation requires separate evidence."
+    },
+    {
+      "rule_id": "SZSE_MAIN_PRICE_CAGE",
+      "market": "CN_A",
+      "board": "SZSE_MAIN",
+      "effective_from": "2023-04-10",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Continuous-auction LIMIT buy <=max(reference*1.02,reference+0.10); sell >=min(reference*0.98,reference-0.10). Reference follows contra quote, own quote, last trade, previous close.",
+      "primary_source_url": "https://investor.szse.cn/column/qa/t20230306_599093.html",
+      "primary_source_sha256": "22b0dbdcddf0a23bcc55ab813f3711b9193f40c12854f321853e9f72742618b2",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/rules/t20230621_601279.html",
+        "https://investor.szse.cn/institute/bookshelf/manualseriesbook/P020230403389861343977.pdf"
+      ],
+      "source_locator": "questions 5-7",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "PRICE_CAGE"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Verified continuous-auction rule; V1 only simulates a precommitted opening instruction, no continuous-auction execution or repricing."
+    },
+    {
+      "rule_id": "SZSE_CHINEXT_PRICE_CAGE_PRE",
+      "market": "CN_A",
+      "board": "SZSE_CHINEXT",
+      "effective_from": "2023-01-01",
+      "effective_to": "2023-04-09",
+      "rule_semantics": "Continuous-auction LIMIT cage is 102% buy/98% sell; out-of-range orders stored, not directly rejected.",
+      "primary_source_url": "https://investor.szse.cn/thematic/chinext/article/t20200813_580574.html",
+      "primary_source_sha256": "848711aac9583e5769a2868bad557d917db686841c63f0c009545f96526f30d2",
+      "supporting_source_urls": [],
+      "source_locator": "questions 2-4",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "PRICE_CAGE",
+        "ORDER_REJECTION_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Verified historical storage mechanism; no continuous-auction order simulation in V1."
+    },
+    {
+      "rule_id": "SZSE_CHINEXT_PRICE_CAGE_POST",
+      "market": "CN_A",
+      "board": "SZSE_CHINEXT",
+      "effective_from": "2023-04-10",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Adds ten-tick floor to 2% cage and replaces storage with direct rejection.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20230621_601279.html",
+      "primary_source_sha256": "5b5cedc06a5fcf5ceb9e0d88afe6b708b1e7e045341f3b8ce8b7efa93202a024",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/bookshelf/manualseriesbook/P020230403389861343977.pdf"
+      ],
+      "source_locator": "question 2, third change",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "PRICE_CAGE",
+        "ORDER_REJECTION_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Verified 2023 change; no continuous-auction order simulation in V1."
+    },
+    {
+      "rule_id": "SZSE_INTRADAY_SUSPENSION",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-04-10",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "No-limit securities trigger temporary halts at first +/-30% and +/-60% from opening price, normally 10 minutes each.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20230621_601279.html",
+      "primary_source_sha256": "5b5cedc06a5fcf5ceb9e0d88afe6b708b1e7e045341f3b8ce8b7efa93202a024",
+      "supporting_source_urls": [
+        "https://www.szse.cn/www/marketServices/technicalservice/doc/P020230724535729507237.pdf"
+      ],
+      "source_locator": "question 2",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "INTRADAY_SUSPENSION"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Official no-limit halt semantics verified. V1 rejects no-limit sessions and never reconstructs an intraday halt sequence."
+    },
+    {
+      "rule_id": "SZSE_CHINEXT_INTRADAY_PRE",
+      "market": "CN_A",
+      "board": "SZSE_CHINEXT",
+      "effective_from": "2023-01-01",
+      "effective_to": "2023-04-09",
+      "rule_semantics": "30%/60% thresholds, ten-minute halts; across 14:57 resume at 14:57; no duplicate same-direction triggers.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20200821_580899.html",
+      "primary_source_sha256": "8cefff283ac158ff3e192bfd9aade76279d19510d2c573c5d5056c364aa02808",
+      "supporting_source_urls": [],
+      "source_locator": "questions 2-3",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "INTRADAY_SUSPENSION"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Official no-limit halt semantics verified. V1 rejects no-limit sessions."
+    },
+    {
+      "rule_id": "SZSE_LOT_SIZE",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Buy 100-share multiples; sell residual below 100 in one instruction. Main maximum 1,000,000; ChiNext LIMIT maximum 300,000 and MARKET maximum 150,000.",
+      "primary_source_url": "https://investor.szse.cn/institute/rules/t20230706_601604.html",
+      "primary_source_sha256": "89e04919809f4d4f514915a4850966d4f638c88ff76674adb7d3ef51d9d86621",
+      "supporting_source_urls": [
+        "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+        "https://investor.szse.cn/thematic/chinext/article/t20200813_580574.html",
+        "https://investor.szse.cn/institute/bookshelf/manualseriesbook/P020230403389861343977.pdf"
+      ],
+      "source_locator": "question 1; preceding rules p13 and 2020 ChiNext Q1",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "LOT_SIZE_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "V1 gates minimum, increment, integer quantity, LIMIT cap and whole odd-lot residual sale; shared OMS/risk retained."
+    },
+    {
+      "rule_id": "SZSE_TICK_SIZE",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "A-share submitted prices in CNY 0.01 increments; limit bounds use half-up rounding.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+      "primary_source_sha256": "3a7e3e378b169248bb9314accd749586a10af24028909e66ae0f1759d5151c3d",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/rules/t20230706_601604.html",
+        "https://investor.szse.cn/institute/bookshelf/manualseriesbook/P020230403389861343977.pdf"
+      ],
+      "source_locator": "page 14, 3.3.13 and 3.3.16",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "TICK_SIZE_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "V1 submitted-limit modulo-tick guard, half-up bounds, zero additional slippage; raw OPEN only after gate."
+    },
+    {
+      "rule_id": "SZSE_SUSPENSION",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Suspended securities do not trade; resumption time comes from announcement; first daily price may be a resumed/continuous trade.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+      "primary_source_sha256": "3a7e3e378b169248bb9314accd749586a10af24028909e66ae0f1759d5151c3d",
+      "supporting_source_urls": [],
+      "source_locator": "pages 25-26, 4.2.1-4.2.2 and 4.3.3-4.3.8",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "SUSPENSION_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Official rules verified; suspension/unknown tradeability prevent fills. Actual auction liquidity is not claimed by the separate daily proxy."
+    },
+    {
+      "rule_id": "SZSE_MARKET_ORDER_SESSION",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "MARKET submissions only in continuous auction for price-limited securities; not accepted in opening auction or no-limit sessions.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+      "primary_source_sha256": "3a7e3e378b169248bb9314accd749586a10af24028909e66ae0f1759d5151c3d",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/institute/rules/t20230706_601604.html",
+        "https://investor.szse.cn/institute/bookshelf/manualseriesbook/P020230403389861343977.pdf"
+      ],
+      "source_locator": "page 12, 3.3.5; 2023 handbook PDF page22/printed35",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "ORDER_REJECTION_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Research now submits LIMIT, never MARKET; official MARKET restrictions remain authoritative but do not prove a simulated LIMIT fill."
+    },
+    {
+      "rule_id": "SZSE_ORDER_VALIDITY",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Exchange instructions are valid for that trading day; invalid price/quantity rejected; local unsent intentions are not accepted exchange orders.",
+      "primary_source_url": "https://www.szse.cn/lawrules/rule/repeal/rules/P020231230545143336292.pdf",
+      "primary_source_sha256": "3a7e3e378b169248bb9314accd749586a10af24028909e66ae0f1759d5151c3d",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/column/qa/t20230306_599093.html"
+      ],
+      "source_locator": "page 14, 3.3.18; post-reform Q8",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "ORDER_REJECTION_RULES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Single intended calendar session only; all unfilled instructions expire that session, missing bars do not extend life."
+    },
+    {
+      "rule_id": "SZSE_STAMP_DUTY_PRE",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2023-08-27",
+      "rule_semantics": "Seller only 0.001 of notional.",
+      "primary_source_url": "https://investor.szse.cn/warning/activities/stockintroduction/t20190531_567540.html",
+      "primary_source_sha256": "e9177f2d46bf96d1395cd609108de347a6a3081afffb271c7b152a13780c1758",
+      "supporting_source_urls": [],
+      "source_locator": "question 5 fee table",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "TRANSACTION_COST_EFFECTIVE_DATES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Schedule charges seller 0.001; no buyer stamp duty."
+    },
+    {
+      "rule_id": "SZSE_STAMP_DUTY_POST",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-08-28",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Stamp duty reduced by half from 2023-08-28: seller 0.0005.",
+      "primary_source_url": "https://www.szse.cn/disclosure/notice/general/t20230827_602970.html",
+      "primary_source_sha256": "0c8375e63c398ad69c86643f0f1980cccf3aa051d4814d2d3fe47bebeca298e2",
+      "supporting_source_urls": [
+        "https://investor.szse.cn/warning/activities/stockintroduction/t20190531_567540.html"
+      ],
+      "source_locator": "notice body, 深证会〔2023〕268号",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "TRANSACTION_COST_EFFECTIVE_DATES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Schedule boundary agrees; no backward application."
+    },
+    {
+      "rule_id": "SZSE_COMMISSION_ASSUMPTION",
+      "market": "CN_A",
+      "board": "SZSE_ALL",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "rule_semantics": "Broker commission is negotiated within stated ceiling and minimum; code 0.0003/min5 is a research assumption, not an exchange-mandated rate.",
+      "primary_source_url": "https://investor.szse.cn/warning/activities/stockintroduction/t20190531_567540.html",
+      "primary_source_sha256": "e9177f2d46bf96d1395cd609108de347a6a3081afffb271c7b152a13780c1758",
+      "supporting_source_urls": [],
+      "source_locator": "question 5, commission table and note 1",
+      "confidence": "VERIFIED",
+      "pilot_materiality": "MATERIAL",
+      "checks": [
+        "TRANSACTION_COST_EFFECTIVE_DATES"
+      ],
+      "implementation_status": "PASS",
+      "implementation_review": "Existing assumed commission retained and explicitly separated from statutory fee evidence."
+    }
+  ],
+  "retired_locations": [
+    {
+      "url": "https://investor.szse.cn/lawrules/index/rule/t20230217_598773.html",
+      "status": "SOURCE_LOCATION_RETIRED_OR_UNAVAILABLE",
+      "reason": "Previously verified HTTP404 by automated and user normal-browser access; not retried in this run; no conclusion that rule content is invalid."
+    },
+    {
+      "url": "https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020230217564423808793.pdf",
+      "status": "SOURCE_LOCATION_RETIRED_OR_UNAVAILABLE",
+      "reason": "Previously verified HTTP404 by automated and user normal-browser access; not retried in this run; no conclusion that rule content is invalid."
+    },
+    {
+      "url": "https://docs.static.szse.cn/www/lawrules/rule/stock/W020230217564423808793.pdf",
+      "status": "SOURCE_LOCATION_RETIRED_OR_UNAVAILABLE",
+      "reason": "Previously verified HTTP404 by automated and user normal-browser access; not retried in this run; no conclusion that rule content is invalid."
+    }
+  ],
+  "implementation_sha256": {
+    "backend/app/domain/markets/rules.py": "b26d34259229ebb048e69138a63ab5e63f9434f2dce6fc15c96a2d753b44df48",
+    "backend/app/domain/markets/cn_a_rules.py": "83f53ad326204645f0fc6df1773ead86cb87606c6b322f94f26c4f2094939ed1",
+    "backend/app/research/engine.py": "590e4134faeddac577efb0c77e24dd00a8796a8a91177afe504b04f1591840dc",
+    "backend/app/execution/broker.py": "67c422ab692a32cd0761694343c74f675d04d0505de11a2997f1b5ff4a830de2",
+    "backend/app/research/strategy.py": "14bd3d21a48560faa28527fa061883a4ceb69bcf7a6332176ac06467152dbde0",
+    "backend/app/research/costs.py": "c1a3be686fb5323161822efa68d04263746f33d650b97238fdbe635ef35a1fd6",
+    "backend/tests/test_a_share_market_domain.py": "57d1c32b765ee5dcffc7025f22e4229f98ebbc3b82807a90faad7dd1fd79f4b1"
+  },
+  "rejected_candidate_sources": [
+    {
+      "source_url": "https://docs.static.szse.cn/www/market/periodical/year/W020230915392912592747.pdf",
+      "sha256": "0402e04aa09b972eaa0a45f323a3eccec6d45cf58128cacad227aa7225fcf8c3",
+      "raw_snapshot_path": "market-rule-claims-20260911/sources/fees-2022.pdf",
+      "reason": "Actual document is 2015 factbook, PDF p660 shows obsolete 0.02 per mille settlement fee. URL timestamp is not content effective date; not accepted for pilot."
+    }
+  ],
+  "human_execution_decision": "APPROVED: CN_A_DAILY_OPENING_LIMIT_V1 SIMULATION_ASSUMPTION; independently validated, not official exchange rule.",
+  "model_assumptions": [
+    {
+      "id": "PILOT_TRANSFER_CLEARING_ALLOWANCE",
+      "classification": "SIMULATION_ASSUMPTION",
+      "rate": "0.00001",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-31",
+      "side": "BOTH",
+      "authority_status": "UNVERIFIED_AS_STATUTORY_RATE",
+      "prior_unresolved_claim": {
+        "rule_id": "SZSE_TRANSFER_FEE",
+        "market": "CN_A",
+        "board": "SZSE_ALL",
+        "effective_from": "2023-01-01",
+        "effective_to": "2024-07-31",
+        "rule_semantics": "Implemented 0.00001 of notional both sides requires contemporary settlement-fee evidence; do not substitute 2015 schedule.",
+        "primary_source_url": null,
+        "primary_source_sha256": null,
+        "supporting_source_urls": [],
+        "source_locator": null,
+        "confidence": "UNRESOLVED",
+        "pilot_materiality": "MATERIAL",
+        "checks": [
+          "TRANSACTION_COST_EFFECTIVE_DATES",
+          "RULE_SOURCE_PROVENANCE"
+        ],
+        "implementation_status": "PARTIAL",
+        "implementation_review": "Official-SZSE-only search did not locate 2022 settlement fee notice. Existing 2022 factbook p1538 lists exchange fees, not this settlement fee. No rate changed."
+      },
+      "human_basis": "2026-09-11 approval section 9: retain already accepted effective-dated costs supported by authoritative/frozen research assumptions. Rate unchanged; not promoted to an official fact.",
+      "documentation": "docs/research/DAILY_EXECUTION_CONVENTION.md"
+    }
+  ]
+}

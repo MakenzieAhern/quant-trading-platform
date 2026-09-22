@@ -1,0 +1,119 @@
+{
+  "report_id": "R5_FULL_SOURCE_PREFLIGHT_V16",
+  "supersedes": {
+    "path": ".research/reports/r5-full-source-preflight-v15.json",
+    "file_sha256": "088cf724f2b4cc2aeea3f8733e1cb372f30894e3837eb6c11ca7f2e3c8381102",
+    "manifest_sha256": "e60eb20f3547490c33f0f8465ba9b584f7342de6a2833c6e2119c52edda588fb"
+  },
+  "dataset_id": "cn-a-research-20100101-20251231-v1",
+  "requested_coverage": [
+    "2010-01-01",
+    "2025-12-31"
+  ],
+  "status": "BLOCKED_MATERIAL_AUTHORITY_AND_METHODOLOGY_GAPS",
+  "components": {
+    "security_master": {
+      "status": "PASS",
+      "securities": 5431,
+      "intervals": 5436,
+      "true_p0_unresolved_facts": 0,
+      "manifest_sha256": "3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235cc6d98e12a8150faf8"
+    },
+    "st_history": {
+      "status": "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
+      "sse_chain_gaps": 0,
+      "sse_manifest_sha256": "0b11bd3fcf4f62b530a551365dfa974b7db3cef63156d5a311e0f714ae0b012f",
+      "szse_probe_sha256": "8cb0c481cd8bd004dc689eee3370eb2fd9f592daec6ced717b40c45d1401c3a8"
+    },
+    "suspension_history": {
+      "status": "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
+      "sse_unresolved": 0,
+      "szse_unresolved": 0,
+      "szse_resume_conflicts": 0,
+      "authority_manifest_sha256": "b495a9e17337549b37b39e23d699ad2295e7c3168a7f37ef237d61744fab322a"
+    },
+    "corporate_actions": {
+      "status": "PASS_PUBLIC_SOURCE_FACT_CLOSURE",
+      "p1_raw_requirements": 16320,
+      "p1_facts_already_established": 16319,
+      "p1_true_missing_source_facts": 1,
+      "remaining_non_corporate_requirements": [
+        "RAW:FULL_UNIVERSE"
+      ],
+      "manifest_sha256": "bff24c37eca440a94cb89ed4357d60bd68d15ce4fac1fc0c6243d6fdd0b06890"
+    },
+    "adjustment_factors": {
+      "status": "PASS_FOR_FULL_DATASET",
+      "verified_intervals": 5436,
+      "provider_factor_change_dates": 43019,
+      "factor_change_counts": {
+        "OFFICIAL_EVENT_DATE_BOUND_PROVIDER_FACTOR": 40691,
+        "OFFICIAL_BONUS_ORACLE_FACTOR_PARITY": 892,
+        "OFFICIAL_SPECIAL_MECHANICS_FACTOR_PARITY": 20,
+        "OFFICIAL_GROSS_TERMS_FACTOR_PARITY": 1348,
+        "OFFICIAL_RESIDUAL_MECHANICS_FACTOR_PARITY": 33,
+        "OFFICIAL_REMAINING_MECHANICS_FACTOR_PARITY": 35
+      },
+      "unresolved_factor_changes": 0,
+      "supported_events_without_same_date_provider_factor": 6,
+      "provider_deferred_factor_events": 3,
+      "official_cash_overlay_events": 3,
+      "unresolved_supported_events": 0,
+      "authority_report_path": "/home/yuchen/data/research/staging/full-adjustment-audit-v1/full-adjustment-authority-v2.json",
+      "authority_report_file_sha256": "14eabedf0ab539632dc2fe41e10239ca69afb9073c1e3362565e45af95a97f60",
+      "authority_report_manifest_sha256": "0d6666849cafbd61b05e0396691c5f63ed128c5a2622b92147be5cf72e8b9bc0",
+      "input_order_reproducibility": "PASS",
+      "checksum_repeatability": "PASS"
+    },
+    "raw_ohlcv": {
+      "status": "PARTIAL_PER_SECURITY_OFFICIAL_AUTHORITY_UNRESOLVED",
+      "szse_unresolved_official_source_rows": 239,
+      "szse_unresolved_date": "2011-07-25",
+      "szse_factor_gap_affected_calendar_sessions": 253,
+      "szse_candidate_promoted": false,
+      "szse_observed_only_treatment": "REJECT_SILENT_CALENDAR_HORIZON_DRIFT",
+      "szse_official_only_treatment": "CONSERVATIVE_FACTOR_UNAVAILABLE",
+      "szse_candidate_feature_only_treatment": "REQUIRES_SOURCE_METHODOLOGY_APPROVAL",
+      "impact_manifest_sha256": "a29bad03ed9080a579534a8eb425123592e0f66f4bc686df6a49e83e3cdf6f00"
+    },
+    "market_rules_and_transaction_costs": {
+      "status": "PARTIAL_ACCOUNT_CONTRACT_AND_PRE_2015_INVESTOR_TRANSFER_TOTAL",
+      "remaining_public_source_gaps": [
+        "SSE_TRANSFER_INVESTOR_TOTAL_2010_01_01_TO_2015_07_31",
+        "SSE_TRANSFER_MINIMUM_2010_01_01_TO_2015_07_31"
+      ],
+      "research_commission_scope_methodology_gap": true,
+      "stamp_duty_full_requested_interval": true,
+      "post_2015_transfer_effective_interval": true,
+      "report_manifest_sha256": "fa46e42fb57ea91962c0def607741dd90420e09158e9a189f032b883aaa21dd7"
+    },
+    "trading_calendar": {
+      "status": "PASS",
+      "sessions": 3886,
+      "manifest_sha256": "d3c681d7d2020d3c7a8111d9600092e79a18ff28234b02e5f5020644506620b8"
+    },
+    "csi300_benchmark": {
+      "status": "PASS_FOR_FULL_RANGE_CLOSE_SERIES",
+      "manifest_sha256": "ced39152f1fb94def77faca1414ca80c661dc827803ae275f935ccc294e91c88"
+    }
+  },
+  "mandatory_incomplete_components": [
+    "RAW_OHLCV_AUTHORITY",
+    "HISTORICAL_MARKET_RULES_AND_TRANSACTION_COSTS"
+  ],
+  "remaining_p1_facts": [
+    "RAW:FULL_UNIVERSE"
+  ],
+  "human_source_input_required": true,
+  "human_methodology_decision_required": true,
+  "paid_source_required": false,
+  "verified_safe_start_date": null,
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "development_study_run": false,
+  "validation_study_run": false,
+  "official_oos_run": false,
+  "input_order_reproducibility": "PASS_FOR_COMPONENTS_WHERE_REPORTED",
+  "manifest_sha256": "47eb9614f6b5885f2fb04b8a9b33f3b62b2db9e2255becfc891a1656a54391d1"
+}

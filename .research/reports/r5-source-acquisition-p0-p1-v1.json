@@ -1,0 +1,88 @@
+{
+  "as_of_utc": "2026-09-15T11:21:33Z",
+  "branch": "feature/a-share-research-v1.1",
+  "head_before_report": "2b34e62a413043ab2b4b3be3f6516e4b21e9d3ac",
+  "manifest": "/home/yuchen/data/research/staging/source-input-requirements-v2-minimal/manifest-v2.json",
+  "manifest_file_sha256": "e9b7bb31868958c4bffd1dd9a31b26c33f0ad71c3b46c2e83adb7dd691b37559",
+  "manifest_canonical_sha256": "96839c742cb12c9e0ea0c8301b990474554f64bfd2abf34579f8190b2e8017c7",
+  "manifest_validation": "PASS",
+  "p0": {
+    "total": 2,
+    "resolved": 0,
+    "unresolved": 2,
+    "sse": {
+      "document_id": "OFFICIAL_DOCUMENT:ef66e47056d63a9845e28e5a39d64347b4ae78a21cc61a60e0a15afe716d9b01",
+      "required_type": "COMPLETE_POINT_IN_TIME_SSE_LISTING_DELISTING_CODE_NAME_BOARD_HISTORY",
+      "coverage": ["2010-01-01", "2025-12-31"],
+      "destination": "/home/yuchen/data/research/manual-official-input/sse/cross-year",
+      "official_routes": [
+        "https://www.sseinfo.com/services/assortment/historical/",
+        "https://www.sseinfo.com/services/sseai/aidata/",
+        "https://bsp.sseinfo.com/business/?id=1703682586115227650"
+      ],
+      "status": "BUSINESS_APPLICATION_APPROVAL_AND_AGREEMENT_REQUIRED"
+    },
+    "szse": {
+      "document_id": "OFFICIAL_DOCUMENT:8e80873a2a2bcf608b3f475a2cd93d9733e2289842fa847a929b03c2b4508c7e",
+      "required_type": "COMPLETE_POINT_IN_TIME_SZSE_LISTING_DELISTING_CODE_NAME_BOARD_HISTORY",
+      "coverage": ["2010-01-01", "2025-12-31"],
+      "destination": "/home/yuchen/data/research/manual-official-input/szse/cross-year",
+      "official_route": "https://webapi.cninfo.com.cn/n#/product/package?packageId=98",
+      "verified_interfaces": [
+        "p_stock2100_inc",
+        "p_stock2101_inc",
+        "institution_basic_information_changes",
+        "security_abbreviation_changes",
+        "p_stock2117_inc"
+      ],
+      "status": "FREE_PREVIEW_AVAILABLE_LOGIN_AND_POTENTIALLY_PAID_EXPORT_REQUIRED"
+    }
+  },
+  "p1": {
+    "raw_event_requirements": 16320,
+    "unique_official_documents": 16304,
+    "duplicate_event_requests_collapsed": 16,
+    "already_local": 7,
+    "net_new_official_documents": 16297,
+    "bulk_collection_families": 5,
+    "cninfo_unique_documents": 16226,
+    "cninfo_event_back_references": 16242,
+    "cninfo_bulk_route": "https://webapi.cninfo.com.cn/n#/product/package?packageId=11",
+    "cninfo_interface_limits": {
+      "maximum_records_per_response": 20000,
+      "market_wide_partition": "ONE_DAY",
+      "resume_key": "maxID_FROM_MAXIMUM_OBJECTID",
+      "fields_verified": [
+        "announcement_date",
+        "announcement_title",
+        "official_pdf_address",
+        "format",
+        "size",
+        "market",
+        "OBJECTID"
+      ]
+    }
+  },
+  "existing_archive_scan": {
+    "metadata_receipts_scanned": 65517,
+    "p1_known_official_urls": 14353,
+    "local_url_matches_with_payload": 9,
+    "valid_pdf_http_200_sha256_matches": 7,
+    "rejected_sse_bot_denial_payloads": 2
+  },
+  "reused_local_source_root": "/home/yuchen/data/research/manual-official-input/cninfo",
+  "reused_local_sources": [
+    {"file": "1215408119.PDF", "year": 2022, "retrieved_at_utc": "2026-09-13T10:54:52.014524+00:00", "sha256": "d0ce17862db32ba2dde975b62dcc2286d16188ee59e287589f1969edaad909d0", "url": "https://static.cninfo.com.cn/finalpage/2022-12-21/1215408119.PDF"},
+    {"file": "1220288229.PDF", "year": 2024, "retrieved_at_utc": "2026-09-13T10:54:52.919444+00:00", "sha256": "f7659034cb64362e870f2f16f25f89ca683b10a779bb18e6e14ac6ea4d5b97a5", "url": "https://static.cninfo.com.cn/finalpage/2024-06-07/1220288229.PDF"},
+    {"file": "1220664181.PDF", "year": 2024, "retrieved_at_utc": "2026-09-13T10:54:55.832273+00:00", "sha256": "d47db5c0b7d2c9bfc37dbc71cfdd2e34ed299948baaad08e7fadedb6fa2dde86", "url": "https://static.cninfo.com.cn/finalpage/2024-07-18/1220664181.PDF"},
+    {"file": "1220848913.PDF", "year": 2024, "retrieved_at_utc": "2026-09-13T10:56:10.318393+00:00", "sha256": "a4f0ab455d78f3ff1681b5de6583a8957cc6127eb455a57168b5e8f835a575cc", "url": "https://static.cninfo.com.cn/finalpage/2024-08-13/1220848913.PDF"},
+    {"file": "1223476469.PDF", "year": 2025, "retrieved_at_utc": "2026-09-13T10:54:59.836646+00:00", "sha256": "1a9e10e1bd1ba1e5ea3493a8c8dab9e1a70e2211de015c60c4ec97312a968f60", "url": "https://static.cninfo.com.cn/finalpage/2025-05-07/1223476469.PDF"},
+    {"file": "1223543249.PDF", "year": 2025, "retrieved_at_utc": "2026-09-13T10:54:58.850826+00:00", "sha256": "903021b449b18291b6b4604495141085c7fc98336161ed556b73d0a22b6dd895", "url": "https://static.cninfo.com.cn/finalpage/2025-05-15/1223543249.PDF"},
+    {"file": "1224067624.PDF", "year": 2025, "retrieved_at_utc": "2026-09-13T10:54:57.378724+00:00", "sha256": "75ae0bb2d5a1a2715aaca1d26b15f0f296dc2ce9848e8cc074ed52ede183eab2", "url": "https://static.cninfo.com.cn/finalpage/2025-07-03/1224067624.PDF"}
+  ],
+  "intake_matcher": "NOT_PRESENT_NO_DUPLICATE_FRAMEWORK_ADDED_BEFORE_P0",
+  "docker_status": "DEFERRED_NONBLOCKING_SEPARATE_FROM_SOURCE_ACQUISITION",
+  "human_approval_required": false,
+  "human_source_input_required": true,
+  "single_smallest_blocker": "OFFICIAL_FULL_EXPORT_ACCOUNT_OR_BUSINESS_APPLICATION_REQUIRED_FOR_P0"
+}

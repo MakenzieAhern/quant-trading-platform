@@ -1,0 +1,12 @@
+{
+  "decision": "APPROVED",
+  "gate": "GATE_A_REVISED_DATASET_FREEZE",
+  "dataset_id": "cn-a-pilot-akshare-20230101-20240731-v2",
+  "review_sha256": "661a4f533b19d9d9746d6e46b2035abcd96bc12f261e4b91d9f2bd9b89ab3d2d",
+  "context_sha256": "aa99ae9e4aaf9ac9801da4c63330e15ffcc3076c12e6c733d75680b58495aa10",
+  "source": "Human attachment e1faf688-9d0b-4558-a068-4d39959caab3",
+  "authorized_next": ["R4_V2_PILOT_ENGINEERING_SMOKE_ONLY", "R5_FULL_RESEARCH_DATASET_MATERIALIZATION_AND_AUDIT"],
+  "next_gate": "GATE_FULL_RESEARCH_DATASET_FREEZE",
+  "formal_studies_authorized": false,
+  "merge_authorized": false
+}

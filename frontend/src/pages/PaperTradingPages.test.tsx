@@ -99,8 +99,8 @@ describe("paper trading pages", () => {
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(jsonResponse(paperSession(), 201));
     render(<CreatePaperSessionPage />);
-    expect(screen.getByLabelText("Provider")).toBeDisabled();
-    expect(screen.getByLabelText("Dataset")).toBeDisabled();
+    expect(screen.getByLabelText("Provider")).toHaveValue("replay");
+    expect(screen.getByLabelText("Dataset")).toHaveValue("AAPL_fixture");
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -115,6 +115,44 @@ describe("paper trading pages", () => {
       provider_type: "replay",
       dataset_id: "AAPL_fixture",
       symbol: "AAPL",
+    });
+  });
+
+  it("creates the frozen A-share strategy only on explicit simulated scenario data", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse(
+        {
+          ...paperSession(),
+          provider_type: "simulated_a_share",
+          dataset_id: "CN_A_SIMULATED_PAPER_FIXTURE_V1",
+          symbol: "CN-A",
+          strategy_type: "cn_a_cross_sectional_momentum_low_vol_v1",
+          strategy_parameters: {},
+        },
+        201,
+      ),
+    );
+    render(<CreatePaperSessionPage />);
+    await userEvent.selectOptions(
+      screen.getByLabelText("Provider"),
+      "simulated_a_share",
+    );
+    expect(screen.getByLabelText("Dataset")).toHaveValue(
+      "CN_A_SIMULATED_PAPER_FIXTURE_V1",
+    );
+    expect(screen.getByLabelText("Symbol")).toHaveValue("CN-A");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(String(fetch.mock.calls[0]?.[1]?.body))).toMatchObject({
+      provider_type: "simulated_a_share",
+      dataset_id: "CN_A_SIMULATED_PAPER_FIXTURE_V1",
+      symbol: "CN-A",
+      strategy: {
+        type: "cn_a_cross_sectional_momentum_low_vol_v1",
+        parameters: {},
+      },
     });
   });
 

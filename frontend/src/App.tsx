@@ -6,6 +6,11 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 import { CreatePaperSessionPage } from "./pages/CreatePaperSessionPage";
 import { PaperSessionDetailPage } from "./pages/PaperSessionDetailPage";
 import { PaperSessionsPage } from "./pages/PaperSessionsPage";
+import { ResearchDatasetPage } from "./pages/research/ResearchDatasetPage";
+import { ResearchHomePage } from "./pages/research/ResearchHomePage";
+import { ResearchRunPage } from "./pages/research/ResearchRunPage";
+import { ResearchStrategiesPage } from "./pages/research/ResearchStrategiesPage";
+import { ResearchStrategyPage } from "./pages/research/ResearchStrategyPage";
 import { usePathname } from "./utils/navigation";
 
 export function App() {
@@ -18,6 +23,14 @@ export function App() {
     /^\/paper\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?$/i.exec(
       pathname,
     );
+  const researchRunMatch =
+    /^\/research\/a-share\/runs\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?$/i.exec(
+      pathname,
+    );
+  const researchDatasetMatch =
+    /^\/research\/a-share\/datasets\/([^/]+)\/?$/i.exec(pathname);
+  const researchStrategyMatch =
+    /^\/research\/a-share\/strategies\/([^/]+)\/?$/i.exec(pathname);
   let page = <NotFoundPage />;
   if (
     pathname === "/" ||
@@ -35,5 +48,31 @@ export function App() {
     page = <CreatePaperSessionPage />;
   else if (paperDetailMatch?.[1])
     page = <PaperSessionDetailPage sessionId={paperDetailMatch[1]} />;
+  else if (
+    pathname === "/research" ||
+    pathname === "/research/" ||
+    pathname === "/research/a-share" ||
+    pathname === "/research/a-share/"
+  )
+    page = <ResearchHomePage />;
+  else if (
+    pathname === "/research/a-share/strategies" ||
+    pathname === "/research/a-share/strategies/"
+  )
+    page = <ResearchStrategiesPage />;
+  else if (researchRunMatch?.[1])
+    page = <ResearchRunPage runId={researchRunMatch[1]} />;
+  else if (researchDatasetMatch?.[1])
+    page = (
+      <ResearchDatasetPage
+        datasetId={decodeURIComponent(researchDatasetMatch[1])}
+      />
+    );
+  else if (researchStrategyMatch?.[1])
+    page = (
+      <ResearchStrategyPage
+        strategyId={decodeURIComponent(researchStrategyMatch[1])}
+      />
+    );
   return <AppShell>{page}</AppShell>;
 }

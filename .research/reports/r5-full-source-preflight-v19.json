@@ -1,0 +1,133 @@
+{
+  "report_id": "R5_FULL_SOURCE_PREFLIGHT_V19",
+  "supersedes": {
+    "path": ".research/reports/r5-full-source-preflight-v18.json",
+    "file_sha256": "a817fe53c6d9c14540259fae2ae07862a3b912a3f696bf73504d11731ef4e3a0",
+    "manifest_sha256": "039c47b110311fdbdea3783e7014a0b46f2eebb9e7d5ec4b4e48735ae54c2c9a"
+  },
+  "dataset_id": "cn-a-research-20100101-20251231-v1",
+  "requested_coverage": [
+    "2010-01-01",
+    "2025-12-31"
+  ],
+  "status": "PASS",
+  "approval": {
+    "policy": "R5_RESEARCH_CONVENTIONS_V1",
+    "status": "APPROVED",
+    "recorded_at_utc": "2026-09-20T15:32:14Z",
+    "source": "User instructed the controller to continue with the recommended project path in Goal mode"
+  },
+  "components": {
+    "security_master": {
+      "status": "PASS",
+      "securities": 5431,
+      "intervals": 5436,
+      "true_p0_unresolved_facts": 0,
+      "manifest_sha256": "3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235cc6d98e12a8150faf8"
+    },
+    "st_history": {
+      "status": "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
+      "sse_chain_gaps": 0,
+      "sse_manifest_sha256": "0b11bd3fcf4f62b530a551365dfa974b7db3cef63156d5a311e0f714ae0b012f",
+      "szse_probe_sha256": "8cb0c481cd8bd004dc689eee3370eb2fd9f592daec6ced717b40c45d1401c3a8"
+    },
+    "suspension_history": {
+      "status": "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
+      "sse_unresolved": 0,
+      "szse_unresolved": 0,
+      "szse_resume_conflicts": 0,
+      "authority_manifest_sha256": "b495a9e17337549b37b39e23d699ad2295e7c3168a7f37ef237d61744fab322a"
+    },
+    "corporate_actions": {
+      "status": "PASS_PUBLIC_SOURCE_FACT_CLOSURE",
+      "p1_raw_requirements": 16320,
+      "p1_facts_already_established": 16320,
+      "p1_true_missing_source_facts": 0,
+      "remaining_non_corporate_requirements": [],
+      "manifest_sha256": "bff24c37eca440a94cb89ed4357d60bd68d15ce4fac1fc0c6243d6fdd0b06890"
+    },
+    "adjustment_factors": {
+      "status": "PASS_FOR_FULL_DATASET",
+      "verified_intervals": 5436,
+      "provider_factor_change_dates": 43019,
+      "unresolved_factor_changes": 0,
+      "supported_events_without_same_date_provider_factor": 6,
+      "provider_deferred_factor_events": 3,
+      "official_cash_overlay_events": 3,
+      "unresolved_supported_events": 0,
+      "authority_report_path": "/home/yuchen/data/research/staging/full-adjustment-audit-v1/full-adjustment-authority-v2.json",
+      "authority_report_file_sha256": "14eabedf0ab539632dc2fe41e10239ca69afb9073c1e3362565e45af95a97f60",
+      "authority_report_manifest_sha256": "0d6666849cafbd61b05e0396691c5f63ed128c5a2622b92147be5cf72e8b9bc0",
+      "input_order_reproducibility": "PASS",
+      "checksum_repeatability": "PASS"
+    },
+    "raw_ohlcv": {
+      "status": "PASS_FOR_FULL_DATASET_WITH_APPROVED_PARTIAL_FEATURE_ONLY_ROWS",
+      "complete_official_rows": "ALL_ACCEPTED_ROWS_EXCEPT_APPROVED_239",
+      "partial_feature_only_rows": 239,
+      "partial_feature_only_date": "2011-07-25",
+      "partial_feature_only_lineage": "OFFICIAL_PARTIAL_FEATURE_ONLY_NON_TRADABLE",
+      "official_close_rows": 239,
+      "official_bounded_volume_rows": 239,
+      "official_bounded_amount_rows": 239,
+      "official_interval_liquidity_decision_invariant_rows": 239,
+      "maximum_20_session_average_perturbation_cny": "170.00",
+      "unknown_fields_retained_null": [
+        "open",
+        "high",
+        "low",
+        "volume",
+        "amount"
+      ],
+      "execution_use": "PROHIBITED",
+      "orders_or_fills_allowed": false,
+      "target_date_rebalance": false,
+      "target_date_execution": false,
+      "candidate_provider_promoted": false,
+      "complete_raw_authority_promoted": false,
+      "report_path": "/home/yuchen/data/research/staging/full-raw-coverage-v1/szse-20110725-monthly-reconstruction-v6/report.json",
+      "report_file_sha256": "f66b4a5237f1310aa1702b48f46f5887a86458f5f50660033605dc167a3e9f64",
+      "report_manifest_sha256": "ec29601a5b3d0968374aa34db8dc2720a4a9c461a8886289d9ab03c504b3738f",
+      "input_order_reproducibility": "PASS",
+      "checksum_repeatability": "PASS"
+    },
+    "market_rules_and_transaction_costs": {
+      "status": "PASS_FOR_FULL_DATASET_WITH_APPROVED_RESEARCH_ACCOUNT_CONVENTION",
+      "remaining_public_source_gaps": [],
+      "research_account_convention": "PILOT_MODEL_EXTENDED_UNCHANGED_2010_2025",
+      "commission_rate": "0.0003",
+      "minimum_commission_cny": "5",
+      "transfer_clearing_allowance_rate": "0.00001",
+      "seller_stamp_duty_rate_through_2023_08_27": "0.001",
+      "seller_stamp_duty_rate_from_2023_08_28": "0.0005",
+      "universal_broker_contract_claim": false,
+      "report_path": "/home/yuchen/data/research/staging/full-rule-preflight-v2/transaction-cost-official-v7/transaction-cost-official-sources-v7.json",
+      "report_file_sha256": "7d4f7ebd80e697c31bbfe93b5a0e6a49d824008175842a78802eb78359adf928",
+      "report_manifest_sha256": "a82ba13093b4ab7b698a525097c9c503c17480f26a4a929e93cc55138c0457de"
+    },
+    "trading_calendar": {
+      "status": "PASS",
+      "sessions": 3886,
+      "manifest_sha256": "d3c681d7d2020d3c7a8111d9600092e79a18ff28234b02e5f5020644506620b8"
+    },
+    "csi300_benchmark": {
+      "status": "PASS_FOR_FULL_RANGE_CLOSE_SERIES",
+      "manifest_sha256": "ced39152f1fb94def77faca1414ca80c661dc827803ae275f935ccc294e91c88"
+    }
+  },
+  "mandatory_incomplete_components": [],
+  "remaining_p1_facts": [],
+  "human_source_input_required": false,
+  "human_methodology_decision_required": false,
+  "paid_source_required": false,
+  "paid_source_option_report": "docs/research/PAID_SOURCE_OPTION_REPORT_V1.md",
+  "verified_safe_start_date": "2010-01-01",
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "development_study_run": false,
+  "validation_study_run": false,
+  "official_oos_run": false,
+  "input_order_reproducibility": "PASS",
+  "manifest_sha256": "ff632aefb099a048ca53ff769779243a0e93d7480cc080eae94c57bd3be33bc9"
+}

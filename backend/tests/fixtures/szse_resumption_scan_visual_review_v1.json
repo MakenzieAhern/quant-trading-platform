@@ -1,0 +1,18 @@
+[
+  {
+    "pdf_page": 1,
+    "resumed_at": "2011-09-15",
+    "review_status": "EXACT_DATE_CONFIRMED",
+    "execution_open_blocked": null,
+    "source_sha256": "49bd0ab2bb91eac2f1c381a0d213c8e2cba1b202e1a9b6cfee092ff0b0ced25e",
+    "visual_evidence": "公司股票将于2011年9月15日恢复交易"
+  },
+  {
+    "pdf_page": 1,
+    "resumed_at": "2011-09-15",
+    "review_status": "EXACT_DATE_CONFIRMED",
+    "execution_open_blocked": false,
+    "source_sha256": "ab95c2a522823fa15443328eee523363a5cac963c7b300119cc9d8715f5c0056",
+    "visual_evidence": "公司股票将于2011年9月15日开市起复牌"
+  }
+]

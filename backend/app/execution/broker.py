@@ -1,10 +1,11 @@
+from collections.abc import Callable
 from decimal import Decimal
 from typing import Protocol
 
 from app.domain.market import Bar
 from app.domain.trading import Fill, Order, OrderSide, OrderStatus, OrderType
 from app.event import Event, EventBus, EventType
-from app.execution.costs import CommissionModel, SlippageModel
+from app.execution.costs import CommissionModel, ContextualCommissionModel, SlippageModel
 from app.execution.state import transition_order
 
 
@@ -34,10 +35,13 @@ class SimulatedBroker:
         event_bus: EventBus,
         commission_model: CommissionModel,
         slippage_model: SlippageModel,
+        *,
+        limit_fill_eligible: Callable[[Order, Bar], bool] | None = None,
     ) -> None:
         self._event_bus = event_bus
         self._commission_model = commission_model
         self._slippage_model = slippage_model
+        self._limit_fill_eligible = limit_fill_eligible
         self._orders: list[Order] = []
         self._pending: list[Order] = []
         self._fills: list[Fill] = []
@@ -63,7 +67,9 @@ class SimulatedBroker:
             self._orders.append(submitted)
             self._publish(EventType.ORDER_SUBMITTED, submitted)
 
-            if submitted.order_type is not OrderType.MARKET:
+            if submitted.order_type is not OrderType.MARKET and not (
+                submitted.order_type is OrderType.LIMIT and self._limit_fill_eligible is not None
+            ):
                 rejected = transition_order(submitted, OrderStatus.REJECTED)
                 self._replace_order(rejected)
                 self._publish(EventType.ORDER_REJECTED, rejected)
@@ -83,9 +89,20 @@ class SimulatedBroker:
         executable = tuple(
             order
             for order in self._pending
-            if order.symbol == bar.symbol and order.created_at < bar.timestamp
+            if order.symbol == bar.symbol
+            and order.created_at < bar.timestamp
+            and self._eligible(order, bar)
         )
         return tuple(self._fill(order, bar) for order in executable)
+
+    def _eligible(self, order: Order, bar: Bar) -> bool:
+        if order.order_type is OrderType.MARKET:
+            return True
+        if self._limit_fill_eligible is None or not self._limit_fill_eligible(order, bar):
+            return False
+        assert order.price is not None
+        price = self._slippage_model.apply(bar.open, order.side)
+        return price <= order.price if order.side is OrderSide.BUY else price >= order.price
 
     def cancel_pending(self) -> tuple[Order, ...]:
         """Cancel every locally pending order without implying external activity."""
@@ -106,7 +123,15 @@ class SimulatedBroker:
     def _fill(self, order: Order, bar: Bar) -> Fill:
         fill_price = self._slippage_model.apply(bar.open, order.side)
         self._validate_fill_price(bar.open, fill_price, order.side)
-        commission = self._commission_model.calculate(order.quantity, fill_price)
+        if isinstance(self._commission_model, ContextualCommissionModel):
+            commission = self._commission_model.calculate_for_fill(
+                order.quantity,
+                fill_price,
+                order.side,
+                bar.timestamp,
+            )
+        else:
+            commission = self._commission_model.calculate(order.quantity, fill_price)
         if not isinstance(commission, Decimal):
             raise BrokerExecutionError("commission model must return Decimal")
         if not commission.is_finite() or commission < Decimal(0):

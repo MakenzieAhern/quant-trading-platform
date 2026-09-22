@@ -4,14 +4,19 @@ build-backend = "hatchling.build"
 
 [project]
 name = "quant-trading-platform-backend"
-version = "1.0.0"
+version = "1.1.0"
 description = "Backend for a deterministic personal quantitative trading platform"
 requires-python = "==3.12.*"
 dependencies = [
   "alembic>=1.17,<2",
   "asyncpg>=0.31,<0.32",
+  "cryptography>=50,<51",
   "fastapi>=0.141,<0.142",
+  "openpyxl>=3.1,<4",
+  "pymupdf>=1.26,<2",
+  "pypdf>=6,<7",
   "pydantic-settings>=2.15,<3",
+  "pyarrow>=25,<26",
   "redis>=7,<8",
   "sqlalchemy>=2.0.52,<2.1",
   "uvicorn[standard]>=0.52,<0.53",
@@ -36,6 +41,7 @@ asyncio_mode = "auto"
 asyncio_default_test_loop_scope = "session"
 asyncio_default_fixture_loop_scope = "session"
 testpaths = ["tests"]
+pythonpath = ["."]
 
 [tool.ruff]
 target-version = "py312"

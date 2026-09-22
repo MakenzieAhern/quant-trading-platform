@@ -1,0 +1,10 @@
+{
+  "decision": "APPROVED",
+  "policy": "CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1",
+  "attachment_sha256": "1adaba893f765d23cee9800ad971c55c1cd7a71b67d2397b09ac220162b815eb",
+  "recorded_at_utc": "2026-09-13T03:38:39Z",
+  "scope": "Uncompensated mandatory partial surrender: proportional quantity and basis removal, corporate-action loss, unchanged retained average cost. No invented fractional allocation or effective date.",
+  "research_authorized": false,
+  "freeze_authorized": false,
+  "merge_authorized": false
+}

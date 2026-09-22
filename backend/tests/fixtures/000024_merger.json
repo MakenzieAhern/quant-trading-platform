@@ -1,0 +1,35 @@
+{
+  "parent_security": {"value": "CN-A:SZSE:000024"},
+  "successor_security": {"value": "CN-A:SZSE:001979"},
+  "conversion_ratio": "1.6008",
+  "parent_last_trading_date": "2015-12-07",
+  "record_date": "2015-12-29",
+  "effective_date": "2015-12-30",
+  "successor_listing_date": "2015-12-30",
+  "official_fractional_method": "GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE",
+  "research_fractional_method": "FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION",
+  "cash_election_offered": true,
+  "sources": [
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2015-12-28/1201863627.PDF",
+      "sha256": "82b4aad17e1a7305e4987a714933d974ed349a84c8eae99149d0cc00fe8f0648",
+      "published_on": "2015-12-28",
+      "retrieved_at": "2026-09-12T23:50:30.460089+00:00",
+      "document": "CMPD2015-177, final conversion implementation, PDF pages1,4,5,7"
+    },
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2015-12-29/1201871229.PDF",
+      "sha256": "fa854710d134cc7e438638148ab74ba56819bd684ed7b18975597162822ba806",
+      "published_on": "2015-12-29",
+      "retrieved_at": "2026-09-12T23:50:12.712696+00:00",
+      "document": "CMSK2015-003, successor listing notice, PDF page1"
+    },
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2015-12-28/1201867754.PDF",
+      "sha256": "7919396e23ca62507d87821008e5b868b1c45f3e1d89d89524da30318eda82ec",
+      "published_on": "2015-12-28",
+      "retrieved_at": "2026-09-12T23:50:10.828925+00:00",
+      "document": "SZSE decision dated2015-12-25, A-share termination, PDF page1"
+    }
+  ]
+}

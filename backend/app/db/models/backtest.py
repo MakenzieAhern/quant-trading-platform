@@ -177,10 +177,32 @@ class BacktestPortfolioSnapshotModel(Base):
     market_value: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     equity: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     realized_pnl: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
+    corporate_action_realized_pnl: Mapped[Decimal] = mapped_column(
+        MONEY, nullable=False, server_default="0"
+    )
+    total_pnl: Mapped[Decimal] = mapped_column(MONEY, nullable=False, server_default="0")
     unrealized_pnl: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     cumulative_commission: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     drawdown: Mapped[Decimal] = mapped_column(MONEY, nullable=False)
     positions: Mapped[list[dict[str, str]]] = mapped_column(JSONB, nullable=False)
+    pending_demergers: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
+    pending_mergers: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
+    merger_rounding_audits: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
+    partial_surrender_audits: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
+    pass_through_audits: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
+    consolidation_audits: Mapped[list[dict[str, object]]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
 
 
 class BacktestMetricsModel(Base):

@@ -1,0 +1,754 @@
+"""Fail-closed, offline parsing of exactly reconciled issuer risk-warning disclosures."""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import io
+import json
+import re
+from collections import Counter
+from datetime import date, timedelta
+from itertools import pairwise
+from pathlib import Path
+from typing import Any
+
+from pypdf import PdfReader
+
+from scripts.reconcile_sse_cninfo import (
+    canonical,
+    issuer_subject,
+    match,
+    publication,
+    save,
+    sha,
+    title_key,
+)
+
+VERSION = "sse-cninfo-ordinary-name-v25"
+DATE = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
+STAR_TRANSLATION = str.maketrans("\u2217\uff0a\ufe61\u2605", "****")
+
+
+def compact(text: str) -> str:
+    return re.sub(r"\s+", "", text)
+
+
+def status(name: str) -> str:
+    name = name.strip("【】").translate(STAR_TRANSLATION)
+    if re.match(r"^(?:S)?\*ST", name, re.I):
+        return "STAR_ST"
+    if re.match(r"^(?:S)?ST", name, re.I):
+        return "ST"
+    return "NORMAL"
+
+
+def linked_name_dates(text: str, clauses: str) -> list[re.Match[str]]:
+    """Only dates directly introducing an exact name-change clause."""
+    dates = [
+        match_date
+        for prefix in (
+            r"自?" + DATE + r"(?:[\uff08(](?:星期|周)[一二三四五六日天][\uff09)])?"
+            r"(?:起|开始)[\uff0c,]?[^。\uff1b;\d]{0,40}?",
+            DATE + r"(?:复牌|恢复交易)[\uff0c,](?:公司(?:的)?(?:A股)?)?",
+            DATE + r"复牌并撤销退市风险警示[\uff0c,](?:公司(?:的)?)?",
+        )
+        for match_date in re.finditer(prefix + clauses, text)
+    ]
+    dates.extend(
+        re.finditer(r"(?=" + clauses + r")(?:公司)?(?:股票|证券)简称自" + DATE + r"起", text)
+    )
+    return dates
+
+
+def extract(pages: list[str], record: dict[str, Any]) -> dict[str, Any]:
+    """Accept an explicit name change and a labeled or tightly linked effective date."""
+    sse = record["sse"]
+    prefix_mode = record.get("match_method") == "security+date+exact_subject+issuer_prefix"
+    confidence, mirrors = match(sse, record["cninfo"], issuer_prefix=prefix_mode)
+    if confidence != "EXACT" or record["match_confidence"] != "EXACT":
+        raise ValueError("MATCH_NOT_EXACT")
+    issuer_name = sse.get("SECURITY_NAME")
+    if not issuer_name and prefix_mode:
+        issuer_name = record.get("derived_security_name_from_sse_title")
+    if not issuer_name and prefix_mode:
+        issuer_name = mirrors[0].get("secName")
+    if not isinstance(issuer_name, str) or not issuer_name.strip():
+        raise ValueError("MISSING_SSE_ISSUER_NAME")
+    text = compact("\n".join(pages))
+    header = text[:500]
+    codes = re.search(
+        r"(?:证券|股票)代码(?:\s*[：:]\s*|\s*)A?([\d\s、,，]{6,55})",  # noqa: RUF001
+        "\n".join(pages)[:1000],
+    )
+    if not codes or sse["SECURITY_CODE"] not in re.findall(r"(?<!\d)\d{6}(?!\d)", codes[1]):
+        raise ValueError("WRONG_SECURITY_CODE")
+    if sse.get("SECURITY_NAME") and compact(issuer_name).casefold() not in header.casefold():
+        raise ValueError("WRONG_ISSUER_NAME")
+    if not sse.get("SECURITY_NAME") and compact(issuer_name).casefold() not in text.casefold():
+        raise ValueError("WRONG_ISSUER_NAME")
+
+    def header_has_name(name: str) -> bool:
+        normalized_header = header.translate(STAR_TRANSLATION)
+        normalized_name = compact(name).translate(STAR_TRANSLATION)
+        return bool(
+            re.search(
+                r"(?:(?:证券|股票|公司)(?:简称|名称)|(?:证券|股票)代码[\uff1a:]?"
+                + re.escape(sse["SECURITY_CODE"])
+                + r"简称)[\uff1a:]?"
+                + re.escape(normalized_name),
+                normalized_header,
+                re.I,
+            )
+        )
+
+    issuer = re.search(r"([\u4e00-\u9fff]{4,}(?:股份有限公司|有限责任公司))", sse["TITLE"])
+    if issuer and issuer[1] not in text[:1200]:
+        raise ValueError("WRONG_ISSUER_COMPANY")
+    if prefix_mode:
+        for cn in mirrors:
+            subject = issuer_subject(cn["announcementTitle"], sse, cn)
+            # Old short names can differ from the issuer prefix printed in metadata.
+            # The entire About-clause must still occur in the verified issuer PDF.
+            if "关于" in subject:
+                subject = subject[subject.index("关于") :]
+            if subject not in title_key(text[:1200]):
+                review = record.get("pdf_subject_review", {})
+                if not (
+                    review.get("announcement_id") == cn["announcementId"]
+                    and re.fullmatch(r"[0-9a-f]{64}", str(review.get("source_sha256", "")))
+                    and review.get("source_sha256") == record.get("cninfo_document_sha256")
+                    and review.get("metadata_subject") == subject
+                    and len(review.get("pdf_subject", "")) >= 12
+                    and review.get("pdf_subject", "").startswith("关于")
+                    == subject.startswith("关于")
+                    and review.get("page") == 1
+                    and review["pdf_subject"] in title_key(compact(pages[0])[:1200])
+                ):
+                    raise ValueError("PDF_SUBJECT_METADATA_MISMATCH")
+            company = re.match(
+                r"[\u4e00-\u9fff]+(?:股份有限公司|有限责任公司)", cn["announcementTitle"]
+            )
+            if company and company[0] not in text[:1200]:
+                raise ValueError("WRONG_CNINFO_ISSUER_COMPANY")
+    names = list(
+        re.finditer(
+            r"(?:公司)?股票A[、,]B股简称将由[“\"]([^、,\uff0c“”\"]{1,20})"
+            r"[、,\uff0c][^“”\"]{1,20}[”\"]变更为[“\"]([^、,\uff0c“”\"]{1,20})"
+            r"[、,\uff0c][^“”\"]{1,20}[”\"]",
+            text,
+        )
+    )
+    names.extend(
+        re.finditer(
+            r"(?:股票(?:简称)?|证券简称|简称)[\uff1a:]?将?[由从]?原?[“\"]([^“”\"\uff1b;]{1,20})[”\"]"
+            r"(?:[\u3001,\uff0c][“\"][^“”\"\uff1b;]{1,20}[”\"]|[\uff0c,])?"
+            r"(?:(?:变更|更改|改|变|恢复)为|变成)[“\"]([^“”\"\uff1b;]{1,20})[”\"]",
+            text,
+        )
+    )
+    names.extend(
+        re.finditer(
+            r"(?:股票|证券)简称自20\d{2}年\d{1,2}月\d{1,2}日起"
+            r"(?:发生变更[\uff0c,])?由[“\"]([^“”\"]{1,20})[”\"]"
+            r"变更为[“”\"]([^“”\"]{1,20})[”\"]",
+            text,
+        )
+    )
+    names.extend(
+        re.finditer(
+            r"(?:股票简称|证券简称)[\uff1a:]?将?[由从]("
+            + re.escape(compact(issuer_name))
+            + r")(?:变更|更改|变)为([A-Za-z*\u4e00-\u9fff]{1,12})(?=[\uff0c,。\uff1b;])",
+            text,
+        )
+    )
+    names = [
+        m
+        for m in names
+        if m[1] == compact(issuer_name) and text[max(0, m.start() - 2) : m.start()] != "扩位"
+    ]
+    confirmation = False
+    if not names:
+        name = re.escape(compact(issuer_name))
+        names = list(re.finditer(r"(?:股票|证券)简称仍为[“\"](" + name + r")[”\"]", text))
+        confirmation = bool(names)
+    pairs = {(m[1], m[1] if confirmation else m[2]) for m in names}
+    if len(pairs) > 1 and prefix_mode and not confirmation:
+        current_pairs = set()
+        for pair in pairs:
+            clauses = (
+                "(?:"
+                + "|".join(sorted({re.escape(m[0]) for m in names if (m[1], m[2]) == pair}))
+                + ")"
+            )
+            linked = linked_name_dates(text, clauses)
+            periods = {
+                date(int(m[1]), int(m[2]), int(m[3])).isoformat() >= sse["SSEDATE"] for m in linked
+            }
+            if len(periods) != 1:
+                break  # Undated or mixed-period pairs cannot be silently discarded.
+            if True in periods:
+                current_pairs.add(pair)
+        else:
+            if len(current_pairs) == 1:
+                pairs = current_pairs
+                names = [m for m in names if (m[1], m[2]) in pairs]
+    # A separately labeled ordinary A-share name survives malformed quoted prose.
+    labels = list(
+        re.finditer(r"(?:实施|撤销)后A股简称为([S*ST\u4e00-\u9fff]{1,12})[\uff0c。\uff1b;]", text)
+    )
+    if not pairs:
+        labels.extend(
+            re.finditer(
+                r"(?:公司)?(?:A股)?(?:股票|证券)简称(?:将|经)?(?:变更|更改|改|恢复)为[\uff1a:]?"
+                r"[“”\"]([S*ST\u4e00-\u9fff]{1,12})[“”\"]",
+                text,
+            )
+        )
+        labels.extend(
+            re.finditer(
+                r"(?:公司)?股票简称(?:将|经)?(?:变更|更改|改)为"
+                r"([S*ST\u4e00-\u9fff]{1,12})[\uff0c,](?:股票|证券)代码"
+                r"(?:不变)?仍?为?[\uff1a:]?[“\"]?" + re.escape(sse["SECURITY_CODE"]) + r"(?!\d)",
+                text,
+            )
+        )
+        labels.extend(
+            re.finditer(
+                r"(?:公司)?股票简称自20\d{2}年\d{1,2}月\d{1,2}日起"
+                r"(?:经)?变更为[“”\"]([S*ST\u4e00-\u9fff]{1,12})[“”\"]",
+                text,
+            )
+        )
+        labels.extend(
+            re.finditer(
+                r"A股[\uff0c,]简称[\uff1a:]([S*ST\u4e00-\u9fff]{1,12})"
+                r"[\uff0c,]证券代码[\uff1a:]" + re.escape(sse["SECURITY_CODE"]) + r"(?!\d)",
+                text,
+            )
+        )
+    labels.extend(
+        re.finditer(
+            r"(?:(?:实施|实行)[“”\"]?)?"
+            r"(?:退市风险警示|其他风险警示|风险警示|其他特别处理|特别处理)[“”\"]?"
+            r"后(?:的|本?公司)?(?:A股)?股票(?:的)?简称(?:为)?[\uff1a:]?[“”\"]?"
+            r"([S*ST\u4e00-\u9fff]{1,12}?)[“”\"]?"
+            r"(?=[、\uff0c,。\uff1b;]|股票代码|[一二三四五六七八九十\d]+[、.]|"
+            r"(?:退市|实施|实行)[“”\"]?(?:.{0,12}风险.{0,3}警.{0,3}示|(?:其他)?特别处理))",
+            text,
+        )
+    )
+    labels.extend(
+        re.finditer(
+            r"实行退市风险警示后(?:本?公司)?股票的?简称为?[\uff1a:]"
+            r"(S?\*ST[\u4e00-\u9fff]{1,10})(?=[、\uff0c,。\uff1b;]|实行退市风险警示后)",
+            text,
+        )
+    )
+    labels.extend(
+        re.finditer(
+            r"股票简称变更为([S*ST\u4e00-\u9fff]{1,12})[\uff0c,]股票代码"
+            + re.escape(sse["SECURITY_CODE"])
+            + r"(?!\d)",
+            text,
+        )
+    )
+    labeled = {(compact(issuer_name), m[1]) for m in labels}
+    name_variants = None
+    if pairs and labeled and pairs != labeled:
+        raise ValueError("CONFLICTING_LABELED_NAME")
+    if not pairs and len(labeled) == 1:
+        pairs = labeled
+        names = labels
+    if (
+        not pairs
+        and len(labeled) > 1
+        and len({(status(old), status(new)) for old, new in labeled}) == 1
+    ):
+        name_variants = sorted(new for _, new in labeled)
+        pairs = {min(labeled)}
+        names = labels
+    restoration = False
+    if not pairs and prefix_mode:
+        # Relisting's N prefix is not NORMAL: require both first-day NST and later ST names.
+        first_names = list(
+            re.finditer(
+                r"恢复上市首日(?:的|[\uff0c,]公司(?:A股)?)?股票简称为[“\"](NST[^“”\"]{1,10})[”\"]",
+                text,
+            )
+        )
+        later_names = list(
+            re.finditer(
+                r"(?:以后公司(?:的)?|自第二个交易日起公司(?:的)?|"
+                r"(?:从恢复上市的第二个交易日起|恢复上市次日起)[\uff0c,]公司(?:A股)?)"
+                r"股票简称为[“\"](ST[^“”\"]{1,10})[”\"]",
+                text,
+            )
+        )
+        first_values = {m[1][1:] for m in first_names}
+        if first_values and first_values == {m[1] for m in later_names} and len(first_values) == 1:
+            pairs = {(compact(issuer_name), next(iter(first_values)))}
+            names = first_names
+            restoration = True
+        if not restoration and (
+            "上海证券交易所批准了撤销对本公司股票实行的退市风险警示或者其他特别处理" in text
+        ):
+            # A normal relisting may abbreviate its first-day display name. Require
+            # explicit exchange approval removing both risk-treatment categories.
+            normal_first = list(
+                re.finditer(r"恢复上市首日的股票简称为[“\"](N[\u4e00-\u9fff]{2,10})[”\"]", text)
+            )
+            normal_later = list(
+                re.finditer(
+                    r"自第二个交易日起公司的股票简称为[“\"]([\u4e00-\u9fff]{2,10})[”\"]", text
+                )
+            )
+            if len({m[1] for m in normal_first}) == len({m[1] for m in normal_later}) == 1:
+                pairs = {(compact(issuer_name), normal_later[0][1])}
+                names = normal_later
+                restoration = True
+    if len(pairs) != 1:
+        raise ValueError("NAME_TRANSITION_UNRESOLVED")
+    old, new = next(iter(pairs))
+    if old != compact(issuer_name):
+        raise ValueError("OLD_NAME_NOT_HEADER_IDENTITY")
+    if not sse.get("SECURITY_NAME") and not any(header_has_name(name) for name in (old, new)):
+        raise ValueError("CNINFO_NAME_NOT_PDF_HEADER")
+    name_clauses = "(?:" + "|".join(sorted({re.escape(m[0]) for m in names})) + ")"
+    # Deliberately narrow: references to old events and unrelated suspension dates are not dates.
+    dates = list(
+        re.finditer(
+            r"(?:撤销|实施|实行)[^。\uff1b;\uff1a:]{0,60}风险警示"
+            r"[^。\uff1b;\uff1a:]{0,15}起始日(?:期)?为?[\uff1a:]?自?" + DATE,
+            text,
+        )
+    )
+    dates.extend(re.finditer(r"(?<![\u4e00-\u9fff])退市风险警示起始日[\uff1a:]" + DATE, text))
+    dates.extend(
+        re.finditer(
+            r"(?:实行退市风险警示的起始日|首日退市风险警示实施日期)"
+            r"[\uff1a:]公司(?:股票)?(?:将于|于)?"
+            r"20\d{2}年\d{1,2}月\d{1,2}日停牌一天[\uff0c,]自?"
+            + DATE
+            + r"起?(?:复牌并)?(?:实施|实行)[“\"]?退市风险警示",
+            text,
+        )
+    )
+    dated = {(date(int(m[1]), int(m[2]), int(m[3])).isoformat()) for m in dates}
+    if restoration:
+        dates = list(
+            re.finditer(
+                r"(?:本)?公司A?股?股票将?(?:于|自)"
+                + DATE
+                + r"起?在(?:上海证券交易所|上交所)恢复(?:上市)?交易",
+                text,
+            )
+        )
+        restoration_dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if dated and dated != restoration_dated:
+            raise ValueError("CONFLICTING_RESTORATION_EFFECTIVE_DATE")
+        dated = restoration_dated
+    if not dates and prefix_mode and not confirmation and not restoration:
+        # Older layouts date the exact name-change clause rather than a start-date label.
+        # Never use a general publication/suspension date or a date from another sentence.
+        dates = linked_name_dates(text, name_clauses)
+        dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if not dates and status(new) in {"ST", "STAR_ST"}:
+            warning = (
+                "退市风险警示" if status(new) == "STAR_ST" else "(?:其他风险警示|(?:其他)?特别处理)"
+            )
+            dates = list(
+                re.finditer(
+                    r"(?<![\u4e00-\u9fff])(?:本)?公司股票(?:交易)?将?(?:于|自|从)"
+                    + DATE
+                    + r"起?被?(?:实施|实行)[“\"]?"
+                    + warning,
+                    text,
+                )
+            )
+            dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        r"(?<![\u4e00-\u9fff])自"
+                        + DATE
+                        + r"起(?:被)?(?:实施|实行)[“\"]?"
+                        + warning
+                        + r"[”\"]?(?:的特别处理)?",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        DATE + r"起(?:被)?(?:实施|实行)[“\"]?" + warning + r"[”\"]?(?:的特别处理)?",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        DATE + r"起复牌[\uff0c,](?:本)?公司股票(?:交易)?(?:将)?(?:被)?"
+                        r"(?:实施|实行)[“\"]?" + warning + r"[”\"]?",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        r"[自从]"
+                        + DATE
+                        + r"起(?:实施|实行)"
+                        + warning
+                        + r"(?:的特别处理)?。具体处理措施为[\uff1a:]"
+                        + name_clauses,
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates and status(new) == "STAR_ST":
+                dates = list(
+                    re.finditer(
+                        r"自"
+                        + DATE
+                        + r"复牌起被(?:上海证券交易所|上交所)(?:实施|实行)退市风险警示",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if not dates and status(old) == "STAR_ST" and status(new) == "ST":
+            dates = list(
+                re.finditer(
+                    r"(?:本)?公司股票(?:交易)?自"
+                    + DATE
+                    + r"起撤销退市风险警示(?:特别处理)?(?:并|[\uff0c,]但)?"
+                    r"(?:仍|同时)?实行其他特别处理",
+                    text,
+                )
+            )
+            dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        r"自" + DATE + r"起撤销(?:公司股票交易)?退市风险警示(?:处理)?"
+                        r"并实行其他特别处理",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        r"自" + DATE + r"起撤销本公司股票交易实行的退市风险警示[\uff0c,]"
+                        r"同时继续对公司股票实行其他特别处理",
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if not dates and status(new) == "NORMAL":
+            warning = (
+                "退市风险警示"
+                if status(issuer_name) == "STAR_ST"
+                else "(?:其他风险警示|其他特别处理)"
+            )
+            dates = list(
+                re.finditer(
+                    r"(?:(?:本)?公司股票(?:将)?(?:于)?)?"
+                    + DATE
+                    + r"(?:起)?复牌并撤销"
+                    + warning
+                    + r"(?:及其他风险警示)?",
+                    text,
+                )
+            )
+            dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+        if not dates and status(new) == "NORMAL":
+            dates = list(
+                re.finditer(
+                    r"自" + DATE + r"起撤销(?:本公司|公司)股票(?:交易)?" + warning,
+                    text,
+                )
+            )
+            dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+            if not dates:
+                dates = list(
+                    re.finditer(
+                        r"(?:本)?公司股票自" + DATE + r"起撤销" + warning,
+                        text,
+                    )
+                )
+                dated = {date(int(m[1]), int(m[2]), int(m[3])).isoformat() for m in dates}
+    # A stale label can coexist with a live, directly stated transition date.
+    if len(dated) == 1 and next(iter(dated)) < sse["SSEDATE"]:
+        live_matches = list(
+            re.finditer(
+                DATE
+                + r"起(?:被)?(?:实施|实行)[“\"]?(?:退市风险警示|其他风险警示|(?:其他)?特别处理)",
+                text,
+            )
+        )
+        live_dates = {
+            date(int(m[1]), int(m[2]), int(m[3])).isoformat()
+            for m in live_matches
+            if sse["SSEDATE"]
+            <= date(int(m[1]), int(m[2]), int(m[3])).isoformat()
+            <= (date.fromisoformat(sse["SSEDATE"]) + timedelta(days=14)).isoformat()
+        }
+        if len(live_dates) == 1:
+            dated |= live_dates
+            dates.extend(
+                m
+                for m in live_matches
+                if date(int(m[1]), int(m[2]), int(m[3])).isoformat() in live_dates
+            )
+    # Narrow only an exact one-year typo beside one live near-publication date.
+    # Other competing dates remain unresolved.
+    if len(dated) == 2:
+        published = date.fromisoformat(sse["SSEDATE"])
+        near = {
+            item
+            for item in dated
+            if published <= date.fromisoformat(item) <= published + timedelta(days=14)
+        }
+        stale = dated - near
+        if len(near) == len(stale) == 1:
+            live, typo = map(date.fromisoformat, (next(iter(near)), next(iter(stale))))
+            if (live.month, live.day) == (typo.month, typo.day) and live.year == typo.year + 1:
+                dated = near
+                dates = [
+                    match_date
+                    for match_date in dates
+                    if date(int(match_date[1]), int(match_date[2]), int(match_date[3])).isoformat()
+                    in near
+                ]
+    if len(dated) != 1:
+        raise ValueError("EFFECTIVE_DATE_UNRESOLVED")
+    for match_date in dates:
+        weekday = re.search(
+            DATE + r"[\uff08(](?:星期|周)([一二三四五六日天])[\uff09)]", match_date[0]
+        )
+        if weekday:
+            actual = date(int(weekday[1]), int(weekday[2]), int(weekday[3])).weekday()
+            if "一二三四五六日"[actual] != weekday[4].replace("天", "日"):
+                raise ValueError("WEEKDAY_DATE_CONFLICT")
+    effective = next(iter(dated))
+    if effective < sse["SSEDATE"]:
+        raise ValueError("RETROSPECTIVE_EVENT_REQUIRES_REVIEW")
+    old_status, new_status = status(old), status(new)
+    if old_status == new_status and not confirmation:
+        raise ValueError("NO_STATUS_TRANSITION")
+    if confirmation:
+        event_type = "STATUS_CONFIRMATION"
+    elif old_status == "NORMAL":
+        event_type = "ENTRY"
+    elif new_status == "NORMAL":
+        event_type = "EXIT"
+    else:
+        event_type = old_status + "_TO_" + new_status
+    support = []
+    for item in (names[0], dates[0]):
+        offset = item.start()
+        page_number = 1
+        for page in pages:
+            length = len(compact(page))
+            if offset < length:
+                break
+            offset -= length
+            page_number += 1
+        support.append({"page": page_number, "compact_page_offset": offset, "text": item[0]})
+    cn = mirrors[0]
+    number = re.search(r"(?:公告编号|编号)\s*[\uff1a:]([^\n]{1,60})", "\n".join(pages)[:1000])
+    result = {
+        "security_id": "CN-A:SSE:" + sse["SECURITY_CODE"],
+        "symbol": sse["SECURITY_CODE"],
+        "old_status": old_status,
+        "status": new_status,
+        "event_type": event_type,
+        "effective_from": effective,
+        "effective_to": None,
+        "old_name": old,
+        "new_name": new,
+        "issuer_company_from_sse_title": issuer[1] if issuer else None,
+        "issuer_announcement_number": compact(number[1]) if number else None,
+        "sse_announcement_id": sse["ORG_BULLETIN_ID"],
+        "sse_title": sse["TITLE"],
+        "sse_publication_date": sse["SSEDATE"],
+        "sse_metadata_snapshot_sha256": record["sse_metadata_snapshot_sha256"],
+        "cninfo_document_url": "https://static.cninfo.com.cn/" + cn["adjunctUrl"],
+        "cninfo_document_id": cn["announcementId"],
+        "cninfo_publication_date": publication(cn),
+        "cninfo_document_sha256": record["cninfo_document_sha256"],
+        "match_method": record["match_method"],
+        "match_confidence": confidence,
+        "parser_version": VERSION,
+        "support": support,
+    }
+    if record.get("pdf_subject_review"):
+        result["pdf_subject_review_sha256"] = sha(canonical(record["pdf_subject_review"]))
+    if name_variants:
+        result["official_same_status_name_variants"] = name_variants
+    return result
+
+
+def normalize(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    unique = {canonical(e): e for e in events}
+    return sorted(
+        unique.values(),
+        key=lambda e: (
+            e["security_id"],
+            e["effective_from"],
+            e.get("official_publication_date", e.get("sse_publication_date", "")),
+            e.get("official_document_id", e.get("sse_announcement_id", "")),
+        ),
+    )
+
+
+def status_on(
+    events: list[dict[str, Any]],
+    security_id: str,
+    day: str,
+    exclusions: tuple[tuple[str, str, str], ...] = (),
+) -> str:
+    """Last known event, not a completeness assertion; unknown is never tradable NORMAL."""
+    date.fromisoformat(day)
+    if any(s == security_id and start <= day <= end for s, start, end in exclusions):
+        return "UNKNOWN"
+    eligible = [
+        e
+        for e in normalize(events)
+        if e["security_id"] == security_id
+        and max(
+            e.get("official_publication_date", ""),
+            e.get("sse_publication_date", ""),
+            e.get("cninfo_publication_date", ""),
+            e["effective_from"],
+        )
+        <= day
+    ]
+    if not eligible:
+        return "UNKNOWN"
+    latest = max(e["effective_from"] for e in eligible)
+    values = {e["status"] for e in eligible if e["effective_from"] == latest}
+    return next(iter(values)) if len(values) == 1 else "UNKNOWN"
+
+
+def build(root: Path, master: Path, sse_snapshot: Path) -> None:
+    records = json.loads((root / "reconciliation.json").read_bytes())
+    events = []
+    unresolved = []
+    for record in records:
+        try:
+            if record["match_confidence"] != "EXACT":
+                raise ValueError(record["match_confidence"])
+            cn = record["cninfo"][0]
+            path = root / "documents" / (cn["announcementId"] + ".pdf")
+            raw = path.read_bytes()
+            if sha(raw) != record["cninfo_document_sha256"]:
+                raise ValueError("DOCUMENT_CHECKSUM_MISMATCH")
+            pages = [p.extract_text() for p in PdfReader(io.BytesIO(raw)).pages]
+            save(root / "text" / (cn["announcementId"] + ".json"), pages)
+            event = extract(pages, record)
+            event["retrieved_at_utc"] = json.loads(path.with_suffix(".pdf.meta.json").read_bytes())[
+                "retrieved_at_utc"
+            ]
+            events.append(event)
+        except ValueError as exc:
+            unresolved.append(
+                {
+                    "sse_id": record["sse"]["ORG_BULLETIN_ID"],
+                    "symbol": record["sse"]["SECURITY_CODE"],
+                    "reason": str(exc),
+                }
+            )
+    ordered = normalize(events)
+    conflicts = []
+    for security_id in sorted({e["security_id"] for e in ordered}):
+        history = [e for e in ordered if e["security_id"] == security_id]
+        for previous, current in pairwise(history):
+            if previous["effective_from"] == current["effective_from"]:
+                issue = previous["status"] != current["status"]
+                reason = "CONFLICTING_SAME_DATE_STATUS"
+            else:
+                issue = previous["status"] != current["old_status"]
+                reason = "MISSING_INTERVENING_TRANSITION_OR_CONFLICT"
+            if issue:
+                conflicts.append(
+                    {
+                        "security_id": security_id,
+                        "reason": reason,
+                        "previous_document": previous["sse_announcement_id"],
+                        "next_document": current["sse_announcement_id"],
+                    }
+                )
+    save(root / "conflicts.json", conflicts)
+    save(root / "normalized-events.json", ordered)
+    save(root / "unresolved-documents.json", unresolved)
+    with master.open() as handle:
+        securities = {r["symbol"]: r for r in csv.DictReader(handle)}
+    candidate_symbols: set[str] = set()
+    for path in sorted((sse_snapshot / "metadata").glob("*.json")):
+        for group in json.loads(path.read_bytes())["pageHelp"]["data"]:
+            candidate_symbols.update(
+                r["SECURITY_CODE"] for r in group if r["SECURITY_CODE"] in securities
+            )
+    classifications = []
+    for symbol in sorted(candidate_symbols):
+        security = securities[symbol]
+        classifications.append(
+            {
+                "security_id": security["security_id"],
+                "classification": "UNRESOLVED",
+                "from_inclusive": max("2023-01-01", security["listing_date"]),
+                "to_inclusive": min("2024-07-31", security["delisting_date"] or "2024-07-31"),
+                "reason": "Candidate selection does not prove complete transitions or baseline.",
+                "parsed_events": sum(e["symbol"] == symbol for e in ordered),
+                "last_known_pilot_start_status": status_on(
+                    ordered, security["security_id"], "2023-01-01"
+                ),
+            }
+        )
+    save(root / "candidate-classifications.json", classifications)
+    summary = {
+        "normalized_event_sha256": sha(canonical(ordered)),
+        "events": len(ordered),
+        "event_types": dict(Counter(e["event_type"] for e in ordered)),
+        "parsed_securities": len({e["security_id"] for e in ordered}),
+        "unresolved_documents": len(unresolved),
+        "candidate_securities": len(classifications),
+        "classification_counts": dict(Counter(r["classification"] for r in classifications)),
+        "conflicts_or_history_gaps": len(conflicts),
+        "pilot_event_types": dict(
+            Counter(
+                e["event_type"]
+                for e in ordered
+                if "2023-01-01" <= e["effective_from"] <= "2024-07-31"
+            )
+        ),
+        "pilot_risk_securities_lower_bound": len(
+            {
+                e["security_id"]
+                for e in ordered
+                if "2023-01-01" <= e["effective_from"] <= "2024-07-31" and e["status"] != "NORMAL"
+            }
+        ),
+        "last_known_risk_at_pilot_start_not_coverage_certified": sum(
+            r["last_known_pilot_start_status"] in {"ST", "STAR_ST"} for r in classifications
+        ),
+        "SSE_HISTORICAL_ST_RECONSTRUCTION": "PARTIAL" if ordered else "FAIL",
+        "PILOT_A_SHARE_DATA_READINESS": "BLOCKED",
+    }
+    save(root / "event-summary.json", summary)
+    print(json.dumps(summary, indent=2))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--master", type=Path, required=True)
+    parser.add_argument("--sse-snapshot", type=Path, required=True)
+    args = parser.parse_args()
+    build(args.root, args.master, args.sse_snapshot)

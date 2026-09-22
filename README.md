@@ -1,115 +1,89 @@
 # Quant Trading Platform
 
-**v1.0.0 — Local Single-User Paper-Trading MVP**
+**v1.1.0 — China A-Share Research Edition**
 
-A deterministic, event-driven quantitative trading platform supporting historical backtesting,
-technical indicators, strategy execution, transaction-cost simulation, portfolio accounting,
-performance analytics, pre-trade risk management, an order management system (OMS), PostgreSQL
-persistence, REST APIs, WebSocket delivery, a React dashboard, and local paper trading.
+A deterministic, point-in-time quantitative research and paper-trading platform for ordinary
+SSE/SZSE A-shares. It combines a 2010–2025 audited research dataset, corporate-action-aware
+portfolio accounting, pre-trade risk, OMS, simulated execution, PostgreSQL persistence, REST and
+WebSocket APIs, and one bilingual React application (`zh-CN` / `en-US`).
 
-> **PAPER TRADING ONLY. NO LIVE BROKER CONNECTIVITY. NO REAL-MONEY ORDER EXECUTION.**
+> **PAPER / SIMULATED ONLY. NO LIVE BROKER. NO REAL-MONEY EXECUTION.**
 
-**Tech stack:** Python · FastAPI · PostgreSQL · Redis · SQLAlchemy · Alembic · React · TypeScript ·
-Docker · GitHub Actions
+Research did not establish robust historical alpha. The official OOS result was weakly positive,
+but is not evidence of reliable profitability and does not predict future returns.
 
-**Verified release baseline:** 257 backend tests · 70 frontend tests · no skips
+## What v1.1 demonstrates
 
-## Overview
+- Point-in-time master for 5,431 historically validated ordinary A-share securities across SSE
+  Main/STAR and SZSE Main/ChiNext, including listed and delisted names.
+- 3,886 trading sessions, 13,411,189 raw daily rows and 42,792 corporate-action rows from
+  2010-01-01 through 2025-12-31.
+- Survivorship, future-IPO, delisting-retention, ST/*ST, suspension, market-rule and
+  corporate-action controls audited before the dataset freeze.
+- Raw prices for execution and separately audited adjusted history for factors—never adjusted
+  prices as fills.
+- Deterministic cross-sectional momentum, trend and low-volatility research using `Decimal`,
+  stable identities and checksummed inputs.
+- A fixed Development / Validation / Official OOS protocol with an immutable one-run OOS lock.
+- Shared RiskEngine → OMS → simulated broker → Portfolio accounting for research and local paper
+  execution.
+- PostgreSQL research/paper ledgers and a typed React dashboard with lineage, benchmark, equity,
+  drawdown, rolling metrics, monthly returns, holdings, rebalances and trades.
 
-The project is a typed modular monolith. A shared Python engine powers historical backtests and
-finite paper replay; FastAPI exposes REST/WebSocket contracts; PostgreSQL stores authoritative
-audit history; React presents results without recalculating financial state.
+## Scientific result
 
-The detailed stack is Python 3.12, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL 16, Redis 7,
-React 19, TypeScript 6, Vite 8, Node 24, pytest, Vitest, and Docker Compose. Redis is provisioned
-for future cache use but is not the current event transport.
+The frozen strategy is `cn_a_cross_sectional_momentum_low_vol_v1` (S4). No Validation candidate
+passed every pre-registered robustness gate, so unchanged S4 entered OOS as the declared fallback.
 
-## Features
+| Split | Period | Total return | Sharpe | Maximum drawdown | Excess vs CSI300 |
+|---|---|---:|---:|---:|---:|
+| Development | 2010–2017 | -21.75% | -0.434 | -32.56% | -35.77% |
+| Validation | 2018–2021 | -5.17% | -0.141 | -11.98% | -26.04% |
+| Official OOS | 2022–2025 | 0.76% | 0.067 | -15.70% | 6.61% |
 
-- Registered daily OHLCV CSV fixtures and strict market-data validation.
-- Decimal SMA, EMA, RSI, MACD and Bollinger Band indicators.
-- Moving-average crossover and RSI mean-reversion strategies.
-- Deterministic next-Bar OPEN simulated execution with configurable engine cost models.
-- Pre-trade exposure, leverage, notional, drawdown and optional buying-power controls.
-- Explicit OMS lifecycle, reservations, risk/broker rejection separation and idempotency.
-- Long/short portfolio accounting, equity/drawdown curves and performance analytics.
-- Atomic PostgreSQL persistence, stable pagination, REST APIs and typed WebSocket events.
-- Backtest and PAPER TRADING dashboards with exact financial strings and UTC labels.
-- Docker-first WSL2/Linux/macOS workflow and isolated CI/integration databases.
-
-The public demo API uses the registered AAPL fixture and fixed default zero-cost execution; it
-does not expose every engine configuration. LIMIT execution exists in the engine but is not a
-dashboard control.
+Official OOS ran exactly once. Its result SHA-256 is
+`ccf5bd2f82f145c9d14bb6ffb912bf035d276b46b8056883b8a18a61a2d92e8c`. See
+[the OOS report](docs/research/OOS_REPORT.md) and
+[strategy report](docs/research/STRATEGY_REPORT.md).
 
 ## Architecture
 
 ```mermaid
-flowchart TD
-    A[Market Data] --> B[Indicators]
-    B --> C[Strategy Engine]
-    C --> D[Signal]
-    D --> E[Risk Engine]
+flowchart LR
+    A[Official/public source snapshots] --> B[Immutable dataset + SHA-256 manifest]
+    B --> C[Point-in-time sessions]
+    C --> D[Factors + frozen strategy]
+    D --> E[RiskEngine]
     E --> F[OMS]
-    F --> G[Execution]
-    G --> H[Fill]
-    H --> I[Portfolio]
-    I --> J[Analytics]
-    J --> K[Persistence]
-    K --> L[REST / WebSocket]
-    L --> M[React Dashboard]
+    F --> G[Simulated execution]
+    G --> H[Portfolio + analytics]
+    H --> I[PostgreSQL research/paper ledger]
+    I --> J[REST / WebSocket]
+    J --> K[React zh-CN / en-US]
 ```
 
-- Financial values use Python `Decimal`, PostgreSQL `NUMERIC(78, 38)`, and exact JSON/UI strings.
-- Authoritative timestamps are timezone-aware UTC; naive datetimes are rejected.
-- Strategies consume completed Bars only. A signal on Bar T may fill at the next later
-  same-symbol Bar OPEN, never on the signal Bar.
-- Fresh state, fixed fixtures, stable event ordering and deterministic identifiers make runs
-  reproducible.
-- Optional `Idempotency-Key` values converge identical requests and reject conflicting reuse.
-- Successful result graphs commit atomically; paper lifecycle/event sequence allocation is
-  serialized with PostgreSQL row locks.
-- WebSocket delivery is bounded and incremental. REST snapshots are always authoritative.
-- Paper lifecycle is `CREATED → STARTING → RUNNING → STOPPING → STOPPED`, with terminal
-  `FAILED` and restart-safe `INTERRUPTED` outcomes.
+Financial values remain `Decimal` / PostgreSQL `NUMERIC(78,38)` / exact JSON strings. Strategies
+consume completed sessions only. Orders use the conservative
+[`CN_A_DAILY_OPENING_LIMIT_V1`](docs/research/DAILY_EXECUTION_CONVENTION.md) daily-bar convention;
+unestablished execution conditions fail closed as no fill. React never recalculates financial
+state. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
-Domain engines do not import FastAPI or SQLAlchemy, and React performs no authoritative trading,
-risk, accounting, or analytics calculations. See [ARCHITECTURE.md](ARCHITECTURE.md).
+## Product surfaces
 
-## Screenshots
+- `/research/a-share` — frozen dataset and formal Development/Validation/OOS ledger.
+- `/research/a-share/strategies` — formulas, frozen configuration and methodology notes.
+- `/research/a-share/datasets/:id` — canonical lineage and manifest.
+- `/research/a-share/runs/:id` — metrics, CSI300 comparison, curves and audit tables.
+- `/paper` — durable local paper/simulated sessions for the registered AAPL replay or the frozen
+  A-share strategy on a deterministic synthetic 2030 scenario, with REST snapshots and WebSocket
+  updates. The synthetic scenario is product validation, not research evidence, and never replays
+  Official OOS.
+- `/backtests` — deterministic registered-fixture regression/demo backtests retained from v1.0.
 
-These are real captures from the Docker-backed v1.0.0 application using the deterministic
-`AAPL_fixture`. No screenshot is fabricated or AI-generated.
+## Quick start
 
-### Backtest Dashboard
-
-![Backtest dashboard with successful Moving Average and RSI runs](docs/screenshots/dashboard.jpg)
-
-### Create a Backtest
-
-![Deterministic backtest creation form](docs/screenshots/create-backtest.jpg)
-
-### Backtest Results
-
-![Successful Moving Average backtest result](docs/screenshots/backtest-result.jpg)
-
-### Equity Curve
-
-![Six-point deterministic equity curve](docs/screenshots/equity-curve.jpg)
-
-### Risk, Orders and Fills
-
-![Approved risk decision, filled order, and simulated fill](docs/screenshots/execution-details.jpg)
-
-### Paper Trading
-
-![Running paper replay with a connected WebSocket and completed market Bar](docs/screenshots/paper-trading.jpg)
-
-See [the capture record](docs/SCREENSHOTS.md) for the reproducible inputs and expected values.
-
-## Quick Start
-
-Requires Git, GNU Make, and Docker with Compose v2.24.4 or newer. On Windows 11, enable Ubuntu
-integration in Docker Desktop and run the commands inside WSL2.
+Requires Docker Desktop/Engine with Compose. On Windows, run from Ubuntu WSL2 with Docker Desktop
+WSL integration enabled.
 
 ```bash
 git clone https://github.com/MakenzieAhern/quant-trading-platform.git
@@ -119,110 +93,42 @@ make setup
 make up
 ```
 
-Open the [dashboard](http://localhost:5173/backtests), [API health](http://localhost:8000/api/health),
-or [OpenAPI](http://localhost:8000/docs). Migrations run automatically. Stop without deleting
-history using `make down`.
+Open [the dashboard](http://localhost:5173/research/a-share),
+[API health](http://localhost:8000/api/health), or [OpenAPI](http://localhost:8000/docs).
+`make down` preserves PostgreSQL and Redis volumes.
 
-## Backtesting
-
-Create a run at `/backtests/new`; inspect history at `/backtests` and an immutable result at
-`/backtests/:runId`. Results expose signals, risk decisions, Orders, Fills, portfolio snapshots,
-equity and analytics. Execution is synchronous and uses registered dataset/strategy identifiers,
-never client-provided paths or dynamic imports.
-
-## Risk and OMS
-
-Signals become immutable proposals before Risk Engine evaluation. A rejected proposal creates no
-broker Order. Approved proposals reserve projected exposure/buying power in deterministic order;
-Fill, rejection, cancellation, or submission failure releases the reservation. Dashboard controls
-expose buying-power enforcement and maximum Order notional while the engine supports additional
-documented limits.
-
-## Portfolio and Analytics
-
-One portfolio engine owns cash, signed positions, cost basis, realized/unrealized PnL,
-commission, market value and equity. Analytics consumes immutable snapshots to calculate return,
-CAGR, drawdown, Sharpe, Sortino, exposure and trade counts. Undefined statistics remain null—never
-infinity or a fabricated value.
-
-## Paper Trading
-
-Paper sessions replay six registered completed Bars through the same Strategy → Risk → OMS →
-simulated Broker → Portfolio path. Start/stop is retry-safe; pending Orders are cancelled on stop.
-Active sessions become `INTERRUPTED` after backend process loss and never silently resume.
-
-This is deterministic local replay, not a live-data feed, brokerage sandbox, or execution venue.
-
-## REST and WebSocket
-
-- `POST /api/backtests`; `GET /api/backtests/{id}` plus result/audit collections.
-- `POST /api/paper-trading/sessions` plus `/{id}/start` and `/{id}/stop`.
-- `GET /api/paper-trading/sessions/{id}/snapshot` and `/events`.
-- `/api/paper-trading/sessions/ws/{id}` for incremental events.
-
-Collections enforce limits of 1–200 and stable ordering. Each browser WebSocket queue is bounded;
-a slow or uncertain client reconnects and reloads authoritative REST state.
-
-## Persistence
-
-Alembic manages a single PostgreSQL schema head. Backtest metadata and audit collections persist
-across backend, PostgreSQL, and Compose restarts. Paper lifecycle and typed event journals are
-durable; a coherent REST snapshot is reconstructed transactionally from them. Audit foreign keys
-use restrictive deletion semantics.
-
-## Testing
-
-The v1.0.0 release baseline is **257 backend tests and 70 frontend tests**, with no skips.
+Large market data is deliberately excluded from Git. To publish the already-generated immutable
+formal results into a local PostgreSQL ledger, mount the audited dataset/result directories and run:
 
 ```bash
-make test       # all suites against disposable PostgreSQL
-make lint       # Ruff, format check, strict mypy, ESLint, TypeScript
-make build      # production frontend bundle
+PYTHONPATH=backend python backend/scripts/publish_formal_research.py \
+  --dataset /data/research/cn-a-research-20100101-20251231-v1 \
+  --development /data/research/runs/r6-development-v5 \
+  --validation /data/research/runs/r7-validation-v1 \
+  --oos /data/research/runs/r8-official-oos-v1
 ```
 
-CI also validates development, test, and release Compose configurations. See
-[release validation](docs/RELEASE_VALIDATION.md) and [performance baselines](docs/PERFORMANCE.md).
+The publisher verifies immutable result lineage and is idempotent. Do **not** rerun Official OOS;
+the one-run authorization is consumed.
 
-## Docker / WSL
-
-Canonical commands run in pinned containers; host Python and Node are not required. Tests use the
-separate `quant-mvp-tests` project and never truncate application history. `make down` preserves
-named volumes. Windows details are in [the WSL2 guide](docs/WINDOWS_WSL_SETUP.md); optional host
-development is documented in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
-
-For a local release rehearsal using installed backend code and nginx static assets:
+## Verification
 
 ```bash
-docker compose -f docker-compose.yml -f compose.release.yml up --build -d --wait
+make test
+make lint
+make build
 ```
 
-## Security
+CI uses disposable PostgreSQL storage and validates Alembic, Python, TypeScript, frontend tests and
+Compose configurations. See [reproducibility](docs/research/REPRODUCIBILITY.md),
+[dataset lineage](docs/research/DATASET.md), [bias controls](docs/research/BIAS_CONTROLS.md), and
+[limitations](docs/research/LIMITATIONS.md).
 
-This is an unauthenticated single-user application intended only for loopback. Compose binds all
-published ports to `127.0.0.1`; do not expose them to a shared or public network. Browser mutation
-origins and WebSocket origins are restricted, HTTP request bodies are capped at 64 KiB, identifiers
-are registry/UUID constrained, validation omits reflected input, and unexpected errors are
-sanitized. `.env`, credentials, databases, dependency trees and build outputs are ignored.
+## Safety and scope
 
-## Limitations
+The application is an unauthenticated, loopback-only, single-user research tool. It contains no
+live-broker adapter or brokerage credentials and is not approved for public-internet deployment.
+Hong Kong/US expansion, real-money trading, and ML/GPU strategy work are outside v1.1.
 
-- Local single-user simulated trading only; no authentication or public-internet deployment.
-- No live data, broker connectivity, credentials, real-money Orders, or production HA.
-- A process crash during synchronous backtest execution may leave a stale `RUNNING` record;
-  automatic recovery is not implemented. No result is fabricated for that record.
-- Paper history is durable, but active in-memory execution is interrupted rather than resumed.
-- Registered fixtures are small finite regression/demo inputs, not licensed market-data feeds.
-- No distributed workers, HFT, options, futures, broker margin/borrow model, ML, or GPU strategies.
-
-## Future Work
-
-Possible future work—none included in v1.0.0—includes authenticated/public deployment,
-lease-backed asynchronous job recovery, rolling live-data retention, additional asset classes,
-advanced visualizations, and separately reviewed broker/ML/GPU research. Any real-money capability
-requires a new security, compliance, and correctness review.
-
-Use [DEMO.md](DEMO.md) for a 5–10 minute walkthrough, [ROADMAP.md](ROADMAP.md) for completed scope,
-and [RELEASE_NOTES.md](RELEASE_NOTES.md) for v1.0.0 release notes.
-
-> Research and education only. Simulated results do not guarantee future performance and are not
-> financial advice.
+Research and education only. Simulated results are not financial advice and do not guarantee
+future performance.

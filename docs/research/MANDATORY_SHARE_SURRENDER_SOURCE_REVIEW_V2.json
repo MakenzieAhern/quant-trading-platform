@@ -1,0 +1,70 @@
+{
+  "policy": "CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1",
+  "security_id": "CN-A:SSE:600462",
+  "version": 2,
+  "event_class": "MANDATORY_UNCOMPENSATED_PARTIAL_SHARE_SURRENDER",
+  "record_date": "2012-02-08",
+  "registry_effective_date": null,
+  "registry_notice_received_on": "2012-10-29",
+  "ordinary_nonexempt_holder_surrender_ratio": "0.20",
+  "consideration": "NONE_TO_SURRENDERING_HOLDER",
+  "shares_transferred_not_cancelled": true,
+  "actual_issuer_wide_surrendered_shares": "96997075",
+  "separate_issuer_issuance_ratio": "0.30",
+  "issuance_entitlement_to_existing_holder": false,
+  "fractional_allocation": "SURRENDER_SPECIFIC_RULE_NOT_VERIFIED",
+  "holder_scope": "Ordinary nonexempt registered holders; top four shareholders have different ratios, nontrade successors follow record holdings, and disclosed unexecuted/exempt holdings require separate treatment.",
+  "date_warning": "October 29 is receipt of judicial transfer notice, not an expressly stated registry effective date. October 25/November 2 dates and global remainder ranking concern separate issuance.",
+  "accounting_status": "EXACT_WHOLE_QUANTITY_ENGINEERING_PASS_HISTORICAL_ADMISSION_PARTIAL",
+  "documents": [
+    {
+      "path": "600462-plan.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-06-28/61190189.PDF",
+      "sha256": "4cdfb7a22a7bf164a1a92d03b34b34c23d2dc2d2f087185b7eb5bfdc32cc16ff",
+      "retrieved_at_utc": "2026-09-13T03:24:34.514037+00:00",
+      "published_on": "2012-06-28"
+    },
+    {
+      "path": "600462-plan-explanation.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-07-10/61245121.PDF",
+      "sha256": "7cc1bd3d5d9e5ffcce1b93f43f51ea61ce283a809a7edb7d16de653c3ad0d455",
+      "retrieved_at_utc": "2026-09-13T03:24:35.863405+00:00",
+      "published_on": "2012-07-10"
+    },
+    {
+      "path": "600462-progress-oct20.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-20/61678960.PDF",
+      "sha256": "6aac7ca6c6ea82e47502a70cb1be08bd111eab63d8bf107c3462795d0779ebeb",
+      "retrieved_at_utc": "2026-09-13T03:24:37.793854+00:00",
+      "published_on": "2012-10-20"
+    },
+    {
+      "path": "600462-transfer.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-27/61721428.PDF",
+      "sha256": "c4dcb25d6dce7d11f08862d10b2ae174a732cfafebcdd2792980eb5bcb62e4f6",
+      "retrieved_at_utc": "2026-09-13T03:24:32.718120+00:00",
+      "published_on": "2012-10-27"
+    },
+    {
+      "path": "600462-progress-oct30.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-30/61732609.PDF",
+      "sha256": "0d0fa5e1c6773d8a834516af2426e8d5adb4de0b9c69213462489d73bd7b809f",
+      "retrieved_at_utc": "2026-09-13T03:25:03.792097+00:00",
+      "published_on": "2012-10-30"
+    },
+    {
+      "path": "600462-progress-nov2.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-02/61751948.PDF",
+      "sha256": "8c962ee074c999135144732d5733323b9b57ec565bb540499f08f47f0e648427",
+      "retrieved_at_utc": "2026-09-13T03:25:05.685997+00:00",
+      "published_on": "2012-11-02"
+    },
+    {
+      "path": "600462-capital-adjustment-implementation.pdf",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-31/61741320.PDF",
+      "sha256": "9d53f1ea78030b5ee3581af4316f37d6511c4af853623c6b7ea07e42e00cad9a",
+      "retrieved_at_utc": "2026-09-13T01:55:17.903619+00:00",
+      "published_on": "2012-10-31"
+    }
+  ]
+}

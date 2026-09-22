@@ -1,7 +1,7 @@
 SHELL := /bin/sh
 CHECK := docker compose -p quant-mvp-tests -f compose.test.yml
 
-.PHONY: help setup up dev down test lint build format typecheck migrate host-setup backend frontend
+.PHONY: help setup up dev down test lint build format typecheck migrate audit-universe host-setup backend frontend
 help:
 	@echo "setup      Build locked Python 3.12 / Node 24 environments (Docker + Make only)"
 	@echo "up/dev     Start local platform; migrations run automatically"
@@ -11,6 +11,7 @@ help:
 	@echo "build      Frontend production build"
 	@echo "format     Format source in project containers"
 	@echo "migrate    Apply application database migrations"
+	@echo "audit-universe  Audit staged official SSE/SZSE point-in-time security files"
 	@echo "host-setup Optional local install: Python 3.12 and Node 24 required"
 
 setup:
@@ -45,6 +46,9 @@ typecheck:
 
 migrate:
 	docker compose exec backend alembic upgrade head
+
+audit-universe:
+	PYTHONPATH=backend .venv/bin/python backend/scripts/audit_a_share_universe.py
 
 host-setup:
 	python3.12 -m venv .venv

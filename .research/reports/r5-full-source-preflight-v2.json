@@ -1,0 +1,109 @@
+{
+  "report_id": "R5_FULL_SOURCE_PREFLIGHT_V2",
+  "requested_coverage": ["2010-01-01", "2025-12-31"],
+  "dataset_id": "cn-a-research-20100101-20251231-v1",
+  "status": "PARTIAL",
+  "verified_safe_start_date": null,
+  "components": {
+    "security_master": {
+      "status": "PASS",
+      "securities": 5431,
+      "intervals": 5436,
+      "report_manifest_sha256": "3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235cc6d98e12a8150faf8"
+    },
+    "st_history": {
+      "status": "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
+      "sse_manifest_sha256": "0b11bd3fcf4f62b530a551365dfa974b7db3cef63156d5a311e0f714ae0b012f",
+      "szse_probe_sha256": "8cb0c481cd8bd004dc689eee3370eb2fd9f592daec6ced717b40c45d1401c3a8"
+    },
+    "suspension_history": {
+      "status": "PARTIAL_OFFICIAL_RESUMPTION_BOUNDARIES",
+      "sse_unresolved": 0,
+      "szse_unresolved": 2010,
+      "authority_file_sha256": "275c94706bf60ab6b402c658e27bf2e7cd0921932204d5a44d0a478342e79dcb",
+      "authority_manifest_sha256": "da9be561718a0783112c5ce083d5183e411d5c535407c7c3217da86b89ee8d67"
+    },
+    "raw_ohlcv": {
+      "status": "PARTIAL_SOURCE_SNAPSHOTS_NOT_RAW_AUTHORITY",
+      "sse_unclassified_missing_sessions": 0,
+      "szse_unresolved_source_rows": 239,
+      "szse_afterhours_scope_unproven": 223,
+      "sse_gap_manifest_sha256": "f7e28d9e67c2a889e72c370e8919586cafef4c29b52b6cb0f4924b089f7f4d65",
+      "szse_gap_file_sha256": "7350f64444a39b10b43dc1b4650174628272c773c29df4079e210fbec37da9ed",
+      "szse_gap_manifest_sha256": "5ad2a1aac5ad867c724bcf45a48fdac6aec8566ccab20c2d35733c20b95e1cda",
+      "szse_v32_residual_scope_changed": false,
+      "szse_v32_residual_reason_changes": 2
+    },
+    "adjustment_factors": {
+      "status": "PARTIAL_ECONOMIC_ALIGNMENT_AND_EVENT_COMPLETENESS_NOT_ESTABLISHED",
+      "verified_intervals": 5436,
+      "conflicting_intervals": 0,
+      "unmatched_factor_change_dates": 2328,
+      "supported_events_without_factor_change": 6,
+      "retained_official_bonus_date_routes": 912,
+      "displayed_price_bounds_pass": 621,
+      "displayed_price_bounds_conflict": 7,
+      "displayed_price_unavailable": 284,
+      "zero_cash_bonus_ratio_bounds_pass": 616,
+      "zero_cash_bonus_ratio_bounds_conflict": 12,
+      "unrouted_factor_change_dates": 1416,
+      "factor_changes_with_cninfo_candidates": 1383,
+      "factor_changes_without_cninfo_candidates": 33,
+      "retained_candidate_documents": 1421,
+      "missing_candidate_documents": 0,
+      "unique_exact_official_terms_candidates": 1311,
+      "no_exact_official_terms_candidates": 72,
+      "gross_terms_factor_checks": 463,
+      "gross_terms_factor_conflicts": 463,
+      "routing_file_sha256": "52f947fd14291caa39496d2771ab061ac03b02857f1cc1e66391ff4cf04966f6",
+      "routing_manifest_sha256": "f36461f55bdc9e8a4dce26bf4ed6c6de9fae5406ffb693a27ef2d958d912be9d",
+      "candidate_report_manifest_sha256": "b7dac748c4c0228e1c1d233efe3767555e5f251e598508b914f9c6280ee2d678",
+      "retained_source_report_manifest_sha256": "db7a9ac94d423fc3542c2a999f2178c3b03a122c2d6f2bbc7ef0856bc3776cf4",
+      "terms_report_manifest_sha256": "0af35ecddac88311712ce7fbb67a24ee40393f78298ed0c676ac3dbb494b437e",
+      "economics_report_manifest_sha256": "ba1f7b04b9f27ce01e76599441ed1616846b2c702ab99021b3c7a1dd96d86b8a",
+      "report_file_sha256": "44e15ed8fc0c51314de513488bf66899f09a1e121363af90aa59ee85a4e8bcac",
+      "report_manifest_sha256": "31859c826876ae5830fb5dc95f03b6591d389300b3f85014c60a95789842bd87"
+    },
+    "corporate_actions": {
+      "status": "PARTIAL",
+      "p1_established_facts": 16073,
+      "p1_missing_facts": 247,
+      "p1_missing_documents": 242,
+      "integer_bonus_supported": 243,
+      "bonus_unresolved": 45,
+      "active_human_gate": "R5_RETAINED_BONUS_FRACTION_POLICY"
+    },
+    "market_rules_and_transaction_costs": {
+      "status": "PARTIAL",
+      "new_executable_rules_accepted": 0,
+      "unresolved_claim_groups": 6,
+      "szse_yearbooks_verified": 16,
+      "szse_2023_handling_boundary": "PASS_SOURCE_CLAIM_2023_08_28",
+      "report_manifest_sha256": "9e6023fef613d9f8c08218c1e2290d786f8843f357c07c8957c629eb0df33a89"
+    },
+    "trading_calendar": {
+      "status": "PASS",
+      "sessions": 3886,
+      "manifest_sha256": "d3c681d7d2020d3c7a8111d9600092e79a18ff28234b02e5f5020644506620b8"
+    },
+    "csi300_benchmark": {
+      "status": "PASS_FOR_FULL_RANGE_CLOSE_SERIES",
+      "manifest_sha256": "ced39152f1fb94def77faca1414ca80c661dc827803ae275f935ccc294e91c88"
+    }
+  },
+  "mandatory_incomplete_components": [
+    "SUSPENSION_HISTORY",
+    "RAW_OHLCV_AUTHORITY",
+    "ADJUSTMENT_ECONOMIC_ALIGNMENT",
+    "CORPORATE_ACTION_COMPLETENESS_AND_ACCOUNTING",
+    "HISTORICAL_MARKET_RULES_AND_TRANSACTION_COSTS"
+  ],
+  "full_dataset_created": false,
+  "full_dataset_audited": false,
+  "full_dataset_frozen": false,
+  "development_study_run": false,
+  "validation_study_run": false,
+  "official_oos_run": false,
+  "input_order_reproducibility": "PASS_FOR_COMPONENTS_WHERE_REPORTED",
+  "manifest_sha256": "796ac5773fd049454c202d4c76a403406139d6813ec4eb20d9b7f7c48dfec5c2"
+}

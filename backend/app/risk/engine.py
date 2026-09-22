@@ -47,11 +47,15 @@ class RiskEngine:
             return self._reject(
                 proposal, RiskReasonCode.INVALID_QUANTITY, "quantity must be positive"
             )
-        if proposal.order_type is not OrderType.MARKET:
+        if proposal.order_type is not OrderType.MARKET and not (
+            self._config.allow_limit_orders
+            and proposal.order_type is OrderType.LIMIT
+            and proposal.limit_price is not None
+        ):
             return self._reject(
                 proposal,
                 RiskReasonCode.UNSUPPORTED_ORDER_TYPE,
-                "only MARKET proposals are supported",
+                "order type is not enabled or limit price is missing",
             )
         if snapshot is None:
             return self._reject(
@@ -103,6 +107,9 @@ class RiskEngine:
                 f"a positive observed mark is required for {proposal.symbol}",
             )
         assert reference_price is not None
+        if proposal.order_type is OrderType.LIMIT and proposal.side is OrderSide.BUY:
+            assert proposal.limit_price is not None
+            reference_price = max(reference_price, proposal.limit_price)
 
         with localcontext(RISK_CONTEXT):
             actual_exposures = self._calculate_exposures(actual_quantities, marks, proposal.symbol)
@@ -113,6 +120,14 @@ class RiskEngine:
                     "every non-flat position requires a positive observed mark",
                 )
             _, _, actual_net_exposure = actual_exposures
+            pending_value = sum(
+                (
+                    p.carrying_value
+                    for p in (*snapshot.pending_demergers, *snapshot.pending_mergers)
+                ),
+                ZERO,
+            )
+            actual_net_exposure += pending_value
             if (
                 snapshot.market_value != actual_net_exposure
                 or snapshot.equity != snapshot.cash + actual_net_exposure
@@ -148,6 +163,8 @@ class RiskEngine:
                     estimated_transaction_cost=estimated_transaction_cost,
                 )
             symbol_exposure, gross_exposure, net_exposure = exposures
+            gross_exposure += pending_value
+            net_exposure += pending_value
             effective_cash = snapshot.cash + reserved_cash_delta
             trade_cash_delta = (
                 -order_notional if proposal.side is OrderSide.BUY else order_notional

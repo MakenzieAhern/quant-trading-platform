@@ -1,0 +1,80 @@
+{
+  "security_id": {
+    "value": "CN-A:SSE:600462"
+  },
+  "affected_holder_class": "ORDINARY_NONEXEMPT_REGISTERED_HOLDER",
+  "record_date": "2012-02-08",
+  "effective_date": null,
+  "surrender_ratio": "0.20",
+  "consideration_type": "NONE",
+  "consideration_value": "0",
+  "quantity_rounding_rule": "UNRESOLVED",
+  "recipient": "ISSUER_BANKRUPTCY_PROPERTY_DISPOSAL_ACCOUNT",
+  "disposition": "TRANSFERRED",
+  "sources": [
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2012-07-10/61245121.PDF",
+      "sha256": "7cc1bd3d5d9e5ffcce1b93f43f51ea61ce283a809a7edb7d16de653c3ad0d455",
+      "published_on": "2012-07-10",
+      "retrieved_at": "2026-09-13T03:24:35.863405+00:00",
+      "document": "600462-plan-explanation.pdf"
+    },
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-20/61678960.PDF",
+      "sha256": "6aac7ca6c6ea82e47502a70cb1be08bd111eab63d8bf107c3462795d0779ebeb",
+      "published_on": "2012-10-20",
+      "retrieved_at": "2026-09-13T03:24:37.793854+00:00",
+      "document": "600462-progress-oct20.pdf"
+    }
+  ],
+  "confirmation_sources": [
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-30/61732609.PDF",
+      "sha256": "0d0fa5e1c6773d8a834516af2426e8d5adb4de0b9c69213462489d73bd7b809f",
+      "published_on": "2012-10-30",
+      "retrieved_at": "2026-09-13T03:25:03.792097+00:00",
+      "document": "600462-progress-oct30.pdf"
+    },
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-02/61751948.PDF",
+      "sha256": "8c962ee074c999135144732d5733323b9b57ec565bb540499f08f47f0e648427",
+      "published_on": "2012-11-02",
+      "retrieved_at": "2026-09-13T03:25:05.685997+00:00",
+      "document": "600462-progress-nov2.pdf"
+    },
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-31/61741320.PDF",
+      "sha256": "9d53f1ea78030b5ee3581af4316f37d6511c4af853623c6b7ea07e42e00cad9a",
+      "published_on": "2012-10-31",
+      "retrieved_at": "2026-09-13T01:55:17.903619+00:00",
+      "document": "600462-capital-adjustment-implementation.pdf"
+    }
+  ],
+  "research_effective_date": "2012-11-19",
+  "nontrading_from": "2012-02-09",
+  "convention_approval_sha256": "6f14546633e87d4a3dfec3564d92e03de07b6778b0636e4f86193994772f03b1",
+  "research_fraction_rule": "CEIL_SURRENDER_FLOOR_RETAINED_V1",
+  "boundary_sources": [
+    {
+      "document": "2012-10 suspension notice",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-02-09/60518742.PDF",
+      "sha256": "9ce1cc1e53f636cd8621f2dd26631d2688be686c44782536e581b656c7beed82",
+      "published_on": "2012-02-09",
+      "retrieved_at": "2026-09-13T03:53:37.070362+00:00"
+    },
+    {
+      "document": "2012-78 resumption notice",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-17/61808819.PDF",
+      "sha256": "80010f9ec6b4cb0ea2c2432d8a8a6b096862674080b02e90b346380f3321d804",
+      "published_on": "2012-11-17",
+      "retrieved_at": "2026-09-13T03:53:39.905310+00:00"
+    },
+    {
+      "document": "2012-77 judicial transfer completion notice",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-09/61779221.PDF",
+      "sha256": "b69fb0005f0e6d9d23c555f24da753a7eb9f51cffaa8d09869abb84b0b24356f",
+      "published_on": "2012-11-09",
+      "retrieved_at": "2026-09-13T03:53:40.989114+00:00"
+    }
+  ]
+}

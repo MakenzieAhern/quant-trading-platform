@@ -1,16 +1,45 @@
-from datetime import UTC, datetime, timedelta
-from decimal import Decimal
+from datetime import UTC, date, datetime, timedelta
+from decimal import Decimal, localcontext
 from uuid import UUID
 
 import pytest
 from pydantic import ValidationError
 
 from app.domain.market import Bar
+from app.domain.markets import (
+    CorporateAction,
+    CorporateActionCompleteness,
+    CorporateActionType,
+    SecurityId,
+)
 from app.domain.trading import Fill, OrderSide
-from app.event import EventBus
+from app.event import EventBus, EventType
 from app.portfolio import PortfolioEngine, PortfolioError
 
 START = datetime(2024, 1, 1, tzinfo=UTC)
+
+
+def test_incomplete_rights_issue_never_silently_subscribes_or_forfeits() -> None:
+    portfolio = PortfolioEngine(EventBus(), Decimal(10000))
+    symbol = "600036"
+    portfolio.apply_fill(make_fill(1, OrderSide.BUY, "100", "15", symbol=symbol))
+    before = portfolio.mark_to_market(make_bar(1, "15", symbol=symbol))
+    action = CorporateAction(
+        security_id=SecurityId(value="CN-A:SSE:600036"),
+        action_type=CorporateActionType.RIGHTS_RELATED_EVENT,
+        ex_date=date(2024, 1, 3),  # Synthetic timestamp; official terms are retained separately.
+        share_ratio=Decimal("0.13"),
+        subscription_price=Decimal("8.85"),
+        source_provider="official-terms-regression",
+        source_version="test-v1",
+        source_record_hash="eacae9cd6c9060ca1739dd5e22129c345daf3461b1e36e30dd4d144b4bb9e141",
+        completeness=CorporateActionCompleteness.COMPLETE,
+    )
+    with pytest.raises(PortfolioError, match="EVENT_IDENTITY_UNRESOLVED"):
+        portfolio.apply_corporate_action(symbol, action, START + timedelta(days=2))
+    after = portfolio.mark_to_market(make_bar(2, "15", symbol=symbol))
+    assert after.cash == before.cash
+    assert after.positions[0].quantity == before.positions[0].quantity
 
 
 def make_fill(
@@ -110,6 +139,117 @@ def test_same_direction_fills_use_weighted_average_cost() -> None:
     assert position.average_price == Decimal(110)
     assert position.realized_pnl == Decimal(0)
     assert portfolio.cash == Decimal(-1200)
+
+
+def test_complete_cash_and_stock_actions_update_long_position_economics() -> None:
+    portfolio = PortfolioEngine(EventBus(), Decimal(2000))
+    portfolio.apply_fill(make_fill(1, OrderSide.BUY, "100", "10", symbol="600000.SSE"))
+    common = {
+        "security_id": SecurityId(value="CN-A:SSE:600000"),
+        "announcement_date": date(2024, 1, 1),
+        "ex_date": date(2024, 1, 3),
+        "source_provider": "fixture",
+        "source_version": "1",
+        "source_record_hash": "a" * 64,
+        "completeness": CorporateActionCompleteness.COMPLETE,
+    }
+    portfolio.apply_corporate_action(
+        "600000.SSE",
+        CorporateAction(
+            **common,
+            action_type=CorporateActionType.CASH_DIVIDEND,
+            cash_per_share=Decimal("0.1"),
+        ),
+        START + timedelta(days=3),
+    )
+    position = portfolio.apply_corporate_action(
+        "600000.SSE",
+        CorporateAction(
+            **common,
+            action_type=CorporateActionType.STOCK_DIVIDEND,
+            share_ratio=Decimal("0.2"),
+        ),
+        START + timedelta(days=3),
+    )
+    assert portfolio.cash == Decimal(1010)
+    assert position is not None
+    assert position.quantity == Decimal(120)
+    assert position.average_price == Decimal(10) / Decimal("1.2")
+    snapshot = portfolio.snapshot_at(START + timedelta(days=3))
+    assert snapshot.corporate_action_realized_pnl == Decimal(10)
+    assert snapshot.realized_pnl == 0
+    assert snapshot.total_pnl == (
+        snapshot.realized_pnl
+        + snapshot.corporate_action_realized_pnl
+        + snapshot.unrealized_pnl
+        - snapshot.cumulative_commission
+    )
+
+
+@pytest.mark.parametrize("ratio", (Decimal(1), Decimal(2)))
+def test_retained_bonus_is_independent_of_ambient_decimal_precision(ratio: Decimal) -> None:
+    positions = []
+    for precision in (6, 50):
+        bus = EventBus()
+        emitted_orders = []
+        for kind in EventType:
+            if kind.value.startswith("ORDER_"):
+                bus.subscribe(kind, emitted_orders.append)
+        portfolio = PortfolioEngine(bus, Decimal(2000))
+        portfolio.apply_fill(make_fill(1, OrderSide.BUY, "101", "10", symbol="600000.SSE"))
+        action = CorporateAction(
+            security_id=SecurityId(value="CN-A:SSE:600000"),
+            action_type=CorporateActionType.BONUS_SHARE,
+            ex_date=date(2024, 1, 3),
+            share_ratio=ratio,
+            source_provider="fixture",
+            source_version="1",
+            source_record_hash="b" * 64,
+            completeness=CorporateActionCompleteness.COMPLETE,
+        )
+        with localcontext() as ctx:
+            ctx.prec = precision
+            position = portfolio.apply_corporate_action(
+                "600000.SSE", action, START + timedelta(days=3)
+            )
+        assert position is not None
+        assert position.quantity == 101 * (1 + ratio) and position.aggregate_cost_basis == 1010
+        assert portfolio.cash == 990
+        assert not emitted_orders
+        positions.append(position)
+    assert positions[0] == positions[1]
+
+
+def test_retained_bonus_floors_unreconstructable_fraction_without_cash_or_basis_loss() -> None:
+    portfolio = PortfolioEngine(EventBus(), Decimal(2000))
+    symbol = "688339.SSE"
+    portfolio.apply_fill(make_fill(1, OrderSide.BUY, "196", "10", symbol=symbol))
+    action = CorporateAction(
+        security_id=SecurityId(value="CN-A:SSE:688339"),
+        action_type=CorporateActionType.BONUS_SHARE,
+        ex_date=date(2024, 7, 22),
+        share_ratio=Decimal("0.4"),
+        source_provider="fixture",
+        source_version="1",
+        source_record_hash="c" * 64,
+        completeness=CorporateActionCompleteness.COMPLETE,
+    )
+
+    position = portfolio.apply_corporate_action(symbol, action, START + timedelta(days=3))
+
+    assert position is not None
+    assert position.quantity == 274
+    assert position.aggregate_cost_basis == 1960
+    assert portfolio.cash == 40
+    audit = portfolio.retained_bonus_rounding_audits[0]
+    assert audit.theoretical_quantity == Decimal("274.4")
+    assert audit.whole_quantity == 274
+    assert audit.discarded_fraction == Decimal("0.4")
+    assert audit.cash_compensation == 0
+    assert audit.retained_basis == 1960
+    assert audit.fractional_treatment == "RESEARCH_FLOOR_NO_CASH"
+    with pytest.raises(PortfolioError, match="duplicate retained bonus"):
+        portfolio.apply_corporate_action(symbol, action, START + timedelta(days=3))
 
 
 def test_same_direction_short_fills_use_absolute_weighted_average_cost() -> None:

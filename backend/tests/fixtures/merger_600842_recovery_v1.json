@@ -1,0 +1,47 @@
+{
+  "policy": "CN_A_MERGER_FRACTIONAL_SHARE_POLICY_V1",
+  "boundary_policy": "FIRST_POST_EVENT_TRADING_BOUNDARY_V1",
+  "case": {
+    "parent": "600842",
+    "successor": "600849",
+    "successor_security_id": "CN-A:SSE:601607",
+    "exchange": "SSE",
+    "conversion_ratio": "0.96",
+    "parent_last_trading_date": "2010-02-03",
+    "continuous_suspension_from": "2010-02-04",
+    "record_date": "2010-02-03",
+    "parent_delisting_date": "2010-02-12",
+    "registry_date": "2010-02-23",
+    "new_shares_listed_on": "2010-03-01",
+    "code_transition_date": "2010-03-05",
+    "successor_listing_date": "1994-03-24",
+    "successor_shares_tradable_from": "2010-03-09",
+    "effective_date": "2010-03-09",
+    "cash_election_offered": true,
+    "affiliated_elector_shares_excluded": 0,
+    "scope": "ORDINARY_UNRESTRICTED_A_SHARE_HOLDER_NO_CASH_ELECTION",
+    "registry_timestamp": "NOT_INFERRED_FROM_FIRST_TRADING_DATE",
+    "source_url": "https://static.cninfo.com.cn/finalpage/2010-03-08/57663591.PDF",
+    "source_path": "full-merger-v1/targeted-parent-fraction-v2/601607-2010-resumption.pdf",
+    "source_sha256": "f51fea0d6a996ba4c8b9cae6e7551358460789933edf6278702cdf772d6be5ac",
+    "publication_date": "2010-03-08",
+    "retrieved_at": "2026-09-17T20:44:40.327692+00:00",
+    "additional_event_sources": [
+      {"url": "https://static.cninfo.com.cn/finalpage/2010-02-02/57568719.PDF", "sha256": "a00c485a4082561ef2b6ac8febc915e5209acf1e9ecc6a43e65ed61dbb392b36", "published_on": "2010-02-02", "retrieved_at": "2026-09-17T20:34:10.642105+00:00", "document": "Official issuer merger report; both parent ratios and whole-share rule"},
+      {"url": "https://static.cninfo.com.cn/finalpage/2010-02-02/57568646.PDF", "sha256": "1c4beacfcd2ed0674a4d97df32155b02d2721e30866cbe6829fda6fc93724f79", "published_on": "2010-02-02", "retrieved_at": "2026-09-17T21:21:07.273930+00:00", "document": "Official parent cash-choice implementation; last trading, halt and ratio"},
+      {"url": "https://static.cninfo.com.cn/finalpage/2010-02-05/57581598.PDF", "sha256": "bc8cc2a13786333336ef48c82d7cf25eb6e4d6783078de8b5ea22fed98c32a07", "published_on": "2010-02-05", "retrieved_at": "2026-09-17T21:21:10.274664+00:00", "document": "Official choice result; zero shareholders elected"},
+      {"url": "https://static.cninfo.com.cn/finalpage/2010-02-11/57603960.PDF", "sha256": "41b10d8828a4433cd6d2bedc9b6b486f01c0d36efd76f0cffceef2ee3d39095b", "published_on": "2010-02-11", "retrieved_at": "2026-09-17T21:22:01.544871+00:00", "document": "Official parent termination notice"},
+      {"url": "https://static.cninfo.com.cn/finalpage/2010-02-25/57623766.PDF", "sha256": "6c792713c2326b319f20e5e90428f92f6f4d9fbbc33938f07f2569a3fe8d11c9", "published_on": "2010-02-25", "retrieved_at": "2026-09-13T04:13:35.894142+00:00", "document": "Official conversion completion and registered-share listing result"},
+      {"url": "https://static.cninfo.com.cn/finalpage/2010-03-03/57644871.PDF", "sha256": "02c3aa51877e94c0ce25f16a3dc553fd3fc6d47c5b4124f1211a245186a084fe", "published_on": "2010-03-03", "retrieved_at": "2026-09-13T09:36:30.814700+00:00", "document": "Official 600849 to 601607 same-company code transition"}
+    ]
+  },
+  "documents": [
+    {"path": "full-merger-v1/targeted-parent-fraction-v2/600849-2010-merger-report.pdf", "url": "https://static.cninfo.com.cn/finalpage/2010-02-02/57568719.PDF", "sha256": "a00c485a4082561ef2b6ac8febc915e5209acf1e9ecc6a43e65ed61dbb392b36", "published_on": "2010-02-02", "retrieved_at_utc": "2026-09-17T20:34:10.642105+00:00"},
+    {"path": "full-merger-v1/targeted-parent-fraction-v4/600842-choice-implementation.pdf", "url": "https://static.cninfo.com.cn/finalpage/2010-02-02/57568646.PDF", "sha256": "1c4beacfcd2ed0674a4d97df32155b02d2721e30866cbe6829fda6fc93724f79", "published_on": "2010-02-02", "retrieved_at_utc": "2026-09-17T21:21:07.273930+00:00"},
+    {"path": "full-merger-v1/targeted-parent-fraction-v4/600842-choice-result.pdf", "url": "https://static.cninfo.com.cn/finalpage/2010-02-05/57581598.PDF", "sha256": "bc8cc2a13786333336ef48c82d7cf25eb6e4d6783078de8b5ea22fed98c32a07", "published_on": "2010-02-05", "retrieved_at_utc": "2026-09-17T21:21:10.274664+00:00"},
+    {"path": "full-merger-v1/targeted-parent-fraction-v4/600842-termination.pdf", "url": "https://static.cninfo.com.cn/finalpage/2010-02-11/57603960.PDF", "sha256": "41b10d8828a4433cd6d2bedc9b6b486f01c0d36efd76f0cffceef2ee3d39095b", "published_on": "2010-02-11", "retrieved_at_utc": "2026-09-17T21:22:01.544871+00:00"},
+    {"path": "full-merger-v1/600849-2010-result.pdf", "url": "https://static.cninfo.com.cn/finalpage/2010-02-25/57623766.PDF", "sha256": "6c792713c2326b319f20e5e90428f92f6f4d9fbbc33938f07f2569a3fe8d11c9", "published_on": "2010-02-25", "retrieved_at_utc": "2026-09-13T04:13:35.894142+00:00"},
+    {"path": "full-code-transitions-v1/600849-implementation.pdf", "url": "https://static.cninfo.com.cn/finalpage/2010-03-03/57644871.PDF", "sha256": "02c3aa51877e94c0ce25f16a3dc553fd3fc6d47c5b4124f1211a245186a084fe", "published_on": "2010-03-03", "retrieved_at_utc": "2026-09-13T09:36:30.814700+00:00"},
+    {"path": "full-merger-v1/targeted-parent-fraction-v2/601607-2010-resumption.pdf", "url": "https://static.cninfo.com.cn/finalpage/2010-03-08/57663591.PDF", "sha256": "f51fea0d6a996ba4c8b9cae6e7551358460789933edf6278702cdf772d6be5ac", "published_on": "2010-03-08", "retrieved_at_utc": "2026-09-17T20:44:40.327692+00:00"}
+  ]
+}

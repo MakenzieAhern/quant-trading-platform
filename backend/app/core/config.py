@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     )
 
     app_name: str = "Quant Trading Platform"
-    app_version: str = "1.0.0"
+    app_version: str = "1.1.0"
     app_env: Literal["development", "test", "production"] = "development"
     log_level: str = "INFO"
     api_host: str = "0.0.0.0"

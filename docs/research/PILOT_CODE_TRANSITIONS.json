@@ -1,0 +1,20 @@
+{
+  "parser_version": "official-effective-dated-code-transition-v1",
+  "transitions": [
+    {
+      "exchange": "SZSE",
+      "old_symbol": "300114",
+      "new_symbol": "302132",
+      "old_name": "中航电测",
+      "board": "SZSE_CHINEXT",
+      "effective_date": "2025-02-17",
+      "publication_date": "2025-02-07",
+      "document_number": "2025-027",
+      "source_url": "https://disc.static.szse.cn/download/disc/disk03/finalpage/2025-02-07/e2d8b9d3-879b-4587-9e1e-235ebf4c8a44.PDF",
+      "snapshot": "szse-code-transition-20250207.pdf",
+      "sha256": "90427f29e153de4a4ebd236e25f226ac1b2a72911e0577a667a70076ad495f03",
+      "retrieved_at": "2026-09-12T13:21:34.508413Z",
+      "claim": "Same listed legal entity and share category; code change cannot be applied backward to Pilot."
+    }
+  ]
+}

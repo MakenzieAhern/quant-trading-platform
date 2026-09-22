@@ -1,0 +1,15 @@
+{
+  "decision": "HUMAN_METHODOLOGY_DECISION_R5_MANDATORY_DEMERGER_ACCOUNTING",
+  "source_attachment": "e9292f23-4f5e-488b-a335-4be32e3cdc8d/pasted-text.txt",
+  "source_sha256": "03e41ad6ea047dd7fcf1e5cfa4c3050acec79dba5bc7b4ec3869e43fdcf6280b",
+  "recorded_at_utc": "2026-09-13T00:01:25Z",
+  "policy": "CN_A_MANDATORY_DEMERGER_POLICY_V1",
+  "basis_allocation": "OFFICIAL_REFERENCE_VALUE",
+  "pending_valuation": "CORPORATE_ACTION_PENDING_CARRY_VALUE",
+  "cash_election_policy": "NO_ELECTION_UNLESS_EXPLICITLY_PREDECLARED_AND_ELIGIBLE",
+  "other_allocation_methods_authorized": false,
+  "formal_studies_authorized": false,
+  "full_dataset_freeze_authorized": false,
+  "merge_authorized": false,
+  "next_gate": "GATE_FULL_RESEARCH_DATASET_FREEZE_OR_GENUINELY_NEW_MATERIAL_METHODOLOGY_BLOCKER"
+}

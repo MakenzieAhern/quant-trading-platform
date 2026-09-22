@@ -1,0 +1,53 @@
+{
+  "parent_security": {"value": "CN-A:SSE:600649"},
+  "effective_date": "2017-02-22",
+  "research_effective_date": "2017-03-31",
+  "completion_date": "2017-02-22",
+  "parent_last_close": "20.34",
+  "parent_last_trading_date": "2016-12-05",
+  "successors": [
+    {
+      "security_id": {"value": "CN-A:SSE:600649"},
+      "conversion_ratio": "0.782637",
+      "listing_date": "2017-03-31",
+      "reference_value": "18.31",
+      "basis_allocation_weight": "0.782637"
+    },
+    {
+      "security_id": {"value": "CN-A:SSE:601200"},
+      "conversion_ratio": "0.217363",
+      "listing_date": "2017-03-31",
+      "reference_value": "24.41",
+      "basis_allocation_weight": "0.217363"
+    }
+  ],
+  "basis_allocation": "OFFICIAL_ASSET_ALLOCATION",
+  "conversion_source": {
+    "url": "https://static.cninfo.com.cn/finalpage/2016-10-22/1202776486.PDF",
+    "sha256": "c14602ec60320a5e63f679e7fe1bc2534ab8338cfce52d79248acfe8becb066b",
+    "published_on": "2016-10-22",
+    "retrieved_at": "2026-09-20T17:14:52.640040+00:00",
+    "document": "600649 revised merger and demerger report, pages 11-12, 54, 57 and 368"
+  },
+  "allocation_sources": [
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2016-10-22/1202776486.PDF",
+      "sha256": "c14602ec60320a5e63f679e7fe1bc2534ab8338cfce52d79248acfe8becb066b",
+      "published_on": "2016-10-22",
+      "retrieved_at": "2026-09-20T17:14:52.640040+00:00",
+      "document": "600649 revised merger and demerger report, pages 11-12, 54, 57 and 368"
+    }
+  ],
+  "confirmation_sources": [
+    {
+      "url": "https://static.cninfo.com.cn/finalpage/2017-03-31/1203242743.PDF",
+      "sha256": "2b7f224b79a40209781f24e341142a3b239e7bf1276b709b59ac3d3c95fd8a0e",
+      "published_on": "2017-03-31",
+      "retrieved_at": "2026-09-20T17:16:24.162085+00:00",
+      "document": "600649 implementation report, pages 2-3 and 14"
+    }
+  ],
+  "official_fractional_method": "GLOBAL_SHAREHOLDER_ALLOCATION_UNREPRODUCIBLE",
+  "research_fractional_method": "FLOOR_NO_CASH_COMPENSATION_RESEARCH_CONVENTION",
+  "cash_election_offered": false
+}

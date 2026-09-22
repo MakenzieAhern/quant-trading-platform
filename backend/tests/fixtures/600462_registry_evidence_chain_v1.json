@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "policy": "CN_A_MANDATORY_PARTIAL_SHARE_SURRENDER_POLICY_V1",
+  "issuer": "延边石岘白麓纸业股份有限公司",
+  "security_id": "CN-A:SSE:600462",
+  "documents": [
+    {
+      "path": "600462-plan.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-06-28/61190189.PDF",
+      "title": "出资人权益调整方案的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-06-28",
+      "document_date": "2012-06-27",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:24:34.514037+00:00",
+      "sha256": "4cdfb7a22a7bf164a1a92d03b34b34c23d2dc2d2f087185b7eb5bfdc32cc16ff"
+    },
+    {
+      "path": "600462-plan-explanation.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-07-10/61245121.PDF",
+      "title": "出资人权益调整相关问题的说明",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-07-10",
+      "document_date": "2012-07-09",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:24:35.863405+00:00",
+      "sha256": "7cc1bd3d5d9e5ffcce1b93f43f51ea61ce283a809a7edb7d16de653c3ad0d455"
+    },
+    {
+      "path": "600462-court-approval.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-08-08/61388417.PDF",
+      "title": "关于法院批准重整计划及继续停牌的公告（附重整计划）",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-08-08",
+      "document_date": "2012-08-07",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:44:20.129176+00:00",
+      "sha256": "2c4e5afe8bdb98d6f914bd1245dc1f5444330e8929225c5e072250077905bb72"
+    },
+    {
+      "path": "600462-progress-oct20.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-20/61678960.PDF",
+      "title": "关于公司执行重整计划进展公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-10-20",
+      "document_date": "2012-10-19",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:24:37.793854+00:00",
+      "sha256": "6aac7ca6c6ea82e47502a70cb1be08bd111eab63d8bf107c3462795d0779ebeb"
+    },
+    {
+      "path": "600462-transfer.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-27/61721428.PDF",
+      "title": "关于公司执行重整计划及股份冻结、划转情况的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-10-27",
+      "document_date": "2012-10-26",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:24:32.718120+00:00",
+      "sha256": "c4dcb25d6dce7d11f08862d10b2ae174a732cfafebcdd2792980eb5bcb62e4f6"
+    },
+    {
+      "path": "600462-progress-oct30.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-30/61732609.PDF",
+      "title": "关于执行重整计划进展公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-10-30",
+      "document_date": "2012-10-29",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:25:03.792097+00:00",
+      "sha256": "0d0fa5e1c6773d8a834516af2426e8d5adb4de0b9c69213462489d73bd7b809f"
+    },
+    {
+      "path": "600462-capital-adjustment-implementation.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-10-31/61741320.PDF",
+      "title": "关于重整计划中涉及出资人权益调整事项实施公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-10-31",
+      "document_date": "2012-10-30",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T01:55:17.903619+00:00",
+      "sha256": "9d53f1ea78030b5ee3581af4316f37d6511c4af853623c6b7ea07e42e00cad9a"
+    },
+    {
+      "path": "600462-progress-nov2.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-02/61751948.PDF",
+      "title": "关于公司执行重整计划进展公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-02",
+      "document_date": "2012-11-01",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:25:05.685997+00:00",
+      "sha256": "8c962ee074c999135144732d5733323b9b57ec565bb540499f08f47f0e648427"
+    },
+    {
+      "path": "600462-progress-nov6.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-06/61763932.PDF",
+      "title": "关于公司执行重整计划进展公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-06",
+      "document_date": "2012-11-05",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:25:07.143762+00:00",
+      "sha256": "d91ec000d3b220faf761eb5c2bbae2c40db8fc65009a5efce24e2bfb08c0d63c"
+    },
+    {
+      "path": "600462-progress-nov8.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-08/61773662.PDF",
+      "title": "关于公司重整计划执行及股份冻结情况的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-08",
+      "document_date": "2012-11-07",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:25:08.262167+00:00",
+      "sha256": "2050242d4af602d15e67f062bdafba9d7707af1236f8213d33d919add541cf79"
+    },
+    {
+      "path": "600462-transfer-complete.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-09/61779221.PDF",
+      "title": "关于公司股权司法划转完成的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-09",
+      "document_date": "2012-11-08",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:53:40.989114+00:00",
+      "sha256": "b69fb0005f0e6d9d23c555f24da753a7eb9f51cffaa8d09869abb84b0b24356f"
+    },
+    {
+      "path": "600462-suspension.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-02-09/60518742.PDF",
+      "title": "关于公司股票停牌的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-02-09",
+      "document_date": "2012-02-08",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:53:37.070362+00:00",
+      "sha256": "9ce1cc1e53f636cd8621f2dd26631d2688be686c44782536e581b656c7beed82"
+    },
+    {
+      "path": "600462-resumption.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-11-17/61808819.PDF",
+      "title": "关于公司股票复牌的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-11-17",
+      "document_date": "2012-11-16",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:53:39.905310+00:00",
+      "sha256": "80010f9ec6b4cb0ea2c2432d8a8a6b096862674080b02e90b346380f3321d804"
+    },
+    {
+      "path": "600462-court-completion.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2012-12-14/61907640.PDF",
+      "title": "关于法院裁定公司重整计划执行完毕的公告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2012-12-14",
+      "document_date": "2012-12-13",
+      "document_date_note": null,
+      "retrieved_at_utc": "2026-09-13T03:44:16.332184+00:00",
+      "sha256": "5d67e395f9ed467dffa858ef0ac929913d6bdde573f2b27fb13fa5cb6a336461"
+    },
+    {
+      "path": "600462-annual-62294359.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2013-03-29/62294359.PDF",
+      "title": "2012年年度报告",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2013-03-29",
+      "document_date": null,
+      "document_date_note": "Separate signature date not established in this review; publication date retained without substitution.",
+      "retrieved_at_utc": "2026-09-13T03:27:19.699409+00:00",
+      "sha256": "a999d0f601b0eb2674fdd03f667e3cd7c970f007d3918445b8de57db6e954da0"
+    },
+    {
+      "path": "600462-annual-62406177.pdf",
+      "source_type": "CNINFO_ISSUER_DISCLOSURE",
+      "url": "https://static.cninfo.com.cn/finalpage/2013-04-23/62406177.PDF",
+      "title": "2012年年度报告（修订版）",
+      "issuer": "延边石岘白麓纸业股份有限公司",
+      "published_on": "2013-04-23",
+      "document_date": null,
+      "document_date_note": "Separate signature date not established in this review; publication date retained without substitution.",
+      "retrieved_at_utc": "2026-09-13T03:27:12.171866+00:00",
+      "sha256": "f9c71099b5f686dc0136d56c81d369761c957bd4e4d6ab4578ac44387ebe9256"
+    }
+  ],
+  "timing": {
+    "record_date": "2012-02-08",
+    "last_pre_suspension_session": "2012-02-08",
+    "suspension_from": "2012-02-09",
+    "transfer_in_progress_document_date": "2012-10-26",
+    "transfer_notice_received": "2012-10-29",
+    "first_post_event_trading_boundary": "2012-11-19",
+    "exact_registry_date": null,
+    "boundary_status": "PASS_FIRST_POST_EVENT_TRADING_BOUNDARY_ONLY",
+    "daily_valuation_mutation_date": "UNVERIFIED_NOT_SUBSTITUTED_WITH_RESUMPTION_DATE"
+  },
+  "counts": {
+    "pre_event_total": 410600000,
+    "ordinary_class_before_exceptions": 308009520,
+    "expected_ordinary_20_percent": 61601904,
+    "expected_top_holder_40_percent": 18584760,
+    "expected_next_three_30_percent": 16838574,
+    "expected_all_classes": 97025238,
+    "actual_surrender_all_classes": 96997075,
+    "separate_issuance": 123180000,
+    "post_unrestricted": 313602925,
+    "post_restricted": 220177075,
+    "post_total": 533780000,
+    "actual_capital_reconciliation_difference": 0,
+    "plan_to_actual_difference": 28163,
+    "listed_unexecuted_quantities": [
+      23047,
+      3000,
+      2000
+    ],
+    "arithmetic_residual_if_these_are_full_shortfall_components": 116,
+    "warning": "The notice says mainly; 116 is not proven rounding. It does not give a complete holder-level reconciliation or conclusively distinguish base holdings versus surrender shortfall for every exception."
+  },
+  "fractional_execution_rule": "NOT_EVIDENCED",
+  "reachability": {
+    "general_portfolio_quantity_domain": "YES_Q_MOD_5_NONZERO",
+    "examples": {
+      "1": "0.2",
+      "6": "1.2",
+      "101": "20.2"
+    },
+    "round_lot_only_from_zero_no_prior_share_actions": "NO_MULTIPLES_OF_100",
+    "actual_600462_2010_2012_history_certificate": "NOT_ESTABLISHED",
+    "no_strategy_run": true
+  },
+  "search": {
+    "sse_pdf_result": "HTTP404_RETAINED",
+    "cninfo": "Reused104 issuer announcements across4 pages and prior28 restructuring results; recovered3 targeted official PDFs this turn.",
+    "chinaclear": "No event-specific public registry notice or surrender allocation located in targeted public searches.",
+    "unofficial_sources_used_as_authority": false,
+    "search_terms": [
+      "600462 石岘 重整 过户 登记",
+      "石岘 调减 零股 零碎股 四舍五入",
+      "九有 2012 调减 登记",
+      "石岘 调减 116"
+    ]
+  },
+  "acceptance": "PARTIAL",
+  "smallest_blocker": "PARTIAL_SURRENDER_REGISTRY_EXECUTION_EVIDENCE_UNVERIFIED:CN-A:SSE:600462"
+}

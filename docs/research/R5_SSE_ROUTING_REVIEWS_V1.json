@@ -1,0 +1,11 @@
+{
+  "scope": "DOCUMENT_BOUND_OFFICIAL_SSE_ROUTING_REVIEWS",
+  "records": [
+    {"announcement_id":"1200018326","official_title":"股票被实施退市风险警示的公告","classification":"DUPLICATE_NON_PDF_ATTACHMENT","related_event_document_id":"1200018209","reason":"Official .js companion attachment duplicates the accepted issuer PDF event."},
+    {"announcement_id":"1209833189","official_title":"*ST博信关于公司股票继续实被施退市风险警示的公告","classification":"STATUS_CONFIRMATION","reason":"Explicit continuation notice; no new risk class is introduced."},
+    {"announcement_id":"1212032614","official_title":"关于公司主要银行账户被冻结事项触发其他风险警示情形的公告","classification":"NO_EFFECTIVE_CHANGE","related_event_document_id":"1209879786","reason":"Adds an other-warning basis while the security is already ST."},
+    {"announcement_id":"1222314247","official_title":"亿阳信通关于公司股票被叠加实施退市风险警示暨风险提示的公告","classification":"STATUS_CONFIRMATION","related_event_document_id":"1219926942","reason":"Adds a warning basis while the security is already *ST."},
+    {"announcement_id":"1223470882","official_title":"江苏吴中医药发展股份有限公司关于控股股东关联方资金占用暨叠加其他风险警示的公告","classification":"NO_EFFECTIVE_CHANGE","related_event_document_id":"1223419400","reason":"Adds an other-warning basis while the security is already *ST."},
+    {"announcement_id":"59608876","official_title":"关于公司股票被特别处理的公告","classification":"DUPLICATE_EVIDENCE","related_event_document_id":"1200036039","reason":"The accepted later official disclosure binds the same 2011-06-30 ST entry."}
+  ]
+}

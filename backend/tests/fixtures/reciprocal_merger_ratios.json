@@ -1,0 +1,7 @@
+{
+  "scope": "Verified ratio terms only, not accepted full merger lifecycle events",
+  "cases": [
+    {"parent_security": "CN-A:SZSE:000578", "successor_security": "CN-A:SZSE:000792", "numerator": "1", "denominator": "2.90", "source_url": "https://static.cninfo.com.cn/finalpage/2011-03-25/59170280.PDF", "source_sha256": "9ec122484a407753f964a78ce4581346de8abb5f08fb73e54b8f2274cc07dd5b", "pdf_page": 3, "exact_parent_quantity": "29", "exact_successor_quantity": "10", "hundred_parent_whole_quantity": "34"},
+    {"parent_security": "CN-A:SSE:600832", "successor_security": "CN-A:SSE:600637", "numerator": "1", "denominator": "3.05", "source_url": "https://static.cninfo.com.cn/finalpage/2015-05-29/1201078513.PDF", "source_sha256": "c55b69a992202ea52b8f1b71522865ce582e8b98661229cca77414be9d593444", "pdf_page": 1, "exact_parent_quantity": "61", "exact_successor_quantity": "20", "hundred_parent_whole_quantity": "32"}
+  ]
+}
