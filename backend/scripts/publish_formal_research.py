@@ -38,6 +38,8 @@ def load_result(root: Path) -> dict:
         or receipt["result_sha256"] != result["result_sha256"]
     ):
         raise ValueError("FORMAL_RESEARCH_RESULT_CHANGED")
+    result.setdefault("candidate_freeze_sha256", None)
+    result.setdefault("methodology_freeze_sha256", None)
     return result
 
 
@@ -163,6 +165,7 @@ async def publish(dataset: Path, roots: tuple[Path, ...]) -> dict[str, str]:
                     },
                 )
             )
+            await session.flush()
             session.add(
                 ResearchPeriodModel(
                     run_id=identifier,

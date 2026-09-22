@@ -1,5 +1,14 @@
 # Decisions
 
+## 2026-09-22 — accept final local release QA and proceed to PR integration
+
+Accept the non-destructive Docker Desktop 4.92.0 recovery with all existing images, volumes and
+project data preserved. Accept the idempotent PostgreSQL publication of the already immutable R6,
+R7 and exactly-once R8 artifacts; this was not a study rerun. Disposable-database Alembic
+reversibility, restart persistence, full test/build/audit gates and real Chrome bilingual
+Research/Paper/WebSocket QA all pass. Proceed with the existing PR #12 only; require green PR and
+main CI before the annotated `v1.1.0` tag and GitHub Release. Do not retune or rerun Official OOS.
+
 ## 2026-09-21 — retain the single Official OOS result without retuning
 
 The frozen S4 strategy completed its only Official OOS run. Retain the original

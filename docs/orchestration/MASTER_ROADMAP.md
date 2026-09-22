@@ -1,19 +1,17 @@
 # v1.1 controller roadmap
 
-## R9 complete / R10 implementation complete / final QA active — 2026-09-22
+## Final local release QA PASS / PR integration active — 2026-09-22
 
-The bilingual Research Edition, immutable formal-study ledger and recruiter-facing documentation
-are complete. The frozen A-share strategy is integrated into the local Paper runtime using a
-deterministic synthetic 2030 scenario and the reviewed RiskEngine, OMS, simulated execution and
-Portfolio path. The scenario is product validation only and never accesses Official OOS.
+R9 and R10 are complete. Docker Desktop 4.92.0, WSL2 integration, PostgreSQL, Redis, backend and
+frontend are healthy with all prior data preserved. The immutable formal artifacts are published
+idempotently to PostgreSQL, disposable-database Alembic reversibility passes, and a full Compose
+restart preserves the ledger. No research study or Official OOS was rerun.
 
-CI run `35625042049` passes at `418e8b7` with 846 backend and 80 frontend tests plus lint, strict
-types, production build and Compose validation. npm and Python dependency audits report zero known
-vulnerabilities after the cryptography lock update. Final release QA remains gated by the local
-Docker Desktop Ingest startup: `sailor-ingest.sock` cannot be renamed to `.stale`, so the backend
-crashes before creating the Linux engine pipe or Ubuntu integration. Quit Docker Desktop without
-factory reset, then recover the runtime socket non-destructively before database publication,
-restart durability and Chrome QA. Do not merge PR #12 before those checks pass.
+The release candidate passes 847 backend and 80 frontend tests, lint, format, strict types,
+production build, Compose validation, dependency audits and real Chrome bilingual Research/Paper
+plus multi-tab WebSocket QA. The remaining path is commit and push the focused publication fixes
+and release state, require green PR #12 CI, review and merge, verify main CI, then create the
+annotated `v1.1.0` tag and GitHub Release. Never retune the frozen strategy or rerun Official OOS.
 
 ## R8 Official OOS complete / R9 Research Edition active — 2026-09-21
 

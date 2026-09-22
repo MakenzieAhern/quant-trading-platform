@@ -1,26 +1,24 @@
 # Current state
 
-## R9 complete / R10 implementation complete / final QA blocked by Docker — 2026-09-22
+## Final local release QA PASS / PR integration active — 2026-09-22
 
-The bilingual Research Edition and all immutable Development, Validation and Official OOS views,
-lineage and limitations are implemented. The frozen A-share strategy now runs incrementally in the
-local Paper product over `CN_A_SIMULATED_PAPER_FIXTURE_V1`, a deterministic 2030 synthetic scenario
-that is explicitly not research evidence. It reuses RiskEngine, OMS, simulated execution,
-Portfolio accounting, durable REST snapshots and bounded WebSocket delivery. No live broker,
-credentials, real-money path, OOS replay or strategy retuning was added.
+Docker Desktop was upgraded in place to 4.92.0 without deleting images, volumes, PostgreSQL,
+Redis or project data. Docker Engine 29.8.0 and Compose 5.5.1 are healthy in Ubuntu WSL2; the four
+project services are healthy on loopback. The old `sailor-ingest.sock` blocker is resolved.
 
-CI `35625042049` passes at `418e8b7`: 846 backend tests, 80 frontend tests, Ruff, format, strict
-mypy, ESLint, TypeScript, production build and all Compose configuration checks. npm production and
-Python lock dependency audits report zero known vulnerabilities. PR #12 is OPEN, CLEAN and
-MERGEABLE, but must not merge before final local QA.
+The immutable Development, Validation and exactly-once Official OOS artifacts were verified and
+published idempotently to PostgreSQL without rerunning any study. The ledger contains one frozen
+dataset, three successful formal runs, 66 metrics, 3,886 rows each for equity/benchmark/drawdown,
+192 monthly rows, 6,260 rolling rows, 182 rebalances, 3,640 holdings and 310 trades. Alembic
+upgrade/downgrade/upgrade/check passed on a disposable database, and Compose restart preserved the
+formal ledger at migration `20260913_0011`.
 
-The remaining final-release blocker is local Docker availability. Docker Desktop 4.89.0 crashes
-while initializing its Ingest server because `sailor-ingest.sock` cannot be renamed to `.stale`.
-The Linux engine pipe is therefore absent and Ubuntu has neither the `docker` command nor the Docker
-Desktop proxy socket. Quit Docker Desktop without factory reset, then recover the runtime socket
-non-destructively. Do not delete images, volumes, PostgreSQL, Redis or project data. After recovery,
-publish the formal ledger to PostgreSQL, run the database-backed integration/restart checks and
-complete real Chrome bilingual/research/Paper/WebSocket QA.
+Local release validation passes: 847 backend tests, 80 frontend tests, Ruff, format, strict mypy,
+ESLint, TypeScript, production build, all Compose configurations and both dependency audits. Real
+Chrome passed bilingual Research/OOS, refresh/back/forward, A-share Paper create/start/stop and
+two-tab WebSocket synchronization with no browser warnings or errors. Application metadata is now
+`1.1.0`. PR #12 remains open and unmerged pending the new commit and CI; the next permitted action
+is commit, push, CI review and merge, followed by main verification and the `v1.1.0` release.
 
 ## R8 Official OOS complete exactly once — 2026-09-21
 

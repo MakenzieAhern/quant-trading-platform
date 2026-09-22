@@ -1,6 +1,6 @@
 # Quant Trading Platform
 
-**v1.1 — China A-Share Research Edition**
+**v1.1.0 — China A-Share Research Edition**
 
 A deterministic, point-in-time quantitative research and paper-trading platform for ordinary
 SSE/SZSE A-shares. It combines a 2010–2025 audited research dataset, corporate-action-aware

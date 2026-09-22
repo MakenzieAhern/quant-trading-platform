@@ -1,19 +1,23 @@
 # Autonomous Quant Project Checkpoint
 
-## 2026-09-22 R9/R10 implementation complete / final QA active
+## 2026-09-22 final local release QA PASS / PR integration active
 
-- R9 bilingual Research Edition: COMPLETE
-- R10 frozen A-share Paper implementation: COMPLETE; final DB/browser QA pending
-- A-share Paper dataset: `CN_A_SIMULATED_PAPER_FIXTURE_V1` (synthetic 2030, not research evidence)
-- execution path: frozen strategy -> RiskEngine -> OMS -> simulated execution -> Portfolio
+- Docker Desktop / Engine / Compose: 4.92.0 / 29.8.0 / 5.5.1; WSL2 integration PASS
+- preserved project services: PostgreSQL / Redis / backend / frontend healthy
+- formal ledger publication: PASS and idempotent; one dataset / three runs / 310 trades
+- Alembic: disposable upgrade -> downgrade -> upgrade -> check PASS; live DB never downgraded
+- restart persistence: PASS at migration `20260913_0011`
+- backend / frontend tests: 847 / 80 PASS
+- Ruff / format / mypy / ESLint / TypeScript / production build: PASS
+- Compose dev / test / release configuration: PASS
+- npm / Python lock dependency audits: zero known vulnerabilities
+- real Chrome zh-CN / en-US Research and Paper QA: PASS
+- A-share Paper create/start/stop and two-tab WebSocket synchronization: PASS
+- browser warning/error log: empty
 - Official OOS rerun/replay: NO; consumed lock unchanged
-- backend focused local checks: 63 PASS after CI fixes
-- frontend local checks: 80 PASS; TypeScript/ESLint/Prettier/build PASS
-- dependency audits: npm 0 known vulnerabilities; Python lock 0 known vulnerabilities
-- CI: run `35625042049` PASS at `418e8b7`; backend 846, frontend 80, Compose PASS
-- PR #12: OPEN, CLEAN, MERGEABLE, UNMERGED
-- Docker final QA: BLOCKED; stale `sailor-ingest.sock` access failure crashes backend startup
-- current stage: FINAL_QA
+- application version: `1.1.0`
+- PR #12: OPEN, UNMERGED; new commit and CI pending
+- current stage: RELEASE_INTEGRATION
 - release/tag: NOT CREATED
 
 ## 2026-09-21 R8 Official OOS complete exactly once

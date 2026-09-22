@@ -1,18 +1,13 @@
 # Blockers
 
-## Current final-QA blocker — 2026-09-22
+## Current release status — 2026-09-22
 
-`DOCKER_SAILOR_INGEST_SOCKET_STALE_ACCESS_FAILURE` is the single remaining release blocker. Docker
-Desktop 4.89.0 fails while initializing Ingest: it cannot rename `sailor-ingest.sock` to `.stale`,
-then its backend crashes. The Linux-engine named pipe is missing, and Ubuntu has neither the
-`docker` command nor the Docker Desktop proxy socket.
-
-R9 is complete and R10 implementation plus offline validation are complete. CI `35625042049` is
-green (846 backend / 80 frontend tests), PR #12 is clean and mergeable, and dependency audits are
-clean. Safe independent work is exhausted. Select Quit, not Factory Reset, in Docker Desktop; only
-after the Docker processes exit may the stale runtime socket be isolated non-destructively. Never
-delete images, volumes, PostgreSQL, Redis or project files. Then complete database-backed
-integration, service/restart durability and Chrome QA. PR #12, tag and release remain pending.
+No active local release blocker remains. `DOCKER_SAILOR_INGEST_SOCKET_STALE_ACCESS_FAILURE` is
+resolved by the non-destructive Docker Desktop 4.92.0 in-place upgrade and controlled WSL restart;
+all images, named volumes and project data are preserved. Database publication, Alembic
+reversibility, service restart persistence, full tests/build/audits and real Chrome bilingual
+Research/Paper/WebSocket QA pass. PR #12 CI, merge, main CI and release publication are pending
+normal external integration gates, not human or methodology blockers.
 
 ## Current R9 status — 2026-09-21
 
