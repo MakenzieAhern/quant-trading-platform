@@ -46,6 +46,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     (available ? { mode: available.mode, asOf: available.as_of } : null);
   const links = [
     { href: "/", label: copy.home, icon: "◫" },
+    { href: "/markets", label: copy.markets, icon: "▥" },
     { href: "/strategies", label: copy.strategies, icon: "◇" },
     { href: "/experiments", label: copy.research, icon: "▤" },
     { href: "/paper", label: copy.accounts, icon: "▣" },
@@ -239,9 +240,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link className="topbarData" href="/data" title={copy.dateZone}>
             <span>
               {pageData
-                ? pageData.dateKind === "observed"
-                  ? copy.pageData
-                  : copy.requestedData
+                ? pageData.dateKind === "snapshot"
+                  ? copy.snapshotData
+                  : pageData.dateKind === "observed"
+                    ? copy.pageData
+                    : copy.requestedData
                 : copy.catalogue}
             </span>
             <strong>

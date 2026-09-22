@@ -29,7 +29,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U4-RESULT | Return/drawdown/cost/benchmark/limits, null semantics, true records and reasons | Personal result and date-linked holdings/trades, full-precision toggle | Chrome demo+historical results agree with exact APIs; real fill/snapshot2031-04-14 linked; source unavailable remains N/A; U4 tests/review PASS | PASS |
 | U4-COMPARE | Reopen/compare 2–3; six config differences indicated | /experiments/compare?ids= | Chrome2-run differences observed; 2–3 selection and URL-popstate tests PASS; browser3-run refresh still pending | IN_PROGRESS |
 | U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, UI downloads | Injection/precision/API tests PASS; actual30021-byte historical JSON HTTP200; browser prepared but artifact/event unverified | IN_PROGRESS |
-| U5-MARKET | Search/watchlist/raw-adjusted/date/source view | /api/markets and MarketsPage ready for integration | 20 backend/13 frontend focused tests; real suspension controls independently reviewed; migration0013 reversible in test DB; main/browser pending | IN_PROGRESS |
+| U5-MARKET | Search/watchlist/raw-adjusted/date/source view | /api/markets and /markets deployed0013 | 20 backend/14 frontend focused tests; independent review PASS; Chrome000001 raw22.45/HFQ874.904325432379995/suspension2010-03-01; watchlist persists fresh tab; dialog dates/locale/Esc;390+1280 no page overflow | PASS |
 | U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | SOURCE_READINESS.md candidate audit | BaoStock anonymous public per-security path probed; bulk EOF fails boundedly; ingestion pending | IN_PROGRESS |
 | U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Pending | API invariants + result→plan browser | NOT_RUN |
 | U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Existing synthetic paper retained | Mode isolation/lifecycle tests | NOT_RUN |
@@ -52,3 +52,18 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
+
+## 2026-09-22 09:27 UTC cached-market browser closure
+
+`u5/markets-zh-light-390-context-fixed.png` and `u5/markets-zh-dark-1280.png`
+under the evidence root show the actual Chrome UI. Parent and detail both wrote
+the topbar data context: opening showed an experiment-style requested date and
+closing erased the selected archive. A regression failed on this mismatch;
+the page now owns the context alone, retaining archive2025-12-31 (or explicitly
+synthetic2031-12-31) through open/close. Requested dates remain in the detail.
+Board/exchange names are translated without changing their API identifiers.
+
+U2 saved versions remain IN_PROGRESS: independent review reproduced an
+interleaved cross-tab draft overwrite. Preserve existing drafts; the author is
+implementing independently retained recovery slots before browser acceptance.
+Incremental provider jobs, U6/U7 and all remaining matrix rows are still required.

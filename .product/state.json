@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-22T09:09:00Z",
+  "updated_at_utc": "2026-09-22T09:27:00Z",
   "milestone": "M1_BROWSER_CLOSURE_AND_M2_U4_U5",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -16,7 +16,7 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-comparison",
+    "branch": "codex/product-v1.2-markets",
     "identity": "MakenzieAhern"
   },
   "ownership": {
@@ -24,9 +24,9 @@
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
     "queue_writer": "experiment manager idle: 5 SUCCEEDED, 1 CANCELLED, 1 INTERRUPTED; no formal studies",
     "agents": {
-      "product_backend_audit": "new U5 incremental backend, independent files; migration0014 held until root deploys0013",
-      "guided_experiments_ui": "frontend configs library/draft validator/wizard; no other shared files",
-      "forward_source_audit": "read-only U5 reader and U4/U8 review PASS"
+      "product_backend_audit": "U5 incremental backend +0014 isolated test migration; no main deployment until review",
+      "guided_experiments_ui": "U2 cross-tab draft retention fix, then isolated marketUpdates frontend directory",
+      "forward_source_audit": "read-only U2 race reported; reviewing U5 incremental backend"
     },
     "verified_processes": "2026-09-22: 4 healthy/available project services; 2 stopped paper sessions; no formal study",
     "process_ids_are_not_reusable_authority": true
@@ -57,14 +57,21 @@
     "Real numeric readability defect fixed with display-only BigInt rounding and full-precision toggle; exact data/export unmodified",
     "147 frontend tests PASS; lint/type/build PASS; independent U4 precision/U8 reviews PASS",
     "U5 reader independent review PASS after timestamp/same-day suspension fix; 896 backend tests author PASS; migration0013 disposable up/down/up PASS",
-    "Formal ledger remains1 dataset/3 runs/310 trades after actual UI historical experiment; .research has no diff"
+    "Formal ledger remains1 dataset/3 runs/310 trades after actual UI historical experiment; .research has no diff",
+    "Reviewed0013 deployed: backend healthy and database-backed watchlist persists across fresh Chrome tab",
+    "Chrome real0000012010-03-01 suspension/raw/adjusted agrees with API; dates retained after dialog reopen/locale change; Escape focus restored",
+    "Chrome390x844 and1280x800 markets no page overflow; zh/light and zh/dark screenshots outside Git",
+    "U5 parent/child source-context race reproduced by failing test then fixed by single page owner;22 related tests PASS",
+    "PR14 draft created/attached; CI35709079995 backend/frontend/compose PASS"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
     "RESOLVED: Vite stale import after .tsx-to.ts rename; frontend restart cleared cached module resolution",
     "RESOLVED: U5 reader mismatched source suspension date formats; product-only normalization/unknown-boundary handling tested",
     "Browser download UI reports prepared, but actual download event/artifact not verified; forbidden chrome://downloads inspection not retried",
-    "Browser native date fill changes DOM without React event; native keyboard commit verified persisted form before submission"
+    "Browser native date fill changes DOM without React event; native keyboard commit verified persisted form before submission",
+    "RESOLVED: closing market detail cleared parent data-mode context; remove duplicate child writer with regression",
+    "OPEN: U2 shared localStorage draft restore can overwrite interleaved other-tab edit; independent reproduction, recovery-slot fix underway"
   ],
   "external_blockers": [
     {
@@ -77,7 +84,7 @@
   "not_run": [
     "Native dirty Back/Forward full browser confirmation path",
     "Browser exported artifact completion; API export content verified separately",
-    "U5 reader deployed/browser acceptance (ready for0013)",
+    "U2 saved configuration browser gate after cross-tab data-loss fix and independent re-review",
     "U5 incremental update/user jobs and source promotion; U6/U7 complete plans/forward",
     "Full remaining M2-M5 matrix, real-user testing not claimed"
   ],
@@ -92,10 +99,20 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "INCOMPLETE"
+    },
+    "14": {
+      "branch": "codex/product-v1.2-comparison",
+      "head": "10fa288",
+      "state": "DRAFT",
+      "ci_run": 35709079995,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "INCOMPLETE:3-way comparison and exported artifact"
     }
   },
-  "next_task": "Publish U4 reviewable stacked PR; deploy reviewed migration0013 and verify real cached market/watchlist UI; continue U5 incremental and U2 saved configs",
-  "next_command": "Verify no active product jobs and no0014 migration, deploy0013/backend; integrate MarketsPage/sidebar then Chrome search/watchlist/raw-adjusted/real suspension controls",
+  "next_task": "Commit U5 cached markets slice; integrate independently reviewed incremental jobs with separate cache; close U2 race; continue full U6/U7/M4/M5",
+  "next_command": "Do not restart backend until0014 review/down-up/full tests pass; register reviewed models/router/lifespan/cache only after that gate",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

@@ -41,6 +41,7 @@ from app.db.models.research import (
     SecurityModel,
     TradingSessionModel,
 )
+from app.db.models.watchlist import WatchlistItemModel
 
 __all__ = [
     "BacktestFillModel",
@@ -82,4 +83,5 @@ __all__ = [
     "SecurityListingPeriodModel",
     "SecurityModel",
     "TradingSessionModel",
+    "WatchlistItemModel",
 ]
