@@ -11,6 +11,7 @@ import { ApiError } from "../../api/client";
 import { i18n } from "../../i18n";
 import { navigate } from "../../utils/navigation";
 import { Link } from "../../components/Link";
+import * as pageContext from "../dataContext";
 import {
   experimentApi,
   parseCapabilities,
@@ -260,6 +261,87 @@ describe("guided experiment", () => {
 });
 
 describe("durable experiment detail", () => {
+  it("explains an eligible simulation check as acceptance, not a rejection, in both languages", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "SUCCEEDED",
+      result_available: true,
+    });
+    vi.spyOn(experimentApi, "result").mockResolvedValue({
+      ...result,
+      execution: {
+        ...result.execution,
+        reason_counts: { ELIGIBLE_SIMULATION_ASSUMPTION: 5 },
+      },
+    });
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 100,
+      offset: 0,
+    });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    expect(
+      await screen.findByText(
+        "Passed conservative daily-bar simulation execution checks. This is a simulation assumption, not proof of a real market fill.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/additional execution constraint/),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "5" })).toBeInTheDocument();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(
+      screen.getByText(
+        "通过保守日线模拟执行检查。这属于模拟假设，不是真实市场成交的证明。",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("labels the requested end separately from the observed completed result date", async () => {
+    const context = vi
+      .spyOn(pageContext, "usePageDataContext")
+      .mockImplementation(() => undefined);
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "SUCCEEDED",
+      result_available: true,
+    });
+    let resolve: ((value: typeof result) => void) | undefined;
+    vi.spyOn(experimentApi, "result").mockImplementation(
+      () =>
+        new Promise((done) => {
+          resolve = done;
+        }),
+    );
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 100,
+      offset: 0,
+    });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await waitFor(() =>
+      expect(context).toHaveBeenLastCalledWith(
+        "synthetic_demo",
+        job.configuration.end_date,
+        "requested",
+      ),
+    );
+    await act(async () => {
+      resolve?.({ ...result, date_end: "2031-06-27" });
+    });
+    await waitFor(() =>
+      expect(context).toHaveBeenLastCalledWith(
+        "synthetic_demo",
+        "2031-06-27",
+        "observed",
+      ),
+    );
+  });
+
   it("reuses the persisted server retry identity after a lost response and a fresh mount", async () => {
     vi.spyOn(experimentApi, "get").mockResolvedValue({
       ...job,
@@ -399,6 +481,9 @@ describe("durable experiment detail", () => {
       .spyOn(experimentApi, "trades")
       .mockResolvedValue({ items: [], total: 0, limit: 20, offset: 0 });
     render(<ExperimentDetailPage jobId={job.job_id} />);
+    await userEvent.click(
+      await screen.findByRole("checkbox", { name: "Show full precision" }),
+    );
     expect(
       await screen.findByText("12.000000000000000001"),
     ).toBeInTheDocument();

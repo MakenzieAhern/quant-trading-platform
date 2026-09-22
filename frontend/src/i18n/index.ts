@@ -5,12 +5,18 @@ import { enUS } from "./resources/en-US";
 import { zhCN } from "./resources/zh-CN";
 import { resolveInitialLocale } from "./locale";
 
+const initialLocale = resolveInitialLocale();
+document.documentElement.lang = initialLocale;
+i18n.on("languageChanged", (locale) => {
+  document.documentElement.lang = locale;
+});
+
 void i18n.use(initReactI18next).init({
   resources: {
     "en-US": enUS,
     "zh-CN": zhCN,
   },
-  lng: resolveInitialLocale(),
+  lng: initialLocale,
   fallbackLng: "en-US",
   supportedLngs: ["en-US", "zh-CN"],
   ns: [

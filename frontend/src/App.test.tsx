@@ -1,4 +1,11 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
@@ -13,7 +20,27 @@ const health = {
 };
 
 describe("routing", () => {
-  it("names icon-only search and restores mobile navigation focus", () => {
+  it("releases mobile background isolation when resizing to desktop", async () => {
+    const desktop = Object.assign(new EventTarget(), { matches: false });
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => desktop),
+    );
+    window.history.replaceState({}, "", "/unknown");
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    await screen.findByText("Service online");
+    fireEvent.click(screen.getByRole("button", { name: "Open navigation" }));
+    expect(document.querySelector(".appBody")).toHaveAttribute("inert");
+    act(() => {
+      desktop.matches = true;
+      desktop.dispatchEvent(new Event("change"));
+    });
+    expect(document.querySelector(".appBody")).not.toHaveAttribute("inert");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("names icon-only search, traps mobile navigation focus and restores it", async () => {
     window.history.replaceState({}, "", "/unknown");
     vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
     render(<App />);
@@ -27,9 +54,42 @@ describe("routing", () => {
     expect(
       screen.getByRole("link", { name: /QUANT Research workspace/ }),
     ).toHaveFocus();
+    const dialog = screen.getByRole("dialog", { name: "Workspace navigation" });
+    const last = within(dialog).getByRole("link", { name: /Settings/ });
+    last.focus();
+    fireEvent.keyDown(window, { key: "Tab" });
+    expect(within(dialog).getByRole("button", { name: "Close" })).toHaveFocus();
+    fireEvent.keyDown(window, { key: "Tab", shiftKey: true });
+    expect(last).toHaveFocus();
+    expect(document.querySelector(".appBody")).toHaveAttribute("inert");
     fireEvent.keyDown(window, { key: "Escape" });
-    expect(menu).toHaveFocus();
+    await waitFor(() => expect(menu).toHaveFocus());
     expect(menu).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("refreshes service health without equating it to data freshness", async () => {
+    window.history.replaceState({}, "", "/unknown");
+    let online = false;
+    vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+      if (String(input).endsWith("/api/health"))
+        return Promise.resolve(
+          online
+            ? jsonResponse(health)
+            : jsonResponse({ detail: "Unavailable" }, 503),
+        );
+      return Promise.resolve(jsonResponse({ detail: "Unavailable" }, 503));
+    });
+    render(<App />);
+    expect(await screen.findByText("Service unavailable")).toBeInTheDocument();
+    online = true;
+    fireEvent.click(
+      screen.getByRole("button", { name: "Refresh service and data status" }),
+    );
+    expect(await screen.findByText("Service online")).toBeInTheDocument();
+    expect(
+      screen.getByText("Available data · not an active run"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Service checked at:/)).toHaveTextContent("UTC");
   });
 
   it.each(["/unknown", "/backtests/not-a-uuid", "/backtests/1234"])(

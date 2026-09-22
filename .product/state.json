@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-22T08:21:00Z",
-  "milestone": "M1_LIVE_VERTICAL_SLICE",
+  "updated_at_utc": "2026-09-22T09:09:00Z",
+  "milestone": "M1_BROWSER_CLOSURE_AND_M2_U4_U5",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,14 +16,18 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "feature/product-experience-v1.2",
+    "branch": "codex/product-v1.2-comparison",
     "identity": "MakenzieAhern"
   },
   "ownership": {
     "repository_writer": "root product controller",
-    "database_writer": "running app backend; no test process; parent API integration only",
-    "queue_writer": "app experiment manager idle; 3 successful personal QA jobs, 1 cancelled, 1 interrupted",
-    "agents": {},
+    "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
+    "queue_writer": "experiment manager idle: 5 SUCCEEDED, 1 CANCELLED, 1 INTERRUPTED; no formal studies",
+    "agents": {
+      "product_backend_audit": "new U5 incremental backend, independent files; migration0014 held until root deploys0013",
+      "guided_experiments_ui": "frontend configs library/draft validator/wizard; no other shared files",
+      "forward_source_audit": "read-only U5 reader and U4/U8 review PASS"
+    },
     "verified_processes": "2026-09-22: 4 healthy/available project services; 2 stopped paper sessions; no formal study",
     "process_ids_are_not_reusable_authority": true
   },
@@ -41,32 +45,62 @@
     "Post-review full frontend108 tests/lint/types/build and backend862 tests/lint/types PASS",
     "Independent review fixes rechecked; exact API prefix regression now covered",
     "Chrome home/guide/strategy/draft/locale/mobile basic checks passed",
-    "Restarted personal experiment retried to SUCCEEDED; frozen manifest/freeze SHA and formal ledger counts unchanged"
+    "Restarted personal experiment retried to SUCCEEDED; frozen manifest/freeze SHA and formal ledger counts unchanged",
+    "M1 commits 6fe9552 and d631e27 pushed to draft PR13; Compose/frontend CI PASS",
+    "Fresh 08:29 UTC v1.1 remote/main/tag/release/CI verification: already complete; no Docker/UAC blocker",
+    "PR13 CI35705532812 backend/frontend/compose PASS after explicit test DB environment fix; PR remains draft",
+    "U4 exact holdings/date filters/export APIs committed ea3743f; UI compare and shared safeguards committed906d408",
+    "Chrome synthetic run dccc74b3 completed; date-linked 2031-04-14 trade+holdings agree; full summary unchanged",
+    "Chrome historical guided job5f26f84f completed297/297 sessions; leave/list/reopen/reload preserves identity; 2011-03-01..28 results visible",
+    "Real historical result exact final_equity99528.8134 and costs30.1866; JSON export HTTP200 30021 bytes; no OOS or formal run",
+    "Chrome390x844 no page overflow; Escape returns menu focus; mobile-to1440 removes inert; zh/en and dark/light checked",
+    "Real numeric readability defect fixed with display-only BigInt rounding and full-precision toggle; exact data/export unmodified",
+    "147 frontend tests PASS; lint/type/build PASS; independent U4 precision/U8 reviews PASS",
+    "U5 reader independent review PASS after timestamp/same-day suspension fix; 896 backend tests author PASS; migration0013 disposable up/down/up PASS",
+    "Formal ledger remains1 dataset/3 runs/310 trades after actual UI historical experiment; .research has no diff"
   ],
   "observed_failures": [
-    "Browser native confirmation control timeout prevents full UI submission/recovery proof; no application failure inferred"
+    "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
+    "RESOLVED: Vite stale import after .tsx-to.ts rename; frontend restart cleared cached module resolution",
+    "RESOLVED: U5 reader mismatched source suspension date formats; product-only normalization/unknown-boundary handling tested",
+    "Browser download UI reports prepared, but actual download event/artifact not verified; forbidden chrome://downloads inspection not retried",
+    "Browser native date fill changes DOM without React event; native keyboard commit verified persisted form before submission"
   ],
   "external_blockers": [
     {
-      "scope": "Chrome acceptance",
+      "scope": "Dirty Back/Forward confirmation browser acceptance",
       "code": "NATIVE_CONFIRM_CONTROL_TIMEOUT",
-      "human_action": "Click Cancel in existing quant platform confirmation if visible; requested once asynchronously",
+      "human_action": "Previously requested Cancel once; no repeated user request",
       "blocks_entire_project": false
     }
   ],
   "not_run": [
-    "Full M1 live browser submit/result and Back/Forward confirm handling",
-    "Feature PR CI",
-    "M2-M5 remaining mandatory acceptance"
+    "Native dirty Back/Forward full browser confirmation path",
+    "Browser exported artifact completion; API export content verified separately",
+    "U5 reader deployed/browser acceptance (ready for0013)",
+    "U5 incremental update/user jobs and source promotion; U6/U7 complete plans/forward",
+    "Full remaining M2-M5 matrix, real-user testing not claimed"
   ],
   "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
-  "next_task": "Checkpoint reviewed M1 slice as draft feature PR; resume existing browser confirmation then finish full UI vertical path before merge",
-  "next_command": "Review git staged files, commit/push feature/product-experience-v1.2; open draft feature PR with exact incomplete browser gate",
+  "pull_requests": {
+    "13": {
+      "branch": "feature/product-experience-v1.2",
+      "head": "1133ae9",
+      "state": "DRAFT",
+      "ci_run": 35705532812,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "INCOMPLETE"
+    }
+  },
+  "next_task": "Publish U4 reviewable stacked PR; deploy reviewed migration0013 and verify real cached market/watchlist UI; continue U5 incremental and U2 saved configs",
+  "next_command": "Verify no active product jobs and no0014 migration, deploy0013/backend; integrate MarketsPage/sidebar then Chrome search/watchlist/raw-adjusted/real suspension controls",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
     "M1": "IN_PROGRESS",
-    "M2": "NOT_RUN",
+    "M2": "IN_PROGRESS",
     "M3": "NOT_RUN",
     "M4": "NOT_RUN",
     "M5": "NOT_RUN"

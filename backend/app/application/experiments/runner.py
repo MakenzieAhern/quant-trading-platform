@@ -6,9 +6,11 @@ from dataclasses import asdict, dataclass, replace
 from datetime import date, datetime
 from decimal import ROUND_FLOOR, Decimal
 from enum import Enum
+from pathlib import Path
 from threading import Event
 from typing import Any
 from uuid import UUID
+from zoneinfo import ZoneInfo
 
 from app.application.backtests.decimal_policy import canonical_decimal
 from app.application.experiments.data import (
@@ -18,13 +20,18 @@ from app.application.experiments.data import (
     load_experiment_dataset,
 )
 from app.application.experiments.models import CreateExperimentRequest
+from app.data.catalog.checksums import canonical_sha256, sha256_file
+from app.data.full_dataset import FullDataset
 from app.domain.risk import RiskConfig
+from app.domain.trading import PortfolioSnapshot
 from app.research.analytics import analyze_research_period
 from app.research.costs import EffectiveDatedAShareCommission
 from app.research.engine import ResearchExecutionEngine
 from app.research.models import PortfolioTarget, ResearchSession
 from app.research.strategy import ChinaAMomentumLowVolResearchStrategy
 from app.strategies.research import ChinaAMomentumLowVolConfig
+
+TRADING_ZONE = ZoneInfo("Asia/Shanghai")
 
 
 def json_value(value: Any) -> Any:
@@ -110,6 +117,7 @@ def run_experiment(
             raise ExperimentCancelled
 
     check_cancelled()
+    implementation_sha256 = _implementation_checksum()
     registered = registry.resolve(request.dataset_id)
     if registered["sha256"] != expected_sha256:
         raise ExperimentInputError("DATASET_CHANGED_SINCE_SUBMISSION")
@@ -178,6 +186,7 @@ def run_experiment(
     reasons = Counter(reason for _, reason in result.execution_checks)
     reasons.update(d.reason_code.value for d in result.decisions if not d.approved)
     rows: dict[str, list[dict[str, Any]]] = {
+        "holdings": [_holdings_row(i, snapshot) for i, snapshot in enumerate(snapshots)],
         "equity": [
             json_value(
                 {
@@ -201,6 +210,7 @@ def run_experiment(
                     "price": f.price,
                     "transaction_cost": f.commission,
                     "timestamp": f.timestamp,
+                    "trading_date": f.timestamp.astimezone(TRADING_ZONE).date(),
                 }
             )
             for i, f in enumerate(result.fills)
@@ -215,6 +225,7 @@ def run_experiment(
                     "reason_code": d.reason_code,
                     "message": d.message,
                     "timestamp": d.timestamp,
+                    "trading_date": d.timestamp.astimezone(TRADING_ZONE).date(),
                 }
             )
             for i, d in enumerate(result.decisions)
@@ -235,6 +246,8 @@ def run_experiment(
         limitations.append("NO_EXECUTED_TRADES_CHECK_WARMUP_LOTS_AND_RISK")
     return ExperimentOutput(
         summary={
+            "result_schema_version": 2,
+            "available_collections": ["equity", "trades", "decisions", "holdings"],
             "mode": registered["mode"],
             "metrics": metrics,
             "limitations": limitations,
@@ -248,9 +261,56 @@ def run_experiment(
             "date_start": dates[0].isoformat(),
             "date_end": dates[-1].isoformat(),
             "benchmark_id": registered["benchmark_id"],
+            "provenance": (
+                {
+                    "provider": data.manifest.provider,
+                    "provider_version": data.manifest.provider_version,
+                    "retrieval_timestamp": data.manifest.retrieval_timestamp.isoformat(),
+                    "market_rule_version": data.manifest.rule_version,
+                    "adjustment_method": data.manifest.adjustment_method,
+                    "source_lineage": list(data.manifest.source_lineage),
+                    "dataset_known_limitations": list(data.manifest.known_limitations),
+                }
+                if isinstance(data, FullDataset)
+                else {
+                    "provider": "DETERMINISTIC_SYNTHETIC_GENERATOR",
+                    "provider_version": "cn-a-exploration-demo-v1",
+                    "retrieval_timestamp": None,
+                    "market_rule_version": "SYNTHETIC_SCENARIO_RULES",
+                    "adjustment_method": "SYNTHETIC_UNADJUSTED_PRICES",
+                    "source_lineage": ["SYNTHETIC_DEMO_NOT_MARKET_OR_RESEARCH_EVIDENCE"],
+                    "dataset_known_limitations": ["SYNTHETIC_DEMO_NOT_MARKET_OR_RESEARCH_EVIDENCE"],
+                }
+            ),
+            "implementation_sha256": implementation_sha256,
+            "strategy_version": "1",
+            "execution_model": {
+                "convention": result.execution_convention,
+                "fill_price": "NEXT_SESSION_RAW_OPEN",
+                "additional_slippage_basis_points": "0",
+                "merger_policy": result.merger_policy,
+                "zero_whole_share_policy": result.zero_whole_share_policy,
+                "partial_surrender_policy": result.partial_surrender_policy,
+                "partial_surrender_fraction_policy": result.partial_surrender_fraction_policy,
+                "partial_surrender_boundary_policy": result.partial_surrender_boundary_policy,
+                "pass_through_policy": result.pass_through_policy,
+                "consolidation_policy": result.consolidation_policy,
+            },
+            "effective_transaction_cost_schedules": [
+                json_value(schedule.model_dump()) for schedule in commission.schedules
+            ],
+            "effective_risk_limits": {
+                **json_value(request.risk.model_dump()),
+                "enforce_buying_power": True,
+                "max_leverage": "1",
+                "long_only": True,
+                "position_weight_applies_to": "REBALANCE_TARGET",
+            },
             "analytics_definitions": {
                 "turnover": "GROSS_TRADED_NOTIONAL_OVER_MEAN_SESSION_EQUITY",
                 "number_of_trades": "EXECUTED_FILLS",
+                "holdings_market_value": "POSITIONS_PLUS_PENDING_CORPORATE_ACTION_CARRYING_VALUE",
+                "holdings_realized_pnl": "TRADING_ONLY_SEPARATE_FROM_CORPORATE_ACTION_REALIZED_PNL",
             },
         },
         rows=rows,
@@ -260,3 +320,52 @@ def run_experiment(
 def _security_id(symbol: str) -> str:
     number, exchange = symbol.split(".")
     return f"CN-A:{exchange}:{number}"
+
+
+def _holdings_row(sequence: int, snapshot: PortfolioSnapshot) -> dict[str, Any]:
+    return json_value(
+        {
+            "sequence": sequence,
+            "trading_date": snapshot.timestamp.astimezone(TRADING_ZONE).date(),
+            "timestamp": snapshot.timestamp,
+            "cash": snapshot.cash,
+            "equity": snapshot.equity,
+            "market_value": snapshot.market_value,
+            "realized_pnl": snapshot.realized_pnl,
+            "corporate_action_realized_pnl": snapshot.corporate_action_realized_pnl,
+            "total_pnl": snapshot.total_pnl,
+            "unrealized_pnl": snapshot.unrealized_pnl,
+            "cumulative_commission": snapshot.cumulative_commission,
+            "pending_corporate_action_value": sum(
+                (
+                    item.carrying_value
+                    for item in (*snapshot.pending_demergers, *snapshot.pending_mergers)
+                ),
+                Decimal(0),
+            ),
+            "positions": [
+                {
+                    "security_id": _security_id(position.symbol),
+                    "quantity": position.quantity,
+                    "average_price": position.average_price,
+                    "market_price": position.market_price,
+                    "market_value": position.quantity * position.market_price,
+                    "weight": (position.quantity * position.market_price / snapshot.equity)
+                    if snapshot.equity > 0
+                    else None,
+                }
+                for position in snapshot.positions
+                if position.quantity != 0
+            ],
+        }
+    )
+
+
+def _implementation_checksum() -> str:
+    root = Path(__file__).resolve().parents[2]
+    return canonical_sha256(
+        {
+            path.relative_to(root).as_posix(): sha256_file(path)
+            for path in sorted(root.rglob("*.py"))
+        }
+    )

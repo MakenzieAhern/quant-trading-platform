@@ -56,9 +56,8 @@ export async function apiRequest<T>(
   const requestSignal = signal
     ? AbortSignal.any([signal, timeoutController.signal])
     : timeoutController.signal;
-  let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
       ...init,
       signal: requestSignal,
       headers: {
@@ -66,6 +65,25 @@ export async function apiRequest<T>(
         ...init.headers,
       },
     });
+    if (!response.ok) {
+      let payload: unknown;
+      try {
+        payload = await response.json();
+      } catch (reason) {
+        if (requestSignal.aborted) throw reason;
+        payload = null;
+      }
+      const error = safeError(response.status, payload);
+      throw new ApiError(response.status, error.message, error.code);
+    }
+    let payload: unknown;
+    try {
+      payload = await response.json();
+    } catch (reason) {
+      if (requestSignal.aborted) throw reason;
+      throw new ApiError(502, "The API returned an invalid JSON response.");
+    }
+    return parse ? parse(payload) : (payload as T);
   } catch (reason) {
     if (timeoutController.signal.aborted && !signal?.aborted) {
       throw new ApiError(408, "The API request timed out.");
@@ -74,21 +92,4 @@ export async function apiRequest<T>(
   } finally {
     window.clearTimeout(timeout);
   }
-  if (!response.ok) {
-    let payload: unknown;
-    try {
-      payload = await response.json();
-    } catch {
-      payload = null;
-    }
-    const error = safeError(response.status, payload);
-    throw new ApiError(response.status, error.message, error.code);
-  }
-  let payload: unknown;
-  try {
-    payload = await response.json();
-  } catch {
-    throw new ApiError(502, "The API returned an invalid JSON response.");
-  }
-  return parse ? parse(payload) : (payload as T);
 }

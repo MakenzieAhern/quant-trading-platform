@@ -2,11 +2,26 @@ import { i18n } from "../i18n";
 
 const DECIMAL_PATTERN = /^(-?)(\d+)(?:\.(\d+))?$/;
 
-export function formatDecimal(value: string | null): string {
+export function formatDecimal(value: string | null, places?: number): string {
   if (value === null) return i18n.t("common:unavailable");
   const match = DECIMAL_PATTERN.exec(value);
   if (!match) return value;
-  const [, sign, integer = "0", fraction = ""] = match;
+  const sign = match[1];
+  let [, , integer = "0", fraction = ""] = match;
+  // Presentation-only rounding: keep the API value intact and never convert money
+  // to Number. Callers omit places for authoritative full-precision displays.
+  if (places !== undefined) {
+    if (!Number.isInteger(places) || places < 0 || places > 20)
+      throw new RangeError("Display precision must be an integer from 0 to 20");
+    if (fraction.length > places) {
+      const units =
+        BigInt(`${integer}${fraction.slice(0, places)}`) +
+        (fraction[places] >= "5" ? 1n : 0n);
+      const digits = units.toString().padStart(places + 1, "0");
+      integer = places ? digits.slice(0, -places) : digits;
+      fraction = places ? digits.slice(-places) : "";
+    }
+  }
   const locale = i18n.resolvedLanguage ?? "en-US";
   // BigInt has no negative zero: retain the sign for exact fractional losses.
   const signedInteger =
@@ -21,7 +36,7 @@ export function formatDecimal(value: string | null): string {
   return `${grouped}${fraction ? `${decimalSeparator}${fraction}` : ""}`;
 }
 
-export function formatPercent(value: string | null): string {
+export function formatPercent(value: string | null, places?: number): string {
   if (value === null) return i18n.t("common:unavailable");
   const match = DECIMAL_PATTERN.exec(value);
   if (!match) return value;
@@ -40,7 +55,7 @@ export function formatPercent(value: string | null): string {
     })
       .formatToParts(0)
       .find((part) => part.type === "percentSign")?.value ?? "%";
-  return `${formatDecimal(shiftedValue)}${percentSign}`;
+  return `${formatDecimal(shiftedValue, places)}${percentSign}`;
 }
 
 export function formatUtc(value: string | null): string {

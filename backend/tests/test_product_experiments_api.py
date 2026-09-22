@@ -1,4 +1,7 @@
 import asyncio
+import csv
+import io
+import json
 from threading import Event
 from uuid import uuid4
 
@@ -112,6 +115,161 @@ async def test_worker_results_are_persisted_paginated_and_reopenable(manager):
         after_save = await client.post(f"/api/experiments/{job.id}/cancel")
         assert after_save.json()["status"] == "SUCCEEDED"
         assert after_save.json()["cancel_requested"] is False
+
+
+async def test_date_filtered_holdings_and_metadata_exports_keep_full_metrics(manager):
+    job = await manager.create(
+        CreateExperimentRequest.model_validate(
+            payload(
+                name='=HYPERLINK("https://example.invalid", "收益")',
+                initial_cash="100000.123456789123456789",
+            )
+        ),
+        "export",
+    )
+    await manager.start()
+    row = await terminal(manager, job.id)
+    assert row.status == "SUCCEEDED", row.error_code
+    await manager.shutdown()
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        prefix = f"/api/experiments/{job.id}"
+        full = (await client.get(prefix + "/result")).json()
+        day = "2031-04-22"
+        query = f"start_date={day}&end_date={day}"
+        for collection in ("equity", "trades", "decisions", "holdings"):
+            page = await client.get(f"{prefix}/{collection}?{query}&limit=1")
+            assert page.status_code == 200, page.text
+            assert page.json()["availability"] == "AVAILABLE"
+            assert len(page.json()["items"]) <= 1
+            assert all(item["trading_date"] == day for item in page.json()["items"])
+        holdings = (await client.get(f"{prefix}/holdings?{query}")).json()
+        assert holdings["total"] == 1
+        assert holdings["items"][0]["positions"]
+        assert (await client.get(prefix + "/result")).json() == full
+        bad = await client.get(prefix + "/equity?start_date=2031-04-22&end_date=2031-01-01")
+        assert bad.status_code == 422 and bad.json()["code"] == "INVALID_DISPLAY_DATE_RANGE"
+        empty = (await client.get(prefix + "/holdings?start_date=2040-01-01")).json()
+        assert empty["items"] == [] and empty["total"] == 0
+        assert empty["availability"] == "AVAILABLE"
+        exported = await client.get(f"{prefix}/export?format=json&{query}")
+        assert exported.status_code == 200
+        assert f'filename="experiment-{job.id}.json"' in exported.headers["content-disposition"]
+        report = exported.json()
+        assert report["full_period_summary"] == full
+        assert report["metadata"]["configuration"] == row.configuration
+        assert report["metadata"]["configuration"]["initial_cash"] == "100000.123456789123456789"
+        assert report["metadata"]["dataset"]["sha256"] == row.dataset_sha256
+        assert report["metadata"]["timestamp_timezone"] == "UTC"
+        assert report["metadata"]["trading_date_timezone"] == "Asia/Shanghai"
+        assert report["metadata"]["legacy_metadata_not_recorded"] == []
+        assert report["metadata"]["display_filter"]["changes_full_run_metrics"] is False
+        assert report["collections"]["holdings"] == holdings["items"]
+        for collection in report["collections"].values():
+            assert all(item["trading_date"] == day for item in collection)
+        exported_csv = await client.get(f"{prefix}/export?format=csv&collection=holdings&{query}")
+        assert exported_csv.status_code == 200
+        records = list(csv.DictReader(io.StringIO(exported_csv.text)))
+        metadata = {r["field"]: r["value"] for r in records if r["record_type"] == "metadata"}
+        assert metadata["name"] == "'" + row.name
+        assert json.loads(metadata["configuration"]) == row.configuration
+        assert json.loads(metadata["full_period_summary"]) == full
+        data = [r for r in records if r["record_type"] == "holdings"]
+        assert len(data) == 1
+        assert data[0]["cash"] == holdings["items"][0]["cash"]
+        assert json.loads(data[0]["positions"]) == holdings["items"][0]["positions"]
+
+
+async def test_legacy_results_are_honest_and_timestamp_filters_use_market_timezone(manager):
+    job = await manager.create(CreateExperimentRequest.model_validate(payload()), "legacy")
+    async with SessionFactory() as db, db.begin():
+        row = await db.get(ExperimentJobModel, job.id)
+        row.status = row.phase = "SUCCEEDED"
+        row.summary = {"metrics": {"total_return": "-0.123456789123456789"}, "limitations": []}
+        for sequence, timestamp in enumerate(
+            ("2031-04-20T15:59:59+00:00", "2031-04-20T16:00:00+00:00")
+        ):
+            db.add(
+                ExperimentResultRowModel(
+                    job_id=job.id,
+                    collection="trades",
+                    sequence=sequence,
+                    payload={
+                        "sequence": sequence,
+                        "timestamp": timestamp,
+                        "price": "123456789.123456789",
+                    },
+                )
+            )
+        db.add(
+            ExperimentResultRowModel(
+                job_id=job.id,
+                collection="decisions",
+                sequence=0,
+                payload={
+                    "sequence": 0,
+                    "timestamp": "2031-04-20T16:00:00+00:00",
+                    "message": "\t=1+1",
+                },
+            )
+        )
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        prefix = f"/api/experiments/{job.id}"
+        holdings = (await client.get(prefix + "/holdings")).json()
+        assert holdings["availability"] == "NOT_RECORDED"
+        assert holdings["reason_code"] == "HOLDINGS_NOT_RECORDED_FOR_THIS_RUN"
+        day = (
+            await client.get(prefix + "/trades?start_date=2031-04-21&end_date=2031-04-21")
+        ).json()
+        assert day["total"] == 1 and day["items"][0]["sequence"] == 1
+        report = (await client.get(prefix + "/export")).json()
+        assert report["collections"]["holdings"] == []
+        assert (
+            report["metadata"]["collection_availability"]["holdings"]["availability"]
+            == "NOT_RECORDED"
+        )
+        assert report["metadata"]["dataset"]["provenance"] is None
+        assert report["metadata"]["implementation_sha256"] is None
+        assert "provenance" in report["metadata"]["legacy_metadata_not_recorded"]
+        missing = await client.get(prefix + "/export?format=csv&collection=holdings")
+        assert (
+            missing.status_code == 409
+            and missing.json()["code"] == "HOLDINGS_NOT_RECORDED_FOR_THIS_RUN"
+        )
+        trades = await client.get(prefix + "/export?format=csv")
+        assert "123456789.123456789" in trades.text
+        decisions = await client.get(prefix + "/export?format=csv&collection=decisions")
+        assert list(csv.DictReader(io.StringIO(decisions.text)))[-1]["message"] == "'\t=1+1"
+
+
+async def test_unready_cancelled_empty_exports_and_unknown_jobs(manager):
+    job = await manager.create(CreateExperimentRequest.model_validate(payload()), "unready")
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        for cancel in (False, True):
+            if cancel:
+                await manager.cancel(job.id)
+            response = await client.get(f"/api/experiments/{job.id}/export")
+            assert response.status_code == 409 and response.json()["code"] == "RESULT_NOT_READY"
+            page = (await client.get(f"/api/experiments/{job.id}/holdings")).json()
+            assert page["availability"] == "NOT_READY"
+            assert page["items"] == []
+        missing = await client.get(f"/api/experiments/{uuid4()}/export")
+        assert missing.status_code == 404
+        invalid = await client.get(f"/api/experiments/{job.id}/export?format=html")
+        assert invalid.status_code == 422
+    empty = await manager.create(
+        CreateExperimentRequest.model_validate(
+            payload(start_date="2030-01-02", end_date="2030-01-10")
+        ),
+        "empty",
+    )
+    await manager.start()
+    assert (await terminal(manager, empty.id)).status == "SUCCEEDED"
+    await manager.shutdown()
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        report = (await client.get(f"/api/experiments/{empty.id}/export")).json()
+        assert report["collections"]["trades"] == []
+        assert report["collections"]["holdings"]
+        assert all(snapshot["positions"] == [] for snapshot in report["collections"]["holdings"])
 
 
 async def test_startup_recovers_orphans_without_false_success_or_results(manager):

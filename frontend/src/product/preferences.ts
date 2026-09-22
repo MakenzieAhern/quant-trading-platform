@@ -1,4 +1,10 @@
 import { useMemo, useSyncExternalStore } from "react";
+import {
+  readPresentationSetting,
+  writePresentationSetting,
+  subscribePresentationSettings,
+  presentationSettingsUnsaved,
+} from "../utils/presentationStorage";
 export const PREFERENCES_KEY = "quant.product.preferences.v1";
 export interface Preferences {
   theme: "system" | "light" | "dark";
@@ -13,19 +19,7 @@ const defaults: Preferences = {
   priceView: "raw",
 };
 function snapshot() {
-  try {
-    return localStorage.getItem(PREFERENCES_KEY);
-  } catch {
-    return null;
-  }
-}
-function subscribe(listener: () => void) {
-  window.addEventListener("storage", listener);
-  window.addEventListener("product-preferences", listener);
-  return () => {
-    window.removeEventListener("storage", listener);
-    window.removeEventListener("product-preferences", listener);
-  };
+  return readPresentationSetting(PREFERENCES_KEY);
 }
 export function parsePreferences(raw: string | null): Preferences {
   try {
@@ -46,14 +40,22 @@ export function parsePreferences(raw: string | null): Preferences {
   }
 }
 export function usePreferences() {
-  const raw = useSyncExternalStore(subscribe, snapshot, () => null);
+  const raw = useSyncExternalStore(
+    subscribePresentationSettings,
+    snapshot,
+    () => null,
+  );
+  const unsaved = useSyncExternalStore(
+    subscribePresentationSettings,
+    presentationSettingsUnsaved,
+    () => false,
+  );
   const preferences = useMemo(() => parsePreferences(raw), [raw]);
   const update = (change: Partial<Preferences>) => {
-    localStorage.setItem(
+    writePresentationSetting(
       PREFERENCES_KEY,
       JSON.stringify({ ...preferences, ...change }),
     );
-    window.dispatchEvent(new Event("product-preferences"));
   };
-  return { preferences, update };
+  return { preferences, update, unsaved };
 }

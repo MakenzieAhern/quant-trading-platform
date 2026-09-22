@@ -253,13 +253,13 @@ p {
   min-width: 0;
 }
 .topbar {
-  height: 68px;
+  min-height: 68px;
   position: sticky;
   top: 0;
   z-index: 20;
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 14px;
   padding: 0 32px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
@@ -298,12 +298,37 @@ kbd {
   align-items: center;
 }
 .serviceState {
-  font-size: 11px;
+  font-size: 12px;
   display: flex;
   gap: 6px;
   align-items: center;
   color: var(--muted);
   white-space: nowrap;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  min-height: 40px;
+  padding: 6px;
+}
+.topbarData {
+  display: grid;
+  gap: 3px;
+  color: var(--muted);
+  min-width: 0;
+  max-width: 270px;
+  font-size: 12px;
+  text-decoration: none;
+}
+.topbarData strong {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+}
+.preferenceWarning {
+  margin: 0;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
 }
 .serviceState i {
   display: inline-block;
@@ -1303,6 +1328,16 @@ footer strong {
   .topbar {
     padding: 0 24px;
     gap: 18px;
+    flex-wrap: wrap;
+    padding-block: 10px;
+  }
+  .topbarData {
+    order: 4;
+    flex-basis: 100%;
+    max-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 12px;
   }
   .searchButton {
     max-width: 250px;
@@ -1317,9 +1352,6 @@ footer strong {
   }
   .topbarTools {
     gap: 10px;
-  }
-  .serviceState {
-    display: none;
   }
   .welcomeCard {
     padding: 28px;
@@ -1390,9 +1422,21 @@ footer strong {
     min-height: 36px;
   }
   .topbar {
-    height: 62px;
-    padding: 0 16px;
+    min-height: 62px;
+    padding: 10px 16px;
     gap: 12px;
+  }
+  .serviceText {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .serviceState {
+    min-width: 40px;
+    justify-content: center;
   }
   .searchButton {
     margin-left: auto;

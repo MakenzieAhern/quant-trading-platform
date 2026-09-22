@@ -5,6 +5,7 @@ import { LanguageSelector } from "../components/LanguageSelector";
 import { useApiResource } from "../hooks/useApiResource";
 import { experimentApi } from "./experiments/api";
 import { readExperimentDraft } from "./experiments/draft";
+import { explainExperimentCode } from "./experiments/codes";
 import { useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
 import { usePreferences } from "./preferences";
@@ -40,6 +41,7 @@ export function ModeGuide() {
 }
 export function WorkbenchPage() {
   const c = useProductCopy();
+  const { i18n } = useTranslation();
   const [retry, setRetry] = useState(0);
   const data = useApiResource(
     (signal) => experimentApi.capabilities(signal),
@@ -51,9 +53,10 @@ export function WorkbenchPage() {
   );
   const draft = readExperimentDraft();
   const [guide, setGuide] = useState(false);
-  const history = data.data?.datasets.find(
-    (item) => item.mode === "historical_exploration" && item.available,
+  const historicalSource = data.data?.datasets.find(
+    (item) => item.mode === "historical_exploration",
   );
+  const history = historicalSource?.available ? historicalSource : undefined;
   return (
     <div className="productPage">
       <header className="workbenchHeading">
@@ -108,11 +111,21 @@ export function WorkbenchPage() {
                 {history ? c.dataDate : c.dataUnavailable}
               </p>
               {history ? (
-                <strong className="dataDate">{history.as_of}</strong>
+                <strong className="dataDate">
+                  {history.as_of ?? c.notRecorded}
+                </strong>
               ) : (
                 <p>{c.dataUnavailableHint}</p>
               )}
               <p className="smallText">{history ? c.staleHint : c.demoHelp}</p>
+              {!history && historicalSource?.reason_code && (
+                <p className="inlineNotice">
+                  {explainExperimentCode(
+                    historicalSource.reason_code,
+                    i18n.language,
+                  )}
+                </p>
+              )}
               <Link className="textLink" href="/data">
                 {c.dataInspect}
                 <span aria-hidden="true">→</span>
@@ -186,7 +199,6 @@ export function WorkbenchPage() {
           title={c.guideTitle}
           onClose={() => {
             setGuide(false);
-            localStorage.setItem("quant.product.guide-seen", "1");
           }}
         >
           <ModeGuide />
@@ -330,6 +342,7 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
 }
 export function DataCenterPage() {
   const c = useProductCopy();
+  const { i18n } = useTranslation();
   const [retry, setRetry] = useState(0);
   const data = useApiResource(
     (signal) => experimentApi.capabilities(signal),
@@ -358,7 +371,8 @@ export function DataCenterPage() {
             <div>
               <span>{c.coverage}</span>
               <strong>
-                {item.coverage_start} — {item.coverage_end}
+                {item.coverage_start ?? c.notRecorded} —{" "}
+                {item.coverage_end ?? c.notRecorded}
               </strong>
             </div>
             <div>
@@ -367,19 +381,24 @@ export function DataCenterPage() {
             </div>
             <div>
               <span>{c.dataDate}</span>
-              <strong>{item.as_of}</strong>
+              <strong>{item.as_of ?? c.notRecorded}</strong>
             </div>
           </div>
+          {!item.available && item.reason_code && (
+            <p role="status" className="inlineNotice">
+              {explainExperimentCode(item.reason_code, i18n.language)}
+            </p>
+          )}
           <p className="dataCardNote">
             {item.mode === "synthetic_demo" ? c.demoHelp : c.staleHint}
           </p>
           <details className="technicalDetails">
             <summary>{c.details}</summary>
             <dl>
-              <dt>Dataset</dt>
+              <dt>{c.dataset}</dt>
               <dd>{item.dataset_id}</dd>
               <dt>SHA-256</dt>
-              <dd>{item.sha256}</dd>
+              <dd>{item.sha256 ?? c.notRecorded}</dd>
               <dt>{c.mode}</dt>
               <dd>{item.mode}</dd>
             </dl>
@@ -429,7 +448,7 @@ export function HelpPage() {
 }
 export function SettingsPage() {
   const c = useProductCopy();
-  const { preferences, update } = usePreferences();
+  const { preferences, update, unsaved } = usePreferences();
   return (
     <div className="productPage readingPage">
       <header className="pageHeader">
@@ -502,7 +521,7 @@ export function SettingsPage() {
           </select>
         </label>
         <p className="smallText" role="status">
-          {c.saved}
+          {unsaved ? c.unsaved : c.saved}
         </p>
       </section>
     </div>

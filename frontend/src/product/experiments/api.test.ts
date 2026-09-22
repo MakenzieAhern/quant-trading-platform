@@ -74,4 +74,149 @@ describe("experiment HTTP boundary", () => {
       new Headers(fetch.mock.calls[2][1]?.headers).get("Idempotency-Key"),
     ).toBe("durable-retry-key");
   });
+
+  it("sends inclusive date bounds with bounded collection pages and keeps availability", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(async () =>
+      jsonResponse({
+        items: [],
+        total: 0,
+        limit: 1,
+        offset: 0,
+        availability: "NOT_RECORDED",
+        reason_code: "HOLDINGS_NOT_RECORDED_FOR_THIS_RUN",
+      }),
+    );
+    const range = { start_date: "2031-01-02", end_date: "2031-01-03" };
+    await experimentApi.equity(job.job_id, undefined, 100, range);
+    await experimentApi.trades(job.job_id, undefined, 20, range);
+    await experimentApi.decisions(job.job_id, undefined, 40, range);
+    await expect(
+      experimentApi.holdings(job.job_id, undefined, 5, range),
+    ).resolves.toMatchObject({
+      availability: "NOT_RECORDED",
+      reason_code: "HOLDINGS_NOT_RECORDED_FOR_THIS_RUN",
+    });
+    const base = `${API_BASE_URL}/api/experiments/${job.job_id}`;
+    expect(fetch.mock.calls.map(([url]) => url)).toEqual([
+      `${base}/equity?limit=100&offset=100&start_date=2031-01-02&end_date=2031-01-03`,
+      `${base}/trades?limit=20&offset=20&start_date=2031-01-02&end_date=2031-01-03`,
+      `${base}/decisions?limit=20&offset=40&start_date=2031-01-02&end_date=2031-01-03`,
+      `${base}/holdings?limit=1&offset=5&start_date=2031-01-02&end_date=2031-01-03`,
+    ]);
+  });
+
+  it("requires exact holdings amounts, allows null weights, and refuses missing availability", async () => {
+    const item = {
+      sequence: 0,
+      trading_date: "2031-01-02",
+      timestamp: "2031-01-02T07:00:00Z",
+      cash: "999.000000000000000001",
+      equity: "0",
+      market_value: "0",
+      realized_pnl: "0",
+      unrealized_pnl: "0",
+      cumulative_commission: "0",
+      pending_corporate_action_value: "0",
+      positions: [
+        {
+          security_id: "CN:600000",
+          quantity: "1",
+          average_price: "1.000000000000000001",
+          market_price: "0",
+          market_value: "0",
+          weight: null,
+        },
+      ],
+    };
+    const page = {
+      items: [item],
+      total: 1,
+      limit: 1,
+      offset: 0,
+      availability: "AVAILABLE",
+      reason_code: null,
+    };
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(page))
+      .mockResolvedValueOnce(
+        jsonResponse({ ...page, items: [{ ...item, cash: 999 }] }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({ items: [], total: 0, limit: 1, offset: 0 }),
+      );
+    await expect(experimentApi.holdings(job.job_id)).resolves.toMatchObject({
+      items: [item],
+    });
+    await expect(experimentApi.holdings(job.job_id)).rejects.toThrow();
+    await expect(experimentApi.holdings(job.job_id)).rejects.toThrow();
+  });
+
+  it("downloads unchanged server bytes with filters and preserves structured export failures", async () => {
+    const csv = 'record_type,value\nmetadata,"100000.000000000000000001"\n';
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        new Response(csv, { headers: { "Content-Type": "text/csv" } }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            code: "HOLDINGS_NOT_RECORDED_FOR_THIS_RUN",
+            message: "Not recorded",
+          },
+          409,
+        ),
+      );
+    const blob = await experimentApi.export(job.job_id, "csv", "trades", {
+      end_date: "2031-01-02",
+    });
+    expect(await blob.text()).toBe(csv);
+    expect(fetch.mock.calls[0][0]).toBe(
+      `${API_BASE_URL}/api/experiments/${job.job_id}/export?format=csv&collection=trades&end_date=2031-01-02`,
+    );
+    await expect(
+      experimentApi.export(job.job_id, "csv", "holdings"),
+    ).rejects.toMatchObject({
+      status: 409,
+      code: "HOLDINGS_NOT_RECORDED_FOR_THIS_RUN",
+    });
+  });
+
+  it("rejects rounded numeric corporate-action fields while preserving absent legacy values", async () => {
+    const item = {
+      sequence: 0,
+      trading_date: "2031-01-02",
+      timestamp: "2031-01-02T07:00:00Z",
+      cash: "100000",
+      equity: "100010.000000000000000001",
+      market_value: "10.000000000000000001",
+      realized_pnl: "0",
+      unrealized_pnl: "0",
+      cumulative_commission: "0",
+      pending_corporate_action_value: "10.000000000000000001",
+      positions: [],
+      total_pnl: "10.000000000000000001",
+      corporate_action_realized_pnl: "0.000000000000000001",
+    };
+    const page = {
+      items: [item],
+      total: 1,
+      limit: 1,
+      offset: 0,
+      availability: "AVAILABLE",
+      reason_code: null,
+    };
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(page))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          ...page,
+          items: [{ ...item, corporate_action_realized_pnl: 0.01 }],
+        }),
+      );
+    await expect(experimentApi.holdings(job.job_id)).resolves.toMatchObject({
+      items: [item],
+    });
+    await expect(experimentApi.holdings(job.job_id)).rejects.toThrow();
+  });
 });

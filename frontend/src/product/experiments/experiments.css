@@ -121,7 +121,10 @@
 }
 .experimentForm input:not([type="checkbox"]):not([type="radio"]),
 .experimentForm select,
-.experimentChartControls select {
+.experimentChartControls select,
+.experimentActions input,
+.experimentActions select,
+.experimentShareUrl input {
   color: var(--text);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -135,6 +138,9 @@
 }
 .experimentForm input:focus-visible,
 .experimentForm select:focus-visible,
+.experimentActions input:focus-visible,
+.experimentActions select:focus-visible,
+.experimentShareUrl input:focus-visible,
 .experimentWorkspace button:focus-visible,
 .experimentWorkspace summary:focus-visible,
 .experimentWorkspace a:focus-visible,
@@ -373,7 +379,8 @@
   fill: var(--primary);
   opacity: 0;
 }
-.experimentChartPoint:hover {
+.experimentChartPoint:hover,
+.experimentChartPoint.isSelected {
   opacity: 1;
 }
 .experimentChart figcaption {
@@ -458,6 +465,61 @@
   border: 1px solid var(--border);
   border-radius: 6px;
 }
+.experimentActions > label,
+.experimentShareUrl {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.experimentActions:has(> label) {
+  align-items: flex-end;
+}
+.experimentCompareSelection > .experimentActions {
+  margin-top: 1rem;
+}
+.experimentComparisonTable table {
+  table-layout: fixed;
+  min-width: 680px;
+}
+.experimentComparisonTable th,
+.experimentComparisonTable td {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+.experimentComparisonTable th:first-child {
+  width: 23%;
+}
+.experimentCondition {
+  display: block;
+  margin-top: 0.65rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+.experimentCondition.isDifferent {
+  color: var(--warning);
+  font-weight: 650;
+}
+.experimentComparisonLimits,
+.experimentSummaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 1.5rem;
+}
+.experimentComparisonLimits li {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+.experimentSummaryGrid dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.experimentSummaryGrid dd {
+  margin: 0.5rem 0 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
 @media (max-width: 1000px) {
   .experimentWizardLayout {
     grid-template-columns: minmax(0, 1fr);
@@ -499,6 +561,7 @@
   }
   .experimentListAction {
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     width: 100%;
     justify-content: space-between;
