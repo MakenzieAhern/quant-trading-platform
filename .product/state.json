@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T20:51:45Z",
+  "updated_at_utc": "2026-09-23T20:55:07Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,10 +32,11 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 20:55UTC unavailable Markets source reason now uses registered EN/ZH explanation with raw code only in closed lineage disclosure; focused Markets12/12, lint, typecheck, build PASS. Live available-cache browser loaded20 rows; unavailable-source browser case NOT_RUN",
     "2026-09-23 20:51UTC removed backend-only development/paper hover title from service status; Chinese/English in-app browser confirmed localized status and no raw title, original EN restored. Focused App9/9, lint, typecheck, build PASS; broader U8 remains IN_PROGRESS",
     "2026-09-23 20:39UTC in-app browser checked guided wizard at 390x844/1024x768/1280x800/1440x900 and seven primary routes at 390x844 in EN/ZH without main-document horizontal overflow; Workbench visually inspected at 390x844 in dark/system and light themes. Original EN/system/default viewport restored. 200% zoom and full a11y matrix NOT_RUN",
     "2026-09-23 post-Docker-restart in-app browser reopened saved historical jobd9f27183 with exact date/metric/plan/risk labels; guided wizard EN-ZH-EN retained exact name, capital and dates. Temporary in-app draft name was restored and saved; full U8 and separate Chrome-profile draft restoration remain unverified",
-    "2026-09-23 PR32 heade10dcab CI35917017954 backend/frontend/compose PASS; draft open, release gate FAIL",
+    "2026-09-23 PR32 head2122573 CI35918826841 backend/frontend/compose PASS; draft open, release gate FAIL",
     "2026-09-23 20:23UTC Docker Desktop non-destructive restart: four project containers self-recovered, backend/PostgreSQL/Redis healthy, API/frontend HTTP200, Redis PONG, all four named volumes and project images retained. Live pre/post research1/3/310 paper5/417 jobs8 updates4 unchanged; two idle test-DB containers restored to prior healthy state. Full Windows reboot/login NOT_RUN",
     "2026-09-23 PR32 head0e0f533 CI35914743552 backend/frontend/compose PASS; draft remains open and v1.2 release unapproved",
     "2026-09-23 Docker Desktop 4.92.0 AutoStart enabled through General settings; four project services changed to unless-stopped in Compose and live runtime without restarting or deleting containers. Base/release Compose config validated; full reboot recovery NOT_RUN because two other test-DB stacks remain running with unverified ownership. M5 startup remains IN_PROGRESS",
@@ -389,9 +390,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "e10dcab",
+      "last_verified_head": "2122573",
       "state": "DRAFT",
-      "ci_run": 35917017954,
+      "ci_run": 35918826841,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",

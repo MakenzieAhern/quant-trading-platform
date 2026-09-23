@@ -54,6 +54,16 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 20:55 UTC unavailable-market explanation
+
+The unavailable historical-source notice in Markets had exposed
+`DATASET_NOT_MOUNTED` directly. It now reuses the registered bilingual plain
+explanation and retains the raw code only in a closed source-lineage disclosure.
+The focused Markets tests passed 12/12 in EN/ZH, with lint, typecheck and build
+passing; the actual available-cache Markets page still loaded 20 rows in the
+in-app browser. An unavailable-source browser run was not possible against
+the mounted live archive, so this change does not close the wider U5/U8 gate.
+
 ## 2026-09-23 20:51 UTC topbar locale review
 
 The actual Chinese result page exposed the backend-only `development · paper`

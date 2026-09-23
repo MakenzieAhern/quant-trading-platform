@@ -566,8 +566,16 @@ describe("historical cache markets", () => {
       ),
     ).toBeInTheDocument();
     expect(
+      screen.getByText(/Historical data are not available to the service/),
+    ).toBeInTheDocument();
+    expect(screen.getByText("DATASET_NOT_MOUNTED").closest("details")).not.toHaveAttribute("open");
+    expect(
       screen.getByRole("button", { name: "Search securities" }),
     ).toBeDisabled();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByText(/服务无法读取历史数据/)).toBeInTheDocument();
   });
 
   it("shows honest empty and failed cache reads and provides retry", async () => {

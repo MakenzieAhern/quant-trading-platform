@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
@@ -6,6 +7,7 @@ import { formatUtc } from "../../utils/format";
 import { navigate } from "../../utils/navigation";
 import { Dialog } from "../Dialog";
 import { usePageDataContext } from "../dataContext";
+import { explainExperimentCode } from "../experiments/codes";
 import { marketApi, securityName } from "./api";
 import { boardLabel, useMarketCopy } from "./copy";
 import { MarketDetail } from "./MarketDetail";
@@ -54,6 +56,7 @@ export function MarketsPage() {
 
 function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   const c = useMarketCopy();
+  const { i18n } = useTranslation();
   const defaultDatasetId =
     (
       datasets.find(
@@ -269,7 +272,15 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             <p>
               {c.unavailable}. {c.sourceUnavailableHelp}
             </p>
-            {dataset?.reason_code && <code>{dataset.reason_code}</code>}
+            {dataset?.reason_code && (
+              <>
+                <p>{explainExperimentCode(dataset.reason_code, i18n.language)}</p>
+                <details className="technicalDetails">
+                  <summary>{c.lineage}</summary>
+                  <code>{dataset.reason_code}</code>
+                </details>
+              </>
+            )}
           </div>
         )}
       </section>
