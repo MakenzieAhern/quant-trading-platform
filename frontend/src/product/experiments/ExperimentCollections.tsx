@@ -200,12 +200,11 @@ function EquityDisplay({
   const [selected, setSelected] = useState(points.at(-1)?.trading_date ?? "");
   if (!points.length) return <p>{u.filteredEmpty}</p>;
   const point = points.find((item) => item.trading_date === selected);
+  const hasBenchmark = points.every((item) => item.benchmark !== null);
   // Only SVG positions use Number. Financial labels and tables retain server strings.
   const values = points.flatMap((item) => [
     Number(item.equity),
-    ...(showBenchmark && item.benchmark !== null
-      ? [Number(item.benchmark)]
-      : []),
+    ...(showBenchmark && hasBenchmark ? [Number(item.benchmark)] : []),
   ]);
   const finite = values.every(Number.isFinite);
   const low = finite ? Math.min(...values) : 0;
@@ -218,7 +217,7 @@ function EquityDisplay({
     ? points.map((item, index) => `${x(index)},${y(item.equity)}`).join(" ")
     : "";
   const benchmarkLine =
-    finite && points.every((item) => item.benchmark !== null)
+    finite && hasBenchmark
       ? points
           .map((item, index) => `${x(index)},${y(item.benchmark!)}`)
           .join(" ")
@@ -249,11 +248,18 @@ function EquityDisplay({
         <label className="experimentCheck">
           <input
             type="checkbox"
-            checked={showBenchmark}
+            checked={hasBenchmark && showBenchmark}
+            disabled={!hasBenchmark}
             onChange={(event) => setShowBenchmark(event.target.checked)}
           />
           {c.showBenchmark}
         </label>
+        {!hasBenchmark && (
+          <span className="experimentHelp">{c.benchmarkUnavailable}</span>
+        )}
+        {!drawdownFinite && (
+          <span className="experimentHelp">{c.drawdownUnavailable}</span>
+        )}
         <label>
           {c.selectDate}
           <select
@@ -346,19 +352,21 @@ function EquityDisplay({
         </svg>
         <figcaption>
           <span className="experimentEquityLegend">{c.equity}</span>
-          {showBenchmark && (
+          {finite && showBenchmark && hasBenchmark && (
             <span className="experimentBenchmarkLegend">
               {c.chartBenchmark}
             </span>
           )}
-          <span className="experimentDrawdownLegend">{c.drawdownSeries}</span>
+          {finite && drawdownFinite && (
+            <span className="experimentDrawdownLegend">{c.drawdownSeries}</span>
+          )}
         </figcaption>
       </figure>
       {point && (
         <p className="experimentChartReadout">
           {c.selectedDate}: <strong>{point.trading_date}</strong> · {c.equity}:{" "}
           <strong>{formatDecimal(point.equity)}</strong>
-          {showBenchmark && (
+          {showBenchmark && hasBenchmark && (
             <>
               {" "}
               · {c.chartBenchmark}: {formatDecimal(point.benchmark)}

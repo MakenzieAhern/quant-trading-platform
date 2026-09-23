@@ -154,6 +154,8 @@ const en = {
   shownPage:
     "Chart shows this page of data only. Summary metrics always describe the complete run.",
   showBenchmark: "Show benchmark",
+  benchmarkUnavailable: "No complete benchmark series for these displayed dates.",
+  drawdownUnavailable: "No complete drawdown series for these displayed dates.",
   selectedDate: "Selected trading date",
   selectDate: "Inspect a trading date",
   geometryUnavailable:
@@ -348,6 +350,8 @@ const zh: typeof en = {
   drawdownSeries: "回撤",
   shownPage: "图表仅显示本页数据。上方汇总指标始终对应完整研究区间。",
   showBenchmark: "显示基准",
+  benchmarkUnavailable: "当前显示日期没有完整的基准序列。",
+  drawdownUnavailable: "当前显示日期没有完整的回撤序列。",
   selectedDate: "已选交易日",
   selectDate: "查看指定交易日",
   geometryUnavailable: "图表无法绘制，请查阅下方精确数据表。",

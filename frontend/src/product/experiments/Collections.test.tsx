@@ -43,6 +43,33 @@ beforeEach(async () => {
 });
 
 describe("filtered durable experiment records", () => {
+  it("does not claim a benchmark line when the displayed page has a gap", async () => {
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [
+        { ...point, benchmark: "100000" },
+        { ...point, sequence: 1, trading_date: "2031-01-04" },
+      ],
+      total: 2,
+      limit: 100,
+      offset: 0,
+    });
+    const view = render(<ExperimentCollections jobId={job.job_id} />);
+    expect(
+      await screen.findByText("No complete benchmark series for these displayed dates."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: "Show benchmark" }),
+    ).toBeDisabled();
+    expect(view.container.querySelector(".experimentBenchmarkLine")).toBeNull();
+    expect(view.container.querySelector(".experimentBenchmarkLegend")).toBeNull();
+    expect(view.container.querySelector(".experimentDrawdownLegend")).toBeNull();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByText("当前显示日期没有完整的基准序列。")).toBeInTheDocument();
+    expect(screen.getByText("当前显示日期没有完整的回撤序列。")).toBeInTheDocument();
+  });
+
   it("shows corporate-action and total PnL without double-counting pending assets", async () => {
     vi.spyOn(experimentApi, "holdings").mockResolvedValue({
       items: [
