@@ -80,6 +80,24 @@ forward receipt remain open. No raw market rows belong in Git.
 
 ## Implementation and remaining gates
 
+### Four-board bounded candidate check (2026-09-23)
+
+After Docker Desktop 4.92.0 recovery, persisted job
+`164c947d-b8bc-47ab-8c99-193bc0eeddf6` was re-read from the running API.
+It requested only 2026-09-22 for `CN-A:SSE:600000` (Main),
+`CN-A:SSE:688001` (STAR), `CN-A:SZSE:000001` (Main), and
+`CN-A:SZSE:300750` (ChiNext). The job `SUCCEEDED`: three provider requests,
+three new observations, one cached observation, four available observations,
+and zero unresolved dates. Its configuration SHA-256 is
+`0e46b4479471ae5c86da1a694506262d2a52e215b3e1991c7240ae6e1b0b05b2`.
+The original receipt/manifests remain on the product volume, not in Git.
+
+All four remain `RAW_CANDIDATE`, **not executable authority**. Current security
+master, calendar, ST history, rules and corporate actions are `UNVERIFIED` for
+2026; adjustment factors were not requested. The fixed sample does not yet
+include current ST or suspension controls. This is historical catch-up, not an
+after-user-start forward receipt; no U7 session or simulated fill is inferred.
+
 1. **DONE for the bounded raw candidate path.** A product-owned, user-triggered
    per-security EOD update job uses
    existing BaoStock integration/Decimal records and a supervised timeout. Fetch
