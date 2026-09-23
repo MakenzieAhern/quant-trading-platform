@@ -54,6 +54,29 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 23:00 UTC local delivery walk-through evidence
+
+Actual local Chrome 153 at 1280×800 recorded a 13.44-second Chinese walkthrough:
+Workbench → guided-backtest entry → strategy detail → saved historical result
+and keyboard date selection → stopped audited-historical paper account. The
+session used an isolated browser profile; only its local draft was saved, no
+new backend task or paper session was started. Live database counts after the
+recording remained eight personal research jobs and five paper sessions.
+The WebM is SHA-256
+`B85F5595830D884BBC88D6C34AD1B824575DAFA199953DD42D7EA18F51695C1F`.
+The video and screenshots are local evidence outside Git, not generated mockups:
+[walkthrough](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/product-walkthrough-zh-1280-v2.webm),
+[home](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/workbench-zh-1280.png),
+[guide](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/guided-start-zh-1280.png),
+[strategy](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/strategy-detail-zh-1280.png),
+[result](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/historical-result-summary-zh-1280.png),
+[chart](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/historical-result-chart-zh-1280.png),
+[comparison](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/historical-comparison-zh-1280.png),
+[paper](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/historical-paper-zh-1280.png).
+This is an agent-controlled read-only demonstration, not a novice-user test,
+fresh forward-data proof, complete start-to-finish run, or release approval.
+`M5-DELIVERY` remains IN_PROGRESS.
+
 ## 2026-09-23 22:48 UTC chart keyboard announcement
 
 Actual Chrome 153 on saved historical study `d9f27183` showed that ArrowUp on
