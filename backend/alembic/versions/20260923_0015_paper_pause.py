@@ -8,7 +8,10 @@ branch_labels = None
 depends_on = None
 
 OLD = "status IN ('CREATED','STARTING','RUNNING','STOPPING','STOPPED','FAILED','INTERRUPTED')"
-NEW = "status IN ('CREATED','STARTING','RUNNING','PAUSING','PAUSED','STOPPING','STOPPED','FAILED','INTERRUPTED')"
+NEW = (
+    "status IN ('CREATED','STARTING','RUNNING','PAUSING','PAUSED',"
+    "'STOPPING','STOPPED','FAILED','INTERRUPTED')"
+)
 
 
 def upgrade() -> None:
