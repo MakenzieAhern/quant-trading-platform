@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ApiError } from "../api/client";
 import {
   PAPER_WS_BASE_URL,
   paperApi,
@@ -94,7 +95,7 @@ export function usePaperStream(sessionId: string) {
   const [connection, setConnection] = useState<PaperConnection>("connecting");
   const [error, setError] = useState<{
     sessionId: string;
-    message: string;
+    message: string | Error;
   } | null>(null);
 
   useEffect(() => {
@@ -106,6 +107,7 @@ export function usePaperStream(sessionId: string) {
     let buffered: PaperWireEvent[] = [];
     let terminal = false;
     let hydrating = false;
+    let reconnectAttempts = 0;
 
     const hydrate = () => {
       hydrationController?.abort();
@@ -122,19 +124,27 @@ export function usePaperStream(sessionId: string) {
           setSnapshot(complete);
           setError(null);
           firstConnection = false;
+          reconnectAttempts = 0;
           terminal = ["STOPPED", "FAILED", "INTERRUPTED"].includes(
             complete.session.status,
           );
           setConnection(terminal ? "closed" : "connected");
           if (terminal) socket?.close();
         })
-        .catch(() => {
+        .catch((reason: unknown) => {
           if (!active || controller.signal.aborted) return;
           hydrating = false;
           setError({
             sessionId,
-            message: t("detail.hydrateError"),
+            message:
+              reason instanceof Error ? reason : t("detail.hydrateError"),
           });
+          if (
+            reason instanceof ApiError &&
+            [401, 403, 404].includes(reason.status)
+          )
+            terminal = true;
+          socket?.close();
         });
     };
 
@@ -199,8 +209,18 @@ export function usePaperStream(sessionId: string) {
         }
         hydrationController?.abort();
         hydrationController = null;
+        if (reconnectAttempts >= 3) {
+          setConnection("closed");
+          setError((current) =>
+            current?.sessionId === sessionId
+              ? current
+              : { sessionId, message: t("detail.connectionError") },
+          );
+          return;
+        }
         setConnection("reconnecting");
-        retry = window.setTimeout(connect, 1000);
+        retry = window.setTimeout(connect, 1000 * 2 ** reconnectAttempts);
+        reconnectAttempts += 1;
       };
     };
 

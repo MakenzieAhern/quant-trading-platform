@@ -289,6 +289,8 @@ export const enUS = {
       stopError: "Unable to stop the paper session.",
       unknownError: "Unknown error",
       hydrateError: "Unable to load the paper session snapshot.",
+      connectionError:
+        "The paper session connection could not be restored automatically.",
       malformedEvent: "A malformed paper stream event was rejected.",
       auditIdentity: "Audit identifiers",
       sessionId: "Session ID",

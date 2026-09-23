@@ -269,6 +269,7 @@ export const zhCN = {
       stopError: "无法停止模拟交易会话。",
       unknownError: "未知错误",
       hydrateError: "无法加载模拟交易会话快照。",
+      connectionError: "模拟交易会话连接未能自动恢复。",
       malformedEvent: "已拒绝格式异常的模拟交易数据流事件。",
       auditIdentity: "审计编号",
       sessionId: "会话编号",

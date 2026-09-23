@@ -85,6 +85,51 @@ describe("paper trading pages", () => {
     expect(MockWebSocket.instances).toHaveLength(2);
   });
 
+  it("rehydrates after one failed snapshot instead of leaving the page stuck", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse({ detail: "temporary" }, 503))
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    expect(MockWebSocket.instances[0]!.readyState).toBe(MockWebSocket.CLOSED);
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    expect(MockWebSocket.instances).toHaveLength(2);
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(screen.getByText("Paper portfolio")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("stops snapshot retries on denied access and bounds repeated service failures", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse({ detail: "forbidden" }, 403))
+      .mockResolvedValue(jsonResponse({ detail: "unavailable" }, 503));
+    const denied = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    expect(screen.getByRole("alert")).toHaveTextContent("Access was denied");
+    await act(async () => vi.advanceTimersByTimeAsync(8000));
+    expect(MockWebSocket.instances).toHaveLength(1);
+    denied.unmount();
+
+    installWebSocket();
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    for (const delay of [1000, 2000, 4000]) {
+      await act(async () => MockWebSocket.instances.at(-1)!.open());
+      await act(async () => vi.advanceTimersByTimeAsync(delay));
+    }
+    await act(async () => MockWebSocket.instances.at(-1)!.open());
+    await act(async () => vi.advanceTimersByTimeAsync(8000));
+    expect(MockWebSocket.instances).toHaveLength(4);
+    expect(fetch).toHaveBeenCalledTimes(5);
+    expect(screen.getByRole("alert")).toHaveTextContent("Reload page");
+  });
+
   it("renders persisted session history and the permanent safety warning", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({ items: [paperSession()], limit: 20, offset: 0, total: 1 }),
@@ -361,7 +406,9 @@ describe("paper trading pages", () => {
     expect(MockWebSocket.instances).toHaveLength(1);
     await act(async () => MockWebSocket.instances[0]!.open());
     expect(screen.getByText("RUNNING")).toBeInTheDocument();
-    expect(screen.getByText("Session connection: connected")).toBeInTheDocument();
+    expect(
+      screen.getByText("Session connection: connected"),
+    ).toBeInTheDocument();
 
     const portfolioEvent = {
       sequence: 1,
@@ -387,7 +434,9 @@ describe("paper trading pages", () => {
     expect(screen.getAllByText("Paper portfolio")).toHaveLength(1);
 
     act(() => MockWebSocket.instances[0]!.close());
-    expect(screen.getByText("Session connection: reconnecting")).toBeInTheDocument();
+    expect(
+      screen.getByText("Session connection: reconnecting"),
+    ).toBeInTheDocument();
     await act(async () => vi.advanceTimersByTimeAsync(1000));
     expect(MockWebSocket.instances).toHaveLength(2);
     await act(async () => MockWebSocket.instances[1]!.open());
@@ -504,7 +553,9 @@ describe("paper trading pages", () => {
     );
     expect(screen.getByRole("alert")).toHaveTextContent("malformed");
     expect(screen.queryByText("must-not-render")).not.toBeInTheDocument();
-    expect(screen.getByText("Session connection: reconnecting")).toBeInTheDocument();
+    expect(
+      screen.getByText("Session connection: reconnecting"),
+    ).toBeInTheDocument();
     await act(async () => vi.advanceTimersByTimeAsync(1000));
     await act(async () => MockWebSocket.instances[1]!.open());
     expect(fetch).toHaveBeenCalledTimes(2);
