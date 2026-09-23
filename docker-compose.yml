@@ -3,6 +3,7 @@ name: quant-trading-platform
 services:
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_DB: quant_platform
       POSTGRES_USER: quant
@@ -19,6 +20,7 @@ services:
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
     ports:
       - "127.0.0.1:6379:6379"
     volumes:
@@ -32,6 +34,7 @@ services:
   backend:
     build:
       context: ./backend
+    restart: unless-stopped
     environment:
       APP_ENV: development
       LOG_LEVEL: INFO
@@ -66,6 +69,7 @@ services:
   frontend:
     build:
       context: ./frontend
+    restart: unless-stopped
     environment:
       VITE_API_BASE_URL: http://localhost:8000
     ports:

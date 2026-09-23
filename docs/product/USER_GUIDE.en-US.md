@@ -6,7 +6,7 @@ This guide describes the local work-in-progress UI, not a released v1.2.0. The a
 
 When the services are already running, open the [workbench](http://localhost:5173/) in a browser on this PC. Check “Service online” separately from the data mode and date. An online service does **not** mean prices are current or that their source has passed audit. Use the [data center](http://localhost:5173/data) to inspect available data, dates and provenance. Language and theme are in [Settings](http://localhost:5173/settings); changing language does not change trading dates or calculations.
 
-One-click startup after a PC reboot has not passed acceptance. If the page is unavailable, do not reinstall Docker, remove volumes or reacquire the archive. Check that Docker Desktop is running, then ask the maintainer to check the project services. Reopen the same task link after recovery; saved tasks and results should remain available.
+This PC is now configured to start Docker Desktop at sign-in and restart project containers unless manually stopped. After signing in to Windows, open the workbench link above without entering terminal commands. Recovery after a full PC reboot has **not** yet been observed, so one-click startup is not accepted. If the page is unavailable, do not reinstall Docker, remove volumes or reacquire the archive. Check that Docker Desktop is running, then ask the maintainer to check the project services. Reopen the same task link after recovery; saved tasks and results should remain available.
 
 ## Keep the four modes separate
 
@@ -33,4 +33,4 @@ For a cancelled or interrupted research task, open its detail page and read the 
 
 ## Release and rollback
 
-This development build is unreleased. The published stable baseline is v1.1.0; formal research reports and frozen data remain read-only. A maintainer may roll application code back through the repository's release process, but must not overwrite the old tag, rerun Official OOS or delete database volumes. Current gaps include lawful forward-market authority, browser export completion, full accessibility/performance acceptance and terminal-free startup. This is not a v1.2.0 final delivery.
+This development build is unreleased. The published stable baseline is v1.1.0; formal research reports and frozen data remain read-only. A maintainer may roll application code back through the repository's release process, but must not overwrite the old tag, rerun Official OOS or delete database volumes. Current gaps include lawful forward-market authority, browser export completion, full accessibility/performance acceptance and reboot-tested terminal-free startup. This is not a v1.2.0 final delivery.

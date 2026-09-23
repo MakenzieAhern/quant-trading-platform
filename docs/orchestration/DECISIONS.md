@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 terminal-free local startup uses native restart policies — 2026-09-23
+
+Docker Desktop 4.92.0's General setting now starts it at Windows sign-in. The
+four project services use Compose `restart: unless-stopped`, also applied to
+their existing running containers without recreation. This avoids a custom
+launcher or background scheduler and respects deliberate manual stops. Base
+and release Compose configuration validated; the backend/API and frontend
+remained available. Full reboot recovery is **not yet accepted**: two separate
+test-database Compose stacks were still running and their owners were not
+verified, so the engine was not restarted merely to exercise this setting.
+No volume, image, application database or research artifact was removed.
+
 ## v1.2 application-history loss and test-database isolation — 2026-09-23
 
 At 19:44 UTC the live `quant_platform` database had zero formal research
