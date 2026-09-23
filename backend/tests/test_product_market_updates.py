@@ -161,6 +161,8 @@ def test_bounds_missing_chunks_and_publication_clock():
         {"date": "2025-01-01"},
         {"open": "1e100"},
         {"tradestatus": "0", "volume": "100"},
+        {"tradestatus": "1", "volume": "", "amount": ""},
+        {"tradestatus": "0", "volume": "", "amount": "1"},
     ],
 )
 def test_parser_fail_closed(changes):
@@ -178,6 +180,14 @@ def test_parser_exact_suspension_st_and_duplicate():
     assert parsed[0]["raw"]["open"] == "10.123456789123456789"
     assert parsed[0]["status"] == "VENDOR_SUSPENDED"
     assert parsed[0]["provider_is_st"] == "1" and not parsed[0]["execution_eligible"]
+    blank = parse_response(
+        envelope(tradestatus="0", volume="", amount=""),
+        SID,
+        date(2026, 9, 18),
+        date(2026, 9, 21),
+    )
+    assert blank[0]["raw"]["volume"] == blank[0]["raw"]["amount"] == "0"
+    assert blank[0]["status"] == "VENDOR_SUSPENDED" and not blank[0]["execution_eligible"]
     duplicate = envelope()
     duplicate["rows"] *= 2
     with pytest.raises(UpdateError):

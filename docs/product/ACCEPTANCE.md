@@ -28,9 +28,9 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U3-ISOLATE | Independent exploration names/store; formal reports/OOS/freeze unchanged, dates labeled inspected | Separate product_research_jobs/rows, readonly archive | No .research diff; frozen hashes unchanged; formal 1 dataset/3 runs/310 trades before-after | IN_PROGRESS |
 | U4-RESULT | Return/drawdown/cost/benchmark/limits, null semantics, true records and reasons | Personal result and date-linked holdings/trades, full-precision toggle | Chrome demo+historical results agree with exact APIs; real fill/snapshot2031-04-14 linked; source unavailable remains N/A; U4 tests/review PASS | PASS |
 | U4-COMPARE | Reopen/compare 2–3; six config differences indicated | /experiments/compare?ids= | Chrome three actual runs, six conditions, exact fraction display and refresh preserving URL/results; comparison tests and independent review PASS; `u4/compare-three-results-en-dark-1024.png` | PASS |
-| U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, automatic download and persistent prepared-file link | Injection/precision/API tests PASS; actual30021-byte historical JSON HTTP200; real browser download artifact/event still unverified | IN_PROGRESS |
+| U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, automatic download and persistent prepared-file link | Injection/precision/API tests PASS; actual30021-byte historical JSON HTTP200. Chrome prepared the expected report blob and backup save link, but a real download event timed out and no file appeared in the default Downloads path; artifact completion remains unverified | IN_PROGRESS |
 | U5-MARKET | Search/watchlist/raw-adjusted/date/source view | /api/markets and /markets deployed0013 | 20 backend/14 frontend focused tests; independent review PASS; Chrome000001 raw22.45/HFQ874.904325432379995/suspension2010-03-01; watchlist persists fresh tab; dialog dates/locale/Esc;390+1280 no page overflow | PASS |
-| U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | /data and /api/market-updates; separate product cache and migration0014 | Real Chrome one-security/one-date job `3b729cf9` succeeded and survived restart/reload. Four-board bounded API job `164c947d` succeeded: 3 new + 1 cached raw candidates, zero unresolved dates; execution authority remains false. ST/suspension controls, failure/retry browser and authority promotion remain | IN_PROGRESS |
+| U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | /data and /api/market-updates; separate product cache and migration0014 | Real Chrome one-security/one-date job `3b729cf9` succeeded and survived restart/reload. Four-board job `164c947d` had 3 new + 1 cached candidates. Targeted control retry `ed796871` added two 2026-09-22 vendor candidates: 688622 isST=1; 603400 suspended with blank raw turnover normalized to zero, never executable. Chrome visually confirmed official SSE 603400 suspension notice; binary checksum unavailable. Execution authority remains false; failure/retry browser and full 2026 authority remain | IN_PROGRESS |
 | U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Persisted result preview and independent audited historical paper account | Historical job `d9f27183` completed 293/293; preview 2011-03-22→23 had 32 candidates, 5 risk rejections. Independent account `d7044a3c` generated 20 risk decisions/orders and 6 fills through the paper runtime; future-data plan and actual forward receipt remain pending | IN_PROGRESS |
 | U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Synthetic demo + distinct audited historical replay with durable pause/resume; forward not implemented | Chrome historical account `4b64380f` started, paused on 2011-03-09, resumed and stopped 2011-03-23; 20 orders, 6 fills, equity99964.8134. Full isolated backend956/frontend188 tests PASS. Forward mode remains | IN_PROGRESS |
 | U7-RECOVER | Socket disconnect/reconnect + backend restart don't fake/duplicate fills | Persisted paused state, deterministic source replay to checked cursor, then append-only continuation | Chrome `4b64380f` stayed PAUSED with 19 events after actual backend restart and WebSocket reconnection; resumed account had 134 non-status events identical to uninterrupted `d7044a3c` (142 vs 138 total, four pause/resume status events). Separate actual mid-run restart left `07d72259` INTERRUPTED at sequence 22 with zero orders/fills and no auto-resume; browser explains retry. Full recovery matrix remains | IN_PROGRESS |
@@ -47,7 +47,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | QA-PERF | Immediate feedback; measured local interaction p95 target≤200ms; bounded charts/tables | Research archive and result/compare routes loaded on demand; initial JS entry chunk 549.12→409.17 kB minified (169.44→129.31 kB gzip) | Vite build and real Chrome direct reload of historical result/data lineage PASS; cold/warm interaction p95 and large-table audit not yet measured | IN_PROGRESS |
 | QA-ENGINE | Decimal/server validation/idempotency/task isolation; same financial path | Existing financial path + independent queue | 862 backend tests; actual 2011 exploratory run completed; synthetic clearly separated | IN_PROGRESS |
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
-| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | 2026-09-23 isolated backend956 PASS (one optional archive test skipped here; mounted archive test passed separately), frontend193 PASS, Ruff/format/mypy/ESLint/TS/build PASS;0015 disposable upgrade/down/up/check PASS; main DB backup verified and0015 deployed. PR22 and PR23 `89cda16` CI PASS; current follow-up slice CI pending, remaining product gates pending | IN_PROGRESS |
+| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | 2026-09-23 isolated backend958 PASS (one optional archive test skipped here; mounted archive test passed separately), frontend193 PASS, Ruff/format/mypy/ESLint/TS/build PASS;0015 disposable upgrade/down/up/check PASS; main DB backup verified and0015 deployed. PR22/PR23 and PR24 `5305096` CI PASS; source-note correction CI pending, remaining product gates pending | IN_PROGRESS |
 | M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Pending | All links validated before release | NOT_RUN |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
@@ -75,6 +75,22 @@ navigation. Chrome opened a genuinely nonexistent research dataset and showed
 Chinese not-found guidance and a working `/` exit. A focused timeout test and
 the complete 193-test frontend suite, lint, typecheck and build passed. This
 does not validate the remaining offline/permission/empty-state browser matrix.
+
+## 2026-09-23 15:29 UTC bounded current ST/suspension control
+
+The first two-security job failed closed on a real BaoStock suspended row with
+empty volume/amount strings. A targeted direct provider inspection established
+the exact shape. Parser v2 accepts only the explicit suspended/both-empty
+case and leaves raw fields immutable; active or half-empty rows still fail.
+Focused isolated tests passed 50/50; full isolated backend 958 PASS with one
+optional archive test skipped, Ruff/format/mypy PASS. After restarting only the idle backend,
+retry job `ed796871-4ce4-4cf3-b7f0-2223e636bb75` completed two requests,
+two candidate observations and zero unresolved dates. `CN-A:SSE:603400` is
+vendor-suspended with zero normalized turnover; `CN-A:SSE:688622` has vendor
+ST flag 1. Neither is execution-eligible. The parser-label caveat, immutable
+manifest checksums and remaining official-source gaps are in SOURCE_READINESS.
+The Chrome report export produced a prepared blob/link but no verified file
+download event or artifact; U4-EXPORT remains IN_PROGRESS.
 
 ## 2026-09-23 14:57 UTC paper pause/restart/resume checkpoint
 

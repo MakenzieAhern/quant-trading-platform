@@ -14,7 +14,7 @@ from app.domain.markets import SecurityId
 PROVIDER = "BAOSTOCK_PUBLIC_SINGLE_SECURITY_EOD"
 SDK_VERSION = "0.9.4"
 SDK_WHEEL_SHA256 = "0bf71c6069ab5890ff3596632f9c3f8f1fbc6bfcac582c2f9d6a5c11ab2cfaf8"
-PARSER_VERSION = "product-baostock-raw-v1"
+PARSER_VERSION = "product-baostock-raw-v2"
 FIELDS = "date,code,open,high,low,close,preclose,volume,amount,adjustflag,tradestatus,isST"
 TERMINAL = {"SUCCEEDED", "FAILED", "CANCELLED", "INTERRUPTED"}
 AUTHORITY = {
@@ -137,8 +137,11 @@ def parse_response(
                 or row["isST"] not in {"0", "1"}
             ):
                 raise ValueError("invalid identity/date/status/adjustment")
+            numeric_row = dict(row)
+            if row["tradestatus"] == "0" and row["volume"] == row["amount"] == "":
+                numeric_row["volume"] = numeric_row["amount"] = "0"
             numbers = {
-                key: parse_decimal_string(row[key])
+                key: parse_decimal_string(numeric_row[key])
                 for key in ("open", "high", "low", "close", "preclose", "volume", "amount")
             }
             DailyBarRecord(
