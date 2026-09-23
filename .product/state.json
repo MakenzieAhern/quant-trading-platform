@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T01:09:46Z",
-  "milestone": "M2_U5_INCREMENTAL_AND_M3_U6_PLANNING",
+  "updated_at_utc": "2026-09-23T01:37:03Z",
+  "milestone": "M3_U6_REPLAY_PREVIEW_AND_U7_PENDING",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,19 +16,19 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-updates",
+    "branch": "codex/product-v1.2-plans",
     "identity": "MakenzieAhern"
   },
   "ownership": {
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
-    "queue_writer": "experiment manager idle: 5 SUCCEEDED, 1 CANCELLED, 1 INTERRUPTED; no formal studies",
+    "queue_writer": "experiment manager idle after U6 historical exploratory QA; no formal studies",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "read-only review closed U2/U5 P1; agent inactive after usage limit"
     },
-    "verified_processes": "2026-09-22: 4 healthy/available project services; 2 stopped paper sessions; no formal study",
+    "verified_processes": "2026-09-23: Docker Desktop 4.92.0, WSL integration and 4 project services healthy; no installer/UAC process; no formal study",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
@@ -72,7 +72,11 @@
     "Main DB pre0014 backup validated off Git; additive0014 deployed with separate product volume and read-only research mount",
     "Chrome explicitly requested one BaoStock security/day: one persisted candidate receipt and observation; restart/reload retained exact job and counts",
     "Formal ledger1 dataset/3 runs/310 trades and frozen manifest/freeze hashes unchanged after0014 and restart",
-    "2026-09-23 fresh isolated quant_test_v12_u5 DB full backend949 PASS, Ruff/format/mypy PASS; frontend183/lint/type/build PASS; Compose base/release config PASS"
+    "2026-09-23 fresh isolated quant_test_v12_u5 DB full backend949 PASS, Ruff/format/mypy PASS; frontend183/lint/type/build PASS; Compose base/release config PASS",
+    "PR18 head904e5d6 CI35806246775 backend/frontend/compose PASS; draft and unmerged",
+    "U6 real historical exploratory job d9f27183 finished293 sessions; preview2011-03-22->2011-03-23, 32 candidates, 5 risk rejections, account cash/equity/16 positions equal persisted holdings; no paper order submitted",
+    "Chrome U6 zh/en and390x844 plan preview passed; local screenshots outside Git; horizontal table hint fixed after visual review",
+    "2026-09-23 U6 full backend950/frontend185, Ruff/format/mypy/ESLint/type/build PASS"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -83,7 +87,8 @@
     "RESOLVED: closing market detail cleared parent data-mode context; remove duplicate child writer with regression",
     "RESOLVED: U2 shared localStorage overwrite across tabs; independently retained per-page recovery slots and independent review",
     "RESOLVED: fixed-clock queue test UUID tie and advisory-lock test cross-database count on a shared PostgreSQL instance; full backend949 PASS",
-    "OPEN: Vite main bundle540.21 kB exceeds500 kB warning; M4 performance diagnosis pending"
+    "RESOLVED: PR18 frontend CI test raced its mock request; explicit resolver readiness fix pushed and CI passed",
+    "OPEN: Vite main bundle548.81 kB exceeds500 kB warning; M4 performance diagnosis pending"
   ],
   "external_blockers": [
     {
@@ -96,7 +101,7 @@
   "not_run": [
     "Native dirty Back/Forward full browser confirmation path",
     "Browser exported artifact completion; API export content verified separately",
-    "U5 cross-board controls, failure/retry/cancel browser matrix and source authority promotion; U6/U7 complete plans/forward",
+    "U5 cross-board controls, failure/retry/cancel browser matrix and source authority promotion; U6 independent account submission and U7 forward receipt",
     "Full remaining M2-M5 matrix, real-user testing not claimed"
   ],
   "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
@@ -150,10 +155,20 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "literal search and watchlist navigation PASS"
+    },
+    "18": {
+      "branch": "codex/product-v1.2-updates",
+      "head": "904e5d6",
+      "state": "DRAFT",
+      "ci_run": 35806246775,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "one bounded raw candidate request and restart/reload persistence PASS; cross-board and authority promotion incomplete"
     }
   },
-  "next_task": "Commit and review the deployed bounded U5 updater as stacked draft PR18, then implement U6 dated simulation plan and continue U7/M4/M5",
-  "next_command": "After U5 PR18 creation and CI, inspect existing execution engine, risk/OMS/portfolio and account API for a receipt-bound U6 simulation plan",
+  "next_task": "Commit U6 replay preview as draft PR19 stacked on PR18, then connect a user-started independent U7 paper account and receipt-bound forward plan; continue M4/M5",
+  "next_command": "Commit current U6 changes, rebase plans branch onto PR18 head904e5d6, push and open draft PR19; then inspect existing Paper runtime lifecycle and current source authority gaps",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

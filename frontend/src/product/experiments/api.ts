@@ -13,6 +13,7 @@ import type {
   ExperimentCollection,
   DateRange,
   Page,
+  SimulationPlan,
 } from "./types";
 
 function record(value: unknown): Record<string, unknown> {
@@ -180,7 +181,56 @@ export function parseResult(value: unknown): ExperimentResult {
     integer(execution[key]);
   for (const count of Object.values(record(execution.reason_counts)))
     integer(count);
+  if (item.simulation_plan !== undefined)
+    parseSimulationPlan(item.simulation_plan);
   return item as unknown as ExperimentResult;
+}
+export function parseSimulationPlan(value: unknown): SimulationPlan {
+  const item = record(value);
+  mode(item.mode);
+  for (const key of [
+    "status", "as_of_trading_date", "dataset_sha256", "configuration_sha256",
+    "strategy_id", "strategy_version", "price_basis", "account_mode",
+    "data_snapshot_sha256",
+  ]) text(item[key]);
+  if (item.next_accepted_session !== null) text(item.next_accepted_session);
+  if (
+    item.simulation_only !== true || item.submitted_to_account !== false ||
+    item.not_today_advice !== true ||
+    !["EXPLORATORY_REPLAY", "SYNTHETIC_DEMO"].includes(String(item.account_mode))
+  ) throw new ApiContractError();
+  decimal(item.estimated_cash_required, true);
+  if (item.risk_rejections !== undefined) integer(item.risk_rejections);
+  if (item.account !== null) {
+    const account = record(item.account);
+    decimal(account.cash);
+    decimal(account.equity);
+    text(account.snapshot_sha256);
+    if (!Array.isArray(account.positions)) throw new ApiContractError();
+    for (const entry of account.positions) {
+      const position = record(entry);
+      text(position.security_id);
+      for (const key of ["quantity", "average_price", "market_price", "market_value"])
+        decimal(position[key]);
+      decimal(position.weight, true);
+    }
+  }
+  if (!Array.isArray(item.candidates)) throw new ApiContractError();
+  for (const entry of item.candidates) {
+    const candidate = record(entry);
+    for (const key of ["security_id", "trigger_reason", "risk_reason_code"])
+      text(candidate[key]);
+    for (const key of [
+      "target_weight", "held_quantity", "target_quantity",
+      "desired_change_quantity", "proposed_quantity",
+    ]) decimal(candidate[key]);
+    decimal(candidate.reference_raw_close, true);
+    if (!["BUY", "SELL", "HOLD"].includes(String(candidate.side)))
+      throw new ApiContractError();
+    if (candidate.risk_approved !== null && typeof candidate.risk_approved !== "boolean")
+      throw new ApiContractError();
+  }
+  return item as unknown as SimulationPlan;
 }
 function page<T>(value: unknown, parse: (entry: unknown) => T): Page<T> {
   const item = record(value);

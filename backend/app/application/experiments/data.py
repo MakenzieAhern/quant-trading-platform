@@ -149,6 +149,9 @@ class ExperimentDatasetRegistry:
 class SyntheticExperimentDataset:
     def __init__(self, end: date) -> None:
         calendar, sessions, self.cost_model = simulated_a_share_fixture(session_count=340)
+        self.next_session = next(
+            (session for session in calendar.sessions if session.session_date > end), None
+        )
         self._sessions = tuple(s for s in sessions if s.trading_date <= end)
         self.calendar = TradingCalendar(
             market=calendar.market,

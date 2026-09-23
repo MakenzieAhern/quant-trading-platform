@@ -22,11 +22,12 @@ from app.application.experiments.data import (
 from app.application.experiments.models import CreateExperimentRequest
 from app.data.catalog.checksums import canonical_sha256, sha256_file
 from app.data.full_dataset import FullDataset
+from app.domain.markets.calendar import TradingCalendar
 from app.domain.risk import RiskConfig
 from app.domain.trading import PortfolioSnapshot
 from app.research.analytics import analyze_research_period
 from app.research.costs import EffectiveDatedAShareCommission
-from app.research.engine import ResearchExecutionEngine
+from app.research.engine import ResearchExecutionDelta, ResearchExecutionEngine
 from app.research.models import PortfolioTarget, ResearchSession
 from app.research.strategy import ChinaAMomentumLowVolResearchStrategy
 from app.strategies.research import ChinaAMomentumLowVolConfig
@@ -62,6 +63,7 @@ class ExploratoryStrategy(ChinaAMomentumLowVolResearchStrategy):
         )
         self.universe = request.universe
         self.max_weight = request.risk.max_position_weight
+        self.last_target: PortfolioTarget | None = None
 
     def target_for_completed_session(
         self,
@@ -69,6 +71,7 @@ class ExploratoryStrategy(ChinaAMomentumLowVolResearchStrategy):
         available_equity: Decimal,
     ) -> PortfolioTarget | None:
         # Candidate selection only: execution still receives all observations and actions.
+        self.last_target = None
         selected_session = session
         if self.universe != "ALL":
             prefix = f"CN-A:{self.universe}:"
@@ -94,9 +97,14 @@ class ExploratoryStrategy(ChinaAMomentumLowVolResearchStrategy):
             ) * lot
             positions.append(replace(item, target_weight=weight, quantity=quantity))
         invested = sum((p.quantity * p.reference_price for p in positions), Decimal(0))
-        return PortfolioTarget(
+        self.last_target = PortfolioTarget(
             positions=tuple(positions), residual_cash=available_equity - invested
         )
+        return self.last_target
+
+    def reset(self) -> None:
+        super().reset()
+        self.last_target = None
 
 
 @dataclass
@@ -140,11 +148,20 @@ def run_experiment(
             for item in data.cost_model.schedules
         )
     )
+    strategy = ExploratoryStrategy(request)
+    execution_calendar = (
+        TradingCalendar(
+            market=data.calendar.market,
+            sessions=(*data.calendar.sessions, data.next_session),
+        )
+        if data.next_session is not None
+        else data.calendar
+    )
     engine = ResearchExecutionEngine(
-        ExploratoryStrategy(request),
+        strategy,
         initial_cash=request.initial_cash,
         commission_model=commission,
-        calendar=data.calendar,
+        calendar=execution_calendar,
         risk_config=RiskConfig(
             enforce_buying_power=True,
             max_leverage=Decimal(1),
@@ -153,12 +170,23 @@ def run_experiment(
     )
     total = len(data.calendar_days)
     progress("EXECUTING", 0, total)
+    last_delta: ResearchExecutionDelta | None = None
     for completed, session in enumerate(data.sessions(), start=1):
         check_cancelled()
-        engine.process_session(session)
+        last_delta = engine.process_session(session)
         if completed % 10 == 0 or completed == total:
             progress("EXECUTING", completed, total)
     check_cancelled()
+    assert last_delta is not None
+    plan = _plan_preview(
+        request,
+        registered["sha256"],
+        registered["mode"],
+        last_delta,
+        strategy.last_target,
+        data.next_session.session_date if data.next_session is not None else None,
+        total,
+    )
     result = engine.finish()
     snapshots = tuple(
         s for s in result.snapshots if request.start_date <= s.timestamp.date() <= request.end_date
@@ -246,7 +274,7 @@ def run_experiment(
         limitations.append("NO_EXECUTED_TRADES_CHECK_WARMUP_LOTS_AND_RISK")
     return ExperimentOutput(
         summary={
-            "result_schema_version": 2,
+            "result_schema_version": 3,
             "available_collections": ["equity", "trades", "decisions", "holdings"],
             "mode": registered["mode"],
             "metrics": metrics,
@@ -284,6 +312,7 @@ def run_experiment(
             ),
             "implementation_sha256": implementation_sha256,
             "strategy_version": "1",
+            "simulation_plan": plan,
             "execution_model": {
                 "convention": result.execution_convention,
                 "fill_price": "NEXT_SESSION_RAW_OPEN",
@@ -315,6 +344,135 @@ def run_experiment(
         },
         rows=rows,
     )
+
+
+def _plan_preview(
+    request: CreateExperimentRequest,
+    dataset_sha256: str,
+    mode: str,
+    delta: ResearchExecutionDelta,
+    target: PortfolioTarget | None,
+    next_session: date | None,
+    completed_sessions: int,
+) -> dict[str, Any]:
+    """Describe the existing engine's final-session account and OMS decisions."""
+
+    snapshot = delta.snapshot
+    as_of = delta.session.trading_date
+    status = (
+        "ACCOUNT_SNAPSHOT_UNAVAILABLE"
+        if snapshot is None
+        else "NEXT_SESSION_UNAVAILABLE"
+        if next_session is None
+        else "INSUFFICIENT_WARMUP"
+        if completed_sessions < 253
+        else "NOT_REBALANCE_SESSION"
+        if target is None
+        else "NO_ELIGIBLE_CANDIDATES"
+        if not target.positions and not snapshot.positions
+        else "SIMULATION_PREVIEW"
+    )
+    common = {
+        "status": status,
+        "mode": mode,
+        "as_of_trading_date": as_of.isoformat(),
+        "next_accepted_session": next_session.isoformat() if next_session else None,
+        "dataset_sha256": dataset_sha256,
+        "configuration_sha256": canonical_sha256(json_value(request.model_dump())),
+        "strategy_id": request.strategy_id,
+        "strategy_version": "1",
+        "simulation_only": True,
+        "submitted_to_account": False,
+        "price_basis": "COMPLETED_RAW_CLOSE_ESTIMATE_NOT_NEXT_OPEN",
+        "account_mode": "EXPLORATORY_REPLAY" if mode != "synthetic_demo" else "SYNTHETIC_DEMO",
+        "not_today_advice": True,
+        "data_snapshot_sha256": canonical_sha256(
+            {
+                "dataset_sha256": dataset_sha256,
+                "as_of": as_of.isoformat(),
+                "observed_raw_closes": [
+                    (str(bar.security_id), canonical_decimal(bar.raw_close))
+                    for bar in sorted(delta.session.bars, key=lambda item: str(item.security_id))
+                ],
+            }
+        ),
+    }
+    if snapshot is None:
+        return {**common, "account": None, "candidates": [], "estimated_cash_required": None}
+
+    account = _holdings_row(0, snapshot)
+    account_view = {
+        "cash": account["cash"],
+        "equity": account["equity"],
+        "positions": account["positions"],
+        "snapshot_sha256": canonical_sha256(account),
+    }
+    if status != "SIMULATION_PREVIEW":
+        return {
+            **common,
+            "account": account_view,
+            "candidates": [],
+            "estimated_cash_required": None,
+            "risk_rejections": 0,
+        }
+    positions = {_security_id(item.symbol): item for item in snapshot.positions}
+    targets = {str(item.security_id): item for item in target.positions} if target else {}
+    proposals = {_security_id(item.symbol): item for item in delta.proposals}
+    decisions = {item.proposal_id: item for item in delta.decisions}
+    prices = {str(item.security_id): item.raw_close for item in delta.session.bars}
+    cash_required = Decimal(0)
+    cash_known = True
+    candidates = []
+    for sid in sorted(positions.keys() | targets.keys()):
+        held = positions[sid].quantity if sid in positions else Decimal(0)
+        desired = targets[sid].quantity if sid in targets else Decimal(0)
+        proposal = proposals.get(sid)
+        decision = decisions.get(proposal.proposal_id) if proposal else None
+        side = (
+            proposal.side.value
+            if proposal
+            else ("BUY" if desired > held else "SELL" if desired < held else "HOLD")
+        )
+        if proposal and decision and decision.approved and side == "BUY":
+            if decision.reference_price is None or decision.estimated_transaction_cost is None:
+                cash_known = False
+            else:
+                cash_required += (
+                    proposal.quantity * decision.reference_price
+                    + decision.estimated_transaction_cost
+                )
+        candidates.append(
+            json_value(
+                {
+                    "security_id": sid,
+                    "target_weight": targets[sid].target_weight if sid in targets else Decimal(0),
+                    "held_quantity": held,
+                    "target_quantity": desired,
+                    "desired_change_quantity": abs(desired - held),
+                    "proposed_quantity": proposal.quantity if proposal else Decimal(0),
+                    "side": side,
+                    "reference_raw_close": prices.get(sid),
+                    "trigger_reason": "TOP_DECILE_MOMENTUM_LOW_VOL"
+                    if sid in targets
+                    else "EXITED_STRATEGY_TARGET",
+                    "risk_approved": decision.approved if decision else None,
+                    "risk_reason_code": decision.reason_code.value
+                    if decision
+                    else "NO_CHANGE"
+                    if desired == held
+                    else "PROPOSAL_NOT_CREATED",
+                }
+            )
+        )
+    return {
+        **common,
+        "account": account_view,
+        "candidates": candidates,
+        "estimated_cash_required": canonical_decimal(cash_required)
+        if cash_known and status == "SIMULATION_PREVIEW"
+        else None,
+        "risk_rejections": sum(item.approved is False for item in delta.decisions),
+    }
 
 
 def _security_id(symbol: str) -> str:

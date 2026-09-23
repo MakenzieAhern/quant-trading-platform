@@ -104,6 +104,44 @@ export interface ExperimentResult {
   date_start: string;
   date_end: string;
   benchmark_id: string;
+  simulation_plan?: SimulationPlan;
+}
+export interface SimulationPlan {
+  status: string;
+  mode: ExperimentMode;
+  as_of_trading_date: string;
+  next_accepted_session: string | null;
+  dataset_sha256: string;
+  configuration_sha256: string;
+  strategy_id: string;
+  strategy_version: string;
+  simulation_only: true;
+  submitted_to_account: false;
+  price_basis: string;
+  account_mode: "EXPLORATORY_REPLAY" | "SYNTHETIC_DEMO";
+  not_today_advice: true;
+  data_snapshot_sha256: string;
+  account: {
+    cash: string;
+    equity: string;
+    snapshot_sha256: string;
+    positions: ExperimentHolding["positions"];
+  } | null;
+  candidates: {
+    security_id: string;
+    target_weight: string;
+    held_quantity: string;
+    target_quantity: string;
+    desired_change_quantity: string;
+    proposed_quantity: string;
+    side: "BUY" | "SELL" | "HOLD";
+    reference_raw_close: string | null;
+    trigger_reason: string;
+    risk_approved: boolean | null;
+    risk_reason_code: string;
+  }[];
+  estimated_cash_required: string | null;
+  risk_rejections?: number;
 }
 export interface ExperimentEquity {
   sequence: number;
