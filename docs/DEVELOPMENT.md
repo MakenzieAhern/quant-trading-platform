@@ -18,6 +18,35 @@ make down
 
 The integration suites truncate tables; direct pytest execution must target a disposable database. Prefer `make test`. The backend suite now exits before collection unless `APP_ENV=test` and `DATABASE_URL` names `quant_test` or `quant_test_*`. Never point direct tests at a database containing demonstration or personal history; the name guard is a last line of defense, not a replacement for checking the actual target.
 
+## Operator database backup and restore drill
+
+Choose a **new absolute path outside this checkout** for `backup_path`; never
+overwrite an earlier dump. This creates a private logical snapshot while the
+application is running. A failed or interrupted dump is invalid, even if a
+partial file exists.
+
+```bash
+backup_path=/absolute/off-repo/location/quant_platform_YYYYMMDD.dump
+(set -C; umask 077; docker compose exec -T postgres pg_dump -U quant -Fc quant_platform > "$backup_path")
+docker compose exec -T postgres pg_restore -l < "$backup_path" >/dev/null
+sha256sum "$backup_path"
+```
+
+On macOS use `shasum -a 256` for the final checksum. For a non-destructive
+recovery drill, choose a **fresh database name**, verify it does not exist,
+then run `createdb` and `pg_restore` against that name only:
+
+```bash
+docker compose exec -T postgres createdb -U quant quant_restore_drill_YYYYMMDD
+docker compose exec -T postgres pg_restore -U quant -d quant_restore_drill_YYYYMMDD --single-transaction --exit-on-error --no-owner --no-acl < "$backup_path"
+```
+
+Stop if either command fails; do not retry the restore into a partially populated
+database or point it at `quant_platform`. Compare key records and schema version
+before trusting a dump. A copy on the same WSL disk is useful for accidental
+deletion but is **not** protection against that disk failing; keep an additional
+copy at an operator-approved independent location.
+
 ## Optional host development
 
 Install Python 3.12 and Node 24/npm 11, then `make host-setup`. Start infrastructure with `docker compose up -d postgres redis`. Apply migrations using `cd backend && ../.venv/bin/alembic upgrade head`. Use `make backend` and `make frontend` in separate terminals. Host environments are optional and must be recreated after architecture changes.

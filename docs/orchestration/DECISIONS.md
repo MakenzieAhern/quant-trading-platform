@@ -37,8 +37,17 @@ database name is `quant_test` or a `quant_test_*` variant, before collection or
 fixture execution. A live-config collect-only invocation was rejected; an
 isolated full suite passed 969 tests with one optional archive skip, and live
 research/paper/product counts remained unchanged. Keep release data-integrity
-acceptance failed until the loss is transparently dispositioned and a durable
-backup/recovery procedure is validated.
+acceptance failed until the loss is transparently dispositioned and an
+independent backup destination is established.
+
+At 20:07 UTC the post-recovery full dump was restored with
+`--single-transaction --exit-on-error` into a newly created
+`quant_restore_drill_20260923` database. All 44 public tables matched the live
+database in both row count and MD5 of sorted `to_jsonb` row representations.
+This proves logical restore on the current PostgreSQL 16 instance, not recovery
+from host or disk failure: the only current backups are on the same WSL disk.
+The two post-backup account ledgers remain missing. No live table was changed
+by this drill, and no scratch database was dropped.
 
 ## v1.2 executable forward feed needs explicit rights evidence — 2026-09-23
 
