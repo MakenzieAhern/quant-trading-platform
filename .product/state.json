@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T23:00:03Z",
+  "updated_at_utc": "2026-09-23T23:03:15Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 23:03UTC bilingual draft user guides corrected stale U4 browser-export warning using actual Chrome153 CSV/JSON acceptance. Both now disclose the two unrecovered post-backup paper sessions and same-disk backup limitation; no claim of full durability or v1.2 release. PR32 head6a31387 CI35931449160 backend/frontend/compose PASS",
     "2026-09-23 23:00UTC actual Chrome153 local agent walkthrough at1280x800 recorded 13.44s VP8 WebM SHA256 B85F5595830D884BBC88D6C34AD1B824575DAFA199953DD42D7EA18F51695C1F: home, guided entry, strategy detail, saved historical result/chart keyboard selection and stopped audited historical paper account. Chrome playback at9s and seven captured route screenshots inspected; comparison screenshot shows two saved runs and condition mismatch warning. Artifacts outside Git under product-evidence/v1.2/m5. Only ephemeral browser-local draft saved; live DB remains 8 research jobs/5 paper sessions. Partial M5 visual evidence, not new-user, forward or release proof",
     "2026-09-23 22:48UTC actual Chrome153 on saved historical study d9f27183: ArrowUp on date selector changed exact financial chart readout but no live-region announcement existed. Existing readout now has polite atomic live semantics; browser confirmed attributes and unchanged exact strings. Existing collection regression, full frontend213, lint/type/build and Prettier PASS. This is bounded keyboard/DOM evidence, not an actual screen-reader study or full WCAG AA gate",
     "2026-09-23 22:43UTC disposable quant_test PostgreSQL/backend and actual headless Chrome153: synthetic job45b220b1 was cancelled through the real API before processing; English detail displayed no partial result. Clicking linked retry created childa54768bb, returning to the parent and clicking again reopened that same child. API confirmed parent CANCELLED, child SUCCEEDED attempt2, one linked row and identical configuration SHA. Screenshots outside Git; isolated containers/network removed without volumes or main DB writes. This closes one U3-RECOVER browser path, not the historical/failure/restart matrix",
@@ -402,16 +403,16 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "2080508",
+      "last_verified_head": "6a31387",
       "state": "DRAFT",
-      "ci_run": 35930344343,
+      "ci_run": 35931449160,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill and linked retry PASS. U3 dirty Back/Forward, isolated cancelled-to-linked-retry and U4 CSV/JSON download PASS in real Chrome. Home links40px, direct-load skip-link focus and fault-injected offline/permission/timeout recovery PASS. No-match and real zero-trade filter guidance PASS. Bounded native 200-percent zoom seven-route ZH/light and EN/dark checks PASS without document overflow; full matrix incomplete. Simple warm navigation p95=32ms, wider QA incomplete. Full Windows reboot and forward authority remain open"
     }
   },
-  "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence; validate an independent backup destination and durable recovery in isolation. The isolated U3 cancelled-to-linked-retry Chrome path now passes; continue the historical failure/restart matrix, U8 and accessibility/performance browser work, extending bounded native 200-percent zoom across remaining locale/theme/route cases. Seek lawful forward-source rights before any U7 execution promotion. Verify terminal-free recovery at the next safe full Windows reboot/login",
+  "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence; validate an independent backup destination and durable recovery in isolation. The isolated U3 cancelled-to-linked-retry Chrome path now passes; continue the historical failure/restart matrix, U8 and accessibility/performance browser work, extending bounded native 200-percent zoom across remaining locale/theme/route cases. Complete the remaining M5 demonstration/startup evidence; the bounded 13.44-second read-only Chrome walkthrough is not a full user flow. Seek lawful forward-source rights before any U7 execution promotion. Verify terminal-free recovery at the next safe full Windows reboot/login",
   "next_command": "Inspect any offered external pre-loss physical snapshot or backup; current live pg_wal starts after the loss and logical dumps cannot supply PITR. Otherwise retain the two sessions as lost. Run backend pytest only with APP_ENV=test on quant_test*; leave frozen research and RAW_CANDIDATE unchanged",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
