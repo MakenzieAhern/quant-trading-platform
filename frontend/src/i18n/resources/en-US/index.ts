@@ -4,10 +4,9 @@ export const enUS = {
     loading: "Loading {{label}}…",
     error: "Unable to load this data.",
     loadErrors: {
-      offline:
-        "The service is unavailable. Check its status, then reload this page.",
+      offline: "The service is unavailable. Check its status, then try again.",
       timeout:
-        "The request timed out. Check the service status, then reload this page.",
+        "The request timed out. Check the service status, then try again.",
       permission: "Access was denied. Check your access before trying again.",
       notFound:
         "This record is unavailable. It may have been removed; return to the workbench to choose another.",
@@ -146,7 +145,8 @@ export const enUS = {
       equityData: "equity data",
       chartTitle: "Portfolio equity curve",
       chartDescription: "Equity over UTC time in deterministic API order.",
-      chartUnavailable: "Chart geometry unavailable; exact values remain below.",
+      chartUnavailable:
+        "Chart geometry unavailable; exact values remain below.",
       accessibleEquity: "Accessible equity data ({{count}} points)",
       equity: "Equity",
       noEquity: "No equity snapshots were recorded.",
@@ -155,7 +155,8 @@ export const enUS = {
       riskDecisions: "Risk decisions",
       noRisk: "No proposals reached risk evaluation.",
       orders: "Orders",
-      noOrders: "No orders were created. Risk-rejected proposals do not become orders.",
+      noOrders:
+        "No orders were created. Risk-rejected proposals do not become orders.",
       fills: "Fills",
       noFills: "No fills were recorded.",
       utcTime: "UTC time",
@@ -180,10 +181,13 @@ export const enUS = {
       started: "Started",
       completed: "Completed",
       inProgress: "Backtest in progress",
-      progressHelp: "This active run is checked every five seconds. Execution remains synchronous on the backend.",
+      progressHelp:
+        "This active run is checked every five seconds. Execution remains synchronous on the backend.",
       failed: "Backtest failed",
-      failedDefault: "The run failed without additional safe diagnostic information.",
-      failedNoMetrics: "No successful metrics or equity curve are displayed for this run.",
+      failedDefault:
+        "The run failed without additional safe diagnostic information.",
+      failedNoMetrics:
+        "No successful metrics or equity curve are displayed for this run.",
     },
   },
   paper: {

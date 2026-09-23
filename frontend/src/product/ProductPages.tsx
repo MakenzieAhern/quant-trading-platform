@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ApiError } from "../api/client";
 import { Link } from "../components/Link";
 import { LanguageSelector } from "../components/LanguageSelector";
 import { useApiResource } from "../hooks/useApiResource";
@@ -12,11 +13,28 @@ import { Dialog } from "./Dialog";
 import { usePreferences } from "./preferences";
 import { MarketUpdatesPanel } from "./marketUpdates";
 
-export function ProductError({ retry }: { retry: () => void }) {
+export function ProductError({
+  error,
+  retry,
+}: {
+  error: unknown;
+  retry: () => void;
+}) {
   const c = useProductCopy();
+  const { t } = useTranslation("common");
+  const reason =
+    error instanceof ApiError
+      ? error.status === 401 || error.status === 403
+        ? "permission"
+        : error.status === 408
+          ? "timeout"
+          : null
+      : error instanceof TypeError
+        ? "offline"
+        : null;
   return (
     <div className="productError" role="alert">
-      <p>{c.loadingError}</p>
+      <p>{reason ? t(`loadErrors.${reason}`) : c.loadingError}</p>
       <button className="button secondary" onClick={retry}>
         {c.retry}
       </button>
@@ -103,7 +121,10 @@ export function WorkbenchPage() {
           {data.loading ? (
             <p role="status">{c.loading}</p>
           ) : data.error ? (
-            <ProductError retry={() => setRetry(retry + 1)} />
+            <ProductError
+              error={data.error}
+              retry={() => setRetry(retry + 1)}
+            />
           ) : (
             <>
               <span className="quietTag">
@@ -163,7 +184,7 @@ export function WorkbenchPage() {
             {c.loading}
           </p>
         ) : jobs.error ? (
-          <ProductError retry={() => setRetry(retry + 1)} />
+          <ProductError error={jobs.error} retry={() => setRetry(retry + 1)} />
         ) : jobs.data?.items.length ? (
           <div className="recentStudies">
             {jobs.data.items.map((job) => (
@@ -249,7 +270,9 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
     (signal) => experimentApi.capabilities(signal),
     [retry],
   );
-  const [selected, setSelected] = useState<string | null>(strategyDrawerFromUrl);
+  const [selected, setSelected] = useState<string | null>(
+    strategyDrawerFromUrl,
+  );
   useEffect(() => {
     const sync = () => setSelected(strategyDrawerFromUrl());
     window.addEventListener("hashchange", sync);
@@ -304,7 +327,9 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
         )}
       </header>
       {catalog.loading && <p role="status">{c.loading}</p>}
-      {catalog.error && <ProductError retry={() => setRetry(retry + 1)} />}
+      {catalog.error && (
+        <ProductError error={catalog.error} retry={() => setRetry(retry + 1)} />
+      )}
       {strategyId ? (
         strategy ? (
           <>
@@ -394,7 +419,9 @@ export function DataCenterPage() {
         </div>
       </header>
       {data.loading && <p role="status">{c.loading}</p>}
-      {data.error && <ProductError retry={() => setRetry(retry + 1)} />}
+      {data.error && (
+        <ProductError error={data.error} retry={() => setRetry(retry + 1)} />
+      )}
       {data.data?.datasets.map((item) => (
         <section className="panel dataSourceCard" key={item.dataset_id}>
           <div className="panelHeader">
