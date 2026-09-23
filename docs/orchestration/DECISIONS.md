@@ -1,5 +1,32 @@
 # Decisions
 
+## v1.2 current-master sample is not a point-in-time execution ledger — 2026-09-23
+
+Targeted SSE exact-code responses and the official SZSE current-list XLSX
+confirm the four-board sample and two SSE ST/suspension controls as listed at
+retrieval. The official SSE notice dates the 688622 delisting-risk-warning
+entry to 2026-04-30. Source snapshots, UTC save times and hashes are in
+`docs/product/SOURCE_READINESS.md`. Do not infer complete 2026 membership,
+2026-09-22 status, or tradability from a current-list row. In particular,
+603400 remains listed while a separate notice reports its suspension. Keep
+all six candidate bars non-executable until dated master/status/action/rule
+and completed-session gates are reconciled. No old research master changed.
+
+## v1.2 current cost provenance is distinct from broker commission — 2026-09-23
+
+The official 2026-01 ChinaClear Shanghai and Shenzhen fee schedules are archived
+and checksummed outside Git; links and hashes are in
+`docs/product/SOURCE_READINESS.md`. For ordinary A-share auctions both show
+0.01‰ transfer fee on each side, 1‰ seller stamp duty subject to the
+continuing half-rate, 0.0341‰ exchange handling fee and 0.02‰ regulatory fee
+on each side. The latter two are included in broker commission according to
+the SSE investor guide, so do not add them again to the existing commission
+model. The 0.0003 rate and CNY 5 minimum remain explicit simulation/brokerage
+assumptions, not a statutory tariff. This current-source finding does not
+retroactively change the frozen v1.1 model-assumption record. Do not promote
+2026 candidate bars or rules to executable status until remaining source and
+runtime gates pass.
+
 ## v1.2 forward-market rule authority remains separate — 2026-09-23
 
 Official SSE/SZSE 2026 Trading Rules were saved and checksummed outside Git.

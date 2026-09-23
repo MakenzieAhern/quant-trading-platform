@@ -190,6 +190,86 @@ status/order constraints still require audit and implementation before any
 candidate bar can be promoted. `RULE_AUTHORITY_2026 = PARTIAL`; all existing
 candidate receipts remain `execution_eligible=false`.
 
+### Current A-share cost components (2026-09-23)
+
+The [ChinaClear fee catalog](https://www.chinaclear.cn/zdjs/fbzyls/service_tlist.shtml)
+currently lists separate Shanghai and Shenzhen schedules updated on
+2026-01-01. Both official tables specify ordinary A-share transfer fees of
+**0.01‰ on each side** (`0.00001` of turnover), securities stamp duty of
+**1‰ on the seller, halved** (`0.0005`), exchange handling fees of
+**0.0341‰ on each side**, and regulatory fees of **0.02‰ on each side**.
+The [SSE investor fee guide](https://one.sse.com.cn/onething/gptz/) states
+the handling and regulatory fees are included in broker commission; adding
+them again to the existing commission model would double-count them. The
+[SZSE 2026-01 schedule](https://www.szse.cn/marketServices/deal/payFees/)
+independently lists the same handling and regulatory rates. The
+[tax authority's 2023 notice](https://shanghai.chinatax.gov.cn/zcfw/zcfgk/yhs/202308/t468451.html)
+is marked effective and confirms the halving from 2023-08-28.
+
+The two ChinaClear originals are stored outside Git under
+`/home/yuchen/data/product_source_evidence/2026_costs/`. These are local save
+times in UTC, not independent HTTP receipt timestamps. The archive was
+verified as 10-page PDF files and checksummed after download:
+
+| Official schedule | Saved UTC | SHA-256 |
+|---|---|---|
+| [Shanghai 2026 fee PDF](https://www.chinaclear.cn/zdjs/fbzyls/202512/922adc26c2ff4865930c7fb77688bb8a/files/%E4%B8%8A%E6%B5%B7%E5%B8%82%E5%9C%BA%E8%AF%81%E5%88%B8%E7%99%BB%E8%AE%B0%E7%BB%93%E7%AE%97%E4%B8%9A%E5%8A%A1%E6%94%B6%E8%B4%B9%E5%8F%8A%E4%BB%A3%E6%94%B6%E7%A8%8E%E8%B4%B9%E4%B8%80%E8%A7%88%E8%A1%A8.pdf) | 2026-09-23 18:08:30 | `84a99e563cb8e84e264c88e3bea2df5f4ac50b1e95330417ec30e2b2566d862f` |
+| [Shenzhen 2026 fee PDF](https://www.chinaclear.cn/zdjs/fbzyls/202512/a59388fbfa714c5fa546784891a42e30/files/%E6%B7%B1%E5%9C%B3%E5%B8%82%E5%9C%BA%E8%AF%81%E5%88%B8%E7%99%BB%E8%AE%B0%E7%BB%93%E7%AE%97%E4%B8%9A%E5%8A%A1%E6%94%B6%E8%B4%B9%E5%8F%8A%E4%BB%A3%E6%94%B6%E7%A8%8E%E8%B4%B9%E4%B8%80%E8%A7%88%E8%A1%A8.pdf) | 2026-09-23 18:08:22 | `dff4a06ce20e180f4a85ddae138211dcf7dd3246fb84775453cfd21cbaec6573` |
+
+This verifies the current **statutory components for ordinary A-share
+auction trades**, not a universal broker commission. The existing `0.0003`
+commission and CNY 5 minimum are configurable simulation assumptions, not
+rates certified by ChinaClear. Current cost-schedule integration and
+brokerage-assumption labeling remain `PARTIAL`; no candidate receipt becomes
+executable from this source check. It does not retroactively certify or edit
+the frozen v1.1 historical transfer-fee allowance.
+
+### Bounded current security-master sample (2026-09-23)
+
+The official [SSE stock list](https://www.sse.com.cn/assortment/stock/list/share/)
+uses its public `https://query.sse.com.cn/sseQuery/commonQuery.do` endpoint.
+Four exact-code requests used `sqlId=COMMON_SSE_CP_GPJCTPZ_GPLB_GP_L`,
+`STOCK_CODE` below, `STOCK_TYPE=1` (Main) or `8` (STAR),
+`COMPANY_STATUS=2,4,5,7,8`, pagination and the page referer. Each response
+contained exactly one matching A-share row with no delisting date. The
+[SZSE official stock-list XLSX](https://www.szse.cn/api/report/ShowReport?SHOWTYPE=xlsx&CATALOGID=1110&TABKEY=tab1)
+contained 2,902 A-share rows (1,494 Main, 1,408 ChiNext) and exactly one row
+each for `000001` and `300750`. All originals are outside Git under
+`/home/yuchen/data/product_source_evidence/2026_master/`:
+
+| Snapshot | Listed identity / board / listing date | Saved UTC | SHA-256 |
+|---|---|---|---|
+| `SSE_600000_QUERY_20260923.json` | 浦发银行 / Main / 1999-11-10 | 18:12:09 | `bd2e4c7c9255ce516ab36cf148320419977aaae00e75a207f449dd910b88ab05` |
+| `SSE_688001_QUERY_20260923.json` | 华兴源创 / STAR / 2019-07-22 | 18:13:57 | `c58d3146bec9591fd6476a8f04208396c138b9aac95dd8ce5587c55e4e0a92c3` |
+| `SSE_688622_QUERY_20260923.json` | *ST禾信 / STAR / 2021-09-13 | 18:14:12 | `11afd2ba67ddf84fc8539f2a32f717d9733d001d2aaa2b9e3519c11b334e75bd` |
+| `SSE_603400_QUERY_20260923.json` | 华之杰 / Main / 2025-06-20 | 18:14:22 | `41087920a69b34499b8f5b8adf2124030109ad8a18c15b6aae6ba1bca1202878` |
+| `SZSE_CURRENT_LIST_20260923.xlsx` | 000001 平安银行 / Main / 1991-04-03; 300750 宁德时代 / ChiNext / 2018-06-11 | 18:12:20 | `8354521bc2a166d47c0411c6f88ab733b76a90a31d4a45aef61765415cac5110` |
+| `SSE_MAIN_CURRENT_20260923.json` | Current Main list: 1,702/1,702 rows, one page | 18:16:37 | `472cb64bd91e598300904f753e1ca17f8a06e331733230256689396911b8293d` |
+| `SSE_STAR_CURRENT_20260923.json` | Current STAR list: 618/618 rows, one page | 18:16:48 | `d7057d578631766a47f9a05ea028cf41d7533d9683190c68e26ce6385a251dc1` |
+
+The two SSE current-list responses had no duplicate codes across 2,320 rows;
+the four targeted SSE identities agreed with that broader snapshot. Together
+with the SZSE XLSX, these sources expose 5,222 listed A-share rows at retrieval.
+This is a **current inventory**, not a complete 2026 effective-dated universe:
+the exchange requests were separate, no historical delisting/renaming chain
+was collected, and current counts must not be projected backward.
+
+The [SSE's 2026-04-29 notice](https://www.sse.com.cn/disclosure/magin/announcement/ssereport/c/c_20260429_10817106.shtml)
+explicitly says `688622` became subject to delisting risk warning on
+**2026-04-30**. Its archived HTML SHA-256 is
+`03e75103555a6211599702c2b261d76bada0bc8655d4a3715ee8ba10dc551a54`
+(saved 2026-09-23 18:15:06 UTC). The current list's `*ST` name corroborates
+the present label, not a complete effective-dated history. Likewise, `603400`
+remains listed in the master while its separate official suspension notice and
+vendor row say it was not trading on 2026-09-22. Listing and trading status
+must not be conflated.
+
+**Sample identity 6/6 is verified at retrieval, not a complete 2026 point-in-time
+master or an as-of-2026-09-22 lifecycle proof.** Targeted changes, delistings,
+ST exits/entries and suspensions still require dated evidence for the intended
+execution interval. `CURRENT_MASTER_AUTHORITY = PARTIAL`; the raw candidates
+remain non-executable. The historical pilot master was not refetched or edited.
+
 ### Current exchange calendar schedule (2026-09-23)
 
 The [SSE 2026 closure notice](https://www.sse.com.cn/disclosure/announcement/general/c/c_20251222_10802507.shtml)
