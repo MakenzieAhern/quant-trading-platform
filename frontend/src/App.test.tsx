@@ -9,6 +9,9 @@ import {
 import { describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
+import { i18n } from "./i18n";
+import { experimentApi } from "./product/experiments/api";
+import { capabilities } from "./product/experiments/fixtures.test-data";
 import { jsonResponse, RUN_ID } from "./test/fixtures";
 
 const health = {
@@ -20,6 +23,56 @@ const health = {
 };
 
 describe("routing", () => {
+  it("closes and restores the strategy drawer with Back and Forward", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({}, "", "/strategies");
+    Object.defineProperties(HTMLDialogElement.prototype, {
+      showModal: {
+        configurable: true,
+        value(this: HTMLDialogElement) {
+          this.setAttribute("open", "");
+        },
+      },
+      close: {
+        configurable: true,
+        value(this: HTMLDialogElement) {
+          this.removeAttribute("open");
+        },
+      },
+    });
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    const view = render(<App />);
+    const trigger = await screen.findByRole("button", {
+      name: /Explore strategy/,
+    });
+    trigger.focus();
+    fireEvent.click(trigger);
+    expect(window.location.hash).toContain(capabilities.strategies[0].strategy_id);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    act(() => window.history.back());
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(window.location.pathname).toBe("/strategies");
+    expect(trigger).toHaveFocus();
+    act(() => window.history.forward());
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(window.location.hash).toBe("");
+    view.unmount();
+    window.history.replaceState(
+      {},
+      "",
+      `/strategies#strategy=${capabilities.strategies[0].strategy_id}`,
+    );
+    render(<App />);
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(window.location.pathname).toBe("/strategies");
+    expect(window.location.hash).toBe("");
+  });
+
   it("releases mobile background isolation when resizing to desktop", async () => {
     const desktop = Object.assign(new EventTarget(), { matches: false });
     vi.stubGlobal(
