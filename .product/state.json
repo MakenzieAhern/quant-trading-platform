@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T01:41:57Z",
-  "milestone": "M3_U6_REPLAY_PREVIEW_AND_U7_PENDING",
+  "updated_at_utc": "2026-09-23T01:46:31Z",
+  "milestone": "M4_ROUTE_BUNDLE_AND_U7_PENDING",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,7 +16,7 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-plans",
+    "branch": "codex/product-v1.2-performance",
     "identity": "MakenzieAhern"
   },
   "ownership": {
@@ -77,7 +77,8 @@
     "U6 real historical exploratory job d9f27183 finished293 sessions; preview2011-03-22->2011-03-23, 32 candidates, 5 risk rejections, account cash/equity/16 positions equal persisted holdings; no paper order submitted",
     "Chrome U6 zh/en and390x844 plan preview passed; local screenshots outside Git; horizontal table hint fixed after visual review",
     "2026-09-23 U6 full backend950/frontend185, Ruff/format/mypy/ESLint/type/build PASS",
-    "PR19 head7235bab draft/attached; CI35807227032 backend/frontend/compose PASS"
+    "PR19 head7235bab draft/attached; CI35807227032 backend/frontend/compose PASS",
+    "M4 route splitting reduced initial JS entry chunk549.12->409.17kB minified; actual Chrome result/dataset deep-link reload PASS; interaction p95 not measured"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -89,7 +90,8 @@
     "RESOLVED: U2 shared localStorage overwrite across tabs; independently retained per-page recovery slots and independent review",
     "RESOLVED: fixed-clock queue test UUID tie and advisory-lock test cross-database count on a shared PostgreSQL instance; full backend949 PASS",
     "RESOLVED: PR18 frontend CI test raced its mock request; explicit resolver readiness fix pushed and CI passed",
-    "OPEN: Vite main bundle548.81 kB exceeds500 kB warning; M4 performance diagnosis pending"
+    "RESOLVED: Vite main bundle exceeded500 kB; route-level lazy loading reduced initial entry chunk to409.17 kB",
+    "OPEN: M4 cold/warm browser p95 interaction latency and large-data rendering remain unmeasured"
   ],
   "external_blockers": [
     {
@@ -177,15 +179,15 @@
       "browser_gate": "historical replay preview in zh/en and mobile PASS; independent account and forward receipt incomplete"
     }
   },
-  "next_task": "Connect a user-started independent U7 paper account and receipt-bound forward plan; continue M4/M5 and remaining product acceptance",
-  "next_command": "Trace PaperTradingManager lifecycle, add mode isolation and conservative forward-source authority gates before accepting any new-market session",
+  "next_task": "Publish the M4 route-splitting slice as draft PR20, then connect a user-started independent U7 paper account and receipt-bound forward plan",
+  "next_command": "Commit and push current codex/product-v1.2-performance slice, create stacked draft PR20, verify CI; then trace PaperTradingManager mode isolation and forward-source authority gates",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
     "M1": "IN_PROGRESS",
     "M2": "IN_PROGRESS",
     "M3": "IN_PROGRESS",
-    "M4": "NOT_RUN",
+    "M4": "IN_PROGRESS",
     "M5": "NOT_RUN"
   }
 }
