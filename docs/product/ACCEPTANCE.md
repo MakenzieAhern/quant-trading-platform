@@ -54,6 +54,33 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 23:45 UTC isolated paper reconnect and restart check
+
+In a disposable `quant-v12-paperqa-20260924` tmpfs PostgreSQL stack with backend
+on port 8001 and frontend on 5174, actual Chrome 153 created synthetic account
+`cccc6b44-dc05-4a57-a9ca-b524adfb3ad0` through the UI. While RUNNING, its
+active WebSocket was closed and reconnected; the authoritative REST sequence
+advanced from 9 to 11 without duplicate fills. After UI pause at sequence 13,
+a second disconnect/reconnect left the REST event count and sequence at 13.
+The session then resumed and naturally STOPPED at sequence 521. All 521
+persisted event sequences were unique and continuous from 1 through 521;
+the final account had one order, one fill, cash `1223.5` and equity `100000000`.
+
+Only the isolated backend was restarted. The same API account still showed
+STOPPED, 521 events, one order, one fill, and identical cash/equity. A fresh
+Chrome context reopened the same page and visibly showed the 2030 synthetic
+label, stopped state, order, fill and portfolio values. The [post-restart
+screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/paper-isolated-stopped-restart-20260924.png)
+is outside Git (SHA-256 `BA998178FBE6067D4D19C63F17709560838CD4A04BB2874712FB0C27E8515FB4`).
+Main DB counts stayed at five paper sessions, 417 paper events and eight
+personal jobs. The three owned test containers and network were removed
+without volumes; their intentionally disposable tmpfs DB was discarded.
+
+This is bounded agent-operated synthetic integration evidence for U7-RECOVER,
+not restoration of the two lost historical ledgers, a full restart matrix,
+genuine forward-market data, or a real-user acceptance test. U7-RECOVER,
+U7-MODES and M4-DATA-INTEGRITY remain FAIL; U7-FORWARD remains NOT_RUN.
+
 ## 2026-09-23 23:07 UTC isolated clean-user demo recording
 
 An empty disposable PostgreSQL `quant_test` and read-only-mounted backend were
