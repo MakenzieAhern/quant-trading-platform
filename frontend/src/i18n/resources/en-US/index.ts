@@ -3,6 +3,20 @@ export const enUS = {
     unavailable: "N/A",
     loading: "Loading {{label}}…",
     error: "Unable to load this data.",
+    loadErrors: {
+      offline:
+        "The service is unavailable. Check its status, then reload this page.",
+      timeout:
+        "The request timed out. Check the service status, then reload this page.",
+      permission: "Access was denied. Check your access before trying again.",
+      notFound:
+        "This record is unavailable. It may have been removed; return to the workbench to choose another.",
+      unknown:
+        "This data could not be loaded. Check the service status, then reload this page.",
+      reload: "Reload page",
+      workbench: "Return to workbench",
+      diagnostic: "Original diagnostic (audit)",
+    },
     noData: "No persisted data is available.",
     previous: "Previous",
     next: "Next",

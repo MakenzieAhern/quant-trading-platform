@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T15:16:28Z",
-  "milestone": "M4_U7_INTERRUPTION_QA_AND_U8_RECOVERY_HELP",
+  "updated_at_utc": "2026-09-23T15:20:55Z",
+  "milestone": "M4_U8_SHARED_LOAD_ERRORS",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -93,7 +93,8 @@
     "PR22 head81ba9bd draft/attached; CI35879037296 backend/frontend/compose PASS after migration Ruff line fix",
     "Chrome historical paper ledger now labels buy/limit/filled/cancelled and risk reasons in Chinese; exact event payloads unchanged",
     "Chrome legacy create form now Chinese; switching to English preserved exact entered capital123456.789; focused35 and full frontend190/lint/type/build PASS",
-    "Actual backend restart while historical account07d72259 was RUNNING led to INTERRUPTED at sequence22 with zero orders/fills and no auto-resume; Chrome shows Chinese recovery action and collapsed raw diagnostic; frontend191/lint/type/build PASS"
+    "Actual backend restart while historical account07d72259 was RUNNING led to INTERRUPTED at sequence22 with zero orders/fills and no auto-resume; Chrome shows Chinese recovery action and collapsed raw diagnostic; frontend191/lint/type/build PASS",
+    "PR23 head89cda16 CI backend/frontend/compose PASS; shared typed load errors now show Chinese actionable 404 in real Chrome and preserve raw diagnostic; frontend193/lint/type/build PASS"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -226,16 +227,16 @@
     },
     "23": {
       "branch": "codex/product-v1.2-paper-i18n",
-      "head": "a7e1aea",
+      "last_verified_head": "89cda16",
       "state": "DRAFT",
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "paper ledger and legacy create locale PASS; interrupted recovery text PASS; wider U8 matrix incomplete"
+      "browser_gate": "paper ledger and legacy create locale PASS; interrupted recovery text and missing-record guidance PASS; wider U8 matrix incomplete"
     }
   },
   "next_task": "Finish U8 language/error/help/a11y coverage, assess lawful receipt-bound forward mode, then complete remaining U5/M4/M5 acceptance",
-  "next_command": "Commit/push interrupted recovery help to existing draft PR23, wait for CI, then inspect current-date source authority before implementing forward market mode",
+  "next_command": "Inspect current PR23 head/CI, then continue U8 error/help/a11y and U5 lawful current-date source gates",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

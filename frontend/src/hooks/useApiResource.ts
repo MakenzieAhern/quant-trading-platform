@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 interface Resource<T> {
   data: T | null;
   loading: boolean;
-  error: string | null;
+  error: Error | null;
 }
 
 export function useApiResource<T>(
@@ -32,7 +32,7 @@ export function useApiResource<T>(
             dependencies,
             data: null,
             loading: false,
-            error: reason.message,
+            error: reason,
           });
         }
       });

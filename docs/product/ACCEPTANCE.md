@@ -35,19 +35,19 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Synthetic demo + distinct audited historical replay with durable pause/resume; forward not implemented | Chrome historical account `4b64380f` started, paused on 2011-03-09, resumed and stopped 2011-03-23; 20 orders, 6 fills, equity99964.8134. Full isolated backend956/frontend188 tests PASS. Forward mode remains | IN_PROGRESS |
 | U7-RECOVER | Socket disconnect/reconnect + backend restart don't fake/duplicate fills | Persisted paused state, deterministic source replay to checked cursor, then append-only continuation | Chrome `4b64380f` stayed PAUSED with 19 events after actual backend restart and WebSocket reconnection; resumed account had 134 non-status events identical to uninterrupted `d7044a3c` (142 vs 138 total, four pause/resume status events). Separate actual mid-run restart left `07d72259` INTERRUPTED at sequence 22 with zero orders/fills and no auto-resume; browser explains retry. Full recovery matrix remains | IN_PROGRESS |
 | U7-FORWARD | Lawful source + completed real session data arriving after user session start; receipt times/plan/simulation | Public-source candidate assessed, forward session not implemented | Historical probe is not forward evidence; real after-start arrival still required | NOT_RUN |
-| U8-I18N | One tree; translated important UI/error/help/a11y; switching retains config/date | Shared i18n for legacy create and paper ledger | Chrome real historical account shows translated signal, order, fill and risk labels; legacy create form is Chinese, and switching to English retained exact entered capital `123456.789`. Interrupted account now shows Chinese actionable recovery help and keeps raw backend diagnostic under audit disclosure. Frontend191/lint/type/build PASS. Remaining pages, server-supplied errors/help/a11y matrix pending | IN_PROGRESS |
+| U8-I18N | One tree; translated important UI/error/help/a11y; switching retains config/date | Shared i18n for legacy create, paper ledger and typed shared load errors | Chrome real historical account shows translated signal, order, fill and risk labels; legacy create form is Chinese, and switching to English retained exact entered capital `123456.789`. Interrupted account has Chinese recovery help; nonexistent dataset has Chinese not-found guidance and preserves raw diagnostic under audit disclosure. Frontend193/lint/type/build PASS. Remaining pages, other server-supplied errors/help/a11y matrix pending | IN_PROGRESS |
 | U8-SETTINGS | System/manual themes, language/motion/market colors/data preferences; explanatory help | Shared safe presentation storage and settings | Storage-denied/quota/locale tests PASS; Chrome theme+language persist reload; full preference matrix pending | IN_PROGRESS |
 | UX-DETAIL | Drawer keeps filters/scroll, Esc/Tab/back/trigger focus, URL | Pending | Keyboard browser | NOT_RUN |
 | UX-COMMAND | Safe Ctrl/Cmd+K + visible entry searches pages/strategy/studies/watchlist/help | Bounded server study/watchlist search, local pages/registered strategies/help | Backend search and frontend debounce/pagination tests PASS; live browser search and keyboard matrix pending | IN_PROGRESS |
 | UX-VIEWS | Saved filters/chips/sort/columns/table-detail/task center | Pending | Reload/reopen | NOT_RUN |
 | UX-CHART | Exact hover/legend/benchmark/date range/equity-drawdown-trade link/table; bounded loading | SVG exact data + linked experiment collections | Chrome selected-date trade/holdings agrees; full summary unaffected; keyboard/hover/large-page matrix pending | IN_PROGRESS |
-| UX-ERROR | No data/permission/offline/timeout/no match/no trades have next step | Pending | Isolated service/DB failure browser tests | NOT_RUN |
+| UX-ERROR | No data/permission/offline/timeout/no match/no trades have next step | Shared load panel distinguishes typed 401/403/404/408 and offline TypeError; raw diagnostic behind disclosure | Chrome real 404 dataset offered safe workbench exit; timeout Chinese component test PASS. Offline, permission and remaining empty-state browser matrix not run | IN_PROGRESS |
 | QA-VISUAL | 1440×900,1280×800,1024×768,390×844; two themes/locales; key 200% zoom | Neutral shell and product pages | Home1440 and mobile390 basic checks; full matrix/zoom not complete | IN_PROGRESS |
 | QA-A11Y | Keyboard/focus/semantic dialogs/live status/reduced motion/AA contrast+targets | Pending | Measured audits + agent keyboard walk | NOT_RUN |
 | QA-PERF | Immediate feedback; measured local interaction p95 target≤200ms; bounded charts/tables | Research archive and result/compare routes loaded on demand; initial JS entry chunk 549.12→409.17 kB minified (169.44→129.31 kB gzip) | Vite build and real Chrome direct reload of historical result/data lineage PASS; cold/warm interaction p95 and large-table audit not yet measured | IN_PROGRESS |
 | QA-ENGINE | Decimal/server validation/idempotency/task isolation; same financial path | Existing financial path + independent queue | 862 backend tests; actual 2011 exploratory run completed; synthetic clearly separated | IN_PROGRESS |
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
-| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | 2026-09-23 isolated backend956 PASS (one optional archive test skipped here; mounted archive test passed separately), frontend191 PASS, Ruff/format/mypy/ESLint/TS/build PASS;0015 disposable upgrade/down/up/check PASS; main DB backup verified and0015 deployed. PR22 and existing PR23 head CI PASS; current follow-up slice CI pending, remaining product gates pending | IN_PROGRESS |
+| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | 2026-09-23 isolated backend956 PASS (one optional archive test skipped here; mounted archive test passed separately), frontend193 PASS, Ruff/format/mypy/ESLint/TS/build PASS;0015 disposable upgrade/down/up/check PASS; main DB backup verified and0015 deployed. PR22 and PR23 `89cda16` CI PASS; current follow-up slice CI pending, remaining product gates pending | IN_PROGRESS |
 | M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Pending | All links validated before release | NOT_RUN |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
@@ -64,6 +64,17 @@ an explicit new-session action, and a collapsed raw English diagnostic retained
 for audit. This is a fail-closed historical replay check, not proof of complete
 crash recovery or a forward market session. The frontend suite passed 191 tests,
 lint, typecheck and production build. Agent walkthrough only.
+
+## 2026-09-23 15:21 UTC shared load-error review
+
+The shared resource hook now preserves typed `ApiError` information instead of
+discarding it into a raw English string. One shared panel distinguishes
+offline, timeout, denied and missing-record states in both locales, retains
+the original diagnostic behind a disclosure, and offers reload or workbench
+navigation. Chrome opened a genuinely nonexistent research dataset and showed
+Chinese not-found guidance and a working `/` exit. A focused timeout test and
+the complete 193-test frontend suite, lint, typecheck and build passed. This
+does not validate the remaining offline/permission/empty-state browser matrix.
 
 ## 2026-09-23 14:57 UTC paper pause/restart/resume checkpoint
 
