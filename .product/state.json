@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T23:28:10Z",
+  "updated_at_utc": "2026-09-23T23:30:54Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,7 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
-    "2026-09-23 23:28UTC real Chrome153 on restored stopped historical paper account: one injected snapshot HTTP503 now triggers socket reconnection and a second authoritative REST snapshot, restoring the page with no alert; injected HTTP403 made one request and showed permission guidance without retry. No account/DB writes. Hook caps persistent reconnect at three backoff retries; focused18/full215 frontend, lint/type/build PASS. This narrows U7-RECOVER and UX-ERROR but missing historical ledgers and full restart/forward gates remain FAIL/NOT_RUN",
+    "2026-09-23 23:31UTC real Chrome153 on restored stopped historical paper account: one injected snapshot HTTP503 now triggers socket reconnection and a second authoritative REST snapshot, restoring the page with no alert; injected HTTP403 made one request and showed permission guidance without retry. Persistent503 stopped after four total requests; live counts paper5/events417/jobs8 unchanged. Focused18/full215 frontend, lint/type/build and PR32 e165e38 CI35933791233 backend/frontend/compose PASS. This narrows U7-RECOVER and UX-ERROR but missing historical ledgers and full restart/forward gates remain FAIL/NOT_RUN",
     "2026-09-23 23:20UTC real Chrome153 on two persisted synthetic demo jobs: detail and comparison in EN/ZH now show the truthful synthetic equal-weight benchmark label instead of raw SYNTHETIC_EQUAL_WEIGHT; raw API identifier and financial values unchanged. No page overflow at1280x800. Focused31/full213 frontend tests, lint/type/build PASS; PR32 efc608c CI35932877381 backend/frontend/compose PASS. Bounded U8 display defect closed; wider bilingual/release matrix remains IN_PROGRESS",
     "2026-09-23 23:08UTC empty disposable quant_test backend8001 and actual Chrome153 frontend5173: full four-step Chinese guided synthetic demo created exactly one server job2813dc8f with only POST /api/experiments; result SUCCEEDED synthetic_demo, +0.39pct displayed return and CNY25 cost with non-market warning. VP8 9.60s video SHA256 947B3233284E55C45BF2D515B81779BFA3D261C538344D1BFB48BB0F8102FFC8 opened in Chrome, running stage frame and step screenshots inspected. Only isolated backend restarted; fresh Chrome reopened same result. Main DB remained8 personal jobs/5 paper sessions; temp containers/network removed without volumes. Agent-operated synthetic evidence, not forward or novice-user acceptance",
     "2026-09-23 23:03UTC bilingual draft user guides corrected stale U4 browser-export warning using actual Chrome153 CSV/JSON acceptance. Both now disclose the two unrecovered post-backup paper sessions and same-disk backup limitation; no claim of full durability or v1.2 release. PR32 head6a31387 CI35931449160 backend/frontend/compose PASS",
@@ -406,9 +406,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "efc608c",
+      "last_verified_head": "e165e38",
       "state": "DRAFT",
-      "ci_run": 35932877381,
+      "ci_run": 35933791233,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
