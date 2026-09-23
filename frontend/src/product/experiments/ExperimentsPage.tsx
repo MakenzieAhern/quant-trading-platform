@@ -8,30 +8,83 @@ import { useExperimentCopy } from "./copy";
 import { comparisonUrl } from "./comparison";
 import { useComparisonCopy } from "./comparisonCopy";
 import { isActiveExperiment } from "./useExperiment";
-import type { Experiment, Page } from "./types";
+import type { Experiment, ExperimentMode, ExperimentStatus, Page } from "./types";
 import "./experiments.css";
+
+export const EXPERIMENT_VIEW_KEY = "quant.product.experiment-view.v1";
+type Sort = "newest" | "oldest" | "name_asc" | "name_desc";
+type View = {
+  q: string;
+  status: ExperimentStatus | "";
+  mode: ExperimentMode | "";
+  sort: Sort;
+  columns: { mode: boolean; period: boolean; created: boolean };
+};
+const statuses: ExperimentStatus[] = [
+  "QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED", "INTERRUPTED",
+];
+const defaultView: View = {
+  q: "", status: "", mode: "", sort: "newest",
+  columns: { mode: true, period: true, created: true },
+};
+function readSavedView(): View {
+  try {
+    const raw = window.localStorage.getItem(EXPERIMENT_VIEW_KEY);
+    if (!raw) return defaultView;
+    const value = JSON.parse(raw) as View;
+    if (
+      !value || typeof value.q !== "string" || value.q.length > 80 ||
+      !["", ...statuses].includes(value.status) ||
+      !["", "synthetic_demo", "historical_exploration"].includes(value.mode) ||
+      !["newest", "oldest", "name_asc", "name_desc"].includes(value.sort) ||
+      !value.columns ||
+      Object.values(value.columns).some((entry) => typeof entry !== "boolean") ||
+      !["mode", "period", "created"].every((key) => typeof value.columns[key as keyof View["columns"]] === "boolean")
+    ) return defaultView;
+    return value;
+  } catch {
+    return defaultView;
+  }
+}
 
 export function ExperimentsPage() {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
   const [selected, setSelected] = useState<{ id: string; name: string }[]>([]);
   const [offset, setOffset] = useState(0);
+  const [view, setView] = useState(readSavedView);
+  const [saveStatus, setSaveStatus] = useState<"saved" | "error" | null>(null);
   const [revision, setRevision] = useState(0);
+  const queryKey = JSON.stringify([offset, view.q, view.status, view.mode, view.sort]);
   const [jobs, setJobs] = useState<{
-    offset: number;
+    key: string;
     data: Page<Experiment> | null;
     error: boolean;
-  }>({ offset, data: null, error: false });
-  if (jobs.offset !== offset) setJobs({ offset, data: null, error: false });
+  }>({ key: queryKey, data: null, error: false });
+  if (jobs.key !== queryKey) setJobs({ key: queryKey, data: null, error: false });
+  function updateView(patch: Partial<View>, queryChanged = true) {
+    setView((current) => ({ ...current, ...patch }));
+    setSaveStatus(null);
+    if (queryChanged) setOffset(0);
+  }
+  function resetView() {
+    updateView(defaultView);
+    try { window.localStorage.removeItem(EXPERIMENT_VIEW_KEY); }
+    catch { setSaveStatus("error"); }
+  }
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
     let timer: number | undefined;
     async function load() {
       try {
-        const data = await experimentApi.list(controller.signal, 20, offset);
+        const data = await experimentApi.list(controller.signal, 20, offset, view.q, {
+          status: view.status || undefined,
+          mode: view.mode || undefined,
+          sort: view.sort,
+        });
         if (!active) return;
-        setJobs({ offset, data, error: false });
+        setJobs({ key: queryKey, data, error: false });
         if (data.items.some(isActiveExperiment))
           timer = window.setTimeout(() => void load(), 5000);
       } catch {
@@ -44,7 +97,7 @@ export function ExperimentsPage() {
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [offset, revision]);
+  }, [queryKey, revision, offset, view.q, view.status, view.mode, view.sort]);
   return (
     <div className="experimentWorkspace">
       <header className="experimentHeader">
@@ -65,6 +118,80 @@ export function ExperimentsPage() {
           </button>
         </div>
       </header>
+      <section className="experimentPanel experimentView" aria-label={c.viewSettings}>
+        <div className="experimentViewControls">
+          <label>
+            {c.searchStudies}
+            <input type="search" maxLength={80} value={view.q}
+              onChange={(event) => updateView({ q: event.target.value })} />
+          </label>
+          <label>
+            {c.status}
+            <select value={view.status}
+              onChange={(event) => updateView({ status: event.target.value as View["status"] })}>
+              <option value="">{c.allStatuses}</option>
+              {statuses.map((status) => <option key={status} value={status}>{c.statuses[status]}</option>)}
+            </select>
+          </label>
+          <label>
+            {c.mode}
+            <select value={view.mode}
+              onChange={(event) => updateView({ mode: event.target.value as View["mode"] })}>
+              <option value="">{c.allModes}</option>
+              <option value="historical_exploration">{c.historical}</option>
+              <option value="synthetic_demo">{c.demo}</option>
+            </select>
+          </label>
+          <label>
+            {c.sort}
+            <select value={view.sort}
+              onChange={(event) => updateView({ sort: event.target.value as Sort })}>
+              <option value="newest">{c.newest}</option>
+              <option value="oldest">{c.oldest}</option>
+              <option value="name_asc">{c.nameAsc}</option>
+              <option value="name_desc">{c.nameDesc}</option>
+            </select>
+          </label>
+        </div>
+        <div className="experimentViewActions">
+          <details>
+            <summary>{c.columns}</summary>
+            <div className="experimentColumnOptions">
+              {(["mode", "period", "created"] as const).map((key) => (
+                <label key={key}>
+                  <input type="checkbox" checked={view.columns[key]}
+                    onChange={(event) => updateView({ columns: { ...view.columns, [key]: event.target.checked } }, false)} />
+                  {c[key]}
+                </label>
+              ))}
+            </div>
+          </details>
+          <button className="button secondary" onClick={() => {
+            try {
+              window.localStorage.setItem(EXPERIMENT_VIEW_KEY, JSON.stringify(view));
+              setSaveStatus("saved");
+            } catch { setSaveStatus("error"); }
+          }}>{c.saveView}</button>
+          <button className="button secondary" onClick={resetView}>{c.clearView}</button>
+        </div>
+        {saveStatus && <p role={saveStatus === "error" ? "alert" : "status"}>
+          {saveStatus === "error" ? c.viewSaveFailed : c.viewSaved}
+        </p>}
+        {(view.q || view.status || view.mode) && <div className="experimentFilterChips">
+          {view.q && <button onClick={() => updateView({ q: "" })}
+            aria-label={`${c.removeFilter}: ${c.searchStudies}`}>
+            {c.searchStudies}: {view.q} ×
+          </button>}
+          {view.status && <button onClick={() => updateView({ status: "" })}
+            aria-label={`${c.removeFilter}: ${c.status}`}>
+            {c.status}: {c.statuses[view.status]} ×
+          </button>}
+          {view.mode && <button onClick={() => updateView({ mode: "" })}
+            aria-label={`${c.removeFilter}: ${c.mode}`}>
+            {c.mode}: {view.mode === "synthetic_demo" ? c.demo : c.historical} ×
+          </button>}
+        </div>}
+      </section>
       <section
         className="experimentPanel experimentCompareSelection"
         aria-label={u.compare}
@@ -118,72 +245,44 @@ export function ExperimentsPage() {
         <>
           {jobs.data.items.length === 0 ? (
             <div className="experimentPanel">
-              <p>{c.empty}</p>
-              <Link href="/research/new">{c.newExperiment}</Link>
+              <p>{view.q || view.status || view.mode ? c.noMatches : c.empty}</p>
+              {view.q || view.status || view.mode ? (
+                <button className="button secondary" onClick={resetView}>{c.clearView}</button>
+              ) : <Link href="/research/new">{c.newExperiment}</Link>}
             </div>
           ) : (
-            <div className="experimentList">
-              {jobs.data.items.map((job) => (
-                <article
-                  className="experimentPanel experimentListCard"
-                  key={job.job_id}
-                >
-                  <div>
-                    <span className="experimentMode">
-                      {job.mode === "synthetic_demo" ? c.demo : c.historical}
-                    </span>
-                    <h2>
-                      <Link href={`/experiments/${job.job_id}`}>
-                        {job.name}
-                      </Link>
-                    </h2>
-                    <p>
-                      {job.configuration.start_date} →{" "}
-                      {job.configuration.end_date}{" "}
-                      <span className="experimentHelp">Asia/Shanghai</span>
-                    </p>
-                    <p className="experimentHelp">
-                      {c.created}: {formatUtc(job.created_at)}
-                    </p>
-                  </div>
-                  <div className="experimentListAction">
-                    <label className="experimentCheck">
-                      <input
-                        type="checkbox"
-                        aria-label={`${u.select}: ${job.name}`}
-                        checked={selected.some(
-                          (item) => item.id === job.job_id,
-                        )}
-                        disabled={
-                          job.status !== "SUCCEEDED" ||
-                          !job.result_available ||
-                          (selected.length === 3 &&
-                            !selected.some((item) => item.id === job.job_id))
-                        }
-                        onChange={(event) =>
-                          setSelected((items) =>
-                            event.target.checked
-                              ? [...items, { id: job.job_id, name: job.name }]
-                              : items.filter((item) => item.id !== job.job_id),
-                          )
-                        }
-                      />
-                      {u.select}
-                    </label>
-                    <span
-                      className={`experimentStatus experimentStatus--${job.status.toLowerCase()}`}
-                    >
+            <div className="experimentTableScroll" role="region" tabIndex={0} aria-label={c.listTitle}>
+              <p className="experimentHelp">{c.tableScroll}</p>
+              <table className="experimentTable">
+                <thead><tr>
+                  <th scope="col">{u.select}</th>
+                  <th scope="col">{c.task}</th>
+                  {view.columns.mode && <th scope="col">{c.mode}</th>}
+                  {view.columns.period && <th scope="col">{c.period}</th>}
+                  {view.columns.created && <th scope="col">{c.created}</th>}
+                  <th scope="col">{c.status}</th>
+                  <th scope="col">{c.open}</th>
+                </tr></thead>
+                <tbody>{jobs.data.items.map((job) => (
+                  <tr key={job.job_id}>
+                    <td><input type="checkbox" aria-label={`${u.select}: ${job.name}`}
+                      checked={selected.some((item) => item.id === job.job_id)}
+                      disabled={job.status !== "SUCCEEDED" || !job.result_available ||
+                        (selected.length === 3 && !selected.some((item) => item.id === job.job_id))}
+                      onChange={(event) => setSelected((items) => event.target.checked
+                        ? [...items, { id: job.job_id, name: job.name }]
+                        : items.filter((item) => item.id !== job.job_id))} /></td>
+                    <th scope="row"><Link href={`/experiments/${job.job_id}`}>{job.name}</Link></th>
+                    {view.columns.mode && <td>{job.mode === "synthetic_demo" ? c.demo : c.historical}</td>}
+                    {view.columns.period && <td>{job.configuration.start_date} → {job.configuration.end_date}</td>}
+                    {view.columns.created && <td>{formatUtc(job.created_at)}</td>}
+                    <td><span className={`experimentStatus experimentStatus--${job.status.toLowerCase()}`}>
                       {c.statuses[job.status]}
-                    </span>
-                    <Link
-                      className="button secondary"
-                      href={`/experiments/${job.job_id}`}
-                    >
-                      {c.open}
-                    </Link>
-                  </div>
-                </article>
-              ))}
+                    </span></td>
+                    <td><Link className="button secondary" href={`/experiments/${job.job_id}`}>{c.open}</Link></td>
+                  </tr>
+                ))}</tbody>
+              </table>
             </div>
           )}
           <Pagination

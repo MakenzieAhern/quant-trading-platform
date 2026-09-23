@@ -21,7 +21,7 @@ import {
 import { CreateExperimentPage } from "./CreateExperimentPage";
 import { ExperimentDetailPage } from "./ExperimentDetailPage";
 import { ExperimentPlan } from "./ExperimentPlan";
-import { ExperimentsPage } from "./ExperimentsPage";
+import { EXPERIMENT_VIEW_KEY, ExperimentsPage } from "./ExperimentsPage";
 import {
   EXPERIMENT_DRAFT_KEY,
   readExperimentDraft,
@@ -31,6 +31,7 @@ import { capabilities, configuration, job, plan, result } from "./fixtures.test-
 
 beforeEach(async () => {
   window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
+  window.localStorage.removeItem(EXPERIMENT_VIEW_KEY);
   await i18n.changeLanguage("en-US");
   window.history.replaceState({}, "", "/research/new");
 });
@@ -416,11 +417,11 @@ describe("durable experiment detail", () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(0);
     });
-    expect(screen.getByText("Queued")).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "Queued" })).toBeInTheDocument();
     await act(async () => {
       await vi.advanceTimersByTimeAsync(5000);
     });
-    expect(screen.getByText("Complete")).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "Complete" })).toBeInTheDocument();
     expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
     await act(async () => {
       await vi.advanceTimersByTimeAsync(10000);
@@ -542,6 +543,36 @@ describe("durable experiment detail", () => {
     expect(
       screen.getAllByRole("link", { name: "New guided backtest" })[0],
     ).toHaveAttribute("href", "/research/new");
+  });
+
+  it("persists a server-wide filtered, sorted column view across remount", async () => {
+    const list = vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [{ ...job, status: "SUCCEEDED", result_available: true }],
+      total: 1, limit: 20, offset: 0,
+    });
+    const first = render(<ExperimentsPage />);
+    await screen.findByRole("link", { name: job.name });
+    await userEvent.type(screen.getByLabelText("Search saved studies"), "Precision");
+    await userEvent.selectOptions(screen.getByLabelText("Status"), "SUCCEEDED");
+    await userEvent.selectOptions(screen.getByLabelText("Sort studies"), "name_asc");
+    await userEvent.click(screen.getByText("Columns"));
+    await userEvent.click(screen.getByRole("checkbox", { name: "Created (UTC)" }));
+    await userEvent.click(screen.getByRole("button", { name: "Save this view" }));
+    expect(screen.getByText("View saved on this device.")).toBeInTheDocument();
+    first.unmount();
+    render(<ExperimentsPage />);
+    expect(screen.getByLabelText("Search saved studies")).toHaveValue("Precision");
+    expect(screen.getByLabelText("Status")).toHaveValue("SUCCEEDED");
+    expect(screen.getByLabelText("Sort studies")).toHaveValue("name_asc");
+    expect(screen.queryByRole("columnheader", { name: "Created (UTC)" })).not.toBeInTheDocument();
+    await waitFor(() => expect(list).toHaveBeenLastCalledWith(
+      expect.any(AbortSignal), 20, 0, "Precision",
+      { status: "SUCCEEDED", mode: undefined, sort: "name_asc" },
+    ));
+    await userEvent.click(screen.getByRole("button", { name: "Remove filter: Status" }));
+    expect(screen.getByLabelText("Status")).toHaveValue("");
+    await userEvent.click(screen.getByRole("button", { name: "Reset view" }));
+    expect(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)).toBeNull();
   });
 });
 

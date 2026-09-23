@@ -126,6 +126,45 @@ async def test_server_search_finds_older_jobs_and_escapes_like_wildcards(manager
         assert (await client.get("/api/experiments", params={"q": "   "})).json()["total"] == 23
 
 
+async def test_list_filters_and_sort_apply_before_pagination(manager):
+    older = await manager.create(
+        CreateExperimentRequest.model_validate(payload(name="Zebra demo")), "view-older"
+    )
+    for index in range(21):
+        await manager.create(
+            CreateExperimentRequest.model_validate(payload(name=f"Other {index}")),
+            f"view-other-{index}",
+        )
+    newer = await manager.create(
+        CreateExperimentRequest.model_validate(payload(name="Alpha demo")), "view-newer"
+    )
+    async with SessionFactory() as db, db.begin():
+        for identifier in (older.id, newer.id):
+            row = await db.get(ExperimentJobModel, identifier)
+            assert row is not None
+            row.status = "SUCCEEDED"
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        params = {"status": "SUCCEEDED", "mode": "synthetic_demo", "q": "demo", "limit": 1}
+        first = (await client.get("/api/experiments", params={**params, "sort": "name_asc"})).json()
+        second = (
+            await client.get("/api/experiments", params={**params, "sort": "name_asc", "offset": 1})
+        ).json()
+        assert first["total"] == second["total"] == 2
+        assert [first["items"][0]["job_id"], second["items"][0]["job_id"]] == [
+            str(newer.id),
+            str(older.id),
+        ]
+        descending = (
+            await client.get("/api/experiments", params={**params, "sort": "name_desc"})
+        ).json()
+        assert descending["items"][0]["job_id"] == str(older.id)
+        assert (await client.get("/api/experiments", params={"status": "FAILED"})).json()[
+            "total"
+        ] == 0
+        for invalid in ({"status": "NORMAL"}, {"mode": "live"}, {"sort": "equity"}):
+            assert (await client.get("/api/experiments", params=invalid)).status_code == 422
+
+
 async def test_worker_results_are_persisted_paginated_and_reopenable(manager):
     job = await manager.create(CreateExperimentRequest.model_validate(payload()), "durable")
     await manager.start()
