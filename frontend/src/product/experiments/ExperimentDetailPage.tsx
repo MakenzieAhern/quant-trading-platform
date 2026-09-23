@@ -11,6 +11,7 @@ import { useComparisonCopy } from "./comparisonCopy";
 import { explainExperimentCode } from "./codes";
 import { experimentError } from "./errors";
 import { ExperimentCollections } from "./ExperimentCollections";
+import { ExperimentPlan } from "./ExperimentPlan";
 import { isActiveExperiment, useExperiment } from "./useExperiment";
 import type { Experiment } from "./types";
 import "./experiments.css";
@@ -331,6 +332,7 @@ function ExperimentResults({
           ))}
         </details>
       </section>
+      <ExperimentPlan plan={data.simulation_plan ?? null} />
       <ExperimentCollections jobId={job.job_id} />
       <section className="experimentPanel">
         <h2>{c.execution}</h2>

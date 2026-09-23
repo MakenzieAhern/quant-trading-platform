@@ -9,6 +9,7 @@ from app.application.experiments.data import (
     DEMO_END,
     DEMO_ID,
     DEMO_SHA,
+    DEMO_START,
     ExperimentDatasetRegistry,
     SyntheticExperimentDataset,
 )
@@ -68,6 +69,9 @@ def test_real_engine_demo_has_exact_money_costs_progress_and_repeatable_results(
     assert phases[0] == ("VERIFYING_DATA", 0, None)
     assert phases[-1] == ("EXECUTING", 340, 340)
     assert output.summary == repeat.summary
+    assert output.summary["simulation_plan"]["status"] == "NEXT_SESSION_UNAVAILABLE"
+    assert output.summary["simulation_plan"]["candidates"] == []
+    assert output.summary["simulation_plan"]["estimated_cash_required"] is None
     assert output.rows["equity"] == repeat.rows["equity"]
     assert output.rows["holdings"] == repeat.rows["holdings"]
     assert len(output.summary["implementation_sha256"]) == 64
@@ -158,6 +162,48 @@ def test_no_fills_preserves_real_all_cash_snapshots(tmp_path):
         assert snapshot["cash"] == snapshot["equity"] == "100000.123456789123456789"
         assert snapshot["positions"] == []
         assert snapshot["market_value"] == snapshot["pending_corporate_action_value"] == "0"
+
+
+def test_final_session_plan_uses_replayed_account_oms_and_only_known_calendar(tmp_path):
+    source = SyntheticExperimentDataset(DEMO_END)
+    as_of, next_day = source.calendar_days[252:254]
+    request = demo_request(start_date=DEMO_START.isoformat(), end_date=as_of.isoformat())
+    output = run_experiment(
+        ExperimentDatasetRegistry(tmp_path), request, DEMO_SHA, Event(), lambda *p: None
+    )
+    plan = output.summary["simulation_plan"]
+    assert plan["status"] == "SIMULATION_PREVIEW"
+    assert plan["as_of_trading_date"] == as_of.isoformat()
+    assert plan["next_accepted_session"] == next_day.isoformat()
+    assert plan["configuration_sha256"] == canonical_sha256(json_value(request.model_dump()))
+    assert plan["data_snapshot_sha256"] != plan["account"]["snapshot_sha256"]
+    assert plan["account"]["cash"] == output.rows["holdings"][-1]["cash"]
+    assert plan["account"]["equity"] == output.rows["holdings"][-1]["equity"]
+    assert plan["candidates"]
+    assert all(
+        item["reference_raw_close"] is None or isinstance(item["reference_raw_close"], str)
+        for item in plan["candidates"]
+    )
+    assert plan["simulation_only"] is True and plan["submitted_to_account"] is False
+    assert plan["not_today_advice"] is True
+    assert all(
+        item["risk_approved"] is not None
+        for item in plan["candidates"]
+        if item["proposed_quantity"] != "0"
+    )
+
+    early = run_experiment(
+        ExperimentDatasetRegistry(tmp_path),
+        demo_request(
+            start_date=DEMO_START.isoformat(), end_date=source.calendar_days[10].isoformat()
+        ),
+        DEMO_SHA,
+        Event(),
+        lambda *p: None,
+    ).summary["simulation_plan"]
+    assert early["status"] == "INSUFFICIENT_WARMUP"
+    assert early["candidates"] == []
+    assert early["estimated_cash_required"] is None
 
 
 @pytest.mark.parametrize(

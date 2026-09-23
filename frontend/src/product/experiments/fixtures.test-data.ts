@@ -3,6 +3,7 @@ import type {
   Experiment,
   ExperimentConfiguration,
   ExperimentResult,
+  SimulationPlan,
 } from "./types";
 
 export const capabilities: Capabilities = {
@@ -108,4 +109,36 @@ export const result: ExperimentResult = {
   date_start: configuration.start_date,
   date_end: configuration.end_date,
   benchmark_id: "SYNTHETIC",
+};
+export const plan: SimulationPlan = {
+  status: "SIMULATION_PREVIEW",
+  mode: "synthetic_demo",
+  as_of_trading_date: "2031-04-14",
+  next_accepted_session: "2031-04-15",
+  dataset_sha256: "a".repeat(64),
+  configuration_sha256: "b".repeat(64),
+  strategy_id: "cn_a_cross_sectional_momentum_low_vol_v1",
+  strategy_version: "1",
+  simulation_only: true,
+  submitted_to_account: false,
+  price_basis: "COMPLETED_RAW_CLOSE_ESTIMATE_NOT_NEXT_OPEN",
+  account_mode: "SYNTHETIC_DEMO",
+  not_today_advice: true,
+  data_snapshot_sha256: "c".repeat(64),
+  account: { cash: "90123.000000000000000001", equity: "100000", snapshot_sha256: "d".repeat(64), positions: [] },
+  candidates: [{
+    security_id: "CN-A:SSE:600000",
+    target_weight: "0.1",
+    held_quantity: "0",
+    target_quantity: "100",
+    desired_change_quantity: "100",
+    proposed_quantity: "100",
+    side: "BUY",
+    reference_raw_close: "9.123456789123456789",
+    trigger_reason: "TOP_DECILE_MOMENTUM_LOW_VOL",
+    risk_approved: true,
+    risk_reason_code: "APPROVED",
+  }],
+  estimated_cash_required: "917.3456789123456789",
+  risk_rejections: 0,
 };

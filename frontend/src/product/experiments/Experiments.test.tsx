@@ -20,13 +20,14 @@ import {
 } from "./api";
 import { CreateExperimentPage } from "./CreateExperimentPage";
 import { ExperimentDetailPage } from "./ExperimentDetailPage";
+import { ExperimentPlan } from "./ExperimentPlan";
 import { ExperimentsPage } from "./ExperimentsPage";
 import {
   EXPERIMENT_DRAFT_KEY,
   readExperimentDraft,
   saveExperimentDraft,
 } from "./draft";
-import { capabilities, configuration, job, result } from "./fixtures.test-data";
+import { capabilities, configuration, job, plan, result } from "./fixtures.test-data";
 
 beforeEach(async () => {
   window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
@@ -545,6 +546,28 @@ describe("durable experiment detail", () => {
 });
 
 describe("experiment contract", () => {
+  it("renders an exact simulation-only plan in both languages without an execute control", async () => {
+    render(<ExperimentPlan plan={plan} />);
+    expect(screen.getByText("Simulated rebalance preview")).toBeInTheDocument();
+    expect(screen.getByText(/Not today's trading advice/)).toBeInTheDocument();
+    expect(screen.getByText("9.123456789123456789")).toBeInTheDocument();
+    expect(screen.getByText("Approved for simulation")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /execute|submit/i })).not.toBeInTheDocument();
+    await i18n.changeLanguage("zh-CN");
+    expect(screen.getByText("模拟调仓预览")).toBeInTheDocument();
+    expect(screen.getByText(/不是今日交易建议/)).toBeInTheDocument();
+  });
+  it("rejects rounded or falsely submitted simulated plans", () => {
+    expect(parseResult({ ...result, simulation_plan: plan }).simulation_plan).toEqual(plan);
+    expect(() => parseResult({
+      ...result,
+      simulation_plan: { ...plan, estimated_cash_required: 917.3 },
+    })).toThrow();
+    expect(() => parseResult({
+      ...result,
+      simulation_plan: { ...plan, submitted_to_account: true },
+    })).toThrow();
+  });
   it("rejects rounded JSON financial numbers instead of coercing them", () => {
     expect(() =>
       parseExperiment({

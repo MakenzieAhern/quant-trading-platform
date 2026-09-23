@@ -31,7 +31,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, automatic download and persistent prepared-file link | Injection/precision/API tests PASS; actual30021-byte historical JSON HTTP200; real browser download artifact/event still unverified | IN_PROGRESS |
 | U5-MARKET | Search/watchlist/raw-adjusted/date/source view | /api/markets and /markets deployed0013 | 20 backend/14 frontend focused tests; independent review PASS; Chrome000001 raw22.45/HFQ874.904325432379995/suspension2010-03-01; watchlist persists fresh tab; dialog dates/locale/Esc;390+1280 no page overflow | PASS |
 | U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | /data and /api/market-updates; separate product cache and migration0014 | Real Chrome one-security/one-date job `3b729cf9` succeeded, one receipt/observation and zero unresolved calendar dates; receipt hashes and restart/reload persistence verified. Cross-board, failure/retry browser and authority promotion remain | IN_PROGRESS |
-| U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Pending | API invariants + result→plan browser | NOT_RUN |
+| U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Persisted result preview from existing replay account and OMS; no independent account submission | Historical job `d9f27183` completed 293/293; 2011-03-22 preview for next accepted 2011-03-23, 32 candidates, 5 risk rejections; API cash/equity/16 positions equal holdings; Chrome zh/en, desktop/mobile; backend950/frontend185 and exact-value tests PASS. Independent U7 account and forward receipt still pending | IN_PROGRESS |
 | U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Existing synthetic paper retained | Mode isolation/lifecycle tests | NOT_RUN |
 | U7-RECOVER | Socket disconnect/reconnect + backend restart don't fake/duplicate fills | Existing runtime interruption | Product retry/resume integration | NOT_RUN |
 | U7-FORWARD | Lawful source + completed real session data arriving after user session start; receipt times/plan/simulation | Public-source candidate assessed, forward session not implemented | Historical probe is not forward evidence; real after-start arrival still required | NOT_RUN |
@@ -47,7 +47,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | QA-PERF | Immediate feedback; measured local interaction p95 target≤200ms; bounded charts/tables | Pending | Machine/data/browser/cache/method to record | NOT_RUN |
 | QA-ENGINE | Decimal/server validation/idempotency/task isolation; same financial path | Existing financial path + independent queue | 862 backend tests; actual 2011 exploratory run completed; synthetic clearly separated | IN_PROGRESS |
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
-| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | 2026-09-23 full backend949/frontend182 PASS, Ruff/mypy/ESLint/TS/build PASS;0014 disposable down/up/check PASS; PR15 CI35710621776 PASS; remaining product gates pending | IN_PROGRESS |
+| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | 2026-09-23 full backend950/frontend185 PASS, Ruff/format/mypy/ESLint/TS/build PASS;0014 disposable down/up/check PASS; PR18 CI35806246775 and PR19 CI35807227032 PASS; remaining product gates pending | IN_PROGRESS |
 | M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Pending | All links validated before release | NOT_RUN |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
@@ -84,3 +84,22 @@ task after backend restart with unchanged counts; the screenshot is
 remain 1 dataset/3 runs/310 trades and frozen manifest/freeze hashes unchanged.
 This is a historical candidate update, not trading authority or a forward
 simulation receipt after user-session start. U6/U7 and the full matrix remain.
+
+## 2026-09-23 U6 historical preview checkpoint
+
+The actual historical exploratory job `d9f27183-a9a1-4f34-aef4-eba439f53374`
+finished 293/293 accepted sessions through 2011-03-22. Its saved preview uses
+only completed-session raw closes and the accepted calendar's next date,
+2011-03-23. Replayed cash `45539.94836`, equity `104666.94836`, and 16 holdings
+exactly match the persisted final holdings endpoint. The preview records 32
+candidates and five risk rejections; approved-buy cash `44221.44166` is an
+estimate at the completed close, not an executable next-open amount. No paper
+order was submitted. An insufficient-warmup test produces no usable plan.
+
+Chrome rendered the real result and plan in Chinese and English. At 390×844,
+the whole page has no horizontal overflow; the candidate table scrolls locally
+with an explicit bilingual hint. Agent screenshots (not real-user evidence) are
+outside Git at `u6/plan-zh-dark-desktop.png` and
+`u6/plan-en-dark-mobile-390.png`. This is U6 replay preview evidence, **not**
+completion of the independent U7 account, genuinely new-market forward mode,
+or U6 submission to a simulated account.

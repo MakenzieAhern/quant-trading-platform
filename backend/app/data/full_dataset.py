@@ -81,11 +81,24 @@ class FullDataset:
                 raise ValueError(f"FROZEN_PARTITION_CHANGED:{relative}")
 
         end = period.end.isoformat()
-        self.calendar_days = tuple(
+        # The accepted calendar can identify the next session without revealing
+        # future prices, statuses or events to the strategy.
+        all_calendar_days = tuple(
             date.fromisoformat(row["session_date"])
             for row in pq.read_table(
-                root / "calendar.parquet", filters=[("session_date", "<=", end)]
+                root / "calendar.parquet", columns=["session_date"]
             ).to_pylist()
+        )
+        self.calendar_days = tuple(day for day in all_calendar_days if day <= period.end)
+        next_day = next((day for day in all_calendar_days if day > period.end), None)
+        self.next_session = (
+            TradingSession(
+                session_date=next_day,
+                is_open=True,
+                source_version=manifest.canonical_sha256,
+            )
+            if next_day is not None
+            else None
         )
         self.calendar = TradingCalendar(
             market=Market.CN_A,
