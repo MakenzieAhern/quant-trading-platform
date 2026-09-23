@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T01:46:31Z",
+  "updated_at_utc": "2026-09-23T01:49:29Z",
   "milestone": "M4_ROUTE_BUNDLE_AND_U7_PENDING",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -78,7 +78,8 @@
     "Chrome U6 zh/en and390x844 plan preview passed; local screenshots outside Git; horizontal table hint fixed after visual review",
     "2026-09-23 U6 full backend950/frontend185, Ruff/format/mypy/ESLint/type/build PASS",
     "PR19 head7235bab draft/attached; CI35807227032 backend/frontend/compose PASS",
-    "M4 route splitting reduced initial JS entry chunk549.12->409.17kB minified; actual Chrome result/dataset deep-link reload PASS; interaction p95 not measured"
+    "M4 route splitting reduced initial JS entry chunk549.12->409.17kB minified; actual Chrome result/dataset deep-link reload PASS; interaction p95 not measured",
+    "PR20 head e2080ec draft/attached; CI35807772638 backend/frontend/compose PASS"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -177,10 +178,19 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "historical replay preview in zh/en and mobile PASS; independent account and forward receipt incomplete"
+    },
+    "20": {
+      "branch": "codex/product-v1.2-performance",
+      "state": "DRAFT",
+      "ci_run": 35807772638,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "result and research dataset deep-link reload PASS; measured p95 incomplete"
     }
   },
-  "next_task": "Publish the M4 route-splitting slice as draft PR20, then connect a user-started independent U7 paper account and receipt-bound forward plan",
-  "next_command": "Commit and push current codex/product-v1.2-performance slice, create stacked draft PR20, verify CI; then trace PaperTradingManager mode isolation and forward-source authority gates",
+  "next_task": "Connect a user-started independent U7 paper account and receipt-bound forward plan; complete remaining U5/M4/M5 gates",
+  "next_command": "Trace PaperTradingManager modes and state recovery, then implement historical A-share account path without treating candidate raw updates as execution authority",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
