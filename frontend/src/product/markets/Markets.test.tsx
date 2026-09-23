@@ -315,6 +315,81 @@ describe("historical cache markets", () => {
     ).toHaveValue("Observed");
   });
 
+  it("closes and reopens a paged security detail with browser history without resetting filters", async () => {
+    vi.mocked(marketApi.search).mockImplementation(
+      async (_dataset, _q, _exchange, offset) => ({
+        items: [security],
+        total: 45,
+        limit: 20,
+        offset: offset ?? 0,
+        metadata,
+      }),
+    );
+    render(<MarketsPage />);
+    await screen.findByRole("button", {
+      name: `Inspect history: ${security.security_id}`,
+    });
+    await userEvent.selectOptions(screen.getByLabelText("Exchange"), "SSE");
+    await userEvent.click(
+      within(screen.getByRole("region", { name: "Search securities" })).getByRole(
+        "button",
+        { name: "Next" },
+      ),
+    );
+    await waitFor(() =>
+      expect(vi.mocked(marketApi.search).mock.calls.at(-1)?.[3]).toBe(20),
+    );
+    const count = vi.mocked(marketApi.search).mock.calls.length;
+    const trigger = screen.getByRole("button", {
+      name: `Inspect history: ${security.security_id}`,
+    });
+    await userEvent.click(trigger);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(new URLSearchParams(window.location.hash.slice(1)).get("security")).toBe(
+      security.security_id,
+    );
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.hash).toBe(""));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+    expect(screen.getByLabelText("Exchange")).toHaveValue("SSE");
+    expect(vi.mocked(marketApi.search).mock.calls.length).toBe(count);
+    act(() => window.history.forward());
+    await waitFor(() => expect(screen.getByRole("dialog")).toBeInTheDocument());
+    expect(vi.mocked(marketApi.search).mock.calls.length).toBe(count);
+    expect(screen.getByLabelText("Exchange")).toHaveValue("SSE");
+  });
+
+  it("loads an exact security from a direct detail URL and fails closed for an unavailable source", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      `/markets#${new URLSearchParams({ dataset: dataset.dataset_id, security: security.security_id })}`,
+    );
+    const first = render(<MarketsPage />);
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    expect(marketApi.search).toHaveBeenCalledWith(
+      dataset.dataset_id,
+      security.security_id,
+      "ALL",
+      0,
+      expect.any(AbortSignal),
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Close" }));
+    expect(window.location.hash).toBe("");
+    first.unmount();
+    window.history.replaceState(
+      {},
+      "",
+      `/markets#${new URLSearchParams({ dataset: "unregistered", security: security.security_id })}`,
+    );
+    render(<MarketsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "This security link could not be opened",
+    );
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
   it("saves once while pending and reopens the database-backed watchlist, then removes it", async () => {
     let stored: WatchlistItem[] = [];
     vi.mocked(marketApi.watchlist).mockImplementation(async () => ({

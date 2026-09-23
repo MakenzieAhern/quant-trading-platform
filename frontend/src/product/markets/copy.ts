@@ -38,6 +38,9 @@ const en = {
   szseMain: "Shenzhen Main Board",
   chiNext: "ChiNext",
   inspect: "Inspect history",
+  detailUnavailable:
+    "This security link could not be opened. Check the registered source or search for the security again.",
+  closeDetail: "Close detail",
   save: "Save to watchlist",
   remove: "Remove from watchlist",
   saving: "Saving…",
@@ -166,6 +169,8 @@ const zh: typeof en = {
   szseMain: "深市主板",
   chiNext: "创业板",
   inspect: "查看历史",
+  detailUnavailable: "无法打开此证券链接。请检查已注册的数据来源，或重新检索该证券。",
+  closeDetail: "关闭详情",
   save: "加入自选",
   remove: "移除自选",
   saving: "正在保存…",

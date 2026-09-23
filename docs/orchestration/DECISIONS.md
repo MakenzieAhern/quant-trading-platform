@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 market security detail history — 2026-09-23
+
+Real Chrome reproduced Back leaving `/markets` from a watchlist detail. The
+market page also reset its query/pagination on every `popstate`, including a
+hash-only traversal. Reuse the existing native dialog and navigation helper;
+put exact dataset/security IDs in the fragment and reset list state only when
+the URL query actually changes. A direct link resolves one exact identity via
+the existing bounded cache search; unavailable/invalid links show a visible
+failure, not a different security. Chrome confirmed Back/Forward, page-2 SSE
+filter and scroll preservation, direct/reloaded links, watchlist focus/Escape,
+and modal Tab containment. No new route framework, backend endpoint, provider
+fetch, or financial calculation was added. Broader UX-DETAIL matrix is open.
+
 ## v1.2 strategy drawer history — 2026-09-23
 
 Real Chrome showed Back from the strategy card drawer leaving `/strategies`

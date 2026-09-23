@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T16:50:06Z",
-  "milestone": "M2_STRATEGY_DRAWER_HISTORY_VERIFIED",
+  "updated_at_utc": "2026-09-23T17:07:07Z",
+  "milestone": "M2_MARKET_DETAIL_HISTORY_VERIFIED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,7 +16,7 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-drawer-history",
+    "branch": "codex/product-v1.2-market-detail-history",
     "identity": "MakenzieAhern"
   },
   "ownership": {
@@ -110,7 +110,12 @@
     "Chrome reproduced sticky-header heading clipping after a detail-to-home route; shared navigation now starts changed routes at scroll zero and focuses main without changing scroll; real home heading y136.7 below 68px bar, Back restored prior scroll; strategy drawer Esc restored trigger focus; frontend199/lint/types/build PASS",
     "PR28 final head e410301 draft/attached; CI35890011915 backend/frontend/compose PASS",
     "Chrome strategy drawer Back closes on /strategies, Forward restores, direct URL opens, full-detail Back restores, Tab remains modal and ordinary Esc returns focus to card; frontend200/lint/types/build PASS",
-    "Fresh Chrome origin5174 with isolated product_v12_baseline/no private archive: first-run guide, primary CTA, registered strategy, named draft save/home/reopen, four steps and synthetic result jobfb620f96 PASS; main DB 8 jobs and .research clean"
+    "Fresh Chrome origin5174 with isolated product_v12_baseline/no private archive: first-run guide, primary CTA, registered strategy, named draft save/home/reopen, four steps and synthetic result jobfb620f96 PASS; main DB 8 jobs and .research clean",
+    "PR29 head4989245 CI35891624373 backend/frontend/compose PASS; draft and unmerged",
+    "Chrome market page-2 SSE filter: detail Back closed in place, Forward reopened, page21-40 and scrollY295 retained; direct/reloaded exact URL, watchlist Back/Esc/focus and modal Tab containment PASS; invalid source visible alert",
+    "Market detail history regression: frontend202 tests, ESLint, TypeScript and build PASS; no backend/data/research files changed",
+    "PR30 head7da7f70 CI35893155448 backend/frontend/compose PASS; draft and unmerged",
+    "Chrome390x844 market/watchlist/detail zh+en dark: innerWidth390, documentWidth375, modalWidth351, no page overflow; viewport reset and Chinese preference restored"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -125,9 +130,9 @@
     "RESOLVED: full backend from /app container lacked repo-root fixture path; WSL checkout test path restored fixture identity. Isolated quant_test_v12_u5 was one migration behind; test-only 0015 upgrade closed three paper constraint failures",
     "RESOLVED: Vite main bundle exceeded500 kB; route-level lazy loading reduced initial entry chunk to409.17 kB",
     "OPEN: M4 cold/warm browser p95 interaction latency and large-data rendering remain unmeasured",
-    "Chrome viewport override requested 390x844 but reported 1905px twice; mobile Task Center and saved-view acceptance not claimed",
+    "RESOLVED for markets: current Chrome viewport override reported390x844 and no page overflow; mobile Task Center and saved-view acceptance remain unclaimed",
     "RESOLVED: isolated home screenshot heading clipping reproduced in live Chrome; route push scroll reset and preventScroll focus verified without overriding native Back restoration",
-    "OPEN: market security detail Back leaves /markets for the preceding route; needs URL-backed dataset/security detail without losing filters or scroll",
+    "RESOLVED: market security detail Back no longer leaves /markets; exact dataset/security URL preserves filter/page/scroll and direct links fail visibly",
     "RESOLVED for known paper event values: raw direction/order/risk labels translated in Chrome; full U8 server-error/help/a11y matrix remains open",
     "OPEN: unplanned mid-run backend restart fails closed as INTERRUPTED; it does not resume automatically, and broader U7 recovery acceptance remains incomplete",
     "PARTIAL: Chrome rendered official SSE 603400 notice confirming suspension from 2026-09-15 and continuation at announcement; PDF binary could not be archived/checksummed because WSL timed out and scripted Windows fetch returned an HTML JavaScript challenge; no bypass attempted",
@@ -305,10 +310,30 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "new-route top and native Back scroll PASS; strategy drawer Esc focus PASS; remaining UX-DETAIL matrix incomplete"
+    },
+    "29": {
+      "branch": "codex/product-v1.2-drawer-history",
+      "head": "4989245",
+      "state": "DRAFT",
+      "ci_run": 35891624373,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "strategy drawer Back/Forward/direct URL/Tab/Esc PASS; wider UX-DETAIL matrix incomplete"
+    },
+    "30": {
+      "branch": "codex/product-v1.2-market-detail-history",
+      "last_verified_head": "7da7f70",
+      "state": "DRAFT",
+      "ci_run": 35893155448,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "market exact URL, Back/Forward, focus, page/filter/scroll and zh/en dark 390x844 PASS; full UX-DETAIL matrix incomplete"
     }
   },
-  "next_task": "Fix market security-detail Back/Forward/direct URL and preserve market filters/scroll; then finish UX-DETAIL mobile and U3 dirty Back/Forward, followed by U5/U7/U8/M4/M5. U4 browser download remains unverified",
-  "next_command": "Review /markets URL, cached search/watchlist and bars API; implement bounded dataset/security deep-link for detail, with browser Back/Forward and focus proof; leave frozen research untouched",
+  "next_task": "Finish remaining UX-DETAIL mobile/filter-scroll matrix and U3 dirty Back/Forward; then U5 current authority, U7 forward receipt, U8/M4/M5. U4 browser download remains unverified",
+  "next_command": "Audit U3 dirty wizard Back/Forward browser confirmation using the existing history guard; pursue another independent acceptance gap if native confirmation remains unavailable",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
