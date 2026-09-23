@@ -19,6 +19,11 @@ function RouterHarness() {
   );
 }
 
+function TwoLocationReaders() {
+  usePathname();
+  return <RouterHarness />;
+}
+
 describe("shared navigation guard", () => {
   it("keeps one listener across draft edits while reading the latest confirmation", async () => {
     window.history.replaceState({}, "", "/research/new");
@@ -27,12 +32,18 @@ describe("shared navigation guard", () => {
     const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
     const view = render(<Guard message="First draft" />);
     view.rerender(<Guard message="Edited draft" />);
-    expect(add.mock.calls.filter(([event]) => event === "popstate")).toHaveLength(1);
-    expect(remove.mock.calls.filter(([event]) => event === "popstate")).toHaveLength(0);
+    expect(
+      add.mock.calls.filter(([event]) => event === "quant:before-traversal"),
+    ).toHaveLength(1);
+    expect(
+      remove.mock.calls.filter(([event]) => event === "quant:before-traversal"),
+    ).toHaveLength(0);
     await userEvent.click(screen.getByRole("link", { name: "Experiments" }));
     expect(confirm).toHaveBeenCalledExactlyOnceWith("Edited draft");
     view.unmount();
-    expect(remove.mock.calls.filter(([event]) => event === "popstate")).toHaveLength(1);
+    expect(
+      remove.mock.calls.filter(([event]) => event === "quant:before-traversal"),
+    ).toHaveLength(1);
   });
 
   it("starts new routes at the top without scrolling on same-route or Back", () => {
@@ -44,6 +55,30 @@ describe("shared navigation guard", () => {
     window.dispatchEvent(new PopStateEvent("popstate"));
     expect(scrollTo).toHaveBeenCalledTimes(1);
     scrollTo.mockRestore();
+  });
+
+  it("asks the guard before a browser traversal updates the route", () => {
+    window.history.replaceState({}, "", "/strategies");
+    render(<RouterHarness />);
+    const deny = (event: Event) => event.preventDefault();
+    window.addEventListener("quant:before-traversal", deny);
+    act(() => {
+      window.history.replaceState({}, "", "/experiments");
+      window.dispatchEvent(new PopStateEvent("popstate", { state: {} }));
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("/strategies");
+    window.removeEventListener("quant:before-traversal", deny);
+  });
+
+  it("confirms a same-page query traversal once with two location readers", () => {
+    window.history.replaceState({}, "", "/research/new?strategy=first");
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(true);
+    render(<TwoLocationReaders />);
+    act(() => {
+      window.history.replaceState({}, "", "/research/new?strategy=second");
+      window.dispatchEvent(new PopStateEvent("popstate", { state: {} }));
+    });
+    expect(confirm).toHaveBeenCalledTimes(1);
   });
 
   it("blocks sidebar links and programmatic commands once before changing history", async () => {

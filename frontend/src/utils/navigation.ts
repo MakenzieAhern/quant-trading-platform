@@ -1,8 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const BEFORE_NAVIGATION = "quant:before-navigation";
+const BEFORE_TRAVERSAL = "quant:before-traversal";
 const HISTORY_INDEX = "quantNavigationIndex";
 const APPROVED_NAVIGATION = "quantNavigationApproved";
+const checkedTraversals = new WeakSet<PopStateEvent>();
 
 function historyIndex(): number {
   const index: unknown = window.history.state?.[HISTORY_INDEX];
@@ -50,7 +52,8 @@ export function useNavigationGuard(allowLeave: () => boolean): void {
     const request = (event: Event) => {
       if (!allowLeaveRef.current()) event.preventDefault();
     };
-    const traversal = (event: PopStateEvent) => {
+    const traversal = (request: Event) => {
+      const event = (request as CustomEvent<PopStateEvent>).detail;
       if (event.state?.[APPROVED_NAVIGATION]) return;
       if (restoring) {
         restoring = false;
@@ -62,7 +65,7 @@ export function useNavigationGuard(allowLeave: () => boolean): void {
         allowLeaveRef.current()
       )
         return;
-      event.stopImmediatePropagation();
+      request.preventDefault();
       const targetIndex: unknown = event.state?.[HISTORY_INDEX];
       const nativeIndex = navigation?.currentEntry?.index;
       const delta =
@@ -76,10 +79,10 @@ export function useNavigationGuard(allowLeave: () => boolean): void {
       window.history.go(delta);
     };
     window.addEventListener(BEFORE_NAVIGATION, request);
-    window.addEventListener("popstate", traversal, true);
+    window.addEventListener(BEFORE_TRAVERSAL, traversal);
     return () => {
       window.removeEventListener(BEFORE_NAVIGATION, request);
-      window.removeEventListener("popstate", traversal, true);
+      window.removeEventListener(BEFORE_TRAVERSAL, traversal);
     };
   }, []);
 }
@@ -88,7 +91,27 @@ export function usePathname(): string {
   const [pathname, setPathname] = useState(window.location.pathname);
   useEffect(() => {
     historyIndex();
-    const update = () => setPathname(window.location.pathname);
+    const update = (event: PopStateEvent) => {
+      if (
+        !event.state?.[APPROVED_NAVIGATION] &&
+        !checkedTraversals.has(event)
+      ) {
+        // App and shell both read the location; one traversal needs one decision.
+        checkedTraversals.add(event);
+        if (
+          !window.dispatchEvent(
+            new CustomEvent(BEFORE_TRAVERSAL, {
+              cancelable: true,
+              detail: event,
+            }),
+          )
+        ) {
+          event.stopImmediatePropagation();
+          return;
+        }
+      }
+      setPathname(window.location.pathname);
+    };
     window.addEventListener("popstate", update);
     return () => window.removeEventListener("popstate", update);
   }, []);

@@ -72,6 +72,16 @@ from host or disk failure: the only current backups are on the same WSL disk.
 The two post-backup account ledgers remain missing. No live table was changed
 by this drill, and no scratch database was dropped.
 
+At 2026-09-23 21:09 UTC, a read-only inspection of the running PostgreSQL 16
+container found only WAL segments `000000010000000000000012` through `14` in
+`pg_wal`. The earliest transaction commit rendered by `pg_waldump` in segment
+`12` is 2026-09-23 19:48:41 UTC, later than the 18:29–18:30 UTC loss window.
+The retained logical dumps are not physical base backups. These live WAL files
+therefore do not establish a recoverable pre-loss point for the two missing
+accounts. Do not attempt recovery against the live cluster or reconstruct
+financial events from WAL guesses. PostgreSQL's [PITR documentation](https://www.postgresql.org/docs/16/continuous-archiving.html)
+requires an appropriate physical base backup and the required WAL sequence.
+
 ## v1.2 executable forward feed needs explicit rights evidence — 2026-09-23
 
 Current SSE and SZSE Trading Rules §5.1.3 reserve exchange trading-information

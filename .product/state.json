@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T20:55:07Z",
+  "updated_at_utc": "2026-09-23T21:18:06Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,9 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 21:18UTC real Chrome153 dirty guided wizard Back now calls native confirmation before shared router update: dismiss retained exact edit/step, accept reached home, Forward restored edit/step without repeat dialog. Duplicate reader prompt regression closed; U3-WIZARD PASS; navigation7/7, frontend208, lint/type/build PASS",
+    "2026-09-23 21:09UTC actual isolated Chrome153 on documented localhost origin downloaded historical CSV29316 bytes and metadata JSON258223 bytes with successful download events; U4-EXPORT PASS. 127.0.0.1 alias is blocked by the existing exact-origin CORS policy; no security change made",
+    "2026-09-23 21:09UTC read-only PostgreSQL WAL inventory found only segments12-14; earliest segment12 COMMIT19:48:41 UTC, after 18:29-18:30 loss. No PITR basis for the missing later paper accounts was found; no live DB mutation",
     "2026-09-23 20:55UTC unavailable Markets source reason now uses registered EN/ZH explanation with raw code only in closed lineage disclosure; focused Markets12/12, lint, typecheck, build PASS. Live available-cache browser loaded20 rows; unavailable-source browser case NOT_RUN",
     "2026-09-23 20:51UTC removed backend-only development/paper hover title from service status; Chinese/English in-app browser confirmed localized status and no raw title, original EN restored. Focused App9/9, lint, typecheck, build PASS; broader U8 remains IN_PROGRESS",
     "2026-09-23 20:39UTC in-app browser checked guided wizard at 390x844/1024x768/1280x800/1440x900 and seven primary routes at 390x844 in EN/ZH without main-document horizontal overflow; Workbench visually inspected at 390x844 in dark/system and light themes. Original EN/system/default viewport restored. 200% zoom and full a11y matrix NOT_RUN",
@@ -164,7 +167,7 @@
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
     "RESOLVED: Vite stale import after .tsx-to.ts rename; frontend restart cleared cached module resolution",
     "RESOLVED: U5 reader mismatched source suspension date formats; product-only normalization/unknown-boundary handling tested",
-    "OPEN: post-restart in-app JSON auto-click and user-activated fallback produced a prepared blob but no download event in 10s or named Windows Downloads file. Browser logs showed no error; app-versus-browser cause unresolved. Earlier direct native attachment control hit net::ERR_BLOCKED_BY_CLIENT; no security bypass attempted",
+    "RESOLVED for actual Chrome: isolated Chrome153 emitted successful CSV and JSON download events on the documented localhost origin; the in-app browser still did not surface its prepared blob as a download. Earlier direct native attachment control hit net::ERR_BLOCKED_BY_CLIENT; no security bypass attempted",
     "RESOLVED: Chrome native date fill changed DOM without React state; onInput now persists the intended date across paper and sibling date controls",
     "RESOLVED: closing market detail cleared parent data-mode context; remove duplicate child writer with regression",
     "RESOLVED: U2 shared localStorage overwrite across tabs; independently retained per-page recovery slots and independent review",
@@ -181,8 +184,8 @@
     "OPEN: unplanned mid-run backend restart fails closed as INTERRUPTED; it does not resume automatically, and broader U7 recovery acceptance remains incomplete",
     "PARTIAL: Chrome rendered official SSE 603400 notice confirming suspension from 2026-09-15 and continuation at announcement; PDF binary could not be archived/checksummed because WSL timed out and scripted Windows fetch returned an HTML JavaScript challenge; no bypass attempted",
     "OPEN: BaoStock retry receipts ed796871 retain parser v1 label despite live normalization fix preceding v2 bump; immutable provenance caveat documented, not silently rewritten",
-    "OPEN: in-app browser-tool Back from dirty wizard left without observable guard popstate or dialog; keyboard Alt+Left stayed without visible dialog and sidebar confirmation worked, but genuine user Back/Forward cancel/accept acceptance is not proven",
-    "OPEN: in-app browser JSON report auto-click and fallback link prepared a blob but yielded no browser download event or Windows Downloads artifact; export completion remains unverified",
+    "RESOLVED: real Chrome153 reproduced dirty wizard Back leaving without confirmation despite sidebar guard; shared router now checks the guard before route state update. Native Back dialog dismiss/accept and Forward exact draft restoration passed in Chrome",
+    "RESOLVED for U4 Chrome export: in-app browser prepared a blob without a download event, while isolated actual Chrome153 completed both CSV and JSON downloads; no Windows Downloads file was claimed because the isolated profile used browser-managed temporary downloads",
     "OPEN: Chrome browser-control binding timed out on two state reads and one fresh-tab attempt after a successful draft-restore and temporary Back-key QA edit; local QA draft name must be restored from U3 temporary keyboard Back QA to U2 Chrome precise configuration before further browser acceptance. No app defect inferred from the tool timeout"
   ],
   "external_blockers": [
@@ -399,8 +402,8 @@
       "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill explanation and linked interrupted retry browser PASS. Docker engine restart and post-restart saved-result read PASS; full Windows reboot, U4 download and U3 native-dialog QA incomplete; forward authority remains PARTIAL"
     }
   },
-  "next_task": "Resolve the two known unrecovered post-backup paper ledgers without inventing data; validate durable backups/recovery in isolation. Continue independent U3/U4/U8/quality work, and seek lawful forward-source rights before any U7 execution promotion. Docker engine restart passed; verify terminal-free recovery at the next safe full Windows reboot/login. U3 native-dialog and U4 browser download remain unverified",
-  "next_command": "Review the incident decision and restored live counts; inspect any external pre-loss backup if offered, otherwise keep missing sessions explicitly lost. Use only APP_ENV=test on quant_test* for backend pytest; leave frozen research and RAW_CANDIDATE unchanged",
+  "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence; validate an independent backup destination and durable recovery in isolation. Continue independent U3 job/recovery, U8, accessibility/performance/browser work, and seek lawful forward-source rights before any U7 execution promotion. Docker engine restart, U4 Chrome export and U3 dirty Back/Forward passed; verify terminal-free recovery at the next safe full Windows reboot/login",
+  "next_command": "Inspect any offered external pre-loss physical snapshot or backup; current live pg_wal starts after the loss and logical dumps cannot supply PITR. Otherwise retain the two sessions as lost. Run backend pytest only with APP_ENV=test on quant_test*; leave frozen research and RAW_CANDIDATE unchanged",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
