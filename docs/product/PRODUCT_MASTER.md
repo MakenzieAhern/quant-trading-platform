@@ -122,3 +122,6 @@ Final delivery must link usable app/start/recovery, before/after screenshots and
 recordings, per-flow evidence/tests/CI, actual mode/data freshness/limitations,
 branch/PR/release/rollback and Chinese/English nontechnical manuals. Only all U1–U8
 verified means PRODUCT_GOAL_COMPLETE; otherwise report PARTIAL/BLOCKED explicitly.
+
+Draft user instructions (not yet operator-reviewed): [中文指南](USER_GUIDE.zh-CN.md) and
+[English guide](USER_GUIDE.en-US.md). These are not v1.2.0 release evidence.

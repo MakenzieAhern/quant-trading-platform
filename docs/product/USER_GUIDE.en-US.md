@@ -1,0 +1,36 @@
+# A-share workstation guide (v1.2 development build)
+
+This guide describes the local work-in-progress UI, not a released v1.2.0. The app is for local research and simulation only: it has no live broker connection and sends no real-money orders. Historical performance cannot guarantee future returns.
+
+## Open the app and check the data
+
+When the services are already running, open the [workbench](http://localhost:5173/) in a browser on this PC. Check “Service online” separately from the data mode and date. An online service does **not** mean prices are current or that their source has passed audit. Use the [data center](http://localhost:5173/data) to inspect available data, dates and provenance. Language and theme are in [Settings](http://localhost:5173/settings); changing language does not change trading dates or calculations.
+
+One-click startup after a PC reboot has not passed acceptance. If the page is unavailable, do not reinstall Docker, remove volumes or reacquire the archive. Check that Docker Desktop is running, then ask the maintainer to check the project services. Reopen the same task link after recovery; saved tasks and results should remain available.
+
+## Keep the four modes separate
+
+| Mode | Appropriate use | Not evidence of |
+|---|---|---|
+| Historical research | Personal exploration on stored A-share data | An unseen test or a forecast of future returns |
+| Historical replay | Walk a simulated account through stored trading sessions | Newly arriving live or end-of-day data |
+| Synthetic demo | Learn controls and pages without private historical data | Market behavior or investment returns |
+| New-market forward simulation | Target mode: process newly completed sessions received after user start | **Not yet available**; data rights, current rules and actual-arrival acceptance remain open |
+
+## From strategy to result
+
+1. On the [workbench](http://localhost:5173/), select “Start guided backtest.” Read the registered strategy's rules, risks and data needs. A strategy description is not a return recommendation.
+2. Complete the four steps: strategy; capital, dates and stock universe; costs and risk; confirmation. Expand advanced settings only when needed. Save a draft to continue from home. Check the data-mode and date labels before submitting.
+3. Find the same durable task in [Experiments](http://localhost:5173/experiments) or the [Task center](http://localhost:5173/tasks). Leaving or refreshing its page does not itself create another task. Only a “Complete” task has a complete result; cancelled, interrupted and failed records are never shown as successful.
+4. Read return, maximum drawdown, costs, benchmark and limitations first; then expand trades, holdings, risk decisions and fill reasons. “Show full precision” changes display only. Filtering shown trading dates does not recompute full-period metrics. Expand technical details for the original reason code.
+5. Select 2–3 completed studies to compare, checking data version, date range, capital, costs, risk and strategy version first. A saved simulated rebalance preview, where present, must be read with its as-of date, data snapshot and risk rejections; older results may have no preview. Export content has API checks, but browser file-download completion is not yet accepted—do not assume a file was saved.
+
+## Simulated accounts and recovery
+
+In [Simulated accounts](http://localhost:5173/paper), choose a clearly labeled synthetic demo or historical replay. Start it explicitly; the page supports pause, resume and stop, with cash, holdings, orders, fills and logs. None are real trades. New-market forward mode is not yet usable; a historical catch-up is not a new-market receipt.
+
+For a cancelled or interrupted research task, open its detail page and read the explanation. “Start or reopen linked retry” uses the saved configuration without overwriting the original record; repeated requests reopen the linked attempt. An account interrupted by a service failure may remain “Interrupted” instead of automatically continuing. Read its recovery guidance before starting a new session; do not assume fills occurred while disconnected. For offline, timeout or missing-data errors, try the page's retry or return action. If it persists, give the task link and displayed technical reason to the maintainer; never clear PostgreSQL, Redis or Docker volumes as a troubleshooting shortcut.
+
+## Release and rollback
+
+This development build is unreleased. The published stable baseline is v1.1.0; formal research reports and frozen data remain read-only. A maintainer may roll application code back through the repository's release process, but must not overwrite the old tag, rerun Official OOS or delete database volumes. Current gaps include lawful forward-market authority, browser export completion, full accessibility/performance acceptance and terminal-free startup. This is not a v1.2.0 final delivery.
