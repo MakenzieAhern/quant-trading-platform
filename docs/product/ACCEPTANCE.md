@@ -54,6 +54,33 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 23:07 UTC isolated clean-user demo recording
+
+An empty disposable PostgreSQL `quant_test` and read-only-mounted backend were
+bound to `127.0.0.1:8001`; actual Chrome 153 served the existing frontend but
+rerouted every `localhost:8000/api/` request to that isolated backend. The
+Chinese 1280×800 browser flow opened the clean Workbench, completed the four
+guided steps, acknowledged the synthetic warning, created exactly one registered
+server job (`2813dc8f`) and read its completed result. The only POST was
+`/api/experiments`; the job was `synthetic_demo`, not market evidence. The
+9.60-second VP8 recording (SHA-256
+`947B3233284E55C45BF2D515B81779BFA3D261C538344D1BFB48BB0F8102FFC8`)
+was opened in Chrome and a running-stage frame inspected. A separate fresh
+Chrome context reopened the same result after only this isolated backend was
+restarted: +0.39% displayed return, CNY 25 cost, synthetic warning intact.
+The main database stayed at eight personal jobs and five paper sessions. The
+disposable tmpfs database/container/network were removed without volumes.
+Evidence remains outside Git:
+[full demo](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/isolated-demo-full-flow-zh-1280.webm),
+[clean home](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/isolated-demo-home-zh-1280.png),
+[configuration](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/isolated-demo-config-zh-1280.png),
+[confirmation](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/isolated-demo-confirm-zh-1280.png),
+[result](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/isolated-demo-result-zh-1280.png),
+[reopened result](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/isolated-demo-reopened-after-backend-restart-zh-1280.png).
+This is an agent-operated synthetic path, not genuine A-share forward market
+receipt, actual novice-user satisfaction, full Windows reboot durability or
+product release acceptance. `M5-DELIVERY` remains IN_PROGRESS.
+
 ## 2026-09-23 23:00 UTC local delivery walk-through evidence
 
 Actual local Chrome 153 at 1280×800 recorded a 13.44-second Chinese walkthrough:
