@@ -73,9 +73,72 @@ async function openSecurity() {
 }
 
 describe("historical cache markets", () => {
+  it("preserves explicit demo datasets and reacts to dataset query navigation without changing authority", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      `/markets?dataset=${demo.dataset_id}&q=${encodeURIComponent(security.security_id)}`,
+    );
+    render(<MarketsPage />);
+    expect(await screen.findByLabelText("Data source")).toHaveValue(
+      demo.dataset_id,
+    );
+    await waitFor(() =>
+      expect(marketApi.search).toHaveBeenLastCalledWith(
+        demo.dataset_id,
+        security.security_id,
+        "ALL",
+        0,
+        expect.any(AbortSignal),
+      ),
+    );
+    act(() => {
+      window.history.pushState(
+        {},
+        "",
+        `/markets?dataset=${dataset.dataset_id}&q=000001`,
+      );
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+    expect(screen.getByLabelText("Data source")).toHaveValue(
+      dataset.dataset_id,
+    );
+    await waitFor(() =>
+      expect(marketApi.search).toHaveBeenLastCalledWith(
+        dataset.dataset_id,
+        "000001",
+        "ALL",
+        0,
+        expect.any(AbortSignal),
+      ),
+    );
+    act(() => {
+      window.history.pushState(
+        {},
+        "",
+        "/markets?dataset=unknown-source&q=600000",
+      );
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+    expect(screen.getByLabelText("Data source")).toHaveValue("unknown-source");
+    expect(
+      screen.getByRole("option", {
+        name: "Source unavailable · unknown-source",
+      }),
+    ).toHaveProperty("selected", true);
+    expect(
+      vi
+        .mocked(marketApi.search)
+        .mock.calls.some((call) => call[0] === "unknown-source"),
+    ).toBe(false);
+  });
   it("preserves the selected archive context when a detail opens and closes", async () => {
     function ContextReadout() {
-      return <output data-testid="source-context">{JSON.stringify(useCurrentPageData())}</output>;
+      return (
+        <output data-testid="source-context">
+          {JSON.stringify(useCurrentPageData())}
+        </output>
+      );
     }
     render(
       <ProductDataProvider>
@@ -83,15 +146,28 @@ describe("historical cache markets", () => {
         <MarketsPage />
       </ProductDataProvider>,
     );
-    await userEvent.selectOptions(await screen.findByLabelText("Data source"), demo.dataset_id);
-    const expected = JSON.stringify({ mode: demo.mode, asOf: demo.as_of, dateKind: "snapshot" });
+    await userEvent.selectOptions(
+      await screen.findByLabelText("Data source"),
+      demo.dataset_id,
+    );
+    const expected = JSON.stringify({
+      mode: demo.mode,
+      asOf: demo.as_of,
+      dateKind: "snapshot",
+    });
     expect(screen.getByTestId("source-context")).toHaveTextContent(expected);
     const dialog = await openSecurity();
     expect(screen.getByTestId("source-context")).toHaveTextContent(expected);
-    expect(screen.getByRole("cell", { name: "Shanghai Main Board" })).toBeInTheDocument();
-    await userEvent.click(within(dialog).getByRole("button", { name: "Close" }));
+    expect(
+      screen.getByRole("cell", { name: "Shanghai Main Board" }),
+    ).toBeInTheDocument();
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: "Close" }),
+    );
     expect(screen.getByTestId("source-context")).toHaveTextContent(expected);
-    await act(async () => { await i18n.changeLanguage("zh-CN"); });
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
     expect(screen.getByRole("cell", { name: "沪市主板" })).toBeInTheDocument();
   });
 
@@ -442,9 +518,7 @@ describe("historical cache markets", () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        /Incremental updates and acquisition task history are not implemented/,
-      ),
-    ).toBeInTheDocument();
+      screen.getByRole("link", { name: "Open data center" }),
+    ).toHaveAttribute("href", "/data");
   });
 });

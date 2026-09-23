@@ -65,8 +65,10 @@ def bars(
 
 
 @router.get("/watchlist")
-async def watchlist(limit: Limit = 50, offset: Offset = 0) -> dict[str, Any]:
-    return await watchlist_service.list(limit, offset)
+async def watchlist(
+    limit: Limit = 50, offset: Offset = 0, q: Annotated[str, Query(max_length=80)] = ""
+) -> dict[str, Any]:
+    return await watchlist_service.list(limit, offset, q)
 
 
 @router.put("/watchlist/{security_id}", response_model=None)

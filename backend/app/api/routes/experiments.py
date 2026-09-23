@@ -102,8 +102,10 @@ async def create_experiment(
 
 
 @router.get("/experiments", response_model=ExperimentPage)
-async def list_experiments(limit: Limit = 20, offset: Offset = 0) -> ExperimentPage:
-    items, total = await experiment_manager.list_jobs(limit, offset)
+async def list_experiments(
+    limit: Limit = 20, offset: Offset = 0, q: Annotated[str, Query(max_length=80)] = ""
+) -> ExperimentPage:
+    items, total = await experiment_manager.list_jobs(limit, offset, q)
     return ExperimentPage(
         items=[_response(item) for item in items], total=total, limit=limit, offset=offset
     )

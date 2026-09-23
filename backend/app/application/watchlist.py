@@ -4,7 +4,7 @@ import asyncio
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, func, or_, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -56,16 +56,26 @@ class WatchlistService:
                 )
             )
 
-    async def list(self, limit: int, offset: int) -> dict[str, Any]:
+    async def list(self, limit: int, offset: int, q: str = "") -> dict[str, Any]:
         available = {
             r["dataset_id"]: r for r in await asyncio.to_thread(self.reader.registry.datasets)
         }
+        query = select(WatchlistItemModel)
+        if needle := q.strip():
+            query = query.where(
+                or_(
+                    WatchlistItemModel.security_id.icontains(needle, autoescape=True),
+                    *(
+                        WatchlistItemModel.security[field].astext.icontains(needle, autoescape=True)
+                        for field in ("symbol", "name", "source_observed_name")
+                    ),
+                )
+            )
         async with self.factory() as db:
-            total = await db.scalar(select(func.count()).select_from(WatchlistItemModel))
+            total = await db.scalar(select(func.count()).select_from(query.subquery()))
             rows = (
                 await db.scalars(
-                    select(WatchlistItemModel)
-                    .order_by(
+                    query.order_by(
                         WatchlistItemModel.added_at.desc(),
                         WatchlistItemModel.dataset_id,
                         WatchlistItemModel.security_id,

@@ -15,7 +15,22 @@ const en = {
   settings: "Settings",
   archive: "Formal research archive",
   legacy: "Legacy fixture backtests",
-  search: "Search pages, strategies and research",
+  search: "Search pages, strategies, research and watchlist",
+  searchScope:
+    "Studies are searched by saved name or ID; watchlist entries by symbol, ID or saved source name. Both searches cover server history, 20 matches per page. Formal archive contents are not searched.",
+  searchCommands: "Pages and registered strategies",
+  searchStudies: "Matching personal studies",
+  searchWatchlist: "Matching watchlist entries",
+  searchMatches: "Server matches",
+  searchNoStudies: "No personal studies match. Try a different name or ID.",
+  searchNoWatchlist: "No saved securities match. Try a symbol or security ID.",
+  searchMore:
+    "More matches are available. Use Next to load the next 20 results.",
+  searchFailed:
+    "Some server search results could not be loaded. This is not an empty-results claim. Retry to check again.",
+  searchObservedName:
+    "source-observed name, not a historical point-in-time name",
+  searchSourceUnavailable: "saved data source unavailable",
   menu: "Open navigation",
   close: "Close",
   local: "Local · single user",
@@ -148,7 +163,7 @@ const en = {
   settingsHint:
     "These choices change presentation, never cash, returns, trading dates or risk decisions.",
   futureUnavailable:
-    "Forward market data is not connected. Historical research and synthetic demonstration remain available.",
+    "Raw candidate updates do not establish validated forward simulation. Historical research and synthetic demonstration remain available.",
   emptySearch:
     "No matching page, strategy or study. Try a name or open Research.",
   navigation: "Workspace navigation",
@@ -178,7 +193,19 @@ const zh: Record<keyof typeof en, string> = {
   settings: "设置",
   archive: "正式研究档案",
   legacy: "旧版样例回测",
-  search: "搜索页面、策略和研究",
+  search: "搜索页面、策略、研究和自选",
+  searchScope:
+    "研究按保存名称或标识搜索，自选按代码、标识或保存的来源名称搜索。两者查询服务器完整记录，每页最多 20 项；不检索正式研究档案内容。",
+  searchCommands: "页面与已注册策略",
+  searchStudies: "匹配的个人研究",
+  searchWatchlist: "匹配的自选记录",
+  searchMatches: "服务器匹配数",
+  searchNoStudies: "没有匹配的个人研究，请换个名称或任务标识。",
+  searchNoWatchlist: "没有匹配的自选证券，请换个股票代码或证券标识。",
+  searchMore: "还有更多匹配项，点击下一页加载后续最多 20 项。",
+  searchFailed: "部分服务器搜索结果无法加载，这不代表没有匹配项。请重试检查。",
+  searchObservedName: "来源观察名称，非历史时点名称",
+  searchSourceUnavailable: "保存的数据来源不可用",
   menu: "打开导航",
   close: "关闭",
   local: "本地 · 单用户",
@@ -304,7 +331,8 @@ const zh: Record<keyof typeof en, string> = {
     "宽基指数提供市场背景。跑赢下跌的市场，账户仍然可能亏钱。沪深300比较序列也不等同于可直接复制的含分红投资回报。",
   settingsTitle: "让工作台更适合你",
   settingsHint: "这些设置只影响展示，不改变本金、收益、交易日期或风控判断。",
-  futureUnavailable: "新行情来源尚未连接。历史研究和合成演示仍可使用。",
+  futureUnavailable:
+    "原始候选更新不代表前向模拟已通过验收。历史研究和合成演示仍可使用。",
   emptySearch: "没有找到匹配的页面、策略或研究。可以换个名称，或打开研究列表。",
   navigation: "工作区导航",
   footer: "本地研究与模拟执行 · 不发送真实资金订单",

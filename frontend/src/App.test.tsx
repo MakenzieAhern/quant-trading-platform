@@ -46,7 +46,7 @@ describe("routing", () => {
     render(<App />);
     expect(
       screen.getByRole("button", {
-        name: "Search pages, strategies and research",
+        name: "Search pages, strategies, research and watchlist",
       }),
     ).toBeInTheDocument();
     const menu = screen.getByRole("button", { name: "Open navigation" });

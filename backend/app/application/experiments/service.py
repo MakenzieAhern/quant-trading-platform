@@ -8,7 +8,7 @@ from threading import Event
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import Date, DateTime, cast, func, select, text
+from sqlalchemy import Date, DateTime, String, cast, func, or_, select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, async_sessionmaker
 from sqlalchemy.sql.elements import ColumnElement
@@ -219,14 +219,23 @@ class ExperimentManager:
                 raise LookupError("EXPERIMENT_NOT_FOUND")
             return row
 
-    async def list_jobs(self, limit: int, offset: int) -> tuple[list[ExperimentJobModel], int]:
+    async def list_jobs(
+        self, limit: int, offset: int, q: str = ""
+    ) -> tuple[list[ExperimentJobModel], int]:
+        query = select(ExperimentJobModel)
+        if needle := q.strip():
+            query = query.where(
+                or_(
+                    ExperimentJobModel.name.icontains(needle, autoescape=True),
+                    cast(ExperimentJobModel.id, String).icontains(needle, autoescape=True),
+                )
+            )
         async with self.factory() as db:
-            total = await db.scalar(select(func.count()).select_from(ExperimentJobModel))
+            total = await db.scalar(select(func.count()).select_from(query.subquery()))
             rows = list(
                 (
                     await db.scalars(
-                        select(ExperimentJobModel)
-                        .order_by(ExperimentJobModel.created_at.desc(), ExperimentJobModel.id)
+                        query.order_by(ExperimentJobModel.created_at.desc(), ExperimentJobModel.id)
                         .limit(limit)
                         .offset(offset)
                     )
