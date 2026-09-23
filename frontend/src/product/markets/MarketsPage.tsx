@@ -3,6 +3,7 @@ import { Pagination } from "../../components/Pagination";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc } from "../../utils/format";
+import { navigate } from "../../utils/navigation";
 import { Dialog } from "../Dialog";
 import { usePageDataContext } from "../dataContext";
 import { marketApi, securityName } from "./api";
@@ -10,6 +11,13 @@ import { boardLabel, useMarketCopy } from "./copy";
 import { MarketDetail } from "./MarketDetail";
 import type { MarketDataset, MarketRange, Security } from "./types";
 import "./markets.css";
+
+function detailFromHash(hash: string) {
+  const params = new URLSearchParams(hash.slice(1));
+  const datasetId = params.get("dataset");
+  const securityId = params.get("security");
+  return datasetId && securityId ? { datasetId, securityId } : null;
+}
 
 export function MarketsPage() {
   const c = useMarketCopy();
@@ -70,17 +78,33 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   const [revision, setRevision] = useState(0);
   const [watchOffset, setWatchOffset] = useState(0);
   const [watchRevision, setWatchRevision] = useState(0);
+  const [detailHash, setDetailHash] = useState(window.location.hash);
   const [selected, setSelected] = useState<{
     security: Security;
     dataset: MarketDataset;
   } | null>(null);
+  const [detailError, setDetailError] = useState(false);
   const [ranges, setRanges] = useState<Record<string, MarketRange>>({});
   const [pending, setPending] = useState<string | null>(null);
   const [outcome, setOutcome] = useState<"saved" | "removed" | "error" | null>(
     null,
   );
   const lock = useRef(false);
-  const displayedSource = selected?.dataset ?? dataset;
+  const lastSearch = useRef(window.location.search);
+  const detail = detailFromHash(detailHash);
+  const detailDatasetId = detail?.datasetId ?? "";
+  const detailSecurityId = detail?.securityId ?? "";
+  const detailSource = datasets.find((d) => d.dataset_id === detailDatasetId);
+  const canResolveDetail =
+    !!detailSource?.available &&
+    /^CN-A:(SSE|SZSE):\d{6}$/.test(detailSecurityId);
+  const activeSelection =
+    detail &&
+    selected?.dataset.dataset_id === detail.datasetId &&
+    selected.security.security_id === detail.securityId
+      ? selected
+      : null;
+  const displayedSource = activeSelection?.dataset ?? dataset;
   usePageDataContext(
     displayedSource?.mode ?? null,
     displayedSource?.as_of ?? null,
@@ -106,21 +130,47 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   );
   useEffect(() => {
     const update = () => {
-      const value =
-        new URLSearchParams(window.location.search).get("q")?.slice(0, 80) ??
-        "";
-      setQ(value);
-      setQuery(value);
-      const requestedDataset = new URLSearchParams(window.location.search).get(
-        "dataset",
-      );
-      setDatasetId(requestedDataset ?? defaultDatasetId);
-      setOffset(0);
-      setSelected(null);
+      if (window.location.search !== lastSearch.current) {
+        lastSearch.current = window.location.search;
+        const params = new URLSearchParams(window.location.search);
+        const value = params.get("q")?.slice(0, 80) ?? "";
+        setQ(value);
+        setQuery(value);
+        setDatasetId(params.get("dataset") ?? defaultDatasetId);
+        setOffset(0);
+      }
+      setDetailError(false);
+      setDetailHash(window.location.hash);
     };
     window.addEventListener("popstate", update);
-    return () => window.removeEventListener("popstate", update);
+    window.addEventListener("hashchange", update);
+    return () => {
+      window.removeEventListener("popstate", update);
+      window.removeEventListener("hashchange", update);
+    };
   }, [defaultDatasetId]);
+  useEffect(() => {
+    if (!canResolveDetail || activeSelection || !detailSource) return;
+    const controller = new AbortController();
+    let active = true;
+    void marketApi
+      .search(detailDatasetId, detailSecurityId, "ALL", 0, controller.signal)
+      .then((page) => {
+        if (!active) return;
+        const security = page.items.find(
+          (item) => item.security_id === detailSecurityId,
+        );
+        if (security) setSelected({ security, dataset: detailSource });
+        else setDetailError(true);
+      })
+      .catch(() => {
+        if (active) setDetailError(true);
+      });
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [activeSelection, canResolveDetail, detailDatasetId, detailSecurityId, detailSource]);
   async function changeWatchlist(
     kind: "add" | "remove",
     source: string,
@@ -150,8 +200,28 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   }
   const mode = (d: MarketDataset) =>
     d.mode === "synthetic_demo" ? c.demo : c.historical;
-  const inspect = (security: Security, d: MarketDataset) =>
+  const inspect = (security: Security, d: MarketDataset) => {
+    const hash = `#${new URLSearchParams({ dataset: d.dataset_id, security: security.security_id })}`;
+    navigate(`${window.location.pathname}${window.location.search}${hash}`);
+    window.history.replaceState(
+      { ...window.history.state, productMarketDetail: true },
+      "",
+      window.location.href,
+    );
     setSelected({ security, dataset: d });
+    setDetailHash(hash);
+  };
+  const closeDetail = () => {
+    if (window.history.state?.productMarketDetail) window.history.back();
+    else {
+      window.history.replaceState(
+        window.history.state,
+        "",
+        window.location.pathname + window.location.search,
+      );
+      setDetailHash("");
+    }
+  };
   return (
     <>
       <section className="marketPanel">
@@ -429,25 +499,35 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
           </>
         )}
       </section>
-      {selected && (
+      {detail && !activeSelection && (
+        <p role={detailError || !canResolveDetail ? "alert" : "status"}>
+          {detailError || !canResolveDetail ? c.detailUnavailable : c.loading}{" "}
+          {(detailError || !canResolveDetail) && (
+            <button className="button secondary" onClick={closeDetail}>
+              {c.closeDetail}
+            </button>
+          )}
+        </p>
+      )}
+      {activeSelection && (
         <Dialog
-          title={`${securityName(selected.security)} · ${selected.security.symbol}`}
-          onClose={() => setSelected(null)}
+          title={`${securityName(activeSelection.security)} · ${activeSelection.security.symbol}`}
+          onClose={closeDetail}
         >
           <MarketDetail
-            key={`${selected.dataset.dataset_id}:${selected.security.security_id}`}
-            security={selected.security}
-            dataset={selected.dataset}
+            key={`${activeSelection.dataset.dataset_id}:${activeSelection.security.security_id}`}
+            security={activeSelection.security}
+            dataset={activeSelection.dataset}
             range={
-              ranges[selected.dataset.dataset_id] ?? {
-                start_date: selected.dataset.default_start,
-                end_date: selected.dataset.default_end,
+              ranges[activeSelection.dataset.dataset_id] ?? {
+                start_date: activeSelection.dataset.default_start,
+                end_date: activeSelection.dataset.default_end,
               }
             }
             onRangeChange={(range) =>
               setRanges((previous) => ({
                 ...previous,
-                [selected.dataset.dataset_id]: range,
+                [activeSelection.dataset.dataset_id]: range,
               }))
             }
           />

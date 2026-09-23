@@ -37,6 +37,10 @@ Drafts persist before leaving; exit has explicit keep/discard/stay semantics.
 Dialog uses native modal focus handling; all essential actions also visible outside
 keyboard shortcuts. The strategy card drawer uses a URL fragment so Back closes it,
 Forward restores it, and a direct link opens it without changing the list's scroll.
+Market security detail uses the same native modal/history behavior with exact
+dataset and security IDs in its fragment; hash-only traversal preserves the
+market exchange, search page and scroll. A direct link resolves one security
+through the bounded registered-cache search and fails visibly if unavailable.
 Monetary values remain exact server strings throughout UI.
 
 Transitions use project target ranges from PRODUCT_MASTER. Reduced motion is both
