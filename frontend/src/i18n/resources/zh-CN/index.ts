@@ -186,7 +186,7 @@ export const zhCN = {
     loading: "模拟交易会话",
     safetyTitle: "模拟交易 — 仅限模拟执行",
     safetyBody:
-      "PAPER / SIMULATED / NO REAL-MONEY。仅在本地模拟，不连接实盘券商，也不发送真实资金订单。",
+      "模拟交易 / 仅供模拟 / 不涉及真实资金。仅在本地模拟，不连接实盘券商，也不发送真实资金订单。",
     safetyLabel: "模拟交易安全提示",
     requestError: "无法加载模拟交易数据。",
     providers: {
@@ -253,7 +253,7 @@ export const zhCN = {
       loading: "模拟交易会话快照",
       back: "← 所有模拟交易会话",
       eyebrow: "模拟交易会话",
-      websocket: "WebSocket",
+      websocket: "会话连接",
       connection: {
         connecting: "正在连接",
         connected: "已连接",

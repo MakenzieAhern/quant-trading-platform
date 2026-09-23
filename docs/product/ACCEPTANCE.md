@@ -54,6 +54,19 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 19:59 UTC restored paper-page language check
+
+The in-app browser opened restored historical account `d7044a3c` from the
+five-session live list and showed its 20 orders, six fills and simulated
+equity `99964.8134`. Its Chinese view initially exposed an English paper
+safety marker, the transport label `WebSocket`, and the internal strategy ID
+in every signal row. Existing bilingual paper copy and strategy-name keys now
+render plain safety/connection labels and a translated strategy name without
+changing persisted financial events. Browser Chinese visible text no longer
+contains those three raw tokens; English was rechecked and the original locale
+restored. Full frontend206/lint/type/build and focused paper16 tests pass.
+This agent check narrows U8 but does not close the full bilingual/a11y matrix.
+
 ## 2026-09-23 15:16 UTC unplanned backend interruption and localized recovery
 
 The agent started historical account `07d72259-4491-4ad6-8ebc-4c8a2a8ae156`

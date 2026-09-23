@@ -256,7 +256,7 @@ describe("paper trading pages", () => {
         ...paperSnapshot("STOPPED"),
         signals: [
           {
-            strategy_id: "strategy",
+            strategy_id: "cn_a_cross_sectional_momentum_low_vol_v1",
             symbol: "CN-A:SSE:600000",
             timestamp: "2011-03-22T07:00:00Z",
             signal_type: "BUY",
@@ -313,6 +313,12 @@ describe("paper trading pages", () => {
       expect(screen.getByText("已成交")).toBeVisible();
       expect(screen.getByText("风控通过")).toBeVisible();
       expect(screen.getByText("提案已通过风控。")).toBeVisible();
+      expect(screen.getByText("A股动量与低波动策略")).toBeVisible();
+      expect(
+        screen.queryByText("cn_a_cross_sectional_momentum_low_vol_v1"),
+      ).not.toBeInTheDocument();
+      expect(screen.getByText(/仅供模拟 \/ 不涉及真实资金/)).toBeVisible();
+      expect(screen.getByText("会话连接: 已关闭")).toBeVisible();
       expect(screen.getByText("可用资金不足")).toBeVisible();
       expect(screen.getByText("预计买入成本超过可用现金。")).toBeVisible();
       await act(async () => i18n.changeLanguage("en-US"));
@@ -355,7 +361,7 @@ describe("paper trading pages", () => {
     expect(MockWebSocket.instances).toHaveLength(1);
     await act(async () => MockWebSocket.instances[0]!.open());
     expect(screen.getByText("RUNNING")).toBeInTheDocument();
-    expect(screen.getByText("WebSocket: connected")).toBeInTheDocument();
+    expect(screen.getByText("Session connection: connected")).toBeInTheDocument();
 
     const portfolioEvent = {
       sequence: 1,
@@ -381,7 +387,7 @@ describe("paper trading pages", () => {
     expect(screen.getAllByText("Paper portfolio")).toHaveLength(1);
 
     act(() => MockWebSocket.instances[0]!.close());
-    expect(screen.getByText("WebSocket: reconnecting")).toBeInTheDocument();
+    expect(screen.getByText("Session connection: reconnecting")).toBeInTheDocument();
     await act(async () => vi.advanceTimersByTimeAsync(1000));
     expect(MockWebSocket.instances).toHaveLength(2);
     await act(async () => MockWebSocket.instances[1]!.open());
@@ -414,7 +420,7 @@ describe("paper trading pages", () => {
       }),
     );
     expect(screen.getByText("STOPPED")).toBeInTheDocument();
-    expect(screen.getByText("WebSocket: closed")).toBeInTheDocument();
+    expect(screen.getByText("Session connection: closed")).toBeInTheDocument();
     await act(async () => vi.advanceTimersByTimeAsync(2000));
     expect(MockWebSocket.instances).toHaveLength(1);
     expect(screen.getByText("2026-09-06 02:01:00Z (UTC)")).toBeInTheDocument();
@@ -448,7 +454,7 @@ describe("paper trading pages", () => {
     expect(screen.getByRole("alert")).toHaveTextContent(
       "Paper execution failed safely.",
     );
-    expect(screen.getByText("WebSocket: closed")).toBeInTheDocument();
+    expect(screen.getByText("Session connection: closed")).toBeInTheDocument();
   });
 
   it("explains a backend interruption in Chinese and keeps the raw diagnostic for audit", async () => {
@@ -498,7 +504,7 @@ describe("paper trading pages", () => {
     );
     expect(screen.getByRole("alert")).toHaveTextContent("malformed");
     expect(screen.queryByText("must-not-render")).not.toBeInTheDocument();
-    expect(screen.getByText("WebSocket: reconnecting")).toBeInTheDocument();
+    expect(screen.getByText("Session connection: reconnecting")).toBeInTheDocument();
     await act(async () => vi.advanceTimersByTimeAsync(1000));
     await act(async () => MockWebSocket.instances[1]!.open());
     expect(fetch).toHaveBeenCalledTimes(2);

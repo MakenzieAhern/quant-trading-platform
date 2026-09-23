@@ -269,7 +269,7 @@ export const enUS = {
       loading: "paper session snapshot",
       back: "← All paper sessions",
       eyebrow: "PAPER SESSION",
-      websocket: "WebSocket",
+      websocket: "Session connection",
       connection: {
         connecting: "connecting",
         connected: "connected",

@@ -266,7 +266,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         ]}
         rows={snapshot.signals.map((item) => [
           formatUtc(item.timestamp),
-          item.strategy_id,
+          t(`strategies.${item.strategy_id}`, { defaultValue: item.strategy_id }),
           item.symbol,
           t(`detail.directions.${item.signal_type}`, {
             defaultValue: item.signal_type,
