@@ -75,6 +75,15 @@ exact name, CNY100000, 2011-01-04→2011-06-30 dates and parameters; this narrow
 U8 but does not close the complete bilingual matrix or prove the separate
 Chrome-profile draft was restored.
 
+At 20:39 UTC, the in-app browser checked the actual guided wizard at
+390×844, 1024×768, 1280×800 and 1440×900. In the 390×844 viewport,
+Workbench, Strategies, Experiments, Markets, Paper, Data Center and Settings
+were inspected in English and their main document did not overflow the
+viewport; the same primary routes were checked in Chinese. Workbench was also
+visually inspected at 390×844 in system-dark and light themes. Original EN,
+system theme and default viewport were restored. This is a bounded responsive
+pass, not 200% zoom, keyboard, screen-reader or complete visual-matrix signoff.
+
 ## 2026-09-23 19:59 UTC restored paper-page language check
 
 The in-app browser opened restored historical account `d7044a3c` from the
