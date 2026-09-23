@@ -384,7 +384,7 @@ describe("durable experiment detail", () => {
         name: "Start or reopen linked retry",
       }),
     );
-    await screen.findByText(/service could not be reached/);
+    await screen.findByText(/request timed out/);
     const acceptedKey = retry.mock.calls[0][1];
     first.unmount();
     render(<ExperimentDetailPage jobId={job.job_id} />);
@@ -476,6 +476,31 @@ describe("durable experiment detail", () => {
       ),
     ).toBeInTheDocument();
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+  });
+
+  it("explains denied result access and recovers after an explicit retry", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "SUCCEEDED",
+      result_available: true,
+    });
+    vi.spyOn(experimentApi, "result")
+      .mockRejectedValueOnce(new ApiError(403, "Forbidden", "FORBIDDEN"))
+      .mockResolvedValue(result);
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 100,
+      offset: 0,
+    });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Access was denied. Check your access before trying again.",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Retry loading" }),
+    );
+    expect(await screen.findByText("What this run shows")).toBeInTheDocument();
   });
 
   it("shows exact results, retains null benchmark values, and loads only one bounded chart page", async () => {

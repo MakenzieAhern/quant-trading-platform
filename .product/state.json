@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T22:25:38Z",
+  "updated_at_utc": "2026-09-23T22:32:07Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 22:32UTC real Chrome153 on persisted successful experiment d9f27183: injected result-only HTTP403 with unknown code now displays actionable Chinese permission explanation; removing the interception and explicitly retrying loads the real result; injected HTTP408 shows timeout guidance. Shared experiment error precedence also covers create/action paths; focused26 frontend tests/type/lint PASS before full suite. No live DB write or formal study",
+    "2026-09-23 22:29UTC native Chrome153 zoom200 additional EN/dark/motion-off 1280x800 physical window (CSS632x352,DPR2) across Workbench, wizard, experiments, markets, paper, data, archive: document width632/632 and no page-level overflow. CDP viewport screenshots outside Git. This is bounded route/theme/locale evidence, not the full QA matrix. PR32 headb50ad2e CI35928381374 backend/frontend/compose PASS",
     "2026-09-23 22:25UTC isolated native Chrome153 page zoom200 via an ephemeral profile: physical 1440x900 rendered CSS712x402 with devicePixelRatio2 and visualViewport.scale1 (not a CSS viewport proxy). Seven primary ZH routes had document width712/712 without page overflow. Clean-profile Workbench primary CTA was clipped 3px below first viewport; short-height heading spacing fix moved bottom405->395, fully visible in physical Chrome CDP capture. This is bounded actual zoom evidence; wider locale/theme/route matrix remains IN_PROGRESS",
     "2026-09-23 PR32 headf802c1b CI35927595260 backend/frontend/compose PASS; draft open, no release promotion",
     "2026-09-23 22:17UTC real Chrome153 research archive EN1280/ZH390 and dataset detail: formerly raw PASSED/SUCCEEDED/research-period codes now show bilingual readiness, run status and split labels, with original codes in title for audit. Mobile research tables now show a localized horizontal-scroll hint and focusable scroll region; keyboard ArrowRight moved scrollLeft40/885 after focus, document width390/390. Full frontend212, lint/type/build, Prettier PASS. U8/QA-A11Y remain IN_PROGRESS beyond this archive slice",

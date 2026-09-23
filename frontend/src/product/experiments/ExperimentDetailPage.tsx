@@ -258,7 +258,7 @@ function ExperimentResults({
   if (result.error)
     return (
       <div role="alert">
-        <p>{c.serverError}</p>
+        <p>{experimentError(result.error, c)}</p>
         <button
           className="button secondary"
           onClick={() => setRevision((value) => value + 1)}

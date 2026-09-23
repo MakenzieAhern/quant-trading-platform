@@ -54,6 +54,25 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 22:32 UTC experiment result-load error recovery
+
+On a persisted successful historical experiment, isolated Chrome 153 intercepted
+only its result GET with HTTP 403 plus an unfamiliar backend code. Before the
+fix, the result panel incorrectly said the server could not finish the
+request. The shared experiment error interpreter now gives permission and
+timeout responses precedence over unknown codes, and the result panel uses
+that same interpreter. Chrome showed Chinese permission guidance, an explicit
+retry after removing the interception loaded the actual result, and an
+injected HTTP 408 showed timeout guidance. No new task or live database write
+was made. The frontend regression covers denied access and retry; broader
+U3 failure/cancellation and U8 error matrices remain IN_PROGRESS.
+
+The native Chrome 200% follow-up also checked seven routes at physical
+1280×800 in EN/dark/motion-off (CSS632×352, DPR2), without document-level
+horizontal overflow. CDP screenshots are outside Git under
+`product-evidence/v1.2/m4/zoom200-en-dark-*-1280.png`. This remains a bounded
+visual check, not full accessibility or product acceptance.
+
 ## 2026-09-23 22:25 UTC native Chrome 200% zoom check
 
 An ephemeral Chrome 153 profile used Chromium's native default-page-zoom

@@ -5,6 +5,9 @@ import type { ExperimentCopy } from "./copy";
 
 export function experimentError(reason: unknown, c: ExperimentCopy) {
   if (!(reason instanceof ApiError)) return c.networkError;
+  if (reason.status === 401 || reason.status === 403)
+    return i18n.t("common:loadErrors.permission");
+  if (reason.status === 408) return i18n.t("common:loadErrors.timeout");
   if (reason.code) return explainExperimentCode(reason.code, i18n.language);
   if (reason.status === 422 || reason.status === 400) return c.validationError;
   if (reason.status === 409) return c.conflictError;
