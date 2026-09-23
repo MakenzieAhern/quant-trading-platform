@@ -23,6 +23,18 @@ const health = {
 };
 
 describe("routing", () => {
+  it("leaves the skip link reachable on direct load and focuses main after navigation", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({}, "", "/");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    const main = screen.getByRole("main");
+    expect(main).not.toHaveFocus();
+    fireEvent.click(screen.getByRole("link", { name: "Strategies" }));
+    await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
+  });
+
   it("closes and restores the strategy drawer with Back and Forward", async () => {
     await i18n.changeLanguage("en-US");
     window.history.replaceState({}, "", "/strategies");
@@ -48,16 +60,22 @@ describe("routing", () => {
     });
     trigger.focus();
     fireEvent.click(trigger);
-    expect(window.location.hash).toContain(capabilities.strategies[0].strategy_id);
+    expect(window.location.hash).toContain(
+      capabilities.strategies[0].strategy_id,
+    );
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     act(() => window.history.back());
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     expect(window.location.pathname).toBe("/strategies");
     expect(trigger).toHaveFocus();
     act(() => window.history.forward());
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     expect(window.location.hash).toBe("");
     view.unmount();
     window.history.replaceState(
@@ -68,7 +86,9 @@ describe("routing", () => {
     render(<App />);
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     expect(window.location.pathname).toBe("/strategies");
     expect(window.location.hash).toBe("");
   });
@@ -155,7 +175,9 @@ describe("routing", () => {
         screen.getByRole("heading", { name: "Page not found" }),
       ).toBeInTheDocument();
       expect(await screen.findByText("Service online")).toBeInTheDocument();
-      expect(screen.queryByTitle("development · paper")).not.toBeInTheDocument();
+      expect(
+        screen.queryByTitle("development · paper"),
+      ).not.toBeInTheDocument();
     },
   );
 

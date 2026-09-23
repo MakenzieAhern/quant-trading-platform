@@ -156,6 +156,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     () => restored?.form ?? initialForm(capabilities, c.defaultName),
   );
   const [step, setStep] = useState(restored?.step ?? 0);
+  const previousStep = useRef(step);
   const [requestKey, setRequestKey] = useState(
     () => restored?.idempotencyKey ?? crypto.randomUUID(),
   );
@@ -193,6 +194,8 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     };
   }, []);
   useEffect(() => {
+    if (previousStep.current === step) return;
+    previousStep.current = step;
     heading.current?.focus();
   }, [step]);
   useEffect(() => {
@@ -423,7 +426,10 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                       max={form.end_date || dataset?.coverage_end}
                       value={form.start_date}
                       onInput={(event) =>
-                        update({ ...form, start_date: event.currentTarget.value })
+                        update({
+                          ...form,
+                          start_date: event.currentTarget.value,
+                        })
                       }
                     />
                   </label>

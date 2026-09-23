@@ -27,7 +27,13 @@ import {
   readExperimentDraft,
   saveExperimentDraft,
 } from "./draft";
-import { capabilities, configuration, job, plan, result } from "./fixtures.test-data";
+import {
+  capabilities,
+  configuration,
+  job,
+  plan,
+  result,
+} from "./fixtures.test-data";
 
 beforeEach(async () => {
   window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
@@ -50,6 +56,18 @@ async function review() {
 }
 
 describe("guided experiment", () => {
+  it("does not steal direct-load focus but focuses each newly opened step", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    render(<CreateExperimentPage />);
+    await screen.findByText(
+      "Ranks eligible shares and builds a long-only portfolio.",
+    );
+    const heading = document.querySelector<HTMLElement>(".experimentForm h2");
+    expect(heading).not.toHaveFocus();
+    await userEvent.click(screen.getByRole("button", { name: "Continue" }));
+    expect(heading).toHaveFocus();
+  });
+
   it("does not erase or navigate away from a newer draft when an abandoned create resolves", async () => {
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
     let resolve: ((value: typeof job) => void) | undefined;
@@ -548,28 +566,51 @@ describe("durable experiment detail", () => {
   it("persists a server-wide filtered, sorted column view across remount", async () => {
     const list = vi.spyOn(experimentApi, "list").mockResolvedValue({
       items: [{ ...job, status: "SUCCEEDED", result_available: true }],
-      total: 1, limit: 20, offset: 0,
+      total: 1,
+      limit: 20,
+      offset: 0,
     });
     const first = render(<ExperimentsPage />);
     await screen.findByRole("link", { name: job.name });
-    await userEvent.type(screen.getByLabelText("Search saved studies"), "Precision");
+    await userEvent.type(
+      screen.getByLabelText("Search saved studies"),
+      "Precision",
+    );
     await userEvent.selectOptions(screen.getByLabelText("Status"), "SUCCEEDED");
-    await userEvent.selectOptions(screen.getByLabelText("Sort studies"), "name_asc");
+    await userEvent.selectOptions(
+      screen.getByLabelText("Sort studies"),
+      "name_asc",
+    );
     await userEvent.click(screen.getByText("Columns"));
-    await userEvent.click(screen.getByRole("checkbox", { name: "Created (UTC)" }));
-    await userEvent.click(screen.getByRole("button", { name: "Save this view" }));
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: "Created (UTC)" }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Save this view" }),
+    );
     expect(screen.getByText("View saved on this device.")).toBeInTheDocument();
     first.unmount();
     render(<ExperimentsPage />);
-    expect(screen.getByLabelText("Search saved studies")).toHaveValue("Precision");
+    expect(screen.getByLabelText("Search saved studies")).toHaveValue(
+      "Precision",
+    );
     expect(screen.getByLabelText("Status")).toHaveValue("SUCCEEDED");
     expect(screen.getByLabelText("Sort studies")).toHaveValue("name_asc");
-    expect(screen.queryByRole("columnheader", { name: "Created (UTC)" })).not.toBeInTheDocument();
-    await waitFor(() => expect(list).toHaveBeenLastCalledWith(
-      expect.any(AbortSignal), 20, 0, "Precision",
-      { status: "SUCCEEDED", mode: undefined, sort: "name_asc" },
-    ));
-    await userEvent.click(screen.getByRole("button", { name: "Remove filter: Status" }));
+    expect(
+      screen.queryByRole("columnheader", { name: "Created (UTC)" }),
+    ).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(list).toHaveBeenLastCalledWith(
+        expect.any(AbortSignal),
+        20,
+        0,
+        "Precision",
+        { status: "SUCCEEDED", mode: undefined, sort: "name_asc" },
+      ),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Remove filter: Status" }),
+    );
     expect(screen.getByLabelText("Status")).toHaveValue("");
     await userEvent.click(screen.getByRole("button", { name: "Reset view" }));
     expect(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)).toBeNull();
@@ -577,15 +618,20 @@ describe("durable experiment detail", () => {
 
   it("restores an unsaved list filter after opening a result and going Back", async () => {
     window.history.replaceState({}, "", "/experiments");
-    const list = vi.spyOn(experimentApi, "list").mockImplementation(
-      async (_signal, _limit, offset) => ({
-        items: [job], total: 41, limit: 20, offset: offset ?? 0,
-      }),
-    );
+    const list = vi
+      .spyOn(experimentApi, "list")
+      .mockImplementation(async (_signal, _limit, offset) => ({
+        items: [job],
+        total: 41,
+        limit: 20,
+        offset: offset ?? 0,
+      }));
     const first = render(<ExperimentsPage />);
     await screen.findByRole("link", { name: job.name });
     await userEvent.type(screen.getByLabelText("Search saved studies"), "M1");
-    await waitFor(() => expect(window.history.state.experimentView.q).toBe("M1"));
+    await waitFor(() =>
+      expect(window.history.state.experimentView.q).toBe("M1"),
+    );
     await userEvent.click(screen.getByRole("button", { name: "Next" }));
     await waitFor(() => expect(window.history.state.experimentOffset).toBe(20));
     await screen.findByRole("link", { name: job.name });
@@ -596,10 +642,15 @@ describe("durable experiment detail", () => {
     await waitFor(() => expect(window.location.pathname).toBe("/experiments"));
     render(<ExperimentsPage />);
     expect(screen.getByLabelText("Search saved studies")).toHaveValue("M1");
-    await waitFor(() => expect(list).toHaveBeenLastCalledWith(
-      expect.any(AbortSignal), 20, 20, "M1",
-      { status: undefined, mode: undefined, sort: "newest" },
-    ));
+    await waitFor(() =>
+      expect(list).toHaveBeenLastCalledWith(
+        expect.any(AbortSignal),
+        20,
+        20,
+        "M1",
+        { status: undefined, mode: undefined, sort: "newest" },
+      ),
+    );
   });
 });
 
@@ -610,21 +661,29 @@ describe("experiment contract", () => {
     expect(screen.getByText(/Not today's trading advice/)).toBeInTheDocument();
     expect(screen.getByText("9.123456789123456789")).toBeInTheDocument();
     expect(screen.getByText("Approved for simulation")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /execute|submit/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /execute|submit/i }),
+    ).not.toBeInTheDocument();
     await i18n.changeLanguage("zh-CN");
     expect(screen.getByText("模拟调仓预览")).toBeInTheDocument();
     expect(screen.getByText(/不是今日交易建议/)).toBeInTheDocument();
   });
   it("rejects rounded or falsely submitted simulated plans", () => {
-    expect(parseResult({ ...result, simulation_plan: plan }).simulation_plan).toEqual(plan);
-    expect(() => parseResult({
-      ...result,
-      simulation_plan: { ...plan, estimated_cash_required: 917.3 },
-    })).toThrow();
-    expect(() => parseResult({
-      ...result,
-      simulation_plan: { ...plan, submitted_to_account: true },
-    })).toThrow();
+    expect(
+      parseResult({ ...result, simulation_plan: plan }).simulation_plan,
+    ).toEqual(plan);
+    expect(() =>
+      parseResult({
+        ...result,
+        simulation_plan: { ...plan, estimated_cash_required: 917.3 },
+      }),
+    ).toThrow();
+    expect(() =>
+      parseResult({
+        ...result,
+        simulation_plan: { ...plan, submitted_to_account: true },
+      }),
+    ).toThrow();
   });
   it("rejects rounded JSON financial numbers instead of coercing them", () => {
     expect(() =>

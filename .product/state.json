@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T21:41:27Z",
+  "updated_at_utc": "2026-09-23T21:47:41Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 21:47UTC Chrome153 at390x844 found direct home/wizard loads stole focus from the first-Tab skip link; AppShell and guided wizard now focus only on route/step changes, not initial mount. Fresh direct routes first Tab reached skip link; in-app route still focused main and wizard Continue focused new heading. Focused35, full frontend210, lint/type/build PASS. Wider keyboard/screen-reader and 200-percent zoom matrix remains IN_PROGRESS",
+    "2026-09-23 PR32 head dd85d5f CI35924102568 backend/frontend/compose PASS for shared home-link target fix",
     "2026-09-23 21:41UTC isolated Chrome153 AX tree scan across nine primary routes found no unnamed exposed controls in button/link/textbox/combobox/checkbox/switch/menuitem roles. Home text links measured20-21px high before shared CSS fix and40px after at390x844,720x450,1440x900; no document overflow and narrow primary CTA remained visible. Frontend208, Prettier/lint/type/build PASS. This is bounded a11y evidence, not full WCAG/contrast/focus or actual browser200-percent proof",
     "2026-09-23 PR32 head c54e205 CI35923085682 backend/frontend/compose PASS; worktree was clean before the present link-target fix",
     "2026-09-23 21:31UTC actual Chrome153 at 720x450 CSS viewport: Workbench primary CTA initially top/bottom507/549 below first screen; compact 601-800px layout moved it to387/429. No document overflow at720/390/1440; before/after screenshots outside Git. This is a zoom proxy, not actual browser200-percent verification",
@@ -397,13 +399,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "c54e205",
+      "last_verified_head": "dd85d5f",
       "state": "DRAFT",
-      "ci_run": 35923085682,
+      "ci_run": 35924102568,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill and linked retry PASS. U3 dirty Back/Forward and U4 CSV/JSON download PASS in real Chrome; narrow 720x450 CSS viewport layout proxy PASS, actual 200-percent browser zoom NOT_RUN. Simple warm navigation p95=32ms, wider QA incomplete. Full Windows reboot and forward authority remain open"
+      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill and linked retry PASS. U3 dirty Back/Forward and U4 CSV/JSON download PASS in real Chrome; home links40px and narrow 720x450 CSS viewport layout proxy PASS, actual 200-percent browser zoom NOT_RUN. Simple warm navigation p95=32ms, wider QA incomplete. Full Windows reboot and forward authority remain open"
     }
   },
   "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence; validate an independent backup destination and durable recovery in isolation. Continue independent U3 job/recovery, U8 and accessibility/performance browser work, including true 200-percent zoom; seek lawful forward-source rights before any U7 execution promotion. Docker engine restart, U4 Chrome export and U3 dirty Back/Forward passed; verify terminal-free recovery at the next safe full Windows reboot/login",

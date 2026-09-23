@@ -13,6 +13,7 @@ import { LanguageSelector } from "./LanguageSelector";
 export function AppShell({ children }: { children: ReactNode }) {
   const copy = useProductCopy();
   const pathname = usePathname();
+  const previousPathname = useRef(pathname);
   const { preferences, update, unsaved } = usePreferences();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -89,6 +90,8 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("focus", refreshOnFocus);
   }, []);
   useEffect(() => {
+    if (previousPathname.current === pathname) return;
+    previousPathname.current = pathname;
     document.getElementById("main-content")?.focus({ preventScroll: true });
   }, [pathname]);
   useEffect(() => {
