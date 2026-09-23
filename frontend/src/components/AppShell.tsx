@@ -235,7 +235,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           >
             <span aria-hidden="true">⌕</span>
             <span>{copy.search}</span>
-            <kbd>⌘ K</kbd>
+            <kbd>Ctrl / ⌘ K</kbd>
           </button>
           <Link className="topbarData" href="/data" title={copy.dateZone}>
             <span>
