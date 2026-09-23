@@ -48,11 +48,32 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | QA-ENGINE | Decimal/server validation/idempotency/task isolation; same financial path | Existing financial path + independent queue | 862 backend tests; actual 2011 exploratory run completed; synthetic clearly separated | IN_PROGRESS |
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
 | M4-DATA-INTEGRITY | Application and formal-history persistence, isolated tests, recoverable backup | Suite-wide test-DB guard and verified additive restore | Live DB was found missing formal 1/3/310 ledger and later paper accounts. Formal ledger and four pre-backup accounts were restored atomically; `4b64380f` and `07d72259` remain absent. Live-config pytest was rejected; isolated backend969 PASS/one optional skip with live counts stable. The post-recovery dump restored into a new database, with 44/44 public tables matching live by row count and sorted-row hash. This same-disk dump is not independent disaster recovery and missing-history disposition remains open | FAIL |
-| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Earlier isolated migration and frontend checks remain valid. 2026-09-23 isolated backend969 PASS/one optional archive skip and PR32 `a6b8c38` CI backend/frontend/compose PASS; however the live DB data-loss incident makes the current release/durability gate FAIL. Frozen research files were not changed; formal DB rows were restored from backup | FAIL |
-| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is enabled; four project containers have `unless-stopped` in Compose and runtime. A non-destructive Docker Desktop restart recovered all four services with API/frontend HTTP200, Redis PONG, persistent volumes/images and unchanged live ledger counts 1/3/310 research, 5/417 paper, 8 personal jobs and 4 update jobs. The two idle test-DB containers were returned to their original healthy state. This is engine-restart evidence, not full Windows reboot/login acceptance. PR32 CI35914743552 backend/frontend/compose PASS; screenshots/recordings and operator review remain incomplete | IN_PROGRESS |
+| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Earlier isolated migration and frontend checks remain valid. 2026-09-23 isolated backend969 PASS/one optional archive skip and PR32 `b060e9f` CI35915906461 backend/frontend/compose PASS; however the live DB data-loss incident makes the current release/durability gate FAIL. Frozen research files were not changed; formal DB rows were restored from backup | FAIL |
+| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is enabled; four project containers have `unless-stopped` in Compose and runtime. A non-destructive Docker Desktop restart recovered all four services with API/frontend HTTP200, Redis PONG, persistent volumes/images and unchanged live ledger counts 1/3/310 research, 5/417 paper, 8 personal jobs and 4 update jobs. The two idle test-DB containers were returned to their original healthy state. This is engine-restart evidence, not full Windows reboot/login acceptance. PR32 CI35915906461 backend/frontend/compose PASS; screenshots/recordings and operator review remain incomplete | IN_PROGRESS |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
+
+## 2026-09-23 20:32 UTC post-restart in-app browser check
+
+The workbench reopened persisted historical job `d9f27183` after the Docker
+engine restart. Its saved 2010-01-04→2011-03-22 range, return +4.67%, drawdown
+-2.48%, cost CNY96.05, 32-row simulated plan and risk refusals rendered; the
+page continued to label the period inspected and the plan non-executable.
+This is a post-restart read check, not a fresh experiment or formal study.
+
+On that actual result page, JSON export produced a prepared blob and a fallback
+save link. Neither automatic click nor user-activated fallback raised a browser
+download event within 10 seconds; the named report was absent from the default
+Windows Downloads directory. U4-EXPORT remains IN_PROGRESS. Browser logs showed
+no error, so the app-versus-browser cause is not established; no security check
+was bypassed. On the guided wizard, a temporary name edit followed by browser
+Back stayed on the wizard but exposed no observable native dialog; the original
+`U3 final diagnostic` name was restored and saved in this in-app browser.
+Dirty Back/Forward cancel/accept remains unverified. EN→ZH→EN preserved the
+exact name, CNY100000, 2011-01-04→2011-06-30 dates and parameters; this narrows
+U8 but does not close the complete bilingual matrix or prove the separate
+Chrome-profile draft was restored.
 
 ## 2026-09-23 19:59 UTC restored paper-page language check
 

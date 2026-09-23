@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T20:24:20Z",
+  "updated_at_utc": "2026-09-23T20:32:46Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 post-Docker-restart in-app browser reopened saved historical jobd9f27183 with exact date/metric/plan/risk labels; guided wizard EN-ZH-EN retained exact name, capital and dates. Temporary in-app draft name was restored and saved; full U8 and separate Chrome-profile draft restoration remain unverified",
+    "2026-09-23 PR32 headb060e9f CI35915906461 backend/frontend/compose PASS; draft open, release gate FAIL",
     "2026-09-23 20:23UTC Docker Desktop non-destructive restart: four project containers self-recovered, backend/PostgreSQL/Redis healthy, API/frontend HTTP200, Redis PONG, all four named volumes and project images retained. Live pre/post research1/3/310 paper5/417 jobs8 updates4 unchanged; two idle test-DB containers restored to prior healthy state. Full Windows reboot/login NOT_RUN",
     "2026-09-23 PR32 head0e0f533 CI35914743552 backend/frontend/compose PASS; draft remains open and v1.2 release unapproved",
     "2026-09-23 Docker Desktop 4.92.0 AutoStart enabled through General settings; four project services changed to unless-stopped in Compose and live runtime without restarting or deleting containers. Base/release Compose config validated; full reboot recovery NOT_RUN because two other test-DB stacks remain running with unverified ownership. M5 startup remains IN_PROGRESS",
@@ -159,7 +161,7 @@
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
     "RESOLVED: Vite stale import after .tsx-to.ts rename; frontend restart cleared cached module resolution",
     "RESOLVED: U5 reader mismatched source suspension date formats; product-only normalization/unknown-boundary handling tested",
-    "Browser download UI reports prepared, but actual download event/artifact not verified; direct native attachment control hit browser security check and net::ERR_BLOCKED_BY_CLIENT, so no bypass or repeated retry",
+    "OPEN: post-restart in-app JSON auto-click and user-activated fallback produced a prepared blob but no download event in 10s or named Windows Downloads file. Browser logs showed no error; app-versus-browser cause unresolved. Earlier direct native attachment control hit net::ERR_BLOCKED_BY_CLIENT; no security bypass attempted",
     "RESOLVED: Chrome native date fill changed DOM without React state; onInput now persists the intended date across paper and sibling date controls",
     "RESOLVED: closing market detail cleared parent data-mode context; remove duplicate child writer with regression",
     "RESOLVED: U2 shared localStorage overwrite across tabs; independently retained per-page recovery slots and independent review",
@@ -385,13 +387,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "0e0f533",
+      "last_verified_head": "b060e9f",
       "state": "DRAFT",
-      "ci_run": 35914743552,
+      "ci_run": 35915906461,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill explanation and linked interrupted retry browser PASS. Docker engine restart PASS, full Windows reboot/browser QA still incomplete; forward authority remains PARTIAL"
+      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill explanation and linked interrupted retry browser PASS. Docker engine restart and post-restart saved-result read PASS; full Windows reboot, U4 download and U3 native-dialog QA incomplete; forward authority remains PARTIAL"
     }
   },
   "next_task": "Resolve the two known unrecovered post-backup paper ledgers without inventing data; validate durable backups/recovery in isolation. Continue independent U3/U4/U8/quality work, and seek lawful forward-source rights before any U7 execution promotion. Docker engine restart passed; verify terminal-free recovery at the next safe full Windows reboot/login. U3 native-dialog and U4 browser download remain unverified",
