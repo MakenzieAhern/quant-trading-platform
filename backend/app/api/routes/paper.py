@@ -143,6 +143,16 @@ async def stop_paper_session(session_id: UUID) -> PaperSessionResponse:
         raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
 
 
+@router.post("/{session_id}/pause", response_model=PaperSessionResponse)
+async def pause_paper_session(session_id: UUID) -> PaperSessionResponse:
+    try:
+        return _session_response(await paper_manager.pause(session_id))
+    except LookupError as exc:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found") from exc
+    except PaperSessionStateError as exc:
+        raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
+
+
 @router.get("/{session_id}/events", response_model=list[PaperEventResponse])
 async def get_paper_events(session_id: UUID) -> list[PaperEventResponse]:
     await _require_session(session_id)

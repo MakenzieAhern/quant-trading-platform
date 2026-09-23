@@ -21,6 +21,8 @@ const STATUSES = new Set<PaperSessionStatus>([
   "CREATED",
   "STARTING",
   "RUNNING",
+  "PAUSING",
+  "PAUSED",
   "STOPPING",
   "STOPPED",
   "FAILED",
@@ -293,6 +295,13 @@ export const paperApi = {
   start: (sessionId: string, signal?: AbortSignal) =>
     apiRequest(
       `/api/paper-trading/sessions/${sessionId}/start`,
+      { method: "POST" },
+      signal,
+      session,
+    ),
+  pause: (sessionId: string, signal?: AbortSignal) =>
+    apiRequest(
+      `/api/paper-trading/sessions/${sessionId}/pause`,
       { method: "POST" },
       signal,
       session,

@@ -374,7 +374,7 @@ export function CreatePaperSessionPage() {
                 <input
                   type="date"
                   value={startDate}
-                  onChange={(event) => setStartDate(event.target.value)}
+                  onInput={(event) => setStartDate(event.currentTarget.value)}
                   required
                 />
               </label>
@@ -383,7 +383,7 @@ export function CreatePaperSessionPage() {
                 <input
                   type="date"
                   value={endDate}
-                  onChange={(event) => setEndDate(event.target.value)}
+                  onInput={(event) => setEndDate(event.currentTarget.value)}
                   required
                 />
               </label>

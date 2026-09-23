@@ -262,10 +262,10 @@ function UpdateRequestForm({
                 min={earliestUpdateDate(caps) ?? undefined}
                 max={draft.end_date || caps.latest_publishable_date}
                 value={draft.start_date}
-                onChange={(event) =>
+                onInput={(event) =>
                   change({
                     ...draft,
-                    start_date: event.target.value,
+                    start_date: event.currentTarget.value,
                     requestKey: crypto.randomUUID(),
                   })
                 }
@@ -281,10 +281,10 @@ function UpdateRequestForm({
                 }
                 max={caps.latest_publishable_date}
                 value={draft.end_date}
-                onChange={(event) =>
+                onInput={(event) =>
                   change({
                     ...draft,
-                    end_date: event.target.value,
+                    end_date: event.currentTarget.value,
                     requestKey: crypto.randomUUID(),
                   })
                 }

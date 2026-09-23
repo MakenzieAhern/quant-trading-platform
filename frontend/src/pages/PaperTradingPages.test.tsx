@@ -175,6 +175,9 @@ describe("paper trading pages", () => {
       "historical_a_share",
     );
     expect(screen.getByText(/Past audited sessions only/)).toBeInTheDocument();
+    fireEvent.input(screen.getByLabelText("End date"), {
+      target: { value: "2011-03-23" },
+    });
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -183,7 +186,7 @@ describe("paper trading pages", () => {
       provider_type: "historical_a_share",
       dataset_id: "cn-a-research-20100101-20251231-v1",
       strategy: {
-        parameters: { start_date: "2011-03-01", end_date: "2011-03-31" },
+        parameters: { start_date: "2011-03-01", end_date: "2011-03-23" },
       },
       risk: {
         enforce_buying_power: true,
@@ -223,6 +226,26 @@ describe("paper trading pages", () => {
       screen.getByText("cn-a-research-20100101-20251231-v1"),
     ).not.toBeVisible();
     expect(screen.getByText(PAPER_ID)).not.toBeVisible();
+  });
+
+  it("offers pause while running and resume from a persisted paused account", async () => {
+    installWebSocket();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")));
+    const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await userEvent.click(screen.getByRole("button", { name: "Pause replay" }));
+    expect(fetch.mock.calls[1]?.[0]).toContain(`/${PAPER_ID}/pause`);
+
+    view.unmount();
+    installWebSocket();
+    fetch.mockResolvedValueOnce(jsonResponse(paperSnapshot("PAUSED")));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    expect(screen.getByRole("button", { name: "Resume replay" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Stop replay" })).toBeVisible();
   });
 
   it("validates paper strategy parameters before submitting", async () => {

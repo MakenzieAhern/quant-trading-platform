@@ -15,6 +15,8 @@ class PaperSessionStatus(StrEnum):
     CREATED = "CREATED"
     STARTING = "STARTING"
     RUNNING = "RUNNING"
+    PAUSING = "PAUSING"
+    PAUSED = "PAUSED"
     STOPPING = "STOPPING"
     STOPPED = "STOPPED"
     FAILED = "FAILED"
@@ -28,6 +30,7 @@ ALLOWED_TRANSITIONS: dict[PaperSessionStatus, frozenset[PaperSessionStatus]] = {
     PaperSessionStatus.STARTING: frozenset(
         {
             PaperSessionStatus.RUNNING,
+            PaperSessionStatus.PAUSING,
             PaperSessionStatus.STOPPING,
             PaperSessionStatus.FAILED,
             PaperSessionStatus.INTERRUPTED,
@@ -35,12 +38,22 @@ ALLOWED_TRANSITIONS: dict[PaperSessionStatus, frozenset[PaperSessionStatus]] = {
     ),
     PaperSessionStatus.RUNNING: frozenset(
         {
+            PaperSessionStatus.PAUSING,
             PaperSessionStatus.STOPPING,
             PaperSessionStatus.STOPPED,
             PaperSessionStatus.FAILED,
             PaperSessionStatus.INTERRUPTED,
         }
     ),
+    PaperSessionStatus.PAUSING: frozenset(
+        {
+            PaperSessionStatus.PAUSED,
+            PaperSessionStatus.STOPPING,
+            PaperSessionStatus.FAILED,
+            PaperSessionStatus.INTERRUPTED,
+        }
+    ),
+    PaperSessionStatus.PAUSED: frozenset({PaperSessionStatus.STARTING, PaperSessionStatus.STOPPED}),
     PaperSessionStatus.STOPPING: frozenset(
         {
             PaperSessionStatus.STOPPED,

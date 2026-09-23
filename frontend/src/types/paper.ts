@@ -2,6 +2,8 @@ export type PaperSessionStatus =
   | "CREATED"
   | "STARTING"
   | "RUNNING"
+  | "PAUSING"
+  | "PAUSED"
   | "STOPPING"
   | "STOPPED"
   | "FAILED"

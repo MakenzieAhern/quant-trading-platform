@@ -115,7 +115,7 @@ class SQLAlchemyPaperRepository:
             raise PaperSessionConcurrencyError("paper session state changed concurrently")
         model.status = target.value
         model.error_message = error_message
-        if target is PaperSessionStatus.RUNNING:
+        if target is PaperSessionStatus.RUNNING and model.started_at is None:
             model.started_at = timestamp
         if target in {
             PaperSessionStatus.STOPPED,
@@ -199,7 +199,11 @@ class SQLAlchemyPaperRepository:
             (
                 await self._session.scalars(
                     select(PaperTradingSessionModel)
-                    .where(PaperTradingSessionModel.status.in_(["STARTING", "RUNNING", "STOPPING"]))
+                    .where(
+                        PaperTradingSessionModel.status.in_(
+                            ["STARTING", "RUNNING", "PAUSING", "STOPPING"]
+                        )
+                    )
                     .order_by(PaperTradingSessionModel.id)
                     .with_for_update()
                 )
