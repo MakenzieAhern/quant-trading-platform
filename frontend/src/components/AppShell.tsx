@@ -89,7 +89,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("focus", refreshOnFocus);
   }, []);
   useEffect(() => {
-    document.getElementById("main-content")?.focus();
+    document.getElementById("main-content")?.focus({ preventScroll: true });
   }, [pathname]);
   useEffect(() => {
     document.documentElement.dataset.theme = preferences.theme;

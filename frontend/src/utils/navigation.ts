@@ -16,10 +16,10 @@ function historyIndex(): number {
 
 export function navigate(path: string): boolean {
   const destination = new URL(path, window.location.href);
-  if (
+  const changingLocation =
     destination.pathname !== window.location.pathname ||
-    destination.search !== window.location.search
-  ) {
+    destination.search !== window.location.search;
+  if (changingLocation) {
     const request = new CustomEvent(BEFORE_NAVIGATION, { cancelable: true });
     if (!window.dispatchEvent(request)) return false;
   }
@@ -27,6 +27,7 @@ export function navigate(path: string): boolean {
   window.dispatchEvent(
     new PopStateEvent("popstate", { state: { [APPROVED_NAVIGATION]: true } }),
   );
+  if (changingLocation) window.scrollTo(0, 0);
   return true;
 }
 

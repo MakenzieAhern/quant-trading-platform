@@ -20,6 +20,17 @@ function RouterHarness() {
 }
 
 describe("shared navigation guard", () => {
+  it("starts new routes at the top without scrolling on same-route or Back", () => {
+    const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+    window.history.replaceState({}, "", "/strategies");
+    navigate("/experiments");
+    expect(scrollTo).toHaveBeenCalledExactlyOnceWith(0, 0);
+    navigate("/experiments");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    scrollTo.mockRestore();
+  });
+
   it("blocks sidebar links and programmatic commands once before changing history", async () => {
     window.history.replaceState({}, "", "/research/new");
     const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
