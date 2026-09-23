@@ -60,9 +60,28 @@ must not qualify it as a new product feed. Historical Tencent/Sina acceptance al
 does not establish new-market coverage or redistribution rights. Their previously
 accepted frozen histories remain untouched.
 
-## Minimal next implementation
+## 2026-09-23 product updater checkpoint
 
-1. Add a product-owned, user-triggered bounded per-security EOD update job, using
+Step 1 below is implemented for an explicitly requested, bounded, per-security
+raw EOD update. Chrome submitted one `CN-A:SSE:600000` / 2026-09-22 request;
+one candidate observation and immutable receipt were written to the separate
+product volume. The same job and receipt survived backend restart and browser
+reload. Migration 0014 was reversible on the disposable database and additive
+on the main database after an off-repo backup. The frozen research archive was
+mounted read-only and its checksums and formal study counts did not change.
+The browser evidence is stored outside Git under
+`product-evidence/v1.2/u5/incremental-raw-receipt-zh-20260923.png`.
+
+This historical catch-up proves ingestion durability, **not** authority for
+execution or U7 forward acceptance. Current master, calendar, ST, market rules,
+corporate actions and adjustment factors remain unverified for the new date.
+Cross-board controls, failure/retry/cancel browser paths, and an after-session
+forward receipt remain open. No raw market rows belong in Git.
+
+## Implementation and remaining gates
+
+1. **DONE for the bounded raw candidate path.** A product-owned, user-triggered
+   per-security EOD update job uses
    existing BaoStock integration/Decimal records and a supervised timeout. Fetch
    only missing completed dates for the selected securities. The full archive is
    not a prerequisite for this product updater. Keep bulk API disabled until a
@@ -71,7 +90,7 @@ accepted frozen histories remain untouched.
    Main/ChiNext plus known current ST and suspension controls. Reconcile current
    master, calendar, status and effective market rules for intended execution.
    Unknown metadata blocks affected execution; missing rows never imply suspension.
-3. Preserve requested-at, response-completed/received-at and immutable first-seen
+3. **DONE for raw candidate receipts; authority promotion remains separate.** Preserve requested-at, response-completed/received-at and immutable first-seen
    timestamps in UTC, exchange trading date separately, SDK/parser/source version,
    request parameters, original fields, response/logical SHA-256 and terms snapshot.
    Append corrected vintages and atomic manifests outside the frozen archive.

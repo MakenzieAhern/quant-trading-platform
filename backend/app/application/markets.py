@@ -8,7 +8,7 @@ from functools import lru_cache
 from importlib import import_module
 from pathlib import Path
 from threading import Lock
-from typing import Any
+from typing import Any, cast
 
 from app.application.experiments.data import (
     DEMO_END,
@@ -126,7 +126,7 @@ class MarketReader:
                     if sha256_file(path) != partition.sha256:
                         raise ExperimentInputError("DATASET_INTEGRITY_FAILED")
                     self._verified[relative] = stamp
-            return pq.read_table(path, filters=filters).to_pylist()
+            return cast(list[dict[str, Any]], pq.read_table(path, filters=filters).to_pylist())
         except (OSError, ValueError) as exc:
             raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc
 

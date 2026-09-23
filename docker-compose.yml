@@ -42,6 +42,7 @@ services:
       MARKET_DATA_PATH: /workspace/data/raw
       BACKTEST_FIXTURE_PATH: /workspace/data/fixtures
       RESEARCH_DATA_PATH: /workspace/research
+      PRODUCT_DATA_PATH: /workspace/product
       FRONTEND_ORIGIN: http://localhost:5173
     command: ["sh", "-c", "alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port 8000"]
     ports:
@@ -50,6 +51,7 @@ services:
       - ./backend:/app
       - ./data:/workspace/data
       - ${RESEARCH_DATA_ROOT:-./data/research}:/workspace/research:ro
+      - product_data:/workspace/product
     depends_on:
       postgres:
         condition: service_healthy
@@ -80,3 +82,4 @@ volumes:
   postgres_data:
   redis_data:
   frontend_node_modules:
+  product_data:

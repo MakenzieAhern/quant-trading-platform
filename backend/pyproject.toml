@@ -10,6 +10,7 @@ requires-python = "==3.12.*"
 dependencies = [
   "alembic>=1.17,<2",
   "asyncpg>=0.31,<0.32",
+  "baostock==0.9.4",
   "cryptography>=50,<51",
   "fastapi>=0.141,<0.142",
   "openpyxl>=3.1,<4",

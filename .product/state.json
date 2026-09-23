@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T00:52:00Z",
+  "updated_at_utc": "2026-09-23T01:09:46Z",
   "milestone": "M2_U5_INCREMENTAL_AND_M3_U6_PLANNING",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -16,7 +16,7 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-configurations",
+    "branch": "codex/product-v1.2-updates",
     "identity": "MakenzieAhern"
   },
   "ownership": {
@@ -64,12 +64,15 @@
     "U5 parent/child source-context race reproduced by failing test then fixed by single page owner;22 related tests PASS",
     "PR14 draft created/attached; CI35709079995 backend/frontend/compose PASS",
     "PR15 draft created/attached; CI35710621776 backend/frontend/compose PASS",
+    "PR16 configurations CI35804060156 backend/frontend/compose PASS; U2 Chrome restore/reload and U4 three-run comparison checked",
+    "PR17 search CI35804362298 backend/frontend/compose PASS; Chrome literal watchlist search and exact-dataset navigation checked",
     "U2 exact named configuration save/restore/reload/Chinese switch and pre-restore backup checked in Chrome; independent race review PASS",
     "U4 three actual runs compared across six conditions; refresh and fractional configuration display checked in Chrome",
     "2026-09-23 full backend949/frontend182, Ruff/mypy/ESLint/type/build PASS; isolated migration0014 down/up/check PASS",
     "Main DB pre0014 backup validated off Git; additive0014 deployed with separate product volume and read-only research mount",
     "Chrome explicitly requested one BaoStock security/day: one persisted candidate receipt and observation; restart/reload retained exact job and counts",
-    "Formal ledger1 dataset/3 runs/310 trades and frozen manifest/freeze hashes unchanged after0014 and restart"
+    "Formal ledger1 dataset/3 runs/310 trades and frozen manifest/freeze hashes unchanged after0014 and restart",
+    "2026-09-23 fresh isolated quant_test_v12_u5 DB full backend949 PASS, Ruff/format/mypy PASS; frontend183/lint/type/build PASS; Compose base/release config PASS"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -79,7 +82,8 @@
     "Browser native date fill changes DOM without React event; native keyboard commit verified persisted form before submission",
     "RESOLVED: closing market detail cleared parent data-mode context; remove duplicate child writer with regression",
     "RESOLVED: U2 shared localStorage overwrite across tabs; independently retained per-page recovery slots and independent review",
-    "OPEN: Vite main bundle539.75 kB exceeds500 kB warning; M4 performance diagnosis pending"
+    "RESOLVED: fixed-clock queue test UUID tie and advisory-lock test cross-database count on a shared PostgreSQL instance; full backend949 PASS",
+    "OPEN: Vite main bundle540.21 kB exceeds500 kB warning; M4 performance diagnosis pending"
   ],
   "external_blockers": [
     {
@@ -126,10 +130,30 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "cached markets and watchlist PASS"
+    },
+    "16": {
+      "branch": "codex/product-v1.2-configurations",
+      "head": "7fdd413",
+      "state": "DRAFT",
+      "ci_run": 35804060156,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "saved versions PASS; comparison PASS; export artifact INCOMPLETE"
+    },
+    "17": {
+      "branch": "codex/product-v1.2-search",
+      "head": "b783750",
+      "state": "DRAFT",
+      "ci_run": 35804362298,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "literal search and watchlist navigation PASS"
     }
   },
-  "next_task": "Push reviewed U2/U4 slice and create stacked draft PR; commit bounded search and U5 incremental slices; then implement U6 plan and continue U7/M4/M5",
-  "next_command": "Review explicit staged paths, push codex/product-v1.2-configurations, create draft PR against codex/product-v1.2-markets; preserve the remaining U5/search worktree changes",
+  "next_task": "Commit and review the deployed bounded U5 updater as stacked draft PR18, then implement U6 dated simulation plan and continue U7/M4/M5",
+  "next_command": "After U5 PR18 creation and CI, inspect existing execution engine, risk/OMS/portfolio and account API for a receipt-bound U6 simulation plan",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

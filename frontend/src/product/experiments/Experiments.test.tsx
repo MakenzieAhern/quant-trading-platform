@@ -330,8 +330,10 @@ describe("durable experiment detail", () => {
         "requested",
       ),
     );
+    await waitFor(() => expect(resolve).toBeDefined());
     await act(async () => {
-      resolve?.({ ...result, date_end: "2031-06-27" });
+      if (!resolve) throw new Error("result request did not start");
+      resolve({ ...result, date_end: "2031-06-27" });
     });
     await waitFor(() =>
       expect(context).toHaveBeenLastCalledWith(

@@ -1,0 +1,120 @@
+.marketUpdates {
+  margin-top: 2rem;
+  min-width: 0;
+}
+.marketUpdates > header,
+.updateRequest,
+.updateDetail,
+.marketUpdates > section {
+  padding: 1rem;
+  margin-top: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  min-width: 0;
+}
+.marketUpdates p {
+  line-height: 1.65;
+}
+.updateNotice {
+  border-left: 3px solid var(--warning);
+  padding: 1rem;
+  background: var(--surface-raised);
+}
+.marketUpdates label {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.8rem 0;
+}
+.marketUpdates input:not([type="checkbox"]),
+.marketUpdates textarea,
+.marketUpdates select {
+  padding: 0.65rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  width: 100%;
+  min-width: 0;
+}
+.marketUpdates fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.marketUpdates .updateCheck {
+  display: flex;
+  align-items: start;
+  gap: 0.6rem;
+}
+.updateCheck input {
+  margin-top: 0.3rem;
+  flex: 0 0 auto;
+}
+.updateDateFields,
+.updateSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 1rem;
+}
+.updateHistory {
+  list-style: none;
+  padding: 0;
+}
+.updateHistory li {
+  border-top: 1px solid var(--border);
+  padding: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.updateHistory li > div {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+.marketUpdates code,
+.marketUpdates dd,
+.marketUpdates pre,
+.updateGapDates,
+.updateHistory span {
+  overflow-wrap: anywhere;
+}
+.marketUpdates pre {
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+}
+.marketUpdates dd {
+  margin: 0.3rem 0 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.marketUpdates dt {
+  color: var(--muted);
+}
+.marketUpdates details {
+  margin: 1rem 0;
+}
+.marketUpdates summary {
+  cursor: pointer;
+}
+.updateTableScroll {
+  max-width: 100%;
+  overflow: auto;
+}
+.updateTableScroll table {
+  border-collapse: collapse;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+.updateTableScroll th,
+.updateTableScroll td {
+  padding: 0.65rem;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  white-space: nowrap;
+}
+.marketUpdates [role="alert"] {
+  color: var(--danger);
+}
