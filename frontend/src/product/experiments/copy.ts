@@ -141,7 +141,7 @@ const en = {
   capitalEnd: "Final equity (CNY)",
   limits: "Before interpreting these results",
   warningHistorical:
-    "This is an exploration of already inspected historical data, not a new Official OOS study. Differences from a formal report do not replace it.",
+    "This explores dates already inspected, not new unseen market data. It cannot replace the published formal report.",
   warningDemo:
     "These prices are synthetic and intentionally demonstrate the workflow. Returns cannot be used as investment evidence.",
   noGuarantee:
@@ -337,7 +337,7 @@ const zh: typeof en = {
   capitalEnd: "最终权益（人民币）",
   limits: "解读结果前请注意",
   warningHistorical:
-    "这是对已查看历史区间的探索，不是新的 Official OOS 研究。与正式报告的差异不替代原有结果。",
+    "这是用已查看的历史数据做探索，不是对未见市场数据的新检验，也不能替代已发布的正式报告。",
   warningDemo: "这里使用合成价格演示操作流程。模拟收益不可作为投资证据。",
   noGuarantee:
     "历史模拟结果不能证明未来可靠收益。成本、执行约束与数据限制都会影响结论。",
