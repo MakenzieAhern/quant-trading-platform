@@ -108,6 +108,14 @@ const explanations: Record<string, [string, string]> = {
     "The next opening price is outside the chosen limit",
     "下一开盘价超出预先指定限价",
   ],
+  CORPORATE_ACTION_NON_ORDERABLE: [
+    "A pending corporate action makes this holding unavailable for a new order",
+    "待处理公司行动使该持仓暂时不能提交新订单",
+  ],
+  CORPORATE_ACTION_OPENING_UNCERTAINTY: [
+    "A corporate action or share surrender makes opening execution uncertain; no simulated fill is assumed",
+    "公司行动或股份让渡使开盘执行存在不确定性；模拟中不假定成交",
+  ],
   DAILY_PARTICIPATION_CAP: [
     "Quantity exceeds the daily volume participation cap",
     "数量超出日成交量参与上限",
