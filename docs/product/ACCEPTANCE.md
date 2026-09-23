@@ -54,6 +54,23 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 23:54 UTC Data Center permission recovery
+
+Actual Chrome 153 at 1280×800 intercepted only the read-only
+`/api/market-updates/capabilities` response with HTTP 403. Before the fix,
+the Data Center said only to refresh. The existing update-error path now
+distinguishes denied access, timeout and offline transport for capabilities,
+history, receipt/observation records and the Task Center, while preserving
+source-specific denial text and explicit refresh. On the live page, Chinese
+permission guidance appeared; after removing the interception, one manual
+refresh restored the real request form. No market-update POST occurred and
+main database counts remained paper 5/417, personal jobs 8, update jobs 4.
+The [full-page Chrome screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/data-permission-403-page-zh-20260924.png)
+is outside Git (SHA-256 `181DBE4D7873DB6C5A70BD572779001DD00773C59DECAF15D60D63CDDBEC5FE2`).
+Focused update/task-center tests 12/12, full frontend 216/216, ESLint,
+TypeScript and production build passed. This is fault injection, not a real
+provider permission grant; U5-UPDATE and UX-ERROR remain IN_PROGRESS.
+
 ## 2026-09-23 23:45 UTC isolated paper reconnect and restart check
 
 In a disposable `quant-v12-paperqa-20260924` tmpfs PostgreSQL stack with backend

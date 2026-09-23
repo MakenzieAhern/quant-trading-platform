@@ -28,8 +28,12 @@ const en = {
     "One request draft and identity is shared by tabs in this browser; another tab can replace it. Submitted tasks remain on the server. Unchanged resubmissions reuse the same identity.",
   loading: "Loading saved state…",
   refresh: "Refresh",
-  loadFailed:
-    "The saved state could not be loaded. This read does not start provider requests; existing tasks may still be running. Refresh to check again.",
+  permission:
+    "The service denied this request. Check access permissions before retrying; do not bypass a source restriction.",
+  timedOut:
+    "The request timed out. Check service state and saved task history before retrying unchanged inputs.",
+  offline:
+    "The service could not be reached. Check its status and saved task history, then retry.",
   unavailable: "Acquisition unavailable",
   history: "Update task history",
   empty: "No update tasks yet.",
@@ -156,8 +160,9 @@ const zh: typeof en = {
     "此浏览器的标签页共享一份请求草稿与标识，其他标签页可能替换它。已提交任务保存在服务器。输入不变时重新提交会使用同一标识。",
   loading: "正在读取已保存状态…",
   refresh: "刷新",
-  loadFailed:
-    "无法读取已保存状态。此读取不会启动供应商请求，但已有任务可能仍在运行。请刷新后检查。",
+  permission: "服务拒绝了此请求。请先核对访问权限；不得绕过数据来源的限制。",
+  timedOut: "请求已超时。请先检查服务状态及已保存任务历史，再用不变输入重试。",
+  offline: "无法连接服务。请先检查服务状态及已保存任务历史，然后重试。",
   unavailable: "当前无法抓取",
   history: "更新任务历史",
   empty: "尚无更新任务。",
@@ -350,9 +355,14 @@ export function explainUpdateCode(code: string, language: string) {
   );
 }
 export function updateError(reason: unknown, language: string) {
-  if (reason instanceof ApiError && reason.code)
-    return explainUpdateCode(reason.code, language);
-  if (reason instanceof ApiError && reason.status === 422)
-    return language.startsWith("zh") ? zh.validation : en.validation;
-  return language.startsWith("zh") ? zh.safeError : en.safeError;
+  const c = language.startsWith("zh") ? zh : en;
+  if (reason instanceof ApiError) {
+    if (reason.code && codes[reason.code])
+      return explainUpdateCode(reason.code, language);
+    if (reason.status === 401 || reason.status === 403) return c.permission;
+    if (reason.status === 408) return c.timedOut;
+    if (reason.status === 422) return c.validation;
+  }
+  if (reason instanceof TypeError) return c.offline;
+  return c.safeError;
 }

@@ -50,6 +50,27 @@ async function fill() {
   await userEvent.click(screen.getByRole("checkbox"));
 }
 describe("explicit incremental request workflow", () => {
+  it("explains a denied capability read and recovers only after explicit refresh", async () => {
+    const create = vi.spyOn(marketUpdateApi, "create");
+    vi.mocked(marketUpdateApi.capabilities).mockRejectedValue(
+      new ApiError(403, "denied"),
+    );
+    render(<MarketUpdatesPanel />);
+    expect(
+      await screen.findByText(/The service denied this request/),
+    ).toBeInTheDocument();
+    expect(create).not.toHaveBeenCalled();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByText(/服务拒绝了此请求/)).toBeInTheDocument();
+    vi.mocked(marketUpdateApi.capabilities).mockResolvedValue(caps);
+    await userEvent.click(screen.getByRole("button", { name: "刷新" }));
+    expect(
+      await screen.findByLabelText("证券标识（1–20 个）"),
+    ).toBeInTheDocument();
+    expect(create).not.toHaveBeenCalled();
+  });
   it("never acquires on open; preserves dates across language changes and waits for explicit consent", async () => {
     const create = vi.spyOn(marketUpdateApi, "create");
     render(<MarketUpdatesPanel />);

@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatUtc } from "../../utils/format";
 import { marketUpdateApi } from "./api";
-import { useUpdateCopy } from "./copy";
+import { updateError, useUpdateCopy } from "./copy";
 import type { UpdateJob } from "./types";
 
 export function UpdateRecords({
@@ -14,6 +15,7 @@ export function UpdateRecords({
   revision: number;
 }) {
   const c = useUpdateCopy();
+  const { i18n } = useTranslation();
   const [security, setSecurity] = useState(job.configuration.security_ids[0]);
   const [receiptOffset, setReceiptOffset] = useState(0);
   const [observationOffset, setObservationOffset] = useState(0);
@@ -85,7 +87,9 @@ export function UpdateRecords({
         </details>
       )}
       {observations.loading && <p role="status">{c.loading}</p>}
-      {observations.error && <p role="alert">{c.loadFailed}</p>}
+      {observations.error && (
+        <p role="alert">{updateError(observations.error, i18n.language)}</p>
+      )}
       {observations.data && (
         <>
           {!observations.data.items.length && <p>{c.noObservations}</p>}
@@ -158,7 +162,9 @@ export function UpdateRecords({
       )}
       <h4>{c.receipts}</h4>
       {receipts.loading && <p role="status">{c.loading}</p>}
-      {receipts.error && <p role="alert">{c.loadFailed}</p>}
+      {receipts.error && (
+        <p role="alert">{updateError(receipts.error, i18n.language)}</p>
+      )}
       {receipts.data && (
         <>
           {!receipts.data.items.length && <p>{c.noReceipts}</p>}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T23:45:29Z",
+  "updated_at_utc": "2026-09-23T23:53:56Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 23:54UTC actual Chrome153 read-only 403 injection on /api/market-updates/capabilities reproduced generic Data Center refresh advice; shared updateError now distinguishes denied access, timeout and offline transport for capabilities/history/records/task center while retaining source-specific codes. Chinese Chrome displayed permission guidance; removing interception and manually refreshing restored the real form, with zero market-update POSTs and live counts paper5/events417/jobs8/updates4 unchanged. Focused12/full216 frontend, lint/type/build PASS. This closes one bounded U5/UX-ERROR permission-recovery defect, not the full failure matrix or provider rights",
     "2026-09-23 23:45UTC disposable tmpfs paper QA on localhost8001/5174 and real Chrome153: one synthetic 2030 account cccc6b44 was created by UI, started, paused, disconnected/reconnected via the actual WebSocket, resumed and naturally STOPPED. Final 521 journal events had exactly unique continuous sequences1..521, one order and one fill. Restarting only the isolated backend retained STOPPED/521/one order/one fill/cash1223.5/equity100000000; fresh Chrome showed the same account and explicit synthetic label. Main DB stayed paper5/events417/jobs8. Only three owned test containers and their test network/tmpfs DB were removed, no volumes. This closes a bounded synthetic reconnect/restart and duplicate-fill check, not the missing historical ledgers or lawful forward market gate; U7-RECOVER remains FAIL",
     "2026-09-23 23:31UTC real Chrome153 on restored stopped historical paper account: one injected snapshot HTTP503 now triggers socket reconnection and a second authoritative REST snapshot, restoring the page with no alert; injected HTTP403 made one request and showed permission guidance without retry. Persistent503 stopped after four total requests; live counts paper5/events417/jobs8 unchanged. Focused18/full215 frontend, lint/type/build and PR32 e165e38 CI35933791233 backend/frontend/compose PASS. This narrows U7-RECOVER and UX-ERROR but missing historical ledgers and full restart/forward gates remain FAIL/NOT_RUN",
     "2026-09-23 23:20UTC real Chrome153 on two persisted synthetic demo jobs: detail and comparison in EN/ZH now show the truthful synthetic equal-weight benchmark label instead of raw SYNTHETIC_EQUAL_WEIGHT; raw API identifier and financial values unchanged. No page overflow at1280x800. Focused31/full213 frontend tests, lint/type/build PASS; PR32 efc608c CI35932877381 backend/frontend/compose PASS. Bounded U8 display defect closed; wider bilingual/release matrix remains IN_PROGRESS",

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "../components/Link";
 import { Pagination } from "../components/Pagination";
 import { useApiResource } from "../hooks/useApiResource";
@@ -6,13 +7,14 @@ import { formatUtc } from "../utils/format";
 import { experimentApi } from "./experiments/api";
 import { useExperimentCopy } from "./experiments/copy";
 import { marketUpdateApi } from "./marketUpdates/api";
-import { useUpdateCopy } from "./marketUpdates/copy";
+import { updateError, useUpdateCopy } from "./marketUpdates/copy";
 import { useProductCopy } from "./copy";
 
 export function TaskCenterPage() {
   const c = useProductCopy();
   const e = useExperimentCopy();
   const u = useUpdateCopy();
+  const { i18n } = useTranslation();
   const [researchOffset, setResearchOffset] = useState(0);
   const [updateOffset, setUpdateOffset] = useState(0);
   const [revision, setRevision] = useState(0);
@@ -78,7 +80,9 @@ export function TaskCenterPage() {
         <h2>{c.updateTasks}</h2>
         <p>{c.candidateOnly}</p>
         {updates.loading && <p role="status">{c.loading}</p>}
-        {updates.error && <p role="alert">{u.loadFailed}</p>}
+        {updates.error && (
+          <p role="alert">{updateError(updates.error, i18n.language)}</p>
+        )}
         {updates.data && (
           <>
             {updates.data.total === 0 && <p>{c.noUpdateTasks}</p>}

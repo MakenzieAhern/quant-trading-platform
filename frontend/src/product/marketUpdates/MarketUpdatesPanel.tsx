@@ -28,6 +28,7 @@ function openUpdateJob(id: string) {
 }
 export function MarketUpdatesPanel() {
   const c = useUpdateCopy();
+  const { i18n } = useTranslation();
   const [revision, setRevision] = useState(0);
   const [offset, setOffset] = useState(0);
   const [jobId, setJobId] = useState(selectedFromUrl);
@@ -56,7 +57,9 @@ export function MarketUpdatesPanel() {
         <p>{c.authority}</p>
       </aside>
       {caps.loading && <p role="status">{c.loading}</p>}
-      {caps.error && <p role="alert">{c.loadFailed}</p>}
+      {caps.error && (
+        <p role="alert">{updateError(caps.error, i18n.language)}</p>
+      )}
       <button type="button" className="button secondary" onClick={refresh}>
         {c.refresh}
       </button>
@@ -72,7 +75,9 @@ export function MarketUpdatesPanel() {
       <section aria-label={c.history}>
         <h3>{c.history}</h3>
         {history.loading && <p role="status">{c.loading}</p>}
-        {history.error && <p role="alert">{c.loadFailed}</p>}
+        {history.error && (
+          <p role="alert">{updateError(history.error, i18n.language)}</p>
+        )}
         {history.data && (
           <>
             {history.data.total === 0 && <p>{c.empty}</p>}
