@@ -1,4 +1,8 @@
+import { lazy, Suspense } from "react";
+import { useTranslation } from "react-i18next";
+
 import { AppShell } from "./components/AppShell";
+import { LoadingPanel } from "./components/AsyncPanel";
 import { BacktestDetailPage } from "./pages/BacktestDetailPage";
 import { BacktestHistoryPage } from "./pages/BacktestHistoryPage";
 import { CreateBacktestPage } from "./pages/CreateBacktestPage";
@@ -6,11 +10,6 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 import { CreatePaperSessionPage } from "./pages/CreatePaperSessionPage";
 import { PaperSessionDetailPage } from "./pages/PaperSessionDetailPage";
 import { PaperSessionsPage } from "./pages/PaperSessionsPage";
-import { ResearchDatasetPage } from "./pages/research/ResearchDatasetPage";
-import { ResearchHomePage } from "./pages/research/ResearchHomePage";
-import { ResearchRunPage } from "./pages/research/ResearchRunPage";
-import { ResearchStrategiesPage } from "./pages/research/ResearchStrategiesPage";
-import { ResearchStrategyPage } from "./pages/research/ResearchStrategyPage";
 import { usePathname } from "./utils/navigation";
 import {
   WorkbenchPage,
@@ -21,12 +20,47 @@ import {
 } from "./product/ProductPages";
 import { CreateExperimentPage } from "./product/experiments/CreateExperimentPage";
 import { ExperimentsPage } from "./product/experiments/ExperimentsPage";
-import { ExperimentDetailPage } from "./product/experiments/ExperimentDetailPage";
-import { ExperimentComparePage } from "./product/experiments/ExperimentComparePage";
 import { ProductDataProvider } from "./product/ProductDataProvider";
 import { MarketsPage } from "./product/markets";
 
+const ResearchDatasetPage = lazy(() =>
+  import("./pages/research/ResearchDatasetPage").then(({ ResearchDatasetPage }) => ({
+    default: ResearchDatasetPage,
+  })),
+);
+const ResearchHomePage = lazy(() =>
+  import("./pages/research/ResearchHomePage").then(({ ResearchHomePage }) => ({
+    default: ResearchHomePage,
+  })),
+);
+const ResearchRunPage = lazy(() =>
+  import("./pages/research/ResearchRunPage").then(({ ResearchRunPage }) => ({
+    default: ResearchRunPage,
+  })),
+);
+const ResearchStrategiesPage = lazy(() =>
+  import("./pages/research/ResearchStrategiesPage").then(
+    ({ ResearchStrategiesPage }) => ({ default: ResearchStrategiesPage }),
+  ),
+);
+const ResearchStrategyPage = lazy(() =>
+  import("./pages/research/ResearchStrategyPage").then(({ ResearchStrategyPage }) => ({
+    default: ResearchStrategyPage,
+  })),
+);
+const ExperimentDetailPage = lazy(() =>
+  import("./product/experiments/ExperimentDetailPage").then(
+    ({ ExperimentDetailPage }) => ({ default: ExperimentDetailPage }),
+  ),
+);
+const ExperimentComparePage = lazy(() =>
+  import("./product/experiments/ExperimentComparePage").then(
+    ({ ExperimentComparePage }) => ({ default: ExperimentComparePage }),
+  ),
+);
+
 export function App() {
+  const { t } = useTranslation("navigation");
   const pathname = usePathname();
   const detailMatch =
     /^\/backtests\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?$/i.exec(
@@ -108,7 +142,11 @@ export function App() {
     );
   return (
     <ProductDataProvider>
-      <AppShell>{page}</AppShell>
+      <AppShell>
+        <Suspense fallback={<LoadingPanel label={t("research")} />}>
+          {page}
+        </Suspense>
+      </AppShell>
     </ProductDataProvider>
   );
 }
