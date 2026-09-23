@@ -1644,3 +1644,29 @@ footer strong {
   transition: none !important;
   scroll-behavior: auto !important;
 }
+.taskCenterList {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.taskCenterList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+.taskCenterList li div {
+  display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.taskCenterList li span,
+.taskCenterList li small {
+  color: var(--muted);
+}
+@media (max-width: 600px) {
+  .taskCenterList li { align-items: stretch; flex-direction: column; }
+}

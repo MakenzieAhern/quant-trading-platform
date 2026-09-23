@@ -49,6 +49,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     { href: "/markets", label: copy.markets, icon: "▥" },
     { href: "/strategies", label: copy.strategies, icon: "◇" },
     { href: "/experiments", label: copy.research, icon: "▤" },
+    { href: "/tasks", label: copy.tasks, icon: "◷" },
     { href: "/paper", label: copy.accounts, icon: "▣" },
     { href: "/data", label: copy.data, icon: "▥" },
   ];
