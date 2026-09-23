@@ -66,7 +66,7 @@ export const enUS = {
     eyebrow: "SIMULATED EXECUTION LEDGER",
     title: "Paper trading sessions",
     description:
-      "Local deterministic replay sessions. No external broker is connected.",
+      "Synthetic demo and audited historical replay accounts. New-market forward simulation is not available yet. No broker is connected.",
     create: "Create paper session",
     persisted: "Persisted sessions",
     empty: "No paper sessions yet. Create a safe replay session to begin.",
@@ -76,11 +76,16 @@ export const enUS = {
       "PAPER / SIMULATED / NO REAL-MONEY. No live broker or real-money orders.",
     safetyLabel: "Paper trading safety notice",
     requestError: "Unable to load paper trading data.",
+    providers: {
+      replay: "Local AAPL fixture replay",
+      simulated_a_share: "Synthetic A-share demo · 2030 scenario",
+      historical_a_share: "Audited A-share historical replay",
+    },
     strategies: {
       moving_average_crossover: "Moving average crossover",
       rsi_mean_reversion: "RSI mean reversion",
       cn_a_cross_sectional_momentum_low_vol_v1:
-        "Frozen A-share momentum + low-volatility strategy",
+        "A-share momentum + low-volatility strategy",
     },
     createPage: {
       eyebrow: "NEW LOCAL REPLAY",
@@ -90,6 +95,7 @@ export const enUS = {
       provider: "Provider",
       replayLocal: "Replay (local)",
       aShareSimulation: "A-share simulation (local)",
+      historicalAShare: "A-share historical replay (audited archive)",
       dataset: "Dataset",
       fixture: "AAPL fixture",
       symbol: "Symbol",
@@ -100,6 +106,21 @@ export const enUS = {
         "Buying-power risk enforcement is enabled. All values remain Decimal strings.",
       aShareScenarioHint:
         "Deterministic 2030 scenario data only — not research evidence or an OOS rerun.",
+      historicalHint:
+        "Past audited sessions only. This is replay, not new market data or a forward result. Range is limited to 93 calendar days.",
+      historicalRange: "Historical replay range",
+      startDate: "Start date",
+      endDate: "End date",
+      historicalAdvanced: "Strategy, universe and cost settings",
+      rebalanceSessions: "Sessions between rebalances",
+      maximumHoldings: "Maximum holdings",
+      maxPositionWeight: "Maximum weight per holding",
+      universe: "Share universe",
+      allShares: "All accepted A-shares",
+      commissionRate: "Commission rate",
+      minimumCommission: "Minimum commission (CNY)",
+      historicalValidationError:
+        "Check the historical dates and strategy/cost limits.",
       registeredStrategy: "Registered strategy",
       strategyType: "Strategy type",
       shortPeriod: "Short period",
@@ -138,6 +159,15 @@ export const enUS = {
       unknownError: "Unknown error",
       hydrateError: "Unable to load the paper session snapshot.",
       malformedEvent: "A malformed paper stream event was rejected.",
+      auditIdentity: "Audit identifiers",
+      sessionId: "Session ID",
+      datasetId: "Dataset ID",
+      marketSources: {
+        SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1:
+          "Synthetic 2030 scenario · not research evidence",
+        FROZEN_HISTORICAL_A_SHARE_REPLAY_V1:
+          "Audited historical archive · replay only",
+      },
       detailsLabel: "Paper session details",
       provider: "Provider",
       created: "Created",

@@ -156,6 +156,75 @@ describe("paper trading pages", () => {
     });
   });
 
+  it("creates an explicitly historical A-share replay, never a forward session", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse(
+        {
+          ...paperSession(),
+          provider_type: "historical_a_share",
+          dataset_id: "cn-a-research-20100101-20251231-v1",
+          symbol: "CN-A",
+          strategy_type: "cn_a_cross_sectional_momentum_low_vol_v1",
+        },
+        201,
+      ),
+    );
+    render(<CreatePaperSessionPage />);
+    await userEvent.selectOptions(
+      screen.getByLabelText("Provider"),
+      "historical_a_share",
+    );
+    expect(screen.getByText(/Past audited sessions only/)).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(String(fetch.mock.calls[0]?.[1]?.body))).toMatchObject({
+      provider_type: "historical_a_share",
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      strategy: {
+        parameters: { start_date: "2011-03-01", end_date: "2011-03-31" },
+      },
+      risk: {
+        enforce_buying_power: true,
+        max_leverage: "1",
+        max_drawdown: "-0.2",
+      },
+    });
+  });
+
+  it("labels persisted historical accounts without presenting archive IDs as the primary mode", async () => {
+    installWebSocket();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({
+        ...paperSnapshot("STOPPED"),
+        session: {
+          ...paperSession("STOPPED"),
+          provider_type: "historical_a_share",
+          dataset_id: "cn-a-research-20100101-20251231-v1",
+          strategy_type: "cn_a_cross_sectional_momentum_low_vol_v1",
+        },
+        latest_session: {
+          trading_date: "2011-03-23",
+          security_count: 2065,
+          source: "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1",
+        },
+      }),
+    );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    expect(
+      await screen.findByText("Audited A-share historical replay"),
+    ).toBeVisible();
+    expect(
+      screen.getByText("Audited historical archive · replay only"),
+    ).toBeVisible();
+    expect(
+      screen.getByText("cn-a-research-20100101-20251231-v1"),
+    ).not.toBeVisible();
+    expect(screen.getByText(PAPER_ID)).not.toBeVisible();
+  });
+
   it("validates paper strategy parameters before submitting", async () => {
     const fetch = vi.spyOn(globalThis, "fetch");
     render(<CreatePaperSessionPage />);

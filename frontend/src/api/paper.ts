@@ -75,7 +75,11 @@ function session(value: unknown): PaperSession {
   const provider = requiredString(
     item.provider_type,
   ) as PaperSession["provider_type"];
-  if (provider !== "replay" && provider !== "simulated_a_share")
+  if (
+    provider !== "replay" &&
+    provider !== "simulated_a_share" &&
+    provider !== "historical_a_share"
+  )
     throw new Error("Invalid paper provider.");
   const strategy = requiredString(
     item.strategy_type,
@@ -129,7 +133,10 @@ const marketSession = (value: unknown): MarketSession => {
     Number(item.security_count) < 0
   )
     throw new Error("Invalid A-share market session.");
-  if (item.source !== "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1")
+  if (
+    item.source !== "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1" &&
+    item.source !== "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1"
+  )
     throw new Error("Invalid A-share simulation source.");
   return {
     trading_date: requiredString(item.trading_date),

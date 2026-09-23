@@ -4,7 +4,7 @@ import json
 import logging
 from collections.abc import Callable
 from contextlib import suppress
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from uuid import UUID, uuid4
 
@@ -13,10 +13,19 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.application.backtests.decimal_policy import canonical_decimal, validate_storage_decimal
 from app.application.backtests.registry import DatasetRegistry, StrategyRegistry
+from app.application.experiments.data import (
+    HISTORICAL_ID,
+    ExperimentDatasetRegistry,
+    load_experiment_dataset,
+)
+from app.application.experiments.models import CreateExperimentRequest
+from app.application.experiments.runner import ExploratoryStrategy
 from app.backtest import BacktestConfig
+from app.data.full_dataset import FullDataset
 from app.data.providers import Timeframe
 from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.domain.market import Bar
+from app.domain.markets.calendar import TradingCalendar
 from app.domain.risk import RiskConfig, RiskDecision
 from app.domain.trading import Fill, Order, PortfolioSnapshot, Signal
 from app.paper.a_share_fixture import (
@@ -42,6 +51,7 @@ from app.paper.runtime import (
     SimulatedAShareSessionProvider,
 )
 from app.research import ResearchExecutionDelta, ResearchSession
+from app.research.costs import EffectiveDatedAShareCommission
 
 
 class PaperSessionConflictError(ValueError):
@@ -54,6 +64,7 @@ class PaperSessionStateError(ValueError):
 
 Clock = Callable[[], datetime]
 logger = logging.getLogger(__name__)
+HISTORICAL_SOURCE = "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1"
 
 
 class PaperTradingManager:
@@ -65,6 +76,7 @@ class PaperTradingManager:
         datasets: DatasetRegistry,
         strategies: StrategyRegistry,
         *,
+        historical_datasets: ExperimentDatasetRegistry | None = None,
         replay_interval_seconds: float = 0.75,
         clock: Clock | None = None,
         hub: PaperEventHub | None = None,
@@ -72,6 +84,7 @@ class PaperTradingManager:
         self._session_factory = session_factory
         self._datasets = datasets
         self._strategies = strategies
+        self._historical_datasets = historical_datasets
         self._replay_interval_seconds = replay_interval_seconds
         self._clock = clock or (lambda: datetime.now(UTC))
         self.hub = hub or PaperEventHub()
@@ -87,7 +100,7 @@ class PaperTradingManager:
         return interrupted
 
     async def create(self, command: CreatePaperSessionCommand) -> PaperSession:
-        if command.provider_type not in {"replay", "simulated_a_share"}:
+        if command.provider_type not in {"replay", "simulated_a_share", "historical_a_share"}:
             raise ValueError("unknown paper market data provider")
         validate_storage_decimal(command.initial_cash, "initial_cash")
         validate_storage_decimal(command.default_order_quantity, "default_order_quantity")
@@ -99,6 +112,28 @@ class PaperTradingManager:
                 command.symbol,
                 command.strategy_parameters,
             )
+        elif command.provider_type == "historical_a_share":
+            if (
+                self._historical_datasets is None
+                or command.dataset_id != HISTORICAL_ID
+                or command.symbol != "CN-A"
+                or command.strategy_type != FROZEN_A_SHARE_STRATEGY_ID
+            ):
+                raise ValueError("invalid historical A-share paper configuration")
+            registered = await asyncio.to_thread(
+                self._historical_datasets.resolve, command.dataset_id
+            )
+            start = command.strategy_parameters["start_date"]
+            end = command.strategy_parameters["end_date"]
+            if not isinstance(start, date) or not isinstance(end, date):
+                raise ValueError("historical paper dates are required")
+            if not (
+                registered["coverage_start"]
+                <= start.isoformat()
+                <= end.isoformat()
+                <= registered["coverage_end"]
+            ):
+                raise ValueError("historical paper range is outside the accepted archive")
         elif (
             command.dataset_id != SIMULATED_A_SHARE_DATASET_ID
             or command.symbol != SIMULATED_A_SHARE_SYMBOL
@@ -107,6 +142,9 @@ class PaperTradingManager:
         ):
             raise ValueError("invalid frozen A-share paper configuration")
         request_hash = self._request_hash(command)
+        parameters = self._json_decimals(command.strategy_parameters)
+        if command.provider_type == "historical_a_share":
+            parameters["dataset_sha256"] = str(registered["sha256"])
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
             if command.client_request_id is not None:
@@ -124,7 +162,7 @@ class PaperTradingManager:
                 dataset_id=command.dataset_id,
                 symbol=command.symbol,
                 strategy_type=command.strategy_type,
-                strategy_parameters=self._json_decimals(command.strategy_parameters),
+                strategy_parameters=parameters,
                 initial_cash=command.initial_cash,
                 default_order_quantity=command.default_order_quantity,
                 risk=self._json_decimals(command.risk.model_dump()),
@@ -229,7 +267,8 @@ class PaperTradingManager:
         provider: ReplayMarketDataProvider | SimulatedAShareSessionProvider | None = None
         runtime: PaperTradingRuntime | ASharePaperTradingRuntime | None = None
         try:
-            provider, runtime = self._build_runtime(session)
+            provider, runtime = await asyncio.to_thread(self._build_runtime, session)
+            assert provider is not None
             self._providers[session.id] = provider
             async with self._lock:
                 current = await self.get(session.id)
@@ -258,12 +297,24 @@ class PaperTradingManager:
 
                 await provider.start(process_bar)
             else:
+                assert isinstance(provider, SimulatedAShareSessionProvider)
                 assert isinstance(runtime, ASharePaperTradingRuntime)
+                historical_start = (
+                    date.fromisoformat(str(session.strategy_parameters["start_date"]))
+                    if session.provider_type == "historical_a_share"
+                    else None
+                )
 
                 async def process_session(item: ResearchSession) -> None:
-                    await persist(
-                        self._serialize_a_share_delta(await runtime.process_session(item))
+                    delta = await runtime.process_session(item)
+                    if historical_start is not None and item.trading_date < historical_start:
+                        return  # Warm up from accepted past only; no pre-range account events.
+                    source = (
+                        HISTORICAL_SOURCE
+                        if session.provider_type == "historical_a_share"
+                        else SIMULATED_SOURCE
                     )
+                    await persist(self._serialize_a_share_delta(delta, source=source))
 
                 await provider.start(process_session)
             async with self._lock:
@@ -350,6 +401,77 @@ class PaperTradingManager:
                     commission_model=commission,
                     calendar=calendar,
                     risk_config=risk,
+                ),
+            )
+        if session.provider_type == "historical_a_share":
+            assert self._historical_datasets is not None
+            params = session.strategy_parameters
+            request = CreateExperimentRequest.model_validate(
+                {
+                    "name": "Historical paper replay",
+                    "dataset_id": session.dataset_id,
+                    "start_date": params["start_date"],
+                    "end_date": params["end_date"],
+                    "initial_cash": canonical_decimal(session.initial_cash),
+                    "universe": params["universe"],
+                    "strategy": {
+                        "rebalance_sessions": params["rebalance_sessions"],
+                        "maximum_holdings": params["maximum_holdings"],
+                    },
+                    "costs": {
+                        "commission_rate": params["commission_rate"],
+                        "minimum_commission": params["minimum_commission"],
+                    },
+                    "risk": {
+                        "max_drawdown": session.risk["max_drawdown"],
+                        "max_position_weight": params["max_position_weight"],
+                    },
+                }
+            )
+            data = load_experiment_dataset(
+                self._historical_datasets, session.dataset_id, request.start_date, request.end_date
+            )
+            if not isinstance(data, FullDataset):
+                raise ValueError("historical paper requires the accepted archive")
+            if data.manifest.canonical_sha256 != params["dataset_sha256"]:
+                raise ValueError("historical paper dataset changed since account creation")
+            commission = EffectiveDatedAShareCommission(
+                tuple(
+                    item.model_copy(
+                        update={
+                            "commission_rate": request.costs.commission_rate,
+                            "minimum_commission": request.costs.minimum_commission,
+                        }
+                    )
+                    for item in data.cost_model.schedules
+                )
+            )
+            calendar = (
+                TradingCalendar(
+                    market=data.calendar.market,
+                    sessions=(*data.calendar.sessions, data.next_session),
+                )
+                if data.next_session is not None
+                else data.calendar
+            )
+            return (
+                SimulatedAShareSessionProvider(
+                    data.sessions(),
+                    self._replay_interval_seconds,
+                    pace_from_date=request.start_date,
+                ),
+                ASharePaperTradingRuntime(
+                    initial_cash=session.initial_cash,
+                    commission_model=commission,
+                    calendar=calendar,
+                    risk_config=RiskConfig(
+                        **{
+                            **risk.model_dump(),
+                            "enforce_buying_power": True,
+                            "max_leverage": Decimal(1),
+                        }
+                    ),
+                    strategy=ExploratoryStrategy(request),
                 ),
             )
         historical = self._datasets.resolve(session.dataset_id, session.symbol)
@@ -456,7 +578,7 @@ class PaperTradingManager:
 
     @classmethod
     def _serialize_a_share_delta(
-        cls, delta: ResearchExecutionDelta
+        cls, delta: ResearchExecutionDelta, *, source: str = SIMULATED_SOURCE
     ) -> tuple[tuple[str, datetime, dict[str, object]], ...]:
         if delta.snapshot is None:
             raise RuntimeError("A-share session did not produce a portfolio snapshot")
@@ -468,7 +590,7 @@ class PaperTradingManager:
                 {
                     "trading_date": delta.session.trading_date.isoformat(),
                     "security_count": len(delta.session.bars),
-                    "source": SIMULATED_SOURCE,
+                    "source": source,
                 },
             )
         ]
@@ -612,7 +734,13 @@ class PaperTradingManager:
     @staticmethod
     def _json_decimals(values: dict[str, object]) -> dict[str, object]:
         return {
-            key: canonical_decimal(value) if isinstance(value, Decimal) else value
+            key: (
+                canonical_decimal(value)
+                if isinstance(value, Decimal)
+                else value.isoformat()
+                if isinstance(value, date)
+                else value
+            )
             for key, value in values.items()
         }
 

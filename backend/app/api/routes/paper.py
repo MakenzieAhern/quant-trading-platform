@@ -25,6 +25,7 @@ from app.application.backtests.registry import (
     UnknownDatasetError,
     UnknownStrategyError,
 )
+from app.application.experiments.data import ExperimentDatasetRegistry
 from app.application.paper_trading import (
     PaperSessionConflictError,
     PaperSessionStateError,
@@ -41,6 +42,7 @@ paper_manager = PaperTradingManager(
     SessionFactory,
     DatasetRegistry.phase7(settings.backtest_fixture_path),
     StrategyRegistry(),
+    historical_datasets=ExperimentDatasetRegistry(settings.research_data_path),
 )
 
 router = APIRouter(prefix="/paper-trading/sessions", tags=["paper-trading"])

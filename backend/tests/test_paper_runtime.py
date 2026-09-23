@@ -5,6 +5,7 @@ from typing import Any
 
 import pytest
 
+from app.api.schemas.paper import HistoricalASharePaperSessionRequest
 from app.application.paper_trading import PaperTradingManager
 from app.backtest import BacktestConfig, BacktestEngine
 from app.data.providers import CSVDataProvider
@@ -112,6 +113,57 @@ async def test_frozen_a_share_runtime_consumes_only_completed_simulated_sessions
         await runtime.process_session(sessions[-1])
     with pytest.raises(ReplayProviderError, match="strictly chronological"):
         SimulatedAShareSessionProvider((sessions[0], sessions[0]))
+
+
+async def test_historical_session_stream_is_lazy_and_source_is_not_synthetic() -> None:
+    _, sessions, _ = simulated_a_share_fixture()
+    yielded = 0
+
+    def lazy():
+        nonlocal yielded
+        for item in sessions[:2]:
+            yielded += 1
+            yield item
+
+    provider = SimulatedAShareSessionProvider(lazy(), 0)
+    assert yielded == 0
+    received = []
+
+    async def collect(item):
+        received.append(item.trading_date)
+
+    await provider.start(collect)
+    assert yielded == len(received) == 2
+    assert received == sorted(received)
+
+
+def test_historical_paper_request_rejects_unsafe_ranges_and_risk() -> None:
+    request = {
+        "provider_type": "historical_a_share",
+        "dataset_id": "cn-a-research-20100101-20251231-v1",
+        "symbol": "CN-A",
+        "strategy": {
+            "type": FROZEN_A_SHARE_STRATEGY_ID,
+            "parameters": {"start_date": "2011-03-01", "end_date": "2011-03-31"},
+        },
+        "initial_cash": "100000",
+        "risk": {"enforce_buying_power": True, "max_leverage": "1"},
+    }
+    parsed = HistoricalASharePaperSessionRequest.model_validate(request)
+    assert parsed.strategy.parameters.start_date.isoformat() == "2011-03-01"
+    assert parsed.risk.max_drawdown == Decimal("-0.2")
+    for change in (
+        {
+            "strategy": {
+                "type": FROZEN_A_SHARE_STRATEGY_ID,
+                "parameters": {"start_date": "2011-03-01", "end_date": "2011-07-01"},
+            }
+        },
+        {"risk": {"enforce_buying_power": False}},
+        {"risk": {"enforce_buying_power": True, "max_leverage": "2"}},
+    ):
+        with pytest.raises(ValueError):
+            HistoricalASharePaperSessionRequest.model_validate({**request, **change})
 
 
 def test_paper_broker_is_local_next_bar_and_explicitly_rejects_limit_orders() -> None:

@@ -66,9 +66,7 @@ export function PaperSessionsPage() {
                       </Link>
                     </td>
                     <td>{t(`paper:strategies.${item.strategy_type}`)}</td>
-                    <td>
-                      {item.provider_type} / {item.dataset_id}
-                    </td>
+                    <td>{t(`paper:providers.${item.provider_type}`)}</td>
                     <td>
                       <StatusBadge status={item.status} />
                     </td>

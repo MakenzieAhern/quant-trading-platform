@@ -64,7 +64,8 @@ export const zhCN = {
   paper: {
     eyebrow: "模拟执行账本",
     title: "模拟交易会话",
-    description: "本地确定性回放会话，未连接外部券商。",
+    description:
+      "可使用合成演示和已审计历史回放账户。真实新行情前向模拟尚不可用；不连接券商。",
     create: "创建模拟会话",
     persisted: "已持久化会话",
     empty: "尚无模拟会话。请创建安全的回放会话。",
@@ -74,10 +75,15 @@ export const zhCN = {
       "PAPER / SIMULATED / NO REAL-MONEY。仅在本地模拟，不连接实盘券商，也不发送真实资金订单。",
     safetyLabel: "模拟交易安全提示",
     requestError: "无法加载模拟交易数据。",
+    providers: {
+      replay: "本地 AAPL 测试回放",
+      simulated_a_share: "A股合成演示 · 2030 场景",
+      historical_a_share: "已审计 A 股历史回放",
+    },
     strategies: {
       moving_average_crossover: "移动平均线交叉",
       rsi_mean_reversion: "RSI 均值回归",
-      cn_a_cross_sectional_momentum_low_vol_v1: "冻结的A股动量与低波动策略",
+      cn_a_cross_sectional_momentum_low_vol_v1: "A股动量与低波动策略",
     },
     createPage: {
       eyebrow: "新建本地回放",
@@ -87,6 +93,7 @@ export const zhCN = {
       provider: "数据源",
       replayLocal: "本地回放",
       aShareSimulation: "A股本地模拟",
+      historicalAShare: "A股历史回放（已审计档案）",
       dataset: "数据集",
       fixture: "AAPL 测试数据",
       symbol: "证券代码",
@@ -96,6 +103,20 @@ export const zhCN = {
       buyingPowerHint: "已启用购买力风控。所有数值均以 Decimal 字符串处理。",
       aShareScenarioHint:
         "仅使用确定性的 2030 合成场景数据，不属于研究证据，也不会重跑正式样本外测试。",
+      historicalHint:
+        "仅回放过去已审计的交易日，不是新行情或前向收益。单次区间最多 93 个自然日。",
+      historicalRange: "历史回放区间",
+      startDate: "开始日期",
+      endDate: "结束日期",
+      historicalAdvanced: "策略、股票范围与成本设置",
+      rebalanceSessions: "调仓间隔（交易日）",
+      maximumHoldings: "最多持仓数",
+      maxPositionWeight: "单只证券最大权重",
+      universe: "股票范围",
+      allShares: "全部已接受的A股",
+      commissionRate: "佣金费率",
+      minimumCommission: "最低佣金（人民币）",
+      historicalValidationError: "请检查历史日期、策略与成本限制。",
       registeredStrategy: "已注册策略",
       strategyType: "策略类型",
       shortPeriod: "短周期",
@@ -132,6 +153,14 @@ export const zhCN = {
       unknownError: "未知错误",
       hydrateError: "无法加载模拟交易会话快照。",
       malformedEvent: "已拒绝格式异常的模拟交易数据流事件。",
+      auditIdentity: "审计编号",
+      sessionId: "会话编号",
+      datasetId: "数据集编号",
+      marketSources: {
+        SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1:
+          "2030 合成场景 · 非研究证据",
+        FROZEN_HISTORICAL_A_SHARE_REPLAY_V1: "已审计历史档案 · 仅供回放",
+      },
       detailsLabel: "模拟交易会话详情",
       provider: "数据源",
       created: "创建时间",

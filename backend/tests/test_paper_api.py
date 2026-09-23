@@ -69,6 +69,59 @@ def a_share_request_body() -> dict[str, object]:
     }
 
 
+def historical_request_body() -> dict[str, object]:
+    return {
+        "provider_type": "historical_a_share",
+        "dataset_id": "cn-a-research-20100101-20251231-v1",
+        "symbol": "CN-A",
+        "strategy": {
+            "type": "cn_a_cross_sectional_momentum_low_vol_v1",
+            "parameters": {
+                "start_date": "2011-03-01",
+                "end_date": "2011-03-31",
+                "rebalance_sessions": 20,
+                "maximum_holdings": 20,
+                "max_position_weight": "0.1",
+                "universe": "ALL",
+                "commission_rate": "0.0003",
+                "minimum_commission": "5",
+            },
+        },
+        "initial_cash": "100000",
+        "default_order_quantity": "1",
+        "risk": {"enforce_buying_power": True, "max_leverage": "1"},
+    }
+
+
+async def test_historical_a_share_account_creation_has_distinct_mode_and_dated_config(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert paper_manager._historical_datasets is not None
+    monkeypatch.setattr(
+        paper_manager._historical_datasets,
+        "resolve",
+        lambda _: {
+            "coverage_start": "2010-01-01",
+            "coverage_end": "2025-12-31",
+            "sha256": "a" * 64,
+        },
+    )
+    headers = {"Idempotency-Key": "historical-paper-march-2011"}
+    created = await client.post(
+        "/api/paper-trading/sessions", json=historical_request_body(), headers=headers
+    )
+    assert created.status_code == 201
+    assert created.json()["provider_type"] == "historical_a_share"
+    assert created.json()["strategy_parameters"]["start_date"] == "2011-03-01"
+    assert created.json()["strategy_parameters"]["dataset_sha256"] == "a" * 64
+    assert created.json()["risk"]["max_drawdown"] == "-0.2"
+    same = await client.post(
+        "/api/paper-trading/sessions", json=historical_request_body(), headers=headers
+    )
+    assert same.json()["session_id"] == created.json()["session_id"]
+    assert (await client.get("/api/paper-trading/sessions")).json()["total"] == 1
+
+
 async def test_create_idempotency_validation_and_safe_lookup(client: AsyncClient) -> None:
     headers = {"Idempotency-Key": "paper-create-reference"}
     first = await client.post("/api/paper-trading/sessions", json=request_body(), headers=headers)

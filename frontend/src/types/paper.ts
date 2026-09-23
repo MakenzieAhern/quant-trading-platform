@@ -10,7 +10,7 @@ export type PaperSessionStatus =
 export interface PaperSession {
   session_id: string;
   status: PaperSessionStatus;
-  provider_type: "replay" | "simulated_a_share";
+  provider_type: "replay" | "simulated_a_share" | "historical_a_share";
   dataset_id: string;
   symbol: string;
   strategy_type:
@@ -40,7 +40,9 @@ export interface MarketBar {
 export interface MarketSession {
   trading_date: string;
   security_count: number;
-  source: "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1";
+  source:
+    | "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1"
+    | "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1";
 }
 
 export interface PaperSignal {
@@ -154,6 +156,31 @@ export type CreatePaperSessionRequest =
       initial_cash: string;
       default_order_quantity: string;
       risk: { enforce_buying_power: true };
+    }
+  | {
+      provider_type: "historical_a_share";
+      dataset_id: "cn-a-research-20100101-20251231-v1";
+      symbol: "CN-A";
+      strategy: {
+        type: "cn_a_cross_sectional_momentum_low_vol_v1";
+        parameters: {
+          start_date: string;
+          end_date: string;
+          rebalance_sessions: number;
+          maximum_holdings: number;
+          max_position_weight: string;
+          universe: "ALL" | "SSE" | "SZSE";
+          commission_rate: string;
+          minimum_commission: string;
+        };
+      };
+      initial_cash: string;
+      default_order_quantity: string;
+      risk: {
+        enforce_buying_power: true;
+        max_leverage: "1";
+        max_drawdown: string;
+      };
     };
 
 export interface PaperWireEvent {
