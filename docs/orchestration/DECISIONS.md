@@ -12,6 +12,17 @@ test-database Compose stacks were still running and their owners were not
 verified, so the engine was not restarted merely to exercise this setting.
 No volume, image, application database or research artifact was removed.
 
+At 20:23 UTC a later ownership check found those test stacks had only
+PostgreSQL containers and no active client connections or repository writer.
+A non-destructive `docker desktop restart` then completed. All four project
+containers recovered automatically; API and frontend returned HTTP 200,
+PostgreSQL and backend were healthy, and Redis returned PONG. Named volumes
+and images persisted. Before/after live counts were identical: formal
+datasets/runs/trades 1/3/310, paper sessions/events 5/417, personal jobs 8,
+market-update jobs 4. The two test PostgreSQL containers were restarted to
+their prior healthy state. This proves Docker Desktop engine-restart recovery,
+**not** automatic recovery after a full Windows sign-out/reboot.
+
 ## v1.2 application-history loss and test-database isolation — 2026-09-23
 
 At 19:44 UTC the live `quant_platform` database had zero formal research
