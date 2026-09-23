@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const BEFORE_NAVIGATION = "quant:before-navigation";
 const HISTORY_INDEX = "quantNavigationIndex";
@@ -33,6 +33,10 @@ export function navigate(path: string): boolean {
 
 /** One confirmation boundary for links, commands and browser traversal. */
 export function useNavigationGuard(allowLeave: () => boolean): void {
+  const allowLeaveRef = useRef(allowLeave);
+  useLayoutEffect(() => {
+    allowLeaveRef.current = allowLeave;
+  });
   useEffect(() => {
     const guardedPath = `${window.location.pathname}${window.location.search}`;
     const guardedIndex = historyIndex();
@@ -44,7 +48,7 @@ export function useNavigationGuard(allowLeave: () => boolean): void {
     const guardedNativeIndex = navigation?.currentEntry?.index;
     let restoring = false;
     const request = (event: Event) => {
-      if (!allowLeave()) event.preventDefault();
+      if (!allowLeaveRef.current()) event.preventDefault();
     };
     const traversal = (event: PopStateEvent) => {
       if (event.state?.[APPROVED_NAVIGATION]) return;
@@ -55,7 +59,7 @@ export function useNavigationGuard(allowLeave: () => boolean): void {
       if (
         `${window.location.pathname}${window.location.search}` ===
           guardedPath ||
-        allowLeave()
+        allowLeaveRef.current()
       )
         return;
       event.stopImmediatePropagation();
@@ -77,7 +81,7 @@ export function useNavigationGuard(allowLeave: () => boolean): void {
       window.removeEventListener(BEFORE_NAVIGATION, request);
       window.removeEventListener("popstate", traversal, true);
     };
-  }, [allowLeave]);
+  }, []);
 }
 
 export function usePathname(): string {

@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from "vitest";
 import { Link } from "../components/Link";
 import { navigate, useNavigationGuard, usePathname } from "./navigation";
 
-function Guard() {
-  useNavigationGuard(() => window.confirm("Leave this draft?"));
+function Guard({ message = "Leave this draft?" }: { message?: string }) {
+  useNavigationGuard(() => window.confirm(message));
   return <Link href="/experiments">Experiments</Link>;
 }
 
@@ -20,6 +20,21 @@ function RouterHarness() {
 }
 
 describe("shared navigation guard", () => {
+  it("keeps one listener across draft edits while reading the latest confirmation", async () => {
+    window.history.replaceState({}, "", "/research/new");
+    const add = vi.spyOn(window, "addEventListener");
+    const remove = vi.spyOn(window, "removeEventListener");
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    const view = render(<Guard message="First draft" />);
+    view.rerender(<Guard message="Edited draft" />);
+    expect(add.mock.calls.filter(([event]) => event === "popstate")).toHaveLength(1);
+    expect(remove.mock.calls.filter(([event]) => event === "popstate")).toHaveLength(0);
+    await userEvent.click(screen.getByRole("link", { name: "Experiments" }));
+    expect(confirm).toHaveBeenCalledExactlyOnceWith("Edited draft");
+    view.unmount();
+    expect(remove.mock.calls.filter(([event]) => event === "popstate")).toHaveLength(1);
+  });
+
   it("starts new routes at the top without scrolling on same-route or Back", () => {
     const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
     window.history.replaceState({}, "", "/strategies");

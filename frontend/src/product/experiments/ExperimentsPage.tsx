@@ -27,31 +27,43 @@ const defaultView: View = {
   q: "", status: "", mode: "", sort: "newest",
   columns: { mode: true, period: true, created: true },
 };
+function validView(value: unknown): value is View {
+  if (!value || typeof value !== "object") return false;
+  const view = value as View;
+  return !(
+    typeof view.q !== "string" || view.q.length > 80 ||
+    !["", ...statuses].includes(view.status) ||
+    !["", "synthetic_demo", "historical_exploration"].includes(view.mode) ||
+    !["newest", "oldest", "name_asc", "name_desc"].includes(view.sort) ||
+    !view.columns ||
+    Object.values(view.columns).some((entry) => typeof entry !== "boolean") ||
+    !["mode", "period", "created"].every((key) => typeof view.columns[key as keyof View["columns"]] === "boolean")
+  );
+}
 function readSavedView(): View {
   try {
+    const current: unknown = window.history.state?.experimentView;
+    if (window.location.pathname === "/experiments" && validView(current)) return current;
     const raw = window.localStorage.getItem(EXPERIMENT_VIEW_KEY);
     if (!raw) return defaultView;
-    const value = JSON.parse(raw) as View;
-    if (
-      !value || typeof value.q !== "string" || value.q.length > 80 ||
-      !["", ...statuses].includes(value.status) ||
-      !["", "synthetic_demo", "historical_exploration"].includes(value.mode) ||
-      !["newest", "oldest", "name_asc", "name_desc"].includes(value.sort) ||
-      !value.columns ||
-      Object.values(value.columns).some((entry) => typeof entry !== "boolean") ||
-      !["mode", "period", "created"].every((key) => typeof value.columns[key as keyof View["columns"]] === "boolean")
-    ) return defaultView;
-    return value;
+    const saved: unknown = JSON.parse(raw);
+    return validView(saved) ? saved : defaultView;
   } catch {
     return defaultView;
   }
+}
+function readOffset(): number {
+  const offset: unknown = window.history.state?.experimentOffset;
+  return window.location.pathname === "/experiments" &&
+    typeof offset === "number" && Number.isSafeInteger(offset) &&
+    offset >= 0 && offset % 20 === 0 ? offset : 0;
 }
 
 export function ExperimentsPage() {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
   const [selected, setSelected] = useState<{ id: string; name: string }[]>([]);
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(readOffset);
   const [view, setView] = useState(readSavedView);
   const [saveStatus, setSaveStatus] = useState<"saved" | "error" | null>(null);
   const [revision, setRevision] = useState(0);
@@ -62,6 +74,13 @@ export function ExperimentsPage() {
     error: boolean;
   }>({ key: queryKey, data: null, error: false });
   if (jobs.key !== queryKey) setJobs({ key: queryKey, data: null, error: false });
+  useEffect(() => {
+    if (window.location.pathname === "/experiments")
+      window.history.replaceState(
+        { ...window.history.state, experimentView: view, experimentOffset: offset },
+        "",
+      );
+  }, [view, offset]);
   function updateView(patch: Partial<View>, queryChanged = true) {
     setView((current) => ({ ...current, ...patch }));
     setSaveStatus(null);
