@@ -222,6 +222,66 @@ export const zhCN = {
       noFills: "尚无模拟成交记录。",
       side: "方向",
       price: "价格",
+      directions: { BUY: "买入", SELL: "卖出", HOLD: "观望" },
+      orderTypes: { MARKET: "市价单", LIMIT: "限价单" },
+      orderStatuses: {
+        CREATED: "已创建",
+        SUBMITTED: "已提交",
+        ACCEPTED: "已接受",
+        PARTIALLY_FILLED: "部分成交",
+        FILLED: "已成交",
+        CANCELLED: "已取消",
+        REJECTED: "已拒绝",
+      },
+      riskReasons: {
+        APPROVED: "风控通过",
+        INVALID_QUANTITY: "数量无效",
+        UNSUPPORTED_ORDER_TYPE: "订单类型不可用",
+        ORDER_NOTIONAL_LIMIT: "订单金额超限",
+        POSITION_LIMIT: "持仓数量超限",
+        SYMBOL_EXPOSURE_LIMIT: "单只证券敞口超限",
+        GROSS_EXPOSURE_LIMIT: "总敞口超限",
+        LEVERAGE_LIMIT: "杠杆超限",
+        INSUFFICIENT_BUYING_POWER: "可用资金不足",
+        DRAWDOWN_LIMIT: "回撤超限",
+        INVALID_PORTFOLIO_STATE: "组合状态无法核实",
+      },
+      riskMessages: {
+        "proposal approved": "提案已通过风控。",
+        "quantity must be positive": "数量必须大于 0。",
+        "order type is not enabled or limit price is missing":
+          "订单类型未启用，或缺少限价。",
+        "a current portfolio snapshot is required": "缺少当前组合快照。",
+        "estimated transaction cost must be non-negative and finite":
+          "预计交易成本必须为非负有限数。",
+        "reserved cash delta must be finite": "预留现金变动必须为有限数。",
+        "reserved buying power must be non-negative and finite":
+          "预留购买力必须为非负有限数。",
+        "portfolio positions must have unique symbols":
+          "组合持仓中有重复证券。",
+        "every non-flat position requires a positive observed mark":
+          "每个非零持仓都需要正数的已观测价格。",
+        "portfolio snapshot is inconsistent with observed marks":
+          "组合快照与已观测价格不一致。",
+        "every non-flat projected position requires a positive observed mark":
+          "每个预计非零持仓都需要正数的已观测价格。",
+        "order notional exceeds configured limit": "订单金额超过设定上限。",
+        "projected absolute position exceeds configured limit":
+          "预计持仓数量超过设定上限。",
+        "projected symbol exposure exceeds configured limit":
+          "预计单只证券敞口超过设定上限。",
+        "projected gross exposure exceeds configured limit":
+          "预计总敞口超过设定上限。",
+        "risk-increasing proposals require positive projected equity":
+          "增加风险的提案要求预计权益大于 0。",
+        "projected gross leverage exceeds configured limit":
+          "预计总杠杆超过设定上限。",
+        "estimated purchase cost exceeds available cash":
+          "预计买入成本超过可用现金。",
+        "current drawdown breaches configured limit": "当前回撤触及设定上限。",
+        reservedQuantityFinite: "{{symbol}} 的预留数量必须为有限数。",
+        positiveMarkRequired: "{{symbol}} 缺少正数的已观测价格。",
+      },
     },
   },
   research: {

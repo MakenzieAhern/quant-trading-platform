@@ -8,6 +8,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
+import { i18n } from "../i18n";
 import { jsonResponse } from "../test/fixtures";
 import { PAPER_ID, paperSession, paperSnapshot } from "../test/paperFixtures";
 import { CreatePaperSessionPage } from "./CreatePaperSessionPage";
@@ -246,6 +247,82 @@ describe("paper trading pages", () => {
     await act(async () => MockWebSocket.instances[0]!.open());
     expect(screen.getByRole("button", { name: "Resume replay" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Stop replay" })).toBeVisible();
+  });
+
+  it("explains paper ledger enums and risk decisions in the selected language", async () => {
+    installWebSocket();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({
+        ...paperSnapshot("STOPPED"),
+        signals: [
+          {
+            strategy_id: "strategy",
+            symbol: "CN-A:SSE:600000",
+            timestamp: "2011-03-22T07:00:00Z",
+            signal_type: "BUY",
+          },
+        ],
+        risk_decisions: [
+          {
+            proposal_id: PAPER_ID,
+            approved: true,
+            reason_code: "APPROVED",
+            message: "proposal approved",
+            timestamp: "2011-03-22T07:00:00Z",
+          },
+          {
+            proposal_id: "00000000-0000-0000-0000-000000000001",
+            approved: false,
+            reason_code: "INSUFFICIENT_BUYING_POWER",
+            message: "estimated purchase cost exceeds available cash",
+            timestamp: "2011-03-22T07:00:00Z",
+          },
+        ],
+        orders: [
+          {
+            order_id: PAPER_ID,
+            strategy_id: "strategy",
+            symbol: "CN-A:SSE:600000",
+            side: "BUY",
+            order_type: "LIMIT",
+            quantity: "100",
+            price: "26",
+            status: "FILLED",
+            created_at: "2011-03-22T07:00:00Z",
+          },
+        ],
+        fills: [
+          {
+            order_id: PAPER_ID,
+            strategy_id: "strategy",
+            symbol: "CN-A:SSE:600000",
+            side: "BUY",
+            quantity: "100",
+            price: "26",
+            commission: "5.026",
+            timestamp: "2011-03-23T01:25:00Z",
+          },
+        ],
+      }),
+    );
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    try {
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      expect(await screen.findByText("买入 / 限价单")).toBeVisible();
+      expect(screen.getByText("已成交")).toBeVisible();
+      expect(screen.getByText("风控通过")).toBeVisible();
+      expect(screen.getByText("提案已通过风控。")).toBeVisible();
+      expect(screen.getByText("可用资金不足")).toBeVisible();
+      expect(screen.getByText("预计买入成本超过可用现金。")).toBeVisible();
+      await act(async () => i18n.changeLanguage("en-US"));
+      expect(screen.getByText("Buy / Limit")).toBeVisible();
+      expect(screen.getByText("Filled")).toBeVisible();
+      expect(screen.getByText("Proposal approved.")).toBeVisible();
+      expect(screen.getByText("Insufficient buying power")).toBeVisible();
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
   });
 
   it("validates paper strategy parameters before submitting", async () => {

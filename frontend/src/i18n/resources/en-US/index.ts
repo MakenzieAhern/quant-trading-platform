@@ -229,6 +229,72 @@ export const enUS = {
       noFills: "No simulated fills recorded.",
       side: "Side",
       price: "Price",
+      directions: { BUY: "Buy", SELL: "Sell", HOLD: "Hold" },
+      orderTypes: { MARKET: "Market", LIMIT: "Limit" },
+      orderStatuses: {
+        CREATED: "Created",
+        SUBMITTED: "Submitted",
+        ACCEPTED: "Accepted",
+        PARTIALLY_FILLED: "Partially filled",
+        FILLED: "Filled",
+        CANCELLED: "Cancelled",
+        REJECTED: "Rejected",
+      },
+      riskReasons: {
+        APPROVED: "Risk approved",
+        INVALID_QUANTITY: "Invalid quantity",
+        UNSUPPORTED_ORDER_TYPE: "Order type unavailable",
+        ORDER_NOTIONAL_LIMIT: "Order notional limit",
+        POSITION_LIMIT: "Position limit",
+        SYMBOL_EXPOSURE_LIMIT: "Single-security exposure limit",
+        GROSS_EXPOSURE_LIMIT: "Gross exposure limit",
+        LEVERAGE_LIMIT: "Leverage limit",
+        INSUFFICIENT_BUYING_POWER: "Insufficient buying power",
+        DRAWDOWN_LIMIT: "Drawdown limit",
+        INVALID_PORTFOLIO_STATE: "Portfolio state unavailable",
+      },
+      riskMessages: {
+        "proposal approved": "Proposal approved.",
+        "quantity must be positive": "Quantity must be positive.",
+        "order type is not enabled or limit price is missing":
+          "Order type is unavailable or its limit price is missing.",
+        "a current portfolio snapshot is required":
+          "A current portfolio snapshot is required.",
+        "estimated transaction cost must be non-negative and finite":
+          "Estimated transaction cost must be non-negative and finite.",
+        "reserved cash delta must be finite":
+          "Reserved cash change must be finite.",
+        "reserved buying power must be non-negative and finite":
+          "Reserved buying power must be non-negative and finite.",
+        "portfolio positions must have unique symbols":
+          "Portfolio positions must have unique symbols.",
+        "every non-flat position requires a positive observed mark":
+          "Each non-zero position needs a positive observed price.",
+        "portfolio snapshot is inconsistent with observed marks":
+          "Portfolio snapshot disagrees with observed prices.",
+        "every non-flat projected position requires a positive observed mark":
+          "Each projected non-zero position needs a positive observed price.",
+        "order notional exceeds configured limit":
+          "Order notional exceeds the configured limit.",
+        "projected absolute position exceeds configured limit":
+          "Projected position exceeds the configured limit.",
+        "projected symbol exposure exceeds configured limit":
+          "Projected single-security exposure exceeds the configured limit.",
+        "projected gross exposure exceeds configured limit":
+          "Projected gross exposure exceeds the configured limit.",
+        "risk-increasing proposals require positive projected equity":
+          "A risk-increasing proposal needs positive projected equity.",
+        "projected gross leverage exceeds configured limit":
+          "Projected gross leverage exceeds the configured limit.",
+        "estimated purchase cost exceeds available cash":
+          "Estimated purchase cost exceeds available cash.",
+        "current drawdown breaches configured limit":
+          "Current drawdown breaches the configured limit.",
+        reservedQuantityFinite:
+          "Reserved quantity for {{symbol}} must be finite.",
+        positiveMarkRequired:
+          "A positive observed price is required for {{symbol}}.",
+      },
     },
   },
   research: {
