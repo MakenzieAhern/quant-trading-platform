@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 import { backtestsApi } from "../api/backtests";
 import { EmptyState, ErrorPanel, LoadingPanel } from "../components/AsyncPanel";
@@ -32,10 +33,11 @@ function Metric({
   value: string | null;
   percent?: boolean;
 }) {
+  const { t } = useTranslation("backtests");
   return (
     <div className="metric">
       <span>{label}</span>
-      <strong title={value ?? "Not available"}>
+      <strong title={value ?? t("detail.notAvailable")}>
         {percent ? formatPercent(value) : formatDecimal(value)}
       </strong>
     </div>
@@ -103,6 +105,8 @@ function Collection<T>({
 }
 
 function SuccessfulResult({ runId }: { runId: string }) {
+  const { t } = useTranslation("backtests");
+  const { t: paperT } = useTranslation("paper");
   const result = useApiResource(
     (signal) => backtestsApi.result(runId, signal),
     [runId],
@@ -138,43 +142,45 @@ function SuccessfulResult({ runId }: { runId: string }) {
       <section className="panel">
         <div className="panelHeader">
           <div>
-            <p className="kicker">AUTHORITATIVE RESULT</p>
-            <h2>Performance</h2>
+            <p className="kicker">{t("detail.authoritative")}</p>
+            <h2>{t("detail.performance")}</h2>
           </div>
           {result.data && (
             <span className="countLabel">
-              {result.data.fill_count} fills ·{" "}
-              {result.data.risk_rejection_count} risk rejections
+              {t("detail.counts", {
+                fills: result.data.fill_count,
+                rejections: result.data.risk_rejection_count,
+              })}
             </span>
           )}
         </div>
-        {result.loading && <LoadingPanel label="performance metrics" />}
+        {result.loading && <LoadingPanel label={t("detail.metricsLoading")} />}
         {result.error && <ErrorPanel message={result.error} />}
         {result.data && (
           <div className="metricsGrid">
             <Metric
-              label="Initial equity"
+              label={t("detail.initialEquity")}
               value={result.data.metrics.initial_equity}
             />
             <Metric
-              label="Final equity"
+              label={t("detail.finalEquity")}
               value={result.data.metrics.final_equity}
             />
             <Metric
-              label="Total return"
+              label={t("detail.totalReturn")}
               value={result.data.metrics.total_return}
               percent
             />
-            <Metric label="CAGR" value={result.data.metrics.cagr} percent />
+            <Metric label={t("detail.cagr")} value={result.data.metrics.cagr} percent />
             <Metric
-              label="Max drawdown"
+              label={t("detail.maxDrawdown")}
               value={result.data.metrics.max_drawdown}
               percent
             />
-            <Metric label="Sharpe" value={result.data.metrics.sharpe_ratio} />
-            <Metric label="Sortino" value={result.data.metrics.sortino_ratio} />
+            <Metric label={t("detail.sharpe")} value={result.data.metrics.sharpe_ratio} />
+            <Metric label={t("detail.sortino")} value={result.data.metrics.sortino_ratio} />
             <Metric
-              label="Commission"
+              label={t("detail.commission")}
               value={result.data.metrics.total_commission}
             />
           </div>
@@ -183,15 +189,15 @@ function SuccessfulResult({ runId }: { runId: string }) {
       <section className="panel">
         <div className="panelHeader">
           <div>
-            <p className="kicker">PORTFOLIO</p>
-            <h2>Equity curve</h2>
+            <p className="kicker">{t("detail.portfolio")}</p>
+            <h2>{t("detail.equityCurve")}</h2>
           </div>
-          <span className="countLabel">UTC · API order</span>
+          <span className="countLabel">{t("detail.apiOrder")}</span>
         </div>
-        {equity.loading && <LoadingPanel label="equity data" />}
+        {equity.loading && <LoadingPanel label={t("detail.equityData")} />}
         {equity.error && <ErrorPanel message={equity.error} />}
         {equity.data && equity.data.items.length === 0 && (
-          <EmptyState>No equity snapshots were recorded.</EmptyState>
+          <EmptyState>{t("detail.noEquity")}</EmptyState>
         )}
         {equity.data && equity.data.items.length > 0 && (
           <EquityChart points={equity.data.items} />
@@ -206,24 +212,35 @@ function SuccessfulResult({ runId }: { runId: string }) {
         )}
       </section>
       <Collection<Signal>
-        title="Signals"
-        empty="No signals were emitted."
+        title={t("detail.signals")}
+        empty={t("detail.noSignals")}
         load={signalLoader}
-        headings={["UTC time", "Strategy", "Symbol", "Signal"]}
+        headings={[
+          t("detail.utcTime"),
+          t("detail.strategy"),
+          t("detail.symbol"),
+          t("detail.signal"),
+        ]}
         row={(item, index) => (
           <tr key={`${item.timestamp}-${index}`}>
             <td>{formatUtc(item.timestamp)}</td>
             <td>{item.strategy_id}</td>
             <td>{item.symbol}</td>
-            <td>{item.signal_type}</td>
+            <td>{paperT(`detail.directions.${item.signal_type}`, { defaultValue: item.signal_type })}</td>
           </tr>
         )}
       />
       <Collection<RiskDecision>
-        title="Risk decisions"
-        empty="No proposals reached risk evaluation."
+        title={t("detail.riskDecisions")}
+        empty={t("detail.noRisk")}
         load={riskLoader}
-        headings={["Proposal", "Decision", "Reason", "Message", "UTC time"]}
+        headings={[
+          t("detail.proposal"),
+          t("detail.decision"),
+          t("detail.reason"),
+          t("detail.message"),
+          t("detail.utcTime"),
+        ]}
         row={(item) => (
           <tr key={item.proposal_id}>
             <td className="mono" title={item.proposal_id}>
@@ -235,27 +252,27 @@ function SuccessfulResult({ runId }: { runId: string }) {
                   item.approved ? "decisionApproved" : "decisionRejected"
                 }
               >
-                {item.approved ? "APPROVED" : "RISK REJECTED"}
+                {t(item.approved ? "detail.approved" : "detail.riskRejected")}
               </span>
             </td>
-            <td>{item.reason_code}</td>
-            <td>{item.message}</td>
+            <td>{paperT(`detail.riskReasons.${item.reason_code}`, { defaultValue: item.reason_code })}</td>
+            <td>{paperT(`detail.riskMessages.${item.message}`, { defaultValue: item.message })}</td>
             <td>{formatUtc(item.timestamp)}</td>
           </tr>
         )}
       />
       <Collection<Order>
-        title="Orders"
-        empty="No orders were created. Risk-rejected proposals do not become orders."
+        title={t("detail.orders")}
+        empty={t("detail.noOrders")}
         load={orderLoader}
         headings={[
-          "Order",
-          "Strategy",
-          "Symbol",
-          "Side / type",
-          "Quantity",
-          "Status",
-          "Created (UTC)",
+          t("detail.order"),
+          t("detail.strategy"),
+          t("detail.symbol"),
+          t("detail.sideType"),
+          t("detail.quantity"),
+          t("detail.status"),
+          t("detail.createdUtc"),
         ]}
         row={(item) => (
           <tr key={item.order_id}>
@@ -265,7 +282,7 @@ function SuccessfulResult({ runId }: { runId: string }) {
             <td>{item.strategy_id}</td>
             <td>{item.symbol}</td>
             <td>
-              {item.side} / {item.order_type}
+              {paperT(`detail.directions.${item.side}`, { defaultValue: item.side })} / {paperT(`detail.orderTypes.${item.order_type}`, { defaultValue: item.order_type })}
             </td>
             <td title={item.quantity}>{item.quantity}</td>
             <td>
@@ -276,7 +293,7 @@ function SuccessfulResult({ runId }: { runId: string }) {
                     : "decisionApproved"
                 }
               >
-                {item.status}
+                {paperT(`detail.orderStatuses.${item.status}`, { defaultValue: item.status })}
               </span>
             </td>
             <td>{formatUtc(item.created_at)}</td>
@@ -284,17 +301,17 @@ function SuccessfulResult({ runId }: { runId: string }) {
         )}
       />
       <Collection<Fill>
-        title="Fills"
-        empty="No fills were recorded."
+        title={t("detail.fills")}
+        empty={t("detail.noFills")}
         load={fillLoader}
         headings={[
-          "Order",
-          "Symbol",
-          "Side",
-          "Quantity",
-          "Price",
-          "Commission",
-          "UTC time",
+          t("detail.order"),
+          t("detail.symbol"),
+          t("detail.side"),
+          t("detail.quantity"),
+          t("detail.price"),
+          t("detail.commission"),
+          t("detail.utcTime"),
         ]}
         row={(item, index) => (
           <tr key={`${item.order_id}-${index}`}>
@@ -302,7 +319,7 @@ function SuccessfulResult({ runId }: { runId: string }) {
               {shortId(item.order_id)}
             </td>
             <td>{item.symbol}</td>
-            <td>{item.side}</td>
+            <td>{paperT(`detail.directions.${item.side}`, { defaultValue: item.side })}</td>
             <td title={item.quantity}>{item.quantity}</td>
             <td title={item.price}>{item.price}</td>
             <td title={item.commission}>{item.commission}</td>
@@ -315,6 +332,8 @@ function SuccessfulResult({ runId }: { runId: string }) {
 }
 
 export function BacktestDetailPage({ runId }: { runId: string }) {
+  const { t } = useTranslation("backtests");
+  const { t: paperT } = useTranslation("paper");
   const [revision, setRevision] = useState(0);
   const run = useApiResource(
     (signal) => backtestsApi.get(runId, signal),
@@ -330,7 +349,7 @@ export function BacktestDetailPage({ runId }: { runId: string }) {
     return () => window.clearTimeout(timeout);
   }, [run.data?.status, revision]);
 
-  if (run.loading) return <LoadingPanel label="backtest detail" />;
+  if (run.loading) return <LoadingPanel label={t("detail.facts")} />;
   if (run.error) return <ErrorPanel message={run.error} />;
   if (!run.data) return null;
   const detail = run.data;
@@ -339,53 +358,48 @@ export function BacktestDetailPage({ runId }: { runId: string }) {
       <header className="detailHeader">
         <div>
           <Link className="backLink" href="/backtests">
-            ← All backtests
+            {t("detail.back")}
           </Link>
-          <p className="eyebrow">RUN / {shortId(detail.run_id)}</p>
-          <h1>{detail.strategy_type.replaceAll("_", " ")}</h1>
+          <p className="eyebrow">{t("detail.eyebrow")} / {shortId(detail.run_id)}</p>
+          <h1>{paperT(`strategies.${detail.strategy_type}`, { defaultValue: detail.strategy_type.replaceAll("_", " ") })}</h1>
           <p className="runId">{detail.run_id}</p>
         </div>
         <StatusBadge status={detail.status} />
       </header>
-      <section className="runFacts" aria-label="Run details">
+      <section className="runFacts" aria-label={t("detail.facts")}>
         <div>
-          <span>Dataset</span>
+          <span>{t("detail.dataset")}</span>
           <strong>
             {detail.dataset_id} / {detail.symbol}
           </strong>
         </div>
         <div>
-          <span>Created</span>
+          <span>{t("detail.created")}</span>
           <strong>{formatUtc(detail.created_at)}</strong>
         </div>
         <div>
-          <span>Started</span>
+          <span>{t("detail.started")}</span>
           <strong>{formatUtc(detail.started_at)}</strong>
         </div>
         <div>
-          <span>Completed</span>
+          <span>{t("detail.completed")}</span>
           <strong>{formatUtc(detail.completed_at)}</strong>
         </div>
       </section>
       {(detail.status === "CREATED" || detail.status === "RUNNING") && (
         <section className="stateCallout runningCallout" role="status">
-          <h2>Backtest in progress</h2>
-          <p>
-            This active run is checked every five seconds. Execution remains
-            synchronous on the backend.
-          </p>
+          <h2>{t("detail.inProgress")}</h2>
+          <p>{t("detail.progressHelp")}</p>
         </section>
       )}
       {detail.status === "FAILED" && (
         <section className="stateCallout failedCallout" role="alert">
-          <h2>Backtest failed</h2>
+          <h2>{t("detail.failed")}</h2>
           <p>
             {detail.error_message ??
-              "The run failed without additional safe diagnostic information."}
+              t("detail.failedDefault")}
           </p>
-          <p>
-            No successful metrics or equity curve are displayed for this run.
-          </p>
+          <p>{t("detail.failedNoMetrics")}</p>
         </section>
       )}
       {detail.status === "SUCCEEDED" && <SuccessfulResult runId={runId} />}

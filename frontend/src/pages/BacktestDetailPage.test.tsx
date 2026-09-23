@@ -1,6 +1,7 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
+import { i18n } from "../i18n";
 import { jsonResponse, metrics, run, RUN_ID } from "../test/fixtures";
 import { BacktestDetailPage } from "./BacktestDetailPage";
 
@@ -212,8 +213,18 @@ describe("backtest detail", () => {
     expect(
       await screen.findByTitle("185.140000000000000001"),
     ).toHaveTextContent("185.140000000000000001");
-    expect(screen.getByText("BUY / MARKET")).toBeInTheDocument();
-    expect(screen.getByText("proposal approved")).toBeInTheDocument();
+    expect(screen.getByText("Buy / Market")).toBeInTheDocument();
+    expect(screen.getByText("Proposal approved.")).toBeInTheDocument();
     expect(screen.getByText("Equity curve")).toBeInTheDocument();
+    try {
+      await act(async () => { await i18n.changeLanguage("zh-CN"); });
+      expect(screen.getByText("表现")).toBeInTheDocument();
+      expect(screen.getByText("权益曲线")).toBeInTheDocument();
+      expect(screen.getByText("买入 / 市价单")).toBeInTheDocument();
+      expect(screen.getByText("提案已通过风控。")).toBeInTheDocument();
+      expect(screen.getByTitle("185.140000000000000001")).toHaveTextContent("185.140000000000000001");
+    } finally {
+      await act(async () => { await i18n.changeLanguage("en-US"); });
+    }
   });
 });
