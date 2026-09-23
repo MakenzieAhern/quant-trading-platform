@@ -54,6 +54,17 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 20:51 UTC topbar locale review
+
+The actual Chinese result page exposed the backend-only `development · paper`
+value in the service-status hover title. The topbar already has a localized
+online/offline label, a refresh control and a UTC check time, so the redundant
+raw title was removed. The existing routing regression now rejects its return;
+focused App tests 9/9, lint, typecheck and build passed in the frontend
+container. The in-app browser confirmed no title in either Chinese or English
+while the localized status and accessible refresh name remained. Original EN
+locale was restored. This narrows U8; it is not a full translation audit.
+
 ## 2026-09-23 20:32 UTC post-restart in-app browser check
 
 The workbench reopened persisted historical job `d9f27183` after the Docker

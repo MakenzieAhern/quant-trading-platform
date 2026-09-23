@@ -263,11 +263,6 @@ export function AppShell({ children }: { children: ReactNode }) {
               aria-label={copy.refreshStatus}
               disabled={health.loading}
               onClick={() => setRefresh((value) => value + 1)}
-              title={
-                health.data
-                  ? `${health.data.environment} · ${health.data.broker_mode}`
-                  : undefined
-              }
             >
               <i aria-hidden="true" />
               <span className="serviceText" role="status">

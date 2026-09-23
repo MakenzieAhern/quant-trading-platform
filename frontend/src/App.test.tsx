@@ -155,7 +155,7 @@ describe("routing", () => {
         screen.getByRole("heading", { name: "Page not found" }),
       ).toBeInTheDocument();
       expect(await screen.findByText("Service online")).toBeInTheDocument();
-      expect(screen.getByTitle("development · paper")).toBeInTheDocument();
+      expect(screen.queryByTitle("development · paper")).not.toBeInTheDocument();
     },
   );
 
