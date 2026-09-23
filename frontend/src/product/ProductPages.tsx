@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "../components/Link";
 import { LanguageSelector } from "../components/LanguageSelector";
 import { useApiResource } from "../hooks/useApiResource";
+import { navigate } from "../utils/navigation";
 import { experimentApi } from "./experiments/api";
 import { readExperimentDraft } from "./experiments/draft";
 import { explainExperimentCode } from "./experiments/codes";
@@ -237,6 +238,9 @@ function StrategyContent() {
     </div>
   );
 }
+function strategyDrawerFromUrl() {
+  return new URLSearchParams(window.location.hash.slice(1)).get("strategy");
+}
 export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
   const c = useProductCopy();
   const { i18n } = useTranslation();
@@ -245,7 +249,38 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
     (signal) => experimentApi.capabilities(signal),
     [retry],
   );
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(strategyDrawerFromUrl);
+  useEffect(() => {
+    const sync = () => setSelected(strategyDrawerFromUrl());
+    window.addEventListener("hashchange", sync);
+    window.addEventListener("popstate", sync);
+    return () => {
+      window.removeEventListener("hashchange", sync);
+      window.removeEventListener("popstate", sync);
+    };
+  }, []);
+  const openDrawer = (id: string) => {
+    navigate(
+      `${window.location.pathname}${window.location.search}#${new URLSearchParams({ strategy: id })}`,
+    );
+    window.history.replaceState(
+      { ...window.history.state, productStrategyDrawer: true },
+      "",
+      window.location.href,
+    );
+    setSelected(id);
+  };
+  const closeDrawer = () => {
+    if (window.history.state?.productStrategyDrawer) window.history.back();
+    else {
+      window.history.replaceState(
+        window.history.state,
+        "",
+        window.location.pathname + window.location.search,
+      );
+      setSelected(null);
+    }
+  };
   const strategy = catalog.data?.strategies.find(
     (item) => item.strategy_id === (strategyId ?? selected),
   );
@@ -308,7 +343,7 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
               <p className="smallText">{c.noGuarantee}</p>
               <button
                 className="button secondary"
-                onClick={() => setSelected(item.strategy_id)}
+                onClick={() => openDrawer(item.strategy_id)}
               >
                 {c.inspectStrategy} →
               </button>
@@ -317,7 +352,7 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
         </div>
       )}
       {selected && strategy && (
-        <Dialog title={name} drawer onClose={() => setSelected(null)}>
+        <Dialog title={name} drawer onClose={closeDrawer}>
           <p>{c.strategySummary}</p>
           <StrategyContent />
           <div className="drawerActions">

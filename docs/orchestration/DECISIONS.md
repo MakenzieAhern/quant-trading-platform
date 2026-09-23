@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 strategy drawer history — 2026-09-23
+
+Real Chrome showed Back from the strategy card drawer leaving `/strategies`
+entirely. Keep the native modal and use a strategy URL fragment instead of a
+second router or global modal stack: Back closes, Forward reopens, direct URL
+loads, and opening the fragment does not reset the underlying list scroll.
+Native Tab/Escape behavior and trigger focus remain. Market security detail has
+the same Back defect but needs its own dataset/security URL and is not accepted
+by this strategy-only fix.
+
 ## v1.2 isolated clean-user demo closure — 2026-09-23
 
 Do not infer first-run usability from the populated application database or

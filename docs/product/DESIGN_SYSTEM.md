@@ -35,7 +35,9 @@ No long hashes on first-use surfaces; lineage remains available in disclosure/de
 All async areas keep their surrounding navigation. Errors explain next step and retry.
 Drafts persist before leaving; exit has explicit keep/discard/stay semantics.
 Dialog uses native modal focus handling; all essential actions also visible outside
-keyboard shortcuts. Monetary values remain exact server strings throughout UI.
+keyboard shortcuts. The strategy card drawer uses a URL fragment so Back closes it,
+Forward restores it, and a direct link opens it without changing the list's scroll.
+Monetary values remain exact server strings throughout UI.
 
 Transitions use project target ranges from PRODUCT_MASTER. Reduced motion is both
 OS-aware and explicitly selectable; no business timing depends on animation.
