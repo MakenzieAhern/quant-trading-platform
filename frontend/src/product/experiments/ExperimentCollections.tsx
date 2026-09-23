@@ -363,7 +363,11 @@ function EquityDisplay({
         </figcaption>
       </figure>
       {point && (
-        <p className="experimentChartReadout">
+        <p
+          className="experimentChartReadout"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {c.selectedDate}: <strong>{point.trading_date}</strong> · {c.equity}:{" "}
           <strong>{formatDecimal(point.equity)}</strong>
           {showBenchmark && hasBenchmark && (

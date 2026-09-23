@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T22:43:43Z",
+  "updated_at_utc": "2026-09-23T22:47:57Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 22:48UTC actual Chrome153 on saved historical study d9f27183: ArrowUp on date selector changed exact financial chart readout but no live-region announcement existed. Existing readout now has polite atomic live semantics; browser confirmed attributes and unchanged exact strings. Existing collection regression, full frontend213, lint/type/build and Prettier PASS. This is bounded keyboard/DOM evidence, not an actual screen-reader study or full WCAG AA gate",
     "2026-09-23 22:43UTC disposable quant_test PostgreSQL/backend and actual headless Chrome153: synthetic job45b220b1 was cancelled through the real API before processing; English detail displayed no partial result. Clicking linked retry created childa54768bb, returning to the parent and clicking again reopened that same child. API confirmed parent CANCELLED, child SUCCEEDED attempt2, one linked row and identical configuration SHA. Screenshots outside Git; isolated containers/network removed without volumes or main DB writes. This closes one U3-RECOVER browser path, not the historical/failure/restart matrix",
     "2026-09-23 22:32UTC real Chrome153 on persisted successful experiment d9f27183: injected result-only HTTP403 with unknown code now displays actionable Chinese permission explanation; removing the interception and explicitly retrying loads the real result; injected HTTP408 shows timeout guidance. Shared experiment error precedence also covers create/action paths; focused26 frontend tests/type/lint PASS before full suite. No live DB write or formal study",
     "2026-09-23 22:29UTC native Chrome153 zoom200 additional EN/dark/motion-off 1280x800 physical window (CSS632x352,DPR2) across Workbench, wizard, experiments, markets, paper, data, archive: document width632/632 and no page-level overflow. CDP viewport screenshots outside Git. This is bounded route/theme/locale evidence, not the full QA matrix. PR32 headb50ad2e CI35928381374 backend/frontend/compose PASS",
@@ -400,9 +401,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "0776f2b",
+      "last_verified_head": "ab4417e",
       "state": "DRAFT",
-      "ci_run": 35928969658,
+      "ci_run": 35930053327,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",

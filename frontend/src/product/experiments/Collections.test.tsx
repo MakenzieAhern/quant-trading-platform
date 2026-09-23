@@ -55,19 +55,37 @@ describe("filtered durable experiment records", () => {
     });
     const view = render(<ExperimentCollections jobId={job.job_id} />);
     expect(
-      await screen.findByText("No complete benchmark series for these displayed dates."),
+      await screen.findByText(
+        "No complete benchmark series for these displayed dates.",
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("checkbox", { name: "Show benchmark" }),
     ).toBeDisabled();
     expect(view.container.querySelector(".experimentBenchmarkLine")).toBeNull();
-    expect(view.container.querySelector(".experimentBenchmarkLegend")).toBeNull();
-    expect(view.container.querySelector(".experimentDrawdownLegend")).toBeNull();
+    expect(
+      view.container.querySelector(".experimentBenchmarkLegend"),
+    ).toBeNull();
+    expect(
+      view.container.querySelector(".experimentDrawdownLegend"),
+    ).toBeNull();
+    const readout = view.container.querySelector(".experimentChartReadout");
+    expect(readout).toHaveAttribute("aria-live", "polite");
+    expect(readout).toHaveAttribute("aria-atomic", "true");
+    await userEvent.selectOptions(
+      screen.getByLabelText("Inspect a trading date"),
+      "2031-01-03",
+    );
+    expect(readout).toHaveTextContent("Selected trading date: 2031-01-03");
     await act(async () => {
       await i18n.changeLanguage("zh-CN");
     });
-    expect(screen.getByText("当前显示日期没有完整的基准序列。")).toBeInTheDocument();
-    expect(screen.getByText("当前显示日期没有完整的回撤序列。")).toBeInTheDocument();
+    expect(
+      screen.getByText("当前显示日期没有完整的基准序列。"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("当前显示日期没有完整的回撤序列。"),
+    ).toBeInTheDocument();
   });
 
   it("shows corporate-action and total PnL without double-counting pending assets", async () => {

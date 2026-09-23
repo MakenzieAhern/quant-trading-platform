@@ -54,6 +54,18 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 22:48 UTC chart keyboard announcement
+
+Actual Chrome 153 on saved historical study `d9f27183` showed that ArrowUp on
+the trading-date selector changed the date and exact equity/benchmark/drawdown
+readout, but the readout had no live-region semantics. The existing readout now
+uses polite, atomic announcement; the same Chrome keyboard step confirmed the
+updated date and financial strings without changing the study or full-period
+metrics. The existing collection test checks the announcement attributes and
+date update. Frontend 213 tests, ESLint, TypeScript, build and Prettier passed.
+This is a bounded keyboard/DOM accessibility check, not a screen-reader user
+study or full WCAG 2.2 AA audit. `QA-A11Y` and `UX-CHART` remain IN_PROGRESS.
+
 ## 2026-09-23 22:32 UTC experiment result-load error recovery
 
 On a persisted successful historical experiment, isolated Chrome 153 intercepted
