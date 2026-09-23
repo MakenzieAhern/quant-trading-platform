@@ -129,7 +129,7 @@ function Comparison({ ids }: { ids: string[] }) {
       key: "costs",
       label: u.costCondition,
       value: (job: Experiment) =>
-        `${c.commission}: ${formatPercent(job.configuration.costs.commission_rate)}\n${c.minimum}: ${formatDecimal(job.configuration.costs.minimum_commission)}`,
+        `${c.commission}: ${formatDecimal(job.configuration.costs.commission_rate)}\n${c.minimum}: ${formatDecimal(job.configuration.costs.minimum_commission)}`,
     },
     {
       key: "cash",
@@ -141,7 +141,7 @@ function Comparison({ ids }: { ids: string[] }) {
       key: "risk",
       label: u.riskCondition,
       value: (job: Experiment) =>
-        `${c.drawdown}: ${formatPercent(job.configuration.risk.max_drawdown)}\n${c.position}: ${formatPercent(job.configuration.risk.max_position_weight)}`,
+        `${c.drawdown}: ${formatDecimal(job.configuration.risk.max_drawdown)}\n${c.position}: ${formatDecimal(job.configuration.risk.max_position_weight)}`,
     },
     {
       key: "strategy",

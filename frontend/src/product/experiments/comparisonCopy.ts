@@ -40,7 +40,9 @@ const en = {
   exportCsv: "Download records (CSV)",
   collection: "Records to export",
   exporting: "Preparing download…",
-  exported: "Download prepared. Check your browser downloads.",
+  exported:
+    "Download prepared. Check your browser downloads. If it did not start, use the save link below.",
+  savePrepared: "Save prepared report",
   holdings: "Account & holdings",
   notRecorded:
     "This older run did not record account snapshots. Its holdings cannot be reconstructed from a missing record; existing results remain unchanged.",
@@ -124,7 +126,9 @@ const zh: typeof en = {
   exportCsv: "下载明细（CSV）",
   collection: "导出记录类型",
   exporting: "正在准备下载…",
-  exported: "已准备下载，请查看浏览器下载记录。",
+  exported:
+    "已准备下载，请查看浏览器下载记录。如果没有开始，可点击下方保存链接。",
+  savePrepared: "保存已准备的报告",
   holdings: "账户与持仓",
   notRecorded:
     "该旧实验未记录账户快照。缺失记录不能重建为真实持仓；已有研究结果保持原样。",

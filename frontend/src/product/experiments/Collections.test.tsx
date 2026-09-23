@@ -294,7 +294,7 @@ describe("server-generated report downloads", () => {
           resolve = done;
         }),
     );
-    render(
+    const view = render(
       <ExperimentExports
         jobId={job.job_id}
         range={{ start_date: "2031-01-02" }}
@@ -316,6 +316,15 @@ describe("server-generated report downloads", () => {
     expect(screen.getByRole("status")).toHaveTextContent(
       "Check your browser downloads",
     );
+    const fallback = screen.getByRole("link", { name: "Save prepared report" });
+    expect(fallback).toHaveAttribute("href", "blob:report");
+    expect(fallback).toHaveAttribute(
+      "download",
+      `experiment-${job.job_id}-trades.csv`,
+    );
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+    view.unmount();
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:report");
   });
 
   it("explains missing legacy holdings export instead of producing an empty CSV", async () => {

@@ -183,6 +183,13 @@ describe("experiment comparison", () => {
         .every((cell) => cell.textContent?.includes("N/A")),
     ).toBe(true);
     expect(screen.getAllByText("Same", { exact: true })).toHaveLength(6);
+    const costs = screen.getByRole("row", { name: /Cost configuration/ });
+    expect(within(costs).getAllByRole("cell")[0]).toHaveTextContent("0.0003");
+    expect(within(costs).getAllByRole("cell")[0]).not.toHaveTextContent(
+      "0.03%",
+    );
+    const risk = screen.getByRole("row", { name: /Risk configuration/ });
+    expect(within(risk).getAllByRole("cell")[0]).toHaveTextContent("-0.2");
     act(() => {
       window.history.pushState({}, "", comparisonUrl([ids[0], ids[2]]));
       window.dispatchEvent(new PopStateEvent("popstate"));
