@@ -105,10 +105,13 @@ only for 2026-09-22: `CN-A:SSE:688622` (STAR, source-observed `*ST禾信`) and
 `CN-A:SSE:603400` (Main Board, `华之杰`). The [official SSE announcement
 catalog](https://www.sse.com.cn/disclosure/listedinfo/announcement/index.shtml)
 indexed the former with the `*ST` name and a 603400 suspension-progress notice
-on that date. Direct access to the candidate 603400 SSE PDF timed out from this
-machine; its effective suspension dates have **not** been accepted from search
-snippets. The frozen master names are coverage clues, not 2026 effective-dated
-authority.
+on that date. Chrome rendered the [official 603400 SSE PDF](https://static.sse.com.cn/disclosure/listedinfo/announcement/c/new/2026-09-22/603400_20260922_QPNV.pdf)
+(announcement 2026-048): it states trading stopped from 2026-09-15 and would
+continue suspended at the announcement. WSL retrieval timed out; a scripted
+Windows fetch saved only an HTML JavaScript challenge, which was identified and
+removed, **not** mislabelled as a PDF checksum. The actual PDF binary has not
+been archived/checksummed. The frozen master names are coverage clues, not
+2026 effective-dated ST authority.
 
 Initial job `0eecbddb-4960-4a63-bf9a-505e9a5af884` failed closed with
 `INVALID_PROVIDER_RESPONSE`. A single targeted BaoStock SDK inspection found
@@ -132,9 +135,10 @@ Provenance caveat: these two append-only retry receipts carry the original
 `product-baostock-raw-v1` parser label because the live normalization fix ran
 before its version token was advanced. Do not relabel or rewrite those receipts.
 The v2 token applies to subsequent receipts; these two are identified by their
-job, manifest hashes and exact raw/normalized checksums. This bounded control
-check does **not** promote vendor ST/status fields to official effective-dated
-authority, establish current universe/calendar/rules/actions, or satisfy a
+job, manifest hashes and exact raw/normalized checksums. The official 603400
+notice corroborates this one suspension control but does **not** promote vendor
+ST/status fields generally to official effective-dated authority, establish
+current universe/calendar/rules/actions, or satisfy a
 post-session-start forward receipt.
 
 1. **DONE for the bounded raw candidate path.** A product-owned, user-triggered

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T15:29:28Z",
+  "updated_at_utc": "2026-09-23T15:35:27Z",
   "milestone": "M3_U5_ST_SUSPENSION_CANDIDATE_CONTROLS",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -96,7 +96,8 @@
     "Actual backend restart while historical account07d72259 was RUNNING led to INTERRUPTED at sequence22 with zero orders/fills and no auto-resume; Chrome shows Chinese recovery action and collapsed raw diagnostic; frontend191/lint/type/build PASS",
     "PR23 head89cda16 CI backend/frontend/compose PASS; shared typed load errors now show Chinese actionable 404 in real Chrome and preserve raw diagnostic; frontend193/lint/type/build PASS",
     "PR23 head ae4dd46 CI backend/frontend/compose PASS; Chrome report export prepared blob/link but no verified download event/file",
-    "Bounded BaoStock control retry ed796871 completed 2/2 requests: 603400 vendor-suspended, 688622 vendor-ST, both execution-ineligible; exact raw blank-turnover parser fix passed 50 focused tests and full isolated backend958 (one optional archive skip), Ruff/format/mypy"
+    "Bounded BaoStock control retry ed796871 completed 2/2 requests: 603400 vendor-suspended, 688622 vendor-ST, both execution-ineligible; exact raw blank-turnover parser fix passed 50 focused tests and full isolated backend958 (one optional archive skip), Ruff/format/mypy",
+    "PR24 head5305096 draft/attached; CI35882218443 backend/frontend/compose PASS; Chrome rendered official SSE 603400 suspension notice, with PDF binary checksum still unavailable"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -112,7 +113,7 @@
     "OPEN: M4 cold/warm browser p95 interaction latency and large-data rendering remain unmeasured",
     "RESOLVED for known paper event values: raw direction/order/risk labels translated in Chrome; full U8 server-error/help/a11y matrix remains open",
     "OPEN: unplanned mid-run backend restart fails closed as INTERRUPTED; it does not resume automatically, and broader U7 recovery acceptance remains incomplete",
-    "OPEN: SSE 603400 direct official announcement PDF timed out; search-index evidence and BaoStock flags are candidate controls, not official dated authority",
+    "PARTIAL: Chrome rendered official SSE 603400 notice confirming suspension from 2026-09-15 and continuation at announcement; PDF binary could not be archived/checksummed because WSL timed out and scripted Windows fetch returned an HTML JavaScript challenge; no bypass attempted",
     "OPEN: BaoStock retry receipts ed796871 retain parser v1 label despite live normalization fix preceding v2 bump; immutable provenance caveat documented, not silently rewritten"
   ],
   "external_blockers": [
@@ -237,10 +238,20 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "paper ledger and legacy create locale PASS; interrupted recovery text and missing-record guidance PASS; wider U8 matrix incomplete"
+    },
+    "24": {
+      "branch": "codex/product-v1.2-market-controls",
+      "last_verified_head": "5305096",
+      "state": "DRAFT",
+      "ci_run": 35882218443,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "bounded raw control API/official PDF visual PASS; current execution authority and forward session incomplete"
     }
   },
   "next_task": "Complete official current-date source authority and after-start forward receipt, while finishing U8/UX/M4/M5 acceptance without changing frozen research",
-  "next_command": "Commit/push U5 suspended-row parser slice on codex/product-v1.2-market-controls, open stacked draft PR24 on PR23, verify CI, then continue official 2026 authority and browser matrix",
+  "next_command": "Verify current PR24 head/CI after source-note correction, then continue official 2026 authority and remaining U5/U8/browser acceptance",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
