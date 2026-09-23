@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T16:15:55Z",
-  "milestone": "M2_UX_SAVED_VIEWS",
+  "updated_at_utc": "2026-09-23T16:26:29Z",
+  "milestone": "M2_U1_CLEAN_USER_CLOSED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -28,7 +28,7 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "read-only review closed U2/U5 P1; agent inactive after usage limit"
     },
-    "verified_processes": "2026-09-23: Docker Desktop 4.92.0, WSL integration and 4 project services healthy; backend restarted while paper account paused; no installer/UAC process or formal study",
+    "verified_processes": "2026-09-23: Docker Desktop 4.92.0, WSL integration and 4 project services healthy; isolated clean-user 8001/5174 services started with owned sessions and stopped after QA; main backend /api/health HTTP200; no formal study",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
@@ -105,7 +105,9 @@
     "2026-09-23 new /tasks Chrome zh/en lists real persisted research and candidate update tasks, with verified detail deep links; frontend196/lint/type/build PASS including partial-load retry",
     "PR26 head1b9cb0d draft/attached; CI35885182089 backend/frontend/compose PASS",
     "Chrome /experiments searched M1, filtered completed historical jobs, name-sorted two actual rows, saved hidden-created-column view and restored it after reload; detail/back and zh/en labels PASS; no-match reset cleared saved view",
-    "2026-09-23 isolated quant_test_v12_u5 upgraded0014→0015; full backend959 PASS (one optional unmounted archive skip), frontend198/lint/type/build PASS; Ruff/mypy PASS"
+    "2026-09-23 isolated quant_test_v12_u5 upgraded0014→0015; full backend959 PASS (one optional unmounted archive skip), frontend198/lint/type/build PASS; Ruff/mypy PASS",
+    "PR27 code head2ebc193 draft/attached; CI35887824466 backend/frontend/compose PASS",
+    "Fresh Chrome origin5174 with isolated product_v12_baseline/no private archive: first-run guide, primary CTA, registered strategy, named draft save/home/reopen, four steps and synthetic result jobfb620f96 PASS; main DB 8 jobs and .research clean"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -120,7 +122,8 @@
     "RESOLVED: full backend from /app container lacked repo-root fixture path; WSL checkout test path restored fixture identity. Isolated quant_test_v12_u5 was one migration behind; test-only 0015 upgrade closed three paper constraint failures",
     "RESOLVED: Vite main bundle exceeded500 kB; route-level lazy loading reduced initial entry chunk to409.17 kB",
     "OPEN: M4 cold/warm browser p95 interaction latency and large-data rendering remain unmeasured",
-    "Chrome viewport override requested 390x844 but reported 1905px; mobile Task Center acceptance not claimed",
+    "Chrome viewport override requested 390x844 but reported 1905px twice; mobile Task Center and saved-view acceptance not claimed",
+    "OPEN: isolated home screenshot after returning from result appeared to clip the page heading near sticky topbar; inspect route scroll restoration in UX-DETAIL/QA-VISUAL",
     "RESOLVED for known paper event values: raw direction/order/risk labels translated in Chrome; full U8 server-error/help/a11y matrix remains open",
     "OPEN: unplanned mid-run backend restart fails closed as INTERRUPTED; it does not resume automatically, and broader U7 recovery acceptance remains incomplete",
     "PARTIAL: Chrome rendered official SSE 603400 notice confirming suspension from 2026-09-15 and continuation at announcement; PDF binary could not be archived/checksummed because WSL timed out and scripted Windows fetch returned an HTML JavaScript challenge; no bypass attempted",
@@ -278,10 +281,20 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "Chinese/English saved research and candidate update task center links PASS; mobile incomplete"
+    },
+    "27": {
+      "branch": "codex/product-v1.2-saved-views",
+      "last_verified_head": "2ebc193",
+      "state": "DRAFT",
+      "ci_run": 35887824466,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "Chinese/English server-filtered saved view, reload, columns, detail/back and no-match reset PASS; mobile incomplete"
     }
   },
-  "next_task": "Finish UX-VIEWS mobile/scroll/detail behavior, then U1/U3/U5/U7/U8/M4/M5; preserve U4 browser download as unverified until security controls permit artifact verification",
-  "next_command": "Commit/push saved-view slice and verify stacked draft PR27 CI, then continue remaining product acceptance without touching frozen research",
+  "next_task": "Finish UX-DETAIL focus/scroll/back and mobile, U3 dirty Back/Forward, then U5/U7/U8/M4/M5; preserve U4 browser download as unverified until security controls permit artifact verification",
+  "next_command": "Inspect real route navigation and reproduce suspected sticky-header scroll clipping; add focused regression before a minimal navigation fix, without changing financial state",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

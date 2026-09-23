@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 isolated clean-user demo closure — 2026-09-23
+
+Do not infer first-run usability from the populated application database or
+API-only demo success. Upgrade only the previously named disposable
+`product_v12_baseline` from schema 0011 to 0015, start dedicated ports
+8001/5174 with an empty private-archive root and separate product cache, and
+use a fresh Chrome origin. The actual browser route completed first-run guide,
+draft save/reopen, all four wizard steps, one registered synthetic job and its
+risk-labeled result. Job `fb620f96-591b-48b3-b238-e92be1b41d02` exists only
+in the isolated product DB. Stop both dedicated servers afterward; no formal
+research or live-market claims follow from this demonstration. This is an
+agent walkthrough, not an independent novice-user study.
+
 ## v1.2 saved research view and full-regression environment — 2026-09-23
 
 Research filters/sort must run in PostgreSQL before count and pagination; sorting
