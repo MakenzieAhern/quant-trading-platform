@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T19:10:33Z",
+  "updated_at_utc": "2026-09-23T19:16:34Z",
   "milestone": "M3_CURRENT_RULE_CANDIDATE_FAIL_CLOSED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 M4 mobile target audit found top data-status link343x20; shared CSS raised it to343x40 at390x844 without overflow (document375), desktop1440 target172x43; full AA/contrast/keyboard audit still open",
     "2026-09-23 in-app browser actual results: benchmark toggle and linked 2011-03-23 six fills/account snapshot left full metrics unchanged; 293-session chart paged100/100/93; missing-series page now explicitly disables unavailable benchmark and omits phantom benchmark/drawdown legends in EN/ZH test, complete-series synthetic browser still plots the line; frontend205/lint/type/build PASS",
     "2026-09-23 Docker Desktop installer/UAC absent, installed version4.92.0, WSL Ubuntu/docker-desktop running and Engine29.8.0/Compose5.5.1 healthy; PR12 merged and v1.1.0 GitHub Release published; no v1.1 replay needed",
     "2026-09-23 legacy persisted success run 2979f811 rendered EN→ZH→EN in real in-app browser: localized detail, metrics, SVG accessible chart, event tables; Decimal values unchanged; frontend204/lint/tsc/build PASS",

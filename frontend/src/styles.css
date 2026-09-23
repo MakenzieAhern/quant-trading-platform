@@ -313,6 +313,8 @@ kbd {
 .topbarData {
   display: grid;
   gap: 3px;
+  min-height: 40px;
+  align-content: center;
   color: var(--muted);
   min-width: 0;
   max-width: 270px;
