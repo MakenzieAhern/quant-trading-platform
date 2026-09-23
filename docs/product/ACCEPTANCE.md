@@ -54,6 +54,21 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 22:17 UTC research-archive status and mobile-table review
+
+Real Chrome 153 on the persisted formal research archive found raw `PASSED`,
+`SUCCEEDED` and research split codes in the Chinese list/detail. The shared split
+badge and two archive pages now show translated, non-promissory labels while the
+original status remains available as the element title for audit. The 390px
+archive screenshot also showed that important columns were offscreen with no
+scroll cue. Both research-list tables and run-detail tables now announce the
+horizontal scroll region and expose a visible narrow-screen hint; the focused
+container moved 40px with ArrowRight in Chrome. Document width remained 390px.
+EN 1280px and ZH 390px screenshots are outside Git under
+`product-evidence/v1.2/m4/research-status-{en-1280,zh-390-scrollhint}.png`.
+Frontend 212 tests, ESLint, TypeScript, build and Prettier passed. This closes
+one archive slice, not the overall U8, visual or accessibility gates.
+
 ## 2026-09-23 21:09 UTC real Chrome export closure
 
 An isolated headless installation of the PC's actual Chrome 153, with its own

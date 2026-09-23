@@ -43,7 +43,11 @@ export function ResearchHomePage() {
           <EmptyState>{t("research:noDatasets")}</EmptyState>
         )}
         {datasets.data && datasets.data.items.length > 0 && (
-          <div className="tableScroll">
+          <div
+            className="tableScroll"
+            tabIndex={0}
+            aria-label={t("research:scrollTable")}
+          >
             <table>
               <thead>
                 <tr>
@@ -74,8 +78,11 @@ export function ResearchHomePage() {
                     <td className="mono" title={dataset.canonical_sha256}>
                       {shortId(dataset.canonical_sha256)}
                     </td>
-                    <td>
-                      {dataset.readiness_status} ·{" "}
+                    <td title={dataset.readiness_status}>
+                      {t(`research:readiness.${dataset.readiness_status}`, {
+                        defaultValue: t("research:readiness.unknown"),
+                      })}{" "}
+                      ·{" "}
                       {dataset.frozen
                         ? t("validation:frozen")
                         : t("validation:notFrozen")}
@@ -97,7 +104,11 @@ export function ResearchHomePage() {
           <EmptyState>{t("research:noRuns")}</EmptyState>
         )}
         {runs.data && runs.data.items.length > 0 && (
-          <div className="tableScroll">
+          <div
+            className="tableScroll"
+            tabIndex={0}
+            aria-label={t("research:scrollTable")}
+          >
             <table>
               <thead>
                 <tr>
@@ -123,7 +134,11 @@ export function ResearchHomePage() {
                     <td>
                       <SplitBadge period={run.period_kind} />
                     </td>
-                    <td>{run.status}</td>
+                    <td title={run.status}>
+                      {t(`common:statuses.${run.status}`, {
+                        defaultValue: t("research:unknownStatus"),
+                      })}
+                    </td>
                     <td>{formatUtc(run.created_at)}</td>
                   </tr>
                 ))}

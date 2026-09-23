@@ -329,7 +329,11 @@ function ResearchTable({
       {rows.length === 0 ? (
         <EmptyState>{t("noData")}</EmptyState>
       ) : (
-        <div className="tableScroll">
+        <div
+          className="tableScroll"
+          tabIndex={0}
+          aria-label={t("research:scrollTable")}
+        >
           <table>
             <thead>
               <tr>

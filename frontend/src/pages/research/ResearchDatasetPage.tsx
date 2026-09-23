@@ -62,8 +62,11 @@ export function ResearchDatasetPage({ datasetId }: { datasetId: string }) {
         </div>
         <div>
           <span>{t("common:status")}</span>
-          <strong>
-            {dataset.data.readiness_status} ·{" "}
+          <strong title={dataset.data.readiness_status}>
+            {t(`research:readiness.${dataset.data.readiness_status}`, {
+              defaultValue: t("research:readiness.unknown"),
+            })}{" "}
+            ·{" "}
             {dataset.data.frozen
               ? t("validation:frozen")
               : t("validation:notFrozen")}

@@ -1023,6 +1023,21 @@ legend {
   overflow-x: auto;
   overscroll-behavior-x: contain;
 }
+.tableScroll[aria-label]::before {
+  content: attr(aria-label);
+  display: block;
+  position: sticky;
+  left: 0;
+  width: max-content;
+  padding: 10px 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (min-width: 601px) {
+  .tableScroll[aria-label]::before {
+    display: none;
+  }
+}
 table {
   width: 100%;
   border-collapse: collapse;
