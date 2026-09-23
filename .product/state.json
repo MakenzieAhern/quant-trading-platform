@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T21:18:06Z",
+  "updated_at_utc": "2026-09-23T21:31:28Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 21:31UTC actual Chrome153 at 720x450 CSS viewport: Workbench primary CTA initially top/bottom507/549 below first screen; compact 601-800px layout moved it to387/429. No document overflow at720/390/1440; before/after screenshots outside Git. This is a zoom proxy, not actual browser200-percent verification",
+    "2026-09-23 21:27UTC PR32 head b5d7a00 CI35921986841 backend/frontend/compose PASS. Isolated real Chrome153 local populated 1440x900 warm Workbench-Strategies clicks30 p50=15.6ms p95=32ms max=48.2ms; separate 293-session result full reload warm10 p95=923ms, cold560ms. Broader QA-PERF remains IN_PROGRESS",
     "2026-09-23 21:18UTC real Chrome153 dirty guided wizard Back now calls native confirmation before shared router update: dismiss retained exact edit/step, accept reached home, Forward restored edit/step without repeat dialog. Duplicate reader prompt regression closed; U3-WIZARD PASS; navigation7/7, frontend208, lint/type/build PASS",
     "2026-09-23 21:09UTC actual isolated Chrome153 on documented localhost origin downloaded historical CSV29316 bytes and metadata JSON258223 bytes with successful download events; U4-EXPORT PASS. 127.0.0.1 alias is blocked by the existing exact-origin CORS policy; no security change made",
     "2026-09-23 21:09UTC read-only PostgreSQL WAL inventory found only segments12-14; earliest segment12 COMMIT19:48:41 UTC, after 18:29-18:30 loss. No PITR basis for the missing later paper accounts was found; no live DB mutation",
@@ -175,7 +177,7 @@
     "RESOLVED: PR18 frontend CI test raced its mock request; explicit resolver readiness fix pushed and CI passed",
     "RESOLVED: full backend from /app container lacked repo-root fixture path; WSL checkout test path restored fixture identity. Isolated quant_test_v12_u5 was one migration behind; test-only 0015 upgrade closed three paper constraint failures",
     "RESOLVED: Vite main bundle exceeded500 kB; route-level lazy loading reduced initial entry chunk to409.17 kB",
-    "OPEN: M4 cold/warm browser p95 interaction latency and large-data rendering remain unmeasured",
+    "PARTIAL: M4 warm simple route-click p95=32ms over30 real-Chrome headless transitions; persisted 293-session result full reload p95=923ms over10, not an interaction metric. Wider interactions, production build, 200-percent zoom and large-data rendering remain unmeasured",
     "RESOLVED for markets, Task Center and research list: current Chrome viewport override reported390x844 and no page overflow; wider mobile matrix remains unclaimed",
     "RESOLVED: isolated home screenshot heading clipping reproduced in live Chrome; route push scroll reset and preventScroll focus verified without overriding native Back restoration",
     "RESOLVED: market security detail Back no longer leaves /markets; exact dataset/security URL preserves filter/page/scroll and direct links fail visibly",
@@ -393,16 +395,16 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "2122573",
+      "last_verified_head": "b5d7a00",
       "state": "DRAFT",
-      "ci_run": 35918826841,
+      "ci_run": 35921986841,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill explanation and linked interrupted retry browser PASS. Docker engine restart and post-restart saved-result read PASS; full Windows reboot, U4 download and U3 native-dialog QA incomplete; forward authority remains PARTIAL"
+      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill and linked retry PASS. U3 dirty Back/Forward and U4 CSV/JSON download PASS in real Chrome; simple warm navigation p95=32ms, wider QA incomplete. Full Windows reboot and forward authority remain open"
     }
   },
-  "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence; validate an independent backup destination and durable recovery in isolation. Continue independent U3 job/recovery, U8, accessibility/performance/browser work, and seek lawful forward-source rights before any U7 execution promotion. Docker engine restart, U4 Chrome export and U3 dirty Back/Forward passed; verify terminal-free recovery at the next safe full Windows reboot/login",
+  "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence; validate an independent backup destination and durable recovery in isolation. Continue independent U3 job/recovery, U8 and accessibility/performance browser work, including true 200-percent zoom; seek lawful forward-source rights before any U7 execution promotion. Docker engine restart, U4 Chrome export and U3 dirty Back/Forward passed; verify terminal-free recovery at the next safe full Windows reboot/login",
   "next_command": "Inspect any offered external pre-loss physical snapshot or backup; current live pg_wal starts after the loss and logical dumps cannot supply PITR. Otherwise retain the two sessions as lost. Run backend pytest only with APP_ENV=test on quant_test*; leave frozen research and RAW_CANDIDATE unchanged",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

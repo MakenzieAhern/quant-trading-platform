@@ -1494,6 +1494,26 @@ footer strong {
     padding-inline: 20px;
   }
 }
+@media (min-width: 601px) and (max-width: 800px) {
+  .welcomeGrid {
+    grid-template-columns: 1fr;
+  }
+  .welcomeCard {
+    padding: 20px 24px;
+    min-height: 0;
+  }
+  .sectionIndex {
+    margin-bottom: 8px;
+  }
+  .welcomeCard h2 {
+    font-size: 24px;
+    line-height: 1.25;
+  }
+  .welcomeDescription {
+    font-size: 14px;
+    margin: 6px 0 10px;
+  }
+}
 @media (max-width: 600px) {
   h1 {
     font-size: 26px;
@@ -1676,5 +1696,8 @@ footer strong {
   color: var(--muted);
 }
 @media (max-width: 600px) {
-  .taskCenterList li { align-items: stretch; flex-direction: column; }
+  .taskCenterList li {
+    align-items: stretch;
+    flex-direction: column;
+  }
 }
