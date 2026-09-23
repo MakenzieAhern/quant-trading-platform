@@ -22,6 +22,7 @@ import { CreateExperimentPage } from "./product/experiments/CreateExperimentPage
 import { ExperimentsPage } from "./product/experiments/ExperimentsPage";
 import { ProductDataProvider } from "./product/ProductDataProvider";
 import { MarketsPage } from "./product/markets";
+import { TaskCenterPage } from "./product/TaskCenterPage";
 
 const ResearchDatasetPage = lazy(() =>
   import("./pages/research/ResearchDatasetPage").then(({ ResearchDatasetPage }) => ({
@@ -90,6 +91,7 @@ export function App() {
       />
     );
   else if (pathname === "/data") page = <DataCenterPage />;
+  else if (pathname === "/tasks") page = <TaskCenterPage />;
   else if (pathname === "/help") page = <HelpPage />;
   else if (pathname === "/settings") page = <SettingsPage />;
   else if (pathname === "/research/new") page = <CreateExperimentPage />;

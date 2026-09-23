@@ -45,6 +45,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
     { label: copy.start, href: "/research/new" },
     { label: copy.strategies, href: "/strategies" },
     { label: copy.research, href: "/experiments" },
+    { label: copy.tasks, href: "/tasks" },
     { label: copy.archive, href: "/research/a-share" },
     { label: copy.accounts, href: "/paper" },
     { label: copy.data, href: "/data" },

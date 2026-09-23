@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 task center and settings browser acceptance — 2026-09-23
+
+Reuse the existing bounded experiment and market-update list APIs for one
+read-only task center. Separate paging and exact detail links avoid merging
+unlike research and raw-candidate jobs into a misleading single queue. Opening
+the page never starts acquisition or a study; candidate observations retain
+their explicit no-execution label. Real Chrome reopened one saved study and
+one update receipt in both language contexts. Saved filters/sort/columns and
+mobile validation remain separate UX-VIEWS work.
+
+Chrome also persisted motion, explicit market colors and price view through
+reload; an actual market detail honored adjusted view. The original user
+preferences were restored. A requested Chrome 390px viewport override still
+reported 1905px, so it is not evidence of mobile layout acceptance.
+
 ## v1.2 command keyboard and browser export control — 2026-09-23
 
 Chrome verified bounded saved-study search, watchlist results and help navigation.
