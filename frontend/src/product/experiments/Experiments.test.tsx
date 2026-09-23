@@ -577,13 +577,18 @@ describe("durable experiment detail", () => {
 
   it("restores an unsaved list filter after opening a result and going Back", async () => {
     window.history.replaceState({}, "", "/experiments");
-    vi.spyOn(experimentApi, "list").mockResolvedValue({
-      items: [job], total: 1, limit: 20, offset: 0,
-    });
+    const list = vi.spyOn(experimentApi, "list").mockImplementation(
+      async (_signal, _limit, offset) => ({
+        items: [job], total: 41, limit: 20, offset: offset ?? 0,
+      }),
+    );
     const first = render(<ExperimentsPage />);
     await screen.findByRole("link", { name: job.name });
     await userEvent.type(screen.getByLabelText("Search saved studies"), "M1");
     await waitFor(() => expect(window.history.state.experimentView.q).toBe("M1"));
+    await userEvent.click(screen.getByRole("button", { name: "Next" }));
+    await waitFor(() => expect(window.history.state.experimentOffset).toBe(20));
+    await screen.findByRole("link", { name: job.name });
     expect(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)).toBeNull();
     await userEvent.click(screen.getByRole("link", { name: job.name }));
     first.unmount();
@@ -591,6 +596,10 @@ describe("durable experiment detail", () => {
     await waitFor(() => expect(window.location.pathname).toBe("/experiments"));
     render(<ExperimentsPage />);
     expect(screen.getByLabelText("Search saved studies")).toHaveValue("M1");
+    await waitFor(() => expect(list).toHaveBeenLastCalledWith(
+      expect.any(AbortSignal), 20, 20, "M1",
+      { status: undefined, mode: undefined, sort: "newest" },
+    ));
   });
 });
 
