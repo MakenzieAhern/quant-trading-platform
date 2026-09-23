@@ -38,6 +38,21 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     latest_portfolio: portfolio,
   } = snapshot;
   const active = session.status === "STARTING" || session.status === "RUNNING";
+  const riskMessage = (message: string) => {
+    const reserved = /^reserved quantity for (.+) must be finite$/.exec(
+      message,
+    );
+    if (reserved)
+      return t("detail.riskMessages.reservedQuantityFinite", {
+        symbol: reserved[1],
+      });
+    const mark = /^a positive observed mark is required for (.+)$/.exec(
+      message,
+    );
+    if (mark)
+      return t("detail.riskMessages.positiveMarkRequired", { symbol: mark[1] });
+    return t(`detail.riskMessages.${message}`, { defaultValue: message });
+  };
 
   return (
     <>
@@ -63,7 +78,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
               disabled={commandPending}
               onClick={() => void command("start")}
             >
-              {t(session.status === "PAUSED" ? "detail.resume" : "detail.start")}
+              {t(
+                session.status === "PAUSED" ? "detail.resume" : "detail.start",
+              )}
             </button>
           )}
           {active && (
@@ -75,7 +92,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
               {t("detail.pause")}
             </button>
           )}
-          {(active || session.status === "PAUSING" || session.status === "PAUSED") && (
+          {(active ||
+            session.status === "PAUSING" ||
+            session.status === "PAUSED") && (
             <button
               className="button"
               disabled={commandPending}
@@ -119,7 +138,20 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
       {session.error_message && (
         <section className="stateCallout failedCallout" role="alert">
           <h2>{t("detail.failedTitle")}</h2>
-          <p>{session.error_message}</p>
+          <p>
+            {t(
+              session.status === "INTERRUPTED"
+                ? "detail.interruptedHelp"
+                : "detail.failedHelp",
+            )}
+          </p>
+          <Link className="button" href="/paper/new">
+            {t("detail.createAgain")}
+          </Link>
+          <details>
+            <summary>{t("detail.auditError")}</summary>
+            <code>{session.error_message}</code>
+          </details>
         </section>
       )}
       <section className="panel">
@@ -236,7 +268,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           formatUtc(item.timestamp),
           item.strategy_id,
           item.symbol,
-          item.signal_type,
+          t(`detail.directions.${item.signal_type}`, {
+            defaultValue: item.signal_type,
+          }),
         ])}
       />
       <PaperTable
@@ -251,8 +285,10 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         rows={snapshot.risk_decisions.map((item) => [
           shortId(item.proposal_id),
           item.approved ? t("detail.approved") : t("detail.riskRejected"),
-          item.reason_code,
-          item.message,
+          t(`detail.riskReasons.${item.reason_code}`, {
+            defaultValue: item.reason_code,
+          }),
+          riskMessage(item.message),
         ])}
       />
       <PaperTable
@@ -267,9 +303,11 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         ]}
         rows={snapshot.orders.map((item) => [
           shortId(item.order_id),
-          `${item.side} / ${item.order_type}`,
+          `${t(`detail.directions.${item.side}`, { defaultValue: item.side })} / ${t(`detail.orderTypes.${item.order_type}`, { defaultValue: item.order_type })}`,
           item.quantity,
-          item.status,
+          t(`detail.orderStatuses.${item.status}`, {
+            defaultValue: item.status,
+          }),
           formatUtc(item.created_at),
         ])}
       />
@@ -286,7 +324,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         ]}
         rows={snapshot.fills.map((item) => [
           shortId(item.order_id),
-          item.side,
+          t(`detail.directions.${item.side}`, { defaultValue: item.side }),
           item.quantity,
           item.price,
           item.commission,

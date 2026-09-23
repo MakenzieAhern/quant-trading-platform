@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T14:57:12Z",
-  "milestone": "M3_U7_PAUSE_RESTART_RESUME_VERIFIED",
+  "updated_at_utc": "2026-09-23T15:20:55Z",
+  "milestone": "M4_U8_SHARED_LOAD_ERRORS",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,7 +16,7 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-paper-resume",
+    "branch": "codex/product-v1.2-paper-i18n",
     "identity": "MakenzieAhern"
   },
   "ownership": {
@@ -89,7 +89,12 @@
     "Chrome historical account4b64380f paused2011-03-09, survived actual backend restart with19 events, resumed and stopped2011-03-23; 134 non-status events exactly equal uninterrupted baseline;20 orders/6 fills/equity99964.8134",
     "Native date input fix verified by actual Chrome paper form submission with persisted end date2011-03-23; related date tests and full frontend188/lint/type/build PASS",
     "2026-09-23 isolated backend956 PASS, Ruff/format/mypy PASS; optional real archive pause/resume test passed with read-only mount;0015 migration up/down/up/check passed on disposable PostgreSQL",
-    "Main DB0015 deployed after validated off-Git backup SHA0f751cb54be0d939fdd76d4ed01b5f6c75591fd9f59d634ca10cbcebd3effd57; .research remains untouched"
+    "Main DB0015 deployed after validated off-Git backup SHA0f751cb54be0d939fdd76d4ed01b5f6c75591fd9f59d634ca10cbcebd3effd57; .research remains untouched",
+    "PR22 head81ba9bd draft/attached; CI35879037296 backend/frontend/compose PASS after migration Ruff line fix",
+    "Chrome historical paper ledger now labels buy/limit/filled/cancelled and risk reasons in Chinese; exact event payloads unchanged",
+    "Chrome legacy create form now Chinese; switching to English preserved exact entered capital123456.789; focused35 and full frontend190/lint/type/build PASS",
+    "Actual backend restart while historical account07d72259 was RUNNING led to INTERRUPTED at sequence22 with zero orders/fills and no auto-resume; Chrome shows Chinese recovery action and collapsed raw diagnostic; frontend191/lint/type/build PASS",
+    "PR23 head89cda16 CI backend/frontend/compose PASS; shared typed load errors now show Chinese actionable 404 in real Chrome and preserve raw diagnostic; frontend193/lint/type/build PASS"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -103,7 +108,8 @@
     "RESOLVED: PR18 frontend CI test raced its mock request; explicit resolver readiness fix pushed and CI passed",
     "RESOLVED: Vite main bundle exceeded500 kB; route-level lazy loading reduced initial entry chunk to409.17 kB",
     "OPEN: M4 cold/warm browser p95 interaction latency and large-data rendering remain unmeasured",
-    "OPEN: historical account table still exposes technical strategy/reason/order enum values; U8 translation incomplete"
+    "RESOLVED for known paper event values: raw direction/order/risk labels translated in Chrome; full U8 server-error/help/a11y matrix remains open",
+    "OPEN: unplanned mid-run backend restart fails closed as INTERRUPTED; it does not resume automatically, and broader U7 recovery acceptance remains incomplete"
   ],
   "external_blockers": [
     {
@@ -208,10 +214,29 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "historical account and restart persistence PASS; forward receipt incomplete"
+    },
+    "22": {
+      "branch": "codex/product-v1.2-paper-resume",
+      "head": "81ba9bd",
+      "state": "DRAFT",
+      "ci_run": 35879037296,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "paused historical account survived backend restart and resumed with identical non-status ledger PASS; forward receipt incomplete"
+    },
+    "23": {
+      "branch": "codex/product-v1.2-paper-i18n",
+      "last_verified_head": "89cda16",
+      "state": "DRAFT",
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "paper ledger and legacy create locale PASS; interrupted recovery text and missing-record guidance PASS; wider U8 matrix incomplete"
     }
   },
-  "next_task": "Review/commit pause-resume slice, translate paper order labels, assess lawful receipt-bound forward mode, then finish remaining U5/M4/M5 gates",
-  "next_command": "git diff --check; commit/push current pause-resume slice to stacked draft PR22 after browser and CI checks; keep forward receipt distinct from historical replay",
+  "next_task": "Finish U8 language/error/help/a11y coverage, assess lawful receipt-bound forward mode, then complete remaining U5/M4/M5 acceptance",
+  "next_command": "Inspect current PR23 head/CI, then continue U8 error/help/a11y and U5 lawful current-date source gates",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

@@ -3,6 +3,16 @@ export const zhCN = {
     unavailable: "暂无",
     loading: "正在加载{{label}}…",
     error: "无法加载该数据。",
+    loadErrors: {
+      offline: "服务暂时无法连接。请检查服务状态，然后重新加载本页。",
+      timeout: "请求超时。请检查服务状态，然后重新加载本页。",
+      permission: "访问被拒绝。请确认访问权限后重试。",
+      notFound: "这条记录不可用，可能已被删除。请返回工作台选择其他记录。",
+      unknown: "无法加载数据。请检查服务状态，然后重新加载本页。",
+      reload: "重新加载本页",
+      workbench: "返回工作台",
+      diagnostic: "原始诊断（审计）",
+    },
     noData: "暂无已持久化数据。",
     previous: "上一页",
     next: "下一页",
@@ -61,6 +71,46 @@ export const zhCN = {
       created: "创建时间",
       started: "开始时间",
       completed: "完成时间",
+    },
+    createPage: {
+      eyebrow: "新建研究运行",
+      title: "创建回测",
+      description: "使用已注册的数据集和策略创建确定性的模拟研究运行。",
+      cancel: "取消",
+      dataset: "数据集",
+      fixture: "AAPL 测试数据",
+      registryId: "注册编号",
+      symbol: "证券代码",
+      capitalSizing: "本金与订单规模",
+      initialCash: "初始资金",
+      quantity: "默认订单数量",
+      decimalHint:
+        "精确 Decimal 字符串会发送至 API；浏览器显示值不参与组合计算。",
+      strategy: "策略",
+      strategyType: "策略类型",
+      movingAverage: "移动平均线交叉",
+      rsiMean: "RSI 均值回归",
+      shortPeriod: "短周期",
+      longPeriod: "长周期",
+      rsiPeriod: "RSI 周期",
+      oversold: "超卖阈值",
+      overbought: "超买阈值",
+      riskControls: "风险控制",
+      buyingPower: "检查购买力",
+      maxNotional: "单笔订单金额上限（可选）",
+      riskHint: "后端使用已完成 K 线的价格评估风险。",
+      run: "运行回测",
+      running: "正在运行回测…",
+      idempotencyHint: "提交时使用幂等键，防止重复创建运行。",
+      maxNotionalError: "订单金额上限必须是大于 0 的 Decimal 字符串。",
+      decimalError: "初始资金和订单数量必须是大于 0 的十进制数字。",
+      periodError: "周期必须是安全的正整数，且短周期小于长周期。",
+      rsiError:
+        "RSI 周期必须是安全的正整数，阈值须满足 0 < 超卖 < 超买 < 100。",
+      conflictError: "重复请求发生冲突：{{message}}",
+      validationError: "参数校验失败：{{message}}",
+      executionError: "回测已安全失败。请到运行历史查看失败记录。",
+      submitError: "无法提交回测。",
     },
   },
   paper: {
@@ -172,6 +222,12 @@ export const zhCN = {
       started: "开始时间",
       stopped: "停止时间",
       failedTitle: "模拟交易会话已安全结束",
+      interruptedHelp:
+        "后端重启中断了本次回放。已有记录保持只读，不会自动补成交或重新下单；如需重试，请创建新会话。",
+      failedHelp:
+        "本次回放未完成，不能把部分记录当作完整结果。请检查配置后创建新会话。",
+      createAgain: "创建新模拟会话",
+      auditError: "原始诊断（审计）",
       latestBar: "最新完整 K 线",
       marketData: "市场数据",
       open: "开盘价",
@@ -222,6 +278,66 @@ export const zhCN = {
       noFills: "尚无模拟成交记录。",
       side: "方向",
       price: "价格",
+      directions: { BUY: "买入", SELL: "卖出", HOLD: "观望" },
+      orderTypes: { MARKET: "市价单", LIMIT: "限价单" },
+      orderStatuses: {
+        CREATED: "已创建",
+        SUBMITTED: "已提交",
+        ACCEPTED: "已接受",
+        PARTIALLY_FILLED: "部分成交",
+        FILLED: "已成交",
+        CANCELLED: "已取消",
+        REJECTED: "已拒绝",
+      },
+      riskReasons: {
+        APPROVED: "风控通过",
+        INVALID_QUANTITY: "数量无效",
+        UNSUPPORTED_ORDER_TYPE: "订单类型不可用",
+        ORDER_NOTIONAL_LIMIT: "订单金额超限",
+        POSITION_LIMIT: "持仓数量超限",
+        SYMBOL_EXPOSURE_LIMIT: "单只证券敞口超限",
+        GROSS_EXPOSURE_LIMIT: "总敞口超限",
+        LEVERAGE_LIMIT: "杠杆超限",
+        INSUFFICIENT_BUYING_POWER: "可用资金不足",
+        DRAWDOWN_LIMIT: "回撤超限",
+        INVALID_PORTFOLIO_STATE: "组合状态无法核实",
+      },
+      riskMessages: {
+        "proposal approved": "提案已通过风控。",
+        "quantity must be positive": "数量必须大于 0。",
+        "order type is not enabled or limit price is missing":
+          "订单类型未启用，或缺少限价。",
+        "a current portfolio snapshot is required": "缺少当前组合快照。",
+        "estimated transaction cost must be non-negative and finite":
+          "预计交易成本必须为非负有限数。",
+        "reserved cash delta must be finite": "预留现金变动必须为有限数。",
+        "reserved buying power must be non-negative and finite":
+          "预留购买力必须为非负有限数。",
+        "portfolio positions must have unique symbols":
+          "组合持仓中有重复证券。",
+        "every non-flat position requires a positive observed mark":
+          "每个非零持仓都需要正数的已观测价格。",
+        "portfolio snapshot is inconsistent with observed marks":
+          "组合快照与已观测价格不一致。",
+        "every non-flat projected position requires a positive observed mark":
+          "每个预计非零持仓都需要正数的已观测价格。",
+        "order notional exceeds configured limit": "订单金额超过设定上限。",
+        "projected absolute position exceeds configured limit":
+          "预计持仓数量超过设定上限。",
+        "projected symbol exposure exceeds configured limit":
+          "预计单只证券敞口超过设定上限。",
+        "projected gross exposure exceeds configured limit":
+          "预计总敞口超过设定上限。",
+        "risk-increasing proposals require positive projected equity":
+          "增加风险的提案要求预计权益大于 0。",
+        "projected gross leverage exceeds configured limit":
+          "预计总杠杆超过设定上限。",
+        "estimated purchase cost exceeds available cash":
+          "预计买入成本超过可用现金。",
+        "current drawdown breaches configured limit": "当前回撤触及设定上限。",
+        reservedQuantityFinite: "{{symbol}} 的预留数量必须为有限数。",
+        positiveMarkRequired: "{{symbol}} 缺少正数的已观测价格。",
+      },
     },
   },
   research: {
