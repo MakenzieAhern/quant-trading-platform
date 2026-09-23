@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T17:07:07Z",
-  "milestone": "M2_MARKET_DETAIL_HISTORY_VERIFIED",
+  "updated_at_utc": "2026-09-23T17:20:40Z",
+  "milestone": "M2_TEMPORARY_RESEARCH_VIEW_HISTORY_VERIFIED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,7 +16,7 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-market-detail-history",
+    "branch": "codex/product-v1.2-view-history",
     "identity": "MakenzieAhern"
   },
   "ownership": {
@@ -115,7 +115,10 @@
     "Chrome market page-2 SSE filter: detail Back closed in place, Forward reopened, page21-40 and scrollY295 retained; direct/reloaded exact URL, watchlist Back/Esc/focus and modal Tab containment PASS; invalid source visible alert",
     "Market detail history regression: frontend202 tests, ESLint, TypeScript and build PASS; no backend/data/research files changed",
     "PR30 head7da7f70 CI35893155448 backend/frontend/compose PASS; draft and unmerged",
-    "Chrome390x844 market/watchlist/detail zh+en dark: innerWidth390, documentWidth375, modalWidth351, no page overflow; viewport reset and Chinese preference restored"
+    "Chrome390x844 market/watchlist/detail zh+en dark: innerWidth390, documentWidth375, modalWidth351, no page overflow; viewport reset and Chinese preference restored",
+    "PR30 docs head1a35912 CI35893526135 backend/frontend/compose PASS",
+    "Chrome390x844 Task Center and research list documentWidth375; visible table-scroll hint; unsaved M1 filter initially lost on detail/Back, then retained after history-entry fix with five server matches; original filter and viewport reset",
+    "Temporary research view fix: focused28/full frontend203 tests, ESLint, TypeScript, and standard Vite build PASS; root-owned ignored dist ownership repaired only for local build output"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -130,10 +133,11 @@
     "RESOLVED: full backend from /app container lacked repo-root fixture path; WSL checkout test path restored fixture identity. Isolated quant_test_v12_u5 was one migration behind; test-only 0015 upgrade closed three paper constraint failures",
     "RESOLVED: Vite main bundle exceeded500 kB; route-level lazy loading reduced initial entry chunk to409.17 kB",
     "OPEN: M4 cold/warm browser p95 interaction latency and large-data rendering remain unmeasured",
-    "RESOLVED for markets: current Chrome viewport override reported390x844 and no page overflow; mobile Task Center and saved-view acceptance remain unclaimed",
+    "RESOLVED for markets, Task Center and research list: current Chrome viewport override reported390x844 and no page overflow; wider mobile matrix remains unclaimed",
     "RESOLVED: isolated home screenshot heading clipping reproduced in live Chrome; route push scroll reset and preventScroll focus verified without overriding native Back restoration",
     "RESOLVED: market security detail Back no longer leaves /markets; exact dataset/security URL preserves filter/page/scroll and direct links fail visibly",
     "RESOLVED for known paper event values: raw direction/order/risk labels translated in Chrome; full U8 server-error/help/a11y matrix remains open",
+    "RESOLVED: unsaved research filter disappeared after detail/Back; the validated temporary view and page offset now live in the list history entry, separately from explicit saved views",
     "OPEN: unplanned mid-run backend restart fails closed as INTERRUPTED; it does not resume automatically, and broader U7 recovery acceptance remains incomplete",
     "PARTIAL: Chrome rendered official SSE 603400 notice confirming suspension from 2026-09-15 and continuation at announcement; PDF binary could not be archived/checksummed because WSL timed out and scripted Windows fetch returned an HTML JavaScript challenge; no bypass attempted",
     "OPEN: BaoStock retry receipts ed796871 retain parser v1 label despite live normalization fix preceding v2 bump; immutable provenance caveat documented, not silently rewritten"
@@ -142,7 +146,7 @@
     {
       "scope": "Dirty Back/Forward confirmation browser acceptance",
       "code": "NATIVE_CONFIRM_CONTROL_TIMEOUT",
-      "human_action": "Previously requested Cancel once; no repeated user request",
+      "human_action": "2026-09-23 sidebar exit prompt visibly triggered, but native dialog dismiss control and screenshot timed out; no repeated user request",
       "blocks_entire_project": false
     }
   ],
@@ -323,17 +327,17 @@
     },
     "30": {
       "branch": "codex/product-v1.2-market-detail-history",
-      "last_verified_head": "7da7f70",
+      "last_verified_head": "1a35912",
       "state": "DRAFT",
-      "ci_run": 35893155448,
+      "ci_run": 35893526135,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "market exact URL, Back/Forward, focus, page/filter/scroll and zh/en dark 390x844 PASS; full UX-DETAIL matrix incomplete"
     }
   },
-  "next_task": "Finish remaining UX-DETAIL mobile/filter-scroll matrix and U3 dirty Back/Forward; then U5 current authority, U7 forward receipt, U8/M4/M5. U4 browser download remains unverified",
-  "next_command": "Audit U3 dirty wizard Back/Forward browser confirmation using the existing history guard; pursue another independent acceptance gap if native confirmation remains unavailable",
+  "next_task": "Review and publish the temporary research-view history slice; continue U5 current authority and U7 lawful new-market forward implementation while U3 native-dialog and U4 download browser controls remain unverified; then U8/M4/M5",
+  "next_command": "Commit the validated view-history slice, push a stacked draft PR based on PR30, verify CI; then inspect the current-data authority and forward paper runtime without touching frozen research",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

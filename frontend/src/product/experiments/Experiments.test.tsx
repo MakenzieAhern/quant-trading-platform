@@ -574,6 +574,24 @@ describe("durable experiment detail", () => {
     await userEvent.click(screen.getByRole("button", { name: "Reset view" }));
     expect(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)).toBeNull();
   });
+
+  it("restores an unsaved list filter after opening a result and going Back", async () => {
+    window.history.replaceState({}, "", "/experiments");
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [job], total: 1, limit: 20, offset: 0,
+    });
+    const first = render(<ExperimentsPage />);
+    await screen.findByRole("link", { name: job.name });
+    await userEvent.type(screen.getByLabelText("Search saved studies"), "M1");
+    await waitFor(() => expect(window.history.state.experimentView.q).toBe("M1"));
+    expect(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)).toBeNull();
+    await userEvent.click(screen.getByRole("link", { name: job.name }));
+    first.unmount();
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe("/experiments"));
+    render(<ExperimentsPage />);
+    expect(screen.getByLabelText("Search saved studies")).toHaveValue("M1");
+  });
 });
 
 describe("experiment contract", () => {
