@@ -10,7 +10,7 @@ import {
   parseComparisonIds,
 } from "./comparison";
 import { useComparisonCopy } from "./comparisonCopy";
-import { useExperimentCopy } from "./copy";
+import { experimentBenchmarkName, useExperimentCopy } from "./copy";
 import { explainExperimentCode } from "./codes";
 import { experimentError } from "./errors";
 import type { Experiment, ExperimentResult } from "./types";
@@ -172,7 +172,7 @@ function Comparison({ ids }: { ids: string[] }) {
     {
       label: c.benchmark,
       value: (r: ExperimentResult) =>
-        `${formatPercent(r.metrics.benchmark_return, places)}\n${r.benchmark_id}`,
+        `${formatPercent(r.metrics.benchmark_return, places)}\n${experimentBenchmarkName(r.benchmark_id, c)}`,
     },
     {
       label: c.excess,

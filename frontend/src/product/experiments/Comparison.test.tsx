@@ -162,6 +162,7 @@ describe("experiment comparison", () => {
     vi.spyOn(experimentApi, "result").mockImplementation(async (id) => ({
       ...result,
       job_id: id,
+      benchmark_id: "SYNTHETIC_EQUAL_WEIGHT",
     }));
     render(<ExperimentComparePage />);
     expect(
@@ -183,6 +184,10 @@ describe("experiment comparison", () => {
         .getAllByRole("cell")
         .every((cell) => cell.textContent?.includes("N/A")),
     ).toBe(true);
+    expect(benchmark).toHaveTextContent(
+      "Synthetic equal-weight benchmark (demo)",
+    );
+    expect(benchmark).not.toHaveTextContent("SYNTHETIC_EQUAL_WEIGHT");
     expect(screen.getAllByText("Same", { exact: true })).toHaveLength(6);
     const costs = screen.getByRole("row", { name: /Cost configuration/ });
     expect(within(costs).getAllByRole("cell")[0]).toHaveTextContent("0.0003");
@@ -209,5 +214,8 @@ describe("experiment comparison", () => {
       screen.getByRole("heading", { name: "实验比较" }),
     ).toBeInTheDocument();
     expect(screen.getByText("风险配置")).toBeInTheDocument();
+    expect(screen.getByRole("row", { name: /^基准收益/ })).toHaveTextContent(
+      "合成等权基准（演示）",
+    );
   });
 });

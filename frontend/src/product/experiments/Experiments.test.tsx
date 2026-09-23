@@ -509,7 +509,10 @@ describe("durable experiment detail", () => {
       status: "SUCCEEDED",
       result_available: true,
     });
-    vi.spyOn(experimentApi, "result").mockResolvedValue(result);
+    vi.spyOn(experimentApi, "result").mockResolvedValue({
+      ...result,
+      benchmark_id: "SYNTHETIC_EQUAL_WEIGHT",
+    });
     const equity = vi.spyOn(experimentApi, "equity").mockResolvedValue({
       items: [
         {
@@ -542,6 +545,12 @@ describe("durable experiment detail", () => {
         "These prices are synthetic and intentionally demonstrate the workflow. Returns cannot be used as investment evidence.",
       ),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Synthetic equal-weight benchmark \(demo\)/),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/SYNTHETIC_EQUAL_WEIGHT/),
+    ).not.toBeInTheDocument();
     await waitFor(() => expect(equity).toHaveBeenCalledTimes(1));
     expect(trades).not.toHaveBeenCalled();
     await userEvent.click(screen.getByText("Exact chart data"));
@@ -550,6 +559,10 @@ describe("durable experiment detail", () => {
     ).toBeGreaterThan(0);
     await userEvent.click(screen.getByRole("button", { name: "Next" }));
     await waitFor(() => expect(equity.mock.calls.at(-1)?.[2]).toBe(100));
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByText(/合成等权基准（演示）/)).toBeInTheDocument();
   });
 
   it("retries a failed task through the backend and opens its linked attempt", async () => {

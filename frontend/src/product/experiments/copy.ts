@@ -97,8 +97,10 @@ const en = {
   saveView: "Save this view",
   clearView: "Reset view",
   viewSaved: "View saved on this device.",
-  viewSaveFailed: "This browser could not save the view. Keep this page open or allow local storage.",
-  noMatches: "No studies match these filters. Clear a filter or reset the view.",
+  viewSaveFailed:
+    "This browser could not save the view. Keep this page open or allow local storage.",
+  noMatches:
+    "No studies match these filters. Clear a filter or reset the view.",
   removeFilter: "Remove filter",
   newExperiment: "New guided backtest",
   formalArchive: "Published research archive",
@@ -137,6 +139,11 @@ const en = {
   drawdownMetric: "Maximum drawdown",
   cost: "Transaction costs (CNY)",
   benchmark: "Benchmark return",
+  benchmarkNames: {
+    CSI300: "CSI 300 Index",
+    SYNTHETIC: "Synthetic demo benchmark",
+    SYNTHETIC_EQUAL_WEIGHT: "Synthetic equal-weight benchmark (demo)",
+  },
   excess: "Return above benchmark",
   capitalEnd: "Final equity (CNY)",
   limits: "Before interpreting these results",
@@ -154,7 +161,8 @@ const en = {
   shownPage:
     "Chart shows this page of data only. Summary metrics always describe the complete run.",
   showBenchmark: "Show benchmark",
-  benchmarkUnavailable: "No complete benchmark series for these displayed dates.",
+  benchmarkUnavailable:
+    "No complete benchmark series for these displayed dates.",
   drawdownUnavailable: "No complete drawdown series for these displayed dates.",
   selectedDate: "Selected trading date",
   selectDate: "Inspect a trading date",
@@ -335,6 +343,11 @@ const zh: typeof en = {
   drawdownMetric: "最大回撤",
   cost: "交易成本（人民币）",
   benchmark: "基准收益",
+  benchmarkNames: {
+    CSI300: "沪深 300 指数",
+    SYNTHETIC: "合成演示基准",
+    SYNTHETIC_EQUAL_WEIGHT: "合成等权基准（演示）",
+  },
   excess: "相对基准收益",
   capitalEnd: "最终权益（人民币）",
   limits: "解读结果前请注意",
@@ -419,3 +432,8 @@ export function useExperimentCopy() {
   return i18n.language.startsWith("zh") ? zh : en;
 }
 export type ExperimentCopy = typeof en;
+
+export function experimentBenchmarkName(id: string, copy: ExperimentCopy) {
+  const names: Record<string, string> = copy.benchmarkNames;
+  return Object.hasOwn(names, id) ? names[id] : id;
+}

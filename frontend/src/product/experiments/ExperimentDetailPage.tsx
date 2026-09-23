@@ -6,7 +6,7 @@ import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
 import { navigate } from "../../utils/navigation";
 import { usePageDataContext } from "../dataContext";
 import { experimentApi } from "./api";
-import { useExperimentCopy } from "./copy";
+import { experimentBenchmarkName, useExperimentCopy } from "./copy";
 import { useComparisonCopy } from "./comparisonCopy";
 import { explainExperimentCode } from "./codes";
 import { experimentError } from "./errors";
@@ -305,7 +305,7 @@ function ExperimentResults({
         <p className="experimentHelp">
           {c.capitalEnd}: {formatDecimal(data.metrics.final_equity, places)} ·{" "}
           {c.excess}: {signedPercent(data.metrics.excess_return)} ·{" "}
-          {data.benchmark_id}
+          {experimentBenchmarkName(data.benchmark_id, c)}
         </p>
       </section>
       <section className="experimentNotice" aria-label={c.limits}>
