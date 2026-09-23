@@ -35,7 +35,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Synthetic demo + distinct audited historical replay with durable pause/resume; forward not implemented | Chrome historical account `4b64380f` started, paused on 2011-03-09, resumed and stopped 2011-03-23; 20 orders, 6 fills, equity99964.8134. Full isolated backend956/frontend188 tests PASS. Forward mode remains | IN_PROGRESS |
 | U7-RECOVER | Socket disconnect/reconnect + backend restart don't fake/duplicate fills | Persisted paused state, deterministic source replay to checked cursor, then append-only continuation | Chrome `4b64380f` stayed PAUSED with 19 events after actual backend restart and WebSocket reconnection; resumed account had 134 non-status events identical to uninterrupted `d7044a3c` (142 vs 138 total, four pause/resume status events). Unplanned mid-run recovery remains unverified | IN_PROGRESS |
 | U7-FORWARD | Lawful source + completed real session data arriving after user session start; receipt times/plan/simulation | Public-source candidate assessed, forward session not implemented | Historical probe is not forward evidence; real after-start arrival still required | NOT_RUN |
-| U8-I18N | One tree; translated important UI/error/help/a11y; switching retains config/date | Existing i18n | Legacy create remains English in Chinese | FAIL |
+| U8-I18N | One tree; translated important UI/error/help/a11y; switching retains config/date | Shared i18n for legacy create and paper ledger | Chrome real historical account shows translated signal, order, fill and risk labels; legacy create form is now Chinese, and switching to English retained exact entered capital `123456.789`. Focused tests and frontend190 PASS. Remaining pages, server-supplied errors/help/a11y matrix pending | IN_PROGRESS |
 | U8-SETTINGS | System/manual themes, language/motion/market colors/data preferences; explanatory help | Shared safe presentation storage and settings | Storage-denied/quota/locale tests PASS; Chrome theme+language persist reload; full preference matrix pending | IN_PROGRESS |
 | UX-DETAIL | Drawer keeps filters/scroll, Esc/Tab/back/trigger focus, URL | Pending | Keyboard browser | NOT_RUN |
 | UX-COMMAND | Safe Ctrl/Cmd+K + visible entry searches pages/strategy/studies/watchlist/help | Bounded server study/watchlist search, local pages/registered strategies/help | Backend search and frontend debounce/pagination tests PASS; live browser search and keyboard matrix pending | IN_PROGRESS |
@@ -75,6 +75,19 @@ Main database migration0015 followed a verified off-Git pre-migration backup
 A separate disposable PostgreSQL instance passed upgrade0014→0015,
 downgrade0015→0014, re-upgrade and `alembic check`. Do not downgrade the live
 database while it contains PAUSED/PAUSING rows. No frozen research files changed.
+
+## 2026-09-23 15:08 UTC focused Chinese/English closure
+
+The Chrome review of the completed historical paper account exposed raw
+`BUY / LIMIT`, `CANCELLED` and `proposal approved` values in Chinese. Paper
+signal/order/fill directions, order types/statuses and known risk reasons and
+diagnostics now use the current locale while persisted event payloads remain
+unchanged. Chrome reloaded the same 20-order/six-fill account and showed
+`买入 / 限价单`, `已成交`/`已取消`, `风控通过` and Chinese diagnostic text. The legacy
+`/backtests/new` form, previously wholly English, now renders Chinese labels,
+validation and help. Chrome language switching retained the exact typed
+capital `123456.789`. This is an agent walkthrough, not a real new-user test;
+untranslated server-supplied errors and the wider U8 matrix are still open.
 
 ## 2026-09-22 09:27 UTC cached-market browser closure
 

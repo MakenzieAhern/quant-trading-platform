@@ -1,11 +1,39 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
+import { i18n } from "../i18n";
 import { jsonResponse, RUN_ID } from "../test/fixtures";
 import { CreateBacktestPage } from "./CreateBacktestPage";
 
 describe("create backtest", () => {
+  it("translates the legacy form without resetting entered capital", async () => {
+    await act(async () => i18n.changeLanguage("en-US"));
+    try {
+      render(<CreateBacktestPage />);
+      fireEvent.change(screen.getByLabelText("Initial cash"), {
+        target: { value: "123456.789" },
+      });
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(screen.getByRole("heading", { name: "创建回测" })).toBeVisible();
+      expect(screen.getByLabelText("初始资金")).toHaveValue("123456.789");
+      fireEvent.change(screen.getByLabelText("短周期"), {
+        target: { value: "4" },
+      });
+      await userEvent.click(screen.getByRole("button", { name: "运行回测" }));
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "短周期小于长周期",
+      );
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
+  });
   it("submits configured risk without rounding the Decimal limit", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")

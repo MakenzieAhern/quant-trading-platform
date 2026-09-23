@@ -63,6 +63,52 @@ export const enUS = {
       started: "Started",
       completed: "Completed",
     },
+    createPage: {
+      eyebrow: "NEW RESEARCH RUN",
+      title: "Create backtest",
+      description:
+        "Configure a deterministic simulated run using the registered dataset and strategy.",
+      cancel: "Cancel",
+      dataset: "Dataset",
+      fixture: "AAPL fixture",
+      registryId: "Registry ID",
+      symbol: "Symbol",
+      capitalSizing: "Capital & sizing",
+      initialCash: "Initial cash",
+      quantity: "Default order quantity",
+      decimalHint:
+        "Exact Decimal strings are sent to the API; browser-visible values are never used for portfolio calculations.",
+      strategy: "Strategy",
+      strategyType: "Strategy type",
+      movingAverage: "Moving average crossover",
+      rsiMean: "RSI mean reversion",
+      shortPeriod: "Short period",
+      longPeriod: "Long period",
+      rsiPeriod: "RSI period",
+      oversold: "Oversold",
+      overbought: "Overbought",
+      riskControls: "Risk controls",
+      buyingPower: "Enforce buying power",
+      maxNotional: "Maximum order notional (optional)",
+      riskHint: "Risk is evaluated by the backend using completed-Bar prices.",
+      run: "Run backtest",
+      running: "Running backtest…",
+      idempotencyHint:
+        "Submission uses an Idempotency-Key to prevent duplicate runs.",
+      maxNotionalError:
+        "Maximum order notional must be a positive Decimal string.",
+      decimalError:
+        "Initial cash and order quantity must be positive decimal strings.",
+      periodError:
+        "Periods must be safe positive integers, with short period below long period.",
+      rsiError:
+        "RSI period must be a safe positive integer and thresholds must satisfy 0 < oversold < overbought < 100.",
+      conflictError: "Duplicate request conflict: {{message}}",
+      validationError: "Validation failed: {{message}}",
+      executionError:
+        "Backtest execution failed safely. Check run history for a failed run.",
+      submitError: "Unable to submit the backtest.",
+    },
   },
   paper: {
     eyebrow: "SIMULATED EXECUTION LEDGER",

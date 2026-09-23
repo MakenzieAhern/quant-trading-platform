@@ -1,4 +1,5 @@
 import { useRef, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 import { backtestsApi } from "../api/backtests";
 import { ApiError } from "../api/client";
@@ -14,6 +15,7 @@ import { navigate } from "../utils/navigation";
 type StrategyType = CreateBacktestRequest["strategy"]["type"];
 
 export function CreateBacktestPage() {
+  const { t } = useTranslation("backtests");
   const [strategyType, setStrategyType] = useState<StrategyType>(
     "moving_average_crossover",
   );
@@ -41,13 +43,11 @@ export function CreateBacktestPage() {
     if (submissionLocked.current) return;
     setError(null);
     if (maxNotional && !isPositiveDecimal(maxNotional)) {
-      setError("Maximum order notional must be a positive Decimal string.");
+      setError(t("createPage.maxNotionalError"));
       return;
     }
     if (!isPositiveDecimal(initialCash) || !isPositiveDecimal(quantity)) {
-      setError(
-        "Initial cash and order quantity must be positive decimal strings.",
-      );
+      setError(t("createPage.decimalError"));
       return;
     }
     let strategy: CreateBacktestRequest["strategy"];
@@ -55,9 +55,7 @@ export function CreateBacktestPage() {
       const short = parsePositiveInteger(shortPeriod);
       const long = parsePositiveInteger(longPeriod);
       if (short === null || long === null || short >= long) {
-        setError(
-          "Periods must be safe positive integers, with short period below long period.",
-        );
+        setError(t("createPage.periodError"));
         return;
       }
       strategy = {
@@ -75,9 +73,7 @@ export function CreateBacktestPage() {
         thresholdOrder !== -1 ||
         upperBound !== -1
       ) {
-        setError(
-          "RSI period must be a safe positive integer and thresholds must satisfy 0 < oversold < overbought < 100.",
-        );
+        setError(t("createPage.rsiError"));
         return;
       }
       strategy = {
@@ -109,18 +105,16 @@ export function CreateBacktestPage() {
       navigate(`/backtests/${created.run_id}`);
     } catch (reason) {
       if (reason instanceof ApiError && reason.status === 409) {
-        setError(`Duplicate request conflict: ${reason.message}`);
+        setError(t("createPage.conflictError", { message: reason.message }));
       } else if (reason instanceof ApiError && reason.status === 422) {
-        setError(`Validation failed: ${reason.message}`);
+        setError(t("createPage.validationError", { message: reason.message }));
       } else if (reason instanceof ApiError && reason.status >= 500) {
-        setError(
-          "Backtest execution failed safely. Check run history for a failed run.",
-        );
+        setError(t("createPage.executionError"));
       } else {
         setError(
           reason instanceof Error
             ? reason.message
-            : "Unable to submit the backtest.",
+            : t("createPage.submitError"),
         );
       }
     } finally {
@@ -133,15 +127,12 @@ export function CreateBacktestPage() {
     <>
       <header className="pageHeader compactHeader">
         <div>
-          <p className="eyebrow">NEW RESEARCH RUN</p>
-          <h1>Create backtest</h1>
-          <p>
-            Configure a deterministic simulated run using the registered dataset
-            and strategy.
-          </p>
+          <p className="eyebrow">{t("createPage.eyebrow")}</p>
+          <h1>{t("createPage.title")}</h1>
+          <p>{t("createPage.description")}</p>
         </div>
         <Link className="button" href="/backtests">
-          Cancel
+          {t("createPage.cancel")}
         </Link>
       </header>
       <form
@@ -151,26 +142,26 @@ export function CreateBacktestPage() {
         aria-describedby={error ? "form-error" : undefined}
       >
         <fieldset disabled={pending}>
-          <legend>Dataset</legend>
+          <legend>{t("createPage.dataset")}</legend>
           <div className="formGrid">
             <label>
-              Dataset
+              {t("createPage.dataset")}
               <select name="dataset" value="AAPL_fixture" disabled>
-                <option value="AAPL_fixture">AAPL fixture</option>
+                <option value="AAPL_fixture">{t("createPage.fixture")}</option>
               </select>
-              <small>Registry ID: AAPL_fixture</small>
+              <small>{t("createPage.registryId")}: AAPL_fixture</small>
             </label>
             <label>
-              Symbol
+              {t("createPage.symbol")}
               <input name="symbol" value="AAPL" readOnly />
             </label>
           </div>
         </fieldset>
         <fieldset disabled={pending}>
-          <legend>Capital &amp; sizing</legend>
+          <legend>{t("createPage.capitalSizing")}</legend>
           <div className="formGrid">
             <label>
-              Initial cash
+              {t("createPage.initialCash")}
               <input
                 name="initial_cash"
                 inputMode="decimal"
@@ -180,7 +171,7 @@ export function CreateBacktestPage() {
               />
             </label>
             <label>
-              Default order quantity
+              {t("createPage.quantity")}
               <input
                 name="default_order_quantity"
                 inputMode="decimal"
@@ -190,15 +181,12 @@ export function CreateBacktestPage() {
               />
             </label>
           </div>
-          <p className="fieldHint">
-            Exact Decimal strings are sent to the API; browser-visible values
-            are never used for portfolio calculations.
-          </p>
+          <p className="fieldHint">{t("createPage.decimalHint")}</p>
         </fieldset>
         <fieldset disabled={pending}>
-          <legend>Strategy</legend>
+          <legend>{t("createPage.strategy")}</legend>
           <label>
-            Strategy type
+            {t("createPage.strategyType")}
             <select
               name="strategy_type"
               value={strategyType}
@@ -207,15 +195,17 @@ export function CreateBacktestPage() {
               }
             >
               <option value="moving_average_crossover">
-                Moving average crossover
+                {t("createPage.movingAverage")}
               </option>
-              <option value="rsi_mean_reversion">RSI mean reversion</option>
+              <option value="rsi_mean_reversion">
+                {t("createPage.rsiMean")}
+              </option>
             </select>
           </label>
           {strategyType === "moving_average_crossover" ? (
             <div className="formGrid">
               <label>
-                Short period
+                {t("createPage.shortPeriod")}
                 <input
                   name="short_period"
                   type="number"
@@ -227,7 +217,7 @@ export function CreateBacktestPage() {
                 />
               </label>
               <label>
-                Long period
+                {t("createPage.longPeriod")}
                 <input
                   name="long_period"
                   type="number"
@@ -242,7 +232,7 @@ export function CreateBacktestPage() {
           ) : (
             <div className="formGrid threeColumns">
               <label>
-                RSI period
+                {t("createPage.rsiPeriod")}
                 <input
                   name="rsi_period"
                   type="number"
@@ -254,7 +244,7 @@ export function CreateBacktestPage() {
                 />
               </label>
               <label>
-                Oversold
+                {t("createPage.oversold")}
                 <input
                   name="oversold"
                   inputMode="decimal"
@@ -264,7 +254,7 @@ export function CreateBacktestPage() {
                 />
               </label>
               <label>
-                Overbought
+                {t("createPage.overbought")}
                 <input
                   name="overbought"
                   inputMode="decimal"
@@ -277,26 +267,24 @@ export function CreateBacktestPage() {
           )}
         </fieldset>
         <fieldset disabled={pending}>
-          <legend>Risk controls</legend>
+          <legend>{t("createPage.riskControls")}</legend>
           <label>
             <input
               type="checkbox"
               checked={buyingPower}
               onChange={(event) => setBuyingPower(event.target.checked)}
             />
-            Enforce buying power
+            {t("createPage.buyingPower")}
           </label>
           <label>
-            Maximum order notional (optional)
+            {t("createPage.maxNotional")}
             <input
               inputMode="decimal"
               value={maxNotional}
               onChange={(event) => setMaxNotional(event.target.value)}
             />
           </label>
-          <p className="fieldHint">
-            Risk is evaluated by the backend using completed-Bar prices.
-          </p>
+          <p className="fieldHint">{t("createPage.riskHint")}</p>
         </fieldset>
         {error && (
           <div id="form-error" className="formError" role="alert">
@@ -309,11 +297,9 @@ export function CreateBacktestPage() {
             type="submit"
             disabled={pending}
           >
-            {pending ? "Running backtest…" : "Run backtest"}
+            {pending ? t("createPage.running") : t("createPage.run")}
           </button>
-          <span>
-            Submission uses an Idempotency-Key to prevent duplicate runs.
-          </span>
+          <span>{t("createPage.idempotencyHint")}</span>
         </div>
       </form>
     </>
