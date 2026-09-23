@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T17:27:05Z",
-  "milestone": "M2_TEMPORARY_RESEARCH_VIEW_HISTORY_VERIFIED",
+  "updated_at_utc": "2026-09-23T17:42:27Z",
+  "milestone": "M4_NAVIGATION_GUARD_REGRESSION_CHECKED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -119,7 +119,8 @@
     "PR30 docs head1a35912 CI35893526135 backend/frontend/compose PASS",
     "Chrome390x844 Task Center and research list documentWidth375; visible table-scroll hint; unsaved M1 filter initially lost on detail/Back, then retained after history-entry fix with five server matches; original filter and viewport reset",
     "Temporary research view fix: focused28/full frontend203 tests, ESLint, TypeScript, and standard Vite build PASS; root-owned ignored dist ownership repaired only for local build output",
-    "PR31 code head1dfde7f CI35895170708 backend/frontend/compose PASS; follow-up offset regression test24/24 focused PASS; head d30160e CI35895465982 backend/frontend/compose PASS"
+    "PR31 code head1dfde7f CI35895170708 backend/frontend/compose PASS; follow-up offset regression test24/24 focused PASS; head d30160e CI35895465982 backend/frontend/compose PASS",
+    "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -141,13 +142,15 @@
     "RESOLVED: unsaved research filter disappeared after detail/Back; the validated temporary view and page offset now live in the list history entry, separately from explicit saved views",
     "OPEN: unplanned mid-run backend restart fails closed as INTERRUPTED; it does not resume automatically, and broader U7 recovery acceptance remains incomplete",
     "PARTIAL: Chrome rendered official SSE 603400 notice confirming suspension from 2026-09-15 and continuation at announcement; PDF binary could not be archived/checksummed because WSL timed out and scripted Windows fetch returned an HTML JavaScript challenge; no bypass attempted",
-    "OPEN: BaoStock retry receipts ed796871 retain parser v1 label despite live normalization fix preceding v2 bump; immutable provenance caveat documented, not silently rewritten"
+    "OPEN: BaoStock retry receipts ed796871 retain parser v1 label despite live normalization fix preceding v2 bump; immutable provenance caveat documented, not silently rewritten",
+    "OPEN: in-app browser-tool Back from dirty wizard left without observable guard popstate or dialog; sidebar confirmation worked, but real user Back/Forward cancel/accept acceptance is not proven",
+    "OPEN: in-app browser JSON report auto-click and fallback link prepared a blob but yielded no browser download event or Windows Downloads artifact; export completion remains unverified"
   ],
   "external_blockers": [
     {
       "scope": "Dirty Back/Forward confirmation browser acceptance",
       "code": "NATIVE_CONFIRM_CONTROL_TIMEOUT",
-      "human_action": "2026-09-23 sidebar exit prompt visibly triggered, but native dialog dismiss control and screenshot timed out; no repeated user request",
+      "human_action": "Chrome native dialog dismiss and screenshot timed out; in-app browser sidebar confirmation and dismissal worked. Full Back/Forward acceptance is still unverified; no user action requested yet",
       "blocks_entire_project": false
     }
   ],

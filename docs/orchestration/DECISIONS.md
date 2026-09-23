@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 guided-draft navigation listener — 2026-09-23
+
+Editing the guided form recreated its leave callback and re-registered the
+shared navigation listener. Keep one listener for the mounted wizard and read
+the latest callback after each render; a regression checks that the listener
+does not churn and the current confirmation is used. This closes the listener
+gap, not the browser Back/Forward acceptance gate: the browser-tool Back did
+not emit an observable guarded `popstate` in the in-app browser, while a
+sidebar link showed a native confirmation that could be dismissed. Do not
+replace the financial workflow or claim Back acceptance from this unit test.
+The separate report-download browser artifact remains unverified.
+
 ## v1.2 temporary research-list history — 2026-09-23
 
 Chrome 390×844 exposed a list-navigation defect: an unsaved `M1` filter vanished
