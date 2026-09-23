@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T17:54:46Z",
-  "milestone": "M4_CURRENT_RULE_SOURCE_GAP_MAPPED",
+  "updated_at_utc": "2026-09-23T18:02:44Z",
+  "milestone": "M3_CURRENT_RULE_CANDIDATE_FAIL_CLOSED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,7 +16,7 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-view-history",
+    "branch": "codex/product-v1.2-current-rules",
     "identity": "MakenzieAhern"
   },
   "ownership": {
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Separate 2026 four-board candidate rules effective July6, injected cost and conservative_no_fill; focused rule tests17 PASS and shared JSON order serialization stabilized across four independent processes",
+    "PR32 head 987a6c5 CI35898960257 backend/frontend/compose PASS before current candidate-rule implementation",
     "PR32 source-evidence head 4c33867 CI35898659389 backend/frontend/compose PASS; draft and unmerged",
     "Official SSE/SZSE 2026 closure notices agree on Sep25-27 Mid-Autumn closure and Sep28 reopening; Sep24 remains only scheduled, not a received completed session",
     "PR31 head 8f396e6 CI35897535773 backend/frontend/compose PASS; draft remains unmerged",
@@ -162,7 +164,7 @@
   "not_run": [
     "Native dirty Back/Forward full browser confirmation path",
     "Browser exported artifact completion; prepared blob/link observed but no download event or default Downloads file; API export content verified separately",
-    "U5 current master/calendar/ST/suspension/actions/cost reconciliation, separately versioned 2026 rule implementation, failure/retry/cancel browser matrix and source authority promotion; U7 after-start forward receipt and unplanned mid-run recovery",
+    "U5 current master/calendar/ST/suspension/actions/cost reconciliation, executable 2026 rule promotion, failure/retry/cancel browser matrix and source authority promotion; U7 after-start forward receipt and unplanned mid-run recovery",
     "Full remaining M2-M5 matrix, real-user testing not claimed"
   ],
   "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
@@ -365,8 +367,8 @@
       "browser_gate": "not applicable to source-evidence-only commit; current forward authority remains PARTIAL"
     }
   },
-  "next_task": "Audit current official master/calendar/ST/suspension/actions/cost evidence, implement a separate effective-dated 2026 product rule version, and then pursue U7 after-start forward receipt; keep U3 native-dialog and U4 browser download unverified until actual proof",
-  "next_command": "Inspect the current master/calendar/ST/action inputs and 2026 official rule clauses; add a separately versioned product rule mapping and boundary tests without changing historical_cn_a_rules or promoting RAW_CANDIDATE receipts",
+  "next_task": "Audit current official master/calendar/ST/suspension/actions/cost evidence, promote a distinct executable 2026 rule version only when those gates pass, then pursue U7 after-start forward receipt; U3 native-dialog and U4 browser download remain unverified",
+  "next_command": "Run PR32 full CI for the rule-candidate commit, then inspect current official master and effective-dated ST/suspension inputs for the bounded four-board sample; keep RAW_CANDIDATE execution false",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

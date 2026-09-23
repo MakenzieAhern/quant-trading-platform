@@ -2,7 +2,7 @@ from datetime import date
 from enum import StrEnum
 from itertools import pairwise
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, model_validator
 
 from app.domain.common import NonNegativeDecimal, PositiveDecimal
 from app.domain.markets.identifiers import Board, Exchange, Market, SecurityId
@@ -80,6 +80,10 @@ class TradingRuleSet(BaseModel):
     provenance_note: str = Field(min_length=1)
     source_version: str = Field(min_length=1)
 
+    @field_serializer("permitted_order_types", when_used="json")
+    def serialize_order_types(self, value: frozenset[OrderType]) -> list[str]:
+        return sorted(order_type.value for order_type in value)
+
     @model_validator(mode="after")
     def validate_range(self) -> "TradingRuleSet":
         if self.valid_to is not None and self.valid_to < self.valid_from:
@@ -133,6 +137,10 @@ class ResolvedTradingRules(BaseModel):
     permitted_order_types: frozenset[OrderType]
     cost_schedule: TransactionCostSchedule
     rule_source_version: str
+
+    @field_serializer("permitted_order_types", when_used="json")
+    def serialize_order_types(self, value: frozenset[OrderType]) -> list[str]:
+        return sorted(order_type.value for order_type in value)
 
 
 class TradingRuleResolver:

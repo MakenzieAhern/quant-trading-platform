@@ -8,12 +8,21 @@ price limits changed from 5% to 10%. The historical `cn-a-2010-2025.6`
 version has open-ended 2023 periods and still resolves Main Board ST at 5%.
 Do not mutate that frozen historical version, reuse it for 2026 product
 execution, or promote BaoStock candidate receipts. Record the primary sources
-and hashes in `docs/product/SOURCE_READINESS.md`; build a distinct effective-
-dated product version only after mapping the full current rule set and its
+and hashes in `docs/product/SOURCE_READINESS.md`; build a distinct executable
+effective-dated product version only after mapping the full current rule set and its
 interaction with current master/calendar/ST/suspension/actions/cost evidence.
 The SSE deferred attachment affects specified block-trade provisions, not the
 ordinary 10% Main Board risk-warning limit. This is a partial authority gain,
 not U7 forward acceptance or permission to run a strategy.
+
+The separate `candidate_2026_cn_a_rules` maps the four board terms with an
+explicit cost input, 2026-07-06 start, and `conservative_no_fill=true` on
+every rule. It is not wired to execution. A new focused test exposed that
+serializing the shared `frozenset` of permitted order types gave two different
+historical rule hashes across processes. Sort that field in JSON at the shared
+model boundary; preserve the underlying historical rule values and frozen
+files. Cross-process checks now agree. Promotion still needs audited current
+master/calendar/ST/suspension/actions/cost and order constraints.
 
 ## v1.2 guided-draft navigation listener — 2026-09-23
 

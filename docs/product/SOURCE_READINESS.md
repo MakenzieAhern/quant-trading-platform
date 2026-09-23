@@ -176,10 +176,18 @@ backend resolved a hypothetical 2026-09-22 SSE Main ST status to
 `cn-a-2010-2025.6:SSE_MAIN-2023-04-10`, limit `0.05`; this is proof of the
 gap, not an actual security classification or simulated order. Do not change
 its serialized content or silently resolve 2026 sessions with it. A separately
-versioned, effective-dated
-2026 rule mapping and tests are still required, together with current
-master/calendar/ST/suspension/actions/cost authority before any candidate bar
-can become execution-eligible. `RULE_AUTHORITY_2026 = PARTIAL` and all existing
+versioned, effective-dated candidate mapping now covers the four boards from
+2026-07-06 and requires an injected cost schedule. It deliberately sets
+`conservative_no_fill=true` for every rule; it cannot authorize even a normal
+paper fill. Historical rule values and frozen files were not edited. Their
+`frozenset` order-type JSON serialization was nondeterministic across processes; the shared
+serializer now sorts order types, and four independent process checks produced
+the same historical model checksum
+`28a0123ce3d9ebf522f59f0bf69de8e24d1fb0a7cb9da0a795a8404c535a250b`.
+The exact official 2026 rule source and transition have focused tests, but
+current master/calendar/ST/suspension/actions/cost authority and executable
+status/order constraints still require audit and implementation before any
+candidate bar can be promoted. `RULE_AUTHORITY_2026 = PARTIAL`; all existing
 candidate receipts remain `execution_eligible=false`.
 
 ### Current exchange calendar schedule (2026-09-23)
