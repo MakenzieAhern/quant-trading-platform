@@ -9,6 +9,7 @@ from sqlalchemy import text, update
 from sqlalchemy.exc import DBAPIError
 
 from app.api.routes.paper import paper_manager, paper_session_websocket, settings
+from app.application.experiments.data import HISTORICAL_ID
 from app.db.models.paper import PaperTradingSessionModel
 from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.db.session import SessionFactory
@@ -241,6 +242,256 @@ async def test_frozen_a_share_simulation_persists_signal_fill_and_portfolio(
     assert stopped.json()["status"] == "STOPPED"
 
 
+async def test_paused_a_share_replays_checkpoint_after_restart_without_duplicate_ledger(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    baseline = (
+        await client.post("/api/paper-trading/sessions", json=a_share_request_body())
+    ).json()
+    baseline_id = baseline["session_id"]
+    await client.post(f"/api/paper-trading/sessions/{baseline_id}/start")
+    for _ in range(500):
+        if (await client.get(f"/api/paper-trading/sessions/{baseline_id}")).json()[
+            "status"
+        ] == "STOPPED":
+            break
+        await asyncio.sleep(0.01)
+    assert (await client.get(f"/api/paper-trading/sessions/{baseline_id}")).json()[
+        "status"
+    ] == "STOPPED"
+    expected = (await client.get(f"/api/paper-trading/sessions/{baseline_id}/events")).json()
+    expected_market = [
+        (item["type"], item["payload"]) for item in expected if item["type"] != "session.status"
+    ]
+
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0.1)
+    created = (await client.post("/api/paper-trading/sessions", json=a_share_request_body())).json()
+    session_id = created["session_id"]
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(100):
+        events = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
+        if any(item["type"] == "market.session" for item in events):
+            break
+        await asyncio.sleep(0.01)
+    assert any(item["type"] == "market.session" for item in events)
+    assert (await client.post(f"/api/paper-trading/sessions/{session_id}/pause")).json()[
+        "status"
+    ] in {"PAUSING", "PAUSED"}
+    for _ in range(100):
+        paused = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if paused["status"] == "PAUSED":
+            break
+        await asyncio.sleep(0.01)
+    assert paused["status"] == "PAUSED"
+    assert await paper_manager.recover_interrupted() == 0
+    await paper_manager.shutdown()
+    assert (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()[
+        "status"
+    ] == "PAUSED"
+
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    assert (await client.post(f"/api/paper-trading/sessions/{session_id}/start")).json()[
+        "status"
+    ] == "STARTING"
+    for _ in range(500):
+        resumed = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if resumed["status"] in {"STOPPED", "FAILED"}:
+            break
+        await asyncio.sleep(0.01)
+    assert resumed["status"] == "STOPPED", resumed
+    assert resumed["started_at"] == paused["started_at"]
+    actual = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
+    actual_market = [
+        (item["type"], item["payload"]) for item in actual if item["type"] != "session.status"
+    ]
+    assert actual_market == expected_market
+    assert [item["payload"]["status"] for item in actual if item["type"] == "session.status"] == [
+        "CREATED",
+        "STARTING",
+        "RUNNING",
+        "PAUSING",
+        "PAUSED",
+        "STARTING",
+        "RUNNING",
+        "STOPPED",
+    ]
+
+
+async def test_paused_bar_replay_matches_uninterrupted_ledger(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    baseline_id = (await client.post("/api/paper-trading/sessions", json=request_body())).json()[
+        "session_id"
+    ]
+    await client.post(f"/api/paper-trading/sessions/{baseline_id}/start")
+    for _ in range(100):
+        baseline = (await client.get(f"/api/paper-trading/sessions/{baseline_id}")).json()
+        if baseline["status"] == "STOPPED":
+            break
+        await asyncio.sleep(0.01)
+    assert baseline["status"] == "STOPPED"
+
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 10)
+    session_id = (await client.post("/api/paper-trading/sessions", json=request_body())).json()[
+        "session_id"
+    ]
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(100):
+        events = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
+        if any(item["type"] == "market.bar" for item in events):
+            break
+        await asyncio.sleep(0.01)
+    assert any(item["type"] == "market.bar" for item in events)
+    await client.post(f"/api/paper-trading/sessions/{session_id}/pause")
+    for _ in range(100):
+        detail = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if detail["status"] == "PAUSED":
+            break
+        await asyncio.sleep(0.01)
+    assert detail["status"] == "PAUSED"
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(100):
+        detail = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if detail["status"] in {"STOPPED", "FAILED"}:
+            break
+        await asyncio.sleep(0.01)
+    assert detail["status"] == "STOPPED", detail
+    expected = (await client.get(f"/api/paper-trading/sessions/{baseline_id}/events")).json()
+    actual = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
+    assert [
+        (item["type"], item["payload"]) for item in actual if item["type"] != "session.status"
+    ] == [(item["type"], item["payload"]) for item in expected if item["type"] != "session.status"]
+
+
+async def test_real_archive_pause_resume_preserves_pending_orders_and_fills(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    if not (settings.research_data_path / HISTORICAL_ID).is_dir():
+        pytest.skip("optional read-only historical archive is not mounted")
+    body = historical_request_body()
+    assert isinstance(body["strategy"], dict)
+    body["strategy"]["parameters"]["end_date"] = "2011-03-23"
+
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    baseline = await client.post("/api/paper-trading/sessions", json=body)
+    assert baseline.status_code == 201, baseline.text
+    baseline_id = baseline.json()["session_id"]
+    await client.post(f"/api/paper-trading/sessions/{baseline_id}/start")
+    for _ in range(1200):
+        baseline_status = (await client.get(f"/api/paper-trading/sessions/{baseline_id}")).json()
+        if baseline_status["status"] in {"STOPPED", "FAILED"}:
+            break
+        await asyncio.sleep(0.05)
+    assert baseline_status["status"] == "STOPPED", baseline_status
+    baseline_events = (await client.get(f"/api/paper-trading/sessions/{baseline_id}/events")).json()
+    assert sum(item["type"] == "fill.created" for item in baseline_events) == 6
+
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0.3)
+    created = await client.post("/api/paper-trading/sessions", json=body)
+    assert created.status_code == 201, created.text
+    session_id = created.json()["session_id"]
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(1200):
+        current = (await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")).json()
+        if current["latest_session"] and current["latest_session"]["trading_date"] == "2011-03-22":
+            break
+        if current["session"]["status"] in {"FAILED", "STOPPED"}:
+            break
+        await asyncio.sleep(0.05)
+    assert current["latest_session"]["trading_date"] == "2011-03-22", current
+    await client.post(f"/api/paper-trading/sessions/{session_id}/pause")
+    for _ in range(100):
+        paused = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if paused["status"] == "PAUSED":
+            break
+        await asyncio.sleep(0.01)
+    assert paused["status"] == "PAUSED"
+    assert (
+        len(
+            (await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")).json()[
+                "orders"
+            ]
+        )
+        == 20
+    )
+    await paper_manager.shutdown()
+    assert await paper_manager.recover_interrupted() == 0
+
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(1200):
+        resumed = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if resumed["status"] in {"STOPPED", "FAILED"}:
+            break
+        await asyncio.sleep(0.05)
+    assert resumed["status"] == "STOPPED", resumed
+    resumed_events = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
+    assert [
+        (item["type"], item["payload"])
+        for item in resumed_events
+        if item["type"] != "session.status"
+    ] == [
+        (item["type"], item["payload"])
+        for item in baseline_events
+        if item["type"] != "session.status"
+    ]
+
+
+async def test_stopping_paused_account_cancels_persisted_pending_order(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 10)
+    session_id = (await client.post("/api/paper-trading/sessions", json=request_body())).json()[
+        "session_id"
+    ]
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(100):
+        detail = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if detail["status"] == "RUNNING":
+            break
+        await asyncio.sleep(0.01)
+    assert detail["status"] == "RUNNING"
+    await client.post(f"/api/paper-trading/sessions/{session_id}/pause")
+    for _ in range(100):
+        detail = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if detail["status"] == "PAUSED":
+            break
+        await asyncio.sleep(0.01)
+    assert detail["status"] == "PAUSED"
+    order_id = uuid4()
+    async with SessionFactory() as session:
+        await SQLAlchemyPaperRepository(session).append_events(
+            UUID(session_id),
+            (
+                (
+                    "order.updated",
+                    datetime.now(UTC),
+                    {
+                        "order_id": str(order_id),
+                        "strategy_id": "pause-audit",
+                        "symbol": "AAPL",
+                        "side": "BUY",
+                        "order_type": "MARKET",
+                        "quantity": "10",
+                        "price": None,
+                        "status": "ACCEPTED",
+                        "created_at": "2024-01-08T00:00:00+00:00",
+                    },
+                ),
+            ),
+        )
+    assert (await client.post(f"/api/paper-trading/sessions/{session_id}/stop")).json()[
+        "status"
+    ] == "STOPPED"
+    snapshot = (await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")).json()
+    assert snapshot["orders"][0]["order_id"] == str(order_id)
+    assert snapshot["orders"][0]["status"] == "CANCELLED"
+    assert snapshot["fills"] == []
+
+
 async def test_repeated_sessions_release_runtime_resources(
     client: AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -348,7 +599,7 @@ async def test_shutdown_marks_an_active_runtime_interrupted(
 async def test_runtime_failure_is_persisted_without_exposing_internal_details(
     client: AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    def fail_to_build_runtime(_session: object) -> object:
+    def fail_to_build_runtime(_session: object, _cursor_date: object) -> object:
         raise RuntimeError("sensitive provider diagnostics")
 
     monkeypatch.setattr(paper_manager, "_build_runtime", fail_to_build_runtime)
@@ -395,7 +646,12 @@ async def test_concurrent_start_stop_commands_create_one_runtime_and_terminal_se
     assert detail["status"] == "STOPPED"
     events = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
     statuses = [item["payload"]["status"] for item in events if item["type"] == "session.status"]
-    assert statuses == ["CREATED", "STARTING", "RUNNING", "STOPPING", "STOPPED"]
+    assert statuses in (
+        ["CREATED", "STARTING", "STOPPING", "STOPPED"],
+        ["CREATED", "STARTING", "RUNNING", "STOPPING", "STOPPED"],
+    )
+    if "RUNNING" not in statuses:
+        assert all(item["type"] not in {"market.bar", "market.session"} for item in events)
 
 
 async def test_start_stop_race_terminates_without_duplicate_runtime(client: AsyncClient) -> None:

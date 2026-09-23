@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T14:23:05Z",
-  "milestone": "M3_U7_HISTORICAL_REPLAY_VERIFIED",
+  "updated_at_utc": "2026-09-23T14:57:12Z",
+  "milestone": "M3_U7_PAUSE_RESTART_RESUME_VERIFIED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,19 +16,19 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-paper",
+    "branch": "codex/product-v1.2-paper-resume",
     "identity": "MakenzieAhern"
   },
   "ownership": {
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
-    "queue_writer": "paper manager idle after stopped local historical replay; no formal studies",
+    "queue_writer": "paper manager idle after stopped local historical pause/resume replay; no formal studies",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "read-only review closed U2/U5 P1; agent inactive after usage limit"
     },
-    "verified_processes": "2026-09-23: Docker Desktop 4.92.0, WSL integration and 4 project services healthy; no installer/UAC process; no formal study",
+    "verified_processes": "2026-09-23: Docker Desktop 4.92.0, WSL integration and 4 project services healthy; backend restarted while paper account paused; no installer/UAC process or formal study",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
@@ -84,14 +84,19 @@
     "Four-board 2026-09-22 bounded raw-candidate job164c947d succeeded after recovery: 3 new + 1 cached observation, zero unresolved dates; execution authority false",
     "New historical A-share paper account d7044a3c used pinned audited dataset SHA and persisted 1x leverage/-20% drawdown; stopped 2011-03-23 after 138 journal events, 20 orders and 6 simulated fills; backend restart retained identical counts and equity99964.8134",
     "Chrome zh/en historical account shows distinct audited-replay source and collapsed audit identifiers; after terminal backend restart sequence138/orders20/fills6/equity99964.8134 unchanged",
-    "2026-09-23 historical paper slice full backend953/frontend187, Ruff/format/mypy/ESLint/type/build PASS on disposable backend DB and local frontend"
+    "2026-09-23 historical paper slice full backend953/frontend187, Ruff/format/mypy/ESLint/type/build PASS on disposable backend DB and local frontend",
+    "PR21 head416b619 draft/attached; CI35873951419 backend/frontend/compose PASS",
+    "Chrome historical account4b64380f paused2011-03-09, survived actual backend restart with19 events, resumed and stopped2011-03-23; 134 non-status events exactly equal uninterrupted baseline;20 orders/6 fills/equity99964.8134",
+    "Native date input fix verified by actual Chrome paper form submission with persisted end date2011-03-23; related date tests and full frontend188/lint/type/build PASS",
+    "2026-09-23 isolated backend956 PASS, Ruff/format/mypy PASS; optional real archive pause/resume test passed with read-only mount;0015 migration up/down/up/check passed on disposable PostgreSQL",
+    "Main DB0015 deployed after validated off-Git backup SHA0f751cb54be0d939fdd76d4ed01b5f6c75591fd9f59d634ca10cbcebd3effd57; .research remains untouched"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
     "RESOLVED: Vite stale import after .tsx-to.ts rename; frontend restart cleared cached module resolution",
     "RESOLVED: U5 reader mismatched source suspension date formats; product-only normalization/unknown-boundary handling tested",
     "Browser download UI reports prepared, but actual download event/artifact not verified; forbidden chrome://downloads inspection not retried",
-    "Browser native date fill changes DOM without React event; native keyboard commit verified persisted form before submission",
+    "RESOLVED: Chrome native date fill changed DOM without React state; onInput now persists the intended date across paper and sibling date controls",
     "RESOLVED: closing market detail cleared parent data-mode context; remove duplicate child writer with regression",
     "RESOLVED: U2 shared localStorage overwrite across tabs; independently retained per-page recovery slots and independent review",
     "RESOLVED: fixed-clock queue test UUID tie and advisory-lock test cross-database count on a shared PostgreSQL instance; full backend949 PASS",
@@ -111,7 +116,7 @@
   "not_run": [
     "Native dirty Back/Forward full browser confirmation path",
     "Browser exported artifact completion; API export content verified separately",
-    "U5 current ST/suspension controls, failure/retry/cancel browser matrix and source authority promotion; U7 pause/resume and forward receipt",
+    "U5 current ST/suspension controls, failure/retry/cancel browser matrix and source authority promotion; U7 forward receipt and unplanned mid-run recovery",
     "Full remaining M2-M5 matrix, real-user testing not claimed"
   ],
   "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
@@ -193,10 +198,20 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "result and research dataset deep-link reload PASS; measured p95 incomplete"
+    },
+    "21": {
+      "branch": "codex/product-v1.2-paper",
+      "head": "416b619",
+      "state": "DRAFT",
+      "ci_run": 35873951419,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "historical account and restart persistence PASS; forward receipt incomplete"
     }
   },
-  "next_task": "Complete safe paper pause/resume and receipt-bound forward mode; finish U8 labels and remaining U5/M4/M5 gates",
-  "next_command": "Trace paper runtime checkpoint/state restoration and forward-source authority before implementing pause/resume; keep historical backfill distinct from after-start market receipt",
+  "next_task": "Review/commit pause-resume slice, translate paper order labels, assess lawful receipt-bound forward mode, then finish remaining U5/M4/M5 gates",
+  "next_command": "git diff --check; commit/push current pause-resume slice to stacked draft PR22 after browser and CI checks; keep forward receipt distinct from historical replay",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

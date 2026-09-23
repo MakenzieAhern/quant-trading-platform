@@ -4,7 +4,7 @@ import json
 import logging
 from collections.abc import Callable
 from contextlib import suppress
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from uuid import UUID, uuid4
 
@@ -215,14 +215,18 @@ class PaperTradingManager:
                 raise LookupError("paper session not found")
             if session.status in {PaperSessionStatus.STARTING, PaperSessionStatus.RUNNING}:
                 return session
-            if session.status is not PaperSessionStatus.CREATED:
+            if session.status not in {PaperSessionStatus.CREATED, PaperSessionStatus.PAUSED}:
                 raise PaperSessionStateError(
                     f"paper session cannot start from {session.status.value}"
                 )
             session = await self._transition(session, PaperSessionStatus.STARTING, "session.status")
             task = asyncio.create_task(self._run(session), name=f"paper-session-{session_id}")
             self._tasks[session_id] = task
-            task.add_done_callback(lambda _: self._tasks.pop(session_id, None))
+            task.add_done_callback(
+                lambda finished: self._tasks.pop(session_id, None)
+                if self._tasks.get(session_id) is finished
+                else None
+            )
             logger.info("Started paper session task %s", session_id)
             return session
 
@@ -239,9 +243,22 @@ class PaperTradingManager:
                 )
                 logger.info("Stopped idle paper session %s", session_id)
                 return stopped
+            if session.status is PaperSessionStatus.PAUSED:
+                events = await self.events(session_id)
+                cancellations = self._pending_order_events(events, self._now())
+                return await self._transition(
+                    session,
+                    PaperSessionStatus.STOPPED,
+                    "session.status",
+                    preceding_events=cancellations,
+                )
             if session.status is PaperSessionStatus.STOPPING:
                 return session
-            if session.status not in {PaperSessionStatus.STARTING, PaperSessionStatus.RUNNING}:
+            if session.status not in {
+                PaperSessionStatus.STARTING,
+                PaperSessionStatus.RUNNING,
+                PaperSessionStatus.PAUSING,
+            }:
                 raise PaperSessionStateError(
                     f"paper session cannot stop from {session.status.value}"
                 )
@@ -250,6 +267,23 @@ class PaperTradingManager:
             if provider is not None:
                 await provider.stop()
             logger.info("Requested stop for paper session %s", session_id)
+            return session
+
+    async def pause(self, session_id: UUID) -> PaperSession:
+        async with self._lock:
+            session = await self.get(session_id)
+            if session is None:
+                raise LookupError("paper session not found")
+            if session.status in {PaperSessionStatus.PAUSING, PaperSessionStatus.PAUSED}:
+                return session
+            if session.status not in {PaperSessionStatus.STARTING, PaperSessionStatus.RUNNING}:
+                raise PaperSessionStateError(
+                    f"paper session cannot pause from {session.status.value}"
+                )
+            session = await self._transition(session, PaperSessionStatus.PAUSING, "session.status")
+            provider = self._providers.get(session_id)
+            if provider is not None:
+                await provider.stop()
             return session
 
     async def shutdown(self) -> None:
@@ -267,15 +301,53 @@ class PaperTradingManager:
         provider: ReplayMarketDataProvider | SimulatedAShareSessionProvider | None = None
         runtime: PaperTradingRuntime | ASharePaperTradingRuntime | None = None
         try:
-            provider, runtime = await asyncio.to_thread(self._build_runtime, session)
+            history = await self.events(session.id)
+            resumed = any(
+                item.event_type == "session.status" and item.payload.get("status") == "PAUSED"
+                for item in history
+            )
+            market_type = "market.bar" if session.provider_type == "replay" else "market.session"
+            last_market = (
+                next((item for item in reversed(history) if item.event_type == market_type), None)
+                if resumed
+                else None
+            )
+            expected_replay = tuple(
+                (item.event_type, item.payload)
+                for item in history
+                if item.event_type != "session.status"
+            )
+            replayed: list[tuple[str, dict[str, object]]] = []
+            if last_market is not None and not expected_replay:
+                raise ValueError("paper replay has no persisted market checkpoint")
+            cursor_time = (
+                datetime.fromisoformat(str(last_market.payload["timestamp"]))
+                if last_market is not None and market_type == "market.bar"
+                else None
+            )
+            cursor_date = (
+                date.fromisoformat(str(last_market.payload["trading_date"]))
+                if last_market is not None and market_type == "market.session"
+                else None
+            )
+            matched_cursor = last_market is None
+            provider, runtime = await asyncio.to_thread(self._build_runtime, session, cursor_date)
             assert provider is not None
             self._providers[session.id] = provider
             async with self._lock:
                 current = await self.get(session.id)
                 if current is None:
                     raise RuntimeError("paper session disappeared")
+                if current.status is PaperSessionStatus.PAUSING:
+                    await self._transition(current, PaperSessionStatus.PAUSED, "session.status")
+                    return
                 if current.status is PaperSessionStatus.STOPPING:
-                    await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
+                    await self._transition(
+                        current,
+                        PaperSessionStatus.STOPPED,
+                        "session.status",
+                        preceding_events=self._pending_order_events(history, self._now()),
+                    )
                     return
                 session = await self._transition(
                     current, PaperSessionStatus.RUNNING, "session.status"
@@ -293,7 +365,16 @@ class PaperTradingManager:
                 assert isinstance(runtime, PaperTradingRuntime)
 
                 async def process_bar(bar: Bar) -> None:
-                    await persist(self._serialize_delta(await runtime.process_bar(bar)))
+                    nonlocal matched_cursor
+                    events = self._serialize_delta(await runtime.process_bar(bar))
+                    if cursor_time is not None and bar.timestamp <= cursor_time:
+                        replayed.extend((kind, payload) for kind, _, payload in events)
+                        if bar.timestamp == cursor_time:
+                            if tuple(replayed) != expected_replay:
+                                raise ValueError("paper replay checkpoint no longer matches")
+                            matched_cursor = True
+                        return
+                    await persist(events)
 
                 await provider.start(process_bar)
             else:
@@ -306,6 +387,7 @@ class PaperTradingManager:
                 )
 
                 async def process_session(item: ResearchSession) -> None:
+                    nonlocal matched_cursor
                     delta = await runtime.process_session(item)
                     if historical_start is not None and item.trading_date < historical_start:
                         return  # Warm up from accepted past only; no pre-range account events.
@@ -314,21 +396,43 @@ class PaperTradingManager:
                         if session.provider_type == "historical_a_share"
                         else SIMULATED_SOURCE
                     )
-                    await persist(self._serialize_a_share_delta(delta, source=source))
+                    events = self._serialize_a_share_delta(delta, source=source)
+                    if cursor_date is not None and item.trading_date <= cursor_date:
+                        replayed.extend((kind, payload) for kind, _, payload in events)
+                        if item.trading_date == cursor_date:
+                            if tuple(replayed) != expected_replay:
+                                raise ValueError("paper replay checkpoint no longer matches")
+                            matched_cursor = True
+                        return
+                    await persist(events)
 
                 await provider.start(process_session)
             async with self._lock:
                 current = await self.get(session.id)
+                if current is not None and current.status is PaperSessionStatus.PAUSING:
+                    await self._transition(current, PaperSessionStatus.PAUSED, "session.status")
+                    return
+                if (
+                    not matched_cursor
+                    and current is not None
+                    and current.status is PaperSessionStatus.RUNNING
+                ):
+                    raise ValueError("paper replay checkpoint disappeared from source data")
                 if current is not None and current.status in {
                     PaperSessionStatus.RUNNING,
                     PaperSessionStatus.STOPPING,
                 }:
-                    cancelled = runtime.cancel_pending_orders()
+                    cancelled = runtime.cancel_pending_orders() if matched_cursor else ()
                     await self._transition(
                         current,
                         PaperSessionStatus.STOPPED,
                         "session.status",
                         cancelled_orders=cancelled,
+                        preceding_events=(
+                            self._pending_order_events(history, self._now())
+                            if not matched_cursor
+                            else ()
+                        ),
                     )
                     logger.info("Paper session %s stopped", session.id)
         except asyncio.CancelledError:
@@ -336,6 +440,7 @@ class PaperTradingManager:
             if current is not None and current.status in {
                 PaperSessionStatus.STARTING,
                 PaperSessionStatus.RUNNING,
+                PaperSessionStatus.PAUSING,
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
@@ -369,6 +474,7 @@ class PaperTradingManager:
             if current is not None and current.status in {
                 PaperSessionStatus.STARTING,
                 PaperSessionStatus.RUNNING,
+                PaperSessionStatus.PAUSING,
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
@@ -383,10 +489,11 @@ class PaperTradingManager:
         finally:
             if provider is not None:
                 await provider.stop()
-            self._providers.pop(session.id, None)
+            if self._providers.get(session.id) is provider:
+                self._providers.pop(session.id, None)
 
     def _build_runtime(
-        self, session: PaperSession
+        self, session: PaperSession, cursor_date: date | None = None
     ) -> tuple[
         ReplayMarketDataProvider | SimulatedAShareSessionProvider,
         PaperTradingRuntime | ASharePaperTradingRuntime,
@@ -395,7 +502,11 @@ class PaperTradingManager:
         if session.provider_type == "simulated_a_share":
             calendar, sessions, commission = simulated_a_share_fixture()
             return (
-                SimulatedAShareSessionProvider(sessions, self._replay_interval_seconds),
+                SimulatedAShareSessionProvider(
+                    sessions,
+                    self._replay_interval_seconds,
+                    pace_from_date=cursor_date + timedelta(days=1) if cursor_date else None,
+                ),
                 ASharePaperTradingRuntime(
                     initial_cash=session.initial_cash,
                     commission_model=commission,
@@ -458,7 +569,9 @@ class PaperTradingManager:
                 SimulatedAShareSessionProvider(
                     data.sessions(),
                     self._replay_interval_seconds,
-                    pace_from_date=request.start_date,
+                    pace_from_date=(cursor_date + timedelta(days=1))
+                    if cursor_date
+                    else request.start_date,
                 ),
                 ASharePaperTradingRuntime(
                     initial_cash=session.initial_cash,
@@ -500,6 +613,20 @@ class PaperTradingManager:
         return provider, runtime
 
     @staticmethod
+    def _pending_order_events(
+        events: tuple[PaperEventRecord, ...], timestamp: datetime
+    ) -> tuple[tuple[str, datetime, dict[str, object]], ...]:
+        latest: dict[str, dict[str, object]] = {}
+        for event in events:
+            if event.event_type == "order.updated":
+                latest[str(event.payload["order_id"])] = event.payload
+        return tuple(
+            ("order.updated", timestamp, {**payload, "status": "CANCELLED"})
+            for payload in latest.values()
+            if payload.get("status") in {"CREATED", "SUBMITTED", "ACCEPTED", "PARTIALLY_FILLED"}
+        )
+
+    @staticmethod
     def _risk_config(session: PaperSession) -> RiskConfig:
         def optional_decimal(name: str) -> Decimal | None:
             value = session.risk.get(name)
@@ -522,9 +649,10 @@ class PaperTradingManager:
         event_type: str,
         error_message: str | None = None,
         cancelled_orders: tuple[Order, ...] = (),
+        preceding_events: tuple[tuple[str, datetime, dict[str, object]], ...] = (),
     ) -> PaperSession:
         now = self._now()
-        preceding_events = tuple(
+        cancellations = tuple(
             ("order.updated", now, self._order(order)) for order in cancelled_orders
         )
         async with self._session_factory() as db:
@@ -536,7 +664,7 @@ class PaperTradingManager:
                 now,
                 event_type,
                 error_message,
-                preceding_events,
+                (*preceding_events, *cancellations),
             )
         for event in stored:
             self.hub.publish(session.id, self._wire_event(event))

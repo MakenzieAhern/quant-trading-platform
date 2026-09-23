@@ -83,8 +83,8 @@ export function MarketDetail({
                 min={dataset.coverage_start}
                 max={dataset.coverage_end}
                 value={range.start_date}
-                onChange={(event) =>
-                  onRangeChange({ ...range, start_date: event.target.value })
+                onInput={(event) =>
+                  onRangeChange({ ...range, start_date: event.currentTarget.value })
                 }
               />
             </label>
@@ -96,8 +96,8 @@ export function MarketDetail({
                 min={dataset.coverage_start}
                 max={dataset.coverage_end}
                 value={range.end_date}
-                onChange={(event) =>
-                  onRangeChange({ ...range, end_date: event.target.value })
+                onInput={(event) =>
+                  onRangeChange({ ...range, end_date: event.currentTarget.value })
                 }
               />
             </label>

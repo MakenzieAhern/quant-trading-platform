@@ -46,7 +46,7 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             <input
               type="date"
               value={start}
-              onChange={(event) => setStart(event.target.value)}
+              onInput={(event) => setStart(event.currentTarget.value)}
             />
           </label>
           <label>
@@ -54,7 +54,7 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             <input
               type="date"
               value={end}
-              onChange={(event) => setEnd(event.target.value)}
+              onInput={(event) => setEnd(event.currentTarget.value)}
             />
           </label>
           <button className="button secondary" type="submit">

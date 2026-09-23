@@ -15,16 +15,14 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   const [commandPending, setCommandPending] = useState(false);
   const [commandError, setCommandError] = useState<string | null>(null);
 
-  const command = async (action: "start" | "stop") => {
+  const command = async (action: "start" | "pause" | "stop") => {
     if (commandPending) return;
     setCommandPending(true);
     setCommandError(null);
     try {
       await paperApi[action](sessionId);
     } catch {
-      setCommandError(
-        t(action === "start" ? "detail.startError" : "detail.stopError"),
-      );
+      setCommandError(t(`detail.${action}Error`));
     } finally {
       setCommandPending(false);
     }
@@ -59,16 +57,25 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             {t("detail.websocket")}: {t(`detail.connection.${connection}`)}
           </span>
           <StatusBadge status={session.status} />
-          {session.status === "CREATED" && (
+          {(session.status === "CREATED" || session.status === "PAUSED") && (
             <button
               className="button buttonPrimary"
               disabled={commandPending}
               onClick={() => void command("start")}
             >
-              {t("detail.start")}
+              {t(session.status === "PAUSED" ? "detail.resume" : "detail.start")}
             </button>
           )}
           {active && (
+            <button
+              className="button"
+              disabled={commandPending}
+              onClick={() => void command("pause")}
+            >
+              {t("detail.pause")}
+            </button>
+          )}
+          {(active || session.status === "PAUSING" || session.status === "PAUSED") && (
             <button
               className="button"
               disabled={commandPending}

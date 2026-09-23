@@ -1107,6 +1107,7 @@ tbody tr:hover {
 }
 .status-running,
 .status-starting,
+.status-pausing,
 .status-stopping,
 .status-interrupted,
 .stream-reconnecting {
@@ -1116,6 +1117,7 @@ tbody tr:hover {
   color: var(--primary);
 }
 .status-stopped,
+.status-paused,
 .streamState {
   color: var(--muted);
 }

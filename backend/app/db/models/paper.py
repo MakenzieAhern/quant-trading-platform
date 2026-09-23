@@ -19,7 +19,7 @@ class PaperTradingSessionModel(Base):
         Index("ix_paper_sessions_status", "status"),
         Index("ix_paper_sessions_created_at", "created_at"),
         CheckConstraint(
-            "status IN ('CREATED','STARTING','RUNNING','STOPPING',"
+            "status IN ('CREATED','STARTING','RUNNING','PAUSING','PAUSED','STOPPING',"
             "'STOPPED','FAILED','INTERRUPTED')",
             name="ck_paper_sessions_status",
         ),

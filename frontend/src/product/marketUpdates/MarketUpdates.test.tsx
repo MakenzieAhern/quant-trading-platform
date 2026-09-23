@@ -41,10 +41,10 @@ async function fill() {
   fireEvent.change(screen.getByLabelText("Security IDs (1–20)"), {
     target: { value: "CN-A:SSE:600000" },
   });
-  fireEvent.change(screen.getByLabelText("Start date"), {
+  fireEvent.input(screen.getByLabelText("Start date"), {
     target: { value: "2026-01-05" },
   });
-  fireEvent.change(screen.getByLabelText("End date"), {
+  fireEvent.input(screen.getByLabelText("End date"), {
     target: { value: "2026-01-06" },
   });
   await userEvent.click(screen.getByRole("checkbox"));

@@ -101,10 +101,10 @@ describe("filtered durable experiment records", () => {
       screen.getByRole("checkbox", { name: "Show full precision" }),
     );
     await screen.findByText("12.000000000000000001");
-    fireEvent.change(screen.getByLabelText("First trading date"), {
+    fireEvent.input(screen.getByLabelText("First trading date"), {
       target: { value: "2031-01-02" },
     });
-    fireEvent.change(screen.getByLabelText("Last trading date"), {
+    fireEvent.input(screen.getByLabelText("Last trading date"), {
       target: { value: "2031-01-04" },
     });
     await userEvent.click(screen.getByRole("button", { name: "Apply dates" }));
@@ -117,7 +117,7 @@ describe("filtered durable experiment records", () => {
     expect(equity.mock.calls.at(-1)?.[2]).toBe(0);
     expect(summary).toHaveBeenCalledTimes(1);
     expect(screen.getByText("12.000000000000000001")).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText("First trading date"), {
+    fireEvent.input(screen.getByLabelText("First trading date"), {
       target: { value: "2031-01-05" },
     });
     await userEvent.click(screen.getByRole("button", { name: "Apply dates" }));

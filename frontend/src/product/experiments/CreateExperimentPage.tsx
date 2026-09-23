@@ -422,8 +422,8 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                       min={dataset?.coverage_start}
                       max={form.end_date || dataset?.coverage_end}
                       value={form.start_date}
-                      onChange={(event) =>
-                        update({ ...form, start_date: event.target.value })
+                      onInput={(event) =>
+                        update({ ...form, start_date: event.currentTarget.value })
                       }
                     />
                   </label>
@@ -435,8 +435,8 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                       min={form.start_date || dataset?.coverage_start}
                       max={dataset?.coverage_end}
                       value={form.end_date}
-                      onChange={(event) =>
-                        update({ ...form, end_date: event.target.value })
+                      onInput={(event) =>
+                        update({ ...form, end_date: event.currentTarget.value })
                       }
                     />
                   </label>

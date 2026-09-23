@@ -420,7 +420,7 @@ describe("historical cache markets", () => {
     await userEvent.click(trigger);
     const dialog = screen.getByRole("dialog");
     await within(dialog).findByLabelText("Inspect trading date");
-    fireEvent.change(within(dialog).getByLabelText("First date"), {
+    fireEvent.input(within(dialog).getByLabelText("First date"), {
       target: { value: "2023-01-01" },
     });
     await userEvent.click(
