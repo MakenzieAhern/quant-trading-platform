@@ -1,5 +1,14 @@
 # Decisions
 
+## v1.2 executable forward feed needs explicit rights evidence — 2026-09-23
+
+Current SSE and SZSE Trading Rules §5.1.3 reserve exchange trading-information
+use to permitted users. The SZSE website's noncommercial browse/download notice
+and BaoStock's public SDK do not prove permission for this product's executable
+forward feed. Keep bounded private source trials and raw candidate receipts
+separate from forward execution authority; seek provider/exchange rights evidence
+before promotion. This is not a finding that the prior private trial was unlawful.
+
 ## v1.2 current-master sample is not a point-in-time execution ledger — 2026-09-23
 
 Targeted SSE exact-code responses and the official SZSE current-list XLSX

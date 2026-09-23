@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T18:33:25Z",
+  "updated_at_utc": "2026-09-23T18:46:00Z",
   "milestone": "M3_CURRENT_RULE_CANDIDATE_FAIL_CLOSED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 official 2026 SSE/SZSE Trading Rules section 5.1.3 checked: exchange trading-information use is permission-gated; public SDK/site readability does not establish BaoStock upstream rights or product forward authority",
+    "2026-09-23 PR32 e0a2d0b CI35903537496 backend/frontend/compose PASS; in-app browser historical JSON export prepared but auto/fallback produced no download event; Chrome extension tab inventory still timed out",
     "2026-09-23 PR32 d62b51a CI35903063257 backend/frontend/compose PASS; isolated quant_test_v12_u5 full backend965 PASS (one optional archive skip), Ruff/format/mypy PASS",
     "2026-09-23 product-only 2026 cost candidate now fixes official transfer/stamp components with explicit broker commission assumptions; all candidate rules still conservative_no_fill",
     "2026-09-23 later SSE/SZSE September17 holiday notices archived off Git with SHA256; Sep25-27 and Oct1-7 closures verified, Sep24 remains scheduled rather than received",
@@ -135,6 +137,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "OPEN: current 2026 executable forward market-data rights are not established by public BaoStock access, SDK BSD license, or exchange website browse/download notice; seek provider/exchange authorization evidence before promotion",
     "OPEN: frozen historical cn-a-2010-2025.6 rule version carries open-ended 2023 periods and 5% Main Board ST limit; it is not a 2026 product-forward authority",
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
     "RESOLVED: Vite stale import after .tsx-to.ts rename; frontend restart cleared cached module resolution",
@@ -374,8 +377,8 @@
       "browser_gate": "candidate rules never execute; current forward authority remains PARTIAL"
     }
   },
-  "next_task": "Restore the local Chrome QA draft name after browser control recovers; reconcile current official master into a point-in-time forward sample with dated ST/suspension/actions and order constraints; only then pursue U7 after-start forward receipt. U3 native-dialog and U4 browser download remain unverified",
-  "next_command": "On a healthy browser binding restore the QA draft name first; then check official dated ST exit/entry and suspension notices for the six current sample securities without promoting RAW_CANDIDATE execution",
+  "next_task": "Restore the local Chrome QA draft name after browser control recovers; obtain explicit BaoStock or authorized-provider rights evidence for private executable forward use, then reconcile current official master into a point-in-time sample with dated ST/suspension/actions and order constraints. U3 native-dialog and U4 browser download remain unverified",
+  "next_command": "Check BaoStock's official data-use terms or request exact provider rights evidence without credentials/payment; on a healthy Chrome binding restore the QA draft name before other browser acceptance; keep RAW_CANDIDATE non-executable",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

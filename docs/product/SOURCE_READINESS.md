@@ -7,7 +7,9 @@ Machine evidence: [bounded probe report](../../.product/evidence/baostock-public
 ## Result
 
 **PARTIAL: free public single-security EOD access works; forward acceptance has
-not run.** No source permission/payment action is currently required from the user.
+not run.** Explicit data-use rights evidence is still needed before an executable
+forward feed can be accepted. No permission request, payment or credential action
+has been initiated.
 
 Official BaoStock 0.9.4, loaded from its checksum-verified PyPI wheel without
 installing into project dependencies, successfully logged into its documented
@@ -48,6 +50,19 @@ no EOF guard; the precise upstream cause of the bulk failure is unestablished.
   documentation supports the scoped private local-analysis trial; redistribution
   and commercial data rights have not been established. No market rows go to Git,
   a public deployment or published release attachments.
+
+The [SSE 2026 Trading Rules, §5.1.3](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/10816482/files/959da0158c65434daa8a43a6e32be7ba.docx)
+and [SZSE 2026 Trading Rules, §5.1.3](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+reserve exchange trading-information use and dissemination to permitted users.
+The SZSE rule expressly says that trading information belongs to the exchange
+and may not be used or disseminated without permission. The [SZSE website
+notice](https://www.szse.cn/application/laws/) permits noncommercial browsing
+and downloading of website content, but that does not itself resolve the more
+specific trading-information permission or BaoStock's upstream rights. This is
+a source-rights gap, **not** a finding that the existing private, bounded trial
+was unlawful. Do not substitute an exchange webpage scrape for the candidate
+provider or promote BaoStock observations to executable forward authority on
+the basis of public readability, SDK licensing, or this website notice alone.
 
 The rendered site retrieves its public documentation with POST `{}` to
 `/helpdocs/api/markdown/<document>` and its disclaimer with GET
