@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T19:29:59Z",
+  "updated_at_utc": "2026-09-23T19:38:35Z",
   "milestone": "M3_CURRENT_RULE_CANDIDATE_FAIL_CLOSED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 mobile paper-session table shared monoLink measured86x14 and now86x40; legacy backtest table link also40, no page overflow at390x844 (375/375), desktop paper row53px. Full frontend206/lint/type/build PASS. Dirty wizard browser-tool Back left while Alt+Left stayed without visible dialog; QA draft name restored. Native Back confirmation acceptance still unverified",
     "2026-09-23 draft bilingual nontechnical user guides now cover current UI, four mode boundaries, result/retry/recovery and safe rollback without claiming v1.2 release; terminal-free startup and recording/operator review remain open. PR32 8c1a620 CI35909284802 backend/frontend/compose PASS",
     "2026-09-23 live in-app browser interrupted personal job5861fbb5 showed no partial result and linked retry reopened prior success3db4b679; same result exposed untranslated corporate-action execution reason. Shared EN/ZH code map now explains both corporate-action rejections while raw code stays auditable; browser EN/ZH recheck and frontend206/lint/type/build PASS. U3/U8 full matrices remain open",
     "2026-09-23 M4 mobile target audit found top data-status link343x20; shared CSS raised it to343x40 at390x844 without overflow (document375), desktop1440 target172x43; full AA/contrast/keyboard audit still open",
@@ -166,7 +167,7 @@
     "OPEN: unplanned mid-run backend restart fails closed as INTERRUPTED; it does not resume automatically, and broader U7 recovery acceptance remains incomplete",
     "PARTIAL: Chrome rendered official SSE 603400 notice confirming suspension from 2026-09-15 and continuation at announcement; PDF binary could not be archived/checksummed because WSL timed out and scripted Windows fetch returned an HTML JavaScript challenge; no bypass attempted",
     "OPEN: BaoStock retry receipts ed796871 retain parser v1 label despite live normalization fix preceding v2 bump; immutable provenance caveat documented, not silently rewritten",
-    "OPEN: in-app browser-tool Back from dirty wizard left without observable guard popstate or dialog; sidebar confirmation worked, but real user Back/Forward cancel/accept acceptance is not proven",
+    "OPEN: in-app browser-tool Back from dirty wizard left without observable guard popstate or dialog; keyboard Alt+Left stayed without visible dialog and sidebar confirmation worked, but genuine user Back/Forward cancel/accept acceptance is not proven",
     "OPEN: in-app browser JSON report auto-click and fallback link prepared a blob but yielded no browser download event or Windows Downloads artifact; export completion remains unverified",
     "OPEN: Chrome browser-control binding timed out on two state reads and one fresh-tab attempt after a successful draft-restore and temporary Back-key QA edit; local QA draft name must be restored from U3 temporary keyboard Back QA to U2 Chrome precise configuration before further browser acceptance. No app defect inferred from the tool timeout"
   ],

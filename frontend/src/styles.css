@@ -1048,6 +1048,12 @@ tbody tr:hover {
   font-size: 12px;
   overflow-wrap: anywhere;
 }
+.tableScroll .monoLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  margin-block: -13px;
+}
 .pagination {
   display: flex;
   flex-wrap: wrap;
