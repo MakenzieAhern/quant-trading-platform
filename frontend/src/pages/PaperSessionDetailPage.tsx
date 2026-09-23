@@ -53,7 +53,6 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             {t("detail.eyebrow")} / {shortId(session.session_id)}
           </p>
           <h1>{t(`strategies.${session.strategy_type}`)}</h1>
-          <p className="runId">{session.session_id}</p>
         </div>
         <div className="paperControls">
           <span className={`streamState stream-${connection}`}>
@@ -88,9 +87,14 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
       <section className="runFacts" aria-label={t("detail.detailsLabel")}>
         <div>
           <span>{t("detail.provider")}</span>
-          <strong>
-            {session.provider_type} / {session.dataset_id}
-          </strong>
+          <strong>{t(`providers.${session.provider_type}`)}</strong>
+          <details>
+            <summary>{t("detail.auditIdentity")}</summary>
+            <span>{t("detail.sessionId")}</span>
+            <code>{session.session_id}</code>
+            <span>{t("detail.datasetId")}</span>
+            <code>{session.dataset_id}</code>
+          </details>
         </div>
         <div>
           <span>{t("detail.created")}</span>
@@ -139,7 +143,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             />
             <Metric
               label={t("detail.source")}
-              value={marketSession.source}
+              value={t(`detail.marketSources.${marketSession.source}`)}
               raw
             />
           </div>

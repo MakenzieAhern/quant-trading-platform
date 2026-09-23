@@ -1,5 +1,5 @@
 import asyncio
-from collections.abc import Awaitable, Callable, Sequence
+from collections.abc import Awaitable, Callable, Iterable, Sequence
 from contextlib import suppress
 from dataclasses import dataclass
 from datetime import date, datetime
@@ -85,17 +85,25 @@ class ReplayMarketDataProvider:
 
 
 class SimulatedAShareSessionProvider:
-    """Replay completed cross-sectional sessions; no broker or live feed exists."""
+    """Replay completed cross-sectional sessions, including lazy frozen archives."""
 
-    def __init__(self, sessions: Sequence[ResearchSession], interval_seconds: float = 0.5) -> None:
+    def __init__(
+        self,
+        sessions: Iterable[ResearchSession],
+        interval_seconds: float = 0.5,
+        *,
+        pace_from_date: date | None = None,
+    ) -> None:
         if interval_seconds < 0:
             raise ValueError("interval_seconds must be non-negative")
-        self._sessions = tuple(sessions)
+        self._streaming = not isinstance(sessions, Sequence)
+        self._sessions = sessions if self._streaming else tuple(sessions)
         self._interval_seconds = interval_seconds
+        self._pace_from_date = pace_from_date
         self._running = False
         self._stop = asyncio.Event()
         previous: date | None = None
-        for session in self._sessions:
+        for session in () if self._streaming else self._sessions:
             if previous is not None and session.trading_date <= previous:
                 raise ReplayProviderError("A-share sessions must be strictly chronological")
             previous = session.trading_date
@@ -110,11 +118,25 @@ class SimulatedAShareSessionProvider:
         self._running = True
         self._stop.clear()
         try:
-            for index, session in enumerate(self._sessions):
+            iterator = iter(self._sessions)
+            previous: date | None = None
+            while not self._stop.is_set():
+                session = (
+                    await asyncio.to_thread(next, iterator, None)
+                    if self._streaming
+                    else next(iterator, None)
+                )
+                if session is None:
+                    break
+                if previous is not None and session.trading_date <= previous:
+                    raise ReplayProviderError("A-share sessions must be strictly chronological")
+                previous = session.trading_date
                 if self._stop.is_set():
                     break
                 await handler(session)
-                if index + 1 < len(self._sessions) and self._interval_seconds:
+                if self._interval_seconds and (
+                    self._pace_from_date is None or session.trading_date >= self._pace_from_date
+                ):
                     with suppress(TimeoutError):
                         await asyncio.wait_for(self._stop.wait(), timeout=self._interval_seconds)
         finally:
@@ -258,8 +280,9 @@ class ASharePaperTradingRuntime:
         commission_model: CommissionModel,
         calendar: TradingCalendar,
         risk_config: RiskConfig | None = None,
+        strategy: ChinaAMomentumLowVolResearchStrategy | None = None,
     ) -> None:
-        strategy = ChinaAMomentumLowVolResearchStrategy()
+        strategy = strategy or ChinaAMomentumLowVolResearchStrategy()
         if strategy.strategy_id != FROZEN_A_SHARE_STRATEGY_ID:
             raise ValueError("frozen A-share strategy identity changed")
         self._engine = ResearchExecutionEngine(

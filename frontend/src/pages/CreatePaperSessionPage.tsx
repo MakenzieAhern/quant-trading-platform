@@ -33,6 +33,14 @@ export function CreatePaperSessionPage() {
   const [rsiPeriod, setRsiPeriod] = useState("14");
   const [oversold, setOversold] = useState("30");
   const [overbought, setOverbought] = useState("70");
+  const [startDate, setStartDate] = useState("2011-03-01");
+  const [endDate, setEndDate] = useState("2011-03-31");
+  const [rebalanceSessions, setRebalanceSessions] = useState("20");
+  const [maximumHoldings, setMaximumHoldings] = useState("20");
+  const [maxPositionWeight, setMaxPositionWeight] = useState("0.1");
+  const [universe, setUniverse] = useState<"ALL" | "SSE" | "SZSE">("ALL");
+  const [commissionRate, setCommissionRate] = useState("0.0003");
+  const [minimumCommission, setMinimumCommission] = useState("5");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const key = useRef<string | null>(null);
@@ -64,6 +72,52 @@ export function CreatePaperSessionPage() {
         initial_cash: initialCash,
         default_order_quantity: quantity,
         risk: { enforce_buying_power: true },
+      };
+    } else if (providerType === "historical_a_share") {
+      const rebalance = parsePositiveInteger(rebalanceSessions);
+      const holdings = parsePositiveInteger(maximumHoldings);
+      if (
+        !startDate ||
+        !endDate ||
+        endDate < startDate ||
+        rebalance === null ||
+        rebalance > 252 ||
+        holdings === null ||
+        holdings > 100 ||
+        !isPositiveDecimal(maxPositionWeight) ||
+        comparePositiveDecimals(maxPositionWeight, "1") === 1 ||
+        !/^\d+(?:\.\d+)?$/.test(commissionRate) ||
+        comparePositiveDecimals(commissionRate, "0.01") === 1 ||
+        !/^\d+(?:\.\d+)?$/.test(minimumCommission) ||
+        comparePositiveDecimals(minimumCommission, "1000") === 1
+      ) {
+        setError(t("createPage.historicalValidationError"));
+        return;
+      }
+      request = {
+        provider_type: "historical_a_share",
+        dataset_id: "cn-a-research-20100101-20251231-v1",
+        symbol: "CN-A",
+        strategy: {
+          type: "cn_a_cross_sectional_momentum_low_vol_v1",
+          parameters: {
+            start_date: startDate,
+            end_date: endDate,
+            rebalance_sessions: rebalance,
+            maximum_holdings: holdings,
+            max_position_weight: maxPositionWeight,
+            universe,
+            commission_rate: commissionRate,
+            minimum_commission: minimumCommission,
+          },
+        },
+        initial_cash: initialCash,
+        default_order_quantity: "1",
+        risk: {
+          enforce_buying_power: true,
+          max_leverage: "1",
+          max_drawdown: "-0.2",
+        },
       };
     } else if (strategyType === "moving_average_crossover") {
       const short = parsePositiveInteger(shortPeriod);
@@ -161,13 +215,16 @@ export function CreatePaperSessionPage() {
                   setInitialCash(
                     value === "simulated_a_share" ? "100000000" : "100000",
                   );
-                  setQuantity(value === "simulated_a_share" ? "1" : "10");
+                  setQuantity(value === "replay" ? "10" : "1");
                 }}
               >
                 <option value="simulated_a_share">
                   {t("createPage.aShareSimulation")}
                 </option>
                 <option value="replay">{t("createPage.replayLocal")}</option>
+                <option value="historical_a_share">
+                  {t("createPage.historicalAShare")}
+                </option>
               </select>
             </label>
             <label>
@@ -176,7 +233,9 @@ export function CreatePaperSessionPage() {
                 value={
                   providerType === "simulated_a_share"
                     ? "CN_A_SIMULATED_PAPER_FIXTURE_V1"
-                    : "AAPL_fixture"
+                    : providerType === "historical_a_share"
+                      ? "cn-a-research-20100101-20251231-v1"
+                      : "AAPL_fixture"
                 }
                 readOnly
               />
@@ -184,7 +243,7 @@ export function CreatePaperSessionPage() {
             <label>
               {t("createPage.symbol")}
               <input
-                value={providerType === "simulated_a_share" ? "CN-A" : "AAPL"}
+                value={providerType === "replay" ? "AAPL" : "CN-A"}
                 readOnly
               />
             </label>
@@ -215,12 +274,14 @@ export function CreatePaperSessionPage() {
           <p className="fieldHint">
             {providerType === "simulated_a_share"
               ? t("createPage.aShareScenarioHint")
-              : t("createPage.buyingPowerHint")}
+              : providerType === "historical_a_share"
+                ? t("createPage.historicalHint")
+                : t("createPage.buyingPowerHint")}
           </p>
         </fieldset>
         <fieldset disabled={pending}>
           <legend>{t("createPage.registeredStrategy")}</legend>
-          {providerType === "simulated_a_share" ? (
+          {providerType !== "replay" ? (
             <label>
               {t("createPage.strategyType")}
               <input
@@ -304,6 +365,101 @@ export function CreatePaperSessionPage() {
             </div>
           ) : null}
         </fieldset>
+        {providerType === "historical_a_share" && (
+          <fieldset disabled={pending}>
+            <legend>{t("createPage.historicalRange")}</legend>
+            <div className="formGrid">
+              <label>
+                {t("createPage.startDate")}
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(event) => setStartDate(event.target.value)}
+                  required
+                />
+              </label>
+              <label>
+                {t("createPage.endDate")}
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(event) => setEndDate(event.target.value)}
+                  required
+                />
+              </label>
+            </div>
+            <details>
+              <summary>{t("createPage.historicalAdvanced")}</summary>
+              <div className="formGrid threeColumns">
+                <label>
+                  {t("createPage.rebalanceSessions")}
+                  <input
+                    type="number"
+                    min="1"
+                    max="252"
+                    value={rebalanceSessions}
+                    onChange={(event) =>
+                      setRebalanceSessions(event.target.value)
+                    }
+                    required
+                  />
+                </label>
+                <label>
+                  {t("createPage.maximumHoldings")}
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={maximumHoldings}
+                    onChange={(event) => setMaximumHoldings(event.target.value)}
+                    required
+                  />
+                </label>
+                <label>
+                  {t("createPage.maxPositionWeight")}
+                  <input
+                    value={maxPositionWeight}
+                    onChange={(event) =>
+                      setMaxPositionWeight(event.target.value)
+                    }
+                    required
+                  />
+                </label>
+                <label>
+                  {t("createPage.universe")}
+                  <select
+                    value={universe}
+                    onChange={(event) =>
+                      setUniverse(event.target.value as typeof universe)
+                    }
+                  >
+                    <option value="ALL">{t("createPage.allShares")}</option>
+                    <option value="SSE">SSE</option>
+                    <option value="SZSE">SZSE</option>
+                  </select>
+                </label>
+                <label>
+                  {t("createPage.commissionRate")}
+                  <input
+                    value={commissionRate}
+                    onChange={(event) => setCommissionRate(event.target.value)}
+                    required
+                  />
+                </label>
+                <label>
+                  {t("createPage.minimumCommission")}
+                  <input
+                    value={minimumCommission}
+                    onChange={(event) =>
+                      setMinimumCommission(event.target.value)
+                    }
+                    required
+                  />
+                </label>
+              </div>
+            </details>
+          </fieldset>
+        )}
         {error && (
           <div id="paper-form-error" className="formError" role="alert">
             {error}
