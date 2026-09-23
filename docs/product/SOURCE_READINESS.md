@@ -141,6 +141,47 @@ ST/status fields generally to official effective-dated authority, establish
 current universe/calendar/rules/actions, or satisfy a
 post-session-start forward receipt.
 
+### Current exchange trading-rule evidence (2026-09-23)
+
+The [SSE 2026 Trading Rules notice](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml)
+is 上证发〔2026〕41号, published 2026-04-24 and effective **2026-07-06**;
+it repeals the 2023 revision on that date. The [SZSE 2026 Trading Rules](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+(深证上〔2026〕551号, published 2026-04-24) likewise take effect
+**2026-07-06** and repeal the 2023 revision. Publication is not the
+effective trading date. [SSE's implementation explanation](https://www.sse.com.cn/aboutus/mediacenter/hotandd/c/c_20260424_10816474.shtml)
+explicitly changes Main Board risk-warning share price limits from 5% to 10%;
+SZSE rule 3.3.13 sets Main Board 10% and ChiNext 20%, with its risk-warning
+section no longer specifying a 5% exception. The [SZSE risk-warning guide](https://www.szse.cn/lawrules/service/member/t20260630_621404.html)
+also describes the Main Board limit change. SSE STAR and SZSE ChiNext remain
+20% in their respective rule text. This is source discovery, **not** accepted
+2026 execution authority.
+
+Original official attachments are stored outside Git under
+`/home/yuchen/data/product_source_evidence/2026_rules/`. Local save times
+below are UTC filesystem timestamps, not independently measured HTTP receipt
+times; SHA-256 was rechecked on 2026-09-23 at 17:48 UTC.
+
+| Official attachment | Saved UTC | SHA-256 |
+|---|---|---|
+| [SSE rules DOCX](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/10816482/files/959da0158c65434daa8a43a6e32be7ba.docx) | 2026-09-23 17:45:31 | `fc922c433438b2636cb631eab25cca405209712acbb6aaded768c45456ff8888` |
+| [SSE deferred clauses DOCX](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/10816482/files/f6bd756cdd8248f49b7795f62e73237f.docx) | 2026-09-23 17:45:31 | `f4a0d0976a01e3e95f82460170900993824b70d91183e42d09e13ba10a9958c5` |
+| [SZSE rules PDF](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf) | 2026-09-23 17:45:29 | `9b66f8b0db70f84a25ef1ccb4ee2351001724e408117552d75f6d8993483c586` |
+
+The SSE deferred-clause attachment concerns specified block-trade VWAP and
+16:00–17:00 provisions, not an extension of the old 5% Main Board limit.
+The historical `cn-a-2010-2025.6` rule version has open-ended 2023 periods
+and Main Board ST limit 5%; it is frozen historical input, **not** a valid
+2026 product-forward rule version. A read-only diagnostic in the running
+backend resolved a hypothetical 2026-09-22 SSE Main ST status to
+`cn-a-2010-2025.6:SSE_MAIN-2023-04-10`, limit `0.05`; this is proof of the
+gap, not an actual security classification or simulated order. Do not change
+its serialized content or silently resolve 2026 sessions with it. A separately
+versioned, effective-dated
+2026 rule mapping and tests are still required, together with current
+master/calendar/ST/suspension/actions/cost authority before any candidate bar
+can become execution-eligible. `RULE_AUTHORITY_2026 = PARTIAL` and all existing
+candidate receipts remain `execution_eligible=false`.
+
 1. **DONE for the bounded raw candidate path.** A product-owned, user-triggered
    per-security EOD update job uses
    existing BaoStock integration/Decimal records and a supervised timeout. Fetch

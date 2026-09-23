@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 forward-market rule authority remains separate — 2026-09-23
+
+Official SSE/SZSE 2026 Trading Rules were saved and checksummed outside Git.
+Both supersede the 2023 revisions on 2026-07-06, and Main Board risk-warning
+price limits changed from 5% to 10%. The historical `cn-a-2010-2025.6`
+version has open-ended 2023 periods and still resolves Main Board ST at 5%.
+Do not mutate that frozen historical version, reuse it for 2026 product
+execution, or promote BaoStock candidate receipts. Record the primary sources
+and hashes in `docs/product/SOURCE_READINESS.md`; build a distinct effective-
+dated product version only after mapping the full current rule set and its
+interaction with current master/calendar/ST/suspension/actions/cost evidence.
+The SSE deferred attachment affects specified block-trade provisions, not the
+ordinary 10% Main Board risk-warning limit. This is a partial authority gain,
+not U7 forward acceptance or permission to run a strategy.
+
 ## v1.2 guided-draft navigation listener — 2026-09-23
 
 Editing the guided form recreated its leave callback and re-registered the

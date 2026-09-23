@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T17:42:27Z",
-  "milestone": "M4_NAVIGATION_GUARD_REGRESSION_CHECKED",
+  "updated_at_utc": "2026-09-23T17:48:15Z",
+  "milestone": "M4_CURRENT_RULE_SOURCE_GAP_MAPPED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "PR31 head 8f396e6 CI35897535773 backend/frontend/compose PASS; draft remains unmerged",
+    "Official SSE/SZSE 2026 trading-rule attachments saved off Git and SHA256 verified; effective 2026-07-06, Main Board ST limit changes 5% to 10%; source gap documented without promoting candidate bars",
     "M0 live Chrome populated/new/empty DB/offline baselines and all six official references",
     "v1.1 remote release/main/tag and Docker 4.92 verified; no installer/UAC pending",
     "M1 backend pre-review 856 tests and reversible migration on isolated database",
@@ -123,6 +125,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "OPEN: frozen historical cn-a-2010-2025.6 rule version carries open-ended 2023 periods and 5% Main Board ST limit; it is not a 2026 product-forward authority",
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
     "RESOLVED: Vite stale import after .tsx-to.ts rename; frontend restart cleared cached module resolution",
     "RESOLVED: U5 reader mismatched source suspension date formats; product-only normalization/unknown-boundary handling tested",
@@ -157,7 +160,7 @@
   "not_run": [
     "Native dirty Back/Forward full browser confirmation path",
     "Browser exported artifact completion; prepared blob/link observed but no download event or default Downloads file; API export content verified separately",
-    "U5 current ST/suspension controls, failure/retry/cancel browser matrix and source authority promotion; U7 forward receipt and unplanned mid-run recovery",
+    "U5 current master/calendar/ST/suspension/actions/cost reconciliation, separately versioned 2026 rule implementation, failure/retry/cancel browser matrix and source authority promotion; U7 after-start forward receipt and unplanned mid-run recovery",
     "Full remaining M2-M5 matrix, real-user testing not claimed"
   ],
   "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
@@ -341,17 +344,17 @@
     },
     "31": {
       "branch": "codex/product-v1.2-view-history",
-      "last_verified_head": "d30160e",
+      "last_verified_head": "8f396e6",
       "state": "DRAFT",
-      "ci_run": 35895465982,
+      "ci_run": 35897535773,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "temporary M1 filter retained across detail/Back at 390x844; wider UX-VIEWS matrix incomplete"
     }
   },
-  "next_task": "Continue U5 current authority and U7 lawful new-market forward implementation while U3 native-dialog and U4 download browser controls remain unverified; then U8/M4/M5",
-  "next_command": "Verify PR31 follow-up CI, then audit lawful current master/calendar/ST/rule/action sources against the candidate updater before any 2026 execution promotion; keep historical backfill separate from after-start receipts",
+  "next_task": "Audit current official master/calendar/ST/suspension/actions/cost evidence, implement a separate effective-dated 2026 product rule version, and then pursue U7 after-start forward receipt; keep U3 native-dialog and U4 browser download unverified until actual proof",
+  "next_command": "Inspect the current master/calendar/ST/action inputs and 2026 official rule clauses; add a separately versioned product rule mapping and boundary tests without changing historical_cn_a_rules or promoting RAW_CANDIDATE receipts",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
