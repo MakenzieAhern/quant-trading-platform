@@ -94,9 +94,48 @@ The original receipt/manifests remain on the product volume, not in Git.
 
 All four remain `RAW_CANDIDATE`, **not executable authority**. Current security
 master, calendar, ST history, rules and corporate actions are `UNVERIFIED` for
-2026; adjustment factors were not requested. The fixed sample does not yet
-include current ST or suspension controls. This is historical catch-up, not an
+2026; adjustment factors were not requested. At this checkpoint the fixed
+sample did not include current ST or suspension controls. This is historical catch-up, not an
 after-user-start forward receipt; no U7 session or simulated fill is inferred.
+
+### Targeted ST and suspension controls (2026-09-23)
+
+Two additional securities from the existing 2025 archive master were requested
+only for 2026-09-22: `CN-A:SSE:688622` (STAR, source-observed `*ST禾信`) and
+`CN-A:SSE:603400` (Main Board, `华之杰`). The [official SSE announcement
+catalog](https://www.sse.com.cn/disclosure/listedinfo/announcement/index.shtml)
+indexed the former with the `*ST` name and a 603400 suspension-progress notice
+on that date. Direct access to the candidate 603400 SSE PDF timed out from this
+machine; its effective suspension dates have **not** been accepted from search
+snippets. The frozen master names are coverage clues, not 2026 effective-dated
+authority.
+
+Initial job `0eecbddb-4960-4a63-bf9a-505e9a5af884` failed closed with
+`INVALID_PROVIDER_RESPONSE`. A single targeted BaoStock SDK inspection found
+`sh.603400` returned `tradestatus=0`, carried price `54.6700`, and empty
+`volume`/`amount` strings. Parser v2 normalizes **only both empty fields on an
+explicit suspended row** to numeric zero; active rows, half-empty rows and
+nonzero suspended transactions still fail. Raw provider fields remain in the
+immutable receipt and `execution_eligible=false`. Focused isolated tests: 50
+PASS, Ruff and formatting PASS.
+
+Retry job `ed796871-4ce4-4cf3-b7f0-2223e636bb75` succeeded with two new
+observations and zero unresolved dates. 603400 is `VENDOR_SUSPENDED`, zero
+normalized volume/amount, vendor `isST=0`; 688622 is `RAW_CANDIDATE`, vendor
+`isST=1`, trading status 1. Their manifest SHA-256 values are respectively
+`e117d2f313ea1579351c235e44af81c99bb5ef46a3a627a0329505c4c4d1a893`
+and `c12aa42bb94898921f64f4eba687687f17dc374cc06299c13965da2ad1cd82b4`.
+The raw receipt timestamps are UTC in the API payload; some local PowerShell
+JSON views convert them to Australia/Sydney time for display.
+
+Provenance caveat: these two append-only retry receipts carry the original
+`product-baostock-raw-v1` parser label because the live normalization fix ran
+before its version token was advanced. Do not relabel or rewrite those receipts.
+The v2 token applies to subsequent receipts; these two are identified by their
+job, manifest hashes and exact raw/normalized checksums. This bounded control
+check does **not** promote vendor ST/status fields to official effective-dated
+authority, establish current universe/calendar/rules/actions, or satisfy a
+post-session-start forward receipt.
 
 1. **DONE for the bounded raw candidate path.** A product-owned, user-triggered
    per-security EOD update job uses
