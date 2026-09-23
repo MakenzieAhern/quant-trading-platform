@@ -47,7 +47,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | QA-PERF | Immediate feedback; measured local interaction p95 target≤200ms; bounded charts/tables | Pending | Machine/data/browser/cache/method to record | NOT_RUN |
 | QA-ENGINE | Decimal/server validation/idempotency/task isolation; same financial path | Existing financial path + independent queue | 862 backend tests; actual 2011 exploratory run completed; synthetic clearly separated | IN_PROGRESS |
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
-| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | 2026-09-23 full backend950/frontend185 PASS, Ruff/format/mypy/ESLint/TS/build PASS;0014 disposable down/up/check PASS; PR18 CI35806246775 PASS; remaining product gates pending | IN_PROGRESS |
+| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | 2026-09-23 full backend950/frontend185 PASS, Ruff/format/mypy/ESLint/TS/build PASS;0014 disposable down/up/check PASS; PR18 CI35806246775 and PR19 CI35807227032 PASS; remaining product gates pending | IN_PROGRESS |
 | M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Pending | All links validated before release | NOT_RUN |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 

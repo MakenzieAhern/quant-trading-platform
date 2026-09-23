@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T01:37:03Z",
+  "updated_at_utc": "2026-09-23T01:41:57Z",
   "milestone": "M3_U6_REPLAY_PREVIEW_AND_U7_PENDING",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -76,7 +76,8 @@
     "PR18 head904e5d6 CI35806246775 backend/frontend/compose PASS; draft and unmerged",
     "U6 real historical exploratory job d9f27183 finished293 sessions; preview2011-03-22->2011-03-23, 32 candidates, 5 risk rejections, account cash/equity/16 positions equal persisted holdings; no paper order submitted",
     "Chrome U6 zh/en and390x844 plan preview passed; local screenshots outside Git; horizontal table hint fixed after visual review",
-    "2026-09-23 U6 full backend950/frontend185, Ruff/format/mypy/ESLint/type/build PASS"
+    "2026-09-23 U6 full backend950/frontend185, Ruff/format/mypy/ESLint/type/build PASS",
+    "PR19 head7235bab draft/attached; CI35807227032 backend/frontend/compose PASS"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -165,10 +166,19 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "one bounded raw candidate request and restart/reload persistence PASS; cross-board and authority promotion incomplete"
+    },
+    "19": {
+      "branch": "codex/product-v1.2-plans",
+      "state": "DRAFT",
+      "ci_run": 35807227032,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "historical replay preview in zh/en and mobile PASS; independent account and forward receipt incomplete"
     }
   },
-  "next_task": "Commit U6 replay preview as draft PR19 stacked on PR18, then connect a user-started independent U7 paper account and receipt-bound forward plan; continue M4/M5",
-  "next_command": "Commit current U6 changes, rebase plans branch onto PR18 head904e5d6, push and open draft PR19; then inspect existing Paper runtime lifecycle and current source authority gaps",
+  "next_task": "Connect a user-started independent U7 paper account and receipt-bound forward plan; continue M4/M5 and remaining product acceptance",
+  "next_command": "Trace PaperTradingManager lifecycle, add mode isolation and conservative forward-source authority gates before accepting any new-market session",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
