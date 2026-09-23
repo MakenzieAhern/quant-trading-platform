@@ -1,5 +1,45 @@
 # Decisions
 
+## v1.2 application-history loss and test-database isolation — 2026-09-23
+
+At 19:44 UTC the live `quant_platform` database had zero formal research
+datasets/runs/trades, one paper session and one backtest run. Its PostgreSQL
+log at 18:29–18:30 UTC shows multiple backend-test-style constraint failures;
+the surviving AAPL fixture session was created at 18:29 UTC. Test fixtures
+previously truncated research, paper and backtest tables without a suite-wide
+database guard. This is strong evidence of an accidental test run against the
+application database, but the exact invoking command has not been recovered.
+
+The verified pre-0015 logical backup (SHA-256
+`0f751cb54be0d939fdd76d4ed01b5f6c75591fd9f59d634ca10cbcebd3effd57`)
+was restored first into a new inspection database. An additive, single-transaction
+restore of its research, paper and backtest rows passed in a separate trial
+database, then in `quant_platform`. The live database now has the original
+formal 1 dataset / 3 runs / 310 trades, five paper sessions (four restored
+plus one surviving fixture), two backtest runs, eight personal research jobs
+and six market receipts. The current database was backed up before and after
+the repair outside Git; the post-recovery dump SHA-256 is
+`1bb477a8b92fc8d595f09c4622f824d4fe139944b8494ddd8b3d2b145e6e249d`.
+Frozen research files and the OOS lock were not changed.
+The eight product-job rows, 1,110 result rows and one watchlist row have
+identical sorted-row checksums in the pre-0015 backup and current database;
+all four earlier market-receipt IDs remain, plus two later receipts.
+
+The later historical paper accounts `4b64380f-85ff-4696-a710-a8d92725bc0b`
+and `07d72259-4491-4ad6-8ebc-4c8a2a8ae156` were created after the backup
+and remain absent. Other unrecorded post-backup sessions cannot be excluded.
+PostgreSQL WAL archiving is off, there is no replication slot, and no later
+pre-loss logical backup was found under the project backup root. Do not
+fabricate those event ledgers or mark their durability acceptance as current.
+
+The backend pytest suite now rejects any target unless `APP_ENV=test` and the
+database name is `quant_test` or a `quant_test_*` variant, before collection or
+fixture execution. A live-config collect-only invocation was rejected; an
+isolated full suite passed 969 tests with one optional archive skip, and live
+research/paper/product counts remained unchanged. Keep release data-integrity
+acceptance failed until the loss is transparently dispositioned and a durable
+backup/recovery procedure is validated.
+
 ## v1.2 executable forward feed needs explicit rights evidence — 2026-09-23
 
 Current SSE and SZSE Trading Rules §5.1.3 reserve exchange trading-information
