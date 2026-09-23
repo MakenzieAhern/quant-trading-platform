@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T18:17:31Z",
+  "updated_at_utc": "2026-09-23T18:33:25Z",
   "milestone": "M3_CURRENT_RULE_CANDIDATE_FAIL_CLOSED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,9 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-23 PR32 d62b51a CI35903063257 backend/frontend/compose PASS; isolated quant_test_v12_u5 full backend965 PASS (one optional archive skip), Ruff/format/mypy PASS",
+    "2026-09-23 product-only 2026 cost candidate now fixes official transfer/stamp components with explicit broker commission assumptions; all candidate rules still conservative_no_fill",
+    "2026-09-23 later SSE/SZSE September17 holiday notices archived off Git with SHA256; Sep25-27 and Oct1-7 closures verified, Sep24 remains scheduled rather than received",
     "2026-09-23 official current-master inventory archived off Git: SSE Main1702/1702 plus STAR618/618 with no duplicate codes, SZSE XLSX Main1494 plus ChiNext1408; 6/6 targeted sample identities matched; SSE notice dated 688622 delisting-risk warning effective Apr30; 2026 point-in-time master remains PARTIAL",
     "2026-09-23 current-cost source audit: official ChinaClear 2026 Shanghai/Shenzhen PDFs archived off Git with SHA256; ordinary A-share transfer 0.01 per mille each side, stamp 1 per mille seller halved, handling 0.0341 per mille and regulatory 0.02 per mille each side; broker commission remains modeled, no forward fill authorized",
     "PR32 head a827697 CI35899893847 backend/frontend/compose PASS; draft and unmerged",
@@ -154,7 +157,8 @@
     "PARTIAL: Chrome rendered official SSE 603400 notice confirming suspension from 2026-09-15 and continuation at announcement; PDF binary could not be archived/checksummed because WSL timed out and scripted Windows fetch returned an HTML JavaScript challenge; no bypass attempted",
     "OPEN: BaoStock retry receipts ed796871 retain parser v1 label despite live normalization fix preceding v2 bump; immutable provenance caveat documented, not silently rewritten",
     "OPEN: in-app browser-tool Back from dirty wizard left without observable guard popstate or dialog; sidebar confirmation worked, but real user Back/Forward cancel/accept acceptance is not proven",
-    "OPEN: in-app browser JSON report auto-click and fallback link prepared a blob but yielded no browser download event or Windows Downloads artifact; export completion remains unverified"
+    "OPEN: in-app browser JSON report auto-click and fallback link prepared a blob but yielded no browser download event or Windows Downloads artifact; export completion remains unverified",
+    "OPEN: Chrome browser-control binding timed out on two state reads and one fresh-tab attempt after a successful draft-restore and temporary Back-key QA edit; local QA draft name must be restored from U3 temporary keyboard Back QA to U2 Chrome precise configuration before further browser acceptance. No app defect inferred from the tool timeout"
   ],
   "external_blockers": [
     {
@@ -361,17 +365,17 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "a827697",
+      "last_verified_head": "d62b51a",
       "state": "DRAFT",
-      "ci_run": 35899893847,
+      "ci_run": 35903063257,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "candidate rules never execute; current forward authority remains PARTIAL"
     }
   },
-  "next_task": "Reconcile current official master inventory into a point-in-time forward sample, dated ST/suspension/actions/calendar and brokerage-assumption-aware cost/rules; only then pursue U7 after-start forward receipt. U3 native-dialog and U4 browser download remain unverified",
-  "next_command": "Check official dated ST exit/entry and suspension notices for the six current sample securities; reconcile 2026 action and session boundaries without promoting RAW_CANDIDATE execution, then implement the smallest forward session path",
+  "next_task": "Restore the local Chrome QA draft name after browser control recovers; reconcile current official master into a point-in-time forward sample with dated ST/suspension/actions and order constraints; only then pursue U7 after-start forward receipt. U3 native-dialog and U4 browser download remain unverified",
+  "next_command": "On a healthy browser binding restore the QA draft name first; then check official dated ST exit/entry and suspension notices for the six current sample securities without promoting RAW_CANDIDATE execution",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

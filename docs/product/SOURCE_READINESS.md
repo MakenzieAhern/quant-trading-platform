@@ -285,6 +285,16 @@ calendar ends 2025-12-31 and does not prove a complete 2026 session list.
 Later exceptional closures or exchange notices still require checking before
 the product calendar can become execution authority.
 
+The exchanges' later, dated [SSE notice of 2026-09-17](https://www.sse.com.cn/disclosure/announcement/general/c/c_20260915_10832273.shtml)
+(上证公告〔2026〕22号) and [SZSE notice of 2026-09-17](https://www.szse.cn/www/disclosure/notice/general/t20260917_622911.html)
+repeat that closure and also list the 2026-10-01 through 2026-10-07 National
+Day closure with 2026-10-08 reopening. Their original HTML was saved off Git
+at `/home/yuchen/data/product_source_evidence/2026_calendar/`: SSE SHA-256
+`779cbf7cc7ab2c4b34db17ceee29e266bc483e075860d8313b85c1d5d0f307bc`
+(2026-09-23 18:32:44 UTC); SZSE SHA-256
+`7b0c4264d27f4ba14a1904ab31cb3b2b870e4e68d6b8d8c0f6cf4254c1a045a4`
+(18:32:45 UTC). These are local save times, not live session receipts.
+
 1. **DONE for the bounded raw candidate path.** A product-owned, user-triggered
    per-security EOD update job uses
    existing BaoStock integration/Decimal records and a supervised timeout. Fetch
