@@ -21,16 +21,16 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | M0-REF | Official references and ≤2 layout directions | DESIGN_SYSTEM.md | Six official sources read; Apple rendered Chrome; one chosen layout | PASS |
 | U1-START | Clean user → one primary guided action → strategy; skip/reopen guide; returning draft/recent/status | Workbench / | Chrome primary CTA, four-mode guide/Esc, restored draft, real as-of; recent-run recheck pending | IN_PROGRESS |
 | U1-DEMO | No-private-data install can run clearly marked synthetic demo; all four modes explained | Registry + standalone synthetic experiment | Actual API demo c4a46658 succeeded; clean-install UI still pending | IN_PROGRESS |
-| U2-STRATEGY | Registered strategies, plain rules/cycle/risk/data/evidence; drafts and saved versions | /strategies and detail drawer | Real registered strategy plain-language Chrome evidence; saved versions pending | IN_PROGRESS |
+| U2-STRATEGY | Registered strategies, plain rules/cycle/risk/data/evidence; drafts and saved versions | /strategies, detail drawer and named local configuration versions | Chrome exact-string save/restore/reload/Chinese switch and pre-restore backup; independent review closed cross-tab overwrite; 16 configuration tests and full frontend suite PASS | PASS |
 | U3-WIZARD | Four steps, advanced disclosure, summary, back/save/restore/exit; locale preserves inputs | /research/new four-step form | Chrome synthetic and actual historical submission/result PASS; draft/locale preserved; dirty Back/Forward confirmation still unverified | IN_PROGRESS |
 | U3-JOB | Validated actual A-share job; stages/counts; persistent URL; refresh/reopen; idempotent duplicate | /api/experiments; independent durable manager | Chrome job5f26f84f: actual297/297, leave/reopen/reload same ID, historical result; API idempotency and UI lock tests PASS | IN_PROGRESS |
 | U3-RECOVER | Real cancellation/retry/interruption; no partial results called success | cancel/retry and durable terminal states | Running cancellation; restart INTERRUPTED; linked retry SUCCEEDED; UI lifecycle pending | IN_PROGRESS |
 | U3-ISOLATE | Independent exploration names/store; formal reports/OOS/freeze unchanged, dates labeled inspected | Separate product_research_jobs/rows, readonly archive | No .research diff; frozen hashes unchanged; formal 1 dataset/3 runs/310 trades before-after | IN_PROGRESS |
 | U4-RESULT | Return/drawdown/cost/benchmark/limits, null semantics, true records and reasons | Personal result and date-linked holdings/trades, full-precision toggle | Chrome demo+historical results agree with exact APIs; real fill/snapshot2031-04-14 linked; source unavailable remains N/A; U4 tests/review PASS | PASS |
-| U4-COMPARE | Reopen/compare 2–3; six config differences indicated | /experiments/compare?ids= | Chrome2-run differences observed; 2–3 selection and URL-popstate tests PASS; browser3-run refresh still pending | IN_PROGRESS |
-| U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, UI downloads | Injection/precision/API tests PASS; actual30021-byte historical JSON HTTP200; browser prepared but artifact/event unverified | IN_PROGRESS |
+| U4-COMPARE | Reopen/compare 2–3; six config differences indicated | /experiments/compare?ids= | Chrome three actual runs, six conditions, exact fraction display and refresh preserving URL/results; comparison tests and independent review PASS; `u4/compare-three-results-en-dark-1024.png` | PASS |
+| U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, automatic download and persistent prepared-file link | Injection/precision/API tests PASS; actual30021-byte historical JSON HTTP200; real browser download artifact/event still unverified | IN_PROGRESS |
 | U5-MARKET | Search/watchlist/raw-adjusted/date/source view | /api/markets and /markets deployed0013 | 20 backend/14 frontend focused tests; independent review PASS; Chrome000001 raw22.45/HFQ874.904325432379995/suspension2010-03-01; watchlist persists fresh tab; dialog dates/locale/Esc;390+1280 no page overflow | PASS |
-| U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | SOURCE_READINESS.md candidate audit | BaoStock anonymous public per-security path probed; bulk EOF fails boundedly; ingestion pending | IN_PROGRESS |
+| U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | /data and /api/market-updates; separate product cache and migration0014 | Real Chrome one-security/one-date job `3b729cf9` succeeded, one receipt/observation and zero unresolved calendar dates; receipt hashes and restart/reload persistence verified. Cross-board, failure/retry browser and authority promotion remain | IN_PROGRESS |
 | U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Pending | API invariants + result→plan browser | NOT_RUN |
 | U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Existing synthetic paper retained | Mode isolation/lifecycle tests | NOT_RUN |
 | U7-RECOVER | Socket disconnect/reconnect + backend restart don't fake/duplicate fills | Existing runtime interruption | Product retry/resume integration | NOT_RUN |
@@ -38,7 +38,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U8-I18N | One tree; translated important UI/error/help/a11y; switching retains config/date | Existing i18n | Legacy create remains English in Chinese | FAIL |
 | U8-SETTINGS | System/manual themes, language/motion/market colors/data preferences; explanatory help | Shared safe presentation storage and settings | Storage-denied/quota/locale tests PASS; Chrome theme+language persist reload; full preference matrix pending | IN_PROGRESS |
 | UX-DETAIL | Drawer keeps filters/scroll, Esc/Tab/back/trigger focus, URL | Pending | Keyboard browser | NOT_RUN |
-| UX-COMMAND | Safe Ctrl/Cmd+K + visible entry searches pages/strategy/studies/watchlist/help | Pending | No eval/dynamic operations | NOT_RUN |
+| UX-COMMAND | Safe Ctrl/Cmd+K + visible entry searches pages/strategy/studies/watchlist/help | Bounded server study/watchlist search, local pages/registered strategies/help | Backend search and frontend debounce/pagination tests PASS; live browser search and keyboard matrix pending | IN_PROGRESS |
 | UX-VIEWS | Saved filters/chips/sort/columns/table-detail/task center | Pending | Reload/reopen | NOT_RUN |
 | UX-CHART | Exact hover/legend/benchmark/date range/equity-drawdown-trade link/table; bounded loading | SVG exact data + linked experiment collections | Chrome selected-date trade/holdings agrees; full summary unaffected; keyboard/hover/large-page matrix pending | IN_PROGRESS |
 | UX-ERROR | No data/permission/offline/timeout/no match/no trades have next step | Pending | Isolated service/DB failure browser tests | NOT_RUN |
@@ -47,7 +47,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | QA-PERF | Immediate feedback; measured local interaction p95 target≤200ms; bounded charts/tables | Pending | Machine/data/browser/cache/method to record | NOT_RUN |
 | QA-ENGINE | Decimal/server validation/idempotency/task isolation; same financial path | Existing financial path + independent queue | 862 backend tests; actual 2011 exploratory run completed; synthetic clearly separated | IN_PROGRESS |
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
-| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Latest896 backend(author)/147 frontend(root) PASS; lint/type/build PASS; PR13 CI35705532812 all PASS; full product gates pending | IN_PROGRESS |
+| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | 2026-09-23 full backend949/frontend182 PASS, Ruff/mypy/ESLint/TS/build PASS;0014 disposable down/up/check PASS; PR15 CI35710621776 PASS; remaining product gates pending | IN_PROGRESS |
 | M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Pending | All links validated before release | NOT_RUN |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
@@ -63,7 +63,24 @@ the page now owns the context alone, retaining archive2025-12-31 (or explicitly
 synthetic2031-12-31) through open/close. Requested dates remain in the detail.
 Board/exchange names are translated without changing their API identifiers.
 
-U2 saved versions remain IN_PROGRESS: independent review reproduced an
-interleaved cross-tab draft overwrite. Preserve existing drafts; the author is
-implementing independently retained recovery slots before browser acceptance.
-Incremental provider jobs, U6/U7 and all remaining matrix rows are still required.
+The prior U2 cross-tab draft overwrite is resolved with independently retained
+per-page recovery slots. Exact saved version and restore behavior was checked in
+Chrome; the three-way comparison was also refreshed in Chrome. These checks are
+agent walkthroughs, not real new-user research.
+
+## 2026-09-23 00:52 UTC incremental candidate checkpoint
+
+Migration0014 was checked with upgrade/downgrade/upgrade and Alembic check on the
+isolated test DB. The main database received the additive migration after a
+validated off-repo backup. Backend949/frontend182 tests, Ruff, strict mypy,
+ESLint, TypeScript and build passed. Chrome submitted exactly one explicit
+BaoStock request for `CN-A:SSE:600000` on 2026-09-22. Job
+`3b729cf9-32e2-4945-9a81-05b08685fc6e` completed one provider request with
+one raw candidate observation and receipt `4eb082e8-4b06-4a63-8197-acfa0f6073d1`.
+Manifest SHA-256 `5db56749ffe589cc34184ea741739cddce57eaec0b8ea150a770b46f28924dff`
+matches the independent product volume file. The browser reopened that same
+task after backend restart with unchanged counts; the screenshot is
+`u5/incremental-raw-receipt-zh-20260923.png` outside Git. Formal ledger counts
+remain 1 dataset/3 runs/310 trades and frozen manifest/freeze hashes unchanged.
+This is a historical candidate update, not trading authority or a forward
+simulation receipt after user-session start. U6/U7 and the full matrix remain.

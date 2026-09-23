@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-22T09:27:00Z",
-  "milestone": "M1_BROWSER_CLOSURE_AND_M2_U4_U5",
+  "updated_at_utc": "2026-09-23T00:52:00Z",
+  "milestone": "M2_U5_INCREMENTAL_AND_M3_U6_PLANNING",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,7 +16,7 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-markets",
+    "branch": "codex/product-v1.2-configurations",
     "identity": "MakenzieAhern"
   },
   "ownership": {
@@ -24,9 +24,9 @@
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
     "queue_writer": "experiment manager idle: 5 SUCCEEDED, 1 CANCELLED, 1 INTERRUPTED; no formal studies",
     "agents": {
-      "product_backend_audit": "U5 incremental backend +0014 isolated test migration; no main deployment until review",
-      "guided_experiments_ui": "U2 cross-tab draft retention fix, then isolated marketUpdates frontend directory",
-      "forward_source_audit": "read-only U2 race reported; reviewing U5 incremental backend"
+      "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
+      "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
+      "forward_source_audit": "read-only review closed U2/U5 P1; agent inactive after usage limit"
     },
     "verified_processes": "2026-09-22: 4 healthy/available project services; 2 stopped paper sessions; no formal study",
     "process_ids_are_not_reusable_authority": true
@@ -62,7 +62,14 @@
     "Chrome real0000012010-03-01 suspension/raw/adjusted agrees with API; dates retained after dialog reopen/locale change; Escape focus restored",
     "Chrome390x844 and1280x800 markets no page overflow; zh/light and zh/dark screenshots outside Git",
     "U5 parent/child source-context race reproduced by failing test then fixed by single page owner;22 related tests PASS",
-    "PR14 draft created/attached; CI35709079995 backend/frontend/compose PASS"
+    "PR14 draft created/attached; CI35709079995 backend/frontend/compose PASS",
+    "PR15 draft created/attached; CI35710621776 backend/frontend/compose PASS",
+    "U2 exact named configuration save/restore/reload/Chinese switch and pre-restore backup checked in Chrome; independent race review PASS",
+    "U4 three actual runs compared across six conditions; refresh and fractional configuration display checked in Chrome",
+    "2026-09-23 full backend949/frontend182, Ruff/mypy/ESLint/type/build PASS; isolated migration0014 down/up/check PASS",
+    "Main DB pre0014 backup validated off Git; additive0014 deployed with separate product volume and read-only research mount",
+    "Chrome explicitly requested one BaoStock security/day: one persisted candidate receipt and observation; restart/reload retained exact job and counts",
+    "Formal ledger1 dataset/3 runs/310 trades and frozen manifest/freeze hashes unchanged after0014 and restart"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
@@ -71,7 +78,8 @@
     "Browser download UI reports prepared, but actual download event/artifact not verified; forbidden chrome://downloads inspection not retried",
     "Browser native date fill changes DOM without React event; native keyboard commit verified persisted form before submission",
     "RESOLVED: closing market detail cleared parent data-mode context; remove duplicate child writer with regression",
-    "OPEN: U2 shared localStorage draft restore can overwrite interleaved other-tab edit; independent reproduction, recovery-slot fix underway"
+    "RESOLVED: U2 shared localStorage overwrite across tabs; independently retained per-page recovery slots and independent review",
+    "OPEN: Vite main bundle539.75 kB exceeds500 kB warning; M4 performance diagnosis pending"
   ],
   "external_blockers": [
     {
@@ -84,8 +92,7 @@
   "not_run": [
     "Native dirty Back/Forward full browser confirmation path",
     "Browser exported artifact completion; API export content verified separately",
-    "U2 saved configuration browser gate after cross-tab data-loss fix and independent re-review",
-    "U5 incremental update/user jobs and source promotion; U6/U7 complete plans/forward",
+    "U5 cross-board controls, failure/retry/cancel browser matrix and source authority promotion; U6/U7 complete plans/forward",
     "Full remaining M2-M5 matrix, real-user testing not claimed"
   ],
   "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
@@ -108,17 +115,27 @@
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "INCOMPLETE:3-way comparison and exported artifact"
+      "browser_gate": "3-way comparison PASS; exported artifact still unverified"
+    },
+    "15": {
+      "branch": "codex/product-v1.2-markets",
+      "head": "5af0943",
+      "state": "DRAFT",
+      "ci_run": 35710621776,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "cached markets and watchlist PASS"
     }
   },
-  "next_task": "Commit U5 cached markets slice; integrate independently reviewed incremental jobs with separate cache; close U2 race; continue full U6/U7/M4/M5",
-  "next_command": "Do not restart backend until0014 review/down-up/full tests pass; register reviewed models/router/lifespan/cache only after that gate",
+  "next_task": "Push reviewed U2/U4 slice and create stacked draft PR; commit bounded search and U5 incremental slices; then implement U6 plan and continue U7/M4/M5",
+  "next_command": "Review explicit staged paths, push codex/product-v1.2-configurations, create draft PR against codex/product-v1.2-markets; preserve the remaining U5/search worktree changes",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
     "M1": "IN_PROGRESS",
     "M2": "IN_PROGRESS",
-    "M3": "NOT_RUN",
+    "M3": "IN_PROGRESS",
     "M4": "NOT_RUN",
     "M5": "NOT_RUN"
   }
