@@ -27,6 +27,13 @@ retroactively change the frozen v1.1 model-assumption record. Do not promote
 2026 candidate bars or rules to executable status until remaining source and
 runtime gates pass.
 
+The product-only `candidate_2026_cn_a_costs` accepts commission and its minimum
+as caller-supplied assumptions, while fixing the separately sourced 2026
+ordinary A-share transfer and seller-stamp components. It does not double
+charge handling/regulatory fees already included in the assumed commission.
+All resulting candidate rules remain `conservative_no_fill`; source-backed
+components alone do not settle current master, status, calendar or action gates.
+
 ## v1.2 forward-market rule authority remains separate — 2026-09-23
 
 Official SSE/SZSE 2026 Trading Rules were saved and checksummed outside Git.

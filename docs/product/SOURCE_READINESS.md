@@ -219,10 +219,13 @@ verified as 10-page PDF files and checksummed after download:
 This verifies the current **statutory components for ordinary A-share
 auction trades**, not a universal broker commission. The existing `0.0003`
 commission and CNY 5 minimum are configurable simulation assumptions, not
-rates certified by ChinaClear. Current cost-schedule integration and
-brokerage-assumption labeling remain `PARTIAL`; no candidate receipt becomes
-executable from this source check. It does not retroactively certify or edit
-the frozen v1.1 historical transfer-fee allowance.
+rates certified by ChinaClear. `candidate_2026_cn_a_costs` now takes those
+assumptions explicitly and returns a separately labeled 2026 candidate cost
+schedule; exchange handling and regulatory fees are not charged again on top
+of the assumed inclusive brokerage commission. Product-facing brokerage
+assumption disclosure and full current execution authority remain `PARTIAL`;
+all candidate rules still forbid fills. This does not retroactively certify
+or edit the frozen v1.1 historical transfer-fee allowance.
 
 ### Bounded current security-master sample (2026-09-23)
 

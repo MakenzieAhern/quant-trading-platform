@@ -5,6 +5,7 @@ import pytest
 
 from app.data.catalog.checksums import canonical_sha256
 from app.domain.markets.cn_a_rules import (
+    candidate_2026_cn_a_costs,
     candidate_2026_cn_a_rules,
     historical_cn_a_rules,
 )
@@ -29,6 +30,19 @@ def _cost(
         valid_to=valid_to,
         source_version="test-cost-not-an-authority",
     )
+
+
+def test_2026_cost_candidate_separates_statutory_rates_from_broker_assumption() -> None:
+    cost = candidate_2026_cn_a_costs(
+        commission_rate=Decimal("0.0003"), minimum_commission=Decimal("5")
+    )
+    assert cost.valid_from == date(2026, 1, 1)
+    assert cost.sell_stamp_duty_rate == Decimal("0.0005")
+    assert cost.transfer_fee_rate == Decimal("0.00001")
+    assert cost.commission_rate == Decimal("0.0003")
+    assert cost.minimum_commission == Decimal("5")
+    assert "broker-assumption" in cost.source_version
+    assert all(rule.conservative_no_fill for rule in candidate_2026_cn_a_rules(cost).rules)
 
 
 @pytest.mark.parametrize(

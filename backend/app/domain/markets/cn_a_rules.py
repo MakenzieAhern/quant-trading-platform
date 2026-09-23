@@ -166,6 +166,20 @@ def historical_cn_a_rules() -> TradingRuleVersion:
     return TradingRuleVersion(version="cn-a-2010-2025.6", rules=tuple(rules))
 
 
+def candidate_2026_cn_a_costs(
+    *, commission_rate: Decimal, minimum_commission: Decimal
+) -> TransactionCostSchedule:
+    """Current statutory components; brokerage commission is an explicit assumption."""
+    return TransactionCostSchedule(
+        commission_rate=commission_rate,
+        minimum_commission=minimum_commission,
+        sell_stamp_duty_rate=Decimal("0.0005"),
+        transfer_fee_rate=Decimal("0.00001"),
+        valid_from=date(2026, 1, 1),
+        source_version="chinaclear-sh-sz-2026-01-01+broker-assumption",
+    )
+
+
 def candidate_2026_cn_a_rules(cost_schedule: TransactionCostSchedule) -> TradingRuleVersion:
     """Official 2026 board terms; fail closed until other current inputs are audited."""
     effective = date(2026, 7, 6)
