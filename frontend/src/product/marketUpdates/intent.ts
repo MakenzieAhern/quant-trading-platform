@@ -1,0 +1,81 @@
+import type { UpdateCapabilities, UpdateConfiguration } from "./types";
+export const UPDATE_DRAFT_KEY = "quant.product.market-update-draft.v1";
+export interface UpdateDraft {
+  securityText: string;
+  start_date: string;
+  end_date: string;
+  requestKey: string;
+}
+export function readUpdateDraft(): UpdateDraft | null {
+  try {
+    const item: unknown = JSON.parse(
+      localStorage.getItem(UPDATE_DRAFT_KEY) ?? "null",
+    );
+    if (!item || typeof item !== "object") return null;
+    const data = item as UpdateDraft;
+    return [
+      data.securityText,
+      data.start_date,
+      data.end_date,
+      data.requestKey,
+    ].every((value) => typeof value === "string")
+      ? data
+      : null;
+  } catch {
+    return null;
+  }
+}
+export function saveUpdateDraft(draft: UpdateDraft) {
+  localStorage.setItem(UPDATE_DRAFT_KEY, JSON.stringify(draft));
+}
+export function requestFromDraft(draft: UpdateDraft): UpdateConfiguration {
+  return {
+    security_ids: draft.securityText
+      .split(/[\s,;，；]+/)
+      .filter(Boolean)
+      .sort(),
+    start_date: draft.start_date,
+    end_date: draft.end_date,
+  };
+}
+export function earliestUpdateDate(caps: UpdateCapabilities): string | null {
+  const archive = caps.archive.find(
+    (item) => item.mode === "historical_exploration",
+  );
+  if (!archive) return null;
+  const date = new Date(`${archive.coverage_end}T00:00:00Z`);
+  if (!Number.isFinite(date.getTime())) return null;
+  date.setUTCDate(date.getUTCDate() + 1);
+  return date.toISOString().slice(0, 10);
+}
+export function validUpdateRequest(
+  config: UpdateConfiguration,
+  caps: UpdateCapabilities,
+): boolean {
+  const { security_ids: ids, start_date: start, end_date: end } = config;
+  const validDate = (day: string) => {
+    const date = new Date(`${day}T00:00:00Z`);
+    return (
+      /^\d{4}-\d{2}-\d{2}$/.test(day) &&
+      Number.isFinite(date.getTime()) &&
+      date.toISOString().slice(0, 10) === day
+    );
+  };
+  const span =
+    (Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) /
+    86400000;
+  const earliest = earliestUpdateDate(caps);
+  return (
+    ids.length >= 1 &&
+    ids.length <= Math.min(20, caps.max_securities) &&
+    new Set(ids).size === ids.length &&
+    ids.every((id) => /^CN-A:(SSE|SZSE):[0-9]{6}$/.test(id)) &&
+    validDate(start) &&
+    validDate(end) &&
+    span >= 0 &&
+    span < Math.min(366, caps.max_days) &&
+    earliest !== null &&
+    start >= earliest &&
+    end <= caps.latest_publishable_date
+  );
+}

@@ -9,6 +9,7 @@ import { explainExperimentCode } from "./experiments/codes";
 import { useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
 import { usePreferences } from "./preferences";
+import { MarketUpdatesPanel } from "./marketUpdates";
 
 export function ProductError({ retry }: { retry: () => void }) {
   const c = useProductCopy();
@@ -410,6 +411,7 @@ export function DataCenterPage() {
           </details>
         </section>
       ))}
+      <MarketUpdatesPanel />
       <p className="inlineNotice">{c.futureUnavailable}</p>
       <p className="smallText">{c.dateZone}</p>
     </div>

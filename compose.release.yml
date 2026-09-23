@@ -5,6 +5,8 @@ services:
       APP_ENV: production
     volumes: !override
       - ./data:/workspace/data:ro
+      - ${RESEARCH_DATA_ROOT:-./data/research}:/workspace/research:ro
+      - product_data:/workspace/product
   frontend:
     build:
       context: ./frontend

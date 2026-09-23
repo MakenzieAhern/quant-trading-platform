@@ -323,7 +323,7 @@ def _security_id(symbol: str) -> str:
 
 
 def _holdings_row(sequence: int, snapshot: PortfolioSnapshot) -> dict[str, Any]:
-    return json_value(
+    result: dict[str, Any] = json_value(
         {
             "sequence": sequence,
             "trading_date": snapshot.timestamp.astimezone(TRADING_ZONE).date(),
@@ -359,6 +359,7 @@ def _holdings_row(sequence: int, snapshot: PortfolioSnapshot) -> dict[str, Any]:
             ],
         }
     )
+    return result
 
 
 def _implementation_checksum() -> str:

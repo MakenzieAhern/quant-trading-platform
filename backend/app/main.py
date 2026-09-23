@@ -1,6 +1,6 @@
 import logging
 from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
+from contextlib import AsyncExitStack, asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse
 from app.api.middleware import RequestBodyLimitMiddleware
 from app.api.router import api_router
 from app.api.routes.experiments import experiment_manager
+from app.api.routes.market_updates import market_update_manager
 from app.api.routes.paper import paper_manager
 from app.core.config import get_settings
 from app.core.logging import configure_logging
@@ -28,14 +29,13 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     interrupted = await paper_manager.recover_interrupted()
     if interrupted:
         logger.info("Interrupted stale paper sessions", extra={"count": interrupted})
-    await experiment_manager.start()
-    try:
+    async with AsyncExitStack() as cleanup:
+        cleanup.push_async_callback(paper_manager.shutdown)
+        cleanup.push_async_callback(experiment_manager.shutdown)
+        await experiment_manager.start()
+        cleanup.push_async_callback(market_update_manager.shutdown)
+        await market_update_manager.start()
         yield
-    finally:
-        try:
-            await experiment_manager.shutdown()
-        finally:
-            await paper_manager.shutdown()
         logger.info("Application stopping")
 
 

@@ -446,7 +446,11 @@ async def test_startup_failure_releases_session_lock_before_returning_connection
     # Explicitly inspect the session lock: a pooled close must not hide a leaked lock.
     async with engine.connect() as connection:
         count = await connection.scalar(
-            text("SELECT count(*) FROM pg_locks WHERE locktype = 'advisory' AND objid = :key"),
+            text(
+                "SELECT count(*) FROM pg_locks WHERE locktype = 'advisory' "
+                "AND database = (SELECT oid FROM pg_database WHERE datname = current_database()) "
+                "AND objid = :key"
+            ),
             {"key": service.OWNER_LOCK},
         )
         assert count == 0
