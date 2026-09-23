@@ -1,4 +1,5 @@
 import asyncio
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -9,6 +10,7 @@ from app.application.experiments.data import DEMO_ID, HISTORICAL_ID, ExperimentD
 from app.application.markets import MarketReader
 from app.application.watchlist import WatchlistService
 from app.core.config import get_settings
+from app.db.models.watchlist import WatchlistItemModel
 from app.db.session import SessionFactory
 from app.main import app
 from tests.test_product_markets import SID
@@ -79,3 +81,50 @@ async def test_watchlist_rejects_unknown_security_dataset_and_unsafe_input(watch
             assert (await client.put(path, json=body)).status_code == 422
         assert (await client.get("/api/markets/watchlist?limit=1000")).status_code == 422
         assert (await client.get("/api/markets/watchlist")).json()["items"] == []
+
+
+async def test_server_watchlist_search_covers_older_snapshots_and_literal_names(watchlist):
+    seed = await watchlist.add(DEMO_ID, SID)
+    async with SessionFactory() as db, db.begin():
+        for index in range(21):
+            sid = f"CN-A:SSE:{610000 + index}"
+            db.add(
+                WatchlistItemModel(
+                    dataset_id=DEMO_ID,
+                    security_id=sid,
+                    dataset_sha256=seed["dataset_sha256"],
+                    security={
+                        **seed["security"],
+                        "security_id": sid,
+                        "symbol": sid[-6:],
+                        "name": "Older%_/研究" if index == 0 else f"Other {index}",
+                        "source_observed_name": "Observed Needle" if index == 0 else None,
+                    },
+                    added_at=datetime(2026, 1, 1, tzinfo=UTC) + timedelta(days=index),
+                )
+            )
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        recent = (await client.get("/api/markets/watchlist?limit=20")).json()
+        assert recent["total"] == 22 and "CN-A:SSE:610000" not in [
+            r["security_id"] for r in recent["items"]
+        ]
+        for query in ("610000", "cn-a:sse:610000", "%_/", "研究", " observed needle "):
+            result = (await client.get("/api/markets/watchlist", params={"q": query})).json()
+            assert result["total"] == 1 and result["items"][0]["security_id"] == "CN-A:SSE:610000"
+            assert result["items"][0]["dataset_id"] == DEMO_ID
+        first = (
+            await client.get("/api/markets/watchlist", params={"q": "Other", "limit": 1})
+        ).json()
+        second = (
+            await client.get(
+                "/api/markets/watchlist", params={"q": "Other", "limit": 1, "offset": 1}
+            )
+        ).json()
+        assert first["total"] == second["total"] == 20
+        assert first["items"][0]["security_id"] != second["items"][0]["security_id"]
+        assert (await client.get("/api/markets/watchlist", params={"q": "no match"})).json()[
+            "total"
+        ] == 0
+        assert (
+            await client.get("/api/markets/watchlist", params={"q": "x" * 81})
+        ).status_code == 422

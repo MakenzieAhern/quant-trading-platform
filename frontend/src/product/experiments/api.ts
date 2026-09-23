@@ -300,9 +300,9 @@ const path = (id: string) => `/api/experiments/${encodeURIComponent(id)}`;
 export const experimentApi = {
   capabilities: (signal?: AbortSignal) =>
     apiRequest("/api/workbench/capabilities", {}, signal, parseCapabilities),
-  list: (signal?: AbortSignal, limit = 20, offset = 0) =>
+  list: (signal?: AbortSignal, limit = 20, offset = 0, q = "") =>
     apiRequest(
-      `/api/experiments?limit=${limit}&offset=${offset}`,
+      `/api/experiments?limit=${limit}&offset=${offset}${q ? `&${new URLSearchParams({ q })}` : ""}`,
       {},
       signal,
       (value) => page(value, parseExperiment),

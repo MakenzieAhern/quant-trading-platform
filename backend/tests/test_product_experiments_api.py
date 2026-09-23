@@ -94,6 +94,38 @@ async def test_concurrent_idempotency_cancel_retry_and_validation(manager):
         assert wrong_money.status_code == 422
 
 
+async def test_server_search_finds_older_jobs_and_escapes_like_wildcards(manager):
+    older = await manager.create(
+        CreateExperimentRequest.model_validate(payload(name="Older Needle 100%_/研究")),
+        "old-search",
+    )
+    for index in range(21):
+        await manager.create(
+            CreateExperimentRequest.model_validate(payload(name=f"Recent other {index}")),
+            f"other-search-{index}",
+        )
+    second = await manager.create(
+        CreateExperimentRequest.model_validate(payload(name="Another needle")), "second-search"
+    )
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        recent = (await client.get("/api/experiments?limit=20")).json()
+        assert recent["total"] == 23 and str(older.id) not in [r["job_id"] for r in recent["items"]]
+        first = (await client.get("/api/experiments", params={"q": " NEEDLE ", "limit": 1})).json()
+        assert first["total"] == 2 and first["items"][0]["job_id"] == str(second.id)
+        after = (
+            await client.get("/api/experiments", params={"q": "needle", "limit": 1, "offset": 1})
+        ).json()
+        assert after["total"] == 2 and after["items"][0]["job_id"] == str(older.id)
+        for query in ("%_/", "研究", str(older.id).upper()):
+            result = (await client.get("/api/experiments", params={"q": query})).json()
+            assert result["total"] == 1 and result["items"][0]["job_id"] == str(older.id)
+        assert (await client.get("/api/experiments", params={"q": "not found"})).json()[
+            "total"
+        ] == 0
+        assert (await client.get("/api/experiments", params={"q": "x" * 81})).status_code == 422
+        assert (await client.get("/api/experiments", params={"q": "   "})).json()["total"] == 23
+
+
 async def test_worker_results_are_persisted_paginated_and_reopenable(manager):
     job = await manager.create(CreateExperimentRequest.model_validate(payload()), "durable")
     await manager.start()

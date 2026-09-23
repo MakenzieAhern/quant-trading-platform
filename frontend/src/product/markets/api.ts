@@ -231,9 +231,9 @@ export const marketApi = {
       signal,
       parseBars,
     ),
-  watchlist: (offset = 0, signal?: AbortSignal) =>
+  watchlist: (offset = 0, signal?: AbortSignal, q = "") =>
     apiRequest(
-      `${root}/watchlist?limit=20&offset=${offset}`,
+      `${root}/watchlist?limit=20&offset=${offset}${q ? `&${new URLSearchParams({ q })}` : ""}`,
       {},
       signal,
       (value) => page(value, watchlist),

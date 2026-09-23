@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Pagination } from "../../components/Pagination";
+import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc } from "../../utils/format";
 import { Dialog } from "../Dialog";
@@ -23,7 +24,9 @@ export function MarketsPage() {
         <h1>{c.title}</h1>
         <p>{c.intro}</p>
       </header>
-      <p className="marketNotice">{c.cacheOnly}</p>
+      <p className="marketNotice">
+        {c.cacheOnly} <Link href="/data">{c.updatesLink}</Link>
+      </p>
       {datasets.loading && <p role="status">{c.loading}</p>}
       {datasets.error && (
         <div role="alert">
@@ -43,15 +46,18 @@ export function MarketsPage() {
 
 function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   const c = useMarketCopy();
+  const defaultDatasetId =
+    (
+      datasets.find(
+        (d) => d.available && d.mode === "historical_exploration",
+      ) ??
+      datasets.find((d) => d.available) ??
+      datasets[0]
+    )?.dataset_id ?? "";
   const [datasetId, setDatasetId] = useState(
     () =>
-      (
-        datasets.find(
-          (d) => d.available && d.mode === "historical_exploration",
-        ) ??
-        datasets.find((d) => d.available) ??
-        datasets[0]
-      )?.dataset_id ?? "",
+      new URLSearchParams(window.location.search).get("dataset") ??
+      defaultDatasetId,
   );
   const dataset = datasets.find((d) => d.dataset_id === datasetId);
   const [q, setQ] = useState(
@@ -105,12 +111,16 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         "";
       setQ(value);
       setQuery(value);
+      const requestedDataset = new URLSearchParams(window.location.search).get(
+        "dataset",
+      );
+      setDatasetId(requestedDataset ?? defaultDatasetId);
       setOffset(0);
       setSelected(null);
     };
     window.addEventListener("popstate", update);
     return () => window.removeEventListener("popstate", update);
-  }, []);
+  }, [defaultDatasetId]);
   async function changeWatchlist(
     kind: "add" | "remove",
     source: string,
@@ -154,6 +164,11 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
               setOffset(0);
             }}
           >
+            {!dataset && (
+              <option value={datasetId} disabled>
+                {c.unavailable} · {datasetId}
+              </option>
+            )}
             {datasets.map((d) => (
               <option key={d.dataset_id} value={d.dataset_id}>
                 {mode(d)} · {d.dataset_id}
@@ -283,7 +298,13 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                             <small>{item.security_id}</small>
                           </th>
                           <td>{securityName(item)}</td>
-                          <td>{item.exchange === "SSE" ? c.sse : item.exchange === "SZSE" ? c.szse : item.exchange}</td>
+                          <td>
+                            {item.exchange === "SSE"
+                              ? c.sse
+                              : item.exchange === "SZSE"
+                                ? c.szse
+                                : item.exchange}
+                          </td>
                           <td>{boardLabel(item.board, c)}</td>
                           <td>
                             <button

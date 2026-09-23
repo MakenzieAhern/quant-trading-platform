@@ -11,7 +11,8 @@ const en = {
   unavailable: "Source unavailable",
   noSources: "No registered data sources are available.",
   cacheOnly:
-    "Historical cache reader — not live quotes. Incremental updates and acquisition task history are not implemented on this page.",
+    "Historical cache reader — not live quotes. Request raw candidates and inspect update tasks in the data center.",
+  updatesLink: "Open data center",
   demoWarning:
     "Synthetic prices demonstrate the interface only. They are not market prices or investment evidence.",
   historicalWarning:
@@ -142,7 +143,8 @@ const zh: typeof en = {
   unavailable: "来源不可用",
   noSources: "当前没有可用的已注册数据来源。",
   cacheOnly:
-    "历史缓存阅读器——不是实时行情。本页尚未实现增量更新及采集任务历史。",
+    "历史缓存阅读器——不是实时行情。可到数据中心请求原始候选数据并查看更新任务。",
+  updatesLink: "打开数据中心",
   demoWarning: "合成价格仅用于演示界面，不是真实市场价格或投资证据。",
   historicalWarning: "此历史区间已被查看，不属于新市场或未见样本／OOS 证据。",
   loading: "正在读取已保存数据…",
@@ -258,7 +260,16 @@ export function useMarketCopy() {
 }
 export type MarketCopy = typeof en;
 export function boardLabel(board: string, c: MarketCopy) {
-  return ({ SSE_MAIN: c.sseMain, SSE_STAR: c.star, SZSE_MAIN: c.szseMain, SZSE_CHINEXT: c.chiNext } as Record<string, string>)[board] ?? board;
+  return (
+    (
+      {
+        SSE_MAIN: c.sseMain,
+        SSE_STAR: c.star,
+        SZSE_MAIN: c.szseMain,
+        SZSE_CHINEXT: c.chiNext,
+      } as Record<string, string>
+    )[board] ?? board
+  );
 }
 export function observationLabel(status: string, c: MarketCopy) {
   return (
