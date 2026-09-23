@@ -13,6 +13,7 @@
   --text: #202733;
   --muted: #596375;
   --border: #dce1e8;
+  --field-border: #767f90;
   --primary: #494dc5;
   --primary-soft: #eeedff;
   --danger: #b12e3d;
@@ -952,7 +953,7 @@ textarea {
   width: 100%;
   min-height: 42px;
   padding: 8px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--field-border);
   border-radius: 6px;
   color: var(--text);
   background: var(--surface);
