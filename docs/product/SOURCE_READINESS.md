@@ -182,6 +182,18 @@ master/calendar/ST/suspension/actions/cost authority before any candidate bar
 can become execution-eligible. `RULE_AUTHORITY_2026 = PARTIAL` and all existing
 candidate receipts remain `execution_eligible=false`.
 
+### Current exchange calendar schedule (2026-09-23)
+
+The [SSE 2026 closure notice](https://www.sse.com.cn/disclosure/announcement/general/c/c_20251222_10802507.shtml)
+(上证公告〔2025〕45号) and [SZSE 2026 closure notice](https://www.szse.cn/disclosure/notice/t20251222_618087.html)
+(深证会〔2025〕481号), both dated 2025-12-22, independently list
+2026-09-25 through 2026-09-27 as Mid-Autumn closure and 2026-09-28 as
+reopening. As of this checkpoint, 2026-09-24 is only a **scheduled** session;
+it has not completed or produced an after-start receipt. The old accepted
+calendar ends 2025-12-31 and does not prove a complete 2026 session list.
+Later exceptional closures or exchange notices still require checking before
+the product calendar can become execution authority.
+
 1. **DONE for the bounded raw candidate path.** A product-owned, user-triggered
    per-security EOD update job uses
    existing BaoStock integration/Decimal records and a supervised timeout. Fetch

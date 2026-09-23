@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T17:48:15Z",
+  "updated_at_utc": "2026-09-23T17:54:46Z",
   "milestone": "M4_CURRENT_RULE_SOURCE_GAP_MAPPED",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "PR32 source-evidence head 4c33867 CI35898659389 backend/frontend/compose PASS; draft and unmerged",
+    "Official SSE/SZSE 2026 closure notices agree on Sep25-27 Mid-Autumn closure and Sep28 reopening; Sep24 remains only scheduled, not a received completed session",
     "PR31 head 8f396e6 CI35897535773 backend/frontend/compose PASS; draft remains unmerged",
     "Official SSE/SZSE 2026 trading-rule attachments saved off Git and SHA256 verified; effective 2026-07-06, Main Board ST limit changes 5% to 10%; source gap documented without promoting candidate bars",
     "M0 live Chrome populated/new/empty DB/offline baselines and all six official references",
@@ -351,6 +353,16 @@
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "temporary M1 filter retained across detail/Back at 390x844; wider UX-VIEWS matrix incomplete"
+    },
+    "32": {
+      "branch": "codex/product-v1.2-current-rules",
+      "last_verified_head": "4c33867",
+      "state": "DRAFT",
+      "ci_run": 35898659389,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "browser_gate": "not applicable to source-evidence-only commit; current forward authority remains PARTIAL"
     }
   },
   "next_task": "Audit current official master/calendar/ST/suspension/actions/cost evidence, implement a separate effective-dated 2026 product rule version, and then pursue U7 after-start forward receipt; keep U3 native-dialog and U4 browser download unverified until actual proof",
