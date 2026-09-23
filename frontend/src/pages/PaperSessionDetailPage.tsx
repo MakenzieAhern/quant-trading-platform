@@ -138,7 +138,20 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
       {session.error_message && (
         <section className="stateCallout failedCallout" role="alert">
           <h2>{t("detail.failedTitle")}</h2>
-          <p>{session.error_message}</p>
+          <p>
+            {t(
+              session.status === "INTERRUPTED"
+                ? "detail.interruptedHelp"
+                : "detail.failedHelp",
+            )}
+          </p>
+          <Link className="button" href="/paper/new">
+            {t("detail.createAgain")}
+          </Link>
+          <details>
+            <summary>{t("detail.auditError")}</summary>
+            <code>{session.error_message}</code>
+          </details>
         </section>
       )}
       <section className="panel">

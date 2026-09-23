@@ -451,6 +451,35 @@ describe("paper trading pages", () => {
     expect(screen.getByText("WebSocket: closed")).toBeInTheDocument();
   });
 
+  it("explains a backend interruption in Chinese and keeps the raw diagnostic for audit", async () => {
+    installWebSocket();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({
+        ...paperSnapshot("INTERRUPTED"),
+        session: {
+          ...paperSession("INTERRUPTED"),
+          error_message: "Paper runtime interrupted by backend shutdown.",
+        },
+      }),
+    );
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    try {
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "后端重启中断了本次回放",
+      );
+      expect(
+        screen.getByRole("link", { name: "创建新模拟会话" }),
+      ).toHaveAttribute("href", "/paper/new");
+      expect(
+        screen.getByText("Paper runtime interrupted by backend shutdown."),
+      ).not.toBeVisible();
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
+  });
+
   it("rejects unknown stream events and rehydrates instead of advancing state", async () => {
     installWebSocket();
     vi.useFakeTimers();

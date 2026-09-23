@@ -225,6 +225,12 @@ export const enUS = {
       started: "Started",
       stopped: "Stopped",
       failedTitle: "Paper session ended safely",
+      interruptedHelp:
+        "A backend restart interrupted this replay. Existing records remain read-only; no fills are backfilled or orders restarted automatically. Create a new session to retry.",
+      failedHelp:
+        "This replay did not complete. Do not treat partial records as a finished result. Check the configuration and create a new session.",
+      createAgain: "Create another paper session",
+      auditError: "Original diagnostic (audit)",
       latestBar: "LATEST COMPLETED BAR",
       marketData: "Market data",
       open: "Open",

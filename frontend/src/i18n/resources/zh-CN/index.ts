@@ -212,6 +212,12 @@ export const zhCN = {
       started: "开始时间",
       stopped: "停止时间",
       failedTitle: "模拟交易会话已安全结束",
+      interruptedHelp:
+        "后端重启中断了本次回放。已有记录保持只读，不会自动补成交或重新下单；如需重试，请创建新会话。",
+      failedHelp:
+        "本次回放未完成，不能把部分记录当作完整结果。请检查配置后创建新会话。",
+      createAgain: "创建新模拟会话",
+      auditError: "原始诊断（审计）",
       latestBar: "最新完整 K 线",
       marketData: "市场数据",
       open: "开盘价",
