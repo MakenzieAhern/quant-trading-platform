@@ -261,30 +261,48 @@
   padding-block: 0.65rem;
   font-weight: 600;
 }
-.experimentListCard {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-.experimentListCard h2 {
-  margin: 0.5rem 0;
-  overflow-wrap: anywhere;
-}
-.experimentListCard h2 a {
-  color: var(--text);
-  text-decoration: none;
-}
-.experimentListCard h2 a:hover {
-  text-decoration: underline;
-}
-.experimentListAction {
-  display: flex;
+.experimentViewControls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
   gap: 0.8rem;
-  flex-direction: column;
-  align-items: flex-end;
-  flex-shrink: 0;
 }
+.experimentViewControls label {
+  display: grid;
+  gap: 0.3rem;
+}
+.experimentViewControls input,
+.experimentViewControls select {
+  min-height: 44px;
+  min-width: 0;
+  width: 100%;
+  font: inherit;
+}
+.experimentViewActions,
+.experimentFilterChips,
+.experimentColumnOptions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.experimentViewActions { margin-top: 0.8rem; }
+.experimentViewActions details { min-width: 8rem; }
+.experimentColumnOptions { padding: 0.5rem; }
+.experimentColumnOptions label { white-space: nowrap; }
+.experimentFilterChips { margin-top: 0.7rem; }
+.experimentFilterChips button {
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.3rem 0.8rem;
+}
+.experimentTable th[scope="row"] {
+  white-space: normal;
+  min-width: 10rem;
+}
+.experimentTable a { min-height: 40px; display: inline-flex; align-items: center; }
 .experimentStatus {
   display: inline-block;
   padding: 0.35rem 0.7rem;
@@ -554,17 +572,6 @@
   .experimentFields {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
-  }
-  .experimentListCard {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  .experimentListAction {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
   }
   .experimentMetrics {
     gap: 0.65rem;

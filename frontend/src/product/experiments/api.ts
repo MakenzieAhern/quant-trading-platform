@@ -8,6 +8,8 @@ import type {
   ExperimentDecision,
   ExperimentEquity,
   ExperimentResult,
+  ExperimentMode,
+  ExperimentStatus,
   ExperimentTrade,
   ExperimentHolding,
   ExperimentCollection,
@@ -347,16 +349,22 @@ function dateQuery(range: DateRange = {}) {
   return query.size ? `&${query}` : "";
 }
 const path = (id: string) => `/api/experiments/${encodeURIComponent(id)}`;
+export interface ExperimentListQuery {
+  status?: ExperimentStatus;
+  mode?: ExperimentMode;
+  sort?: "newest" | "oldest" | "name_asc" | "name_desc";
+}
 export const experimentApi = {
   capabilities: (signal?: AbortSignal) =>
     apiRequest("/api/workbench/capabilities", {}, signal, parseCapabilities),
-  list: (signal?: AbortSignal, limit = 20, offset = 0, q = "") =>
-    apiRequest(
-      `/api/experiments?limit=${limit}&offset=${offset}${q ? `&${new URLSearchParams({ q })}` : ""}`,
-      {},
-      signal,
-      (value) => page(value, parseExperiment),
-    ),
+  list: (signal?: AbortSignal, limit = 20, offset = 0, q = "", filters: ExperimentListQuery = {}) => {
+    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (q) params.set("q", q);
+    if (filters.status) params.set("status", filters.status);
+    if (filters.mode) params.set("mode", filters.mode);
+    if (filters.sort && filters.sort !== "newest") params.set("sort", filters.sort);
+    return apiRequest(`/api/experiments?${params}`, {}, signal, (value) => page(value, parseExperiment));
+  },
   get: (id: string, signal?: AbortSignal) =>
     apiRequest(path(id), {}, signal, parseExperiment),
   create: (body: ExperimentConfiguration, key: string) =>

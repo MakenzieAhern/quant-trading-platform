@@ -46,6 +46,20 @@ describe("experiment HTTP boundary", () => {
     ]);
   });
 
+  it("sends server-wide filters and sort with the page request", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({ items: [], total: 0, limit: 20, offset: 20 }),
+    );
+    await experimentApi.list(undefined, 20, 20, "Alpha", {
+      status: "SUCCEEDED",
+      mode: "historical_exploration",
+      sort: "name_asc",
+    });
+    expect(fetch.mock.calls[0][0]).toBe(
+      `${API_BASE_URL}/api/experiments?limit=20&offset=20&q=Alpha&status=SUCCEEDED&mode=historical_exploration&sort=name_asc`,
+    );
+  });
+
   it("uses the same API root for detail, lifecycle commands and all paginated collections", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")

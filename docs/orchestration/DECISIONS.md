@@ -1,5 +1,36 @@
 # Decisions
 
+## v1.2 isolated clean-user demo closure — 2026-09-23
+
+Do not infer first-run usability from the populated application database or
+API-only demo success. Upgrade only the previously named disposable
+`product_v12_baseline` from schema 0011 to 0015, start dedicated ports
+8001/5174 with an empty private-archive root and separate product cache, and
+use a fresh Chrome origin. The actual browser route completed first-run guide,
+draft save/reopen, all four wizard steps, one registered synthetic job and its
+risk-labeled result. Job `fb620f96-591b-48b3-b238-e92be1b41d02` exists only
+in the isolated product DB. Stop both dedicated servers afterward; no formal
+research or live-market claims follow from this demonstration. This is an
+agent walkthrough, not an independent novice-user study.
+
+## v1.2 saved research view and full-regression environment — 2026-09-23
+
+Research filters/sort must run in PostgreSQL before count and pagination; sorting
+only the visible 20 rows would falsely hide older matches. Keep the existing
+bounded API and add validated status/mode/sort parameters. Save one explicit
+per-browser view (query, filters, sort, optional columns); preserve comparison
+selection and exact detail URLs. A semantic table reuses the existing scroll
+region and mobile scroll hint. Chrome verified reload, bilingual labels, detail
+navigation, and no-match reset. This does not complete the broader mobile and
+drawer acceptance matrix.
+
+Full backend regression initially used the backend container path `/app`, while
+older tests resolve fixtures relative to the repository root. The proper WSL
+checkout and isolated test DB fixed that environment mismatch. Three remaining
+paper failures exposed test DB `quant_test_v12_u5` at migration 0014; upgrade
+that disposable DB only to 0015. The final full run passed 959 tests with one
+optional archive-mount skip. Neither failure was relabeled as a product PASS.
+
 ## v1.2 task center and settings browser acceptance — 2026-09-23
 
 Reuse the existing bounded experiment and market-update list APIs for one

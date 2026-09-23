@@ -11,7 +11,7 @@ import {
   parseComparisonIds,
 } from "./comparison";
 import { ExperimentComparePage } from "./ExperimentComparePage";
-import { ExperimentsPage } from "./ExperimentsPage";
+import { EXPERIMENT_VIEW_KEY, ExperimentsPage } from "./ExperimentsPage";
 import { job, result } from "./fixtures.test-data";
 import type { Experiment } from "./types";
 
@@ -24,6 +24,7 @@ const runs: Experiment[] = ids.map((id, index) => ({
   result_available: true,
 }));
 beforeEach(async () => {
+  window.localStorage.removeItem(EXPERIMENT_VIEW_KEY);
   await i18n.changeLanguage("en-US");
   window.history.replaceState({}, "", comparisonUrl(ids.slice(0, 2)));
 });

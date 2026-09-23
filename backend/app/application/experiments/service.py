@@ -5,7 +5,7 @@ import logging
 from contextlib import suppress
 from datetime import UTC, date, datetime
 from threading import Event
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID, uuid4
 
 from sqlalchemy import Date, DateTime, String, cast, func, or_, select, text
@@ -220,7 +220,13 @@ class ExperimentManager:
             return row
 
     async def list_jobs(
-        self, limit: int, offset: int, q: str = ""
+        self,
+        limit: int,
+        offset: int,
+        q: str = "",
+        status: str | None = None,
+        mode: str | None = None,
+        sort: Literal["newest", "oldest", "name_asc", "name_desc"] = "newest",
     ) -> tuple[list[ExperimentJobModel], int]:
         query = select(ExperimentJobModel)
         if needle := q.strip():
@@ -230,16 +236,20 @@ class ExperimentManager:
                     cast(ExperimentJobModel.id, String).icontains(needle, autoescape=True),
                 )
             )
+        if status:
+            query = query.where(ExperimentJobModel.status == status)
+        if mode:
+            query = query.where(ExperimentJobModel.mode == mode)
+        order = {
+            "newest": (ExperimentJobModel.created_at.desc(), ExperimentJobModel.id),
+            "oldest": (ExperimentJobModel.created_at, ExperimentJobModel.id),
+            "name_asc": (func.lower(ExperimentJobModel.name), ExperimentJobModel.id),
+            "name_desc": (func.lower(ExperimentJobModel.name).desc(), ExperimentJobModel.id),
+        }[sort]
         async with self.factory() as db:
             total = await db.scalar(select(func.count()).select_from(query.subquery()))
             rows = list(
-                (
-                    await db.scalars(
-                        query.order_by(ExperimentJobModel.created_at.desc(), ExperimentJobModel.id)
-                        .limit(limit)
-                        .offset(offset)
-                    )
-                ).all()
+                (await db.scalars(query.order_by(*order).limit(limit).offset(offset))).all()
             )
             return rows, int(total or 0)
 

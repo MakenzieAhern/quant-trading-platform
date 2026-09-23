@@ -103,9 +103,15 @@ async def create_experiment(
 
 @router.get("/experiments", response_model=ExperimentPage)
 async def list_experiments(
-    limit: Limit = 20, offset: Offset = 0, q: Annotated[str, Query(max_length=80)] = ""
+    limit: Limit = 20,
+    offset: Offset = 0,
+    q: Annotated[str, Query(max_length=80)] = "",
+    status: Literal["QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED", "INTERRUPTED"]
+    | None = None,
+    mode: Literal["historical_exploration", "synthetic_demo"] | None = None,
+    sort: Literal["newest", "oldest", "name_asc", "name_desc"] = "newest",
 ) -> ExperimentPage:
-    items, total = await experiment_manager.list_jobs(limit, offset, q)
+    items, total = await experiment_manager.list_jobs(limit, offset, q, status, mode, sort)
     return ExperimentPage(
         items=[_response(item) for item in items], total=total, limit=limit, offset=offset
     )
