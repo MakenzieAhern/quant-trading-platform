@@ -54,6 +54,23 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-23 22:25 UTC native Chrome 200% zoom check
+
+An ephemeral Chrome 153 profile used Chromium's native default-page-zoom
+preference (factor 2, not a CSS viewport proxy): a physical 1440×900 window
+reported CSS viewport 712×402, `devicePixelRatio=2` and
+`visualViewport.scale=1`. Workbench, guided wizard, experiment list, markets,
+paper accounts, data center and research archive each had document width
+712/712 with no page-level horizontal overflow. The clean-profile Workbench
+primary action was clipped by 3 CSS pixels below the first screen. A
+short-height/narrow-width heading-spacing adjustment moved its bottom from
+405 to 395 against the 402px viewport; a physical 1424×805 Chrome CDP
+screenshot shows the entire button. Before/after screenshots are outside Git
+under `product-evidence/v1.2/m4/zoom200-clean-home-{cdp,fixed-cdp}.png`.
+Regular Playwright screenshots were cropped at native zoom, so these captures
+used Chrome's screenshot protocol directly. This is a bounded Chinese/light
+route pass, not the complete language/theme/route zoom matrix.
+
 ## 2026-09-23 22:17 UTC research-archive status and mobile-table review
 
 Real Chrome 153 on the persisted formal research archive found raw `PASSED`,
