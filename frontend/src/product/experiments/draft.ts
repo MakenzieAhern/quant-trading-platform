@@ -1,6 +1,14 @@
 import type { ExperimentConfiguration } from "./types";
 
 export const EXPERIMENT_DRAFT_KEY = "quant.product.experiment-draft.v1";
+export const DRAFT_RECOVERY_PREFIX =
+  "quant.product.experiment-draft-recovery.v1.";
+// A page owns only this recovery slot. Never reuse a writer ID from shared storage.
+const writerId = crypto.randomUUID();
+export interface BrowserDraftRecovery {
+  id: string;
+  draft: ExperimentDraft;
+}
 export interface ExperimentDraft {
   version: 1;
   form: ExperimentConfiguration;
@@ -12,7 +20,14 @@ export function readExperimentDraft(): ExperimentDraft | null {
   try {
     const raw = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
     if (!raw) return null;
-    const value = JSON.parse(raw) as ExperimentDraft;
+    return parseExperimentDraft(JSON.parse(raw));
+  } catch {
+    return null;
+  }
+}
+export function parseExperimentDraft(input: unknown): ExperimentDraft | null {
+  try {
+    const value = input as ExperimentDraft;
     if (
       value.version !== 1 ||
       !Number.isInteger(value.step) ||
@@ -53,14 +68,61 @@ export function saveExperimentDraft(
   step: number,
   idempotencyKey: string,
 ) {
-  window.localStorage.setItem(
-    EXPERIMENT_DRAFT_KEY,
-    JSON.stringify({
-      version: 1,
-      form,
-      step,
-      idempotencyKey,
-      savedAt: new Date().toISOString(),
-    } satisfies ExperimentDraft),
-  );
+  const raw = JSON.stringify({
+    version: 1,
+    form,
+    step,
+    idempotencyKey,
+    savedAt: new Date().toISOString(),
+  } satisfies ExperimentDraft);
+  // Synchronous for beforeunload: preserve this page's latest values before any
+  // shared-pointer write. Another tab can win the pointer without losing ours.
+  window.localStorage.setItem(`${DRAFT_RECOVERY_PREFIX}${writerId}`, raw);
+  window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, raw);
+}
+
+export function readBrowserDraftRecoveries(): {
+  items: BrowserDraftRecovery[];
+  unreadable: number;
+  storageFailed: boolean;
+} {
+  const items: BrowserDraftRecovery[] = [];
+  let unreadable = 0;
+  try {
+    const keys = Array.from({ length: localStorage.length }, (_, index) =>
+      localStorage.key(index),
+    ).filter(
+      (key): key is string =>
+        key !== null && key.startsWith(DRAFT_RECOVERY_PREFIX),
+    );
+    for (const key of keys) {
+      const raw = localStorage.getItem(key);
+      if (raw === null) continue;
+      try {
+        const draft = parseExperimentDraft(JSON.parse(raw));
+        const id = key.slice(DRAFT_RECOVERY_PREFIX.length);
+        if (
+          !draft ||
+          !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+            id,
+          )
+        )
+          unreadable++;
+        else items.push({ id, draft });
+      } catch {
+        unreadable++;
+      }
+    }
+  } catch {
+    return { items: [], unreadable, storageFailed: true };
+  }
+  return {
+    items: items.sort(
+      (a, b) =>
+        b.draft.savedAt.localeCompare(a.draft.savedAt) ||
+        b.id.localeCompare(a.id),
+    ),
+    unreadable,
+    storageFailed: false,
+  };
 }

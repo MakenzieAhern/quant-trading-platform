@@ -1,0 +1,65 @@
+.configurationVersions {
+  margin-top: 1.5rem;
+  min-width: 0;
+}
+.configurationVersionSave {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.75rem;
+}
+.configurationVersionSave label {
+  display: grid;
+  gap: 0.4rem;
+  flex: 1 1 16rem;
+}
+.configurationVersionSave input {
+  padding: 0.65rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  min-width: 0;
+  width: 100%;
+}
+.configurationVersionList {
+  list-style: none;
+  padding: 0;
+}
+.configurationVersionList li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border);
+}
+.configurationVersionList li > div {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.configurationVersionList span {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.configurationVersionPreview dl {
+  display: grid;
+  grid-template-columns: minmax(7rem, 1fr) minmax(0, 2fr);
+  gap: 0.5rem 1rem;
+}
+.configurationVersionPreview dt {
+  color: var(--muted);
+}
+.configurationVersionPreview dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.configurationVersionPreview pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}

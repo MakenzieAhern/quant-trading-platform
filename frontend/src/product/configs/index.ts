@@ -1,0 +1,1 @@
+export { ConfigurationVersionsPanel } from "./ConfigurationVersionsPanel";

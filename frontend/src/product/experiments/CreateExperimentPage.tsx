@@ -5,11 +5,11 @@ import { useApiResource } from "../../hooks/useApiResource";
 import {
   comparePositiveDecimals,
   formatDecimal,
-  formatPercent,
   isPositiveDecimal,
 } from "../../utils/format";
 import { navigate, useNavigationGuard } from "../../utils/navigation";
 import { usePageDataContext } from "../dataContext";
+import { ConfigurationVersionsPanel } from "../configs";
 import { experimentApi } from "./api";
 import { useExperimentCopy } from "./copy";
 import {
@@ -681,16 +681,30 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
             <dt>{c.holdings}</dt>
             <dd>{form.strategy.maximum_holdings}</dd>
             <dt>{c.commission}</dt>
-            <dd>{formatPercent(form.costs.commission_rate)}</dd>
+            <dd>{formatDecimal(form.costs.commission_rate)}</dd>
             <dt>{c.minimum}</dt>
             <dd>{formatDecimal(form.costs.minimum_commission)}</dd>
             <dt>{c.drawdown}</dt>
-            <dd>{formatPercent(form.risk.max_drawdown)}</dd>
+            <dd>{formatDecimal(form.risk.max_drawdown)}</dd>
             <dt>{c.position}</dt>
-            <dd>{formatPercent(form.risk.max_position_weight)}</dd>
+            <dd>{formatDecimal(form.risk.max_position_weight)}</dd>
           </dl>
         </aside>
       </div>
+      <ConfigurationVersionsPanel
+        current={{ form, step, idempotencyKey: requestKey }}
+        disabled={pending}
+        onRestore={(draft) => {
+          setForm(draft.form);
+          setStep(0);
+          setRequestKey(draft.idempotencyKey);
+          setSaved(true);
+          savedRef.current = true;
+          setStorageError(false);
+          setError(null);
+          setAcknowledged(false);
+        }}
+      />
     </>
   );
 }
