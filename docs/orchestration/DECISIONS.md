@@ -1,5 +1,19 @@
 # Decisions
 
+## v1.2 command keyboard and browser export control — 2026-09-23
+
+Chrome verified bounded saved-study search, watchlist results and help navigation.
+The Windows topbar displayed a Mac-only shortcut, and the native search field
+consumed the first Escape by clearing text instead of closing the palette.
+Show both supported shortcuts and handle Escape at the search field; preserve
+the native dialog's other focus/cancel behavior. One Escape now closes in Chrome.
+
+The U4 report API and blob preparation remain independently verified, but an
+actual saved browser artifact is not. A direct HTTP attachment control was
+blocked by the browser security check (`net::ERR_BLOCKED_BY_CLIENT`). Do not
+bypass it or infer a saved file from the UI's prepared status. Continue other
+independent product work while this browser acceptance stays open.
+
 ## v1.2 U4 browser closure and U5 reader review — 2026-09-22
 
 Actual Chrome-created synthetic and historical personal experiments now complete.

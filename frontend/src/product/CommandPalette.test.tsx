@@ -48,6 +48,15 @@ beforeEach(async () => {
   });
 });
 describe("bounded server command search", () => {
+  it("closes on the first Escape even when the native search field has text", async () => {
+    const close = vi.fn();
+    render(<CommandPalette onClose={close} />);
+    const search = screen.getByRole("searchbox");
+    fireEvent.change(search, { target: { value: "saved study" } });
+    fireEvent.keyDown(search, { key: "Escape" });
+    expect(close).toHaveBeenCalledOnce();
+  });
+
   it("keeps each category's empty message accurate when the other has a match", async () => {
     vi.mocked(marketApi.watchlist).mockResolvedValue({
       items: [watched],

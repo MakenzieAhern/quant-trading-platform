@@ -66,6 +66,13 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           maxLength={80}
           value={query}
           onChange={(event) => setQuery(event.target.value.slice(0, 80))}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              event.preventDefault();
+              event.stopPropagation();
+              onClose();
+            }
+          }}
           placeholder={copy.search}
         />
       </label>

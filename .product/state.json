@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T15:35:27Z",
-  "milestone": "M3_U5_ST_SUSPENSION_CANDIDATE_CONTROLS",
+  "updated_at_utc": "2026-09-23T15:46:29Z",
+  "milestone": "M4_UX_COMMAND_KEYBOARD",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -16,7 +16,7 @@
     "host": "DESKTOP-3EOROGR",
     "distro": "Ubuntu",
     "path": "/home/yuchen/projects/quant-trading-platform",
-    "branch": "codex/product-v1.2-market-controls",
+    "branch": "codex/product-v1.2-command-keyboard",
     "identity": "MakenzieAhern"
   },
   "ownership": {
@@ -97,13 +97,15 @@
     "PR23 head89cda16 CI backend/frontend/compose PASS; shared typed load errors now show Chinese actionable 404 in real Chrome and preserve raw diagnostic; frontend193/lint/type/build PASS",
     "PR23 head ae4dd46 CI backend/frontend/compose PASS; Chrome report export prepared blob/link but no verified download event/file",
     "Bounded BaoStock control retry ed796871 completed 2/2 requests: 603400 vendor-suspended, 688622 vendor-ST, both execution-ineligible; exact raw blank-turnover parser fix passed 50 focused tests and full isolated backend958 (one optional archive skip), Ruff/format/mypy",
-    "PR24 head5305096 draft/attached; CI35882218443 backend/frontend/compose PASS; Chrome rendered official SSE 603400 suspension notice, with PDF binary checksum still unavailable"
+    "PR24 head5305096 draft/attached; CI35882218443 backend/frontend/compose PASS; Chrome rendered official SSE 603400 suspension notice, with PDF binary checksum still unavailable",
+    "2026-09-23 Chrome returning-user home shows saved draft, four actual recent studies and dated data state; U1 clean-user end-to-end still pending",
+    "2026-09-23 Chrome Ctrl+K, bounded server study search, watchlist result, help navigation and one-Escape close PASS after shortcut hint/focus repair; frontend194/lint/type/build PASS"
   ],
   "observed_failures": [
     "RESOLVED: PR13 backend CI unsafe environment, fixed explicit APP_ENV=test and quant_test",
     "RESOLVED: Vite stale import after .tsx-to.ts rename; frontend restart cleared cached module resolution",
     "RESOLVED: U5 reader mismatched source suspension date formats; product-only normalization/unknown-boundary handling tested",
-    "Browser download UI reports prepared, but actual download event/artifact not verified; forbidden chrome://downloads inspection not retried",
+    "Browser download UI reports prepared, but actual download event/artifact not verified; direct native attachment control hit browser security check and net::ERR_BLOCKED_BY_CLIENT, so no bypass or repeated retry",
     "RESOLVED: Chrome native date fill changed DOM without React state; onInput now persists the intended date across paper and sibling date controls",
     "RESOLVED: closing market detail cleared parent data-mode context; remove duplicate child writer with regression",
     "RESOLVED: U2 shared localStorage overwrite across tabs; independently retained per-page recovery slots and independent review",
@@ -250,8 +252,8 @@
       "browser_gate": "bounded raw control API/official PDF visual PASS; current execution authority and forward session incomplete"
     }
   },
-  "next_task": "Complete official current-date source authority and after-start forward receipt, while finishing U8/UX/M4/M5 acceptance without changing frozen research",
-  "next_command": "Verify current PR24 head/CI after source-note correction, then continue official 2026 authority and remaining U5/U8/browser acceptance",
+  "next_task": "Close remaining U1/U3/U5/U7/U8/UX/M4/M5 acceptance; preserve U4 browser download as unverified until browser security check permits direct artifact verification",
+  "next_command": "Push command-keyboard slice as a stacked PR over PR24, verify CI, then continue independent U5/U7 forward source and U8/UX acceptance without touching frozen research",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
