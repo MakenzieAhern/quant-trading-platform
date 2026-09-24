@@ -11,6 +11,24 @@ not run.** Explicit data-use rights evidence is still needed before an executabl
 forward feed can be accepted. No permission request, payment or credential action
 has been initiated.
 
+### Written rights clarification needed (unsent)
+
+The [SSE 2026 rule, §5.1.3](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml)
+and [SZSE 2026 rule, §5.1.3](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+do not themselves grant this product a feed-use license. The official
+[SSE service page](https://www.sse.com.cn/transparency/services/) lists
+`marketservice@sse.com.cn` for market-data licensing questions; the official
+[SZSE contact page](https://www.szse.cn/English/about/contactus/index.html)
+lists `infoservices@cninfo.com.cn` for market-data authorization. BaoStock's
+[official home](https://www.baostock.com/) lists `baostock@163.com` for support.
+No inquiry has been sent, no permission inferred, and no commercial purchase
+authorized. The exact question for a rights holder/provider is whether its
+2026 A-share delayed/EOD feed, including both exchanges, may be stored and
+used in a **private single-user local application** to create dated simulated
+plans and persistent paper fills, without redistribution or real orders; ask
+for the applicable written terms and any upstream exchange authorization.
+Until that is documented, candidate receipts remain non-executable.
+
 The historical paper-account form and guided research cost hint now explicitly
 identify user-entered broker commission as a simulation assumption, not a
 verified broker quote. This product-copy correction does not resolve current

@@ -14,6 +14,22 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 19:07 UTC failed paper rehydration hides stale balances
+
+The paper detail kept its last cash/positions under an error after a failed
+authoritative REST rehydration, even though the header called that portfolio
+authoritative. The shared stream hook now clears the old snapshot and buffered
+events on hydration failure, and clears it on a malformed stream event; only a
+subsequent valid REST snapshot restores values. A focused 503-after-success
+reconnect test and malformed-event test prove the fail-closed transition and
+successful recovery (paper suite 21/21; frontend 226/226, lint, typecheck,
+build and Prettier passed). A real local browser still rendered the
+unchanged stopped account after successful hydration: cash `81309.8134` and
+equity `99964.8134` matched the read-only API, with no account action. The
+fault transition has unit evidence, not a new live-browser injected 503 claim.
+No ledger, market receipt or formal research was changed. Full U7 recovery,
+missing ledgers, independent backup and forward authority remain open.
+
 ## 2026-09-24 18:58 UTC paper-session live-status semantics
 
 The stopped historical paper-session detail rendered connection and session

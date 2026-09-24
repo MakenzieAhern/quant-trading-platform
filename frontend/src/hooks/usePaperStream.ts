@@ -146,6 +146,8 @@ export function usePaperStream(sessionId: string) {
         .catch((reason: unknown) => {
           if (!active || controller.signal.aborted) return;
           hydrating = false;
+          buffered = [];
+          setSnapshot(null);
           setError({
             sessionId,
             message:
@@ -205,6 +207,7 @@ export function usePaperStream(sessionId: string) {
             socket?.close();
           }
         } catch {
+          setSnapshot(null);
           setError({
             sessionId,
             message: t("detail.malformedEvent"),

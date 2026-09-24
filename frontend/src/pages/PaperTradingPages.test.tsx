@@ -104,6 +104,29 @@ describe("paper trading pages", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
+  it("hides stale financial values until a failed reconnect obtains a new snapshot", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockResolvedValueOnce(jsonResponse({ detail: "unavailable" }, 503))
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    expect(screen.getByText("Paper portfolio")).toBeInTheDocument();
+
+    act(() => MockWebSocket.instances[0]!.close());
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(screen.queryByText("Paper portfolio")).not.toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("unavailable");
+
+    await act(async () => vi.advanceTimersByTimeAsync(2000));
+    await act(async () => MockWebSocket.instances[2]!.open());
+    expect(screen.getByText("Paper portfolio")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
   it("stops snapshot retries on denied access and bounds repeated service failures", async () => {
     installWebSocket();
     vi.useFakeTimers();
@@ -642,7 +665,7 @@ describe("paper trading pages", () => {
     vi.useFakeTimers();
     const fetch = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(jsonResponse(paperSnapshot("RUNNING")));
+      .mockImplementation(async () => jsonResponse(paperSnapshot("RUNNING")));
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     act(() =>
@@ -654,13 +677,12 @@ describe("paper trading pages", () => {
       }),
     );
     expect(screen.getByRole("alert")).toHaveTextContent("malformed");
+    expect(screen.queryByText("Paper portfolio")).not.toBeInTheDocument();
     expect(screen.queryByText("must-not-render")).not.toBeInTheDocument();
-    expect(
-      screen.getByText("Session connection: reconnecting"),
-    ).toBeInTheDocument();
     await act(async () => vi.advanceTimersByTimeAsync(1000));
     await act(async () => MockWebSocket.instances[1]!.open());
     expect(fetch).toHaveBeenCalledTimes(2);
+    expect(screen.getByText("Paper portfolio")).toBeInTheDocument();
   });
 
   it("aborts hydration and closes the socket when navigating away", async () => {
