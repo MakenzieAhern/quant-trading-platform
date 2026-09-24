@@ -1833,3 +1833,26 @@ WCAG 2.2 AA pass. Chrome browser-control zoom shortcuts did not visibly alter
 the viewport, so no new native-200% result is claimed. Separate U3 isolation
 review cannot prove every pre-loss formal DB row matches its original state;
 M4 data integrity and independent backup remain unaccepted.
+
+## 2026-09-24 22:58 UTC release frontend and bounded guide walkthrough
+
+Independent read-only review found that the release Compose overlay selected
+the Nginx frontend image but inherited the development `npm ci && npm run dev`
+command. The merged release configuration therefore could not start its
+frontend. The overlay now resets the command to the image default; CI asserts
+the merged frontend command is null. Local release-image build passed, and an
+isolated Nginx container served HTTP 200 on 127.0.0.1:15173 with the expected
+security headers. That disposable container was stopped; the main Compose
+stack, database and volumes were not changed. This is a release-config smoke
+check, not a complete release rehearsal or M5 PASS.
+
+Actual Chrome cross-checked the draft Chinese/English operator guides against
+the home/data/paper mode labels, a saved historical result, and its separate
+paper-account handoff. The historical source was locked, the 293-session
+study left the 93-day-limited replay start blank, and capital, universe,
+strategy, cost and risk settings were visible for review. No study, account,
+order, provider request or market receipt was created. This is an agent
+walkthrough of key guide paths, not an independent novice-user review or a
+complete bilingual demo. The user still cannot confirm an independent backup
+destination, genuine pre-loss ledgers, or licensed 2026 forward data; none is
+accepted. `M4-DATA-INTEGRITY`, `U7-FORWARD` and `M5-DELIVERY` remain FAIL.

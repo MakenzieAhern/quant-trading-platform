@@ -75,3 +75,4 @@ jobs:
       - run: docker compose config --quiet
       - run: docker compose -f compose.test.yml config --quiet
       - run: docker compose -f docker-compose.yml -f compose.release.yml config --quiet
+      - run: docker compose -f docker-compose.yml -f compose.release.yml config --format json | python3 -c 'import json, sys; assert json.load(sys.stdin)["services"]["frontend"].get("command") is None'

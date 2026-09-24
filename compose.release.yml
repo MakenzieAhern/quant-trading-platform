@@ -11,5 +11,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.release
+    command: !reset null
     volumes: !reset []
     environment: !reset {}
