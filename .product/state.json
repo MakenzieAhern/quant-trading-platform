@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T23:45:00Z",
+  "updated_at_utc": "2026-09-24T23:51:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 23:51UTC PR32 head06d1b01 CI36074387311 backend/frontend/Compose PASS. Read-only host inventory found no attached removable/network backup drive; C/D remain one NVMe, local OneDrive sync root contains no backup file, and five known WSL dumps have no original rows for post-pre0015 paper accounts4b64380f/07d72259. This does not rule out remote cloud or Windows shadows: non-elevated RestorePoint Access Denied and ShadowCopy initialization failure; elevated inventory remains user-gated. Windows boot time has not changed since Docker Run-path correction, so login autostart untested. No data/volume/settings changed; independent backup, missing genuine ledgers and lawful forward rights remain open",
     "2026-09-24 23:45UTC actual Chrome /tasks exposed ambiguous repeated Open experiment/Open task AX names. Existing links now include localized study/security/date/time context; Chrome EN/ZH AX trees distinguish 8 research and 4 raw-request links, original ZH/dark restored, no task/provider/paper request. Focused3, full frontend238, ESLint, TypeScript/build, changed-file Prettier PASS. Browser viewport override did not change measured CSS width, so no new mobile claim. This is bounded QA-A11Y progress; missing ledgers, independent backup and lawful forward rights remain unknown; PR CI pending",
     "2026-09-24 23:35UTC real Chrome Data Center EN/ZH terms and request acknowledgment now explicitly distinguish candidate local source evaluation from unverified exchange-data rights, including forward simulation; Chinese/dark restored, no provider request or DB write. Focused frontend12, ESLint, TypeScript and production build PASS. Read-only Windows backup inventory found stopped File History/backup services and ready tasks plus running OneDrive, none proving WSL/Docker backup; wbadmin listing requires elevation, so Windows Backup/VSS remain unassessed. U7 forward and M4 integrity/independent backup remain open; PR CI pending",
     "2026-09-24 23:24UTC release Compose safety: read-only review found backend inherited development's automatic Alembic startup. Release overlay now resets backend command to the image's plain Uvicorn CMD; CI asserts both release image commands. Local merged-Compose JSON confirmed backend/frontend commands null while development Alembic command remains intact; no live stack, migration or DB write executed. Deployment guide requires controlled one-off migration after independent backup. M4/M5 and external blockers unchanged; PR CI pending",

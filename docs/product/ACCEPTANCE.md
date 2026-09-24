@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-09-24 23:51 UTC backup-location follow-up and PR CI
+
+The user could not identify an independent backup destination, pre-loss ledger
+backup or lawful 2026 A-share data-use authorization; all remain unknown. A
+read-only host check found only C: and D: fixed logical drives (previously
+verified as partitions of the same NVMe), no currently attached removable or
+network drive, and only `desktop.ini` in the local OneDrive sync root. The
+empty local sync root does **not** prove that no cloud backup exists. The five
+known WSL PostgreSQL dumps remain the earlier `pre0014`, `pre0015`, after-loss,
+post-recovery and `pre0016` files; the first two predate paper accounts
+`4b64380f` and `07d72259`, and the later three cannot recover their original
+rows. No candidate source, database, volume or backup setting was changed.
+
+Non-elevated `Get-ComputerRestorePoint` returned Access Denied and
+`Win32_ShadowCopy` returned initialization failure, consistent with the
+earlier privileged `vssadmin`/`wbadmin` gate. Shadow copies and Windows Backup
+versions remain **unassessed**, not absent. The 2026-09-24 22:29 AEST Windows
+boot time is unchanged after the Docker Run-path correction, so post-login
+autostart still has not been retested. PR #32 head `06d1b01` passed
+[CI36074387311](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36074387311)
+backend, frontend and Compose. M4-DATA-INTEGRITY, U7-FORWARD and M5-DELIVERY
+remain unaccepted.
+
 ## 2026-09-24 23:45 UTC task-center link purpose (QA-A11Y)
 
 Actual Chrome `/tasks` exposed eight identical "Open experiment" and four
