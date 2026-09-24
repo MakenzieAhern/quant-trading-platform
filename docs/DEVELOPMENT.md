@@ -29,7 +29,7 @@ Compose explicitly supplies container settings; the root `.env` configures host 
 | Variable | Default / purpose |
 | --- | --- |
 | APP_NAME / APP_VERSION | Quant Trading Platform / 1.0.0, public health metadata |
-| APP_ENV | development; also test or production, metadata only, not authentication |
+| APP_ENV | development; pytest requires `test` together with a `quant_test` database; not authentication |
 | LOG_LEVEL | INFO; lifecycle logging without sensitive exception text |
 | API_HOST / API_PORT | 0.0.0.0 / 8000; metadata settings, use CLI bind flags to change server binding |
 | DATABASE_URL | Local PostgreSQL asyncpg URL; backend only |
