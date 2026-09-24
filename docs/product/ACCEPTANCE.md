@@ -100,10 +100,66 @@ proves it changes with `max_order_notional`. A legacy-account test proves no
 plan is silently backfilled, and a WebSocket test covers incremental plan
 state. The final isolated backend suite passed 977/977 and the final frontend
 suite 224/224 after these fixes. The three real Chrome captures preceded the
-checksum-only backend correction; no post-correction Chrome recheck is claimed.
+checksum-only backend correction; the separate post-correction in-app browser
+recheck below is not mislabeled as another Chrome run.
 U6/U7 and the release remain open:
 neither a lawful post-start forward data receipt nor the two missing genuine
 paper ledgers or independent physical backup exists in this evidence.
+
+## 2026-09-24 04:43 UTC post-correction account-plan browser recheck
+
+PR #32 commit `84fc718` passed [CI 35956311105](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35956311105)
+(backend, frontend, Compose). In the owned `quant-v12-u6plan` test stack, a
+new account `f30dc3b9-d2a2-42d1-8991-de3d6ae449d7` completed its historical
+2011-03-01..31 replay with six simulated fills. Its API returned a latest
+2011-03-31 non-rebalance snapshot and the last genuine 2011-03-22 rebalance
+plan: 20 candidates, `submitted_to_account=true`, next accepted session
+2011-03-23 and configuration SHA-256
+`316ddc3a39ce4211d073782af49108cdd4ad1245241f3b0cf39750b7e37c30bb`.
+The account used this same post-correction code, not a recreated old screenshot.
+
+The Codex in-app browser on `http://localhost:5174` loaded the stopped account
+after the replay. Chinese and English both displayed the dated account-native
+plan, plan-time CNY100,000 cash versus latest CNY81,309.8134, the
+CNY75,191.75091 estimated approved-buy cash, and explicit historical-only /
+no-broker-order wording. Opening provenance visibly showed configuration
+`316ddc3a…30bb`, matching the API. At its 1280×720 viewport, the plan copy
+measured 15px/25.5px line height, document width 1265px, and the plan table
+scrolled locally (1043px content within 938px), not at page level.
+At an explicit 390×844 viewport, Chinese plan text and the historical-only
+warning remained visible without page overflow (document width 375px), while
+the same 1043px table scrolled within 307px; the temporary viewport override
+was reset after QA. The
+[mobile capture](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u6-account-plan-postfix-zh-mobile-20260924.png)
+has SHA-256 `BDDB754F4D2C89423651B1122128A02423CC1DC60FE0BEE543FB6EAD10EFCCA6`.
+[English](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u6-account-plan-postfix-en-20260924.png)
+SHA-256 `4DEED0DDB5174F5E4CB34D22D016A61D7F79C013E28450246642531230729740` and
+[Chinese](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u6-account-plan-postfix-zh-20260924.png)
+SHA-256 `91F75B94A84A99ACBE2B14771F50D6737B61343B676954F56D1A4D06ADE73A62`
+are actual browser captures outside Git. No account command was sent through
+the browser recheck; account creation/start occurred separately on the
+disposable API. The first attempt at `127.0.0.1:5174` showed a service error
+because the development CORS/API origin was configured for `localhost:5174`;
+switching to that exact origin resolved it without changing security settings.
+This closes only the bounded post-correction historical-plan visual check, not
+the broader U6/U7 forward-data or release gates.
+
+An independently created account `35e2bd86-3590-4014-8665-9c5a88800313`
+used the same historical dates and strategy with a stricter CNY3,000
+`max_order_notional`. Its persisted 2011-03-22 plan had 20 candidates, six
+approved and 14 `ORDER_NOTIONAL_LIMIT` rejections; the plan's configuration
+SHA-256 changed to
+`fdb3a6a3bdb5d39b508f76b9355571d15bc6c32559d42acde4221e87f80eb53e`.
+Three later fills belonged only to approved securities: the intersection of
+14 rejected symbols with three filled symbols was empty. The same browser
+rendered all 20 rows with six Chinese approval explanations and 14 explicit
+`已拒绝: 订单金额超出配置上限` explanations; the
+[risk-decision capture](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u6-account-plan-risk-reject-zh-20260924.png)
+is outside Git, SHA-256
+`09E6F9A9492F19B939A349D110329DD16F24DE909096C8EAB666EBE217532063`.
+Both accounts were created and started only in the owned disposable test DB;
+the live paper-session count remained five. This proves a bounded historical
+risk-rejection path, not lawful new-market execution.
 
 ## 2026-09-24 03:35 UTC paper-list error guidance
 
