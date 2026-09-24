@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 paper creation defaults to labeled A-share demo — 2026-09-24
+
+The A-share product shell previously opened `/paper/new` with the legacy AAPL
+fixture selected. A fresh local session now defaults to the existing 2030
+synthetic A-share demo, which works without a private archive and is explicitly
+not research evidence; its large scenario balance is not an account-size
+recommendation. Legacy AAPL replay remains an explicit, labeled non-A-share
+option, and audited historical replay remains available by selection. No
+provider, persisted session, financial engine or forward-source authority was
+changed. This fixes the entry default without presenting synthetic outcomes as
+real A-share history or forward simulation.
+
 ## v1.2 historical paper plans are account-native and versioned — 2026-09-24
 
 A saved exploratory result's plan is not an order for a separate paper account.

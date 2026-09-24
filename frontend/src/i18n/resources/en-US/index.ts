@@ -197,7 +197,8 @@ export const enUS = {
       "Synthetic demo and audited historical replay accounts. New-market forward simulation is not available yet. No broker is connected.",
     create: "Create paper session",
     persisted: "Persisted sessions",
-    empty: "No paper sessions yet. Create a safe replay session to begin.",
+    empty:
+      "No paper sessions yet. Start with a labeled synthetic demo or historical replay.",
     loading: "paper trading sessions",
     safetyTitle: "PAPER TRADING — SIMULATED EXECUTION ONLY",
     safetyBody:
@@ -216,13 +217,13 @@ export const enUS = {
         "A-share momentum + low-volatility strategy",
     },
     createPage: {
-      eyebrow: "NEW LOCAL REPLAY",
+      eyebrow: "NEW SIMULATED ACCOUNT",
       title: "Create paper session",
       cancel: "Cancel",
       safeProvider: "Safe provider",
       provider: "Provider",
-      replayLocal: "Replay (local)",
-      aShareSimulation: "A-share simulation (local)",
+      replayLocal: "Legacy AAPL fixture (not A-share)",
+      aShareSimulation: "Synthetic A-share demo (2030 scenario)",
       historicalAShare: "A-share historical replay (audited archive)",
       dataset: "Dataset",
       fixture: "AAPL fixture",
@@ -233,7 +234,7 @@ export const enUS = {
       buyingPowerHint:
         "Buying-power risk enforcement is enabled. All values remain Decimal strings.",
       aShareScenarioHint:
-        "Deterministic 2030 scenario data only — not research evidence or an OOS rerun.",
+        "Deterministic 2030 scenario data only — not research evidence or an OOS rerun. The default 100,000,000 balance is a scenario input, not a recommended account size.",
       historicalHint:
         "Past audited sessions only. This is replay, not new market data or a forward result. Range is limited to 93 calendar days.",
       historicalRange: "Historical replay range",

@@ -27,7 +27,7 @@ This PC is configured to start Docker Desktop at sign-in and restart project con
 
 ## Simulated accounts and recovery
 
-In [Simulated accounts](http://localhost:5173/paper), choose a clearly labeled synthetic demo or historical replay. Start it explicitly; the page supports pause, resume and stop, with cash, holdings, orders, fills and logs. None are real trades. New-market forward mode is not yet usable; a historical catch-up is not a new-market receipt.
+In [Simulated accounts](http://localhost:5173/paper), the creation form defaults to a clearly labeled 2030 synthetic A-share demo; the legacy AAPL fixture remains an explicit non-A-share choice. You can also choose audited historical replay. Start the account explicitly; the page supports pause, resume and stop, with cash, holdings, orders, fills and logs. None are real trades. New-market forward mode is not yet usable; a historical catch-up is not a new-market receipt.
 
 For a cancelled or interrupted research task, open its detail page and read the explanation. “Start or reopen linked retry” uses the saved configuration without overwriting the original record; repeated requests reopen the linked attempt. An account interrupted by a service failure may remain “Interrupted” instead of automatically continuing. Read its recovery guidance before starting a new session; do not assume fills occurred while disconnected. For offline, timeout or missing-data errors, try the page's retry or return action. If it persists, give the task link and displayed technical reason to the maintainer; never clear PostgreSQL, Redis or Docker volumes as a troubleshooting shortcut.
 

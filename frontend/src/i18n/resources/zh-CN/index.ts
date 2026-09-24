@@ -182,7 +182,7 @@ export const zhCN = {
       "可使用合成演示和已审计历史回放账户。真实新行情前向模拟尚不可用；不连接券商。",
     create: "创建模拟会话",
     persisted: "已持久化会话",
-    empty: "尚无模拟会话。请创建安全的回放会话。",
+    empty: "尚无模拟会话。可从明确标记的合成演示或历史回放开始。",
     loading: "模拟交易会话",
     safetyTitle: "模拟交易 — 仅限模拟执行",
     safetyBody:
@@ -200,13 +200,13 @@ export const zhCN = {
       cn_a_cross_sectional_momentum_low_vol_v1: "A股动量与低波动策略",
     },
     createPage: {
-      eyebrow: "新建本地回放",
+      eyebrow: "新建模拟账户",
       title: "创建模拟交易会话",
       cancel: "取消",
       safeProvider: "安全数据源",
       provider: "数据源",
-      replayLocal: "本地回放",
-      aShareSimulation: "A股本地模拟",
+      replayLocal: "保留的 AAPL 测试回放（非 A 股）",
+      aShareSimulation: "A 股合成演示（2030 场景）",
       historicalAShare: "A股历史回放（已审计档案）",
       dataset: "数据集",
       fixture: "AAPL 测试数据",
@@ -216,7 +216,7 @@ export const zhCN = {
       orderQuantity: "订单数量",
       buyingPowerHint: "已启用购买力风控。所有数值均以 Decimal 字符串处理。",
       aShareScenarioHint:
-        "仅使用确定性的 2030 合成场景数据，不属于研究证据，也不会重跑正式样本外测试。",
+        "仅使用确定性的 2030 合成场景数据，不属于研究证据，也不会重跑正式样本外测试。默认的 100,000,000 资金仅为场景输入，不是建议的账户规模。",
       historicalHint:
         "仅回放过去已审计的交易日，不是新行情或前向收益。单次区间最多 93 个自然日。",
       historicalRange: "历史回放区间",

@@ -215,12 +215,17 @@ describe("paper trading pages", () => {
     expect(screen.getByRole("link", { name: "Reload page" })).toBeVisible();
   });
 
-  it("creates only a registered replay session with one idempotency key", async () => {
+  it("keeps legacy AAPL replay explicit and creates it with one idempotency key", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(jsonResponse(paperSession(), 201));
     render(<CreatePaperSessionPage />);
+    expect(screen.getByLabelText("Provider")).toHaveValue("simulated_a_share");
+    await userEvent.selectOptions(screen.getByLabelText("Provider"), "replay");
     expect(screen.getByLabelText("Provider")).toHaveValue("replay");
+    expect(
+      screen.getByRole("option", { name: "Legacy AAPL fixture (not A-share)" }),
+    ).toBeInTheDocument();
     expect(screen.getByLabelText("Dataset")).toHaveValue("AAPL_fixture");
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
@@ -239,7 +244,7 @@ describe("paper trading pages", () => {
     });
   });
 
-  it("creates the frozen A-share strategy only on explicit simulated scenario data", async () => {
+  it("defaults to a clearly labeled synthetic A-share demo", async () => {
     const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse(
         {
@@ -254,10 +259,9 @@ describe("paper trading pages", () => {
       ),
     );
     render(<CreatePaperSessionPage />);
-    await userEvent.selectOptions(
-      screen.getByLabelText("Provider"),
-      "simulated_a_share",
-    );
+    expect(screen.getByLabelText("Provider")).toHaveValue("simulated_a_share");
+    expect(screen.getByLabelText("Initial cash")).toHaveValue("100000000");
+    expect(screen.getByText(/not a recommended account size/)).toBeVisible();
     expect(screen.getByLabelText("Dataset")).toHaveValue(
       "CN_A_SIMULATED_PAPER_FIXTURE_V1",
     );
@@ -463,6 +467,7 @@ describe("paper trading pages", () => {
   it("validates paper strategy parameters before submitting", async () => {
     const fetch = vi.spyOn(globalThis, "fetch");
     render(<CreatePaperSessionPage />);
+    await userEvent.selectOptions(screen.getByLabelText("Provider"), "replay");
     fireEvent.change(screen.getByLabelText("Short period"), {
       target: { value: "4" },
     });

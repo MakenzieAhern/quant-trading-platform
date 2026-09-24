@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T18:39:00Z",
+  "updated_at_utc": "2026-09-24T18:46:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 18:46UTC actual local browser found the A-share paper creation form defaulted to legacy AAPL; it now defaults to the existing labeled 2030 synthetic A-share demo with scenario-only cash disclaimer, while legacy AAPL remains explicitly selectable as non-A-share. Browser reload, legacy switch, Chinese label and restored English preference verified without creating/starting a session. Focused paper20/full frontend225, ESLint, TypeScript, production build, Prettier and diff check PASS. U7 forward, missing genuine ledgers, M4/M5 and release unchanged",
     "2026-09-24 18:39UTC live in-app browser on persisted historical job d9f27183 prepared the JSON metadata report and displayed the Save prepared report link. EN to ZH to EN showed the translated save link with the same prepared blob. This validates the corrected bilingual guide recovery path, but not that the in-app browser saved a file; prior actual Chrome download remains the transfer proof. No new study or paper activity. M4/M5/U7 and release gates unchanged",
     "2026-09-24 18:33UTC the draft EN/ZH user guides were checked against current route dispatch and ExperimentExports: the browser-blocked-download instruction incorrectly named a retry control when the UI actually offers Save prepared report after successful preparation. Both guides now distinguish browser suppression from report preparation failure and disclose broker commission as a simulation assumption. git diff --check PASS. Prior actual Chrome CSV/JSON download evidence remains valid; no new download or DB write, no operator/novice signoff, M5 remains FAIL",
     "2026-09-24 18:27UTC official SSE/SZSE September 2026 holiday notices were rechecked online: both close 2026-09-25 through 09-27 and schedule reopening 09-28. Thus no genuinely new completed A-share session can arrive during the closure; 09-28 publication is only the earliest conditional forward receipt, not acceptance. Current product-forward source rights/master/status/calendar/action/executable-rule authorities remain PARTIAL and no session was started. Frontend npm audit (all dependencies and production-only) found 0 vulnerabilities. Read-only Docker directory inventory found only the current ext4.vhdx and docker_data.vhdx, not a pre-loss VHDX copy; VSS remains unassessed without elevated read-only listing",

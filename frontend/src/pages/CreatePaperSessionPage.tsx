@@ -22,12 +22,13 @@ type ProviderType = CreatePaperSessionRequest["provider_type"];
 
 export function CreatePaperSessionPage() {
   const { t } = useTranslation("paper");
-  const [providerType, setProviderType] = useState<ProviderType>("replay");
+  const [providerType, setProviderType] =
+    useState<ProviderType>("simulated_a_share");
   const [strategyType, setStrategyType] = useState<StrategyType>(
     "moving_average_crossover",
   );
-  const [initialCash, setInitialCash] = useState("100000");
-  const [quantity, setQuantity] = useState("10");
+  const [initialCash, setInitialCash] = useState("100000000");
+  const [quantity, setQuantity] = useState("1");
   const [shortPeriod, setShortPeriod] = useState("2");
   const [longPeriod, setLongPeriod] = useState("3");
   const [rsiPeriod, setRsiPeriod] = useState("14");
