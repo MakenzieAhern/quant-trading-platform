@@ -140,6 +140,17 @@ describe("paper trading pages", () => {
     expect(screen.getByTitle(PAPER_ID)).toBeInTheDocument();
   });
 
+  it("keeps a denied paper-list error typed for actionable guidance", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({ detail: "forbidden" }, 403),
+    );
+    render(<PaperSessionsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Access was denied",
+    );
+    expect(screen.getByRole("link", { name: "Reload page" })).toBeVisible();
+  });
+
   it("creates only a registered replay session with one idempotency key", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")

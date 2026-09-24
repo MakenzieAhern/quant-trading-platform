@@ -37,7 +37,7 @@ export function PaperSessionsPage() {
           <h2 id="paper-sessions-title">{t("paper:persisted")}</h2>
         </div>
         {sessions.loading && <LoadingPanel label={t("paper:loading")} />}
-        {sessions.error && <ErrorPanel message={t("paper:requestError")} />}
+        {sessions.error && <ErrorPanel message={sessions.error} />}
         {sessions.data?.items.length === 0 && (
           <EmptyState>{t("paper:empty")}</EmptyState>
         )}

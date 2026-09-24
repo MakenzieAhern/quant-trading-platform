@@ -54,6 +54,27 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 03:35 UTC paper-list error guidance
+
+Actual isolated Chrome 153 at 1280×800 intercepted only the saved paper-list
+GET with HTTP 403. Before the fix, `/paper` replaced the typed API error with
+a generic service message. Passing the original error to the existing shared
+`ErrorPanel` now shows explicit permission guidance and a visible reload link.
+The [before](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/paper-list-403-before-20260924.png)
+and [after](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/paper-list-403-after-20260924.png)
+captures are outside Git, SHA-256
+`ED53B644F29C707609CC2E86F75C972772B123183B62284783A533074FB168CB` and
+`01674A581DD336C3F9EA82772902B624F3A4C6A9EC908C197E38ADA8945B65EB`.
+After removing interception, the visible reload restored all five persisted
+accounts. In Chinese, an intercepted HTTP 408 showed timeout guidance and the
+same next step; its [capture](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/paper-list-408-zh-20260924.png)
+has SHA-256 `C5736603C0BCDCBD76BEA0FE4226B6171BA684632587B171724E5A73D9F67578`.
+The instrumented checks sent zero POST requests. A focused regression passed
+19/19 paper-page tests; full frontend 221/221, ESLint, TypeScript, Prettier and
+production build passed. This closes one `UX-ERROR`/`U8-I18N` defect, not the
+full fault, accessibility or release matrix. A 403 injection is not a real
+permission grant, and no account execution or forward-market receipt occurred.
+
 ## 2026-09-24 03:24 UTC Data Center detail targets
 
 Actual Chrome 153 exposed a bounded `QA-A11Y` pointer-target defect on the
