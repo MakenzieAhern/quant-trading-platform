@@ -1588,3 +1588,18 @@ read-only recheck of a **partial** path: it neither repairs the absent ledgers
 nor proves a newly generated account plan, novice usability, restart safety,
 independent disaster recovery or real forward-market acceptance. M4 and M5
 remain incomplete; PR #32 stays unmerged.
+
+## 2026-09-24 20:22 UTC bounded responsive matrix
+
+The local Codex in-app Chromium rendered ten known primary routes at 390×844,
+720×450, 1024×768, 1280×800 and 1440×900 in each of EN/system-dark,
+EN/light, ZH/light and ZH/dark: 200 route/size/language/theme observations.
+Every page had an `h1` and document `scrollWidth == clientWidth`; browser
+warning/error log was empty. A saved 293-session historical result and the
+Chinese/dark Workbench and Chinese/light wizard were visually inspected at
+390×844. The result kept +4.67% return, −2.48% drawdown and its dated,
+non-executable historical preview. The original EN/system/default viewport
+was restored. This proves only the measured layout, not native 200% zoom,
+actual Chrome behavior, complete contrast/keyboard/screen-reader accessibility,
+or a new user completing the flow. `QA-VISUAL` remains IN_PROGRESS; no study,
+paper account, formal research, market receipt or frozen asset was changed.
