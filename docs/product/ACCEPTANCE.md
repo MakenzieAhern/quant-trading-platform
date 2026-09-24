@@ -54,6 +54,31 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 03:24 UTC Data Center detail targets
+
+Actual Chrome 153 exposed a bounded `QA-A11Y` pointer-target defect on the
+populated Data Center. At a 504×336 CSS viewport (a narrow-layout proxy,
+**not** native 200% browser zoom), its two technical-lineage summaries were
+32px high, source/policy summaries about 25px, and expanded source/archive
+links only 16–20px. The existing shared technical-detail and market-update
+CSS now gives those summaries and links a 40px minimum click height, without
+changing destination URLs, provider permissions, data or update behavior.
+
+After hot reload, the same route measured all eight relevant summaries/links
+at 40px and document/client width 504/504. Clicking the lower edge of both
+summary types toggled the intended `<details>`; keyboard Space closed the
+focused provider summary with a visible solid focus outline. In a separate
+390×844 Chinese/system-dark Chrome view, the page stayed 390/390 wide,
+all eight targets remained 40px, and the expanded provider/terms links
+remained visible at 40px. The [collapsed mobile view](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/data-center-targets-zh-dark-mobile-20260924.png)
+has SHA-256 `FDC2CD0145E65347ABEA3314C1200E2D30EA52A173D97DF6BC8C55603D23A76D`;
+the [expanded source view](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/data-center-source-links-zh-dark-mobile-20260924.png)
+has SHA-256 `A40B1EB6A97555614330A650C10A750709B9183244B35D0932EC2ECD6B701FFE`.
+Both are actual browser captures outside Git. Frontend 220/220 tests,
+ESLint, TypeScript, production build and CSS Prettier passed. This fixes one
+target-size defect; it is not a full WCAG 2.2 AA/screen-reader, native-zoom,
+forward-source or release signoff.
+
 ## 2026-09-24 03:14 UTC U6 result-to-account browser chain
 
 Actual Google Chrome 153 at 1280×800 reopened saved historical exploration

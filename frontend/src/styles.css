@@ -755,7 +755,12 @@ kbd {
 .technicalDetails summary {
   cursor: pointer;
   font-weight: 600;
-  min-height: 32px;
+  min-height: 40px;
+}
+.technicalDetails a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
 }
 .technicalDetails dd {
   margin: 0 0 10px;

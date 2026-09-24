@@ -98,6 +98,13 @@
 }
 .marketUpdates summary {
   cursor: pointer;
+  min-height: 40px;
+  padding-block: 0.5rem;
+}
+.marketUpdates a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
 }
 .updateTableScroll {
   max-width: 100%;
