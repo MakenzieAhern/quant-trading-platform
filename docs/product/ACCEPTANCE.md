@@ -54,6 +54,23 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 11:45 UTC Help FAQ pointer target
+
+Actual Chrome on the running local app, Chinese/dark: the first Help FAQ row
+looked about 70px high, but clicking its lower blank area at `(500, 615)`
+left the native `<details>` collapsed. The shared `.helpQuestion` CSS had 20px
+vertical padding on the non-interactive parent and only a 30px minimum on
+`summary`. Moving that padding to the native `summary` and giving it a 70px
+minimum retained the disclosure marker and row layout. The same lower-edge
+click then expanded the Chinese answer; in English, `(500, 635)` expanded
+the translated answer. Chrome's accessibility tree reported the native
+button as expanded and focused in both languages. The original Chinese
+preference was restored. This is a bounded `QA-A11Y` pointer-target fix, not
+a native-200%-zoom, mobile, assistive-technology or full WCAG audit. Frontend
+225 tests, ESLint, TypeScript typecheck, production build and CSS Prettier
+all passed in the existing frontend container; no backend or research test was
+rerun for a CSS-only change. `QA-A11Y` remains IN_PROGRESS.
+
 ## 2026-09-24 11:25 UTC Docker recovery and U3 isolation read-only audit
 
 Docker Desktop 4.92.0 was unexpectedly stopped: the `docker-desktop` WSL2

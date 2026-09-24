@@ -838,12 +838,12 @@ kbd {
 }
 .helpQuestion {
   border-bottom: 1px solid var(--border);
-  padding: 20px 0;
 }
 .helpQuestion summary {
   cursor: pointer;
   font-weight: 600;
-  min-height: 30px;
+  min-height: 70px;
+  padding: 20px 0;
 }
 .helpQuestion p {
   font-size: 14px;
