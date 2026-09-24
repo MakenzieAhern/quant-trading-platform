@@ -1747,3 +1747,16 @@ in English. The original Chinese/dark preference was restored. Existing
 direct-route regression, all 228 frontend tests, ESLint, TypeScript/build and
 changed-file Prettier passed. This is one bounded U8/QA-A11Y fix, not a full
 screen-reader study or completion of the bilingual/accessibility matrix.
+
+## 2026-09-24 22:07 UTC historical-paper handoff keyboard order
+
+Actual Chrome opened the saved 293-session historical result's independent
+paper-account setup. Before the fix, Tab after the source-switch link focused
+the immutable archive ID, then other read-only fields. Those three display-only
+inputs now remain readable but are omitted from sequential keyboard focus.
+Chrome recheck: Tab from the source-switch link reaches editable initial cash;
+the next Tab reaches the historical start-date control. No account, order or
+study was created. Focused paper tests 25/25, full frontend 232/232, ESLint,
+TypeScript, production build and changed-file Prettier passed. This closes
+only the handoff form's wasted Tab stops; `QA-A11Y` and full U7 acceptance
+remain IN_PROGRESS/FAIL respectively.

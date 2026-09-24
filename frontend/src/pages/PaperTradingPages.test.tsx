@@ -459,6 +459,11 @@ describe("paper trading pages", () => {
     expect(screen.getByLabelText("Initial cash")).toHaveValue(
       "123456.789000000000001",
     );
+    screen
+      .getByRole("link", { name: "Start an independent account instead" })
+      .focus();
+    await userEvent.tab();
+    expect(screen.getByLabelText("Initial cash")).toHaveFocus();
     fireEvent.submit(
       screen
         .getByRole("button", { name: "Create paper session" })

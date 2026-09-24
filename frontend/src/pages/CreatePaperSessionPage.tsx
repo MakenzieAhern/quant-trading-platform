@@ -339,6 +339,7 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
                       : "AAPL_fixture"
                 }
                 readOnly
+                tabIndex={-1}
               />
             </label>
             <label>
@@ -346,6 +347,7 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
               <input
                 value={providerType === "replay" ? "AAPL" : "CN-A"}
                 readOnly
+                tabIndex={-1}
               />
             </label>
           </div>
@@ -388,6 +390,7 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
               <input
                 value={t("strategies.cn_a_cross_sectional_momentum_low_vol_v1")}
                 readOnly
+                tabIndex={-1}
               />
             </label>
           ) : (
