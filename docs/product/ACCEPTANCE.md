@@ -129,6 +129,32 @@ wait for visible DOM state; they are **not** low-level input-to-paint traces.
 They pass the 200ms target for only these warm interactions, not full reload,
 production build, cold cache, larger datasets or the entire QA-PERF gate.
 
+## 2026-09-24 01:56 UTC shared experiment checkbox target
+
+On the same saved result in actual Chrome 153 at native 200% zoom, the
+`显示完整精度` and `显示基准` labels were each only 25.5 CSS px high. The shared
+`.experimentCheck` style now centers its checkbox and gives the clickable
+label a 40px minimum height. Browser recheck measured both labels at exactly
+40px with document/client width 712/712. A click at the bottom of the expanded
+benchmark label toggled it off and back on; keyboard Space did the same and
+retained the visible 2px focus ring with 3px offset. A 390×844 Chrome result
+page measured both labels at 40px and document/client width 390/390. The
+saved result summary and backend data were unchanged. At physical 1024×768 /
+native 200% zoom, the real two-study comparison precision label measured 40px;
+the guided wizard reached its confirmation step without submitting and its
+multiline acknowledgment label measured 45.6px. Both routes had document/client
+width 504/504. No configuration was run.
+
+[Before](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/zoom200-experiment-check-target-before-20260924.png)
+SHA-256 `ADF558828CE72AE315C1F86033C82928AD19A691A5598054ACFBF0E8378B0137`;
+[after](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/zoom200-experiment-check-target-after-20260924.png)
+SHA-256 `AB543C7351E11D79DD0EF4B308759BEE1A79C976686EC8D5511418FEE2EE2804`.
+Both captures remain outside Git. Frontend 219 tests, ESLint, TypeScript,
+production build and Prettier passed. PR #32 code head `07fe3a1` passed
+[CI 35945124726](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35945124726)
+for backend, frontend and Compose. This closes one target-size defect, not
+the full WCAG 2.2 AA or screen-reader audit.
+
 ## 2026-09-24 01:09 UTC unplanned historical worker crash and linked completion
 
 An owned `quant-v12-u3crash-20260924` tmpfs PostgreSQL and backend on 8001
