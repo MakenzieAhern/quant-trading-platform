@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-09-24 23:35 UTC forward-data rights disclosure and backup inventory
+
+Actual Chrome on `/data` showed that the raw-candidate notice already blocks
+execution, but the expanded BaoStock terms said "private local analysis trial"
+without explicitly separating that trial from unverified exchange-data rights
+for this app. The shared EN/ZH terms and request acknowledgment now say the
+rights remain unverified, including forward simulation; SDK access and a
+software license do not grant data rights. Chrome exposed both corrected
+language variants in the terms disclosure and checkbox name, then restored
+Chinese/dark. No request was submitted, receipt changed or authority promoted.
+The focused update suite passed 12/12; ESLint, TypeScript and production build
+passed. This reduces a U5/U8 permission ambiguity; U7-FORWARD remains NOT_RUN.
+
+Read-only Windows inventory found only stopped File History, block-backup and
+cloud-restore services, ready built-in backup tasks, and a running OneDrive
+process. None proves that WSL/Docker/PostgreSQL data were backed up to an
+independent destination. `wbadmin get versions` required elevation, as the
+earlier VSS query did; neither shadow copies nor Windows Backup versions were
+assessed. No files, volumes, settings or data were changed. M4 independent
+backup and the two genuine missing ledgers remain open.
+
 ## 2026-09-24 23:24 UTC release backend migration safety
 
 Read-only review of the merged release Compose configuration found that the

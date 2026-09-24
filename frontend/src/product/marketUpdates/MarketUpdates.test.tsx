@@ -76,12 +76,23 @@ describe("explicit incremental request workflow", () => {
     render(<MarketUpdatesPanel />);
     await fill();
     expect(create).not.toHaveBeenCalled();
+    expect(screen.getByRole("checkbox")).toHaveAccessibleName(
+      /Data-use rights for this app remain unverified/,
+    );
+    await userEvent.click(screen.getByText("Provider source and terms"));
+    expect(
+      screen.getByText(/exchange-data rights for this app/),
+    ).toBeInTheDocument();
     await act(async () => {
       await i18n.changeLanguage("zh-CN");
     });
     expect(screen.getByLabelText("开始日期")).toHaveValue("2026-01-05");
     expect(screen.getByLabelText("结束日期")).toHaveValue("2026-01-06");
+    expect(screen.getByRole("checkbox")).toHaveAccessibleName(
+      /本应用的数据使用权仍未核实/,
+    );
     expect(screen.getByText(/不代表来源验收通过/)).toBeInTheDocument();
+    expect(screen.getByText(/本应用使用交易所数据的权利/)).toBeInTheDocument();
     expect(create).not.toHaveBeenCalled();
   });
   it("locks duplicate submit clicks and navigates only after the server returns its durable job", async () => {

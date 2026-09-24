@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 raw-data trial never implies forward-use rights — 2026-09-24
+
+The public BaoStock SDK and scoped local source-evaluation trial remain
+candidate evidence only. The [SSE 2026 rule](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml)
+and [SZSE 2026 rule](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+reserve exchange trading-information use to permitted users. User-facing
+EN/ZH terms and request acknowledgment therefore state that this app's data
+rights, including forward simulation, are unverified. Preserve existing
+receipt/provenance fields; do not relabel trial evidence as authorization.
+
 ## v1.2 release startup does not migrate application history — 2026-09-24
 
 The development backend still migrates on startup for convenience. The release

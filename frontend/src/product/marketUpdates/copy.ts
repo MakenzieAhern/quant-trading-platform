@@ -19,7 +19,7 @@ const en = {
   submit: "Request selected raw data",
   submitting: "Submitting request…",
   confirm:
-    "I understand this starts bounded provider requests for private local analysis only; it does not approve data for research or trading.",
+    "I understand this starts bounded source-evaluation requests. Data-use rights for this app remain unverified; these observations cannot authorize research, forward simulation or trading.",
   validation:
     "Check 1–20 distinct canonical IDs and a valid 1–366-day date range inside the displayed boundary.",
   storage:
@@ -76,7 +76,7 @@ const en = {
   source: "Provider source and terms",
   terms: "Use terms",
   termsHelp:
-    "Private local analysis trial only. Redistribution and commercial data rights are not established; the software license does not grant a data license.",
+    "Private local-analysis trial only; exchange-data rights for this app, including forward simulation, remain unverified. Public SDK access and its software license do not grant a data license.",
   limits: "Bounded request policy",
   limitSecurities: "Maximum securities",
   limitDays: "Maximum calendar days",
@@ -151,7 +151,7 @@ const zh: typeof en = {
   submit: "请求所选原始数据",
   submitting: "正在提交请求…",
   confirm:
-    "我理解此操作将启动仅供本地私人分析的有限供应商请求，不会批准数据用于研究或交易。",
+    "我理解此操作将启动有限的来源评估请求。本应用的数据使用权仍未核实；这些观察值不能据此用于研究、前向模拟或交易。",
   validation:
     "请检查 1–20 个不重复的规范证券标识，以及显示边界内有效的 1–366 日区间。",
   storage:
@@ -202,7 +202,7 @@ const zh: typeof en = {
   source: "供应商来源及使用条款",
   terms: "使用条款",
   termsHelp:
-    "仅供本地私人分析试用，尚未确立再分发及商业数据使用权；软件许可证不等于数据许可证。",
+    "仅作本地私人分析试用；本应用使用交易所数据的权利（包括前向模拟）仍未核实。公开 SDK 可访问及其软件许可证均不构成数据授权。",
   limits: "有限请求策略",
   limitSecurities: "最多证券数",
   limitDays: "最多自然日数",
