@@ -68,13 +68,29 @@ export function saveExperimentDraft(
   step: number,
   idempotencyKey: string,
 ) {
-  const raw = JSON.stringify({
-    version: 1,
-    form,
-    step,
-    idempotencyKey,
-    savedAt: new Date().toISOString(),
-  } satisfies ExperimentDraft);
+  let storedRaw: string | null = null;
+  let stored: ExperimentDraft | null = null;
+  try {
+    storedRaw = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
+    stored = storedRaw ? parseExperimentDraft(JSON.parse(storedRaw)) : null;
+  } catch {
+    // Corrupt or unreadable storage must not prevent writing the current draft.
+  }
+  const unchanged =
+    stored &&
+    stored.step === step &&
+    stored.idempotencyKey === idempotencyKey &&
+    JSON.stringify(stored.form) === JSON.stringify(form);
+  const raw =
+    unchanged && storedRaw
+      ? storedRaw
+      : JSON.stringify({
+          version: 1,
+          form,
+          step,
+          idempotencyKey,
+          savedAt: new Date().toISOString(),
+        } satisfies ExperimentDraft);
   // Synchronous for beforeunload: preserve this page's latest values before any
   // shared-pointer write. Another tab can win the pointer without losing ours.
   window.localStorage.setItem(`${DRAFT_RECOVERY_PREFIX}${writerId}`, raw);

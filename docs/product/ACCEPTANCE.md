@@ -161,6 +161,37 @@ Both accounts were created and started only in the owned disposable test DB;
 the live paper-session count remained five. This proves a bounded historical
 risk-rejection path, not lawful new-market execution.
 
+## 2026-09-24 05:02 UTC draft autosave and mobile Back target
+
+An unchanged wizard autosave had been rewriting only `savedAt`, making a
+cancelled recovery preview appear to alter the shared draft. The shared
+`saveExperimentDraft` path now retains the exact stored JSON when form, step
+and request identity are unchanged; a real form edit still receives a new
+timestamp. The focused configuration/recovery tests passed 17/17 and the
+full frontend suite passed 225/225, with ESLint, TypeScript, production build,
+Prettier and `git diff --check` passing. In the live in-app browser, an
+alternate recovery draft was previewed and **Keep current draft** returned to
+the unchanged `U3 final diagnostic` name/step. Reopening the wizard in a new
+tab again showed that saved name and step 2. The
+[reopen capture](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/draft-cancel-reopen-en-20260924.png)
+is outside Git, SHA-256
+`9446EABC95695687C9838B7DBA191F1799DE44D52ADF2DC628BEB00669D0D627`.
+The browser-control interface stalled on the native **Save & exit** confirm;
+that confirm's subsequent navigation was **not** verified and is not claimed
+as passed. No research job was submitted.
+
+The shared `.backLink` target on five detail pages was 21px high; its CSS now
+gives a 40px minimum target without a page-level mobile overflow. At an
+explicit 390×844 viewport, the real restored historical account's link
+measured 116.8×40px, document width 375px against viewport 390px. A click
+at `(40,313)` near its lower edge navigated to `/paper`; the original 21px
+target would not have included that point. The
+[mobile capture](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/paper-back-target-mobile-20260924.png)
+is outside Git, SHA-256
+`CE649E1B1401586665BF390EF32B4E45BA4A468B5E7BCE5AC7543B6D6DEEE4BD`.
+The viewport override was reset. This closes two bounded defects, not full
+U3 recovery, WCAG 2.2 AA, data-integrity or release acceptance.
+
 ## 2026-09-24 03:35 UTC paper-list error guidance
 
 Actual isolated Chrome 153 at 1280×800 intercepted only the saved paper-list

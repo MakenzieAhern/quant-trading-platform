@@ -1162,8 +1162,10 @@ tbody tr:hover {
   align-items: flex-end;
 }
 .backLink {
-  display: inline-block;
-  margin-bottom: 22px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  margin-bottom: 3px;
   font-size: 13px;
   text-decoration: none;
 }

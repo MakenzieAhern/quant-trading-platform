@@ -34,6 +34,27 @@ beforeEach(() => {
       window.localStorage.removeItem(key);
 });
 describe("immutable browser configuration versions", () => {
+  it("keeps the saved time for an unchanged autosave, but dates a real edit", () => {
+    const original = JSON.stringify(current);
+    localStorage.setItem(EXPERIMENT_DRAFT_KEY, original);
+    saveExperimentDraft(
+      { ...configuration },
+      current.step,
+      current.idempotencyKey,
+    );
+    expect(localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(original);
+    expect(readBrowserDraftRecoveries().items[0].draft.savedAt).toBe(
+      current.savedAt,
+    );
+
+    saveExperimentDraft(
+      { ...configuration, name: "Edited configuration" },
+      current.step,
+      current.idempotencyKey,
+    );
+    expect(readExperimentDraft()?.form.name).toBe("Edited configuration");
+    expect(readExperimentDraft()?.savedAt).not.toBe(current.savedAt);
+  });
   it("retains and explicitly restores another tab's draft written during backup publication", async () => {
     saveExperimentDraft(configuration, current.step, current.idempotencyKey);
     const target = saveConfigurationVersion("Target", {
