@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T02:24:13Z",
+  "updated_at_utc": "2026-09-24T02:57:31Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -28,10 +28,12 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "read-only review closed U2/U5 P1; agent inactive after usage limit"
     },
-    "verified_processes": "2026-09-24: main Compose backend/postgres/redis healthy and frontend running; owned quant-v12-u3restart, quant-v12-u3fail and quant-v12-u3crash isolated backends, tmpfs postgres, networks and two-file shadow directory removed after QA; original four volumes remained; no formal study",
+    "verified_processes": "2026-09-24 02:48UTC: main Compose backend/postgres/redis healthy and frontend running; owned quant-v12-retry-0016 tmpfs PostgreSQL and network removed after migration/full-test/clone validation, without -v; original four named volumes remained. Earlier owned U3 isolated backends, tmpfs postgres, networks and two-file shadow directory were removed after QA; no formal study",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 02:55UTC actual Chrome153 slow saved-market-update detail GET after manual Refresh retained old completed status and 2/2 counts with no immediate task feedback. Local detail refresh now clears old job/error and announces Loading saved state via the existing polite status region. Same Chrome held GET showed old completion count0 and loading; after releasing the genuine read, completion returned. No update POST/provider request. Screenshot SHA256 504BA0EA3A8A68EACF74DB15E274EA583E43329A931E8C632CCF99251F881DB0 in ACCEPTANCE. Focused update12, full frontend220, ESLint, TypeScript, Prettier and production build PASS. Bounded UX-ERROR/QA-A11Y improvement, not an actual screen-reader study or full release gate",
+    "2026-09-24 02:48UTC retry identity root fix: unique retry_of constraints for research and update jobs in reversible migration0016, with same-child lookup/race recovery. Isolated backend975 PASS/one optional archive skip, Ruff/format/mypy PASS; migration down/up on tmpfs DB and 0015→0016 on a transactionally restored live-data clone PASS. Pre0016 same-disk dump SHA256 c823582ed08f5e5e3e43aa6e697cda667ff4ec75babd2badb33fda48131f6eb4. PR32 head1cf5092 CI35948252640 backend/frontend/compose PASS. Live backend-only restart after migration left research8/update4/paper5 and API health200. Actual isolated Chrome153 clicked old FAILED raw-update parent0eecbddb once and opened existing SUCCEEDED childed796871; one retry POST, jobs4/receipts6/observations6 and one child unchanged. Screenshot SHA256 8F91D19CCB3D7E40D37C2CF1AFD0A5C1D55C4187BCD46E54912080CF40DF6932 in ACCEPTANCE. This closes bounded retry identity, not U5 source authority, missing paper ledgers, independent disaster recovery or release",
     "2026-09-24 02:24UTC actual Chrome153 /tasks fault-injected research GET403; before fix the research panel falsely instructed service startup while four raw-data task links remained. Reusing the existing typed experiment-error interpreter now shows explicit permission guidance in ZH/EN alert. Removing interception and visible Refresh restored eight genuine research links with four update links still present and zero POST. Screenshot SHA256 before C4A448CF18F457E11D9D5EE04F1DFCCF755917AFC68E40ADD4C8DA6194A3388A and after EN 88B2D08AFBB77F3F8AE6ED5D4A4BA8F9B4A27946B88FC129DC23A3D0945809A5 in ACCEPTANCE. Focused task-center2, full frontend219, ESLint, TypeScript, build and Prettier PASS. PR32 code head58e64a1 CI35946927203 backend/frontend/compose PASS. This closes one bounded UX-ERROR/U8 defect, not the full gate",
     "2026-09-24 02:14UTC actual Chrome153 found eight 18x18 row-level comparison checkboxes in /experiments. A single local label wrapper now gives each a 40x40 pointer target. Native 200-percent physical1280x800/CSS640/DPR2 outer-edge click selected a study and keyboard Space deselected it with visible focus; English accessible name retained and doc/client640/640. Fresh Chrome standard390x844/DPR1 label40x40 and doc/client390/390, table-only horizontal scroll. Mobile screenshot SHA256 B852B32DFC92851A73AEDCE878912E152843FBBBE982685F4C2F369E4AFC3325 in ACCEPTANCE. Frontend219, ESLint, TypeScript and build PASS. PR32 code head f02dbf5 CI35946268129 backend/frontend/compose PASS. This closes one bounded QA-A11Y target defect; full WCAG and release remain open",
     "2026-09-24 01:59UTC actual Chrome153 on saved 293-session result at native 200-percent zoom measured the two .experimentCheck labels at25.5 CSS px high; shared CSS raised clickable labels to40px. Clicks on the new lower target area and keyboard Space toggled benchmark with visible2px focus ring/3px offset; full-period metrics unchanged. Mobile390 labels also40px with no document overflow. At physical1024x768/native200, two-study comparison precision was40px and multiline wizard acknowledgment45.6px; no run submitted. Before/after SHA256 in ACCEPTANCE. Full frontend219, ESLint, TypeScript, build, Prettier PASS. PR32 code head07fe3a1 CI35945124726 backend/frontend/compose PASS. This closes one bounded target defect, not QA-A11Y or release",
@@ -200,6 +202,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "RESOLVED: manual refresh of a previously completed raw-update task kept stale success and counts visible while its detail GET was pending; now it immediately shows a polite loading state until the authoritative response arrives, verified with a delayed real-Chrome request and regression",
     "RESOLVED: /tasks research-list HTTP403 was described as local-service outage; task center now shares typed permission, timeout, server and offline guidance with the research list, with browser ZH/EN 403 and refresh recovery plus unit 403/offline sequence",
     "RESOLVED: /experiments study-comparison row checkboxes had only18x18 CSS-pixel click targets in actual Chrome; row label targets now40x40, outer-edge click/keyboard selection and standard-mobile/200-percent geometry rechecked without page-level overflow",
     "RESOLVED: shared experiment checkbox labels had only25.5px clickable height on native-200-percent saved result; .experimentCheck now has40px minimum target and centered checkbox, verified on result, comparison, wizard and mobile without page overflow or financial-value change",
@@ -240,7 +243,7 @@
     "M4-BACKUP-DESTINATION: Windows currently exposes only one physical NVMe disk (Disk0); C and D are partitions on that disk, with no independently mounted backup medium verified"
   ],
   "not_run": [
-    "U5 current master/calendar/ST/suspension/actions/cost reconciliation, executable 2026 rule promotion, failure/retry/cancel browser matrix and source authority promotion; U7 after-start forward receipt and unplanned mid-run recovery",
+    "U5 current master/calendar/ST/suspension/actions/cost reconciliation, executable 2026 rule promotion, cancellation browser matrix and source authority promotion; U7 after-start forward receipt and unplanned mid-run recovery",
     "Full remaining M2-M5 matrix, real-user testing not claimed"
   ],
   "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
@@ -434,17 +437,17 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "58e64a1",
+      "last_verified_head": "f3d3526",
       "state": "DRAFT",
-      "ci_run": 35946927203,
+      "ci_run": 35949299927,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill and linked retry PASS. U3 dirty Back/Forward, isolated cancelled-to-linked-retry and U4 CSV/JSON download PASS in real Chrome. Home links40px, direct-load skip-link focus and fault-injected offline/permission/timeout recovery PASS. No-match and real zero-trade filter guidance PASS. Native 200-percent zoom home first actions visible at 1024x768 ZH/EN light and returning EN/dark; 1280x800 ZH/dark ten-route no-overflow/AX-name check PASS. Standard 390x844 ZH/system-light and EN/dark ten-route width/AX-name checks PASS. Saved 293-session 200-percent result pagination/benchmark/precision warm p95=51/46/58ms; shared experiment checkbox targets40px and keyboard/clickable on result, comparison and wizard. Research-list comparison row targets now40px with outer-edge click/Space and EN name in Chrome; mobile no page overflow. Task center research GET403 now shows ZH/EN permission guidance and Refresh restores eight studies while four update tasks remain and zero POST. Full visual/A11Y/performance matrix incomplete. Full Windows reboot and forward authority remain open"
+      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill and linked retry PASS. U3 dirty Back/Forward, isolated cancelled-to-linked-retry and U4 CSV/JSON download PASS in real Chrome. Home links40px, direct-load skip-link focus and fault-injected offline/permission/timeout recovery PASS. No-match and real zero-trade filter guidance PASS. Native 200-percent zoom home first actions visible at 1024x768 ZH/EN light and returning EN/dark; 1280x800 ZH/dark ten-route no-overflow/AX-name check PASS. Standard 390x844 ZH/system-light and EN/dark ten-route width/AX-name checks PASS. Saved 293-session 200-percent result pagination/benchmark/precision warm p95=51/46/58ms; shared experiment checkbox targets40px and keyboard/clickable on result, comparison and wizard. Research-list comparison row targets now40px with outer-edge click/Space and EN name in Chrome; mobile no page overflow. Task center research GET403 now shows ZH/EN permission guidance and Refresh restores eight studies while four update tasks remain and zero POST. Old failed raw-update parent now reopens its existing successful child from Chrome; one retry POST and no new job/receipt/observation. Full visual/A11Y/performance matrix incomplete. Full Windows reboot and forward authority remain open"
     }
   },
   "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence and obtain an independent backup destination. U3 cancellation, failure, controlled restart and unplanned test-worker crash/retry now pass; do not confuse that with physical power loss or U7 forward-paper durability. Continue U8/accessibility/performance and remaining native 200-percent zoom cases. M5 still lacks complete real-data user flow, full Windows startup and real novice-user review. Obtain lawful forward-source rights before any U7 execution promotion; verify terminal-free recovery at the next safe full Windows reboot/login",
-  "next_command": "Inspect an unverified U5 update failure/retry or QA-A11Y live-announcement path in actual Chrome. Also inspect any newly available genuine pre-loss paper-ledger evidence or independent physical backup destination read-only. Do not disrupt the live 5173 app merely to benchmark a production preview: the backend permits that one frontend origin. Leave frozen research, Official OOS and RAW_CANDIDATE unchanged",
+  "next_command": "Verify the remaining U5 cancellation browser path in an isolated test database or inspect QA-A11Y live announcements in real Chrome. Also inspect any newly available genuine pre-loss paper-ledger evidence or independent physical backup destination read-only. Do not disrupt the live 5173 app merely to benchmark a production preview: the backend permits that one frontend origin. Leave frozen research, Official OOS and RAW_CANDIDATE unchanged",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 retries use one database-enforced child per parent — 2026-09-24
+
+The retry UI key and an operator-created child's key need not match. Request-key
+idempotency alone therefore allowed another child for the same failed parent.
+Product research and raw-update job tables now uniquely constrain non-null
+`retry_of`; the managers return the existing child, including when concurrent
+keys race. A conflicting configuration remains a conflict. Migration 0016 is
+reversible and was tested on an isolated database and a restored live-data
+clone before deployment. The old parent reopened its prior successful child
+in real Chrome without increasing the 4 update jobs or 6 receipts. This fixes
+retry identity, not forward-market authorization or the separate missing paper
+ledgers; the pre-migration backup is on the same physical disk.
+
 ## v1.2 terminal-free local startup uses native restart policies — 2026-09-23
 
 Docker Desktop 4.92.0's General setting now starts it at Windows sign-in. The

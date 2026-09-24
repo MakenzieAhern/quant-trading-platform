@@ -30,7 +30,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U4-COMPARE | Reopen/compare 2–3; six config differences indicated | /experiments/compare?ids= | Chrome three actual runs, six conditions, exact fraction display and refresh preserving URL/results; comparison tests and independent review PASS; `u4/compare-three-results-en-dark-1024.png` | PASS |
 | U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, automatic download and persistent prepared-file link | Injection/precision/API tests PASS, including CSV formula-prefix escaping. On 2026-09-23 21:09 UTC isolated real Chrome 153 with `acceptDownloads` at the documented `http://localhost:5173` origin emitted successful download events for historical job `d9f27183`: trades CSV 29,316 bytes and metadata JSON 258,223 bytes, with expected filenames and `download.failure() = null`; JSON began with report metadata and exact job ID. Earlier in-app-browser download suppression remains an environment-specific observation, not a failed Chrome export. Agent walkthrough, not a real-user study | PASS |
 | U5-MARKET | Search/watchlist/raw-adjusted/date/source view | /api/markets and /markets deployed0013 | 20 backend/14 frontend focused tests; independent review PASS; Chrome000001 raw22.45/HFQ874.904325432379995/suspension2010-03-01; watchlist persists fresh tab; dialog dates/locale/Esc;390+1280 no page overflow | PASS |
-| U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | /data and /api/market-updates; separate product cache and migration0014 | Real Chrome one-security/one-date job `3b729cf9` succeeded and survived restart/reload. Four-board job `164c947d` had 3 new + 1 cached candidates. Targeted control retry `ed796871` added two 2026-09-22 vendor candidates: 688622 isST=1; 603400 suspended with blank raw turnover normalized to zero, never executable. Chrome visually confirmed official SSE 603400 suspension notice; binary checksum unavailable. Official 2026 exchange rule transition is mapped in a separate candidate model with no fills and focused tests; execution authority remains false. Failure/retry browser and full 2026 authority remain | IN_PROGRESS |
+| U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | /data and /api/market-updates; separate product cache and migration0014/0016 | Real Chrome one-security/one-date job `3b729cf9` succeeded and survived restart/reload. Four-board job `164c947d` had 3 new + 1 cached candidates. Targeted control retry `ed796871` added two 2026-09-22 vendor candidates: 688622 isST=1; 603400 suspended with blank raw turnover normalized to zero, never executable. On 2026-09-24 real Chrome reopened the existing successful child from failed parent `0eecbddb`; live jobs/receipts/observations stayed 4/6/6, with one child. Separate candidate 2026 rules still authorize no fills. Cancellation browser matrix and full 2026 source authority remain | IN_PROGRESS |
 | U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Persisted result preview and independent audited historical paper account | Historical job `d9f27183` completed 293/293; preview 2011-03-22→23 had 32 candidates, 5 risk rejections. Independent account `d7044a3c` generated 20 risk decisions/orders and 6 fills through the paper runtime; future-data plan and actual forward receipt remain pending | IN_PROGRESS |
 | U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Synthetic demo + distinct audited historical replay with durable pause/resume; forward not implemented | Chrome previously verified account `4b64380f` with 20 orders/six fills, but that post-backup account is now absent after the 2026-09-23 database incident. The older uninterrupted account `d7044a3c` was restored from a verified backup. Forward mode remains unimplemented | FAIL |
 | U7-RECOVER | Socket disconnect/reconnect + backend restart don't fake/duplicate fills | Persisted paused state, deterministic source replay to checked cursor, then append-only continuation | Prior Chrome restart/resume observations for `4b64380f` and interrupted `07d72259` are retained as historical QA evidence, not current persistence proof: both post-backup ledgers are absent from the live DB. No synthetic reconstruction is accepted. On 2026-09-23 actual Chrome 153 injected one snapshot HTTP503 for restored stopped historical account `d7044a3c`: the page recovered via one WebSocket reconnect and a second authoritative REST snapshot with no alert; HTTP403 stopped after one request with permission guidance; persistent503 stopped after four total requests. Live counts paper5/events417/jobs8 unchanged. Focused18/full215 frontend tests, lint/type/build and [CI35933791233](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35933791233) backend/frontend/compose PASS; bounded retry and no stale-event ledger mutation have unit coverage. Full restart/forward recovery matrix and lost ledgers remain | FAIL |
@@ -53,6 +53,61 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
+
+## 2026-09-24 02:55 UTC manual update refresh feedback
+
+In actual Google Chrome 153 at 1280×800, delaying only the saved update
+detail GET after the visible Refresh click left the old completed status,
+2/2 requests and candidate summary on screen until the response finished.
+That was ambiguous feedback for a user and a stale success during a pending
+read, although the prior error path already hid old details. The detail
+refresh now immediately clears the old job/error and presents the existing
+polite `role=status` loading message. Chrome with the same held GET showed
+zero old-completion copy and exactly `Loading saved state…`; releasing the
+unmodified request restored the genuine completed detail. No update POST or
+provider request was made in this fault-injection check. The
+[loading-state screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u5-refresh-loading-20260924.png)
+is outside Git, SHA-256
+`504BA0EA3A8A68EACF74DB15E274EA583E43329A931E8C632CCF99251F881DB0`.
+The focused update suite passed 12/12, full frontend 220/220, ESLint,
+TypeScript, Prettier and production build passed. PR32
+[CI35949299927](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35949299927)
+passed backend/frontend/compose. This is a bounded
+UX-ERROR/QA-A11Y status-feedback improvement, not an actual screen-reader
+study or full U5/AA/release acceptance.
+
+## 2026-09-24 02:48 UTC durable retry identity and actual Chrome check
+
+An existing failed raw-update parent `0eecbddb-4960-4a63-bf9a-505e9a5af884`
+already had successful child `ed796871-4ce4-4cf3-b7f0-2223e636bb75`, but the
+child used a manually supplied request key. The UI retry key differed, so the
+old backend could create a second child. Migration 0016 adds one unique
+`retry_of` child per parent to both personal-research and market-update jobs;
+service create/retry returns the existing child for a different key or a
+concurrent call, while retaining configuration-fingerprint conflict checks.
+
+The change passed 975 isolated backend tests (one optional archive skip),
+Ruff/format/mypy, migration downgrade/re-upgrade on disposable `quant_test`,
+and [PR32 CI35948252640](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35948252640)
+backend/frontend/compose. A pre-0016 logical dump outside Git has SHA-256
+`c823582ed08f5e5e3e43aa6e697cda667ff4ec75babd2badb33fda48131f6eb4`;
+it restored transactionally into a disposable clone containing 8 research and
+4 update jobs, then upgraded 0015→0016 with both constraints present. This is
+a same-disk migration safety check, not independent disaster recovery.
+
+The live migration reached 0016, only the backend restarted, API health
+returned HTTP 200, and the 8 research / 4 update / 5 paper session counts
+stayed unchanged. In an independent headless Google Chrome 153 session at
+1280×800, clicking the visible failed-task retry once sent one
+`POST /api/market-updates/{parent}/retry` and navigated to the already
+successful child URL. The child displayed 2/2 completed requests and the
+candidate-only/non-executable warning. Live update jobs/receipts/observations
+remained 4/6/6 and the parent had exactly one child; this is not evidence of
+a newly authorized provider feed. The [Chrome screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u5-retry-existing-child-20260924.png)
+is outside Git, SHA-256
+`8F91D19CCB3D7E40D37C2CF1AFD0A5C1D55C4187BCD46E54912080CF40DF6932`.
+U5-UPDATE remains IN_PROGRESS, QA-RELEASE remains FAIL, and no forward account
+was started.
 
 ## 2026-09-24 02:21 UTC task-center research error recovery
 
