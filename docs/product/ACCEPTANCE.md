@@ -161,6 +161,24 @@ Both accounts were created and started only in the owned disposable test DB;
 the live paper-session count remained five. This proves a bounded historical
 risk-rejection path, not lawful new-market execution.
 
+## 2026-09-24 05:08 UTC mobile topbar target follow-up
+
+At 390×844 on the live `/paper` list, the menu and search controls were
+36×37px and 36×38px; the English language target was only 27.9×40px. Shared
+mobile CSS gives menu, search and both language buttons at least 40×40px.
+The first spacing attempt wrapped the tool group to a new row, so the final
+mobile gap is 8px; the final measured first row contains all five controls,
+while the dated data-context link remains on its own second row. Document
+width was 375px within a 390px viewport. Lower-edge clicks on the expanded
+menu and search targets opened their intended panels; closing restored the
+page and search focus. The
+[mobile capture](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/topbar-targets-en-mobile-20260924.png)
+is outside Git, SHA-256
+`69208CD0CE02FA8E2F6D9C7EFEBC7E73E4848400DBF3C1ADCF79B510BCDED341`.
+The viewport override was reset. Full frontend 225/225, ESLint, TypeScript
+build and CSS Prettier passed. This closes one bounded pointer-target defect,
+not a full WCAG 2.2 AA or native-zoom signoff.
+
 ## 2026-09-24 05:02 UTC draft autosave and mobile Back target
 
 An unchanged wizard autosave had been rewriting only `savedAt`, making a

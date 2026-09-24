@@ -1468,8 +1468,8 @@ footer strong {
   }
   .mobileMenu {
     display: inline-grid !important;
-    min-width: 36px;
-    min-height: 36px;
+    min-width: 40px;
+    min-height: 40px;
   }
   .topbar {
     min-height: 62px;
@@ -1489,15 +1489,20 @@ footer strong {
     justify-content: center;
   }
   .searchButton {
-    margin-left: auto;
-    min-width: 36px;
+    margin-left: 0;
+    min-width: 40px;
+    min-height: 40px;
     padding: 0 8px;
+  }
+  .languageSelector button {
+    min-width: 40px;
   }
   .searchButton > span:nth-child(2) {
     display: none;
   }
   .topbarTools {
     gap: 6px;
+    margin-left: auto;
   }
   .themeControl select {
     max-width: 102px;
@@ -1558,7 +1563,7 @@ footer strong {
     display: none;
   }
   .topbar {
-    gap: 10px;
+    gap: 8px;
   }
   .topbarTools {
     margin-left: 0;
