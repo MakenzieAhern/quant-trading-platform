@@ -54,6 +54,27 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 00:02 UTC chart missing-series browser check and backup media
+
+The persisted historical result `d9f27183` has complete benchmark values on
+all three pages (293 observations). To test the missing-data display without
+altering that result or its database, actual Chrome 153 intercepted only its
+read-only equity response and set one displayed benchmark and drawdown value
+to `null`. The page showed incomplete-series guidance in Chinese and English,
+disabled the benchmark switch, rendered neither incomplete SVG line nor legend,
+and kept the exact-data table accessible with both null cells shown as unknown
+(`暂无`), not zero. No experiment POST occurred. The [Chinese fault-injection
+screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/chart-null-series-fault-zh-20260924.png)
+is outside Git (SHA-256 `600D20313726D2DCBFB02703135C6C28336480180BB0D4117A68D45D42EC8C30`).
+This is browser fault-injection evidence, not a naturally incomplete historical
+result or formal research rerun; UX-CHART and QA-A11Y remain IN_PROGRESS.
+
+Windows `Get-Partition` and `Get-Disk` showed both C: and D: on Disk0, the
+machine's sole exposed 2 TB NVMe disk. No independently mounted filesystem
+backup destination was verified. The existing same-disk dump/restore drill
+does not close independent disaster recovery or the two missing post-backup
+paper ledgers; M4-DATA-INTEGRITY remains FAIL.
+
 ## 2026-09-23 23:54 UTC Data Center permission recovery
 
 Actual Chrome 153 at 1280×800 intercepted only the read-only

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-23T23:53:56Z",
+  "updated_at_utc": "2026-09-24T00:01:58Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 00:02UTC actual Chrome153 on persisted historical result d9f27183, read-only equity-response fault injection only: one benchmark and drawdown point became null in the browser, with no API write. EN/ZH showed incomplete-series guidance, disabled benchmark toggle, drew no benchmark/drawdown lines or legends, and the accessible exact-data table showed both nulls as unknown rather than zero. Main DB and formal report unchanged. This narrows UX-CHART and QA-A11Y browser evidence; the persisted source itself has no observed missing-series page. Windows Get-Partition/Get-Disk shows C and D are partitions of the same sole 2TB NVMe Disk0, so the existing D/same-disk backup is not independent disaster recovery",
     "2026-09-23 23:54UTC actual Chrome153 read-only 403 injection on /api/market-updates/capabilities reproduced generic Data Center refresh advice; shared updateError now distinguishes denied access, timeout and offline transport for capabilities/history/records/task center while retaining source-specific codes. Chinese Chrome displayed permission guidance; removing interception and manually refreshing restored the real form, with zero market-update POSTs and live counts paper5/events417/jobs8/updates4 unchanged. Focused12/full216 frontend, lint/type/build PASS. This closes one bounded U5/UX-ERROR permission-recovery defect, not the full failure matrix or provider rights",
     "2026-09-23 23:45UTC disposable tmpfs paper QA on localhost8001/5174 and real Chrome153: one synthetic 2030 account cccc6b44 was created by UI, started, paused, disconnected/reconnected via the actual WebSocket, resumed and naturally STOPPED. Final 521 journal events had exactly unique continuous sequences1..521, one order and one fill. Restarting only the isolated backend retained STOPPED/521/one order/one fill/cash1223.5/equity100000000; fresh Chrome showed the same account and explicit synthetic label. Main DB stayed paper5/events417/jobs8. Only three owned test containers and their test network/tmpfs DB were removed, no volumes. This closes a bounded synthetic reconnect/restart and duplicate-fill check, not the missing historical ledgers or lawful forward market gate; U7-RECOVER remains FAIL",
     "2026-09-23 23:31UTC real Chrome153 on restored stopped historical paper account: one injected snapshot HTTP503 now triggers socket reconnection and a second authoritative REST snapshot, restoring the page with no alert; injected HTTP403 made one request and showed permission guidance without retry. Persistent503 stopped after four total requests; live counts paper5/events417/jobs8 unchanged. Focused18/full215 frontend, lint/type/build and PR32 e165e38 CI35933791233 backend/frontend/compose PASS. This narrows U7-RECOVER and UX-ERROR but missing historical ledgers and full restart/forward gates remain FAIL/NOT_RUN",
@@ -212,7 +213,11 @@
     "RESOLVED for U4 Chrome export: in-app browser prepared a blob without a download event, while isolated actual Chrome153 completed both CSV and JSON downloads; no Windows Downloads file was claimed because the isolated profile used browser-managed temporary downloads",
     "RESOLVED: transient Chrome browser-control binding timeouts were followed by successful Chrome Back/Forward and CSV/JSON acceptance; the temporary QA draft name was restored. No app defect was inferred from the tool timeout"
   ],
-  "external_blockers": [],
+  "external_blockers": [
+    "U7-FORWARD: lawful product-use rights for a genuinely new A-share market-data feed have not been established; a public SDK or historical candidate receipt does not grant execution authority",
+    "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay",
+    "M4-BACKUP-DESTINATION: Windows currently exposes only one physical NVMe disk (Disk0); C and D are partitions on that disk, with no independently mounted backup medium verified"
+  ],
   "not_run": [
     "U5 current master/calendar/ST/suspension/actions/cost reconciliation, executable 2026 rule promotion, failure/retry/cancel browser matrix and source authority promotion; U7 after-start forward receipt and unplanned mid-run recovery",
     "Full remaining M2-M5 matrix, real-user testing not claimed"
@@ -408,9 +413,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "e165e38",
+      "last_verified_head": "1ce8207",
       "state": "DRAFT",
-      "ci_run": 35933791233,
+      "ci_run": 35935912517,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
