@@ -683,6 +683,7 @@ describe("paper trading pages", () => {
       await act(async () => MockWebSocket.instances[0]!.open());
       expect(await screen.findByText("买入 / 限价单")).toBeVisible();
       expect(screen.getByText("已成交")).toBeVisible();
+      expect(screen.getByText("风控检查通过")).toBeVisible();
       expect(screen.getByText("风控通过")).toBeVisible();
       expect(screen.getByText("提案已通过风控。")).toBeVisible();
       expect(screen.getByText("A股动量与低波动策略")).toBeVisible();
@@ -696,6 +697,8 @@ describe("paper trading pages", () => {
       await act(async () => i18n.changeLanguage("en-US"));
       expect(screen.getByText("Buy / Limit")).toBeVisible();
       expect(screen.getByText("Filled")).toBeVisible();
+      expect(screen.getByText("Risk check passed")).toBeVisible();
+      expect(screen.getByText("Rejected by risk controls")).toBeVisible();
       expect(screen.getByText("Proposal approved.")).toBeVisible();
       expect(screen.getByText("Insufficient buying power")).toBeVisible();
     } finally {

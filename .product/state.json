@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T22:34:00Z",
+  "updated_at_utc": "2026-09-24T22:38:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 22:38UTC actual Chrome persisted historical paper account EN/ZH showed risk-approved proposals can end filled or cancelled; paper/backtest decision labels now say Risk check passed / 风控检查通过 rather than raw APPROVED or ambiguous 已批准, with EN rejection translated. Focused paper/backtest32, full frontend235, ESLint, TypeScript/build and changed-file Prettier PASS; PR CI pending. User reports independent backup destination, genuine pre-loss ledger backup and lawful 2026 A-share forward-data rights all unknown; none accepted. U8/M4/U7/M5 remain open",
     "2026-09-24 22:34UTC actual Chrome /paper listed five retained sessions with shortened UUIDs as primary entry; two historical rows shared strategy/status. Visible entry is now localized Open session, with distinct translated strategy/provider/status/UTC time/short audit ID in AX; exact saved ledger opened and Back returned to list, then ZH/dark restored. Shared English lifecycle labels are human-readable rather than raw backend enums. Focused31/full frontend235, ESLint, TypeScript/build PASS. U8/QA-A11Y bounded progress only; missing genuine ledgers, independent backup, lawful forward source, post-login startup and release gates unchanged",
     "2026-09-24 22:24UTC actual Chrome populated research list had three same-named M1 lifecycle recovery records with ambiguous comparison control names. Row checkbox and links now distinguish records by translated status and UTC creation time; selected chips show the time. Actual Chrome ZH/EN AX trees confirmed distinct names, then ZH/dark restored. Same-name regression plus full frontend234, ESLint, TypeScript/build, changed-test Prettier and diff check PASS. Bounded QA-A11Y progress only; missing genuine ledgers, independent backup, lawful forward source, post-login startup and release gates unchanged",
     "2026-09-24 22:12UTC actual Chrome historical-result handoff keyboard audit found three immutable form fields wasting Tab stops. Display-only archive ID, symbol and fixed strategy inputs now skip sequential focus; Chrome Tab from source-switch link reaches editable cash then historical start-date control, without account/order creation. The retained legacy backtest's inert symbol is likewise skipped; Chrome Tab from Cancel reaches initial cash. Comparison share URL deliberately stays focusable for copying. Full frontend233, ESLint, TypeScript/build, changed-file Prettier PASS; PR32 code head5002eea CI36065880987 backend/frontend/compose PASS. QA-A11Y remains IN_PROGRESS; missing genuine ledgers, independent backup, lawful forward source, post-login startup and release remain open",

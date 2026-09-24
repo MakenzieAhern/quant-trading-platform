@@ -214,17 +214,25 @@ describe("backtest detail", () => {
       await screen.findByTitle("185.140000000000000001"),
     ).toHaveTextContent("185.140000000000000001");
     expect(screen.getByText("Buy / Market")).toBeInTheDocument();
+    expect(screen.getByText("Risk check passed")).toBeInTheDocument();
     expect(screen.getByText("Proposal approved.")).toBeInTheDocument();
     expect(screen.getByText("Equity curve")).toBeInTheDocument();
     try {
-      await act(async () => { await i18n.changeLanguage("zh-CN"); });
+      await act(async () => {
+        await i18n.changeLanguage("zh-CN");
+      });
       expect(screen.getByText("表现")).toBeInTheDocument();
       expect(screen.getByText("权益曲线")).toBeInTheDocument();
       expect(screen.getByText("买入 / 市价单")).toBeInTheDocument();
+      expect(screen.getByText("风控检查通过")).toBeInTheDocument();
       expect(screen.getByText("提案已通过风控。")).toBeInTheDocument();
-      expect(screen.getByTitle("185.140000000000000001")).toHaveTextContent("185.140000000000000001");
+      expect(screen.getByTitle("185.140000000000000001")).toHaveTextContent(
+        "185.140000000000000001",
+      );
     } finally {
-      await act(async () => { await i18n.changeLanguage("en-US"); });
+      await act(async () => {
+        await i18n.changeLanguage("en-US");
+      });
     }
   });
 });

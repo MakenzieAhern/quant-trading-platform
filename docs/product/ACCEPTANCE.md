@@ -1802,3 +1802,18 @@ build and changed-file Prettier passed. This closes only wasted form Tab stops;
 `QA-A11Y` and full U7 acceptance remain IN_PROGRESS/FAIL respectively.
 PR #32 code head `5002eea` passed [CI36065880987](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36065880987)
 backend/frontend/Compose; the PR remains draft and unmerged.
+
+## 2026-09-24 22:38 UTC risk decision wording
+
+Actual Chrome on retained historical paper account `d7044a3c` showed that a
+risk-approved proposal may end as either a filled or cancelled order. The
+decision column previously displayed raw `APPROVED` in English. Paper and
+backtest decisions now read `Risk check passed` / `风控检查通过`, distinct from the
+order-execution status; English rejection reads `Rejected by risk controls`.
+Chrome verified both locales on the saved account and restored Chinese/dark.
+Focused paper/backtest tests passed 32/32; full frontend 235/235, ESLint,
+TypeScript, production build and changed-file Prettier passed. This changes presentation only,
+not a risk decision, order or ledger. Full U8 accessibility/translation and
+M4/U7/M5 gates remain open. The user could not confirm an independent backup
+location, genuine pre-loss ledger backup, or lawful 2026 forward-data rights;
+none is treated as accepted.
