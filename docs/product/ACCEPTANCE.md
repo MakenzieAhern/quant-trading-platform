@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-24 22:34 UTC paper-session entry and lifecycle copy
+
+Actual Chrome on `/paper` showed five retained sessions whose first-column
+links exposed shortened UUIDs, including two indistinguishable-looking
+historical strategy rows. The visible action now reads `查看会话` / `Open session`;
+its accessible name includes the translated strategy, data mode, lifecycle
+status, UTC creation time and short audit ID. The full ID remains available in
+the account detail's audit disclosure. Chrome's Chinese and English trees
+distinguished the two historical accounts; selecting one opened its exact
+persisted ledger, and Back returned to the list. The original Chinese/dark
+preference was restored. The shared English lifecycle dictionary now renders
+human-readable `Created`, `Running`, `Stopped`, etc. instead of raw uppercase
+backend enums, without changing their API values or financial processing.
+Two affected-page suites passed 31/31, full frontend 235/235, ESLint,
+TypeScript and production build passed. This is agent-operated U8/QA-A11Y
+progress, not a novice-user study, full screen-reader/WCAG audit, recovery of
+the two absent ledgers, lawful forward simulation or release acceptance.
+`QA-A11Y` remains IN_PROGRESS; `M4-DATA-INTEGRITY` and `M5-DELIVERY` remain
+FAIL.
+
 ## 2026-09-24 22:24 UTC same-name research accessibility check
 
 Actual Chrome on the populated `/experiments` list exposed three distinct

@@ -215,13 +215,54 @@ describe("paper trading pages", () => {
       jsonResponse({ items: [paperSession()], limit: 20, offset: 0, total: 1 }),
     );
     render(<PaperSessionsPage />);
-    expect(await screen.findByText("CREATED")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Created", { selector: ".statusBadge" }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/SIMULATED EXECUTION ONLY/)).toBeInTheDocument();
     expect(screen.getByText(/not A-share data/)).toBeInTheDocument();
-    expect(screen.getByTitle(PAPER_ID)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: /Open session: Moving average crossover/,
+      }),
+    ).toHaveAttribute("href", `/paper/${PAPER_ID}`);
     expect(
       screen.getByRole("region", { name: /If columns are cut off/ }),
     ).toHaveAttribute("tabindex", "0");
+  });
+
+  it("distinguishes same-strategy sessions without making IDs the primary action", async () => {
+    const secondId = "534d9730-a8c9-4f71-a0fc-c4b5d156f2ef";
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({
+        items: [
+          paperSession(),
+          {
+            ...paperSession(),
+            session_id: secondId,
+            created_at: "2026-09-06T02:01:00Z",
+          },
+        ],
+        limit: 20,
+        offset: 0,
+        total: 2,
+      }),
+    );
+    render(<PaperSessionsPage />);
+    const links = await screen.findAllByRole("link", {
+      name: /Open session: Moving average crossover/,
+    });
+    expect(links).toHaveLength(2);
+    expect(links[0]).toHaveTextContent("Open session");
+    expect(links[0]).not.toHaveAttribute(
+      "aria-label",
+      links[1]?.getAttribute("aria-label"),
+    );
+    expect(screen.queryByText(/34d97303/)).not.toBeInTheDocument();
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(
+      screen.getAllByRole("link", { name: /查看会话: 移动平均线交叉/ }),
+    ).toHaveLength(2);
+    await act(async () => i18n.changeLanguage("en-US"));
   });
 
   it("shows the account's dated plan without implying a live order", async () => {
@@ -692,7 +733,7 @@ describe("paper trading pages", () => {
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     expect(MockWebSocket.instances).toHaveLength(1);
     await act(async () => MockWebSocket.instances[0]!.open());
-    expect(screen.getByText("RUNNING")).toBeInTheDocument();
+    expect(screen.getByText("Running")).toBeInTheDocument();
     expect(
       screen.getByText("Session connection: connected"),
     ).toBeInTheDocument();
@@ -702,7 +743,7 @@ describe("paper trading pages", () => {
         .closest('[role="status"]'),
     ).not.toBeNull();
     expect(
-      screen.getByText("RUNNING").closest('[role="status"]'),
+      screen.getByText("Running").closest('[role="status"]'),
     ).not.toBeNull();
 
     const portfolioEvent = {
@@ -779,7 +820,9 @@ describe("paper trading pages", () => {
         payload: { status: "STOPPED" },
       }),
     );
-    expect(screen.getByText("STOPPED")).toBeInTheDocument();
+    expect(
+      screen.getByText("Stopped", { selector: ".statusBadge" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Session connection: closed")).toBeInTheDocument();
     await act(async () => vi.advanceTimersByTimeAsync(2000));
     expect(MockWebSocket.instances).toHaveLength(1);
@@ -810,7 +853,7 @@ describe("paper trading pages", () => {
         payload: { status: "FAILED" },
       }),
     );
-    expect(await screen.findByText("FAILED")).toBeInTheDocument();
+    expect(await screen.findByText("Failed")).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent(
       "Paper execution failed safely.",
     );
@@ -908,9 +951,11 @@ describe("paper trading pages", () => {
       <PaperSessionDetailPage sessionId="a0975744-c58a-49d8-a72d-45f6ed700ca6" />,
     );
     await act(async () => MockWebSocket.instances[1]!.open());
-    expect(await screen.findByText("STOPPED")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Stopped", { selector: ".statusBadge" }),
+    ).toBeInTheDocument();
     resolveOld(jsonResponse(paperSnapshot("RUNNING")));
     await Promise.resolve();
-    expect(screen.queryByText("RUNNING")).not.toBeInTheDocument();
+    expect(screen.queryByText("Running")).not.toBeInTheDocument();
   });
 });

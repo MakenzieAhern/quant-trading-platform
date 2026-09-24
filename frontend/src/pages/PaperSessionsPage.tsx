@@ -51,7 +51,7 @@ export function PaperSessionsPage() {
             <table>
               <thead>
                 <tr>
-                  <th scope="col">{t("common:run")}</th>
+                  <th scope="col">{t("paper:sessionColumn")}</th>
                   <th scope="col">{t("common:strategy")}</th>
                   <th scope="col">{t("research:provider")}</th>
                   <th scope="col">{t("common:status")}</th>
@@ -65,9 +65,9 @@ export function PaperSessionsPage() {
                       <Link
                         className="monoLink"
                         href={`/paper/${item.session_id}`}
-                        title={item.session_id}
+                        aria-label={`${t("paper:openSession")}: ${t(`paper:strategies.${item.strategy_type}`)} · ${t(`paper:providers.${item.provider_type}`)} · ${t(`common:statuses.${item.status}`)} · ${formatUtc(item.created_at)} · ${shortId(item.session_id)}`}
                       >
-                        {shortId(item.session_id)}
+                        {t("paper:openSession")}
                       </Link>
                     </td>
                     <td>{t(`paper:strategies.${item.strategy_type}`)}</td>
