@@ -315,6 +315,13 @@ at `/home/yuchen/data/product_source_evidence/2026_calendar/`: SSE SHA-256
 `7b0c4264d27f4ba14a1904ab31cb3b2b870e4e68d6b8d8c0f6cf4254c1a045a4`
 (18:32:45 UTC). These are local save times, not live session receipts.
 
+At 2026-09-24 18:27 UTC, the official SSE notice and SZSE notice were checked
+again: both still specify 2026-09-25 through 09-27 as closed and 09-28 as
+the scheduled reopening. The next possible after-start completed-session
+receipt is therefore no earlier than the 09-28 session's data publication,
+and only if lawful source rights and all execution authorities are accepted
+first. A scheduled opening is not itself a receipt or forward acceptance.
+
 1. **DONE for the bounded raw candidate path.** A product-owned, user-triggered
    per-security EOD update job uses
    existing BaoStock integration/Decimal records and a supervised timeout. Fetch
