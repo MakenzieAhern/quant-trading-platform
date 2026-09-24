@@ -14,6 +14,25 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 19:18 UTC bounded production-build performance check
+
+The existing `frontend/dist` was served briefly with `vite preview` on the
+project-owned `localhost:5173` origin while only the project's dev frontend
+was stopped. The original frontend was restarted afterward; frontend and
+`/api/health` both returned HTTP 200, and live counts remained 8 research
+jobs, 5 paper sessions and 417 paper events. No study or order was submitted.
+
+In the Codex in-app Chromium browser (1265 CSS-pixel viewport, populated local
+database), 30 warm Workbench↔Strategies clicks reached the visible destination
+heading at p50 21ms, p95 25ms and max 28ms. Ten full reloads of saved
+293-session historical result `d9f27183` reached its saved +4.67% return at
+p95 439ms (samples 367–439ms). This reload is not a click-response measure.
+English and Chinese strategy pages rendered, English preference was restored,
+and the browser reported no console warning/error. Timing includes browser
+automation overhead. This is a bounded production-preview check, not actual
+Chrome, cold-cache, larger-data, native-zoom or full `QA-PERF` acceptance;
+that gate remains IN_PROGRESS.
+
 ## 2026-09-24 19:07 UTC failed paper rehydration hides stale balances
 
 The paper detail kept its last cash/positions under an error after a failed
