@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T03:07:58Z",
+  "updated_at_utc": "2026-09-24T03:14:43Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 03:14UTC actual Chrome153 read-only U6 result-to-account route: saved historical plan d9f27183 showed 2011-03-22 as-of, 2011-03-23 next accepted session, 32 candidates/five risk rejections and explicit no-order/not-current-advice warning; same result explained 70 proposals/65 approvals/18 fills. Visible Research list selected it with historical 5f26f84f; comparison warned periods differ and no ranking. Sidebar opened independent STOPPED audited historical paper account d7044a3c with 2011-03-23 session, 20 orders/six fills. A repeat instrumented route pass saw zero POST. Two real Chrome screenshots/hashes in ACCEPTANCE, outside Git. This is a bounded terminal-free historical route check, not plan submission or U7 forward acceptance. Docker Desktop4.92.0 UI reported Engine running with no installer/UAC window; Ubuntu and docker-desktop WSL2 running, Engine29.8.0/Compose5.5.1, four original named project volumes listed, Redis PONG and backend/frontend HTTP200. PR32 prior b0b9d5c CI35950237555 success",
     "2026-09-24 03:07UTC isolated real Chrome153 on localhost5174 against fixture-only backend8001/tmpfs quant_test: one selected-security raw-update job76314ee4 entered RUNNING0/1, user Cancel showed sending feedback and persisted CANCELLED0/1 after Task Center navigation/direct reopen. Retry created childbdf49c26 attempt2; explicit child cancellation followed by second parent Retry reopened that same child. Test DB2 CANCELLED jobs/1 link/0 receipts/0 observations; main update4/receipts6/paper5 unchanged. Temporary transport waited only on cancel, no provider contact or forward authorization. Screenshot SHA256 3C005DF8136D3529018BB647CEB4E31D0030562D74A8C1C70A1DD3FDB622A372 in ACCEPTANCE. Owned test containers/network and temporary fixture removed without image/volume deletion. This closes bounded U5 cancel/retry browser path, not 2026 source authority or release",
     "2026-09-24 02:55UTC actual Chrome153 slow saved-market-update detail GET after manual Refresh retained old completed status and 2/2 counts with no immediate task feedback. Local detail refresh now clears old job/error and announces Loading saved state via the existing polite status region. Same Chrome held GET showed old completion count0 and loading; after releasing the genuine read, completion returned. No update POST/provider request. Screenshot SHA256 504BA0EA3A8A68EACF74DB15E274EA583E43329A931E8C632CCF99251F881DB0 in ACCEPTANCE. Focused update12, full frontend220, ESLint, TypeScript, Prettier and production build PASS. Bounded UX-ERROR/QA-A11Y improvement, not an actual screen-reader study or full release gate",
     "2026-09-24 02:48UTC retry identity root fix: unique retry_of constraints for research and update jobs in reversible migration0016, with same-child lookup/race recovery. Isolated backend975 PASS/one optional archive skip, Ruff/format/mypy PASS; migration down/up on tmpfs DB and 0015→0016 on a transactionally restored live-data clone PASS. Pre0016 same-disk dump SHA256 c823582ed08f5e5e3e43aa6e697cda667ff4ec75babd2badb33fda48131f6eb4. PR32 head1cf5092 CI35948252640 backend/frontend/compose PASS. Live backend-only restart after migration left research8/update4/paper5 and API health200. Actual isolated Chrome153 clicked old FAILED raw-update parent0eecbddb once and opened existing SUCCEEDED childed796871; one retry POST, jobs4/receipts6/observations6 and one child unchanged. Screenshot SHA256 8F91D19CCB3D7E40D37C2CF1AFD0A5C1D55C4187BCD46E54912080CF40DF6932 in ACCEPTANCE. This closes bounded retry identity, not U5 source authority, missing paper ledgers, independent disaster recovery or release",
@@ -438,9 +439,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "f3d3526",
+      "last_verified_head": "b0b9d5c",
       "state": "DRAFT",
-      "ci_run": 35949299927,
+      "ci_run": 35950237555,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
@@ -448,7 +449,7 @@
     }
   },
   "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence and obtain an independent backup destination. U3 cancellation, failure, controlled restart and unplanned test-worker crash/retry now pass; do not confuse that with physical power loss or U7 forward-paper durability. Continue U8/accessibility/performance and remaining native 200-percent zoom cases. M5 still lacks complete real-data user flow, full Windows startup and real novice-user review. Obtain lawful forward-source rights before any U7 execution promotion; verify terminal-free recovery at the next safe full Windows reboot/login",
-  "next_command": "Inspect an unverified QA-A11Y live-announcement or mobile/200-percent route in real Chrome, or conduct a bounded U6 plan-to-account browser trace without new provider acquisition. Also inspect any newly available genuine pre-loss paper-ledger evidence or independent physical backup destination read-only. Do not disrupt live 5173 merely to benchmark a production preview. Leave frozen research, Official OOS and RAW_CANDIDATE unchanged",
+  "next_command": "Inspect an unverified QA-A11Y live-announcement or mobile/200-percent route in real Chrome. Also inspect any newly available genuine pre-loss paper-ledger evidence or independent physical backup destination read-only. Do not disrupt live 5173 merely to benchmark a production preview. Leave frozen research, Official OOS and RAW_CANDIDATE unchanged",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

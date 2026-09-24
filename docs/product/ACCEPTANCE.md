@@ -54,6 +54,38 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 03:14 UTC U6 result-to-account browser chain
+
+Actual Google Chrome 153 at 1280×800 reopened saved historical exploration
+`d9f27183-a9a1-4f34-aef4-eba439f53374`. Its result showed the saved
+2011-03-22 simulation preview: next accepted session 2011-03-23, replayed
+cash 45,539.94836 CNY, estimated approved-buy cash 44,221.44166 CNY, 32
+candidates and five cash-risk rejections. The result separately explained
+70 proposed orders, 65 risk-approved proposals and 18 fills, including
+non-fill reasons. It explicitly said the preview sent no order to a separate
+simulated account and was not current trading advice.
+
+Using only visible UI, the tester returned to the research list, selected
+that study and saved historical study `5f26f84f-b6da-4eac-805a-fbc28fd27af4`,
+and opened their comparison. The comparison flagged different trading
+periods, despite matching dataset, costs, capital, risk and strategy settings;
+it did not rank or recommend a strategy. The tester then used the persistent
+sidebar to open independent paper account
+`d7044a3c-7ef3-46ba-accd-197a6d40505e`, visibly labeled audited
+A-share **historical replay**, STOPPED, with 2011-03-23 session, portfolio,
+positions, 20 orders and six fills. This account was not created or funded by
+the experiment preview. A second instrumented pass through the same browser
+route sequence recorded zero POST requests. No market provider was contacted.
+
+The [comparison screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u6-comparison-chain-20260924.png)
+has SHA-256 `503E7C66E3EE242554664125FC1F532A1A0D1AB3A5018549C06279BAA47D0DBE`;
+the [account screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u6-account-chain-20260924.png)
+has SHA-256 `5DFD5EB3D110F23284287E7C3C20C0CEE92FA75CAD9874F1C51D94D624FADCCD`.
+Both are outside Git. This is a bounded terminal-free historical-navigation
+check; U6/U7 remain IN_PROGRESS because the preview is not an executable
+forward plan, no new-market receipt was accepted, and paper-ledger recovery
+remains incomplete.
+
 ## 2026-09-24 03:07 UTC U5 cancellation/retry in isolated real Chrome
 
 An owned `quant-v12-u5cancel` Compose test project used PostgreSQL
