@@ -8,7 +8,9 @@ cannot advertise a handoff it cannot complete. This only prepares an
 independent account; it does not make the research preview executable. A
 Chrome control-call round trip is not a valid ≤200 ms interaction measure
 because it includes browser automation transport. Keep QA-PERF open until a
-page-native timing method is available; do not lower the product target.
+foreground browser-native timing method is available; the temporary two-frame
+probe showed background-frame/observation delays near two seconds and was
+removed. Do not lower the product target.
 
 ## v1.2 paper creation defaults to labeled A-share demo — 2026-09-24
 
