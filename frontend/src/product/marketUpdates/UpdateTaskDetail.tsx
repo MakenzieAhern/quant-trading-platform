@@ -41,7 +41,10 @@ export function UpdateTaskDetail({
         if (activeStatus(data))
           timer = window.setTimeout(() => void load(), 2500);
       } catch (reason) {
-        if (alive) setError(reason);
+        if (alive) {
+          setJob(null);
+          setError(reason);
+        }
       }
     }
     void load();

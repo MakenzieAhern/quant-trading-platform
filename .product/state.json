@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T00:15:30Z",
+  "updated_at_utc": "2026-09-24T00:24:23Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 00:24UTC actual Chrome153 U5 task detail on saved candidate update ed796871: fault-injected detail GET503 previously left stale completed status/counts visible beside an error. Shared detail now clears last-known job after failed read; Chrome showed only actionable error, then restored authoritative saved completion on manual refresh. No POST and main DB counts paper5/events417/research8/updates4. Focused11/full217 frontend tests, lint/type/build/Prettier PASS. Separately Chrome read-only inspected persisted historical CANCELLED b78965ad, INTERRUPTED 5861fbb5 and SUCCEEDED linked child3db4b679; first two showed no partial result, third showed real saved result, not a new restart trial. One 390x844 EN/dark chart check had no page overflow. U5/U3/UX/QA broader gates remain open",
     "2026-09-24 00:15UTC UX-CHART bounded real-Chrome153 check: saved historical exploration job5f26f84f native date keyboard Home/ArrowDown changed exact readout to 2011-03-02 with polite live-region semantics; benchmark toggle removed line and legend; display-only 2011-03-10..15 showed four sessions without changing -0.47pct full-run return. Selecting 2011-03-23 linked the chart to six saved fills and its account/holdings snapshot. No POST, main DB remained paper5/events417/jobs8/updates4, .research unchanged. Screenshot SHA256 7B3E76BC5EFE6A708458A86C312A75B2EE2CD155E1FAF652412E89A80429C02B. This narrows UX-CHART and QA-A11Y, not a screen-reader or full visual-matrix PASS",
     "2026-09-24 00:08UTC U3-JOB composite acceptance PASS: live audited historical exploration job5f26f84f remains SUCCEEDED with297/297 sessions and fresh Chrome153 reopens its saved URL, completed result, costs and inspected-history warning. Separately a disposable tmpfs quant_test stack and actual Chrome four-step synthetic wizard double-click sent one POST /api/experiments, returned202 job45c986a5, and persisted exactly one job; a fresh client resent the same stored request key/config and received the identical job ID with count still1. The saved synthetic result reopened in a fresh Chrome context with visible non-market label. Only the three owned test containers and network/tmpfs DB were removed; main DB remained paper5/events417/jobs8/updates4. Existing backend concurrent-same-key/409 test and frontend lock test cover shared paths. This establishes U3-JOB, not U3-RECOVER or forward acceptance",
     "2026-09-24 00:02UTC actual Chrome153 on persisted historical result d9f27183, read-only equity-response fault injection only: one benchmark and drawdown point became null in the browser, with no API write. EN/ZH showed incomplete-series guidance, disabled benchmark toggle, drew no benchmark/drawdown lines or legends, and the accessible exact-data table showed both nulls as unknown rather than zero. Main DB and formal report unchanged. This narrows UX-CHART and QA-A11Y browser evidence; the persisted source itself has no observed missing-series page. Windows Get-Partition/Get-Disk shows C and D are partitions of the same sole 2TB NVMe Disk0, so the existing D/same-disk backup is not independent disaster recovery",
@@ -188,6 +189,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "RESOLVED: saved market-update detail refresh GET503 kept the old completed status and counts visible as if current; the detail now hides the stale job until a successful manual refresh, verified in actual Chrome and frontend regression",
     "OPEN DATA LOSS: live quant_platform was found at formal ledger0/0/0 and paper sessions1 after 18:29 UTC test-like activity. Four older paper sessions and formal ledger were restored from verified pre0015 backup, but post-backup historical sessions4b64380f and07d72259 remain absent; additional unrecorded post-backup rows cannot be ruled out. No WAL archive/replication slot or later pre-loss backup found. Exact invoking command unproven; do not claim current U7 durability PASS",
     "OPEN: current 2026 executable forward market-data rights are not established by public BaoStock access, SDK BSD license, or exchange website browse/download notice; seek provider/exchange authorization evidence before promotion",
     "OPEN: frozen historical cn-a-2010-2025.6 rule version carries open-ended 2023 periods and 5% Main Board ST limit; it is not a 2026 product-forward authority",
@@ -415,9 +417,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "f89c7e5",
+      "last_verified_head": "12fea86",
       "state": "DRAFT",
-      "ci_run": 35937035599,
+      "ci_run": 35937693767,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",

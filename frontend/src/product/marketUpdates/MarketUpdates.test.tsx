@@ -308,4 +308,38 @@ describe("explicit incremental request workflow", () => {
     );
     await waitFor(() => expect(marketUpdateApi.get).toHaveBeenCalledTimes(2));
   });
+  it("does not present an old completed task as current after a refresh failure", async () => {
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const detail = await screen.findByRole("region", {
+      name: `Task: ${job.job_id}`,
+    });
+    expect(
+      await within(detail).findByText(
+        "Bounded raw requests completed. Candidate-only status is unchanged.",
+      ),
+    ).toBeInTheDocument();
+    vi.mocked(marketUpdateApi.get).mockRejectedValueOnce(
+      new ApiError(503, "service unavailable"),
+    );
+    await userEvent.click(
+      within(detail).getAllByRole("button", { name: "Refresh" })[0],
+    );
+    expect(
+      await within(detail).findByText(/Request could not be completed/),
+    ).toBeInTheDocument();
+    expect(
+      within(detail).queryByText(
+        "Bounded raw requests completed. Candidate-only status is unchanged.",
+      ),
+    ).not.toBeInTheDocument();
+    await userEvent.click(
+      within(detail).getByRole("button", { name: "Refresh" }),
+    );
+    expect(
+      await within(detail).findByText(
+        "Bounded raw requests completed. Candidate-only status is unchanged.",
+      ),
+    ).toBeInTheDocument();
+  });
 });

@@ -54,6 +54,28 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 00:24 UTC stale update-task status after read failure
+
+Actual Chrome 153 opened the saved candidate-only update task `ed796871`.
+After intercepting only its detail GET with HTTP 503, **刷新** previously
+showed an error above an obsolete “请求已完成” state, counts and observations.
+The detail component now clears its last-known job on a failed read; it does
+not present cached completion as current. Removing the interception and
+manually refreshing restored the server's saved state. The [task-error panel](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u5-task-read-error-zh-20260924.png)
+is an actual Chrome screenshot outside Git (SHA-256
+`E7579544B00ADFF687D0E2B1A0A13472ABEC2AD65FDAAC2776602F7199CB51D6`).
+No update POST occurred; main counts stayed paper 5/417, research jobs 8,
+update jobs 4. The focused task test is 11/11, full frontend 217/217,
+ESLint, TypeScript, build and Prettier PASS. This closes one stale-status
+failure path, not U5 source/rule authority or its whole failure matrix.
+
+Chrome also read the existing historical exploration chain `b78965ad`
+CANCELLED → `5861fbb5` INTERRUPTED → `3db4b679` SUCCEEDED. The first two
+had truthful recovery guidance, a linked-retry control and no result body;
+the third displayed saved -0.91% return and costs. This was read-only
+observation of persisted states, not a new cancellation/restart trial; no POST
+occurred and `U3-RECOVER` remains IN_PROGRESS.
+
 ## 2026-09-24 00:15 UTC chart date-link and keyboard browser check
 
 Actual Chrome 153 on the saved historical exploration `5f26f84f` (20 March
@@ -73,6 +95,13 @@ The main database remained at five paper sessions/417 paper events/eight
 personal research jobs/four update jobs, and `.research` was unchanged. This
 is agent-operated browser/DOM evidence, not a screen-reader study or complete
 large-data and cross-theme/locale chart acceptance.
+
+An additional actual Chrome 390×844 EN/dark/motion-off check of this saved
+result showed document width 390/390 and no page-level horizontal overflow.
+The [mobile chart screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/chart-mobile-en-dark-390-20260924.png)
+is outside Git (SHA-256
+`8723D435FCF7D12B579D95B31A1AB856B7533298AE42096D70495051B286941D`).
+This is one theme/locale/size combination, not the full visual matrix.
 
 ## 2026-09-24 00:08 UTC U3 job identity browser check
 
