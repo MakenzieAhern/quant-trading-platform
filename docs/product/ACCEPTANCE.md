@@ -1224,3 +1224,35 @@ This shared class also serves strategy recent details and market lineage.
 Frontend 225 Vitest, ESLint, TypeScript/production build, and CSS Prettier PASS.
 This closes a bounded pointer-target defect, **not** the full WCAG 2.2 AA,
 screen-reader, native-zoom, data-integrity, forward-market, or delivery gates.
+
+## 2026-09-24 12:02 UTC bounded recovery inventory and user-path recheck
+
+Read-only Windows/WSL inventory found the existing `pre0014` and `pre0015`
+PostgreSQL dumps plus the after-loss and post-recovery dumps already recorded
+above; none is a newly discovered pre-loss copy of the two absent paper
+sessions. The standard Windows File History configuration path is absent.
+Windows VSS shadow-copy enumeration returned `initialization failed`, and
+`vssadmin list shadows` explicitly required elevated privileges. Thus shadow
+copies are **not assessed**, not proven absent. Two anonymous Docker volumes
+were created at 2026-09-24 03:03Z and 03:55Z, after the 2026-09-23 loss;
+their contents were not altered. Docker Desktop's official login-autostart
+setting, HKCU Run entry and current processes exist, but its
+`StartupApproved` bytes are all zero; that undocumented value is a hypothesis,
+not a diagnosed cause, and no registry/startup setting was changed.
+
+Actual Chrome (existing Chinese/dark profile) followed Workbench → Data
+Center → registered strategy explanation → guided research entry → saved
+historical result → two-study comparison → restored stopped historical paper
+account. The Data Center distinguished historical coverage through
+2025-12-31, synthetic 2030 demo and unapproved raw-update candidates. The
+wizard restored its existing local draft with the exact
+`123456.789000000000001` cash string; no new job was submitted. The saved
+293-session result showed +4.67% return, -2.48% drawdown, CNY96.05 costs,
+-8.83% CSI300 and a dated 2011-03-22 preview explicitly not executable.
+Comparison warned that the two historical periods differ. The restored paper
+account displayed a stopped 2011-03-23 session, six fills and a truthful
+"older account has no account-specific saved plan" message. This is an agent
+read-only recheck of a **partial** path: it neither repairs the absent ledgers
+nor proves a newly generated account plan, novice usability, restart safety,
+independent disaster recovery or real forward-market acceptance. M4 and M5
+remain incomplete; PR #32 stays unmerged.
