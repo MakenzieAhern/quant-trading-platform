@@ -225,6 +225,7 @@ export function usePaperStream(sessionId: string) {
         hydrationController?.abort();
         hydrationController = null;
         if (reconnectAttempts >= 3) {
+          setSnapshot(null);
           setConnection("closed");
           setError((current) =>
             current?.sessionId === sessionId

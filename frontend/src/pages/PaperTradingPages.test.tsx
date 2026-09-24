@@ -127,6 +127,40 @@ describe("paper trading pages", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
+  it("hides the last portfolio when socket reconnect attempts are exhausted", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({
+        ...paperSnapshot("RUNNING"),
+        latest_portfolio: {
+          timestamp: "2024-01-09T00:00:00Z",
+          cash: "81309.8134",
+          market_value: "18655",
+          equity: "99964.8134",
+          realized_pnl: "0",
+          unrealized_pnl: "-5",
+          cumulative_commission: "30.1866",
+          drawdown: "0",
+          positions: [],
+        },
+      }),
+    );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    expect(screen.getByTitle("81309.8134")).toBeInTheDocument();
+
+    for (const delay of [1000, 2000, 4000]) {
+      act(() => MockWebSocket.instances.at(-1)!.close());
+      await act(async () => vi.advanceTimersByTimeAsync(delay));
+    }
+    act(() => MockWebSocket.instances.at(-1)!.close());
+    expect(MockWebSocket.instances).toHaveLength(4);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("alert")).toHaveTextContent("Reload page");
+    expect(screen.queryByTitle("81309.8134")).not.toBeInTheDocument();
+  });
+
   it("stops snapshot retries on denied access and bounds repeated service failures", async () => {
     installWebSocket();
     vi.useFakeTimers();
