@@ -14,6 +14,26 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 21:01 UTC data-center confirmation target and open evidence
+
+Actual Chrome on the running local Data Center measured the raw-update
+consent checkbox's enclosing label at 663×26px on desktop. The existing label
+now has a 40px minimum height; Chrome remeasured 663×40px. At a temporary
+390×844 viewport it measured 307×42.875px and document width 375px, without
+page-level overflow. The viewport was reset. No checkbox was selected and no
+supplier request was sent. Frontend 228/228 tests, ESLint, TypeScript/build,
+CSS Prettier and `git diff --check` passed. This closes one bounded pointer
+target, not the full accessibility gate.
+
+The user answered **unknown**, not yes or no, for an independent physical or
+approved private backup location, a genuine pre-incident copy of paper
+accounts `4b64380f` and `07d72259`, and lawful 2026 A-share feed rights.
+None is inferred. Windows Docker's own launch log has no entry between the
+2026-09-24 22:29 AEST reboot and the 2026-09-25 03:46 AEST manual launch.
+The quoted HKCU Run path was changed after that failed login and awaits a
+genuine subsequent login test; no duplicate startup mechanism or reset was
+added. M4 data integrity, U7 forward and M5 delivery remain unaccepted.
+
 ## 2026-09-24 20:52 UTC Chrome missing-record recovery layout
 
 Actual Chrome on the running local application exposed that the shared 404

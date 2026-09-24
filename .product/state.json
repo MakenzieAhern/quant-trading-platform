@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T20:52:30Z",
+  "updated_at_utc": "2026-09-24T21:01:38Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 21:01UTC actual Chrome Data Center found raw-update consent label 663x26px on desktop; one existing CSS min-height now makes it 663x40px. At temporary 390x844 viewport it measured 307x42.875px with document width375; viewport reset, no consent selected or provider request sent. Frontend228, ESLint, TypeScript/build, CSS Prettier and diff check PASS. Windows Docker log contains no launch between the 22:29 AEST reboot and 03:46 AEST manual start; quoted Run path remains untested by a later genuine login. User answered unknown for independent backup destination, genuine pre-loss copies of two paper ledgers and lawful 2026 feed rights; none is assumed. M4/U7/M5/release gates unchanged",
     "2026-09-24 20:52UTC actual Chrome showed a shared 404 message/button/diagnostic squeezed into one row and paper-account recovery routed to Workbench rather than saved accounts. Shared error layout now stacks, and paper 404 returns to /paper with locale-aware text. Chrome EN/ZH checked and link opened five retained accounts; temporary 390x844 viewport had document/client width375/375 and return target height42px, then default viewport and original ZH/dark restored. Focused25 tests, ESLint, TypeScript, Prettier, build PASS. This does not establish native 200pct zoom, screen-reader, lost-ledger recovery, forward rights or release",
     "2026-09-24 20:43UTC local in-app Chromium reproduced a missing paper account WebSocket handshake rejection that bypassed authoritative REST classification and ended in generic reload advice. The shared stream hook now probes REST once on initial pre-open close and stops retries for typed 401/403/404. A focused rejected-handshake regression, paper23/full frontend228, ESLint, TypeScript, Prettier and production build PASS. Browser EN/ZH 404 guidance PASS; retained stopped account d7044a3c still has cash81309.8134/equity99964.8134/six fills. No account/data write. Two genuine missing ledgers, independent backup, lawful forward feed and M4/M5 release gates remain open",
     "2026-09-24 20:33UTC isolated safety PR33 merged into main as 08a4f59 after focused guard tests, an explicit live-config collect-only rejection and backend/frontend/compose CI36055281479 PASS. Main CI36055484857 also passed all three jobs. This moves the pytest pre-collection guard and quant_test CI target from the v1.2 stack into published-main development safety; it does not restore two missing paper ledgers, create an independent backup, authorize 2026 data, pass M4/M5 or release v1.2. PR13/PR32 remain draft/open/mergeable; the product worktree remains clean",
