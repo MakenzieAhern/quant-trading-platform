@@ -2,6 +2,10 @@
 
 ## Local release rehearsal
 
+**Do not run this rehearsal on the current v1.2 workbench** until the
+data-integrity and independent-backup gates pass. The command replaces running
+project containers, so verify a recoverable independent backup before trying it.
+
 With Docker Compose 2.24.4 or newer:
 
 ```bash
@@ -14,12 +18,13 @@ It retains the same loopback ports and local PostgreSQL history. This is a local
 rehearsal, not an authenticated public deployment. Return to development with `make up`.
 It replaces the running project containers, but the release backend uses its image command
 and does not run Alembic automatically. Check the schema and run any required migration as
-a controlled one-off only after a verified independent backup. Do not run this release
-rehearsal on the current v1.2 workbench until data-integrity and independent-backup gates
-pass; the CI frontend smoke uses an isolated image and does not start PostgreSQL, Redis or
-the backend.
+a controlled one-off only after a verified independent backup. The CI frontend smoke uses an
+isolated image and does not start PostgreSQL, Redis or the backend.
 
 Docker Compose is the supported development deployment, not a production trading topology.
+The following bootstrap commands are for a clean install. On an existing database,
+verify an independent backup and review the migration before running them; do not
+rerun this block on the current v1.2 workbench.
 
 ```bash
 cp .env.example .env

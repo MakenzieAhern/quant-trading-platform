@@ -23,6 +23,11 @@ autostart still has not been retested. PR #32 head `06d1b01` passed
 backend, frontend and Compose. M4-DATA-INTEGRITY, U7-FORWARD and M5-DELIVERY
 remain unaccepted.
 
+The release-rehearsal command and the clean-install bootstrap command in
+`docs/DEPLOYMENT.md` previously appeared before their current-workbench backup
+warnings. Both warnings now precede the respective commands. No Compose,
+migration, service or database command was executed by this documentation fix.
+
 ## 2026-09-24 23:45 UTC task-center link purpose (QA-A11Y)
 
 Actual Chrome `/tasks` exposed eight identical "Open experiment" and four
