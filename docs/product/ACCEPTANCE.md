@@ -14,6 +14,24 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 21:54 UTC paper-handoff eligibility and performance-method check
+
+Review found that the historical result page previously offered the paper
+handoff for any successful historical job, although the form accepts only the
+audited archive and registered strategy. A shared eligibility check now governs
+both entry and destination; an incompatible historical dataset no longer gets
+a dead-end link. A focused negative regression and the compatible real Chrome
+result-page recheck passed. No account or order was created. Full frontend
+232/232, ESLint, TypeScript and production build passed locally.
+
+An attempted actual-Chrome chart performance check could not establish the
+≤200 ms page-response target. The available read-only page evaluator does not
+expose `performance`/`PerformanceObserver`, and one browser-control click
+round trip took 2,062 ms; that number includes automation transport and is
+**not** the app's response time. No performance PASS/FAIL is inferred, and the
+existing target remains. A browser-native trace or equivalent measurement that
+separates page work from automation overhead is still required.
+
 ## 2026-09-24 21:41 UTC historical result to paper-account handoff
 
 The completed audited-historical research result now links to a separate

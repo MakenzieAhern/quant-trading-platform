@@ -286,6 +286,11 @@ describe("durable experiment detail", () => {
       ...job,
       status: "SUCCEEDED",
       mode: "historical_exploration",
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      configuration: {
+        ...job.configuration,
+        dataset_id: "cn-a-research-20100101-20251231-v1",
+      },
       result_available: true,
     });
     vi.spyOn(experimentApi, "result").mockResolvedValue({
@@ -309,6 +314,32 @@ describe("durable experiment detail", () => {
         /does not copy results, create an account or submit an order/,
       ),
     ).toBeInTheDocument();
+  });
+
+  it("does not advertise paper setup for an unsupported historical dataset", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "SUCCEEDED",
+      mode: "historical_exploration",
+      result_available: true,
+    });
+    vi.spyOn(experimentApi, "result").mockResolvedValue({
+      ...result,
+      mode: "historical_exploration",
+    });
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 100,
+      offset: 0,
+    });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await screen.findByText("What this run shows");
+    expect(
+      screen.queryByRole("link", {
+        name: "Review these settings in a separate historical paper account",
+      }),
+    ).not.toBeInTheDocument();
   });
 
   it("explains an eligible simulation check as acceptance, not a rejection, in both languages", async () => {

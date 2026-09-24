@@ -12,6 +12,7 @@ import { explainExperimentCode } from "./codes";
 import { experimentError } from "./errors";
 import { ExperimentCollections } from "./ExperimentCollections";
 import { ExperimentPlan } from "./ExperimentPlan";
+import { canUsePaperHandoff } from "./paperHandoff";
 import { isActiveExperiment, useExperiment } from "./useExperiment";
 import type { Experiment } from "./types";
 import "./experiments.css";
@@ -333,7 +334,7 @@ function ExperimentResults({
         </details>
       </section>
       <ExperimentPlan plan={data.simulation_plan ?? null} />
-      {job.mode === "historical_exploration" && job.status === "SUCCEEDED" && (
+      {canUsePaperHandoff(job) && (
         <div className="experimentPanel">
           <Link
             className="button secondary"

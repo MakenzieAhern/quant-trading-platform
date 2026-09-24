@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 paper handoff eligibility and invalid timing method — 2026-09-24
+
+The saved-result link and destination form now share the same accepted
+historical dataset/strategy predicate, so a successful but incompatible study
+cannot advertise a handoff it cannot complete. This only prepares an
+independent account; it does not make the research preview executable. A
+Chrome control-call round trip is not a valid ≤200 ms interaction measure
+because it includes browser automation transport. Keep QA-PERF open until a
+page-native timing method is available; do not lower the product target.
+
 ## v1.2 paper creation defaults to labeled A-share demo — 2026-09-24
 
 The A-share product shell previously opened `/paper/new` with the legacy AAPL

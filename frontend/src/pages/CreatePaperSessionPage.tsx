@@ -8,6 +8,7 @@ import { Link } from "../components/Link";
 import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
 import { useApiResource } from "../hooks/useApiResource";
 import { experimentApi } from "../product/experiments/api";
+import { canUsePaperHandoff } from "../product/experiments/paperHandoff";
 import type { Experiment } from "../product/experiments/types";
 import type { CreatePaperSessionRequest } from "../types/paper";
 import {
@@ -63,17 +64,7 @@ export function CreatePaperSessionPage() {
       />
     );
   const job = source.data;
-  if (
-    validSourceId &&
-    (!job ||
-      job.status !== "SUCCEEDED" ||
-      !job.result_available ||
-      job.mode !== "historical_exploration" ||
-      job.dataset_id !== "cn-a-research-20100101-20251231-v1" ||
-      job.configuration.dataset_id !== job.dataset_id ||
-      job.configuration.strategy_id !==
-        "cn_a_cross_sectional_momentum_low_vol_v1")
-  )
+  if (validSourceId && !canUsePaperHandoff(job))
     return (
       <p role="alert">
         {t("createPage.sourceUnavailable")}{" "}
