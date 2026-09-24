@@ -54,6 +54,31 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 12:25 UTC shared pagination target in actual Chrome
+
+A fresh Chrome tab on the running local app, Chinese/dark at an explicit
+390×844 viewport, showed no page-level horizontal overflow across nine routes:
+strategies, markets, experiments, tasks, paper, data, help, settings and a
+persisted historical result. Document/client widths were 375/375 CSS pixels
+on all nine. This is one locale/theme/viewport slice, not the whole matrix.
+
+The common pagination buttons on experiments, tasks, paper and data were
+36px tall. Their callers all use the same `Pagination` component and one
+`.pagination button` rule, whose minimum height was raised to 40px. Chrome
+then measured respectively 2, 4, 2 and 2 buttons at 40px; all four pages
+still had document/client widths 375/375. The research-list pagination row
+was visually inspected in Chrome after scrolling. Its disabled Prev/Next
+state reflected the actual 8-item saved list, so this did not exercise an
+enabled edge click. The existing component test covers exact page offsets.
+
+The same scan also found 18px checkbox inputs, but their actual clickable
+labels were at least 40×40px in the research table, 52×53px or larger in its
+column controls, and 307×43px for the data-center consent. No extra checkbox
+CSS was added. Frontend 225/225 tests, ESLint, TypeScript, production build,
+CSS Prettier and `git diff --check` passed. The temporary browser viewport
+override was reset. `QA-A11Y` and `QA-VISUAL` stay **IN_PROGRESS**; these
+measurements are not a full target-spacing, native-zoom or screen-reader audit.
+
 ## 2026-09-24 12:15 UTC test isolation and Windows login-startup correction
 
 The backend suite's shared `pytest_sessionstart` guard requires `APP_ENV=test`

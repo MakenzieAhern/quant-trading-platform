@@ -1101,7 +1101,7 @@ tbody tr:hover {
 .pagination button {
   border: 1px solid var(--border);
   border-radius: 5px;
-  min-height: 36px;
+  min-height: 40px;
   padding: 6px 10px;
   background: var(--surface);
   color: var(--text);
