@@ -498,6 +498,14 @@ describe("paper trading pages", () => {
     expect(
       screen.getByText("Session connection: connected"),
     ).toBeInTheDocument();
+    expect(
+      screen
+        .getByText("Session connection: connected")
+        .closest('[role="status"]'),
+    ).not.toBeNull();
+    expect(
+      screen.getByText("RUNNING").closest('[role="status"]'),
+    ).not.toBeNull();
 
     const portfolioEvent = {
       sequence: 1,
@@ -526,6 +534,11 @@ describe("paper trading pages", () => {
     expect(
       screen.getByText("Session connection: reconnecting"),
     ).toBeInTheDocument();
+    expect(
+      screen
+        .getByText("Session connection: reconnecting")
+        .closest('[role="status"]'),
+    ).not.toBeNull();
     await act(async () => vi.advanceTimersByTimeAsync(1000));
     expect(MockWebSocket.instances).toHaveLength(2);
     await act(async () => MockWebSocket.instances[1]!.open());

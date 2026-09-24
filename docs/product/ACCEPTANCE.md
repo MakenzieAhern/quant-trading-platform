@@ -14,6 +14,19 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 18:58 UTC paper-session live-status semantics
+
+The stopped historical paper-session detail rendered connection and session
+state as plain text in the browser accessibility tree. The detail page now
+marks these two changing labels as status regions without changing the shared
+badge or any account transition. A real local browser reload confirmed DOM
+`role="status"` on `Session connection: closed` and `STOPPED`; the browser's
+accessibility-tree provider still coalesced that area into a text node, so
+this is **not** a screen-reader announcement proof. Focused paper tests 20/20,
+full frontend 225/225, ESLint, TypeScript, production build and diff check
+PASS. No session was started and no market/ledger state was changed. `QA-A11Y`
+remains IN_PROGRESS; U7 forward, M4 integrity and M5 delivery remain open.
+
 ## 2026-09-24 18:50 UTC A-share paper-entry default
 
 Actual local browser `/paper/new` initially defaulted to the legacy AAPL

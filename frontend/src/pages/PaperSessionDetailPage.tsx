@@ -69,10 +69,12 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           <h1>{t(`strategies.${session.strategy_type}`)}</h1>
         </div>
         <div className="paperControls">
-          <span className={`streamState stream-${connection}`}>
+          <span className={`streamState stream-${connection}`} role="status">
             {t("detail.websocket")}: {t(`detail.connection.${connection}`)}
           </span>
-          <StatusBadge status={session.status} />
+          <span role="status">
+            <StatusBadge status={session.status} />
+          </span>
           {(session.status === "CREATED" || session.status === "PAUSED") && (
             <button
               className="button buttonPrimary"
