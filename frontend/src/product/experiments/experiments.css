@@ -313,6 +313,17 @@
   white-space: normal;
   min-width: 10rem;
 }
+.experimentTableSelect {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+.experimentTableSelect:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
 .experimentTable a {
   min-height: 40px;
   display: inline-flex;

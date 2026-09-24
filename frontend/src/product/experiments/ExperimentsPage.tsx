@@ -285,13 +285,15 @@ export function ExperimentsPage() {
                 </tr></thead>
                 <tbody>{jobs.data.items.map((job) => (
                   <tr key={job.job_id}>
-                    <td><input type="checkbox" aria-label={`${u.select}: ${job.name}`}
-                      checked={selected.some((item) => item.id === job.job_id)}
-                      disabled={job.status !== "SUCCEEDED" || !job.result_available ||
-                        (selected.length === 3 && !selected.some((item) => item.id === job.job_id))}
-                      onChange={(event) => setSelected((items) => event.target.checked
-                        ? [...items, { id: job.job_id, name: job.name }]
-                        : items.filter((item) => item.id !== job.job_id))} /></td>
+                    <td><label className="experimentTableSelect">
+                      <input type="checkbox" aria-label={`${u.select}: ${job.name}`}
+                        checked={selected.some((item) => item.id === job.job_id)}
+                        disabled={job.status !== "SUCCEEDED" || !job.result_available ||
+                          (selected.length === 3 && !selected.some((item) => item.id === job.job_id))}
+                        onChange={(event) => setSelected((items) => event.target.checked
+                          ? [...items, { id: job.job_id, name: job.name }]
+                          : items.filter((item) => item.id !== job.job_id))} />
+                    </label></td>
                     <th scope="row"><Link href={`/experiments/${job.job_id}`}>{job.name}</Link></th>
                     {view.columns.mode && <td>{job.mode === "synthetic_demo" ? c.demo : c.historical}</td>}
                     {view.columns.period && <td>{job.configuration.start_date} → {job.configuration.end_date}</td>}
