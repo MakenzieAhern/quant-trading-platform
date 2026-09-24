@@ -447,6 +447,33 @@ describe("durable experiment detail", () => {
     expect(list).toHaveBeenCalledTimes(2);
   });
 
+  it("does not keep old studies visible after the list refresh fails", async () => {
+    const list = vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [{ ...job, status: "SUCCEEDED" }],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    render(<ExperimentsPage />);
+    expect(
+      await screen.findByRole("cell", { name: "Complete" }),
+    ).toBeInTheDocument();
+    list.mockRejectedValueOnce(new ApiError(503, "service unavailable"));
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "The server could not finish this request",
+    );
+    expect(
+      screen.queryByRole("cell", { name: "Complete" }),
+    ).not.toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Retry loading" }),
+    );
+    expect(
+      await screen.findByRole("cell", { name: "Complete" }),
+    ).toBeInTheDocument();
+  });
+
   it("reopens a job, displays actual work counts, and requests server cancellation", async () => {
     vi.spyOn(experimentApi, "get").mockResolvedValue({
       ...job,

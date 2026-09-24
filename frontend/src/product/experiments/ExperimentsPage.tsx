@@ -5,6 +5,7 @@ import { formatUtc } from "../../utils/format";
 import { navigate } from "../../utils/navigation";
 import { experimentApi } from "./api";
 import { useExperimentCopy } from "./copy";
+import { experimentError } from "./errors";
 import { comparisonUrl } from "./comparison";
 import { useComparisonCopy } from "./comparisonCopy";
 import { isActiveExperiment } from "./useExperiment";
@@ -71,9 +72,9 @@ export function ExperimentsPage() {
   const [jobs, setJobs] = useState<{
     key: string;
     data: Page<Experiment> | null;
-    error: boolean;
-  }>({ key: queryKey, data: null, error: false });
-  if (jobs.key !== queryKey) setJobs({ key: queryKey, data: null, error: false });
+    error: unknown;
+  }>({ key: queryKey, data: null, error: null });
+  if (jobs.key !== queryKey) setJobs({ key: queryKey, data: null, error: null });
   useEffect(() => {
     if (window.location.pathname === "/experiments")
       window.history.replaceState(
@@ -103,11 +104,11 @@ export function ExperimentsPage() {
           sort: view.sort,
         });
         if (!active) return;
-        setJobs({ key: queryKey, data, error: false });
+        setJobs({ key: queryKey, data, error: null });
         if (data.items.some(isActiveExperiment))
           timer = window.setTimeout(() => void load(), 5000);
-      } catch {
-        if (active) setJobs((previous) => ({ ...previous, error: true }));
+      } catch (reason) {
+        if (active) setJobs({ key: queryKey, data: null, error: reason });
       }
     }
     void load();
@@ -248,10 +249,10 @@ export function ExperimentsPage() {
           </button>
         </div>
       </section>
-      {!jobs.data && !jobs.error && <p role="status">{c.loading}</p>}
-      {jobs.error && (
+      {!jobs.data && jobs.error === null && <p role="status">{c.loading}</p>}
+      {jobs.error !== null && (
         <div className="experimentNotice" role="alert">
-          <p>{c.networkError}</p>
+          <p>{experimentError(jobs.error, c)}</p>
           <button
             className="button secondary"
             onClick={() => setRevision((value) => value + 1)}

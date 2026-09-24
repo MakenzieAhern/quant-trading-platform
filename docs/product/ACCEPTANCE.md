@@ -54,6 +54,23 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 00:33 UTC stale research list after refresh failure
+
+Actual Chrome 153 refreshed the populated personal-research list with an
+intercepted GET 503. Before correction, an offline-sounding error appeared
+above previously fetched “已完成” rows. The list now removes old rows after a
+failed read and passes the actual typed error to the existing explanation
+function: HTTP 503 shows server-request guidance, while HTTP 403 shows
+permission guidance. After restoring the read and manually retrying, the
+server's saved rows returned. The [503 list screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-list-read-error-zh-20260924.png)
+is outside Git (SHA-256
+`CB6147AED09B4DFF1375131516D0554B2121105577AAA8769F03800F7F56D59D`).
+No POST or database mutation occurred (paper 5/417, research 8, updates 4).
+Focused research 28/28 and full frontend suite, lint, TypeScript and build
+PASS. The list's existing in-flight refresh behavior is unchanged; this only
+prevents a failed refresh from presenting stale rows as current. Wider U3
+recovery and U8 error/accessibility matrices remain incomplete.
+
 ## 2026-09-24 00:28 UTC stale research result after task-read failure
 
 The same stale-success presentation existed in the research-detail status
