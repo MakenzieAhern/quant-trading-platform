@@ -54,6 +54,29 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 02:21 UTC task-center research error recovery
+
+Actual Chrome 153 intercepted only `GET /api/experiments` on `/tasks` with a
+test HTTP 403. Before the fix, the research section incorrectly told a Chinese
+user to start the local service; the four raw-data request links still loaded.
+The task center now reuses the same typed experiment-error explanation as the
+research list/detail. With the same injected 403, Chinese and English rendered
+explicit access-denied guidance in an alert; after removing the interception
+and using the visible Refresh button, eight genuine saved research links
+returned, the four raw-data links remained, and the browser sent no POST.
+The test was a local fault injection, not an actual permission grant or bypass.
+[Before](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/task-center-403-before-20260924.png)
+(SHA-256 `C4A448CF18F457E11D9D5EE04F1DFCCF755917AFC68E40ADD4C8DA6194A3388A`)
+and [after English](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/task-center-403-after-en-20260924.png)
+(`88B2D08AFBB77F3F8AE6ED5D4A4BA8F9B4A27946B88FC129DC23A3D0945809A5`)
+are actual browser captures outside Git. The existing dual-stream test now
+covers 403 → offline → explicit refresh recovery; full frontend 219 tests,
+ESLint, TypeScript, production build and Prettier passed. This closes one
+`UX-ERROR`/`U8-I18N` defect, not either full acceptance row.
+PR #32 code head `58e64a1` passed
+[CI 35946927203](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35946927203)
+for backend, frontend and Compose.
+
 ## 2026-09-24 02:11 UTC experiment comparison selection target
 
 Actual Chrome 153 on the populated `/experiments` page found eight row-level
