@@ -14,6 +14,22 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 20:43 UTC missing paper-account handshake recovery
+
+The local in-app Chromium browser confirmed that a missing persisted paper
+account (`4b64380f`) received HTTP 404 from its REST snapshot, but the
+WebSocket was rejected before `onopen`, so the page previously retried and
+ended with generic reload advice. The shared paper-stream hook now makes one
+read-only REST classification after a failed initial socket handshake; a
+typed 401/403/404 stops the retry timer and shows the existing bilingual
+permission/not-found guidance. No saved balance or fill is synthesized.
+The added rejected-handshake regression and all 23 paper-page tests passed;
+the full frontend suite passed 228/228, with ESLint, TypeScript, Prettier and
+production build passing. Browser recheck showed EN/ZH not-found guidance;
+the separate retained account `d7044a3c` still displayed its saved cash
+`81309.8134`, equity `99964.8134` and six fills. This fixes one truthful
+missing-record path, **not** the two absent ledgers or U7/M4/M5 acceptance.
+
 ## 2026-09-24 20:06 UTC paper accessibility and startup recovery recheck
 
 The local in-app Chromium browser reopened the persisted stopped historical

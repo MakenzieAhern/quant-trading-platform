@@ -188,6 +188,24 @@ describe("paper trading pages", () => {
     expect(screen.getByRole("alert")).toHaveTextContent("Reload page");
   });
 
+  it("classifies a rejected opening socket through the authoritative REST snapshot", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(
+        jsonResponse({ detail: "paper session not found" }, 404),
+      );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.close());
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "This record is unavailable",
+    );
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await act(async () => vi.advanceTimersByTimeAsync(8000));
+    expect(MockWebSocket.instances).toHaveLength(1);
+  });
+
   it("renders persisted session history and the permanent safety warning", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({ items: [paperSession()], limit: 20, offset: 0, total: 1 }),

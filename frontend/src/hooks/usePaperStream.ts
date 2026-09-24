@@ -120,6 +120,8 @@ export function usePaperStream(sessionId: string) {
     let terminal = false;
     let hydrating = false;
     let reconnectAttempts = 0;
+    let openingChecked = false;
+    let openingController: AbortController | null = null;
 
     const hydrate = () => {
       hydrationController?.abort();
@@ -163,12 +165,17 @@ export function usePaperStream(sessionId: string) {
     };
 
     const connect = () => {
-      if (!active) return;
+      if (!active || terminal) return;
       setConnection(firstConnection ? "connecting" : "reconnecting");
       socket = new WebSocket(
         `${PAPER_WS_BASE_URL}/api/paper-trading/sessions/ws/${sessionId}`,
       );
-      socket.onopen = hydrate;
+      let opened = false;
+      socket.onopen = () => {
+        opened = true;
+        openingController?.abort();
+        hydrate();
+      };
       socket.onmessage = (message) => {
         if (!active) return;
         try {
@@ -218,6 +225,27 @@ export function usePaperStream(sessionId: string) {
       socket.onerror = () => socket?.close();
       socket.onclose = () => {
         if (!active) return;
+        if (!opened && firstConnection && !openingChecked) {
+          openingChecked = true;
+          const controller = new AbortController();
+          openingController = controller;
+          void paperApi
+            .snapshot(sessionId, controller.signal)
+            .catch((reason: unknown) => {
+              if (!active || controller.signal.aborted || !firstConnection)
+                return;
+              if (
+                reason instanceof ApiError &&
+                [401, 403, 404].includes(reason.status)
+              ) {
+                terminal = true;
+                if (retry !== undefined) window.clearTimeout(retry);
+                socket?.close();
+                setConnection("closed");
+                setError({ sessionId, message: reason });
+              }
+            });
+        }
         if (terminal) {
           setConnection("closed");
           return;
@@ -244,6 +272,7 @@ export function usePaperStream(sessionId: string) {
     return () => {
       active = false;
       hydrationController?.abort();
+      openingController?.abort();
       if (retry !== undefined) window.clearTimeout(retry);
       socket?.close();
     };
