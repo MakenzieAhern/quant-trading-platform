@@ -138,6 +138,7 @@ describe("paper trading pages", () => {
     render(<PaperSessionsPage />);
     expect(await screen.findByText("CREATED")).toBeInTheDocument();
     expect(screen.getByText(/SIMULATED EXECUTION ONLY/)).toBeInTheDocument();
+    expect(screen.getByText(/not A-share data/)).toBeInTheDocument();
     expect(screen.getByTitle(PAPER_ID)).toBeInTheDocument();
   });
 

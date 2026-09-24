@@ -32,7 +32,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U5-MARKET | Search/watchlist/raw-adjusted/date/source view | /api/markets and /markets deployed0013 | 20 backend/14 frontend focused tests; independent review PASS; Chrome000001 raw22.45/HFQ874.904325432379995/suspension2010-03-01; watchlist persists fresh tab; dialog dates/locale/Esc;390+1280 no page overflow | PASS |
 | U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | /data and /api/market-updates; separate product cache and migration0014/0016 | Real Chrome one-security/one-date job `3b729cf9` succeeded and survived restart/reload. Four-board job `164c947d` had 3 new + 1 cached candidates. Targeted control retry `ed796871` added two 2026-09-22 vendor candidates: 688622 isST=1; 603400 suspended with blank raw turnover normalized to zero, never executable. On 2026-09-24 real Chrome reopened the existing successful child from failed parent `0eecbddb`; live jobs/receipts/observations stayed 4/6/6, with one child. A separate provider-free fixture browser run cancelled a RUNNING task, reopened it, and proved two parent retries resolve to one child, with zero receipts; details below. Separate candidate 2026 rules still authorize no fills. Full 2026 source authority remains | IN_PROGRESS |
 | U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Persisted result preview and account-native plan in the audited historical paper event journal | Historical job `d9f27183` completed 293/293; its independent preview had 32 candidates and 5 risk rejections. A new isolated historical account `2f005ae8` saved its own 2011-03-22 plan with 20 candidates, submitted simulated proposals, and six later fills; the 2011-03-23 snapshot exposes the last actual rebalance plan separately from the latest balance. Real Chrome ZH/EN/mobile evidence below. New-market plan/receipt and forward-source authority remain pending | IN_PROGRESS |
-| U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Synthetic demo + distinct audited historical replay with durable pause/resume; forward not implemented | Chrome previously verified account `4b64380f` with 20 orders/six fills, but that post-backup account is now absent after the 2026-09-23 database incident. The older uninterrupted account `d7044a3c` was restored from a verified backup. Forward mode remains unimplemented | FAIL |
+| U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Synthetic demo + distinct audited historical replay with durable pause/resume; forward not implemented | Chrome previously verified account `4b64380f` with 20 orders/six fills, but that post-backup account is now absent after the 2026-09-23 database incident. The older uninterrupted account `d7044a3c` was restored from a verified backup. Retained legacy AAPL fixtures are now explicitly labeled non-A-share in both languages; this does not supply forward mode or recover the missing ledger | FAIL |
 | U7-RECOVER | Socket disconnect/reconnect + backend restart don't fake/duplicate fills | Persisted paused state, deterministic source replay to checked cursor, then append-only continuation | Prior Chrome restart/resume observations for `4b64380f` and interrupted `07d72259` are retained as historical QA evidence, not current persistence proof: both post-backup ledgers are absent from the live DB. No synthetic reconstruction is accepted. On 2026-09-23 actual Chrome 153 injected one snapshot HTTP503 for restored stopped historical account `d7044a3c`: the page recovered via one WebSocket reconnect and a second authoritative REST snapshot with no alert; HTTP403 stopped after one request with permission guidance; persistent503 stopped after four total requests. Live counts paper5/events417/jobs8 unchanged. Focused18/full215 frontend tests, lint/type/build and [CI35933791233](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35933791233) backend/frontend/compose PASS; bounded retry and no stale-event ledger mutation have unit coverage. Full restart/forward recovery matrix and lost ledgers remain | FAIL |
 | U7-FORWARD | Lawful source + completed real session data arriving after user session start; receipt times/plan/simulation | Public-source candidate assessed, forward session not implemented | Historical probe is not forward evidence; real after-start arrival still required. Current SSE/SZSE Trading Rules §5.1.3 require permission for exchange trading-information use; BaoStock's public SDK and website access do not establish upstream/product execution rights (see SOURCE_READINESS). | NOT_RUN |
 | U8-I18N | One tree; translated important UI/error/help/a11y; switching retains config/date | Shared i18n for legacy create/detail, paper ledger and typed shared load errors | Chrome real historical account shows translated signal, order, fill and risk labels; legacy create form is Chinese, and switching to English retained exact entered capital `123456.789`. Interrupted account has Chinese recovery help; nonexistent dataset has Chinese not-found guidance and preserves raw diagnostic under audit disclosure. The historical result warning explains inspected vs unseen data in both languages. On 2026-09-23, the in-app browser switched a persisted legacy success run EN→ZH→EN with exact Decimal strings unchanged. A later live result exposed raw `CORPORATE_ACTION_OPENING_UNCERTAINTY` as an unexplained reason; shared code mapping now explains it and the sibling non-orderable rejection in EN/ZH, with the original code still behind technical details. Chrome EN/ZH on two persisted synthetic jobs now shows a truthful synthetic equal-weight benchmark label in both result and comparison, without exposing `SYNTHETIC_EQUAL_WEIGHT` in the page; focused31/full213 frontend tests, lint/type/build and PR32 [CI35932877381](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35932877381) backend/frontend/compose PASS. Remaining pages, other server-supplied errors/help/a11y matrix pending | IN_PROGRESS |
@@ -53,6 +53,31 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
+
+## 2026-09-24 17:57 UTC retained fixture mode clarity
+
+The actual local `/paper` page contained two preserved AAPL fixture sessions
+beside A-share historical and synthetic accounts, while the product shell
+called itself A-share-only. The shared provider label now explicitly says
+"Legacy local AAPL fixture · not A-share data" in English and
+"保留的 AAPL 本地测试回放 · 非 A 股数据" in Chinese. Existing sessions and links
+were not filtered, edited or deleted. The same live browser page displayed
+both translations; the original English preference was restored. Its desktop
+table showed the longer label without clipping. The focused paper page suite
+passed 20/20, full frontend 225/225, TypeScript, ESLint, production build,
+Prettier and `git diff --check` passed.
+This is a narrow labeling fix, not U7 mode or data-integrity acceptance.
+
+The prior Save & exit tab was absent from the browser inventory. A fresh
+local tab restored the saved step-2 draft. Clicking its Save & exit button
+raised the expected native confirmation, but browser control then could not
+inspect or resolve that dialog; the URL inventory remained `/research/new`.
+The action was not repeated, no research POST was made, and an exit outcome
+is **not** claimed. A separate QA tab remained usable. An initial
+`127.0.0.1:5173` tab showed an apparent API error because its origin differed
+from the configured `localhost:8000` API; opening the documented
+`localhost:5173` origin showed service online and the persisted studies.
+This was a QA-entry mismatch, not a new Docker or database outage.
 
 ## 2026-09-24 17:48 UTC actual next-login startup failure
 

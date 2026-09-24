@@ -205,7 +205,7 @@ export const enUS = {
     safetyLabel: "Paper trading safety notice",
     requestError: "Unable to load paper trading data.",
     providers: {
-      replay: "Local AAPL fixture replay",
+      replay: "Legacy local AAPL fixture · not A-share data",
       simulated_a_share: "Synthetic A-share demo · 2030 scenario",
       historical_a_share: "Audited A-share historical replay",
     },

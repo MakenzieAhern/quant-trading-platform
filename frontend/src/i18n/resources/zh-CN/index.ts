@@ -190,7 +190,7 @@ export const zhCN = {
     safetyLabel: "模拟交易安全提示",
     requestError: "无法加载模拟交易数据。",
     providers: {
-      replay: "本地 AAPL 测试回放",
+      replay: "保留的 AAPL 本地测试回放 · 非 A 股数据",
       simulated_a_share: "A股合成演示 · 2030 场景",
       historical_a_share: "已审计 A 股历史回放",
     },
