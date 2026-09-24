@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T11:25:00Z",
+  "updated_at_utc": "2026-09-24T11:33:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 11:33UTC read-only Windows startup audit: last boot 18:33:33 AEST, Docker backend log ended 18:32:43 before reboot and resumed only after agent manual launch at 21:22:14; at 21:22 Desktop process, Engine pipe and docker-desktop WSL were absent/stopped. AutoStart=true, HKCU Run entry and Ubuntu integration were configured, but this real post-login check did not self-recover. No matching application-crash event in bounded 18:30–21:25 Application log; root cause and any intervening intentional exit unknown. Existing app launch recovered services/volumes without reset. M5 terminal-free post-reboot startup acceptance NOT_MET, release unchanged; guides and ACCEPTANCE corrected",
     "2026-09-24 11:25UTC unexpected Docker Desktop stop was diagnosed (no backend process, stopped docker-desktop WSL instance, absent Engine pipe), and existing Desktop4.92.0 launched without reset/reinstall/cleanup. Engine29.8.0, Ubuntu integration, four original Compose services/volumes, Redis PONG, PostgreSQL/backend health and API/frontend HTTP200 recovered. Read-only SQL: formal dataset1/runs3/trades310, personal jobs8/rows1110, no shared run IDs; frozen canonical/archive manifest/freeze hashes match 2026-09-22 M1 evidence, OOS lock remains consumed. This does not prove all pre-loss DB rows or independent backup; U3-ISOLATE remains IN_PROGRESS, M4-DATA-INTEGRITY FAIL and forward-source blocker unchanged",
     "2026-09-24 06:00UTC live in-app browser Workbench AX read raw ISO service check time; shared AppShell now reuses formatUtc. English AX reads 2026-09-24 05:40:12Z (UTC), Chinese reads 2026/09/24 05:40:12 (UTC), then language restored to English. Frontend225, ESLint, Prettier, TypeScript/build PASS; no data/API mutation. This closes one bounded U8/QA-A11Y presentation defect, not the full screen-reader matrix or release. PR32 remains open, data-loss/backup/forward-source blockers remain",
     "2026-09-24 05:11UTC live in-app browser 390x844 /paper topbar found menu36x37, search36x38 and English language27.9x40 targets. Shared mobile CSS raised menu/search/both language buttons to at least40x40; an initial wrap was corrected with an 8px gap. Five controls fit first row, dated data context remains second row, document375<viewport390. Lower-edge menu/search clicks opened intended panels, then closed safely. 720x450 width also had no document overflow. Screenshot SHA in ACCEPTANCE outside Git. Full frontend225, ESLint, TypeScript build and CSS Prettier PASS. PR32 head506f2c2 CI35958686226 backend/frontend/compose PASS. Windows still exposes only Disk0 NVMe, with C/D partitions, not an independent backup medium. Full AA/native zoom/data-integrity/release remain open",
@@ -212,6 +213,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "ACTIVE: 2026-09-24 real Windows reboot/login did not leave Docker Desktop/Engine running at 21:22 AEST despite configured AutoStart and HKCU Run entry. Manual existing-app launch restored it; root cause unproven. M5 terminal-free startup acceptance not met",
     "RESOLVED for this session: Docker Desktop4.92.0 was stopped and Ubuntu integration/Windows Engine pipe unavailable; starting only the existing installed app restored Engine, named project volumes and four Compose services without reset, reinstall or cleanup. Cause of the unexpected stop is unproven; full reboot/login acceptance remains open",
     "RESOLVED: manual refresh of a previously completed raw-update task kept stale success and counts visible while its detail GET was pending; now it immediately shows a polite loading state until the authoritative response arrives, verified with a delayed real-Chrome request and regression",
     "RESOLVED: /tasks research-list HTTP403 was described as local-service outage; task center now shares typed permission, timeout, server and offline guidance with the research list, with browser ZH/EN 403 and refresh recovery plus unit 403/offline sequence",
@@ -448,16 +450,16 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "506f2c2",
+      "last_verified_head": "da286a6",
       "state": "DRAFT",
-      "ci_run": 35958686226,
+      "ci_run": 35993081946,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Bounded post-correction U6 in-app browser ZH/EN and 390x844 historical account-native plan PASS; strict order limit displayed 14 rejections and no rejected-symbol fills in isolated DB. Mobile topbar40px, detail Back40px and unchanged-draft cancellation/reopen checks recorded in ACCEPTANCE. Prior real Chrome U3/U4/U5/U8 and accessibility checks retained. Full visual/A11Y/performance matrix, lost paper ledgers, independent backup, full Windows reboot and lawful forward authority remain open"
+      "browser_gate": "Bounded post-correction U6 in-app browser ZH/EN and 390x844 historical account-native plan PASS; strict order limit displayed 14 rejections and no rejected-symbol fills in isolated DB. Mobile topbar40px, detail Back40px and unchanged-draft cancellation/reopen checks recorded in ACCEPTANCE. Prior real Chrome U3/U4/U5/U8 and accessibility checks retained. Actual 2026-09-24 Windows reboot/login did not bring Docker Desktop online by the 21:22 check despite configured AutoStart; manual launch restored services, so M5 delivery FAIL. Full visual/A11Y/performance matrix, lost paper ledgers, independent backup and lawful forward authority remain open"
     }
   },
-  "next_task": "Continue the remaining real-browser U8/accessibility/performance and restart/compatibility matrix without relaxing a required row. Seek genuine pre-loss paper-ledger evidence, an independent physical backup destination and lawful forward-source rights; M5 still lacks complete real-data user flow, full Windows startup and real novice-user review. Do not mark full U6/U7 or release complete from historical replay",
+  "next_task": "Diagnose why the actual 2026-09-24 Windows login left Docker Desktop stopped despite configured AutoStart; verify a later real post-login self-recovery without unsafe reset or deleting data. Continue remaining real-browser U8/accessibility/performance and compatibility checks without relaxing a required row. User is unsure whether genuine pre-loss paper-ledger evidence, an independent physical backup destination or lawful forward-source rights exist; keep those gates unproven. M5 also lacks complete real-data user flow and novice-user review. Do not mark full U6/U7 or release complete from historical replay",
   "next_command": "Recheck PR32/worktree and the latest non-PASS rows in ACCEPTANCE; choose a bounded native-200-percent browser accessibility or restart-compatibility test, then observe/fix/retest/document. Do not replay the stalled native Save & exit confirmation without a new browser-control path. Preserve the owned isolated test stack only while it serves QA; never touch the main DB or frozen research. Do not merge/tag while data-loss, backup and forward-source gates remain open",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

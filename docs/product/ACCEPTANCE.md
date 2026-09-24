@@ -49,7 +49,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
 | M4-DATA-INTEGRITY | Application and formal-history persistence, isolated tests, recoverable backup | Suite-wide test-DB guard and verified additive restore | Live DB was found missing formal 1/3/310 ledger and later paper accounts. Formal ledger and four pre-backup accounts were restored atomically; `4b64380f` and `07d72259` remain absent. Live-config pytest was rejected; isolated backend969 PASS/one optional skip with live counts stable. The post-recovery dump restored into a new database, with 44/44 public tables matching live by row count and sorted-row hash. This same-disk dump is not independent disaster recovery and missing-history disposition remains open | FAIL |
 | QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Earlier isolated migration and frontend checks remain valid. 2026-09-23 isolated backend969 PASS/one optional archive skip and PR32 `b060e9f` CI35915906461 backend/frontend/compose PASS; however the live DB data-loss incident makes the current release/durability gate FAIL. Frozen research files were not changed; formal DB rows were restored from backup | FAIL |
-| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is enabled; four project containers have `unless-stopped` in Compose and runtime. A non-destructive Docker Desktop restart recovered all four services with API/frontend HTTP200, Redis PONG, persistent volumes/images and unchanged live ledger counts 1/3/310 research, 5/417 paper, 8 personal jobs and 4 update jobs. The two idle test-DB containers were returned to their original healthy state. This is engine-restart evidence, not full Windows reboot/login acceptance. PR32 CI35915906461 backend/frontend/compose PASS; screenshots/recordings and operator review remain incomplete | IN_PROGRESS |
+| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is configured and four project containers use `unless-stopped`, but the 2026-09-24 real Windows reboot/login did **not** yield a running Desktop/Engine at the 21:22 local check. A non-destructive manual Desktop launch recovered all four services with API/frontend HTTP200, Redis PONG and persistent volumes. Automatic post-login startup therefore failed this observed check; its cause is unproven. Screenshots/recordings and operator review remain incomplete | FAIL |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
@@ -79,6 +79,22 @@ match the 2026-09-22 M1 evidence. The OOS lock still records consumption.
 These checks strengthen U3-ISOLATE evidence but do not prove every pre-loss
 formal DB row matches its original state; the data-loss and independent-backup
 gates remain FAIL/blocked and U3-ISOLATE remains IN_PROGRESS.
+
+## 2026-09-24 11:33 UTC Windows startup observation
+
+Windows reports last boot at 2026-09-24 18:33:33 AEST and the console user
+signed in around 18:33. Docker backend logs continue until 18:32:43 before
+that reboot, then have no later entry until the agent's manual launch at
+21:22:14. At that check the Desktop/backend process, Engine pipe and
+`docker-desktop` WSL instance were absent/stopped. The installed app's
+`AutoStart` setting is true, an HKCU Run entry exists and Ubuntu integration
+is enabled; these settings alone did not make Docker available after this
+login. No matching Docker application-crash event was found in the bounded
+18:30–21:25 Application log check; neither the reason for non-start nor an
+intentional intervening exit is established. Starting the existing app by
+hand restored the original services and volumes without reset or cleanup.
+Thus M5's terminal-free post-reboot startup acceptance is **not met** by this
+observation. This is not evidence of another data loss.
 
 ## 2026-09-24 06:00 UTC shared status-time accessibility check
 
