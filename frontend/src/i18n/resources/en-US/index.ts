@@ -238,12 +238,22 @@ export const enUS = {
       historicalHint:
         "Past audited sessions only. This is replay, not new market data or a forward result. Range is limited to 93 calendar days.",
       historicalRange: "Historical replay range",
+      sourceLoading: "saved study settings",
+      sourceUnavailable:
+        "This saved study cannot configure a historical paper account. Open a completed A-share historical study, or start an independent account.",
+      sourceList: "Return to saved studies",
+      sourceReview:
+        "Settings copied from ‘{{name}}’ for review only. This account will have its own dates, snapshot and plan; no account or order has been created.",
+      sourceChooseDates:
+        "The study exceeds the 93-calendar-day replay limit. Choose the start date explicitly before creating this separate account.",
+      sourceIndependent: "Start an independent account instead",
       startDate: "Start date",
       endDate: "End date",
       historicalAdvanced: "Strategy, universe and cost settings",
       rebalanceSessions: "Sessions between rebalances",
       maximumHoldings: "Maximum holdings",
       maxPositionWeight: "Maximum weight per holding",
+      maxDrawdown: "Drawdown risk limit (negative fraction)",
       universe: "Share universe",
       allShares: "All accepted A-shares",
       commissionRate: "Commission rate",
@@ -251,7 +261,7 @@ export const enUS = {
       commissionAssumption:
         "These are simulation assumptions, not a verified broker quote. The historical engine applies its accepted date-specific cost model; check the result's cost breakdown.",
       historicalValidationError:
-        "Check the historical dates and strategy/cost limits.",
+        "Choose no more than 93 calendar days and check strategy, cost and risk limits.",
       registeredStrategy: "Registered strategy",
       strategyType: "Strategy type",
       shortPeriod: "Short period",

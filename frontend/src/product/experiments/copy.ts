@@ -153,6 +153,9 @@ const en = {
     "These prices are synthetic and intentionally demonstrate the workflow. Returns cannot be used as investment evidence.",
   noGuarantee:
     "Past simulated results do not establish reliable future returns. Costs, execution constraints and data limits affect what can be inferred.",
+  paperHandoff: "Review these settings in a separate historical paper account",
+  paperHandoffHelp:
+    "This opens a separate account form; it does not copy results, create an account or submit an order. Historical replay is limited to 93 calendar days.",
   chart: "Equity and drawdown",
   table: "Exact chart data",
   equity: "Portfolio equity (CNY)",
@@ -356,6 +359,9 @@ const zh: typeof en = {
   warningDemo: "这里使用合成价格演示操作流程。模拟收益不可作为投资证据。",
   noGuarantee:
     "历史模拟结果不能证明未来可靠收益。成本、执行约束与数据限制都会影响结论。",
+  paperHandoff: "用这次研究的设置准备独立历史模拟账户",
+  paperHandoffHelp:
+    "仅打开独立账户表单；不会复制收益、创建账户或提交订单。历史回放单次最多 93 个自然日。",
   chart: "权益与回撤",
   table: "图表精确数据",
   equity: "组合权益（人民币）",

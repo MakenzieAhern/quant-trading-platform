@@ -9,7 +9,8 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { i18n } from "../i18n";
-import { plan } from "../product/experiments/fixtures.test-data";
+import { experimentApi } from "../product/experiments/api";
+import { job, plan } from "../product/experiments/fixtures.test-data";
 import { jsonResponse } from "../test/fixtures";
 import { PAPER_ID, paperSession, paperSnapshot } from "../test/paperFixtures";
 import { CreatePaperSessionPage } from "./CreatePaperSessionPage";
@@ -409,6 +410,117 @@ describe("paper trading pages", () => {
         max_drawdown: "-0.2",
       },
     });
+  });
+
+  it("copies completed historical settings but requires an explicit 93-day replay range", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      `/paper/new?from_experiment=${job.job_id}`,
+    );
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      name: "Saved historical study",
+      status: "SUCCEEDED",
+      result_available: true,
+      mode: "historical_exploration",
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      configuration: {
+        ...job.configuration,
+        dataset_id: "cn-a-research-20100101-20251231-v1",
+        start_date: "2010-01-04",
+        end_date: "2011-03-22",
+        initial_cash: "123456.789000000000001",
+        universe: "SZSE",
+        strategy: { rebalance_sessions: 23, maximum_holdings: 12 },
+        costs: { commission_rate: "0.0007", minimum_commission: "7" },
+        risk: { max_drawdown: "-0.35", max_position_weight: "0.08" },
+      },
+    });
+    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse(
+        {
+          ...paperSession(),
+          provider_type: "historical_a_share",
+          dataset_id: "cn-a-research-20100101-20251231-v1",
+        },
+        201,
+      ),
+    );
+    render(<CreatePaperSessionPage />);
+    expect(
+      await screen.findByText(/Settings copied from ‘Saved historical study’/),
+    ).toBeVisible();
+    expect(screen.getByText(/Choose the start date explicitly/)).toBeVisible();
+    expect(screen.getByLabelText("Provider")).toHaveValue("historical_a_share");
+    expect(screen.getByLabelText("Provider")).toBeDisabled();
+    expect(screen.getByLabelText("Start date")).toHaveValue("");
+    expect(screen.getByLabelText("End date")).toHaveValue("2011-03-22");
+    expect(screen.getByLabelText("Initial cash")).toHaveValue(
+      "123456.789000000000001",
+    );
+    fireEvent.submit(
+      screen
+        .getByRole("button", { name: "Create paper session" })
+        .closest("form")!,
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Choose no more than 93 calendar days",
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    await userEvent.click(
+      screen.getByText("Strategy, universe and cost settings"),
+    );
+    expect(
+      screen.getByLabelText("Drawdown risk limit (negative fraction)"),
+    ).toHaveValue("-0.35");
+    fireEvent.input(screen.getByLabelText("Start date"), {
+      target: { value: "2011-01-01" },
+    });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(String(fetch.mock.calls[0]?.[1]?.body))).toMatchObject({
+      provider_type: "historical_a_share",
+      initial_cash: "123456.789000000000001",
+      strategy: {
+        parameters: {
+          start_date: "2011-01-01",
+          end_date: "2011-03-22",
+          rebalance_sessions: 23,
+          maximum_holdings: 12,
+          max_position_weight: "0.08",
+          universe: "SZSE",
+          commission_rate: "0.0007",
+          minimum_commission: "7",
+        },
+      },
+      risk: { max_drawdown: "-0.35" },
+    });
+  });
+
+  it("does not turn a synthetic saved study into a historical paper account", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      `/paper/new?from_experiment=${job.job_id}`,
+    );
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "SUCCEEDED",
+      result_available: true,
+    });
+    render(<CreatePaperSessionPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "cannot configure a historical paper account",
+    );
+    expect(
+      screen.queryByRole("button", { name: "Create paper session" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Return to saved studies" }),
+    ).toHaveAttribute("href", "/experiments");
   });
 
   it("labels persisted historical accounts without presenting archive IDs as the primary mode", async () => {

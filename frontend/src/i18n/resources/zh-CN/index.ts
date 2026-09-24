@@ -220,19 +220,30 @@ export const zhCN = {
       historicalHint:
         "仅回放过去已审计的交易日，不是新行情或前向收益。单次区间最多 93 个自然日。",
       historicalRange: "历史回放区间",
+      sourceLoading: "已保存研究的设置",
+      sourceUnavailable:
+        "这份研究不能用于配置历史模拟账户。请打开已完成的 A 股历史研究，或独立创建账户。",
+      sourceList: "返回已保存研究",
+      sourceReview:
+        "已从“{{name}}”复制设置供核对。此账户将使用自己的日期、快照和计划；尚未创建账户或提交订单。",
+      sourceChooseDates:
+        "研究区间超过 93 个自然日的回放上限。请明确选择开始日期，再创建这个独立账户。",
+      sourceIndependent: "改为独立创建账户",
       startDate: "开始日期",
       endDate: "结束日期",
       historicalAdvanced: "策略、股票范围与成本设置",
       rebalanceSessions: "调仓间隔（交易日）",
       maximumHoldings: "最多持仓数",
       maxPositionWeight: "单只证券最大权重",
+      maxDrawdown: "最大回撤风控阈值（负数）",
       universe: "股票范围",
       allShares: "全部已接受的A股",
       commissionRate: "佣金费率",
       minimumCommission: "最低佣金（人民币）",
       commissionAssumption:
         "这两项是模拟假设，不是已核实的券商报价。历史引擎另按已接受的生效日期成本模型计算；请在结果中核对成本明细。",
-      historicalValidationError: "请检查历史日期、策略与成本限制。",
+      historicalValidationError:
+        "请选择不超过 93 个自然日，并检查策略、成本和风控限制。",
       registeredStrategy: "已注册策略",
       strategyType: "策略类型",
       shortPeriod: "短周期",

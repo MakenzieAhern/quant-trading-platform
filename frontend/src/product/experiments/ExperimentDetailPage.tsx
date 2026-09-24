@@ -333,6 +333,17 @@ function ExperimentResults({
         </details>
       </section>
       <ExperimentPlan plan={data.simulation_plan ?? null} />
+      {job.mode === "historical_exploration" && job.status === "SUCCEEDED" && (
+        <div className="experimentPanel">
+          <Link
+            className="button secondary"
+            href={`/paper/new?from_experiment=${encodeURIComponent(job.job_id)}`}
+          >
+            {c.paperHandoff}
+          </Link>
+          <p className="experimentHelp">{c.paperHandoffHelp}</p>
+        </div>
+      )}
       <ExperimentCollections jobId={job.job_id} />
       <section className="experimentPanel">
         <h2>{c.execution}</h2>

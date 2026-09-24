@@ -281,6 +281,36 @@ describe("guided experiment", () => {
 });
 
 describe("durable experiment detail", () => {
+  it("offers a separate paper-account handoff only after a historical result succeeds", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "SUCCEEDED",
+      mode: "historical_exploration",
+      result_available: true,
+    });
+    vi.spyOn(experimentApi, "result").mockResolvedValue({
+      ...result,
+      mode: "historical_exploration",
+    });
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 100,
+      offset: 0,
+    });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    expect(
+      await screen.findByRole("link", {
+        name: "Review these settings in a separate historical paper account",
+      }),
+    ).toHaveAttribute("href", `/paper/new?from_experiment=${job.job_id}`);
+    expect(
+      screen.getByText(
+        /does not copy results, create an account or submit an order/,
+      ),
+    ).toBeInTheDocument();
+  });
+
   it("explains an eligible simulation check as acceptance, not a rejection, in both languages", async () => {
     vi.spyOn(experimentApi, "get").mockResolvedValue({
       ...job,

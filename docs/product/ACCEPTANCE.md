@@ -14,6 +14,30 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 21:41 UTC historical result to paper-account handoff
+
+The completed audited-historical research result now links to a separate
+historical paper-account form. The form retrieves the saved study, accepts only
+the completed registered historical configuration, and copies exact capital,
+strategy, universe, cost and risk inputs for review. It never copies result
+metrics or creates/submits an account on navigation. When the study's range
+exceeds the existing 93-calendar-day paper replay limit, the start date stays
+empty and must be chosen explicitly; the saved end date remains visible.
+Synthetic/ineligible studies fail closed. The account will have its own
+snapshot, plan and ledger, not a continuation of the research preview.
+
+Actual Chrome 153 on saved 293-session study `d9f27183` showed the Chinese
+handoff link, then the independent form with historical provider locked,
+2010-01-04→2011-03-22 source range explained, blank start, 2011-03-22 end,
+CNY100000 capital, 20-session/20-holding strategy, 0.1 position cap,
+-0.2 drawdown limit and 0.0003/5 cost assumptions. No form was submitted.
+Unit regression covers the result link, long-range guard, exact-string inputs
+and synthetic rejection. Full frontend 231/231, ESLint, TypeScript, production
+build and changed-file formatting passed locally. Read-only live DB counts
+remained datasets1/runs3/trades310/product jobs8/paper sessions5/events417.
+This is bounded U6/U7 navigation progress, not proof of a common executable
+plan, forward feed, missing-ledger recovery or release acceptance.
+
 ## 2026-09-24 21:01 UTC data-center confirmation target and open evidence
 
 Actual Chrome on the running local Data Center measured the raw-update

@@ -3,8 +3,12 @@ import { useTranslation } from "react-i18next";
 
 import { ApiError } from "../api/client";
 import { paperApi } from "../api/paper";
+import { ErrorPanel, LoadingPanel } from "../components/AsyncPanel";
 import { Link } from "../components/Link";
 import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
+import { useApiResource } from "../hooks/useApiResource";
+import { experimentApi } from "../product/experiments/api";
+import type { Experiment } from "../product/experiments/types";
 import type { CreatePaperSessionRequest } from "../types/paper";
 import {
   comparePositiveDecimals,
@@ -21,27 +25,116 @@ type StrategyType = ReplayRequest["strategy"]["type"];
 type ProviderType = CreatePaperSessionRequest["provider_type"];
 
 export function CreatePaperSessionPage() {
+  const sourceId = new URLSearchParams(window.location.search).get(
+    "from_experiment",
+  );
+  const validSourceId =
+    sourceId &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      sourceId,
+    )
+      ? sourceId
+      : null;
+  const source = useApiResource(
+    (signal) =>
+      validSourceId
+        ? experimentApi.get(validSourceId, signal)
+        : Promise.resolve(null),
+    [validSourceId],
+  );
   const { t } = useTranslation("paper");
-  const [providerType, setProviderType] =
-    useState<ProviderType>("simulated_a_share");
+  if (sourceId && !validSourceId)
+    return (
+      <p role="alert">
+        {t("createPage.sourceUnavailable")}{" "}
+        <Link href="/experiments">{t("createPage.sourceList")}</Link>
+      </p>
+    );
+  if (validSourceId && source.loading)
+    return <LoadingPanel label={t("createPage.sourceLoading")} />;
+  if (validSourceId && source.error)
+    return (
+      <ErrorPanel
+        message={source.error}
+        notFoundReturn={{
+          href: "/experiments",
+          label: t("createPage.sourceList"),
+        }}
+      />
+    );
+  const job = source.data;
+  if (
+    validSourceId &&
+    (!job ||
+      job.status !== "SUCCEEDED" ||
+      !job.result_available ||
+      job.mode !== "historical_exploration" ||
+      job.dataset_id !== "cn-a-research-20100101-20251231-v1" ||
+      job.configuration.dataset_id !== job.dataset_id ||
+      job.configuration.strategy_id !==
+        "cn_a_cross_sectional_momentum_low_vol_v1")
+  )
+    return (
+      <p role="alert">
+        {t("createPage.sourceUnavailable")}{" "}
+        <Link href="/experiments">{t("createPage.sourceList")}</Link>
+      </p>
+    );
+  return <PaperSessionForm key={job?.job_id ?? "new"} sourceJob={job} />;
+}
+
+function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
+  const { t } = useTranslation("paper");
+  const sourceConfig = sourceJob?.configuration;
+  const sourceRangeFits =
+    sourceConfig &&
+    Number.isFinite(Date.parse(sourceConfig.start_date)) &&
+    Number.isFinite(Date.parse(sourceConfig.end_date)) &&
+    Date.parse(sourceConfig.end_date) >= Date.parse(sourceConfig.start_date) &&
+    Date.parse(sourceConfig.end_date) - Date.parse(sourceConfig.start_date) <=
+      92 * 86_400_000;
+  const [providerType, setProviderType] = useState<ProviderType>(
+    sourceJob ? "historical_a_share" : "simulated_a_share",
+  );
   const [strategyType, setStrategyType] = useState<StrategyType>(
     "moving_average_crossover",
   );
-  const [initialCash, setInitialCash] = useState("100000000");
+  const [initialCash, setInitialCash] = useState(
+    sourceConfig?.initial_cash ?? "100000000",
+  );
   const [quantity, setQuantity] = useState("1");
   const [shortPeriod, setShortPeriod] = useState("2");
   const [longPeriod, setLongPeriod] = useState("3");
   const [rsiPeriod, setRsiPeriod] = useState("14");
   const [oversold, setOversold] = useState("30");
   const [overbought, setOverbought] = useState("70");
-  const [startDate, setStartDate] = useState("2011-03-01");
-  const [endDate, setEndDate] = useState("2011-03-31");
-  const [rebalanceSessions, setRebalanceSessions] = useState("20");
-  const [maximumHoldings, setMaximumHoldings] = useState("20");
-  const [maxPositionWeight, setMaxPositionWeight] = useState("0.1");
-  const [universe, setUniverse] = useState<"ALL" | "SSE" | "SZSE">("ALL");
-  const [commissionRate, setCommissionRate] = useState("0.0003");
-  const [minimumCommission, setMinimumCommission] = useState("5");
+  const [startDate, setStartDate] = useState(
+    sourceRangeFits ? sourceConfig.start_date : sourceJob ? "" : "2011-03-01",
+  );
+  const [endDate, setEndDate] = useState(
+    sourceConfig?.end_date ?? "2011-03-31",
+  );
+  const [rebalanceSessions, setRebalanceSessions] = useState(
+    String(sourceConfig?.strategy.rebalance_sessions ?? 20),
+  );
+  const [maximumHoldings, setMaximumHoldings] = useState(
+    String(sourceConfig?.strategy.maximum_holdings ?? 20),
+  );
+  const [maxPositionWeight, setMaxPositionWeight] = useState(
+    sourceConfig?.risk.max_position_weight ?? "0.1",
+  );
+  const [maxDrawdown, setMaxDrawdown] = useState(
+    sourceConfig?.risk.max_drawdown ?? "-0.2",
+  );
+  const [universe, setUniverse] = useState<"ALL" | "SSE" | "SZSE">(
+    sourceConfig?.universe ?? "ALL",
+  );
+  const [commissionRate, setCommissionRate] = useState(
+    sourceConfig?.costs.commission_rate ?? "0.0003",
+  );
+  const [minimumCommission, setMinimumCommission] = useState(
+    sourceConfig?.costs.minimum_commission ?? "5",
+  );
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const key = useRef<string | null>(null);
@@ -81,6 +174,9 @@ export function CreatePaperSessionPage() {
         !startDate ||
         !endDate ||
         endDate < startDate ||
+        !Number.isFinite(Date.parse(startDate)) ||
+        !Number.isFinite(Date.parse(endDate)) ||
+        Date.parse(endDate) - Date.parse(startDate) > 92 * 86_400_000 ||
         rebalance === null ||
         rebalance > 252 ||
         holdings === null ||
@@ -90,7 +186,9 @@ export function CreatePaperSessionPage() {
         !/^\d+(?:\.\d+)?$/.test(commissionRate) ||
         comparePositiveDecimals(commissionRate, "0.01") === 1 ||
         !/^\d+(?:\.\d+)?$/.test(minimumCommission) ||
-        comparePositiveDecimals(minimumCommission, "1000") === 1
+        comparePositiveDecimals(minimumCommission, "1000") === 1 ||
+        !/^-?0(?:\.\d+)?$|^-1(?:\.0+)?$/.test(maxDrawdown) ||
+        (isPositiveDecimal(maxDrawdown) && maxDrawdown !== "0")
       ) {
         setError(t("createPage.historicalValidationError"));
         return;
@@ -117,7 +215,7 @@ export function CreatePaperSessionPage() {
         risk: {
           enforce_buying_power: true,
           max_leverage: "1",
-          max_drawdown: "-0.2",
+          max_drawdown: maxDrawdown,
         },
       };
     } else if (strategyType === "moving_average_crossover") {
@@ -197,6 +295,16 @@ export function CreatePaperSessionPage() {
           {t("createPage.cancel")}
         </Link>
       </header>
+      {sourceJob && (
+        <section className="experimentNotice" role="note">
+          <p>{t("createPage.sourceReview", { name: sourceJob.name })}</p>
+          <p>
+            {sourceConfig?.start_date} — {sourceConfig?.end_date}
+            {!sourceRangeFits && ` · ${t("createPage.sourceChooseDates")}`}
+          </p>
+          <Link href="/paper/new">{t("createPage.sourceIndependent")}</Link>
+        </section>
+      )}
       <form
         className="formPanel"
         onSubmit={(event) => void submit(event)}
@@ -210,6 +318,7 @@ export function CreatePaperSessionPage() {
               {t("createPage.provider")}
               <select
                 value={providerType}
+                disabled={Boolean(sourceJob)}
                 onChange={(event) => {
                   const value = event.target.value as ProviderType;
                   setProviderType(value);
@@ -423,6 +532,14 @@ export function CreatePaperSessionPage() {
                     onChange={(event) =>
                       setMaxPositionWeight(event.target.value)
                     }
+                    required
+                  />
+                </label>
+                <label>
+                  {t("createPage.maxDrawdown")}
+                  <input
+                    value={maxDrawdown}
+                    onChange={(event) => setMaxDrawdown(event.target.value)}
                     required
                   />
                 </label>
