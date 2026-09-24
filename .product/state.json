@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T01:36:57Z",
+  "updated_at_utc": "2026-09-24T01:41:01Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 01:41UTC isolated actual Chrome153 at 390x844/DPR1 checked ten main routes in ZH/system-light and EN/dark: all document/client widths390/390, no unnamed exposed button/link/form control in Chrome AX. Real home, wizard and paper screenshots/hashes in ACCEPTANCE. Browser profile was new but the backend database populated; not clean-install, real novice-user, full interaction or WCAG proof. PR32 docs head b7b1a62 CI35943815149 backend/frontend/compose PASS",
     "2026-09-24 01:36UTC actual Chrome153 native 200-percent zoom at physical1024x768/CSS504x336/DPR2: shared narrow-short CSS brought clean-home primary action inside first screen in ZH/light and EN/light. Returning EN/dark draft button bottom moved CSS340.9 to326.7, within viewport336; clicking opened saved wizard route. At physical1280x800/CSS632x352, ZH/dark returning draft action was within viewport, ten main routes had document/client width632/632 and Chrome AX exposed no unnamed interactive control. Screenshots/hashes in ACCEPTANCE. Frontend219 tests, ESLint, TypeScript, build and Prettier PASS; PR32 code head08c75e9 CI35943421735 backend/frontend/compose PASS. Docker Desktop4.92.0/WSL Engine29.8.0, Compose5.5.1, PostgreSQL/Redis and API/frontend health checked; existing images and project volumes remained. Bounded browser evidence only, not full QA-VISUAL/A11Y or release PASS",
     "2026-09-24 01:09UTC owned quant-v12-u3crash tmpfs PostgreSQL and readonly historical archive ran an inspected 2010-2014 exploratory job. Only its backend was SIGKILLed after RUNNING progress20/1212; exit137, durable pre-restart parent77354e81 RUNNING60/1212 with null summary and zero rows. Starting the same backend reconciled it to INTERRUPTED/WORKER_RESTARTED_RETRY_AVAILABLE with 60/1212 preserved, result unavailable and HTTP409. Actual Chrome153 showed truthful Chinese recovery and created linked child52b76f45; child SUCCEEDED1212/1212 with4108 rows only on child, same configuration SHA, and inspected-history/non-guarantee warning. Two repeat parent retry clicks reopened same child; isolated DB held2 jobs/1 link. Screenshots SHA256 F4B7DA5CA03CFB8F0FB8F03A38D9D564D6D2803227F8CD09738A70E0F450AE79 and 1444728E5575FF30AEBDB7EDBA7BB3645E574C75C43DF6A44A002E4A74FA199B. Owned test backend/tmpfs/network removed without -v, main DB paper5/events417/research8/updates4 and .research unchanged. U3-RECOVER PASS for worker-process crash, not physical power loss/U7 forward. PR32 code head a517a86 CI35941102188 backend/frontend/compose PASS",
     "2026-09-24 01:00UTC owned quant-v12-u3fail tmpfs PostgreSQL and read-only test shadow with copied genuine manifest/marker but no partitions reproduced real FAILED historical exploration parent d5105a82: result unavailable, HTTP409, zero rows. Registry incorrectly advertised this incomplete archive available and worker returned generic error; shared loader now maps missing/changed partitions to DATASET_INTEGRITY_FAILED and discovery marks absent partitions unavailable. On isolated backend restart, actual Chrome153 clicked parent retry and opened FAILED child5b8db429 with same configuration SHA and typed guidance in ZH/EN; repeated parent retry reopened same child. Test DB 2 jobs/1 link/0 rows; screenshots SHA256 E40242E0A9ECA7F46272D301529DF116ADB3E7014397CA402BBC03733D864EF3 and 266BBEAD83369519200A87CD0C714C9AD9D97781E847886F78831246BC76D00D. Focused experiment API18/18, market reader18/18, Ruff/mypy PASS; real archive availability true and metadata check 11.1ms. Only owned test containers/network/tmpfs/shadow removed, main DB paper5/events417/research8/updates4 and .research unchanged. Unexpected process crash and broader release gate remain open. PR32 prior docs head1a46992 CI35940065682 backend/frontend/compose PASS",
@@ -426,13 +427,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "08c75e9",
+      "last_verified_head": "b7b1a62",
       "state": "DRAFT",
-      "ci_run": 35943421735,
+      "ci_run": 35943815149,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill and linked retry PASS. U3 dirty Back/Forward, isolated cancelled-to-linked-retry and U4 CSV/JSON download PASS in real Chrome. Home links40px, direct-load skip-link focus and fault-injected offline/permission/timeout recovery PASS. No-match and real zero-trade filter guidance PASS. Native 200-percent zoom home first actions visible at 1024x768 ZH/EN light and returning EN/dark; 1280x800 ZH/dark ten-route no-overflow/AX-name check PASS. Full visual/A11Y matrix incomplete. Simple warm navigation p95=32ms, wider QA incomplete. Full Windows reboot and forward authority remain open"
+      "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill and linked retry PASS. U3 dirty Back/Forward, isolated cancelled-to-linked-retry and U4 CSV/JSON download PASS in real Chrome. Home links40px, direct-load skip-link focus and fault-injected offline/permission/timeout recovery PASS. No-match and real zero-trade filter guidance PASS. Native 200-percent zoom home first actions visible at 1024x768 ZH/EN light and returning EN/dark; 1280x800 ZH/dark ten-route no-overflow/AX-name check PASS. Standard 390x844 ZH/system-light and EN/dark ten-route width/AX-name checks PASS. Full visual/A11Y matrix incomplete. Simple warm navigation p95=32ms, wider QA incomplete. Full Windows reboot and forward authority remain open"
     }
   },
   "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence and obtain an independent backup destination. U3 cancellation, failure, controlled restart and unplanned test-worker crash/retry now pass; do not confuse that with physical power loss or U7 forward-paper durability. Continue U8/accessibility/performance and remaining native 200-percent zoom cases. M5 still lacks complete real-data user flow, full Windows startup and real novice-user review. Obtain lawful forward-source rights before any U7 execution promotion; verify terminal-free recovery at the next safe full Windows reboot/login",

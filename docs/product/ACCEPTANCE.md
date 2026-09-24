@@ -89,6 +89,24 @@ screen-reader or WCAG audit. PR #32 code head `08c75e9` passed
 [CI 35943421735](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35943421735)
 for backend, frontend and Compose; release gates remain open.
 
+## 2026-09-24 01:41 UTC mobile route breadth
+
+An isolated Chrome 153 profile at 390×844 (DPR 1) checked the same ten main
+routes in Chinese/system-light and English/dark. Every route reported document
+width equal to its 390px client viewport; Chrome's accessibility tree exposed
+no unnamed button, link or form control. The [Chinese home](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/mobile390-zh-system-clean-home-20260924.png)
+(SHA-256 `F89B354EEE56F3DF29AFFA5CE86A691E102D2F3BE6C9D412C646F55F63800162`),
+[English wizard](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/mobile390-en-dark-wizard-20260924.png)
+(`4A62884967A3D8AF292EF42832E75990F4ED8376FD0DA10AABC14F9AF69F9781`)
+and [English paper page](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/mobile390-en-dark-paper-20260924.png)
+(`C32B24CFEB759AF173D0D3F9FDD40F300E791EDD6D931BEF4E8147142C1D0ED0`)
+are real-browser captures outside Git. The profile was new, but the backend
+database was populated; this is **not** clean-install or novice-user proof.
+Only route width/names and the shown views were inspected, not the full
+interaction, contrast, screen-reader or 200%-on-mobile matrix. PR #32 docs
+head `b7b1a62` passed
+[CI 35943815149](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35943815149).
+
 ## 2026-09-24 01:09 UTC unplanned historical worker crash and linked completion
 
 An owned `quant-v12-u3crash-20260924` tmpfs PostgreSQL and backend on 8001
