@@ -14,6 +14,23 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 19:47 UTC bounded responsive and locale recheck
+
+On the running local app in the Codex in-app Chromium browser, a 1024×768
+viewport showed no document-level horizontal overflow on Workbench, Strategies,
+Research, Task center, Paper sessions, Data center, Help and Settings in
+Chinese/dark; the saved historical result also fit. Seven of those routes
+were checked in English/system theme at the same width. The saved result and
+restored stopped historical paper account were visually checked at 390×844 in
+Chinese/dark; both had document/client width 375/375 CSS pixels. The paper
+account retained cash `81309.8134` and equity `99964.8134`, with explicit
+historical-replay and simulated-execution labels. Browser warning/error logs
+were empty. An 18px research-list checkbox input was inside a 53px-high
+clickable label; input dimensions alone are not a target-size failure.
+English/system preferences and default viewport were restored afterward.
+This is a bounded agent check, not actual Chrome, 200% zoom, screen-reader,
+complete contrast, novice-user or full visual-matrix acceptance.
+
 ## 2026-09-24 19:38 UTC paper reconnect state labels and exhaustion
 
 An independent paper-stream code review found that four consecutive WebSocket
