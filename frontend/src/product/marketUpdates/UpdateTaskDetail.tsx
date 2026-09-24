@@ -86,7 +86,11 @@ export function UpdateTaskDetail({
       <button
         className="button secondary"
         type="button"
-        onClick={() => setRevision((value) => value + 1)}
+        onClick={() => {
+          setJob(null);
+          setError(null);
+          setRevision((value) => value + 1);
+        }}
       >
         {c.refresh}
       </button>

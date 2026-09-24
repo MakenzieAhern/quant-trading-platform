@@ -342,4 +342,27 @@ describe("explicit incremental request workflow", () => {
       ),
     ).toBeInTheDocument();
   });
+  it("announces loading instead of showing stale completion during manual refresh", async () => {
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const detail = await screen.findByRole("region", {
+      name: `Task: ${job.job_id}`,
+    });
+    const completed =
+      "Bounded raw requests completed. Candidate-only status is unchanged.";
+    expect(await within(detail).findByText(completed)).toBeInTheDocument();
+    let finish!: (result: UpdateJob) => void;
+    vi.mocked(marketUpdateApi.get).mockImplementationOnce(
+      () => new Promise((resolve) => (finish = resolve)),
+    );
+    await userEvent.click(
+      within(detail).getAllByRole("button", { name: "Refresh" })[0],
+    );
+    expect(within(detail).queryByText(completed)).not.toBeInTheDocument();
+    expect(within(detail).getByRole("status")).toHaveTextContent(
+      "Loading saved state…",
+    );
+    await act(async () => finish(job));
+    expect(await within(detail).findByText(completed)).toBeInTheDocument();
+  });
 });
