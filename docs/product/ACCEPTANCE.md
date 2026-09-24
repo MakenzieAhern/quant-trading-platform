@@ -54,6 +54,32 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 11:25 UTC Docker recovery and U3 isolation read-only audit
+
+Docker Desktop 4.92.0 was unexpectedly stopped: the `docker-desktop` WSL2
+instance was stopped, its backend process absent, and both Windows Engine pipe
+and Ubuntu CLI integration unavailable. Launching only the already-installed
+Desktop app restored Engine 29.8.0 and Ubuntu integration without reinstall,
+reset or cleanup. The existing four project containers restarted; PostgreSQL,
+Redis (`PONG`) and backend health became healthy, and API/frontend returned
+HTTP 200. The four named project volumes persisted. This is another bounded
+engine-restart check, not a full Windows reboot or independent backup proof.
+Windows still reports only one physical NVMe disk.
+
+Read-only live SQL now shows formal research 1 dataset / 3 runs (Development,
+Validation, OOS) / 310 trades, versus 8 personal jobs / 1110 personal result
+rows. The product and formal jobs have distinct tables and zero shared run IDs.
+The formal dataset remains `PASSED` and frozen, with canonical SHA-256
+`1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e`.
+The current archive manifest file SHA-256
+`693c0b81d942d9532c6ec6c6455fbafab76921a40c8093bace32f1fac9cf2cd0`
+and freeze file SHA-256
+`228569f1dcbb099e8b7225ef72f6960660f5741bb7298c051809bbb1ab3739bd`
+match the 2026-09-22 M1 evidence. The OOS lock still records consumption.
+These checks strengthen U3-ISOLATE evidence but do not prove every pre-loss
+formal DB row matches its original state; the data-loss and independent-backup
+gates remain FAIL/blocked and U3-ISOLATE remains IN_PROGRESS.
+
 ## 2026-09-24 06:00 UTC shared status-time accessibility check
 
 The live in-app browser at `localhost:5173` exposed the Workbench service
