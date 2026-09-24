@@ -1,0 +1,88 @@
+import { act, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
+import { Link } from "../components/Link";
+import { navigate, useNavigationGuard, usePathname } from "./navigation";
+
+function Guard() {
+  useNavigationGuard(() => window.confirm("Leave this draft?"));
+  return <Link href="/experiments">Experiments</Link>;
+}
+
+function RouterHarness() {
+  const pathname = usePathname();
+  return (
+    <>
+      <output>{pathname}</output>
+      {pathname === "/research/new" && <Guard />}
+    </>
+  );
+}
+
+describe("shared navigation guard", () => {
+  it("blocks sidebar links and programmatic commands once before changing history", async () => {
+    window.history.replaceState({}, "", "/research/new");
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(<RouterHarness />);
+    const length = window.history.length;
+    await userEvent.click(screen.getByRole("link", { name: "Experiments" }));
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(window.location.pathname).toBe("/research/new");
+    expect(window.history.length).toBe(length);
+    act(() => {
+      expect(navigate("/settings")).toBe(false);
+    });
+    expect(confirm).toHaveBeenCalledTimes(2);
+    expect(screen.getByRole("status")).toHaveTextContent("/research/new");
+    confirm.mockReturnValue(true);
+    act(() => {
+      expect(navigate("/experiments")).toBe(true);
+    });
+    expect(confirm).toHaveBeenCalledTimes(3);
+    expect(screen.getByRole("status")).toHaveTextContent("/experiments");
+  });
+
+  it("restores a cancelled browser Back without truncating Forward history", async () => {
+    window.history.replaceState({}, "", "/strategies");
+    navigate("/research/new");
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(<RouterHarness />);
+    const length = window.history.length;
+    act(() => window.history.back());
+    await waitFor(() => expect(confirm).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(window.location.pathname).toBe("/research/new"));
+    expect(screen.getByRole("status")).toHaveTextContent("/research/new");
+    expect(window.history.length).toBe(length);
+    confirm.mockReturnValue(true);
+    act(() => window.history.back());
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent("/strategies"),
+    );
+    expect(confirm).toHaveBeenCalledTimes(2);
+    act(() => window.history.forward());
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent("/research/new"),
+    );
+    expect(confirm).toHaveBeenCalledTimes(2);
+    expect(window.history.length).toBe(length);
+  });
+
+  it("restores a cancelled Forward traversal and preserves both neighbours", async () => {
+    window.history.replaceState({}, "", "/research/new");
+    navigate("/help");
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe("/research/new"));
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(<RouterHarness />);
+    act(() => window.history.forward());
+    await waitFor(() => expect(confirm).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(window.location.pathname).toBe("/research/new"));
+    expect(screen.getByRole("status")).toHaveTextContent("/research/new");
+    confirm.mockReturnValue(true);
+    act(() => window.history.forward());
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent("/help"),
+    );
+    expect(confirm).toHaveBeenCalledTimes(2);
+  });
+});

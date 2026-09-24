@@ -1,33 +1,18 @@
 from __future__ import annotations
 
 from datetime import datetime
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from typing import Annotated, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, model_validator
 
-from app.application.backtests.decimal_policy import validate_storage_decimal
+from app.application.backtests.decimal_policy import parse_decimal_string
 from app.application.backtests.models import BacktestRunStatus
 from app.domain.common import Symbol, UtcDateTime
 
-
-def _decimal_string(value: object) -> Decimal:
-    if not isinstance(value, str):
-        raise ValueError("financial Decimal values must be JSON strings")
-    if len(value) > 128:
-        raise ValueError("Decimal string must not exceed 128 characters")
-    try:
-        parsed = Decimal(value)
-    except InvalidOperation as exc:
-        raise ValueError("invalid Decimal string") from exc
-    if not parsed.is_finite():
-        raise ValueError("Decimal value must be finite")
-    return validate_storage_decimal(parsed, "Decimal value")
-
-
-DecimalString = Annotated[Decimal, BeforeValidator(_decimal_string)]
-PositiveDecimalString = Annotated[Decimal, BeforeValidator(_decimal_string), Field(gt=0)]
+DecimalString = Annotated[Decimal, BeforeValidator(parse_decimal_string)]
+PositiveDecimalString = Annotated[Decimal, BeforeValidator(parse_decimal_string), Field(gt=0)]
 
 
 class StrictModel(BaseModel):

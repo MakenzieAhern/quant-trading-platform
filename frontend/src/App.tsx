@@ -12,6 +12,16 @@ import { ResearchRunPage } from "./pages/research/ResearchRunPage";
 import { ResearchStrategiesPage } from "./pages/research/ResearchStrategiesPage";
 import { ResearchStrategyPage } from "./pages/research/ResearchStrategyPage";
 import { usePathname } from "./utils/navigation";
+import {
+  WorkbenchPage,
+  ProductStrategiesPage,
+  DataCenterPage,
+  HelpPage,
+  SettingsPage,
+} from "./product/ProductPages";
+import { CreateExperimentPage } from "./product/experiments/CreateExperimentPage";
+import { ExperimentsPage } from "./product/experiments/ExperimentsPage";
+import { ExperimentDetailPage } from "./product/experiments/ExperimentDetailPage";
 
 export function App() {
   const pathname = usePathname();
@@ -32,11 +42,21 @@ export function App() {
   const researchStrategyMatch =
     /^\/research\/a-share\/strategies\/([^/]+)\/?$/i.exec(pathname);
   let page = <NotFoundPage />;
-  if (
-    pathname === "/" ||
-    pathname === "/backtests" ||
-    pathname === "/backtests/"
-  )
+  if (pathname === "/") page = <WorkbenchPage />;
+  else if (pathname === "/strategies") page = <ProductStrategiesPage />;
+  else if (pathname.startsWith("/strategies/"))
+    page = (
+      <ProductStrategiesPage
+        strategyId={decodeURIComponent(pathname.slice("/strategies/".length))}
+      />
+    );
+  else if (pathname === "/data") page = <DataCenterPage />;
+  else if (pathname === "/help") page = <HelpPage />;
+  else if (pathname === "/settings") page = <SettingsPage />;
+  else if (pathname === "/research/new") page = <CreateExperimentPage />;
+  else if (pathname === "/experiments" || pathname === "/experiments/") page = <ExperimentsPage />;
+  else if (/^\/experiments\/[0-9a-f-]{36}\/?$/i.test(pathname)) page = <ExperimentDetailPage jobId={pathname.split("/")[2]} />;
+  else if (pathname === "/backtests" || pathname === "/backtests/")
     page = <BacktestHistoryPage />;
   else if (pathname === "/backtests/new" || pathname === "/backtests/new/")
     page = <CreateBacktestPage />;

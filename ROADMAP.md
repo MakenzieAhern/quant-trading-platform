@@ -1,14 +1,22 @@
 # Roadmap
 
-## v1.1 — China A-Share Research Edition (feature branch)
+## v1.2 — Product Experience Edition (active)
+
+The full product objective, milestones M0–M5 and U1–U8 acceptance live in
+[PRODUCT_MASTER](docs/product/PRODUCT_MASTER.md), [ACCEPTANCE](docs/product/ACCEPTANCE.md)
+and [.product/state.json](.product/state.json). Current work turns the released platform
+into a bilingual self-service A-share research and simulated-account workspace.
+
+## v1.1 — China A-Share Research Edition (published)
 
 Implemented foundations include effective-dated A-share models/rules, provider contracts/adapters,
 deterministic Parquet and logical checksums, normalized corporate actions, cross-sectional research,
 persistence/API, exact analytics and bilingual UI. Before studies can run, complete the historical
 universe/delisted-security audit and freeze a real zero-cost dataset.
 
-Development and Validation remain pending the readiness gate. Official OOS is separately approved
-and must run once only after all choices are frozen. PR review precedes any merge/tag. Live trading,
+Development, Validation and the exactly-once Official OOS are complete and immutable.
+PR #12 merged into main `f88b5c6`; annotated tag and Release v1.1.0 were published
+2026-09-22. Historical research checkpoints must not be treated as current product blockers. Live trading,
 real broker integration, ML/GPU, HFT and additional asset classes remain explicitly out of scope.
 
 Each phase must be deterministic, documented, linted, and tested before dependent work begins. Correctness takes priority over headline performance.

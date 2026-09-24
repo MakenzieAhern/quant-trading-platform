@@ -1,0 +1,129 @@
+{
+  "report_id": "PRODUCT_BAOSTOCK_PUBLIC_EOD_CAPABILITY_20260922",
+  "status": "PARTIAL_SINGLE_SECURITY_PUBLIC_EOD_ACCESS_VERIFIED",
+  "verified_at_utc": "2026-09-22T07:51:53.032573+00:00",
+  "scope": "U5_U7_SOURCE_FEASIBILITY_ONLY",
+  "classification": "INTEGRATION_BACKFILL_NOT_FORWARD",
+  "forward_acceptance_passed": false,
+  "human_action_required": false,
+  "repository_market_rows": 0,
+  "project_dependency_changes": false,
+  "database_changes": false,
+  "frozen_research_changes": false,
+  "private_evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/source-readiness-20260922",
+  "probe_script_sha256": "7e001a2fd39bf32282a41777ff770fb9639472e63083c75d04f0eea07759b62f",
+  "probe_validator_self_check": "PASS_VALID_BAR_ACCEPTED_INVALID_OHLC_REJECTED",
+  "sdk": {
+    "package": "baostock",
+    "package_version": "0.9.4",
+    "reported_version": "00.9.40",
+    "official_metadata_url": "https://pypi.org/pypi/baostock/0.9.4/json",
+    "wheel_sha256": "0bf71c6069ab5890ff3596632f9c3f8f1fbc6bfcac582c2f9d6a5c11ab2cfaf8",
+    "metadata_sha256": "5c3c2cb2bcfc2c5df87fd975c7f47d0a6cffe7f91bae7a2985a7433570675100",
+    "mode": "DIRECT_PRIVATE_WHEEL_IMPORT_EXISTING_ISOLATED_PANDAS_CACHE",
+    "endpoint": "public-api.baostock.com:10030",
+    "credentials": "OFFICIAL_ANONYMOUS_DEFAULT_NO_API_KEY",
+    "software_license": "BSD",
+    "software_license_is_not_data_license": true
+  },
+  "limits": {
+    "network_data_attempts": 2,
+    "login_attempts": 2,
+    "automatic_retries": 0,
+    "socket_timeout_seconds": 8,
+    "each_probe_runtime_limit_seconds": 45,
+    "outer_process_limit_seconds": 55,
+    "all_a_row_bound": 20000,
+    "single_security_row_bound": 5
+  },
+  "attempts": [
+    {
+      "api": "query_daily_history_k_AStock",
+      "parameters": {"date": "2026-09-21"},
+      "login_code": "0",
+      "requested_at_utc": "2026-09-22T07:50:27.302365+00:00",
+      "ended_at_utc": "2026-09-22T07:51:10.549525+00:00",
+      "status": "FAILED_NO_COMPLETE_RESPONSE_WITHIN_TOTAL_GUARD",
+      "error_code": "10002007",
+      "error_message": "网络接收错误。",
+      "guard_message": "TOTAL_RUNTIME_45_SECONDS",
+      "market_rows_received": 0,
+      "private_report": "probe-result.json",
+      "private_report_sha256": "da3f226650cc9b5ab58143b3ec719a4a4f3d6bd53f1b734ca31ee817fee2521f",
+      "private_log_sha256": "74eff969a683023c22fcc532d97244983b00d454a5e734d8579530e2bf305d07",
+      "exact_upstream_failure_cause": "UNESTABLISHED"
+    },
+    {
+      "api": "query_history_k_data_plus",
+      "parameters": {"code": "sh.600000", "start_date": "2026-09-18", "end_date": "2026-09-22", "frequency": "d", "adjustflag": "3"},
+      "login_code": "0",
+      "requested_at_utc": "2026-09-22T07:51:49.502452+00:00",
+      "response_completed_at_utc": "2026-09-22T07:51:53.022481+00:00",
+      "rows_received_at_utc": "2026-09-22T07:51:53.032475+00:00",
+      "status": "SINGLE_SECURITY_CAPABILITY_PASS",
+      "error_code": "0",
+      "market_rows_received": 2,
+      "dates": ["2026-09-18", "2026-09-21"],
+      "latest_returned_trading_date_for_probe_security": "2026-09-21",
+      "raw_ohlc_bounds": "PASS",
+      "finite_positive_prices": "PASS",
+      "nonnegative_volume_amount": "PASS",
+      "unadjusted_flag_3": "PASS",
+      "status_domains": "PASS",
+      "trade_status_counts": {"1": 2},
+      "st_counts": {"0": 2},
+      "private_report": "attempt2-single/probe-result.json",
+      "private_report_sha256": "294dcfdb4ecee9c704e6c256a11051b654520de088981610c580f291eb1d8da2",
+      "private_rows_sha256": "074c61514843ba41e1005e705b6a1e61e0802bf7b9840b947598ef4b00c747b8",
+      "response_sha256": "669df9878ba844a809c07ffa251504e7eea1d5155e253242d3afc3687dea6b8c",
+      "response_representation": "SDK_DECOMPRESSED_PROTOCOL_TEXT_NOT_ORIGINAL_WIRE_BYTES"
+    }
+  ],
+  "provenance_snapshots": [
+    {
+      "url": "https://www.baostock.com/mainContent?file=home.md",
+      "retrieval_url": "https://www.baostock.com/helpdocs/api/markdown/home.md",
+      "method": "POST",
+      "request_body": {},
+      "local_download_completed_at_utc": "2026-09-22T07:48:27.158400Z",
+      "private_file": "home.md",
+      "sha256": "5df532ba388c9d0dec4736453b79c77e15da7df98caca60683f3eaf9150b919e"
+    },
+    {
+      "url": "https://www.baostock.com/mainContent?file=DailyUpdates.md",
+      "retrieval_url": "https://www.baostock.com/helpdocs/api/markdown/DailyUpdates.md",
+      "method": "POST",
+      "request_body": {},
+      "local_download_completed_at_utc": "2026-09-22T07:48:28.206964Z",
+      "private_file": "DailyUpdates.md",
+      "sha256": "ddb5f1e153c44ab0e76cebd4506ff0075def6d8884c7fd1d2cd523e2f75a70c8"
+    },
+    {
+      "url": "https://www.baostock.com/mainContent?file=stockKData.md",
+      "retrieval_url": "https://www.baostock.com/helpdocs/api/markdown/stockKData.md",
+      "method": "POST",
+      "request_body": {},
+      "local_download_completed_at_utc": "2026-09-22T07:48:29.278717Z",
+      "private_file": "stockKData.md",
+      "sha256": "2a6db3b24ab21a199aa17bd949dfbe545d3279007bea1664854f9b7c20542aac"
+    },
+    {
+      "url": "https://www.baostock.com/disclaimer",
+      "retrieval_url": "https://www.baostock.com/articleMall/api/contract?contract_status=1&contract_type=5",
+      "method": "GET",
+      "version": "V1.0.0",
+      "local_download_completed_at_utc": "2026-09-22T07:48:30.347255Z",
+      "private_file": "disclaimer.json",
+      "sha256": "4172ee9f39f0e33f12be4e84d319fa066a5b48655aa1ea572f6ce905159e9d13"
+    }
+  ],
+  "use_scope": {
+    "local_analysis_and_storage": "DOCUMENTED_BY_PROVIDER",
+    "data_redistribution_or_commercial_permission": "NOT_ESTABLISHED",
+    "real_time_entitlement": "NOT_CLAIMED",
+    "paid_or_vip_access": "NOT_USED"
+  },
+  "checks_not_run": ["OTHER_BOARDS", "ST_SECURITIES", "SUSPENDED_SECURITIES", "MARKET_WIDE_COMPLETENESS", "CURRENT_MASTER_RULE_CALENDAR_RECONCILIATION", "INCREMENTAL_RESTART_IDEMPOTENCY", "GENUINELY_NEW_MARKET_FORWARD_RECEIPT", "FORWARD_PLAN_AND_CONSTRAINED_EXECUTION"],
+  "next_source_task": "Implement bounded product-owned per-security EOD receipts; before promotion validate a fixed cross-board/ST/suspension sample with current metadata and rules. No further live requests in this probe.",
+  "single_smallest_external_blocker": null
+}

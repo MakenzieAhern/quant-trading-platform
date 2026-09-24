@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
@@ -13,6 +13,25 @@ const health = {
 };
 
 describe("routing", () => {
+  it("names icon-only search and restores mobile navigation focus", () => {
+    window.history.replaceState({}, "", "/unknown");
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    expect(
+      screen.getByRole("button", {
+        name: "Search pages, strategies and research",
+      }),
+    ).toBeInTheDocument();
+    const menu = screen.getByRole("button", { name: "Open navigation" });
+    fireEvent.click(menu);
+    expect(
+      screen.getByRole("link", { name: /QUANT Research workspace/ }),
+    ).toHaveFocus();
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(menu).toHaveFocus();
+    expect(menu).toHaveAttribute("aria-expanded", "false");
+  });
+
   it.each(["/unknown", "/backtests/not-a-uuid", "/backtests/1234"])(
     "fails safely for %s",
     async (pathname) => {
@@ -22,9 +41,8 @@ describe("routing", () => {
       expect(
         screen.getByRole("heading", { name: "Page not found" }),
       ).toBeInTheDocument();
-      expect(
-        await screen.findByText("development · paper"),
-      ).toBeInTheDocument();
+      expect(await screen.findByText("Service online")).toBeInTheDocument();
+      expect(screen.getByTitle("development · paper")).toBeInTheDocument();
     },
   );
 

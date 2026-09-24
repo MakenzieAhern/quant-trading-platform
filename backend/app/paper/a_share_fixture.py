@@ -18,7 +18,9 @@ SIMULATED_A_SHARE_SYMBOL = "CN-A"
 SIMULATED_SOURCE = "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1"
 
 
-def simulated_a_share_fixture() -> tuple[
+def simulated_a_share_fixture(
+    *, session_count: int = 254
+) -> tuple[
     TradingCalendar,
     tuple[ResearchSession, ...],
     EffectiveDatedAShareCommission,
@@ -27,7 +29,9 @@ def simulated_a_share_fixture() -> tuple[
 
     days: list[date] = []
     current = date(2030, 1, 2)
-    while len(days) < 254:
+    if session_count < 254 or session_count > 1000:
+        raise ValueError("synthetic session count must be between 254 and 1000")
+    while len(days) < session_count:
         if current.weekday() < 5:
             days.append(current)
         current += timedelta(days=1)

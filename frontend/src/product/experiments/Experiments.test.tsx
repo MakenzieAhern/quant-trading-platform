@@ -1,0 +1,494 @@
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ApiError } from "../../api/client";
+import { i18n } from "../../i18n";
+import { navigate } from "../../utils/navigation";
+import { Link } from "../../components/Link";
+import {
+  experimentApi,
+  parseCapabilities,
+  parseExperiment,
+  parseResult,
+} from "./api";
+import { CreateExperimentPage } from "./CreateExperimentPage";
+import { ExperimentDetailPage } from "./ExperimentDetailPage";
+import { ExperimentsPage } from "./ExperimentsPage";
+import {
+  EXPERIMENT_DRAFT_KEY,
+  readExperimentDraft,
+  saveExperimentDraft,
+} from "./draft";
+import { capabilities, configuration, job, result } from "./fixtures.test-data";
+
+beforeEach(async () => {
+  window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
+  await i18n.changeLanguage("en-US");
+  window.history.replaceState({}, "", "/research/new");
+});
+
+async function review() {
+  await screen.findByText(
+    "Ranks eligible shares and builds a long-only portfolio.",
+  );
+  await userEvent.click(screen.getByRole("button", { name: "Continue" }));
+  fireEvent.change(screen.getByLabelText("Starting capital (CNY)"), {
+    target: { value: configuration.initial_cash },
+  });
+  await userEvent.click(screen.getByRole("button", { name: "Continue" }));
+  await userEvent.click(screen.getByRole("button", { name: "Continue" }));
+  await userEvent.click(screen.getByRole("checkbox", { name: /I understand/ }));
+}
+
+describe("guided experiment", () => {
+  it("does not erase or navigate away from a newer draft when an abandoned create resolves", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    let resolve: ((value: typeof job) => void) | undefined;
+    vi.spyOn(experimentApi, "create").mockImplementation(
+      () =>
+        new Promise((done) => {
+          resolve = done;
+        }),
+    );
+    const first = render(<CreateExperimentPage />);
+    await review();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Run this configuration" }),
+    );
+    first.unmount();
+    const newer = {
+      ...configuration,
+      name: "Newer configuration",
+      initial_cash: "432100.000000000000000009",
+    };
+    saveExperimentDraft(newer, 1, "newer-request-key");
+    render(<CreateExperimentPage />);
+    expect(await screen.findByLabelText("Experiment name")).toHaveValue(
+      "Newer configuration",
+    );
+    await act(async () => resolve?.(job));
+    expect(readExperimentDraft()).toMatchObject({
+      form: newer,
+      idempotencyKey: "newer-request-key",
+    });
+    expect(window.location.pathname).toBe("/research/new");
+    expect(screen.getByLabelText("Starting capital (CNY)")).toHaveValue(
+      newer.initial_cash,
+    );
+  });
+
+  it("guards dirty sidebar and command navigation without losing the restored form", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(
+      <>
+        <Link href="/experiments">Sidebar research</Link>
+        <CreateExperimentPage />
+      </>,
+    );
+    await screen.findByText(
+      "Ranks eligible shares and builds a long-only portfolio.",
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Continue" }));
+    fireEvent.change(screen.getByLabelText("Starting capital (CNY)"), {
+      target: { value: "123456.000000000000000001" },
+    });
+    await userEvent.click(
+      screen.getByRole("link", { name: "Sidebar research" }),
+    );
+    expect(confirm).toHaveBeenCalledTimes(1);
+    act(() => {
+      expect(navigate("/settings")).toBe(false);
+    });
+    expect(confirm).toHaveBeenCalledTimes(2);
+    expect(screen.getByLabelText("Starting capital (CNY)")).toHaveValue(
+      "123456.000000000000000001",
+    );
+    expect(readExperimentDraft()?.form.initial_cash).toBe(
+      "123456.000000000000000001",
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Save draft" }));
+    act(() => {
+      expect(navigate("/experiments")).toBe(true);
+    });
+    expect(confirm).toHaveBeenCalledTimes(2);
+  });
+
+  it("confirms explicit Save & exit only once", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(true);
+    render(<CreateExperimentPage />);
+    await screen.findByText(
+      "Ranks eligible shares and builds a long-only portfolio.",
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Save & exit" }));
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(window.location.pathname).toBe("/");
+    expect(readExperimentDraft()).not.toBeNull();
+  });
+
+  it("submits a real registry configuration with exact strings and locks duplicate clicks", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    let resolve: ((value: typeof job) => void) | undefined;
+    const create = vi.spyOn(experimentApi, "create").mockImplementation(
+      () =>
+        new Promise((done) => {
+          resolve = done;
+        }),
+    );
+    render(<CreateExperimentPage />);
+    await review();
+    await userEvent.dblClick(
+      screen.getByRole("button", { name: "Run this configuration" }),
+    );
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create.mock.calls[0][0]).toMatchObject({
+      initial_cash: configuration.initial_cash,
+      costs: { commission_rate: "0.0003", minimum_commission: "5" },
+      risk: { max_drawdown: "-0.2", max_position_weight: "0.1" },
+    });
+    expect(screen.getByRole("button", { name: "Submitting…" })).toBeDisabled();
+    await act(async () => resolve?.(job));
+    expect(window.location.pathname).toBe(`/experiments/${job.job_id}`);
+    expect(readExperimentDraft()).toBeNull();
+  });
+
+  it("saves and restores the step, exact values and request identity without changing them on language switch", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    saveExperimentDraft(configuration, 2, "existing-request-key");
+    const { unmount } = render(<CreateExperimentPage />);
+    expect(
+      await screen.findByText("Your saved draft has been restored."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Drawdown risk limit (negative fraction)"),
+    ).toHaveValue("-0.2");
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByLabelText("佣金比例（小数）")).toHaveValue("0.0003");
+    await userEvent.click(screen.getByRole("button", { name: "保存草稿" }));
+    expect(readExperimentDraft()).toMatchObject({
+      form: configuration,
+      step: 2,
+      idempotencyKey: "existing-request-key",
+    });
+    unmount();
+    render(<CreateExperimentPage />);
+    expect(await screen.findByLabelText("回撤风险阈值（负小数）")).toHaveValue(
+      "-0.2",
+    );
+  });
+
+  it("retains the idempotency key after an uncertain request and changes it only after editing", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const create = vi
+      .spyOn(experimentApi, "create")
+      .mockRejectedValue(new ApiError(503, "Unavailable"));
+    render(<CreateExperimentPage />);
+    await review();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Run this configuration" }),
+    );
+    await screen.findByRole("alert");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Run this configuration" }),
+    );
+    expect(create.mock.calls[1][1]).toBe(create.mock.calls[0][1]);
+    await userEvent.click(screen.getByRole("button", { name: "Back" }));
+    fireEvent.change(
+      screen.getByLabelText("Minimum commission per trade (CNY)"),
+      { target: { value: "6" } },
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Continue" }));
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: /I understand/ }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Run this configuration" }),
+    );
+    expect(create.mock.calls[2][1]).not.toBe(create.mock.calls[0][1]);
+  });
+
+  it("validates invalid risk inputs and preserves incomplete drafts for later correction", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    saveExperimentDraft(
+      {
+        ...configuration,
+        costs: { ...configuration.costs, commission_rate: "" },
+      },
+      2,
+      "draft",
+    );
+    render(<CreateExperimentPage />);
+    expect(
+      await screen.findByLabelText("Commission rate (decimal fraction)"),
+    ).toHaveValue("");
+    fireEvent.change(
+      screen.getByLabelText("Commission rate (decimal fraction)"),
+      { target: { value: "0.02" } },
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Continue" }));
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Check the highlighted step",
+    );
+    expect(
+      screen.getByLabelText("Commission rate (decimal fraction)"),
+    ).toHaveValue("0.02");
+  });
+
+  it("asks before exiting and does not discard the draft when exit is declined", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(<CreateExperimentPage />);
+    await screen.findByText(
+      "Ranks eligible shares and builds a long-only portfolio.",
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Save & exit" }));
+    expect(window.confirm).toHaveBeenCalledOnce();
+    expect(window.location.pathname).toBe("/research/new");
+    expect(readExperimentDraft()?.form.strategy_id).toBe(
+      configuration.strategy_id,
+    );
+  });
+});
+
+describe("durable experiment detail", () => {
+  it("reuses the persisted server retry identity after a lost response and a fresh mount", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "FAILED",
+      phase: "FAILED",
+    });
+    const retry = vi
+      .spyOn(experimentApi, "retry")
+      .mockRejectedValueOnce(new ApiError(408, "Response lost"))
+      .mockResolvedValue({
+        ...job,
+        job_id: "accepted-child",
+        retry_of: job.job_id,
+      });
+    const first = render(<ExperimentDetailPage jobId={job.job_id} />);
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: "Start or reopen linked retry",
+      }),
+    );
+    await screen.findByText(/service could not be reached/);
+    const acceptedKey = retry.mock.calls[0][1];
+    first.unmount();
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: "Start or reopen linked retry",
+      }),
+    );
+    expect(retry.mock.calls[1][1]).toBe(acceptedKey);
+    expect(acceptedKey).toBe(`experiment-retry-v1:${job.job_id}`);
+    expect(window.location.pathname).toBe("/experiments/accepted-child");
+  });
+
+  it("polls the same durable job until terminal status and then stops", async () => {
+    vi.useFakeTimers();
+    const get = vi
+      .spyOn(experimentApi, "get")
+      .mockResolvedValueOnce({ ...job, status: "RUNNING", phase: "EXECUTING" })
+      .mockResolvedValue({ ...job, status: "SUCCEEDED", phase: "COMPLETE" });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    expect(get).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2500);
+    });
+    expect(get).toHaveBeenCalledTimes(2);
+    expect(screen.getByText("Complete")).toBeInTheDocument();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10000);
+    });
+    expect(get).toHaveBeenCalledTimes(2);
+  });
+
+  it("refreshes active list entries without replacing the visible page by a spinner", async () => {
+    vi.useFakeTimers();
+    const list = vi
+      .spyOn(experimentApi, "list")
+      .mockResolvedValueOnce({ items: [job], total: 1, limit: 20, offset: 0 })
+      .mockResolvedValue({
+        items: [{ ...job, status: "SUCCEEDED" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      });
+    render(<ExperimentsPage />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    expect(screen.getByText("Queued")).toBeInTheDocument();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(5000);
+    });
+    expect(screen.getByText("Complete")).toBeInTheDocument();
+    expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10000);
+    });
+    expect(list).toHaveBeenCalledTimes(2);
+  });
+
+  it("reopens a job, displays actual work counts, and requests server cancellation", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "RUNNING",
+      phase: "EXECUTING",
+      completed_sessions: 3,
+      total_sessions: 20,
+    });
+    const cancel = vi
+      .spyOn(experimentApi, "cancel")
+      .mockResolvedValue({ ...job, status: "CANCELLED" });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    expect(
+      await screen.findByText("Completed trading sessions: 3 / 20"),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("progressbar")).toHaveAttribute("value", "3");
+    await userEvent.click(screen.getByRole("button", { name: "Cancel task" }));
+    expect(cancel).toHaveBeenCalledWith(job.job_id);
+  });
+
+  it("does not invent a percentage when the server has no total", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue(job);
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    expect(
+      await screen.findByText(
+        "The server has not reported a measurable total yet.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+  });
+
+  it("shows exact results, retains null benchmark values, and loads only one bounded chart page", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "SUCCEEDED",
+      result_available: true,
+    });
+    vi.spyOn(experimentApi, "result").mockResolvedValue(result);
+    const equity = vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [
+        {
+          sequence: 0,
+          trading_date: "2031-01-02",
+          equity: result.metrics.final_equity!,
+          benchmark: null,
+          drawdown: "-0.0123",
+        },
+      ],
+      total: 600,
+      limit: 100,
+      offset: 0,
+    });
+    const trades = vi
+      .spyOn(experimentApi, "trades")
+      .mockResolvedValue({ items: [], total: 0, limit: 20, offset: 0 });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    expect(
+      await screen.findByText("12.000000000000000001"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Benchmark return").nextSibling).toHaveTextContent(
+      "N/A",
+    );
+    expect(
+      await screen.findByText(
+        "These prices are synthetic and intentionally demonstrate the workflow. Returns cannot be used as investment evidence.",
+      ),
+    ).toBeInTheDocument();
+    await waitFor(() => expect(equity).toHaveBeenCalledTimes(1));
+    expect(trades).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByText("Exact chart data"));
+    expect(
+      screen.getAllByText("100,012.123456789012345678").length,
+    ).toBeGreaterThan(0);
+    await userEvent.click(screen.getByRole("button", { name: "Next" }));
+    await waitFor(() => expect(equity.mock.calls.at(-1)?.[2]).toBe(100));
+  });
+
+  it("retries a failed task through the backend and opens its linked attempt", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "INTERRUPTED",
+      phase: "INTERRUPTED",
+      error_code: "WORKER_RESTARTED_RETRY_AVAILABLE",
+    });
+    const retry = vi.spyOn(experimentApi, "retry").mockResolvedValue({
+      ...job,
+      job_id: "new-attempt",
+      retry_of: job.job_id,
+    });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: "Start or reopen linked retry",
+      }),
+    );
+    expect(retry).toHaveBeenCalledWith(job.job_id, expect.any(String));
+    expect(window.location.pathname).toBe("/experiments/new-attempt");
+  });
+
+  it("offers a real first action on an empty list", async () => {
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    render(<ExperimentsPage />);
+    expect(await screen.findByText(/No experiments yet/)).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("link", { name: "New guided backtest" })[0],
+    ).toHaveAttribute("href", "/research/new");
+  });
+});
+
+describe("experiment contract", () => {
+  it("rejects rounded JSON financial numbers instead of coercing them", () => {
+    expect(() =>
+      parseExperiment({
+        ...job,
+        configuration: { ...configuration, initial_cash: 100000 },
+      }),
+    ).toThrow();
+    expect(() =>
+      parseResult({
+        ...result,
+        metrics: { ...result.metrics, transaction_costs: 12 },
+      }),
+    ).toThrow();
+    expect(parseResult(result).metrics.transaction_costs).toBe(
+      "12.000000000000000001",
+    );
+  });
+  it("accepts an explicitly unavailable historical source with null provenance", () => {
+    const data = {
+      ...capabilities,
+      datasets: [
+        {
+          ...capabilities.datasets[0],
+          available: false,
+          mode: "historical_exploration",
+          sha256: null,
+          as_of: null,
+          reason_code: "DATASET_NOT_MOUNTED",
+        },
+      ],
+    };
+    expect(parseCapabilities(data).datasets[0].available).toBe(false);
+  });
+});
