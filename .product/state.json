@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T19:18:10Z",
+  "updated_at_utc": "2026-09-24T19:24:22Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 19:24UTC production preview saved 293-session chart twenty page1/page2 clicks p95 275ms and twenty benchmark toggles p95 284ms; same in-app browser method on restored dev server toggles p95 284ms, while direct equity API read returned HTTP200 in 10ms. The ~270ms tool-inclusive interaction floor prevents attributing a production regression or passing the <=200ms QA-PERF target. Full return +4.67% unchanged, browser no errors, dev frontend/API HTTP200 after restoration, live research8/paper5/events417 unchanged. Actual Chrome production click-to-visible-change measurement remains required; no speculative chart change, formal study, market or ledger write",
     "2026-09-24 19:18UTC bounded production-preview browser check on existing frontend/dist, temporarily replacing only project-owned port5173 frontend and restoring original dev service: 30 warm Workbench/Strategies route clicks p50 21ms/p95 25ms/max 28ms; saved 293-session result ten full reloads p95 439ms to +4.67% visible. Codex in-app Chromium 1265 CSS-pixel viewport, populated DB, not actual Chrome or full QA-PERF. EN/ZH strategy rendered, EN restored, no browser console warnings/errors. After restoration frontend and API HTTP200; live research8/paper5/events417 unchanged. No new study/order, formal/frozen data or authority change. QA-PERF remains IN_PROGRESS; missing genuine ledgers, independent backup, lawful current feed, forward and release gates remain open",
     "2026-09-24 19:07UTC paper stream now hides stale cash/positions when authoritative REST rehydration fails or a stream event is malformed, restoring only after a valid new snapshot. Focused paper21/full frontend226, lint/typecheck/build/Prettier and PR32 code head f7888a0 CI36046097765 backend/frontend/compose PASS; live browser normal stopped-account cash81309.8134/equity99964.8134 matched read-only API, but failed-REST browser injection was not run. No ledger/market/formal-data mutation. Official SSE/SZSE market-data authorization contacts and an unsent, scoped rights question recorded in SOURCE_READINESS; no permission inferred. U7 recovery/forward, M4 integrity, M5 delivery and release remain open",
     "2026-09-24 18:58UTC paper-session detail connection and state labels now have local role=status regions, with no shared badge change. Focused paper20/full frontend225, ESLint, TypeScript, build and diff check PASS; actual browser DOM exposes status roles on closed and STOPPED after reload, although its AX provider coalesces the area to text, so no screen-reader announcement claim. No session or ledger mutation. QA-A11Y remains IN_PROGRESS; U7 forward, M4 integrity, M5 delivery and release unchanged",
@@ -254,7 +255,7 @@
     "RESOLVED: PR18 frontend CI test raced its mock request; explicit resolver readiness fix pushed and CI passed",
     "RESOLVED: full backend from /app container lacked repo-root fixture path; WSL checkout test path restored fixture identity. Isolated quant_test_v12_u5 was one migration behind; test-only 0015 upgrade closed three paper constraint failures",
     "RESOLVED: Vite main bundle exceeded500 kB; route-level lazy loading reduced initial entry chunk to409.17 kB",
-    "PARTIAL: M4 warm simple route-click p95=32ms over30 real-Chrome headless transitions; persisted 293-session result full reload p95=923ms over10, not an interaction metric. Native-200-percent warm 293-session result pagination/benchmark/precision p95=51/46/58ms over20 each. Production build, cold cache and larger-data interactions remain unmeasured",
+    "PARTIAL: M4 warm simple route-click p95=32ms over30 real-Chrome headless transitions; persisted 293-session result full reload p95=923ms over10, not an interaction metric. Native-200-percent warm 293-session result pagination/benchmark/precision p95=51/46/58ms over20 each. Bounded in-app Chromium production preview route p95=25ms, result reload p95=439ms; chart toggle p95=284ms in both production preview and development server under the same tool-inclusive method, so no product-only slowdown is established. Actual Chrome production interaction, cold cache and larger datasets remain unmeasured",
     "RESOLVED for markets, Task Center and research list: current Chrome viewport override reported390x844 and no page overflow; wider mobile matrix remains unclaimed",
     "RESOLVED: isolated home screenshot heading clipping reproduced in live Chrome; route push scroll reset and preventScroll focus verified without overriding native Back restoration",
     "RESOLVED: market security detail Back no longer leaves /markets; exact dataset/security URL preserves filter/page/scroll and direct links fail visibly",
