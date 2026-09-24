@@ -78,7 +78,7 @@ export function ResearchHomePage() {
                     <td className="mono" title={dataset.canonical_sha256}>
                       {shortId(dataset.canonical_sha256)}
                     </td>
-                    <td title={dataset.readiness_status}>
+                    <td>
                       {t(`research:readiness.${dataset.readiness_status}`, {
                         defaultValue: t("research:readiness.unknown"),
                       })}{" "}
@@ -134,7 +134,7 @@ export function ResearchHomePage() {
                     <td>
                       <SplitBadge period={run.period_kind} />
                     </td>
-                    <td title={run.status}>
+                    <td>
                       {t(`common:statuses.${run.status}`, {
                         defaultValue: t("research:unknownStatus"),
                       })}

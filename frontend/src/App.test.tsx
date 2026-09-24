@@ -205,6 +205,7 @@ describe("routing", () => {
   });
 
   it("supports a direct research dataset lineage URL", async () => {
+    await i18n.changeLanguage("en-US");
     const datasetId = "cn-a-research-20100101-20251231-v1";
     window.history.replaceState(
       {},
@@ -236,6 +237,9 @@ describe("routing", () => {
     expect(
       await screen.findByRole("heading", { name: datasetId }),
     ).toBeInTheDocument();
+    expect(screen.getByText("Audit passed · Frozen")).not.toHaveAttribute(
+      "title",
+    );
     expect(screen.queryByText("Page not found")).not.toBeInTheDocument();
   });
 });

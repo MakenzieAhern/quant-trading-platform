@@ -1678,3 +1678,18 @@ zoom, screen-reader/WCAG certification, novice-user, missing-ledger recovery,
 independent backup, lawful forward-source or v1.2 release acceptance.
 `QA-VISUAL` and `QA-A11Y` remain IN_PROGRESS; `M4-DATA-INTEGRITY` and
 `M5-DELIVERY` remain FAIL.
+
+## 2026-09-24 21:26 UTC formal-archive status accessibility
+
+Actual Chrome's Chinese accessibility tree exposed `PASSED` and `SUCCEEDED`
+as the names of formal-archive status cells even though their visible child
+text was translated. The raw `title` attributes on two list cells and the
+dataset-detail status caused this mismatch. Removing those three redundant
+titles retains the translated visible statuses and leaves the original codes
+in the formal API/manifest evidence. Chrome's archive tree now contains
+`审计通过 · 已冻结` and `已成功` as child text without the raw status names;
+dataset detail reads `审计通过 · 已冻结` in Chinese and `Audit passed · Frozen`
+in English. The original Chinese/dark preference was restored. Existing
+direct-route regression, all 228 frontend tests, ESLint, TypeScript/build and
+changed-file Prettier passed. This is one bounded U8/QA-A11Y fix, not a full
+screen-reader study or completion of the bilingual/accessibility matrix.
