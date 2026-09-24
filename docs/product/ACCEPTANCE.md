@@ -54,6 +54,24 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 00:28 UTC stale research result after task-read failure
+
+The same stale-success presentation existed in the research-detail status
+reader: actual Chrome 153 opened persisted historical job `5f26f84f`, then a
+read-only HTTP 503 interception on its task GET plus **刷新** left the previous
+−0.47% return visible below the error. The hook now clears the last job on a
+failed task read. Chrome subsequently showed only the actionable error and
+manual refresh restored the authoritative saved result. The [error-state
+screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-no-stale-result-zh-20260924.png)
+is outside Git (SHA-256
+`43F3D9E7C106A4561C1CF41FF622068FDD869306A98D96DE4B396B6F9185ED38`).
+The existing shared resource hook already discards data on read errors;
+these two bespoke task readers now do likewise. No POST, job mutation or
+formal research run occurred; live counts remained paper 5/417, research 8,
+updates 4. Focused research 27/27, full frontend 218/218, lint, typecheck,
+build and Prettier PASS. This repairs one misleading error state, not the
+broader U3 restart or release acceptance.
+
 ## 2026-09-24 00:24 UTC stale update-task status after read failure
 
 Actual Chrome 153 opened the saved candidate-only update task `ed796871`.

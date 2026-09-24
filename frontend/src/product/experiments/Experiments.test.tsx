@@ -503,6 +503,24 @@ describe("durable experiment detail", () => {
     expect(await screen.findByText("What this run shows")).toBeInTheDocument();
   });
 
+  it("hides a stale completed study when refreshing its task status fails", async () => {
+    const completed = {
+      ...job,
+      status: "SUCCEEDED" as const,
+      result_available: true,
+    };
+    const get = vi.spyOn(experimentApi, "get").mockResolvedValue(completed);
+    vi.spyOn(experimentApi, "result").mockResolvedValue(result);
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    expect(await screen.findByText("What this run shows")).toBeInTheDocument();
+    get.mockRejectedValueOnce(new ApiError(503, "service unavailable"));
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(screen.queryByText("What this run shows")).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(await screen.findByText("What this run shows")).toBeInTheDocument();
+  });
+
   it("shows exact results, retains null benchmark values, and loads only one bounded chart page", async () => {
     vi.spyOn(experimentApi, "get").mockResolvedValue({
       ...job,

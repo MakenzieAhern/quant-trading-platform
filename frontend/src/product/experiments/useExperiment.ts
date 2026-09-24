@@ -25,7 +25,7 @@ export function useExperiment(jobId: string) {
         if (isActiveExperiment(data))
           timer = window.setTimeout(() => void load(), 2500);
       } catch (error) {
-        if (active) setState((previous) => ({ ...previous, error }));
+        if (active) setState({ jobId, data: null, error });
       }
     }
     void load();
