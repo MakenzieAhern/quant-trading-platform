@@ -61,6 +61,7 @@ function Collection<T>({
   headings: string[];
   row: (item: T, index: number) => ReactNode;
 }) {
+  const { t } = useTranslation("research");
   const [offset, setOffset] = useState(0);
   const page = useApiResource(
     (signal) => load(COLLECTION_LIMIT, offset, signal),
@@ -77,7 +78,12 @@ function Collection<T>({
         <EmptyState>{empty}</EmptyState>
       )}
       {page.data && page.data.items.length > 0 && (
-        <div className="tableScroll">
+        <div
+          className="tableScroll"
+          role="region"
+          tabIndex={0}
+          aria-label={t("scrollTable")}
+        >
           <table>
             <thead>
               <tr>
@@ -171,14 +177,24 @@ function SuccessfulResult({ runId }: { runId: string }) {
               value={result.data.metrics.total_return}
               percent
             />
-            <Metric label={t("detail.cagr")} value={result.data.metrics.cagr} percent />
+            <Metric
+              label={t("detail.cagr")}
+              value={result.data.metrics.cagr}
+              percent
+            />
             <Metric
               label={t("detail.maxDrawdown")}
               value={result.data.metrics.max_drawdown}
               percent
             />
-            <Metric label={t("detail.sharpe")} value={result.data.metrics.sharpe_ratio} />
-            <Metric label={t("detail.sortino")} value={result.data.metrics.sortino_ratio} />
+            <Metric
+              label={t("detail.sharpe")}
+              value={result.data.metrics.sharpe_ratio}
+            />
+            <Metric
+              label={t("detail.sortino")}
+              value={result.data.metrics.sortino_ratio}
+            />
             <Metric
               label={t("detail.commission")}
               value={result.data.metrics.total_commission}
@@ -226,7 +242,11 @@ function SuccessfulResult({ runId }: { runId: string }) {
             <td>{formatUtc(item.timestamp)}</td>
             <td>{item.strategy_id}</td>
             <td>{item.symbol}</td>
-            <td>{paperT(`detail.directions.${item.signal_type}`, { defaultValue: item.signal_type })}</td>
+            <td>
+              {paperT(`detail.directions.${item.signal_type}`, {
+                defaultValue: item.signal_type,
+              })}
+            </td>
           </tr>
         )}
       />
@@ -255,8 +275,16 @@ function SuccessfulResult({ runId }: { runId: string }) {
                 {t(item.approved ? "detail.approved" : "detail.riskRejected")}
               </span>
             </td>
-            <td>{paperT(`detail.riskReasons.${item.reason_code}`, { defaultValue: item.reason_code })}</td>
-            <td>{paperT(`detail.riskMessages.${item.message}`, { defaultValue: item.message })}</td>
+            <td>
+              {paperT(`detail.riskReasons.${item.reason_code}`, {
+                defaultValue: item.reason_code,
+              })}
+            </td>
+            <td>
+              {paperT(`detail.riskMessages.${item.message}`, {
+                defaultValue: item.message,
+              })}
+            </td>
             <td>{formatUtc(item.timestamp)}</td>
           </tr>
         )}
@@ -282,7 +310,13 @@ function SuccessfulResult({ runId }: { runId: string }) {
             <td>{item.strategy_id}</td>
             <td>{item.symbol}</td>
             <td>
-              {paperT(`detail.directions.${item.side}`, { defaultValue: item.side })} / {paperT(`detail.orderTypes.${item.order_type}`, { defaultValue: item.order_type })}
+              {paperT(`detail.directions.${item.side}`, {
+                defaultValue: item.side,
+              })}{" "}
+              /{" "}
+              {paperT(`detail.orderTypes.${item.order_type}`, {
+                defaultValue: item.order_type,
+              })}
             </td>
             <td title={item.quantity}>{item.quantity}</td>
             <td>
@@ -293,7 +327,9 @@ function SuccessfulResult({ runId }: { runId: string }) {
                     : "decisionApproved"
                 }
               >
-                {paperT(`detail.orderStatuses.${item.status}`, { defaultValue: item.status })}
+                {paperT(`detail.orderStatuses.${item.status}`, {
+                  defaultValue: item.status,
+                })}
               </span>
             </td>
             <td>{formatUtc(item.created_at)}</td>
@@ -319,7 +355,11 @@ function SuccessfulResult({ runId }: { runId: string }) {
               {shortId(item.order_id)}
             </td>
             <td>{item.symbol}</td>
-            <td>{paperT(`detail.directions.${item.side}`, { defaultValue: item.side })}</td>
+            <td>
+              {paperT(`detail.directions.${item.side}`, {
+                defaultValue: item.side,
+              })}
+            </td>
             <td title={item.quantity}>{item.quantity}</td>
             <td title={item.price}>{item.price}</td>
             <td title={item.commission}>{item.commission}</td>
@@ -360,8 +400,14 @@ export function BacktestDetailPage({ runId }: { runId: string }) {
           <Link className="backLink" href="/backtests">
             {t("detail.back")}
           </Link>
-          <p className="eyebrow">{t("detail.eyebrow")} / {shortId(detail.run_id)}</p>
-          <h1>{paperT(`strategies.${detail.strategy_type}`, { defaultValue: detail.strategy_type.replaceAll("_", " ") })}</h1>
+          <p className="eyebrow">
+            {t("detail.eyebrow")} / {shortId(detail.run_id)}
+          </p>
+          <h1>
+            {paperT(`strategies.${detail.strategy_type}`, {
+              defaultValue: detail.strategy_type.replaceAll("_", " "),
+            })}
+          </h1>
           <p className="runId">{detail.run_id}</p>
         </div>
         <StatusBadge status={detail.status} />
@@ -395,10 +441,7 @@ export function BacktestDetailPage({ runId }: { runId: string }) {
       {detail.status === "FAILED" && (
         <section className="stateCallout failedCallout" role="alert">
           <h2>{t("detail.failed")}</h2>
-          <p>
-            {detail.error_message ??
-              t("detail.failedDefault")}
-          </p>
+          <p>{detail.error_message ?? t("detail.failedDefault")}</p>
           <p>{t("detail.failedNoMetrics")}</p>
         </section>
       )}

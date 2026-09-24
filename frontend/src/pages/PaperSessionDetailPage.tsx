@@ -391,6 +391,7 @@ function PaperTable({
   headings: string[];
   rows: string[][];
 }) {
+  const { t } = useTranslation("research");
   return (
     <section className="panel dataPanel">
       <div className="panelHeader">
@@ -399,7 +400,12 @@ function PaperTable({
       {rows.length === 0 ? (
         <p className="emptyState">{empty}</p>
       ) : (
-        <div className="tableScroll">
+        <div
+          className="tableScroll"
+          role="region"
+          tabIndex={0}
+          aria-label={t("scrollTable")}
+        >
           <table>
             <thead>
               <tr>

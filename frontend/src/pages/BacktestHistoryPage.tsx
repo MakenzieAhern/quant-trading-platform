@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 const LIMIT = 20;
 
 export function BacktestHistoryPage() {
-  const { t } = useTranslation("backtests");
+  const { t } = useTranslation(["backtests", "research"]);
   const [offset, setOffset] = useState(0);
   const runs = useApiResource(
     (signal) => backtestsApi.list(LIMIT, offset, signal),
@@ -43,7 +43,12 @@ export function BacktestHistoryPage() {
           <EmptyState>{t("empty")}</EmptyState>
         )}
         {runs.data && runs.data.items.length > 0 && (
-          <div className="tableScroll">
+          <div
+            className="tableScroll"
+            role="region"
+            tabIndex={0}
+            aria-label={t("research:scrollTable")}
+          >
             <table>
               <thead>
                 <tr>

@@ -42,7 +42,12 @@ export function PaperSessionsPage() {
           <EmptyState>{t("paper:empty")}</EmptyState>
         )}
         {sessions.data && sessions.data.items.length > 0 && (
-          <div className="tableScroll">
+          <div
+            className="tableScroll"
+            role="region"
+            tabIndex={0}
+            aria-label={t("research:scrollTable")}
+          >
             <table>
               <thead>
                 <tr>

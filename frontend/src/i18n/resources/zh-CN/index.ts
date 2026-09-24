@@ -419,7 +419,7 @@ export const zhCN = {
     datasetDetail: "研究数据集",
     strategies: "研究策略",
     runs: "研究运行",
-    scrollTable: "可横向滚动表格，查看全部列。",
+    scrollTable: "如列被遮挡，请在表格内横向滚动查看其余内容。",
     unknownStatus: "未知状态",
     readiness: {
       PASSED: "审计通过",

@@ -448,7 +448,8 @@ export const enUS = {
     datasetDetail: "Research dataset",
     strategies: "Research strategies",
     runs: "Research runs",
-    scrollTable: "Scroll horizontally to see every table column.",
+    scrollTable:
+      "If columns are cut off, scroll within this table to see the rest.",
     unknownStatus: "Unknown status",
     readiness: {
       PASSED: "Audit passed",

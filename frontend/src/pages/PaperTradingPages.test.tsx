@@ -218,6 +218,9 @@ describe("paper trading pages", () => {
     expect(screen.getByText(/SIMULATED EXECUTION ONLY/)).toBeInTheDocument();
     expect(screen.getByText(/not A-share data/)).toBeInTheDocument();
     expect(screen.getByTitle(PAPER_ID)).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: /If columns are cut off/ }),
+    ).toHaveAttribute("tabindex", "0");
   });
 
   it("shows the account's dated plan without implying a live order", async () => {

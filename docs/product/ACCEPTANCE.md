@@ -1654,3 +1654,27 @@ was restored. This proves only the measured layout, not native 200% zoom,
 actual Chrome behavior, complete contrast/keyboard/screen-reader accessibility,
 or a new user completing the flow. `QA-VISUAL` remains IN_PROGRESS; no study,
 paper account, formal research, market receipt or frozen asset was changed.
+
+## 2026-09-24 21:18 UTC bounded Chrome table-scroll repair
+
+Actual Chrome rendered ten primary routes at 390×844, 1024×768, 1280×800,
+and 1440×900 in Chinese/dark, plus 390×844 and 1440×900 in English/light,
+1024×768 and 1280×800 in English/dark, and 390×844 and 1440×900 in
+Chinese/light: 100 route/size/locale/theme observations with no document-level
+horizontal overflow. Four representative states were visually inspected.
+At 1024×768 English/dark, the paper-account table overflowed locally
+(984px content in a 759px container) but had no visible scroll cue. The
+existing shared cue is now visible at desktop widths, and legacy paper and
+backtest tables have localized, focusable scroll regions. Chrome showed the
+cue on paper, backtest and formal archive tables in both locales; focusing
+the paper region and pressing ArrowRight changed its scrollLeft. The 390px
+Chinese/dark paper page retained no document-level overflow. Browser
+presentation was restored to Chinese/dark and the default viewport.
+Frontend 228 tests, ESLint, TypeScript, production build, changed-file
+Prettier and diff check passed. Read-only database counts remained one formal
+dataset/three runs/310 trades, eight product jobs, five paper sessions and
+417 events. This is a bounded keyboard/layout improvement, not native 200%
+zoom, screen-reader/WCAG certification, novice-user, missing-ledger recovery,
+independent backup, lawful forward-source or v1.2 release acceptance.
+`QA-VISUAL` and `QA-A11Y` remain IN_PROGRESS; `M4-DATA-INTEGRITY` and
+`M5-DELIVERY` remain FAIL.
