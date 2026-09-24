@@ -43,6 +43,56 @@ beforeEach(async () => {
 });
 
 describe("filtered durable experiment records", () => {
+  it("identifies each risk-decision technical disclosure by its security and sequence", async () => {
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 100,
+      offset: 0,
+    });
+    vi.spyOn(experimentApi, "decisions").mockResolvedValue({
+      items: [
+        {
+          sequence: 7,
+          proposal_id: "proposal-7",
+          security_id: "600000.SSE",
+          approved: true,
+          reason_code: "APPROVED",
+          message: "Approved",
+          timestamp: "2031-01-03T07:00:00Z",
+        },
+        {
+          sequence: 8,
+          proposal_id: "proposal-8",
+          security_id: "600000.SSE",
+          approved: false,
+          reason_code: "ORDER_NOTIONAL_LIMIT",
+          message: "Rejected",
+          timestamp: "2031-01-03T07:00:00Z",
+        },
+      ],
+      total: 2,
+      limit: 20,
+      offset: 0,
+    });
+    render(<ExperimentCollections jobId={job.job_id} />);
+    await userEvent.click(
+      screen.getByText("Risk decisions", { selector: "summary" }),
+    );
+    expect(
+      await screen.findByLabelText("Technical details: 600000.SSE · 7"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Technical details: 600000.SSE · 8"),
+    ).toBeInTheDocument();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(
+      screen.getByLabelText("技术详情: 600000.SSE · 7"),
+    ).toBeInTheDocument();
+  });
+
   it("does not claim a benchmark line when the displayed page has a gap", async () => {
     vi.spyOn(experimentApi, "equity").mockResolvedValue({
       items: [

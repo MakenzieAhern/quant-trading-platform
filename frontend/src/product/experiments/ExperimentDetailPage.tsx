@@ -381,7 +381,9 @@ function ExperimentResults({
                     <td>
                       {explainExperimentCode(reason, i18n.language)}
                       <details>
-                        <summary>{c.technical}</summary>
+                        <summary aria-label={`${c.technical}: ${reason}`}>
+                          {c.technical}
+                        </summary>
                         <code>{reason}</code>
                       </details>
                     </td>

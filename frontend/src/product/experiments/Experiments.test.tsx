@@ -371,6 +371,11 @@ describe("durable experiment detail", () => {
       screen.queryByText(/additional execution constraint/),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "5" })).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(
+        "Technical details: ELIGIBLE_SIMULATION_ASSUMPTION",
+      ),
+    ).toBeInTheDocument();
     await act(async () => {
       await i18n.changeLanguage("zh-CN");
     });
@@ -378,6 +383,9 @@ describe("durable experiment detail", () => {
       screen.getByText(
         "通过保守日线模拟执行检查。这属于模拟假设，不是真实市场成交的证明。",
       ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("技术详情: ELIGIBLE_SIMULATION_ASSUMPTION"),
     ).toBeInTheDocument();
   });
 

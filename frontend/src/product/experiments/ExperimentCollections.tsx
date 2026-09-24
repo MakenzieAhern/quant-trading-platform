@@ -587,7 +587,11 @@ function DecisionCollection({
                   <td>
                     {explainExperimentCode(item.reason_code, i18n.language)}
                     <details>
-                      <summary>{c.technical}</summary>
+                      <summary
+                        aria-label={`${c.technical}: ${item.security_id} · ${item.sequence}`}
+                      >
+                        {c.technical}
+                      </summary>
                       <code>{item.reason_code}</code>
                       <p>{item.message}</p>
                     </details>

@@ -1817,3 +1817,19 @@ not a risk decision, order or ledger. Full U8 accessibility/translation and
 M4/U7/M5 gates remain open. The user could not confirm an independent backup
 location, genuine pre-loss ledger backup, or lawful 2026 forward-data rights;
 none is treated as accepted.
+
+## 2026-09-24 22:47 UTC research-detail disclosure names
+
+Actual Chrome on saved 293-session result `d9f27183` exposed multiple
+indistinguishable `技术详情` controls in the execution-reason table and risk
+decision table. Each repeated disclosure now has a distinct accessible name:
+the execution reason code, or the security identifier plus decision sequence.
+The visible label stays short. Chrome's Chinese and English accessibility trees
+distinguished the controls, and the original Chinese/dark preference was
+restored. Focused collection/detail tests passed 39/39; full frontend 236/236,
+ESLint, TypeScript, production build and changed-file Prettier passed. This is a bounded
+agent-operated accessibility repair, not a screen-reader user study or a full
+WCAG 2.2 AA pass. Chrome browser-control zoom shortcuts did not visibly alter
+the viewport, so no new native-200% result is claimed. Separate U3 isolation
+review cannot prove every pre-loss formal DB row matches its original state;
+M4 data integrity and independent backup remain unaccepted.
