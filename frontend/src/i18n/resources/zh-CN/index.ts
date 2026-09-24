@@ -308,6 +308,9 @@ export const zhCN = {
       securities: "证券数量",
       source: "数据来源",
       portfolioKicker: "权威组合状态",
+      lastVerifiedPortfolioKicker: "上次核验的组合状态",
+      lastVerifiedWarning:
+        "连接已中断。当前显示的是上次核验的账户快照，并非实时余额；重新连接后将重新读取。",
       portfolio: "模拟交易组合",
       cash: "现金",
       marketValue: "市值",

@@ -331,6 +331,9 @@ export const enUS = {
       securities: "Securities",
       source: "Source",
       portfolioKicker: "AUTHORITATIVE PORTFOLIO",
+      lastVerifiedPortfolioKicker: "LAST VERIFIED PORTFOLIO",
+      lastVerifiedWarning:
+        "Connection interrupted. Displayed account state is the last verified snapshot, not a current balance; it will refresh after reconnection.",
       portfolio: "Paper portfolio",
       cash: "Cash",
       marketValue: "Market value",

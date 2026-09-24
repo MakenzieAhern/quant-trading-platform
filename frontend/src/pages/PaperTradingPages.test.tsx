@@ -547,7 +547,7 @@ describe("paper trading pages", () => {
     vi.useFakeTimers();
     const fetch = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(jsonResponse(paperSnapshot("RUNNING")));
+      .mockImplementation(async () => jsonResponse(paperSnapshot("RUNNING")));
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     expect(MockWebSocket.instances).toHaveLength(1);
     await act(async () => MockWebSocket.instances[0]!.open());
@@ -596,10 +596,21 @@ describe("paper trading pages", () => {
         .getByText("Session connection: reconnecting")
         .closest('[role="status"]'),
     ).not.toBeNull();
+    expect(
+      screen.getByText(/last verified snapshot/).closest('[role="status"]'),
+    ).not.toBeNull();
+    expect(screen.getByText("LAST VERIFIED PORTFOLIO")).toBeInTheDocument();
+    expect(
+      screen.queryByText("AUTHORITATIVE PORTFOLIO"),
+    ).not.toBeInTheDocument();
     await act(async () => vi.advanceTimersByTimeAsync(1000));
     expect(MockWebSocket.instances).toHaveLength(2);
     await act(async () => MockWebSocket.instances[1]!.open());
     expect(fetch).toHaveBeenCalledTimes(2);
+    expect(
+      screen.queryByText(/last verified snapshot/),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("AUTHORITATIVE PORTFOLIO")).toBeInTheDocument();
   });
 
   it("closes terminal session streams without reconnecting", async () => {

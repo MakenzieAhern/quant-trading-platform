@@ -14,7 +14,7 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
-## 2026-09-24 19:33 UTC exhausted paper reconnect hides stale state
+## 2026-09-24 19:38 UTC paper reconnect state labels and exhaustion
 
 An independent paper-stream code review found that four consecutive WebSocket
 closures after a successful REST snapshot exhausted the bounded reconnects
@@ -22,12 +22,18 @@ but left the old account and "authoritative portfolio" on screen beside a
 reload error. A focused test failed on the still-visible portfolio. The shared
 stream hook now clears the snapshot at final reconnect exhaustion, so the
 page shows only the actionable reload error until a fresh authoritative REST
-read. The new test passed with the other 21 paper-page tests; all 227 frontend
-tests, ESLint, TypeScript, production build and formatting passed. A live
+read. During bounded reconnect attempts, the still-visible snapshot is now
+explicitly labelled "last verified" with an EN/ZH warning that it is not a
+current balance; a successful REST rehydration restores the authoritative
+label. The focused tests cover both branches and passed with the other
+paper-page tests; all 227 frontend tests, ESLint, TypeScript and formatting
+passed. The default local build could not clear a pre-existing root-owned
+`frontend/dist/assets` directory; a production build to a fresh temporary
+output directory passed without changing that directory. A live
 in-app Chromium reload of the existing STOPPED historical account still showed
 cash `81309.8134`, equity `99964.8134`, six saved fills and no browser errors.
-The four-close fault was exercised in the component test, **not** injected
-into the live browser. No account, market, formal research or frozen data was
+The reconnect and four-close faults were exercised in component tests,
+**not** injected into the live browser. No account, market, formal research or frozen data was
 written. Full U7 recovery, M4 data integrity and release remain unaccepted.
 
 ## 2026-09-24 19:24 UTC production chart timing cross-check

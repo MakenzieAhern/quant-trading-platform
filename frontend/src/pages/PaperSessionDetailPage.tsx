@@ -108,6 +108,11 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           )}
         </div>
       </header>
+      {connection === "reconnecting" && (
+        <p className="stateCallout" role="status">
+          {t("detail.lastVerifiedWarning")}
+        </p>
+      )}
       {(error || commandError) && (
         <ErrorPanel
           message={commandError ?? error ?? t("detail.unknownError")}
@@ -209,7 +214,13 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
       <section className="panel">
         <div className="panelHeader">
           <div>
-            <p className="kicker">{t("detail.portfolioKicker")}</p>
+            <p className="kicker">
+              {t(
+                connection === "reconnecting"
+                  ? "detail.lastVerifiedPortfolioKicker"
+                  : "detail.portfolioKicker",
+              )}
+            </p>
             <h2>{t("detail.portfolio")}</h2>
           </div>
         </div>
