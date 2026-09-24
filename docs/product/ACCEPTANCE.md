@@ -14,7 +14,7 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
-## 2026-09-24 18:46 UTC A-share paper-entry default
+## 2026-09-24 18:50 UTC A-share paper-entry default
 
 Actual local browser `/paper/new` initially defaulted to the legacy AAPL
 fixture despite the A-share-only shell. The form now defaults to the existing
@@ -24,8 +24,10 @@ is explicitly marked non-A-share in EN/ZH. The live browser verified default
 after reload, manual legacy selection, Chinese label, and restored English
 preference; no session was created or started. Focused paper tests 20/20,
 full frontend 225/225, ESLint, TypeScript, production build, Prettier and
-diff check PASS. This closes a bounded novice-entry mode ambiguity, not
-U7 forward, missing paper-ledger recovery or M4 data integrity.
+diff check PASS. PR #32 head `b67222f` passed
+[CI 36043708809](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36043708809)
+for backend, frontend and Compose. This closes a bounded novice-entry mode
+ambiguity, not U7 forward, missing paper-ledger recovery or M4 data integrity.
 
 ## 2026-09-24 18:39 UTC prepared-report fallback check
 
