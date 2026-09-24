@@ -23,7 +23,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U1-DEMO | No-private-data install can run clearly marked synthetic demo; all four modes explained | Registry + standalone synthetic experiment | Isolated API exposed historical archive unavailable (`DATASET_NOT_MOUNTED`) and demo available. Chrome completed all four guided steps, created job `fb620f96-591b-48b3-b238-e92be1b41d02` in isolated DB and opened result (+0.39%, −0.04% drawdown, CNY25 costs); synthetic/non-market warning persisted on home, wizard and result, and no executable next-day plan was fabricated. Main DB remained 8 personal jobs and `.research` clean. Temp 8001/5174 servers stopped after QA | PASS |
 | U2-STRATEGY | Registered strategies, plain rules/cycle/risk/data/evidence; drafts and saved versions | /strategies, URL-backed detail drawer and named local configuration versions | Chrome exact-string save/restore/reload/Chinese switch and pre-restore backup; drawer direct URL, Back/Forward and return from full strategy detail verified; independent review closed cross-tab overwrite; full frontend suite PASS | PASS |
 | U3-WIZARD | Four steps, advanced disclosure, summary, back/save/restore/exit; locale preserves inputs | /research/new four-step form | Chrome synthetic and actual historical submission/result PASS; draft/locale preserved. Real Chrome 153 on 2026-09-23 reproduced dirty Back silently leaving despite the sidebar guard. The shared router now runs the same guard before route updates: a native dialog on Back, dismiss retained the exact edited name and step, accept reached home, and Forward restored the exact draft and step without a second dialog. A regression also catches duplicate prompts from the App and shell location readers. Focused navigation 7/7, full frontend 208, lint/type/build PASS. Agent walkthrough, not a novice-user study | PASS |
-| U3-JOB | Validated actual A-share job; stages/counts; persistent URL; refresh/reopen; idempotent duplicate | /api/experiments; independent durable manager | Chrome job5f26f84f: actual297/297, leave/reopen/reload same ID, historical result; API idempotency and UI lock tests PASS | IN_PROGRESS |
+| U3-JOB | Validated actual A-share job; stages/counts; persistent URL; refresh/reopen; idempotent duplicate | /api/experiments; independent durable manager | Live historical job `5f26f84f` remains SUCCEEDED 297/297 and a fresh Chrome context reopened its saved result URL. In a separate tmpfs test DB, the actual Chrome four-step synthetic wizard double-click sent one POST and persisted one job; resending the saved key/config from a fresh client returned the same ID with the DB still at one job. Existing backend concurrent-key/conflict test and frontend lock test cover the shared path. Synthetic result is labeled non-market; details below | PASS |
 | U3-RECOVER | Real cancellation/retry/interruption; no partial results called success | cancel/retry and durable terminal states | Running cancellation; restart INTERRUPTED; linked retry SUCCEEDED. On 2026-09-23 the in-app browser opened interrupted job `5861fbb5`, showed no partial result and explained the linked retry, then its retry control reopened existing completed job `3db4b679` rather than overwriting the original. Cancelled job `b78965ad` also showed no partial result and a recovery explanation. In a separate disposable `quant_test` database, actual Chrome 153 opened cancelled synthetic job `45b220b1`, showed no partial result, clicked linked retry, and reopened the same child `a54768bb` on a second click. The parent remained CANCELLED; the child SUCCEEDED as attempt 2 with one linked row and an identical configuration SHA. [Cancelled](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-isolated-cancelled-en-1280.png) and [linked retry](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-isolated-linked-retry-en-1280.png) screenshots are outside Git. This proves one synthetic cancellation/retry path, not the broader historical/failure/restart matrix | IN_PROGRESS |
 | U3-ISOLATE | Independent exploration names/store; formal reports/OOS/freeze unchanged, dates labeled inspected | Separate product_research_jobs/rows, readonly archive | No .research diff; frozen hashes unchanged; formal 1 dataset/3 runs/310 trades before-after | IN_PROGRESS |
 | U4-RESULT | Return/drawdown/cost/benchmark/limits, null semantics, true records and reasons | Personal result and date-linked holdings/trades, full-precision toggle | Chrome demo+historical results agree with exact APIs; real fill/snapshot2031-04-14 linked; source unavailable remains N/A; U4 tests/review PASS | PASS |
@@ -53,6 +53,29 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
+
+## 2026-09-24 00:08 UTC U3 job identity browser check
+
+The main database's audited historical exploration job
+`5f26f84f-b6da-4eac-805a-fbc28fd27af4` remains SUCCEEDED at 297/297
+processed sessions. Fresh Chrome 153 reopened its same persistent URL and
+showed the completed 2011 result, actual return/cost/benchmark, and warning
+that the interval is already inspected historical data.
+
+Separately, an empty `quant-v12-u3double-20260924` tmpfs PostgreSQL stack ran
+the registered four-step synthetic wizard in actual Chrome. Double-clicking
+the final Run button produced one POST `/api/experiments`, HTTP 202, job
+`45c986a5-4eb8-49c4-9418-91697808406e`, and exactly one persisted task.
+The job finished 340/340 sessions; a fresh Chrome context reopened its result
+with the non-market synthetic label. Replaying the stored configuration and
+idempotency key from a new client returned that same job ID and left the
+database at one task. The [isolated result screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-double-submit-isolated-zh-20260924.png)
+is outside Git (SHA-256 `56F00ED3A038797E1EF19D424932EDE923BBE681CEE5532065926C831BFE51D7`).
+The test containers/network and intentionally disposable tmpfs database were
+removed without volumes. Main DB counts remained paper 5/417, personal jobs
+8 and update jobs 4. This composite historical/synthetic evidence accepts
+U3-JOB's shared create/identity path, but not U3-RECOVER's full failure
+matrix, genuine forward data, or a real novice-user test.
 
 ## 2026-09-24 00:02 UTC chart missing-series browser check and backup media
 
