@@ -24,7 +24,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U2-STRATEGY | Registered strategies, plain rules/cycle/risk/data/evidence; drafts and saved versions | /strategies, URL-backed detail drawer and named local configuration versions | Chrome exact-string save/restore/reload/Chinese switch and pre-restore backup; drawer direct URL, Back/Forward and return from full strategy detail verified; independent review closed cross-tab overwrite; full frontend suite PASS | PASS |
 | U3-WIZARD | Four steps, advanced disclosure, summary, back/save/restore/exit; locale preserves inputs | /research/new four-step form | Chrome synthetic and actual historical submission/result PASS; draft/locale preserved. Real Chrome 153 on 2026-09-23 reproduced dirty Back silently leaving despite the sidebar guard. The shared router now runs the same guard before route updates: a native dialog on Back, dismiss retained the exact edited name and step, accept reached home, and Forward restored the exact draft and step without a second dialog. A regression also catches duplicate prompts from the App and shell location readers. Focused navigation 7/7, full frontend 208, lint/type/build PASS. Agent walkthrough, not a novice-user study | PASS |
 | U3-JOB | Validated actual A-share job; stages/counts; persistent URL; refresh/reopen; idempotent duplicate | /api/experiments; independent durable manager | Live historical job `5f26f84f` remains SUCCEEDED 297/297 and a fresh Chrome context reopened its saved result URL. In a separate tmpfs test DB, the actual Chrome four-step synthetic wizard double-click sent one POST and persisted one job; resending the saved key/config from a fresh client returned the same ID with the DB still at one job. Existing backend concurrent-key/conflict test and frontend lock test cover the shared path. Synthetic result is labeled non-market; details below | PASS |
-| U3-RECOVER | Real cancellation/retry/interruption; no partial results called success | cancel/retry and durable terminal states | Running cancellation; restart INTERRUPTED; linked retry SUCCEEDED. On 2026-09-23 the in-app browser opened interrupted job `5861fbb5`, showed no partial result and explained the linked retry, then its retry control reopened existing completed job `3db4b679` rather than overwriting the original. Cancelled job `b78965ad` also showed no partial result and a recovery explanation. In a separate disposable `quant_test` database, actual Chrome 153 opened cancelled synthetic job `45b220b1`, showed no partial result, clicked linked retry, and reopened the same child `a54768bb` on a second click. The parent remained CANCELLED; the child SUCCEEDED as attempt 2 with one linked row and an identical configuration SHA. [Cancelled](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-isolated-cancelled-en-1280.png) and [linked retry](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-isolated-linked-retry-en-1280.png) screenshots are outside Git. This proves one synthetic cancellation/retry path, not the broader historical/failure/restart matrix | IN_PROGRESS |
+| U3-RECOVER | Real cancellation/retry/interruption; no partial results called success | cancel/retry and durable terminal states | Prior isolated synthetic cancellation/retry and main historical interrupted chain remain documented below. On 2026-09-24 a separate read-only-mounted historical exploration was interrupted by restarting only its isolated backend at 190/1212 sessions: parent `8fa4b318` kept zero result rows and HTTP409 result, while actual Chrome created/reopened the same linked child `557f6885` twice. Child finished 1212/1212 with 4108 saved rows; both configuration hashes matched. This closes a controlled historical backend-restart/retry path, not an unplanned process-crash or actual FAILED-terminal browser path; details and screenshots below | IN_PROGRESS |
 | U3-ISOLATE | Independent exploration names/store; formal reports/OOS/freeze unchanged, dates labeled inspected | Separate product_research_jobs/rows, readonly archive | No .research diff; frozen hashes unchanged; formal 1 dataset/3 runs/310 trades before-after | IN_PROGRESS |
 | U4-RESULT | Return/drawdown/cost/benchmark/limits, null semantics, true records and reasons | Personal result and date-linked holdings/trades, full-precision toggle | Chrome demo+historical results agree with exact APIs; real fill/snapshot2031-04-14 linked; source unavailable remains N/A; U4 tests/review PASS | PASS |
 | U4-COMPARE | Reopen/compare 2–3; six config differences indicated | /experiments/compare?ids= | Chrome three actual runs, six conditions, exact fraction display and refresh preserving URL/results; comparison tests and independent review PASS; `u4/compare-three-results-en-dark-1024.png` | PASS |
@@ -53,6 +53,37 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
+
+## 2026-09-24 00:46 UTC isolated historical restart and linked retry
+
+An owned `quant-v12-u3restart-20260924` PostgreSQL ran on disposable tmpfs,
+with an isolated backend on `127.0.0.1:8001`. Backend code, ordinary fixtures
+and the already-audited historical archive were mounted read-only; no formal
+study or Official OOS was run. The exploratory request used the existing
+registered strategy and an explicitly inspected 2010-01-04→2014-12-31 range.
+Its first task `8fa4b318` was observed RUNNING at 90/1212 sessions before
+restarting only that test backend. It became `INTERRUPTED` at 190/1212 with
+`WORKER_STOPPED_RETRY_AVAILABLE`, `result_available=false`, zero result rows
+and HTTP 409 on `/result`; it was not called a completed study.
+
+Actual Chrome 153 opened this interrupted task using only the isolated API,
+showed localized recovery guidance and no financial result, then clicked
+**创建或打开关联重试**. Child `557f6885` completed 1212/1212 with 4108 persisted
+result rows, attempt 2, `retry_of` pointing to the unchanged parent and the
+same configuration SHA-256. Clicking the parent's retry control twice after
+completion returned that identical child; the test DB still held exactly two
+tasks. Chrome displayed the completed child with an inspected-history warning,
+not forward-market or Official OOS evidence. [Interrupted state](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-historical-isolated-interrupted-zh-20260924.png)
+(SHA-256 `0F5A51E740C780D3FF89F9F1524BC9562CC7B61FC3443B6A05E1C5DFF0AEFFBB`)
+and [linked result](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-historical-isolated-retry-result-zh-20260924.png)
+(SHA-256 `352E7766F36567F8F21FA25429F1F778B27CFD82DAFD2A414BA894A61D30BFE8`)
+are actual Chrome screenshots outside Git. Main DB counts remained paper
+5/417, personal research 8 and update jobs 4; `.research` stayed unchanged.
+Only this owned test backend, tmpfs database container and test network were
+removed; all four existing Docker volumes and main services remained.
+Controlled restart is not proof of unexpected process crash/power loss, and
+an actual FAILED-terminal browser flow is still unverified. `U3-RECOVER`
+remains IN_PROGRESS.
 
 ## 2026-09-24 00:33 UTC stale research list after refresh failure
 

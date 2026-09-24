@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T00:33:16Z",
+  "updated_at_utc": "2026-09-24T00:46:16Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -28,10 +28,11 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "read-only review closed U2/U5 P1; agent inactive after usage limit"
     },
-    "verified_processes": "2026-09-23: Docker Desktop 4.92.0, WSL integration and 4 project services healthy; isolated clean-user 8001/5174 services started with owned sessions and stopped after QA; main backend /api/health HTTP200; no formal study",
+    "verified_processes": "2026-09-24: main Compose backend/postgres/redis healthy and frontend running; owned quant-v12-u3restart isolated backend, tmpfs postgres and network removed after QA; original four volumes remained; no formal study",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 00:46UTC isolated quant-v12-u3restart-20260924 tmpfs PostgreSQL and read-only-mounted backend/archive ran one already-inspected 2010-2014 historical exploration. Restarting only that backend while parent8fa4b318 was RUNNING yielded INTERRUPTED 190/1212, result_available false, zero saved rows and /result HTTP409. Actual Chrome153 showed Chinese recovery guidance and created child557f6885 via the retry button; child SUCCEEDED 1212/1212 with4108 persisted rows, attempt2/retry_of parent, identical configuration SHA. Clicking parent retry twice reopened the same child with only two jobs in the isolated DB. Screenshots SHA256 0F5A51E740C780D3FF89F9F1524BC9562CC7B61FC3443B6A05E1C5DFF0AEFFBB and 352E7766F36567F8F21FA25429F1F778B27CFD82DAFD2A414BA894A61D30BFE8. Main DB paper5/events417/research8/updates4 and .research unchanged. Only owned test containers/tmpfs/network removed, no volumes. Controlled restart is not unplanned crash; actual FAILED-terminal Chrome path remains open. PR32 c4a2fa5 CI35938999918 backend/frontend/compose PASS",
     "2026-09-24 00:33UTC actual Chrome153 research-list GET503 fault showed stale completed rows beneath an inaccurate offline error. The list now discards rows on failed read and uses the existing typed experiment error interpreter; Chrome showed server guidance for 503 and permission guidance for 403, then restored saved rows after manual retry. Screenshot SHA256 CB6147AED09B4DFF1375131516D0554B2121105577AAA8769F03800F7F56D59D. No POST/main DB change (paper5/events417/research8/updates4). Focused28/full frontend tests, lint/type/build PASS. Prior 82f7bd6 PR32 CI35938578311 backend/frontend/compose PASS; wider recovery and release gates remain open",
     "2026-09-24 00:28UTC real Chrome153 reproduced a sibling stale-success error: saved historical job5f26f84f retained its -0.47pct return beneath a task GET503 error. Bespoke useExperiment now discards last job after failed read, matching the already safe shared resource hook and U5 update detail. Chrome showed error alone, then restored saved result after manual refresh. Screenshot SHA256 43F3D9E7C106A4561C1CF41FF622068FDD869306A98D96DE4B396B6F9185ED38. No POST, no research run or DB change; paper5/events417/research8/updates4. Focused27/full218 frontend tests, lint/type/build/Prettier PASS. Prior 292042d PR32 CI35938346010 backend/frontend/compose PASS; U3-RECOVER and M4 data integrity remain open",
     "2026-09-24 00:24UTC actual Chrome153 U5 task detail on saved candidate update ed796871: fault-injected detail GET503 previously left stale completed status/counts visible beside an error. Shared detail now clears last-known job after failed read; Chrome showed only actionable error, then restored authoritative saved completion on manual refresh. No POST and main DB counts paper5/events417/research8/updates4. Focused11/full217 frontend tests, lint/type/build/Prettier PASS. Separately Chrome read-only inspected persisted historical CANCELLED b78965ad, INTERRUPTED 5861fbb5 and SUCCEEDED linked child3db4b679; first two showed no partial result, third showed real saved result, not a new restart trial. One 390x844 EN/dark chart check had no page overflow. U5/U3/UX/QA broader gates remain open",
@@ -421,17 +422,17 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "82f7bd6",
+      "last_verified_head": "c4a2fa5",
       "state": "DRAFT",
-      "ci_run": 35938578311,
+      "ci_run": 35938999918,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
       "browser_gate": "candidate rules never execute; EN/ZH corporate-action non-fill and linked retry PASS. U3 dirty Back/Forward, isolated cancelled-to-linked-retry and U4 CSV/JSON download PASS in real Chrome. Home links40px, direct-load skip-link focus and fault-injected offline/permission/timeout recovery PASS. No-match and real zero-trade filter guidance PASS. Bounded native 200-percent zoom seven-route ZH/light and EN/dark checks PASS without document overflow; full matrix incomplete. Simple warm navigation p95=32ms, wider QA incomplete. Full Windows reboot and forward authority remain open"
     }
   },
-  "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence; obtain an independent physical/network backup destination and validate durable recovery in isolation. U3-JOB is accepted; continue the separate historical failure/restart matrix, U8 and accessibility/performance browser work, extending bounded native 200-percent zoom across remaining locale/theme/route cases. M5 still lacks a complete real-data user flow, full Windows startup and actual novice-user review. Seek lawful forward-source rights before any U7 execution promotion. Verify terminal-free recovery at the next safe full Windows reboot/login",
-  "next_command": "Inspect any offered external pre-loss physical snapshot or backup; current live pg_wal starts after the loss and logical dumps cannot supply PITR. Otherwise retain the two sessions as lost. Run backend pytest only with APP_ENV=test on quant_test*; leave frozen research and RAW_CANDIDATE unchanged",
+  "next_task": "Resolve the two known unrecovered post-backup paper ledgers only from genuine external pre-loss evidence and obtain an independent backup destination. U3 controlled historical backend-restart/retry is now verified, but an actual FAILED-terminal browser path and unexpected process-crash case remain; continue those in disposable quant_test* only. Continue U8/accessibility/performance and bounded native 200-percent zoom across remaining cases. M5 still lacks complete real-data user flow, full Windows startup and real novice-user review. Obtain lawful forward-source rights before any U7 execution promotion; verify terminal-free recovery at the next safe full Windows reboot/login",
+  "next_command": "Inspect the existing experiment FAILED-terminal tests and choose a bounded disposable quant_test* failure case, then verify the real browser guidance/retry without live DB writes. If a genuine external pre-loss snapshot or independent backup destination is offered, inspect it read-only; current live pg_wal cannot supply PITR. Leave frozen research, Official OOS and RAW_CANDIDATE unchanged",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
