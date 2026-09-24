@@ -63,7 +63,7 @@ function readOffset(): number {
 export function ExperimentsPage() {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
-  const [selected, setSelected] = useState<{ id: string; name: string }[]>([]);
+  const [selected, setSelected] = useState<{ id: string; name: string; createdAt: string }[]>([]);
   const [offset, setOffset] = useState(readOffset);
   const [view, setView] = useState(readSavedView);
   const [saveStatus, setSaveStatus] = useState<"saved" | "error" | null>(null);
@@ -228,14 +228,14 @@ export function ExperimentsPage() {
             <button
               className="button secondary"
               key={item.id}
-              aria-label={`${u.remove} ${item.name}`}
+              aria-label={`${u.remove} ${item.name} · ${formatUtc(item.createdAt)}`}
               onClick={() =>
                 setSelected((items) =>
                   items.filter((entry) => entry.id !== item.id),
                 )
               }
             >
-              {item.name} ×
+              {item.name} · {formatUtc(item.createdAt)} ×
             </button>
           ))}
           <button
@@ -286,22 +286,24 @@ export function ExperimentsPage() {
                 <tbody>{jobs.data.items.map((job) => (
                   <tr key={job.job_id}>
                     <td><label className="experimentTableSelect">
-                      <input type="checkbox" aria-label={`${u.select}: ${job.name}`}
+                      <input type="checkbox" aria-label={`${u.select}: ${job.name} · ${c.statuses[job.status]} · ${formatUtc(job.created_at)}`}
                         checked={selected.some((item) => item.id === job.job_id)}
                         disabled={job.status !== "SUCCEEDED" || !job.result_available ||
                           (selected.length === 3 && !selected.some((item) => item.id === job.job_id))}
                         onChange={(event) => setSelected((items) => event.target.checked
-                          ? [...items, { id: job.job_id, name: job.name }]
+                          ? [...items, { id: job.job_id, name: job.name, createdAt: job.created_at }]
                           : items.filter((item) => item.id !== job.job_id))} />
                     </label></td>
-                    <th scope="row"><Link href={`/experiments/${job.job_id}`}>{job.name}</Link></th>
+                    <th scope="row"><Link href={`/experiments/${job.job_id}`}
+                      aria-label={`${job.name} · ${c.statuses[job.status]} · ${formatUtc(job.created_at)}`}>{job.name}</Link></th>
                     {view.columns.mode && <td>{job.mode === "synthetic_demo" ? c.demo : c.historical}</td>}
                     {view.columns.period && <td>{job.configuration.start_date} → {job.configuration.end_date}</td>}
                     {view.columns.created && <td>{formatUtc(job.created_at)}</td>}
                     <td><span className={`experimentStatus experimentStatus--${job.status.toLowerCase()}`}>
                       {c.statuses[job.status]}
                     </span></td>
-                    <td><Link className="button secondary" href={`/experiments/${job.job_id}`}>{c.open}</Link></td>
+                    <td><Link className="button secondary" href={`/experiments/${job.job_id}`}
+                      aria-label={`${c.open}: ${job.name} · ${formatUtc(job.created_at)}`}>{c.open}</Link></td>
                   </tr>
                 ))}</tbody>
               </table>

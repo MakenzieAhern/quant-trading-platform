@@ -96,31 +96,79 @@ describe("experiment comparison", () => {
     expect(compare).toBeDisabled();
     await userEvent.click(
       await screen.findByRole("checkbox", {
-        name: "Select for comparison: Study 1",
+        name: /Select for comparison: Study 1 · Complete ·/,
       }),
     );
     await userEvent.click(
-      screen.getByRole("checkbox", { name: "Select for comparison: Study 2" }),
+      screen.getByRole("checkbox", {
+        name: /Select for comparison: Study 2 · Complete ·/,
+      }),
     );
     expect(compare).toBeEnabled();
     await userEvent.click(screen.getByRole("button", { name: "Next" }));
     await userEvent.click(
       await screen.findByRole("checkbox", {
-        name: "Select for comparison: Study 3",
+        name: /Select for comparison: Study 3 · Complete ·/,
       }),
     );
     expect(
-      screen.getByRole("checkbox", { name: "Select for comparison: Study 4" }),
+      screen.getByRole("checkbox", {
+        name: /Select for comparison: Study 4 · Complete ·/,
+      }),
     ).toBeDisabled();
     expect(
       screen.getByRole("checkbox", {
-        name: "Select for comparison: Running study",
+        name: /Select for comparison: Running study · Queued ·/,
       }),
     ).toBeDisabled();
     await userEvent.click(compare);
     expect(window.location.pathname + window.location.search).toBe(
       comparisonUrl(ids.slice(0, 3)),
     );
+  });
+
+  it("distinguishes same-named studies in selection and removal controls", async () => {
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [
+        { ...runs[0], name: "Same study", created_at: "2026-09-22T10:00:00Z" },
+        { ...runs[1], name: "Same study", created_at: "2026-09-22T10:01:00Z" },
+      ],
+      total: 2,
+      offset: 0,
+      limit: 20,
+    });
+    render(<ExperimentsPage />);
+    const boxes = await screen.findAllByRole("checkbox", {
+      name: /Select for comparison: Same study · Complete ·/,
+    });
+    expect(boxes).toHaveLength(2);
+    expect(boxes[0]).not.toHaveAttribute(
+      "aria-label",
+      boxes[1]?.getAttribute("aria-label"),
+    );
+    const studyLinks = screen.getAllByRole("link", {
+      name: /^Same study · Complete ·/,
+    });
+    expect(studyLinks).toHaveLength(2);
+    expect(studyLinks[0]).not.toHaveAttribute(
+      "aria-label",
+      studyLinks[1]?.getAttribute("aria-label"),
+    );
+    expect(
+      screen.getAllByRole("link", { name: /^Open experiment: Same study ·/ }),
+    ).toHaveLength(2);
+    await userEvent.click(boxes[0]!);
+    await userEvent.click(boxes[1]!);
+    const remove = screen.getAllByRole("button", { name: /Remove Same study/ });
+    expect(remove).toHaveLength(2);
+    expect(remove[0]).not.toHaveAttribute(
+      "aria-label",
+      remove[1]?.getAttribute("aria-label"),
+    );
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(
+      screen.getAllByRole("button", { name: /移除 Same study/ }),
+    ).toHaveLength(2);
   });
 
   it("keeps unknown and unfinished requested studies visible instead of making a partial comparison", async () => {

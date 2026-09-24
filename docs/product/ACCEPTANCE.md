@@ -1,5 +1,22 @@
 # v1.2 acceptance ledger
 
+## 2026-09-24 22:24 UTC same-name research accessibility check
+
+Actual Chrome on the populated `/experiments` list exposed three distinct
+`M1 lifecycle recovery` records whose comparison controls previously had the
+same accessible name. The row checkbox now includes translated status and UTC
+creation time; both result links include the saved record's creation time,
+and selected-removal chips show it visibly. Actual Chrome's Chinese and English
+accessibility trees distinguished the complete, interrupted and cancelled
+records and their links; the original Chinese/dark preference was restored.
+One same-name/two-timestamp regression covers row links, checkbox selection,
+removal and locale change. Full frontend 234/234, ESLint, TypeScript, production
+build, changed-test Prettier and diff check passed. This is a bounded list
+accessibility repair, **not** screen-reader/WCAG certification, independent
+backup, recovered paper ledgers, licensed forward market data or release
+acceptance. `QA-A11Y` stays IN_PROGRESS; `M4-DATA-INTEGRITY` and
+`M5-DELIVERY` remain FAIL.
+
 Status vocabulary: PASS (direct evidence), FAIL (observed defect), IN_PROGRESS,
 NOT_RUN, EXTERNAL_BLOCKED. Code existence/test count alone never proves a user flow.
 This ledger is cumulative; no required row may disappear to manufacture completion.

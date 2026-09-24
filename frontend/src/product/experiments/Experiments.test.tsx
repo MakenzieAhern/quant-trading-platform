@@ -715,7 +715,7 @@ describe("durable experiment detail", () => {
       offset: 0,
     });
     const first = render(<ExperimentsPage />);
-    await screen.findByRole("link", { name: job.name });
+    await screen.findByRole("link", { name: new RegExp(`^${job.name} ·`) });
     await userEvent.type(
       screen.getByLabelText("Search saved studies"),
       "Precision",
@@ -771,16 +771,18 @@ describe("durable experiment detail", () => {
         offset: offset ?? 0,
       }));
     const first = render(<ExperimentsPage />);
-    await screen.findByRole("link", { name: job.name });
+    await screen.findByRole("link", { name: new RegExp(`^${job.name} ·`) });
     await userEvent.type(screen.getByLabelText("Search saved studies"), "M1");
     await waitFor(() =>
       expect(window.history.state.experimentView.q).toBe("M1"),
     );
     await userEvent.click(screen.getByRole("button", { name: "Next" }));
     await waitFor(() => expect(window.history.state.experimentOffset).toBe(20));
-    await screen.findByRole("link", { name: job.name });
+    await screen.findByRole("link", { name: new RegExp(`^${job.name} ·`) });
     expect(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)).toBeNull();
-    await userEvent.click(screen.getByRole("link", { name: job.name }));
+    await userEvent.click(
+      screen.getByRole("link", { name: new RegExp(`^${job.name} ·`) }),
+    );
     first.unmount();
     act(() => window.history.back());
     await waitFor(() => expect(window.location.pathname).toBe("/experiments"));
