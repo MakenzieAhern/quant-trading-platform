@@ -176,7 +176,9 @@ page and search focus. The
 is outside Git, SHA-256
 `69208CD0CE02FA8E2F6D9C7EFEBC7E73E4848400DBF3C1ADCF79B510BCDED341`.
 The viewport override was reset. Full frontend 225/225, ESLint, TypeScript
-build and CSS Prettier passed. This closes one bounded pointer-target defect,
+build and CSS Prettier passed. PR #32 commit `506f2c2` passed
+[CI 35958686226](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35958686226)
+(backend, frontend, Compose). This closes one bounded pointer-target defect,
 not a full WCAG 2.2 AA or native-zoom signoff.
 
 ## 2026-09-24 05:02 UTC draft autosave and mobile Back target
