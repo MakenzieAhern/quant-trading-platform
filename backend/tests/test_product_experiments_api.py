@@ -128,6 +128,32 @@ async def test_concurrent_idempotency_cancel_retry_and_validation(manager):
         assert wrong_money.status_code == 422
 
 
+async def test_retry_parent_has_one_child_across_keys_and_concurrent_calls(manager):
+    parent = await manager.create(CreateExperimentRequest.model_validate(payload()), "parent")
+    await manager.cancel(parent.id)
+    child = await manager.retry(parent.id, "manual-child")
+    assert (await manager.retry(parent.id, "ui-retry-different-key")).id == child.id
+    manager._ownership_failed = True
+    assert (await manager.retry(parent.id, "worker-unavailable")).id == child.id
+    manager._ownership_failed = False
+
+    other = await manager.create(
+        CreateExperimentRequest.model_validate(payload(name="Other parent")), "other-parent"
+    )
+    await manager.cancel(other.id)
+    left, right = await asyncio.gather(
+        manager.retry(other.id, "parallel-a"), manager.retry(other.id, "parallel-b")
+    )
+    assert left.id == right.id and left.retry_of == other.id
+    async with SessionFactory() as db:
+        children = (
+            await db.scalars(
+                select(ExperimentJobModel).where(ExperimentJobModel.retry_of.is_not(None))
+            )
+        ).all()
+    assert {row.id for row in children} == {child.id, left.id}
+
+
 async def test_server_search_finds_older_jobs_and_escapes_like_wildcards(manager):
     older = await manager.create(
         CreateExperimentRequest.model_validate(payload(name="Older Needle 100%_/研究")),

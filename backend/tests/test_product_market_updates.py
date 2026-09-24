@@ -263,6 +263,28 @@ async def test_create_idempotency_exact_receipts_persistence_missing_only(manage
     assert (await reopened.receipts(done.id, 1, 0)) == (receipts, total)
 
 
+async def test_retry_parent_has_one_child_across_keys_and_concurrent_calls(manager):
+    parent = await manager.create(request(), "parent")
+    await manager.cancel(parent.id)
+    child = await manager.retry(parent.id, "manual-child")
+    assert (await manager.retry(parent.id, "ui-retry-different-key")).id == child.id
+
+    other = await manager.create(request(end="2026-09-20"), "other-parent")
+    await manager.cancel(other.id)
+    left, right = await asyncio.gather(
+        manager.retry(other.id, "parallel-a"), manager.retry(other.id, "parallel-b")
+    )
+    assert left.id == right.id and left.retry_of == other.id
+    async with SessionFactory() as db:
+        children = (
+            await db.scalars(
+                select(MarketUpdateJobModel).where(MarketUpdateJobModel.retry_of.is_not(None))
+            )
+        ).all()
+    assert {row.id for row in children} == {child.id, left.id}
+    assert manager.test_calls == []
+
+
 async def test_empty_response_remains_unknown_not_holiday_or_suspension(manager):
     async def empty(parameters, cancelled):
         response = envelope()

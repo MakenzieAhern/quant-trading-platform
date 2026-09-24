@@ -246,6 +246,12 @@ class MarketUpdateManager:
             )
             if existing is not None:
                 return self._same(existing, digest, retry_of)
+            if retry_of is not None:
+                child = await db.scalar(
+                    select(MarketUpdateJobModel).where(MarketUpdateJobModel.retry_of == retry_of)
+                )
+                if child is not None:
+                    return self._same(child, digest, retry_of)
         if self._stopping:
             raise UpdateConflict("UPDATE_WORKER_UNAVAILABLE")
         if await self._denied():
@@ -297,6 +303,12 @@ class MarketUpdateManager:
                 existing = await db.scalar(
                     select(MarketUpdateJobModel).where(MarketUpdateJobModel.request_key == key)
                 )
+                if existing is None and retry_of is not None:
+                    existing = await db.scalar(
+                        select(MarketUpdateJobModel).where(
+                            MarketUpdateJobModel.retry_of == retry_of
+                        )
+                    )
                 if existing is None:
                     raise
                 return self._same(existing, digest, retry_of)

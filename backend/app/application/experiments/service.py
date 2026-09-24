@@ -151,8 +151,6 @@ class ExperimentManager:
         retry_of: UUID | None = None,
         attempt: int = 1,
     ) -> ExperimentJobModel:
-        if self._ownership_failed:
-            raise ExperimentConflictError("EXPERIMENT_WORKER_UNAVAILABLE")
         config = json_value(request.model_dump())
         fingerprint = canonical_sha256(config)
         async with self.factory() as db:
@@ -161,6 +159,14 @@ class ExperimentManager:
             )
             if existing is not None:
                 return self._same(existing, fingerprint, retry_of)
+            if retry_of is not None:
+                child = await db.scalar(
+                    select(ExperimentJobModel).where(ExperimentJobModel.retry_of == retry_of)
+                )
+                if child is not None:
+                    return self._same(child, fingerprint, retry_of)
+        if self._ownership_failed:
+            raise ExperimentConflictError("EXPERIMENT_WORKER_UNAVAILABLE")
         dataset = await asyncio.to_thread(self.registry.resolve, request.dataset_id)
         if (
             not date.fromisoformat(dataset["coverage_start"])
@@ -198,6 +204,10 @@ class ExperimentManager:
                 existing = await db.scalar(
                     select(ExperimentJobModel).where(ExperimentJobModel.request_key == key)
                 )
+                if existing is None and retry_of is not None:
+                    existing = await db.scalar(
+                        select(ExperimentJobModel).where(ExperimentJobModel.retry_of == retry_of)
+                    )
                 if existing is None:
                     raise
                 return self._same(existing, fingerprint, retry_of)
