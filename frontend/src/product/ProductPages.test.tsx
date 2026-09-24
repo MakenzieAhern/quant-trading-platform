@@ -1,8 +1,22 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { expect, it, vi } from "vitest";
 import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
-import { ProductError } from "./ProductPages";
+import { HelpPage, ProductError } from "./ProductPages";
+
+it("keeps an open help answer expanded when its translated label changes", async () => {
+  await act(() => i18n.changeLanguage("en-US"));
+  render(<HelpPage />);
+  fireEvent.click(screen.getByText("What is a backtest?"));
+  expect(
+    screen.getByText("What is a backtest?").closest("details"),
+  ).toHaveAttribute("open");
+  await act(() => i18n.changeLanguage("zh-CN"));
+  expect(screen.getByText("什么是回测？").closest("details")).toHaveAttribute(
+    "open",
+  );
+  await act(() => i18n.changeLanguage("en-US"));
+});
 
 it("distinguishes permission, timeout and offline failures while keeping retry", async () => {
   await i18n.changeLanguage("en-US");

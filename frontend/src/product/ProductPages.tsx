@@ -494,12 +494,12 @@ export function HelpPage() {
         <ModeGuide />
       </section>
       {[
-        [c.backtestQuestion, c.backtestAnswer],
-        [c.drawdownQuestion, c.drawdownAnswer],
-        [c.winQuestion, c.winAnswer],
-        [c.benchmarkQuestion, c.benchmarkAnswer],
-      ].map(([q, a]) => (
-        <details className="helpQuestion" key={q}>
+        ["backtest", c.backtestQuestion, c.backtestAnswer],
+        ["drawdown", c.drawdownQuestion, c.drawdownAnswer],
+        ["win", c.winQuestion, c.winAnswer],
+        ["benchmark", c.benchmarkQuestion, c.benchmarkAnswer],
+      ].map(([id, q, a]) => (
+        <details className="helpQuestion" key={id}>
           <summary>{q}</summary>
           <p>{a}</p>
         </details>

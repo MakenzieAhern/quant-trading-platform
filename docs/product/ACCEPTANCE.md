@@ -1856,3 +1856,17 @@ walkthrough of key guide paths, not an independent novice-user review or a
 complete bilingual demo. The user still cannot confirm an independent backup
 destination, genuine pre-loss ledgers, or licensed 2026 forward data; none is
 accepted. `M4-DATA-INTEGRITY`, `U7-FORWARD` and `M5-DELIVERY` remain FAIL.
+
+## 2026-09-24 23:07 UTC help language-switch context
+
+Actual Chrome on `/help` showed all four English explanations and the four
+distinct data-mode descriptions. Switching the locale after expanding a help
+answer collapsed it: the translated question was being used as the React key.
+The fixed four-question list now uses stable identifiers. A regression test
+checks that the open answer stays open when its label changes from English to
+Chinese. Chrome confirmed the expanded answer remained visible across
+Chinese → English → Chinese, and the original Chinese/dark preference was
+restored. Full frontend 237/237, ESLint, TypeScript, production build and
+changed-file Prettier passed. No research, account, order or data was changed.
+This closes only this U8 reading-context defect, not the full bilingual,
+screen-reader, performance or novice-user acceptance; M4/M5 remain open.
