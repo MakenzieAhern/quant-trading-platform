@@ -49,10 +49,43 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
 | M4-DATA-INTEGRITY | Application and formal-history persistence, isolated tests, recoverable backup | Suite-wide test-DB guard and verified additive restore | Live DB was found missing formal 1/3/310 ledger and later paper accounts. Formal ledger and four pre-backup accounts were restored atomically; `4b64380f` and `07d72259` remain absent. Live-config pytest was rejected; isolated backend969 PASS/one optional skip with live counts stable. The post-recovery dump restored into a new database, with 44/44 public tables matching live by row count and sorted-row hash. This same-disk dump is not independent disaster recovery and missing-history disposition remains open | FAIL |
 | QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Earlier isolated migration and frontend checks remain valid. 2026-09-23 isolated backend969 PASS/one optional archive skip and PR32 `b060e9f` CI35915906461 backend/frontend/compose PASS; however the live DB data-loss incident makes the current release/durability gate FAIL. Frozen research files were not changed; formal DB rows were restored from backup | FAIL |
-| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is configured and four project containers use `unless-stopped`, but the 2026-09-24 real Windows reboot/login did **not** yield a running Desktop/Engine at the 21:22 local check. A non-destructive manual Desktop launch recovered all four services with API/frontend HTTP200, Redis PONG and persistent volumes. Automatic post-login startup therefore failed this observed check; its cause is unproven. Screenshots/recordings and operator review remain incomplete | FAIL |
+| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is configured and four project containers use `unless-stopped`, but the 2026-09-24 real Windows reboot/login did **not** yield a running Desktop/Engine at the 21:22 local check. A non-destructive manual Desktop launch recovered all four services with API/frontend HTTP200, Redis PONG and persistent volumes. At 12:15 UTC the Docker-only Windows startup-approval value was corrected from all-zero to the enabled `02` format, with readback and currently running services verified; this is **not** a successful next-login test. Screenshots/recordings and operator review remain incomplete | FAIL |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
+
+## 2026-09-24 12:15 UTC test isolation and Windows login-startup correction
+
+The backend suite's shared `pytest_sessionstart` guard requires `APP_ENV=test`
+and a `quant_test`-named database. In the running backend container, a
+collection-only invocation with `APP_ENV=development` and an intentionally
+unreachable `quant_platform` URL exited 1 with the guard message before any
+test was collected. The isolated test Compose specifies `quant_test` on a
+tmpfs PostgreSQL data directory. This is a bounded fail-closed check, not a
+re-run of the suite or proof that missing live paper history was restored.
+
+Windows login-startup inspection found Docker Desktop's own AutoStart setting
+true and its exact `HKCU\\...\\Run` executable still present, while the
+`StartupApproved\\Run` value for Docker Desktop was twelve zero bytes. Four
+other enabled per-user entries began `02`. After checking that the Docker
+executable existed and the value had not changed, only that one approval value
+was set to `020000000000000000000000`; readback matched. The old value was
+`000000000000000000000000`, so the one-value change is reversible. This
+matches the enabled pattern described in [Microsoft Q&A](https://learn.microsoft.com/en-us/answers/questions/2843923/enforce-startup-apps-through-gpos),
+but is an inference about this machine, **not** a proven root cause. Docker's
+[official startup setting](https://docs.docker.com/desktop/settings-and-maintenance/settings/)
+alone had not delivered a running Engine after the observed reboot. Current
+Compose still has the same four running services; PostgreSQL, Redis and backend
+are healthy, Redis returned PONG, and API/frontend returned HTTP 200. Do not
+promote M5 until the next real login starts Docker and the app without terminal
+assistance. No second startup task, reset, volume deletion or service restart
+was performed.
+
+Chrome's existing guided-research page did display the native Save & exit
+confirmation. The browser control timed out during dismiss/refresh, so the
+dialog outcome and post-click route were **not** verified. There was no new
+research submission. Inspect the live dialog/page state before repeating any
+navigation action; this observation does not change U3-WIZARD status.
 
 ## 2026-09-24 11:45 UTC Help FAQ pointer target
 
