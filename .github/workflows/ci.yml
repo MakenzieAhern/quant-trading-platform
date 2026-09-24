@@ -80,5 +80,5 @@ jobs:
           docker compose -p qtp-release-smoke -f docker-compose.yml -f compose.release.yml build frontend
           container_id=$(docker run --rm -d -p 127.0.0.1:15173:5173 qtp-release-smoke-frontend)
           trap 'docker stop "$container_id" >/dev/null' EXIT
-          curl -fsSI --retry 5 --retry-connrefused --retry-delay 1 http://127.0.0.1:15173/
+          curl -fsSI --retry 5 --retry-all-errors --retry-delay 1 http://127.0.0.1:15173/
           curl -fsSI http://127.0.0.1:15173/help
