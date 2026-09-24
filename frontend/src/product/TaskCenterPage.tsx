@@ -6,6 +6,7 @@ import { useApiResource } from "../hooks/useApiResource";
 import { formatUtc } from "../utils/format";
 import { experimentApi } from "./experiments/api";
 import { useExperimentCopy } from "./experiments/copy";
+import { experimentError } from "./experiments/errors";
 import { marketUpdateApi } from "./marketUpdates/api";
 import { updateError, useUpdateCopy } from "./marketUpdates/copy";
 import { useProductCopy } from "./copy";
@@ -43,7 +44,9 @@ export function TaskCenterPage() {
       <section className="panel" aria-label={c.researchTasks}>
         <h2>{c.researchTasks}</h2>
         {research.loading && <p role="status">{c.loading}</p>}
-        {research.error && <p role="alert">{c.loadingError}</p>}
+        {research.error && (
+          <p role="alert">{experimentError(research.error, e)}</p>
+        )}
         {research.data && (
           <>
             {research.data.total === 0 && <p>{c.noResearchTasks}</p>}

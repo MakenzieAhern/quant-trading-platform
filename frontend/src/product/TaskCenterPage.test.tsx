@@ -1,6 +1,7 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
 import { experimentApi } from "./experiments/api";
 import { job as researchJob } from "./experiments/fixtures.test-data";
@@ -58,7 +59,8 @@ describe("task center", () => {
     await i18n.changeLanguage("en-US");
     const research = vi
       .spyOn(experimentApi, "list")
-      .mockRejectedValueOnce(new Error("offline"))
+      .mockRejectedValueOnce(new ApiError(403, "denied"))
+      .mockRejectedValueOnce(new TypeError("Failed to fetch"))
       .mockResolvedValue({
         items: [researchJob],
         total: 1,
@@ -73,15 +75,19 @@ describe("task center", () => {
     });
     render(<TaskCenterPage />);
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "could not load",
+      "Access was denied",
     );
     expect(
       await screen.findByRole("link", { name: "Open task" }),
     ).toHaveAttribute("href", `/data?updateJob=${updateJob.job_id}`);
     await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "service could not be reached",
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     expect(
       await screen.findByRole("link", { name: "Open experiment" }),
     ).toHaveAttribute("href", `/experiments/${researchJob.job_id}`);
-    expect(research).toHaveBeenCalledTimes(2);
+    expect(research).toHaveBeenCalledTimes(3);
   });
 });
