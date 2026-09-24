@@ -7,6 +7,7 @@ import { usePreferences } from "../product/preferences";
 import { CommandPalette } from "../product/CommandPalette";
 import { experimentApi } from "../product/experiments/api";
 import { useCurrentPageData } from "../product/dataContext";
+import { formatUtc } from "../utils/format";
 import { Link } from "./Link";
 import { LanguageSelector } from "./LanguageSelector";
 
@@ -277,7 +278,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </span>
               {health.data && (
                 <span className="srOnly">
-                  {copy.checkedAt}: {health.data.checkedAt} UTC
+                  {copy.checkedAt}: {formatUtc(health.data.checkedAt)}
                 </span>
               )}
             </button>

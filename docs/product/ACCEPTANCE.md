@@ -54,6 +54,20 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 06:00 UTC shared status-time accessibility check
+
+The live in-app browser at `localhost:5173` exposed the Workbench service
+status's screen-reader-only check time as raw
+`2026-09-24T05:40:12.769Z UTC`. The shared AppShell now uses the existing
+`formatUtc` presentation helper; the same browser accessibility tree reads
+`2026-09-24 05:40:12Z (UTC)` in English and
+`2026/09/24 05:40:12 (UTC)` in Chinese. Language was restored to English.
+No market date, data status, or API value changed. AppShell regression covers
+both locales and rejects a raw ISO timestamp. Frontend 225/225 tests, ESLint,
+Prettier, TypeScript and production build passed. This is an agent browser
+accessibility-tree check, not a screen-reader user study; U8-I18N and QA-A11Y
+remain IN_PROGRESS, and the release/data-integrity blockers remain open.
+
 ## 2026-09-24 04:12 UTC account-native historical plan
 
 The U6 gap was not a missing button: the saved research-result preview belonged

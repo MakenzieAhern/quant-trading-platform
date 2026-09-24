@@ -162,7 +162,18 @@ describe("routing", () => {
     expect(
       screen.getByText("Available data · not an active run"),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Service checked at:/)).toHaveTextContent("UTC");
+    expect(screen.getByText(/Service checked at:/)).toHaveTextContent(
+      /Service checked at: .*\(UTC\)/,
+    );
+    expect(screen.getByText(/Service checked at:/)).not.toHaveTextContent(
+      /T\d{2}:\d{2}/,
+    );
+    await act(() => i18n.changeLanguage("zh-CN"));
+    expect(screen.getByText(/服务检查时间:/)).toHaveTextContent(/\(UTC\)/);
+    expect(screen.getByText(/服务检查时间:/)).not.toHaveTextContent(
+      /T\d{2}:\d{2}/,
+    );
+    await act(() => i18n.changeLanguage("en-US"));
   });
 
   it.each(["/unknown", "/backtests/not-a-uuid", "/backtests/1234"])(

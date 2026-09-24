@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T05:11:00Z",
+  "updated_at_utc": "2026-09-24T06:00:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 06:00UTC live in-app browser Workbench AX read raw ISO service check time; shared AppShell now reuses formatUtc. English AX reads 2026-09-24 05:40:12Z (UTC), Chinese reads 2026/09/24 05:40:12 (UTC), then language restored to English. Frontend225, ESLint, Prettier, TypeScript/build PASS; no data/API mutation. This closes one bounded U8/QA-A11Y presentation defect, not the full screen-reader matrix or release. PR32 remains open, data-loss/backup/forward-source blockers remain",
     "2026-09-24 05:11UTC live in-app browser 390x844 /paper topbar found menu36x37, search36x38 and English language27.9x40 targets. Shared mobile CSS raised menu/search/both language buttons to at least40x40; an initial wrap was corrected with an 8px gap. Five controls fit first row, dated data context remains second row, document375<viewport390. Lower-edge menu/search clicks opened intended panels, then closed safely. 720x450 width also had no document overflow. Screenshot SHA in ACCEPTANCE outside Git. Full frontend225, ESLint, TypeScript build and CSS Prettier PASS. PR32 head506f2c2 CI35958686226 backend/frontend/compose PASS. Windows still exposes only Disk0 NVMe, with C/D partitions, not an independent backup medium. Full AA/native zoom/data-integrity/release remain open",
     "2026-09-24 05:03UTC shared draft autosave retains exact stored JSON/timestamp for unchanged form/step/identity, with an edited-form regression. Focused configuration17, full frontend225, ESLint, TypeScript, build, Prettier and diff check PASS. In-app browser previewed an old recovery and cancelled to preserve current U3 draft; new tab showed the same name and step2. Native Save & exit confirm navigation was not verified because browser control stalled. Shared detail Back link grew from21 to40px; mobile390x844 real historical account measured116.8x40, document375<viewport390, lower-edge click navigated to /paper. Two screenshot hashes in ACCEPTANCE, outside Git. U3 full exit, WCAG, data-integrity, forward and release gates stay open",
     "2026-09-24 04:48UTC PR32 code head84fc718 CI35956311105 backend/frontend/compose PASS. Post-correction in-app browser on configured localhost5174 rendered isolated historical account f30dc3b9 plan in ZH/EN and 390x844: 2011-03-22 as-of, plan-time CNY100000 versus latest CNY81309.8134, no-current-advice warning, config SHA316ddc3a...30bb matching API; 15px/25.5px plan copy, desktop/mobile document width1265/375 under 1280/390. A second owned isolated account with CNY3000 max-order-notional yielded 20 candidates, six approvals, 14 explicit ORDER_NOTIONAL_LIMIT rejections, three fills and zero rejected-symbol fills; its configuration SHA differed. Four new outside-Git screenshot hashes and exact limits in ACCEPTANCE. No live DB account count change (five); no .research mutation. Full U6/U7 forward/data-loss/backup and release gates remain open",
