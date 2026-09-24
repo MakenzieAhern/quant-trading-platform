@@ -16,7 +16,7 @@ make down
 
 `make up` waits for database/backend health and applies migrations. `make down` preserves named application volumes. `make test` builds locked images and runs all suites using `compose.test.yml`: a different project, no published database port, and temporary PostgreSQL storage. Its exit trap removes only this disposable test project. Run one test invocation at a time. Lint/build use the same pinned images without starting the application database.
 
-The integration suites truncate tables; direct pytest execution must target a disposable database. Prefer `make test`. Never point direct tests at a database containing demonstration or personal history.
+The integration suites truncate tables. Pytest now refuses to start unless `APP_ENV=test` and the database name is `quant_test` or `quant_test_*`; direct runs still require a genuinely disposable database. Prefer `make test`. Never point tests at a database containing demonstration or personal history.
 
 ## Optional host development
 
@@ -29,7 +29,7 @@ Compose explicitly supplies container settings; the root `.env` configures host 
 | Variable | Default / purpose |
 | --- | --- |
 | APP_NAME / APP_VERSION | Quant Trading Platform / 1.0.0, public health metadata |
-| APP_ENV | development; also test or production, metadata only, not authentication |
+| APP_ENV | development; pytest requires `test` together with a `quant_test` database; not authentication |
 | LOG_LEVEL | INFO; lifecycle logging without sensitive exception text |
 | API_HOST / API_PORT | 0.0.0.0 / 8000; metadata settings, use CLI bind flags to change server binding |
 | DATABASE_URL | Local PostgreSQL asyncpg URL; backend only |
