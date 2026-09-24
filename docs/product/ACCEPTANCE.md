@@ -14,6 +14,22 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 19:56 UTC explicit tradeability guard
+
+The shared A-share rule resolver previously returned `executable=True` when
+`is_suspended=False` even if the same dated security status had
+`is_tradeable=None` or `False`. A new regression first failed on the unknown
+case; the resolver now requires `is_tradeable is True`. Targeted market,
+candidate-rule, smoke, execution-engine and dataset tests passed 62/62; Ruff
+check/format and strict mypy passed. A normal reload of the existing stopped
+historical paper account in the in-app browser showed the saved six fills,
+cash `81309.8134` and equity `99964.8134` without browser warnings/errors;
+that browser read did **not** exercise the new unknown-status branch. No account,
+data-source, methodology or frozen research write occurred. The candidate
+2026 rules remain conservative no-fill; `U7-FORWARD`, M4 and release are not
+accepted. The user could not confirm legal 2026 feed rights, a genuine pre-loss
+copy of two absent paper ledgers, or an independent physical backup destination.
+
 ## 2026-09-24 19:47 UTC bounded responsive and locale recheck
 
 On the running local app in the Codex in-app Chromium browser, a 1024×768

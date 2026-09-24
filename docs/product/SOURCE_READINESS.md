@@ -11,6 +11,13 @@ not run.** Explicit data-use rights evidence is still needed before an executabl
 forward feed can be accepted. No permission request, payment or credential action
 has been initiated.
 
+On 2026-09-24, the shared rule resolver was tightened to require an explicit
+`is_tradeable=True` as well as `is_suspended=False` before returning
+`executable=True`. Unknown or false tradeability now fails closed. This is a
+software guard, **not** confirmation of a 2026 status authority, licensed feed,
+or forward execution. The separate 2026 candidate rules remain
+`conservative_no_fill=True`; `RULE_AUTHORITY_2026 = PARTIAL`.
+
 ### Written rights clarification needed (unsent)
 
 The [SSE 2026 rule, §5.1.3](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml)

@@ -195,7 +195,8 @@ class TradingRuleResolver:
         elif security_status.is_st and selected.st_price_limit_rate is not None:
             limit_rate = selected.st_price_limit_rate
         executable = (
-            security_status.is_suspended is False
+            security_status.is_tradeable is True
+            and security_status.is_suspended is False
             and not security_status.is_one_price_limit
             and not selected.conservative_no_fill
             and listing_age_sessions >= selected.conservative_no_fill_listing_sessions
