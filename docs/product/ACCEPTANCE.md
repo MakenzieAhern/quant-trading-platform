@@ -49,10 +49,43 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
 | M4-DATA-INTEGRITY | Application and formal-history persistence, isolated tests, recoverable backup | Suite-wide test-DB guard and verified additive restore | Live DB was found missing formal 1/3/310 ledger and later paper accounts. Formal ledger and four pre-backup accounts were restored atomically; `4b64380f` and `07d72259` remain absent. Live-config pytest was rejected; isolated backend969 PASS/one optional skip with live counts stable. The post-recovery dump restored into a new database, with 44/44 public tables matching live by row count and sorted-row hash. This same-disk dump is not independent disaster recovery and missing-history disposition remains open | FAIL |
 | QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Earlier isolated migration and frontend checks remain valid. 2026-09-23 isolated backend969 PASS/one optional archive skip and PR32 `b060e9f` CI35915906461 backend/frontend/compose PASS; however the live DB data-loss incident makes the current release/durability gate FAIL. Frozen research files were not changed; formal DB rows were restored from backup | FAIL |
-| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is configured and four project containers use `unless-stopped`, but the 2026-09-24 real Windows reboot/login did **not** yield a running Desktop/Engine at the 21:22 local check. A non-destructive manual Desktop launch recovered all four services with API/frontend HTTP200, Redis PONG and persistent volumes. At 12:15 UTC the Docker-only Windows startup-approval value was corrected from all-zero to the enabled `02` format, with readback and currently running services verified; this is **not** a successful next-login test. Screenshots/recordings and operator review remain incomplete | FAIL |
+| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is configured and four project containers use `unless-stopped`, but the real 2026-09-24 22:29 AEST reboot/login still left Desktop/Engine stopped at 03:44 after the startup-approval correction. The Docker-only HKCU Run path was then quoted; this is reversible and unproven until another real login. One non-destructive manual launch restored Engine, four services/volumes and API/frontend HTTP200. Screenshots/recordings and operator review remain incomplete | FAIL |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
+
+## 2026-09-24 17:48 UTC actual next-login startup failure
+
+Windows booted at 2026-09-24 22:29:20 AEST; Explorer started at 22:29:36.
+At 2026-09-25 03:44 AEST there was no Docker Desktop/backend process, and
+both Ubuntu and `docker-desktop` WSL distributions were stopped. Docker's
+Desktop log had not advanced past the previous pre-reboot launch, and no
+Docker-related Application event appeared in the bounded 22:28–22:40 log.
+`AutoStart=true`, the Docker-only `StartupApproved\\Run` value still began
+`02`, and the HKCU Run entry remained present. Thus the earlier approval
+correction failed an actual login test; whether Windows skipped the entry or
+the app exited before logging is not established.
+
+The exact Run value was the unquoted existing executable path
+`C:\Program Files\Docker\Docker\Docker Desktop.exe`. After verifying that
+value and executable, only this one Run value was changed to the quoted
+`"C:\Program Files\Docker\Docker\Docker Desktop.exe"`; readback and the
+enabled approval value matched. The old unquoted string is the rollback
+value. This is a hypothesis-driven, reversible startup correction, **not**
+proof of root cause or M5 acceptance. No additional startup mechanism,
+installer, reset, cleanup or reboot was invoked.
+
+The already-installed Desktop app was launched once manually. Ubuntu then
+reached Engine 29.8.0 / Compose 5.5.1; the four original project volumes were
+listed, PostgreSQL/Redis/backend became healthy, Redis returned PONG,
+`/api/health` and frontend returned HTTP 200. Read-only live counts remained
+research runs 3, research trades 310, paper sessions 5, paper events 417,
+product research jobs 8 and market-update jobs 4, matching the recorded
+post-recovery baseline. This is service recovery, not restoration of the two
+missing pre-loss paper ledgers or an independent backup. The user could not
+confirm independent backup media, pre-loss snapshot/WAL or lawful 2026 feed
+rights; all three stay unverified. The next genuine login still must prove
+terminal-free auto-start before M5 can pass.
 
 ## 2026-09-24 12:25 UTC shared pagination target in actual Chrome
 
