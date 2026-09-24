@@ -35,11 +35,15 @@ describe("task center", () => {
       await within(study).findByText(researchJob.name),
     ).toBeInTheDocument();
     expect(
-      within(study).getByRole("link", { name: "Open experiment" }),
+      within(study).getByRole("link", {
+        name: /^Open experiment: Precision exploration · 2026-09-22/,
+      }),
     ).toHaveAttribute("href", `/experiments/${researchJob.job_id}`);
     expect(await within(raw).findByText(/CN-A:SSE:600000/)).toBeInTheDocument();
     expect(
-      within(raw).getByRole("link", { name: "Open task" }),
+      within(raw).getByRole("link", {
+        name: /^Open task: CN-A:SSE:600000 · 2026-01-05–2026-01-06 · 2026-09-22/,
+      }),
     ).toHaveAttribute("href", `/data?updateJob=${updateJob.job_id}`);
     expect(raw).toHaveTextContent("not approved for simulated execution");
     await userEvent.click(within(study).getByRole("button", { name: "Next" }));
@@ -78,7 +82,7 @@ describe("task center", () => {
       "Access was denied",
     );
     expect(
-      await screen.findByRole("link", { name: "Open task" }),
+      await screen.findByRole("link", { name: /^Open task: CN-A:SSE:600000/ }),
     ).toHaveAttribute("href", `/data?updateJob=${updateJob.job_id}`);
     await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -86,8 +90,37 @@ describe("task center", () => {
     );
     await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     expect(
-      await screen.findByRole("link", { name: "Open experiment" }),
+      await screen.findByRole("link", {
+        name: /^Open experiment: Precision exploration/,
+      }),
     ).toHaveAttribute("href", `/experiments/${researchJob.job_id}`);
     expect(research).toHaveBeenCalledTimes(3);
+  });
+
+  it("distinguishes task links in Chinese without exposing internal IDs", async () => {
+    await i18n.changeLanguage("zh-CN");
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [researchJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(marketUpdateApi, "list").mockResolvedValue({
+      items: [updateJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    render(<TaskCenterPage />);
+    expect(
+      await screen.findByRole("link", {
+        name: /^查看实验: Precision exploration · 2026\/09\/22/,
+      }),
+    ).toHaveAttribute("href", `/experiments/${researchJob.job_id}`);
+    expect(
+      await screen.findByRole("link", {
+        name: /^打开任务: CN-A:SSE:600000 · 2026-01-05–2026-01-06 · 2026\/09\/22/,
+      }),
+    ).toHaveAttribute("href", `/data?updateJob=${updateJob.job_id}`);
   });
 });

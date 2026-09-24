@@ -1,5 +1,20 @@
 # v1.2 acceptance ledger
 
+## 2026-09-24 23:45 UTC task-center link purpose (QA-A11Y)
+
+Actual Chrome `/tasks` exposed eight identical "Open experiment" and four
+identical "Open task" link names, so a links-only screen-reader view could not
+identify the target. The existing list rows now give each link a localized
+accessible name with its study name or security/date window and UTC creation
+time; visible text and destinations are unchanged. Chrome EN and ZH accessibility
+trees distinguish all 12 links, including repeated study names and repeated
+security/date windows. Chinese/dark preferences were restored. Focused 3/3 and
+full frontend 238/238, ESLint, TypeScript/production build, and changed-file
+Prettier passed. No research, provider or paper request was sent. This closes
+one QA-A11Y defect, not the full WCAG/screen-reader/release gate. A temporary
+Chrome viewport override did not change the measured CSS viewport in this
+session, so no new mobile-size claim is made.
+
 ## 2026-09-24 23:35 UTC forward-data rights disclosure and backup inventory
 
 Actual Chrome on `/data` showed that the raw-candidate notice already blocks

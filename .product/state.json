@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T23:35:00Z",
+  "updated_at_utc": "2026-09-24T23:45:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 23:45UTC actual Chrome /tasks exposed ambiguous repeated Open experiment/Open task AX names. Existing links now include localized study/security/date/time context; Chrome EN/ZH AX trees distinguish 8 research and 4 raw-request links, original ZH/dark restored, no task/provider/paper request. Focused3, full frontend238, ESLint, TypeScript/build, changed-file Prettier PASS. Browser viewport override did not change measured CSS width, so no new mobile claim. This is bounded QA-A11Y progress; missing ledgers, independent backup and lawful forward rights remain unknown; PR CI pending",
     "2026-09-24 23:35UTC real Chrome Data Center EN/ZH terms and request acknowledgment now explicitly distinguish candidate local source evaluation from unverified exchange-data rights, including forward simulation; Chinese/dark restored, no provider request or DB write. Focused frontend12, ESLint, TypeScript and production build PASS. Read-only Windows backup inventory found stopped File History/backup services and ready tasks plus running OneDrive, none proving WSL/Docker backup; wbadmin listing requires elevation, so Windows Backup/VSS remain unassessed. U7 forward and M4 integrity/independent backup remain open; PR CI pending",
     "2026-09-24 23:24UTC release Compose safety: read-only review found backend inherited development's automatic Alembic startup. Release overlay now resets backend command to the image's plain Uvicorn CMD; CI asserts both release image commands. Local merged-Compose JSON confirmed backend/frontend commands null while development Alembic command remains intact; no live stack, migration or DB write executed. Deployment guide requires controlled one-off migration after independent backup. M4/M5 and external blockers unchanged; PR CI pending",
     "2026-09-24 23:15UTC release CI now builds Compose-selected Nginx frontend and smoke-checks / plus /help with docker run, no backend/DB. Local isolated image returned HTTP200 on both routes; actual Chrome rendered Chinese /help and expanded an answer. Top bar service unavailable on isolated 15173 origin is expected because main backend accepts 5173 only; no full release/API acceptance claimed. Disposable test containers stopped; one local Compose-run attempt pre-created three qtp-release-smoke named volumes, retained under no-delete policy. Windows AutoStart=true, quoted HKCU Run path and running Desktop process are consistent but next real login still untested. Deployment guide warns release up would replace live containers and auto-migrate existing DB; M4/M5 FAIL; PR CI pending",

@@ -64,6 +64,7 @@ export function TaskCenterPage() {
                   <Link
                     className="button secondary"
                     href={`/experiments/${job.job_id}`}
+                    aria-label={`${e.open}: ${job.name} · ${formatUtc(job.created_at)}`}
                   >
                     {e.open}
                   </Link>
@@ -103,6 +104,7 @@ export function TaskCenterPage() {
                   <Link
                     className="button secondary"
                     href={`/data?updateJob=${encodeURIComponent(job.job_id)}`}
+                    aria-label={`${u.open}: ${job.configuration.security_ids.join(", ")} · ${job.configuration.start_date}–${job.configuration.end_date} · ${formatUtc(job.created_at)}`}
                   >
                     {u.open}
                   </Link>
