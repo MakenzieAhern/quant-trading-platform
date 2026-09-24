@@ -36,6 +36,16 @@ plans and persistent paper fills, without redistribution or real orders; ask
 for the applicable written terms and any upstream exchange authorization.
 Until that is documented, candidate receipts remain non-executable.
 
+The [SZSE website legal notice](https://www.szse.cn/application/laws/)
+describes noncommercial browsing and downloading of **that website's** content.
+The [2026 SZSE Trading Rules, §5.1.3](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+separately require permission to use exchange trading information. The
+website notice does not identify BaoStock's upstream feed or explicitly grant
+this application's persistent EOD-plan and simulated-fill use. This is a
+scope inference, not a legal determination; keep the rights gate unresolved
+until written terms cover the actual source and use. A bounded recheck on
+2026-09-24 found no such authorization.
+
 The historical paper-account form and guided research cost hint now explicitly
 identify user-entered broker commission as a simulation assumption, not a
 verified broker quote. This product-copy correction does not resolve current

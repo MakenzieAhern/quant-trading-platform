@@ -14,6 +14,26 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 20:06 UTC paper accessibility and startup recovery recheck
+
+The local in-app Chromium browser reopened the persisted stopped historical
+paper account without changing its cash `81309.8134`, equity `99964.8134`, or
+six fills. A read-only computed-style scan of 406 visible leaf-text elements
+on that page found zero below 4.5:1 for normal or 3:1 for large text in both
+light and dark themes; English and Chinese were exercised. The scan composites
+CSS ancestor backgrounds but is not a complete contrast/WCAG or screen-reader
+audit. At 390×844 in Chinese/dark, document and client widths were 375/375,
+the visible interactive targets measured at least 40px on both axes, and the
+paper safety notice and replay label remained visible. Language, system theme
+and default viewport were restored.
+
+A read-only Windows check found the current Docker Desktop Run entry quoted,
+Docker Engine reachable from WSL, and the four project services running (the
+backend/PostgreSQL/Redis health checks healthy). The quoted entry has **not**
+been tested by a subsequent genuine Windows login. Both draft user guides now
+give the observed manual, terminal-free Docker Desktop recovery path without
+claiming autostart acceptance. `QA-A11Y` and `M5-DELIVERY` remain incomplete.
+
 ## 2026-09-24 19:56 UTC explicit tradeability guard
 
 The shared A-share rule resolver previously returned `executable=True` when

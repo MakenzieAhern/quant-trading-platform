@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T19:47:10Z",
+  "updated_at_utc": "2026-09-24T20:06:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 20:06UTC read-only in-app Chromium historical paper audit: 406 visible leaf-text elements on light/dark themes had zero below 4.5:1 normal or 3:1 large by approximate computed-style/ancestor-background scan; English and Chinese exercised. Chinese/dark 390x844 document/client width375/375, visible controls at least40px both axes, paper safety/replay labels present. EN/system/default viewport restored. This is not full WCAG/screen-reader/actual-Chrome acceptance. Current Windows Docker Run entry is quoted and Engine29.8.0/four Compose services running; no real post-quote login test, so M5 autostart remains FAIL. Draft EN/ZH guides now describe observed manual terminal-free recovery. PR32 head5157bc5 CI36051642740 backend/frontend/compose PASS; source rights, missing genuine ledgers and independent backup remain unproven",
     "2026-09-24 19:56UTC shared rule resolver now requires explicitly true is_tradeable in addition to non-suspension for executable status. A regression first failed for unknown tradeability; 62 targeted backend tests, Ruff check/format and mypy PASS. Normal stopped historical paper browser reload retained cash81309.8134/equity99964.8134/six fills and no warnings/errors, but did not exercise unknown-status branch. User could not confirm lawful 2026 feed rights, genuine pre-loss copies of two missing paper ledgers or independent backup destination. Candidate 2026 rules remain conservative no-fill; U7 forward, M4/M5 and release remain open; no data/formal/frozen write",
     "2026-09-24 19:47UTC bounded Codex in-app Chromium responsive QA: 1024x768 Chinese/dark nine routes including saved result and English/system seven routes had no document overflow; 390x844 Chinese/dark saved historical result and stopped paper account had client/scroll width375/375, with cash81309.8134/equity99964.8134 and simulation/historical labels. Browser warning/error logs empty; 18px research checkbox input sits inside 53px-high clickable label. EN/system preferences and default viewport restored. Not actual Chrome, 200pct zoom, screen-reader, full visual matrix or novice-user acceptance. Windows still has one physical NVMe and no mapped SMB destination; no independent backup found. PR32 be256dd CI36049751246 backend/frontend/compose PASS. No data/formal/ledger write; U7 forward, M4/M5 and release remain open",
     "2026-09-24 19:38UTC paper WebSocket reconnect exhaustion left the old authoritative portfolio under a reload error; a new four-close component test first failed, then shared usePaperStream now clears the stale snapshot on final exhaustion. During bounded retries the page explicitly labels the retained state last verified with EN/ZH non-current-balance warning; successful REST hydration restores authoritative label. Paper page22/full frontend227, ESLint, TypeScript and Prettier PASS. Default local build was blocked clearing a pre-existing root-owned frontend/dist/assets; production build to fresh /tmp output PASS without changing that directory. Live in-app browser normal STOPPED historical account still showed cash81309.8134/equity99964.8134/six saved fills and no browser errors; reconnect/fault branches have component-test evidence, not live-browser injection. No account/order, market, formal or frozen-data write. Full U7 recovery, missing genuine ledgers, independent backup, forward rights, M4/M5 and release remain open",
@@ -471,9 +472,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "be256dd",
+      "last_verified_head": "5157bc5",
       "state": "DRAFT",
-      "ci_run": 36049751246,
+      "ci_run": 36051642740,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
