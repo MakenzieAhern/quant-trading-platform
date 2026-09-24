@@ -24,7 +24,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U2-STRATEGY | Registered strategies, plain rules/cycle/risk/data/evidence; drafts and saved versions | /strategies, URL-backed detail drawer and named local configuration versions | Chrome exact-string save/restore/reload/Chinese switch and pre-restore backup; drawer direct URL, Back/Forward and return from full strategy detail verified; independent review closed cross-tab overwrite; full frontend suite PASS | PASS |
 | U3-WIZARD | Four steps, advanced disclosure, summary, back/save/restore/exit; locale preserves inputs | /research/new four-step form | Chrome synthetic and actual historical submission/result PASS; draft/locale preserved. Real Chrome 153 on 2026-09-23 reproduced dirty Back silently leaving despite the sidebar guard. The shared router now runs the same guard before route updates: a native dialog on Back, dismiss retained the exact edited name and step, accept reached home, and Forward restored the exact draft and step without a second dialog. A regression also catches duplicate prompts from the App and shell location readers. Focused navigation 7/7, full frontend 208, lint/type/build PASS. Agent walkthrough, not a novice-user study | PASS |
 | U3-JOB | Validated actual A-share job; stages/counts; persistent URL; refresh/reopen; idempotent duplicate | /api/experiments; independent durable manager | Live historical job `5f26f84f` remains SUCCEEDED 297/297 and a fresh Chrome context reopened its saved result URL. In a separate tmpfs test DB, the actual Chrome four-step synthetic wizard double-click sent one POST and persisted one job; resending the saved key/config from a fresh client returned the same ID with the DB still at one job. Existing backend concurrent-key/conflict test and frontend lock test cover the shared path. Synthetic result is labeled non-market; details below | PASS |
-| U3-RECOVER | Real cancellation/retry/interruption; no partial results called success | cancel/retry and durable terminal states | Controlled historical restart/retry is documented below. A separate isolated missing-partition case produced a real FAILED parent with zero saved rows and HTTP409 result; after error classification correction, actual Chrome opened a linked FAILED child, displayed specific integrity guidance in Chinese and English, and reopened the same child on repeated parent retry. Both attempts kept the same configuration hash and no result rows. Unexpected process-crash/power-loss recovery remains unverified | IN_PROGRESS |
+| U3-RECOVER | Real cancellation/retry/interruption; no partial results called success | cancel/retry and durable terminal states | Isolated cancellation, genuine FAILED terminal, controlled restart, and non-graceful SIGKILL recovery all verified. The crash left parent `77354e81` RUNNING 60/1212 with zero result rows; startup reconciled it to INTERRUPTED with HTTP409 result and a truthful Chrome warning. One linked child `52b76f45` completed 1212/1212, with 4108 rows only on the child and identical configuration SHA; two repeated parent retries reopened that child. The separate missing-partition FAILED path displayed specific bilingual integrity guidance and never yielded partial results. Details/screenshots below; this is not whole-machine power-loss or U7 forward-paper evidence | PASS |
 | U3-ISOLATE | Independent exploration names/store; formal reports/OOS/freeze unchanged, dates labeled inspected | Separate product_research_jobs/rows, readonly archive | No .research diff; frozen hashes unchanged; formal 1 dataset/3 runs/310 trades before-after | IN_PROGRESS |
 | U4-RESULT | Return/drawdown/cost/benchmark/limits, null semantics, true records and reasons | Personal result and date-linked holdings/trades, full-precision toggle | Chrome demo+historical results agree with exact APIs; real fill/snapshot2031-04-14 linked; source unavailable remains N/A; U4 tests/review PASS | PASS |
 | U4-COMPARE | Reopen/compare 2–3; six config differences indicated | /experiments/compare?ids= | Chrome three actual runs, six conditions, exact fraction display and refresh preserving URL/results; comparison tests and independent review PASS; `u4/compare-three-results-en-dark-1024.png` | PASS |
@@ -54,12 +54,39 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 01:09 UTC unplanned historical worker crash and linked completion
+
+An owned `quant-v12-u3crash-20260924` tmpfs PostgreSQL and backend on 8001
+used the existing historical archive mounted read-only. Its explicitly
+inspected 2010-01-04→2014-12-31 exploratory parent `77354e81` was observed
+RUNNING before `docker kill --signal KILL` targeted **only** that isolated
+backend. Exit code was 137. Before restart, the durable DB still showed
+RUNNING 60/1212, null summary and zero result rows; no background worker was
+alive. Starting the same test backend reconciled it to `INTERRUPTED` with
+`WORKER_RESTARTED_RETRY_AVAILABLE`, preserved 60/1212, null summary,
+`result_available=false`, zero result rows and HTTP 409 on `/result`.
+
+Actual Chrome 153 showed the [interrupted guidance](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-historical-isolated-sigkill-interrupted-zh-20260924.png)
+(SHA-256 `F4B7DA5CA03CFB8F0FB8F03A38D9D564D6D2803227F8CD09738A70E0F450AE79`)
+and clicked the linked retry. Child `52b76f45` finished 1212/1212 with
+4108 persisted result rows, attempt 2, `retry_of` the unchanged parent and
+identical configuration SHA-256. The [reopened child](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u3-historical-isolated-sigkill-retry-result-zh-20260924.png)
+(SHA-256 `1444728E5575FF30AEBDB7EDBA7BB3645E574C75C43DF6A44A002E4A74FA199B`)
+kept the inspected-history/non-guarantee warning. Two later parent retry
+clicks opened that same child; the test DB held two jobs, one retry link and
+4108 rows only for the child. This is execution/recovery QA, **not** return
+evidence or Official OOS. The owned backend, tmpfs PostgreSQL and network
+were removed without `-v`; main DB counts stayed paper 5/417, research 8,
+updates 4, four existing Docker volumes remained and `.research` was not
+modified. This verifies abrupt worker-process exit, not physical power loss,
+Windows reboot or the independent U7 paper/forward paths.
+
 ## 2026-09-24 01:00 UTC isolated historical FAILED terminal and honest data availability
 
 An owned `quant-v12-u3fail-20260924` tmpfs PostgreSQL and backend on port 8001
 used a test-only shadow dataset containing copies of the genuine frozen
-manifest and marker but **no** partitions. The real archive, code mount and
-main database remained read-only. Before correction, the registry advertised
+manifest and marker but **no** partitions. The real archive and code mount
+were read-only; the main database was untouched. Before correction, the registry advertised
 this incomplete dataset as available and the worker failed with generic
 `EXPERIMENT_EXECUTION_FAILED`. Parent `d5105a82` was genuinely `FAILED`, with
 `result_available=false`, HTTP 409 on `/result`, and zero result rows.
