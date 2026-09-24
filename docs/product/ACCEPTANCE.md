@@ -1756,7 +1756,10 @@ the immutable archive ID, then other read-only fields. Those three display-only
 inputs now remain readable but are omitted from sequential keyboard focus.
 Chrome recheck: Tab from the source-switch link reaches editable initial cash;
 the next Tab reaches the historical start-date control. No account, order or
-study was created. Focused paper tests 25/25, full frontend 232/232, ESLint,
-TypeScript, production build and changed-file Prettier passed. This closes
-only the handoff form's wasted Tab stops; `QA-A11Y` and full U7 acceptance
-remain IN_PROGRESS/FAIL respectively.
+study was created. The same inert-symbol Tab stop was removed from the
+retained legacy backtest form, while the comparison share URL remains
+keyboard-focusable so users can select and copy it. Actual Chrome confirmed
+Tab from legacy Cancel reaches initial cash without visiting the immutable
+AAPL field. Final combined frontend 233/233, ESLint, TypeScript, production
+build and changed-file Prettier passed. This closes only wasted form Tab stops;
+`QA-A11Y` and full U7 acceptance remain IN_PROGRESS/FAIL respectively.

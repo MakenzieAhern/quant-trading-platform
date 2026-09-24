@@ -153,7 +153,7 @@ export function CreateBacktestPage() {
             </label>
             <label>
               {t("createPage.symbol")}
-              <input name="symbol" value="AAPL" readOnly />
+              <input name="symbol" value="AAPL" readOnly tabIndex={-1} />
             </label>
           </div>
         </fieldset>

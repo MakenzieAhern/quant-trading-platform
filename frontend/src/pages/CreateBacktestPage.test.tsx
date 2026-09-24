@@ -195,6 +195,13 @@ describe("create backtest", () => {
     expect(screen.queryByText("../")).not.toBeInTheDocument();
   });
 
+  it("skips the immutable symbol during keyboard setup", async () => {
+    render(<CreateBacktestPage />);
+    screen.getByRole("link", { name: "Cancel" }).focus();
+    await userEvent.tab();
+    expect(screen.getByLabelText("Initial cash")).toHaveFocus();
+  });
+
   it.each([
     [409, "Duplicate request conflict"],
     [422, "Validation failed"],
