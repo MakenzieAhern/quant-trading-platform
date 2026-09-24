@@ -223,13 +223,14 @@
 .experimentCheck {
   display: flex !important;
   flex-direction: row !important;
-  align-items: flex-start;
+  align-items: center;
+  min-height: 40px;
   gap: 0.65rem !important;
   font-weight: 400 !important;
   line-height: 1.6;
 }
 .experimentCheck input {
-  margin-top: 0.3rem;
+  margin-top: 0;
   flex-shrink: 0;
   width: 18px;
   height: 18px;
@@ -285,11 +286,21 @@
   align-items: center;
   gap: 0.6rem;
 }
-.experimentViewActions { margin-top: 0.8rem; }
-.experimentViewActions details { min-width: 8rem; }
-.experimentColumnOptions { padding: 0.5rem; }
-.experimentColumnOptions label { white-space: nowrap; }
-.experimentFilterChips { margin-top: 0.7rem; }
+.experimentViewActions {
+  margin-top: 0.8rem;
+}
+.experimentViewActions details {
+  min-width: 8rem;
+}
+.experimentColumnOptions {
+  padding: 0.5rem;
+}
+.experimentColumnOptions label {
+  white-space: nowrap;
+}
+.experimentFilterChips {
+  margin-top: 0.7rem;
+}
 .experimentFilterChips button {
   min-height: 40px;
   border: 1px solid var(--border);
@@ -302,7 +313,11 @@
   white-space: normal;
   min-width: 10rem;
 }
-.experimentTable a { min-height: 40px; display: inline-flex; align-items: center; }
+.experimentTable a {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+}
 .experimentStatus {
   display: inline-block;
   padding: 0.35rem 0.7rem;
