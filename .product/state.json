@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T21:41:00Z",
+  "updated_at_utc": "2026-09-24T21:45:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,7 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
-    "2026-09-24 21:41UTC completed saved A-share historical result now opens an independent historical paper-account form with exact capital/strategy/universe/cost/risk settings copied for review; over-93-day research range leaves start blank and needs explicit choice. Actual Chrome153 verified d9f27183 Chinese result link, separate form, disabled historical provider, blank start/end2011-03-22 and 20/20/0.1/-0.2/0.0003/5 values without submission. Synthetic studies fail closed in regression. Frontend231, ESLint, TypeScript/build, changed-file Prettier PASS; read-only live counts datasets1/runs3/trades310/jobs8/paper5/events417 unchanged. This is bounded U6/U7 navigation progress, not common-plan execution, forward rights, missing ledger recovery, independent backup or release acceptance",
+    "2026-09-24 21:41UTC completed saved A-share historical result now opens an independent historical paper-account form with exact capital/strategy/universe/cost/risk settings copied for review; over-93-day research range leaves start blank and needs explicit choice. Actual Chrome153 verified d9f27183 ZH/EN result and separate form, disabled historical provider, blank start/end2011-03-22 and 20/20/0.1/-0.2/0.0003/5 values without submission; original ZH/dark restored. Synthetic studies fail closed in regression. Frontend231, ESLint, TypeScript/build, changed-file Prettier and PR32 e938b67 CI36063147686 backend/frontend/compose PASS; read-only live counts datasets1/runs3/trades310/jobs8/paper5/events417 unchanged. This is bounded U6/U7 navigation progress, not common-plan execution, forward rights, missing ledger recovery, independent backup or release acceptance",
     "2026-09-24 21:26UTC actual Chrome formal-archive AX tree exposed raw PASSED/SUCCEEDED as status cell names despite translated visible labels. Three redundant raw title attributes removed; Chrome AX then showed translated child text in archive and dataset detail, including English Audit passed/Frozen, with original ZH/dark restored. Focused direct-route regression and full frontend228, ESLint, TypeScript/build, changed-file Prettier PASS. Bounded U8/QA-A11Y progress only; full screen-reader, missing ledgers, backup, forward rights, post-login Docker autostart and release gates unchanged",
     "2026-09-24 21:18UTC actual Chrome 100 primary-route/size/locale/theme observations had no document horizontal overflow; visual spot checks found at 1024px paper table 984px content inside a 759px container with no visible cue. Shared desktop table cue and four missing legacy paper/backtest focusable localized table regions now render correctly; Chrome ArrowRight moved focused paper scrollLeft, and 390px ZH/dark paper retained no document overflow. Original ZH/dark/default viewport restored. Frontend228, ESLint, TypeScript, build, Prettier and diff check PASS. Read-only DB counts formal1/3/310, product jobs8, paper5/events417 unchanged. Bounded QA-VISUAL/A11Y progress only; native zoom, full WCAG, missing genuine ledgers, independent backup, lawful 2026 feed, Docker post-login autostart and release gates remain open. User answered unknown for backup destination, pre-loss ledgers and feed rights; no authority inferred",
     "2026-09-24 21:01UTC actual Chrome Data Center found raw-update consent label 663x26px on desktop; one existing CSS min-height now makes it 663x40px. At temporary 390x844 viewport it measured 307x42.875px with document width375; viewport reset, no consent selected or provider request sent. Frontend228, ESLint, TypeScript/build, CSS Prettier and diff check PASS. Windows Docker log contains no launch between the 22:29 AEST reboot and 03:46 AEST manual start; quoted Run path remains untested by a later genuine login. User answered unknown for independent backup destination, genuine pre-loss copies of two paper ledgers and lawful 2026 feed rights; none is assumed. M4/U7/M5/release gates unchanged",
@@ -480,13 +480,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "82e3fff",
+      "last_verified_head": "e938b67",
       "state": "DRAFT",
-      "ci_run": 36060700967,
+      "ci_run": 36063147686,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Real Chrome bilingual paper/backtest table scrolling and formal archive translated status AX spot checks PASS; 100 route-size-locale-theme width observations had no document overflow. Native 200pct zoom, full visual/A11Y/performance matrix and forward mode remain incomplete. Docker post-login auto-start still unproven; missing genuine ledgers, independent backup and lawful forward authority remain open"
+      "browser_gate": "Real Chrome completed historical result to separate paper-form handoff ZH/EN PASS without account/order submission; bilingual table scrolling and formal archive translated status AX spot checks PASS. Native 200pct zoom, full visual/A11Y/performance matrix and forward mode remain incomplete. Docker post-login auto-start still unproven; missing genuine ledgers, independent backup and lawful forward authority remain open"
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",

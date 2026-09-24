@@ -31,6 +31,10 @@ handoff link, then the independent form with historical provider locked,
 2010-01-04→2011-03-22 source range explained, blank start, 2011-03-22 end,
 CNY100000 capital, 20-session/20-holding strategy, 0.1 position cap,
 -0.2 drawdown limit and 0.0003/5 cost assumptions. No form was submitted.
+English Chrome displayed the same independent-account and date-limit warnings;
+the original Chinese/dark preference was restored. PR #32 code head `e938b67`
+passed [CI36063147686](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36063147686)
+backend/frontend/Compose.
 Unit regression covers the result link, long-range guard, exact-string inputs
 and synthetic rejection. Full frontend 231/231, ESLint, TypeScript, production
 build and changed-file formatting passed locally. Read-only live DB counts
