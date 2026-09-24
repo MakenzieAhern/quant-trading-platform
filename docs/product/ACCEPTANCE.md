@@ -1,5 +1,18 @@
 # v1.2 acceptance ledger
 
+## 2026-09-24 23:24 UTC release backend migration safety
+
+Read-only review of the merged release Compose configuration found that the
+backend still inherited development's `alembic upgrade head && uvicorn` startup
+command. The release overlay now resets that command to the backend image's
+plain Uvicorn default; CI checks both release backend and frontend commands.
+Local Compose JSON checks confirm both release commands are null while the
+development command remains unchanged. No release stack, migration, account,
+market source or live database write was run. A schema change still requires a
+controlled one-off migration after a verified independent backup. This removes
+one accidental startup-migration risk, not the missing pre-loss paper ledgers,
+independent backup gap or M4/M5 release blockers.
+
 ## 2026-09-24 22:34 UTC paper-session entry and lifecycle copy
 
 Actual Chrome on `/paper` showed five retained sessions whose first-column

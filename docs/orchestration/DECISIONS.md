@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 release startup does not migrate application history — 2026-09-24
+
+The development backend still migrates on startup for convenience. The release
+Compose overlay instead resets that inherited command and uses the backend
+image's plain Uvicorn CMD. A release cutover must check schema compatibility
+and apply any needed Alembic migration as a separately controlled action after
+an independently verified backup. CI asserts the merged release command for
+both backend and frontend. This is a deployment safety boundary, not permission
+to rehearse on the current live database while M4 integrity/backup gates fail.
+
 ## v1.2 paper handoff eligibility and invalid timing method — 2026-09-24
 
 The saved-result link and destination form now share the same accepted
