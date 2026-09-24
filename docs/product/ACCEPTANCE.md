@@ -54,6 +54,28 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
 
+## 2026-09-24 02:11 UTC experiment comparison selection target
+
+Actual Chrome 153 on the populated `/experiments` page found eight row-level
+comparison checkboxes with only an 18×18 CSS-pixel pointer target. The column
+visibility options already had larger label targets. A label around each row
+checkbox now provides a 40×40 target while retaining its bilingual accessible
+name and the original selection/three-study limit. At native 200% zoom in a
+physical 1280×800 window (CSS 640px, DPR 2), clicking the new outer edge
+selected a study, and keyboard Space removed it; the selected count changed
+from 0 to 1 and back. The document/client widths were both 640px. English
+`Select for comparison` remained correctly named. In a separate fresh Chrome
+profile at standard 390×844/DPR 1, the label measured 40×40 and page width
+equaled the 390px viewport; only the data table scrolled horizontally.
+[Mobile capture](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/experiment-select-mobile-after-20260924.png)
+is outside Git (SHA-256
+`B852B32DFC92851A73AEDCE878912E152843FBBBE982685F4C2F369E4AFC3325`).
+Frontend 219 tests, ESLint, TypeScript and production build passed. This closes
+one `QA-A11Y` target defect, not the full WCAG/AT/visual matrix; its status
+remains IN_PROGRESS. PR #32 code head `f02dbf5` passed
+[CI 35946268129](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35946268129)
+for backend, frontend and Compose. No research task or paper account was started.
+
 ## 2026-09-24 01:31 UTC native 200% narrow/short first-action visibility
 
 Actual local Chrome 153 at 200% page zoom in a physical 1024×768 window
