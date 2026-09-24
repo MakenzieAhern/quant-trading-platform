@@ -1870,3 +1870,23 @@ restored. Full frontend 237/237, ESLint, TypeScript, production build and
 changed-file Prettier passed. No research, account, order or data was changed.
 This closes only this U8 reading-context defect, not the full bilingual,
 screen-reader, performance or novice-user acceptance; M4/M5 remain open.
+
+## 2026-09-24 23:15 UTC isolated release frontend runtime gate
+
+The release CI now builds the actual Compose-selected frontend image, runs that
+image without starting backend/PostgreSQL/Redis, and checks HTTP 200 for `/`
+and the `/help` deep link. The merged Compose command-null assertion remains.
+Local rehearsal built the isolated image; both routes returned HTTP 200 with
+Nginx and the expected headers. Actual Chrome on the isolated 15173 origin
+rendered the Chinese help page and expanded a help answer, proving the bundle
+ran beyond a bare HTTP response. Its top bar correctly showed service
+unavailable: the running backend only accepts the normal 5173 origin, so this
+does **not** prove end-to-end release API operation. The disposable frontend
+containers were stopped without touching the main four services or DB.
+
+One local `docker compose run --no-deps` experiment unexpectedly pre-created
+three `qtp-release-smoke_*` named volumes although no database service ran.
+They were left intact under the no-volume-deletion policy. CI uses `docker run`
+for the image smoke instead, avoiding that side effect. Windows currently
+shows Docker AutoStart enabled and a quoted HKCU Run path, but no subsequent
+real login has tested it. `QA-RELEASE` and `M5-DELIVERY` remain FAIL.

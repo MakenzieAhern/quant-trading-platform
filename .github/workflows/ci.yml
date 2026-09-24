@@ -76,3 +76,9 @@ jobs:
       - run: docker compose -f compose.test.yml config --quiet
       - run: docker compose -f docker-compose.yml -f compose.release.yml config --quiet
       - run: docker compose -f docker-compose.yml -f compose.release.yml config --format json | python3 -c 'import json, sys; assert json.load(sys.stdin)["services"]["frontend"].get("command") is None'
+      - run: |
+          docker compose -p qtp-release-smoke -f docker-compose.yml -f compose.release.yml build frontend
+          container_id=$(docker run --rm -d -p 127.0.0.1:15173:5173 qtp-release-smoke-frontend)
+          trap 'docker stop "$container_id" >/dev/null' EXIT
+          curl -fsSI --retry 5 --retry-connrefused --retry-delay 1 http://127.0.0.1:15173/
+          curl -fsSI http://127.0.0.1:15173/help

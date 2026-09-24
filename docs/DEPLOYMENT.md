@@ -12,6 +12,10 @@ This uses the installed backend image without a source-code mount and an nginx-s
 frontend production bundle (no Vite server). The registered fixture directory is read-only.
 It retains the same loopback ports and local PostgreSQL history. This is a local release
 rehearsal, not an authenticated public deployment. Return to development with `make up`.
+It replaces the running project containers and the backend startup runs Alembic on the
+existing database. Do not run it on the current v1.2 workbench until data-integrity and
+independent-backup gates pass; the CI frontend smoke uses an isolated image and does not
+start PostgreSQL, Redis or the backend.
 
 Docker Compose is the supported development deployment, not a production trading topology.
 
