@@ -88,6 +88,8 @@ async def test_frozen_a_share_runtime_consumes_only_completed_simulated_sessions
     assert runtime.strategy_id == FROZEN_A_SHARE_STRATEGY_ID
     assert len(deltas) == 254
     assert sum(len(item.proposals) for item in deltas) == 1
+    assert deltas[-2].target is not None
+    assert deltas[-1].target is None
     assert sum(len(item.decisions) for item in deltas) == 1
     assert sum(len(item.fills) for item in deltas) == 1
     assert deltas[-1].fills[0].symbol.endswith(".SSE")
@@ -108,6 +110,10 @@ async def test_frozen_a_share_runtime_consumes_only_completed_simulated_sessions
         "fill.created",
         "portfolio.snapshot",
     ]
+    plan = {"plan_version": "PAPER_ACCOUNT_PLAN_V1", "as_of_trading_date": "2030-01-03"}
+    serialized = PaperTradingManager._serialize_a_share_delta(deltas[-2], plan=plan)
+    assert serialized[-1][2]["plan"] == plan
+    assert "plan" not in PaperTradingManager._serialize_a_share_delta(deltas[-2])[-1][2]
     assert runtime.cancel_pending_orders() == ()
     with pytest.raises(ReplayProviderError, match="already stopped"):
         await runtime.process_session(sessions[-1])

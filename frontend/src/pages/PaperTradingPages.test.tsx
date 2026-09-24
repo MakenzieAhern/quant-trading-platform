@@ -9,6 +9,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { i18n } from "../i18n";
+import { plan } from "../product/experiments/fixtures.test-data";
 import { jsonResponse } from "../test/fixtures";
 import { PAPER_ID, paperSession, paperSnapshot } from "../test/paperFixtures";
 import { CreatePaperSessionPage } from "./CreatePaperSessionPage";
@@ -138,6 +139,68 @@ describe("paper trading pages", () => {
     expect(await screen.findByText("CREATED")).toBeInTheDocument();
     expect(screen.getByText(/SIMULATED EXECUTION ONLY/)).toBeInTheDocument();
     expect(screen.getByTitle(PAPER_ID)).toBeInTheDocument();
+  });
+
+  it("shows the account's dated plan without implying a live order", async () => {
+    installWebSocket();
+    const accountPlan = {
+      ...plan,
+      mode: "historical_exploration",
+      as_of_trading_date: "2011-03-22",
+      next_accepted_session: "2011-03-23",
+      account_mode: "HISTORICAL_PAPER_REPLAY",
+      submitted_to_account: true,
+      paper_session_id: PAPER_ID,
+      plan_version: "PAPER_ACCOUNT_PLAN_V1",
+    };
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({
+        ...paperSnapshot("STOPPED"),
+        last_rebalance_plan: accountPlan,
+        session: {
+          ...paperSession("STOPPED"),
+          provider_type: "historical_a_share",
+          strategy_type: "cn_a_cross_sectional_momentum_low_vol_v1",
+        },
+        latest_portfolio: {
+          timestamp: "2011-03-23T07:00:00Z",
+          cash: "90123",
+          market_value: "9877",
+          equity: "100000",
+          realized_pnl: "0",
+          unrealized_pnl: "0",
+          cumulative_commission: "0",
+          drawdown: "0",
+          positions: [],
+          plan: {
+            ...accountPlan,
+            status: "NOT_REBALANCE_SESSION",
+            as_of_trading_date: "2011-03-23",
+            candidates: [],
+            submitted_to_account: false,
+          },
+        },
+      }),
+    );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    expect(
+      await screen.findByText("This account's historical rebalance plan"),
+    ).toBeVisible();
+    expect(
+      screen.getByText(/routed through this account's simulated risk/),
+    ).toBeVisible();
+    expect(screen.getByText("9.123456789123456789")).toBeVisible();
+    expect(screen.getByText("2011-03-22")).toBeVisible();
+    expect(screen.getByText("Cash at plan time (CNY)")).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: /execute|submit/i }),
+    ).not.toBeInTheDocument();
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(screen.getByText("此模拟账户的历史调仓计划")).toBeVisible();
+    expect(screen.getByText(/不是今日交易建议/)).toBeVisible();
+    expect(screen.getByText("计划时账户现金（人民币）")).toBeVisible();
+    await act(async () => i18n.changeLanguage("en-US"));
   });
 
   it("keeps a denied paper-list error typed for actionable guidance", async () => {

@@ -143,6 +143,16 @@ export interface SimulationPlan {
   estimated_cash_required: string | null;
   risk_rejections?: number;
 }
+
+export type PaperAccountPlan = Omit<
+  SimulationPlan,
+  "account_mode" | "submitted_to_account"
+> & {
+  account_mode: "HISTORICAL_PAPER_REPLAY";
+  submitted_to_account: boolean;
+  paper_session_id: string;
+  plan_version: "PAPER_ACCOUNT_PLAN_V1";
+};
 export interface ExperimentEquity {
   sequence: number;
   trading_date: string;

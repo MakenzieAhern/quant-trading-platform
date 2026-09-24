@@ -36,5 +36,6 @@ export function paperSnapshot(
     orders: [],
     fills: [],
     latest_portfolio: null,
+    last_rebalance_plan: null,
   };
 }

@@ -67,6 +67,7 @@ class ResearchExecutionResult:
 @dataclass(frozen=True, slots=True)
 class ResearchExecutionDelta:
     session: ResearchSession
+    target: PortfolioTarget | None
     proposals: tuple[OrderProposal, ...]
     decisions: tuple[RiskDecision, ...]
     orders: tuple[Order, ...]
@@ -142,7 +143,7 @@ class ResearchExecutionEngine:
         fill_count = len(self._broker.fills)
         expired_count = len(self._expired_order_ids)
         check_count = len(self._execution_checks)
-        self._process_session(session)
+        target = self._process_session(session)
         self._previous_date = session.trading_date
         proposals = self._oms.proposals[proposal_count:]
         fills = self._broker.fills[fill_count:]
@@ -153,6 +154,7 @@ class ResearchExecutionEngine:
         )
         return ResearchExecutionDelta(
             session=session,
+            target=target,
             proposals=proposals,
             decisions=self._oms.decisions[decision_count:],
             orders=tuple(item for item in self._oms.orders if item.id in order_ids),
@@ -187,7 +189,7 @@ class ResearchExecutionEngine:
         self._active_session = None
         self._previous_date = None
 
-    def _process_session(self, session: ResearchSession) -> None:
+    def _process_session(self, session: ResearchSession) -> PortfolioTarget | None:
         self._active_session = session
         timestamp = datetime.combine(
             session.trading_date, time(15, 0, 0, 1), tzinfo=ZoneInfo("Asia/Shanghai")
@@ -316,7 +318,7 @@ class ResearchExecutionEngine:
 
         snapshot = self._portfolio.latest_snapshot
         if snapshot is None:
-            return
+            return None
         # Accounting evidence (including later allocation sources) is never a factor input.
         target = self._strategy.target_for_completed_session(
             replace(
@@ -334,10 +336,11 @@ class ResearchExecutionEngine:
         )
         if target is None:
             self._portfolio.compact_closed_positions()
-            return
+            return None
         self._expire_pending()
         self._route_target(target, timestamp)
         self._portfolio.compact_closed_positions()
+        return target
 
     def _fill_eligible(self, order: Order, bar: Bar) -> bool:
         session = self._active_session

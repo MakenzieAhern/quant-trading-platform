@@ -1,5 +1,6 @@
 import { apiRequest } from "./client";
 import { API_BASE_URL } from "./config";
+import { parsePaperAccountPlan } from "../product/experiments/api";
 import type {
   CreatePaperSessionRequest,
   MarketBar,
@@ -220,6 +221,7 @@ const portfolio = (value: unknown): PaperPortfolio => {
         realized_pnl: decimal(position.realized_pnl),
       };
     }),
+    plan: item.plan == null ? null : parsePaperAccountPlan(item.plan),
   };
 };
 
@@ -227,7 +229,7 @@ function snapshot(value: unknown): PaperSnapshot {
   const item = record(value);
   if (!Number.isSafeInteger(item.last_sequence))
     throw new Error("Invalid sequence.");
-  return {
+  const result: PaperSnapshot = {
     session: session(item.session),
     last_sequence: item.last_sequence as number,
     latest_bar: item.latest_bar === null ? null : marketBar(item.latest_bar),
@@ -239,7 +241,20 @@ function snapshot(value: unknown): PaperSnapshot {
     fills: array(item.fills, fill),
     latest_portfolio:
       item.latest_portfolio === null ? null : portfolio(item.latest_portfolio),
+    last_rebalance_plan:
+      item.last_rebalance_plan == null
+        ? null
+        : parsePaperAccountPlan(item.last_rebalance_plan),
   };
+  if (
+    (result.latest_portfolio?.plan || result.last_rebalance_plan) &&
+    (result.session.provider_type !== "historical_a_share" ||
+      [result.latest_portfolio?.plan, result.last_rebalance_plan].some(
+        (plan) => plan && plan.paper_session_id !== result.session.session_id,
+      ))
+  )
+    throw new Error("Paper plan does not belong to this account.");
+  return result;
 }
 
 function page(value: unknown): PaperSessionPage {

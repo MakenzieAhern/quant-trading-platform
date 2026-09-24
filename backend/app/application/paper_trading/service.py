@@ -19,8 +19,9 @@ from app.application.experiments.data import (
     load_experiment_dataset,
 )
 from app.application.experiments.models import CreateExperimentRequest
-from app.application.experiments.runner import ExploratoryStrategy
+from app.application.experiments.runner import ExploratoryStrategy, build_plan_preview, json_value
 from app.backtest import BacktestConfig
+from app.data.catalog.checksums import canonical_sha256
 from app.data.full_dataset import FullDataset
 from app.data.providers import Timeframe
 from app.db.repositories.paper import SQLAlchemyPaperRepository
@@ -145,6 +146,7 @@ class PaperTradingManager:
         parameters = self._json_decimals(command.strategy_parameters)
         if command.provider_type == "historical_a_share":
             parameters["dataset_sha256"] = str(registered["sha256"])
+            parameters["plan_version"] = "PAPER_ACCOUNT_PLAN_V1"
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
             if command.client_request_id is not None:
@@ -385,6 +387,11 @@ class PaperTradingManager:
                     if session.provider_type == "historical_a_share"
                     else None
                 )
+                plan_request = (
+                    self._historical_request(session)
+                    if session.strategy_parameters.get("plan_version") == "PAPER_ACCOUNT_PLAN_V1"
+                    else None
+                )
 
                 async def process_session(item: ResearchSession) -> None:
                     nonlocal matched_cursor
@@ -396,7 +403,25 @@ class PaperTradingManager:
                         if session.provider_type == "historical_a_share"
                         else SIMULATED_SOURCE
                     )
-                    events = self._serialize_a_share_delta(delta, source=source)
+                    plan = None
+                    if plan_request is not None:
+                        plan = build_plan_preview(
+                            plan_request,
+                            str(session.strategy_parameters["dataset_sha256"]),
+                            "historical_exploration",
+                            delta,
+                            delta.target,
+                            runtime.next_accepted_session(item.trading_date),
+                            runtime.completed_sessions,
+                        )
+                        plan.update(
+                            paper_session_id=str(session.id),
+                            account_mode="HISTORICAL_PAPER_REPLAY",
+                            submitted_to_account=bool(delta.proposals),
+                            plan_version="PAPER_ACCOUNT_PLAN_V1",
+                            configuration_sha256=self._historical_plan_sha(session, plan_request),
+                        )
+                    events = self._serialize_a_share_delta(delta, source=source, plan=plan)
                     if cursor_date is not None and item.trading_date <= cursor_date:
                         replayed.extend((kind, payload) for kind, _, payload in events)
                         if item.trading_date == cursor_date:
@@ -492,6 +517,43 @@ class PaperTradingManager:
             if self._providers.get(session.id) is provider:
                 self._providers.pop(session.id, None)
 
+    @staticmethod
+    def _historical_request(session: PaperSession) -> CreateExperimentRequest:
+        params = session.strategy_parameters
+        return CreateExperimentRequest.model_validate(
+            {
+                "name": "Historical paper replay",
+                "dataset_id": session.dataset_id,
+                "start_date": params["start_date"],
+                "end_date": params["end_date"],
+                "initial_cash": canonical_decimal(session.initial_cash),
+                "universe": params["universe"],
+                "strategy": {
+                    "rebalance_sessions": params["rebalance_sessions"],
+                    "maximum_holdings": params["maximum_holdings"],
+                },
+                "costs": {
+                    "commission_rate": params["commission_rate"],
+                    "minimum_commission": params["minimum_commission"],
+                },
+                "risk": {
+                    "max_drawdown": session.risk["max_drawdown"],
+                    "max_position_weight": params["max_position_weight"],
+                },
+            }
+        )
+
+    @classmethod
+    def _historical_plan_sha(cls, session: PaperSession, request: CreateExperimentRequest) -> str:
+        return canonical_sha256(
+            json_value(
+                {
+                    "request": request.model_dump(),
+                    "effective_risk": cls._historical_effective_risk(session).model_dump(),
+                }
+            )
+        )
+
     def _build_runtime(
         self, session: PaperSession, cursor_date: date | None = None
     ) -> tuple[
@@ -517,28 +579,7 @@ class PaperTradingManager:
         if session.provider_type == "historical_a_share":
             assert self._historical_datasets is not None
             params = session.strategy_parameters
-            request = CreateExperimentRequest.model_validate(
-                {
-                    "name": "Historical paper replay",
-                    "dataset_id": session.dataset_id,
-                    "start_date": params["start_date"],
-                    "end_date": params["end_date"],
-                    "initial_cash": canonical_decimal(session.initial_cash),
-                    "universe": params["universe"],
-                    "strategy": {
-                        "rebalance_sessions": params["rebalance_sessions"],
-                        "maximum_holdings": params["maximum_holdings"],
-                    },
-                    "costs": {
-                        "commission_rate": params["commission_rate"],
-                        "minimum_commission": params["minimum_commission"],
-                    },
-                    "risk": {
-                        "max_drawdown": session.risk["max_drawdown"],
-                        "max_position_weight": params["max_position_weight"],
-                    },
-                }
-            )
+            request = self._historical_request(session)
             data = load_experiment_dataset(
                 self._historical_datasets, session.dataset_id, request.start_date, request.end_date
             )
@@ -577,13 +618,7 @@ class PaperTradingManager:
                     initial_cash=session.initial_cash,
                     commission_model=commission,
                     calendar=calendar,
-                    risk_config=RiskConfig(
-                        **{
-                            **risk.model_dump(),
-                            "enforce_buying_power": True,
-                            "max_leverage": Decimal(1),
-                        }
-                    ),
+                    risk_config=self._historical_effective_risk(session),
                     strategy=ExploratoryStrategy(request),
                 ),
             )
@@ -640,6 +675,16 @@ class PaperTradingManager:
             max_leverage=optional_decimal("max_leverage"),
             enforce_buying_power=bool(session.risk.get("enforce_buying_power", False)),
             max_drawdown=optional_decimal("max_drawdown"),
+        )
+
+    @classmethod
+    def _historical_effective_risk(cls, session: PaperSession) -> RiskConfig:
+        return RiskConfig(
+            **{
+                **cls._risk_config(session).model_dump(),
+                "enforce_buying_power": True,
+                "max_leverage": Decimal(1),
+            }
         )
 
     async def _transition(
@@ -706,7 +751,11 @@ class PaperTradingManager:
 
     @classmethod
     def _serialize_a_share_delta(
-        cls, delta: ResearchExecutionDelta, *, source: str = SIMULATED_SOURCE
+        cls,
+        delta: ResearchExecutionDelta,
+        *,
+        source: str = SIMULATED_SOURCE,
+        plan: dict[str, object] | None = None,
     ) -> tuple[tuple[str, datetime, dict[str, object]], ...]:
         if delta.snapshot is None:
             raise RuntimeError("A-share session did not produce a portfolio snapshot")
@@ -750,7 +799,10 @@ class PaperTradingManager:
             for item in delta.orders
             if item.id not in filled_order_ids
         )
-        events.append(("portfolio.snapshot", timestamp, cls._snapshot(delta.snapshot)))
+        snapshot = cls._snapshot(delta.snapshot)
+        if plan is not None:
+            snapshot["plan"] = plan
+        events.append(("portfolio.snapshot", timestamp, snapshot))
         return tuple(events)
 
     @staticmethod

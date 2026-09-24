@@ -178,12 +178,12 @@ def run_experiment(
             progress("EXECUTING", completed, total)
     check_cancelled()
     assert last_delta is not None
-    plan = _plan_preview(
+    plan = build_plan_preview(
         request,
         registered["sha256"],
         registered["mode"],
         last_delta,
-        strategy.last_target,
+        last_delta.target,
         data.next_session.session_date if data.next_session is not None else None,
         total,
     )
@@ -346,7 +346,7 @@ def run_experiment(
     )
 
 
-def _plan_preview(
+def build_plan_preview(
     request: CreateExperimentRequest,
     dataset_sha256: str,
     mode: str,

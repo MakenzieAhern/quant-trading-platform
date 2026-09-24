@@ -115,12 +115,46 @@ async def test_historical_a_share_account_creation_has_distinct_mode_and_dated_c
     assert created.json()["provider_type"] == "historical_a_share"
     assert created.json()["strategy_parameters"]["start_date"] == "2011-03-01"
     assert created.json()["strategy_parameters"]["dataset_sha256"] == "a" * 64
+    assert created.json()["strategy_parameters"]["plan_version"] == "PAPER_ACCOUNT_PLAN_V1"
     assert created.json()["risk"]["max_drawdown"] == "-0.2"
     same = await client.post(
         "/api/paper-trading/sessions", json=historical_request_body(), headers=headers
     )
     assert same.json()["session_id"] == created.json()["session_id"]
     assert (await client.get("/api/paper-trading/sessions")).json()["total"] == 1
+
+
+async def test_historical_plan_checksum_covers_effective_account_risk(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert paper_manager._historical_datasets is not None
+    monkeypatch.setattr(
+        paper_manager._historical_datasets,
+        "resolve",
+        lambda _: {
+            "coverage_start": "2010-01-01",
+            "coverage_end": "2025-12-31",
+            "sha256": "a" * 64,
+        },
+    )
+    first = await client.post("/api/paper-trading/sessions", json=historical_request_body())
+    changed = historical_request_body()
+    changed["risk"] = {
+        "enforce_buying_power": True,
+        "max_leverage": "1",
+        "max_order_notional": "5000",
+    }
+    second = await client.post("/api/paper-trading/sessions", json=changed)
+    assert first.status_code == second.status_code == 201
+    original = await paper_manager.get(UUID(first.json()["session_id"]))
+    limited = await paper_manager.get(UUID(second.json()["session_id"]))
+    assert original is not None and limited is not None
+    original_request = paper_manager._historical_request(original)
+    limited_request = paper_manager._historical_request(limited)
+    assert original_request == limited_request
+    assert paper_manager._historical_plan_sha(
+        original, original_request
+    ) != paper_manager._historical_plan_sha(limited, limited_request)
 
 
 async def test_create_idempotency_validation_and_safe_lookup(client: AsyncClient) -> None:
@@ -388,6 +422,64 @@ async def test_real_archive_pause_resume_preserves_pending_orders_and_fills(
     assert baseline_status["status"] == "STOPPED", baseline_status
     baseline_events = (await client.get(f"/api/paper-trading/sessions/{baseline_id}/events")).json()
     assert sum(item["type"] == "fill.created" for item in baseline_events) == 6
+    baseline_plans = [
+        item["payload"]["plan"]
+        for item in baseline_events
+        if item["type"] == "portfolio.snapshot" and item["payload"].get("plan")
+    ]
+    assert baseline_plans[-2]["as_of_trading_date"] == "2011-03-22"
+    assert baseline_plans[-2]["paper_session_id"] == baseline_id
+    assert baseline_plans[-2]["submitted_to_account"] is True
+    assert baseline_plans[-2]["candidates"]
+    assert baseline_plans[-2]["account_mode"] == "HISTORICAL_PAPER_REPLAY"
+    baseline_session = await paper_manager.get(UUID(baseline_id))
+    assert baseline_session is not None
+    assert baseline_plans[-2]["configuration_sha256"] == paper_manager._historical_plan_sha(
+        baseline_session, paper_manager._historical_request(baseline_session)
+    )
+    baseline_snapshot = (
+        await client.get(f"/api/paper-trading/sessions/{baseline_id}/snapshot")
+    ).json()
+    assert baseline_snapshot["latest_session"]["trading_date"] == "2011-03-23"
+    assert baseline_snapshot["latest_portfolio"]["plan"]["status"] == "NOT_REBALANCE_SESSION"
+    assert baseline_snapshot["last_rebalance_plan"]["as_of_trading_date"] == "2011-03-22"
+    assert baseline_snapshot["last_rebalance_plan"]["paper_session_id"] == baseline_id
+
+    legacy = await client.post("/api/paper-trading/sessions", json=body)
+    assert legacy.status_code == 201, legacy.text
+    legacy_id = legacy.json()["session_id"]
+    legacy_parameters = dict(legacy.json()["strategy_parameters"])
+    legacy_parameters.pop("plan_version")
+    async with SessionFactory() as db:
+        await db.execute(
+            update(PaperTradingSessionModel)
+            .where(PaperTradingSessionModel.id == UUID(legacy_id))
+            .values(strategy_parameters=legacy_parameters)
+        )
+        await db.commit()
+    legacy_row = await paper_manager.get(UUID(legacy_id))
+    assert legacy_row is not None and "plan_version" not in legacy_row.strategy_parameters
+    await client.post(f"/api/paper-trading/sessions/{legacy_id}/start")
+    for _ in range(1200):
+        legacy_status = (await client.get(f"/api/paper-trading/sessions/{legacy_id}")).json()
+        if legacy_status["status"] in {"STOPPED", "FAILED"}:
+            break
+        await asyncio.sleep(0.05)
+    assert legacy_status["status"] == "STOPPED", legacy_status
+    legacy_events = (await client.get(f"/api/paper-trading/sessions/{legacy_id}/events")).json()
+    assert sum(item["type"] == "fill.created" for item in legacy_events) == 6
+    assert all(
+        item["payload"].get("plan") is None
+        for item in legacy_events
+        if item["type"] == "portfolio.snapshot"
+    )
+    assert all(
+        "plan" not in item.payload
+        for item in await paper_manager.events(UUID(legacy_id))
+        if item.event_type == "portfolio.snapshot"
+    )
+    legacy_snapshot = (await client.get(f"/api/paper-trading/sessions/{legacy_id}/snapshot")).json()
+    assert legacy_snapshot["last_rebalance_plan"] is None
 
     monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0.3)
     created = await client.post("/api/paper-trading/sessions", json=body)
@@ -402,6 +494,8 @@ async def test_real_archive_pause_resume_preserves_pending_orders_and_fills(
             break
         await asyncio.sleep(0.05)
     assert current["latest_session"]["trading_date"] == "2011-03-22", current
+    assert current["latest_portfolio"]["plan"]["as_of_trading_date"] == "2011-03-22"
+    assert current["latest_portfolio"]["plan"]["paper_session_id"] == session_id
     await client.post(f"/api/paper-trading/sessions/{session_id}/pause")
     for _ in range(100):
         paused = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
@@ -429,15 +523,27 @@ async def test_real_archive_pause_resume_preserves_pending_orders_and_fills(
         await asyncio.sleep(0.05)
     assert resumed["status"] == "STOPPED", resumed
     resumed_events = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
-    assert [
-        (item["type"], item["payload"])
-        for item in resumed_events
-        if item["type"] != "session.status"
-    ] == [
-        (item["type"], item["payload"])
-        for item in baseline_events
-        if item["type"] != "session.status"
-    ]
+    resumed_snapshot = (
+        await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")
+    ).json()
+    assert resumed_snapshot["last_rebalance_plan"]["as_of_trading_date"] == "2011-03-22"
+    assert resumed_snapshot["last_rebalance_plan"]["paper_session_id"] == session_id
+
+    def comparable_events(events: list[dict[str, object]]) -> list[tuple[object, object]]:
+        result = []
+        for item in events:
+            if item["type"] == "session.status":
+                continue
+            payload = item["payload"]
+            assert isinstance(payload, dict)
+            if item["type"] == "portfolio.snapshot" and payload.get("plan"):
+                plan = payload["plan"]
+                assert isinstance(plan, dict)
+                payload = {**payload, "plan": {**plan, "paper_session_id": "<account>"}}
+            result.append((item["type"], payload))
+        return result
+
+    assert comparable_events(resumed_events) == comparable_events(baseline_events)
 
 
 async def test_stopping_paused_account_cancels_persisted_pending_order(

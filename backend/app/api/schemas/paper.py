@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Literal
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, Field, model_validator
@@ -177,6 +177,7 @@ class PortfolioPayload(BaseModel):
     cumulative_commission: str
     drawdown: str
     positions: list[PositionPayload]
+    plan: dict[str, Any] | None = None
 
 
 PaperPayload = (
@@ -217,3 +218,4 @@ class PaperSnapshotResponse(BaseModel):
     orders: list[PaperOrderResponse]
     fills: list[FillResponse]
     latest_portfolio: PortfolioPayload | None
+    last_rebalance_plan: dict[str, Any] | None = None

@@ -81,11 +81,23 @@ export function applyPaperEvent(
       fills: replaceBy(current.fills, fill, (item) => item.order_id),
     };
   }
-  if (event.type === "portfolio.snapshot")
+  if (event.type === "portfolio.snapshot") {
+    const portfolio = paperParsers.portfolio(event.payload);
+    if (
+      portfolio.plan &&
+      (current.session.provider_type !== "historical_a_share" ||
+        portfolio.plan.paper_session_id !== current.session.session_id)
+    )
+      throw new Error("Paper plan does not belong to this account.");
     return {
       ...next,
-      latest_portfolio: paperParsers.portfolio(event.payload),
+      latest_portfolio: portfolio,
+      last_rebalance_plan:
+        portfolio.plan?.status === "SIMULATION_PREVIEW"
+          ? portfolio.plan
+          : current.last_rebalance_plan,
     };
+  }
   return next;
 }
 

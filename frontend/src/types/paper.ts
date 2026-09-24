@@ -1,3 +1,5 @@
+import type { PaperAccountPlan } from "../product/experiments/types";
+
 export type PaperSessionStatus =
   | "CREATED"
   | "STARTING"
@@ -104,6 +106,7 @@ export interface PaperPortfolio {
   cumulative_commission: string;
   drawdown: string;
   positions: PaperPosition[];
+  plan: PaperAccountPlan | null;
 }
 
 export interface PaperSnapshot {
@@ -116,6 +119,7 @@ export interface PaperSnapshot {
   orders: PaperOrder[];
   fills: PaperFill[];
   latest_portfolio: PaperPortfolio | null;
+  last_rebalance_plan: PaperAccountPlan | null;
 }
 
 export interface PaperSessionPage {

@@ -168,6 +168,7 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
     latest_bar: MarketBarPayload | None = None
     latest_session: MarketSessionPayload | None = None
     latest_portfolio: PortfolioPayload | None = None
+    last_rebalance_plan: dict[str, object] | None = None
     signals = []
     decisions = []
     fills = []
@@ -195,6 +196,9 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
             fills.append(FillResponse.model_validate(payload))
         elif event.event_type == "portfolio.snapshot":
             latest_portfolio = PortfolioPayload.model_validate(payload)
+            plan = payload.get("plan")
+            if isinstance(plan, dict) and plan.get("status") == "SIMULATION_PREVIEW":
+                last_rebalance_plan = plan
     return PaperSnapshotResponse(
         session=_session_response(session),
         last_sequence=events[-1].sequence if events else 0,
@@ -205,6 +209,7 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
         orders=list(orders.values()),
         fills=fills,
         latest_portfolio=latest_portfolio,
+        last_rebalance_plan=last_rebalance_plan,
     )
 
 

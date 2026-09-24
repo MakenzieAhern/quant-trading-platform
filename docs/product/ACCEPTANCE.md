@@ -31,7 +31,7 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, automatic download and persistent prepared-file link | Injection/precision/API tests PASS, including CSV formula-prefix escaping. On 2026-09-23 21:09 UTC isolated real Chrome 153 with `acceptDownloads` at the documented `http://localhost:5173` origin emitted successful download events for historical job `d9f27183`: trades CSV 29,316 bytes and metadata JSON 258,223 bytes, with expected filenames and `download.failure() = null`; JSON began with report metadata and exact job ID. Earlier in-app-browser download suppression remains an environment-specific observation, not a failed Chrome export. Agent walkthrough, not a real-user study | PASS |
 | U5-MARKET | Search/watchlist/raw-adjusted/date/source view | /api/markets and /markets deployed0013 | 20 backend/14 frontend focused tests; independent review PASS; Chrome000001 raw22.45/HFQ874.904325432379995/suspension2010-03-01; watchlist persists fresh tab; dialog dates/locale/Esc;390+1280 no page overflow | PASS |
 | U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | /data and /api/market-updates; separate product cache and migration0014/0016 | Real Chrome one-security/one-date job `3b729cf9` succeeded and survived restart/reload. Four-board job `164c947d` had 3 new + 1 cached candidates. Targeted control retry `ed796871` added two 2026-09-22 vendor candidates: 688622 isST=1; 603400 suspended with blank raw turnover normalized to zero, never executable. On 2026-09-24 real Chrome reopened the existing successful child from failed parent `0eecbddb`; live jobs/receipts/observations stayed 4/6/6, with one child. A separate provider-free fixture browser run cancelled a RUNNING task, reopened it, and proved two parent retries resolve to one child, with zero receipts; details below. Separate candidate 2026 rules still authorize no fills. Full 2026 source authority remains | IN_PROGRESS |
-| U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Persisted result preview and independent audited historical paper account | Historical job `d9f27183` completed 293/293; preview 2011-03-22→23 had 32 candidates, 5 risk rejections. Independent account `d7044a3c` generated 20 risk decisions/orders and 6 fills through the paper runtime; future-data plan and actual forward receipt remain pending | IN_PROGRESS |
+| U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Persisted result preview and account-native plan in the audited historical paper event journal | Historical job `d9f27183` completed 293/293; its independent preview had 32 candidates and 5 risk rejections. A new isolated historical account `2f005ae8` saved its own 2011-03-22 plan with 20 candidates, submitted simulated proposals, and six later fills; the 2011-03-23 snapshot exposes the last actual rebalance plan separately from the latest balance. Real Chrome ZH/EN/mobile evidence below. New-market plan/receipt and forward-source authority remain pending | IN_PROGRESS |
 | U7-MODES | Three isolated account modes, start/pause/stop/risk/ledger | Synthetic demo + distinct audited historical replay with durable pause/resume; forward not implemented | Chrome previously verified account `4b64380f` with 20 orders/six fills, but that post-backup account is now absent after the 2026-09-23 database incident. The older uninterrupted account `d7044a3c` was restored from a verified backup. Forward mode remains unimplemented | FAIL |
 | U7-RECOVER | Socket disconnect/reconnect + backend restart don't fake/duplicate fills | Persisted paused state, deterministic source replay to checked cursor, then append-only continuation | Prior Chrome restart/resume observations for `4b64380f` and interrupted `07d72259` are retained as historical QA evidence, not current persistence proof: both post-backup ledgers are absent from the live DB. No synthetic reconstruction is accepted. On 2026-09-23 actual Chrome 153 injected one snapshot HTTP503 for restored stopped historical account `d7044a3c`: the page recovered via one WebSocket reconnect and a second authoritative REST snapshot with no alert; HTTP403 stopped after one request with permission guidance; persistent503 stopped after four total requests. Live counts paper5/events417/jobs8 unchanged. Focused18/full215 frontend tests, lint/type/build and [CI35933791233](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35933791233) backend/frontend/compose PASS; bounded retry and no stale-event ledger mutation have unit coverage. Full restart/forward recovery matrix and lost ledgers remain | FAIL |
 | U7-FORWARD | Lawful source + completed real session data arriving after user session start; receipt times/plan/simulation | Public-source candidate assessed, forward session not implemented | Historical probe is not forward evidence; real after-start arrival still required. Current SSE/SZSE Trading Rules §5.1.3 require permission for exchange trading-information use; BaoStock's public SDK and website access do not establish upstream/product execution rights (see SOURCE_READINESS). | NOT_RUN |
@@ -53,6 +53,57 @@ Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/prod
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
+
+## 2026-09-24 04:12 UTC account-native historical plan
+
+The U6 gap was not a missing button: the saved research-result preview belonged
+to its exploratory run, while the paper account independently generated orders
+without saving an account-specific plan. New historical accounts now version their
+plan contract as `PAPER_ACCOUNT_PLAN_V1` and store the completed-date plan in the
+same durable `portfolio.snapshot` event batch as their simulated risk/OMS/portfolio
+updates. Earlier accounts without that marker replay their original journal
+without a retroactive plan. The shared preview builder and existing display
+component were reused; no broker or new market feed was introduced.
+
+In an owned tmpfs PostgreSQL test stack with the audited historical archive mounted
+read-only, actual Chrome 153 at 1280×800 created account
+`2f005ae8-75d4-46e4-812b-051c59381009` and the user deliberately clicked
+Start. Instrumentation saw exactly one create POST and one start POST; subsequent
+reload, language and viewport checks added no POST. The stopped account's final
+session was 2011-03-23: latest cash CNY81,309.8134, equity CNY99,964.8134 and
+six fills. The API's latest-day plan correctly said `NOT_REBALANCE_SESSION`, while
+`last_rebalance_plan` selected the persisted 2011-03-22 plan (20 candidates,
+`submitted_to_account=true`, estimated approved-buy cash CNY75,191.75091) with
+the same account ID. This is not today's advice; the displayed next accepted
+session is the historical 2011-03-23, and cash at plan time was CNY100,000,
+distinct from the latest balance. Both languages visibly explain that distinction.
+At 390×844, Chrome measured document/client width 390/390 and showed a local
+horizontal-table scroll hint. The test-account data are disposable, not a live
+paper ledger or a forward-market receipt.
+
+The actual browser [Chinese plan](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u6-account-plan-zh-20260924.png),
+[English plan](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u6-account-plan-en-20260924.png), and
+[English mobile plan](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/u6-account-plan-en-mobile-detail-20260924.png)
+are outside Git; SHA-256 values are respectively
+`91764EBCB93CB0E91DE09C57606B8204C2F52F3E73BB4D7F4C1DEB4E3DA59E0E`,
+`321EACCABF9623BA4015EFA216DE1CB41611D68216A2595D07B45024054D4C7B`,
+and `C47FB9AF76534E43306B80479124F938453D77EC27D02DD79E2BF614C2A0EA0D`.
+Focused frontend 33/33 and final full frontend 224/224, ESLint, TypeScript and
+production build passed. The first isolated full-backend run failed 28 queue
+ownership checks because the still-running owned QA backend held advisory locks
+on that same disposable database; no financial assertion failed. After stopping
+only that QA backend, the identical full suite passed 976/976; Ruff, formatting
+and strict mypy also passed. An independent read-only review found that the
+initial configuration checksum omitted account order/exposure risk limits;
+the hash now includes full effective risk and the account-native plan test
+proves it changes with `max_order_notional`. A legacy-account test proves no
+plan is silently backfilled, and a WebSocket test covers incremental plan
+state. The final isolated backend suite passed 977/977 and the final frontend
+suite 224/224 after these fixes. The three real Chrome captures preceded the
+checksum-only backend correction; no post-correction Chrome recheck is claimed.
+U6/U7 and the release remain open:
+neither a lawful post-start forward data receipt nor the two missing genuine
+paper ledgers or independent physical backup exists in this evidence.
 
 ## 2026-09-24 03:35 UTC paper-list error guidance
 

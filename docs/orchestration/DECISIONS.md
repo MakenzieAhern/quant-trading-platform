@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 historical paper plans are account-native and versioned — 2026-09-24
+
+A saved exploratory result's plan is not an order for a separate paper account.
+New audited historical paper accounts marked `PAPER_ACCOUNT_PLAN_V1` therefore
+save each completed-date plan in the same durable `portfolio.snapshot` event
+batch as their own risk/OMS/portfolio outcome. Existing accounts without that
+marker replay their original event ledger without backfilling a plan. The plan
+reuses the actual engine target and decisions; the latest non-rebalance account
+snapshot and the last genuine rebalance plan remain separately dated. Its
+configuration checksum covers both the strategy request and the **full
+effective account risk** (including limits forced by historical mode), after
+an independent review found the initial request-only hash omitted order and
+exposure limits. The UI distinguishes plan-time balances from latest balances
+and never labels historical output as a current trade recommendation. This
+does not establish a lawful forward feed or repair missing prior paper ledgers.
+
 ## v1.2 retries use one database-enforced child per parent — 2026-09-24
 
 The retry UI key and an operator-created child's key need not match. Request-key

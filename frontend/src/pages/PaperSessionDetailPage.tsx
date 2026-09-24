@@ -6,6 +6,7 @@ import { ErrorPanel, LoadingPanel } from "../components/AsyncPanel";
 import { Link } from "../components/Link";
 import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
 import { StatusBadge } from "../components/StatusBadge";
+import { ExperimentPlan } from "../product/experiments/ExperimentPlan";
 import { usePaperStream } from "../hooks/usePaperStream";
 import { formatDecimal, formatUtc, shortId } from "../utils/format";
 
@@ -235,6 +236,12 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           <p className="emptyState">{t("detail.noPortfolio")}</p>
         )}
       </section>
+      {session.provider_type === "historical_a_share" && portfolio && (
+        <ExperimentPlan
+          plan={snapshot.last_rebalance_plan ?? portfolio.plan}
+          account
+        />
+      )}
       <PaperTable
         title={t("detail.positions")}
         empty={t("detail.noPositions")}
@@ -266,7 +273,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         ]}
         rows={snapshot.signals.map((item) => [
           formatUtc(item.timestamp),
-          t(`strategies.${item.strategy_id}`, { defaultValue: item.strategy_id }),
+          t(`strategies.${item.strategy_id}`, {
+            defaultValue: item.strategy_id,
+          }),
           item.symbol,
           t(`detail.directions.${item.signal_type}`, {
             defaultValue: item.signal_type,
