@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T20:22:27Z",
+  "updated_at_utc": "2026-09-24T20:33:39Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 20:33UTC isolated safety PR33 merged into main as 08a4f59 after focused guard tests, an explicit live-config collect-only rejection and backend/frontend/compose CI36055281479 PASS. Main CI36055484857 also passed all three jobs. This moves the pytest pre-collection guard and quant_test CI target from the v1.2 stack into published-main development safety; it does not restore two missing paper ledgers, create an independent backup, authorize 2026 data, pass M4/M5 or release v1.2. PR13/PR32 remain draft/open/mergeable; the product worktree remains clean",
     "2026-09-24 20:22UTC local Codex in-app Chromium responsive audit: 10 known primary routes across 390x844, 720x450, 1024x768, 1280x800 and 1440x900 in EN/system-dark, EN/light, ZH/light and ZH/dark (200 route-size-locale-theme observations) each rendered an h1 and had document scrollWidth equal to clientWidth. At 390x844, /paper and eight other primary routes had no sub-40px visible interactive element except comparison/data checkboxes whose enclosing labels provide larger targets. The saved 293-session historical result at 720x450 and 390x844 retained +4.67%/-2.48% and dated non-executable replay preview; EN/dark and ZH/light screenshots were visually inspected. Browser warning/error log empty. Original EN/system/default viewport restored; no account or study mutation. This is a bounded width/layout check, not native 200% zoom, actual Chrome, full WCAG, interaction, real-user or release acceptance. U7 forward, missing ledgers, independent backup and M5 remain open",
     "2026-09-24 20:06UTC read-only in-app Chromium historical paper audit: 406 visible leaf-text elements on light/dark themes had zero below 4.5:1 normal or 3:1 large by approximate computed-style/ancestor-background scan; English and Chinese exercised. Chinese/dark 390x844 document/client width375/375, visible controls at least40px both axes, paper safety/replay labels present. EN/system/default viewport restored. This is not full WCAG/screen-reader/actual-Chrome acceptance. Current Windows Docker Run entry is quoted and Engine29.8.0/four Compose services running; no real post-quote login test, so M5 autostart remains FAIL. Draft EN/ZH guides now describe observed manual terminal-free recovery. PR32 head5157bc5 CI36051642740 backend/frontend/compose PASS; source rights, missing genuine ledgers and independent backup remain unproven",
     "2026-09-24 19:56UTC shared rule resolver now requires explicitly true is_tradeable in addition to non-suspension for executable status. A regression first failed for unknown tradeability; 62 targeted backend tests, Ruff check/format and mypy PASS. Normal stopped historical paper browser reload retained cash81309.8134/equity99964.8134/six fills and no warnings/errors, but did not exercise unknown-status branch. User could not confirm lawful 2026 feed rights, genuine pre-loss copies of two missing paper ledgers or independent backup destination. Candidate 2026 rules remain conservative no-fill; U7 forward, M4/M5 and release remain open; no data/formal/frozen write",
@@ -473,17 +474,29 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "5157bc5",
+      "last_verified_head": "79153e0",
       "state": "DRAFT",
-      "ci_run": 36051642740,
+      "ci_run": 36054565513,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Bounded post-correction U6 in-app browser ZH/EN and 390x844 historical account-native plan PASS; strict order limit displayed 14 rejections and no rejected-symbol fills in isolated DB. Mobile topbar40px, detail Back40px and unchanged-draft cancellation/reopen checks recorded in ACCEPTANCE. Prior real Chrome U3/U4/U5/U8 and accessibility checks retained. Actual 2026-09-24 Windows reboot/login did not bring Docker Desktop online by the 21:22 check despite configured AutoStart; manual launch restored services, so M5 delivery FAIL. Full visual/A11Y/performance matrix, lost paper ledgers, independent backup and lawful forward authority remain open"
+      "browser_gate": "Local in-app Chromium 200 route-size-locale-theme responsive observations found no page-wide overflow; saved historical result retained exact labels/metrics. Prior real Chrome U3/U4/U5/U8 checks retained, but native 200pct zoom, full visual/A11Y/performance matrix and forward mode remain incomplete. Actual 2026-09-24 Windows reboot/login failed Docker autostart; manual launch restored services, so M5 delivery FAIL. Missing genuine ledgers, independent backup and lawful forward authority remain open"
+    },
+    "33": {
+      "branch": "codex/v1.2-test-db-guard",
+      "head": "84d0195",
+      "state": "MERGED",
+      "main_sha": "08a4f59",
+      "pr_ci_run": 36055281479,
+      "main_ci_run": 36055484857,
+      "backend": "PASS",
+      "frontend": "PASS",
+      "compose": "PASS",
+      "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
   "next_task": "Continue independent M4/M5 browser, performance, accessibility and compatibility checks while keeping forward-source, missing genuine ledgers and independent backup unproven. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 data publication is the earliest conditional after-start receipt, never a substitute for lawful source and execution-authority approval. A privileged read-only VSS inventory would be useful only if the user can perform the Windows administrator step; do not infer shadow-copy absence from access denied. A genuine next Windows login must test the Docker-only quoted HKCU Run path; the prior StartupApproved correction demonstrably failed at the 2026-09-24 22:29 AEST login. Do not add a duplicate startup mechanism or claim M5 PASS. The in-app browser control could not resolve a native Save & exit confirmation; do not repeat its click on that tab or claim an exit outcome. M5 also lacks complete real-data user flow and novice-user review. Do not promote full U6/U7 or release from historical replay",
-  "next_command": "Recheck PR32/worktree and non-PASS ACCEPTANCE rows; on a future real Windows login verify Docker starts without terminal assistance and services recover, with no reset or data deletion. Continue a bounded independent M4/M5 check without main DB mutation. Do not re-run formal research, merge or tag while data-loss, independent backup and forward-source gates remain open",
+  "next_command": "Recheck PR32/worktree and non-PASS ACCEPTANCE rows; on a future real Windows login verify Docker starts without terminal assistance and services recover, with no reset or data deletion. Continue independent M4/M5 work without main DB mutation. Do not re-run formal research, merge the product PR stack or tag v1.2 while data-loss, independent backup and forward-source gates remain open",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
