@@ -14,6 +14,19 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 18:33 UTC bilingual guide correction
+
+The draft Chinese and English guides incorrectly told users to find a retry
+control when a prepared report did not automatically download. The actual
+export component exposes a **Save prepared report** link after successful
+preparation; failed preparation instead leaves the download buttons available.
+Both guides now distinguish those cases and identify broker commission as a
+simulation assumption, not a verified quote. The route names and exact
+EN/ZH control text were checked against the current frontend; prior real
+Chrome CSV/JSON download evidence remains the browser evidence. No new
+download or app transaction was attempted. Operator/novice review and M5
+delivery remain incomplete.
+
 ## 2026-09-24 18:19 UTC backup-location and exit-dialog check
 
 Read-only Windows inventory again shows just Disk0 (2 TB NVMe), C:/D: on
