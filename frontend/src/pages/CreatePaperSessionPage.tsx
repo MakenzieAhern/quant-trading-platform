@@ -457,6 +457,9 @@ export function CreatePaperSessionPage() {
                   />
                 </label>
               </div>
+              <p className="fieldHint">
+                {t("createPage.commissionAssumption")}
+              </p>
             </details>
           </fieldset>
         )}

@@ -51,7 +51,7 @@ const en = {
     "Factor definitions and accounting rules remain the registered implementation. Only the settings shown here are configurable.",
   commission: "Commission rate (decimal fraction)",
   commissionHint:
-    "0.0003 means 0.03% per transaction, subject to the minimum. Effective-dated statutory costs are added by the engine.",
+    "Broker commission is a simulation assumption, not a verified quote. 0.0003 means 0.03% per transaction, subject to the minimum. Effective-dated statutory costs are added by the engine.",
   minimum: "Minimum commission per trade (CNY)",
   drawdown: "Drawdown risk limit (negative fraction)",
   drawdownHint:
@@ -269,7 +269,7 @@ const zh: typeof en = {
   fixedStrategy: "因子定义与会计规则沿用已注册实现，仅支持调整此处列出的设置。",
   commission: "佣金比例（小数）",
   commissionHint:
-    "0.0003 表示每笔 0.03%，不足最低佣金时按最低值计。引擎另按生效日期计算法定费用。",
+    "券商佣金是模拟假设，不是已核实的报价。0.0003 表示每笔 0.03%，不足最低佣金时按最低值计。引擎另按生效日期计算法定费用。",
   minimum: "每笔最低佣金（人民币）",
   drawdown: "回撤风险阈值（负小数）",
   drawdownHint:

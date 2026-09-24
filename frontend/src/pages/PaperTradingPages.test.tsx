@@ -296,6 +296,15 @@ describe("paper trading pages", () => {
       "historical_a_share",
     );
     expect(screen.getByText(/Past audited sessions only/)).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByText("Strategy, universe and cost settings"),
+    );
+    expect(
+      screen.getByText(/simulation assumptions, not a verified broker quote/),
+    ).toBeVisible();
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(screen.getByText(/模拟假设，不是已核实的券商报价/)).toBeVisible();
+    await act(async () => i18n.changeLanguage("en-US"));
     fireEvent.input(screen.getByLabelText("End date"), {
       target: { value: "2011-03-23" },
     });

@@ -230,6 +230,8 @@ export const zhCN = {
       allShares: "全部已接受的A股",
       commissionRate: "佣金费率",
       minimumCommission: "最低佣金（人民币）",
+      commissionAssumption:
+        "这两项是模拟假设，不是已核实的券商报价。历史引擎另按已接受的生效日期成本模型计算；请在结果中核对成本明细。",
       historicalValidationError: "请检查历史日期、策略与成本限制。",
       registeredStrategy: "已注册策略",
       strategyType: "策略类型",

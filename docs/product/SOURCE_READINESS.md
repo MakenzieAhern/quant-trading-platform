@@ -11,6 +11,11 @@ not run.** Explicit data-use rights evidence is still needed before an executabl
 forward feed can be accepted. No permission request, payment or credential action
 has been initiated.
 
+The historical paper-account form and guided research cost hint now explicitly
+identify user-entered broker commission as a simulation assumption, not a
+verified broker quote. This product-copy correction does not resolve current
+broker pricing or the new-market source-rights gap above.
+
 Official BaoStock 0.9.4, loaded from its checksum-verified PyPI wheel without
 installing into project dependencies, successfully logged into its documented
 `public-api.baostock.com:10030` node anonymously. A raw daily query for `sh.600000`

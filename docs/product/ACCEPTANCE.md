@@ -14,6 +14,18 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 18:10 UTC historical commission disclosure checkpoint
+
+The historical paper-account advanced form now labels its commission rate and
+minimum as simulation assumptions, not a verified broker quote. The guided
+research cost hint says the same in English and Chinese. This changes no
+fee calculation, accepted date-specific cost model, source authority or frozen
+research. The local browser showed the English and Chinese form text; at
+390x844 the English hint wrapped within the card with document width 375px
+and client width 375px. No account was submitted. Frontend 225/225 tests,
+TypeScript, ESLint, production build, Prettier and diff check passed. This
+closes a bounded disclosure ambiguity, not U7 forward, M4 or release.
+
 | ID | Required observable acceptance | Implementation/API/page | Tests/evidence | Status |
 |---|---|---|---|---|
 | M0-ENV | Correct host, clean baseline, published v1.1/main, no competing writer, healthy services | Git/GitHub/Compose | Live commands 2026-09-22; main/tag f88b5c6, PR12 merged | PASS |

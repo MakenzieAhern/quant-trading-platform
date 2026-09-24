@@ -247,6 +247,8 @@ export const enUS = {
       allShares: "All accepted A-shares",
       commissionRate: "Commission rate",
       minimumCommission: "Minimum commission (CNY)",
+      commissionAssumption:
+        "These are simulation assumptions, not a verified broker quote. The historical engine applies its accepted date-specific cost model; check the result's cost breakdown.",
       historicalValidationError:
         "Check the historical dates and strategy/cost limits.",
       registeredStrategy: "Registered strategy",
