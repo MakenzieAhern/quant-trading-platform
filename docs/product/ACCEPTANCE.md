@@ -14,6 +14,16 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 18:39 UTC prepared-report fallback check
+
+In the live in-app browser, the persisted historical job `d9f27183` prepared
+its JSON metadata report and displayed the English "Save prepared report"
+link. Switching to Chinese showed "保存已准备的报告" with the same prepared blob;
+switching back to English retained the link. This confirms the recovery text
+in both guides matches the current UI. It does not establish that this browser
+saved a file; the earlier real-Chrome CSV/JSON download proof remains the
+file-transfer evidence. No new study, paper account or order was created.
+
 ## 2026-09-24 18:33 UTC bilingual guide correction
 
 The draft Chinese and English guides incorrectly told users to find a retry
