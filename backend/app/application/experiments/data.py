@@ -46,6 +46,7 @@ class ExperimentDatasetRegistry:
             or manifest.canonical_sha256 != record["dataset_manifest_sha256"]
             or canonical_sha256({k: v for k, v in record.items() if k != "freeze_record_sha256"})
             != record["freeze_record_sha256"]
+            or any(not (path / item.relative_path).is_file() for item in manifest.partitions)
         ):
             raise ExperimentInputError("DATASET_INTEGRITY_FAILED")
         return manifest
@@ -183,8 +184,15 @@ def load_experiment_dataset(
     if dataset_id != HISTORICAL_ID:
         raise ExperimentInputError("DATASET_NOT_REGISTERED")
     # FULL_PERIOD is only a loader date container; no formal study runner or OOS lock is called.
-    return FullDataset(
-        registry.root / HISTORICAL_ID,
-        registry.manifest(),
-        TemporalPeriod(ResearchPeriodKind.FULL_PERIOD, start, end),
-    )
+    try:
+        return FullDataset(
+            registry.root / HISTORICAL_ID,
+            registry.manifest(),
+            TemporalPeriod(ResearchPeriodKind.FULL_PERIOD, start, end),
+        )
+    except (OSError, KeyError) as exc:
+        raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc
+    except ValueError as exc:
+        if not str(exc).startswith("FROZEN_PARTITION_CHANGED:"):
+            raise
+        raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc

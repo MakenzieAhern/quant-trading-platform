@@ -210,6 +210,16 @@ def test_touched_partition_integrity_and_untouched_partition_not_loaded(archive)
         archive.bars(HISTORICAL_ID, SID, date(2030, 1, 2), date(2030, 1, 2))
 
 
+def test_missing_frozen_partition_is_not_advertised_as_available(archive):
+    (archive.registry.root / HISTORICAL_ID / "raw/SSE/2030-01.parquet").unlink()
+    historical, demo = archive.registry.datasets()
+    assert historical["available"] is False
+    assert historical["reason_code"] == "DATASET_INTEGRITY_FAILED"
+    assert demo["available"] is True
+    with pytest.raises(ExperimentInputError, match="DATASET_INTEGRITY_FAILED"):
+        archive.registry.resolve(HISTORICAL_ID)
+
+
 def test_clean_install_demo_is_real_bounded_synthetic_data(tmp_path):
     reader = MarketReader(ExperimentDatasetRegistry(tmp_path))
     assert reader.registry.datasets()[0]["available"] is False

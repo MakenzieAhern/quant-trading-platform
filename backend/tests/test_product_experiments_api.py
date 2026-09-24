@@ -2,6 +2,7 @@ import asyncio
 import csv
 import io
 import json
+from datetime import date
 from threading import Event
 from uuid import uuid4
 
@@ -10,8 +11,14 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy import select, text
 
 from app.api.routes import experiments
+from app.application.experiments import data as experiment_data
 from app.application.experiments import service
-from app.application.experiments.data import DEMO_ID, ExperimentDatasetRegistry
+from app.application.experiments.data import (
+    DEMO_ID,
+    HISTORICAL_ID,
+    ExperimentDatasetRegistry,
+    ExperimentInputError,
+)
 from app.application.experiments.models import CreateExperimentRequest
 from app.application.experiments.runner import ExperimentOutput
 from app.application.experiments.service import ExperimentManager
@@ -44,6 +51,33 @@ def payload(**changes):
         "end_date": "2031-04-22",
         **changes,
     }
+
+
+@pytest.mark.parametrize(
+    ("failure", "code"),
+    [
+        (FileNotFoundError("missing partition"), "DATASET_INTEGRITY_FAILED"),
+        (ValueError("FROZEN_PARTITION_CHANGED:raw/2011-01.parquet"), "DATASET_INTEGRITY_FAILED"),
+        (ValueError("unrelated calculation error"), None),
+    ],
+)
+def test_historical_load_classifies_partition_failures_without_hiding_other_errors(
+    tmp_path, monkeypatch, failure, code
+):
+    registry = ExperimentDatasetRegistry(tmp_path)
+    monkeypatch.setattr(registry, "manifest", lambda: object())
+
+    def broken_dataset(*_args):
+        raise failure
+
+    monkeypatch.setattr(experiment_data, "FullDataset", broken_dataset)
+    expected = ExperimentInputError if code else ValueError
+    with pytest.raises(expected) as caught:
+        experiment_data.load_experiment_dataset(
+            registry, HISTORICAL_ID, date(2011, 1, 4), date(2011, 6, 30)
+        )
+    if code:
+        assert caught.value.code == code
 
 
 async def terminal(manager, identifier):
