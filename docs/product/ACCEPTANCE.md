@@ -1210,3 +1210,17 @@ outside Git at `u6/plan-zh-dark-desktop.png` and
 `u6/plan-en-dark-mobile-390.png`. This is U6 replay preview evidence, **not**
 completion of the independent U7 account, genuinely new-market forward mode,
 or U6 submission to a simulated account.
+
+## 2026-09-24 11:54 UTC shared technical-disclosure target checkpoint
+
+Actual Chrome on the registered strategy detail (Chinese/dark) showed the
+`technicalDetails` row's upper blank area did not toggle the native disclosure,
+while its text line did. The shared CSS had 20px vertical padding on the
+noninteractive `<details>` parent and only a 40px `<summary>` target. Moving
+that spacing onto `<summary>` made the same upper-edge coordinate toggle the
+expanded state; the English "Technical lineage" upper edge also expanded and
+exposed the correct strategy ID/method link. Chinese/dark was restored.
+This shared class also serves strategy recent details and market lineage.
+Frontend 225 Vitest, ESLint, TypeScript/production build, and CSS Prettier PASS.
+This closes a bounded pointer-target defect, **not** the full WCAG 2.2 AA,
+screen-reader, native-zoom, data-integrity, forward-market, or delivery gates.

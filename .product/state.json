@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T11:45:00Z",
+  "updated_at_utc": "2026-09-24T11:54:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 11:54UTC actual Chrome ZH/EN registered strategy detail reproduced a noninteractive top edge of the shared technicalDetails disclosure row: parent padding20px and summary min-height40px. Shared CSS moved padding onto summary with min-height80px; the same top-edge coordinate then toggled collapsed/expanded in both languages with semantic AX state and correct lineage content. Original Chinese/dark preference restored. Frontend225, ESLint, TypeScript/production build and CSS Prettier PASS. QA-A11Y remains IN_PROGRESS; no full AT/native-zoom claim and no data/source/delivery gate changed",
     "2026-09-24 11:45UTC actual Chrome ZH/EN Help FAQ pointer test found visual ~70px row with parent padding but only 30px native summary hit area: bottom-edge click did nothing. Moving padding to summary and setting min-height70px made the same lower-edge clicks expand translated native details with focused/expanded AX state; original Chinese/dark preference restored. Existing frontend container: 225 Vitest, ESLint, TypeScript, production build, CSS Prettier PASS. QA-A11Y still IN_PROGRESS; native200/mobile/AT matrix and M4/M5 external gates unchanged",
     "2026-09-24 11:33UTC read-only Windows startup audit: last boot 18:33:33 AEST, Docker backend log ended 18:32:43 before reboot and resumed only after agent manual launch at 21:22:14; at 21:22 Desktop process, Engine pipe and docker-desktop WSL were absent/stopped. AutoStart=true, HKCU Run entry and Ubuntu integration were configured, but this real post-login check did not self-recover. No matching application-crash event in bounded 18:30–21:25 Application log; root cause and any intervening intentional exit unknown. Existing app launch recovered services/volumes without reset. M5 terminal-free post-reboot startup acceptance NOT_MET, release unchanged; guides and ACCEPTANCE corrected",
     "2026-09-24 11:25UTC unexpected Docker Desktop stop was diagnosed (no backend process, stopped docker-desktop WSL instance, absent Engine pipe), and existing Desktop4.92.0 launched without reset/reinstall/cleanup. Engine29.8.0, Ubuntu integration, four original Compose services/volumes, Redis PONG, PostgreSQL/backend health and API/frontend HTTP200 recovered. Read-only SQL: formal dataset1/runs3/trades310, personal jobs8/rows1110, no shared run IDs; frozen canonical/archive manifest/freeze hashes match 2026-09-22 M1 evidence, OOS lock remains consumed. This does not prove all pre-loss DB rows or independent backup; U3-ISOLATE remains IN_PROGRESS, M4-DATA-INTEGRITY FAIL and forward-source blocker unchanged",

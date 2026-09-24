@@ -747,7 +747,6 @@ kbd {
   font-size: 14px;
 }
 .technicalDetails {
-  padding: 20px 24px;
   border-top: 1px solid var(--border);
   font-size: 12px;
   color: var(--muted);
@@ -755,7 +754,15 @@ kbd {
 .technicalDetails summary {
   cursor: pointer;
   font-weight: 600;
-  min-height: 40px;
+  min-height: 80px;
+  padding: 20px 24px;
+}
+.technicalDetails > :not(summary) {
+  margin-left: 24px;
+  margin-right: 24px;
+}
+.technicalDetails[open] {
+  padding-bottom: 20px;
 }
 .technicalDetails a {
   display: inline-flex;
