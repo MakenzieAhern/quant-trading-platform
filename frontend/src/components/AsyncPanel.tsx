@@ -12,7 +12,13 @@ export function LoadingPanel({ label }: { label: string }) {
   );
 }
 
-export function ErrorPanel({ message }: { message: string | Error }) {
+export function ErrorPanel({
+  message,
+  notFoundReturn,
+}: {
+  message: string | Error;
+  notFoundReturn?: { href: string; label: string };
+}) {
   const { t } = useTranslation("common");
   const kind =
     message instanceof ApiError
@@ -31,9 +37,15 @@ export function ErrorPanel({ message }: { message: string | Error }) {
       <p>{t(`loadErrors.${kind}`)}</p>
       <a
         className="button"
-        href={kind === "notFound" ? "/" : window.location.href}
+        href={
+          kind === "notFound"
+            ? (notFoundReturn?.href ?? "/")
+            : window.location.href
+        }
       >
-        {t(kind === "notFound" ? "loadErrors.workbench" : "loadErrors.reload")}
+        {kind === "notFound"
+          ? (notFoundReturn?.label ?? t("loadErrors.workbench"))
+          : t("loadErrors.reload")}
       </a>
       <details>
         <summary>{t("loadErrors.diagnostic")}</summary>

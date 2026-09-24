@@ -1118,6 +1118,14 @@ tbody tr:hover {
   min-height: 120px;
   color: var(--muted);
 }
+.panelState.errorPanel {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 12px;
+}
+.errorPanel p {
+  margin: 0;
+}
 .loader {
   width: 14px;
   height: 14px;

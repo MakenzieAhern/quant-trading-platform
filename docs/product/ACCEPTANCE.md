@@ -14,6 +14,21 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 20:52 UTC Chrome missing-record recovery layout
+
+Actual Chrome on the running local application exposed that the shared 404
+panel squeezed its message, button and diagnostic into one horizontal row;
+the paper-account button also sent the user to Workbench rather than the
+persisted-account list. The shared error panel now stacks those elements,
+while paper-account 404 alone supplies a localized `/paper` return link.
+Chrome showed the corrected Chinese and English copy and the link opened the
+five retained accounts. At a temporary 390×844 Chrome viewport, the document
+had client/scroll width 375/375 and the return button height was 42px; the
+default viewport and original Chinese/dark preference were restored.
+Focused error/paper tests passed 25/25 with ESLint, TypeScript, Prettier and
+production build. This is agent-operated viewport QA, not native 200% zoom,
+screen-reader acceptance, recovery of two absent ledgers, or U7/M4/M5 PASS.
+
 ## 2026-09-24 20:43 UTC missing paper-account handshake recovery
 
 The local in-app Chromium browser confirmed that a missing persisted paper

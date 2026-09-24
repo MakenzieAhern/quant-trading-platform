@@ -30,7 +30,13 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   };
 
   if (!snapshot && !error) return <LoadingPanel label={t("detail.loading")} />;
-  if (!snapshot && error) return <ErrorPanel message={error} />;
+  if (!snapshot && error)
+    return (
+      <ErrorPanel
+        message={error}
+        notFoundReturn={{ href: "/paper", label: t("detail.back") }}
+      />
+    );
   if (!snapshot) return null;
   const {
     session,

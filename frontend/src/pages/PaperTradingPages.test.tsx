@@ -201,6 +201,9 @@ describe("paper trading pages", () => {
     expect(screen.getByRole("alert")).toHaveTextContent(
       "This record is unavailable",
     );
+    expect(
+      screen.getByRole("link", { name: "← All paper sessions" }),
+    ).toHaveAttribute("href", "/paper");
     expect(fetch).toHaveBeenCalledTimes(1);
     await act(async () => vi.advanceTimersByTimeAsync(8000));
     expect(MockWebSocket.instances).toHaveLength(1);

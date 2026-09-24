@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-24T20:43:37Z",
+  "updated_at_utc": "2026-09-24T20:52:30Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-24 20:52UTC actual Chrome showed a shared 404 message/button/diagnostic squeezed into one row and paper-account recovery routed to Workbench rather than saved accounts. Shared error layout now stacks, and paper 404 returns to /paper with locale-aware text. Chrome EN/ZH checked and link opened five retained accounts; temporary 390x844 viewport had document/client width375/375 and return target height42px, then default viewport and original ZH/dark restored. Focused25 tests, ESLint, TypeScript, Prettier, build PASS. This does not establish native 200pct zoom, screen-reader, lost-ledger recovery, forward rights or release",
     "2026-09-24 20:43UTC local in-app Chromium reproduced a missing paper account WebSocket handshake rejection that bypassed authoritative REST classification and ended in generic reload advice. The shared stream hook now probes REST once on initial pre-open close and stops retries for typed 401/403/404. A focused rejected-handshake regression, paper23/full frontend228, ESLint, TypeScript, Prettier and production build PASS. Browser EN/ZH 404 guidance PASS; retained stopped account d7044a3c still has cash81309.8134/equity99964.8134/six fills. No account/data write. Two genuine missing ledgers, independent backup, lawful forward feed and M4/M5 release gates remain open",
     "2026-09-24 20:33UTC isolated safety PR33 merged into main as 08a4f59 after focused guard tests, an explicit live-config collect-only rejection and backend/frontend/compose CI36055281479 PASS. Main CI36055484857 also passed all three jobs. This moves the pytest pre-collection guard and quant_test CI target from the v1.2 stack into published-main development safety; it does not restore two missing paper ledgers, create an independent backup, authorize 2026 data, pass M4/M5 or release v1.2. PR13/PR32 remain draft/open/mergeable; the product worktree remains clean",
     "2026-09-24 20:22UTC local Codex in-app Chromium responsive audit: 10 known primary routes across 390x844, 720x450, 1024x768, 1280x800 and 1440x900 in EN/system-dark, EN/light, ZH/light and ZH/dark (200 route-size-locale-theme observations) each rendered an h1 and had document scrollWidth equal to clientWidth. At 390x844, /paper and eight other primary routes had no sub-40px visible interactive element except comparison/data checkboxes whose enclosing labels provide larger targets. The saved 293-session historical result at 720x450 and 390x844 retained +4.67%/-2.48% and dated non-executable replay preview; EN/dark and ZH/light screenshots were visually inspected. Browser warning/error log empty. Original EN/system/default viewport restored; no account or study mutation. This is a bounded width/layout check, not native 200% zoom, actual Chrome, full WCAG, interaction, real-user or release acceptance. U7 forward, missing ledgers, independent backup and M5 remain open",
@@ -475,9 +476,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "79153e0",
+      "last_verified_head": "96b8233",
       "state": "DRAFT",
-      "ci_run": 36054565513,
+      "ci_run": 36056888351,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",

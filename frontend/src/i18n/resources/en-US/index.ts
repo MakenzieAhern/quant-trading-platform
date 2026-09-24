@@ -9,7 +9,7 @@ export const enUS = {
         "The request timed out. Check the service status, then try again.",
       permission: "Access was denied. Check your access before trying again.",
       notFound:
-        "This record is unavailable. It may have been removed; return to the workbench to choose another.",
+        "This record is unavailable. It may have been removed. Choose another saved record.",
       unknown:
         "This data could not be loaded. Check the service status, then reload this page.",
       reload: "Reload page",
