@@ -14,6 +14,27 @@ Screenshots are local, outside Git:
 [mobile](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/strategy-mobile.png).
 Canonical Windows evidence root: `C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2`.
 
+## 2026-09-24 18:19 UTC backup-location and exit-dialog check
+
+Read-only Windows inventory again shows just Disk0 (2 TB NVMe), C:/D: on
+that disk, and no mapped SMB drive. The Temp PowerShell drive is under C:.
+This rules out an already mounted independent destination; it does not rule
+out an unplugged device, private backup service or VSS snapshot. The current
+process token is medium integrity with Administrators deny-only, so the
+previous VSS access failure cannot be interpreted as no snapshots. A
+privileged **read-only** shadow-copy listing remains the next bounded
+recovery check, without restoring or deleting anything.
+
+The in-app browser restored the agent's saved `U3 final diagnostic` step-2
+draft. Clicking Save & exit raised the expected native confirmation, but
+browser control could not inspect or dismiss it and the URL stayed on
+`/research/new`; no exit outcome is claimed and the action was not repeated.
+The existing focused unit test accepts the positive branch, not a live-browser
+navigation proof. No study was submitted; read-only live counts stayed at
+eight product research jobs, five paper sessions and 417 paper events. PR #32
+head `f72d258` passed [CI 36039521609](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36039521609)
+for frontend, backend and Compose. All release gates remain unchanged.
+
 ## 2026-09-24 18:10 UTC historical commission disclosure checkpoint
 
 The historical paper-account advanced form now labels its commission rate and
