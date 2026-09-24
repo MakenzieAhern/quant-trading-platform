@@ -74,6 +74,21 @@ are real-browser captures outside Git. Frontend 219 tests, ESLint, TypeScript,
 production build and Prettier passed. This closes only the observed first-action
 clipping; QA-VISUAL and QA-A11Y remain IN_PROGRESS.
 
+At physical 1280×800 with the same native zoom, a returning Chinese/dark
+profile reported CSS 632×352/DPR 2. Its draft action ended at CSS y=295.2.
+Workbench, strategies, guided backtest, experiments, markets, paper, data,
+tasks, help and settings all had document/client width 632/632; Chrome's
+accessibility tree exposed no unnamed button, link or form control on those
+ten routes. [Home](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/zoom200-1280-zh-dark-draft-20260924.png)
+(SHA-256 `BDDB3F7DA2C43D6F710ADC12FFCEA39A24253E9D43F37953F29E04EDB111F7B1`)
+and [markets](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/zoom200-1280-zh-dark-markets-target-20260924.png)
+(`694E5052AED2F7BEBAB9A1B15A28D1E6D4CA08E1305A8AF4BA941657C1A08E23`)
+are outside Git. The markets notice contains a 20px-high link inline in a
+sentence; this bounded geometry/AX pass is not a full target-spacing, contrast,
+screen-reader or WCAG audit. PR #32 code head `08c75e9` passed
+[CI 35943421735](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/35943421735)
+for backend, frontend and Compose; release gates remain open.
+
 ## 2026-09-24 01:09 UTC unplanned historical worker crash and linked completion
 
 An owned `quant-v12-u3crash-20260924` tmpfs PostgreSQL and backend on 8001
