@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-25T00:13:00Z",
+  "updated_at_utc": "2026-09-25T00:20:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -258,6 +258,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "OPEN U3-WIZARD browser evidence: actual Chrome Save & exit showed native confirm, but accepting it timed out in browser control; dialog vanished while tab listing remained /research/new and later state capture timed out. No task submitted or retry attempted. Unit confirm/navigation and separate Back browser path pass; explicit Save & exit navigation/restore is unverified, so U3-WIZARD corrected to IN_PROGRESS. Use a different reliable browser validation path, not the same stuck tab/click",
     "OPEN RECOVERY EVIDENCE GAP: bounded local inventory found only already-known pre0014/pre0015 and post-loss dumps; Windows File History configuration absent; VSS CIM initialization failed and vssadmin requires administrator privilege, so shadow-copy existence is unassessed, not disproven. Two anonymous Docker volumes were created after the loss. No settings/data changed; the missing historical paper ledgers remain absent",
     "ACTIVE: 2026-09-24 22:29 AEST real Windows reboot/login did not start Docker Desktop/Engine by 03:44 AEST despite configured AutoStart and enabled StartupApproved Run value. Docker-only Run path was quoted and the existing app manually launched; root cause and next-login result remain unproven. M5 terminal-free startup acceptance not met",
     "RESOLVED for this session: Docker Desktop4.92.0 was stopped and Ubuntu integration/Windows Engine pipe unavailable; starting only the existing installed app restored Engine, named project volumes and four Compose services without reset, reinstall or cleanup. Cause of the unexpected stop is unproven; full reboot/login acceptance remains open",
@@ -517,7 +518,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue independent M4/M5 browser, performance, accessibility and compatibility checks while keeping forward-source, missing genuine ledgers and independent backup unproven. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 data publication is the earliest conditional after-start receipt, never a substitute for lawful source and execution-authority approval. A privileged read-only VSS inventory would be useful only if the user can perform the Windows administrator step; do not infer shadow-copy absence from access denied. A genuine next Windows login must test the Docker-only quoted HKCU Run path; the prior StartupApproved correction demonstrably failed at the 2026-09-24 22:29 AEST login. Do not add a duplicate startup mechanism or claim M5 PASS. The in-app browser control could not resolve a native Save & exit confirmation; do not repeat its click on that tab or claim an exit outcome. M5 also lacks complete real-data user flow and novice-user review. Do not promote full U6/U7 or release from historical replay",
+  "next_task": "Continue independent M4/M5 browser, performance, accessibility and compatibility checks while keeping forward-source, missing genuine ledgers and independent backup unproven. Explicit Save & exit navigation/restore still needs a different reliable real-browser path; the prior in-app and Chrome controls both timed out on native confirm, so do not repeat their stuck tabs or claim an exit outcome. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 data publication is the earliest conditional after-start receipt, never a substitute for lawful source and execution-authority approval. A privileged read-only VSS inventory would be useful only if the user can perform the Windows administrator step; do not infer shadow-copy absence from access denied. A genuine next Windows login must test the Docker-only quoted HKCU Run path; the prior StartupApproved correction demonstrably failed at the 2026-09-24 22:29 AEST login. Do not add a duplicate startup mechanism or claim M5 PASS. M5 also lacks complete real-data user flow and novice-user review. Do not promote full U6/U7 or release from historical replay",
   "next_command": "Recheck PR32/worktree and non-PASS ACCEPTANCE rows; on a future real Windows login verify Docker starts without terminal assistance and services recover, with no reset or data deletion. Continue independent M4/M5 work without main DB mutation. Do not re-run formal research, merge the product PR stack or tag v1.2 while data-loss, independent backup and forward-source gates remain open",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
