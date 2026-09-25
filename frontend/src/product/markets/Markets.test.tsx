@@ -73,6 +73,52 @@ async function openSecurity() {
 }
 
 describe("historical cache markets", () => {
+  it("distinguishes saved-security actions across sources and languages", async () => {
+    vi.mocked(marketApi.watchlist).mockResolvedValue({
+      items: [
+        watched,
+        {
+          ...watched,
+          dataset_id: demo.dataset_id,
+          dataset_sha256: demo.sha256!,
+        },
+      ],
+      total: 2,
+      limit: 20,
+      offset: 0,
+    });
+    render(<MarketsPage />);
+    expect(
+      await screen.findByRole("button", {
+        name: `Save to watchlist: ${security.security_id}`,
+      }),
+    ).toBeInTheDocument();
+    for (const source of [dataset, demo]) {
+      expect(
+        screen.getByRole("button", {
+          name: `Inspect history: ${security.security_id} · ${source.dataset_id}`,
+        }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", {
+          name: `Remove from watchlist: ${security.security_id} · ${source.dataset_id}`,
+        }),
+      ).toBeInTheDocument();
+    }
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(
+      screen.getByRole("button", {
+        name: `加入自选: ${security.security_id}`,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: `移除自选: ${security.security_id} · ${demo.dataset_id}`,
+      }),
+    ).toBeInTheDocument();
+  });
   it("preserves explicit demo datasets and reacts to dataset query navigation without changing authority", async () => {
     window.history.replaceState(
       {},
@@ -331,10 +377,9 @@ describe("historical cache markets", () => {
     });
     await userEvent.selectOptions(screen.getByLabelText("Exchange"), "SSE");
     await userEvent.click(
-      within(screen.getByRole("region", { name: "Search securities" })).getByRole(
-        "button",
-        { name: "Next" },
-      ),
+      within(
+        screen.getByRole("region", { name: "Search securities" }),
+      ).getByRole("button", { name: "Next" }),
     );
     await waitFor(() =>
       expect(vi.mocked(marketApi.search).mock.calls.at(-1)?.[3]).toBe(20),
@@ -345,9 +390,9 @@ describe("historical cache markets", () => {
     });
     await userEvent.click(trigger);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(new URLSearchParams(window.location.hash.slice(1)).get("security")).toBe(
-      security.security_id,
-    );
+    expect(
+      new URLSearchParams(window.location.hash.slice(1)).get("security"),
+    ).toBe(security.security_id);
     act(() => window.history.back());
     await waitFor(() => expect(window.location.hash).toBe(""));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -412,10 +457,16 @@ describe("historical cache markets", () => {
       });
     const first = render(<MarketsPage />);
     await userEvent.dblClick(
-      await screen.findByRole("button", { name: "Save to watchlist" }),
+      await screen.findByRole("button", {
+        name: `Save to watchlist: ${security.security_id}`,
+      }),
     );
     expect(add).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: "Saving…" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", {
+        name: `Saving…: ${security.security_id}`,
+      }),
+    ).toBeDisabled();
     await act(async () => {
       stored = [watched];
       resolve?.(watched);
@@ -424,7 +475,9 @@ describe("historical cache markets", () => {
     first.unmount();
     render(<MarketsPage />);
     await userEvent.click(
-      await screen.findByRole("button", { name: "Remove from watchlist" }),
+      await screen.findByRole("button", {
+        name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
+      }),
     );
     expect(remove).toHaveBeenCalledWith(
       dataset.dataset_id,
@@ -547,10 +600,14 @@ describe("historical cache markets", () => {
       ),
     ).toBeInTheDocument();
     expect(
-      await screen.findByRole("button", { name: "Inspect history" }),
+      await screen.findByRole("button", {
+        name: `Inspect history: ${security.security_id} · ${dataset.dataset_id}`,
+      }),
     ).toBeDisabled();
     await userEvent.click(
-      screen.getByRole("button", { name: "Remove from watchlist" }),
+      screen.getByRole("button", {
+        name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
+      }),
     );
     expect(remove).toHaveBeenCalledWith(
       dataset.dataset_id,
@@ -568,7 +625,9 @@ describe("historical cache markets", () => {
     expect(
       screen.getByText(/Historical data are not available to the service/),
     ).toBeInTheDocument();
-    expect(screen.getByText("DATASET_NOT_MOUNTED").closest("details")).not.toHaveAttribute("open");
+    expect(
+      screen.getByText("DATASET_NOT_MOUNTED").closest("details"),
+    ).not.toHaveAttribute("open");
     expect(
       screen.getByRole("button", { name: "Search securities" }),
     ).toBeDisabled();

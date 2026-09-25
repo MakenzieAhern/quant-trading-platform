@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 00:40 UTC market watchlist action names
+
+Actual Chrome showed twenty identical **Save to watchlist** accessibility
+names in the market results and generic **Inspect history**/**Remove from
+watchlist** names for saved securities. The existing buttons now identify the
+security; saved-row actions also identify the dataset, so the same security
+in historical and synthetic sources has distinct names. Visible labels and
+watchlist behavior are unchanged. A regression test checks both sources and
+English/Chinese names. Actual Chrome's EN/ZH accessibility trees confirmed
+the names and the original Chinese/dark preference was restored. Focused
+13/13 and full frontend 240/240 tests, ESLint, TypeScript/production build,
+changed-file Prettier and `git diff --check` passed. No live watchlist,
+account, provider or research write was made. An independent read-only PR32
+review found no additional release-critical defect beyond recorded acceptance
+gaps. This closes only the repeated-action-name defect; `QA-A11Y` remains
+**IN_PROGRESS** and M4/M5 remain blocked by the unverified genuine pre-loss
+ledgers, independent backup and lawful forward-data rights. The user does
+not know whether any of those three external prerequisites exists; none is
+treated as approved.
+
 ## 2026-09-25 00:30 UTC raw-task history accessibility
 
 Actual Chrome opened the existing failed raw-candidate task from the task
