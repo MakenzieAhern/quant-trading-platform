@@ -18,6 +18,13 @@ real-money orders, and no new-market forward simulation. Chinese/dark and the
 Workbench route were restored. This was agent-operated read-only QA: no new
 study, paper session, provider request or order was requested, and no
 English recording, novice-user study, native 200% zoom or full M4/M5 PASS.
+[PR #32 CI 36168702768](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36168702768)
+at head `4396a53` passed backend, frontend and Compose. A bounded check for a
+local recorder found no installed Snipping Tool; pre-existing Clipchamp opened
+only to a Microsoft sign-in failure screen. It was closed without login,
+screen permission, upload or recording. No **new English** video is claimed;
+the earlier Chinese demo and walkthrough recordings remain valid bounded
+evidence, not full delivery acceptance.
 
 ## 2026-09-25 17:29 UTC Docker login-recovery and startup replacement
 
@@ -774,7 +781,7 @@ closes a bounded disclosure ambiguity, not U7 forward, M4 or release.
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
 | M4-DATA-INTEGRITY | Application and formal-history persistence, isolated tests, recoverable backup | Suite-wide test-DB guard and verified additive restore | Live DB was found missing formal 1/3/310 ledger and later paper accounts. Formal ledger and four pre-backup accounts were restored atomically; `4b64380f` and `07d72259` remain absent. Live-config pytest was rejected; isolated backend969 PASS/one optional skip with live counts stable. The post-recovery dump restored into a new database, with 44/44 public tables matching live by row count and sorted-row hash. This same-disk dump is not independent disaster recovery and missing-history disposition remains open | FAIL |
 | QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Isolated release-image/browser rehearsal and [CI 36081787335](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36081787335) backend/frontend/Compose plus production-backend/tmpfs smoke PASS. The live DB data-loss incident, missing independent disaster-recovery proof, forward authority and remaining M4/M5 acceptance keep the release gate FAIL; frozen research files were not changed | FAIL |
-| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. A second real 2026-09-25 12:05 AEST login did not launch Desktop under the quoted Run path, despite AutoStart and enabled StartupApproved. One limited current-user AtLogOn task replaced that Run entry; the next genuine login has not tested it. Manual launch recovered Engine, four services/volumes and original database counts without loss. English video, complete screenshots, novice-user/operator review and terminal-free startup remain incomplete | FAIL |
+| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback; bounded Chinese demo/walkthrough videos and screenshots exist. A second real 2026-09-25 12:05 AEST login did not launch Desktop under the quoted Run path, despite AutoStart and enabled StartupApproved. One limited current-user AtLogOn task replaced that Run entry; the next genuine login has not tested it. Manual launch recovered Engine, four services/volumes and original database counts without loss. Full key-interaction coverage, novice-user/operator review and terminal-free startup remain incomplete; no English video is claimed or treated as a separate requirement | FAIL |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
