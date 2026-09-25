@@ -96,7 +96,7 @@ export function MarketUpdatesPanel() {
                   <button
                     type="button"
                     className="button secondary"
-                    aria-label={`${c.open}: ${job.job_id}`}
+                    aria-label={`${c.open}: ${job.configuration.security_ids.join(", ")} · ${job.configuration.start_date}–${job.configuration.end_date} · ${formatUtc(job.created_at)}`}
                     onClick={() => openUpdateJob(job.job_id)}
                   >
                     {c.open}

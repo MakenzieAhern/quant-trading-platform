@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-25T00:20:00Z",
+  "updated_at_utc": "2026-09-25T00:30:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-25 00:30UTC actual Chrome Data Center opened existing failed raw-candidate task read-only and found four history Open task buttons named only by UUID. Buttons now expose securities, requested date range and UTC creation time in ZH/EN, matching task-center context; Chrome distinguished all four and original ZH/dark was restored. Focused13/full frontend239, ESLint, TypeScript/build and Prettier PASS. No provider retry/request or DB write. A second fresh Chrome wizard tab restored the step-2 draft, but Save & exit native confirmation again left browser control timed out and tab on /research/new; U3-WIZARD stays IN_PROGRESS. QA-A11Y bounded progress only; missing ledgers, independent backup, lawful forward rights and M4/M5 gates unchanged",
     "2026-09-25 00:13UTC actual Chrome153 at390x844 opened retained historical paper d7044a3c and 293-session result d9f27183. Both document widths375/375, locally scrollable focusable tables; keyboard Right moved paper table; the result's two18px checkboxes had40px-high label targets. Viewport reset, no account/research action. npm audit full locked frontend tree and pip-audit2.10.1 locked backend tree reported zero known vulnerabilities; pip-audit ran only in ephemeral test container. PR32 head0e0bc30 CI36075909646 backend/frontend/Compose PASS. Bounded mobile/security evidence only; M4/M5 and external gates unchanged",
     "2026-09-25 00:04UTC independent read-only review found paper recovery ran before the experiment singleton lock, allowing a rejected overlapping backend startup to interrupt a live paper account; terminal accounts also accepted appended events. Startup now obtains ownership before paper recovery, releases it only after paper shutdown, and rejects post-terminal event appends under row lock. Isolated quant_test focused34 PASS/one optional archive skip; full backend979 PASS/same skip; Ruff/format/mypy PASS. Main Compose/DB/frozen research untouched. Missing genuine ledgers, independent backup and lawful forward-feed rights still unknown; M4/M5 gates unchanged",
     "2026-09-24 23:55UTC deployment guide review: release-rehearsal and clean-install commands had current-workbench backup warnings after the commands. Warnings now precede both blocks; no Compose/migration/service/DB command executed. Prior PR32 head36f38b1 CI36074911895 backend/frontend/Compose PASS; new documentation-only head CI pending. Three external release gates unchanged",

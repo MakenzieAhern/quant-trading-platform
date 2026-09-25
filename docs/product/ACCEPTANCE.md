@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 00:30 UTC raw-task history accessibility
+
+Actual Chrome opened the existing failed raw-candidate task from the task
+center without retrying it. The Data Center history's four **Open task**
+buttons exposed only UUIDs to assistive technology, unlike the contextual
+task-center links. Each button now names the securities, requested date range
+and UTC creation time in the selected language; the visible label, target and
+audit ID are unchanged. Actual Chrome's Chinese and English accessibility
+trees distinguished all four buttons, including the failed and successful
+requests for the same securities and dates. Chinese/dark was restored. The
+focused 13/13 and full frontend 239/239 tests, ESLint, TypeScript/production
+build and changed-file Prettier passed. No provider request, retry, account or
+research task was started. This is bounded QA-A11Y progress, not full WCAG or
+U5 source-authority acceptance.
+
+A second fresh Chrome tab also reopened the saved step-2 wizard draft, but
+the explicit Save & exit native confirmation again left the browser controller
+timed out with the tab still on `/research/new`. No second click or research
+submission was made; U3-WIZARD remains **IN_PROGRESS**.
+
 ## 2026-09-25 00:20 UTC explicit save-and-exit browser gate corrected
 
 A fresh actual-Chrome tab reopened the existing local step-2 draft with its

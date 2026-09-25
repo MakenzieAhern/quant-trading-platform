@@ -50,6 +50,22 @@ async function fill() {
   await userEvent.click(screen.getByRole("checkbox"));
 }
 describe("explicit incremental request workflow", () => {
+  it("names saved task controls by security, dates and time in both languages", async () => {
+    render(<MarketUpdatesPanel />);
+    expect(
+      await screen.findByRole("button", {
+        name: /^Open task: CN-A:SSE:600000 · 2026-01-05–2026-01-06 · 2026-09-22/,
+      }),
+    ).toBeInTheDocument();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(
+      screen.getByRole("button", {
+        name: /^打开任务: CN-A:SSE:600000 · 2026-01-05–2026-01-06 · 2026\/09\/22/,
+      }),
+    ).toBeInTheDocument();
+  });
   it("explains a denied capability read and recovers only after explicit refresh", async () => {
     const create = vi.spyOn(marketUpdateApi, "create");
     vi.mocked(marketUpdateApi.capabilities).mockRejectedValue(
