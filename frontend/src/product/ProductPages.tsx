@@ -229,7 +229,6 @@ export function WorkbenchPage() {
             className="button"
             onClick={() => {
               setGuide(false);
-              localStorage.setItem("quant.product.guide-seen", "1");
             }}
           >
             {c.skip}

@@ -1,5 +1,17 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 01:57 UTC optional orientation under denied storage
+
+The Workbench's optional mode guide wrote a `guide-seen` browser-storage key
+that no code read. Denied storage could therefore throw while the user pressed
+**Got it, continue exploring**. The dead write was removed; the guide still
+closes and remains reopenable. A regression simulates a storage `SecurityError`;
+the focused 3/3 and full frontend 242/242 tests, ESLint, TypeScript/production
+build and diff check passed. No account, provider, database or frozen research
+data was changed. This closes one U1 error-path defect, not M4/U7/M5 or native
+200% zoom. The user still cannot confirm an independent backup destination,
+genuine pre-loss paper ledgers or lawful 2026 forward-data rights.
+
 ## 2026-09-25 01:50 UTC result chart date/locale and review checkpoint
 
 Actual Chrome reopened saved 293-session historical job `d9f27183` without a
