@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 00:13 UTC mobile ledger/result and dependency audit
+
+Actual Chrome 153 at 390×844 opened the retained stopped historical A-share
+paper account `d7044a3c` and the saved 293-session A-share study `d9f27183`.
+Both had document width 375px against client width 375px: no page-level
+horizontal overflow. The paper page's five wide tables each had a named,
+focusable local scroll region; keyboard Right moved the first table. Visible
+paper controls were at least 24px in both dimensions. The result page's
+three wide tables were locally scrollable and focusable; its two 18px native
+checkboxes were inside 40px-high clickable labels. The browser viewport was
+reset afterward. This is a two-route mobile/keyboard sample, not full
+QA-VISUAL or WCAG 2.2 AA acceptance; no session or research action was sent.
+
+At PR #32 head `0e0bc30`, [CI 36075909646](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36075909646)
+passed backend, frontend and Compose. `npm audit --audit-level=moderate`
+reported zero known vulnerabilities in the locked frontend dependency tree,
+including development dependencies. `pip-audit 2.10.1 -r requirements.lock`
+reported no known vulnerabilities for the locked backend tree from a one-off
+test-only container; no audit package was added to the live backend or repo.
+The main stack was not rebuilt or restarted. These checks do not resolve the
+missing genuine paper ledgers, independent backup, lawful forward-feed rights,
+or the remaining product/release acceptance matrix.
+
 ## 2026-09-25 00:04 UTC paper startup ownership fence
 
 An independent read-only review found a conditional overlap hazard: a second

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-25T00:04:00Z",
+  "updated_at_utc": "2026-09-25T00:13:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-25 00:13UTC actual Chrome153 at390x844 opened retained historical paper d7044a3c and 293-session result d9f27183. Both document widths375/375, locally scrollable focusable tables; keyboard Right moved paper table; the result's two18px checkboxes had40px-high label targets. Viewport reset, no account/research action. npm audit full locked frontend tree and pip-audit2.10.1 locked backend tree reported zero known vulnerabilities; pip-audit ran only in ephemeral test container. PR32 head0e0bc30 CI36075909646 backend/frontend/Compose PASS. Bounded mobile/security evidence only; M4/M5 and external gates unchanged",
     "2026-09-25 00:04UTC independent read-only review found paper recovery ran before the experiment singleton lock, allowing a rejected overlapping backend startup to interrupt a live paper account; terminal accounts also accepted appended events. Startup now obtains ownership before paper recovery, releases it only after paper shutdown, and rejects post-terminal event appends under row lock. Isolated quant_test focused34 PASS/one optional archive skip; full backend979 PASS/same skip; Ruff/format/mypy PASS. Main Compose/DB/frozen research untouched. Missing genuine ledgers, independent backup and lawful forward-feed rights still unknown; M4/M5 gates unchanged",
     "2026-09-24 23:55UTC deployment guide review: release-rehearsal and clean-install commands had current-workbench backup warnings after the commands. Warnings now precede both blocks; no Compose/migration/service/DB command executed. Prior PR32 head36f38b1 CI36074911895 backend/frontend/Compose PASS; new documentation-only head CI pending. Three external release gates unchanged",
     "2026-09-24 23:51UTC PR32 head06d1b01 CI36074387311 backend/frontend/Compose PASS. Read-only host inventory found no attached removable/network backup drive; C/D remain one NVMe, local OneDrive sync root contains no backup file, and five known WSL dumps have no original rows for post-pre0015 paper accounts4b64380f/07d72259. This does not rule out remote cloud or Windows shadows: non-elevated RestorePoint Access Denied and ShadowCopy initialization failure; elevated inventory remains user-gated. Windows boot time has not changed since Docker Run-path correction, so login autostart untested. No data/volume/settings changed; independent backup, missing genuine ledgers and lawful forward rights remain open",
@@ -495,9 +496,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "5002eea",
+      "last_verified_head": "0e0bc30",
       "state": "DRAFT",
-      "ci_run": 36065880987,
+      "ci_run": 36075909646,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
