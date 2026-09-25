@@ -18,8 +18,10 @@ It retains the same loopback ports and local PostgreSQL history. This is a local
 rehearsal, not an authenticated public deployment. Return to development with `make up`.
 It replaces the running project containers, but the release backend uses its image command
 and does not run Alembic automatically. Check the schema and run any required migration as
-a controlled one-off only after a verified independent backup. The CI frontend smoke uses an
-isolated image and does not start PostgreSQL, Redis or the backend.
+a controlled one-off only after a verified independent backup. CI separately
+smokes the static frontend and the production backend image; the backend check
+uses isolated tmpfs PostgreSQL/Redis with no project data mounts. Neither CI
+check replaces the live-data backup/rehearsal gate.
 
 Docker Compose is the supported development deployment, not a production trading topology.
 The following bootstrap commands are for a clean install. On an existing database,

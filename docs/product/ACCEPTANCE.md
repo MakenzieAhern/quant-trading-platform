@@ -1,5 +1,19 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 01:25 UTC release-image CI regression gate
+
+PR #32 head `f5d4f8d` [CI 36081787335](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36081787335)
+passed backend, frontend and Compose. The Compose job's new release-backend
+smoke step passed on GitHub's isolated runner: it built the backend image,
+migrated a tmpfs PostgreSQL database, started production-mode Uvicorn with
+scratch Redis on a private Docker network, and checked `/api/health` plus the
+clean-install capability boundary (synthetic demo available; unmounted
+historical archive unavailable). It uses no application data mount or named
+database volume and cleans up its scratch containers/network. The prior
+agent-operated Chrome end-to-end rehearsal remains separate evidence; CI does
+not run a browser or establish data durability, lawful forward authority or
+v1.2 release readiness. `QA-RELEASE` and `M5-DELIVERY` remain FAIL.
+
 ## 2026-09-25 01:15 UTC isolated release-image end-to-end rehearsal
 
 At product head `955c23a`, the backend release image and Nginx frontend image
@@ -652,7 +666,7 @@ closes a bounded disclosure ambiguity, not U7 forward, M4 or release.
 | QA-ENGINE | Decimal/server validation/idempotency/task isolation; same financial path | Existing financial path + independent queue | 862 backend tests; actual 2011 exploratory run completed; synthetic clearly separated | IN_PROGRESS |
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
 | M4-DATA-INTEGRITY | Application and formal-history persistence, isolated tests, recoverable backup | Suite-wide test-DB guard and verified additive restore | Live DB was found missing formal 1/3/310 ledger and later paper accounts. Formal ledger and four pre-backup accounts were restored atomically; `4b64380f` and `07d72259` remain absent. Live-config pytest was rejected; isolated backend969 PASS/one optional skip with live counts stable. The post-recovery dump restored into a new database, with 44/44 public tables matching live by row count and sorted-row hash. This same-disk dump is not independent disaster recovery and missing-history disposition remains open | FAIL |
-| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Earlier isolated migration and frontend checks remain valid. 2026-09-23 isolated backend969 PASS/one optional archive skip and PR32 `b060e9f` CI35915906461 backend/frontend/compose PASS; however the live DB data-loss incident makes the current release/durability gate FAIL. Frozen research files were not changed; formal DB rows were restored from backup | FAIL |
+| QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Isolated release-image/browser rehearsal and [CI 36081787335](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36081787335) backend/frontend/Compose plus production-backend/tmpfs smoke PASS. The live DB data-loss incident, missing independent disaster-recovery proof, forward authority and remaining M4/M5 acceptance keep the release gate FAIL; frozen research files were not changed | FAIL |
 | M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is configured and four project containers use `unless-stopped`, but the real 2026-09-24 22:29 AEST reboot/login still left Desktop/Engine stopped at 03:44 after the startup-approval correction. The Docker-only HKCU Run path was then quoted; this is reversible and unproven until another real login. One non-destructive manual launch restored Engine, four services/volumes and API/frontend HTTP200. Screenshots/recordings and operator review remain incomplete | FAIL |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
