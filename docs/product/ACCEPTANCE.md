@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 17:39 UTC bounded English Chrome read-only walkthrough
+
+The existing Chrome profile was reopened after its previous window disappeared.
+At the live local frontend, English Data Center and strategy detail from the
+earlier attempt were continued into saved historical study `d9f27183`:
+complete-run return `+4.67%`, drawdown `-2.48%`, costs `CNY 96.05`, CSI 300
+benchmark `-8.83%`, historical-only 2011-03-22 rebalance preview, and
+plain-language non-fill reasons were visible. Comparing that run to synthetic
+demo `dccc74b3` showed a prominent uncontrolled-comparison warning, distinct
+historical/synthetic data provenance, and different periods/capital; the page
+did not rank or recommend a strategy. The stopped historical paper account
+`d7044a3c` showed its 2011-03-23 session, CNY cash/equity, retained positions,
+and an explicit notice that its older account-native plan is unavailable.
+Chrome showed the safety boundary: simulated execution only, no broker or
+real-money orders, and no new-market forward simulation. Chinese/dark and the
+Workbench route were restored. This was agent-operated read-only QA: no new
+study, paper session, provider request or order was requested, and no
+English recording, novice-user study, native 200% zoom or full M4/M5 PASS.
+
 ## 2026-09-25 17:29 UTC Docker login-recovery and startup replacement
 
 Windows last booted at 2026-09-25 12:04:54 AEST and this user logged in at
@@ -26,6 +45,9 @@ startup and release remain FAIL. Chrome was closed during the attempted
 English read-only walkthrough; Data Center and strategy detail were observed,
 but the historical result had reached only Loading when the browser binding
 disappeared. No English video or completed result walkthrough is claimed.
+[PR #32 CI 36167737133](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36167737133)
+at head `8ec405d` passed backend, frontend and Compose. That CI did not run a
+Windows login or restore the missing paper ledgers.
 
 ## 2026-09-25 01:57 UTC optional orientation under denied storage
 

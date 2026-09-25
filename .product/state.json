@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-25T17:29:00Z",
+  "updated_at_utc": "2026-09-25T17:39:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-25 17:39UTC existing Chrome restored and bounded English read-only product path completed: Data Center/strategy detail, saved historical result d9f27183 with +4.67%/-2.48%/CNY96.05/-8.83% and dated 2011-03-22 plan plus non-fill reasons; cross-mode compare with synthetic dccc74b3 warned conditions differ; stopped historical paper d7044a3c showed 2011-03-23 session, CNY portfolio and no older account-native plan. Chinese/dark Workbench restored. No study/account/provider/order mutation requested; no English video, novice-user test, native200% zoom or full M4/M5 acceptance claimed",
+    "2026-09-25 17:34UTC PR32 head 8ec405d CI36167737133 backend/frontend/Compose PASS after Docker login-recovery documentation and bilingual guide correction. This CI does not test actual Windows login; the single current-user scheduled AtLogOn task remains unproven, M5 FAIL. PR32 remains draft/unmerged and v1.2 unreleased",
     "2026-09-25 17:29UTC after an actual 12:04/12:05 AEST Windows boot/login, Docker Desktop had no process or post-login launch log despite AutoStart=true, enabled StartupApproved and a quoted Run path. The installed Desktop was started once non-destructively at 03:24 AEST next day; WSL Engine29.8.0, Compose5.5.1, four project services/volumes recovered, PostgreSQL/Redis/backend healthy, API/frontend HTTP200, read-only DB counts formal1/3/310 jobs8 paper5/events417 receipts6 unchanged. Registered one limited current-user AtLogOn task and removed only the duplicate Docker HKCU Run value after exact verification; rollback value is documented in DECISIONS. New mechanism needs a future real login test; M5 startup FAIL. Chrome closed during English result walkthrough: Data Center and strategy detail were observed, result only reached Loading; no complete walkthrough or video claimed. No market/account/study/data deletion or release",
     "2026-09-25 02:00UTC PR32 head abdc56b CI36084273692 backend/frontend/Compose PASS after optional Workbench guide storage-denial fix and prior chart QA checkpoint; API and frontend HTTP200, clean local worktree before CI-record update. PR32 remains draft/open, no merge or release. Passing CI does not prove independent backup, genuine pre-loss ledgers, lawful forward source, native200% zoom or full M4/M5 acceptance",
     "2026-09-25 01:57UTC optional Workbench mode guide contained a dead guide-seen localStorage write, with no reader, that could throw on denied storage while closing the guide. Removed the unused write and added a SecurityError regression; focused3/full frontend242, ESLint, TypeScript/production build and diff check PASS. Guide remains manually reopenable; no account/provider/database/frozen research write. This closes one U1 error-path defect only, not M4/U7/M5. User answers on independent backup, genuine pre-loss paper ledgers and lawful 2026 forward-data rights remain unknown",
@@ -509,9 +511,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "abdc56b",
+      "last_verified_head": "8ec405d",
       "state": "DRAFT",
-      "ci_run": 36084273692,
+      "ci_run": 36167737133,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
@@ -530,7 +532,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Do not repeat the isolated release-image/clean-DB rehearsal or the failed Docker Run-entry hypothesis. On the next genuine Windows login, test the single current-user AtLogOn task and verify Docker/WSL/Compose/API/frontend plus retained database counts without terminal assistance, reset or data deletion. Until then M5 startup is FAIL. Chrome closed during the English result walkthrough; resume only if a real browser connection becomes available and do not claim a video without recording capability. Continue independent M4/M5 accessibility, performance and compatibility work while preserving the missing genuine ledgers, independent backup and lawful forward-source blockers. Native 200% zoom needs user-operated evidence: browser policy blocked chrome://settings/appearance; do not bypass or substitute a CSS proxy. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 is only the earliest conditional after-start receipt and still needs lawful source authority. A privileged read-only VSS inventory needs a real Windows administrator action; do not infer absent shadows from Access Denied. No duplicate Docker startup mechanism, full U6/U7 promotion or release from historical replay",
+  "next_task": "Do not repeat the isolated release-image/clean-DB rehearsal or the failed Docker Run-entry hypothesis. On the next genuine Windows login, test the single current-user AtLogOn task and verify Docker/WSL/Compose/API/frontend plus retained database counts without terminal assistance, reset or data deletion. Until then M5 startup is FAIL. Existing Chrome is available again and the bounded English result/compare/stopped-paper read-only walkthrough has completed; obtain a real English recording and novice-user evidence only through an approved supported capture/user-testing path, not by calling this text QA a video. Continue independent M4/M5 accessibility, performance and compatibility work while preserving the missing genuine ledgers, independent backup and lawful forward-source blockers. Native 200% zoom needs user-operated evidence: browser policy blocked chrome://settings/appearance; do not bypass or substitute a CSS proxy. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 is only the earliest conditional after-start receipt and still needs lawful source authority. A privileged read-only VSS inventory needs a real Windows administrator action; do not infer absent shadows from Access Denied. No duplicate Docker startup mechanism, full U6/U7 promotion or release from historical replay",
   "next_command": "Recheck PR32/worktree and non-PASS ACCEPTANCE rows; on a future real Windows login verify the single Docker AtLogOn task and services recover without terminal assistance. Continue independent M4/M5 work without main DB mutation. Do not re-run formal research, merge the product PR stack or tag v1.2 while data-loss, independent backup and forward-source gates remain open",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
