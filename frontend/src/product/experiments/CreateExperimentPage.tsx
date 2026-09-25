@@ -9,6 +9,7 @@ import {
 } from "../../utils/format";
 import { navigate, useNavigationGuard } from "../../utils/navigation";
 import { usePageDataContext } from "../dataContext";
+import { Dialog } from "../Dialog";
 import { ConfigurationVersionsPanel } from "../configs";
 import { experimentApi } from "./api";
 import { useExperimentCopy } from "./copy";
@@ -163,6 +164,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
   const [saved, setSaved] = useState(Boolean(restored));
   const savedRef = useRef(Boolean(restored));
   const [storageError, setStorageError] = useState(false);
+  const [exitOpen, setExitOpen] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [pending, setPending] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
@@ -654,7 +656,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
               className="button secondary"
               disabled={pending}
               onClick={() => {
-                if (persist() && window.confirm(c.exitConfirm)) navigate("/");
+                if (persist()) setExitOpen(true);
               }}
             >
               {c.exit}
@@ -711,6 +713,27 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
           setAcknowledged(false);
         }}
       />
+      {exitOpen && (
+        <Dialog title={c.exit} onClose={() => setExitOpen(false)}>
+          <p>{c.exitConfirm}</p>
+          <div className="experimentDraftActions">
+            <button
+              type="button"
+              className="button secondary"
+              onClick={() => setExitOpen(false)}
+            >
+              {c.back}
+            </button>
+            <button
+              type="button"
+              className="button"
+              onClick={() => navigate("/")}
+            >
+              {c.exit}
+            </button>
+          </div>
+        </Dialog>
+      )}
     </>
   );
 }

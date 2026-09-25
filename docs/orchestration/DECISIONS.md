@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 explicit wizard exit uses the existing in-app dialog — 2026-09-25
+
+Three actual-browser attempts to accept the native `window.confirm` for
+**Save & exit** did not yield a verifiable navigation outcome; the browser
+controller timed out while the wizard remained visible. The explicit button
+now saves the same local draft and opens the product's existing accessible
+`Dialog`, with cancel/Escape or confirm. This preserves exit confirmation and
+the existing dirty-route/Back guard without adding a component or dependency.
+Actual Chrome verified EN/ZH dialog text, cancel/Escape, confirmed navigation
+to the workbench and exact step-2 draft restoration. This is a U3 wizard
+interaction decision, not a change to research execution, finance or data.
+
 ## v1.2 raw-data trial never implies forward-use rights — 2026-09-24
 
 The public BaoStock SDK and scoped local source-evaluation trial remain

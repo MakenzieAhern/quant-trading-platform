@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -53,6 +54,23 @@ async function review() {
   await userEvent.click(screen.getByRole("button", { name: "Continue" }));
   await userEvent.click(screen.getByRole("button", { name: "Continue" }));
   await userEvent.click(screen.getByRole("checkbox", { name: /I understand/ }));
+}
+
+function enableNativeDialog() {
+  Object.defineProperties(HTMLDialogElement.prototype, {
+    showModal: {
+      configurable: true,
+      value(this: HTMLDialogElement) {
+        this.setAttribute("open", "");
+      },
+    },
+    close: {
+      configurable: true,
+      value(this: HTMLDialogElement) {
+        this.removeAttribute("open");
+      },
+    },
+  });
 }
 
 describe("guided experiment", () => {
@@ -141,7 +159,8 @@ describe("guided experiment", () => {
     expect(confirm).toHaveBeenCalledTimes(2);
   });
 
-  it("confirms explicit Save & exit only once", async () => {
+  it("confirms explicit Save & exit in an accessible dialog and restores the draft", async () => {
+    enableNativeDialog();
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
     const confirm = vi.spyOn(window, "confirm").mockReturnValue(true);
     render(<CreateExperimentPage />);
@@ -149,7 +168,14 @@ describe("guided experiment", () => {
       "Ranks eligible shares and builds a long-only portfolio.",
     );
     await userEvent.click(screen.getByRole("button", { name: "Save & exit" }));
-    expect(confirm).toHaveBeenCalledTimes(1);
+    const dialog = screen.getByRole("dialog", { name: "Save & exit" });
+    expect(dialog).toHaveTextContent(
+      "Your latest draft is saved on this device.",
+    );
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: "Save & exit" }),
+    );
+    expect(confirm).not.toHaveBeenCalled();
     expect(window.location.pathname).toBe("/");
     expect(readExperimentDraft()).not.toBeNull();
   });
@@ -264,19 +290,49 @@ describe("guided experiment", () => {
     ).toHaveValue("0.02");
   });
 
-  it("asks before exiting and does not discard the draft when exit is declined", async () => {
+  it("keeps the saved draft and wizard open when explicit exit is declined", async () => {
+    enableNativeDialog();
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
-    vi.spyOn(window, "confirm").mockReturnValue(false);
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
     render(<CreateExperimentPage />);
     await screen.findByText(
       "Ranks eligible shares and builds a long-only portfolio.",
     );
     await userEvent.click(screen.getByRole("button", { name: "Save & exit" }));
-    expect(window.confirm).toHaveBeenCalledOnce();
+    const dialog = screen.getByRole("dialog", { name: "Save & exit" });
+    await userEvent.click(within(dialog).getByRole("button", { name: "Back" }));
+    expect(screen.queryByRole("dialog", { name: "Save & exit" })).toBeNull();
+    expect(confirm).not.toHaveBeenCalled();
     expect(window.location.pathname).toBe("/research/new");
     expect(readExperimentDraft()?.form.strategy_id).toBe(
       configuration.strategy_id,
     );
+  });
+
+  it("does not open the exit dialog when the draft cannot be saved", async () => {
+    enableNativeDialog();
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    render(<CreateExperimentPage />);
+    await screen.findByText(
+      "Ranks eligible shares and builds a long-only portfolio.",
+    );
+    const write = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new Error("storage unavailable");
+      });
+    try {
+      await userEvent.click(
+        screen.getByRole("button", { name: "Save & exit" }),
+      );
+      expect(screen.queryByRole("dialog", { name: "Save & exit" })).toBeNull();
+      expect(window.location.pathname).toBe("/research/new");
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "This browser could not save your draft",
+      );
+    } finally {
+      write.mockRestore();
+    }
   });
 });
 

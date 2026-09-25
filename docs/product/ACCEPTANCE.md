@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 00:48 UTC guided Save & exit browser closure
+
+The explicit wizard **Save & exit** route no longer uses the browser-native
+confirmation that repeatedly left its outcome unobservable. It reuses the
+existing accessible product dialog; the dirty sidebar/Back navigation guard
+is unchanged. Actual Chrome 153 opened the restored historical step-2 draft,
+cancelled the Chinese dialog without leaving, then confirmed and reached the
+workbench. **Continue last draft** restored the same name, 2011-01-04 through
+2011-06-30 dates and exact CNY `123456.789000000000001`. In English, the
+dialog text translated without resetting the draft; Escape returned focus to
+the trigger and left the wizard intact. Chinese/dark was restored. The dialog
+was visually inspected in Chrome. Focused wizard 31/31 and full frontend
+241/241 tests, ESLint and TypeScript/production build passed; changed-file
+Prettier was applied and rechecked. No research task, account or order was
+submitted and no live database or frozen research file was changed. An
+independent read-only review found no release-critical defect in this change.
+
+Together with the already recorded four-step, historical/synthetic submission,
+draft/locale and guarded navigation evidence, this closes the agent-operated
+`U3-WIZARD` interaction row. It is not an independent novice-user study and
+does not close `U3-ISOLATE`, M4 data integrity, U7 forward mode or M5 delivery.
+
 ## 2026-09-25 00:40 UTC market watchlist action names
 
 Actual Chrome showed twenty identical **Save to watchlist** accessibility
@@ -552,7 +574,7 @@ closes a bounded disclosure ambiguity, not U7 forward, M4 or release.
 | U1-START | Clean user → one primary guided action → strategy; skip/reopen guide; returning draft/recent/status | Workbench / | 2026-09-23 real Chrome fresh origin5174 + isolated `product_v12_baseline` (0 initial product jobs, no private archive): primary CTA opened registered strategy; four-mode guide closed with Esc and reopened; named draft `Clean install demo QA` saved, appeared on home and resumed at step 2; after completion home showed exact recent study and dated synthetic data state. Agent walkthrough, not a novice-user study | PASS |
 | U1-DEMO | No-private-data install can run clearly marked synthetic demo; all four modes explained | Registry + standalone synthetic experiment | Isolated API exposed historical archive unavailable (`DATASET_NOT_MOUNTED`) and demo available. Chrome completed all four guided steps, created job `fb620f96-591b-48b3-b238-e92be1b41d02` in isolated DB and opened result (+0.39%, −0.04% drawdown, CNY25 costs); synthetic/non-market warning persisted on home, wizard and result, and no executable next-day plan was fabricated. Main DB remained 8 personal jobs and `.research` clean. Temp 8001/5174 servers stopped after QA | PASS |
 | U2-STRATEGY | Registered strategies, plain rules/cycle/risk/data/evidence; drafts and saved versions | /strategies, URL-backed detail drawer and named local configuration versions | Chrome exact-string save/restore/reload/Chinese switch and pre-restore backup; drawer direct URL, Back/Forward and return from full strategy detail verified; independent review closed cross-tab overwrite; full frontend suite PASS | PASS |
-| U3-WIZARD | Four steps, advanced disclosure, summary, back/save/restore/exit; locale preserves inputs | /research/new four-step form | Chrome synthetic and actual historical submission/result PASS; draft/locale preserved. The shared router now guards dirty Back: actual Chrome dismiss retained the edit and step, accept reached home, and Forward restored them without another dialog. Explicit Save & exit has a passing component test, but its actual-Chrome confirm acceptance timed out with the tab still on `/research/new`; browser navigation/restore remains unverified. Agent walkthrough, not a novice-user study | IN_PROGRESS |
+| U3-WIZARD | Four steps, advanced disclosure, summary, back/save/restore/exit; locale preserves inputs | /research/new four-step form | Chrome synthetic and actual historical submission/result PASS; draft/locale preserved. The shared router guards dirty Back: actual Chrome dismiss retained the edit and step, accept reached home, and Forward restored them. Explicit Save & exit now uses the existing accessible dialog: actual Chrome EN/ZH cancel/Escape stayed on the wizard, confirm reached home, and Continue last draft restored the exact step, name, dates and capital. Failed local storage keeps the page open. Focused31/full241 frontend tests, lint/type/build PASS. Agent walkthrough, not a novice-user study | PASS |
 | U3-JOB | Validated actual A-share job; stages/counts; persistent URL; refresh/reopen; idempotent duplicate | /api/experiments; independent durable manager | Live historical job `5f26f84f` remains SUCCEEDED 297/297 and a fresh Chrome context reopened its saved result URL. In a separate tmpfs test DB, the actual Chrome four-step synthetic wizard double-click sent one POST and persisted one job; resending the saved key/config from a fresh client returned the same ID with the DB still at one job. Existing backend concurrent-key/conflict test and frontend lock test cover the shared path. Synthetic result is labeled non-market; details below | PASS |
 | U3-RECOVER | Real cancellation/retry/interruption; no partial results called success | cancel/retry and durable terminal states | Isolated cancellation, genuine FAILED terminal, controlled restart, and non-graceful SIGKILL recovery all verified. The crash left parent `77354e81` RUNNING 60/1212 with zero result rows; startup reconciled it to INTERRUPTED with HTTP409 result and a truthful Chrome warning. One linked child `52b76f45` completed 1212/1212, with 4108 rows only on the child and identical configuration SHA; two repeated parent retries reopened that child. The separate missing-partition FAILED path displayed specific bilingual integrity guidance and never yielded partial results. Details/screenshots below; this is not whole-machine power-loss or U7 forward-paper evidence | PASS |
 | U3-ISOLATE | Independent exploration names/store; formal reports/OOS/freeze unchanged, dates labeled inspected | Separate product_research_jobs/rows, readonly archive | No .research diff; frozen hashes unchanged; formal 1 dataset/3 runs/310 trades before-after | IN_PROGRESS |
