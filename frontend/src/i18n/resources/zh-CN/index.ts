@@ -325,6 +325,7 @@ export const zhCN = {
       lastVerifiedWarning:
         "连接已中断。当前显示的是上次核验的账户快照，并非实时余额；重新连接后将重新读取。",
       portfolio: "模拟交易组合",
+      cnySuffix: "（人民币）",
       cash: "现金",
       marketValue: "市值",
       equity: "权益",

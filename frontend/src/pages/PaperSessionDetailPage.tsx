@@ -45,6 +45,8 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     latest_portfolio: portfolio,
   } = snapshot;
   const active = session.status === "STARTING" || session.status === "RUNNING";
+  const moneyUnit =
+    session.provider_type === "historical_a_share" ? t("detail.cnySuffix") : "";
   const riskMessage = (message: string) => {
     const reserved = /^reserved quantity for (.+) must be finite$/.exec(
       message,
@@ -232,22 +234,28 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         </div>
         {portfolio ? (
           <div className="metricsGrid">
-            <Metric label={t("detail.cash")} value={portfolio.cash} />
             <Metric
-              label={t("detail.marketValue")}
+              label={`${t("detail.cash")}${moneyUnit}`}
+              value={portfolio.cash}
+            />
+            <Metric
+              label={`${t("detail.marketValue")}${moneyUnit}`}
               value={portfolio.market_value}
             />
-            <Metric label={t("detail.equity")} value={portfolio.equity} />
             <Metric
-              label={t("detail.realizedPnl")}
+              label={`${t("detail.equity")}${moneyUnit}`}
+              value={portfolio.equity}
+            />
+            <Metric
+              label={`${t("detail.realizedPnl")}${moneyUnit}`}
               value={portfolio.realized_pnl}
             />
             <Metric
-              label={t("detail.unrealizedPnl")}
+              label={`${t("detail.unrealizedPnl")}${moneyUnit}`}
               value={portfolio.unrealized_pnl}
             />
             <Metric
-              label={t("detail.commission")}
+              label={`${t("detail.commission")}${moneyUnit}`}
               value={portfolio.cumulative_commission}
             />
           </div>
@@ -267,10 +275,10 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         headings={[
           t("createPage.symbol"),
           t("detail.quantity"),
-          t("detail.averagePrice"),
-          t("detail.price"),
-          t("detail.unrealizedPnlShort"),
-          t("detail.realizedPnlShort"),
+          `${t("detail.averagePrice")}${moneyUnit}`,
+          `${t("detail.price")}${moneyUnit}`,
+          `${t("detail.unrealizedPnlShort")}${moneyUnit}`,
+          `${t("detail.realizedPnlShort")}${moneyUnit}`,
         ]}
         rows={(portfolio?.positions ?? []).map((item) => [
           item.symbol,
@@ -346,8 +354,8 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           t("detail.order"),
           t("detail.side"),
           t("detail.quantity"),
-          t("detail.price"),
-          t("detail.commission"),
+          `${t("detail.price")}${moneyUnit}`,
+          `${t("detail.commission")}${moneyUnit}`,
           t("detail.utcTime"),
         ]}
         rows={snapshot.fills.map((item) => [

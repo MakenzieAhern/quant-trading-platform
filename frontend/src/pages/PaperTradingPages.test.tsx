@@ -295,7 +295,16 @@ describe("paper trading pages", () => {
           unrealized_pnl: "0",
           cumulative_commission: "0",
           drawdown: "0",
-          positions: [],
+          positions: [
+            {
+              symbol: "600000.SSE",
+              quantity: "100",
+              average_price: "10",
+              market_price: "10.5",
+              unrealized_pnl: "50",
+              realized_pnl: "0",
+            },
+          ],
           plan: {
             ...accountPlan,
             status: "NOT_REBALANCE_SESSION",
@@ -317,6 +326,11 @@ describe("paper trading pages", () => {
     expect(screen.getByText("9.123456789123456789")).toBeVisible();
     expect(screen.getByText("2011-03-22")).toBeVisible();
     expect(screen.getByText("Cash at plan time (CNY)")).toBeVisible();
+    expect(screen.getByText("Cash (CNY)")).toBeVisible();
+    expect(screen.getByText("Market value (CNY)")).toBeVisible();
+    expect(
+      screen.getByRole("columnheader", { name: "Price (CNY)" }),
+    ).toBeVisible();
     expect(
       screen.queryByRole("button", { name: /execute|submit/i }),
     ).not.toBeInTheDocument();
@@ -324,6 +338,10 @@ describe("paper trading pages", () => {
     expect(screen.getByText("此模拟账户的历史调仓计划")).toBeVisible();
     expect(screen.getByText(/不是今日交易建议/)).toBeVisible();
     expect(screen.getByText("计划时账户现金（人民币）")).toBeVisible();
+    expect(screen.getByText("现金（人民币）")).toBeVisible();
+    expect(
+      screen.getByRole("columnheader", { name: "价格（人民币）" }),
+    ).toBeVisible();
     await act(async () => i18n.changeLanguage("en-US"));
   });
 
@@ -769,6 +787,7 @@ describe("paper trading pages", () => {
     expect(screen.getByTitle("100012.252500000000000001")).toHaveTextContent(
       "100,012.252500000000000001",
     );
+    expect(screen.queryByText("Cash (CNY)")).not.toBeInTheDocument();
     act(() => MockWebSocket.instances[0]!.message(portfolioEvent));
     expect(screen.getAllByText("Paper portfolio")).toHaveLength(1);
 

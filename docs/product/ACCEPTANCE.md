@@ -1,5 +1,21 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 01:06 UTC historical paper monetary units
+
+Actual Chrome 153 showed the stopped, audited A-share paper account with
+unqualified portfolio balances and position/fill prices. The existing detail
+page now marks historical A-share cash, equity, market value, PnL, commissions
+and position/fill prices as 人民币/CNY in Chinese/English, without changing exact
+values, exports or backend accounting. Synthetic/legacy accounts do not gain an
+unverified CNY claim. Chrome reloaded the retained historical account and
+confirmed both locales' labels, then restored the original Chinese/dark
+preference. Focused paper tests 26/26, full frontend 241/241, ESLint and
+TypeScript/production build passed; changed files were formatted. No account,
+order, provider, database or frozen research write occurred. This is a bounded
+U8/QA-A11Y clarity fix, not full U8 or release acceptance. Two lost genuine
+paper ledgers, independent disaster-recovery destination, lawful 2026 feed
+rights and Docker post-login startup remain unverified.
+
 ## 2026-09-25 00:48 UTC guided Save & exit browser closure
 
 The explicit wizard **Save & exit** route no longer uses the browser-native

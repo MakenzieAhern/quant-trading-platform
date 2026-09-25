@@ -347,6 +347,7 @@ export const enUS = {
       lastVerifiedWarning:
         "Connection interrupted. Displayed account state is the last verified snapshot, not a current balance; it will refresh after reconnection.",
       portfolio: "Paper portfolio",
+      cnySuffix: " (CNY)",
       cash: "Cash",
       marketValue: "Market value",
       equity: "Equity",
