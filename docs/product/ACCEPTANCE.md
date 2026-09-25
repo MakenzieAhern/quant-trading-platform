@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 01:15 UTC isolated release-image end-to-end rehearsal
+
+At product head `955c23a`, the backend release image and Nginx frontend image
+were built from the current worktree; the frontend API base was compiled for
+the isolated loopback port `18000`. Four explicitly named scratch containers
+used their own Docker network and ports `18000`/`15173`, with PostgreSQL and
+Redis on tmpfs and **no mounts or volumes** from the main application. The
+backend ran `APP_ENV=production`, `BROKER_MODE=paper` and its plain image CMD,
+not the development startup command. On the scratch database, Alembic
+`upgrade head`, `downgrade 20260904_0001`, `upgrade head`, and `check` passed.
+Redis returned PONG; backend `/api/health` and Nginx `/` and `/help` returned
+HTTP 200 with the expected static security headers.
+
+Actual Chrome 153 opened the release frontend, saw the separate backend as
+online, and completed all four guided steps using the explicitly labeled
+synthetic demo because no private historical archive was mounted. The
+isolated API accepted one POST and the saved job
+`b3b0a2cc-7e8a-4ca2-89d8-87004c0aee3f` completed; its result remained
+available after page reload and after restarting only the scratch backend.
+The page warned that +0.39% synthetic return was not market evidence and
+withheld an executable next-day plan. Scratch PostgreSQL held one personal
+job; the main database still read formal 1/3/310, personal jobs 8, paper
+sessions 5/events 417. Main Compose and frozen research were untouched.
+The four named scratch containers were stopped and auto-removed, and their
+now-empty scratch network was removed; no application volume or image was
+deleted. Main Compose remained four services up, with the same database
+counts after cleanup.
+
+This is a bounded clean-database release-image/API/browser and process-restart
+rehearsal, **not** the actual release Compose switchover, independent backup,
+restoration of two missing genuine ledgers, lawful 2026 forward-mode evidence,
+native-login startup, novice-user review or v1.2 acceptance. M4 data integrity,
+U7 forward mode, QA-RELEASE and M5 delivery remain blocked/incomplete.
+
 ## 2026-09-25 01:06 UTC historical paper monetary units
 
 Actual Chrome 153 showed the stopped, audited A-share paper account with
