@@ -21,6 +21,8 @@ Research → Research again → one Back returns to Workbench. Chinese/dark and
 the original Workbench tab were restored; live product jobs/paper sessions/
 paper events/market receipts stayed `8/5/417/6`. This repairs Back behavior,
 not the remaining U7 forward, M4 data-integrity or M5 release gates.
+[PR #32 CI 36170000918](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36170000918)
+at head `067bf01` passed backend, frontend and Compose; the PR remains draft.
 
 ## 2026-09-25 17:39 UTC bounded English Chrome read-only walkthrough
 
