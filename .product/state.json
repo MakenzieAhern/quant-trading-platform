@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-25T01:57:00Z",
+  "updated_at_utc": "2026-09-25T02:00:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-25 02:00UTC PR32 head abdc56b CI36084273692 backend/frontend/Compose PASS after optional Workbench guide storage-denial fix and prior chart QA checkpoint; API and frontend HTTP200, clean local worktree before CI-record update. PR32 remains draft/open, no merge or release. Passing CI does not prove independent backup, genuine pre-loss ledgers, lawful forward source, native200% zoom or full M4/M5 acceptance",
     "2026-09-25 01:57UTC optional Workbench mode guide contained a dead guide-seen localStorage write, with no reader, that could throw on denied storage while closing the guide. Removed the unused write and added a SecurityError regression; focused3/full frontend242, ESLint, TypeScript/production build and diff check PASS. Guide remains manually reopenable; no account/provider/database/frozen research write. This closes one U1 error-path defect only, not M4/U7/M5. User answers on independent backup, genuine pre-loss paper ledgers and lawful 2026 forward-data rights remain unknown",
     "2026-09-25 01:50UTC actual Chrome saved historical job d9f27183 date filter 2011-03-01..2011-03-22 moved chart selection into range, retained full-run +4.67%/-2.48%/CNY96.05/-8.83%, showed 16/16 equity rows, and EN switch preserved both dates and exact readout; full interval and ZH/dark restored, no job/account/provider/DB write. Independent read-only current result/plan/chart review found no reproducible new U4/U6/U8 defect. Native200% browser zoom remains NOT_RUN: browser security policy blocked chrome://settings/appearance, with no bypass attempted. UX-CHART/QA-VISUAL/QA-A11Y/M4 remain IN_PROGRESS; three external prerequisites remain unverified",
     "2026-09-25 01:34UTC actual Chrome responsive spot check: /data, /tasks, /experiments, /paper and /help had no page-level horizontal overflow at 390x844 in ZH/dark and EN/light, at 1024x768 EN/light, or at 1280x800 and 1440x900 ZH/dark. Five more primary routes /, /strategies, /markets, /research/a-share and /settings also measured 375/375 at 390 in ZH/dark and EN/light after loading. Help desktop/mobile and settings mobile visually inspected; research checkboxes have >=40px label targets despite 18px native inputs, data acknowledgment label 307x64px, and wide tables stay local. Mobile research first Tab reached skip link and Enter focused main. Original ZH/dark and viewport restored; no provider/study/account/DB write. This does not prove native200% zoom, complete WCAG, novice use or M4/M5. User still cannot confirm independent backup destination, genuine pre-loss ledgers or lawful 2026 forward-feed rights; all remain unverified",
@@ -506,9 +507,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "7f22c2c",
+      "last_verified_head": "abdc56b",
       "state": "DRAFT",
-      "ci_run": 36082842364,
+      "ci_run": 36084273692,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",

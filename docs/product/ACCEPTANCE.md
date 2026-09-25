@@ -8,7 +8,10 @@ that no code read. Denied storage could therefore throw while the user pressed
 closes and remains reopenable. A regression simulates a storage `SecurityError`;
 the focused 3/3 and full frontend 242/242 tests, ESLint, TypeScript/production
 build and diff check passed. No account, provider, database or frozen research
-data was changed. This closes one U1 error-path defect, not M4/U7/M5 or native
+data was changed. PR #32 head `abdc56b` [CI 36084273692](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36084273692)
+passed backend, frontend and Compose; the local worktree was clean and the
+running API/frontend returned HTTP 200. This closes one U1 error-path defect,
+not M4/U7/M5 or native
 200% zoom. The user still cannot confirm an independent backup destination,
 genuine pre-loss paper ledgers or lawful 2026 forward-data rights.
 
