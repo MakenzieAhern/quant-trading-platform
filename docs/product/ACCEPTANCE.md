@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 01:50 UTC result chart date/locale and review checkpoint
+
+Actual Chrome reopened saved 293-session historical job `d9f27183` without a
+new run. Filtering displayed records to 2011-03-01–2011-03-22 changed the
+chart selection from 2010-06-01 to the in-range 2011-03-22 and showed 16/16
+equity rows. Full-run return/drawdown/cost/benchmark remained +4.67%/-2.48%/
+CNY96.05/-8.83%. Switching Chinese to English kept both date inputs, the
+selected trading date and exact chart readout; full interval and Chinese/dark
+were restored. No study/account/provider/database write occurred. An
+independent read-only review of the current result/plan/chart code and tests
+found no reproducible new U4/U6/U8 defect; it was not an assistive-technology
+or novice-user acceptance test.
+
+Chrome browser control explicitly blocked `chrome://settings/appearance` by
+security policy. No alternate route or bypass was attempted. Therefore a
+native 200% browser-zoom check remains **NOT RUN** by the agent and requires a
+user-operated browser session or an approved testing interface; the earlier
+720px CSS-viewport proxy is not equivalent. `UX-CHART`, `QA-VISUAL`, `QA-A11Y`
+and M4 remain IN_PROGRESS.
+
 ## 2026-09-25 01:34 UTC five-route responsive and language spot check
 
 Actual Chrome inspected `/data`, `/tasks`, `/experiments`, `/paper` and `/help`
