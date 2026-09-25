@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 18:10 UTC Chrome production-chart timing method rejected
+
+On DESKTOP-3EOROGR, the current production frontend build was served in actual
+Chrome 153 on the project-owned `localhost:5173` origin against the saved
+293-session historical result `d9f27183`. Only the project's frontend was
+briefly stopped; a named temporary preview container served the build. The
+first two benchmark-toggle clicks took 278/269 ms at the browser-control API,
+then the next 18 took about 2.75–2.99 seconds each. Every click changed both
+the checkbox and benchmark SVG line, and 20 toggles returned the control to
+checked. A separate full-precision checkbox took 274 ms on its first click
+and 2749 ms on its second. The same jump in a non-chart control leaves
+browser-control delay and page-wide work unseparated: these tool-inclusive
+times cannot establish chart render latency or the <=200 ms interaction
+target. No performance PASS or product regression is inferred;
+use a supported in-browser event/paint trace rather than repeating this method.
+
+The temporary preview tab/container were closed. The original Compose frontend
+was restored (Compose recreated only that frontend container); PostgreSQL,
+Redis and backend remained running. Frontend and `/api/health` returned HTTP
+200, Redis PONG, and read-only live counts remained research jobs 8, paper
+sessions 5, paper events 417 and market-update jobs 4. No study, order,
+provider acquisition, database restore, formal report or frozen data was
+changed. `QA-PERF` and the release gate remain IN_PROGRESS/FAIL respectively.
+
 ## 2026-09-25 17:53 UTC same-route Back repair
 
 Actual Chrome opened the saved historical study `d9f27183` and followed its
