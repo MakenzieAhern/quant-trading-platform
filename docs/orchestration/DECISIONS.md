@@ -1,5 +1,28 @@
 # Decisions
 
+## v1.2 replace ineffective Docker login Run entry with one user task — 2026-09-25
+
+The next actual Windows boot/login occurred at 2026-09-25 12:04/12:05 AEST,
+after Docker Desktop's Run path was quoted. `AutoStart=true`, the enabled
+StartupApproved value and the quoted Run path were still present, but Docker
+had no process or new launch log until a manual start at 2026-09-26 03:24 AEST;
+no bounded Application crash event explained the absence. The existing
+Docker Desktop 4.92.0 executable started cleanly, and the original four
+Compose services, four named volumes and application counts survived.
+
+Replace that one ineffective per-user Run entry with a single current-user
+Task Scheduler `AtLogOn` action named `QuantTrading-DockerDesktop-AtLogon`.
+Its principal resolves to the current user's SID, uses interactive limited
+privilege, starts the same installed executable, has no time limit and ignores
+overlapping task instances. The old Run value was exactly
+`"C:\Program Files\Docker\Docker\Docker Desktop.exe"` and was removed only
+after the task was registered and verified; restoring that value and removing
+the named task reverses the change. No administrator elevation, Docker reset,
+volume, image or project-data operation occurred. This is a new startup
+hypothesis, **not** successful login acceptance until the next real sign-in.
+Docker's [official setting](https://docs.docker.com/desktop/settings-and-maintenance/settings/)
+describes login autostart but does not explain this host-specific failure.
+
 ## v1.2 explicit wizard exit uses the existing in-app dialog — 2026-09-25
 
 Three actual-browser attempts to accept the native `window.confirm` for

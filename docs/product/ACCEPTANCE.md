@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 17:29 UTC Docker login-recovery and startup replacement
+
+Windows last booted at 2026-09-25 12:04:54 AEST and this user logged in at
+12:05:07, after the Docker Run path had been quoted. Docker Desktop 4.92.0 was
+not running when checked at 2026-09-26 03:24 AEST; `docker-desktop` WSL was
+stopped and Ubuntu had no Docker CLI integration. The user setting still said
+`AutoStart=true`, StartupApproved began `02`, and the quoted per-user Run value
+was present. Host logs had no post-login Docker launch before the agent's
+manual start, and the bounded Application crash-log check found no Docker
+event. The exact reason Windows skipped the Run entry remains unknown.
+
+Starting only the already-installed Desktop recovered WSL Engine 29.8.0,
+Compose 5.5.1, four original project volumes and four project services.
+PostgreSQL, Redis and backend became healthy; `/api/health` and the frontend
+returned HTTP 200. Read-only database counts remained formal datasets/runs/
+trades `1/3/310`, personal research jobs `8`, paper sessions/events `5/417`,
+market receipts `6`. No reset, prune, reinstall, data deletion or study ran.
+
+Because the previous startup hypothesis failed, one limited-privilege
+current-user `AtLogOn` scheduled task now replaces the Docker-only HKCU Run
+entry, which was removed after verifying the task and recording its rollback
+value. The task has **not** passed a real next-login test. M5 terminal-free
+startup and release remain FAIL. Chrome was closed during the attempted
+English read-only walkthrough; Data Center and strategy detail were observed,
+but the historical result had reached only Loading when the browser binding
+disappeared. No English video or completed result walkthrough is claimed.
+
 ## 2026-09-25 01:57 UTC optional orientation under denied storage
 
 The Workbench's optional mode guide wrote a `guide-seen` browser-storage key
@@ -11,8 +38,7 @@ build and diff check passed. No account, provider, database or frozen research
 data was changed. PR #32 head `abdc56b` [CI 36084273692](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36084273692)
 passed backend, frontend and Compose; the local worktree was clean and the
 running API/frontend returned HTTP 200. This closes one U1 error-path defect,
-not M4/U7/M5 or native
-200% zoom. The user still cannot confirm an independent backup destination,
+not M4/U7/M5 or native 200% zoom. The user still cannot confirm an independent backup destination,
 genuine pre-loss paper ledgers or lawful 2026 forward-data rights.
 
 ## 2026-09-25 01:50 UTC result chart date/locale and review checkpoint
@@ -726,7 +752,7 @@ closes a bounded disclosure ambiguity, not U7 forward, M4 or release.
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
 | M4-DATA-INTEGRITY | Application and formal-history persistence, isolated tests, recoverable backup | Suite-wide test-DB guard and verified additive restore | Live DB was found missing formal 1/3/310 ledger and later paper accounts. Formal ledger and four pre-backup accounts were restored atomically; `4b64380f` and `07d72259` remain absent. Live-config pytest was rejected; isolated backend969 PASS/one optional skip with live counts stable. The post-recovery dump restored into a new database, with 44/44 public tables matching live by row count and sorted-row hash. This same-disk dump is not independent disaster recovery and missing-history disposition remains open | FAIL |
 | QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Isolated release-image/browser rehearsal and [CI 36081787335](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36081787335) backend/frontend/Compose plus production-backend/tmpfs smoke PASS. The live DB data-loss incident, missing independent disaster-recovery proof, forward authority and remaining M4/M5 acceptance keep the release gate FAIL; frozen research files were not changed | FAIL |
-| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. Docker Desktop 4.92.0 login autostart is configured and four project containers use `unless-stopped`, but the real 2026-09-24 22:29 AEST reboot/login still left Desktop/Engine stopped at 03:44 after the startup-approval correction. The Docker-only HKCU Run path was then quoted; this is reversible and unproven until another real login. One non-destructive manual launch restored Engine, four services/volumes and API/frontend HTTP200. Screenshots/recordings and operator review remain incomplete | FAIL |
+| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback. A second real 2026-09-25 12:05 AEST login did not launch Desktop under the quoted Run path, despite AutoStart and enabled StartupApproved. One limited current-user AtLogOn task replaced that Run entry; the next genuine login has not tested it. Manual launch recovered Engine, four services/volumes and original database counts without loss. English video, complete screenshots, novice-user/operator review and terminal-free startup remain incomplete | FAIL |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
