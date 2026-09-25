@@ -13,7 +13,9 @@ dialog text translated without resetting the draft; Escape returned focus to
 the trigger and left the wizard intact. Chinese/dark was restored. The dialog
 was visually inspected in Chrome. Focused wizard 31/31 and full frontend
 241/241 tests, ESLint and TypeScript/production build passed; changed-file
-Prettier was applied and rechecked. No research task, account or order was
+Prettier was applied and rechecked. PR #32 code head `e84a5b3`
+[CI 36079549453](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36079549453)
+passed backend, frontend and Compose. No research task, account or order was
 submitted and no live database or frozen research file was changed. An
 independent read-only review found no release-critical defect in this change.
 

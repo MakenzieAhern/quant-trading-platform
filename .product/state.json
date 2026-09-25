@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-25T00:48:00Z",
+  "updated_at_utc": "2026-09-25T00:55:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,7 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
-    "2026-09-25 00:48UTC U3-WIZARD explicit Save & exit replaced repeated unobservable native confirm with the existing accessible Dialog; dirty sidebar/Back guard unchanged. Fresh actual Chrome153 ZH/EN confirmed modal/cancel/Escape, confirmed home navigation and Continue last draft restored exact step2/name/dates/CNY123456.789000000000001; visual dialog inspected, original ZH/dark restored. Failed local storage remains on page. Independent read-only review found no release-critical defect. Focused31/full frontend241, ESLint, TypeScript/production build PASS; no task/account/order/DB/research mutation. U3-WIZARD agent-operated row PASS, not a novice-user study; U3-ISOLATE/M4/U7/M5 and three external prerequisites remain open",
+    "2026-09-25 00:48UTC U3-WIZARD explicit Save & exit replaced repeated unobservable native confirm with the existing accessible Dialog; dirty sidebar/Back guard unchanged. Fresh actual Chrome153 ZH/EN confirmed modal/cancel/Escape, confirmed home navigation and Continue last draft restored exact step2/name/dates/CNY123456.789000000000001; visual dialog inspected, original ZH/dark restored. Failed local storage remains on page. Independent read-only review found no release-critical defect. Focused31/full frontend241, ESLint, TypeScript/production build PASS; PR32 code head e84a5b3 CI36079549453 backend/frontend/Compose PASS. No task/account/order/DB/research mutation. U3-WIZARD agent-operated row PASS, not a novice-user study; U3-ISOLATE/M4/U7/M5 and three external prerequisites remain open",
     "2026-09-25 00:40UTC actual Chrome market result and watchlist accessible actions now distinguish security and, for saved rows, dataset in EN/ZH; same-security cross-source regression added, visible UI/business behavior unchanged, original ZH/dark restored. Focused13/full frontend240, ESLint, TypeScript/production build, changed-file Prettier and diff check PASS. Independent read-only PR32 review found no new release-critical defect beyond acceptance gaps. User cannot confirm independent backup destination, genuine pre-loss paper ledgers or lawful 2026 forward-data rights; all remain unverified, as do M4/M5 and full accessibility. No live watchlist/provider/account/research write",
     "2026-09-25 00:30UTC actual Chrome Data Center opened existing failed raw-candidate task read-only and found four history Open task buttons named only by UUID. Buttons now expose securities, requested date range and UTC creation time in ZH/EN, matching task-center context; Chrome distinguished all four and original ZH/dark was restored. Focused13/full frontend239, ESLint, TypeScript/build and Prettier PASS. No provider retry/request or DB write. A second fresh Chrome wizard tab restored the step-2 draft, but Save & exit native confirmation again left browser control timed out and tab on /research/new; U3-WIZARD stays IN_PROGRESS. QA-A11Y bounded progress only; missing ledgers, independent backup, lawful forward rights and M4/M5 gates unchanged",
     "2026-09-25 00:13UTC actual Chrome153 at390x844 opened retained historical paper d7044a3c and 293-session result d9f27183. Both document widths375/375, locally scrollable focusable tables; keyboard Right moved paper table; the result's two18px checkboxes had40px-high label targets. Viewport reset, no account/research action. npm audit full locked frontend tree and pip-audit2.10.1 locked backend tree reported zero known vulnerabilities; pip-audit ran only in ephemeral test container. PR32 head0e0bc30 CI36075909646 backend/frontend/Compose PASS. Bounded mobile/security evidence only; M4/M5 and external gates unchanged",
@@ -500,13 +500,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "0e0bc30",
+      "last_verified_head": "e84a5b3",
       "state": "DRAFT",
-      "ci_run": 36075909646,
+      "ci_run": 36079549453,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Real Chrome compatible completed historical result to separate paper-form handoff ZH/EN PASS without account/order submission; unsupported archive link hidden by regression. Read-only handoff/legacy backtest form fields no longer waste Tab stops; Chrome confirmed focus reaches editable cash/date. Bilingual table scrolling and formal archive translated status AX spot checks PASS. Chart performance timing invalid under background/browser-control overhead, so full visual/A11Y/performance matrix and forward mode remain incomplete. Docker post-login auto-start still unproven; missing genuine ledgers, independent backup and lawful forward authority remain open"
+      "browser_gate": "U3-WIZARD explicit Save & exit accessible dialog ZH/EN cancel/Escape/home/restore PASS with exact saved draft; market watchlist actions uniquely named in ZH/EN. Earlier historical result-to-paper handoff, read-only field focus, bilingual table scrolling and formal archive translated AX spot checks PASS. Chart performance timing invalid under background/browser-control overhead, so full visual/A11Y/performance matrix and forward mode remain incomplete. Docker post-login auto-start still unproven; missing genuine ledgers, independent backup and lawful forward authority remain open"
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -521,7 +521,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Recheck PR32 CI after the U3-WIZARD interaction change, then continue independent M4/M5 browser, performance, accessibility and compatibility checks while keeping forward-source, missing genuine ledgers and independent backup unproven. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 data publication is the earliest conditional after-start receipt, never a substitute for lawful source and execution-authority approval. A privileged read-only VSS inventory would be useful only if the user can perform the Windows administrator step; do not infer shadow-copy absence from access denied. A genuine next Windows login must test the Docker-only quoted HKCU Run path; the prior StartupApproved correction demonstrably failed at the 2026-09-24 22:29 AEST login. Do not add a duplicate startup mechanism or claim M5 PASS. M5 also lacks complete real-data user flow and novice-user review. Do not promote full U6/U7 or release from historical replay",
+  "next_task": "Continue independent M4/M5 browser, performance, accessibility and compatibility checks while keeping forward-source, missing genuine ledgers and independent backup unproven. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 data publication is the earliest conditional after-start receipt, never a substitute for lawful source and execution-authority approval. A privileged read-only VSS inventory would be useful only if the user can perform the Windows administrator step; do not infer shadow-copy absence from access denied. A genuine next Windows login must test the Docker-only quoted HKCU Run path; the prior StartupApproved correction demonstrably failed at the 2026-09-24 22:29 AEST login. Do not add a duplicate startup mechanism or claim M5 PASS. M5 also lacks complete real-data user flow and novice-user review. Do not promote full U6/U7 or release from historical replay",
   "next_command": "Recheck PR32/worktree and non-PASS ACCEPTANCE rows; on a future real Windows login verify Docker starts without terminal assistance and services recover, with no reset or data deletion. Continue independent M4/M5 work without main DB mutation. Do not re-run formal research, merge the product PR stack or tag v1.2 while data-loss, independent backup and forward-source gates remain open",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
