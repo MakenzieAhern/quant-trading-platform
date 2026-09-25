@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-25T17:44:00Z",
+  "updated_at_utc": "2026-09-25T17:53:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-25 17:53UTC actual Chrome reproduced same-route sidebar Research click inserting duplicate history: first Back stayed on Research rather than returning to prior paper form. Shared navigate now no-ops only on exact same URL, preserving distinct hash navigation. Focused8/full frontend243, ESLint, TypeScript/Vite build, Prettier/diff PASS; fresh Chrome Workbench->Research->Research->one Back reached Workbench. Historical result->paper form handoff retained audited replay/CNY100000/end2011-03-22 and forced explicit start for >93-day source; EN switch retained values. No account submitted; live jobs8/paper5/events417/receipts6 unchanged. Chinese/dark Workbench restored. U7 forward/M4 integrity/M5 release remain open",
     "2026-09-25 17:44UTC PR32 head4396a53 CI36168702768 backend/frontend/Compose PASS after bounded English read-only browser QA; live paper5/events417, product research8 and market receipts6 unchanged. Existing Chrome restored to Chinese/dark Workbench. A local recorder check found no Snipping Tool; pre-existing Clipchamp showed Microsoft sign-in failure and was closed without login, capture permission, upload or video. PR32 remains draft/unmerged; M4/M5 and external data gates remain open",
     "2026-09-25 17:39UTC existing Chrome restored and bounded English read-only product path completed: Data Center/strategy detail, saved historical result d9f27183 with +4.67%/-2.48%/CNY96.05/-8.83% and dated 2011-03-22 plan plus non-fill reasons; cross-mode compare with synthetic dccc74b3 warned conditions differ; stopped historical paper d7044a3c showed 2011-03-23 session, CNY portfolio and no older account-native plan. Chinese/dark Workbench restored. No study/account/provider/order mutation requested; no English video, novice-user test, native200% zoom or full M4/M5 acceptance claimed",
     "2026-09-25 17:34UTC PR32 head 8ec405d CI36167737133 backend/frontend/Compose PASS after Docker login-recovery documentation and bilingual guide correction. This CI does not test actual Windows login; the single current-user scheduled AtLogOn task remains unproven, M5 FAIL. PR32 remains draft/unmerged and v1.2 unreleased",
@@ -272,6 +273,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "RESOLVED UX-NAVIGATION: shared navigate previously pushed an identical URL on same-route sidebar clicks, so one browser Back landed on the same page. Exact-URL no-op plus hash-distinction regression and fresh real-Chrome Back verification passed",
     "PARTIAL M5 RECORDINGS: earlier Chinese demo/walkthrough videos remain valid bounded evidence. No new English recording was made: browser-control API has no recording capability, Windows Snipping Tool was not installed, and existing Clipchamp opened only to a Microsoft sign-in failure. No login, permission change or alternative capture bypass was attempted. English read-only walkthrough is browser/text evidence only; English video is not a separate user requirement",
     "ACTIVE: 2026-09-25 12:04/12:05 AEST boot/login did not launch Docker Desktop by 2026-09-26 03:24 AEST despite quoted HKCU Run path, AutoStart=true and enabled StartupApproved. No Docker launch log appeared after login; bounded Application crash check found none. The old Run value was replaced by one limited current-user scheduled AtLogOn task; next real login is untested, so M5 terminal-free startup remains FAIL",
     "RESOLVED U3-WIZARD explicit exit: the prior native-confirm browser path repeatedly timed out, so Save & exit now uses the existing accessible in-app Dialog. Fresh Chrome EN/ZH verified cancel/Escape, home navigation, exact saved-draft restoration; route Back guard remains native and separately tested. No research task was submitted",

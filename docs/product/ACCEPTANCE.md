@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 17:53 UTC same-route Back repair
+
+Actual Chrome opened the saved historical study `d9f27183` and followed its
+paper-account handoff without creating an account. The form retained the
+historical provider, CNY 100000, dataset and 2011-03-22 end date; because the
+study spans more than the 93-calendar-day replay limit, the start date stayed
+required and empty. EN switching preserved these values and the explicit
+replay-only warning. No account was submitted.
+
+While returning to the research list, clicking its already-active sidebar
+link and pressing Back once left Chrome on the same list: the shared `navigate`
+helper added a redundant browser-history entry for an **identical** URL.
+After checking its callers and hash-detail navigation, the helper now returns
+without pushing only when the complete destination URL already equals the
+current URL. A regression checks both no duplicate entry and a distinct hash
+entry. Focused navigation 8/8, full frontend 243/243, ESLint, TypeScript/Vite
+build, Prettier and diff check passed. Fresh real Chrome verified Workbench →
+Research → Research again → one Back returns to Workbench. Chinese/dark and
+the original Workbench tab were restored; live product jobs/paper sessions/
+paper events/market receipts stayed `8/5/417/6`. This repairs Back behavior,
+not the remaining U7 forward, M4 data-integrity or M5 release gates.
+
 ## 2026-09-25 17:39 UTC bounded English Chrome read-only walkthrough
 
 The existing Chrome profile was reopened after its previous window disappeared.

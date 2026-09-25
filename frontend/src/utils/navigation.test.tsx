@@ -57,6 +57,16 @@ describe("shared navigation guard", () => {
     scrollTo.mockRestore();
   });
 
+  it("does not add duplicate history for an exact current URL", () => {
+    window.history.replaceState({}, "", "/experiments");
+    const push = vi.spyOn(window.history, "pushState");
+    expect(navigate("/experiments")).toBe(true);
+    expect(push).not.toHaveBeenCalled();
+    expect(navigate("/experiments#details")).toBe(true);
+    expect(push).toHaveBeenCalledTimes(1);
+    push.mockRestore();
+  });
+
   it("asks the guard before a browser traversal updates the route", () => {
     window.history.replaceState({}, "", "/strategies");
     render(<RouterHarness />);
