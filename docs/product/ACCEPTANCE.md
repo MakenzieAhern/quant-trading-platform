@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 01:34 UTC five-route responsive and language spot check
+
+Actual Chrome inspected `/data`, `/tasks`, `/experiments`, `/paper` and `/help`
+without submitting any request or changing a saved record. At 390×844,
+Chinese/dark and English/light each had document width equal to scroll width
+(`375/375`) on all five routes. At 1024×768 English/light the five pages were
+`1009/1009`; at 1280×800 and 1440×900 Chinese/dark they were respectively
+`1265/1265` and `1425/1425`. The help page was visually inspected at English
+light desktop and mobile sizes. On the research list, the 18px native
+comparison and column checkboxes were inside 40px or taller labels; its wider
+table remained in a local scroll region rather than widening the page.
+The data-request acknowledgment's 18px input had a 307×64px label target.
+On a fresh mobile research-list load, first Tab focused the skip link and
+Enter moved focus to `main#main-content`.
+The same 390×844 two-locale/two-theme spot check covered `/`, `/strategies`,
+`/markets`, `/research/a-share` and `/settings` after their headings appeared;
+all five also measured `375/375`. The fully loaded formal archive retained
+two locally scrollable tables (1237px and 777px inside 337px containers).
+The English/light settings page was visually inspected at mobile size.
+Language/theme were returned to Chinese/dark and the temporary viewport
+override was reset. This is a bounded layout and target check, not native
+200% zoom, a complete contrast/keyboard/screen-reader audit, or novice-user
+acceptance. `QA-VISUAL`, `QA-A11Y`, M4 and M5 remain incomplete.
+
 ## 2026-09-25 01:25 UTC release-image CI regression gate
 
 PR #32 head `f5d4f8d` [CI 36081787335](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36081787335)
