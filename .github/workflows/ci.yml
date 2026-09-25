@@ -82,3 +82,20 @@ jobs:
           trap 'docker stop "$container_id" >/dev/null' EXIT
           curl -fsSI --retry 5 --retry-all-errors --retry-delay 1 http://127.0.0.1:15173/
           curl -fsSI http://127.0.0.1:15173/help
+      - name: Smoke release backend against isolated scratch services
+        run: |
+          set -euo pipefail
+          docker build -t qtp-release-smoke-backend ./backend
+          docker network create qtp-release-ci
+          trap 'for container in qtp-release-ci-api qtp-release-ci-redis qtp-release-ci-pg; do docker stop "$container" >/dev/null 2>&1 || true; done; docker network rm qtp-release-ci >/dev/null 2>&1 || true' EXIT
+          docker run --rm -d --name qtp-release-ci-pg --network qtp-release-ci --tmpfs /var/lib/postgresql/data:rw -e POSTGRES_DB=quant_test -e POSTGRES_USER=quant -e POSTGRES_PASSWORD=test_only postgres:16-alpine
+          docker run --rm -d --name qtp-release-ci-redis --network qtp-release-ci --tmpfs /data:rw redis:7-alpine
+          for attempt in $(seq 1 30); do
+            if docker exec qtp-release-ci-pg pg_isready -U quant -d quant_test >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          docker exec qtp-release-ci-pg pg_isready -U quant -d quant_test
+          docker run --rm --network qtp-release-ci -e APP_ENV=production -e DATABASE_URL=postgresql+asyncpg://quant:test_only@qtp-release-ci-pg:5432/quant_test qtp-release-smoke-backend alembic upgrade head
+          docker run --rm -d --name qtp-release-ci-api --network qtp-release-ci -p 127.0.0.1:18000:8000 -e APP_ENV=production -e DATABASE_URL=postgresql+asyncpg://quant:test_only@qtp-release-ci-pg:5432/quant_test -e REDIS_URL=redis://qtp-release-ci-redis:6379/0 -e BROKER_MODE=paper qtp-release-smoke-backend
+          curl -fsS --retry 10 --retry-all-errors --retry-delay 1 http://127.0.0.1:18000/api/health | python3 -c 'import json, sys; data = json.load(sys.stdin); assert data["status"] == "ok" and data["environment"] == "production" and data["broker_mode"] == "paper"'
+          curl -fsS http://127.0.0.1:18000/api/workbench/capabilities | python3 -c 'import json, sys; datasets = {item["mode"]: item for item in json.load(sys.stdin)["datasets"]}; assert datasets["synthetic_demo"]["available"] and not datasets["historical_exploration"]["available"]'
