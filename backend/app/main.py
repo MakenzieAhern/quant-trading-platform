@@ -26,15 +26,15 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         "Application starting",
         extra={"environment": settings.app_env, "broker_mode": settings.broker_mode},
     )
-    interrupted = await paper_manager.recover_interrupted()
-    if interrupted:
-        logger.info("Interrupted stale paper sessions", extra={"count": interrupted})
     async with AsyncExitStack() as cleanup:
-        cleanup.push_async_callback(paper_manager.shutdown)
         cleanup.push_async_callback(experiment_manager.shutdown)
-        await experiment_manager.start()
         cleanup.push_async_callback(market_update_manager.shutdown)
+        cleanup.push_async_callback(paper_manager.shutdown)
+        await experiment_manager.start()
         await market_update_manager.start()
+        interrupted = await paper_manager.recover_interrupted()
+        if interrupted:
+            logger.info("Interrupted stale paper sessions", extra={"count": interrupted})
         yield
         logger.info("Application stopping")
 

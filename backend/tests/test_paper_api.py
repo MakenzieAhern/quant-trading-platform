@@ -15,6 +15,7 @@ from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.db.session import SessionFactory
 from app.execution import OrderManager
 from app.main import app
+from app.paper.models import PaperSessionConcurrencyError
 from app.paper.runtime import PaperBroker, ReplayMarketDataProvider
 from app.portfolio import PortfolioEngine
 from app.risk import RiskEngine
@@ -640,6 +641,20 @@ async def test_stop_is_retry_safe_and_sessions_are_isolated(client: AsyncClient)
     assert (await client.get(f"/api/paper-trading/sessions/{second_id}")).json()[
         "status"
     ] == "CREATED"
+
+
+async def test_terminal_paper_account_rejects_late_market_events(client: AsyncClient) -> None:
+    created = await client.post("/api/paper-trading/sessions", json=request_body())
+    session_id = UUID(created.json()["session_id"])
+    stopped = await client.post(f"/api/paper-trading/sessions/{session_id}/stop")
+    assert stopped.json()["status"] == "STOPPED"
+    before = await paper_manager.events(session_id)
+    async with SessionFactory() as db:
+        with pytest.raises(PaperSessionConcurrencyError, match="already terminal"):
+            await SQLAlchemyPaperRepository(db).append_events(
+                session_id, (("market.bar", datetime.now(UTC), {}),)
+            )
+    assert await paper_manager.events(session_id) == before
 
 
 async def test_restart_contract_marks_orphaned_runtime_interrupted(client: AsyncClient) -> None:

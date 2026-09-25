@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-09-25 00:04 UTC paper startup ownership fence
+
+An independent read-only review found a conditional overlap hazard: a second
+backend could mark a live paper account `INTERRUPTED` before failing to acquire
+the existing experiment-worker singleton lock. The original worker could then
+append events after that terminal status. Startup now acquires ownership and
+starts local managers before reconciling orphaned paper accounts; shutdown
+stops paper tasks before releasing ownership. Repository event appends reject
+terminal paper sessions under the same row lock. This was a code-inspection
+finding, not an observed live-account incident.
+
+The focused isolated `quant_test` suite passed 34 tests with one optional
+historical-archive skip; the complete backend suite passed 979 with that same
+skip. Ruff, formatting and mypy passed. No main Compose service was restarted,
+no formal study/OOS was rerun, and no live database or frozen dataset was
+written. The repair does not restore missing paper ledgers, establish an
+independent backup, license a forward data feed, or complete M4/M5 acceptance.
+
 ## 2026-09-24 23:51 UTC backup-location follow-up and PR CI
 
 The user could not identify an independent backup destination, pre-loss ledger

@@ -136,12 +136,14 @@ class SQLAlchemyPaperRepository:
         events: tuple[tuple[str, datetime, dict[str, object]], ...],
     ) -> tuple[PaperEventRecord, ...]:
         model = await self._session.scalar(
-            select(PaperTradingSessionModel.id)
+            select(PaperTradingSessionModel)
             .where(PaperTradingSessionModel.id == session_id)
             .with_for_update()
         )
         if model is None:
             raise LookupError("paper session not found")
+        if model.status in {"STOPPED", "FAILED", "INTERRUPTED"}:
+            raise PaperSessionConcurrencyError("paper session is already terminal")
         records = await self._append_events_locked(session_id, events)
         await self._session.commit()
         return records
