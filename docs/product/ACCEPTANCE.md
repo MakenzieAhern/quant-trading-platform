@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 07:16 UTC bounded Task Center whole-page quality
+
+Actual Chrome checked Task Center in ZH/EN × dark/light ×
+1440×900/1280×800/1024×768/390×844, using the existing eight research
+tasks and four raw-data request tasks. All16 cases retained twelve task rows,
+two translated named regions and descriptive task links. Document client/scroll
+widths matched1425/1265/1009/375; measured paragraphs/headings/list rows had no
+horizontal overflow. All twelve task links were42px high. Sampled main body,
+status and timestamp text contrast minimum7.653 dark /5.652 light; timestamps
+12.5px. No actual defect found; no code, dependencies or financial behavior changed.
+
+Native EN/light390 Tab from Refresh reached the first descriptive research-task
+link with2px outline. Full-page EN/light390 and ZH/dark1440 images inspected
+inline, not saved local PNGs or all16 pixel-reviewed images. Original ZH/dark
+restored, temporary viewport reset and owned tab closed. Eight critical retained
+DB counts/fingerprints still match; no provider request/retry, new research,
+paper lifecycle, runtime change or GitHub access. Suites not rerun for proof-only
+documentation. This is not full speech/native200%/AA/novice/performance acceptance.
+
+Evidence outside Git: `product-evidence/v1.2/m4/20260926-task-center-matrix.json`.
+User-reported GitHub recovery remains estimated2026-10-01, unverified; no push/CI
+polling/release. All original U1–U8/M0–M5 and external gates remain required.
+
 ## 2026-09-26 07:06 UTC truthful shared modes and Help/Settings matrix
 
 Actual Help described forward processing as if it were an available capability,
