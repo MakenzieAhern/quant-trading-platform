@@ -208,11 +208,12 @@ export function ExperimentPlan({
               </p>
               <div
                 className="experimentTableScroll"
+                role="region"
                 tabIndex={0}
-                aria-label={title}
+                aria-label={`${title} · ${c.scroll}`}
                 aria-describedby="simulation-plan-scroll"
               >
-                <table>
+                <table aria-label={title}>
                   <thead>
                     <tr>
                       {[

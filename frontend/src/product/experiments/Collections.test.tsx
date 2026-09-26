@@ -15,7 +15,7 @@ import { ExperimentCollections } from "./ExperimentCollections";
 import { ExperimentExports } from "./ExperimentExports";
 import { ExperimentHoldings } from "./ExperimentHoldings";
 import { ExperimentDetailPage } from "./ExperimentDetailPage";
-import { job, result } from "./fixtures.test-data";
+import { job, plan, result } from "./fixtures.test-data";
 import type { ExperimentHolding } from "./types";
 
 const point = {
@@ -43,6 +43,157 @@ beforeEach(async () => {
 });
 
 describe("filtered durable experiment records", () => {
+  it("names research collection tables and keyboard regions distinctly across locales without changing exact values", async () => {
+    const equity = vi
+      .spyOn(experimentApi, "equity")
+      .mockResolvedValue({ items: [point], total: 1, limit: 100, offset: 0 });
+    vi.spyOn(experimentApi, "trades").mockResolvedValue({
+      items: [
+        {
+          sequence: 1,
+          order_id: "order",
+          security_id: "SSE:600000",
+          side: "BUY",
+          quantity: "100",
+          price: "9.123456789012345678",
+          transaction_cost: "5",
+          timestamp: snapshot.timestamp,
+        },
+      ],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(experimentApi, "decisions").mockResolvedValue({
+      items: [
+        {
+          sequence: 2,
+          proposal_id: "proposal",
+          security_id: "SSE:600000",
+          approved: true,
+          reason_code: "APPROVED",
+          message: "Approved",
+          timestamp: snapshot.timestamp,
+        },
+      ],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(experimentApi, "holdings").mockResolvedValue({
+      items: [
+        {
+          ...snapshot,
+          positions: [
+            {
+              security_id: "SSE:600000",
+              quantity: "100",
+              average_price: "9.123456789012345678",
+              market_price: "10",
+              market_value: "1000",
+              weight: null,
+            },
+          ],
+        },
+      ],
+      total: 1,
+      limit: 1,
+      offset: 0,
+      availability: "AVAILABLE",
+    });
+    render(<ExperimentCollections jobId={job.job_id} />);
+    await screen.findByRole("combobox", { name: "Inspect a trading date" });
+    await userEvent.click(
+      screen.getByText("Exact chart data", { selector: "summary" }),
+    );
+    for (const name of ["Trades", "Account & holdings", "Risk decisions"])
+      await userEvent.click(screen.getByText(name, { selector: "summary" }));
+    for (const name of [
+      "Exact chart data",
+      "Trades",
+      "Account & holdings",
+      "Risk decisions",
+    ]) {
+      const region = await screen.findByRole("region", { name });
+      expect(region).toHaveAttribute("tabindex", "0");
+      expect(within(region).getByRole("table", { name })).toBeInTheDocument();
+    }
+    const table = screen.getByRole("table", { name: "Exact chart data" });
+    expect(
+      within(table).getByText("100,000.000000000000000009"),
+    ).toBeInTheDocument();
+    expect(within(table).getAllByText("N/A")).toHaveLength(2);
+    expect(within(table).getAllByRole("columnheader")).toHaveLength(4);
+    expect(within(table).getAllByRole("rowheader")).toHaveLength(1);
+    const summary = screen.getByText("Exact chart data", {
+      selector: "summary",
+    });
+    summary.focus();
+    await userEvent.tab();
+    expect(
+      screen.getByRole("region", { name: "Exact chart data" }),
+    ).toHaveFocus();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    for (const name of ["图表精确数据", "交易明细", "账户与持仓", "风控决策"]) {
+      expect(
+        within(screen.getByRole("region", { name })).getByRole("table", {
+          name,
+        }),
+      ).toBeInTheDocument();
+    }
+    expect(screen.getByRole("region", { name: "图表精确数据" })).toHaveFocus();
+    expect(equity).toHaveBeenCalledTimes(1);
+  });
+
+  it("names execution and plan tables without confusing the plan section and its scroll region", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "SUCCEEDED",
+      result_available: true,
+    });
+    vi.spyOn(experimentApi, "result").mockResolvedValue({
+      ...result,
+      simulation_plan: plan,
+    });
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 100,
+      offset: 0,
+    });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    const execution = await screen.findByRole("region", {
+      name: "Why orders did or did not fill",
+    });
+    expect(
+      within(execution).getByRole("table", {
+        name: "Why orders did or did not fill",
+      }),
+    ).toBeInTheDocument();
+    const preview = screen.getByRole("region", {
+      name: "Simulated rebalance preview",
+    });
+    const scroll = within(preview).getByRole("region", {
+      name: /Simulated rebalance preview · Scroll this table/,
+    });
+    expect(
+      within(scroll).getByRole("table", {
+        name: "Simulated rebalance preview",
+      }),
+    ).toHaveTextContent("9.123456789123456789");
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(
+      screen.getByRole("table", { name: "为什么订单成交或未成交" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("table", { name: "模拟调仓预览" }),
+    ).toHaveTextContent("9.123456789123456789");
+  });
+
   it("identifies each risk-decision technical disclosure by its security and sequence", async () => {
     vi.spyOn(experimentApi, "equity").mockResolvedValue({
       items: [],
@@ -239,6 +390,13 @@ describe("filtered durable experiment records", () => {
       availability: "AVAILABLE",
     });
     render(<ExperimentCollections jobId={job.job_id} />);
+    fireEvent.input(screen.getByLabelText("First trading date"), {
+      target: { value: point.trading_date },
+    });
+    fireEvent.input(screen.getByLabelText("Last trading date"), {
+      target: { value: point.trading_date },
+    });
+    await userEvent.click(screen.getByRole("button", { name: "Apply dates" }));
     await userEvent.click(
       await screen.findByRole("button", {
         name: "Show trades and holdings for this date",
@@ -257,8 +415,30 @@ describe("filtered durable experiment records", () => {
     expect(
       screen.getAllByText("100,000.000000000000000009").length,
     ).toBeGreaterThan(0);
+    for (const name of ["Trades", "Account & holdings"]) {
+      await userEvent.click(screen.getByText(name, { selector: "summary" }));
+      expect(
+        screen.getByText(name, { selector: "summary" }).parentElement,
+      ).not.toHaveAttribute("open");
+    }
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: "Show trades and holdings for this date",
+      }),
+    );
+    expect(
+      await screen.findByText(/No open positions at this snapshot/),
+    ).toBeInTheDocument();
+    for (const name of ["Trades", "Account & holdings"])
+      expect(
+        screen.getByText(name, { selector: "summary" }).parentElement,
+      ).toHaveAttribute("open");
     await userEvent.click(
       screen.getByRole("button", { name: "Clear linked date" }),
+    );
+    await waitFor(() => expect(equity.mock.calls.at(-1)?.[3]).toEqual(range));
+    await userEvent.click(
+      screen.getByRole("button", { name: "Show full interval" }),
     );
     await waitFor(() => expect(equity.mock.calls.at(-1)?.[3]).toEqual({}));
   });

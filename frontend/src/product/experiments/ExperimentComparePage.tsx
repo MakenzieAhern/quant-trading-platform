@@ -232,10 +232,11 @@ function Comparison({ ids }: { ids: string[] }) {
         <p className="experimentHelp">{c.tableScroll}</p>
         <div
           className="experimentTableScroll experimentComparisonTable"
+          role="region"
           tabIndex={0}
           aria-label={u.comparisonMetrics}
         >
-          <table>
+          <table aria-label={u.comparisonMetrics}>
             <thead>{headers}</thead>
             <tbody>
               {metrics.map((row) => (
@@ -254,10 +255,11 @@ function Comparison({ ids }: { ids: string[] }) {
         <h2>{u.compatibility}</h2>
         <div
           className="experimentTableScroll experimentComparisonTable"
+          role="region"
           tabIndex={0}
           aria-label={u.compatibility}
         >
-          <table>
+          <table aria-label={u.compatibility}>
             <thead>{headers}</thead>
             <tbody>
               {rows.map((row) => (

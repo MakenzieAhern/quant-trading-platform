@@ -434,6 +434,14 @@ describe("experiment comparison", () => {
     expect(
       await screen.findByText(/These six configuration conditions match/),
     ).toBeInTheDocument();
+    for (const name of [
+      "Saved full-period results",
+      "Are these conditions the same?",
+    ]) {
+      const region = screen.getByRole("region", { name });
+      expect(region).toHaveAttribute("tabindex", "0");
+      expect(within(region).getByRole("table", { name })).toBeInTheDocument();
+    }
     expect(
       screen.getByText(
         /Implementation fingerprints, execution-model versions and effective statutory cost schedules are not verified here/,
@@ -479,6 +487,13 @@ describe("experiment comparison", () => {
     expect(
       screen.getByRole("heading", { name: "实验比较" }),
     ).toBeInTheDocument();
+    for (const name of ["已保存的完整区间结果", "这些条件是否一致？"]) {
+      expect(
+        within(screen.getByRole("region", { name })).getByRole("table", {
+          name,
+        }),
+      ).toBeInTheDocument();
+    }
     expect(screen.getByText("风险配置")).toBeInTheDocument();
     expect(screen.getByRole("row", { name: /^基准收益/ })).toHaveTextContent(
       "合成等权基准（演示）",

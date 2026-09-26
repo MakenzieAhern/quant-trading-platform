@@ -19,6 +19,7 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
   const [range, setRange] = useState<DateRange>({});
   const [invalid, setInvalid] = useState(false);
   const [focused, setFocused] = useState("");
+  const [focusRequest, setFocusRequest] = useState(0);
   const filterAnchor = useRef<HTMLElement>(null);
   const filter = focused ? { start_date: focused, end_date: focused } : range;
   return (
@@ -99,13 +100,15 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
         )}
       </section>
       <FilteredCollections
-        key={`${jobId}-${filter.start_date}-${filter.end_date}`}
+        key={`${jobId}-${filter.start_date}-${filter.end_date}-${focused}-${focusRequest}`}
         jobId={jobId}
         range={filter}
         focused={focused}
         onFocusDate={(date) => {
           filterAnchor.current?.focus();
           setFocused(date);
+          // Every explicit Show action reopens records, even after manual collapse.
+          setFocusRequest((value) => value + 1);
         }}
       />
       <ExperimentExports jobId={jobId} range={filter} />
@@ -398,10 +401,11 @@ function EquityDisplay({
         <p className="experimentHelp">{c.tableScroll}</p>
         <div
           className="experimentTableScroll"
+          role="region"
           tabIndex={0}
-          aria-label={c.tableScroll}
+          aria-label={c.table}
         >
-          <table>
+          <table aria-label={c.table}>
             <thead>
               <tr>
                 <th scope="col">{c.date}</th>
@@ -498,10 +502,11 @@ function TradeCollection({
       ) : (
         <div
           className="experimentTableScroll"
+          role="region"
           tabIndex={0}
-          aria-label={c.tableScroll}
+          aria-label={c.trades}
         >
-          <table>
+          <table aria-label={c.trades}>
             <thead>
               <tr>
                 {[
@@ -613,10 +618,11 @@ function DecisionCollection({
       ) : (
         <div
           className="experimentTableScroll"
+          role="region"
           tabIndex={0}
-          aria-label={c.tableScroll}
+          aria-label={c.decisions}
         >
-          <table>
+          <table aria-label={c.decisions}>
             <thead>
               <tr>
                 {[c.time, c.security, c.decision, c.reason].map((label) => (

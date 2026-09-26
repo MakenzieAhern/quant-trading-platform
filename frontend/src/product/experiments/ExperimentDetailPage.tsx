@@ -364,10 +364,11 @@ function ExperimentResults({
         </dl>
         <div
           className="experimentTableScroll"
+          role="region"
           tabIndex={0}
-          aria-label={c.tableScroll}
+          aria-label={c.execution}
         >
-          <table>
+          <table aria-label={c.execution}>
             <thead>
               <tr>
                 <th scope="col">{c.reason}</th>

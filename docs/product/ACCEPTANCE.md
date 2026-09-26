@@ -1,5 +1,44 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 06:06 UTC research table context and repeated date linkage
+
+Eight research scroll regions and tables now reuse the existing translated
+visible titles; the plan inner scroll region remains distinct from its outer
+section. Native table headers, bounded pagination and exact server strings
+remain unchanged. Actual Chrome on approved localhost:5173 verified EN/light
+and ZH/dark context, keyboard focus (3px outline), comparison native Tab into
+study links and horizontal ArrowRight scrolling (0 to 32px). Comparison uses
+two existing saved historical results and still warns that trading periods
+differ; no new research run was created.
+
+A real existing-data defect was reproduced: an already-applied single-date
+range did not reopen trades/holdings on Show; repeated Show after manual
+collapse also did not reopen them. A local explicit-action counter now resets
+only bounded detail collections on each Show action. The persistent filter
+section keeps focus, manual collapse still works, and language changes do not
+remount the collections. Chrome verified 2011-03-22 holdings with 16 positions
+and unchanged full-period metrics. Regression assertions failed before fixes;
+all 296 frontend tests across 36 files plus lint/typecheck/build/Prettier pass.
+
+Initial browser blank-page evidence showed a served empty BacktestHistoryPage
+module despite its intact on-disk export. Restarted only the frontend once;
+the frontend then served the module and worked. A transient formatter/cache
+interaction is a hypothesis, not established root cause. A test-only invalid
+Testing Library exact option caused tsc failure and was removed; strict string
+name assertions were retained. No backend, PostgreSQL or Redis restart.
+
+Eight critical table counts and sorted-row MD5 fingerprints are unchanged;
+this is a mutation check, not a backup or proof of historical completeness.
+API health 200, Redis PONG, PostgreSQL/backend healthy. Frozen .research
+unchanged; no account/order/study/provider write, push, CI retry or merge.
+Restored Chinese/dark and closed the temporary Chrome tab. Read-only reviewer
+approved the final semantic and repeated-action changes.
+
+Evidence: product-evidence/v1.2/m4/20260926-research-table-keyboard.json.
+Bounded verification only: actual screen-reader speech, native 200% zoom,
+OS reduced motion, novice acceptance, full performance/release gates remain
+open. GitHub recovery remains user-estimated 2026-10-01, unverified.
+
 ## 2026-09-26 05:46 UTC stable asynchronous pagination and date-link focus
 
 Closed the previously observed BODY-focus defect with the existing shared

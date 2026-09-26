@@ -101,10 +101,11 @@ export function ExperimentHoldings({
           ) : (
             <div
               className="experimentTableScroll"
+              role="region"
               tabIndex={0}
               aria-label={u.holdings}
             >
-              <table>
+              <table aria-label={u.holdings}>
                 <thead>
                   <tr>
                     {[

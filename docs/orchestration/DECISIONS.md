@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 native research table names and explicit repeated Show — 2026-09-26
+
+Use existing visible translations on native scroll regions and tables, not a
+new accessibility library or labeling registry. Keep plan inner/outer regions
+distinct. Every explicit Show action reopens the bounded date-linked detail
+collections even when the date is unchanged or the user collapsed them;
+synchronous persistent filter focus and resource identity isolation remain.
+No financial calculations, formal study, frozen data or methodology changed.
+Final frontend296/lint/type/build and existing-data Chrome checks pass bounded;
+not full accessibility/release acceptance. Continue local work during the
+user-reported GitHub hold without push/CI retries or gate bypass.
+
 ## v1.2 stable native paging focus without stale data — 2026-09-26
 
 Keep the shared pager mounted during asynchronous loading/error/success and focus
