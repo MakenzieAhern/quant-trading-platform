@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 06:14 UTC two-study comparison responsive matrix
+
+Real Chrome on approved localhost:5173 compared two existing saved historical
+studies (d9f27183,5f26f84f), without creating studies or requests to vendors.
+Checked 1440x900,1280x800,1024x768,390x844 in both languages and both themes:
+16 geometry cases had document scroll width equal to client width. Desktop
+clients were1425/1265/1009px; mobile375px. Named tables remained7 metric and6
+condition rows; desktop regions1074/938/714px, mobile307px with680px local
+table width. Screenshots of visible top/table/limits segments were reviewed.
+This is not every scroll position, three-study responsiveness, actual200pct
+zoom, screen-reader speech, full AA or all-page QA-VISUAL completion.
+
+On mobile the native ArrowRight moved the precise metric table from0 to40px
+(max373px), retained named-region focus and3px outline, without moving the
+whole document horizontally. Full-precision final equities104666.94836 and
+99528.8134 and costs96.05164/30.1866 match the current authoritative result
+API; language change retains the checked precision setting and exact values.
+Trading-period differences and non-recommendation warnings remain present.
+
+Retained tool failures: full-page and clipped screenshot calls each timed out.
+Normal screenshots succeeded; one immediate ENdark1440 capture showed the
+prior light/mobile frame and was not accepted as dark evidence. Fresh DOM
+Dark-selected/rootTheme dark/width1440, then a separate screenshot, confirmed
+the correct desktop view. Mobile does not expose the topbar theme selector;
+after a no-match, fresh DOM was inspected and the actual desktop selector used
+before resizing. No hidden-state writes, browser reset or app restart.
+
+The later U4-EXPORT row already contains successful real-Chrome download
+evidence, so older in-app-browser failures were not repeated or reclassified.
+No implementation changed; previous frontend296/lint/type/build results are
+previous-turn evidence, not a new test run. Eight critical table fingerprints
+remain unchanged; frozen .research has no diff. Restored ZH/dark, reset viewport,
+closed owned tab; user main tab/draft unchanged. No GitHub push/CI retry.
+Evidence: product-evidence/v1.2/m4/20260926-comparison-responsive-matrix.json.
+Full product and external gates remain open.
+
 ## 2026-09-26 06:06 UTC research table context and repeated date linkage
 
 Eight research scroll regions and tables now reuse the existing translated
