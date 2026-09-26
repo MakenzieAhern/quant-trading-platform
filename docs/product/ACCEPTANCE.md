@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 17:13 UTC bounded offline home responsive checkpoint
+
+Actual Chrome home: four requested viewports1440x900/1280x800/1024x768/390x844
+times EN/ZH and light/dark produced16 DOM geometry checks, no page horizontal
+overflow, two truthful offline alerts, main controls>=40CSSpx. Five real JPEG
+screenshots saved outside Git; initial PNG names corrected after magic-byte
+verification, without reencoding. One delivered desktop image1188x891 rather
+than1425x891 is a retained unproven scaling confound, not exact-width proof.
+Extension overlays remain; no clean-profile or novice claim. Independent readonly
+review of JSON and two actual screenshots found readable actions/errors and no
+blocking overflow or fabricated online/results state; no live interaction review.
+
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260926-offline-home-responsive.json>)
+and [Chinese desktop screenshot](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/offline-home-zh-light-1440-20260926.jpg>)
+are outside Git. Own tab closed, locale/theme/default viewport restored; freshly
+verified own preview439 stopped, process/listener absent, persistent build retained.
+Native200% zoom/speech/fullAA/p95/novice/SQL/runtime/forward NOT_PROVEN.
+Docker absent17:13UTC; bounded log tails show canceled streams/EOF, not proven
+fatal cause. User five-day GitHub estimate is not recovery proof: no push, remote
+CI polling/retries, merge or release. Full U1-U8/M0-M5 remains incomplete.
+
 ## 2026-09-26 16:58 UTC historical paper integer request boundary
 
 Six failing regressions proved the actual request union coerced true,20.0 and

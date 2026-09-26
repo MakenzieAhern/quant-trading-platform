@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 GitHub hold and bounded offline home evidence — 2026-09-26
+
+User confirms GitHub recovery is expected in five days. Keep push, remote CI
+polling/retries, merges and release suspended until actual recovery, not a date
+assumption. Unknown independent backup, genuine lost-ledger backup and lawful
+current feed rights are not approvals. Continue independent local work.
+
+Accepted 16 real Chrome home DOM geometry states and five JPEG screenshots,
+not 16 visual acceptances. Offline status stays truthful; no data or account
+action. Readonly review of JSON and two screenshots found no blocking issue.
+Preserve extension overlays and one1188px screenshot delivery mismatch as
+confounds. Native zoom, speech, novice, performance, SQL/runtime and forward
+acceptance remain open. Only freshly verified own preview/tab cleaned; cache
+retained. Docker absent; existing canceled-stream/EOF log tails do not prove
+the exit cause. No blind launch loop, reset or data deletion.
+
 ## v1.2 reject coerced historical paper counts — 2026-09-26
 
 Require real integer types for historical account rebalance/holding counts at the
