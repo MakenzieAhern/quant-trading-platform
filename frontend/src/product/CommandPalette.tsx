@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "../components/Link";
 import { Pagination } from "../components/Pagination";
@@ -11,6 +11,8 @@ import { Dialog } from "./Dialog";
 export function CommandPalette({ onClose }: { onClose: () => void }) {
   const copy = useProductCopy();
   const { i18n } = useTranslation();
+  const searchInput = useRef<HTMLInputElement>(null);
+  useEffect(() => searchInput.current?.focus(), []);
   const [query, setQuery] = useState("");
   const [search, setSearch] = useState({
     q: "",
@@ -63,6 +65,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
       <label>
         <span className="srOnly">{copy.search}</span>
         <input
+          ref={searchInput}
           type="search"
           maxLength={80}
           value={query}

@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 02:57 UTC command-search focus and explicit motion-off
+
+Actual Chrome 153 at 390x844 EN/dark/motion-off reproduced a command-panel
+keyboard defect: Ctrl+K focused its Close button, so direct typing `Help`
+left the search input empty. A new regression failed before the fix.
+The command component now focuses its existing input after the shared Dialog
+opens; the Dialog's trigger capture/cleanup and other dialog types are unchanged.
+The regression also covers StrictMode and restoration to the original trigger.
+Focused search 7/7, full frontend 245/245, ESLint, TypeScript/build and changed-file
+Prettier passed. In actual Chrome, both the shortcut and visible button focused
+search; EN `Help`/ZH `帮助` entered directly, first Escape closed with text and
+returned to the search-button trigger, and Tab/Enter on the Help command reached
+`/help` with main-content focus. No input was programmatically filled for this
+focus verification.
+
+The explicit motion-off setting survived reload. Nine primary routes' initial
+mounted content and ::before/::after styles had no non-none animation, nonzero
+transition duration or smooth scrolling. This samples content after a visible h1,
+not every asynchronously loaded row/error/result branch. At 390x844 the mobile
+navigation had a 0s transition, modal semantics, inert background and a real
+Shift+Tab/Tab focus wrap; Escape released isolation and returned to Open navigation.
+The command panel also stayed animation-free and fully keyboard-operable.
+The OS `prefers-reduced-motion` branch was inspected in CSS, **not** tested with
+a changed actual system setting. Full AA/AT/visual/motion acceptance is not claimed.
+
+Bounded evidence is outside Git at
+`product-evidence/v1.2/m4/20260926-motion-command-focus.json`.
+Original system-motion, Chinese/dark preferences and default viewport were
+restored, with Workbench left open. Four Compose services remained running,
+API HTTP 200; read-only counts remained formal `1/3/310`, personal jobs `8`,
+paper sessions/events `5/417` and update jobs/receipts `4/6`. No container
+restart, provider acquisition, study, account/order submission or database write
+was requested; `.research` remains unchanged. U7/M4 integrity/M5 remain open.
+
 ## 2026-09-26 02:46 UTC native Chrome chart interaction timing
 
 The earlier tool-inclusive click times did not isolate application latency.

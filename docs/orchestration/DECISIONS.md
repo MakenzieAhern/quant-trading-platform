@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 put command focus on search without changing other dialogs — 2026-09-26
+
+The shared native Dialog correctly captures/restores the outside trigger, but
+its default first focusable control is Close. Command search needs immediate
+typing after Ctrl+K or its visible button. Focus the existing input from the
+command component's mount effect after Dialog opens, using one ref; do not add
+a focus manager/library or change confirmation/drawer defaults. A failing
+regression plus StrictMode/trigger-restoration test and actual bilingual Chrome
+keyboard typing/close/navigation verify the change. Explicit motion-off route
+and mobile-navigation evidence is bounded; the actual OS reduced-motion branch
+and full accessibility acceptance remain unproven.
+
 ## v1.2 measure native events, restore only the stopped frontend — 2026-09-26
 
 Replace rejected tool-roundtrip chart timing with the browser's native Event

@@ -7,6 +7,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { StrictMode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "../i18n";
 import { CommandPalette } from "./CommandPalette";
@@ -48,6 +49,31 @@ beforeEach(async () => {
   });
 });
 describe("bounded server command search", () => {
+  it("focuses search on opening and returns to the original trigger on closing", () => {
+    const view = render(
+      <>
+        <button>Open command search</button>
+      </>,
+    );
+    const trigger = screen.getByRole("button", { name: "Open command search" });
+    trigger.focus();
+    view.rerender(
+      <>
+        <button>Open command search</button>
+        <StrictMode>
+          <CommandPalette onClose={() => undefined} />
+        </StrictMode>
+      </>,
+    );
+    expect(screen.getByRole("searchbox")).toHaveFocus();
+    view.rerender(
+      <>
+        <button>Open command search</button>
+      </>,
+    );
+    expect(trigger).toHaveFocus();
+  });
+
   it("closes on the first Escape even when the native search field has text", async () => {
     const close = vi.fn();
     render(<CommandPalette onClose={close} />);
