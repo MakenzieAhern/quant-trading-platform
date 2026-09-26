@@ -1,5 +1,19 @@
 # Decisions
 
+## v1.2 missing native events are pending, not automatically fast — 2026-09-26
+
+Removing click-time DOM publication did not eliminate missing native records.
+The same AX interaction was absent after DOM result readiness but later delivered
+13312ms/13304ms entries after screenshot. Reject interpreting empty records as
+under16 or zero; preserve earlier3040ms too. DOM readiness/fast handlers cannot
+substitute presentation, and this one sequential control does not prove an
+occlusion/screenshot/app cause. Stop larger sampling until rendering/foreground
+conditions are verified; ask human to put Chrome unoccluded in front, no native
+control/security bypass. Reuse existing readonly harness/same-origin isolated
+build; no main CORS weakening. No speculative app fix. While this confirmation
+is pending, inspect independent required U7 implementation gaps without source
+acquisition or paper activity; offline tests never satisfy forward acceptance.
+
 ## v1.2 reprioritize after two proof-only units — 2026-09-26
 
 Task Center and strategy matrices add bounded evidence, not new full user flows

@@ -1,5 +1,53 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 07:36 UTC native event delivery diagnosis, not a p95 pass
+
+Three fresh main-app strategy documents at actual958×903 each opened the native
+drawer on the first mouse activation. The prior isolated anomaly was not reproduced;
+cause unproven, no speculative code patch or unconditional activation promotion.
+
+Reused existing localhost-only GET-forward harness in owned/tmp/qtp-native-qa-cGGYmp.
+Copied default build still called localhost8000 and failed from5182 due the configured
+origin boundary; isolated VITE_API_BASE_URL=/ build restored same-origin proxy.
+Main backend CORS/settings and main dev app were not changed. tsc/Vite build and
+native recorder JS syntax passed; full suites not rerun for QA-only instrumentation.
+
+New protocol has no MutationObserver or DOM publication during the measured click;
+collection is an explicit button activated only after saved result+4.67% appears.
+Actual Chrome153, ZH/dark1440×900, no-store resources200 with positive transfer
+bytes (main451445/lazy25029), not cold backend/OS/data. Primary1 matched trusted
+pointerdown/up/click interaction157, all24ms. Primary2 native absent, including
+same-page recollection: unknown, not zero. Stop incomplete sampling, no p95.
+
+Changed input to documented AX click, added full native-event/event-count diagnostics.
+Control interaction3679 had trusted input6985.8ms/click6987.6ms, result ready and
+native/allNative empty before capture, despite pointerdown/up count1 and click count2
+(second click belongs to collector). After a native screenshot and recollection,
+the SAME interaction appeared: pointerdown13312ms, pointerup/click13304ms;
+click processing6991.6−6988.0=3.6ms. The capture/collection happened after the
+original input; this is evidence of late presentation/delivery, not causal proof
+that screenshot, occlusion or app code is its source. [W3C Event Timing](https://www.w3.org/TR/event-timing/)
+distinguishes native rendering duration from synchronous event processing.
+Earlier3040ms remains. Empty native output cannot be classified under16 from DOM
+readiness. Immediate output publication is not the sole explanation. No app
+performance PASS/FAIL, complete protocol, native p95 or all-product promotion.
+
+Collector first mouse activation also produced no output; Enter collected it.
+Visible raw JSON initially caused QA-only page overflow; retained recorder wraps
+it for future use. Do not patch app styles for this measurement artifact. Initial
+cross-shell variable copy resolved to/./ and failed permission checks; used explicit
+mktemp result/separate literal copies instead, no broad deletion. A mistakenly
+targeted TSX node-check failed on extension; corrected JS syntax check passed.
+
+Evidence outside Git: `product-evidence/v1.2/m4/20260926-native-delivery-diagnostic.json`
+and recorder20260926-native-route-deferred.js, SHA256
+8235d331bda03f72c4f50164ee41079d0fddbe181242655bc814c7bf9d2e300a.
+Owned PID40976/start17:28:48/path verified before TERM; session71597 terminal,
+5182 listener absent; build/evidence retained, temporary viewport/tab cleaned.
+Four main services and eight critical DB fingerprints unchanged; frozen research
+clean; no provider acquisition/financial write/GitHub operation. User asked to
+confirm actual Chrome foreground/unoccluded; not yet verified. Full goal/gates remain.
+
 ## 2026-09-26 07:22 UTC strategy layout evidence, activation anomaly retained
 
 Actual Chrome checked16 combinations of ZH/EN, dark/light and the four required
