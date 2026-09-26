@@ -354,11 +354,20 @@ def build_plan_preview(
     target: PortfolioTarget | None,
     next_session: date | None,
     completed_sessions: int,
+    *,
+    legacy_checkpoint: bool = False,
 ) -> dict[str, Any]:
     """Describe the existing engine's final-session account and OMS decisions."""
 
     snapshot = delta.snapshot
     as_of = delta.session.trading_date
+    # V1 replay only: reproduce already persisted projections without rewriting history.
+    if (
+        not legacy_checkpoint
+        and snapshot is not None
+        and snapshot.timestamp.astimezone(TRADING_ZONE).date() != as_of
+    ):
+        snapshot = None
     status = (
         "ACCOUNT_SNAPSHOT_UNAVAILABLE"
         if snapshot is None

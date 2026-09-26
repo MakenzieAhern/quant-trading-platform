@@ -151,7 +151,7 @@ export type PaperAccountPlan = Omit<
   account_mode: "HISTORICAL_PAPER_REPLAY";
   submitted_to_account: boolean;
   paper_session_id: string;
-  plan_version: "PAPER_ACCOUNT_PLAN_V1";
+  plan_version: "PAPER_ACCOUNT_PLAN_V1" | "PAPER_ACCOUNT_PLAN_V2";
 };
 export interface ExperimentEquity {
   sequence: number;

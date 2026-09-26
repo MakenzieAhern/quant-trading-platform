@@ -27,77 +27,98 @@ describe("paper API contracts", () => {
     expect(result.latest_portfolio?.realized_pnl).toBe("0.000000000000000001");
   });
 
-  it("accepts an account-native historical plan only for its own account", async () => {
-    const accountPlan = {
-      ...plan,
-      mode: "historical_exploration",
-      account_mode: "HISTORICAL_PAPER_REPLAY",
-      submitted_to_account: true,
-      paper_session_id: PAPER_ID,
-      plan_version: "PAPER_ACCOUNT_PLAN_V1",
-    };
-    const payload = {
-      ...paperSnapshot("STOPPED"),
-      last_rebalance_plan: accountPlan,
-      session: {
-        ...paperSession("STOPPED"),
-        provider_type: "historical_a_share",
-      },
-      latest_portfolio: {
-        timestamp: "2011-03-22T07:00:00Z",
-        cash: "98160.852500000000000001",
-        market_value: "1851.4",
-        equity: "100012.252500000000000001",
-        realized_pnl: "0",
-        unrealized_pnl: "12.2",
-        cumulative_commission: "0",
-        drawdown: "0",
-        positions: [],
-        plan: accountPlan,
-      },
-    };
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation(async () => jsonResponse(payload));
-    expect(
-      (await paperApi.snapshot(PAPER_ID)).latest_portfolio?.plan?.candidates[0]
-        .reference_raw_close,
-    ).toBe("9.123456789123456789");
-    expect(
-      (await paperApi.snapshot(PAPER_ID)).last_rebalance_plan?.paper_session_id,
-    ).toBe(PAPER_ID);
-    fetch.mockResolvedValue(
-      jsonResponse({
-        ...payload,
-        last_rebalance_plan: { ...accountPlan, paper_session_id: "other" },
-      }),
-    );
-    await expect(paperApi.snapshot(PAPER_ID)).rejects.toThrow(
-      "does not belong",
-    );
-    fetch.mockResolvedValue(
-      jsonResponse({
-        ...payload,
-        latest_portfolio: {
-          ...payload.latest_portfolio,
-          plan: { ...accountPlan, paper_session_id: "other" },
+  it.each(["PAPER_ACCOUNT_PLAN_V1", "PAPER_ACCOUNT_PLAN_V2"])(
+    "accepts %s only for its own account",
+    async (version) => {
+      const accountPlan = {
+        ...plan,
+        mode: "historical_exploration",
+        account_mode: "HISTORICAL_PAPER_REPLAY",
+        submitted_to_account: true,
+        paper_session_id: PAPER_ID,
+        plan_version: version,
+      };
+      const payload = {
+        ...paperSnapshot("STOPPED"),
+        last_rebalance_plan: accountPlan,
+        session: {
+          ...paperSession("STOPPED"),
+          provider_type: "historical_a_share",
         },
-      }),
-    );
-    await expect(paperApi.snapshot(PAPER_ID)).rejects.toThrow(
-      "does not belong",
-    );
-    fetch.mockResolvedValue(
-      jsonResponse({
-        ...payload,
         latest_portfolio: {
-          ...payload.latest_portfolio,
-          plan: { ...accountPlan, estimated_cash_required: 917.3 },
+          timestamp: "2011-03-22T07:00:00Z",
+          cash: "98160.852500000000000001",
+          market_value: "1851.4",
+          equity: "100012.252500000000000001",
+          realized_pnl: "0",
+          unrealized_pnl: "12.2",
+          cumulative_commission: "0",
+          drawdown: "0",
+          positions: [],
+          plan: accountPlan,
         },
-      }),
-    );
-    await expect(paperApi.snapshot(PAPER_ID)).rejects.toThrow();
-  });
+      };
+      const fetch = vi
+        .spyOn(globalThis, "fetch")
+        .mockImplementation(async () => jsonResponse(payload));
+      expect(
+        (await paperApi.snapshot(PAPER_ID)).latest_portfolio?.plan
+          ?.candidates[0].reference_raw_close,
+      ).toBe("9.123456789123456789");
+      expect(
+        (await paperApi.snapshot(PAPER_ID)).last_rebalance_plan
+          ?.paper_session_id,
+      ).toBe(PAPER_ID);
+      fetch.mockResolvedValue(
+        jsonResponse({
+          ...payload,
+          last_rebalance_plan: { ...accountPlan, paper_session_id: "other" },
+        }),
+      );
+      await expect(paperApi.snapshot(PAPER_ID)).rejects.toThrow(
+        "does not belong",
+      );
+      fetch.mockResolvedValue(
+        jsonResponse({
+          ...payload,
+          latest_portfolio: {
+            ...payload.latest_portfolio,
+            plan: { ...accountPlan, paper_session_id: "other" },
+          },
+        }),
+      );
+      await expect(paperApi.snapshot(PAPER_ID)).rejects.toThrow(
+        "does not belong",
+      );
+      fetch.mockResolvedValue(
+        jsonResponse({
+          ...payload,
+          latest_portfolio: {
+            ...payload.latest_portfolio,
+            plan: { ...accountPlan, estimated_cash_required: 917.3 },
+          },
+        }),
+      );
+      await expect(paperApi.snapshot(PAPER_ID)).rejects.toThrow();
+      fetch.mockResolvedValue(
+        jsonResponse({
+          ...payload,
+          last_rebalance_plan: {
+            ...accountPlan,
+            plan_version: "PAPER_ACCOUNT_PLAN_V3",
+          },
+        }),
+      );
+      await expect(paperApi.snapshot(PAPER_ID)).rejects.toThrow();
+      fetch.mockResolvedValue(
+        jsonResponse({
+          ...payload,
+          last_rebalance_plan: { ...accountPlan, plan_version: [version] },
+        }),
+      );
+      await expect(paperApi.snapshot(PAPER_ID)).rejects.toThrow();
+    },
+  );
 
   it("retains the last actual rebalance through later non-rebalance stream events", () => {
     const current = paperSnapshot("RUNNING");

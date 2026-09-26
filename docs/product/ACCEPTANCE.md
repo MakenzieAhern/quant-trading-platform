@@ -1,5 +1,38 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 16:36 UTC current plan snapshot and legacy checkpoint compatibility
+
+An empty session can retain the prior portfolio snapshot. The shared plan builder
+now requires snapshot date = as-of date in Asia/Shanghai; otherwise it returns
+ACCOUNT_SNAPSHOT_UNAVAILABLE with no account/candidates/cash requirement, without
+mutating the delta, engine or financial ledger. The failing baseline and UTC
+cross-midnight positive control are preserved in the regression test.
+
+Readonly review identified a compatibility risk before commit: recalculating an
+old V1 paused account would change its saved projection and break strict replay.
+Saved cursor-side events now rebuild their own V1/V2 versions; new events always
+use V2, including never-started V1 accounts. Original pre-plan accounts remain
+without plans. Entire event-payload equality remains mandatory; altered cash
+fails without new market events. Mixed-version second resume produces no duplicate
+events. Old V1 projections match the unmodified e2a3aa9 builder field-for-field,
+with a golden SHA anchor for its stale-date case. Old records are not rewritten;
+their prior-date account may be affected by this known defect, not accepted as a
+current executable plan. Frontend accepts strict V1/V2 strings and rejects unknown
+or array versions while preserving exact money strings.
+
+115 offline backend tests, full frontend312/36 files, Ruff check/format320,
+mypy144, ESLint, types, changed-file Prettier and fresh Vite129-module build passed.
+Actual _run and fixture runtime were exercised with SQL boundaries mocked, not
+database persistence acceptance. Independent final readonly review found no P0/P1;
+its suggested unstarted-V1 test was added and passed. Docker/Chrome processes are
+absent; browser inventory has only an empty in-app browser. Actual Chrome and full
+backend SQL suite NOT_RUN; current retained DB/service health NOT_VERIFIED.
+No runtime/account/provider/formal study/OOS or GitHub action. GitHub hold and all
+U1–U8/M0–M5 requirements remain; this is not full U6/U7 or release acceptance.
+[Offline evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260926-plan-snapshot-checkpoint.json>)
+is outside Git. First scratch build failed shell argument transport; explicit
+observed scratch path corrected it without changing original assets/permissions.
+
 ## 2026-09-26 16:16 UTC legacy submission keeps locale, draft and retry identity
 
 Eight baseline regressions exposed stale translated local/API errors and missing

@@ -1,4 +1,5 @@
-from datetime import date
+from dataclasses import replace
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from threading import Event
 
@@ -14,7 +15,12 @@ from app.application.experiments.data import (
     SyntheticExperimentDataset,
 )
 from app.application.experiments.models import CreateExperimentRequest
-from app.application.experiments.runner import ExperimentCancelled, json_value, run_experiment
+from app.application.experiments.runner import (
+    ExperimentCancelled,
+    build_plan_preview,
+    json_value,
+    run_experiment,
+)
 from app.data.catalog.checksums import canonical_sha256
 
 
@@ -204,6 +210,60 @@ def test_final_session_plan_uses_replayed_account_oms_and_only_known_calendar(tm
     assert early["status"] == "INSUFFICIENT_WARMUP"
     assert early["candidates"] == []
     assert early["estimated_cash_required"] is None
+
+
+def test_plan_does_not_relabel_prior_account_snapshot_as_current():
+    from app.execution import FixedCommission
+    from app.research import ResearchExecutionEngine, ResearchSession
+    from tests.test_research_execution_engine import CALENDAR, OneTargetStrategy, _session
+
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal("10000.000000000000000001"),
+        commission_model=FixedCommission(Decimal(5)),
+        calendar=CALENDAR,
+    )
+    first = engine.process_session(_session(date(2024, 1, 2), opening="10"))
+    missing = engine.process_session(
+        ResearchSession(trading_date=date(2024, 1, 3), bars=(), statuses=(), buy_lot_sizes=())
+    )
+    assert missing.snapshot is first.snapshot
+    assert missing.snapshot is not None
+    original = missing.snapshot.model_dump()
+    plan = build_plan_preview(
+        demo_request(start_date="2024-01-02", end_date="2024-01-03"),
+        DEMO_SHA,
+        "synthetic_demo",
+        missing,
+        missing.target,
+        date(2024, 1, 4),
+        253,
+    )
+    assert plan["as_of_trading_date"] == "2024-01-03"
+    assert plan["status"] == "ACCOUNT_SNAPSHOT_UNAVAILABLE"
+    assert plan["account"] is None
+    assert plan["candidates"] == []
+    assert plan["estimated_cash_required"] is None
+    assert missing.snapshot.model_dump() == original
+
+    # A UTC date one day earlier can still belong to this exchange trading date.
+    current = replace(
+        missing,
+        snapshot=missing.snapshot.model_copy(
+            update={"timestamp": datetime(2024, 1, 2, 16, tzinfo=UTC)}
+        ),
+    )
+    same_day = build_plan_preview(
+        demo_request(start_date="2024-01-02", end_date="2024-01-03"),
+        DEMO_SHA,
+        "synthetic_demo",
+        current,
+        current.target,
+        date(2024, 1, 4),
+        253,
+    )
+    assert same_day["status"] == "NOT_REBALANCE_SESSION"
+    assert same_day["account"]["cash"] == "10000.000000000000000001"
 
 
 @pytest.mark.parametrize(

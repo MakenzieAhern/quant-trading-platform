@@ -146,7 +146,7 @@ class PaperTradingManager:
         parameters = self._json_decimals(command.strategy_parameters)
         if command.provider_type == "historical_a_share":
             parameters["dataset_sha256"] = str(registered["sha256"])
-            parameters["plan_version"] = "PAPER_ACCOUNT_PLAN_V1"
+            parameters["plan_version"] = "PAPER_ACCOUNT_PLAN_V2"
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
             if command.client_request_id is not None:
@@ -398,9 +398,20 @@ class PaperTradingManager:
                 )
                 plan_request = (
                     self._historical_request(session)
-                    if session.strategy_parameters.get("plan_version") == "PAPER_ACCOUNT_PLAN_V1"
+                    if session.strategy_parameters.get("plan_version") is not None
                     else None
                 )
+                if plan_request is not None and session.strategy_parameters["plan_version"] not in {
+                    "PAPER_ACCOUNT_PLAN_V1",
+                    "PAPER_ACCOUNT_PLAN_V2",
+                }:
+                    raise ValueError("unsupported historical paper plan version")
+                recorded_plan_versions = {
+                    str(plan["as_of_trading_date"]): str(plan["plan_version"])
+                    for event in history
+                    if event.event_type == "portfolio.snapshot"
+                    and isinstance(plan := event.payload.get("plan"), dict)
+                }
 
                 async def process_session(item: ResearchSession) -> None:
                     nonlocal matched_cursor
@@ -414,21 +425,17 @@ class PaperTradingManager:
                     )
                     plan = None
                     if plan_request is not None:
-                        plan = build_plan_preview(
+                        plan = self._historical_plan(
+                            session,
                             plan_request,
-                            str(session.strategy_parameters["dataset_sha256"]),
-                            "historical_exploration",
                             delta,
-                            delta.target,
                             runtime.next_accepted_session(item.trading_date),
                             runtime.completed_sessions,
-                        )
-                        plan.update(
-                            paper_session_id=str(session.id),
-                            account_mode="HISTORICAL_PAPER_REPLAY",
-                            submitted_to_account=bool(delta.proposals),
-                            plan_version="PAPER_ACCOUNT_PLAN_V1",
-                            configuration_sha256=self._historical_plan_sha(session, plan_request),
+                            version=recorded_plan_versions.get(
+                                item.trading_date.isoformat(), "PAPER_ACCOUNT_PLAN_V2"
+                            )
+                            if cursor_date is not None and item.trading_date <= cursor_date
+                            else "PAPER_ACCOUNT_PLAN_V2",
                         )
                     events = self._serialize_a_share_delta(delta, source=source, plan=plan)
                     if cursor_date is not None and item.trading_date <= cursor_date:
@@ -578,6 +585,38 @@ class PaperTradingManager:
                 },
             }
         )
+
+    @classmethod
+    def _historical_plan(
+        cls,
+        session: PaperSession,
+        request: CreateExperimentRequest,
+        delta: ResearchExecutionDelta,
+        next_session: date | None,
+        completed_sessions: int,
+        *,
+        version: str = "PAPER_ACCOUNT_PLAN_V2",
+    ) -> dict[str, object]:
+        if version not in {"PAPER_ACCOUNT_PLAN_V1", "PAPER_ACCOUNT_PLAN_V2"}:
+            raise ValueError("unsupported historical paper plan version")
+        plan = build_plan_preview(
+            request,
+            str(session.strategy_parameters["dataset_sha256"]),
+            "historical_exploration",
+            delta,
+            delta.target,
+            next_session,
+            completed_sessions,
+            legacy_checkpoint=version == "PAPER_ACCOUNT_PLAN_V1",
+        )
+        plan.update(
+            paper_session_id=str(session.id),
+            account_mode="HISTORICAL_PAPER_REPLAY",
+            submitted_to_account=bool(delta.proposals),
+            plan_version=version,
+            configuration_sha256=cls._historical_plan_sha(session, request),
+        )
+        return plan
 
     @classmethod
     def _historical_plan_sha(cls, session: PaperSession, request: CreateExperimentRequest) -> str:

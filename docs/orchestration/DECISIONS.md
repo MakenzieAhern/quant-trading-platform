@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 plan date safety without rewriting saved replay — 2026-09-26
+
+Reject prior-date portfolio snapshots at the shared plan projection boundary,
+using the exchange timezone, not UTC date. Do not alter accounting/execution.
+An independent review exposed old paused V1 projection compatibility: version
+the projection, rebuild saved V1/V2 only inside the cursor and generate V2 outside
+it. Keep exact financial/event payload comparison and immutable original records;
+never strip plans from comparison or weaken assertions. Pre-plan accounts retain
+their existing no-plan contract. Old projections with missing-day snapshots are
+retained evidence of the known defect, not newly approved advice. Reuse current
+JSON parameters and builder; no migration/dependency. Offline real runtime with
+mocked SQL verifies mixed-version resume, no duplicates, tamper rejection and
+never-started V1 upgrade; golden hash comes from unmodified e2a3aa9. Full runtime,
+browser, CI and U7 lawful after-start new-data gates remain explicitly incomplete.
+
 ## v1.2 POST recovery must preserve draft and idempotency — 2026-09-26
 
 Keep local validation keys/typed API errors until render for live locale changes.

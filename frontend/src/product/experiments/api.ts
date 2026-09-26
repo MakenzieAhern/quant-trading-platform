@@ -205,10 +205,13 @@ export function parsePaperAccountPlan(value: unknown): PaperAccountPlan {
   const item = record(value);
   parsePlanFields(item);
   text(item.paper_session_id);
+  text(item.plan_version);
   if (
     item.mode !== "historical_exploration" ||
     item.account_mode !== "HISTORICAL_PAPER_REPLAY" ||
-    item.plan_version !== "PAPER_ACCOUNT_PLAN_V1" ||
+    !["PAPER_ACCOUNT_PLAN_V1", "PAPER_ACCOUNT_PLAN_V2"].includes(
+      String(item.plan_version),
+    ) ||
     typeof item.submitted_to_account !== "boolean"
   )
     throw new ApiContractError();
