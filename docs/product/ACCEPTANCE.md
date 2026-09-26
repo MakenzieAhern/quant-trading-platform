@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 06:21 UTC research control-boundary override repaired
+
+Actual Chrome found that the grouped research input/select rule overrode the
+global --field-border with --border. Light boundaries measured1.314:1 against
+the white input and1.173:1 against its raised panel. Changed only that shared
+rule to the existing field token; no new CSS system, dimensions, focus,
+disabled behavior, data or calculation changes. Selector callers include the
+wizard, displayed-date filters, chart date, CSV selection and comparison URL.
+
+Eight computed field samples now measure light4.032/3.597 and dark3.992/3.412
+against inner/outer backgrounds, with heights44–48.5px. Actual result-page
+date/chart/export selectors inherit the token; comparison URL was reviewed,
+not browser-rechecked this turn. The existing32-row plan has sampled text
+minima light5.405/dark6.541 and3px focus ratios5.946/6.600; native Tab moves
+to provenance summary. Independent read-only reviewer approved the shared fix.
+Full frontend296/36files, lint/types/build/Prettier/diff checks pass.
+
+Draft name, exact cash123456.789000000000001 and dates2011-01-04/2011-06-30
+were not edited and survived theme switches. The page's existing autosave may
+refresh timestamps on mount/unload; storage is not claimed byte-identical.
+390px viewport measured375px client/scroll, no document overflow; the returned
+mobile screenshot showed prior desktop composition and is not mobile visual
+proof. An immediate light-plan screenshot similarly showed a stale dark frame;
+discarded it, then fresh DOM/separate capture verified actual light rendering.
+
+Eight critical DB fingerprints and frozen .research remain unchanged. No
+runtime restart, new study/account/order/provider acquisition or GitHub action.
+ZH/dark restored, viewport reset and two owned tabs closed. This is a bounded
+computed contrast/keyboard check, not full AA, speech, zoom or all-page visual
+acceptance. Evidence: product-evidence/v1.2/m4/20260926-research-control-contrast.json.
+Full product and external gates remain open.
+
 ## 2026-09-26 06:14 UTC two-study comparison responsive matrix
 
 Real Chrome on approved localhost:5173 compared two existing saved historical

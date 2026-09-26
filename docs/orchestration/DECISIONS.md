@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 reuse field boundary token in research override — 2026-09-26
+
+The specific research input/select rule beat the already-correct global control
+boundary rule. Fix that grouped rule once with --field-border instead of adding
+page overrides or changing quiet decorative borders. Preserve layout/native
+focus/disabled semantics. Actual field and plan samples plus frontend296 and
+read-only review pass bounded; screenshot stale frames are discarded, not
+accepted as theme/mobile evidence. Draft values remain exact; existing autosave
+timestamps may change. No financial or frozen-research mutation.
+
 ## v1.2 native research table names and explicit repeated Show — 2026-09-26
 
 Use existing visible translations on native scroll regions and tables, not a
