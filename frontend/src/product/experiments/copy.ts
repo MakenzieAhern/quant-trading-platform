@@ -67,6 +67,26 @@ const en = {
     "I understand that this is an exploratory simulation, not new unseen evidence or a trading recommendation.",
   validation:
     "Check the highlighted step: use a name, available dates, positive capital, whole-number strategy settings, valid costs and risk limits.",
+  fieldErrors: {
+    strategy: "Choose an available registered strategy.",
+    dataset: "Choose an available data source.",
+    name: "Enter an experiment name, not only spaces (up to 120 characters).",
+    cash: "Starting capital must be a positive decimal, at most 1,000,000,000,000 CNY.",
+    start:
+      "Choose a first trading date within the data source's available dates.",
+    end: "Choose a last trading date on or after the first date, within the available dates.",
+    universe: "Choose a stock universe supported by this data source.",
+    rebalance:
+      "Enter a whole-number rebalance interval within the strategy's displayed limits.",
+    holdings:
+      "Enter a whole-number maximum holdings within the strategy's displayed limits.",
+    commission: "Commission rate must be a decimal from 0 to 0.01 (0% to 1%).",
+    minimum: "Minimum commission must be a decimal from 0 to 1,000 CNY.",
+    drawdown:
+      "Drawdown risk limit must be a decimal from -1 to 0 (-100% to 0%).",
+    position:
+      "Maximum target weight must be a positive decimal, at most 1 (100%).",
+  },
   networkError:
     "The service could not be reached. Check its status, then retry. An unchanged submission keeps the same request key.",
   validationError:
@@ -285,6 +305,21 @@ const zh: typeof en = {
   acknowledge: "我理解这是探索性模拟，不是新的未见样本证据，也不是交易建议。",
   validation:
     "请检查当前步骤：名称、可用日期、正数本金、整数策略参数，以及有效的成本和风险范围。",
+  fieldErrors: {
+    strategy: "请选择可用的已注册策略。",
+    dataset: "请选择可用的数据来源。",
+    name: "请输入实验名称，不能只有空格（最多 120 个字符）。",
+    cash: "初始本金须为正小数，最多 1,000,000,000,000 元。",
+    start: "请选择数据来源可用日期范围内的开始交易日。",
+    end: "结束交易日不得早于开始日，且须在可用日期范围内。",
+    universe: "请选择此数据来源支持的股票范围。",
+    rebalance: "调仓间隔须为整数，且在策略显示的限制范围内。",
+    holdings: "最大持仓数须为整数，且在策略显示的限制范围内。",
+    commission: "佣金比例须为 0 至 0.01 的小数（0% 至 1%）。",
+    minimum: "每笔最低佣金须为 0 至 1,000 元的小数。",
+    drawdown: "回撤风险阈值须为 -1 至 0 的小数（-100% 至 0%）。",
+    position: "单只证券最大目标权重须为正小数，最多为 1（100%）。",
+  },
   networkError:
     "无法连接服务。请检查服务状态后重试。配置未变时会使用同一请求标识，避免重复创建。",
   validationError:

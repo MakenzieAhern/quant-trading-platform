@@ -1,5 +1,46 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 04:50 UTC actionable wizard validation and keyboard recovery
+
+Actual Chrome on an isolated localhost production build reproduced negative
+capital: generic alert only, no invalid/description association, focus left on
+Continue. The wizard's existing validation now identifies the first invalid
+field using the same exact monetary predicates. Bilingual explanations attach
+through aria-invalid/describedby; restored-review errors return to the proper
+step, open a closed advanced section and focus its field. Async API errors focus
+the summary without inventing a field. Repeated unchanged invalid submission
+refocuses the field. No new dependency or financial/backend calculation.
+
+noValidate deliberately funnels native/custom failures through this one path;
+required/bounded integer and Decimal checks remain, with name<=120 and canonical
+Gregorian ISO dates covering former native safeguards. Server stays authoritative.
+Baseline capital-focus regression failed before repair. Initial batch13fail/1pass
+included one malformed fractional-integer draft fixture: draft shape rejects that
+fixture, so corrected it to a valid-shape out-of-range integer and separately
+tested fractional UI input. No weakened assertion. Focused wizard16 and existing
+guided tests31 PASS; full frontend287/35files, lint/type/production build and
+changed Prettier PASS. Independent read-only reviewer found no bounded regression.
+
+Actual Chrome EN/dark negative capital focused correctly, ZH retained -1 and
+translated its description; correction retained exact100000.000000000000000001
+and focused next-step heading. ZH/dark commission0.02, repeated Enter, EN/light
+translated error/focus PASS. Closed advanced maximum-holdings0 automatically
+opened/focused with1–100 guidance; correction20 continued without residual errors.
+An installed browser writing-assistant extension appended its label to the input;
+selector timeout was resolved from fresh DOM with the observed name prefix,
+not a product defect or extension/security change. Screenshot emitted inline,
+not a saved-image claim. Actual screen-reader speech not verified; broader AA
+and product acceptance remain incomplete. Async-error and invalid restored-review
+paths above are unit evidence, not a financial browser submission.
+
+Reused readonly GET-only harness, separate5181 storage; no job/account/order/
+provider POST, main draft or frozen-research change. Owned PID21982/start14:40:05
+and listener verified before TERM; session70717 terminal,5181 closed/temp tab
+closed/build retained. Main PG/Redis/backend healthy, PONG/API+frontend200, eight
+critical count/row fingerprints unchanged. Evidence outside Git:
+product-evidence/v1.2/m4/20260926-wizard-validation.json. Commit stays local during
+user-estimated GitHub hold; CI not run for this repair, no merge/release.
+
 ## 2026-09-26 04:37 UTC local plan keyboard check and CI hold
 
 User reports GitHub recovery requires five days: estimated 2026-10-01, not

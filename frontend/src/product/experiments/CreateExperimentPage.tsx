@@ -12,7 +12,7 @@ import { usePageDataContext } from "../dataContext";
 import { Dialog } from "../Dialog";
 import { ConfigurationVersionsPanel } from "../configs";
 import { experimentApi } from "./api";
-import { useExperimentCopy } from "./copy";
+import { useExperimentCopy, type ExperimentCopy } from "./copy";
 import {
   EXPERIMENT_DRAFT_KEY,
   readExperimentDraft,
@@ -95,45 +95,63 @@ function initialForm(
   };
 }
 
-function validConfiguration(
+type ConfigurationField = keyof ExperimentCopy["fieldErrors"];
+
+function validTradingDate(value: string) {
+  const date = new Date(`${value}T00:00:00Z`);
+  return (
+    /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+    !Number.isNaN(date.getTime()) &&
+    date.toISOString().slice(0, 10) === value
+  );
+}
+
+function invalidConfigurationField(
   form: ExperimentConfiguration,
   capabilities: Capabilities,
   step: number,
-): boolean {
+): ConfigurationField | null {
   const strategy = capabilities.strategies.find(
     (item) => item.strategy_id === form.strategy_id,
   );
-  if (!strategy) return false;
-  if (step === 0) return true;
+  if (!strategy) return "strategy";
+  if (step === 0) return null;
   const dataset = capabilities.datasets.find(
     (item) => item.dataset_id === form.dataset_id,
   );
+  if (!dataset?.available) return "dataset";
+  if (!form.name.trim() || form.name.length > 120) return "name";
   if (
-    !dataset?.available ||
-    !form.name.trim() ||
     !isPositiveDecimal(form.initial_cash) ||
-    comparePositiveDecimals(form.initial_cash, "1000000000000") === 1 ||
-    !form.start_date ||
-    !form.end_date ||
-    form.start_date > form.end_date ||
-    form.start_date < dataset.coverage_start ||
-    form.end_date > dataset.coverage_end ||
-    !dataset.universes.includes(form.universe)
+    comparePositiveDecimals(form.initial_cash, "1000000000000") === 1
   )
-    return false;
+    return "cash";
+  if (
+    !validTradingDate(form.start_date) ||
+    form.start_date < dataset.coverage_start ||
+    form.start_date > dataset.coverage_end
+  )
+    return "start";
+  if (
+    !validTradingDate(form.end_date) ||
+    form.end_date < form.start_date ||
+    form.end_date > dataset.coverage_end
+  )
+    return "end";
+  if (!dataset.universes.includes(form.universe)) return "universe";
   for (const key of ["rebalance_sessions", "maximum_holdings"] as const) {
     const value = form.strategy[key],
       range = strategy.parameters[key];
     if (!Number.isSafeInteger(value) || value < range.min || value > range.max)
-      return false;
+      return key === "rebalance_sessions" ? "rebalance" : "holdings";
   }
-  if (step === 1) return true;
-  for (const [value, max] of [
-    [form.costs.commission_rate, "0.01"],
-    [form.costs.minimum_commission, "1000"],
-  ]) {
+  if (step === 1) return null;
+  for (const [field, value, max] of [
+    ["commission", form.costs.commission_rate, "0.01"],
+    ["minimum", form.costs.minimum_commission, "1000"],
+  ] as const) {
     const comparison = comparePositiveDecimals(value, max);
-    if (comparison === null || comparison === 1) return false;
+    if (comparison === null || comparison === 1) return field;
   }
   const magnitude = form.risk.max_drawdown.replace(/^-/, "");
   if (
@@ -142,11 +160,18 @@ function validConfiguration(
     (isPositiveDecimal(form.risk.max_drawdown) &&
       form.risk.max_drawdown !== "0")
   )
-    return false;
-  return (
-    isPositiveDecimal(form.risk.max_position_weight) &&
+    return "drawdown";
+  return isPositiveDecimal(form.risk.max_position_weight) &&
     comparePositiveDecimals(form.risk.max_position_weight, "1") !== 1
-  );
+    ? null
+    : "position";
+}
+
+function focusInvalidField(form: HTMLFormElement | null) {
+  const field = form?.querySelector<HTMLElement>('[aria-invalid="true"]');
+  const details = field?.closest("details");
+  if (details) details.open = true;
+  field?.focus();
 }
 
 function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
@@ -171,6 +196,17 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
   const locked = useRef(false);
   const active = useRef(true);
   const heading = useRef<HTMLHeadingElement>(null);
+  const formElement = useRef<HTMLFormElement>(null);
+  const errorElement = useRef<HTMLDivElement>(null);
+  const invalidField =
+    error === "validation"
+      ? invalidConfigurationField(form, capabilities, 3)
+      : null;
+  const fieldAccessibility = (field: ConfigurationField) => ({
+    "aria-invalid": invalidField === field || undefined,
+    "aria-describedby":
+      invalidField === field ? "experiment-validation-error" : undefined,
+  });
   const strategy = capabilities.strategies.find(
     (item) => item.strategy_id === form.strategy_id,
   );
@@ -200,6 +236,12 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     previousStep.current = step;
     heading.current?.focus();
   }, [step]);
+  useEffect(() => {
+    if (!error) return;
+    if (formElement.current?.querySelector('[aria-invalid="true"]'))
+      focusInvalidField(formElement.current);
+    else errorElement.current?.focus();
+  }, [error, step]);
   useEffect(() => {
     const save = () => {
       try {
@@ -243,12 +285,24 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     }
   }
   function move(next: number) {
-    if (next > step && !validConfiguration(form, capabilities, step)) {
-      setError("validation");
+    const invalid = invalidConfigurationField(form, capabilities, step);
+    if (next > step && invalid) {
+      rejectConfiguration(invalid);
       return;
     }
     setError(null);
     setStep(next);
+  }
+  function rejectConfiguration(field: ConfigurationField) {
+    setStep(
+      field === "strategy"
+        ? 0
+        : ["commission", "minimum", "drawdown", "position"].includes(field)
+          ? 2
+          : 1,
+    );
+    if (error === "validation") focusInvalidField(formElement.current);
+    setError("validation");
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -257,7 +311,12 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
       return;
     }
     if (locked.current) return;
-    if (!acknowledged || !validConfiguration(form, capabilities, 3)) {
+    const invalid = invalidConfigurationField(form, capabilities, 3);
+    if (invalid) {
+      rejectConfiguration(invalid);
+      return;
+    }
+    if (!acknowledged) {
       setError("validation");
       return;
     }
@@ -302,6 +361,8 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
       </ol>
       <div className="experimentWizardLayout">
         <form
+          ref={formElement}
+          noValidate
           className="experimentPanel experimentForm"
           onSubmit={(event) => void submit(event)}
         >
@@ -317,6 +378,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                     className={`experimentChoice ${entry.strategy_id === form.strategy_id ? "isSelected" : ""}`}
                   >
                     <input
+                      {...fieldAccessibility("strategy")}
                       type="radio"
                       name="strategy"
                       value={entry.strategy_id}
@@ -352,6 +414,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.name}
                   <input
+                    {...fieldAccessibility("name")}
                     required
                     maxLength={120}
                     value={form.name}
@@ -363,6 +426,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.dataset}
                   <select
+                    {...fieldAccessibility("dataset")}
                     value={form.dataset_id}
                     onChange={(event) => {
                       const chosen = capabilities.datasets.find(
@@ -410,6 +474,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.cash}
                   <input
+                    {...fieldAccessibility("cash")}
                     required
                     inputMode="decimal"
                     value={form.initial_cash}
@@ -422,6 +487,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                   <label>
                     {c.start}
                     <input
+                      {...fieldAccessibility("start")}
                       type="date"
                       required
                       min={dataset?.coverage_start}
@@ -438,6 +504,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                   <label>
                     {c.end}
                     <input
+                      {...fieldAccessibility("end")}
                       type="date"
                       required
                       min={form.start_date || dataset?.coverage_start}
@@ -453,6 +520,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.universe}
                   <select
+                    {...fieldAccessibility("universe")}
                     value={form.universe}
                     onChange={(event) =>
                       update({
@@ -476,6 +544,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                     <label>
                       {c.rebalance}
                       <input
+                        {...fieldAccessibility("rebalance")}
                         type="number"
                         required
                         min={strategy?.parameters.rebalance_sessions.min}
@@ -495,6 +564,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                     <label>
                       {c.holdings}
                       <input
+                        {...fieldAccessibility("holdings")}
                         type="number"
                         required
                         min={strategy?.parameters.maximum_holdings.min}
@@ -520,6 +590,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.commission}
                   <input
+                    {...fieldAccessibility("commission")}
                     inputMode="decimal"
                     required
                     value={form.costs.commission_rate}
@@ -538,6 +609,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.minimum}
                   <input
+                    {...fieldAccessibility("minimum")}
                     inputMode="decimal"
                     required
                     value={form.costs.minimum_commission}
@@ -555,6 +627,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.drawdown}
                   <input
+                    {...fieldAccessibility("drawdown")}
                     inputMode="decimal"
                     required
                     value={form.risk.max_drawdown}
@@ -573,6 +646,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.position}
                   <input
+                    {...fieldAccessibility("position")}
                     inputMode="decimal"
                     required
                     value={form.risk.max_position_weight}
@@ -616,10 +690,27 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
             )}
           </fieldset>
           {Boolean(error) && (
-            <div className="experimentError" role="alert">
+            <div
+              ref={errorElement}
+              id="experiment-validation-error"
+              className="experimentError"
+              role="alert"
+              tabIndex={-1}
+            >
               {error === "validation"
                 ? c.validation
                 : experimentError(error, c)}
+              {invalidField && (
+                <p>
+                  {c.fieldErrors[invalidField]}
+                  {invalidField === "rebalance" &&
+                    strategy &&
+                    ` (${strategy.parameters.rebalance_sessions.min}–${strategy.parameters.rebalance_sessions.max})`}
+                  {invalidField === "holdings" &&
+                    strategy &&
+                    ` (${strategy.parameters.maximum_holdings.min}–${strategy.parameters.maximum_holdings.max})`}
+                </p>
+              )}
             </div>
           )}
           {storageError && <p role="alert">{c.storageError}</p>}

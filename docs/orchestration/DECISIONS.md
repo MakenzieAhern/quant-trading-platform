@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 one field-aware wizard validation path — 2026-09-26
+
+Keep the existing exact-string monetary validation, return first invalid field
+instead of a boolean, and attach translated guidance to that control. Route an
+invalid restored review to its field's step and open native details before focus.
+Use noValidate only with replacement required/date/name/integer bounds, avoiding
+the browser's unfocusable hidden-field failure. Server remains final authority;
+do not use floating-point conversion for money or derive field errors from an
+unknown API response. Focus generic API errors as a summary. Preserve draft
+identity and duplicate-request locking; test and browser-check separately.
+Reuse existing readonly QA harness/isolated origin, no financial POST or runtime
+restart. No new validation/UI framework, GitHub retry or acceptance promotion.
+
 ## v1.2 user-estimated five-day GitHub hold — 2026-09-26
 
 User says GitHub needs five days to recover (estimated2026-10-01). Record as
