@@ -1,5 +1,21 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 17:16 UTC current-head local frontend release checks
+
+At e9e175e, all321 tests/37 files, ESLint, TypeScript and production Vite129-module
+build passed. Official npm registry audit reported0 vulnerabilities; dependencies
+unchanged. Build retained outside Git in /home/yuchen/.cache/qtp-release-check-fKelHx.
+Initial shell PATH expansion failed before tests; corrected explicit Linux PATH
+and actual terminal exit0 recorded, no claim from failed command.
+
+Docker absent, Ubuntu running/docker-desktop stopped. No native PostgreSQL/Redis
+available. Bounded Application crash-event query returned no matching Docker
+events; latest host EOF/canceled streams still do not prove cause. User intentional
+exit question pending; no launch loop or data deletion. Full backend SQL/runtime,
+native accessibility/performance, forward and CI/release remain NOT_PROVEN.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260926-local-release-preflight.json>)
+is outside Git; GitHub hold continues and full goal remains active.
+
 ## 2026-09-26 17:13 UTC bounded offline home responsive checkpoint
 
 Actual Chrome home: four requested viewports1440x900/1280x800/1024x768/390x844
