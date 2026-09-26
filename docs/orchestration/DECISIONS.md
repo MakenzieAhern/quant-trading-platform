@@ -1,5 +1,14 @@
 # Decisions
 
+## v1.2 finish three-study comparison with existing native tables — 2026-09-26
+
+No additional component, dependency or code is needed: actual three-study
+geometry/keyboard checks pass16 size/theme/locale combinations using existing
+fixed-layout wrapping and local scroll regions. Preserve long metadata and
+exact financial strings, not truncated values or whole-page horizontal overflow.
+Representative visible screenshots are bounded evidence, not full visual/AA
+acceptance. User-reported GitHub hold remains unchanged: no push or CI retry.
+
 ## v1.2 reuse field boundary token in research override — 2026-09-26
 
 The specific research input/select rule beat the already-correct global control

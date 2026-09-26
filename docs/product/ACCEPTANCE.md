@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 06:31 UTC three-study responsive comparison closure
+
+Actual Chrome selected three existing successful historical studies from the
+list: U6 plan preview, U4 March 2011 and M1 lifecycle recovery. Four required
+viewport sizes × two languages × two themes produced16 geometry checks: no
+document overflow, four columns, seven metric rows/six condition rows and no
+cell-content overflow. Document clients1425/1265/1009/375 equal scroll widths;
+both table regions are1074/938/714/307 wide, with680px local scroll on mobile.
+Table and scroll-region names translate together.
+
+Actual screenshot segments covered ZH dark desktop/header and mobile conditions,
+ZH light mobile third-study header/all seven metric rows, EN dark1024 long
+condition values and EN light1280 all three condition headers. Native mobile
+Tab/Shift+Tab reaches the next region/third header and reveals it at373px local
+scroll; ArrowRight settles at40px. Both focus outlines are3px. Fresh state and
+separate capture avoided accepting stale frames. These segments are not all16
+full visual screenshots or full AA/native200pct/speech evidence.
+
+All seven full-precision metrics match the three read-only result APIs, including
+equities104666.94836/99528.8134/99092.83177 and costs96.05164/30.1866/20.16823;
+EN→ZH retains precision state and values. Different periods visibly warn this
+is not a controlled comparison; actual execution/fee fingerprints still require
+metadata review. No ranking, new run or financial recomputation.
+
+Eight critical DB mutation fingerprints match the prior checkpoint and .research
+has no diff. RestoredZH/dark, resetviewport and closed owned QA tab. No product
+code change or test rerun; preceding296 frontend tests are historical evidence,
+not newly run. No provider/runtime/GitHub/financial writes. Evidence outside Git:
+product-evidence/v1.2/m4/20260926-three-study-responsive-matrix.json. Full U1–U8,
+M4/M5 and external/release gates remain incomplete; goal remains active.
+
 ## 2026-09-26 06:21 UTC research control-boundary override repaired
 
 Actual Chrome found that the grouped research input/select rule overrode the
