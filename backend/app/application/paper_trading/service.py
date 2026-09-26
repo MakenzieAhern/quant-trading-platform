@@ -175,6 +175,11 @@ class PaperTradingManager:
                 client_request_id=command.client_request_id,
                 request_hash=request_hash if command.client_request_id is not None else None,
             )
+            if command.provider_type == "historical_a_share":
+                try:
+                    self._historical_request(session)
+                except ValueError as exc:
+                    raise ValueError("invalid historical A-share paper configuration") from exc
             try:
                 created = await repository.create(session)
                 logger.info("Created paper session %s", created.id)

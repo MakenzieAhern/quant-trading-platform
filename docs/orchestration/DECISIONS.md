@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 validate historical paper before saving; render error locale — 2026-09-26
+
+Reuse the shared historical experiment request at paper create, before any saved
+account/event, to reject configurations the runtime cannot accept. Do not duplicate
+the engine cap or change existing persisted idempotent accounts. Frontend exact
+comparison trims pasted whitespace; errors retain translation keys until render,
+so locale change preserves inputs and updates every local/API create error.
+Focused and full tests plus actual Chrome verified these bounded repairs; no
+account start, acquisition or formal research. No dependency/migration added.
+GitHub five-day hold stays in force. Normal Docker launch briefly restored engine
+and original assets but processes subsequently vanished; EOF is not a proven root
+cause. Do not loop restarts/reset/delete data or mark services/release healthy.
+
 ## v1.2 cached index is not independent provenance authority — 2026-09-26
 
 Reading actual U7 composition found only replay/synthetic/historical providers;

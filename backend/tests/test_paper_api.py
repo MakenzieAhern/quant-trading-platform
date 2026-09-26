@@ -158,6 +158,33 @@ async def test_historical_plan_checksum_covers_effective_account_risk(
     ) != paper_manager._historical_plan_sha(limited, limited_request)
 
 
+async def test_historical_account_rejects_cash_the_shared_engine_cannot_run(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert paper_manager._historical_datasets is not None
+    monkeypatch.setattr(
+        paper_manager._historical_datasets,
+        "resolve",
+        lambda _: {
+            "coverage_start": "2010-01-01",
+            "coverage_end": "2025-12-31",
+            "sha256": "a" * 64,
+        },
+    )
+    body = historical_request_body()
+    body["initial_cash"] = "1000000000000.000000000000001"
+    rejected = await client.post("/api/paper-trading/sessions", json=body)
+    assert rejected.status_code == 422
+    assert (await client.get("/api/paper-trading/sessions")).json()["total"] == 0
+    body["initial_cash"] = "1000000000000"
+    accepted = await client.post("/api/paper-trading/sessions", json=body)
+    assert accepted.status_code == 201
+    assert accepted.json()["status"] == "CREATED"
+    session = await paper_manager.get(UUID(accepted.json()["session_id"]))
+    assert session is not None
+    assert str(paper_manager._historical_request(session).initial_cash) == body["initial_cash"]
+
+
 async def test_create_idempotency_validation_and_safe_lookup(client: AsyncClient) -> None:
     headers = {"Idempotency-Key": "paper-create-reference"}
     first = await client.post("/api/paper-trading/sessions", json=request_body(), headers=headers)

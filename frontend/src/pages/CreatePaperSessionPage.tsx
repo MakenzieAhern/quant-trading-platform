@@ -141,7 +141,14 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
     if (locked.current) return;
     setError(null);
     if (!isPositiveDecimal(initialCash) || !isPositiveDecimal(quantity)) {
-      setError(t("createPage.decimalError"));
+      setError("createPage.decimalError");
+      return;
+    }
+    if (
+      providerType === "historical_a_share" &&
+      comparePositiveDecimals(initialCash.trim(), "1000000000000") === 1
+    ) {
+      setError("createPage.historicalCashLimit");
       return;
     }
     let request: CreatePaperSessionRequest;
@@ -181,7 +188,7 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
         !/^-?0(?:\.\d+)?$|^-1(?:\.0+)?$/.test(maxDrawdown) ||
         (isPositiveDecimal(maxDrawdown) && maxDrawdown !== "0")
       ) {
-        setError(t("createPage.historicalValidationError"));
+        setError("createPage.historicalValidationError");
         return;
       }
       request = {
@@ -213,7 +220,7 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
       const short = parsePositiveInteger(shortPeriod);
       const long = parsePositiveInteger(longPeriod);
       if (short === null || long === null || short >= long) {
-        setError(t("createPage.periodError"));
+        setError("createPage.periodError");
         return;
       }
       request = {
@@ -236,7 +243,7 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
         comparePositiveDecimals(oversold, overbought) !== -1 ||
         comparePositiveDecimals(overbought, "100") !== -1
       ) {
-        setError(t("createPage.rsiError"));
+        setError("createPage.rsiError");
         return;
       }
       request = {
@@ -261,12 +268,12 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
     } catch (reason) {
       setError(
         reason instanceof ApiError && reason.status === 404
-          ? t("createPage.datasetError")
+          ? "createPage.datasetError"
           : reason instanceof ApiError && reason.status === 409
-            ? t("createPage.conflictError")
+            ? "createPage.conflictError"
             : reason instanceof ApiError && reason.status === 422
-              ? t("createPage.validationError")
-              : t("createPage.submitError"),
+              ? "createPage.validationError"
+              : "createPage.submitError",
       );
     } finally {
       locked.current = false;
@@ -381,6 +388,9 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
                 ? t("createPage.historicalHint")
                 : t("createPage.buyingPowerHint")}
           </p>
+          {providerType === "historical_a_share" && (
+            <p className="fieldHint">{t("createPage.historicalCashLimit")}</p>
+          )}
         </fieldset>
         <fieldset disabled={pending}>
           <legend>{t("createPage.registeredStrategy")}</legend>
@@ -577,7 +587,7 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
         )}
         {error && (
           <div id="paper-form-error" className="formError" role="alert">
-            {error}
+            {t(error)}
           </div>
         )}
         <div className="formActions">

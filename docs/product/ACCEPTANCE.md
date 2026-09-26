@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 historical account configuration and live error locale
+
+Disposable API regression proved historical create accepted exact cash above the
+existing research engine limit and only failed on startup. Reuse the shared
+request model before persistence; invalid create now422 with sanitized text,
+exactly1e12 remains CREATED (never started). Synthetic/idempotent paths preserved.
+Frontend uses the existing exact comparator with trim, not Number. Independent
+readonly review found the whitespace bypass; its regression first failed then
+passed. Chrome found error text retained the prior locale; all create errors now
+store translation keys and translate at render. Immediate locale regression first
+failed; final28 paper frontend cases passed. Actual Chrome English→Chinese alert
+changed without resubmitting, exact fractional input preserved; native full-page
+image inspected inline, restoredZH/dark and closed own tab. No account created.
+
+Full backend995 passed/1 optional unmounted archive skipped; Ruff543 format and
+mypy144 passed. Full final frontend test/lint/type/build returned0; compact output
+did not retain final total, not inferred. Preceding frontend301 passed. Eight DB
+fingerprints matched at08:05UTC, `.research` unchanged. No formal study or feed.
+
+Runtime changed during continuation: normal installed Docker4.92.0 launch briefly
+restored29.8.0/Compose5.5.1 with original12 containers/9 volumes and PostgreSQL mount.
+Main Compose startup then lost its handle; at15:54UTC Docker processes absent again
+and Ubuntu reported docker unavailable. Latest backend log15:53:31Z ends in event
+stream EOF, cause unproven. No reset/deletion/repeated launch. Final service/data
+recheck and owned tmpfs-test cleanup **not verified**, not healthy recovery PASS.
+GitHub remains held; no push/CI/merge/release. All full product gates remain open.
+
+[Bounded repair and runtime evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260926-paper-configuration-boundary.json>)
+is outside Git. Local tests do not establish forward source rights, lost-ledger
+recovery, independent backup, Windows login persistence or release acceptance.
+
 ## 2026-09-26 07:51 UTC observation payload must match its immutable receipt
 
 U5's read path verified bundle checksums but trusted the separate PostgreSQL

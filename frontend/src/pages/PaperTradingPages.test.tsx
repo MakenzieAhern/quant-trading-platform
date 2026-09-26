@@ -471,6 +471,64 @@ describe("paper trading pages", () => {
     });
   });
 
+  it("rejects historical cash above the engine limit without rounding or submitting", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch");
+    render(<CreatePaperSessionPage />);
+    await userEvent.selectOptions(
+      screen.getByLabelText("Provider"),
+      "historical_a_share",
+    );
+    await userEvent.clear(screen.getByLabelText("Initial cash"));
+    await userEvent.type(
+      screen.getByLabelText("Initial cash"),
+      "1000000000000.000000000000001",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Historical simulated-account cash",
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    try {
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "历史模拟账户初始资金须大于 0",
+      );
+      expect(screen.getByLabelText("初始资金")).toHaveValue(
+        "1000000000000.000000000000001",
+      );
+      await userEvent.click(
+        screen.getByRole("button", { name: "创建模拟交易会话" }),
+      );
+      expect(screen.getByRole("alert")).toHaveTextContent("1,000,000,000,000");
+      expect(fetch).not.toHaveBeenCalled();
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
+  });
+
+  it("rejects historical excess cash with surrounding whitespace before submitting", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch");
+    render(<CreatePaperSessionPage />);
+    await userEvent.selectOptions(
+      screen.getByLabelText("Provider"),
+      "historical_a_share",
+    );
+    await userEvent.clear(screen.getByLabelText("Initial cash"));
+    await userEvent.type(
+      screen.getByLabelText("Initial cash"),
+      " 1000000000000.000000000000001 ",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Historical simulated-account cash",
+    );
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it("copies completed historical settings but requires an explicit 93-day replay range", async () => {
     window.history.replaceState(
       {},

@@ -264,6 +264,8 @@ export const enUS = {
         "These are simulation assumptions, not a verified broker quote. The historical engine applies its accepted date-specific cost model; check the result's cost breakdown.",
       historicalValidationError:
         "Choose no more than 93 calendar days and check strategy, cost and risk limits.",
+      historicalCashLimit:
+        "Historical simulated-account cash must be positive and no more than CNY 1,000,000,000,000, matching the research engine limit.",
       registeredStrategy: "Registered strategy",
       strategyType: "Strategy type",
       shortPeriod: "Short period",

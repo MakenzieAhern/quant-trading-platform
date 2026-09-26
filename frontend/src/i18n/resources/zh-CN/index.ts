@@ -246,6 +246,8 @@ export const zhCN = {
         "这两项是模拟假设，不是已核实的券商报价。历史引擎另按已接受的生效日期成本模型计算；请在结果中核对成本明细。",
       historicalValidationError:
         "请选择不超过 93 个自然日，并检查策略、成本和风控限制。",
+      historicalCashLimit:
+        "历史模拟账户初始资金须大于 0 且不超过 1,000,000,000,000 元，与研究引擎上限一致。",
       registeredStrategy: "已注册策略",
       strategyType: "策略类型",
       shortPeriod: "短周期",

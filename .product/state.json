@@ -1,7 +1,25 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-26T07:51:48Z",
+  "updated_at_utc": "2026-09-26T15:56:46Z",
+  "paper_configuration_boundary": {
+    "status": "PASS_BOUNDED_NOT_FULL_U6_U7_U8_RELEASE",
+    "backend_tests_passed": 995,
+    "optional_archive_tests_skipped": 1,
+    "frontend_paper_tests_passed": 28,
+    "frontend_final_suite": "PASS_EXIT0_FINAL_TOTAL_NOT_RETAINED",
+    "chrome": "Exact excess cash including whitespace rejected; immediate EN-to-ZH error translation and input preservation passed, no account creation",
+    "evidence": "product-evidence/v1.2/m4/20260926-paper-configuration-boundary.json",
+    "policy": "Existing shared request/Decimal limit and translation keys only. No formal/OOS/provider/forward activity. Current Docker recovery incomplete; earlier fingerprints/test results are timestamped, not current health acceptance."
+  },
+  "docker_runtime_latest": {
+    "status": "UNAVAILABLE_AFTER_BRIEF_NORMAL_LAUNCH_CAUSE_UNPROVEN",
+    "observed_at_utc": "2026-09-26T15:54:33Z",
+    "engine_during_brief_recovery": "29.8.0",
+    "desktop_installed": "4.92.0.240144",
+    "error": "Ubuntu: docker could not be found in this WSL 2 distro; Docker Windows processes absent. Last host event streamer EOF15:53:31Z, not proven fatal cause",
+    "policy": "One normal launch, original12 containers/9 volumes/mount retained; no reset/deletion or repeated launch. Final service fingerprints and isolated tmpfs cleanup not verified. Recheck live Windows/user ownership before any next recovery action."
+  },
   "observation_receipt_integrity": {
     "status": "PASS_BOUNDED_DEFECT_FIXED_NOT_FORWARD_ACCEPTANCE",
     "regression_variants": 5,
@@ -147,6 +165,7 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
+    "latest_verification": "2026-09-26 15:56UTC current branch3b6ce6c plus only owned changes; no competing git/pytest/Alembic/restore observed. Docker processes absent again after brief launch. Final service/DB recheck and owned tmpfs-test cleanup blocked by unavailable runtime; do not reuse old PIDs or mark them healthy. No second launcher or destructive action.",
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
     "queue_writer": "owned isolated paper manager idle after two stopped historical QA accounts; main paper manager idle; no formal studies",
@@ -159,6 +178,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-26 historical paper pre-save shared request validation: exact excess1e12+fraction now422 before persistence, boundary1e12 CREATED neverstarted; no duplicated financialcap. Frontend exacttrim guard and shared translated-key errors repaired, two baseline regressions failed then final28paper cases passed. Fullbackend995+1optional skip/Ruff543/mypy144, finalfrontend testlinttypebuild exit0; finaltotal notretained. Actual Chrome EN-to-ZH existingalert translated withoutsubmit, typedprecision preserved, restoredZHdark/owntabclosed. Eight DBfingerprints unchanged08:05UTC/frozenresearchclean. Later Docker absent→normal4.92launch brieflyEngine29.8/12containers/9volumes→processes absent again15:54UTC/WSLdockerunavailable; lastEOF15:53:31 causeunproven. No repeatedrestart/reset/deletion. Finalservice/testcleanup notverified; GitHubhold/noCIpushmerge, fullgoalactive/incomplete",
     "2026-09-26 07:51UTC real U5 provenance defect baseline reproduced: DB INSERT could attach unchecked payload to valid immutable receipt. Reuse verified Parquet rows/type-sensitive canonicalSHA and receiptmetadata at common read gate; wrongdate/price/executionflag/security/numeric0 all API422, next update fails before transport. Readonly agent caught False==0 and final diff approved. Focused56/fullbackend994+1 optional archive skip, final Ruff/543format/mypy144 PASS; initial length/type issues corrected. All6 retained receipts/observations readverifiednon-executable; actual ZH/EN Chrome fourboard task/candidate exactrows and finalrestartreload originalsourceIDs PASS, no console errors. Fivepaper STOPPED/queues terminal, eightcriticalfingerprints unchanged/frozenresearch clean. Explicit test Postgres stopped/ownedtabclosed, no volume/image deletion. U7 actualforwardprovider absent/rights unresolved, no fixture-as-forward or release claim. Github five-day humanhold retained; fullgoalactive",
     "2026-09-26 07:36UTC three fresh strategy documents first mouse opened native drawer; prior isolated anomaly not reproduced or explained. Reused localhost-only GET-forward QA in owned/tmp, corrected copied build direct8000 source with isolated VITE_API_BASE_URL=/ build, no CORS weakening. New deferred explicit collection/no MutationObserver protocol: primary1 trusted complete native24ms; primary2 absent even same-page recollect; AX control allNative empty before screenshot and same interaction3679 later13312/13304ms after capture. Missing record is not under16/zero, immediate output publication not sole cause; no p95/app verdict. Raw diagnostic/script retained, Syntax and isolated tsc/Vite pass. Owned PID40976/session71597 terminated/listener gone, own viewport/tab cleaned, main services and eight DB fingerprints unchanged, frozen research clean. User foreground confirmation requested; original full gates/GitHub hold retained",
     "2026-09-26 07:22UTC actual Chrome strategy list/drawer32 geometry states across ZH/EN,dark/light,four dimensions: one registered card, six explanation sections, no measured page/text/drawer horizontal overflow, controls40/42px. Drawer sampled text minimum dark7.653/light6.058. Native mobile Tab reached configuration link2px focus and Escape returned trigger; independent detail URL loaded six sections. Initial mouse click had no retained drawer; subsequent Enter/stable mouse and sixteen Enter opens succeeded; cause unresolved, overall strategy quality PARTIAL. Representative native inline images only, original ZH/dark restored and viewport/tab cleaned. No code/test/provider/finance/runtime/GitHub changes, DB fingerprints/frozen research unchanged. Two proof-only units trigger priority change to first-activation/cold-timing diagnosis, not scope reduction",
@@ -478,6 +498,7 @@
     "RESOLVED: transient Chrome browser-control binding timeouts were followed by successful Chrome Back/Forward and CSV/JSON acceptance; the temporary QA draft name was restored. No app defect was inferred from the tool timeout"
   ],
   "external_blockers": [
+    "M4-RUNTIME: installed Docker4.92 briefly started with retained assets then processes vanished and Ubuntu docker became unavailable again; last15:53:31Z EOF is not root cause. Needs live Windows/process/user-ownership diagnosis before any further launch; no reset or restart loop",
     "CI-ACCOUNT: exact pushed f91e1e5 run36217962698 never started frontend/backend/Compose due to GitHub recent-payment/spending-limit annotation. Account owner must check Billing & plans; no automatic payment/limit changes or repeated reruns. Local tests do not substitute required CI",
     "U7-FORWARD: lawful product-use rights for a genuinely new A-share market-data feed have not been established; a public SDK or historical candidate receipt does not grant execution authority",
     "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay",
@@ -700,7 +721,7 @@
     }
   },
   "next_task": "Do not repeat the isolated release-image/clean-DB rehearsal or the failed Docker Run-entry hypothesis. On the next genuine Windows login, test the single current-user AtLogOn task and verify Docker/WSL/Compose/API/frontend plus retained database counts without terminal assistance, reset or data deletion. Until then M5 startup is FAIL. Existing Chrome is available again and the bounded English result/compare/stopped-paper read-only walkthrough has completed; retain existing Chinese recordings as bounded evidence and fill only actual key-interaction coverage gaps through a supported capture path. English video is optional, not a separate user requirement. Obtain genuine novice-user evidence rather than relabel agent QA. Continue independent M4/M5 accessibility, performance and compatibility work while preserving the missing genuine ledgers, independent backup and lawful forward-source blockers. Native 200% zoom needs user-operated evidence: browser policy blocked chrome://settings/appearance; do not bypass or substitute a CSS proxy. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 is only the earliest conditional after-start receipt and still needs lawful source authority. A privileged read-only VSS inventory needs a real Windows administrator action; do not infer absent shadows from Access Denied. No duplicate Docker startup mechanism, full U6/U7 promotion or release from historical replay",
-  "next_command": "Continue full U1-U8/M0-M5 goal locally; user confirms GitHub recovery only in five days, estimated2026-10-01 remains unverified, no push/CI polling. U5 receipt/index provenance mismatch now fixed and validated:56 focused/994 fullbackend+1 optional archive skip, main6 retained receipt/rows and ZH/EN cached reads PASS, no acquisition. Actual U7 only replay/synthetic/historical providers exist; lawful new-market source/authority/adapter and genuine post-user-start receipt/plan/constrained processing remain incomplete, do not invent or relabel historical data. Next independently trace U6 selected saved config -> paper-account plan provenance/quantity/risk gate for a concrete server-side mismatch without starting retained accounts, rerunning formal research or fetching feed data; guard any integration checks with disposable DB. Native performance foreground confirmation still unanswered: preserve3040/13312 observations and p95null, no repeated unqualified sampling or generic geometry matrices. If human foreground confirmed, reuse owned isolated same-origin deferred-collection protocol with bounded capture controls, no security bypass. Missing genuine ledgers/independentbackup/login/nativezoom/speech/novice/media/exact-headCI/release remain required. No merge/release/frozen edits/formal rerun.",
+  "next_command": "Continue full U1-U8/M0-M5, not a smaller passing subset. GitHub user five-dayhold/estimatedOct1 unverified: no push/CIpoll/merge/release. Historical paper creation cash/shared request and live locale errors now repaired/tested/Chrome checked; do not repeat completed unit. First read current Docker Windows processes/WSL/host shutdown or failure evidence and user ownership, no launcher loop: normal4.92launch brieflyEngine29.8 then processes disappeared15:54UTC; EOF not rootcause. If runtime genuinely available, verify all5 retained STOPPED accounts/terminalqueues/eight fingerprint invariants, API200/frontend5173/PONG and owned tmpfs quant_test cleanup without deletion. Otherwise proceed safe source/manual/error-path inspection and preserve tests as timestamped evidence, not current health. Next concrete U6/U7 gap is selected config/plan risk and quantity trace, plus U8 remaining API-error locale behavior, no account starts/formal rerun/provider acquisition. U7 lawful source/current authority/adapter/genuine after-user-start completed-session receipt-plan-constrainedprocessing remain required and incomplete, never substitute history/demo. Nativeperf foreground unanswered/p95null/prior3040-13312 retained; no repeated unqualified samples. Missing genuine ledgers/independentbackup/login/native200zoom/speech/novice/media/exact-headCI/release remain full gates. Frozen .research/OOS untouched.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
