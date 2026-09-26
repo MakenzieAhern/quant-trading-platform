@@ -1,5 +1,42 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 03:38 UTC nested comparison/detail return and incomplete comparison
+
+Actual Chrome found the still-open nested defect: list selection 2 -> compare
+-> detail -> visible Back to list produced selection 0. A new navigation
+regression failed before repair. Replace the one-hop origin with the existing
+history entry's bounded managed ancestor metadata (URL and index only). Return
+to the nearest exact requested URL via native history traversal, retaining its
+list context and Forward entries. Validate consecutive safe indices and the
+current URL marker; direct, malformed or unknown/native-hash history navigates
+internally. Retain only 32 managed ancestors; beyond that bounded context the
+safe internal fallback applies. No router/cache dependency or financial change.
+
+Focused navigation/comparison 29 PASS; full frontend 260 PASS, lint, TypeScript,
+production build, changed-file Prettier and diff check PASS. Regressions include
+three nested routes, nearest newer list, unknown hash, malformed metadata and
+cancel/accept of the existing dirty-draft guard on a multi-entry return.
+Chrome ZH/dark: M1 search + completed/historical/name-ascending filters, two
+existing completed studies -> comparison -> original detail -> reload -> Back
+retained both selections and filter chips. Native Forward still reached compare
+then detail; switching EN before returning retained the same selection/dates.
+
+A separate direct comparison of one real completed study and the existing real
+INTERRUPTED study showed the explicit incomplete alert in EN/ZH, named both
+studies without omission and exposed retry/loading and detail/return controls;
+it did not fabricate a partial metric table. The internal Back link worked.
+No retry command, study/account/order/provider creation, main service restart,
+DB write or frozen-research mutation occurred. Temporary tab closed; main tab
+restored to default view, selection 0 and Chinese/dark Workbench. Main services
+remain running, PG/Redis/backend healthy, Redis PONG/API 200; formal 1/3/310,
+jobs 8, paper 5/events 417 and updates 4/receipts 6 unchanged.
+
+Bounded evidence is outside Git at product-evidence/v1.2/m4/
+20260926-nested-study-return.json. Scroll restoration, missing/stale result
+browser branches, native zoom, novice review, lawful forward data and genuine
+missing-ledger/independent-backup gates remain separate. Full views/U4/U5/U7/
+M4/M5 acceptance is not claimed.
+
 ## 2026-09-26 03:28 UTC saved study view and comparison return context
 
 Actual Chrome reproduced two list-context defects: selecting two completed

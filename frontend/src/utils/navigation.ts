@@ -5,6 +5,27 @@ const BEFORE_TRAVERSAL = "quant:before-traversal";
 const HISTORY_INDEX = "quantNavigationIndex";
 const APPROVED_NAVIGATION = "quantNavigationApproved";
 const checkedTraversals = new WeakSet<PopStateEvent>();
+type ReturnEntry = { url: string; index: number };
+
+function returnEntries(index: number): ReturnEntry[] {
+  const entries: unknown = window.history.state?.quantNavigationReturns;
+  if (
+    window.history.state?.quantNavigationUrl !== window.location.href ||
+    !Array.isArray(entries) ||
+    entries.length > 32 ||
+    !entries.every(
+      (entry, offset): entry is ReturnEntry =>
+        entry !== null &&
+        typeof entry === "object" &&
+        typeof entry.url === "string" &&
+        Number.isSafeInteger(entry.index) &&
+        entry.index >= 0 &&
+        entry.index === index - entries.length + offset,
+    )
+  )
+    return [];
+  return entries;
+}
 
 function historyIndex(): number {
   const index: unknown = window.history.state?.[HISTORY_INDEX];
@@ -26,10 +47,17 @@ export function navigate(path: string): boolean {
     const request = new CustomEvent(BEFORE_NAVIGATION, { cancelable: true });
     if (!window.dispatchEvent(request)) return false;
   }
+  const index = historyIndex();
+  const parents = returnEntries(index);
   window.history.pushState(
     {
-      [HISTORY_INDEX]: historyIndex() + 1,
-      quantNavigationFrom: window.location.pathname,
+      [HISTORY_INDEX]: index + 1,
+      quantNavigationUrl: destination.href,
+      // ponytail: retain 32 managed ancestors; older/unknown history uses the internal fallback.
+      quantNavigationReturns: [
+        ...parents,
+        { url: window.location.href, index },
+      ].slice(-32),
     },
     "",
     path,
@@ -42,7 +70,13 @@ export function navigate(path: string): boolean {
 }
 
 export function navigateBack(path: string): void {
-  if (window.history.state?.quantNavigationFrom === path) window.history.back();
+  const index = historyIndex();
+  const url = new URL(path, window.location.href).href;
+  const parent = returnEntries(index)
+    .slice()
+    .reverse()
+    .find((entry) => entry.url === url);
+  if (parent) window.history.go(parent.index - index);
   else navigate(path);
 }
 

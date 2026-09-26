@@ -2,7 +2,12 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Link } from "../components/Link";
-import { navigate, useNavigationGuard, usePathname } from "./navigation";
+import {
+  navigate,
+  navigateBack,
+  useNavigationGuard,
+  usePathname,
+} from "./navigation";
 
 function Guard({ message = "Leave this draft?" }: { message?: string }) {
   useNavigationGuard(() => window.confirm(message));
@@ -25,6 +30,40 @@ function TwoLocationReaders() {
 }
 
 describe("shared navigation guard", () => {
+  it("returns through nested details to the original list and keeps Forward entries", async () => {
+    window.history.replaceState(
+      { retainedSelection: ["first", "second"] },
+      "",
+      "/experiments",
+    );
+    navigate("/experiments/compare?ids=first,second");
+    navigate("/experiments/first");
+    navigate("/experiments/second");
+    const length = window.history.length;
+    render(
+      <Link back href="/experiments">
+        Back to list
+      </Link>,
+    );
+    await userEvent.click(screen.getByRole("link", { name: "Back to list" }));
+    await waitFor(() =>
+      expect(window.history.state.retainedSelection).toEqual([
+        "first",
+        "second",
+      ]),
+    );
+    expect(window.location.pathname).toBe("/experiments");
+    expect(window.history.length).toBe(length);
+    act(() => window.history.forward());
+    await waitFor(() =>
+      expect(window.location.pathname).toBe("/experiments/compare"),
+    );
+    act(() => window.history.forward());
+    await waitFor(() =>
+      expect(window.location.pathname).toBe("/experiments/first"),
+    );
+  });
+
   it("returns a Back link to its own prior list entry without discarding Forward history", async () => {
     window.history.replaceState(
       { retainedSelection: ["first", "second"] },
@@ -46,6 +85,70 @@ describe("shared navigation guard", () => {
     await waitFor(() =>
       expect(window.location.pathname).toBe("/experiments/compare"),
     );
+  });
+
+  it("returns to the nearest matching list when a newer list replaced the context", async () => {
+    window.history.replaceState({ original: true }, "", "/experiments");
+    navigate("/experiments/first");
+    navigate("/experiments");
+    window.history.replaceState({ ...window.history.state, newer: true }, "");
+    navigate("/experiments/second");
+    act(() => navigateBack("/experiments"));
+    await waitFor(() => expect(window.history.state.newer).toBe(true));
+    expect(window.history.state.original).toBeUndefined();
+  });
+
+  it("does not traverse through an unknown native hash change", () => {
+    window.history.replaceState({}, "", "/experiments");
+    navigate("/experiments/first");
+    window.history.replaceState(
+      window.history.state,
+      "",
+      "/experiments/first#unknown",
+    );
+    const go = vi.spyOn(window.history, "go");
+    navigateBack("/experiments");
+    expect(window.location.pathname).toBe("/experiments");
+    expect(go).not.toHaveBeenCalled();
+    go.mockRestore();
+  });
+
+  it.each([
+    [null],
+    [{ url: "/experiments", index: -1 }],
+    [{ url: "/experiments", index: 99 }],
+  ])("falls back internally for malformed return history %j", (entries) => {
+    window.history.replaceState(
+      {
+        quantNavigationIndex: 2,
+        quantNavigationUrl: window.location.origin + "/experiments/first",
+        quantNavigationReturns: entries,
+      },
+      "",
+      "/experiments/first",
+    );
+    const go = vi.spyOn(window.history, "go");
+    navigateBack("/experiments");
+    expect(window.location.pathname).toBe("/experiments");
+    expect(go).not.toHaveBeenCalled();
+    go.mockRestore();
+  });
+
+  it("keeps the unsaved-draft guard on a multi-entry return", async () => {
+    window.history.replaceState({}, "", "/experiments");
+    navigate("/experiments/first");
+    navigate("/research/new");
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(<RouterHarness />);
+    act(() => navigateBack("/experiments"));
+    await waitFor(() => expect(confirm).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(window.location.pathname).toBe("/research/new"));
+    confirm.mockReturnValue(true);
+    act(() => navigateBack("/experiments"));
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent("/experiments"),
+    );
+    expect(confirm).toHaveBeenCalledTimes(2);
   });
 
   it("uses the internal list fallback for directly opened detail Back links", async () => {

@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 extend managed history returns rather than copy study state — 2026-09-26
+
+The one-hop Back helper passed direct routes but still reset list context after
+comparison -> detail. Reuse native history and existing navigation indices,
+recording bounded URL/index ancestors instead of copying domain selections into
+each page or adding a router/cache. Select the nearest exact matching ancestor.
+Reject malformed/nonconsecutive/unknown-URL history and use internal navigation;
+retain at most 32 entries as a deliberate bounded-context ceiling. Traversal
+still passes the existing unsaved-draft guard and preserves native Forward.
+A failing regression, full frontend checks and real bilingual nested-return QA
+verify the repair; incomplete comparison was separately tested with actual
+completed/INTERRUPTED saved jobs. No data/source/research/release gate promoted.
+
 ## v1.2 preserve the existing study-list history entry — 2026-09-26
 
 Two actual Chrome defects reset comparison selection after a detail/browser
