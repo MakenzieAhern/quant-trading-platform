@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 04:37 UTC local plan keyboard check and CI hold
+
+User reports GitHub recovery requires five days: estimated 2026-10-01, not
+verified recovery or authorization to pay/increase limits. No CI retry or push
+while the account gate is unchanged; local work continues, release gates intact.
+
+Actual Chrome opened the existing U6 historical plan using Enter. Chinese/dark
+table focus had a visible 3px outline; ArrowRight reached its horizontal end
+(436px). Tab reached native provenance summary; Enter opened/closed it and
+retained focus. English/light retained 32 candidates, five cash rejections,
+2011-03-22/23 boundary, cash45539.94836/equity104666.94836/estimated44221.44166,
+historical-only/no-order warnings and semantic status. English summary also
+opened/closed with Enter. English table is wider (max664px); Chinese end-scroll
+evidence does not establish English end-scroll or full screen-reader coverage.
+No new study, account, order, provider request, code change or service restart.
+Chinese/dark Workbench and existing U3 draft restored. Eight critical table
+counts/row hashes unchanged; `.research` unchanged. Evidence outside Git:
+product-evidence/v1.2/m4/20260926-plan-keyboard-ci-hold.json.
+This bounded case passes, not full accessibility, M4/M5 or release acceptance.
+
 ## 2026-09-26 04:30 UTC GitHub Actions account gate
 
 Comparison repair pushed as f91e1e5 to existing draft/open PR32. Exact-head

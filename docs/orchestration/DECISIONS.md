@@ -1,5 +1,14 @@
 # Decisions
 
+## v1.2 user-estimated five-day GitHub hold — 2026-09-26
+
+User says GitHub needs five days to recover (estimated2026-10-01). Record as
+user estimate, not confirmed resolution. Do not repeatedly rerun Actions or
+push checkpoint-only changes during the unchanged account gate. Continue safe
+local checks/coherent commits; after actual owner-confirmed recovery validate
+the exact release candidate in CI. Do not pay, change limits or bypass checks.
+No scheduled recovery promise; no merge/release or other gate promotion.
+
 ## v1.2 stop CI retries at account-billing gate — 2026-09-26
 
 GitHub run36217962698 for pushed f91e1e5 returned all3 jobs failed with zero
