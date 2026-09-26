@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-26T02:35:00Z",
+  "updated_at_utc": "2026-09-26T02:46:39Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -28,10 +28,11 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "read-only review closed U2/U5 P1; agent inactive after usage limit"
     },
-    "verified_processes": "2026-09-25 17:29UTC: Docker Desktop4.92.0 was found stopped after the 12:05 AEST Windows login and launched once non-destructively at 03:24 AEST the next day. WSL Engine29.8.0 and Compose5.5.1 recovered; backend/PostgreSQL/Redis healthy, API/frontend HTTP200, four original project volumes retained, live database formal1/3/310 jobs8 paper5/events417 receipts6. Only the four project containers were running among ten after recovery; no concurrent git/pytest/vitest/Alembic/restore process was observed. A single current-user AtLogOn scheduled task replaced the ineffective Docker-only HKCU Run entry; real next-login acceptance not yet run. Recheck actual process IDs, commands and ownership before any later stop or write",
+    "verified_processes": "2026-09-26 02:46UTC: named frontend-only production preview removed after native Event Timing QA. Restore command unexpectedly recreated PostgreSQL/Redis/backend dependencies; original named data volumes retained, services healthy, Redis PONG/API+frontend HTTP200, Alembic0016 head, formal1/3/310 jobs8 paper5/events417 updates4/receipts6 unchanged. Original frontend running, temporary measurement source removed; frontend-only restore must use start on existing stopped container or explicit up --no-deps. No concurrent git/pytest/vitest/Alembic/restore process was observed before the QA unit. Docker current-user AtLogOn task remains unproven by a real next login. Recheck current PIDs, commands and ownership before later stops/writes",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-26 02:46UTC actual Chrome153 production native Event Timing on warm 293-session historical result at1440x900 ZH/dark: all30 trusted benchmark toggles changed checkbox/SVG and matched30 nonzero interaction groups; p50/p95/max16ms with8ms quantization/16ms threshold, no zero substitutions. Bounded case PASS, QA-PERF remains IN_PROGRESS. Temporary observer/import removed, original build rebuilt, browser diagnostic absent and viewport/Workbench restored. Frontend244/lint/type/build PASS. Restore command unexpectedly recreated three dependencies; all named volumes retained and services/API/frontend recovered, Alembic0016 head and formal1/3/310 jobs8 paper5/events417 updates4/receipts6 unchanged. This is not continuous uptime/mid-run recovery. No research/provider/study/order/restore; .research clean. User's backup/pre-loss/forward-rights answers remain unknown, not approved",
     "2026-09-26 02:35UTC failing App regression reproduced stale service/data status on visibilitychange without window focus. Shell reuses existing return handler/10-second throttle, skips hidden pages, reserves timestamp before refresh and cleans up both listeners; no polling/worker/provider/financial changes. App11/full frontend244/ESLint/TypeScript/build/Prettier PASS. Actual Chrome ZH/dark manual refresh advanced UTC time02:34:59; genuine hidden/return test NOT VERIFIED because temporary tab and one Ctrl+Tab kept product visibility visible. Temp tab closed, no forged browser event/native bypass. Live formal1/3/310 jobs8 paper5/events417 receipts6 unchanged; U8/M4/U7/M5 remain incomplete",
     "2026-09-26 PR32 head244f446 CI36211806892 backend987 PASS/one optional archive skip, frontend243 and Compose release-smoke PASS after shared test-mode Settings guard. PR remains draft/open, no merge/release; this CI does not establish lost-ledger recovery, independent backup, current forward rights or full M4/M5",
     "2026-09-26 02:26UTC shared Settings now rejects APP_ENV=test outside quant_test/quant_test_* before engine creation, covering scripts and Alembic as well as pytest; one existing name check reused, validation error strings omit credentials. Focused15 PASS; fresh tmpfs isolated full backend985 PASS/one optional archive skip before final malformed-URL/production cases added, Ruff/format/mypy PASS; frontend243/ESLint/TypeScript PASS. Standalone unsafe Alembic current probe failed at Settings with no DB connection or URL/password output. Scratch project removed without volumes/main-service changes; live formal1/3/310 jobs8 paper5/events417 update jobs4/receipts6 retained, API200, .research clean. Prevention only: genuine lost ledgers, independent backup, lawful forward source and U7/M5 remain unresolved",
@@ -522,9 +523,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "244f446",
+      "last_verified_head": "142fb7b",
       "state": "DRAFT",
-      "ci_run": 36211806892,
+      "ci_run": 36212189796,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",

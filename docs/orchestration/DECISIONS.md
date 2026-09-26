@@ -1,5 +1,25 @@
 # Decisions
 
+## v1.2 measure native events, restore only the stopped frontend — 2026-09-26
+
+Replace rejected tool-roundtrip chart timing with the browser's native Event
+Timing on a temporary local production build. Use installed platform APIs,
+nonzero interaction grouping and explicit threshold/quantization; remove all
+measurement code afterward instead of adding a permanent telemetry module.
+Thirty real Chrome benchmark toggles matched thirty native interactions and
+met the bounded warm-case target, not the complete performance gate. Evidence,
+hash, counts and cleanup are in the acceptance ledger.
+
+Restoration with `docker compose up -d frontend` unexpectedly recreated the
+three dependencies, although no volume was deleted. Services, named volumes,
+migration head and saved row counts survived, but continuity cannot be claimed.
+For an existing stopped frontend, use `docker compose start frontend`;
+if replacement is necessary, explicitly use `up --no-deps -d frontend`.
+Never rely on an unqualified Compose `up` to leave dependencies unchanged.
+No financial/provider/research operation was requested. The user's answers
+remain unknown for backup destination, pre-loss evidence and forward-use rights;
+none grants authorization or changes those acceptance gates.
+
 ## v1.2 protect test-mode entry points at shared configuration — 2026-09-26
 
 The existing pytest-session guard alone left independent scripts and Alembic

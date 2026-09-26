@@ -1,5 +1,47 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 02:46 UTC native Chrome chart interaction timing
+
+The earlier tool-inclusive click times did not isolate application latency.
+A temporary local `PerformanceObserver` on the production build now measured
+native Event Timing in actual Chrome 153 on DESKTOP-3EOROGR (Ryzen 7 9800X3D),
+1440x900, Chinese/dark, warm saved 293-session result `d9f27183`, with a
+100-point chart page and 138 rendered table rows. All 30 trusted benchmark
+toggle clicks had a matched nonzero `interactionId`; related entries were
+grouped by maximum duration rather than counted as separate gestures.
+Each click changed both checkbox and benchmark SVG, and the final state was
+checked. Native p50/p95/max were **16/16/16 ms**, with 8 ms quantization and
+a 16 ms reporting threshold; no missing/censored interaction was substituted
+with zero. Click processing was 9.1-12 ms; this is a bounded warm-case PASS
+against the 200 ms target, not whole-site INP or full `QA-PERF` acceptance.
+The [W3C Event Timing draft](https://www.w3.org/TR/event-timing/) documents
+the grouping, threshold and native input-to-presentation semantics.
+
+Per-interaction evidence is outside Git at
+`product-evidence/v1.2/m4/20260926-chrome-native-chart-timing.json`, SHA-256
+`b40ec23d93d03c0a5785e32e0e408ccff2b588d578e7bf33928e288315d29bdd`.
+Temporary measurement code was removed, the original production build rebuilt,
+and no frontend source diff remains. Chrome reload verified the diagnostic
+output absent, restored the original viewport and Chinese/dark Workbench.
+Frontend 244/244, ESLint, TypeScript and build passed.
+
+**Operational deviation:** the preview used only the frontend port, but
+`docker compose up -d frontend` during restoration unexpectedly recreated
+PostgreSQL, Redis and backend dependencies. Their named data volumes were
+retained, all services recovered, Redis PONG/API and frontend HTTP 200, and
+Alembic remained at `20260924_0016`. Read-only counts stayed formal `1/3/310`,
+personal jobs `8`, paper sessions/events `5/417`, updates/receipts `4/6`.
+Do not describe those dependencies as continuously running throughout the
+restore. Future frontend-only restoration must use `docker compose start
+frontend` for the existing stopped container, or explicit `--no-deps` if an
+update is needed. No volume cleanup, data restore, study or provider request
+was performed. `.research` remains unchanged. This incident/check does not
+establish mid-run recovery, lost-ledger repair or full persistence acceptance.
+
+The user's three unknown answers do not establish an independent backup
+destination, genuine pre-loss ledger evidence or lawful new-market data rights.
+Those gates remain open; U7/M4/M5 and product completion remain incomplete.
+
 ## 2026-09-26 02:35 UTC tab-return status refresh
 
 A failing App regression reproduced stale topbar service/data status when a
