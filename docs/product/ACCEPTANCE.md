@@ -1,5 +1,40 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 05:04 UTC cold HTTP-cache route measurement is partial
+
+Disposable production build42f2025, Chrome153, ZH/dark1440x900, no-store
+responses and fresh document per sample. Reused GET-only localhost5182 QA
+forwarder; no financial POST or new study. Seven trusted pointer clicks loaded
+the same saved historical result: loading DOM4.8–11.7ms, result DOM337.2–346.2ms.
+Asset/main/lazy JS responses200 with positive transfer bytes, not cold backend,
+OS or archive data. These measure DOM availability, not visible presentation.
+
+Preserve native3040ms pointerup/click in sample1 (same interaction, not two
+samples). Sample7 native click16ms; five samples have pointerdown-only0 and
+incomplete click evidence, not zero-duration clicks. Event observer threshold16
+censors entries; asynchronous delivery was observed after the result became
+available. No native/visible-feedback p95 or cold performance PASS is claimed.
+Two bridge timeouts occurred before input, root sample remained null; do not
+count them as product interactions or silently remove failures. Changed action
+method rather than repeating a third identical failed action.
+
+Bounded QA-only publication control with AX clicks: deferred184ms interaction
+versus immediate384ms pointerdown/376ms click, DOM results341.2/327ms. Two
+observations cannot establish causality or dismiss3040ms; different input method
+is not pooled into the seven-sample series. Independent read-only review agrees
+DOM-only progress is valid but native paint evidence incomplete. Stop this
+measurement series before multiplying an unresolved measurement design.
+
+Owned QA PID24290/start14:55:50 WSL, command and5182 listener verified before
+TERM; session16430 terminal/listener gone. Temp tab closed, viewport reset,
+instrumentation removed from disposable index, build/evidence retained. Main
+services healthy; eight critical count/row fingerprints unchanged and .research
+diff empty. No product code/runtime/data/provider changes. Evidence outside Git:
+product-evidence/v1.2/m4/20260926-cold-route-diagnostic.json. No push/CI retry,
+merge or release during user-estimated five-day GitHub hold. Remaining native
+paint collection needs a valid bounded protocol; paper keyboard/live-announcement
+and nontext focus checks remain safe independent work. Goal remains incomplete.
+
 ## 2026-09-26 04:50 UTC actionable wizard validation and keyboard recovery
 
 Actual Chrome on an isolated localhost production build reproduced negative

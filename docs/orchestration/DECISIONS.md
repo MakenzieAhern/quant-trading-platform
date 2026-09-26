@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 distinguish cold DOM timing from visible response — 2026-09-26
+
+Retain the native3040ms interaction anomaly and incomplete native click samples.
+DOM availability/rAF opportunity and pointerdown-only0 do not prove visible
+response or INP. Stop this incomplete seven-sample series before scaling it to30;
+the two QA-only publication controls do not establish a cause. No product-code
+repair or acceptance promotion from this evidence alone. Reuse native observers
+and the existing GET-only harness, no performance dependency or browser bypass.
+Keep GitHub hold unchanged and continue independent local quality gates.
+
 ## v1.2 one field-aware wizard validation path — 2026-09-26
 
 Keep the existing exact-string monetary validation, return first invalid field
