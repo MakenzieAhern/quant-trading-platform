@@ -50,6 +50,35 @@ async function fill() {
   await userEvent.click(screen.getByRole("checkbox"));
 }
 describe("explicit incremental request workflow", () => {
+  it("names native candidate observations and its translated scroll region without acquiring data", async () => {
+    const create = vi.spyOn(marketUpdateApi, "create");
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const table = await screen.findByRole("table", {
+      name: "Candidate observations",
+    });
+    const scroll = screen.getByRole("region", {
+      name: "Candidate observations · Scrollable exact observation table",
+    });
+    expect(scroll).toHaveAttribute("tabindex", "0");
+    expect(scroll).toContainElement(table);
+    expect(
+      within(table).getByText("12.000000000000000001"),
+    ).toBeInTheDocument();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    const translated = screen.getByRole("table", { name: "候选观察值" });
+    expect(
+      screen.getByRole("region", {
+        name: "候选观察值 · 可滚动的精确观察值表",
+      }),
+    ).toContainElement(translated);
+    expect(
+      within(translated).getByText("125,000.000000000000000009"),
+    ).toBeInTheDocument();
+    expect(create).not.toHaveBeenCalled();
+  });
   it("names saved task controls by security, dates and time in both languages", async () => {
     render(<MarketUpdatesPanel />);
     expect(
@@ -201,7 +230,7 @@ describe("explicit incremental request workflow", () => {
     window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
     render(<MarketUpdatesPanel />);
     const table = await screen.findByRole("region", {
-      name: "Scrollable exact observation table",
+      name: "Candidate observations · Scrollable exact observation table",
     });
     expect(
       within(table).getByText("12.000000000000000001"),

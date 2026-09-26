@@ -1,5 +1,44 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 06:40 UTC market/data table keyboard context repaired
+
+Actual Chrome confirmed three remaining unnamed tables: cached security search,
+historical exact observations and raw candidate observations. Search/exact
+focusable containers had labels but no region role; candidate had only a scroll
+hint. Reused existing translated titles for native table names, added two region
+roles, and distinguished nested search/candidate regions with the existing hint.
+No component, dependency, layout, request, price formatting or finance change.
+Prettier also expanded two existing date callback objects without semantic change.
+
+Two new regressions fail before repair for missing named tables. Final focused28
+and full frontend298/36files, lint/types/build, changed-filePrettier/diff PASS.
+Tests cover EN/ZH names/containment/tabindex and preserved precise strings/no new
+acquisition. Initial host WSL npm was unavailable; switched to the existing
+Compose frontend Node24.21.0 runtime, no installation. Independent read-only
+review approved the final diff without claiming complete AA.
+
+Real Chrome ZH/dark and EN/light:20 cached search rows and50 exact rows remain;
+Tab enters inspect600000/first date2011-01-04; Escape returns dialog focus to
+its exact trigger. At390×844, document375/375 and dialog334/334 have no overflow;
+named local search/exact scroll regions are312/727 and263/1075. Native ArrowRight
+settles at40px (immediate read0),3px focus; visible exact-table segment inspected.
+This is not a whole-page screenshot or actual screen-reader speech.
+
+Existing four-board update164c947d remains3/3 requests, cache1/new3/available4/gaps0.
+Its candidate region/table names translate; mobile307/1215 locally scrolls40px
+with2px focus and document375/375. Native Tab reaches receipt summary. Selecting
+already-cached300750 and switching EN→ZH retains2026-09-22 raw OHLC298/308.69/
+297.74/304.63, volume47381066, amount14476584269.96 and exact receipt identity.
+Candidate/unverified/non-executable warnings remain; no provider request.
+
+Eight critical DB mutation fingerprints and .research unchanged; API/frontend200,
+RedisPONG. RestoredZH/dark, resetviewport, closed owned tab; no runtime restart,
+new financial/session/study/provider write or GitHub action. Evidence outside Git:
+product-evidence/v1.2/m4/20260926-market-table-keyboard.json. Full U1–U8/M0–M5,
+nativezoom/speech/novice/performance/startup/data-rights/backup/ledger/CI/release
+gates remain open. Next audit the whole objective against evidence before selecting
+another missing case, rather than repeating accepted table checks.
+
 ## 2026-09-26 06:31 UTC three-study responsive comparison closure
 
 Actual Chrome selected three existing successful historical studies from the

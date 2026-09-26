@@ -73,6 +73,49 @@ async function openSecurity() {
 }
 
 describe("historical cache markets", () => {
+  it("names native search and exact tables with distinct translated scroll regions", async () => {
+    render(<MarketsPage />);
+    const searchTable = await screen.findByRole("table", {
+      name: "Search securities",
+    });
+    const searchScroll = screen.getByRole("region", {
+      name: "Search securities · Scrollable table; scroll horizontally to see every column.",
+    });
+    expect(searchScroll).toHaveAttribute("tabindex", "0");
+    expect(searchScroll).toContainElement(searchTable);
+    const dialog = await openSecurity();
+    await within(dialog).findByLabelText("Inspect trading date");
+    await userEvent.click(
+      within(dialog).getByText("Exact observations", { selector: "summary" }),
+    );
+    const exactScroll = within(dialog).getByRole("region", {
+      name: "Exact observations",
+    });
+    expect(exactScroll).toHaveAttribute("tabindex", "0");
+    expect(
+      within(exactScroll).getByRole("table", { name: "Exact observations" }),
+    ).toBeInTheDocument();
+    const reads = [
+      vi.mocked(marketApi.search).mock.calls.length,
+      vi.mocked(marketApi.bars).mock.calls.length,
+    ];
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByRole("table", { name: "检索证券" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", {
+        name: "检索证券 · 可横向滚动表格以查看全部列。",
+      }),
+    ).toContainElement(screen.getByRole("table", { name: "检索证券" }));
+    expect(
+      within(dialog).getByRole("region", { name: "精确记录" }),
+    ).toContainElement(within(dialog).getByRole("table", { name: "精确记录" }));
+    expect([
+      vi.mocked(marketApi.search).mock.calls.length,
+      vi.mocked(marketApi.bars).mock.calls.length,
+    ]).toEqual(reads);
+  });
   it("distinguishes saved-security actions across sources and languages", async () => {
     vi.mocked(marketApi.watchlist).mockResolvedValue({
       items: [

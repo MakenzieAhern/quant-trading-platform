@@ -361,9 +361,10 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                 <div
                   className="marketTableScroll"
                   tabIndex={0}
-                  aria-label={c.search}
+                  role="region"
+                  aria-label={`${c.search} · ${c.scroll}`}
                 >
-                  <table>
+                  <table aria-label={c.search}>
                     <thead>
                       <tr>
                         <th scope="col">{c.security}</th>

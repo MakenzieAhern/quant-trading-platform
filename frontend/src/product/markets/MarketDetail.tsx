@@ -84,7 +84,10 @@ export function MarketDetail({
                 max={dataset.coverage_end}
                 value={range.start_date}
                 onInput={(event) =>
-                  onRangeChange({ ...range, start_date: event.currentTarget.value })
+                  onRangeChange({
+                    ...range,
+                    start_date: event.currentTarget.value,
+                  })
                 }
               />
             </label>
@@ -97,7 +100,10 @@ export function MarketDetail({
                 max={dataset.coverage_end}
                 value={range.end_date}
                 onInput={(event) =>
-                  onRangeChange({ ...range, end_date: event.currentTarget.value })
+                  onRangeChange({
+                    ...range,
+                    end_date: event.currentTarget.value,
+                  })
                 }
               />
             </label>
@@ -422,8 +428,13 @@ function PriceChart({
         <p className="marketHelp">
           {c.units} {c.scroll}
         </p>
-        <div className="marketTableScroll" tabIndex={0} aria-label={c.exact}>
-          <table>
+        <div
+          className="marketTableScroll"
+          tabIndex={0}
+          role="region"
+          aria-label={c.exact}
+        >
+          <table aria-label={c.exact}>
             <thead>
               <tr>
                 {[

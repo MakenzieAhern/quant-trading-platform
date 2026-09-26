@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 reuse native translated market table context — 2026-09-26
+
+Actual browser and failing regressions exposed three unnamed market/data tables
+and two focusable generic containers. Name native tables with existing titles,
+declare existing scroll containers as regions and distinguish the search inner
+region from its already-named outer section using the current scroll hint.
+No dependency, shared abstraction or copy system needed. Preserve raw/adjusted
+and candidate/executable distinctions, Decimal strings and existing GET-only
+inspection. Full frontend298 and independent review pass bounded, not full AA.
+
 ## v1.2 finish three-study comparison with existing native tables — 2026-09-26
 
 No additional component, dependency or code is needed: actual three-study

@@ -97,9 +97,9 @@ export function UpdateRecords({
             className="updateTableScroll"
             tabIndex={0}
             role="region"
-            aria-label={c.scroll}
+            aria-label={`${c.observations} · ${c.scroll}`}
           >
-            <table>
+            <table aria-label={c.observations}>
               <thead>
                 <tr>
                   {[
