@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 distinguish chart checks from async focus acceptance — 2026-09-26
+
+Keep measured essential-plot contrast and basic native keys as bounded evidence;
+do not inflate them into complete AA. Actual Next and inspect-date loading remove
+focused controls. Preserve useApiResource's identity/stale-data isolation and
+date-key reset semantics; do not restore stale financial data to hold DOM focus.
+Next implement a stable pager/user-action focus target across async loading and
+separate persistent parent focus for date-link, reusing native controls. No global
+focus registry, automatic mount autofocus, new library or security/financial
+change. Independent readonly review examines all callers before a shared repair.
+Checkpoint defect honestly, with async/moved-focus/last-page regressions and
+browser recheck still required. No GitHub retry during reported hold.
+
 ## v1.2 name shared paper ledger regions without changing runtime — 2026-09-26
 
 Reuse existing translated section titles and scroll hint in shared PaperTable;

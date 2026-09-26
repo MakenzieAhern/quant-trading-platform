@@ -1,5 +1,47 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 05:27 UTC bounded chart contrast/keyboard; async focus defect found
+
+Actual Chrome on approved5173, existing historical result a2770b6, native958x903
+viewport (no override), ZH/dark and EN/light. Computed essential SVG colors against
+the first opaque plot panel, with all ancestor opacity1/background-image none,
+meet unrounded3:1: dark minimum6.540636911463896, light5.405261175460344.
+This covers equity/benchmark/drawdown/selected vertical/point versus plot
+background only, not crossings, native checkbox tick/menu arrow, every control,
+full text contrast or complete AA. Decorative axes were not required graphics.
+Method: [W3C non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html).
+
+Native Home/ArrowDown/End date selection updates exact strings and vertical
+marker; benchmark Space removes/restores curve/legend/readout without changing
+date. Tab date→activity→exact-data summary→scroll container→first date button;
+Enter disclosure/date selection retains focus, aria-pressed and matching select.
+Date focus2px, activity/summary/table/date-button3px. Locale/theme preserves
+selected date and disclosure. Readout polite/atomic roles verified, not speech.
+Table has headers/buttons but unnamed table/generic scroll DIV remains a
+separate semantic-navigation gap, not full table-landmark acceptance.
+
+Actual pages100/100/93 and last Next disabled; inspect2010-11-05 links one point,
+opens Trades/holdings with genuine dated all-cash snapshot and explanatory empty
+trades. Full-run metric text remains unchanged through page/date display changes.
+However Next loading unmounts its focused button; after both loads activeElement
+BODY. Inspect-date's keyed subtree also remounts and loses activity focus. This
+is REPRODUCED_NOT_FIXED, not keyboard PASS. Root cause is intentional resource
+identity reset plus conditionally mounted controls. Read-only review inspected
+all21 Pagination sites (17 async/server,4 local/client) and recommends a stable
+native pager anchor/busy contract, not retaining stale rows or global focus state.
+Keyed date-link requires separate persistent-parent focus while keeping resets.
+
+Two guessed English locator names timed out; fresh DOM supplied actual names,
+no application change or retries on stale selectors. Original ZH/dark restored,
+temp tab closed, no viewport/QA process/service restart/financial/provider/study
+mutation. Eight critical count/sorted-row fingerprints and .research unchanged;
+services healthy/API/frontend200/PONG. No code change/new suite run claimed;
+previous287 frontend remains prior evidence. Evidence outside Git:
+product-evidence/v1.2/m4/20260926-chart-keyboard-contrast.json.
+GitHub hold unchanged/no polling/push/CI/merge/release. Next repair must retain
+loading/error/lastpage/isolation and not steal focus after the user moves away;
+deferred tests and actual browser recheck required. Full M4/M5 remains open.
+
 ## 2026-09-26 05:15 UTC distinct paper-ledger landmarks and keyboard traversal
 
 Actual Chrome on5173 showed five populated ledger regions sharing the generic
