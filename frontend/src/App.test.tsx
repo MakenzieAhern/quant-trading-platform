@@ -23,6 +23,61 @@ const health = {
 };
 
 describe("routing", () => {
+  it("canonicalizes the accepted study-list alias without losing query, fragment or list history", async () => {
+    await i18n.changeLanguage("en-US");
+    const state = {
+      experimentView: {
+        q: "Study",
+        status: "SUCCEEDED",
+        mode: "",
+        sort: "newest",
+        columns: { mode: true, period: true, created: true },
+      },
+      experimentSelection: [RUN_ID, "aa000000-0000-4000-8000-000000000001"].map(
+        (id) => ({
+          id,
+          name: "Study",
+          createdAt: "2026-09-22T10:00:00Z",
+        }),
+      ),
+      experimentScrollY: 693,
+    };
+    window.history.replaceState(
+      state,
+      "",
+      "/experiments/?retained=yes#context",
+    );
+    const length = window.history.length;
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    await screen.findByRole("heading", { name: "Your experiments" });
+    expect(
+      window.location.pathname + window.location.search + window.location.hash,
+    ).toBe("/experiments?retained=yes#context");
+    expect(window.history.length).toBe(length);
+    expect(
+      screen.getByRole("searchbox", { name: "Search saved studies" }),
+    ).toHaveValue("Study");
+    expect(screen.getByText("Selected: 2 / 3")).toBeInTheDocument();
+    expect(window.history.state.experimentSelection).toEqual(
+      state.experimentSelection,
+    );
+    await waitFor(() =>
+      expect(window.scrollTo).toHaveBeenCalledWith({
+        top: 693,
+        left: 0,
+        behavior: "instant",
+      }),
+    );
+  });
+
   it("leaves the skip link reachable on direct load and focuses main after navigation", async () => {
     await i18n.changeLanguage("en-US");
     window.history.replaceState({}, "", "/");

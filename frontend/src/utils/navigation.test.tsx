@@ -30,6 +30,32 @@ function TwoLocationReaders() {
 }
 
 describe("shared navigation guard", () => {
+  it("canonicalizes a managed study-list alias and preserves its native return entry", async () => {
+    window.history.replaceState({}, "", "/strategies");
+    render(<RouterHarness />);
+    act(() => navigate("/experiments/"));
+    expect(window.location.pathname).toBe("/experiments");
+    expect(window.history.state.quantNavigationUrl).toBe(window.location.href);
+    window.history.replaceState(
+      { ...window.history.state, retainedSelection: ["first", "second"] },
+      "",
+    );
+    act(() => navigate("/experiments/first"));
+    const length = window.history.length;
+    act(() => navigateBack("/experiments"));
+    await waitFor(() =>
+      expect(window.history.state.retainedSelection).toEqual([
+        "first",
+        "second",
+      ]),
+    );
+    expect(window.history.length).toBe(length);
+    act(() => window.history.forward());
+    await waitFor(() =>
+      expect(window.location.pathname).toBe("/experiments/first"),
+    );
+  });
+
   it("returns through nested details to the original list and keeps Forward entries", async () => {
     window.history.replaceState(
       { retainedSelection: ["first", "second"] },

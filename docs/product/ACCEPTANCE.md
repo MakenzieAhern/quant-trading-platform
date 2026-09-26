@@ -1,5 +1,53 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 04:15 UTC alias review, text contrast and idle guard deployment
+
+Independent read-only review identified an accepted `/experiments/` alias
+bypassing the exact list/history identity. Actual Chrome reproduced M1 query
+and two selections disappearing after detail/native Back. Two new regressions
+failed before repair. Normalize only this accepted alias in the existing shared
+pathname reader, before mount and after allowed traversal; retain query/hash,
+history length and state, rewriting only a matching managed URL marker. Existing
+dirty-navigation guards remain intact. The same reviewer accepted the bounded
+repair. Focused49/full frontend269, lint/type/build/changed-file Prettier PASS.
+Actual EN/light Chrome detail/visible Back retained M1, selection2 and loaded
+scrollY631. Native Forward/Back and guard compatibility have unit coverage;
+no broader alias, router, response cache or financial-state change was added.
+
+Actual saved-result rendered text contrast: 884 nodes each in ZH/dark and
+EN/light, zero failures against normal4.5/large3 ratios, disabled Previous
+opacity skipped. Computed RGB/background alpha composition is bounded evidence,
+not full WCAG or chart/nontext/focus/native-control/screen-reader acceptance.
+
+Main jobs/accounts were idle; only `docker compose restart backend` deployed
+the previously tested checkpoint guard. Backend healthy/API200, Redis PONG,
+Alembic0016. Other service IDs/start times unchanged; no container/volume/image
+recreated or deleted. Eight critical table counts and sorted JSON-row MD5s were
+identical before/after (an equality check, not a backup). Guard host/container
+SHA256 matched. Chrome reloaded eight saved studies and the Chinese/dark
+Workbench; default view/selection0, original draft and viewport preserved.
+No study/account/order/provider creation or `.research` write. This idle restart
+does not prove mid-run recovery or restore the two missing genuine ledgers.
+
+Evidence outside Git: product-evidence/v1.2/m4/
+20260926-alias-review-idle-restart.json. Base92e760b passed CI36216328525;
+this alias repair awaits its own exact-head CI. Three human answers remain
+unknown; full M4/M5, forward authority and release gates remain incomplete.
+
+### Concrete remaining independent checks, without reopening accepted cases
+
+- Saved comparison partial-load/error transitions after success: same saved
+  identity, no stale/partial financial metrics and successful manual retry.
+  Prior completed+INTERRUPTED comparison is accepted, not this new failure case.
+- Broader keyboard/announcement and chart/nontext/focus contrast across
+  configuration, plan and paper pages; bounded result text checks above do not
+  replace these, genuine screen-reader or OS reduced-motion evidence.
+- Cold production-route/data feedback measurements beyond accepted warm
+  30-route and 30-chart measurements; record case and method, not proxy timings.
+- Genuine next Windows login, native200pct user-operated zoom, novice workflow,
+  independent backup medium, authentic pre-loss ledgers and lawful forward-feed
+  rights remain separate user/external gates. Agent QA cannot substitute them.
+
 ## 2026-09-26 03:55 UTC asynchronous study-list scroll and missing-link recovery
 
 Actual Chrome ZH/dark reproduced a stable loaded-list position of `scrollY=693`

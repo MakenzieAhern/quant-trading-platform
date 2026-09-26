@@ -1,5 +1,22 @@
 # Decisions
 
+## v1.2 canonicalize accepted list alias and deploy only while idle — 2026-09-26
+
+Use the existing pathname reader to normalize only `/experiments/`, retaining
+query/hash/native history state and correcting only a matching managed URL
+marker. Root Chrome and failing regressions confirmed the read-only review's
+finding; repaired tests/browser and independent follow-up review passed. No new
+router/cache/dependency. Preserve dirty-navigation guards. Text-contrast checks
+are bounded rendered-result evidence, not full accessibility acceptance.
+
+The main backend was still running before the prior checkpoint guard existed.
+After verifying no active paper/research/update work or competing writer, restart
+only that existing backend. Host/container guard checksum and eight critical
+table fingerprints matched, API healthy and saved studies reloaded. Do not
+infer full crash recovery, missing-ledger restoration or backup safety from an
+idle restart. No research/methodology or data-authority decision changed. Three
+unknown human replies remain unknown and release gates remain closed.
+
 ## v1.2 restore asynchronous list scroll after actual rows — 2026-09-26
 
 Native history preserves the right entry but can restore before async rows

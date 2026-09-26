@@ -134,8 +134,26 @@ export function useNavigationGuard(allowLeave: () => boolean): void {
   }, []);
 }
 
+function currentPathname(): string {
+  // This accepted legacy alias must use the same list/history identity before mount.
+  if (window.location.pathname === "/experiments/") {
+    const source = window.location.href;
+    const canonical = new URL(source);
+    canonical.pathname = "/experiments";
+    const state = window.history.state;
+    window.history.replaceState(
+      state?.quantNavigationUrl === source
+        ? { ...state, quantNavigationUrl: canonical.href }
+        : state,
+      "",
+      canonical.href,
+    );
+  }
+  return window.location.pathname;
+}
+
 export function usePathname(): string {
-  const [pathname, setPathname] = useState(window.location.pathname);
+  const [pathname, setPathname] = useState(currentPathname);
   useEffect(() => {
     historyIndex();
     const update = (event: PopStateEvent) => {
@@ -157,7 +175,7 @@ export function usePathname(): string {
           return;
         }
       }
-      setPathname(window.location.pathname);
+      setPathname(currentPathname());
     };
     window.addEventListener("popstate", update);
     return () => window.removeEventListener("popstate", update);
