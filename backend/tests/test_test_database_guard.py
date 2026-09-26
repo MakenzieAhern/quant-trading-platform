@@ -8,6 +8,7 @@ from conftest import require_disposable_database
         ("test", "postgresql+asyncpg://quant@localhost/quant_platform"),
         ("development", "postgresql+asyncpg://quant@localhost/quant_test"),
         ("test", "postgresql+asyncpg://quant@localhost/quant_testing_prod"),
+        ("test", "not_a_database_url"),
     ],
 )
 def test_guard_rejects_non_disposable_targets(app_env: str, database_url: str) -> None:

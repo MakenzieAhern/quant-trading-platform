@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 02:26 UTC shared test-mode database protection
+
+The suite-level pytest guard did not protect independent test-mode scripts or
+Alembic: their shared Settings previously accepted `APP_ENV=test` with an
+application database URL. Settings now rejects every target outside the existing
+`quant_test` / `quant_test_*` namespace before engine creation, and pytest reuses
+the same URL/name check. Configuration error strings hide input values, including
+database credentials. Development/production behavior is unchanged.
+
+Focused configuration/guard tests passed 15/15, including unsafe names, malformed
+URLs, permitted test targets and credential-redaction. The full backend suite
+on fresh `quant-v12-settings-guard-20260926` tmpfs PostgreSQL passed 985 tests
+with one optional unmounted-archive skip before the final malformed-URL and
+production-mode cases were added; Ruff, format and mypy passed. Frontend 243/243, ESLint and TypeScript
+passed. A standalone `APP_ENV=test` Alembic `current` probe against a deliberately
+unreachable application-named target failed at Settings before any engine or
+database connection, with no URL/password in the error string. The scratch
+container/network were removed without volumes or main-service changes.
+
+Read-only live counts remained formal datasets/runs/trades `1/3/310`, personal
+jobs `8`, paper sessions/events `5/417`, update jobs/receipts `4/6`; API health
+returned HTTP 200 and `.research` had no diff. This closes an additional
+test-entry-point protection gap, **not** recovery of the two lost genuine
+paper ledgers, independent disaster backup, forward-source authority or U7/M5.
+No formal study, source acquisition, schema migration or release was run on
+application history.
+
 ## 2026-09-25 18:10 UTC Chrome production-chart timing method rejected
 
 On DESKTOP-3EOROGR, the current production frontend build was served in actual

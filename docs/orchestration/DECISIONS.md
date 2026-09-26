@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 protect test-mode entry points at shared configuration — 2026-09-26
+
+The existing pytest-session guard alone left independent scripts and Alembic
+unprotected when `APP_ENV=test` was paired with application history. Reuse the
+existing disposable database namespace check in Settings, before any engine
+construction; pytest imports that one check instead of maintaining another
+regex. Hide configuration inputs in printed validation errors so rejecting a
+database URL does not disclose its credentials. No driver, new dependency,
+schema, finance or development/production behavior changes. Unit/full isolated
+checks and a standalone rejected Alembic probe are in the acceptance ledger.
+This is prevention, not reconstruction or recovery of missing paper accounts.
+
 ## v1.2 replace ineffective Docker login Run entry with one user task — 2026-09-25
 
 The next actual Windows boot/login occurred at 2026-09-25 12:04/12:05 AEST,

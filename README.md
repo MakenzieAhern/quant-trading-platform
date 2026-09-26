@@ -120,7 +120,9 @@ make build
 ```
 
 CI uses disposable PostgreSQL storage and validates Alembic, Python, TypeScript, frontend tests and
-Compose configurations. See [reproducibility](docs/research/REPRODUCIBILITY.md),
+Compose configurations. `APP_ENV=test` requires a `quant_test` or `quant_test_*` database;
+shared configuration rejects application targets before connecting, including scripts and Alembic.
+The pytest runner also requires test mode. See [reproducibility](docs/research/REPRODUCIBILITY.md),
 [dataset lineage](docs/research/DATASET.md), [bias controls](docs/research/BIAS_CONTROLS.md), and
 [limitations](docs/research/LIMITATIONS.md).
 

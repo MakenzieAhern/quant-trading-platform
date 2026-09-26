@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-25T18:10:00Z",
+  "updated_at_utc": "2026-09-26T02:26:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-26 02:26UTC shared Settings now rejects APP_ENV=test outside quant_test/quant_test_* before engine creation, covering scripts and Alembic as well as pytest; one existing name check reused, validation error strings omit credentials. Focused15 PASS; fresh tmpfs isolated full backend985 PASS/one optional archive skip before final malformed-URL/production cases added, Ruff/format/mypy PASS; frontend243/ESLint/TypeScript PASS. Standalone unsafe Alembic current probe failed at Settings with no DB connection or URL/password output. Scratch project removed without volumes/main-service changes; live formal1/3/310 jobs8 paper5/events417 update jobs4/receipts6 retained, API200, .research clean. Prevention only: genuine lost ledgers, independent backup, lawful forward source and U7/M5 remain unresolved",
     "2026-09-25 18:10UTC controlled Chrome153 production-chart timing experiment on saved 293-session result: 20 benchmark toggles all changed checkbox and SVG, but browser-control click time jumped from 269/278ms to about 2.75-2.99s; unrelated full-precision control showed the same 274ms then 2749ms pattern. Browser-control delay and page-wide work remain unseparated, so tool-inclusive timing cannot prove app p95; use supported in-browser event/paint trace, not this method. Temporary production-preview tab/container removed, original Compose frontend restored; backend/PostgreSQL/Redis stayed up, frontend/API HTTP200, Redis PONG, live jobs8/paper5/events417/update jobs4 unchanged. QA-PERF remains IN_PROGRESS; no study/order/source/database/frozen-data change",
     "2026-09-25 17:56UTC PR32 head067bf01 CI36170000918 backend/frontend/Compose PASS after shared same-route Back repair; live jobs8/paper5/events417/market receipts6 unchanged. PR32 remains draft/open, local worktree clean before this CI-record checkpoint. This CI does not close M4 integrity, U7 forward or M5 startup/release",
     "2026-09-25 17:53UTC actual Chrome reproduced same-route sidebar Research click inserting duplicate history: first Back stayed on Research rather than returning to prior paper form. Shared navigate now no-ops only on exact same URL, preserving distinct hash navigation. Focused8/full frontend243, ESLint, TypeScript/Vite build, Prettier/diff PASS; fresh Chrome Workbench->Research->Research->one Back reached Workbench. Historical result->paper form handoff retained audited replay/CNY100000/end2011-03-22 and forced explicit start for >93-day source; EN switch retained values. No account submitted; live jobs8/paper5/events417/receipts6 unchanged. Chinese/dark Workbench restored. U7 forward/M4 integrity/M5 release remain open",
@@ -275,6 +276,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "RESOLVED M4 test-entry-point safety: pytest-only guard did not cover independent test-mode scripts/Alembic. Shared configuration now rejects application database names before connection, reuses the same pytest namespace check and hides credential-bearing validation inputs; isolated and standalone CLI checks passed. This does not recover the historical data loss",
     "RESOLVED UX-NAVIGATION: shared navigate previously pushed an identical URL on same-route sidebar clicks, so one browser Back landed on the same page. Exact-URL no-op plus hash-distinction regression and fresh real-Chrome Back verification passed",
     "PARTIAL M5 RECORDINGS: earlier Chinese demo/walkthrough videos remain valid bounded evidence. No new English recording was made: browser-control API has no recording capability, Windows Snipping Tool was not installed, and existing Clipchamp opened only to a Microsoft sign-in failure. No login, permission change or alternative capture bypass was attempted. English read-only walkthrough is browser/text evidence only; English video is not a separate user requirement",
     "ACTIVE: 2026-09-25 12:04/12:05 AEST boot/login did not launch Docker Desktop by 2026-09-26 03:24 AEST despite quoted HKCU Run path, AutoStart=true and enabled StartupApproved. No Docker launch log appeared after login; bounded Application crash check found none. The old Run value was replaced by one limited current-user scheduled AtLogOn task; next real login is untested, so M5 terminal-free startup remains FAIL",
