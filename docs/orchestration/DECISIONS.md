@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 distinguish unverified saved plans from dated previews — 2026-09-26
+
+Do not infer an old plan's snapshot date from the current account. Reuse the shared
+plan view to warn in both locales when its own date is absent or mismatched, while
+preserving original financial/risk evidence and offering no execution action.
+New guarded projections record their Shanghai snapshot date. Paper V3 adds this
+metadata; saved V1/V2 reconstruct exactly without it, retaining strict comparison
+and golden checks. No migration, dependency, record rewrite or accounting change.
+Offline117 backend/321 frontend/static/build and independent review passed; actual
+SQL/V3 persistence, Chrome and forward acceptance remain pending. GitHub hold
+continues until actual recovery; no push, remote CI polling, merge or release.
+
 ## v1.2 plan date safety without rewriting saved replay — 2026-09-26
 
 Reject prior-date portfolio snapshots at the shared plan projection boundary,

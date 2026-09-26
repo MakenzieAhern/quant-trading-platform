@@ -146,7 +146,7 @@ class PaperTradingManager:
         parameters = self._json_decimals(command.strategy_parameters)
         if command.provider_type == "historical_a_share":
             parameters["dataset_sha256"] = str(registered["sha256"])
-            parameters["plan_version"] = "PAPER_ACCOUNT_PLAN_V2"
+            parameters["plan_version"] = "PAPER_ACCOUNT_PLAN_V3"
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
             if command.client_request_id is not None:
@@ -404,6 +404,7 @@ class PaperTradingManager:
                 if plan_request is not None and session.strategy_parameters["plan_version"] not in {
                     "PAPER_ACCOUNT_PLAN_V1",
                     "PAPER_ACCOUNT_PLAN_V2",
+                    "PAPER_ACCOUNT_PLAN_V3",
                 }:
                     raise ValueError("unsupported historical paper plan version")
                 recorded_plan_versions = {
@@ -432,10 +433,10 @@ class PaperTradingManager:
                             runtime.next_accepted_session(item.trading_date),
                             runtime.completed_sessions,
                             version=recorded_plan_versions.get(
-                                item.trading_date.isoformat(), "PAPER_ACCOUNT_PLAN_V2"
+                                item.trading_date.isoformat(), "PAPER_ACCOUNT_PLAN_V3"
                             )
                             if cursor_date is not None and item.trading_date <= cursor_date
-                            else "PAPER_ACCOUNT_PLAN_V2",
+                            else "PAPER_ACCOUNT_PLAN_V3",
                         )
                     events = self._serialize_a_share_delta(delta, source=source, plan=plan)
                     if cursor_date is not None and item.trading_date <= cursor_date:
@@ -595,9 +596,13 @@ class PaperTradingManager:
         next_session: date | None,
         completed_sessions: int,
         *,
-        version: str = "PAPER_ACCOUNT_PLAN_V2",
+        version: str = "PAPER_ACCOUNT_PLAN_V3",
     ) -> dict[str, object]:
-        if version not in {"PAPER_ACCOUNT_PLAN_V1", "PAPER_ACCOUNT_PLAN_V2"}:
+        if version not in {
+            "PAPER_ACCOUNT_PLAN_V1",
+            "PAPER_ACCOUNT_PLAN_V2",
+            "PAPER_ACCOUNT_PLAN_V3",
+        }:
             raise ValueError("unsupported historical paper plan version")
         plan = build_plan_preview(
             request,
@@ -609,6 +614,8 @@ class PaperTradingManager:
             completed_sessions,
             legacy_checkpoint=version == "PAPER_ACCOUNT_PLAN_V1",
         )
+        if version == "PAPER_ACCOUNT_PLAN_V2":
+            plan.pop("account_snapshot_trading_date")  # Preserve the persisted V2 projection.
         plan.update(
             paper_session_id=str(session.id),
             account_mode="HISTORICAL_PAPER_REPLAY",

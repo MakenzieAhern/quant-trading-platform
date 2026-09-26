@@ -110,6 +110,7 @@ export interface SimulationPlan {
   status: string;
   mode: ExperimentMode;
   as_of_trading_date: string;
+  account_snapshot_trading_date?: string | null;
   next_accepted_session: string | null;
   dataset_sha256: string;
   configuration_sha256: string;
@@ -151,7 +152,8 @@ export type PaperAccountPlan = Omit<
   account_mode: "HISTORICAL_PAPER_REPLAY";
   submitted_to_account: boolean;
   paper_session_id: string;
-  plan_version: "PAPER_ACCOUNT_PLAN_V1" | "PAPER_ACCOUNT_PLAN_V2";
+  plan_version:
+    "PAPER_ACCOUNT_PLAN_V1" | "PAPER_ACCOUNT_PLAN_V2" | "PAPER_ACCOUNT_PLAN_V3";
 };
 export interface ExperimentEquity {
   sequence: number;

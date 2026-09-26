@@ -1,5 +1,31 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 16:49 UTC saved plan date confidence and V3 metadata
+
+Old saved plans do not prove their own account snapshot date. The shared research
+and paper plan view now gives a bilingual unverified-history warning for missing
+or mismatched dates; cash/equity become recorded values, not claimed plan-time
+values. Original amounts, candidates and risk decisions remain visible and intact.
+No executable action is added. New plans carry their guarded Shanghai snapshot
+date; missing accounts carry null. Latest portfolio date cannot validate an older
+rebalance plan.
+
+New paper events use V3. V1/V2 saved checkpoints retain their exact old payloads
+without the new field; V2 golden hashes were captured from unmodified ddc1f24.
+Strict whole-event comparison, mixed-version resume, duplicate prevention and
+cash-tamper rejection remain. Earlier V2-only entries below are timestamped history,
+not the current new-event contract. No saved record or accounting is rewritten.
+
+Seven baseline warning tests failed before repair. Final117 offline backend and
+321 full frontend tests/37 files, Ruff check/format320, mypy144, ESLint, types,
+changed-file Prettier and fresh Vite129-module build passed. An intermediate page
+selector ambiguity was corrected to require both visible matching dates. Readonly
+independent review found no P0/P1. SQL persistence/new V3 API creation and actual
+Chrome NOT_RUN; current services/DB NOT_VERIFIED. GitHub remains held. This is
+bounded offline evidence, not full U6/U7 or release acceptance.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260926-plan-date-warning.json>)
+is outside Git. Full original goal remains active with all external gates intact.
+
 ## 2026-09-26 16:36 UTC current plan snapshot and legacy checkpoint compatibility
 
 An empty session can retain the prior portfolio snapshot. The shared plan builder

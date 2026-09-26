@@ -406,6 +406,10 @@ def build_plan_preview(
             }
         ),
     }
+    if not legacy_checkpoint:
+        common["account_snapshot_trading_date"] = (
+            snapshot.timestamp.astimezone(TRADING_ZONE).date().isoformat() if snapshot else None
+        )
     if snapshot is None:
         return {**common, "account": None, "candidates": [], "estimated_cash_required": None}
 

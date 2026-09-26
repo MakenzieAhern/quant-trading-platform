@@ -28,6 +28,12 @@ const en = {
   asOf: "Completed trading date (Asia/Shanghai)",
   next: "Next accepted session",
   nextUnknown: "Not available in this dataset",
+  accountDate: "Account snapshot trading date (Asia/Shanghai)",
+  dateNotRecorded: "Not recorded",
+  unverifiedDate:
+    "The account snapshot date is missing or differs from this plan's date. Treat this as an unverified historical record, not an executable plan. Original amounts, risk decisions, orders and fills are preserved. For a newly verified preview, create a separate exploratory run or account; do not overwrite this record.",
+  recordedCash: "Recorded account cash (CNY)",
+  recordedEquity: "Recorded account equity (CNY)",
   cash: "Replayed cash (CNY)",
   equity: "Replayed equity (CNY)",
   paperCash: "Cash at plan time (CNY)",
@@ -97,6 +103,12 @@ const zh: typeof en = {
   asOf: "已完成交易日（Asia/Shanghai）",
   next: "下一个已验收交易日",
   nextUnknown: "当前数据集不可用",
+  accountDate: "账户快照交易日（Asia/Shanghai）",
+  dateNotRecorded: "未记录",
+  unverifiedDate:
+    "账户快照日期缺失或与计划日期不一致。请将其视为未经日期核验的历史记录，而非可执行计划。原金额、风控决定、订单和成交均保留。如需新核验的预览，请另建探索性实验或模拟账户，不要覆盖本记录。",
+  recordedCash: "记录的账户现金（人民币）",
+  recordedEquity: "记录的账户权益（人民币）",
   cash: "回放账户现金（人民币）",
   equity: "回放账户权益（人民币）",
   paperCash: "计划时账户现金（人民币）",
@@ -149,6 +161,10 @@ export function ExperimentPlan({
   const { i18n } = useTranslation();
   const c = i18n.language.startsWith("zh") ? zh : en;
   const title = account ? c.paperTitle : c.title;
+  const unverifiedDate = Boolean(
+    plan?.account &&
+    plan.account_snapshot_trading_date !== plan.as_of_trading_date,
+  );
   return (
     <section
       className="experimentPanel"
@@ -163,6 +179,11 @@ export function ExperimentPlan({
           <p className="experimentNotice">
             {account ? c.paperWarning : c.warning}
           </p>
+          {unverifiedDate && (
+            <p className="stateCallout" role="alert">
+              {c.unverifiedDate}
+            </p>
+          )}
           <p>
             {account
               ? c.paperReplay
@@ -182,15 +203,31 @@ export function ExperimentPlan({
               <dd>{plan.as_of_trading_date}</dd>
             </div>
             <div>
+              <dt>{c.accountDate}</dt>
+              <dd>{plan.account_snapshot_trading_date ?? c.dateNotRecorded}</dd>
+            </div>
+            <div>
               <dt>{c.next}</dt>
               <dd>{plan.next_accepted_session ?? c.nextUnknown}</dd>
             </div>
             <div>
-              <dt>{account ? c.paperCash : c.cash}</dt>
+              <dt>
+                {unverifiedDate
+                  ? c.recordedCash
+                  : account
+                    ? c.paperCash
+                    : c.cash}
+              </dt>
               <dd>{formatDecimal(plan.account?.cash ?? null)}</dd>
             </div>
             <div>
-              <dt>{account ? c.paperEquity : c.equity}</dt>
+              <dt>
+                {unverifiedDate
+                  ? c.recordedEquity
+                  : account
+                    ? c.paperEquity
+                    : c.equity}
+              </dt>
               <dd>{formatDecimal(plan.account?.equity ?? null)}</dd>
             </div>
             <div>

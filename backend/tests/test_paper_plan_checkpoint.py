@@ -24,6 +24,7 @@ from tests.test_research_execution_engine import CALENDAR, OneTargetStrategy, _s
 
 V1 = "PAPER_ACCOUNT_PLAN_V1"
 V2 = "PAPER_ACCOUNT_PLAN_V2"
+V3 = "PAPER_ACCOUNT_PLAN_V3"
 
 
 class FixtureStrategy(OneTargetStrategy):
@@ -110,8 +111,10 @@ async def checkpoint(session, version):
     return tuple(events)
 
 
-@pytest.mark.parametrize("version,paused", [(V1, True), (V2, True), (None, True), (V1, False)])
-async def test_saved_plan_versions_resume_strictly_and_only_new_plans_use_v2(
+@pytest.mark.parametrize(
+    "version,paused", [(V1, True), (V2, True), (V3, True), (None, True), (V1, False)]
+)
+async def test_saved_plan_versions_resume_strictly_and_only_new_plans_use_v3(
     monkeypatch, version, paused
 ):
     initial = account(version)
@@ -155,17 +158,19 @@ async def test_saved_plan_versions_resume_strictly_and_only_new_plans_use_v2(
     snapshots = [item.payload for item in stored if item.event_type == "portfolio.snapshot"]
     latest = snapshots[-1]
     if version is not None:
-        assert latest["plan"]["plan_version"] == V2
+        assert latest["plan"]["plan_version"] == V3
         assert latest["plan"]["status"] == "ACCOUNT_SNAPSHOT_UNAVAILABLE"
         assert latest["plan"]["account"] is None
+        assert latest["plan"]["account_snapshot_trading_date"] is None
     else:
         assert "plan" not in latest  # Original pre-plan accounts retain their event contract.
     if not paused:
         assert initial.strategy_parameters["plan_version"] == V1
-        assert all(item["plan"]["plan_version"] == V2 for item in snapshots)
+        assert all(item["plan"]["plan_version"] == V3 for item in snapshots)
+        assert snapshots[0]["plan"]["account_snapshot_trading_date"] == "2024-01-02"
         return  # This fixture has never paused; do not fabricate a resume marker.
 
-    # Resume again across mixed V1/V2 history: no duplicate event or financial change.
+    # Resume again across mixed saved/current history: no duplicate event or financial change.
     history = (*history, *stored)
     manager.events.return_value = history
     stored.clear()
@@ -211,5 +216,16 @@ async def test_legacy_projection_reproduces_old_stale_account_but_new_projection
     assert new["estimated_cash_required"] is None
     with pytest.raises(ValueError, match="unsupported"):
         PaperTradingManager._historical_plan(
-            initial, request, delta, date(2024, 1, 4), 2, version="PAPER_ACCOUNT_PLAN_V3"
+            initial, request, delta, date(2024, 1, 4), 2, version="PAPER_ACCOUNT_PLAN_V4"
         )
+
+
+async def test_original_v2_projection_remains_byte_identical_without_new_metadata():
+    history = await checkpoint(account(V2), V2)
+    plans = [item.payload["plan"] for item in history if item.event_type == "portfolio.snapshot"]
+    assert all("account_snapshot_trading_date" not in item for item in plans)
+    # Captured from unmodified ddc1f24, before adding the V3 metadata.
+    assert [canonical_sha256(item) for item in plans] == [
+        "82ed1233c54dce4d658149a1f14df8b3c8b1116fc62f45f0ee59c5a9050c9dfa",
+        "34fa94cc478079e0021dc6f900fb1105f6ff6cc00c0e95a8591cfb7f734b3ccb",
+    ]

@@ -209,9 +209,11 @@ export function parsePaperAccountPlan(value: unknown): PaperAccountPlan {
   if (
     item.mode !== "historical_exploration" ||
     item.account_mode !== "HISTORICAL_PAPER_REPLAY" ||
-    !["PAPER_ACCOUNT_PLAN_V1", "PAPER_ACCOUNT_PLAN_V2"].includes(
-      String(item.plan_version),
-    ) ||
+    ![
+      "PAPER_ACCOUNT_PLAN_V1",
+      "PAPER_ACCOUNT_PLAN_V2",
+      "PAPER_ACCOUNT_PLAN_V3",
+    ].includes(String(item.plan_version)) ||
     typeof item.submitted_to_account !== "boolean"
   )
     throw new ApiContractError();
@@ -220,6 +222,8 @@ export function parsePaperAccountPlan(value: unknown): PaperAccountPlan {
 
 function parsePlanFields(item: Record<string, unknown>): void {
   mode(item.mode);
+  if (item.account_snapshot_trading_date != null)
+    text(item.account_snapshot_trading_date);
   for (const key of [
     "status",
     "as_of_trading_date",

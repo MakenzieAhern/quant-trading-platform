@@ -271,11 +271,12 @@ describe("paper trading pages", () => {
       ...plan,
       mode: "historical_exploration",
       as_of_trading_date: "2011-03-22",
+      account_snapshot_trading_date: "2011-03-22",
       next_accepted_session: "2011-03-23",
       account_mode: "HISTORICAL_PAPER_REPLAY",
       submitted_to_account: true,
       paper_session_id: PAPER_ID,
-      plan_version: "PAPER_ACCOUNT_PLAN_V1",
+      plan_version: "PAPER_ACCOUNT_PLAN_V3",
     };
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({
@@ -324,7 +325,10 @@ describe("paper trading pages", () => {
       screen.getByText(/routed through this account's simulated risk/),
     ).toBeVisible();
     expect(screen.getByText("9.123456789123456789")).toBeVisible();
-    expect(screen.getByText("2011-03-22")).toBeVisible();
+    const planDates = screen.getAllByText("2011-03-22");
+    expect(planDates).toHaveLength(2);
+    for (const date of planDates) expect(date).toBeVisible();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(screen.getByText("Cash at plan time (CNY)")).toBeVisible();
     expect(screen.getByText("Cash (CNY)")).toBeVisible();
     expect(screen.getByText("Market value (CNY)")).toBeVisible();

@@ -116,7 +116,7 @@ async def test_historical_a_share_account_creation_has_distinct_mode_and_dated_c
     assert created.json()["provider_type"] == "historical_a_share"
     assert created.json()["strategy_parameters"]["start_date"] == "2011-03-01"
     assert created.json()["strategy_parameters"]["dataset_sha256"] == "a" * 64
-    assert created.json()["strategy_parameters"]["plan_version"] == "PAPER_ACCOUNT_PLAN_V2"
+    assert created.json()["strategy_parameters"]["plan_version"] == "PAPER_ACCOUNT_PLAN_V3"
     assert created.json()["risk"]["max_drawdown"] == "-0.2"
     same = await client.post(
         "/api/paper-trading/sessions", json=historical_request_body(), headers=headers

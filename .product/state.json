@@ -1,7 +1,15 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-26T16:36:09Z",
+  "updated_at_utc": "2026-09-26T16:49:17Z",
+  "plan_date_warning": {
+    "status": "PASS_OFFLINE_NOT_BROWSER_OR_SQL_PERSISTENCE",
+    "backend_offline_passed": 117,
+    "frontend_full_passed": 321,
+    "independent_readonly_review": "NO_P0_P1",
+    "evidence": "product-evidence/v1.2/m4/20260926-plan-date-warning.json",
+    "policy": "Shared bilingual warning preserves old financial values; new metadata uses guarded Shanghai snapshot date. New paper plans V3, strict V1/V2 checkpoint reconstruction unchanged with golden hashes. No original rewrite/account/provider/DB/frozen/OOS/GitHub action. Actual Chrome/full SQL/new V3 persisted creation pending; full goal remains active. Earlier V2-only entry is timestamped history."
+  },
   "plan_snapshot_checkpoint": {
     "status": "PASS_OFFLINE_REGRESSION_NOT_RUNTIME_RELEASE",
     "backend_offline_passed": 115,
@@ -193,14 +201,14 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-09-26 16:16UTC branch codex/product-v1.2-current-rules base8f53291, only owned four frontend changes before checkpoint. No competing git write/test observed; final readonly review complete. Docker process inventory absent; no repeated launcher. Chrome no longer connected. Both own15173 Vite previews matched command/starttime before TERM and listener gone. Current services/DB and prior tmpfs cleanup unverified, old PIDs not authority.",
+    "latest_verification": "2026-09-26 16:49UTC codex/product-v1.2-current-rules baseddc1f24, owned plan metadata/warning changes only. No competing writer/test observed at start; final readonly review complete. Docker/Chrome absent16:45UTC; no launcher or recovery action. Services/DB and prior tmpfs cleanup unverified; scratch build has no listener. Old PIDs not authority.",
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
     "queue_writer": "owned isolated paper manager idle after two stopped historical QA accounts; main paper manager idle; no formal studies",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
-      "forward_source_audit": "2026-09-26 legacy POST-error readonly review complete; reload loses draft/key finding reproduced and fixed, final four-file diff approved; no API/DB/network writes"
+      "forward_source_audit": "2026-09-26 plan-date warning/V3 compatibility final readonly review NO_P0_P1; strict V1/V2 replay retained; reviewer did not run tests/API/DB/network"
     },
     "verified_processes": "2026-09-26 07:51UTC root-only writer; readonly agent review complete. All5 paper sessions STOPPED and update/research queues terminal before two normal main-backend restarts. Explicit isolated Compose qtp-v12-receipt-integrity-20260926 PostgreSQL/test quant_test owned here; test docker-run containers --rm terminal, PostgreSQL stopped after exact labels checked, no named volume/image deletion. Main four services remain healthy/running, API200, eight critical DB fingerprints unchanged/frozen research clean. Actual ZH/EN cached Chrome read only, restoredZHdark and own tab closed. No acquisition/finance/GitHub actions. Foreground confirmation still pending; no new perf verdict. Verify live identities before future actions.",
     "process_ids_are_not_reusable_authority": true
@@ -752,7 +760,7 @@
     }
   },
   "next_task": "Do not repeat the isolated release-image/clean-DB rehearsal or the failed Docker Run-entry hypothesis. On the next genuine Windows login, test the single current-user AtLogOn task and verify Docker/WSL/Compose/API/frontend plus retained database counts without terminal assistance, reset or data deletion. Until then M5 startup is FAIL. Existing Chrome is available again and the bounded English result/compare/stopped-paper read-only walkthrough has completed; retain existing Chinese recordings as bounded evidence and fill only actual key-interaction coverage gaps through a supported capture path. English video is optional, not a separate user requirement. Obtain genuine novice-user evidence rather than relabel agent QA. Continue independent M4/M5 accessibility, performance and compatibility work while preserving the missing genuine ledgers, independent backup and lawful forward-source blockers. Native 200% zoom needs user-operated evidence: browser policy blocked chrome://settings/appearance; do not bypass or substitute a CSS proxy. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 is only the earliest conditional after-start receipt and still needs lawful source authority. A privileged read-only VSS inventory needs a real Windows administrator action; do not infer absent shadows from Access Denied. No duplicate Docker startup mechanism, full U6/U7 promotion or release from historical replay",
-  "next_command": "Continue original full U1-U8/M0-M5, goal active. User five-day GitHub hold: no push/CI retries or polling/merge/release until actual recovery. Current plan date/legacy checkpoint repair completed offline:115backend/312fullfrontend, strictV1/V2 cursor reconstruction and V2-new, no rewrite or ledger changes; do not redo accepted offline unit. Next inspect retained legacy plan/result UI for a truthful stale-account-date warning using existing timestamp/asof, then remaining risk/quantity/cash boundaries; only reproduce real defects, preserve original records and exact calculation. Actual Chrome disconnected and Docker processes absent/WSLdocker-desktopStopped; no launch loop, manual-exit question unanswered. SQL persistence/newV2create/real pause-restart-resume and bilingual browser proof remain NOT_RUN; once runtime restored verify live retained5STOPPED/terminalqueues/eight fingerprints/API200/frontend5173/PONG and owned tmpfs cleanup before operational QA, old PIDs not authority. No provider acquisition/account start/formal/OOS/frozen mutation. U7 lawful rights/current authorities/real forward adapter/actual after-user-start completed-session receipt-plan-constrainedprocessing remain required; no history/demo substitution. Lostgenuineledgers/independentbackup/login/native200zoom/speech/novice/perf/media/exact-headCI/release still open. New scratch build/tmp/qtp-plan-date-build-O9QKRP retained, no listener launched.",
+  "next_command": "Continue original full U1-U8/M0-M5, goal active. User five-day GitHub hold: no push/remote CI polling or retries/merge/release until actual recovery. Shared plan snapshot guard, legacy checkpoint compatibility and old-plan date warning completed offline:117 backend/321 frontend/static/build/independent review; do not repeat accepted unit. New paper events V3 include guarded Shanghai snapshot date; saved V1/V2 exact replay and original records preserved. Next trace remaining U6 risk/quantity/cash configuration authority boundaries end-to-end and reproduce only real defects. Docker/Chrome absent16:45UTC, manual-exit question unanswered; no launch loop. Actual SQL/newV3create/real pause-restart-resume and bilingual Chrome proof pending. Once runtime restored verify live retained5STOPPED/terminalqueues/eight fingerprints/API200/frontend5173/PONG and owned tmpfs cleanup before operational QA; old PIDs not authority. No provider acquisition/account start/formal/OOS/frozen mutation. U7 lawful rights/current authorities/actual forward adapter/after-user-start real completed-session receipt-plan-constrainedprocessing remain required; no history/demo substitution. Genuine lostledgers/independentbackup/login/native200zoom/speech/novice/perf/media/exact-headCI/release still open. Scratch /tmp/qtp-plan-warning-build-WUz9O1 retained, no listener.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

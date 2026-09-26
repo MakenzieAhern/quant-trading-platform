@@ -180,6 +180,7 @@ def test_final_session_plan_uses_replayed_account_oms_and_only_known_calendar(tm
     plan = output.summary["simulation_plan"]
     assert plan["status"] == "SIMULATION_PREVIEW"
     assert plan["as_of_trading_date"] == as_of.isoformat()
+    assert plan["account_snapshot_trading_date"] == as_of.isoformat()
     assert plan["next_accepted_session"] == next_day.isoformat()
     assert plan["configuration_sha256"] == canonical_sha256(json_value(request.model_dump()))
     assert plan["data_snapshot_sha256"] != plan["account"]["snapshot_sha256"]
@@ -242,6 +243,7 @@ def test_plan_does_not_relabel_prior_account_snapshot_as_current():
     assert plan["as_of_trading_date"] == "2024-01-03"
     assert plan["status"] == "ACCOUNT_SNAPSHOT_UNAVAILABLE"
     assert plan["account"] is None
+    assert plan["account_snapshot_trading_date"] is None
     assert plan["candidates"] == []
     assert plan["estimated_cash_required"] is None
     assert missing.snapshot.model_dump() == original
@@ -263,6 +265,7 @@ def test_plan_does_not_relabel_prior_account_snapshot_as_current():
         253,
     )
     assert same_day["status"] == "NOT_REBALANCE_SESSION"
+    assert same_day["account_snapshot_trading_date"] == "2024-01-03"
     assert same_day["account"]["cash"] == "10000.000000000000000001"
 
 
