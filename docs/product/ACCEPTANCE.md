@@ -1,5 +1,38 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 03:28 UTC saved study view and comparison return context
+
+Actual Chrome reproduced two list-context defects: selecting two completed
+studies, opening a detail and using browser Back reset selection to zero;
+after that fix, the visible comparison Back link still created a fresh list
+entry and lost selection. Reuse the existing list history state for at most
+three validated selections; do not put IDs into the durable saved-view setting.
+The existing Link/navigation helper now optionally traverses back only when
+the current entry records that its immediate origin is the requested list;
+direct details use the internal list fallback. Modifier-click behavior and
+existing unsaved-draft traversal guard remain unchanged.
+
+The failing component regression now passes. Focused navigation/comparison/
+experiments 53 PASS; full frontend 253 PASS, ESLint, TypeScript and production
+build PASS. Changed shared/test files pass Prettier; the original compact
+ExperimentsPage style is retained instead of unrelated whole-file reformatting.
+In Chrome, completed/historical/name-ascending filters and hidden creation
+column survived save/reload; two selected real historical studies survived
+detail/comparison visible Back links, browser Back/Forward and reload. EN/light
+390x844 comparison retained dated results and no page overflow; remove-one
+disabled comparison. A direct detail in a fresh tab safely returned internally
+with zero selection. Default filters, empty selection, ZH/dark and original
+viewport/Workbench were restored; the temporary direct-detail tab was closed.
+
+This covers the direct list->detail/compare->list path, not every nested
+comparison->detail return, missing/stale study branch, native zoom or novice
+workflow. No study, account, order, provider request or database write occurred.
+Four services remain running, Redis PONG/API 200, formal counts 1/3/310,
+jobs 8, paper 5/events 417, updates 4/receipts 6 and frozen .research unchanged.
+Evidence is outside Git at product-evidence/v1.2/m4/
+20260926-study-return-context.json. Full U5/views/U7/M4/M5 remain incomplete;
+unknown backup/pre-loss/forward-rights answers are not approval.
+
 ## 2026-09-26 03:10 UTC checkpoint write safety and isolated real crash
 
 Two new regressions (Bar replay and synthetic A-share sessions) failed before

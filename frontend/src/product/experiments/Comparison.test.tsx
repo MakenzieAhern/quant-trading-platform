@@ -1,4 +1,4 @@
-import { act, render, screen, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../api/client";
@@ -170,6 +170,92 @@ describe("experiment comparison", () => {
       screen.getAllByRole("button", { name: /移除 Same study/ }),
     ).toHaveLength(2);
   });
+
+  it("restores comparison selection after result Back and list remount, without saving it in the view", async () => {
+    window.history.replaceState({}, "", "/experiments");
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: runs.slice(0, 2),
+      total: 2,
+      offset: 0,
+      limit: 20,
+    });
+    const first = render(<ExperimentsPage />);
+    await userEvent.click(
+      await screen.findByRole("checkbox", {
+        name: /Select for comparison: Study 1/,
+      }),
+    );
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: /Select for comparison: Study 2/ }),
+    );
+    expect(screen.getByText("Selected: 2 / 3")).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("link", { name: /^Open experiment: Study 1/ }),
+    );
+    first.unmount();
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe("/experiments"));
+    const restored = render(<ExperimentsPage />);
+    expect(screen.getByText("Selected: 2 / 3")).toBeInTheDocument();
+    expect(
+      await screen.findByRole("checkbox", {
+        name: /Select for comparison: Study 1/,
+      }),
+    ).toBeChecked();
+    expect(
+      screen.getByRole("checkbox", { name: /Select for comparison: Study 2/ }),
+    ).toBeChecked();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Save this view" }),
+    );
+    expect(
+      JSON.parse(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)!),
+    ).not.toHaveProperty("selected");
+    restored.unmount();
+    render(<ExperimentsPage />);
+    expect(screen.getByText("Selected: 2 / 3")).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: /Remove Study 1/ }),
+    );
+    expect(screen.getByText("Selected: 1 / 3")).toBeInTheDocument();
+  });
+
+  it.each([
+    null,
+    [null],
+    [{ id: ids[0], name: "Study", createdAt: "not-a-date" }],
+    [1, 2].map(() => ({
+      id: ids[0],
+      name: "Study",
+      createdAt: job.created_at,
+    })),
+    ids.map((id) => ({ id, name: "Study", createdAt: job.created_at })),
+  ])(
+    "ignores malformed, duplicate or oversized history selection: %j",
+    async (selection) => {
+      window.history.replaceState(
+        { experimentSelection: selection },
+        "",
+        "/experiments",
+      );
+      vi.spyOn(experimentApi, "list").mockResolvedValue({
+        items: runs.slice(0, 2),
+        total: 2,
+        offset: 0,
+        limit: 20,
+      });
+      render(<ExperimentsPage />);
+      expect(screen.getByText("Selected: 0 / 3")).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Compare selected experiments" }),
+      ).toBeDisabled();
+      expect(
+        await screen.findByRole("checkbox", {
+          name: /Select for comparison: Study 1/,
+        }),
+      ).not.toBeChecked();
+    },
+  );
 
   it("keeps unknown and unfinished requested studies visible instead of making a partial comparison", async () => {
     vi.spyOn(experimentApi, "get").mockImplementation(async (id) => {

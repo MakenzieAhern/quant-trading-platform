@@ -13,6 +13,7 @@ import type { Experiment, ExperimentMode, ExperimentStatus, Page } from "./types
 import "./experiments.css";
 
 export const EXPERIMENT_VIEW_KEY = "quant.product.experiment-view.v1";
+type Selection = { id: string; name: string; createdAt: string }[];
 type Sort = "newest" | "oldest" | "name_asc" | "name_desc";
 type View = {
   q: string;
@@ -60,10 +61,35 @@ function readOffset(): number {
     offset >= 0 && offset % 20 === 0 ? offset : 0;
 }
 
+function readSelection(): Selection {
+  const selected: unknown = window.history.state?.experimentSelection;
+  if (
+    window.location.pathname !== "/experiments" ||
+    !Array.isArray(selected) ||
+    selected.length > 3 ||
+    !selected.every(
+      (item): item is Selection[number] =>
+        item !== null &&
+        typeof item === "object" &&
+        typeof item.id === "string" &&
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          item.id,
+        ) &&
+        typeof item.name === "string" &&
+        typeof item.createdAt === "string" &&
+        !Number.isNaN(Date.parse(item.createdAt)),
+    ) ||
+    new Set(selected.map((item) => item.id.toLowerCase())).size !==
+      selected.length
+  )
+    return [];
+  return selected;
+}
+
 export function ExperimentsPage() {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
-  const [selected, setSelected] = useState<{ id: string; name: string; createdAt: string }[]>([]);
+  const [selected, setSelected] = useState(readSelection);
   const [offset, setOffset] = useState(readOffset);
   const [view, setView] = useState(readSavedView);
   const [saveStatus, setSaveStatus] = useState<"saved" | "error" | null>(null);
@@ -78,10 +104,10 @@ export function ExperimentsPage() {
   useEffect(() => {
     if (window.location.pathname === "/experiments")
       window.history.replaceState(
-        { ...window.history.state, experimentView: view, experimentOffset: offset },
+        { ...window.history.state, experimentView: view, experimentOffset: offset, experimentSelection: selected },
         "",
       );
-  }, [view, offset]);
+  }, [view, offset, selected]);
   function updateView(patch: Partial<View>, queryChanged = true) {
     setView((current) => ({ ...current, ...patch }));
     setSaveStatus(null);

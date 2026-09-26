@@ -25,6 +25,43 @@ function TwoLocationReaders() {
 }
 
 describe("shared navigation guard", () => {
+  it("returns a Back link to its own prior list entry without discarding Forward history", async () => {
+    window.history.replaceState(
+      { retainedSelection: ["first", "second"] },
+      "",
+      "/experiments",
+    );
+    navigate("/experiments/compare?ids=first,second");
+    const length = window.history.length;
+    render(
+      <Link back href="/experiments">
+        Back to list
+      </Link>,
+    );
+    await userEvent.click(screen.getByRole("link", { name: "Back to list" }));
+    await waitFor(() => expect(window.location.pathname).toBe("/experiments"));
+    expect(window.history.state.retainedSelection).toEqual(["first", "second"]);
+    expect(window.history.length).toBe(length);
+    act(() => window.history.forward());
+    await waitFor(() =>
+      expect(window.location.pathname).toBe("/experiments/compare"),
+    );
+  });
+
+  it("uses the internal list fallback for directly opened detail Back links", async () => {
+    window.history.replaceState({}, "", "/experiments/direct");
+    const back = vi.spyOn(window.history, "back");
+    render(
+      <Link back href="/experiments">
+        Back to list
+      </Link>,
+    );
+    await userEvent.click(screen.getByRole("link", { name: "Back to list" }));
+    expect(window.location.pathname).toBe("/experiments");
+    expect(back).not.toHaveBeenCalled();
+    back.mockRestore();
+  });
+
   it("keeps one listener across draft edits while reading the latest confirmation", async () => {
     window.history.replaceState({}, "", "/research/new");
     const add = vi.spyOn(window, "addEventListener");

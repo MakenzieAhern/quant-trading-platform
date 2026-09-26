@@ -36,7 +36,7 @@ export function ExperimentComparePage() {
   const ids = parseComparisonIds(search);
   return (
     <div className="experimentWorkspace">
-      <Link className="experimentBack" href="/experiments">
+      <Link back className="experimentBack" href="/experiments">
         ← {c.backList}
       </Link>
       <header className="experimentHeader">
@@ -48,7 +48,7 @@ export function ExperimentComparePage() {
       ) : (
         <div className="experimentNotice" role="alert">
           <p>{u.invalidIds}</p>
-          <Link href="/experiments">{c.backList}</Link>
+          <Link back href="/experiments">{c.backList}</Link>
         </div>
       )}
     </div>

@@ -1,12 +1,13 @@
 import type { AnchorHTMLAttributes, MouseEvent } from "react";
 
-import { navigate } from "../utils/navigation";
+import { navigate, navigateBack } from "../utils/navigation";
 
 export function Link({
   href = "/",
   onClick,
+  back = false,
   ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement>) {
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { back?: boolean }) {
   const follow = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.(event);
     if (
@@ -18,7 +19,8 @@ export function Link({
       !event.altKey
     ) {
       event.preventDefault();
-      navigate(href);
+      if (back) navigateBack(href);
+      else navigate(href);
     }
   };
   return <a {...props} href={href} onClick={follow} />;

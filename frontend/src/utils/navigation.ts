@@ -26,12 +26,24 @@ export function navigate(path: string): boolean {
     const request = new CustomEvent(BEFORE_NAVIGATION, { cancelable: true });
     if (!window.dispatchEvent(request)) return false;
   }
-  window.history.pushState({ [HISTORY_INDEX]: historyIndex() + 1 }, "", path);
+  window.history.pushState(
+    {
+      [HISTORY_INDEX]: historyIndex() + 1,
+      quantNavigationFrom: window.location.pathname,
+    },
+    "",
+    path,
+  );
   window.dispatchEvent(
     new PopStateEvent("popstate", { state: { [APPROVED_NAVIGATION]: true } }),
   );
   if (changingLocation) window.scrollTo(0, 0);
   return true;
+}
+
+export function navigateBack(path: string): void {
+  if (window.history.state?.quantNavigationFrom === path) window.history.back();
+  else navigate(path);
 }
 
 /** One confirmation boundary for links, commands and browser traversal. */

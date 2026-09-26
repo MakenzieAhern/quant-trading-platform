@@ -69,7 +69,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
   const data = job.data;
   return (
     <div className="experimentWorkspace">
-      <Link className="experimentBack" href="/experiments">
+      <Link back className="experimentBack" href="/experiments">
         ← {c.backList}
       </Link>
       {!data && !job.error && <p role="status">{c.loading}</p>}

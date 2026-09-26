@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 preserve the existing study-list history entry — 2026-09-26
+
+Two actual Chrome defects reset comparison selection after a detail/browser
+return or the visible comparison Back link. Extend existing list history state
+with validated, capped selection and the existing Link/navigation helper with
+an explicit back intent. Traverse only to a recorded matching immediate list
+origin; otherwise navigate internally. Do not add router/cache dependencies,
+persist selection in the saved view, override modified anchor clicks or bypass
+the draft guard. Regression and bounded direct-return Chrome evidence pass;
+nested/error/novice/full visual gates remain separate. Research/data/source
+acceptance and release permissions are unchanged.
+
 ## v1.2 fail closed before writing an unmatched replay — 2026-09-26
 
 Resume already reconstructs runtime state and compares the exact persisted
