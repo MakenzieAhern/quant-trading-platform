@@ -121,6 +121,13 @@ export const enUS = {
       executionError:
         "Backtest execution failed safely. Check run history for a failed run.",
       submitError: "Unable to submit the backtest.",
+      unavailableError:
+        "Backtest creation is unavailable. Check the service status and registered data before trying again.",
+      timeoutError: "The request timed out. It may already have created a run.",
+      offlineError:
+        "The service is unavailable. The submission result is unknown.",
+      recoveryHint:
+        "Keep this form open. Check run history in another tab before retrying with the same settings using Run backtest below. Do not reload: it clears this form and its retry identifier.",
     },
     detail: {
       back: "← All backtests",

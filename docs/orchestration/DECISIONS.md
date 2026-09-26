@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 POST recovery must preserve draft and idempotency — 2026-09-26
+
+Keep local validation keys/typed API errors until render for live locale changes.
+The shared GET ErrorPanel is unsuitable for an in-memory POST form: its reload
+would lose the precise draft and idempotency key when a timeout may already have
+created a run. Independent review found this intermediate regression; two tests
+failed before correction. Reuse the existing form alert/submit boundary instead,
+specific translated POST outcome guidance and closed diagnostics. No new helper,
+dependency, financial calculation or automatic resubmission. Same settings retry
+keeps body/key, edits replace key. Final27 focused/311 full/static/build and readonly
+review passed; in-app keyboard locale proof is explicitly not real Chrome, runtime,
+mouse or forward acceptance. GitHub unavailable for user-reported five days:
+hold all push/CI retries/merge/release until actual recovery, no bypass or date-based
+assumption. Continue safe local required work, never reduce the product goal.
+
 ## v1.2 command errors are actions, not load failures — 2026-09-26
 
 Paper start/pause/stop use one existing command boundary. Preserve its pending,

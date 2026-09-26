@@ -111,6 +111,11 @@ export const zhCN = {
       validationError: "参数校验失败：{{message}}",
       executionError: "回测已安全失败。请到运行历史查看失败记录。",
       submitError: "无法提交回测。",
+      unavailableError: "暂时无法创建回测。请检查服务状态和已注册数据后重试。",
+      timeoutError: "请求超时，但可能已经创建运行。",
+      offlineError: "服务暂时无法连接，提交结果尚不确定。",
+      recoveryHint:
+        "请保留此表单，在另一标签页查看运行历史后，使用下方“运行回测”按原配置重试。不要重新加载：这会清空表单和重试标识。",
     },
     detail: {
       back: "← 所有回测",

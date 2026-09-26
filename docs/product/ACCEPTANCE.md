@@ -1,5 +1,31 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 16:16 UTC legacy submission keeps locale, draft and retry identity
+
+Eight baseline regressions exposed stale translated local/API errors and missing
+typed permission/unavailable/timeout/offline guidance. Translate keys/typed errors
+at render without changing request construction, financial strings or submit locks.
+Independent review rejected an intermediate use of GET ErrorPanel: its reload
+action would erase the POST draft and retry key. Two new timeout/offline regressions
+first failed on that action. Keep the existing form and Run button, explain the
+unknown outcome and checking history in another tab; no destructive reload action.
+
+Final focused27/full311 frontend tests, ESLint, types, changed-file Prettier and
+fresh scratch production build129 modules passed; independent four-file readonly
+review found no blocker. Same settings resend identical body/key after500/408/
+offline; editing creates a new key. No backend change/suite or GitHub CI run.
+
+Chrome connection is currently absent: **actual Chrome NOT_RUN**. In-app browser
+keyboard-only local invalid-period check passed ZH→EN→ZH with exact fractional
+cash retained. Native full-page English image inspected inline, not a saved media
+deliverable. Mouse locator clicks had no observed effect; cause unproven, not mouse
+acceptance. Only deterministic invalid inputs submitted, no valid run/account/API
+mutation. Own tab closed and owned preview processes stopped, port15173 clear.
+Docker remains absent and current service/DB health unverified. GitHub five-day
+user hold, full U1–U8/M0–M5 and all existing gates remain unchanged/incomplete.
+[Bounded evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260926-legacy-submission-errors.json>)
+is outside Git; component fixtures are not operational or forward acceptance.
+
 ## 2026-09-26 16:02 UTC failed account commands keep their context and locale
 
 With Docker unavailable, existing WSL Node24.20 and matching locked frontend
