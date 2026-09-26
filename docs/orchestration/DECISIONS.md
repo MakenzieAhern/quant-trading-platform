@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 fail closed before writing an unmatched replay — 2026-09-26
+
+Resume already reconstructs runtime state and compares the exact persisted
+non-status journal at the checkpoint. Reuse that match flag in the existing
+shared persistence callback: no later session/bar may be published before the
+checkpoint matches. Failure/shutdown/concurrent-stop cleanup before matching
+uses only known persisted pending orders. Do not introduce a new checkpoint
+store/queue or permit INTERRUPTED accounts to start automatically. Two failing
+regressions establish the former write-before-failure defect; isolated full
+checks and a real owned synthetic API SIGKILL establish bounded safety evidence.
+This does not repair missing genuine ledgers, promote forward data rights or
+pass full U7/M4/M5. Main backend was not restarted to deploy the patch.
+
 ## v1.2 put command focus on search without changing other dialogs — 2026-09-26
 
 The shared native Dialog correctly captures/restores the outside trigger, but

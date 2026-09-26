@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 03:10 UTC checkpoint write safety and isolated real crash
+
+Two new regressions (Bar replay and synthetic A-share sessions) failed before
+the fix: if a paused account's persisted market checkpoint disappeared from
+the input, subsequent non-status events were appended before terminal failure.
+The existing shared persistence callback now refuses writes until replay has
+exactly matched the saved checkpoint. Failure, cancellation and concurrent-stop
+cleanup of an unmatched runtime cancel only pending orders from the persisted
+history, not orders invented by the unverified replay. No lifecycle permission,
+automatic recovery, financial policy, schema, worker or dependency was added.
+Both regressions pass with the non-status journal unchanged and terminal restart
+HTTP 409. Fresh isolated `quant_test` tmpfs full backend: 989 PASS, one optional
+unmounted historical-archive skip; Ruff, format and mypy PASS.
+
+A real Uvicorn process in an owned, isolated API container was frozen to capture
+an exact committed two-account prefix, then SIGKILLed and restarted against its
+unchanged scratch PostgreSQL. The paused synthetic account `192d42bc` stayed
+PAUSED; active `cc001164` became INTERRUPTED, no automatic processing occurred,
+explicit start returned HTTP 409, and the saved non-status journal was identical.
+Startup logged exactly one orphan interruption. This is genuine process-crash
+evidence on a synthetic fixture, **not** new-market forward, full historical
+recovery, host/database-loss recovery or reconstruction of the missing accounts.
+The first harness attempt stopped before the crash due to PowerShell REST-array
+enumeration; that harness issue was corrected, and only its scratch account was
+stopped before the successful attempt. Do not count it as a product failure.
+
+Evidence and the bounded check script are outside Git at
+`product-evidence/v1.2/m4/20260926-paper-recovery.json` and
+`20260926-paper-crash-check.ps1`. Owned scratch API/Redis and tmpfs PostgreSQL
+containers/network were removed; no image, named volume or application data
+was removed. Main services were not restarted or hot-reloaded for this patch;
+all four remain running, Redis PONG/API HTTP 200, with read-only formal counts
+`1/3/310`, jobs `8`, paper `5/417`, updates `4/6` and `.research` unchanged.
+Full U7/M4/M5, genuine lost-ledger recovery, independent backup and lawful
+forward-source gates remain open; the three unknown user answers grant nothing.
+
 ## 2026-09-26 02:57 UTC command-search focus and explicit motion-off
 
 Actual Chrome 153 at 390x844 EN/dark/motion-off reproduced a command-panel

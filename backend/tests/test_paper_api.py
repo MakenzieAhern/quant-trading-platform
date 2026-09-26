@@ -16,7 +16,7 @@ from app.db.session import SessionFactory
 from app.execution import OrderManager
 from app.main import app
 from app.paper.models import PaperSessionConcurrencyError
-from app.paper.runtime import PaperBroker, ReplayMarketDataProvider
+from app.paper.runtime import PaperBroker, ReplayMarketDataProvider, SimulatedAShareSessionProvider
 from app.portfolio import PortfolioEngine
 from app.risk import RiskEngine
 from app.strategies import MovingAverageCrossoverStrategy
@@ -399,6 +399,55 @@ async def test_paused_bar_replay_matches_uninterrupted_ledger(
     assert [
         (item["type"], item["payload"]) for item in actual if item["type"] != "session.status"
     ] == [(item["type"], item["payload"]) for item in expected if item["type"] != "session.status"]
+
+
+@pytest.mark.parametrize("provider_type", ["replay", "simulated_a_share"])
+async def test_missing_resume_checkpoint_does_not_append_unverified_market_ledger(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch, provider_type: str
+) -> None:
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 10)
+    body = request_body() if provider_type == "replay" else a_share_request_body()
+    session_id = (await client.post("/api/paper-trading/sessions", json=body)).json()["session_id"]
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(100):
+        before = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
+        if any(item["type"] in {"market.bar", "market.session"} for item in before):
+            break
+        await asyncio.sleep(0.01)
+    assert any(item["type"] in {"market.bar", "market.session"} for item in before)
+    await client.post(f"/api/paper-trading/sessions/{session_id}/pause")
+    for _ in range(100):
+        paused = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if paused["status"] == "PAUSED":
+            break
+        await asyncio.sleep(0.01)
+    assert paused["status"] == "PAUSED"
+    before = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
+    build_runtime = paper_manager._build_runtime
+
+    def missing_checkpoint(session, cursor_date):
+        provider, runtime = build_runtime(session, cursor_date)
+        if isinstance(provider, ReplayMarketDataProvider):
+            provider._bars = provider._bars[1:]
+        else:
+            assert isinstance(provider, SimulatedAShareSessionProvider)
+            provider._sessions = tuple(provider._sessions)[1:]
+        return provider, runtime
+
+    monkeypatch.setattr(paper_manager, "_build_runtime", missing_checkpoint)
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(500):
+        failed = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+        if failed["status"] in {"STOPPED", "FAILED"}:
+            break
+        await asyncio.sleep(0.01)
+    assert failed["status"] == "FAILED", failed
+    after = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
+    assert [
+        (item["type"], item["payload"]) for item in after if item["type"] != "session.status"
+    ] == [(item["type"], item["payload"]) for item in before if item["type"] != "session.status"]
+    assert (await client.post(f"/api/paper-trading/sessions/{session_id}/start")).status_code == 409
 
 
 async def test_real_archive_pause_resume_preserves_pending_orders_and_fills(

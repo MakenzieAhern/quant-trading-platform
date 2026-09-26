@@ -302,6 +302,8 @@ class PaperTradingManager:
         session = initial
         provider: ReplayMarketDataProvider | SimulatedAShareSessionProvider | None = None
         runtime: PaperTradingRuntime | ASharePaperTradingRuntime | None = None
+        history: tuple[PaperEventRecord, ...] = ()
+        matched_cursor = False
         try:
             history = await self.events(session.id)
             resumed = any(
@@ -358,6 +360,8 @@ class PaperTradingManager:
             async def persist(
                 events: tuple[tuple[str, datetime, dict[str, object]], ...],
             ) -> None:
+                if not matched_cursor:
+                    raise ValueError("paper replay checkpoint disappeared from source data")
                 async with self._session_factory() as db:
                     stored = await SQLAlchemyPaperRepository(db).append_events(session.id, events)
                 for event in stored:
@@ -469,13 +473,22 @@ class PaperTradingManager:
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
-                    cancelled = runtime.cancel_pending_orders() if runtime is not None else ()
+                    cancelled = (
+                        runtime.cancel_pending_orders()
+                        if runtime is not None and matched_cursor
+                        else ()
+                    )
                     await self._transition(
                         current,
                         PaperSessionStatus.INTERRUPTED,
                         "session.status",
                         "Paper runtime interrupted by backend shutdown.",
                         cancelled_orders=cancelled,
+                        preceding_events=(
+                            self._pending_order_events(history, self._now())
+                            if not matched_cursor
+                            else ()
+                        ),
                     )
                     logger.warning("Paper session %s interrupted by shutdown", session.id)
             raise
@@ -486,12 +499,21 @@ class PaperTradingManager:
                 and current is not None
                 and current.status is PaperSessionStatus.STOPPING
             ):
-                cancelled = runtime.cancel_pending_orders() if runtime is not None else ()
+                cancelled = (
+                    runtime.cancel_pending_orders()
+                    if runtime is not None and matched_cursor
+                    else ()
+                )
                 await self._transition(
                     current,
                     PaperSessionStatus.STOPPED,
                     "session.status",
                     cancelled_orders=cancelled,
+                    preceding_events=(
+                        self._pending_order_events(history, self._now())
+                        if not matched_cursor
+                        else ()
+                    ),
                 )
                 logger.info("Paper session %s stopped after a concurrent command", session.id)
                 return
@@ -503,13 +525,22 @@ class PaperTradingManager:
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
-                    cancelled = runtime.cancel_pending_orders() if runtime is not None else ()
+                    cancelled = (
+                        runtime.cancel_pending_orders()
+                        if runtime is not None and matched_cursor
+                        else ()
+                    )
                     await self._transition(
                         current,
                         PaperSessionStatus.FAILED,
                         "session.status",
                         f"{type(exc).__name__}: paper session failed",
                         cancelled_orders=cancelled,
+                        preceding_events=(
+                            self._pending_order_events(history, self._now())
+                            if not matched_cursor
+                            else ()
+                        ),
                     )
         finally:
             if provider is not None:
