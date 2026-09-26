@@ -98,14 +98,13 @@ function Collection<T>({
           </table>
         </div>
       )}
-      {page.data && (
-        <Pagination
-          offset={offset}
-          limit={COLLECTION_LIMIT}
-          total={page.data.total}
-          onChange={setOffset}
-        />
-      )}
+      <Pagination
+        offset={offset}
+        limit={COLLECTION_LIMIT}
+        total={page.data?.total ?? null}
+        loading={page.loading}
+        onChange={setOffset}
+      />
     </section>
   );
 }
@@ -218,14 +217,13 @@ function SuccessfulResult({ runId }: { runId: string }) {
         {equity.data && equity.data.items.length > 0 && (
           <EquityChart points={equity.data.items} />
         )}
-        {equity.data && (
-          <Pagination
-            offset={equityOffset}
-            limit={200}
-            total={equity.data.total}
-            onChange={setEquityOffset}
-          />
-        )}
+        <Pagination
+          offset={equityOffset}
+          limit={200}
+          total={equity.data?.total ?? null}
+          loading={equity.loading}
+          onChange={setEquityOffset}
+        />
       </section>
       <Collection<Signal>
         title={t("detail.signals")}

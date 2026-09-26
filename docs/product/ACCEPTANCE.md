@@ -1,5 +1,38 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 05:46 UTC stable asynchronous pagination and date-link focus
+
+Closed the previously observed BODY-focus defect with the existing shared
+Pagination component: synchronous user-action focus on a named native group,
+retained through pending/error/success, guarded busy/unknown controls, and no
+delayed autofocus or stale financial data. All 17 asynchronous sites moved
+outside resource-content branches; four client-side sites reuse the same contract.
+Date activity and clear actions focus the persistent parent filter before the
+keyed collections reset. Existing request identity isolation is unchanged.
+
+The original two regressions failed before the repair. Added checks cover pending
+and disabled last-page Next, error/retry, a moved focus not being stolen, locale,
+unmount, independent pagers, actual stateful client boundaries and obsolete job
+completion after replacement. Full frontend: 294/294 across 36 files; lint,
+TypeScript and production build PASS. Independent read-only all-caller review
+found no release-critical defect; its two missing regressions were added and passed.
+
+Actual Chrome on original approved 5173, saved 293-session result: Chinese/dark
+and English/light Next retains DIV group focus both while busy and after loading;
+101–200 and 201–293 ranges correct, last Next disabled, Tab reaches Previous.
+Date activity/clear retains named SECTION focus, then Tab reaches native first
+date input. Both focus outlines are 2px. Market search similarly retains focus
+through loading and 21–40 of 5431; independent watchlist stays 1–1 of 1.
+This is bounded agent-operated keyboard evidence, not screen-reader speech or
+full WCAG AA. Research exact-table landmarks, native zoom/motion and full matrix
+remain open. Evidence: external product-evidence/v1.2/m4/20260926-pagination-focus.json.
+
+Chinese/dark restored; only owned tab closed. No service restart, new study,
+account, financial/provider request or research change. Eight retained table
+fingerprints match; API200, Redis PONG and main Compose healthy. GitHub remains
+user-reported unavailable for five days; the estimate is not verified recovery.
+Local commits only; no push/CI retry, merge or release. Full product gates remain open.
+
 ## 2026-09-26 05:27 UTC bounded chart contrast/keyboard; async focus defect found
 
 Actual Chrome on approved5173, existing historical result a2770b6, native958x903

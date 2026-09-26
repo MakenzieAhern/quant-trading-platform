@@ -1,5 +1,19 @@
 # Decisions
 
+## v1.2 stable native paging focus without stale data — 2026-09-26
+
+Keep the shared pager mounted during asynchronous loading/error/success and focus
+its named group synchronously before a user-initiated page change. Preserve
+native disabled boundaries and hide unknown ranges. Never restore focus in a
+later effect or retain outdated financial rows to hold the DOM. Date links and
+clear use the persistent filter section before keyed collection reset. All21
+callers reviewed independently; obsolete job response and stateful client
+boundaries added as requested regressions. Full frontend294/lint/type/build and
+actual Chrome ZHdark/ENlight plus market-search recheck passed, bounded only.
+No dependency, backend/resource-hook, financial or security change. Continue
+safe local work through the user's five-day GitHub hold; recovery must be verified
+before exact-head remote CI and release gates. No gate bypass or completion claim.
+
 ## v1.2 distinguish chart checks from async focus acceptance — 2026-09-26
 
 Keep measured essential-plot contrast and basic native keys as bounded evidence;

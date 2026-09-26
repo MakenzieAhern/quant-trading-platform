@@ -421,14 +421,15 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                 </div>
               </>
             )}
-            <Pagination
-              offset={results.data.offset}
-              limit={results.data.limit}
-              total={results.data.total}
-              onChange={setOffset}
-            />
           </>
         )}
+        <Pagination
+          offset={offset}
+          limit={results.data?.limit ?? 20}
+          total={results.data?.total ?? null}
+          loading={results.loading && !!dataset?.available}
+          onChange={setOffset}
+        />
       </section>
       <section className="marketPanel" aria-label={c.watchlist}>
         <h2>{c.watchlist}</h2>
@@ -512,14 +513,15 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                 );
               })}
             </div>
-            <Pagination
-              offset={watchlist.data.offset}
-              limit={watchlist.data.limit}
-              total={watchlist.data.total}
-              onChange={setWatchOffset}
-            />
           </>
         )}
+        <Pagination
+          offset={watchOffset}
+          limit={watchlist.data?.limit ?? 20}
+          total={watchlist.data?.total ?? null}
+          loading={watchlist.loading}
+          onChange={setWatchOffset}
+        />
       </section>
       {detail && !activeSelection && (
         <p role={detailError || !canResolveDetail ? "alert" : "status"}>

@@ -71,14 +71,15 @@ export function TaskCenterPage() {
                 </li>
               ))}
             </ul>
-            <Pagination
-              offset={researchOffset}
-              limit={research.data.limit}
-              total={research.data.total}
-              onChange={setResearchOffset}
-            />
           </>
         )}
+        <Pagination
+          offset={researchOffset}
+          limit={research.data?.limit ?? 20}
+          total={research.data?.total ?? null}
+          loading={research.loading}
+          onChange={setResearchOffset}
+        />
       </section>
       <section className="panel" aria-label={c.updateTasks}>
         <h2>{c.updateTasks}</h2>
@@ -111,14 +112,15 @@ export function TaskCenterPage() {
                 </li>
               ))}
             </ul>
-            <Pagination
-              offset={updateOffset}
-              limit={updates.data.limit}
-              total={updates.data.total}
-              onChange={setUpdateOffset}
-            />
           </>
         )}
+        <Pagination
+          offset={updateOffset}
+          limit={updates.data?.limit ?? 20}
+          total={updates.data?.total ?? null}
+          loading={updates.loading}
+          onChange={setUpdateOffset}
+        />
       </section>
     </div>
   );

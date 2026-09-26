@@ -87,14 +87,13 @@ export function BacktestHistoryPage() {
             </table>
           </div>
         )}
-        {runs.data && (
-          <Pagination
-            offset={offset}
-            limit={LIMIT}
-            total={runs.data.total}
-            onChange={setOffset}
-          />
-        )}
+        <Pagination
+          offset={offset}
+          limit={LIMIT}
+          total={runs.data?.total ?? null}
+          loading={runs.loading}
+          onChange={setOffset}
+        />
       </section>
     </>
   );

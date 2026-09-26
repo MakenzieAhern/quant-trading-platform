@@ -125,17 +125,18 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                 ))}
               </nav>
               {jobs.data.total > 20 && <p>{copy.searchMore}</p>}
-              <Pagination
-                offset={search.jobsOffset}
-                limit={20}
-                total={jobs.data.total}
-                onChange={(offset) =>
-                  setSearch((value) => ({ ...value, jobsOffset: offset }))
-                }
-              />
             </>
           )
         )}
+        <Pagination
+          offset={search.jobsOffset}
+          limit={20}
+          total={waiting ? null : (jobs.data?.total ?? null)}
+          loading={waiting || jobs.loading}
+          onChange={(offset) =>
+            setSearch((value) => ({ ...value, jobsOffset: offset }))
+          }
+        />
       </section>
       <section aria-label={copy.searchWatchlist}>
         <h3>{copy.searchWatchlist}</h3>
@@ -172,17 +173,18 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                 ))}
               </nav>
               {watches.data.total > 20 && <p>{copy.searchMore}</p>}
-              <Pagination
-                offset={search.watchOffset}
-                limit={20}
-                total={watches.data.total}
-                onChange={(offset) =>
-                  setSearch((value) => ({ ...value, watchOffset: offset }))
-                }
-              />
             </>
           )
         )}
+        <Pagination
+          offset={search.watchOffset}
+          limit={20}
+          total={waiting ? null : (watches.data?.total ?? null)}
+          loading={waiting || watches.loading}
+          onChange={(offset) =>
+            setSearch((value) => ({ ...value, watchOffset: offset }))
+          }
+        />
       </section>
     </Dialog>
   );

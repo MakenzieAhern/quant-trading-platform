@@ -194,14 +194,15 @@ export function UpdateRecords({
               <pre>{JSON.stringify(row, null, 2)}</pre>
             </details>
           ))}
-          <Pagination
-            offset={receiptOffset}
-            limit={20}
-            total={receipts.data.total}
-            onChange={setReceiptOffset}
-          />
         </>
       )}
+      <Pagination
+        offset={receiptOffset}
+        limit={20}
+        total={receipts.data?.total ?? null}
+        loading={receipts.loading}
+        onChange={setReceiptOffset}
+      />
     </div>
   );
 }

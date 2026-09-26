@@ -104,14 +104,15 @@ export function MarketUpdatesPanel() {
                 </li>
               ))}
             </ul>
-            <Pagination
-              offset={offset}
-              limit={20}
-              total={history.data.total}
-              onChange={setOffset}
-            />
           </>
         )}
+        <Pagination
+          offset={offset}
+          limit={20}
+          total={history.data?.total ?? null}
+          loading={history.loading}
+          onChange={setOffset}
+        />
       </section>
       {jobId ? (
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(

@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
@@ -19,10 +19,16 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
   const [range, setRange] = useState<DateRange>({});
   const [invalid, setInvalid] = useState(false);
   const [focused, setFocused] = useState("");
+  const filterAnchor = useRef<HTMLElement>(null);
   const filter = focused ? { start_date: focused, end_date: focused } : range;
   return (
     <>
-      <section className="experimentPanel">
+      <section
+        className="experimentPanel"
+        ref={filterAnchor}
+        tabIndex={-1}
+        aria-label={u.filterTitle}
+      >
         <h2>{u.filterTitle}</h2>
         <p className="experimentHelp">{u.rangeHelp}</p>
         <form
@@ -80,7 +86,13 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             <p role="status">
               {u.focusedDate}: <strong>{focused}</strong> · Asia/Shanghai
             </p>
-            <button className="button secondary" onClick={() => setFocused("")}>
+            <button
+              className="button secondary"
+              onClick={() => {
+                filterAnchor.current?.focus();
+                setFocused("");
+              }}
+            >
               {u.clearFocus}
             </button>
           </div>
@@ -91,7 +103,10 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
         jobId={jobId}
         range={filter}
         focused={focused}
-        onFocusDate={setFocused}
+        onFocusDate={(date) => {
+          filterAnchor.current?.focus();
+          setFocused(date);
+        }}
       />
       <ExperimentExports jobId={jobId} range={filter} />
     </>
@@ -138,20 +153,19 @@ function FilteredCollections({
           </div>
         )}
         {equity.data && (
-          <>
-            <EquityDisplay
-              key={`${jobId}-${offset}`}
-              points={equity.data.items}
-              onFocusDate={onFocusDate}
-            />
-            <Pagination
-              offset={equity.data.offset}
-              limit={equity.data.limit}
-              total={equity.data.total}
-              onChange={setOffset}
-            />
-          </>
+          <EquityDisplay
+            key={`${jobId}-${offset}`}
+            points={equity.data.items}
+            onFocusDate={onFocusDate}
+          />
         )}
+        <Pagination
+          offset={offset}
+          limit={equity.data?.limit ?? 100}
+          total={equity.data?.total ?? null}
+          loading={equity.loading}
+          onChange={setOffset}
+        />
       </section>
       <details
         className="experimentPanel"
@@ -442,20 +456,40 @@ function TradeCollection({
     (signal) => experimentApi.trades(jobId, signal, offset, range),
     [jobId, offset, range.start_date, range.end_date, revision],
   );
-  if (data.loading) return <p role="status">{c.loading}</p>;
+  // The key keeps this control mounted when only the resource content changes.
+  const pager = (
+    <Pagination
+      key="pagination"
+      offset={offset}
+      limit={data.data?.limit ?? 20}
+      total={data.data?.total ?? null}
+      loading={data.loading}
+      onChange={setOffset}
+    />
+  );
+  if (data.loading)
+    return (
+      <>
+        <p role="status">{c.loading}</p>
+        {pager}
+      </>
+    );
   if (data.error)
     return (
-      <div role="alert">
-        <p>{c.networkError}</p>
-        <button
-          className="button secondary"
-          onClick={() => setRevision((value) => value + 1)}
-        >
-          {c.retryLoad}
-        </button>
-      </div>
+      <>
+        <div role="alert">
+          <p>{c.networkError}</p>
+          <button
+            className="button secondary"
+            onClick={() => setRevision((value) => value + 1)}
+          >
+            {c.retryLoad}
+          </button>
+        </div>
+        {pager}
+      </>
     );
-  if (!data.data) return null;
+  if (!data.data) return <>{pager}</>;
   return (
     <>
       <p className="experimentHelp">{c.tableScroll}</p>
@@ -518,12 +552,7 @@ function TradeCollection({
           </table>
         </div>
       )}
-      <Pagination
-        offset={data.data.offset}
-        limit={data.data.limit}
-        total={data.data.total}
-        onChange={setOffset}
-      />
+      {pager}
     </>
   );
 }
@@ -543,20 +572,39 @@ function DecisionCollection({
     (signal) => experimentApi.decisions(jobId, signal, offset, range),
     [jobId, offset, range.start_date, range.end_date, revision],
   );
-  if (data.loading) return <p role="status">{c.loading}</p>;
+  const pager = (
+    <Pagination
+      key="pagination"
+      offset={offset}
+      limit={data.data?.limit ?? 20}
+      total={data.data?.total ?? null}
+      loading={data.loading}
+      onChange={setOffset}
+    />
+  );
+  if (data.loading)
+    return (
+      <>
+        <p role="status">{c.loading}</p>
+        {pager}
+      </>
+    );
   if (data.error)
     return (
-      <div role="alert">
-        <p>{c.networkError}</p>
-        <button
-          className="button secondary"
-          onClick={() => setRevision((value) => value + 1)}
-        >
-          {c.retryLoad}
-        </button>
-      </div>
+      <>
+        <div role="alert">
+          <p>{c.networkError}</p>
+          <button
+            className="button secondary"
+            onClick={() => setRevision((value) => value + 1)}
+          >
+            {c.retryLoad}
+          </button>
+        </div>
+        {pager}
+      </>
     );
-  if (!data.data) return null;
+  if (!data.data) return <>{pager}</>;
   return (
     <>
       <p className="experimentHelp">{c.tableScroll}</p>
@@ -602,12 +650,7 @@ function DecisionCollection({
           </table>
         </div>
       )}
-      <Pagination
-        offset={data.data.offset}
-        limit={data.data.limit}
-        total={data.data.total}
-        onChange={setOffset}
-      />
+      {pager}
     </>
   );
 }

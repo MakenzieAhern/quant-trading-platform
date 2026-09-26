@@ -368,14 +368,15 @@ export function ExperimentsPage() {
               </table>
             </div>
           )}
-          <Pagination
-            offset={jobs.data.offset}
-            limit={jobs.data.limit}
-            total={jobs.data.total}
-            onChange={setOffset}
-          />
         </>
       )}
+      <Pagination
+        offset={offset}
+        limit={jobs.data?.limit ?? 20}
+        total={jobs.data?.total ?? null}
+        loading={!jobs.data && jobs.error === null}
+        onChange={setOffset}
+      />
     </div>
   );
 }

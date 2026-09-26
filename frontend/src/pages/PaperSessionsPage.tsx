@@ -82,14 +82,13 @@ export function PaperSessionsPage() {
             </table>
           </div>
         )}
-        {sessions.data && (
-          <Pagination
-            offset={offset}
-            limit={LIMIT}
-            total={sessions.data.total}
-            onChange={setOffset}
-          />
-        )}
+        <Pagination
+          offset={offset}
+          limit={LIMIT}
+          total={sessions.data?.total ?? null}
+          loading={sessions.loading}
+          onChange={setOffset}
+        />
       </section>
     </>
   );
