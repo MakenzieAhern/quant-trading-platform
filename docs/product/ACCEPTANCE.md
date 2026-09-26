@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 07:51 UTC observation payload must match its immutable receipt
+
+U5's read path verified bundle checksums but trusted the separate PostgreSQL
+observation index. A new disposable-DB regression proved that an INSERT could
+reference a valid receipt yet introduce an observation absent from that receipt;
+the existing append-only UPDATE/DELETE triggers did not prevent this. Preserve
+those triggers and test-DB guard. Reuse the same verified Parquet read plus
+existing canonical SHA256, binding receipt/security/date and exact JSON payload.
+Receipt metadata also matches its original manifest identity/provider/UTC time.
+No schema, authority promotion, price calculation or frozen asset modification.
+
+Five negative variants cover date, price, executable flag, security identity and
+numeric0 versus booleanfalse (Python dictionary equality alone was insufficient,
+found by independent read-only review). API returns422 with the stable integrity
+code; subsequent incremental acquisition stops before another provider call.
+Final focused56/full backend994 passed,1 optional archive skip; Ruff/all543 format
+and mypy144 passed. Initial long-line/type-check failures were corrected, not
+ignored. Frontend unchanged, suite not rerun; remote CI not run during human hold.
+
+New source loaded in a read-only audit verified all6 retained receipts/observations,
+all non-executable. Main backend normal restart; all5 accounts were STOPPED and
+queues terminal first. Immediate health curl reset was startup transient; later
+health200. Actual Chrome153 ZH/EN reopened existing four-board task, exact cached
+rows and receipt IDs plus non-execution/rights warnings. Final-code restart/reload
+returned the original Chinese candidate row, no console errors. Native English
+table image inspected inline, no local image artifact claimed. Locale restored,
+own tab closed. Eight critical DB fingerprints unchanged; frozen research clean.
+Explicit owned quant_test PostgreSQL stopped, no volume/data/image deletion.
+
+[Reproduction/test/browser/safety summary](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260926-receipt-observation-integrity.json>)
+is outside Git. Actual U7 request union/manager still has only replay, simulated
+A-share and historical A-share providers: licensed new-market adapter and its
+after-start real receipt/plan/constrained processing remain **NOT_IMPLEMENTED /
+NOT_ACCEPTED**, not just an unrun UI test. No placeholder adapter or feed right
+inferred. This fix reduces a real U5 defect, not a full product/release PASS.
+
 ## 2026-09-26 07:36 UTC native event delivery diagnosis, not a p95 pass
 
 Three fresh main-app strategy documents at actual958×903 each opened the native

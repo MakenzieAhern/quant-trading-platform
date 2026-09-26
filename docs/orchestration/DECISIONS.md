@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 cached index is not independent provenance authority — 2026-09-26
+
+Reading actual U7 composition found only replay/synthetic/historical providers;
+forward remains required and unimplemented/unaccepted, not silently replaced by
+fixtures. Do not invent a provider contract or source permission. Independent
+safe work found U5 verified immutable bundles but returned unchecked DB payloads.
+Append-only triggers do not guarantee a newly inserted row belonged to a receipt.
+Reuse verified normalized rows and existing canonical SHA256, checking source
+membership, exact payload and receipt metadata at the shared read boundary so
+both API and missing-date scheduling fail closed. No extra dependency/migration.
+Independent review caught False==0; canonical JSON keeps types distinct. Five
+negative API/acquisition variants, full backend994+1 optional skip, focused56,
+Ruff/format/mypy and actual ZH/EN cached Chrome reads passed. No acquisition or
+paper activity; all retained fingerprints unchanged after normal backend restart.
+Hold GitHub until actual recovery; no merge/release or full forward promotion.
+
 ## v1.2 missing native events are pending, not automatically fast — 2026-09-26
 
 Removing click-time DOM publication did not eliminate missing native records.

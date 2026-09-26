@@ -6,6 +6,7 @@ import sys
 from contextlib import asynccontextmanager
 from datetime import UTC, date, datetime, timedelta
 from types import SimpleNamespace
+from uuid import UUID
 
 import pytest
 from fastapi import FastAPI
@@ -20,6 +21,7 @@ from app.application.market_updates.cache import ReceiptCache
 from app.application.market_updates.contracts import (
     AUTHORITY,
     FIELDS,
+    PROVIDER,
     CreateUpdateRequest,
     UpdateCancelled,
     UpdateConflict,
@@ -32,7 +34,11 @@ from app.application.market_updates.service import MarketUpdateManager
 from app.application.market_updates.worker import check_result
 from app.core.config import get_settings
 from app.data.catalog.checksums import canonical_sha256
-from app.db.models.market_updates import MarketReceiptModel, MarketUpdateJobModel
+from app.db.models.market_updates import (
+    MarketObservationModel,
+    MarketReceiptModel,
+    MarketUpdateJobModel,
+)
 from app.db.session import SessionFactory, engine
 
 SID = "CN-A:SSE:600000"
@@ -413,6 +419,58 @@ async def test_cache_corruption_stops_missing_date_acquisition(manager):
     manifest = manager.cache.verify(receipt.manifest_sha256)
     (manager.cache.root / manifest["rows"]["path"]).write_bytes(b"corrupt fixture")
     next_job = await manager.create(request(), "check-cache")
+    assert (await terminal(manager, next_job.id)).error_code == "PRODUCT_CACHE_INTEGRITY_FAILED"
+    assert len(manager.test_calls) == 1
+
+
+@pytest.mark.parametrize(
+    "change", ["date", "price", "execution_eligible", "flag_type", "security_id"]
+)
+async def test_observation_must_belong_to_verified_receipt(manager, change):
+    job = await manager.create(request(), "verified-receipt")
+    await manager.start()
+    assert (await terminal(manager, job.id)).status == "SUCCEEDED"
+    values = await manager.observations(SID, request().start_date, request().end_date)
+    payload = {key: value for key, value in values[0].items() if key != "receipt_id"}
+    day = date(2026, 9, 18)
+    if change == "date":
+        day = date(2026, 9, 19)
+        payload["trading_date"] = day.isoformat()
+    elif change == "price":
+        payload["raw"] = {**payload["raw"], "close": "10.6"}
+    elif change == "security_id":
+        payload["security_id"] = "CN-A:SZSE:000001"
+    elif change == "flag_type":
+        payload["execution_eligible"] = 0  # Python equality treats False == 0.
+    else:
+        payload["execution_eligible"] = True
+    async with SessionFactory() as db, db.begin():
+        # Append-only triggers prevent UPDATE, but an INSERT can still refer to a
+        # valid receipt that never contained this observation. Replace only the
+        # isolated test index to exercise same-key payload corruption as well.
+        await db.execute(text("TRUNCATE product_market_observations"))
+        db.add(
+            MarketObservationModel(
+                provider=PROVIDER,
+                security_id=SID,
+                trading_date=day,
+                receipt_id=UUID(values[0]["receipt_id"]),
+                payload=payload,
+            )
+        )
+    assert (await manager.receipts(job.id, 20, 0))[1] == 1
+    with pytest.raises(UpdateError, match="PRODUCT_CACHE_INTEGRITY_FAILED"):
+        await manager.observations(SID, request().start_date, request().end_date)
+    app = FastAPI()
+    app.include_router(routes.router, prefix="/api")
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        response = await client.get(
+            "/api/market-updates/observations",
+            params={"security_id": SID, "start_date": "2026-09-18", "end_date": "2026-09-21"},
+        )
+    assert response.status_code == 422
+    assert response.json()["code"] == "PRODUCT_CACHE_INTEGRITY_FAILED"
+    next_job = await manager.create(request(), "reject-unverified-cache")
     assert (await terminal(manager, next_job.id)).error_code == "PRODUCT_CACHE_INTEGRITY_FAILED"
     assert len(manager.test_calls) == 1
 

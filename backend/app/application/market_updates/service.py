@@ -384,10 +384,19 @@ class MarketUpdateManager:
             )
         return items, int(total or 0)
 
-    async def _verify_receipt(self, receipt: MarketReceiptModel) -> None:
-        manifest = await asyncio.to_thread(self.cache.verify, receipt.manifest_sha256)
-        if manifest["evidence"] != receipt.evidence:
+    async def _verify_receipt(self, receipt: MarketReceiptModel) -> list[dict[str, Any]]:
+        manifest, rows = await asyncio.to_thread(self.cache.read, receipt.manifest_sha256)
+        evidence = manifest["evidence"]
+        if (
+            canonical_sha256(evidence) != canonical_sha256(receipt.evidence)
+            or evidence.get("receipt_id") != str(receipt.id)
+            or evidence.get("job_id") != str(receipt.job_id)
+            or evidence.get("security_id") != receipt.security_id
+            or evidence.get("received_at_utc") != receipt.received_at.isoformat()
+            or evidence.get("provider") != PROVIDER
+        ):
             raise UpdateError("PRODUCT_CACHE_INTEGRITY_FAILED")
+        return rows
 
     async def observations(self, sid: str, start: date, end: date) -> list[dict[str, Any]]:
         async with self.factory() as db:
@@ -410,8 +419,21 @@ class MarketUpdateManager:
                     )
                 )
             )
+        verified = {}
         for receipt in receipts:
-            await self._verify_receipt(receipt)
+            source_rows = await self._verify_receipt(receipt)
+            for source_row in source_rows:
+                verified[(receipt.id, source_row["security_id"], source_row["trading_date"])] = (
+                    source_row
+                )
+        for row in rows:
+            expected_row = verified.get(
+                (row.receipt_id, row.security_id, row.trading_date.isoformat())
+            )
+            if expected_row is None or canonical_sha256(expected_row) != canonical_sha256(
+                row.payload
+            ):
+                raise UpdateError("PRODUCT_CACHE_INTEGRITY_FAILED")
         return [{**row.payload, "receipt_id": str(row.receipt_id)} for row in rows]
 
     async def _claim(self) -> MarketUpdateJobModel | None:

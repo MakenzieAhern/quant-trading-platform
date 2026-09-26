@@ -112,6 +112,10 @@ class ReceiptCache:
         return next(self.root.glob("*.denial.json"), None) is not None
 
     def verify(self, digest: str) -> dict[str, Any]:
+        return self.read(digest)[0]
+
+    def read(self, digest: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        """Read normalized rows only after verifying their immutable receipt bundle."""
         if re.fullmatch(r"[0-9a-f]{64}", digest) is None:
             raise UpdateError("PRODUCT_CACHE_INTEGRITY_FAILED")
         try:
@@ -134,6 +138,6 @@ class ReceiptCache:
             expected = manifest["evidence"].get("logical_rows_sha256")
             if expected is not None and canonical_sha256({"rows": rows}) != expected:
                 raise ValueError("normalized rows checksum mismatch")
-            return manifest
+            return manifest, rows
         except (OSError, KeyError, ValueError, TypeError) as exc:
             raise UpdateError("PRODUCT_CACHE_INTEGRITY_FAILED") from exc
