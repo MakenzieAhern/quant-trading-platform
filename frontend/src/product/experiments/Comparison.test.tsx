@@ -1,4 +1,11 @@
-import { act, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../api/client";
@@ -13,7 +20,7 @@ import {
 import { ExperimentComparePage } from "./ExperimentComparePage";
 import { EXPERIMENT_VIEW_KEY, ExperimentsPage } from "./ExperimentsPage";
 import { job, result } from "./fixtures.test-data";
-import type { Experiment } from "./types";
+import type { Experiment, Page } from "./types";
 
 const ids = [1, 2, 3, 4].map((n) => `aa000000-0000-4000-8000-00000000000${n}`);
 const runs: Experiment[] = ids.map((id, index) => ({
@@ -219,6 +226,78 @@ describe("experiment comparison", () => {
     );
     expect(screen.getByText("Selected: 1 / 3")).toBeInTheDocument();
   });
+
+  it("restores scroll only after rows load, then records user scrolling without replaying it on rerender", async () => {
+    window.history.replaceState({ experimentScrollY: 693 }, "", "/experiments");
+    vi.stubGlobal("scrollY", 55);
+    let resolve!: (page: Page<Experiment>) => void;
+    vi.spyOn(experimentApi, "list").mockReturnValue(
+      new Promise((done) => {
+        resolve = done;
+      }),
+    );
+    render(<ExperimentsPage />);
+    fireEvent.scroll(window);
+    expect(window.history.state.experimentScrollY).toBe(693);
+    expect(window.scrollTo).not.toHaveBeenCalled();
+    await act(async () =>
+      resolve({ items: runs, total: 4, offset: 0, limit: 20 }),
+    );
+    expect(window.scrollTo).toHaveBeenCalledExactlyOnceWith({
+      top: 693,
+      left: 0,
+      behavior: "instant",
+    });
+    vi.stubGlobal("scrollY", 725);
+    fireEvent.scroll(window);
+    expect(window.history.state.experimentScrollY).toBe(725);
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(window.scrollTo).toHaveBeenCalledTimes(1);
+    window.history.pushState({}, "", `/experiments/${ids[0]}`);
+    fireEvent.scroll(window);
+    expect(window.history.state).not.toHaveProperty("experimentScrollY");
+  });
+
+  it("does not restore the old list position after filters change while loading", async () => {
+    window.history.replaceState({ experimentScrollY: 693 }, "", "/experiments");
+    let resolve!: (page: Page<Experiment>) => void;
+    vi.spyOn(experimentApi, "list")
+      .mockReturnValueOnce(new Promise(() => {}))
+      .mockReturnValueOnce(
+        new Promise((done) => {
+          resolve = done;
+        }),
+      );
+    render(<ExperimentsPage />);
+    fireEvent.change(screen.getByRole("searchbox"), {
+      target: { value: "Study" },
+    });
+    await act(async () =>
+      resolve({ items: runs, total: 4, offset: 0, limit: 20 }),
+    );
+    expect(window.scrollTo).not.toHaveBeenCalled();
+    expect(window.history.state.experimentScrollY).toBeNull();
+  });
+
+  it.each([null, -1, "693", NaN, Infinity])(
+    "ignores invalid list scroll metadata: %j",
+    async (position) => {
+      window.history.replaceState(
+        { experimentScrollY: position },
+        "",
+        "/experiments",
+      );
+      vi.spyOn(experimentApi, "list").mockResolvedValue({
+        items: runs,
+        total: 4,
+        offset: 0,
+        limit: 20,
+      });
+      render(<ExperimentsPage />);
+      await screen.findByRole("link", { name: /^Open experiment: Study 1/ });
+      expect(window.scrollTo).not.toHaveBeenCalled();
+    },
+  );
 
   it.each([
     null,

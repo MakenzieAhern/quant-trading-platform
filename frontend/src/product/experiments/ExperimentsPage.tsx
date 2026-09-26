@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "../../components/Link";
 import { Pagination } from "../../components/Pagination";
 import { formatUtc } from "../../utils/format";
@@ -61,6 +61,13 @@ function readOffset(): number {
     offset >= 0 && offset % 20 === 0 ? offset : 0;
 }
 
+function readScrollPosition(): number | null {
+  const position: unknown = window.history.state?.experimentScrollY;
+  return window.location.pathname === "/experiments" &&
+    typeof position === "number" && Number.isFinite(position) && position >= 0
+    ? position : null;
+}
+
 function readSelection(): Selection {
   const selected: unknown = window.history.state?.experimentSelection;
   if (
@@ -94,6 +101,7 @@ export function ExperimentsPage() {
   const [view, setView] = useState(readSavedView);
   const [saveStatus, setSaveStatus] = useState<"saved" | "error" | null>(null);
   const [revision, setRevision] = useState(0);
+  const scrollToRestore = useRef(readScrollPosition());
   const queryKey = JSON.stringify([offset, view.q, view.status, view.mode, view.sort]);
   const [jobs, setJobs] = useState<{
     key: string;
@@ -101,6 +109,24 @@ export function ExperimentsPage() {
     error: unknown;
   }>({ key: queryKey, data: null, error: null });
   if (jobs.key !== queryKey) setJobs({ key: queryKey, data: null, error: null });
+  useLayoutEffect(() => {
+    if (jobs.data && scrollToRestore.current !== null) {
+      // Native Back can clamp the position while this asynchronous list is loading.
+      window.scrollTo({ top: scrollToRestore.current, left: 0, behavior: "instant" });
+      scrollToRestore.current = null;
+    }
+  }, [jobs.data]);
+  useEffect(() => {
+    if (!jobs.data) return;
+    const saveScroll = () => {
+      if (window.location.pathname === "/experiments" && scrollToRestore.current === null)
+        window.history.replaceState(
+          { ...window.history.state, experimentScrollY: window.scrollY }, "",
+        );
+    };
+    window.addEventListener("scroll", saveScroll, { passive: true });
+    return () => window.removeEventListener("scroll", saveScroll);
+  }, [jobs.data]);
   useEffect(() => {
     if (window.location.pathname === "/experiments")
       window.history.replaceState(
@@ -111,7 +137,14 @@ export function ExperimentsPage() {
   function updateView(patch: Partial<View>, queryChanged = true) {
     setView((current) => ({ ...current, ...patch }));
     setSaveStatus(null);
-    if (queryChanged) setOffset(0);
+    if (queryChanged) {
+      scrollToRestore.current = null;
+      if (window.location.pathname === "/experiments")
+        window.history.replaceState(
+          { ...window.history.state, experimentScrollY: null }, "",
+        );
+      setOffset(0);
+    }
   }
   function resetView() {
     updateView(defaultView);

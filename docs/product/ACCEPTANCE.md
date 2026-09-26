@@ -1,5 +1,40 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 03:55 UTC asynchronous study-list scroll and missing-link recovery
+
+Actual Chrome ZH/dark reproduced a stable loaded-list position of `scrollY=693`
+becoming `55` after opening the existing last-row result and returning. The
+loading placeholder is shorter than the loaded list, so native restoration
+clamps too early. Reuse the existing list history entry for validated vertical
+position; restore once in layout after rows load, then record real scrolling.
+Do not overwrite it during loading or on another route. Query changes discard
+the old position, including a filter change before the first request completes.
+No response cache, polling restore loop, router or dependency was added.
+
+The new regression failed before repair. Focused comparison/list checks 19 PASS;
+full frontend 267 PASS, ESLint, TypeScript, production build, changed-test
+Prettier and diff check PASS. Invalid/null/negative/nonfinite/string positions,
+loading clamp, subsequent scrolling, rerender and pending-filter change are
+covered. The original compact page style is retained. Actual Chrome returned
+to `693`, reloaded at `693`, and preserved `693` after native Forward/Back;
+before/after screenshots were emitted inline, not claimed as saved files.
+
+A read-only DB query established zero records for the fixture-shaped unknown
+study ID. Its actual deep link showed actionable Chinese and English not-found
+alerts; the visible Back link returned to the loaded list without an alert or
+invented result. This is one missing-link branch, not all stale/offline/timeout
+cases. Restored Chinese/dark Workbench and original view/empty selection; no
+temporary viewport was set. Services remain healthy, Redis PONG/API+frontend
+HTTP200, formal 1/3/310, jobs 8, paper 5/events 417, updates 4/receipts 6 unchanged.
+No study/account/order/provider/DB/service restart or `.research` mutation.
+
+Evidence stays outside Git at product-evidence/v1.2/m4/
+20260926-study-scroll-recovery.json. The user's three `不清楚` answers remain
+unknown, not backup existence, pre-loss recovery evidence or feed authorization.
+UX-VIEWS/UX-ERROR/full M4/M5 remain incomplete; no merge or release gate promoted.
+Base `fb5888a` passed [CI36215518814](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36215518814)
+backend/frontend/Compose; that run predates this scroll repair.
+
 ## 2026-09-26 03:38 UTC nested comparison/detail return and incomplete comparison
 
 Actual Chrome found the still-open nested defect: list selection 2 -> compare

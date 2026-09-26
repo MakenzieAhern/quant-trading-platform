@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 restore asynchronous list scroll after actual rows — 2026-09-26
+
+Native history preserves the right entry but can restore before async rows
+make the document tall enough. Keep a validated vertical position in that
+existing study-list entry, restore once when data arrive, and register only a
+passive loaded-list scroll listener. Ignore other routes/loading clamps and
+discard pending position when the query changes. Do not cache study responses,
+add a router/observer/retry loop, or change financial data. Failing regression
+and actual Chrome 693->55 before / 693->693 after establish this root cause.
+Missing-study bilingual guidance and internal return were separately verified.
+Unknown human answers do not grant backup/data-use authority; release and
+genuine recovery/forward gates remain unchanged.
+
 ## v1.2 extend managed history returns rather than copy study state — 2026-09-26
 
 The one-hop Back helper passed direct routes but still reset list context after
