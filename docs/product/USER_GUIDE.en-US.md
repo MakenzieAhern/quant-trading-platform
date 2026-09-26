@@ -25,6 +25,24 @@ Project containers are configured to recover with the Docker Desktop engine. Des
 4. Read return, maximum drawdown, costs, benchmark and limitations first; then expand trades, holdings, risk decisions and fill reasons. “Show full precision” changes display only. Filtering shown trading dates does not recompute full-period metrics. Expand technical details for the original reason code.
 5. Select 2–3 completed studies to compare, checking data version, date range, capital, costs, risk and strategy version first. A saved simulated rebalance preview, where present, must be read with its as-of date, data snapshot and risk rejections; older results may have no preview. The result page can download a metadata JSON report and CSV records; both completed in actual Chrome on this PC. If the report is prepared but your browser does not start the download, use “Save prepared report” and check browser downloads. If preparation fails, check service status before clicking the download button again; a click alone does not prove the file was saved.
 
+## Inspect prices, cache and update history
+
+Search for a security in [Markets and watchlist](http://localhost:5173/markets), then inspect its historical dates and source. Raw prices are unadjusted prices for that date. Research-adjusted prices support historical comparisons, not a claim about executable prices. A watchlist saves interest, not orders. The catalog date, an observation's trading date and the UTC service-check time are different concepts.
+
+In [Data center](http://localhost:5173/data), inspect the saved update history under “Incremental raw-data requests.” Open a task to read receipts, observations and unexplained dates. “Refresh” reads saved state; it does not reacquire the entire archive. A linked retry retains the original failed task. Failure or cancellation is not evidence of complete data.
+
+This area is currently a **candidate raw cache, not approved for trading**. “Request complete” only means the bounded vendor request ended, not that usage rights, the current security master, calendar, ST history, rules or corporate actions passed acceptance. New requests need a separate acknowledgment of source-evaluation use. Until those rights and source gates are resolved, do not use candidate observations for research, forward simulation or trading. Allowed dates are request bounds, not proof of a trading session or available data; this does not refetch the whole historical archive.
+
+## Understand the result
+
+- Return describes asset change during that simulated period, not a promise about the future. Check capital, costs and whether the data are synthetic first.
+- Maximum drawdown is the largest drop from a previous asset peak to a later low. A profitable final result can still contain a large drawdown.
+- Win rate is the fraction of profitable trades. A few large losses can outweigh many small wins; win rate is not return.
+- A benchmark is a same-period comparison, not a risk-free return. Check matching dates and data modes.
+- Orders can remain unfilled because of suspension, price limits, cash constraints or risk rejection. Read the reason; a signal is not a fill. Unknown values are not zero.
+
+Open [Help](http://localhost:5173/help) for further explanations.
+
 ## Simulated accounts and recovery
 
 In [Simulated accounts](http://localhost:5173/paper), the creation form defaults to a clearly labeled 2030 synthetic A-share demo; the legacy AAPL fixture remains an explicit non-A-share choice. You can also choose audited historical replay. Start the account explicitly; the page supports pause, resume and stop, with cash, holdings, orders, fills and logs. None are real trades. New-market forward mode is not yet usable; a historical catch-up is not a new-market receipt.

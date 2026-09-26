@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 separate existing media from usable delivery — 2026-09-26
+
+All 73 ledger media targets exist natively, but Windows reads through WSL's
+`/mnt/c` UNC alias failed; sampled WSL read succeeded. Reuse the existing images
+and checksum-matching videos through an outside-Git local DELIVERY_INDEX with
+native links, rather than copy private media into Git or add a server/dependency.
+Keep original paths and files for provenance. The M5 home image is still loading/
+fading: label it, do not claim settled current visual proof. Current Browser Use
+policy blocked local video playback; no alternate-browser/hosting/CDP bypass.
+Checksums are byte identity, not playback or full key-interaction coverage.
+
+Reuse both manuals with cache/task-history/candidate restrictions and plain
+result concepts, checking the actual ZH/EN data-center headings and warnings.
+No provider acquisition or financial task. No milestone/release promotion:
+backup/original ledgers/forward rights, genuine login, novice/native zoom/speech/
+performance, complete media and exact-head CI remain. Continue independent quality
+work during the GitHub hold without shrinking the original U1–U8 objective.
+
 ## v1.2 reuse native translated market table context — 2026-09-26
 
 Actual browser and failing regressions exposed three unnamed market/data tables

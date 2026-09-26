@@ -1,5 +1,63 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 06:52 UTC delivery completion-gap audit
+
+Read the complete original objective, PRODUCT_MASTER, both guides, state and
+the requirement matrix. This is a gap audit, not a new full runtime acceptance.
+Code baseline `a3b679e`, clean at entry, ahead12 of cached origin; no remote
+query during the user-reported five-day GitHub hold. Four Compose services
+running; PostgreSQL/backend/Redis healthy. No competing writer/test/restore seen.
+
+All 73 distinct local media targets in this ledger exist as native Windows files.
+Windows reads through their WSL `/mnt/c` UNC aliases returned AccessDenied;
+WSL can read the sampled file. Existence therefore does not prove cross-client
+link usability. Outside-Git `product-evidence/v1.2/DELIVERY_INDEX.md` now has
+18 checked native-path file links, app/manual links and explicit scope/gaps.
+It is a local delivery aid, not another authoritative project-state file.
+
+Both principal WebM SHA-256 hashes match the original records:
+historical walkthrough `B85F5595830D884BBC88D6C34AD1B824575DAFA199953DD42D7EA18F51695C1F`;
+isolated synthetic flow `947B3233284E55C45BF2D515B81779BFA3D261C538344D1BFB48BB0F8102FFC8`.
+Durations/playability remain prior evidence: Browser Use URL policy blocked local
+`file:` video navigation; no hosting/alternate browser/CDP workaround attempted.
+Direct image inspection found the M5 home still loading/fading. The index marks
+this limitation and distinguishes the inspected, loaded earlier M1 home; neither
+is promoted to current full visual proof. Original files remain unchanged.
+
+| Requirement | Existing evidence and remaining gap |
+|---|---|
+| U1/U2 | START/DEMO/STRATEGY bounded prior evidence retained. Live strategy drawer/full page matched manual names; no current novice/full visual claim. |
+| U3 | WIZARD/JOB/RECOVER prior historical and isolated synthetic evidence includes idempotency/cancel/failure/crash retry. ISOLATE remains incomplete with missing original ledgers. No new tasks/formal studies. |
+| U4 | RESULT/COMPARE/EXPORT prior acceptance retained. Three-study geometry is bounded; do not reopen accepted Chrome downloads from an older suppression observation. |
+| U5/U6 | Cached history/historical plans have bounded evidence; current source authority, lawful new data and new-market plans remain incomplete. Manuals now cover cache/history/refresh/candidate limits/date distinctions, matching live ZH/EN data-center headings. No provider request. |
+| U7 | Synthetic/history are not genuine forward. Missing original paper ledgers, rights and after-start arrival/processing prevent completion. Stopped-account image is not lifecycle recording. |
+| U8, UX-DETAIL/VIEWS/CHART/ERROR | Prior cases retained; full cross-page translation/focus/scroll/error/accessibility coverage not collectively proven. Manuals now explain return/drawdown/win rate/benchmark/non-fills without profitability claims. |
+| Design and QA-VISUAL/A11Y/PERF | Four sizes/two themes/two locales have bounded cases, not whole-product proof. Native200%/OS motion/speech/novice and genuine cold visible-response p95 remain unproven; proxies cannot promote gates. |
+| QA-ENGINE/REVIEW/RELEASE and safety | Prior frontend298/lint/types/build belong to prior code unit, not rerun now. Exact-head full suites/migrations/restart/compatibility/CI still required for release. Eight critical DB fingerprints match prior checkpoint; `.research` unchanged; no new dependencies/calculation, destructive action, live order or authority redo. |
+| M0–M5 | M0 baseline exists. M1/M2 real visible flows need broader acceptance; M3 lacks required forward mode; M4 integrity/quality and M5 delivery/publication remain open. No milestone promoted. |
+
+Six mandatory walkthroughs: (1) clean synthetic and actual historical strategy→job→
+result have prior bounded proof, not a novice test; (2) navigation/refresh/duplicate/
+cancel/failure have isolated evidence; (3) result→reason→comparison→historical plan
+has bounded proof, new-market chain incomplete; (4) mode/date samples are not a
+full-page matrix; (5) isolated synthetic restart/WebSocket checks do not recover
+missing original accounts or prove forward processing; (6) offline/permission/
+timeout/no-match/no-trade faults exist, broader coverage remains. No mock substitute.
+
+Final deliverables: (1) app/manual recovery available, next genuine login NOT_RUN;
+(2) before/after and two recordings PARTIAL: missing standalone old orientation/
+comparison/paper evidence must be reconciled with actual baseline, not fabricated;
+comparison/account-lifecycle recordings remain; (3) per-flow local proof exists,
+exact-head CI blocked; (4) modes/dates/limits in guides/index; (5) branch/PR32 exist,
+no v1.2.0 merge/release/rehearsed rollback completion; (6) ZH/EN manuals expanded,
+novice/operator review remains. M5 FAIL; PRODUCT_GOAL_COMPLETE=false.
+
+Next safe work: settled current six-surface screenshots/key interactions using
+supported artifact capture only, then missing whole-page visual/accessibility
+cases. If durable recording capture is unavailable, state that tooling gap and
+advance independent quality work. Do not repeat accepted tables/export/recovery,
+trigger held GitHub jobs, fake forward data or stop solely on the GitHub hold.
+
 ## 2026-09-26 06:40 UTC market/data table keyboard context repaired
 
 Actual Chrome confirmed three remaining unnamed tables: cached security search,
