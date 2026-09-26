@@ -48,7 +48,9 @@ export function ExperimentComparePage() {
       ) : (
         <div className="experimentNotice" role="alert">
           <p>{u.invalidIds}</p>
-          <Link back href="/experiments">{c.backList}</Link>
+          <Link back href="/experiments">
+            {c.backList}
+          </Link>
         </div>
       )}
     </div>
@@ -66,13 +68,14 @@ function Comparison({ ids }: { ids: string[] }) {
     async (signal) =>
       Promise.all(
         ids.map(async (id): Promise<ComparedRun> => {
+          let job: Experiment | undefined;
           try {
-            const job = await experimentApi.get(id, signal);
+            job = await experimentApi.get(id, signal);
             if (job.status !== "SUCCEEDED" || !job.result_available)
               return { id, job, notReady: true };
             return { id, job, result: await experimentApi.result(id, signal) };
           } catch (error) {
-            return { id, error };
+            return { id, job, error };
           }
         }),
       ),

@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 retain verified comparison identity and transport fallback — 2026-09-26
+
+One failed result GET must not discard the same request's already parsed job
+name or render a partial metric table. Keep that metadata in the comparison's
+existing catch. Unknown transport codes must use applicable HTTP guidance, not
+promise absent technical-detail controls; registered domain explanations remain
+unchanged via optional fallback in the existing shared explanation helper.
+Preserve permission/timeout priority and no stale data on retry/query changes.
+Failing regression, actual production-build Chrome fault/retry and independent
+read-only review establish the bounded repair. The localhost QA forwarder sends
+only GET to the main API; no financial writes or service restarts, no fake outage
+or forward-data claim. Full product/recovery/release gates remain unchanged.
+
 ## v1.2 canonicalize accepted list alias and deploy only while idle — 2026-09-26
 
 Use the existing pathname reader to normalize only `/experiments/`, retaining

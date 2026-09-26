@@ -246,10 +246,15 @@ const explanations: Record<string, [string, string]> = {
   ],
 };
 
-export function explainExperimentCode(code: string, language: string): string {
+export function explainExperimentCode(
+  code: string,
+  language: string,
+  fallback?: string,
+): string {
   const chinese = language.startsWith("zh");
   return (
     explanations[code]?.[chinese ? 1 : 0] ??
+    fallback ??
     (chinese
       ? "此代码尚无已登记的通俗解释；请展开技术详情查看原始代码。"
       : "No plain-language explanation is registered for this code; expand technical details to inspect it.")

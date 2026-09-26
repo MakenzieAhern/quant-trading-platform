@@ -1,5 +1,44 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 04:27 UTC saved comparison result failure and identity-safe retry
+
+Actual Chrome over a disposable localhost-only production build and read-only
+API forwarder loaded two existing successful historical studies, then reloaded
+with one delayed result GET503. It reproduced two defects: already parsed study
+name discarded on result failure, and an unknown transport code directing the
+user to nonexistent technical details. The shared code-explanation helper now
+accepts HTTP guidance as an unknown-code fallback; registered business/risk
+explanations remain unchanged and permission/timeout precedence is retained.
+The comparison catch retains only that same request's verified job metadata,
+never partial financial results. No router, dependency or domain change.
+
+New regression failed before repair. Focused22/full frontend271, lint/type,
+production build and changed-file Prettier PASS. Deferred query-only failure and
+retry assert no stale/partial metric tables; unknown and registered code behavior
+has focused coverage. A mistaken fixture-value test expectation was corrected
+after inspecting its actual precise return, not by weakening assertions.
+Independent read-only source review found no actionable regression.
+
+Chrome ZH/light and EN/dark showed both actual saved study names and actionable
+server guidance, zero metric tables while incomplete. Mouse retry and keyboard
+Enter retry restored the same pair, two tables/zero alerts, returns4.67%/-0.47%
+and original2010-01-04→2011-03-22 /2011-03-01→2011-03-28 periods. Locale switch
+retained the pair/error. Before/after screenshots emitted inline, not saved-file
+claims. Browser retry completed too quickly to capture pending feedback; that
+specific deferred branch is unit evidence, not browser timing evidence. Injection
+is not a real outage, permission grant, strategy rerun or forward-market evidence.
+
+QA forwards GET only to fixed localhost8000, never financial POST. Owned process
+and listener verified before stopping; port5181 and temporary tab closed. Main
+services untouched/healthy/API200/PONG; eight critical table counts/sorted row
+hashes equal prior verified04:09 values. Original main browser untouched, no
+viewport override, study/account/order/provider or frozen `.research` mutation.
+Evidence outside Git: product-evidence/v1.2/m4/
+20260926-comparison-result-error.json and comparison-readonly-qa.py.
+Base61170ca CI36217283329 PASS (backend989/1skip, frontend269, Compose).
+This repair awaits exact-head CI. Broader accessibility/performance and genuine
+backup/ledger/forward/startup/user gates remain open; M4/M5 not promoted.
+
 ## 2026-09-26 04:15 UTC alias review, text contrast and idle guard deployment
 
 Independent read-only review identified an accepted `/experiments/` alias
@@ -36,9 +75,9 @@ unknown; full M4/M5, forward authority and release gates remain incomplete.
 
 ### Concrete remaining independent checks, without reopening accepted cases
 
-- Saved comparison partial-load/error transitions after success: same saved
-  identity, no stale/partial financial metrics and successful manual retry.
-  Prior completed+INTERRUPTED comparison is accepted, not this new failure case.
+- Saved comparison result503 after success and identity-safe manual retry now
+  passed as bounded evidence above; deferred pending/query transitions have
+  unit coverage. Do not repeat this or the prior completed+INTERRUPTED case.
 - Broader keyboard/announcement and chart/nontext/focus contrast across
   configuration, plan and paper pages; bounded result text checks above do not
   replace these, genuine screen-reader or OS reduced-motion evidence.

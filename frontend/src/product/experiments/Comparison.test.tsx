@@ -356,6 +356,59 @@ describe("experiment comparison", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("retains known study names on result failure and retries without stale or partial metrics", async () => {
+    vi.spyOn(experimentApi, "get").mockImplementation(async (id) =>
+      runs.find((run) => run.job_id === id)!,
+    );
+    let reject!: (reason: Error) => void;
+    let resolve!: (value: typeof result) => void;
+    let attempts = 0;
+    const summary = vi
+      .spyOn(experimentApi, "result")
+      .mockImplementation((id) =>
+        id !== ids[2]
+          ? Promise.resolve({ ...result, job_id: id })
+          : new Promise((done, fail) => {
+              attempts += 1;
+              if (attempts === 1) reject = fail;
+              else resolve = done;
+            }),
+      );
+    render(<ExperimentComparePage />);
+    await screen.findByRole("heading", { name: "Saved full-period results" });
+    act(() => {
+      window.history.pushState({}, "", comparisonUrl([ids[0], ids[2]]));
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+    await waitFor(() =>
+      expect(summary).toHaveBeenCalledWith(ids[2], expect.any(AbortSignal)),
+    );
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    await act(async () =>
+      reject(new ApiError(503, "Unavailable", "UNREGISTERED_RESULT_ERROR")),
+    );
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent("Study 1");
+    expect(alert).toHaveTextContent("Study 3");
+    expect(alert).toHaveTextContent("The server could not finish this request");
+    expect(alert).not.toHaveTextContent("expand technical details");
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(alert).toHaveTextContent("服务端未完成请求");
+    await userEvent.click(screen.getByRole("button", { name: "重新加载" }));
+    await waitFor(() => expect(attempts).toBe(2));
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    await act(async () => resolve({ ...result, job_id: ids[2]! }));
+    await screen.findByRole("heading", { name: "已保存的完整区间结果" });
+    expect(screen.getAllByRole("table")).toHaveLength(2);
+    expect(screen.getByRole("row", { name: /^累计收益/ })).toHaveTextContent(
+      "0.01%0.01%",
+    );
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.queryByText("Study 2")).not.toBeInTheDocument();
+  });
+
   it("shows exact metrics/nulls and six conditions, reacts to query-only navigation and language changes", async () => {
     vi.spyOn(experimentApi, "get").mockImplementation(async (id) => {
       const found = runs.find((r) => r.job_id === id)!;
