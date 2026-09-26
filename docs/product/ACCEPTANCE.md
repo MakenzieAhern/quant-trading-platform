@@ -1,5 +1,18 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 04:30 UTC GitHub Actions account gate
+
+Comparison repair pushed as f91e1e5 to existing draft/open PR32. Exact-head
+[CI36217962698](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36217962698)
+terminated before any frontend/backend/Compose step started. GitHub annotations
+state recent account payments failed or the spending limit needs increasing.
+This is NOT_STARTED_ACCOUNT_BILLING, not a failed product test and not CI PASS.
+No repeated rerun, payment, limit change, alternative identity, self-hosted
+workaround or protection bypass attempted. User informed once to check Billing
+& plans. Local frontend271/lint/type/build and bounded Chrome/review evidence
+remain valid; safe independent M4 work remains. Release stays incomplete. This
+external gate is saved locally without another pointless CI-triggering push.
+
 ## 2026-09-26 04:27 UTC saved comparison result failure and identity-safe retry
 
 Actual Chrome over a disposable localhost-only production build and read-only
@@ -36,7 +49,7 @@ viewport override, study/account/order/provider or frozen `.research` mutation.
 Evidence outside Git: product-evidence/v1.2/m4/
 20260926-comparison-result-error.json and comparison-readonly-qa.py.
 Base61170ca CI36217283329 PASS (backend989/1skip, frontend269, Compose).
-This repair awaits exact-head CI. Broader accessibility/performance and genuine
+This repair's exact-head CI did not start due to the account gate above. Broader accessibility/performance and genuine
 backup/ledger/forward/startup/user gates remain open; M4/M5 not promoted.
 
 ## 2026-09-26 04:15 UTC alias review, text contrast and idle guard deployment

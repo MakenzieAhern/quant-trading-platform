@@ -1,5 +1,16 @@
 # Decisions
 
+## v1.2 stop CI retries at account-billing gate — 2026-09-26
+
+GitHub run36217962698 for pushed f91e1e5 returned all3 jobs failed with zero
+steps and official billing/spending-limit annotations. Distinguish local passing
+tests from CI not started. Do not pay, increase budget, change account, add a
+self-hosted workaround or bypass protected checks. Save this new gate locally
+without a second CI-triggering push; continue independent safe quality work.
+Account owner must resolve the billing/limit state before one deliberate exact
+head rerun. Existing missing-ledger/independent-backup/lawful-forward and full
+product gates remain intact. No merge or release.
+
 ## v1.2 retain verified comparison identity and transport fallback — 2026-09-26
 
 One failed result GET must not discard the same request's already parsed job
