@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 05:15 UTC distinct paper-ledger landmarks and keyboard traversal
+
+Actual Chrome on5173 showed five populated ledger regions sharing the generic
+scroll instruction and five unnamed tables. Shared PaperTable now prefixes the
+translated section title on each region and names its table with that title;
+tabindex, headers, empty states and all monetary/stream/API logic stay unchanged.
+New ZH region assertion failed before repair. Initial English fixture expected
+Simulated orders/fills rather than the existing Paper orders/fills: corrected
+explicit expectations after inspecting translations, not weakened assertions.
+Focused26/full frontend287/35files, lint/type/build/Prettier/diff PASS. Independent
+read-only reviewer approved the bounded change; no full WCAG/speech claim.
+
+QA-only HTTP forwarder lacked WebSocket upgrade, so snapshotGET200 did not hydrate
+the UI. Existing installed Vite preview proxy then reached the backend, which
+rejected temporary5182 Origin with WebSocket403. Stopped this access path; no
+Origin rewrite, CORS/security change or product connection fix to satisfy QA.
+POST on a nonexistent QA-only path returned405. Both owned processes verified
+by PID/start/command/listener before TERM (26120/start15:10:56 Python,26254/
+start15:12:59 Vite); sessions8838/29277 terminal, listener5182 gone, files retained.
+Compose inspection established source bind mount: fresh page on approved5173
+served the repair without image build or any container restart.
+
+Actual Chrome ZH/dark stopped historical account: all five region/table names
+distinct, Tab positions→signals→risk→orders→fills,2px visible outline. EN names
+and positions→signals verified; rows6/20/20/20/6 unchanged, historical date
+2011-03-23 retained, cash81309.8134/equity99964.8134/commission30.1866 unchanged.
+Closed/Stopped status roles localized; actual screen-reader speech not tested.
+Audit native Enter opens/closes with focus retained. Locale restoredZH, dark
+unchanged, temp tabs closed; main draft not interacted with. Eight critical
+fingerprints and .research unchanged, services healthy/API+frontend200/PONG.
+No session start/pause/stop, job/provider/order/financial POST or research run.
+Evidence outside Git: product-evidence/v1.2/m4/20260926-paper-landmark-keyboard.json.
+Local coherent commit only; GitHub hold unchanged, no CI retry/push/merge/release.
+
 ## 2026-09-26 05:04 UTC cold HTTP-cache route measurement is partial
 
 Disposable production build42f2025, Chrome153, ZH/dark1440x900, no-store

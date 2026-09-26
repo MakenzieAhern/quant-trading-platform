@@ -412,9 +412,9 @@ function PaperTable({
           className="tableScroll"
           role="region"
           tabIndex={0}
-          aria-label={t("scrollTable")}
+          aria-label={`${title} — ${t("scrollTable")}`}
         >
-          <table>
+          <table aria-label={title}>
             <thead>
               <tr>
                 {headings.map((heading) => (

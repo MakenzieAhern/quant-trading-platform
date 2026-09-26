@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 name shared paper ledger regions without changing runtime — 2026-09-26
+
+Reuse existing translated section titles and scroll hint in shared PaperTable;
+name the semantic table too. No new component/library or financial calculation.
+Test all five populated types in ZH/EN and keyboard focus; empty states unchanged.
+Do not fix production WebSocket logic merely because a HTTP-only QA helper fails.
+After a temporary-origin403, stop that route without rewriting Origin/security.
+Inspect Compose source mounts first: approved original5173 already serves source
+changes, so no image build or restart required for real-browser verification.
+
 ## v1.2 distinguish cold DOM timing from visible response — 2026-09-26
 
 Retain the native3040ms interaction anomaly and incomplete native click samples.

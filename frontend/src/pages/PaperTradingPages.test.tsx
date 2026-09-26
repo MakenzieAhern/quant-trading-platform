@@ -644,6 +644,26 @@ describe("paper trading pages", () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({
         ...paperSnapshot("STOPPED"),
+        latest_portfolio: {
+          timestamp: "2011-03-23T07:00:00Z",
+          cash: "81309.8134",
+          market_value: "18655",
+          equity: "99964.8134",
+          realized_pnl: "0",
+          unrealized_pnl: "-5",
+          cumulative_commission: "30.1866",
+          drawdown: "0",
+          positions: [
+            {
+              symbol: "CN-A:SSE:600000",
+              quantity: "100",
+              average_price: "26",
+              market_price: "26.19",
+              unrealized_pnl: "19",
+              realized_pnl: "0",
+            },
+          ],
+        },
         signals: [
           {
             strategy_id: "cn_a_cross_sectional_momentum_low_vol_v1",
@@ -712,6 +732,23 @@ describe("paper trading pages", () => {
       expect(screen.getByText("会话连接: 已关闭")).toBeVisible();
       expect(screen.getByText("可用资金不足")).toBeVisible();
       expect(screen.getByText("预计买入成本超过可用现金。")).toBeVisible();
+      for (const title of [
+        "持仓",
+        "信号",
+        "风控决策",
+        "模拟订单",
+        "模拟成交",
+      ]) {
+        expect(
+          screen.getByRole("region", {
+            name: `${title} — ${i18n.t("research:scrollTable")}`,
+          }),
+        ).toHaveAttribute("tabindex", "0");
+        expect(screen.getByRole("table", { name: title })).toBeVisible();
+      }
+      screen.getByRole("region", { name: /^持仓 —/ }).focus();
+      await userEvent.tab();
+      expect(screen.getByRole("region", { name: /^信号 —/ })).toHaveFocus();
       await act(async () => i18n.changeLanguage("en-US"));
       expect(screen.getByText("Buy / Limit")).toBeVisible();
       expect(screen.getByText("Filled")).toBeVisible();
@@ -719,6 +756,21 @@ describe("paper trading pages", () => {
       expect(screen.getByText("Rejected by risk controls")).toBeVisible();
       expect(screen.getByText("Proposal approved.")).toBeVisible();
       expect(screen.getByText("Insufficient buying power")).toBeVisible();
+      for (const title of [
+        "Positions",
+        "Signals",
+        "Risk decisions",
+        "Paper orders",
+        "Paper fills",
+      ]) {
+        expect(
+          screen.getByRole("region", {
+            name: `${title} — ${i18n.t("research:scrollTable")}`,
+          }),
+        ).toHaveAttribute("tabindex", "0");
+        expect(screen.getByRole("table", { name: title })).toBeVisible();
+      }
+      expect(screen.getByRole("region", { name: /^Signals —/ })).toHaveFocus();
     } finally {
       await act(async () => i18n.changeLanguage("en-US"));
     }
