@@ -697,6 +697,55 @@ describe("paper trading pages", () => {
     expect(screen.getByRole("button", { name: "Stop replay" })).toBeVisible();
   });
 
+  it.each([
+    [
+      "CREATED",
+      "Start replay",
+      "start",
+      "Unable to start the paper session.",
+      "无法开始模拟交易会话。",
+    ],
+    [
+      "RUNNING",
+      "Pause replay",
+      "pause",
+      "Unable to pause the paper session.",
+      "无法暂停模拟交易会话。",
+    ],
+    [
+      "PAUSED",
+      "Stop replay",
+      "stop",
+      "Unable to stop the paper session.",
+      "无法停止模拟交易会话。",
+    ],
+  ] as const)(
+    "translates a failed %s account command without resubmitting",
+    async (status, button, action, english, chinese) => {
+      installWebSocket();
+      const fetch = vi
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValueOnce(jsonResponse(paperSnapshot(status)))
+        .mockResolvedValueOnce(jsonResponse({ detail: "unavailable" }, 503));
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      await userEvent.click(
+        await screen.findByRole("button", { name: button }),
+      );
+      expect(screen.getByRole("alert")).toHaveTextContent(english);
+      expect(screen.getByText(english)).toBeVisible();
+      expect(fetch.mock.calls[1]?.[0]).toContain(`/${PAPER_ID}/${action}`);
+      try {
+        await act(async () => i18n.changeLanguage("zh-CN"));
+        expect(screen.getByRole("alert")).toHaveTextContent(chinese);
+        expect(screen.getByText(chinese)).toBeVisible();
+        expect(fetch).toHaveBeenCalledTimes(2);
+      } finally {
+        await act(async () => i18n.changeLanguage("en-US"));
+      }
+    },
+  );
+
   it("explains paper ledger enums and risk decisions in the selected language", async () => {
     installWebSocket();
     vi.spyOn(globalThis, "fetch").mockResolvedValue(

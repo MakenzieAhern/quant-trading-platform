@@ -23,7 +23,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     try {
       await paperApi[action](sessionId);
     } catch {
-      setCommandError(t(`detail.${action}Error`));
+      setCommandError(`detail.${action}Error`);
     } finally {
       setCommandPending(false);
     }
@@ -121,11 +121,12 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           {t("detail.lastVerifiedWarning")}
         </p>
       )}
-      {(error || commandError) && (
-        <ErrorPanel
-          message={commandError ?? error ?? t("detail.unknownError")}
-        />
+      {commandError && (
+        <p className="stateCallout" role="alert">
+          {t(commandError)}
+        </p>
       )}
+      {error && <ErrorPanel message={error} />}
       <section className="runFacts" aria-label={t("detail.detailsLabel")}>
         <div>
           <span>{t("detail.provider")}</span>

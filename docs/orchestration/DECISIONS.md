@@ -1,5 +1,16 @@
 # Decisions
 
+## v1.2 command errors are actions, not load failures — 2026-09-26
+
+Paper start/pause/stop use one existing command boundary. Preserve its pending,
+retry and persisted snapshot behavior, but show the specific translated failure
+visibly and translate keys at render, not invocation. Keep stream errors separate
+so a command failure cannot mask them. Three failing-then-passing regressions and
+offline full frontend305/static/build checks plus readonly review support this
+bounded repair. No real account/API/DB action or claimed Chrome acceptance.
+Use existing Node/dependencies while Docker unavailable; fresh scratch output
+avoids root-owned generated dist without permission changes or data deletion.
+
 ## v1.2 validate historical paper before saving; render error locale — 2026-09-26
 
 Reuse the shared historical experiment request at paper create, before any saved

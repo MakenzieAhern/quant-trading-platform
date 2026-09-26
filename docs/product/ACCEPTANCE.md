@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 16:02 UTC failed account commands keep their context and locale
+
+With Docker unavailable, existing WSL Node24.20 and matching locked frontend
+dependencies enabled offline validation, no install. Three API503 fixture cases
+first failed: start/pause/stop errors retained English after Chinese switch and
+were hidden inside a generic data-load diagnostic. At their shared command
+boundary store the existing key, render a visible native alert with the specific
+failure. Stream errors retain independent typed ErrorPanel; neither snapshot,
+financial/API behavior nor pending/finally/retry semantics changed.
+
+Focused31/full305 frontend tests passed, ESLint/types/Prettier passed. First npm
+invocation failed inherited PATH quoting; used observed absolute Node executable.
+Default build failed EACCES on root-owned dist/assets. Same Vite production build
+passed129 modules in a freshly created scratch output, no chown/manual deletion or
+original asset overwrite. Readonly independent final two-file review found no
+bounded blocker. Backend unchanged/not rerun; CI held. Actual Chrome command-error
+recheck **NOT_RUN** while Docker absent; mock commands do not act on retained
+accounts or prove U7 runtime/forward acceptance. No account/provider/DB/OOS work.
+
+Bounded Windows event reads found no matching Docker/WSL fault/shutdown event in
+the observed interval, not proof of cause. Docker ownership question unanswered;
+no second launch/reset/deletion. Full product acceptance/release remains incomplete.
+[Offline regression/build/review evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260926-paper-command-errors.json>)
+is outside Git. Subsequent healthy runtime must supply real browser evidence.
+
 ## 2026-09-26 historical account configuration and live error locale
 
 Disposable API regression proved historical create accepted exact cash above the
