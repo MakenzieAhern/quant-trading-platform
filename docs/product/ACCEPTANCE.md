@@ -1,5 +1,38 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 07:22 UTC strategy layout evidence, activation anomaly retained
+
+Actual Chrome checked16 combinations of ZH/EN, dark/light and the four required
+dimensions, each with list and native drawer open (32 geometry states). The
+single registered strategy retained six plain-language sections covering rules,
+cycle, risks, configuration, data and weak existing evidence. List document
+client/scroll widths matched1425/1265/1009/375; drawer widths matched523 desktop
+and358 mobile, no measured paragraph/heading overflow. Card trigger42px;
+drawer Close/Open40px and Configure42px. Sampled drawer text contrast minimum
+dark7.653/light6.058. Mobile EN/light native Tab reached Configure with2px outline,
+Escape returned Explore strategy. Independent detail URL loaded all six sections.
+
+Do not hide the first activation anomaly: initial native locator mouse click left
+no drawer/hash and main focused, confirmed by a later read. No console error.
+Enter then opened it, and a later stable mouse click plus sixteen matrix Enter
+opens succeeded. Cause remains unproven; no speculative shared Dialog/router fix
+was made. Strategy quality remains PARTIAL, not unconditional activation PASS.
+The attempted browser history read was unavailable in the DOM-only scope; no
+fallback to hidden state/CDP or mutation. Missing guessed file paths were corrected
+through rg discovery; those read-command failures were not failed app tests.
+
+Representative actual desktop ZH/dark and mobile EN/light drawer and independent
+detail images inspected inline, not saved local PNGs or all32 pixel-reviewed images.
+Original ZH/dark restored; owned viewport/tab cleaned. Eight critical DB counts/
+fingerprints and frozen research unchanged. No code, suites, provider, financial,
+runtime or GitHub operations. Evidence outside Git:
+`product-evidence/v1.2/m4/20260926-strategy-quality.json`.
+
+Two recent units added bounded proof but no new completed full user flow or code
+defect reduction. Change priority now to first-activation/cold-response diagnosis,
+not another generic matrix. Keep native3040ms cold anomaly and p95 unknown; DOM/
+rAF availability cannot prove presentation. Full U1–U8/M0–M5 and all gates remain.
+
 ## 2026-09-26 07:16 UTC bounded Task Center whole-page quality
 
 Actual Chrome checked Task Center in ZH/EN × dark/light ×

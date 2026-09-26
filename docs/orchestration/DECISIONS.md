@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 reprioritize after two proof-only units — 2026-09-26
+
+Task Center and strategy matrices add bounded evidence, not new full user flows
+or code-defect reduction. Honor the original two-iteration rule: stop accumulating
+generic geometry matrices and prioritize the observed first strategy activation
+anomaly and unresolved cold native interaction measurement. Stable mouse/Enter
+success does not explain the initial no-drawer observation; no speculative fix.
+Native3040ms cold sample remains; missing native click entries cannot become zero,
+DOM/rAF timing cannot become paint evidence, and p95 remains unknown until a valid
+complete protocol. Do not shrink required quality or forward/source/release scope.
+GitHub remains user-reported hold estimated2026-10-01, no push/CI polling.
+
 ## v1.2 shared mode guide must state current availability — 2026-09-26
 
 Help and home onboarding shared a description of forward processing but omitted
