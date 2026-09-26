@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 16:58 UTC historical paper integer request boundary
+
+Six failing regressions proved the actual request union coerced true,20.0 and
+string20 into integers for rebalance_sessions/maximum_holdings. The two existing
+fields now require strict integers, matching the exploratory request. Valid
+lower/upper/default counts and exact cash100000.123456789123456789 remain unchanged.
+No accounting, runtime, saved account, plan version or ledger rewrite. Final126
+pure backend tests, Ruff check/format320 and mypy144 passed. Independent readonly
+review found no P0/P1: valid UI JSON and normalized saved-account recovery remain
+compatible; it did not execute tests/DB/browser/network. Actual HTTP POST/SQL
+persistence/browser submission NOT_RUN; frontend not rerun because unchanged.
+
+Previous turn normally launched actual installed Chrome and inspected current
+281e25b isolated frontend at15173: home explicitly reported service/data unavailable
+in Chinese; semantic EN button switched the same real page to English. Native
+window inspection was stopped by URL-confidence policy; no bypass, native200%
+NOT_RUN, no screenshot obtained. This is not service or forward acceptance.
+Fresh PID/start/command/cwd inspection identified only the owned preview489,
+which was stopped with TERM; process/listener absence verified16:58UTC. Build
+retained, no files/data deleted. Chrome remains open; Docker absent, main health
+unverified. GitHub hold/full U1-U8 goal and external gates remain intact.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260926-paper-count-boundary.json>)
+is outside Git.
+
 ## 2026-09-26 16:49 UTC saved plan date confidence and V3 metadata
 
 Old saved plans do not prove their own account snapshot date. The shared research

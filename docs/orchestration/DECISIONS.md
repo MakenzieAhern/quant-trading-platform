@@ -1,5 +1,16 @@
 # Decisions
 
+## v1.2 reject coerced historical paper counts — 2026-09-26
+
+Require real integer types for historical account rebalance/holding counts at the
+existing request boundary, as the experimental boundary already does. Six failing
+tests demonstrated boolean/float/string coercion; change only two Field options,
+retain safe defaults/ranges/exact cash and all stored accounts/financial engine.
+Pure126/backend static passed; no new dependency, schema migration or financial
+implementation. Browser service-error observation is bounded real Chrome DOM,
+not nativezoom/screenshot/runtime/forward acceptance. Obeyed native UI policy stop,
+cleaned only freshly verified own preview. Do not bypass or repeatedly retry.
+
 ## v1.2 distinguish unverified saved plans from dated previews — 2026-09-26
 
 Do not infer an old plan's snapshot date from the current account. Reuse the shared

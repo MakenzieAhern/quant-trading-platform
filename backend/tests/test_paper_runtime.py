@@ -4,8 +4,9 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from pydantic import TypeAdapter, ValidationError
 
-from app.api.schemas.paper import HistoricalASharePaperSessionRequest
+from app.api.schemas.paper import CreatePaperSessionRequest, HistoricalASharePaperSessionRequest
 from app.application.paper_trading import PaperTradingManager
 from app.backtest import BacktestConfig, BacktestEngine
 from app.data.providers import CSVDataProvider
@@ -170,6 +171,55 @@ def test_historical_paper_request_rejects_unsafe_ranges_and_risk() -> None:
     ):
         with pytest.raises(ValueError):
             HistoricalASharePaperSessionRequest.model_validate({**request, **change})
+
+
+@pytest.mark.parametrize("field", ["rebalance_sessions", "maximum_holdings"])
+@pytest.mark.parametrize("value", [True, 20.0, "20"])
+def test_historical_paper_counts_do_not_coerce_non_integer_json(field, value) -> None:
+    request = {
+        "provider_type": "historical_a_share",
+        "dataset_id": "cn-a-research-20100101-20251231-v1",
+        "symbol": "CN-A",
+        "strategy": {
+            "type": FROZEN_A_SHARE_STRATEGY_ID,
+            "parameters": {
+                "start_date": "2011-03-01",
+                "end_date": "2011-03-31",
+                field: value,
+            },
+        },
+    }
+    with pytest.raises(ValidationError):
+        TypeAdapter(CreatePaperSessionRequest).validate_python(request)
+
+
+@pytest.mark.parametrize("rebalance,holdings", [(1, 1), (252, 100), (20, 20)])
+def test_historical_paper_integer_boundaries_preserve_exact_configuration(
+    rebalance, holdings
+) -> None:
+    parsed = HistoricalASharePaperSessionRequest.model_validate(
+        {
+            "provider_type": "historical_a_share",
+            "dataset_id": "cn-a-research-20100101-20251231-v1",
+            "symbol": "CN-A",
+            "strategy": {
+                "type": FROZEN_A_SHARE_STRATEGY_ID,
+                "parameters": {
+                    "start_date": "2011-03-01",
+                    "end_date": "2011-03-31",
+                    "rebalance_sessions": rebalance,
+                    "maximum_holdings": holdings,
+                },
+            },
+            "initial_cash": "100000.123456789123456789",
+        }
+    )
+    assert parsed.strategy.parameters.rebalance_sessions == rebalance
+    assert parsed.strategy.parameters.maximum_holdings == holdings
+    assert parsed.initial_cash == Decimal("100000.123456789123456789")
+    assert parsed.risk.enforce_buying_power is True
+    assert parsed.risk.max_leverage == Decimal(1)
+    assert parsed.risk.max_drawdown == Decimal("-0.2")
 
 
 def test_paper_broker_is_local_next_bar_and_explicitly_rejects_limit_orders() -> None:

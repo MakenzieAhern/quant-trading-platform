@@ -50,8 +50,8 @@ class SimulatedASharePaperSessionRequest(StrictModel):
 class HistoricalAShareParameters(StrictModel):
     start_date: date
     end_date: date
-    rebalance_sessions: int = Field(default=20, ge=1, le=252)
-    maximum_holdings: int = Field(default=20, ge=1, le=100)
+    rebalance_sessions: int = Field(default=20, ge=1, le=252, strict=True)
+    maximum_holdings: int = Field(default=20, ge=1, le=100, strict=True)
     max_position_weight: PositiveDecimalString = Field(default=Decimal("0.1"), le=1)
     universe: Literal["ALL", "SSE", "SZSE"] = "ALL"
     commission_rate: DecimalString = Field(default=Decimal("0.0003"), ge=0, le=Decimal("0.01"))

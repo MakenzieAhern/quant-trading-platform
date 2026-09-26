@@ -1,7 +1,20 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-26T16:49:17Z",
+  "updated_at_utc": "2026-09-26T16:58:16Z",
+  "historical_paper_integer_boundary": {
+    "status": "PASS_OFFLINE_REQUEST_BOUNDARY_NOT_RUNTIME_RELEASE",
+    "baseline_failed": 6,
+    "backend_offline_passed": 126,
+    "independent_readonly_review": "NO_P0_P1; validUIintegerJSON/savednormalizedaccount compatible, no external action",
+    "evidence": "product-evidence/v1.2/m4/20260926-paper-count-boundary.json",
+    "policy": "Only2 strict integer fields; actual union rejects bool/float/string counts, valid UI integers/precise cash/risk preserved. No engine/account/ledger/plan rewrite. HTTP/SQL/browserPOST not run; GitHub held/full goal incomplete."
+  },
+  "offline_chrome_latest": {
+    "status": "BOUNDED_DOM_PASS_NATIVE_POLICY_STOP_NOT_RUNTIME_ACCEPTANCE",
+    "observed_at_utc": "2026-09-26T16:54:04Z",
+    "policy": "Normally launched installedChrome, isolated current281e25b home at15173 truthfulZHoffline/ENsemantic switch. NativewindowURL confidence stop obeyed, no bypass/no200zoom/screenshot. Ownpreview489 verifiedPID/start/cwd/command and TERM, listener absent16:58UTC; build retained. Docker/main health unavailable/unverified; no account/provider/GitHub action."
+  },
   "plan_date_warning": {
     "status": "PASS_OFFLINE_NOT_BROWSER_OR_SQL_PERSISTENCE",
     "backend_offline_passed": 117,
@@ -201,14 +214,14 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-09-26 16:49UTC codex/product-v1.2-current-rules baseddc1f24, owned plan metadata/warning changes only. No competing writer/test observed at start; final readonly review complete. Docker/Chrome absent16:45UTC; no launcher or recovery action. Services/DB and prior tmpfs cleanup unverified; scratch build has no listener. Old PIDs not authority.",
+    "latest_verification": "2026-09-26 16:58UTC branch codex/product-v1.2-current-rules base281e25b. Owned2backend request/test changes and checkpoint only; no competing writer/test/preview. Ownedpreview489 confirmed start/cwd/args thenTERM,15173 absent. Chrome nowrunning after normal16:54 launch; nativeComputerUseURL-confidence stop obeyed. Dockerabsent, mainDB/services unverified. No account/provider/GitHub actions; oldPIDs not authority.",
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
     "queue_writer": "owned isolated paper manager idle after two stopped historical QA accounts; main paper manager idle; no formal studies",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
-      "forward_source_audit": "2026-09-26 plan-date warning/V3 compatibility final readonly review NO_P0_P1; strict V1/V2 replay retained; reviewer did not run tests/API/DB/network"
+      "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
     "verified_processes": "2026-09-26 07:51UTC root-only writer; readonly agent review complete. All5 paper sessions STOPPED and update/research queues terminal before two normal main-backend restarts. Explicit isolated Compose qtp-v12-receipt-integrity-20260926 PostgreSQL/test quant_test owned here; test docker-run containers --rm terminal, PostgreSQL stopped after exact labels checked, no named volume/image deletion. Main four services remain healthy/running, API200, eight critical DB fingerprints unchanged/frozen research clean. Actual ZH/EN cached Chrome read only, restoredZHdark and own tab closed. No acquisition/finance/GitHub actions. Foreground confirmation still pending; no new perf verdict. Verify live identities before future actions.",
     "process_ids_are_not_reusable_authority": true
@@ -760,7 +773,7 @@
     }
   },
   "next_task": "Do not repeat the isolated release-image/clean-DB rehearsal or the failed Docker Run-entry hypothesis. On the next genuine Windows login, test the single current-user AtLogOn task and verify Docker/WSL/Compose/API/frontend plus retained database counts without terminal assistance, reset or data deletion. Until then M5 startup is FAIL. Existing Chrome is available again and the bounded English result/compare/stopped-paper read-only walkthrough has completed; retain existing Chinese recordings as bounded evidence and fill only actual key-interaction coverage gaps through a supported capture path. English video is optional, not a separate user requirement. Obtain genuine novice-user evidence rather than relabel agent QA. Continue independent M4/M5 accessibility, performance and compatibility work while preserving the missing genuine ledgers, independent backup and lawful forward-source blockers. Native 200% zoom needs user-operated evidence: browser policy blocked chrome://settings/appearance; do not bypass or substitute a CSS proxy. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 is only the earliest conditional after-start receipt and still needs lawful source authority. A privileged read-only VSS inventory needs a real Windows administrator action; do not infer absent shadows from Access Denied. No duplicate Docker startup mechanism, full U6/U7 promotion or release from historical replay",
-  "next_command": "Continue original full U1-U8/M0-M5, goal active. User five-day GitHub hold: no push/remote CI polling or retries/merge/release until actual recovery. Shared plan snapshot guard, legacy checkpoint compatibility and old-plan date warning completed offline:117 backend/321 frontend/static/build/independent review; do not repeat accepted unit. New paper events V3 include guarded Shanghai snapshot date; saved V1/V2 exact replay and original records preserved. Next trace remaining U6 risk/quantity/cash configuration authority boundaries end-to-end and reproduce only real defects. Docker/Chrome absent16:45UTC, manual-exit question unanswered; no launch loop. Actual SQL/newV3create/real pause-restart-resume and bilingual Chrome proof pending. Once runtime restored verify live retained5STOPPED/terminalqueues/eight fingerprints/API200/frontend5173/PONG and owned tmpfs cleanup before operational QA; old PIDs not authority. No provider acquisition/account start/formal/OOS/frozen mutation. U7 lawful rights/current authorities/actual forward adapter/after-user-start real completed-session receipt-plan-constrainedprocessing remain required; no history/demo substitution. Genuine lostledgers/independentbackup/login/native200zoom/speech/novice/perf/media/exact-headCI/release still open. Scratch /tmp/qtp-plan-warning-build-WUz9O1 retained, no listener.",
+  "next_command": "Continue original full U1-U8/M0-M5 goal active. GitHub five-day hold: no push/remote CI poll/retry/merge/release until actual recovery. Plan guard/old-date warning/V3 strict legacy replay and historical integer boundary accepted offline126 backend/static/read-onlyreview, frontend321 at281e25b; do not redo. ActualChrome normally launched and homeZHoffline->EN tested, but nativeComputerUse URL-confidence safety stop obeyed; no nativewindow retry/bypass,200zoom/screenshot unverified. Ownpreview489 verified thenTERM,15173 absent16:58UTC, build/tmp/qtp-offline-ui-0N1CR4 retained. Next use supported browser-only API confined to explicit local test tab for service-error responsive/theme/locale evidence if available; native200% remains separate. Docker absent, mainDB/services/tempcleanup not verified. SQL/newV3persistedcreate/pause-restart-resume pending; verify live retained5STOPPED/queues/eightfingerprints/API200/frontend5173/PONG when recovered, oldPIDs not authority. No account/provider/formal/OOS/frozen mutation. U7lawfulrights/currentauthorities/realforwardadapter/actualafterstartreceipt-plan-constrainedprocessing remain required, no history/demo substitution. Missinggenuineledgers/independentbackup/login/speech/novice/perf/media/exactheadCI/release remain open.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
