@@ -80,15 +80,21 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => desktop?.removeEventListener("change", leaveMobile);
   }, []);
   useEffect(() => {
-    const refreshOnFocus = () => {
+    const refreshOnReturn = () => {
       if (
         document.visibilityState !== "hidden" &&
         Date.now() - lastCheck.current >= 10_000
-      )
+      ) {
+        lastCheck.current = Date.now();
         setRefresh((value) => value + 1);
+      }
     };
-    window.addEventListener("focus", refreshOnFocus);
-    return () => window.removeEventListener("focus", refreshOnFocus);
+    window.addEventListener("focus", refreshOnReturn);
+    document.addEventListener("visibilitychange", refreshOnReturn);
+    return () => {
+      window.removeEventListener("focus", refreshOnReturn);
+      document.removeEventListener("visibilitychange", refreshOnReturn);
+    };
   }, []);
   useEffect(() => {
     if (previousPathname.current === pathname) return;

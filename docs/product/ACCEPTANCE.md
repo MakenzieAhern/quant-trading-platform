@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 02:35 UTC tab-return status refresh
+
+A failing App regression reproduced stale topbar service/data status when a
+document became visible without a window-focus event. The shared shell now
+listens to `visibilitychange` through its existing return/focus handler, skips
+hidden documents, reserves the existing ten-second throttle before updating,
+and removes both listeners on unmount. It introduces no timer, provider request,
+worker or financial behavior. The regression checks service failure after return,
+data-capability refresh, hidden/duplicate-event suppression and cleanup.
+Focused App 11/11, full frontend 244/244, ESLint, TypeScript, production build,
+Prettier and diff checks passed.
+
+Actual Chrome on the retained Chinese/dark Workbench showed the new code and
+a normal manual status refresh advanced its UTC check time to 02:34:59. The
+attempted real-tab background/return test is **NOT VERIFIED**: the temporary
+blank tab and one Ctrl+Tab action did not change the product document's observed
+visibility from `visible`. The temporary tab was closed; no alternate native
+automation or forged DOM visibility event was used. The unit test isolates this
+event path; the browser result proves only ordinary refresh compatibility,
+not a genuine visibility transition. Wider M4/U8 acceptance remains incomplete.
+Read-only application counts remained formal `1/3/310`, personal jobs `8`, paper
+sessions/events `5/417` and market receipts `6`; no study, account, order or
+source-acquisition request was submitted.
+
 ## 2026-09-26 02:26 UTC shared test-mode database protection
 
 The suite-level pytest guard did not protect independent test-mode scripts or

@@ -176,6 +176,51 @@ describe("routing", () => {
     await act(() => i18n.changeLanguage("en-US"));
   });
 
+  it("rechecks stale service and data status on tab return without duplicate or hidden requests", async () => {
+    window.history.replaceState({}, "", "/unknown");
+    const now = vi.spyOn(Date, "now").mockReturnValue(1000);
+    const visibility = vi
+      .spyOn(document, "visibilityState", "get")
+      .mockReturnValue("visible");
+    const data = vi
+      .spyOn(experimentApi, "capabilities")
+      .mockResolvedValue(capabilities);
+    let online = true;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(() =>
+        Promise.resolve(
+          online
+            ? jsonResponse(health)
+            : jsonResponse({ detail: "Unavailable" }, 503),
+        ),
+      );
+    const view = render(<App />);
+    await screen.findByText("Service online");
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(data).toHaveBeenCalledTimes(1);
+
+    now.mockReturnValue(15000);
+    online = false;
+    visibility.mockReturnValue("hidden");
+    fireEvent(document, new Event("visibilitychange"));
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    visibility.mockReturnValue("visible");
+    fireEvent(document, new Event("visibilitychange"));
+    await screen.findByText("Service unavailable");
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(data).toHaveBeenCalledTimes(2);
+    fireEvent.focus(window);
+    fireEvent(document, new Event("visibilitychange"));
+    expect(fetch).toHaveBeenCalledTimes(2);
+
+    view.unmount();
+    now.mockReturnValue(30000);
+    fireEvent(document, new Event("visibilitychange"));
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
   it.each(["/unknown", "/backtests/not-a-uuid", "/backtests/1234"])(
     "fails safely for %s",
     async (pathname) => {

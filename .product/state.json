@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-26T02:26:00Z",
+  "updated_at_utc": "2026-09-26T02:35:00Z",
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
@@ -32,6 +32,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-26 02:35UTC failing App regression reproduced stale service/data status on visibilitychange without window focus. Shell reuses existing return handler/10-second throttle, skips hidden pages, reserves timestamp before refresh and cleans up both listeners; no polling/worker/provider/financial changes. App11/full frontend244/ESLint/TypeScript/build/Prettier PASS. Actual Chrome ZH/dark manual refresh advanced UTC time02:34:59; genuine hidden/return test NOT VERIFIED because temporary tab and one Ctrl+Tab kept product visibility visible. Temp tab closed, no forged browser event/native bypass. Live formal1/3/310 jobs8 paper5/events417 receipts6 unchanged; U8/M4/U7/M5 remain incomplete",
+    "2026-09-26 PR32 head244f446 CI36211806892 backend987 PASS/one optional archive skip, frontend243 and Compose release-smoke PASS after shared test-mode Settings guard. PR remains draft/open, no merge/release; this CI does not establish lost-ledger recovery, independent backup, current forward rights or full M4/M5",
     "2026-09-26 02:26UTC shared Settings now rejects APP_ENV=test outside quant_test/quant_test_* before engine creation, covering scripts and Alembic as well as pytest; one existing name check reused, validation error strings omit credentials. Focused15 PASS; fresh tmpfs isolated full backend985 PASS/one optional archive skip before final malformed-URL/production cases added, Ruff/format/mypy PASS; frontend243/ESLint/TypeScript PASS. Standalone unsafe Alembic current probe failed at Settings with no DB connection or URL/password output. Scratch project removed without volumes/main-service changes; live formal1/3/310 jobs8 paper5/events417 update jobs4/receipts6 retained, API200, .research clean. Prevention only: genuine lost ledgers, independent backup, lawful forward source and U7/M5 remain unresolved",
     "2026-09-25 18:10UTC controlled Chrome153 production-chart timing experiment on saved 293-session result: 20 benchmark toggles all changed checkbox and SVG, but browser-control click time jumped from 269/278ms to about 2.75-2.99s; unrelated full-precision control showed the same 274ms then 2749ms pattern. Browser-control delay and page-wide work remain unseparated, so tool-inclusive timing cannot prove app p95; use supported in-browser event/paint trace, not this method. Temporary production-preview tab/container removed, original Compose frontend restored; backend/PostgreSQL/Redis stayed up, frontend/API HTTP200, Redis PONG, live jobs8/paper5/events417/update jobs4 unchanged. QA-PERF remains IN_PROGRESS; no study/order/source/database/frozen-data change",
     "2026-09-25 17:56UTC PR32 head067bf01 CI36170000918 backend/frontend/Compose PASS after shared same-route Back repair; live jobs8/paper5/events417/market receipts6 unchanged. PR32 remains draft/open, local worktree clean before this CI-record checkpoint. This CI does not close M4 integrity, U7 forward or M5 startup/release",
@@ -276,6 +278,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "CODE FIXED / BROWSER TRANSITION OPEN: AppShell listened only to window focus, so visibility-only tab return retained stale service/data status. Failing then passing App regression and normal real-Chrome manual refresh verified the fix/compatibility; genuine tab hide/return could not be produced by available browser controls, whose observed document remained visible. Do not relabel that as real-tab acceptance",
     "RESOLVED M4 test-entry-point safety: pytest-only guard did not cover independent test-mode scripts/Alembic. Shared configuration now rejects application database names before connection, reuses the same pytest namespace check and hides credential-bearing validation inputs; isolated and standalone CLI checks passed. This does not recover the historical data loss",
     "RESOLVED UX-NAVIGATION: shared navigate previously pushed an identical URL on same-route sidebar clicks, so one browser Back landed on the same page. Exact-URL no-op plus hash-distinction regression and fresh real-Chrome Back verification passed",
     "PARTIAL M5 RECORDINGS: earlier Chinese demo/walkthrough videos remain valid bounded evidence. No new English recording was made: browser-control API has no recording capability, Windows Snipping Tool was not installed, and existing Clipchamp opened only to a Microsoft sign-in failure. No login, permission change or alternative capture bypass was attempted. English read-only walkthrough is browser/text evidence only; English video is not a separate user requirement",
@@ -519,9 +522,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "067bf01",
+      "last_verified_head": "244f446",
       "state": "DRAFT",
-      "ci_run": 36170000918,
+      "ci_run": 36211806892,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
