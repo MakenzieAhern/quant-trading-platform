@@ -3,9 +3,29 @@ import { afterEach, expect, it, vi } from "vitest";
 import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
 import { experimentApi } from "./experiments/api";
-import { HelpPage, ProductError, WorkbenchPage } from "./ProductPages";
+import {
+  HelpPage,
+  ModeGuide,
+  ProductError,
+  WorkbenchPage,
+} from "./ProductPages";
 
 afterEach(() => vi.restoreAllMocks());
+
+it.each([
+  ["en-US", "New-market forward simulation", "Not available yet."],
+  ["zh-CN", "新行情前向模拟", "尚未开放。"],
+])(
+  "states current forward availability in the shared mode guide (%s)",
+  async (locale, title, unavailable) => {
+    await act(() => i18n.changeLanguage(locale));
+    render(<ModeGuide />);
+    expect(
+      screen.getByRole("heading", { name: title }).closest("section"),
+    ).toHaveTextContent(unavailable);
+    await act(() => i18n.changeLanguage("en-US"));
+  },
+);
 
 it("closes the optional guide when browser storage rejects writes", async () => {
   await act(() => i18n.changeLanguage("en-US"));

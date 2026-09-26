@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 shared mode guide must state current availability — 2026-09-26
+
+Help and home onboarding shared a description of forward processing but omitted
+the current “not available” boundary present on Paper/manuals. Reuse their shared
+copy, adding explicit bilingual unavailability plus lawful verified source and
+after-user-start new-session requirements. Do not duplicate conditional badges,
+add dependencies, hide required forward scope or imply a license was obtained.
+Two failing language regressions became passing; actual Help and home dialog
+checked, including mobile motion-off/keyboard. A32-case Help/Settings geometry
+matrix and representative full-page native images reduce bounded quality gaps,
+not the full AA/zoom/speech/novice/performance/media/forward/release gates.
+
 ## v1.2 separate existing media from usable delivery — 2026-09-26
 
 All 73 ledger media targets exist natively, but Windows reads through WSL's

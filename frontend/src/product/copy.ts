@@ -9,7 +9,8 @@ const en = {
   strategies: "Strategies",
   research: "Research",
   tasks: "Task center",
-  tasksIntro: "Reopen saved research and raw-data request tasks. Opening this page does not start new work.",
+  tasksIntro:
+    "Reopen saved research and raw-data request tasks. Opening this page does not start new work.",
   researchTasks: "Research tasks",
   updateTasks: "Raw-data request tasks",
   noResearchTasks: "No personal research tasks yet.",
@@ -152,7 +153,7 @@ const en = {
   demoHelp:
     "Made-up prices in a deterministic scenario teach the controls and test the product. They are not investment evidence.",
   forwardHelp:
-    "A deliberately started account processes new completed market data received after it starts. This requires a verified source; past data or the 2030 demo cannot prove it works.",
+    "Not available yet. This mode requires a legally usable, verified source and an explicitly started account that processes newly completed sessions received after start. Historical backfill and the 2030 demo do not prove forward acceptance.",
   helpTitle: "A few ideas that make the results clearer",
   backtestQuestion: "What is a backtest?",
   backtestAnswer:
@@ -329,7 +330,7 @@ const zh: Record<keyof typeof en, string> = {
   replayHelp: "让模拟账户依次走过已存储的历史交易日。这不是新到达的市场数据。",
   demoHelp: "用确定性的虚构价格学习操作、验证产品流程，不作为投资收益证据。",
   forwardHelp:
-    "主动启动会话后，接收新到达的已完成交易日数据并模拟处理。必须先验证数据来源；历史补录和2030演示不能替代这一验收。",
+    "尚未开放。此模式需要合法可用且经过核验的数据来源，由用户主动启动会话后接收新到达的已完成交易日数据并模拟处理。历史补录和2030演示不能替代前向验收。",
   helpTitle: "读懂结果，从几个概念开始",
   backtestQuestion: "什么是回测？",
   backtestAnswer:

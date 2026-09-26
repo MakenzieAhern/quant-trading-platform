@@ -1,5 +1,47 @@
 # v1.2 acceptance ledger
 
+## 2026-09-26 07:06 UTC truthful shared modes and Help/Settings matrix
+
+Actual Help described forward processing as if it were an available capability,
+without its current unavailability, unlike Paper and the manuals. Both callers
+use ModeGuide: Help and the optional Workbench dialog. Two bilingual regressions
+failed first; the shared copy now says “Not available yet” / “尚未开放” and retains
+lawful verified source, deliberate start and genuinely new completed sessions
+after start. Historical backfill/2030 remains explicitly insufficient. No forward
+capability was removed or promoted, no execution/financial calculation changed.
+
+Actual Chrome checked 32 geometry cases: Help/Settings × ZH/EN × dark/light ×
+1440×900/1280×800/1024×768/390×844. Document client/scroll widths both
+1425/1265/1009/375; no measured visible main paragraph/heading/label/summary
+overflow. All four Help answers were expanded; new forward warning present in
+all16 Help cases. Help main controls min42px; Settings min40px. Motion/colors/
+price remained system/red-up/raw across language/theme changes, saved-state copy
+translated. Representative full-page images inspected: EN/light390 and ZH/dark
+desktop on both pages, plus ZH/light390 home dialog. They are inline native tool
+images, not claimed saved local PNGs or complete six-surface media delivery.
+
+Mobile native ArrowDown changed Motion to off, root flag off and select focus
+ring2px; Tab reached market-color select with2px ring. Workbench dialog remained
+native open/modal,349px client/scroll, animation none/transition0s; shared warning
+visible in EN/ZH. Tab reached the acknowledgment button; Escape closed and restored
+trigger focus. Original ZH/dark/system/red-up/raw restored, viewport reset and
+owned tab closed. This is bounded explicit-motion-off behavior, not OS-motion,
+screen-reader, all business paths, native200%, full visual/AA or novice acceptance.
+
+Evidence: `product-evidence/v1.2/m4/20260926-help-settings-matrix.json` outside Git.
+Tooling failures retained: filtered mutable disclosure selectors lost their nth
+target; switched to stable summaries + observed parent state. Dialog-role evaluate
+timed out despite visible snapshot; native DOM diagnosed open/modal without
+restarting or duplicating the action. No workaround of blocked file-video policy.
+
+Focused8 and full frontend300/36files, lint/typecheck/build PASS; final changed-file
+Prettier/diff PASS (one existing tasksIntro wrapping-only formatting repair).
+Independent read-only review approved, without independently rerunning tests.
+Backend not rerun for copy-only change; eight critical DB fingerprints unchanged,
+`.research` clean. No provider/request/job/account/runtime/GitHub mutation. All
+broader integrity, forward, backup, login, media, performance and CI/release gates
+remain; U8-I18N/QA-VISUAL/QA-A11Y stay IN_PROGRESS, PRODUCT_GOAL_COMPLETE=false.
+
 ## 2026-09-26 06:52 UTC delivery completion-gap audit
 
 Read the complete original objective, PRODUCT_MASTER, both guides, state and
