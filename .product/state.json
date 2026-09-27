@@ -1,8 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-26T17:18:52Z",
-  "blocked_audit": {
+  "updated_at_utc": "2026-09-27T17:24:11Z",
+  "docker_login_quit_diagnosis": {
+    "status": "LOGIN_TRIGGER_EXECUTED_MENU_QUIT_CONFIRMED_CURRENT_RUNTIME_UNAVAILABLE",
+    "evidence": "product-evidence/v1.2/m4/20260928-docker-login-quit-diagnosis.json",
+    "facts": "Boot12:41local; AtLogOn task12:41:15local result0. Backend launched02:41:16Z, actionMenuQuit02:41:50Z. Second launch02:42:15Z, actionMenuQuit12:53:21Z, ExitHealthyState12:53:26Z. No current Docker process. No new launch/task/setting/data mutation.",
+    "limit": "Confirms menu quit/graceful shutdown, not identity/intent of initiator, earlier09-26 cause, current service/data health or full startup acceptance. Ask whether restarting and keeping Desktop running is intended; no duplicate startup mechanism or blind retry."
+  },
+  "previous_blocked_audit": {
     "consecutive_no_progress_goal_turns": 3,
     "status": "REQUIRES_EXTERNAL_STATE_CHANGE_OR_HUMAN_ACTION",
     "policy": "Full U1-U8/M0-M5 scope unchanged and incomplete. Local frontend release checks terminal/pass, no competing writer. Docker still absent, intentional-exit question unanswered; no repeated launch. Remaining runtime/SQL/native-login/novice/forward/data-recovery/backup/CI gates cannot be promoted by offline checks. GitHub hold remains; no release claim. Resume same task after Docker/user ownership changes and continue other required gates."
@@ -220,7 +226,7 @@
     "policy": "User reconfirmed GitHub recovery takes five days. Hold ALL push, CI retries/polling, merge and release until actual recovery; estimated date is not proof. Continue safe local work. Exact-head CI required afterward; no payment, limit change or gate bypass."
   },
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
-  "status": "BLOCKED",
+  "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
     "tag": "v1.1.0",
@@ -237,7 +243,7 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-09-26 16:58UTC branch codex/product-v1.2-current-rules base281e25b. Owned2backend request/test changes and checkpoint only; no competing writer/test/preview. Ownedpreview489 confirmed start/cwd/args thenTERM,15173 absent. Chrome nowrunning after normal16:54 launch; nativeComputerUseURL-confidence stop obeyed. Dockerabsent, mainDB/services unverified. No account/provider/GitHub actions; oldPIDs not authority.",
+    "latest_verification": "2026-09-27 17:24UTC branch codex/product-v1.2-current-rules @3be378d clean before owned checkpoint. No competing git/test/Vite writer. Docker absent after observed09-27 menu quit/graceful shutdown; existing login task executed result0. No runtime/task/setting/database/GitHub mutation, no historical PID reused.",
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
     "queue_writer": "owned isolated paper manager idle after two stopped historical QA accounts; main paper manager idle; no formal studies",
@@ -573,7 +579,7 @@
     "RESOLVED: transient Chrome browser-control binding timeouts were followed by successful Chrome Back/Forward and CSV/JSON acceptance; the temporary QA draft name was restored. No app defect was inferred from the tool timeout"
   ],
   "external_blockers": [
-    "M4-RUNTIME: installed Docker4.92 briefly started with retained assets then processes vanished and Ubuntu docker became unavailable again; last15:53:31Z EOF is not root cause. Needs live Windows/process/user-ownership diagnosis before any further launch; no reset or restart loop",
+    "M4-RUNTIME: current Docker absent after official logs recorded09-27 actionMenuQuit and graceful shutdown; login task executed result0. Initiator/intent unknown. Confirm restarting and keeping Desktop running; no blind loop or task reset. Earlier09-26 EOF-only disappearance remains unexplained; services/SQL/data health unverified",
     "CI-ACCOUNT: exact pushed f91e1e5 run36217962698 never started frontend/backend/Compose due to GitHub recent-payment/spending-limit annotation. Account owner must check Billing & plans; no automatic payment/limit changes or repeated reruns. Local tests do not substitute required CI",
     "U7-FORWARD: lawful product-use rights for a genuinely new A-share market-data feed have not been established; a public SDK or historical candidate receipt does not grant execution authority",
     "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay",
@@ -796,7 +802,7 @@
     }
   },
   "next_task": "Do not repeat the isolated release-image/clean-DB rehearsal or the failed Docker Run-entry hypothesis. On the next genuine Windows login, test the single current-user AtLogOn task and verify Docker/WSL/Compose/API/frontend plus retained database counts without terminal assistance, reset or data deletion. Until then M5 startup is FAIL. Existing Chrome is available again and the bounded English result/compare/stopped-paper read-only walkthrough has completed; retain existing Chinese recordings as bounded evidence and fill only actual key-interaction coverage gaps through a supported capture path. English video is optional, not a separate user requirement. Obtain genuine novice-user evidence rather than relabel agent QA. Continue independent M4/M5 accessibility, performance and compatibility work while preserving the missing genuine ledgers, independent backup and lawful forward-source blockers. Native 200% zoom needs user-operated evidence: browser policy blocked chrome://settings/appearance; do not bypass or substitute a CSS proxy. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 is only the earliest conditional after-start receipt and still needs lawful source authority. A privileged read-only VSS inventory needs a real Windows administrator action; do not infer absent shadows from Access Denied. No duplicate Docker startup mechanism, full U6/U7 promotion or release from historical replay",
-  "next_command": "Resume the same full U1-U8/M0-M5 goal after the required human action or external-state change; blocked after three consecutive no-progress turns, not complete. User five-day GitHub hold: no push/remote CI polling/retries/merge/release until actual recovery; estimate not proof. Accepted offline strict-count126 tests/static and prior frontend321; home16 DOM states/five JPEGs/read-only two-screenshot review saved, do not redo. Own preview/tab cleaned, persistent cache retained, native200zoom/speech/novice/p95 still unproved. Docker Windows processes absent17:13UTC; bounded existing log tail canceled streams/EOF does not establish cause. First confirm runtime ownership and whether user intentionally exited before any further non-destructive recovery; no blind launcher loop/reset/delete. Once recovered verify actual retained assets/queues/eight fingerprints/API/frontend/PONG then pending SQL/newV3 persistence and pause-restart-resume. Continue independent required local acceptance meanwhile, no arbitrary proof-unit loop or scope reduction. U7 lawful rights/current authorities/real forward adapter/actual after-start receipt-plan-constrained processing remain required; unknown rights/independent backup/genuine lost-ledger backup are not approvals. No original account/ledger/frozen/formal/OOS mutation or history/demo substitution. Windows login/nativeaccessibility/novice/media/exactheadCI/release gates remain open.",
+  "next_command": "Same full U1-U8/M0-M5 goal resumed with new login/menu-quit evidence; not complete. Confirm whether Docker should be restarted and kept running; logs prove menu quit/graceful shutdown09-27, not initiating person's intent. Existing AtLogOn executed result0, no duplicate startup mechanism needed; not full M5 acceptance. If confirmed, one normal supported start, then verify actual assets/mounts/queues/eight fingerprints/Compose/PONG/API/frontend before pending disposable SQL V3 persistence and pause/restart/resume. Do not redo accepted frontend321/static/build/audit or offline126/backend checks unnecessarily. GitHub five-day hold: no push/poll/retry/merge/release until actual recovery. No data deletion/reset/frozen/formal/OOS mutation; missing genuine ledgers/independent backup/lawful current feed rights and current-source authorities/actual after-start forward receipt remain required. Native zoom/speech/novice/performance/login/media/full compatibility/exact-head CI/release gates stay open, no history/demo substitution or scope reduction.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",

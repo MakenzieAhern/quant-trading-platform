@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 login and menu-quit evidence — 2026-09-28 local
+
+New Windows boot and task/log evidence changes the runtime diagnosis. Existing
+AtLogOn task executed12:41:15local/result0, launched backend02:41:16Z; logs show
+actionMenuQuit02:41:50Z. A second launch02:42:15Z ended after another menu-quit
+request12:53:21Z and ExitHealthyState12:53:26Z. Do not infer crash, a failed
+login trigger, or the initiating person's intent from absence/EOF alone.
+Keep previous09-26 unresolved disappearance separate. Current services still
+unavailable; task result0 is not database/data/reboot acceptance. No startup
+mechanism change or repeated launch. Confirm whether Desktop should be restarted
+and kept running before overriding an observed menu exit. Full scope/CI hold intact.
+
 ## v1.2 GitHub hold and bounded offline home evidence — 2026-09-26
 
 User confirms GitHub recovery is expected in five days. Keep push, remote CI

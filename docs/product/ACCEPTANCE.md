@@ -1,5 +1,19 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 local login-trigger evidence, not full startup PASS
+
+Windows reboot12:41local and current-user AtLogOn task12:41:15/result0 confirmed.
+Existing action launched Docker backend02:41:16Z; menu-quit request02:41:50Z.
+Second launch02:42:15Z later received actionMenuQuit12:53:21Z, followed by
+ExitHealthyState12:53:26Z and backend exit. This establishes graceful menu exit,
+not who initiated it or why. Earlier09-26 EOF-only case remains unexplained.
+Current Docker absent and Compose unavailable; no current service/SQL/data
+fingerprints or full M5 startup PASS. Readonly diagnosis only, no launcher,
+task/setting change, reset or data deletion. Ask whether to restart and keep
+Desktop running; preserve GitHub hold and all required U1-U8/M0-M5 gates.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260928-docker-login-quit-diagnosis.json>)
+is outside Git.
+
 ## 2026-09-26 17:16 UTC current-head local frontend release checks
 
 At e9e175e, all321 tests/37 files, ESLint, TypeScript and production Vite129-module
