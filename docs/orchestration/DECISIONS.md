@@ -1,5 +1,22 @@
 # Decisions
 
+## v1.2 measure responsive controls and actual media, not assumptions — 2026-09-28
+
+Use current available in-app browser for read-only saved historical ledger16-case
+matrix; Chrome unavailable, never promote this to native200zoom/speech/fullAA.
+Phone header intentionally hides Theme: select through visible desktop control,
+then measure phone rather than force hidden control or patch working layout.
+ZH no-plan matcher must use observed copy; older account absence cannot be filled
+by frontend reconstruction. Keyboard scrolling needs native settled readback,
+not an immediate0 interpreted as failure. Independent review of three actual
+images found no visible blocker with narrowly stated evidence limits.
+
+Screenshot return bytes decoded as JPEG despite initial .png names. Rename only
+own new current artifacts to jpg, preserve bytes/hash; older links retained with
+MIME correction note. Report actual image pixels separately from DOM viewport,
+no invented exact-size/paint proof. No product code or financial state change,
+no redundant full suite; main eight fingerprints equal, preferences restored.
+
 ## v1.2 provider identity controls empty-state copy — 2026-09-28 local
 
 New historical-account UI walkthrough found Bar labels before first A-share

@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 saved historical ledger responsive and keyboard matrix
+
+Current58bcc98 live frontend bind, existing localhost5173/8000 services, stopped
+historical accountd7044a3c only. Four requested DOM viewports1440x900/1280x800/
+1024x768/390x844 times EN/ZH and light/dark:16 cases without page overflow.
+Cash81309.8134/equity99964.8134/trading date2011-03-23 unchanged, five tables
+retain6/20/20/20/6 rows, translated named focusable local-scroll regions. Older
+account has no native saved plan; both locales truthfully retain that absence.
+Back link40px, compact audit disclosure24.75px min; not universal40px/fullAA.
+
+Phone table337px/content733px: real ArrowRight focus and later scrollLeft40/80,
+2px visible outline, page375/375. Immediate0 preceded native scroll completion,
+not failure. Mobile header intentionally omits Theme, so select via desktop UI
+then remeasure phone; no hidden-DOM settings mutation or product patch. Initial
+ZH notice matcher corrected to actual visible copy, not changed product copy.
+
+Six real representative JPEGs/checksums saved; decoder corrected mistaken PNG
+filename/header assumption. Own new filenames renamed jpg without changing bytes;
+older screenshot links retained and MIME note added. Delivered image dimensions
+differ from requested DOM dimensions; height difference cause unproven, not exact
+pixel proof for16 cases. Independent readonly review of three key images found
+no observable blocker, but cannot independently validate SQL/matrix/amounts or
+fullAA/Chrome/nativezoom/speech/forward. No fabricated visual/financial evidence.
+
+Original EN/system restored, temporary viewport reset/own tab closed. No new
+process/account/provider/study command. All eight main fingerprints match reference,
+four original services remain healthy/reachable and `.research` unchanged. No
+code change, so earlier323 frontend tests/static/build remain timestamped, not
+rerun. All mandatory product/release gates and GitHub hold preserved.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260928-paper-ledger-matrix.json>)
+is outside Git.
+
 ## 2026-09-28 new V3 historical UI account and provider empty-state fix
 
 Owned tmpfs quant_test/API18036/frontend15173 only: create a new historical
