@@ -308,9 +308,12 @@ export const enUS = {
       resume: "Resume replay",
       pause: "Pause replay",
       stop: "Stop replay",
-      startError: "Unable to start the paper session.",
-      pauseError: "Unable to pause the paper session.",
-      stopError: "Unable to stop the paper session.",
+      startError:
+        "Unable to start the paper session. Check the current session status and connection before retrying.",
+      pauseError:
+        "Unable to pause the paper session. Check the current session status and connection before retrying.",
+      stopError:
+        "Unable to stop the paper session. Check the current session status and connection before retrying.",
       unknownError: "Unknown error",
       hydrateError: "Unable to load the paper session snapshot.",
       connectionError:

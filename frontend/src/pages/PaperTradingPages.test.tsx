@@ -769,22 +769,22 @@ describe("paper trading pages", () => {
       "CREATED",
       "Start replay",
       "start",
-      "Unable to start the paper session.",
-      "无法开始模拟交易会话。",
+      "Unable to start the paper session. Check the current session status and connection before retrying.",
+      "无法开始模拟交易会话。重试前请先检查当前会话状态和连接。",
     ],
     [
       "RUNNING",
       "Pause replay",
       "pause",
-      "Unable to pause the paper session.",
-      "无法暂停模拟交易会话。",
+      "Unable to pause the paper session. Check the current session status and connection before retrying.",
+      "无法暂停模拟交易会话。重试前请先检查当前会话状态和连接。",
     ],
     [
       "PAUSED",
       "Stop replay",
       "stop",
-      "Unable to stop the paper session.",
-      "无法停止模拟交易会话。",
+      "Unable to stop the paper session. Check the current session status and connection before retrying.",
+      "无法停止模拟交易会话。重试前请先检查当前会话状态和连接。",
     ],
   ] as const)(
     "translates a failed %s account command without resubmitting",
@@ -801,11 +801,17 @@ describe("paper trading pages", () => {
       );
       expect(screen.getByRole("alert")).toHaveTextContent(english);
       expect(screen.getByText(english)).toBeVisible();
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Check the current session status and connection before retrying.",
+      );
       expect(fetch.mock.calls[1]?.[0]).toContain(`/${PAPER_ID}/${action}`);
       try {
         await act(async () => i18n.changeLanguage("zh-CN"));
         expect(screen.getByRole("alert")).toHaveTextContent(chinese);
         expect(screen.getByText(chinese)).toBeVisible();
+        expect(screen.getByRole("alert")).toHaveTextContent(
+          "重试前请先检查当前会话状态和连接。",
+        );
         expect(fetch).toHaveBeenCalledTimes(2);
       } finally {
         await act(async () => i18n.changeLanguage("en-US"));

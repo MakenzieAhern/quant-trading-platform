@@ -1,5 +1,24 @@
 # Decisions
 
+## v1.2 actionable command failures, not presumed non-execution — 2026-09-28
+
+Actual isolated synthetic UI503 exposed no-next-step copy for all three shared
+paper command failures. Add bilingual status/connection-before-retry guidance in
+existing locale resources; preserve explicit user action, command API/runtime and
+financial authority. Failure does not prove an ambiguous network request never
+committed; do not promise zero execution or automatically resubmit. Existing three
+regressions fail before fix and full323 frontend/static/build pass afterward.
+
+Outside-Git guarded local ASGI middleware rejects only armed synthetic account
+POST before domain dispatch; actual SQL/lifespan/socket/runtime remains. Existing
+30s pacing is QA-only, never production performance or new-market evidence.
+UI CREATED/start, RUNNING/pause, PAUSED/stop EN/ZH/context/no-extra-request and
+explicit retry transitions verified with real screenshots. Empty first-day ledger
+does not prove nonempty-fill recovery; prior independently recorded ledger cases
+remain separate. Readonly review no release-critical finding, narrowly scoped.
+Fresh ownership cleanup preserves main eight fingerprints/all services/research;
+GitHub hold/no release. Full mandatory product/human gates unchanged.
+
 ## v1.2 measure responsive controls and actual media, not assumptions — 2026-09-28
 
 Use current available in-app browser for read-only saved historical ledger16-case

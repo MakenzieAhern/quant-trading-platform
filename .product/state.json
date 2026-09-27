@@ -1,7 +1,17 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-27T18:16:07Z",
+  "updated_at_utc": "2026-09-27T18:34:53Z",
+  "paper_command_ui_recovery": {
+    "status": "PASS_BOUNDED_SYNTHETIC_UI_COMMAND_REJECTION_NOT_FULL_PRODUCT",
+    "base_head": "2c0077d",
+    "evidence": "product-evidence/v1.2/m4/20260928-paper-command-recovery.json",
+    "fix": "Existing bilingual three command errors now explain status/connection check before retry. New guidance baseline3failed/30passed; focused33/full323frontend/lint/type/format/build129 PASS. No production backend/financial/provider/dependency change",
+    "ui": "Owned quant_test/synthetic0f982c1f actual UI create no autostart. Pre-dispatch503: CREATED/start1->1, RUNNING/pause5->5, PAUSED/stop7->7; EN/ZH/no language-induced commands/buttons enabled. Disarm+explicit UI transitions RUNNING/PAUSED/STOPPED8. First2030-01-02/10securities cash/equity100000000, zero orders/fills",
+    "review": "Readonly diff/two actual JPEGs no release-critical finding; four screenshots/hashes saved. Not independently tested SQL/Chrome/AA/forward or nonempty-fill recovery",
+    "cleanup": "Own tabclosed/ZHsystem retained; fresh5885/5907 start/cwd/args checked beforeTERM, graceful API log/tool exit1, processes/listeners absent. Fresh exact owned tmpfs containerID/labels/no mounts checked thenstopped; only disposable data gone, object/image retained. Main eight fingerprints equal/four services running/APIfrontend200/.research Gitclean",
+    "limits": "Full U1-U8/M0-M5 stays mandatory. GitHubhold/no remote calls; nativezoom/speech/novice/performance/login/lawful new feed and current authorities/after-start receipt/original missing ledgers/independent backup/release incomplete. Pre-dispatch503 is not actual outage/ambiguous post-commit failure proof"
+  },
   "saved_paper_ledger_matrix": {
     "status": "PASS_BOUNDED_HISTORICAL_MATRIX_NOT_FULL_PRODUCT",
     "head": "58bcc98",
@@ -841,8 +851,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Do not redo accepted V3 SQL/normal process restart, new historical UI or saved ledger16-case matrix. Next close actual browser paper command-error recovery: existing unit regressions pass but CREATED/RUNNING/PAUSED command rejection translation/input/state preservation lacks live UI proof. Use only owned disposable test account/DB with current backend/frontend; never command original accounts or change financial calculations for QA. Read existing errors/runtime paths and reuse test harness before any edit. Continue other full M4/M5 gates afterward. Native Chrome/200zoom/speech remain unavailable/unverified; no bypass or proxy promotion. Genuine novice separate from agent walkthrough. Next real Windows login verify existing single startup without terminal help, no autonomous reboot/duplicate starter. Keep missing genuine ledger backup, independent backup and lawful current forward authorities/real after-start receipt mandatory. GitHub hold until actual recovery.",
-  "local_next_command": "Inventory current repo/PIDs/queues and owned tmpfs container identity. Inspect PaperSessionDetailPage command-error and existing PaperTradingPages command regressions, verify isolated actual backend command rejection with real UI. Preserve original services/data/frozen/formal/OOS and all external gates; no GitHub remote calls.",
+  "next_task": "Do not redo accepted V3 SQL/normal process restart, new historical UI, saved ledger16-case matrix or bounded paper command503 recovery. Continue full M4/M5: inspect UX-ERROR matrix and existing guided-research submit-failure/draft recovery evidence, close a genuinely unverified actual browser error path with owned disposable synthetic DB/current services only. Preserve all successful paths and financial semantics; do not introduce tests just to increase counts. Then remaining native accessibility/performance/novice/manual/media/login and current authority/forward gates. Chrome200zoom/speech still unavailable/unverified, no bypass or proxy promotion. Genuine novice separate from agent walkthrough. Next real Windows login verify existing single startup without terminal help, no autonomous reboot/duplicate starter. Missing genuine ledger backup/independent backup/lawful current forward authorities and real after-start receipt remain mandatory. GitHub hold until actual recovery, no date assumption.",
+  "local_next_command": "Revalidate actual repo/PIDs/queues before mutation. Read UX-ERROR acceptance and guided-research failure/draft UI source/tests/evidence; select remaining unverified UI recovery scope rather than repeat paper matrix. Owned QA processes5885/5907 and tmpfs DB are stopped, never reuse saved PIDs. Preserve original services/data/frozen/formal/OOS/all human gates; no GitHub remote calls.",
   "next_command": "Same full U1-U8/M0-M5 goal active/incomplete. Local Docker/fullbackend/migration and bounded V3 SQL/actual normal-process recovery verified; do not repeat them unnecessarily. Next prioritize remaining real-browser/native accessibility/performance and genuine novice workflow evidence; inventory supported browser surfaces before actions, no policy workaround. Pending lawful forward rights/current authorities/actual after-start receipt, genuine missing-ledger backup and independent backup remain human/external gates. Verify real Windows login without terminal assistance at next genuine login, no autonomous OS reboot or duplicate startup mechanism. GitHub five-day hold: no push/poll/retry/merge/release until actual recovery, not date assumption. Preserve all formal/frozen/OOS assets and original full product/release scope; no history/demo substitution or live trading.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

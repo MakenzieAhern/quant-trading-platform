@@ -1,5 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 actual paper command rejection and recovery
+
+Current2c0077d frontend/actual API+SQL in owned tmpfs quant_test, synthetic account
+0f982c1f only. UI create did not auto-start. Injected selected POST503 before
+application command: CREATED/start sequence1->1, RUNNING/pause5->5,
+PAUSED/stop7->7. EN/ZH alerts persisted/translated, buttons remained available;
+locale change added no command request. After disarm, explicit UI clicks start,
+pause, stop returned200 and reached RUNNING, PAUSED, STOPPED8. Cash/equity100000000,
+date2030-01-02/10securities unchanged; zero orders/fills, not a nonempty-ledger
+duplication check or forward evidence. Outside-Git harness uses existing supported
+30s pacing only for UI QA, current lifecycle/SQL/runtime and own-origin CORS.
+
+Observed defect: failure lacked a concrete next step. Existing two locale resources
+now ask to check current status/connection before retry; no claim that an ambiguous
+request never executed. Added guidance assertions first3failed/30passed; fixed33,
+fullfrontend323/37files/lint/type/format/build129 PASS. Financial/provider/backend
+code unchanged; backend suite not rerun. Four actual JPEGs/checksums and method in
+outside-Git `product-evidence/v1.2/m4/20260928-paper-command-recovery.json`.
+Independent readonly diff/two-image review found no release-critical issue; not
+independent SQL/tests/native accessibility or Chrome proof.
+
+Own tab closed/original ZHsystem preserved. Fresh PID/start/cwd/args verified before
+TERM, graceful API shutdown logged (tool exit1, no exit0 claim); own listeners gone.
+Fresh containerID/labels/tmpfs/no mounts verified then disposable DB stopped,
+test data gone as designed; container/image retained. Main eight fingerprints equal,
+four original services running/APIfrontend200/.research unchanged. GitHub hold,
+full U1-U8/M0-M5, nativezoom/speech/novice/performance/login, genuine lost ledgers,
+independent backup and lawful real after-start feed/authority/release gates remain.
+
 ## 2026-09-28 saved historical ledger responsive and keyboard matrix
 
 Current58bcc98 live frontend bind, existing localhost5173/8000 services, stopped
