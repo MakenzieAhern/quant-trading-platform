@@ -86,7 +86,7 @@ describe("task center", () => {
     ).toHaveAttribute("href", `/data?updateJob=${updateJob.job_id}`);
     await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "service could not be reached",
+      "Could not confirm a response from the service.",
     );
     await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     expect(

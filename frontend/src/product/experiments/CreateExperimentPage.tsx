@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { ApiError } from "../../api/client";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import {
@@ -700,6 +701,15 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
               {error === "validation"
                 ? c.validation
                 : experimentError(error, c)}
+              {error !== "validation" &&
+                (!(error instanceof ApiError) ||
+                  error.status === 408 ||
+                  error.status >= 500) && (
+                  <p>
+                    {c.uncertainSubmission}{" "}
+                    <Link href="/tasks">{c.checkTaskCenter}</Link>
+                  </p>
+                )}
               {invalidField && (
                 <p>
                   {c.fieldErrors[invalidField]}

@@ -390,11 +390,13 @@ describe("experiment comparison", () => {
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent("Study 1");
     expect(alert).toHaveTextContent("Study 3");
-    expect(alert).toHaveTextContent("The server could not finish this request");
+    expect(alert).toHaveTextContent(
+      "The server response could not be confirmed",
+    );
     expect(alert).not.toHaveTextContent("expand technical details");
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
     await act(async () => i18n.changeLanguage("zh-CN"));
-    expect(alert).toHaveTextContent("服务端未完成请求");
+    expect(alert).toHaveTextContent("未能确认服务端响应");
     await userEvent.click(screen.getByRole("button", { name: "重新加载" }));
     await waitFor(() => expect(attempts).toBe(2));
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();

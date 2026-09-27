@@ -88,7 +88,7 @@ const en = {
       "Maximum target weight must be a positive decimal, at most 1 (100%).",
   },
   networkError:
-    "The service could not be reached. Check its status, then retry. An unchanged submission keeps the same request key.",
+    "Could not confirm a response from the service. Check its status before retrying. An unchanged submission keeps the same request key.",
   validationError:
     "The server rejected this configuration. Review dates, available data and the cost/risk limits, then try again.",
   conflictError:
@@ -96,7 +96,10 @@ const en = {
   notFoundError:
     "This task is not available. Return to your experiment list or check the identifier.",
   serverError:
-    "The server could not finish this request. Refresh the task before retrying; completed work remains saved.",
+    "The server response could not be confirmed. Check the latest task status before retrying; completed work remains saved.",
+  uncertainSubmission:
+    "A task may already exist. Retrying without editing keeps the same request ID and reopens any accepted task; editing creates a new request.",
+  checkTaskCenter: "Check task center",
   technical: "Technical details",
   refresh: "Refresh",
   loading: "Loading…",
@@ -321,12 +324,16 @@ const zh: typeof en = {
     position: "单只证券最大目标权重须为正小数，最多为 1（100%）。",
   },
   networkError:
-    "无法连接服务。请检查服务状态后重试。配置未变时会使用同一请求标识，避免重复创建。",
+    "未能确认服务响应。请检查服务状态后重试。配置未变时会使用同一请求标识，避免重复创建。",
   validationError:
     "服务端未接受此配置。请检查日期、可用数据、成本与风险限制后重试。",
   conflictError: "该操作与任务当前状态冲突。请刷新查看最新状态。",
   notFoundError: "找不到该任务。请返回实验列表，或检查任务标识。",
-  serverError: "服务端未完成请求。请先刷新任务再重试；已完成的内容仍会保存。",
+  serverError:
+    "未能确认服务端响应。重试前请检查任务的最新状态；已完成的内容仍会保存。",
+  uncertainSubmission:
+    "任务可能已经创建。不修改配置重试会保留同一请求编号，并重新打开已接受的任务；修改配置会创建新的请求。",
+  checkTaskCenter: "查看任务中心",
   technical: "技术详情",
   refresh: "刷新",
   loading: "正在加载…",

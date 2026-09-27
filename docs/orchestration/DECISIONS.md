@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 uncertain creation response means check/reopen, not assumed failure — 2026-09-28
+
+Actual isolated synthetic task completed after backend202 while browser saw503.
+Use existing shared bilingual error resources for neutral response uncertainty;
+existing wizard alert supplies native task-center link and explains unchanged
+request-ID recovery versus edited new request. Cover408/5xx/nonApiError only,
+retain validation/permission/other4xx handling. No auto-resubmission or new wrapper.
+Existing draft/idempotency mechanism already recovers original job after reload;
+do not replace it. Exact configuration/cash/key/SHA/job/completion time/one SQL
+row preserved in actual UI; component tests additionally cover timeout/network
+errors, not native browser disconnect proof. Full325 frontend/static/build PASS,
+readonly review no blocker. Production backend and financial semantics unchanged.
+Evidence outsideGit: product-evidence/v1.2/m4/20260928-create-response-recovery.json.
+GitHub user hold and all remaining full product/human gates unchanged.
+
 ## v1.2 actionable command failures, not presumed non-execution — 2026-09-28
 
 Actual isolated synthetic UI503 exposed no-next-step copy for all three shared

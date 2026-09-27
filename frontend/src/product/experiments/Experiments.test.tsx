@@ -233,35 +233,85 @@ describe("guided experiment", () => {
     );
   });
 
-  it("retains the idempotency key after an uncertain request and changes it only after editing", async () => {
-    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
-    const create = vi
-      .spyOn(experimentApi, "create")
-      .mockRejectedValue(new ApiError(503, "Unavailable"));
-    render(<CreateExperimentPage />);
-    await review();
-    await userEvent.click(
-      screen.getByRole("button", { name: "Run this configuration" }),
-    );
-    await screen.findByRole("alert");
-    await userEvent.click(
-      screen.getByRole("button", { name: "Run this configuration" }),
-    );
-    expect(create.mock.calls[1][1]).toBe(create.mock.calls[0][1]);
-    await userEvent.click(screen.getByRole("button", { name: "Back" }));
-    fireEvent.change(
-      screen.getByLabelText("Minimum commission per trade (CNY)"),
-      { target: { value: "6" } },
-    );
-    await userEvent.click(screen.getByRole("button", { name: "Continue" }));
-    await userEvent.click(
-      screen.getByRole("checkbox", { name: /I understand/ }),
-    );
-    await userEvent.click(
-      screen.getByRole("button", { name: "Run this configuration" }),
-    );
-    expect(create.mock.calls[2][1]).not.toBe(create.mock.calls[0][1]);
-  });
+  it.each([503, 408, "network"] as const)(
+    "retains request identity after uncertain response %s, locale switch and remount until editing",
+    async (status) => {
+      vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+      const create = vi
+        .spyOn(experimentApi, "create")
+        .mockRejectedValue(
+          typeof status === "number"
+            ? new ApiError(status, "Unavailable")
+            : new TypeError("Failed to fetch"),
+        );
+      const { unmount } = render(<CreateExperimentPage />);
+      await review();
+      await userEvent.click(
+        screen.getByRole("button", { name: "Run this configuration" }),
+      );
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        status === 503
+          ? "The server response could not be confirmed."
+          : status === 408
+            ? "The request timed out."
+            : "Could not confirm a response from the service.",
+      );
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Retrying without editing keeps the same request ID",
+      );
+      expect(
+        screen.getByRole("link", { name: "Check task center" }),
+      ).toHaveAttribute("href", "/tasks");
+      const acceptedKey = create.mock.calls[0][1];
+      const acceptedForm = create.mock.calls[0][0];
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        status === 503
+          ? "未能确认服务端响应"
+          : status === 408
+            ? "请求超时"
+            : "未能确认服务响应",
+      );
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "不修改配置重试会保留同一请求编号",
+      );
+      expect(create).toHaveBeenCalledTimes(1);
+      expect(readExperimentDraft()).toMatchObject({
+        form: acceptedForm,
+        step: 3,
+        idempotencyKey: acceptedKey,
+      });
+      await act(async () => i18n.changeLanguage("en-US"));
+      unmount();
+      render(<CreateExperimentPage />);
+      await screen.findByText("Your saved draft has been restored.");
+      expect(create).toHaveBeenCalledTimes(1);
+      expect(
+        screen.getByRole("button", { name: "Run this configuration" }),
+      ).toBeDisabled();
+      await userEvent.click(
+        screen.getByRole("checkbox", { name: /I understand/ }),
+      );
+      await userEvent.click(
+        screen.getByRole("button", { name: "Run this configuration" }),
+      );
+      expect(create.mock.calls[1][1]).toBe(create.mock.calls[0][1]);
+      expect(create.mock.calls[1][0]).toEqual(acceptedForm);
+      await userEvent.click(screen.getByRole("button", { name: "Back" }));
+      fireEvent.change(
+        screen.getByLabelText("Minimum commission per trade (CNY)"),
+        { target: { value: "6" } },
+      );
+      await userEvent.click(screen.getByRole("button", { name: "Continue" }));
+      await userEvent.click(
+        screen.getByRole("checkbox", { name: /I understand/ }),
+      );
+      await userEvent.click(
+        screen.getByRole("button", { name: "Run this configuration" }),
+      );
+      expect(create.mock.calls[2][1]).not.toBe(create.mock.calls[0][1]);
+    },
+  );
 
   it("validates invalid risk inputs and preserves incomplete drafts for later correction", async () => {
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
@@ -586,7 +636,7 @@ describe("durable experiment detail", () => {
     list.mockRejectedValueOnce(new ApiError(503, "service unavailable"));
     await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "The server could not finish this request",
+      "The server response could not be confirmed",
     );
     expect(
       screen.queryByRole("cell", { name: "Complete" }),

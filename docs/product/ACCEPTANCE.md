@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 accepted create response uncertainty and original task recovery
+
+Current f1e4046, owned quant_test/synthetic fixture only: guarded outside-Git
+middleware let actual create return202, concealed its first response with503.
+Real worker completed340/340 while wizard retained exact cash
+123456.789000000000001/configuration. EN/ZH switch, task-center lookup, Back and
+reload caused no second POST. Reload required a fresh acknowledgement; unchanged
+explicit retry returned the same request key/config SHA/job17307fe3. SQL stayed
+one task with unchanged completion timestamp, not a rerun. Native task-center Link
+and neutral bilingual uncertainty guidance replace misleading noncompletion and
+unreachable-service claims. Validation/permission handling remains specialized;
+no automatic retry, financial/API/backend/provider/dependency change.
+
+503/408/TypeError component regressions retain draft/key/remount/ack/edit semantics;
+final325 frontend/37files, lint/type/changed-file format/build129 PASS. Shared-copy
+TaskCenter and comparison assertions updated without weakening refresh/isolation.
+Readonly final diff review no blocker, not independent execution. Actual browser
+fault is202 concealed by503, not native disconnect/timeout. Four JPEGs/checksums
+and exact identity/timestamps outside Git:
+`product-evidence/v1.2/m4/20260928-create-response-recovery.json`.
+Corrected-alert screenshots have the alert below fold; DOM observed guidance and
+link, final result screenshot shows recovered task. No full visual/Chrome/AA claim.
+
+Own tab closed/ZHsystem preserved; fresh PID/cwd/args checked before TERM; API
+graceful shutdown/tool exit1 recorded, own listeners absent. Fresh exact owned
+tmpfs container/labels/no mounts verified then stopped: only disposable test data
+gone, container/image retained. Main eight fingerprints equal; original four
+services running/APIfrontend200/.research unchanged. Full scope, GitHub hold,
+native/novice/forward/current authorities/original missing ledgers/independent
+backup/login/performance/release gates remain incomplete.
+
 ## 2026-09-28 actual paper command rejection and recovery
 
 Current2c0077d frontend/actual API+SQL in owned tmpfs quant_test, synthetic account
