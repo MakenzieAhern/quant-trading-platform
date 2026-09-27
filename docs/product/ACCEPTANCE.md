@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 local runtime recovery and isolated backend verification
+
+One supported normal Desktop start succeeded; original four Compose services
+started without recreation/reset. PostgreSQL/backend healthy, Redis PONG,
+API/frontend HTTP200 on configured8000/5173; Engine29.8.0/Compose5.5.1.
+Original volumes and read-only research mount retained. Five paper sessions
+remain STOPPED; all eight critical table count/sorted-row fingerprints match
+the09-26 reference. Equality is not recovery of missing ledgers or a backup.
+
+Owned tmpfs quant_test only:1012 passed/one optional historical archive skipped,
+Ruff/544-format/mypy144 passed, upgrade/downgrade/upgrade/check passed. Three
+Compose configs passed. Test container freshly verified then stopped; main
+services remain running, no project data/image/volume deletion. No formal/OOS run.
+In-app browser EN/ZH/EN saved historical result displays the snapshot-date
+warning and preserves exact amounts; AX only, not actual Chrome visual/zoom
+acceptance. Initial mouse no-effect remains unproven; keyboard opened the result.
+Own tab closed/original locale restored/draft untouched. GitHub five-day hold
+continues; actual recovery and exact-head CI still required. Full goal incomplete.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260928-runtime-sql-recovery.json>)
+is outside Git.
+
 ## 2026-09-28 local login-trigger evidence, not full startup PASS
 
 Windows reboot12:41local and current-user AtLogOn task12:41:15/result0 confirmed.

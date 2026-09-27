@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 normal startup authority correction and recovery — 2026-09-28 local
+
+The original goal authorizes non-destructive Docker recovery. A menu-quit log
+does not itself revoke that authority; the earlier additional approval gate
+was unnecessary. One official normal CLI start succeeded, followed by start
+of existing Compose containers, not recreation. No startup-task/settings change,
+reset/deletion/loop. Original volumes/read-only archive mount/eight main table
+fingerprints retained; all four services healthy/reachable, five sessions stopped.
+Isolated tmpfs backend1012+one optional archive skip/static/migration cycle passed;
+only freshly verified owned test container stopped afterward. Local runtime
+blocker resolved, but terminal-free post-login persistence not thereby accepted.
+Bounded in-app EN/ZH historical-warning check is not actual Chrome/forward proof.
+User five-day GitHub estimate does not authorize remote retries or date-based
+recovery assumptions. Preserve all required product, data and release gates.
+
 ## v1.2 login and menu-quit evidence — 2026-09-28 local
 
 New Windows boot and task/log evidence changes the runtime diagnosis. Existing

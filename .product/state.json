@@ -1,12 +1,21 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-27T17:24:11Z",
+  "updated_at_utc": "2026-09-27T17:35:52Z",
+  "runtime_sql_recovery": {
+    "status": "PASS_LOCAL_RUNTIME_AND_ISOLATED_BACKEND_NOT_FULL_PRODUCT",
+    "tested_head": "8bb779a",
+    "evidence": "product-evidence/v1.2/m4/20260928-runtime-sql-recovery.json",
+    "runtime": "One normal official startup; original Compose four services healthy/reachable, Engine29.8.0/Compose5.5.1, API8000/frontend5173 HTTP200/PONG. Original volumes/research read-only mount retained; five paper STOPPED and eight table fingerprints match reference",
+    "tests": "Isolated tmpfs quant_test1012 passed/one optional archive skip; upgrade-downgrade-upgrade-check/Ruff/format544/mypy144/three Compose configs PASS",
+    "browser": "In-app only EN/ZH/EN saved historical snapshot warning and exact amounts preserved; AX not actual Chrome/visual/nativezoom/forward acceptance. Initial mouse no-effect unproven, keyboard navigation worked; own tab closed/original EN restored/draft untouched",
+    "limits": "Normal startup was already authorized; menu-quit log alone did not require renewed approval. Keep terminal-free login, persistedV3 lifecycle, native QA, real novice, missing ledgers, independent backup, lawful forward source/current authorities/after-start receipt and CI/release gates open. No frozen/formal/OOS changes"
+  },
   "docker_login_quit_diagnosis": {
     "status": "LOGIN_TRIGGER_EXECUTED_MENU_QUIT_CONFIRMED_CURRENT_RUNTIME_UNAVAILABLE",
     "evidence": "product-evidence/v1.2/m4/20260928-docker-login-quit-diagnosis.json",
     "facts": "Boot12:41local; AtLogOn task12:41:15local result0. Backend launched02:41:16Z, actionMenuQuit02:41:50Z. Second launch02:42:15Z, actionMenuQuit12:53:21Z, ExitHealthyState12:53:26Z. No current Docker process. No new launch/task/setting/data mutation.",
-    "limit": "Confirms menu quit/graceful shutdown, not identity/intent of initiator, earlier09-26 cause, current service/data health or full startup acceptance. Ask whether restarting and keeping Desktop running is intended; no duplicate startup mechanism or blind retry."
+    "limit": "Historical diagnosis only. Confirms menu quit/graceful shutdown, not identity/intent or earlier09-26 cause. Superseded for current runtime by runtime_sql_recovery; normal recovery was already authorized, no renewed approval or duplicate startup mechanism needed. Full terminal-free login acceptance remains open."
   },
   "previous_blocked_audit": {
     "consecutive_no_progress_goal_turns": 3,
@@ -91,12 +100,12 @@
     "policy": "Existing shared request/Decimal limit and translation keys only. No formal/OOS/provider/forward activity. Current Docker recovery incomplete; earlier fingerprints/test results are timestamped, not current health acceptance."
   },
   "docker_runtime_latest": {
-    "status": "UNAVAILABLE_AFTER_BRIEF_NORMAL_LAUNCH_CAUSE_UNPROVEN",
-    "observed_at_utc": "2026-09-26T15:54:33Z",
+    "status": "HEALTHY_AFTER_NORMAL_SUPPORTED_START_LOCAL_ONLY",
+    "observed_at_utc": "2026-09-27T17:35:52Z",
     "engine_during_brief_recovery": "29.8.0",
     "desktop_installed": "4.92.0.240144",
-    "error": "Ubuntu: docker could not be found in this WSL 2 distro; Docker Windows processes absent. Last host event streamer EOF15:53:31Z, not proven fatal cause",
-    "policy": "One normal launch, original12 containers/9 volumes/mount retained; no reset/deletion or repeated launch. Final service fingerprints and isolated tmpfs cleanup not verified. Recheck live Windows/user ownership before any next recovery action."
+    "error": null,
+    "policy": "Original four services healthy/reachable, nine volumes retained, research mount read-only, eight fingerprints match reference. Only own freshly verified tmpfs test container stopped; main remains running. Earlier EOF cause and full terminal-free login acceptance remain unproven; no reset/deletion/repeated launch."
   },
   "observation_receipt_integrity": {
     "status": "PASS_BOUNDED_DEFECT_FIXED_NOT_FORWARD_ACCEPTANCE",
@@ -221,7 +230,8 @@
   },
   "github_recovery_hold": {
     "reported_by": "user",
-    "estimated_recovery_date": "2026-10-01",
+    "estimated_recovery_date": null,
+    "reported_wait": "five days; no exact recovery time independently verified",
     "actual_recovery_verified": false,
     "policy": "User reconfirmed GitHub recovery takes five days. Hold ALL push, CI retries/polling, merge and release until actual recovery; estimated date is not proof. Continue safe local work. Exact-head CI required afterward; no payment, limit change or gate bypass."
   },
@@ -243,7 +253,7 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-09-27 17:24UTC branch codex/product-v1.2-current-rules @3be378d clean before owned checkpoint. No competing git/test/Vite writer. Docker absent after observed09-27 menu quit/graceful shutdown; existing login task executed result0. No runtime/task/setting/database/GitHub mutation, no historical PID reused.",
+    "latest_verification": "2026-09-27 17:35UTC branch codex/product-v1.2-current-rules @8bb779a clean before owned checkpoint. Main four services running; paper5 STOPPED/eight fingerprints unchanged. Owned tmpfs test container exact ID/labels/no-mount checked and stopped; original volumes retained. No GitHub/frozen/formal/OOS/provider action. Never reuse historical process IDs as authority.",
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
     "queue_writer": "owned isolated paper manager idle after two stopped historical QA accounts; main paper manager idle; no formal studies",
@@ -256,6 +266,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-27 17:35UTC supported normal Desktop/Compose start recovered original four services without recreation/reset/deletion. Engine29.8.0/Compose5.5.1/PONG/APIfrontend200. Main fivepaper STOPPED/eight critical row-count fingerprints match09-26 reference. Isolated tmpfs quant_test fullbackend1012+one optional archive skip/Ruff544format/mypy144/migration upgrade-downgrade-upgrade-check/threeCompose configs PASS. Fresh exact owned test container verified/stopped, main remainsrunning. In-app browser saved historical warning EN/ZH/EN and exact amounts/date preserved; mouse no-effect unproven/keyboard worked, no Chromevisual/nativezoom/forward claim. RestoredEN/closedowntab/draft untouched. .researchdiffclean; GitHubfive-dayhold/allfullgoal gates retained. Evidence20260928-runtime-sql-recovery.json outsideGit",
     "2026-09-26 16:36UTC shared plan prior-date snapshot defect fixed without engine/ledger mutation. Readonly review identified V1 saved-replay incompatibility; V1/V2 per-date cursor reproduction and V2-only new plans now preserve strict entire-event equality, old no-plan accounts, mixed-version second resume/no duplicate and tamper refusal. UnstartedV1 emitsV2 without parameter rewrite; oldbuilder golden hash field-equal. Offline115/fullfrontend312/Ruff320/mypy144/Eslint/types/Prettier/freshVite129 PASS; SQLboundary mocked and actualChrome absent, not runtime/release/U7 acceptance. No DB/account/provider/OOS/GitHub activity, .research gitdiffclean. Userfive-dayGitHubhold active, fullgoal incomplete",
     "2026-09-26 16:16UTC legacy submission locale/typed guidance fixed:8baseline failures, independent review found reload loses POST draft/key and2new regressions first failed. Final form-local guidance preserves unknown result, no reload, exact body/key retry; edits replacekey. Focused27/full311/36files/lint/types/Prettier/scratchVite129 PASS, readonly four-file final approved. Chrome absent; in-app keyboard invalid4vs3 period and ZH-EN-ZH preserved123456.789000000000000001, fullpage nativeimage inline only; mouse click no-effect unresolved, no acceptance claim. RestoredZH/own tabclosed/two owned previews command+start verified TERM/15173 clear. No validrun/provider/account/DB/OOS/GitHub operation, .researchclean, Docker stillabsent/currentservices unknown. Userfive-dayGitHubhold reconfirmed, fullgoalactive/incomplete",
     "2026-09-26 16:02UTC U7/U8 command-error shared repair:3startpauseStop503fixtures firstfailed for stale language; now specificvisible alert translated atrender and streamerror independent. Focused31/full305/Eslint/types/Prettier PASS usingexistingWSLNode24/deps. DefaultdistrootassetsEACCES, scratch/tmp/qtp-paper-command-build-7Ea2NY Vite129module PASS, no permissionchange/manualdelete. Readonlyfinalreview no boundedblocker. ActualChrome notrun Dockerabsent, no mainDB/provider/account/runtime/finance/research/OOS/GitHub actions/.research clean. Windowsboundedlogsinventory1application36system no matchingDocker/WSL/shutdown/fault evidence, rootcauseunproven/userownershipanswerpending. Fullgoalactive/incomplete, no repeatlauncher",
@@ -579,7 +590,6 @@
     "RESOLVED: transient Chrome browser-control binding timeouts were followed by successful Chrome Back/Forward and CSV/JSON acceptance; the temporary QA draft name was restored. No app defect was inferred from the tool timeout"
   ],
   "external_blockers": [
-    "M4-RUNTIME: current Docker absent after official logs recorded09-27 actionMenuQuit and graceful shutdown; login task executed result0. Initiator/intent unknown. Confirm restarting and keeping Desktop running; no blind loop or task reset. Earlier09-26 EOF-only disappearance remains unexplained; services/SQL/data health unverified",
     "CI-ACCOUNT: exact pushed f91e1e5 run36217962698 never started frontend/backend/Compose due to GitHub recent-payment/spending-limit annotation. Account owner must check Billing & plans; no automatic payment/limit changes or repeated reruns. Local tests do not substitute required CI",
     "U7-FORWARD: lawful product-use rights for a genuinely new A-share market-data feed have not been established; a public SDK or historical candidate receipt does not grant execution authority",
     "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay",
@@ -802,7 +812,7 @@
     }
   },
   "next_task": "Do not repeat the isolated release-image/clean-DB rehearsal or the failed Docker Run-entry hypothesis. On the next genuine Windows login, test the single current-user AtLogOn task and verify Docker/WSL/Compose/API/frontend plus retained database counts without terminal assistance, reset or data deletion. Until then M5 startup is FAIL. Existing Chrome is available again and the bounded English result/compare/stopped-paper read-only walkthrough has completed; retain existing Chinese recordings as bounded evidence and fill only actual key-interaction coverage gaps through a supported capture path. English video is optional, not a separate user requirement. Obtain genuine novice-user evidence rather than relabel agent QA. Continue independent M4/M5 accessibility, performance and compatibility work while preserving the missing genuine ledgers, independent backup and lawful forward-source blockers. Native 200% zoom needs user-operated evidence: browser policy blocked chrome://settings/appearance; do not bypass or substitute a CSS proxy. Official SSE/SZSE schedules close 2026-09-25 through 09-27; 09-28 is only the earliest conditional after-start receipt and still needs lawful source authority. A privileged read-only VSS inventory needs a real Windows administrator action; do not infer absent shadows from Access Denied. No duplicate Docker startup mechanism, full U6/U7 promotion or release from historical replay",
-  "next_command": "Same full U1-U8/M0-M5 goal resumed with new login/menu-quit evidence; not complete. Confirm whether Docker should be restarted and kept running; logs prove menu quit/graceful shutdown09-27, not initiating person's intent. Existing AtLogOn executed result0, no duplicate startup mechanism needed; not full M5 acceptance. If confirmed, one normal supported start, then verify actual assets/mounts/queues/eight fingerprints/Compose/PONG/API/frontend before pending disposable SQL V3 persistence and pause/restart/resume. Do not redo accepted frontend321/static/build/audit or offline126/backend checks unnecessarily. GitHub five-day hold: no push/poll/retry/merge/release until actual recovery. No data deletion/reset/frozen/formal/OOS mutation; missing genuine ledgers/independent backup/lawful current feed rights and current-source authorities/actual after-start forward receipt remain required. Native zoom/speech/novice/performance/login/media/full compatibility/exact-head CI/release gates stay open, no history/demo substitution or scope reduction.",
+  "next_command": "Same full U1-U8/M0-M5 goal active/incomplete. Docker/main services recovered, table equality and full isolated backend1012+one optional skip/static/migration cycle verified; do not repeat accepted checks unnecessarily. Next inspect existing newV3 lifecycle tests and close actual persisted creation/pause/restart/resume in an explicitly owned disposable DB, not main. In-app historical warning EN/ZH passed, actual Chrome/native zoom/speech/performance still required. GitHub five-day hold: no push/poll/retry/merge/release until actual recovery, not a date assumption. Preserve original formal/frozen/OOS assets and all required forward/backup/genuine-ledger/novice/login/media/compatibility/CI gates. No scope reduction, no live trading or placeholder forward acceptance.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
