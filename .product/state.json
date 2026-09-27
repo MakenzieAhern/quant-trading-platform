@@ -1,7 +1,17 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-27T18:59:21Z",
+  "updated_at_utc": "2026-09-27T19:08:51Z",
+  "market_detail_return_matrix": {
+    "status": "PASS_BOUNDED_FILTERED_DETAIL_NOT_FULL_UX_AA_PRODUCT",
+    "base_head": "5f4ee64",
+    "cases": 16,
+    "evidence": "product-evidence/v1.2/m4/20260928-market-detail-context-matrix.json",
+    "scope": "Actual IAB historical000025/query000/SZSE/page21-40of573 across4DOMsizes ENZH/lightdark; Back/Escape exactquery/source/page/focus/scroll restored, Forwardreopen, reverseTabinside. Additional12forwardTab/Close390ZHdark. Date2011-01-04..06-30/118OHLCV+1suspension+0missingfactors retained; no pageoverflow",
+    "review": "Four actualJPEG/checksums; root and readonly two-image review no observable blocker, not independently reexecuted matrix. Delivered heights891/812 differ DOM900/844, cause unproven; not physicalsize/200zoom/fullfocuscycle/speech/AA",
+    "cleanup": "Own tab7closed/originalENsystem restored/viewportreset/no new process or code/test/dependency. Originalfourservices running/eight main countMD5fingerprints equal/research Gitclean; no financial/provider/study/GitHub mutation",
+    "limits": "Full U1-U8/M0-M5/nativeaccessibility/performance/novice/media/login/currentauthority/lawfulforward/actualafter-startreceipt/genuine lostledgers/independentbackup/CIrelease remain required. Do not repeat bounded accepted matrices or substitute them for external gates"
+  },
   "recovery_guide_refresh": {
     "status": "PASS_BOUNDED_BILINGUAL_GUIDANCE_NOT_NOVICE_OR_RELEASE",
     "base_head": "e8b0303",
@@ -870,7 +880,7 @@
     }
   },
   "next_task": "Do not redo accepted V3 SQL/normal process restart, historical UI/ledger matrix, paper command503 or accepted-create503/same-job recovery. Continue full M4/M5 remaining native accessibility/performance/novice/manual/media/login and current authority/forward gates. Preserve successful paths and financial semantics; no tests merely for counts. Chrome200zoom/speech unavailable/unverified, no bypass or proxy promotion; genuine novice is separate from agent walkthrough. Next real Windows login verify existing single startup without terminal help, no autonomous reboot/duplicate starter. Missing genuine ledger backup/independent backup/lawful current forward authorities and actual after-start receipt remain mandatory. GitHub hold until actual recovery, no date assumption.",
-  "local_next_command": "Revalidate actual repo/PIDs/queues before mutation. Accepted-create503 recovery and bilingual manual recovery refresh now bounded closed; do not repeat them or paper command/ledger matrices. Select genuinely unverified remaining M4/M5 native accessibility/performance/media evidence from full matrix, not tests for counts. Real novice availability asked once, no reply/signoff; do not repeat question or substitute agent walkthrough. Own guide tab6closed/no new process; oldQA7446/7468 and tmpfs DB stopped, never reuse saved PIDs. Preserve original services/data/frozen/formal/OOS/all human gates; no GitHub remote calls.",
+  "local_next_command": "Revalidate actual repo/PIDs/queues before mutation. Accepted-create503 recovery, bilingual manual refresh and filtered market-detail16-case Back/Escape matrix bounded closed; do not repeat them or paper matrices. Select genuinely unverified remaining M4/M5 native accessibility/performance/media evidence from full matrix, not counts or proxies. Real novice availability asked once, no reply/signoff; do not repeat question or substitute agent walkthrough. Own market tab7closed/ENsystemrestored/viewportreset/no new process; oldQA7446/7468/tmpfsDB stopped, never reuse saved PIDs. Preserve original services/data/frozen/formal/OOS/all human gates; no GitHub remote calls.",
   "next_command": "Same full U1-U8/M0-M5 goal active/incomplete. Local Docker/fullbackend/migration and bounded V3 SQL/actual normal-process recovery verified; do not repeat them unnecessarily. Next prioritize remaining real-browser/native accessibility/performance and genuine novice workflow evidence; inventory supported browser surfaces before actions, no policy workaround. Pending lawful forward rights/current authorities/actual after-start receipt, genuine missing-ledger backup and independent backup remain human/external gates. Verify real Windows login without terminal assistance at next genuine login, no autonomous OS reboot or duplicate startup mechanism. GitHub five-day hold: no push/poll/retry/merge/release until actual recovery, not date assumption. Preserve all formal/frozen/OOS assets and original full product/release scope; no history/demo substitution or live trading.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

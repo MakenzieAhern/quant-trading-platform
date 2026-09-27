@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 market-detail filtered page return matrix
+
+Current5f4ee64 actual in-app localhost services, historical000025 only: UI query000,
+SZSE filter, second page21–40/573. Four requested DOMsizes1440x900/1280x800/
+1024x768/390x844 times ENZH/lightdark:16 cases. Back and Escape close the detail
+and restore exact trigger/query/source/exchange/page/scroll; Forward reopens.
+ReverseTab stays in modal; additional12forwardTabs and visible Close tested on
+390ZHdark, not a complete cyclic/speech/AA audit. Exact2011-01-04..06-30 window,
+118OHLCV/1official suspension/0missing factors retained. All page document widths
+equal client widths, modal horizontally contained; native modal internal scroll.
+
+Four actual JPEGs/checksums outsideGit; root and independent readonly reviewer
+inspected390ZHdark/1440ZHlight, no observable blocker. Screenshot375x812 and
+1425x891 differ from requested DOM heights, cause unproven; no physical-size or
+native200zoom claim. Method/matrix/limits:
+`product-evidence/v1.2/m4/20260928-market-detail-context-matrix.json`.
+Review did not independently execute matrix/SQL/Tab. No production change/new
+tests/dependency/financial/provider/study operation. Own tabclosed/ENsystem
+restored/viewportreset; originalfourservices running/eight main fingerprints equal/
+.research unchanged. FullUXDETAIL/visual/AA/novice/performance/forward/backup/login/
+media/CIrelease remain incomplete; GitHubhold retained.
+
 ## 2026-09-28 bilingual recovery instructions aligned to current evidence
 
 Both user guides corrected stale never-tested-login wording: current real09-27
