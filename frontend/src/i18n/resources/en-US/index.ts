@@ -346,6 +346,7 @@ export const enUS = {
       volume: "Volume",
       utcTime: "UTC time",
       noBars: "No completed replay Bars received yet.",
+      noSessions: "No completed A-share trading days received yet.",
       latestSession: "LATEST COMPLETED A-SHARE SESSION",
       marketSession: "Market session",
       sessionDate: "Session date",
@@ -364,6 +365,8 @@ export const enUS = {
       unrealizedPnl: "Unrealized PnL",
       commission: "Commission",
       noPortfolio: "Portfolio initializes on the first completed Bar.",
+      noSessionPortfolio:
+        "The portfolio appears after the first completed A-share trading day.",
       positions: "Positions",
       noPositions: "No simulated positions are open.",
       averagePrice: "Average price",

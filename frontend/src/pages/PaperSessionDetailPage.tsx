@@ -45,6 +45,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     latest_portfolio: portfolio,
   } = snapshot;
   const active = session.status === "STARTING" || session.status === "RUNNING";
+  const aShare =
+    session.provider_type === "simulated_a_share" ||
+    session.provider_type === "historical_a_share";
   const moneyUnit =
     session.provider_type === "historical_a_share" ? t("detail.cnySuffix") : "";
   const riskMessage = (message: string) => {
@@ -175,14 +178,10 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         <div className="panelHeader">
           <div>
             <p className="kicker">
-              {marketSession
-                ? t("detail.latestSession")
-                : t("detail.latestBar")}
+              {aShare ? t("detail.latestSession") : t("detail.latestBar")}
             </p>
             <h2>
-              {marketSession
-                ? t("detail.marketSession")
-                : t("detail.marketData")}
+              {aShare ? t("detail.marketSession") : t("detail.marketData")}
             </h2>
           </div>
         </div>
@@ -217,7 +216,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             />
           </div>
         ) : (
-          <p className="emptyState">{t("detail.noBars")}</p>
+          <p className="emptyState">
+            {t(aShare ? "detail.noSessions" : "detail.noBars")}
+          </p>
         )}
       </section>
       <section className="panel">
@@ -261,7 +262,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             />
           </div>
         ) : (
-          <p className="emptyState">{t("detail.noPortfolio")}</p>
+          <p className="emptyState">
+            {t(aShare ? "detail.noSessionPortfolio" : "detail.noPortfolio")}
+          </p>
         )}
       </section>
       {session.provider_type === "historical_a_share" && portfolio && (

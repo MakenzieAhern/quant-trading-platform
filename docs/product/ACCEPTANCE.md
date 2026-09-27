@@ -1,5 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 new V3 historical UI account and provider empty-state fix
+
+Owned tmpfs quant_test/API18036/frontend15173 only: create a new historical
+account through the in-app UI, dates2011-03-01..23/cash100000. EN switch preserves
+form values; creation stays CREATED with no automatic start/data/orders/fills.
+Actual walkthrough exposed incorrect Bar empty-state labels on A-share accounts:
+shared detail page chose labels by data availability rather than provider type.
+Fix only provider-specific headings/translated empty states; preserve legacy
+AAPL copy and all financial code. New regression failed2/passed31 before fix,
+then33 passed across both locales/all three providers; full frontend323/37files,
+lint/typecheck passed. Vite129-module build passed in fresh cache output. Default
+root-owned dist/cache permissions were not changed; no old files deleted.
+
+Explicit UI start completed STOPPED/138events/20orders/six distinct-order fills.
+EN/ZH show latest2011-03-23 cash81309.8134/equity99964.8134 versus plan-time
+2011-03-22 cash100000/estimated requirement75191.75091 and next2011-03-23.
+V3, historical-only warnings and snapshot distinction verified. Four real key
+screenshots/checksums retained outside Git. Native Chrome unavailable in current
+browser inventory; no bypass/retry. This is agent historical walkthrough, not
+genuine novice, native zoom/speech, full visual matrix or lawful forward PASS.
+
+Own tab closed/original ZH/system restored; freshly identified owned API/Vite
+stopped/listeners absent, tmpfs test container stopped (disposable test data only).
+Original main four services remain healthy/reachable; eight fingerprints match
+reference and `.research` unchanged. GitHub five-day hold preserved until actual
+recovery, not estimated date. Full goal/release remains incomplete.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260928-paper-provider-empty-state.json>)
+is outside Git.
+
 ## 2026-09-28 V3 SQL persistence and actual graceful process restart
 
 Previously optional real-archive test now ran in owned tmpfs quant_test: baseline

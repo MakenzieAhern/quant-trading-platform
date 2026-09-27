@@ -53,6 +53,69 @@ function installWebSocket() {
 }
 
 describe("paper trading pages", () => {
+  it.each(["en-US", "zh-CN"])(
+    "uses provider-specific empty states before any market data arrives (%s)",
+    async (language) => {
+      await act(async () => i18n.changeLanguage(language));
+      try {
+        for (const provider of [
+          "replay",
+          "simulated_a_share",
+          "historical_a_share",
+        ] as const) {
+          installWebSocket();
+          const snapshot = paperSnapshot();
+          snapshot.session.provider_type = provider;
+          vi.spyOn(globalThis, "fetch").mockResolvedValue(
+            jsonResponse(snapshot),
+          );
+          const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+          await act(async () => MockWebSocket.instances[0]!.open());
+          const aShare = provider !== "replay";
+          expect(
+            screen.getByText(
+              i18n.t(aShare ? "detail.latestSession" : "detail.latestBar", {
+                ns: "paper",
+              }),
+            ),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", {
+              name: i18n.t(
+                aShare ? "detail.marketSession" : "detail.marketData",
+                { ns: "paper" },
+              ),
+            }),
+          ).toBeInTheDocument();
+          const emptyText =
+            language === "zh-CN"
+              ? "尚未收到完整的 A 股交易日数据。"
+              : "No completed A-share trading days received yet.";
+          const portfolioText =
+            language === "zh-CN"
+              ? "完成首个 A 股交易日回放后显示组合。"
+              : "The portfolio appears after the first completed A-share trading day.";
+          expect(
+            screen.getByText(
+              aShare ? emptyText : i18n.t("detail.noBars", { ns: "paper" }),
+            ),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByText(
+              aShare
+                ? portfolioText
+                : i18n.t("detail.noPortfolio", { ns: "paper" }),
+            ),
+          ).toBeInTheDocument();
+          view.unmount();
+          vi.restoreAllMocks();
+        }
+      } finally {
+        await act(async () => i18n.changeLanguage("en-US"));
+      }
+    },
+  );
+
   it("bounds events waiting for a slow REST hydration and reconnects", async () => {
     installWebSocket();
     vi.useFakeTimers();

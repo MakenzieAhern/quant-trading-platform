@@ -1,7 +1,16 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-27T17:49:07Z",
+  "updated_at_utc": "2026-09-27T18:08:00Z",
+  "new_historical_paper_ui": {
+    "status": "PASS_BOUNDED_IN_APP_UI_AND_PROVIDER_EMPTY_STATES_NOT_FULL_PRODUCT",
+    "base_head": "cda787d",
+    "evidence": "product-evidence/v1.2/m4/20260928-paper-provider-empty-state.json",
+    "fix": "CREATED A-share account incorrectly used Bar copy before latest_session. Shared page now selects labels by provider_type, bilingual empty instructions; legacy replay/calculations unchanged. Baseline2failed/31passed, focused33pass, fullfrontend323/37files/lint/type/build129 PASS",
+    "ui": "Own tmpfs SQL/new account124f7866 created through ZH/EN form with no autostart, explicit UI start STOPPED/138events/20orders/six unique fills. V3 historical2011-03-23 cash81309.8134/equity99964.8134 versus March22 plan cash100000/nextMarch23/estimate75191.75091; four real screenshots/hash evidence outside Git",
+    "cleanup": "Own tab closed/ZHsystem restored; fresh PID/start/args API3474/Vite3518 stopped, listeners absent; verified owned tmpfs testDB stopped, disposable test data only. Main four healthy/APIfrontend200/eight fingerprints unchanged/research Git clean. No user data deletion/permissions changes",
+    "limits": "Current native Chrome binding unavailable; no workaround/retry. Not real novice/native200zoom/speech/forward/full matrix. Full scope and human/external gates remain. GitHub user five-day hold, actual recovery required; no remote operation. Normal build EACCES handled via isolated output, quoted-shell artifact moved recoverably outside Git"
+  },
   "v3_sql_process_recovery": {
     "status": "PASS_BOUNDED_HISTORICAL_SQL_AND_NORMAL_PROCESS_RESTART",
     "base_head": "5319feb",

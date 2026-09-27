@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 provider identity controls empty-state copy — 2026-09-28 local
+
+New historical-account UI walkthrough found Bar labels before first A-share
+session arrives. Select headings/empty-state instructions by accepted provider
+type, not existence of latest_session. Reuse shared detail page and current
+bilingual resources; keep replay copy and financial computation unchanged.
+Regression covers all three providers in both locales, fails before/pass after.
+No new helper/dependency/configuration framework. Bounded isolated UI V3 run
+completed with historical dates and distinct plan-time/latest balances; not
+U7 forward, real novice or native Chrome accessibility acceptance.
+
+User confirms GitHub unavailable for five days. Keep all pushes/remote CI polling,
+merge/tag/release paused until actual recovery. Continue local evidence; elapsed
+time is not recovery confirmation. Preserve original data/frozen/formal/OOS and
+all pending human/external/product gates. Temporary test services stopped only.
+
 ## v1.2 reuse and strengthen real-archive recovery proof — 2026-09-28 local
 
 The skipped real-archive integration test was the existing path, not a missing
