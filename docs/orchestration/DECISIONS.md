@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 recovery manual must separate request and attempt identities — 2026-09-28
+
+Update existing EN/ZH guides, no additional recovery abstraction. Unconfirmed
+create: lookup original task, restore unchanged draft/key, acknowledge and retry
+explicitly. Known terminal failure: linked retry is a new attempt retaining the
+original. Paused account can explicitly Resume replay/继续回放, interrupted account
+remains read-only; never infer current balance/fills from lost connection. Correct
+stale startup never-tested claim using actual09-27 task/menuQuit evidence, without
+promoting full login recovery. Current browser CORS address is localhost5173,
+not a reason to weaken security. Actual readonly bilingual old task/source review
+and guide link checks recorded outsideGit; genuine novice question asked once,
+not replaced by agent walk-through. All full product/human/release gates preserved.
+
 ## v1.2 uncertain creation response means check/reopen, not assumed failure — 2026-09-28
 
 Actual isolated synthetic task completed after backend202 while browser saw503.

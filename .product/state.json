@@ -1,7 +1,16 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-27T18:50:10Z",
+  "updated_at_utc": "2026-09-27T18:59:21Z",
+  "recovery_guide_refresh": {
+    "status": "PASS_BOUNDED_BILINGUAL_GUIDANCE_NOT_NOVICE_OR_RELEASE",
+    "base_head": "e8b0303",
+    "evidence": "product-evidence/v1.2/m5/20260928-guide-recovery-refresh.json",
+    "changes": "Existing ENZH guides distinguish uncertain same-key create vs linked newattempt, paused explicit Resume replay/继续回放 vs interrupted readonly, snapshot not current balance, normal pause-process recovery not abrupt/database-loss backup. Correct09-27 real login task/menuQuit without fullstartup promotion; exact browserlocalhost origin no security workaround",
+    "proof": "Actual in-app localhostTaskCenter8research/4candidates and old5861fbb5 Interrupted ENZH/no-result/linkedretry labels, GETonly/no retry clicked. Eight guide linksHTTP200; readonly bilingual review no blocker, exactresume labels corrected; docs-only diffcheckPASS, no suite/OOS rerun",
+    "cleanup": "Own tab6closed/originalENsystem restored/no new process. Main eight countMD5fingerprints equal/research Gitclean, originalfourservices healthy. Initial127origin failed, localhostworked per configuredCORS; no security expansion",
+    "human": "Real uninvolved nonfinancial novice trial availability asked once asynchronously; no reply/signoff yet. Full native/performance/media/login/forward/backup/GitHubrelease gates remain required"
+  },
   "create_response_ui_recovery": {
     "status": "PASS_BOUNDED_ACCEPTED_RESPONSE_RECOVERY_NOT_FULL_PRODUCT",
     "base_head": "f1e4046",
@@ -861,7 +870,7 @@
     }
   },
   "next_task": "Do not redo accepted V3 SQL/normal process restart, historical UI/ledger matrix, paper command503 or accepted-create503/same-job recovery. Continue full M4/M5 remaining native accessibility/performance/novice/manual/media/login and current authority/forward gates. Preserve successful paths and financial semantics; no tests merely for counts. Chrome200zoom/speech unavailable/unverified, no bypass or proxy promotion; genuine novice is separate from agent walkthrough. Next real Windows login verify existing single startup without terminal help, no autonomous reboot/duplicate starter. Missing genuine ledger backup/independent backup/lawful current forward authorities and actual after-start receipt remain mandatory. GitHub hold until actual recovery, no date assumption.",
-  "local_next_command": "Revalidate actual repo/PIDs/queues before mutation. Accepted-create response recovery now closed for bounded synthetic503; do not repeat it or paper command/ledger matrices. Select genuinely unverified remaining M4/M5 native accessibility/performance/novice/manual/media evidence from full acceptance matrix, not tests for counts. Owned QA7446/7468 and tmpfs DB are stopped, never reuse saved PIDs. Preserve original services/data/frozen/formal/OOS/all human gates; no GitHub remote calls.",
+  "local_next_command": "Revalidate actual repo/PIDs/queues before mutation. Accepted-create503 recovery and bilingual manual recovery refresh now bounded closed; do not repeat them or paper command/ledger matrices. Select genuinely unverified remaining M4/M5 native accessibility/performance/media evidence from full matrix, not tests for counts. Real novice availability asked once, no reply/signoff; do not repeat question or substitute agent walkthrough. Own guide tab6closed/no new process; oldQA7446/7468 and tmpfs DB stopped, never reuse saved PIDs. Preserve original services/data/frozen/formal/OOS/all human gates; no GitHub remote calls.",
   "next_command": "Same full U1-U8/M0-M5 goal active/incomplete. Local Docker/fullbackend/migration and bounded V3 SQL/actual normal-process recovery verified; do not repeat them unnecessarily. Next prioritize remaining real-browser/native accessibility/performance and genuine novice workflow evidence; inventory supported browser surfaces before actions, no policy workaround. Pending lawful forward rights/current authorities/actual after-start receipt, genuine missing-ledger backup and independent backup remain human/external gates. Verify real Windows login without terminal assistance at next genuine login, no autonomous OS reboot or duplicate startup mechanism. GitHub five-day hold: no push/poll/retry/merge/release until actual recovery, not date assumption. Preserve all formal/frozen/OOS assets and original full product/release scope; no history/demo substitution or live trading.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

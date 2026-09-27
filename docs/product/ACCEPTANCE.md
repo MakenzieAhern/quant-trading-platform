@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 bilingual recovery instructions aligned to current evidence
+
+Both user guides corrected stale never-tested-login wording: current real09-27
+sign-in/task12:41:15/result0 and later menuQuit are recorded, not complete startup
+acceptance or proof of initiator. Added uncertain create lookup/unchanged draft
+key/new acknowledgement versus a linked new attempt for explicit failure;
+PAUSED explicit Resume replay/继续回放 versus INTERRUPTED read-only/no backfill;
+last verified snapshot is not current balance. Normal paused process recovery is
+not abrupt crash/database-loss/independent backup. No new runtime mechanism.
+
+Actual in-app documentedlocalhost5173 task center loaded8research/4candidate
+tasks; existing5861fbb5 Interrupted detail matched EN/ZH linked-retry/no-result
+copy. No retry clicked or new task. Initial127origin failed; documentedlocalhost
+worked, matching exact CORS source config. Guides name this browser-origin
+boundary without suggesting security changes. Eight guide routes HTTP200, not
+eight full UI flows. Independent readonly review no blocker; corrected exact
+resume labels. Docs-only diff check PASS, no unnecessary suite/OOS rerun.
+Two native JPEGs/checksums and limits:
+`product-evidence/v1.2/m5/20260928-guide-recovery-refresh.json`.
+
+Own tabclosed/ENsystem restored/no new process. Eight main fingerprints equal,
+.research unchanged. Real novice trial availability asked once, no signoff;
+M5 and full native/forward/backup/login/performance/GitHub/release gates remain.
+
 ## 2026-09-28 accepted create response uncertainty and original task recovery
 
 Current f1e4046, owned quant_test/synthetic fixture only: guarded outside-Git
