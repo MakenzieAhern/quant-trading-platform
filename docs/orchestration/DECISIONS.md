@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 reuse and strengthen real-archive recovery proof — 2026-09-28 local
+
+The skipped real-archive integration test was the existing path, not a missing
+framework. Run it with the accepted archive and disposable SQL only. Inspection
+showed it reused the same manager after shutdown: strengthen it with a fresh
+manager/registries via the same HTTP routes, explicit V3/date invariants and
+whole saved-prefix equality, retaining original financial baseline comparison.
+Readonly independent review accepted the bounded change;41 related tests pass.
+
+Then validate an actual separate backend-process shutdown/restart against owned
+tmpfs SQL. Paused97-event prefix survived unchanged, no automatic resume; explicit
+resume added only one remaining historical session and six fills. Duplicate
+start409 appended nothing. No production engine patch was necessary. Preserve
+the distinction from abrupt crash, whole-host restart and lawful after-start
+new-market forward acceptance; none follows from historical process recovery.
+Main data fingerprints/frozen Git state unchanged, owned process/test DB stopped,
+GitHub hold and all missing product/release evidence remain.
+
 ## v1.2 normal startup authority correction and recovery — 2026-09-28 local
 
 The original goal authorizes non-destructive Docker recovery. A menu-quit log

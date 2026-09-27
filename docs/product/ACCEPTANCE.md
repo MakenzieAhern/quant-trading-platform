@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 V3 SQL persistence and actual graceful process restart
+
+Previously optional real-archive test now ran in owned tmpfs quant_test: baseline
+passed, strengthened paper API/plan compatibility41 tests passed with no skips.
+Only existing test changed: V3/date guards, fresh manager via actual HTTP route,
+saved-prefix equality and unchanged full financial-event comparison. Readonly
+independent review found no blocking issue; final Ruff/format passed after an
+equivalent response-assignment style fix. Production calculations unchanged.
+
+Separate current-source backend18036 in test mode: new historical V3 account
+paused at2011-03-22 with20 orders/zero fills/97 events. Verified own process
+gracefully exited; a new process/lifespan reopened the same SQL DB. It stayed
+PAUSED with the exact97-event checksum preserved, until explicit HTTP start.
+Resume added only2011-03-23, produced six distinct-order fills and17 dated V3
+plans; saved prefix/start time unchanged. Repeated start409 appended no event.
+Owned API/test DB stopped after fresh identity checks; main eight fingerprints
+still match reference, services HTTP200, `.research` unchanged. No formal/OOS run.
+
+This closes a bounded V3 historical normal-process restart check, not abrupt
+crash/power/database-loss/terminal-free login, real Chrome/novice or U7 forward.
+All original product and external gates remain required; GitHub stays held.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260928-v3-sql-process-recovery.json>)
+is outside Git.
+
 ## 2026-09-28 local runtime recovery and isolated backend verification
 
 One supported normal Desktop start succeeded; original four Compose services

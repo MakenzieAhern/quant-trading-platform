@@ -8,6 +8,7 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text, update
 from sqlalchemy.exc import DBAPIError
 
+from app.api.routes import paper as paper_routes
 from app.api.routes.paper import paper_manager, paper_session_websocket, settings
 from app.application.experiments.data import HISTORICAL_ID
 from app.db.models.paper import PaperTradingSessionModel
@@ -489,6 +490,7 @@ async def test_real_archive_pause_resume_preserves_pending_orders_and_fills(
     monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
     baseline = await client.post("/api/paper-trading/sessions", json=body)
     assert baseline.status_code == 201, baseline.text
+    assert baseline.json()["strategy_parameters"]["plan_version"] == "PAPER_ACCOUNT_PLAN_V3"
     baseline_id = baseline.json()["session_id"]
     await client.post(f"/api/paper-trading/sessions/{baseline_id}/start")
     for _ in range(1200):
@@ -504,6 +506,12 @@ async def test_real_archive_pause_resume_preserves_pending_orders_and_fills(
         for item in baseline_events
         if item["type"] == "portfolio.snapshot" and item["payload"].get("plan")
     ]
+    for plan in baseline_plans:
+        assert plan["plan_version"] == "PAPER_ACCOUNT_PLAN_V3"
+        assert plan["account_snapshot_trading_date"] == (
+            plan["as_of_trading_date"] if plan["account"] is not None else None
+        )
+        assert plan["not_today_advice"] is True
     assert baseline_plans[-2]["as_of_trading_date"] == "2011-03-22"
     assert baseline_plans[-2]["paper_session_id"] == baseline_id
     assert baseline_plans[-2]["submitted_to_account"] is True
@@ -588,18 +596,37 @@ async def test_real_archive_pause_resume_preserves_pending_orders_and_fills(
         )
         == 20
     )
+    paused_events = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
     await paper_manager.shutdown()
-    assert await paper_manager.recover_interrupted() == 0
-
-    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
-    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
-    for _ in range(1200):
-        resumed = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
-        if resumed["status"] in {"STOPPED", "FAILED"}:
-            break
-        await asyncio.sleep(0.05)
+    # Fresh runtime ownership, with no tasks/providers/cache inherited from the old manager.
+    restarted = paper_routes.PaperTradingManager(
+        SessionFactory,
+        paper_routes.DatasetRegistry.phase7(settings.backtest_fixture_path),
+        paper_routes.StrategyRegistry(),
+        historical_datasets=paper_routes.ExperimentDatasetRegistry(settings.research_data_path),
+        replay_interval_seconds=0,
+    )
+    try:
+        monkeypatch.setattr(paper_routes, "paper_manager", restarted)
+        assert await restarted.recover_interrupted() == 0
+        restored = await restarted.get(UUID(session_id))
+        assert restored is not None and restored.status.value == "PAUSED"
+        assert (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json() == (
+            paused_events
+        )
+        started = await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+        assert started.status_code == 200
+        for _ in range(1200):
+            resumed = (await client.get(f"/api/paper-trading/sessions/{session_id}")).json()
+            if resumed["status"] in {"STOPPED", "FAILED"}:
+                break
+            await asyncio.sleep(0.05)
+    finally:
+        await restarted.shutdown()
     assert resumed["status"] == "STOPPED", resumed
+    assert resumed["started_at"] == paused["started_at"]
     resumed_events = (await client.get(f"/api/paper-trading/sessions/{session_id}/events")).json()
+    assert resumed_events[: len(paused_events)] == paused_events
     resumed_snapshot = (
         await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")
     ).json()
