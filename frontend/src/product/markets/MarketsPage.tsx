@@ -464,7 +464,10 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                 const source = datasets.find(
                   (d) => d.dataset_id === item.dataset_id,
                 );
-                const canRead = item.source_available && source?.available;
+                const canRead =
+                  item.source_available &&
+                  source?.available &&
+                  item.dataset_sha256 === source.sha256;
                 return (
                   <article
                     className="marketWatchItem"

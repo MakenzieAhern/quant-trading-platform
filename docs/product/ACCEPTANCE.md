@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 local execution while GitHub Actions is unavailable
+
+The four original Compose services remain running; PostgreSQL, Redis and backend
+report healthy, and `/api/health` and `/markets` each return HTTP 200. Local
+execution is independent of GitHub Actions. This is not an exact pushed-head CI
+result or permission to merge/release; the user-reported 2026-10-01 recovery is
+an estimate, not observed recovery.
+
+A U5 source-version defect was reproduced in isolated backend/frontend tests:
+a saved watchlist row with the same dataset ID but a different dataset SHA was
+still marked readable. The backend now checks the saved SHA against the current
+registered source, returning `DATASET_VERSION_CHANGED` when they differ. The
+frontend independently disables Inspect if the current dataset response has a
+different SHA, while Remove remains available. The English/Chinese notice now
+mentions changed sources. No real archive, saved record, frozen research, paper
+account or provider input was modified.
+
+On this working-tree snapshot, isolated `quant_test` PostgreSQL gave 1013 backend
+tests PASS, one optional unmounted-archive skip; 327 frontend tests/37 files PASS.
+Full Ruff/format/mypy, frontend lint/typecheck/build (129 modules), three Compose
+config checks and Alembic downgrade to `20260904_0001`, re-upgrade to head and
+`check` on the test DB all PASS. Main API/frontend returned 200. This is bounded
+local verification. An actual in-app browser opened the existing unchanged
+watchlist history on the matching source SHA; its temporary tab was closed.
+The mismatch case was proved only in isolated tests, not by changing a real
+archive. Eight main data-table count/MD5 fingerprints equal the saved reference;
+`.research` is unchanged. The owned, labeled, mount-free `quant_test` tmpfs
+PostgreSQL was stopped after checks; only its disposable test state ended, with
+no image/volume/object deletion and no main service stop. Release-image smoke,
+native browser/new-user/forward/
+data rights/backup and GitHub exact-head CI remain separate open gates.
+
 ## 2026-09-28 benchmark visibility survives saved-chart pagination
 
 The saved equity chart reset its Show benchmark preference on every page change:

@@ -67,6 +67,20 @@ async def test_watchlist_historical_snapshot_survives_optional_archive_unmount(
     assert (await watchlist.list(50, 0))["total"] == 0
 
 
+async def test_watchlist_saved_snapshot_is_not_readable_with_a_different_dataset_sha(watchlist):
+    saved = await watchlist.add(DEMO_ID, SID)
+    async with SessionFactory() as db, db.begin():
+        row = await db.get(WatchlistItemModel, (DEMO_ID, SID))
+        assert row is not None
+        row.dataset_sha256 = "0" * 64
+    listed = (await watchlist.list(50, 0))["items"][0]
+    assert listed["security"] == saved["security"]
+    assert listed["dataset_sha256"] == "0" * 64
+    assert listed["source_available"] is False
+    assert listed["source_reason_code"] == "DATASET_VERSION_CHANGED"
+    await watchlist.remove(DEMO_ID, SID)
+
+
 async def test_watchlist_rejects_unknown_security_dataset_and_unsafe_input(watchlist):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         path = f"/api/markets/watchlist/{SID}"

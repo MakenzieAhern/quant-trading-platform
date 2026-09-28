@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T04:15:25Z",
+  "updated_at_utc": "2026-09-28T04:27:27Z",
+  "watchlist_source_version_guard": {
+    "status": "PASS_LOCAL_TESTS_NOT_FULL_U5_OR_RELEASE",
+    "cause": "Saved watchlist source availability checked dataset ID but not saved dataset SHA",
+    "fix": "Backend current-source SHA check and frontend current-dataset SHA guard; changed-source bilingual notice; Remove retained",
+    "proof": "RED backend/frontend regressions then isolated quant_test backend 1013 PASS 1 optional archive skip, frontend 327 PASS/37 files; full Ruff/format/mypy, frontend lint/type/build129, test-only Alembic down/up/check, Compose configs PASS; original services running and API/frontend HTTP200. Actual IAB matching-source watchlist Inspect opened, own tab closed. Eight main count/MD5 fingerprints equal saved reference; .research unchanged. Owned labeled mount-free test PG stopped, only disposable tmpfs state ended, no volume/image/object/main-service deletion",
+    "limits": "Mismatched real archive was not altered; mismatch only isolated tests. No remote GitHub CI or release-image smoke. U5, native/new-user/forward/data-rights/backup and full U1-U8/M0-M5 gates remain open"
+  },
   "chart_benchmark_page_preference": {
     "status": "PASS_BOUNDED_ACTUAL_IAB_NOT_FULL_CHART_OR_RELEASE",
     "base_head": "63295f9",

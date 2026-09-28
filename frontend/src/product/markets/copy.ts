@@ -56,7 +56,7 @@ const en = {
     "Your watchlist is empty. Save a security from the search results.",
   savedAt: "Added at",
   archivedSource:
-    "The saved source is unavailable. You can still remove this entry.",
+    "The saved source is unavailable or has changed. You can still remove this entry.",
   coverage: "Registered coverage",
   asOf: "Archive as-of",
   retrieved: "Archive retrieval time",
@@ -169,7 +169,8 @@ const zh: typeof en = {
   szseMain: "深市主板",
   chiNext: "创业板",
   inspect: "查看历史",
-  detailUnavailable: "无法打开此证券链接。请检查已注册的数据来源，或重新检索该证券。",
+  detailUnavailable:
+    "无法打开此证券链接。请检查已注册的数据来源，或重新检索该证券。",
   closeDetail: "关闭详情",
   save: "加入自选",
   remove: "移除自选",
@@ -184,7 +185,7 @@ const zh: typeof en = {
     "保存在本地数据库中。即使证券代码相同，历史档案与合成演示的自选记录仍彼此独立。",
   watchlistEmpty: "自选列表为空，可从检索结果添加证券。",
   savedAt: "加入时间",
-  archivedSource: "该记录的数据来源不可用，但仍可移除自选。",
+  archivedSource: "该记录的数据来源不可用或已变更，但仍可移除自选。",
   coverage: "已注册覆盖区间",
   asOf: "档案数据截至",
   retrieved: "档案获取时间",

@@ -680,6 +680,35 @@ describe("historical cache markets", () => {
     expect(screen.getByText(/服务无法读取历史数据/)).toBeInTheDocument();
   });
 
+  it("does not open a saved watchlist snapshot against a different current dataset SHA", async () => {
+    vi.mocked(marketApi.watchlist).mockResolvedValue({
+      items: [{ ...watched, dataset_sha256: "0".repeat(64) }],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    render(<MarketsPage />);
+    expect(
+      await screen.findByRole("button", {
+        name: `Inspect history: ${security.security_id} · ${dataset.dataset_id}`,
+      }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("button", {
+        name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
+      }),
+    ).toBeEnabled();
+    expect(
+      screen.getByText(
+        "The saved source is unavailable or has changed. You can still remove this entry.",
+      ),
+    ).toBeInTheDocument();
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(
+      screen.getByText("该记录的数据来源不可用或已变更，但仍可移除自选。"),
+    ).toBeInTheDocument();
+  });
+
   it("shows honest empty and failed cache reads and provides retry", async () => {
     vi.mocked(marketApi.search)
       .mockRejectedValueOnce(new Error("offline"))
