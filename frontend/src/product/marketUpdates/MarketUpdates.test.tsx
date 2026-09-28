@@ -161,6 +161,62 @@ describe("explicit incremental request workflow", () => {
       }),
     ).toBeInTheDocument();
   });
+  it("hands keyboard focus from history to the opened task", async () => {
+    render(<MarketUpdatesPanel />);
+    const open = await screen.findByRole("button", {
+      name: /^Open task: CN-A:SSE:600000/,
+    });
+    open.focus();
+    await userEvent.keyboard("{Enter}");
+    expect(location.search).toBe(`?updateJob=${job.job_id}`);
+    expect(
+      screen.getByRole("region", { name: `Task: ${job.job_id}` }),
+    ).toHaveFocus();
+  });
+  it("keeps the focused task before its reloading history list", async () => {
+    const page = { items: [job], total: 1, limit: 20, offset: 0 };
+    let finish!: (value: typeof page) => void;
+    vi.mocked(marketUpdateApi.list)
+      .mockResolvedValueOnce(page)
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (finish = resolve)),
+      );
+    render(<MarketUpdatesPanel />);
+    const open = await screen.findByRole("button", {
+      name: /^Open task: CN-A:SSE:600000/,
+    });
+    open.focus();
+    await userEvent.keyboard("{Enter}");
+    const detail = screen.getByRole("region", {
+      name: `Task: ${job.job_id}`,
+    });
+    const history = screen.getByRole("region", { name: "Update task history" });
+    expect(detail).toHaveFocus();
+    expect(
+      detail.compareDocumentPosition(history) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    await act(async () => finish(page));
+    expect(detail).toHaveFocus();
+    expect(
+      detail.compareDocumentPosition(history) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+  it("does not steal focus when another control is chosen as history opens", async () => {
+    render(<MarketUpdatesPanel />);
+    const open = await screen.findByRole("button", {
+      name: /^Open task: CN-A:SSE:600000/,
+    });
+    const refresh = screen.getByRole("button", { name: "Refresh" });
+    open.focus();
+    await act(async () => {
+      fireEvent.click(open);
+      refresh.focus();
+    });
+    expect(location.search).toBe(`?updateJob=${job.job_id}`);
+    expect(refresh).toHaveFocus();
+  });
   it("explains a denied capability read and recovers only after explicit refresh", async () => {
     const create = vi.spyOn(marketUpdateApi, "create");
     vi.mocked(marketUpdateApi.capabilities).mockRejectedValue(

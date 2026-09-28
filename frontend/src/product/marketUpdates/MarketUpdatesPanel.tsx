@@ -95,6 +95,22 @@ export function MarketUpdatesPanel() {
           }}
         />
       )}
+      {jobId ? (
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          jobId,
+        ) ? (
+          <UpdateTaskDetail
+            key={jobId}
+            jobId={jobId}
+            onOpen={openAndFocusTask}
+            focusRef={taskFocus}
+          />
+        ) : (
+          <p role="alert">{c.invalidJob}</p>
+        )
+      ) : (
+        <p>{c.selectPrompt}</p>
+      )}
       <section aria-label={c.history}>
         <h3>{c.history}</h3>
         {history.loading && <p role="status">{c.loading}</p>}
@@ -120,7 +136,12 @@ export function MarketUpdatesPanel() {
                     type="button"
                     className="button secondary"
                     aria-label={`${c.open}: ${job.configuration.security_ids.join(", ")} · ${job.configuration.start_date}–${job.configuration.end_date} · ${formatUtc(job.created_at)}`}
-                    onClick={() => openUpdateJob(job.job_id)}
+                    onClick={(event) =>
+                      openAndFocusTask(
+                        job.job_id,
+                        document.activeElement === event.currentTarget,
+                      )
+                    }
                   >
                     {c.open}
                   </button>
@@ -137,22 +158,6 @@ export function MarketUpdatesPanel() {
           onChange={setOffset}
         />
       </section>
-      {jobId ? (
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-          jobId,
-        ) ? (
-          <UpdateTaskDetail
-            key={jobId}
-            jobId={jobId}
-            onOpen={openAndFocusTask}
-            focusRef={taskFocus}
-          />
-        ) : (
-          <p role="alert">{c.invalidJob}</p>
-        )
-      ) : (
-        <p>{c.selectPrompt}</p>
-      )}
     </section>
   );
 }

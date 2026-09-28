@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 data-center saved task keyboard focus — bounded Chrome
+
+The history `Open task` button bypassed the existing focus handoff. A keyboard
+selection first left focus on the page body; after handing focus to the detail,
+the reloading history list shifted that detail below the 911px Chrome viewport
+(top 1137px). The button now reuses `openAndFocusTask`, and the selected detail
+renders before history so a list refill cannot move it out of view. No task,
+provider, financial or API behavior changed.
+
+Focused component checks passed 29/29, including Enter, history refill and
+no focus theft when another control is chosen. Full frontend tests passed
+364/364; ESLint, TypeScript/Vite 129-module build and changed-file Prettier
+passed. In actual Chrome, keyboard Return opened an existing saved task via
+GET, focused its named detail, and kept it visible at top 398px while history
+refilled below it (top 1730px). The temporary agent tab was closed; original
+Chinese/dark preferences were not changed. Independent read-only review found
+no blocking defect. A long detail now places history farther down the page.
+
+This is a bounded keyboard/visual U5 check, not native screen-reader speech,
+200% zoom, full U5/U8/M4, independent novice acceptance, GitHub CI or release.
+No original database write or saved screenshot artifact is claimed.
+
 ## 2026-09-29 terminal-free login startup — read-only causal narrowing
 
 The enabled current-user `QuantTrading-DockerDesktop-AtLogon` task ran at
