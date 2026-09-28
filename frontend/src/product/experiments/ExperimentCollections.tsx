@@ -20,6 +20,7 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
   const [invalid, setInvalid] = useState(false);
   const [focused, setFocused] = useState("");
   const [focusRequest, setFocusRequest] = useState(0);
+  const [showBenchmark, setShowBenchmark] = useState(true);
   const filterAnchor = useRef<HTMLElement>(null);
   const filter = focused ? { start_date: focused, end_date: focused } : range;
   return (
@@ -104,6 +105,8 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
         jobId={jobId}
         range={filter}
         focused={focused}
+        showBenchmark={showBenchmark}
+        onShowBenchmark={setShowBenchmark}
         onFocusDate={(date) => {
           filterAnchor.current?.focus();
           setFocused(date);
@@ -120,11 +123,15 @@ function FilteredCollections({
   jobId,
   range,
   focused,
+  showBenchmark,
+  onShowBenchmark,
   onFocusDate,
 }: {
   jobId: string;
   range: DateRange;
   focused: string;
+  showBenchmark: boolean;
+  onShowBenchmark: (show: boolean) => void;
   onFocusDate: (date: string) => void;
 }) {
   const c = useExperimentCopy();
@@ -159,6 +166,8 @@ function FilteredCollections({
           <EquityDisplay
             key={`${jobId}-${offset}`}
             points={equity.data.items}
+            showBenchmark={showBenchmark}
+            onShowBenchmark={onShowBenchmark}
             onFocusDate={onFocusDate}
           />
         )}
@@ -205,15 +214,18 @@ function FilteredCollections({
 
 function EquityDisplay({
   points,
+  showBenchmark,
+  onShowBenchmark,
   onFocusDate,
 }: {
   points: ExperimentEquity[];
+  showBenchmark: boolean;
+  onShowBenchmark: (show: boolean) => void;
   onFocusDate: (date: string) => void;
 }) {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
   const id = useId();
-  const [showBenchmark, setShowBenchmark] = useState(true);
   const [selected, setSelected] = useState(points.at(-1)?.trading_date ?? "");
   if (!points.length) return <p>{u.filteredEmpty}</p>;
   const point = points.find((item) => item.trading_date === selected);
@@ -267,7 +279,7 @@ function EquityDisplay({
             type="checkbox"
             checked={hasBenchmark && showBenchmark}
             disabled={!hasBenchmark}
-            onChange={(event) => setShowBenchmark(event.target.checked)}
+            onChange={(event) => onShowBenchmark(event.target.checked)}
           />
           {c.showBenchmark}
         </label>

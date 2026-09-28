@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 benchmark visibility survives saved-chart pagination
+
+The saved equity chart reset its Show benchmark preference on every page change:
+`EquityDisplay` remounted for the new offset with a fresh `true` state. A new
+regression first failed on page 2's checked box. The preference now belongs to
+the stable experiment collections container, while the keyed display still
+resets its selected trading date for each page. No financial calculations,
+records, API, source authority or frozen research changed.
+
+Focused collections/keyboard tests 16 PASS; full frontend 326/37 PASS, lint,
+typecheck, changed-file Prettier and production build129 PASS. Actual in-app
+browser at documented localhost opened the existing 293-session historical run
+`d9f27183`: hide benchmark on page 1, advance to 101–200/293, then observe the
+box still off, zero benchmark curve/legend and no benchmark readout. Re-enable
+on page 2 restored one curve, one legend and the exact server-supplied readout.
+The temporary tab was closed; no study, account, provider or order command ran.
+This closes only the chart-pagination preference defect, not full UX-CHART,
+native Chrome/200%/screen-reader/performance/novice/forward or release gates.
+GitHub CI remains on the user-reported recovery hold.
+
 ## 2026-09-28 market-detail filtered page return matrix
 
 Current5f4ee64 actual in-app localhost services, historical000025 only: UI query000,

@@ -1,7 +1,25 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-27T19:08:51Z",
+  "updated_at_utc": "2026-09-28T04:15:25Z",
+  "chart_benchmark_page_preference": {
+    "status": "PASS_BOUNDED_ACTUAL_IAB_NOT_FULL_CHART_OR_RELEASE",
+    "base_head": "63295f9",
+    "cause": "EquityDisplay remounted for each page offset and reinitialized Show benchmark=true",
+    "fix": "Lift display preference to stable ExperimentCollections; preserve per-page selected trading-date reset; no backend or financial change",
+    "proof": "Regression reproduced RED on page2 checked state, then focused16 and full frontend326/37, lint/type/Prettier/build129 PASS. Actual existing historical d9f27183 page1 toggle off -> page2 101-200of293 remains off/no benchmark line/legend/readout; toggle on page2 restores line/legend/exact readout. IAB tab closed, GET/presentation only",
+    "limits": "UX-CHART remains IN_PROGRESS; no native Chrome/200pct/speech/full visual/performance/novice/forward/data integrity/CI/release claim. GitHub hold unchanged"
+  },
+  "remaining_gate_feasibility": {
+    "observed_at_utc": "2026-09-27T19:16:29Z",
+    "base_head": "63295f9",
+    "classification": "SUPERSEDED_BY_LOCAL_CHART_DEFECT_FIX",
+    "consecutive_no_progress_since_last_completed_work": 0,
+    "runtime": "Original four Compose services running; PostgreSQL/Redis/backend healthy, frontend and /api/health HTTP200. No host QA/test/repository writer observed beyond this read-only inspection. Working tree clean before checkpoint edit",
+    "native_browser": "Previous turn official @oai/sky initialized and launched installed Chrome, returned window919058. First state capture stopped: could not determine current browser URL on Windows with enough confidence to enforce policy. No input, screenshot, zoom or speech acceptance; no retry/bypass this turn. Window ID is historical observation, not reusable authority",
+    "remaining_conditions": "GitHub actual recovery; lawful current-data product-use authority and actual after-start arrival; genuine missing original ledger backup; independent backup destination; uninvolved novice review; native accessibility/performance/media and next genuine login proof",
+    "policy": "Prior three-turn impasse was resolved locally by an actual reproducible chart defect and browser-verified fix. No external/user/native-policy condition was promoted: GitHub, lawful forward source, original lost ledgers, independent backup, novice, native accessibility/performance/media and next genuine login remain open. Full U1-U8/M0-M5 scope retained; product incomplete. No remote, financial, frozen/formal/OOS, startup or security changes"
+  },
   "market_detail_return_matrix": {
     "status": "PASS_BOUNDED_FILTERED_DETAIL_NOT_FULL_UX_AA_PRODUCT",
     "base_head": "5f4ee64",

@@ -289,6 +289,60 @@ describe("filtered durable experiment records", () => {
     ).toBeInTheDocument();
   });
 
+  it("keeps the chosen benchmark visibility when chart pages change", async () => {
+    vi.spyOn(experimentApi, "equity")
+      .mockResolvedValueOnce({
+        items: [{ ...point, benchmark: "100000" }],
+        total: 101,
+        limit: 100,
+        offset: 0,
+      })
+      .mockResolvedValueOnce({
+        items: [
+          {
+            ...point,
+            sequence: 100,
+            trading_date: "2031-01-04",
+            benchmark: "100001",
+          },
+        ],
+        total: 101,
+        limit: 100,
+        offset: 100,
+      });
+    const view = render(<ExperimentCollections jobId={job.job_id} />);
+    const toggle = await screen.findByRole("checkbox", {
+      name: "Show benchmark",
+    });
+    await userEvent.click(toggle);
+    expect(toggle).not.toBeChecked();
+    await userEvent.click(screen.getByRole("button", { name: "Next" }));
+    await waitFor(() =>
+      expect(screen.getByLabelText("Inspect a trading date")).toHaveValue(
+        "2031-01-04",
+      ),
+    );
+    expect(
+      screen.getByRole("checkbox", { name: "Show benchmark" }),
+    ).not.toBeChecked();
+    expect(view.container.querySelector(".experimentBenchmarkLine")).toBeNull();
+    expect(
+      view.container.querySelector(".experimentBenchmarkLegend"),
+    ).toBeNull();
+    expect(
+      view.container.querySelector(".experimentChartReadout"),
+    ).not.toHaveTextContent("Benchmark");
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: "Show benchmark" }),
+    );
+    expect(
+      view.container.querySelector(".experimentBenchmarkLine"),
+    ).not.toBeNull();
+    expect(
+      view.container.querySelector(".experimentBenchmarkLegend"),
+    ).not.toBeNull();
+  });
+
   it("shows corporate-action and total PnL without double-counting pending assets", async () => {
     vi.spyOn(experimentApi, "holdings").mockResolvedValue({
       items: [
