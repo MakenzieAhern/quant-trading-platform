@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T23:44:32Z",
+  "updated_at_utc": "2026-09-28T23:54:23Z",
+  "foreground_service_status_audit": {
+    "status": "PASS_BOUNDED_LOCAL_TIMER_REGRESSION_NOT_FULL_M4_M5",
+    "parent_head": "a191cd3",
+    "fix": "Reuse the existing visible-tab return-check to refresh topbar health and available data every 30 seconds; skip hidden requests and clear interval on unmount",
+    "proof": "Fake-time online to HTTP503 to recovery test14/14, hidden/no-post-unmount requests; full frontend367/367, local Ruff/format/mypy, ESLint/TypeScript and Vite build PASS. Pre-change isolated make test exited0 with frontend366/366. Main Compose PostgreSQL/Redis/backend healthy, Redis PONG, API/frontend HTTP200. Actual Chrome GET-only saved U6 result showed undated-account warning, five cash rejections and source hashes; keyboard Tab after disclosure reached independent-account link",
+    "limits": "No real-browser backend-outage trial, native screen-reader/200pct zoom, saved current-head media, independent novice, full M4/M5 or GitHub CI/release. October 1 GitHub recovery is an estimate, not verified clearance"
+  },
   "global_watchlist_search_detail_audit": {
     "status": "PASS_BOUNDED_ACTUAL_CHROME_KEYBOARD_GET_ONLY_NOT_FULL_U5_M4",
     "parent_head": "24f5886",

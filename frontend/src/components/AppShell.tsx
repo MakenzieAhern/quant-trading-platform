@@ -92,9 +92,11 @@ export function AppShell({ children }: { children: ReactNode }) {
     };
     window.addEventListener("focus", refreshOnReturn);
     document.addEventListener("visibilitychange", refreshOnReturn);
+    const timer = window.setInterval(refreshOnReturn, 30_000);
     return () => {
       window.removeEventListener("focus", refreshOnReturn);
       document.removeEventListener("visibilitychange", refreshOnReturn);
+      window.clearInterval(timer);
     };
   }, []);
   useEffect(() => {

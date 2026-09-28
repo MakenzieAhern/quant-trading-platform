@@ -327,6 +327,50 @@ describe("routing", () => {
     expect(fetch).toHaveBeenCalledTimes(2);
   });
 
+  it("rechecks foreground health and recovers without polling hidden tabs", async () => {
+    window.history.replaceState({}, "", "/unknown");
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-29T00:00:00Z"));
+    const visibility = vi
+      .spyOn(document, "visibilityState", "get")
+      .mockReturnValue("visible");
+    const data = vi
+      .spyOn(experimentApi, "capabilities")
+      .mockResolvedValue(capabilities);
+    let online = true;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(() =>
+        Promise.resolve(
+          online
+            ? jsonResponse(health)
+            : jsonResponse({ detail: "Unavailable" }, 503),
+        ),
+      );
+    const view = render(<App />);
+    await act(async () => {});
+    expect(screen.getByText("Service online")).toBeInTheDocument();
+
+    online = false;
+    await act(async () => vi.advanceTimersByTime(30_000));
+    expect(screen.getByText("Service unavailable")).toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(data).toHaveBeenCalledTimes(2);
+
+    visibility.mockReturnValue("hidden");
+    online = true;
+    await act(async () => vi.advanceTimersByTime(60_000));
+    expect(fetch).toHaveBeenCalledTimes(2);
+    visibility.mockReturnValue("visible");
+    await act(async () => vi.advanceTimersByTime(30_000));
+    expect(screen.getByText("Service online")).toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(3);
+
+    view.unmount();
+    await act(async () => vi.advanceTimersByTime(30_000));
+    expect(fetch).toHaveBeenCalledTimes(3);
+  });
+
   it.each(["/unknown", "/backtests/not-a-uuid", "/backtests/1234"])(
     "fails safely for %s",
     async (pathname) => {

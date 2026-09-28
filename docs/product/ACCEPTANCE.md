@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 foreground service-status recovery — local gate
+
+The topbar rechecked service health on initial load, manual refresh and tab
+return, but could continue saying "Service online" indefinitely if the user
+kept the tab visible while the backend failed. The existing return-check path
+now runs every 30 seconds while visible; hidden tabs make no requests, and
+unmount clears the timer. Its refresh still checks both health and available
+data, so the status and catalog are not silently equated with data freshness.
+
+An isolated fake-time regression covered online → HTTP 503 → recovery without
+focus/visibility events, no hidden-tab requests and timer cleanup. Focused
+App tests passed 14/14; full frontend 367/367, local Ruff/format/mypy,
+ESLint/TypeScript and production build passed. Before this change, the full
+isolated `make test` passed (frontend 366/366); the backend was unchanged.
+The original Compose PostgreSQL/Redis/backend remained healthy, Redis returned
+PONG, and `/api/health` and the frontend both returned HTTP 200. Actual Chrome
+opened the saved U6 historical result by GET: the undated-account warning,
+five cash rejections and source checksums remained visible; expanding source
+details kept keyboard focus, and Tab reached the independent-account link.
+
+This is local unit/build and bounded Chrome GET-only evidence, not a real
+browser backend-outage trial, native assistive-technology/zoom proof, saved
+current-head media, full M4/M5 acceptance or GitHub CI. GitHub recovery on
+October 1 is a user estimate, not a verified clearance to push or release.
+
 ## 2026-09-29 global search to saved-security detail — bounded Chrome
 
 From `/markets`, keyboard Return on the existing saved 平安银行 result in global
