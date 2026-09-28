@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 local execution without GitHub CI and pending-submit recovery
+
+The original PostgreSQL, Redis, backend and frontend Compose services remained
+running; both `/api/health` and the local frontend returned HTTP 200. GitHub
+availability on October 1 is only a user estimate, not a verified recovery.
+Local Compose, tests and production-image checks can continue, but they do not
+replace exact pushed-head CI, review or release gates.
+
+Before this UI fix, an isolated production frontend/backend stack at local head
+`e7aba94` used a private network and tmpfs PostgreSQL/Redis. Its fresh schema
+migrated to head, and an actual in-app browser completed one synthetic-demo
+study (340/340 sessions), reopened its result, and showed the synthetic-not-
+market-evidence warning in both languages. Those owned scratch services were
+stopped; their test data were transient, and the original project services,
+volumes, account records and frozen research were untouched. This is a bounded
+integrated release rehearsal, not the post-fix image or formal study evidence.
+
+The subsequent pending-submit fix keeps the legacy backtest, paper-account and
+guided-study submit controls focusable while the existing request locks prevent
+duplicate writes. A failing-then-passing regression covers each path. The
+paper-account error now treats an uncertain response conservatively: check the
+session list and service status in another tab, keep the form open, then retry
+unchanged settings with the same request ID. The test verifies the same
+Idempotency-Key on retry and the Chinese/English recovery copy. Definite
+401/403 denials instead show the permission error; bilingual regressions guard
+against an uncertain-retry instruction on those responses. Full frontend
+335/335 across 37 files, lint, typecheck, Prettier and production build (129
+modules) passed locally. In an isolated release frontend with its API
+intentionally unavailable, actual in-app browser checks showed the English and
+Chinese recovery message and retained submit focus; no paper account was
+created. The labeled mount-free test container was stopped. Native Chrome,
+screen-reader, independent novice, exact-head GitHub CI and full U1–U8/M0–M5
+acceptance remain open; no push, merge, release, OOS or live trading occurred.
+
 ## 2026-09-28 local operation and submission/focus safety while GitHub is held
 
 The original four Compose services remain running locally. A production

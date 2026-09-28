@@ -8,6 +8,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
+import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
 import { experimentApi } from "../product/experiments/api";
 import { job, plan } from "../product/experiments/fixtures.test-data";
@@ -488,6 +489,77 @@ describe("paper trading pages", () => {
       },
     });
   });
+
+  it("keeps the create action focused through a failed request and prevents a pending duplicate", async () => {
+    let rejectCreate: ((reason: Error) => void) | undefined;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementationOnce(
+        () =>
+          new Promise<Response>((_, reject) => {
+            rejectCreate = reject;
+          }),
+      )
+      .mockRejectedValue(new TypeError("offline"));
+    render(<CreatePaperSessionPage />);
+    const create = screen.getByRole("button", {
+      name: "Create paper session",
+    });
+    await userEvent.click(create);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    const firstHeaders = fetch.mock.calls[0]?.[1]?.headers;
+    expect(create).toHaveFocus();
+    expect(create).not.toBeDisabled();
+    expect(create).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(create);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await act(async () => rejectCreate?.(new TypeError("offline")));
+    expect(await screen.findByRole("alert")).toBeVisible();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Check the paper-session list in another tab",
+    );
+    expect(create).toHaveFocus();
+    expect(create).toHaveAttribute("aria-disabled", "false");
+    try {
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "在另一个标签页查看模拟交易会话列表",
+      );
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
+    await userEvent.click(create);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    expect(fetch.mock.calls[1]?.[1]?.headers).toEqual(firstHeaders);
+  });
+
+  it.each([401, 403])(
+    "treats HTTP %s as denied access, not uncertain creation, in both locales",
+    async (status) => {
+      const fetch = vi
+        .spyOn(globalThis, "fetch")
+        .mockRejectedValue(new ApiError(status, "diagnostic"));
+      render(<CreatePaperSessionPage />);
+      await userEvent.click(
+        screen.getByRole("button", { name: "Create paper session" }),
+      );
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        i18n.t("common:loadErrors.permission"),
+      );
+      expect(screen.getByRole("alert")).not.toHaveTextContent(
+        "Check the paper-session list",
+      );
+      try {
+        await act(async () => i18n.changeLanguage("zh-CN"));
+        expect(screen.getByRole("alert")).toHaveTextContent(
+          i18n.t("common:loadErrors.permission"),
+        );
+        expect(fetch).toHaveBeenCalledTimes(1);
+      } finally {
+        await act(async () => i18n.changeLanguage("en-US"));
+      }
+    },
+  );
 
   it("creates an explicitly historical A-share replay, never a forward session", async () => {
     const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(

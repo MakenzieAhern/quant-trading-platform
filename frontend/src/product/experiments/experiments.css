@@ -152,7 +152,8 @@
 .experimentWorkspace summary {
   cursor: pointer;
 }
-.experimentWorkspace button:disabled {
+.experimentWorkspace button:disabled,
+.experimentWorkspace button[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.65;
 }

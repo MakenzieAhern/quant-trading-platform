@@ -316,7 +316,7 @@ export function CreateBacktestPage() {
           <button
             className="button buttonPrimary"
             type="submit"
-            disabled={pending}
+            aria-disabled={pending}
           >
             {pending ? t("createPage.running") : t("createPage.run")}
           </button>

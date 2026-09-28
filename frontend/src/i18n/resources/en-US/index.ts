@@ -288,7 +288,8 @@ export const enUS = {
       periodError:
         "Periods must be safe positive integers with short below long.",
       rsiError: "RSI values must satisfy 0 < oversold < overbought < 100.",
-      submitError: "Unable to create paper session.",
+      submitError:
+        "Could not confirm whether the paper session was created. Keep this form open. Check the paper-session list in another tab and the service status before retrying unchanged settings here. Reloading or editing the form starts a new request.",
       datasetError: "The registered paper dataset is unavailable.",
       conflictError: "This paper session conflicts with an existing request.",
       validationError: "Please check the submitted paper session values.",

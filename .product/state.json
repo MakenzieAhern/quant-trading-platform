@@ -1,7 +1,16 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T05:06:10Z",
+  "updated_at_utc": "2026-09-28T05:33:20Z",
+  "local_offline_runtime_and_submit_recovery": {
+    "status": "PASS_BOUNDED_LOCAL_NOT_FULL_PRODUCT_OR_CI",
+    "base_head": "e7aba94",
+    "runtime": "Original four Compose services running; PostgreSQL/Redis/backend healthy, frontend and /api/health HTTP200. GitHub October 1 is an estimate, not verified recovery; no remote action",
+    "integrated_rehearsal": "Before focus fix, isolated release frontend/backend on private network with tmpfs PostgreSQL/Redis migrated fresh schema to head. Actual IAB synthetic demo completed340/340, result reopen and ENZH synthetic warning. Owned scratch services stopped, no main account/volume/frozen research change",
+    "fix": "Pending backtest/paper/study submit controls retain focus via aria-disabled while existing locks prevent duplicates; paper uncertain-response copy gives bilingual list/service/unchanged same-key retry instructions, but 401/403 show definitive permission guidance",
+    "proof": "Three red/green focus regressions and red/green 401/403 denial tests; paper retry preserves Idempotency-Key. Full frontend335/37, lint/typecheck/Prettier/build129 PASS. Isolated release frontend with deliberately unavailable API showed ENZH paper recovery copy and submit focus in actual IAB; own tab and mount-free container stopped",
+    "limits": "Integrated synthetic rehearsal was at pre-fix e7aba94; current fix has component suite plus isolated offline production frontend browser, not integrated current-head release run. Native Chrome/screen-reader/novice/full M4-M5 and lawful current-forward/genuine ledgers/independent backup remain open. GitHub exact-head CI, push, review, merge and release held until actual recovery"
+  },
   "local_operation_submission_focus": {
     "status": "PASS_BOUNDED_LOCAL_TESTS_NOT_FULL_PRODUCT_OR_CI",
     "base_head": "caa6953",

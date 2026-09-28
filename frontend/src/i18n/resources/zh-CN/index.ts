@@ -266,7 +266,8 @@ export const zhCN = {
       decimalError: "初始资金和订单数量必须是正数 Decimal 字符串。",
       periodError: "周期必须是安全的正整数，且短周期小于长周期。",
       rsiError: "RSI 参数必须满足 0 < 超卖阈值 < 超买阈值 < 100。",
-      submitError: "无法创建模拟交易会话。",
+      submitError:
+        "无法确认模拟交易会话是否已创建。请保留当前表单，在另一个标签页查看模拟交易会话列表和服务状态，然后在此按原设置重试。重新加载或修改表单会生成新请求。",
       datasetError: "已注册的模拟交易数据集不可用。",
       conflictError: "该模拟交易会话与现有请求冲突。",
       validationError: "请检查提交的模拟交易会话参数。",

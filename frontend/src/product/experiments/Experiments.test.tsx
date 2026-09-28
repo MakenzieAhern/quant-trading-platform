@@ -200,7 +200,10 @@ describe("guided experiment", () => {
       costs: { commission_rate: "0.0003", minimum_commission: "5" },
       risk: { max_drawdown: "-0.2", max_position_weight: "0.1" },
     });
-    expect(screen.getByRole("button", { name: "Submitting…" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Submitting…" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
     await act(async () => resolve?.(job));
     expect(window.location.pathname).toBe(`/experiments/${job.job_id}`);
     expect(readExperimentDraft()).toBeNull();
@@ -237,6 +240,39 @@ describe("guided experiment", () => {
     );
     await waitFor(() => expect(create).toHaveBeenCalledTimes(1));
     expect(window.location.pathname).toBe(`/experiments/${job.job_id}`);
+  });
+
+  it("keeps the run action focused while pending, then focuses the failed-request alert", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    let rejectCreate: ((reason: Error) => void) | undefined;
+    const create = vi
+      .spyOn(experimentApi, "create")
+      .mockImplementationOnce(
+        () =>
+          new Promise<typeof job>((_, reject) => {
+            rejectCreate = reject;
+          }),
+      )
+      .mockRejectedValue(new ApiError(503, "Unavailable"));
+    render(<CreateExperimentPage />);
+    await review();
+    const submit = screen.getByRole("button", {
+      name: "Run this configuration",
+    });
+    await userEvent.click(submit);
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(submit).toHaveFocus();
+    expect(submit).not.toBeDisabled();
+    expect(submit).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(submit);
+    expect(create).toHaveBeenCalledTimes(1);
+    await act(async () => rejectCreate?.(new ApiError(503, "Unavailable")));
+    const alert = await screen.findByRole("alert");
+    expect(alert).toBeVisible();
+    expect(alert).toHaveFocus();
+    expect(submit).toHaveAttribute("aria-disabled", "false");
+    await userEvent.click(submit);
+    await waitFor(() => expect(create).toHaveBeenCalledTimes(2));
   });
 
   it("saves and restores the step, exact values and request identity without changing them on language switch", async () => {
@@ -322,6 +358,9 @@ describe("guided experiment", () => {
       expect(
         screen.getByRole("button", { name: "Run this configuration" }),
       ).toBeDisabled();
+      expect(
+        screen.getByRole("button", { name: "Run this configuration" }),
+      ).toHaveAttribute("aria-disabled", "true");
       await userEvent.click(
         screen.getByRole("checkbox", { name: /I understand/ }),
       );

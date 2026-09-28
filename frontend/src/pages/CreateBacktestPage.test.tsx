@@ -116,6 +116,34 @@ describe("create backtest", () => {
     );
   });
 
+  it("keeps the run action focused through a failed request and prevents a pending duplicate", async () => {
+    let rejectCreate: ((reason: Error) => void) | undefined;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementationOnce(
+        () =>
+          new Promise<Response>((_, reject) => {
+            rejectCreate = reject;
+          }),
+      )
+      .mockRejectedValue(new TypeError("offline"));
+    render(<CreateBacktestPage />);
+    const submit = screen.getByRole("button", { name: "Run backtest" });
+    await userEvent.click(submit);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(submit).toHaveFocus();
+    expect(submit).not.toBeDisabled();
+    expect(submit).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(submit);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await act(async () => rejectCreate?.(new TypeError("offline")));
+    expect(await screen.findByRole("alert")).toBeVisible();
+    expect(submit).toHaveFocus();
+    expect(submit).toHaveAttribute("aria-disabled", "false");
+    await userEvent.click(submit);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+  });
+
   it.each([500, 408, "offline"])(
     "reuses a key after %s and replaces it only after payload edits",
     async (failure) => {

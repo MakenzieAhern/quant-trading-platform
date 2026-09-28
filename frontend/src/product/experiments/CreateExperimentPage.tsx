@@ -738,7 +738,8 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
             <button
               className="button"
               type="submit"
-              disabled={pending || (step === 3 && !acknowledged)}
+              disabled={step === 3 && !acknowledged}
+              aria-disabled={pending || (step === 3 && !acknowledged)}
             >
               {pending ? c.submitting : step === 3 ? c.confirm : c.next}
             </button>

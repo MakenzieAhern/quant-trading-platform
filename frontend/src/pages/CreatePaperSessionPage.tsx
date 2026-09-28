@@ -267,13 +267,16 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
       navigate(`/paper/${created.session_id}`);
     } catch (reason) {
       setError(
-        reason instanceof ApiError && reason.status === 404
-          ? "createPage.datasetError"
-          : reason instanceof ApiError && reason.status === 409
-            ? "createPage.conflictError"
-            : reason instanceof ApiError && reason.status === 422
-              ? "createPage.validationError"
-              : "createPage.submitError",
+        reason instanceof ApiError &&
+          (reason.status === 401 || reason.status === 403)
+          ? "common:loadErrors.permission"
+          : reason instanceof ApiError && reason.status === 404
+            ? "createPage.datasetError"
+            : reason instanceof ApiError && reason.status === 409
+              ? "createPage.conflictError"
+              : reason instanceof ApiError && reason.status === 422
+                ? "createPage.validationError"
+                : "createPage.submitError",
       );
     } finally {
       locked.current = false;
@@ -591,7 +594,7 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
           </div>
         )}
         <div className="formActions">
-          <button className="button buttonPrimary" disabled={pending}>
+          <button className="button buttonPrimary" aria-disabled={pending}>
             {pending ? t("createPage.creating") : t("createPage.submit")}
           </button>
           <span>{t("createPage.idempotentHint")}</span>
