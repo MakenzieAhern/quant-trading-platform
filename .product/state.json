@@ -1,7 +1,16 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T19:04:41Z",
+  "updated_at_utc": "2026-09-28T19:18:49Z",
+  "watchlist_focus_repair": {
+    "status": "PASS_BOUNDED_LOCAL_BROWSER_AND_TESTS_NOT_FULL_M4_OR_CI",
+    "base_head": "72ff8ca",
+    "cause": "Native disabled on in-flight Save/Remove could drop focus, and a removed focused button vanished after list reload despite existing synchronous duplicate-write lock",
+    "fix": "Use focusable aria-disabled on pending actions; when Remove succeeds, focus the stable named watchlist section only if its trigger still owns focus",
+    "proof": "Red focus regression then focused16/16 and full frontend336/37, ESLint/TypeScript/changed-file Prettier/build129 PASS. Independent readonly diff review no actionable blocker. Actual IAB Chinese isolated release frontend/private test API/tmpfs copy: two mouse/keyboard Save+Remove cycles, Save retains button focus, Remove names section with keyboard visible2px outline, API PUT200/DELETE204, browser warn/error none",
+    "safety": "Scratch backend mounted historical/product/data only read-only; scratch and original watchlists count1 after test. Owned tab closed and exact labeled API/web/PG/Redis stopped; scratch tmpfs DB copy discarded, original volumes/services/.research unchanged. No provider/formal/OOS/live/remote action",
+    "limits": "Not native Chrome or screen-reader speech, current saved release media, genuine novice, full U5/M4, GitHub CI, forward-data or v1.2 release proof"
+  },
   "local_ci_equivalent_checks": {
     "status": "PASS_BOUNDED_CI_COMMANDS_WITH_OPTIONAL_FORMAT_DRIFT_NOT_GITHUB_CI",
     "code_head": "8e5b9eb",

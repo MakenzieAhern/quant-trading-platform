@@ -93,6 +93,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
     null,
   );
   const lock = useRef(false);
+  const watchlistSection = useRef<HTMLElement>(null);
   const lastSearch = useRef(window.location.search);
   const detail = detailFromHash(detailHash);
   const detailDatasetId = detail?.datasetId ?? "";
@@ -184,6 +185,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
     kind: "add" | "remove",
     source: string,
     id: string,
+    trigger?: HTMLButtonElement,
   ) {
     if (lock.current) return;
     lock.current = true;
@@ -195,6 +197,8 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         setWatchOffset(0);
       } else {
         await marketApi.remove(source, id);
+        if (document.activeElement === trigger)
+          watchlistSection.current?.focus();
         if (watchlist.data?.items.length === 1 && watchOffset > 0)
           setWatchOffset(Math.max(0, watchOffset - 20));
       }
@@ -399,7 +403,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                           <td>
                             <button
                               className="button secondary"
-                              disabled={pending !== null}
+                              aria-disabled={pending !== null}
                               aria-label={`${pending === `add:${datasetId}:${item.security_id}` ? c.saving : c.save}: ${item.security_id}`}
                               onClick={() =>
                                 void changeWatchlist(
@@ -432,7 +436,12 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
           onChange={setOffset}
         />
       </section>
-      <section className="marketPanel" aria-label={c.watchlist}>
+      <section
+        className="marketPanel"
+        aria-label={c.watchlist}
+        ref={watchlistSection}
+        tabIndex={-1}
+      >
         <h2>{c.watchlist}</h2>
         <p className="marketHelp">{c.watchlistHelp}</p>
         {outcome && (
@@ -497,13 +506,14 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                       </button>
                       <button
                         className="button secondary"
-                        disabled={pending !== null}
+                        aria-disabled={pending !== null}
                         aria-label={`${pending === `remove:${item.dataset_id}:${item.security_id}` ? c.removing : c.remove}: ${item.security_id} · ${item.dataset_id}`}
-                        onClick={() =>
+                        onClick={(event) =>
                           void changeWatchlist(
                             "remove",
                             item.dataset_id,
                             item.security_id,
+                            event.currentTarget,
                           )
                         }
                       >

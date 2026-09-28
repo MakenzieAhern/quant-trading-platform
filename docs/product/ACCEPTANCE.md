@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 watchlist keyboard focus during save and remove
+
+A new regression failed against the old native-disabled Save button. The
+existing synchronous watchlist lock already blocked repeat writes; Save and
+Remove now use focusable `aria-disabled` during an in-flight change. On a
+successful Remove, focus moves to the stable, named watchlist section only if
+the removed button still owns focus; moving elsewhere during the request is
+not overridden. The shared disabled-state CSS already covers this attribute.
+The focused markets suite passed 16/16, full frontend 336/336 across 37 files,
+ESLint, TypeScript, changed-file Prettier and the 129-module build passed.
+An independent read-only diff review found no actionable blocker.
+
+For an actual in-app browser check, a new release frontend image used a
+private scratch API and tmpfs PostgreSQL containing a local, short-lived copy
+of the existing database. Historical/product/data mounts on the scratch API
+were **read-only**; the original database and application endpoints were not
+used for writes. In the Chinese market page, mouse and keyboard each saved and
+removed `CN-A:SSE:600000` through the isolated API. Save retained the button
+focus; Remove moved it to the named watchlist section. Keyboard removal showed
+a visible 2px focus outline. The isolated API returned PUT 200 and DELETE 204;
+the scratch and original watchlists each had one record afterward, and the
+browser reported no warning/error. The owned browser tab closed; exact labeled
+scratch API/web/PostgreSQL/Redis containers were stopped after checking IDs and
+mount modes. Stopping the tmpfs PostgreSQL discarded **only the test copy**;
+the original volumes/images and four running services were preserved.
+
+This is a bounded local keyboard/pointer and DB-copy browser proof, not native
+Chrome or screen-reader speech, saved release media, real novice testing, a
+full U5/M4 matrix, GitHub CI or v1.2 release acceptance. No provider, formal
+research, frozen asset, OOS, live order or remote GitHub action occurred.
+
 ## 2026-09-29 local CI-equivalent checks while GitHub is unavailable
 
 The current code tree (unchanged since `8e5b9eb`; `ad740cf` only recorded the

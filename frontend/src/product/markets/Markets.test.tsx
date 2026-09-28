@@ -499,29 +499,31 @@ describe("historical cache markets", () => {
         stored = [];
       });
     const first = render(<MarketsPage />);
-    await userEvent.dblClick(
-      await screen.findByRole("button", {
-        name: `Save to watchlist: ${security.security_id}`,
-      }),
-    );
+    const save = await screen.findByRole("button", {
+      name: `Save to watchlist: ${security.security_id}`,
+    });
+    save.focus();
+    await userEvent.keyboard("{Enter}{Enter}");
     expect(add).toHaveBeenCalledTimes(1);
-    expect(
-      screen.getByRole("button", {
-        name: `Saving…: ${security.security_id}`,
-      }),
-    ).toBeDisabled();
+    const saving = screen.getByRole("button", {
+      name: `Saving…: ${security.security_id}`,
+    });
+    expect(saving).toHaveAttribute("aria-disabled", "true");
+    expect(saving).not.toBeDisabled();
+    expect(saving).toHaveFocus();
     await act(async () => {
       stored = [watched];
       resolve?.(watched);
     });
     await screen.findByText("Saved to your watchlist.");
+    expect(save).toHaveFocus();
     first.unmount();
     render(<MarketsPage />);
-    await userEvent.click(
-      await screen.findByRole("button", {
-        name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
-      }),
-    );
+    const removeButton = await screen.findByRole("button", {
+      name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
+    });
+    removeButton.focus();
+    await userEvent.keyboard("{Enter}");
     expect(remove).toHaveBeenCalledWith(
       dataset.dataset_id,
       security.security_id,
@@ -531,6 +533,46 @@ describe("historical cache markets", () => {
         "Your watchlist is empty. Save a security from the search results.",
       ),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Your watchlist" }),
+    ).toHaveFocus();
+  });
+
+  it("does not steal focus after a watchlist removal when the user moves away", async () => {
+    let stored = [watched];
+    vi.mocked(marketApi.watchlist).mockImplementation(async () => ({
+      items: stored,
+      total: stored.length,
+      limit: 20,
+      offset: 0,
+    }));
+    let finish!: () => void;
+    vi.spyOn(marketApi, "remove").mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = () => {
+            stored = [];
+            resolve();
+          };
+        }),
+    );
+    render(<MarketsPage />);
+    const remove = await screen.findByRole("button", {
+      name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
+    });
+    remove.focus();
+    await userEvent.keyboard("{Enter}");
+    expect(remove).toHaveAttribute("aria-disabled", "true");
+    expect(remove).toHaveFocus();
+    const inspect = screen.getByRole("button", {
+      name: `Inspect history: ${security.security_id}`,
+    });
+    inspect.focus();
+    await act(async () => finish());
+    await screen.findByText(
+      "Your watchlist is empty. Save a security from the search results.",
+    );
+    expect(inspect).toHaveFocus();
   });
 
   it("uses the stored price-view default while preserving exact strings, gaps and dates across locale changes", async () => {
