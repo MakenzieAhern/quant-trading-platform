@@ -836,6 +836,77 @@ describe("paper trading pages", () => {
     expect(screen.getByRole("button", { name: "Stop replay" })).toBeVisible();
   });
 
+  it("keeps the focused paper command during an in-flight failure without duplicate POSTs", async () => {
+    installWebSocket();
+    let finish!: (response: Response) => void;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("CREATED")))
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (finish = resolve)),
+      );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    const start = screen.getByRole("button", { name: "Start replay" });
+    start.focus();
+    await userEvent.keyboard("{Enter}{Enter}");
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(start).toHaveFocus();
+    expect(start).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(start);
+    expect(fetch).toHaveBeenCalledTimes(2);
+    await act(async () => finish(jsonResponse({ detail: "unavailable" }, 503)));
+    expect(start).toHaveFocus();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Unable to start the paper session",
+    );
+  });
+
+  it("moves focus to the durable status only when a focused paper action disappears", async () => {
+    installWebSocket();
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("CREATED")))
+      .mockResolvedValueOnce(jsonResponse(paperSession("STARTING")));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    const start = screen.getByRole("button", { name: "Start replay" });
+    start.focus();
+    await userEvent.keyboard("{Enter}");
+    act(() =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "session.status",
+        occurred_at: "2026-09-06T02:01:00Z",
+        payload: { status: "STARTING" },
+      }),
+    );
+    expect(screen.queryByRole("button", { name: "Start replay" })).toBeNull();
+    expect(
+      screen.getByText("Starting", { selector: ".statusBadge" }).parentElement,
+    ).toHaveFocus();
+  });
+
+  it("does not steal focus after the user leaves a paper command before a status change", async () => {
+    installWebSocket();
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      jsonResponse(paperSnapshot("CREATED")),
+    );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    screen.getByRole("button", { name: "Start replay" }).focus();
+    const back = screen.getByRole("link", { name: "← All paper sessions" });
+    back.focus();
+    act(() =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "session.status",
+        occurred_at: "2026-09-06T02:01:00Z",
+        payload: { status: "STARTING" },
+      }),
+    );
+    expect(back).toHaveFocus();
+  });
+
   it.each([
     [
       "CREATED",

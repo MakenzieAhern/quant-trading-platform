@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { paperApi } from "../api/paper";
@@ -15,9 +15,22 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   const { snapshot, connection, error } = usePaperStream(sessionId);
   const [commandPending, setCommandPending] = useState(false);
   const [commandError, setCommandError] = useState<string | null>(null);
+  const commandLock = useRef(false);
+  const focusedCommand = useRef<HTMLButtonElement | null>(null);
+  const statusFocus = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const button = focusedCommand.current;
+    if (button && !button.isConnected) {
+      if (document.activeElement === document.body)
+        statusFocus.current?.focus();
+      focusedCommand.current = null;
+    }
+  }, [snapshot?.session.status]);
 
   const command = async (action: "start" | "pause" | "stop") => {
-    if (commandPending) return;
+    if (commandLock.current) return;
+    commandLock.current = true;
     setCommandPending(true);
     setCommandError(null);
     try {
@@ -25,6 +38,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     } catch {
       setCommandError(`detail.${action}Error`);
     } finally {
+      commandLock.current = false;
       setCommandPending(false);
     }
   };
@@ -79,17 +93,26 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           </p>
           <h1>{t(`strategies.${session.strategy_type}`)}</h1>
         </div>
-        <div className="paperControls">
+        <div
+          className="paperControls"
+          onFocusCapture={(event) => {
+            if (event.target instanceof HTMLButtonElement)
+              focusedCommand.current = event.target;
+          }}
+          onBlurCapture={() => {
+            focusedCommand.current = null;
+          }}
+        >
           <span className={`streamState stream-${connection}`} role="status">
             {t("detail.websocket")}: {t(`detail.connection.${connection}`)}
           </span>
-          <span role="status">
+          <span role="status" ref={statusFocus} tabIndex={-1}>
             <StatusBadge status={session.status} />
           </span>
           {(session.status === "CREATED" || session.status === "PAUSED") && (
             <button
               className="button buttonPrimary"
-              disabled={commandPending}
+              aria-disabled={commandPending}
               onClick={() => void command("start")}
             >
               {t(
@@ -100,7 +123,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           {active && (
             <button
               className="button"
-              disabled={commandPending}
+              aria-disabled={commandPending}
               onClick={() => void command("pause")}
             >
               {t("detail.pause")}
@@ -111,7 +134,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             session.status === "PAUSED") && (
             <button
               className="button"
-              disabled={commandPending}
+              aria-disabled={commandPending}
               onClick={() => void command("stop")}
             >
               {t("detail.stop")}

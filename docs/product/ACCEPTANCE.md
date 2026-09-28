@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 paper command keyboard focus through request and status changes
+
+Start, Pause and Stop previously used native `disabled` while their POST was
+pending, which could remove keyboard focus. A later WebSocket status could also
+remove the focused action and leave focus on the document body. A red regression
+demonstrated both gaps. The controls now remain focusable with `aria-disabled`;
+one synchronous lock blocks repeated keyboard/pointer POSTs. When a focused
+action disappears after an authoritative status change, focus moves to its
+stable status text. Moving focus elsewhere first is respected. The existing
+shared disabled-state and focus-ring styles are reused.
+
+The paper-page suite passed 39/39, the full frontend passed 339/339 across 37
+files, and ESLint, TypeScript, changed-file Prettier and a 129-module release
+build passed. Independent read-only diff review found no actionable blocker.
+In an actual in-app browser against a new release frontend and **isolated,
+mount-free** API/PostgreSQL/Redis, two disposable synthetic 2030 accounts were
+created. Mouse Start/Pause/Stop on the first and keyboard Start followed by
+pointer Stop on the second reached authoritative
+status updates; after each removed focused action, the active element was the
+status span. Keyboard Start left a visible 2px focus outline. Browser warning/
+error logs were empty. Both accounts were explicitly stopped before QA cleanup.
+The scratch database was migrated from empty to Alembic head `20260924_0016`
+and lived only in tmpfs; the exact labeled test services were stopped. Original
+services, volumes, accounts, frozen `.research` and Official OOS were not
+modified. No live order, market acquisition or GitHub action occurred.
+
+The deferred 503/double-activation case was component-tested, not forced in a
+live browser. This is bounded in-app browser and synthetic-mode evidence, not
+native Chrome, screen-reader speech, a genuine new-market forward session,
+saved release media, full U7/M4/M5 acceptance or GitHub CI.
+
 ## 2026-09-29 watchlist keyboard focus during save and remove
 
 A new regression failed against the old native-disabled Save button. The
