@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T21:31:30Z",
+  "updated_at_utc": "2026-09-28T21:52:38Z",
+  "local_current_code_release_smoke": {
+    "status": "PASS_BOUNDED_LOCAL_NOT_GITHUB_CI_OR_FULL_RELEASE",
+    "code_head": "3e621a1b519637e7c9936098527eada064dbd5a2",
+    "proof": "Three Compose configs valid; unique frontend production image served /, /help and /markets with HTTP200. Unique backend production image used private-network tmpfs quant_test PostgreSQL and Redis: Alembic head 20260924_0016 -> baseline 20260904_0001 -> head, check, production paper-mode /api/health and demo-available/archive-unmounted capabilities PASS. Owned scratch containers/network stopped; images retained. Original four services remained running, Redis PONG, main database read-only counts paper sessions5/events417/research jobs8 unchanged",
+    "chart_browser": "At the same executable code head, saved historical result chart keyboard paging settled 1-100 -> 101-200 -> 201-293 of 293; final Next disabled, Tab focused Previous, aria-live=polite present and Chrome error log empty. Screenshot and SHA-256 indexed outside Git",
+    "limits": "No GitHub CI, integrated release browser, native screen-reader speech/200pct zoom, measured cold interaction p95, real novice, nonzero-fill abrupt paper restart, lawful current forward receipt, genuine missing-ledger restoration, independent backup or full M4/M5. Static release frontend defaults API URL to live localhost:8000; HTTP-only smoke did not open it in browser. No original database, provider, frozen research or Official OOS write"
+  },
   "local_paper_event_integrity": {
     "status": "PASS_BOUNDED_LOCAL_REGRESSIONS_NOT_FULL_U7_OR_GITHUB_CI",
     "frontend": "Live signal.created events now append by distinct stream sequence, matching REST; two securities with the same strategy/time/type and repeated same-security new-sequence events are retained, while duplicate sequence is ignored. Red/green regression; full frontend361 PASS, ESLint/TypeScript/build129 PASS",

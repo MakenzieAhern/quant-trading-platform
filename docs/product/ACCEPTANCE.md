@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 current-code local release and chart checks during GitHub CI hold
+
+At executable code head `3e621a1`, all three Compose configurations passed
+validation. A uniquely tagged production frontend image built 129 modules and
+served `/`, `/help` and `/markets` through isolated Nginx with HTTP 200. A
+uniquely tagged backend image ran on a private scratch network with tmpfs
+PostgreSQL `quant_test` and Redis; Alembic upgraded to `20260924_0016`,
+downgraded to baseline `20260904_0001`, upgraded again and reported no pending
+schema operation. Its production paper-mode `/api/health` returned HTTP 200;
+capabilities exposed the synthetic demo and correctly marked the deliberately
+unmounted historical archive unavailable. The release frontend was **not**
+opened against that backend: its baked API origin points to the live local
+port 8000, so the Nginx checks prove static delivery only.
+
+Only the newly owned scratch containers and network were stopped; the local
+images remain. The original four Compose services remained running and the
+main database's read-only counts were five paper sessions, 417 paper events
+and eight product research jobs, unchanged from the previous checkpoint.
+The full local backend/frontend/lint/type/build suite at this same executable
+code head is recorded below, not rerun merely for this documentation entry.
+This local smoke is **not** GitHub CI, integrated production-browser coverage,
+independent disaster recovery, U7 forward acceptance or a release PASS.
+
+Separately, Chrome read-only keyboard paging on the existing 293-session
+historical result advanced the equity/drawdown chart from 1–100 to 101–200 and
+201–293. The last-page Next button disabled, Tab focused Previous, and the
+pager exposed `aria-live=polite`; the browser error log was empty. The actual
+JPEG and SHA-256 are indexed outside Git in the local delivery evidence. This
+does not prove native screen-reader speech, full WCAG 2.2 AA, native 200% zoom
+or the complete chart/device matrix.
+
 ## 2026-09-29 local paper event integrity during the GitHub CI hold
 
 Two paper-ledger defects were reproduced before repair. The live frontend
