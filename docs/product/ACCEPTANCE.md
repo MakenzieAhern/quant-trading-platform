@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 local operation and submission/focus safety while GitHub is held
+
+The original four Compose services remain running locally. A production
+frontend image built from `caa6953` (129 modules) served `/`, `/help`,
+`/markets` and a direct comparison URL with HTTP 200 in an isolated,
+mount-free loopback Nginx container. Its exact identity and label were checked
+before stopping it; the image was retained. This is static route smoke, not an
+integrated production browser run or GitHub CI.
+
+A failing U3 regression showed that the study wizard could POST even when
+browser storage rejected the draft and idempotency request ID. Submission now
+stops before the API call unless that identity is saved. Once storage recovers,
+the same page can submit once; the bilingual warning names the unsaved request
+ID. The test proves zero create calls on failure and one on recovery. It does
+not simulate a native browser storage outage or claim the full U3 journey.
+
+A second failing regression exposed a refresh-focus defect: after health
+completed but capabilities remained pending, the topbar button unlocked and
+could restart the latter request. It now remains focusable with
+`aria-disabled` and refuses repeat activation until both checks finish. A
+bounded live in-app browser click kept focus on the button after the ordinary
+fast refresh; the pending split is component-tested, not a live throttled
+browser or screen-reader proof.
+
+After both fixes, 330 frontend tests across 37 files, lint, typecheck,
+Prettier and the 129-module production build passed locally. No backend,
+financial, provider, paper account, frozen research, or official OOS path was
+changed. Original services/data were not stopped or deleted. GitHub push,
+exact-head CI, merge and release remain held until actual recovery; the
+reported October 1 date is an estimate, not observed availability. Full
+U1–U8/M0–M5 acceptance and external gates remain open.
+
 ## 2026-09-28 same-name comparison identity
 
 The saved-study list already distinguished duplicate names, but the comparison

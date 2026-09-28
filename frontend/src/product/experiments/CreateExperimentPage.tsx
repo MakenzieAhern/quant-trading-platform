@@ -321,10 +321,10 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
       setError("validation");
       return;
     }
+    setError(null);
+    if (!persist()) return;
     locked.current = true;
     setPending(true);
-    setError(null);
-    persist();
     try {
       const job = await experimentApi.create(form, requestKey);
       try {

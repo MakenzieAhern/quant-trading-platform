@@ -39,6 +39,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     (signal) => experimentApi.capabilities(signal),
     [refresh],
   );
+  const refreshing = health.loading || data.loading;
   const available =
     data.data?.datasets.find(
       (item) => item.mode === "historical_exploration" && item.available,
@@ -271,8 +272,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               type="button"
               className={`serviceState ${health.error ? "serviceOffline" : ""}`}
               aria-label={copy.refreshStatus}
-              disabled={health.loading}
-              onClick={() => setRefresh((value) => value + 1)}
+              aria-disabled={refreshing}
+              onClick={() => {
+                if (!refreshing) setRefresh((value) => value + 1);
+              }}
             >
               <i aria-hidden="true" />
               <span className="serviceText" role="status">

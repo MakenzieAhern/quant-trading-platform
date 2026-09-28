@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T04:51:35Z",
+  "updated_at_utc": "2026-09-28T05:06:10Z",
+  "local_operation_submission_focus": {
+    "status": "PASS_BOUNDED_LOCAL_TESTS_NOT_FULL_PRODUCT_OR_CI",
+    "base_head": "caa6953",
+    "proof": "Release frontend image129 modules served /,/help,/markets and direct comparison route HTTP200 in owned labeled mount-free loopback scratch Nginx, then stopped. U3 red/green storage failure prevents POST before durable draft/request ID and allows one retry after recovery. M4 red/green health-complete/data-pending refresh retains focus/aria-disabled and prevents duplicate requests. Full frontend330/37, lint/typecheck/Prettier/build129 PASS. Bounded IAB ordinary refresh retained focus; own tab closed",
+    "limits": "Static route smoke was built at caa6953 before these uncommitted code fixes, not exact new-head CI or integrated release browser. Storage outage and split pending were component-tested, not live fault injection or native screen-reader proof. No backend/financial/provider/account/frozen/formal/OOS/GitHub action. Full U1-U8/M0-M5 and external gates remain open"
+  },
   "comparison_same_name_identity": {
     "status": "PASS_LOCAL_REGRESSION_AND_BOUNDED_IAB_NOT_FULL_U4_OR_CI",
     "cause": "Duplicate study names were allowed and distinguished in the list, but comparison headers, limitation cards and Open links dropped that identity",
@@ -340,10 +346,10 @@
   },
   "github_recovery_hold": {
     "reported_by": "user",
-    "estimated_recovery_date": null,
-    "reported_wait": "five days; no exact recovery time independently verified",
+    "estimated_recovery_date": "2026-10-01",
+    "reported_wait": "user now estimates October 1; no exact recovery time independently verified",
     "actual_recovery_verified": false,
-    "policy": "User reconfirmed GitHub recovery takes five days. Hold ALL push, CI retries/polling, merge and release until actual recovery; estimated date is not proof. Continue safe local work. Exact-head CI required afterward; no payment, limit change or gate bypass."
+    "policy": "User estimates GitHub CI/CD recovery on October 1. Hold ALL push, CI retries/polling, merge and release until actual recovery; estimated date is not proof. Continue safe local work. Exact-head CI required afterward; no payment, limit change or gate bypass."
   },
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
@@ -376,6 +382,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-28 05:06UTC local U3/M4 safety: failing regressions proved study POST despite failed request-ID persistence and service refresh reactivation while capabilities pending; both fixed. Full frontend330/37, lint/type/format/build129 PASS. Earlier caa6953 scratch release frontend routes /,/help,/markets/direct comparison HTTP200 and exact owned container stopped; normal live IAB refresh retained focus, own tab closed. Main four Compose services running; no backend/financial/provider/account/frozen/formal/OOS/GitHub mutation. Full product and exact-head CI gates remain open",
     "2026-09-28 04:51UTC U4 duplicate-name comparison identity fixed: a failing regression with two same-name, same-second successful jobs now passes; shared ordinal/name/UTC label appears in both comparison tables and limitation cards/Open links. Focused21/fullfrontend328/lint/type/Prettier/build129 PASS. Bounded IAB on two existing distinct-name historical studies showed correct numbered/dated links/columns/cards and no obvious desktop overflow; own tab closed. Original four Compose running, API/frontend200, no study/account/provider/GitHub/frozen/formal/OOS mutation. Full product/CI/external gates remain open",
     "2026-09-28 04:41UTC current head816c738 local release image HTTP smoke: frontend Nginx /,/help,/markets200, isolated backend production health ok/paper and honest demo-vs-unmounted-history capabilities, tmpfs migrations head; scratch containers/network cleaned, images retained. Fresh IAB first Explore strategy click opened exact drawer/hash and Close restored trigger; prior native Chrome anomaly unresolved. Main four services/API/frontend200, eight retained table fingerprints equal reference, .research unchanged. No GitHub/financial/provider/formal/OOS action; full U1-U8/M0-M5 remains incomplete",
     "2026-09-27 18:16UTC saved historical ledger16DOM-case matrix/current58bcc98: four sizes times ENZH/lightdark no page overflow, exactcash/equity/date/no-native-plan retained; five namedfocusable tables6/20/20/20/6. MobileArrowRight settled40/80,2pxfocus. SixrealJPEG outsideGit, decodedpixel/DOMsize limits recorded; independent three-image review no observable blocker only. Own tabclosed/ENsystem restored/viewportreset, main eight fingerprints equal/fourhealthy/researchclean. No code/study/provider/GitHubwrite, all full product gates open",

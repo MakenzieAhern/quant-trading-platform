@@ -19,7 +19,7 @@ const en = {
   exitConfirm:
     "Leave this configuration? Your latest draft is saved on this device.",
   storageError:
-    "This browser could not save your draft. Keep this page open or allow local storage before leaving.",
+    "This browser could not save your draft and request ID. Keep this page open; allow local storage before running or leaving, then retry.",
   summary: "Your configuration",
   registered: "Registered strategy",
   noStrategies:
@@ -267,7 +267,8 @@ const zh: typeof en = {
   restored: "已恢复上次保存的草稿。",
   exit: "保存并退出",
   exitConfirm: "离开当前配置？最新草稿已保存在本机。",
-  storageError: "浏览器无法保存草稿。请保留此页面，或允许本地存储后再离开。",
+  storageError:
+    "浏览器无法保存草稿和请求编号。请保留此页面，允许本地存储后再运行或离开，然后重试。",
   summary: "当前配置",
   registered: "已注册策略",
   noStrategies: "暂无可执行策略。请检查数据中心或重新加载。",

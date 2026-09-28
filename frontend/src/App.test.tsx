@@ -231,6 +231,57 @@ describe("routing", () => {
     await act(() => i18n.changeLanguage("en-US"));
   });
 
+  it("keeps the service refresh focused and prevents repeat requests while loading", async () => {
+    window.history.replaceState({}, "", "/unknown");
+    let healthRequests = 0;
+    let dataRequests = 0;
+    let resolveHealth: ((response: Response) => void) | undefined;
+    let resolveData: ((response: typeof capabilities) => void) | undefined;
+    vi.spyOn(experimentApi, "capabilities").mockImplementation(() => {
+      dataRequests += 1;
+      return dataRequests === 1
+        ? Promise.resolve(capabilities)
+        : new Promise<typeof capabilities>((done) => {
+            resolveData = done;
+          });
+    });
+    vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+      if (!String(input).endsWith("/api/health"))
+        throw new Error("Unexpected fetch");
+      healthRequests += 1;
+      return healthRequests === 1
+        ? Promise.resolve(jsonResponse(health))
+        : new Promise((done) => {
+            resolveHealth = done;
+          });
+    });
+    render(<App />);
+    await screen.findByText("Service online");
+    const refresh = screen.getByRole("button", {
+      name: "Refresh service and data status",
+    });
+    await waitFor(() =>
+      expect(refresh).toHaveAttribute("aria-disabled", "false"),
+    );
+    refresh.focus();
+    fireEvent.click(refresh);
+    expect(healthRequests).toBe(2);
+    expect(dataRequests).toBe(2);
+    expect(refresh).toHaveFocus();
+    expect(refresh).not.toBeDisabled();
+    expect(refresh).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(refresh);
+    expect(healthRequests).toBe(2);
+    await act(async () => resolveHealth?.(jsonResponse(health)));
+    expect(refresh).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(refresh);
+    expect(healthRequests).toBe(2);
+    expect(dataRequests).toBe(2);
+    await act(async () => resolveData?.(capabilities));
+    expect(refresh).toHaveFocus();
+    expect(refresh).toHaveAttribute("aria-disabled", "false");
+  });
+
   it("rechecks stale service and data status on tab return without duplicate or hidden requests", async () => {
     window.history.replaceState({}, "", "/unknown");
     const now = vi.spyOn(Date, "now").mockReturnValue(1000);

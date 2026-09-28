@@ -206,6 +206,39 @@ describe("guided experiment", () => {
     expect(readExperimentDraft()).toBeNull();
   });
 
+  it("does not submit when the request identity cannot be saved, then permits a safe retry", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const create = vi.spyOn(experimentApi, "create").mockResolvedValue(job);
+    const write = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new Error("storage unavailable");
+      });
+    try {
+      render(<CreateExperimentPage />);
+      await review();
+      expect(readExperimentDraft()).toBeNull();
+      await userEvent.click(
+        screen.getByRole("button", { name: "Run this configuration" }),
+      );
+      expect(create).not.toHaveBeenCalled();
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "This browser could not save your draft",
+      );
+      expect(
+        screen.getByRole("button", { name: "Run this configuration" }),
+      ).toBeEnabled();
+      expect(window.location.pathname).toBe("/research/new");
+    } finally {
+      write.mockRestore();
+    }
+    await userEvent.click(
+      screen.getByRole("button", { name: "Run this configuration" }),
+    );
+    await waitFor(() => expect(create).toHaveBeenCalledTimes(1));
+    expect(window.location.pathname).toBe(`/experiments/${job.job_id}`);
+  });
+
   it("saves and restores the step, exact values and request identity without changing them on language switch", async () => {
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
     saveExperimentDraft(configuration, 2, "existing-request-key");
