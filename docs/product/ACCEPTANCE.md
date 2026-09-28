@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 saved-result report export keyboard focus
+
+On an existing saved 2011 historical result, actual Chrome keyboard Return
+prepared the CSV report but the focused download button became natively
+disabled and focus fell to `BODY`. A deferred-download regression was red
+before repair. Both JSON and CSV buttons now use `aria-disabled` during the
+existing synchronous duplicate-GET guard; the collection select remains
+natively disabled so the requested report cannot change mid-flight.
+
+After repair, the focused regression passed 12/12 and the full frontend suite
+passed 361/361. ESLint, TypeScript, changed-file Prettier and the 129-module
+production build passed. In the same Chrome result, keyboard Return prepared
+the report with focus still on the CSV button; the next Tab reached the
+prepared-report fallback link with the expected filename. A separate read-only
+review found no actionable issue. The local evidence is indexed outside Git
+under `product-evidence/v1.2/m4/20260929-32a6a04-export-keyboard-focus.json`.
+The export was GET-only; main database read-only counts stayed at 5/417/8.
+This is a bounded U4/M4 keyboard repair, not native screen-reader speech or
+complete export, accessibility, product or release acceptance.
+
 ## 2026-09-29 historical paper crash after persisted fills — bounded local check
 
 At executable head `3e621a1`, a uniquely owned backend used scratch tmpfs

@@ -1,7 +1,15 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T22:27:41Z",
+  "updated_at_utc": "2026-09-28T22:39:30Z",
+  "export_keyboard_focus_repair": {
+    "status": "PASS_BOUNDED_CHROME_AND_LOCAL_TESTS_NOT_FULL_U4_M4",
+    "parent_head": "32a6a04ce38150003ba12d9552151c1b108db2b8",
+    "defect": "On a saved historical result, actual Chrome keyboard Return prepared CSV but native disabling of the focused export button moved document.activeElement to BODY",
+    "fix": "Both export buttons now use aria-disabled during the existing pending.current request lock; collection select remains natively disabled; no API or financial behavior changed",
+    "proof": "Deferred focused regression red 1/12 before fix then green 12/12; full frontend361 PASS, ESLint/TypeScript/changed-file Prettier/Vite129 build PASS. Actual Chrome Chinese/dark keyboard export retained focus on CSV button after completion; Tab reached prepared fallback link with expected filename. Independent read-only diff review found no actionable issue. Main database read-only counts paper5/events417/research8 unchanged",
+    "limits": "Browser GET completed too quickly to measure pending focus directly, which the deferred component check covers. No native screen-reader speech, all export variants, full U4/M4/M5, genuine forward feed, missing ledger restore, independent backup or GitHub CI/release acceptance. Evidence indexed outside Git"
+  },
   "local_current_code_release_smoke": {
     "status": "PASS_BOUNDED_LOCAL_NOT_GITHUB_CI_OR_FULL_RELEASE",
     "code_head": "3e621a1b519637e7c9936098527eada064dbd5a2",
@@ -517,7 +525,7 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-09-28 19:32UTC root sole repository writer, read-only subagent reviews completed. Branch codex/product-v1.2-current-rules based on 7aee79e with local paper-focus diff awaiting commit; original four Compose running and healthy. Scratch QA API/web had zero mounts, PostgreSQL/Redis tmpfs, two synthetic accounts stopped, own IAB tab closed, exact scratch services stopped. Original database/account rows were not written or fingerprinted in this unit; frozen .research Git diff empty. No provider/formal/OOS/live/GitHub operation.",
+    "latest_verification": "2026-09-28 22:39UTC root sole repository writer and subagents read-only. Branch codex/product-v1.2-current-rules at 32a6a04 before the export-focus diff; no index lock or competing writer. Original four Compose services running; local saved-result export used GET only. Main database read-only counts paper sessions5/events417/research jobs8 unchanged. No provider, formal/OOS, frozen research, live-trading or GitHub operation.",
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
     "queue_writer": "No owned isolated backend/worker currently running. Two synthetic paper accounts existed only in the stopped disposable QA tmpfs database; original main queue/account state was not changed in this unit.",
@@ -526,7 +534,7 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "2026-09-28 19:32UTC: original four Compose services running; backend/PostgreSQL/Redis healthy, main API/frontend reachable. Exact IDs/labels/network/zero mounts of owned paper-focus QA API/web and tmpfs PostgreSQL/Redis checked, then stopped; stopped objects/image retained. Own IAB tab closed. No Windows login/reboot/startup acceptance inferred; historical IDs are not reusable authority.",
+    "verified_processes": "2026-09-28 22:39UTC: original four Compose services running, backend/PostgreSQL/Redis healthy, main API/frontend HTTP200 at prior checkpoint and Chrome local saved-result page loaded during this unit. No scratch service started for the export-focus fix. No Windows login/reboot/startup acceptance inferred; historical IDs are not reusable authority.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [

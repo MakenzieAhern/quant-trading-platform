@@ -629,9 +629,14 @@ describe("server-generated report downloads", () => {
         range={{ start_date: "2031-01-02" }}
       />,
     );
-    await userEvent.dblClick(
-      screen.getByRole("button", { name: "Download records (CSV)" }),
-    );
+    const exportButton = screen.getByRole("button", {
+      name: "Download records (CSV)",
+    });
+    exportButton.focus();
+    await userEvent.dblClick(exportButton);
+    expect(exportButton).toHaveFocus();
+    expect(exportButton).toHaveAttribute("aria-disabled", "true");
+    expect(exportButton).toBeEnabled();
     expect(download).toHaveBeenCalledTimes(1);
     expect(download).toHaveBeenCalledWith(job.job_id, "csv", "trades", {
       start_date: "2031-01-02",
@@ -640,6 +645,8 @@ describe("server-generated report downloads", () => {
     await act(async () => {
       resolve?.(blob);
     });
+    expect(exportButton).toHaveFocus();
+    expect(exportButton).toHaveAttribute("aria-disabled", "false");
     expect(createUrl).toHaveBeenCalledWith(blob);
     expect(click).toHaveBeenCalledOnce();
     expect(screen.getByRole("status")).toHaveTextContent(

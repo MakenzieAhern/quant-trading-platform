@@ -79,7 +79,7 @@ export function ExperimentExports({
       <div className="experimentActions">
         <button
           className="button secondary"
-          disabled={status === "loading"}
+          aria-disabled={status === "loading"}
           onClick={() => void download("json")}
         >
           {u.exportJson}
@@ -101,7 +101,7 @@ export function ExperimentExports({
         </label>
         <button
           className="button secondary"
-          disabled={status === "loading"}
+          aria-disabled={status === "loading"}
           onClick={() => void download("csv")}
         >
           {u.exportCsv}
