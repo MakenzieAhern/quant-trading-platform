@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T20:37:03Z",
+  "updated_at_utc": "2026-09-28T20:43:52Z",
+  "paper_terminal_rehydration": {
+    "status": "PASS_BOUNDED_COMPONENT_TESTS_NOT_BROWSER_FAULT_INJECTION",
+    "cause": "Terminal WebSocket notification disabled retries before the authoritative REST snapshot; transient HTTP503 then left final account and ledger unavailable until manual reload",
+    "fix": "Only successful terminal REST hydration or explicit access/not-found denial ends retries; server close or transient snapshot failure uses the existing bounded reconnect path and clears stale financial values on read failure",
+    "proof": "Red terminal-notification/503 regression then two new recovery cases PASS; paper page41/41, frontend358/37, ESLint, TypeScript, changed-file Prettier and build129 PASS; independent read-only race review no actionable issue",
+    "limits": "No actual-browser injected outage, original account/provider/database mutation, genuine pre-loss ledger restore, lawful current-data forward receipt, full U7/M4/M5 or GitHub CI"
+  },
   "pagination_range_announcement": {
     "status": "PASS_BOUNDED_DOM_TESTS_NOT_NATIVE_SCREEN_READER",
     "cause": "Shared pagination focused its named group before loading but the settled range was not a live region",

@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 terminal paper-stream recovery after transient snapshot failure
+
+The paper detail previously treated a WebSocket terminal-status notification
+as final before the authoritative REST snapshot succeeded. If that GET briefly
+returned HTTP 503, the socket closed with retries disabled and the final
+account status and ledger remained unavailable until manual reload. The shared
+stream hook now treats the notification as a reason to hydrate; only a
+successful terminal REST snapshot (or an explicit 401/403/404 denial) stops
+reconnection. A server close before the GET finishes aborts that read and
+uses the existing bounded reconnect path. Financial values are cleared on a
+failed read, not presented as an authoritative final balance.
+
+The new terminal-notification/503 regression failed before the change and
+passed after it. A second test covers the server-close-before-snapshot race;
+the existing successful-terminal, initial-failure, stale-money and retry-limit
+tests remain passing. Paper page: 41/41; full frontend: 358/358 across 37
+files; ESLint, TypeScript, changed-file Prettier and 129-module production
+build passed. Independent read-only review found no actionable race. These
+are component and code-review checks, not a real-browser injected outage or
+full U7/M4/M5 acceptance. No original account, database, provider, frozen
+research, Official OOS or GitHub action was changed.
+
 ## 2026-09-29 shared pagination range announcement
 
 The shared pager moves keyboard focus to its named group before an asynchronous

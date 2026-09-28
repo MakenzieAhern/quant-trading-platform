@@ -185,14 +185,6 @@ export function usePaperStream(sessionId: string) {
             socket?.close();
             return;
           }
-          if (
-            event.type === "session.status" &&
-            ["STOPPED", "FAILED", "INTERRUPTED"].includes(
-              String(event.payload.status),
-            )
-          ) {
-            terminal = true;
-          }
           if (hydrating && buffered.length >= 256) {
             buffered = [];
             terminal = false;

@@ -1209,7 +1209,7 @@ describe("paper trading pages", () => {
       );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
-    act(() =>
+    await act(async () =>
       MockWebSocket.instances[0]!.message({
         sequence: 1,
         type: "session.status",
@@ -1224,6 +1224,66 @@ describe("paper trading pages", () => {
     await act(async () => vi.advanceTimersByTimeAsync(2000));
     expect(MockWebSocket.instances).toHaveLength(1);
     expect(screen.getByText("2026-09-06 02:01:00Z (UTC)")).toBeInTheDocument();
+  });
+
+  it("recovers a terminal notification after a transient final snapshot failure", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockResolvedValueOnce(jsonResponse({ detail: "temporary" }, 503))
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await act(async () =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "session.status",
+        occurred_at: "2026-09-06T02:01:00Z",
+        payload: { status: "STOPPED" },
+      }),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("temporary");
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    expect(MockWebSocket.instances).toHaveLength(2);
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(
+      screen.getByText("Stopped", { selector: ".statusBadge" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Session connection: closed")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("rehydrates terminal state when the server closes before the final snapshot", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockReturnValueOnce(new Promise(() => {}))
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    act(() => {
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "session.status",
+        occurred_at: "2026-09-06T02:01:00Z",
+        payload: { status: "STOPPED" },
+      });
+      MockWebSocket.instances[0]!.close();
+    });
+    expect(fetch.mock.calls[1]?.[1]?.signal?.aborted).toBe(true);
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    expect(MockWebSocket.instances).toHaveLength(2);
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(
+      screen.getByText("Stopped", { selector: ".statusBadge" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Session connection: closed")).toBeInTheDocument();
   });
 
   it("hydrates terminal failure even when it arrives before the initial REST snapshot", async () => {
