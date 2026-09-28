@@ -51,6 +51,8 @@ describe("Pagination", () => {
       </>,
     );
     const pager = screen.getByRole("group", { name: "Pagination" });
+    const range = within(pager).getByText("1–20 of 41");
+    expect(range).toHaveAttribute("aria-live", "polite");
     expect(pager).not.toHaveFocus();
     await userEvent.click(within(pager).getByRole("button", { name: "Next" }));
     expect(pager).toHaveFocus();
@@ -67,6 +69,7 @@ describe("Pagination", () => {
       </>,
     );
     expect(pager).toHaveAttribute("aria-busy", "true");
+    expect(range).toHaveTextContent("Loading");
     expect(within(pager).getByRole("button", { name: "Next" })).toBeDisabled();
     expect(screen.queryByText("1–20 of 41")).not.toBeInTheDocument();
     screen.getByLabelText("Other task").focus();
@@ -76,6 +79,7 @@ describe("Pagination", () => {
         <Pagination offset={20} limit={20} total={41} onChange={onChange} />
       </>,
     );
+    expect(range).toHaveTextContent("21–40 of 41");
     await act(async () => {
       await i18n.changeLanguage("zh-CN");
     });

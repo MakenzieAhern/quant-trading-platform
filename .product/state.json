@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T20:35:00Z",
+  "updated_at_utc": "2026-09-28T20:37:03Z",
+  "pagination_range_announcement": {
+    "status": "PASS_BOUNDED_DOM_TESTS_NOT_NATIVE_SCREEN_READER",
+    "cause": "Shared pagination focused its named group before loading but the settled range was not a live region",
+    "fix": "Add polite live semantics to the existing range span without introducing a competing status role or changing focus and paging behavior",
+    "proof": "Red focused assertion, then Pagination9/9 and full frontend356/37 PASS; ESLint, TypeScript and Vite build129 PASS. Role=status trial caused three ambiguous status queries in full suite, so live-only markup was retained",
+    "limits": "No native screen-reader speech, 200pct zoom, independent novice or full U6/M4/M5 acceptance; no provider, original database, frozen research or GitHub action"
+  },
   "paper_restart_order_closure": {
     "status": "PASS_ISOLATED_SQL_TESTS_NOT_GENUINE_LEDGER_RESTORE_OR_FULL_U7",
     "cause": "Backend restart interrupted orphaned paper sessions but cancelled only ACCEPTED orders, leaving CREATED, SUBMITTED and PARTIALLY_FILLED orders visibly open",

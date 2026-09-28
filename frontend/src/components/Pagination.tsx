@@ -34,7 +34,7 @@ export function Pagination({
       aria-label={t("pagination")}
       aria-busy={loading}
     >
-      <span>
+      <span aria-live="polite">
         {unavailable
           ? loading
             ? t("loading", { label: "" })

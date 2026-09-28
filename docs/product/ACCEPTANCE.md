@@ -1,5 +1,19 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 shared pagination range announcement
+
+The shared pager moves keyboard focus to its named group before an asynchronous
+page change, but the settled range text was not a live region. Its existing
+range span now has `aria-live="polite"`; focus behavior and button states are
+unchanged. A focused test confirms the same span updates from loading to the
+new range and preserves deliberately moved focus. Adding `role="status"`
+initially caused three unrelated status queries to become ambiguous, so the
+smaller live-only markup was retained. Focused 9/9 and full frontend 356/356
+passed, along with ESLint, TypeScript and the 129-module production build.
+This proves DOM semantics, not native screen-reader speech, 200% zoom or full
+U6/M4/M5 acceptance. No provider, database, frozen research or remote action
+occurred.
+
 ## 2026-09-29 local operation and orphaned paper-order recovery
 
 GitHub Actions remains unavailable pending actual account recovery, but the
