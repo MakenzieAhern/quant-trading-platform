@@ -223,6 +223,23 @@ export function usePaperStream(sessionId: string) {
           openingController = controller;
           void paperApi
             .snapshot(sessionId, controller.signal)
+            .then((openingSnapshot) => {
+              if (!active || controller.signal.aborted || !firstConnection)
+                return;
+              if (
+                !["STOPPED", "FAILED", "INTERRUPTED"].includes(
+                  openingSnapshot.session.status,
+                )
+              )
+                return;
+              terminal = true;
+              firstConnection = false;
+              if (retry !== undefined) window.clearTimeout(retry);
+              setSnapshot(openingSnapshot);
+              setError(null);
+              setConnection("closed");
+              socket?.close();
+            })
             .catch((reason: unknown) => {
               if (!active || controller.signal.aborted || !firstConnection)
                 return;

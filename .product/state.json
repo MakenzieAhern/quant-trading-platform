@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T20:57:57Z",
+  "updated_at_utc": "2026-09-28T21:12:42Z",
+  "isolated_paper_process_restart": {
+    "status": "PASS_BOUNDED_ACTUAL_BACKEND_RESTART_NOT_FULL_U7",
+    "test_project": "quant-mvp-tests tmpfs PostgreSQL and isolated backend, migrated to 20260924_0016; HTTP-created replay account e620d5b4-30b1-4db7-b21f-deb5af1cc9e5 with four injected pending order states and zero fills",
+    "proof": "Before scratch backend SIGKILL: RUNNING, events1-7. Actual app.main startup: INTERRUPTED, four distinct orders CANCELLED once, events1-12. Second scratch kill/start: still12 events/no duplicate cancellations/fills. Original main PostgreSQL read-only counts paper sessions5/events417/research jobs8; four main services stayed up. Scratch backend/PG stopped, no image/volume deletion or .research change",
+    "limits": "Injected replay orders, no filled position and no genuine pre-loss ledger; FILLED preservation is direct SQL regression only. No full U7, lawful forward receipt, independent backup or remote CI/release acceptance"
+  },
+  "cold_click_performance_pilot": {
+    "status": "UNVERIFIED_BROWSER_TOOL_LIMIT_NOT_P95_PASS",
+    "proof": "Verified saved-results page loaded in a temporary Chrome tab, but available Browser Use scope exposed no performance or PerformanceObserver and could not verify foreground focus. Stopped before input; tab closed without writes",
+    "limits": "Prior unmatched/delayed click samples unresolved; no native Event Timing p95, native zoom, screen-reader, novice or full M4 acceptance"
+  },
+  "local_ci_hold_progress": {
+    "status": "PASS_BOUNDED_LOCAL_NOT_GITHUB_CI_OR_FULL_PRODUCT",
+    "test_target": "make test no longer calls down --volumes; the isolated quant_test PostgreSQL is tmpfs and test services are stopped without Docker volume deletion. Fresh Alembic head 20260924_0016; backend 1019 passed, one optional unmounted-archive skip; frontend 358 passed. Local Ruff/format/mypy, ESLint, TypeScript and build passed",
+    "paper_stream": "An initial WebSocket close with REST 200 STOPPED previously left cash/fills behind Loading. Red/green regression now hydrates terminal REST state and cancels retry, while RUNNING REST alone stays hidden without a live socket. Paper pages 43/43, full frontend 360/360, ESLint, TypeScript, changed-file Prettier and production build129 passed",
+    "limits": "Component and local-container evidence only; no real-browser injected socket fault, remote GitHub CI/review/merge/release, genuine forward receipt, native accessibility/performance, independent novice, original lost ledgers or backup destination. Original Compose data and frozen research/Official OOS untouched"
+  },
   "isolated_current_head_historical_e2e": {
     "status": "PASS_BOUNDED_ISOLATED_IAB_HISTORICAL_NOT_FORWARD_OR_RELEASE",
     "head": "f75dd95",

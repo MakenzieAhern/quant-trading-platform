@@ -1,5 +1,55 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local gates during the GitHub CI hold
+
+The isolated `make test` target previously ended with `down --volumes`.
+Its PostgreSQL data is already tmpfs, so the target now stops only its
+disposable Compose services; the development and performance instructions
+match this no-volume-deletion policy. Before running, the test Compose config
+was checked for `quant_test`, `APP_ENV=test`, an unpublished PostgreSQL port
+and tmpfs storage. The local full run migrated that database to
+`20260924_0016`: backend 1019 passed, one optional unmounted-archive case
+skipped, and frontend 358 passed. Local Ruff/format/mypy, ESLint, TypeScript
+and production build also passed. These are local checks, not GitHub Actions.
+
+An additional paper-stream regression then reproduced a distinct fault:
+when the opening WebSocket was blocked, REST returned a saved `STOPPED`
+account with cash and fills, but the page stayed on Loading. The shared hook
+now accepts that authoritative terminal REST snapshot and cancels its pending
+reconnect. A `RUNNING` REST snapshot still cannot masquerade as live state
+without a WebSocket. The stopped-account test failed before the fix; after it,
+paper-page 43/43 and full frontend 360/360 passed, with ESLint, TypeScript,
+changed-file Prettier and the 129-module production build. This is bounded
+component proof, not an injected real-browser socket outage or full U7/M4/M5.
+The original services, accounts, frozen research and Official OOS were not
+used for the test writes. No push, remote CI, merge or release was attempted.
+
+## 2026-09-29 isolated backend process restart with pending orders
+
+An owned `quant-mvp-tests` PostgreSQL with tmpfs storage was migrated to
+`20260924_0016`; its backend used only the test project and read-only fixture
+data. A fresh replay account `e620d5b4-30b1-4db7-b21f-deb5af1cc9e5` was
+created through HTTP, then four distinct `CREATED`, `SUBMITTED`, `ACCEPTED`
+and `PARTIALLY_FILLED` order states were seeded through the existing repository.
+Before failure, HTTP showed `RUNNING`, seven continuous events and zero fills.
+Only that labeled scratch backend was killed with SIGKILL; test PostgreSQL
+stayed healthy. On the real application startup path, HTTP showed
+`INTERRUPTED`, each order `CANCELLED` once, and events 1–12 (four cancellation
+events followed by the interruption). A second kill/start left the event count
+at 12 and added no duplicate cancellation or fill. The test backend and tmpfs
+PostgreSQL were then stopped without deleting any image or volume. The original
+four services stayed up; the main database's read-only counts remained five
+paper accounts, 417 paper events and eight research jobs. `.research` was
+unchanged. This operational gate uses injected simulated orders and zero fills;
+it is not genuine pre-loss ledger recovery or full U7 acceptance.
+
+A separate cold-click performance pilot opened only an existing saved-results
+page in verified Chrome, then stopped before input: the available browser
+scope exposed neither `performance` nor `PerformanceObserver` and could not
+prove foreground focus. No native Event Timing sample or p95 is claimed.
+The temporary tab was closed without application writes. Prior delayed and
+unmatched clicks remain unresolved; M4 performance and accessibility stay open.
+
 ## 2026-09-29 isolated current-head historical flow during GitHub hold
 
 At code head `f75dd95`, production backend/frontend images ran against an

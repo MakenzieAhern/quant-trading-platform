@@ -274,6 +274,71 @@ describe("paper trading pages", () => {
     expect(MockWebSocket.instances).toHaveLength(1);
   });
 
+  it("shows a stopped account from REST when the opening socket is blocked", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const snapshot = paperSnapshot("STOPPED");
+    snapshot.latest_portfolio = {
+      timestamp: "2024-01-09T00:00:00Z",
+      cash: "81309.8134",
+      market_value: "18655",
+      equity: "99964.8134",
+      realized_pnl: "0",
+      unrealized_pnl: "-5",
+      cumulative_commission: "30.1866",
+      drawdown: "0",
+      positions: [],
+      plan: null,
+    };
+    snapshot.fills = [
+      {
+        order_id: "11111111-1111-4111-8111-111111111111",
+        strategy_id: "moving_average_crossover",
+        symbol: "AAPL",
+        side: "BUY",
+        quantity: "10",
+        price: "25",
+        commission: "2.36",
+        timestamp: "2024-01-09T00:00:00Z",
+      },
+    ];
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(snapshot));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.close());
+    expect(screen.getByTitle("81309.8134")).toBeInTheDocument();
+    expect(screen.getByTitle("2.36")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await act(async () => vi.advanceTimersByTimeAsync(8000));
+    expect(MockWebSocket.instances).toHaveLength(1);
+  });
+
+  it("does not present an active account as live when only REST is reachable", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const snapshot = paperSnapshot("RUNNING");
+    snapshot.latest_portfolio = {
+      timestamp: "2024-01-09T00:00:00Z",
+      cash: "81309.8134",
+      market_value: "18655",
+      equity: "99964.8134",
+      realized_pnl: "0",
+      unrealized_pnl: "-5",
+      cumulative_commission: "30.1866",
+      drawdown: "0",
+      positions: [],
+      plan: null,
+    };
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(snapshot));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.close());
+    expect(screen.queryByTitle("81309.8134")).not.toBeInTheDocument();
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    expect(MockWebSocket.instances).toHaveLength(2);
+  });
+
   it("renders persisted session history and the permanent safety warning", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({ items: [paperSession()], limit: 20, offset: 0, total: 1 }),
