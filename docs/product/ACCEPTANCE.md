@@ -1,5 +1,38 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 current-head local release-image smoke
+
+At local head `816c738`, the release Compose frontend image rebuilt from source
+(129 modules). In an isolated labeled, mount-free Nginx container on loopback
+15174, `/`, `/help` and `/markets` returned HTTP 200. A separately built backend
+image started with its own tmpfs `quant_test` PostgreSQL and Redis on a private
+network; migrations reached head, production `/api/health` returned `ok` with
+paper broker mode, and capabilities truthfully offered synthetic demo while
+historical exploration was unavailable without the private archive. The
+temporary frontend, API, PostgreSQL, Redis and network were stopped/removed
+after exact identity and ownership checks. Images were retained; no main
+service, persistent volume, dataset or account was touched.
+
+This matches the CI Compose job's bounded image/HTTP smoke, not an integrated
+release-browser flow: the default release frontend API URL points to the live
+port 8000, so no scratch frontend-to-scratch backend browser claim is made.
+GitHub exact-head CI, full M5 release and external gates remain open.
+
+On the live development frontend, one fresh hidden in-app browser tab loaded
+`/strategies`; its first visible Explore strategy click opened the registered
+drawer and exact `#strategy=` URL, focused Close, and closing restored the
+trigger and base URL. The temporary tab was closed. This bounded in-app result
+does not explain or erase the earlier one-off native Chrome first-click
+anomaly, nor prove cold native pointer/p95 acceptance. Main eight retained
+table count/MD5 fingerprints still equal the saved reference; `.research`
+remains untouched.
+
+The apparent synthetic-demo pre-start execution concern was rejected after
+tracing the caller: earlier sessions provide the declared 253-session warmup,
+while `active_from=request.start_date` prevents a target before the requested
+start. Existing result tests assert initial cash and fill dates. No financial
+path was changed based on the misleading loaded-session count.
+
 ## 2026-09-28 local execution while GitHub Actions is unavailable
 
 The four original Compose services remain running; PostgreSQL, Redis and backend

@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 local release smoke and synthetic warmup boundary — 2026-09-28
+
+During the user-reported GitHub Actions hold, test the current release images in
+uniquely named, isolated scratch containers with tmpfs PostgreSQL/Redis. The
+default release frontend API URL points at the live 8000 service, so static
+Nginx HTTP checks are not called an integrated scratch-browser test. Do not
+reuse the older `qtp-release-smoke` local project, its volumes or image names.
+No local result substitutes for exact pushed-head CI or full M5 approval.
+
+An apparent synthetic pre-start trading issue was rejected: the loader includes
+earlier sessions for the declared 253-session feature warmup, but
+`ExploratoryStrategy(active_from=request.start_date)` suppresses targets before
+the chosen start. Existing result tests assert initial cash and fill dates.
+Loaded-session count alone is not evidence of an earlier trade; no financial
+path or historical research was changed.
+
 ## v1.2 recovery manual must separate request and attempt identities — 2026-09-28
 
 Update existing EN/ZH guides, no additional recovery abstraction. Unconfirmed
