@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 historical filled-plus-pending crash — bounded isolated proof
+
+The pinned `3e621a1` backend replayed the accepted 2011 historical archive
+read-only against uniquely owned tmpfs `quant_test` PostgreSQL/Redis. While the
+scratch account was `RUNNING` with six persisted historical fills and six
+positions, the API was paused and one `ACCEPTED` order was **QA-injected via
+the repository into that same scratch journal**. This order was not generated
+by the running broker. The 124-event SQL prefix was recorded before scratch
+API `SIGKILL` and retained its SHA-256 after both starts.
+
+The first start appended exactly one `CANCELLED` update for the injected order
+and one `INTERRUPTED` status event (126 total). The second start appended
+nothing. Both restored HTTP snapshots retained six fills, six positions,
+cash `81309.8134` and equity `99964.8134`, with the order cancelled; both
+attempts to restart the interrupted account returned 409 without journal
+changes. The adjacent outside-Git result
+`product-evidence/v1.2/m4/20260929-3e621a1-historical-six-fill-injected-pending-crash.json`
+records IDs, prefix checksum, script checksum and exact scope.
+
+Only owned scratch containers/network were removed; no original image, volume,
+database or account was mounted or changed. Original services remained healthy,
+API/frontend returned HTTP 200, main database read-only counts stayed 5/417/8,
+and frozen archive marker/manifest hashes matched the prior checkpoint. This
+narrows U7 restart integrity but does not prove a broker-generated pending
+order beside fills, lawful current-data forward trading, genuine lost-ledger
+restoration, independent backup, full U7/M4/M5, GitHub CI or release.
+
 ## 2026-09-29 saved-result report export keyboard focus
 
 On an existing saved 2011 historical result, actual Chrome keyboard Return
