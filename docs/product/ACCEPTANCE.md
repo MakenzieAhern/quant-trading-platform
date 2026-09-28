@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local CI-equivalent checks while GitHub is unavailable
+
+The current code tree (unchanged since `8e5b9eb`; `ad740cf` only recorded the
+preceding rehearsal) passed the frontend CI commands in the running local
+container: 335 tests in 37 files, ESLint, TypeScript and the 129-module
+production build. A separate, broader Prettier check is **not** in CI and
+reported style drift in eight tracked files at this head (`index.html`,
+`scripts/benchmark.mjs`, `src/App.tsx`, `src/components/EquityChart.tsx`,
+`src/i18n/i18n.test.tsx`, `src/product/experiments/api.test.ts`,
+`src/product/experiments/ExperimentsPage.tsx`,
+`src/product/experiments/fixtures.test-data.ts`). No formatting rewrite was
+made merely to mask that distinction.
+
+Against the owned, mount-free, tmpfs `quant_test` PostgreSQL—not the original
+application database—the backend image passed Alembic upgrade, downgrade to
+`20260904_0001`, re-upgrade and `alembic check`; 1,013 tests passed, with one
+optional read-only historical-archive test skipped because that archive was
+not mounted. Ruff check, Ruff format check (544 files) and mypy (144 files)
+passed. All four Compose configuration/override checks in CI passed. The
+temporary database/cache containers were stopped again after exact ownership
+checks; no `down -v`, prune, original-volume or frozen-research operation was
+used. Original four project services remained healthy.
+
+These are local equivalents of the code/test checks, **not** a GitHub runner,
+pushed-head PR check, review, merge or release. The user-estimated October 1
+GitHub recovery has not been verified. Full product and external gates remain
+open.
+
 ## 2026-09-29 exact-head local integrated release rehearsal
 
 Docker Desktop 4.92.0 was launched normally after login, without reinstall or

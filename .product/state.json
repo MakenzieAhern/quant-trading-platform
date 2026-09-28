@@ -1,7 +1,16 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T18:58:13Z",
+  "updated_at_utc": "2026-09-28T19:04:41Z",
+  "local_ci_equivalent_checks": {
+    "status": "PASS_BOUNDED_CI_COMMANDS_WITH_OPTIONAL_FORMAT_DRIFT_NOT_GITHUB_CI",
+    "code_head": "8e5b9eb",
+    "record_head": "ad740cf",
+    "frontend": "Local container 335 tests/37 files, ESLint, TypeScript and Vite build129 PASS. Additional repository-wide Prettier check, not in CI, flagged eight unchanged tracked files; no formatting rewrite",
+    "backend": "Owned scratch tmpfs quant_test: Alembic upgrade/downgrade 20260904_0001/re-upgrade/check PASS; 1013 tests PASS, one optional historical-archive test SKIP because archive unmounted; Ruff check, Ruff format544 and mypy144 PASS",
+    "compose": "Four CI config/override checks PASS; main four services healthy; scratch DB/cache stopped after label/ID/zero-mount check, no original volumes or .research changes",
+    "limits": "Local equivalents only; GitHub runner/pushed-head PR CI/review/merge/release still held until actual recovery. Full U1-U8/M0-M5 and external data/backup/novice/native-accessibility gates remain open"
+  },
   "exact_head_integrated_local_rehearsal": {
     "status": "PASS_BOUNDED_EXACT_HEAD_LOCAL_NOT_FULL_PRODUCT_OR_CI",
     "head": "8e5b9eb",
