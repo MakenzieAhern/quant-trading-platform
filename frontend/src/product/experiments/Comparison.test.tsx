@@ -178,6 +178,44 @@ describe("experiment comparison", () => {
     ).toHaveLength(2);
   });
 
+  it("keeps same-named, same-second studies identifiable throughout comparison", async () => {
+    const sameRuns = runs.slice(0, 2).map((run) => ({
+      ...run,
+      name: "Same study",
+      created_at: "2026-09-22T10:00:00Z",
+    }));
+    vi.spyOn(experimentApi, "get").mockImplementation(async (id) =>
+      sameRuns.find((run) => run.job_id === id)!,
+    );
+    vi.spyOn(experimentApi, "result").mockImplementation(async (id) => ({
+      ...result,
+      job_id: id,
+    }));
+    render(<ExperimentComparePage />);
+    const labels = [1, 2].map(
+      (number) => `${number}. Same study · 2026-09-22 10:00:00Z (UTC)`,
+    );
+    const tables = await screen.findAllByRole("table");
+    for (const table of tables) {
+      for (const [index, label] of labels.entries()) {
+        expect(
+          within(table).getByRole("link", { name: label }),
+        ).toHaveAttribute("href", `/experiments/${ids[index]}`);
+      }
+    }
+    const cards = screen.getAllByRole("article");
+    for (const [index, label] of labels.entries()) {
+      expect(
+        within(cards[index]!).getByRole("heading", { name: label }),
+      ).toBeInTheDocument();
+      expect(
+        within(cards[index]!).getByRole("link", {
+          name: `Open experiment: ${label}`,
+        }),
+      ).toHaveAttribute("href", `/experiments/${ids[index]}`);
+    }
+  });
+
   it("restores comparison selection after result Back and list remount, without saving it in the view", async () => {
     window.history.replaceState({}, "", "/experiments");
     vi.spyOn(experimentApi, "list").mockResolvedValue({

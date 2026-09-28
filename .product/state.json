@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T04:41:28Z",
+  "updated_at_utc": "2026-09-28T04:51:35Z",
+  "comparison_same_name_identity": {
+    "status": "PASS_LOCAL_REGRESSION_AND_BOUNDED_IAB_NOT_FULL_U4_OR_CI",
+    "cause": "Duplicate study names were allowed and distinguished in the list, but comparison headers, limitation cards and Open links dropped that identity",
+    "fix": "Shared comparison label includes per-view ordinal, study name and UTC creation time across incomplete list, both tables, limitations and accessible Open links",
+    "proof": "Red/green same-name same-second regression; focused21 and full frontend328/37files PASS, lint/typecheck/Prettier/build129 PASS. Actual IAB with two existing distinct-name historical studies showed matching numbered/dated columns and limitation links; own tab closed",
+    "limits": "Exact duplicate names were component-tested, not newly created in the live DB. Not full U4/browser/release/novice acceptance; GitHub recovery unverified and push/CI/merge/release hold unchanged. No financial/provider/frozen/OOS data or account mutation"
+  },
   "current_head_release_smoke": {
     "status": "PASS_LOCAL_IMAGE_HTTP_NOT_CI_OR_FULL_M5",
     "head": "816c738",
@@ -369,6 +376,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-28 04:51UTC U4 duplicate-name comparison identity fixed: a failing regression with two same-name, same-second successful jobs now passes; shared ordinal/name/UTC label appears in both comparison tables and limitation cards/Open links. Focused21/fullfrontend328/lint/type/Prettier/build129 PASS. Bounded IAB on two existing distinct-name historical studies showed correct numbered/dated links/columns/cards and no obvious desktop overflow; own tab closed. Original four Compose running, API/frontend200, no study/account/provider/GitHub/frozen/formal/OOS mutation. Full product/CI/external gates remain open",
     "2026-09-28 04:41UTC current head816c738 local release image HTTP smoke: frontend Nginx /,/help,/markets200, isolated backend production health ok/paper and honest demo-vs-unmounted-history capabilities, tmpfs migrations head; scratch containers/network cleaned, images retained. Fresh IAB first Explore strategy click opened exact drawer/hash and Close restored trigger; prior native Chrome anomaly unresolved. Main four services/API/frontend200, eight retained table fingerprints equal reference, .research unchanged. No GitHub/financial/provider/formal/OOS action; full U1-U8/M0-M5 remains incomplete",
     "2026-09-27 18:16UTC saved historical ledger16DOM-case matrix/current58bcc98: four sizes times ENZH/lightdark no page overflow, exactcash/equity/date/no-native-plan retained; five namedfocusable tables6/20/20/20/6. MobileArrowRight settled40/80,2pxfocus. SixrealJPEG outsideGit, decodedpixel/DOMsize limits recorded; independent three-image review no observable blocker only. Own tabclosed/ENsystem restored/viewportreset, main eight fingerprints equal/fourhealthy/researchclean. No code/study/provider/GitHubwrite, all full product gates open",
     "2026-09-27 17:49UTC V3 real historical SQL path:41 API/checkpoint tests PASS/no skip with accepted archive; fresh manager and full prefix/financial equality, readonly review no blocker. Separate backend18036 actual2737 graceful exit/new2890 lifespan preserves PAUSED97events/20orders/zero fills; explicit resume adds only2011-03-23/six distinct-order fills/17datedV3plans. Prefix/starttime unchanged, duplicate start409/no events. Owned API/test DB stopped after fresh identity checks; main eight fingerprints unchanged/APIfrontend200/.researchclean. Normal historical process recovery only, not abruptcrash/host/login/UInewaccount/novice/forward; all original scope and GitHubhold remain. Evidence20260928-v3-sql-process-recovery.json outsideGit",

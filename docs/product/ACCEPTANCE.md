@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-09-28 same-name comparison identity
+
+The saved-study list already distinguished duplicate names, but the comparison
+page dropped that identity in both result/condition column headers and the
+limitations cards. A failing regression used two successful jobs with the same
+name **and same displayed creation second**. The page now repeats one shared
+ordinal, name and UTC creation label across the incomplete-state list, both
+tables and limitations, including distinct accessible Open links. The focused
+comparison suite passed 21/21; the full frontend suite passed 328/328, with
+lint, typecheck, Prettier and production build (129 modules) passing locally.
+
+One temporary in-app browser opened two existing completed historical studies
+through the live local frontend and confirmed matching numbered/dated headers,
+result columns, limitation cards and target links. Its screenshot showed no
+obvious desktop layout overflow; the tab was closed. This browser check used
+distinct real study names, while the exact duplicate-name collision is covered
+by the isolated regression. No experiment, paper account, provider request,
+database, frozen research or GitHub state was changed. U4 and full product
+acceptance remain IN_PROGRESS; local checks do not replace exact-head GitHub CI
+after actual account recovery.
+
 ## 2026-09-28 current-head local release-image smoke
 
 At local head `816c738`, the release Compose frontend image rebuilt from source

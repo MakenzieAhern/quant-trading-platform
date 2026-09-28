@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
-import { formatDecimal, formatPercent } from "../../utils/format";
+import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
 import { experimentApi } from "./api";
 import {
   comparisonConditions,
@@ -23,6 +23,10 @@ type ComparedRun = {
   error?: unknown;
   notReady?: boolean;
 };
+
+function runLabel(job: Experiment, index: number) {
+  return `${index + 1}. ${job.name} · ${formatUtc(job.created_at)}`;
+}
 
 export function ExperimentComparePage() {
   const c = useExperimentCopy();
@@ -88,10 +92,12 @@ function Comparison({ ids }: { ids: string[] }) {
       <div className="experimentNotice" role="alert">
         <h2>{u.incomplete}</h2>
         <ul>
-          {entries?.map((entry) => (
+          {entries?.map((entry, index) => (
             <li key={entry.id}>
               <Link href={`/experiments/${entry.id}`}>
-                {entry.job?.name ?? entry.id}
+                {entry.job
+                  ? runLabel(entry.job, index)
+                  : `${index + 1}. ${entry.id}`}
               </Link>
               :{" "}
               {entry.notReady
@@ -195,9 +201,11 @@ function Comparison({ ids }: { ids: string[] }) {
   const headers = (
     <tr>
       <th scope="col">{u.condition}</th>
-      {completed.map(({ job }) => (
+      {completed.map(({ job }, index) => (
         <th scope="col" key={job.job_id}>
-          <Link href={`/experiments/${job.job_id}`}>{job.name}</Link>
+          <Link href={`/experiments/${job.job_id}`}>
+            {runLabel(job, index)}
+          </Link>
         </th>
       ))}
     </tr>
@@ -286,9 +294,9 @@ function Comparison({ ids }: { ids: string[] }) {
       <section className="experimentPanel">
         <h2>{c.limits}</h2>
         <div className="experimentComparisonLimits">
-          {completed.map(({ id, job, result }) => (
+          {completed.map(({ id, job, result }, index) => (
             <article key={id}>
-              <h3>{job.name}</h3>
+              <h3>{runLabel(job, index)}</h3>
               <p>
                 {job.mode === "synthetic_demo"
                   ? c.warningDemo
@@ -301,7 +309,12 @@ function Comparison({ ids }: { ids: string[] }) {
                   </li>
                 ))}
               </ul>
-              <Link href={`/experiments/${id}`}>{c.open}</Link>
+              <Link
+                href={`/experiments/${id}`}
+                aria-label={`${c.open}: ${runLabel(job, index)}`}
+              >
+                {c.open}
+              </Link>
             </article>
           ))}
         </div>
