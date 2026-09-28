@@ -1,5 +1,50 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 isolated current-head historical flow during GitHub hold
+
+At code head `f75dd95`, production backend/frontend images ran against an
+owned private test network, tmpfs PostgreSQL/Redis/product state, and read-only
+repository data and audited historical archive. Fresh Alembic upgrade reached
+`20260924_0016`; the test API and frontend returned HTTP 200. The original
+Compose services, accounts, volumes and frozen research were not used for
+these writes.
+
+In the actual in-app browser, guided historical study A
+`dd3ab840-fc90-4885-98e1-3484e5e18c1a` completed 293/293 including
+warmup for 2011-03-01 through 2011-03-22. It had zero fills because 20
+approved proposals had no in-window next session; its preview was dated
+2011-03-22 for 2011-03-23 and was not submitted to an account. Studies B
+`47d883ec-f650-45fd-aa91-8962405f524f` and C
+`e742b89e-6bc2-45cb-b6f4-8165e9a91255` each completed 294/294 for
+2011-03-01 through 2011-03-23 with six historical fills. Their saved
+comparison agreed on data SHA, scope, dates, capital, risk and strategy;
+only the simulated commission rate differed (`0.0003` versus `0.002`).
+B cost CNY 30.1866 and ended at CNY 99964.8134; C cost CNY 37.5066
+and ended at CNY 99957.4934. The comparison page flagged the cost mismatch
+and did not rank or recommend either study. Reload preserved the comparison.
+
+The result-to-paper handoff from A copied settings but did not create an
+account or order. After explicitly extending the independent replay through
+2011-03-23, account `311ed27f-ec9e-43ef-94db-5a1c214892ed` was created
+with no orders, then deliberately started. It stopped after 17 market
+sessions: 20 distinct simulated orders, six fills, final cash CNY
+81309.8134 and equity CNY 99964.8134, matching B's financial result.
+Its persisted 2011-03-22 plan named 2011-03-23 as the next accepted
+session, `submitted_to_account=true` and the same account ID. A page reload
+restored the stopped status, plan dates and final balances.
+
+After recording these results, the three agent-created browser tabs were
+closed and only the four exact `qtp-v12-e2e-20260929-*` containers were
+stopped. Their scratch PostgreSQL/Redis used tmpfs, so that disposable test
+state ended with them; the stopped containers and images were retained.
+The original four Compose services remained up and the main API health
+check still passed. No Docker volume, image or original database was removed.
+
+This is bounded historical/local integration evidence on an isolated
+disposable database, not native Chrome, saved current-head media, a genuine
+after-start market-data receipt, forward paper trading, full U7/M4/M5,
+GitHub CI or v1.2 release acceptance. No Official OOS was rerun.
+
 ## 2026-09-29 terminal paper-stream recovery after transient snapshot failure
 
 The paper detail previously treated a WebSocket terminal-status notification

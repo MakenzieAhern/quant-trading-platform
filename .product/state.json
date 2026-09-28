@@ -1,7 +1,15 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T20:43:52Z",
+  "updated_at_utc": "2026-09-28T20:57:57Z",
+  "isolated_current_head_historical_e2e": {
+    "status": "PASS_BOUNDED_ISOLATED_IAB_HISTORICAL_NOT_FORWARD_OR_RELEASE",
+    "head": "f75dd95",
+    "studies": "A dd3ab840 completed 293/293 through 2011-03-22, zero fills and 20 approved next-session preview proposals; matched-window B 47d883ec and C e742b89e each completed 294/294 through 2011-03-23 with six fills. Their saved UI comparison matched data SHA/scope/dates/capital/risk/strategy and differed only in commission 0.0003 versus 0.002; exact costs 30.1866 versus 37.5066 CNY and equity 99964.8134 versus 99957.4934 CNY. Comparison persisted after reload",
+    "paper": "Independent handoff account 311ed27f-ec9e-43ef-94db-5a1c214892ed was CREATED with zero orders, explicitly started, then STOPPED at 2011-03-23 after 17 sessions, 20 distinct simulated orders and six fills. Final cash 81309.8134/equity 99964.8134 CNY matched study B; persisted 2011-03-22 plan targeted 2011-03-23 and was submitted to this account. Reload restored stopped status and balances",
+    "safety": "Current-head release images on owned private scratch network with tmpfs PostgreSQL/Redis/product state; repository data and audited research archive mounted read-only. Three owned browser tabs closed and four exact labeled scratch containers stopped after evidence capture; stopped objects/images retained and only disposable tmpfs test state ended. Original four Compose services stayed up and main API health passed; original database/volumes/accounts, frozen research and Official OOS untouched",
+    "limits": "In-app browser, not native Chrome; no saved current-head media, native zoom/screen-reader, genuine current-data after-start receipt, forward paper run, full U7/M4/M5, GitHub CI or v1.2 release PASS"
+  },
   "paper_terminal_rehydration": {
     "status": "PASS_BOUNDED_COMPONENT_TESTS_NOT_BROWSER_FAULT_INJECTION",
     "cause": "Terminal WebSocket notification disabled retries before the authoritative REST snapshot; transient HTTP503 then left final account and ledger unavailable until manual reload",
