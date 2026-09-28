@@ -32,7 +32,7 @@ export function MarketUpdatesPanel() {
   const [revision, setRevision] = useState(0);
   const [offset, setOffset] = useState(0);
   const [jobId, setJobId] = useState(selectedFromUrl);
-  const createdFocus = useRef<string | null>(null);
+  const pendingTaskFocus = useRef<string | null>(null);
   const taskFocus = useRef<HTMLElement>(null);
   const caps = useApiResource(
     (signal) => marketUpdateApi.capabilities(signal),
@@ -48,12 +48,20 @@ export function MarketUpdatesPanel() {
     return () => window.removeEventListener("popstate", changed);
   }, []);
   useEffect(() => {
-    if (jobId && createdFocus.current === jobId && taskFocus.current) {
+    if (jobId && pendingTaskFocus.current === jobId && taskFocus.current) {
       if (document.activeElement === document.body) taskFocus.current.focus();
-      createdFocus.current = null;
+      pendingTaskFocus.current = null;
     }
   }, [jobId]);
   const refresh = () => setRevision((value) => value + 1);
+  const openAndFocusTask = (id: string, shouldFocus: boolean) => {
+    pendingTaskFocus.current = shouldFocus ? id : null;
+    if (!openUpdateJob(id)) pendingTaskFocus.current = null;
+    else if (pendingTaskFocus.current === jobId && taskFocus.current) {
+      taskFocus.current.focus();
+      pendingTaskFocus.current = null;
+    }
+  };
   return (
     <section className="marketUpdates" aria-label={c.title}>
       <header>
@@ -75,12 +83,7 @@ export function MarketUpdatesPanel() {
         <UpdateRequestForm
           capabilities={caps.data}
           onCreated={(id, shouldFocus) => {
-            createdFocus.current = shouldFocus ? id : null;
-            if (!openUpdateJob(id)) createdFocus.current = null;
-            else if (createdFocus.current === jobId && taskFocus.current) {
-              taskFocus.current.focus();
-              createdFocus.current = null;
-            }
+            openAndFocusTask(id, shouldFocus);
             refresh();
           }}
         />
@@ -134,7 +137,7 @@ export function MarketUpdatesPanel() {
           <UpdateTaskDetail
             key={jobId}
             jobId={jobId}
-            onOpen={openUpdateJob}
+            onOpen={openAndFocusTask}
             focusRef={taskFocus}
           />
         ) : (

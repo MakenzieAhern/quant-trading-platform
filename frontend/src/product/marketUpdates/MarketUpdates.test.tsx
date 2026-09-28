@@ -333,6 +333,220 @@ describe("explicit incremental request workflow", () => {
       screen.getByText(/cannot be used for execution or forward acceptance/),
     ).toBeInTheDocument();
   });
+  it("keeps cancellation focused and moves to the terminal task status", async () => {
+    const running: UpdateJob = {
+      ...job,
+      status: "RUNNING",
+      phase: "FETCHING_RAW_CANDIDATES",
+      completed_at: null,
+      summary: null,
+    };
+    const cancelled: UpdateJob = {
+      ...running,
+      status: "CANCELLED",
+      phase: "CANCELLED",
+      cancel_requested: true,
+    };
+    let current = running;
+    vi.mocked(marketUpdateApi.get).mockImplementation(async () => current);
+    let finish!: (value: UpdateJob) => void;
+    const cancel = vi
+      .spyOn(marketUpdateApi, "cancel")
+      .mockImplementation(() => new Promise((resolve) => (finish = resolve)));
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const button = await screen.findByRole("button", {
+      name: "Request cancellation",
+    });
+    button.focus();
+    await userEvent.keyboard("{Enter}{Enter}");
+    expect(cancel).toHaveBeenCalledTimes(1);
+    expect(button).toHaveFocus();
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(button);
+    expect(cancel).toHaveBeenCalledTimes(1);
+    current = cancelled;
+    await act(async () => finish(cancelled));
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: "Cancelled" })).toHaveFocus(),
+    );
+  });
+  it("does not steal cancellation focus after moving to Refresh", async () => {
+    const running: UpdateJob = { ...job, status: "RUNNING" };
+    const cancelled: UpdateJob = {
+      ...running,
+      status: "CANCELLED",
+      cancel_requested: true,
+    };
+    let current = running;
+    vi.mocked(marketUpdateApi.get).mockImplementation(async () => current);
+    let finish!: (value: UpdateJob) => void;
+    vi.spyOn(marketUpdateApi, "cancel").mockImplementation(
+      () => new Promise((resolve) => (finish = resolve)),
+    );
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const button = await screen.findByRole("button", {
+      name: "Request cancellation",
+    });
+    button.focus();
+    await userEvent.keyboard("{Enter}");
+    const refresh = within(
+      screen.getByRole("region", { name: `Task: ${job.job_id}` }),
+    ).getAllByRole("button", { name: "Refresh" })[0];
+    refresh.focus();
+    current = cancelled;
+    await act(async () => finish(cancelled));
+    await screen.findByRole("heading", { name: "Cancelled" });
+    expect(refresh).toHaveFocus();
+  });
+  it("does not repeat cancellation once the server records the request", async () => {
+    vi.mocked(marketUpdateApi.get).mockResolvedValue({
+      ...job,
+      status: "RUNNING",
+      cancel_requested: true,
+    });
+    const cancel = vi.spyOn(marketUpdateApi, "cancel");
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const button = await screen.findByRole("button", {
+      name: "Request cancellation",
+    });
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    button.focus();
+    await userEvent.keyboard("{Enter}");
+    await userEvent.click(button);
+    expect(cancel).not.toHaveBeenCalled();
+    expect(button).toHaveFocus();
+  });
+  it("keeps retry focused during an uncertain response without repeating it", async () => {
+    vi.mocked(marketUpdateApi.get).mockResolvedValue({
+      ...job,
+      status: "FAILED",
+      phase: "FAILED",
+      error_code: "PROVIDER_TIMEOUT",
+      summary: null,
+    });
+    let fail!: (reason: unknown) => void;
+    const retry = vi
+      .spyOn(marketUpdateApi, "retry")
+      .mockImplementation(() => new Promise((_, reject) => (fail = reject)));
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const button = await screen.findByRole("button", {
+      name: "Retry this unsuccessful task",
+    });
+    button.focus();
+    await userEvent.keyboard("{Enter}{Enter}");
+    expect(retry).toHaveBeenCalledTimes(1);
+    expect(button).toHaveFocus();
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(button);
+    expect(retry).toHaveBeenCalledTimes(1);
+    await act(async () => fail(new ApiError(503, "unavailable")));
+    expect(button).toHaveFocus();
+    expect(
+      screen.getByText(/Request could not be completed/),
+    ).toBeInTheDocument();
+  });
+  it("focuses the linked retry task after the original button disappears", async () => {
+    const failed: UpdateJob = {
+      ...job,
+      status: "FAILED",
+      phase: "FAILED",
+      error_code: "PROVIDER_TIMEOUT",
+      summary: null,
+    };
+    const linked: UpdateJob = {
+      ...failed,
+      job_id: "ab000000-0000-4000-8000-000000000002",
+      status: "QUEUED",
+      phase: "QUEUED",
+      error_code: null,
+      retry_of: job.job_id,
+    };
+    vi.mocked(marketUpdateApi.get).mockImplementation(async (id) =>
+      id === linked.job_id ? linked : failed,
+    );
+    vi.spyOn(marketUpdateApi, "retry").mockResolvedValue(linked);
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const retry = await screen.findByRole("button", {
+      name: "Retry this unsuccessful task",
+    });
+    retry.focus();
+    await userEvent.keyboard("{Enter}");
+    const linkedTask = await screen.findByRole("region", {
+      name: `Task: ${linked.job_id}`,
+    });
+    await waitFor(() => expect(linkedTask).toHaveFocus());
+  });
+  it("does not steal focus from an outer control when a retry opens its child", async () => {
+    const failed: UpdateJob = {
+      ...job,
+      status: "FAILED",
+      phase: "FAILED",
+      error_code: "PROVIDER_TIMEOUT",
+      summary: null,
+    };
+    const linked: UpdateJob = {
+      ...failed,
+      job_id: "ab000000-0000-4000-8000-000000000002",
+      status: "QUEUED",
+      phase: "QUEUED",
+      error_code: null,
+      retry_of: job.job_id,
+    };
+    vi.mocked(marketUpdateApi.get).mockImplementation(async (id) =>
+      id === linked.job_id ? linked : failed,
+    );
+    let finish!: (value: UpdateJob) => void;
+    vi.spyOn(marketUpdateApi, "retry").mockImplementation(
+      () => new Promise((resolve) => (finish = resolve)),
+    );
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const retry = await screen.findByRole("button", {
+      name: "Retry this unsuccessful task",
+    });
+    retry.focus();
+    await userEvent.keyboard("{Enter}");
+    const outerRefresh = screen.getAllByRole("button", { name: "Refresh" })[0];
+    outerRefresh.focus();
+    await act(async () => finish(linked));
+    await screen.findByRole("region", { name: `Task: ${linked.job_id}` });
+    expect(outerRefresh).toHaveFocus();
+  });
+  it("focuses the read error if a refresh removes the active cancel button", async () => {
+    const running: UpdateJob = {
+      ...job,
+      status: "RUNNING",
+      phase: "FETCHING_RAW_CANDIDATES",
+      summary: null,
+    };
+    vi.mocked(marketUpdateApi.get)
+      .mockResolvedValueOnce(running)
+      .mockRejectedValue(new ApiError(503, "unavailable"));
+    vi.spyOn(marketUpdateApi, "cancel").mockResolvedValue({
+      ...running,
+      cancel_requested: true,
+    });
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const cancel = await screen.findByRole("button", {
+      name: "Request cancellation",
+    });
+    cancel.focus();
+    await userEvent.keyboard("{Enter}");
+    const detail = screen.getByRole("region", {
+      name: `Task: ${job.job_id}`,
+    });
+    await waitFor(() =>
+      expect(
+        within(detail).getByText(/Request could not be completed/),
+      ).toHaveFocus(),
+    );
+  });
   it("retry uses backend child semantics and source denial prevents further task requests", async () => {
     const failed = {
       ...job,

@@ -1,5 +1,43 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 U5 update-task command focus and Chrome read-only check
+
+The saved update-task Cancel/Retry buttons were natively disabled during a
+request, which could drop keyboard focus. A completed cancellation or failed
+task read could then remove the focused button; successful Retry opened a
+linked task on the same pathname without handing focus to that new detail.
+Regression tests first failed on the pending controls. The existing request
+lock remains authoritative, Cancel is additionally guarded after the server
+records `cancel_requested`, and source-denied/receipt-blocked Retry remains
+natively disabled. Pending controls use `aria-disabled`; focus moves to the
+terminal status, read error or linked task only when the command still owned
+focus. Moving focus to Refresh or another outer control is respected.
+
+The focused suite passed 24/24 and the full frontend passed 353/353 across
+37 files. ESLint, TypeScript, changed-file Prettier and the 129-module
+production build passed. Independent read-only review found no actionable
+regression after the linked-task and read-error cases were added. In actual
+Chrome, a saved failed update task was reopened by GET only: its status
+heading was focusable, Retry had the expected enabled state, and the browser
+reported no warning/error. No Retry/Cancel POST or provider acquisition was
+made against the original application.
+
+The dynamic pending/terminal and linked-Retry focus transitions are proven by
+component tests, **not** by a live browser command or screen-reader speech.
+This does not establish U5/M4/M5 acceptance or source rights. Original
+services, volumes, ledgers, frozen `.research` and Official OOS were not
+changed; GitHub CI, review, merge and release remain on hold.
+
+## 2026-09-29 native Chrome zoom tooling boundary
+
+The Chrome browser extension opened the local workbench at 1728×911 CSS
+pixels with device-pixel ratio 1. Sending a page-level Ctrl+Equal left both
+width and ratio unchanged, so it did **not** produce native 200% zoom.
+The separate Windows computer-control path stopped before input because it
+could not verify the current Chrome URL for policy enforcement. This is a
+tooling boundary, not evidence that the app passed or failed 200% zoom.
+No shortcut repetition, viewport-proxy promotion or safety bypass followed.
+
 ## 2026-09-29 experiment command focus and local operation during GitHub hold
 
 Experiment Cancel/Retry used native-disabled pending buttons, so keyboard focus

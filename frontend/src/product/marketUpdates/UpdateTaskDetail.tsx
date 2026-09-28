@@ -13,7 +13,7 @@ export function UpdateTaskDetail({
   focusRef,
 }: {
   jobId: string;
-  onOpen: (id: string) => void;
+  onOpen: (id: string, shouldFocus: boolean) => void;
   focusRef: Ref<HTMLElement>;
 }) {
   const c = useUpdateCopy();
@@ -24,6 +24,9 @@ export function UpdateTaskDetail({
   const [action, setAction] = useState(false);
   const active = useRef(true);
   const locked = useRef(false);
+  const focusedCommand = useRef<HTMLButtonElement | null>(null);
+  const statusFocus = useRef<HTMLHeadingElement>(null);
+  const errorFocus = useRef<HTMLParagraphElement>(null);
   useEffect(() => {
     active.current = true;
     return () => {
@@ -56,8 +59,17 @@ export function UpdateTaskDetail({
       window.clearTimeout(timer);
     };
   }, [jobId, revision]);
+  useEffect(() => {
+    const button = focusedCommand.current;
+    if (button && !button.isConnected) {
+      if (document.activeElement === document.body)
+        (statusFocus.current ?? errorFocus.current)?.focus();
+      focusedCommand.current = null;
+    }
+  }, [job?.status, error]);
   async function command(kind: "cancel" | "retry") {
-    if (locked.current) return;
+    if (locked.current || (kind === "cancel" && job?.cancel_requested)) return;
+    const trigger = document.activeElement;
     locked.current = true;
     setAction(true);
     setError(null);
@@ -67,7 +79,12 @@ export function UpdateTaskDetail({
           ? await marketUpdateApi.cancel(jobId)
           : await marketUpdateApi.retry(jobId);
       if (!active.current) return;
-      if (kind === "retry") onOpen(result.job_id);
+      if (kind === "retry")
+        onOpen(
+          result.job_id,
+          trigger instanceof HTMLButtonElement &&
+            document.activeElement === trigger,
+        );
       else {
         setJob(result);
         setRevision((value) => value + 1);
@@ -87,6 +104,13 @@ export function UpdateTaskDetail({
       aria-label={`${c.task}: ${jobId}`}
       tabIndex={-1}
       ref={focusRef}
+      onFocusCapture={(event) => {
+        if (event.target instanceof HTMLButtonElement)
+          focusedCommand.current = event.target;
+      }}
+      onBlurCapture={() => {
+        focusedCommand.current = null;
+      }}
     >
       <h3>{c.task}</h3>
       <code>{jobId}</code>
@@ -103,11 +127,15 @@ export function UpdateTaskDetail({
       </button>
       {!job && !error && <p role="status">{c.loading}</p>}
       {error !== null && (
-        <p role="alert">{updateError(error, i18n.language)}</p>
+        <p ref={errorFocus} role="alert" tabIndex={-1}>
+          {updateError(error, i18n.language)}
+        </p>
       )}
       {job && (
         <>
-          <h4>{c.statuses[job.status]}</h4>
+          <h4 ref={statusFocus} tabIndex={-1}>
+            {c.statuses[job.status]}
+          </h4>
           <p>
             {job.configuration.start_date} → {job.configuration.end_date} ·
             Asia/Shanghai
@@ -140,7 +168,7 @@ export function UpdateTaskDetail({
             <button
               type="button"
               className="button secondary"
-              disabled={action || job.cancel_requested}
+              aria-disabled={action || job.cancel_requested}
               onClick={() => void command("cancel")}
             >
               {action ? c.working : c.cancel}
@@ -153,13 +181,11 @@ export function UpdateTaskDetail({
               <button
                 type="button"
                 className="button secondary"
-                disabled={
-                  action ||
-                  [
-                    "SOURCE_ACCESS_DENIED",
-                    "RECEIPT_PERSISTENCE_BLOCKED",
-                  ].includes(job.error_code ?? "")
-                }
+                disabled={[
+                  "SOURCE_ACCESS_DENIED",
+                  "RECEIPT_PERSISTENCE_BLOCKED",
+                ].includes(job.error_code ?? "")}
+                aria-disabled={action}
                 onClick={() => void command("retry")}
               >
                 {action ? c.working : c.retry}
