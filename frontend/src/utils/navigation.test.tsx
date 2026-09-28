@@ -5,6 +5,7 @@ import { Link } from "../components/Link";
 import {
   navigate,
   navigateBack,
+  replaceUrl,
   useNavigationGuard,
   usePathname,
 } from "./navigation";
@@ -135,6 +136,20 @@ describe("shared navigation guard", () => {
     const go = vi.spyOn(window.history, "go");
     navigateBack("/experiments");
     expect(window.location.pathname).toBe("/experiments");
+    expect(go).not.toHaveBeenCalled();
+    go.mockRestore();
+  });
+
+  it("does not certify unknown URL changes while replacing a detail URL", () => {
+    window.history.replaceState({}, "", "/experiments");
+    navigate("/markets#dataset=known&security=CN-A:SSE:600000");
+    window.history.replaceState(window.history.state, "", "/markets#unknown");
+    replaceUrl("/markets");
+    expect(window.history.state.quantNavigationUrl).not.toBe(
+      window.location.href,
+    );
+    const go = vi.spyOn(window.history, "go").mockImplementation(() => {});
+    navigateBack("/experiments");
     expect(go).not.toHaveBeenCalled();
     go.mockRestore();
   });

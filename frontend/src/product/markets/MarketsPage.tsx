@@ -4,7 +4,7 @@ import { Pagination } from "../../components/Pagination";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc } from "../../utils/format";
-import { navigate } from "../../utils/navigation";
+import { navigate, replaceUrl } from "../../utils/navigation";
 import { Dialog } from "../Dialog";
 import { usePageDataContext } from "../dataContext";
 import { explainExperimentCode } from "../experiments/codes";
@@ -227,11 +227,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   const closeDetail = () => {
     if (window.history.state?.productMarketDetail) window.history.back();
     else {
-      window.history.replaceState(
-        window.history.state,
-        "",
-        window.location.pathname + window.location.search,
-      );
+      replaceUrl(window.location.pathname + window.location.search);
       setDetailHash("");
     }
   };

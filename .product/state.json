@@ -1,7 +1,15 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T23:31:53Z",
+  "updated_at_utc": "2026-09-28T23:44:32Z",
+  "global_watchlist_search_detail_audit": {
+    "status": "PASS_BOUNDED_ACTUAL_CHROME_KEYBOARD_GET_ONLY_NOT_FULL_U5_M4",
+    "parent_head": "24f5886",
+    "defect": "Command-search saved-security link filtered /markets by dataset and exact security ID but omitted the supported detail hash, so a same-route selection did not open the selected detail and focus returned to topbar search",
+    "fix": "Append the existing dataset/security detail hash while retaining the list filter; reuse MarketsPage exact-ID registered-source resolver and modal focus. Shared replaceUrl synchronizes managed URL metadata on owned hash close only when it matched the pre-close URL; Markets and strategy drawers reuse it",
+    "proof": "Extended command-search regression red before fix, green7/7; managed-return regression red before helper then green, unknown-native-URL guard and direct-detail/fail-closed tests green; full frontend366/366, ESLint, TypeScript/Vite129 build and changed-file Prettier PASS. Actual Chrome keyboard Return from /markets opened saved Ping An Bank CN-A:SZSE:000001 named dialog with visible focused Close; Escape restored exact-ID filtered list. Independent read-only review found the history metadata issue before helper",
+    "limits": "GET-only agent walkthrough; no provider or user-data POST. Browser tool did not expose history.state; focused test covers it. No saved current-head media, native screen-reader speech, 200pct zoom, statistical first-click latency, independent novice, complete U5/M4/M5 or GitHub CI/release. One separate fresh Chrome strategy first click passed but does not resolve older intermittent anomaly"
+  },
   "market_history_task_focus_audit": {
     "status": "PASS_BOUNDED_ACTUAL_CHROME_KEYBOARD_GET_ONLY_NOT_FULL_U5_M4",
     "parent_head": "45cf09e",

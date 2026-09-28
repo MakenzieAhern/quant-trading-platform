@@ -153,7 +153,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                 {watches.data.items.map((item) => (
                   <Link
                     key={`${item.dataset_id}:${item.security_id}`}
-                    href={`/markets?${new URLSearchParams({ dataset: item.dataset_id, q: item.security_id })}`}
+                    href={`/markets?${new URLSearchParams({ dataset: item.dataset_id, q: item.security_id })}#${new URLSearchParams({ dataset: item.dataset_id, security: item.security_id })}`}
                     onClick={onClose}
                   >
                     <span>

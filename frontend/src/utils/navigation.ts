@@ -69,6 +69,19 @@ export function navigate(path: string): boolean {
   return true;
 }
 
+/** Keep managed return entries valid when an owned detail replaces its own URL. */
+export function replaceUrl(path: string): void {
+  const before = window.location.href;
+  const state = window.history.state;
+  window.history.replaceState(
+    state?.quantNavigationUrl === before
+      ? { ...state, quantNavigationUrl: new URL(path, before).href }
+      : state,
+    "",
+    path,
+  );
+}
+
 export function navigateBack(path: string): void {
   const index = historyIndex();
   const url = new URL(path, window.location.href).href;

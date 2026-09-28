@@ -4,7 +4,7 @@ import { ApiError } from "../api/client";
 import { Link } from "../components/Link";
 import { LanguageSelector } from "../components/LanguageSelector";
 import { useApiResource } from "../hooks/useApiResource";
-import { navigate } from "../utils/navigation";
+import { navigate, replaceUrl } from "../utils/navigation";
 import { experimentApi } from "./experiments/api";
 import { readExperimentDraft } from "./experiments/draft";
 import { explainExperimentCode } from "./experiments/codes";
@@ -295,11 +295,7 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
   const closeDrawer = () => {
     if (window.history.state?.productStrategyDrawer) window.history.back();
     else {
-      window.history.replaceState(
-        window.history.state,
-        "",
-        window.location.pathname + window.location.search,
-      );
+      replaceUrl(window.location.pathname + window.location.search);
       setSelected(null);
     }
   };

@@ -102,7 +102,7 @@ describe("bounded server command search", () => {
       ),
     ).not.toBeInTheDocument();
   });
-  it("searches older server records instead of filtering recent entries and preserves dataset links", async () => {
+  it("searches older server records and opens the exact saved security", async () => {
     vi.mocked(experimentApi.list).mockImplementation(
       async (_signal, _limit, offset, q) => ({
         items:
@@ -150,9 +150,13 @@ describe("bounded server command search", () => {
     const url = new URL(watch.getAttribute("href")!, "http://local");
     expect(url.searchParams.get("dataset")).toBe(demo.dataset_id);
     expect(url.searchParams.get("q")).toBe(watched.security_id);
+    const detail = new URLSearchParams(url.hash.slice(1));
+    expect(detail.get("dataset")).toBe(demo.dataset_id);
+    expect(detail.get("security")).toBe(watched.security_id);
     await userEvent.click(watch);
     expect(close).toHaveBeenCalledOnce();
     expect(location.search).toContain(encodeURIComponent(demo.dataset_id));
+    expect(location.hash).toBe(url.hash);
   });
   it("loads the next bounded page with unchanged query instead of downloading all results", async () => {
     vi.mocked(experimentApi.list).mockImplementation(

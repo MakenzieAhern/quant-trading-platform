@@ -9,6 +9,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "../../i18n";
+import { navigate, navigateBack } from "../../utils/navigation";
 import { writePresentationSetting } from "../../utils/presentationStorage";
 import { PREFERENCES_KEY } from "../preferences";
 import { ProductDataProvider } from "../ProductDataProvider";
@@ -476,6 +477,22 @@ describe("historical cache markets", () => {
       "This security link could not be opened",
     );
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("keeps managed return history after closing a search-linked detail", async () => {
+    window.history.replaceState({}, "", "/strategies");
+    navigate(
+      `/markets?${new URLSearchParams({ dataset: dataset.dataset_id, q: security.security_id })}#${new URLSearchParams({ dataset: dataset.dataset_id, security: security.security_id })}`,
+    );
+    render(<MarketsPage />);
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Close" }));
+    expect(window.location.hash).toBe("");
+    expect(window.history.state.quantNavigationUrl).toBe(window.location.href);
+    const go = vi.spyOn(window.history, "go").mockImplementation(() => {});
+    navigateBack("/strategies");
+    expect(go).toHaveBeenCalledWith(-1);
+    go.mockRestore();
   });
 
   it("saves once while pending and reopens the database-backed watchlist, then removes it", async () => {

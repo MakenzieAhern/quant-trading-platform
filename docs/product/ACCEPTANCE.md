@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 global search to saved-security detail — bounded Chrome
+
+From `/markets`, keyboard Return on the existing saved 平安银行 result in global
+search formerly closed the palette and filtered the table, but did not open the
+selected security's detail; focus returned to the topbar search button. The
+link now includes the already-supported effective-dated dataset/security
+detail hash while retaining the dataset and exact-ID list filter. The market
+page's existing resolver still requires a registered available dataset and a
+valid exact CN-A security ID, failing visibly when it cannot resolve one.
+Review also found that closing a managed hash detail could leave its saved
+navigation URL stale; the shared replace helper now updates that marker only
+when it matched the URL being replaced. Markets and strategy drawers reuse it,
+without blessing an unknown native hash change.
+
+An extended command-search regression failed before the link change and passed
+7/7 afterward. A managed-return regression also failed before the helper and
+passed afterward; the unknown-URL guard and direct-detail/fail-closed tests
+remained green. Full frontend tests passed 366/366, ESLint, TypeScript/Vite 129-module build
+and changed-file Prettier passed. In actual Chrome on the same `/markets`
+route, Enter opened the named 平安银行 · 000001 detail, focused its visible Close
+button, and Escape returned to the exact-ID filtered list. The historical
+archive cutoff remained 2025-12-31; no market acquisition or user-data POST
+was sent. A separate first pointer click on the strategy card opened its
+drawer and focused Close in one fresh Chrome trial, but the earlier intermittent
+cold-click/p95 question is not resolved by that single pass. The browser
+tool did not expose `history.state` for direct inspection; the focused test
+covers the managed marker and return behavior.
+
+This is agent-operated GET-only keyboard/visual evidence, not saved current-head
+media, native screen-reader speech, 200% zoom, statistical click latency,
+independent novice acceptance, complete U5/M4/M5 or GitHub CI/release.
+
 ## 2026-09-29 data-center saved task keyboard focus — bounded Chrome
 
 The history `Open task` button bypassed the existing focus handoff. A keyboard
