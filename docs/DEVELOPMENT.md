@@ -14,7 +14,7 @@ make build
 make down
 ```
 
-`make up` waits for database/backend health and applies migrations. `make down` preserves named application volumes. `make test` builds locked images and runs all suites using `compose.test.yml`: a different project, no published database port, and temporary PostgreSQL storage. Its exit trap removes only this disposable test project. Run one test invocation at a time. Lint/build use the same pinned images without starting the application database.
+`make up` waits for database/backend health and applies migrations. `make down` preserves named application volumes. `make test` builds locked images and runs all suites using `compose.test.yml`: a different project, no published database port, and temporary PostgreSQL storage. Its exit trap stops the disposable test service without `down --volumes`; the test database is tmpfs and does not persist across stops. Run one test invocation at a time. Lint/build use the same pinned images without starting the application database.
 
 The integration suites truncate tables; direct pytest execution must target a disposable database. Prefer `make test`. The backend suite now exits before collection unless `APP_ENV=test` and `DATABASE_URL` names `quant_test` or `quant_test_*`. Never point direct tests at a database containing demonstration or personal history; the name guard is a last line of defense, not a replacement for checking the actual target.
 
