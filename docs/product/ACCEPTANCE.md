@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 historical paper crash after persisted fills — bounded local check
+
+At executable head `3e621a1`, a uniquely owned backend used scratch tmpfs
+`quant_test` PostgreSQL/Redis and the accepted historical archive read-only.
+Its 2011-03-23 replay account was still `RUNNING` with six committed fills and
+six positions when only the scratch backend received `SIGKILL`. The original
+123 SQL events retained the same SHA-256 after two actual starts. Startup
+appended one `INTERRUPTED` event (124 total); the second start added none.
+Both post-restart HTTP snapshots matched the pre-crash SQL ledger's seven
+listed portfolio values, six listed fields per position and the multiset of
+eight listed fill attributes, including order IDs. The final event sequence
+was 124. Starting the interrupted account returned 409 twice and appended no
+event. This does not establish a distinct fill-level ID or entire object
+identity. Earlier zero-fill pending-order restart evidence is separate; this
+run had no pending order at the freeze.
+
+The outside-Git result in `product-evidence/v1.2/m4/20260929-3e621a1-historical-fill-crash-rest-snapshot.json`
+and its adjacent repeatable script record the exact prefix checksum and limits.
+The scratch containers/network were removed; images and original volumes
+remained. The four original Compose
+services stayed up, main database read-only counts remained 5/417/8, and
+frozen archive marker/manifest hashes matched the prior checkpoint. This is
+not genuine pre-loss ledger restoration, lawful new-market forward evidence,
+independent backup, full U7/M4/M5, GitHub CI or release acceptance.
+
 ## 2026-09-29 current-code local release and chart checks during GitHub CI hold
 
 At executable code head `3e621a1`, all three Compose configurations passed

@@ -1,13 +1,20 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T21:52:38Z",
+  "updated_at_utc": "2026-09-28T22:27:41Z",
   "local_current_code_release_smoke": {
     "status": "PASS_BOUNDED_LOCAL_NOT_GITHUB_CI_OR_FULL_RELEASE",
     "code_head": "3e621a1b519637e7c9936098527eada064dbd5a2",
     "proof": "Three Compose configs valid; unique frontend production image served /, /help and /markets with HTTP200. Unique backend production image used private-network tmpfs quant_test PostgreSQL and Redis: Alembic head 20260924_0016 -> baseline 20260904_0001 -> head, check, production paper-mode /api/health and demo-available/archive-unmounted capabilities PASS. Owned scratch containers/network stopped; images retained. Original four services remained running, Redis PONG, main database read-only counts paper sessions5/events417/research jobs8 unchanged",
     "chart_browser": "At the same executable code head, saved historical result chart keyboard paging settled 1-100 -> 101-200 -> 201-293 of 293; final Next disabled, Tab focused Previous, aria-live=polite present and Chrome error log empty. Screenshot and SHA-256 indexed outside Git",
-    "limits": "No GitHub CI, integrated release browser, native screen-reader speech/200pct zoom, measured cold interaction p95, real novice, nonzero-fill abrupt paper restart, lawful current forward receipt, genuine missing-ledger restoration, independent backup or full M4/M5. Static release frontend defaults API URL to live localhost:8000; HTTP-only smoke did not open it in browser. No original database, provider, frozen research or Official OOS write"
+    "limits": "No GitHub CI, integrated release browser, native screen-reader speech/200pct zoom, measured cold interaction p95, real novice, lawful current forward receipt, genuine missing-ledger restoration, independent backup or full M4/M5. A separate bounded nonzero-fill abrupt paper restart passed afterward; it is not part of this release-image smoke or full U7. Static release frontend defaults API URL to live localhost:8000; HTTP-only smoke did not open it in browser. No original database, provider, frozen research or Official OOS write"
+  },
+  "local_historical_fill_crash_restored_snapshot": {
+    "status": "PASS_BOUNDED_ACTUAL_BACKEND_SIGKILL_AFTER_SIX_FILLS_NOT_FULL_U7",
+    "code_head": "3e621a1b519637e7c9936098527eada064dbd5a2",
+    "proof": "Owned bridge/tmpfs quant_test PostgreSQL and Redis, accepted historical archive read-only. 2011-03-23 historical account still RUNNING after six persisted fills and six positions; SQL prefix 123 events SHA256 1915d9a26cfc8f02b282a5b1dc081d6740bbde1c2669174adc7104efc336491b. Actual API SIGKILL/start twice yielded INTERRUPTED, 124 then 124 events, unchanged prefix, no post-409 events and Start409 twice. Both restored HTTP snapshots matched pre-crash SQL portfolio cash 81309.8134/equity 99964.8134 and five other listed money fields, listed position fields and a six-fill attribute multiset with order IDs; last sequence 124. No distinct fill-level ID claim",
+    "safety": "Repeatable outside-Git script and bounded result indexed in product-evidence/v1.2/m4. Scratch containers/network removed; original Compose four services running, main database read-only counts paper5/events417/research8, frozen .freeze.json/manifest SHA256 unchanged. Images and original volumes retained",
+    "limits": "No pending orders at this freeze, so concurrent filled-plus-pending cancellation is not proven here. Scratch ordinary bridge was not egress-blocked. No original paper account or main database write, no genuine lost-ledger restoration, lawful 2026 after-start forward receipt, independent backup, full U7/M4/M5 or GitHub CI/release acceptance"
   },
   "local_paper_event_integrity": {
     "status": "PASS_BOUNDED_LOCAL_REGRESSIONS_NOT_FULL_U7_OR_GITHUB_CI",
