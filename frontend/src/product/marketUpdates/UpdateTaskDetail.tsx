@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type Ref } from "react";
 import { useTranslation } from "react-i18next";
 import { formatUtc } from "../../utils/format";
 import { marketUpdateApi } from "./api";
@@ -10,9 +10,11 @@ const activeStatus = (job: UpdateJob) =>
 export function UpdateTaskDetail({
   jobId,
   onOpen,
+  focusRef,
 }: {
   jobId: string;
   onOpen: (id: string) => void;
+  focusRef: Ref<HTMLElement>;
 }) {
   const c = useUpdateCopy();
   const { i18n } = useTranslation();
@@ -80,7 +82,12 @@ export function UpdateTaskDetail({
     }
   }
   return (
-    <section className="updateDetail" aria-label={`${c.task}: ${jobId}`}>
+    <section
+      className="updateDetail"
+      aria-label={`${c.task}: ${jobId}`}
+      tabIndex={-1}
+      ref={focusRef}
+    >
       <h3>{c.task}</h3>
       <code>{jobId}</code>
       <button

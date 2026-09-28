@@ -24,7 +24,7 @@ const selectedFromUrl = () =>
 function openUpdateJob(id: string) {
   const url = new URL(location.href);
   url.searchParams.set("updateJob", id);
-  navigate(`${url.pathname}${url.search}${url.hash}`);
+  return navigate(`${url.pathname}${url.search}${url.hash}`);
 }
 export function MarketUpdatesPanel() {
   const c = useUpdateCopy();
@@ -32,6 +32,8 @@ export function MarketUpdatesPanel() {
   const [revision, setRevision] = useState(0);
   const [offset, setOffset] = useState(0);
   const [jobId, setJobId] = useState(selectedFromUrl);
+  const createdFocus = useRef<string | null>(null);
+  const taskFocus = useRef<HTMLElement>(null);
   const caps = useApiResource(
     (signal) => marketUpdateApi.capabilities(signal),
     [revision],
@@ -45,6 +47,12 @@ export function MarketUpdatesPanel() {
     window.addEventListener("popstate", changed);
     return () => window.removeEventListener("popstate", changed);
   }, []);
+  useEffect(() => {
+    if (jobId && createdFocus.current === jobId && taskFocus.current) {
+      if (document.activeElement === document.body) taskFocus.current.focus();
+      createdFocus.current = null;
+    }
+  }, [jobId]);
   const refresh = () => setRevision((value) => value + 1);
   return (
     <section className="marketUpdates" aria-label={c.title}>
@@ -66,8 +74,13 @@ export function MarketUpdatesPanel() {
       {caps.data && (
         <UpdateRequestForm
           capabilities={caps.data}
-          onCreated={(id) => {
-            openUpdateJob(id);
+          onCreated={(id, shouldFocus) => {
+            createdFocus.current = shouldFocus ? id : null;
+            if (!openUpdateJob(id)) createdFocus.current = null;
+            else if (createdFocus.current === jobId && taskFocus.current) {
+              taskFocus.current.focus();
+              createdFocus.current = null;
+            }
             refresh();
           }}
         />
@@ -118,7 +131,12 @@ export function MarketUpdatesPanel() {
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
           jobId,
         ) ? (
-          <UpdateTaskDetail key={jobId} jobId={jobId} onOpen={openUpdateJob} />
+          <UpdateTaskDetail
+            key={jobId}
+            jobId={jobId}
+            onOpen={openUpdateJob}
+            focusRef={taskFocus}
+          />
         ) : (
           <p role="alert">{c.invalidJob}</p>
         )
@@ -134,7 +152,7 @@ function UpdateRequestForm({
   onCreated,
 }: {
   capabilities: UpdateCapabilities;
-  onCreated: (id: string) => void;
+  onCreated: (id: string, shouldFocus: boolean) => void;
 }) {
   const c = useUpdateCopy();
   const { i18n } = useTranslation();
@@ -152,6 +170,7 @@ function UpdateRequestForm({
   const [error, setError] = useState<unknown>(null);
   const [storageFailed, setStorageFailed] = useState(false);
   const lock = useRef(false);
+  const submitButton = useRef<HTMLButtonElement>(null);
   const active = useRef(true);
   useEffect(() => {
     active.current = true;
@@ -210,7 +229,7 @@ function UpdateRequestForm({
         active.current &&
         `${location.pathname}${location.search}` === originatingUrl
       )
-        onCreated(job.job_id);
+        onCreated(job.job_id, document.activeElement === submitButton.current);
     } catch (reason) {
       if (active.current) setError(reason);
     } finally {
@@ -305,14 +324,16 @@ function UpdateRequestForm({
             />
             {c.confirm}
           </label>
-          <button
-            className="button"
-            type="submit"
-            disabled={pending || unavailable || !accepted}
-          >
-            {pending ? c.submitting : c.submit}
-          </button>
         </fieldset>
+        <button
+          ref={submitButton}
+          className="button"
+          type="submit"
+          disabled={!pending && (unavailable || !accepted)}
+          aria-disabled={pending}
+        >
+          {pending ? c.submitting : c.submit}
+        </button>
         {error !== null && (
           <p role="alert">
             {error === "validation"

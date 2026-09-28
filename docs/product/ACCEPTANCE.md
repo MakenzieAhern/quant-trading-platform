@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local execution and U5 market-update submit focus
+
+GitHub CI/CD remains on hold until actual account recovery; October 1 is a user
+estimate, not a verified runner date. Local Compose remained available with
+PostgreSQL/Redis/backend healthy, Redis `PONG`, and both the frontend and
+`/api/health` returning HTTP 200. This supports local use and checks, not a
+substitute for pushed-head CI, review, merge or release.
+
+The market-update form had a native-disabled pending Submit inside a disabled
+fieldset, which could drop keyboard focus even though its existing synchronous
+lock already prevented duplicate requests. Submit now remains focusable with
+`aria-disabled` while fields stay disabled and the lock still blocks keyboard
+and pointer repeats. On successful creation, focus moves to the named task
+detail only when Submit still owned focus; an already-open same-identity task
+is handled without relying on a URL change. Deliberate focus movement to
+another control is respected. A red same-ID regression confirmed the old gap.
+The focused suite passed 17/17; full frontend passed 342/342 across 37 files,
+with ESLint, TypeScript, changed-file Prettier and a 129-module release build.
+Independent read-only review identified and verified the same-ID boundary.
+
+No real market-update POST or provider acquisition was made because local
+product-use rights for current A-share data remain unverified. This is a
+bounded component-level focus check, not an actual-browser submission,
+native Chrome/200%/screen-reader proof, full U5/M4/M5 acceptance, current
+forward-data authority or GitHub CI. Original services, volumes, ledgers,
+frozen `.research` and Official OOS were not changed.
+
 ## 2026-09-29 paper command keyboard focus through request and status changes
 
 Start, Pause and Stop previously used native `disabled` while their POST was

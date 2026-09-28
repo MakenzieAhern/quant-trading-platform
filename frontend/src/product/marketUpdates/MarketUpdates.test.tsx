@@ -150,21 +150,78 @@ describe("explicit incremental request workflow", () => {
     );
     render(<MarketUpdatesPanel />);
     await fill();
-    await userEvent.dblClick(
-      screen.getByRole("button", { name: "Request selected raw data" }),
-    );
+    const submit = screen.getByRole("button", {
+      name: "Request selected raw data",
+    });
+    submit.focus();
+    await userEvent.keyboard("{Enter}{Enter}");
     expect(create).toHaveBeenCalledTimes(1);
-    expect(
-      screen.getByRole("button", { name: "Submitting request…" }),
-    ).toBeDisabled();
+    expect(submit).toHaveFocus();
+    expect(submit).toHaveAttribute("aria-disabled", "true");
+    expect(screen.getByLabelText("Security IDs (1–20)")).toBeDisabled();
+    await userEvent.click(submit);
+    expect(create).toHaveBeenCalledTimes(1);
     expect(location.search).toBe("");
     await act(async () => resolve?.(job));
     expect(location.search).toBe(`?updateJob=${job.job_id}`);
+    expect(
+      screen.getByRole("region", { name: `Task: ${job.job_id}` }),
+    ).toHaveFocus();
     expect(
       await screen.findByText(
         "Bounded raw requests completed. Candidate-only status is unchanged.",
       ),
     ).toBeInTheDocument();
+  });
+  it("keeps the submit focus and saved identity after an uncertain response", async () => {
+    let reject!: (reason: unknown) => void;
+    const create = vi
+      .spyOn(marketUpdateApi, "create")
+      .mockImplementation(() => new Promise((_, fail) => (reject = fail)));
+    render(<MarketUpdatesPanel />);
+    await fill();
+    const submit = screen.getByRole("button", {
+      name: "Request selected raw data",
+    });
+    submit.focus();
+    await userEvent.keyboard("{Enter}");
+    expect(submit).toHaveFocus();
+    await act(async () => reject(new ApiError(503, "unavailable")));
+    expect(submit).toHaveFocus();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Check service state and saved task history",
+    );
+    expect(JSON.parse(localStorage.getItem(UPDATE_DRAFT_KEY)!).requestKey).toBe(
+      create.mock.calls[0][1],
+    );
+  });
+  it("does not move focus from another control when a pending task completes", async () => {
+    let resolve!: (value: UpdateJob) => void;
+    vi.spyOn(marketUpdateApi, "create").mockImplementation(
+      () => new Promise((done) => (resolve = done)),
+    );
+    render(<MarketUpdatesPanel />);
+    await fill();
+    screen.getByRole("button", { name: "Request selected raw data" }).focus();
+    await userEvent.keyboard("{Enter}");
+    const refresh = screen.getByRole("button", { name: "Refresh" });
+    refresh.focus();
+    await act(async () => resolve(job));
+    expect(location.search).toBe(`?updateJob=${job.job_id}`);
+    expect(refresh).toHaveFocus();
+  });
+  it("focuses an already open task after a same-identity retry succeeds", async () => {
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    vi.spyOn(marketUpdateApi, "create").mockResolvedValue(job);
+    render(<MarketUpdatesPanel />);
+    await fill();
+    const task = screen.getByRole("region", { name: `Task: ${job.job_id}` });
+    const submit = screen.getByRole("button", {
+      name: "Request selected raw data",
+    });
+    submit.focus();
+    await userEvent.keyboard("{Enter}");
+    await waitFor(() => expect(task).toHaveFocus());
   });
   it("reopens an uncertain submission with the same identity and does not submit automatically", async () => {
     const create = vi
