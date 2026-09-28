@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 terminal-free login startup — read-only causal narrowing
+
+The enabled current-user `QuantTrading-DockerDesktop-AtLogon` task ran at
+2026-09-28 23:41:00 AEST after the 23:40:45 boot and returned task result 0.
+Docker Desktop's backend launched at 23:41:01, exited at 23:41:25, launched
+again at 23:41:43 and exited at 23:41:51. The currently healthy Docker
+backend processes started only at 2026-09-29 04:50:06 AEST after manual
+recovery. Thus the scheduled trigger worked, but task result 0 is **not**
+evidence that Engine, Compose or the UI stayed available after login.
+
+A bounded Application Error/WER check found no matching event in the startup
+window; Task Scheduler Operational logging was disabled and old backend logs
+had rotated. The exact backend exit cause remains unproven. Existing at-logon
+task and Docker Run entry already coexist; no third launcher, task execution,
+reboot or system change was made. M5 terminal-free startup remains NOT_PROVEN.
+At the next genuine login, inspect timestamped Engine/Compose/API/frontend
+availability before any manual intervention, then diagnose the captured exit
+if it recurs. No simulated login or read-only check now can close that gate.
+
 ## 2026-09-29 saved historical plan bilingual keyboard audit — bounded Chrome
 
 At unchanged executable code head `b9089b2`, actual Chrome opened the existing

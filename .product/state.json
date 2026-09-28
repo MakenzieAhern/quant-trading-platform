@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T23:03:50Z",
+  "updated_at_utc": "2026-09-28T23:07:53Z",
+  "terminal_free_login_startup_audit": {
+    "status": "NOT_PROVEN_EXISTING_TRIGGER_RAN_BUT_DOCKER_BACKEND_EXITED",
+    "evidence": "Windows boot 2026-09-28 23:40:45 AEST; enabled current-user QuantTrading-DockerDesktop-AtLogon task ran 23:41:00 and LastTaskResult=0. Docker Desktop backend launched 23:41:01/exited23:41:25, launched23:41:43/exited23:41:51. Currently healthy backend processes started only 2026-09-29 04:50:06 AEST after manual recovery. Task result proves trigger/action success, not persistent Engine, Compose or page availability",
+    "cause_limit": "Bounded Application Error/WER query showed no matching crash event; Task Scheduler Operational logging disabled and old backend logs rotated. Exact backend exit cause is unproven; do not reuse an older menu-quit diagnosis as fact",
+    "next_safe_action": "Do not add another launcher, run the task or reboot merely for QA. At the next genuine login, check timestamped Engine/Compose/API/frontend before manual intervention and capture the Docker exit diagnostics if it fails again",
+    "safety": "Read-only task/process/log inspection; no system setting, Docker data, repository runtime or user state changed"
+  },
   "saved_plan_bilingual_keyboard_audit": {
     "status": "PASS_BOUNDED_ACTUAL_CHROME_GET_ONLY_NOT_FULL_U6_U8_M4",
     "code_head": "b9089b2",
