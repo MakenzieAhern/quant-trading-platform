@@ -1,7 +1,15 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T05:33:20Z",
+  "updated_at_utc": "2026-09-28T18:58:13Z",
+  "exact_head_integrated_local_rehearsal": {
+    "status": "PASS_BOUNDED_EXACT_HEAD_LOCAL_NOT_FULL_PRODUCT_OR_CI",
+    "head": "8e5b9eb",
+    "runtime": "Docker Desktop 4.92.0 launched normally after login; original Compose PostgreSQL/Redis/backend/frontend started in place, healthy/reachable. Manual recovery only, not future automatic-login proof",
+    "proof": "Production backend/frontend images built at exact clean head; isolated labeled mount-free scratch PostgreSQL/Redis/API/web, Alembic head 20260924_0016, API/HTML HTTP200. Actual IAB guided synthetic job 1aef4177-2c97-47df-bc31-ec8bd980df65 completed 340/340, persisted after reload and in scratch SQL, ENZH non-market warning and no executable next-session plan, seven proposals/five fills/two limit rejections, no browser warn/error",
+    "cleanup": "Owned IAB tab closed; exact four labeled zero-mount scratch containers stopped, stopped objects/images retained. Scratch tmpfs data disposable; original Compose volumes/services/account data and .research untouched",
+    "limits": "Bounded current-head integrated production-image browser proof only. Native Chrome/saved release media/200pct/screen-reader/novice/full U1-U8/M0-M5, lawful current-market feed, genuine missing original ledgers and independent backup remain open. GitHub Oct1 is estimate; no remote push/CI/merge/release"
+  },
   "local_offline_runtime_and_submit_recovery": {
     "status": "PASS_BOUNDED_LOCAL_NOT_FULL_PRODUCT_OR_CI",
     "base_head": "e7aba94",

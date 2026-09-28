@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 exact-head local integrated release rehearsal
+
+Docker Desktop 4.92.0 was launched normally after login, without reinstall or
+reset. The existing PostgreSQL, Redis, backend and frontend Compose containers
+were started in place: database, cache and API are healthy; Redis returned
+PONG; `/api/health` and the frontend returned HTTP 200. This proves manual
+recovery today, not automatic startup after a future login.
+
+At clean local head `8e5b9eb`, production backend and frontend images were
+built. A separate labeled, mount-free network used temporary PostgreSQL and
+Redis filesystems and no original project volume. Its fresh database migrated
+to Alembic head `20260924_0016`; scratch production API and frontend served on
+loopback 18000 and 15174. In an actual in-app browser, the guided research
+wizard created one **synthetic demo** job, which completed 340/340 sessions.
+The saved result survived page reload; the scratch database contained exactly
+that one successful job. Both English and Chinese views labeled it non-market
+evidence and withheld an executable rebalance plan because there was no
+accepted next session. The result showed 7 proposals, 5 simulated fills and
+2 open-outside-limit rejections. No browser error/warning was observed.
+
+The owned browser tab and four scratch containers were closed/stopped after
+checking exact IDs, labels and zero mounts. Their temporary database/cache
+contents were disposable; their stopped containers and images were retained.
+The original Compose services, volumes, account records and frozen research
+were not altered. This closes the prior **exact-head integrated image/browser
+rehearsal** gap only. It does not establish native Chrome, saved release media,
+200% zoom/screen-reader, uninvolved novice, lawful current-market feed,
+genuine pre-loss paper ledgers, independent backup, full U1–U8/M0–M5, GitHub
+CI or release readiness. The user-estimated October 1 GitHub recovery remains
+unverified; no push, merge or release occurred.
+
 ## 2026-09-28 local execution without GitHub CI and pending-submit recovery
 
 The original PostgreSQL, Redis, backend and frontend Compose services remained
