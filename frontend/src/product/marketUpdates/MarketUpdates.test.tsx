@@ -50,6 +50,72 @@ async function fill() {
   await userEvent.click(screen.getByRole("checkbox"));
 }
 describe("explicit incremental request workflow", () => {
+  it("keeps active history visible until its terminal update and then stops polling", async () => {
+    vi.useFakeTimers();
+    const running: UpdateJob = { ...job, status: "RUNNING" };
+    let complete!: (value: {
+      items: UpdateJob[];
+      total: number;
+      limit: number;
+      offset: number;
+    }) => void;
+    const list = vi
+      .mocked(marketUpdateApi.list)
+      .mockResolvedValueOnce({
+        items: [running],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (complete = resolve)),
+      );
+    render(<MarketUpdatesPanel />);
+    await act(async () => {});
+    const history = screen.getByRole("region", { name: "Update task history" });
+    expect(within(history).getByRole("status")).toHaveTextContent("Running");
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(list).toHaveBeenCalledTimes(2);
+    expect(within(history).getByRole("status")).toHaveTextContent("Running");
+    await act(async () =>
+      complete({ items: [job], total: 1, limit: 20, offset: 0 }),
+    );
+    expect(within(history).getByRole("status")).toHaveTextContent(
+      "Requests completed",
+    );
+    await act(async () => vi.advanceTimersByTime(10000));
+    expect(list).toHaveBeenCalledTimes(2);
+  });
+  it("hides an unconfirmed active status after a polling error until explicit refresh", async () => {
+    vi.useFakeTimers();
+    const running: UpdateJob = { ...job, status: "RUNNING" };
+    const list = vi
+      .mocked(marketUpdateApi.list)
+      .mockResolvedValueOnce({
+        items: [running],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockRejectedValueOnce(new ApiError(503, "unavailable"))
+      .mockResolvedValueOnce({ items: [job], total: 1, limit: 20, offset: 0 });
+    render(<MarketUpdatesPanel />);
+    await act(async () => {});
+    const history = screen.getByRole("region", { name: "Update task history" });
+    expect(within(history).getByRole("status")).toHaveTextContent("Running");
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(within(history).getByRole("alert")).toBeInTheDocument();
+    expect(within(history).queryByText("Running")).not.toBeInTheDocument();
+    await act(async () => vi.advanceTimersByTime(10000));
+    expect(list).toHaveBeenCalledTimes(2);
+    await act(async () =>
+      fireEvent.click(screen.getByRole("button", { name: "Refresh" })),
+    );
+    expect(within(history).getByRole("status")).toHaveTextContent(
+      "Requests completed",
+    );
+    expect(list).toHaveBeenCalledTimes(3);
+  });
   it("names native candidate observations and its translated scroll region without acquiring data", async () => {
     const create = vi.spyOn(marketUpdateApi, "create");
     window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);

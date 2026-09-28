@@ -1,7 +1,15 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T20:10:20Z",
+  "updated_at_utc": "2026-09-28T20:25:16Z",
+  "active_task_list_consistency": {
+    "status": "PASS_BOUNDED_LOCAL_TESTS_AND_CHROME_GET_ONLY_NOT_LIVE_TRANSITION",
+    "base_head": "a223675",
+    "cause": "Update detail polled but adjacent update history and task-center research/update lists loaded only once, leaving active statuses stale indefinitely",
+    "fix": "Reuse existing resource hook with optional five-second poll only while the returned page contains QUEUED/RUNNING jobs; retain visible page during poll, fail closed with explicit Refresh on read error, abort request/timer on identity change or unmount; use polite status semantics only on changing row text",
+    "proof": "Red update-history regression, then focused30/30 and full frontend356/37 PASS; ESLint, TypeScript, changed-file Prettier and release build129 PASS. Actual Chrome GET-only /tasks and /data rendered existing terminal rows",
+    "limits": "No original-app task/provider POST, live active-to-terminal browser transition or screen-reader speech. No backend/data/authority/OOS changes; full U5/M3/M4/M5, native accessibility, GitHub CI and release remain unverified"
+  },
   "market_update_command_focus_repair": {
     "status": "PASS_BOUNDED_LOCAL_TESTS_AND_CHROME_READ_ONLY_NOT_LIVE_COMMAND",
     "base_head": "0e71d91",

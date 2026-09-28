@@ -1,5 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 U5 and task-center active-list consistency
+
+The Data Center's saved update detail already polled active tasks, but its
+adjacent history and both task-center lists made only one request. They could
+continue to show queued/running after the server had completed a task. The
+existing resource hook now optionally polls only while the returned page has
+queued/running items. A response replaces the visible page without a loading
+flash; a failed read clears the unconfirmed prior status and requires the
+visible Refresh action before another attempt. Dependency changes or unmounts
+abort the old request and timer. Research and raw-candidate task lists use the
+same bounded five-second behavior. Only each row's changing status has polite
+live-region semantics, not the entire list. No polling starts jobs or promotes
+candidate data to execution authority.
+
+The update-history regression failed before the fix (one list request after
+five seconds), then passed with running-to-completed convergence, retained
+list during an in-flight read and no further terminal polling. A second
+regression confirmed a 503 hides stale running status, stops automatic reads
+and recovers only after explicit Refresh. Task-center research/update tests
+also passed. Full frontend: 356/356 across 37 files;
+ESLint, TypeScript, changed-file Prettier and 129-module production build
+passed. Actual Chrome GET-only reopened `/tasks` and `/data` against the
+original local app and displayed persisted terminal rows. No active task was
+created for QA, so live-browser status transitions and actual screen-reader
+speech are not claimed. The
+original database, providers, frozen research and Official OOS were not
+modified. This narrows U5/task recovery, not lawful current-data authority,
+full M3/M4/M5, screen-reader/native zoom, GitHub CI or release acceptance.
+
 ## 2026-09-29 U5 update-task command focus and Chrome read-only check
 
 The saved update-task Cancel/Retry buttons were natively disabled during a

@@ -41,6 +41,13 @@ export function MarketUpdatesPanel() {
   const history = useApiResource(
     (signal) => marketUpdateApi.list(offset, signal),
     [offset, revision, jobId],
+    {
+      intervalMs: 5000,
+      while: (page) =>
+        page.items.some(
+          (job) => job.status === "QUEUED" || job.status === "RUNNING",
+        ),
+    },
   );
   useEffect(() => {
     const changed = () => setJobId(selectedFromUrl());
@@ -101,7 +108,7 @@ export function MarketUpdatesPanel() {
               {history.data.items.map((job) => (
                 <li key={job.job_id}>
                   <div>
-                    <strong>{c.statuses[job.status]}</strong>
+                    <strong role="status">{c.statuses[job.status]}</strong>
                     <span>{job.configuration.security_ids.join(", ")}</span>
                     <span>
                       {job.configuration.start_date} →{" "}

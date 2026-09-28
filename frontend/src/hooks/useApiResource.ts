@@ -9,6 +9,7 @@ interface Resource<T> {
 export function useApiResource<T>(
   load: (signal: AbortSignal) => Promise<T>,
   dependencies: readonly unknown[],
+  poll?: { intervalMs: number; while: (data: T) => boolean },
 ): Resource<T> {
   const [resource, setResource] = useState<
     Resource<T> & { dependencies: readonly unknown[] }
@@ -21,24 +22,35 @@ export function useApiResource<T>(
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
-    void load(controller.signal)
-      .then((data) => {
-        if (active)
+    let timer: number | undefined;
+    function refresh() {
+      void load(controller.signal)
+        .then((data) => {
+          if (!active) return;
           setResource({ dependencies, data, loading: false, error: null });
-      })
-      .catch((reason: unknown) => {
-        if (active && reason instanceof Error && reason.name !== "AbortError") {
-          setResource({
-            dependencies,
-            data: null,
-            loading: false,
-            error: reason,
-          });
-        }
-      });
+          if (poll?.while(data))
+            timer = window.setTimeout(refresh, poll.intervalMs);
+        })
+        .catch((reason: unknown) => {
+          if (
+            active &&
+            reason instanceof Error &&
+            reason.name !== "AbortError"
+          ) {
+            setResource({
+              dependencies,
+              data: null,
+              loading: false,
+              error: reason,
+            });
+          }
+        });
+    }
+    refresh();
     return () => {
       active = false;
       controller.abort();
+      window.clearTimeout(timer);
     };
     // The caller supplies the exact dependency list for its stable loader closure.
     // eslint-disable-next-line react-hooks/exhaustive-deps

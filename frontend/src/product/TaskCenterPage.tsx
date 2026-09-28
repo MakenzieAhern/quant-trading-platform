@@ -7,6 +7,7 @@ import { formatUtc } from "../utils/format";
 import { experimentApi } from "./experiments/api";
 import { useExperimentCopy } from "./experiments/copy";
 import { experimentError } from "./experiments/errors";
+import { isActiveExperiment } from "./experiments/useExperiment";
 import { marketUpdateApi } from "./marketUpdates/api";
 import { updateError, useUpdateCopy } from "./marketUpdates/copy";
 import { useProductCopy } from "./copy";
@@ -22,10 +23,18 @@ export function TaskCenterPage() {
   const research = useApiResource(
     (signal) => experimentApi.list(signal, 20, researchOffset),
     [researchOffset, revision],
+    { intervalMs: 5000, while: (page) => page.items.some(isActiveExperiment) },
   );
   const updates = useApiResource(
     (signal) => marketUpdateApi.list(updateOffset, signal),
     [updateOffset, revision],
+    {
+      intervalMs: 5000,
+      while: (page) =>
+        page.items.some(
+          (job) => job.status === "QUEUED" || job.status === "RUNNING",
+        ),
+    },
   );
   return (
     <div className="productPage">
@@ -56,7 +65,7 @@ export function TaskCenterPage() {
                   <div>
                     <strong>{job.name}</strong>
                     <span>
-                      {e.statuses[job.status]} ·{" "}
+                      <span role="status">{e.statuses[job.status]}</span> ·{" "}
                       {job.mode === "synthetic_demo" ? e.demo : e.historical}
                     </span>
                     <small>{formatUtc(job.created_at)}</small>
@@ -97,8 +106,9 @@ export function TaskCenterPage() {
                   <div>
                     <strong>{job.configuration.security_ids.join(", ")}</strong>
                     <span>
-                      {u.statuses[job.status]} · {job.configuration.start_date}{" "}
-                      → {job.configuration.end_date} (Asia/Shanghai)
+                      <span role="status">{u.statuses[job.status]}</span> ·{" "}
+                      {job.configuration.start_date} →{" "}
+                      {job.configuration.end_date} (Asia/Shanghai)
                     </span>
                     <small>{formatUtc(job.created_at)}</small>
                   </div>

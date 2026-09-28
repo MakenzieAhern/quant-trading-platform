@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { ApiError } from "../api/client";
@@ -10,6 +10,56 @@ import { job as updateJob } from "./marketUpdates/fixtures.test-data";
 import { TaskCenterPage } from "./TaskCenterPage";
 
 describe("task center", () => {
+  it("refreshes only active research and update rows without restarting work", async () => {
+    await i18n.changeLanguage("en-US");
+    vi.useFakeTimers();
+    const research = vi
+      .spyOn(experimentApi, "list")
+      .mockResolvedValueOnce({
+        items: [{ ...researchJob, status: "RUNNING" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockResolvedValueOnce({
+        items: [{ ...researchJob, status: "SUCCEEDED" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      });
+    const updates = vi
+      .spyOn(marketUpdateApi, "list")
+      .mockResolvedValueOnce({
+        items: [{ ...updateJob, status: "RUNNING" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockResolvedValueOnce({
+        items: [updateJob],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      });
+    const createResearch = vi.spyOn(experimentApi, "create");
+    const createUpdate = vi.spyOn(marketUpdateApi, "create");
+    render(<TaskCenterPage />);
+    await act(async () => {});
+    const study = screen.getByRole("region", { name: "Research tasks" });
+    const raw = screen.getByRole("region", { name: "Raw-data request tasks" });
+    expect(within(study).getByRole("status")).toHaveTextContent("Running");
+    expect(within(raw).getByRole("status")).toHaveTextContent("Running");
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(within(study).getByRole("status")).toHaveTextContent("Complete");
+    expect(within(raw).getByRole("status")).toHaveTextContent(
+      "Requests completed",
+    );
+    await act(async () => vi.advanceTimersByTime(10000));
+    expect(research).toHaveBeenCalledTimes(2);
+    expect(updates).toHaveBeenCalledTimes(2);
+    expect(createResearch).not.toHaveBeenCalled();
+    expect(createUpdate).not.toHaveBeenCalled();
+  });
   it("reopens independent saved tasks and pages research without starting work", async () => {
     await i18n.changeLanguage("en-US");
     const research = vi
