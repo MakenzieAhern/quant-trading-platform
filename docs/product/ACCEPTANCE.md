@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 saved historical plan bilingual keyboard audit — bounded Chrome
+
+At unchanged executable code head `b9089b2`, actual Chrome opened the existing
+saved U6 historical result `d9f27183-a9a1-4f34-aef4-eba439f53374` by GET.
+Chinese/dark displayed the 2011-03-22 plan, missing account-snapshot date,
+2011-03-23 next accepted trading day and explicit historical/not-today and
+no-order warnings. The recorded cash `45539.94836`, equity `104666.94836`
+and risk-approved buy estimate `44221.44166` were visible. Its five cash
+rejections were reachable through the risk-decision pagination; Shift+Tab
+from its pager reached a named technical-detail button. Enter expanded the
+`INSUFFICIENT_BUYING_POWER` trace and kept visible keyboard focus.
+
+After a temporary EN/light switch, the same plan retained its dates, figures
+and warnings in English. ArrowRight on the focused horizontal table region
+exposed the complete rightmost Risk/OMS decision text, including all five
+`Rejected: Insufficient available cash` rows; ten further ArrowRight presses
+did not visibly move the table or truncate the text. Tab reached the named
+Data and configuration provenance button; Enter collapsed it without losing
+focus. The original Chinese/dark preferences were restored and the agent tab
+closed. Main database read-only counts remained paper5/events417/research8.
+
+This is an agent-operated, GET-only Chrome visual/keyboard check, not an
+independent novice study, native screen-reader announcement, exact numeric
+scroll-bound measurement, full U6/U8/M4, or a persisted screenshot/recording.
+The browser tool showed images for visual inspection but did not save an image
+artifact in this run. GitHub CI and release remain held.
+
 ## 2026-09-29 historical filled-plus-pending crash — bounded isolated proof
 
 The pinned `3e621a1` backend replayed the accepted 2011 historical archive

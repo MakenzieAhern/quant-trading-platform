@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T22:49:37Z",
+  "updated_at_utc": "2026-09-28T23:03:50Z",
+  "saved_plan_bilingual_keyboard_audit": {
+    "status": "PASS_BOUNDED_ACTUAL_CHROME_GET_ONLY_NOT_FULL_U6_U8_M4",
+    "code_head": "b9089b2",
+    "proof": "Actual Chrome on saved historical result d9f27183-a9a1-4f34-aef4-eba439f53374. ZH/dark showed 2011-03-22 plan, missing account snapshot date, 2011-03-23 next accepted trading day, historical/not-today/no-order warnings and recorded cash45539.94836/equity104666.94836/risk-approved buy estimate44221.44166. Risk table page61-70 showed five cash rejections; Shift+Tab from pager reached named technical detail, Enter expanded raw insufficient-buying-power trace and retained visible focus. EN/light preserved dates, figures and truthful warning; keyboard ArrowRight on focused table exposed complete rightmost Risk/OMS decision and five rejected-cash texts; ten more arrows caused no visible movement. Tab reached provenance button; Enter collapsed it with focus retained. ZH/dark restored, agent tab closed, main database read-only counts paper5/events417/research8 unchanged",
+    "limits": "Agent walkthrough only, not independent novice, native screen-reader announcement, measured scrollLeft/max, full U6/U8/M4/M5 or release. Browser screenshots were visually inspected but not persisted by the available tool in this run; no new screenshot artifact is claimed. No GitHub action"
+  },
   "local_historical_filled_plus_injected_pending_crash": {
     "status": "PASS_BOUNDED_SIX_REAL_HISTORICAL_FILLS_PLUS_QA_INJECTED_PENDING_NOT_FULL_U7",
     "backend_image": "qtp-v12-local-3e621a1-backend sha256:672d5c8bae9496284294c174f89843623f986ec60b8c48ce32d3c81b12531b4c",
