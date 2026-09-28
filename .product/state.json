@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T21:12:42Z",
+  "updated_at_utc": "2026-09-28T21:31:30Z",
+  "local_paper_event_integrity": {
+    "status": "PASS_BOUNDED_LOCAL_REGRESSIONS_NOT_FULL_U7_OR_GITHUB_CI",
+    "frontend": "Live signal.created events now append by distinct stream sequence, matching REST; two securities with the same strategy/time/type and repeated same-security new-sequence events are retained, while duplicate sequence is ignored. Red/green regression; full frontend361 PASS, ESLint/TypeScript/build129 PASS",
+    "backend": "A-share finish returns only new terminal cancellations, excluding earlier session expiries. Shared paper manager reuses the first cancellation batch if atomic STOPPED transition fails and STOPPING retry or FAILED fallback follows; replay fault-injection was red before fix and green after. Mixed prior expiry plus new pending covered. Disposable tmpfs make test backend1024 PASS/one optional archive skip, Ruff/format/mypy PASS; independent read-only diff review no blocker",
+    "runtime": "Original four Compose services running, PostgreSQL/Redis/backend healthy, Redis PONG, /api/health and frontend HTTP200. No original database/provider write, no frozen research or Official OOS change",
+    "limits": "Local component and isolated test evidence only; no genuine pre-loss ledger restore, lawful current forward feed and after-start receipt, independent backup, full U7/M4/M5, GitHub pushed-head CI/review/merge/release. GitHub October 1 is a user estimate, not verified recovery"
+  },
   "isolated_paper_process_restart": {
     "status": "PASS_BOUNDED_ACTUAL_BACKEND_RESTART_NOT_FULL_U7",
     "test_project": "quant-mvp-tests tmpfs PostgreSQL and isolated backend, migrated to 20260924_0016; HTTP-created replay account e620d5b4-30b1-4db7-b21f-deb5af1cc9e5 with four injected pending order states and zero fills",

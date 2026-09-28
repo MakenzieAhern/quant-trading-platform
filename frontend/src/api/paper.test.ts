@@ -172,6 +172,33 @@ describe("paper API contracts", () => {
     ).toThrow("does not belong");
   });
 
+  it("keeps each paper signal event while ignoring repeated sequences", () => {
+    const signal = (sequence: number, symbol: string) =>
+      parseWireEvent({
+        sequence,
+        type: "signal.created",
+        occurred_at: "2011-03-22T07:00:00Z",
+        payload: {
+          strategy_id: "cn_a_cross_sectional_momentum_low_vol_v1",
+          symbol,
+          timestamp: "2011-03-22T07:00:00Z",
+          signal_type: "BUY",
+        },
+      });
+    const first = applyPaperEvent(
+      paperSnapshot("RUNNING"),
+      signal(1, "CN-A:SSE:600000"),
+    );
+    const second = applyPaperEvent(first, signal(2, "CN-A:SSE:600001"));
+    const third = applyPaperEvent(second, signal(3, "CN-A:SSE:600000"));
+    expect(third.signals.map((item) => item.symbol)).toEqual([
+      "CN-A:SSE:600000",
+      "CN-A:SSE:600001",
+      "CN-A:SSE:600000",
+    ]);
+    expect(applyPaperEvent(third, signal(3, "CN-A:SSE:600000"))).toBe(third);
+  });
+
   it("rejects malformed successful responses", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({ ...paperSession(), initial_cash: 100000 }),

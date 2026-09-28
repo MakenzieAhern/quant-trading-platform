@@ -1,7 +1,11 @@
-from datetime import UTC, datetime, timedelta
+from dataclasses import replace
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
+from unittest.mock import AsyncMock, MagicMock
+from uuid import uuid4
 
 import pytest
 from pydantic import TypeAdapter, ValidationError
@@ -17,7 +21,7 @@ from app.event import EventBus
 from app.execution import FixedBasisPointSlippage, FixedCommission
 from app.paper.a_share_fixture import simulated_a_share_fixture
 from app.paper.hub import PaperEventHub
-from app.paper.models import PaperSessionStatus, require_transition
+from app.paper.models import PaperSessionConcurrencyError, PaperSessionStatus, require_transition
 from app.paper.runtime import (
     FROZEN_A_SHARE_STRATEGY_ID,
     ASharePaperTradingRuntime,
@@ -28,6 +32,7 @@ from app.paper.runtime import (
     SimulatedAShareSessionProvider,
 )
 from app.strategies import MovingAverageCrossoverStrategy, RSIMeanReversionStrategy
+from tests.test_research_execution_engine import CALENDAR, OneTargetStrategy, _session
 
 FIXTURES = Path(__file__).parents[2] / "data" / "fixtures"
 START = datetime(2024, 1, 1, tzinfo=UTC)
@@ -120,6 +125,101 @@ async def test_frozen_a_share_runtime_consumes_only_completed_simulated_sessions
         await runtime.process_session(sessions[-1])
     with pytest.raises(ReplayProviderError, match="strictly chronological"):
         SimulatedAShareSessionProvider((sessions[0], sessions[0]))
+
+
+@pytest.mark.parametrize("expired_before_stop", [False, True])
+async def test_a_share_terminal_cleanup_only_emits_new_cancellations(
+    expired_before_stop: bool,
+) -> None:
+    calendar, sessions, commission = simulated_a_share_fixture()
+    runtime = ASharePaperTradingRuntime(
+        initial_cash=Decimal(100000000),
+        commission_model=commission,
+        calendar=calendar,
+    )
+    for item in sessions[:-1]:
+        await runtime.process_session(item)
+    if expired_before_stop:
+        missed = await runtime.process_session(replace(sessions[-1], bars=()))
+        assert len(missed.expired_order_ids) == 1
+        assert missed.orders[0].status is OrderStatus.CANCELLED
+    cancelled = runtime.cancel_pending_orders()
+    assert len(cancelled) == (0 if expired_before_stop else 1)
+    assert all(order.status is OrderStatus.CANCELLED for order in cancelled)
+    assert runtime.cancel_pending_orders() == ()
+
+
+async def test_a_share_terminal_cleanup_excludes_prior_expiry_with_new_pending_order() -> None:
+    class FixtureStrategy(OneTargetStrategy):
+        strategy_id = FROZEN_A_SHARE_STRATEGY_ID
+
+    strategy = FixtureStrategy()
+    runtime = ASharePaperTradingRuntime(
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+        strategy=strategy,
+    )
+    first = await runtime.process_session(_session(date(2024, 1, 2), opening="10"))
+    strategy.calls = 0  # Rebalance again after the first order misses its execution session.
+    second = await runtime.process_session(_session(date(2024, 1, 3), opening="10.1"))
+    assert len(first.proposals) == len(second.expired_order_ids) == len(second.proposals) == 1
+    assert second.expired_order_ids[0] == first.proposals[0].proposal_id
+    cancelled = runtime.cancel_pending_orders()
+    assert [(item.id, item.status) for item in cancelled] == [
+        (second.proposals[0].proposal_id, OrderStatus.CANCELLED)
+    ]
+    assert runtime.cancel_pending_orders() == ()
+
+
+@pytest.mark.parametrize("concurrent_stop", [False, True])
+async def test_terminal_transition_retry_retains_cancelled_order(
+    concurrent_stop: bool,
+) -> None:
+    runtime = PaperTradingRuntime(
+        (MovingAverageCrossoverStrategy("retry-cancel", "AAPL", 2, 3),),
+        BacktestConfig(initial_cash=Decimal(100000), default_order_quantity=Decimal(10)),
+    )
+    for item in CSVDataProvider(FIXTURES).get_historical_bars("AAPL"):
+        await runtime.process_bar(item)
+        if runtime.broker.pending_orders:
+            break
+    pending_id = runtime.broker.pending_orders[0].id
+    session = SimpleNamespace(
+        id=uuid4(),
+        status=PaperSessionStatus.STARTING,
+        provider_type="replay",
+        strategy_parameters={},
+    )
+    manager = PaperTradingManager(MagicMock(), MagicMock(), MagicMock())
+    manager.events = AsyncMock(return_value=())
+    manager.get = AsyncMock(return_value=session)
+    manager._build_runtime = lambda _session, _cursor_date: (
+        ReplayMarketDataProvider((), 0),
+        runtime,
+    )
+    attempts = []
+
+    async def transition(_session, target, *_args, **kwargs):
+        if target is PaperSessionStatus.STOPPED and not attempts:
+            attempts.append(kwargs["cancelled_orders"])
+            session.status = (
+                PaperSessionStatus.STOPPING if concurrent_stop else PaperSessionStatus.RUNNING
+            )
+            if concurrent_stop:
+                raise PaperSessionConcurrencyError("simulated competing stop")
+            raise RuntimeError("simulated write failure")
+        if target in {PaperSessionStatus.STOPPED, PaperSessionStatus.FAILED}:
+            attempts.append(kwargs["cancelled_orders"])
+        session.status = target
+        return session
+
+    manager._transition = transition
+    await manager._run(session)
+    assert session.status is (
+        PaperSessionStatus.STOPPED if concurrent_stop else PaperSessionStatus.FAILED
+    )
+    assert [[order.id for order in batch] for batch in attempts] == [[pending_id], [pending_id]]
 
 
 async def test_historical_session_stream_is_lazy_and_source_is_not_synthetic() -> None:

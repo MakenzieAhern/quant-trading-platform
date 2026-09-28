@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local paper event integrity during the GitHub CI hold
+
+Two paper-ledger defects were reproduced before repair. The live frontend
+replaced signals with the same strategy, timestamp and type, silently hiding
+distinct security or repeated same-security events. The reducer now appends
+each new-sequence `signal.created` event, matching the REST event projection;
+the existing sequence guard still discards replay duplicates. A regression
+failed before the change and covers both different and repeated symbols.
+
+The A-share runtime's terminal cleanup also reported cumulative expired
+orders, repeating earlier `CANCELLED` events. It now returns only cancellations
+caused by `finish()`, including when an earlier order expired before a new
+pending order. The shared paper manager retains that cancellation batch across
+a failed terminal database transition, so a concurrent STOPPING retry or
+FAILED fallback does not lose the order update. Offline replay fault-injection
+tests failed before this shared fix and passed afterward. The isolation tests
+did not write to the original paper database or call a market provider.
+
+The final local `make test` run used the disposable tmpfs `quant_test` database:
+backend 1024 passed, one optional unmounted historical-archive case skipped,
+frontend 361 passed. Local Ruff, format check, mypy, ESLint, TypeScript and
+production frontend build passed; an independent read-only diff review found
+no blocking issue. The four original Compose services and health endpoint
+remained available. This is bounded local event-integrity evidence, **not**
+GitHub CI, a genuine lost-ledger restore, lawful forward-feed acceptance,
+full U7/M4/M5, or approval to merge/release. Current-head screenshots, if
+captured, are indexed outside Git in the local delivery evidence directory.
+
 ## 2026-09-29 local gates during the GitHub CI hold
 
 The isolated `make test` target previously ended with `down --volumes`.

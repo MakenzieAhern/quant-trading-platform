@@ -49,11 +49,7 @@ export function applyPaperEvent(
     const signal = paperParsers.signal(event.payload);
     return {
       ...next,
-      signals: replaceBy(
-        current.signals,
-        signal,
-        (item) => `${item.strategy_id}:${item.timestamp}:${item.signal_type}`,
-      ),
+      signals: [...current.signals, signal],
     };
   }
   if (event.type === "risk.decision") {

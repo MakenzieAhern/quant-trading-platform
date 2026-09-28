@@ -309,6 +309,18 @@ class PaperTradingManager:
         runtime: PaperTradingRuntime | ASharePaperTradingRuntime | None = None
         history: tuple[PaperEventRecord, ...] = ()
         matched_cursor = False
+        terminal_cancelled: tuple[Order, ...] | None = None
+
+        def cancelled_orders() -> tuple[Order, ...]:
+            nonlocal terminal_cancelled
+            if terminal_cancelled is None:
+                terminal_cancelled = (
+                    runtime.cancel_pending_orders()
+                    if runtime is not None and matched_cursor
+                    else ()
+                )
+            return terminal_cancelled
+
         try:
             history = await self.events(session.id)
             resumed = any(
@@ -464,12 +476,11 @@ class PaperTradingManager:
                     PaperSessionStatus.RUNNING,
                     PaperSessionStatus.STOPPING,
                 }:
-                    cancelled = runtime.cancel_pending_orders() if matched_cursor else ()
                     await self._transition(
                         current,
                         PaperSessionStatus.STOPPED,
                         "session.status",
-                        cancelled_orders=cancelled,
+                        cancelled_orders=cancelled_orders(),
                         preceding_events=(
                             self._pending_order_events(history, self._now())
                             if not matched_cursor
@@ -486,17 +497,12 @@ class PaperTradingManager:
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
-                    cancelled = (
-                        runtime.cancel_pending_orders()
-                        if runtime is not None and matched_cursor
-                        else ()
-                    )
                     await self._transition(
                         current,
                         PaperSessionStatus.INTERRUPTED,
                         "session.status",
                         "Paper runtime interrupted by backend shutdown.",
-                        cancelled_orders=cancelled,
+                        cancelled_orders=cancelled_orders(),
                         preceding_events=(
                             self._pending_order_events(history, self._now())
                             if not matched_cursor
@@ -512,16 +518,11 @@ class PaperTradingManager:
                 and current is not None
                 and current.status is PaperSessionStatus.STOPPING
             ):
-                cancelled = (
-                    runtime.cancel_pending_orders()
-                    if runtime is not None and matched_cursor
-                    else ()
-                )
                 await self._transition(
                     current,
                     PaperSessionStatus.STOPPED,
                     "session.status",
-                    cancelled_orders=cancelled,
+                    cancelled_orders=cancelled_orders(),
                     preceding_events=(
                         self._pending_order_events(history, self._now())
                         if not matched_cursor
@@ -538,17 +539,12 @@ class PaperTradingManager:
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
-                    cancelled = (
-                        runtime.cancel_pending_orders()
-                        if runtime is not None and matched_cursor
-                        else ()
-                    )
                     await self._transition(
                         current,
                         PaperSessionStatus.FAILED,
                         "session.status",
                         f"{type(exc).__name__}: paper session failed",
-                        cancelled_orders=cancelled,
+                        cancelled_orders=cancelled_orders(),
                         preceding_events=(
                             self._pending_order_events(history, self._now())
                             if not matched_cursor

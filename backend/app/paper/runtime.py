@@ -323,6 +323,7 @@ class ASharePaperTradingRuntime:
         return self._result
 
     def cancel_pending_orders(self) -> tuple[Order, ...]:
+        expired_before = len(self._engine._expired_order_ids)
         result = self.finish()
-        expired = set(result.expired_order_ids)
+        expired = set(result.expired_order_ids[expired_before:])
         return tuple(item for item in result.orders if item.id in expired)
