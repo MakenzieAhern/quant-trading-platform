@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T20:25:16Z",
+  "updated_at_utc": "2026-09-28T20:35:00Z",
+  "paper_restart_order_closure": {
+    "status": "PASS_ISOLATED_SQL_TESTS_NOT_GENUINE_LEDGER_RESTORE_OR_FULL_U7",
+    "cause": "Backend restart interrupted orphaned paper sessions but cancelled only ACCEPTED orders, leaving CREATED, SUBMITTED and PARTIALLY_FILLED orders visibly open",
+    "fix": "Use the same four pending order statuses as normal stop/failure when appending cancellation events on restart; preserve FILLED, CANCELLED and REJECTED",
+    "proof": "Isolated tmpfs quant_test seven-state regression failed 3/7 before fix and passed 7/7 after fix; full backend 1019 passed, one optional unmounted-archive skip; Ruff check/format and mypy passed. Original Compose PostgreSQL/Redis/backend/frontend running, PONG and API/frontend HTTP 200",
+    "limits": "No original database, paper account, provider, frozen research or Official OOS mutation. Genuine pre-loss ledgers, lawful forward feed, independent backup, full U7/M4/M5, native QA and GitHub pushed-head CI remain open"
+  },
   "active_task_list_consistency": {
     "status": "PASS_BOUNDED_LOCAL_TESTS_AND_CHROME_GET_ONLY_NOT_LIVE_TRANSITION",
     "base_head": "a223675",

@@ -760,7 +760,21 @@ async def test_terminal_paper_account_rejects_late_market_events(client: AsyncCl
     assert await paper_manager.events(session_id) == before
 
 
-async def test_restart_contract_marks_orphaned_runtime_interrupted(client: AsyncClient) -> None:
+@pytest.mark.parametrize(
+    "order_status, expected_status",
+    [
+        ("CREATED", "CANCELLED"),
+        ("SUBMITTED", "CANCELLED"),
+        ("ACCEPTED", "CANCELLED"),
+        ("PARTIALLY_FILLED", "CANCELLED"),
+        ("FILLED", "FILLED"),
+        ("CANCELLED", "CANCELLED"),
+        ("REJECTED", "REJECTED"),
+    ],
+)
+async def test_restart_contract_marks_orphaned_runtime_interrupted(
+    client: AsyncClient, order_status: str, expected_status: str
+) -> None:
     created = await client.post("/api/paper-trading/sessions", json=request_body())
     session_id = UUID(created.json()["session_id"])
     async with SessionFactory() as session:
@@ -778,7 +792,7 @@ async def test_restart_contract_marks_orphaned_runtime_interrupted(client: Async
                         "order_type": "MARKET",
                         "quantity": "10",
                         "price": None,
-                        "status": "ACCEPTED",
+                        "status": order_status,
                         "created_at": "2024-01-08T00:00:00+00:00",
                     },
                 ),
@@ -796,9 +810,9 @@ async def test_restart_contract_marks_orphaned_runtime_interrupted(client: Async
     assert detail.json()["error_message"] == "Paper runtime interrupted by backend restart."
     events = await client.get(f"/api/paper-trading/sessions/{session_id}/events")
     assert events.json()[-1]["payload"] == {"status": "INTERRUPTED"}
-    assert events.json()[-2]["payload"]["status"] == "CANCELLED"
+    assert events.json()[-2]["payload"]["status"] == expected_status
     snapshot = await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")
-    assert snapshot.json()["orders"][0]["status"] == "CANCELLED"
+    assert snapshot.json()["orders"][0]["status"] == expected_status
 
 
 async def test_shutdown_marks_an_active_runtime_interrupted(

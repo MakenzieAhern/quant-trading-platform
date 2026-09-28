@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local operation and orphaned paper-order recovery
+
+GitHub Actions remains unavailable pending actual account recovery, but the
+original local Compose services are running: PostgreSQL accepts connections,
+Redis returns `PONG`, and the frontend and `/api/health` both return HTTP 200.
+This permits local use and testing, not pushed-head CI, review or release.
+
+An orphaned paper session was marked `INTERRUPTED` on backend restart, but its
+persisted `CREATED`, `SUBMITTED` and `PARTIALLY_FILLED` orders were left open;
+only `ACCEPTED` was cancelled. The restart path now cancels the same four
+pending states as normal stop/failure, leaving `FILLED`, `CANCELLED` and
+`REJECTED` untouched. In isolated tmpfs `quant_test`, the seven-case restart
+regression first failed 3/7 and then passed 7/7. Full backend: 1019 passed,
+one optional historical-archive case skipped because that archive was not
+mounted. Ruff check/format and mypy passed. The original database, paper
+accounts, frozen research and Official OOS were not used or changed. This is
+a bounded recovery fix, not genuine pre-loss ledger restoration or full
+U7/M4/M5 acceptance.
+
 ## 2026-09-29 U5 and task-center active-list consistency
 
 The Data Center's saved update detail already polled active tasks, but its

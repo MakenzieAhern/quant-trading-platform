@@ -232,7 +232,7 @@ class SQLAlchemyPaperRepository:
             cancellations = tuple(
                 ("order.updated", timestamp, {**payload, "status": "CANCELLED"})
                 for payload in latest_orders.values()
-                if payload.get("status") == "ACCEPTED"
+                if payload.get("status") in {"CREATED", "SUBMITTED", "ACCEPTED", "PARTIALLY_FILLED"}
             )
             await self._append_events_locked(
                 model.id,
