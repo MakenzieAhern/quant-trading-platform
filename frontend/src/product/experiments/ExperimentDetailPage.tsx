@@ -34,6 +34,8 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
   const [action, setAction] = useState<"cancel" | "retry" | null>(null);
   const [actionError, setActionError] = useState<unknown>(null);
   const locked = useRef(false);
+  const focusedCommand = useRef<HTMLButtonElement | null>(null);
+  const statusFocus = useRef<HTMLSpanElement>(null);
   const activeJob = useRef<string | null>(jobId);
   useEffect(() => {
     activeJob.current = jobId;
@@ -42,8 +44,17 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
       activeJob.current = null;
     };
   }, [jobId]);
+  useEffect(() => {
+    const button = focusedCommand.current;
+    if (button && !button.isConnected) {
+      if (document.activeElement === document.body)
+        statusFocus.current?.focus();
+      focusedCommand.current = null;
+    }
+  }, [job.data?.status]);
   async function command(kind: "cancel" | "retry") {
-    if (locked.current) return;
+    if (locked.current || (kind === "cancel" && job.data?.cancel_requested))
+      return;
     locked.current = true;
     setAction(kind);
     setActionError(null);
@@ -92,8 +103,20 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
               {data.configuration.start_date} → {data.configuration.end_date} ·
               Asia/Shanghai
             </p>
-            <div className="experimentActions">
+            <div
+              className="experimentActions"
+              onFocusCapture={(event) => {
+                if (event.target instanceof HTMLButtonElement)
+                  focusedCommand.current = event.target;
+              }}
+              onBlurCapture={() => {
+                focusedCommand.current = null;
+              }}
+            >
               <span
+                ref={statusFocus}
+                role="status"
+                tabIndex={-1}
                 className={`experimentStatus experimentStatus--${data.status.toLowerCase()}`}
               >
                 {c.statuses[data.status]}
@@ -104,7 +127,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
               {isActiveExperiment(data) && (
                 <button
                   className="button secondary"
-                  disabled={action !== null || data.cancel_requested}
+                  aria-disabled={action !== null || data.cancel_requested}
                   onClick={() => void command("cancel")}
                 >
                   {action === "cancel" ? c.cancelling : c.cancel}
@@ -113,7 +136,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
               {["FAILED", "INTERRUPTED", "CANCELLED"].includes(data.status) && (
                 <button
                   className="button"
-                  disabled={action !== null}
+                  aria-disabled={action !== null}
                   onClick={() => void command("retry")}
                 >
                   {action === "retry" ? c.retrying : c.retry}

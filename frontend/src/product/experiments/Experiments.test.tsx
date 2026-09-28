@@ -741,6 +741,99 @@ describe("durable experiment detail", () => {
     expect(cancel).toHaveBeenCalledWith(job.job_id);
   });
 
+  it("keeps cancellation focused and moves to its stable final status", async () => {
+    const running = { ...job, status: "RUNNING" as const, phase: "EXECUTING" };
+    const cancelled = { ...running, status: "CANCELLED" as const };
+    let current: typeof job = running;
+    vi.spyOn(experimentApi, "get").mockImplementation(async () => current);
+    let finish!: (value: typeof cancelled) => void;
+    const cancel = vi
+      .spyOn(experimentApi, "cancel")
+      .mockImplementation(() => new Promise((resolve) => (finish = resolve)));
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    const button = await screen.findByRole("button", { name: "Cancel task" });
+    button.focus();
+    await userEvent.keyboard("{Enter}{Enter}");
+    expect(cancel).toHaveBeenCalledTimes(1);
+    expect(button).toHaveFocus();
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(button);
+    expect(cancel).toHaveBeenCalledTimes(1);
+    current = cancelled;
+    await act(async () => finish(cancelled));
+    await waitFor(() =>
+      expect(
+        screen.getByText("Cancelled", { selector: ".experimentStatus" }),
+      ).toHaveFocus(),
+    );
+  });
+
+  it("does not steal focus when the user leaves cancellation before completion", async () => {
+    const running = { ...job, status: "RUNNING" as const };
+    const cancelled = { ...running, status: "CANCELLED" as const };
+    let current: typeof job = running;
+    vi.spyOn(experimentApi, "get").mockImplementation(async () => current);
+    let finish!: (value: typeof cancelled) => void;
+    vi.spyOn(experimentApi, "cancel").mockImplementation(
+      () => new Promise((resolve) => (finish = resolve)),
+    );
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    const button = await screen.findByRole("button", { name: "Cancel task" });
+    button.focus();
+    await userEvent.keyboard("{Enter}");
+    const refresh = screen.getByRole("button", { name: "Refresh" });
+    refresh.focus();
+    current = cancelled;
+    await act(async () => finish(cancelled));
+    await screen.findByText("Cancelled", { selector: ".experimentStatus" });
+    expect(refresh).toHaveFocus();
+  });
+
+  it("does not repeat a cancellation already acknowledged by the server", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "RUNNING",
+      cancel_requested: true,
+    });
+    const cancel = vi.spyOn(experimentApi, "cancel");
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    const button = await screen.findByRole("button", { name: "Cancel task" });
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    button.focus();
+    await userEvent.keyboard("{Enter}");
+    await userEvent.click(button);
+    expect(cancel).not.toHaveBeenCalled();
+    expect(button).toHaveFocus();
+  });
+
+  it("keeps retry focused through an uncertain response without a duplicate", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "INTERRUPTED",
+      phase: "INTERRUPTED",
+    });
+    let fail!: (reason: unknown) => void;
+    const retry = vi
+      .spyOn(experimentApi, "retry")
+      .mockImplementation(() => new Promise((_, reject) => (fail = reject)));
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    const button = await screen.findByRole("button", {
+      name: "Start or reopen linked retry",
+    });
+    button.focus();
+    await userEvent.keyboard("{Enter}{Enter}");
+    expect(retry).toHaveBeenCalledTimes(1);
+    expect(button).toHaveFocus();
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(button);
+    expect(retry).toHaveBeenCalledTimes(1);
+    await act(async () => fail(new ApiError(503, "unavailable")));
+    expect(button).toHaveFocus();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "The server response could not be confirmed",
+    );
+  });
+
   it("does not invent a percentage when the server has no total", async () => {
     vi.spyOn(experimentApi, "get").mockResolvedValue(job);
     render(<ExperimentDetailPage jobId={job.job_id} />);

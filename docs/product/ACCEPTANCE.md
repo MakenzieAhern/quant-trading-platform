@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 experiment command focus and local operation during GitHub hold
+
+Experiment Cancel/Retry used native-disabled pending buttons, so keyboard focus
+could fall to the document body when a request began or the focused Cancel
+button disappeared after a terminal status update. The controls now remain
+focusable with `aria-disabled`; the existing synchronous lock and a
+`cancel_requested` guard prevent duplicate commands. If a status change
+removes the still-focused action, focus moves to the stable status text.
+Deliberate movement to Refresh is respected. The status has a visible focus
+ring. A red regression demonstrated the prior failure.
+
+The focused experiment suite passed 39/39 and the full frontend passed
+346/346 across 37 files. ESLint, TypeScript, changed-file Prettier and the
+129-module production build passed. Independent read-only diff review found
+no blocking regression. A GET-only in-app browser recheck of an existing
+completed historical task found the named status element in the rendered DOM
+and no browser warning/error. No Cancel/Retry POST or provider acquisition
+was made in the original application. PostgreSQL accepted connections, Redis
+returned PONG, and the original frontend and `/api/health` returned HTTP 200.
+
+The pending-to-terminal focus transition is component-tested, not verified
+in a running browser; native Chrome, 200% zoom, screen-reader speech and full
+U3/M4/M5 acceptance remain open. Local operation and checks may continue
+during the user-estimated GitHub hold, but they do not replace pushed-head CI,
+review, merge or release. Original volumes, ledgers, frozen `.research` and
+Official OOS were unchanged.
+
 ## 2026-09-29 local execution and U5 market-update submit focus
 
 GitHub CI/CD remains on hold until actual account recovery; October 1 is a user
