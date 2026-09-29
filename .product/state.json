@@ -1,12 +1,18 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T04:21:20Z",
+  "updated_at_utc": "2026-09-29T04:46:42Z",
+  "observation_pager_focus_gate": {
+    "status": "PASS_BOUNDED_LOCAL_CHROME_KEYBOARD_NOT_FULL_M4",
+    "code_head": "4e339d5",
+    "proof": "2026-09-29 UTC: red component regression showed Data Center observation pager unmounted when a saved task progress GET refetched observations. Pager is now persistent with loading state. Actual Chrome 153 found a second issue: 50-row to 1-row pagination moved the focused pager behind the sticky topbar. Shared pagination now scrolls the user-activated group into the visible viewport after layout changes, with dynamic topbar clearance and a guarded animation frame. User scroll-away cancels intent so a later poll does not pull the page back. Focused 48/48, exact-code make test backend 1024 passed/one optional archive skip and frontend 413/413, make lint and make build passed. Chrome keyboard Enter at 1440/400 CSS widths and pointer at 1100 preserved focus and visibility through held GET refetch; later manual scroll away stayed away. Only backend GET requests. Three screenshots visually inspected and SHA-256 recorded outside Git in product-evidence/v1.2/m4/20260929-observation-pager-focus.md. Independent read-only final review found no concrete regression.",
+    "limits": "Browser-injected 51-row QA observations, not actual provider/current data. Headless Chrome is not native 200pct zoom, screen-reader speech, physical mobile soft-keyboard, independent novice, full M4/M5 or GitHub CI. Lawful forward source/use rights and after-start receipt, genuine lost-ledger recovery, independent physical backup and full U1-U8/M0-M5 remain open. No original database/account/provider/frozen research/OOS write, push, merge or release occurred. GitHub 2026-10-01 recovery is a user estimate, not verified."
+  },
   "task_success_poll_focus_gate": {
     "status": "PASS_BOUNDED_ACTUAL_CHROME_RESPONSE_SHIFT_NOT_FULL_M4",
     "code_head": "4cc342a",
     "proof": "2026-09-29 UTC: actual Chrome 153 browser-only GET-response shift seeded 20 QA rows, armed one RUNNING poll, prepended a newer row and displaced the focused twentieth Open control. Before fix, Research tasks, Raw-data request tasks and Update task history all lost focus to BODY. Three regressions were red. The existing page focus effects now target persistent named headings on successful replacement and still target alerts on failed GETs; a fourth regression preserves focus deliberately moved to Refresh. Chrome recheck focused H2/H2/H3 with only backend GET requests; three screenshots visually inspected and SHA-256 recorded outside Git in product-evidence/v1.2/m4/20260929-task-success-poll-focus.md. Focused tests 47/47, exact-code make test backend 1024 passed/one optional archive skip and frontend 411/411, make lint and make build passed. Independent read-only post-fix review found no actionable diff regression.",
-    "limits": "Browser-injected successful GET shift, not a real concurrent new task or native screen-reader/zoom/mobile proof. Separate Data observation-pager focus issue remains. Full M4/M5, lawful forward market authority and after-start receipt, genuine missing-ledger recovery, independent backup, novice QA and GitHub CI/release remain open. No original database/account/provider/frozen research/OOS write, push, merge or release occurred."
+    "limits": "Browser-injected successful GET shift, not a real concurrent new task or native screen-reader/zoom/mobile proof. The separate Data observation-pager correction is recorded in observation_pager_focus_gate; full M4/M5, lawful forward market authority and after-start receipt, genuine missing-ledger recovery, independent backup, novice QA and GitHub CI/release remain open. No original database/account/provider/frozen research/OOS write, push, merge or release occurred."
   },
   "strategy_first_click_timing_gate": {
     "status": "PASS_BOUNDED_LOCAL_CHROME_DRAWER_OPENING_NOT_FULL_QA_PERF_OR_M4",

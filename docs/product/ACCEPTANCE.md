@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 observation pagination focus — bounded M4 correction
+
+Progress refetches cleared the Data Center observation response and unmounted
+its focused pager. A red component regression reproduced that defect. The
+pager remains mounted and reports loading. An actual-Chrome check then found
+the focused last-page pager jumped behind the sticky topbar when 50 rows
+collapsed to one. Shared pagination now keeps a user-activated pager visible
+through layout changes, using the measured topbar clearance. A subsequent
+manual scroll away cancels that intent, so later polling does not pull the
+user back. Independent read-only diff review found no concrete regression.
+
+Focused tests passed 48/48. Exact-code `make test` passed backend 1024 with one
+optional unmounted-archive skip and frontend 413/413; `make lint` and
+`make build` passed. Installed Chrome 153 confirmed focus-visible,
+unobscured pager behavior at 1440 and 400 CSS-pixel widths with keyboard
+Enter; 1100 width checked the wrapped topbar. The backend saw GETs only.
+Script, geometry, manually-scrolled-away check and three visually inspected
+screenshot hashes are outside Git in
+`product-evidence/v1.2/m4/20260929-observation-pager-focus.md`.
+
+This browser-injected 51-row QA fixture is not actual provider data. Native
+200% zoom, screen reader, physical mobile/soft keyboard, independent novice,
+full M4/M5 and GitHub CI/release gates remain open. No original database,
+frozen research/OOS, provider, paper account, push or release was changed.
+
 ## 2026-09-29 successful task-poll focus — bounded M4 correction
 
 Actual Chrome 153 reproduced a keyboard focus defect in three task lists:
@@ -19,7 +44,7 @@ one optional unmounted-archive skip and frontend 411/411; `make lint` and
 `make build` passed. An independent read-only post-fix review found no
 actionable regression. This is not a real concurrent task-creation event,
 native screen-reader, mobile/zoom matrix, full M4 or GitHub CI acceptance.
-The separate Data observation-pager focus path remains to be tested.
+The separate Data observation-pager correction is recorded above.
 
 ## 2026-09-29 strategy first-click timing — bounded M4 Chrome study
 
