@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 current-head isolated production-browser rehearsal — bounded M5 integration
+
+At `cb9367c` a separate Compose project built current production backend and
+frontend images, migrated only a tmpfs `quant_test` PostgreSQL, and ran with
+tmpfs Redis/product state plus read-only accepted historical archive mounts.
+All four scratch services were running, PostgreSQL/Redis/backend healthy, and
+scratch frontend and `/api/health` returned HTTP 200. The original four
+services stayed up and the original frontend and `/api/health` still returned
+HTTP 200 after the walkthrough.
+
+Actual Chrome completed the Chinese Workbench → guided 2011 historical study
+→ saved result, then switched the result to English. It created a **separate**
+2011-04-01–2011-06-30 paper account only after explicitly shortening the
+replay range to the 93-day cap. That account reached 2011-06-30, stopped
+normally, and exposed its historical plan, risk decisions, orders, cancelled
+orders and fills in both languages. A second same-period study with a
+different initial capital completed; the comparison page marked that
+difference and warned the results were **not a controlled comparison**.
+Detailed IDs, observed values and isolation limits are outside Git in
+`product-evidence/v1.2/m5/20260929-cb9367c-current-head-integrated-browser.md`.
+At 390×844 CSS pixels, actual Chrome showed no page-wide horizontal overflow
+on the Chinese comparison or stopped paper-account pages. The English dark
+comparison at 1024×768 and English dark stopped paper-account page at
+1280×800 also had no page-wide overflow; each viewport was visually inspected.
+Language, theme and viewport were then reset. This is not the full
+viewport/theme/locale or native 200% zoom matrix.
+Seven screenshots were visually inspected in the browser tool but **no
+screenshot or recording was saved** in this slice.
+
+This is a bounded local current-head integration check, not full M5 media or
+delivery acceptance. Independent novice, native accessibility/zoom,
+performance matrix, next genuine login/startup, lost-ledger/independent-backup
+resolution, lawful new-market forward receipt and exact-head GitHub CI remain
+open. No original database, frozen research/OOS, provider, push, merge or
+release was changed.
+
 ## 2026-09-29 observation pagination focus — bounded M4 correction
 
 Progress refetches cleared the Data Center observation response and unmounted
