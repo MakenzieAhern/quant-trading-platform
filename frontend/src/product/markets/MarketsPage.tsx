@@ -22,6 +22,11 @@ function detailFromHash(hash: string) {
   return datasetId && securityId ? { datasetId, securityId } : null;
 }
 
+function exchangeFromUrl() {
+  const value = new URLSearchParams(window.location.search).get("exchange");
+  return value === "SSE" || value === "SZSE" ? value : "ALL";
+}
+
 export function MarketsPage() {
   const c = useMarketCopy();
   const [revision, setRevision] = useState(0);
@@ -74,7 +79,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
       new URLSearchParams(window.location.search).get("q")?.slice(0, 80) ?? "",
   );
   const [query, setQuery] = useState(q);
-  const [exchange, setExchange] = useState("ALL");
+  const [exchange, setExchange] = useState(exchangeFromUrl);
   const [offset, setOffset] = useState(0);
   const [revision, setRevision] = useState(0);
   const [watchOffset, setWatchOffset] = useState(0);
@@ -93,6 +98,16 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   const lock = useRef(false);
   const watchlistSection = useRef<HTMLElement>(null);
   const lastSearch = useRef(window.location.search);
+  const persistFilters = (source: string, term: string, venue: string) => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("dataset", source);
+    if (term) params.set("q", term);
+    else params.delete("q");
+    if (venue !== "ALL") params.set("exchange", venue);
+    else params.delete("exchange");
+    replaceUrl(`${window.location.pathname}?${params}${window.location.hash}`);
+    lastSearch.current = window.location.search;
+  };
   const detail = detailFromHash(detailHash);
   const detailDatasetId = detail?.datasetId ?? "";
   const detailSecurityId = detail?.securityId ?? "";
@@ -139,6 +154,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         setQ(value);
         setQuery(value);
         setDatasetId(params.get("dataset") ?? defaultDatasetId);
+        setExchange(exchangeFromUrl());
         setOffset(0);
       }
       setDetailError(false);
@@ -239,6 +255,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             onChange={(event) => {
               setDatasetId(event.target.value);
               setOffset(0);
+              persistFilters(event.target.value, query, exchange);
             }}
           >
             {!dataset && (
@@ -297,8 +314,10 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
           className="marketControls"
           onSubmit={(event) => {
             event.preventDefault();
-            setQuery(q.trim());
+            const term = q.trim();
+            setQuery(term);
             setOffset(0);
+            persistFilters(datasetId, term, exchange);
           }}
         >
           <label className="marketField marketSearchField">
@@ -317,6 +336,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
               onChange={(event) => {
                 setExchange(event.target.value);
                 setOffset(0);
+                persistFilters(datasetId, query, event.target.value);
               }}
             >
               <option value="ALL">{c.all}</option>

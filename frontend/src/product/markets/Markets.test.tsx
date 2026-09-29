@@ -434,6 +434,7 @@ describe("historical cache markets", () => {
       "600000",
     );
     await userEvent.selectOptions(screen.getByLabelText("Exchange"), "SSE");
+    expect(new URLSearchParams(window.location.search).get("q")).toBeNull();
     await userEvent.click(
       screen.getByRole("button", { name: "Search securities" }),
     );
@@ -461,14 +462,79 @@ describe("historical cache markets", () => {
       expect(marketApi.search).toHaveBeenLastCalledWith(
         dataset.dataset_id,
         "Observed",
+        "ALL",
+        0,
+        expect.any(AbortSignal),
+      ),
+    );
+    expect(screen.getByLabelText("Exchange")).toHaveValue("ALL");
+    expect(
+      screen.getByLabelText("Symbol, code or source-observed name"),
+    ).toHaveValue("Observed");
+  });
+
+  it("restores committed source and search filters after reload and detail Back", async () => {
+    const first = render(<MarketsPage />);
+    await screen.findByRole("button", {
+      name: `Inspect history: ${security.security_id}`,
+    });
+    await userEvent.selectOptions(
+      screen.getByLabelText("Data source"),
+      demo.dataset_id,
+    );
+    await userEvent.type(
+      screen.getByLabelText("Symbol, code or source-observed name"),
+      "600000",
+    );
+    await userEvent.selectOptions(screen.getByLabelText("Exchange"), "SSE");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Search securities" }),
+    );
+    await waitFor(() =>
+      expect(marketApi.search).toHaveBeenLastCalledWith(
+        demo.dataset_id,
+        "600000",
         "SSE",
         0,
         expect.any(AbortSignal),
       ),
     );
+    expect(new URLSearchParams(window.location.search).get("dataset")).toBe(
+      demo.dataset_id,
+    );
+    expect(new URLSearchParams(window.location.search).get("q")).toBe("600000");
+    expect(new URLSearchParams(window.location.search).get("exchange")).toBe(
+      "SSE",
+    );
+
+    first.unmount();
+    render(<MarketsPage />);
+    expect(await screen.findByLabelText("Data source")).toHaveValue(
+      demo.dataset_id,
+    );
     expect(
       screen.getByLabelText("Symbol, code or source-observed name"),
-    ).toHaveValue("Observed");
+    ).toHaveValue("600000");
+    expect(screen.getByLabelText("Exchange")).toHaveValue("SSE");
+    await waitFor(() =>
+      expect(marketApi.search).toHaveBeenLastCalledWith(
+        demo.dataset_id,
+        "600000",
+        "SSE",
+        0,
+        expect.any(AbortSignal),
+      ),
+    );
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: `Inspect history: ${security.security_id}`,
+      }),
+    );
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.hash).toBe(""));
+    expect(screen.getByLabelText("Exchange")).toHaveValue("SSE");
+    expect(new URLSearchParams(window.location.search).get("q")).toBe("600000");
   });
 
   it("closes and reopens a paged security detail with browser history without resetting filters", async () => {

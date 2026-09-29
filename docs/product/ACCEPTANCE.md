@@ -6125,3 +6125,30 @@ valid cold p95, native screen-reader/200% zoom, independent novice QA,
 lawful after-start forward receipt, genuine lost-ledger recovery, independent
 physical backup, full M4/M5 and hosted exact-head CI remain open. October 1
 is an unverified GitHub recovery estimate; no push, merge, tag or release.
+
+## 2026-09-29 16:28 UTC local Markets filter recovery while GitHub CI is held
+
+The existing WSL Compose PostgreSQL and backend were healthy, Redis returned
+PONG, and localhost frontend plus `/api/health` returned HTTP 200. A red
+Markets regression showed that source, exchange and submitted search were
+kept only in React state: refreshing the page lost the selected filters.
+The page now writes those three committed filters to its existing URL with
+the shared history-safe replacement helper, preserving detail fragments and
+any other search parameters. An unsubmitted search draft is not committed.
+URL hydration and external navigation validate SSE/SZSE; an absent or invalid
+exchange means ALL rather than silently retaining a prior exchange.
+
+The focused Markets file passed 23/23. The isolated full local `make test`
+passed backend 1029 with one optional unmounted-archive skip and frontend
+481/481; `make lint`, `make build`, changed-file Prettier and `git diff --check`
+passed. In installed Chrome on the original localhost app, a read-only
+historical-cache search for 600000/SSE changed the URL to include the exact
+dataset, exchange and query; reload restored both controls and the one
+600000 row. Opening that row's dated detail then using browser Back preserved
+the query and exchange and returned focus to its inspect button. The browser
+screenshot was inspected but not saved as M5 media. No POST, original DB
+mutation, market retrieval, frozen research/OOS, GitHub action or release
+occurred. This closes one bounded U5 filter-recovery defect, not the complete
+U5/M4/M5 matrix or hosted CI. October 1 remains an unverified recovery
+estimate; lawful new-market use, genuine missing-ledger restoration and an
+independent physical backup remain open gates.
