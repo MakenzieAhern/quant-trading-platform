@@ -102,6 +102,9 @@ export function ExperimentsPage() {
   const [saveStatus, setSaveStatus] = useState<"saved" | "error" | null>(null);
   const [revision, setRevision] = useState(0);
   const scrollToRestore = useRef(readScrollPosition());
+  const focusedList = useRef(false);
+  const listHeading = useRef<HTMLHeadingElement>(null);
+  const listError = useRef<HTMLDivElement>(null);
   const queryKey = JSON.stringify([offset, view.q, view.status, view.mode, view.sort]);
   const [jobs, setJobs] = useState<{
     key: string;
@@ -134,6 +137,12 @@ export function ExperimentsPage() {
         "",
       );
   }, [view, offset, selected]);
+  useEffect(() => {
+    if (!focusedList.current || document.activeElement !== document.body) return;
+    if (jobs.error !== null) listError.current?.focus();
+    else if (jobs.data) listHeading.current?.focus();
+    focusedList.current = false;
+  }, [jobs.data, jobs.error]);
   function updateView(patch: Partial<View>, queryChanged = true) {
     setView((current) => ({ ...current, ...patch }));
     setSaveStatus(null);
@@ -180,7 +189,7 @@ export function ExperimentsPage() {
   return (
     <div className="experimentWorkspace">
       <header className="experimentHeader">
-        <h1>{c.listTitle}</h1>
+        <h1 ref={listHeading} tabIndex={-1}>{c.listTitle}</h1>
         <p>{c.listIntro}</p>
         <div className="experimentActions">
           <Link className="button" href="/research/new">
@@ -310,7 +319,9 @@ export function ExperimentsPage() {
       </section>
       {!jobs.data && jobs.error === null && <p role="status">{c.loading}</p>}
       {jobs.error !== null && (
-        <div className="experimentNotice" role="alert">
+        <div ref={listError} className="experimentNotice" role="alert" tabIndex={-1}
+          onFocusCapture={() => (focusedList.current = true)}
+          onBlurCapture={() => (focusedList.current = false)}>
           <p>{experimentError(jobs.error, c)}</p>
           <button
             className="button secondary"
@@ -330,7 +341,9 @@ export function ExperimentsPage() {
               ) : <Link href="/research/new">{c.newExperiment}</Link>}
             </div>
           ) : (
-            <div className="experimentTableScroll" role="region" tabIndex={0} aria-label={c.listTitle}>
+            <div className="experimentTableScroll" role="region" tabIndex={0} aria-label={c.listTitle}
+              onFocusCapture={() => (focusedList.current = true)}
+              onBlurCapture={() => (focusedList.current = false)}>
               <p className="experimentHelp">{c.tableScroll}</p>
               <table className="experimentTable">
                 <thead><tr>

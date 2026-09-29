@@ -5131,3 +5131,37 @@ label and remains 4/4. These are bounded component tests, not real browser
 fault injection, full U7/M4/M5 or release acceptance. No original database,
 paper account, provider, frozen research, Official OOS, push, merge or
 release was changed.
+
+## 2026-09-29 05:52 UTC experiment-list polling and retry focus
+
+The Research experiment list had two M4 keyboard defects. When an active-row
+poll failed, the table unmounted and its focused link fell to `BODY`; after
+an error was retried successfully, the disappearing Retry button likewise
+left focus on `BODY`. Red component regressions reproduced both. The list
+now moves focus to its visible error alert only when the focused list control
+disappears, and moves focus to its stable heading after a successful retry or
+row replacement. Focus deliberately moved elsewhere is not stolen. A
+read-only independent review identified additional keyed-row and pending-
+retry focus gaps; both are covered by the final tests.
+
+An isolated production frontend and GET-only QA proxy over the existing
+scratch backend reproduced one five-second poll with a browser-response-only
+`RUNNING` row and an injected HTTP 503. Actual Chrome focus moved from that
+row link to the visible alert, with no stale row; the first Retry check exposed
+the second defect. After the fix and a rebuilt frontend, Chrome again focused
+the alert on failure and the H1 after Retry restored the list. The screenshot
+was inspected in-tool but **not saved**. Reproducible proxy and bounded method
+log are outside Git in
+`product-evidence/v1.2/m4/20260929-experiment-poll-focus-*`.
+
+Final local checks: `make test` passed backend 1024/1025 (one optional
+unmounted-archive skip) and frontend 416/416; the later test-only pending-
+retry guard passed in the focused 50/50 and final full frontend 417/417.
+`make lint`, `make build` and `git diff --check` passed. The exact QA tab,
+mount-free container and proxy were stopped; original four Compose services
+remained running and original frontend/API both returned HTTP 200. This is
+bounded Chrome/component evidence, not native screen-reader speech, full
+M4/M5, independent novice, licensed current-market forward simulation,
+genuine lost-ledger/independent-backup recovery or exact-head GitHub CI.
+No original database/account/provider/frozen research/Official OOS write,
+push, merge or release occurred; October 1 remains an unverified estimate.

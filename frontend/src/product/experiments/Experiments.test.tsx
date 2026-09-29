@@ -719,6 +719,43 @@ describe("durable experiment detail", () => {
     expect(list).toHaveBeenCalledTimes(2);
   });
 
+  it.each([
+    ["removed row", true],
+    ["focus moved elsewhere", false],
+  ] as const)("recovers focus after an active-list poll fails: %s", async (_, onRow) => {
+    vi.useFakeTimers();
+    vi.spyOn(experimentApi, "list")
+      .mockResolvedValueOnce({ items: [job], total: 1, limit: 20, offset: 0 })
+      .mockRejectedValueOnce(new ApiError(503, "service unavailable"));
+    render(<ExperimentsPage />);
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    const rowLink = screen.getByRole("link", { name: /^Open experiment:/ });
+    const refresh = screen.getByRole("button", { name: "Refresh" });
+    rowLink.focus();
+    if (!onRow) refresh.focus();
+    await act(async () => vi.advanceTimersByTimeAsync(5000));
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent("The server response could not be confirmed");
+    expect(rowLink).not.toBeInTheDocument();
+    expect(onRow ? alert : refresh).toHaveFocus();
+  });
+
+  it("returns focus to the list heading when a polled row disappears but the table remains", async () => {
+    vi.useFakeTimers();
+    const remaining = { ...job, job_id: "22222222-2222-4222-8222-222222222222", name: "Remaining study" };
+    vi.spyOn(experimentApi, "list")
+      .mockResolvedValueOnce({ items: [job, remaining], total: 2, limit: 20, offset: 0 })
+      .mockResolvedValueOnce({ items: [remaining], total: 1, limit: 20, offset: 0 });
+    render(<ExperimentsPage />);
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    const rowLink = screen.getAllByRole("link", { name: /^Open experiment:/ })[0];
+    rowLink.focus();
+    await act(async () => vi.advanceTimersByTimeAsync(5000));
+    expect(rowLink).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Open experiment: Remaining study/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "Your experiments" })).toHaveFocus();
+  });
+
   it("does not keep old studies visible after the list refresh fails", async () => {
     const list = vi.spyOn(experimentApi, "list").mockResolvedValue({
       items: [{ ...job, status: "SUCCEEDED" }],
@@ -744,6 +781,28 @@ describe("durable experiment detail", () => {
     expect(
       await screen.findByRole("cell", { name: "Complete" }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "Your experiments" })).toHaveFocus();
+  });
+
+  it("does not steal focus moved away while a failed-list retry is pending", async () => {
+    const saved = { items: [{ ...job, status: "SUCCEEDED" as const }], total: 1, limit: 20, offset: 0 };
+    let finishRetry: (() => void) | undefined;
+    vi.spyOn(experimentApi, "list")
+      .mockResolvedValueOnce(saved)
+      .mockRejectedValueOnce(new ApiError(503, "service unavailable"))
+      .mockImplementationOnce(() => new Promise((resolve) => {
+        finishRetry = () => resolve(saved);
+      }));
+    render(<ExperimentsPage />);
+    await screen.findByRole("cell", { name: "Complete" });
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    await screen.findByRole("alert");
+    await userEvent.click(screen.getByRole("button", { name: "Retry loading" }));
+    const refresh = screen.getByRole("button", { name: "Refresh" });
+    refresh.focus();
+    await act(async () => finishRetry?.());
+    expect(screen.getByRole("cell", { name: "Complete" })).toBeInTheDocument();
+    expect(refresh).toHaveFocus();
   });
 
   it("reopens a job, displays actual work counts, and requests server cancellation", async () => {
