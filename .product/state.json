@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T03:01:13Z",
+  "updated_at_utc": "2026-09-29T03:06:42Z",
+  "experiment_cancel_response_reconciliation_gate": {
+    "status": "PASS_BOUNDED_LOCAL_COMPONENT_FIX_NOT_FULL_U3_ERROR_MATRIX",
+    "parent_head": "9ee6ded",
+    "proof": "2026-09-29 UTC: two red component regressions reproduced a lost cancel POST response leaving an obsolete error after authoritative task GET had confirmed either cancel_requested on RUNNING or CANCELLED, in both failure-first and confirmation-first orders. The detail view now tags the failed action and suppresses only a cancel error after that confirmation; an unconfirmed cancel failure remains visible, and a later Retry 503 on the cancelled parent remains visible. Focused Experiments 44/44, full frontend 392/392, ESLint, TypeScript, Prettier and Vite build passed. Actual Chrome reopened an existing saved historical study via GET and displayed persisted results without a page error.",
+    "limits": "The browser check was a successful saved-study read, not browser injection of a lost cancel response or an actual live cancellation. No original study/account/provider/frozen research or Official OOS was mutated. This does not prove full U3/M4/M5, independent novice, current licensed forward market data, restored missing ledgers, independent backup or GitHub exact-head CI. GitHub recovery remains unverified; no push, merge or release."
+  },
   "current_head_workbench_media_gate": {
     "status": "PASS_ONE_SETTLED_DESKTOP_PNG_NOT_FULL_M5",
     "source_head": "a9d22983cf9673e53a73f5c2d04c0e5ce865e869",

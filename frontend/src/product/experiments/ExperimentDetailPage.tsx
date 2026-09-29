@@ -32,7 +32,10 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
     observedEnd ? "observed" : "requested",
   );
   const [action, setAction] = useState<"cancel" | "retry" | null>(null);
-  const [actionError, setActionError] = useState<unknown>(null);
+  const [actionError, setActionError] = useState<{
+    kind: "cancel" | "retry";
+    reason: unknown;
+  } | null>(null);
   const locked = useRef(false);
   const focusedCommand = useRef<HTMLButtonElement | null>(null);
   const statusFocus = useRef<HTMLSpanElement>(null);
@@ -69,7 +72,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
       if (kind === "retry") navigate(`/experiments/${updated.job_id}`);
       else job.refresh();
     } catch (reason) {
-      if (activeJob.current === jobId) setActionError(reason);
+      if (activeJob.current === jobId) setActionError({ kind, reason });
     } finally {
       if (activeJob.current === jobId) {
         locked.current = false;
@@ -144,11 +147,15 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
               )}
             </div>
           </header>
-          {Boolean(actionError) && (
-            <p className="experimentError" role="alert">
-              {experimentError(actionError, c)}
-            </p>
-          )}
+          {actionError &&
+            !(
+              actionError.kind === "cancel" &&
+              (data.cancel_requested || data.status === "CANCELLED")
+            ) && (
+              <p className="experimentError" role="alert">
+                {experimentError(actionError.reason, c)}
+              </p>
+            )}
           {isActiveExperiment(data) && <JobProgress job={data} />}
           {data.status === "FAILED" && (
             <p className="experimentNotice" role="alert">

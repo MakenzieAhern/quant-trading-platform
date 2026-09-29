@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 lost research-cancel response — bounded U3 correction
+
+Two red component regressions reproduced a cancellation accepted by the
+server but followed by a lost/503 POST response. Whether the POST failed
+before or after an authoritative task GET confirmed `cancel_requested` on a
+running job or terminal `CANCELLED`, the old view retained a misleading
+request-error alert. The detail view now records which command failed and
+hides only the obsolete **cancel** error after authoritative confirmation.
+An unconfirmed cancel failure still appears; a subsequent Retry 503 on the
+cancelled parent still appears independently. This matches the backend's
+durable cancel transaction and does not create another task or touch results.
+
+Focused `Experiments.test.tsx` passed 44/44 after the fix, full frontend
+392/392; ESLint, TypeScript, changed-file Prettier and Vite build passed.
+Actual Chrome reopened an existing saved historical result by GET with its
+stored metrics and no page error, then the temporary tab closed. The browser
+did not inject a lost cancel response or cancel a live task. This is a bounded
+code/error-path correction, not full U3/M4/M5, independent novice or GitHub
+CI/release acceptance. Original studies, accounts, providers, frozen research
+and Official OOS were not changed.
+
 ## 2026-09-29 current-head Workbench screenshot — bounded media
 
 Installed Chrome 153 headless loaded the local Workbench at the configured

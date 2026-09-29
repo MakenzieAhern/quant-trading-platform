@@ -831,6 +831,64 @@ describe("durable experiment detail", () => {
     expect(button).toHaveFocus();
   });
 
+  it.each(["failure-first", "confirmation-first"] as const)(
+    "reconciles a lost cancel response with the confirmed task state: %s",
+    async (order) => {
+      const running = {
+        ...job,
+        status: "RUNNING" as const,
+        phase: "EXECUTING" as const,
+      };
+      const confirmed =
+        order === "failure-first"
+          ? { ...running, cancel_requested: true }
+          : { ...running, status: "CANCELLED" as const };
+      let current: typeof job = running;
+      vi.spyOn(experimentApi, "get").mockImplementation(async () => current);
+      let fail!: (reason: unknown) => void;
+      const cancel = vi
+        .spyOn(experimentApi, "cancel")
+        .mockImplementation(() => new Promise((_, reject) => (fail = reject)));
+      render(<ExperimentDetailPage jobId={job.job_id} />);
+      await userEvent.click(
+        await screen.findByRole("button", { name: "Cancel task" }),
+      );
+      expect(cancel).toHaveBeenCalledTimes(1);
+
+      if (order === "failure-first") {
+        await act(async () => fail(new ApiError(503, "unavailable")));
+        expect(screen.getByRole("alert")).toHaveTextContent(
+          "The server response could not be confirmed",
+        );
+      }
+      current = confirmed;
+      await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+      if (order === "failure-first")
+        await screen.findByText(
+          "Cancellation requested. The server will stop safely at its next checkpoint.",
+        );
+      else
+        await screen.findByText("Cancelled", {
+          selector: ".experimentStatus",
+        });
+      if (order === "confirmation-first")
+        await act(async () => fail(new ApiError(503, "unavailable")));
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+      if (order === "confirmation-first") {
+        vi.spyOn(experimentApi, "retry").mockRejectedValue(
+          new ApiError(503, "unavailable"),
+        );
+        await userEvent.click(
+          screen.getByRole("button", { name: "Start or reopen linked retry" }),
+        );
+        expect(screen.getByRole("alert")).toHaveTextContent(
+          "The server response could not be confirmed",
+        );
+      }
+    },
+  );
+
   it("keeps retry focused through an uncertain response without a duplicate", async () => {
     vi.spyOn(experimentApi, "get").mockResolvedValue({
       ...job,
