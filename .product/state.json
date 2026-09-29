@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T02:12:19Z",
+  "updated_at_utc": "2026-09-29T02:20:40Z",
+  "isolated_integrated_release_demo": {
+    "status": "PASS_BOUNDED_SYNTHETIC_RELEASE_FLOW_NOT_FULL_U1_U3_M4_M5",
+    "source_head": "5776d762ba2e9750a3a970bf1fd1350f2bed4f0e",
+    "proof": "2026-09-29 UTC: reused the production backend image and rebuilt the release frontend with API base http://localhost:18002. Exact frontend origin http://localhost:15176 passed backend CORS. On private-network tmpfs quant_test PostgreSQL/Redis with no original data mounts, the Codex in-app browser showed online status, the one registered A-share strategy, disabled unmounted historical archive and clearly labeled 2031 synthetic demo. Home CTA opened the four-step wizard. Default demo submission returned HTTP 202, job 4fdf5f74-e18e-495d-b0f0-e2b7cc82bbe6 reached SUCCEEDED, 340/340 sessions, and browser result showed saved return +0.39%, drawdown -0.04%, cost 25 CNY and synthetic benchmark +4.15%. Reload reopened the same result; English locale retained those values and translated the risk/synthetic warnings; Chinese locale was restored. The plan failed closed because no accepted next trading day exists. API logs linked browser GET/OPTIONS/POST/result calls to the isolated API.",
+    "safety": "API and frontend bound only to 127.0.0.1:18002/15176. All four isolated containers had auto-remove, no host or named-volume mounts and only the dedicated scratch network; they were stopped and auto-removed after the browser tab closed, and the empty network was removed. The synthetic QA job and tmpfs database were intentionally disposable. Original four Compose services and main API/frontend remained available afterward.",
+    "limits": "This is one agent-operated synthetic demo in the in-app browser, not a real novice study, independent Chrome/native accessibility/200pct/performance matrix, historical A-share archive run, lawful after-start forward market data, genuine lost-ledger restore, independent backup, full U1-U8/M4/M5 or GitHub CI. No screenshot file or interaction recording was saved. GitHub recovery is unverified; no push, merge or release."
+  },
   "current_head_release_image_smoke": {
     "status": "PASS_BOUNDED_LOCAL_IMAGES_NOT_INTEGRATED_RELEASE_OR_GITHUB_CI",
     "source_head": "9ff0ff1c600115410be8a07a6908f98d8c2dd603",

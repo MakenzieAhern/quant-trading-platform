@@ -4736,3 +4736,36 @@ accessibility/performance/novice acceptance, or M4/M5 release approval.
 No original database, frozen research, dataset, account, provider or Official
 OOS change, push, merge or release occurred. The October 1 GitHub recovery
 date remains a user estimate, not verified clearance.
+
+## 2026-09-29 02:20 UTC isolated frontend-to-backend release demo
+
+At local head `5776d76`, an isolated release frontend was rebuilt with
+`VITE_API_BASE_URL=http://localhost:18002`, paired with the current production
+backend image using `FRONTEND_ORIGIN=http://localhost:15176`, and served on
+localhost-only temporary ports. Scratch PostgreSQL and Redis used tmpfs and a
+private network; none of the four containers had host or named-volume mounts.
+This avoided the release Compose overlay's original host ports and data mounts.
+
+In the Codex in-app browser, the first page showed an online service, the
+registered A-share strategy, a disabled unmounted historical archive, and an
+explicitly labeled 2031 synthetic demo. The main action opened the four-step
+wizard. Submitting default demo settings returned HTTP 202 to the isolated API;
+job `4fdf5f74-e18e-495d-b0f0-e2b7cc82bbe6` finished `SUCCEEDED` with
+340/340 sessions. The saved result showed +0.39% return, -0.04% drawdown,
+CNY 25 cost and +4.15% **synthetic** benchmark; these are workflow fixture
+outputs, not market or investment evidence. A browser reload reopened the same
+result. Switching to English retained the numbers and translated the synthetic
+and risk warnings; Chinese was restored. The plan correctly withheld an
+executable action because this demo has no accepted next trading day. API logs
+confirmed browser GET/OPTIONS/POST/result requests reached the isolated API.
+
+The browser tab was closed, the four exact auto-remove scratch containers were
+stopped, and the verified-empty dedicated network was removed. The QA task and
+tmpfs database were disposable; original PostgreSQL, Redis, backend and
+frontend remained running, with their API/frontend still HTTP 200. No original
+database, frozen research, provider, account, Official OOS or GitHub action
+was taken. This is one agent-operated synthetic release-flow proof, **not**
+independent Chrome/novice, real A-share or forward-data acceptance, current-head
+interaction media, full M4/M5, GitHub CI, or v1.2 release approval. No screenshot
+file or recording was saved. October 1 remains a user estimate, not a verified
+GitHub recovery event.
