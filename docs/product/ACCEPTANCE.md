@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 13:29 UTC exact-head Chrome receipt recovery and local runtime
+
+At `b328ae8`, a separate tmpfs Compose stack and real Chrome tested the
+paper-create ambiguity: the first backend 201 was deliberately lost; retrying
+the saved identical-key request received a test-injected 422; the new read-only
+receipt endpoint returned 200 for the original committed account. The proxy
+recorded identical request/key hashes, and scratch session list stayed at
+`total=1`, `CREATED`. After removing the HTTP-only fault proxy and switching
+only the scratch frontend to direct scratch API access, Chrome showed the
+same account `已连接 已创建`, and the creation page retained its confirmed link.
+No replay was started. The detailed harness, IDs and SHA-256 values are outside
+Git in `product-evidence/v1.2/m5/20260929-paper-receipt-422-browser.md`.
+
+The original backend process had predated the new route. All original jobs
+were terminal, no pending product receipt journal was present, and the DB was
+already at Alembic head, so a backend-only Compose restart loaded current
+bind-mounted code. Original PostgreSQL/Redis/backend are healthy, Redis PONG;
+frontend and API health are HTTP 200; live OpenAPI now exposes the receipt
+route. Original paper sessions/events remain `5/417`, research jobs `8`,
+market jobs `4`. This makes the local app usable while GitHub account CI is
+held, but not release-ready. No original account/data or frozen/OOS asset was
+used for scratch QA; no push, hosted CI, merge, tag or release occurred.
+October 1 remains an unverified restoration estimate. Lawful new-market
+forward receipt, genuine missing-ledger restore, independent physical backup,
+valid cold matched p95, native screen-reader/200% zoom, CSV landing and
+independent novice QA remain open. This is one same-profile fault path, not a
+full U7/M4/M5 or arbitrary-race proof.
+
 ## 2026-09-29 13:13 UTC local committed-receipt recovery — bounded U7 check
 
 When an earlier paper-create response is uncertain, a later identical-key
