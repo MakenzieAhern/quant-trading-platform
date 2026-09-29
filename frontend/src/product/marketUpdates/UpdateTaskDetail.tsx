@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type Ref } from "react";
 import { useTranslation } from "react-i18next";
+import { ApiError } from "../../api/client";
 import { formatUtc } from "../../utils/format";
 import { marketUpdateApi } from "./api";
 import { explainUpdateCode, updateError, useUpdateCopy } from "./copy";
@@ -10,10 +11,12 @@ const activeStatus = (job: UpdateJob) =>
 export function UpdateTaskDetail({
   jobId,
   onOpen,
+  onReturn,
   focusRef,
 }: {
   jobId: string;
   onOpen: (id: string, shouldFocus: boolean) => void;
+  onReturn: () => void;
   focusRef: Ref<HTMLElement>;
 }) {
   const c = useUpdateCopy();
@@ -131,6 +134,19 @@ export function UpdateTaskDetail({
           {updateError(error, i18n.language)}
         </p>
       )}
+      {error instanceof ApiError &&
+        error.code === "MARKET_UPDATE_NOT_FOUND" && (
+          <>
+            <p>{c.missingTaskHelp}</p>
+            <button
+              type="button"
+              className="button secondary"
+              onClick={onReturn}
+            >
+              {c.backToRequests}
+            </button>
+          </>
+        )}
       {job && (
         <>
           <h4 ref={statusFocus} tabIndex={-1}>

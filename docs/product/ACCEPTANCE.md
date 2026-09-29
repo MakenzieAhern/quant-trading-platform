@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 missing data-update task recovery — bounded local Chrome
+
+A valid-looking but absent `/data?updateJob=` deep link returned the correct 404,
+yet offered only Refresh and left the invalid selection in the URL. The detail
+now explains where to go in Chinese and English and offers an explicit return
+to requests and task history. Recovery replaces the invalid URL instead of
+pushing it onto browser history, and focuses the stable panel heading after
+the detail is removed. It never starts provider acquisition.
+
+One new component regression was red before the change and now passes for
+empty history, both languages, keyboard Return, unchanged history length and
+heading focus. The current frontend passed 368/368 tests, ESLint, TypeScript,
+Prettier and a 129-module production build. The isolated repository test run
+passed backend 1024 with one optional archive skip and frontend 368; its
+frontend image was built before the later focus refinement, which was covered
+by the subsequent current-code frontend run. Actual Chrome opened an absent
+task by GET and confirmed the Chinese recovery button clears `updateJob`,
+restores form/history, and focuses the panel heading. No task, provider,
+paper account, original database or frozen research was changed.
+
+This is bounded local UX evidence, not full U5/U8/M4/M5, native screen-reader
+speech, independent novice acceptance, GitHub CI or release approval. The
+October 1 GitHub recovery date is a user estimate and remains unverified.
+
 ## 2026-09-29 application motion-off setting — bounded actual Chrome
 
 On the existing `/settings` page in actual Chrome, the saved motion preference

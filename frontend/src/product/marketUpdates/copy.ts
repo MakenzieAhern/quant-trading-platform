@@ -39,6 +39,9 @@ const en = {
   empty: "No update tasks yet.",
   open: "Open task",
   task: "Task",
+  missingTaskHelp:
+    "Choose another task from history below, or use the request form above if history is empty.",
+  backToRequests: "Back to requests and task history",
   created: "Created",
   status: "Status",
   requests: "Completed provider requests",
@@ -168,6 +171,8 @@ const zh: typeof en = {
   empty: "尚无更新任务。",
   open: "打开任务",
   task: "任务",
+  missingTaskHelp: "请从下方历史选择其他任务；若历史为空，请使用上方请求表单。",
+  backToRequests: "返回请求与任务历史",
   created: "创建时间",
   status: "状态",
   requests: "已完成供应商请求",

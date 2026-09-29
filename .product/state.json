@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T00:11:05Z",
+  "updated_at_utc": "2026-09-29T00:26:30Z",
+  "missing_market_update_task_recovery_audit": {
+    "status": "PASS_BOUNDED_LOCAL_CHROME_NOT_FULL_U5_U8_M4_M5",
+    "parent_head": "fadeb58",
+    "fix": "A saved update-task 404 now gives bilingual recovery guidance and a button that replaces the invalid /data?updateJob URL, restores the request/history view, and focuses its stable heading without starting acquisition",
+    "proof": "One red/green empty-history component case checks both languages, keyboard Enter, unchanged history length, cleared query, and heading focus. Current frontend 368/368, ESLint, TypeScript, Prettier, Vite 129-module build PASS. Isolated make test backend 1024 PASS/one optional archive skip; frontend 368 PASS from image built before later focus refinement. Actual Chrome GET-only 404 recovery cleared query, restored form/history and focused heading",
+    "limits": "No native screen-reader speech, independent novice, complete U5/U8/M4/M5, GitHub CI or release approval. October 1 GitHub recovery is a user estimate, not verified clearance. No provider, original database, paper account, frozen research or OOS write"
+  },
   "chrome_motion_preference_audit": {
     "status": "PASS_BOUNDED_APP_MOTION_OFF_NOT_OS_REDUCED_MOTION_OR_FULL_M4",
     "code_head": "64d8e0b",

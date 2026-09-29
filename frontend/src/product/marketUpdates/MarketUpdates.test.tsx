@@ -757,6 +757,45 @@ describe("explicit incremental request workflow", () => {
     );
     await waitFor(() => expect(marketUpdateApi.get).toHaveBeenCalledTimes(2));
   });
+  it("lets an absent saved task return to requests when history is empty", async () => {
+    vi.mocked(marketUpdateApi.get).mockRejectedValue(
+      new ApiError(404, "missing", "MARKET_UPDATE_NOT_FOUND"),
+    );
+    vi.mocked(marketUpdateApi.list).mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    expect(
+      await screen.findByText(/Choose another task from history below/),
+    ).toBeInTheDocument();
+    expect(screen.getByText("No update tasks yet.")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Back to requests and task history" }),
+    ).toBeInTheDocument();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByText(/请从下方历史选择其他任务/)).toBeInTheDocument();
+    const historyLength = window.history.length;
+    const recovery = screen.getByRole("button", { name: "返回请求与任务历史" });
+    recovery.focus();
+    await userEvent.keyboard("{Enter}");
+    expect(location.search).toBe("");
+    expect(window.history.length).toBe(historyLength);
+    expect(
+      screen.getByRole("heading", { name: "原始行情增量请求" }),
+    ).toHaveFocus();
+    expect(
+      screen.getByText("打开任务后可查看回执、观察值及未解释日期。"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "请求所选原始数据" }),
+    ).toBeInTheDocument();
+  });
   it("does not present an old completed task as current after a refresh failure", async () => {
     window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
     render(<MarketUpdatesPanel />);

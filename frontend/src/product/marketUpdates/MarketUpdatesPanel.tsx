@@ -4,7 +4,7 @@ import { Pagination } from "../../components/Pagination";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc } from "../../utils/format";
-import { navigate } from "../../utils/navigation";
+import { navigate, replaceUrl } from "../../utils/navigation";
 import { marketUpdateApi } from "./api";
 import { explainUpdateCode, updateError, useUpdateCopy } from "./copy";
 import {
@@ -34,6 +34,7 @@ export function MarketUpdatesPanel() {
   const [jobId, setJobId] = useState(selectedFromUrl);
   const pendingTaskFocus = useRef<string | null>(null);
   const taskFocus = useRef<HTMLElement>(null);
+  const headingFocus = useRef<HTMLHeadingElement>(null);
   const caps = useApiResource(
     (signal) => marketUpdateApi.capabilities(signal),
     [revision],
@@ -72,7 +73,9 @@ export function MarketUpdatesPanel() {
   return (
     <section className="marketUpdates" aria-label={c.title}>
       <header>
-        <h2>{c.title}</h2>
+        <h2 ref={headingFocus} tabIndex={-1}>
+          {c.title}
+        </h2>
         <p>{c.intro}</p>
       </header>
       <aside className="updateNotice">
@@ -103,6 +106,11 @@ export function MarketUpdatesPanel() {
             key={jobId}
             jobId={jobId}
             onOpen={openAndFocusTask}
+            onReturn={() => {
+              replaceUrl("/data");
+              setJobId(null);
+              headingFocus.current?.focus();
+            }}
             focusRef={taskFocus}
           />
         ) : (
