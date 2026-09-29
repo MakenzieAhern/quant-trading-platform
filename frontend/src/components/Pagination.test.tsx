@@ -51,6 +51,8 @@ describe("Pagination", () => {
       </>,
     );
     const pager = screen.getByRole("group", { name: "Pagination" });
+    const scroll = vi.fn();
+    pager.scrollIntoView = scroll;
     const range = within(pager).getByText("1–20 of 41");
     expect(range).toHaveAttribute("aria-live", "polite");
     expect(pager).not.toHaveFocus();
@@ -75,6 +77,10 @@ describe("Pagination", () => {
       within(pager).getByRole("button", { name: "Previous" }),
     ).toBeDisabled();
     expect(screen.queryByText("1–20 of 41")).not.toBeInTheDocument();
+    expect(scroll).toHaveBeenCalledExactlyOnceWith({
+      block: "nearest",
+      inline: "nearest",
+    });
     screen.getByLabelText("Other task").focus();
     view.rerender(
       <>
@@ -87,6 +93,7 @@ describe("Pagination", () => {
       await i18n.changeLanguage("zh-CN");
     });
     expect(screen.getByLabelText("Other task")).toHaveFocus();
+    expect(scroll).toHaveBeenCalledTimes(1);
     expect(pager).toHaveAccessibleName("分页");
     await act(async () => {
       await i18n.changeLanguage("en-US");
@@ -94,6 +101,37 @@ describe("Pagination", () => {
     view.unmount();
     expect(pager).not.toBeInTheDocument();
     expect(onChange).toHaveBeenCalledExactlyOnceWith(20);
+  });
+
+  it("does not pull a focused pager back after the user scrolls away", async () => {
+    const onChange = vi.fn();
+    const view = render(
+      <Pagination offset={0} limit={20} total={41} onChange={onChange} />,
+    );
+    const pager = screen.getByRole("group", { name: "Pagination" });
+    const scroll = vi.fn();
+    pager.scrollIntoView = scroll;
+    await userEvent.click(within(pager).getByRole("button", { name: "Next" }));
+    view.rerender(
+      <Pagination offset={20} limit={20} total={41} onChange={onChange} />,
+    );
+    expect(scroll).toHaveBeenCalledTimes(1);
+    vi.spyOn(pager, "getBoundingClientRect").mockReturnValue({
+      top: -100,
+      bottom: -36,
+    } as DOMRect);
+    window.dispatchEvent(new Event("scroll"));
+    view.rerender(
+      <Pagination
+        offset={20}
+        limit={20}
+        total={null}
+        loading
+        onChange={onChange}
+      />,
+    );
+    expect(pager).toHaveFocus();
+    expect(scroll).toHaveBeenCalledTimes(1);
   });
 
   it("allows a safe previous page when the total becomes unknown", async () => {

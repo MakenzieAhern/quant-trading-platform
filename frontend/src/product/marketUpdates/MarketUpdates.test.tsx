@@ -12,6 +12,7 @@ import { ApiError } from "../../api/client";
 import { i18n } from "../../i18n";
 import { marketUpdateApi } from "./api";
 import { MarketUpdatesPanel } from "./MarketUpdatesPanel";
+import { UpdateRecords } from "./UpdateRecords";
 import { caps, job, observations, receipt } from "./fixtures.test-data";
 import { UPDATE_DRAFT_KEY } from "./intent";
 import type { UpdateJob } from "./types";
@@ -174,6 +175,35 @@ describe("explicit incremental request workflow", () => {
       within(translated).getByText("125,000.000000000000000009"),
     ).toBeInTheDocument();
     expect(create).not.toHaveBeenCalled();
+  });
+  it("keeps the focused observation pager mounted when progress refetches records", async () => {
+    const rows = Array.from({ length: 51 }, (_, index) => ({
+      ...observations.items[0],
+      trading_date: new Date(Date.UTC(2026, 0, index + 1))
+        .toISOString()
+        .slice(0, 10),
+    }));
+    vi.mocked(marketUpdateApi.observations)
+      .mockResolvedValueOnce({ ...observations, items: rows, total: 51 })
+      .mockImplementationOnce(() => new Promise(() => {}));
+    const running = {
+      ...job,
+      status: "RUNNING" as const,
+      completed_requests: 0,
+    };
+    const { rerender } = render(<UpdateRecords job={running} revision={0} />);
+    await screen.findByRole("table", { name: "Candidate observations" });
+    const pager = screen.getAllByRole("group", { name: "Pagination" })[0];
+    await userEvent.click(within(pager).getByRole("button", { name: "Next" }));
+    expect(pager).toHaveFocus();
+    rerender(
+      <UpdateRecords
+        job={{ ...running, completed_requests: 1 }}
+        revision={0}
+      />,
+    );
+    expect(pager).toBeInTheDocument();
+    expect(pager).toHaveFocus();
   });
   it("names saved task controls by security, dates and time in both languages", async () => {
     render(<MarketUpdatesPanel />);

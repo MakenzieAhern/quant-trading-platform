@@ -152,14 +152,15 @@ export function UpdateRecords({
               </tbody>
             </table>
           </div>
-          <Pagination
-            offset={observationOffset}
-            limit={50}
-            total={observations.data.total}
-            onChange={setObservationOffset}
-          />
         </>
       )}
+      <Pagination
+        offset={observationOffset}
+        limit={50}
+        total={observations.data?.total ?? null}
+        loading={observations.loading}
+        onChange={setObservationOffset}
+      />
       <h4>{c.receipts}</h4>
       {receipts.loading && <p role="status">{c.loading}</p>}
       {receipts.error && (
