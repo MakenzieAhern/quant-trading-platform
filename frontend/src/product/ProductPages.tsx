@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ApiError } from "../api/client";
 import { Link } from "../components/Link";
@@ -67,6 +67,12 @@ export function WorkbenchPage() {
   const c = useProductCopy();
   const { i18n } = useTranslation();
   const [retry, setRetry] = useState(0);
+  const dataHeading = useRef<HTMLHeadingElement>(null);
+  const recentHeading = useRef<HTMLHeadingElement>(null);
+  const retryRead = (heading: HTMLHeadingElement | null) => {
+    if (document.activeElement?.closest(".productError")) heading?.focus();
+    setRetry((value) => value + 1);
+  };
   const data = useApiResource(
     (signal) => experimentApi.capabilities(signal),
     [retry],
@@ -121,13 +127,15 @@ export function WorkbenchPage() {
           </button>
         </section>
         <aside className="dataOverview">
-          <h2>{c.environment}</h2>
+          <h2 ref={dataHeading} tabIndex={-1}>
+            {c.environment}
+          </h2>
           {data.loading ? (
             <p role="status">{c.loading}</p>
           ) : data.error ? (
             <ProductError
               error={data.error}
-              retry={() => setRetry(retry + 1)}
+              retry={() => retryRead(dataHeading.current)}
             />
           ) : (
             <>
@@ -178,7 +186,9 @@ export function WorkbenchPage() {
       </section>
       <section className="panel">
         <div className="panelHeader">
-          <h2>{c.recent}</h2>
+          <h2 ref={recentHeading} tabIndex={-1}>
+            {c.recent}
+          </h2>
           <Link className="textLink" href="/experiments">
             {c.viewAll} →
           </Link>
@@ -188,7 +198,10 @@ export function WorkbenchPage() {
             {c.loading}
           </p>
         ) : jobs.error ? (
-          <ProductError error={jobs.error} retry={() => setRetry(retry + 1)} />
+          <ProductError
+            error={jobs.error}
+            retry={() => retryRead(recentHeading.current)}
+          />
         ) : jobs.data?.items.length ? (
           <div className="recentStudies">
             {jobs.data.items.map((job) => (

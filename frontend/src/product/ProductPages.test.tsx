@@ -1,8 +1,15 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
 import { experimentApi } from "./experiments/api";
+import { capabilities } from "./experiments/fixtures.test-data";
 import {
   HelpPage,
   ModeGuide,
@@ -94,3 +101,35 @@ it("distinguishes permission, timeout and offline failures while keeping retry",
   fireEvent.click(screen.getByRole("button", { name: "Try again" }));
   expect(retry).toHaveBeenCalledOnce();
 });
+
+it.each(["success", "error"])(
+  "keeps keyboard focus in the Workbench after a capabilities Retry returns %s",
+  async (outcome) => {
+    await act(() => i18n.changeLanguage("en-US"));
+    const read = vi
+      .spyOn(experimentApi, "capabilities")
+      .mockRejectedValueOnce(new ApiError(503, "unavailable"));
+    if (outcome === "success") read.mockResolvedValue(capabilities);
+    else read.mockRejectedValue(new ApiError(403, "denied"));
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [],
+      limit: 4,
+      offset: 0,
+      total: 0,
+    });
+    render(<WorkbenchPage />);
+    const retry = await screen.findByRole("button", { name: "Try again" });
+    retry.focus();
+    expect(retry).toHaveFocus();
+    fireEvent.click(retry);
+    await waitFor(() => expect(read).toHaveBeenCalledTimes(2));
+    if (outcome === "success")
+      await waitFor(() =>
+        expect(screen.queryByRole("alert")).not.toBeInTheDocument(),
+      );
+    else await screen.findByText(/Access was denied/);
+    expect(
+      screen.getByRole("heading", { name: "Your research data" }),
+    ).toHaveFocus();
+  },
+);
