@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T06:55:28Z",
+  "updated_at_utc": "2026-09-29T07:10:52Z",
+  "local_operation_during_github_hold_gate": {
+    "status": "PASS_LOCAL_RUNTIME_TEST_LINT_BUILD_NOT_HOSTED_CI_OR_RELEASE",
+    "parent_head": "91e4cfb",
+    "proof": "2026-09-29 UTC: original Compose PostgreSQL, Redis, backend and frontend stayed up; PostgreSQL/Redis/backend healthy; frontend and /api/health HTTP200. A Chrome 153 pre-fix accessibility tree exposed only the refresh button, not its nested status. The service status is now an external live region referenced by aria-describedby; a focused regression failed before and passed after the fix. Exact-source make test passed backend 1024 with one optional unmounted-archive skip and frontend 417; make lint and make build passed. See docs/product/ACCEPTANCE.md.",
+    "limits": "The development frontend serves bind-mounted current source, but its production image was not rebuilt for this fix. Post-fix native Chrome accessibility tree and screen-reader speech are unverified because the Windows browser helper stopped on URL-confidence policy. Local checks are not pushed-head GitHub CI, full M4/M5, backup/ledger/data-rights closure or v1.2 release. No original database, frozen research/OOS, paper account, provider, push, merge or release write."
+  },
   "paper_command_late_503_browser_gate": {
     "status": "PASS_BOUNDED_CHROME_RESPONSE_MUTATION_NOT_FULL_M4",
     "code_head": "ffaa0232fe025eefed2994abb72edbc6f9829c87",

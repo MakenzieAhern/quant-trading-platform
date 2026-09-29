@@ -157,7 +157,7 @@ describe("routing", () => {
     window.history.replaceState({}, "", "/unknown");
     vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
     render(<App />);
-    await screen.findByText("Service online");
+    await screen.findByText("Service online", { selector: ".serviceText" });
     fireEvent.click(screen.getByRole("button", { name: "Open navigation" }));
     expect(document.querySelector(".appBody")).toHaveAttribute("inert");
     act(() => {
@@ -208,12 +208,25 @@ describe("routing", () => {
       return Promise.resolve(jsonResponse({ detail: "Unavailable" }, 503));
     });
     render(<App />);
-    expect(await screen.findByText("Service unavailable")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Service unavailable", {
+        selector: ".serviceText",
+      }),
+    ).toBeInTheDocument();
+    const refresh = screen.getByRole("button", {
+      name: "Refresh service and data status",
+    });
+    const serviceStatus = screen.getByRole("status");
+    expect(refresh).not.toContainElement(serviceStatus);
+    expect(refresh).toHaveAttribute("aria-describedby", serviceStatus.id);
+    expect(refresh).toHaveAccessibleDescription("Service unavailable");
     online = true;
-    fireEvent.click(
-      screen.getByRole("button", { name: "Refresh service and data status" }),
-    );
-    expect(await screen.findByText("Service online")).toBeInTheDocument();
+    fireEvent.click(refresh);
+    expect(
+      await screen.findByText("Service online", { selector: ".serviceText" }),
+    ).toBeInTheDocument();
+    expect(serviceStatus).toHaveTextContent("Service online");
+    expect(refresh).toHaveAccessibleDescription("Service online");
     expect(
       screen.getByText("Available data · not an active run"),
     ).toBeInTheDocument();
@@ -256,7 +269,7 @@ describe("routing", () => {
           });
     });
     render(<App />);
-    await screen.findByText("Service online");
+    await screen.findByText("Service online", { selector: ".serviceText" });
     const refresh = screen.getByRole("button", {
       name: "Refresh service and data status",
     });
@@ -302,7 +315,7 @@ describe("routing", () => {
         ),
       );
     const view = render(<App />);
-    await screen.findByText("Service online");
+    await screen.findByText("Service online", { selector: ".serviceText" });
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(data).toHaveBeenCalledTimes(1);
 
@@ -314,7 +327,9 @@ describe("routing", () => {
 
     visibility.mockReturnValue("visible");
     fireEvent(document, new Event("visibilitychange"));
-    await screen.findByText("Service unavailable");
+    await screen.findByText("Service unavailable", {
+      selector: ".serviceText",
+    });
     expect(fetch).toHaveBeenCalledTimes(2);
     expect(data).toHaveBeenCalledTimes(2);
     fireEvent.focus(window);
@@ -349,11 +364,15 @@ describe("routing", () => {
       );
     const view = render(<App />);
     await act(async () => {});
-    expect(screen.getByText("Service online")).toBeInTheDocument();
+    expect(
+      screen.getByText("Service online", { selector: ".serviceText" }),
+    ).toBeInTheDocument();
 
     online = false;
     await act(async () => vi.advanceTimersByTime(30_000));
-    expect(screen.getByText("Service unavailable")).toBeInTheDocument();
+    expect(
+      screen.getByText("Service unavailable", { selector: ".serviceText" }),
+    ).toBeInTheDocument();
     expect(fetch).toHaveBeenCalledTimes(2);
     expect(data).toHaveBeenCalledTimes(2);
 
@@ -363,7 +382,9 @@ describe("routing", () => {
     expect(fetch).toHaveBeenCalledTimes(2);
     visibility.mockReturnValue("visible");
     await act(async () => vi.advanceTimersByTime(30_000));
-    expect(screen.getByText("Service online")).toBeInTheDocument();
+    expect(
+      screen.getByText("Service online", { selector: ".serviceText" }),
+    ).toBeInTheDocument();
     expect(fetch).toHaveBeenCalledTimes(3);
 
     view.unmount();
@@ -380,7 +401,11 @@ describe("routing", () => {
       expect(
         screen.getByRole("heading", { name: "Page not found" }),
       ).toBeInTheDocument();
-      expect(await screen.findByText("Service online")).toBeInTheDocument();
+      expect(
+        await screen.findByText("Service online", {
+          selector: ".serviceText",
+        }),
+      ).toBeInTheDocument();
       expect(
         screen.queryByTitle("development · paper"),
       ).not.toBeInTheDocument();

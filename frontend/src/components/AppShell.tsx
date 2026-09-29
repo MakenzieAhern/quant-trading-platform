@@ -47,6 +47,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   const displayedData =
     pageData ??
     (available ? { mode: available.mode, asOf: available.as_of } : null);
+  const serviceStatus = health.error
+    ? copy.offline
+    : health.data
+      ? copy.online
+      : copy.connecting;
   const links = [
     { href: "/", label: copy.home, icon: "◫" },
     { href: "/markets", label: copy.markets, icon: "▥" },
@@ -274,25 +279,23 @@ export function AppShell({ children }: { children: ReactNode }) {
               type="button"
               className={`serviceState ${health.error ? "serviceOffline" : ""}`}
               aria-label={copy.refreshStatus}
+              aria-describedby="service-health-status"
               aria-disabled={refreshing}
               onClick={() => {
                 if (!refreshing) setRefresh((value) => value + 1);
               }}
             >
               <i aria-hidden="true" />
-              <span className="serviceText" role="status">
-                {health.error
-                  ? copy.offline
-                  : health.data
-                    ? copy.online
-                    : copy.connecting}
-              </span>
+              <span className="serviceText">{serviceStatus}</span>
               {health.data && (
                 <span className="srOnly">
                   {copy.checkedAt}: {formatUtc(health.data.checkedAt)}
                 </span>
               )}
             </button>
+            <span id="service-health-status" className="srOnly" role="status">
+              {serviceStatus}
+            </span>
             <LanguageSelector />
             <label className="themeControl">
               <span className="srOnly">{copy.theme}</span>

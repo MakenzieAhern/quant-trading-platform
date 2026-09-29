@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 GitHub-independent local operation and service-status accessibility
+
+The original four Compose services remained up; PostgreSQL, Redis and backend
+reported healthy, and the frontend and `/api/health` each returned HTTP 200.
+On the working tree based on `91e4cfb`, Chrome 153's pre-fix accessibility
+tree exposed the refresh button but suppressed its nested service `status`.
+The status is now a sibling live region and describes the refresh button.
+A focused regression was red before the fix and green after it. Exact-source
+local `make test` passed 1024 backend tests (one optional historical-archive
+skip) and 417 frontend tests; `make lint` and `make build` passed.
+The existing Vite frontend serves the bind-mounted changed AppShell source;
+its fetched module contains `service-health-status` without a container restart.
+
+This permits local use and development during the GitHub Actions hold, but
+does not establish a pushed-head hosted CI result or v1.2 release approval.
+The post-fix native Chrome accessibility tree and screen-reader speech remain
+unverified because the Windows browser helper could not safely establish its
+current URL and stopped. No original database, frozen research, paper account,
+provider, push, merge or release was changed.
+
 ## 2026-09-29 local continuation during GitHub Actions hold — bounded M4 correction
 
 The shared paper-ledger table now exposes its first body cell as a semantic
