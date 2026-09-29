@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 saved-study comparison — bounded current-head Chrome
+
+On local HEAD `25b0fa4`, actual Chrome opened two saved historical studies in
+the comparison view. Chinese/dark and English/light both showed the same
+study identities, dataset checksum, differing date windows and explicit
+warning that this is **not a controlled comparison**. The full-precision
+toggle showed stored values, and reloading the comparison URL restored the
+two studies and rounded values. A fresh first mouse click also opened the
+strategy detail and focused Close. Chrome's queried warning/error log was
+empty. The original Chinese/dark preference was restored; no provider,
+research, paper-account or market-data POST was initiated.
+
+The bounded observation is recorded in the local, untracked evidence file
+`product-evidence/v1.2/m4/20260929-25b0fa4-comparison-chrome.md`. No
+current-head screenshot/recording was saved. One successful strategy click
+does not resolve the intermittent cold-click or p95 question; the browser
+tool did not expose native Event Timing. This is not full M4/M5, new-market
+forward evidence, GitHub CI or release acceptance.
+
 ## 2026-09-29 missing data-update task recovery — bounded local Chrome
 
 A valid-looking but absent `/data?updateJob=` deep link returned the correct 404,
