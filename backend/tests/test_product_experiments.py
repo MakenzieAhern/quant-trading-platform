@@ -2,6 +2,7 @@ from dataclasses import replace
 from datetime import UTC, date, datetime
 from decimal import Decimal
 from threading import Event
+from types import SimpleNamespace
 
 import pytest
 from pydantic import ValidationError
@@ -11,7 +12,9 @@ from app.application.experiments.data import (
     DEMO_ID,
     DEMO_SHA,
     DEMO_START,
+    HISTORICAL_ID,
     ExperimentDatasetRegistry,
+    ExperimentInputError,
     SyntheticExperimentDataset,
 )
 from app.application.experiments.models import CreateExperimentRequest
@@ -22,6 +25,7 @@ from app.application.experiments.runner import (
     run_experiment,
 )
 from app.data.catalog.checksums import canonical_sha256
+from app.data.catalog.freeze import MARKER
 
 
 def demo_request(**changes):
@@ -64,6 +68,25 @@ def test_clean_install_capability_is_explicit_synthetic_demo(tmp_path):
     source = SyntheticExperimentDataset(DEMO_END)
     assert len(source.calendar_days) == 340
     assert source.calendar_days[-1] == date.fromisoformat(demo["coverage_end"])
+
+
+def test_non_object_historical_freeze_marker_does_not_block_demo(tmp_path, monkeypatch):
+    archive = tmp_path / HISTORICAL_ID
+    archive.mkdir()
+    (archive / "manifest.json").write_text("{}")
+    (archive / MARKER).write_text("null")
+    monkeypatch.setattr(
+        "app.application.experiments.data.load_manifest",
+        lambda _: SimpleNamespace(dataset_id=HISTORICAL_ID, canonical_sha256="sha", partitions=()),
+    )
+
+    registry = ExperimentDatasetRegistry(tmp_path)
+    historical, demo = registry.capabilities()["datasets"]
+    assert historical["available"] is False
+    assert historical["reason_code"] == "DATASET_INTEGRITY_FAILED"
+    assert demo["available"] is True
+    with pytest.raises(ExperimentInputError, match="DATASET_INTEGRITY_FAILED"):
+        registry.resolve(HISTORICAL_ID)
 
 
 def test_real_engine_demo_has_exact_money_costs_progress_and_repeatable_results(tmp_path):

@@ -42,7 +42,8 @@ class ExperimentDatasetRegistry:
         manifest = load_manifest(path / "manifest.json")
         record = json.loads((path / MARKER).read_bytes())
         if (
-            manifest.dataset_id != HISTORICAL_ID
+            not isinstance(record, dict)
+            or manifest.dataset_id != HISTORICAL_ID
             or manifest.canonical_sha256 != record["dataset_manifest_sha256"]
             or canonical_sha256({k: v for k, v in record.items() if k != "freeze_record_sha256"})
             != record["freeze_record_sha256"]
