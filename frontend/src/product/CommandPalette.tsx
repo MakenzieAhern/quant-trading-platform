@@ -87,7 +87,10 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             className="button secondary"
-            onClick={() => setRevision((value) => value + 1)}
+            onClick={() => {
+              searchInput.current?.focus();
+              setRevision((value) => value + 1);
+            }}
           >
             {copy.retry}
           </button>

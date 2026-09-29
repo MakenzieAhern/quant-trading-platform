@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 global search keyboard Retry — bounded U8/M4 correction
+
+The global command search lost keyboard focus when a failed studies read was
+retried successfully: the focused Retry button disappeared and focus fell to
+the document body. The existing regression failed before the change. Retry
+now focuses the persistent search field before reloading, preserving the
+query; the focused test passed 7/7 and the full frontend passed 438/438.
+`make lint`, changed-file Prettier and `make build` passed.
+
+Actual Chrome loaded a current-source production preview through a GET-only
+proxy to the isolated scratch backend. The proxy returned one studies search
+HTTP 503 for `q=FocusProbe`, then HTTP 200 on Retry. The browser exposed
+the Chinese error, keyboard Tab focused Retry, Return cleared the error with
+the unchanged query and search field focused, and Escape restored focus to
+the topbar Search trigger. The recovery screenshot was visually inspected
+but not saved as M5 media. Proxy checksum, exact endpoints and cleanup are
+outside Git in `product-evidence/v1.2/m4/20260929-command-palette-retry-focus/README.md`.
+The preview/proxy/tabs were stopped; original Compose services stayed up.
+
+The same Chrome session did **not** establish native 200% zoom: two browser
+zoom shortcut forms left the measured zoom/viewport unchanged. Neither the
+automatic CSV action nor its prepared fallback link yielded a captured
+download event, so file landing remains unverified, not an established app
+defect. Native screen-reader speech, full U8/M4/M5, independent novice,
+lawful forward data, genuine lost-ledger recovery, independent backup and
+hosted exact-head CI remain open. No push, merge or release occurred.
+
 ## 2026-09-29 local market readout live-region and update focus check
 
 On the working tree based on `4fdcd26`, the market detail announced its full

@@ -242,8 +242,14 @@ describe("bounded server command search", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "not an empty-results claim",
     );
-    await userEvent.click(screen.getByRole("button", { name: "Try again" }));
+    const retry = screen.getByRole("button", { name: "Try again" });
+    retry.focus();
+    await userEvent.keyboard("{Enter}");
     await waitFor(() => expect(experimentApi.list).toHaveBeenCalledTimes(2));
+    await waitFor(() =>
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument(),
+    );
+    expect(screen.getByRole("searchbox")).toHaveFocus();
     fireEvent.change(screen.getByRole("searchbox"), {
       target: { value: "界".repeat(90) },
     });
