@@ -1,7 +1,19 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T03:40:24Z",
+  "updated_at_utc": "2026-09-29T03:56:47Z",
+  "task_poll_focus_gate": {
+    "status": "PASS_BOUNDED_LOCAL_CHROME_FAULT_INJECTION_NOT_FULL_M4",
+    "code_head": "e1922f0",
+    "proof": "2026-09-29 UTC: two red regressions reproduced focused task links falling to body after a five-second failed poll. Task Center research/raw-task and Data Center update-history now focus their named error alerts only if the focused list control disappears; no stale list is retained. Focused 43/43 and full frontend 407/407 passed. Actual installed Chrome 153 in three independent read-only contexts modified only the browser response to mark one saved row RUNNING, then injected HTTP503 on the next list GET. All three alert focus checks passed with visible screenshots and only backend GETs. Exact-code make test exited zero with backend 1024 passed/one optional unmounted-archive skip and frontend 407/407; make lint and make build exited zero. Independent read-only review found no concrete blocker. Evidence and screenshot SHA-256 are under product-evidence/v1.2/m4/20260929-task-poll-focus-chrome.md outside Git.",
+    "limits": "Browser-injected failure, not a real outage or native screen-reader speech; idle pagination focus, wider M4, genuine novice, lawful new-market forward data, lost-ledger/independent-backup recovery and GitHub-hosted CI remain open. No original database/account/provider/frozen research/OOS write, push, merge or release occurred."
+  },
+  "market_cache_browser_error_gate": {
+    "status": "PASS_BOUNDED_ACTUAL_CHROME_READ_ERROR_RECOVERY_NOT_FULL_U5_U8_M4",
+    "source_head": "69f1e39",
+    "proof": "2026-09-29 UTC: installed Chrome 153 loaded the local market page in independent EN and ZH contexts. Browser interception held both initial securities-search GETs at injected EN/403 or ZH/408 until the visible Retry reading cache action; the next GET restored a 20-row historical table and removed the alert. Both localized messages and source/date warnings were visually checked in SHA-256-recorded screenshots. The script exited zero; all observed backend API requests were GET. Independent read-only review found no concrete code blocker and prompted the numeric method log to be persisted. See product-evidence/v1.2/m4/20260929-market-read-error-chrome.md outside Git.",
+    "limits": "This did not test an in-session locale switch, real backend permission failure/timeout, production build or full U5/U8/M4. No provider, watchlist, original database/account/frozen research/OOS write, GitHub action or release occurred."
+  },
   "m5_result_chart_guide_gate": {
     "status": "PASS_BOUNDED_BILINGUAL_GUIDE_NOT_FULL_M5",
     "source_head": "7c96ee5",

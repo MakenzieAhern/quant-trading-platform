@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 task-list polling focus — bounded M4 correction
+
+Task Center research/raw-task lists and Data Center update history unmounted a
+focused Open link/button when a five-second polling GET failed. Focus fell to
+`body`, leaving keyboard users without a useful recovery point. Two new
+regressions reproduced that failure before the fix. Each list now moves focus
+to its named, programmatically focusable error alert only when the focused
+list item disappears; moving focus elsewhere before the poll does not steal it.
+The shared resource hook still clears failed data, so stale task state is not
+presented as current. Focused TaskCenter/MarketUpdates tests passed 43/43;
+full frontend 407/407.
+
+Actual Chrome 153 then exercised all three lists with browser-only status
+overrides to trigger polling and injected 503 responses. In every case, the
+Open control disappeared and the visible alert received focus. Only backend
+GET requests occurred; no saved job was changed. Three visually checked
+viewport screenshots, SHA-256 values and the reproducible script are recorded
+outside Git in `product-evidence/v1.2/m4/20260929-task-poll-focus-chrome.md`.
+Exact-code `make test` passed backend 1024 with one optional unmounted-archive
+skip and frontend 407; `make lint` and `make build` passed. This is not a real
+outage, native screen-reader proof, idle-pagination test or full M4 acceptance.
+
+## 2026-09-29 market read-error recovery — bounded Chrome check
+
+Installed Chrome 153 received browser-injected 403 on English market-search
+GETs and 408 on Chinese market-search GETs. Both pages displayed the correct
+localized next step and historical-source warning. One visible Retry read the
+cached search again, removed the alert and restored a 20-row table. All logged
+backend API methods were GET; no provider or watchlist mutation occurred. The
+two screenshots were visually checked, and the script, request counts and
+SHA-256 values are saved outside Git in
+`product-evidence/v1.2/m4/20260929-market-read-error-chrome.md`.
+This closes a browser-evidence gap for the earlier typed-error repair, not the
+full U5/U8/M4 matrix, a real permission/timeout failure, or legal authority
+for new-market forward simulation.
+
 ## 2026-09-29 result-chart guide — bounded M5 improvement
 
 Both user guides now document the existing result chart's 100-point pages,
