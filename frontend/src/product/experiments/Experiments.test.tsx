@@ -1286,6 +1286,48 @@ describe("experiment contract", () => {
     expect(screen.getByText("模拟调仓预览")).toBeInTheDocument();
     expect(screen.getByText(/不是今日交易建议/)).toBeInTheDocument();
   });
+  it("keeps unknown saved plan reasons distinct from an actual strategy exit", async () => {
+    const unknown = "UNRECOGNIZED_TEST_REASON";
+    const candidate = plan.candidates[0];
+    const saved = {
+      ...plan,
+      candidates: [
+        candidate,
+        {
+          ...candidate,
+          security_id: "CN-A:SSE:600001",
+          trigger_reason: "EXITED_STRATEGY_TARGET",
+          side: "SELL",
+          target_weight: "0",
+          held_quantity: "100",
+          target_quantity: "0",
+        },
+        {
+          ...candidate,
+          security_id: "CN-A:SSE:600002",
+          trigger_reason: unknown,
+        },
+      ],
+    };
+    render(
+      <ExperimentPlan
+        plan={
+          parseResult({ ...result, simulation_plan: saved }).simulation_plan ??
+          null
+        }
+      />,
+    );
+    expect(
+      screen.getByText("Top-ranked eligible momentum/low-volatility share"),
+    ).toBeVisible();
+    expect(screen.getByText("No longer in the strategy target")).toBeVisible();
+    expect(
+      screen.getByText(`Unrecognized recorded reason (${unknown})`),
+    ).toBeVisible();
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(screen.getByText("不再属于策略目标持仓")).toBeVisible();
+    expect(screen.getByText(`未识别的已记录原因 (${unknown})`)).toBeVisible();
+  });
   it("rejects rounded or falsely submitted simulated plans", () => {
     expect(
       parseResult({ ...result, simulation_plan: plan }).simulation_plan,

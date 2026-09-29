@@ -5982,3 +5982,45 @@ not native screen-reader speech, 200% zoom, full M4/M5, independent novice,
 lawful forward-market data, genuine missing-ledger recovery, independent
 physical backup or exact-head hosted CI. GitHub October 1 recovery remains an
 unverified estimate; no push, merge, tag or release occurred.
+
+## 2026-09-29 15:05 UTC plan-reason fail-closed display and local QA limits
+
+The saved-plan renderer previously labeled every reason other than
+`TOP_DECILE_MOMENTUM_LOW_VOL` as a definite strategy exit. The current backend
+emits only that code and `EXITED_STRATEGY_TARGET`, but an older or unrecognized
+saved code must not acquire a false financial explanation. The renderer now
+matches both known codes explicitly; any other string is labeled as an
+unrecognized recorded reason in English or Chinese and retains its original
+code. No plan, amount, order, account, backend API or stored record changed.
+One regression passes an unknown reason through the existing result parser
+and checks all three display cases in both languages. Focused tests 51/51,
+full frontend 469/469, ESLint, TypeScript and production build passed. An
+independent read-only diff review found no actionable issue. Installed Chrome
+on the original `localhost:5173` rendered both real saved known reasons in
+English and Chinese; English was restored. No real saved unknown reason was
+found or fabricated in the application database, so the browser observation
+is a known-code regression check, not live unknown-code proof.
+
+A separate isolated pre-fix-HEAD release page on loopback port 15177 used
+GET-only API proxying with POST denied (403) to probe cold saved-result clicks.
+Ten document-reported-visible/focused, trusted clicks showed loading DOM
+mutations 4.5–6.6 ms after pointer input, **not painted feedback**. Native click entries were
+absent at the first collection; a delayed re-collection exposed one route
+click of 1216 ms. The same page's trivial collection button then produced
+528 ms and one 147440 ms native click duration when a following paint was
+deferred. Five double-frame timestamps were still null at collection. These
+samples are censored or presentation-timing contaminated; no valid matched
+cold p95 or app PASS/FAIL can be inferred. The previous method must not be
+repeated unchanged. The owned no-volume QA container/tab were stopped/closed;
+original Compose PostgreSQL, Redis, backend and frontend remained healthy.
+Before the change, the isolated local test stack passed backend 1029 with
+one optional-archive skip and frontend 468; after the change, frontend 469
+passed. Local checks do not replace exact-head GitHub CI.
+
+Current-head CSV endpoint audit returned HTTP 200 with a 29,316-character
+historical trades report and retained server formula-escaping tests. The
+earlier Chrome primary/fallback clicks still did not prove file landing;
+neither the blocked internal Downloads page nor the identical download-event
+method was retried. CSV landing, native screen-reader/200% zoom, independent
+novice QA, genuine lawful after-start forward data, lost-ledger restoration,
+independent physical backup, full M4/M5 and hosted CI remain open.

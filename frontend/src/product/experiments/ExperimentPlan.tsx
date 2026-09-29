@@ -52,6 +52,7 @@ const en = {
   trigger: "Why selected",
   triggerTop: "Top-ranked eligible momentum/low-volatility share",
   triggerExit: "No longer in the strategy target",
+  triggerUnknown: "Unrecognized recorded reason",
   approved: "Approved for simulation",
   rejected: "Rejected",
   unavailable: "No executable proposal",
@@ -126,6 +127,7 @@ const zh: typeof en = {
   trigger: "入选原因",
   triggerTop: "动量／低波动因子排序靠前且符合条件",
   triggerExit: "不再属于策略目标持仓",
+  triggerUnknown: "未识别的已记录原因",
   approved: "模拟风控通过",
   rejected: "已拒绝",
   unavailable: "没有可执行拟单",
@@ -284,7 +286,9 @@ export function ExperimentPlan({
                         <td>
                           {item.trigger_reason === "TOP_DECILE_MOMENTUM_LOW_VOL"
                             ? c.triggerTop
-                            : c.triggerExit}
+                            : item.trigger_reason === "EXITED_STRATEGY_TARGET"
+                              ? c.triggerExit
+                              : `${c.triggerUnknown} (${item.trigger_reason})`}
                         </td>
                         <td>{formatPercent(item.target_weight)}</td>
                         <td>{formatDecimal(item.held_quantity)}</td>

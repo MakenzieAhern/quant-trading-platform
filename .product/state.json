@@ -1,7 +1,19 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T14:28:05Z",
+  "updated_at_utc": "2026-09-29T15:05:00Z",
+  "m4_plan_trigger_reason_20260929_gate": {
+    "status": "PASS_BOUNDED_COMPONENT_AND_KNOWN_CODE_ACTUAL_CHROME_NOT_FULL_M4",
+    "parent_head": "39a92a7",
+    "proof": "2026-09-29 15:05 UTC: saved-plan renderer now explicitly maps TOP_DECILE_MOMENTUM_LOW_VOL and EXITED_STRATEGY_TARGET; other strings show bilingual unrecognized recorded reason and original code, not a false exit. Existing result parser plus one regression covers all three cases in EN/ZH. Focused 51/51, full frontend 469/469, ESLint, TypeScript and production build passed; independent read-only diff review PASS_BOUNDED. Installed Chrome on original localhost:5173 rendered both known reasons from a saved historical result in EN/ZH; English restored. No POST, original data or financial calculation change. See docs/product/ACCEPTANCE.md.",
+    "limits": "Unknown-code browser branch was not sourced from a real stored plan; no actual unknown saved code found or fabricated in the database. This is not full M4/M5, lawful forward, lost-ledger recovery, independent backup or hosted exact-head CI."
+  },
+  "m4_cold_click_probe_20260929_gate": {
+    "status": "UNVERIFIED_PRESENTATION_TIMING_CONTAMINATED",
+    "parent_head": "39a92a7",
+    "proof": "2026-09-29 isolated no-store GET-only release page on localhost:15177, POST403: ten document-reported-visible/focused trusted result clicks produced loading DOM mutations 4.5-6.6ms after pointer input, not paint. First native collections had no click entries; delayed re-collection exposed one 1216ms route click, while a trivial control showed 528ms and a paint-deferred 147440ms click. Five double-rAF timestamps were null at collection. Independent read-only method review rejected p95 attribution. Owned QA tab/container closed/stopped; original Compose remained healthy. See docs/product/ACCEPTANCE.md.",
+    "limits": "No valid matched cold click p95, no app PASS/FAIL. Missing Event Timing entries are censored, not zero; null frame timestamps must not be coerced to negative latency. Do not rerun the same background/presentation-contaminated method unchanged."
+  },
   "m4_research_self_removing_focus_20260929_gate": {
     "status": "PASS_BOUNDED_ACTUAL_CHROME_KEYBOARD_DOM_NOT_FULL_M4_M5",
     "parent_head": "cbe8a1c",
@@ -1503,7 +1515,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Local Chrome lost-201/422 receipt recovery, stale-confirmed-receipt fail-closed paths and Research self-removing-control focus now pass bounded checks; do not repeat them. Continue valid U4 cold matched Event Timing p95, native screen-reader/200pct zoom, current-head CSV file landing, independent novice and remaining M4/M5 evidence. Lawful after-start forward receipt, genuine lost-ledger restore, independent physical backup and exact-head GitHub CI remain external gates. October 1 is only the user's estimate. Preserve original data/frozen/OOS; no push, CI retry/poll, merge or release until verified GitHub recovery.",
+  "next_task": "Bounded unknown saved-plan reason display, paper receipt recovery and Research focus now pass; do not repeat them. Cold-click QA-PERF needs a separately validated foreground/native-paint protocol because the 2026-09-29 series was presentation-timing contaminated; retain all censored/anomalous samples. Current-head CSV endpoint works but file landing remains unverified; do not repeat the same Chrome download-event method or bypass the blocked internal Downloads page. Continue safe native screen-reader/200pct zoom, independent novice and remaining M4/M5 evidence where available. Lawful after-start forward receipt, genuine lost-ledger restore, independent physical backup and exact-head GitHub CI remain external gates. October 1 is only the user's estimate. Preserve original data/frozen/OOS; no push, CI retry/poll, merge or release until verified GitHub recovery.",
   "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify git status, Docker Compose and PRODUCT_MASTER plus this state. Original Compose serves localhost:5173 with backend receipt route loaded; qtp-v12-paper-loss-qa was a separate tmpfs browser QA stack and is stopped, not the original runtime. Use isolated test DB for backend suites; local test/lint/build do not replace hosted CI. Continue remaining safe M4/M5 measurements, retaining censored p95 samples and avoiding reload latency as interaction p95. Do not clear original data, frozen research/OOS or push/poll/retry/merge/release on the October 1 estimate.",
   "next_command": "Same full U1-U8/M0-M5 goal active/incomplete. Local Docker/fullbackend/migration and bounded V3 SQL/actual normal-process recovery verified; do not repeat them unnecessarily. CUA Chrome extension supports safe read-only rendering, not verified native 200pct zoom or screen-reader speech; Windows URL-policy failure must not be bypassed or retried unchanged. Continue M4 performance/accessibility and genuine novice workflow evidence only with valid measurement, retaining unmatched/censored timing samples. Pending lawful forward rights/current authorities/actual after-start receipt, genuine missing-ledger backup and independent backup remain human/external gates. Verify real Windows login without terminal assistance at next genuine login, no autonomous OS reboot or duplicate startup mechanism. GitHub hold: no push/poll/retry/merge/release until actual recovery, not date assumption. Preserve all formal/frozen/OOS assets and original full product/release scope; no history/demo substitution or live trading.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
