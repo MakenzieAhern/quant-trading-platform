@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 13:55 UTC stale browser receipt — fail-closed local U7 check
+
+A browser-saved `confirmedSessionId` is not proof that the current server still
+has its paper account after a database rollback or restore. The creation page
+now checks the saved request key through the existing positive-only receipt
+endpoint before opening that account. A queued saved retry that discovers a
+confirmation under the cross-tab lock uses the same check. An explicit
+“Create another” first verifies every saved confirmed receipt under that lock;
+404, offline or an ID mismatch leaves the exact original key intact and sends
+no new POST. Both languages now explain that verification is required.
+
+In a current-source release build with separate tmpfs `quant_test` PostgreSQL,
+Redis and product storage, real Chrome at `localhost:15176/paper/new` retained
+two receipts from earlier scratch runs while the newly initialized scratch DB
+had zero accounts. “Verify and open saved paper account” stayed on the form
+and showed the recovery warning. “Create another paper account” also stayed
+on the form with the warning; scratch account count remained zero. No replay
+or original-data write occurred. The scratch Compose project was stopped
+without volume/image pruning. Independent read-only diff review found no
+remaining actionable defect in this flow. The isolated full local suite passed
+backend 1029/one optional archive skip and frontend 466; Ruff, format, mypy,
+ESLint, TypeScript, Prettier and production build passed. Original services
+remained healthy with frontend/API HTTP 200, Redis PONG and paper
+sessions/events `5/417`, research jobs `8`, market jobs `4` unchanged.
+
+This is one same-profile stale-receipt browser path and deterministic
+component regressions, not full U7/M4/M5, arbitrary race or disaster-recovery
+proof. A server rollback after a successful GET remains a server-side race;
+client validation alone cannot close it. No genuine missing ledger was
+recreated. GitHub account CI remains unavailable; October 1 is an unverified
+estimate. No push, merge, tag or release occurred. Lawful forward-market data,
+independent physical backup, native screen-reader/200% zoom, valid cold
+matched p95, CSV file landing and independent novice QA remain open.
+
 ## 2026-09-29 13:29 UTC exact-head Chrome receipt recovery and local runtime
 
 At `b328ae8`, a separate tmpfs Compose stack and real Chrome tested the

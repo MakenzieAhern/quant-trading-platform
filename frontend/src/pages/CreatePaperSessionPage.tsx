@@ -125,6 +125,17 @@ async function createOrRecoverPaper(
   }
 }
 
+async function verifiedPaperSessionId(
+  saved: PendingPaperCreate,
+): Promise<string> {
+  if (!saved.confirmedSessionId)
+    throw new Error("Paper receipt is unconfirmed");
+  const current = await paperApi.receipt(saved.key);
+  if (current.session_id !== saved.confirmedSessionId)
+    throw new Error("Saved paper receipt does not match server");
+  return current.session_id;
+}
+
 function PaperCreateRecoveryPanel({
   saved,
   onSavedChange,
@@ -151,6 +162,7 @@ function PaperCreateRecoveryPanel({
     setError(null);
     const originatingUrl = window.location.href;
     let sent = false;
+    let verifyingReceipt = false;
     try {
       const sessionId = await withPaperCreateLock(async () => {
         if (!active.current || window.location.href !== originatingUrl)
@@ -159,7 +171,10 @@ function PaperCreateRecoveryPanel({
           (item) => item.body === intent.body && item.key === intent.key,
         );
         if (!saved) throw new Error("Saved paper request changed");
-        if (saved.confirmedSessionId) return saved.confirmedSessionId;
+        if (saved.confirmedSessionId) {
+          verifyingReceipt = true;
+          return verifiedPaperSessionId(saved);
+        }
         // A prior attempt may have committed even if this retry is rejected.
         sent = true;
         const created = await createOrRecoverPaper(
@@ -178,7 +193,46 @@ function PaperCreateRecoveryPanel({
         navigate(`/paper/${sessionId}`);
     } catch (reason) {
       if (active.current)
-        setError(sent ? paperCreateError(reason) : "createPage.recoveryError");
+        setError(
+          verifyingReceipt
+            ? "createPage.receiptUnverified"
+            : sent
+              ? paperCreateError(reason)
+              : "createPage.recoveryError",
+        );
+    } finally {
+      locked.current = false;
+      if (active.current) {
+        setBusy(null);
+        onSavedChange();
+      }
+    }
+  };
+
+  const verifyAndOpen = async (intent: PendingPaperCreate) => {
+    if (locked.current) return;
+    locked.current = true;
+    setBusy(intent.key);
+    setError(null);
+    const originatingUrl = window.location.href;
+    try {
+      const sessionId = await withPaperCreateLock(async () => {
+        if (!active.current || window.location.href !== originatingUrl)
+          throw new Error("Paper creation page was left before verification");
+        const saved = readPendingPaperCreates().find(
+          (item) => item.key === intent.key && item.body === intent.body,
+        );
+        if (
+          !saved?.confirmedSessionId ||
+          saved.confirmedSessionId !== intent.confirmedSessionId
+        )
+          throw new Error("Saved paper receipt changed");
+        return verifiedPaperSessionId(saved);
+      });
+      if (active.current && window.location.href === originatingUrl)
+        navigate(`/paper/${sessionId}`);
+    } catch {
+      if (active.current) setError("createPage.receiptUnverified");
     } finally {
       locked.current = false;
       if (active.current) {
@@ -220,9 +274,13 @@ function PaperCreateRecoveryPanel({
                 </pre>
               </details>
               {intent.confirmedSessionId ? (
-                <Link href={`/paper/${intent.confirmedSessionId}`}>
+                <button
+                  type="button"
+                  aria-disabled={busy !== null}
+                  onClick={() => void verifyAndOpen(intent)}
+                >
                   {t("createPage.openSaved")}
-                </Link>
+                </button>
               ) : (
                 <button
                   type="button"
@@ -510,10 +568,21 @@ function PaperSessionForm({
     const originatingUrl = window.location.href;
     let intent: PendingPaperCreate | null = null;
     let sent = false;
+    let verifyingReceipts = false;
     try {
       const created = await withPaperCreateLock(async () => {
         if (!active.current || window.location.href !== originatingUrl)
           throw new Error("Paper creation page was left before submission");
+        if (createAnother) {
+          const previous = readPendingPaperCreates();
+          if (previous.some((item) => !item.confirmedSessionId))
+            throw new PendingPaperCreateError(
+              "Resolve saved paper request first",
+            );
+          verifyingReceipts = true;
+          for (const item of previous) await verifiedPaperSessionId(item);
+          verifyingReceipts = false;
+        }
         const priorKeys = new Set(
           readPendingPaperCreates().map((item) => item.key),
         );
@@ -547,9 +616,11 @@ function PaperSessionForm({
         setError(
           reason instanceof PendingPaperCreateError
             ? "createPage.resolvePendingFirst"
-            : sent
-              ? paperCreateError(reason)
-              : "createPage.storageError",
+            : verifyingReceipts
+              ? "createPage.receiptUnverified"
+              : sent
+                ? paperCreateError(reason)
+                : "createPage.storageError",
         );
     } finally {
       locked.current = false;

@@ -772,8 +772,10 @@ describe("paper trading pages", () => {
     );
     expect(pendingKeys()).toHaveLength(1);
     expect(
-      screen.getByRole("link", { name: "Open saved paper account" }),
-    ).toHaveAttribute("href", `/paper/${PAPER_ID}`);
+      screen.getByRole("button", {
+        name: "Verify and open saved paper account",
+      }),
+    ).toBeVisible();
   });
 
   it("blocks a changed request until the uncertain one is reconciled", async () => {
@@ -810,18 +812,26 @@ describe("paper trading pages", () => {
   it("requires an explicit new-account action after a confirmed creation", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(jsonResponse(paperSession(), 201));
+      .mockImplementation(() =>
+        Promise.resolve(jsonResponse(paperSession(), 201)),
+      );
     const first = render(<CreatePaperSessionPage />);
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(
+        JSON.parse(window.localStorage.getItem(pendingKeys()[0]) ?? "{}"),
+      ).toMatchObject({ confirmedSessionId: PAPER_ID }),
+    );
     first.unmount();
     window.history.replaceState({}, "", "/paper/new");
     render(<CreatePaperSessionPage />);
     expect(
-      screen.getByRole("link", { name: "Open saved paper account" }),
-    ).toHaveAttribute("href", `/paper/${PAPER_ID}`);
+      screen.getByRole("button", {
+        name: "Verify and open saved paper account",
+      }),
+    ).toBeVisible();
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -829,13 +839,151 @@ describe("paper trading pages", () => {
     await userEvent.click(
       screen.getByRole("button", { name: "Create another paper account" }),
     );
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
-    expect(fetch.mock.calls[1]?.[1]?.body).toBe(fetch.mock.calls[0]?.[1]?.body);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
+    expect(fetch.mock.calls[1]?.[0]).toContain("/sessions/receipt");
+    expect(fetch.mock.calls[2]?.[1]?.body).toBe(fetch.mock.calls[0]?.[1]?.body);
     expect(
-      new Headers(fetch.mock.calls[1]?.[1]?.headers).get("Idempotency-Key"),
+      new Headers(fetch.mock.calls[2]?.[1]?.headers).get("Idempotency-Key"),
     ).not.toBe(
       new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
     );
+  });
+
+  it("verifies a saved confirmed account before opening it", async () => {
+    window.history.replaceState({}, "", "/paper/new");
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSession(), 201))
+      .mockResolvedValueOnce(jsonResponse(paperSession()));
+    const first = render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() =>
+      expect(
+        JSON.parse(window.localStorage.getItem(pendingKeys()[0]) ?? "{}"),
+      ).toMatchObject({ confirmedSessionId: PAPER_ID }),
+    );
+    first.unmount();
+    window.history.replaceState({}, "", "/paper/new");
+    render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: "Verify and open saved paper account",
+      }),
+    );
+    await waitFor(() =>
+      expect(window.location.pathname).toBe(`/paper/${PAPER_ID}`),
+    );
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(fetch.mock.calls[1]?.[0]).toContain("/sessions/receipt");
+    expect(fetch.mock.calls[1]?.[1]?.method).toBeUndefined();
+  });
+
+  it.each(["missing", "mismatch", "offline"] as const)(
+    "does not open a locally confirmed account when the current server is %s",
+    async (failure) => {
+      window.history.replaceState({}, "", "/paper/new");
+      const fetch = vi
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValueOnce(jsonResponse(paperSession(), 201));
+      const first = render(<CreatePaperSessionPage />);
+      await userEvent.click(
+        screen.getByRole("button", { name: "Create paper session" }),
+      );
+      await waitFor(() =>
+        expect(
+          JSON.parse(window.localStorage.getItem(pendingKeys()[0]) ?? "{}"),
+        ).toMatchObject({ confirmedSessionId: PAPER_ID }),
+      );
+      first.unmount();
+      window.history.replaceState({}, "", "/paper/new");
+      if (failure === "missing")
+        fetch.mockImplementation(() =>
+          Promise.resolve(jsonResponse({ detail: "not found" }, 404)),
+        );
+      else if (failure === "mismatch")
+        fetch.mockImplementation(() =>
+          Promise.resolve(
+            jsonResponse({
+              ...paperSession(),
+              session_id: "00000000-0000-0000-0000-000000000002",
+            }),
+          ),
+        );
+      else fetch.mockRejectedValue(new TypeError("offline"));
+
+      const key = pendingKeys()[0];
+      render(<CreatePaperSessionPage />);
+      await userEvent.click(
+        screen.getByRole("button", {
+          name: "Verify and open saved paper account",
+        }),
+      );
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "could not be verified against the current server",
+      );
+      expect(window.location.pathname).toBe("/paper/new");
+      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(fetch.mock.calls[1]?.[0]).toContain("/sessions/receipt");
+      expect(
+        new Headers(fetch.mock.calls[1]?.[1]?.headers).get("Idempotency-Key"),
+      ).toBe(key?.slice(PAPER_CREATE_PENDING_PREFIX.length));
+      expect(
+        JSON.parse(window.localStorage.getItem(key) ?? "{}"),
+      ).toMatchObject({
+        confirmedSessionId: PAPER_ID,
+      });
+      await userEvent.click(
+        screen.getByRole("button", { name: "Create another paper account" }),
+      );
+      await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
+      expect(
+        screen
+          .getAllByRole("alert")
+          .some((item) => item.textContent?.includes("could not be verified")),
+      ).toBe(true);
+      expect(fetch.mock.calls[2]?.[0]).toContain("/sessions/receipt");
+      expect(fetch.mock.calls[2]?.[1]?.method).toBeUndefined();
+      expect(pendingKeys()).toEqual([key]);
+    },
+  );
+
+  it("verifies a receipt that was confirmed while a saved retry waited for the lock", async () => {
+    window.history.replaceState({}, "", "/paper/new");
+    let resolveFirst: ((response: Response) => void) | undefined;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementationOnce(
+        () =>
+          new Promise<Response>((resolve) => {
+            resolveFirst = resolve;
+          }),
+      )
+      .mockResolvedValueOnce(jsonResponse({ detail: "not found" }, 404));
+    const first = render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    const key = pendingKeys()[0];
+    render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Retry saved request 1" }),
+    );
+    first.unmount();
+    await act(async () => resolveFirst?.(jsonResponse(paperSession(), 201)));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    expect(fetch.mock.calls[1]?.[0]).toContain("/sessions/receipt");
+    expect(fetch.mock.calls[1]?.[1]?.method).toBeUndefined();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "could not be verified against the current server",
+    );
+    expect(window.location.pathname).toBe("/paper/new");
+    expect(pendingKeys()).toEqual([key]);
+    expect(JSON.parse(window.localStorage.getItem(key) ?? "{}")).toMatchObject({
+      confirmedSessionId: PAPER_ID,
+    });
   });
 
   it("serializes two same-origin creation forms before choosing a second key", async () => {
@@ -862,7 +1010,9 @@ describe("paper trading pages", () => {
     await act(async () => resolveFirst?.(jsonResponse(paperSession(), 201)));
     await waitFor(() =>
       expect(
-        screen.getAllByRole("link", { name: "Open saved paper account" }),
+        screen.getAllByRole("button", {
+          name: "Verify and open saved paper account",
+        }),
       ).toHaveLength(2),
     );
     expect(fetch).toHaveBeenCalledTimes(1);
@@ -1251,7 +1401,9 @@ describe("paper trading pages", () => {
     window.history.replaceState({}, "", "/paper/new");
     render(<CreatePaperSessionPage />);
     expect(
-      screen.getByRole("link", { name: "Open saved paper account" }),
+      screen.getByRole("button", {
+        name: "Verify and open saved paper account",
+      }),
     ).toBeVisible();
     expect(fetch).toHaveBeenCalledTimes(1);
   });

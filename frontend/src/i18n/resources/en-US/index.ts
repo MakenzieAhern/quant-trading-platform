@@ -293,13 +293,15 @@ export const enUS = {
         "Could not confirm whether the paper session was created. Check the paper-session list and service status. Retry unchanged settings here, or reopen this page to choose the saved exact request.",
       pendingTitle: "Saved paper creation requests",
       pendingHelp:
-        "Check the session list first. Retry an unconfirmed saved request with its original key, or open a confirmed account. Nothing starts trading automatically.",
+        "Check the session list first. Retry an unconfirmed saved request with its original key, or verify a browser-saved receipt against this server before opening it. Nothing starts trading automatically.",
       pendingDetails: "Review exact saved settings",
       retrySaved: "Retry saved request {{number}}",
-      openSaved: "Open saved paper account",
+      openSaved: "Verify and open saved paper account",
+      receiptUnverified:
+        "This browser-saved account could not be verified against the current server. No new account was created. Check the account list and data-recovery status; keep the original request key and verify again later.",
       createAnother: "Create another paper account",
       resolvePendingFirst:
-        "A saved creation already exists. Review its exact settings, retry it if unconfirmed, or open the confirmed account. To make a new account, use Create another.",
+        "A saved creation already exists. Review its exact settings, retry it if unconfirmed, or verify its receipt before opening. To make a new account, use Create another after saved receipts are verified.",
       storageError:
         "Could not save this creation request. No POST was sent by this attempt. Check browser storage before trying again.",
       recoveryError:
