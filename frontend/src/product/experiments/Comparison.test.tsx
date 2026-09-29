@@ -435,12 +435,17 @@ describe("experiment comparison", () => {
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
     await act(async () => i18n.changeLanguage("zh-CN"));
     expect(alert).toHaveTextContent("未能确认服务端响应");
-    await userEvent.click(screen.getByRole("button", { name: "重新加载" }));
+    const heading = screen.getByRole("heading", { name: "实验比较" });
+    const retry = screen.getByRole("button", { name: "重新加载" });
+    retry.focus();
+    await userEvent.keyboard("{Enter}");
     await waitFor(() => expect(attempts).toBe(2));
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    expect(heading).toHaveFocus();
     await act(async () => resolve({ ...result, job_id: ids[2]! }));
     await screen.findByRole("heading", { name: "已保存的完整区间结果" });
+    expect(heading).toHaveFocus();
     expect(screen.getAllByRole("table")).toHaveLength(2);
     expect(screen.getByRole("row", { name: /^累计收益/ })).toHaveTextContent(
       "0.01%0.01%",

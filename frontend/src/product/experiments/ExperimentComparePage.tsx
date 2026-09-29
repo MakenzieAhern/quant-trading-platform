@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
@@ -31,6 +31,7 @@ function runLabel(job: Experiment, index: number) {
 export function ExperimentComparePage() {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
+  const heading = useRef<HTMLHeadingElement>(null);
   const [search, setSearch] = useState(window.location.search);
   useEffect(() => {
     const update = () => setSearch(window.location.search);
@@ -44,11 +45,17 @@ export function ExperimentComparePage() {
         ← {c.backList}
       </Link>
       <header className="experimentHeader">
-        <h1>{u.comparison}</h1>
+        <h1 ref={heading} tabIndex={-1}>
+          {u.comparison}
+        </h1>
         <p>{u.comparisonHelp}</p>
       </header>
       {ids ? (
-        <Comparison key={ids.join(",")} ids={ids} />
+        <Comparison
+          key={ids.join(",")}
+          ids={ids}
+          focusHeading={() => heading.current?.focus()}
+        />
       ) : (
         <div className="experimentNotice" role="alert">
           <p>{u.invalidIds}</p>
@@ -61,7 +68,13 @@ export function ExperimentComparePage() {
   );
 }
 
-function Comparison({ ids }: { ids: string[] }) {
+function Comparison({
+  ids,
+  focusHeading,
+}: {
+  ids: string[];
+  focusHeading: () => void;
+}) {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
   const { i18n } = useTranslation();
@@ -110,7 +123,10 @@ function Comparison({ ids }: { ids: string[] }) {
         </ul>
         <button
           className="button secondary"
-          onClick={() => setRevision((value) => value + 1)}
+          onClick={(event) => {
+            if (document.activeElement === event.currentTarget) focusHeading();
+            setRevision((value) => value + 1);
+          }}
         >
           {c.retryLoad}
         </button>
