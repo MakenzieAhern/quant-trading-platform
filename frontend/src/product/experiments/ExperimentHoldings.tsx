@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
+import { ProductError } from "../ProductPages";
 import { experimentApi } from "./api";
 import { useComparisonCopy } from "./comparisonCopy";
 import { useExperimentCopy } from "./copy";
@@ -43,15 +44,10 @@ export function ExperimentHoldings({
   if (data.error)
     return (
       <>
-        <div role="alert">
-          <p>{c.networkError}</p>
-          <button
-            className="button secondary"
-            onClick={() => setRevision((value) => value + 1)}
-          >
-            {c.retryLoad}
-          </button>
-        </div>
+        <ProductError
+          error={data.error}
+          retry={() => setRevision((value) => value + 1)}
+        />
         {pager}
       </>
     );

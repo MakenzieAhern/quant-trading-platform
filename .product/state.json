@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T02:33:27Z",
+  "updated_at_utc": "2026-09-29T02:45:08Z",
+  "saved_collection_read_error_local_gate": {
+    "status": "PASS_BOUNDED_READ_ERROR_FIX_NOT_BROWSER_FAULT_INJECTION_OR_FULL_M4",
+    "parent_head": "781424b",
+    "proof": "2026-09-29 UTC: all four saved-study read-only equity/trades/risk-decision/holdings GET failures previously showed the submission-specific same-request-key warning. Four red cases reproduced 403/408/offline failures; the existing typed ProductError now gives bilingual guidance, retries only the GET and never creates an experiment. Focused Collections 16/16, TypeScript, changed-file ESLint/Prettier and git diff check passed. Actual Chrome opened an existing saved historical result and expanded trades and holdings successfully after the change; the temporary tab was closed. Independent read-only review found no blocker in this slice.",
+    "limits": "The Chrome run checked the success path, not a browser-injected 403/408/offline failure. No screenshot or recording was saved. Full M4/U1-U8/M5, native accessibility, cold interaction p95, independent novice, lawful forward data, genuine lost-ledger and backup recovery, and exact-head GitHub CI remain incomplete. No original account/study/provider/frozen research or Official OOS mutation, push, merge or release occurred."
+  },
   "capability_load_error_local_gate": {
     "status": "PASS_BOUNDED_LOCAL_ERROR_PATH_NOT_GITHUB_CI_OR_RELEASE",
     "parent_head": "50b2b2e",

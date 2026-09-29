@@ -43,6 +43,91 @@ beforeEach(async () => {
 });
 
 describe("filtered durable experiment records", () => {
+  it.each([
+    [
+      "equity",
+      null,
+      new ApiError(403, "denied"),
+      "Access was denied",
+      "访问被拒绝",
+    ],
+    [
+      "trades",
+      "Trades",
+      new ApiError(408, "timeout"),
+      "request timed out",
+      "请求超时",
+    ],
+    [
+      "decisions",
+      "Risk decisions",
+      new TypeError("offline"),
+      "service is unavailable",
+      "服务暂时无法连接",
+    ],
+    [
+      "holdings",
+      "Account & holdings",
+      new ApiError(403, "denied"),
+      "Access was denied",
+      "访问被拒绝",
+    ],
+  ] as const)(
+    "explains a failed read-only %s request without suggesting duplicate submission",
+    async (collection, summary, failure, english, chinese) => {
+      const equity = vi.spyOn(experimentApi, "equity").mockResolvedValue({
+        items: [],
+        total: 0,
+        limit: 100,
+        offset: 0,
+      });
+      const trades = vi.spyOn(experimentApi, "trades").mockResolvedValue({
+        items: [],
+        total: 0,
+        limit: 20,
+        offset: 0,
+      });
+      const decisions = vi.spyOn(experimentApi, "decisions").mockResolvedValue({
+        items: [],
+        total: 0,
+        limit: 20,
+        offset: 0,
+      });
+      const holdings = vi.spyOn(experimentApi, "holdings").mockResolvedValue({
+        items: [],
+        total: 0,
+        limit: 1,
+        offset: 0,
+        availability: "AVAILABLE",
+      });
+      const create = vi.spyOn(experimentApi, "create");
+      const read = { equity, trades, decisions, holdings }[collection];
+      read.mockRejectedValueOnce(failure);
+      render(<ExperimentCollections jobId={job.job_id} />);
+      if (summary)
+        await userEvent.click(
+          screen.getByText(summary, { selector: "summary" }),
+        );
+      expect(await screen.findByRole("alert")).toHaveTextContent(english);
+      expect(screen.getByRole("alert")).not.toHaveTextContent(
+        "submission keeps the same request key",
+      );
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(screen.getByRole("alert")).toHaveTextContent(chinese);
+      expect(screen.getByRole("alert")).not.toHaveTextContent("避免重复创建");
+      await userEvent.click(
+        within(screen.getByRole("alert")).getByRole("button", {
+          name: "重新尝试",
+        }),
+      );
+      await waitFor(() => expect(read).toHaveBeenCalledTimes(2));
+      await waitFor(() =>
+        expect(screen.queryByRole("alert")).not.toBeInTheDocument(),
+      );
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+
   it("names research collection tables and keyboard regions distinctly across locales without changing exact values", async () => {
     const equity = vi
       .spyOn(experimentApi, "equity")

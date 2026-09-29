@@ -4792,3 +4792,22 @@ full U1–U8/M0–M5, native browser fault-injection, novice, accessibility,
 performance, forward-data or disaster-recovery pass. No original database,
 paper account, frozen research, provider, Official OOS, push, merge or release
 was changed. The user-estimated October 1 GitHub recovery is not yet verified.
+
+## 2026-09-29 02:45 UTC saved-result read-error correction
+
+Four read-only result panes (equity, trades, risk decisions and holdings)
+previously reused the uncertain-*submission* message when their GET failed.
+Four red tests reproduced HTTP 403, HTTP 408 and offline cases. The existing
+typed load-error panel now supplies distinct bilingual guidance. Retry issues
+only the failed GET, not an experiment-create request; all four recovered in
+the focused test. `Collections.test.tsx` passed 16/16; TypeScript, changed-file
+ESLint/Prettier and diff checks passed. An independent read-only reviewer found
+no blocking issue in this slice.
+
+Actual Chrome opened a saved historical result and expanded the trades and
+holdings panes after the fix; their saved rows loaded without a browser error.
+The temporary QA tab was closed. This is a successful-read browser check, not
+browser fault injection of 403/408/offline; no screenshot file or recording
+was saved. Full M4, U1–U8/M5, genuine forward-data/backup/ledger gates and
+exact-head GitHub CI remain open. No original study/account/provider/frozen
+research, Official OOS, push, merge or release was changed.

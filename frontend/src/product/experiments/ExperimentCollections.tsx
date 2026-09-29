@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
+import { ProductError } from "../ProductPages";
 import { experimentApi, tradingDate } from "./api";
 import { useExperimentCopy } from "./copy";
 import { explainExperimentCode } from "./codes";
@@ -152,15 +153,10 @@ function FilteredCollections({
         <p className="experimentHelp">{c.shownPage}</p>
         {equity.loading && <p role="status">{c.loading}</p>}
         {equity.error && (
-          <div role="alert">
-            <p>{c.networkError}</p>
-            <button
-              className="button secondary"
-              onClick={() => setRevision((value) => value + 1)}
-            >
-              {c.retryLoad}
-            </button>
-          </div>
+          <ProductError
+            error={equity.error}
+            retry={() => setRevision((value) => value + 1)}
+          />
         )}
         {equity.data && (
           <EquityDisplay
@@ -493,15 +489,10 @@ function TradeCollection({
   if (data.error)
     return (
       <>
-        <div role="alert">
-          <p>{c.networkError}</p>
-          <button
-            className="button secondary"
-            onClick={() => setRevision((value) => value + 1)}
-          >
-            {c.retryLoad}
-          </button>
-        </div>
+        <ProductError
+          error={data.error}
+          retry={() => setRevision((value) => value + 1)}
+        />
         {pager}
       </>
     );
@@ -609,15 +600,10 @@ function DecisionCollection({
   if (data.error)
     return (
       <>
-        <div role="alert">
-          <p>{c.networkError}</p>
-          <button
-            className="button secondary"
-            onClick={() => setRevision((value) => value + 1)}
-          >
-            {c.retryLoad}
-          </button>
-        </div>
+        <ProductError
+          error={data.error}
+          retry={() => setRevision((value) => value + 1)}
+        />
         {pager}
       </>
     );
