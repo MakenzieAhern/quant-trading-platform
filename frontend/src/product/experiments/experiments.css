@@ -143,6 +143,8 @@
 .experimentShareUrl input:focus-visible,
 .experimentWorkspace button:focus-visible,
 .experimentStatus:focus-visible,
+.experimentWorkspace [role="status"]:focus-visible,
+.experimentWorkspace [role="alert"]:focus-visible,
 .experimentWorkspace summary:focus-visible,
 .experimentWorkspace a:focus-visible,
 .experimentTableScroll:focus-visible {

@@ -39,8 +39,10 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
   } | null>(null);
   const locked = useRef(false);
   const focusedCommand = useRef<HTMLButtonElement | null>(null);
+  const pendingFocus = useRef(false);
   const statusFocus = useRef<HTMLSpanElement>(null);
   const readErrorFocus = useRef<HTMLDivElement>(null);
+  const loadingFocus = useRef<HTMLParagraphElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const activeJob = useRef<string | null>(jobId);
   useEffect(() => {
@@ -52,12 +54,25 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
   }, [jobId]);
   useEffect(() => {
     const button = focusedCommand.current;
-    if (button && !button.isConnected) {
-      if (document.activeElement === document.body)
-        (statusFocus.current ?? readErrorFocus.current)?.focus();
+    if (
+      (pendingFocus.current || (button && !button.isConnected)) &&
+      document.activeElement === document.body
+    )
+      (
+        statusFocus.current ??
+        readErrorFocus.current ??
+        loadingFocus.current
+      )?.focus();
+    if (!loadingFocus.current) {
+      pendingFocus.current = false;
       focusedCommand.current = null;
     }
-  }, [job.data?.status]);
+  }, [job.data?.status, job.error]);
+  function refreshJob() {
+    pendingFocus.current = document.activeElement instanceof HTMLButtonElement;
+    setObservedEnd(null);
+    job.refresh();
+  }
   async function command(kind: "cancel" | "retry") {
     if (locked.current || (kind === "cancel" && job.data?.cancel_requested))
       return;
@@ -73,7 +88,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
             await experimentApi.retry(jobId, `experiment-retry-v1:${jobId}`);
       if (activeJob.current !== jobId) return;
       if (kind === "retry") navigate(`/experiments/${updated.job_id}`);
-      else job.refresh();
+      else job.revalidate();
     } catch (reason) {
       if (activeJob.current === jobId) setActionError({ kind, reason });
     } finally {
@@ -89,7 +104,11 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
       <Link back className="experimentBack" href="/experiments">
         ← {c.backList}
       </Link>
-      {!data && !job.error && <p role="status">{c.loading}</p>}
+      {!data && !job.error && (
+        <p ref={loadingFocus} role="status" tabIndex={-1}>
+          {c.loading}
+        </p>
+      )}
       {Boolean(job.error) && (
         <div
           ref={readErrorFocus}
@@ -98,7 +117,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
           tabIndex={-1}
         >
           <p>{experimentError(job.error, c)}</p>
-          <button className="button secondary" onClick={job.refresh}>
+          <button className="button secondary" onClick={refreshJob}>
             {c.refresh}
           </button>
         </div>
@@ -134,7 +153,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
               >
                 {c.statuses[data.status]}
               </span>
-              <button className="button secondary" onClick={job.refresh}>
+              <button className="button secondary" onClick={refreshJob}>
                 {c.refresh}
               </button>
               {isActiveExperiment(data) && (

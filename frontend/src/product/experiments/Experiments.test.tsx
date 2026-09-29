@@ -1074,9 +1074,87 @@ describe("durable experiment detail", () => {
     get.mockRejectedValueOnce(new ApiError(503, "service unavailable"));
     await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveFocus();
     expect(screen.queryByText("What this run shows")).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     expect(await screen.findByText("What this run shows")).toBeInTheDocument();
+  });
+
+  it("hides saved results and retains focus while a manual status refresh waits", async () => {
+    const context = vi
+      .spyOn(pageContext, "usePageDataContext")
+      .mockImplementation(() => undefined);
+    const completed = {
+      ...job,
+      status: "SUCCEEDED" as const,
+      result_available: true,
+    };
+    let resolveRefresh: ((value: typeof completed) => void) | undefined;
+    const get = vi
+      .spyOn(experimentApi, "get")
+      .mockResolvedValueOnce(completed)
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            resolveRefresh = resolve;
+          }),
+      );
+    vi.spyOn(experimentApi, "result").mockResolvedValue({
+      ...result,
+      date_end: "2031-06-27",
+    });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    expect(await screen.findByText("What this run shows")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(context).toHaveBeenLastCalledWith(
+        "synthetic_demo",
+        "2031-06-27",
+        "observed",
+      ),
+    );
+    screen.getByRole("button", { name: "Refresh" }).focus();
+    await userEvent.keyboard("{Enter}");
+    await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+    expect(screen.queryByText("What this run shows")).not.toBeInTheDocument();
+    const loading = screen.getByText("Loading…");
+    expect(loading).toHaveAttribute("role", "status");
+    expect(loading).toHaveFocus();
+    expect(context).toHaveBeenLastCalledWith(null, null, "requested");
+    await act(async () => resolveRefresh?.(completed));
+    expect(await screen.findByText("What this run shows")).toBeInTheDocument();
+    expect(document.querySelector(".experimentStatus")).toHaveFocus();
+  });
+
+  it("ignores an older poll response after a manual refresh starts", async () => {
+    vi.useFakeTimers();
+    const running = { ...job, status: "RUNNING" as const };
+    const completed = { ...job, status: "SUCCEEDED" as const };
+    let resolvePoll!: (value: typeof running) => void;
+    let resolveRefresh!: (value: typeof completed) => void;
+    const get = vi
+      .spyOn(experimentApi, "get")
+      .mockResolvedValueOnce(running)
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (resolvePoll = resolve)),
+      )
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (resolveRefresh = resolve)),
+      );
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    await act(async () => vi.advanceTimersByTimeAsync(2500));
+    expect(get).toHaveBeenCalledTimes(2);
+    fireEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(get).toHaveBeenCalledTimes(3);
+    await act(async () => resolvePoll(running));
+    expect(screen.getByText("Loading…")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Running", { selector: ".experimentStatus" }),
+    ).not.toBeInTheDocument();
+    await act(async () => resolveRefresh(completed));
+    expect(
+      screen.getByText("Complete", { selector: ".experimentStatus" }),
+    ).toBeInTheDocument();
   });
 
   it("shows exact results, retains null benchmark values, and loads only one bounded chart page", async () => {
