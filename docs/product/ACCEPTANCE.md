@@ -5214,3 +5214,39 @@ metadata limits, date-filtered export records versus full-period metrics and
 contextual data dates. These were checked against existing product behavior;
 they are documentation corrections, not a new M5 browser or release pass.
 No original service data, frozen research, Official OOS or GitHub state changed.
+
+## 2026-09-29 06:55 UTC bounded Chrome paper race and saved historical media
+
+On a scratch-only synthetic A-share paper account, the current-head frontend
+made exactly one Start POST. The scratch backend accepted it once (HTTP 200,
+one `STARTING` event); an isolated response proxy held that reply until Chrome
+showed `Running`, then delivered HTTP 503. Both browser response and CDP
+network events recorded that 503. The UI stayed `Running` with zero visible
+error alerts and no duplicate Start POST. The account was stopped afterward.
+The preliminary attempt did not prove 503 delivery and is excluded. The
+reproducible harness, report and post-response screenshot are outside Git at
+`product-evidence/v1.2/m4/20260929-paper-late503-chrome.md`. This passes one
+controlled browser-response case, not a real outage or full M4/U7 matrix.
+
+Installed Chrome 153 saved and visually checked current-head scratch PNGs of
+the Workbench, historical result, differing-condition comparison and stopped
+historical paper account at 1440×900. A separate Playwright capture measured
+CSS viewport/client/scroll widths of 390/390/390 and saved a 390×844 Chinese
+Workbench PNG without page-level horizontal overflow. A native Chrome CLI
+390px PNG cropped a wider layout and is **rejected**; the initial 127.0.0.1
+origin PNG is also rejected because scratch CORS expected `localhost`.
+Screenshots and SHA-256 values are outside Git in
+`product-evidence/v1.2/m5/20260929-chrome-media/README.md`.
+
+A 26.12-second, 1440×900 VP8 WebM records scripted GET-only navigation from
+Workbench through selecting two saved studies, the non-controlled-comparison
+warning, both historical results, then a stopped paper account and its dated
+plan. Decoded frames at 1, 7, 13, 15, 21 and 25.9 seconds were inspected; the
+first frame is white while Chrome starts. WebM SHA-256 is
+`A8BC68808698B59D8A84E4AB390EFF424182B95B47486EB4A17F630A32BF7D70`.
+The post-close `saveAs` step errored, but the raw recording had finalized and
+decoded; see `20260929-readonly-interaction.md` in the same outside-Git folder.
+This is saved historical scripted media, not independent novice, native 200%
+zoom/screen-reader, physical-mobile, full M4/M5, or lawful new-market forward
+evidence. No original account/database/provider/frozen research/OOS or GitHub
+write occurred. GitHub October 1 recovery remains unverified.
