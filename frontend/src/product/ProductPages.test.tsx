@@ -37,6 +37,26 @@ it.each([
   },
 );
 
+it("describes guided research without claiming it starts a simulated account", async () => {
+  vi.spyOn(experimentApi, "capabilities").mockRejectedValue(
+    new Error("offline"),
+  );
+  vi.spyOn(experimentApi, "list").mockRejectedValue(new Error("offline"));
+  await act(() => i18n.changeLanguage("en-US"));
+  render(<WorkbenchPage />);
+  expect(
+    screen.getByText(/Choose a strategy, set your assumptions/),
+  ).toHaveTextContent("in a guided backtest");
+  expect(
+    screen.queryByText(/using a simulated account/),
+  ).not.toBeInTheDocument();
+  await act(() => i18n.changeLanguage("zh-CN"));
+  expect(screen.getByText(/选一个策略，设定你的假设/)).toHaveTextContent(
+    "通过模拟研究",
+  );
+  await act(() => i18n.changeLanguage("en-US"));
+});
+
 it("keeps a section-level Retry near its persistent heading", async () => {
   await act(() => i18n.changeLanguage("en-US"));
   render(

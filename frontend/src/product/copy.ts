@@ -75,7 +75,7 @@ const en = {
   welcome: "A clearer way to explore A-shares",
   lead: "Understand the risk. Then test the idea.",
   intro:
-    "Choose a strategy, set your assumptions, then examine its returns, costs and risks using a simulated account.",
+    "Choose a strategy, set your assumptions, then examine its returns, costs and risks in a guided backtest.",
   start: "Start guided backtest",
   existing: "View existing research",
   guide: "How this workspace works",
