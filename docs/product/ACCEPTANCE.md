@@ -6042,3 +6042,30 @@ watchlist entry, then Close restored focus to its trigger. No search source was
 fault-injected in Chrome, so browser failure-path acceptance remains unverified.
 Original Compose/financial data and GitHub were not changed; this is bounded
 M4 error guidance, not U1–U8/M4/M5 or hosted-CI completion.
+
+## 2026-09-29 15:38 UTC local runtime and paper-fill stream parity
+
+The original WSL Compose PostgreSQL, Redis and backend were healthy, the
+frontend was up, Redis returned PONG, PostgreSQL accepted connections, and
+Windows localhost frontend and `/api/health` returned HTTP 200. This machine
+can run the development application without GitHub CI/CD. No Docker restart,
+database migration, original account action or GitHub operation was needed.
+
+Read-only contract review found that REST snapshots append every persisted
+`fill.created` event while the frontend WebSocket reducer replaced all fills
+sharing an order ID. The reducer now appends distinct sequence events; its
+existing sequence guard ignores replay. A regression covers two same-order
+fill events and a repeated sequence. Display rows also use a row-index suffix
+to avoid duplicate React keys if distinct events have identical visible
+fields. Current simulated broker emits only one all-or-nothing fill per order;
+this is event-stream/REST parity, **not** evidence of an existing lost-fill
+incident or support for partial fills.
+
+The isolated disposable PostgreSQL `make test` passed backend 1029 tests with
+one optional read-only archive skip and frontend 476/476. `make lint`,
+`make build`, changed-file Prettier and `git diff --check` passed. This is a
+local substitute for development feedback, not exact-head hosted CI, native
+accessibility, independent novice acceptance or release approval. GitHub
+October 1 recovery remains an unverified estimate; no push, merge, tag or
+release occurred. Lawful after-start forward data, genuine lost-ledger
+recovery and independent physical backup remain separate gates.

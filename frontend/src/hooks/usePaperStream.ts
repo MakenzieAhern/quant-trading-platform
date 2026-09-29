@@ -79,7 +79,7 @@ export function applyPaperEvent(
     const fill = paperParsers.fill(event.payload);
     return {
       ...next,
-      fills: replaceBy(current.fills, fill, (item) => item.order_id),
+      fills: [...current.fills, fill],
     };
   }
   if (event.type === "portfolio.snapshot") {

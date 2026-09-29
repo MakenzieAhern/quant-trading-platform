@@ -214,6 +214,37 @@ describe("paper API contracts", () => {
     expect(applyPaperEvent(third, signal(3, "CN-A:SSE:600000"))).toBe(third);
   });
 
+  it("keeps distinct same-order fills while ignoring a repeated sequence", () => {
+    const fill = (sequence: number, quantity: string, commission: string) =>
+      parseWireEvent({
+        sequence,
+        type: "fill.created",
+        occurred_at: "2011-03-22T07:00:00Z",
+        payload: {
+          order_id: "11111111-1111-4111-8111-111111111111",
+          strategy_id: "cn_a_cross_sectional_momentum_low_vol_v1",
+          symbol: "CN-A:SSE:600000",
+          side: "BUY",
+          quantity,
+          price: "10",
+          commission,
+          timestamp: "2011-03-22T07:00:00Z",
+        },
+      });
+    const first = applyPaperEvent(
+      paperSnapshot("RUNNING"),
+      fill(1, "10", "0.1"),
+    );
+    const second = applyPaperEvent(first, fill(2, "5", "0.05"));
+    expect(
+      second.fills.map((item) => [item.quantity, item.commission]),
+    ).toEqual([
+      ["10", "0.1"],
+      ["5", "0.05"],
+    ]);
+    expect(applyPaperEvent(second, fill(2, "5", "0.05"))).toBe(second);
+  });
+
   it("rejects malformed successful responses", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({ ...paperSession(), initial_cash: 100000 }),

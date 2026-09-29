@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T15:23:00Z",
+  "updated_at_utc": "2026-09-29T15:38:00Z",
+  "u7_fill_stream_parity_20260929_gate": {
+    "status": "PASS_BOUNDED_LOCAL_CONTRACT_NOT_PARTIAL_FILL_OR_FULL_U7",
+    "parent_head": "abc12c7",
+    "proof": "2026-09-29 15:38 UTC: WSL original Compose PostgreSQL/Redis/backend healthy, frontend up, Redis PONG, PostgreSQL accepting connections and localhost frontend/API HTTP200. REST appends all persisted fill events; frontend reducer now appends distinct-sequence same-order events rather than replacing by order ID, with existing sequence replay guard. Generic table keys remain unique for identical visible rows. Red/green regression; isolated make test backend1029/one optional archive skip and frontend476/476; make lint, make build, changed-file Prettier and git diff --check passed. See docs/product/ACCEPTANCE.md.",
+    "limits": "Current broker fills an order only once; this is future event-stream/REST parity, not proof of current partial fills or recovered original ledger. No browser fault injection, original database/account/provider/frozen/OOS or GitHub write. Not full U7/M4/M5, licensed forward data, genuine lost-ledger restore, independent physical backup, native accessibility, independent novice or hosted exact-head CI. October 1 GitHub recovery unverified."
+  },
   "m4_command_search_error_20260929_gate": {
     "status": "PASS_BOUNDED_TYPED_ERROR_COMPONENT_AND_CHROME_NORMAL_NOT_FULL_M4",
     "parent_head": "8ae355b",

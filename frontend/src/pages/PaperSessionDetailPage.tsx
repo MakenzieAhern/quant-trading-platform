@@ -520,7 +520,7 @@ function PaperTable({
             </thead>
             <tbody>
               {rows.map((row, rowIndex) => (
-                <tr key={row.join(":")}>
+                <tr key={`${row.join(":")}:${rowIndex}`}>
                   {row.map((value, index) =>
                     index === 0 ? (
                       <th
