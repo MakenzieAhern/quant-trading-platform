@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T10:31:25Z",
+  "updated_at_utc": "2026-09-29T10:41:45Z",
+  "m4_native_chrome_service_health_20260929_gate": {
+    "status": "PASS_BOUNDED_BROWSER_AX_AND_DOM_NOT_SCREEN_READER_OR_FULL_M4_M5",
+    "source_head": "7be85cf",
+    "proof": "2026-09-29 UTC: native installed Chrome on existing isolated release Workbench showed sibling service text and DOM role=status outside refresh button, referenced by aria-describedby. Only scratch backend was stopped after confirming five paper sessions STOPPED, two research jobs SUCCEEDED and no update job. Visible Chrome tab changed without manual click to ZH 服务不可用; EN switch showed Service unavailable with matching role=status text and refresh-button label. Restarted only scratch backend, API HTTP200; clicking visible Refresh restored Service online with button focus retained, then ZH switch showed 服务在线. Scratch backend healthy after restart; original Compose/HTTP health unchanged. Four screenshots/hashes and process proof outside Git in product-evidence/v1.2/m4/20260929-7be85cf-service-health/README.md.",
+    "limits": "The Chrome AX tree exposed independent state text and DOM showed status semantics, but screen-reader speech was not observed. One desktop scratch locale/outage path, not full 200pct zoom, viewport/theme matrix, independent novice, latency p95, full M4/M5 or hosted exact-head CI. No original account/database/frozen/OOS/GitHub write."
+  },
   "m5_historical_account_restart_20260929_gate": {
     "status": "PASS_BOUNDED_SCRATCH_IAB_AND_NATIVE_CHROME_NOT_FULL_U7_M4_M5",
     "code_head": "f16460c990dd8c6fa0c5ca3fe650cb9e642cb437",

@@ -5583,3 +5583,28 @@ No original financial account, formal/frozen research, OOS, provider authority,
 GitHub push/CI, PR merge or release was changed. GitHub October 1 recovery is
 still an unverified user estimate; full U1–U8/M4/M5 and external gates remain
 open.
+
+## 2026-09-29 10:40 UTC native Chrome service-health outage and recovery
+
+At `7be85cf` (no AppShell source change since the current-head scratch image),
+installed Chrome opened the isolated release Workbench. Before process action,
+its QA backend was healthy and all scratch paper/research jobs were terminal.
+Only that scratch backend was stopped. The visible tab changed to `服务不可用`
+without a manual refresh click; its topbar data link separately said
+`不可用`. The Chrome accessibility tree showed independent service-state text
+after the refresh button. The DOM confirmed that the sibling
+`role="status"` element was outside the button and matched its
+`aria-describedby` target. Switching to English showed `Service unavailable`
+with the same relationship. After restarting only the scratch backend, a
+visible Refresh click restored `Service online` and kept focus on the button;
+switching back to Chinese restored `服务在线`. The backend returned HTTP 200 and
+Docker healthy; original Compose services and `/` plus `/api/health` remained
+healthy/HTTP 200 throughout.
+
+Four actual Chrome screenshots, SHA-256 values, exact process checks and scope
+are outside Git in
+`product-evidence/v1.2/m4/20260929-7be85cf-service-health/README.md`.
+This closes one bounded real-browser service-status/label/recovery check, **not**
+screen-reader speech, native 200% zoom, the full viewport/theme/locale matrix,
+novice testing, full M4/M5 or GitHub CI. No original financial data, frozen
+research, OOS, GitHub PR or release was changed.
