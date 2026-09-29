@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local Workbench retry browser proof — M4 remains open
+
+`b963abf` keeps keyboard focus on the persistent Workbench heading when an
+error Retry button disappears during capability or recent-study loading, but
+does not move focus if the user already left the error. A red/green component
+regression covers capability retry success and repeat failure; independent
+read-only review found no obvious regression and noted the recent-study branch
+is not separately tested. In an isolated production preview with a GET-only
+proxy, the in-app browser saw a real displayed 503 error, keyboard Retry to
+success with heading focus, and 503-to-503-to-success with heading focus.
+The earlier development-server attempt was rejected because StrictMode masked
+the injected failure. The proxy, owned preview container and QA tab were
+stopped after validation; the original four Compose services stayed up.
+
+Actual in-app browser Workbench and Help tabs also synchronized Chinese and
+English without reload; English was restored. At committed `b963abf`, full
+frontend tests passed 424/424, `make lint` and `make build` passed. The last
+backend run passed 1025 tests with one optional unmounted-archive skip before
+this frontend-only change. Details and the GET-only proxy checksum are in
+outside-Git `product-evidence/v1.2/m4/20260929-workbench-retry-browser.md`.
+No screenshot was saved as exact-head M5 media. Native screen-reader/zoom,
+OS reduced motion, independent novice, lawful forward data, lost-ledger
+recovery, independent backup and hosted CI remain open; no release gate is
+promoted by this bounded check.
+
 ## 2026-09-29 local operation while GitHub Actions is unavailable
 
 GitHub Actions is not needed to run the platform on this PC. From the WSL
