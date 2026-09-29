@@ -1,7 +1,19 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T03:33:35Z",
+  "updated_at_utc": "2026-09-29T03:40:24Z",
+  "m5_result_chart_guide_gate": {
+    "status": "PASS_BOUNDED_BILINGUAL_GUIDE_NOT_FULL_M5",
+    "source_head": "7c96ee5",
+    "proof": "2026-09-29 UTC: both existing user guides now explain the already-implemented 100-point chart paging, benchmark toggle, exact available date readout, linked trade/holding date inspection, table/keyboard fallback and the distinction between display filtering and full-period metrics; missing values remain unknown rather than zero. Copy and behavior were checked against ExperimentCollections and the formatter; git diff --check passed.",
+    "limits": "Documentation only. No fresh browser interaction, screenshot, video, independent novice or full M5 acceptance. No financial computation, original database/account/frozen research/OOS or GitHub action changed."
+  },
+  "exact_head_local_verification_gate": {
+    "status": "PASS_LOCAL_TEST_LINT_BUILD_NOT_GITHUB_CI_OR_RELEASE",
+    "code_head": "7c96ee5",
+    "proof": "2026-09-29 UTC: after commit 7c96ee5, make test exited zero: backend 1024 passed, 1 skipped because the optional read-only historical archive was not mounted; frontend 404/404 passed across 38 files. The test Compose project used a separate tmpfs quant_test PostgreSQL and read-only ./data mount, and no test services remained running afterward. make lint exited zero (Ruff check/format, mypy, ESLint and TypeScript); make build exited zero (Vite production build, 130 modules). Original Compose PostgreSQL, Redis and backend remained healthy; the frontend and /api/health returned HTTP 200. Git worktree was clean after the commit.",
+    "limits": "This local developer verification cannot substitute for exact-head GitHub-hosted CI, current licensed forward-market data, genuine lost-ledger recovery, independent physical backup, native accessibility/performance, independent novice acceptance, full U1-U8/M0-M5 or v1.2 release. GitHub recovery is not verified and no push, merge, release, original database/account/frozen research/OOS or provider write occurred."
+  },
   "market_cache_read_error_gate": {
     "status": "PASS_BOUNDED_LOCAL_TYPED_ERROR_FIX_NOT_FULL_U5_U8_M4",
     "parent_head": "cb4439a",

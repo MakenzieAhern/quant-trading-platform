@@ -1,5 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 result-chart guide — bounded M5 improvement
+
+Both user guides now document the existing result chart's 100-point pages,
+benchmark checkbox, selected-date precise available values, linked trades and
+holdings, and exact-data table/keyboard route. They state that the controls
+change only the display, not full-period metrics, and that missing values are
+not zero. Labels and behavior were checked against the current component and
+number formatter. This is documentation completeness, not a new browser,
+novice, accessibility or full M5 acceptance result.
+
+## 2026-09-29 exact-head local verification during GitHub hold
+
+After commit `7c96ee5`, `make test` exited zero: backend 1024 passed, one
+optional read-only historical-archive test skipped because that archive was
+not mounted, and frontend 404/404 passed across 38 files. The test Compose
+project used a separate tmpfs `quant_test` PostgreSQL and read-only `./data`
+mount; no test services remained running afterward. `make lint` passed Ruff
+check/format, mypy, ESLint and TypeScript. `make build` passed the Vite
+production build (130 modules). The original Compose PostgreSQL, Redis and
+backend remained healthy; the frontend and `/api/health` returned HTTP 200.
+The worktree was clean after the commit.
+
+These are local developer checks, **not** GitHub-hosted CI or release
+acceptance. GitHub recovery remains unverified; no push, merge or release
+occurred. Current licensed forward-market data, the two lost paper ledgers,
+independent physical backup, native accessibility/performance, genuine novice
+acceptance and full U1–U8/M0–M5 remain open. The original database,
+accounts, frozen research and Official OOS were not changed.
+
 ## 2026-09-29 saved-market read errors — bounded U5/U8 correction
 
 The market catalog, security search, watchlist and saved-price detail used
