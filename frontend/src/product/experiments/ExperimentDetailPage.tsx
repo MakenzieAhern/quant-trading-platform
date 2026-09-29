@@ -41,6 +41,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
   const focusedCommand = useRef<HTMLButtonElement | null>(null);
   const statusFocus = useRef<HTMLSpanElement>(null);
   const readErrorFocus = useRef<HTMLDivElement>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
   const activeJob = useRef<string | null>(jobId);
   useEffect(() => {
     activeJob.current = jobId;
@@ -108,7 +109,9 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
             <span className="experimentMode">
               {data.mode === "synthetic_demo" ? c.demo : c.historical}
             </span>
-            <h1>{data.name}</h1>
+            <h1 ref={heading} tabIndex={-1}>
+              {data.name}
+            </h1>
             <p>
               {data.configuration.start_date} → {data.configuration.end_date} ·
               Asia/Shanghai
@@ -189,7 +192,11 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
             </div>
           )}
           {data.result_available ? (
-            <ExperimentResults job={data} onObservedEnd={setObservedEnd} />
+            <ExperimentResults
+              job={data}
+              onObservedEnd={setObservedEnd}
+              focusHeading={() => heading.current?.focus()}
+            />
           ) : (
             <p className="experimentHelp">{c.resultPending}</p>
           )}
@@ -276,9 +283,11 @@ function JobProgress({ job }: { job: Experiment }) {
 function ExperimentResults({
   job,
   onObservedEnd,
+  focusHeading,
 }: {
   job: Experiment;
   onObservedEnd: (value: string | null) => void;
+  focusHeading: () => void;
 }) {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
@@ -300,7 +309,10 @@ function ExperimentResults({
         <p>{experimentError(result.error, c)}</p>
         <button
           className="button secondary"
-          onClick={() => setRevision((value) => value + 1)}
+          onClick={(event) => {
+            if (document.activeElement === event.currentTarget) focusHeading();
+            setRevision((value) => value + 1);
+          }}
         >
           {c.retryLoad}
         </button>

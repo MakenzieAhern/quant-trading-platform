@@ -1030,9 +1030,15 @@ describe("durable experiment detail", () => {
       status: "SUCCEEDED",
       result_available: true,
     });
+    let completeRetry: ((value: typeof result) => void) | undefined;
     vi.spyOn(experimentApi, "result")
       .mockRejectedValueOnce(new ApiError(403, "Forbidden", "FORBIDDEN"))
-      .mockResolvedValue(result);
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            completeRetry = resolve;
+          }),
+      );
     vi.spyOn(experimentApi, "equity").mockResolvedValue({
       items: [],
       total: 0,
@@ -1043,10 +1049,16 @@ describe("durable experiment detail", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Access was denied. Check your access before trying again.",
     );
-    await userEvent.click(
-      screen.getByRole("button", { name: "Retry loading" }),
-    );
+    screen.getByRole("button", { name: "Retry loading" }).focus();
+    await userEvent.keyboard("{Enter}");
+    expect(
+      screen.getByRole("heading", { level: 1, name: job.name }),
+    ).toHaveFocus();
+    await act(async () => completeRetry?.(result));
     expect(await screen.findByText("What this run shows")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 1, name: job.name }),
+    ).toHaveFocus();
   });
 
   it("hides a stale completed study when refreshing its task status fails", async () => {
