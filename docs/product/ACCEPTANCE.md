@@ -4708,3 +4708,31 @@ physical disaster recovery. No new study, market acquisition, paper order,
 formal/OOS run, push, merge or release occurred; no screenshot file or
 recording was saved for this check. The user-estimated October 1 GitHub
 recovery is not itself clearance to resume remote operations.
+
+## 2026-09-29 02:12 UTC current-head release images without GitHub CI
+
+At local head `9ff0ff1`, the merged release Compose configuration passed and
+reset both backend and frontend commands to their release-image defaults. The
+current-source frontend release image served `/`, `/help` and `/markets` with
+HTTP 200 on an isolated localhost port. Actual Chrome rendered `/help`, showed
+the unavailable-service state honestly, and expanded the “What is a backtest?”
+help item. This was not an integrated release-browser run: the standalone
+frontend was not wired to the isolated backend.
+
+The current-source backend release image migrated a fresh private-network,
+tmpfs `quant_test` PostgreSQL from empty to Alembic head `20260924_0016`.
+The last revision downgraded to `20260923_0015` and upgraded to head again.
+With separate tmpfs PostgreSQL and Redis, production/paper-mode
+`/api/health` returned HTTP 200 and Redis returned PONG. The isolated API
+log showed startup complete. Exact scratch containers had auto-remove,
+no host/named-volume mounts, and were stopped; their empty dedicated network
+was removed. The original four Compose services remained running, and their
+frontend and `/api/health` returned HTTP 200 afterward.
+
+This closes only a local current-head image, migration and runtime smoke gap.
+It is not GitHub CI, an integrated release-browser run, a genuine backup or
+lost-ledger recovery, licensed current-market forward evidence, native
+accessibility/performance/novice acceptance, or M4/M5 release approval.
+No original database, frozen research, dataset, account, provider or Official
+OOS change, push, merge or release occurred. The October 1 GitHub recovery
+date remains a user estimate, not verified clearance.

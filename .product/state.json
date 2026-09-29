@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T02:01:55Z",
+  "updated_at_utc": "2026-09-29T02:12:19Z",
+  "current_head_release_image_smoke": {
+    "status": "PASS_BOUNDED_LOCAL_IMAGES_NOT_INTEGRATED_RELEASE_OR_GITHUB_CI",
+    "source_head": "9ff0ff1c600115410be8a07a6908f98d8c2dd603",
+    "proof": "2026-09-29 UTC: current-source release Compose configuration passed and reset backend/frontend commands. The release frontend image built and served /, /help and /markets with HTTP 200 on an isolated localhost port; actual Chrome rendered /help and expanded its backtest explanation. A separate backend production image migrated an empty tmpfs quant_test PostgreSQL to Alembic head 20260924_0016, downgraded one revision and upgraded to head again. With isolated tmpfs PostgreSQL and Redis, production paper-mode /api/health returned HTTP 200 and Redis PONG. Original four Compose services remained running; original / and /api/health returned HTTP 200 after cleanup.",
+    "safety": "The isolated frontend, API, PostgreSQL and Redis containers used auto-remove and no host or named-volume mounts. Exact scratch containers were stopped and auto-removed; their dedicated empty network was removed. Original images, volumes, database and research files were not deleted or migrated.",
+    "limits": "The isolated release frontend was not connected to its isolated backend in a browser; its service-unavailable state was displayed honestly. This is local image/migration/runtime smoke, not GitHub CI, complete integrated release QA, independent backup, recovered lost ledgers, lawful current forward data, native accessibility/performance/novice acceptance or v1.2 approval. GitHub recovery remains unverified; no push, merge or release."
+  },
   "local_execution_during_github_hold": {
     "status": "PASS_LOCAL_RUNTIME_AND_TESTS_NOT_RELEASE_CI",
     "code_head": "c0ab74e5979e0a46166c60c8bc065b5162c009a0",
