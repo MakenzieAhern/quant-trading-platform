@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local U3/U4 recovery defects — M4 remains open
+
+Two red regressions exposed independent failures. A historical freeze marker
+containing valid JSON `null` crashed the capabilities registry, blocking even
+the independent synthetic-demo entry. The registry now treats a non-object
+marker as `DATASET_INTEGRITY_FAILED`: historical data is unavailable, while
+demo capabilities remain available and historical resolution still fails
+closed (`c487042`). A failed replacement CSV download previously revoked the
+already prepared report URL. The existing fallback now survives that failure
+and is revoked only after successful replacement or unmount (`e5329d0`). The
+result route keys its detail by job ID, so navigation unmounts the old link.
+
+Both regressions failed before the fixes and passed afterward. An independent
+read-only diff review found no concrete blocker. On committed code, local
+`make test` passed 1025 backend tests with one optional unmounted-archive skip
+and 418 frontend tests. `make lint`, changed-file Prettier, `make build` and
+`git diff --check` passed. Tests used the separate disposable `quant_test`
+PostgreSQL; original PostgreSQL, Redis, backend and frontend stayed running,
+with frontend and `/api/health` HTTP 200. Before a targeted backend restart,
+the original API showed no active research, paper, market-update or backtest
+task. Only the backend was restarted to load the committed code; it returned
+healthy, capabilities HTTP 200 with both mounted historical and independent
+demo available, and all four task-status distributions were unchanged. The
+corrupt-marker case was tested only against an isolated temporary fixture,
+not by altering the original archive. No original account/database, frozen
+research, provider or GitHub state was written.
+
+Browser interaction with the failed-download/recovery state and native
+accessibility remain unverified: the Windows browser helper stopped before
+input on URL-confidence policy, and that method was not retried or bypassed.
+This local check is not hosted CI, full U3/U4/M4/M5 acceptance or v1.2 release.
+
 ## 2026-09-29 delivery provenance correction — M5 remains open
 
 The outside-Git delivery index now identifies clean local `fe0712b`, 100
