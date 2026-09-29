@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ApiError } from "../api/client";
@@ -8,7 +8,12 @@ import {
   paperParsers,
   parseWireEvent,
 } from "../api/paper";
-import type { PaperSnapshot, PaperWireEvent } from "../types/paper";
+import type {
+  PaperSession,
+  PaperSessionStatus,
+  PaperSnapshot,
+  PaperWireEvent,
+} from "../types/paper";
 
 export type PaperConnection =
   "connecting" | "connected" | "reconnecting" | "closed";
@@ -99,6 +104,7 @@ export function applyPaperEvent(
 
 export function usePaperStream(sessionId: string) {
   const { t } = useTranslation("paper");
+  const hydrateRef = useRef<(() => Promise<void>) | null>(null);
   const [snapshot, setSnapshot] = useState<PaperSnapshot | null>(null);
   const [connection, setConnection] = useState<PaperConnection>("connecting");
   const [error, setError] = useState<{
@@ -124,7 +130,7 @@ export function usePaperStream(sessionId: string) {
       const controller = new AbortController();
       hydrationController = controller;
       hydrating = true;
-      void paperApi
+      return paperApi
         .snapshot(sessionId, controller.signal)
         .then((hydrated) => {
           if (!active || controller.signal.aborted) return;
@@ -134,11 +140,14 @@ export function usePaperStream(sessionId: string) {
           setSnapshot(complete);
           setError(null);
           firstConnection = false;
-          reconnectAttempts = 0;
+          const socketOpen = socket?.readyState === WebSocket.OPEN;
+          if (socketOpen) reconnectAttempts = 0;
           terminal = ["STOPPED", "FAILED", "INTERRUPTED"].includes(
             complete.session.status,
           );
-          setConnection(terminal ? "closed" : "connected");
+          setConnection(
+            terminal ? "closed" : socketOpen ? "connected" : "reconnecting",
+          );
           if (terminal) socket?.close();
         })
         .catch((reason: unknown) => {
@@ -159,6 +168,7 @@ export function usePaperStream(sessionId: string) {
           socket?.close();
         });
     };
+    hydrateRef.current = hydrate;
 
     const connect = () => {
       if (!active || terminal) return;
@@ -276,6 +286,7 @@ export function usePaperStream(sessionId: string) {
     connect();
     return () => {
       active = false;
+      hydrateRef.current = null;
       hydrationController?.abort();
       openingController?.abort();
       if (retry !== undefined) window.clearTimeout(retry);
@@ -287,5 +298,22 @@ export function usePaperStream(sessionId: string) {
     snapshot: snapshot?.session.session_id === sessionId ? snapshot : null,
     connection,
     error: error?.sessionId === sessionId ? error.message : null,
+    acknowledge: (before: PaperSessionStatus, accepted: PaperSession) => {
+      if (accepted.session_id !== sessionId) {
+        setSnapshot(null);
+        setError({
+          sessionId,
+          message: new Error("Paper command account mismatch"),
+        });
+        return;
+      }
+      setSnapshot((current) =>
+        current?.session.session_id === sessionId &&
+        current.session.status === before
+          ? { ...current, session: accepted }
+          : current,
+      );
+    },
+    refresh: () => hydrateRef.current?.() ?? Promise.resolve(),
   };
 }

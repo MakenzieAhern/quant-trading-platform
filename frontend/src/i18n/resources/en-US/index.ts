@@ -320,6 +320,8 @@ export const enUS = {
       connectionError:
         "The paper session connection could not be restored automatically.",
       malformedEvent: "A malformed paper stream event was rejected.",
+      commandAccountMismatch:
+        "The server returned a different paper account for this command. Reload this page before using account controls.",
       auditIdentity: "Audit identifiers",
       sessionId: "Session ID",
       datasetId: "Dataset ID",

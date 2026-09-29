@@ -25,7 +25,9 @@ function commandConfirmed(
 
 export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   const { t } = useTranslation("paper");
-  const { snapshot, connection, error } = usePaperStream(sessionId);
+  const { snapshot, connection, error, acknowledge, refresh } =
+    usePaperStream(sessionId);
+  const [contractErrorId, setContractErrorId] = useState<string | null>(null);
   const [commandPending, setCommandPending] = useState(false);
   const [commandError, setCommandError] = useState<PaperAction | null>(null);
   const commandLock = useRef(false);
@@ -57,15 +59,26 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
 
   const command = async (action: PaperAction) => {
     if (commandLock.current) return;
+    const before = snapshot?.session.status;
+    if (!before) return;
     commandLock.current = true;
     pendingAction.current = action;
     pendingCommandConfirmed.current = false;
     setCommandPending(true);
     setCommandError(null);
+    let accepted = false;
     try {
-      await paperApi[action](sessionId);
+      const response = await paperApi[action](sessionId);
+      if (response.session_id !== sessionId) {
+        setContractErrorId(sessionId);
+        return;
+      }
+      accepted = true;
+      acknowledge(before, response);
+      await refresh();
     } catch {
-      if (!pendingCommandConfirmed.current) setCommandError(action);
+      if (!accepted && !pendingCommandConfirmed.current)
+        setCommandError(action);
     } finally {
       pendingAction.current = null;
       commandLock.current = false;
@@ -73,6 +86,15 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     }
   };
 
+  if (contractErrorId === sessionId)
+    return (
+      <div className="panelState errorPanel" role="alert">
+        <p>{t("detail.commandAccountMismatch")}</p>
+        <a className="button" href={window.location.href}>
+          {t("common:loadErrors.reload")}
+        </a>
+      </div>
+    );
   if (!snapshot && !error) return <LoadingPanel label={t("detail.loading")} />;
   if (!snapshot && error)
     return (

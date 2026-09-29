@@ -294,6 +294,8 @@ export const zhCN = {
       hydrateError: "无法加载模拟交易会话快照。",
       connectionError: "模拟交易会话连接未能自动恢复。",
       malformedEvent: "已拒绝格式异常的模拟交易数据流事件。",
+      commandAccountMismatch:
+        "服务器对该指令返回了另一个模拟账户。为避免误操作，请刷新此页面后再操作账户。",
       auditIdentity: "审计编号",
       sessionId: "会话编号",
       datasetId: "数据集编号",

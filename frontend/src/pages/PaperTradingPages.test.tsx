@@ -982,11 +982,19 @@ describe("paper trading pages", () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
-      .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")));
+      .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")))
+      .mockResolvedValueOnce(
+        jsonResponse({ ...paperSnapshot("PAUSING"), last_sequence: 1 }),
+      );
     const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     await userEvent.click(screen.getByRole("button", { name: "Pause replay" }));
     expect(fetch.mock.calls[1]?.[0]).toContain(`/${PAPER_ID}/pause`);
+    expect(fetch.mock.calls[2]?.[0]).toContain(`/${PAPER_ID}/snapshot`);
+    expect(
+      screen.getByText("Pausing", { selector: ".statusBadge" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Pause replay" })).toBeNull();
 
     view.unmount();
     installWebSocket();
@@ -995,6 +1003,163 @@ describe("paper trading pages", () => {
     await act(async () => MockWebSocket.instances[0]!.open());
     expect(screen.getByRole("button", { name: "Resume replay" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Stop replay" })).toBeVisible();
+  });
+
+  it("reconciles an accepted command while the paper stream is reconnecting", async () => {
+    installWebSocket();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")))
+      .mockResolvedValueOnce(
+        jsonResponse({ ...paperSnapshot("PAUSING"), last_sequence: 1 }),
+      );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    act(() => MockWebSocket.instances[0]!.close());
+    expect(screen.getByText("Session connection: reconnecting")).toBeVisible();
+
+    await userEvent.click(screen.getByRole("button", { name: "Pause replay" }));
+    expect(fetch.mock.calls[2]?.[0]).toContain(`/${PAPER_ID}/snapshot`);
+    expect(
+      screen.getByText("Pausing", { selector: ".statusBadge" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Pause replay" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Stop replay" })).toBeVisible();
+    expect(screen.getByText("Session connection: reconnecting")).toBeVisible();
+  });
+
+  it("keeps an accepted transition when a disconnect aborts its snapshot read", async () => {
+    installWebSocket();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")))
+      .mockImplementationOnce(
+        (_input, init) =>
+          new Promise<Response>((_resolve, reject) => {
+            init?.signal?.addEventListener("abort", () =>
+              reject(new DOMException("aborted", "AbortError")),
+            );
+          }),
+      );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await userEvent.click(screen.getByRole("button", { name: "Pause replay" }));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
+
+    act(() => MockWebSocket.instances[0]!.close());
+    await waitFor(() =>
+      expect(fetch.mock.calls[2]?.[1]?.signal?.aborted).toBe(true),
+    );
+    expect(
+      screen.getByText("Pausing", { selector: ".statusBadge" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Pause replay" })).toBeNull();
+    expect(screen.getByText("Session connection: reconnecting")).toBeVisible();
+  });
+
+  it("keeps a newer stream status over an older command response", async () => {
+    installWebSocket();
+    let finishPost!: (response: Response) => void;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (finishPost = resolve)),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({ ...paperSnapshot("PAUSED"), last_sequence: 1 }),
+      )
+      .mockReturnValueOnce(new Promise(() => {}));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await userEvent.click(screen.getByRole("button", { name: "Pause replay" }));
+    await act(async () =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "session.status",
+        occurred_at: "2026-09-06T02:01:00Z",
+        payload: { status: "PAUSED" },
+      }),
+    );
+    expect(
+      screen.getByText("Paused", { selector: ".statusBadge" }),
+    ).toBeVisible();
+
+    await act(async () => finishPost(jsonResponse(paperSession("PAUSING"))));
+    expect(fetch).toHaveBeenCalledTimes(4);
+    expect(
+      screen.getByText("Paused", { selector: ".statusBadge" }),
+    ).toBeVisible();
+    expect(
+      screen.queryByText("Pausing", { selector: ".statusBadge" }),
+    ).toBeNull();
+  });
+
+  it("does not apply a command response from another paper account", async () => {
+    installWebSocket();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          ...paperSession("PAUSING"),
+          session_id: "534d9730-a8c9-4f71-a0fc-c4b5d156f2ef",
+        }),
+      )
+      .mockResolvedValue(
+        jsonResponse({ ...paperSnapshot("PAUSED"), last_sequence: 1 }),
+      );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await userEvent.click(screen.getByRole("button", { name: "Pause replay" }));
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "The server returned a different paper account",
+    );
+    expect(screen.queryByRole("button", { name: "Pause replay" })).toBeNull();
+    await act(async () =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "session.status",
+        occurred_at: "2026-09-06T02:01:00Z",
+        payload: { status: "PAUSED" },
+      }),
+    );
+    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "The server returned a different paper account",
+    );
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "服务器对该指令返回了另一个模拟账户",
+    );
+    await act(async () => i18n.changeLanguage("en-US"));
+  });
+
+  it("does not call an accepted command failed when its follow-up read fails", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")))
+      .mockResolvedValueOnce(jsonResponse({ detail: "unavailable" }, 503))
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("FAILED")));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    act(() => MockWebSocket.instances[0]!.close());
+
+    await act(async () =>
+      fireEvent.click(screen.getByRole("button", { name: "Pause replay" })),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("unavailable");
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(
+      screen.getByText("Failed", { selector: ".statusBadge" }),
+    ).toBeVisible();
+    expect(screen.queryByText(/Unable to pause the paper session/)).toBeNull();
   });
 
   it("keeps the focused paper command during an in-flight failure without duplicate POSTs", async () => {
@@ -1190,7 +1355,10 @@ describe("paper trading pages", () => {
     installWebSocket();
     vi.spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("CREATED")))
-      .mockResolvedValueOnce(jsonResponse(paperSession("STARTING")));
+      .mockResolvedValueOnce(jsonResponse(paperSession("STARTING")))
+      .mockResolvedValue(
+        jsonResponse({ ...paperSnapshot("STARTING"), last_sequence: 1 }),
+      );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     const start = screen.getByRole("button", { name: "Start replay" });
