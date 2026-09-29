@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T03:56:47Z",
+  "updated_at_utc": "2026-09-29T04:09:16Z",
+  "strategy_first_click_timing_gate": {
+    "status": "PASS_BOUNDED_LOCAL_CHROME_DRAWER_OPENING_NOT_FULL_QA_PERF_OR_M4",
+    "source_head": "f3bd6b1",
+    "proof": "2026-09-29 UTC: installed Chrome 153 headless opened the strategy drawer in 120/120 first-click trials across four 30-sample sets, each with a fresh context/document and network cache disabled. Host click-start-to-rendered-screenshot p95s were 196.5/234.4/203.9/205.6 ms; that upper bound includes automation/screenshot overhead, so neither app p95 PASS nor FAIL follows. An independent read-only method review required checking the dialog open time against native click Event Timing. Final 30/30 opened within the recorded native click rendering window with an 8 ms timing-quantization allowance; native event-duration p95 was 24 ms and trusted pointerdown-to-second-frame-after-open p95 was 18.5 ms. All backend API requests were GET. Reproducible script and visually inspected screenshot checksum are outside Git in product-evidence/v1.2/m4/20260929-strategy-first-click-measure.md.",
+    "limits": "One local headless Chrome/dev-page interaction only; callback timing is not a pixel-present timestamp, and no production/browser/assistive-tech/slower-device/independent-novice or whole-site p95 acceptance is claimed. Full QA-PERF/M4, lawful forward market data, genuine lost-ledger recovery, independent backup and GitHub CI/release remain open. No original database/account/provider/frozen research/OOS write, push, merge or release occurred."
+  },
   "task_poll_focus_gate": {
     "status": "PASS_BOUNDED_LOCAL_CHROME_FAULT_INJECTION_NOT_FULL_M4",
     "code_head": "e1922f0",

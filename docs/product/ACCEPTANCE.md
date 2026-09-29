@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 strategy first-click timing — bounded M4 Chrome study
+
+Installed Chrome 153 opened the strategy drawer in 120/120 first-click trials
+over four sets of 30 fresh browser contexts/documents with network cache
+disabled. The host click-start-to-rendered-screenshot p95 values were 196.5,
+234.4, 203.9 and 205.6 ms. That stopwatch includes automation and screenshot
+overhead; three sets exceeded the 200 ms target, so it is neither an app
+PASS nor an app FAIL. After independent method review, the final set recorded
+native click event and dialog-open timestamps: all 30 dialog openings fell
+within the click's recorded rendering window with an 8 ms event-timing
+quantization allowance. Native event-duration p95 was 24 ms, and trusted
+pointerdown to the second frame callback after opening p95 was 18.5 ms.
+
+The script, method limits and visually checked screenshot checksum are
+recorded outside Git in
+`product-evidence/v1.2/m4/20260929-strategy-first-click-measure.md`. This
+proves only a local headless development-page interaction, not production
+visible-pixel latency, native assistive technology, whole-site p95,
+independent novice QA, GitHub CI or full `QA-PERF`/M4 acceptance.
+
 ## 2026-09-29 task-list polling focus — bounded M4 correction
 
 Task Center research/raw-task lists and Data Center update history unmounted a
