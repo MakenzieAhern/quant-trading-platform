@@ -7,6 +7,7 @@ import { experimentApi } from "./experiments/api";
 import { marketApi, securityName } from "./markets/api";
 import { useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
+import { ProductError } from "./ProductPages";
 
 export function CommandPalette({ onClose }: { onClose: () => void }) {
   const copy = useProductCopy();
@@ -41,6 +42,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
     (signal) => marketApi.watchlist(search.watchOffset, signal, search.q),
     [search.q, search.watchOffset, revision],
   );
+  const searchError = capabilities.error ?? jobs.error ?? watches.error;
   const commands = [
     { label: copy.home, href: "/" },
     { label: copy.markets, href: "/markets" },
@@ -81,20 +83,16 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
         />
       </label>
       <p>{copy.searchScope}</p>
-      {(capabilities.error || jobs.error || watches.error) && (
-        <div role="alert">
-          <p>{copy.searchFailed}</p>
-          <button
-            type="button"
-            className="button secondary"
-            onClick={() => {
-              searchInput.current?.focus();
-              setRevision((value) => value + 1);
-            }}
-          >
-            {copy.retry}
-          </button>
-        </div>
+      {searchError && (
+        <ProductError
+          error={searchError}
+          fallback={copy.searchFailed}
+          retryLabel={copy.retry}
+          retry={() => {
+            searchInput.current?.focus();
+            setRevision((value) => value + 1);
+          }}
+        />
       )}
       <nav className="commandResults" aria-label={copy.searchCommands}>
         {commands.map((item) => (

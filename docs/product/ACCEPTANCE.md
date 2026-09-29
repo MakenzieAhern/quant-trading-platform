@@ -6024,3 +6024,21 @@ neither the blocked internal Downloads page nor the identical download-event
 method was retried. CSV landing, native screen-reader/200% zoom, independent
 novice QA, genuine lawful after-start forward data, lost-ledger restoration,
 independent physical backup, full M4/M5 and hosted CI remain open.
+
+## 2026-09-29 15:23 UTC command search error recovery
+
+Global command search formerly collapsed server permission denial, timeout and
+offline failures into one generic Retry instruction. A read-only review traced
+the three independent GET resources and the existing `ProductError` classifier.
+The palette now reuses that classifier with its prior partial-results fallback;
+successful sources remain visible, and Retry still focuses the search field
+before requesting again. Red/green tests cover 403, 408 and offline in English
+and Chinese with a successful watchlist source and no automatic repeat request.
+The focused file passed 13/13 and the full frontend 475/475; changed-file
+Prettier, ESLint, TypeScript and production build passed. Independent read-only
+diff review found no actionable issue. Installed Chrome on the original app
+opened the command search with registered strategy, eight saved studies and one
+watchlist entry, then Close restored focus to its trigger. No search source was
+fault-injected in Chrome, so browser failure-path acceptance remains unverified.
+Original Compose/financial data and GitHub were not changed; this is bounded
+M4 error guidance, not U1–U8/M4/M5 or hosted-CI completion.

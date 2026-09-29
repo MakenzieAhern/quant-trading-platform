@@ -9,6 +9,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { StrictMode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
 import { CommandPalette } from "./CommandPalette";
 import { experimentApi } from "./experiments/api";
@@ -267,4 +268,52 @@ describe("bounded server command search", () => {
       ),
     );
   });
+  it.each([
+    {
+      language: "en-US",
+      error: new ApiError(403, "denied"),
+      expected: "Access was denied",
+    },
+    {
+      language: "zh-CN",
+      error: new ApiError(403, "denied"),
+      expected: "访问被拒绝",
+    },
+    {
+      language: "en-US",
+      error: new ApiError(408, "timeout"),
+      expected: "request timed out",
+    },
+    {
+      language: "zh-CN",
+      error: new ApiError(408, "timeout"),
+      expected: "请求超时",
+    },
+    {
+      language: "en-US",
+      error: new TypeError("offline"),
+      expected: "service is unavailable",
+    },
+    {
+      language: "zh-CN",
+      error: new TypeError("offline"),
+      expected: "服务暂时无法连接",
+    },
+  ])(
+    "explains $language search failure without hiding successful sources",
+    async ({ language, error, expected }) => {
+      await i18n.changeLanguage(language);
+      vi.mocked(experimentApi.list).mockRejectedValue(error);
+      vi.mocked(marketApi.watchlist).mockResolvedValue({
+        items: [watched],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      });
+      render(<CommandPalette onClose={() => undefined} />);
+      expect(await screen.findByRole("alert")).toHaveTextContent(expected);
+      expect(screen.getByRole("link", { name: /600000/ })).toBeInTheDocument();
+      expect(experimentApi.list).toHaveBeenCalledTimes(1);
+    },
+  );
 });
