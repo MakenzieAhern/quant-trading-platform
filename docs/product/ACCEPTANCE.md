@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local operation during GitHub Actions hold — bounded U7 correction
+
+WSL2 and Docker remained available without hosted CI. The original Compose
+PostgreSQL, Redis and backend were healthy, the frontend was up, and both
+`http://localhost:5173/` and `/api/health` returned HTTP 200 from Windows.
+This proves local reachability, not v1.2 release readiness; GitHub's October 1
+recovery is the user's estimate, not a verified service date.
+
+Two creation pages allowed a late successful POST to redirect after the user
+had selected Cancel. New isolated tests first failed for paper-account and
+legacy-backtest creation. Both now follow the existing research-wizard pattern:
+only the still-mounted page at its submission URL may navigate on completion.
+The tests cover an unmounted paper form and a still-mounted legacy form after
+Cancel changed the URL. Focused tests passed 86/86; `make test` passed in the
+separate tmpfs test Compose project (frontend 441/441), and `make lint` and
+`make build` passed. An independent read-only review found no source defect.
+No original database, running account, provider, frozen study, OOS or GitHub
+state was changed. The running original frontend was not rebuilt with this
+working-tree fix, and no actual-browser delayed-POST proof was claimed.
+
+This is a bounded route-consistency fix, not full U7/M4/M5 acceptance. A
+separate audit found that paper-create idempotency is only component-memory
+durable: a lost 201 followed by refresh may generate a new key and a second
+account. That requires its own exact-request recovery correction. Lawful
+new-market forward receipt, genuine lost-ledger recovery, independent physical
+backup, novice acceptance and exact-head hosted CI remain open. No push,
+merge or release occurred.
+
 ## 2026-09-29 configuration restore at the 20-row boundary — bounded U2/U3/M4 correction
 
 When the oldest saved configuration was restored from a full 20-row page,

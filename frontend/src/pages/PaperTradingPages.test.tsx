@@ -694,6 +694,27 @@ describe("paper trading pages", () => {
     expect(fetch.mock.calls[1]?.[1]?.headers).toEqual(firstHeaders);
   });
 
+  it("does not reopen a created session after leaving while the request is pending", async () => {
+    window.history.replaceState({}, "", "/paper/new");
+    let resolveCreate: ((response: Response) => void) | undefined;
+    const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(
+      () =>
+        new Promise<Response>((resolve) => {
+          resolveCreate = resolve;
+        }),
+    );
+    const view = render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole("link", { name: "Cancel" }));
+    expect(window.location.pathname).toBe("/paper");
+    view.unmount();
+    await act(async () => resolveCreate?.(jsonResponse(paperSession(), 201)));
+    expect(window.location.pathname).toBe("/paper");
+  });
+
   it.each([401, 403])(
     "treats HTTP %s as denied access, not uncertain creation, in both locales",
     async (status) => {

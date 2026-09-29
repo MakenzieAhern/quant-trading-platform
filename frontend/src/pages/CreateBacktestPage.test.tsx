@@ -116,6 +116,28 @@ describe("create backtest", () => {
     );
   });
 
+  it("does not reopen a completed run after Cancel changes the URL while the request is pending", async () => {
+    window.history.replaceState({}, "", "/backtests/new");
+    let resolveCreate: ((response: Response) => void) | undefined;
+    const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(
+      () =>
+        new Promise<Response>((resolve) => {
+          resolveCreate = resolve;
+        }),
+    );
+    render(<CreateBacktestPage />);
+    await userEvent.click(screen.getByRole("button", { name: "Run backtest" }));
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole("link", { name: "Cancel" }));
+    expect(window.location.pathname).toBe("/backtests");
+    await act(async () =>
+      resolveCreate?.(
+        jsonResponse({ run_id: RUN_ID, status: "SUCCEEDED", links: {} }, 201),
+      ),
+    );
+    expect(window.location.pathname).toBe("/backtests");
+  });
+
   it("keeps the run action focused through a failed request and prevents a pending duplicate", async () => {
     let rejectCreate: ((reason: Error) => void) | undefined;
     const fetch = vi

@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import { backtestsApi } from "../api/backtests";
@@ -32,6 +32,14 @@ export function CreateBacktestPage() {
   const [error, setError] = useState<string | Error | null>(null);
   const requestKey = useRef<string | null>(null);
   const submissionLocked = useRef(false);
+  const active = useRef(true);
+
+  useEffect(() => {
+    active.current = true;
+    return () => {
+      active.current = false;
+    };
+  }, []);
 
   const changed = () => {
     requestKey.current = null;
@@ -100,14 +108,17 @@ export function CreateBacktestPage() {
     requestKey.current ??= crypto.randomUUID();
     submissionLocked.current = true;
     setPending(true);
+    const originatingUrl = window.location.href;
     try {
       const created = await backtestsApi.create(payload, requestKey.current);
-      navigate(`/backtests/${created.run_id}`);
+      if (active.current && window.location.href === originatingUrl)
+        navigate(`/backtests/${created.run_id}`);
     } catch (reason) {
-      setError(reason instanceof Error ? reason : "createPage.submitError");
+      if (active.current)
+        setError(reason instanceof Error ? reason : "createPage.submitError");
     } finally {
       submissionLocked.current = false;
-      setPending(false);
+      if (active.current) setPending(false);
     }
   };
 

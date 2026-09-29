@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ApiError } from "../api/client";
@@ -130,6 +130,14 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
   const [error, setError] = useState<string | null>(null);
   const key = useRef<string | null>(null);
   const locked = useRef(false);
+  const active = useRef(true);
+
+  useEffect(() => {
+    active.current = true;
+    return () => {
+      active.current = false;
+    };
+  }, []);
 
   const changed = () => {
     key.current = null;
@@ -262,25 +270,28 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
     key.current ??= crypto.randomUUID();
     locked.current = true;
     setPending(true);
+    const originatingUrl = window.location.href;
     try {
       const created = await paperApi.create(request, key.current);
-      navigate(`/paper/${created.session_id}`);
+      if (active.current && window.location.href === originatingUrl)
+        navigate(`/paper/${created.session_id}`);
     } catch (reason) {
-      setError(
-        reason instanceof ApiError &&
-          (reason.status === 401 || reason.status === 403)
-          ? "common:loadErrors.permission"
-          : reason instanceof ApiError && reason.status === 404
-            ? "createPage.datasetError"
-            : reason instanceof ApiError && reason.status === 409
-              ? "createPage.conflictError"
-              : reason instanceof ApiError && reason.status === 422
-                ? "createPage.validationError"
-                : "createPage.submitError",
-      );
+      if (active.current)
+        setError(
+          reason instanceof ApiError &&
+            (reason.status === 401 || reason.status === 403)
+            ? "common:loadErrors.permission"
+            : reason instanceof ApiError && reason.status === 404
+              ? "createPage.datasetError"
+              : reason instanceof ApiError && reason.status === 409
+                ? "createPage.conflictError"
+                : reason instanceof ApiError && reason.status === 422
+                  ? "createPage.validationError"
+                  : "createPage.submitError",
+        );
     } finally {
       locked.current = false;
-      setPending(false);
+      if (active.current) setPending(false);
     }
   };
 
