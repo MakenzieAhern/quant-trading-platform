@@ -19,7 +19,10 @@ export function Dialog({
     dialog?.showModal();
     return () => {
       dialog?.close();
-      if (trigger instanceof HTMLElement) trigger.focus();
+      if (trigger instanceof HTMLElement && trigger.isConnected)
+        trigger.focus();
+      else if (document.activeElement === document.body)
+        document.getElementById("main-content")?.focus({ preventScroll: true });
     };
   }, []);
   return (

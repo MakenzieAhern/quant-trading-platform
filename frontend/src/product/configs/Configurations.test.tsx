@@ -1,4 +1,11 @@
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "../../i18n";
@@ -214,6 +221,40 @@ describe("configuration versions in the guided wizard", () => {
     expect(screen.getByLabelText("Starting capital (CNY)")).toHaveValue(
       target.draft.form.initial_cash,
     );
+  });
+  it("returns focus to the workspace when restoring removes the selected version's row", async () => {
+    const oldest = saveConfigurationVersion("Oldest setup", {
+      ...current,
+      step: 0,
+    });
+    localStorage.setItem(
+      CONFIG_VERSION_PREFIX + oldest.id,
+      JSON.stringify({ ...oldest, createdAt: "2020-01-01T00:00:00Z" }),
+    );
+    for (let index = 0; index < 19; index += 1)
+      saveConfigurationVersion(`Other setup ${index}`, current);
+    const restore = vi.fn();
+    render(
+      <main id="main-content" tabIndex={-1}>
+        <ConfigurationVersionsPanel
+          current={{ ...current, step: 0 }}
+          onRestore={restore}
+        />
+      </main>,
+    );
+    const trigger = screen.getByRole("button", {
+      name: "Review and restore: Oldest setup",
+    });
+    trigger.focus();
+    await userEvent.keyboard("{Enter}");
+    await userEvent.click(
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: "Back up current draft and restore",
+      }),
+    );
+    expect(restore).toHaveBeenCalledOnce();
+    expect(trigger).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
   });
   it("reports quota failure and retains the name, current form and draft", async () => {
     saveExperimentDraft(configuration, 2, current.idempotencyKey);

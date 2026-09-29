@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 configuration restore at the 20-row boundary — bounded U2/U3/M4 correction
+
+When the oldest saved configuration was restored from a full 20-row page,
+the required pre-restore backup became row 1 and moved the original Restore
+trigger to page 2. Closing the confirmation dialog tried to focus that now
+disconnected button, leaving keyboard focus on `body`. The new regression
+reproduced this failure (7 pass, 1 fail). The shared dialog now returns focus
+to its connected trigger as before; only when the trigger has disappeared
+and focus has fallen to `body` does it focus the persistent main workspace.
+The focused suite passed 8/8, the full frontend passed 439/439, and `make
+lint`, changed-file Prettier and `make build` passed. A read-only review found
+no blocking regression in the six dialog callers.
+
+Actual Chrome 153 on DESKTOP-3EOROGR loaded current-source Vite at temporary
+`localhost:15175/research/new`. Through the UI on that isolated origin, it
+saved 20 versions, opened the oldest with Return, and confirmed restoration
+with Return. The page then showed 21 versions and the step-1 restore notice;
+the old button was absent from page 1, focus was on `main-content`, and the
+old version remained on page 2. A GET-only proxy on `:18014` forwarded reads
+to the isolated scratch backend `:18012`, so this browser exercise made no
+backend write. The screenshot was visually inspected but not saved as M5
+media. The temporary tab, proxy and dev container were stopped; the original
+four Compose services stayed healthy. Exact harness and proxy checksum are
+outside Git in `product-evidence/v1.2/m4/20260929-config-restore-focus/README.md`.
+
+This is one configuration keyboard-fallback case, not native screen-reader
+speech, 200% zoom, full U2/U3/M4/M5, independent novice acceptance, lawful
+new-market forward data, genuine lost-ledger recovery, independent backup or
+hosted exact-head CI. The 21 browser-only QA versions remain under the
+inactive temporary `localhost:15175` origin; no original account, database,
+frozen research, OOS or GitHub state was changed.
+
 ## 2026-09-29 global search keyboard Retry — bounded U8/M4 correction
 
 The global command search lost keyboard focus when a failed studies read was
