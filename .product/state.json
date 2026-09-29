@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T06:08:52Z",
+  "updated_at_utc": "2026-09-29T06:20:25Z",
+  "release_rollback_documentation_gate": {
+    "status": "PASS_DOC_SAFETY_ONLY_ROLLBACK_REHEARSAL_BLOCKED",
+    "proof": "Read-only checks on 2026-09-29 found the original database at Alembic 20260924_0016; published v1.1.0 does not include v1.2 migrations 20260922_0012 through 20260924_0016. docs/DEPLOYMENT.md and both user guides now explicitly prohibit treating checkout of v1.1.0 plus make up against the current PostgreSQL volume as a safe rollback; the documented gate requires an independent pre-upgrade PostgreSQL/product-data backup and isolated restore rehearsal. See docs/product/ACCEPTANCE.md.",
+    "limits": "No verified independent pre-upgrade backup, isolated restore, application rollback or cutover. The original database, volumes, accounts and product data were not changed. Documentation safety correction is not M5 acceptance, hosted CI or v1.2 release. GitHub October 1 recovery remains unverified."
+  },
   "browser_narrow_zoom_surrogate_gate": {
     "status": "PARTIAL_CSS_VIEWPORT_SURROGATE_NATIVE_200PCT_UNVERIFIED",
     "code_head": "3db3a32bfa41d84ad4e064c79b550707eb20d996",

@@ -15,13 +15,37 @@ docker compose -f docker-compose.yml -f compose.release.yml up --build -d --wait
 This uses the installed backend image without a source-code mount and an nginx-served
 frontend production bundle (no Vite server). The registered fixture directory is read-only.
 It retains the same loopback ports and local PostgreSQL history. This is a local release
-rehearsal, not an authenticated public deployment. Return to development with `make up`.
+rehearsal, not an authenticated public deployment. `make up` switches back to
+development containers only for the **same schema-compatible checkout**; it is
+not a rollback to an older tag and does not undo a database migration.
 It replaces the running project containers, but the release backend uses its image command
 and does not run Alembic automatically. Check the schema and run any required migration as
 a controlled one-off only after a verified independent backup. CI separately
 smokes the static frontend and the production backend image; the backend check
 uses isolated tmpfs PostgreSQL/Redis with no project data mounts. Neither CI
 check replaces the live-data backup/rehearsal gate.
+
+## Code and data rollback gate — not yet passed for v1.2
+
+At the 2026-09-29 checkpoint, the local database reports Alembic revision
+`20260924_0016`. The published `v1.1.0` tag lacks product migrations
+`20260922_0012` through `20260924_0016`. Do **not** check out `v1.1.0` and run
+`make up` (or start its image) against the current PostgreSQL volume: old code
+does not know that schema revision. Do not downgrade the live database, delete
+volumes, or call an on-disk copy on the same physical drive an independent
+backup.
+
+A rollback can be considered only after a consistent, independently stored
+pre-upgrade backup of PostgreSQL **and** product data has been verified. First
+restore a copy into a separate checkout pinned to the intended release tag,
+with a separate Compose project, private volumes and loopback ports. Never
+mount the current live database or writable product directory into that
+rehearsal. Confirm the restored database revision is known to that tag, then
+smoke its frontend, `/api/health`, saved research and paper-ledger reads. Record
+which post-backup records would be absent. Only a successful isolated rehearsal
+and a reviewed downtime/data-loss decision can authorize a later cutover;
+preserve the original volumes for recovery. Until then, **rollback is not
+verified or available**. Keep running schema-compatible code or stop safely.
 
 Docker Compose is the supported development deployment, not a production trading topology.
 The following bootstrap commands are for a clean install. On an existing database,

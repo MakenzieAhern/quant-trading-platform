@@ -5197,3 +5197,20 @@ services stayed running; there were no account/database/provider, frozen
 research, Official OOS or GitHub writes. Full M4/M5, actual native zoom,
 licensed new-market forward receipt, genuine lost-ledger restore, independent
 backup, hosted CI and release approval remain open.
+
+## 2026-09-29 06:20 UTC deployment and guide safety correction
+
+Read-only Alembic inspection found the original development database at
+`20260924_0016 (head)`. The published `v1.1.0` tag lacks product migrations
+`20260922_0012` through `20260924_0016`. Its code must not be started against
+the current PostgreSQL volume as an assumed rollback. `docs/DEPLOYMENT.md`
+now states the independent pre-upgrade backup and isolated restore-rehearsal
+gate; both user guides link to it. No such backup/rehearsal or cutover has
+been verified, so rollback remains unavailable, not PASS.
+
+The guides also qualify optional historical archive availability, uncertain
+paper-session creation retries, conditional rebalance plans, comparison
+metadata limits, date-filtered export records versus full-period metrics and
+contextual data dates. These were checked against existing product behavior;
+they are documentation corrections, not a new M5 browser or release pass.
+No original service data, frozen research, Official OOS or GitHub state changed.
