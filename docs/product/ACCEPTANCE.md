@@ -1,5 +1,22 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 delivery provenance correction — M5 remains open
+
+The outside-Git delivery index now identifies clean local `fe0712b`, 100
+commits ahead of its cached remote. The accepted five PNGs and 26.12-second
+WebM were captured at earlier frontend code `ffaa023`, before the service
+status accessibility fix; they are not exact-HEAD media. Their six SHA-256
+values match the saved manifest, and all 60 local file links in the index
+resolve. HTTP and WSL UNC links were not browser-click verified. The original
+four Compose services stayed up; the frontend and `/api/health` returned 200.
+
+Windows Computer Use twice stopped before input because it could not
+confidently identify the Chrome URL. No zoom or native screen-reader claim is
+made and no alternate automation was used to bypass that safety stop. The
+index still marks full account-lifecycle recording, exact-HEAD six-route
+media, independent novice, real login startup, backup/lost-ledger, lawful
+forward receipt and hosted CI/release gates incomplete.
+
 ## 2026-09-29 GitHub-independent local operation and service-status accessibility
 
 The original four Compose services remained up; PostgreSQL, Redis and backend
