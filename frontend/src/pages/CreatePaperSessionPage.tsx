@@ -19,12 +19,14 @@ import {
 import { navigate } from "../utils/navigation";
 import {
   confirmPaperCreate,
+  discardRejectedPaperCreate,
   PAPER_CREATE_PENDING_PREFIX,
   paperRequestFromBody,
   PendingPaperCreateError,
   preparePaperCreate,
   readPendingPaperCreates,
   type PendingPaperCreate,
+  withPaperCreateLock,
 } from "./paperCreateRecovery";
 
 type ReplayRequest = Extract<
@@ -62,7 +64,12 @@ export function CreatePaperSessionPage() {
         </Link>
       </header>
       <PaperCreateRecoveryPanel saved={saved} onSavedChange={refreshSaved} />
-      <PaperSessionCreationContent onSavedChange={refreshSaved} />
+      <PaperSessionCreationContent
+        onSavedChange={refreshSaved}
+        canCreateAnother={Boolean(
+          saved?.length && saved.every((item) => item.confirmedSessionId),
+        )}
+      />
     </>
   );
 }
@@ -116,48 +123,44 @@ function PaperCreateRecoveryPanel({
 
   const retry = async (intent: PendingPaperCreate) => {
     if (locked.current) return;
-    let request: CreatePaperSessionRequest;
-    try {
-      if (
-        !readPendingPaperCreates().some(
-          (item) => item.body === intent.body && item.key === intent.key,
-        )
-      )
-        throw new Error("Saved paper request changed");
-      request = paperRequestFromBody(intent.body);
-    } catch {
-      setError("createPage.recoveryError");
-      return;
-    }
     locked.current = true;
     setBusy(intent.key);
     setError(null);
     const originatingUrl = window.location.href;
+    let sent = false;
     try {
-      const created = await paperApi.create(request, intent.key);
-      if (active.current && window.location.href === originatingUrl) {
-        if (navigate(`/paper/${created.session_id}`)) {
-          try {
-            confirmPaperCreate(intent);
-            if (active.current) onSavedChange();
-          } catch {
-            // The confirmed account remains recoverable with its saved key.
-          }
-        }
-      }
-    } catch (reason) {
-      if (definitelyNotCreated(reason)) {
+      const sessionId = await withPaperCreateLock(async () => {
+        if (!active.current || window.location.href !== originatingUrl)
+          throw new Error("Paper creation page was left before retry");
+        const saved = readPendingPaperCreates().find(
+          (item) => item.body === intent.body && item.key === intent.key,
+        );
+        if (!saved) throw new Error("Saved paper request changed");
+        if (saved.confirmedSessionId) return saved.confirmedSessionId;
+        // A prior attempt may have committed even if this retry is rejected.
+        sent = true;
+        const created = await paperApi.create(
+          paperRequestFromBody(saved.body),
+          saved.key,
+        );
         try {
-          confirmPaperCreate(intent);
-          if (active.current) onSavedChange();
+          confirmPaperCreate(saved, created.session_id);
         } catch {
-          // Keep an unreadable intent fail-closed for manual reconciliation.
+          // Keep the exact key for another recovery if receipt storage fails.
         }
-      }
-      if (active.current) setError(paperCreateError(reason));
+        return created.session_id;
+      });
+      if (active.current && window.location.href === originatingUrl)
+        navigate(`/paper/${sessionId}`);
+    } catch (reason) {
+      if (active.current)
+        setError(sent ? paperCreateError(reason) : "createPage.recoveryError");
     } finally {
       locked.current = false;
-      if (active.current) setBusy(null);
+      if (active.current) {
+        setBusy(null);
+        onSavedChange();
+      }
     }
   };
 
@@ -192,13 +195,19 @@ function PaperCreateRecoveryPanel({
                   {JSON.stringify(request, null, 2)}
                 </pre>
               </details>
-              <button
-                type="button"
-                aria-disabled={busy !== null}
-                onClick={() => void retry(intent)}
-              >
-                {t("createPage.retrySaved", { number: index + 1 })}
-              </button>
+              {intent.confirmedSessionId ? (
+                <Link href={`/paper/${intent.confirmedSessionId}`}>
+                  {t("createPage.openSaved")}
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  aria-disabled={busy !== null}
+                  onClick={() => void retry(intent)}
+                >
+                  {t("createPage.retrySaved", { number: index + 1 })}
+                </button>
+              )}
             </li>
           );
         })}
@@ -210,8 +219,10 @@ function PaperCreateRecoveryPanel({
 
 function PaperSessionCreationContent({
   onSavedChange,
+  canCreateAnother,
 }: {
   onSavedChange: () => void;
+  canCreateAnother: boolean;
 }) {
   const sourceId = new URLSearchParams(window.location.search).get(
     "from_experiment",
@@ -263,6 +274,7 @@ function PaperSessionCreationContent({
       key={job?.job_id ?? "new"}
       sourceJob={job}
       onSavedChange={onSavedChange}
+      canCreateAnother={canCreateAnother}
     />
   );
 }
@@ -270,9 +282,11 @@ function PaperSessionCreationContent({
 function PaperSessionForm({
   sourceJob,
   onSavedChange,
+  canCreateAnother,
 }: {
   sourceJob: Experiment | null;
   onSavedChange: () => void;
+  canCreateAnother: boolean;
 }) {
   const { t } = useTranslation("paper");
   const sourceConfig = sourceJob?.configuration;
@@ -344,6 +358,9 @@ function PaperSessionForm({
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (locked.current) return;
+    const submitter = (event.nativeEvent as SubmitEvent).submitter;
+    const createAnother =
+      submitter instanceof HTMLButtonElement && submitter.value === "another";
     setError(null);
     if (!isPositiveDecimal(initialCash) || !isPositiveDecimal(quantity)) {
       setError("createPage.decimalError");
@@ -464,42 +481,52 @@ function PaperSessionForm({
         risk: { enforce_buying_power: true },
       };
     }
-    let intent: PendingPaperCreate;
-    try {
-      intent = preparePaperCreate(request);
-    } catch (reason) {
-      setError(
-        reason instanceof PendingPaperCreateError
-          ? "createPage.resolvePendingFirst"
-          : "createPage.storageError",
-      );
-      return;
-    }
     locked.current = true;
     setPending(true);
     const originatingUrl = window.location.href;
+    let intent: PendingPaperCreate | null = null;
+    let sent = false;
     try {
-      const created = await paperApi.create(request, intent.key);
-      if (active.current && window.location.href === originatingUrl) {
-        if (navigate(`/paper/${created.session_id}`)) {
-          try {
-            confirmPaperCreate(intent);
-            onSavedChange();
-          } catch {
-            // Keep the exact key for a later reconciliation if storage fails.
-          }
-        }
-      }
-    } catch (reason) {
-      if (definitelyNotCreated(reason)) {
+      const created = await withPaperCreateLock(async () => {
+        if (!active.current || window.location.href !== originatingUrl)
+          throw new Error("Paper creation page was left before submission");
+        const priorKeys = new Set(
+          readPendingPaperCreates().map((item) => item.key),
+        );
+        intent = preparePaperCreate(request, createAnother);
+        const fresh = !priorKeys.has(intent.key);
+        let result;
         try {
-          confirmPaperCreate(intent);
-          if (active.current) onSavedChange();
-        } catch {
-          // An unreadable saved intent must still block a duplicate attempt.
+          sent = true;
+          result = await paperApi.create(request, intent.key);
+        } catch (reason) {
+          if (fresh && definitelyNotCreated(reason)) {
+            try {
+              discardRejectedPaperCreate(intent);
+            } catch {
+              // A storage failure leaves the original key for reconciliation.
+            }
+          }
+          throw reason;
         }
-      }
-      if (active.current) setError(paperCreateError(reason));
+        try {
+          confirmPaperCreate(intent, result.session_id);
+        } catch {
+          // The original key remains recoverable if receipt storage fails.
+        }
+        return result;
+      });
+      if (active.current && window.location.href === originatingUrl)
+        navigate(`/paper/${created.session_id}`);
+    } catch (reason) {
+      if (active.current)
+        setError(
+          reason instanceof PendingPaperCreateError
+            ? "createPage.resolvePendingFirst"
+            : sent
+              ? paperCreateError(reason)
+              : "createPage.storageError",
+        );
     } finally {
       locked.current = false;
       if (active.current) {
@@ -812,6 +839,11 @@ function PaperSessionForm({
           <button className="button buttonPrimary" aria-disabled={pending}>
             {pending ? t("createPage.creating") : t("createPage.submit")}
           </button>
+          {canCreateAnother && (
+            <button type="submit" value="another" aria-disabled={pending}>
+              {t("createPage.createAnother")}
+            </button>
+          )}
           <span>{t("createPage.idempotentHint")}</span>
         </div>
       </form>

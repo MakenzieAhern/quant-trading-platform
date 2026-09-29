@@ -1,5 +1,43 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 12:46 UTC two-tab paper creation — bounded local U7 check
+
+The paper-create page now holds one same-origin browser Web Lock from reading
+saved intents through POST and receipt persistence. A successful response
+retains its exact request, key and confirmed session ID, so an ordinary later
+submit cannot silently create a new account; a separate explicit button is
+required. If the first result was uncertain, a later 400/422 retry does not
+erase the original reconciliation key. An independent read-only review found
+this last bug before the patch, and two new regressions cover both form and
+saved-request retries. Storage failure or unavailable Web Locks stops a fresh
+POST rather than choosing an unsafe key.
+
+The isolated `qtp-local-paper-0929` tmpfs test project passed 1027 backend
+tests with one optional unmounted-archive skip and 456 frontend tests across
+38 files. Ruff, format, mypy, ESLint and TypeScript passed. A separate
+`qtp-v12-paper-lock-qa` current-source production build used its own tmpfs
+`quant_test` PostgreSQL, Redis and product data, with read-only research/data
+mounts; Alembic was applied only to that scratch database. Its API and
+frontend were healthy at `localhost:18014` and `localhost:15175`. In real
+Chrome, two tabs at that same origin were open before a synthetic 2030 demo
+account was created. The second tab received the saved confirmed receipt and
+“Open saved paper account” link without reload; its ordinary Create action
+stayed on the form with duplicate-prevention guidance. Scratch read-only
+`GET /api/paper-trading/sessions` returned `total: 1`, the same account ID
+shown in the first tab. No replay was started. The original Compose stack,
+database and accounts were not modified.
+
+This proves only one local Chrome two-tab success path plus mocked-lock
+concurrency/fault regressions, not every browser interleaving, cross-profile
+or cross-device exactly-once behavior, an actual-browser lost-201 fault, full
+U7/M4/M5 or release readiness. The scratch stack is disposable and remains
+separate from the original app. GitHub exact-head CI, lawful after-start
+forward-market receipt, genuine pre-incident lost-ledger recovery,
+independent physical backup, valid cold matched interaction p95, native
+screen-reader/200% zoom, CSV landing and independent novice QA remain open.
+October 1 is only an unverified estimate of GitHub account restoration; no
+push, hosted CI retry/poll, merge, tag or release occurred.
+
 ## 2026-09-29 12:22 UTC local paper-create recovery during GitHub CI hold
 
 The original WSL Compose PostgreSQL, Redis and backend were healthy, the

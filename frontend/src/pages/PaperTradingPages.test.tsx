@@ -59,6 +59,7 @@ function installWebSocket() {
 }
 
 describe("paper trading pages", () => {
+  let lockTail = Promise.resolve();
   const pendingKeys = () =>
     Array.from({ length: window.localStorage.length }, (_, index) =>
       window.localStorage.key(index),
@@ -67,8 +68,27 @@ describe("paper trading pages", () => {
     );
   const clearPending = () =>
     pendingKeys().forEach((key) => window.localStorage.removeItem(key));
-  beforeEach(clearPending);
-  afterEach(clearPending);
+  beforeEach(() => {
+    clearPending();
+    lockTail = Promise.resolve();
+    Object.defineProperty(window.navigator, "locks", {
+      configurable: true,
+      value: {
+        request: (_name: string, work: () => Promise<unknown>) => {
+          const result = lockTail.then(work);
+          lockTail = result.then(
+            () => undefined,
+            () => undefined,
+          );
+          return result;
+        },
+      },
+    });
+  });
+  afterEach(() => {
+    clearPending();
+    Reflect.deleteProperty(window.navigator, "locks");
+  });
 
   it.each(["en-US", "zh-CN"])(
     "uses provider-specific empty states before any market data arrives (%s)",
@@ -735,7 +755,7 @@ describe("paper trading pages", () => {
     );
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "An earlier creation is still unconfirmed",
+      "A saved creation already exists",
     );
     await userEvent.click(
       screen.getByRole("button", { name: "Retry saved request 1" }),
@@ -750,7 +770,10 @@ describe("paper trading pages", () => {
     ).toBe(
       new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
     );
-    expect(pendingKeys()).toHaveLength(0);
+    expect(pendingKeys()).toHaveLength(1);
+    expect(
+      screen.getByRole("link", { name: "Open saved paper account" }),
+    ).toHaveAttribute("href", `/paper/${PAPER_ID}`);
   });
 
   it("blocks a changed request until the uncertain one is reconciled", async () => {
@@ -769,7 +792,7 @@ describe("paper trading pages", () => {
     await userEvent.click(create);
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "An earlier creation is still unconfirmed",
+      "A saved creation already exists",
     );
     fireEvent.change(screen.getByLabelText("Initial cash"), {
       target: { value: "100000000" },
@@ -784,7 +807,7 @@ describe("paper trading pages", () => {
     expect(fetch.mock.calls[1]?.[1]?.body).toBe(fetch.mock.calls[0]?.[1]?.body);
   });
 
-  it("starts a fresh intent after a confirmed creation of the same settings", async () => {
+  it("requires an explicit new-account action after a confirmed creation", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(jsonResponse(paperSession(), 201));
@@ -796,14 +819,156 @@ describe("paper trading pages", () => {
     first.unmount();
     window.history.replaceState({}, "", "/paper/new");
     render(<CreatePaperSessionPage />);
+    expect(
+      screen.getByRole("link", { name: "Open saved paper account" }),
+    ).toHaveAttribute("href", `/paper/${PAPER_ID}`);
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create another paper account" }),
     );
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
     expect(fetch.mock.calls[1]?.[1]?.body).toBe(fetch.mock.calls[0]?.[1]?.body);
     expect(
       new Headers(fetch.mock.calls[1]?.[1]?.headers).get("Idempotency-Key"),
     ).not.toBe(
+      new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
+    );
+  });
+
+  it("serializes two same-origin creation forms before choosing a second key", async () => {
+    window.history.replaceState({}, "", "/paper/new");
+    let resolveFirst: ((response: Response) => void) | undefined;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementationOnce(
+        () =>
+          new Promise<Response>((resolve) => {
+            resolveFirst = resolve;
+          }),
+      )
+      .mockResolvedValue(jsonResponse(paperSession(), 201));
+    render(<CreatePaperSessionPage />);
+    render(<CreatePaperSessionPage />);
+    const creates = screen.getAllByRole("button", {
+      name: "Create paper session",
+    });
+    await userEvent.click(creates[0]);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    await userEvent.click(creates[1]);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await act(async () => resolveFirst?.(jsonResponse(paperSession(), 201)));
+    await waitFor(() =>
+      expect(
+        screen.getAllByRole("link", { name: "Open saved paper account" }),
+      ).toHaveLength(2),
+    );
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(pendingKeys()).toHaveLength(1);
+    expect(
+      JSON.parse(window.localStorage.getItem(pendingKeys()[0]) ?? "{}"),
+    ).toMatchObject({ confirmedSessionId: PAPER_ID });
+  });
+
+  it("reuses one key when a second form waits for a lost response", async () => {
+    window.history.replaceState({}, "", "/paper/new");
+    let rejectFirst: ((reason: Error) => void) | undefined;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementationOnce(
+        () =>
+          new Promise<Response>((_, reject) => {
+            rejectFirst = reject;
+          }),
+      )
+      .mockResolvedValue(jsonResponse(paperSession(), 201));
+    render(<CreatePaperSessionPage />);
+    render(<CreatePaperSessionPage />);
+    const creates = screen.getAllByRole("button", {
+      name: "Create paper session",
+    });
+    await userEvent.click(creates[0]);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    await userEvent.click(creates[1]);
+    await act(async () => rejectFirst?.(new TypeError("response lost")));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    expect(
+      new Headers(fetch.mock.calls[1]?.[1]?.headers).get("Idempotency-Key"),
+    ).toBe(
+      new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
+    );
+    expect(pendingKeys()).toHaveLength(1);
+    await waitFor(() =>
+      expect(
+        JSON.parse(window.localStorage.getItem(pendingKeys()[0]) ?? "{}"),
+      ).toMatchObject({ confirmedSessionId: PAPER_ID }),
+    );
+  });
+
+  it("does not send a queued create after its page has been cancelled", async () => {
+    window.history.replaceState({}, "", "/paper/new");
+    let resolveFirst: ((response: Response) => void) | undefined;
+    const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(
+      () =>
+        new Promise<Response>((resolve) => {
+          resolveFirst = resolve;
+        }),
+    );
+    render(<CreatePaperSessionPage />);
+    render(<CreatePaperSessionPage />);
+    const creates = screen.getAllByRole("button", {
+      name: "Create paper session",
+    });
+    await userEvent.click(creates[0]);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    await userEvent.click(creates[1]);
+    await userEvent.click(screen.getAllByRole("link", { name: "Cancel" })[1]);
+    expect(window.location.pathname).toBe("/paper");
+    await act(async () => resolveFirst?.(jsonResponse(paperSession(), 201)));
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(pendingKeys()).toHaveLength(1);
+  });
+
+  it("retains the original key if confirmed-receipt storage fails after 201", async () => {
+    window.history.replaceState({}, "", "/paper/new");
+    const setItem = Storage.prototype.setItem;
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (
+      this: Storage,
+      key: string,
+      value: string,
+    ) {
+      if (
+        key.startsWith(PAPER_CREATE_PENDING_PREFIX) &&
+        value.includes('"confirmedSessionId"')
+      )
+        throw new Error("quota exceeded");
+      return setItem.call(this, key, value);
+    });
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(paperSession(), 201));
+    const first = render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    expect(pendingKeys()).toHaveLength(1);
+    expect(
+      JSON.parse(window.localStorage.getItem(pendingKeys()[0]) ?? "{}")
+        .confirmedSessionId,
+    ).toBeUndefined();
+    first.unmount();
+    window.history.replaceState({}, "", "/paper/new");
+    render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    expect(
+      new Headers(fetch.mock.calls[1]?.[1]?.headers).get("Idempotency-Key"),
+    ).toBe(
       new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
     );
   });
@@ -825,6 +990,20 @@ describe("paper trading pages", () => {
       screen.getByRole("button", { name: "Create paper session" }),
     );
     expect(fetch).not.toHaveBeenCalled();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Could not save this creation request",
+    );
+  });
+
+  it("does not POST when browser cross-tab locking is unavailable", async () => {
+    Reflect.deleteProperty(window.navigator, "locks");
+    const fetch = vi.spyOn(globalThis, "fetch");
+    render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    expect(pendingKeys()).toHaveLength(0);
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Could not save this creation request",
     );
@@ -868,6 +1047,51 @@ describe("paper trading pages", () => {
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
     expect(fetch.mock.calls[1]?.[1]?.body).not.toBe(
       fetch.mock.calls[0]?.[1]?.body,
+    );
+  });
+
+  it("keeps an uncertain key when a later ordinary retry is rejected", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockRejectedValueOnce(new TypeError("response lost"))
+      .mockRejectedValueOnce(new ApiError(422, "schema changed"));
+    render(<CreatePaperSessionPage />);
+    const create = screen.getByRole("button", { name: "Create paper session" });
+    await userEvent.click(create);
+    await screen.findByRole("alert");
+    const key = pendingKeys()[0];
+    await userEvent.click(create);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    expect(pendingKeys()).toEqual([key]);
+    fireEvent.change(screen.getByLabelText("Initial cash"), {
+      target: { value: "123456.75" },
+    });
+    await userEvent.click(create);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps an uncertain key when a saved-request retry is rejected", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockRejectedValueOnce(new TypeError("response lost"))
+      .mockRejectedValueOnce(new ApiError(422, "schema changed"));
+    const first = render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await screen.findByRole("alert");
+    const key = pendingKeys()[0];
+    first.unmount();
+    render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Retry saved request 1" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    expect(pendingKeys()).toEqual([key]);
+    expect(
+      new Headers(fetch.mock.calls[1]?.[1]?.headers).get("Idempotency-Key"),
+    ).toBe(
+      new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
     );
   });
 
@@ -966,7 +1190,7 @@ describe("paper trading pages", () => {
     window.history.replaceState({}, "", "/paper/new");
     render(<CreatePaperSessionPage />);
     expect(
-      screen.getByRole("button", { name: "Retry saved request 1" }),
+      screen.getByRole("link", { name: "Open saved paper account" }),
     ).toBeVisible();
     expect(fetch).toHaveBeenCalledTimes(1);
   });

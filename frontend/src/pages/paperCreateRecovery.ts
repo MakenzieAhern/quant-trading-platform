@@ -10,11 +10,20 @@ export interface PendingPaperCreate {
   body: string;
   key: string;
   savedAt: string;
+  confirmedSessionId?: string;
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-// ponytail: 20 unresolved intents fit a personal workstation; raise only with a recovery UI for larger queues.
+// ponytail: 1000 retained receipts fit a personal workstation; add explicit archive UI if this ceiling is reached.
+const MAX_SAVED = 1000;
 const MAX_PENDING = 20;
+const CREATE_LOCK = "quant.product.paper-create.v1";
+
+export function withPaperCreateLock<T>(work: () => Promise<T>): Promise<T> {
+  if (!navigator.locks?.request)
+    throw new Error("Browser cross-tab locking unavailable");
+  return navigator.locks.request(CREATE_LOCK, work);
+}
 
 export function paperRequestFromBody(body: string): CreatePaperSessionRequest {
   if (body.length > 8192) throw new Error("Invalid saved paper request");
@@ -54,9 +63,8 @@ export function readPendingPaperCreates(): PendingPaperCreate[] {
         key !== null && key.startsWith(PAPER_CREATE_PENDING_PREFIX),
     )
     .sort();
-  if (keys.length > MAX_PENDING)
-    throw new Error("Invalid saved paper requests");
-  return keys.map((storageKey) => {
+  if (keys.length > MAX_SAVED) throw new Error("Invalid saved paper requests");
+  const saved = keys.map((storageKey) => {
     const raw = window.localStorage.getItem(storageKey);
     if (raw === null || raw.length > 9000)
       throw new Error("Invalid saved paper requests");
@@ -71,25 +79,38 @@ export function readPendingPaperCreates(): PendingPaperCreate[] {
       !UUID.test(item.key) ||
       storageKey !== `${PAPER_CREATE_PENDING_PREFIX}${item.key}` ||
       typeof item.savedAt !== "string" ||
-      Number.isNaN(Date.parse(item.savedAt))
+      Number.isNaN(Date.parse(item.savedAt)) ||
+      (item.confirmedSessionId !== undefined &&
+        (typeof item.confirmedSessionId !== "string" ||
+          !UUID.test(item.confirmedSessionId)))
     )
       throw new Error("Invalid saved paper requests");
     paperRequestFromBody(item.body);
     return item as unknown as PendingPaperCreate;
   });
+  if (saved.filter((item) => !item.confirmedSessionId).length > MAX_PENDING)
+    throw new Error("Too many unresolved paper requests");
+  return saved;
 }
 
 export function preparePaperCreate(
   request: CreatePaperSessionRequest,
+  createAnother = false,
 ): PendingPaperCreate {
-  // ponytail: localStorage is not atomic across tabs; add Web Locks and retained receipts before claiming cross-tab exactly-once creation.
+  // All callers must hold CREATE_LOCK through the server response and receipt write.
   const body = JSON.stringify(request);
   paperRequestFromBody(body);
-  const pending = readPendingPaperCreates();
-  const matches = pending.filter((item) => item.body === body);
-  if (matches.length === 1) return matches[0];
-  if (matches.length > 1 || pending.length)
+  const saved = readPendingPaperCreates();
+  const matchingPending = saved.filter(
+    (item) => item.body === body && !item.confirmedSessionId,
+  );
+  if (!createAnother && matchingPending.length === 1) return matchingPending[0];
+  if (
+    saved.some((item) => !item.confirmedSessionId) ||
+    (saved.length && !createAnother)
+  )
     throw new PendingPaperCreateError("Resolve saved paper request first");
+  if (saved.length >= MAX_SAVED) throw new Error("Saved paper requests full");
   const intent: PendingPaperCreate = {
     version: 1,
     body,
@@ -103,11 +124,30 @@ export function preparePaperCreate(
   return intent;
 }
 
-export function confirmPaperCreate(intent: PendingPaperCreate): void {
-  const pending = readPendingPaperCreates();
+export function confirmPaperCreate(
+  intent: PendingPaperCreate,
+  sessionId: string,
+): void {
+  if (!UUID.test(sessionId)) throw new Error("Invalid paper session ID");
+  const saved = readPendingPaperCreates().find(
+    (item) => item.body === intent.body && item.key === intent.key,
+  );
   if (
-    pending.some((item) => item.body === intent.body && item.key === intent.key)
+    !saved ||
+    (saved.confirmedSessionId && saved.confirmedSessionId !== sessionId)
   )
+    throw new Error("Saved paper receipt changed");
+  window.localStorage.setItem(
+    `${PAPER_CREATE_PENDING_PREFIX}${intent.key}`,
+    JSON.stringify({ ...saved, confirmedSessionId: sessionId }),
+  );
+}
+
+export function discardRejectedPaperCreate(intent: PendingPaperCreate): void {
+  const saved = readPendingPaperCreates().find(
+    (item) => item.body === intent.body && item.key === intent.key,
+  );
+  if (saved && !saved.confirmedSessionId)
     window.localStorage.removeItem(
       `${PAPER_CREATE_PENDING_PREFIX}${intent.key}`,
     );

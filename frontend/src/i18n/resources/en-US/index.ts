@@ -291,13 +291,15 @@ export const enUS = {
       rsiError: "RSI values must satisfy 0 < oversold < overbought < 100.",
       submitError:
         "Could not confirm whether the paper session was created. Check the paper-session list and service status. Retry unchanged settings here, or reopen this page to choose the saved exact request.",
-      pendingTitle: "Unconfirmed paper creations",
+      pendingTitle: "Saved paper creation requests",
       pendingHelp:
-        "A previous creation may have succeeded. Check the session list first, then retry the exact saved request to recover the same account. Nothing starts trading automatically.",
+        "Check the session list first. Retry an unconfirmed saved request with its original key, or open a confirmed account. Nothing starts trading automatically.",
       pendingDetails: "Review exact saved settings",
       retrySaved: "Retry saved request {{number}}",
+      openSaved: "Open saved paper account",
+      createAnother: "Create another paper account",
       resolvePendingFirst:
-        "An earlier creation is still unconfirmed. Review the saved settings and retry that exact request before creating a different account.",
+        "A saved creation already exists. Review its exact settings, retry it if unconfirmed, or open the confirmed account. To make a new account, use Create another.",
       storageError:
         "Could not save this creation request. No POST was sent by this attempt. Check browser storage before trying again.",
       recoveryError:
