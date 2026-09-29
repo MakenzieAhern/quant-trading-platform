@@ -35,6 +35,8 @@ export function MarketUpdatesPanel() {
   const pendingTaskFocus = useRef<string | null>(null);
   const taskFocus = useRef<HTMLElement>(null);
   const headingFocus = useRef<HTMLHeadingElement>(null);
+  const focusedHistory = useRef(false);
+  const historyErrorFocus = useRef<HTMLParagraphElement>(null);
   const caps = useApiResource(
     (signal) => marketUpdateApi.capabilities(signal),
     [revision],
@@ -50,6 +52,16 @@ export function MarketUpdatesPanel() {
         ),
     },
   );
+  useEffect(() => {
+    if (
+      history.error &&
+      focusedHistory.current &&
+      document.activeElement === document.body
+    ) {
+      historyErrorFocus.current?.focus();
+      focusedHistory.current = false;
+    }
+  }, [history.error]);
   useEffect(() => {
     const changed = () => setJobId(selectedFromUrl());
     window.addEventListener("popstate", changed);
@@ -123,12 +135,18 @@ export function MarketUpdatesPanel() {
         <h3>{c.history}</h3>
         {history.loading && <p role="status">{c.loading}</p>}
         {history.error && (
-          <p role="alert">{updateError(history.error, i18n.language)}</p>
+          <p ref={historyErrorFocus} role="alert" tabIndex={-1}>
+            {updateError(history.error, i18n.language)}
+          </p>
         )}
         {history.data && (
           <>
             {history.data.total === 0 && <p>{c.empty}</p>}
-            <ul className="updateHistory">
+            <ul
+              className="updateHistory"
+              onFocusCapture={() => (focusedHistory.current = true)}
+              onBlurCapture={() => (focusedHistory.current = false)}
+            >
               {history.data.items.map((job) => (
                 <li key={job.job_id}>
                   <div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "../components/Link";
 import { Pagination } from "../components/Pagination";
@@ -20,6 +20,9 @@ export function TaskCenterPage() {
   const [researchOffset, setResearchOffset] = useState(0);
   const [updateOffset, setUpdateOffset] = useState(0);
   const [revision, setRevision] = useState(0);
+  const focusedList = useRef<"research" | "updates" | null>(null);
+  const researchError = useRef<HTMLParagraphElement>(null);
+  const updateErrorFocus = useRef<HTMLParagraphElement>(null);
   const research = useApiResource(
     (signal) => experimentApi.list(signal, 20, researchOffset),
     [researchOffset, revision],
@@ -36,6 +39,16 @@ export function TaskCenterPage() {
         ),
     },
   );
+  useEffect(() => {
+    if (document.activeElement !== document.body) return;
+    if (research.error && focusedList.current === "research") {
+      researchError.current?.focus();
+      focusedList.current = null;
+    } else if (updates.error && focusedList.current === "updates") {
+      updateErrorFocus.current?.focus();
+      focusedList.current = null;
+    }
+  }, [research.error, updates.error]);
   return (
     <div className="productPage">
       <header className="pageHeader">
@@ -54,12 +67,18 @@ export function TaskCenterPage() {
         <h2>{c.researchTasks}</h2>
         {research.loading && <p role="status">{c.loading}</p>}
         {research.error && (
-          <p role="alert">{experimentError(research.error, e)}</p>
+          <p ref={researchError} role="alert" tabIndex={-1}>
+            {experimentError(research.error, e)}
+          </p>
         )}
         {research.data && (
           <>
             {research.data.total === 0 && <p>{c.noResearchTasks}</p>}
-            <ul className="taskCenterList">
+            <ul
+              className="taskCenterList"
+              onFocusCapture={() => (focusedList.current = "research")}
+              onBlurCapture={() => (focusedList.current = null)}
+            >
               {research.data.items.map((job) => (
                 <li key={job.job_id}>
                   <div>
@@ -95,12 +114,18 @@ export function TaskCenterPage() {
         <p>{c.candidateOnly}</p>
         {updates.loading && <p role="status">{c.loading}</p>}
         {updates.error && (
-          <p role="alert">{updateError(updates.error, i18n.language)}</p>
+          <p ref={updateErrorFocus} role="alert" tabIndex={-1}>
+            {updateError(updates.error, i18n.language)}
+          </p>
         )}
         {updates.data && (
           <>
             {updates.data.total === 0 && <p>{c.noUpdateTasks}</p>}
-            <ul className="taskCenterList">
+            <ul
+              className="taskCenterList"
+              onFocusCapture={() => (focusedList.current = "updates")}
+              onBlurCapture={() => (focusedList.current = null)}
+            >
               {updates.data.items.map((job) => (
                 <li key={job.job_id}>
                   <div>

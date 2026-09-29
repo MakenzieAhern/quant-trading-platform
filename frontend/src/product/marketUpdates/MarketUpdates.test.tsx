@@ -103,8 +103,12 @@ describe("explicit incremental request workflow", () => {
     await act(async () => {});
     const history = screen.getByRole("region", { name: "Update task history" });
     expect(within(history).getByRole("status")).toHaveTextContent("Running");
+    within(history)
+      .getByRole("button", { name: /^Open task:/ })
+      .focus();
     await act(async () => vi.advanceTimersByTime(5000));
     expect(within(history).getByRole("alert")).toBeInTheDocument();
+    expect(within(history).getByRole("alert")).toHaveFocus();
     expect(within(history).queryByText("Running")).not.toBeInTheDocument();
     await act(async () => vi.advanceTimersByTime(10000));
     expect(list).toHaveBeenCalledTimes(2);

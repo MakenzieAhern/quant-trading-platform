@@ -60,6 +60,92 @@ describe("task center", () => {
     expect(createResearch).not.toHaveBeenCalled();
     expect(createUpdate).not.toHaveBeenCalled();
   });
+  it("moves focus to the stream error when a focused saved task disappears on poll failure", async () => {
+    await i18n.changeLanguage("en-US");
+    vi.useFakeTimers();
+    vi.spyOn(experimentApi, "list")
+      .mockResolvedValueOnce({
+        items: [{ ...researchJob, status: "RUNNING" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockRejectedValueOnce(new ApiError(503, "unavailable"));
+    vi.spyOn(marketUpdateApi, "list").mockResolvedValue({
+      items: [updateJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    render(<TaskCenterPage />);
+    await act(async () => {});
+    const research = screen.getByRole("region", { name: "Research tasks" });
+    within(research)
+      .getByRole("link", { name: /^Open experiment:/ })
+      .focus();
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(within(research).getByRole("alert")).toHaveFocus();
+    expect(
+      within(research).queryByRole("link", { name: /^Open experiment:/ }),
+    ).not.toBeInTheDocument();
+  });
+  it("moves focus to the raw-task error without touching the unaffected research stream", async () => {
+    await i18n.changeLanguage("en-US");
+    vi.useFakeTimers();
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [researchJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(marketUpdateApi, "list")
+      .mockResolvedValueOnce({
+        items: [{ ...updateJob, status: "RUNNING" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockRejectedValueOnce(new ApiError(503, "unavailable"));
+    render(<TaskCenterPage />);
+    await act(async () => {});
+    const updates = screen.getByRole("region", {
+      name: "Raw-data request tasks",
+    });
+    within(updates)
+      .getByRole("link", { name: /^Open task:/ })
+      .focus();
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(within(updates).getByRole("alert")).toHaveFocus();
+    expect(
+      screen.getByRole("link", { name: /^Open experiment:/ }),
+    ).toBeInTheDocument();
+  });
+  it("does not steal focus after the user leaves a task link before a failed poll", async () => {
+    await i18n.changeLanguage("en-US");
+    vi.useFakeTimers();
+    vi.spyOn(experimentApi, "list")
+      .mockResolvedValueOnce({
+        items: [{ ...researchJob, status: "RUNNING" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockRejectedValueOnce(new ApiError(503, "unavailable"));
+    vi.spyOn(marketUpdateApi, "list").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    render(<TaskCenterPage />);
+    await act(async () => {});
+    screen.getByRole("link", { name: /^Open experiment:/ }).focus();
+    const refresh = screen.getByRole("button", { name: "Refresh" });
+    refresh.focus();
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(refresh).toHaveFocus();
+  });
   it("reopens independent saved tasks and pages research without starting work", async () => {
     await i18n.changeLanguage("en-US");
     const research = vi
