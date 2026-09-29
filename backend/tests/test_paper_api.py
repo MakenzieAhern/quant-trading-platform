@@ -10,7 +10,8 @@ from sqlalchemy.exc import DBAPIError
 
 from app.api.routes import paper as paper_routes
 from app.api.routes.paper import paper_manager, paper_session_websocket, settings
-from app.application.experiments.data import HISTORICAL_ID
+from app.application.backtests.registry import UnknownDatasetError
+from app.application.experiments.data import HISTORICAL_ID, ExperimentInputError
 from app.db.models.paper import PaperTradingSessionModel
 from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.db.session import SessionFactory
@@ -212,6 +213,55 @@ async def test_create_idempotency_validation_and_safe_lookup(client: AsyncClient
     }
     for invalid in (invalid_provider, invalid_dataset, invalid_strategy):
         assert (await client.post("/api/paper-trading/sessions", json=invalid)).status_code == 422
+
+
+@pytest.mark.parametrize("historical", [False, True])
+async def test_create_replay_precedes_mutable_dataset_validation(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch, historical: bool
+) -> None:
+    body = historical_request_body() if historical else request_body()
+    headers = {"Idempotency-Key": f"paper-source-outage-{historical}"}
+    if historical:
+        assert paper_manager._historical_datasets is not None
+        monkeypatch.setattr(
+            paper_manager._historical_datasets,
+            "resolve",
+            lambda _: {
+                "coverage_start": "2010-01-01",
+                "coverage_end": "2025-12-31",
+                "sha256": "a" * 64,
+            },
+        )
+    created = await client.post("/api/paper-trading/sessions", json=body, headers=headers)
+    assert created.status_code == 201
+
+    if historical:
+
+        def unavailable_historical(_: str) -> None:
+            raise ExperimentInputError("DATASET_NOT_MOUNTED")
+
+        monkeypatch.setattr(paper_manager._historical_datasets, "resolve", unavailable_historical)
+    else:
+
+        def unavailable_replay(_: str, __: str) -> None:
+            raise UnknownDatasetError("dataset unavailable")
+
+        monkeypatch.setattr(paper_manager._datasets, "resolve", unavailable_replay)
+
+    replay = await client.post("/api/paper-trading/sessions", json=body, headers=headers)
+    assert replay.status_code == 201
+    assert replay.json() == created.json()
+    changed = await client.post(
+        "/api/paper-trading/sessions", json={**body, "initial_cash": "100001"}, headers=headers
+    )
+    assert changed.status_code == 409
+    new_key = await client.post(
+        "/api/paper-trading/sessions",
+        json=body,
+        headers={"Idempotency-Key": f"paper-source-outage-new-{historical}"},
+    )
+    assert new_key.status_code == (422 if historical else 404)
+    assert (await client.get("/api/paper-trading/sessions")).json()["total"] == 1
 
 
 async def test_concurrent_idempotent_creation_converges_on_one_session(

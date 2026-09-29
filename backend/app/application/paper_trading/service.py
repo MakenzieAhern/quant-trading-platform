@@ -105,6 +105,18 @@ class PaperTradingManager:
             raise ValueError("unknown paper market data provider")
         validate_storage_decimal(command.initial_cash, "initial_cash")
         validate_storage_decimal(command.default_order_quantity, "default_order_quantity")
+        request_hash = self._request_hash(command)
+        if command.client_request_id is not None:
+            async with self._session_factory() as db:
+                existing = await SQLAlchemyPaperRepository(db).get_by_client_request_id(
+                    command.client_request_id
+                )
+                if existing is not None:
+                    if existing.request_hash != request_hash:
+                        raise PaperSessionConflictError(
+                            "idempotency key was already used for different paper session content"
+                        )
+                    return existing
         if command.provider_type == "replay":
             self._datasets.resolve(command.dataset_id, command.symbol)
             self._strategies.build(
@@ -142,21 +154,12 @@ class PaperTradingManager:
             or command.strategy_parameters
         ):
             raise ValueError("invalid frozen A-share paper configuration")
-        request_hash = self._request_hash(command)
         parameters = self._json_decimals(command.strategy_parameters)
         if command.provider_type == "historical_a_share":
             parameters["dataset_sha256"] = str(registered["sha256"])
             parameters["plan_version"] = "PAPER_ACCOUNT_PLAN_V3"
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
-            if command.client_request_id is not None:
-                existing = await repository.get_by_client_request_id(command.client_request_id)
-                if existing is not None:
-                    if existing.request_hash != request_hash:
-                        raise PaperSessionConflictError(
-                            "idempotency key was already used for different paper session content"
-                        )
-                    return existing
             session = PaperSession(
                 id=uuid4(),
                 status=PaperSessionStatus.CREATED,

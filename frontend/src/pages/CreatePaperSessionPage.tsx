@@ -17,6 +17,15 @@ import {
   parsePositiveInteger,
 } from "../utils/format";
 import { navigate } from "../utils/navigation";
+import {
+  confirmPaperCreate,
+  PAPER_CREATE_PENDING_PREFIX,
+  paperRequestFromBody,
+  PendingPaperCreateError,
+  preparePaperCreate,
+  readPendingPaperCreates,
+  type PendingPaperCreate,
+} from "./paperCreateRecovery";
 
 type ReplayRequest = Extract<
   CreatePaperSessionRequest,
@@ -26,6 +35,184 @@ type StrategyType = ReplayRequest["strategy"]["type"];
 type ProviderType = CreatePaperSessionRequest["provider_type"];
 
 export function CreatePaperSessionPage() {
+  const { t } = useTranslation("paper");
+  const [saved, setSaved] = useState<PendingPaperCreate[] | null>(loadSaved);
+  const refreshSaved = () => setSaved(loadSaved());
+  useEffect(() => {
+    const onStorage = (event: StorageEvent) => {
+      if (
+        event.key === null ||
+        event.key.startsWith(PAPER_CREATE_PENDING_PREFIX)
+      )
+        refreshSaved();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+  return (
+    <>
+      <PaperSafetyBanner />
+      <header className="pageHeader compactHeader">
+        <div>
+          <p className="eyebrow">{t("createPage.eyebrow")}</p>
+          <h1>{t("createPage.title")}</h1>
+        </div>
+        <Link className="button" href="/paper">
+          {t("createPage.cancel")}
+        </Link>
+      </header>
+      <PaperCreateRecoveryPanel saved={saved} onSavedChange={refreshSaved} />
+      <PaperSessionCreationContent onSavedChange={refreshSaved} />
+    </>
+  );
+}
+
+function loadSaved(): PendingPaperCreate[] | null {
+  try {
+    return readPendingPaperCreates();
+  } catch {
+    return null;
+  }
+}
+
+function definitelyNotCreated(reason: unknown): boolean {
+  return (
+    reason instanceof ApiError &&
+    [400, 401, 403, 404, 422].includes(reason.status)
+  );
+}
+
+function paperCreateError(reason: unknown): string {
+  return reason instanceof ApiError &&
+    (reason.status === 401 || reason.status === 403)
+    ? "common:loadErrors.permission"
+    : reason instanceof ApiError && reason.status === 404
+      ? "createPage.datasetError"
+      : reason instanceof ApiError && reason.status === 409
+        ? "createPage.conflictError"
+        : reason instanceof ApiError && reason.status === 422
+          ? "createPage.validationError"
+          : "createPage.submitError";
+}
+
+function PaperCreateRecoveryPanel({
+  saved,
+  onSavedChange,
+}: {
+  saved: PendingPaperCreate[] | null;
+  onSavedChange: () => void;
+}) {
+  const { t } = useTranslation("paper");
+  const [busy, setBusy] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const locked = useRef(false);
+  const active = useRef(true);
+  useEffect(() => {
+    active.current = true;
+    return () => {
+      active.current = false;
+    };
+  }, []);
+
+  const retry = async (intent: PendingPaperCreate) => {
+    if (locked.current) return;
+    let request: CreatePaperSessionRequest;
+    try {
+      if (
+        !readPendingPaperCreates().some(
+          (item) => item.body === intent.body && item.key === intent.key,
+        )
+      )
+        throw new Error("Saved paper request changed");
+      request = paperRequestFromBody(intent.body);
+    } catch {
+      setError("createPage.recoveryError");
+      return;
+    }
+    locked.current = true;
+    setBusy(intent.key);
+    setError(null);
+    const originatingUrl = window.location.href;
+    try {
+      const created = await paperApi.create(request, intent.key);
+      if (active.current && window.location.href === originatingUrl) {
+        if (navigate(`/paper/${created.session_id}`)) {
+          try {
+            confirmPaperCreate(intent);
+            if (active.current) onSavedChange();
+          } catch {
+            // The confirmed account remains recoverable with its saved key.
+          }
+        }
+      }
+    } catch (reason) {
+      if (definitelyNotCreated(reason)) {
+        try {
+          confirmPaperCreate(intent);
+          if (active.current) onSavedChange();
+        } catch {
+          // Keep an unreadable intent fail-closed for manual reconciliation.
+        }
+      }
+      if (active.current) setError(paperCreateError(reason));
+    } finally {
+      locked.current = false;
+      if (active.current) setBusy(null);
+    }
+  };
+
+  if (saved === null)
+    return <p role="alert">{t("createPage.recoveryError")}</p>;
+  if (!saved.length) return null;
+  return (
+    <section
+      className="experimentNotice"
+      aria-labelledby="paper-recovery-title"
+    >
+      <h2 id="paper-recovery-title">{t("createPage.pendingTitle")}</h2>
+      <p>{t("createPage.pendingHelp")}</p>
+      <ul>
+        {saved.map((intent, index) => {
+          const request = paperRequestFromBody(intent.body);
+          const mode = t(
+            request.provider_type === "replay"
+              ? "createPage.replayLocal"
+              : request.provider_type === "historical_a_share"
+                ? "createPage.historicalAShare"
+                : "createPage.aShareSimulation",
+          );
+          return (
+            <li key={intent.key}>
+              <p>
+                {mode} · {t("createPage.initialCash")}: {request.initial_cash}
+              </p>
+              <details>
+                <summary>{t("createPage.pendingDetails")}</summary>
+                <pre style={{ overflowX: "auto" }}>
+                  {JSON.stringify(request, null, 2)}
+                </pre>
+              </details>
+              <button
+                type="button"
+                aria-disabled={busy !== null}
+                onClick={() => void retry(intent)}
+              >
+                {t("createPage.retrySaved", { number: index + 1 })}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {error && <p role="alert">{t(error)}</p>}
+    </section>
+  );
+}
+
+function PaperSessionCreationContent({
+  onSavedChange,
+}: {
+  onSavedChange: () => void;
+}) {
   const sourceId = new URLSearchParams(window.location.search).get(
     "from_experiment",
   );
@@ -71,10 +258,22 @@ export function CreatePaperSessionPage() {
         <Link href="/experiments">{t("createPage.sourceList")}</Link>
       </p>
     );
-  return <PaperSessionForm key={job?.job_id ?? "new"} sourceJob={job} />;
+  return (
+    <PaperSessionForm
+      key={job?.job_id ?? "new"}
+      sourceJob={job}
+      onSavedChange={onSavedChange}
+    />
+  );
 }
 
-function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
+function PaperSessionForm({
+  sourceJob,
+  onSavedChange,
+}: {
+  sourceJob: Experiment | null;
+  onSavedChange: () => void;
+}) {
   const { t } = useTranslation("paper");
   const sourceConfig = sourceJob?.configuration;
   const sourceRangeFits =
@@ -128,7 +327,6 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
   );
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const key = useRef<string | null>(null);
   const locked = useRef(false);
   const active = useRef(true);
 
@@ -140,7 +338,6 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
   }, []);
 
   const changed = () => {
-    key.current = null;
     setError(null);
   };
 
@@ -267,46 +464,53 @@ function PaperSessionForm({ sourceJob }: { sourceJob: Experiment | null }) {
         risk: { enforce_buying_power: true },
       };
     }
-    key.current ??= crypto.randomUUID();
+    let intent: PendingPaperCreate;
+    try {
+      intent = preparePaperCreate(request);
+    } catch (reason) {
+      setError(
+        reason instanceof PendingPaperCreateError
+          ? "createPage.resolvePendingFirst"
+          : "createPage.storageError",
+      );
+      return;
+    }
     locked.current = true;
     setPending(true);
     const originatingUrl = window.location.href;
     try {
-      const created = await paperApi.create(request, key.current);
-      if (active.current && window.location.href === originatingUrl)
-        navigate(`/paper/${created.session_id}`);
+      const created = await paperApi.create(request, intent.key);
+      if (active.current && window.location.href === originatingUrl) {
+        if (navigate(`/paper/${created.session_id}`)) {
+          try {
+            confirmPaperCreate(intent);
+            onSavedChange();
+          } catch {
+            // Keep the exact key for a later reconciliation if storage fails.
+          }
+        }
+      }
     } catch (reason) {
-      if (active.current)
-        setError(
-          reason instanceof ApiError &&
-            (reason.status === 401 || reason.status === 403)
-            ? "common:loadErrors.permission"
-            : reason instanceof ApiError && reason.status === 404
-              ? "createPage.datasetError"
-              : reason instanceof ApiError && reason.status === 409
-                ? "createPage.conflictError"
-                : reason instanceof ApiError && reason.status === 422
-                  ? "createPage.validationError"
-                  : "createPage.submitError",
-        );
+      if (definitelyNotCreated(reason)) {
+        try {
+          confirmPaperCreate(intent);
+          if (active.current) onSavedChange();
+        } catch {
+          // An unreadable saved intent must still block a duplicate attempt.
+        }
+      }
+      if (active.current) setError(paperCreateError(reason));
     } finally {
       locked.current = false;
-      if (active.current) setPending(false);
+      if (active.current) {
+        setPending(false);
+        onSavedChange();
+      }
     }
   };
 
   return (
     <>
-      <PaperSafetyBanner />
-      <header className="pageHeader compactHeader">
-        <div>
-          <p className="eyebrow">{t("createPage.eyebrow")}</p>
-          <h1>{t("createPage.title")}</h1>
-        </div>
-        <Link className="button" href="/paper">
-          {t("createPage.cancel")}
-        </Link>
-      </header>
       {sourceJob && (
         <section className="experimentNotice" role="note">
           <p>{t("createPage.sourceReview", { name: sourceJob.name })}</p>

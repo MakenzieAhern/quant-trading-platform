@@ -7,7 +7,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
@@ -16,6 +16,10 @@ import { job, plan } from "../product/experiments/fixtures.test-data";
 import { jsonResponse } from "../test/fixtures";
 import { PAPER_ID, paperSession, paperSnapshot } from "../test/paperFixtures";
 import { CreatePaperSessionPage } from "./CreatePaperSessionPage";
+import {
+  PAPER_CREATE_PENDING_PREFIX,
+  preparePaperCreate,
+} from "./paperCreateRecovery";
 import { PaperSessionDetailPage } from "./PaperSessionDetailPage";
 import { PaperSessionsPage } from "./PaperSessionsPage";
 
@@ -55,6 +59,17 @@ function installWebSocket() {
 }
 
 describe("paper trading pages", () => {
+  const pendingKeys = () =>
+    Array.from({ length: window.localStorage.length }, (_, index) =>
+      window.localStorage.key(index),
+    ).filter((key): key is string =>
+      Boolean(key?.startsWith(PAPER_CREATE_PENDING_PREFIX)),
+    );
+  const clearPending = () =>
+    pendingKeys().forEach((key) => window.localStorage.removeItem(key));
+  beforeEach(clearPending);
+  afterEach(clearPending);
+
   it.each(["en-US", "zh-CN"])(
     "uses provider-specific empty states before any market data arrives (%s)",
     async (language) => {
@@ -677,14 +692,17 @@ describe("paper trading pages", () => {
     await act(async () => rejectCreate?.(new TypeError("offline")));
     expect(await screen.findByRole("alert")).toBeVisible();
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "Check the paper-session list in another tab",
+      "Check the paper-session list and service status",
     );
+    expect(
+      screen.getByRole("button", { name: "Retry saved request 1" }),
+    ).toBeVisible();
     expect(create).toHaveFocus();
     expect(create).toHaveAttribute("aria-disabled", "false");
     try {
       await act(async () => i18n.changeLanguage("zh-CN"));
       expect(screen.getByRole("alert")).toHaveTextContent(
-        "在另一个标签页查看模拟交易会话列表",
+        "先查看会话列表和服务状态",
       );
     } finally {
       await act(async () => i18n.changeLanguage("en-US"));
@@ -692,6 +710,237 @@ describe("paper trading pages", () => {
     await userEvent.click(create);
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
     expect(fetch.mock.calls[1]?.[1]?.headers).toEqual(firstHeaders);
+  });
+
+  it("retries the exact saved request after a lost response and page remount", async () => {
+    window.history.replaceState({}, "", "/paper/new");
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockRejectedValueOnce(new TypeError("response lost"))
+      .mockResolvedValueOnce(jsonResponse(paperSession(), 201));
+    const first = render(<CreatePaperSessionPage />);
+    fireEvent.change(screen.getByLabelText("Initial cash"), {
+      target: { value: "123456.75" },
+    });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(await screen.findByRole("alert")).toBeVisible();
+    first.unmount();
+
+    render(<CreatePaperSessionPage />);
+    expect(screen.getByLabelText("Initial cash")).toHaveValue("100000000");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "An earlier creation is still unconfirmed",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Retry saved request 1" }),
+    );
+    await waitFor(() =>
+      expect(window.location.pathname).toBe(`/paper/${PAPER_ID}`),
+    );
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(fetch.mock.calls[1]?.[1]?.body).toBe(fetch.mock.calls[0]?.[1]?.body);
+    expect(
+      new Headers(fetch.mock.calls[1]?.[1]?.headers).get("Idempotency-Key"),
+    ).toBe(
+      new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
+    );
+    expect(pendingKeys()).toHaveLength(0);
+  });
+
+  it("blocks a changed request until the uncertain one is reconciled", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockRejectedValue(new TypeError("response lost"));
+    render(<CreatePaperSessionPage />);
+    const create = screen.getByRole("button", {
+      name: "Create paper session",
+    });
+    await userEvent.click(create);
+    await screen.findByRole("alert");
+    fireEvent.change(screen.getByLabelText("Initial cash"), {
+      target: { value: "123456.75" },
+    });
+    await userEvent.click(create);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "An earlier creation is still unconfirmed",
+    );
+    fireEvent.change(screen.getByLabelText("Initial cash"), {
+      target: { value: "100000000" },
+    });
+    await userEvent.click(create);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    const keys = fetch.mock.calls.map(([, init]) =>
+      new Headers(init?.headers).get("Idempotency-Key"),
+    );
+    expect(keys[0]).toBeTruthy();
+    expect(keys[1]).toBe(keys[0]);
+    expect(fetch.mock.calls[1]?.[1]?.body).toBe(fetch.mock.calls[0]?.[1]?.body);
+  });
+
+  it("starts a fresh intent after a confirmed creation of the same settings", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(paperSession(), 201));
+    const first = render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    first.unmount();
+    window.history.replaceState({}, "", "/paper/new");
+    render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    expect(fetch.mock.calls[1]?.[1]?.body).toBe(fetch.mock.calls[0]?.[1]?.body);
+    expect(
+      new Headers(fetch.mock.calls[1]?.[1]?.headers).get("Idempotency-Key"),
+    ).not.toBe(
+      new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
+    );
+  });
+
+  it("does not POST if the uncertain-create key cannot be saved", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch");
+    const setItem = Storage.prototype.setItem;
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (
+      this: Storage,
+      key: string,
+      value: string,
+    ) {
+      if (key.startsWith(PAPER_CREATE_PENDING_PREFIX))
+        throw new Error("quota exceeded");
+      return setItem.call(this, key, value);
+    });
+    render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Could not save this creation request",
+    );
+  });
+
+  it("does not POST or poison storage when a request exceeds the recovery bound", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch");
+    render(<CreatePaperSessionPage />);
+    fireEvent.change(screen.getByLabelText("Initial cash"), {
+      target: { value: "1".repeat(8300) },
+    });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    expect(pendingKeys()).toHaveLength(0);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Could not save this creation request",
+    );
+  });
+
+  it("clears a definitely rejected request so its settings can be corrected", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockRejectedValueOnce(new ApiError(422, "invalid"))
+      .mockResolvedValueOnce(jsonResponse(paperSession(), 201));
+    render(<CreatePaperSessionPage />);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Please check the submitted paper session values",
+    );
+    expect(pendingKeys()).toHaveLength(0);
+    fireEvent.change(screen.getByLabelText("Initial cash"), {
+      target: { value: "123456.75" },
+    });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    expect(fetch.mock.calls[1]?.[1]?.body).not.toBe(
+      fetch.mock.calls[0]?.[1]?.body,
+    );
+  });
+
+  it("blocks new creation when saved-request storage is corrupt", async () => {
+    window.localStorage.setItem(
+      `${PAPER_CREATE_PENDING_PREFIX}00000000-0000-0000-0000-000000000001`,
+      "{invalid",
+    );
+    const fetch = vi.spyOn(globalThis, "fetch");
+    render(<CreatePaperSessionPage />);
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Saved creation requests cannot be read safely",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    expect(screen.getAllByRole("alert")).toHaveLength(2);
+  });
+
+  it("can retry a saved exact request when its source study no longer loads", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      `/paper/new?from_experiment=${job.job_id}`,
+    );
+    preparePaperCreate({
+      provider_type: "historical_a_share",
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      symbol: "CN-A",
+      strategy: {
+        type: "cn_a_cross_sectional_momentum_low_vol_v1",
+        parameters: {
+          start_date: "2011-03-01",
+          end_date: "2011-03-23",
+          rebalance_sessions: 20,
+          maximum_holdings: 20,
+          max_position_weight: "0.1",
+          universe: "ALL",
+          commission_rate: "0.0003",
+          minimum_commission: "5",
+        },
+      },
+      initial_cash: "123456.75",
+      default_order_quantity: "1",
+      risk: {
+        enforce_buying_power: true,
+        max_leverage: "1",
+        max_drawdown: "-0.2",
+      },
+    });
+    vi.spyOn(experimentApi, "get").mockRejectedValue(new Error("offline"));
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(
+        jsonResponse(
+          { ...paperSession(), provider_type: "historical_a_share" },
+          201,
+        ),
+      );
+    render(<CreatePaperSessionPage />);
+    expect(await screen.findByRole("alert")).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: "Create paper session" }),
+    ).toBeNull();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Retry saved request 1" }),
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(String(fetch.mock.calls[0]?.[1]?.body))).toMatchObject({
+      provider_type: "historical_a_share",
+      initial_cash: "123456.75",
+    });
   });
 
   it("does not reopen a created session after leaving while the request is pending", async () => {
@@ -713,6 +962,13 @@ describe("paper trading pages", () => {
     view.unmount();
     await act(async () => resolveCreate?.(jsonResponse(paperSession(), 201)));
     expect(window.location.pathname).toBe("/paper");
+    expect(pendingKeys()).toHaveLength(1);
+    window.history.replaceState({}, "", "/paper/new");
+    render(<CreatePaperSessionPage />);
+    expect(
+      screen.getByRole("button", { name: "Retry saved request 1" }),
+    ).toBeVisible();
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   it.each([401, 403])(

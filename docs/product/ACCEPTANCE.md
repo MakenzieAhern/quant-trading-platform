@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 12:22 UTC local paper-create recovery during GitHub CI hold
+
+The original WSL Compose PostgreSQL, Redis and backend were healthy, the
+frontend was up, and `/` plus `/api/health` returned HTTP 200. These running
+containers predate the working-tree change. An isolated `qtp-local-paper-0929`
+Compose test project used its own tmpfs `quant_test` PostgreSQL and did not
+touch the original database. Its full backend suite passed 1027/1028 with one
+optional unmounted-archive skip; the frontend passed 449/449. Ruff, mypy,
+ESLint, TypeScript, changed-file Prettier and the production frontend build
+passed locally. None of these results sets a GitHub CI status.
+
+Paper creation now saves the exact request and idempotency key before POST,
+allows an explicit same-key retry after a lost response or reload, blocks a
+different request while the earlier outcome is uncertain, and exposes saved
+recovery even if its originating experiment stops loading. A definite
+400/401/403/404/422 rejection removes the rejected intent so the form can be
+corrected. The backend looks up an already accepted matching key before
+checking mutable dataset/strategy availability, so a replay survives a later
+source outage. Focused page tests passed 65/65, including a changed default
+form after reload, oversized storage and a definite 422 correction. The
+saved-retry panel is visible on the same page after an uncertain response.
+
+This is a bounded single-tab/browser-profile recovery improvement, **not**
+cross-tab exactly-once, full U7 or release acceptance. `localStorage`
+read/choose/write is not atomic across tabs, and removing a confirmed intent
+can strand another tab whose response was lost; Web Locks plus retained
+confirmed receipts and explicit new-account action are still required before
+claiming that stronger guarantee. No actual-browser fault injection for this
+new flow was run. The original runtime was not rebuilt, and no original
+account, provider, frozen data, Official OOS or GitHub state was changed.
+GitHub's October 1 recovery remains an unverified estimate; remote exact-head
+CI, lawful current-market forward receipt, genuine lost-ledger recovery,
+independent physical backup, novice QA and release gates remain open.
+
 ## 2026-09-29 local operation during GitHub Actions hold — bounded U7 correction
 
 WSL2 and Docker remained available without hosted CI. The original Compose

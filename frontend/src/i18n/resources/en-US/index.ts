@@ -282,14 +282,26 @@ export const enUS = {
       overbought: "Overbought",
       creating: "Creating…",
       submit: "Create paper session",
-      idempotentHint: "Creation is idempotent and does not start execution.",
+      idempotentHint:
+        "An unconfirmed request can be retried without a duplicate. Creation does not start execution.",
       decimalError:
         "Initial cash and quantity must be positive Decimal strings.",
       periodError:
         "Periods must be safe positive integers with short below long.",
       rsiError: "RSI values must satisfy 0 < oversold < overbought < 100.",
       submitError:
-        "Could not confirm whether the paper session was created. Keep this form open. Check the paper-session list in another tab and the service status before retrying unchanged settings here. Reloading or editing the form starts a new request.",
+        "Could not confirm whether the paper session was created. Check the paper-session list and service status. Retry unchanged settings here, or reopen this page to choose the saved exact request.",
+      pendingTitle: "Unconfirmed paper creations",
+      pendingHelp:
+        "A previous creation may have succeeded. Check the session list first, then retry the exact saved request to recover the same account. Nothing starts trading automatically.",
+      pendingDetails: "Review exact saved settings",
+      retrySaved: "Retry saved request {{number}}",
+      resolvePendingFirst:
+        "An earlier creation is still unconfirmed. Review the saved settings and retry that exact request before creating a different account.",
+      storageError:
+        "Could not save this creation request. No POST was sent by this attempt. Check browser storage before trying again.",
+      recoveryError:
+        "Saved creation requests cannot be read safely. No retry was sent. Check browser storage and the session list before creating another account.",
       datasetError: "The registered paper dataset is unavailable.",
       conflictError: "This paper session conflicts with an existing request.",
       validationError: "Please check the submitted paper session values.",

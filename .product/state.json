@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T11:57:33Z",
+  "updated_at_utc": "2026-09-29T12:22:13Z",
+  "u7_paper_create_recovery_20260929_gate": {
+    "status": "PASS_BOUNDED_LOCAL_SINGLE_TAB_NOT_CROSS_TAB_OR_FULL_U7_M4_M5",
+    "parent_head": "713fbec",
+    "proof": "2026-09-29 UTC: original WSL Compose four services healthy, frontend and API health HTTP200. New exact-body/idempotency-key recovery across lost response and remount, changed-body fail-closed, same-page saved retry and definite 4xx correction have focused frontend 65/65. Backend accepted-key lookup now precedes mutable source validation; isolated backend paper API 41 passed/one optional archive skip. Fresh qtp-local-paper-0929 tmpfs test Compose full backend 1027 passed/one optional archive skip and frontend 449/449; make lint, changed-file Prettier and make build passed. docs/product/ACCEPTANCE.md records bounded evidence and limits.",
+    "limits": "Current original containers predate these edits. No actual-browser fault proof. Cross-tab localStorage election and confirmed-intent removal remain unsafe for exactly-once semantics; use Web Locks and retained receipts before full U7 claim. No original database/account/provider/frozen/OOS or GitHub write. Hosted exact-head CI, lawful current-market forward receipt, genuine lost-ledger recovery, independent physical backup and novice acceptance remain open; October 1 GitHub recovery is unverified."
+  },
   "u7_create_cancel_late_response_20260929_gate": {
     "status": "PASS_BOUNDED_LOCAL_TEST_NOT_BROWSER_OR_FULL_U7_M4_M5",
     "parent_head": "1537a94",
