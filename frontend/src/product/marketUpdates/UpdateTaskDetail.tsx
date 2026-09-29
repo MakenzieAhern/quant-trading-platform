@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type Ref } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type Ref } from "react";
 import { useTranslation } from "react-i18next";
 import { ApiError, requestOutcomeUncertain } from "../../api/client";
 import { formatUtc } from "../../utils/format";
@@ -76,7 +76,7 @@ export function UpdateTaskDetail({
       window.clearTimeout(timer);
     };
   }, [jobId, revision]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const button = focusedCommand.current;
     if (button && !button.isConnected) {
       if (document.activeElement === document.body)

@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local market readout live-region and update focus check
+
+On the working tree based on `4fdcd26`, the market detail announced its full
+OHLCV/factor fact sheet whenever a selected chart point changed. A regression
+failed against that broad `role=status`. The live region now contains only the
+selected date and observation status; exact price/factor values remain visible
+and available in the ordinary definition list. Actual Chrome opened the saved
+historical 600000 detail, changed the date from 2011-06-30 to 2011-06-29,
+and exposed `2011-06-29 · 完整 OHLCV 记录` as the status while the precise
+2011-06-29 close remained `9.7600` outside it. The accessibility tree and DOM
+agreed; a visually inspected screenshot and SHA-256 are outside Git in
+`product-evidence/v1.2/m4/20260929-4fdcd26-market-live-status/README.md`.
+
+The first complete frontend run also had one read-error focus failure in the
+market-update detail (437 passed, one failed), while its focused file passed.
+The parent schedules a later focus request; the disappearing-command handoff
+now runs during layout rather than a passive effect. Its existing regression,
+the combined targeted files (62/62), and two subsequent complete frontend
+runs (438/438 each) passed. A final local `make test` also passed 1025 backend
+tests (one optional unmounted-archive skip) and 438 frontend tests in the
+separate test Compose project. This is a bounded likely timing-race correction,
+not proof of every browser interleaving. `make lint`, changed-file Prettier,
+`make build` and `git diff --check` passed. Original Compose data and services
+were not changed; no push, merge or release occurred. Native screen-reader
+speech, 200% zoom, independent novice, full M4/M5, lawful after-start forward
+data, original lost-ledger recovery, independent backup and exact-head GitHub
+CI remain open. The user's October 1 recovery date is an estimate.
+
 ## 2026-09-29 actual browser U4 export recovery and current-source Workbench media
 
 The isolated production preview of current frontend source displayed an

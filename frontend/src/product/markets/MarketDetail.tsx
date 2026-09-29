@@ -369,9 +369,11 @@ function PriceChart({
         </figcaption>
       </figure>
       {selectedBar && (
-        <div className="marketReadout" role="status">
-          <strong>{selectedBar.trading_date}</strong> ·{" "}
-          {observationLabel(selectedBar.status, c)}
+        <div className="marketReadout">
+          <span role="status">
+            <strong>{selectedBar.trading_date}</strong> ·{" "}
+            {observationLabel(selectedBar.status, c)}
+          </span>
           <dl className="marketFacts">
             {[
               [c.open, selectedBar[view].open],

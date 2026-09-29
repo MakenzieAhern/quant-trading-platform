@@ -708,6 +708,24 @@ describe("historical cache markets", () => {
     expect(marketApi.bars).toHaveBeenCalledTimes(1);
   });
 
+  it("announces only the selected date and status, leaving exact prices readable on demand", async () => {
+    render(<MarketsPage />);
+    const dialog = await openSecurity();
+    const picker = await within(dialog).findByLabelText("Inspect trading date");
+    const status = within(dialog).getByRole("status");
+    expect(status.textContent?.trim()).toBe("2024-02-29 · Feature-only close");
+    expect(
+      within(dialog).getByText("Effective adjustment factor", {
+        selector: "dt",
+      }),
+    ).toBeInTheDocument();
+    await userEvent.selectOptions(picker, "2024-02-27");
+    expect(status.textContent?.trim()).toBe("2024-02-27 · Observed OHLCV");
+    expect(
+      within(dialog).getByText("10.123456789012345678", { selector: "dd" }),
+    ).toBeInTheDocument();
+  });
+
   it("rejects an overlong date window without silently clipping it and restores trigger focus", async () => {
     render(<MarketsPage />);
     const trigger = await screen.findByRole("button", {
