@@ -370,6 +370,7 @@ describe("historical cache markets", () => {
 
   it("shows pending and failed detail reads with retry, and does not invent bars for an empty window", async () => {
     let reject: ((error: Error) => void) | undefined;
+    let completeRetry: ((value: typeof bars) => void) | undefined;
     vi.mocked(marketApi.bars)
       .mockImplementationOnce(
         () =>
@@ -377,12 +378,12 @@ describe("historical cache markets", () => {
             reject = fail;
           }),
       )
-      .mockResolvedValueOnce({
-        ...bars,
-        items: [],
-        total: 0,
-        metadata: { ...metadata, status_counts: {} },
-      });
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            completeRetry = resolve;
+          }),
+      );
     render(<MarketsPage />);
     const dialog = await openSecurity();
     expect(within(dialog).getByRole("status")).toHaveTextContent(
@@ -394,9 +395,19 @@ describe("historical cache markets", () => {
     expect(within(dialog).getByRole("alert")).toHaveTextContent(
       "could not be loaded",
     );
-    await userEvent.click(
-      within(dialog).getByRole("button", { name: "Retry reading cache" }),
+    within(dialog).getByRole("button", { name: "Retry reading cache" }).focus();
+    await userEvent.keyboard("{Enter}");
+    const heading = within(dialog).getByRole("heading", { level: 2 });
+    expect(heading).toHaveFocus();
+    await act(async () =>
+      completeRetry?.({
+        ...bars,
+        items: [],
+        total: 0,
+        metadata: { ...metadata, status_counts: {} },
+      }),
     );
+    expect(heading).toHaveFocus();
     expect(
       await within(dialog).findByText(/no prices have been filled in/),
     ).toBeInTheDocument();

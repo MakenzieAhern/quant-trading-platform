@@ -233,6 +233,49 @@ describe("explicit incremental request workflow", () => {
       screen.getByRole("region", { name: `Task: ${job.job_id}` }),
     ).toHaveFocus();
   });
+  it("lands a direct task link on the task after page-route focus", async () => {
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    let runFrame = () => {};
+    vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+      runFrame = () => callback(0);
+      return 1;
+    });
+    vi.stubGlobal("cancelAnimationFrame", vi.fn());
+    const view = render(
+      <main id="main-content" tabIndex={-1}>
+        <MarketUpdatesPanel dataReady={false} />
+      </main>,
+    );
+    const task = screen.getByRole("region", { name: `Task: ${job.job_id}` });
+    const scroll = vi.fn();
+    task.scrollIntoView = scroll;
+    const main = view.container.querySelector("main")!;
+    main.focus();
+    await screen.findByText(
+      "Bounded raw requests completed. Candidate-only status is unchanged.",
+    );
+    await screen.findByLabelText("Security IDs (1–20)");
+    expect(main).toHaveFocus();
+    view.rerender(
+      <main id="main-content" tabIndex={-1}>
+        <MarketUpdatesPanel dataReady />
+      </main>,
+    );
+    act(runFrame);
+    expect(task).toHaveFocus();
+    expect(scroll).toHaveBeenCalledWith({ block: "start" });
+  });
+  it("does not focus a task on ordinary Data Center navigation", async () => {
+    const { container } = render(
+      <main id="main-content" tabIndex={-1}>
+        <MarketUpdatesPanel />
+      </main>,
+    );
+    const main = container.querySelector("main")!;
+    main.focus();
+    await screen.findByLabelText("Security IDs (1–20)");
+    expect(main).toHaveFocus();
+  });
   it("keeps the focused task before its reloading history list", async () => {
     const page = { items: [job], total: 1, limit: 20, offset: 0 };
     let finish!: (value: typeof page) => void;

@@ -5,15 +5,18 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, expect, it, vi } from "vitest";
 import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
 import { experimentApi } from "./experiments/api";
 import { capabilities } from "./experiments/fixtures.test-data";
 import {
+  DataCenterPage,
   HelpPage,
   ModeGuide,
   ProductError,
+  ProductStrategiesPage,
   WorkbenchPage,
 } from "./ProductPages";
 
@@ -33,6 +36,22 @@ it.each([
     await act(() => i18n.changeLanguage("en-US"));
   },
 );
+
+it("keeps a section-level Retry near its persistent heading", async () => {
+  await act(() => i18n.changeLanguage("en-US"));
+  render(
+    <main>
+      <h1>Research</h1>
+      <section>
+        <h2>Equity chart</h2>
+        <ProductError error={new Error("offline")} retry={() => {}} />
+      </section>
+    </main>,
+  );
+  screen.getByRole("button", { name: "Try again" }).focus();
+  await userEvent.keyboard("{Enter}");
+  expect(screen.getByRole("heading", { name: "Equity chart" })).toHaveFocus();
+});
 
 it("closes the optional guide when browser storage rejects writes", async () => {
   await act(() => i18n.changeLanguage("en-US"));
@@ -131,5 +150,34 @@ it.each(["success", "error"])(
     expect(
       screen.getByRole("heading", { name: "Your research data" }),
     ).toHaveFocus();
+  },
+);
+
+it.each([
+  ["Strategies", <ProductStrategiesPage />],
+  ["Data Center", <DataCenterPage />],
+])(
+  "keeps keyboard focus after a %s data Retry replaces its error",
+  async (_name, page) => {
+    await act(() => i18n.changeLanguage("en-US"));
+    let completeRetry: ((value: typeof capabilities) => void) | undefined;
+    const read = vi
+      .spyOn(experimentApi, "capabilities")
+      .mockRejectedValueOnce(new ApiError(503, "unavailable"))
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            completeRetry = resolve;
+          }),
+      );
+    render(<main>{page}</main>);
+    const retry = await screen.findByRole("button", { name: "Try again" });
+    retry.focus();
+    await userEvent.keyboard("{Enter}");
+    await waitFor(() => expect(read).toHaveBeenCalledTimes(2));
+    const heading = screen.getByRole("heading", { level: 1 });
+    expect(heading).toHaveFocus();
+    await act(async () => completeRetry?.(capabilities));
+    expect(heading).toHaveFocus();
   },
 );

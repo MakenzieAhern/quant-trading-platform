@@ -39,7 +39,23 @@ export function ProductError({
   return (
     <div className="productError" role="alert">
       <p>{reason ? t(`loadErrors.${reason}`) : (fallback ?? c.loadingError)}</p>
-      <button className="button secondary" onClick={retry}>
+      <button
+        className="button secondary"
+        onClick={(event) => {
+          const button = event.currentTarget;
+          const main = button.closest("main");
+          const heading =
+            button.closest("dialog")?.querySelector("h2") ??
+            button.closest("section, aside")?.querySelector("h2, h3") ??
+            main?.querySelector("h1");
+          retry();
+          if (document.activeElement !== button) return;
+          if (heading) {
+            heading.tabIndex = -1;
+            heading.focus();
+          } else main?.focus();
+        }}
+      >
         {retryLabel ?? c.retry}
       </button>
     </div>
@@ -485,7 +501,7 @@ export function DataCenterPage() {
           </details>
         </section>
       ))}
-      <MarketUpdatesPanel />
+      <MarketUpdatesPanel dataReady={!data.loading} />
       <p className="inlineNotice">{c.futureUnavailable}</p>
       <p className="smallText">{c.dateZone}</p>
     </div>

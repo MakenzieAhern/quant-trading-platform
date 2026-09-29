@@ -26,12 +26,17 @@ function openUpdateJob(id: string) {
   url.searchParams.set("updateJob", id);
   return navigate(`${url.pathname}${url.search}${url.hash}`);
 }
-export function MarketUpdatesPanel() {
+export function MarketUpdatesPanel({
+  dataReady = true,
+}: {
+  dataReady?: boolean;
+} = {}) {
   const c = useUpdateCopy();
   const { i18n } = useTranslation();
   const [revision, setRevision] = useState(0);
   const [offset, setOffset] = useState(0);
   const [jobId, setJobId] = useState(selectedFromUrl);
+  const initialJobId = useRef(jobId);
   const pendingTaskFocus = useRef<string | null>(null);
   const taskFocus = useRef<HTMLElement>(null);
   const headingFocus = useRef<HTMLHeadingElement>(null);
@@ -71,6 +76,34 @@ export function MarketUpdatesPanel() {
     window.addEventListener("popstate", changed);
     return () => window.removeEventListener("popstate", changed);
   }, []);
+  useEffect(() => {
+    if (
+      !initialJobId.current ||
+      !taskFocus.current ||
+      !dataReady ||
+      caps.loading
+    )
+      return;
+    const frame = window.requestAnimationFrame?.(() => {
+      const target = taskFocus.current;
+      const focused = document.activeElement;
+      if (
+        !target ||
+        selectedFromUrl() !== initialJobId.current ||
+        (focused !== document.body &&
+          focused !== document.getElementById("main-content"))
+      )
+        return;
+      const topbar =
+        document.querySelector(".topbar")?.getBoundingClientRect().bottom ?? 0;
+      target.style.scrollMarginTop = `${Math.ceil(Math.max(0, topbar)) + 8}px`;
+      target.focus({ preventScroll: true });
+      target.scrollIntoView?.({ block: "start" });
+    });
+    return () => {
+      if (frame !== undefined) window.cancelAnimationFrame(frame);
+    };
+  }, [dataReady, caps.loading]);
   useEffect(() => {
     if (jobId && pendingTaskFocus.current === jobId && taskFocus.current) {
       if (document.activeElement === document.body) taskFocus.current.focus();
