@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 current-head Workbench screenshot — bounded media
+
+Installed Chrome 153 headless loaded the local Workbench at the configured
+`localhost:5173` origin. The saved PNG is 1440×900, 86,856 bytes, SHA-256
+`1211D135D1372591801971AD5E8EC17703E63AC743F35ED5100F1BC0BC6DD87E`.
+It was visually inspected after capture: a settled Chinese/light returning-user
+home showed the guided-backtest primary action, existing-research secondary
+action, online service, historical data cutoff 2025-12-31 with no current-
+advice claim, and recent saved studies. HEAD was `a9d2298`, frontend tree
+`1a4b7d3d6ea92838da5345a886a9ae4f9d6f3449`. The PNG and bounded capture
+record are outside Git in
+`product-evidence/v1.2/m5/20260929-a9d2298-workbench-capture.md`.
+
+This supplies a current-code opening-page image, not a fresh-user walkthrough,
+interaction recording, two-locale/theme/viewport matrix, native 200% zoom,
+screen-reader speech, cold-click p95, independent novice test, complete M4/M5,
+GitHub CI or release acceptance. The capture navigated only to the local home
+page; no account, study, provider, market-data or GitHub action was initiated.
+
 ## 2026-09-29 saved comparison screenshot — bounded current-code media
 
 An installed Chrome 153 headless process loaded the existing two-study

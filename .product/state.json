@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T02:52:54Z",
+  "updated_at_utc": "2026-09-29T03:01:13Z",
+  "current_head_workbench_media_gate": {
+    "status": "PASS_ONE_SETTLED_DESKTOP_PNG_NOT_FULL_M5",
+    "source_head": "a9d22983cf9673e53a73f5c2d04c0e5ce865e869",
+    "frontend_tree": "1a4b7d3d6ea92838da5345a886a9ae4f9d6f3449",
+    "proof": "2026-09-29 UTC: installed Chrome 153 headless saved the configured localhost Workbench at 1440x900. The 86856-byte PNG SHA256 1211D135D1372591801971AD5E8EC17703E63AC743F35ED5100F1BC0BC6DD87E was visually inspected: settled Chinese/light returning-user home, guided-backtest primary action, existing-research secondary action, online service, historical data cutoff 2025-12-31 with non-current-advice warning, and recent saved studies. Capture record and PNG are outside Git under product-evidence/v1.2/m5/20260929-a9d2298-workbench-capture.md.",
+    "limits": "One GET-only desktop image is not a first-run walkthrough, interaction recording, locale/theme/viewport matrix, native 200pct zoom, screen-reader speech, cold-click p95, independent novice test, full M4/M5, GitHub CI or release. No before/after database or frozen-asset fingerprint was taken. Dedicated Chrome process exited; its Windows Temp profile remains after denied cleanup."
+  },
   "paper_command_race_local_gate": {
     "status": "PASS_BOUNDED_LOCAL_STATE_RECONCILIATION_NOT_FULL_U7_OR_GITHUB_CI",
     "parent_head": "5cd433d",
