@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 successful task-poll focus — bounded M4 correction
+
+Actual Chrome 153 reproduced a keyboard focus defect in three task lists:
+when a successful five-second poll prepended a newer task and displaced the
+focused twentieth Open control, focus fell to `BODY`. The test changed only
+the browser's GET responses, not backend jobs. Three focused regressions
+were red before the fix. Task Center's research/raw lists and Data Center's
+history now hand off focus to their persistent named headings on successful
+replacement, while the existing failed-GET path still targets its alert and
+deliberately moved focus is not stolen. Chrome recheck focused H2/H2/H3,
+respectively, with only backend GET requests. Three screenshots were visually
+inspected and SHA-256 recorded outside Git in
+`product-evidence/v1.2/m4/20260929-task-success-poll-focus.md`.
+
+Focused tests passed 47/47. Exact-code `make test` passed backend 1024 with
+one optional unmounted-archive skip and frontend 411/411; `make lint` and
+`make build` passed. An independent read-only post-fix review found no
+actionable regression. This is not a real concurrent task-creation event,
+native screen-reader, mobile/zoom matrix, full M4 or GitHub CI acceptance.
+The separate Data observation-pager focus path remains to be tested.
+
 ## 2026-09-29 strategy first-click timing — bounded M4 Chrome study
 
 Installed Chrome 153 opened the strategy drawer in 120/120 first-click trials
