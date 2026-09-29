@@ -5423,3 +5423,42 @@ were not changed. This is one bounded keyboard recovery case, not an actual
 browser 503→success run, native Chrome/screen-reader speech, whole U4/M4/M5,
 independent novice acceptance or hosted CI. The October 1 recovery estimate
 has not been verified; no push, merge or release was attempted.
+
+## 2026-09-29 09:14 UTC local continuation during GitHub hold
+
+The original Compose PostgreSQL, Redis, backend and frontend remained up;
+PostgreSQL, Redis and backend were healthy, and the frontend and `/api/health`
+returned HTTP 200. The isolated `quant-mvp-tests` test stack used temporary
+PostgreSQL storage. `make test` passed 1025 backend tests with one optional
+unmounted-archive skip and all 424 frontend tests. `make lint`, frontend
+typecheck and `make build` passed. These are local checks, not pushed-head
+GitHub CI or release approval.
+
+Actual in-app-browser GET-only navigation at 1265×712 showed the running
+Workbench, Strategies, strategy detail, restored guided-research draft,
+Research list and saved historical result in English/dark. Six baseline
+screenshots and a post-change success-page screenshot are stored and hashed
+outside Git in `product-evidence/v1.2/m5/20260929-cfd9fe5-iab/README.md`.
+The two result screenshots are pixel-identical. This is returning-user,
+clipped-viewport evidence, not exact requested media, native Chrome, a
+clean-user walkthrough, independent novice test or full M5.
+
+A red keyboard regression showed that saved-result Retry removed its focused
+error button and left focus on `BODY`. Commit `3ca7676` moves focus to the
+persistent result heading before reloading. A deferred-response test asserts
+heading focus both while the replacement GET is pending and after successful
+metrics return; all 424 frontend tests, lint, typecheck and build pass.
+Independent read-only review found no concrete defect. The browser screenshot
+shows only the success page, **not** an error→Retry browser proof; that path
+is verified by the component regression only. Whole U4/M4/M5 remains open.
+
+Read-only backup inventory found one physical NVMe; its C/D partitions are
+not independent backup destinations. Known pre-accident dumps predate the
+lost account creation, and later dumps postdate the loss; none is verified
+to contain original account ledgers `4b64380f` and `07d72259`. Windows
+backup/VSS inventory could not be completed without elevation, so its
+existence is unknown, not disproven. No lawful 2026 two-exchange market-data
+use grant or genuine after-start forward receipt was established. Original
+database/accounts, Docker volumes, frozen research, Official OOS and GitHub
+were not changed. GitHub recovery on October 1 is an unverified estimate;
+no push, merge or release was attempted.
