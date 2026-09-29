@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 saved-market read errors — bounded U5/U8 correction
+
+The market catalog, security search, watchlist and saved-price detail used
+one generic archive/service warning even when the API returned a typed 403 or
+408. A new search regression first failed on an actual `ApiError(403)` with
+the old archive warning. All four read surfaces now reuse the existing
+bilingual `ProductError` classification while preserving their market-specific
+fallback and Retry label. Focused Markets tests passed 21/21, covering the
+four surfaces, EN/ZH permission text and no request on locale switch.
+
+The full frontend passed 404/404 tests, ESLint, TypeScript and Vite build.
+Actual Chrome reopened the local historical market list and a saved price
+detail: 5431 registered securities, the source/date warnings and exact-price
+record rendered; closing the dialog returned focus to its trigger. That
+browser check was a successful GET path, **not** a browser-injected 403/408.
+An independent read-only code review found no concrete blocker in this slice.
+No provider request, watchlist change, original database/account/frozen asset
+write, GitHub action or release occurred. Full U5/U8/M4 and external gates
+remain open.
+
+## 2026-09-29 research read-error focus — bounded U3/M4 correction
+
+When a running research task's polling GET failed, its focused Cancel button
+and status both unmounted, leaving keyboard focus on the page body. A focused
+regression reproduced this before the fix. The read-error alert is now a
+programmatic focus fallback, using the existing status-focus path; the
+regression and the full Experiments file passed 46/46. The full frontend
+passed 404/404 tests, ESLint, TypeScript and Vite build. This is a component-
+level polling-failure check; no real-browser GET fault was injected, and no
+study was cancelled or created. Full U3/M4 remains open.
+
 ## 2026-09-29 data-update cancel response — bounded U5 correction
 
 The update-task detail shared one error state for GET reads and cancel/retry

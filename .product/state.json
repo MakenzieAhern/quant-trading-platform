@@ -1,7 +1,19 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T03:22:53Z",
+  "updated_at_utc": "2026-09-29T03:33:35Z",
+  "market_cache_read_error_gate": {
+    "status": "PASS_BOUNDED_LOCAL_TYPED_ERROR_FIX_NOT_FULL_U5_U8_M4",
+    "parent_head": "cb4439a",
+    "proof": "2026-09-29 UTC: a red 403 search regression reproduced the old archive/service message. Catalog, security search, watchlist and saved-price reads now reuse ProductError's existing bilingual permission/timeout/offline guidance with market-specific generic fallback and Retry label. Focused Markets 21/21 covered all four surfaces and EN/ZH without an automatic request on language change. Full frontend 404/404, ESLint, TypeScript and Vite build passed. Actual Chrome opened the local historical market list and saved-price detail by GET, showing 5431 registered securities, source/date warnings and exact saved observations; closing the detail returned focus to the trigger. Independent read-only review found no blocker in this diff.",
+    "limits": "The Chrome success path did not inject a 403/408. No provider request, watchlist mutation, original database/account/frozen research/OOS write, push, CI, merge or release occurred. This does not prove full U5/U8/M4, genuine novice, lawful forward data, lost-ledger recovery or independent backup."
+  },
+  "experiment_read_error_focus_gate": {
+    "status": "PASS_BOUNDED_LOCAL_FOCUS_REGRESSION_NOT_FULL_U3_M4",
+    "parent_head": "cb4439a",
+    "proof": "2026-09-29 UTC: a focused failing regression showed that polling GET 503 unmounted the focused Cancel button and status and left focus on body. The existing status-focus effect now falls back to a programmatically focusable read-error alert. Focused Experiments 46/46; full frontend 404/404, ESLint, TypeScript and Vite build passed. Independent read-only review found no concrete blocker.",
+    "limits": "Component test only; no browser-injected GET failure or real cancellation. No original study/account/provider/frozen research/OOS mutation or GitHub action. Full U3/M4 and external gates remain open."
+  },
   "market_update_cancel_response_gate": {
     "status": "PASS_BOUNDED_LOCAL_ERROR_RECONCILIATION_NOT_SOURCE_AUTHORITY_OR_FULL_U5",
     "parent_head": "8e3b4f4",

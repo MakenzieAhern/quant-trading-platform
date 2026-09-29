@@ -6,6 +6,7 @@ import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc } from "../../utils/format";
 import { navigate, replaceUrl } from "../../utils/navigation";
 import { Dialog } from "../Dialog";
+import { ProductError } from "../ProductPages";
 import { usePageDataContext } from "../dataContext";
 import { explainExperimentCode } from "../experiments/codes";
 import { marketApi, securityName } from "./api";
@@ -39,15 +40,12 @@ export function MarketsPage() {
       </p>
       {datasets.loading && <p role="status">{c.loading}</p>}
       {datasets.error && (
-        <div role="alert">
-          <p>{c.error}</p>
-          <button
-            className="button secondary"
-            onClick={() => setRevision((n) => n + 1)}
-          >
-            {c.retry}
-          </button>
-        </div>
+        <ProductError
+          error={datasets.error}
+          fallback={c.error}
+          retryLabel={c.retry}
+          retry={() => setRevision((n) => n + 1)}
+        />
       )}
       {datasets.data && <MarketWorkspace datasets={datasets.data} />}
     </div>
@@ -334,15 +332,12 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
           <p role="status">{c.loading}</p>
         )}
         {results.error && (
-          <div role="alert">
-            <p>{c.error}</p>
-            <button
-              className="button secondary"
-              onClick={() => setRevision((n) => n + 1)}
-            >
-              {c.retry}
-            </button>
-          </div>
+          <ProductError
+            error={results.error}
+            fallback={c.error}
+            retryLabel={c.retry}
+            retry={() => setRevision((n) => n + 1)}
+          />
         )}
         {results.data && dataset && (
           <>
@@ -451,15 +446,12 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         )}
         {watchlist.loading && <p role="status">{c.loading}</p>}
         {watchlist.error && (
-          <div role="alert">
-            <p>{c.error}</p>
-            <button
-              className="button secondary"
-              onClick={() => setWatchRevision((n) => n + 1)}
-            >
-              {c.retry}
-            </button>
-          </div>
+          <ProductError
+            error={watchlist.error}
+            fallback={c.error}
+            retryLabel={c.retry}
+            retry={() => setWatchRevision((n) => n + 1)}
+          />
         )}
         {watchlist.data && (
           <>

@@ -2,6 +2,7 @@ import { useId, useState } from "react";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatUtc } from "../../utils/format";
+import { ProductError } from "../ProductPages";
 import { usePreferences } from "../preferences";
 import { closingPrice, marketApi, validRange } from "./api";
 import { observationLabel, useMarketCopy } from "./copy";
@@ -131,15 +132,12 @@ export function MarketDetail({
       </p>
       {data.loading && <p role="status">{c.loading}</p>}
       {data.error && (
-        <div role="alert">
-          <p>{c.error}</p>
-          <button
-            className="button secondary"
-            onClick={() => setRevision((n) => n + 1)}
-          >
-            {c.retry}
-          </button>
-        </div>
+        <ProductError
+          error={data.error}
+          fallback={c.error}
+          retryLabel={c.retry}
+          retry={() => setRevision((n) => n + 1)}
+        />
       )}
       {data.data && (
         <MarketObservation

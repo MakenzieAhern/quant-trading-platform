@@ -40,6 +40,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
   const locked = useRef(false);
   const focusedCommand = useRef<HTMLButtonElement | null>(null);
   const statusFocus = useRef<HTMLSpanElement>(null);
+  const readErrorFocus = useRef<HTMLDivElement>(null);
   const activeJob = useRef<string | null>(jobId);
   useEffect(() => {
     activeJob.current = jobId;
@@ -52,7 +53,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
     const button = focusedCommand.current;
     if (button && !button.isConnected) {
       if (document.activeElement === document.body)
-        statusFocus.current?.focus();
+        (statusFocus.current ?? readErrorFocus.current)?.focus();
       focusedCommand.current = null;
     }
   }, [job.data?.status]);
@@ -89,7 +90,12 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
       </Link>
       {!data && !job.error && <p role="status">{c.loading}</p>}
       {Boolean(job.error) && (
-        <div className="experimentNotice" role="alert">
+        <div
+          ref={readErrorFocus}
+          className="experimentNotice"
+          role="alert"
+          tabIndex={-1}
+        >
           <p>{experimentError(job.error, c)}</p>
           <button className="button secondary" onClick={job.refresh}>
             {c.refresh}

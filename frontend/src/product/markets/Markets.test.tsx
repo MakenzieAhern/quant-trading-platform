@@ -8,6 +8,7 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ApiError } from "../../api/client";
 import { i18n } from "../../i18n";
 import { navigate, navigateBack } from "../../utils/navigation";
 import { writePresentationSetting } from "../../utils/presentationStorage";
@@ -74,6 +75,60 @@ async function openSecurity() {
 }
 
 describe("historical cache markets", () => {
+  it("does not misreport a denied dataset catalog as a local archive problem", async () => {
+    vi.mocked(marketApi.datasets).mockRejectedValue(
+      new ApiError(403, "denied"),
+    );
+    render(<MarketsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Access was denied. Check your access before trying again.",
+    );
+    expect(marketApi.search).not.toHaveBeenCalled();
+  });
+  it("explains a denied cache search in both languages without repeating the request", async () => {
+    vi.mocked(marketApi.search).mockRejectedValue(new ApiError(403, "denied"));
+    render(<MarketsPage />);
+    const search = await screen.findByRole("region", {
+      name: "Search securities",
+    });
+    expect(await within(search).findByRole("alert")).toHaveTextContent(
+      "Access was denied. Check your access before trying again.",
+    );
+    const reads = vi.mocked(marketApi.search).mock.calls.length;
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(
+      within(screen.getByRole("region", { name: "检索证券" })).getByRole(
+        "alert",
+      ),
+    ).toHaveTextContent("访问被拒绝。请确认访问权限后重试。");
+    expect(marketApi.search).toHaveBeenCalledTimes(reads);
+  });
+  it("keeps a watchlist timeout distinct from an empty watchlist", async () => {
+    vi.mocked(marketApi.watchlist).mockRejectedValue(
+      new ApiError(408, "timeout"),
+    );
+    render(<MarketsPage />);
+    expect(
+      await screen.findByText(
+        "The request timed out. Check the service status, then try again.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "Your watchlist is empty. Save a security from the search results.",
+      ),
+    ).not.toBeInTheDocument();
+  });
+  it("explains denied saved-price reads in security detail", async () => {
+    vi.mocked(marketApi.bars).mockRejectedValue(new ApiError(403, "denied"));
+    render(<MarketsPage />);
+    const dialog = await openSecurity();
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Access was denied. Check your access before trying again.",
+    );
+  });
   it("names native search and exact tables with distinct translated scroll regions", async () => {
     render(<MarketsPage />);
     const searchTable = await screen.findByRole("table", {

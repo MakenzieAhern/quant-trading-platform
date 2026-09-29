@@ -16,9 +16,13 @@ import { MarketUpdatesPanel } from "./marketUpdates";
 export function ProductError({
   error,
   retry,
+  fallback,
+  retryLabel,
 }: {
   error: unknown;
   retry: () => void;
+  fallback?: string;
+  retryLabel?: string;
 }) {
   const c = useProductCopy();
   const { t } = useTranslation("common");
@@ -34,9 +38,9 @@ export function ProductError({
         : null;
   return (
     <div className="productError" role="alert">
-      <p>{reason ? t(`loadErrors.${reason}`) : c.loadingError}</p>
+      <p>{reason ? t(`loadErrors.${reason}`) : (fallback ?? c.loadingError)}</p>
       <button className="button secondary" onClick={retry}>
-        {c.retry}
+        {retryLabel ?? c.retry}
       </button>
     </div>
   );

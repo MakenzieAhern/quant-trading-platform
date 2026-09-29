@@ -793,6 +793,23 @@ describe("durable experiment detail", () => {
     );
   });
 
+  it("focuses the read error when polling removes the focused cancel button", async () => {
+    vi.useFakeTimers();
+    const running = { ...job, status: "RUNNING" as const, phase: "EXECUTING" };
+    vi.spyOn(experimentApi, "get")
+      .mockResolvedValueOnce(running)
+      .mockRejectedValueOnce(new ApiError(503, "service unavailable"));
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    screen.getByRole("button", { name: "Cancel task" }).focus();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2500);
+    });
+    expect(screen.getByRole("alert")).toHaveFocus();
+  });
+
   it("does not steal focus when the user leaves cancellation before completion", async () => {
     const running = { ...job, status: "RUNNING" as const };
     const cancelled = { ...running, status: "CANCELLED" as const };
