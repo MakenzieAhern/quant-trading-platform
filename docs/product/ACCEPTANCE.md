@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 data-update cancel response — bounded U5 correction
+
+The update-task detail shared one error state for GET reads and cancel/retry
+actions. If a cancel POST returned 503 **after** a task GET had already
+confirmed `cancel_requested` or `CANCELLED`, the late response reintroduced a
+misleading alert. Conversely, a definitive cancel 403 disappeared after a
+successful status refresh. Red tests reproduced both defects; the
+failure-first 503 order was already safe and is retained as a regression.
+
+Read and action errors now have separate state. A shared small classifier
+marks only network errors, timeout 408 and server 5xx as uncertain; a
+confirmed cancel hides only such an obsolete action warning. Permission 403
+and a subsequent Retry 503 remain visible. A denied Cancel POST followed by
+a failed GET keeps the denial visible alongside a distinct read error;
+the inverse (uncertain Cancel 503, denied GET 403) also keeps both errors.
+Identical 403 alerts are deduplicated for assistive technology. The first
+two interleavings failed before the fix; the inverse is also covered.
+Focused MarketUpdates 36/36 and
+Experiments 45/45, full frontend 399/399, ESLint, TypeScript, changed-file
+Prettier and Vite build passed. This also tightens the preceding research-
+cancel fix so a separate actor's cancellation cannot swallow a definitive
+permission denial.
+
+Actual Chrome opened the local data center and an existing completed raw-
+candidate update task by GET, displaying its persisted status, observations,
+receipts and warning that candidate data cannot be used for forward
+acceptance. The temporary tab closed. No browser-injected lost response or
+live cancellation was run. This bounded error-path repair does not establish
+source/use rights, full U5/U3/M4/M5, independent novice, GitHub CI or release.
+No provider acquisition, original database/account/frozen research/OOS write,
+push, merge or release occurred.
+
 ## 2026-09-29 lost research-cancel response — bounded U3 correction
 
 Two red component regressions reproduced a cancellation accepted by the

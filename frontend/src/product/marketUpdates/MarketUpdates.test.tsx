@@ -541,6 +541,172 @@ describe("explicit incremental request workflow", () => {
     expect(cancel).not.toHaveBeenCalled();
     expect(button).toHaveFocus();
   });
+  it.each(["failure-first", "confirmation-first"] as const)(
+    "reconciles an uncertain cancel response with saved task status: %s",
+    async (order) => {
+      const running: UpdateJob = {
+        ...job,
+        status: "RUNNING",
+        phase: "FETCHING_RAW_CANDIDATES",
+        summary: null,
+      };
+      const confirmed: UpdateJob =
+        order === "failure-first"
+          ? { ...running, cancel_requested: true }
+          : { ...running, status: "CANCELLED", cancel_requested: true };
+      let current = running;
+      vi.mocked(marketUpdateApi.get).mockImplementation(async () => current);
+      let fail!: (reason: unknown) => void;
+      const cancel = vi
+        .spyOn(marketUpdateApi, "cancel")
+        .mockImplementation(() => new Promise((_, reject) => (fail = reject)));
+      window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+      render(<MarketUpdatesPanel />);
+      const detail = await screen.findByRole("region", {
+        name: `Task: ${job.job_id}`,
+      });
+      await userEvent.click(
+        within(detail).getByRole("button", { name: "Request cancellation" }),
+      );
+      expect(cancel).toHaveBeenCalledTimes(1);
+      if (order === "failure-first") {
+        await act(async () => fail(new ApiError(503, "unavailable")));
+        expect(within(detail).getByRole("alert")).toHaveTextContent(
+          "Request could not be completed",
+        );
+      }
+      current = confirmed;
+      await userEvent.click(
+        within(detail).getAllByRole("button", { name: "Refresh" })[0],
+      );
+      if (order === "failure-first")
+        await within(detail).findByText(
+          "Cancellation requested; waiting for the server checkpoint.",
+        );
+      else await within(detail).findByRole("heading", { name: "Cancelled" });
+      if (order === "confirmation-first")
+        await act(async () => fail(new ApiError(503, "unavailable")));
+      expect(within(detail).queryByRole("alert")).not.toBeInTheDocument();
+
+      if (order === "confirmation-first") {
+        vi.spyOn(marketUpdateApi, "retry").mockRejectedValue(
+          new ApiError(503, "unavailable"),
+        );
+        await userEvent.click(
+          within(detail).getByRole("button", {
+            name: "Retry this unsuccessful task",
+          }),
+        );
+        expect(within(detail).getByRole("alert")).toHaveTextContent(
+          "Request could not be completed",
+        );
+      }
+    },
+  );
+  it("keeps a denied cancel response visible despite a later cancellation", async () => {
+    const running: UpdateJob = { ...job, status: "RUNNING" };
+    let current = running;
+    vi.mocked(marketUpdateApi.get).mockImplementation(async () => current);
+    vi.spyOn(marketUpdateApi, "cancel").mockRejectedValue(
+      new ApiError(403, "denied"),
+    );
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const detail = await screen.findByRole("region", {
+      name: `Task: ${job.job_id}`,
+    });
+    await userEvent.click(
+      within(detail).getByRole("button", { name: "Request cancellation" }),
+    );
+    expect(within(detail).getByRole("alert")).toHaveTextContent(
+      "The service denied this request",
+    );
+    current = { ...running, cancel_requested: true };
+    await userEvent.click(
+      within(detail).getAllByRole("button", { name: "Refresh" })[0],
+    );
+    await within(detail).findByText(
+      "Cancellation requested; waiting for the server checkpoint.",
+    );
+    expect(within(detail).getByRole("alert")).toHaveTextContent(
+      "The service denied this request",
+    );
+  });
+  it.each([503, 403])(
+    "keeps a denied cancel visible without duplicate alerts when the next read returns %i",
+    async (readStatus) => {
+      const running: UpdateJob = { ...job, status: "RUNNING" };
+      vi.mocked(marketUpdateApi.get)
+        .mockResolvedValueOnce(running)
+        .mockRejectedValueOnce(new ApiError(readStatus, "unavailable"));
+      vi.spyOn(marketUpdateApi, "cancel").mockRejectedValue(
+        new ApiError(403, "denied"),
+      );
+      window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+      render(<MarketUpdatesPanel />);
+      const detail = await screen.findByRole("region", {
+        name: `Task: ${job.job_id}`,
+      });
+      await userEvent.click(
+        within(detail).getByRole("button", { name: "Request cancellation" }),
+      );
+      expect(within(detail).getByRole("alert")).toHaveTextContent(
+        "The service denied this request",
+      );
+      await userEvent.click(
+        within(detail).getAllByRole("button", { name: "Refresh" })[0],
+      );
+      await waitFor(() => {
+        const alerts = within(detail).getAllByRole("alert");
+        expect(
+          alerts.some((alert) =>
+            alert.textContent?.includes("The service denied this request"),
+          ),
+        ).toBe(true);
+        expect(alerts).toHaveLength(readStatus === 403 ? 1 : 2);
+        if (readStatus === 503)
+          expect(
+            alerts.some((alert) =>
+              alert.textContent?.includes("Request could not be completed"),
+            ),
+          ).toBe(true);
+      });
+    },
+  );
+  it("keeps an uncertain cancel warning when the next status read is denied", async () => {
+    const running: UpdateJob = { ...job, status: "RUNNING" };
+    vi.mocked(marketUpdateApi.get)
+      .mockResolvedValueOnce(running)
+      .mockRejectedValueOnce(new ApiError(403, "denied"));
+    vi.spyOn(marketUpdateApi, "cancel").mockRejectedValue(
+      new ApiError(503, "unavailable"),
+    );
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    const detail = await screen.findByRole("region", {
+      name: `Task: ${job.job_id}`,
+    });
+    await userEvent.click(
+      within(detail).getByRole("button", { name: "Request cancellation" }),
+    );
+    await userEvent.click(
+      within(detail).getAllByRole("button", { name: "Refresh" })[0],
+    );
+    await waitFor(() => {
+      const alerts = within(detail).getAllByRole("alert");
+      expect(alerts).toHaveLength(2);
+      expect(
+        alerts.some((alert) =>
+          alert.textContent?.includes("The service denied this request"),
+        ),
+      ).toBe(true);
+      expect(
+        alerts.some((alert) =>
+          alert.textContent?.includes("Request could not be completed"),
+        ),
+      ).toBe(true);
+    });
+  });
   it("keeps retry focused during an uncertain response without repeating it", async () => {
     vi.mocked(marketUpdateApi.get).mockResolvedValue({
       ...job,

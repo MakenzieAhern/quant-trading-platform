@@ -889,6 +889,26 @@ describe("durable experiment detail", () => {
     },
   );
 
+  it("keeps denied cancellation visible when a different actor later requests cancellation", async () => {
+    const running = { ...job, status: "RUNNING" as const };
+    let current: typeof job = running;
+    vi.spyOn(experimentApi, "get").mockImplementation(async () => current);
+    vi.spyOn(experimentApi, "cancel").mockRejectedValue(
+      new ApiError(403, "denied"),
+    );
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Cancel task" }),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("Access was denied");
+    current = { ...running, cancel_requested: true };
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    await screen.findByText(
+      "Cancellation requested. The server will stop safely at its next checkpoint.",
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("Access was denied");
+  });
+
   it("keeps retry focused through an uncertain response without a duplicate", async () => {
     vi.spyOn(experimentApi, "get").mockResolvedValue({
       ...job,

@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T03:06:42Z",
+  "updated_at_utc": "2026-09-29T03:22:53Z",
+  "market_update_cancel_response_gate": {
+    "status": "PASS_BOUNDED_LOCAL_ERROR_RECONCILIATION_NOT_SOURCE_AUTHORITY_OR_FULL_U5",
+    "parent_head": "8e3b4f4",
+    "proof": "2026-09-29 UTC: update-task component regressions covered 503 cancellation response after/before authoritative GET confirmation, and a red permission regression showed that a later successful GET wrongly cleared a definitive cancel 403. Read and action failures now have separate state. A shared uncertain-response classifier restricts stale-cancel suppression to network TypeError, timeout 408 and server 5xx; permission denial and a later Retry 503 remain visible. Further red interleavings showed POST 403 hidden by GET 503 and duplicate denial alerts for POST 403 plus GET 403; the view now preserves distinct errors without duplicate spoken alerts, including the inverse POST 503/GET 403 path. Focused MarketUpdates 36/36 and Experiments 45/45, full frontend 399/399, ESLint, TypeScript, Prettier and Vite build passed. Actual Chrome opened the local data center and an existing completed candidate-only task by GET; its saved status, observations and source warnings rendered without a page error.",
+    "limits": "The browser check did not inject a lost response or start/cancel an update. Candidate raw observations are not accepted forward-market data and source/use rights remain unverified. This does not prove full U5/U3/M4/M5, independent novice, genuine ledger recovery, independent backup, GitHub CI or release. No provider request, original database/account/frozen research/OOS mutation, push, merge or release occurred."
+  },
   "experiment_cancel_response_reconciliation_gate": {
     "status": "PASS_BOUNDED_LOCAL_COMPONENT_FIX_NOT_FULL_U3_ERROR_MATRIX",
     "parent_head": "9ee6ded",

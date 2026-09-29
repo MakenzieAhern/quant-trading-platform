@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { requestOutcomeUncertain } from "../../api/client";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
@@ -150,6 +151,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
           {actionError &&
             !(
               actionError.kind === "cancel" &&
+              requestOutcomeUncertain(actionError.reason) &&
               (data.cancel_requested || data.status === "CANCELLED")
             ) && (
               <p className="experimentError" role="alert">

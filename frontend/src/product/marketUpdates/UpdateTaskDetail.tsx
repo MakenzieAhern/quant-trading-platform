@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type Ref } from "react";
 import { useTranslation } from "react-i18next";
-import { ApiError } from "../../api/client";
+import { ApiError, requestOutcomeUncertain } from "../../api/client";
 import { formatUtc } from "../../utils/format";
 import { marketUpdateApi } from "./api";
 import { explainUpdateCode, updateError, useUpdateCopy } from "./copy";
@@ -24,12 +24,26 @@ export function UpdateTaskDetail({
   const [revision, setRevision] = useState(0);
   const [job, setJob] = useState<UpdateJob | null>(null);
   const [error, setError] = useState<unknown>(null);
+  const [actionError, setActionError] = useState<{
+    kind: "cancel" | "retry";
+    reason: unknown;
+  } | null>(null);
   const [action, setAction] = useState(false);
   const active = useRef(true);
   const locked = useRef(false);
   const focusedCommand = useRef<HTMLButtonElement | null>(null);
   const statusFocus = useRef<HTMLHeadingElement>(null);
   const errorFocus = useRef<HTMLParagraphElement>(null);
+  const confirmedCancelError =
+    actionError?.kind === "cancel" &&
+    requestOutcomeUncertain(actionError.reason) &&
+    (job?.cancel_requested || job?.status === "CANCELLED");
+  const displayedError =
+    error !== null
+      ? error
+      : job && !confirmedCancelError
+        ? (actionError?.reason ?? null)
+        : null;
   useEffect(() => {
     active.current = true;
     return () => {
@@ -69,13 +83,14 @@ export function UpdateTaskDetail({
         (statusFocus.current ?? errorFocus.current)?.focus();
       focusedCommand.current = null;
     }
-  }, [job?.status, error]);
+  }, [job?.status, displayedError]);
   async function command(kind: "cancel" | "retry") {
     if (locked.current || (kind === "cancel" && job?.cancel_requested)) return;
     const trigger = document.activeElement;
     locked.current = true;
     setAction(true);
     setError(null);
+    setActionError(null);
     try {
       const result =
         kind === "cancel"
@@ -93,7 +108,7 @@ export function UpdateTaskDetail({
         setRevision((value) => value + 1);
       }
     } catch (reason) {
-      if (active.current) setError(reason);
+      if (active.current) setActionError({ kind, reason });
     } finally {
       if (active.current) {
         locked.current = false;
@@ -128,14 +143,20 @@ export function UpdateTaskDetail({
       >
         {c.refresh}
       </button>
-      {!job && !error && <p role="status">{c.loading}</p>}
-      {error !== null && (
+      {!job && displayedError === null && <p role="status">{c.loading}</p>}
+      {displayedError !== null && (
         <p ref={errorFocus} role="alert" tabIndex={-1}>
-          {updateError(error, i18n.language)}
+          {updateError(displayedError, i18n.language)}
         </p>
       )}
-      {error instanceof ApiError &&
-        error.code === "MARKET_UPDATE_NOT_FOUND" && (
+      {error !== null &&
+        actionError !== null &&
+        updateError(error, i18n.language) !==
+          updateError(actionError.reason, i18n.language) && (
+          <p role="alert">{updateError(actionError.reason, i18n.language)}</p>
+        )}
+      {displayedError instanceof ApiError &&
+        displayedError.code === "MARKET_UPDATE_NOT_FOUND" && (
           <>
             <p>{c.missingTaskHelp}</p>
             <button
