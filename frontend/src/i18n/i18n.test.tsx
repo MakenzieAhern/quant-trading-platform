@@ -1,13 +1,10 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { LanguageSelector } from "../components/LanguageSelector";
+import { HelpPage } from "../product/ProductPages";
 import { i18n } from ".";
-import {
-  LOCALE_STORAGE_KEY,
-  normalizeLocale,
-  persistLocale,
-} from "./locale";
+import { LOCALE_STORAGE_KEY, normalizeLocale, persistLocale } from "./locale";
 import { enUS } from "./resources/en-US";
 import { zhCN } from "./resources/zh-CN";
 
@@ -47,5 +44,34 @@ describe("application internationalization", () => {
     expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("zh-CN");
     expect(document.documentElement.lang).toBe("zh-CN");
     expect(i18n.language).toBe("zh-CN");
+  });
+
+  it("updates an open tab when another tab changes the saved language", async () => {
+    await i18n.changeLanguage("en-US");
+    render(
+      <>
+        <LanguageSelector />
+        <HelpPage />
+      </>,
+    );
+    expect(screen.getByText("What is a backtest?")).toBeInTheDocument();
+
+    localStorage.setItem(LOCALE_STORAGE_KEY, "zh-CN");
+    await act(async () => {
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: LOCALE_STORAGE_KEY,
+          newValue: "zh-CN",
+          storageArea: localStorage,
+        }),
+      );
+    });
+
+    expect(screen.getByText("什么是回测？")).toBeInTheDocument();
+    expect(document.documentElement.lang).toBe("zh-CN");
+    expect(screen.getByRole("button", { name: "中文" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 });
