@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local operation while GitHub Actions is unavailable
+
+GitHub Actions is not needed to run the platform on this PC. From the WSL
+repository, the existing four-service Compose application was up: PostgreSQL,
+Redis and backend reported healthy, and the frontend and `/api/health` each
+returned HTTP 200. A URL-confirmed in-app browser opened the local Workbench
+and a saved historical research result by GET; the result showed its metrics,
+historical date and non-advice warnings. This is actual local browser access,
+not native Windows Chrome accessibility or full M5 evidence.
+
+Two red/green corrections were committed locally. `9874e09` synchronizes
+language across open tabs through the existing i18n setup. `126f811` labels
+an older historical paper portfolio with its last verified trading date when
+the latest accepted session has no new valuation; it handles REST hydration
+and WebSocket updates without changing immutable paper events. On committed
+`126f811`, `make test` passed 1025 backend tests with one optional
+unmounted-archive skip and 422 frontend tests. `make lint` and `make build`
+passed. Tests used the separate `quant-mvp-tests` PostgreSQL project, and the
+original four services remained running afterward. No original account,
+database, provider, frozen research, push, merge or release was changed.
+
+These are local gates only. The user's October 1 GitHub Actions recovery is an
+estimate, not a verified account state. Exact pushed-head hosted CI, native
+zoom/screen-reader and independent novice QA, current lawful A-share forward
+data, genuine lost-ledger recovery and independent physical backup remain
+open. The platform can be used locally, but these checks do not authorize a
+v1.2 merge, tag or release.
+
 ## 2026-09-29 local U3/U4 recovery defects — M4 remains open
 
 Two red regressions exposed independent failures. A historical freeze marker

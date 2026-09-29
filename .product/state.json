@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T07:42:55Z",
+  "updated_at_utc": "2026-09-29T08:05:00Z",
+  "local_ci_alternative_20260929_gate": {
+    "status": "PASS_LOCAL_RUNTIME_TEST_LINT_BUILD_NOT_HOSTED_CI_OR_RELEASE",
+    "code_heads": ["9874e09", "126f811"],
+    "proof": "2026-09-29 UTC: original WSL Compose PostgreSQL, Redis, backend and frontend remained up; PostgreSQL/Redis/backend healthy; frontend and /api/health HTTP 200. An in-app browser with a confirmed localhost:5173 URL loaded the saved historical U6 result and displayed its metrics and date warnings. Red/green regressions fixed cross-tab locale synchronization and stale historical paper-portfolio labeling without changing ledger events. At committed HEAD 126f811, make test passed backend 1025 with one optional unmounted-archive skip and frontend 422; make lint and make build passed. The test database used the isolated quant-mvp-tests Compose project. See docs/product/ACCEPTANCE.md.",
+    "limits": "The user's October 1 GitHub Actions recovery is unverified. Local checks do not replace exact pushed-head hosted CI or release approval. The in-app browser check was read-only and is not native Windows Chrome, 200pct zoom, screen-reader speech, independent novice QA or full M4/M5 saved media. No original account/database/provider/frozen research, push, merge or release write. Lawful forward receipt, genuine lost-ledger recovery and independent physical backup remain open."
+  },
   "local_u3_u4_recovery_gate": {
     "status": "PASS_BOUNDED_LOCAL_REGRESSIONS_AND_RUNTIME_RELOAD_NOT_FULL_M4_M5",
     "code_heads": ["c487042", "e5329d0"],
