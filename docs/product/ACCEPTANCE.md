@@ -5498,3 +5498,36 @@ bounded IAB 1280×720 case, not native Chrome, required 1280×800 or other
 viewports, screen-reader speech, 200% zoom, independent novice or full M4/M5.
 No original account/provider/frozen research/OOS or GitHub write occurred;
 October 1 recovery remains unverified.
+
+## 2026-09-29 09:57 UTC local execution during GitHub CI hold
+
+The existing WSL Compose PostgreSQL, Redis and backend were healthy; the frontend
+was running, and `/` plus `/api/health` returned HTTP 200. PostgreSQL accepted
+connections, Redis returned PONG, and `docker compose config --quiet` passed.
+The application is usable locally at `http://localhost:5173`; this does not
+require GitHub Actions. The repository's existing `make test`, `make lint` and
+`make build` provide local development checks using the isolated test Compose
+project. They are not pushed-head CI or a release gate substitute. No `act`,
+self-hosted runner, new dependency or payment workaround was introduced.
+
+At `d99c325`, a red/green EN/ZH Workbench regression corrected the EN intro's
+claim that a guided backtest uses a simulated account. The actual wizard creates
+a research job, not a paper account; the intro now says “guided backtest”.
+At `70bd3d6`, paper start/pause/stop commands acknowledge the parsed same-account
+server response and reconcile with the existing REST snapshot. A socket loss or
+superseding status event cannot reopen the old command while a read is aborted;
+newer stream state wins. A successful POST followed by failed GET is not reported
+as a failed command. A mismatched account response fails closed with persistent
+bilingual reload guidance. Red/green component tests cover these paths; an
+independent read-only review found no actionable diff regression.
+
+Final local `make test` exited zero: backend 1025 passed, one optional unmounted
+historical-archive test skipped, frontend 435 passed across 38 files. `make lint`
+(Ruff, format, mypy, ESLint, TypeScript), changed-file Prettier and `make build`
+passed. Original Compose services and frontend/API HTTP 200 remained available
+after checks. This is local component/container evidence, not native-browser
+injected socket-fault QA, full U1–U8/M4/M5, independent novice, lawful after-start
+forward data, genuine lost-ledger recovery, independent physical backup or
+exact-head GitHub CI. The October 1 date is the user's estimate, not verified
+recovery; no push, merge or release was attempted, and original accounts,
+provider data, frozen research and Official OOS were not modified.
