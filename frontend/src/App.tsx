@@ -25,9 +25,11 @@ import { MarketsPage } from "./product/markets";
 import { TaskCenterPage } from "./product/TaskCenterPage";
 
 const ResearchDatasetPage = lazy(() =>
-  import("./pages/research/ResearchDatasetPage").then(({ ResearchDatasetPage }) => ({
-    default: ResearchDatasetPage,
-  })),
+  import("./pages/research/ResearchDatasetPage").then(
+    ({ ResearchDatasetPage }) => ({
+      default: ResearchDatasetPage,
+    }),
+  ),
 );
 const ResearchHomePage = lazy(() =>
   import("./pages/research/ResearchHomePage").then(({ ResearchHomePage }) => ({
@@ -45,9 +47,11 @@ const ResearchStrategiesPage = lazy(() =>
   ),
 );
 const ResearchStrategyPage = lazy(() =>
-  import("./pages/research/ResearchStrategyPage").then(({ ResearchStrategyPage }) => ({
-    default: ResearchStrategyPage,
-  })),
+  import("./pages/research/ResearchStrategyPage").then(
+    ({ ResearchStrategyPage }) => ({
+      default: ResearchStrategyPage,
+    }),
+  ),
 );
 const ExperimentDetailPage = lazy(() =>
   import("./product/experiments/ExperimentDetailPage").then(
@@ -129,7 +133,9 @@ export function App() {
   )
     page = <ResearchStrategiesPage />;
   else if (researchRunMatch?.[1])
-    page = <ResearchRunPage runId={researchRunMatch[1]} />;
+    page = (
+      <ResearchRunPage key={researchRunMatch[1]} runId={researchRunMatch[1]} />
+    );
   else if (researchDatasetMatch?.[1])
     page = (
       <ResearchDatasetPage

@@ -532,6 +532,11 @@ export const enUS = {
     monthlyReturns: "Monthly returns",
     rollingMetrics: "Rolling metrics",
     rollingDrawdown: "Rolling drawdown",
+    chartData: "Show plotted data ({{count}} points)",
+    chartUnavailable:
+      "Chart geometry is unavailable for these values; use the exact data table.",
+    displayedDateRange:
+      "Displayed trading dates: {{start}}–{{end}}. Full-run metrics are unchanged.",
     holdings: "Holdings",
     rebalances: "Rebalances",
     trades: "Trades",
@@ -549,6 +554,8 @@ export const enUS = {
     strategyConfig: "Strategy configuration",
     columns: {
       date: "Date",
+      series: "Series",
+      value: "Exact value",
       security: "Security",
       quantity: "Quantity",
       weight: "Weight",

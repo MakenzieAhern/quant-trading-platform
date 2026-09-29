@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ApiContractError } from "../../api/contracts";
 import { researchApi } from "../../api/research";
 import {
   EmptyState,
@@ -7,6 +9,7 @@ import {
   LoadingPanel,
 } from "../../components/AsyncPanel";
 import { Link } from "../../components/Link";
+import { Pagination } from "../../components/Pagination";
 import { BenchmarkChart } from "../../components/research/BenchmarkChart";
 import { DrawdownChart } from "../../components/research/DrawdownChart";
 import { MonthlyReturnHeatmap } from "../../components/research/MonthlyReturnHeatmap";
@@ -27,6 +30,11 @@ export function ResearchRunPage({ runId }: { runId: string }) {
     "metrics",
     "accessibility",
   ]);
+  const [curveOffset, setCurveOffset] = useState(0);
+  const [rollingOffset, setRollingOffset] = useState(0);
+  const [holdingsOffset, setHoldingsOffset] = useState(0);
+  const [rebalancesOffset, setRebalancesOffset] = useState(0);
+  const [tradesOffset, setTradesOffset] = useState(0);
   const run = useApiResource(
     (signal) => researchApi.run(runId, signal),
     [runId],
@@ -35,43 +43,52 @@ export function ResearchRunPage({ runId }: { runId: string }) {
     (signal) => researchApi.metrics(runId, signal),
     [runId],
   );
-  const equity = useApiResource(
-    (signal) => researchApi.points(runId, "equity", signal),
-    [runId],
-  );
-  const benchmark = useApiResource(
-    (signal) => researchApi.points(runId, "benchmark", signal),
-    [runId],
-  );
-  const drawdown = useApiResource(
-    (signal) => researchApi.points(runId, "drawdown", signal),
-    [runId],
+  const curves = useApiResource(
+    async (signal) => {
+      const [equity, benchmark, drawdown] = await Promise.all([
+        researchApi.points(runId, "equity", curveOffset, signal),
+        researchApi.points(runId, "benchmark", curveOffset, signal),
+        researchApi.points(runId, "drawdown", curveOffset, signal),
+      ]);
+      if (
+        equity.total !== benchmark.total ||
+        equity.total !== drawdown.total ||
+        equity.items.some(
+          (point, index) =>
+            point.sequence !== benchmark.items[index]?.sequence ||
+            point.sequence !== drawdown.items[index]?.sequence ||
+            point.trading_date !== benchmark.items[index]?.trading_date ||
+            point.trading_date !== drawdown.items[index]?.trading_date,
+        )
+      )
+        throw new ApiContractError();
+      return { equity, benchmark, drawdown };
+    },
+    [runId, curveOffset],
   );
   const monthly = useApiResource(
     (signal) => researchApi.monthlyReturns(runId, signal),
     [runId],
   );
   const rolling = useApiResource(
-    (signal) => researchApi.rollingMetrics(runId, signal),
-    [runId],
+    (signal) => researchApi.rollingMetrics(runId, rollingOffset, signal),
+    [runId, rollingOffset],
   );
   const holdings = useApiResource(
-    (signal) => researchApi.holdings(runId, signal),
-    [runId],
+    (signal) => researchApi.holdings(runId, holdingsOffset, signal),
+    [runId, holdingsOffset],
   );
   const rebalances = useApiResource(
-    (signal) => researchApi.rebalances(runId, signal),
-    [runId],
+    (signal) => researchApi.rebalances(runId, rebalancesOffset, signal),
+    [runId, rebalancesOffset],
   );
   const trades = useApiResource(
-    (signal) => researchApi.trades(runId, signal),
-    [runId],
+    (signal) => researchApi.trades(runId, tradesOffset, signal),
+    [runId, tradesOffset],
   );
   if (run.loading) return <LoadingPanel label={t("research:runDetail")} />;
   if (run.error) return <ErrorPanel message={run.error} />;
   if (!run.data) return null;
-  const emptyCharts =
-    !equity.data?.items.length && !benchmark.data?.items.length;
   const rollingByDate = new Map<string, Record<string, string>>();
   for (const item of rolling.data?.items ?? []) {
     if (item.value === null) continue;
@@ -186,21 +203,49 @@ export function ResearchRunPage({ runId }: { runId: string }) {
             {t("research:equity")} / {t("research:benchmarkCurve")}
           </h2>
         </div>
-        {emptyCharts ? (
+        {curves.loading ? (
+          <LoadingPanel label={t("research:equity")} />
+        ) : curves.error ? (
+          <ErrorPanel message={curves.error} />
+        ) : !curves.data?.equity.items.length ? (
           <EmptyState>{t("common:noData")}</EmptyState>
         ) : (
-          <BenchmarkChart
-            strategy={equity.data?.items ?? []}
-            benchmark={benchmark.data?.items ?? []}
-          />
+          <>
+            <BenchmarkChart
+              key={curveOffset}
+              strategy={curves.data.equity.items}
+              benchmark={curves.data.benchmark.items}
+            />
+            <p className="researchChartRange">
+              {t("research:displayedDateRange", {
+                start: curves.data.equity.items[0].trading_date,
+                end: curves.data.equity.items.at(-1)?.trading_date,
+              })}
+            </p>
+            {curves.data.equity.total > 200 && (
+              <Pagination
+                offset={curveOffset}
+                limit={200}
+                total={curves.data.equity.total}
+                onChange={setCurveOffset}
+              />
+            )}
+          </>
         )}
       </section>
       <section className="panel">
         <div className="panelHeader">
           <h2>{t("research:drawdown")}</h2>
         </div>
-        {drawdown.data?.items.length ? (
-          <DrawdownChart points={drawdown.data.items} />
+        {curves.loading ? (
+          <LoadingPanel label={t("research:drawdown")} />
+        ) : curves.error ? (
+          <ErrorPanel message={curves.error} />
+        ) : curves.data?.drawdown.items.length ? (
+          <DrawdownChart
+            key={curveOffset}
+            points={curves.data.drawdown.items}
+          />
         ) : (
           <EmptyState>{t("common:noData")}</EmptyState>
         )}
@@ -209,7 +254,11 @@ export function ResearchRunPage({ runId }: { runId: string }) {
         <div className="panelHeader">
           <h2>{t("research:monthlyReturns")}</h2>
         </div>
-        {monthly.data?.items.length ? (
+        {monthly.loading ? (
+          <LoadingPanel label={t("research:monthlyReturns")} />
+        ) : monthly.error ? (
+          <ErrorPanel message={monthly.error} />
+        ) : monthly.data?.items.length ? (
           <MonthlyReturnHeatmap values={monthly.data.items} />
         ) : (
           <EmptyState>{t("common:noData")}</EmptyState>
@@ -219,24 +268,46 @@ export function ResearchRunPage({ runId }: { runId: string }) {
         <div className="panelHeader">
           <h2>{t("research:rollingMetrics")}</h2>
         </div>
-        {rolling.loading && (
+        {rolling.loading ? (
           <LoadingPanel label={t("research:rollingMetrics")} />
-        )}
-        {rolling.error && <ErrorPanel message={rolling.error} />}
-        {rollingSharpe.length || rollingDrawdown.length ? (
-          <BenchmarkChart
-            strategy={rollingSharpe}
-            benchmark={rollingDrawdown}
-            strategyLabel={t("metrics:sharpe_ratio")}
-            benchmarkLabel={t("research:rollingDrawdown")}
-            ariaLabel={t("accessibility:rollingChart")}
-          />
+        ) : rolling.error ? (
+          <ErrorPanel message={rolling.error} />
+        ) : rollingSharpe.length || rollingDrawdown.length ? (
+          <>
+            <BenchmarkChart
+              key={rollingOffset}
+              strategy={rollingSharpe}
+              benchmark={rollingDrawdown}
+              strategyLabel={t("metrics:sharpe_ratio")}
+              benchmarkLabel={t("research:rollingDrawdown")}
+              ariaLabel={t("accessibility:rollingChart")}
+            />
+            <p className="researchChartRange">
+              {t("research:displayedDateRange", {
+                start: rollingSharpe[0]?.trading_date,
+                end: rollingSharpe.at(-1)?.trading_date,
+              })}
+            </p>
+          </>
         ) : (
-          !rolling.loading && <EmptyState>{t("common:noData")}</EmptyState>
+          <EmptyState>{t("common:noData")}</EmptyState>
+        )}
+        {rolling.data && rolling.data.total > 200 && (
+          <Pagination
+            offset={rollingOffset}
+            limit={200}
+            total={rolling.data.total}
+            onChange={setRollingOffset}
+          />
         )}
       </section>
       <ResearchTable
         title={t("research:holdings")}
+        loading={holdings.loading}
+        error={holdings.error}
+        offset={holdingsOffset}
+        total={holdings.data?.total ?? null}
+        onChange={setHoldingsOffset}
         headings={[
           t("research:columns.date"),
           t("research:columns.security"),
@@ -256,6 +327,11 @@ export function ResearchRunPage({ runId }: { runId: string }) {
       />
       <ResearchTable
         title={t("research:rebalances")}
+        loading={rebalances.loading}
+        error={rebalances.error}
+        offset={rebalancesOffset}
+        total={rebalances.data?.total ?? null}
+        onChange={setRebalancesOffset}
         headings={[
           t("research:columns.date"),
           t("research:columns.turnover"),
@@ -271,6 +347,11 @@ export function ResearchRunPage({ runId }: { runId: string }) {
       />
       <ResearchTable
         title={t("research:trades")}
+        loading={trades.loading}
+        error={trades.error}
+        offset={tradesOffset}
+        total={trades.data?.total ?? null}
+        onChange={setTradesOffset}
         headings={[
           t("research:columns.utcTime"),
           t("research:columns.security"),
@@ -315,10 +396,20 @@ function ResearchTable({
   title,
   headings,
   rows,
+  loading,
+  error,
+  offset,
+  total,
+  onChange,
 }: {
   title: string;
   headings: string[];
   rows: string[][];
+  loading: boolean;
+  error: Error | null;
+  offset: number;
+  total: number | null;
+  onChange: (offset: number) => void;
 }) {
   const { t } = useTranslation("common");
   return (
@@ -326,19 +417,25 @@ function ResearchTable({
       <div className="panelHeader">
         <h2>{title}</h2>
       </div>
-      {rows.length === 0 ? (
+      {loading ? (
+        <LoadingPanel label={title} />
+      ) : error ? (
+        <ErrorPanel message={error} />
+      ) : rows.length === 0 ? (
         <EmptyState>{t("noData")}</EmptyState>
       ) : (
         <div
           className="tableScroll"
           tabIndex={0}
-          aria-label={t("research:scrollTable")}
+          aria-label={`${title} — ${t("research:scrollTable")}`}
         >
-          <table>
+          <table aria-label={title}>
             <thead>
               <tr>
                 {headings.map((heading) => (
-                  <th key={heading}>{heading}</th>
+                  <th scope="col" key={heading}>
+                    {heading}
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -353,6 +450,14 @@ function ResearchTable({
             </tbody>
           </table>
         </div>
+      )}
+      {!loading && !error && total !== null && total > 200 && (
+        <Pagination
+          offset={offset}
+          limit={200}
+          total={total}
+          onChange={onChange}
+        />
       )}
     </section>
   );

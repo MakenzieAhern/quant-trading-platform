@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import type { ResearchPoint } from "../../types/research";
+import { ResearchPointTable } from "./ResearchPointTable";
 
 interface ChartPoint {
   x: number;
@@ -42,6 +43,9 @@ export function BenchmarkChart({
   ariaLabel?: string;
 }) {
   const { t } = useTranslation(["accessibility", "research"]);
+  const chartLabel = ariaLabel ?? t("accessibility:benchmarkChart");
+  const firstLabel = strategyLabel ?? t("research:strategySeries");
+  const secondLabel = benchmarkLabel ?? t("research:benchmark");
   const width = 900;
   const height = 260;
   const scaleValues = [...strategy, ...benchmark].map((point) =>
@@ -55,11 +59,8 @@ export function BenchmarkChart({
     scaleValues,
   );
   return (
-    <figure
-      className="researchChart"
-      aria-label={ariaLabel ?? t("accessibility:benchmarkChart")}
-    >
-      <svg viewBox={`0 0 ${width} ${height}`} role="img">
+    <figure className="researchChart" aria-label={chartLabel}>
+      <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
         <polyline
           className="strategyLine"
           points={polyline(strategyCoordinates)}
@@ -70,13 +71,19 @@ export function BenchmarkChart({
         />
       </svg>
       <figcaption>
-        <span className="strategyLegend">
-          {strategyLabel ?? t("research:strategySeries")}
-        </span>
-        <span className="benchmarkLegend">
-          {benchmarkLabel ?? t("research:benchmark")}
-        </span>
+        <span className="strategyLegend">{firstLabel}</span>
+        <span className="benchmarkLegend">{secondLabel}</span>
       </figcaption>
+      {scaleValues.some((value) => !Number.isFinite(value)) && (
+        <p>{t("research:chartUnavailable")}</p>
+      )}
+      <ResearchPointTable
+        label={chartLabel}
+        series={[
+          { label: firstLabel, points: strategy },
+          { label: secondLabel, points: benchmark },
+        ]}
+      />
     </figure>
   );
 }

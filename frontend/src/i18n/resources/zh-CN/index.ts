@@ -495,6 +495,9 @@ export const zhCN = {
     monthlyReturns: "月度收益",
     rollingMetrics: "滚动指标",
     rollingDrawdown: "滚动回撤",
+    chartData: "查看已绘制数据（{{count}} 个点）",
+    chartUnavailable: "这些数值无法绘制图形；请查看精确数据表。",
+    displayedDateRange: "显示交易日：{{start}}–{{end}}。正式全期指标不变。",
     holdings: "持仓",
     rebalances: "再平衡",
     trades: "交易",
@@ -510,6 +513,8 @@ export const zhCN = {
     strategyConfig: "策略配置",
     columns: {
       date: "日期",
+      series: "序列",
+      value: "精确值",
       security: "证券",
       quantity: "数量",
       weight: "权重",

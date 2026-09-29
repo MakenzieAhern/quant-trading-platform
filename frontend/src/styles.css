@@ -1320,6 +1320,21 @@ tbody tr:hover {
   color: var(--muted);
   font-size: 12px;
 }
+.researchChart details {
+  margin-top: 16px;
+}
+.researchChart summary {
+  min-height: 44px;
+  padding-block: 10px;
+  cursor: pointer;
+}
+.researchChart .drawdownBars {
+  padding: 0;
+}
+.researchChartRange {
+  margin: 0 24px 16px;
+  color: var(--muted);
+}
 .chartCard details {
   margin-top: 20px;
   font-size: 13px;
