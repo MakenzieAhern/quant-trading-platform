@@ -1222,10 +1222,12 @@ describe("durable experiment detail", () => {
         { status: "SUCCEEDED", mode: undefined, sort: "name_asc" },
       ),
     );
-    await userEvent.click(
-      screen.getByRole("button", { name: "Remove filter: Status" }),
-    );
+    screen.getByRole("button", { name: "Remove filter: Status" }).focus();
+    await userEvent.keyboard("{Enter}");
     expect(screen.getByLabelText("Status")).toHaveValue("");
+    expect(
+      screen.getByRole("region", { name: "Study view settings" }),
+    ).toHaveFocus();
     await userEvent.click(screen.getByRole("button", { name: "Reset view" }));
     expect(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)).toBeNull();
   });

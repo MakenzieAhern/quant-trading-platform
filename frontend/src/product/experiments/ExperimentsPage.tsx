@@ -105,6 +105,8 @@ export function ExperimentsPage() {
   const focusedList = useRef(false);
   const listHeading = useRef<HTMLHeadingElement>(null);
   const listError = useRef<HTMLDivElement>(null);
+  const viewSettings = useRef<HTMLElement>(null);
+  const selectionStatus = useRef<HTMLParagraphElement>(null);
   const queryKey = JSON.stringify([offset, view.q, view.status, view.mode, view.sort]);
   const [jobs, setJobs] = useState<{
     key: string;
@@ -160,6 +162,10 @@ export function ExperimentsPage() {
     try { window.localStorage.removeItem(EXPERIMENT_VIEW_KEY); }
     catch { setSaveStatus("error"); }
   }
+  function removeFilter(patch: Partial<View>, button: HTMLButtonElement) {
+    if (document.activeElement === button) viewSettings.current?.focus();
+    updateView(patch);
+  }
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
@@ -206,7 +212,7 @@ export function ExperimentsPage() {
           </button>
         </div>
       </header>
-      <section className="experimentPanel experimentView" aria-label={c.viewSettings}>
+      <section ref={viewSettings} className="experimentPanel experimentView" aria-label={c.viewSettings} tabIndex={-1}>
         <div className="experimentViewControls">
           <label>
             {c.searchStudies}
@@ -266,15 +272,15 @@ export function ExperimentsPage() {
           {saveStatus === "error" ? c.viewSaveFailed : c.viewSaved}
         </p>}
         {(view.q || view.status || view.mode) && <div className="experimentFilterChips">
-          {view.q && <button onClick={() => updateView({ q: "" })}
+          {view.q && <button onClick={(event) => removeFilter({ q: "" }, event.currentTarget)}
             aria-label={`${c.removeFilter}: ${c.searchStudies}`}>
             {c.searchStudies}: {view.q} ×
           </button>}
-          {view.status && <button onClick={() => updateView({ status: "" })}
+          {view.status && <button onClick={(event) => removeFilter({ status: "" }, event.currentTarget)}
             aria-label={`${c.removeFilter}: ${c.status}`}>
             {c.status}: {c.statuses[view.status]} ×
           </button>}
-          {view.mode && <button onClick={() => updateView({ mode: "" })}
+          {view.mode && <button onClick={(event) => removeFilter({ mode: "" }, event.currentTarget)}
             aria-label={`${c.removeFilter}: ${c.mode}`}>
             {c.mode}: {view.mode === "synthetic_demo" ? c.demo : c.historical} ×
           </button>}
@@ -287,7 +293,7 @@ export function ExperimentsPage() {
         <div>
           <h2>{u.compare}</h2>
           <p className="experimentHelp">{u.selectHelp}</p>
-          <p role="status">
+          <p ref={selectionStatus} role="status" tabIndex={-1}>
             {u.selected}: {selected.length} / 3
           </p>
         </div>
@@ -297,11 +303,13 @@ export function ExperimentsPage() {
               className="button secondary"
               key={item.id}
               aria-label={`${u.remove} ${item.name} · ${formatUtc(item.createdAt)}`}
-              onClick={() =>
+              onClick={(event) => {
+                if (document.activeElement === event.currentTarget)
+                  selectionStatus.current?.focus();
                 setSelected((items) =>
                   items.filter((entry) => entry.id !== item.id),
-                )
-              }
+                );
+              }}
             >
               {item.name} · {formatUtc(item.createdAt)} ×
             </button>

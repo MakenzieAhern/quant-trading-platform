@@ -5956,3 +5956,29 @@ This closes one real-dialog keyboard/error/retry/focus case beyond the jsdom
 class, native zoom, full U5/U8/M4/M5, independent novice or hosted CI. No
 original financial data, frozen research/OOS, GitHub push/merge or release was
 changed.
+
+## 2026-09-29 14:28 UTC Research list self-removing controls and CSV boundary
+
+At `cbe8a1c`, two red Enter-key regressions reproduced lost focus when a
+selected-study Remove button or an active filter chip removed itself. The
+Research list now moves focus before unmount to its persistent selected-count
+status or labeled view-settings region; all three filter chips share the same
+handoff. Both focused tests passed after the change. Full frontend 468/468,
+ESLint and production TypeScript/Vite build passed; an independent read-only
+diff review found no blocking issue. In installed Chrome on the original
+`localhost:5173/experiments`, Enter removed an existing completed study from
+the browser-only comparison selection and focused the selected-count status;
+Enter removed a temporary search chip and focused Study view settings. The
+original Compose services remained running/healthy and frontend plus
+`/api/health` returned HTTP 200. No new study or paper-account request was sent.
+
+On the existing saved historical result, Chrome displayed a prepared CSV blob
+and fallback save link, but neither click yielded a captured download event;
+the exact expected file was absent from Windows Downloads. Automatic current-
+head CSV file landing remains **UNVERIFIED**, not proven broken. The browser
+policy blocked its internal Downloads page; no alternate download-manager
+route was attempted. These are bounded keyboard/DOM and export observations,
+not native screen-reader speech, 200% zoom, full M4/M5, independent novice,
+lawful forward-market data, genuine missing-ledger recovery, independent
+physical backup or exact-head hosted CI. GitHub October 1 recovery remains an
+unverified estimate; no push, merge, tag or release occurred.

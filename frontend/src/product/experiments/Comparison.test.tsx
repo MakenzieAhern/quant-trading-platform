@@ -259,10 +259,9 @@ describe("experiment comparison", () => {
     restored.unmount();
     render(<ExperimentsPage />);
     expect(screen.getByText("Selected: 2 / 3")).toBeInTheDocument();
-    await userEvent.click(
-      screen.getByRole("button", { name: /Remove Study 1/ }),
-    );
-    expect(screen.getByText("Selected: 1 / 3")).toBeInTheDocument();
+    screen.getByRole("button", { name: /Remove Study 1/ }).focus();
+    await userEvent.keyboard("{Enter}");
+    expect(screen.getByText("Selected: 1 / 3")).toHaveFocus();
   });
 
   it("restores scroll only after rows load, then records user scrolling without replaying it on rerender", async () => {
