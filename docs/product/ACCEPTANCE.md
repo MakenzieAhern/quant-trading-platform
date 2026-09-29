@@ -5531,3 +5531,27 @@ forward data, genuine lost-ledger recovery, independent physical backup or
 exact-head GitHub CI. The October 1 date is the user's estimate, not verified
 recovery; no push, merge or release was attempted, and original accounts,
 provider data, frozen research and Official OOS were not modified.
+
+## 2026-09-29 10:13 UTC local mobile navigation and offline validation
+
+At `9ffd880`, a red regression reproduced the mobile sidebar remaining modal
+with the main content inert after its current-page Help link was clicked.
+The sidebar now closes only for an unmodified click whose URL exactly matches
+the current URL, using its existing focus-return path. A second regression
+keeps the sidebar open when a dirty research wizard refuses a different route.
+An independent read-only diff review found no actionable issue. In the actual
+in-app browser at 390×844, selecting Help from the open sidebar closed it and
+returned focus to Open navigation; the temporary viewport was reset.
+
+Original Compose PostgreSQL/Redis/backend stayed healthy, frontend remained up,
+and `/` and `/api/health` returned HTTP 200. The second complete `make test`
+passed backend 1025 (one optional unmounted archive skip) and frontend 437/437;
+`make lint` and `make build` passed. The first complete run had one unrelated
+Market Updates read-error focus assertion fail with the alert mounted but not
+focused within one second. That test passed six targeted repeats, its 40-test
+file and later full runs; no root cause was confirmed and no speculative fix
+was made. Local execution is available without GitHub Actions, but these checks
+are neither native Chrome/screen-reader/full M4/M5 acceptance nor exact pushed-
+head hosted CI. October 1 is only an estimated recovery date. No original
+account, database, provider, frozen research, Official OOS or GitHub state was
+changed; no push, merge or release occurred.
