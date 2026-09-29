@@ -473,6 +473,64 @@ describe("historical cache markets", () => {
     ).toHaveValue("Observed");
   });
 
+  it("hides stale search actions until a new draft is submitted", async () => {
+    vi.mocked(marketApi.search).mockImplementation(async (_source, term) => ({
+      items: term === "000001" ? [] : [security],
+      total: term === "000001" ? 0 : 1,
+      limit: 20,
+      offset: 0,
+      metadata,
+    }));
+    render(<MarketsPage />);
+    const catalog = await screen.findByRole("region", {
+      name: "Search securities",
+    });
+    expect(
+      await within(catalog).findByRole("button", {
+        name: `Inspect history: ${security.security_id}`,
+      }),
+    ).toBeInTheDocument();
+    const reads = vi.mocked(marketApi.search).mock.calls.length;
+
+    await userEvent.type(
+      screen.getByLabelText("Symbol, code or source-observed name"),
+      "000001",
+    );
+    expect(within(catalog).queryByRole("table")).not.toBeInTheDocument();
+    expect(
+      within(catalog).queryByRole("button", {
+        name: `Save to watchlist: ${security.security_id}`,
+      }),
+    ).not.toBeInTheDocument();
+    expect(within(catalog).getByRole("status")).toHaveTextContent(
+      "Press Search securities to apply the text; previous results are hidden.",
+    );
+    await userEvent.selectOptions(screen.getByLabelText("Exchange"), "SZSE");
+    expect(marketApi.search).toHaveBeenCalledTimes(reads);
+    expect(new URLSearchParams(window.location.search).get("q")).toBeNull();
+
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(
+      within(screen.getByRole("region", { name: "检索证券" })).getByRole(
+        "status",
+      ),
+    ).toHaveTextContent("此前的检索结果已隐藏");
+    await userEvent.click(screen.getByRole("button", { name: "检索证券" }));
+    await waitFor(() =>
+      expect(marketApi.search).toHaveBeenLastCalledWith(
+        dataset.dataset_id,
+        "000001",
+        "SZSE",
+        0,
+        expect.any(AbortSignal),
+      ),
+    );
+    expect(new URLSearchParams(window.location.search).get("q")).toBe("000001");
+    expect(
+      await screen.findByText("没有符合条件的证券，请尝试其他代码或交易所。"),
+    ).toBeInTheDocument();
+  });
+
   it("restores committed source and search filters after reload and detail Back", async () => {
     const first = render(<MarketsPage />);
     await screen.findByRole("button", {

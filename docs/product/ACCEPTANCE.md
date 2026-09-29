@@ -6152,3 +6152,29 @@ occurred. This closes one bounded U5 filter-recovery defect, not the complete
 U5/M4/M5 matrix or hosted CI. October 1 remains an unverified recovery
 estimate; lawful new-market use, genuine missing-ledger restoration and an
 independent physical backup remain open gates.
+
+## 2026-09-29 16:42 UTC pending Markets search stays separate from old results
+
+A red Markets regression confirmed that entering a new code left the old
+catalogue row, Inspect and Save actions visible; changing Exchange could
+refetch the old committed query while the input showed the new draft. The
+explicit Search submit remains the commit point. Until then, the old table,
+actions and pager are hidden, the stale request is cancelled, and a bilingual
+status explains that Search must be pressed. The URL keeps the prior committed
+query, not the draft. Existing watchlist records remain independently visible.
+
+The focused Markets file passed 24/24 after the red/green change. An isolated
+`make test` passed backend 1029 with one optional unmounted-archive skip and
+frontend 482/482. `make lint`, `make build`, changed-file Prettier and
+`git diff --check` passed; independent read-only diff review found no
+actionable issue. Installed Chrome on the original localhost app showed the
+historical search table disappear while `000001` was unsubmitted, including
+after switching to SZSE. Submitting Search changed the URL to `q=000001` and
+displayed only the SZSE 000001 row. The final browser screenshot was inspected
+in-tool but not saved as exact-head M5 media. No POST, original database or
+market-provider write, frozen research/OOS, GitHub action or release occurred.
+This closes a bounded U5 mismatch, not full U5/M4/M5, native screen-reader
+speech, 200% zoom, valid cold p95, CSV file landing, independent novice QA,
+lawful after-start forward data, genuine missing-ledger recovery, independent
+physical backup or hosted exact-head CI. October 1 remains an unverified
+GitHub recovery estimate.

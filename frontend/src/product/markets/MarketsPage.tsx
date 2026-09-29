@@ -79,6 +79,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
       new URLSearchParams(window.location.search).get("q")?.slice(0, 80) ?? "",
   );
   const [query, setQuery] = useState(q);
+  const draftPending = q.trim() !== query;
   const [exchange, setExchange] = useState(exchangeFromUrl);
   const [offset, setOffset] = useState(0);
   const [revision, setRevision] = useState(0);
@@ -129,12 +130,13 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   );
   const results = useApiResource(
     (signal) =>
-      dataset?.available
+      dataset?.available && !draftPending
         ? marketApi.search(dataset.dataset_id, query, exchange, offset, signal)
         : Promise.resolve(null),
     [
       dataset?.dataset_id,
       dataset?.available,
+      draftPending,
       query,
       exchange,
       offset,
@@ -348,10 +350,13 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             {c.search}
           </button>
         </form>
-        {dataset?.available && results.loading && (
+        {dataset?.available && draftPending && (
+          <p role="status">{c.pendingSearch}</p>
+        )}
+        {dataset?.available && !draftPending && results.loading && (
           <p role="status">{c.loading}</p>
         )}
-        {results.error && (
+        {!draftPending && results.error && (
           <ProductError
             error={results.error}
             fallback={c.error}
@@ -359,7 +364,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             retry={() => setRevision((n) => n + 1)}
           />
         )}
-        {results.data && dataset && (
+        {!draftPending && results.data && dataset && (
           <>
             <p className="marketHelp">
               {c.provider}: {results.data.metadata.provider} ·{" "}
@@ -439,13 +444,15 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             )}
           </>
         )}
-        <Pagination
-          offset={offset}
-          limit={results.data?.limit ?? 20}
-          total={results.data?.total ?? null}
-          loading={results.loading && !!dataset?.available}
-          onChange={setOffset}
-        />
+        {!draftPending && (
+          <Pagination
+            offset={offset}
+            limit={results.data?.limit ?? 20}
+            total={results.data?.total ?? null}
+            loading={results.loading && !!dataset?.available}
+            onChange={setOffset}
+          />
+        )}
       </section>
       <section
         className="marketPanel"

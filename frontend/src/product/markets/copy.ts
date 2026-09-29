@@ -25,6 +25,8 @@ const en = {
   searchLabel: "Symbol, code or source-observed name",
   searchHelp:
     "Names are catalogue/source observations, not a claim about a security's name on a historical date.",
+  pendingSearch:
+    "Press Search securities to apply the text; previous results are hidden.",
   exchange: "Exchange",
   all: "All exchanges",
   sse: "Shanghai (SSE)",
@@ -156,6 +158,7 @@ const zh: typeof en = {
   search: "检索证券",
   searchLabel: "股票代码、标识或来源观察名称",
   searchHelp: "名称来自目录／来源观察，不代表该证券在某个历史日期使用此名称。",
+  pendingSearch: "请点击“检索证券”应用输入内容；此前的检索结果已隐藏。",
   exchange: "交易所",
   all: "全部交易所",
   sse: "上海（SSE）",
