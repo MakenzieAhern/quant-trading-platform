@@ -4681,3 +4681,30 @@ This is bounded local/GET-only evidence, not full U4 interaction, native
 screen-reader/200% zoom, independent novice testing, GitHub CI or M4/M5 PASS.
 No research, account, provider or dataset write occurred. The user-estimated
 October 1 GitHub recovery is not treated as verified clearance.
+
+## 2026-09-29 02:01 UTC local operation while GitHub CI/CD is unavailable
+
+The existing main Compose stack remained available on this PC: PostgreSQL and
+backend were healthy, Redis and frontend were running, and both `/` on port
+5173 and `/api/health` on port 8000 returned HTTP 200. Actual Chrome opened
+the local workbench, data center and an existing saved historical result via
+read-only navigation. The data center explicitly labeled the available archive
+as historical through 2025-12-31, not current market data.
+
+At local head `c0ab74e`, `make test` used the separate `compose.test.yml`
+tmpfs PostgreSQL and passed 1024 backend tests (one optional unmounted-archive
+skip) plus 378 frontend tests. `make lint` passed Ruff, format, mypy, ESLint
+and TypeScript; `make build` passed the Vite production build. Actual Chrome
+confirmed no document-width overflow on the workbench at 390×844 and
+1024×768 in Chinese/dark and English/light, and at 1280×800 and 1440×900
+in English/light. The exact 390px CSS viewport was verified, then the browser
+override and original Chinese/dark preference were restored.
+
+This is a bounded local-runtime and developer-check checkpoint. It does not
+replace GitHub CI, the full M4 browser/accessibility/performance matrix,
+saved M5 media, independent novice acceptance, lawful current-data forward
+evidence, genuine recovery of the two lost paper ledgers, or independent
+physical disaster recovery. No new study, market acquisition, paper order,
+formal/OOS run, push, merge or release occurred; no screenshot file or
+recording was saved for this check. The user-estimated October 1 GitHub
+recovery is not itself clearance to resume remote operations.

@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T01:46:24Z",
+  "updated_at_utc": "2026-09-29T02:01:55Z",
+  "local_execution_during_github_hold": {
+    "status": "PASS_LOCAL_RUNTIME_AND_TESTS_NOT_RELEASE_CI",
+    "code_head": "c0ab74e5979e0a46166c60c8bc065b5162c009a0",
+    "proof": "2026-09-29 UTC: original Compose PostgreSQL, Redis, backend and frontend were running; / and /api/health returned HTTP 200. In a separate tmpfs test PostgreSQL, make test passed 1024 backend tests with one optional unmounted-archive skip and 378 frontend tests. make lint passed Ruff, format, mypy, ESLint and TypeScript; make build passed the Vite production build. Actual Chrome opened the local workbench, data center and a saved historical result by GET. Workbench 390x844 zh/dark and en/light and 1024x768 zh/dark and en/light had no document-width overflow; en/light 1280x800 and 1440x900 also had no overflow. The viewport override and original zh/dark preferences were restored.",
+    "limits": "This is local developer validation, not GitHub-hosted CI, full M4 viewport/theme/locale/accessibility/performance evidence, an independent novice study, current licensed A-share forward data, recovery of two lost paper ledgers, independent physical backup, or v1.2 release approval. No new study, provider request, paper order, formal/OOS run, push or release was made; the existing GitHub recovery hold remains until actual recovery is verified. No screenshot file or recording was saved in this check."
+  },
   "formal_research_chart_audit": {
     "status": "PASS_BOUNDED_LOCAL_CHROME_NOT_FULL_U4_M4_M5_OR_GITHUB_CI",
     "fix": "The exact strategy/benchmark table now sorts by trading date before paging, so matching dates stay adjacent; chart x-positions share the same ordered date domain. Rolling metrics preserve null Sharpe and valid same-date drawdown instead of dropping both; chart traces break at missing values. Curve, rolling and research-table pagers remain mounted through loading/error, use distinct section labels, and allow safe Previous from an unknown-total error page.",
