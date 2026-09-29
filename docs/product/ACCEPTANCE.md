@@ -5555,3 +5555,31 @@ are neither native Chrome/screen-reader/full M4/M5 acceptance nor exact pushed-
 head hosted CI. October 1 is only an estimated recovery date. No original
 account, database, provider, frozen research, Official OOS or GitHub state was
 changed; no push, merge or release occurred.
+
+## 2026-09-29 10:30 UTC isolated historical account restart and Chrome export check
+
+At source `f16460c`, the existing scratch release Compose images were rebuilt
+without touching the original project. Its PostgreSQL/Redis/product data were
+tmpfs and the accepted archive was read-only. In the actual in-app browser, a
+new scratch-only audited historical A-share account was started, paused after
+2011-04-19, reloaded after restarting only the scratch backend, resumed from
+2011-04-20, then stopped on 2011-05-11. A separate native Chrome read showed
+the persisted STOPPED state, last market date and final cash/equity. Scratch
+PostgreSQL had 282 continuous, unique journal sequences, 49 strictly increasing
+unique market dates and 11 fills with distinct order IDs. These checks establish
+bounded local persistence/replay continuity, not independent economics or full
+U7/M4/M5 acceptance. Original PostgreSQL/Redis/backend remained healthy and
+frontend plus `/api/health` returned HTTP 200.
+
+Chrome CSV export for an existing scratch historical research result produced
+the page's prepared blob link, but neither the primary button nor fallback
+link yielded a captured download event; the exact expected filename was not
+found in Windows Downloads. Automatic file landing remains **UNVERIFIED**.
+The browser policy blocked its internal Downloads page, and no alternate route
+was attempted. Screenshots, SHA-256 values, image IDs and query details are
+outside Git at
+`product-evidence/v1.2/m5/20260929-f16460c-historical-restart/README.md`.
+No original financial account, formal/frozen research, OOS, provider authority,
+GitHub push/CI, PR merge or release was changed. GitHub October 1 recovery is
+still an unverified user estimate; full U1–U8/M4/M5 and external gates remain
+open.
