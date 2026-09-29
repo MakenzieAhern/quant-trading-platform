@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T05:06:17Z",
+  "updated_at_utc": "2026-09-29T05:20:00Z",
+  "github_hold_local_continuation_gate": {
+    "status": "PASS_BOUNDED_LOCAL_CODE_AND_RUNTIME_NOT_HOSTED_CI_OR_FULL_M4_M5",
+    "parent_head": "5f0cd15",
+    "proof": "2026-09-29 UTC: shared paper ledger PaperTable first body cells are semantic row headers in five tables; bilingual populated-ledger regression failed before the fix and passed afterward. Isolated production-image Chrome exposed row headers in all five Chinese tables. Working-tree make test passed backend 1024 with one optional archive skip and frontend 413/413; make lint, Prettier, frontend TypeScript/production build, three Compose configuration checks and an Alembic upgrade/downgrade/re-upgrade/check in a separate tmpfs quant_test database passed. Original and scratch frontends and /api/health returned HTTP200; original services remained running. See docs/product/ACCEPTANCE.md.",
+    "limits": "Local execution is available despite the GitHub Actions billing hold, but no exact pushed-head hosted CI, PR approval, merge or v1.2 release is claimed. No native screen-reader speech, full M4/M5, lawful 2026 forward receipt, genuine lost-ledger restoration or independent physical backup. No original database/provider/frozen research/OOS write or GitHub action; October 1 account recovery remains unverified."
+  },
   "current_head_isolated_production_browser_gate": {
     "status": "PASS_BOUNDED_LOCAL_CURRENT_HEAD_INTEGRATION_NOT_FULL_M5",
     "code_head": "cb9367cba78609323f45d1454f103c61febfc934",

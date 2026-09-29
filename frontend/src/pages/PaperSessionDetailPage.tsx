@@ -483,11 +483,21 @@ function PaperTable({
             <tbody>
               {rows.map((row, rowIndex) => (
                 <tr key={row.join(":")}>
-                  {row.map((value, index) => (
-                    <td key={`${headings[index]}-${rowIndex}`} title={value}>
-                      {value}
-                    </td>
-                  ))}
+                  {row.map((value, index) =>
+                    index === 0 ? (
+                      <th
+                        scope="row"
+                        key={`${headings[index]}-${rowIndex}`}
+                        title={value}
+                      >
+                        {value}
+                      </th>
+                    ) : (
+                      <td key={`${headings[index]}-${rowIndex}`} title={value}>
+                        {value}
+                      </td>
+                    ),
+                  )}
                 </tr>
               ))}
             </tbody>

@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 local continuation during GitHub Actions hold — bounded M4 correction
+
+The shared paper-ledger table now exposes its first body cell as a semantic
+row header in all five positions, signals, risk-decision, order and fill tables.
+The existing bilingual populated-ledger test failed before the change and
+passed afterward. In the isolated production-image Chrome account, all five
+Chinese tables exposed row headers (7/62/62/62/19 on the persisted historical
+account); the page was visually inspected. This is not native screen-reader
+speech or the full accessibility matrix.
+
+On the working tree based on `5f0cd15`, local `make test` passed backend
+1024 tests with one optional unmounted-archive skip and frontend 413/413.
+`make lint`, changed-file Prettier, the frontend TypeScript/production build,
+three Compose configuration checks, and Alembic upgrade/downgrade-to-baseline/
+re-upgrade/check on a separate tmpfs `quant_test` PostgreSQL all passed.
+Both original and isolated frontend URLs and `/api/health` returned HTTP 200;
+the original four Compose services remained running. The local scratch
+database was stopped without deleting volumes or touching the original data.
+
+These checks let development and historical/synthetic local QA continue while
+GitHub Actions is unavailable. They do **not** create a pushed-head hosted CI
+result, approve PR #32, justify merge or release, establish lawful 2026
+forward-market data, restore the genuine missing paper ledgers, or complete
+M4/M5. The user's October 1 recovery date is an estimate, not a verified
+GitHub account state. No push, merge, release, Official OOS rerun or original
+database/frozen research write occurred.
+
 ## 2026-09-29 current-head isolated production-browser rehearsal — bounded M5 integration
 
 At `cb9367c` a separate Compose project built current production backend and

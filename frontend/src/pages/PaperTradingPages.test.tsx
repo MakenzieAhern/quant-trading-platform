@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -1283,19 +1284,21 @@ describe("paper trading pages", () => {
       expect(screen.getByText("会话连接: 已关闭")).toBeVisible();
       expect(screen.getByText("可用资金不足")).toBeVisible();
       expect(screen.getByText("预计买入成本超过可用现金。")).toBeVisible();
-      for (const title of [
-        "持仓",
-        "信号",
-        "风控决策",
-        "模拟订单",
-        "模拟成交",
-      ]) {
+      for (const [title, rowCount] of [
+        ["持仓", 1],
+        ["信号", 1],
+        ["风控决策", 2],
+        ["模拟订单", 1],
+        ["模拟成交", 1],
+      ] as const) {
         expect(
           screen.getByRole("region", {
             name: `${title} — ${i18n.t("research:scrollTable")}`,
           }),
         ).toHaveAttribute("tabindex", "0");
-        expect(screen.getByRole("table", { name: title })).toBeVisible();
+        const table = screen.getByRole("table", { name: title });
+        expect(table).toBeVisible();
+        expect(within(table).getAllByRole("rowheader")).toHaveLength(rowCount);
       }
       screen.getByRole("region", { name: /^持仓 —/ }).focus();
       await userEvent.tab();
@@ -1307,19 +1310,21 @@ describe("paper trading pages", () => {
       expect(screen.getByText("Rejected by risk controls")).toBeVisible();
       expect(screen.getByText("Proposal approved.")).toBeVisible();
       expect(screen.getByText("Insufficient buying power")).toBeVisible();
-      for (const title of [
-        "Positions",
-        "Signals",
-        "Risk decisions",
-        "Paper orders",
-        "Paper fills",
-      ]) {
+      for (const [title, rowCount] of [
+        ["Positions", 1],
+        ["Signals", 1],
+        ["Risk decisions", 2],
+        ["Paper orders", 1],
+        ["Paper fills", 1],
+      ] as const) {
         expect(
           screen.getByRole("region", {
             name: `${title} — ${i18n.t("research:scrollTable")}`,
           }),
         ).toHaveAttribute("tabindex", "0");
-        expect(screen.getByRole("table", { name: title })).toBeVisible();
+        const table = screen.getByRole("table", { name: title });
+        expect(table).toBeVisible();
+        expect(within(table).getAllByRole("rowheader")).toHaveLength(rowCount);
       }
       expect(screen.getByRole("region", { name: /^Signals —/ })).toHaveFocus();
     } finally {
