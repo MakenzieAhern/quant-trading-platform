@@ -7,6 +7,7 @@ import { Link } from "../components/Link";
 import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
 import { StatusBadge } from "../components/StatusBadge";
 import { ExperimentPlan } from "../product/experiments/ExperimentPlan";
+import { tradingDate } from "../product/experiments/api";
 import { usePaperStream } from "../hooks/usePaperStream";
 import type { PaperSessionStatus } from "../types/paper";
 import { formatDecimal, formatUtc, shortId } from "../utils/format";
@@ -93,6 +94,13 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     session.provider_type === "historical_a_share";
   const moneyUnit =
     session.provider_type === "historical_a_share" ? t("detail.cnySuffix") : "";
+  const portfolioDate = portfolio ? tradingDate(portfolio) : null;
+  const stalePortfolio = Boolean(
+    aShare &&
+    marketSession &&
+    portfolio &&
+    portfolioDate !== marketSession.trading_date,
+  );
   const riskMessage = (message: string) => {
     const reserved = /^reserved quantity for (.+) must be finite$/.exec(
       message,
@@ -278,7 +286,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           <div>
             <p className="kicker">
               {t(
-                connection === "reconnecting"
+                connection === "reconnecting" || stalePortfolio
                   ? "detail.lastVerifiedPortfolioKicker"
                   : "detail.portfolioKicker",
               )}
@@ -286,6 +294,14 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             <h2>{t("detail.portfolio")}</h2>
           </div>
         </div>
+        {stalePortfolio && (
+          <p className="stateCallout" role="alert">
+            {t("detail.stalePortfolioWarning", {
+              portfolioDate: portfolioDate ?? t("detail.unknownDate"),
+              sessionDate: marketSession?.trading_date,
+            })}
+          </p>
+        )}
         {portfolio ? (
           <div className="metricsGrid">
             <Metric

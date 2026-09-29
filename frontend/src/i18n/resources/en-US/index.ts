@@ -360,6 +360,9 @@ export const enUS = {
       lastVerifiedPortfolioKicker: "LAST VERIFIED PORTFOLIO",
       lastVerifiedWarning:
         "Connection interrupted. Displayed account state is the last verified snapshot, not a current balance; it will refresh after reconnection.",
+      stalePortfolioWarning:
+        "Latest accepted session: {{sessionDate}}. The portfolio, cash, and positions below are last verified as of {{portfolioDate}}, not valued for {{sessionDate}}.",
+      unknownDate: "unknown date",
       portfolio: "Paper portfolio",
       cnySuffix: " (CNY)",
       cash: "Cash",

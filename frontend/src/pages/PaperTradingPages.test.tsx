@@ -479,6 +479,101 @@ describe("paper trading pages", () => {
     await act(async () => i18n.changeLanguage("en-US"));
   });
 
+  it.each(["en-US", "zh-CN"])(
+    "labels a prior-day portfolio as last verified after an empty accepted session (%s)",
+    async (language) => {
+      await act(async () => i18n.changeLanguage(language));
+      try {
+        installWebSocket();
+        const snapshot = paperSnapshot("STOPPED");
+        snapshot.session.provider_type = "historical_a_share";
+        snapshot.latest_session = {
+          trading_date: "2011-03-23",
+          security_count: 0,
+          source: "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1",
+        };
+        snapshot.latest_portfolio = {
+          timestamp: "2011-03-22T07:00:00Z",
+          cash: "100000",
+          market_value: "0",
+          equity: "100000",
+          realized_pnl: "0",
+          unrealized_pnl: "0",
+          cumulative_commission: "0",
+          drawdown: "0",
+          positions: [],
+          plan: null,
+        };
+        vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(snapshot));
+        render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+        await act(async () => MockWebSocket.instances[0]!.open());
+
+        expect(
+          screen.getByText(
+            i18n.t("detail.lastVerifiedPortfolioKicker", { ns: "paper" }),
+          ),
+        ).toBeVisible();
+        expect(
+          screen.queryByText(i18n.t("detail.portfolioKicker", { ns: "paper" })),
+        ).not.toBeInTheDocument();
+        expect(screen.getByText("2011-03-23")).toBeVisible();
+        expect(screen.getByRole("alert")).toHaveTextContent("2011-03-22");
+        expect(screen.getByRole("alert")).toHaveTextContent("2011-03-23");
+        expect(screen.getByRole("alert")).toHaveTextContent(
+          language === "zh-CN"
+            ? "下方组合、现金及持仓"
+            : "portfolio, cash, and positions",
+        );
+      } finally {
+        await act(async () => i18n.changeLanguage("en-US"));
+      }
+    },
+  );
+
+  it("keeps a same-day portfolio authoritative until the next empty session event", async () => {
+    installWebSocket();
+    const snapshot = paperSnapshot("RUNNING");
+    snapshot.session.provider_type = "historical_a_share";
+    snapshot.latest_session = {
+      trading_date: "2011-03-22",
+      security_count: 1,
+      source: "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1",
+    };
+    snapshot.latest_portfolio = {
+      timestamp: "2011-03-21T18:00:00Z",
+      cash: "100000",
+      market_value: "0",
+      equity: "100000",
+      realized_pnl: "0",
+      unrealized_pnl: "0",
+      cumulative_commission: "0",
+      drawdown: "0",
+      positions: [],
+      plan: null,
+    };
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(snapshot));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    expect(screen.getByText("AUTHORITATIVE PORTFOLIO")).toBeVisible();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+    act(() =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "market.session",
+        occurred_at: "2011-03-22T07:00:00Z",
+        payload: {
+          trading_date: "2011-03-23",
+          security_count: 0,
+          source: "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1",
+        },
+      }),
+    );
+    expect(screen.getByText("LAST VERIFIED PORTFOLIO")).toBeVisible();
+    expect(screen.getByRole("alert")).toHaveTextContent("2011-03-22");
+    expect(screen.getByRole("alert")).toHaveTextContent("2011-03-23");
+  });
+
   it("keeps a denied paper-list error typed for actionable guidance", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       jsonResponse({ detail: "forbidden" }, 403),
