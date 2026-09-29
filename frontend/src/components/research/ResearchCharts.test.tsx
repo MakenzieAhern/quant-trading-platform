@@ -1,7 +1,8 @@
-import { render } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { expect, test, vi } from "vitest";
 import { BenchmarkChart } from "./BenchmarkChart";
 import { DrawdownChart } from "./DrawdownChart";
+import { MonthlyReturnHeatmap } from "./MonthlyReturnHeatmap";
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -32,4 +33,20 @@ test("zero drawdown renders finite minimum-height bars", () => {
     />,
   );
   expect(container.querySelector("span")?.style.height).toBe("2%");
+});
+
+test("monthly returns remain readable as individual values", () => {
+  render(
+    <MonthlyReturnHeatmap
+      values={[
+        { month: "2024-01-01", value: "0.01" },
+        { month: "2024-02-01", value: null },
+      ]}
+    />,
+  );
+  const region = screen.getByRole("region", { name: "monthlyHeatmap" });
+  expect(within(region).getByText("2024-01")).toBeInTheDocument();
+  expect(within(region).getByText("1%")).toBeInTheDocument();
+  expect(within(region).getByTitle("2024-01-01: 1%")).toBeInTheDocument();
+  expect(within(region).getByText("2024-02")).toBeInTheDocument();
 });

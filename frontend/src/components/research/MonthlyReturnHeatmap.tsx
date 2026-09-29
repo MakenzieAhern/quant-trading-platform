@@ -6,9 +6,10 @@ import { formatPercent } from "../../utils/format";
 export function MonthlyReturnHeatmap({ values }: { values: MonthlyReturn[] }) {
   const { t } = useTranslation("accessibility");
   return (
-    <div className="monthlyHeatmap" role="img" aria-label={t("monthlyHeatmap")}>
+    <section className="monthlyHeatmap" aria-label={t("monthlyHeatmap")}>
       {values.map((value) => {
         const numeric = value.value === null ? null : Number(value.value);
+        const display = formatPercent(value.value);
         const className =
           numeric === null || !Number.isFinite(numeric)
             ? "neutral"
@@ -19,13 +20,13 @@ export function MonthlyReturnHeatmap({ values }: { values: MonthlyReturn[] }) {
           <div
             key={value.month}
             className={className}
-            title={`${value.month}: ${value.value ?? "N/A"}`}
+            title={`${value.month}: ${display}`}
           >
             <span>{value.month.slice(0, 7)}</span>
-            <strong>{formatPercent(value.value)}</strong>
+            <strong>{display}</strong>
           </div>
         );
       })}
-    </div>
+    </section>
   );
 }

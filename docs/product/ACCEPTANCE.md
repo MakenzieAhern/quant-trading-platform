@@ -1,5 +1,22 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 monthly-return heatmap — bounded accessibility repair
+
+Actual Chrome exposed a saved formal research heatmap's heading but none of
+its 48 visible month/value cells: the wrapper's `role="img"` made its child
+data presentational. It now uses a named native section, preserving every
+month and exact displayed percentage in the accessibility tree. Hover titles
+use the same percent units instead of the raw return fraction. The focused
+regression failed before each corresponding fix, then passed; final frontend
+369/369 tests, ESLint, changed-file Prettier and TypeScript/Vite build passed.
+Chrome on the saved validation run confirmed first and last month values in
+Chinese and English; the original Chinese/dark preference was restored.
+
+Local evidence: `product-evidence/v1.2/m4/20260929-heatmap-accessibility.md`
+(outside Git). This is one repaired M4 accessibility defect, not verified
+native screen-reader speech, full WCAG/visual matrix, saved current-head
+media, GitHub CI or release acceptance. No study or data was changed.
+
 ## 2026-09-29 saved-study comparison — bounded current-head Chrome
 
 On local HEAD `25b0fa4`, actual Chrome opened two saved historical studies in

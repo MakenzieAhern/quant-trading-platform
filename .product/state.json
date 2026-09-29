@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T00:26:30Z",
+  "updated_at_utc": "2026-09-29T00:50:50Z",
+  "monthly_heatmap_accessibility_audit": {
+    "status": "PASS_BOUNDED_ACTUAL_CHROME_NOT_FULL_M4",
+    "parent_head": "305aee2",
+    "fix": "Replace role=img with a named native section so all 48 saved month and exact percent cells remain available to accessibility tools; align hover title with displayed percent units",
+    "proof": "Two red/green focused assertions, final frontend 369/369, ESLint, changed-file Prettier and TypeScript/Vite build PASS. Actual Chrome ZH and EN accessibility trees expose first and last saved month/percent values; original ZH/dark restored",
+    "limits": "No native screen-reader speech, full WCAG/visual matrix, saved current-head media, p95 performance, GitHub CI or release. No API, dataset, financial calculation, original database or frozen research change"
+  },
   "missing_market_update_task_recovery_audit": {
     "status": "PASS_BOUNDED_LOCAL_CHROME_NOT_FULL_U5_U8_M4_M5",
     "parent_head": "fadeb58",
