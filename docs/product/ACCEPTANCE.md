@@ -5400,3 +5400,26 @@ This is saved historical scripted media, not independent novice, native 200%
 zoom/screen-reader, physical-mobile, full M4/M5, or lawful new-market forward
 evidence. No original account/database/provider/frozen research/OOS or GitHub
 write occurred. GitHub October 1 recovery remains unverified.
+
+## 2026-09-29 08:51 UTC comparison Retry keyboard-focus recovery
+
+At local code head `c291fdc`, a red regression showed that keyboard Enter on
+the comparison error's Retry removed the focused button and stranded focus on
+`BODY` during the replacement GET. The page now moves focus synchronously to
+its persistent, programmatically focusable H1 before invalidating the read.
+The deferred 503-result component case asserts H1 focus during loading and
+after successful metrics return. Its 21 targeted tests, all 424 frontend tests,
+lint, TypeScript check, production build and changed-file Prettier check pass.
+An independent read-only diff review found no concrete regression.
+
+Actual in-app browser on the bind-mounted current source loaded a deliberately
+nonexistent two-ID comparison. Both reads returned not found; keyboard Enter
+on Retry left the visible focus ring and accessibility focus on “Compare
+experiments” while the incomplete state remained actionable. Screenshot saved
+outside Git at `product-evidence/v1.2/m4/20260929-compare-retry-focus.png`,
+SHA-256 `1306AB3C0F55B48A64BE87E5F44ACBA5D98A6872D38396B4E5AA1C94FA05711D`.
+The temporary tab was closed; original Compose services and financial data
+were not changed. This is one bounded keyboard recovery case, not an actual
+browser 503→success run, native Chrome/screen-reader speech, whole U4/M4/M5,
+independent novice acceptance or hosted CI. The October 1 recovery estimate
+has not been verified; no push, merge or release was attempted.
