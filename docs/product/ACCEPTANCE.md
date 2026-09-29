@@ -5462,3 +5462,39 @@ use grant or genuine after-start forward receipt was established. Original
 database/accounts, Docker volumes, frozen research, Official OOS and GitHub
 were not changed. GitHub recovery on October 1 is an unverified estimate;
 no push, merge or release was attempted.
+
+## 2026-09-29 09:33 UTC shared Retry and raw-task deep-link recovery
+
+Red keyboard tests reproduced lost focus when the shared error Retry removed
+its button on Strategies and Data Center. Another red test showed that simply
+focusing the page H1 is wrong inside the market-detail dialog; a
+section-level error likewise should retain its local heading. Commit
+`d07990b` now hands focus to the persistent modal H2, otherwise the nearest
+section/aside H2/H3, otherwise the page H1/main. The Workbench's existing
+explicit H2 handoff is not overridden. Deferred-response tests cover focus
+while the replacement GET is pending and after it resolves. The modal test
+uses jsdom's `showModal` stub, so native dialog focus remains a browser gate.
+
+Task Center's existing raw-update task link previously focused a detail that
+was pushed offscreen when data cards and the request form loaded afterward.
+The first actual in-app-browser attempt is rejected: the focused task top was
+y=1396 in a 720px viewport. The corrected landing waits for parent and
+request-capability layout, then checks URL and user focus before scrolling.
+At 1280×720, the Task Center link placed the focused task top at y=125.7,
+below the 119px topbar; direct URL reload placed it at y=126.5. Both reads
+used an existing completed **candidate-only** task and started no source
+request. Screenshot and SHA-256 are outside Git in
+`product-evidence/v1.2/m4/20260929-u5-deep-link-iab/README.md`.
+
+Final local frontend: 429/429 tests across 38 files, ESLint, TypeScript,
+changed-file Prettier and production build PASS; independent read-only diff
+review found no actionable issue. The first standard build failed only
+because ignored generated `frontend/dist/assets` was root-owned. Its exact
+resolved path/ignore rule were checked, owner restored to `yuchen`, and the
+standard build passed; no original service data or Docker volume was touched.
+Post-check Compose PostgreSQL/Redis/backend remained healthy, frontend up,
+and frontend plus `/api/health` returned HTTP 200. Browser evidence is one
+bounded IAB 1280×720 case, not native Chrome, required 1280×800 or other
+viewports, screen-reader speech, 200% zoom, independent novice or full M4/M5.
+No original account/provider/frozen research/OOS or GitHub write occurred;
+October 1 recovery remains unverified.
