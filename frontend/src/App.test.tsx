@@ -12,6 +12,7 @@ import { App } from "./App";
 import { i18n } from "./i18n";
 import { experimentApi } from "./product/experiments/api";
 import { capabilities } from "./product/experiments/fixtures.test-data";
+import { EXPERIMENT_DRAFT_KEY } from "./product/experiments/draft";
 import { jsonResponse, RUN_ID } from "./test/fixtures";
 
 const health = {
@@ -193,6 +194,43 @@ describe("routing", () => {
     fireEvent.keyDown(window, { key: "Escape" });
     await waitFor(() => expect(menu).toHaveFocus());
     expect(menu).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("closes mobile navigation when its current-page link is selected", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({}, "", "/help");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    const menu = screen.getByRole("button", { name: "Open navigation" });
+    fireEvent.click(menu);
+    const navigation = screen.getByRole("dialog", {
+      name: "Workspace navigation",
+    });
+    fireEvent.click(within(navigation).getByRole("link", { name: "Help" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(document.querySelector(".appBody")).not.toHaveAttribute("inert");
+    await waitFor(() => expect(menu).toHaveFocus());
+  });
+
+  it("keeps mobile navigation open when the dirty wizard rejects a new route", async () => {
+    await i18n.changeLanguage("en-US");
+    window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
+    window.history.replaceState({}, "", "/research/new");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(<App />);
+    await screen.findByRole("button", { name: "Continue" });
+    fireEvent.click(screen.getByRole("button", { name: "Open navigation" }));
+    const navigation = screen.getByRole("dialog", {
+      name: "Workspace navigation",
+    });
+    fireEvent.click(within(navigation).getByRole("link", { name: "Help" }));
+    expect(confirm).toHaveBeenCalledOnce();
+    expect(window.location.pathname).toBe("/research/new");
+    expect(navigation).toHaveAttribute("role", "dialog");
+    expect(document.querySelector(".appBody")).toHaveAttribute("inert");
   });
 
   it("refreshes service health without equating it to data freshness", async () => {

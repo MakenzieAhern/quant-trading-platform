@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import { getHealth } from "../api/health";
 import { useApiResource } from "../hooks/useApiResource";
 import { usePathname } from "../utils/navigation";
@@ -26,6 +32,19 @@ export function AppShell({ children }: { children: ReactNode }) {
   const closeMenu = () => {
     setMenuOpen(false);
     requestAnimationFrame(() => menuButton.current?.focus());
+  };
+  const closeCurrentSidebarLink = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (
+      menuOpen &&
+      event.button === 0 &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      !event.shiftKey &&
+      !event.altKey &&
+      !event.defaultPrevented &&
+      event.currentTarget.href === window.location.href
+    )
+      closeMenu();
   };
   const health = useApiResource(
     async (signal) => {
@@ -177,7 +196,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             ×
           </button>
         )}
-        <Link className="brand" href="/" aria-label={`QUANT ${copy.brand}`}>
+        <Link
+          className="brand"
+          href="/"
+          aria-label={`QUANT ${copy.brand}`}
+          onClick={closeCurrentSidebarLink}
+        >
           <span className="brandMark">Q</span>
           <span>
             QUANT<span className="brandSubtitle">{copy.brand}</span>
@@ -194,6 +218,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={closeCurrentSidebarLink}
               aria-current={active(item.href) ? "page" : undefined}
             >
               <span aria-hidden="true" className="navIcon">
@@ -207,6 +232,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <nav aria-label={copy.help}>
             <Link
               href="/help"
+              onClick={closeCurrentSidebarLink}
               aria-current={pathname === "/help" ? "page" : undefined}
             >
               <span className="navIcon" aria-hidden="true">
@@ -216,6 +242,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
             <Link
               href="/settings"
+              onClick={closeCurrentSidebarLink}
               aria-current={pathname === "/settings" ? "page" : undefined}
             >
               <span className="navIcon" aria-hidden="true">
