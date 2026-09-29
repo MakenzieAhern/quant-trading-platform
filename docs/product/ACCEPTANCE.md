@@ -6069,3 +6069,59 @@ accessibility, independent novice acceptance or release approval. GitHub
 October 1 recovery remains an unverified estimate; no push, merge, tag or
 release occurred. Lawful after-start forward data, genuine lost-ledger
 recovery and independent physical backup remain separate gates.
+
+## 2026-09-29 16:16 UTC local refresh, fill announcement and dependency hygiene
+
+An explicit saved-study status Refresh used to leave a completed result and
+its metrics visible while its replacement GET was pending. It now clears the
+old task/result and observed-end context immediately, shows a focusable
+loading status, and transfers focus to the new status or actionable read
+error. A request-generation guard prevents an older in-flight poll from
+repopulating stale data after Refresh. Successful Cancel still uses the
+non-clearing revalidation path to preserve its existing focus contract.
+Focused red/green tests cover delayed GET, old-poll ordering, observed-end
+reset, recovery and error focus; the study-detail file passed 53/53.
+
+An isolated production preview on localhost:15178 used a GET-only proxy on
+:18015 to hold only the next GET for an existing saved historical study.
+Installed Chrome exposed a focused `正在加载…` status without stale result
+metrics while the GET was held. An intentionally overlong hold produced the
+expected focused timeout alert; a short hold followed by release restored
+the saved result and focused `SPAN.experimentStatus--succeeded`. The proxy
+log contained only application GETs; the temporary tab, proxy and preview
+were closed. Method, build/proxy checksums and limits are recorded outside
+Git in `product-evidence/v1.2/m4/20260929-u3-refresh-pending/README.md`.
+This Chrome build preceded the final CSS focus-outline addition and paper
+announcement changes, so it is bounded U3 behavior evidence, **not**
+exact-final-head M5 media or native screen-reader/200% zoom evidence.
+
+Paper account live `fill.created` events now use a persistent bilingual
+screen-reader status: REST/initial/reconnect hydration stays silent; only
+post-hydration, higher-sequence stream fills announce once. Distinct fills
+with identical wording get distinct keyed children, while changing language
+does not replay an old fill. Independent review found an A→B→A account-route
+replay risk; the announcement state now resets synchronously on session ID
+change. A MutationObserver regression confirms the old A text is never
+reinserted while B's REST request is pending. Paper page tests passed 85/85;
+independent read-only re-review found no remaining release-critical issue.
+This is DOM/ARIA evidence, not observed native screen-reader speech or proof
+of actual partial fills in the current one-fill-per-order simulated broker.
+
+`npm audit` initially reported one moderate dev-only transitive `undici
+8.10.1` [upstream advisory](https://github.com/nodejs/undici/security/advisories/GHSA-3wwx-pv8p-q78v)
+through jsdom, while the production-only scan reported
+zero. The lockfile alone now pins compatible `undici 8.10.2`; fresh `npm ci`
+and full `npm audit --audit-level=high` report zero vulnerabilities. The
+final isolated `make test` passed backend 1029 with one optional unmounted
+read-only archive skip and frontend 480/480; `make lint`, `make build`,
+targeted Prettier on the changed code/lock files and `git diff --check`
+passed. The existing large Experiments test file has older whole-file
+Prettier drift outside this change and was not wholesale reformatted.
+Original Compose PostgreSQL/Redis/backend remained healthy, frontend was
+running, Redis PONG, PostgreSQL accepted connections, and local frontend
+and `/api/health` returned HTTP 200. No original financial data, frozen
+research/OOS, provider authority or GitHub state changed. CSV file landing,
+valid cold p95, native screen-reader/200% zoom, independent novice QA,
+lawful after-start forward receipt, genuine lost-ledger recovery, independent
+physical backup, full M4/M5 and hosted exact-head CI remain open. October 1
+is an unverified GitHub recovery estimate; no push, merge, tag or release.
