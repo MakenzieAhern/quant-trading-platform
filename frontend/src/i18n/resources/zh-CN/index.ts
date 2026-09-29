@@ -388,6 +388,8 @@ export const zhCN = {
       quantity: "数量",
       status: "状态",
       fills: "模拟成交",
+      fillAnnouncement:
+        "新增模拟成交：{{side}} {{quantity}} 股 {{symbol}}，成交价 {{price}}。",
       noFills: "尚无模拟成交记录。",
       side: "方向",
       price: "价格",

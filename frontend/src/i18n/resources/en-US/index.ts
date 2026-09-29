@@ -416,6 +416,8 @@ export const enUS = {
       quantity: "Quantity",
       status: "Status",
       fills: "Paper fills",
+      fillAnnouncement:
+        "New simulated fill: {{side}} {{quantity}} {{symbol}} at {{price}}.",
       noFills: "No simulated fills recorded.",
       side: "Side",
       price: "Price",

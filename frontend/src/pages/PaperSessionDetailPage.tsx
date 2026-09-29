@@ -25,8 +25,14 @@ function commandConfirmed(
 
 export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   const { t } = useTranslation("paper");
-  const { snapshot, connection, error, acknowledge, refresh } =
-    usePaperStream(sessionId);
+  const {
+    snapshot,
+    fillAnnouncement,
+    connection,
+    error,
+    acknowledge,
+    refresh,
+  } = usePaperStream(sessionId);
   const [contractErrorId, setContractErrorId] = useState<string | null>(null);
   const [commandPending, setCommandPending] = useState(false);
   const [commandError, setCommandError] = useState<PaperAction | null>(null);
@@ -86,24 +92,51 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     }
   };
 
+  const liveFillStatus = (
+    <span
+      id="paper-fill-announcement"
+      className="srOnly"
+      role="status"
+      aria-atomic="true"
+    >
+      {fillAnnouncement && (
+        <span key={fillAnnouncement.sequence} lang={fillAnnouncement.language}>
+          {fillAnnouncement.text}
+        </span>
+      )}
+    </span>
+  );
+
   if (contractErrorId === sessionId)
     return (
-      <div className="panelState errorPanel" role="alert">
-        <p>{t("detail.commandAccountMismatch")}</p>
-        <a className="button" href={window.location.href}>
-          {t("common:loadErrors.reload")}
-        </a>
-      </div>
+      <>
+        {liveFillStatus}
+        <div className="panelState errorPanel" role="alert">
+          <p>{t("detail.commandAccountMismatch")}</p>
+          <a className="button" href={window.location.href}>
+            {t("common:loadErrors.reload")}
+          </a>
+        </div>
+      </>
     );
-  if (!snapshot && !error) return <LoadingPanel label={t("detail.loading")} />;
+  if (!snapshot && !error)
+    return (
+      <>
+        {liveFillStatus}
+        <LoadingPanel label={t("detail.loading")} />
+      </>
+    );
   if (!snapshot && error)
     return (
-      <ErrorPanel
-        message={error}
-        notFoundReturn={{ href: "/paper", label: t("detail.back") }}
-      />
+      <>
+        {liveFillStatus}
+        <ErrorPanel
+          message={error}
+          notFoundReturn={{ href: "/paper", label: t("detail.back") }}
+        />
+      </>
     );
-  if (!snapshot) return null;
+  if (!snapshot) return <>{liveFillStatus}</>;
   const {
     session,
     latest_bar: bar,
@@ -141,6 +174,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
 
   return (
     <>
+      {liveFillStatus}
       <PaperSafetyBanner />
       <header className="detailHeader">
         <div>

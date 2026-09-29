@@ -18,6 +18,12 @@ import type {
 export type PaperConnection =
   "connecting" | "connected" | "reconnecting" | "closed";
 
+type FillAnnouncement = {
+  sequence: number;
+  language: string;
+  text: string;
+};
+
 function replaceBy<T>(items: T[], next: T, identity: (item: T) => string): T[] {
   const key = identity(next);
   const index = items.findIndex((item) => identity(item) === key);
@@ -103,9 +109,16 @@ export function applyPaperEvent(
 }
 
 export function usePaperStream(sessionId: string) {
-  const { t } = useTranslation("paper");
+  const { t, i18n } = useTranslation("paper");
   const hydrateRef = useRef<(() => Promise<void>) | null>(null);
+  const acceptedSequence = useRef<number | null>(null);
   const [snapshot, setSnapshot] = useState<PaperSnapshot | null>(null);
+  const [announcementState, setAnnouncementState] = useState<{
+    sessionId: string;
+    value: FillAnnouncement | null;
+  }>({ sessionId, value: null });
+  if (announcementState.sessionId !== sessionId)
+    setAnnouncementState({ sessionId, value: null });
   const [connection, setConnection] = useState<PaperConnection>("connecting");
   const [error, setError] = useState<{
     sessionId: string;
@@ -113,6 +126,7 @@ export function usePaperStream(sessionId: string) {
   } | null>(null);
 
   useEffect(() => {
+    acceptedSequence.current = null;
     let active = true;
     let socket: WebSocket | null = null;
     let retry: number | undefined;
@@ -137,6 +151,10 @@ export function usePaperStream(sessionId: string) {
           const complete = buffered.reduce(applyPaperEvent, hydrated);
           buffered = [];
           hydrating = false;
+          acceptedSequence.current = Math.max(
+            acceptedSequence.current ?? complete.last_sequence,
+            complete.last_sequence,
+          );
           setSnapshot(complete);
           setError(null);
           firstConnection = false;
@@ -154,6 +172,7 @@ export function usePaperStream(sessionId: string) {
           if (!active || controller.signal.aborted) return;
           hydrating = false;
           buffered = [];
+          acceptedSequence.current = null;
           setSnapshot(null);
           setError({
             sessionId,
@@ -198,12 +217,42 @@ export function usePaperStream(sessionId: string) {
             return;
           }
           if (hydrating) buffered.push(event);
-          else
+          else {
+            if (
+              event.sequence !== null &&
+              acceptedSequence.current !== null &&
+              event.sequence > acceptedSequence.current
+            ) {
+              acceptedSequence.current = event.sequence;
+              if (event.type === "fill.created") {
+                const fill = paperParsers.fill(event.payload);
+                setAnnouncementState((current) =>
+                  current.sessionId === sessionId
+                    ? {
+                        sessionId,
+                        value: {
+                          sequence: event.sequence!,
+                          language: i18n.language,
+                          text: t("detail.fillAnnouncement", {
+                            side: t(`detail.directions.${fill.side}`, {
+                              defaultValue: fill.side,
+                            }),
+                            quantity: fill.quantity,
+                            symbol: fill.symbol,
+                            price: fill.price,
+                          }),
+                        },
+                      }
+                    : current,
+                );
+              }
+            }
             setSnapshot((current) =>
               current?.session.session_id === sessionId
                 ? applyPaperEvent(current, event)
                 : current,
             );
+          }
           // Status events carry no lifecycle timestamps or sanitized failure text.
           // Refresh REST, buffering subsequent incremental events until it completes.
           if (event.type === "session.status") hydrate();
@@ -212,6 +261,7 @@ export function usePaperStream(sessionId: string) {
             socket?.close();
           }
         } catch {
+          acceptedSequence.current = null;
           setSnapshot(null);
           setError({
             sessionId,
@@ -240,6 +290,10 @@ export function usePaperStream(sessionId: string) {
                 return;
               terminal = true;
               firstConnection = false;
+              acceptedSequence.current = Math.max(
+                acceptedSequence.current ?? openingSnapshot.last_sequence,
+                openingSnapshot.last_sequence,
+              );
               if (retry !== undefined) window.clearTimeout(retry);
               setSnapshot(openingSnapshot);
               setError(null);
@@ -268,6 +322,7 @@ export function usePaperStream(sessionId: string) {
         hydrationController?.abort();
         hydrationController = null;
         if (reconnectAttempts >= 3) {
+          acceptedSequence.current = null;
           setSnapshot(null);
           setConnection("closed");
           setError((current) =>
@@ -287,19 +342,25 @@ export function usePaperStream(sessionId: string) {
     return () => {
       active = false;
       hydrateRef.current = null;
+      acceptedSequence.current = null;
       hydrationController?.abort();
       openingController?.abort();
       if (retry !== undefined) window.clearTimeout(retry);
       socket?.close();
     };
-  }, [sessionId, t]);
+  }, [sessionId, t, i18n.language]);
 
   return {
     snapshot: snapshot?.session.session_id === sessionId ? snapshot : null,
+    fillAnnouncement:
+      announcementState.sessionId === sessionId
+        ? announcementState.value
+        : null,
     connection,
     error: error?.sessionId === sessionId ? error.message : null,
     acknowledge: (before: PaperSessionStatus, accepted: PaperSession) => {
       if (accepted.session_id !== sessionId) {
+        acceptedSequence.current = null;
         setSnapshot(null);
         setError({
           sessionId,

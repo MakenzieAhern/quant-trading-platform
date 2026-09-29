@@ -2491,6 +2491,160 @@ describe("paper trading pages", () => {
     expect(screen.getByText("AUTHORITATIVE PORTFOLIO")).toBeInTheDocument();
   });
 
+  it("announces only new stream fills, once per sequence, in the receipt language", async () => {
+    installWebSocket();
+    const fill = {
+      order_id: PAPER_ID,
+      strategy_id: "moving_average_crossover",
+      symbol: "AAPL",
+      side: "BUY",
+      quantity: "10",
+      price: "12",
+      commission: "0.5",
+      timestamp: "2026-09-06T02:01:00Z",
+    };
+    let resolveInitial!: (response: Response) => void;
+    vi.spyOn(globalThis, "fetch")
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (resolveInitial = resolve)),
+      )
+      .mockImplementation(() =>
+        Promise.resolve(
+          jsonResponse({
+            ...paperSnapshot("RUNNING"),
+            last_sequence: 5,
+            fills: [fill, fill, fill, fill, fill],
+          }),
+        ),
+      );
+    const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    const status = document.getElementById("paper-fill-announcement")!;
+    expect(status).toHaveAttribute("role", "status");
+    expect(status).toHaveAttribute("aria-atomic", "true");
+    expect(status).toBeEmptyDOMElement();
+    try {
+      await act(async () => MockWebSocket.instances[0]!.open());
+      act(() =>
+        MockWebSocket.instances[0]!.message({
+          sequence: 2,
+          type: "fill.created",
+          occurred_at: fill.timestamp,
+          payload: fill,
+        }),
+      );
+      await act(async () =>
+        resolveInitial(
+          jsonResponse({
+            ...paperSnapshot("RUNNING"),
+            last_sequence: 1,
+            fills: [fill],
+          }),
+        ),
+      );
+      expect(document.getElementById("paper-fill-announcement")).toBe(status);
+      expect(status).toBeEmptyDOMElement();
+
+      const live = {
+        sequence: 3,
+        type: "fill.created",
+        occurred_at: fill.timestamp,
+        payload: fill,
+      };
+      act(() => MockWebSocket.instances[0]!.message(live));
+      expect(status).toHaveTextContent(
+        "New simulated fill: Buy 10 AAPL at 12.",
+      );
+      const firstMessage = status.firstElementChild;
+      act(() => MockWebSocket.instances[0]!.message(live));
+      expect(status.firstElementChild).toBe(firstMessage);
+      act(() => MockWebSocket.instances[0]!.message({ ...live, sequence: 4 }));
+      const secondMessage = status.firstElementChild;
+      expect(secondMessage).not.toBe(firstMessage);
+      expect(status).toHaveTextContent(
+        "New simulated fill: Buy 10 AAPL at 12.",
+      );
+
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(status.firstElementChild).toBe(secondMessage);
+      expect(status).toHaveTextContent(
+        "New simulated fill: Buy 10 AAPL at 12.",
+      );
+      await act(async () => MockWebSocket.instances.at(-1)!.open());
+      expect(status.firstElementChild).toBe(secondMessage);
+      act(() =>
+        MockWebSocket.instances.at(-1)!.message({ ...live, sequence: 6 }),
+      );
+      expect(status).toHaveTextContent(
+        "新增模拟成交：买入 10 股 AAPL，成交价 12。",
+      );
+      expect(status.firstElementChild).toHaveAttribute("lang", "zh-CN");
+    } finally {
+      view.unmount();
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
+  });
+
+  it("does not replay an old fill announcement after A→B→A while B hydration is pending", async () => {
+    installWebSocket();
+    const otherId = "534d9730-a8c9-4f71-a0fc-c4b5d156f2ef";
+    const fill = {
+      order_id: PAPER_ID,
+      strategy_id: "moving_average_crossover",
+      symbol: "AAPL",
+      side: "BUY",
+      quantity: "10",
+      price: "12",
+      commission: "0.5",
+      timestamp: "2026-09-06T02:01:00Z",
+    };
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
+      .mockReturnValueOnce(new Promise<Response>(() => {}))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          ...paperSnapshot("RUNNING"),
+          last_sequence: 1,
+          fills: [fill],
+        }),
+      );
+    const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    act(() =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "fill.created",
+        occurred_at: fill.timestamp,
+        payload: fill,
+      }),
+    );
+    const status = document.getElementById("paper-fill-announcement")!;
+    expect(status).toHaveTextContent("New simulated fill: Buy 10 AAPL at 12.");
+
+    view.rerender(<PaperSessionDetailPage sessionId={otherId} />);
+    expect(status).toBeEmptyDOMElement();
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(fetch).toHaveBeenCalledTimes(2);
+
+    const observer = new MutationObserver(() => {});
+    observer.observe(status, { childList: true, subtree: true });
+    view.rerender(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    const inserted = observer
+      .takeRecords()
+      .flatMap((record) => Array.from(record.addedNodes));
+    observer.disconnect();
+    expect(
+      inserted.some((node) => node.textContent?.includes("New simulated fill")),
+    ).toBe(false);
+    expect(document.getElementById("paper-fill-announcement")).toBe(status);
+    expect(status).toBeEmptyDOMElement();
+    expect(fetch.mock.calls[1]?.[1]?.signal?.aborted).toBe(true);
+
+    await act(async () => MockWebSocket.instances[2]!.open());
+    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(status).toBeEmptyDOMElement();
+  });
+
   it("closes terminal session streams without reconnecting", async () => {
     installWebSocket();
     vi.useFakeTimers();
