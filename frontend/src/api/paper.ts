@@ -285,6 +285,13 @@ export const paperApi = {
     ),
   get: (sessionId: string, signal?: AbortSignal) =>
     apiRequest(`/api/paper-trading/sessions/${sessionId}`, {}, signal, session),
+  receipt: (key: string, signal?: AbortSignal) =>
+    apiRequest(
+      "/api/paper-trading/sessions/receipt",
+      { headers: { "Idempotency-Key": key } },
+      signal,
+      session,
+    ),
   snapshot: (sessionId: string, signal?: AbortSignal) =>
     apiRequest(
       `/api/paper-trading/sessions/${sessionId}/snapshot`,

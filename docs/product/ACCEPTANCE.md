@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 13:13 UTC local committed-receipt recovery — bounded U7 check
+
+When an earlier paper-create response is uncertain, a later identical-key
+POST can fail request validation before the server's idempotency lookup.
+The new read-only `GET /api/paper-trading/sessions/receipt` checks only for a
+committed account under that exact key, returns it with `Cache-Control:
+no-store`, and is called after a prior-attempt POST receives 400/404/422.
+The browser confirms that receipt and opens the existing account if found;
+otherwise it retains the original key and blocks a different new account.
+Neither a 404 nor a timeout means the original POST can no longer commit.
+No schema migration, deletion or cancellation was added.
+
+Against an isolated tmpfs `quant_test` PostgreSQL, the full backend suite
+passed 1029 tests with one optional unmounted-archive skip. The final full
+frontend suite passed 461 tests across 38 files, including recovery after
+400/404/422 and retaining an uncertain key when receipt lookup returns 404.
+Ruff, format, mypy, ESLint, TypeScript, Prettier and production frontend build
+passed. Independent read-only review found no remaining actionable defect
+after the 404 source-outage edge was added. This remains local code/test evidence, not an
+actual-browser proof of the new endpoint or hosted CI. The earlier actual-
+Chrome lost-201 proof is in the following entry. The original Compose services
+and financial database remained untouched; no GitHub action occurred.
+
 ## 2026-09-29 13:02 UTC browser lost-201 recovery — bounded local U7 check
 
 In a separate tmpfs `qtp-v12-paper-loss-qa` Compose project at code head

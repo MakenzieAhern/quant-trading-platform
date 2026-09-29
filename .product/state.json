@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T13:02:27Z",
+  "updated_at_utc": "2026-09-29T13:14:15Z",
+  "u7_paper_create_committed_receipt_20260929_gate": {
+    "status": "PASS_BOUNDED_LOCAL_CHECK_NOT_FULL_U7_M4_M5",
+    "parent_head": "9912e1f",
+    "proof": "2026-09-29 13:14 UTC: positive-only read endpoint finds a committed paper session by original idempotency key with no-store; prior-attempt browser flow probes it after 400/404/422 and keeps the key on absence. Isolated tmpfs backend full suite 1029 passed/one optional archive skip; final frontend full suite 461 passed. Backend Ruff/format/mypy and frontend ESLint/TypeScript/Prettier/build passed. Independent read-only diff review found no remaining actionable issue. Original Compose and GitHub untouched.",
+    "limits": "404 is UNKNOWN, not permission to remove the key or create another account; an original POST can commit later. No durable cancellation tombstone or cross-profile/device exactly-once. Not actual-browser proof of this endpoint, full U7/M4/M5, lawful forward-market data, true lost-ledger restore, independent physical backup or hosted exact-head CI."
+  },
   "u7_paper_create_lost201_browser_20260929_gate": {
     "status": "PASS_BOUNDED_ACTUAL_CHROME_SAME_PROFILE_SCRATCH_NOT_FULL_U7_M4_M5",
     "code_head": "504b95a",

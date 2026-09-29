@@ -1054,27 +1054,55 @@ describe("paper trading pages", () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")
       .mockRejectedValueOnce(new TypeError("response lost"))
-      .mockRejectedValueOnce(new ApiError(422, "schema changed"));
+      .mockRejectedValueOnce(new ApiError(422, "schema changed"))
+      .mockResolvedValueOnce(jsonResponse({}, 404));
     render(<CreatePaperSessionPage />);
     const create = screen.getByRole("button", { name: "Create paper session" });
     await userEvent.click(create);
     await screen.findByRole("alert");
     const key = pendingKeys()[0];
     await userEvent.click(create);
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
     expect(pendingKeys()).toEqual([key]);
+    expect(fetch.mock.calls[2]?.[0]).toContain("/sessions/receipt");
     fireEvent.change(screen.getByLabelText("Initial cash"), {
       target: { value: "123456.75" },
     });
     await userEvent.click(create);
-    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(fetch).toHaveBeenCalledTimes(3);
+  });
+
+  it("recovers a committed receipt after a later ordinary retry gets 422", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockRejectedValueOnce(new TypeError("response lost"))
+      .mockRejectedValueOnce(new ApiError(422, "schema changed"))
+      .mockResolvedValueOnce(jsonResponse(paperSession()));
+    render(<CreatePaperSessionPage />);
+    const create = screen.getByRole("button", { name: "Create paper session" });
+    await userEvent.click(create);
+    await screen.findByRole("alert");
+    const key = pendingKeys()[0];
+    await userEvent.click(create);
+    await waitFor(() =>
+      expect(window.location.pathname).toBe(`/paper/${PAPER_ID}`),
+    );
+    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(fetch.mock.calls[2]?.[0]).toContain("/sessions/receipt");
+    expect(
+      new Headers(fetch.mock.calls[2]?.[1]?.headers).get("Idempotency-Key"),
+    ).toBe(key?.slice(PAPER_CREATE_PENDING_PREFIX.length));
+    expect(JSON.parse(window.localStorage.getItem(key) ?? "{}")).toMatchObject({
+      confirmedSessionId: PAPER_ID,
+    });
   });
 
   it("keeps an uncertain key when a saved-request retry is rejected", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")
       .mockRejectedValueOnce(new TypeError("response lost"))
-      .mockRejectedValueOnce(new ApiError(422, "schema changed"));
+      .mockRejectedValueOnce(new ApiError(422, "schema changed"))
+      .mockResolvedValueOnce(jsonResponse({}, 404));
     const first = render(<CreatePaperSessionPage />);
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
@@ -1086,7 +1114,7 @@ describe("paper trading pages", () => {
     await userEvent.click(
       screen.getByRole("button", { name: "Retry saved request 1" }),
     );
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
     expect(pendingKeys()).toEqual([key]);
     expect(
       new Headers(fetch.mock.calls[1]?.[1]?.headers).get("Idempotency-Key"),
@@ -1094,6 +1122,39 @@ describe("paper trading pages", () => {
       new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
     );
   });
+
+  it.each([400, 404, 422])(
+    "recovers a committed receipt after a saved retry gets %s",
+    async (status) => {
+      const fetch = vi
+        .spyOn(globalThis, "fetch")
+        .mockRejectedValueOnce(new TypeError("response lost"))
+        .mockRejectedValueOnce(new ApiError(status, "request rejected"))
+        .mockResolvedValueOnce(jsonResponse(paperSession()));
+      const first = render(<CreatePaperSessionPage />);
+      await userEvent.click(
+        screen.getByRole("button", { name: "Create paper session" }),
+      );
+      await screen.findByRole("alert");
+      const key = pendingKeys()[0];
+      first.unmount();
+      window.history.replaceState({}, "", "/paper/new");
+      render(<CreatePaperSessionPage />);
+      await userEvent.click(
+        screen.getByRole("button", { name: "Retry saved request 1" }),
+      );
+      await waitFor(() =>
+        expect(window.location.pathname).toBe(`/paper/${PAPER_ID}`),
+      );
+      expect(fetch).toHaveBeenCalledTimes(3);
+      expect(fetch.mock.calls[2]?.[0]).toContain("/sessions/receipt");
+      expect(
+        JSON.parse(window.localStorage.getItem(key) ?? "{}"),
+      ).toMatchObject({
+        confirmedSessionId: PAPER_ID,
+      });
+    },
+  );
 
   it("blocks new creation when saved-request storage is corrupt", async () => {
     window.localStorage.setItem(

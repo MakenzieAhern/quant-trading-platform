@@ -4,7 +4,16 @@ from contextlib import suppress
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Header, HTTPException, Query, WebSocket, WebSocketDisconnect, status
+from fastapi import (
+    APIRouter,
+    Header,
+    HTTPException,
+    Query,
+    Response,
+    WebSocket,
+    WebSocketDisconnect,
+    status,
+)
 from sqlalchemy.exc import IntegrityError
 
 from app.api.schemas.paper import (
@@ -116,6 +125,23 @@ async def list_paper_sessions(
         offset=offset,
         total=total,
     )
+
+
+@router.get("/receipt", response_model=PaperSessionResponse)
+async def get_paper_create_receipt(
+    response: Response,
+    idempotency_key: Annotated[str, Header(max_length=255)],
+) -> PaperSessionResponse:
+    response.headers["Cache-Control"] = "no-store"
+    session = await paper_manager.get_by_client_request_id(idempotency_key)
+    if session is None:
+        # A missing committed row does not prove that an earlier POST cannot still arrive.
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            "no committed paper session currently found for this request key",
+            headers={"Cache-Control": "no-store"},
+        )
+    return _session_response(session)
 
 
 @router.get("/{session_id}", response_model=PaperSessionResponse)

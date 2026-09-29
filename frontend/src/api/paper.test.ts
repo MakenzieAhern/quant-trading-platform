@@ -7,6 +7,21 @@ import { jsonResponse } from "../test/fixtures";
 import { PAPER_ID, paperSession, paperSnapshot } from "../test/paperFixtures";
 
 describe("paper API contracts", () => {
+  it("looks up a committed creation receipt with the original key", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(paperSession()));
+    const result = await paperApi.receipt("original-key");
+    expect(result.session_id).toBe(PAPER_ID);
+    expect(fetch.mock.calls[0]?.[0]).toContain(
+      "/api/paper-trading/sessions/receipt",
+    );
+    expect(fetch.mock.calls[0]?.[1]?.method).toBeUndefined();
+    expect(
+      new Headers(fetch.mock.calls[0]?.[1]?.headers).get("Idempotency-Key"),
+    ).toBe("original-key");
+  });
+
   it("preserves exact Decimal strings in authoritative snapshots", async () => {
     const snapshot = paperSnapshot("STOPPED");
     snapshot.latest_portfolio = {

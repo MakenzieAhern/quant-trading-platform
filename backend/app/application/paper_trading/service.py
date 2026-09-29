@@ -204,6 +204,10 @@ class PaperTradingManager:
         async with self._session_factory() as db:
             return await SQLAlchemyPaperRepository(db).get(session_id)
 
+    async def get_by_client_request_id(self, key: str) -> PaperSession | None:
+        async with self._session_factory() as db:
+            return await SQLAlchemyPaperRepository(db).get_by_client_request_id(key)
+
     async def list(self, limit: int, offset: int) -> tuple[tuple[PaperSession, ...], int]:
         async with self._session_factory() as db:
             return await SQLAlchemyPaperRepository(db).list(limit, offset)

@@ -102,6 +102,29 @@ function paperCreateError(reason: unknown): string {
           : "createPage.submitError";
 }
 
+async function createOrRecoverPaper(
+  request: CreatePaperSessionRequest,
+  key: string,
+  priorAttempt: boolean,
+) {
+  try {
+    return await paperApi.create(request, key);
+  } catch (reason) {
+    if (
+      priorAttempt &&
+      reason instanceof ApiError &&
+      [400, 404, 422].includes(reason.status)
+    ) {
+      try {
+        return await paperApi.receipt(key);
+      } catch {
+        // A missing receipt is not proof that an in-flight POST cannot commit.
+      }
+    }
+    throw reason;
+  }
+}
+
 function PaperCreateRecoveryPanel({
   saved,
   onSavedChange,
@@ -139,9 +162,10 @@ function PaperCreateRecoveryPanel({
         if (saved.confirmedSessionId) return saved.confirmedSessionId;
         // A prior attempt may have committed even if this retry is rejected.
         sent = true;
-        const created = await paperApi.create(
+        const created = await createOrRecoverPaper(
           paperRequestFromBody(saved.body),
           saved.key,
+          true,
         );
         try {
           confirmPaperCreate(saved, created.session_id);
@@ -498,7 +522,7 @@ function PaperSessionForm({
         let result;
         try {
           sent = true;
-          result = await paperApi.create(request, intent.key);
+          result = await createOrRecoverPaper(request, intent.key, !fresh);
         } catch (reason) {
           if (fresh && definitelyNotCreated(reason)) {
             try {

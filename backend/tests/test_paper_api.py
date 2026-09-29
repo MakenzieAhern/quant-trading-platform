@@ -17,7 +17,7 @@ from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.db.session import SessionFactory
 from app.execution import OrderManager
 from app.main import app
-from app.paper.models import PaperSessionConcurrencyError
+from app.paper.models import PaperSession, PaperSessionConcurrencyError
 from app.paper.runtime import PaperBroker, ReplayMarketDataProvider, SimulatedAShareSessionProvider
 from app.portfolio import PortfolioEngine
 from app.risk import RiskEngine
@@ -213,6 +213,74 @@ async def test_create_idempotency_validation_and_safe_lookup(client: AsyncClient
     }
     for invalid in (invalid_provider, invalid_dataset, invalid_strategy):
         assert (await client.post("/api/paper-trading/sessions", json=invalid)).status_code == 422
+
+
+async def test_create_receipt_finds_committed_session_after_request_validation_fails(
+    client: AsyncClient,
+) -> None:
+    headers = {"Idempotency-Key": "paper-lost-create-response"}
+    created = await client.post("/api/paper-trading/sessions", json=request_body(), headers=headers)
+    assert created.status_code == 201
+
+    # A later request can fail current schema validation before create() sees the key.
+    invalid = {**request_body(), "provider_type": "removed_provider"}
+    assert (
+        await client.post("/api/paper-trading/sessions", json=invalid, headers=headers)
+    ).status_code == 422
+    receipt = await client.get("/api/paper-trading/sessions/receipt", headers=headers)
+    assert receipt.status_code == 200
+    assert receipt.headers["cache-control"] == "no-store"
+    assert receipt.json() == created.json()
+    assert (await client.get("/api/paper-trading/sessions")).json()["total"] == 1
+
+
+async def test_create_receipt_absence_does_not_claim_request_will_never_commit(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    headers = {"Idempotency-Key": "paper-in-flight-create"}
+    entered = asyncio.Event()
+    proceed = asyncio.Event()
+    original_create = SQLAlchemyPaperRepository.create
+
+    async def delayed_create(
+        self: SQLAlchemyPaperRepository, session: PaperSession
+    ) -> PaperSession:
+        entered.set()
+        await proceed.wait()
+        return await original_create(self, session)
+
+    monkeypatch.setattr(SQLAlchemyPaperRepository, "create", delayed_create)
+    pending = asyncio.create_task(
+        client.post("/api/paper-trading/sessions", json=request_body(), headers=headers)
+    )
+    try:
+        await asyncio.wait_for(entered.wait(), timeout=10)
+        unknown = await client.get("/api/paper-trading/sessions/receipt", headers=headers)
+        assert unknown.status_code == 404
+        assert unknown.headers["cache-control"] == "no-store"
+        assert "currently" in unknown.json()["detail"]
+    finally:
+        proceed.set()
+    created = await pending
+    assert created.status_code == 201
+    found = await client.get("/api/paper-trading/sessions/receipt", headers=headers)
+    assert found.status_code == 200
+    assert found.json()["session_id"] == created.json()["session_id"]
+
+    absent = await client.get(
+        "/api/paper-trading/sessions/receipt",
+        headers={"Idempotency-Key": "paper-never-sent"},
+    )
+    assert absent.status_code == 404
+    assert absent.headers["cache-control"] == "no-store"
+    assert (await client.get("/api/paper-trading/sessions")).json()["total"] == 1
+    assert (await client.get("/api/paper-trading/sessions/receipt")).status_code == 422
+    assert (
+        await client.get(
+            "/api/paper-trading/sessions/receipt",
+            headers={"Idempotency-Key": "x" * 256},
+        )
+    ).status_code == 422
 
 
 @pytest.mark.parametrize("historical", [False, True])
