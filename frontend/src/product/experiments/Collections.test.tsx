@@ -686,6 +686,57 @@ describe("filtered durable experiment records", () => {
 });
 
 describe("server-generated report downloads", () => {
+  it("keeps a prepared report available when a replacement download fails", async () => {
+    const blob = new Blob(["first report"], { type: "text/csv" });
+    const replacement = new Blob(["replacement report"], { type: "text/csv" });
+    const revoke = vi.fn();
+    vi.stubGlobal(
+      "URL",
+      Object.assign(URL, {
+        createObjectURL: vi
+          .fn()
+          .mockReturnValueOnce("blob:first-report")
+          .mockReturnValueOnce("blob:replacement"),
+        revokeObjectURL: revoke,
+      }),
+    );
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(
+      () => undefined,
+    );
+    vi.spyOn(experimentApi, "export")
+      .mockResolvedValueOnce(blob)
+      .mockRejectedValueOnce(new ApiError(503, "Unavailable"))
+      .mockResolvedValueOnce(replacement);
+
+    const view = render(<ExperimentExports jobId={job.job_id} range={{}} />);
+    const download = screen.getByRole("button", {
+      name: "Download records (CSV)",
+    });
+    await userEvent.click(download);
+    const fallback = await screen.findByRole("link", {
+      name: "Save prepared report",
+    });
+    expect(fallback).toHaveAttribute("href", "blob:first-report");
+
+    await userEvent.click(download);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "The report could not be downloaded",
+    );
+    expect(fallback).toHaveAttribute("href", "blob:first-report");
+    expect(revoke).not.toHaveBeenCalled();
+
+    await userEvent.click(download);
+    await waitFor(() =>
+      expect(
+        screen.getByRole("link", { name: "Save prepared report" }),
+      ).toHaveAttribute("href", "blob:replacement"),
+    );
+    expect(revoke).toHaveBeenCalledWith("blob:first-report");
+
+    view.unmount();
+    expect(revoke).toHaveBeenCalledWith("blob:replacement");
+  });
+
   it("downloads the unchanged server blob once and shows real pending feedback", async () => {
     const blob = new Blob(["server metadata,exact amounts"], {
       type: "text/csv",

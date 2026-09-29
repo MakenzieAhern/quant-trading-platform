@@ -43,7 +43,6 @@ export function ExperimentExports({
     pending.current = true;
     setStatus("loading");
     setMissingHoldings(false);
-    setPrepared(null);
     try {
       const blob = await experimentApi.export(jobId, format, collection, range);
       if (!mounted.current) return;
