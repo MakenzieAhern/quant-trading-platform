@@ -6,21 +6,23 @@ export function Pagination({
   limit,
   total,
   loading = false,
+  label,
   onChange,
 }: {
   offset: number;
   limit: number;
   total: number | null;
   loading?: boolean;
+  label?: string;
   onChange: (offset: number) => void;
 }) {
   const { t } = useTranslation("common");
   const anchor = useRef<HTMLDivElement>(null);
-  const unavailable = loading || total === null || limit <= 0;
+  const unavailable = loading || limit <= 0;
   const first = total === 0 ? 0 : offset + 1;
   const last = total === null ? 0 : Math.min(offset + limit, total);
   function change(next: number) {
-    if (unavailable) return;
+    if (unavailable || (total === null && next >= offset)) return;
     // Focus before loading can remove/disable the button. Never steal later focus.
     anchor.current?.focus();
     onChange(next);
@@ -31,11 +33,11 @@ export function Pagination({
       className="pagination"
       role="group"
       tabIndex={-1}
-      aria-label={t("pagination")}
+      aria-label={label ? `${label} — ${t("pagination")}` : t("pagination")}
       aria-busy={loading}
     >
       <span aria-live="polite">
-        {unavailable
+        {unavailable || total === null
           ? loading
             ? t("loading", { label: "" })
             : t("unavailable")
@@ -51,7 +53,7 @@ export function Pagination({
       <button
         type="button"
         onClick={() => change(offset + limit)}
-        disabled={unavailable || offset + limit >= (total ?? 0)}
+        disabled={unavailable || total === null || offset + limit >= total}
       >
         {t("next")}
       </button>

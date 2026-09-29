@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, expect, test, vi } from "vitest";
 
@@ -73,10 +73,18 @@ test("one curve page advances all three series without changing stored metrics",
       name: "research:equity / research:benchmarkCurve",
     })
   ).closest("section")!;
+  const pager = within(equitySection).getByRole("group", {
+    name: "research:equity / research:benchmarkCurve — pagination",
+  });
+  const pagerNames = screen
+    .getAllByRole("group", { name: /pagination/ })
+    .map((group) => group.getAttribute("aria-label"));
+  expect(new Set(pagerNames).size).toBe(5);
   await userEvent.click(
     within(equitySection).getByRole("button", { name: "next" }),
   );
   await screen.findByText("research:displayedDateRange:2024-04-01–2024-04-01");
+  expect(pager).toHaveFocus();
   expect(researchApi.points).toHaveBeenCalledTimes(6);
   for (const kind of ["equity", "benchmark", "drawdown"])
     expect(researchApi.points).toHaveBeenCalledWith(
@@ -86,6 +94,54 @@ test("one curve page advances all three series without changing stored metrics",
       expect.any(AbortSignal),
     );
   expect(researchApi.metrics).toHaveBeenCalledTimes(1);
+  await userEvent.click(
+    within(pager).getByRole("button", { name: "previous" }),
+  );
+  await screen.findByText("research:displayedDateRange:2024-01-02–2024-01-02");
+  expect(pager).toHaveFocus();
+});
+
+test("research table pager retains keyboard focus through loading and error", async () => {
+  let rejectPage!: (reason: Error) => void;
+  vi.mocked(researchApi.holdings).mockImplementation((_id, offset) =>
+    offset === 0
+      ? Promise.resolve({
+          items: Array.from({ length: 200 }, (_, sequence) => ({
+            sequence,
+            trading_date: "2024-01-02",
+            security_id: "CN-A:SSE:600000",
+            quantity: "1",
+            weight: "0.01",
+            market_value: "1",
+          })),
+          limit: 200,
+          offset: 0,
+          total: 201,
+        })
+      : new Promise((_resolve, reject) => {
+          rejectPage = reject;
+        }),
+  );
+  render(<ResearchRunPage runId="saved" />);
+  const holdingsSection = (
+    await screen.findByRole("heading", { name: "research:holdings" })
+  ).closest("section")!;
+  const pager = within(holdingsSection).getByRole("group", {
+    name: "research:holdings — pagination",
+  });
+  await userEvent.click(within(pager).getByRole("button", { name: "next" }));
+  expect(pager).toHaveFocus();
+  expect(pager).toHaveAttribute("aria-busy", "true");
+  await act(async () => rejectPage(new TypeError("offline")));
+  expect(within(holdingsSection).getByRole("alert")).toBeInTheDocument();
+  expect(pager).toHaveFocus();
+  await userEvent.click(
+    within(pager).getByRole("button", { name: "previous" }),
+  );
+  await within(holdingsSection).findByRole("table", {
+    name: "research:holdings",
+  });
+  expect(pager).toHaveFocus();
 });
 
 test("failed curve request is not reported as empty data", async () => {
@@ -106,4 +162,37 @@ test("failed curve request is not reported as empty data", async () => {
   expect(
     within(equitySection).getByText("loadErrors.offline"),
   ).toBeInTheDocument();
+});
+
+test("rolling page retains a valid drawdown when the same date has no Sharpe value", async () => {
+  vi.mocked(researchApi.rollingMetrics).mockResolvedValue({
+    items: [
+      { trading_date: "2024-01-02", metric_name: "drawdown", value: "-0.1" },
+      { trading_date: "2024-01-02", metric_name: "sharpe", value: null },
+      { trading_date: "2024-01-03", metric_name: "drawdown", value: "-0.2" },
+      { trading_date: "2024-01-03", metric_name: "sharpe", value: "1.2" },
+    ],
+    limit: 200,
+    offset: 0,
+    total: 4,
+  });
+  render(<ResearchRunPage runId="saved" />);
+  const section = (
+    await screen.findByRole("heading", { name: "research:rollingMetrics" })
+  ).closest("section")!;
+  const figure = await within(section).findByRole("figure", {
+    name: "accessibility:rollingChart",
+  });
+  expect(figure.querySelectorAll("polyline.benchmarkLine")).toHaveLength(1);
+  expect(figure.querySelectorAll("circle.strategyLine")).toHaveLength(1);
+  await userEvent.click(within(section).getByText("chartData"));
+  const table = within(section).getByRole("table", {
+    name: "accessibility:rollingChart",
+  });
+  expect(within(table).getAllByRole("row")).toHaveLength(5);
+  const unavailable = within(table).getByText("common:unavailable");
+  expect(
+    within(unavailable.closest("tr")!).getByText("2024-01-02"),
+  ).toBeInTheDocument();
+  expect(within(table).getByText("-0.1")).toBeInTheDocument();
 });

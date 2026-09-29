@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T01:04:18Z",
+  "updated_at_utc": "2026-09-29T01:46:24Z",
+  "formal_research_chart_audit": {
+    "status": "PASS_BOUNDED_LOCAL_CHROME_NOT_FULL_U4_M4_M5_OR_GITHUB_CI",
+    "fix": "The exact strategy/benchmark table now sorts by trading date before paging, so matching dates stay adjacent; chart x-positions share the same ordered date domain. Rolling metrics preserve null Sharpe and valid same-date drawdown instead of dropping both; chart traces break at missing values. Curve, rolling and research-table pagers remain mounted through loading/error, use distinct section labels, and allow safe Previous from an unknown-total error page.",
+    "proof": "Final frontend 378/378, ESLint, changed-file Prettier and TypeScript/Vite build PASS after independent read-only review fixes. Main Compose four services up, backend/PostgreSQL/Redis healthy, localhost:5173 and /api/health HTTP200. Actual Chrome Development run b38081a7 showed 2011-01-18 null Sharpe alongside exact drawdown 0 and adjacent same-date strategy/benchmark rows; source first rolling page had 200 records, 21 null Sharpe and 100 valid drawdowns. Curve Next displayed sessions 201-400 with focus retained on its distinct named pager.",
+    "limits": "Bounded GET-only local QA, not full interactive chart U4, native screen-reader/200pct zoom, independent novice, measured p95, lawful current-data forward receipt, genuine lost-ledger restore, independent backup or GitHub CI/release. No original account, provider, frozen research or Official OOS write; GitHub hold remains until actual recovery, not a date assumption."
+  },
   "current_code_comparison_media": {
     "status": "PASS_ONE_DESKTOP_PNG_NOT_FULL_M5",
     "code_head": "249c32709de97c3705b19a6029b5ac8290103146",

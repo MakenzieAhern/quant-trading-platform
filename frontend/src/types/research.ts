@@ -74,6 +74,10 @@ export interface ResearchPoint {
   value: string;
 }
 
+export type NullableResearchPoint = Omit<ResearchPoint, "value"> & {
+  value: string | null;
+};
+
 export interface MonthlyReturn {
   month: string;
   value: string | null;

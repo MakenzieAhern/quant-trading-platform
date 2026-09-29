@@ -4654,3 +4654,30 @@ They were left intact under the no-volume-deletion policy. CI uses `docker run`
 for the image smoke instead, avoiding that side effect. Windows currently
 shows Docker AutoStart enabled and a quoted HKCU Run path, but no subsequent
 real login has tested it. `QA-RELEASE` and `M5-DELIVERY` remain FAIL.
+
+## 2026-09-29 01:46 UTC local formal-chart integrity and keyboard paging
+
+The formal research detail's exact strategy/benchmark table previously put
+all strategy rows before benchmark rows, separating matching trading dates
+across local table pages. It now orders rows by trading date before paging,
+and both visual traces use the same ordered date domain even if source series
+have independent dates.
+Rolling metrics previously dropped a date's valid drawdown when its Sharpe
+value was null; both exact rows are now shown, with the Sharpe value explicitly
+unavailable and no line drawn through its missing observation. The curve,
+rolling and research-table pagers remain mounted while a page loads or errors,
+so keyboard focus survives Next and Previous. Each has a distinct section
+name; after a failed later page, Previous remains available without guessing
+an unknown total.
+
+Local full frontend tests 378/378, ESLint, changed-file Prettier and
+TypeScript/Vite build passed. Main Compose PostgreSQL, Redis and backend were
+healthy, frontend and `/api/health` returned HTTP 200. Actual Chrome on the
+saved Development run `b38081a7` showed same-date strategy/benchmark rows,
+2011-01-18 null Sharpe alongside exact drawdown 0, and curve page 201–400
+with focus retained on the named pager. The read-only source response for the
+first rolling page had 200 rows: 21 null Sharpe and 100 valid drawdowns.
+This is bounded local/GET-only evidence, not full U4 interaction, native
+screen-reader/200% zoom, independent novice testing, GitHub CI or M4/M5 PASS.
+No research, account, provider or dataset write occurred. The user-estimated
+October 1 GitHub recovery is not treated as verified clearance.

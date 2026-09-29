@@ -71,6 +71,9 @@ describe("Pagination", () => {
     expect(pager).toHaveAttribute("aria-busy", "true");
     expect(range).toHaveTextContent("Loading");
     expect(within(pager).getByRole("button", { name: "Next" })).toBeDisabled();
+    expect(
+      within(pager).getByRole("button", { name: "Previous" }),
+    ).toBeDisabled();
     expect(screen.queryByText("1–20 of 41")).not.toBeInTheDocument();
     screen.getByLabelText("Other task").focus();
     view.rerender(
@@ -93,7 +96,7 @@ describe("Pagination", () => {
     expect(onChange).toHaveBeenCalledExactlyOnceWith(20);
   });
 
-  it("keeps unknown totals disabled without preventing an independent pager", async () => {
+  it("allows a safe previous page when the total becomes unknown", async () => {
     const first = vi.fn();
     const second = vi.fn();
     render(
@@ -105,15 +108,18 @@ describe("Pagination", () => {
     const [unavailable, available] = screen.getAllByRole("group", {
       name: "Pagination",
     });
-    for (const button of within(unavailable).getAllByRole("button")) {
-      expect(button).toBeDisabled();
-      await userEvent.click(button);
-    }
+    expect(
+      within(unavailable).getByRole("button", { name: "Next" }),
+    ).toBeDisabled();
+    await userEvent.click(
+      within(unavailable).getByRole("button", { name: "Previous" }),
+    );
+    expect(unavailable).toHaveFocus();
     await userEvent.click(
       within(available).getByRole("button", { name: "Previous" }),
     );
     expect(available).toHaveFocus();
-    expect(first).not.toHaveBeenCalled();
+    expect(first).toHaveBeenCalledExactlyOnceWith(0);
     expect(second).toHaveBeenCalledExactlyOnceWith(0);
   });
 

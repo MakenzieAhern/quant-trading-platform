@@ -1303,6 +1303,12 @@ tbody tr:hover {
 .benchmarkLine {
   stroke: var(--muted);
 }
+.researchChart circle.strategyLine {
+  fill: var(--primary);
+}
+.researchChart circle.benchmarkLine {
+  fill: var(--muted);
+}
 .chartCard line {
   stroke: var(--border);
   stroke-width: 1;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import type { ResearchPoint } from "../../types/research";
+import type { NullableResearchPoint } from "../../types/research";
 import { Pagination } from "../Pagination";
 
 const PAGE_SIZE = 100;
@@ -11,16 +11,20 @@ export function ResearchPointTable({
   series,
 }: {
   label: string;
-  series: { label: string; points: ResearchPoint[] }[];
+  series: { label: string; points: NullableResearchPoint[] }[];
 }) {
-  const { t } = useTranslation("research");
+  const { t } = useTranslation(["research", "common"]);
   const [open, setOpen] = useState(false);
   const [offset, setOffset] = useState(0);
   const total = series.reduce((count, item) => count + item.points.length, 0);
   const rows = open
-    ? series.flatMap((item) =>
-        item.points.map((point) => ({ label: item.label, point })),
-      )
+    ? series
+        .flatMap((item) =>
+          item.points.map((point) => ({ label: item.label, point })),
+        )
+        .sort((left, right) =>
+          left.point.trading_date.localeCompare(right.point.trading_date),
+        )
     : [];
   const pageOffset = Math.min(
     offset,
@@ -51,7 +55,7 @@ export function ResearchPointTable({
                   >
                     <td>{row.label}</td>
                     <td>{row.point.trading_date}</td>
-                    <td>{row.point.value}</td>
+                    <td>{row.point.value ?? t("common:unavailable")}</td>
                   </tr>
                 ))}
               </tbody>

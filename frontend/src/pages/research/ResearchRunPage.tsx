@@ -89,22 +89,18 @@ export function ResearchRunPage({ runId }: { runId: string }) {
   if (run.loading) return <LoadingPanel label={t("research:runDetail")} />;
   if (run.error) return <ErrorPanel message={run.error} />;
   if (!run.data) return null;
-  const rollingByDate = new Map<string, Record<string, string>>();
+  const rollingByDate = new Map<string, Record<string, string | null>>();
   for (const item of rolling.data?.items ?? []) {
-    if (item.value === null) continue;
     const values = rollingByDate.get(item.trading_date) ?? {};
     values[item.metric_name] = item.value;
     rollingByDate.set(item.trading_date, values);
   }
-  const completeRolling = [...rollingByDate].filter(
-    ([, values]) =>
-      values.sharpe !== undefined && values.drawdown !== undefined,
-  );
+  const rollingDates = [...rollingByDate];
   const rollingPoints = (metricName: "sharpe" | "drawdown") =>
-    completeRolling.map(([trading_date, values], sequence) => ({
+    rollingDates.map(([trading_date, values], sequence) => ({
       sequence,
       trading_date,
-      value: values[metricName],
+      value: values[metricName] ?? null,
     }));
   const rollingSharpe = rollingPoints("sharpe");
   const rollingDrawdown = rollingPoints("drawdown");
@@ -222,16 +218,16 @@ export function ResearchRunPage({ runId }: { runId: string }) {
                 end: curves.data.equity.items.at(-1)?.trading_date,
               })}
             </p>
-            {curves.data.equity.total > 200 && (
-              <Pagination
-                offset={curveOffset}
-                limit={200}
-                total={curves.data.equity.total}
-                onChange={setCurveOffset}
-              />
-            )}
           </>
         )}
+        <Pagination
+          offset={curveOffset}
+          limit={200}
+          total={curves.data?.equity.total ?? null}
+          loading={curves.loading}
+          label={`${t("research:equity")} / ${t("research:benchmarkCurve")}`}
+          onChange={setCurveOffset}
+        />
       </section>
       <section className="panel">
         <div className="panelHeader">
@@ -292,14 +288,14 @@ export function ResearchRunPage({ runId }: { runId: string }) {
         ) : (
           <EmptyState>{t("common:noData")}</EmptyState>
         )}
-        {rolling.data && rolling.data.total > 200 && (
-          <Pagination
-            offset={rollingOffset}
-            limit={200}
-            total={rolling.data.total}
-            onChange={setRollingOffset}
-          />
-        )}
+        <Pagination
+          offset={rollingOffset}
+          limit={200}
+          total={rolling.data?.total ?? null}
+          loading={rolling.loading}
+          label={t("research:rollingMetrics")}
+          onChange={setRollingOffset}
+        />
       </section>
       <ResearchTable
         title={t("research:holdings")}
@@ -451,14 +447,14 @@ function ResearchTable({
           </table>
         </div>
       )}
-      {!loading && !error && total !== null && total > 200 && (
-        <Pagination
-          offset={offset}
-          limit={200}
-          total={total}
-          onChange={onChange}
-        />
-      )}
+      <Pagination
+        offset={offset}
+        limit={200}
+        total={total}
+        loading={loading}
+        label={title}
+        onChange={onChange}
+      />
     </section>
   );
 }

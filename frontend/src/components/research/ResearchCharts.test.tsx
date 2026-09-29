@@ -42,7 +42,7 @@ test("chart data is lazy, paged and preserves independent dates and exact string
     trading_date: sequence === 100 ? "2024-04-01" : "2024-01-02",
     value: sequence === 100 ? "100.123456789012345678" : "1",
   }));
-  render(
+  const { container } = render(
     <BenchmarkChart
       strategy={strategy}
       benchmark={[
@@ -54,6 +54,17 @@ test("chart data is lazy, paged and preserves independent dates and exact string
       ]}
     />,
   );
+  expect(
+    container.querySelector("circle.benchmarkLine")?.getAttribute("cx"),
+  ).toBe("900");
+  expect(
+    container
+      .querySelector("polyline.strategyLine")
+      ?.getAttribute("points")
+      ?.split(" ")
+      .at(-1)
+      ?.startsWith("450,"),
+  ).toBe(true);
   expect(
     screen.queryByRole("table", { name: "accessibility:benchmarkChart" }),
   ).toBeNull();
@@ -68,6 +79,70 @@ test("chart data is lazy, paged and preserves independent dates and exact string
   expect(within(table).getByText("2024-04-01")).toBeInTheDocument();
   expect(within(table).getByText("99.000000000000000001")).toBeInTheDocument();
   expect(within(table).getByText("2024-04-02")).toBeInTheDocument();
+});
+
+test("equity table keeps same-date strategy and benchmark rows together across pages", async () => {
+  const dates = Array.from({ length: 200 }, (_, index) =>
+    new Date(Date.UTC(2023, 0, index + 1)).toISOString().slice(0, 10),
+  );
+  render(
+    <BenchmarkChart
+      strategy={dates.map((trading_date, sequence) => ({
+        sequence,
+        trading_date,
+        value: `S${sequence}`,
+      }))}
+      benchmark={dates.map((trading_date, sequence) => ({
+        sequence,
+        trading_date,
+        value: `B${sequence}`,
+      }))}
+    />,
+  );
+  await userEvent.click(screen.getByText("chartData"));
+  const table = screen.getByRole("table", {
+    name: "accessibility:benchmarkChart",
+  });
+  expect(within(table).getAllByText("research:strategySeries")).toHaveLength(
+    50,
+  );
+  expect(within(table).getAllByText("research:benchmark")).toHaveLength(50);
+  expect(within(table).getByText("S49")).toBeInTheDocument();
+  expect(within(table).getByText("B49")).toBeInTheDocument();
+  expect(within(table).queryByText("S50")).toBeNull();
+  await userEvent.click(screen.getByRole("button", { name: "next" }));
+  expect(within(table).getByText("S50")).toBeInTheDocument();
+  expect(within(table).getByText("B50")).toBeInTheDocument();
+});
+
+test("a missing rolling value stays visible and breaks only its own chart line", async () => {
+  const dates = ["2024-01-02", "2024-01-03", "2024-01-04"];
+  const { container } = render(
+    <BenchmarkChart
+      strategy={dates.map((trading_date, sequence) => ({
+        sequence,
+        trading_date,
+        value: sequence === 1 ? null : `${sequence + 1}`,
+      }))}
+      benchmark={dates.map((trading_date, sequence) => ({
+        sequence,
+        trading_date,
+        value: `-${sequence + 1}`,
+      }))}
+    />,
+  );
+  expect(container.querySelectorAll("polyline.strategyLine")).toHaveLength(0);
+  expect(container.querySelectorAll("circle.strategyLine")).toHaveLength(2);
+  expect(container.querySelectorAll("polyline.benchmarkLine")).toHaveLength(1);
+  await userEvent.click(screen.getByText("chartData"));
+  const table = screen.getByRole("table", {
+    name: "accessibility:benchmarkChart",
+  });
+  const unavailable = within(table).getByText("common:unavailable");
+  expect(
+    within(unavailable.closest("tr")!).getByText("2024-01-03"),
+  ).toBeInTheDocument();
+  expect(within(table).getByText("-2")).toBeInTheDocument();
 });
 
 test("drawdown exact point remains keyboard-accessible below visual bars", async () => {

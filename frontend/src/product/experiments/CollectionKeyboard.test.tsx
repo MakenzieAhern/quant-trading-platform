@@ -132,8 +132,8 @@ it("keeps a holdings pager mounted through an error and retry without late autof
   await act(async () => fail(new Error("offline")));
   expect(pager).toBeInTheDocument();
   expect(pager).toHaveFocus();
-  for (const button of within(pager).getAllByRole("button"))
-    expect(button).toBeDisabled();
+  expect(within(pager).getByRole("button", { name: "Previous" })).toBeEnabled();
+  expect(within(pager).getByRole("button", { name: "Next" })).toBeDisabled();
   await userEvent.click(screen.getByRole("button", { name: "Retry loading" }));
   expect(pager).not.toHaveFocus();
   await act(async () => finish({ ...holdings, offset: 1 }));
