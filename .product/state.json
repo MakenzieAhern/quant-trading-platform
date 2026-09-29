@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T05:52:00Z",
+  "updated_at_utc": "2026-09-29T06:08:52Z",
+  "browser_narrow_zoom_surrogate_gate": {
+    "status": "PARTIAL_CSS_VIEWPORT_SURROGATE_NATIVE_200PCT_UNVERIFIED",
+    "code_head": "3db3a32bfa41d84ad4e064c79b550707eb20d996",
+    "proof": "Actual Chrome 153 on the existing isolated production-image scratch project: English 390x844 saved result had document/client width 375/375; chart keyboard pagination reached 101-119 of 119 with named focus. Chinese dark 1024x768 stopped historical paper ledger had document/client width 1009/1009; the named plan table scrolled with ArrowRight to 337/337. A separate 720x450 CSS-viewport surrogate had saved-result and stopped-ledger document/client width 705/705; chart pagination remained focused and visible, and the ledger plan table scrolled to its rightmost decision at 424/424. No page-level horizontal overflow or alert was observed. Chrome tab and temporary viewport were reset/closed; no screenshot file was saved. See docs/product/ACCEPTANCE.md.",
+    "limits": "At 1440x900 base viewport, Chrome-extension Control-plus and Control-equal did not change devicePixelRatio, visualViewport scale or CSS viewport; therefore the 720x450 check is not native 200pct zoom evidence. Native 200pct, screen-reader speech, independent novice, full locale/theme/viewport matrix, saved interaction media and all M4/M5/release gates remain open. Only scratch GET/UI display interactions occurred; no original account/database/provider/frozen research/OOS or GitHub write. October 1 GitHub recovery is unverified."
+  },
   "experiment_list_poll_focus_gate": {
     "status": "PASS_BOUNDED_ACTUAL_CHROME_GET_FAULT_AND_RETRY_NOT_FULL_M4_M5",
     "parent_head": "db3e49b",

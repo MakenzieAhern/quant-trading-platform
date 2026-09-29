@@ -5165,3 +5165,35 @@ M4/M5, independent novice, licensed current-market forward simulation,
 genuine lost-ledger/independent-backup recovery or exact-head GitHub CI.
 No original database/account/provider/frozen research/Official OOS write,
 push, merge or release occurred; October 1 remains an unverified estimate.
+
+## 2026-09-29 06:08 UTC narrow-browser check, not native 200% zoom
+
+At clean code head `3db3a32`, the existing isolated production-image scratch
+project remained healthy. Actual Chrome 153 used only saved historical reads:
+
+- English 390×844 saved result: document/client width 375/375. Keyboard Next
+  advanced the chart to 101–119 of 119 and left focus on the named Pagination
+  group. No page-level horizontal overflow or alert was observed.
+- Chinese dark 1024×768 stopped historical paper ledger: document/client width
+  1009/1009. The named plan table was 714px wide with 1051px content;
+  ArrowRight reached its 337px maximum horizontal scroll, exposing the risk
+  decision column.
+- A separate 720×450 **CSS viewport surrogate**: saved-result and stopped-
+  ledger document/client width 705/705. Result chart Next reached 101–119 of
+  119 with focus on the named group in view. The ledger plan table was 627px
+  wide with 1051px content; keyboard scrolling reached 424/424px and the
+  rightmost decision text was visible. No page-level horizontal overflow.
+
+Native 200% zoom was **not** proven: at a 1440×900 base viewport, Chrome
+extension `Control+plus` and `Control+equal` did not change devicePixelRatio,
+visualViewport scale or the CSS viewport. The 720px surrogate cannot replace
+real page zoom, font scaling or screen-reader speech. Screenshots were viewed
+in-tool but not saved as release media. An independent read-only static audit
+found no clearly evidenced release-critical defect in these target layouts;
+it did not run a browser and cannot certify geometry or WCAG AA.
+
+The temporary Chrome tab and viewport were reset/closed. The original four
+services stayed running; there were no account/database/provider, frozen
+research, Official OOS or GitHub writes. Full M4/M5, actual native zoom,
+licensed new-market forward receipt, genuine lost-ledger restore, independent
+backup, hosted CI and release approval remain open.
