@@ -37,6 +37,7 @@ export function MarketUpdatesPanel() {
   const headingFocus = useRef<HTMLHeadingElement>(null);
   const focusedHistory = useRef(false);
   const historyErrorFocus = useRef<HTMLParagraphElement>(null);
+  const historyHeadingFocus = useRef<HTMLHeadingElement>(null);
   const caps = useApiResource(
     (signal) => marketUpdateApi.capabilities(signal),
     [revision],
@@ -54,14 +55,17 @@ export function MarketUpdatesPanel() {
   );
   useEffect(() => {
     if (
-      history.error &&
+      (history.error || history.data) &&
       focusedHistory.current &&
       document.activeElement === document.body
     ) {
-      historyErrorFocus.current?.focus();
+      (history.error
+        ? historyErrorFocus
+        : historyHeadingFocus
+      ).current?.focus();
       focusedHistory.current = false;
     }
-  }, [history.error]);
+  }, [history.data, history.error]);
   useEffect(() => {
     const changed = () => setJobId(selectedFromUrl());
     window.addEventListener("popstate", changed);
@@ -132,7 +136,9 @@ export function MarketUpdatesPanel() {
         <p>{c.selectPrompt}</p>
       )}
       <section aria-label={c.history}>
-        <h3>{c.history}</h3>
+        <h3 ref={historyHeadingFocus} tabIndex={-1}>
+          {c.history}
+        </h3>
         {history.loading && <p role="status">{c.loading}</p>}
         {history.error && (
           <p ref={historyErrorFocus} role="alert" tabIndex={-1}>

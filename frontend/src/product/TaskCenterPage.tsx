@@ -21,6 +21,8 @@ export function TaskCenterPage() {
   const [updateOffset, setUpdateOffset] = useState(0);
   const [revision, setRevision] = useState(0);
   const focusedList = useRef<"research" | "updates" | null>(null);
+  const researchHeading = useRef<HTMLHeadingElement>(null);
+  const updateHeading = useRef<HTMLHeadingElement>(null);
   const researchError = useRef<HTMLParagraphElement>(null);
   const updateErrorFocus = useRef<HTMLParagraphElement>(null);
   const research = useApiResource(
@@ -41,14 +43,20 @@ export function TaskCenterPage() {
   );
   useEffect(() => {
     if (document.activeElement !== document.body) return;
-    if (research.error && focusedList.current === "research") {
-      researchError.current?.focus();
+    if (
+      focusedList.current === "research" &&
+      (research.error || research.data)
+    ) {
+      (research.error ? researchError : researchHeading).current?.focus();
       focusedList.current = null;
-    } else if (updates.error && focusedList.current === "updates") {
-      updateErrorFocus.current?.focus();
+    } else if (
+      focusedList.current === "updates" &&
+      (updates.error || updates.data)
+    ) {
+      (updates.error ? updateErrorFocus : updateHeading).current?.focus();
       focusedList.current = null;
     }
-  }, [research.error, updates.error]);
+  }, [research.data, research.error, updates.data, updates.error]);
   return (
     <div className="productPage">
       <header className="pageHeader">
@@ -64,7 +72,9 @@ export function TaskCenterPage() {
         </button>
       </header>
       <section className="panel" aria-label={c.researchTasks}>
-        <h2>{c.researchTasks}</h2>
+        <h2 ref={researchHeading} tabIndex={-1}>
+          {c.researchTasks}
+        </h2>
         {research.loading && <p role="status">{c.loading}</p>}
         {research.error && (
           <p ref={researchError} role="alert" tabIndex={-1}>
@@ -110,7 +120,9 @@ export function TaskCenterPage() {
         />
       </section>
       <section className="panel" aria-label={c.updateTasks}>
-        <h2>{c.updateTasks}</h2>
+        <h2 ref={updateHeading} tabIndex={-1}>
+          {c.updateTasks}
+        </h2>
         <p>{c.candidateOnly}</p>
         {updates.loading && <p role="status">{c.loading}</p>}
         {updates.error && (

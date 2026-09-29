@@ -89,6 +89,116 @@ describe("task center", () => {
       within(research).queryByRole("link", { name: /^Open experiment:/ }),
     ).not.toBeInTheDocument();
   });
+  it("moves focus to the research heading when a successful poll replaces its focused task", async () => {
+    await i18n.changeLanguage("en-US");
+    vi.useFakeTimers();
+    vi.spyOn(experimentApi, "list")
+      .mockResolvedValueOnce({
+        items: [{ ...researchJob, status: "RUNNING" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockResolvedValueOnce({
+        items: [
+          {
+            ...researchJob,
+            job_id: "aaaaaaaa-bbbb-4ccc-8ddd-000000000001",
+            name: "Newer task",
+          },
+        ],
+        total: 2,
+        limit: 20,
+        offset: 0,
+      });
+    vi.spyOn(marketUpdateApi, "list").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    render(<TaskCenterPage />);
+    await act(async () => {});
+    const research = screen.getByRole("region", { name: "Research tasks" });
+    const open = within(research).getByRole("link", {
+      name: /^Open experiment:/,
+    });
+    open.focus();
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(open).not.toBeInTheDocument();
+    expect(
+      within(research).getByRole("heading", { name: "Research tasks" }),
+    ).toHaveFocus();
+  });
+  it("moves focus to the raw-task heading when a successful poll replaces its focused task", async () => {
+    await i18n.changeLanguage("en-US");
+    vi.useFakeTimers();
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(marketUpdateApi, "list")
+      .mockResolvedValueOnce({
+        items: [{ ...updateJob, status: "RUNNING" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockResolvedValueOnce({
+        items: [
+          { ...updateJob, job_id: "aaaaaaaa-bbbb-4ccc-8ddd-000000000002" },
+        ],
+        total: 2,
+        limit: 20,
+        offset: 0,
+      });
+    render(<TaskCenterPage />);
+    await act(async () => {});
+    const raw = screen.getByRole("region", { name: "Raw-data request tasks" });
+    const open = within(raw).getByRole("link", { name: /^Open task:/ });
+    open.focus();
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(open).not.toBeInTheDocument();
+    expect(
+      within(raw).getByRole("heading", { name: "Raw-data request tasks" }),
+    ).toHaveFocus();
+  });
+  it("does not steal focus after the user leaves a task link before a successful replacement", async () => {
+    await i18n.changeLanguage("en-US");
+    vi.useFakeTimers();
+    vi.spyOn(experimentApi, "list")
+      .mockResolvedValueOnce({
+        items: [{ ...researchJob, status: "RUNNING" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockResolvedValueOnce({
+        items: [
+          { ...researchJob, job_id: "aaaaaaaa-bbbb-4ccc-8ddd-000000000004" },
+        ],
+        total: 2,
+        limit: 20,
+        offset: 0,
+      });
+    vi.spyOn(marketUpdateApi, "list").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    render(<TaskCenterPage />);
+    await act(async () => {});
+    const open = screen.getByRole("link", { name: /^Open experiment:/ });
+    open.focus();
+    const refresh = screen.getByRole("button", { name: "Refresh" });
+    refresh.focus();
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(open).not.toBeInTheDocument();
+    expect(refresh).toHaveFocus();
+  });
   it("moves focus to the raw-task error without touching the unaffected research stream", async () => {
     await i18n.changeLanguage("en-US");
     vi.useFakeTimers();

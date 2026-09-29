@@ -120,6 +120,32 @@ describe("explicit incremental request workflow", () => {
     );
     expect(list).toHaveBeenCalledTimes(3);
   });
+  it("moves focus to history heading when a successful poll replaces its focused task", async () => {
+    vi.useFakeTimers();
+    vi.mocked(marketUpdateApi.list)
+      .mockResolvedValueOnce({
+        items: [{ ...job, status: "RUNNING" }],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      })
+      .mockResolvedValueOnce({
+        items: [{ ...job, job_id: "aaaaaaaa-bbbb-4ccc-8ddd-000000000003" }],
+        total: 2,
+        limit: 20,
+        offset: 0,
+      });
+    render(<MarketUpdatesPanel />);
+    await act(async () => {});
+    const history = screen.getByRole("region", { name: "Update task history" });
+    const open = within(history).getByRole("button", { name: /^Open task:/ });
+    open.focus();
+    await act(async () => vi.advanceTimersByTime(5000));
+    expect(open).not.toBeInTheDocument();
+    expect(
+      within(history).getByRole("heading", { name: "Update task history" }),
+    ).toHaveFocus();
+  });
   it("names native candidate observations and its translated scroll region without acquiring data", async () => {
     const create = vi.spyOn(marketUpdateApi, "create");
     window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
