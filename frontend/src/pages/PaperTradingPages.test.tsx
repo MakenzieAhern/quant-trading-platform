@@ -927,6 +927,169 @@ describe("paper trading pages", () => {
     );
   });
 
+  it.each([
+    [
+      "start",
+      "CREATED",
+      "STARTING",
+      "Start replay",
+      "Starting",
+      ["RUNNING", "STOPPED"],
+    ],
+    [
+      "pause",
+      "RUNNING",
+      "PAUSING",
+      "Pause replay",
+      "Pausing",
+      ["PAUSED", "STARTING", "RUNNING"],
+    ],
+    ["stop", "PAUSED", "STOPPING", "Stop replay", "Stopping", ["STOPPED"]],
+  ] as const)(
+    "clears an uncertain %s failure only after the authoritative state changes",
+    async (action, before, after, button, statusLabel, laterStatuses) => {
+      for (const statusFirst of [false, true]) {
+        installWebSocket();
+        let finishPost!: (response: Response) => void;
+        const fetch = vi
+          .spyOn(globalThis, "fetch")
+          .mockResolvedValueOnce(jsonResponse(paperSnapshot(before)))
+          .mockImplementationOnce(
+            () => new Promise((resolve) => (finishPost = resolve)),
+          )
+          .mockResolvedValueOnce(
+            jsonResponse({ ...paperSnapshot(after), last_sequence: 1 }),
+          );
+        for (const [index, nextStatus] of laterStatuses.entries())
+          fetch.mockResolvedValueOnce(
+            jsonResponse({
+              ...paperSnapshot(nextStatus),
+              last_sequence: index + 2,
+            }),
+          );
+        const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+        await act(async () => MockWebSocket.instances[0]!.open());
+        await userEvent.click(screen.getByRole("button", { name: button }));
+        expect(fetch.mock.calls[1]?.[0]).toContain(`/${PAPER_ID}/${action}`);
+
+        const confirmStatus = async (
+          nextStatus: NonNullable<Parameters<typeof paperSnapshot>[0]>,
+          sequence: number,
+        ) => {
+          await act(async () =>
+            MockWebSocket.instances[0]!.message({
+              sequence,
+              type: "session.status",
+              occurred_at: "2026-09-06T02:01:00Z",
+              payload: { status: nextStatus },
+            }),
+          );
+          expect(
+            screen.getByText(
+              sequence === 1
+                ? statusLabel
+                : i18n.t(`statuses.${nextStatus}`, { ns: "common" }),
+              { selector: ".statusBadge" },
+            ),
+          ).toBeInTheDocument();
+        };
+
+        if (statusFirst) await confirmStatus(after, 1);
+        await act(async () =>
+          finishPost(jsonResponse({ detail: "unavailable" }, 503)),
+        );
+        if (!statusFirst) {
+          expect(screen.getByRole("alert")).toHaveTextContent(
+            `Unable to ${action} the paper session`,
+          );
+          expect(
+            screen.getByText(
+              before === "CREATED"
+                ? "Created"
+                : before === "RUNNING"
+                  ? "Running"
+                  : "Paused",
+              {
+                selector: ".statusBadge",
+              },
+            ),
+          ).toBeInTheDocument();
+          await confirmStatus(after, 1);
+        }
+        expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+        for (const [index, nextStatus] of laterStatuses.entries()) {
+          await confirmStatus(nextStatus, index + 2);
+          expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+        }
+        expect(fetch).toHaveBeenCalledTimes(3 + laterStatuses.length);
+        if (action === "pause") {
+          fetch.mockResolvedValueOnce(
+            jsonResponse({ detail: "unavailable" }, 503),
+          );
+          await userEvent.click(screen.getByRole("button", { name: button }));
+          expect(screen.getByRole("alert")).toHaveTextContent(
+            "Unable to pause the paper session",
+          );
+          expect(fetch).toHaveBeenCalledTimes(4 + laterStatuses.length);
+        }
+        view.unmount();
+        vi.restoreAllMocks();
+      }
+    },
+  );
+
+  it.each([
+    ["start", "CREATED", "Start replay", ["STARTING", "RUNNING", "STOPPED"]],
+    [
+      "pause",
+      "RUNNING",
+      "Pause replay",
+      ["PAUSING", "PAUSED", "STARTING", "RUNNING"],
+    ],
+  ] as const)(
+    "does not revive a confirmed %s failure when the POST fails after later statuses",
+    async (action, before, button, statuses) => {
+      installWebSocket();
+      let finishPost!: (response: Response) => void;
+      const fetch = vi
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValueOnce(jsonResponse(paperSnapshot(before)))
+        .mockImplementationOnce(
+          () => new Promise((resolve) => (finishPost = resolve)),
+        );
+      for (const [index, status] of statuses.entries())
+        fetch.mockResolvedValueOnce(
+          jsonResponse({ ...paperSnapshot(status), last_sequence: index + 1 }),
+        );
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      await userEvent.click(screen.getByRole("button", { name: button }));
+      expect(fetch.mock.calls[1]?.[0]).toContain(`/${PAPER_ID}/${action}`);
+      for (const [index, status] of statuses.entries()) {
+        await act(async () =>
+          MockWebSocket.instances[0]!.message({
+            sequence: index + 1,
+            type: "session.status",
+            occurred_at: "2026-09-06T02:01:00Z",
+            payload: { status },
+          }),
+        );
+      }
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      await act(async () =>
+        finishPost(jsonResponse({ detail: "unavailable" }, 503)),
+      );
+      expect(
+        screen.getByText(
+          i18n.t(`statuses.${statuses.at(-1)}`, { ns: "common" }),
+          { selector: ".statusBadge" },
+        ),
+      ).toBeInTheDocument();
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      expect(fetch).toHaveBeenCalledTimes(2 + statuses.length);
+    },
+  );
+
   it("moves focus to the durable status only when a focused paper action disappears", async () => {
     installWebSocket();
     vi.spyOn(globalThis, "fetch")

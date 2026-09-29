@@ -8,14 +8,28 @@ import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
 import { StatusBadge } from "../components/StatusBadge";
 import { ExperimentPlan } from "../product/experiments/ExperimentPlan";
 import { usePaperStream } from "../hooks/usePaperStream";
+import type { PaperSessionStatus } from "../types/paper";
 import { formatDecimal, formatUtc, shortId } from "../utils/format";
+
+type PaperAction = "start" | "pause" | "stop";
+
+function commandConfirmed(
+  action: PaperAction,
+  status: PaperSessionStatus | undefined,
+) {
+  if (action === "start") return status === "STARTING" || status === "RUNNING";
+  if (action === "pause") return status === "PAUSING" || status === "PAUSED";
+  return status === "STOPPING" || status === "STOPPED";
+}
 
 export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   const { t } = useTranslation("paper");
   const { snapshot, connection, error } = usePaperStream(sessionId);
   const [commandPending, setCommandPending] = useState(false);
-  const [commandError, setCommandError] = useState<string | null>(null);
+  const [commandError, setCommandError] = useState<PaperAction | null>(null);
   const commandLock = useRef(false);
+  const pendingAction = useRef<PaperAction | null>(null);
+  const pendingCommandConfirmed = useRef(false);
   const focusedCommand = useRef<HTMLButtonElement | null>(null);
   const statusFocus = useRef<HTMLSpanElement>(null);
 
@@ -28,16 +42,31 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     }
   }, [snapshot?.session.status]);
 
-  const command = async (action: "start" | "pause" | "stop") => {
+  const status = snapshot?.session.status;
+  useEffect(() => {
+    if (
+      pendingAction.current &&
+      commandConfirmed(pendingAction.current, status)
+    )
+      pendingCommandConfirmed.current = true;
+  }, [status]);
+  const commandErrorIsStale =
+    commandError !== null && commandConfirmed(commandError, status);
+  if (commandErrorIsStale) setCommandError(null);
+
+  const command = async (action: PaperAction) => {
     if (commandLock.current) return;
     commandLock.current = true;
+    pendingAction.current = action;
+    pendingCommandConfirmed.current = false;
     setCommandPending(true);
     setCommandError(null);
     try {
       await paperApi[action](sessionId);
     } catch {
-      setCommandError(`detail.${action}Error`);
+      if (!pendingCommandConfirmed.current) setCommandError(action);
     } finally {
+      pendingAction.current = null;
       commandLock.current = false;
       setCommandPending(false);
     }
@@ -147,9 +176,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           {t("detail.lastVerifiedWarning")}
         </p>
       )}
-      {commandError && (
+      {commandError && !commandErrorIsStale && (
         <p className="stateCallout" role="alert">
-          {t(commandError)}
+          {t(`detail.${commandError}Error`)}
         </p>
       )}
       {error && <ErrorPanel message={error} />}

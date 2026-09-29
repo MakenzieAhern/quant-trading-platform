@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T02:45:08Z",
+  "updated_at_utc": "2026-09-29T02:52:54Z",
+  "paper_command_race_local_gate": {
+    "status": "PASS_BOUNDED_LOCAL_STATE_RECONCILIATION_NOT_FULL_U7_OR_GITHUB_CI",
+    "parent_head": "5cd433d",
+    "proof": "2026-09-29 UTC: a paper start/pause/stop POST can return 503 despite an authoritative stream/REST state change. Red tests reproduced old command errors surviving later statuses, including when STARTING/RUNNING/STOPPED or PAUSING/PAUSED/STARTING/RUNNING arrived before a late failed POST. The view now tracks confirmation for the pending action and discards its late error; genuinely unconfirmed failures and a later new command failure remain visible. PaperTradingPages passed 48/48. Local make test exited zero with frontend 390/390; make lint and make build exited zero. Original Compose PostgreSQL, Redis and backend were healthy, frontend and /api/health returned HTTP 200.",
+    "limits": "This is deterministic local component/integration verification, not a real network-fault browser injection, full U7/M4/M5, native accessibility, independent novice, lawful forward-market data, original lost-ledger recovery, independent backup or exact-head GitHub CI. October 1 is the user's estimated GitHub recovery date and remains unverified. No original database/account/provider/frozen research, Official OOS, push, merge or release was changed."
+  },
   "saved_collection_read_error_local_gate": {
     "status": "PASS_BOUNDED_READ_ERROR_FIX_NOT_BROWSER_FAULT_INJECTION_OR_FULL_M4",
     "parent_head": "781424b",

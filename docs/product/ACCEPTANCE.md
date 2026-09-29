@@ -4811,3 +4811,26 @@ browser fault injection of 403/408/offline; no screenshot file or recording
 was saved. Full M4, U1–U8/M5, genuine forward-data/backup/ledger gates and
 exact-head GitHub CI remain open. No original study/account/provider/frozen
 research, Official OOS, push, merge or release was changed.
+
+## 2026-09-29 02:53 UTC local continuation without GitHub CI
+
+GitHub recovery is still unverified; October 1 is only the user's estimate.
+The running local Compose PostgreSQL, Redis and backend were healthy, with
+`/api/health` and the frontend returning HTTP 200. The services need no
+restart. `make test` passed using its separate disposable PostgreSQL, with
+390/390 frontend tests; `make lint` and `make build` exited zero. This is a
+usable local verification path while GitHub Actions is unavailable, but it
+cannot replace exact-head remote CI, PR review, merge or release gates.
+
+A paper-session race was reproduced and corrected locally. A start, pause or
+stop HTTP command could report an error after the authoritative session state
+had already confirmed the command, leaving a misleading alert as subsequent
+statuses arrived. The view now records confirmation during a pending command
+and suppresses its late failure. Regression tests also cover a failed POST
+before confirmation, later status changes, an unconfirmed failure and a new
+command failing independently; `PaperTradingPages.test.tsx` passed 48/48.
+The saved-result keyboard regression was aligned to the new read-error retry
+label and remains 4/4. These are bounded component tests, not real browser
+fault injection, full U7/M4/M5 or release acceptance. No original database,
+paper account, provider, frozen research, Official OOS, push, merge or
+release was changed.
