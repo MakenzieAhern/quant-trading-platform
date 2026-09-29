@@ -74,6 +74,31 @@ function enableNativeDialog() {
 }
 
 describe("guided experiment", () => {
+  it.each([
+    [new ApiError(403, "denied"), "Access was denied", "访问被拒绝"],
+    [new ApiError(408, "timeout"), "request timed out", "请求超时"],
+    [new TypeError("offline"), "service is unavailable", "服务暂时无法连接"],
+  ] as const)(
+    "explains a capability-load failure before any submission: %s",
+    async (failure, english, chinese) => {
+      vi.spyOn(experimentApi, "capabilities")
+        .mockRejectedValueOnce(failure)
+        .mockResolvedValue(capabilities);
+      const create = vi.spyOn(experimentApi, "create");
+      render(<CreateExperimentPage />);
+      expect(await screen.findByRole("alert")).toHaveTextContent(english);
+      expect(screen.getByRole("alert")).not.toHaveTextContent("request key");
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(screen.getByRole("alert")).toHaveTextContent(chinese);
+      expect(create).not.toHaveBeenCalled();
+      await userEvent.click(screen.getByRole("button", { name: "重新尝试" }));
+      expect(
+        (await screen.findAllByText(capabilities.strategies[0].name_zh)).length,
+      ).toBeGreaterThan(0);
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+
   it("does not steal direct-load focus but focuses each newly opened step", async () => {
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
     render(<CreateExperimentPage />);

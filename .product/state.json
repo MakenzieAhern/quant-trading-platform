@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T02:20:40Z",
+  "updated_at_utc": "2026-09-29T02:33:27Z",
+  "capability_load_error_local_gate": {
+    "status": "PASS_BOUNDED_LOCAL_ERROR_PATH_NOT_GITHUB_CI_OR_RELEASE",
+    "parent_head": "50b2b2e",
+    "proof": "2026-09-29 UTC: the research wizard's pre-submission capability-load failure now reuses the existing typed ProductError guidance. A red regression reproduced the prior misleading submission-retry message for HTTP 403, HTTP 408 and offline TypeError; after the fix, three bilingual EN/ZH cases verified the accurate guidance, a successful retry, and no experiment-create POST. Focused tests passed 5/5. The full local make test, make lint and make build commands all exited zero; frontend tests passed 381/381, backend tests ran against an isolated disposable PostgreSQL, and Ruff, format, mypy, ESLint, TypeScript and Vite build passed. Original Compose PostgreSQL, Redis, backend and frontend remained running; /api/health and the frontend returned HTTP 200, Redis PONG and PostgreSQL accepted connections.",
+    "limits": "This is local developer validation of one U1/U3 error path, not full U1-U8/M0-M5 acceptance, native browser fault injection, independent novice, accessibility/performance, lawful current-market forward data, genuine lost-paper-ledger restore, independent backup, exact-head GitHub CI or v1.2 release. GitHub recovery remains unverified; no push, merge, release, provider request, formal/OOS run or original database change occurred."
+  },
   "isolated_integrated_release_demo": {
     "status": "PASS_BOUNDED_SYNTHETIC_RELEASE_FLOW_NOT_FULL_U1_U3_M4_M5",
     "source_head": "5776d762ba2e9750a3a970bf1fd1350f2bed4f0e",

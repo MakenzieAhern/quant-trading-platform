@@ -11,6 +11,7 @@ import {
 import { navigate, useNavigationGuard } from "../../utils/navigation";
 import { usePageDataContext } from "../dataContext";
 import { Dialog } from "../Dialog";
+import { ProductError } from "../ProductPages";
 import { ConfigurationVersionsPanel } from "../configs";
 import { experimentApi } from "./api";
 import { useExperimentCopy, type ExperimentCopy } from "./copy";
@@ -39,15 +40,10 @@ export function CreateExperimentPage() {
       </header>
       {capabilities.loading && <p role="status">{c.loading}</p>}
       {capabilities.error && (
-        <div className="experimentNotice" role="alert">
-          <p>{c.networkError}</p>
-          <button
-            className="button secondary"
-            onClick={() => setRevision((value) => value + 1)}
-          >
-            {c.retryLoad}
-          </button>
-        </div>
+        <ProductError
+          error={capabilities.error}
+          retry={() => setRevision((value) => value + 1)}
+        />
       )}
       {capabilities.data &&
         (capabilities.data.strategies.length ? (

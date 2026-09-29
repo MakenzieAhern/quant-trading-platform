@@ -4769,3 +4769,26 @@ independent Chrome/novice, real A-share or forward-data acceptance, current-head
 interaction media, full M4/M5, GitHub CI, or v1.2 release approval. No screenshot
 file or recording was saved. October 1 remains a user estimate, not a verified
 GitHub recovery event.
+
+## 2026-09-29 02:33 UTC local continuation while GitHub CI is held
+
+The running Compose PostgreSQL, Redis, backend and frontend remained available
+on their configured localhost ports; PostgreSQL accepted connections, Redis
+returned PONG, `/api/health` reported HTTP 200 and the frontend returned HTTP
+200. This permits local use and verification without GitHub Actions. The
+repository's `make test` uses a separate disposable PostgreSQL; `make test`,
+`make lint` and `make build` all exited zero. Frontend tests passed 381/381;
+backend tests, Ruff, format, mypy, ESLint, TypeScript and Vite build passed.
+
+One U1/U3 defect was corrected: before any experiment submission, a failed
+strategy-capabilities read showed the message for an uncertain *submission*.
+The wizard now reuses the existing typed load-error panel. Red-before/green-
+after cases covered HTTP 403, HTTP 408 and offline TypeError in English and
+Chinese, successful read retry, and no experiment-create request. An
+independent read-only review found no required change or import cycle.
+
+These checks are bounded local evidence, not the exact-head GitHub CI or a
+full U1–U8/M0–M5, native browser fault-injection, novice, accessibility,
+performance, forward-data or disaster-recovery pass. No original database,
+paper account, frozen research, provider, Official OOS, push, merge or release
+was changed. The user-estimated October 1 GitHub recovery is not yet verified.
