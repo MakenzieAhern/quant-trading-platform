@@ -5608,3 +5608,27 @@ This closes one bounded real-browser service-status/label/recovery check, **not*
 screen-reader speech, native 200% zoom, the full viewport/theme/locale matrix,
 novice testing, full M4/M5 or GitHub CI. No original financial data, frozen
 research, OOS, GitHub PR or release was changed.
+
+## 2026-09-29 10:45 UTC native Chrome market-dialog read failure and Retry focus
+
+At `17dbebc`, installed Chrome opened `600000` from the scratch historical
+market list in a native dialog. Only the isolated backend was stopped after
+confirming its PID/Compose ownership and terminal scratch jobs. Changing the
+visible end date from 2011-06-30 to 2011-06-29 and reading the new window
+produced a localized, actionable `服务暂时无法连接` alert with `重试读取缓存` inside the
+still-open dialog. That intermediate failure was observed in the Chrome AX/DOM
+state; no failure PNG was saved. After restarting that same scratch backend,
+Enter on Retry moved focus to the persistent dialog H2 while loading. The
+successful historical-bars GET returned HTTP 200, displayed the exact
+2011-01-04–2011-06-29 diagnostics, removed the alert and kept H2 focus.
+Escape closed the dialog, cleared its URL hash and returned focus to the
+original security button. The scratch backend finished healthy; original
+Compose and API remained healthy/HTTP 200.
+
+Two Chrome PNGs, SHA-256 values, request path and process facts are outside Git
+at `product-evidence/v1.2/m4/20260929-17dbebc-market-modal-retry/README.md`.
+This closes one real-dialog keyboard/error/retry/focus case beyond the jsdom
+`showModal` stub. It does not establish screen-reader speech, every error
+class, native zoom, full U5/U8/M4/M5, independent novice or hosted CI. No
+original financial data, frozen research/OOS, GitHub push/merge or release was
+changed.
