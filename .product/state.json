@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T12:46:25Z",
+  "updated_at_utc": "2026-09-29T13:02:27Z",
+  "u7_paper_create_lost201_browser_20260929_gate": {
+    "status": "PASS_BOUNDED_ACTUAL_CHROME_SAME_PROFILE_SCRATCH_NOT_FULL_U7_M4_M5",
+    "code_head": "504b95a",
+    "proof": "2026-09-29 13:02 UTC: isolated qtp-v12-paper-loss-qa tmpfs Compose and exact-origin loopback fault proxy swallowed the browser's first committed 201 for a synthetic 2030 paper account. Real Chrome reloaded, retried its saved request with identical key/body hashes, and reached the same session ID 7eaea074-9cdf-43c9-aff9-9c1c8b5a3da3; scratch GET list total=1 CREATED. Saved confirmed receipt remained on the create page. After replacing only the scratch frontend's API target with direct scratch backend access on the same origin, Chrome account detail showed connected/created and no console errors. No replay or original database write. Full harness and checksums outside Git at product-evidence/v1.2/m5/20260929-paper-create-lost201-browser.md.",
+    "limits": "One same-profile actual-browser lost-201 path; not every race, crash, cross-profile/device exactly-once, full U7/M4/M5 or release readiness. Narrow proxy did not tunnel WebSocket, so its initial detail error was a harness limitation. Lawful forward-market receipt, genuine lost-ledger restore, independent physical backup, cold matched p95, native screen-reader/200pct zoom, CSV landing, independent novice and exact-head hosted CI remain open. GitHub October 1 recovery unverified; no push/merge/tag/release."
+  },
   "u7_paper_create_cross_tab_20260929_gate": {
     "status": "PASS_BOUNDED_ACTUAL_CHROME_TWO_TAB_SCRATCH_NOT_FULL_U7_M4_M5",
     "parent_head": "06b5968a83732b765d3ffb6322e9f89734211eab",

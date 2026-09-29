@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 13:02 UTC browser lost-201 recovery — bounded local U7 check
+
+In a separate tmpfs `qtp-v12-paper-loss-qa` Compose project at code head
+`504b95a`, real Chrome created a synthetic 2030 demo account through a
+loopback one-shot proxy. The backend committed HTTP 201, but the proxy closed
+the first browser response. After a reload, the page retained the uncertain
+saved request; its same-key retry returned the same account ID
+`7eaea074-9cdf-43c9-aff9-9c1c8b5a3da3`. The proxy recorded identical key
+and body hashes for both POSTs; scratch session list reported `total=1` and
+`CREATED`. The form subsequently showed a saved confirmed receipt. After the
+test-only frontend was rebuilt on the same origin to use the scratch backend
+directly, Chrome opened that account detail and showed `已连接 已创建` with no
+console errors. The intermediate detail error was caused by the deliberately
+HTTP-only fault proxy not tunnelling WebSocket. No replay was started.
+
+Harness, checksums and exact observations are outside Git at
+`product-evidence/v1.2/m5/20260929-paper-create-lost201-browser.md`.
+This proves one same-profile browser fault path, not every timing race,
+cross-profile/device exactly-once, full U7/M4/M5, or release readiness.
+Original database/accounts, frozen research/OOS and GitHub were unchanged.
+Hosted exact-head CI remains unavailable; October 1 restoration is an
+unverified estimate. Lawful forward-market receipt, genuine lost-ledger
+recovery, independent physical backup, valid cold matched p95, native
+screen-reader/200% zoom, CSV landing and independent novice QA remain open.
+
 ## 2026-09-29 12:46 UTC two-tab paper creation — bounded local U7 check
 
 The paper-create page now holds one same-origin browser Web Lock from reading
