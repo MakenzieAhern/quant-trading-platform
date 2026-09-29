@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { ApiError } from "../api/client";
@@ -423,8 +429,11 @@ function PaperSessionForm({
   );
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [invalidField, setInvalidField] = useState<string | null>(null);
+  const [validationAttempt, setValidationAttempt] = useState(0);
   const locked = useRef(false);
   const active = useRef(true);
+  const formElement = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     active.current = true;
@@ -432,9 +441,30 @@ function PaperSessionForm({
       active.current = false;
     };
   }, []);
+  useLayoutEffect(() => {
+    if (!invalidField) return;
+    const input = formElement.current?.elements.namedItem(invalidField);
+    if (input instanceof HTMLElement) {
+      const details = input.closest("details");
+      if (details) details.open = true;
+      input.focus();
+    }
+  }, [invalidField, validationAttempt]);
 
   const changed = () => {
     setError(null);
+    setInvalidField(null);
+  };
+
+  const fieldAccessibility = (field: string) => ({
+    name: field,
+    "aria-invalid": invalidField === field || undefined,
+    "aria-describedby": invalidField === field ? "paper-form-error" : undefined,
+  });
+  const reportInvalid = (message: string, field: string) => {
+    setInvalidField(field);
+    setError(message);
+    setValidationAttempt((attempt) => attempt + 1);
   };
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
@@ -444,15 +474,20 @@ function PaperSessionForm({
     const createAnother =
       submitter instanceof HTMLButtonElement && submitter.value === "another";
     setError(null);
-    if (!isPositiveDecimal(initialCash) || !isPositiveDecimal(quantity)) {
-      setError("createPage.decimalError");
+    setInvalidField(null);
+    if (!isPositiveDecimal(initialCash)) {
+      reportInvalid("createPage.decimalError", "initialCash");
+      return;
+    }
+    if (!isPositiveDecimal(quantity)) {
+      reportInvalid("createPage.decimalError", "orderQuantity");
       return;
     }
     if (
       providerType === "historical_a_share" &&
       comparePositiveDecimals(initialCash.trim(), "1000000000000") === 1
     ) {
-      setError("createPage.historicalCashLimit");
+      reportInvalid("createPage.historicalCashLimit", "initialCash");
       return;
     }
     let request: CreatePaperSessionRequest;
@@ -472,27 +507,34 @@ function PaperSessionForm({
     } else if (providerType === "historical_a_share") {
       const rebalance = parsePositiveInteger(rebalanceSessions);
       const holdings = parsePositiveInteger(maximumHoldings);
-      if (
-        !startDate ||
-        !endDate ||
-        endDate < startDate ||
-        !Number.isFinite(Date.parse(startDate)) ||
-        !Number.isFinite(Date.parse(endDate)) ||
-        Date.parse(endDate) - Date.parse(startDate) > 92 * 86_400_000 ||
-        rebalance === null ||
-        rebalance > 252 ||
-        holdings === null ||
-        holdings > 100 ||
-        !isPositiveDecimal(maxPositionWeight) ||
-        comparePositiveDecimals(maxPositionWeight, "1") === 1 ||
-        !/^\d+(?:\.\d+)?$/.test(commissionRate) ||
-        comparePositiveDecimals(commissionRate, "0.01") === 1 ||
-        !/^\d+(?:\.\d+)?$/.test(minimumCommission) ||
-        comparePositiveDecimals(minimumCommission, "1000") === 1 ||
-        !/^-?0(?:\.\d+)?$|^-1(?:\.0+)?$/.test(maxDrawdown) ||
-        (isPositiveDecimal(maxDrawdown) && maxDrawdown !== "0")
-      ) {
-        setError("createPage.historicalValidationError");
+      const invalid =
+        !startDate || !Number.isFinite(Date.parse(startDate))
+          ? "startDate"
+          : !endDate ||
+              endDate < startDate ||
+              !Number.isFinite(Date.parse(endDate)) ||
+              Date.parse(endDate) - Date.parse(startDate) > 92 * 86_400_000
+            ? "endDate"
+            : rebalance === null || rebalance > 252
+              ? "rebalanceSessions"
+              : holdings === null || holdings > 100
+                ? "maximumHoldings"
+                : !isPositiveDecimal(maxPositionWeight) ||
+                    comparePositiveDecimals(maxPositionWeight, "1") === 1
+                  ? "maxPositionWeight"
+                  : !/^\d+(?:\.\d+)?$/.test(commissionRate) ||
+                      comparePositiveDecimals(commissionRate, "0.01") === 1
+                    ? "commissionRate"
+                    : !/^\d+(?:\.\d+)?$/.test(minimumCommission) ||
+                        comparePositiveDecimals(minimumCommission, "1000") === 1
+                      ? "minimumCommission"
+                      : !/^-?0(?:\.\d+)?$|^-1(?:\.0+)?$/.test(maxDrawdown) ||
+                          (isPositiveDecimal(maxDrawdown) &&
+                            maxDrawdown !== "0")
+                        ? "maxDrawdown"
+                        : null;
+      if (invalid) {
+        reportInvalid("createPage.historicalValidationError", invalid);
         return;
       }
       request = {
@@ -504,8 +546,8 @@ function PaperSessionForm({
           parameters: {
             start_date: startDate,
             end_date: endDate,
-            rebalance_sessions: rebalance,
-            maximum_holdings: holdings,
+            rebalance_sessions: rebalance!,
+            maximum_holdings: holdings!,
             max_position_weight: maxPositionWeight,
             universe,
             commission_rate: commissionRate,
@@ -524,7 +566,10 @@ function PaperSessionForm({
       const short = parsePositiveInteger(shortPeriod);
       const long = parsePositiveInteger(longPeriod);
       if (short === null || long === null || short >= long) {
-        setError("createPage.periodError");
+        reportInvalid(
+          "createPage.periodError",
+          short === null ? "shortPeriod" : "longPeriod",
+        );
         return;
       }
       request = {
@@ -547,7 +592,15 @@ function PaperSessionForm({
         comparePositiveDecimals(oversold, overbought) !== -1 ||
         comparePositiveDecimals(overbought, "100") !== -1
       ) {
-        setError("createPage.rsiError");
+        reportInvalid(
+          "createPage.rsiError",
+          period === null
+            ? "rsiPeriod"
+            : !isPositiveDecimal(oversold) ||
+                comparePositiveDecimals(oversold, "100") !== -1
+              ? "oversold"
+              : "overbought",
+        );
         return;
       }
       request = {
@@ -644,7 +697,9 @@ function PaperSessionForm({
         </section>
       )}
       <form
+        ref={formElement}
         className="formPanel"
+        noValidate
         onSubmit={(event) => void submit(event)}
         onChange={changed}
         aria-describedby={error ? "paper-form-error" : undefined}
@@ -705,6 +760,7 @@ function PaperSessionForm({
             <label>
               {t("createPage.initialCash")}
               <input
+                {...fieldAccessibility("initialCash")}
                 value={initialCash}
                 onChange={(event) => setInitialCash(event.target.value)}
                 required
@@ -714,6 +770,7 @@ function PaperSessionForm({
               <label>
                 {t("createPage.orderQuantity")}
                 <input
+                  {...fieldAccessibility("orderQuantity")}
                   value={quantity}
                   onChange={(event) => setQuantity(event.target.value)}
                   required
@@ -767,6 +824,7 @@ function PaperSessionForm({
               <label>
                 {t("createPage.shortPeriod")}
                 <input
+                  {...fieldAccessibility("shortPeriod")}
                   type="number"
                   min="1"
                   step="1"
@@ -778,6 +836,7 @@ function PaperSessionForm({
               <label>
                 {t("createPage.longPeriod")}
                 <input
+                  {...fieldAccessibility("longPeriod")}
                   type="number"
                   min="2"
                   step="1"
@@ -792,6 +851,7 @@ function PaperSessionForm({
               <label>
                 {t("createPage.rsiPeriod")}
                 <input
+                  {...fieldAccessibility("rsiPeriod")}
                   type="number"
                   min="1"
                   step="1"
@@ -803,6 +863,7 @@ function PaperSessionForm({
               <label>
                 {t("createPage.oversold")}
                 <input
+                  {...fieldAccessibility("oversold")}
                   value={oversold}
                   onChange={(event) => setOversold(event.target.value)}
                   required
@@ -811,6 +872,7 @@ function PaperSessionForm({
               <label>
                 {t("createPage.overbought")}
                 <input
+                  {...fieldAccessibility("overbought")}
                   value={overbought}
                   onChange={(event) => setOverbought(event.target.value)}
                   required
@@ -826,6 +888,7 @@ function PaperSessionForm({
               <label>
                 {t("createPage.startDate")}
                 <input
+                  {...fieldAccessibility("startDate")}
                   type="date"
                   value={startDate}
                   onInput={(event) => setStartDate(event.currentTarget.value)}
@@ -835,6 +898,7 @@ function PaperSessionForm({
               <label>
                 {t("createPage.endDate")}
                 <input
+                  {...fieldAccessibility("endDate")}
                   type="date"
                   value={endDate}
                   onInput={(event) => setEndDate(event.currentTarget.value)}
@@ -848,6 +912,7 @@ function PaperSessionForm({
                 <label>
                   {t("createPage.rebalanceSessions")}
                   <input
+                    {...fieldAccessibility("rebalanceSessions")}
                     type="number"
                     min="1"
                     max="252"
@@ -861,6 +926,7 @@ function PaperSessionForm({
                 <label>
                   {t("createPage.maximumHoldings")}
                   <input
+                    {...fieldAccessibility("maximumHoldings")}
                     type="number"
                     min="1"
                     max="100"
@@ -872,6 +938,7 @@ function PaperSessionForm({
                 <label>
                   {t("createPage.maxPositionWeight")}
                   <input
+                    {...fieldAccessibility("maxPositionWeight")}
                     value={maxPositionWeight}
                     onChange={(event) =>
                       setMaxPositionWeight(event.target.value)
@@ -882,6 +949,7 @@ function PaperSessionForm({
                 <label>
                   {t("createPage.maxDrawdown")}
                   <input
+                    {...fieldAccessibility("maxDrawdown")}
                     value={maxDrawdown}
                     onChange={(event) => setMaxDrawdown(event.target.value)}
                     required
@@ -903,6 +971,7 @@ function PaperSessionForm({
                 <label>
                   {t("createPage.commissionRate")}
                   <input
+                    {...fieldAccessibility("commissionRate")}
                     value={commissionRate}
                     onChange={(event) => setCommissionRate(event.target.value)}
                     required
@@ -911,6 +980,7 @@ function PaperSessionForm({
                 <label>
                   {t("createPage.minimumCommission")}
                   <input
+                    {...fieldAccessibility("minimumCommission")}
                     value={minimumCommission}
                     onChange={(event) =>
                       setMinimumCommission(event.target.value)

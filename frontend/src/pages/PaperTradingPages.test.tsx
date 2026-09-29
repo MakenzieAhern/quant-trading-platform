@@ -1543,6 +1543,73 @@ describe("paper trading pages", () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
+  it("reveals and focuses an invalid advanced historical setting in both languages", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(paperSession(), 201));
+    render(<CreatePaperSessionPage />);
+    await userEvent.selectOptions(
+      screen.getByLabelText("Provider"),
+      "historical_a_share",
+    );
+    const summary = screen.getByText("Strategy, universe and cost settings");
+    await userEvent.click(summary);
+    const details = summary.closest("details");
+    const weight = screen.getByLabelText("Maximum weight per holding");
+    await userEvent.clear(weight);
+    await userEvent.type(weight, "1.2");
+    await userEvent.click(summary);
+    expect(details).not.toHaveAttribute("open");
+    const focusStates: Array<{
+      invalid: string | null;
+      describedBy: string | null;
+      expanded: boolean;
+    }> = [];
+    weight.addEventListener("focus", () => {
+      focusStates.push({
+        invalid: weight.getAttribute("aria-invalid"),
+        describedBy: weight.getAttribute("aria-describedby"),
+        expanded: Boolean(details?.open),
+      });
+    });
+    screen.getByRole("button", { name: "Create paper session" }).focus();
+    await userEvent.keyboard("{Enter}");
+    expect(fetch).not.toHaveBeenCalled();
+    expect(details).toHaveAttribute("open");
+    expect(weight).toHaveFocus();
+    expect(weight).toHaveAttribute("aria-invalid", "true");
+    const errorId = weight.getAttribute("aria-describedby");
+    expect(errorId).toBeTruthy();
+    expect(focusStates).toEqual([
+      { invalid: "true", describedBy: errorId, expanded: true },
+    ]);
+    expect(document.getElementById(errorId!)).toHaveTextContent(
+      "strategy, cost and risk limits",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    expect(weight).toHaveFocus();
+    expect(focusStates).toHaveLength(2);
+    try {
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(screen.getByLabelText("单只证券最大权重")).toBe(weight);
+      expect(document.getElementById(errorId!)).toHaveTextContent(
+        "策略、成本和风控限制",
+      );
+      await userEvent.clear(weight);
+      await userEvent.type(weight, "0.1");
+      expect(weight).not.toHaveAttribute("aria-invalid");
+      await userEvent.click(
+        screen.getByRole("button", { name: "创建模拟交易会话" }),
+      );
+      await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
+  });
+
   it("copies completed historical settings but requires an explicit 93-day replay range", async () => {
     window.history.replaceState(
       {},
@@ -2328,6 +2395,28 @@ describe("paper trading pages", () => {
       "short below long",
     );
     expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("focuses an impossible RSI oversold threshold before submitting", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch");
+    render(<CreatePaperSessionPage />);
+    await userEvent.selectOptions(screen.getByLabelText("Provider"), "replay");
+    await userEvent.selectOptions(
+      screen.getByLabelText("Strategy type"),
+      "rsi_mean_reversion",
+    );
+    const oversold = screen.getByLabelText("Oversold");
+    await userEvent.clear(oversold);
+    await userEvent.type(oversold, "100");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Create paper session" }),
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    expect(oversold).toHaveFocus();
+    expect(oversold).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText("Overbought")).not.toHaveAttribute(
+      "aria-invalid",
+    );
   });
 
   it("hydrates from REST, ingests typed events once, and reconnects with rehydration", async () => {

@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-29T13:55:42Z",
+  "updated_at_utc": "2026-09-29T14:14:14Z",
+  "m4_paper_form_validation_focus_20260929_gate": {
+    "status": "PASS_BOUNDED_ACTUAL_CHROME_KEYBOARD_DOM_NOT_FULL_M4_M5",
+    "parent_head": "cd2b607",
+    "proof": "2026-09-29 14:14 UTC: first invalid paper-create field now opens its enclosing details and receives focus after aria-invalid, translated error and aria-describedby render; repeated invalid submit refocuses. Replay RSI oversold>=100 maps to Oversold. Red/green regression, frontend 468/468, ESLint, TypeScript and production build passed. Real Chrome on original localhost:5173/paper/new confirmed collapsed invalid historical weight reopened and focused with English error/ARIA relation; earlier Chinese error also observed. No create POST; original paper sessions/events remained 5/417; frontend and API health HTTP200. Independent read-only diff review found no actionable defect. See docs/product/ACCEPTANCE.md.",
+    "limits": "Keyboard/DOM and local browser evidence only, not native screen-reader speech, native 200pct zoom, full M4/M5, lawful forward-market receipt, genuine lost-ledger restoration, independent physical backup or hosted exact-head CI. October 1 GitHub recovery unverified; no push/merge/tag/release."
+  },
   "u7_stale_confirmed_receipt_20260929_gate": {
     "status": "PASS_BOUNDED_ACTUAL_CHROME_SCRATCH_NOT_FULL_U7_M4_M5",
     "parent_head": "6d5e02b",

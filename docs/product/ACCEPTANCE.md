@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 14:14 UTC historical paper form keyboard error recovery — bounded M4 check
+
+An invalid historical replay setting inside a collapsed advanced section no
+longer leaves keyboard focus on Create with the offending field hidden. The
+form now identifies the first invalid control, expands its native `details`,
+then focuses it after the bilingual error and `aria-invalid` / `aria-describedby`
+have rendered. A repeat invalid submit refocuses the same field. Replay RSI
+oversold values at or above 100 identify Oversold, not an impossible-to-fix
+Overbought value. Uncertain server-create errors still leave focus on Create
+for the established same-key recovery flow.
+
+The regression was red before the fix. Final component tests passed 468/468;
+ESLint, TypeScript and the production frontend build passed. Real Chrome on
+the original local Vite app at `localhost:5173/paper/new` used an invalid
+historical weight of 1.2 in a collapsed section: Create reopened the section,
+focused that field, showed its English error and retained `aria-invalid=true`
+with a live `aria-describedby` target. The earlier Chinese check also showed
+the translated error. No valid create was submitted. Original paper
+sessions/events remained `5/417`, and frontend plus `/api/health` returned
+HTTP 200. Independent read-only diff review found no remaining actionable
+defect in the change.
+
+This is a bounded keyboard/DOM check, not native screen-reader speech, native
+200% zoom, full M4/M5, lawful forward-market data, restored missing ledgers,
+independent backup, hosted CI or v1.2 release. GitHub's October 1 recovery is
+an unverified estimate; no push, merge, tag or release occurred.
+
 ## 2026-09-29 13:55 UTC stale browser receipt — fail-closed local U7 check
 
 A browser-saved `confirmedSessionId` is not proof that the current server still
