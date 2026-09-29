@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 saved comparison screenshot — bounded current-code media
+
+An installed Chrome 153 headless process loaded the existing two-study
+comparison from the configured `localhost:5173` origin, without submitting
+anything. The saved 1440×900 PNG shows the online indicator, the two saved
+historical studies, the explicit differing-conditions warning, rounded metrics
+and the scrollable result table. PNG SHA-256 is
+`B1A06A67950B5D288BE0091C76F2695CD77B10185963E72B509BE63B2E9EBECA`;
+the frontend tree at capture was `87a710d1827d69877c176aea2c2f2080b2d6ea24`
+on `249c327`. The local artifact and rejected capture trials are documented in
+`product-evidence/v1.2/m5/20260929-249c327-comparison-capture.md` outside Git.
+
+The first trials used `127.0.0.1`, which mismatched the configured `localhost`
+frontend origin and displayed a spurious service error despite HTTP 200 study
+GETs. They are not delivery evidence. A requested 390-pixel screenshot did not
+verify the effective CSS viewport and is not mobile acceptance. One settled
+desktop screenshot is M5 media progress, not an interaction recording,
+bilingual/theme matrix, native zoom/speech, independent novice test, full
+M4/M5, GitHub CI or release pass. This capture sent no mutation request to
+the original database, frozen research or OOS; no before/after fingerprint
+was taken.
+
 ## 2026-09-29 monthly-return heatmap — bounded accessibility repair
 
 Actual Chrome exposed a saved formal research heatmap's heading but none of
