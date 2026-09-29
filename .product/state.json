@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-28T23:54:23Z",
+  "updated_at_utc": "2026-09-29T00:11:05Z",
+  "chrome_motion_preference_audit": {
+    "status": "PASS_BOUNDED_APP_MOTION_OFF_NOT_OS_REDUCED_MOTION_OR_FULL_M4",
+    "code_head": "64d8e0b",
+    "proof": "Actual Chrome /settings started with motion=system and OS prefers-reduced-motion=false. Selecting the visible Close nonessential motion option set root data-motion=off and computed .productPage animation-duration=0s; restoring Follow system returned data-motion=system and animation-duration=0.22s. The original preference was restored. Main Compose four services remained running; no account, study, provider or dataset write.",
+    "limits": "No Windows OS reduced-motion transition, native 200pct zoom, saved media, screen-reader speech or full M4/M5. Chrome browser zoom shortcut produced no change in devicePixelRatio/innerWidth; the agent Chrome tab was not exposed as a unique native Windows Chrome window, so no native menu workaround was attempted. Existing five stopped paper sessions have at most 20 rows per activity table and 21.5 KB snapshot; no table pagination was added without a present scale defect. Future long-running feed still requires bounded server transfer."
+  },
   "foreground_service_status_audit": {
     "status": "PASS_BOUNDED_LOCAL_TIMER_REGRESSION_NOT_FULL_M4_M5",
     "parent_head": "a191cd3",

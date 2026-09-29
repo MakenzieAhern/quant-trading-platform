@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 application motion-off setting — bounded actual Chrome
+
+On the existing `/settings` page in actual Chrome, the saved motion preference
+started at Follow system with OS `prefers-reduced-motion=false`. The page's
+computed entry animation was 0.22s. Selecting the visible Close nonessential
+motion option set `data-motion=off` and computed `.productPage` animation to
+0s. Restoring Follow system returned the value and 0.22s animation. This
+proves the explicit application switch suppresses that animation without
+changing the original preference; it does **not** verify a Windows OS
+reduced-motion transition, every interactive motion, screen-reader speech,
+200% native Chrome zoom or full M4 accessibility.
+
+The browser zoom shortcut in the agent Chrome tab did not change
+`devicePixelRatio` or `innerWidth`. The tab was not present as a uniquely
+selectable native Windows Chrome window; no unrelated user window was used
+and no viewport proxy was promoted to native 200% evidence. Five existing
+stopped paper sessions had at most 20 rows in any signals/risk/orders/fills
+table and a largest REST snapshot of about 21.5 KB. No speculative local
+pagination was added; a genuinely long-running feed would need bounded
+server transfer as well. No code, account, study, provider or dataset was
+changed, and no screenshot/recording artifact was saved. M4/M5 remain open.
+
 ## 2026-09-29 foreground service-status recovery — local gate
 
 The topbar rechecked service health on initial load, manual refresh and tab
