@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 actual browser U4 export recovery and current-source Workbench media
+
+The isolated production preview of current frontend source displayed an
+already-saved historical result. In the in-app browser, keyboard CSV export
+returned HTTP 200 and prepared a named fallback; a GET-only local proxy then
+injected one exact export HTTP 503. The error was visible but the fallback
+kept the same blob URL, filename, route and button focus. A third browser
+retry returned HTTP 200, cleared the error and replaced the blob URL while
+retaining route and focus. The proxy recorded export 200/503/200. Screenshots
+of the failure and recovery were visually checked and saved outside Git with
+SHA-256s in `product-evidence/v1.2/m4/20260929-export-retry-browser.md`.
+The browser did not prove that an automatic file landed in Downloads; old
+blob revocation on replacement is covered by the focused component test,
+not this browser observation. The preview/proxy/tab were stopped; original
+Compose services remained up and frontend/API health returned HTTP 200.
+
+At local checkout `7965170`, the running bind-mounted frontend also produced
+real in-app-browser full-page Workbench captures in EN/system-dark with a
+requested 1440×900 CSS viewport and ZH/light with a requested 390×844 CSS
+viewport. The mobile document had no page-wide overflow (scroll width =
+client width 375). The saved PNGs are 1425×1337 and 375×1912 respectively,
+because the capture surface reserves browser chrome/scrollbar space; cropped
+diagnostics were rejected. Hashes and limits are in outside-Git
+`product-evidence/v1.2/m5/20260929-7965170-iab/README.md`. These are two
+bounded exact-source images, not the complete before/after six-route media,
+native Chrome/zoom/speech, valid cold p95, independent novice, full U4/M4/M5,
+hosted CI or release. EN/Follow system and the default viewport were restored.
+
 ## 2026-09-29 local Workbench retry browser proof — M4 remains open
 
 `b963abf` keeps keyboard focus on the persistent Workbench heading when an
