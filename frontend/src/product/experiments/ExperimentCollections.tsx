@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
@@ -23,6 +23,11 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
   const [focusRequest, setFocusRequest] = useState(0);
   const [showBenchmark, setShowBenchmark] = useState(true);
   const filterAnchor = useRef<HTMLElement>(null);
+  const firstDate = useRef<HTMLInputElement>(null);
+  const invalidRangeId = useId();
+  useEffect(() => {
+    if (invalid) firstDate.current?.focus();
+  }, [invalid]);
   const filter = focused ? { start_date: focused, end_date: focused } : range;
   return (
     <>
@@ -40,6 +45,7 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             event.preventDefault();
             if (start && end && start > end) {
               setInvalid(true);
+              if (invalid) firstDate.current?.focus();
               return;
             }
             setInvalid(false);
@@ -54,8 +60,15 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             {c.start}
             <input
               type="date"
+              ref={firstDate}
               value={start}
-              onInput={(event) => setStart(event.currentTarget.value)}
+              aria-invalid={invalid || undefined}
+              aria-describedby={invalid ? invalidRangeId : undefined}
+              onInput={(event) => {
+                const value = event.currentTarget.value;
+                setStart(value);
+                if (!value || !end || value <= end) setInvalid(false);
+              }}
             />
           </label>
           <label>
@@ -63,7 +76,13 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             <input
               type="date"
               value={end}
-              onInput={(event) => setEnd(event.currentTarget.value)}
+              aria-invalid={invalid || undefined}
+              aria-describedby={invalid ? invalidRangeId : undefined}
+              onInput={(event) => {
+                const value = event.currentTarget.value;
+                setEnd(value);
+                if (!start || !value || start <= value) setInvalid(false);
+              }}
             />
           </label>
           <button className="button secondary" type="submit">
@@ -83,7 +102,7 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             {u.reset}
           </button>
         </form>
-        {invalid && <p role="alert">{u.invalidRange}</p>}
+        {invalid && <p id={invalidRangeId} role="alert">{u.invalidRange}</p>}
         {focused && (
           <div className="experimentActions">
             <p role="status">

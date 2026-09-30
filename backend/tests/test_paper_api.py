@@ -1126,8 +1126,8 @@ async def test_layer_failures_are_terminal_and_safely_reported(
 
 
 class FakeWebSocket:
-    def __init__(self, *, fail_after_connect: bool = False) -> None:
-        self.headers = {"origin": settings.frontend_origin}
+    def __init__(self, *, fail_after_connect: bool = False, origin: str | None = None) -> None:
+        self.headers = {"origin": origin or settings.frontend_origin}
         self.accepted = False
         self.sent: list[dict[str, object]] = []
         self.closed: tuple[int, str] | None = None
@@ -1150,13 +1150,21 @@ class FakeWebSocket:
         return {"type": "websocket.disconnect"}
 
 
+async def test_websocket_rejects_untrusted_origin() -> None:
+    websocket = FakeWebSocket(origin="https://untrusted.example")
+    await paper_session_websocket(websocket, UUID(int=0))  # type: ignore[arg-type]
+    assert websocket.closed == (4403, "origin not allowed")
+
+
+@pytest.mark.parametrize("origin", ["http://localhost:5173", "http://127.0.0.1:5173"])
 async def test_websocket_disconnect_and_delivery_failure_release_subscriptions(
     client: AsyncClient,
+    origin: str,
 ) -> None:
     created = await client.post("/api/paper-trading/sessions", json=request_body())
     session_id = UUID(created.json()["session_id"])
 
-    websocket = FakeWebSocket()
+    websocket = FakeWebSocket(origin=origin)
     task = asyncio.create_task(paper_session_websocket(websocket, session_id))  # type: ignore[arg-type]
     for _ in range(100):
         if paper_manager.hub.subscriber_count(session_id) == 1:

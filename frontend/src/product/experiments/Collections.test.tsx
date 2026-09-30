@@ -506,7 +506,19 @@ describe("filtered durable experiment records", () => {
       target: { value: "2031-01-05" },
     });
     await userEvent.click(screen.getByRole("button", { name: "Apply dates" }));
-    expect(screen.getByRole("alert")).toHaveTextContent("valid date range");
+    const rangeError = screen.getByRole("alert");
+    const firstDate = screen.getByLabelText("First trading date");
+    const lastDate = screen.getByLabelText("Last trading date");
+    expect(rangeError).toHaveTextContent("valid date range");
+    expect(firstDate).toHaveFocus();
+    for (const input of [firstDate, lastDate]) {
+      expect(input).toHaveAttribute("aria-invalid", "true");
+      expect(input).toHaveAttribute("aria-describedby", rangeError.id);
+    }
+    fireEvent.input(firstDate, { target: { value: "2031-01-03" } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(firstDate).not.toHaveAttribute("aria-invalid");
+    expect(lastDate).not.toHaveAttribute("aria-invalid");
     expect(equity).toHaveBeenCalledTimes(2);
     await userEvent.click(
       screen.getByRole("button", { name: "Show full interval" }),

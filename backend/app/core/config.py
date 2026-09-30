@@ -48,6 +48,15 @@ class Settings(BaseSettings):
     product_data_path: Path = Field(default=PROJECT_DIR / "data" / "product")
     frontend_origin: str = "http://localhost:5173"
 
+    @property
+    def allowed_frontend_origins(self) -> tuple[str, ...]:
+        if re.fullmatch(r"http://localhost:\d{1,5}", self.frontend_origin):
+            return (
+                self.frontend_origin,
+                self.frontend_origin.replace("localhost", "127.0.0.1", 1),
+            )
+        return (self.frontend_origin,)
+
     @field_validator(
         "market_data_path",
         "backtest_fixture_path",

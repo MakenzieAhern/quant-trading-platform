@@ -242,7 +242,7 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
 @router.websocket("/ws/{session_id}")
 async def paper_session_websocket(websocket: WebSocket, session_id: UUID) -> None:
     origin = websocket.headers.get("origin")
-    if origin is not None and origin != settings.frontend_origin:
+    if origin is not None and origin not in settings.allowed_frontend_origins:
         await websocket.close(code=4403, reason="origin not allowed")
         return
     if await paper_manager.get(session_id) is None:

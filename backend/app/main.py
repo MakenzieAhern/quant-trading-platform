@@ -46,13 +46,13 @@ app = FastAPI(
 )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_origin],
+    allow_origins=list(settings.allowed_frontend_origins),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 app.include_router(api_router)
-app.add_middleware(RequestBodyLimitMiddleware, allowed_origin=settings.frontend_origin)
+app.add_middleware(RequestBodyLimitMiddleware, allowed_origins=settings.allowed_frontend_origins)
 
 
 @app.exception_handler(RequestValidationError)

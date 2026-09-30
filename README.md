@@ -1,6 +1,12 @@
 # Quant Trading Platform
 
-**v1.1.0 — China A-Share Research Edition**
+**Current checkout: v1.2 Product Experience Edition in development.** The released
+scientific baseline below is **v1.1.0 — China A-Share Research Edition**; v1.2 is not
+released. Start at the [local workbench](http://localhost:5173/) and use the
+[中文操作指南](docs/product/USER_GUIDE.zh-CN.md) or
+[English user guide](docs/product/USER_GUIDE.en-US.md). The
+[product master](docs/product/PRODUCT_MASTER.md) records the full v1.2 scope and
+remaining acceptance gates.
 
 A deterministic, point-in-time quantitative research and paper-trading platform for ordinary
 SSE/SZSE A-shares. It combines a 2010–2025 audited research dataset, corporate-action-aware
@@ -68,7 +74,7 @@ consume completed sessions only. Orders use the conservative
 unestablished execution conditions fail closed as no fill. React never recalculates financial
 state. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
-## Product surfaces
+## v1.1 baseline surfaces
 
 - `/research/a-share` — frozen dataset and formal Development/Validation/OOS ledger.
 - `/research/a-share/strategies` — formulas, frozen configuration and methodology notes.
@@ -80,10 +86,11 @@ state. See [ARCHITECTURE.md](ARCHITECTURE.md).
   Official OOS.
 - `/backtests` — deterministic registered-fixture regression/demo backtests retained from v1.0.
 
-## Quick start
+## Quick start (fresh installation only)
 
 Requires Docker Desktop/Engine with Compose. On Windows, run from Ubuntu WSL2 with Docker Desktop
-WSL integration enabled.
+WSL integration enabled. Do not clone again or repeat initial setup on an existing PC; start its
+existing Compose services instead. Docker Desktop may require a manual launch after Windows login.
 
 ```bash
 git clone https://github.com/MakenzieAhern/quant-trading-platform.git
@@ -93,7 +100,7 @@ make setup
 make up
 ```
 
-Open [the dashboard](http://localhost:5173/research/a-share),
+Open [the workbench](http://localhost:5173/),
 [API health](http://localhost:8000/api/health), or [OpenAPI](http://localhost:8000/docs).
 `make down` preserves PostgreSQL and Redis volumes.
 

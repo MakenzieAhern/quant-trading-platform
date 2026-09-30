@@ -1,5 +1,52 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 19:04 UTC local loopback API and date-error recovery — bounded M4 fixes
+
+An actual in-app browser opened the original development frontend at
+`127.0.0.1:5173`: the page loaded but incorrectly showed the backend offline.
+The same browser at `localhost:5173` showed the real historical catalog and
+saved studies. The backend accepted the `localhost` CORS preflight (HTTP 200)
+but rejected the `127.0.0.1` preflight (HTTP 400); the Paper WebSocket had the
+same single-origin restriction. Two new loopback regression variants failed
+red. One exact, same-port allowed-origin tuple now feeds CORS, the unsafe HTTP
+origin guard and the Paper WebSocket check. Focused tests passed 11/11; the
+full isolated backend suite passed 1033 with one optional unmounted-archive
+skip, and Ruff, format check and mypy passed. Independent read-only review
+found no P1/P2 security regression; untrusted origins remain denied. An
+isolated tmpfs release stack at `127.0.0.1:15173` showed service online and
+correctly dated historical data. After read-only confirmation that the
+original research, update and Paper jobs had no active sessions, only the
+original backend was restarted. The original `127.0.0.1:5173` browser then
+showed service online and the saved studies; database counts remained eight
+research jobs, five Paper sessions and 417 Paper events. No new study,
+account, provider request or formal/OOS run was created.
+
+An independent accessibility audit found that an inverted display-date range
+showed a generic alert without identifying its date controls or returning
+keyboard focus. The existing collection test failed red (16/17) when it
+required focus and both input/error associations, then passed 17/17 after the
+shared range form marked both dates invalid, linked one inline error and
+focused the first date after the error committed. Correcting the range clears
+the error and associations. In the actual in-app browser, keyboard submission
+of a saved historical study's invalid display range focused the first date,
+both date inputs exposed `aria-invalid=true` and described the same Chinese
+error, and correction removed those attributes. This only changes display
+filtering, not full-period metrics or persisted research.
+
+The README now distinguishes the unreleased v1.2 checkout from the published
+v1.1 baseline, links both existing user guides and points fresh installs to
+the workbench. Final local `make test` passed backend 1033/one optional
+unmounted-archive skip and frontend 490/490 across 38 files. `make lint`
+(Ruff, format, mypy, ESLint and TypeScript), `make build`, JSON syntax and
+`git diff --check` all passed on the working tree. The test Compose services
+were stopped afterward. These are bounded application/browser and regression proofs,
+not native screen-reader speech, a complete WCAG/zoom/performance matrix,
+independent novice validation, exact-head hosted CI or M5 media files. The
+browser screenshots were inspected in-tool, not saved as durable M5 media.
+The lawful after-start forward feed, genuine missing ledgers, independent
+physical backup, unattended Docker startup and GitHub recovery remain open.
+No push, CI retry/poll, merge, tag or release occurred.
+
 ## 2026-09-30 18:32 UTC malformed deep-link recovery — bounded M4 fix
 
 Three percent-encoded URL segments were decoded directly during `App` render.
