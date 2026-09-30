@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 19:56 UTC filtered research-page recovery — local browser check
+
+Local commit `a1f9c90` fixes the U3 saved-research list when the last item on
+an active filtered page leaves that filter. The list now moves back one page
+if an offset page has no rows, even when the API's separate count remains
+stale during a COUNT/SELECT race; it preserves the filter and returns keyboard
+focus to the list region. Three red/green cases cover consistent shrink,
+stale-count shrink and unchanged active page. The final isolated `make test`
+passed backend 1,033 with one optional unmounted-archive skip and frontend
+494/494 across 38 files; `make lint`, `make build` and `git diff --check`
+passed. Independent read-only review found no P1/P2 in the final fix.
+
+An isolated frontend on `localhost:15174` used a localhost-only, GET-only
+synthetic API on `127.0.0.1:18013`, without a database or original backend
+write. In the in-app browser, filtering 21 synthetic RUNNING rows and opening
+page 2 showed item 21/21. The next poll returned an empty page with stale
+total 21; the UI recovered to page 1 showing 1–20/20 while keeping RUNNING
+selected and focus on the pagination region. The proxy trace confirms two
+`offset=20&status=RUNNING` reads followed by `offset=0&status=RUNNING`.
+All synthetic non-GET methods returned 403. A screenshot was visually
+inspected in-tool, but no durable PNG or native Chrome/screen-reader evidence
+was saved. The temporary tab and proxy were closed, the isolated frontend
+stopped and its Compose override removed. The original four services remained
+up and frontend/API returned HTTP 200. This is a bounded local U3/M4 check,
+not full U3/M4/M5 or hosted CI; GitHub recovery is still unverified and no
+push, CI retry/poll, merge or release occurred.
+
 ## 2026-09-30 19:37 UTC isolated browser check — stop an unstarted paper account
 
 Local commit `c867cc4` exposes the backend's existing `CREATED → STOPPED`
