@@ -6920,3 +6920,11 @@ missing pre-loss paper ledgers, prove lawful genuinely new-market receipts,
 an independent physical backup, full M4/M5 accessibility and novice QA, or
 GitHub-hosted exact-head CI. No strategy/OOS, original account/event,
 frozen dataset or release action was run.
+
+At the 390×844 CSS mobile viewport, the same stopped account's opened log
+showed 50 rows. Read-only DOM geometry reported page scroll width 375
+against viewport width 390; the labeled log table region was 337 wide with
+704-wide content, confined to its internal horizontal scroll. The English
+system-theme layout and saved-not-live warning were visually inspected.
+The temporary QA tab closed and the viewport override was reset. This is
+not native 200% zoom, a screen-reader check, or durable M5 media.

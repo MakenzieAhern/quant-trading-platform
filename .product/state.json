@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T23:49:56Z",
+  "updated_at_utc": "2026-09-30T23:51:52Z",
+  "m4_paper_journal_mobile_20261001_gate": {
+    "status": "PASS_BOUNDED_MOBILE_CSS_VIEWPORT_NOT_NATIVE_ZOOM_OR_FULL_M4_M5",
+    "source_head": "b8b06c4",
+    "proof": "2026-09-30 23:51 UTC: agent-owned in-app-browser on original stopped historical account d7044a3c opened the saved event log at CSS viewport 390x844 EN/system. Document scroll width 375 <= 390; log table region width 337 and content width 704, so wide columns remain in its labeled internal horizontal scroll. Exactly 50 event rows displayed. Visual screenshot inspected in-tool; temporary QA tab closed and viewport override reset. Original account/data unchanged. See docs/product/ACCEPTANCE.md.",
+    "limits": "One CSS mobile viewport and stopped account only, not durable screenshot, native 200-percent zoom, screen-reader speech, full route/theme/locale matrix, independent novice, full M4/M5 or hosted CI."
+  },
   "u7_event_journal_20261001_gate": {
     "status": "PASS_BOUNDED_READ_ONLY_BILINGUAL_JOURNAL_NOT_FULL_U7_M4_M5",
     "parent_head": "b09e9d8",
