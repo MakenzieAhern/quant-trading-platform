@@ -6837,3 +6837,30 @@ draft and Continue link. The original English preference was restored and
 the QA tab closed. Neither backup nor submit was clicked. This is a bounded
 existing-draft bilingual browser path, not corrupted-storage injection,
 cross-tab atomicity, an observed create request, or full U1/U3/M4 acceptance.
+
+## 2026-09-30 23:29 UTC local CI-equivalent release checks
+
+On source HEAD `3d67608`, the isolated `quant-mvp-tests` PostgreSQL service
+used `quant_test` on tmpfs. Alembic upgrade to head, downgrade to
+`20260904_0001`, re-upgrade to head and `alembic check` all exited zero;
+the disposable PostgreSQL service was then stopped. The prior full
+`make test`, `make lint` and `make build` checks passed on the same source
+code (subsequent commits changed only product evidence documents).
+
+All three development, test and release Compose configurations passed
+`config --quiet`. The release overlay rendered backend and frontend commands
+as null, so it does not inherit development's automatic migration command.
+A uniquely tagged release frontend image served `/` and `/help` through
+Nginx with HTTP 200. A separate uniquely named, mount-free backend image
+used only tmpfs PostgreSQL/Redis, migrated a fresh `quant_test`, then
+served `/api/health` with `environment=production` and `broker_mode=paper`.
+Its capabilities reported synthetic demo available and historical archive
+unavailable rather than pretending the absent archive was mounted. The
+temporary frontend/API/PostgreSQL/Redis containers and empty scratch
+network were stopped or removed; no original image/volume/DB was deleted.
+The original four Compose services remained running.
+
+This covers local CI-equivalent migration and release smoke only. It does
+not prove a successful GitHub-hosted run, an integrated release cutover,
+backup/rollback restoration, full M4/M5, licensed forward-market receipt
+or recovery of the missing original paper ledgers.

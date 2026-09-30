@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T23:23:49Z",
+  "updated_at_utc": "2026-09-30T23:29:11Z",
+  "m5_local_ci_parity_20261001_gate": {
+    "status": "PASS_LOCAL_MIGRATION_AND_RELEASE_SMOKE_NOT_HOSTED_CI_OR_RELEASE",
+    "source_head": "3d67608",
+    "proof": "2026-09-30 23:29 UTC: prior full make test backend 1033/one optional archive skip and frontend 532, make lint/build passed on unchanged source. On isolated tmpfs quant_test, Alembic upgrade head, downgrade 20260904_0001, re-upgrade head and check exited zero. Development/test/release Compose configs passed; release overlay backend/frontend commands were null. Uniquely tagged release Nginx frontend returned HTTP 200 for / and /help. Mount-free production paper-mode backend against uniquely named tmpfs PostgreSQL/Redis migrated and returned health ok plus synthetic-demo available/historical-archive unavailable capabilities. Owned scratch containers stopped and scratch network removed; original four services stayed up. See docs/product/ACCEPTANCE.md.",
+    "limits": "Local CI-equivalent checks are not successful GitHub-hosted exact-head CI, integrated cutover, tested backup/rollback restore, full M4/M5, lawful new-market receipt or genuine lost-ledger recovery. No original database/volume, frozen research/OOS or GitHub action changed."
+  },
   "u1_u3_existing_draft_bilingual_browser_20261001_gate": {
     "status": "PASS_BOUNDED_EXISTING_DRAFT_BROWSER_NOT_MALFORMED_OR_FULL_U1_U3_M4",
     "parent_head": "be1d72d",
