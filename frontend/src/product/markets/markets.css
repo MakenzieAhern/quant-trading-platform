@@ -78,7 +78,7 @@
 .marketField select {
   color: var(--text);
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--field-border);
   border-radius: 7px;
   min-height: 44px;
   min-width: 0;

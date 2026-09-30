@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T21:24:14Z",
+  "updated_at_utc": "2026-09-30T21:38:00Z",
+  "u8_form_boundary_contrast_20261001_gate": {
+    "status": "PASS_BOUNDED_RED_GREEN_AND_IN_APP_BROWSER_NOT_FULL_U8_M4_M5",
+    "parent_head": "72a271ca6b039acec726f5c99d2f7318cff0b743",
+    "proof": "2026-09-30 21:38 UTC: Markets, incremental-data and configuration form borders now use existing --field-border. Focused regression failed red and passed green; full frontend 505/505 across 39 files, ESLint, TypeScript, production build, changed-file Prettier and diff check passed. In-app browser computed Markets border rgb(118,127,144) in dark/light and data-request textarea/date fields in light. Theme restored; temporary QA tab closed. Independent read-only review found no blocking issue and minimum declared surface contrast 3.412:1. See docs/product/ACCEPTANCE.md.",
+    "limits": "Literal CSS regression and bounded browser observations, not complete cascade/contrast, native screen-reader or 200pct zoom evidence, full U5/U8/M4/M5 or hosted exact-head CI. No original data/accounts/provider/frozen/OOS or GitHub write; forward-feed rights, genuine pre-loss ledger and independent backup remain open."
+  },
   "local_execution_20261001_gate": {
     "status": "PASS_LOCAL_RUNTIME_TEST_LINT_BUILD_NOT_HOSTED_CI",
     "head": "2db52104b30ae6c1a3ac878167f04f3308715ff4",

@@ -6655,3 +6655,31 @@ Full U1-U8/M4/M5, lawful after-start forward data, genuine ledger recovery,
 independent backup, novice and native accessibility/performance/media
 evidence, and hosted CI remain incomplete. No original account,
 frozen research/OOS, or release action was taken.
+
+## 2026-09-30 21:38 UTC product form boundary contrast
+
+The original localhost Markets page showed a dark-theme search input border
+of `#373d4a` against the `#1e2129` input and `#292d38` surrounding panel.
+The form-specific rules for Markets, incremental data requests and saved
+configuration names overrode the existing shared `--field-border` token with
+the quieter `--border` token. A focused CSS regression failed red on those
+three selectors. The three declarations now use `--field-border`; no new
+token, dependency or component was added.
+
+The focused regression passed after the change. Isolated frontend tests
+passed 505/505 across 39 files; ESLint, TypeScript, production build,
+changed-file Prettier and `git diff --check` passed. In the in-app browser,
+the actual Markets search border computed to `rgb(118, 127, 144)` in both
+dark and light themes, and the data-request textarea/date inputs computed
+to the same border in light theme. The browser's original Follow system
+theme was restored and the temporary QA tab closed. Independent read-only
+review found no blocking regression and calculated the token at a minimum
+3.412:1 contrast against the declared input/panel surfaces.
+
+The source-text regression protects these three declarations, not every
+future cascade or token change. Browser observations cover these two
+surfaces only; they do not prove full WCAG 2.2 AA, native screen-reader
+speech, 200% zoom, U5/U8/M4/M5 or release readiness. No original accounts,
+data, frozen research/OOS or GitHub action was changed. Hosted CI and the
+separate lawful forward-feed, authentic pre-loss ledger and independent
+backup gates remain open.
