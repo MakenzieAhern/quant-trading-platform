@@ -5,7 +5,7 @@ import { formatDecimal, formatUtc } from "../../utils/format";
 import { ProductError } from "../ProductPages";
 import { usePreferences } from "../preferences";
 import { closingPrice, marketApi, validRange } from "./api";
-import { observationLabel, useMarketCopy } from "./copy";
+import { observationLabel, riskLabel, useMarketCopy } from "./copy";
 import type {
   MarketBar,
   MarketBars,
@@ -413,10 +413,7 @@ function PriceChart({
           <p>
             {c.factorDate}:{" "}
             {selectedBar.adjustment_effective_date ?? c.notRecorded} · {c.risk}:{" "}
-            {selectedBar.risk_status === "NORMAL"
-              ? c.normal
-              : (selectedBar.risk_status ?? c.unknown)}{" "}
-            · {c.blocked}:{" "}
+            {riskLabel(selectedBar.risk_status, c)} · {c.blocked}:{" "}
             {selectedBar.execution_open_blocked === null
               ? c.unknown
               : selectedBar.execution_open_blocked

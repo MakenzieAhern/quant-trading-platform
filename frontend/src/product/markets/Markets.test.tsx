@@ -130,6 +130,28 @@ describe("historical cache markets", () => {
       "Access was denied. Check your access before trying again.",
     );
   });
+  it("keeps an unrecognized catalogue board visible without rendering inherited object keys", async () => {
+    vi.mocked(marketApi.search).mockResolvedValue({
+      items: [{ ...security, board: "__proto__" }],
+      total: 1,
+      limit: 20,
+      offset: 0,
+      metadata,
+    });
+    render(<MarketsPage />);
+    expect(await screen.findByText("__proto__")).toBeInTheDocument();
+  });
+  it("keeps unrecognized observation counts safe without treating inherited keys as labels", async () => {
+    vi.mocked(marketApi.bars).mockResolvedValue({
+      ...bars,
+      metadata: { ...metadata, status_counts: { ["__proto__"]: 1 } },
+    });
+    render(<MarketsPage />);
+    const dialog = await openSecurity();
+    expect(
+      within(dialog).getByText("Unknown", { selector: "dt" }),
+    ).toBeInTheDocument();
+  });
   it("names native search and exact tables with distinct translated scroll regions", async () => {
     render(<MarketsPage />);
     const searchTable = await screen.findByRole("table", {
@@ -824,14 +846,58 @@ describe("historical cache markets", () => {
     expect(
       within(dialog).getByText(/not complete, executable OHLCV bars/),
     ).toBeInTheDocument();
+    expect(within(dialog).getByText(/Recorded risk status/)).toHaveTextContent(
+      "ST — risk-warning designation",
+    );
     await act(async () => {
       await i18n.changeLanguage("zh-CN");
     });
+    expect(within(dialog).getByText(/已记录风险状态/)).toHaveTextContent(
+      "ST（风险警示标记）",
+    );
     expect(within(dialog).getByLabelText("开始日期")).toHaveValue("2024-02-27");
     expect(within(dialog).getByLabelText("结束日期")).toHaveValue("2024-02-29");
     expect(within(dialog).getByLabelText("价格视图")).toHaveValue("raw");
     expect(marketApi.bars).toHaveBeenCalledTimes(1);
   });
+
+  it.each([
+    ["STAR_ST", "*ST — delisting-risk warning", "*ST（退市风险警示）"],
+    ["DELISTING_PERIOD", "Delisting period", "退市整理期"],
+    [
+      "__proto__",
+      "Unrecognized risk code: __proto__",
+      "未识别的风险代码: __proto__",
+    ],
+    [
+      "FUTURE_RISK",
+      "Unrecognized risk code: FUTURE_RISK",
+      "未识别的风险代码: FUTURE_RISK",
+    ],
+    [null, "Unknown", "未知"],
+  ])(
+    "keeps %s risk status explicit in both languages",
+    async (risk, en, zh) => {
+      vi.mocked(marketApi.bars).mockResolvedValue({
+        ...bars,
+        items: bars.items.map((bar) =>
+          bar.trading_date === "2024-02-29"
+            ? { ...bar, risk_status: risk }
+            : bar,
+        ),
+      });
+      render(<MarketsPage />);
+      const dialog = await openSecurity();
+      expect(
+        within(dialog).getByText(/Recorded risk status/),
+      ).toHaveTextContent(en);
+      await act(async () => {
+        await i18n.changeLanguage("zh-CN");
+      });
+      expect(within(dialog).getByText(/已记录风险状态/)).toHaveTextContent(zh);
+      expect(marketApi.bars).toHaveBeenCalledTimes(1);
+    },
+  );
 
   it("announces only the selected date and status, leaving exact prices readable on demand", async () => {
     render(<MarketsPage />);

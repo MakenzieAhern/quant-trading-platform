@@ -119,7 +119,11 @@ const en = {
   status: "Observation status",
   risk: "Recorded risk status",
   normal: "Normal",
+  st: "ST — risk-warning designation",
+  starSt: "*ST — delisting-risk warning",
+  delistingPeriod: "Delisting period",
   unknown: "Unknown",
+  unrecognizedRisk: "Unrecognized risk code",
   blocked: "Opening execution blocked",
   yes: "Yes",
   no: "No",
@@ -246,7 +250,11 @@ const zh: typeof en = {
   status: "记录状态",
   risk: "已记录风险状态",
   normal: "正常",
+  st: "ST（风险警示标记）",
+  starSt: "*ST（退市风险警示）",
+  delistingPeriod: "退市整理期",
   unknown: "未知",
+  unrecognizedRisk: "未识别的风险代码",
   blocked: "开盘执行受限",
   yes: "是",
   no: "否",
@@ -269,28 +277,40 @@ export function useMarketCopy() {
 }
 export type MarketCopy = typeof en;
 export function boardLabel(board: string, c: MarketCopy) {
-  return (
-    (
-      {
-        SSE_MAIN: c.sseMain,
-        SSE_STAR: c.star,
-        SZSE_MAIN: c.szseMain,
-        SZSE_CHINEXT: c.chiNext,
-      } as Record<string, string>
-    )[board] ?? board
-  );
+  const labels: Record<string, string> = {
+    SSE_MAIN: c.sseMain,
+    SSE_STAR: c.star,
+    SZSE_MAIN: c.szseMain,
+    SZSE_CHINEXT: c.chiNext,
+  };
+  return Object.hasOwn(labels, board) ? labels[board] : board;
 }
 export function observationLabel(status: string, c: MarketCopy) {
-  return (
-    (
-      {
-        OBSERVED: c.observed,
-        SUSPENDED: c.suspended,
-        SUSPENSION_BOUNDARY_UNCERTAIN: c.uncertainSuspension,
-        FEATURE_ONLY: c.feature,
-        MISSING_OBSERVATION: c.missing,
-        OUTSIDE_LISTING: c.outside,
-      } as Record<string, string>
-    )[status] ?? c.unknown
-  );
+  const labels: Record<string, string> = {
+    OBSERVED: c.observed,
+    SUSPENDED: c.suspended,
+    SUSPENSION_BOUNDARY_UNCERTAIN: c.uncertainSuspension,
+    FEATURE_ONLY: c.feature,
+    MISSING_OBSERVATION: c.missing,
+    OUTSIDE_LISTING: c.outside,
+  };
+  return Object.hasOwn(labels, status) ? labels[status] : c.unknown;
+}
+
+export function riskLabel(status: string | null, c: MarketCopy) {
+  switch (status) {
+    case "NORMAL":
+      return c.normal;
+    case "ST":
+      return c.st;
+    case "STAR_ST":
+      return c.starSt;
+    case "DELISTING_PERIOD":
+      return c.delistingPeriod;
+    case null:
+    case "":
+      return c.unknown;
+    default:
+      return `${c.unrecognizedRisk}: ${status}`;
+  }
 }
