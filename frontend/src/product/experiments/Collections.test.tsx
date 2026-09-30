@@ -715,20 +715,43 @@ describe("server-generated report downloads", () => {
     vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(
       () => undefined,
     );
-    vi.spyOn(experimentApi, "export")
+    const exported = vi
+      .spyOn(experimentApi, "export")
       .mockResolvedValueOnce(blob)
       .mockRejectedValueOnce(new ApiError(503, "Unavailable"))
       .mockResolvedValueOnce(replacement);
 
-    const view = render(<ExperimentExports jobId={job.job_id} range={{}} />);
+    const view = render(
+      <ExperimentExports
+        jobId={job.job_id}
+        range={{ start_date: "2031-01-02", end_date: "2031-01-03" }}
+      />,
+    );
     const download = screen.getByRole("button", {
       name: "Download records (CSV)",
     });
     await userEvent.click(download);
     const fallback = await screen.findByRole("link", {
-      name: "Save prepared report",
+      name: /Save prepared report/,
     });
     expect(fallback).toHaveAttribute("href", "blob:first-report");
+    view.rerender(
+      <ExperimentExports
+        jobId={job.job_id}
+        range={{ start_date: "2031-01-04", end_date: "2031-01-05" }}
+      />,
+    );
+    await userEvent.selectOptions(
+      screen.getByLabelText("Records to export"),
+      "equity",
+    );
+    expect(fallback).toHaveAccessibleName(/-trades\.csv/);
+    expect(fallback).toHaveAccessibleName(/2031-01-02.*2031-01-03/);
+    expect(fallback).not.toHaveAccessibleName(/2031-01-04/);
+    expect(exported).toHaveBeenCalledTimes(1);
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(fallback).toHaveAccessibleName(/保存已准备的报告.*2031-01-02/);
+    await act(async () => i18n.changeLanguage("en-US"));
 
     await userEvent.click(download);
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -740,7 +763,7 @@ describe("server-generated report downloads", () => {
     await userEvent.click(download);
     await waitFor(() =>
       expect(
-        screen.getByRole("link", { name: "Save prepared report" }),
+        screen.getByRole("link", { name: /Save prepared report/ }),
       ).toHaveAttribute("href", "blob:replacement"),
     );
     expect(revoke).toHaveBeenCalledWith("blob:first-report");
@@ -800,7 +823,9 @@ describe("server-generated report downloads", () => {
     expect(screen.getByRole("status")).toHaveTextContent(
       "Check your browser downloads",
     );
-    const fallback = screen.getByRole("link", { name: "Save prepared report" });
+    const fallback = screen.getByRole("link", {
+      name: /Save prepared report/,
+    });
     expect(fallback).toHaveAttribute("href", "blob:report");
     expect(fallback).toHaveAttribute(
       "download",

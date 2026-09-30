@@ -114,6 +114,7 @@ export function ExperimentExports({
             className="button secondary"
             href={prepared.url}
             download={prepared.filename}
+            aria-label={`${u.savePrepared}: ${prepared.filename} · ${u.filterTitle}: ${prepared.range.start_date ?? "…"} → ${prepared.range.end_date ?? "…"} (Asia/Shanghai)`}
           >
             {u.savePrepared}
           </a>
