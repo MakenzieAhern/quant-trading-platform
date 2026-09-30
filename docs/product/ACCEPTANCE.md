@@ -1,5 +1,31 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 20:26 UTC retained report identity — bounded local browser check
+
+Local code commit `0a62efb` makes the existing prepared-report fallback link
+identify the original job/CSV collection and trading-date range in its
+translated accessible name. The old blob remains available when a replacement
+download fails; changing the current date filter or CSV collection does not
+silently relabel that old file as the new selection. No report contents or
+financial calculation changed, and no new dependency was added.
+
+The prior generic link name failed a focused regression. The combined
+retention/filter/locale test then passed 17/17 while preserving the existing
+replacement-failure and URL-revocation checks. At the exact code commit,
+isolated `make test` passed backend 1,033 with one optional unmounted-archive
+skip and frontend 495/495 across 38 files. Frontend ESLint, TypeScript/build,
+changed-file Prettier and diff check passed. Independent read-only review found
+no P1/P2 issue.
+
+In the actual local in-app browser, a saved synthetic run prepared a trades CSV
+for 2031-01-02→03. After applying 2031-01-06→07, the current display showed
+the new range while the retained fallback link's accessible name and adjacent
+text still identified the old trades CSV and old dates. The GET-only export
+did not create a study, account, provider update or formal/OOS run. The
+temporary QA tab was closed. No native screen-reader speech, saved screenshot,
+download-file landing or full U4/M4/M5 acceptance is claimed. GitHub Actions
+recovery is unverified; no push, CI retry/poll, merge, tag or release occurred.
+
 ## 2026-09-30 20:13 UTC market date-range keyboard recovery — bounded local check
 
 Local code commit `63e45d9` fixes an invalid historical market date window
