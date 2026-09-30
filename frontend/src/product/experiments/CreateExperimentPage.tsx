@@ -41,10 +41,15 @@ function finishNewIntent() {
 function existingDraft() {
   try {
     const raw = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
-    const draft = raw ? parseExperimentDraft(JSON.parse(raw)) : null;
-    return { draft, unreadable: Boolean(raw && !draft) };
+    let draft = null;
+    try {
+      draft = raw === null ? null : parseExperimentDraft(JSON.parse(raw));
+    } catch {
+      // A malformed value remains available as exact text for recovery.
+    }
+    return { draft, raw, unreadable: raw !== null && !draft };
   } catch {
-    return { draft: null, unreadable: true };
+    return { draft: null, raw: null, unreadable: true };
   }
 }
 
@@ -57,9 +62,9 @@ export function CreateExperimentPage() {
     "pending",
   );
   const original =
-    newIntent && choice === "pending"
+    choice === "pending"
       ? existingDraft()
-      : { draft: null, unreadable: false };
+      : { draft: null, raw: null, unreadable: false };
   const [choiceError, setChoiceError] = useState<"failed" | "conflict" | null>(
     null,
   );
@@ -92,11 +97,60 @@ export function CreateExperimentPage() {
           retry={() => setRevision((value) => value + 1)}
         />
       )}
+      {choice === "pending" &&
+        original.unreadable &&
+        (original.raw === null ? (
+          <p role="alert">{versions.readFailed}</p>
+        ) : (
+          <section
+            className="experimentPanel"
+            aria-labelledby="unreadable-draft-title"
+          >
+            <h2 id="unreadable-draft-title">{c.unreadableDraftTitle}</h2>
+            <p>{c.unreadableDraftHint}</p>
+            <details>
+              <summary>{c.unreadableDraftText}</summary>
+              <textarea
+                className="experimentUnreadableDraft"
+                aria-label={c.unreadableDraftText}
+                readOnly
+                rows={5}
+                value={original.raw}
+              />
+            </details>
+            {choiceError && <p role="alert">{versions[choiceError]}</p>}
+            <button
+              className="button"
+              disabled={!capabilities.data?.strategies.length}
+              onClick={() => {
+                try {
+                  saveExperimentDraft(
+                    initialForm(capabilities.data!, c.defaultName),
+                    0,
+                    crypto.randomUUID(),
+                    original.raw!,
+                  );
+                  finishNewIntent();
+                  setChoice("started");
+                } catch (reason) {
+                  setChoiceError(
+                    reason instanceof Error &&
+                      reason.message === "DRAFT_CHANGED_IN_ANOTHER_TAB"
+                      ? "conflict"
+                      : "failed",
+                  );
+                }
+              }}
+            >
+              {c.unreadableDraftStart}
+            </button>
+          </section>
+        ))}
       {capabilities.data &&
         (capabilities.data.strategies.length ? (
-          newIntent && choice === "pending" && original.unreadable ? (
-            <p role="alert">{versions.readFailed}</p>
-          ) : newIntent && choice === "pending" && original.draft ? (
+          choice === "pending" && original.unreadable ? null : newIntent &&
+            choice === "pending" &&
+            original.draft ? (
             <section
               className="experimentPanel"
               aria-labelledby="new-draft-title"

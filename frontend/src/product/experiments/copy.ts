@@ -20,6 +20,11 @@ const en = {
     "Starting a new backtest saves the current draft as a separate browser version first. It does not run either configuration.",
   newDraftStart: "Back up draft and start new",
   newDraftResume: "Continue saved draft",
+  unreadableDraftTitle: "Saved draft needs recovery",
+  unreadableDraftHint:
+    "This browser cannot read the saved draft. Its exact original text will be kept as a read-only browser copy before a new draft opens. Nothing is submitted.",
+  unreadableDraftText: "Show original draft text for copying",
+  unreadableDraftStart: "Preserve original and start new",
   exit: "Save & exit",
   exitConfirm:
     "Leave this configuration? Your latest draft is saved on this device.",
@@ -275,6 +280,11 @@ const zh: typeof en = {
     "新建回测前会先将当前草稿另存为浏览器配置版本，不会运行任何配置。",
   newDraftStart: "备份草稿并新建",
   newDraftResume: "继续已保存草稿",
+  unreadableDraftTitle: "已保存草稿需要恢复",
+  unreadableDraftHint:
+    "当前浏览器无法解析已保存的草稿。新建前会将原始文本完整保留为只读浏览器副本；不会提交实验。",
+  unreadableDraftText: "查看原始草稿文本以便复制",
+  unreadableDraftStart: "保留原文并新建",
   exit: "保存并退出",
   exitConfirm: "离开当前配置？最新草稿已保存在本机。",
   storageError:

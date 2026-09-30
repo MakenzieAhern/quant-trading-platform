@@ -14,6 +14,7 @@ import { CreateExperimentPage } from "../experiments/CreateExperimentPage";
 import {
   EXPERIMENT_DRAFT_KEY,
   DRAFT_RECOVERY_PREFIX,
+  UNREADABLE_DRAFT_PREFIX,
   readExperimentDraft,
   saveExperimentDraft,
   type ExperimentDraft,
@@ -38,6 +39,7 @@ beforeEach(async () => {
     if (
       key.startsWith(CONFIG_VERSION_PREFIX) ||
       key.startsWith(DRAFT_RECOVERY_PREFIX) ||
+      key.startsWith(UNREADABLE_DRAFT_PREFIX) ||
       key === EXPERIMENT_DRAFT_KEY
     )
       window.localStorage.removeItem(key);
@@ -59,6 +61,34 @@ beforeEach(async () => {
   });
 });
 describe("configuration versions in the guided wizard", () => {
+  it("keeps unreadable draft text available to copy after remount and locale change", async () => {
+    const id = crypto.randomUUID();
+    const raw = '{"version":1,"form":';
+    localStorage.setItem(UNREADABLE_DRAFT_PREFIX + id, raw);
+    const restore = vi.fn();
+    const create = vi.spyOn(experimentApi, "create");
+    const first = render(
+      <ConfigurationVersionsPanel current={current} onRestore={restore} />,
+    );
+    await userEvent.click(screen.getByText("Unreadable draft copies"));
+    await userEvent.click(screen.getByText(`Raw draft copy: ${id}`));
+    expect(screen.getByLabelText("Original draft text")).toHaveValue(raw);
+    expect(screen.getByLabelText("Original draft text")).toHaveAttribute(
+      "readonly",
+    );
+    first.unmount();
+    render(
+      <ConfigurationVersionsPanel current={current} onRestore={restore} />,
+    );
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    await userEvent.click(screen.getByText("无法读取的草稿副本"));
+    await userEvent.click(screen.getByText(`原始草稿副本: ${id}`));
+    expect(screen.getByLabelText("原始草稿文本")).toHaveValue(raw);
+    expect(localStorage.getItem(UNREADABLE_DRAFT_PREFIX + id)).toBe(raw);
+    expect(restore).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+  });
+
   it("rejects a recovery slot changed after preview and displays fractions in fraction fields", async () => {
     saveExperimentDraft(configuration, 2, current.idempotencyKey);
     const original = localStorage.getItem(EXPERIMENT_DRAFT_KEY);

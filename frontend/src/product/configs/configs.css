@@ -63,3 +63,7 @@
   overflow-wrap: anywhere;
   font-size: 0.8rem;
 }
+.configurationRecovery textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+}

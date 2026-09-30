@@ -29,8 +29,11 @@ import { ExperimentPlan } from "./ExperimentPlan";
 import { EXPERIMENT_VIEW_KEY, ExperimentsPage } from "./ExperimentsPage";
 import {
   EXPERIMENT_DRAFT_KEY,
+  DRAFT_RECOVERY_PREFIX,
+  UNREADABLE_DRAFT_PREFIX,
   readBrowserDraftRecoveries,
   readExperimentDraft,
+  readUnreadableDraftCopies,
   saveExperimentDraft,
 } from "./draft";
 import {
@@ -44,6 +47,12 @@ import {
 beforeEach(async () => {
   window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
   window.localStorage.removeItem(EXPERIMENT_VIEW_KEY);
+  Array.from({ length: window.localStorage.length }, (_, index) =>
+    window.localStorage.key(index),
+  ).forEach((key) => {
+    if (key?.startsWith(UNREADABLE_DRAFT_PREFIX) || key?.startsWith(DRAFT_RECOVERY_PREFIX))
+      window.localStorage.removeItem(key);
+  });
   await i18n.changeLanguage("en-US");
   window.history.replaceState({}, "", "/research/new");
 });
@@ -79,6 +88,194 @@ function enableNativeDialog() {
 }
 
 describe("guided experiment", () => {
+  it.each(["{broken", ""])(
+    "preserves unreadable draft bytes before an explicit new start: %s",
+    async (raw) => {
+      vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+      const create = vi.spyOn(experimentApi, "create");
+      window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, raw);
+      window.history.replaceState({}, "", "/research/new?new=1");
+      render(<CreateExperimentPage />);
+      await screen.findByRole("heading", {
+        name: "Saved draft needs recovery",
+      });
+      expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(raw);
+      expect(
+        screen.queryByRole("heading", { name: "Choose a strategy" }),
+      ).toBeNull();
+      await userEvent.click(
+        screen.getByRole("button", { name: "Preserve original and start new" }),
+      );
+      expect(
+        await screen.findByRole("heading", { name: "Choose a strategy" }),
+      ).toBeInTheDocument();
+      expect(readExperimentDraft()).toMatchObject({ step: 0 });
+      expect(
+        Array.from({ length: window.localStorage.length }, (_, index) =>
+          window.localStorage.key(index),
+        ).some(
+          (key) =>
+            key?.startsWith(UNREADABLE_DRAFT_PREFIX) &&
+            window.localStorage.getItem(key) === raw,
+        ),
+      ).toBe(true);
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+
+  it("does not silently overwrite unreadable raw on a direct wizard link", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const raw = "{broken";
+    window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, raw);
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { name: "Saved draft needs recovery" });
+    expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(raw);
+    expect(screen.queryByRole("heading", { name: "Choose a strategy" })).toBeNull();
+  });
+
+  it("keeps this page's prior usable recovery when starting after shared-draft corruption", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    saveExperimentDraft(configuration, 2, "pre-corruption-request");
+    window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, "{broken");
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { name: "Saved draft needs recovery" });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Preserve original and start new" }),
+    );
+    expect(
+      readBrowserDraftRecoveries().items.some(
+        ({ draft }) => draft.idempotencyKey === "pre-corruption-request",
+      ),
+    ).toBe(true);
+    expect(readUnreadableDraftCopies().items.some(({ raw }) => raw === "{broken")).toBe(true);
+    expect(readExperimentDraft()?.step).toBe(0);
+  });
+
+  it("leaves an unreadable draft unchanged when its raw backup cannot be saved", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const raw = "{broken";
+    window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, raw);
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { name: "Saved draft needs recovery" });
+    const write = Storage.prototype.setItem;
+    const blocked = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (
+      this: Storage,
+      key,
+      value,
+    ) {
+      if (key.startsWith(UNREADABLE_DRAFT_PREFIX))
+        throw new DOMException("full", "QuotaExceededError");
+      write.call(this, key, value);
+    });
+    try {
+      await userEvent.click(
+        screen.getByRole("button", { name: "Preserve original and start new" }),
+      );
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "The version action could not be saved",
+      );
+      expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(raw);
+      expect(window.location.search).toBe("?new=1");
+    } finally {
+      blocked.mockRestore();
+    }
+  });
+
+  it("does not replace unreadable raw changed by another tab during the choice", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, "{old");
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { name: "Saved draft needs recovery" });
+    const newerRaw = JSON.stringify({
+      version: 1,
+      form: configuration,
+      step: 1,
+      idempotencyKey: "other-tab-request-key",
+      savedAt: "2026-10-01T00:00:00Z",
+    });
+    window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, newerRaw);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Preserve original and start new" }),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "The draft changed in another tab",
+    );
+    expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(newerRaw);
+    expect(readUnreadableDraftCopies().items).toHaveLength(0);
+    expect(window.location.search).toBe("?new=1");
+  });
+
+  it("detects a newer shared draft arriving during raw-backup writes", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, "{old");
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { name: "Saved draft needs recovery" });
+    const newerRaw = JSON.stringify({
+      version: 1,
+      form: configuration,
+      step: 2,
+      idempotencyKey: "concurrent-request-key",
+      savedAt: "2026-10-01T00:00:00Z",
+    });
+    const write = Storage.prototype.setItem;
+    const concurrent = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (
+      this: Storage,
+      key,
+      value,
+    ) {
+      write.call(this, key, value);
+      if (key.startsWith(DRAFT_RECOVERY_PREFIX))
+        write.call(this, EXPERIMENT_DRAFT_KEY, newerRaw);
+    });
+    try {
+      await userEvent.click(
+        screen.getByRole("button", { name: "Preserve original and start new" }),
+      );
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "The draft changed in another tab",
+      );
+      expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(newerRaw);
+      expect(window.location.search).toBe("?new=1");
+    } finally {
+      concurrent.mockRestore();
+    }
+  });
+
+  it("shows corrupt draft text even when capabilities cannot load", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockRejectedValue(
+      new TypeError("offline"),
+    );
+    window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, "{offline");
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("alert");
+    await userEvent.click(screen.getByText("Show original draft text for copying"));
+    expect(screen.getByLabelText("Show original draft text for copying")).toHaveValue(
+      "{offline",
+    );
+    expect(screen.getByRole("button", { name: "Preserve original and start new" })).toBeDisabled();
+  });
+
+  it("shows corrupt draft text but cannot start without registered strategies", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue({
+      ...capabilities,
+      strategies: [],
+    });
+    window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, "{no-strategy");
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await screen.findByText("No executable strategy is available. Check the data center or retry loading.");
+    await userEvent.click(screen.getByText("Show original draft text for copying"));
+    expect(screen.getByLabelText("Show original draft text for copying")).toHaveValue(
+      "{no-strategy",
+    );
+    expect(screen.getByRole("button", { name: "Preserve original and start new" })).toBeDisabled();
+  });
+
   it("opens a fresh first step and retains the requested strategy when no draft exists", async () => {
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
     const create = vi.spyOn(experimentApi, "create");

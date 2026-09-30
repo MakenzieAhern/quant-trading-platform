@@ -5,7 +5,9 @@ import { Dialog } from "../Dialog";
 import { useExperimentCopy } from "../experiments/copy";
 import {
   DRAFT_RECOVERY_PREFIX,
+  UNREADABLE_DRAFT_PREFIX,
   readBrowserDraftRecoveries,
+  readUnreadableDraftCopies,
   type ExperimentDraft,
 } from "../experiments/draft";
 import { useConfigurationCopy } from "./copy";
@@ -35,6 +37,9 @@ export function ConfigurationVersionsPanel({
   const [offset, setOffset] = useState(0);
   const [recoveries, setRecoveries] = useState(readBrowserDraftRecoveries);
   const [recoveryOffset, setRecoveryOffset] = useState(0);
+  const [unreadableCopies, setUnreadableCopies] = useState(
+    readUnreadableDraftCopies,
+  );
   const [selected, setSelected] = useState<
     | ConfigurationVersion
     | (Omit<ConfigurationVersion, "kind"> & { kind: "browser_recovery" })
@@ -56,13 +61,15 @@ export function ConfigurationVersionsPanel({
   function refresh() {
     setLibrary(readConfigurationVersions());
     setRecoveries(readBrowserDraftRecoveries());
+    setUnreadableCopies(readUnreadableDraftCopies());
   }
   useEffect(() => {
     const changed = (event: StorageEvent) => {
       if (
         event.key === null ||
         event.key.startsWith(CONFIG_VERSION_PREFIX) ||
-        event.key.startsWith(DRAFT_RECOVERY_PREFIX)
+        event.key.startsWith(DRAFT_RECOVERY_PREFIX) ||
+        event.key.startsWith(UNREADABLE_DRAFT_PREFIX)
       )
         refresh();
     };
@@ -270,6 +277,36 @@ export function ConfigurationVersionsPanel({
               onChange={setRecoveryOffset}
             />
           </>
+        )}
+      </details>
+      <details
+        className="configurationRecovery"
+        onToggle={(event) => {
+          if (event.currentTarget.open)
+            setUnreadableCopies(readUnreadableDraftCopies());
+        }}
+      >
+        <summary>{c.unreadableCopies}</summary>
+        <p>{c.unreadableCopyHelp}</p>
+        {unreadableCopies.storageFailed ? (
+          <p role="alert">{c.readFailed}</p>
+        ) : unreadableCopies.items.length === 0 ? (
+          <p>{c.unreadableCopyEmpty}</p>
+        ) : (
+          unreadableCopies.items.map((entry) => (
+            <details key={entry.id}>
+              <summary>{`${c.unreadableCopy}: ${entry.id}`}</summary>
+              <label>
+                {c.unreadableRaw}
+                <textarea
+                  readOnly
+                  rows={6}
+                  value={entry.raw}
+                  style={{ width: "100%" }}
+                />
+              </label>
+            </details>
+          ))
         )}
       </details>
       {selected && (

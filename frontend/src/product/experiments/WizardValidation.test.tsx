@@ -7,6 +7,7 @@ import { experimentApi } from "./api";
 import { CreateExperimentPage } from "./CreateExperimentPage";
 import {
   EXPERIMENT_DRAFT_KEY,
+  DRAFT_RECOVERY_PREFIX,
   readExperimentDraft,
   saveExperimentDraft,
 } from "./draft";
@@ -14,6 +15,8 @@ import { capabilities, configuration } from "./fixtures.test-data";
 
 beforeEach(async () => {
   localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
+  for (const key of Object.keys(localStorage))
+    if (key.startsWith(DRAFT_RECOVERY_PREFIX)) localStorage.removeItem(key);
   await i18n.changeLanguage("en-US");
   window.history.replaceState({}, "", "/research/new");
   vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);

@@ -93,7 +93,12 @@ describe("immutable browser configuration versions", () => {
       (entry) => entry.draft.idempotencyKey === "other-tab-new-intent",
     );
     expect(preserved?.draft.form).toEqual(otherForm);
-    expect(readBrowserDraftRecoveries().items).toHaveLength(2);
+    expect(readBrowserDraftRecoveries().items).toHaveLength(3);
+    expect(
+      readBrowserDraftRecoveries().items.some(
+        (entry) => entry.draft.idempotencyKey === current.idempotencyKey,
+      ),
+    ).toBe(true);
     const recovered = restoreBrowserDraft(
       preserved!.id,
       restored,

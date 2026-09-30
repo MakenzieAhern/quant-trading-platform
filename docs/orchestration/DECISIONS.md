@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 malformed browser drafts preserve both raw text and prior page recovery — 2026-10-01
+
+Fail closed on an unreadable shared experiment draft: show its original text,
+then require an explicit new-start action that persists a separate read-only
+raw copy before replacing the shared pointer. If the backup cannot be stored,
+retain the original and do not open the new draft. Rotate the existing
+per-page recovery key when the request identity changes; otherwise a second
+wizard visit can overwrite the only valid page recovery while backing up only
+the malformed shared value. List raw copies for manual copying, not automatic
+parsing, restoration or execution. A final shared-value recheck narrows
+cross-tab races but `localStorage` provides no atomic compare-and-swap; do not
+claim strict multi-tab serialization. Component tests prove the bounded paths,
+not native browser corruption injection or permanent backup.
+
+## v1.2 installed Chrome CSV fallback is still not file-landing evidence — 2026-10-01
+
+An installed-Chrome read-only attempt on the existing synthetic result showed
+the named prepared `blob:` fallback, but neither automatic nor explicit click
+yielded a download event or an exact file in ordinary Windows Downloads.
+Browser policy blocked Chrome's internal downloads page; do not work around
+that boundary. Keep M5 CSV landing unverified until an observable authorized
+destination and exact file contents can be inspected. This does not prove an
+application export defect or substitute for hosted CI.
+
 ## v1.2 task center pagers reuse existing section names — 2026-10-01
 
 Two distinct task streams must not expose identically named pagination groups

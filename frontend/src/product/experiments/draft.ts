@@ -3,8 +3,10 @@ import type { ExperimentConfiguration } from "./types";
 export const EXPERIMENT_DRAFT_KEY = "quant.product.experiment-draft.v1";
 export const DRAFT_RECOVERY_PREFIX =
   "quant.product.experiment-draft-recovery.v1.";
-// A page owns only this recovery slot. Never reuse a writer ID from shared storage.
-const writerId = crypto.randomUUID();
+export const UNREADABLE_DRAFT_PREFIX =
+  "quant.product.unreadable-experiment-draft.v1.";
+// Rotate when this page starts another logical draft; older recovery stays intact.
+let writerId = crypto.randomUUID();
 export interface BrowserDraftRecovery {
   id: string;
   draft: ExperimentDraft;
@@ -67,14 +69,28 @@ export function saveExperimentDraft(
   form: ExperimentConfiguration,
   step: number,
   idempotencyKey: string,
+  expectedUnreadableRaw?: string,
 ) {
-  let storedRaw: string | null = null;
+  const storedRaw = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
+  if (
+    expectedUnreadableRaw !== undefined &&
+    storedRaw !== expectedUnreadableRaw
+  )
+    throw new Error("DRAFT_CHANGED_IN_ANOTHER_TAB");
   let stored: ExperimentDraft | null = null;
   try {
-    storedRaw = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
-    stored = storedRaw ? parseExperimentDraft(JSON.parse(storedRaw)) : null;
+    stored =
+      storedRaw === null ? null : parseExperimentDraft(JSON.parse(storedRaw));
   } catch {
-    // Corrupt or unreadable storage must not prevent writing the current draft.
+    // Keep the exact original bytes; the user may still recover them.
+  }
+  if (storedRaw !== null && !stored) {
+    if (storedRaw !== expectedUnreadableRaw)
+      throw new Error("DRAFT_CHANGED_IN_ANOTHER_TAB");
+    const backupKey = `${UNREADABLE_DRAFT_PREFIX}${crypto.randomUUID()}`;
+    if (window.localStorage.getItem(backupKey) !== null)
+      throw new Error("UNREADABLE_DRAFT_BACKUP_EXISTS");
+    window.localStorage.setItem(backupKey, storedRaw);
   }
   const unchanged =
     stored &&
@@ -91,10 +107,60 @@ export function saveExperimentDraft(
           idempotencyKey,
           savedAt: new Date().toISOString(),
         } satisfies ExperimentDraft);
+  const currentRecoveryRaw = window.localStorage.getItem(
+    `${DRAFT_RECOVERY_PREFIX}${writerId}`,
+  );
+  let currentRecovery: ExperimentDraft | null = null;
+  try {
+    currentRecovery = currentRecoveryRaw
+      ? parseExperimentDraft(JSON.parse(currentRecoveryRaw))
+      : null;
+  } catch {
+    // Preserve an unreadable page recovery under its existing key.
+  }
+  const nextWriterId =
+    currentRecoveryRaw !== null &&
+    currentRecovery?.idempotencyKey !== idempotencyKey
+      ? crypto.randomUUID()
+      : writerId;
+  if (
+    nextWriterId !== writerId &&
+    window.localStorage.getItem(`${DRAFT_RECOVERY_PREFIX}${nextWriterId}`) !==
+      null
+  )
+    throw new Error("DRAFT_RECOVERY_KEY_EXISTS");
   // Synchronous for beforeunload: preserve this page's latest values before any
   // shared-pointer write. Another tab can win the pointer without losing ours.
-  window.localStorage.setItem(`${DRAFT_RECOVERY_PREFIX}${writerId}`, raw);
+  window.localStorage.setItem(`${DRAFT_RECOVERY_PREFIX}${nextWriterId}`, raw);
+  if (
+    expectedUnreadableRaw !== undefined &&
+    window.localStorage.getItem(EXPERIMENT_DRAFT_KEY) !== expectedUnreadableRaw
+  )
+    throw new Error("DRAFT_CHANGED_IN_ANOTHER_TAB");
   window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, raw);
+  writerId = nextWriterId;
+}
+
+export function readUnreadableDraftCopies(): {
+  items: { id: string; raw: string }[];
+  storageFailed: boolean;
+} {
+  try {
+    const items: { id: string; raw: string }[] = [];
+    for (let index = 0; index < window.localStorage.length; index++) {
+      const key = window.localStorage.key(index);
+      if (!key?.startsWith(UNREADABLE_DRAFT_PREFIX)) continue;
+      const raw = window.localStorage.getItem(key);
+      if (raw !== null)
+        items.push({ id: key.slice(UNREADABLE_DRAFT_PREFIX.length), raw });
+    }
+    return {
+      items: items.sort((a, b) => a.id.localeCompare(b.id)),
+      storageFailed: false,
+    };
+  } catch {
+    return { items: [], storageFailed: true };
+  }
 }
 
 export function clearCompletedExperimentDraft(

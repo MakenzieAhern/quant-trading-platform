@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 23:02 UTC unreadable browser-draft recovery and Chrome CSV boundary
+
+An existing malformed or empty saved experiment draft now blocks silent wizard
+replacement. The page shows the exact stored text for copying even if strategy
+capabilities fail to load, and offers an explicit new start only when a strategy
+is available. That action first retains the original text as a read-only browser
+copy, then writes the new draft; a backup/quota failure leaves the shared draft
+untouched. A different shared value observed during recovery stops the action.
+The per-page recovery key now rotates for a different request identity, so an
+earlier valid page recovery remains available when the shared draft is corrupt.
+The configuration panel lists raw copies in English and Chinese but does not
+restore or run them. Red regressions reproduced the lost prior page recovery;
+final frontend lint, typecheck, 531/531 tests and production build passed,
+with `git diff --check` clean. The repository's isolated `make test`,
+`make lint` and `make build` also exited zero: backend 1,033 passed with one
+optional archive-mount skip, and frontend 531 passed. These are local/component
+checks; browser `localStorage` has no atomic compare-and-swap, so the final
+cross-tab read/write window is not claimed eliminated. Browser storage copies
+remain device-local and count toward its quota.
+
+In installed Chrome on the original completed synthetic study
+`dccc74b3-f8c4-487f-9597-4cd9d8fb7288`, both the automatic CSV action and
+its named `blob:` fallback displayed "Download prepared" but the documented
+download-event wait timed out. The exact file was absent from ordinary Windows
+Downloads. Chrome's internal download page was blocked by the browser policy;
+no alternative path was used. `CSV_FILE_LANDING = NOT_VERIFIED`, not an app
+defect or a successful saved-file claim. The temporary QA tab was closed; no
+study/account/provider/frozen research/OOS, GitHub or release action occurred.
+Full U1/U3/M4/M5, native accessibility, independent novice, physical backup,
+lawful forward feed and hosted exact-head CI remain open.
+
+At 23:02 UTC a read-only GitHub check still found PR #32 open/draft and no
+Actions run newer than the September 26 payment-or-spending-limit admission
+failure. October 1 Sydney time has arrived, but hosted recovery is not yet
+independently demonstrated. No workflow retry, push or billing change was made.
+
 ## 2026-09-30 22:07 UTC local operation and terminal paper-session recovery
 
 GitHub-hosted Actions is still unverified for the current local code; October 1
