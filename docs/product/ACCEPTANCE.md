@@ -1,5 +1,35 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 21:11 UTC task-center pagination names — bounded U8/M4 check
+
+Local code commit `596ad3d` gives the research and raw-data task pagers
+distinct bilingual accessible group names by passing their existing section
+titles to the shared `Pagination` component. A new EN/ZH regression failed
+against the two identical generic names, then passed 12/12 after the two-line
+fix; an existing test already checks independent research paging. The full
+frontend suite passed 504/504 across 38 files, `make lint`, `make build`,
+changed-file Prettier and diff checks passed. Independent read-only final
+review found no P1/P2. The original local in-app browser exposed separate
+`Research tasks — Pagination` / `Raw-data request tasks — Pagination` and
+`研究任务 — 分页` / `原始数据请求任务 — 分页` in the actual task-center accessibility tree.
+The locale was restored and the temporary tab closed. No task creation, data
+update, financial/account write, GitHub or release action occurred. This is
+not native screen-reader speech or full U8/M4/M5 acceptance.
+
+## 2026-09-30 21:11 UTC Docker login-exit follow-up — cause still unknown
+
+Read-only Windows task and log inspection confirmed the 2026-09-30 login
+task's last run at 21:16:17 AEST with result 0. Docker Desktop initialized
+dashboard, tray and Engine twice, then logged `Quitting whole Docker Desktop`
+before `app.exit(104)` at 21:16:41 and 21:17:37 AEST. Later WSL/Abort errors
+are shutdown effects, not proof of the initiating cause. No Docker crash or
+concurrent logout was found. HKCU Run also has a Docker Desktop entry, so
+there may be two launch paths, but the second start and Quit initiator cannot
+be attributed from available logs. Do not change startup settings or infer a
+fix. Ask whether the tray Quit was user-initiated; the next genuine login
+should capture process parentage and both launch paths immediately. M5
+terminal-free startup remains FAIL. No service, setting or data was changed.
+
 ## 2026-09-30 20:58 UTC CSV alternate capture — still not verified
 
 On the unchanged local app and completed synthetic study

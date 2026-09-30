@@ -1,7 +1,18 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T20:58:42Z",
+  "updated_at_utc": "2026-09-30T21:11:12Z",
+  "u8_task_center_pagination_20261001_gate": {
+    "status": "PASS_BOUNDED_RED_GREEN_AND_IN_APP_AX_NOT_FULL_U8_M4_M5",
+    "code_head": "596ad3d",
+    "proof": "2026-09-30 21:11 UTC: existing bilingual section titles now distinguish the two task-center pagination groups. EN/ZH regression failed red with identical generic names, then focused 12/12, full frontend 504/504 across 38 files, make lint/build, changed-file Prettier and diff checks passed. Independent read-only review found no P1/P2. Original in-app browser accessibility tree showed separate English and Chinese group names; locale restored and QA tab closed. See docs/product/ACCEPTANCE.md.",
+    "limits": "Actual in-app accessibility tree and component tests, not native screen-reader speech or complete U8/M4/M5. No task/account/provider/frozen/OOS or GitHub write."
+  },
+  "m5_docker_login_exit_20261001_gate": {
+    "status": "FAIL_UNATTENDED_STARTUP_ROOT_CAUSE_UNPROVEN",
+    "proof": "Read-only 2026-09-30 login logs: scheduled Docker task ran at 21:16:17 AEST with result 0; two Desktop starts initialized tray/dashboard/Engine, then logged Quitting whole Docker Desktop before app.exit(104). HKCU Run also has a Desktop entry. No Docker crash or logout was found. The duplicate launch path and Quit initiator remain hypotheses, not causes. See docs/product/ACCEPTANCE.md.",
+    "next": "Await user context on any tray Quit; on the next genuine login capture both launch entries, process parentage and Electron/backend logs before changing settings. Do not reboot just for QA."
+  },
   "m5_csv_file_landing_20261001_gate": {
     "status": "PARTIAL_PREPARED_UI_FILE_LANDING_NOT_VERIFIED",
     "proof": "2026-09-30 20:58 UTC: original in-app browser again showed the named blob fallback for completed synthetic study dccc74b3-f8c4-487f-9597-4cd9d8fb7288. A distinct locator downloadMedia capture timed out after 20 seconds; the exact expected file was absent from ordinary C:/Users/1/Downloads and Chrome was not an available browser provider. Earlier automatic and explicit fallback download-event waits also timed out. QA tab closed. See docs/product/ACCEPTANCE.md.",
@@ -1070,6 +1081,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-09-30 21:11UTC local 596ad3d U8 task-center pagination: generic duplicate group names failed red in EN/ZH; existing bilingual titles passed focused12, full frontend504/504 across38, make lint/build, Prettier and diff check. Original in-app browser accessibility tree confirmed distinct research/raw-data pagination names in both languages; locale restored/tab closed. Independent read-only review no P1/P2. No native screen-reader/full M4/M5 or hosted CI claim; no task/financial/account/GitHub write.",
     "2026-09-30 20:26UTC local 0a62efb U4 retained export identity: generic old-link name failed red; final bilingual original job/collection/date name and failed-replacement retention passed focused17, exact code-head isolated make test backend1033/one optional archive skip/frontend495, frontend lint/build/Prettier/diff PASS. Actual in-app browser synthetic report A retained old identity after current date range B; independent read-only review no P1/P2. No original account/provider/frozen/OOS or GitHub write. Native speech/media/download landing, full U4/M4/M5 and hosted CI remain open.",
     "2026-09-30 20:13UTC local 63e45d9 U5 historical market date-window recovery: red/green 25-case Markets suite and full frontend495/38 PASS, lint/build/Prettier/diff PASS. Original in-app browser confirmed invalid, dialog reopen, corrected and empty-date keyboard/ARIA paths; independent read-only review no P1/P2. Original four Compose services up, PG/Redis/backend healthy, PONG and frontend/API HTTP200. No original provider/account/frozen/OOS or GitHub action. Full U5/M4/M5, durable media, native speech/zoom and hosted CI remain open.",
     "2026-09-30 19:56UTC local a1f9c90 U3 filtered research pagination recovery: three red/green cases, full isolated backend1033/one optional skip and frontend494/494, lint/build PASS; independent read-only review no P1/P2. Isolated GET-only synthetic browser page2 stale-count race recovered to page1 with RUNNING filter and 20/20 count; trace offset20 twice then offset0. QA tab/proxy stopped, isolated frontend stopped/override removed, original four services/API/frontend healthy. No durable media, original data/provider/frozen/OOS or GitHub action; full U3/M4/M5 remains open.",

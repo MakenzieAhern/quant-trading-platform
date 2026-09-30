@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 task center pagers reuse existing section names — 2026-10-01
+
+Two distinct task streams must not expose identically named pagination groups
+to assistive technology. Pass the existing bilingual section labels to the
+shared pager; do not add another component or translation key. A scoped EN/ZH
+regression and actual in-app accessibility tree verify the names. The
+read-only Docker login-exit follow-up found a possible duplicate startup
+entry but no proven Quit initiator, so no startup setting is changed before
+user context and a genuine-login trace.
+
 ## v1.2 CSV landing needs an observable file, not a prepared link — 2026-10-01
 
 An in-app browser export of an existing synthetic report produced the visible
