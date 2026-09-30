@@ -1,7 +1,18 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T21:11:12Z",
+  "updated_at_utc": "2026-09-30T21:24:14Z",
+  "local_execution_20261001_gate": {
+    "status": "PASS_LOCAL_RUNTIME_TEST_LINT_BUILD_NOT_HOSTED_CI",
+    "head": "2db52104b30ae6c1a3ac878167f04f3308715ff4",
+    "proof": "2026-09-30 21:16-21:24 UTC: original PostgreSQL, Redis and backend healthy; frontend running. Windows host frontend and /api/health both HTTP 200. Existing isolated make test exited 0 with backend 1033 passed/one optional unmounted-archive skip and frontend 504 passed across 38 files; make lint and make build exited 0. Working tree remained clean before this checkpoint edit.",
+    "limits": "This confirms local use and repeatable checks, not GitHub job admission, exact pushed-head CI, native browser/a11y/media, forward data, backup or v1.2 release."
+  },
+  "m4_backup_recheck_20261001_gate": {
+    "status": "NO_INDEPENDENT_MOUNT_OR_GENUINE_PRELOSS_LEDGER_SNAPSHOT_FOUND_VSS_UNASSESSED",
+    "proof": "Read-only 2026-10-01 AEST inventory: only one present 2 TB KLEVV NVMe physical disk; C and D are partitions. No mounted removable/network backup location; a historical HP USB device is not present. The known backup directory still has two dumps before the missing paper accounts were created and three after the loss. Local OneDrive has no backup candidate; File History configuration was absent. Windows Backup/VSS/restore-point inventory requires elevation or failed initialization, so shadow-copy absence is not established.",
+    "next": "User must identify/mount an independent backup destination and any genuine post-account-creation, pre-loss snapshot/WAL, or provide an elevated Windows Backup/VSS version inventory. No restore or data write was attempted."
+  },
   "u8_task_center_pagination_20261001_gate": {
     "status": "PASS_BOUNDED_RED_GREEN_AND_IN_APP_AX_NOT_FULL_U8_M4_M5",
     "code_head": "596ad3d",
@@ -10,12 +21,12 @@
   },
   "m5_docker_login_exit_20261001_gate": {
     "status": "FAIL_UNATTENDED_STARTUP_ROOT_CAUSE_UNPROVEN",
-    "proof": "Read-only 2026-09-30 login logs: scheduled Docker task ran at 21:16:17 AEST with result 0; two Desktop starts initialized tray/dashboard/Engine, then logged Quitting whole Docker Desktop before app.exit(104). HKCU Run also has a Desktop entry. No Docker crash or logout was found. The duplicate launch path and Quit initiator remain hypotheses, not causes. See docs/product/ACCEPTANCE.md.",
-    "next": "Await user context on any tray Quit; on the next genuine login capture both launch entries, process parentage and Electron/backend logs before changing settings. Do not reboot just for QA."
+    "proof": "Read-only login evidence: scheduled task ran 2026-09-30 21:16:17 AEST/result 0, backend started 21:16:18, and Electron logged Quitting whole Docker Desktop at 21:16:41 before app.exit(104). Shell-Core Run enumeration began only 21:16:50; event 9707 launched the HKCU Run Docker entry at 21:17:26, matching the second backend start 21:17:27 and second Quit 21:17:37. The second launcher is proven, but it cannot explain the first Quit. No bounded crash/logout event identified its actor. Current running Docker was manually recovered later. See docs/product/ACCEPTANCE.md.",
+    "next": "Await user context on any tray Quit; at the next genuine login capture process parentage plus Electron/backend logs promptly. Do not change either startup entry or reboot solely for QA."
   },
   "m5_csv_file_landing_20261001_gate": {
     "status": "PARTIAL_PREPARED_UI_FILE_LANDING_NOT_VERIFIED",
-    "proof": "2026-09-30 20:58 UTC: original in-app browser again showed the named blob fallback for completed synthetic study dccc74b3-f8c4-487f-9597-4cd9d8fb7288. A distinct locator downloadMedia capture timed out after 20 seconds; the exact expected file was absent from ordinary C:/Users/1/Downloads and Chrome was not an available browser provider. Earlier automatic and explicit fallback download-event waits also timed out. QA tab closed. See docs/product/ACCEPTANCE.md.",
+    "proof": "2026-09-30 20:58 UTC: original in-app browser again showed the named blob fallback for completed synthetic study dccc74b3-f8c4-487f-9597-4cd9d8fb7288, but download capture timed out and exact file was absent from ordinary Downloads. At 21:24 UTC a read-only GET of its CSV export API returned HTTP 200, text/csv, Content-Disposition attachment with the named file, nosniff and no-store. Browser-managed file landing remains unverified. See docs/product/ACCEPTANCE.md.",
     "limits": "Browser file destination remains unknown; no actual file landing, filename/content inspection or application defect is proven. Do not repeat unchanged in-app captures; use a supported download manager/path or user-operated file check. No original study/account/provider/formal/OOS mutation."
   },
   "u8_market_risk_labels_20261001_gate": {
@@ -1047,7 +1058,7 @@
     "estimated_recovery_date": "2026-10-01",
     "reported_wait": "user now estimates October 1; no exact recovery time independently verified",
     "actual_recovery_verified": false,
-    "last_readonly_check": "2026-09-30 UTC: MakenzieAhern gh authentication confirmed; one read-only personal Actions billing-usage query returned HTTP 404 requesting user scope. No scope refresh, CI run/poll/retry or remote write. Billing clearance and job admission remain unverified.",
+    "last_readonly_check": "2026-09-30 21:14 UTC (October 1 Sydney): latest repository Actions run remains September 26 run 36217962698 with jobs not admitted and a payment-or-spending-limit annotation; no newer run. Signed-in account budget page displayed Actions budget $0, Stop usage Yes and 100% utilization while billing still displayed September 1-30. A read-only CLI usage query lacked user scope and returned 404; no authorization refresh. This is a visible budget risk, not proof that an October run would fail. No CI trigger/retry/push or billing change.",
     "policy": "Local date has reached October 1, but actual GitHub Actions recovery is not independently confirmed. Hold ALL push, CI retries/polling, merge and release until actual recovery; estimated date is not proof. Continue safe local work. Exact-head CI required afterward; no payment, limit change or gate bypass."
   },
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
@@ -1426,7 +1437,7 @@
     "RESOLVED: transient Chrome browser-control binding timeouts were followed by successful Chrome Back/Forward and CSV/JSON acceptance; the temporary QA draft name was restored. No app defect was inferred from the tool timeout"
   ],
   "external_blockers": [
-    "CI-ACCOUNT: exact pushed f91e1e5 run36217962698 never started frontend/backend/Compose due to GitHub recent-payment/spending-limit annotation. Account owner must check Billing & plans; no automatic payment/limit changes or repeated reruns. Local tests do not substitute required CI",
+    "CI-ACCOUNT: exact pushed f91e1e5 run36217962698 never started frontend/backend/Compose due to GitHub recent-payment/spending-limit annotation. On October 1 Sydney the signed-in Actions budget still displayed $0, Stop usage Yes, 100% and no new run, so actual recovery is unverified. Account owner must check Billing & plans; no automatic payment/limit changes or repeated reruns. Local tests do not substitute required CI",
     "U7-FORWARD: lawful product-use rights for a genuinely new A-share market-data feed have not been established; a public SDK or historical candidate receipt does not grant execution authority",
     "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay",
     "M4-BACKUP-DESTINATION: Windows currently exposes only one physical NVMe disk (Disk0); C and D are partitions on that disk, with no independently mounted backup medium verified"

@@ -6603,3 +6603,55 @@ speech, 200% zoom, valid cold p95, CSV file landing, independent novice QA,
 lawful after-start forward data, genuine missing-ledger recovery, independent
 physical backup or hosted exact-head CI. October 1 remains an unverified
 GitHub recovery estimate.
+
+## 2026-09-30 21:24 UTC local operation and outstanding release gates
+
+At clean local code HEAD 2db5210 on DESKTOP-3EOROGR, the four original
+Compose services were running (PostgreSQL, Redis and backend healthy).
+Windows-host requests to the frontend and /api/health each returned HTTP
+200. The repository's isolated make test exited 0: backend 1033 passed,
+one optional unmounted-archive skip; frontend 504 passed across 38 files.
+make lint and make build both exited 0. These checks allow local use;
+they do not replace hosted exact-pushed-head CI or complete M4/M5.
+
+A read-only CSV GET for the existing synthetic study
+dccc74b3-f8c4-487f-9597-4cd9d8fb7288 returned HTTP 200,
+text/csv, Content-Disposition attachment with its named file,
+X-Content-Type-Options nosniff, and Cache-Control no-store.
+The in-app browser's prepared download still has no verified file landing
+or inspected saved content. A Windows Chrome URL-confidence safety stop
+must not be retried unchanged; no app CSV failure is inferred from that tool
+boundary.
+
+Read-only GitHub evidence at 21:14 UTC found no Actions run after the
+September 26 failed [run 36217962698](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36217962698).
+The signed-in Actions budget displayed $0, Stop usage Yes and 100%
+utilization while billing still displayed September 1-30. This is a risk,
+not proof that a fresh October job would be admitted or rejected. No run,
+rerun, push, billing or authorization change was made; the CI/release gate
+stays open.
+
+The real September 30 Windows login remains an M5 unattended-startup
+failure. The current-user scheduled task ran at 21:16:17 AEST and Docker's
+first backend started at 21:16:18, then Electron recorded an orderly
+"Quitting whole Docker Desktop" at 21:16:41. Shell-Core event 9705 began
+Run-key enumeration only at 21:16:50; event 9707 launched the separate
+HKCU Run Docker entry at 21:17:26, matching the second backend start
+at 21:17:27 and second Quit at 21:17:37. Thus both launch mechanisms
+executed, but their overlap cannot explain the first Quit. No bounded
+crash or logout event identified who initiated either Quit. Existing
+settings were not changed and no QA-only reboot occurred. The next
+genuine login should capture process parentage and Docker logs promptly.
+
+A bounded backup recheck found only one present physical NVMe disk;
+C: and D: are partitions, not independent copies. No removable/network
+backup destination is mounted. The known five dumps remain two before
+the missing paper accounts were created and three after the loss.
+Windows Backup/VSS/restore-point inventory could not be completed
+without elevation or an available provider, so absence of snapshots
+is not claimed. No authentic pre-loss paper-ledger evidence or independent
+backup destination was found; no restore or backup write was attempted.
+Full U1-U8/M4/M5, lawful after-start forward data, genuine ledger recovery,
+independent backup, novice and native accessibility/performance/media
+evidence, and hosted CI remain incomplete. No original account,
+frozen research/OOS, or release action was taken.
