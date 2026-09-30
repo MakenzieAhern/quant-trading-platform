@@ -149,24 +149,70 @@ describe("routing", () => {
     expect(window.location.hash).toBe("");
   });
 
-  it("releases mobile background isolation when resizing to desktop", async () => {
-    const desktop = Object.assign(new EventTarget(), { matches: false });
+  it("releases mobile isolation without losing focus when resizing to desktop", async () => {
+    const mobile = Object.assign(new EventTarget(), { matches: true });
     vi.stubGlobal(
       "matchMedia",
-      vi.fn(() => desktop),
+      vi.fn(() => mobile),
     );
     window.history.replaceState({}, "", "/unknown");
     vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
     render(<App />);
     await screen.findByText("Service online", { selector: ".serviceText" });
-    fireEvent.click(screen.getByRole("button", { name: "Open navigation" }));
-    expect(document.querySelector(".appBody")).toHaveAttribute("inert");
+    const menu = screen.getByRole("button", { name: "Open navigation" });
+    menu.focus();
+    menu.blur();
     act(() => {
-      desktop.matches = true;
-      desktop.dispatchEvent(new Event("change"));
+      mobile.matches = false;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
+    expect(window.matchMedia).toHaveBeenCalledWith("(max-width: 800px)");
+
+    act(() => {
+      mobile.matches = true;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    fireEvent.click(menu);
+    expect(document.querySelector(".appBody")).toHaveAttribute("inert");
+    const navigation = screen.getByRole("dialog", {
+      name: "Workspace navigation",
+    });
+    const strategies = within(navigation).getByRole("link", {
+      name: "Strategies",
+    });
+    strategies.focus();
+    act(() => {
+      mobile.matches = false;
+      mobile.dispatchEvent(new Event("change"));
     });
     expect(document.querySelector(".appBody")).not.toHaveAttribute("inert");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(strategies).toHaveFocus();
+
+    act(() => {
+      mobile.matches = true;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    fireEvent.click(menu);
+    within(screen.getByRole("dialog", { name: "Workspace navigation" }))
+      .getByRole("button", { name: "Close" })
+      .focus();
+    const main = screen.getByRole("main");
+    const focusMain = main.focus.bind(main);
+    vi.spyOn(main, "focus").mockImplementation((options) => {
+      if (!document.querySelector(".appBody")?.hasAttribute("inert"))
+        focusMain(options);
+    });
+    vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+      callback(0);
+      return 1;
+    });
+    act(() => {
+      mobile.matches = false;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    await waitFor(() => expect(main).toHaveFocus());
   });
 
   it("names icon-only search, traps mobile navigation focus and restores it", async () => {

@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type MouseEvent,
@@ -26,6 +27,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const sidebar = useRef<HTMLElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const lastFocused = useRef<Element | null>(null);
+  const resizeFocus = useRef<Element | null>(null);
   const [refresh, setRefresh] = useState(0);
   const lastCheck = useRef(0);
   const pageData = useCurrentPageData();
@@ -96,13 +99,35 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (menuOpen) sidebar.current?.querySelector("a")?.focus();
   }, [menuOpen]);
+  useLayoutEffect(() => {
+    const focused = resizeFocus.current;
+    if (menuOpen || !focused) return;
+    resizeFocus.current = null;
+    if (
+      document.activeElement === focused ||
+      document.activeElement === document.body
+    )
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+  }, [menuOpen]);
   useEffect(() => {
-    const desktop = window.matchMedia?.("(min-width: 801px)");
+    const mobile = window.matchMedia?.("(max-width: 800px)");
     const leaveMobile = () => {
-      if (desktop?.matches) setMenuOpen(false);
+      if (mobile?.matches) return;
+      const focused = document.activeElement;
+      const mobileControl = focused?.matches(".mobileMenu, .sidebarBackdrop")
+        ? focused
+        : focused === document.body &&
+            lastFocused.current?.matches(".mobileMenu, .sidebarBackdrop")
+          ? lastFocused.current
+          : null;
+      const menuWasOpen = sidebar.current?.classList.contains("sidebarOpen");
+      if (mobileControl && menuWasOpen) resizeFocus.current = mobileControl;
+      setMenuOpen(false);
+      if (mobileControl && !menuWasOpen)
+        document.getElementById("main-content")?.focus({ preventScroll: true });
     };
-    desktop?.addEventListener("change", leaveMobile);
-    return () => desktop?.removeEventListener("change", leaveMobile);
+    mobile?.addEventListener("change", leaveMobile);
+    return () => mobile?.removeEventListener("change", leaveMobile);
   }, []);
   useEffect(() => {
     const refreshOnReturn = () => {
@@ -176,7 +201,12 @@ export function AppShell({ children }: { children: ReactNode }) {
     };
   }, [pathname]);
   return (
-    <div className="appShell">
+    <div
+      className="appShell"
+      onFocusCapture={(event) => {
+        lastFocused.current = event.target;
+      }}
+    >
       <a className="skipLink" href="#main-content" inert={menuOpen}>
         {copy.skipContent}
       </a>

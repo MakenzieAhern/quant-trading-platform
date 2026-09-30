@@ -1,5 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 18:13 UTC mobile-to-desktop navigation focus — bounded M4 fix
+
+Independent read-only review found that crossing the mobile/desktop breakpoint
+while a mobile-only navigation control had focus could leave focus on a hidden
+or removed button. The first test extension reproduced the focused hamburger
+case. Review then identified an ordering risk: an animation-frame callback can
+run before React has removed `inert` from the closing sidebar's background.
+A test that simulates that timing and refuses focus on an inert ancestor failed
+on the first fix. CSS used `max-width: 800px` for mobile while the JavaScript
+waited for `min-width: 801px`, leaving a fractional-width gap.
+
+The shared resize handler now uses the exact complement of the CSS breakpoint,
+tracks the last focused app control, closes the dialog and restores focus to
+the persistent main region **after** the close commit when the removed mobile
+control held focus. A persistent sidebar link keeps its focus. The focused
+regression passed after the correction, as did the full frontend suite
+487/487, ESLint, TypeScript/production build and changed-file Prettier.
+An independent final read-only diff review found no remaining P1/P2 issue.
+Local frontend and `/api/health` remained HTTP 200, Redis returned PONG and
+read-only original paper sessions/events stayed `5/417`. No account, DB,
+frozen research/OOS, Docker setting or GitHub state was changed.
+
+This is a JSDOM media-query/inert timing regression, **not** an actual-browser
+native 200% zoom or screen-reader speech pass. Windows Chrome UI control
+stopped on URL-confidence policy in the previous attempt; that route was not
+retried or bypassed. Exact-head M5 media, independent novice review, valid
+cold-click p95, lawful after-start forward data, genuine lost-ledger recovery,
+independent backup, unattended Docker startup and hosted CI remain open.
+
 ## 2026-09-30 17:43 UTC real-login Docker startup failure and local recovery
 
 After the actual 2026-09-30 21:16 AEST Windows login, the pre-intervention
