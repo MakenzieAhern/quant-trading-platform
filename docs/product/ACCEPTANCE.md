@@ -6795,3 +6795,24 @@ existing browser draft fails closed on fresh start but has no in-page recovery
 action; this P2 remains open under M4. The shared localStorage pointer is not
 an atomic cross-tab compare-and-swap; per-tab recovery copies remain the
 fallback for that narrow race.
+
+## 2026-09-30 23:16 UTC local execution and short-viewport sidebar
+
+GitHub Actions remains unverified: PR #32 is still draft and its latest run
+was stopped before jobs started by an account payment/spending-limit error.
+The billing date alone is not a successful CI result. The original local
+Compose services remain up: PostgreSQL, Redis and backend healthy, Redis
+PONG, PostgreSQL accepting connections, and frontend plus `/api/health`
+both HTTP 200. Local `make test` passed backend 1033 with one optional
+unmounted-archive skip and frontend 532 across 40 files; `make lint` and
+`make build` passed. These use the isolated test Compose project, not the
+original business database.
+
+A static audit found the fixed sidebar had no vertical overflow rule even
+though its brand, scope, nine navigation links and footer exceed a short
+zoomed viewport. The focused regression failed before the change and passed
+after adding `overflow-y: auto` to the shared sidebar rule. This is a
+bounded CSS guard, not proof of real-browser 200% zoom, keyboard scrolling
+or native screen-reader reachability; M4/M5 remain open. Independent read-only
+review found no obvious normal-height regression. No original account/data,
+frozen research/OOS, GitHub push, CI retry, merge, tag or release was changed.
