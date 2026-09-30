@@ -6715,3 +6715,47 @@ speech, 200% zoom, U5/U8/M4/M5 or release readiness. No original accounts,
 data, frozen research/OOS or GitHub action was changed. Hosted CI and the
 separate lawful forward-feed, authentic pre-loss ledger and independent
 backup gates remain open.
+
+## 2026-09-30 22:25 UTC local execution and draft-intent boundary
+
+GitHub Actions is not needed to run the local Compose development services.
+PostgreSQL, Redis and backend were healthy; frontend was running, and actual
+Chrome at http://localhost:5173/ showed Service online with the saved
+Workbench draft and recent studies. An exact-parent-HEAD (6a11aba) frontend
+release image built locally and its owned scratch container served four
+static routes on 127.0.0.1:15174 with HTTP 200. The scratch container was
+stopped; the original services, data volumes and browser draft were not
+changed by that image smoke. Static HTTP is not integrated release QA.
+
+Before this change, Workbench's “Start guided backtest” and “Continue your
+draft” both opened the same saved wizard state. New/Start/Configure links now
+request an explicit fresh-start choice; the Continue link still resumes the
+saved step and request ID. With an existing draft, the wizard does not mount
+or autosave before the choice. Fresh start reuses the existing configuration
+version backup-first path, checks for a changed shared draft, preserves the
+previous configuration, creates a new request ID and opens step 1. An
+unreadable draft or failed storage write does not silently overwrite it.
+The fresh-start choice also re-reads storage when capabilities arrive, so a
+draft created by another tab during that request is not mistaken for an
+empty workspace.
+Confirmed successful experiment creation now clears only its matching
+current-page recovery copy, not a newer draft or another tab's copy.
+
+Local tests covered backup, changed-tab and storage-failure boundaries,
+successful and late create cleanup, and distinct Workbench/command links.
+Isolated make test passed backend 1033 with one optional unmounted-archive
+skip and frontend 519 before the delayed-capabilities regression was added.
+After the follow-up regressions, all 521 frontend tests across 39 files passed; make lint
+(Ruff, format, mypy, ESLint, TypeScript) and production build passed.
+Actual Chrome showed the existing draft, distinct Start and Continue URLs,
+then the fresh-start choice without a POST or backup action; the temporary
+tab was closed. This is a bounded EN Chrome observation, not native
+screen-reader, zoom, novice or full U1/U3/M4/M5 acceptance. No original
+financial account, frozen research/OOS, GitHub push, CI retry, merge, tag or
+release was performed. The latest read-only GitHub check at 22:09 UTC still
+showed no Actions run after September 26; October 1 is not verified recovery.
+Independent review found no remaining P1 in this boundary. A malformed
+existing browser draft fails closed on fresh start but has no in-page recovery
+action; this P2 remains open under M4. The shared localStorage pointer is not
+an atomic cross-tab compare-and-swap; per-tab recovery copies remain the
+fallback for that narrow race.

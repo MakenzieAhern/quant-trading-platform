@@ -10,7 +10,8 @@ import { afterEach, expect, it, vi } from "vitest";
 import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
 import { experimentApi } from "./experiments/api";
-import { capabilities } from "./experiments/fixtures.test-data";
+import { capabilities, configuration } from "./experiments/fixtures.test-data";
+import { EXPERIMENT_DRAFT_KEY } from "./experiments/draft";
 import {
   DataCenterPage,
   HelpPage,
@@ -55,6 +56,38 @@ it("describes guided research without claiming it starts a simulated account", a
     "通过模拟研究",
   );
   await act(() => i18n.changeLanguage("en-US"));
+});
+
+it("separates starting a new backtest from continuing the saved draft", async () => {
+  await act(() => i18n.changeLanguage("en-US"));
+  vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+  vi.spyOn(experimentApi, "list").mockResolvedValue({
+    items: [],
+    limit: 4,
+    offset: 0,
+    total: 0,
+  });
+  window.localStorage.setItem(
+    EXPERIMENT_DRAFT_KEY,
+    JSON.stringify({
+      version: 1,
+      form: configuration,
+      step: 2,
+      idempotencyKey: "saved-intent",
+      savedAt: "2026-09-30T00:00:00Z",
+    }),
+  );
+  try {
+    render(<WorkbenchPage />);
+    expect(
+      screen.getByRole("link", { name: "Continue your draft" }),
+    ).toHaveAttribute("href", "/research/new");
+    expect(
+      screen.getByRole("link", { name: "Start guided backtest" }),
+    ).toHaveAttribute("href", "/research/new?new=1");
+  } finally {
+    window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
+  }
 });
 
 it("keeps a section-level Retry near its persistent heading", async () => {

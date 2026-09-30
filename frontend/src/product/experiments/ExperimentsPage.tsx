@@ -215,7 +215,7 @@ export function ExperimentsPage() {
         <h1 ref={listHeading} tabIndex={-1}>{c.listTitle}</h1>
         <p>{c.listIntro}</p>
         <div className="experimentActions">
-          <Link className="button" href="/research/new">
+          <Link className="button" href="/research/new?new=1">
             {c.newExperiment}
           </Link>
           <Link className="button secondary" href="/research/a-share">
@@ -363,7 +363,7 @@ export function ExperimentsPage() {
               <p>{view.q || view.status || view.mode ? c.noMatches : c.empty}</p>
               {view.q || view.status || view.mode ? (
                 <button className="button secondary" onClick={resetView}>{c.clearView}</button>
-              ) : <Link href="/research/new">{c.newExperiment}</Link>}
+              ) : <Link href="/research/new?new=1">{c.newExperiment}</Link>}
             </div>
           ) : (
             <div className="experimentTableScroll" role="region" tabIndex={0} aria-label={c.listTitle}

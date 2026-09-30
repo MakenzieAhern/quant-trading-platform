@@ -8,15 +8,23 @@ import {
   formatDecimal,
   isPositiveDecimal,
 } from "../../utils/format";
-import { navigate, useNavigationGuard } from "../../utils/navigation";
+import {
+  navigate,
+  replaceUrl,
+  useNavigationGuard,
+} from "../../utils/navigation";
 import { usePageDataContext } from "../dataContext";
 import { Dialog } from "../Dialog";
 import { ProductError } from "../ProductPages";
 import { ConfigurationVersionsPanel } from "../configs";
+import { useConfigurationCopy } from "../configs/copy";
+import { startNewExperimentDraft } from "../configs/storage";
 import { experimentApi } from "./api";
 import { useExperimentCopy, type ExperimentCopy } from "./copy";
 import {
   EXPERIMENT_DRAFT_KEY,
+  clearCompletedExperimentDraft,
+  parseExperimentDraft,
   readExperimentDraft,
   saveExperimentDraft,
 } from "./draft";
@@ -24,13 +32,52 @@ import { experimentError } from "./errors";
 import type { Capabilities, ExperimentConfiguration } from "./types";
 import "./experiments.css";
 
+function finishNewIntent() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("new");
+  replaceUrl(url.pathname + url.search);
+}
+
+function existingDraft() {
+  try {
+    const raw = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
+    const draft = raw ? parseExperimentDraft(JSON.parse(raw)) : null;
+    return { draft, unreadable: Boolean(raw && !draft) };
+  } catch {
+    return { draft: null, unreadable: true };
+  }
+}
+
 export function CreateExperimentPage() {
   const c = useExperimentCopy();
+  const versions = useConfigurationCopy();
+  const newIntent =
+    new URLSearchParams(window.location.search).get("new") === "1";
+  const [choice, setChoice] = useState<"pending" | "resume" | "started">(
+    "pending",
+  );
+  const original =
+    newIntent && choice === "pending"
+      ? existingDraft()
+      : { draft: null, unreadable: false };
+  const [choiceError, setChoiceError] = useState<"failed" | "conflict" | null>(
+    null,
+  );
   const [revision, setRevision] = useState(0);
   const capabilities = useApiResource(
     (signal) => experimentApi.capabilities(signal),
     [revision],
   );
+  useEffect(() => {
+    if (
+      newIntent &&
+      capabilities.data &&
+      !original.draft &&
+      !original.unreadable
+    ) {
+      finishNewIntent();
+    }
+  }, [newIntent, capabilities.data, original.draft, original.unreadable]);
   return (
     <div className="experimentWorkspace">
       <header className="experimentHeader">
@@ -47,7 +94,58 @@ export function CreateExperimentPage() {
       )}
       {capabilities.data &&
         (capabilities.data.strategies.length ? (
-          <ExperimentWizard capabilities={capabilities.data} />
+          newIntent && choice === "pending" && original.unreadable ? (
+            <p role="alert">{versions.readFailed}</p>
+          ) : newIntent && choice === "pending" && original.draft ? (
+            <section
+              className="experimentPanel"
+              aria-labelledby="new-draft-title"
+            >
+              <h2 id="new-draft-title">{c.newDraftTitle}</h2>
+              <p>{c.newDraftHint}</p>
+              {choiceError && <p role="alert">{versions[choiceError]}</p>}
+              <div className="experimentActions">
+                <button
+                  className="button secondary"
+                  onClick={() => {
+                    finishNewIntent();
+                    setChoice("resume");
+                  }}
+                >
+                  {c.newDraftResume}
+                </button>
+                <button
+                  className="button"
+                  onClick={() => {
+                    try {
+                      startNewExperimentDraft(
+                        original.draft!,
+                        initialForm(capabilities.data!, c.defaultName),
+                        versions.backup,
+                      );
+                      finishNewIntent();
+                      setChoice("started");
+                    } catch (reason) {
+                      setChoiceError(
+                        reason instanceof Error &&
+                          reason.message === "DRAFT_CHANGED_IN_ANOTHER_TAB"
+                          ? "conflict"
+                          : "failed",
+                      );
+                    }
+                  }}
+                >
+                  {c.newDraftStart}
+                </button>
+              </div>
+            </section>
+          ) : (
+            <ExperimentWizard
+              capabilities={capabilities.data}
+              showRestored={choice !== "started"}
+              focusOnMount={choice !== "pending"}
+            />
+          )
         ) : (
           <p role="alert">{c.noStrategies}</p>
         ))}
@@ -171,7 +269,15 @@ function focusInvalidField(form: HTMLFormElement | null) {
   field?.focus();
 }
 
-function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
+function ExperimentWizard({
+  capabilities,
+  showRestored,
+  focusOnMount,
+}: {
+  capabilities: Capabilities;
+  showRestored: boolean;
+  focusOnMount: boolean;
+}) {
   const c = useExperimentCopy();
   const { i18n } = useTranslation();
   const [restored] = useState(readExperimentDraft);
@@ -228,6 +334,9 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
       active.current = false;
     };
   }, []);
+  useEffect(() => {
+    if (focusOnMount) heading.current?.focus();
+  }, [focusOnMount]);
   useEffect(() => {
     if (previousStep.current === step) return;
     previousStep.current = step;
@@ -323,12 +432,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     setPending(true);
     try {
       const job = await experimentApi.create(form, requestKey);
-      try {
-        if (readExperimentDraft()?.idempotencyKey === requestKey)
-          window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
-      } catch {
-        /* The durable server job is authoritative after creation. */
-      }
+      clearCompletedExperimentDraft(form, requestKey);
       if (active.current && window.location.pathname === "/research/new")
         navigate(`/experiments/${job.job_id}`);
     } catch (reason) {
@@ -343,7 +447,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     universe === "ALL" ? c.all : universe === "SSE" ? c.sse : c.szse;
   return (
     <>
-      {restored && (
+      {showRestored && restored && (
         <p className="experimentRestored" role="status">
           {c.restored}
         </p>

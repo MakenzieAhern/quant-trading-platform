@@ -46,7 +46,9 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
   const commands = [
     { label: copy.home, href: "/" },
     { label: copy.markets, href: "/markets" },
-    { label: copy.start, href: "/research/new" },
+    ...(window.location.pathname === "/research/new"
+      ? []
+      : [{ label: copy.start, href: "/research/new?new=1" }]),
     { label: copy.strategies, href: "/strategies" },
     { label: copy.research, href: "/experiments" },
     { label: copy.tasks, href: "/tasks" },

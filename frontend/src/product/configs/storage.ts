@@ -5,6 +5,7 @@ import {
   saveExperimentDraft,
   type ExperimentDraft,
 } from "../experiments/draft";
+import type { ExperimentConfiguration } from "../experiments/types";
 
 export const CONFIG_VERSION_PREFIX = "quant.product.configuration-version.v1.";
 export interface ConfigurationVersion {
@@ -126,6 +127,13 @@ export function restoreBrowserDraft(
     throw new Error("RECOVERY_DRAFT_CHANGED");
   return restoreDraftSnapshot(target, current, backupName);
 }
+export function startNewExperimentDraft(
+  current: ExperimentDraft,
+  form: ExperimentConfiguration,
+  backupName: string,
+): ExperimentDraft {
+  return restoreDraftSnapshot({ ...current, form }, current, backupName);
+}
 function restoreDraftSnapshot(
   target: ExperimentDraft,
   current: ExperimentDraft,
@@ -138,6 +146,7 @@ function restoreDraftSnapshot(
     storedRaw !== null &&
     (!stored ||
       stored.idempotencyKey !== current.idempotencyKey ||
+      stored.step !== current.step ||
       JSON.stringify(stored.form) !== JSON.stringify(current.form))
   )
     throw new Error("DRAFT_CHANGED_IN_ANOTHER_TAB");

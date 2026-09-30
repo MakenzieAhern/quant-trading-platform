@@ -50,6 +50,21 @@ beforeEach(async () => {
   });
 });
 describe("bounded server command search", () => {
+  it("sends the new-study command to the explicit fresh-start choice", () => {
+    render(<CommandPalette onClose={() => undefined} />);
+    expect(
+      screen.getByRole("link", { name: "Start guided backtest" }),
+    ).toHaveAttribute("href", "/research/new?new=1");
+  });
+
+  it("does not offer same-route new navigation while a wizard is already open", () => {
+    window.history.replaceState({}, "", "/research/new");
+    render(<CommandPalette onClose={() => undefined} />);
+    expect(
+      screen.queryByRole("link", { name: "Start guided backtest" }),
+    ).toBeNull();
+  });
+
   it("focuses search on opening and returns to the original trigger on closing", () => {
     const view = render(
       <>

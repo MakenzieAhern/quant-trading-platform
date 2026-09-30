@@ -12,6 +12,10 @@ import { ApiError } from "../../api/client";
 import { i18n } from "../../i18n";
 import { navigate } from "../../utils/navigation";
 import { Link } from "../../components/Link";
+import {
+  CONFIG_VERSION_PREFIX,
+  readConfigurationVersions,
+} from "../configs/storage";
 import * as pageContext from "../dataContext";
 import {
   experimentApi,
@@ -25,6 +29,7 @@ import { ExperimentPlan } from "./ExperimentPlan";
 import { EXPERIMENT_VIEW_KEY, ExperimentsPage } from "./ExperimentsPage";
 import {
   EXPERIMENT_DRAFT_KEY,
+  readBrowserDraftRecoveries,
   readExperimentDraft,
   saveExperimentDraft,
 } from "./draft";
@@ -74,6 +79,160 @@ function enableNativeDialog() {
 }
 
 describe("guided experiment", () => {
+  it("opens a fresh first step and retains the requested strategy when no draft exists", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const create = vi.spyOn(experimentApi, "create");
+    window.history.replaceState(
+      {},
+      "",
+      "/research/new?new=1&strategy=" +
+        encodeURIComponent(configuration.strategy_id),
+    );
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { name: "Choose a strategy" });
+    expect(readExperimentDraft()).toMatchObject({
+      step: 0,
+      form: { strategy_id: configuration.strategy_id },
+    });
+    expect(new URLSearchParams(window.location.search).get("new")).toBeNull();
+    expect(new URLSearchParams(window.location.search).get("strategy")).toBe(
+      configuration.strategy_id,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Continue" }));
+    fireEvent.change(screen.getByLabelText("Starting capital (CNY)"), {
+      target: { value: "123456.000000000000000001" },
+    });
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(screen.getByLabelText("初始本金（人民币）")).toHaveValue(
+      "123456.000000000000000001",
+    );
+    expect(screen.queryByRole("heading", { name: "已有保存的草稿" })).toBeNull();
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it("notices a draft created while capabilities load before starting new", async () => {
+    let resolve: ((value: typeof capabilities) => void) | undefined;
+    vi.spyOn(experimentApi, "capabilities").mockImplementation(
+      () =>
+        new Promise((done) => {
+          resolve = done;
+        }),
+    );
+    const create = vi.spyOn(experimentApi, "create");
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await waitFor(() => expect(resolve).toBeDefined());
+    const other = { ...configuration, name: "Written during load" };
+    saveExperimentDraft(other, 2, "during-load-request");
+    const original = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
+    await act(async () => resolve?.(capabilities));
+    await screen.findByRole("heading", { name: "A saved draft already exists" });
+    expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(original);
+    expect(screen.queryByLabelText("Starting capital (CNY)")).toBeNull();
+    expect(window.location.search).toBe("?new=1");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Back up draft and start new" }),
+    );
+    expect(readExperimentDraft()?.idempotencyKey).not.toBe("during-load-request");
+    expect(
+      readConfigurationVersions().items.some(
+        (item) =>
+          item.draft.idempotencyKey === "during-load-request" &&
+          item.draft.form.name === other.name,
+      ),
+    ).toBe(true);
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it("backs up an existing draft before starting a separate backtest", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const create = vi.spyOn(experimentApi, "create");
+    const old = { ...configuration, name: "Keep my previous setup" };
+    saveExperimentDraft(old, 2, "previous-request-key");
+    const original = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { name: "A saved draft already exists" });
+    expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(original);
+    expect(screen.queryByLabelText("Starting capital (CNY)")).toBeNull();
+    expect(create).not.toHaveBeenCalled();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Back up draft and start new" }),
+    );
+    expect(
+      await screen.findByRole("heading", { name: "Choose a strategy" }),
+    ).toHaveFocus();
+    const fresh = readExperimentDraft();
+    expect(fresh).toMatchObject({
+      step: 0,
+      form: { name: "My A-share experiment" },
+    });
+    expect(fresh?.idempotencyKey).not.toBe("previous-request-key");
+    expect(
+      readConfigurationVersions().items.some(
+        (item) =>
+          item.kind === "pre_restore_backup" &&
+          item.draft.idempotencyKey === "previous-request-key" &&
+          item.draft.form.name === old.name,
+      ),
+    ).toBe(true);
+    expect(window.location.search).toBe("");
+    expect(screen.queryByText("Your saved draft has been restored.")).toBeNull();
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it("does not replace a new draft written by another tab during the start-new choice", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    saveExperimentDraft(configuration, 2, "previous-request-key");
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { name: "A saved draft already exists" });
+    const newer = { ...configuration, name: "Other tab keeps this" };
+    saveExperimentDraft(newer, 1, "other-tab-request-key");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Back up draft and start new" }),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "The draft changed in another tab",
+    );
+    expect(readExperimentDraft()).toMatchObject({
+      form: newer,
+      idempotencyKey: "other-tab-request-key",
+    });
+    expect(window.location.search).toBe("?new=1");
+  });
+
+  it("keeps the original draft when its pre-new backup cannot be stored", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    saveExperimentDraft(configuration, 2, "previous-request-key");
+    const original = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
+    window.history.replaceState({}, "", "/research/new?new=1");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { name: "A saved draft already exists" });
+    const write = Storage.prototype.setItem;
+    const blocked = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (
+      this: Storage,
+      key,
+      value,
+    ) {
+      if (key.startsWith(CONFIG_VERSION_PREFIX))
+        throw new DOMException("full", "QuotaExceededError");
+      write.call(this, key, value);
+    });
+    try {
+      await userEvent.click(
+        screen.getByRole("button", { name: "Back up draft and start new" }),
+      );
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "The version action could not be saved",
+      );
+      expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(original);
+      expect(window.location.search).toBe("?new=1");
+    } finally {
+      blocked.mockRestore();
+    }
+  });
+
   it.each([
     [new ApiError(403, "denied"), "Access was denied", "访问被拒绝"],
     [new ApiError(408, "timeout"), "request timed out", "请求超时"],
@@ -141,6 +300,13 @@ describe("guided experiment", () => {
       form: newer,
       idempotencyKey: "newer-request-key",
     });
+    expect(
+      readBrowserDraftRecoveries().items.some(
+        (item) =>
+          item.draft.idempotencyKey === "newer-request-key" &&
+          item.draft.form.name === newer.name,
+      ),
+    ).toBe(true);
     expect(window.location.pathname).toBe("/research/new");
     expect(screen.getByLabelText("Starting capital (CNY)")).toHaveValue(
       newer.initial_cash,
@@ -225,6 +391,12 @@ describe("guided experiment", () => {
       costs: { commission_rate: "0.0003", minimum_commission: "5" },
       risk: { max_drawdown: "-0.2", max_position_weight: "0.1" },
     });
+    const requestKey = create.mock.calls[0][1];
+    expect(
+      readBrowserDraftRecoveries().items.some(
+        (item) => item.draft.idempotencyKey === requestKey,
+      ),
+    ).toBe(true);
     expect(screen.getByRole("button", { name: "Submitting…" })).toHaveAttribute(
       "aria-disabled",
       "true",
@@ -232,6 +404,11 @@ describe("guided experiment", () => {
     await act(async () => resolve?.(job));
     expect(window.location.pathname).toBe(`/experiments/${job.job_id}`);
     expect(readExperimentDraft()).toBeNull();
+    expect(
+      readBrowserDraftRecoveries().items.some(
+        (item) => item.draft.idempotencyKey === requestKey,
+      ),
+    ).toBe(false);
   });
 
   it("does not submit when the request identity cannot be saved, then permits a safe retry", async () => {
@@ -1356,7 +1533,7 @@ describe("durable experiment detail", () => {
     expect(await screen.findByText(/No experiments yet/)).toBeInTheDocument();
     expect(
       screen.getAllByRole("link", { name: "New guided backtest" })[0],
-    ).toHaveAttribute("href", "/research/new");
+    ).toHaveAttribute("href", "/research/new?new=1");
   });
 
   it("persists a server-wide filtered, sorted column view across remount", async () => {

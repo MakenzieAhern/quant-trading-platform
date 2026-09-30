@@ -97,6 +97,32 @@ export function saveExperimentDraft(
   window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, raw);
 }
 
+export function clearCompletedExperimentDraft(
+  form: ExperimentConfiguration,
+  idempotencyKey: string,
+) {
+  const matches = (raw: string | null) => {
+    if (!raw) return false;
+    try {
+      const stored = parseExperimentDraft(JSON.parse(raw));
+      return (
+        stored?.idempotencyKey === idempotencyKey &&
+        JSON.stringify(stored.form) === JSON.stringify(form)
+      );
+    } catch {
+      return false;
+    }
+  };
+  for (const key of [EXPERIMENT_DRAFT_KEY, DRAFT_RECOVERY_PREFIX + writerId]) {
+    try {
+      if (matches(window.localStorage.getItem(key)))
+        window.localStorage.removeItem(key);
+    } catch {
+      // The server job is durable; browser storage may be unavailable.
+    }
+  }
+}
+
 export function readBrowserDraftRecoveries(): {
   items: BrowserDraftRecovery[];
   unreadable: number;

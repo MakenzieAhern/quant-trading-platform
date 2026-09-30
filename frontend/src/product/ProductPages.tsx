@@ -130,7 +130,7 @@ export function WorkbenchPage() {
           <h2>{c.lead}</h2>
           <p className="welcomeDescription">{c.intro}</p>
           <div className="welcomeActions">
-            <Link className="button" href="/research/new">
+            <Link className="button" href="/research/new?new=1">
               {c.start}
               <span aria-hidden="true">→</span>
             </Link>
@@ -349,7 +349,13 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
           <p>{c.strategyIntro}</p>
         </div>
         {strategyId && strategy && (
-          <Link className="button" href="/research/new">
+          <Link
+            className="button"
+            href={
+              "/research/new?new=1&strategy=" +
+              encodeURIComponent(strategy.strategy_id)
+            }
+          >
             {c.configure} →
           </Link>
         )}
@@ -411,7 +417,10 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
           <div className="drawerActions">
             <Link
               className="button"
-              href="/research/new"
+              href={
+                "/research/new?new=1&strategy=" +
+                encodeURIComponent(strategy.strategy_id)
+              }
               onClick={() => setSelected(null)}
             >
               {c.configure}
@@ -532,7 +541,7 @@ export function HelpPage() {
           <p>{a}</p>
         </details>
       ))}
-      <Link className="button" href="/research/new">
+      <Link className="button" href="/research/new?new=1">
         {c.start} →
       </Link>
     </div>

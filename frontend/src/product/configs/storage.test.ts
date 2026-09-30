@@ -15,6 +15,7 @@ import {
   restoreConfigurationVersion,
   restoreBrowserDraft,
   saveConfigurationVersion,
+  startNewExperimentDraft,
 } from "./storage";
 
 const current: ExperimentDraft = {
@@ -263,5 +264,19 @@ describe("immutable browser configuration versions", () => {
     ).toThrow("DRAFT_CHANGED_IN_ANOTHER_TAB");
     expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(raw);
     expect(readConfigurationVersions().items).toHaveLength(1);
+  });
+  it("refuses a fresh start when another tab advanced the same draft", () => {
+    saveExperimentDraft(configuration, current.step, current.idempotencyKey);
+    saveExperimentDraft(configuration, 3, current.idempotencyKey);
+    const raw = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
+    expect(() =>
+      startNewExperimentDraft(
+        current,
+        { ...configuration, name: "Fresh start" },
+        "Before new backtest",
+      ),
+    ).toThrow("DRAFT_CHANGED_IN_ANOTHER_TAB");
+    expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(raw);
+    expect(readConfigurationVersions().items).toHaveLength(0);
   });
 });

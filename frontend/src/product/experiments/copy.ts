@@ -15,6 +15,11 @@ const en = {
   save: "Save draft",
   saved: "Draft saved on this device",
   restored: "Your saved draft has been restored.",
+  newDraftTitle: "A saved draft already exists",
+  newDraftHint:
+    "Starting a new backtest saves the current draft as a separate browser version first. It does not run either configuration.",
+  newDraftStart: "Back up draft and start new",
+  newDraftResume: "Continue saved draft",
   exit: "Save & exit",
   exitConfirm:
     "Leave this configuration? Your latest draft is saved on this device.",
@@ -265,6 +270,11 @@ const zh: typeof en = {
   save: "保存草稿",
   saved: "草稿已保存在本机",
   restored: "已恢复上次保存的草稿。",
+  newDraftTitle: "已有保存的草稿",
+  newDraftHint:
+    "新建回测前会先将当前草稿另存为浏览器配置版本，不会运行任何配置。",
+  newDraftStart: "备份草稿并新建",
+  newDraftResume: "继续已保存草稿",
   exit: "保存并退出",
   exitConfirm: "离开当前配置？最新草稿已保存在本机。",
   storageError:
