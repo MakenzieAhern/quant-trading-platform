@@ -719,6 +719,82 @@ describe("durable experiment detail", () => {
     expect(list).toHaveBeenCalledTimes(2);
   });
 
+  it.each([[20, true], [21, true], [21, false]] as const)(
+    "returns to a valid filtered page after an empty active page, total=%i, row focused=%s",
+    async (total, rowFocused) => {
+      vi.useFakeTimers();
+      window.history.replaceState(
+        {
+          experimentView: {
+            q: "",
+            status: "RUNNING",
+            mode: "",
+            sort: "newest",
+            columns: { mode: true, period: true, created: true },
+          },
+          experimentOffset: 20,
+        },
+        "",
+        "/experiments",
+      );
+      const departed = {
+        ...job,
+        name: "Departed running study",
+        status: "RUNNING" as const,
+      };
+      const remaining = {
+        ...departed,
+        job_id: "22222222-2222-4222-8222-222222222222",
+        name: "Remaining running study",
+      };
+      const list = vi
+        .spyOn(experimentApi, "list")
+        .mockResolvedValueOnce({
+          items: [departed],
+          total: 21,
+          limit: 20,
+          offset: 20,
+        })
+        .mockResolvedValueOnce({ items: [], total, limit: 20, offset: 20 })
+        .mockResolvedValueOnce({
+          items: [remaining],
+          total: 20,
+          limit: 20,
+          offset: 0,
+        });
+
+      render(<ExperimentsPage />);
+      await act(async () => vi.advanceTimersByTimeAsync(0));
+      const refresh = screen.getByRole("button", { name: "Refresh" });
+      if (rowFocused)
+        screen
+          .getByRole("link", { name: /^Open experiment: Departed running study/ })
+          .focus();
+      else refresh.focus();
+      await act(async () => vi.advanceTimersByTimeAsync(5000));
+
+      expect(list).toHaveBeenCalledTimes(3);
+      expect(list).toHaveBeenLastCalledWith(
+        expect.any(AbortSignal), 20, 0, "",
+        { status: "RUNNING", mode: undefined, sort: "newest" },
+      );
+      expect(screen.getByLabelText("Status")).toHaveValue("RUNNING");
+      expect(
+        screen.getByRole("link", {
+          name: /^Open experiment: Remaining running study/,
+        }),
+      ).toBeInTheDocument();
+      expect(screen.queryByText("No matching studies.")).not.toBeInTheDocument();
+      expect(screen.queryByText("21–20 of 20")).not.toBeInTheDocument();
+      expect(window.history.state.experimentOffset).toBe(0);
+      expect(
+        rowFocused
+          ? screen.getByRole("heading", { level: 1, name: "Your experiments" })
+          : refresh,
+      ).toHaveFocus();
+    },
+  );
+
   it.each([
     ["removed row", true],
     ["focus moved elsewhere", false],

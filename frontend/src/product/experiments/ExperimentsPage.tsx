@@ -178,6 +178,23 @@ export function ExperimentsPage() {
           sort: view.sort,
         });
         if (!active) return;
+        // COUNT and page SELECT can observe different job statuses.
+        if (offset > 0 && data.items.length === 0) {
+          if (document.activeElement?.closest(".experimentTableScroll"))
+            listHeading.current?.focus();
+          scrollToRestore.current = null;
+          if (window.location.pathname === "/experiments")
+            window.history.replaceState(
+              { ...window.history.state, experimentScrollY: null }, "",
+            );
+          setOffset(
+            Math.min(
+              offset - 20,
+              Math.floor(Math.max(0, data.total - 1) / 20) * 20,
+            ),
+          );
+          return;
+        }
         setJobs({ key: queryKey, data, error: null });
         if (data.items.some(isActiveExperiment))
           timer = window.setTimeout(() => void load(), 5000);
