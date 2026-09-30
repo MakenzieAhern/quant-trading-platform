@@ -6864,3 +6864,17 @@ This covers local CI-equivalent migration and release smoke only. It does
 not prove a successful GitHub-hosted run, an integrated release cutover,
 backup/rollback restoration, full M4/M5, licensed forward-market receipt
 or recovery of the missing original paper ledgers.
+
+## 2026-09-30 23:31 UTC bounded Workbench viewport review
+
+An agent-owned in-app-browser tab inspected the real Workbench at
+1024×768, 1280×800 and 1440×900 in English with the system-following
+theme. All three had no document-level horizontal overflow; at 1024×768
+the sidebar had its own vertical overflow, while at 1280×800 and 1440×900
+it fitted. A Chinese light-theme 390×844 viewport also had no document-
+level horizontal overflow and kept the primary guided-backtest action in
+the visible page. Screenshots were inspected in-tool, not saved as durable
+M5 media. Theme, language and viewport were restored to the original
+English/system/default values, and the QA tab was closed. This is one
+Workbench surface across four CSS viewports, not the required complete
+route/theme/locale matrix or native 200% zoom/screen-reader acceptance.

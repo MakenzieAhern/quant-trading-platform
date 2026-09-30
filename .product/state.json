@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T23:29:11Z",
+  "updated_at_utc": "2026-09-30T23:31:39Z",
+  "m4_workbench_viewport_20261001_gate": {
+    "status": "PASS_BOUNDED_WORKBENCH_CSS_VIEWPORTS_NOT_FULL_M4_M5",
+    "parent_head": "cfcca95",
+    "proof": "2026-09-30 23:31 UTC: agent-owned in-app-browser Workbench at 1024x768, 1280x800 and 1440x900 EN/system had no document horizontal overflow; sidebar was internally scrollable at 1024 and fitted at larger sizes. ZH/light 390x844 also had no page overflow and showed the primary guided-backtest action. Screenshots inspected in-tool; original EN/system/default preferences restored and QA tab closed. See docs/product/ACCEPTANCE.md.",
+    "limits": "One Workbench surface and CSS viewport override only, not complete route/theme/locale visual matrix, durable screenshot/video, native 200-percent zoom or screen-reader, independent novice review, full M4/M5 or hosted CI. No original draft/account/data, frozen research/OOS or GitHub action."
+  },
   "m5_local_ci_parity_20261001_gate": {
     "status": "PASS_LOCAL_MIGRATION_AND_RELEASE_SMOKE_NOT_HOSTED_CI_OR_RELEASE",
     "source_head": "3d67608",
