@@ -1,5 +1,31 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 19:21 UTC local operation without hosted CI — bounded U5 keyboard fix
+
+The original WSL Compose PostgreSQL, Redis, backend and frontend were running;
+PostgreSQL accepted connections, Redis returned PONG, and both Windows-host
+`localhost:5173/` and `localhost:8000/api/health` returned HTTP 200. Existing
+installations can continue locally with `make up` if services stop, and use
+`make test`, `make lint` and `make build` without GitHub Actions. `make up`
+automatically applies the existing Alembic migrations, so it was not rerun
+against already-running services. The October 1 GitHub recovery estimate is
+not verified clearance; no push, CI retry/poll, merge or release occurred.
+
+A red frontend regression confirmed that duplicate canonical IDs in the
+raw-update request form left keyboard focus on Submit despite a generic error
+and no provider POST. The existing validator now identifies its first invalid
+security/date field without changing the accept/reject decision. The form
+focuses that field on every invalid submission, marks it `aria-invalid`, links
+the translated error with `aria-describedby`, and clears the association on
+edit. Focused tests passed 43/43. Full isolated `make test` passed backend
+1033 with one optional unmounted-archive skip and frontend 490/490 across 38
+files; `make lint`, `make build`, changed-file Prettier and `git diff --check`
+passed. Independent read-only review found no P1/P2 regression. This is
+component/DOM evidence, not native screen-reader speech or full U5/M4/M5
+acceptance. No original account, provider, frozen research or OOS write was
+made. Lawful forward data, genuine lost ledgers, independent backup, native
+accessibility/novice/performance evidence and exact-head hosted CI remain open.
+
 ## 2026-09-30 19:04 UTC local loopback API and date-error recovery — bounded M4 fixes
 
 An actual in-app browser opened the original development frontend at

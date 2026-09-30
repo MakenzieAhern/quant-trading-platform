@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { Link } from "../../components/Link";
@@ -9,10 +15,11 @@ import { marketUpdateApi } from "./api";
 import { explainUpdateCode, updateError, useUpdateCopy } from "./copy";
 import {
   earliestUpdateDate,
+  invalidUpdateRequestField,
   readUpdateDraft,
   requestFromDraft,
   saveUpdateDraft,
-  validUpdateRequest,
+  type InvalidUpdateField,
   type UpdateDraft,
 } from "./intent";
 import { UpdateTaskDetail } from "./UpdateTaskDetail";
@@ -248,8 +255,13 @@ function UpdateRequestForm({
   const [accepted, setAccepted] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<unknown>(null);
+  const [invalidField, setInvalidField] = useState<InvalidUpdateField | null>(
+    null,
+  );
+  const [validationAttempt, setValidationAttempt] = useState(0);
   const [storageFailed, setStorageFailed] = useState(false);
   const lock = useRef(false);
+  const formElement = useRef<HTMLFormElement>(null);
   const submitButton = useRef<HTMLButtonElement>(null);
   const active = useRef(true);
   useEffect(() => {
@@ -258,6 +270,17 @@ function UpdateRequestForm({
       active.current = false;
     };
   }, []);
+  useLayoutEffect(() => {
+    if (!invalidField) return;
+    const input = formElement.current?.elements.namedItem(invalidField);
+    if (input instanceof HTMLElement) input.focus();
+  }, [invalidField, validationAttempt]);
+  const fieldAccessibility = (field: InvalidUpdateField) => ({
+    name: field,
+    "aria-invalid": invalidField === field || undefined,
+    "aria-describedby":
+      invalidField === field ? "update-request-error" : undefined,
+  });
   const archive = caps.archive.find(
     (dataset) => dataset.mode === "historical_exploration",
   );
@@ -275,6 +298,7 @@ function UpdateRequestForm({
     setDraft(updated);
     setAccepted(false);
     setError(null);
+    setInvalidField(null);
     try {
       saveUpdateDraft(updated);
       setStorageFailed(false);
@@ -286,8 +310,11 @@ function UpdateRequestForm({
     event.preventDefault();
     if (lock.current || unavailable) return;
     const config = requestFromDraft(draft);
-    if (!accepted || !validUpdateRequest(config, caps)) {
+    const invalid = invalidUpdateRequestField(config, caps);
+    if (!accepted || invalid !== null) {
       setError("validation");
+      setInvalidField(invalid);
+      setValidationAttempt((attempt) => attempt + 1);
       return;
     }
     try {
@@ -337,11 +364,12 @@ function UpdateRequestForm({
               : explainUpdateCode("UPDATE_WORKER_UNAVAILABLE", i18n.language)}
         </p>
       )}
-      <form onSubmit={(event) => void submit(event)}>
+      <form ref={formElement} onSubmit={(event) => void submit(event)}>
         <fieldset disabled={pending}>
           <label>
             {c.securities}
             <textarea
+              {...fieldAccessibility("security_ids")}
               rows={3}
               maxLength={500}
               required
@@ -362,6 +390,7 @@ function UpdateRequestForm({
             <label>
               {c.start}
               <input
+                {...fieldAccessibility("start_date")}
                 type="date"
                 required
                 min={earliestUpdateDate(caps) ?? undefined}
@@ -379,6 +408,7 @@ function UpdateRequestForm({
             <label>
               {c.end}
               <input
+                {...fieldAccessibility("end_date")}
                 type="date"
                 required
                 min={
@@ -415,7 +445,7 @@ function UpdateRequestForm({
           {pending ? c.submitting : c.submit}
         </button>
         {error !== null && (
-          <p role="alert">
+          <p id="update-request-error" role="alert">
             {error === "validation"
               ? c.validation
               : updateError(error, i18n.language)}

@@ -6,7 +6,7 @@ import {
   parseObservations,
 } from "./api";
 import { caps, job, observations, receipt } from "./fixtures.test-data";
-import { validUpdateRequest } from "./intent";
+import { invalidUpdateRequestField, validUpdateRequest } from "./intent";
 describe("incremental update HTTP contract", () => {
   it("uses /api paths, exact bodies, server idempotency and bounded paginated reads", async () => {
     const fetch = vi
@@ -91,6 +91,27 @@ describe("incremental update HTTP contract", () => {
   });
   it("enforces inclusive date boundaries, canonical distinct IDs and maximum scope", () => {
     expect(validUpdateRequest(job.configuration, caps)).toBe(true);
+    expect(
+      invalidUpdateRequestField(
+        {
+          ...job.configuration,
+          security_ids: ["CN-A:SSE:600000", "CN-A:SSE:600000"],
+        },
+        caps,
+      ),
+    ).toBe("security_ids");
+    expect(
+      invalidUpdateRequestField(
+        { ...job.configuration, start_date: "2025-12-31" },
+        caps,
+      ),
+    ).toBe("start_date");
+    expect(
+      invalidUpdateRequestField(
+        { ...job.configuration, end_date: "2026-09-23" },
+        caps,
+      ),
+    ).toBe("end_date");
     for (const config of [
       { ...job.configuration, start_date: "2025-12-31" },
       { ...job.configuration, end_date: "2026-09-23" },

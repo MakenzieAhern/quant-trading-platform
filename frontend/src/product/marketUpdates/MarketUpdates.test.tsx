@@ -487,13 +487,24 @@ describe("explicit incremental request workflow", () => {
     await userEvent.click(
       screen.getByRole("button", { name: "Request selected raw data" }),
     );
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "distinct canonical IDs",
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent("distinct canonical IDs");
+    expect(alert).toHaveAttribute("id", "update-request-error");
+    expect(create).not.toHaveBeenCalled();
+    const ids = screen.getByLabelText("Security IDs (1–20)");
+    expect(ids).toHaveFocus();
+    expect(ids).toHaveAttribute("aria-invalid", "true");
+    expect(ids).toHaveAttribute("aria-describedby", alert.id);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Request selected raw data" }),
     );
+    expect(ids).toHaveFocus();
     expect(create).not.toHaveBeenCalled();
     fireEvent.change(screen.getByLabelText("Security IDs (1–20)"), {
       target: { value: "CN-A:SSE:600000" },
     });
+    expect(ids).not.toHaveAttribute("aria-invalid");
+    expect(ids).not.toHaveAttribute("aria-describedby");
     await userEvent.click(screen.getByRole("checkbox"));
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       throw new DOMException("full", "QuotaExceededError");
