@@ -1,5 +1,45 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 19:37 UTC isolated browser check — stop an unstarted paper account
+
+Local commit `c867cc4` exposes the backend's existing `CREATED → STOPPED`
+transition in the paper-session page, so an unused account need not be started
+just to stop it. A red/green frontend test verifies the Stop command, no Start
+request, and the terminal status. The complete local `make test`, `make lint`
+and `make build` passed after the change; the backend reported 1,033 passing
+tests and one optional unmounted-archive skip. No hosted CI was run.
+
+For browser confirmation, Compose project `quant-paper-ui-1001` used
+`compose.test.yml` with a separate `quant_test` PostgreSQL tmpfs, `APP_ENV=test`,
+and localhost-only ports 18000/15173. Both scratch endpoints returned HTTP 200;
+the original four-service Compose project remained healthy. In the Codex
+in-app browser, the synthetic A-share create page produced disposable session
+`a38cbf08-7022-4371-ba15-aa917dc4b36b` in `CREATED`. The page showed both
+Start and Stop. Keyboard Return on Stop changed the visible state to
+`STOPPED`; the scratch API confirmed `started_at` was null and `stopped_at`
+was set. The original project's paper-session total remained five. A visual
+screenshot was inspected but not saved as a durable acceptance artifact.
+The scratch Compose project was stopped and its temporary override removed;
+no original account, provider, frozen data or OOS run was touched. This closes
+only the local U7 created-account control gap, not full U7/M4/M5 acceptance.
+
+## 2026-09-30 19:26 UTC current-head raw-request keyboard browser recheck
+
+At local commit `8c1bd2f`, the Codex in-app browser opened the original
+`localhost:5173/data` page. The existing candidate request form had a
+publishable 2026-09-22 date and two copies of `CN-A:SSE:600000`; native input
+validity was true, so this tested the application-level distinct-ID rule.
+After keyboard consent and Return on Submit, focus moved to the Security IDs
+textarea. Read-only DOM inspection showed `aria-invalid=true`,
+`aria-describedby=update-request-error` and the translated inline error.
+The backend's read-only task-list total was still four. The browser form was
+cleared to blank values with consent off and no visible error, then returned
+to the online Workbench. No provider POST, account action or study run was
+requested. Pointer click/check actions in this in-app browser did not
+reliably activate their targets, so this is **keyboard/DOM evidence only**,
+not a pointer, native Chrome, screen-reader or complete U5/M4/M5 pass. No
+durable screenshot was saved.
+
 ## 2026-09-30 19:21 UTC local operation without hosted CI — bounded U5 keyboard fix
 
 The original WSL Compose PostgreSQL, Redis, backend and frontend were running;
