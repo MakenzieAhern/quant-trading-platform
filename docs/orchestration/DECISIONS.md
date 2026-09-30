@@ -1,5 +1,19 @@
 # Decisions
 
+## v1.2 historical risk wording and inherited-key safety — 2026-10-01
+
+Explain accepted historical ST, *ST and delisting-period codes in the existing
+bilingual market readout, without deriving trading permission from the label.
+Use period-neutral wording for ST across the 2010–2025 archive; the separate
+opening-execution flag remains authoritative for that displayed fact. Unknown
+non-null risk codes stay visible as unrecognized, never Normal. An initial
+plain-object lookup was rejected after read-only review and red tests showed
+`__proto__` could reach React as an object. Explicit risk branches and own-key
+guards in the sibling board/observation label paths close that class of crash
+without a new dependency or financial-data change. Bounded browser and local
+test evidence is recorded in `docs/product/ACCEPTANCE.md`; full U8/M4/M5 and
+hosted CI remain open.
+
 ## v1.2 local release smoke and synthetic warmup boundary — 2026-09-28
 
 During the user-reported GitHub Actions hold, test the current release images in

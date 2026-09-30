@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 20:45 UTC historical market-risk labels — bounded local browser check
+
+Local code commit `2cbd45a` explains accepted historical `ST`, `STAR_ST`
+(`*ST`) and `DELISTING_PERIOD` risk codes in both languages while keeping the
+separate opening-execution flag intact. `ST` uses period-neutral wording for
+the 2010–2025 archive; it does not impose a newer legal label on older dates.
+Unknown non-null risk codes are explicitly marked unrecognized and retained,
+never turned into Normal. The same inherited-key crash pattern in board and
+observation labels is closed with own-key checks. No financial rule, archive,
+provider or account data changed. The terminology is consistent with the
+[SSE historical listing rule](https://www.sse.com.cn/lawandrules/assemble/c/10116497/files/77fbf7bc013141ff843668080951f781.pdf)
+and [SZSE investor explanation](https://investor.szse.cn/knowledge/company/st/t20171113_538693.html).
+
+The initial ST explanation assertion failed against the raw-code display.
+Two further regressions reproduced React render crashes for `__proto__`
+board and observation-count keys before the own-key fix. The final focused
+Markets suite passed 32/32; isolated `make test` passed backend 1,033 with one
+optional unmounted-archive skip and frontend 502/502 across 38 files. `make
+lint`, `make build`, changed-file Prettier and `git diff --check` passed.
+Independent read-only final review found no remaining P1/P2 in this slice.
+
+In the actual local in-app browser, the original read-only historical archive
+showed 600462 on 2023-01-31 as `ST（风险警示标记）` and independently `开盘执行受限：否`.
+The same security's 2011-06-30 record showed `*ST（退市风险警示）` and, after an
+EN switch/reopen, `*ST — delisting-risk warning`; the date and archive stayed
+the same. Temporary QA tabs were closed. This is a bounded U5/U8 browser check,
+not full U5/U8/M4/M5, native screen-reader speech, 200% zoom or durable
+exact-current-head media. GitHub read-only run listing still showed no new
+run after the 2026-09-26 failed PR32 run; October 1 recovery remains unproven.
+No push, CI retry, merge, tag or release occurred.
+
 ## 2026-09-30 20:26 UTC retained report identity — bounded local browser check
 
 Local code commit `0a62efb` makes the existing prepared-report fallback link
