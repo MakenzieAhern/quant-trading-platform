@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 20:13 UTC market date-range keyboard recovery — bounded local check
+
+Local code commit `63e45d9` fixes an invalid historical market date window
+leaving keyboard focus on Apply with a generic alert. The existing range
+validator now drives a translated inline error associated with both date
+fields, focuses the first field after an invalid submit and after closing and
+reopening the dialog, and clears the error/ARIA associations when corrected.
+Disabling native form validation for this form also lets an empty required date
+reach that same translated error path. No date window is applied or extra bars
+GET is sent until a valid user submission. Existing historical data are read
+only; no provider update, paper account or formal study was started.
+
+The original app in the in-app browser reproduced the old focus/ARIA failure,
+then verified the repaired invalid, reopen and empty-date paths against the
+actual local frontend. Red/green Markets regressions passed 25/25; the exact
+code commit passed the full frontend suite 495/495 across 38 files.
+ESLint, TypeScript/production build, changed-file Prettier and diff check
+passed; an independent read-only review found no P1/P2 issue. The original
+PostgreSQL, Redis and backend remained healthy, Redis returned PONG, and the
+frontend and `/api/health` returned HTTP 200. This is in-app browser keyboard/
+DOM evidence, not native Chrome/screen-reader speech, 200% zoom, durable
+current-head video, full U5/M4/M5 or hosted CI. GitHub recovery is unverified;
+no push, CI retry/poll, merge, tag or release occurred.
+
 ## 2026-09-30 19:56 UTC filtered research-page recovery — local browser check
 
 Local commit `a1f9c90` fixes the U3 saved-research list when the last item on
