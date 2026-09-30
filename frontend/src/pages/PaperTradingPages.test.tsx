@@ -1901,6 +1901,29 @@ describe("paper trading pages", () => {
     expect(screen.getByRole("button", { name: "Stop replay" })).toBeVisible();
   });
 
+  it("can stop an unstarted account without starting its provider", async () => {
+    installWebSocket();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("CREATED")))
+      .mockResolvedValueOnce(jsonResponse(paperSession("STOPPED")))
+      .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+
+    screen.getByRole("button", { name: "Stop replay" }).focus();
+    await userEvent.keyboard("{Enter}");
+    expect(fetch.mock.calls[1]?.[0]).toContain(`/${PAPER_ID}/stop`);
+    expect(fetch.mock.calls[1]?.[1]?.method).toBe("POST");
+    expect(
+      fetch.mock.calls.some(([url]) => String(url).endsWith("/start")),
+    ).toBe(false);
+    expect(
+      screen.getByText("Stopped", { selector: ".statusBadge" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Start replay" })).toBeNull();
+  });
+
   it("reconciles an accepted command while the paper stream is reconnecting", async () => {
     installWebSocket();
     const fetch = vi

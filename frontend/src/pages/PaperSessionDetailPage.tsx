@@ -222,7 +222,8 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
               {t("detail.pause")}
             </button>
           )}
-          {(active ||
+          {(session.status === "CREATED" ||
+            active ||
             session.status === "PAUSING" ||
             session.status === "PAUSED") && (
             <button
