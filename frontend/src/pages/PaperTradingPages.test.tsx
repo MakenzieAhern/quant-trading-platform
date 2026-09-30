@@ -10,6 +10,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ApiError } from "../api/client";
+import { paperApi } from "../api/paper";
 import { i18n } from "../i18n";
 import { experimentApi } from "../product/experiments/api";
 import { job, plan } from "../product/experiments/fixtures.test-data";
@@ -395,6 +396,114 @@ describe("paper trading pages", () => {
     ).toHaveAttribute("tabindex", "0");
   });
 
+  it("updates a running session from the server and stops polling when it stops", async () => {
+    await act(async () => i18n.changeLanguage("en-US"));
+    vi.useFakeTimers();
+    const list = vi
+      .spyOn(paperApi, "list")
+      .mockResolvedValueOnce({
+        items: [paperSession("RUNNING")],
+        limit: 20,
+        offset: 0,
+        total: 1,
+      })
+      .mockResolvedValueOnce({
+        items: [paperSession("STOPPED")],
+        limit: 20,
+        offset: 0,
+        total: 1,
+      });
+    render(<PaperSessionsPage />);
+    await act(async () => {});
+    expect(
+      screen.getByText("Running", { selector: ".statusBadge" }),
+    ).toBeInTheDocument();
+    const account = screen.getByRole("link", {
+      name: /Open session: Moving average crossover.*Running/,
+    });
+    account.focus();
+
+    await act(async () => vi.advanceTimersByTimeAsync(5000));
+    expect(list).toHaveBeenCalledTimes(2);
+    expect(
+      screen.getByText("Stopped", { selector: ".statusBadge" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: /Stopped/ })).toBeInTheDocument();
+    expect(account).toHaveAccessibleName(/Open session:.*Stopped/);
+    expect(account).toHaveFocus();
+    await act(async () => vi.advanceTimersByTimeAsync(10000));
+    expect(list).toHaveBeenCalledTimes(2);
+  });
+
+  it("refreshes an idle session without polling it", async () => {
+    await act(async () => i18n.changeLanguage("en-US"));
+    vi.useFakeTimers();
+    const list = vi
+      .spyOn(paperApi, "list")
+      .mockResolvedValueOnce({
+        items: [paperSession("CREATED")],
+        limit: 20,
+        offset: 0,
+        total: 1,
+      })
+      .mockResolvedValueOnce({
+        items: [paperSession("PAUSED")],
+        limit: 20,
+        offset: 0,
+        total: 1,
+      });
+    render(<PaperSessionsPage />);
+    await act(async () => {});
+    await act(async () => vi.advanceTimersByTimeAsync(10000));
+    expect(list).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    await act(async () => {});
+    expect(list).toHaveBeenCalledTimes(2);
+    expect(screen.getByRole("status", { name: /Paused/ })).toBeInTheDocument();
+  });
+
+  it("moves focus to the error when polling invalidates a focused session", async () => {
+    await act(async () => i18n.changeLanguage("en-US"));
+    vi.useFakeTimers();
+    vi.spyOn(paperApi, "list")
+      .mockResolvedValueOnce({
+        items: [paperSession("RUNNING")],
+        limit: 20,
+        offset: 0,
+        total: 1,
+      })
+      .mockRejectedValueOnce(new Error("Connection failed"));
+    render(<PaperSessionsPage />);
+    await act(async () => {});
+    screen.getByRole("link", { name: /Open session:.*Running/ }).focus();
+    await act(async () => vi.advanceTimersByTimeAsync(5000));
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Persisted sessions" }),
+    ).toHaveFocus();
+  });
+
+  it("moves focus to the list heading when a polled row disappears", async () => {
+    await act(async () => i18n.changeLanguage("en-US"));
+    vi.useFakeTimers();
+    vi.spyOn(paperApi, "list")
+      .mockResolvedValueOnce({
+        items: [paperSession("RUNNING")],
+        limit: 20,
+        offset: 0,
+        total: 1,
+      })
+      .mockResolvedValueOnce({ items: [], limit: 20, offset: 0, total: 0 });
+    render(<PaperSessionsPage />);
+    await act(async () => {});
+    screen.getByRole("link", { name: /Open session:.*Running/ }).focus();
+    await act(async () => vi.advanceTimersByTimeAsync(5000));
+    expect(screen.getByText(/No paper sessions yet/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Persisted sessions" }),
+    ).toHaveFocus();
+  });
+
   it("distinguishes same-strategy sessions without making IDs the primary action", async () => {
     const secondId = "534d9730-a8c9-4f71-a0fc-c4b5d156f2ef";
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
@@ -421,6 +530,12 @@ describe("paper trading pages", () => {
     expect(links[0]).not.toHaveAttribute(
       "aria-label",
       links[1]?.getAttribute("aria-label"),
+    );
+    const statuses = screen.getAllByRole("status", { name: /Created/ });
+    expect(statuses).toHaveLength(2);
+    expect(statuses[0]).not.toHaveAttribute(
+      "aria-label",
+      statuses[1]?.getAttribute("aria-label"),
     );
     expect(screen.queryByText(/34d97303/)).not.toBeInTheDocument();
     await act(async () => i18n.changeLanguage("zh-CN"));

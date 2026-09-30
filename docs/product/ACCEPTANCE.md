@@ -1,5 +1,62 @@
 # v1.2 acceptance ledger
 
+## 2026-09-29 17:10 UTC research Cancel focus lifetime — bounded M4 check
+
+The first final full frontend run for the paper-list slice failed one existing
+focus assertion (485/486), despite a targeted rerun and the next full run
+passing. Read-only review found the root cause: a nonterminal job-status effect
+discarded the Cancel button's focus reference while that button was still
+mounted and focused. A later terminal status removed the button, leaving no
+target for focus handoff. The smallest fix retains that reference until the
+button disconnects; the existing blur handler still clears it if the user
+moves focus elsewhere. A deterministic QUEUED → RUNNING → CANCELLED test
+failed before the fix and passed after it, alongside the original focused
+and moved-away cases.
+
+Final isolated `make test` exited zero: backend 1029 passed with one optional
+unmounted-archive skip, frontend 487/487; an additional full frontend run
+also passed 487/487. `make lint`, `make build`, JSON validation and
+`git diff --check` passed. The new test block is formatted; unrelated
+pre-existing whole-file Prettier drift was not included. The earlier failed full run is
+retained as evidence, not hidden. No actual research cancellation was issued
+against the original app. This DOM regression is not native screen-reader
+speech, every race, complete M4/M5 or hosted CI.
+
+## 2026-09-29 17:02 UTC paper-list status freshness — bounded local U7/M4 check
+
+The persisted paper-session list now checks active STARTING/RUNNING/PAUSING/
+STOPPING rows every five seconds and stops polling when none remain. CREATED
+and PAUSED rows have a visible bilingual Refresh action rather than unbounded
+idle polling. A changed status has a distinct localized live-region label that
+includes the row's UTC time and short audit ID. When a poll error or a list
+change removes the focused row, focus moves to the persistent list heading
+instead of falling to the document body. No backend account command or
+financial calculation changed.
+
+Red/green regressions covered RUNNING to STOPPED, terminal poll stop, idle
+refresh, error and row-removal focus, and same-strategy status labels. The
+focused paper suite passed 89/89. The isolated full suite passed backend
+1029 with one optional unmounted-archive skip. The first final full frontend
+run was 485/486 due to the separate research cancellation-focus bug documented
+above; that cause was reproduced and fixed. Final full `make test` exited
+zero with frontend 487/487; an additional full frontend run also passed.
+Final Ruff/format/mypy, ESLint/TypeScript and production build passed. Actual
+installed Chrome on the separate
+`qtp-v12-paper-lock-qa` tmpfs release stack at `localhost:15175/paper` showed
+the Chinese and English Refresh control, simulation warning, one persisted
+CREATED row and its localized status label. Clicking Refresh reloaded the row
+and retained focus on the control. The scratch frontend alone was rebuilt;
+original Compose PostgreSQL/Redis/backend remained healthy, original frontend
+and `/api/health` returned HTTP 200, and Redis returned PONG.
+
+This browser check did not inject a RUNNING to STOPPED transition or capture
+native screen-reader speech. The screenshot was inspected in-tool, not saved
+as exact-head M5 media. It is not full U7/M4/M5, valid cold p95, native 200%
+zoom, CSV landing, independent novice QA, lawful forward data, recovery of
+the two genuine missing ledgers, independent backup or hosted CI. No original
+account/database, frozen research/OOS or GitHub state was changed. October 1
+GitHub recovery is still an unverified estimate; no push, merge or release.
+
 ## 2026-09-29 14:14 UTC historical paper form keyboard error recovery — bounded M4 check
 
 An invalid historical replay setting inside a collapsed advanced section no

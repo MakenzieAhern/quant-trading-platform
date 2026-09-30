@@ -852,6 +852,34 @@ describe("durable experiment detail", () => {
     );
   });
 
+  it("keeps cancellation focus ownership across an active status poll", async () => {
+    vi.useFakeTimers();
+    const queued = { ...job, status: "QUEUED" as const };
+    const running = { ...queued, status: "RUNNING" as const };
+    const cancelled = { ...running, status: "CANCELLED" as const };
+    let current: typeof job = queued;
+    vi.spyOn(experimentApi, "get").mockImplementation(async () => current);
+    vi.spyOn(experimentApi, "cancel").mockResolvedValue(cancelled);
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    const button = screen.getByRole("button", { name: "Cancel task" });
+    button.focus();
+
+    current = running;
+    await act(async () => vi.advanceTimersByTimeAsync(2500));
+    expect(
+      screen.getByText("Running", { selector: ".experimentStatus" }),
+    ).toBeInTheDocument();
+    expect(button).toHaveFocus();
+
+    current = cancelled;
+    fireEvent.click(button);
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(
+      screen.getByText("Cancelled", { selector: ".experimentStatus" }),
+    ).toHaveFocus();
+  });
+
   it("focuses the read error when polling removes the focused cancel button", async () => {
     vi.useFakeTimers();
     const running = { ...job, status: "RUNNING" as const, phase: "EXECUTING" };

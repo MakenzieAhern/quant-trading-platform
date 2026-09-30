@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { paperApi } from "../api/paper";
@@ -15,10 +15,34 @@ const LIMIT = 20;
 export function PaperSessionsPage() {
   const { t } = useTranslation(["paper", "common", "research"]);
   const [offset, setOffset] = useState(0);
+  const [revision, setRevision] = useState(0);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const focusedList = useRef(false);
   const sessions = useApiResource(
     (signal) => paperApi.list(LIMIT, offset, signal),
-    [offset],
+    [offset, revision],
+    {
+      intervalMs: 5000,
+      while: (page) =>
+        page.items.some(
+          (item) =>
+            item.status === "STARTING" ||
+            item.status === "RUNNING" ||
+            item.status === "PAUSING" ||
+            item.status === "STOPPING",
+        ),
+    },
   );
+  useEffect(() => {
+    if (
+      (sessions.data || sessions.error) &&
+      focusedList.current &&
+      document.activeElement === document.body
+    ) {
+      heading.current?.focus();
+      focusedList.current = false;
+    }
+  }, [sessions.data, sessions.error]);
   return (
     <>
       <PaperSafetyBanner />
@@ -34,7 +58,16 @@ export function PaperSessionsPage() {
       </header>
       <section className="panel" aria-labelledby="paper-sessions-title">
         <div className="panelHeader">
-          <h2 id="paper-sessions-title">{t("paper:persisted")}</h2>
+          <h2 ref={heading} id="paper-sessions-title" tabIndex={-1}>
+            {t("paper:persisted")}
+          </h2>
+          <button
+            className="button secondary"
+            type="button"
+            onClick={() => setRevision((value) => value + 1)}
+          >
+            {t("paper:refresh")}
+          </button>
         </div>
         {sessions.loading && <LoadingPanel label={t("paper:loading")} />}
         {sessions.error && <ErrorPanel message={sessions.error} />}
@@ -47,6 +80,8 @@ export function PaperSessionsPage() {
             role="region"
             tabIndex={0}
             aria-label={t("research:scrollTable")}
+            onFocusCapture={() => (focusedList.current = true)}
+            onBlurCapture={() => (focusedList.current = false)}
           >
             <table>
               <thead>
@@ -73,7 +108,12 @@ export function PaperSessionsPage() {
                     <td>{t(`paper:strategies.${item.strategy_type}`)}</td>
                     <td>{t(`paper:providers.${item.provider_type}`)}</td>
                     <td>
-                      <StatusBadge status={item.status} />
+                      <span
+                        role="status"
+                        aria-label={`${t(`paper:strategies.${item.strategy_type}`)}: ${t(`common:statuses.${item.status}`)} · ${formatUtc(item.created_at)} · ${shortId(item.session_id)}`}
+                      >
+                        <StatusBadge status={item.status} />
+                      </span>
                     </td>
                     <td>{formatUtc(item.created_at)}</td>
                   </tr>

@@ -65,7 +65,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
       )?.focus();
     if (!loadingFocus.current) {
       pendingFocus.current = false;
-      focusedCommand.current = null;
+      if (!button?.isConnected) focusedCommand.current = null;
     }
   }, [job.data?.status, job.error]);
   function refreshJob() {

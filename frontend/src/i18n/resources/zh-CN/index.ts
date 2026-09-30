@@ -187,6 +187,7 @@ export const zhCN = {
       "可使用合成演示和已审计历史回放账户。真实新行情前向模拟尚不可用；不连接券商。",
     create: "创建模拟会话",
     persisted: "已持久化会话",
+    refresh: "刷新",
     sessionColumn: "会话",
     openSession: "查看会话",
     empty: "尚无模拟会话。可从明确标记的合成演示或历史回放开始。",

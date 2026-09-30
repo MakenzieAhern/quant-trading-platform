@@ -204,6 +204,7 @@ export const enUS = {
       "Synthetic demo and audited historical replay accounts. New-market forward simulation is not available yet. No broker is connected.",
     create: "Create paper session",
     persisted: "Persisted sessions",
+    refresh: "Refresh",
     sessionColumn: "Session",
     openSession: "Open session",
     empty:
