@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 20:50 UTC CSV file-landing probe — not verified
+
+The actual local in-app browser opened the already-completed synthetic study
+`dccc74b3-f8c4-487f-9597-4cd9d8fb7288` in the original read-only app.
+Clicking Download records (CSV) displayed "Download prepared" plus the
+fallback link for
+`experiment-dccc74b3-f8c4-487f-9597-4cd9d8fb7288-trades.csv`.
+The browser's documented download-event wait timed out for both the automatic
+click and one explicit fallback-link click. No corresponding file appeared at
+the exact expected path in the ordinary Windows Downloads folder, and the
+in-app tab logged no console error. Its download destination or handling is
+not established. The QA tab was closed; no study/account/provider update or
+formal/OOS run was made.
+
+`CSV_FILE_LANDING = NOT_VERIFIED`, not PASS and not a confirmed application
+defect. The prepared UI and GET path have bounded browser evidence, but a
+supported browser download manager or exact output path is needed to inspect
+the actual file, filename and contents. Do not repeat the same in-app-browser
+event wait without a changed hypothesis or capture surface.
+
 ## 2026-09-30 20:45 UTC historical market-risk labels — bounded local browser check
 
 Local code commit `2cbd45a` explains accepted historical `ST`, `STAR_ST`

@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 CSV landing needs an observable file, not a prepared link — 2026-10-01
+
+An in-app browser export of an existing synthetic report produced the visible
+prepared CSV fallback, but neither the automatic click nor one direct fallback
+click yielded a download event or a file at the exact expected ordinary Windows
+Downloads path. Do not infer file landing or diagnose an app bug from that
+surface alone. Stop unchanged event retries; use a supported browser/download
+manager or known destination before closing this M5 gate. The original study,
+account, provider and formal research paths were not mutated.
+
 ## v1.2 historical risk wording and inherited-key safety — 2026-10-01
 
 Explain accepted historical ST, *ST and delisting-period codes in the existing
