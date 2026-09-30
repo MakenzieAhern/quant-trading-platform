@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T23:20:54Z",
+  "updated_at_utc": "2026-09-30T23:23:49Z",
+  "u1_u3_existing_draft_bilingual_browser_20261001_gate": {
+    "status": "PASS_BOUNDED_EXISTING_DRAFT_BROWSER_NOT_MALFORMED_OR_FULL_U1_U3_M4",
+    "parent_head": "be1d72d",
+    "proof": "2026-09-30 23:23 UTC: an agent-owned in-app-browser tab on localhost Workbench displayed the existing draft, separate Continue and Start links. Chinese Start opened the saved-draft choice with explicit Continue and backup-first New actions. Switching to English on the same route translated the choice; returning to Workbench still showed the saved draft and Continue. EN preference restored and QA tab closed. Neither backup nor submit clicked. See docs/product/ACCEPTANCE.md.",
+    "limits": "Existing valid draft and one browser profile only; malformed-storage browser injection, actual backup/new/POST, cross-tab atomicity and full U1/U3/M4 remain unverified. No original draft, account/data, frozen research/OOS or GitHub action was intentionally changed."
+  },
   "m4_sidebar_short_viewport_20261001_gate": {
     "status": "PASS_BOUNDED_IAB_SHORT_VIEWPORT_NOT_NATIVE_ZOOM_OR_FULL_M4_M5",
     "parent_head": "6b2ba0a",

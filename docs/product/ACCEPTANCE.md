@@ -6826,3 +6826,14 @@ horizontal overflow was false. Escape closed navigation; viewport override
 was reset and the QA tab closed. Browser zoom shortcuts did not change the
 reported viewport or device-pixel ratio, so this does not establish native
 200% browser zoom or screen-reader speech.
+
+At 23:23 UTC, an agent-owned in-app-browser tab on the original localhost
+origin opened Workbench with the existing saved draft. Switching to Chinese
+kept its title and separate Continue and Start links. Start led to the
+Chinese saved-draft choice with explicit Continue and backup-first New
+actions; switching back to English on that same choice translated the copy
+without leaving the route. Returning to Workbench still showed the saved
+draft and Continue link. The original English preference was restored and
+the QA tab closed. Neither backup nor submit was clicked. This is a bounded
+existing-draft bilingual browser path, not corrupted-storage injection,
+cross-tab atomicity, an observed create request, or full U1/U3/M4 acceptance.
