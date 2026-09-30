@@ -6878,3 +6878,45 @@ M5 media. Theme, language and viewport were restored to the original
 English/system/default values, and the QA tab was closed. This is one
 Workbench surface across four CSS viewports, not the required complete
 route/theme/locale matrix or native 200% zoom/screen-reader acceptance.
+
+## 2026-09-30 23:50 UTC bounded U7 saved-event journal
+
+The existing PostgreSQL paper event ledger was already authoritative, but
+the account detail UI showed only its folded current orders and snapshot.
+`GET /api/paper-trading/sessions/{id}/events` now keeps its original complete
+ascending response when called without pagination. Optional `limit` (1–200)
+and positive, exclusive `before_sequence` run a bounded indexed database
+query and return newest-first rows. The UI requests 51, displays only 50,
+and keeps only one page in the DOM. It opens the saved journal on demand,
+labels it as manually refreshable rather than a live feed, and provides
+Older, Newer and Refresh-to-latest actions. Event kinds, lifecycle and order
+statuses, page ranges and errors have English/Chinese labels; no raw payload
+or account command is submitted by the journal.
+
+An isolated tmpfs PostgreSQL API test preserved the old no-param contract,
+verified order CREATED → ACCEPTED → FILLED as separate transitions, newest-
+first pages, exclusive cursor and 422 bounds. Frontend tests verified two
+statuses of one order remain separate, no event GET before expansion, no POST,
+account-route isolation against a delayed old response, and a 51-row page
+through Older and Refresh. Exact-code `make test` passed backend 1034 with
+one optional unmounted historical-archive skip and frontend 536/536 across
+40 files. `make lint`, `make build`, changed-file Prettier and diff checks
+passed. Independent diff review's missing ARIA target and misleading older-
+page Refresh/range findings were fixed and rechecked.
+
+On the original local service, all five paper accounts were STOPPED and all
+eight exploratory research jobs non-running before a backend-only restart.
+The new REST read returned historical account d7044a3c's latest sequences
+138, 137, 136. In an agent-owned in-app-browser tab, the original stopped
+historical account displayed English event pages 138–89, 88–39 and 38–1,
+then Refresh returned to 138–89. Chinese localized event labels and the
+page range were visible. The QA tab closed after restoring English.
+Original PostgreSQL counts remained five paper sessions, 417 paper events
+and eight research jobs; `/api/health` returned HTTP 200. The browser
+screenshot was inspected in-tool, not saved as durable M5 media.
+
+This closes a bounded U7 log-visibility gap only. It does not restore two
+missing pre-loss paper ledgers, prove lawful genuinely new-market receipts,
+an independent physical backup, full M4/M5 accessibility and novice QA, or
+GitHub-hosted exact-head CI. No strategy/OOS, original account/event,
+frozen dataset or release action was run.

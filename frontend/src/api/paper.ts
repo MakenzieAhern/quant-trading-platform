@@ -6,6 +6,7 @@ import type {
   MarketBar,
   MarketSession,
   PaperFill,
+  PaperJournalEvent,
   PaperOrder,
   PaperPortfolio,
   PaperRiskDecision,
@@ -299,6 +300,13 @@ export const paperApi = {
       signal,
       snapshot,
     ),
+  events: (sessionId: string, beforeSequence?: number, signal?: AbortSignal) =>
+    apiRequest(
+      `/api/paper-trading/sessions/${sessionId}/events?limit=51${beforeSequence === undefined ? "" : `&before_sequence=${beforeSequence}`}`,
+      {},
+      signal,
+      journalPage,
+    ),
   create: (
     request: CreatePaperSessionRequest,
     key: string,
@@ -385,4 +393,37 @@ export function parseWireEvent(value: unknown): PaperWireEvent {
       item.occurred_at === null ? null : requiredString(item.occurred_at),
     payload,
   };
+}
+
+function journalEvent(value: unknown): PaperJournalEvent {
+  const event = parseWireEvent(value);
+  const type = event.type;
+  if (
+    event.sequence === null ||
+    event.sequence <= 0 ||
+    event.occurred_at === null ||
+    type === "stream.connected" ||
+    type === "stream.resync_required"
+  )
+    throw new Error("Invalid persisted paper event.");
+  return {
+    ...event,
+    type,
+    sequence: event.sequence,
+    occurred_at: event.occurred_at,
+  };
+}
+
+function journalPage(value: unknown): PaperJournalEvent[] {
+  if (!Array.isArray(value) || value.length > 51)
+    throw new Error("Invalid paper event page.");
+  const events = value.map(journalEvent);
+  if (
+    events.some(
+      (event, index) =>
+        index > 0 && event.sequence >= events[index - 1]!.sequence,
+    )
+  )
+    throw new Error("Invalid paper event order.");
+  return events;
 }

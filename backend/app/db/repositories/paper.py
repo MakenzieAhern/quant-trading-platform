@@ -177,14 +177,22 @@ class SQLAlchemyPaperRepository:
         )
         return records
 
-    async def list_events(self, session_id: UUID) -> tuple[PaperEventRecord, ...]:
-        models = (
-            await self._session.scalars(
-                select(PaperTradingEventModel)
-                .where(PaperTradingEventModel.session_id == session_id)
-                .order_by(PaperTradingEventModel.sequence)
-            )
-        ).all()
+    async def list_events(
+        self, session_id: UUID, *, limit: int | None = None, before_sequence: int | None = None
+    ) -> tuple[PaperEventRecord, ...]:
+        query = select(PaperTradingEventModel).where(
+            PaperTradingEventModel.session_id == session_id
+        )
+        if before_sequence is not None:
+            query = query.where(PaperTradingEventModel.sequence < before_sequence)
+        query = query.order_by(
+            PaperTradingEventModel.sequence.desc()
+            if limit is not None
+            else PaperTradingEventModel.sequence
+        )
+        if limit is not None:
+            query = query.limit(limit)
+        models = tuple((await self._session.scalars(query)).all())
         return tuple(
             PaperEventRecord(
                 item.session_id,

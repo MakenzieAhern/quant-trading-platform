@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T23:31:39Z",
+  "updated_at_utc": "2026-09-30T23:49:56Z",
+  "u7_event_journal_20261001_gate": {
+    "status": "PASS_BOUNDED_READ_ONLY_BILINGUAL_JOURNAL_NOT_FULL_U7_M4_M5",
+    "parent_head": "b09e9d8",
+    "proof": "2026-09-30 23:35-23:50 UTC: existing durable paper event journal gained optional indexed newest-first limit/before_sequence reads while the no-param ascending API remains unchanged. Account UI now opens a read-only bilingual saved-event table on demand, 50 visible rows per page from a 51-row bounded query, with Older/Newer/Refresh, localized event summaries and accessible sequence range. Focused frontend 101/101, exact-code make test backend 1034/one optional archive skip and frontend 536/536 across 40 files, make lint/build, changed-file Prettier and diff check passed. Independent read-only diff review found no remaining P1/P2 after two pagination/accessibility corrections. Original stopped historical account d7044a3c with 138 events was inspected in an agent-owned in-app-browser tab: English 138-89, 88-39, 38-1, Refresh back to 138-89; Chinese event labels and range visible. EN restored and tab closed. Backend-only restart loaded the route after checking all five paper sessions STOPPED and eight research jobs non-running. Original DB counts stayed paper 5/events 417/research jobs 8; backend health HTTP 200. See docs/product/ACCEPTANCE.md.",
+    "limits": "Saved log is deliberately manually refreshed, not a live stream. One existing stopped historical account and component/scratch-DB tests, not complete route/theme/viewport/native screen-reader, 200-percent zoom, independent novice, durable exact-head media, lawful after-start forward receipt, genuine lost-ledger recovery, independent physical backup or hosted exact-head CI. No original account/event/research/frozen/OOS, GitHub push/merge/tag/release write."
+  },
   "m4_workbench_viewport_20261001_gate": {
     "status": "PASS_BOUNDED_WORKBENCH_CSS_VIEWPORTS_NOT_FULL_M4_M5",
     "parent_head": "cfcca95",

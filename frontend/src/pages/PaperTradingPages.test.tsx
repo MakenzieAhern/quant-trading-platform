@@ -93,6 +93,185 @@ describe("paper trading pages", () => {
   });
 
   it.each(["en-US", "zh-CN"])(
+    "shows distinct saved order transitions in a bounded read-only event log (%s)",
+    async (language) => {
+      await act(async () => i18n.changeLanguage(language));
+      installWebSocket();
+      const order = {
+        order_id: "966db07d-e61f-4ca8-aad0-e5774a63fc09",
+        strategy_id: "moving_average_crossover",
+        symbol: "AAPL",
+        side: "BUY",
+        order_type: "MARKET",
+        quantity: "10",
+        price: null,
+        created_at: "2026-09-06T02:01:00Z",
+      };
+      const fetch = vi
+        .spyOn(globalThis, "fetch")
+        .mockImplementation(async (input) =>
+          jsonResponse(
+            String(input).includes("/events?")
+              ? [
+                  {
+                    sequence: 10,
+                    type: "order.updated",
+                    occurred_at: "2026-09-06T02:02:00Z",
+                    payload: { ...order, status: "FILLED" },
+                  },
+                  {
+                    sequence: 9,
+                    type: "order.updated",
+                    occurred_at: "2026-09-06T02:01:00Z",
+                    payload: { ...order, status: "ACCEPTED" },
+                  },
+                ]
+              : paperSnapshot("STOPPED"),
+          ),
+        );
+      try {
+        render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+        await act(async () => MockWebSocket.instances[0]!.open());
+        const heading = i18n.t("detail.eventLog", { ns: "paper" });
+        expect(
+          await screen.findByRole("heading", { name: heading }),
+        ).toBeInTheDocument();
+        expect(
+          fetch.mock.calls.some(([url]) => String(url).includes("/events?")),
+        ).toBe(false);
+        await userEvent.click(
+          screen.getByRole("button", {
+            name: i18n.t("detail.viewEventLog", { ns: "paper" }),
+          }),
+        );
+        const table = await screen.findByRole("table", { name: heading });
+        expect(
+          fetch.mock.calls.some(([url]) =>
+            String(url).includes(`/sessions/${PAPER_ID}/events?limit=51`),
+          ),
+        ).toBe(true);
+        expect(within(table).getAllByRole("row")).toHaveLength(3);
+        expect(
+          within(table).getByRole("rowheader", { name: "10" }),
+        ).toBeInTheDocument();
+        expect(
+          within(table).getByRole("rowheader", { name: "9" }),
+        ).toBeInTheDocument();
+        expect(
+          within(table).getByText(language === "zh-CN" ? /已成交/ : /Filled/),
+        ).toBeInTheDocument();
+        expect(
+          within(table).getByText(language === "zh-CN" ? /已接受/ : /Accepted/),
+        ).toBeInTheDocument();
+        expect(
+          fetch.mock.calls.every(([, options]) => options?.method !== "POST"),
+        ).toBe(true);
+      } finally {
+        vi.restoreAllMocks();
+        await act(async () => i18n.changeLanguage("en-US"));
+      }
+    },
+  );
+
+  it("discards an old account's delayed event page after route change", async () => {
+    installWebSocket();
+    const otherId = "a0975744-c58a-49d8-a72d-45f6ed700ca6";
+    let resolveOld!: (response: Response) => void;
+    const oldPage = new Promise<Response>((resolve) => {
+      resolveOld = resolve;
+    });
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+      const url = String(input);
+      if (url.includes(`/sessions/${PAPER_ID}/events?`)) return oldPage;
+      if (url.includes(`/sessions/${otherId}/events?`))
+        return jsonResponse([
+          {
+            sequence: 2,
+            type: "session.status",
+            occurred_at: "2026-09-06T02:02:00Z",
+            payload: { status: "STOPPED" },
+          },
+        ]);
+      const snapshot = paperSnapshot("STOPPED");
+      snapshot.session.session_id = url.includes(otherId) ? otherId : PAPER_ID;
+      return jsonResponse(snapshot);
+    });
+    const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await userEvent.click(
+      await screen.findByRole("button", { name: "View saved events" }),
+    );
+    view.rerender(<PaperSessionDetailPage sessionId={otherId} />);
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(
+      await screen.findByRole("rowheader", { name: "2" }),
+    ).toBeInTheDocument();
+    resolveOld(
+      jsonResponse([
+        {
+          sequence: 999,
+          type: "session.status",
+          occurred_at: "2026-09-06T02:01:00Z",
+          payload: { status: "FAILED" },
+        },
+      ]),
+    );
+    await act(async () => Promise.resolve());
+    expect(
+      screen.queryByRole("rowheader", { name: "999" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("pages one saved event window at a time and Refresh returns to the latest", async () => {
+    installWebSocket();
+    const event = (sequence: number) => ({
+      sequence,
+      type: "session.status",
+      occurred_at: "2026-09-06T02:00:00Z",
+      payload: { status: "STOPPED" },
+    });
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(async (input) => {
+        const url = String(input);
+        if (!url.includes("/events?"))
+          return jsonResponse(paperSnapshot("STOPPED"));
+        return jsonResponse(
+          url.includes("before_sequence=53")
+            ? [event(52), event(51)]
+            : Array.from({ length: 51 }, (_, index) => event(102 - index)),
+        );
+      });
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await userEvent.click(
+      await screen.findByRole("button", { name: "View saved events" }),
+    );
+    expect(
+      await screen.findByRole("rowheader", { name: "102" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole("rowheader")).toHaveLength(50);
+    await userEvent.click(screen.getByRole("button", { name: "Older" }));
+    expect(
+      await screen.findByRole("rowheader", { name: "52" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("rowheader", { name: "102" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText(/Saved events 52–51/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(
+      await screen.findByRole("rowheader", { name: "102" }),
+    ).toBeInTheDocument();
+    expect(fetch.mock.calls.at(-1)?.[0]).toContain(
+      `/sessions/${PAPER_ID}/events?limit=51`,
+    );
+    expect(String(fetch.mock.calls.at(-1)?.[0])).not.toContain(
+      "before_sequence",
+    );
+  });
+
+  it.each(["en-US", "zh-CN"])(
     "uses provider-specific empty states before any market data arrives (%s)",
     async (language) => {
       await act(async () => i18n.changeLanguage(language));

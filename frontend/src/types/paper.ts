@@ -205,3 +205,12 @@ export interface PaperWireEvent {
   occurred_at: string | null;
   payload: Record<string, unknown>;
 }
+
+export interface PaperJournalEvent extends PaperWireEvent {
+  sequence: number;
+  occurred_at: string;
+  type: Exclude<
+    PaperWireEvent["type"],
+    "stream.connected" | "stream.resync_required"
+  >;
+}

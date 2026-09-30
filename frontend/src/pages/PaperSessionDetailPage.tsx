@@ -9,7 +9,7 @@ import { StatusBadge } from "../components/StatusBadge";
 import { ExperimentPlan } from "../product/experiments/ExperimentPlan";
 import { tradingDate } from "../product/experiments/api";
 import { usePaperStream } from "../hooks/usePaperStream";
-import type { PaperSessionStatus } from "../types/paper";
+import type { PaperJournalEvent, PaperSessionStatus } from "../types/paper";
 import { formatDecimal, formatUtc, shortId } from "../utils/format";
 
 type PaperAction = "start" | "pause" | "stop";
@@ -36,6 +36,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   const [contractErrorId, setContractErrorId] = useState<string | null>(null);
   const [commandPending, setCommandPending] = useState(false);
   const [commandError, setCommandError] = useState<PaperAction | null>(null);
+  const [logOpen, setLogOpen] = useState(false);
   const commandLock = useRef(false);
   const pendingAction = useRef<PaperAction | null>(null);
   const pendingCommandConfirmed = useRef(false);
@@ -503,7 +504,189 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           formatUtc(item.timestamp),
         ])}
       />
+      <section className="panel dataPanel">
+        <div className="panelHeader">
+          <h2>{t("detail.eventLog")}</h2>
+          <button
+            type="button"
+            aria-expanded={logOpen}
+            aria-controls="paper-event-log"
+            onClick={() => setLogOpen((open) => !open)}
+          >
+            {t(logOpen ? "detail.hideEventLog" : "detail.viewEventLog")}
+          </button>
+        </div>
+        <div id="paper-event-log">
+          {logOpen && (
+            <PaperEventJournal
+              key={sessionId}
+              sessionId={sessionId}
+              latestSequence={snapshot.last_sequence}
+            />
+          )}
+        </div>
+      </section>
     </>
+  );
+}
+
+function PaperEventJournal({
+  sessionId,
+  latestSequence,
+}: {
+  sessionId: string;
+  latestSequence: number;
+}) {
+  const { t } = useTranslation("paper");
+  const { t: researchT } = useTranslation("research");
+  const [cursors, setCursors] = useState<number[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [result, setResult] = useState<{
+    key: string;
+    events: PaperJournalEvent[];
+    hasOlder: boolean;
+    failed: boolean;
+  } | null>(null);
+  const beforeSequence = cursors.at(-1);
+  const requestKey = `${sessionId}:${beforeSequence ?? "latest"}:${refreshKey}`;
+  const loading = result?.key !== requestKey;
+  const events = loading ? [] : result.events;
+  const failed = !loading && result.failed;
+  const hasOlder = !loading && result.hasOlder;
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let current = true;
+    void paperApi
+      .events(sessionId, beforeSequence, controller.signal)
+      .then((page) => {
+        if (!current) return;
+        setResult({
+          key: requestKey,
+          events: page.slice(0, 50),
+          hasOlder: page.length > 50,
+          failed: false,
+        });
+      })
+      .catch(() => {
+        if (current)
+          setResult({
+            key: requestKey,
+            events: [],
+            hasOlder: false,
+            failed: true,
+          });
+      });
+    return () => {
+      current = false;
+      controller.abort();
+    };
+  }, [sessionId, beforeSequence, requestKey]);
+
+  const description = (event: PaperJournalEvent) => {
+    const payload = event.payload;
+    if (event.type === "session.status")
+      return t(`common:statuses.${String(payload.status)}`);
+    if (event.type === "market.bar") return String(payload.symbol);
+    if (event.type === "market.session") return String(payload.trading_date);
+    if (event.type === "signal.created")
+      return `${String(payload.symbol)} · ${t(`detail.directions.${String(payload.signal_type)}`, { defaultValue: String(payload.signal_type) })}`;
+    if (event.type === "risk.decision")
+      return `${payload.approved ? t("detail.approved") : t("detail.riskRejected")} · ${t(`detail.riskReasons.${String(payload.reason_code)}`, { defaultValue: String(payload.reason_code) })}`;
+    if (event.type === "order.updated")
+      return `${shortId(String(payload.order_id))} · ${t(`detail.orderStatuses.${String(payload.status)}`, { defaultValue: String(payload.status) })} · ${String(payload.symbol)}`;
+    if (event.type === "fill.created")
+      return `${shortId(String(payload.order_id))} · ${String(payload.quantity)} ${String(payload.symbol)} @ ${String(payload.price)}`;
+    return t("detail.eventEquity", { equity: String(payload.equity) });
+  };
+
+  return (
+    <div aria-busy={loading}>
+      <p className="stateCallout">{t("detail.eventLogSaved")}</p>
+      {loading ? (
+        <LoadingPanel label={t("detail.eventLog")} />
+      ) : failed ? (
+        <p className="stateCallout" role="alert">
+          {t("detail.eventLogError")}
+        </p>
+      ) : events.length === 0 ? (
+        <p className="emptyState">{t("detail.noEvents")}</p>
+      ) : (
+        <div
+          className="tableScroll"
+          role="region"
+          tabIndex={0}
+          aria-label={`${t("detail.eventLog")} — ${researchT("scrollTable")}`}
+        >
+          <table aria-label={t("detail.eventLog")}>
+            <thead>
+              <tr>
+                <th scope="col">{t("detail.eventSequence")}</th>
+                <th scope="col">{t("detail.utcTime")}</th>
+                <th scope="col">{t("detail.eventType")}</th>
+                <th scope="col">{t("detail.eventSummary")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map((event) => (
+                <tr key={event.sequence}>
+                  <th scope="row">{event.sequence}</th>
+                  <td>{formatUtc(event.occurred_at)}</td>
+                  <td>{t(`detail.eventTypes.${event.type}`)}</td>
+                  <td>{description(event)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <div
+        className="pagination"
+        role="group"
+        aria-label={t("detail.eventLog")}
+      >
+        <span aria-live="polite">
+          {loading
+            ? t("detail.eventLogLoading")
+            : events.length > 0
+              ? t("detail.eventLogRange", {
+                  newest: events[0]!.sequence,
+                  oldest: events.at(-1)!.sequence,
+                })
+              : ""}
+          {cursors.length === 0 &&
+            events.length > 0 &&
+            latestSequence > events[0]!.sequence &&
+            ` · ${t("detail.newEventsAvailable")}`}
+        </span>
+        <button
+          type="button"
+          disabled={loading}
+          onClick={() => {
+            setCursors([]);
+            setRefreshKey((key) => key + 1);
+          }}
+        >
+          {t("detail.refreshEvents")}
+        </button>
+        <button
+          type="button"
+          disabled={loading || cursors.length === 0}
+          onClick={() => setCursors((current) => current.slice(0, -1))}
+        >
+          {t("detail.newerEvents")}
+        </button>
+        <button
+          type="button"
+          disabled={loading || !hasOlder || events.length === 0}
+          onClick={() =>
+            setCursors((current) => [...current, events.at(-1)!.sequence])
+          }
+        >
+          {t("detail.olderEvents")}
+        </button>
+      </div>
+    </div>
   );
 }
 

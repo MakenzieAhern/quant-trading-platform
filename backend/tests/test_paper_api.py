@@ -215,6 +215,59 @@ async def test_create_idempotency_validation_and_safe_lookup(client: AsyncClient
         assert (await client.post("/api/paper-trading/sessions", json=invalid)).status_code == 422
 
 
+async def test_event_history_pages_preserve_order_transitions(client: AsyncClient) -> None:
+    created = await client.post("/api/paper-trading/sessions", json=request_body())
+    session_id = UUID(created.json()["session_id"])
+    order_id = uuid4()
+    timestamp = datetime.now(UTC)
+    order = {
+        "order_id": str(order_id),
+        "strategy_id": "pagination-check",
+        "symbol": "AAPL",
+        "side": "BUY",
+        "order_type": "MARKET",
+        "quantity": "10",
+        "price": None,
+        "created_at": timestamp.isoformat(),
+    }
+    async with SessionFactory() as db:
+        await SQLAlchemyPaperRepository(db).append_events(
+            session_id,
+            tuple(
+                ("order.updated", timestamp, {**order, "status": status})
+                for status in ("CREATED", "ACCEPTED", "FILLED")
+            ),
+        )
+
+    path = f"/api/paper-trading/sessions/{session_id}/events"
+    full = await client.get(path)
+    assert full.status_code == 200
+    assert [event["sequence"] for event in full.json()] == [1, 2, 3, 4]
+    assert [event["payload"]["status"] for event in full.json()[1:]] == [
+        "CREATED",
+        "ACCEPTED",
+        "FILLED",
+    ]
+    recent = await client.get(path, params={"limit": 2})
+    assert [event["sequence"] for event in recent.json()] == [4, 3]
+    assert [event["payload"]["status"] for event in recent.json()] == [
+        "FILLED",
+        "ACCEPTED",
+    ]
+    older = await client.get(path, params={"limit": 2, "before_sequence": 3})
+    assert [event["sequence"] for event in older.json()] == [2, 1]
+    before_only = await client.get(path, params={"before_sequence": 4})
+    assert [event["sequence"] for event in before_only.json()] == [3, 2, 1]
+    assert (await client.get(path, params={"before_sequence": 1})).json() == []
+    for params in (
+        {"limit": 0},
+        {"limit": 201},
+        {"before_sequence": 0},
+        {"before_sequence": 2147483648},
+    ):
+        assert (await client.get(path, params=params)).status_code == 422
+
+
 async def test_create_receipt_finds_committed_session_after_request_validation_fails(
     client: AsyncClient,
 ) -> None:

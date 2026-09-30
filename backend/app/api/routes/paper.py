@@ -180,9 +180,20 @@ async def pause_paper_session(session_id: UUID) -> PaperSessionResponse:
 
 
 @router.get("/{session_id}/events", response_model=list[PaperEventResponse])
-async def get_paper_events(session_id: UUID) -> list[PaperEventResponse]:
+async def get_paper_events(
+    session_id: UUID,
+    limit: Annotated[int | None, Query(ge=1, le=200)] = None,
+    before_sequence: Annotated[int | None, Query(ge=1, le=2147483647)] = None,
+) -> list[PaperEventResponse]:
     await _require_session(session_id)
-    return [_event_response(item) for item in await paper_manager.events(session_id)]
+    if before_sequence is not None and limit is None:
+        limit = 200
+    return [
+        _event_response(item)
+        for item in await paper_manager.events(
+            session_id, limit=limit, before_sequence=before_sequence
+        )
+    ]
 
 
 @router.get("/{session_id}/snapshot", response_model=PaperSnapshotResponse)
