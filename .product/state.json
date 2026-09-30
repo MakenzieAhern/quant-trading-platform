@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T23:16:17Z",
+  "updated_at_utc": "2026-09-30T23:20:54Z",
   "m4_sidebar_short_viewport_20261001_gate": {
-    "status": "PASS_BOUNDED_CSS_REGRESSION_NOT_NATIVE_ZOOM_OR_FULL_M4_M5",
+    "status": "PASS_BOUNDED_IAB_SHORT_VIEWPORT_NOT_NATIVE_ZOOM_OR_FULL_M4_M5",
     "parent_head": "6b2ba0a",
-    "proof": "2026-09-30 23:16 UTC: fixed sidebar now permits vertical overflow on short viewports. Focused CSS regression failed red and passed green; isolated make test passed backend 1033 with one optional archive skip and frontend 532/532 across 40 files, make lint and make build passed. Original Compose PostgreSQL, Redis and backend healthy, frontend/API HTTP 200. Independent read-only review found no obvious normal-height regression. See docs/product/ACCEPTANCE.md.",
-    "limits": "Static CSS rule and local test only; actual browser 200-percent zoom, keyboard reachability, native screen-reader, full M4/M5 and hosted exact-head CI unverified. No original account/data, frozen research/OOS or GitHub write."
+    "proof": "2026-09-30 23:16-23:20 UTC: fixed sidebar now permits vertical overflow on short viewports. Focused CSS regression failed red and passed green; isolated make test passed backend 1033 with one optional archive skip and frontend 532/532 across 40 files, make lint and make build passed. Original Compose PostgreSQL, Redis and backend healthy, frontend/API HTTP 200. In an agent-owned in-app-browser tab at 640x400, the open sidebar was 832px tall inside 400px, Help and Settings began below the fold, and Tab navigation scrolled them fully into view at scrollTop 432 with no page horizontal overflow. Viewport reset and tab closed. Independent read-only review found no obvious normal-height regression. See docs/product/ACCEPTANCE.md.",
+    "limits": "One in-app-browser CSS short-viewport and keyboard path only; native browser 200-percent zoom, screen-reader speech, other sizes/locales/themes, full M4/M5 and hosted exact-head CI unverified. Browser zoom shortcuts had no measurable effect. No original account/data, frozen research/OOS or GitHub write."
   },
   "u3_unreadable_draft_20261001_gate": {
     "status": "PASS_BOUNDED_LOCAL_RECOVERY_NOT_FULL_U3_M4_M5",

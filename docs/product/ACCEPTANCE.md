@@ -6816,3 +6816,13 @@ bounded CSS guard, not proof of real-browser 200% zoom, keyboard scrolling
 or native screen-reader reachability; M4/M5 remain open. Independent read-only
 review found no obvious normal-height regression. No original account/data,
 frozen research/OOS, GitHub push, CI retry, merge, tag or release was changed.
+
+At 23:20 UTC an agent-owned in-app-browser tab used a temporary 640×400 CSS
+viewport. The open navigation had `scrollHeight=832`, `clientHeight=400`,
+computed `overflow-y: auto`; Help and Settings began below the fold. Eight
+Tab presses from the focused brand reached Help, a ninth reached Settings,
+and both became wholly visible at sidebar `scrollTop=432`. Document-level
+horizontal overflow was false. Escape closed navigation; viewport override
+was reset and the QA tab closed. Browser zoom shortcuts did not change the
+reported viewport or device-pixel ratio, so this does not establish native
+200% browser zoom or screen-reader speech.
