@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 18:32 UTC malformed deep-link recovery — bounded M4 fix
+
+Three percent-encoded URL segments were decoded directly during `App` render.
+The existing safe-route test failed red with `URIError` for malformed strategy,
+research-dataset and research-strategy links. One shared route-boundary decoder
+now leaves those paths on the bilingual Not Found page; valid route decoding and
+precedence remain unchanged. The six focused safe-route cases and full frontend
+suite (490/490) passed, as did `make lint`, `make build`, changed-file Prettier
+and an independent read-only diff review with no P1/P2 finding. Original four
+Compose services and frontend/API health remained up; no account, database,
+frozen research/OOS or provider action was taken.
+
+The in-app browser blocked deliberate malformed-URL navigation with its own
+client policy, so this is deterministic component evidence, **not** actual
+browser proof of the error page or complete M4 accessibility. Its separate
+local API navigation block does not establish an application API defect. A
+read-only GitHub account check still could not verify Actions recovery: the
+billing-usage endpoint returned HTTP 404 requesting additional account scope.
+No auth refresh, push, CI run, merge or release occurred. The October 1 date
+alone remains insufficient to release the remote hold.
+
 ## 2026-09-30 18:13 UTC mobile-to-desktop navigation focus — bounded M4 fix
 
 Independent read-only review found that crossing the mobile/desktop breakpoint

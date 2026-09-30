@@ -64,6 +64,14 @@ const ExperimentComparePage = lazy(() =>
   ),
 );
 
+function decodeRouteId(value: string): string | null {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return null;
+  }
+}
+
 export function App() {
   const { t } = useTranslation("navigation");
   const pathname = usePathname();
@@ -88,13 +96,11 @@ export function App() {
   else if (pathname === "/markets" || pathname === "/markets/")
     page = <MarketsPage />;
   else if (pathname === "/strategies") page = <ProductStrategiesPage />;
-  else if (pathname.startsWith("/strategies/"))
-    page = (
-      <ProductStrategiesPage
-        strategyId={decodeURIComponent(pathname.slice("/strategies/".length))}
-      />
-    );
-  else if (pathname === "/data") page = <DataCenterPage />;
+  else if (pathname.startsWith("/strategies/")) {
+    const strategyId = decodeRouteId(pathname.slice("/strategies/".length));
+    if (strategyId !== null)
+      page = <ProductStrategiesPage strategyId={strategyId} />;
+  } else if (pathname === "/data") page = <DataCenterPage />;
   else if (pathname === "/tasks") page = <TaskCenterPage />;
   else if (pathname === "/help") page = <HelpPage />;
   else if (pathname === "/settings") page = <SettingsPage />;
@@ -136,18 +142,15 @@ export function App() {
     page = (
       <ResearchRunPage key={researchRunMatch[1]} runId={researchRunMatch[1]} />
     );
-  else if (researchDatasetMatch?.[1])
-    page = (
-      <ResearchDatasetPage
-        datasetId={decodeURIComponent(researchDatasetMatch[1])}
-      />
-    );
-  else if (researchStrategyMatch?.[1])
-    page = (
-      <ResearchStrategyPage
-        strategyId={decodeURIComponent(researchStrategyMatch[1])}
-      />
-    );
+  else if (researchDatasetMatch?.[1]) {
+    const datasetId = decodeRouteId(researchDatasetMatch[1]);
+    if (datasetId !== null)
+      page = <ResearchDatasetPage datasetId={datasetId} />;
+  } else if (researchStrategyMatch?.[1]) {
+    const strategyId = decodeRouteId(researchStrategyMatch[1]);
+    if (strategyId !== null)
+      page = <ResearchStrategyPage strategyId={strategyId} />;
+  }
   return (
     <ProductDataProvider>
       <AppShell>

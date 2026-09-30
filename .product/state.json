@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T18:13:22Z",
+  "updated_at_utc": "2026-09-30T18:32:00Z",
+  "m4_malformed_deep_link_20261001_gate": {
+    "status": "PASS_BOUNDED_RED_GREEN_COMPONENT_NOT_ACTUAL_BROWSER_OR_FULL_M4",
+    "parent_head": "a88b66219d119dceb7a7f1bce31c3bc2e3bc8d1c",
+    "proof": "2026-09-30 18:32 UTC: three malformed percent-encoded strategy/research URL cases failed red with URIError during App render. A shared route-boundary decoder now leaves each on bilingual Not Found while preserving valid decoding and precedence. Focused safe-route 6/6 and full frontend 490/490 passed; make lint, make build, changed-file Prettier and independent read-only diff review with no P1/P2 passed. Original four Compose services remained up and frontend/API health HTTP 200. See docs/product/ACCEPTANCE.md.",
+    "limits": "In-app browser blocked malformed URL and local API direct navigation under client policy; no actual-browser malformed-route or native accessibility claim. No original account, DB, provider, frozen research/OOS, GitHub write or release action. Full M4/M5 and external gates remain open."
+  },
   "m4_mobile_resize_focus_20261001_gate": {
     "status": "PASS_BOUNDED_RED_GREEN_COMPONENT_NOT_NATIVE_200PCT_OR_FULL_M4",
     "parent_head": "f7d96231d7f4b4212affa06938861710b5036607",
@@ -989,6 +995,7 @@
     "estimated_recovery_date": "2026-10-01",
     "reported_wait": "user now estimates October 1; no exact recovery time independently verified",
     "actual_recovery_verified": false,
+    "last_readonly_check": "2026-09-30 UTC: MakenzieAhern gh authentication confirmed; one read-only personal Actions billing-usage query returned HTTP 404 requesting user scope. No scope refresh, CI run/poll/retry or remote write. Billing clearance and job admission remain unverified.",
     "policy": "Local date has reached October 1, but actual GitHub Actions recovery is not independently confirmed. Hold ALL push, CI retries/polling, merge and release until actual recovery; estimated date is not proof. Continue safe local work. Exact-head CI required afterward; no payment, limit change or gate bypass."
   },
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",

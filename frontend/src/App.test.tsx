@@ -476,25 +476,27 @@ describe("routing", () => {
     expect(fetch).toHaveBeenCalledTimes(3);
   });
 
-  it.each(["/unknown", "/backtests/not-a-uuid", "/backtests/1234"])(
-    "fails safely for %s",
-    async (pathname) => {
-      window.history.replaceState({}, "", pathname);
-      vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
-      render(<App />);
-      expect(
-        screen.getByRole("heading", { name: "Page not found" }),
-      ).toBeInTheDocument();
-      expect(
-        await screen.findByText("Service online", {
-          selector: ".serviceText",
-        }),
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByTitle("development · paper"),
-      ).not.toBeInTheDocument();
-    },
-  );
+  it.each([
+    "/unknown",
+    "/backtests/not-a-uuid",
+    "/backtests/1234",
+    "/strategies/%",
+    "/research/a-share/datasets/%",
+    "/research/a-share/strategies/%",
+  ])("fails safely for %s", async (pathname) => {
+    window.history.replaceState({}, "", pathname);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    expect(
+      screen.getByRole("heading", { name: "Page not found" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText("Service online", {
+        selector: ".serviceText",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByTitle("development · paper")).not.toBeInTheDocument();
+  });
 
   it("supports a direct detail URL and shows a safe 404 state", async () => {
     window.history.replaceState({}, "", `/backtests/${RUN_ID}`);
