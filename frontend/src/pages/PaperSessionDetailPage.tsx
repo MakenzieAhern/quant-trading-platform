@@ -272,7 +272,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           <strong>{formatUtc(session.stopped_at)}</strong>
         </div>
       </section>
-      {session.error_message && (
+      {(session.error_message ||
+        session.status === "FAILED" ||
+        session.status === "INTERRUPTED") && (
         <section className="stateCallout failedCallout" role="alert">
           <h2>{t("detail.failedTitle")}</h2>
           <p>
@@ -282,13 +284,18 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
                 : "detail.failedHelp",
             )}
           </p>
-          <Link className="button" href="/paper/new">
+          <Link
+            className="button"
+            href={`/paper/new?from_session=${encodeURIComponent(session.session_id)}`}
+          >
             {t("detail.createAgain")}
           </Link>
-          <details>
-            <summary>{t("detail.auditError")}</summary>
-            <code>{session.error_message}</code>
-          </details>
+          {session.error_message && (
+            <details>
+              <summary>{t("detail.auditError")}</summary>
+              <code>{session.error_message}</code>
+            </details>
+          )}
         </section>
       )}
       <section className="panel">

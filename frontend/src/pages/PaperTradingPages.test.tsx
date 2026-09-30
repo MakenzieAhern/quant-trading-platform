@@ -19,6 +19,7 @@ import { PAPER_ID, paperSession, paperSnapshot } from "../test/paperFixtures";
 import { CreatePaperSessionPage } from "./CreatePaperSessionPage";
 import {
   PAPER_CREATE_PENDING_PREFIX,
+  confirmPaperCreate,
   preparePaperCreate,
 } from "./paperCreateRecovery";
 import { PaperSessionDetailPage } from "./PaperSessionDetailPage";
@@ -2928,12 +2929,276 @@ describe("paper trading pages", () => {
       );
       expect(
         screen.getByRole("link", { name: "创建新模拟会话" }),
-      ).toHaveAttribute("href", "/paper/new");
+      ).toHaveAttribute("href", `/paper/new?from_session=${PAPER_ID}`);
       expect(
         screen.getByText("Paper runtime interrupted by backend shutdown."),
       ).not.toBeVisible();
     } finally {
       await act(async () => i18n.changeLanguage("en-US"));
+    }
+  });
+
+  it("offers a configuration-preserving retry for an interrupted session without a stored diagnostic", async () => {
+    installWebSocket();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse(paperSnapshot("INTERRUPTED")),
+    );
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    expect(
+      await screen.findByRole("link", { name: "Create another paper session" }),
+    ).toHaveAttribute("href", `/paper/new?from_session=${PAPER_ID}`);
+    expect(
+      screen.queryByText("Original diagnostic (audit)"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("copies an interrupted historical account into a new independent form without changing its ledger", async () => {
+    window.history.replaceState({}, "", `/paper/new?from_session=${PAPER_ID}`);
+    const source = {
+      ...paperSession("INTERRUPTED"),
+      provider_type: "historical_a_share" as const,
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      symbol: "CN-A",
+      strategy_type: "cn_a_cross_sectional_momentum_low_vol_v1" as const,
+      strategy_parameters: {
+        start_date: "2011-03-01",
+        end_date: "2011-03-23",
+        rebalance_sessions: 23,
+        maximum_holdings: 12,
+        max_position_weight: "0.08",
+        universe: "SZSE",
+        commission_rate: "0.0007",
+        minimum_commission: "7",
+        dataset_sha256: "a".repeat(64),
+        plan_version: "PAPER_ACCOUNT_PLAN_V3",
+      },
+      initial_cash: "123456.789000000000001",
+      default_order_quantity: "1",
+      risk: {
+        enforce_buying_power: true,
+        max_leverage: "1",
+        max_drawdown: "-0.35",
+        allow_limit_orders: false,
+        max_order_notional: null,
+      },
+    };
+    vi.spyOn(paperApi, "get").mockResolvedValue(source);
+    const create = vi.spyOn(paperApi, "create").mockResolvedValue({
+      ...source,
+      session_id: "c9c01cd0-425e-4cf0-9ae4-ad76501025a6",
+      status: "CREATED",
+    });
+    try {
+      render(<CreatePaperSessionPage />);
+      expect(
+        await screen.findByText(/Settings copied from paper session/),
+      ).toBeVisible();
+      expect(screen.getByLabelText("Provider")).toHaveValue(
+        "historical_a_share",
+      );
+      expect(screen.getByLabelText("Provider")).toBeDisabled();
+      expect(screen.getByLabelText("Initial cash")).toHaveValue(
+        "123456.789000000000001",
+      );
+      expect(screen.getByLabelText("Start date")).toHaveValue("2011-03-01");
+      expect(screen.getByLabelText("End date")).toHaveValue("2011-03-23");
+      await userEvent.click(
+        screen.getByText("Strategy, universe and cost settings"),
+      );
+      expect(screen.getByLabelText("Share universe")).toHaveValue("SZSE");
+      expect(
+        screen.getByLabelText("Drawdown risk limit (negative fraction)"),
+      ).toHaveValue("-0.35");
+      expect(create).not.toHaveBeenCalled();
+      await userEvent.click(
+        screen.getByRole("button", { name: "Create paper session" }),
+      );
+      await waitFor(() => expect(create).toHaveBeenCalledOnce());
+      expect(create.mock.calls[0]?.[0]).toMatchObject({
+        provider_type: "historical_a_share",
+        initial_cash: "123456.789000000000001",
+        strategy: {
+          parameters: {
+            start_date: "2011-03-01",
+            end_date: "2011-03-23",
+            rebalance_sessions: 23,
+            maximum_holdings: 12,
+            universe: "SZSE",
+            commission_rate: "0.0007",
+            minimum_commission: "7",
+          },
+        },
+        risk: { max_drawdown: "-0.35" },
+      });
+      expect(create.mock.calls[0]?.[0].strategy.parameters).not.toHaveProperty(
+        "dataset_sha256",
+      );
+      expect(create.mock.calls[0]?.[0].strategy.parameters).not.toHaveProperty(
+        "plan_version",
+      );
+      expect(paperApi.get).toHaveBeenCalledWith(PAPER_ID, expect.anything());
+    } finally {
+      window.history.replaceState({}, "", "/paper/new");
+    }
+  });
+
+  it("copies replay settings without creating an account until explicit submission", async () => {
+    window.history.replaceState({}, "", `/paper/new?from_session=${PAPER_ID}`);
+    const source = {
+      ...paperSession("FAILED"),
+      strategy_parameters: { short_period: 7, long_period: 30 },
+      initial_cash: "76543.21",
+      default_order_quantity: "3.5",
+    };
+    vi.spyOn(paperApi, "get").mockResolvedValue(source);
+    const create = vi.spyOn(paperApi, "create");
+    try {
+      render(<CreatePaperSessionPage />);
+      expect(
+        await screen.findByText(/Settings copied from paper session/),
+      ).toBeVisible();
+      expect(screen.getByLabelText("Provider")).toHaveValue("replay");
+      expect(screen.getByLabelText("Initial cash")).toHaveValue("76543.21");
+      expect(screen.getByLabelText("Order quantity")).toHaveValue("3.5");
+      expect(screen.getByLabelText("Short period")).toHaveValue(7);
+      expect(screen.getByLabelText("Long period")).toHaveValue(30);
+      expect(create).not.toHaveBeenCalled();
+    } finally {
+      window.history.replaceState({}, "", "/paper/new");
+    }
+  });
+
+  it("uses a fresh idempotency key when copying after a confirmed paper account", async () => {
+    window.history.replaceState({}, "", `/paper/new?from_session=${PAPER_ID}`);
+    const source = paperSession("FAILED");
+    const prior = preparePaperCreate({
+      provider_type: "replay",
+      dataset_id: "AAPL_fixture",
+      symbol: "AAPL",
+      strategy: {
+        type: "moving_average_crossover",
+        parameters: { short_period: 2, long_period: 3 },
+      },
+      initial_cash: source.initial_cash,
+      default_order_quantity: source.default_order_quantity,
+      risk: { enforce_buying_power: true },
+    });
+    confirmPaperCreate(prior, PAPER_ID);
+    vi.spyOn(paperApi, "get").mockResolvedValue(source);
+    const receipt = vi.spyOn(paperApi, "receipt").mockResolvedValue(source);
+    const create = vi.spyOn(paperApi, "create").mockResolvedValue({
+      ...source,
+      session_id: "c9c01cd0-425e-4cf0-9ae4-ad76501025a6",
+      status: "CREATED",
+    });
+    try {
+      render(<CreatePaperSessionPage />);
+      await screen.findByText(/Settings copied from paper session/);
+      await userEvent.click(
+        screen.getByRole("button", { name: "Create paper session" }),
+      );
+      await waitFor(() => expect(create).toHaveBeenCalledOnce());
+      expect(receipt).toHaveBeenCalledWith(prior.key);
+      expect(create.mock.calls[0]?.[1]).not.toBe(prior.key);
+    } finally {
+      window.history.replaceState({}, "", "/paper/new");
+    }
+  });
+
+  it("does not reuse an unresolved paper request when copying a terminal account", async () => {
+    window.history.replaceState({}, "", `/paper/new?from_session=${PAPER_ID}`);
+    const source = paperSession("INTERRUPTED");
+    preparePaperCreate({
+      provider_type: "replay",
+      dataset_id: "AAPL_fixture",
+      symbol: "AAPL",
+      strategy: {
+        type: "moving_average_crossover",
+        parameters: { short_period: 2, long_period: 3 },
+      },
+      initial_cash: source.initial_cash,
+      default_order_quantity: source.default_order_quantity,
+      risk: { enforce_buying_power: true },
+    });
+    vi.spyOn(paperApi, "get").mockResolvedValue(source);
+    const create = vi.spyOn(paperApi, "create");
+    try {
+      render(<CreatePaperSessionPage />);
+      await screen.findByText(/Settings copied from paper session/);
+      await userEvent.click(
+        screen.getByRole("button", { name: "Create paper session" }),
+      );
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "A saved creation already exists",
+      );
+      expect(create).not.toHaveBeenCalled();
+    } finally {
+      window.history.replaceState({}, "", "/paper/new");
+    }
+  });
+
+  it("refuses paper source settings the form cannot preserve", async () => {
+    window.history.replaceState({}, "", `/paper/new?from_session=${PAPER_ID}`);
+    vi.spyOn(paperApi, "get").mockResolvedValue({
+      ...paperSession("INTERRUPTED"),
+      risk: { enforce_buying_power: true, max_order_notional: "100" },
+    });
+    const create = vi.spyOn(paperApi, "create");
+    try {
+      render(<CreatePaperSessionPage />);
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "cannot safely configure a new account",
+      );
+      expect(screen.queryByLabelText("Provider")).not.toBeInTheDocument();
+      expect(create).not.toHaveBeenCalled();
+    } finally {
+      window.history.replaceState({}, "", "/paper/new");
+    }
+  });
+
+  it("rejects ambiguous or mismatched paper sources without using a default account", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      `/paper/new?from_session=${PAPER_ID}&from_experiment=${job.job_id}`,
+    );
+    const get = vi.spyOn(paperApi, "get");
+    try {
+      const page = render(<CreatePaperSessionPage />);
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "cannot safely configure a new account",
+      );
+      expect(get).not.toHaveBeenCalled();
+      page.unmount();
+      window.history.replaceState(
+        {},
+        "",
+        `/paper/new?from_session=${PAPER_ID}`,
+      );
+      get.mockResolvedValue({
+        ...paperSession("INTERRUPTED"),
+        session_id: "f86a98c6-16ad-44c5-822e-f20404173142",
+      });
+      const mismatchedPage = render(<CreatePaperSessionPage />);
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "cannot safely configure a new account",
+      );
+      expect(screen.queryByLabelText("Provider")).not.toBeInTheDocument();
+      mismatchedPage.unmount();
+      window.history.replaceState(
+        {},
+        "",
+        `/paper/new?from_session=${PAPER_ID.toUpperCase()}`,
+      );
+      get.mockResolvedValue(paperSession("INTERRUPTED"));
+      render(<CreatePaperSessionPage />);
+      expect(
+        await screen.findByText(/Settings copied from paper session/),
+      ).toBeVisible();
+      expect(get).toHaveBeenCalledWith(PAPER_ID, expect.anything());
+    } finally {
+      window.history.replaceState({}, "", "/paper/new");
     }
   });
 

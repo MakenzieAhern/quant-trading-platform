@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 22:07 UTC local operation and terminal paper-session recovery
+
+GitHub-hosted Actions is still unverified for the current local code; October 1
+is a user estimate, not a CI PASS. The original WSL Compose PostgreSQL, Redis
+and backend remained healthy, frontend remained up, and Windows-host
+`localhost:5173/` plus `/api/health` both returned HTTP 200. Local execution
+can continue without CI/CD; the exact pushed-head hosted CI, review and release
+gates cannot be replaced by local checks.
+
+A failed or interrupted paper session's "Create another" link previously dropped its
+configuration and opened the default synthetic demo. It now carries a validated
+source ID, fetches the persisted settings, and prefills only settings the form
+can faithfully represent, even if the interrupted status has no diagnostic
+message. Ambiguous/mismatched/unsupported sources fail closed;
+server-only historical dataset checksum and plan version are not sent in a new
+request. The new account is independent, uses the currently accepted dataset,
+leaves the original ledger read-only, and is never submitted or started by
+navigation. Existing confirmed receipts are verified before a fresh
+idempotency key; unresolved requests still block creation. Red regressions for
+the old link/default form passed green with the fix. `make test` passed backend
+1033 plus one optional unmounted-archive skip and final frontend 512/512 across 39
+files. `make lint`, TypeScript, production build, changed-file Prettier and
+diff check passed. Actual Chrome on existing stopped historical session
+`d7044a3c` displayed the original historical mode, cash, dates, risk/cost
+settings and bilingual independent-account warning. The browser did not click
+Create; no original account or financial data was changed.
+
+This is bounded U7 usability and local QA, not recovered pre-loss paper ledgers,
+new lawful market data, independent physical backup, full U7/M4/M5 acceptance,
+native screen-reader/200% zoom, or exact-head GitHub CI. No push, merge, tag,
+release, frozen-dataset, methodology or Official OOS action occurred.
+
 ## 2026-09-30 21:11 UTC task-center pagination names — bounded U8/M4 check
 
 Local code commit `596ad3d` gives the research and raw-data task pagers

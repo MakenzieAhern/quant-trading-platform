@@ -257,6 +257,13 @@ export const enUS = {
       sourceChooseDates:
         "The study exceeds the 93-calendar-day replay limit. Choose the start date explicitly before creating this separate account.",
       sourceIndependent: "Start an independent account instead",
+      sessionSourceLoading: "saved paper session settings",
+      sessionSourceUnavailable:
+        "This paper session cannot safely configure a new account. Review the original session or start independently.",
+      sessionSourceList: "Return to paper sessions",
+      sessionSourceReview:
+        "Settings copied from paper session for review. This will create a new independent account using the currently accepted dataset; the original ledger stays read-only. No account or order has been created or restarted.",
+      sessionSourceOriginal: "Review original session",
       startDate: "Start date",
       endDate: "End date",
       historicalAdvanced: "Strategy, universe and cost settings",

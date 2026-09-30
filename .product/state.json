@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-09-30T21:38:00Z",
+  "updated_at_utc": "2026-09-30T22:07:00Z",
+  "u7_terminal_paper_copy_20261001_gate": {
+    "status": "PASS_BOUNDED_LOCAL_RED_GREEN_AND_CHROME_NOT_FULL_U7_M4_M5",
+    "parent_head": "7f637906c9c5b9c68f003621d291a2701f3676c0",
+    "proof": "2026-09-30 22:07 UTC: failed/interrupted paper recovery link carries a validated source ID even without a diagnostic; supported saved settings prefill an independent account, while ambiguous/mismatched/unsupported settings fail closed. Historical server-only checksum/plan metadata are not posted; confirmed receipts require verification before a fresh key, unresolved requests block. Red/green regressions passed. Isolated make test: backend 1033 passed/one optional unmounted-archive skip; final frontend 512/512 across 39 files. make lint, TypeScript, production build, changed-file Prettier and diff check passed. Actual Chrome on existing stopped historical session d7044a3c showed historical mode, cash, dates, cost/risk settings and EN/ZH independent-account warning without Create. Windows-host frontend and API health HTTP 200; see docs/product/ACCEPTANCE.md.",
+    "limits": "Bounded local U7 usability, not original lost-ledger restoration, actual new-account creation in browser, full U7/M4/M5/native screen-reader/200pct zoom, lawful after-start data, independent backup or exact pushed-head hosted CI. October 1 GitHub recovery remains an unverified user estimate. No original financial account/data/frozen/OOS write, push, merge, tag or release."
+  },
   "u8_form_boundary_contrast_20261001_gate": {
     "status": "PASS_BOUNDED_RED_GREEN_AND_IN_APP_BROWSER_NOT_FULL_U8_M4_M5",
     "parent_head": "72a271ca6b039acec726f5c99d2f7318cff0b743",

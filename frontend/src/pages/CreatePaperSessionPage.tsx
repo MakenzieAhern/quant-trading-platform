@@ -16,7 +16,7 @@ import { useApiResource } from "../hooks/useApiResource";
 import { experimentApi } from "../product/experiments/api";
 import { canUsePaperHandoff } from "../product/experiments/paperHandoff";
 import type { Experiment } from "../product/experiments/types";
-import type { CreatePaperSessionRequest } from "../types/paper";
+import type { CreatePaperSessionRequest, PaperSession } from "../types/paper";
 import {
   comparePositiveDecimals,
   isPositiveDecimal,
@@ -41,6 +41,188 @@ type ReplayRequest = Extract<
 >;
 type StrategyType = ReplayRequest["strategy"]["type"];
 type ProviderType = CreatePaperSessionRequest["provider_type"];
+
+const uuidPattern =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const decimalPattern = /^\d+(?:\.\d+)?$/;
+
+function copiedPaperRequest(
+  source: PaperSession,
+): CreatePaperSessionRequest | null {
+  if (
+    !["STOPPED", "FAILED", "INTERRUPTED"].includes(source.status) ||
+    !isPositiveDecimal(source.initial_cash) ||
+    !isPositiveDecimal(source.default_order_quantity)
+  )
+    return null;
+  const risk = source.risk;
+  const supportedRisk = new Set([
+    "max_order_notional",
+    "max_position_quantity",
+    "max_symbol_exposure",
+    "max_gross_exposure",
+    "max_leverage",
+    "enforce_buying_power",
+    "max_drawdown",
+    "allow_limit_orders",
+  ]);
+  if (
+    Object.keys(risk).some((key) => !supportedRisk.has(key)) ||
+    [
+      risk.max_order_notional,
+      risk.max_position_quantity,
+      risk.max_symbol_exposure,
+      risk.max_gross_exposure,
+    ].some((value) => value != null) ||
+    risk.enforce_buying_power !== true ||
+    (risk.allow_limit_orders !== undefined && risk.allow_limit_orders !== false)
+  )
+    return null;
+
+  const parameters = source.strategy_parameters;
+  if (source.provider_type === "historical_a_share") {
+    const supported = new Set([
+      "start_date",
+      "end_date",
+      "rebalance_sessions",
+      "maximum_holdings",
+      "max_position_weight",
+      "universe",
+      "commission_rate",
+      "minimum_commission",
+      "dataset_sha256", // Server provenance is resolved again for the new account.
+      "plan_version",
+    ]);
+    if (
+      source.dataset_id !== "cn-a-research-20100101-20251231-v1" ||
+      source.symbol !== "CN-A" ||
+      source.strategy_type !== "cn_a_cross_sectional_momentum_low_vol_v1" ||
+      source.default_order_quantity !== "1" ||
+      risk.max_leverage !== "1" ||
+      typeof risk.max_drawdown !== "string" ||
+      Object.keys(parameters).some((key) => !supported.has(key)) ||
+      typeof parameters.start_date !== "string" ||
+      typeof parameters.end_date !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(parameters.start_date) ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(parameters.end_date) ||
+      !Number.isFinite(Date.parse(parameters.start_date)) ||
+      !Number.isFinite(Date.parse(parameters.end_date)) ||
+      !Number.isSafeInteger(parameters.rebalance_sessions) ||
+      !Number.isSafeInteger(parameters.maximum_holdings) ||
+      typeof parameters.max_position_weight !== "string" ||
+      !isPositiveDecimal(parameters.max_position_weight) ||
+      !["ALL", "SSE", "SZSE"].includes(String(parameters.universe)) ||
+      typeof parameters.commission_rate !== "string" ||
+      !decimalPattern.test(parameters.commission_rate) ||
+      typeof parameters.minimum_commission !== "string" ||
+      !decimalPattern.test(parameters.minimum_commission)
+    )
+      return null;
+    return {
+      provider_type: "historical_a_share",
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      symbol: "CN-A",
+      strategy: {
+        type: "cn_a_cross_sectional_momentum_low_vol_v1",
+        parameters: {
+          start_date: parameters.start_date,
+          end_date: parameters.end_date,
+          rebalance_sessions: parameters.rebalance_sessions as number,
+          maximum_holdings: parameters.maximum_holdings as number,
+          max_position_weight: parameters.max_position_weight,
+          universe: parameters.universe as "ALL" | "SSE" | "SZSE",
+          commission_rate: parameters.commission_rate,
+          minimum_commission: parameters.minimum_commission,
+        },
+      },
+      initial_cash: source.initial_cash,
+      default_order_quantity: "1",
+      risk: {
+        enforce_buying_power: true,
+        max_leverage: "1",
+        max_drawdown: risk.max_drawdown,
+      },
+    };
+  }
+  if (risk.max_leverage != null || risk.max_drawdown != null) return null;
+  if (source.provider_type === "simulated_a_share") {
+    if (
+      source.dataset_id !== "CN_A_SIMULATED_PAPER_FIXTURE_V1" ||
+      source.symbol !== "CN-A" ||
+      source.strategy_type !== "cn_a_cross_sectional_momentum_low_vol_v1" ||
+      source.default_order_quantity !== "1" ||
+      Object.keys(parameters).length !== 0
+    )
+      return null;
+    return {
+      provider_type: "simulated_a_share",
+      dataset_id: "CN_A_SIMULATED_PAPER_FIXTURE_V1",
+      symbol: "CN-A",
+      strategy: {
+        type: "cn_a_cross_sectional_momentum_low_vol_v1",
+        parameters: {},
+      },
+      initial_cash: source.initial_cash,
+      default_order_quantity: "1",
+      risk: { enforce_buying_power: true },
+    };
+  }
+  if (source.dataset_id !== "AAPL_fixture" || source.symbol !== "AAPL")
+    return null;
+  if (source.strategy_type === "moving_average_crossover") {
+    if (
+      Object.keys(parameters).some(
+        (key) => key !== "short_period" && key !== "long_period",
+      ) ||
+      !Number.isSafeInteger(parameters.short_period) ||
+      !Number.isSafeInteger(parameters.long_period)
+    )
+      return null;
+    return {
+      provider_type: "replay",
+      dataset_id: "AAPL_fixture",
+      symbol: "AAPL",
+      strategy: {
+        type: "moving_average_crossover",
+        parameters: {
+          short_period: parameters.short_period as number,
+          long_period: parameters.long_period as number,
+        },
+      },
+      initial_cash: source.initial_cash,
+      default_order_quantity: source.default_order_quantity,
+      risk: { enforce_buying_power: true },
+    };
+  }
+  if (
+    source.strategy_type !== "rsi_mean_reversion" ||
+    Object.keys(parameters).some(
+      (key) => !["rsi_period", "oversold", "overbought"].includes(key),
+    ) ||
+    !Number.isSafeInteger(parameters.rsi_period) ||
+    typeof parameters.oversold !== "string" ||
+    typeof parameters.overbought !== "string" ||
+    !decimalPattern.test(parameters.oversold) ||
+    !decimalPattern.test(parameters.overbought)
+  )
+    return null;
+  return {
+    provider_type: "replay",
+    dataset_id: "AAPL_fixture",
+    symbol: "AAPL",
+    strategy: {
+      type: "rsi_mean_reversion",
+      parameters: {
+        rsi_period: parameters.rsi_period as number,
+        oversold: parameters.oversold,
+        overbought: parameters.overbought,
+      },
+    },
+    initial_cash: source.initial_cash,
+    default_order_quantity: source.default_order_quantity,
+    risk: { enforce_buying_power: true },
+  };
+}
 
 export function CreatePaperSessionPage() {
   const { t } = useTranslation("paper");
@@ -315,21 +497,35 @@ function PaperSessionCreationContent({
   const sourceId = new URLSearchParams(window.location.search).get(
     "from_experiment",
   );
+  const sessionId = new URLSearchParams(window.location.search).get(
+    "from_session",
+  );
   const validSourceId =
-    sourceId &&
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      sourceId,
-    )
-      ? sourceId
-      : null;
+    sourceId && uuidPattern.test(sourceId) ? sourceId : null;
+  const validSessionId =
+    sessionId && uuidPattern.test(sessionId) ? sessionId.toLowerCase() : null;
   const source = useApiResource(
     (signal) =>
-      validSourceId
+      validSourceId && !sessionId
         ? experimentApi.get(validSourceId, signal)
         : Promise.resolve(null),
-    [validSourceId],
+    [validSourceId, sessionId],
+  );
+  const paperSource = useApiResource(
+    (signal) =>
+      validSessionId && !sourceId
+        ? paperApi.get(validSessionId, signal)
+        : Promise.resolve(null),
+    [validSessionId, sourceId],
   );
   const { t } = useTranslation("paper");
+  if (sessionId && (sourceId || !validSessionId))
+    return (
+      <p role="alert">
+        {t("createPage.sessionSourceUnavailable")}{" "}
+        <Link href="/paper">{t("createPage.sessionSourceList")}</Link>
+      </p>
+    );
   if (sourceId && !validSourceId)
     return (
       <p role="alert">
@@ -339,6 +535,8 @@ function PaperSessionCreationContent({
     );
   if (validSourceId && source.loading)
     return <LoadingPanel label={t("createPage.sourceLoading")} />;
+  if (validSessionId && paperSource.loading)
+    return <LoadingPanel label={t("createPage.sessionSourceLoading")} />;
   if (validSourceId && source.error)
     return (
       <ErrorPanel
@@ -346,6 +544,16 @@ function PaperSessionCreationContent({
         notFoundReturn={{
           href: "/experiments",
           label: t("createPage.sourceList"),
+        }}
+      />
+    );
+  if (validSessionId && paperSource.error)
+    return (
+      <ErrorPanel
+        message={paperSource.error}
+        notFoundReturn={{
+          href: "/paper",
+          label: t("createPage.sessionSourceList"),
         }}
       />
     );
@@ -357,10 +565,24 @@ function PaperSessionCreationContent({
         <Link href="/experiments">{t("createPage.sourceList")}</Link>
       </p>
     );
+  const original = paperSource.data;
+  const sourceDraft = original ? copiedPaperRequest(original) : null;
+  if (
+    validSessionId &&
+    (!original || original.session_id !== validSessionId || !sourceDraft)
+  )
+    return (
+      <p role="alert">
+        {t("createPage.sessionSourceUnavailable")}{" "}
+        <Link href="/paper">{t("createPage.sessionSourceList")}</Link>
+      </p>
+    );
   return (
     <PaperSessionForm
-      key={job?.job_id ?? "new"}
+      key={job?.job_id ?? original?.session_id ?? "new"}
       sourceJob={job}
+      sourceSession={original}
+      sourceDraft={sourceDraft}
       onSavedChange={onSavedChange}
       canCreateAnother={canCreateAnother}
     />
@@ -369,15 +591,31 @@ function PaperSessionCreationContent({
 
 function PaperSessionForm({
   sourceJob,
+  sourceSession,
+  sourceDraft,
   onSavedChange,
   canCreateAnother,
 }: {
   sourceJob: Experiment | null;
+  sourceSession: PaperSession | null;
+  sourceDraft: CreatePaperSessionRequest | null;
   onSavedChange: () => void;
   canCreateAnother: boolean;
 }) {
   const { t } = useTranslation("paper");
   const sourceConfig = sourceJob?.configuration;
+  const historicalDraft =
+    sourceDraft?.provider_type === "historical_a_share" ? sourceDraft : null;
+  const replayDraft =
+    sourceDraft?.provider_type === "replay" ? sourceDraft : null;
+  const movingAverageDraft =
+    replayDraft?.strategy.type === "moving_average_crossover"
+      ? replayDraft.strategy.parameters
+      : null;
+  const rsiDraft =
+    replayDraft?.strategy.type === "rsi_mean_reversion"
+      ? replayDraft.strategy.parameters
+      : null;
   const sourceRangeFits =
     sourceConfig &&
     Number.isFinite(Date.parse(sourceConfig.start_date)) &&
@@ -386,46 +624,80 @@ function PaperSessionForm({
     Date.parse(sourceConfig.end_date) - Date.parse(sourceConfig.start_date) <=
       92 * 86_400_000;
   const [providerType, setProviderType] = useState<ProviderType>(
-    sourceJob ? "historical_a_share" : "simulated_a_share",
+    sourceDraft?.provider_type ??
+      (sourceJob ? "historical_a_share" : "simulated_a_share"),
   );
   const [strategyType, setStrategyType] = useState<StrategyType>(
-    "moving_average_crossover",
+    replayDraft?.strategy.type ?? "moving_average_crossover",
   );
   const [initialCash, setInitialCash] = useState(
-    sourceConfig?.initial_cash ?? "100000000",
+    sourceDraft?.initial_cash ?? sourceConfig?.initial_cash ?? "100000000",
   );
-  const [quantity, setQuantity] = useState("1");
-  const [shortPeriod, setShortPeriod] = useState("2");
-  const [longPeriod, setLongPeriod] = useState("3");
-  const [rsiPeriod, setRsiPeriod] = useState("14");
-  const [oversold, setOversold] = useState("30");
-  const [overbought, setOverbought] = useState("70");
+  const [quantity, setQuantity] = useState(
+    sourceDraft?.default_order_quantity ?? "1",
+  );
+  const [shortPeriod, setShortPeriod] = useState(
+    String(movingAverageDraft?.short_period ?? 2),
+  );
+  const [longPeriod, setLongPeriod] = useState(
+    String(movingAverageDraft?.long_period ?? 3),
+  );
+  const [rsiPeriod, setRsiPeriod] = useState(
+    String(rsiDraft?.rsi_period ?? 14),
+  );
+  const [oversold, setOversold] = useState(rsiDraft?.oversold ?? "30");
+  const [overbought, setOverbought] = useState(rsiDraft?.overbought ?? "70");
   const [startDate, setStartDate] = useState(
-    sourceRangeFits ? sourceConfig.start_date : sourceJob ? "" : "2011-03-01",
+    historicalDraft?.strategy.parameters.start_date ??
+      (sourceRangeFits
+        ? sourceConfig.start_date
+        : sourceJob
+          ? ""
+          : "2011-03-01"),
   );
   const [endDate, setEndDate] = useState(
-    sourceConfig?.end_date ?? "2011-03-31",
+    historicalDraft?.strategy.parameters.end_date ??
+      sourceConfig?.end_date ??
+      "2011-03-31",
   );
   const [rebalanceSessions, setRebalanceSessions] = useState(
-    String(sourceConfig?.strategy.rebalance_sessions ?? 20),
+    String(
+      historicalDraft?.strategy.parameters.rebalance_sessions ??
+        sourceConfig?.strategy.rebalance_sessions ??
+        20,
+    ),
   );
   const [maximumHoldings, setMaximumHoldings] = useState(
-    String(sourceConfig?.strategy.maximum_holdings ?? 20),
+    String(
+      historicalDraft?.strategy.parameters.maximum_holdings ??
+        sourceConfig?.strategy.maximum_holdings ??
+        20,
+    ),
   );
   const [maxPositionWeight, setMaxPositionWeight] = useState(
-    sourceConfig?.risk.max_position_weight ?? "0.1",
+    historicalDraft?.strategy.parameters.max_position_weight ??
+      sourceConfig?.risk.max_position_weight ??
+      "0.1",
   );
   const [maxDrawdown, setMaxDrawdown] = useState(
-    sourceConfig?.risk.max_drawdown ?? "-0.2",
+    historicalDraft?.risk.max_drawdown ??
+      sourceConfig?.risk.max_drawdown ??
+      "-0.2",
   );
   const [universe, setUniverse] = useState<"ALL" | "SSE" | "SZSE">(
-    sourceConfig?.universe ?? "ALL",
+    historicalDraft?.strategy.parameters.universe ??
+      sourceConfig?.universe ??
+      "ALL",
   );
   const [commissionRate, setCommissionRate] = useState(
-    sourceConfig?.costs.commission_rate ?? "0.0003",
+    historicalDraft?.strategy.parameters.commission_rate ??
+      sourceConfig?.costs.commission_rate ??
+      "0.0003",
   );
   const [minimumCommission, setMinimumCommission] = useState(
-    sourceConfig?.costs.minimum_commission ?? "5",
+    historicalDraft?.strategy.parameters.minimum_commission ??
+      sourceConfig?.costs.minimum_commission ??
+      "5",
   );
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -472,7 +744,8 @@ function PaperSessionForm({
     if (locked.current) return;
     const submitter = (event.nativeEvent as SubmitEvent).submitter;
     const createAnother =
-      submitter instanceof HTMLButtonElement && submitter.value === "another";
+      Boolean(sourceSession) ||
+      (submitter instanceof HTMLButtonElement && submitter.value === "another");
     setError(null);
     setInvalidField(null);
     if (!isPositiveDecimal(initialCash)) {
@@ -696,6 +969,15 @@ function PaperSessionForm({
           <Link href="/paper/new">{t("createPage.sourceIndependent")}</Link>
         </section>
       )}
+      {sourceSession && (
+        <section className="experimentNotice" role="note">
+          <p>{t("createPage.sessionSourceReview")}</p>
+          <Link href={`/paper/${sourceSession.session_id}`}>
+            {t("createPage.sessionSourceOriginal")}
+          </Link>{" "}
+          · <Link href="/paper/new">{t("createPage.sourceIndependent")}</Link>
+        </section>
+      )}
       <form
         ref={formElement}
         className="formPanel"
@@ -711,7 +993,7 @@ function PaperSessionForm({
               {t("createPage.provider")}
               <select
                 value={providerType}
-                disabled={Boolean(sourceJob)}
+                disabled={Boolean(sourceJob || sourceSession)}
                 onChange={(event) => {
                   const value = event.target.value as ProviderType;
                   setProviderType(value);
@@ -1004,7 +1286,7 @@ function PaperSessionForm({
           <button className="button buttonPrimary" aria-disabled={pending}>
             {pending ? t("createPage.creating") : t("createPage.submit")}
           </button>
-          {canCreateAnother && (
+          {canCreateAnother && !sourceSession && (
             <button type="submit" value="another" aria-disabled={pending}>
               {t("createPage.createAnother")}
             </button>

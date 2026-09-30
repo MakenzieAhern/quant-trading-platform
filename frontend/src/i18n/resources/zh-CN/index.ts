@@ -237,6 +237,13 @@ export const zhCN = {
       sourceChooseDates:
         "研究区间超过 93 个自然日的回放上限。请明确选择开始日期，再创建这个独立账户。",
       sourceIndependent: "改为独立创建账户",
+      sessionSourceLoading: "已保存模拟会话的设置",
+      sessionSourceUnavailable:
+        "无法安全地用此模拟会话配置新账户。请核对原会话，或独立创建账户。",
+      sessionSourceList: "返回模拟会话列表",
+      sessionSourceReview:
+        "已复制原模拟会话的设置供核对。新账户将独立使用当前已接受的数据集；原账本保持只读。尚未创建或重启账户，也未提交订单。",
+      sessionSourceOriginal: "核对原会话",
       startDate: "开始日期",
       endDate: "结束日期",
       historicalAdvanced: "策略、股票范围与成本设置",
