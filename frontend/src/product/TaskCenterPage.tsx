@@ -112,6 +112,7 @@ export function TaskCenterPage() {
           </>
         )}
         <Pagination
+          label={c.researchTasks}
           offset={researchOffset}
           limit={research.data?.limit ?? 20}
           total={research.data?.total ?? null}
@@ -162,6 +163,7 @@ export function TaskCenterPage() {
           </>
         )}
         <Pagination
+          label={c.updateTasks}
           offset={updateOffset}
           limit={updates.data?.limit ?? 20}
           total={updates.data?.total ?? null}

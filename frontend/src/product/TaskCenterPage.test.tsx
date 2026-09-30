@@ -305,6 +305,34 @@ describe("task center", () => {
     expect(createUpdate).not.toHaveBeenCalled();
   });
 
+  it.each([
+    [
+      "en-US",
+      "Research tasks — Pagination",
+      "Raw-data request tasks — Pagination",
+    ],
+    ["zh-CN", "研究任务 — 分页", "原始数据请求任务 — 分页"],
+  ])("names both pagers in %s", async (language, researchName, updateName) => {
+    await i18n.changeLanguage(language);
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(marketUpdateApi, "list").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    render(<TaskCenterPage />);
+    expect(
+      screen.getByRole("group", { name: researchName }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: updateName })).toBeInTheDocument();
+  });
+
   it("keeps one task stream usable when the other fails and can refresh", async () => {
     await i18n.changeLanguage("en-US");
     const research = vi
