@@ -1,5 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 17:43 UTC real-login Docker startup failure and local recovery
+
+After the actual 2026-09-30 21:16 AEST Windows login, the pre-intervention
+2026-10-01 03:34 AEST check found no Docker Desktop/backend process or Engine;
+`Ubuntu` and `docker-desktop` WSL were stopped. The existing
+`QuantTrading-DockerDesktop-AtLogon` task ran at 21:16:17 with result 0,
+but Electron recorded `app.exit(104)` at 21:16:41 and 21:17:37, and the
+backend recorded matching `actionMenuQuit` and Electron-requested shutdowns.
+Thus the login
+trigger fired but did **not** keep Docker or the page available. The
+initiating reason for Electron's exit is unproven; later WSL/vpnkit errors
+do not establish it. M5 terminal-free startup **FAILS** this real-login
+check.
+
+One normal launch of the already installed Docker Desktop 4.92.0 at 03:37:55
+AEST restored WSL integration, Engine 29.8.0 and Compose 5.5.1. At 17:43 UTC,
+the original four Compose services were running, PostgreSQL/Redis/backend
+were healthy, Redis returned PONG, PostgreSQL accepted connections, and
+`http://localhost:5173/` plus `/api/health` returned HTTP 200. The four
+original project volumes remained listed; read-only original database counts
+were five paper sessions and 417 events, matching the prior checkpoint.
+This is a working **manual local development route during the GitHub hold**,
+not proof of unattended restart, independent backup, missing-ledger recovery,
+forward-market licensing, exact-head hosted CI or v1.2 release. No factory
+reset, image/volume/database/project deletion, original account write,
+frozen/OOS change, remote push, CI retry, merge or release occurred.
+The date reaching October 1 does not verify that GitHub Actions billing or
+quota has recovered; keep the remote gate held until actual confirmation.
+
 ## 2026-09-29 17:10 UTC research Cancel focus lifetime — bounded M4 check
 
 The first final full frontend run for the paper-list slice failed one existing
@@ -3999,7 +4028,7 @@ closes a bounded disclosure ambiguity, not U7 forward, M4 or release.
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
 | M4-DATA-INTEGRITY | Application and formal-history persistence, isolated tests, recoverable backup | Suite-wide test-DB guard and verified additive restore | Live DB was found missing formal 1/3/310 ledger and later paper accounts. Formal ledger and four pre-backup accounts were restored atomically; `4b64380f` and `07d72259` remain absent. Live-config pytest was rejected; isolated backend969 PASS/one optional skip with live counts stable. The post-recovery dump restored into a new database, with 44/44 public tables matching live by row count and sorted-row hash. This same-disk dump is not independent disaster recovery and missing-history disposition remains open | FAIL |
 | QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Isolated release-image/browser rehearsal and [CI 36081787335](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36081787335) backend/frontend/Compose plus production-backend/tmpfs smoke PASS. The live DB data-loss incident, missing independent disaster-recovery proof, forward authority and remaining M4/M5 acceptance keep the release gate FAIL; frozen research files were not changed | FAIL |
-| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback; bounded Chinese demo/walkthrough videos and screenshots exist. A second real 2026-09-25 12:05 AEST login did not launch Desktop under the quoted Run path, despite AutoStart and enabled StartupApproved. One limited current-user AtLogOn task replaced that Run entry; the next genuine login has not tested it. Manual launch recovered Engine, four services/volumes and original database counts without loss. Full key-interaction coverage, novice-user/operator review and terminal-free startup remain incomplete; no English video is claimed or treated as a separate requirement | FAIL |
+| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback; bounded Chinese demo/walkthrough videos and screenshots exist. The genuine 2026-09-30 login ran the current-user AtLogOn task but Docker Desktop twice entered its app Quit path; the original services recovered only after a later manual launch. The native Run entry currently also exists, but its role in the Quit path is unproven. Full key-interaction coverage, novice-user/operator review and terminal-free startup remain incomplete; no English video is claimed or treated as a separate requirement | FAIL |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
