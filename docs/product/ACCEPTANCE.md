@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-09-30 20:58 UTC CSV alternate capture — still not verified
+
+On the unchanged local app and completed synthetic study
+`dccc74b3-f8c4-487f-9597-4cd9d8fb7288`, a new browser session again
+showed the prepared trades CSV. The visible fallback was a single `blob:`
+link with the expected `download` filename. This time the browser's separate
+locator `downloadMedia()` path, rather than its download-event wait, timed out
+after 20 seconds. The exact CSV was still absent from ordinary Windows
+Downloads. The only available browser provider was the Codex in-app browser;
+the Chrome provider was unavailable. The temporary tab was closed.
+
+`CSV_FILE_LANDING = NOT_VERIFIED`. Two distinct in-app capture mechanisms have
+failed to expose a saved path, which does not prove either successful landing
+or an application defect. Next proof needs a supported browser with an
+observable download manager/path, or a user-performed file check. Do not
+repeat this in-app capture unchanged. No study/account/provider/formal/OOS
+mutation, GitHub action, or release action occurred.
+
 ## 2026-09-30 20:50 UTC CSV file-landing probe — not verified
 
 The actual local in-app browser opened the already-completed synthetic study

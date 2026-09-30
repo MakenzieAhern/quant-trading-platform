@@ -5,10 +5,12 @@
 An in-app browser export of an existing synthetic report produced the visible
 prepared CSV fallback, but neither the automatic click nor one direct fallback
 click yielded a download event or a file at the exact expected ordinary Windows
-Downloads path. Do not infer file landing or diagnose an app bug from that
-surface alone. Stop unchanged event retries; use a supported browser/download
-manager or known destination before closing this M5 gate. The original study,
-account, provider and formal research paths were not mutated.
+Downloads path. A distinct locator `downloadMedia()` attempt also timed out on
+the `blob:` fallback, and this session exposed no Chrome browser provider. Do
+not infer file landing or diagnose an app bug from that surface alone. Stop
+in-app capture retries; use a supported browser/download manager or known
+destination before closing this M5 gate. The original study, account,
+provider and formal research paths were not mutated.
 
 ## v1.2 historical risk wording and inherited-key safety — 2026-10-01
 
