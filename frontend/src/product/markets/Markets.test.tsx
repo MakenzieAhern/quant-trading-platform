@@ -40,6 +40,7 @@ beforeEach(async () => {
       configurable: true,
       value(this: HTMLDialogElement) {
         this.setAttribute("open", "");
+        this.querySelector<HTMLElement>(".iconButton")?.focus();
       },
     },
     close: {
@@ -864,19 +865,61 @@ describe("historical cache markets", () => {
     await userEvent.click(
       within(dialog).getByRole("button", { name: "Read this date window" }),
     );
-    expect(within(dialog).getByRole("alert")).toHaveTextContent(
-      "Dates have not been changed",
-    );
-    expect(within(dialog).getByLabelText("First date")).toHaveValue(
-      "2023-01-01",
-    );
+    const rangeError = within(dialog).getByRole("alert");
+    expect(rangeError).toHaveTextContent("Dates have not been changed");
+    const firstDate = within(dialog).getByLabelText("First date");
+    const lastDate = within(dialog).getByLabelText("Last date");
+    expect(firstDate).toHaveValue("2023-01-01");
+    expect(firstDate).toHaveFocus();
+    for (const input of [firstDate, lastDate]) {
+      expect(input).toHaveAttribute("aria-invalid", "true");
+      expect(input).toHaveAttribute("aria-describedby", rangeError.id);
+    }
     expect(marketApi.bars).toHaveBeenCalledTimes(1);
     await userEvent.click(
       within(dialog).getByRole("button", { name: "Close" }),
     );
     expect(trigger).toHaveFocus();
     await userEvent.click(trigger);
-    expect(screen.getByLabelText("First date")).toHaveValue("2023-01-01");
+    const restoredFirst = screen.getByLabelText("First date");
+    expect(restoredFirst).toHaveValue("2023-01-01");
+    await waitFor(() => expect(restoredFirst).toHaveFocus());
+    fireEvent.input(restoredFirst, { target: { value: "2024-02-27" } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(restoredFirst).not.toHaveAttribute("aria-invalid");
+    expect(restoredFirst).not.toHaveAttribute("aria-describedby");
+    expect(screen.getByLabelText("Last date")).not.toHaveAttribute(
+      "aria-invalid",
+    );
+    expect(screen.getByLabelText("Last date")).not.toHaveAttribute(
+      "aria-describedby",
+    );
+    expect(marketApi.bars).toHaveBeenCalledTimes(1);
+  });
+
+  it("links an empty date to its translated error instead of relying on browser-only validation", async () => {
+    render(<MarketsPage />);
+    const dialog = await openSecurity();
+    await within(dialog).findByLabelText("Inspect trading date");
+    const firstDate = within(dialog).getByLabelText("First date");
+    fireEvent.input(firstDate, { target: { value: "" } });
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: "Read this date window" }),
+    );
+    const error = within(dialog).getByRole("alert");
+    expect(error).toHaveTextContent("Dates have not been changed");
+    expect(firstDate).toHaveFocus();
+    expect(firstDate).toHaveAttribute("aria-invalid", "true");
+    expect(firstDate).toHaveAttribute("aria-describedby", error.id);
+    expect(marketApi.bars).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(within(dialog).getByRole("alert")).toHaveTextContent(
+      "日期未被自动修改",
+    );
+    expect(within(dialog).getByLabelText("开始日期")).toHaveValue("");
+    expect(marketApi.bars).toHaveBeenCalledTimes(1);
   });
 
   it("keeps unavailable historical records removable while clearly labeling the demo", async () => {

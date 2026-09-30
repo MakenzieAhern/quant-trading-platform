@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatUtc } from "../../utils/format";
@@ -31,6 +31,15 @@ export function MarketDetail({
   const [applied, setApplied] = useState(range);
   const [invalid, setInvalid] = useState(!validRange(range, dataset));
   const [revision, setRevision] = useState(0);
+  const firstDate = useRef<HTMLInputElement>(null);
+  const invalidRangeId = useId();
+  useEffect(() => {
+    if (invalid) queueMicrotask(() => firstDate.current?.focus());
+  }, [invalid]);
+  function changeRange(nextRange: MarketRange) {
+    onRangeChange(nextRange);
+    if (validRange(nextRange, dataset)) setInvalid(false);
+  }
   const data = useApiResource(
     (signal) =>
       validRange(applied, dataset)
@@ -62,10 +71,12 @@ export function MarketDetail({
       <p className="marketHelp">{c.searchHelp}</p>
       <form
         className="marketControls"
+        noValidate
         onSubmit={(event) => {
           event.preventDefault();
           if (!validRange(range, dataset)) {
             setInvalid(true);
+            if (invalid) firstDate.current?.focus();
             return;
           }
           setInvalid(false);
@@ -80,12 +91,15 @@ export function MarketDetail({
               {c.first}
               <input
                 type="date"
+                ref={firstDate}
                 required
                 min={dataset.coverage_start}
                 max={dataset.coverage_end}
                 value={range.start_date}
+                aria-invalid={invalid || undefined}
+                aria-describedby={invalid ? invalidRangeId : undefined}
                 onInput={(event) =>
-                  onRangeChange({
+                  changeRange({
                     ...range,
                     start_date: event.currentTarget.value,
                   })
@@ -100,8 +114,10 @@ export function MarketDetail({
                 min={dataset.coverage_start}
                 max={dataset.coverage_end}
                 value={range.end_date}
+                aria-invalid={invalid || undefined}
+                aria-describedby={invalid ? invalidRangeId : undefined}
                 onInput={(event) =>
-                  onRangeChange({
+                  changeRange({
                     ...range,
                     end_date: event.currentTarget.value,
                   })
@@ -114,7 +130,11 @@ export function MarketDetail({
           </div>
         </fieldset>
       </form>
-      {invalid && <p role="alert">{c.invalidRange}</p>}
+      {invalid && (
+        <p id={invalidRangeId} role="alert">
+          {c.invalidRange}
+        </p>
+      )}
       <label className="marketField">
         {c.priceView}
         <select
