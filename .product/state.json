@@ -1,7 +1,19 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T01:18:53Z",
+  "updated_at_utc": "2026-10-01T01:38:05Z",
+  "m4_mobile_entry_focus_20261001_gate": {
+    "status": "PASS_COMPONENT_ONLY_NATIVE_ZOOM_NOT_RUN",
+    "source_head": "63c16ec66cd1e643ca9df351a60dc4ef1a4a9a20",
+    "proof": "2026-10-01 01:33 UTC: source audit found desktop sidebar links could keep focus when the shared CSS breakpoint hides the sidebar at 800 CSS pixels. A focused red regression failed; the shared matchMedia handler now sends focus to the visible menu button for direct and browser-blurred sidebar focus. App tests 20/20, isolated make test backend 1034 with one optional archive skip and frontend 541/541, make lint/build, Prettier and diff check passed. Independent read-only review found no P1/P2. Exact code/doc head 63c16ec passed GitHub Actions backend/frontend/compose in run 36801845931. See docs/product/ACCEPTANCE.md.",
+    "limits": "Three bounded browser-control connection attempts timed out; no new native 200-percent zoom, real-browser focus timing or screen-reader speech was observed. Component tests are not full M4/M5, and no original account, frozen research or Official OOS was changed. PR32 remains draft/open."
+  },
+  "m5_bilingual_demo_20261001_gate": {
+    "status": "DRAFT_SOURCE_CHECKED_NOT_CURRENT_HEAD_BROWSER_OR_NOVICE_ACCEPTED",
+    "source_head": "63c16ec66cd1e643ca9df351a60dc4ef1a4a9a20",
+    "proof": "The current bilingual synthetic A-share demo lives at docs/product/DEMO.md and is linked from README; root DEMO.md is explicitly legacy AAPL fixture guidance. Current wizard/capability source and earlier isolated real-browser synthetic result/reopen evidence support the path. Independent read-only review corrected two unsafe draft statements: unrelated saved work is backed up before new demo, and step-one short strategy text is not full risk detail. Exact source head 63c16ec GitHub CI backend/frontend/compose passed run 36801845931.",
+    "limits": "No current-head browser rerun, independent novice user, genuine forward-market receipt, genuine lost-ledger recovery, independent physical backup or final M5/release acceptance."
+  },
   "u3_multitab_draft_20261001_gate": {
     "status": "PASS_BOUNDED_CROSS_TAB_RECOVERY_NOT_ATOMIC_OR_FULL_U3_M4_M5",
     "parent_head": "3a51c439f8528e94527ed3e3b75b100936e8a13f",
@@ -1735,13 +1747,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "060a0587505d2423a4b486ee90c083d1a9a4ac8f",
+      "last_verified_head": "63c16ec66cd1e643ca9df351a60dc4ef1a4a9a20",
       "state": "DRAFT",
-      "ci_run": 36797418009,
+      "ci_run": 36801845931,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "U3-WIZARD explicit Save & exit accessible dialog ZH/EN cancel/Escape/home/restore PASS with exact saved draft; market watchlist actions uniquely named in ZH/EN. Ten primary routes had bounded ZH/dark and EN/light 390x844 no-overflow checks; saved historical chart date/locale invariant rechecked. Earlier result-to-paper handoff, read-only field focus, bilingual table scrolling and formal archive translated AX spot checks PASS. Current code head additionally passed bounded Chrome keyboard focus on the saved paper-event pager; packaged frontend HTTP smoke passed separately. Native 200% browser zoom, full visual/A11Y/performance matrix and forward mode remain incomplete. Docker post-login auto-start still unproven; missing genuine ledgers, independent backup and lawful forward authority remain open"
+      "browser_gate": "Earlier U3 wizard, saved paper-event pager, responsive routes, historical chart and synthetic demo paths have bounded Chrome evidence. The 2026-10-01 desktop-to-mobile sidebar-focus repair passed component red/green and independent review but its native 200% zoom/browser timing was NOT_RUN because browser control timed out. Bilingual v1.2 demo script was source-checked, not current-head browser- or novice-accepted. Full visual/A11Y/performance, forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -1756,9 +1768,9 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Original local Compose is healthy and usable at localhost:5173. Last verified code head 060a058 passed GitHub backend/frontend/Compose CI in run 36797418009; PR32 remains draft/open and any subsequent head needs its own CI. Bounded Chrome paper-journal keyboard focus and isolated packaged-frontend HTTP checks passed, not full M4/M5. U1-U8/M4/M5 remain incomplete. Next safe work: durable M5 media/CSV file landing, native zoom/screen-reader and foreground click-p95 evidence, then independent novice flow. Next genuine Windows login must recheck Docker autostart; do not reboot just for QA. Lawful after-start 2026 forward-market data rights and receipt, genuine pre-loss ledgers and independent physical backup remain external gates. Preserve frozen research/OOS, prohibit live trading and do not merge, tag or release before all product and data gates pass.",
-  "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform read PRODUCT_MASTER and .product/state.json; verify branch, clean status, original docker compose ps and PR32 exact-head CI. Continue safe local UX/QA or isolated-test work. Original Compose serves localhost:5173 and API 8000; do not touch original financial data or browser draft. Actual native screen-reader/zoom/performance acceptance remains absent.",
-  "next_command": "Full U1-U8/M0-M5 objective remains incomplete despite exact-head hosted CI recovery. Recheck Docker autostart at the next genuine Windows login without an induced reboot or duplicate launcher. Missing lawful 2026 forward data rights/after-start receipt, genuine lost-ledger backup, independent physical backup and full M4/M5 acceptance remain open. Do not merge, tag or release before all gates pass.",
+  "next_task": "Original local Compose remains usable at localhost:5173. Code/doc head 63c16ec passed exact GitHub backend/frontend/Compose CI run 36801845931; PR32 remains draft/open and this state-only successor needs its own exact-head CI. Desktop-to-mobile navigation focus has component-only proof, and docs/product/DEMO.md is a source-checked bilingual synthetic script. Once browser control recovers, check native 200% focus/overflow and current-head demo path without altering original financial accounts; then durable M5 media/CSV landing, screen-reader, foreground click-p95 and independent novice flow. Recheck Docker autostart only at the next genuine Windows login, not by induced reboot. Lawful after-start 2026 forward data rights/receipt, genuine pre-loss ledgers and independent physical backup remain external gates. No merge, tag or release before all gates pass.",
+  "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify clean branch, original docker compose ps and PR32 current-head CI. When browser control is available, use a separate 127.0.0.1 browser origin to test desktop-to-mobile focus under native 200% zoom and bilingual demo labels; do not submit a study/account on the original database for QA. Continue M4/M5 safe checks while preserving frozen research/OOS.",
+  "next_command": "Full U1-U8/M0-M5 objective remains incomplete. Verify the pushed state-only head's CI, then continue M4 native browser/assistive-technology and M5 delivery checks. Recheck Docker autostart only after the next genuine Windows login. Lawful after-start forward data, genuine lost-ledger backup and independent physical backup remain unresolved. Do not merge, tag or release before all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
