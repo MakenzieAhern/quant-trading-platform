@@ -1,7 +1,43 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T21:07:59Z",
+  "updated_at_utc": "2026-10-01T21:27:42Z",
+  "m4_current_head_market_dialog_focus_20261002_gate": {
+    "status": "PASS_BOUNDED_CHROME_MARKET_DIALOG_ESC_BACK_FOCUS_NOT_FULL_M4",
+    "source_head": "208d6b80c9e5c0be98c18aa36e244b280613dd15",
+    "proof": "An agent-owned installed Chrome tab opened the cached SSE 600000 historical detail from Markets without a write. The native dialog was modal, URL gained dataset/security fragment, and focus moved to Close. Escape closed the dialog, removed the fragment and restored focus to the exact Inspect history trigger. Reopening then browser Back gave the same modal-close, fragment-removal and focus-return result. Document scroll/client width remained 943/943 CSS px. The tab was closed. See docs/product/ACCEPTANCE.md.",
+    "limits": "One saved historical security and one 943 CSS px EN/dark path only. No full keyboard trap, Tab cycle, locale/theme/viewport matrix, screen-reader speech, 200-percent zoom or M4 PASS."
+  },
+  "m4_current_head_chrome_control_contrast_20261002_gate": {
+    "status": "PASS_BOUNDED_EN_LIGHT_DARK_BUTTON_LINK_PROXY_NOT_FULL_M4",
+    "source_head": "208d6b80c9e5c0be98c18aa36e244b280613dd15",
+    "proof": "An agent-owned installed Chrome tab visited nine main routes in the existing EN/dark preference and a temporary EN/light preference. Read-only computed-style checks of visible enabled button/link text against the nearest opaque ancestor background found no candidate below 4.5:1 in either theme. The original dark preference was visibly restored and the tab closed. See docs/product/ACCEPTANCE.md.",
+    "limits": "This RGB/nearest-opaque-background proxy ignores translucent layers, imagery, non-text icons, other text, disabled states, focus/hover, Chinese, 200-percent zoom and screen-reader speech. It is not a full WCAG or M4 PASS."
+  },
+  "m4_current_head_chrome_ax_names_20261002_gate": {
+    "status": "PASS_BOUNDED_NINE_ROUTE_CHROME_AX_NAMES_NOT_FULL_M4",
+    "source_head": "208d6b80c9e5c0be98c18aa36e244b280613dd15",
+    "proof": "An agent-owned installed Chrome tab navigated the visible Workbench, Markets, Strategies, Research, Task center, Simulated accounts, Data center, Help and Settings links. After each route's level-one heading became visible, a full accessibility-tree snapshot exposed 262 button/link/checkbox/select/text-field role occurrences across the nine states and no role line lacking a name by the narrow parser. The tab was closed. See docs/product/ACCEPTANCE.md.",
+    "limits": "Repeated global controls contribute to the occurrence count. This is a bounded accessibility-tree name inventory only, not screen-reader speech, full WCAG 2.2 AA, dialogs, errors, 200-percent zoom, keyboard matrix or M4 acceptance."
+  },
+  "ci_documentation_head_20261002": {
+    "head": "208d6b80c9e5c0be98c18aa36e244b280613dd15",
+    "run": 36926686832,
+    "status": "PASS_BACKEND_FRONTEND_COMPOSE",
+    "completed_at_utc": "2026-10-01T21:27:08Z",
+    "proof": "GitHub Actions run 36926686832 completed success on exact pushed head 208d6b8: backend, frontend and Compose all success. The backend setup-python step took longer than usual but completed without cancellation or rerun."
+  },
+  "local_docs_checkpoint_20261002": {
+    "status": "BOUNDED_QA_EVIDENCE_NOT_FULL_M4_M5",
+    "contents": "Bounded current-head Chrome market-dialog, nine-route accessible-name, two-theme control-contrast and CSV non-landing evidence; no application code or financial data change.",
+    "next": "On publication to existing PR32, verify the new exact-head CI before any release gate."
+  },
+  "m5_current_head_chrome_csv_20261002_gate": {
+    "status": "CSV_FILE_LANDING_NOT_VERIFIED",
+    "source_head": "208d6b80c9e5c0be98c18aa36e244b280613dd15",
+    "proof": "In an agent-owned installed Chrome tab, the existing completed synthetic result prepared a named trades CSV and exposed an actual blob: link with a download attribute. Both the automatic button and explicit fallback link produced no observable Playwright download event within bounded 20s and 15s waits. The exact filename remained absent from ordinary Windows Downloads; browser console logged no error. Read-only browser evaluate did not expose fetch for inspecting blob bytes. QA tabs were closed. See docs/product/ACCEPTANCE.md.",
+    "limits": "No saved path or bytes were observed. This is not file-landing PASS and does not establish an application export defect. Do not repeat browser event/downloadMedia capture without a new observable destination. No original account, provider, financial database, frozen research, merge, tag or release changed."
+  },
   "m4_current_head_chrome_943_20261002_gate": {
     "status": "PASS_BOUNDED_CHROME_EN_DARK_943_NOT_FULL_M4",
     "source_head": "2e59daf1d2d54e6ab51869e3fb4c4360b7cb8708",

@@ -1,5 +1,80 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 21:27 UTC PR #32 documentation-head CI
+
+Exact pushed head `208d6b80c9e5c0be98c18aa36e244b280613dd15`
+completed [run 36926686832](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36926686832)
+with backend, frontend and Compose all successful. The backend's Python setup
+step was slow but completed on its original run, without cancellation or
+rerun. This confirms that documentation head only; the later local QA
+checkpoint requires its own exact-head CI after push. PR #32 remains draft.
+
+## 2026-10-01 21:25 UTC current-head Chrome market-detail focus
+
+In an agent-owned installed Chrome tab, Markets opened the cached SSE
+`600000` history with a native modal dialog. The URL gained its dataset and
+security fragment, and focus moved to Close. Escape closed the dialog,
+removed the fragment and returned focus to the exact `Inspect history`
+trigger. After reopening, browser Back produced the same close/fragment/focus
+result. Page scroll and client widths stayed 943/943 CSS px. The QA tab was
+closed; no watchlist, provider, account or financial-data write occurred.
+
+This is one English/dark, 943 CSS px historical detail. It does not prove a
+full Tab-cycle trap, all market data modes, locale/theme/viewport matrix,
+screen-reader speech, native 200% zoom or M4 acceptance.
+
+## 2026-10-01 21:24 UTC current-head Chrome control-contrast proxy
+
+At nine main routes in an agent-owned installed Chrome tab, a read-only
+computed-style check examined visible enabled buttons and links under the
+existing English/dark preference, then temporary English/light. It computed
+RGB text contrast against the nearest fully opaque ancestor background and
+found no candidate below 4.5:1 in either theme. The original dark setting
+was visibly restored before closing the tab.
+
+This is a narrow proxy, not a WCAG 2.2 AA audit: it does not composite
+translucent layers, inspect imagery, non-text icons, other text, focus/hover,
+disabled controls, Chinese, zoom or screen-reader speech. No M4 gate was
+promoted and no financial or provider data was changed.
+
+## 2026-10-01 21:20 UTC current-head Chrome accessible-name inventory
+
+An agent-owned installed Chrome tab navigated the visible links for Workbench,
+Markets & watchlist, Strategies, Research, Task center, Simulated accounts,
+Data center, Help and Settings. After each destination's level-one heading
+became visible, a full accessibility-tree snapshot was checked for unnamed
+exposed buttons, links, checkboxes, select controls and text fields. Across
+the nine route states, 262 matching role occurrences had no blank-name line.
+Global shell controls repeat in each state, so 262 is not a unique-control
+count. The tab was closed and no form or financial-data write occurred.
+
+This is bounded current-head accessible-name evidence, not a screen-reader
+speech test, complete form/dialog/error inventory, keyboard/200% zoom matrix,
+WCAG 2.2 AA or M4 PASS.
+
+## 2026-10-01 21:19 UTC current-head installed-Chrome CSV boundary
+
+On documentation head `208d6b80c9e5c0be98c18aa36e244b280613dd15`,
+an agent-owned installed Chrome tab opened the existing completed synthetic
+result `dccc74b3-f8c4-487f-9597-4cd9d8fb7288`. The trades CSV button
+showed "Download prepared" and a visible `blob:` fallback link with the
+expected `download` filename. Browser download-event waits were registered
+before both the button click (20 seconds) and explicit fallback click (15
+seconds); neither emitted a download event. The exact file was absent from
+ordinary Windows Downloads. Chrome console had no warning or error. A
+separate read-only `blob:` payload check could not run because this browser
+evaluation scope does not expose `fetch`. Both agent-owned tabs were closed.
+
+`CSV_FILE_LANDING = NOT_VERIFIED`. The prepared UI is not proof of saved
+bytes, and event-capture failure is not proof of an application export bug.
+Earlier Chrome `downloadMedia()` and in-app-browser event attempts were also
+inconclusive. Do not repeat those capture paths without an observable
+destination; next proof needs a confirmed file path and inspected filename,
+bytes and content. No provider, original account/financial database, frozen
+research/OOS, merge, tag or release action occurred. Two Chrome page-zoom
+shortcuts also left `devicePixelRatio` and CSS viewport unchanged, so native
+200% zoom remains unverified; a narrower CSS viewport is not a substitute.
+
 ## 2026-10-01 21:07 UTC current-head CI and bounded installed-Chrome check
 
 Exact pushed code head `2e59daf1d2d54e6ab51869e3fb4c4360b7cb8708`
