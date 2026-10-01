@@ -28,6 +28,12 @@ const en = {
   exit: "Save & exit",
   exitConfirm:
     "Leave this configuration? Your latest draft is saved on this device.",
+  unsavedLeaveConfirm:
+    "Your latest changes may not be saved. Leave this configuration?",
+  draftConflict:
+    "The draft changed in another tab. Your latest values are in Browser page recovery drafts below. Reload this page, review both drafts, then restore the one you want. This page cannot save or run now.",
+  draftConflictStorageFailed:
+    "Another tab changed the draft, and this browser could not save your recovery copy. Keep this page open and copy your values manually; do not reload or run.",
   storageError:
     "This browser could not save your draft and request ID. Keep this page open; allow local storage before running or leaving, then retry.",
   summary: "Your configuration",
@@ -287,6 +293,11 @@ const zh: typeof en = {
   unreadableDraftStart: "保留原文并新建",
   exit: "保存并退出",
   exitConfirm: "离开当前配置？最新草稿已保存在本机。",
+  unsavedLeaveConfirm: "最新修改可能尚未保存。确定离开当前配置吗？",
+  draftConflict:
+    "草稿已在另一标签页改变。本页最新值已存入下方的浏览器页面草稿恢复。请刷新页面，核对两份草稿，再恢复所需副本；当前页面不能保存或运行。",
+  draftConflictStorageFailed:
+    "另一标签页已修改草稿，但浏览器无法保存本页恢复副本。请保持此页面打开，手动复制当前数值；不要刷新或运行。",
   storageError:
     "浏览器无法保存草稿和请求编号。请保留此页面，允许本地存储后再运行或离开，然后重试。",
   summary: "当前配置",

@@ -701,6 +701,111 @@ describe("guided experiment", () => {
     );
   });
 
+  it("preserves both tabs' latest drafts and blocks save-and-exit after a conflicting edit", async () => {
+    enableNativeDialog();
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    saveExperimentDraft(configuration, 1, "first-tab-key");
+    const first = render(<CreateExperimentPage />);
+    await screen.findByLabelText("Starting capital (CNY)");
+    vi.resetModules();
+    const otherTab = await import("./draft");
+    const otherForm = { ...configuration, name: "Other tab latest" };
+    otherTab.saveExperimentDraft(otherForm, 1, "second-tab-key");
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: EXPERIMENT_DRAFT_KEY,
+          newValue: window.localStorage.getItem(EXPERIMENT_DRAFT_KEY),
+        }),
+      );
+    });
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "changed in another tab",
+    );
+    fireEvent.change(screen.getByLabelText("Starting capital (CNY)"), {
+      target: { value: "123456.000000000000000007" },
+    });
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "changed in another tab",
+    );
+    expect(readExperimentDraft()?.form).toEqual(otherForm);
+    expect(
+      readBrowserDraftRecoveries().items.some(
+        ({ draft }) =>
+          draft.form.initial_cash === "123456.000000000000000007" &&
+          draft.idempotencyKey !== "second-tab-key",
+      ),
+    ).toBe(true);
+    await userEvent.click(screen.getByRole("button", { name: "Save & exit" }));
+    expect(screen.queryByRole("dialog", { name: "Save & exit" })).toBeNull();
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(screen.getByRole("alert")).toHaveTextContent("另一标签页");
+    await act(async () => i18n.changeLanguage("en-US"));
+    const ownRecovery = readBrowserDraftRecoveries().items.find(
+      ({ draft }) => draft.form.initial_cash === "123456.000000000000000007",
+    )!;
+    first.unmount();
+    render(<CreateExperimentPage />);
+    expect(await screen.findByLabelText("Experiment name")).toHaveValue(
+      "Other tab latest",
+    );
+    expect(
+      readBrowserDraftRecoveries().items.find(({ id }) => id === ownRecovery.id)
+        ?.draft.form.initial_cash,
+    ).toBe("123456.000000000000000007");
+    await userEvent.click(screen.getByText("Browser page recovery drafts"));
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(
+          `Review recovery draft:.*${ownRecovery.id.slice(0, 8)}`,
+        ),
+      }),
+    );
+    await userEvent.click(
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: "Back up current draft and restore",
+      }),
+    );
+    expect(readExperimentDraft()?.form.initial_cash).toBe(
+      "123456.000000000000000007",
+    );
+    expect(
+      readConfigurationVersions().items.some(
+        (entry) =>
+          entry.kind === "pre_restore_backup" &&
+          entry.draft.form.name === "Other tab latest",
+      ),
+    ).toBe(true);
+  });
+
+  it("does not publish an older shared draft on unload or submit", async () => {
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const create = vi.spyOn(experimentApi, "create");
+    saveExperimentDraft(configuration, 3, "first-tab-key");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("button", { name: "Run this configuration" });
+    vi.resetModules();
+    const otherTab = await import("./draft");
+    const otherForm = { ...configuration, name: "Other tab latest" };
+    otherTab.saveExperimentDraft(otherForm, 1, "second-tab-key");
+    let leaveAllowed = true;
+    act(() => {
+      leaveAllowed = window.dispatchEvent(
+        new Event("beforeunload", { cancelable: true }),
+      );
+    });
+    expect(leaveAllowed).toBe(false);
+    expect(readExperimentDraft()?.form).toEqual(otherForm);
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: /I understand/ }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Run this configuration" }),
+    );
+    expect(create).not.toHaveBeenCalled();
+    expect(readExperimentDraft()?.form).toEqual(otherForm);
+  });
+
   it.each([503, 408, "network"] as const)(
     "retains request identity after uncertain response %s, locale switch and remount until editing",
     async (status) => {

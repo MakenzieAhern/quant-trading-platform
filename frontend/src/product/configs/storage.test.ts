@@ -13,7 +13,6 @@ import {
   CONFIG_VERSION_PREFIX,
   readConfigurationVersions,
   restoreConfigurationVersion,
-  restoreBrowserDraft,
   saveConfigurationVersion,
   startNewExperimentDraft,
 } from "./storage";
@@ -56,7 +55,7 @@ describe("immutable browser configuration versions", () => {
     expect(readExperimentDraft()?.form.name).toBe("Edited configuration");
     expect(readExperimentDraft()?.savedAt).not.toBe(current.savedAt);
   });
-  it("retains and explicitly restores another tab's draft written during backup publication", async () => {
+  it("keeps another tab's draft when it arrives during backup publication", async () => {
     saveExperimentDraft(configuration, current.step, current.idempotencyKey);
     const target = saveConfigurationVersion("Target", {
       ...current,
@@ -82,13 +81,11 @@ describe("immutable browser configuration versions", () => {
       }
       original.call(this, key, value);
     });
-    const restored = restoreConfigurationVersion(
-      target.id,
-      current,
-      "Before restore",
-    );
+    expect(() =>
+      restoreConfigurationVersion(target.id, current, "Before restore"),
+    ).toThrow("DRAFT_CHANGED_IN_ANOTHER_TAB");
     expect(interleaved).toBe(true);
-    expect(readExperimentDraft()?.form.name).toBe("Restore target");
+    expect(readExperimentDraft()?.form).toEqual(otherForm);
     const preserved = readBrowserDraftRecoveries().items.find(
       (entry) => entry.draft.idempotencyKey === "other-tab-new-intent",
     );
@@ -96,18 +93,35 @@ describe("immutable browser configuration versions", () => {
     expect(readBrowserDraftRecoveries().items).toHaveLength(3);
     expect(
       readBrowserDraftRecoveries().items.some(
-        (entry) => entry.draft.idempotencyKey === current.idempotencyKey,
+        (entry) => entry.draft.form.name === "Restore target",
       ),
     ).toBe(true);
-    const recovered = restoreBrowserDraft(
-      preserved!.id,
-      restored,
-      "Before recovery",
-      preserved!.draft,
+    expect(
+      readConfigurationVersions().items.some(
+        (entry) =>
+          entry.kind === "pre_restore_backup" &&
+          entry.draft.idempotencyKey === current.idempotencyKey,
+      ),
+    ).toBe(true);
+  });
+  it("keeps one page recovery through ordinary edits, rotating only for an explicit new draft", () => {
+    saveExperimentDraft(configuration, 1, "first-intent");
+    for (let index = 0; index < 20; index++)
+      saveExperimentDraft(
+        { ...configuration, name: `Edit ${index}` },
+        1,
+        `edit-${index}`,
+      );
+    expect(readBrowserDraftRecoveries().items).toHaveLength(1);
+    expect(readBrowserDraftRecoveries().items[0].draft.form.name).toBe(
+      "Edit 19",
     );
-    expect(recovered.form).toEqual(otherForm);
-    expect(recovered.step).toBe(0);
-    expect(recovered.idempotencyKey).not.toBe("other-tab-new-intent");
+    startNewExperimentDraft(
+      readExperimentDraft()!,
+      { ...configuration, name: "New intent" },
+      "Before new draft",
+    );
+    expect(readBrowserDraftRecoveries().items).toHaveLength(2);
   });
   it("never changes the shared draft if its own recovery slot cannot be persisted", () => {
     saveExperimentDraft(configuration, 2, current.idempotencyKey);

@@ -7053,3 +7053,40 @@ and Redis remained healthy.
 and the Nginx SPA fallback, not browser rendering of the production bundle,
 backend integration, rollback, full M5 or product release. No original data
 mount, paper account, frozen research/OOS, merge, tag or release was touched.
+
+## 2026-10-01 01:15 UTC multi-tab draft recovery and local execution
+
+On parent head `3a51c439f8528e94527ed3e3b75b100936e8a13f`, ordinary
+wizard autosave, explicit Save, Save & exit and Run shared an unguarded
+browser draft pointer. A second tab could update it and the older page could
+silently replace it; rotating page-recovery slots on each new request key also
+left a copy for every field edit. The focused regressions failed red on both
+cases and on a restore interleaving with another tab. The shared saver now
+retains this page's latest recovery first, checks the exact last acknowledged
+shared raw before publishing, rotates recovery only for an explicit new or
+restore intent, and writes recovery only during `beforeunload`. A cross-tab
+storage notification and an unload read warn about stale shared state. The
+conflicted page cannot Save & exit, Run or restore against its stale view;
+reload exposes the newer shared draft and both page recoveries, then an
+explicit restore backs up the newer draft before replacing it.
+
+The isolated full local `make test` passed backend **1034** with one optional
+unmounted-archive skip and frontend **540/540** across 40 files. `make lint`,
+`make build` and `git diff --check` passed. An independent read-only re-review
+found no remaining concrete release-critical issue in this change. Actual
+installed Chrome used a separate `127.0.0.1:5173` origin: tab B edited a
+test draft, tab A displayed the Chinese conflict alert and did not open
+Save & exit; after reload, the list showed separate old and new recoveries.
+The browser restored the old test copy and showed a named pre-restore backup.
+No experiment was submitted. The original Compose services and frontend/API
+remained healthy and HTTP 200. The test-only `127.0.0.1` browser drafts remain
+separate from the original `localhost` draft.
+
+`U3_MULTITAB_DRAFT_RECOVERY = PASS_BOUNDED`. Browser `localStorage` has no
+atomic compare-and-swap: a narrow concurrent check/write race remains, so
+this is loss-resistant recovery, not strict cross-tab serialization or an
+independent backup. Complete U1–U8/M4/M5, native assistive-technology and
+200% zoom, independent novice, lawful new-market data receipt, genuine
+pre-loss ledger recovery, independent physical backup, exact pushed-head CI,
+merge and release remain open. No original financial account, frozen research
+or Official OOS was changed.

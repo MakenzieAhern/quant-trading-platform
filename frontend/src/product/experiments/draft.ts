@@ -7,6 +7,20 @@ export const UNREADABLE_DRAFT_PREFIX =
   "quant.product.unreadable-experiment-draft.v1.";
 // Rotate when this page starts another logical draft; older recovery stays intact.
 let writerId = crypto.randomUUID();
+export function beginExperimentDraftPage() {
+  try {
+    const pageRaw = window.localStorage.getItem(
+      `${DRAFT_RECOVERY_PREFIX}${writerId}`,
+    );
+    if (
+      pageRaw !== null &&
+      pageRaw !== window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)
+    )
+      writerId = crypto.randomUUID();
+  } catch {
+    // Blocked storage remains visible to the wizard's normal save path.
+  }
+}
 export interface BrowserDraftRecovery {
   id: string;
   draft: ExperimentDraft;
@@ -69,12 +83,17 @@ export function saveExperimentDraft(
   form: ExperimentConfiguration,
   step: number,
   idempotencyKey: string,
-  expectedUnreadableRaw?: string,
-) {
+  options: {
+    expectedRaw?: string | null;
+    replaceUnreadable?: boolean;
+    newIntent?: boolean;
+    recoveryOnly?: boolean;
+  } = {},
+): string {
   const storedRaw = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
   if (
-    expectedUnreadableRaw !== undefined &&
-    storedRaw !== expectedUnreadableRaw
+    options.replaceUnreadable &&
+    (options.expectedRaw === undefined || storedRaw !== options.expectedRaw)
   )
     throw new Error("DRAFT_CHANGED_IN_ANOTHER_TAB");
   let stored: ExperimentDraft | null = null;
@@ -84,9 +103,7 @@ export function saveExperimentDraft(
   } catch {
     // Keep the exact original bytes; the user may still recover them.
   }
-  if (storedRaw !== null && !stored) {
-    if (storedRaw !== expectedUnreadableRaw)
-      throw new Error("DRAFT_CHANGED_IN_ANOTHER_TAB");
+  if (storedRaw !== null && !stored && options.replaceUnreadable) {
     const backupKey = `${UNREADABLE_DRAFT_PREFIX}${crypto.randomUUID()}`;
     if (window.localStorage.getItem(backupKey) !== null)
       throw new Error("UNREADABLE_DRAFT_BACKUP_EXISTS");
@@ -119,8 +136,7 @@ export function saveExperimentDraft(
     // Preserve an unreadable page recovery under its existing key.
   }
   const nextWriterId =
-    currentRecoveryRaw !== null &&
-    currentRecovery?.idempotencyKey !== idempotencyKey
+    currentRecoveryRaw !== null && (options.newIntent || !currentRecovery)
       ? crypto.randomUUID()
       : writerId;
   if (
@@ -129,16 +145,19 @@ export function saveExperimentDraft(
       null
   )
     throw new Error("DRAFT_RECOVERY_KEY_EXISTS");
-  // Synchronous for beforeunload: preserve this page's latest values before any
-  // shared-pointer write. Another tab can win the pointer without losing ours.
+  // Preserve this page before the shared pointer; unload writes only this copy.
   window.localStorage.setItem(`${DRAFT_RECOVERY_PREFIX}${nextWriterId}`, raw);
+  writerId = nextWriterId;
+  if (options.recoveryOnly) return raw;
   if (
-    expectedUnreadableRaw !== undefined &&
-    window.localStorage.getItem(EXPERIMENT_DRAFT_KEY) !== expectedUnreadableRaw
+    window.localStorage.getItem(EXPERIMENT_DRAFT_KEY) !==
+    (options.expectedRaw === undefined ? storedRaw : options.expectedRaw)
   )
     throw new Error("DRAFT_CHANGED_IN_ANOTHER_TAB");
+  if (storedRaw !== null && !stored && !options.replaceUnreadable)
+    throw new Error("DRAFT_CHANGED_IN_ANOTHER_TAB");
   window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, raw);
-  writerId = nextWriterId;
+  return raw;
 }
 
 export function readUnreadableDraftCopies(): {

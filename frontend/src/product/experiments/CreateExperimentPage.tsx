@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { ApiError } from "../../api/client";
 import { Link } from "../../components/Link";
@@ -23,9 +29,9 @@ import { experimentApi } from "./api";
 import { useExperimentCopy, type ExperimentCopy } from "./copy";
 import {
   EXPERIMENT_DRAFT_KEY,
+  beginExperimentDraftPage,
   clearCompletedExperimentDraft,
   parseExperimentDraft,
-  readExperimentDraft,
   saveExperimentDraft,
 } from "./draft";
 import { experimentError } from "./errors";
@@ -128,7 +134,11 @@ export function CreateExperimentPage() {
                     initialForm(capabilities.data!, c.defaultName),
                     0,
                     crypto.randomUUID(),
-                    original.raw!,
+                    {
+                      expectedRaw: original.raw,
+                      replaceUnreadable: true,
+                      newIntent: true,
+                    },
                   );
                   finishNewIntent();
                   setChoice("started");
@@ -334,7 +344,12 @@ function ExperimentWizard({
 }) {
   const c = useExperimentCopy();
   const { i18n } = useTranslation();
-  const [restored] = useState(readExperimentDraft);
+  const [atMount] = useState(() => {
+    beginExperimentDraftPage();
+    return existingDraft();
+  });
+  const restored = atMount.draft;
+  const expectedRaw = useRef(atMount.raw);
   const [form, setForm] = useState(
     () => restored?.form ?? initialForm(capabilities, c.defaultName),
   );
@@ -346,6 +361,8 @@ function ExperimentWizard({
   const [saved, setSaved] = useState(Boolean(restored));
   const savedRef = useRef(Boolean(restored));
   const [storageError, setStorageError] = useState(false);
+  const [draftConflict, setDraftConflict] = useState(false);
+  const draftConflictRef = useRef(false);
   const [exitOpen, setExitOpen] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [pending, setPending] = useState(false);
@@ -380,7 +397,33 @@ function ExperimentWizard({
       ? strategy.name_zh
       : strategy.name_en
     : form.strategy_id;
-  useNavigationGuard(() => savedRef.current || window.confirm(c.exitConfirm));
+  useNavigationGuard(
+    () => savedRef.current || window.confirm(c.unsavedLeaveConfirm),
+  );
+
+  const save = useCallback(() => {
+    try {
+      const raw = saveExperimentDraft(form, step, requestKey, {
+        expectedRaw: expectedRaw.current,
+        recoveryOnly: draftConflictRef.current,
+      });
+      if (draftConflictRef.current) return false;
+      expectedRaw.current = raw;
+      setStorageError(false);
+      return true;
+    } catch (reason) {
+      savedRef.current = false;
+      setSaved(false);
+      if (
+        reason instanceof Error &&
+        reason.message === "DRAFT_CHANGED_IN_ANOTHER_TAB"
+      ) {
+        draftConflictRef.current = true;
+        setDraftConflict(true);
+      } else setStorageError(true);
+      return false;
+    }
+  }, [form, step, requestKey]);
 
   useEffect(() => {
     active.current = true;
@@ -403,26 +446,54 @@ function ExperimentWizard({
     else errorElement.current?.focus();
   }, [error, step]);
   useEffect(() => {
-    const save = () => {
-      try {
-        saveExperimentDraft(form, step, requestKey);
-        return true;
-      } catch {
-        return false;
+    const changed = (event: StorageEvent) => {
+      if (event.key === EXPERIMENT_DRAFT_KEY) {
+        try {
+          if (
+            window.localStorage.getItem(EXPERIMENT_DRAFT_KEY) ===
+            expectedRaw.current
+          )
+            return;
+        } catch {
+          // Fail closed when the shared draft cannot be checked.
+        }
+        draftConflictRef.current = true;
+        setDraftConflict(true);
+        savedRef.current = false;
+        setSaved(false);
       }
     };
-    save();
+    window.addEventListener("storage", changed);
+    return () => window.removeEventListener("storage", changed);
+  }, []);
+  useEffect(() => {
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (!cancelled) save();
+    });
     const unload = (event: BeforeUnloadEvent) => {
-      if (!savedRef.current || !save()) {
+      let recovered = false;
+      let sharedUnchanged = false;
+      try {
+        saveExperimentDraft(form, step, requestKey, { recoveryOnly: true });
+        recovered = true;
+        sharedUnchanged =
+          window.localStorage.getItem(EXPERIMENT_DRAFT_KEY) ===
+          expectedRaw.current;
+      } catch {
+        // A failed page recovery must not be described as saved.
+      }
+      if (!savedRef.current || !recovered || !sharedUnchanged) {
         event.preventDefault();
         event.returnValue = "";
       }
     };
     window.addEventListener("beforeunload", unload);
     return () => {
+      cancelled = true;
       window.removeEventListener("beforeunload", unload);
     };
-  }, [form, step, requestKey, saved, c.exitConfirm]);
+  }, [save, form, step, requestKey]);
 
   function update(next: ExperimentConfiguration) {
     setForm(next);
@@ -433,16 +504,12 @@ function ExperimentWizard({
     setAcknowledged(false);
   }
   function persist() {
-    try {
-      saveExperimentDraft(form, step, requestKey);
+    if (save()) {
       setSaved(true);
       savedRef.current = true;
-      setStorageError(false);
       return true;
-    } catch {
-      setStorageError(true);
-      return false;
     }
+    return false;
   }
   function move(next: number) {
     const invalid = invalidConfigurationField(form, capabilities, step);
@@ -878,6 +945,11 @@ function ExperimentWizard({
             </div>
           )}
           {storageError && <p role="alert">{c.storageError}</p>}
+          {draftConflict && (
+            <p role="alert">
+              {storageError ? c.draftConflictStorageFailed : c.draftConflict}
+            </p>
+          )}
           <div className="experimentActions">
             {step > 0 && (
               <button
@@ -958,7 +1030,11 @@ function ExperimentWizard({
       <ConfigurationVersionsPanel
         current={{ form, step, idempotencyKey: requestKey }}
         disabled={pending}
+        restoreBlocked={draftConflict}
         onRestore={(draft) => {
+          expectedRaw.current = JSON.stringify(draft);
+          draftConflictRef.current = false;
+          setDraftConflict(false);
           setForm(draft.form);
           setStep(0);
           setRequestKey(draft.idempotencyKey);

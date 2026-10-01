@@ -159,6 +159,14 @@ function restoreDraftSnapshot(
     idempotencyKey: crypto.randomUUID(),
     savedAt: new Date().toISOString(),
   };
-  saveExperimentDraft(draft.form, draft.step, draft.idempotencyKey);
-  return draft;
+  const raw = saveExperimentDraft(
+    draft.form,
+    draft.step,
+    draft.idempotencyKey,
+    {
+      expectedRaw: storedRaw,
+      newIntent: true,
+    },
+  );
+  return parseExperimentDraft(JSON.parse(raw))!;
 }

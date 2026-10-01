@@ -24,10 +24,12 @@ import "./configs.css";
 export function ConfigurationVersionsPanel({
   current,
   disabled = false,
+  restoreBlocked = false,
   onRestore,
 }: {
   current: Pick<ExperimentDraft, "form" | "step" | "idempotencyKey">;
   disabled?: boolean;
+  restoreBlocked?: boolean;
   onRestore: (draft: ExperimentDraft) => void;
 }) {
   const c = useConfigurationCopy();
@@ -92,7 +94,7 @@ export function ConfigurationVersionsPanel({
     }
   }
   function restore() {
-    if (disabled || !selected) return;
+    if (disabled || restoreBlocked || !selected) return;
     setNotice(null);
     setError(null);
     try {
@@ -369,7 +371,7 @@ export function ConfigurationVersionsPanel({
               <button
                 type="button"
                 className="button"
-                disabled={disabled || library.storageFailed}
+                disabled={disabled || restoreBlocked || library.storageFailed}
                 onClick={restore}
               >
                 {c.confirm}
