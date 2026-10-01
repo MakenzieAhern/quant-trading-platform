@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 23:35 UTC formal-research API write boundary
+
+The existing product experiment service already persists separate
+`product_research_jobs` and `product_research_rows`, but `POST /api/research/runs`
+still created a row in the formal `research_runs` archive for a DEVELOPMENT
+request with a valid build SHA. A new test reproduced HTTP 201 in the isolated
+tmpfs `quant_test` database before the fix. The legacy POST now returns HTTP
+409 `FORMAL_RESEARCH_READ_ONLY` for DEVELOPMENT, VALIDATION and OUT_OF_SAMPLE;
+all formal archive GET routes remain available. Existing saved formal metrics,
+equity and lineage were read through the unchanged GET API in the same suite.
+
+The focused research API suite passed 5/5, the complete isolated backend suite
+passed 1035 with one optional unmounted-archive skip, and changed-file Ruff,
+format and mypy checks passed. The rebuilt local backend returned the new 409,
+`/api/health` and the frontend returned HTTP 200, Redis returned PONG. Compose
+recreated the PostgreSQL container during this backend deployment but retained
+its data: live counts stayed at 1 formal dataset, 3 formal runs, 310 formal
+trades, 8 personal jobs, 1110 personal rows, 5 paper sessions, 417 paper
+events and 4 market-update jobs. No original financial task, formal study or
+Official OOS was run. This closes the API write path, not the broader
+`U3-ISOLATE`/M4 data-integrity gate: genuine pre-loss paper ledgers and an
+independent backup remain missing.
+
 ## 2026-10-01 23:22 UTC local CI-equivalent and interrupted-state check
 
 On code head `cca65d4` with local documentation updates, `make test` exited 0
@@ -4708,7 +4731,7 @@ closes a bounded disclosure ambiguity, not U7 forward, M4 or release.
 | U3-WIZARD | Four steps, advanced disclosure, summary, back/save/restore/exit; locale preserves inputs | /research/new four-step form | Chrome synthetic and actual historical submission/result PASS; draft/locale preserved. The shared router guards dirty Back: actual Chrome dismiss retained the edit and step, accept reached home, and Forward restored them. Explicit Save & exit now uses the existing accessible dialog: actual Chrome EN/ZH cancel/Escape stayed on the wizard, confirm reached home, and Continue last draft restored the exact step, name, dates and capital. Failed local storage keeps the page open. Focused31/full241 frontend tests, lint/type/build PASS. Agent walkthrough, not a novice-user study | PASS |
 | U3-JOB | Validated actual A-share job; stages/counts; persistent URL; refresh/reopen; idempotent duplicate | /api/experiments; independent durable manager | Live historical job `5f26f84f` remains SUCCEEDED 297/297 and a fresh Chrome context reopened its saved result URL. In a separate tmpfs test DB, the actual Chrome four-step synthetic wizard double-click sent one POST and persisted one job; resending the saved key/config from a fresh client returned the same ID with the DB still at one job. Existing backend concurrent-key/conflict test and frontend lock test cover the shared path. Synthetic result is labeled non-market; details below | PASS |
 | U3-RECOVER | Real cancellation/retry/interruption; no partial results called success | cancel/retry and durable terminal states | Isolated cancellation, genuine FAILED terminal, controlled restart, and non-graceful SIGKILL recovery all verified. The crash left parent `77354e81` RUNNING 60/1212 with zero result rows; startup reconciled it to INTERRUPTED with HTTP409 result and a truthful Chrome warning. One linked child `52b76f45` completed 1212/1212, with 4108 rows only on the child and identical configuration SHA; two repeated parent retries reopened that child. The separate missing-partition FAILED path displayed specific bilingual integrity guidance and never yielded partial results. Details/screenshots below; this is not whole-machine power-loss or U7 forward-paper evidence | PASS |
-| U3-ISOLATE | Independent exploration names/store; formal reports/OOS/freeze unchanged, dates labeled inspected | Separate product_research_jobs/rows, readonly archive | No .research diff; frozen hashes unchanged; formal 1 dataset/3 runs/310 trades before-after | IN_PROGRESS |
+| U3-ISOLATE | Independent exploration names/store; formal reports/OOS/freeze unchanged, dates labeled inspected | Separate product_research_jobs/rows; formal archive GET-only in the local product API | Red/green isolated API test: legacy POST created a formal run, now HTTP 409; GET lineage still reads; live formal 1 dataset/3 runs/310 trades and personal 8 jobs/1110 rows retained. Pre-loss integrity and independent backup remain unproven | IN_PROGRESS |
 | U4-RESULT | Return/drawdown/cost/benchmark/limits, null semantics, true records and reasons | Personal result and date-linked holdings/trades, full-precision toggle | Chrome demo+historical results agree with exact APIs; real fill/snapshot2031-04-14 linked; source unavailable remains N/A; U4 tests/review PASS | PASS |
 | U4-COMPARE | Reopen/compare 2–3; six config differences indicated | /experiments/compare?ids= | Chrome three actual runs, six conditions, exact fraction display and refresh preserving URL/results; comparison tests and independent review PASS; `u4/compare-three-results-en-dark-1024.png` | PASS |
 | U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, automatic download and persistent prepared-file link | Injection/precision/API tests PASS, including CSV formula-prefix escaping. On 2026-09-23 21:09 UTC isolated real Chrome 153 with `acceptDownloads` at the documented `http://localhost:5173` origin emitted successful download events for historical job `d9f27183`: trades CSV 29,316 bytes and metadata JSON 258,223 bytes, with expected filenames and `download.failure() = null`; JSON began with report metadata and exact job ID. Earlier in-app-browser download suppression remains an environment-specific observation, not a failed Chrome export. Agent walkthrough, not a real-user study | PASS |

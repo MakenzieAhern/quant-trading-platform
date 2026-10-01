@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 formal archive API is read-only — 2026-10-01
+
+Keep the saved formal research GET endpoints, but reject the legacy
+`POST /api/research/runs` with `FORMAL_RESEARCH_READ_ONLY`. Even with OOS
+rejected, that route could append DEVELOPMENT or VALIDATION rows to the
+published formal ledger; product exploration already has separate durable
+`/api/experiments` storage and does not need it. Preserve existing records and
+operator publication scripts; do not infer that closing one HTTP write path
+restores missing pre-loss paper ledgers or completes U3/M4 acceptance.
+
 ## v1.2 market-update identity after confirmed submission — 2026-10-01
 
 Keep the saved idempotency key after an uncertain response or when the form is
