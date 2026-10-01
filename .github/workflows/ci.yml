@@ -24,7 +24,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U quant -d quant_test"
+          --health-cmd "pg_isready -h 127.0.0.1 -U quant -d quant_test"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -91,10 +91,10 @@ jobs:
           docker run --rm -d --name qtp-release-ci-pg --network qtp-release-ci --tmpfs /var/lib/postgresql/data:rw -e POSTGRES_DB=quant_test -e POSTGRES_USER=quant -e POSTGRES_PASSWORD=test_only postgres:16-alpine
           docker run --rm -d --name qtp-release-ci-redis --network qtp-release-ci --tmpfs /data:rw redis:7-alpine
           for attempt in $(seq 1 30); do
-            if docker exec qtp-release-ci-pg pg_isready -U quant -d quant_test >/dev/null 2>&1; then break; fi
+            if docker exec qtp-release-ci-pg pg_isready -h 127.0.0.1 -U quant -d quant_test >/dev/null 2>&1; then break; fi
             sleep 1
           done
-          docker exec qtp-release-ci-pg pg_isready -U quant -d quant_test
+          docker exec qtp-release-ci-pg pg_isready -h 127.0.0.1 -U quant -d quant_test
           docker run --rm --network qtp-release-ci -e APP_ENV=production -e DATABASE_URL=postgresql+asyncpg://quant:test_only@qtp-release-ci-pg:5432/quant_test qtp-release-smoke-backend alembic upgrade head
           docker run --rm -d --name qtp-release-ci-api --network qtp-release-ci -p 127.0.0.1:18000:8000 -e APP_ENV=production -e DATABASE_URL=postgresql+asyncpg://quant:test_only@qtp-release-ci-pg:5432/quant_test -e REDIS_URL=redis://qtp-release-ci-redis:6379/0 -e BROKER_MODE=paper qtp-release-smoke-backend
           curl -fsS --retry 10 --retry-all-errors --retry-delay 1 http://127.0.0.1:18000/api/health | python3 -c 'import json, sys; data = json.load(sys.stdin); assert data["status"] == "ok" and data["environment"] == "production" and data["broker_mode"] == "paper"'

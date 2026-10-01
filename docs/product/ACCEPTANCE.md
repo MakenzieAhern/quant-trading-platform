@@ -7130,3 +7130,29 @@ independent backup, merge and v1.2 release remain open.
 Exact pushed code/doc head `63c16ec66cd1e643ca9df351a60dc4ef1a4a9a20`
 completed [GitHub Actions run 36801845931](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36801845931)
 with backend, frontend and Compose all SUCCESS at 2026-10-01 01:37 UTC.
+
+## 2026-10-01 01:50 UTC PostgreSQL readiness timing repair
+
+The later metadata head `007e355a53e7c752448e594379c8bb68dc573c74`
+failed only the Compose job in [GitHub Actions run
+36802558858](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36802558858):
+the release smoke's immediate `docker exec ... pg_isready` reported
+`/var/run/postgresql:5432 - no response` during fresh PostgreSQL startup.
+Backend and frontend jobs passed. This was a real head-level CI failure, not
+an accepted green release gate.
+
+The official `postgres:16-alpine` entrypoint starts a temporary setup server
+with `listen_addresses=''`, then stops it before starting the final TCP
+server. The prior Unix-socket readiness check could therefore pass during
+temporary initialization, followed by a failed final probe in that restart
+gap; this is the evidence-based likely cause, not a proven trace of every
+internal state in the hosted run. All five in-container PostgreSQL readiness
+probes across GitHub CI, the isolated test Compose file and the normal
+Compose file now use `-h 127.0.0.1` to wait for the final TCP listener.
+
+Local isolated `make test` passed backend **1034** with one optional
+unmounted-archive skip and frontend **541/541**. Base, test and release
+`docker compose config --quiet` and `git diff --check` passed. Independent
+read-only review found no P1/P2 concern in the probe change. A fresh hosted
+CI run on the repair commit is still required; no full M5/release acceptance
+or original database mutation is claimed.

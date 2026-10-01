@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U quant -d quant_platform"]
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U quant -d quant_platform"]
       interval: 5s
       timeout: 5s
       retries: 10
