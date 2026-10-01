@@ -7153,6 +7153,11 @@ Compose file now use `-h 127.0.0.1` to wait for the final TCP listener.
 Local isolated `make test` passed backend **1034** with one optional
 unmounted-archive skip and frontend **541/541**. Base, test and release
 `docker compose config --quiet` and `git diff --check` passed. Independent
-read-only review found no P1/P2 concern in the probe change. A fresh hosted
-CI run on the repair commit is still required; no full M5/release acceptance
-or original database mutation is claimed.
+read-only review found no P1/P2 concern in the probe change. Exact repair head
+`c68950b776d43b18159a242eef4aa740a8437b3c` passed backend, frontend
+and Compose release smoke in [GitHub Actions run
+36803093367](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36803093367).
+Original local Compose still had four running services, healthy PostgreSQL,
+Redis and backend, with frontend and `/api/health` HTTP 200. This closes the
+CI timing defect only; no full M5/release acceptance or original database
+mutation is claimed.

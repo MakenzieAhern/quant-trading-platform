@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T01:44:25Z",
+  "updated_at_utc": "2026-10-01T01:54:13Z",
+  "m5_postgres_readiness_20261001_gate": {
+    "status": "PASS_BOUNDED_EXACT_HEAD_CI_NOT_FULL_M5",
+    "source_head": "c68950b776d43b18159a242eef4aa740a8437b3c",
+    "ci_run": 36803093367,
+    "proof": "A later metadata head 007e355 failed Compose in GitHub Actions run 36802558858 while backend/frontend passed; fresh Postgres reported Unix-socket no response. The official postgres:16-alpine entrypoint has a socket-only temporary setup server. All five in-container readiness probes now require final TCP on 127.0.0.1. Local isolated make test passed backend 1034 with one optional archive skip and frontend 541/541; all three Compose configs and diff check passed. Independent read-only review found no P1/P2 concern. Exact repair head c68950b passed backend/frontend/Compose release smoke in run 36803093367; original four Compose services remained up and frontend/API HTTP 200. See docs/product/ACCEPTANCE.md.",
+    "limits": "This closes a startup-timing CI flake only, not complete M5/release, current-head native 200-percent zoom, assistive-technology, independent novice, lawful forward-market receipt, genuine lost-ledger recovery, independent physical backup or post-login Docker autostart. PR32 remains draft/open; no original database, frozen research/OOS, merge, tag or release changed."
+  },
   "m4_mobile_entry_focus_20261001_gate": {
     "status": "PASS_COMPONENT_ONLY_NATIVE_ZOOM_NOT_RUN",
     "source_head": "63c16ec66cd1e643ca9df351a60dc4ef1a4a9a20",
@@ -1747,9 +1754,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "63c16ec66cd1e643ca9df351a60dc4ef1a4a9a20",
+      "last_verified_head": "c68950b776d43b18159a242eef4aa740a8437b3c",
       "state": "DRAFT",
-      "ci_run": 36801845931,
+      "ci_run": 36803093367,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
@@ -1768,7 +1775,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Original local Compose remains usable at localhost:5173. Code/doc head 63c16ec passed exact GitHub backend/frontend/Compose CI run 36801845931; its metadata-only successor df7ee80 also passed run 36802142056. PR32 remains draft/open and every later head must be checked independently. Desktop-to-mobile navigation focus has component-only proof, and docs/product/DEMO.md is a source-checked bilingual synthetic script. Once browser control recovers, check native 200% focus/overflow and current-head demo path without altering original financial accounts; then durable M5 media/CSV landing, screen-reader, foreground click-p95 and independent novice flow. Recheck Docker autostart only at the next genuine Windows login, not by induced reboot. Lawful after-start 2026 forward data rights/receipt, genuine pre-loss ledgers and independent physical backup remain external gates. No merge, tag or release before all gates pass.",
+  "next_task": "Original local Compose remains usable at localhost:5173. Postgres TCP-readiness repair head c68950b passed exact GitHub backend/frontend/Compose CI run 36803093367 after prior head 007e355 failed Compose; every later head must be checked independently. PR32 remains draft/open. Desktop-to-mobile navigation focus has component-only proof, and docs/product/DEMO.md is a source-checked bilingual synthetic script. Once browser control recovers, check native 200% focus/overflow and current-head demo path without altering original financial accounts; then durable M5 media/CSV landing, screen-reader, foreground click-p95 and independent novice flow. Recheck Docker autostart only at the next genuine Windows login, not by induced reboot. Lawful after-start 2026 forward data rights/receipt, genuine pre-loss ledgers and independent physical backup remain external gates. No merge, tag or release before all gates pass.",
   "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify clean branch, original docker compose ps and PR32 current-head CI. When browser control is available, use a separate 127.0.0.1 browser origin to test desktop-to-mobile focus under native 200% zoom and bilingual demo labels; do not submit a study/account on the original database for QA. Continue M4/M5 safe checks while preserving frozen research/OOS.",
   "next_command": "Full U1-U8/M0-M5 objective remains incomplete. Check the current pushed head's CI before any release gate, and continue M4 native browser/assistive-technology and M5 delivery checks when browser control is available. Recheck Docker autostart only after the next genuine Windows login. Lawful after-start forward data, genuine lost-ledger backup and independent physical backup remain unresolved. Do not merge, tag or release before all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
