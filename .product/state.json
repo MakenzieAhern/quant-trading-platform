@@ -1,12 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T01:15:38Z",
+  "updated_at_utc": "2026-10-01T01:18:53Z",
   "u3_multitab_draft_20261001_gate": {
     "status": "PASS_BOUNDED_CROSS_TAB_RECOVERY_NOT_ATOMIC_OR_FULL_U3_M4_M5",
     "parent_head": "3a51c439f8528e94527ed3e3b75b100936e8a13f",
     "proof": "2026-10-01 01:15 UTC: ordinary wizard saves now preserve a per-page recovery and check the last acknowledged shared raw before publication; an observed newer tab blocks Save & exit and Run, and unload never republishes stale shared data. Recovery slots no longer rotate on every field edit. A red/green restore-interleaving regression and complete conflict-remount-recovery test passed. Isolated make test exited 0 with backend 1034/one optional unmounted-archive skip and frontend 540/540; make lint/build and diff check passed. Independent read-only re-review found no remaining concrete release-critical issue. Installed Chrome on isolated 127.0.0.1 origin showed tab B change warning in tab A, blocked Save & exit, both recovery copies after reload, and a backup-first restore; no Run/POST. Original Compose/API/frontend remained HTTP 200 and healthy. See docs/product/ACCEPTANCE.md.",
-    "limits": "localStorage compare/write is not atomic across tabs, so this is bounded loss-resistant recovery, not strict serialization. Browser-local recovery is not an independent backup. The isolated test origin retains test drafts; the original localhost draft and financial accounts were not changed. No native screen-reader/200-percent zoom, full U1-U8/M4/M5, independent novice or exact new-head CI acceptance. No frozen research/OOS, merge, tag or release action."
+    "ci": "Exact code head 7c6d2bae691227c8262474bb3b60d8e2ce6458e2 passed GitHub Actions run 36800336531: backend, frontend and compose SUCCESS at 2026-10-01 01:18 UTC. PR32 remains draft/open.",
+    "limits": "localStorage compare/write is not atomic across tabs, so this is bounded loss-resistant recovery, not strict serialization. Browser-local recovery is not an independent backup. The isolated test origin retains test drafts; the original localhost draft and financial accounts were not changed. No native screen-reader/200-percent zoom, full U1-U8/M4/M5 or independent novice acceptance. No frozen research/OOS, merge, tag or release action."
   },
   "m5_current_release_frontend_smoke_20261001_gate": {
     "status": "PASS_BOUNDED_PACKAGED_FRONTEND_HTTP_NOT_FULL_M5",
