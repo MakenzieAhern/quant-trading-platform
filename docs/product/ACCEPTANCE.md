@@ -7323,3 +7323,44 @@ it was not retried through an unsafe workaround. Lawful after-start 2026
 forward-market rights/receipt, genuine pre-loss paper ledgers, independent
 physical backup and Docker unattended-login startup remain open. No merge,
 tag or release occurred.
+
+## 2026-10-01 19:43 UTC genuine reboot, safe Docker recovery and current-head 404
+
+Windows reported a genuine boot at 2026-10-01 17:05:29 AEST. The existing
+`QuantTrading-DockerDesktop-AtLogon` task ran at 17:05:43 with result 0, and
+Docker Desktop 4.92.0 initialized at 07:05:57 UTC. A second instance was
+observed at 07:06:37 UTC. At 07:07:49 UTC Electron logged `Quitting whole
+Docker Desktop` and `app.exit(104)`; the backend logged `actionMenuQuit` and
+an Electron-requested shutdown. The initiator of that Quit remains unknown.
+At this work unit's first check, no Docker Desktop/backend process remained,
+`docker-desktop` WSL was stopped and Ubuntu did not expose `docker`. Thus the
+actual login **failed terminal-free startup** despite the task's result 0.
+Neither the second launch nor a user action has been proven to cause the Quit;
+startup settings were not changed and no reboot was induced for testing.
+
+With no Docker process present, one ordinary launch of the already-installed
+Desktop restored WSL integration: Client/Engine 29.8.0, Desktop 4.92.0 and
+Compose 5.5.1. The four original Compose containers restarted without being
+recreated; PostgreSQL, Redis and backend reported healthy, Redis returned
+PONG, PostgreSQL accepted connections, and both frontend and `/api/health`
+returned HTTP 200. The four named project volumes and existing images were
+still listed. Read-only original-database counts matched the prior checkpoint:
+five paper sessions, 417 paper events, eight personal research jobs and four
+market-update jobs. All five paper sessions were `STOPPED`; research jobs were
+six `SUCCEEDED`, one `CANCELLED` and one `INTERRUPTED`. These counts establish
+bounded restart retention, not an independent backup or restored pre-loss
+ledgers. No volume/image/data reset, deletion or `down -v` was performed.
+
+On the current pushed head `057d332252b339386c8145bc4b109ac21c70d9af`,
+a fresh local in-app-browser tab at explicit `127.0.0.1:5173` showed the
+Workbench with service online and the historical-data date 2025-12-31. A
+direct unknown route showed matching English `Page not found` heading,
+breadcrumb and `Page not found · QUANT` title; switching to Chinese produced
+`未找到页面` and `未找到页面 · QUANT`. English/system preferences were restored and
+only the agent-created QA tab was closed. This closes the prior current-head
+404 browser-proof gap, but is not installed Chrome, native 200% zoom,
+screen-reader speech, durable M5 media, CSV file landing, independent novice
+review or full U1–U8/M4/M5. PR #32 remains open/draft with exact inspected-head
+backend/frontend/Compose CI green in run 36827147044. Lawful post-start 2026 market feed rights
+and receipt, genuine pre-loss paper ledgers, independent physical backup and
+terminal-free Docker login remain release blockers; no merge, tag or release.
