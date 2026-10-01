@@ -155,6 +155,7 @@ export function UpdateRecords({
         </>
       )}
       <Pagination
+        label={c.observations}
         offset={observationOffset}
         limit={50}
         total={observations.data?.total ?? null}
@@ -198,6 +199,7 @@ export function UpdateRecords({
         </>
       )}
       <Pagination
+        label={c.receipts}
         offset={receiptOffset}
         limit={20}
         total={receipts.data?.total ?? null}

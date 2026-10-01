@@ -21,6 +21,7 @@ import {
   formatUtc,
   shortId,
 } from "../utils/format";
+import { localizeRiskMessage } from "./riskMessage";
 
 const COLLECTION_LIMIT = 25;
 
@@ -278,11 +279,7 @@ function SuccessfulResult({ runId }: { runId: string }) {
                 defaultValue: item.reason_code,
               })}
             </td>
-            <td>
-              {paperT(`detail.riskMessages.${item.message}`, {
-                defaultValue: item.message,
-              })}
-            </td>
+            <td>{localizeRiskMessage(item.message, paperT)}</td>
             <td>{formatUtc(item.timestamp)}</td>
           </tr>
         )}
@@ -439,8 +436,20 @@ export function BacktestDetailPage({ runId }: { runId: string }) {
       {detail.status === "FAILED" && (
         <section className="stateCallout failedCallout" role="alert">
           <h2>{t("detail.failed")}</h2>
-          <p>{detail.error_message ?? t("detail.failedDefault")}</p>
+          <p>
+            {t(
+              detail.error_message
+                ? "detail.failedWithDiagnostic"
+                : "detail.failedDefault",
+            )}
+          </p>
           <p>{t("detail.failedNoMetrics")}</p>
+          {detail.error_message && (
+            <details>
+              <summary>{paperT("detail.auditError")}</summary>
+              <code>{detail.error_message}</code>
+            </details>
+          )}
         </section>
       )}
       {detail.status === "SUCCEEDED" && <SuccessfulResult runId={runId} />}

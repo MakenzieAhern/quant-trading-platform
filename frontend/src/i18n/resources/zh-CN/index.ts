@@ -177,6 +177,8 @@ export const zhCN = {
       progressHelp: "系统每五秒检查一次运行状态；后端仍同步执行这次回测。",
       failed: "回测失败",
       failedDefault: "运行失败，暂无额外的安全诊断信息。",
+      failedWithDiagnostic:
+        "本次回测未完成，请核对配置和服务状态；原始诊断可在下方展开查看。",
       failedNoMetrics: "这次运行不会显示成功指标或权益曲线。",
     },
   },

@@ -193,6 +193,8 @@ export const enUS = {
       failed: "Backtest failed",
       failedDefault:
         "The run failed without additional safe diagnostic information.",
+      failedWithDiagnostic:
+        "This backtest did not complete. Check its configuration and service status; open the original diagnostic below for details.",
       failedNoMetrics:
         "No successful metrics or equity curve are displayed for this run.",
     },

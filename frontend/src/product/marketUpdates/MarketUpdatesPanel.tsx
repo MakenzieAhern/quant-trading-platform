@@ -223,6 +223,7 @@ export function MarketUpdatesPanel({
           </>
         )}
         <Pagination
+          label={c.history}
           offset={offset}
           limit={20}
           total={history.data?.total ?? null}
@@ -374,7 +375,11 @@ function UpdateRequestForm({
               : explainUpdateCode("UPDATE_WORKER_UNAVAILABLE", i18n.language)}
         </p>
       )}
-      <form ref={formElement} onSubmit={(event) => void submit(event)}>
+      <form
+        ref={formElement}
+        noValidate
+        onSubmit={(event) => void submit(event)}
+      >
         <fieldset disabled={pending}>
           <label>
             {c.securities}

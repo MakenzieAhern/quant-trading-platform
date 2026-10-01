@@ -11,6 +11,7 @@ import { tradingDate } from "../product/experiments/api";
 import { usePaperStream } from "../hooks/usePaperStream";
 import type { PaperJournalEvent, PaperSessionStatus } from "../types/paper";
 import { formatDecimal, formatUtc, shortId } from "../utils/format";
+import { localizeRiskMessage } from "./riskMessage";
 
 type PaperAction = "start" | "pause" | "stop";
 
@@ -157,22 +158,6 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     portfolio &&
     portfolioDate !== marketSession.trading_date,
   );
-  const riskMessage = (message: string) => {
-    const reserved = /^reserved quantity for (.+) must be finite$/.exec(
-      message,
-    );
-    if (reserved)
-      return t("detail.riskMessages.reservedQuantityFinite", {
-        symbol: reserved[1],
-      });
-    const mark = /^a positive observed mark is required for (.+)$/.exec(
-      message,
-    );
-    if (mark)
-      return t("detail.riskMessages.positiveMarkRequired", { symbol: mark[1] });
-    return t(`detail.riskMessages.${message}`, { defaultValue: message });
-  };
-
   return (
     <>
       {liveFillStatus}
@@ -461,7 +446,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           t(`detail.riskReasons.${item.reason_code}`, {
             defaultValue: item.reason_code,
           }),
-          riskMessage(item.message),
+          localizeRiskMessage(item.message, t),
         ])}
       />
       <PaperTable

@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { i18n } from "../i18n";
@@ -70,6 +70,31 @@ describe("backtest detail", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText("Performance")).not.toBeInTheDocument();
     expect(screen.queryByText("Equity curve")).not.toBeInTheDocument();
+  });
+
+  it("gives Chinese failure guidance before the exact server diagnostic", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse(run("FAILED")),
+    );
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    try {
+      render(<BacktestDetailPage runId={RUN_ID} />);
+      const alert = await screen.findByRole("alert");
+      expect(
+        within(alert).getByText(
+          "本次回测未完成，请核对配置和服务状态；原始诊断可在下方展开查看。",
+        ),
+      ).toBeInTheDocument();
+      const details = within(alert)
+        .getByText("原始诊断（审计）")
+        .closest("details");
+      expect(details).not.toHaveAttribute("open");
+      expect(details).toHaveTextContent(
+        "RuntimeError: backtest execution failed",
+      );
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
   });
 
   it("renders backend text as text rather than executable markup", async () => {
@@ -158,10 +183,27 @@ describe("backtest detail", () => {
                 projected_cash: "98148.60",
                 estimated_transaction_cost: "0",
               },
+              {
+                proposal_id: "a0975744-c58a-49d8-a72d-45f6ed700ca6",
+                approved: false,
+                reason_code: "INVALID_PORTFOLIO_STATE",
+                message: "reserved quantity for AAPL must be finite",
+                timestamp: "2024-01-02T00:00:00Z",
+                risk_increasing: true,
+                reference_price: "185.14",
+                order_notional: "1851.40",
+                projected_position_quantity: "10",
+                projected_symbol_exposure: "1851.40",
+                projected_gross_exposure: "1851.40",
+                projected_net_exposure: "1851.40",
+                projected_gross_leverage: "0.018514",
+                projected_cash: "98148.60",
+                estimated_transaction_cost: "0",
+              },
             ],
             limit: 25,
             offset: 0,
-            total: 1,
+            total: 2,
           }),
         );
       if (url.includes("/orders"))
@@ -226,6 +268,9 @@ describe("backtest detail", () => {
       expect(screen.getByText("买入 / 市价单")).toBeInTheDocument();
       expect(screen.getByText("风控检查通过")).toBeInTheDocument();
       expect(screen.getByText("提案已通过风控。")).toBeInTheDocument();
+      expect(
+        screen.getByText("AAPL 的预留数量必须为有限数。"),
+      ).toBeInTheDocument();
       expect(screen.getByTitle("185.140000000000000001")).toHaveTextContent(
         "185.140000000000000001",
       );

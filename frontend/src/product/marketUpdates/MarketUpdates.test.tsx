@@ -193,7 +193,9 @@ describe("explicit incremental request workflow", () => {
     };
     const { rerender } = render(<UpdateRecords job={running} revision={0} />);
     await screen.findByRole("table", { name: "Candidate observations" });
-    const pager = screen.getAllByRole("group", { name: "Pagination" })[0];
+    const pager = screen.getByRole("group", {
+      name: "Candidate observations — Pagination",
+    });
     await userEvent.click(within(pager).getByRole("button", { name: "Next" }));
     expect(pager).toHaveFocus();
     rerender(
@@ -204,6 +206,32 @@ describe("explicit incremental request workflow", () => {
     );
     expect(pager).toBeInTheDocument();
     expect(pager).toHaveFocus();
+  });
+  it("names the history, observation, and receipt pagers in both languages", async () => {
+    window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
+    render(<MarketUpdatesPanel />);
+    await screen.findByRole("table", { name: "Candidate observations" });
+    for (const [locale, names] of [
+      [
+        "en-US",
+        [
+          "Update task history — Pagination",
+          "Candidate observations — Pagination",
+          "Provider receipt evidence — Pagination",
+        ],
+      ],
+      [
+        "zh-CN",
+        ["更新任务历史 — 分页", "候选观察值 — 分页", "供应商回执证据 — 分页"],
+      ],
+    ] as const) {
+      await act(async () => i18n.changeLanguage(locale));
+      expect(
+        screen.getAllByRole("group", { name: /Pagination|分页/ }),
+      ).toHaveLength(3);
+      for (const name of names)
+        expect(screen.getByRole("group", { name })).toBeInTheDocument();
+    }
   });
   it("names saved task controls by security, dates and time in both languages", async () => {
     render(<MarketUpdatesPanel />);
@@ -609,6 +637,33 @@ describe("explicit incremental request workflow", () => {
       ),
     ).toBeInTheDocument();
     expect(create).not.toHaveBeenCalled();
+  });
+  it("shows a translated required-field error before any request", async () => {
+    const create = vi.spyOn(marketUpdateApi, "create");
+    render(<MarketUpdatesPanel />);
+    await screen.findByRole("checkbox");
+    await userEvent.click(screen.getByRole("checkbox"));
+    for (const [locale, field, error] of [
+      ["en-US", "Security IDs (1–20)", /distinct canonical IDs/],
+      ["zh-CN", "证券标识（1–20 个）", /不重复的规范证券标识/],
+    ] as const) {
+      await act(async () => i18n.changeLanguage(locale));
+      await userEvent.click(
+        screen.getByRole("button", {
+          name:
+            locale === "en-US"
+              ? "Request selected raw data"
+              : "请求所选原始数据",
+        }),
+      );
+      const alert = screen.getByRole("alert");
+      expect(alert).toHaveTextContent(error);
+      const ids = screen.getByLabelText(field);
+      expect(ids).toHaveFocus();
+      expect(ids).toHaveAttribute("aria-invalid", "true");
+      expect(ids).toHaveAttribute("aria-describedby", alert.id);
+      expect(create).not.toHaveBeenCalled();
+    }
   });
   it("reopens saved task URLs with exact observations, receipt hashes and honest unresolved dates", async () => {
     window.history.replaceState({}, "", `/data?updateJob=${job.job_id}`);
