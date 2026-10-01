@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T23:45:11Z",
+  "updated_at_utc": "2026-10-01T23:58:08Z",
+  "m4_m5_bounded_browser_and_release_smoke_20261002_gate": {
+    "status": "PASS_BOUNDED_MOBILE_JOURNAL_AND_PACKAGED_OFFLINE_STATE_NOT_FULL_M4_M5",
+    "source_head": "d53e89a13f67d0507b82fed5879598ba66602577",
+    "proof": "In an agent-owned Chrome localhost tab at a temporary 390x844 viewport, the retained stopped historical paper account d7044a3c showed Chinese and English labels. The English saved-event journal paged 138-89 to 88-39 and back, retained focus on the labeled pager and updated its aria-live range; document/client widths stayed 375/375. Chinese preference and default viewport were restored. A current-source Dockerfile.release image sha256:1213b80695f127ada6e069340f841ef27320ba7deff53e75696b335fd53daa8f served the home and deep-link SPA entry with HTTP 200 on an isolated port, and actual Chrome rendered the packaged home and an actionable localized offline deep-link state. The scratch container had no mounts and was stopped; the original four Compose services remained running and frontend/API returned HTTP 200. See docs/product/ACCEPTANCE.md.",
+    "limits": "The 390x844 check is a viewport override, not native 200-percent zoom or screen-reader speech. The isolated package used port 50390, which is not in the backend CORS allowlist, so its offline state was expected and does not prove API-linked release operation or an application defect. No original financial database, paper session, provider, research archive, OOS, merge, tag or release was changed. Full M4/M5 and product release remain open."
+  },
   "u3_local_product_isolation_20261002_gate": {
     "status": "PASS_SCOPED_LOCAL_PRODUCT_ISOLATION_NOT_M4_DATA_RECOVERY",
     "code_head": "12fc5cdf9aec2c91c5af696977bc71faae9cf8f7",
