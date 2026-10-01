@@ -7027,3 +7027,29 @@ and theme, not native screen-reader speech, native 200% zoom, full M4/M5
 acceptance or durable media. The current code still needs exact pushed-head
 CI. No Run/POST, original paper ledger, frozen research/OOS, merge, tag or
 release action occurred.
+
+## 2026-10-01 00:47 UTC exact-head CI recovery and packaged frontend smoke
+
+The existing draft/open PR #32 was pushed to exact code head
+`060a0587505d2423a4b486ee90c083d1a9a4ac8f`. [GitHub Actions run
+36797418009](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36797418009)
+completed `SUCCESS` for backend, frontend and Compose. This directly verifies
+October Actions job admission; the September billing-blocked run remains
+historical, and no billing settings were changed. A later documentation-only
+head still requires its own exact-head CI before any release decision.
+
+The release frontend was separately built from `frontend/Dockerfile.release`
+at code head `060a058` as image `qtp-v12-frontend-smoke:060a058`, image ID
+`sha256:4a7e9d9ff9fc42fdd8790ad0a7519fb18b9704da4af2e9f6a9af894acf2e6286`.
+An owned scratch Nginx container bound only `127.0.0.1:50389`, reported zero
+mounts, and served both `/` and the SPA deep link
+`/paper/00000000-0000-0000-0000-000000000000` as HTTP 200 `text/html`, 650
+bytes. Its startup logs had no error. Only that scratch container was stopped;
+the image and stopped container remain for inspection. The original Compose
+frontend and `/api/health` still returned HTTP 200, and backend, PostgreSQL
+and Redis remained healthy.
+
+`PACKAGED_FRONTEND_HTTP = PASS_BOUNDED`. This proves packaged static delivery
+and the Nginx SPA fallback, not browser rendering of the production bundle,
+backend integration, rollback, full M5 or product release. No original data
+mount, paper account, frozen research/OOS, merge, tag or release was touched.

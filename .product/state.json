@@ -1,7 +1,15 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T00:39:00Z",
+  "updated_at_utc": "2026-10-01T00:47:00Z",
+  "m5_current_release_frontend_smoke_20261001_gate": {
+    "status": "PASS_BOUNDED_PACKAGED_FRONTEND_HTTP_NOT_FULL_M5",
+    "source_head": "060a0587505d2423a4b486ee90c083d1a9a4ac8f",
+    "image": "qtp-v12-frontend-smoke:060a058",
+    "image_id": "sha256:4a7e9d9ff9fc42fdd8790ad0a7519fb18b9704da4af2e9f6a9af894acf2e6286",
+    "proof": "2026-10-01 00:46 UTC: frontend/Dockerfile.release built the exact 060a058 source into an Nginx image. Owned scratch container qtp-v12-frontend-smoke-060a058 published only on loopback 127.0.0.1:50389, had zero mounts, and returned text/html HTTP 200 with 650 bytes for / and /paper/00000000-0000-0000-0000-000000000000. Nginx startup logs had no error; only that owned container was stopped. Original Compose frontend and /api/health remained HTTP 200; backend, PostgreSQL and Redis healthy. See docs/product/ACCEPTANCE.md.",
+    "limits": "HTTP and SPA fallback only, not browser DOM/asset/runtime UX, release backend/database migration or rollback. Test image and stopped scratch container were retained; no original volume, ledger, frozen research/OOS or release state changed."
+  },
   "m4_paper_journal_keyboard_20261001_gate": {
     "status": "PASS_BOUNDED_CHROME_KEYBOARD_FOCUS_NOT_FULL_M4_M5",
     "parent_head": "995e47b1019e28fc631a58071a050dbb5ed2a14c",
@@ -1140,10 +1148,10 @@
   "github_recovery_hold": {
     "reported_by": "user",
     "estimated_recovery_date": "2026-10-01",
-    "reported_wait": "user now estimates October 1; no exact recovery time independently verified",
-    "actual_recovery_verified": false,
-    "last_readonly_check": "2026-09-30 23:02 UTC (October 1 09:02 Sydney): gh auth still MakenzieAhern; PR #32 remains OPEN DRAFT at remote f91e1e50c1a07037ec365a24b3defe2aa0842d12. Latest Actions run remains September 26 run 36217962698; all three jobs failed before runner assignment with the payment-or-spending-limit annotation, and no newer run was listed. Earlier signed-in budget view showed Actions budget $0, Stop usage Yes and 100% utilization for September. An October run has not been attempted or confirmed. No CI trigger/retry/push or billing change.",
-    "policy": "Local date has reached October 1, but actual GitHub Actions recovery is not independently confirmed. Hold ALL push, CI retries/polling, merge and release until actual recovery; estimated date is not proof. Continue safe local work. Exact-head CI required afterward; no payment, limit change or gate bypass."
+    "reported_wait": "historical user estimate was October 1; actual recovery subsequently verified by a successful October Actions run",
+    "actual_recovery_verified": true,
+    "last_readonly_check": "2026-10-01 00:43 UTC: GitHub Actions run 36797418009 completed SUCCESS on exact PR #32 head 060a0587505d2423a4b486ee90c083d1a9a4ac8f; backend, frontend and Compose jobs all succeeded. PR #32 remained OPEN DRAFT. September billing-blocked run is historical, not the present CI state. No billing or limit setting was changed.",
+    "policy": "The September Actions admission hold is resolved by an actual successful October run. Normal feature-branch pushes and exact-head CI checks may proceed; this does not authorize merge or release. Reverify CI against the latest pushed head at the release gate. No payment, limit change or gate bypass."
   },
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
   "status": "IN_PROGRESS",
@@ -1720,13 +1728,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "a2c48be",
+      "last_verified_head": "060a0587505d2423a4b486ee90c083d1a9a4ac8f",
       "state": "DRAFT",
-      "ci_run": 36794402679,
+      "ci_run": 36797418009,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "U3-WIZARD explicit Save & exit accessible dialog ZH/EN cancel/Escape/home/restore PASS with exact saved draft; market watchlist actions uniquely named in ZH/EN. Ten primary routes had bounded ZH/dark and EN/light 390x844 no-overflow checks; saved historical chart date/locale invariant rechecked. Earlier result-to-paper handoff, read-only field focus, bilingual table scrolling and formal archive translated AX spot checks PASS. Native 200% browser zoom, full visual/A11Y/performance matrix and forward mode remain incomplete. Docker post-login auto-start still unproven; missing genuine ledgers, independent backup and lawful forward authority remain open"
+      "browser_gate": "U3-WIZARD explicit Save & exit accessible dialog ZH/EN cancel/Escape/home/restore PASS with exact saved draft; market watchlist actions uniquely named in ZH/EN. Ten primary routes had bounded ZH/dark and EN/light 390x844 no-overflow checks; saved historical chart date/locale invariant rechecked. Earlier result-to-paper handoff, read-only field focus, bilingual table scrolling and formal archive translated AX spot checks PASS. Current code head additionally passed bounded Chrome keyboard focus on the saved paper-event pager; packaged frontend HTTP smoke passed separately. Native 200% browser zoom, full visual/A11Y/performance matrix and forward mode remain incomplete. Docker post-login auto-start still unproven; missing genuine ledgers, independent backup and lawful forward authority remain open"
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -1741,7 +1749,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Original local Compose is healthy and usable at localhost:5173. Exact pushed a2c48be GitHub CI backend/frontend/compose passed in run36794402679; PR32 is still draft/open. Isolated-browser bilingual malformed-draft recovery passed and its test storage was restored/cleaned. U1-U8/M4/M5 remain incomplete. Next safe work: durable M5 media/CSV file landing, native zoom/screen-reader and foreground click-p95 evidence, then independent novice flow. Next genuine Windows login must recheck Docker autostart; do not reboot just for QA. Lawful after-start 2026 forward-market data rights and receipt, genuine pre-loss ledgers and independent physical backup remain external gates. Preserve frozen research/OOS, prohibit live trading and do not merge, tag or release before all product and data gates pass.",
+  "next_task": "Original local Compose is healthy and usable at localhost:5173. Last verified code head 060a058 passed GitHub backend/frontend/Compose CI in run 36797418009; PR32 remains draft/open and any subsequent head needs its own CI. Bounded Chrome paper-journal keyboard focus and isolated packaged-frontend HTTP checks passed, not full M4/M5. U1-U8/M4/M5 remain incomplete. Next safe work: durable M5 media/CSV file landing, native zoom/screen-reader and foreground click-p95 evidence, then independent novice flow. Next genuine Windows login must recheck Docker autostart; do not reboot just for QA. Lawful after-start 2026 forward-market data rights and receipt, genuine pre-loss ledgers and independent physical backup remain external gates. Preserve frozen research/OOS, prohibit live trading and do not merge, tag or release before all product and data gates pass.",
   "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform read PRODUCT_MASTER and .product/state.json; verify branch, clean status, original docker compose ps and PR32 exact-head CI. Continue safe local UX/QA or isolated-test work. Original Compose serves localhost:5173 and API 8000; do not touch original financial data or browser draft. Actual native screen-reader/zoom/performance acceptance remains absent.",
   "next_command": "Full U1-U8/M0-M5 objective remains incomplete despite exact-head hosted CI recovery. Recheck Docker autostart at the next genuine Windows login without an induced reboot or duplicate launcher. Missing lawful 2026 forward data rights/after-start receipt, genuine lost-ledger backup, independent physical backup and full M4/M5 acceptance remain open. Do not merge, tag or release before all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
