@@ -398,6 +398,97 @@ describe("explicit incremental request workflow", () => {
       ),
     ).toBeInTheDocument();
   });
+  it("uses a fresh key for another confirmed request with the same scope", async () => {
+    const secondJob = {
+      ...job,
+      job_id: "aaaaaaaa-bbbb-4ccc-8ddd-000000000004",
+    };
+    const create = vi
+      .spyOn(marketUpdateApi, "create")
+      .mockResolvedValueOnce(job)
+      .mockResolvedValueOnce(secondJob);
+    render(<MarketUpdatesPanel />);
+    await fill();
+    const submit = screen.getByRole("button", {
+      name: "Request selected raw data",
+    });
+    await userEvent.click(submit);
+    await screen.findByRole("region", { name: `Task: ${job.job_id}` });
+    await screen.findByLabelText("Security IDs (1–20)");
+    const firstKey = create.mock.calls[0][1];
+    expect(screen.getByRole("checkbox")).not.toBeChecked();
+    const nextSubmit = screen.getByRole("button", {
+      name: "Request selected raw data",
+    });
+    expect(nextSubmit).toBeDisabled();
+    expect(
+      JSON.parse(localStorage.getItem(UPDATE_DRAFT_KEY)!).requestKey,
+    ).not.toBe(firstKey);
+
+    await userEvent.click(screen.getByRole("checkbox"));
+    await userEvent.click(nextSubmit);
+    expect(create).toHaveBeenCalledTimes(2);
+    expect(create.mock.calls[1][0]).toEqual(create.mock.calls[0][0]);
+    expect(create.mock.calls[1][1]).not.toBe(firstKey);
+  });
+  it("keeps the submitted key if Refresh unmounts the form before the response", async () => {
+    let resolveCreate!: (value: UpdateJob) => void;
+    let resolveRefresh!: () => void;
+    const create = vi
+      .spyOn(marketUpdateApi, "create")
+      .mockImplementationOnce(
+        () => new Promise((done) => (resolveCreate = done)),
+      )
+      .mockResolvedValueOnce(job);
+    vi.mocked(marketUpdateApi.capabilities)
+      .mockResolvedValueOnce(caps)
+      .mockImplementationOnce(
+        () =>
+          new Promise((done) => {
+            resolveRefresh = () => done(caps);
+          }),
+      );
+    render(<MarketUpdatesPanel />);
+    await fill();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Request selected raw data" }),
+    );
+    const submittedKey = create.mock.calls[0][1];
+    await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(screen.queryByLabelText("Security IDs (1–20)")).toBeNull();
+    await act(async () => resolveCreate(job));
+    expect(location.search).toBe("");
+    expect(JSON.parse(localStorage.getItem(UPDATE_DRAFT_KEY)!).requestKey).toBe(
+      submittedKey,
+    );
+
+    await act(async () => resolveRefresh());
+    await screen.findByLabelText("Security IDs (1–20)");
+    await userEvent.click(screen.getByRole("checkbox"));
+    await userEvent.click(
+      screen.getByRole("button", { name: "Request selected raw data" }),
+    );
+    expect(create.mock.calls[1][1]).toBe(submittedKey);
+  });
+  it("preserves another tab's saved draft when a response arrives", async () => {
+    let resolve!: (value: UpdateJob) => void;
+    vi.spyOn(marketUpdateApi, "create").mockImplementation(
+      () => new Promise((done) => (resolve = done)),
+    );
+    render(<MarketUpdatesPanel />);
+    await fill();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Request selected raw data" }),
+    );
+    const newer = {
+      ...JSON.parse(localStorage.getItem(UPDATE_DRAFT_KEY)!),
+      securityText: "CN-A:SSE:600001",
+      requestKey: crypto.randomUUID(),
+    };
+    localStorage.setItem(UPDATE_DRAFT_KEY, JSON.stringify(newer));
+    await act(async () => resolve(job));
+    expect(JSON.parse(localStorage.getItem(UPDATE_DRAFT_KEY)!)).toEqual(newer);
+  });
   it("keeps the submit focus and saved identity after an uncertain response", async () => {
     let reject!: (reason: unknown) => void;
     const create = vi
@@ -514,7 +605,7 @@ describe("explicit incremental request workflow", () => {
     );
     expect(
       screen.getByText(
-        /This request has not been submitted without a saved identity/,
+        /A new request needs a saved identity before submission/,
       ),
     ).toBeInTheDocument();
     expect(create).not.toHaveBeenCalled();

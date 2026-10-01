@@ -1,5 +1,16 @@
 # Decisions
 
+## v1.2 market-update identity after confirmed submission — 2026-10-01
+
+Keep the saved idempotency key after an uncertain response or when the form is
+unmounted before its response can open the task. Once the active form receives
+and displays a confirmed task, persist a fresh key for a later explicit
+same-scope gap recheck and require the user to acknowledge again. This lets
+new requests revisit still-missing dates without turning response loss into
+duplicate jobs. The response handler checks for an already-changed draft from
+another tab before writing; browser storage has no atomic compare-and-swap.
+Raw market updates remain candidate-only and do not authorize forward execution.
+
 ## v1.2 malformed browser drafts preserve both raw text and prior page recovery — 2026-10-01
 
 Fail closed on an unreadable shared experiment draft: show its original text,

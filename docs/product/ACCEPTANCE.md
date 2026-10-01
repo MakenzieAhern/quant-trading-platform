@@ -7161,3 +7161,35 @@ Original local Compose still had four running services, healthy PostgreSQL,
 Redis and backend, with frontend and `/api/health` HTTP 200. This closes the
 CI timing defect only; no full M5/release acceptance or original database
 mutation is claimed.
+
+## 2026-10-01 02:20 UTC U5 repeated gap-check identity
+
+At parent head `2229484`, a confirmed market-update request left its saved
+idempotency key unchanged. The backend correctly returns the existing job for
+that key, so a later explicit request for the same securities/dates could not
+recheck unresolved dates. The focused second-submission regression failed red.
+The form now rotates and persists a key only when its still-mounted, same-URL
+instance receives confirmation and opens that task; it clears the previous
+acknowledgement before another request. An uncertain/error response, or a
+confirmed response arriving after Refresh unmounted the form or its URL
+changed, keeps the submitted key for safe reconciliation. A response from an
+older tab preserves a newer saved draft observed before its write. Both locale
+messages now describe these distinct intents.
+
+Independent read-only review found and reproduced the Refresh/unmount timing
+gap in the first repair; its deferred-response regression failed red before
+the guard and passed green afterward. The final focused U5 suite passed
+**43/43**. Isolated `make test` passed backend **1034** with one optional
+unmounted-archive skip and frontend **544/544**; `make lint`, `make build`,
+changed-file format and `git diff --check` passed. A final independent review
+found no remaining concrete P1/P2 in this slice. The bilingual demo script
+also now tells readers to choose the matching top-bar language before using
+its quoted controls; the labels were checked against current source.
+
+This is local/component proof, not a current-head native browser walkthrough
+or complete U5/M4/M5 acceptance. Browser control could not safely identify
+the Windows Chrome URL and earlier browser-surface discovery timed out, so no
+200% zoom, CSV file-landing or novice result is claimed. No actual provider
+request, original financial database write, frozen research/OOS change,
+forward acceptance, merge, tag or release occurred. Hosted CI on the new
+pushed head remains pending.

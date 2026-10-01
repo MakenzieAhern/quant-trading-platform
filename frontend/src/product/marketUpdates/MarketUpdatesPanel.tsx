@@ -330,13 +330,23 @@ function UpdateRequestForm({
     const originatingUrl = `${location.pathname}${location.search}`;
     try {
       const job = await marketUpdateApi.create(config, draft.requestKey);
-      // Leave the persisted identity intact: a lost response or reopened form must
-      // reconcile to this same server job, never silently create another request.
       if (
         active.current &&
         `${location.pathname}${location.search}` === originatingUrl
-      )
+      ) {
+        const next = { ...draft, requestKey: crypto.randomUUID() };
+        setDraft(next);
+        setAccepted(false);
+        // A different tab may have replaced this draft while the request was pending.
+        if (JSON.stringify(readUpdateDraft()) === JSON.stringify(draft)) {
+          try {
+            saveUpdateDraft(next);
+          } catch {
+            setStorageFailed(true);
+          }
+        }
         onCreated(job.job_id, document.activeElement === submitButton.current);
+      }
     } catch (reason) {
       if (active.current) setError(reason);
     } finally {

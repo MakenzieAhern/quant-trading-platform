@@ -4,6 +4,11 @@ This is a **synthetic, local-only** walkthrough, not a released v1.2.0,
 market-data result, investment recommendation, or forward-simulation test. It
 does not connect to a broker or send real-money orders.
 
+开始前请在顶栏选择“中文”或“EN”，与下面的步骤语言一致；界面可能保留上次的语言。
+
+Before starting, choose `中文` or `EN` in the top bar to match the walkthrough;
+the app may remember a previous language.
+
 ## 中文：从首页到保存的演示结果
 
 1. 在本机服务运行后打开[工作台](http://localhost:5173/)。若网页无法打开，先从 Windows 开始菜单启动已安装的 Docker Desktop，待引擎就绪后刷新；登录后自动启动尚未通过验收。不要清空数据库或 Docker 卷。

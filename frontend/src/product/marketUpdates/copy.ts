@@ -23,9 +23,9 @@ const en = {
   validation:
     "Check 1–20 distinct canonical IDs and a valid 1–366-day date range inside the displayed boundary.",
   storage:
-    "Browser storage is unavailable or full. This request has not been submitted without a saved identity. Keep this page open, check storage and retry.",
+    "Browser storage is unavailable or full. A new request needs a saved identity before submission. Check task history for any confirmed submission, keep this page open, and retry after storage is available.",
   saved:
-    "One request draft and identity is shared by tabs in this browser; another tab can replace it. Submitted tasks remain on the server. Unchanged resubmissions reuse the same identity.",
+    "Tabs in this browser share one request draft. Retry an uncertain response with the same identity; after a confirmed response, a new explicit request uses a new identity. Submitted tasks remain on the server.",
   loading: "Loading saved state…",
   refresh: "Refresh",
   permission:
@@ -158,9 +158,9 @@ const zh: typeof en = {
   validation:
     "请检查 1–20 个不重复的规范证券标识，以及显示边界内有效的 1–366 日区间。",
   storage:
-    "浏览器存储不可用或已满。未在缺少持久请求标识的情况下提交。请保留此页面，检查存储后重试。",
+    "浏览器存储不可用或已满。新请求须先保存标识才能提交。请在任务历史核对已确认的提交，保留页面，并在存储恢复后重试。",
   saved:
-    "此浏览器的标签页共享一份请求草稿与标识，其他标签页可能替换它。已提交任务保存在服务器。输入不变时重新提交会使用同一标识。",
+    "此浏览器的标签页共享一份请求草稿。结果未确认时，用同一标识重试；收到确认后，下一次明确请求会使用新标识。已提交任务保存在服务器。",
   loading: "正在读取已保存状态…",
   refresh: "刷新",
   permission: "服务拒绝了此请求。请先核对访问权限；不得绕过数据来源的限制。",
