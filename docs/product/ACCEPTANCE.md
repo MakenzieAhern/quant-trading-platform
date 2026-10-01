@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 22:41 UTC bounded native-zoom and VSS evidence boundary
+
+An agent-owned installed Chrome localhost tab opened the current Workbench at
+the existing profile preference. Its read-only baseline was devicePixelRatio
+1, innerWidth 958 and document/client width 943/943 CSS px. Sending both
+Ctrl+Plus and Ctrl+Equal through the browser-control channel left those values
+unchanged. Ctrl+0 was sent, the same baseline was verified, and only the owned
+tab was closed. This channel did not effect or prove native 200% browser zoom;
+do not infer an accessibility pass from a CSS viewport proxy or this attempt.
+
+A read-only Windows `vssadmin list shadows` request returned the utility's
+explicit administrator-permission error. A separate read-only
+`Win32_ShadowCopy` CIM query also failed initialization. No VSS inventory was
+obtained; neither the presence nor absence of a pre-loss snapshot is proven.
+No UAC was bypassed, shadow copy mounted, backup restored or original database
+changed. Genuine missing paper ledgers remain missing, and VSS inspection
+requires an approved elevated read-only action if it is pursued.
+
 ## 2026-10-01 22:35 UTC M2 current-head design and legacy-route closeout
 
 On clean source head 2e8488f085b0e0eebf83dd14f220f93545cecb6f, the
