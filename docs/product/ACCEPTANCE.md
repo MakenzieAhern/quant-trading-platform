@@ -6928,3 +6928,21 @@ against viewport width 390; the labeled log table region was 337 wide with
 system-theme layout and saved-not-live warning were visually inspected.
 The temporary QA tab closed and the viewport override was reset. This is
 not native 200% zoom, a screen-reader check, or durable M5 media.
+
+## 2026-10-01 00:04 UTC GitHub Actions recovery and exact-head CI
+
+After the UTC date change, one coherent milestone push updated the existing
+draft/open PR #32 to `b1dc0b8461aeef860171ba3ec3b6dba88c76b8a3`.
+GitHub Actions run `36793989690` admitted all three jobs and completed
+backend, frontend and Compose with `SUCCESS`. This replaces the earlier
+September 26 billing-blocked run as the current CI evidence for that exact
+pushed head; it does not retroactively make the old run pass. The working tree
+was clean at push, and the original local frontend and API returned HTTP 200;
+PostgreSQL and Redis remained healthy. Local execution at
+`http://localhost:5173/` never depended on Actions availability.
+
+PR #32 remains draft and unmerged. This CI result is not full U1–U8/M4/M5
+acceptance, a lawful after-start A-share forward receipt, recovery of the two
+missing historical paper ledgers, an independently verified physical backup,
+an isolated rollback rehearsal, or a v1.2 release. No original financial
+data, frozen research, Official OOS, merge, tag or release was changed.
