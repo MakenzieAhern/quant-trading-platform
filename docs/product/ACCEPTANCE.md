@@ -1,5 +1,46 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 22:15 UTC current-head isolated M1 clean-install flow
+
+On clean source head 1e11cc87d3a9ff1531ce8067cb81e7f1d2c16f09,
+the agent-owned, localhost-only QA stack used dedicated images, network,
+PostgreSQL tmpfs and Redis tmpfs. The scratch PostgreSQL container had no
+mounted volume. The original Compose database and research archive were not
+connected to this stack. Its capabilities reported historical research
+unavailable (DATASET_NOT_MOUNTED) and synthetic demo available.
+
+In the in-app browser, the empty-workbench primary action opened the
+four-step guided flow. The registered strategy detail had already been opened
+and closed with Escape and trigger-focus return on this source head. A named
+draft 隔离验收：新用户演示 2026-10-02 was saved, appeared on Workbench, and
+restored at the saved step with exact capital
+123456.789000000000001. Cost/risk defaults and the synthetic/non-market
+warning remained visible through confirmation. After the explicit exploratory
+acknowledgment, the UI created real backend job
+d781fa96-1a04-4cd6-99c7-cb2e5a5d44af; the running page exposed phase,
+330/340 completed trading sessions, elapsed time and the durable ID.
+Leaving for Workbench and reopening its recent-study link returned to the
+same completed job. Reloading its direct URL also restored the same result.
+The scratch database contained exactly one job, SUCCEEDED 340/340, with the
+exact capital string; the summary retained final equity
+123951.289000000000001, five fills and CNY 25 costs.
+
+The result's first screen showed return +0.40%, drawdown -0.04%, cost
+25, benchmark +4.15% and explicit synthetic/non-market limitations.
+Full-precision display showed stored values rather than recalculated UI
+money. Its next-session plan correctly said no accepted next trading day was
+available and did not offer an executable plan. The screenshot and
+accessibility state were inspected in the QA browser. Existing earlier
+installed-Chrome and regression evidence covers the same M1 feature slice.
+M1 = PASS for the core interactive milestone, not for complete U1–U8,
+independent novice acceptance, native screen-reader/200% zoom, M4/M5 or
+v1.2 release. No original paper account, provider, frozen research/OOS,
+merge, tag or release was changed. The agent-created QA tab and exact four
+scratch containers were closed/stopped, and only their dedicated scratch
+network was removed. The original PostgreSQL/Redis/backend stayed healthy;
+the original frontend and API remained HTTP 200. No original Docker image,
+volume or database was removed.
+
 ## 2026-10-01 22:01 UTC current-runtime CSV export boundary
 
 From the Windows host, a read-only HTTP GET to the running backend exported
