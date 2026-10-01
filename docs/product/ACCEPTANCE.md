@@ -7394,3 +7394,21 @@ terminal-free startup remains FAIL. Lawful post-start 2026 market-feed rights
 and receipt, genuine pre-loss paper ledgers, independent backup, full U1–U8/M4/M5,
 novice, media and native accessibility remain open. No original financial DB,
 frozen research/OOS, merge, tag or release was changed.
+
+## 2026-10-01 20:12 UTC saved market-update request-key recovery
+
+A saved Data Center update draft could contain a string request key that did
+not meet the backend's `Idempotency-Key` contract (empty or containing a space).
+The draft loader accepted it, so submitting the restored scope could send an
+invalid key. The shared loader now preserves a valid key and replaces only an
+invalid saved key with a new UUID; the security and date scope is retained.
+Two red cases reproduced the invalid submission arguments before the fix and
+passed afterward. The complete market-update suite passed 47/47, the full
+frontend suite 560/560 across 40 files, ESLint, TypeScript and production
+build passed. Original Compose services remained up, and frontend plus
+`/api/health` returned HTTP 200. No provider request or original financial
+database write was made. Existing PR #32 was still open/draft; its prior
+head `79b02e4` had successful hosted backend/frontend/Compose run 36918578952.
+The new commit still needs exact-head CI. This is a bounded recovery fix,
+not complete U5/M4/M5 or v1.2 release acceptance; no native Chrome or
+screen-reader pass was obtained in this unit.

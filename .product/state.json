@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T19:59:31Z",
+  "updated_at_utc": "2026-10-01T20:12:19Z",
+  "u5_saved_request_key_recovery_20261002_gate": {
+    "status": "PASS_BOUNDED_LOCAL_NOT_FULL_U5_M4_M5",
+    "parent_head": "79b02e430833746a9ea1418b6e7c54c206b65072",
+    "proof": "Invalid saved Data Center market-update idempotency keys (empty or containing spaces) reproduced wrong submission arguments before the fix; the shared loader now preserves valid keys and repairs only malformed saved keys while retaining scope. Focused suite 47/47, full frontend 560/560 across 40 files, ESLint, TypeScript and production build passed. Original Compose services stayed running; frontend and /api/health HTTP 200. PR32 was open/draft and prior head 79b02e4 had successful GitHub run 36918578952. See docs/product/ACCEPTANCE.md.",
+    "limits": "New head requires exact-head CI. No provider request or original financial database write, native Chrome, screen-reader or complete U5/M4/M5 acceptance. No frozen research/OOS, merge, tag or release."
+  },
   "m4_current_head_mobile_recheck_20261002_gate": {
     "status": "PASS_BOUNDED_CURRENT_HEAD_IAB_MOBILE_NOT_FULL_M4",
     "source_head": "f8d93c8b8e96b1b6b8e77332c90a3039f1f26dde",

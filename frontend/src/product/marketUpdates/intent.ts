@@ -13,14 +13,21 @@ export function readUpdateDraft(): UpdateDraft | null {
     );
     if (!item || typeof item !== "object") return null;
     const data = item as UpdateDraft;
-    return [
-      data.securityText,
-      data.start_date,
-      data.end_date,
-      data.requestKey,
-    ].every((value) => typeof value === "string")
-      ? data
-      : null;
+    if (
+      ![
+        data.securityText,
+        data.start_date,
+        data.end_date,
+        data.requestKey,
+      ].every((value) => typeof value === "string")
+    )
+      return null;
+    return {
+      ...data,
+      requestKey: /^[A-Za-z0-9._:-]{1,128}$/.test(data.requestKey)
+        ? data.requestKey
+        : crypto.randomUUID(),
+    };
   } catch {
     return null;
   }

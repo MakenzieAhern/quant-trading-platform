@@ -426,6 +426,34 @@ describe("explicit incremental request workflow", () => {
       ),
     ).toBeInTheDocument();
   });
+  it.each(["", "bad key"])(
+    "repairs a saved invalid request key without losing the update scope (%s)",
+    async (requestKey) => {
+      localStorage.setItem(
+        UPDATE_DRAFT_KEY,
+        JSON.stringify({
+          securityText: "CN-A:SSE:600000",
+          start_date: "2026-01-05",
+          end_date: "2026-01-06",
+          requestKey,
+        }),
+      );
+      const create = vi.spyOn(marketUpdateApi, "create").mockResolvedValue(job);
+      render(<MarketUpdatesPanel />);
+      expect(await screen.findByLabelText("Security IDs (1–20)")).toHaveValue(
+        "CN-A:SSE:600000",
+      );
+      expect(screen.getByLabelText("Start date")).toHaveValue("2026-01-05");
+      expect(screen.getByLabelText("End date")).toHaveValue("2026-01-06");
+      await userEvent.click(screen.getByRole("checkbox"));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Request selected raw data" }),
+      );
+      expect(create).toHaveBeenCalledTimes(1);
+      expect(create.mock.calls[0][1]).toMatch(/^[A-Za-z0-9._:-]{1,128}$/);
+      expect(create.mock.calls[0][1]).not.toBe(requestKey);
+    },
+  );
   it("uses a fresh key for another confirmed request with the same scope", async () => {
     const secondJob = {
       ...job,
