@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 22:35 UTC M2 current-head design and legacy-route closeout
+
+On clean source head 2e8488f085b0e0eebf83dd14f220f93545cecb6f, the
+original local Compose served the workbench and API with HTTP 200; PostgreSQL,
+Redis and backend remained healthy. An agent-owned in-app Chromium tab checked
+the shared shell on Workbench, Markets/watchlist, Strategies, Research, Task
+center, Simulated accounts, Data center, Help and Settings. Two existing saved
+historical experiments were selected in the UI and opened in the comparison
+route. Its warning identified the differing trading periods and explicitly
+said this was not a controlled comparison; the six saved-condition rows and
+full-period metrics were visible. At 390x844 CSS pixels the comparison page
+had document/client width 375/375 and a local table-scroll cue.
+
+The formal A-share archive opened its strategy methodology, frozen dataset
+detail and one saved Official OOS run without rerunning research. The old
+backtest list and a persisted fixture-run detail still opened inside the shared
+shell; the detail loaded metrics and ledger sections, and its direct URL at
+390x844 had document/client width 375/375. The prior 96-observation
+four-viewport/two-language/two-theme width-and-title check covers the six
+primary routes; this current-head pass adds comparison and deep-link samples.
+Exact-head GitHub Actions run
+[36934261795](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36934261795)
+passed backend (tests, Ruff, mypy, disposable-DB Alembic round trip), frontend
+(tests, lint, typecheck, build) and Compose/release smoke. The temporary
+viewport was reset and the owned tab closed.
+
+M2 = PASS for design-system spread and old-link compatibility, not for all
+underlying U1-U8 functionality. This agent browser pass does not prove native
+200% zoom, screen-reader speech, independent novice acceptance, full M4/M5,
+lawful new-market forward receipts, original missing paper ledgers, independent
+physical backup, post-change unattended Windows login or v1.2 release. No
+provider, account, financial database, frozen research/OOS, merge, tag or
+release was changed.
+
 ## 2026-10-01 22:15 UTC current-head isolated M1 clean-install flow
 
 On clean source head 1e11cc87d3a9ff1531ce8067cb81e7f1d2c16f09,
