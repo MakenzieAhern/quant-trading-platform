@@ -1,5 +1,16 @@
 # Decisions
 
+## v1.2 U3 isolation is separate from M4 disaster recovery — 2026-10-01
+
+Accept U3-ISOLATE only as a scoped local product-workflow gate against the
+post-recovery baseline: independent personal tables, read-only formal HTTP
+archive, read-only frozen-data mount, consumed OOS lock and inspected-history
+labels. Exact code-head CI and an independent read-only review support the
+scope. The 2026-09-23 database incident did not become harmless: missing
+post-backup paper ledgers, possible unrecorded rows and lack of an independent
+physical backup remain M4-DATA-INTEGRITY FAIL. Never infer that U3 isolation
+restores lost history or authorizes U7 forward execution, merge or release.
+
 ## v1.2 formal archive API is read-only — 2026-10-01
 
 Keep the saved formal research GET endpoints, but reject the legacy
