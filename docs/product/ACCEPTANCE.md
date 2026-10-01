@@ -6974,3 +6974,56 @@ tag or release action was performed. On the preceding exact pushed
 `36794402679` completed backend, frontend and Compose with SUCCESS; PR #32
 remains draft/open. This documentation update will require its own exact-head
 CI before any future release gate.
+
+## 2026-10-01 00:30 UTC installed-Chrome CSV capture boundary
+
+On exact pushed `995e47b1019e28fc631a58071a050dbb5ed2a14c` (PR #32
+backend/frontend/Compose CI `36795810427` all SUCCESS), an agent-owned tab in
+the installed Chrome opened the existing completed **synthetic** result
+`dccc74b3-f8c4-487f-9597-4cd9d8fb7288`. The report panel prepared the
+named trades CSV and exposed its `blob:` save link. This time Chrome's
+supported `downloadMedia()` capture on that visible fallback was attempted,
+unlike the earlier in-app-browser attempt; it timed out after 20 seconds.
+The exact expected CSV and filename variants were absent from the ordinary
+Windows Downloads folder. The tab was closed. Live PostgreSQL counts stayed
+at eight research jobs, five paper sessions and 417 paper events.
+
+`CSV_FILE_LANDING = NOT_VERIFIED`. The visible prepared state proves only that
+the UI fetched and named the export; it does not prove file placement or an
+application download defect. Repeating browser-tool download waits without a
+new observable destination is not useful. A supported controlled-download
+profile or a user-confirmed saved file is needed to inspect filename, bytes
+and content. No Run, POST, account, provider, frozen research/OOS, merge, tag
+or release action was performed.
+
+## 2026-10-01 00:39 UTC paper-event keyboard focus regression and Chrome check
+
+An isolated frontend regression was red on the saved-event pager's missing
+`aria-busy` state; the completed test also asserts retained keyboard focus.
+The journal now transfers focus to its existing pagination group
+*before* Older, Newer or Refresh starts a request; it does not take focus
+from outside that group. The group is programmatically focusable and reports
+`aria-busy`. This follows the existing shared-pagination pattern without
+changing account or event APIs. A read-only diff review found no concrete
+P1/P2 concern.
+
+The focused paper-page suite passed 102/102. The isolated `make test` passed
+backend 1034 (one optional unmounted historical archive skipped) and
+frontend 537/537 across 40 files. `make lint`, `make build`, changed-file
+Prettier and `git diff --check` passed. The original Compose services
+remained up; the PostgreSQL count query after QA returned eight research
+jobs, five paper sessions and 417 paper events.
+
+An agent-owned installed-Chrome tab opened original **stopped** historical
+account `d7044a3c-7ef3-46ba-accd-197a6d40505e` read-only. In Chinese,
+keyboard Enter on Older moved the 138–89 saved-event window to 88–39;
+Newer returned to 138–89; Refresh retained that window. After each action,
+the browser's actual `document.activeElement` was the labeled “模拟账户事件日志”
+group, not a disabled or detached button. The final page was visually
+inspected and the temporary tab closed.
+
+`PAPER_JOURNAL_KEYBOARD_FOCUS = PASS_BOUNDED`. This is one account, locale
+and theme, not native screen-reader speech, native 200% zoom, full M4/M5
+acceptance or durable media. The current code still needs exact pushed-head
+CI. No Run/POST, original paper ledger, frozen research/OOS, merge, tag or
+release action occurred.

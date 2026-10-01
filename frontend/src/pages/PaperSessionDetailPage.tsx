@@ -541,6 +541,7 @@ function PaperEventJournal({
   const { t: researchT } = useTranslation("research");
   const [cursors, setCursors] = useState<number[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const pager = useRef<HTMLDivElement>(null);
   const [result, setResult] = useState<{
     key: string;
     events: PaperJournalEvent[];
@@ -553,6 +554,9 @@ function PaperEventJournal({
   const events = loading ? [] : result.events;
   const failed = !loading && result.failed;
   const hasOlder = !loading && result.hasOlder;
+  const focusPager = () => {
+    if (pager.current?.contains(document.activeElement)) pager.current.focus();
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -641,9 +645,12 @@ function PaperEventJournal({
         </div>
       )}
       <div
+        ref={pager}
         className="pagination"
         role="group"
+        tabIndex={-1}
         aria-label={t("detail.eventLog")}
+        aria-busy={loading}
       >
         <span aria-live="polite">
           {loading
@@ -663,6 +670,7 @@ function PaperEventJournal({
           type="button"
           disabled={loading}
           onClick={() => {
+            focusPager();
             setCursors([]);
             setRefreshKey((key) => key + 1);
           }}
@@ -672,16 +680,20 @@ function PaperEventJournal({
         <button
           type="button"
           disabled={loading || cursors.length === 0}
-          onClick={() => setCursors((current) => current.slice(0, -1))}
+          onClick={() => {
+            focusPager();
+            setCursors((current) => current.slice(0, -1));
+          }}
         >
           {t("detail.newerEvents")}
         </button>
         <button
           type="button"
           disabled={loading || !hasOlder || events.length === 0}
-          onClick={() =>
-            setCursors((current) => [...current, events.at(-1)!.sequence])
-          }
+          onClick={() => {
+            focusPager();
+            setCursors((current) => [...current, events.at(-1)!.sequence]);
+          }}
         >
           {t("detail.olderEvents")}
         </button>

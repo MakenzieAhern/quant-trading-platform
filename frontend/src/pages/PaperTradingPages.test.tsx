@@ -271,6 +271,70 @@ describe("paper trading pages", () => {
     );
   });
 
+  it("keeps keyboard focus on saved-event paging while requests disable buttons", async () => {
+    await act(async () => i18n.changeLanguage("en-US"));
+    installWebSocket();
+    const event = (sequence: number) => ({
+      sequence,
+      type: "session.status",
+      occurred_at: "2026-09-06T02:00:00Z",
+      payload: { status: "STOPPED" },
+    });
+    let resolveOlder!: (response: Response) => void;
+    let resolveRefresh!: (response: Response) => void;
+    const olderPage = new Promise<Response>((resolve) => {
+      resolveOlder = resolve;
+    });
+    const refreshPage = new Promise<Response>((resolve) => {
+      resolveRefresh = resolve;
+    });
+    let latestRequests = 0;
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+      const url = String(input);
+      if (!url.includes("/events?"))
+        return jsonResponse(paperSnapshot("STOPPED"));
+      if (url.includes("before_sequence=53")) return olderPage;
+      latestRequests += 1;
+      return latestRequests === 1
+        ? jsonResponse(
+            Array.from({ length: 51 }, (_, index) => event(102 - index)),
+          )
+        : refreshPage;
+    });
+
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await userEvent.click(
+      await screen.findByRole("button", { name: "View saved events" }),
+    );
+    await screen.findByRole("rowheader", { name: "102" });
+    const pager = screen.getByRole("group", { name: "Paper event log" });
+    const older = within(pager).getByRole("button", { name: "Older" });
+    older.focus();
+    await userEvent.keyboard("{Enter}");
+    expect(older).toBeDisabled();
+    expect(pager).toHaveAttribute("aria-busy", "true");
+    expect(pager).toHaveFocus();
+
+    await act(async () => resolveOlder(jsonResponse([event(52), event(51)])));
+    await screen.findByRole("rowheader", { name: "52" });
+    const refresh = within(pager).getByRole("button", { name: "Refresh" });
+    refresh.focus();
+    await userEvent.keyboard("{Enter}");
+    expect(refresh).toBeDisabled();
+    expect(pager).toHaveFocus();
+
+    await act(async () =>
+      resolveRefresh(
+        jsonResponse(
+          Array.from({ length: 51 }, (_, index) => event(102 - index)),
+        ),
+      ),
+    );
+    await screen.findByRole("rowheader", { name: "102" });
+    expect(pager).toHaveFocus();
+  });
+
   it.each(["en-US", "zh-CN"])(
     "uses provider-specific empty states before any market data arrives (%s)",
     async (language) => {

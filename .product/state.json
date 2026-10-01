@@ -1,7 +1,19 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T00:20:52Z",
+  "updated_at_utc": "2026-10-01T00:39:00Z",
+  "m4_paper_journal_keyboard_20261001_gate": {
+    "status": "PASS_BOUNDED_CHROME_KEYBOARD_FOCUS_NOT_FULL_M4_M5",
+    "parent_head": "995e47b1019e28fc631a58071a050dbb5ed2a14c",
+    "proof": "2026-10-01 00:34-00:39 UTC: keyboard regression was red on missing pager aria-busy; the completed test also asserts retained focus. The existing stable pager group now receives focus synchronously before Older, Newer or Refresh changes request state and reports aria-busy. Focused 102/102; isolated make test backend 1034/one optional archive skip and frontend 537/537; make lint/build and diff check passed. Read-only review found no concrete P1/P2. Installed Chrome on original stopped account d7044a3c confirmed Chinese event ranges 138-89 to 88-39 to 138-89; after keyboard Enter on Older, Newer and Refresh, activeElement stayed the labeled journal group. Temporary tab closed; DB counts remained jobs 8, sessions 5, events 417. See docs/product/ACCEPTANCE.md.",
+    "limits": "One Chrome account, Chinese locale and system theme; no native screen-reader speech, 200-percent zoom, full locale/theme/route matrix or durable M5 media. No original account, provider, frozen research/OOS or release-state write. New code requires exact pushed-head CI before any release gate."
+  },
+  "m5_csv_chrome_20261001_gate": {
+    "status": "NOT_VERIFIED_CHROME_DOWNLOAD_CAPTURE_TIMEOUT_NOT_APP_FAILURE",
+    "source_head": "995e47b1019e28fc631a58071a050dbb5ed2a14c",
+    "proof": "2026-10-01 00:28-00:30 UTC: installed Chrome agent tab opened an existing completed synthetic result, prepared the named trades CSV, and exposed its blob fallback. Chrome-supported downloadMedia on that fallback timed out at 20 seconds; exact expected CSV and variants were absent from ordinary Windows Downloads. Tab closed; original DB remained research jobs 8, paper sessions 5, events 417. See docs/product/ACCEPTANCE.md.",
+    "limits": "No saved path or inspected file was obtained. This is a browser-control capture boundary, not evidence of an application download defect or a CSV landing PASS. Do not repeat the same capture method without a new destination/hypothesis; no original financial data or release action changed."
+  },
   "u1_u3_malformed_draft_browser_20261001_gate": {
     "status": "PASS_BOUNDED_ISOLATED_BROWSER_RECOVERY_NOT_FULL_U1_U3_M4_M5",
     "source_head": "a2c48be533f95a74a8e797d152bfccf55864e763",
