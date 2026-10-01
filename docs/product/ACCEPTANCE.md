@@ -7274,3 +7274,52 @@ policy bypass was used. Original financial accounts, provider acquisition,
 frozen research and Official OOS were not changed. Lawful after-start forward
 data rights/receipt, genuine pre-loss ledgers and independent physical backup
 remain unresolved; no merge, tag or release occurred.
+
+## 2026-10-01 06:48 UTC saved-task identity and bilingual browser orientation
+
+The original local app at explicit `127.0.0.1:5173` was inspected in a
+new in-app browser tab. An existing completed **synthetic** result
+`dccc74b3-f8c4-487f-9597-4cd9d8fb7288` opened read-only, its direct
+comparison action selected that same saved source, and a second completed
+synthetic result `c4a46658-24c5-40eb-a211-53038aaa6580` opened a two-result
+comparison. English and Chinese showed six matching configuration conditions
+and the synthetic/non-market caveat; browser Back retained both selections.
+The same actual local UI changed the document title from `Research · QUANT`
+to `研究 · QUANT`, and from `Help · QUANT` to `帮助 · QUANT` on route/locale
+changes. English and system theme were restored and the temporary QA tabs
+closed. This browser pass preceded the final 404-only code follow-up; that
+follow-up has component and exact-head CI proof, not a second browser pass.
+These were GET-only flows; no original study, paper account, provider
+request, frozen research or Official OOS was started or changed.
+
+A shared experiment GET/result contract now rejects a parsed `job_id` that
+does not match the requested ID, preventing a different saved study from
+appearing under the selected URL or in its comparison. The corresponding
+market-update detail GET has the same fail-closed check, preventing a
+different task's provenance/receipts from appearing under the requested URL.
+The backend was not observed returning mismatched IDs; these are client
+contract guards. Route and locale changes set a translated browser title.
+An independent review found that the first version mislabeled a real 404 as
+legacy backtests; a red regression reproduced it, and the final implementation
+uses the router's actual Not Found result for the breadcrumb and title.
+Focused contract/title regressions were red before their respective fixes.
+
+At code head `52a5e13cdb958d75c94a83f00dd4e827aecc4968`, the final isolated
+`make test` passed backend **1,034** with one optional unmounted-archive skip
+and frontend **558/558** across 40 files. `make lint`, seven-file Prettier,
+`git diff --check`, and a production Vite build to a unique temporary output
+directory passed. Independent final read-only review found no remaining
+concrete P1/P2 in the seven-file diff. Original PostgreSQL, Redis and backend
+were healthy, frontend remained running, and frontend plus `/api/health`
+returned HTTP 200. The exact code-head [GitHub CI run 36826702044](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36826702044)
+completed successfully for backend, frontend and Compose. PR #32 remains open
+and draft.
+
+This is bounded in-app-browser and isolated-test evidence, **not** installed
+Chrome, native 200% zoom, screen-reader speech, durable exact-head M5 media,
+CSV file landing, independent novice or full U1–U8/M4/M5 acceptance. A new
+Chrome-extension control attempt timed out before its URL could be verified;
+it was not retried through an unsafe workaround. Lawful after-start 2026
+forward-market rights/receipt, genuine pre-loss paper ledgers, independent
+physical backup and Docker unattended-login startup remain open. No merge,
+tag or release occurred.
