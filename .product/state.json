@@ -1,11 +1,17 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T00:04:12Z",
+  "updated_at_utc": "2026-10-01T00:20:52Z",
+  "u1_u3_malformed_draft_browser_20261001_gate": {
+    "status": "PASS_BOUNDED_ISOLATED_BROWSER_RECOVERY_NOT_FULL_U1_U3_M4_M5",
+    "source_head": "a2c48be533f95a74a8e797d152bfccf55864e763",
+    "proof": "2026-10-01 00:16-00:20 UTC: agent-owned in-app browser at isolated 127.0.0.1:5173 backed up the exact existing 520-byte draft, seeded {broken, and confirmed real /research/new?new=1 recovery choice and exact raw text in ZH and EN. Explicit preserve-and-new showed first wizard step and an exact unreadable copy; no Run/POST. The original 520-byte draft/timestamp was restored exactly, and the two test-created recovery copies, QA backup and temporary page/tabs were removed. Original DB counts stayed research jobs 8, paper sessions 5, events 417. Original Compose frontend and API health were HTTP 200. See docs/product/ACCEPTANCE.md.",
+    "limits": "127 origin kept browser storage separate but its real app made local API GETs. This does not prove cross-tab atomicity, native 200-percent zoom, screen-reader speech, durable M5 media, full U1-U8/M4/M5 or product release. Original localhost draft, accounts, frozen research/OOS and release state unchanged."
+  },
   "hosted_ci_recovery_20261001_gate": {
     "status": "PASS_EXACT_PUSHED_HEAD_NOT_PRODUCT_RELEASE",
-    "head": "b1dc0b8461aeef860171ba3ec3b6dba88c76b8a3",
-    "proof": "2026-10-01 00:00-00:03 UTC: after one milestone push to existing draft PR32, GitHub Actions run36793989690 admitted and completed backend, frontend and compose jobs SUCCESS on the exact pushed head. The original local Compose still served frontend and /api/health HTTP 200; PostgreSQL and Redis remained healthy. The earlier Sep26 billing-blocked run remains historical evidence, not the current CI status.",
+    "head": "a2c48be533f95a74a8e797d152bfccf55864e763",
+    "proof": "2026-10-01 00:00-00:07 UTC: existing draft PR32 milestone heads b1dc0b8 and then a2c48be admitted GitHub Actions; current exact pushed a2c48be run36794402679 completed backend, frontend and compose jobs SUCCESS. The original local Compose still served frontend and /api/health HTTP 200; PostgreSQL and Redis remained healthy. The earlier Sep26 billing-blocked run remains historical evidence, not the current CI status.",
     "limits": "PR32 remains draft/open. This is a CI gate for the tested head only, not full U1-U8/M4/M5, lawful after-start forward-market receipt, genuine lost-ledger recovery, independently verified physical backup, rollback rehearsal, merge or v1.2 release."
   },
   "m4_paper_journal_mobile_20261001_gate": {
@@ -1702,9 +1708,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "b1dc0b8",
+      "last_verified_head": "a2c48be",
       "state": "DRAFT",
-      "ci_run": 36793989690,
+      "ci_run": 36794402679,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
@@ -1723,7 +1729,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Original local Compose is healthy and usable at localhost:5173. Exact pushed b1dc0b8 GitHub CI backend/frontend/compose passed in run36793989690; PR32 is still draft/open. U1-U8/M4/M5 remain incomplete. Next safe work: bilingual isolated-browser malformed-draft recovery without altering the original saved draft, durable M5 media/CSV file landing, native zoom/screen-reader and foreground click-p95 evidence, then independent novice flow. Next genuine Windows login must recheck Docker autostart; do not reboot just for QA. Lawful after-start 2026 forward-market data rights and receipt, genuine pre-loss ledgers and independent physical backup remain external gates. Preserve frozen research/OOS, prohibit live trading and do not merge, tag or release before all product and data gates pass.",
+  "next_task": "Original local Compose is healthy and usable at localhost:5173. Exact pushed a2c48be GitHub CI backend/frontend/compose passed in run36794402679; PR32 is still draft/open. Isolated-browser bilingual malformed-draft recovery passed and its test storage was restored/cleaned. U1-U8/M4/M5 remain incomplete. Next safe work: durable M5 media/CSV file landing, native zoom/screen-reader and foreground click-p95 evidence, then independent novice flow. Next genuine Windows login must recheck Docker autostart; do not reboot just for QA. Lawful after-start 2026 forward-market data rights and receipt, genuine pre-loss ledgers and independent physical backup remain external gates. Preserve frozen research/OOS, prohibit live trading and do not merge, tag or release before all product and data gates pass.",
   "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform read PRODUCT_MASTER and .product/state.json; verify branch, clean status, original docker compose ps and PR32 exact-head CI. Continue safe local UX/QA or isolated-test work. Original Compose serves localhost:5173 and API 8000; do not touch original financial data or browser draft. Actual native screen-reader/zoom/performance acceptance remains absent.",
   "next_command": "Full U1-U8/M0-M5 objective remains incomplete despite exact-head hosted CI recovery. Recheck Docker autostart at the next genuine Windows login without an induced reboot or duplicate launcher. Missing lawful 2026 forward data rights/after-start receipt, genuine lost-ledger backup, independent physical backup and full M4/M5 acceptance remain open. Do not merge, tag or release before all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

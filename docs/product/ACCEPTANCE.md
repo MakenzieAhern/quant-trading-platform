@@ -6946,3 +6946,31 @@ acceptance, a lawful after-start A-share forward receipt, recovery of the two
 missing historical paper ledgers, an independently verified physical backup,
 an isolated rollback rehearsal, or a v1.2 release. No original financial
 data, frozen research, Official OOS, merge, tag or release was changed.
+
+## 2026-10-01 00:20 UTC isolated malformed-draft browser recovery
+
+An agent-owned in-app-browser session used the isolated
+`http://127.0.0.1:5173` origin, leaving the ordinary `localhost` browser
+storage untouched. A temporary same-origin QA page first saved the exact
+existing 520-byte draft and then seeded `{broken` into the shared draft key.
+The real `/research/new?new=1` page showed the recovery choice and exact raw
+text in Chinese and English. Choosing “Preserve original and start new” moved
+to the usable first wizard step without `?new=1`; the unreadable-copies panel
+exposed the exact `{broken` text. The browser did not advance to Run or submit
+a research job. The QA page restored the prior 520-byte draft exactly, with
+its original `2026-09-30T23:56:02.764Z` timestamp, then removed only the two
+copies created by this test. It verified no QA backup or test copies remained;
+the temporary page and tabs were removed. Original PostgreSQL counts remained
+eight research jobs, five paper sessions and 417 paper events. The original
+Compose frontend and `/api/health` both returned HTTP 200.
+
+The existing draft flow still has a localStorage cross-tab race window and
+browser-local recovery copies are not independent backups. This is a bounded
+U1/U3 actual-browser recovery check, not full U1–U8/M4/M5, native 200% zoom,
+screen-reader or durable media acceptance. The 127-origin page made GETs to
+the existing local API; no POST, original account/frozen research/OOS, merge,
+tag or release action was performed. On the preceding exact pushed
+`a2c48be533f95a74a8e797d152bfccf55864e763` head, GitHub Actions run
+`36794402679` completed backend, frontend and Compose with SUCCESS; PR #32
+remains draft/open. This documentation update will require its own exact-head
+CI before any future release gate.
