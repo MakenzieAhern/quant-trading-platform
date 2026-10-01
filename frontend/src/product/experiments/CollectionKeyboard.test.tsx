@@ -31,7 +31,7 @@ it("keeps the chart pager focused through a pending request and a disabled last-
     );
   render(<ExperimentCollections jobId="saved-job" />);
   const next = await screen.findByRole("button", { name: "Next" });
-  const pager = screen.getByLabelText("Pagination");
+  const pager = screen.getByLabelText("Equity and drawdown — Pagination");
   next.focus();
   await userEvent.keyboard("{Enter}");
   expect(pager).toBeInTheDocument();
@@ -125,7 +125,9 @@ it("keeps a holdings pager mounted through an error and retry without late autof
     );
   render(<ExperimentHoldings jobId="saved-job" range={{}} />);
   const next = await screen.findByRole("button", { name: "Next" });
-  const pager = screen.getByRole("group", { name: "Pagination" });
+  const pager = screen.getByRole("group", {
+    name: "Account & holdings — Pagination",
+  });
   next.focus();
   await userEvent.keyboard("{Enter}");
   expect(pager).toHaveFocus();
@@ -163,7 +165,9 @@ it("ignores a pending old job after replacement without reviving its data or foc
     </>,
   );
   await userEvent.click(await screen.findByRole("button", { name: "Next" }));
-  const oldPager = screen.getByRole("group", { name: "Pagination" });
+  const oldPager = screen.getByRole("group", {
+    name: "Equity and drawdown — Pagination",
+  });
   expect(oldPager).toHaveFocus();
   screen.getByLabelText("Other task").focus();
   view.rerender(

@@ -102,7 +102,11 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             {u.reset}
           </button>
         </form>
-        {invalid && <p id={invalidRangeId} role="alert">{u.invalidRange}</p>}
+        {invalid && (
+          <p id={invalidRangeId} role="alert">
+            {u.invalidRange}
+          </p>
+        )}
         {focused && (
           <div className="experimentActions">
             <p role="status">
@@ -187,6 +191,7 @@ function FilteredCollections({
           />
         )}
         <Pagination
+          label={c.chart}
           offset={offset}
           limit={equity.data?.limit ?? 100}
           total={equity.data?.total ?? null}
@@ -491,6 +496,7 @@ function TradeCollection({
   const pager = (
     <Pagination
       key="pagination"
+      label={c.trades}
       offset={offset}
       limit={data.data?.limit ?? 20}
       total={data.data?.total ?? null}
@@ -602,6 +608,7 @@ function DecisionCollection({
   const pager = (
     <Pagination
       key="pagination"
+      label={c.decisions}
       offset={offset}
       limit={data.data?.limit ?? 20}
       total={data.data?.total ?? null}

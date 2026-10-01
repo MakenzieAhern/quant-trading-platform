@@ -50,6 +50,25 @@ beforeEach(async () => {
   });
 });
 describe("bounded server command search", () => {
+  it.each([
+    [
+      "en-US",
+      "Matching personal studies — Pagination",
+      "Matching watchlist entries — Pagination",
+    ],
+    ["zh-CN", "匹配的个人研究 — 分页", "匹配的自选记录 — 分页"],
+  ])(
+    "distinguishes both %s result pagers",
+    async (language, studies, watchlist) => {
+      await i18n.changeLanguage(language);
+      render(<CommandPalette onClose={() => undefined} />);
+      expect(screen.getByRole("group", { name: studies })).toBeInTheDocument();
+      expect(
+        screen.getByRole("group", { name: watchlist }),
+      ).toBeInTheDocument();
+    },
+  );
+
   it("sends the new-study command to the explicit fresh-start choice", () => {
     render(<CommandPalette onClose={() => undefined} />);
     expect(

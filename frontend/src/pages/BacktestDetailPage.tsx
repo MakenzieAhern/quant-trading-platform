@@ -100,6 +100,7 @@ function Collection<T>({
         </div>
       )}
       <Pagination
+        label={title}
         offset={offset}
         limit={COLLECTION_LIMIT}
         total={page.data?.total ?? null}
@@ -219,6 +220,7 @@ function SuccessfulResult({ runId }: { runId: string }) {
           <EquityChart points={equity.data.items} />
         )}
         <Pagination
+          label={t("detail.equityCurve")}
           offset={equityOffset}
           limit={200}
           total={equity.data?.total ?? null}

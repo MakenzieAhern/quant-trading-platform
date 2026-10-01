@@ -259,6 +259,16 @@ describe("backtest detail", () => {
     expect(screen.getByText("Risk check passed")).toBeInTheDocument();
     expect(screen.getByText("Proposal approved.")).toBeInTheDocument();
     expect(screen.getByText("Equity curve")).toBeInTheDocument();
+    for (const label of [
+      "Equity curve",
+      "Signals",
+      "Risk decisions",
+      "Orders",
+      "Fills",
+    ])
+      expect(
+        screen.getByRole("group", { name: `${label} — Pagination` }),
+      ).toBeInTheDocument();
     try {
       await act(async () => {
         await i18n.changeLanguage("zh-CN");
@@ -271,6 +281,10 @@ describe("backtest detail", () => {
       expect(
         screen.getByText("AAPL 的预留数量必须为有限数。"),
       ).toBeInTheDocument();
+      for (const label of ["权益曲线", "信号", "风控决策", "订单", "成交"])
+        expect(
+          screen.getByRole("group", { name: `${label} — 分页` }),
+        ).toBeInTheDocument();
       expect(screen.getByTitle("185.140000000000000001")).toHaveTextContent(
         "185.140000000000000001",
       );

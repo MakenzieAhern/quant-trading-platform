@@ -63,6 +63,7 @@ export function ResearchPointTable({
           </div>
           {total > PAGE_SIZE && (
             <Pagination
+              label={label}
               offset={pageOffset}
               limit={PAGE_SIZE}
               total={total}

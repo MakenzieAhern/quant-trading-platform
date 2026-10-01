@@ -132,6 +132,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           )
         )}
         <Pagination
+          label={copy.searchStudies}
           offset={search.jobsOffset}
           limit={20}
           total={waiting ? null : (jobs.data?.total ?? null)}
@@ -180,6 +181,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           )
         )}
         <Pagination
+          label={copy.searchWatchlist}
           offset={search.watchOffset}
           limit={20}
           total={waiting ? null : (watches.data?.total ?? null)}

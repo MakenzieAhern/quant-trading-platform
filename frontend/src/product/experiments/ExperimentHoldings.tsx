@@ -27,6 +27,7 @@ export function ExperimentHoldings({
   const pager = (
     <Pagination
       key="pagination"
+      label={u.holdings}
       offset={offset}
       limit={data.data?.limit ?? 1}
       total={available ? data.data!.total : null}

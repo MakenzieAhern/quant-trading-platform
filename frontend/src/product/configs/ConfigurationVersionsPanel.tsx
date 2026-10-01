@@ -200,6 +200,7 @@ export function ConfigurationVersionsPanel({
                   ))}
               </ul>
               <Pagination
+                label={c.title}
                 offset={pageOffset}
                 limit={20}
                 total={library.items.length}
@@ -273,6 +274,7 @@ export function ConfigurationVersionsPanel({
                 ))}
             </ul>
             <Pagination
+              label={c.recoveries}
               offset={recoveryOffset}
               limit={20}
               total={recoveries.items.length}

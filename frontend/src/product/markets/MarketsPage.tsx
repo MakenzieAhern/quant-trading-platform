@@ -446,6 +446,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         )}
         {!draftPending && (
           <Pagination
+            label={c.search}
             offset={offset}
             limit={results.data?.limit ?? 20}
             total={results.data?.total ?? null}
@@ -545,6 +546,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
           </>
         )}
         <Pagination
+          label={c.watchlist}
           offset={watchOffset}
           limit={watchlist.data?.limit ?? 20}
           total={watchlist.data?.total ?? null}
