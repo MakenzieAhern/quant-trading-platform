@@ -1,11 +1,19 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T23:07:11Z",
+  "updated_at_utc": "2026-10-01T23:22:25Z",
+  "m5_local_ci_equivalent_20261002_gate": {
+    "status": "PASS_BOUNDED_LOCAL_CHECKS_NOT_RELEASE_ACCEPTANCE",
+    "source_head": "cca65d4a33d7b9be05d887cb695cbe33e4c169f1",
+    "proof": "The isolated make test command exited 0 on quant-mvp-tests tmpfs quant_test PostgreSQL; frontend 562/562 passed and the full backend suite completed. make lint passed Ruff, Ruff format, mypy, ESLint and TypeScript; make build passed. Original PostgreSQL, Redis, backend and frontend stayed up, disposable test services stopped and /api/health returned HTTP 200. One persisted INTERRUPTED study showed understandable linked-retry guidance in ZH/EN in an agent-owned in-app browser tab without submitting a retry. A separate read-only source reviewer found no new concrete P1/P2 in sampled U1-U8 and financial/API paths. See docs/product/ACCEPTANCE.md.",
+    "limits": "Local checks do not replace release-head hosted CI, native 200-percent zoom, screen-reader speech, independent novice testing, lawful forward data, genuine missing pre-loss ledgers, independent physical backup, post-change unattended login or full M4/M5. PR32 remains draft/open; no merge, tag or release."
+  },
   "u8_formal_archive_bilingual_20261002_gate": {
     "status": "PASS_BOUNDED_CHROME_ZH_EN_NOT_FULL_U8_M4_M5",
+    "last_tested_code_head": "cca65d4a33d7b9be05d887cb695cbe33e4c169f1",
+    "ci_run": 36939099820,
     "proof": "An owned installed-Chrome tab reproduced raw BUY and English risk-note text on the Chinese saved Official OOS run, then verified 买入 plus the Chinese warning and Buy plus the original English warning after a presentation-only fix. Existing paper-side translations were reused; only an exact canonical limitation string is localized and unknown text remains raw. Full local frontend 562/562, lint, typecheck and production build passed; code head 6633e30 backend/frontend/Compose CI run 36938777559 passed. A Chrome follow-up measured the new precision label 140.875x24 CSS px, then 140.875x40 after a one-line min-height fix, with document/client width 943/943. See docs/product/ACCEPTANCE.md.",
-    "limits": "Read-only saved run and one locale pair, not complete U8, screen-reader speech, native 200-percent zoom, full M4/M5 or release acceptance. No source diagnostics, formal study, frozen dataset, account, official OOS, merge or tag changed. Exact changed-head CI remains to be verified after push."
+    "limits": "Read-only saved run and one locale pair, not complete U8, screen-reader speech, native 200-percent zoom, full M4/M5 or release acceptance. No source diagnostics, formal study, frozen dataset, account, official OOS, merge or tag changed. The documented code head passed CI; final release still requires CI on its own code head."
   },
   "m4_native_zoom_vss_boundary_20261002_gate": {
     "status": "NATIVE_ZOOM_NOT_VERIFIED_VSS_INVENTORY_REQUIRES_ELEVATION",

@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 23:22 UTC local CI-equivalent and interrupted-state check
+
+On code head `cca65d4` with local documentation updates, `make test` exited 0
+using the separate `quant-mvp-tests` Compose project and tmpfs `quant_test`
+PostgreSQL. The full backend suite completed, and all 562 frontend tests
+passed. `make lint` passed
+Ruff, Ruff format, mypy, ESLint and TypeScript; `make build` produced the
+frontend bundle. The disposable test services were stopped, while the original
+PostgreSQL, Redis, backend and frontend remained up and `/api/health` returned
+HTTP 200. This is a real local alternative when hosted CI is unavailable, not
+a substitute for the final release-head CI or product acceptance.
+
+An agent-owned in-app browser tab opened one persisted INTERRUPTED study by
+GET. Its linked-retry explanation, non-overwrite warning and status were
+readable in Chinese and English; the original EN/system preference was
+restored and the tab closed. No retry was submitted. A separate read-only
+source reviewer found no new concrete P1/P2 defect in the sampled U1–U8 and
+financial/API paths. Neither check proves native 200% zoom, screen-reader
+speech, independent novice acceptance or full M4/M5.
+
 ## 2026-10-01 23:03 UTC bounded formal-archive bilingual closeout
 
 An agent-owned installed Chrome tab opened the saved Official OOS research run
@@ -20,7 +40,9 @@ and production build passing locally. Exact pushed head `6633e30` passed
 for backend, frontend and Compose. A follow-up Chrome measurement found the
 new full-precision label was only 140.875×24 CSS px; a 40px minimum height
 raised the measured target to 140.875×40 while document/client width remained
-943/943. That one-line CSS follow-up still needs its own CI after push.
+943/943. The exact CSS-follow-up head `cca65d4` then passed
+[CI run 36939099820](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36939099820)
+for backend, frontend and Compose.
 
 This is one archive-detail U8 slice and a bounded target-size check, not
 complete bilingual coverage, screen-reader speech, native 200% zoom, full
@@ -4710,7 +4732,7 @@ closes a bounded disclosure ambiguity, not U7 forward, M4 or release.
 | QA-REVIEW | Implement→browser review→fix→recheck; independent read-only review resolved | Independent backend+frontend code/test review | Reported races/idempotency/format/routing defects corrected; final browser repeat pending | IN_PROGRESS |
 | M4-DATA-INTEGRITY | Application and formal-history persistence, isolated tests, recoverable backup | Suite-wide test-DB guard and verified additive restore | Live DB was found missing formal 1/3/310 ledger and later paper accounts. Formal ledger and four pre-backup accounts were restored atomically; `4b64380f` and `07d72259` remain absent. Live-config pytest was rejected; isolated backend969 PASS/one optional skip with live counts stable. The post-recovery dump restored into a new database, with 44/44 public tables matching live by row count and sorted-row hash. This same-disk dump is not independent disaster recovery and missing-history disposition remains open | FAIL |
 | QA-RELEASE | Full backend/frontend/lint/types/build/migrations/durability/CI/compatibility | Incremental suites and reversible migrations | Isolated release-image/browser rehearsal and [CI 36081787335](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36081787335) backend/frontend/Compose plus production-backend/tmpfs smoke PASS. The live DB data-loss incident, missing independent disaster-recovery proof, forward authority and remaining M4/M5 acceptance keep the release gate FAIL; frozen research files were not changed | FAIL |
-| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback; bounded Chinese demo/walkthrough videos and screenshots exist. The genuine 2026-09-30 login ran the current-user AtLogOn task but Docker Desktop twice entered its app Quit path; the original services recovered only after a later manual launch. The native Run entry currently also exists, but its role in the Quit path is unproven. Full key-interaction coverage, novice-user/operator review and terminal-free startup remain incomplete; no English video is claimed or treated as a separate requirement | FAIL |
+| M5-DELIVERY | New/old screenshots + key recordings, bilingual manual/demo/start/recovery/rollback, mode freshness/limits | Draft [Chinese](USER_GUIDE.zh-CN.md) and [English](USER_GUIDE.en-US.md) guides | Both draft guides cover current UI, mode/date boundaries, recovery and rollback; bounded Chinese demo/walkthrough videos and screenshots exist. At the genuine 2026-10-01 login the current-user AtLogOn task and a duplicate HKCU Run entry both launched Docker Desktop, which later entered its app Quit path. The duplicate Run entry was subsequently backed up and removed; Docker was manually restarted on 2026-10-02. Windows last boot remains 2026-10-01 17:05 AEST, so the corrected single-task configuration has not had a genuine post-change login test. Full key-interaction coverage, novice-user/operator review and terminal-free startup remain incomplete; no English video is claimed or treated as a separate requirement | FAIL |
 | M5-PUBLISH | Small feature PRs reviewed+CI+browser→merge; v1.2.0 only after all required rows pass | feature/product-experience-v1.2 | v1.1 remains immutable | NOT_RUN |
 
 PRODUCT_GOAL_COMPLETE = NO. Remaining required work is the full non-PASS set above.
