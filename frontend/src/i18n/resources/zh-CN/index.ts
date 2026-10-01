@@ -525,6 +525,7 @@ export const zhCN = {
     strategyNameZh:
       "China A-Share Cross-Sectional Momentum and Low-Volatility Strategy",
     methodology: "冻结方法",
+    fullPrecision: "显示完整精度",
     methodologyNotes: "时间点与会计说明",
     pointInTimeNote: "历史证券池、ST、停牌和规则均按每个交易日解析。",
     corporateActionNote:
@@ -605,6 +606,11 @@ export const zhCN = {
     excess_return: "超额收益",
     tracking_error: "跟踪误差",
     information_ratio: "信息比率",
+    average_gross_exposure: "平均总敞口",
+    average_net_exposure: "平均净敞口",
+    average_holding_period: "平均持有期（交易日）",
+    closed_trade_sessions: "卖出交易日记录数",
+    number_of_trades: "交易记录数",
   },
   validation: {
     datasetReady: "已就绪",

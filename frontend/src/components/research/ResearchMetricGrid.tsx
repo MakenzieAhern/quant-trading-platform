@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { ResearchMetric } from "../../types/research";
@@ -13,34 +14,46 @@ const PERCENT_METRICS = new Set([
   "benchmark_return",
   "excess_return",
   "tracking_error",
+  "average_gross_exposure",
+  "average_net_exposure",
 ]);
 
 export function ResearchMetricGrid({ metrics }: { metrics: ResearchMetric[] }) {
-  const { t } = useTranslation("metrics");
+  const { t } = useTranslation(["metrics", "research"]);
+  const [fullPrecision, setFullPrecision] = useState(false);
+  const places = fullPrecision ? undefined : 2;
   return (
-    <div className="metricsGrid">
-      {metrics.map((metric) => (
-        <div
-          className="metric"
-          key={`${metric.period_kind}-${metric.metric_name}`}
-        >
-          <span>
-            {t(metric.metric_name, {
-              defaultValue: metric.metric_name.replaceAll("_", " "),
-            })}
-          </span>
-          <strong title={metric.value ?? undefined}>
-            {PERCENT_METRICS.has(metric.metric_name)
-              ? formatPercent(metric.value)
-              : formatDecimal(metric.value)}
-          </strong>
-          <small>
-            {metric.period_kind === "PILOT_SMOKE"
-              ? "PILOT_ENGINEERING_SMOKE_ONLY"
-              : metric.period_kind}
-          </small>
-        </div>
-      ))}
-    </div>
+    <>
+      <label className="metricPrecision">
+        <input
+          type="checkbox"
+          checked={fullPrecision}
+          onChange={(event) => setFullPrecision(event.target.checked)}
+        />
+        {t("research:fullPrecision")}
+      </label>
+      <div className="metricsGrid">
+        {metrics.map((metric) => (
+          <div
+            className="metric"
+            key={`${metric.period_kind}-${metric.metric_name}`}
+          >
+            <span>
+              {t(metric.metric_name, {
+                defaultValue: metric.metric_name.replaceAll("_", " "),
+              })}
+            </span>
+            <strong title={metric.value ?? undefined}>
+              {PERCENT_METRICS.has(metric.metric_name)
+                ? formatPercent(metric.value, places)
+                : formatDecimal(metric.value, places)}
+            </strong>
+            <small title={metric.period_kind}>
+              {t(`research:periods.${metric.period_kind}`)}
+            </small>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

@@ -561,6 +561,7 @@ export const enUS = {
       "China A-Share Cross-Sectional Momentum and Low-Volatility Strategy",
     strategyNameZh: "中国A股横截面动量与低波动策略",
     methodology: "Frozen methodology",
+    fullPrecision: "Show full precision",
     methodologyNotes: "Point-in-time and accounting notes",
     pointInTimeNote:
       "Historical membership, ST, suspension and rules are resolved as of each session.",
@@ -647,6 +648,11 @@ export const enUS = {
     excess_return: "Excess return",
     tracking_error: "Tracking error",
     information_ratio: "Information ratio",
+    average_gross_exposure: "Average gross exposure",
+    average_net_exposure: "Average net exposure",
+    average_holding_period: "Average holding period (trading sessions)",
+    closed_trade_sessions: "Sell-session records",
+    number_of_trades: "Trade records",
   },
   validation: {
     datasetReady: "Ready",
