@@ -153,7 +153,7 @@ export function App() {
   }
   return (
     <ProductDataProvider>
-      <AppShell>
+      <AppShell notFound={page.type === NotFoundPage}>
         <Suspense fallback={<LoadingPanel label={t("research")} />}>
           {page}
         </Suspense>

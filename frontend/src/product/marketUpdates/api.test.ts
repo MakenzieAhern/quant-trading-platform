@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { ApiContractError } from "../../api/contracts";
 import {
   marketUpdateApi,
   parseCapabilities,
@@ -8,6 +9,14 @@ import {
 import { caps, job, observations, receipt } from "./fixtures.test-data";
 import { invalidUpdateRequestField, validUpdateRequest } from "./intent";
 describe("incremental update HTTP contract", () => {
+  it("rejects a detail response for a different job", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response(JSON.stringify({ ...job, job_id: "other-job" })),
+    );
+    await expect(marketUpdateApi.get(job.job_id)).rejects.toBeInstanceOf(
+      ApiContractError,
+    );
+  });
   it("uses /api paths, exact bodies, server idempotency and bounded paginated reads", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")

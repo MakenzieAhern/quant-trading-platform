@@ -398,6 +398,11 @@ function dateQuery(range: DateRange = {}) {
   return query.size ? `&${query}` : "";
 }
 const path = (id: string) => `/api/experiments/${encodeURIComponent(id)}`;
+function matchingJobId<T extends { job_id: string }>(job: T, id: string): T {
+  if (job.job_id.toLowerCase() !== id.toLowerCase())
+    throw new ApiContractError();
+  return job;
+}
 export interface ExperimentListQuery {
   status?: ExperimentStatus;
   mode?: ExperimentMode;
@@ -427,7 +432,9 @@ export const experimentApi = {
     );
   },
   get: (id: string, signal?: AbortSignal) =>
-    apiRequest(path(id), {}, signal, parseExperiment),
+    apiRequest(path(id), {}, signal, (value) =>
+      matchingJobId(parseExperiment(value), id),
+    ),
   create: (body: ExperimentConfiguration, key: string) =>
     apiRequest(
       "/api/experiments",
@@ -454,7 +461,9 @@ export const experimentApi = {
       parseExperiment,
     ),
   result: (id: string, signal?: AbortSignal) =>
-    apiRequest(`${path(id)}/result`, {}, signal, parseResult),
+    apiRequest(`${path(id)}/result`, {}, signal, (value) =>
+      matchingJobId(parseResult(value), id),
+    ),
   equity: (id: string, signal?: AbortSignal, offset = 0, range?: DateRange) =>
     apiRequest(
       `${path(id)}/equity?limit=100&offset=${offset}${dateQuery(range)}`,

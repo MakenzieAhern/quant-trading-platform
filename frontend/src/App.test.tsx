@@ -91,6 +91,33 @@ describe("routing", () => {
     await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
   });
 
+  it("updates the page title after navigation and a language change", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({}, "", "/settings");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    expect(document.title).toBe("Settings · QUANT");
+
+    fireEvent.click(screen.getByRole("link", { name: "Help" }));
+    expect(document.title).toBe("Help · QUANT");
+
+    await act(() => i18n.changeLanguage("zh-CN"));
+    expect(document.title).toBe("帮助 · QUANT");
+  });
+
+  it("titles an unknown route as not found instead of legacy backtests", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({}, "", "/does-not-exist");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    expect(
+      screen.getByRole("heading", { name: "Page not found" }),
+    ).toBeInTheDocument();
+    expect(document.title).toBe("Page not found · QUANT");
+  });
+
   it("closes and restores the strategy drawer with Back and Forward", async () => {
     await i18n.changeLanguage("en-US");
     window.history.replaceState({}, "", "/strategies");

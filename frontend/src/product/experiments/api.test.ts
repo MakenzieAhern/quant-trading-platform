@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { API_BASE_URL } from "../../api/config";
+import { ApiContractError } from "../../api/contracts";
 import { jsonResponse } from "../../test/fixtures";
 import { experimentApi } from "./api";
 import { capabilities, configuration, job, result } from "./fixtures.test-data";
@@ -46,10 +47,34 @@ describe("experiment HTTP boundary", () => {
     ]);
   });
 
-  it("sends server-wide filters and sort with the page request", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      jsonResponse({ items: [], total: 0, limit: 20, offset: 20 }),
+  it("rejects a saved study or result returned for a different job ID", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        jsonResponse({
+          ...job,
+          job_id: "00000000-0000-0000-0000-000000000000",
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          ...result,
+          job_id: "00000000-0000-0000-0000-000000000000",
+        }),
+      );
+    await expect(experimentApi.get(job.job_id)).rejects.toBeInstanceOf(
+      ApiContractError,
     );
+    await expect(experimentApi.result(job.job_id)).rejects.toBeInstanceOf(
+      ApiContractError,
+    );
+  });
+
+  it("sends server-wide filters and sort with the page request", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(
+        jsonResponse({ items: [], total: 0, limit: 20, offset: 20 }),
+      );
     await experimentApi.list(undefined, 20, 20, "Alpha", {
       status: "SUCCEEDED",
       mode: "historical_exploration",

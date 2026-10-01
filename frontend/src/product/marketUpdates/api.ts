@@ -245,7 +245,12 @@ export const marketUpdateApi = {
       page(value, parseJob),
     ),
   get: (id: string, signal?: AbortSignal) =>
-    apiRequest(path(id), {}, signal, parseJob),
+    apiRequest(path(id), {}, signal, (value) => {
+      const parsed = parseJob(value);
+      if (parsed.job_id.toLowerCase() !== id.toLowerCase())
+        throw new ApiContractError();
+      return parsed;
+    }),
   create: (config: UpdateConfiguration, key: string) =>
     apiRequest(root, post(key, config), undefined, parseJob),
   cancel: (id: string) =>

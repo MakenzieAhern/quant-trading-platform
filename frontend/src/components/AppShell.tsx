@@ -6,6 +6,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { getHealth } from "../api/health";
 import { useApiResource } from "../hooks/useApiResource";
 import { usePathname } from "../utils/navigation";
@@ -18,8 +19,15 @@ import { formatUtc } from "../utils/format";
 import { Link } from "./Link";
 import { LanguageSelector } from "./LanguageSelector";
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({
+  children,
+  notFound,
+}: {
+  children: ReactNode;
+  notFound: boolean;
+}) {
   const copy = useProductCopy();
+  const { t } = useTranslation("common");
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
   const { preferences, update, unsaved } = usePreferences();
@@ -85,7 +93,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   ];
   const active = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
-  const location =
+  const routeLocation =
     links.find((item) => active(item.href))?.label ??
     (pathname.startsWith("/research/new")
       ? copy.newStudy
@@ -96,6 +104,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           : pathname === "/help"
             ? copy.help
             : copy.legacy);
+  const location = notFound ? t("pageNotFound") : routeLocation;
+  useEffect(() => {
+    document.title = `${location} · QUANT`;
+  }, [location]);
   useEffect(() => {
     if (menuOpen) sidebar.current?.querySelector("a")?.focus();
   }, [menuOpen]);
