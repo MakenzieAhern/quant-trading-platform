@@ -1087,6 +1087,9 @@ tbody tr:hover {
   min-height: 40px;
   margin-block: -13px;
 }
+.paperSessionMode {
+  display: none;
+}
 .pagination {
   display: flex;
   flex-wrap: wrap;
@@ -1589,6 +1592,14 @@ footer strong {
   }
 }
 @media (max-width: 600px) {
+  .paperSessionMode {
+    display: block;
+    width: 160px;
+    margin-top: 8px;
+    color: var(--muted);
+    line-height: 1.4;
+    white-space: normal;
+  }
   h1 {
     font-size: 26px;
   }

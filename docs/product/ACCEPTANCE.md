@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 21:52 UTC narrow-screen paper-mode clarity
+
+The paper-session list now repeats its existing localized provider label below
+the Open session link at widths up to 600 CSS px. The provider column remains
+intact for local table scrolling; the narrow-screen repeat is hidden from the
+accessibility tree because the link's accessible name already includes the
+provider. This makes the retained legacy AAPL fixture's "not A-share data"
+warning visible without first scrolling the table horizontally.
+
+In an agent-owned installed Chrome tab at 390x844, the first row visibly said
+"Legacy local AAPL fixture · not A-share data" in English and
+"保留的 AAPL 本地测试回放 · 非 A 股数据" in Chinese. The document's scroll/client width
+was 375/375 CSS px in both states. At the restored 943 CSS px viewport the
+repeat was hidden and width stayed 943/943. The original English/dark
+preference was restored and the QA tab closed. Full frontend tests passed
+560/560 across 40 files; ESLint, TypeScript, production build, changed-file
+Prettier and `git diff --check` passed. Independent read-only review found no
+new concrete P1/P2 in the bounded diff.
+
+This is U7 mode clarity on one mobile viewport, not a lawful forward-market
+account, native 200% browser zoom, screen-reader speech, CSV file-landing
+proof, complete M4/M5 or release acceptance. No provider, original financial
+database, frozen research/OOS, merge, tag or release action occurred. The
+changed head still needs its own GitHub Actions run after push.
+
 ## 2026-10-01 21:27 UTC PR #32 documentation-head CI
 
 Exact pushed head `208d6b80c9e5c0be98c18aa36e244b280613dd15`

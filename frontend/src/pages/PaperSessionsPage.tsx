@@ -104,6 +104,9 @@ export function PaperSessionsPage() {
                       >
                         {t("paper:openSession")}
                       </Link>
+                      <small className="paperSessionMode" aria-hidden="true">
+                        {t(`paper:providers.${item.provider_type}`)}
+                      </small>
                     </td>
                     <td>{t(`paper:strategies.${item.strategy_type}`)}</td>
                     <td>{t(`paper:providers.${item.provider_type}`)}</td>

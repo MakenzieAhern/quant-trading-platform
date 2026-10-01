@@ -629,7 +629,9 @@ describe("paper trading pages", () => {
       await screen.findByText("Created", { selector: ".statusBadge" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/SIMULATED EXECUTION ONLY/)).toBeInTheDocument();
-    expect(screen.getByText(/not A-share data/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/not A-share data/, { selector: ".paperSessionMode" }),
+    ).toHaveAttribute("aria-hidden", "true");
     expect(
       screen.getByRole("link", {
         name: /Open session: Moving average crossover/,

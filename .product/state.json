@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T21:37:48Z",
+  "updated_at_utc": "2026-10-01T21:52:51Z",
+  "u7_mobile_paper_mode_clarity_20261002_gate": {
+    "status": "PASS_BOUNDED_CHROME_EN_ZH_390_NOT_FULL_U7_M4_M5",
+    "source_head": "dd9072b05872ec85caf54cb302fa35de3551aa51",
+    "proof": "The first visible paper-session table cell now repeats its existing localized provider label on screens at most 600 CSS px; the existing provider column remains unchanged and the repeat is hidden from assistive technology because the link already names the provider. Installed Chrome at 390x844 showed the retained AAPL fixture explicitly marked not A-share data in English and Chinese before horizontal table scrolling, with document scroll/client width 375/375. Returning to the 943 CSS px desktop viewport hid the repeat and kept width 943/943. Full frontend suite 560/560, ESLint, TypeScript, production build, changed-file Prettier and diff check passed. Independent read-only review found no new concrete P1/P2. See docs/product/ACCEPTANCE.md.",
+    "limits": "This is one narrow-screen mode-label clarity fix, not current A-share forward execution, native browser 200-percent zoom, screen-reader speech, full U7/M4/M5 or release acceptance. No provider, original financial DB, frozen research/OOS, merge, tag or release changed. Exact changed-head GitHub CI remains to be verified after push."
+  },
   "m5_local_patched_compose_runtime_20261002_gate": {
     "status": "PASS_BOUNDED_LOCAL_RUNTIME_NOT_FULL_M5_OR_RELEASE",
     "source_head": "7c0f3fef1ddd4eab945ea4bef3d9b5e7bd9e9744",
