@@ -98,7 +98,7 @@ pygments==2.21.0
     # via pytest
 pymupdf==1.28.2
     # via quant-trading-platform-backend (backend/pyproject.toml)
-pypdf==6.16.1
+pypdf==6.19.0
     # via quant-trading-platform-backend (backend/pyproject.toml)
 pyproject-hooks==1.3.0
     # via
