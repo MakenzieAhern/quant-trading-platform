@@ -7412,3 +7412,28 @@ head `79b02e4` had successful hosted backend/frontend/Compose run 36918578952.
 The new commit still needs exact-head CI. This is a bounded recovery fix,
 not complete U5/M4/M5 or v1.2 release acceptance; no native Chrome or
 screen-reader pass was obtained in this unit.
+
+## 2026-10-01 20:22 UTC four-viewport bilingual/theme overflow recheck
+
+On DESKTOP-3EOROGR, an agent-owned local Codex in-app Chromium tab at
+`127.0.0.1:5173` visited Workbench, Markets, Strategies, Research, Simulated
+accounts and Data center at 390×844, 1024×768, 1280×800 and 1440×900 CSS
+viewports. Each route was measured under ZH/light, EN/dark, ZH/dark and
+EN/light: **96 route/viewport/locale/theme observations**. Every measured
+`document.documentElement.scrollWidth` equaled its `clientWidth` (375,
+1009, 1265 and 1425 CSS px respectively); all document titles matched the
+selected language. The 390×844 ZH/light paper table displayed its local
+horizontal-scroll instruction; the page itself did not overflow. Visual
+spot checks also covered Workbench and Data center at 1024×768 and Data
+center at 1440×900. The main/body computed font size at 1440 was 15px.
+Only read-only page navigation and preference changes were made; EN and
+Follow system were restored, the temporary viewport override was reset and
+the agent-created tab was closed. No provider request, account, study or
+financial-data write occurred.
+
+This is a bounded layout-width/title and spot-visual check, **not** full
+visual, interaction, WCAG, native installed Chrome, 200% browser zoom,
+screen-reader speech, physical mobile, p95 performance, durable media or
+independent novice acceptance. The in-app browser's zoom shortcut produced
+no verifiable zoom; Chrome was not available in this browser-control session.
+Do not promote M4/M5 or the v1.2 release gate from this check.

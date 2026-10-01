@@ -389,3 +389,17 @@ requires unavailable credentials/payment, or no lawful workable source remains
 after the bounded alternatives. None was observed in this probe. Cross-board
 coverage, incremental durability, new-event receipt and actual forward processing
 are still engineering/elapsed-time acceptance work, not completed capabilities.
+
+## 2026-10-02 holiday and rights checkpoint
+
+The official [SSE September 17 notice](https://www.sse.com.cn/disclosure/announcement/general/c/c_20260915_10832273.shtml)
+and [SZSE annual notice](https://www.szse.cn/disclosure/notice/t20251222_618087.html)
+were rechecked on October 2 (Australia/Sydney). Both schedule the A-share
+market closed October 1–7, reopening October 8. This is a scheduled reopening,
+not an observed session or provider receipt. With no accepted, deliberately
+started forward session, a new after-start completed-session EOD receipt cannot
+be established during this closure; the next scheduled opportunity is no
+earlier than the October 8 session and its later data publication. There was
+no new provider request, authority promotion or simulated fill. The written
+source-use rights, current master/calendar/ST/actions/rules and durable
+post-start receipt gates remain unresolved.
