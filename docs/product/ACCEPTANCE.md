@@ -7364,3 +7364,33 @@ review or full U1–U8/M4/M5. PR #32 remains open/draft with exact inspected-hea
 backend/frontend/Compose CI green in run 36827147044. Lawful post-start 2026 market feed rights
 and receipt, genuine pre-loss paper ledgers, independent physical backup and
 terminal-free Docker login remain release blockers; no merge, tag or release.
+
+## 2026-10-01 19:59 UTC current-head mobile and release-gate recheck
+
+The clean pushed branch and open draft PR #32 were at `f8d93c8b8e96b1b6b8e77332c90a3039f1f26dde`.
+[Exact-head CI run 36916698384](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36916698384)
+completed successfully for backend, frontend and Compose. The original four
+Compose services remained up; local frontend and `/api/health` returned HTTP
+200. This is CI/runtime evidence, not v1.2 product release acceptance.
+
+At a 390×844 CSS viewport, the local in-app browser visually showed the
+Workbench, Data Center and Simulated Accounts. Document scroll/client widths
+were 375/375 on Data Center, Markets, Strategies, Research and Simulated
+Accounts, with no page-level horizontal overflow. Opening mobile navigation
+and choosing Data Center closed the menu and focused main. The viewport was
+reset and only the agent-created tab was closed. This is a bounded current-head
+IAB recheck, not native Chrome, 200% zoom, screen-reader speech, the full
+theme/locale matrix or durable M5 media. A separate read-only review traced
+current market-update, paper-copy and comparison flows and established no new
+high-impact local defect; that is not a full independent novice evaluation.
+
+Windows still exposes one physical NVMe disk; C: and D: are partitions, not
+independent backup media. Security process-creation event 4688 was unavailable
+for the genuine login interval, and the Application log showed no Docker crash
+event there. Docker's Electron Quit and backend `actionMenuQuit` records still
+do not identify the initiator, so no startup setting was changed and no reboot
+was induced. Current operation required one prior manual Docker launch;
+terminal-free startup remains FAIL. Lawful post-start 2026 market-feed rights
+and receipt, genuine pre-loss paper ledgers, independent backup, full U1–U8/M4/M5,
+novice, media and native accessibility remain open. No original financial DB,
+frozen research/OOS, merge, tag or release was changed.
