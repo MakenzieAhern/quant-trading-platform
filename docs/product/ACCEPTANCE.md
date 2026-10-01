@@ -7241,3 +7241,36 @@ out; the in-app browser check did not establish browser download-file landing
 or an application CSV defect. Full U1–U8/M4/M5, lawful after-start forward
 data rights and receipt, genuine pre-loss ledger recovery, independent
 physical backup, independent novice, merge and v1.2 release remain open.
+
+## 2026-10-01 06:20 UTC saved-result comparison and contextual pagination
+
+The saved-result detail page now offers a direct bilingual comparison entry.
+The list validates that exact saved result before selecting it; pending reads
+disable selection, transient errors retain the source for explicit Retry or
+manual selection, and invalid or unfinished sources fail closed. Red/green
+regressions cover the result-to-list handoff, unfinished/invalid/missing source,
+pending selection race and transient recovery. Other product views now give
+their pagination groups distinct existing bilingual section names. Focused
+selection and focus regressions cover English and Chinese. Independent read-only
+review found no remaining concrete P1/P2 in these slices.
+
+At code head `d600ec2403b165fa8a5cbecec18d5cf63e750338`, isolated `make test`
+passed backend **1,034** with one optional unmounted-archive skip and frontend
+**554/554** across 40 files. `make lint` (Ruff, mypy, ESLint and TypeScript),
+production Vite build into a fresh `/tmp` directory and `git diff --check`
+passed. Changed-file Prettier passed 13 of 14 files; the sole exception is the
+pre-existing compact layout of `ExperimentsPage.tsx`: the parent version is
+420 lines while Prettier would reflow it to 627, so a whole-file formatting
+rewrite was not mixed into this behavioral patch. Exact pushed code head
+`d600ec2` passed backend, frontend and Compose in
+[GitHub Actions run 36824185174](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36824185174).
+The existing PR #32 remains open and draft.
+
+This is bounded component and local service proof, not a native Chrome/200%
+zoom, screen-reader, CSV file-landing, independent novice, full U4/M4/M5 or
+v1.2 release pass. Browser control could not establish the installed Chrome
+URL with sufficient confidence and was stopped; no alternate browser-control
+policy bypass was used. Original financial accounts, provider acquisition,
+frozen research and Official OOS were not changed. Lawful after-start forward
+data rights/receipt, genuine pre-loss ledgers and independent physical backup
+remain unresolved; no merge, tag or release occurred.
