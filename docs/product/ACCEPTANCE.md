@@ -15,9 +15,16 @@ restoring the prior English/dark preference. No study or account was run.
 
 A focused regression first failed on the raw trade side, then passed after the
 change. The complete frontend suite passed 562/562, with ESLint, TypeScript
-and production build passing locally. This is one archive-detail U8 slice, not
+and production build passing locally. Exact pushed head `6633e30` passed
+[CI run 36938777559](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36938777559)
+for backend, frontend and Compose. A follow-up Chrome measurement found the
+new full-precision label was only 140.875×24 CSS px; a 40px minimum height
+raised the measured target to 140.875×40 while document/client width remained
+943/943. That one-line CSS follow-up still needs its own CI after push.
+
+This is one archive-detail U8 slice and a bounded target-size check, not
 complete bilingual coverage, screen-reader speech, native 200% zoom, full
-M4/M5 or release acceptance. Exact changed-head CI requires a pushed commit.
+M4/M5 or release acceptance.
 
 ## 2026-10-01 22:41 UTC bounded native-zoom and VSS evidence boundary
 

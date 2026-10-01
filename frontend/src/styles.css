@@ -1223,6 +1223,7 @@ tbody tr:hover {
 .metricPrecision {
   display: inline-flex;
   align-items: center;
+  min-height: 40px;
   gap: 8px;
   margin-bottom: 12px;
   font-size: 13px;
