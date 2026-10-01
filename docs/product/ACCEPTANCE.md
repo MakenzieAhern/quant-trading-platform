@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 21:07 UTC current-head CI and bounded installed-Chrome check
+
+Exact pushed code head `2e59daf1d2d54e6ab51869e3fb4c4360b7cb8708`
+passed GitHub Actions backend, frontend and Compose in
+[run 36924929586](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36924929586).
+The earlier September spending-limit admission failure is historical; hosted
+CI is currently usable. The original PostgreSQL, Redis and backend Compose
+services were healthy, and frontend was running. No original service was
+restarted or rebuilt in this check.
+
+An agent-owned installed Chrome tab at the verified local
+`http://localhost:5173/` origin exercised Workbench, Markets, Strategies,
+Research, Simulated Accounts and Data Center under the existing English/dark
+preferences. At its actual 943 CSS px viewport, document `scrollWidth` equaled
+`clientWidth` on all six routes. The strategy-detail native dialog opened with
+focus on Close; Escape closed it and restored focus to the Explore strategy
+trigger. Main action targets measured about 40–42 CSS px. Research compare
+checkboxes were 18px controls inside 40×40px labels; the one 20px Markets
+link was inline in paragraph text. No form submission, provider request,
+strategy run or financial-data write occurred. The agent-owned tab was closed.
+
+This is one current-head locale/theme/viewport and dialog-focus check, not
+native 200% zoom, screen-reader speech, full visual/interaction/performance
+matrix, CSV file landing, durable M5 media or independent novice acceptance.
+The running development containers were not rebuilt with the updated
+dependency locks. U1–U8/M4/M5 and release remain incomplete; PR #32 stays
+draft/open with no merge, tag or release.
+
 ## 2026-09-30 23:02 UTC unreadable browser-draft recovery and Chrome CSV boundary
 
 An existing malformed or empty saved experiment draft now blocks silent wizard

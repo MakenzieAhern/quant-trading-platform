@@ -1,11 +1,18 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T20:52:24Z",
+  "updated_at_utc": "2026-10-01T21:07:59Z",
+  "m4_current_head_chrome_943_20261002_gate": {
+    "status": "PASS_BOUNDED_CHROME_EN_DARK_943_NOT_FULL_M4",
+    "source_head": "2e59daf1d2d54e6ab51869e3fb4c4360b7cb8708",
+    "ci_run": 36924929586,
+    "proof": "An agent-owned installed Chrome tab at explicit localhost:5173 visited Workbench, Markets, Strategies, Research, Simulated Accounts and Data Center in existing EN/dark settings. At the actual 943 CSS px viewport all six routes had document scrollWidth equal clientWidth. The strategy detail native dialog closed with Escape and returned focus to its Explore strategy trigger. Main action targets measured about 40-42 CSS px; research compare checkboxes were within 40x40 labels. No form, provider, study or financial-data write occurred. The QA tab was closed. Exact pushed-head GitHub Actions backend, frontend and Compose all passed in run 36924929586. See docs/product/ACCEPTANCE.md.",
+    "limits": "One locale/theme/viewport and one dialog-focus path only. Not native 200-percent zoom, screen-reader speech, full visual/performance matrix, durable M5 media, independent novice, complete M4/M5 or product release. The running development containers were not rebuilt with updated dependency locks."
+  },
   "m5_backend_pdf_dependency_audit_20261002_gate": {
     "status": "PATCHED_LOCK_DISPOSABLE_AUDIT_AND_FIXTURE_TESTS_PASS_NOT_FULL_M5",
     "proof": "The locked pypdf 6.16.1 showed eight known findings in a disposable pip-audit 2.10.1 check. The existing >=6,<7 dependency allows the one-line lock update to pypdf 6.19.0. A disposable backend container with the repository mounted read-only installed 6.19.0, passed pip check and 50 SSE/CNINFO fixture tests, and a second disposable audit found no known vulnerabilities in the patched lock. Extracting the same official SZSE 2026 PDF with the old and new pypdf yielded identical 40 pages and identical extracted-text SHA-256 ffbdec63ccb18db749c4c2dd0d5ba93ed4b3c509208deb8e1e38cae7869f9a7c. See docs/product/ACCEPTANCE.md.",
-    "limits": "This is a bounded lockfile and disposable-container check, not a permanent security guarantee or full M5. The running backend was not rebuilt and still has the older installed package. No original database, research archive, Docker volume, merge, tag or release was changed. New pushed-head CI remains required."
+    "limits": "This is a bounded lockfile and disposable-container check, not a permanent security guarantee or full M5. Exact code head 2e59daf passed backend/frontend/Compose CI in run 36924929586, but the running backend was not rebuilt and still has the older installed package. No original database, research archive, Docker volume, merge, tag or release was changed."
   },
   "m5_frontend_dependency_audit_20261002_gate": {
     "status": "PATCHED_LOCK_SCRATCH_INSTALL_AUDIT_PASS_NOT_FULL_M5",
@@ -1838,13 +1845,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "52a5e13cdb958d75c94a83f00dd4e827aecc4968",
+      "last_verified_head": "2e59daf1d2d54e6ab51869e3fb4c4360b7cb8708",
       "state": "DRAFT",
-      "ci_run": 36826702044,
+      "ci_run": 36924929586,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Earlier U3 wizard, saved paper-event pager, responsive routes, historical chart and synthetic demo paths have bounded browser evidence. An explicit local IAB tab verified saved synthetic result-to-comparison with two results, six matching conditions, EN/ZH caveats, Back selection retention and localized Research/Help titles. Exact new code head passed backend/frontend/Compose CI; GET task identity and 404 title are regression-tested. Native installed Chrome/200%/screen-reader/CSV file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
+      "browser_gate": "Earlier U3 wizard, saved paper-event pager, responsive routes, historical chart and synthetic demo paths have bounded browser evidence. Current-head installed Chrome EN/dark at 943 CSS px showed six main routes without document overflow and one strategy dialog Escape/focus-return pass. Exact code head 2e59daf passed backend/frontend/Compose CI. Native 200% zoom, screen-reader speech, CSV file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -1859,7 +1866,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Keep PR32 open/draft and verify CI against each pushed head; last confirmed green head is f201642 in run 36924190868. Current original Compose is usable at localhost:5173, but the October 1 genuine login failed terminal-free startup. One duplicate Docker Run entry was backed up and removed while the scheduled login task stayed Ready; no post-change genuine login has occurred, so M5 remains FAIL. The frontend brace-expansion 5.0.12 lock fix passed exact-head CI; the backend pypdf 6.19.0 lock fix passed disposable audit and 50 fixture tests and needs its own pushed-head CI. Browser control was safety-stopped when it could not establish the Chrome URL; do not count this as native 200-percent zoom, speech, media or novice proof or repeat the same control path without a changed hypothesis. Continue independent M4/M5 checks. The next completed SSE/SZSE session is scheduled October 8, not yet a receipt. Lawful forward-feed rights/current execution authorities, genuine pre-loss paper ledgers and independent physical backup remain release gates; no merge, tag or release.",
+  "next_task": "Keep PR32 open/draft and verify CI against each pushed head; exact code head 2e59daf passed backend/frontend/Compose in run 36924929586. Current original Compose is usable at localhost:5173, but the October 1 genuine login failed terminal-free startup. One duplicate Docker Run entry was backed up and removed while the scheduled login task stayed Ready; no post-change genuine login has occurred, so M5 remains FAIL. Frontend brace-expansion 5.0.12 and backend pypdf 6.19.0 lock fixes passed exact-head CI; development containers were not rebuilt. Installed Chrome EN/dark at 943 CSS px produced bounded current-head layout and dialog-focus evidence, not native 200-percent zoom, screen-reader speech, full media or novice proof. Continue independent M4/M5 checks. The next completed SSE/SZSE session is scheduled October 8, not yet a receipt. Lawful forward-feed rights/current execution authorities, genuine pre-loss paper ledgers and independent physical backup remain release gates; no merge, tag or release.",
   "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform check clean branch/PR32 head, current exact-head CI, original docker compose ps and localhost health. Use isolated test data only for further M4/M5 QA; keep original accounts and frozen research/OOS read-only. At the next genuine Windows login verify whether the single scheduled task starts Docker and all four Compose services without terminal input; do not induce a reboot merely to claim acceptance.",
   "next_command": "Full U1-U8/M0-M5 objective remains incomplete. Continue safe browser, accessibility, performance, delivery and exact-head CI evidence without bypassing a browser URL-confidence stop. Ask once for any still-missing lawful forward-feed rights, genuine pre-loss ledger evidence and an independent physical backup destination; do not infer approval from public readability or fabricate lost records. Keep PR32 draft/open; no merge, tag or release until all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
