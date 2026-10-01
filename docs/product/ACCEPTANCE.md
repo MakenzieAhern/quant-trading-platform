@@ -7195,3 +7195,49 @@ forward acceptance, merge, tag or release occurred. Exact pushed code/doc
 head `9a6e8973e14d2b95c411f259297b883ccccb0482` passed backend,
 frontend and Compose in [GitHub Actions run
 36805490344](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36805490344).
+
+## 2026-10-01 05:46 UTC bilingual recovery and data-center controls
+
+The preserved legacy backtest detail page previously put a raw English server
+exception in its primary FAILED alert, and its parameterized risk decisions
+did not use the localization already present on the paper-session page. Two
+focused assertions failed red. The existing risk-message rules are now shared
+between those pages; FAILED shows locale-specific guidance first and retains
+the exact diagnostic in a collapsed technical disclosure. The backtest and
+paper focused suites passed **109/109** after the change. Unknown risk text
+still falls back to the original message, rendered as text.
+
+In the Data Center, native required-field validation previously intercepted
+the request before the existing localized validation and focus handoff ran.
+The request form now uses that existing validation path. Its history,
+observation and receipt pagers also have distinct names formed from existing
+bilingual section labels. Focused regressions failed red, then passed
+**45/45**; an independent read-only review of both code slices found no
+P1/P2 issue. On the local in-app browser at `127.0.0.1:5173/data`, an empty
+English and Chinese request displayed the respective error and focused the
+security-ID field without a POST. Opening an existing saved task read-only
+showed three distinct Chinese pager names in the accessibility tree. The EN
+preference was restored and the QA tab closed.
+
+The combined isolated `make test` passed backend **1034** with one optional
+unmounted historical-archive skip and frontend **547/547** across 40 files.
+`make lint`, changed-file Prettier and `git diff --check` passed. A production
+Vite bundle passed into a fresh temporary output directory; the normal local
+`frontend/dist/assets` directory is root-owned, so it was not overwritten.
+Exact code head `8c9b53076b3186a30a76fe6fe5f9484efb3ab79d` passed
+backend, frontend (including the normal clean-checkout build) and Compose in
+[GitHub Actions run 36821215437](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36821215437).
+Original Compose PostgreSQL, Redis and backend were healthy, Redis returned
+PONG, and frontend and `/api/health` returned HTTP 200. PR #32 remains draft
+and open; no original account, provider acquisition, frozen research or
+Official OOS was changed.
+
+A separate bounded responsive check at the previous code head moved focused
+desktop-sidebar navigation into 799×768 and 720×450 CSS viewports: focus
+landed on the visible Open navigation button and document scroll width did
+not exceed client width. This is a CSS viewport proxy, **not native 200% zoom**
+or screen-reader acceptance. A fresh installed-Chrome control attempt timed
+out; the in-app browser check did not establish browser download-file landing
+or an application CSV defect. Full U1–U8/M4/M5, lawful after-start forward
+data rights and receipt, genuine pre-loss ledger recovery, independent
+physical backup, independent novice, merge and v1.2 release remain open.
