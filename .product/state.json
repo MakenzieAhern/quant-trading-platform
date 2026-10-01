@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T20:23:41Z",
+  "updated_at_utc": "2026-10-01T20:34:27Z",
+  "m5_docker_single_login_entry_20261002_gate": {
+    "status": "CONFIG_REMEDIATED_NEXT_GENUINE_LOGIN_UNVERIFIED",
+    "proof": "Windows login task QuantTrading-DockerDesktop-AtLogon remained Ready and pointed at the installed Docker Desktop. Shell-Core event 9707 showed a second HKCU Run launch at 2026-10-01 17:06:37 AEST after the task ran at 17:05:43. Docker Desktop General AutoStart was turned off in the UI; the unchanged stale HKCU Run value was backed up at HKCU:\\Software\\QuantTrading\\StartupBackups\\DockerDesktop-20261002 and then removed. AutoStart=false, Run entry absent and task Ready were verified. Engine 29.8.0, all four original Compose services, frontend and /api/health HTTP 200 remained healthy. See docs/product/ACCEPTANCE.md.",
+    "limits": "The duplicate launch is proven but is not proven to have caused the later actionMenuQuit. No genuine post-change login has occurred, so terminal-free startup remains FAIL. No reboot, Docker data reset, image/volume deletion, original financial write, merge, tag or release."
+  },
   "m4_four_viewport_bilingual_theme_20261002_gate": {
     "status": "PASS_BOUNDED_96_LAYOUT_WIDTH_AND_TITLE_OBSERVATIONS_NOT_FULL_M4",
     "source_head": "ccf37cb795f98bb360f9d37a6e96082df4351117",
