@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T21:52:51Z",
+  "updated_at_utc": "2026-10-01T22:01:05Z",
+  "u4_current_runtime_csv_export_20261002_gate": {
+    "status": "PASS_BOUNDED_SERVER_EXPORT_NOT_BROWSER_FILE_LANDING_OR_FULL_U4",
+    "source_head": "1e5ebb46a924da19f51f43031df7eaa30d9e1243",
+    "proof": "Windows-host HTTP GET against the running backend exported the existing completed synthetic job dccc74b3-f8c4-487f-9597-4cd9d8fb7288 as CSV: HTTP 200, text/csv, attachment disposition, 9064 UTF-8 bytes, 28 metadata and five trade rows. All 20 checked required metadata fields were present, including job/mode, configuration/dataset/strategy, cost/risk, dates, timezone and CSV notes; sampled quantity/price/cost fields retained numeric text. A one-day display filter returned zero trades while the full-period summary string remained exactly unchanged; metadata declared the inclusive filter and changes_full_run_metrics=false. Exact pushed source head 1e5ebb4 passed GitHub Actions backend/frontend/Compose run 36931641502. See docs/product/ACCEPTANCE.md.",
+    "limits": "Read-only synthetic report and server response only. The report timestamp changes on each export, so the one-response SHA-256 is a receipt, not a repeatability claim. This does not prove Chrome saved a file, lawful current A-share forward data, complete U4/M4/M5 or release acceptance. Native 200-percent zoom also remains unverified because the only targetable Windows Chrome window was unrelated. No original account, provider, frozen research/OOS, merge, tag or release changed."
+  },
   "u7_mobile_paper_mode_clarity_20261002_gate": {
     "status": "PASS_BOUNDED_CHROME_EN_ZH_390_NOT_FULL_U7_M4_M5",
     "source_head": "dd9072b05872ec85caf54cb302fa35de3551aa51",

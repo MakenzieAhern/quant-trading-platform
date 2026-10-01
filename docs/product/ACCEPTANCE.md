@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 22:01 UTC current-runtime CSV export boundary
+
+From the Windows host, a read-only HTTP GET to the running backend exported
+the already completed synthetic study `dccc74b3-f8c4-487f-9597-4cd9d8fb7288`
+as trades CSV. The response was HTTP 200, `text/csv; charset=utf-8`, attachment
+disposition and 9,064 UTF-8 bytes. Parsing the actual response yielded 28
+metadata rows and five trade rows. All 20 checked required metadata fields
+were present, including job/mode, configuration/dataset/strategy identity,
+effective cost/risk, date/timezone and CSV notes. The sampled quantity, price
+and transaction-cost cells retained numeric text. A display filter for
+`2030-12-20` returned zero trade rows but the embedded full-period summary
+remained exactly unchanged; filter metadata reported an inclusive range and
+`changes_full_run_metrics=false`. This is direct server-export evidence, not
+the earlier mock-Blob component test. The report includes a live export
+timestamp, so separate responses are not expected to have identical bytes.
+Existing formula-prefix tests remain in
+`backend/tests/test_product_experiments.py`.
+
+Exact pushed source head `1e5ebb46a924da19f51f43031df7eaa30d9e1243`
+passed [run 36931641502](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36931641502):
+backend, frontend and Compose succeeded. PR #32 remains draft/open.
+
+`CSV_FILE_LANDING = NOT_VERIFIED` in the current browser: direct server bytes
+do not prove that the frontend download saved a file. Native 200% zoom also
+remains unverified: Windows automation exposed only an unrelated Chrome
+window, which was not targeted. No account, provider, original financial
+database, frozen research/OOS, merge, tag or release action occurred.
+
 ## 2026-10-01 21:52 UTC narrow-screen paper-mode clarity
 
 The paper-session list now repeats its existing localized provider label below
