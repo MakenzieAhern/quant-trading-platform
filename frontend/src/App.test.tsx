@@ -215,6 +215,38 @@ describe("routing", () => {
     await waitFor(() => expect(main).toHaveFocus());
   });
 
+  it("moves hidden sidebar focus to navigation when resizing to mobile", async () => {
+    const mobile = Object.assign(new EventTarget(), { matches: false });
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => mobile),
+    );
+    window.history.replaceState({}, "", "/unknown");
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    await screen.findByText("Service online", { selector: ".serviceText" });
+    const strategies = screen.getByRole("link", { name: "Strategies" });
+    const menu = screen.getByRole("button", { name: "Open navigation" });
+    strategies.focus();
+    act(() => {
+      mobile.matches = true;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    expect(menu).toHaveFocus();
+
+    act(() => {
+      mobile.matches = false;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    strategies.focus();
+    strategies.blur(); // Some browsers blur a control when CSS hides its parent.
+    act(() => {
+      mobile.matches = true;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    expect(menu).toHaveFocus();
+  });
+
   it("names icon-only search, traps mobile navigation focus and restores it", async () => {
     window.history.replaceState({}, "", "/unknown");
     vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));

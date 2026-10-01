@@ -112,8 +112,16 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     const mobile = window.matchMedia?.("(max-width: 800px)");
     const leaveMobile = () => {
-      if (mobile?.matches) return;
       const focused = document.activeElement;
+      if (mobile?.matches) {
+        if (
+          sidebar.current?.contains(focused) ||
+          (focused === document.body &&
+            sidebar.current?.contains(lastFocused.current))
+        )
+          menuButton.current?.focus({ preventScroll: true });
+        return;
+      }
       const mobileControl = focused?.matches(".mobileMenu, .sidebarBackdrop")
         ? focused
         : focused === document.body &&
