@@ -7093,3 +7093,36 @@ passed backend, frontend and Compose in [GitHub Actions run
 36800336531](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36800336531)
 at 2026-10-01 01:18 UTC. PR #32 remains draft/open. No original financial
 account, frozen research or Official OOS was changed.
+
+## 2026-10-01 01:33 UTC mobile-entry focus and current demo script
+
+At parent head `cb8d4c9`, the shared AppShell had a focus handoff only for
+mobile-to-desktop resize. At the reverse breakpoint, CSS hides the sidebar at
+800 CSS pixels but a focused desktop sidebar link could remain hidden from a
+keyboard user. The new App regression failed red on that path. The shared
+`matchMedia` change handler now sends focus to the visible Open navigation
+button when focus is on a sidebar control or was blurred to `body` from one.
+Existing mobile-to-desktop behavior is unchanged. The focused App suite passed
+20/20; isolated `make test` passed backend **1034** with one optional unmounted-
+archive skip and frontend **541/541** across 40 files. `make lint`, `make
+build`, changed-file Prettier and `git diff --check` passed. An independent
+read-only diff review found no P1/P2 regression. Code commit: `e122652`.
+
+The old root [DEMO.md](../../DEMO.md) now explicitly identifies its AAPL
+fixture as legacy; the new [bilingual v1.2 demo](DEMO.md) gives the current
+synthetic A-share four-step flow and links the fuller user guides. Its steps
+were cross-checked against current wizard/capability code and the earlier
+isolated real-browser synthetic result/reopen evidence. It does not claim a
+current-head clean-install browser rerun or an independent novice test.
+An independent read-only doc review corrected two draft hazards before commit:
+an unrelated saved study must be backed up before starting this demo, and the
+wizard's short strategy description must not be presented as full risk detail.
+
+`M4_MOBILE_ENTRY_FOCUS = PASS_COMPONENT_ONLY` and
+`M5_BILINGUAL_DEMO_SCRIPT = DRAFT_SOURCE_CHECKED`. The browser-control helper
+timed out on three bounded attempts, so **native 200% zoom and current-head
+browser interaction remain NOT_RUN**, not PASS. Original Compose frontend and
+API stayed HTTP 200, with backend/PostgreSQL/Redis healthy; no experiment,
+account, provider, frozen dataset or OOS was submitted or changed. Full
+U1–U8/M4/M5, lawful forward-market receipt, genuine lost-ledger recovery,
+independent backup, merge and v1.2 release remain open.

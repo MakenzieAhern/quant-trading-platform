@@ -8,6 +8,8 @@ released. Start at the [local workbench](http://localhost:5173/) and use the
 [product master](docs/product/PRODUCT_MASTER.md) records the full v1.2 scope and
 remaining acceptance gates.
 
+For a safe first look, follow the [bilingual synthetic A-share demo](docs/product/DEMO.md).
+
 A deterministic, point-in-time quantitative research and paper-trading platform for ordinary
 SSE/SZSE A-shares. It combines a 2010–2025 audited research dataset, corporate-action-aware
 portfolio accounting, pre-trade risk, OMS, simulated execution, PostgreSQL persistence, REST and
