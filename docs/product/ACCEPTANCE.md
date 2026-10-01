@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-01 23:03 UTC bounded formal-archive bilingual closeout
+
+An agent-owned installed Chrome tab opened the saved Official OOS research run
+`f4483e02-421a-5815-9ac4-31d329605240` read-only. In Chinese, the first
+trade row visibly rendered the raw `BUY` backend code and the known-limitations
+section rendered its English server text. The frontend now reuses the existing
+paper-direction translation for trade sides and translates only the exact,
+known formal-research limitation string. Unknown diagnostic text still appears
+verbatim rather than receiving a guessed translation; the API payload and
+frozen research record remain unchanged. The same Chrome tab showed `买入` and
+the Chinese risk warning, then `Buy` and the original English warning after
+restoring the prior English/dark preference. No study or account was run.
+
+A focused regression first failed on the raw trade side, then passed after the
+change. The complete frontend suite passed 562/562, with ESLint, TypeScript
+and production build passing locally. This is one archive-detail U8 slice, not
+complete bilingual coverage, screen-reader speech, native 200% zoom, full
+M4/M5 or release acceptance. Exact changed-head CI requires a pushed commit.
+
 ## 2026-10-01 22:41 UTC bounded native-zoom and VSS evidence boundary
 
 An agent-owned installed Chrome localhost tab opened the current Workbench at

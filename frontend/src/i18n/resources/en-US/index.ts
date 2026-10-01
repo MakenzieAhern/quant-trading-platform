@@ -602,6 +602,8 @@ export const enUS = {
     rebalances: "Rebalances",
     trades: "Trades",
     knownLimitations: "KNOWN LIMITATIONS",
+    formalKnownLimitations:
+      "Daily-bar simulation; Validation did not establish robust alpha; no guarantee of future returns.",
     reproducibility: "REPRODUCIBILITY",
     reproduceCommand:
       "Reproduce with the persisted run ID and frozen dataset checksum.",

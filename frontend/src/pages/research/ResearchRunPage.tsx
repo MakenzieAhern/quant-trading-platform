@@ -23,12 +23,16 @@ import {
   shortId,
 } from "../../utils/format";
 
+const FORMAL_KNOWN_LIMITATIONS =
+  "Daily-bar simulation; Validation did not establish robust alpha; no guarantee of future returns.";
+
 export function ResearchRunPage({ runId }: { runId: string }) {
   const { t } = useTranslation([
     "research",
     "common",
     "metrics",
     "accessibility",
+    "paper",
   ]);
   const [curveOffset, setCurveOffset] = useState(0);
   const [rollingOffset, setRollingOffset] = useState(0);
@@ -89,6 +93,7 @@ export function ResearchRunPage({ runId }: { runId: string }) {
   if (run.loading) return <LoadingPanel label={t("research:runDetail")} />;
   if (run.error) return <ErrorPanel message={run.error} />;
   if (!run.data) return null;
+  const knownLimitations = run.data.diagnostics.known_limitations;
   const rollingByDate = new Map<string, Record<string, string | null>>();
   for (const item of rolling.data?.items ?? []) {
     const values = rollingByDate.get(item.trading_date) ?? {};
@@ -360,7 +365,9 @@ export function ResearchRunPage({ runId }: { runId: string }) {
           trades.data?.items.map((item) => [
             formatUtc(item.timestamp),
             item.security_id,
-            item.side,
+            t(`paper:detail.directions.${item.side}`, {
+              defaultValue: item.side,
+            }),
             formatDecimal(item.quantity),
             formatDecimal(item.price),
             formatDecimal(item.transaction_cost),
@@ -371,9 +378,11 @@ export function ResearchRunPage({ runId }: { runId: string }) {
         <article>
           <h2>{t("research:knownLimitations")}</h2>
           <p>
-            {run.data.diagnostics.known_limitations
-              ? String(run.data.diagnostics.known_limitations)
-              : t("common:noData")}
+            {knownLimitations === FORMAL_KNOWN_LIMITATIONS
+              ? t("research:formalKnownLimitations")
+              : knownLimitations
+                ? String(knownLimitations)
+                : t("common:noData")}
           </p>
         </article>
         <article>

@@ -562,6 +562,8 @@ export const zhCN = {
     rebalances: "再平衡",
     trades: "交易",
     knownLimitations: "已知限制",
+    formalKnownLimitations:
+      "日线模拟；验证期未证明稳健的超额收益；不保证未来收益。",
     reproducibility: "可复现性",
     reproduceCommand: "使用已持久化的运行 ID 和冻结的数据集校验和复现。",
     preOosEvidence: "此处仅为开发期/验证期证据；锁定的样本外结果单独报告。",

@@ -196,3 +196,54 @@ test("rolling page retains a valid drawdown when the same date has no Sharpe val
   ).toBeInTheDocument();
   expect(within(table).getByText("-0.1")).toBeInTheDocument();
 });
+
+test("saved research trades and canonical limitations use localized presentation", async () => {
+  vi.mocked(researchApi.run).mockResolvedValue({
+    ...savedRun,
+    diagnostics: {
+      known_limitations:
+        "Daily-bar simulation; Validation did not establish robust alpha; no guarantee of future returns.",
+    },
+  });
+  vi.mocked(researchApi.trades).mockResolvedValue({
+    items: [
+      {
+        sequence: 0,
+        order_id: "first",
+        security_id: "CN-A:SSE:600000",
+        side: "BUY",
+        quantity: "100",
+        price: "10",
+        transaction_cost: "1",
+        timestamp: "2024-01-02T01:25:00Z",
+      },
+      {
+        sequence: 1,
+        order_id: "second",
+        security_id: "CN-A:SSE:600000",
+        side: "SELL",
+        quantity: "100",
+        price: "11",
+        transaction_cost: "1",
+        timestamp: "2024-01-03T01:25:00Z",
+      },
+    ],
+    limit: 200,
+    offset: 0,
+    total: 2,
+  });
+  render(<ResearchRunPage runId="saved" />);
+  const tradeTable = await screen.findByRole("table", {
+    name: "research:trades",
+  });
+  expect(
+    within(tradeTable).getByText("paper:detail.directions.BUY"),
+  ).toBeInTheDocument();
+  expect(
+    within(tradeTable).getByText("paper:detail.directions.SELL"),
+  ).toBeInTheDocument();
+  expect(within(tradeTable).queryByText("BUY")).toBeNull();
+  expect(
+    screen.getByText("research:formalKnownLimitations"),
+  ).toBeInTheDocument();
+});

@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T22:41:00Z",
+  "updated_at_utc": "2026-10-01T23:03:38Z",
+  "u8_formal_archive_bilingual_20261002_gate": {
+    "status": "PASS_BOUNDED_CHROME_ZH_EN_NOT_FULL_U8_M4_M5",
+    "proof": "An owned installed-Chrome tab reproduced raw BUY and English risk-note text on the Chinese saved Official OOS run, then verified 买入 plus the Chinese warning and Buy plus the original English warning after a presentation-only fix. Existing paper-side translations were reused; only an exact canonical limitation string is localized and unknown text remains raw. Full local frontend 562/562, lint, typecheck and production build passed. See docs/product/ACCEPTANCE.md.",
+    "limits": "Read-only saved run and one locale pair, not complete U8, screen-reader speech, native 200-percent zoom, full M4/M5 or release acceptance. No source diagnostics, formal study, frozen dataset, account, official OOS, merge or tag changed. Exact changed-head CI remains to be verified after push."
+  },
   "m4_native_zoom_vss_boundary_20261002_gate": {
     "status": "NATIVE_ZOOM_NOT_VERIFIED_VSS_INVENTORY_REQUIRES_ELEVATION",
     "proof": "An owned installed-Chrome localhost tab began at DPR1/innerWidth958/document943 CSS px; Ctrl+Plus and Ctrl+Equal through browser control did not change them. Ctrl+0 retained baseline and the owned tab was closed. Read-only vssadmin list shadows returned an administrator-permission error; Win32_ShadowCopy CIM initialization also failed. See docs/product/ACCEPTANCE.md.",
