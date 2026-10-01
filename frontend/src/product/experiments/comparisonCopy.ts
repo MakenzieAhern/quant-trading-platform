@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 const en = {
   compare: "Compare selected experiments",
   select: "Select for comparison",
+  chooseManually: "Choose studies manually",
   selectHelp:
     "Choose 2–3 completed experiments. Selection is kept while you browse pages.",
   selected: "Selected",
@@ -93,6 +94,7 @@ const en = {
 const zh: typeof en = {
   compare: "比较所选实验",
   select: "选择用于比较",
+  chooseManually: "手动选择实验",
   selectHelp: "选择 2–3 个已完成实验。切换列表页时会保留选择。",
   selected: "已选择",
   remove: "移除",

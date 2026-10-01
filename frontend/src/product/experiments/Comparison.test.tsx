@@ -18,6 +18,7 @@ import {
   parseComparisonIds,
 } from "./comparison";
 import { ExperimentComparePage } from "./ExperimentComparePage";
+import { ExperimentDetailPage } from "./ExperimentDetailPage";
 import { EXPERIMENT_VIEW_KEY, ExperimentsPage } from "./ExperimentsPage";
 import { job, result } from "./fixtures.test-data";
 import type { Experiment, Page } from "./types";
@@ -37,6 +38,185 @@ beforeEach(async () => {
 });
 
 describe("experiment comparison", () => {
+  it("starts a comparison from a reopened result with that result selected", async () => {
+    window.history.replaceState({}, "", `/experiments/${ids[0]}`);
+    vi.spyOn(experimentApi, "get").mockResolvedValue(runs[0]!);
+    vi.spyOn(experimentApi, "result").mockResolvedValue(result);
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 100,
+      offset: 0,
+    });
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: runs.slice(0, 2),
+      total: 2,
+      offset: 0,
+      limit: 20,
+    });
+    const detail = render(<ExperimentDetailPage jobId={ids[0]!} />);
+    const link = await screen.findByRole("link", {
+      name: "Select for comparison",
+    });
+    expect(link).toHaveAttribute("href", `/experiments?compare_from=${ids[0]}`);
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(
+      screen.getByRole("link", { name: "选择用于比较" }),
+    ).toBeInTheDocument();
+    await act(async () => i18n.changeLanguage("en-US"));
+    await userEvent.click(link);
+    detail.unmount();
+    expect(window.location.pathname + window.location.search).toBe(
+      `/experiments?compare_from=${ids[0]}`,
+    );
+    render(<ExperimentsPage />);
+    expect(await screen.findByText("Selected: 1 / 3")).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: /Select for comparison: Study 1/ }),
+    ).toBeChecked();
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: /Select for comparison: Study 2/ }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Compare selected experiments" }),
+    );
+    expect(window.location.pathname + window.location.search).toBe(
+      comparisonUrl(ids.slice(0, 2)),
+    );
+  });
+
+  it("does not preselect an unfinished or invalid comparison source", async () => {
+    window.history.replaceState({}, "", `/experiments?compare_from=${ids[0]}`);
+    const get = vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...runs[0]!,
+      status: "RUNNING",
+      result_available: false,
+    });
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: runs.slice(0, 2),
+      total: 2,
+      offset: 0,
+      limit: 20,
+    });
+    const unfinished = render(<ExperimentsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "does not have a successful complete result yet",
+    );
+    expect(screen.getByText("Selected: 0 / 3")).toBeInTheDocument();
+    expect(window.location.search).toBe("");
+    unfinished.unmount();
+    get.mockClear();
+    window.history.replaceState({}, "", "/experiments?compare_from=invalid");
+    render(<ExperimentsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "invalid identifiers",
+    );
+    expect(get).not.toHaveBeenCalled();
+    expect(window.location.search).toBe("");
+  });
+
+  it("clears a missing saved source instead of retrying a terminal 404", async () => {
+    window.history.replaceState({}, "", `/experiments?compare_from=${ids[0]}`);
+    vi.spyOn(experimentApi, "get").mockRejectedValue(
+      new ApiError(404, "Missing"),
+    );
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: runs.slice(0, 2),
+      total: 2,
+      offset: 0,
+      limit: 20,
+    });
+    render(<ExperimentsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent("not available");
+    expect(window.location.search).toBe("");
+    expect(screen.queryByRole("button", { name: "Retry loading" })).toBeNull();
+    expect(
+      screen.getByRole("checkbox", {
+        name: /Select for comparison: Study 2/,
+      }),
+    ).toBeEnabled();
+  });
+
+  it("keeps list selection unavailable until the result handoff resolves", async () => {
+    window.history.replaceState({}, "", `/experiments?compare_from=${ids[0]}`);
+    let resolve!: (run: Experiment) => void;
+    vi.spyOn(experimentApi, "get").mockImplementation(
+      () =>
+        new Promise<Experiment>((ready) => {
+          resolve = ready;
+        }),
+    );
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: runs.slice(0, 2),
+      total: 2,
+      offset: 0,
+      limit: 20,
+    });
+    render(<ExperimentsPage />);
+    const other = await screen.findByRole("checkbox", {
+      name: /Select for comparison: Study 2/,
+    });
+    expect(other).toBeDisabled();
+    expect(screen.getByText("Selected: 0 / 3")).toBeInTheDocument();
+    await act(async () => resolve(runs[0]!));
+    expect(await screen.findByText("Selected: 1 / 3")).toBeInTheDocument();
+    expect(other).toBeEnabled();
+    await userEvent.click(other);
+    expect(screen.getByText("Selected: 2 / 3")).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", {
+        name: /Select for comparison: Study 1/,
+      }),
+    ).toBeChecked();
+  });
+
+  it("retains the source on transient failure, then retries or lets users choose manually", async () => {
+    window.history.replaceState({}, "", `/experiments?compare_from=${ids[0]}`);
+    const get = vi
+      .spyOn(experimentApi, "get")
+      .mockRejectedValueOnce(new TypeError("offline"))
+      .mockResolvedValueOnce(runs[0]!);
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: runs.slice(0, 2),
+      total: 2,
+      offset: 0,
+      limit: 20,
+    });
+    const first = render(<ExperimentsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Could not confirm a response",
+    );
+    expect(window.location.search).toBe(`?compare_from=${ids[0]}`);
+    expect(
+      screen.getByRole("checkbox", {
+        name: /Select for comparison: Study 2/,
+      }),
+    ).toBeDisabled();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Retry loading" }),
+    );
+    expect(await screen.findByText("Selected: 1 / 3")).toBeInTheDocument();
+    expect(get).toHaveBeenCalledTimes(2);
+    expect(window.location.search).toBe("");
+    expect(screen.getByText("Selected: 1 / 3")).toHaveFocus();
+    first.unmount();
+
+    window.history.replaceState({}, "", `/experiments?compare_from=${ids[0]}`);
+    get.mockRejectedValue(new TypeError("offline"));
+    render(<ExperimentsPage />);
+    await screen.findByRole("alert");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Choose studies manually" }),
+    );
+    expect(window.location.search).toBe("");
+    expect(screen.getByText("Selected: 0 / 3")).toHaveFocus();
+    expect(
+      screen.getByRole("checkbox", {
+        name: /Select for comparison: Study 2/,
+      }),
+    ).toBeEnabled();
+  });
+
   it("compares decimals without floating point and checks exactly six conditions", () => {
     expect(comparableDecimal("-000.000")).toBe("0");
     expect(comparableDecimal("00100.000000000000000010")).toBe(

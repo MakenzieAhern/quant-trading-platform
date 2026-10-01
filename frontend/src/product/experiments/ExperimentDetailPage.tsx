@@ -403,6 +403,14 @@ function ExperimentResults({
         </details>
       </section>
       <ExperimentPlan plan={data.simulation_plan ?? null} />
+      {job.status === "SUCCEEDED" && (
+        <Link
+          className="button secondary"
+          href={`/experiments?compare_from=${encodeURIComponent(job.job_id)}`}
+        >
+          {u.select}
+        </Link>
+      )}
       {canUsePaperHandoff(job) && (
         <div className="experimentPanel">
           <Link

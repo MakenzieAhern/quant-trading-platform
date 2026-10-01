@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "../../components/Link";
 import { Pagination } from "../../components/Pagination";
+import { ApiError } from "../../api/client";
 import { formatUtc } from "../../utils/format";
-import { navigate } from "../../utils/navigation";
+import { navigate, replaceUrl } from "../../utils/navigation";
 import { experimentApi } from "./api";
 import { useExperimentCopy } from "./copy";
 import { experimentError } from "./errors";
@@ -13,6 +14,7 @@ import type { Experiment, ExperimentMode, ExperimentStatus, Page } from "./types
 import "./experiments.css";
 
 export const EXPERIMENT_VIEW_KEY = "quant.product.experiment-view.v1";
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 type Selection = { id: string; name: string; createdAt: string }[];
 type Sort = "newest" | "oldest" | "name_asc" | "name_desc";
 type View = {
@@ -69,6 +71,7 @@ function readScrollPosition(): number | null {
 }
 
 function readSelection(): Selection {
+  if (new URLSearchParams(window.location.search).has("compare_from")) return [];
   const selected: unknown = window.history.state?.experimentSelection;
   if (
     window.location.pathname !== "/experiments" ||
@@ -79,9 +82,7 @@ function readSelection(): Selection {
         item !== null &&
         typeof item === "object" &&
         typeof item.id === "string" &&
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-          item.id,
-        ) &&
+        UUID_PATTERN.test(item.id) &&
         typeof item.name === "string" &&
         typeof item.createdAt === "string" &&
         !Number.isNaN(Date.parse(item.createdAt)),
@@ -100,6 +101,10 @@ export function ExperimentsPage() {
   const [offset, setOffset] = useState(readOffset);
   const [view, setView] = useState(readSavedView);
   const [saveStatus, setSaveStatus] = useState<"saved" | "error" | null>(null);
+  const [compareImportError, setCompareImportError] = useState<unknown>(null);
+  const [comparePending, setComparePending] = useState(() =>
+    new URLSearchParams(window.location.search).has("compare_from"));
+  const [compareRevision, setCompareRevision] = useState(0);
   const [revision, setRevision] = useState(0);
   const scrollToRestore = useRef(readScrollPosition());
   const focusedList = useRef(false);
@@ -107,12 +112,53 @@ export function ExperimentsPage() {
   const listError = useRef<HTMLDivElement>(null);
   const viewSettings = useRef<HTMLElement>(null);
   const selectionStatus = useRef<HTMLParagraphElement>(null);
+  const restoreCompareFocus = useRef(false);
   const queryKey = JSON.stringify([offset, view.q, view.status, view.mode, view.sort]);
+  const compareSourceActive = new URLSearchParams(window.location.search).has("compare_from");
   const [jobs, setJobs] = useState<{
     key: string;
     data: Page<Experiment> | null;
     error: unknown;
   }>({ key: queryKey, data: null, error: null });
+  useEffect(() => {
+    const ids = new URLSearchParams(window.location.search).getAll("compare_from");
+    if (window.location.pathname !== "/experiments" || ids.length === 0) return;
+    const id = ids[0] ?? "";
+    const sourceUrl = window.location.href;
+    const controller = new AbortController();
+    const source = ids.length === 1 && UUID_PATTERN.test(id)
+      ? experimentApi.get(id, controller.signal)
+      : Promise.reject("INVALID_ID");
+    void source.then(
+      (run) => {
+        if (controller.signal.aborted || window.location.href !== sourceUrl) return;
+        if (document.activeElement?.closest(".experimentCompareSelection") ||
+            (restoreCompareFocus.current && document.activeElement === document.body))
+          selectionStatus.current?.focus();
+        restoreCompareFocus.current = false;
+        const invalid = run.job_id.toLowerCase() !== id.toLowerCase() ||
+          Number.isNaN(Date.parse(run.created_at));
+        if (invalid) setCompareImportError("INVALID_ID");
+        else if (run.status !== "SUCCEEDED" || !run.result_available)
+          setCompareImportError("NOT_READY");
+        else setSelected([{ id: run.job_id, name: run.name, createdAt: run.created_at }]);
+        setComparePending(false);
+        replaceUrl("/experiments");
+      },
+      (reason) => {
+        if (controller.signal.aborted || window.location.href !== sourceUrl) return;
+        if (restoreCompareFocus.current && document.activeElement === document.body)
+          selectionStatus.current?.focus();
+        restoreCompareFocus.current = false;
+        setCompareImportError(reason ?? "UNKNOWN_ERROR");
+        setComparePending(false);
+        if (reason === "INVALID_ID" ||
+            (reason instanceof ApiError && [400, 404, 422].includes(reason.status)))
+          replaceUrl("/experiments");
+      },
+    );
+    return () => controller.abort();
+  }, [compareRevision]);
   if (jobs.key !== queryKey) setJobs({ key: queryKey, data: null, error: null });
   useLayoutEffect(() => {
     if (jobs.data && scrollToRestore.current !== null) {
@@ -313,6 +359,34 @@ export function ExperimentsPage() {
           <p ref={selectionStatus} role="status" tabIndex={-1}>
             {u.selected}: {selected.length} / 3
           </p>
+          {comparePending && <p role="status">{c.loading}</p>}
+          {compareImportError !== null && (
+            <p role="alert">
+              {compareImportError === "INVALID_ID"
+                ? u.invalidIds
+                : compareImportError === "NOT_READY"
+                  ? u.notReady
+                  : experimentError(compareImportError, c)}
+            </p>
+          )}
+          {compareSourceActive && (
+            <div className="experimentActions">
+              {compareImportError !== null && (
+                <button className="button secondary" onClick={(event) => {
+                  restoreCompareFocus.current = document.activeElement === event.currentTarget;
+                  setCompareImportError(null);
+                  setComparePending(true);
+                  setCompareRevision((value) => value + 1);
+                }}>{c.retryLoad}</button>
+              )}
+              <button className="button secondary" onClick={() => {
+                selectionStatus.current?.focus();
+                replaceUrl("/experiments");
+                setCompareImportError(null);
+                setComparePending(false);
+              }}>{u.chooseManually}</button>
+            </div>
+          )}
         </div>
         <div className="experimentActions">
           {selected.map((item) => (
@@ -333,7 +407,7 @@ export function ExperimentsPage() {
           ))}
           <button
             className="button"
-            disabled={selected.length < 2}
+            disabled={compareSourceActive || selected.length < 2}
             onClick={() =>
               navigate(comparisonUrl(selected.map((item) => item.id)))
             }
@@ -385,7 +459,7 @@ export function ExperimentsPage() {
                     <td><label className="experimentTableSelect">
                       <input type="checkbox" aria-label={`${u.select}: ${job.name} · ${c.statuses[job.status]} · ${formatUtc(job.created_at)}`}
                         checked={selected.some((item) => item.id === job.job_id)}
-                        disabled={job.status !== "SUCCEEDED" || !job.result_available ||
+                        disabled={compareSourceActive || job.status !== "SUCCEEDED" || !job.result_available ||
                           (selected.length === 3 && !selected.some((item) => item.id === job.job_id))}
                         onChange={(event) => setSelected((items) => event.target.checked
                           ? [...items, { id: job.job_id, name: job.name, createdAt: job.created_at }]
