@@ -8320,3 +8320,33 @@ step is written terms covering the actual private local persistent simulation
 use and upstream exchange rights. Genuine post-change login, independent
 physical backup and pre-loss ledger evidence still need separate real-world
 proof. Full U1–U8/M3–M5 and v1.2 publication remain incomplete.
+
+## 2026-10-02 04:07 UTC isolated legacy cancellation browser check
+
+At local unpushed source head `8cdfaa4834af223f3721e70a2ec1f218a7b76eb1`,
+the legacy backtest detail page no longer gives `CANCELLED`, pending or
+partially filled orders the success color reserved for `FILLED`. For an
+enforced-buying-power legacy run it explains a fill-time cancellation in the
+existing English and Chinese wording. The current legacy engine has only this
+active cancellation path; the API does **not** persist a separate cancellation
+reason code, so another path would require one rather than relying on this
+inference.
+
+A separate `qtp-gap-ui-20261002` Compose project used a tmpfs PostgreSQL, a
+six-row artificial AAPL CSV and ports 18080/15173. Its actual Chrome form
+submitted CNY 1,000 with buying power enforced. The backend saved one approved
+proposal and one cancelled buy, zero fills, zero commission and unchanged
+CNY 1,000 final equity. In the reopened detail page English showed
+"Cancelled · Actual fill price and fees exceed available cash" and Chinese
+showed "已取消 · 实际成交价及费用超出可用资金"; the cancelled text was neutral, not green.
+Screenshots were inspected in-tool, not retained as durable M5 media. The
+temporary Chrome tabs, named run containers, tmpfs DB/network and six-row CSV
+were removed. The original four Compose services remained online with
+frontend and `/api/health` HTTP 200; original read-only counts stayed five
+paper sessions, 417 events, eight research jobs and four update jobs.
+
+The isolated full test gate passed backend **1040**, one optional unmounted
+archive skip, frontend **566**, Ruff/format/mypy/ESLint/TypeScript, Prettier on
+changed files and Vite build. This is a bounded legacy U4/M4 defect closure,
+not full U4/M4/M5, an original-database submission, lawful new-market forward
+receipt, exact-head hosted CI, or release approval. PR #32 remains draft/open.
