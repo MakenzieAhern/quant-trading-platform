@@ -174,6 +174,21 @@ it("distinguishes permission, timeout and offline failures while keeping retry",
   expect(retry).toHaveBeenCalledOnce();
 });
 
+it("does not promise historical or demo availability while data-center service is offline", async () => {
+  await act(() => i18n.changeLanguage("en-US"));
+  vi.spyOn(experimentApi, "capabilities").mockRejectedValue(
+    new TypeError("offline"),
+  );
+  render(<DataCenterPage />);
+  await screen.findByRole("button", { name: "Try again" });
+  expect(screen.getByText(/Raw candidate updates/)).not.toHaveTextContent(
+    "remain available",
+  );
+  await act(() => i18n.changeLanguage("zh-CN"));
+  expect(screen.getByText(/原始候选更新/)).not.toHaveTextContent("仍可使用");
+  await act(() => i18n.changeLanguage("en-US"));
+});
+
 it.each(["success", "error"])(
   "keeps keyboard focus in the Workbench after a capabilities Retry returns %s",
   async (outcome) => {

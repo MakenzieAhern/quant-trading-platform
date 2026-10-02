@@ -1,7 +1,17 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T04:48:47Z",
+  "updated_at_utc": "2026-10-02T12:54:00Z",
+  "m4_packaged_offline_recovery_20261002_gate": {
+    "status": "PASS_BOUNDED_OFFLINE_RECOVERY_NOT_FULL_U8_M4_M5",
+    "proof": "An isolated packaged production-mode stack with scratch tmpfs PostgreSQL/Redis exposed a false unconditional Data Center availability promise when only its backend was offline. A bilingual regression failed before and passed after removing the promise from shared copy. Actual in-app Chromium confirmed corrected offline/Retry state and recovery after scratch backend restart without a financial write; 30 warm Workbench-to-Strategies samples had median 23 ms, nearest-rank p95 26 ms and max 86 ms. Full frontend tests 567/567, lint/type/format/build and post-restart focused 13/13 passed; independent read-only review found no blocking issue. See docs/product/ACCEPTANCE.md.",
+    "limits": "One packaged offline path and one warm route only. No retained current-head screenshots, cold performance, full U8/M4/M5, lawful forward market receipt, genuine lost ledgers, independent backup, exact new-head hosted CI, merge, tag or release. Scratch stack was removed without touching original data."
+  },
+  "local_docker_manual_recovery_20261002_gate": {
+    "status": "PASS_MANUAL_START_NOT_POST_LOGIN_AUTOSTART",
+    "proof": "Docker Desktop 4.92.0 was stopped and Ubuntu lacked docker. Starting the existing Desktop executable restored WSL Engine 29.8.0 and the four original Compose services; PostgreSQL ready, Redis PONG, backend health ok and frontend HTTP 200. Read-only original counts matched the prior checkpoint: 5 paper sessions, 417 events, 8 research jobs and 4 update jobs.",
+    "limits": "Manual start does not prove unattended startup at next genuine Windows login. No factory reset, volume/image removal, down -v, migration, original financial write, merge, tag or release."
+  },
   "pr32_unknown_route_ci_20261002_gate": {
     "status": "PASS_EXACT_CODE_HEAD_CI_NOT_PRODUCT_RELEASE",
     "source_head": "83c5961825ab599b07cc77ba38b0f660d9f6d921",
@@ -2110,8 +2120,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. Pushed unknown-route code head 83c5961 passed exact-head CI 36965529749; the following browser-timing documentation checkpoint is local only. Three v1.1-to-v1.2 real-browser media pairs are indexed; an empty tmpfs database passed all-16-revision Alembic upgrade/base-downgrade/re-upgrade. Actual browser confirmed bilingual unknown-route recovery and result-to-account safety; two warm local route transitions met the 200ms target, but full U8/M4/M5 remain open. Pursue independent cold/release-stack performance, accessibility and delivery evidence without repeating blocked download/Performance API/zoom/VSS methods. Written rights for private local persistent 2026 simulated plans/fills, an after-start completed-session receipt, genuine pre-loss paper ledgers, an independent physical backup and a genuine post-change unattended login remain external gaps. Keep PR32 draft/open; no merge, tag or release.",
-  "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify branch/head/clean status, local documentation commit versus remote PR #32 and original docker compose ps. Read the latest ACCEPTANCE section; pursue an independent cold/release-stack M4/M5 verification route or real defect reduction without original financial-data submission. Use isolated tmpfs quant_test for database tests. Do not rerun the same blocked browser download, Performance API, zoom-shortcut or VSS methods. GitHub Actions passed pushed code-head CI 36965529749; at the next genuine Windows login verify terminal-free startup without inducing a reboot solely for this claim.",
+  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. Packaged browser validation removed one misleading offline Data Center promise; 567 frontend tests and bounded warm navigation passed locally. Docker was recovered by manual Desktop start with original counts intact, but unattended post-login startup is unproven. Push the coherent local checkpoint to draft PR32 and verify exact-head CI. Then continue accessibility, cold/release-stack performance and delivery evidence without original financial-data submission or repeating blocked methods. Written rights for private local persistent 2026 simulated plans/fills, an after-start completed-session receipt, genuine pre-loss paper ledgers and an independent physical backup remain external gaps. Keep PR32 draft/open; no merge, tag or release.",
+  "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform validate the current copy/test/docs diff, confirm remote PR32 head and Git identity, commit and fast-forward push the local checkpoint, then await exact-head backend/frontend/Compose CI. Continue independent safe M4/M5 work afterward. At the next genuine Windows login verify terminal-free Docker startup without inducing a reboot solely for that claim. Do not run financial studies or bypass missing lawful forward-feed rights.",
   "next_command": "Full U1-U8/M0-M5 objective remains incomplete. Continue safe browser, accessibility, performance, delivery and exact-head CI evidence without bypassing a browser URL-confidence stop. Ask once for any still-missing lawful forward-feed rights, genuine pre-loss ledger evidence and an independent physical backup destination; do not infer approval from public readability or fabricate lost records. Keep PR32 draft/open; no merge, tag or release until all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

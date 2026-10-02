@@ -171,7 +171,7 @@ const en = {
   settingsHint:
     "These choices change presentation, never cash, returns, trading dates or risk decisions.",
   futureUnavailable:
-    "Raw candidate updates do not establish validated forward simulation. Historical research and synthetic demonstration remain available.",
+    "Raw candidate updates do not establish validated forward simulation.",
   emptySearch:
     "No matching page, strategy or study. Try a name or open Research.",
   navigation: "Workspace navigation",
@@ -346,8 +346,7 @@ const zh: Record<keyof typeof en, string> = {
     "宽基指数提供市场背景。跑赢下跌的市场，账户仍然可能亏钱。沪深300比较序列也不等同于可直接复制的含分红投资回报。",
   settingsTitle: "让工作台更适合你",
   settingsHint: "这些设置只影响展示，不改变本金、收益、交易日期或风控判断。",
-  futureUnavailable:
-    "原始候选更新不代表前向模拟已通过验收。历史研究和合成演示仍可使用。",
+  futureUnavailable: "原始候选更新不代表前向模拟已通过验收。",
   emptySearch: "没有找到匹配的页面、策略或研究。可以换个名称，或打开研究列表。",
   navigation: "工作区导航",
   footer: "本地研究与模拟执行 · 不发送真实资金订单",

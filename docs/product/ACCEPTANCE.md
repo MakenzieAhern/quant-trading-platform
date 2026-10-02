@@ -8462,3 +8462,49 @@ release-build or broader interaction performance, actual screen-reader
 behavior, forward-market plans, missing historical ledgers, independent backup
 or M4/M5 acceptance. The owned tab was closed; no original financial record,
 frozen research or Official OOS was changed.
+
+## 2026-10-02 12:54 UTC packaged Data Center offline recovery (bounded U8/M4)
+
+On DESKTOP-3EOROGR, an isolated packaged frontend/backend ran against scratch
+PostgreSQL and Redis on tmpfs, with no original database or research archive
+mounted. The local production-mode backend exposed only explicit synthetic-demo
+availability. In an agent-owned in-app Chromium tab, stopping only that scratch
+backend made Data Center report the service offline, but its footer still
+claimed historical research and synthetic demo "remain available" / "仍可使用".
+That unconditional availability promise was a UX-ERROR, not evidence that the
+data were actually accessible.
+
+A bilingual `ProductPages.test.tsx` regression failed on the old wording and
+passed after the shared `futureUnavailable` copy stopped making an unconditional
+availability claim. The packaged frontend was rebuilt and the actual browser
+showed the corrected offline state and Retry action in Chinese; after the
+scratch backend restarted, Retry restored online capabilities and the update
+panel without a Create/Start action. Scratch research/update/paper job counts
+remained zero. Full frontend tests passed **567/567**, ESLint, TypeScript,
+touched-file Prettier and Vite production build passed; the build retained its
+existing >500 kB chunk advisory. A separate post-restart focused container run
+passed **13/13** Data Center page tests. Independent read-only review found no
+blocking issue. Warm packaged Workbench → Strategies click-to-heading timing
+over 30 browser-controlled samples had median 23 ms, nearest-rank p95 26 ms,
+and max 86 ms. This is one warm local route, not cold-cache or broad p95 proof.
+
+The scratch containers and network were removed after checking they had no
+original mounts; no Docker volumes/images, original financial rows, frozen
+research or Official OOS were removed or modified. Browser screenshots were
+inspected but not retained as M5 delivery media. This closes one misleading
+offline-copy defect, not full U8/M4/M5, lawful new-market forward use, genuine
+pre-loss ledgers, an independent backup, or v1.2 release acceptance. The new
+local change has not yet passed exact-head GitHub CI.
+
+## 2026-10-02 12:54 UTC local Docker manual-start recovery
+
+At this checkpoint Docker Desktop 4.92.0 was installed but stopped; Ubuntu
+WSL2 could not find `docker`. Starting the existing Desktop executable normally
+(no reset or data removal) restored Docker Engine 29.8.0 in WSL. The original
+Compose PostgreSQL, Redis, backend and frontend resumed; PostgreSQL accepted
+connections, Redis returned PONG, `/api/health` reported `ok`, and the
+frontend returned HTTP 200. A read-only original-database count remained
+5 paper sessions, 417 paper events, 8 research jobs and 4 market-update jobs,
+matching the prior checkpoint. This is a **manual-start** recovery, not proof
+of unattended startup after Windows login. No `down -v`, prune, factory reset,
+database migration or original-data write was used.
