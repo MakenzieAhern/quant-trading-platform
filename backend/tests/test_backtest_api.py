@@ -37,6 +37,7 @@ from app.db.models.backtest import (
 )
 from app.db.repositories import SQLAlchemyBacktestRepository
 from app.db.session import SessionFactory
+from app.domain.market import Bar
 from app.domain.risk import RiskConfig
 from app.domain.trading import OrderStatus
 from app.main import app
@@ -524,6 +525,39 @@ async def test_risk_rejection_is_persisted_without_order(client: AsyncClient) ->
     assert result.json()["proposal_count"] == 1
     assert result.json()["risk_rejection_count"] == 1
     assert result.json()["reservation_count"] == 0
+
+
+async def test_fill_time_buying_power_cancellation_is_persisted(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    bars = tuple(
+        Bar(
+            symbol="AAPL",
+            timestamp=datetime(2024, 1, 1, tzinfo=UTC) + timedelta(days=day),
+            open=price,
+            high=price + 1,
+            low=price,
+            close=price,
+            volume=Decimal(1000),
+        )
+        for day, price in enumerate(map(Decimal, ("3", "2", "1", "2", "4", "1000")))
+    )
+    monkeypatch.setattr(CSVDataProvider, "_read_file", lambda _self, _symbol: bars)
+    payload = request_body("1000")
+    payload["risk"] = {"enforce_buying_power": True}
+    response = await client.post("/api/backtests", json=payload)
+    assert response.status_code == 201, response.text
+    run_id = response.json()["run_id"]
+
+    decisions = (await client.get(f"/api/backtests/{run_id}/risk-decisions")).json()
+    orders = (await client.get(f"/api/backtests/{run_id}/orders")).json()
+    fills = (await client.get(f"/api/backtests/{run_id}/fills")).json()
+    equity = (await client.get(f"/api/backtests/{run_id}/equity")).json()
+    result = (await client.get(f"/api/backtests/{run_id}/result")).json()
+    assert decisions["items"][0]["approved"] is True
+    assert orders["items"][0]["status"] == "CANCELLED"
+    assert fills["total"] == result["fill_count"] == result["reservation_count"] == 0
+    assert equity["items"][-1]["cash"] == result["metrics"]["final_equity"] == "1000"
 
 
 async def test_list_and_child_pagination_is_stable_and_bounded(
