@@ -4,7 +4,6 @@ from contextlib import suppress
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal
-from itertools import pairwise
 from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
@@ -309,8 +308,6 @@ class ASharePaperTradingRuntime:
             risk_config=risk_config,
         )
         self._engine.reset()
-        accepted_dates = tuple(item.session_date for item in calendar.sessions if item.is_open)
-        self._next_accepted_session = dict(pairwise(accepted_dates))
         self._completed_sessions = 0
         self._result: ResearchExecutionResult | None = None
 
@@ -323,7 +320,12 @@ class ASharePaperTradingRuntime:
         return self._completed_sessions
 
     def next_accepted_session(self, trading_date: date) -> date | None:
-        return self._next_accepted_session.get(trading_date)
+        return self._engine.next_accepted_session(trading_date)
+
+    def extend_calendar(self, calendar: TradingCalendar) -> None:
+        if self._result is not None:
+            raise ReplayProviderError("A-share paper runtime is already stopped")
+        self._engine.extend_calendar(calendar)
 
     async def process_session(self, session: ResearchSession) -> ResearchExecutionDelta:
         if self._result is not None:

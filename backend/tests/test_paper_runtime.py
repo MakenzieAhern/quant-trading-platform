@@ -15,6 +15,7 @@ from app.application.paper_trading import PaperTradingManager
 from app.backtest import BacktestConfig, BacktestEngine
 from app.data.providers import CSVDataProvider
 from app.domain.market import Bar
+from app.domain.markets.calendar import TradingCalendar
 from app.domain.risk import RiskConfig, RiskReasonCode
 from app.domain.trading import Order, OrderSide, OrderStatus, OrderType
 from app.event import EventBus
@@ -170,6 +171,32 @@ async def test_a_share_terminal_cleanup_excludes_prior_expiry_with_new_pending_o
         (second.proposals[0].proposal_id, OrderStatus.CANCELLED)
     ]
     assert runtime.cancel_pending_orders() == ()
+
+
+async def test_calendar_extension_does_not_retroactively_create_a_paper_intent() -> None:
+    class FixtureStrategy(OneTargetStrategy):
+        strategy_id = FROZEN_A_SHARE_STRATEGY_ID
+
+    calendar = TradingCalendar(market=CALENDAR.market, sessions=CALENDAR.sessions[:1])
+    runtime = ASharePaperTradingRuntime(
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=calendar,
+        strategy=FixtureStrategy(),
+    )
+    first = await runtime.process_session(_session(date(2024, 1, 2), opening="10"))
+    assert first.target is not None and first.proposals == first.orders == first.fills == ()
+    runtime.extend_calendar(CALENDAR)
+    assert runtime.next_accepted_session(date(2024, 1, 2)) == date(2024, 1, 3)
+    assert runtime.completed_sessions == 1
+    assert first.proposals == first.orders == ()
+    second = await runtime.process_session(_session(date(2024, 1, 3), opening="9.9"))
+    assert second.proposals == second.fills == ()
+    assert second.snapshot is not None and second.snapshot.cash == Decimal(10000)
+    result = runtime.finish()
+    with pytest.raises(ReplayProviderError, match="already stopped"):
+        runtime.extend_calendar(CALENDAR)
+    assert runtime.finish() == result and result.fills == ()
 
 
 @pytest.mark.parametrize("concurrent_stop", [False, True])

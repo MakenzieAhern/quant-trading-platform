@@ -181,6 +181,80 @@ def test_incremental_research_execution_matches_batch_without_future_access() ->
     assert incremental.snapshots == batch.snapshots
 
 
+def test_append_only_calendar_extension_preserves_precommitted_orders_and_batch_result() -> None:
+    calendar = TradingCalendar(market=Market.CN_A, sessions=CALENDAR.sessions[:2])
+    extended = TradingCalendar(
+        market=Market.CN_A,
+        sessions=(
+            *calendar.sessions,
+            TradingSession(session_date=date(2024, 1, 4), is_open=False, source_version="fixture"),
+            TradingSession(session_date=date(2024, 1, 5), is_open=True, source_version="fixture"),
+        ),
+    )
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal("10000.000000000000000001"),
+        commission_model=FixedCommission(Decimal(5)),
+        calendar=calendar,
+    )
+    first = engine.process_session(_session(date(2024, 1, 2), opening="10"))
+    assert first.proposals[0].intended_execution_session == date(2024, 1, 3)
+    assert engine.next_accepted_session(date(2024, 1, 3)) is None
+    engine.extend_calendar(extended)
+    engine.extend_calendar(extended)  # Identical publication is retry-safe.
+    assert engine.next_accepted_session(date(2024, 1, 3)) == date(2024, 1, 5)
+    assert first.proposals[0].intended_execution_session == date(2024, 1, 3)
+    with pytest.raises(ValueError, match="missing calendar session"):
+        engine.process_session(_session(date(2024, 1, 5), opening="9.9"))
+    with pytest.raises(ValueError, match="outside accepted calendar"):
+        engine.process_session(_session(date(2024, 1, 4), opening="9.9"))
+    second = engine.process_session(_session(date(2024, 1, 3), opening="9.9"))
+    assert len(second.fills) == 1
+    assert second.fills[0].price == Decimal("9.9")
+    engine.process_session(_session(date(2024, 1, 5), opening="9.9"))
+    incremental = engine.finish()
+    assert incremental == engine.run(
+        (
+            _session(date(2024, 1, 2), opening="10"),
+            _session(date(2024, 1, 3), opening="9.9"),
+            _session(date(2024, 1, 5), opening="9.9"),
+        )
+    )
+
+
+@pytest.mark.parametrize("change", ["shorter", "source", "open", "insert"])
+def test_calendar_extension_rejects_changed_prefix_without_mutating_orders(change: str) -> None:
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+    )
+    first = engine.process_session(_session(date(2024, 1, 2), opening="10"))
+    sessions = CALENDAR.sessions
+    if change == "shorter":
+        sessions = sessions[:-1]
+    elif change in {"source", "open"}:
+        sessions = (
+            sessions[0],
+            sessions[1].model_copy(
+                update={"source_version": "changed"} if change == "source" else {"is_open": False}
+            ),
+            *sessions[2:],
+        )
+    else:
+        sessions = (
+            TradingSession(session_date=date(2024, 1, 1), is_open=True, source_version="fixture"),
+            *sessions,
+        )
+    with pytest.raises(ValueError, match="append-only"):
+        engine.extend_calendar(TradingCalendar(market=Market.CN_A, sessions=sessions))
+    assert engine.next_accepted_session(date(2024, 1, 3)) == date(2024, 1, 4)
+    second = engine.process_session(_session(date(2024, 1, 3), opening="9.9"))
+    assert second.orders[0].id == first.orders[0].id
+    assert len(second.fills) == 1
+
+
 def test_suspension_expires_order_in_its_intended_session() -> None:
     engine = ResearchExecutionEngine(
         OneTargetStrategy(),

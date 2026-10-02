@@ -91,6 +91,7 @@ class ResearchExecutionEngine:
         risk_config: RiskConfig | None = None,
     ) -> None:
         self._strategy = strategy
+        self._calendar = calendar
         dates = tuple(item.session_date for item in calendar.sessions if item.is_open)
         self._next_session = dict(pairwise(dates))
         self._calendar_dates = frozenset(dates)
@@ -119,6 +120,27 @@ class ResearchExecutionEngine:
             commission_model,
         )
         self._expired_order_ids: list[UUID] = []
+
+    def next_accepted_session(self, trading_date: date) -> date | None:
+        return self._next_session.get(trading_date)
+
+    def extend_calendar(self, calendar: TradingCalendar) -> None:
+        """Append already accepted dates; never reroute past targets or pending orders.
+
+        Acceptance/provenance belongs to the application boundary. A future durable
+        forward adapter must journal when each extension was applied and replay that
+        timeline, not reconstruct old intents using the final expanded calendar.
+        """
+        if (
+            calendar.market != self._calendar.market
+            or calendar.sessions[: len(self._calendar.sessions)] != self._calendar.sessions
+        ):
+            raise ValueError("accepted calendar extension must be append-only")
+        dates = tuple(item.session_date for item in calendar.sessions if item.is_open)
+        next_session = dict(pairwise(dates))
+        self._calendar = calendar
+        self._next_session = next_session
+        self._calendar_dates = frozenset(dates)
 
     def run(self, sessions: Iterable[ResearchSession]) -> ResearchExecutionResult:
         self.reset()
