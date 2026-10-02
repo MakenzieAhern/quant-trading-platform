@@ -176,7 +176,17 @@ class PaperTradingRuntime:
         self._strategy_engine = StrategyEngine(self._event_bus)
         for strategy in strategies:
             self._strategy_engine.register(strategy)
-        self._broker = PaperBroker(self._event_bus, config.commission_model, config.slippage_model)
+        self._broker = PaperBroker(
+            self._event_bus,
+            config.commission_model,
+            config.slippage_model,
+            fill_eligible=(
+                lambda fill: fill.side is not OrderSide.BUY
+                or fill.quantity * fill.price + fill.commission <= self._portfolio.cash
+            )
+            if config.risk.enforce_buying_power
+            else None,
+        )
         self._order_manager = OrderManager(
             self._event_bus,
             self._broker,
@@ -207,6 +217,7 @@ class PaperTradingRuntime:
         decision_count = len(self._order_manager.decisions)
         proposal_count = len(self._order_manager.proposals)
         fill_count = len(self._broker.fills)
+        previous_orders = {order.id: order.status for order in self._order_manager.orders}
         self._broker.execute_pending(bar)
         self._event_bus.publish(Event(EventType.MARKET_DATA, bar, occurred_at=bar.timestamp))
         self._last_bar_time = bar.timestamp
@@ -216,7 +227,11 @@ class PaperTradingRuntime:
         new_fills = self._broker.fills[fill_count:]
         new_order_ids = {
             proposal.proposal_id for proposal in self._order_manager.proposals[proposal_count:]
-        } | {fill.order_id for fill in new_fills}
+        } | {
+            order.id
+            for order in self._order_manager.orders
+            if order.id in previous_orders and order.status is not previous_orders[order.id]
+        }
         return PaperRuntimeDelta(
             bar=bar,
             signals=tuple(self._signals[signal_count:]),

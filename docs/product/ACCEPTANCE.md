@@ -8099,3 +8099,30 @@ or file download was submitted. Read-only Windows disk inventory still showed
 one 2 TB NVMe physical disk; C and D partitions cannot satisfy independent
 physical backup. This is bounded U3/U5/U8 compact-height evidence only, not
 full visual/A11Y/M4/M5, lawful forward data or release acceptance.
+
+## 2026-10-02 02:34 UTC legacy paper gap-up buying-power guard
+
+An independent read-only review reproduced a legacy AAPL paper replay with
+`enforce_buying_power=true`: a BUY approved against the prior close filled at
+the next open of 1000, leaving cash -8000 from initial cash 2000. The shared
+simulated broker now accepts a fill-time eligibility check; this paper runtime
+uses actual fill notional plus commission and current cash. An unaffordable
+BUY becomes a terminal CANCELLED order before any fill, and the existing OMS
+reservation is released. The paper delta and durable event serializer carry
+that cancellation at the execution bar time. Other modes retain their existing
+fill semantics; the accepted A-share research methodology and archive are
+unchanged. A deterministic regression proves the gap cancellation, no fill,
+cash 2000, no position, no pending reservation and a serialized cancellation.
+
+The isolated `quant-mvp-tests` tmpfs `quant_test` run passed **1037 backend
+tests** with one optional unmounted-archive skip and **566 frontend tests**;
+Ruff, formatting, mypy, ESLint, TypeScript and production build passed. The
+original Compose stack and database were not used for tests. This is a bounded
+U7 money-safety fix, not lawful forward-market acceptance, recovery of genuine
+pre-loss ledgers, backup, full M4/M5 or release approval.
+
+An additional installed-Chrome attempt on the existing saved historical result
+showed the prepared JSON Blob link and correct filename, but the browser's
+`downloadMedia` route timed out. Its owned tab was closed. This does **not**
+verify file landing; the prior browser-control block was not bypassed or
+retried by the unchanged method.

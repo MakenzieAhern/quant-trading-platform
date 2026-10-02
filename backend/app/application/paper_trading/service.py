@@ -28,7 +28,7 @@ from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.domain.market import Bar
 from app.domain.markets.calendar import TradingCalendar
 from app.domain.risk import RiskConfig, RiskDecision
-from app.domain.trading import Fill, Order, PortfolioSnapshot, Signal
+from app.domain.trading import Fill, Order, OrderStatus, PortfolioSnapshot, Signal
 from app.paper.a_share_fixture import (
     SIMULATED_A_SHARE_DATASET_ID,
     SIMULATED_A_SHARE_SYMBOL,
@@ -736,11 +736,15 @@ class PaperTradingManager:
         events: list[tuple[str, datetime, dict[str, object]]] = [
             ("market.bar", delta.bar.timestamp, cls._bar(delta.bar))
         ]
-        filled_order_ids = {fill.order_id for fill in delta.fills}
+        completed_order_ids = {
+            item.id
+            for item in delta.orders
+            if item.status in {OrderStatus.FILLED, OrderStatus.CANCELLED}
+        }
         events.extend(
             ("order.updated", delta.bar.timestamp, cls._order(item))
             for item in delta.orders
-            if item.id in filled_order_ids
+            if item.id in completed_order_ids
         )
         events.extend(("fill.created", item.timestamp, cls._fill(item)) for item in delta.fills)
         events.extend(
@@ -752,7 +756,7 @@ class PaperTradingManager:
         events.extend(
             ("order.updated", item.created_at, cls._order(item))
             for item in delta.orders
-            if item.id not in filled_order_ids
+            if item.id not in completed_order_ids
         )
         events.append(
             (

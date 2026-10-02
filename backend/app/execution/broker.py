@@ -37,11 +37,13 @@ class SimulatedBroker:
         slippage_model: SlippageModel,
         *,
         limit_fill_eligible: Callable[[Order, Bar], bool] | None = None,
+        fill_eligible: Callable[[Fill], bool] | None = None,
     ) -> None:
         self._event_bus = event_bus
         self._commission_model = commission_model
         self._slippage_model = slippage_model
         self._limit_fill_eligible = limit_fill_eligible
+        self._fill_eligible = fill_eligible
         self._orders: list[Order] = []
         self._pending: list[Order] = []
         self._fills: list[Fill] = []
@@ -93,7 +95,8 @@ class SimulatedBroker:
             and order.created_at < bar.timestamp
             and self._eligible(order, bar)
         )
-        return tuple(self._fill(order, bar) for order in executable)
+        fills = (self._fill(order, bar) for order in executable)
+        return tuple(fill for fill in fills if fill is not None)
 
     def _eligible(self, order: Order, bar: Bar) -> bool:
         if order.order_type is OrderType.MARKET:
@@ -120,7 +123,7 @@ class SimulatedBroker:
         self._pending.clear()
         self._fills.clear()
 
-    def _fill(self, order: Order, bar: Bar) -> Fill:
+    def _fill(self, order: Order, bar: Bar) -> Fill | None:
         fill_price = self._slippage_model.apply(bar.open, order.side)
         self._validate_fill_price(bar.open, fill_price, order.side)
         if isinstance(self._commission_model, ContextualCommissionModel):
@@ -147,6 +150,12 @@ class SimulatedBroker:
             commission=commission,
             timestamp=bar.timestamp,
         )
+        if self._fill_eligible is not None and not self._fill_eligible(fill):
+            cancelled = transition_order(order, OrderStatus.CANCELLED)
+            self._pending.remove(order)
+            self._replace_order(cancelled)
+            self._publish(EventType.ORDER_CANCELLED, cancelled)
+            return None
         filled_order = transition_order(order, OrderStatus.FILLED)
         self._pending.remove(order)
         self._replace_order(filled_order)

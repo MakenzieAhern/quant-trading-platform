@@ -506,6 +506,43 @@ async def test_paper_replay_matches_backtest_financial_and_strategy_contracts() 
     ]
 
 
+async def test_gap_up_buy_is_cancelled_before_cash_can_go_negative() -> None:
+    runtime = PaperTradingRuntime(
+        (MovingAverageCrossoverStrategy("gap", "AAPL", 2, 3),),
+        BacktestConfig(
+            initial_cash=Decimal("2000"),
+            default_order_quantity=Decimal("10"),
+            risk=RiskConfig(enforce_buying_power=True),
+        ),
+    )
+    bars = CSVDataProvider(FIXTURES).get_historical_bars("AAPL")
+    for item in bars:
+        await runtime.process_bar(item)
+        if runtime.broker.pending_orders:
+            break
+
+    assert runtime.broker.pending_orders[0].side is OrderSide.BUY
+    next_bar = next(
+        item for item in bars if item.timestamp > runtime.broker.pending_orders[0].created_at
+    )
+    gap = next_bar.model_copy(
+        update={key: Decimal("1000") for key in ("open", "high", "low", "close")}
+    )
+    delta = await runtime.process_bar(gap)
+
+    assert delta.fills == runtime.broker.fills == ()
+    assert delta.orders[0].status is OrderStatus.CANCELLED
+    assert runtime.broker.pending_orders == ()
+    assert runtime.order_manager.active_reservation_count == 0
+    assert runtime.portfolio.cash == delta.snapshot.cash == Decimal("2000")
+    assert runtime.portfolio.positions == ()
+    assert (
+        "order.updated",
+        gap.timestamp,
+        PaperTradingManager._order(delta.orders[0]),
+    ) in PaperTradingManager._serialize_delta(delta)
+
+
 async def test_risk_rejection_never_reaches_paper_broker_or_portfolio_fill() -> None:
     runtime = PaperTradingRuntime(
         (MovingAverageCrossoverStrategy("moving_average_crossover:AAPL", "AAPL", 2, 3),),

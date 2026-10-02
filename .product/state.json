@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T02:23:52Z",
+  "updated_at_utc": "2026-10-02T02:34:33Z",
+  "u7_legacy_gap_buying_power_20261002_gate": {
+    "status": "PASS_BOUNDED_GAP_UP_CANCEL_NOT_FULL_U7_M4_M5",
+    "proof": "Independent read-only reproduction found an approved AAPL replay BUY filling after a gap to 1000, leaving cash -8000 from 2000 despite enforced buying power. At fill time the paper broker now cancels an unaffordable BUY before fill, releases OMS reservation and persists the cancellation at the execution bar time. New deterministic regression proves no fill, unchanged cash and no position/pending reservation; isolated tmpfs quant_test full backend 1037 passed with one optional archive skip, frontend 566, lint, typecheck and production build passed. See docs/product/ACCEPTANCE.md.",
+    "limits": "Legacy replay money-safety only; not 2026 forward authority, genuine pre-loss ledger recovery, independent backup, full U7/M4/M5, merge, tag or release. Actual Chrome prepared JSON Blob link but downloadMedia timed out, so file landing remains unverified. Original database and frozen research/OOS were untouched."
+  },
   "m4_compact_height_chrome_20261002_gate": {
     "status": "PASS_BOUNDED_RESPONSIVE_APPROXIMATION_NATIVE_ZOOM_NOT_VERIFIED",
     "proof": "Owned installed-Chrome 512x384 temporary CSS viewport: English workbench and Data center had document/client width 497/497, scrollable navigation reached Data center and returned focus to main. Historical Markets detail fit the short viewport with internal scroll. Existing guided research draft retained exact CNY 123456.789000000000001 and 2011-01-04 to 2011-06-30 across EN/ZH with no page-level overflow. English and default viewport restored; tab closed. See docs/product/ACCEPTANCE.md.",
