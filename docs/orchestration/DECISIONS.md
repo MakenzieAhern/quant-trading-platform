@@ -1,5 +1,38 @@
 # Decisions
 
+## v1.2 completion gates follow the accepted product objective — 2026-10-02
+
+Rechecked the original U1–U8/M0–M5 mandate against the accumulated checkpoint.
+Independent physical backup media, a real novice satisfaction test, unattended
+Windows-login launch and rerecording all media after each commit were not
+explicit mandatory requirements. Keep these as additional assurance, not
+invented release blockers. Restore/durability, terminal-free use, a read-only
+independent review, relevant AA/live status and actual user-flow/media evidence
+remain mandatory; no requirement or failing financial result is removed.
+
+Preserve the two genuinely missing old paper ledgers and their incident as an
+unresolved data-integrity fact. A new current-baseline restore is not their
+recovery. The current populated logical restore passed 44/44 table fingerprints,
+all six receipt bundles and 41 GET comparisons in a separate scratch stack;
+same-host copies are not independent disaster protection. Sep23/24 scoped native
+200% and later scoped performance passes remain valid historical evidence,
+not blanket current AA/visual/performance acceptance. Public SDK access still
+does not establish lawful forward-feed use; the true U5→U6→U7 forward path is
+required and remains incomplete. Do not merge/tag/release v1.2 on these partial
+passes. The earlier Oct1 paragraph's physical-media release-blocker wording is
+superseded by this scope audit; its missing-ledger warning is not superseded.
+
+## v1.2 clear transient fill announcements on locale change — 2026-10-02
+
+The shared paper stream retained a translated fill announcement after all other
+UI text switched language. Clear its temporary value in the existing identity
+reset when its language differs, rather than relabeling an old fill as new or
+merely hiding it (which revives it on a roundtrip). Keep financial snapshots,
+sequence de-duplication and the existing socket lifecycle unchanged. Red/green
+regression and actual packaged Chrome verify empty ZH/EN roundtrips after a
+real streamed historical fill, including terminal state and unchanged ledger.
+This is DOM live-region evidence, not recorded screen-reader speech.
+
 ## v1.2 U3 isolation is separate from M4 disaster recovery — 2026-10-01
 
 Accept U3-ISOLATE only as a scoped local product-workflow gate against the

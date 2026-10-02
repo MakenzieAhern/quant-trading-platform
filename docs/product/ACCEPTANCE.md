@@ -1,5 +1,64 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 14:05 UTC restored populated UI and paper-locale completion loop
+
+The shared paper hook cached a translated new-fill announcement through locale
+changes. Code `b60ac87` clears its transient value through the existing reset,
+without changing backend financial authority, event de-duplication or socket
+dependencies. The regression was red before the change and passed102 focused
+cases and568 full frontend cases; lint/types/format/build passed. Actual packaged
+Chrome on a separate scratch account observed a new English historical fill,
+then an empty announcement after Chinese, English return and a second roundtrip.
+Natural STOPPED state retained136 contiguous events/six fills and byte-identical
+terminal snapshot/events after the roundtrip. This is live-region DOM proof,
+not an actual screen-reader speech recording or new-market forward acceptance.
+
+The saved historical lifecycle on source`3184281` also completed actual Chrome
+Start→Pause→scratch-backend restart→explicit Reload→Resume→Stop. PAUSED snapshot
+and139 events were byte-identical after restart. Final268 contiguous events,
+40 unique terminal orders/11 order-linked fills retained the prefix and original
+start time; independent read-only review passed. A wrongly sized sampled video
+was corrected to40 unmodified1425×891 JPEG frames at1fps and fully decoded.
+It is a time-compressed screenshot sequence, **not continuous recording**;
+the earlier1425×676 first image is separate. Scratch PostgreSQL was not stopped,
+so this proves backend-process recovery, not tmpfs/whole-host durability.
+
+The existing pre0016 dump was separately restored into an empty
+`quant_test_restore` and upgraded to0016. All44 table fingerprints, six receipt
+bundles and41 GET paths matched the current original baseline. The package now
+embeds the exact backend/frontend/PostgreSQL/Redis images; root successfully
+loaded all four and verified their exact IDs without replacing original services.
+The archive/fixtures remain explicit read-only external prerequisites. A verifier
+delimiter/partial-assertion gap found during root review is corrected against the
+original newline-delimited baseline, rather than rewriting the original evidence.
+
+Actual Chrome then reopened the packaged restored18173 Workbench, saved
+293-session study, three-study comparison, five STOPPED accounts, `d7044a3c`
+cash/equity/fills and saved events138–89. Its older account-native plan is absent
+and explicitly disclosed; the saved study's dated preview warns of its missing
+account-snapshot date and is non-executable. No old plan was reconstructed or
+financial job submitted. At390×844 EN/dark comparison width was375/375, local
+table ArrowRight moved scrollLeft0→40, and navigation Escape returned focus.
+ZH/light1440 and ZH/dark1024 observations also had no whole-page overflow;
+same-account reload retained STOPPED state and monetary values. This is a scoped
+restored user-flow combination, not the whole visual/AA/performance matrix.
+
+Local evidence outside Git:
+
+- [Actual fill-locale proof](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261002-b60ac87-fill-locale/README.md).
+- [Historical lifecycle and corrected sampled video](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261002-3184281-paper-lifecycle/README.md).
+- [Populated restore package and commands](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261002-current-restore/RESTORE.md).
+- [Restored Chrome combination evidence](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261002-restored-ui/README.md).
+
+The original U1–U8/M0–M5 scope is unchanged. Independent physical backup media,
+real novice satisfaction, unattended Windows-login launch and per-commit full
+media recapture are additional assurance, not invented mandatory gates. Keep
+Sep23/24 native200% and other scoped performance passes as historical evidence;
+current observation limits do not erase them or prove broader acceptance.
+Two genuinely missing old ledgers and lawful actual new-market forward source,
+adapter/after-start receipt/plan/processing remain unresolved. PR32 stays draft;
+no merge/tag/release or PRODUCT_GOAL_COMPLETE is claimed.
+
 ## 2026-10-02 03:48 UTC local backend restart after buying-power fix
 
 The clean feature branch was at local commit `2d6ef45`, ahead of its remote by

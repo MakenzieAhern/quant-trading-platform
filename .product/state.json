@@ -1,7 +1,35 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T13:14:00Z",
+  "updated_at_utc": "2026-10-02T14:08:00Z",
+  "completion_scope_audit_20261002": {
+    "status": "ORIGINAL_U1_U8_M0_M5_UNCHANGED_ADDED_GATES_CORRECTED",
+    "required_remaining": "Actual lawful new-market forward source/adapter/after-start completed-session receipt/dated plan/constrained processing; unresolved missing-ledger fact; consolidated relevant visual/AA/performance/user-flow and restorable-delivery evidence. No v1.2 completion claim.",
+    "additional_assurance_not_mandatory": ["independent physical backup medium", "real novice satisfaction study", "unattended Windows-login start", "full media rerecording after every commit"],
+    "historical_evidence": "Sep23/24 native Chrome 200% and Sep26 scoped production Event Timing passes are retained. Oct1/2 observation limits do not erase prior passes or prove broad current acceptance. See DECISIONS and ACCEPTANCE."
+  },
+  "u7_u8_fill_locale_20261002_gate": {
+    "status": "PASS_SCOPED_ACTUAL_CHROME_NOT_FORWARD_OR_RELEASE",
+    "source_head": "b60ac870ae6222a03ce0591a0802161a57ea46ed",
+    "proof": "Shared stream now clears temporary old-language fill announcements. Red/green 102 focused and 568 full frontend cases, lint/type/format/build passed. Actual packaged Chrome on scratch account ffdae33a observed a new EN fill, cleared it on ZH, and kept it empty on EN return and a second roundtrip. Natural STOPPED; 136 contiguous events and six fills; terminal snapshot/events bytes unchanged after roundtrip.",
+    "evidence": "product-evidence/v1.2/m5/20261002-b60ac87-fill-locale/README.md",
+    "limits": "DOM live-region observation, not screen-reader speech, new-market forward, lost-ledger recovery or whole M4/M5. Exact-head remote CI pending push."
+  },
+  "u7_historical_lifecycle_media_20261002_gate": {
+    "status": "PASS_BACKEND_RESTART_RESUME_STOP_WITH_RETAINED_SCRATCH_DB",
+    "source_head": "3184281e23e52485f53bdf7bd2615147da2891f9",
+    "proof": "Chrome-created account 70c67980 explicitly started/paused; only owned media backend stopped/restarted. Error guidance then explicit Reload reopened identical PAUSED snapshot/139 events. Resume and Stop retained the prefix: 268 contiguous events, 40 unique terminal orders, 11 unique order-linked fills, no open orders, same started_at. Independent read-only audit passed. Corrected uniform video decoded all40 frames at1425x891/1fps.",
+    "evidence": "product-evidence/v1.2/m5/20261002-3184281-paper-lifecycle/README.md",
+    "limits": "Time-compressed screenshot-sampled video, not continuous recording. Scratch PG/Redis tmpfs were not stopped; no whole-stack/host persistence, missing-ledger recovery, forward, novice or full M5 claim."
+  },
+  "m5_populated_restore_20261002_gate": {
+    "status": "PASS_CURRENT_BASELINE_DB_RECEIPTS_API_AND_SCOPED_CHROME_COMBINATION",
+    "proof": "Existing pre0016 dump restored into empty dedicated quant_test_restore, migrated to0016. Root14:07 corrected read-only verifier directly matched44 original table fingerprints and41 GET paths; original verification unchanged. Six receipt bundles/29 package-file hashes verified, exact4images saved/loaded/ID-matched. Five STOPPED accounts/417 events, eight research jobs/1110 rows, four updates/six receipts. Actual packaged Chrome18173 reopened Workbench/saved293-session result/3-study comparison/5accounts/d704cash,fills,journal138..89 and directreload. Bounded390ENdark/1024ZHdark/1440ZHlight widths375/1009/1425 matched client. Old account-native plan absent and clearly disclosed; older study dated preview non-executable. No original volume/network or financial job write.",
+    "manifest_sha256": "eec7d689c696a7a89c4ce83f239c0bb3b151c231e33f66aaf9f86b429964ad24",
+    "chrome_evidence": "product-evidence/v1.2/m5/20261002-restored-ui/README.md",
+    "evidence": "product-evidence/v1.2/m5/20261002-current-restore/RESTORE.md",
+    "limits": "Current post-loss baseline only; two old absent accounts are not recovered. Same-host logical restore, not independent disaster recovery, v1.1 downgrade, new forward/native plan or whole visual/AA/performance/release. The archive/fixtures are external read-only prerequisites."
+  },
   "pr32_unknown_strategy_ci_20261002_gate": {
     "status": "PASS_EXACT_CODE_HEAD_CI_NOT_PRODUCT_RELEASE",
     "source_head": "ea51d0f7bd84f349623575974d8506a6230f0c18",
@@ -1561,10 +1589,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-09-29 07:42UTC root sole repository writer; read-only agent review made no edits. Branch codex/product-v1.2-current-rules at e5329d0 before this docs checkpoint. Original API had only terminal paper5/research8/update4/backtest2 records before targeted backend restart; distributions were unchanged afterward. Four original Compose services healthy and frontend/API HTTP200. Test execution used separate tmpfs quant_test. No original account/database/provider/frozen research/Official OOS or GitHub write.",
+    "latest_verification": "2026-10-02 13:47UTC root sole repository writer at b60ac87, no Git lock or WSL repository-writing process observed; agents are read-only or own only external restore-package files and scratch runtime. Four original Compose services healthy, localhost5173/API8000 HTTP200. Original data remain read-only in this work unit. Media and restore projects have separate networks and tmpfs PG/Redis, no original volumes.",
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
-    "queue_writer": "No active original paper/research/update/backtest task at 2026-09-29 07:42UTC; no owned isolated backend/worker running. Only the original backend was restarted after these read-only checks, with terminal task-status distributions unchanged.",
+    "queue_writer": "Root owns only historical replay in qtp-v12-3184281-media (both owned accounts now STOPPED); restore agent owns qtp-v12-3184281-restore packaging and GET-only reads, no financial tasks. No original task submission, provider retrieval or formal/OOS job.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -1920,8 +1948,7 @@
   ],
   "external_blockers": [
     "U7-FORWARD: lawful product-use rights for a genuinely new A-share market-data feed have not been established; a public SDK or historical candidate receipt does not grant execution authority",
-    "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay",
-    "M4-BACKUP-DESTINATION: Windows currently exposes only one physical NVMe disk (Disk0); C and D are partitions on that disk, with no independently mounted backup medium verified"
+    "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay"
   ],
   "not_run": [
     "U5 current master/calendar/ST/suspension/actions/cost reconciliation, executable 2026 rule promotion and source authority promotion; U7 after-start forward receipt and unplanned mid-run recovery",
@@ -2124,7 +2151,7 @@
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "At prior code head bc198bb, packaged Data Center offline copy and Retry recovery were confirmed in Chrome with exact-head CI 37009858550. Current code head ea51d0f confirmed bilingual unknown-strategy recovery to the populated list in read-only Chrome; local 568 frontend tests and exact-head CI 37011283889 backend/frontend/Compose passed. Native 200% zoom, screen-reader speech, report file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
+      "browser_gate": "Current local b60ac87 fill-locale fix passed actual packaged Chrome and568 frontend cases; remote CI is not yet attributed to it. Prior pushed3184281 passed CI37011749469. Saved historical restart/resume/stop media and current-baseline logical restore are scoped passes. Actual forward feed/chain, missing old ledgers and consolidated required visual/AA/performance/delivery evidence remain incomplete. Native200% and performance have historical bounded passes, not never-run. Additional assurance is distinguished by completion_scope_audit_20261002."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2139,9 +2166,9 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. Packaged Data Center offline messaging and unknown strategy deep-link recovery are corrected with bounded bilingual browser evidence; their pushed code heads passed exact-head CI 37009858550 and 37011283889. Docker was recovered by manual Desktop start with original counts intact, but unattended post-login startup is unproven. Continue safe accessibility, cold/release-stack performance and durable current-head delivery evidence without original financial-data submission or repeating blocked methods. Written rights for private local persistent 2026 simulated plans/fills, an after-start completed-session receipt, genuine pre-loss paper ledgers and an independent physical backup remain external gaps. Keep PR32 draft/open; no merge, tag or release.",
-  "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify branch/head/clean status, original Docker Compose and latest PR32 CI, then pursue one concrete safe M4/M5 defect or durable browser evidence. At the next genuine Windows login verify terminal-free Docker startup without inducing a reboot solely for that claim. Do not run financial studies or bypass missing lawful forward-feed rights.",
-  "next_command": "Full U1-U8/M0-M5 objective remains incomplete. Continue safe browser, accessibility, performance, delivery and exact-head CI evidence without bypassing a browser URL-confidence stop. Ask once for any still-missing lawful forward-feed rights, genuine pre-loss ledger evidence and an independent physical backup destination; do not infer approval from public readability or fabricate lost records. Keep PR32 draft/open; no merge, tag or release until all gates pass.",
+  "next_task": "Push coherent b60ac87 plus this scoped restore/lifecycle/scope-audit milestone to existing draftPR32 and verify exact-head CI. Continue consolidated relevant AA, cold/release interaction and delivery/export observations using a materially different supported method rather than repeated failed download hooks or six-route width counts. Implement the actual lawful forward chain only with source rights/current authority; do not relabel historical receipts. Preserve missing-ledger incident and all U1-U8/M0-M5 requirements; no invented novice/physical-disk gates.",
+  "local_next_command": "git diff --check; validate product state JSON and reviewed milestone diff; coherent commit/push existing branch; gh run list to obtain actual live exact-head CI handle, then bounded watch. Original5173/8000 and scratch restore18173/18016/media15173/18012 are currently owned/running; root only repository writer. No financial/provider/original-data submission.",
+  "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
     "M0": "PASS",
