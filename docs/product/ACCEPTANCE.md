@@ -1,5 +1,72 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 21:23 UTC async input waiting remains controllable
+
+U7 lifecycle foundation `9db4fda0aa2c1e2f0329385c4acb00cd80f6b05b` accepts
+owned async input through the existing provider. Pause/stop cancels and awaits
+the pending read, closes its iterator, preserves in-flight handler completion
+and same-tick stop precedence. Independent P2 close-error masking cancellation/
+primary failure was reproduced and fixed centrally. Final source review scoped
+PASS/no new P1/P2.66 focused/1091 full backend/one optional archive skip,
+Ruff546/mypy145; unchanged frontend582/44/lint/type/build PASS. Older1088 log is
+superseded, existing528.79kB/>500kB advisory retained. No schema/dependency or
+public forward mode was added. New exact hosted source-batch CI is pending.
+
+Actual Chrome ZH/EN on owned quant_test tmpfs18018/18175 waits BEFORE upstream
+yield, not within a financial callback. Only one synthetic initial calendar
+control enters the journal. Pause yields PAUSED6; graceful backend restart keeps
+raw snapshot/events byte-identical and does not auto-run. Resume uses a fresh
+iterator, duplicate initial control adds no event; Stop yields STOPPED10. Second
+actual account waits with zero input; graceful shutdown/reload yields INTERRUPTED4
+with unchanged prefix, no auto-run. First stopped account remains byte-identical.
+Three iterator closures/two calendar yields; no market session/plan/order/fill.
+This is not hard-crash/financial checkpoint or genuinely new-market evidence.
+
+[Protocol, failures and tests](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m3/20261003-async-session-lifecycle/README.md),
+[actual ZH paused account](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m3/20261003-async-session-lifecycle/paused-zh.jpg),
+[EN interrupted explanation](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m3/20261003-async-session-lifecycle/interrupted-en.jpg)
+and [saved verifier](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m3/20261003-async-session-lifecycle/verify-evidence.ps1)
+are external local evidence:71 files, manifest SHA256
+`b8691d5565d16695167678ebed9087e547a98b1c4703af5823a1e151100cca70`.
+Independent71-file saved/source binding review PASS_SCOPED/no new P1/P2,
+including all hashes/byte equality/event-prefix/iterator/runtime checks and
+three real screenshots. A separate
+[invocation note](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m3/20261003-async-session-lifecycle-review/reproducibility-note.md)
+(SHA50e21c3a…d1543) records new Windows PowerShell execution-policy refusal;
+ordinary permitted current-shell `& .\verify-evidence.ps1` passed twice, without
+policy changes. Parent sealed bytes remain unchanged. Saved review is not live
+runtime/full-database verification.
+Original four selected runtimes/counts/statuses5paper/417events/8personal studies
+unchanged, frontend/API200/RedisPONG. Only owned QA three and testPG stopped;
+tmpfs synthetic DB released, durable data/images/volumes intact. Other owned
+restore/media untouched; ZH/system-motion/normal viewport/tabclosed. Original
+backend was not reloaded for this source slice. Failed fixture/lint/close RED,
+wrong route/startup GET and ANSI evidence-parser attempts remain explicit.
+
+Prior independently reviewed diagnostics are now checkpointed, not repeated:
+
+- [Original-instance export](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261003-export-landing/README.md):10-file manifest581224d7…74c24;
+  server CSV28metadata/18exact trades PASS_SCOPED, original result unchanged.
+  Documented15s event wait/retained-link/ordinary Downloads still do not prove
+  current browser landing. Historical successful downloads remain scoped proof.
+- [Long-work mechanism](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-long-work-diagnostic/README.md):17-file manifeste94b4374…639db;
+  olda710 QA only: static80.1→81ms long task/native missing6000ms; one actual136ms
+  interaction/130.5ms frame/9.7ms script, no after-click long task. Not current
+  product/p95/paint; earlier2552ms negative remains. Separate
+  [viewport](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-long-work-diagnostic-review/viewport-erratum.md)
+  and [encoding](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-long-work-diagnostic-review/image-format-erratum.md)
+  errata preserve sealed bytes: static1440x900 vs actual1920x911 CSS; .png bytes
+  actuallyJPEG1440x900/1905x904, not presentation proof. Independent saved review PASS_SCOPED.
+- [Ordinary-view zoom no-op](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-native-zoom/README.md):8-file manifestfce03470…0963;
+  independent saved unchanged observation PASS, current native200 UNVERIFIED.
+  Repeating the rejected shortcut method was an execution error; do not repeat
+  it again or call a CSS viewport override native zoom. No VSS/UAC/security action.
+
+Full U1–U8/M0–M5 remains IN_PROGRESS, including lawful current authorities/
+after-start receipt/plan/constrained forward, genuine absent ledgers and broad
+AA/native200/p95/delivery. Saved reviews are not fresh full-product acceptance.
+No financial/frozen/.research/OOS/source promotion, merge/tag/release.
+
 ## 2026-10-02 20:41 UTC exact dates CI, original deployment and keyboard/motion follow-up
 
 This supersedes the pending CI/reload/review actions in the20:24 checkpoint,

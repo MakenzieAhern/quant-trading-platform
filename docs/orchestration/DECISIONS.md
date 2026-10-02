@@ -1,5 +1,35 @@
 # Decisions
 
+## v1.2 async input lifecycle without a fake forward mode — 2026-10-02 21:23 UTC
+
+Reuse existing provider and stdlib asyncio: one owned pending read raced against
+the existing stop event, cancel/await both, close returned iterator, preserve
+handler completion and original failure/cancellation. Independent cleanup P2
+was fixed in that common path, not special-case callers.66 focused/1091backend
+plus optional archive skip/582frontend/full checks PASS. No schema/dependency,
+unlicensed adapter/public forward mode, financial semantics or frozen mutation.
+
+Actual Chrome and isolated PostgreSQL prove upstream waiting Pause→PAUSED,
+graceful restart byte equality, Resume fresh source/dedup→Stop and second-account
+graceful shutdown→INTERRUPTED. Only synthetic calendar input, no price/session/
+plan/order/fill.71-file independent saved/sourcehash review PASS_SCOPED;
+exact newCI pending before meaningful source milestone push on existingPR32.
+Separate shell invocation note records a new powershell execution-policy refusal
+and permitted current-shell & calls passing; no security setting changed or
+sealed byte rewritten. Saved review is not a live/full-database check. Original
+services/counts preserved, owned tmpfs QA stopped; no durable deletion. Keep
+lawful current authority/after-start receipt/plan/constrained forward mandatory.
+
+Persist previous10-file export/17-file long-work+separate viewport/encoding
+errata/8-file zoom observations, each independently scoped reviewed. CSV server
+parity is not browser landing; one136ms old-code sample is not currentp95/paint
+and cannot erase2552ms negative. Static/actual viewport mismatch and mislabeled
+JPEGs are retained, not resealed. The zoom attempt repeated an already-rejected
+shortcut: record the mistake and change method, no more identical accelerators,
+download timeouts or favorable-only native sampling. No speculative performance
+patch without app root cause; no security/disabled-native-surface bypass.
+Full U1–U8/M0–M5 scope and genuine lost-ledger fact remain; no merge/release.
+
 ## v1.2 close exact-date deployment checkpoint, continue broad quality — 2026-10-02 20:41 UTC
 
 Exact9dfa CI37060637944 allSUCCESS and independent104/31-file saved reviews
