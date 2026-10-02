@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T00:31:14Z",
+  "updated_at_utc": "2026-10-02T00:39:00Z",
+  "m5_bilingual_guide_export_parity_20261002_gate": {
+    "status": "PASS_BOUNDED_GUIDE_PARITY_NOT_FILE_LANDING_OR_FULL_M5",
+    "proof": "An owned actual-Chrome tab read a saved completed historical result in English and Chinese. The current result visibly offered a metadata JSON report, a records CSV selector, comparison and a separate historical paper-account settings link. The English user guide omitted export and optional dated-plan instructions present in the Chinese guide. Its comparison step now explains both export controls, full-interval JSON metrics versus displayed-date CSV filtering, and that an older result may lack the plan. The tab was closed after restoring English; no report was requested, downloaded or submitted and the original database was unchanged.",
+    "limits": "Documentation parity and read-only browser check only. Actual CSV/JSON file landing, durable current-head media, independent novice evaluation and full U1-U8/M4/M5 remain unverified. This does not authorize merge, tag or v1.2 release."
+  },
   "m5_isolated_packaged_historical_replay_20261002_gate": {
     "status": "PASS_BOUNDED_PRODUCTION_MODE_HISTORICAL_FLOW_AND_RESTART_NOT_RELEASE",
     "source_head": "8865fe418ff34e137760a152e5f8b24377892c07",
