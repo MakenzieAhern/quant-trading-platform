@@ -90,7 +90,8 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
     security: Security;
     dataset: MarketDataset;
   } | null>(null);
-  const [detailError, setDetailError] = useState(false);
+  const [detailError, setDetailError] = useState<Error | null>(null);
+  const [detailRevision, setDetailRevision] = useState(0);
   const [ranges, setRanges] = useState<Record<string, MarketRange>>({});
   const [pending, setPending] = useState<string | null>(null);
   const [outcome, setOutcome] = useState<"saved" | "removed" | "error" | null>(
@@ -159,7 +160,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         setExchange(exchangeFromUrl());
         setOffset(0);
       }
-      setDetailError(false);
+      setDetailError(null);
       setDetailHash(window.location.hash);
     };
     window.addEventListener("popstate", update);
@@ -181,10 +182,13 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
           (item) => item.security_id === detailSecurityId,
         );
         if (security) setSelected({ security, dataset: detailSource });
-        else setDetailError(true);
+        else setDetailError(new Error("Security not found"));
       })
-      .catch(() => {
-        if (active) setDetailError(true);
+      .catch((reason: unknown) => {
+        if (active)
+          setDetailError(
+            reason instanceof Error ? reason : new Error("Detail read failed"),
+          );
       });
     return () => {
       active = false;
@@ -196,6 +200,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
     detailDatasetId,
     detailSecurityId,
     detailSource,
+    detailRevision,
   ]);
   async function changeWatchlist(
     kind: "add" | "remove",
@@ -555,14 +560,28 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         />
       </section>
       {detail && !activeSelection && (
-        <p role={detailError || !canResolveDetail ? "alert" : "status"}>
-          {detailError || !canResolveDetail ? c.detailUnavailable : c.loading}{" "}
+        <div>
+          {detailError ? (
+            <ProductError
+              error={detailError}
+              fallback={c.detailUnavailable}
+              retryLabel={c.retry}
+              retry={() => {
+                setDetailError(null);
+                setDetailRevision((n) => n + 1);
+              }}
+            />
+          ) : (
+            <p role={!canResolveDetail ? "alert" : "status"}>
+              {!canResolveDetail ? c.detailUnavailable : c.loading}
+            </p>
+          )}
           {(detailError || !canResolveDetail) && (
             <button className="button secondary" onClick={closeDetail}>
               {c.closeDetail}
             </button>
           )}
-        </p>
+        </div>
       )}
       {activeSelection && (
         <Dialog

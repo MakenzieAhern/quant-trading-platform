@@ -692,6 +692,34 @@ describe("historical cache markets", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("explains denied detail-link reads and retries only when requested", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      `/markets?dataset=${demo.dataset_id}#${new URLSearchParams({ dataset: dataset.dataset_id, security: security.security_id })}`,
+    );
+    let detailReads = 0;
+    vi.mocked(marketApi.search).mockImplementation(async (source) => {
+      if (source === dataset.dataset_id && ++detailReads === 1)
+        throw new ApiError(403, "denied");
+      return { items: [security], total: 1, limit: 20, offset: 0, metadata };
+    });
+    render(<MarketsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Access was denied. Check your access before trying again.",
+    );
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "访问被拒绝。请确认访问权限后重试。",
+    );
+    expect(detailReads).toBe(1);
+    await userEvent.click(screen.getByRole("button", { name: "重试读取缓存" }));
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    expect(detailReads).toBe(2);
+  });
+
   it("keeps managed return history after closing a search-linked detail", async () => {
     window.history.replaceState({}, "", "/strategies");
     navigate(
