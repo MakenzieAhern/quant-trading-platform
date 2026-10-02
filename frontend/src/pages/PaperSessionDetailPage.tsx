@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { paperApi } from "../api/paper";
+import { paperApi, paperParsers } from "../api/paper";
 import { ErrorPanel, LoadingPanel } from "../components/AsyncPanel";
 import { Link } from "../components/Link";
 import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
@@ -576,6 +576,13 @@ function PaperEventJournal({
       return t(`common:statuses.${String(payload.status)}`);
     if (event.type === "market.bar") return String(payload.symbol);
     if (event.type === "market.session") return String(payload.trading_date);
+    if (event.type === "calendar.observed") {
+      const observation = paperParsers.calendar(payload);
+      return t(`detail.calendarSummary.${observation.kind}`, {
+        count: observation.calendar.sessions.length,
+        completed: observation.after_completed_sessions,
+      });
+    }
     if (event.type === "signal.created")
       return `${String(payload.symbol)} · ${t(`detail.directions.${String(payload.signal_type)}`, { defaultValue: String(payload.signal_type) })}`;
     if (event.type === "risk.decision")

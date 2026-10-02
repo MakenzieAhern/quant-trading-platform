@@ -15,6 +15,7 @@ from app.api.schemas.backtests import (
     StrategyRequest,
     StrictModel,
 )
+from app.paper.calendar import CalendarObservation
 from app.paper.models import PaperSessionStatus
 
 
@@ -192,6 +193,7 @@ PaperPayload = (
     | PaperOrderResponse
     | FillResponse
     | PortfolioPayload
+    | CalendarObservation
 )
 
 
@@ -206,9 +208,19 @@ class PaperEventResponse(BaseModel):
         "order.updated",
         "fill.created",
         "portfolio.snapshot",
+        "calendar.observed",
     ]
     occurred_at: datetime
     payload: PaperPayload
+
+    @model_validator(mode="after")
+    def validate_calendar_event(self) -> "PaperEventResponse":
+        if self.type == "calendar.observed":
+            if not isinstance(self.payload, CalendarObservation):
+                raise ValueError("calendar event requires a calendar observation")
+            if self.occurred_at != self.payload.applied_at:
+                raise ValueError("calendar application timestamp mismatch")
+        return self
 
 
 class PaperSnapshotResponse(BaseModel):

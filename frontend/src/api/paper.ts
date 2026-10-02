@@ -5,6 +5,7 @@ import type {
   CreatePaperSessionRequest,
   MarketBar,
   MarketSession,
+  PaperCalendarPayload,
   PaperFill,
   PaperJournalEvent,
   PaperOrder,
@@ -36,6 +37,7 @@ const EVENT_TYPES = new Set<PaperWireEvent["type"]>([
   "session.status",
   "market.bar",
   "market.session",
+  "calendar.observed",
   "signal.created",
   "risk.decision",
   "order.updated",
@@ -115,6 +117,116 @@ function session(value: unknown): PaperSession {
 function array<T>(value: unknown, parse: (item: unknown) => T): T[] {
   if (!Array.isArray(value)) throw new Error("Invalid paper collection.");
   return value.map(parse);
+}
+
+function calendarFields(item: Record<string, unknown>, keys: string[]) {
+  if (
+    Object.keys(item).length !== keys.length ||
+    keys.some((key) => !Object.hasOwn(item, key))
+  )
+    throw new Error("Invalid paper calendar fields.");
+}
+
+function calendarDate(value: unknown): string {
+  const text = requiredString(value);
+  const date = new Date(`${text}T00:00:00Z`);
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(text) ||
+    text.startsWith("0000") ||
+    !Number.isFinite(date.getTime()) ||
+    date.toISOString().slice(0, 10) !== text
+  )
+    throw new Error("Invalid paper calendar date.");
+  return text;
+}
+
+function calendarUtc(value: unknown): string {
+  const text = requiredString(value);
+  const match =
+    /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,6}))?(?:Z|\+00:00)$/.exec(
+      text,
+    );
+  if (
+    !match ||
+    Number(match[2]) > 23 ||
+    Number(match[3]) > 59 ||
+    Number(match[4]) > 59
+  )
+    throw new Error("Invalid paper calendar UTC timestamp.");
+  calendarDate(match[1]);
+  // Preserve microseconds: Date.parse alone would equate different instants.
+  return `${match[1]}T${match[2]}:${match[3]}:${match[4]}.${(match[5] ?? "").padEnd(6, "0")}Z`;
+}
+
+function calendarObservation(value: unknown): PaperCalendarPayload {
+  const item = record(value);
+  calendarFields(item, [
+    "schema_version",
+    "kind",
+    "calendar",
+    "before_sha256",
+    "after_sha256",
+    "applied_at",
+    "after_completed_sessions",
+    "after_trading_date",
+  ]);
+  const kind = requiredString(item.kind);
+  const before = item.before_sha256;
+  const after = requiredString(item.after_sha256);
+  const count = item.after_completed_sessions;
+  const completedDate =
+    item.after_trading_date === null
+      ? null
+      : calendarDate(item.after_trading_date);
+  if (
+    item.schema_version !== "PAPER_CALENDAR_V1" ||
+    (kind !== "initial" && kind !== "extension") ||
+    !/^[a-f0-9]{64}$/.test(after) ||
+    !Number.isSafeInteger(count) ||
+    Number(count) < 0 ||
+    (count === 0 && completedDate !== null) ||
+    (Number(count) > 0 && completedDate === null) ||
+    (kind === "initial" && (before !== null || count !== 0)) ||
+    (kind === "extension" &&
+      (typeof before !== "string" ||
+        !/^[a-f0-9]{64}$/.test(before) ||
+        before === after))
+  )
+    throw new Error("Invalid paper calendar observation.");
+  const calendar = record(item.calendar);
+  calendarFields(calendar, ["market", "sessions"]);
+  if (calendar.market !== "CN_A")
+    throw new Error("Invalid paper calendar market.");
+  const sessions = array(calendar.sessions, (value) => {
+    const session = record(value);
+    calendarFields(session, ["session_date", "is_open", "source_version"]);
+    const source = requiredString(session.source_version);
+    if (typeof session.is_open !== "boolean" || source.length === 0)
+      throw new Error("Invalid paper calendar session.");
+    return {
+      session_date: calendarDate(session.session_date),
+      is_open: session.is_open,
+      source_version: source,
+    };
+  });
+  if (
+    sessions.some(
+      (session, index) =>
+        index > 0 && session.session_date <= sessions[index - 1]!.session_date,
+    )
+  )
+    throw new Error("Invalid paper calendar order.");
+  calendarUtc(item.applied_at);
+  return {
+    schema_version: "PAPER_CALENDAR_V1",
+    kind,
+    calendar: { market: "CN_A", sessions },
+    before_sha256: before as string | null,
+    after_sha256: after,
+    applied_at: requiredString(item.applied_at),
+    after_completed_sessions: count as number,
+    after_trading_date: completedDate,
+  };
 }
 
 const marketBar = (value: unknown): MarketBar => {
@@ -357,6 +469,7 @@ export const paperParsers = {
   snapshot,
   marketBar,
   marketSession,
+  calendar: calendarObservation,
   signal,
   decision,
   order,
@@ -387,7 +500,14 @@ export function parseWireEvent(value: unknown): PaperWireEvent {
         throw new Error("Invalid paper session status.");
     } else if (type === "market.bar") marketBar(payload);
     else if (type === "market.session") marketSession(payload);
-    else if (type === "signal.created") signal(payload);
+    else if (type === "calendar.observed") {
+      const observation = calendarObservation(payload);
+      if (
+        Number(item.sequence) <= 0 ||
+        calendarUtc(item.occurred_at) !== calendarUtc(observation.applied_at)
+      )
+        throw new Error("Invalid paper calendar event envelope.");
+    } else if (type === "signal.created") signal(payload);
     else if (type === "risk.decision") decision(payload);
     else if (type === "order.updated") order(payload);
     else if (type === "fill.created") fill(payload);

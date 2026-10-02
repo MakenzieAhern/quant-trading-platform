@@ -28,7 +28,7 @@ from app.risk import RiskEngine
 from app.strategies import BaseStrategy, StrategyEngine
 
 BarHandler = Callable[[Bar], Awaitable[None]]
-AShareSessionHandler = Callable[[ResearchSession], Awaitable[None]]
+AShareSessionHandler = Callable[[ResearchSession | TradingCalendar], Awaitable[None]]
 FROZEN_A_SHARE_STRATEGY_ID = "cn_a_cross_sectional_momentum_low_vol_v1"
 
 
@@ -89,7 +89,7 @@ class SimulatedAShareSessionProvider:
 
     def __init__(
         self,
-        sessions: Iterable[ResearchSession],
+        sessions: Iterable[ResearchSession | TradingCalendar],
         interval_seconds: float = 0.5,
         *,
         pace_from_date: date | None = None,
@@ -104,6 +104,8 @@ class SimulatedAShareSessionProvider:
         self._stop = asyncio.Event()
         previous: date | None = None
         for session in () if self._streaming else self._sessions:
+            if isinstance(session, TradingCalendar):
+                continue
             if previous is not None and session.trading_date <= previous:
                 raise ReplayProviderError("A-share sessions must be strictly chronological")
             previous = session.trading_date
@@ -128,14 +130,22 @@ class SimulatedAShareSessionProvider:
                 )
                 if session is None:
                     break
-                if previous is not None and session.trading_date <= previous:
+                if (
+                    isinstance(session, ResearchSession)
+                    and previous is not None
+                    and session.trading_date <= previous
+                ):
                     raise ReplayProviderError("A-share sessions must be strictly chronological")
-                previous = session.trading_date
+                if isinstance(session, ResearchSession):
+                    previous = session.trading_date
                 if self._stop.is_set():
                     break
                 await handler(session)
                 if self._interval_seconds and (
-                    self._pace_from_date is None or session.trading_date >= self._pace_from_date
+                    isinstance(session, ResearchSession)
+                    and (
+                        self._pace_from_date is None or session.trading_date >= self._pace_from_date
+                    )
                 ):
                     with suppress(TimeoutError):
                         await asyncio.wait_for(self._stop.wait(), timeout=self._interval_seconds)
@@ -321,6 +331,14 @@ class ASharePaperTradingRuntime:
 
     def next_accepted_session(self, trading_date: date) -> date | None:
         return self._engine.next_accepted_session(trading_date)
+
+    @property
+    def calendar(self) -> TradingCalendar:
+        return self._engine.calendar
+
+    @property
+    def last_completed_session(self) -> date | None:
+        return self._engine.last_completed_session
 
     def extend_calendar(self, calendar: TradingCalendar) -> None:
         if self._result is not None:

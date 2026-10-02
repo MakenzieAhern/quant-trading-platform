@@ -418,6 +418,12 @@ export const zhCN = {
       eventType: "事件",
       eventSummary: "详情",
       eventEquity: "权益 {{equity}}",
+      calendarSummary: {
+        initial:
+          "日历初始化：共 {{count}} 个日期，已完成 {{completed}} 个交易日。仅日历控制记录，不代表新行情或成交。",
+        extension:
+          "日历扩展至 {{count}} 个日期，已完成 {{completed}} 个交易日。仅日历控制记录，不代表新行情或成交。",
+      },
       eventLogLoading: "正在加载已保存事件…",
       eventLogRange: "已保存事件 {{newest}}–{{oldest}}（本页最新在前）",
       newEventsAvailable: "有更新的已保存事件，刷新后可查看。",
@@ -427,6 +433,7 @@ export const zhCN = {
       eventTypes: {
         session: { status: "账户状态" },
         market: { bar: "完整 K 线", session: "交易日" },
+        calendar: { observed: "日历控制记录" },
         signal: { created: "策略信号" },
         risk: { decision: "风控决策" },
         order: { updated: "订单更新" },

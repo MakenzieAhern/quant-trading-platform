@@ -1,12 +1,192 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { paperApi, parseWireEvent } from "./paper";
+import { paperApi, paperParsers, parseWireEvent } from "./paper";
 import { applyPaperEvent } from "../hooks/usePaperStream";
 import { plan } from "../product/experiments/fixtures.test-data";
 import { jsonResponse } from "../test/fixtures";
-import { PAPER_ID, paperSession, paperSnapshot } from "../test/paperFixtures";
+import {
+  PAPER_ID,
+  paperCalendarEvent,
+  paperSession,
+  paperSnapshot,
+} from "../test/paperFixtures";
 
 describe("paper API contracts", () => {
+  it.each(["initial", "extension"] as const)(
+    "accepts persisted %s calendar observations with the same UTC instant",
+    (kind) => {
+      const event = paperCalendarEvent(kind);
+      const wire = {
+        ...event,
+        occurred_at: event.occurred_at.replace("Z", "+00:00"),
+      };
+      expect(parseWireEvent(wire)).toEqual(wire);
+      expect(
+        parseWireEvent({
+          ...event,
+          occurred_at: "2026-10-03T00:00:00.100000+00:00",
+          payload: { ...event.payload, applied_at: "2026-10-03T00:00:00.1Z" },
+        }).type,
+      ).toBe("calendar.observed");
+    },
+  );
+
+  it("retains the explicit processed-date anchor even without a financial market cursor", () => {
+    const event = paperCalendarEvent("extension");
+    const current = paperSnapshot("RUNNING");
+    for (const after_trading_date of ["2010-05-26", "2010-05-27"]) {
+      const wire = {
+        ...event,
+        payload: { ...event.payload, after_trading_date },
+      };
+      const parsed = parseWireEvent(wire);
+      expect(parsed.payload.after_trading_date).toBe(after_trading_date);
+      expect(applyPaperEvent(current, parsed)).toEqual({
+        ...current,
+        last_sequence: event.sequence,
+      });
+    }
+    const beforeProcessing = {
+      ...event,
+      payload: {
+        ...event.payload,
+        after_completed_sessions: 0,
+        after_trading_date: null,
+      },
+    };
+    expect(parseWireEvent(beforeProcessing)).toEqual(beforeProcessing);
+  });
+
+  it("rejects malformed calendar payloads and mismatched or non-UTC envelopes", () => {
+    const event = paperCalendarEvent();
+    const payload = event.payload;
+    const calendar = payload.calendar;
+    const session = calendar.sessions[0]!;
+    const extension = paperCalendarEvent("extension").payload;
+    const missingDate: Record<string, unknown> = { ...payload };
+    delete missingDate.after_trading_date;
+    const invalid = [
+      missingDate,
+      { ...payload, after_trading_date: "2010-05-26" },
+      { ...extension, after_trading_date: null },
+      { ...extension, after_completed_sessions: 0 },
+      { ...extension, after_trading_date: "2010-02-30" },
+      { ...extension, after_trading_date: "2010-5-26" },
+      { ...extension, after_trading_date: 20100526 },
+      { ...extension, before_sha256: extension.after_sha256 },
+      { ...payload, schema_version: "PAPER_CALENDAR_V2" },
+      { ...payload, kind: "unknown" },
+      { ...payload, extra: "not-in-contract" },
+      { ...payload, calendar: undefined },
+      { ...payload, before_sha256: "a".repeat(64) },
+      { ...payload, kind: "extension", before_sha256: null },
+      { ...payload, kind: "extension", before_sha256: "A".repeat(64) },
+      { ...payload, after_sha256: "B".repeat(64) },
+      { ...payload, after_sha256: "b".repeat(63) },
+      { ...payload, after_completed_sessions: 1 },
+      { ...payload, after_completed_sessions: -1 },
+      { ...payload, after_completed_sessions: 0.5 },
+      { ...payload, after_completed_sessions: "0" },
+      { ...payload, after_completed_sessions: Number.MAX_SAFE_INTEGER + 1 },
+      { ...payload, applied_at: "2026-10-03T00:00:00" },
+      { ...payload, applied_at: "2026-10-03T08:00:00.123456+08:00" },
+      { ...payload, applied_at: "2026-02-30T00:00:00.123456Z" },
+      { ...payload, applied_at: "2026-10-03T24:00:00.123456Z" },
+      { ...payload, applied_at: "2026-10-03T00:60:00.123456Z" },
+      { ...payload, applied_at: "2026-10-03T00:00:60.123456Z" },
+      { ...payload, calendar: { ...calendar, market: "US" } },
+      { ...payload, calendar: { ...calendar, extra: true } },
+      { ...payload, calendar: { ...calendar, sessions: [session, session] } },
+      {
+        ...payload,
+        calendar: { ...calendar, sessions: [...calendar.sessions].reverse() },
+      },
+      ...[
+        { ...session, session_date: "2010-02-30" },
+        { ...session, session_date: "0000-01-01" },
+        { ...session, session_date: "2010-5-26" },
+        { ...session, session_date: 20100526 },
+        { ...session, is_open: 1 },
+        { ...session, source_version: "" },
+        { ...session, source_version: null },
+        { ...session, extra: true },
+      ].map((invalidSession) => ({
+        ...payload,
+        calendar: { ...calendar, sessions: [invalidSession] },
+      })),
+    ];
+    for (const invalidPayload of invalid)
+      expect(() =>
+        parseWireEvent({ ...event, payload: invalidPayload }),
+      ).toThrow();
+    for (const occurred_at of [
+      "2026-10-03T00:00:00.123457Z",
+      "2026-10-03T00:00:00Z",
+      "2026-10-03T00:00:00.123456",
+      "2026-10-03T08:00:00.123456+08:00",
+    ])
+      expect(() => parseWireEvent({ ...event, occurred_at })).toThrow();
+    expect(() => parseWireEvent({ ...event, sequence: 0 })).toThrow();
+    expect(() =>
+      parseWireEvent({ ...event, type: "calendar.untrusted" }),
+    ).toThrow();
+  });
+
+  it("advances calendar sequences only, preserving financial state and deduplicating", () => {
+    const current = paperSnapshot("RUNNING");
+    current.session.provider_type = "historical_a_share";
+    current.last_sequence = 7;
+    current.latest_session = {
+      trading_date: "2010-05-26",
+      security_count: 1,
+      source: "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1",
+    };
+    current.latest_portfolio = paperParsers.portfolio({
+      timestamp: "2010-05-26T07:00:00Z",
+      cash: "100000.000000000000000001",
+      market_value: "0",
+      equity: "100000.000000000000000001",
+      realized_pnl: "0",
+      unrealized_pnl: "0",
+      cumulative_commission: "0",
+      drawdown: "0",
+      positions: [],
+      plan: {
+        ...plan,
+        mode: "historical_exploration",
+        account_mode: "HISTORICAL_PAPER_REPLAY",
+        submitted_to_account: true,
+        paper_session_id: PAPER_ID,
+        plan_version: "PAPER_ACCOUNT_PLAN_V3",
+      },
+    });
+    current.last_rebalance_plan = current.latest_portfolio.plan;
+    current.fills = [
+      paperParsers.fill({
+        order_id: PAPER_ID,
+        strategy_id: "cn_a_cross_sectional_momentum_low_vol_v1",
+        symbol: "CN-A:SSE:600000",
+        side: "BUY",
+        quantity: "100",
+        price: "10",
+        commission: "5",
+        timestamp: "2010-05-26T07:00:00Z",
+      }),
+    ];
+    const event = parseWireEvent(paperCalendarEvent("extension", 8));
+    const next = applyPaperEvent(current, event);
+    expect(next).toEqual({ ...current, last_sequence: 8 });
+    expect(next.session).toBe(current.session);
+    expect(next.latest_session).toBe(current.latest_session);
+    expect(next.latest_portfolio).toBe(current.latest_portfolio);
+    expect(next.last_rebalance_plan).toBe(current.last_rebalance_plan);
+    expect(next.fills).toBe(current.fills);
+    expect(applyPaperEvent(next, event)).toBe(next);
+    expect(
+      applyPaperEvent(next, parseWireEvent(paperCalendarEvent("initial", 7))),
+    ).toBe(next);
+  });
+
   it("looks up a committed creation receipt with the original key", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")

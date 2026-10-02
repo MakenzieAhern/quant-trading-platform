@@ -1,6 +1,7 @@
 import asyncio
 from collections.abc import AsyncIterator
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
+from decimal import Decimal
 from uuid import UUID, uuid4
 
 import pytest
@@ -12,16 +13,107 @@ from app.api.routes import paper as paper_routes
 from app.api.routes.paper import paper_manager, paper_session_websocket, settings
 from app.application.backtests.registry import UnknownDatasetError
 from app.application.experiments.data import HISTORICAL_ID, ExperimentInputError
+from app.application.paper_trading.service import PaperTradingManager
 from app.db.models.paper import PaperTradingSessionModel
 from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.db.session import SessionFactory
-from app.execution import OrderManager
+from app.execution import FixedCommission, OrderManager
 from app.main import app
 from app.paper.models import PaperSession, PaperSessionConcurrencyError
-from app.paper.runtime import PaperBroker, ReplayMarketDataProvider, SimulatedAShareSessionProvider
+from app.paper.runtime import (
+    ASharePaperTradingRuntime,
+    PaperBroker,
+    ReplayMarketDataProvider,
+    SimulatedAShareSessionProvider,
+)
 from app.portfolio import PortfolioEngine
 from app.risk import RiskEngine
 from app.strategies import MovingAverageCrossoverStrategy
+from tests.test_paper_calendar_journal import INITIAL
+from tests.test_paper_plan_checkpoint import FixtureStrategy
+from tests.test_research_execution_engine import CALENDAR, _session
+
+
+async def test_calendar_journal_survives_new_manager_and_rest_hydration(
+    client: AsyncClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Real disposable PostgreSQL/API; synthetic inputs, not forward authority."""
+    first_manager = PaperTradingManager(
+        SessionFactory, paper_manager._datasets, paper_manager._strategies
+    )
+    items = (
+        INITIAL,
+        _session(date(2024, 1, 2), opening="10"),
+        CALENDAR,
+        _session(date(2024, 1, 3), opening="9.9"),
+    )
+
+    def install(manager, *, pause=False):
+        def build(session, cursor_date, initial_calendar=None):
+            runtime = ASharePaperTradingRuntime(
+                initial_cash=session.initial_cash,
+                commission_model=FixedCommission(),
+                calendar=initial_calendar or (CALENDAR if cursor_date else INITIAL),
+                strategy=FixtureStrategy(),
+            )
+            provider = SimulatedAShareSessionProvider(items, 0)
+            original_start = provider.start
+
+            async def start(handler):
+                async def consume(item):
+                    await handler(item)
+                    if pause and item is CALENDAR:
+                        await manager.pause(session.id)
+
+                await original_start(consume)
+
+            provider.start = start
+            return provider, runtime
+
+        manager._build_runtime = build
+        monkeypatch.setattr(paper_routes, "paper_manager", manager)
+
+    install(first_manager, pause=True)
+    created = (await client.post("/api/paper-trading/sessions", json=a_share_request_body())).json()
+    session_id = UUID(created["session_id"])
+    try:
+        await first_manager.start(session_id)
+        await first_manager._tasks[session_id]
+        assert (await first_manager.get(session_id)).status.value == "PAUSED"
+        before = await first_manager.events(session_id)
+        controls = [item for item in before if item.event_type == "calendar.observed"]
+        assert [item.payload["after_completed_sessions"] for item in controls] == [0, 1]
+        hydrated = await client.get(f"/api/paper-trading/sessions/{session_id}/events")
+        assert hydrated.status_code == 200
+        assert len([item for item in hydrated.json() if item["type"] == "calendar.observed"]) == 2
+        await first_manager.shutdown()
+        restarted = PaperTradingManager(
+            SessionFactory, paper_manager._datasets, paper_manager._strategies
+        )
+        install(restarted)
+        try:
+            assert await restarted.recover_interrupted() == 0
+            await restarted.start(session_id)
+            await restarted._tasks[session_id]
+            after = await restarted.events(session_id)
+            assert after[: len(before)] == before
+            assert [item.sequence for item in after] == list(range(1, len(after) + 1))
+            assert len([item for item in after if item.event_type == "calendar.observed"]) == 2
+            snapshot = await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")
+            assert snapshot.status_code == 200
+            state = snapshot.json()
+            assert state["session"]["status"] == "STOPPED"
+            assert state["latest_session"]["trading_date"] == "2024-01-03"
+            assert Decimal(state["latest_portfolio"]["cash"]) == Decimal(created["initial_cash"])
+            assert state["orders"] == state["fills"] == []
+            journal_response = await client.get(f"/api/paper-trading/sessions/{session_id}/events")
+            assert journal_response.status_code == 200
+            assert [item["type"] for item in journal_response.json()].count("market.session") == 2
+        finally:
+            await restarted.shutdown()
+    finally:
+        await first_manager.shutdown()
 
 
 @pytest.fixture(autouse=True)

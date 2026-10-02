@@ -35,6 +35,7 @@ from app.paper.a_share_fixture import (
     SIMULATED_SOURCE,
     simulated_a_share_fixture,
 )
+from app.paper.calendar import CalendarObservation
 from app.paper.hub import PaperEventHub
 from app.paper.models import (
     CreatePaperSessionCommand,
@@ -329,7 +330,7 @@ class PaperTradingManager:
             expected_replay = tuple(
                 (item.event_type, item.payload)
                 for item in history
-                if item.event_type != "session.status"
+                if item.event_type not in {"session.status", "calendar.observed"}
             )
             replayed: list[tuple[str, dict[str, object]]] = []
             if last_market is not None and not expected_replay:
@@ -345,7 +346,37 @@ class PaperTradingManager:
                 else None
             )
             matched_cursor = last_market is None
-            provider, runtime = await asyncio.to_thread(self._build_runtime, session, cursor_date)
+            calendar_records = tuple(
+                item for item in history if item.event_type == "calendar.observed"
+            )
+            observations = tuple(
+                CalendarObservation.model_validate(item.payload) for item in calendar_records
+            )
+            if observations:
+                if observations[0].kind != "initial" or session.provider_type == "replay":
+                    raise ValueError("paper calendar timeline has no initial observation")
+                previous_calendar = observations[0].calendar
+                for index, (record, observation) in enumerate(
+                    zip(calendar_records, observations, strict=True)
+                ):
+                    if record.occurred_at != observation.applied_at:
+                        raise ValueError("calendar application timestamp mismatch")
+                    if index and observation.kind == "initial":
+                        raise ValueError("duplicate initial calendar observation")
+                    observation.validate_current(previous_calendar)
+                    previous_calendar = observation.calendar
+                if any(
+                    item.event_type == market_type and item.sequence < calendar_records[0].sequence
+                    for item in history
+                ):
+                    raise ValueError("initial calendar follows persisted market data")
+                provider, runtime = await asyncio.to_thread(
+                    self._build_runtime, session, cursor_date, observations[0].calendar
+                )
+            else:
+                provider, runtime = await asyncio.to_thread(
+                    self._build_runtime, session, cursor_date
+                )
             assert provider is not None
             self._providers[session.id] = provider
             async with self._lock:
@@ -414,10 +445,92 @@ class PaperTradingManager:
                     and isinstance(plan := event.payload.get("plan"), dict)
                 }
 
-                async def process_session(item: ResearchSession) -> None:
+                calendar_cursor = 0
+                known_calendars = {item.after_sha256 for item in observations}
+
+                def replay_calendars() -> None:
+                    nonlocal calendar_cursor
+                    while calendar_cursor < len(observations):
+                        observation = observations[calendar_cursor]
+                        if observation.after_completed_sessions > runtime.completed_sessions:
+                            break
+                        if observation.after_completed_sessions != runtime.completed_sessions:
+                            raise ValueError("calendar observation checkpoint disappeared")
+                        if observation.after_trading_date != runtime.last_completed_session:
+                            raise ValueError("calendar observation trading date mismatch")
+                        if observation.kind == "initial" and calendar_cursor != 0:
+                            raise ValueError("duplicate initial calendar observation")
+                        observation.validate_current(runtime.calendar)
+                        runtime.extend_calendar(observation.calendar)
+                        calendar_cursor += 1
+
+                replay_calendars()
+
+                async def observe_calendar(calendar: TradingCalendar) -> None:
+                    digest = canonical_sha256(calendar.model_dump(mode="json"))
+                    if digest in known_calendars:
+                        return  # Saved observations apply only at their journaled boundary.
+                    if calendar_cursor < len(observations):
+                        raise ValueError("new calendar arrived before replay checkpoint")
+                    if not known_calendars and (expected_replay or runtime.completed_sessions):
+                        raise ValueError("legacy account has no initial calendar observation")
+                    async with self._lock:
+                        current = await self.get(session.id)
+                        if current is not None and current.status in {
+                            PaperSessionStatus.PAUSING,
+                            PaperSessionStatus.STOPPING,
+                        }:
+                            return  # A user command won the lock; do not commit new knowledge.
+                        if current is None or current.status is not PaperSessionStatus.RUNNING:
+                            raise PaperSessionConcurrencyError("paper calendar lifecycle changed")
+                        now = self._now()
+                        observation = CalendarObservation(
+                            schema_version="PAPER_CALENDAR_V1",
+                            kind="extension" if known_calendars else "initial",
+                            calendar=calendar,
+                            before_sha256=canonical_sha256(runtime.calendar.model_dump(mode="json"))
+                            if known_calendars
+                            else None,
+                            after_sha256=digest,
+                            applied_at=now,
+                            after_completed_sessions=runtime.completed_sessions,
+                            after_trading_date=runtime.last_completed_session,
+                        )
+                        observation.validate_current(runtime.calendar)
+                        if not matched_cursor:
+                            raise ValueError("new calendar arrived before replay checkpoint")
+                        async with self._session_factory() as db:
+                            stored = await SQLAlchemyPaperRepository(db).append_events(
+                                session.id,
+                                (("calendar.observed", now, observation.model_dump(mode="json")),),
+                            )
+                        runtime.extend_calendar(
+                            calendar
+                        )  # Only committed knowledge can affect consumption.
+                        known_calendars.add(digest)
+                        for event in stored:
+                            self.hub.publish(session.id, self._wire_event(event))
+
+                async def process_session(item: ResearchSession | TradingCalendar) -> None:
                     nonlocal matched_cursor
+                    if isinstance(item, TradingCalendar):
+                        await observe_calendar(item)
+                        return
+                    if (
+                        cursor_date is not None
+                        and item.trading_date > cursor_date
+                        and not matched_cursor
+                    ):
+                        raise ValueError("paper replay checkpoint disappeared from source data")
+                    if (
+                        (cursor_date is None or item.trading_date > cursor_date)
+                        and (historical_start is None or item.trading_date >= historical_start)
+                        and calendar_cursor < len(observations)
+                    ):
+                        raise ValueError("calendar observation checkpoint disappeared")
                     delta = await runtime.process_session(item)
                     if historical_start is not None and item.trading_date < historical_start:
+                        replay_calendars()
                         return  # Warm up from accepted past only; no pre-range account events.
                     source = (
                         HISTORICAL_SOURCE
@@ -445,6 +558,8 @@ class PaperTradingManager:
                             if tuple(replayed) != expected_replay:
                                 raise ValueError("paper replay checkpoint no longer matches")
                             matched_cursor = True
+                        # Apply knowledge after the original financial batch and plan.
+                        replay_calendars()
                         return
                     await persist(events)
 
@@ -454,6 +569,13 @@ class PaperTradingManager:
                 if current is not None and current.status is PaperSessionStatus.PAUSING:
                     await self._transition(current, PaperSessionStatus.PAUSED, "session.status")
                     return
+                if (
+                    current is not None
+                    and current.status is PaperSessionStatus.RUNNING
+                    and isinstance(provider, SimulatedAShareSessionProvider)
+                    and calendar_cursor != len(observations)
+                ):
+                    raise ValueError("calendar observation checkpoint disappeared")
                 if (
                     not matched_cursor
                     and current is not None
@@ -589,7 +711,10 @@ class PaperTradingManager:
         )
 
     def _build_runtime(
-        self, session: PaperSession, cursor_date: date | None = None
+        self,
+        session: PaperSession,
+        cursor_date: date | None = None,
+        initial_calendar: TradingCalendar | None = None,
     ) -> tuple[
         ReplayMarketDataProvider | SimulatedAShareSessionProvider,
         PaperTradingRuntime | ASharePaperTradingRuntime,
@@ -606,7 +731,7 @@ class PaperTradingManager:
                 ASharePaperTradingRuntime(
                     initial_cash=session.initial_cash,
                     commission_model=commission,
-                    calendar=calendar,
+                    calendar=initial_calendar or calendar,
                     risk_config=risk,
                 ),
             )
@@ -651,7 +776,7 @@ class PaperTradingManager:
                 ASharePaperTradingRuntime(
                     initial_cash=session.initial_cash,
                     commission_model=commission,
-                    calendar=calendar,
+                    calendar=initial_calendar or calendar,
                     risk_config=self._historical_effective_risk(session),
                     strategy=ExploratoryStrategy(request),
                 ),

@@ -49,6 +49,24 @@ export interface MarketSession {
     | "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1";
 }
 
+export interface PaperCalendarPayload {
+  schema_version: "PAPER_CALENDAR_V1";
+  kind: "initial" | "extension";
+  calendar: {
+    market: "CN_A";
+    sessions: {
+      session_date: string;
+      is_open: boolean;
+      source_version: string;
+    }[];
+  };
+  before_sha256: string | null;
+  after_sha256: string;
+  applied_at: string;
+  after_completed_sessions: number;
+  after_trading_date: string | null;
+}
+
 export interface PaperSignal {
   strategy_id: string;
   symbol: string;
@@ -198,6 +216,7 @@ export interface PaperWireEvent {
     | "session.status"
     | "market.bar"
     | "market.session"
+    | "calendar.observed"
     | "signal.created"
     | "risk.decision"
     | "order.updated"

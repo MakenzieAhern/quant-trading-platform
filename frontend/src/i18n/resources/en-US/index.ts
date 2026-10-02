@@ -447,6 +447,12 @@ export const enUS = {
       eventType: "Event",
       eventSummary: "Details",
       eventEquity: "Equity {{equity}}",
+      calendarSummary: {
+        initial:
+          "Calendar initialized. Dates recorded: {{count}}. Completed sessions: {{completed}}. Calendar control only; no new market data or fills.",
+        extension:
+          "Calendar extended. Dates recorded: {{count}}. Completed sessions: {{completed}}. Calendar control only; no new market data or fills.",
+      },
       eventLogLoading: "Loading saved events…",
       eventLogRange: "Saved events {{newest}}–{{oldest}} (newest first)",
       newEventsAvailable:
@@ -457,6 +463,7 @@ export const enUS = {
       eventTypes: {
         session: { status: "Account status" },
         market: { bar: "Completed bar", session: "Trading session" },
+        calendar: { observed: "Calendar control" },
         signal: { created: "Strategy signal" },
         risk: { decision: "Risk decision" },
         order: { updated: "Order update" },

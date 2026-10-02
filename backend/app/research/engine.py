@@ -124,6 +124,14 @@ class ResearchExecutionEngine:
     def next_accepted_session(self, trading_date: date) -> date | None:
         return self._next_session.get(trading_date)
 
+    @property
+    def calendar(self) -> TradingCalendar:
+        return self._calendar
+
+    @property
+    def last_completed_session(self) -> date | None:
+        return self._previous_date
+
     def extend_calendar(self, calendar: TradingCalendar) -> None:
         """Append already accepted dates; never reroute past targets or pending orders.
 
@@ -131,11 +139,7 @@ class ResearchExecutionEngine:
         forward adapter must journal when each extension was applied and replay that
         timeline, not reconstruct old intents using the final expanded calendar.
         """
-        if (
-            calendar.market != self._calendar.market
-            or calendar.sessions[: len(self._calendar.sessions)] != self._calendar.sessions
-        ):
-            raise ValueError("accepted calendar extension must be append-only")
+        calendar.require_extension_of(self._calendar)
         dates = tuple(item.session_date for item in calendar.sessions if item.is_open)
         next_session = dict(pairwise(dates))
         self._calendar = calendar
