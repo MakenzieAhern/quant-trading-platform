@@ -35,6 +35,7 @@ export function ResearchRunPage({ runId }: { runId: string }) {
     "paper",
   ]);
   const [curveOffset, setCurveOffset] = useState(0);
+  const [showBenchmark, setShowBenchmark] = useState(true);
   const [rollingOffset, setRollingOffset] = useState(0);
   const [holdingsOffset, setHoldingsOffset] = useState(0);
   const [rebalancesOffset, setRebalancesOffset] = useState(0);
@@ -203,6 +204,14 @@ export function ResearchRunPage({ runId }: { runId: string }) {
           <h2>
             {t("research:equity")} / {t("research:benchmarkCurve")}
           </h2>
+          <label className="metricPrecision">
+            <input
+              type="checkbox"
+              checked={showBenchmark}
+              onChange={(event) => setShowBenchmark(event.target.checked)}
+            />
+            {t("research:showBenchmark")}
+          </label>
         </div>
         {curves.loading ? (
           <LoadingPanel label={t("research:equity")} />
@@ -216,6 +225,7 @@ export function ResearchRunPage({ runId }: { runId: string }) {
               key={curveOffset}
               strategy={curves.data.equity.items}
               benchmark={curves.data.benchmark.items}
+              showBenchmark={showBenchmark}
             />
             <p className="researchChartRange">
               {t("research:displayedDateRange", {

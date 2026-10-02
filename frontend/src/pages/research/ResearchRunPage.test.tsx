@@ -101,6 +101,81 @@ test("one curve page advances all three series without changing stored metrics",
   expect(pager).toHaveFocus();
 });
 
+test("benchmark visibility preserves exact data, requests, paging and rolling drawdown", async () => {
+  vi.mocked(researchApi.points).mockImplementation(
+    async (_id, _kind, offset = 0) => {
+      const page = pointPage(offset, offset === 0 ? 200 : 1);
+      return {
+        ...page,
+        items: page.items.map((point) => ({
+          ...point,
+          trading_date: new Date(Date.UTC(2024, 0, 2 + point.sequence))
+            .toISOString()
+            .slice(0, 10),
+        })),
+      };
+    },
+  );
+  vi.mocked(researchApi.rollingMetrics).mockResolvedValue({
+    items: [
+      { trading_date: "2024-01-02", metric_name: "sharpe", value: null },
+      { trading_date: "2024-01-02", metric_name: "drawdown", value: "-0.1" },
+      { trading_date: "2024-01-03", metric_name: "sharpe", value: "1.2" },
+      { trading_date: "2024-01-03", metric_name: "drawdown", value: "-0.2" },
+    ],
+    limit: 200,
+    offset: 0,
+    total: 4,
+  });
+  render(<ResearchRunPage runId="saved" />);
+  const equityFigure = await screen.findByRole("figure", {
+    name: "accessibility:benchmarkChart",
+  });
+  const equitySection = equityFigure.closest("section")!;
+  const rollingFigure = await screen.findByRole("figure", {
+    name: "accessibility:rollingChart",
+  });
+  const toggle = within(equitySection).getByRole("checkbox", {
+    name: "research:showBenchmark",
+  });
+  expect(toggle).toBeChecked();
+  await userEvent.click(within(equityFigure).getByText("chartData"));
+  const table = within(equityFigure).getByRole("table");
+  const exactData = table.textContent;
+  await userEvent.click(toggle);
+  expect(toggle).not.toBeChecked();
+  expect(equityFigure.querySelector(".strategyLine")).not.toBeNull();
+  expect(equityFigure.querySelector(".benchmarkLine")).toBeNull();
+  expect(equityFigure.querySelector(".benchmarkLegend")).toBeNull();
+  expect(table.textContent).toBe(exactData);
+  expect(within(table).getAllByText("research:benchmark")).toHaveLength(50);
+  expect(within(table).getAllByText("100.000000000000000001")).toHaveLength(
+    100,
+  );
+  expect(rollingFigure.querySelector(".benchmarkLine")).not.toBeNull();
+  expect(rollingFigure.querySelectorAll("circle.strategyLine")).toHaveLength(1);
+  expect(researchApi.points).toHaveBeenCalledTimes(3);
+  expect(researchApi.metrics).toHaveBeenCalledTimes(1);
+  expect(researchApi.rollingMetrics).toHaveBeenCalledTimes(1);
+  await userEvent.keyboard(" ");
+  expect(toggle).toBeChecked();
+  expect(equityFigure.querySelector(".benchmarkLine")).not.toBeNull();
+  expect(equityFigure.querySelector(".benchmarkLegend")).not.toBeNull();
+  expect(table.textContent).toBe(exactData);
+  await userEvent.keyboard(" ");
+  const pager = within(equitySection).getByRole("group", {
+    name: "research:equity / research:benchmarkCurve — pagination",
+  });
+  await userEvent.click(within(pager).getByRole("button", { name: "next" }));
+  await screen.findByText("research:displayedDateRange:2024-07-20–2024-07-20");
+  expect(toggle).not.toBeChecked();
+  expect(equitySection.querySelector(".benchmarkLine")).toBeNull();
+  expect(researchApi.points).toHaveBeenCalledTimes(6);
+  expect(researchApi.metrics).toHaveBeenCalledTimes(1);
+  expect(researchApi.rollingMetrics).toHaveBeenCalledTimes(1);
+  expect(rollingFigure.querySelector(".benchmarkLine")).not.toBeNull();
+});
+
 test("research table pager retains keyboard focus through loading and error", async () => {
   let rejectPage!: (reason: Error) => void;
   vi.mocked(researchApi.holdings).mockImplementation((_id, offset) =>

@@ -1,5 +1,53 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 19:20 UTC formal archive benchmark control and real mobile reflow
+
+U4/U8/UX-CHART scoped progress, not complete chart/product/release acceptance.
+The existing read-only Development archive `b38081a7…306f` now has a native
+ZH/EN benchmark checkbox. Page-level state survives curve paging and locale;
+the exact table still contains both series, official full-run metrics/API
+dependencies are unchanged, and rolling Sharpe/drawdown keeps its second trace.
+No financial request, strategy run, frozen research or OOS write occurred.
+
+Actual mobile Chrome exposed client375/scroll533. A column/align-start header
+child used max-content514.9px despite min-width0; monthly exact long numbers
+also overran their grid cells. Three shared CSS declarations constrain header
+width and permit full monthly-value wrapping. No ellipsis/rounding/hidden-data
+substitute. Fixed client375/scroll375, header339px and no monthly cell clipping.
+RED tests preserved both absent checkbox and absent CSS guards; one new fixture
+sorting failure was corrected only by using ascending aligned dates.14 focused
+tests pass; full frontend579/44, lint/type/Prettier/build pass, existing528.79kB
+entry advisory retained. Independent seven-file source review PASS_SCOPED.
+
+Actual Chrome Space/OFF focus,100-row exact table equality, stored metrics and
+rolling invariance, page201-400 and locale preference were checked.16 DOM
+combinations cover the four prescribed dimensions and both languages/themes;
+all have client=scroll,40px checkbox target and identical saved metrics/rolling.
+Separately settled screenshots were inspected at1440/1280/1024/390, including
+long monthly values. Immediate old-frame screenshots remain explicitly
+non-proof. This is not the full visual, native200%, hover/date linkage,
+keyboard/WCAG or <=200ms p95 acceptance.
+
+[Protocol, failures and scope](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-benchmark-toggle/README.md),
+[raw browser assertions](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-benchmark-toggle/browser-assertions.json),
+[mobile wrapping screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-benchmark-toggle/settled-monthly-390-zh-dark.png)
+and [read-only verifier](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-benchmark-toggle/verify-evidence.ps1)
+are local external evidence, not portable Git attachments.69 files sealed,
+manifest SHA256 `bf3c3fd3cfa7bfc88d8886892e218b0d1eed9585e4cfd29de45136357fc5e4c4`.
+The sealed README's inherited Chrome153 label is superseded by this
+[browser metadata correction](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-benchmark-toggle-review/browser-version-erratum.md)
+(SHA256 `b1fde4c3a9b3714e18243aa4656cf05f23dd57730ec6c7229386bd814060c958`).
+Installed Chrome154 is verified; exact running-tab version remains unverified.
+The version page was denied by browser policy, with no workaround attempted.
+Saved metric bytes unchanged `ff5e4a74…a0e1d`; original/restored5/417/8/4.
+Only owned frontend changed, restored exacte328/no mounts/healthy; original
+services and owned backend/PG/Redis starts unchanged. Original frontend/API200,
+both RedisPONG; preferences restored, viewport reset and owned tab closed.
+Manuals distinguish archive200-point series/100-record table from personal
+100-session chart. Independent69-file evidence/erratum review PASS_SCOPED;
+exact new CI is not yet run.
+old a71023e CI covers neither this source batch nor later checkpoint.
+
 ## 2026-10-02 18:57 UTC exact saved-result CI and negative native diagnostic
 
 Exact runtime `a71023e56d00e151d1569ae54479a2a63aba75c1` passed

@@ -407,6 +407,7 @@ kbd {
 .pageHeader > div,
 .detailHeader > div {
   min-width: 0;
+  max-width: 100%;
 }
 .pageHeader p {
   max-width: 720px;
@@ -1385,6 +1386,8 @@ tbody tr:hover {
 }
 .monthlyHeatmap > div {
   display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
   gap: 8px;
   padding: 10px;
   border: 1px solid var(--border);

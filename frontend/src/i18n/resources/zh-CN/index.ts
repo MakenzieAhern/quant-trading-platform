@@ -563,6 +563,7 @@ export const zhCN = {
     manifest: "规范化清单",
     ruleVersion: "市场规则版本",
     benchmark: "基准",
+    showBenchmark: "显示基准",
     strategySeries: "策略",
     period: "研究切分",
     equity: "策略权益",

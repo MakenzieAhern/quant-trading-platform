@@ -76,12 +76,14 @@ export function BenchmarkChart({
   strategyLabel,
   benchmarkLabel,
   ariaLabel,
+  showBenchmark = true,
 }: {
   strategy: NullableResearchPoint[];
   benchmark: NullableResearchPoint[];
   strategyLabel?: string;
   benchmarkLabel?: string;
   ariaLabel?: string;
+  showBenchmark?: boolean;
 }) {
   const { t } = useTranslation(["accessibility", "research"]);
   const chartLabel = ariaLabel ?? t("accessibility:benchmarkChart");
@@ -89,9 +91,10 @@ export function BenchmarkChart({
   const secondLabel = benchmarkLabel ?? t("research:benchmark");
   const width = 900;
   const height = 260;
-  const scaleValues = [...strategy, ...benchmark].flatMap((point) =>
-    point.value === null ? [] : [Number(point.value)],
-  );
+  const scaleValues = [
+    ...strategy,
+    ...(showBenchmark ? benchmark : []),
+  ].flatMap((point) => (point.value === null ? [] : [Number(point.value)]));
   const dates = new Map(
     [...new Set([...strategy, ...benchmark].map((point) => point.trading_date))]
       .sort()
@@ -115,11 +118,13 @@ export function BenchmarkChart({
     <figure className="researchChart" aria-label={chartLabel}>
       <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
         {traces(strategyCoordinates, "strategyLine")}
-        {traces(benchmarkCoordinates, "benchmarkLine")}
+        {showBenchmark && traces(benchmarkCoordinates, "benchmarkLine")}
       </svg>
       <figcaption>
         <span className="strategyLegend">{firstLabel}</span>
-        <span className="benchmarkLegend">{secondLabel}</span>
+        {showBenchmark && (
+          <span className="benchmarkLegend">{secondLabel}</span>
+        )}
       </figcaption>
       {(!scaleValues.length ||
         scaleValues.some((value) => !Number.isFinite(value))) && (

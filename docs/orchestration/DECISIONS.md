@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 formal benchmark display and shared mobile root fixes — 2026-10-02 19:20 UTC
+
+Reuse native localized checkbox and page-level display state; do not fetch,
+recompute formal metrics, hide exact table records or disable rolling drawdown
+when the equity benchmark is hidden. Preserve preference across page/locale,
+bounded requests and the default visible second series in other callers.
+Existing report only read, never rerun to demonstrate a UI control.
+
+Actual375/533 mobile negative identifies two roots: column header cross-axis
+max-content and long grid-child exact numbers. Shared max-width100% plus monthly
+min-width0/overflow-wrap:anywhere fixes all corresponding callers without
+ellipsis, rounding or new JS/library.14 focused and579 full frontend checks,
+actual Chrome16 scoped DOM cases/settled images and source reviewPASS_SCOPED;
+69-file evidence SHA bf3c3fd3…fc5e4c4 sealed, artifact/erratum reviewPASS_SCOPED. A separate
+browser-version erratum supersedes inheritedChrome153 without editing sealed
+bytes: installed154 verified, exact running-tab version unverified; restricted
+scope/URL denial respected, no workaround or performance/version promotion. Retain old
+fixture failure, source RED and stale screenshots as explicit non-proof.
+Native200/p95/fullWCAG/fullUX-CHART are not promoted. Original/restored5/417/8/4,
+metrics byte-identical; restore only ownedfrontend exact baseline/healthy.
+Coherent milestone push existing draftPR32, exact newCI then next required
+formal-hover/date-linkage work. Full legal forward and genuine lost-record
+requirements remain; no merge/tag/release, OOS or authority modification.
+
 ## v1.2 preserve late native failures and resume independent chart work — 2026-10-02 18:57 UTC
 
 Keep immutable2500ms snapshots and separate6000ms tails. Late matching native

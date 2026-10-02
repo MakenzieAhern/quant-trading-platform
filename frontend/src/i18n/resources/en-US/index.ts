@@ -603,6 +603,7 @@ export const enUS = {
     manifest: "Canonical manifest",
     ruleVersion: "Market-rule version",
     benchmark: "Benchmark",
+    showBenchmark: "Show benchmark",
     strategySeries: "Strategy",
     period: "Research split",
     equity: "Strategy equity",
