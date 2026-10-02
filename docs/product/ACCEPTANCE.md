@@ -8076,3 +8076,26 @@ Compose in [CI run 36954962240](https://github.com/MakenzieAhern/quant-trading-p
 PR #32 remains draft/open. This does not satisfy lawful forward data, genuine
 lost-paper-ledger recovery, independent backup, full U5/U8 browser matrix or
 M4/M5 release acceptance.
+
+## 2026-10-02 02:23 UTC compact-height Chrome accessibility spot check
+
+An owned installed-Chrome tab used a temporary **512×384 CSS-pixel viewport**
+to exercise a short-height layout (a responsive approximation, **not native
+200% browser zoom**). The dark English workbench had document/client widths
+497/497. Its mobile navigation could scroll to Data center and closed with
+focus on `main`. The data center made the historical 2025-12-31 as-of date,
+synthetic 2031 scenario and unaccepted raw-candidate warning distinct, with
+497/497 widths. The historical Markets table was locally scrollable; its
+600000 detail dialog fit within the 384-pixel height and had its own scroll
+area. The guided research draft displayed exact CNY
+123456.789000000000001 and 2011-01-04→2011-06-30; switching EN→ZH kept
+those values and the 497/497 width. English and the default browser viewport
+were restored, and the owned tab was closed.
+
+The Chrome tab's two zoom-key attempts did not change its measured viewport or
+device-pixel ratio, so **native 200% zoom remains NOT VERIFIED**. These
+in-tool images are not durable M5 media. No study, paper session, market update
+or file download was submitted. Read-only Windows disk inventory still showed
+one 2 TB NVMe physical disk; C and D partitions cannot satisfy independent
+physical backup. This is bounded U3/U5/U8 compact-height evidence only, not
+full visual/A11Y/M4/M5, lawful forward data or release acceptance.

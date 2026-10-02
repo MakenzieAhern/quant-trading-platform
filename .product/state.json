@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T02:10:26Z",
+  "updated_at_utc": "2026-10-02T02:23:52Z",
+  "m4_compact_height_chrome_20261002_gate": {
+    "status": "PASS_BOUNDED_RESPONSIVE_APPROXIMATION_NATIVE_ZOOM_NOT_VERIFIED",
+    "proof": "Owned installed-Chrome 512x384 temporary CSS viewport: English workbench and Data center had document/client width 497/497, scrollable navigation reached Data center and returned focus to main. Historical Markets detail fit the short viewport with internal scroll. Existing guided research draft retained exact CNY 123456.789000000000001 and 2011-01-04 to 2011-06-30 across EN/ZH with no page-level overflow. English and default viewport restored; tab closed. See docs/product/ACCEPTANCE.md.",
+    "limits": "Responsive approximation, not native browser 200-percent zoom; shortcut attempts did not change viewport/device-pixel ratio. In-tool screenshots are not durable M5 media. One physical NVMe remains insufficient for independent backup. No job, paper session, provider request, download, merge, tag or release was made. Full visual/A11Y/M4/M5 and U7 forward acceptance remain open."
+  },
   "u4_export_date_scope_20261002_gate": {
     "status": "PASS_BOUNDED_BILINGUAL_DATE_SCOPE_NOT_FULL_U4_M4_M5",
     "proof": "At a saved historical result on the clean 7fa6969 source, actual Chrome 390x844 EN/ZH showed the unfiltered report scope as an ellipsis-to-ellipsis date range. An independent read-only reviewer traced empty and one-sided date filters to the export path and confirmed the backend treats absent bounds as no date filter, not unknown dates. The frontend now labels the full saved interval and each unbounded side explicitly in both languages, including the prepared-save link accessible name. Focused Collections 18/18, full frontend 565/565, ESLint, TypeScript/production build and Prettier passed. Actual Chrome 390x844 EN/ZH displayed the corrected full-interval text with document/client width 375/375. Browser locale and viewport were restored and the owned tab closed; see docs/product/ACCEPTANCE.md.",
