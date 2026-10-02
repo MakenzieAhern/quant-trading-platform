@@ -1,5 +1,65 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 17:56 UTC actual Chrome calendar WebSocket and recovery (bounded U7/M4)
+
+PASS for isolated offline synthetic QA on checkout
+`6ea79097a4545350e06abba062e3bc3685e74d0e` (unchanged reviewed financial
+code `a6d6b63`), not genuine new-market forward or full product acceptance.
+The existing real API/manager/journal/hub/runtime/frontend ran against owned
+`APP_ENV=test`/`quant_test`/tmpfs PostgreSQL, backend18018/frontend18175.
+The external finite harness gates existing fixture inputs and closes only
+owned transport; it is not a shipped provider or financial-event generator.
+
+Actual Chrome received both typed calendar controls. A separate account
+loaded saved events6–1 without a newer-events cue; releasing only sequence7
+over the socket added that cue without Refresh, while the saved page stayed6–1.
+Financial projection fields and the fill announcement stayed unchanged.
+Manual Refresh then exposed both explicitly non-market/non-fill controls.
+ZH/light and EN/dark wording, plus390×844 ZH/dark, were observed.
+
+Automatic reconnect retained byte-identical snapshots. An actual PAUSED backend
+restart retained byte-identical snapshot and full journal; explicit Resume
+preserved the old journal prefix. At sequence518 the single order was ACCEPTED
+with zero fills. The final ordinary fixture session committed one fill while
+all owned sockets were closed. Reconnection's authoritative REST snapshot,
+actual browser reload and locale switch retained STOPPED with523 contiguous
+events,254 market sessions,two calendar records,one fill and cash1223.5.
+All financial projection fields match the previous accepted fixture snapshot.
+No old fill was newly announced. Mobile document client/scroll widths both375;
+only named table regions scrolled locally. This is neither a screen-reader
+speech test nor broad AA/performance/200% acceptance.
+
+[Protocol, auxiliary failures and limits](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-calendar-ws/README.md),
+[runnable saved-artifact verifier](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-calendar-ws/verify-evidence.ps1)
+and [51 per-file hashes](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-calendar-ws/sha256-manifest.json)
+are retained outside Git. Manifest SHA-256:
+`fc1ee7e4d761d186d4c235fdc9b7080a02963a97b88f897b9607e4e6c1d72b36`.
+These are local WSL-host links, not portable GitHub/clone attachments. The
+verifier checks retained artifacts, not a new live browser run. ASGI send trace
+alone is not consumption proof; the control-only DOM cue supplies that proof.
+The brief reconnect warning was not sampled. Deliberate duplicate fill-packet
+delivery, prolonged retry exhaustion, RUNNING crash and power loss were not
+newly tested. EN desktop image omits off-screen controls; matching DOM has them.
+
+Both synthetic accounts terminated; all three owned services are stopped and
+disposable tmpfs data released. QA-origin preferences/viewport restored and
+owned tab closed. Original counts remain5 paper/417 events/8 personal research/
+4 update jobs, services healthy/API+frontend HTTP200/RedisPONG, no original
+restart or data/frozen/research/OOS/provider/authority change. Bilingual guides
+now explain calendar controls and manual log Refresh. No runtime/dependency/
+schema change, merge or release. Previous1065 backend+one optional skip,
+576 frontend and exact036e53b CI remain separately attributed; fresh
+documentation-batch CI is pending. Independent read-only review matched all51
+file sizes/hashes and the manifest hash, ran the verifier, inspected raw traces/
+snapshots/events/DOM and five-file scope: scoped PASS. Historical external PID
+and original-count/service-stop facts are operator observations, not raw outputs
+independently verified by this bundle; the cue screenshot is post-Refresh, and
+the before/after DOM proves the unrefreshed cue.
+Next required independent work is native, production-packaged U4 saved-result
+feedback/performance evidence, not another calendar replay. Full U1–U8/M0–M5,
+lawful after-start feed→plan→constrained processing and genuine pre-loss evidence
+remain incomplete.
+
 ## 2026-10-02 17:20 UTC exact causal-calendar batch CI
 
 [CI37039670325](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37039670325)

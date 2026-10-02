@@ -1,5 +1,35 @@
 # Decisions
 
+## v1.2 prove actual browser recovery without changing finance — 2026-10-02 17:56 UTC
+
+Reuse the real paper API/journal/hub/runtime and frontend in an owned
+`APP_ENV=test`/`quant_test` tmpfs stack. Keep finite input pacing and
+transport fault injection in an external guarded harness, never a public
+provider/API or mocked browser financial payload. PAUSED process restart is
+the unchanged-ledger test; RUNNING crash intentionally has different lifecycle
+semantics and must not be mislabeled.
+
+Separate transport trace from actual UI consumption: a control-only6→7 event
+changed the newer-saved-log cue while the rendered6–1 page and financial state
+remained unchanged. Offline final-session fill then recovered through REST
+exactly once, matching the accepted fixture's financial projection. Scope the
+result to synthetic QA; retain uncaptured transient warning, send-before-await
+trace, screenshot/off-screen, retry/duplicate-packet and auxiliary failure
+limits. Saved-artifact verification is repeatability evidence, not a rerun.
+
+Keep51 external per-file hashes and the canonical manifest hash in the product
+checkpoint; local WSL-host links are not portable GitHub attachments. Stop only
+owned test services after both synthetic accounts terminate. Original ledger/
+frozen/OOS/source authorities stay unchanged. Guide additions explain calendar
+knowledge, UTC versus trading date,2030 synthetic dates and manual log Refresh.
+No new dependency, migration, financial code, merge or release.
+
+With bounded calendar transport/restart proof complete, the next independent
+required M4 slice is production-packaged saved-result click feedback: first
+verify a bounded native-timing method, then measure cold-document samples.
+Do not report missing samples as0ms, clear user browser privacy/security, rerun
+research or replace the full U1–U8/M0–M5 objective with this QA subset.
+
 ## v1.2 calendar batch exact CI, no product release — 2026-10-02 17:20 UTC
 
 Normal milestone push `036e53b` passed backend/frontend/Compose in

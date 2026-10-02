@@ -59,6 +59,8 @@ In [Simulated accounts](http://localhost:5173/paper), the creation form defaults
 
 On an account detail page, choose “View saved events” below Fills to inspect its persisted event log. It shows at most 50 records at once, newest first; “Older” and “Newer” page through history. “Refresh” returns to the latest saved records. This log does not update live on its own, and it does not recreate missing records.
 
+If a “Calendar control” record appears, it records the trading dates known to that account at that point, not new market data, an order or a fill. Its UTC record time can differ from the replay's trading date; synthetic 2030 dates are not real future observations. “Newer saved events are available” means the journal has new records; choose “Refresh” to read them.
+
 On a completed A-share historical research result, “Review these settings in a separate historical paper account” opens a new-account form with capital, strategy, universe, cost and risk settings copied for review. It does not copy the study's returns or rebalance preview, create or start an account, or submit an order. Each historical replay is limited to 93 calendar days; a longer study leaves the new start date blank for you to choose explicitly. The new account has its own data snapshot and ledger, with a rebalance plan only when conditions allow. Create and start it only after reviewing the settings.
 
 When reading this account's own historical rebalance plan, check the completed trading day, account snapshot date, next accepted session, plan-time cash, estimated cash requirement and risk decisions, and expand “Data and configuration provenance” when needed. The latest balance above is not the plan-time balance, and a historical plan is not today's trading advice.
