@@ -8055,3 +8055,24 @@ native 200% zoom, screen-reader speech, independent novice testing, complete
 M4/M5 or release acceptance. Exact pushed code head `73c9353` passed
 [CI run 36954165988](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36954165988)
 for backend, frontend and Compose; PR #32 remains draft/open.
+
+## 2026-10-02 02:19 UTC local execution and U5 detail-link error handling
+
+Docker Compose's original PostgreSQL, Redis and backend containers were healthy;
+the frontend container was running. The frontend and `/api/health` returned
+HTTP 200, and Redis returned `PONG`. This confirms the local program is usable
+without hosted CI, not that the v1.2 release gates are complete.
+
+An independent read-only review found that a direct market-detail link discarded
+401/403, timeout and offline read errors into the same “link could not be
+opened” text. The detail read now retains the error for the existing bilingual
+typed explanation and exposes a user-initiated retry. It does not auto-retry,
+fetch new market data or create a job. The deterministic denial test checks
+English, Chinese, no language-triggered repeat request and manual recovery.
+Focused market tests passed **33/33**, complete frontend tests **566/566**,
+ESLint, production build and changed-file Prettier passed. Pushed code head
+`25a95e1f3f28c0ee169956b43e47f8a4ee9ba9b9` passed backend, frontend and
+Compose in [CI run 36954962240](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36954962240).
+PR #32 remains draft/open. This does not satisfy lawful forward data, genuine
+lost-paper-ledger recovery, independent backup, full U5/U8 browser matrix or
+M4/M5 release acceptance.

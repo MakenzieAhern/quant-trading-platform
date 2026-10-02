@@ -2002,13 +2002,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "73c9353c0904cd1bc602892e0f63f76ddd78f06c",
+      "last_verified_head": "25a95e1f3f28c0ee169956b43e47f8a4ee9ba9b9",
       "state": "DRAFT",
-      "ci_run": 36954165988,
+      "ci_run": 36954962240,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Earlier U3 wizard, saved paper-event pager, responsive routes, historical chart and synthetic demo paths have bounded browser evidence. At code head 73c9353, installed Chrome EN/ZH 390x844 verified explicit full-interval report scope and no page overflow; backend/frontend/Compose CI 36954165988 passed. Native 200% zoom, screen-reader speech, CSV file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
+      "browser_gate": "Earlier U3 wizard, saved paper-event pager, responsive routes, historical chart and synthetic demo paths have bounded browser evidence. At code head 73c9353, installed Chrome EN/ZH 390x844 verified explicit full-interval report scope and no page overflow. At code head 25a95e1, U5 direct-detail denial/locale/manual-retry regression and frontend 566 tests passed; backend/frontend/Compose CI 36954962240 passed. Current-head browser fault injection is not claimed. Native 200% zoom, screen-reader speech, CSV file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
