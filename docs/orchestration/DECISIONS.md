@@ -1,5 +1,31 @@
 # Decisions
 
+## v1.2 append-only calendar and shared sticky-focus root cause — 2026-10-02 15:37 UTC
+
+Keep current/forward calendar acceptance at the application/source-authority
+boundary. The engine may append an immutable accepted session prefix, but may
+not revise old date/open/source facts, move precommitted execution dates or
+create past orders after discovering a later date. Reuse its next-session map in
+paper runtime. Future durable forward work must journal the extension timeline
+and replay it at the original application time. This tested offline foundation
+is not source authorization, forward provider or U7 acceptance.
+
+Actual390 Chrome proved that native reverse Tab can hide a whole date button
+behind a responsive sticky header. Fix once at the document scroll container:
+native CSS scroll-padding with measured header height/ResizeObserver, not
+hardcoded68px, per-date patches or a focus handler. Remove duplicated header
+margins from existing pagination/deep-link code. Actual same-date390, eleven
+1024/EN targets, native modal paging/Escape and stored-task direct-link recheck
+passed; independent review found no critical regression. Existing financial
+state, original services and frozen/OOS assets were untouched.
+
+Consolidate real M5 captures rather than rerecord every passing flow. Mark absent
+old loaded detail/run/comparison/account as NOT_CAPTURED; sampled lifecycle is
+not continuous, synthetic jobs are not market evidence, current-baseline restore
+does not recover missing ledgers. The bilingual guide now distinguishes dated
+plan-time cash from the latest account balance. No new mandatory physical-backup
+gate, strategy run, authority promotion, merge or release is inferred.
+
 ## v1.2 reuse verified gates; hosted CI recovered — 2026-10-02 14:40 UTC
 
 Exact pushed `b17650d` CI37018861446 passed backend/frontend/Compose. Local

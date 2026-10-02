@@ -1,7 +1,27 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T14:55:45Z",
+  "updated_at_utc": "2026-10-02T15:37:00Z",
+  "u7_calendar_extension_20261003_gate": {
+    "status": "PASS_OFFLINE_CALENDAR_FOUNDATION_NOT_FORWARD",
+    "source_head": "f78f7822bdd56816407fea74673d6d05fb3cc7e8",
+    "proof": "Shared engine accepts only same-market immutable full-session-prefix calendar extensions; old dates/is_open/source versions cannot change. Paper runtime delegates next-session lookup and rejects extension after stop. Retry is idempotent; existing intents keep execution dates; a date with no accepted successor never gains a retroactive order. Red six cases then87 focused/1046 full backend passed, one optional archive skip; Ruff/check+format and mypy144files PASS on disposable quant_test/tmpfs PG, stopped afterward.",
+    "limits": "No forward provider/API mode, source-rights/current-authority promotion, durable extension timeline or after-start market receipt/plan/execution. Historical result serialization, frozen research/OOS and original database were not changed; future adapter must replay extensions at their actual journaled application time."
+  },
+  "m4_sticky_focus_20261003_gate": {
+    "status": "PASS_SCOPED_ACTUAL_CHROME_SHARED_ROOT_CAUSE_FIX",
+    "source_head": "bc7390cd9f4aa4b43c4442ed35591b0ef927812a",
+    "frontend_image": "sha256:e328748b00618e275d1a139d1d13f3a0cffb4aac53e9e1e063379c1397c90d7c",
+    "proof": "Actual390 Chrome reverseTab dateMay26 was completely covered (top68.781/bottom108.781/header109). Shared root scroll-padding tracks measured sticky-header border-box via native ResizeObserver; after same target126.781-166.781/header109 and six further targets visible.1024 EN header113/root121 and11targets minimumtop120.656 including outline clear. Removed duplicate header margins;390 dialog101-119 pager/TabPrevious/Enter51-100/Escape and stored candidate task direct link remained correct. App regression red/green;80 focused,569 full frontend/lint/tsc-build/Prettier PASS. Independent diff/image/DOM/geometry review PASS. ZH/dark/System and normal viewport restored.",
+    "evidence": "product-evidence/v1.2/m4/20261003-sticky-focus/README.md",
+    "geometry_sha256": "1fa8c161e6352fba4a5dceea6e0dc5fbf4b2d73b2029d9b2ffeb6ce16dafec7a",
+    "limits": "Production image replacement/Chrome proof belong to owned restored18173; backend remains3184281. Original containers/config not restarted, frontend5173/API8000 HTTP200, RedisPONG/PGaccepting. Original Vite5173 bind-mounts shared source and may hot-reload edits; no immutable original-UI claim. No provider/financial write, system-reduced-motion true branch, full AA/performance/forward or release claim. Vite501.05kB entry warning retained, not suppressed."
+  },
+  "m5_six_flow_index_20261003_gate": {
+    "status": "CONSOLIDATED_SCOPED_MEDIA_NOT_FULL_M5",
+    "proof": "DEMO.md links16 existing real files across home/orientation/guide/strategy/run/comparison/paper; root confirmed every target exists. Marks missing old loaded strategy/run detail/account as NOT_CAPTURED, and comparison has no equivalent v1.1 view. Loading/entry screenshots are not matched before details; three-study after mixes historical/synthetic and is not controlled; sampled40frame1fps lifecycle is not continuous. Bilingual guides explain account-native plan dates/provenance and plan-time versus latest cash. Independent physical backup remains additional assurance, not a newly invented gate.",
+    "limits": "Different historical builds/captures are explicitly attributed; no fabricated old media, real novice/forward or full delivery/release PASS. Remaining before gaps need genuine or explicitly labeled reconstructed baseline proof."
+  },
   "u4_saved_result_keyboard_date_20261002_gate": {
     "status": "PASS_SCOPED_RESTORED_HISTORICAL_DATE_TRADE_HOLDING_RETURN_FLOW",
     "frontend_head": "b60ac870ae6222a03ce0591a0802161a57ea46ed",
@@ -1605,7 +1625,7 @@
     "last_readonly_check": "2026-10-02: GitHub Actions run37018861446 completed SUCCESS on exact pushed b17650deb8d4c1321c05d503b0d05675f34adf26; backend/frontend/Compose succeeded. PR32 remains OPEN DRAFT. Historical billing block is not the present CI state; no billing/limit setting changed. Subsequent checkpoint edits are not attributed to this run.",
     "policy": "The September Actions admission hold is resolved by an actual successful October run. Normal feature-branch pushes and exact-head CI checks may proceed; this does not authorize merge or release. Reverify CI against the latest pushed head at the release gate. No payment, limit change or gate bypass."
   },
-  "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
+  "milestone": "M3_FORWARD_FOUNDATION_AND_M4_QUALITY",
   "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
@@ -1623,7 +1643,7 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-02 13:47UTC root sole repository writer at b60ac87, no Git lock or WSL repository-writing process observed; agents are read-only or own only external restore-package files and scratch runtime. Four original Compose services healthy, localhost5173/API8000 HTTP200. Original data remain read-only in this work unit. Media and restore projects have separate networks and tmpfs PG/Redis, no original volumes.",
+    "latest_verification": "2026-10-02 15:34UTC root sole repository writer, current bc7390c after scoped calendar/focus commits; no Git lock or competing repository/test writer observed. Agents read-only. Original four containers retain same IDs and remain running/healthy; media/restore scratch DB/backends unchanged. Only restored18173 frontend rebuilt/replaced for focus QA. Disposable qtp-v12-oct3-calendar-test PG stopped after1046pass/one optional skip; no original data/provider/financial writes.",
     "repository_writer": "root product controller",
     "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
     "queue_writer": "Root owns only historical replay in qtp-v12-3184281-media (both owned accounts now STOPPED); restore agent owns qtp-v12-3184281-restore packaging and GET-only reads, no financial tasks. No original task submission, provider retrieval or formal/OOS job.",
@@ -2200,8 +2220,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "b17650d push/exact CI and independently reviewed restored saved-result keyboard/date→trades/holdings→clear/return flow are DONE. Select a genuinely uncovered required user-flow/AA/visual/representative feedback case from the current matrix rather than repeat successful gates, download hooks or route counts. Actual lawful forward chain still requires source rights/current authority; preserve genuine missing-ledger fact and all U1-U8/M0-M5 requirements. No merge/release until required gates pass.",
-  "local_next_command": "Checkpoint JSON/diff and independent review PASS; save this doc-only milestone in a coherent local commit, then read ACCEPTANCE current matrix before selecting the next uncovered case. Keep CI attribution exact b17650d until any later pushed head actually passes; no tiny-edit push required. Original5173/8000 and scratch restore18173/18016/media15173/18012 remain owned/running; no financial/provider/original-data submission.",
+  "next_task": "Calendar offline foundation and shared sticky-focus defect are closed with tests/actual Chrome/independent review. Save/push this coherent milestone to existing draft PR32 and check its exact head CI; do not reuse b17650d CI for newer code. Then address genuine missing before-flow media via explicit read-only baseline reconstruction or an uncovered required integration case, not repeat passing keyboard/download probes. Actual lawful forward chain still requires source rights/current authority and durable adapter; preserve genuine missing-ledger fact and all U1-U8/M0-M5 requirements. No merge/release until required gates pass.",
+  "local_next_command": "Validate JSON/diff, commit docs checkpoint, normal meaningful-batch push current branch and wait bounded for exact head CI. Original5173/8000 and scratch restore18173/18016/media15173/18012 remain owned/running; restore frontend now bc7390c image e328748, backend still3184281. Do not restart original data/queues, change authority/frozen methodology or run formal/OOS.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

@@ -1,5 +1,49 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 15:37 UTC calendar foundation and actual sticky-focus closure
+
+M3 offline foundation `f78f782` adds append-only **already accepted** calendar
+extension to the shared financial engine, not a forward feed. Same market and
+complete immutable date/open/source prefix are required. Existing execution dates
+remain precommitted; a past target without an accepted next date never gains a
+retroactive order. Paper next-session lookup reuses the engine; stopped runtime
+cannot extend. Six red cases then87 focused and1046 full backend tests passed;
+one optional read-only archive test skipped because the archive was not mounted.
+Ruff/check+format and mypy144files passed. Disposable tmpfs `quant_test` migrated
+through20260924_0016 and was stopped afterward. No original DB or frozen/OOS
+execution. A future durable adapter must journal/replay when extensions applied,
+not reconstruct old intentions against the final future-expanded calendar.
+
+M4 actual Chrome reproduced a real mobile defect: reverse Tab in the saved
+historical chart placed May26 at y68.781–108.781 behind the109px sticky header.
+`bc7390c` measures the actual header with one native ResizeObserver and gives the
+document native scroll-padding, without any focusin trap or per-Tab scrolling.
+After the same390×844/ZH/dark path, May26 is y126.781–166.781; six further targets
+remain visible. At1024×768/EN, header113/root121 and eleven targets stay clear,
+minimumtop120.656 including focus outline. Existing390 raw-history119-record
+modal Next/terminal Previous/Enter/Escape and stored-task direct link remain
+correct after removing duplicate per-target header margins. Original preferences
+and normal viewport restored; no acquisition, job/order or original-data write.
+
+One App observer/cleanup regression failed before implementation;80 focused and
+569 full frontend cases, ESLint, TypeScript production build and changed-file
+Prettier passed. The501.05kB entry-chunk warning remains visible. Independent
+read-only diff/image/active-DOM/geometry review PASS. Only owned restored frontend
+18173 was replaced by image `e328748b…90d7c`; backend remains3184281. Original
+containers/config were not restarted;5173/8000 HTTP200, RedisPONG/PGaccepting.
+Original Vite bind-mounts shared source and may hot-reload; it is not an immutable
+old UI. [Actual before/after proof](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-sticky-focus/README.md)
+has geometry SHA1fa8c161…fec7a. This closes this shared focus defect, not full AA,
+system-reduced-motion true branch, current-rule authority or real forward mode.
+
+M5 [six-flow media index](DEMO.md#six-flow-media-index-2026-10-03-checkpoint)
+now links16 verified existing real artifacts with capture/build/format limits and
+explicit `NOT_CAPTURED` before gaps. Both guides clarify account-native plan-time
+cash versus latest balance. Missing old media, lawful after-start forward chain,
+genuine lost-ledger evidence and remaining required consolidated M4/M5 proof are
+not silently marked PASS. Existing b17650d CI does not cover these later commits;
+the meaningful batch requires its own exact-head run before claiming CI PASS.
+
 ## 2026-10-02 14:40 UTC CI recovery and scoped keyboard/account-plan closure
 
 [CI37018861446](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37018861446)
