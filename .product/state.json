@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T02:05:49Z",
+  "updated_at_utc": "2026-10-02T02:10:26Z",
   "u4_export_date_scope_20261002_gate": {
     "status": "PASS_BOUNDED_BILINGUAL_DATE_SCOPE_NOT_FULL_U4_M4_M5",
     "proof": "At a saved historical result on the clean 7fa6969 source, actual Chrome 390x844 EN/ZH showed the unfiltered report scope as an ellipsis-to-ellipsis date range. An independent read-only reviewer traced empty and one-sided date filters to the export path and confirmed the backend treats absent bounds as no date filter, not unknown dates. The frontend now labels the full saved interval and each unbounded side explicitly in both languages, including the prepared-save link accessible name. Focused Collections 18/18, full frontend 565/565, ESLint, TypeScript/production build and Prettier passed. Actual Chrome 390x844 EN/ZH displayed the corrected full-interval text with document/client width 375/375. Browser locale and viewport were restored and the owned tab closed; see docs/product/ACCEPTANCE.md.",
-    "limits": "Presentation-only fix. The actual download file landing, native 200-percent zoom, screen-reader speech, independent novice review, full U4/M4/M5 and v1.2 release remain unverified. No report download, experiment, paper session, provider job, original financial-data write, frozen research/OOS change, merge, tag or release occurred. New code head CI remains to be checked after commit/push."
+    "limits": "Presentation-only fix. Code head 73c9353 passed hosted backend/frontend/Compose in run 36954165988. The actual download file landing, native 200-percent zoom, screen-reader speech, independent novice review, full U4/M4/M5 and v1.2 release remain unverified. No report download, experiment, paper session, provider job, original financial-data write, frozen research/OOS change, merge, tag or release occurred."
   },
   "u7_terminal_failure_restart_20261002_gate": {
     "status": "PASS_BOUNDED_ISOLATED_RESTART_REGRESSION_NOT_FULL_U7",
@@ -2002,13 +2002,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "2e59daf1d2d54e6ab51869e3fb4c4360b7cb8708",
+      "last_verified_head": "73c9353c0904cd1bc602892e0f63f76ddd78f06c",
       "state": "DRAFT",
-      "ci_run": 36924929586,
+      "ci_run": 36954165988,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Earlier U3 wizard, saved paper-event pager, responsive routes, historical chart and synthetic demo paths have bounded browser evidence. Current-head installed Chrome EN/dark at 943 CSS px showed six main routes without document overflow and one strategy dialog Escape/focus-return pass. Exact code head 2e59daf passed backend/frontend/Compose CI. Native 200% zoom, screen-reader speech, CSV file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
+      "browser_gate": "Earlier U3 wizard, saved paper-event pager, responsive routes, historical chart and synthetic demo paths have bounded browser evidence. At code head 73c9353, installed Chrome EN/ZH 390x844 verified explicit full-interval report scope and no page overflow; backend/frontend/Compose CI 36954165988 passed. Native 200% zoom, screen-reader speech, CSV file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2023,7 +2023,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. The post-failure fresh-manager paper regression is bounded and does not prove a genuine OS restart; keep PR32 open/draft and verify exact new-head CI after this checkpoint. Continue independent M4/M5 work when an observable route is available, especially screen-reader speech, durable current-head media, independent novice review and genuine post-change unattended login. The next completed SSE/SZSE session is scheduled October 8, not yet a receipt. Lawful forward-feed rights/current execution authorities, genuine pre-loss paper ledgers and independent physical backup remain release gates; no merge, tag or release.",
+  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. The post-failure fresh-manager paper regression is bounded and does not prove a genuine OS restart; PR32 code head 73c9353 passed backend/frontend/Compose CI and remains open/draft. Continue independent M4/M5 work when an observable route is available, especially screen-reader speech, durable current-head media, independent novice review and genuine post-change unattended login. The next completed SSE/SZSE session is scheduled October 8, not yet a receipt. Lawful forward-feed rights/current execution authorities, genuine pre-loss paper ledgers and independent physical backup remain release gates; no merge, tag or release.",
   "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify branch/head, PR32 exact-head CI, original docker compose ps and localhost health. Do not repeat browser zoom shortcuts or VSS permission failures without a new method or approved elevation. At the next genuine Windows login verify terminal-free Docker and all four Compose services; do not induce a reboot merely to claim acceptance.",
   "next_command": "Full U1-U8/M0-M5 objective remains incomplete. Continue safe browser, accessibility, performance, delivery and exact-head CI evidence without bypassing a browser URL-confidence stop. Ask once for any still-missing lawful forward-feed rights, genuine pre-loss ledger evidence and an independent physical backup destination; do not infer approval from public readability or fabricate lost records. Keep PR32 draft/open; no merge, tag or release until all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

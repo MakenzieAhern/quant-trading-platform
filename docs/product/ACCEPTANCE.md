@@ -8052,4 +8052,6 @@ paper account, market update or financial-database write was made.
 
 This is bounded U4/U8/M4 clarity progress, not browser file-landing proof,
 native 200% zoom, screen-reader speech, independent novice testing, complete
-M4/M5 or release acceptance. The new code head still requires exact-head CI.
+M4/M5 or release acceptance. Exact pushed code head `73c9353` passed
+[CI run 36954165988](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36954165988)
+for backend, frontend and Compose; PR #32 remains draft/open.
