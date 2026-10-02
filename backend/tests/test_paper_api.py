@@ -268,6 +268,38 @@ async def test_event_history_pages_preserve_order_transitions(client: AsyncClien
         assert (await client.get(path, params=params)).status_code == 422
 
 
+async def test_fill_time_cancellation_reason_survives_saved_account_reads(
+    client: AsyncClient,
+) -> None:
+    created = await client.post("/api/paper-trading/sessions", json=request_body())
+    session_id = UUID(created.json()["session_id"])
+    timestamp = datetime.now(UTC)
+    order = {
+        "order_id": str(uuid4()),
+        "strategy_id": "gap-check",
+        "symbol": "AAPL",
+        "side": "BUY",
+        "order_type": "MARKET",
+        "quantity": "10",
+        "price": None,
+        "status": "CANCELLED",
+        "created_at": timestamp.isoformat(),
+        "cancellation_reason_code": "INSUFFICIENT_BUYING_POWER",
+    }
+    async with SessionFactory() as db:
+        await SQLAlchemyPaperRepository(db).append_events(
+            session_id, (("order.updated", timestamp, order),)
+        )
+
+    path = f"/api/paper-trading/sessions/{session_id}"
+    assert (await client.get(f"{path}/snapshot")).json()["orders"][0][
+        "cancellation_reason_code"
+    ] == "INSUFFICIENT_BUYING_POWER"
+    assert (await client.get(f"{path}/events")).json()[-1]["payload"][
+        "cancellation_reason_code"
+    ] == "INSUFFICIENT_BUYING_POWER"
+
+
 async def test_create_receipt_finds_committed_session_after_request_validation_fails(
     client: AsyncClient,
 ) -> None:

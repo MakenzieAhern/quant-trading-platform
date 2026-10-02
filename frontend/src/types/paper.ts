@@ -74,6 +74,7 @@ export interface PaperOrder {
   price: string | null;
   status: string;
   created_at: string;
+  cancellation_reason_code?: string;
 }
 
 export interface PaperFill {

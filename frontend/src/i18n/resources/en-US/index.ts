@@ -476,6 +476,10 @@ export const enUS = {
         CANCELLED: "Cancelled",
         REJECTED: "Rejected",
       },
+      fillCancellationReasons: {
+        INSUFFICIENT_BUYING_POWER:
+          "Actual fill price and fees exceed available cash",
+      },
       riskReasons: {
         APPROVED: "Risk approved",
         INVALID_QUANTITY: "Invalid quantity",

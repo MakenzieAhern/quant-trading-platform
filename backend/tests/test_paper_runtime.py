@@ -536,10 +536,13 @@ async def test_gap_up_buy_is_cancelled_before_cash_can_go_negative() -> None:
     assert runtime.order_manager.active_reservation_count == 0
     assert runtime.portfolio.cash == delta.snapshot.cash == Decimal("2000")
     assert runtime.portfolio.positions == ()
+    assert any(decision.approved for decision in runtime.order_manager.decisions)
+    cancelled_payload = PaperTradingManager._order(delta.orders[0])
+    cancelled_payload["cancellation_reason_code"] = "INSUFFICIENT_BUYING_POWER"
     assert (
         "order.updated",
         gap.timestamp,
-        PaperTradingManager._order(delta.orders[0]),
+        cancelled_payload,
     ) in PaperTradingManager._serialize_delta(delta)
 
 

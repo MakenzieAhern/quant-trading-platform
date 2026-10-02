@@ -463,9 +463,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           shortId(item.order_id),
           `${t(`detail.directions.${item.side}`, { defaultValue: item.side })} / ${t(`detail.orderTypes.${item.order_type}`, { defaultValue: item.order_type })}`,
           item.quantity,
-          t(`detail.orderStatuses.${item.status}`, {
-            defaultValue: item.status,
-          }),
+          `${t(`detail.orderStatuses.${item.status}`, { defaultValue: item.status })}${item.cancellation_reason_code ? ` · ${t(`detail.fillCancellationReasons.${item.cancellation_reason_code}`, { defaultValue: item.cancellation_reason_code })}` : ""}`,
           formatUtc(item.created_at),
         ])}
       />
@@ -583,7 +581,7 @@ function PaperEventJournal({
     if (event.type === "risk.decision")
       return `${payload.approved ? t("detail.approved") : t("detail.riskRejected")} · ${t(`detail.riskReasons.${String(payload.reason_code)}`, { defaultValue: String(payload.reason_code) })}`;
     if (event.type === "order.updated")
-      return `${shortId(String(payload.order_id))} · ${t(`detail.orderStatuses.${String(payload.status)}`, { defaultValue: String(payload.status) })} · ${String(payload.symbol)}`;
+      return `${shortId(String(payload.order_id))} · ${t(`detail.orderStatuses.${String(payload.status)}`, { defaultValue: String(payload.status) })} · ${String(payload.symbol)}${payload.cancellation_reason_code ? ` · ${t(`detail.fillCancellationReasons.${String(payload.cancellation_reason_code)}`, { defaultValue: String(payload.cancellation_reason_code) })}` : ""}`;
     if (event.type === "fill.created")
       return `${shortId(String(payload.order_id))} · ${String(payload.quantity)} ${String(payload.symbol)} @ ${String(payload.price)}`;
     return t("detail.eventEquity", { equity: String(payload.equity) });

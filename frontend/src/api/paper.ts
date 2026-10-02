@@ -183,6 +183,13 @@ const order = (value: unknown): PaperOrder => {
     price: item.price === null ? null : decimal(item.price),
     status: requiredString(item.status),
     created_at: requiredString(item.created_at),
+    ...(item.cancellation_reason_code == null
+      ? {}
+      : {
+          cancellation_reason_code: requiredString(
+            item.cancellation_reason_code,
+          ),
+        }),
   };
 };
 

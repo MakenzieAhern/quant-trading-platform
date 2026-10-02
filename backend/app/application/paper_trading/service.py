@@ -741,11 +741,13 @@ class PaperTradingManager:
             for item in delta.orders
             if item.status in {OrderStatus.FILLED, OrderStatus.CANCELLED}
         }
-        events.extend(
-            ("order.updated", delta.bar.timestamp, cls._order(item))
-            for item in delta.orders
-            if item.id in completed_order_ids
-        )
+        for item in delta.orders:
+            if item.id not in completed_order_ids:
+                continue
+            payload = cls._order(item)
+            if item.status is OrderStatus.CANCELLED:
+                payload["cancellation_reason_code"] = "INSUFFICIENT_BUYING_POWER"
+            events.append(("order.updated", delta.bar.timestamp, payload))
         events.extend(("fill.created", item.timestamp, cls._fill(item)) for item in delta.fills)
         events.extend(
             ("signal.created", item.timestamp, cls._signal(item)) for item in delta.signals

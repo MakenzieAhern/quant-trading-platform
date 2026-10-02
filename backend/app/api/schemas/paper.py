@@ -156,6 +156,9 @@ class PaperOrderResponse(BaseModel):
     price: str | None
     status: str
     created_at: datetime
+    cancellation_reason_code: str | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
 
 
 class PositionPayload(BaseModel):

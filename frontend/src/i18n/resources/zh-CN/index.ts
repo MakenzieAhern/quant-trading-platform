@@ -447,6 +447,9 @@ export const zhCN = {
         CANCELLED: "已取消",
         REJECTED: "已拒绝",
       },
+      fillCancellationReasons: {
+        INSUFFICIENT_BUYING_POWER: "实际成交价及费用超出可用资金",
+      },
       riskReasons: {
         APPROVED: "风控通过",
         INVALID_QUANTITY: "数量无效",

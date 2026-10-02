@@ -114,6 +114,17 @@ describe("paper trading pages", () => {
             String(input).includes("/events?")
               ? [
                   {
+                    sequence: 11,
+                    type: "order.updated",
+                    occurred_at: "2026-09-06T02:03:00Z",
+                    payload: {
+                      ...order,
+                      order_id: "d35b2e06-6946-48e5-8f5f-f3bf22fa91d1",
+                      status: "CANCELLED",
+                      cancellation_reason_code: "INSUFFICIENT_BUYING_POWER",
+                    },
+                  },
+                  {
                     sequence: 10,
                     type: "order.updated",
                     occurred_at: "2026-09-06T02:02:00Z",
@@ -150,7 +161,14 @@ describe("paper trading pages", () => {
             String(url).includes(`/sessions/${PAPER_ID}/events?limit=51`),
           ),
         ).toBe(true);
-        expect(within(table).getAllByRole("row")).toHaveLength(3);
+        expect(within(table).getAllByRole("row")).toHaveLength(4);
+        expect(
+          within(table).getByText(
+            language === "zh-CN"
+              ? /实际成交价及费用超出可用资金/
+              : /Actual fill price and fees exceed available cash/,
+          ),
+        ).toBeInTheDocument();
         expect(
           within(table).getByRole("rowheader", { name: "10" }),
         ).toBeInTheDocument();

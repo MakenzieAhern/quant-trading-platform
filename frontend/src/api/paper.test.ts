@@ -24,6 +24,20 @@ describe("paper API contracts", () => {
 
   it("preserves exact Decimal strings in authoritative snapshots", async () => {
     const snapshot = paperSnapshot("STOPPED");
+    snapshot.orders = [
+      {
+        order_id: "966db07d-e61f-4ca8-aad0-e5774a63fc09",
+        strategy_id: "gap-check",
+        symbol: "AAPL",
+        side: "BUY",
+        order_type: "MARKET",
+        quantity: "10",
+        price: null,
+        status: "CANCELLED",
+        created_at: "2024-01-09T00:00:00Z",
+        cancellation_reason_code: "INSUFFICIENT_BUYING_POWER",
+      },
+    ];
     snapshot.latest_portfolio = {
       timestamp: "2024-01-09T00:00:00Z",
       cash: "98160.852500000000000001",
@@ -40,6 +54,9 @@ describe("paper API contracts", () => {
     const result = await paperApi.snapshot(PAPER_ID);
     expect(result.latest_portfolio?.equity).toBe("100012.252500000000000001");
     expect(result.latest_portfolio?.realized_pnl).toBe("0.000000000000000001");
+    expect(result.orders[0]?.cancellation_reason_code).toBe(
+      "INSUFFICIENT_BUYING_POWER",
+    );
   });
 
   it.each([
