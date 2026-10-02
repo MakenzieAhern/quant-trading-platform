@@ -7934,3 +7934,43 @@ controls. Original Compose PostgreSQL, Redis and backend were healthy; frontend
 and `/api/health` returned HTTP 200. This is bounded `UX-ERROR` progress, not
 full `U8`, accessibility, M4/M5, independent novice or release acceptance. No
 paper/account/source/frozen dataset/OOS write, merge, tag or release occurred.
+
+## 2026-10-02 01:30 UTC actual-browser render-failure and manual recovery
+
+At clean PR #32 head `e1f61eb5964c7bd409a27f17f4de5e8ff5ff4e97`,
+the current production frontend was built on an isolated localhost:5175 origin.
+A temporary Python standard-library HTTP server returned 503 only for the
+`ExperimentDetailPage-*.js` lazy chunk, forwarded **GET only** `/api/` requests
+to the original loopback API, and otherwise served the built assets. The
+GET-only helper retained outside Git at
+`/mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261002-render-fault-server.py` had
+SHA-256 `f73f7bcad85a522716eb4dba51e004caa3a7295ee83425ec03dd4ff4263ceb6c`.
+Run it with the built `frontend/dist` directory and port `5175`; pass `allow`
+as a third argument to remove the injected chunk failure. It did not implement
+POST, PUT, PATCH or DELETE. The original localhost:5173
+frontend and 8000 API were not stopped or reconfigured.
+
+An owned in-app Chromium tab opened a saved historical result. With the chunk
+blocked, it displayed the Chinese `本页显示已中断` and English `This page stopped
+displaying` alert on separate locale passes. The alert had task and simulated
+account links with `target=_blank` and `rel=noopener noreferrer`, plus a same-URL
+manual reload. The English fault page had `lang=en-US` and `role=alert` in the
+DOM. The temporary same-origin task page read the eight saved research tasks;
+the account page read five saved sessions. After the chunk was allowed, clicking
+the fault page's reload link restored the same saved historical result, including
++4.67% total return, -2.48% drawdown, CNY 96.05 cost, -8.83% CSI300 return and
+its inspected-period warning. No result or account creation was submitted.
+
+Two harness errors were corrected before counting recovery: the first scratch
+port build used the original API origin and showed a CORS-driven service error,
+then the first task-link attempt found that the test server lacked an SPA
+`/tasks` fallback. Rebuilding only ignored `frontend/dist` for the scratch
+origin and adding GET-only API forwarding plus `/tasks`/`/paper` fallbacks
+resolved both. The default build was restored afterward; all owned scratch tabs
+and the temporary server were closed. Original database counts were unchanged
+at research jobs/paper sessions/paper events/update jobs **8/5/417/4**, the
+original frontend and `/api/health` returned HTTP 200, and no application
+source file changed during this browser test. This verifies the current-head
+browser render-fault recovery path, **not**
+the cause of the earlier hot-update blank page, all runtime errors, native
+screen-reader speech, full `UX-ERROR`/M4/M5, lawful forward data or release.
