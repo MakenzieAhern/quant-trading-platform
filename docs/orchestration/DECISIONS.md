@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 reuse verified gates; hosted CI recovered — 2026-10-02 14:40 UTC
+
+Exact pushed `b17650d` CI37018861446 passed backend/frontend/Compose. Local
+execution remains independent of hosted CI; the original services and HTTP200
+were rechecked without restart or data writes. Record completed push/CI rather
+than repeatedly scheduling it. Keep historical native200%, CSV/JSON downloads
+and Sep26 production Event Timing as scoped passes, not never-run.
+
+Current market-modal terminal paging/Escape and existing STOPPED historical
+account-native EN/ZH plan checks are bounded passes. BODY at native Tab boundaries
+does not prove background focus escape; the supported DOM scope cannot expose
+document.hasFocus(), so do not add a speculative custom trap. The new CSV media
+transfer timeout is an unverified current observation, not an inferred app defect
+or a reason to erase older successful downloads. Preserve genuine forward,
+lost-ledger and remaining relevant M4/M5 requirements; no merge/release.
+
 ## v1.2 completion gates follow the accepted product objective — 2026-10-02
 
 Rechecked the original U1–U8/M0–M5 mandate against the accumulated checkpoint.

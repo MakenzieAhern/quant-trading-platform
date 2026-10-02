@@ -1,7 +1,41 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T14:08:00Z",
+  "updated_at_utc": "2026-10-02T14:55:45Z",
+  "u4_saved_result_keyboard_date_20261002_gate": {
+    "status": "PASS_SCOPED_RESTORED_HISTORICAL_DATE_TRADE_HOLDING_RETURN_FLOW",
+    "frontend_head": "b60ac870ae6222a03ce0591a0802161a57ea46ed",
+    "backend_head": "3184281e23e52485f53bdf7bd2615147da2891f9",
+    "proof": "Actual Chrome18173 on saved SUCCEEDED d9f27183: keyboard Enter paged twice, Home+53ArrowDown selected native date2011-01-19, Enter linked/expanded records and focused date region. ZH/EN full precision matched nine trades/nine holdings, firstbuy200@20.98/cost5.04196, cash69719.69765/equity101296.69765. Enter clear focused stable region; original ZH/dark/precision-off restored; empty date inputs. Keyboard list/return reopened same study with main focus and unchanged full-run+4.67%/-2.48%/CNY96.05/-8.83% metrics. Study/result GET bytes matched prior restore hashes2f8782d3...62d7/495de2cf...ecba. No financial/provider/job write.",
+    "evidence": "product-evidence/v1.2/m4/20261002-saved-result-date-flow/README.md",
+    "independent_review": "PASS: twelve file hashes/images/DOM/GET precision, baseline hashes and split frontend/backend provenance independently checked; no scope expansion.",
+    "limits": "Existing historical study on restored production stack, no temporary viewport. Not forward data arrival, full visual/AA/performance or release; genuine missing-ledger fact remains."
+  },
+  "pr32_restore_locale_ci_20261002_gate": {
+    "status": "PASS_EXACT_PUSHED_HEAD_CI_NOT_PRODUCT_RELEASE",
+    "source_head": "b17650deb8d4c1321c05d503b0d05675f34adf26",
+    "ci_run": 37018861446,
+    "proof": "Backend, frontend and Compose completed successfully on exact pushed b17650d, including the b60ac87 fill-locale fix and scoped restore/lifecycle checkpoint. Original PostgreSQL/Redis/backend are healthy and frontend5173/API8000 returned HTTP200. GitHub is no longer an active local-operation blocker.",
+    "limits": "PR32 remains draft/open. CI success is not whole U1-U8/M3-M5 or permission to merge/release. This records b17650d, not any subsequent unpushed checkpoint."
+  },
+  "m4_market_modal_terminal_keyboard_20261002_gate": {
+    "status": "PASS_SCOPED_PAGER_AND_ESCAPE_NOT_FULL_NATIVE_TAB_LOOP",
+    "proof": "Actual Chrome on restored18173 at390x844 EN/dark/motion-off queried000025 and retained119 records (118 raw bars plus one official suspension). Keyboard Next reached101-119; the focused pager and enabled Previous control remained visible. Tab reached Previous; Enter returned51-100; Escape restored Inspect history/query/list context. Reopening from an already-visible trigger retained scroll890 on Escape.",
+    "evidence": "product-evidence/v1.2/m4/20261002-market-modal-keyboard/README.md",
+    "limits": "First trigger-focus restoration intentionally scrolled it into view. BODY at native keyboard boundaries does not prove background focus escape. The supported read-only scope cannot expose document.hasFocus(); direct APG first/last Tab cycling remains unproven. No speculative custom trap added; not full AA."
+  },
+  "u6_existing_account_plan_bilingual_20261002_gate": {
+    "status": "PASS_SCOPED_EXISTING_HISTORICAL_ACCOUNT_NOT_FORWARD",
+    "proof": "Actual Chrome on media15173 reviewed the already-STOPPED ffdae33a account's native plan in EN/ZH:20 candidates, matching2011-03-22 plan/account dates, next03-23, plan-timecash/equity100000 and exact estimate75191.75091. Latest03-31 balance was separately labeled; expanded checksum/version provenance persisted. After EN/ZH/EN, full snapshot SHA98865b2d4eb98309e283f01d0ef9dea041f41008d09e2bde0a6a74fe288a4243 remained byte-identical with20orders/sixfills. No financial submission; EN/dark and temporary viewport restored.",
+    "evidence": "product-evidence/v1.2/m5/20261002-account-plan/README.md",
+    "limits": "Historical proposals and stored fills only; no new order in this review. Does not fill the older restored d704 account's absent native plan or missing ledgers. No forward, global AA/performance or full M5 acceptance."
+  },
+  "u4_csv_download_observation_20261002_gate": {
+    "status": "PREPARED_CSV_VISIBLE_CURRENT_TRANSFER_UNVERIFIED",
+    "proof": "Restored18173 saved study d9f27183 exposed an actual prepared CSV link. A new documented downloadMedia attempt timed out after14988ms; no matching file was found in ordinary Windows Downloads. Evidence retained outside Git; no identical retry or security bypass.",
+    "evidence": "product-evidence/v1.2/m5/20261002-export-download-observation/README.md",
+    "limits": "No app defect or current transfer PASS inferred. Sep23 actual Chrome CSV29316bytes/JSON258223bytes successful download events remain valid historical scoped U4-EXPORT evidence, not ordinary Downloads/current-version proof."
+  },
   "completion_scope_audit_20261002": {
     "status": "ORIGINAL_U1_U8_M0_M5_UNCHANGED_ADDED_GATES_CORRECTED",
     "required_remaining": "Actual lawful new-market forward source/adapter/after-start completed-session receipt/dated plan/constrained processing; unresolved missing-ledger fact; consolidated relevant visual/AA/performance/user-flow and restorable-delivery evidence. No v1.2 completion claim.",
@@ -13,7 +47,7 @@
     "source_head": "b60ac870ae6222a03ce0591a0802161a57ea46ed",
     "proof": "Shared stream now clears temporary old-language fill announcements. Red/green 102 focused and 568 full frontend cases, lint/type/format/build passed. Actual packaged Chrome on scratch account ffdae33a observed a new EN fill, cleared it on ZH, and kept it empty on EN return and a second roundtrip. Natural STOPPED; 136 contiguous events and six fills; terminal snapshot/events bytes unchanged after roundtrip.",
     "evidence": "product-evidence/v1.2/m5/20261002-b60ac87-fill-locale/README.md",
-    "limits": "DOM live-region observation, not screen-reader speech, new-market forward, lost-ledger recovery or whole M4/M5. Exact-head remote CI pending push."
+    "limits": "DOM live-region observation, not screen-reader speech, new-market forward, lost-ledger recovery or whole M4/M5. Included in pushed b17650d; exact-head CI37018861446 passed."
   },
   "u7_historical_lifecycle_media_20261002_gate": {
     "status": "PASS_BACKEND_RESTART_RESUME_STOP_WITH_RETAINED_SCRATCH_DB",
@@ -1568,7 +1602,7 @@
     "estimated_recovery_date": "2026-10-01",
     "reported_wait": "historical user estimate was October 1; actual recovery subsequently verified by a successful October Actions run",
     "actual_recovery_verified": true,
-    "last_readonly_check": "2026-10-01 05:47 UTC: GitHub Actions run 36821215437 completed SUCCESS on exact PR #32 code head 8c9b53076b3186a30a76fe6fe5f9484efb3ab79d; backend, frontend and Compose jobs all succeeded. PR #32 remained OPEN DRAFT. September billing-blocked run is historical, not the present CI state. No billing or limit setting was changed.",
+    "last_readonly_check": "2026-10-02: GitHub Actions run37018861446 completed SUCCESS on exact pushed b17650deb8d4c1321c05d503b0d05675f34adf26; backend/frontend/Compose succeeded. PR32 remains OPEN DRAFT. Historical billing block is not the present CI state; no billing/limit setting changed. Subsequent checkpoint edits are not attributed to this run.",
     "policy": "The September Actions admission hold is resolved by an actual successful October run. Normal feature-branch pushes and exact-head CI checks may proceed; this does not authorize merge or release. Reverify CI against the latest pushed head at the release gate. No payment, limit change or gate bypass."
   },
   "milestone": "M4_DATA_INTEGRITY_REMEDIATION",
@@ -1933,7 +1967,7 @@
     "RESOLVED: PR18 frontend CI test raced its mock request; explicit resolver readiness fix pushed and CI passed",
     "RESOLVED: full backend from /app container lacked repo-root fixture path; WSL checkout test path restored fixture identity. Isolated quant_test_v12_u5 was one migration behind; test-only 0015 upgrade closed three paper constraint failures",
     "RESOLVED: Vite main bundle exceeded500 kB; route-level lazy loading reduced initial entry chunk to409.17 kB",
-    "PARTIAL: M4 warm simple route-click p95=32ms over30 real-Chrome headless transitions; persisted 293-session result full reload p95=923ms over10, not an interaction metric. Native-200-percent warm 293-session result pagination/benchmark/precision p95=51/46/58ms over20 each. Bounded in-app Chromium production preview route p95=25ms, result reload p95=439ms; chart toggle p95=284ms in both production preview and development server under the same tool-inclusive method, so no product-only slowdown is established. Actual Chrome production interaction, cold cache and larger datasets remain unmeasured",
+    "PARTIAL: M4 warm simple route-click p95=32ms over30 real-Chrome headless transitions; persisted 293-session result full reload p95=923ms over10, not an interaction metric. Native-200-percent warm 293-session result pagination/benchmark/precision p95=51/46/58ms over20 each. Bounded in-app Chromium production preview route p95=25ms, result reload p95=439ms; chart toggle p95=284ms in both production preview and development server under the same tool-inclusive method, so no product-only slowdown is established. Sep26 actual Chrome production native Event Timing over30 warm benchmark interactions passed with p95=16ms; other uncovered production interactions, cold cache, larger datasets and the full matrix remain unverified",
     "RESOLVED for markets, Task Center and research list: current Chrome viewport override reported390x844 and no page overflow; wider mobile matrix remains unclaimed",
     "RESOLVED: isolated home screenshot heading clipping reproduced in live Chrome; route push scroll reset and preventScroll focus verified without overriding native Back restoration",
     "RESOLVED: market security detail Back no longer leaves /markets; exact dataset/security URL preserves filter/page/scroll and direct links fail visibly",
@@ -2145,13 +2179,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "ea51d0f7bd84f349623575974d8506a6230f0c18",
+      "last_verified_head": "b17650deb8d4c1321c05d503b0d05675f34adf26",
       "state": "DRAFT",
-      "ci_run": 37011283889,
+      "ci_run": 37018861446,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Current local b60ac87 fill-locale fix passed actual packaged Chrome and568 frontend cases; remote CI is not yet attributed to it. Prior pushed3184281 passed CI37011749469. Saved historical restart/resume/stop media and current-baseline logical restore are scoped passes. Actual forward feed/chain, missing old ledgers and consolidated required visual/AA/performance/delivery evidence remain incomplete. Native200% and performance have historical bounded passes, not never-run. Additional assurance is distinguished by completion_scope_audit_20261002."
+      "browser_gate": "Pushed b17650d includes b60ac87 fill-locale actual Chrome and568 frontend PASS; exact-head CI37018861446 passed all three jobs. Saved historical lifecycle/current-baseline logical restore,119-record market modal pager/Escape and existing account-native EN/ZH plan are scoped passes. Actual forward feed/chain, missing old ledgers and consolidated required visual/AA/performance/delivery evidence remain incomplete. Native200%, production timing and exports retain historical bounded passes; additional assurance is not an invented mandatory gate."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2166,8 +2200,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Push coherent b60ac87 plus this scoped restore/lifecycle/scope-audit milestone to existing draftPR32 and verify exact-head CI. Continue consolidated relevant AA, cold/release interaction and delivery/export observations using a materially different supported method rather than repeated failed download hooks or six-route width counts. Implement the actual lawful forward chain only with source rights/current authority; do not relabel historical receipts. Preserve missing-ledger incident and all U1-U8/M0-M5 requirements; no invented novice/physical-disk gates.",
-  "local_next_command": "git diff --check; validate product state JSON and reviewed milestone diff; coherent commit/push existing branch; gh run list to obtain actual live exact-head CI handle, then bounded watch. Original5173/8000 and scratch restore18173/18016/media15173/18012 are currently owned/running; root only repository writer. No financial/provider/original-data submission.",
+  "next_task": "b17650d push/exact CI and independently reviewed restored saved-result keyboard/date→trades/holdings→clear/return flow are DONE. Select a genuinely uncovered required user-flow/AA/visual/representative feedback case from the current matrix rather than repeat successful gates, download hooks or route counts. Actual lawful forward chain still requires source rights/current authority; preserve genuine missing-ledger fact and all U1-U8/M0-M5 requirements. No merge/release until required gates pass.",
+  "local_next_command": "Checkpoint JSON/diff and independent review PASS; save this doc-only milestone in a coherent local commit, then read ACCEPTANCE current matrix before selecting the next uncovered case. Keep CI attribution exact b17650d until any later pushed head actually passes; no tiny-edit push required. Original5173/8000 and scratch restore18173/18016/media15173/18012 remain owned/running; no financial/provider/original-data submission.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
