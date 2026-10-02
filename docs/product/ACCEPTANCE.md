@@ -8203,3 +8203,39 @@ GETs were 3–10 ms. The browser-control bridge/polling contribution was not
 isolated, so neither a product p95 PASS nor a product latency defect is claimed.
 The next useful performance check needs an on-page timing/profiling surface
 that distinguishes UI render from automation wait overhead.
+
+## 2026-10-02 03:25 UTC local quality gate during reported GitHub hold
+
+The user reported that GitHub would not recover for about five more days.
+This is a new, unverified report, not evidence that the previously successful
+October GitHub Actions runs were invalid. No push, remote CI, PR merge, tag or
+release was attempted in this check. The clean WSL feature branch was
+`codex/product-v1.2-current-rules` at
+`2ed76389cab08f559f3651f9c3640212ac3db951` before the documentation
+checkpoint. The original Compose PostgreSQL, Redis and backend remained healthy,
+frontend running, and frontend plus `/api/health` returned HTTP 200.
+
+The repository's `make test` used the separate `compose.test.yml` project and
+tmpfs `quant_test` PostgreSQL, then stopped that project's services. Backend
+**1038 passed**, with one optional unmounted historical-archive test skipped;
+frontend **566 passed**. `make lint` passed Ruff, format, mypy, ESLint and
+TypeScript. `make build` passed TypeScript and Vite. Vite emitted its existing
+main-chunk size warning at 500.55 kB; this is a warning, not a failed build or
+a measured page-latency verdict. The original four Compose services remained
+up after the isolated checks and both local HTTP endpoints still returned 200.
+
+At this head an owned installed-Chrome tab opened an existing saved historical
+result. The JSON export button prepared the expected same-origin Blob fallback
+and named file, but neither the button nor the fallback link produced an
+observable download event within bounded waits. No browser error was captured
+and no recent file appeared in the ordinary Windows Downloads folder. This
+repeated an earlier unsuccessful event-observation route at the new head;
+**file landing remains UNVERIFIED**, not an application export failure or a
+U4/M5 PASS. Do not run a third unchanged attempt. Earlier server GET evidence
+still proves HTTP 200 attachment/report semantics only. No original financial
+data, frozen research/OOS, or user-owned browser tab was changed. The two
+visible 18 px chart checkboxes sit inside 40 px-high labels, so this bounded
+target-size inspection did not identify a new defect. Full U1-U8/M3-M5,
+licensed after-start forward receipt, genuine pre-loss ledgers, independent
+backup, native 200% zoom, screen-reader speech, novice testing, report file
+landing and release remain open.
