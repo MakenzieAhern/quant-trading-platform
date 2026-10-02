@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T15:37:00Z",
+  "updated_at_utc": "2026-10-02T15:44:25Z",
+  "pr32_calendar_focus_ci_20261003_gate": {
+    "status": "PASS_EXACT_PUSHED_HEAD_CI_NOT_PRODUCT_RELEASE",
+    "source_head": "f7f3c6a86c595cbded8bbe6634c362dbc0346aac",
+    "ci_run": 37028749727,
+    "proof": "Exact pushed f7f3c6a includes f78f782 calendar foundation and bc7390c actual-Chrome shared focus fix, plus independently reviewed scoped docs/media index. Backend/frontend/Compose all completed SUCCESS at2026-10-02T15:43:20Z; PR32 head matches, remainsOPEN DRAFT. Normal push did not change Git identity, billing, protections, source authority, visibility or release state.",
+    "limits": "CI covers f7f3c6a, not a later local evidence-only checkpoint. No full U1-U8/M3-M5, forward-rights/arrival, lost-ledger recovery, merge, tag or release claim."
+  },
   "u7_calendar_extension_20261003_gate": {
     "status": "PASS_OFFLINE_CALENDAR_FOUNDATION_NOT_FORWARD",
     "source_head": "f78f7822bdd56816407fea74673d6d05fb3cc7e8",
@@ -2199,13 +2206,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "b17650deb8d4c1321c05d503b0d05675f34adf26",
+      "last_verified_head": "f7f3c6a86c595cbded8bbe6634c362dbc0346aac",
       "state": "DRAFT",
-      "ci_run": 37018861446,
+      "ci_run": 37028749727,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Pushed b17650d includes b60ac87 fill-locale actual Chrome and568 frontend PASS; exact-head CI37018861446 passed all three jobs. Saved historical lifecycle/current-baseline logical restore,119-record market modal pager/Escape and existing account-native EN/ZH plan are scoped passes. Actual forward feed/chain, missing old ledgers and consolidated required visual/AA/performance/delivery evidence remain incomplete. Native200%, production timing and exports retain historical bounded passes; additional assurance is not an invented mandatory gate."
+      "browser_gate": "Pushed f7f3c6a includes scoped f78f782 calendar and bc7390c actualChrome390/1024 shared sticky-focus repair,569 frontend/1046 backend with one optional archive skip. Exact-head CI37028749727 all three jobs PASS. Prior historical lifecycle/current-baseline restore/date linkage/modal/account-native plan remain scoped evidence. Actual lawful forward chain, genuine missing old ledgers and remaining consolidated relevant M4/M5 proof remain incomplete. No merge/release; preserve scoped native200%, production timing and exports without invented extra gates."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2220,8 +2227,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Calendar offline foundation and shared sticky-focus defect are closed with tests/actual Chrome/independent review. Save/push this coherent milestone to existing draft PR32 and check its exact head CI; do not reuse b17650d CI for newer code. Then address genuine missing before-flow media via explicit read-only baseline reconstruction or an uncovered required integration case, not repeat passing keyboard/download probes. Actual lawful forward chain still requires source rights/current authority and durable adapter; preserve genuine missing-ledger fact and all U1-U8/M0-M5 requirements. No merge/release until required gates pass.",
-  "local_next_command": "Validate JSON/diff, commit docs checkpoint, normal meaningful-batch push current branch and wait bounded for exact head CI. Original5173/8000 and scratch restore18173/18016/media15173/18012 remain owned/running; restore frontend now bc7390c image e328748, backend still3184281. Do not restart original data/queues, change authority/frozen methodology or run formal/OOS.",
+  "next_task": "f7f3c6a push/exact CI37028749727 and independently reviewed calendar/shared-sticky-focus/docs milestone are DONE. Next genuine M5 before-media gap can use cached fixed v1.1.0 frontend on current read-only restored backend, explicitly labeled Oct3 reconstructed baseline, never old database recovery or original Sep22 capture. Old tag has no personal comparison/tasks; do not invent equivalent views. Current historical paper parser mismatch is real: do not change/forge responses; use only a compatible existing STOPPED synthetic or explicitly non-A-share AAPL detail. Actual lawful forward chain still needs source rights/current authority and durable adapter; preserve missing-ledger fact and full U1-U8/M0-M5. No merge/release until required gates pass.",
+  "local_next_command": "Save this evidence-only CI checkpoint in a coherent local commit, no tiny extra push needed. Before baseline media, verify ownership and exact cached v1.1.0 tree/old contracts/current restored GET hashes; enforce all non-read API methods denied in an owned local proxy before opening old UI, preserve existing18173 origin for valid WebSocket, and restore exact e328748 frontend afterward. Do not switch main checkout or old backend, migrate/downgrade DB, rerun formal report/strategy, fake an old running state, provider access or change frozen assets. Original5173/8000 and scratch restore18173/18016/media15173/18012 remain owned/running; frontendbc7390c/back3184281 proof is scoped. Goal remainsactive/incomplete.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

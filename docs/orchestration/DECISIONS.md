@@ -1,5 +1,14 @@
 # Decisions
 
+## v1.2 exact batch CI confirmed — 2026-10-02 15:44 UTC
+
+Normal meaningful-batch push `f7f3c6a` passed backend/frontend/Compose in
+CI37028749727, verified against the same PR32 head. This includes separately
+reviewed calendar/focus slices and accurately scoped media/docs. Hosted CI is
+available again; local application execution never depended on it. PR32 remains
+draft/open; no merge, tag/release or billing/protection/identity/visibility change.
+Do not attribute later evidence-only local documentation to this exact run.
+
 ## v1.2 append-only calendar and shared sticky-focus root cause — 2026-10-02 15:37 UTC
 
 Keep current/forward calendar acceptance at the application/source-authority

@@ -1,5 +1,15 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 15:44 UTC exact calendar/focus batch CI
+
+[CI37028749727](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37028749727)
+completed backend/frontend/Compose SUCCESS on exact pushed
+`f7f3c6a86c595cbded8bbe6634c362dbc0346aac`, including calendar `f78f782`, actual
+sticky-focus `bc7390c` and the independently reviewed scoped media/guide batch.
+PR32 head matches; it remains OPEN/DRAFT, unmerged. This closes the new-code CI
+attribution gap; it is not full forward/M4/M5 or release acceptance. The later
+local evidence-only checkpoint is not falsely attributed to this CI run.
+
 ## 2026-10-02 15:37 UTC calendar foundation and actual sticky-focus closure
 
 M3 offline foundation `f78f782` adds append-only **already accepted** calendar
