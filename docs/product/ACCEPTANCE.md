@@ -8367,3 +8367,26 @@ verified current blocker. This only closes the current code-head CI gap for the
 bounded cash-gap fix. Full U1–U8/M3–M5, data integrity, lawful forward data,
 independent backup, missing genuine ledgers, post-change unattended login and
 release remain incomplete. No PR was merged and no tag or release was created.
+
+## 2026-10-02 M5 before/after media inventory (partial)
+
+The 2026-09-22 v1.1.0 baseline was captured in real Chrome before the product
+redesign. The later v1.2 images below were also captured from the running app,
+not generated mockups. All linked media are local files outside Git; their
+different dates, data modes and viewport crops must not be mistaken for a
+controlled pixel-difference test.
+
+| User task | v1.1 baseline | v1.2 development evidence | What changed |
+| --- | --- | --- | --- |
+| Find the starting action | [Old backtest-led home](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/home.png) | [Workbench with guided action and data status](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/workbench-zh-1280.png) | The first screen now explains the task and separates service availability from historical data freshness. |
+| Configure a study | [Old long backtest form](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/create-backtest.png) | [Guided step 2 with persistent summary](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/isolated-demo-config-zh-1280.png) | Required inputs are split into four steps; the after image is explicitly synthetic and does not imply A-share evidence. |
+| Locate research | [Old formal research archive](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/before/research-loaded.png) | [Personal research list with formal-archive entry](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20260929-3e621a1-experiments-zh-dark.jpg) | Personal exploratory jobs are separated from the read-only formal archive; these are reorganized entry surfaces, not identical datasets. |
+
+The [isolated guided-flow recording](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/isolated-demo-full-flow-zh-1280.webm)
+and [read-only historical walkthrough](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/product-walkthrough-zh-1280-v2.webm)
+show key interactions, with their original scope and checksums recorded above.
+The old strategy image stopped at a loading state, and no same-day v1.1 paper
+account or result-comparison baseline image was saved. Older v1.0 README images
+are not substituted as v1.1 proof. This is a verified three-task media pairing,
+not complete six-flow/current-code-head media, novice usability, M5 PASS or
+release acceptance.

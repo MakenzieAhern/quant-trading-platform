@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T04:18:38Z",
+  "updated_at_utc": "2026-10-02T04:25:54Z",
+  "m5_before_after_media_inventory_20261002_gate": {
+    "status": "PASS_THREE_TASK_PAIRINGS_NOT_FULL_M5",
+    "proof": "Verified existing local real-browser v1.1 baseline and v1.2 development screenshots for starting action, study configuration and research entry; paired them with explicit mode/date/viewport caveats in docs/product/ACCEPTANCE.md. Existing guided synthetic and read-only historical WebM recordings are linked; all eight referenced files exist outside Git. No new generated or synthetic image was presented as a real UI capture.",
+    "limits": "The old strategy capture stopped at loading; same-day v1.1 paper-account and comparison baselines were not saved. The paired images predate current code head and do not prove current-head six-flow media, independent novice acceptance or M5 delivery. No original data, frozen research, OOS, PR merge, tag or release changed."
+  },
   "pr32_cash_gap_ci_20261002_gate": {
     "status": "PASS_EXACT_CODE_HEAD_CI_NOT_PRODUCT_RELEASE",
     "source_head": "683ccb390fdf06ba651cb5b49458b09981286358",
@@ -2083,7 +2088,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. The cash-gap legacy backtest fix has persisted API regression, isolated Chrome EN/ZH cancellation-path evidence, full local 1040/566 tests and lint/build, and exact-code-head PR #32 CI 36963794833; this does not close full U4 or any release gate. GitHub Actions is operational for this PR on 2026-10-02, so no CI outage should be inferred from the earlier user estimate. Seek a genuinely new M4/M5 passing flow or defect, not the already bounded browser download/Performance API/zoom/VSS attempts. Written rights for private local persistent 2026 simulated plans/fills, an after-start completed-session receipt, genuine pre-loss paper ledgers, an independent physical backup and a genuine post-change unattended login remain external gaps. Keep PR32 draft/open; no merge, tag or release.",
+  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. The legacy cash-gap fix has persisted API regression, isolated Chrome EN/ZH evidence, local 1040/566 tests and exact-code-head PR #32 CI 36963794833. The docs-only successor f183515 also passed PR CI 36964095541. Three existing v1.1-to-v1.2 real-browser media pairs are now indexed, but complete current-head six-flow M5 media is not proven. Avoid repeating the blocked browser download/Performance API/zoom/VSS paths; pursue a genuinely new U8 accessibility/error flow or defect. Written rights for private local persistent 2026 simulated plans/fills, an after-start completed-session receipt, genuine pre-loss paper ledgers, an independent physical backup and a genuine post-change unattended login remain external gaps. Keep PR32 draft/open; no merge, tag or release.",
   "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify branch/head/clean status and original docker compose ps. Read the latest ACCEPTANCE section and pursue a new independent local M4/M5 verification route or real defect reduction without original financial-data submission. Use isolated tmpfs quant_test for database tests. Do not rerun the same blocked browser download, Performance API, zoom-shortcut or VSS methods. GitHub Actions passed code-head CI 36963794833; at the next genuine Windows login verify terminal-free startup without inducing a reboot solely for this claim.",
   "next_command": "Full U1-U8/M0-M5 objective remains incomplete. Continue safe browser, accessibility, performance, delivery and exact-head CI evidence without bypassing a browser URL-confidence stop. Ask once for any still-missing lawful forward-feed rights, genuine pre-loss ledger evidence and an independent physical backup destination; do not infer approval from public readability or fabricate lost records. Keep PR32 draft/open; no merge, tag or release until all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
