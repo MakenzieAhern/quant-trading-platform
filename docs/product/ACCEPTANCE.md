@@ -7912,3 +7912,25 @@ two genuine pre-loss paper ledgers, lawful 2026 forward-market receipt,
 independent backup, unattended Windows login, full M4/M5 or v1.2 release
 acceptance. PR #32 remains draft/open; no frozen dataset, formal study,
 Official OOS, merge, tag or release was changed.
+
+## 2026-10-02 01:17 UTC bounded application render-failure recovery
+
+An earlier in-app browser run briefly showed a blank research detail after
+hot updates, then recovered on reload; its root cause was not reproduced. The
+frontend had no top-level render-error boundary, so an unexpected child render
+error could leave no usable recovery instructions. A minimal root boundary now
+shows a localized English/Chinese alert and native links to inspect saved
+tasks or simulated accounts in a new tab before manually reloading. It does
+not retry a request, create a duplicate task, or promise preservation of an
+unsaved form. The browser did not reproduce or fault-inject the earlier error;
+this change is a resilience guard, not a root-cause claim.
+
+An injected child-render-error component test passed in both languages. The
+full frontend suite passed **564/564**, followed by Prettier, ESLint,
+TypeScript and production build. In an owned in-app browser tab, the normal
+Workbench to Research list to saved historical result path rendered with the
+existing result, risk warning, plan provenance, chart, table and export
+controls. Original Compose PostgreSQL, Redis and backend were healthy; frontend
+and `/api/health` returned HTTP 200. This is bounded `UX-ERROR` progress, not
+full `U8`, accessibility, M4/M5, independent novice or release acceptance. No
+paper/account/source/frozen dataset/OOS write, merge, tag or release occurred.

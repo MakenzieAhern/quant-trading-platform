@@ -3,6 +3,13 @@ export const enUS = {
     unavailable: "N/A",
     loading: "Loading {{label}}…",
     error: "Unable to load this data.",
+    renderFailure: {
+      title: "This page stopped displaying",
+      guidance:
+        "Nothing was retried automatically. If you just submitted a request, check saved tasks or simulated accounts in another tab before reloading. Unsaved form entries may be lost.",
+      tasks: "Check saved tasks",
+      accounts: "Check simulated accounts",
+    },
     loadErrors: {
       offline: "The service is unavailable. Check its status, then try again.",
       timeout:

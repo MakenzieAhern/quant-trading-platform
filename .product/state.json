@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T01:04:43Z",
+  "updated_at_utc": "2026-10-02T01:17:15Z",
+  "u8_render_failure_recovery_20261002_gate": {
+    "status": "PASS_BOUNDED_COMPONENT_RECOVERY_NOT_FULL_U8",
+    "proof": "A top-level render boundary now presents a bilingual recovery alert with manual reload and separate saved-task/account checks; it does not auto-retry or promise unsaved-form preservation. Injected render-error tests passed in both locales; full frontend 564/564, Prettier, ESLint, TypeScript and production build passed. Owned in-app browser rendered the normal Workbench to Research list to saved historical result path. Original Compose services were healthy and frontend plus API returned HTTP 200. See docs/product/ACCEPTANCE.md.",
+    "limits": "The earlier post-hot-update blank page root cause was not reproduced or fixed by evidence, and the fallback was not browser fault-injected. This does not close full U8/UX-ERROR, native accessibility, independent novice, M4/M5, missing genuine ledgers, lawful forward data, backup or release; PR32 remains draft/open."
+  },
   "u7_terminal_ledger_reconcile_20261002_gate": {
     "status": "PASS_BOUNDED_PERSISTED_ORDER_CLOSURE_NOT_FULL_U7",
     "proof": "Independent read-only review found that a failed market-event write could leave a persisted ACCEPTED order open on a terminal FAILED account: runtime memory had advanced while the event batch rolled back. Terminal transitions now derive order cancellations from the latest committed journal under the same PostgreSQL row lock and transaction. A new isolated-DB failure-injection test reproduces a post-start saved order followed by runtime failure and verifies FAILED, CANCELLED, and no fill. Full isolated make test passed backend 1036 with one optional unmounted-archive skip and frontend 562; make lint and make build passed. Original backend restarted healthy with frontend and API HTTP 200; original product jobs, paper sessions and paper events stayed 8/5/417. See docs/product/ACCEPTANCE.md.",

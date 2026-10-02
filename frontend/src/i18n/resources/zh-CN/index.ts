@@ -3,6 +3,13 @@ export const zhCN = {
     unavailable: "暂无",
     loading: "正在加载{{label}}…",
     error: "无法加载该数据。",
+    renderFailure: {
+      title: "本页显示已中断",
+      guidance:
+        "系统没有自动重试操作。如果刚提交请求，请先在另一标签页核对已保存的任务或模拟账户，再重新加载。未保存的表单内容可能丢失。",
+      tasks: "核对已保存任务",
+      accounts: "核对模拟账户",
+    },
     loadErrors: {
       offline: "服务暂时无法连接。请检查服务状态，然后重试。",
       timeout: "请求超时。请检查服务状态，然后重试。",
