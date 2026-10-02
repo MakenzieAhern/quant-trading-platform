@@ -8133,3 +8133,36 @@ showed the prepared JSON Blob link and correct filename, but the browser's
 `downloadMedia` route timed out. Its owned tab was closed. This does **not**
 verify file landing; the prior browser-control block was not bypassed or
 retried by the unchanged method.
+
+## 2026-10-02 03:02 UTC exact-head local operation and read-only Chrome journey
+
+The live WSL Compose stack remains usable independently of GitHub: PostgreSQL,
+Redis and backend were healthy, frontend running, Redis answered `PONG`, and
+`/api/health` and frontend returned HTTP 200. GitHub was also reachable in
+this check: open/draft PR #32 points at exact head
+`a72b21bbd48a2f3946c39166c7628434aa7d91f1`, whose backend, frontend and
+Compose checks all passed in
+[CI run 36957619969](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36957619969).
+
+An owned real-Chrome tab followed existing records only: English workbench →
+strategy explanation → saved historical research result → a two-result
+comparison → a stopped A-share historical replay account. The result clearly
+marked 2010-01-04→2011-03-22 as already-inspected history, displayed dated
+rebalance-preview caveats and did not claim forward performance. The comparison
+warned that the studies had different periods and were not controlled; it did
+not rank or recommend. The account correctly identified 2011-03-23 as a
+historical replay of 2,065 securities, showed portfolio, orders, fills and
+saved events, and disclosed that this older account has no account-native
+plan. Chinese view preserved the simulated-only and audited-historical labels;
+the original English preference was restored. Browser error log was empty.
+Read-only original-database counts remained five paper accounts, 417 paper
+events, eight research jobs and four market-update jobs. No experiment,
+provider request, new paper session, download or original-database write was
+made.
+
+This is a **bounded current-head navigation and language check**, not an
+independent novice test or a full U1–U8/M4/M5 sign-off. Native 200% zoom,
+screen-reader speech, current-head durable media, actual report file landing,
+unattended post-login startup, lawful 2026 forward-market authority, genuine
+pre-loss ledger recovery and independent physical backup remain unverified or
+blocked. PR #32 stays draft/open; no merge, tag or release.
