@@ -1,7 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T04:07:00Z",
+  "updated_at_utc": "2026-10-02T04:18:38Z",
+  "pr32_cash_gap_ci_20261002_gate": {
+    "status": "PASS_EXACT_CODE_HEAD_CI_NOT_PRODUCT_RELEASE",
+    "source_head": "683ccb390fdf06ba651cb5b49458b09981286358",
+    "ci_run": 36963794833,
+    "proof": "The seven previously local commits were fast-forward pushed to existing draft PR #32 after verifying a clean WSL branch, unchanged MakenzieAhern Git identity, and no frozen-research file in the diff. GitHub Actions completed backend, frontend and Compose successfully at exactly 683ccb390fdf06ba651cb5b49458b09981286358. Local original Compose services remained up, with frontend and /api/health returning HTTP 200.",
+    "limits": "This closes current code-head CI for the bounded legacy fill-time cash cancellation fix; it does not establish full U1-U8/M3-M5 acceptance, independent backup, genuine missing pre-loss ledgers, lawful after-start forward data, post-change unattended login, merge, tag or release. PR #32 remains draft/open."
+  },
   "m4_legacy_backtest_cancelled_ui_20261002_gate": {
     "status": "PASS_BOUNDED_ISOLATED_BROWSER_NOT_FULL_U4_M4_M5",
     "source_head": "8cdfaa4834af223f3721e70a2ec1f218a7b76eb1",
@@ -2055,13 +2062,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "a72b21bbd48a2f3946c39166c7628434aa7d91f1",
+      "last_verified_head": "683ccb390fdf06ba651cb5b49458b09981286358",
       "state": "DRAFT",
-      "ci_run": 36957619969,
+      "ci_run": 36963794833,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "At exact source head a72b21b, actual Chrome read existing Workbench, Strategies, historical Research result, non-controlled comparison and stopped 2011 A-share paper account with ledger in EN/ZH, restored original EN, zero browser errors and unchanged original DB counts 5/417/8/4. Earlier bounded wizard, pager, responsive, chart and synthetic evidence remains. Exact-head CI 36957619969 backend/frontend/Compose passed. Native 200% zoom, screen-reader speech, report file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
+      "browser_gate": "At exact code head 683ccb3, an isolated tmpfs Chrome EN/ZH legacy cancellation path showed CANCELLED neutrally with a cash-gap explanation, zero fills and unchanged CNY1000. Earlier bounded read-only Workbench, Strategies, Research, comparison and historical paper-account browser evidence remains; original DB counts stayed 5/417/8/4. Exact code-head CI 36963794833 backend/frontend/Compose passed. Native 200% zoom, screen-reader speech, report file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2076,8 +2083,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. A cash-gap legacy backtest fix now has persisted API regression and actual isolated Chrome EN/ZH cancellation-path evidence, with full local 1040/566 tests and lint/build. This does not close full U4 or any release gate. The user's reported GitHub hold remains unverified; six coherent local commits are ahead of origin before this documentation checkpoint, and prior successful October CI is historical only. Seek a genuinely new M4/M5 passing flow or defect, not the already bounded browser download/Performance API/zoom/VSS attempts. Written rights for private local persistent 2026 simulated plans/fills, an after-start completed-session receipt, genuine pre-loss paper ledgers, an independent physical backup and a genuine post-change unattended login remain external gaps. Keep PR32 draft/open; no merge, tag or release.",
-  "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify branch/head/clean status and original docker compose ps. Read the latest ACCEPTANCE section and pursue a new independent local M4/M5 verification route or real defect reduction without original financial-data submission. Use isolated tmpfs quant_test for database tests. Do not rerun the same blocked browser download, Performance API, zoom-shortcut or VSS methods. When GitHub actually recovers, push coherent local commits and check PR32 exact-head CI; at the next genuine Windows login verify terminal-free startup without inducing a reboot solely for this claim.",
+  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. The cash-gap legacy backtest fix has persisted API regression, isolated Chrome EN/ZH cancellation-path evidence, full local 1040/566 tests and lint/build, and exact-code-head PR #32 CI 36963794833; this does not close full U4 or any release gate. GitHub Actions is operational for this PR on 2026-10-02, so no CI outage should be inferred from the earlier user estimate. Seek a genuinely new M4/M5 passing flow or defect, not the already bounded browser download/Performance API/zoom/VSS attempts. Written rights for private local persistent 2026 simulated plans/fills, an after-start completed-session receipt, genuine pre-loss paper ledgers, an independent physical backup and a genuine post-change unattended login remain external gaps. Keep PR32 draft/open; no merge, tag or release.",
+  "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify branch/head/clean status and original docker compose ps. Read the latest ACCEPTANCE section and pursue a new independent local M4/M5 verification route or real defect reduction without original financial-data submission. Use isolated tmpfs quant_test for database tests. Do not rerun the same blocked browser download, Performance API, zoom-shortcut or VSS methods. GitHub Actions passed code-head CI 36963794833; at the next genuine Windows login verify terminal-free startup without inducing a reboot solely for this claim.",
   "next_command": "Full U1-U8/M0-M5 objective remains incomplete. Continue safe browser, accessibility, performance, delivery and exact-head CI evidence without bypassing a browser URL-confidence stop. Ask once for any still-missing lawful forward-feed rights, genuine pre-loss ledger evidence and an independent physical backup destination; do not infer approval from public readability or fabricate lost records. Keep PR32 draft/open; no merge, tag or release until all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
