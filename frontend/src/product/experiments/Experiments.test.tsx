@@ -50,7 +50,10 @@ beforeEach(async () => {
   Array.from({ length: window.localStorage.length }, (_, index) =>
     window.localStorage.key(index),
   ).forEach((key) => {
-    if (key?.startsWith(UNREADABLE_DRAFT_PREFIX) || key?.startsWith(DRAFT_RECOVERY_PREFIX))
+    if (
+      key?.startsWith(UNREADABLE_DRAFT_PREFIX) ||
+      key?.startsWith(DRAFT_RECOVERY_PREFIX)
+    )
       window.localStorage.removeItem(key);
   });
   await i18n.changeLanguage("en-US");
@@ -130,7 +133,9 @@ describe("guided experiment", () => {
     render(<CreateExperimentPage />);
     await screen.findByRole("heading", { name: "Saved draft needs recovery" });
     expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(raw);
-    expect(screen.queryByRole("heading", { name: "Choose a strategy" })).toBeNull();
+    expect(
+      screen.queryByRole("heading", { name: "Choose a strategy" }),
+    ).toBeNull();
   });
 
   it("keeps this page's prior usable recovery when starting after shared-draft corruption", async () => {
@@ -148,7 +153,9 @@ describe("guided experiment", () => {
         ({ draft }) => draft.idempotencyKey === "pre-corruption-request",
       ),
     ).toBe(true);
-    expect(readUnreadableDraftCopies().items.some(({ raw }) => raw === "{broken")).toBe(true);
+    expect(
+      readUnreadableDraftCopies().items.some(({ raw }) => raw === "{broken"),
+    ).toBe(true);
     expect(readExperimentDraft()?.step).toBe(0);
   });
 
@@ -160,15 +167,13 @@ describe("guided experiment", () => {
     render(<CreateExperimentPage />);
     await screen.findByRole("heading", { name: "Saved draft needs recovery" });
     const write = Storage.prototype.setItem;
-    const blocked = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (
-      this: Storage,
-      key,
-      value,
-    ) {
-      if (key.startsWith(UNREADABLE_DRAFT_PREFIX))
-        throw new DOMException("full", "QuotaExceededError");
-      write.call(this, key, value);
-    });
+    const blocked = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(function (this: Storage, key, value) {
+        if (key.startsWith(UNREADABLE_DRAFT_PREFIX))
+          throw new DOMException("full", "QuotaExceededError");
+        write.call(this, key, value);
+      });
     try {
       await userEvent.click(
         screen.getByRole("button", { name: "Preserve original and start new" }),
@@ -222,15 +227,13 @@ describe("guided experiment", () => {
       savedAt: "2026-10-01T00:00:00Z",
     });
     const write = Storage.prototype.setItem;
-    const concurrent = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (
-      this: Storage,
-      key,
-      value,
-    ) {
-      write.call(this, key, value);
-      if (key.startsWith(DRAFT_RECOVERY_PREFIX))
-        write.call(this, EXPERIMENT_DRAFT_KEY, newerRaw);
-    });
+    const concurrent = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(function (this: Storage, key, value) {
+        write.call(this, key, value);
+        if (key.startsWith(DRAFT_RECOVERY_PREFIX))
+          write.call(this, EXPERIMENT_DRAFT_KEY, newerRaw);
+      });
     try {
       await userEvent.click(
         screen.getByRole("button", { name: "Preserve original and start new" }),
@@ -253,11 +256,15 @@ describe("guided experiment", () => {
     window.history.replaceState({}, "", "/research/new?new=1");
     render(<CreateExperimentPage />);
     await screen.findByRole("alert");
-    await userEvent.click(screen.getByText("Show original draft text for copying"));
-    expect(screen.getByLabelText("Show original draft text for copying")).toHaveValue(
-      "{offline",
+    await userEvent.click(
+      screen.getByText("Show original draft text for copying"),
     );
-    expect(screen.getByRole("button", { name: "Preserve original and start new" })).toBeDisabled();
+    expect(
+      screen.getByLabelText("Show original draft text for copying"),
+    ).toHaveValue("{offline");
+    expect(
+      screen.getByRole("button", { name: "Preserve original and start new" }),
+    ).toBeDisabled();
   });
 
   it("shows corrupt draft text but cannot start without registered strategies", async () => {
@@ -268,12 +275,18 @@ describe("guided experiment", () => {
     window.localStorage.setItem(EXPERIMENT_DRAFT_KEY, "{no-strategy");
     window.history.replaceState({}, "", "/research/new?new=1");
     render(<CreateExperimentPage />);
-    await screen.findByText("No executable strategy is available. Check the data center or retry loading.");
-    await userEvent.click(screen.getByText("Show original draft text for copying"));
-    expect(screen.getByLabelText("Show original draft text for copying")).toHaveValue(
-      "{no-strategy",
+    await screen.findByText(
+      "No executable strategy is available. Check the data center or retry loading.",
     );
-    expect(screen.getByRole("button", { name: "Preserve original and start new" })).toBeDisabled();
+    await userEvent.click(
+      screen.getByText("Show original draft text for copying"),
+    );
+    expect(
+      screen.getByLabelText("Show original draft text for copying"),
+    ).toHaveValue("{no-strategy");
+    expect(
+      screen.getByRole("button", { name: "Preserve original and start new" }),
+    ).toBeDisabled();
   });
 
   it("opens a fresh first step and retains the requested strategy when no draft exists", async () => {
@@ -303,7 +316,9 @@ describe("guided experiment", () => {
     expect(screen.getByLabelText("初始本金（人民币）")).toHaveValue(
       "123456.000000000000000001",
     );
-    expect(screen.queryByRole("heading", { name: "已有保存的草稿" })).toBeNull();
+    expect(
+      screen.queryByRole("heading", { name: "已有保存的草稿" }),
+    ).toBeNull();
     expect(create).not.toHaveBeenCalled();
   });
 
@@ -323,14 +338,18 @@ describe("guided experiment", () => {
     saveExperimentDraft(other, 2, "during-load-request");
     const original = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
     await act(async () => resolve?.(capabilities));
-    await screen.findByRole("heading", { name: "A saved draft already exists" });
+    await screen.findByRole("heading", {
+      name: "A saved draft already exists",
+    });
     expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(original);
     expect(screen.queryByLabelText("Starting capital (CNY)")).toBeNull();
     expect(window.location.search).toBe("?new=1");
     await userEvent.click(
       screen.getByRole("button", { name: "Back up draft and start new" }),
     );
-    expect(readExperimentDraft()?.idempotencyKey).not.toBe("during-load-request");
+    expect(readExperimentDraft()?.idempotencyKey).not.toBe(
+      "during-load-request",
+    );
     expect(
       readConfigurationVersions().items.some(
         (item) =>
@@ -349,7 +368,9 @@ describe("guided experiment", () => {
     const original = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
     window.history.replaceState({}, "", "/research/new?new=1");
     render(<CreateExperimentPage />);
-    await screen.findByRole("heading", { name: "A saved draft already exists" });
+    await screen.findByRole("heading", {
+      name: "A saved draft already exists",
+    });
     expect(window.localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(original);
     expect(screen.queryByLabelText("Starting capital (CNY)")).toBeNull();
     expect(create).not.toHaveBeenCalled();
@@ -374,7 +395,9 @@ describe("guided experiment", () => {
       ),
     ).toBe(true);
     expect(window.location.search).toBe("");
-    expect(screen.queryByText("Your saved draft has been restored.")).toBeNull();
+    expect(
+      screen.queryByText("Your saved draft has been restored."),
+    ).toBeNull();
     expect(create).not.toHaveBeenCalled();
   });
 
@@ -383,7 +406,9 @@ describe("guided experiment", () => {
     saveExperimentDraft(configuration, 2, "previous-request-key");
     window.history.replaceState({}, "", "/research/new?new=1");
     render(<CreateExperimentPage />);
-    await screen.findByRole("heading", { name: "A saved draft already exists" });
+    await screen.findByRole("heading", {
+      name: "A saved draft already exists",
+    });
     const newer = { ...configuration, name: "Other tab keeps this" };
     saveExperimentDraft(newer, 1, "other-tab-request-key");
     await userEvent.click(
@@ -405,17 +430,17 @@ describe("guided experiment", () => {
     const original = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
     window.history.replaceState({}, "", "/research/new?new=1");
     render(<CreateExperimentPage />);
-    await screen.findByRole("heading", { name: "A saved draft already exists" });
-    const write = Storage.prototype.setItem;
-    const blocked = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (
-      this: Storage,
-      key,
-      value,
-    ) {
-      if (key.startsWith(CONFIG_VERSION_PREFIX))
-        throw new DOMException("full", "QuotaExceededError");
-      write.call(this, key, value);
+    await screen.findByRole("heading", {
+      name: "A saved draft already exists",
     });
+    const write = Storage.prototype.setItem;
+    const blocked = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(function (this: Storage, key, value) {
+        if (key.startsWith(CONFIG_VERSION_PREFIX))
+          throw new DOMException("full", "QuotaExceededError");
+        write.call(this, key, value);
+      });
     try {
       await userEvent.click(
         screen.getByRole("button", { name: "Back up draft and start new" }),
@@ -1198,7 +1223,11 @@ describe("durable experiment detail", () => {
     expect(list).toHaveBeenCalledTimes(2);
   });
 
-  it.each([[20, true], [21, true], [21, false]] as const)(
+  it.each([
+    [20, true],
+    [21, true],
+    [21, false],
+  ] as const)(
     "returns to a valid filtered page after an empty active page, total=%i, row focused=%s",
     async (total, rowFocused) => {
       vi.useFakeTimers();
@@ -1247,14 +1276,19 @@ describe("durable experiment detail", () => {
       const refresh = screen.getByRole("button", { name: "Refresh" });
       if (rowFocused)
         screen
-          .getByRole("link", { name: /^Open experiment: Departed running study/ })
+          .getByRole("link", {
+            name: /^Open experiment: Departed running study/,
+          })
           .focus();
       else refresh.focus();
       await act(async () => vi.advanceTimersByTimeAsync(5000));
 
       expect(list).toHaveBeenCalledTimes(3);
       expect(list).toHaveBeenLastCalledWith(
-        expect.any(AbortSignal), 20, 0, "",
+        expect.any(AbortSignal),
+        20,
+        0,
+        "",
         { status: "RUNNING", mode: undefined, sort: "newest" },
       );
       expect(screen.getByLabelText("Status")).toHaveValue("RUNNING");
@@ -1263,7 +1297,9 @@ describe("durable experiment detail", () => {
           name: /^Open experiment: Remaining running study/,
         }),
       ).toBeInTheDocument();
-      expect(screen.queryByText("No matching studies.")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("No matching studies."),
+      ).not.toBeInTheDocument();
       expect(screen.queryByText("21–20 of 20")).not.toBeInTheDocument();
       expect(window.history.state.experimentOffset).toBe(0);
       expect(
@@ -1277,38 +1313,63 @@ describe("durable experiment detail", () => {
   it.each([
     ["removed row", true],
     ["focus moved elsewhere", false],
-  ] as const)("recovers focus after an active-list poll fails: %s", async (_, onRow) => {
-    vi.useFakeTimers();
-    vi.spyOn(experimentApi, "list")
-      .mockResolvedValueOnce({ items: [job], total: 1, limit: 20, offset: 0 })
-      .mockRejectedValueOnce(new ApiError(503, "service unavailable"));
-    render(<ExperimentsPage />);
-    await act(async () => vi.advanceTimersByTimeAsync(0));
-    const rowLink = screen.getByRole("link", { name: /^Open experiment:/ });
-    const refresh = screen.getByRole("button", { name: "Refresh" });
-    rowLink.focus();
-    if (!onRow) refresh.focus();
-    await act(async () => vi.advanceTimersByTimeAsync(5000));
-    const alert = screen.getByRole("alert");
-    expect(alert).toHaveTextContent("The server response could not be confirmed");
-    expect(rowLink).not.toBeInTheDocument();
-    expect(onRow ? alert : refresh).toHaveFocus();
-  });
+  ] as const)(
+    "recovers focus after an active-list poll fails: %s",
+    async (_, onRow) => {
+      vi.useFakeTimers();
+      vi.spyOn(experimentApi, "list")
+        .mockResolvedValueOnce({ items: [job], total: 1, limit: 20, offset: 0 })
+        .mockRejectedValueOnce(new ApiError(503, "service unavailable"));
+      render(<ExperimentsPage />);
+      await act(async () => vi.advanceTimersByTimeAsync(0));
+      const rowLink = screen.getByRole("link", { name: /^Open experiment:/ });
+      const refresh = screen.getByRole("button", { name: "Refresh" });
+      rowLink.focus();
+      if (!onRow) refresh.focus();
+      await act(async () => vi.advanceTimersByTimeAsync(5000));
+      const alert = screen.getByRole("alert");
+      expect(alert).toHaveTextContent(
+        "The server response could not be confirmed",
+      );
+      expect(rowLink).not.toBeInTheDocument();
+      expect(onRow ? alert : refresh).toHaveFocus();
+    },
+  );
 
   it("returns focus to the list heading when a polled row disappears but the table remains", async () => {
     vi.useFakeTimers();
-    const remaining = { ...job, job_id: "22222222-2222-4222-8222-222222222222", name: "Remaining study" };
+    const remaining = {
+      ...job,
+      job_id: "22222222-2222-4222-8222-222222222222",
+      name: "Remaining study",
+    };
     vi.spyOn(experimentApi, "list")
-      .mockResolvedValueOnce({ items: [job, remaining], total: 2, limit: 20, offset: 0 })
-      .mockResolvedValueOnce({ items: [remaining], total: 1, limit: 20, offset: 0 });
+      .mockResolvedValueOnce({
+        items: [job, remaining],
+        total: 2,
+        limit: 20,
+        offset: 0,
+      })
+      .mockResolvedValueOnce({
+        items: [remaining],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      });
     render(<ExperimentsPage />);
     await act(async () => vi.advanceTimersByTimeAsync(0));
-    const rowLink = screen.getAllByRole("link", { name: /^Open experiment:/ })[0];
+    const rowLink = screen.getAllByRole("link", {
+      name: /^Open experiment:/,
+    })[0];
     rowLink.focus();
     await act(async () => vi.advanceTimersByTimeAsync(5000));
     expect(rowLink).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^Open experiment: Remaining study/ })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1, name: "Your experiments" })).toHaveFocus();
+    expect(
+      screen.getByRole("link", { name: /^Open experiment: Remaining study/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Your experiments" }),
+    ).toHaveFocus();
   });
 
   it("does not keep old studies visible after the list refresh fails", async () => {
@@ -1336,23 +1397,35 @@ describe("durable experiment detail", () => {
     expect(
       await screen.findByRole("cell", { name: "Complete" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1, name: "Your experiments" })).toHaveFocus();
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Your experiments" }),
+    ).toHaveFocus();
   });
 
   it("does not steal focus moved away while a failed-list retry is pending", async () => {
-    const saved = { items: [{ ...job, status: "SUCCEEDED" as const }], total: 1, limit: 20, offset: 0 };
+    const saved = {
+      items: [{ ...job, status: "SUCCEEDED" as const }],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    };
     let finishRetry: (() => void) | undefined;
     vi.spyOn(experimentApi, "list")
       .mockResolvedValueOnce(saved)
       .mockRejectedValueOnce(new ApiError(503, "service unavailable"))
-      .mockImplementationOnce(() => new Promise((resolve) => {
-        finishRetry = () => resolve(saved);
-      }));
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            finishRetry = () => resolve(saved);
+          }),
+      );
     render(<ExperimentsPage />);
     await screen.findByRole("cell", { name: "Complete" });
     await userEvent.click(screen.getByRole("button", { name: "Refresh" }));
     await screen.findByRole("alert");
-    await userEvent.click(screen.getByRole("button", { name: "Retry loading" }));
+    await userEvent.click(
+      screen.getByRole("button", { name: "Retry loading" }),
+    );
     const refresh = screen.getByRole("button", { name: "Refresh" });
     refresh.focus();
     await act(async () => finishRetry?.());
@@ -1838,6 +1911,104 @@ describe("durable experiment detail", () => {
     ).toHaveAttribute("href", "/research/new?new=1");
   });
 
+  it.each(["en-US", "zh-CN"])(
+    "names each removable filter with its visible value and keeps keyboard query behavior in %s",
+    async (locale) => {
+      await i18n.changeLanguage(locale);
+      const labels =
+        locale === "en-US"
+          ? {
+              search: "Search saved studies",
+              status: "Status",
+              mode: "Data mode",
+              complete: "Complete",
+              historical: "Historical exploration · already inspected period",
+              remove: "Remove filter",
+              region: "Study view settings",
+            }
+          : {
+              search: "搜索已保存的研究",
+              status: "状态",
+              mode: "数据模式",
+              complete: "已完成",
+              historical: "历史探索 · 已查看区间",
+              remove: "移除筛选",
+              region: "研究视图设置",
+            };
+      const query = "M1 + 精确";
+      const list = vi.spyOn(experimentApi, "list").mockResolvedValue({
+        items: [],
+        total: 0,
+        limit: 20,
+        offset: 0,
+      });
+      render(<ExperimentsPage />);
+      fireEvent.change(screen.getByLabelText(labels.search), {
+        target: { value: query },
+      });
+      fireEvent.change(screen.getByLabelText(labels.status), {
+        target: { value: "SUCCEEDED" },
+      });
+      fireEvent.change(screen.getByRole("combobox", { name: labels.mode }), {
+        target: { value: "historical_exploration" },
+      });
+      await waitFor(() =>
+        expect(list).toHaveBeenLastCalledWith(
+          expect.any(AbortSignal),
+          20,
+          0,
+          query,
+          {
+            status: "SUCCEEDED",
+            mode: "historical_exploration",
+            sort: "newest",
+          },
+        ),
+      );
+      for (const label of [
+        `${labels.search}: ${query}`,
+        `${labels.status}: ${labels.complete}`,
+        `${labels.mode}: ${labels.historical}`,
+      ]) {
+        expect(
+          screen.getByRole("button", { name: `${labels.remove}: ${label}` }),
+        ).toHaveTextContent(`${label} ×`);
+      }
+      for (const [label, q, status, mode] of [
+        [
+          `${labels.search}: ${query}`,
+          "",
+          "SUCCEEDED",
+          "historical_exploration",
+        ],
+        [
+          `${labels.status}: ${labels.complete}`,
+          "",
+          undefined,
+          "historical_exploration",
+        ],
+        [`${labels.mode}: ${labels.historical}`, "", undefined, undefined],
+      ] as const) {
+        screen
+          .getByRole("button", { name: `${labels.remove}: ${label}` })
+          .focus();
+        await userEvent.keyboard("{Enter}");
+        expect(
+          screen.getByRole("region", { name: labels.region }),
+        ).toHaveFocus();
+        await waitFor(() =>
+          expect(list).toHaveBeenLastCalledWith(
+            expect.any(AbortSignal),
+            20,
+            0,
+            q,
+            { status, mode, sort: "newest" },
+          ),
+        );
+      }
+    },
+  );
+
   it("persists a server-wide filtered, sorted column view across remount", async () => {
     const list = vi.spyOn(experimentApi, "list").mockResolvedValue({
       items: [{ ...job, status: "SUCCEEDED", result_available: true }],
@@ -1883,7 +2054,9 @@ describe("durable experiment detail", () => {
         { status: "SUCCEEDED", mode: undefined, sort: "name_asc" },
       ),
     );
-    screen.getByRole("button", { name: "Remove filter: Status" }).focus();
+    screen
+      .getByRole("button", { name: "Remove filter: Status: Complete" })
+      .focus();
     await userEvent.keyboard("{Enter}");
     expect(screen.getByLabelText("Status")).toHaveValue("");
     expect(

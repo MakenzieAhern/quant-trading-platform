@@ -378,7 +378,7 @@ export function AppShell({
             <button
               type="button"
               className={`serviceState ${health.error ? "serviceOffline" : ""}`}
-              aria-label={copy.refreshStatus}
+              aria-label={`${serviceStatus} · ${copy.refreshStatus}`}
               aria-describedby="service-health-status"
               aria-disabled={refreshing}
               onClick={() => {

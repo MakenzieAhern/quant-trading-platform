@@ -336,15 +336,15 @@ export function ExperimentsPage() {
         </p>}
         {(view.q || view.status || view.mode) && <div className="experimentFilterChips">
           {view.q && <button onClick={(event) => removeFilter({ q: "" }, event.currentTarget)}
-            aria-label={`${c.removeFilter}: ${c.searchStudies}`}>
+            aria-label={`${c.removeFilter}: ${c.searchStudies}: ${view.q}`}>
             {c.searchStudies}: {view.q} ×
           </button>}
           {view.status && <button onClick={(event) => removeFilter({ status: "" }, event.currentTarget)}
-            aria-label={`${c.removeFilter}: ${c.status}`}>
+            aria-label={`${c.removeFilter}: ${c.status}: ${c.statuses[view.status]}`}>
             {c.status}: {c.statuses[view.status]} ×
           </button>}
           {view.mode && <button onClick={(event) => removeFilter({ mode: "" }, event.currentTarget)}
-            aria-label={`${c.removeFilter}: ${c.mode}`}>
+            aria-label={`${c.removeFilter}: ${c.mode}: ${view.mode === "synthetic_demo" ? c.demo : c.historical}`}>
             {c.mode}: {view.mode === "synthetic_demo" ? c.demo : c.historical} ×
           </button>}
         </div>}

@@ -69,7 +69,7 @@ describe("routing", () => {
     );
     expect(root.style.getPropertyValue("--app-topbar-height")).toBe("109px");
     const refresh = screen.getByRole("button", {
-      name: "Refresh service and data status",
+      name: /Refresh service and data status/,
     });
     refresh.focus();
     height = 153.5;
@@ -418,17 +418,23 @@ describe("routing", () => {
     });
     render(<App />);
     expect(
+      screen.getByRole("button", { name: /Refresh service and data status/ }),
+    ).toHaveAccessibleName("Connecting · Refresh service and data status");
+    expect(
       await screen.findByText("Service unavailable", {
         selector: ".serviceText",
       }),
     ).toBeInTheDocument();
     const refresh = screen.getByRole("button", {
-      name: "Refresh service and data status",
+      name: /Refresh service and data status/,
     });
     const serviceStatus = screen.getByRole("status");
     expect(refresh).not.toContainElement(serviceStatus);
     expect(refresh).toHaveAttribute("aria-describedby", serviceStatus.id);
     expect(refresh).toHaveAccessibleDescription("Service unavailable");
+    expect(refresh).toHaveAccessibleName(
+      "Service unavailable · Refresh service and data status",
+    );
     online = true;
     fireEvent.click(refresh);
     expect(
@@ -436,6 +442,9 @@ describe("routing", () => {
     ).toBeInTheDocument();
     expect(serviceStatus).toHaveTextContent("Service online");
     expect(refresh).toHaveAccessibleDescription("Service online");
+    expect(refresh).toHaveAccessibleName(
+      "Service online · Refresh service and data status",
+    );
     expect(
       screen.getByText("Available data · not an active run"),
     ).toBeInTheDocument();
@@ -446,6 +455,7 @@ describe("routing", () => {
       /T\d{2}:\d{2}/,
     );
     await act(() => i18n.changeLanguage("zh-CN"));
+    expect(refresh).toHaveAccessibleName("服务在线 · 刷新服务与数据状态");
     expect(screen.getByText(/服务检查时间:/)).toHaveTextContent(/\(UTC\)/);
     expect(screen.getByText(/服务检查时间:/)).not.toHaveTextContent(
       /T\d{2}:\d{2}/,
@@ -480,7 +490,7 @@ describe("routing", () => {
     render(<App />);
     await screen.findByText("Service online", { selector: ".serviceText" });
     const refresh = screen.getByRole("button", {
-      name: "Refresh service and data status",
+      name: /Refresh service and data status/,
     });
     await waitFor(() =>
       expect(refresh).toHaveAttribute("aria-disabled", "false"),
