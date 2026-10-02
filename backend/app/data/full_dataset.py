@@ -300,7 +300,14 @@ class FullDataset:
                         if security_id.endswith(("300090", "300156", "300216"))
                         else None
                     )
-                    key = (member["board"], risky, min(age, 5), blocked, special)
+                    key = (
+                        member["board"],
+                        risky,
+                        min(age, 5),
+                        blocked,
+                        status.is_one_price_limit,
+                        special,
+                    )
                     if key not in rule_cache:
                         rule_cache[key] = self.resolver.resolve(
                             security_id=sid,

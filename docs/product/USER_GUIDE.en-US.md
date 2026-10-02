@@ -31,6 +31,15 @@ Keep using `http://localhost:5173/` to recover drafts and uncertain requests sav
 
 ### Formal research archives (read-only)
 
+Known engine defect (2026-10-03): the old historical loader could reuse the first
+security's single-price non-executable flag for another security in the same
+cache group, incorrectly rejecting a normal security. The new version separates
+these states. An independent single-price veto remains, so illegal fills are not
+established. Prior executed personal/formal candidate results may be affected;
+impact on particular saved reports is not quantified. Original reports, frozen
+data and the consumed OOS lock remain unchanged. This fix does not revalidate old
+returns, and formal research is not rerun to replace its original evidence.
+
 Open an existing report in the [formal A-share archive](http://localhost:5173/research/a-share) and check its Development, Validation or OOS label first. Click “Show benchmark” or press Space to toggle its equity-chart overlay. Paging and language changes on this page retain the display choice without recomputing official metrics or rerunning research. Equity and benchmark each load at most 200 points per page; expand “Show plotted data” for an exact table with at most 100 records per page. Hiding the curve does not remove benchmark values from that table. Long monthly-return values wrap in full on mobile rather than being truncated.
 
 Enter first/last trading dates under “Displayed trading dates,” then choose “Apply dates.” Leave either end blank for an open bound; “Show full interval” resets both. The server filters before pagination, not just the current 200 points. Equity and drawdown date pickers stay linked; hover, click or use Home/arrow keys for exact values. Previewing a date does not query activity. Choose “Show trades and holdings for this date” to query holdings, rebalances and trades for that Asia/Shanghai trading day and move to the linked-date region. Later chart preview/paging does not silently change the confirmed records' date: check “Linked trading date.” “Clear linked date” restores the prior range. The rolling chart retains its independent readout. These actions do not recompute official full-run metrics or monthly returns. Missing values are not zero; no matching holdings does not imply liquidation.
