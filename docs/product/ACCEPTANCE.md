@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 19:28 UTC exact formal-chart batch CI and next required work
+
+Source/manual/checkpoint batch `b020bb7aa0d2446eedf7becc6f74ee8b0222baf7`
+passed [CI37054020278](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37054020278):
+backend1065/one optional skip/Ruff/mypy145, frontend579/44/lint/type/build,
+Compose config/scratch migration/release frontend/backend smoke. Exact PR32
+matches and remains OPEN/DRAFT. Subsequent checkpoint-only writes are not
+covered by that run. Independent source and69-file evidence plus version
+erratum reviews PASS_SCOPED; scoped local proof and negative frames below remain.
+[Saved CI and correction](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-benchmark-toggle-review/README.md)
+stay outside Git. Exact CI JSON SHA313c5984…8f25d.
+
+UX-CHART remains IN_PROGRESS: formal BenchmarkChart lacks individual exact
+hover values; formal curves share paging but do not interactively link a date
+to all trades/holdings. Those APIs currently lack date filtering, so filtering
+only the current200 records cannot satisfy full-period linkage. Next reuse
+native precise point titles/readout before bounded real API date selection.
+No fullM4/M5/native200/p95/lawful new-market forward/missing-ledger recovery,
+merge/tag/release or strategy/OOS claim. Goal remains ACTIVE/IN_PROGRESS.
+
 ## 2026-10-02 19:20 UTC formal archive benchmark control and real mobile reflow
 
 U4/U8/UX-CHART scoped progress, not complete chart/product/release acceptance.

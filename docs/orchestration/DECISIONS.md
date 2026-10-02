@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 exact chart-batch CI, retain full required chart scope — 2026-10-02 19:28 UTC
+
+Exactb020bb7/CI37054020278 backend/frontend/Compose allSUCCESS, draftPR32 matches;
+later checkpoint documentation is not implicitly covered. Keep independent
+source/69-file artifact plus browser-version erratum reviews scoped. Original
+data/frozen assets/OOS untouched. Do not merge or release from this local slice.
+Continue formal exact hover via existing native title/readout semantics; full
+equity/drawdown/trade-date linkage must use bounded server-date filtering, not
+partial-page filtering presented as whole history. Native2552ms failure,
+running ChromeversionUNVERIFIED, lawful forward and genuinely lost ledgers
+remain unchanged. Save checkpoint without a documentation-only push/CI loop.
+
 ## v1.2 formal benchmark display and shared mobile root fixes — 2026-10-02 19:20 UTC
 
 Reuse native localized checkbox and page-level display state; do not fetch,

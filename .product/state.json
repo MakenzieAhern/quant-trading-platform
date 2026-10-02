@@ -1,9 +1,18 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T19:24:28Z",
+  "updated_at_utc": "2026-10-02T19:28:14Z",
+  "pr32_formal_chart_ci_20261003_gate": {
+    "status": "PASS_EXACT_RUNTIME_BATCH",
+    "head": "b020bb7aa0d2446eedf7becc6f74ee8b0222baf7",
+    "run": 37054020278,
+    "url": "https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37054020278",
+    "proof": "Exact pushed formal benchmark/shared reflow/manual/checkpoint batch backend/frontend/Compose SUCCESS; final frontend completed2026-10-02T19:27:50Z. Backend1065/one optional skip/Ruff/mypy145; frontend579/44/lint/type/build; Compose config/scratch migration/release frontend/backend smoke PASS. PR32 matches and remainsOPEN_DRAFT. Source and69-file artifact/erratum independentPASS_SCOPED; scoped Chrome geometry/financial preservation proof. Later checkpoint-only writes not covered by this run. Not fullUX-CHART/U1-U8/M3-M5/native200/p95/forward/data-loss recovery/release.",
+    "evidence": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-benchmark-toggle-review",
+    "ci_json_sha256": "313c59842b4f22356b8d959dc1a75e4485dc06bb6fe5cb292210309dbc18f25d"
+  },
   "u4_formal_benchmark_reflow_20261003_gate": {
-    "status": "LOCAL_PASS_SCOPED_CI_NOT_YET_RUN",
+    "status": "PASS_SCOPED_EXACT_RUNTIME_CI",
     "source_base": "40bebb127da3869dc8b78a078b6199647e9f974e",
     "scope": "Required native localized benchmark visibility in formal archive equity chart; page-level state preserves preference across curve paging/locale. Only SVG/legend/visual Y scale change; exact both-series table, full official metrics, API dependencies and rolling Sharpe/drawdown remain intact. Shared header max-width100% and monthly cell min-width0/overflow-wrap:anywhere close actual mobile header/long-value overflow without truncation or financial recalculation.",
     "tests": "Expected RED for missing checkbox and shared CSS retained; new fixture's same-date sorting failure retained then fixture alone corrected.14 focused PASS; full frontend579/44, lint/type/touched Prettier/build PASS. Existing >500kB entry advisory retained, not a performance PASS.",
@@ -15,7 +24,7 @@
     "review": "Seven frontend source/test/style files and69-file saved artifact plus separate version erratum independently PASS_SCOPED, no newP1/P2. Independent hash/verifier/raw16matrix/API22metrics/exact100rows/96monthlycells/settled screenshots/cleanup verified. Exact running browser versionUNVERIFIED respected; no broad gate promotion.",
     "cleanup": "Only owned18173 frontend replaced/restored exacte328/no mounts/healthy; current PID16369/start2026-10-02T19:18:13.724179442Z is historical evidence, never reusable authority. Owned backend/PG/Redis starts/PIDs unchanged; original four unchanged and frontend/APIHTTP200, RedisPONG. Original/restored5|417|8|4; raw metrics-before/after SHAff5e4a74603a53492a2938382f6ef542ea58103e88fd98c7200d0004af6a0e1d identical. ZH/dark restored, viewport reset/owned tab closed. No job/queue/financial/frozen/research/OOS/source/authority write.",
     "limits": "Full U1-U8/M3-M5/UX-CHART remains incomplete; native timing negative/unproven target, lawful forward/new receipt and genuinely lost paper ledgers retained. Olda710 CI does not cover this batch. No merge/tag/release.",
-    "next": "Coherent source/checkpoint/manual commit and meaningful push existing draftPR32; await exact new CI without treating old run as new proof. Then reuse existing exact point titles/readout for formal chart hover; formal date-linked trade/holding selection requires real bounded API filtering, not filtering only current200 rows."
+    "next": "Exactb020bb7 CI37054020278 passed; later checkpoint-only writes not covered. Continue next required exact hover by reusing native point titles/readout, then full formal date-linked trade/holding selection requires real bounded API filtering, not filtering only current200 rows. Preserve all scoped/unverified/full-goal boundaries."
   },
   "pr32_saved_result_ci_20261003_gate": {
     "status": "PASS_EXACT_RUNTIME_BATCH",
@@ -2287,13 +2296,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "a71023e56d00e151d1569ae54479a2a63aba75c1",
+      "last_verified_head": "b020bb7aa0d2446eedf7becc6f74ee8b0222baf7",
       "state": "DRAFT",
-      "ci_run": 37048395908,
+      "ci_run": 37054020278,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Saved-route eager fix actual Chrome three cold-doc request-start2-4ms/metricDOM67-87ms, same saved financial summary, native/RAF PARTIAL; independent code/577frontend/40-file verifier/five-file diff PASS_SCOPED and exacta71023e CI37048395908 backend/frontend/Compose SUCCESS. Later checkpoint/native diagnostic not covered by this CI. Prior calendar/SQL/focus/history/baseline/plan/media retained scoped. No lawful forward/full U1-U8/M3-M5/missing-ledger recovery/merge/release claim."
+      "browser_gate": "Formal archive native benchmark control/Space/exact table/paging/locale/rolling/full metrics and mobile533->375 shared-header/monthly reflow scopedChromePASS.579frontend,16 scopedDOM cases,69-file verifier/independent source and saved-artifact erratumPASS_SCOPED. Exactb020bb7 CI37054020278 backend/frontend/ComposeSUCCESS; later checkpoint-only writes not covered. Prior saved-route/current calendar/SQL/focus/history/baseline/plan/media evidence retained scoped, native/RAF PARTIAL and long2552ms retained. Exact running Chromeversion unverified, historical153 corrected externally. No lawful forward/fullUX-CHART/U1-U8/M3-M5/native200/p95/missing-ledger recovery/merge/release claim."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2308,7 +2317,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Formal archive benchmark visibility and actual mobile header/monthly-value reflow now scoped localPASS:579 frontend,14 focused,16 DOM cases, settled actualChrome screenshots, exact metrics/tables/rolling unchanged;69-file sealed verifier PASS. Source and artifact/erratum reviewPASS_SCOPED. Save coherent source/checkpoint/manual commit and meaningful batch push existing draftPR32, observe exact newCI; olda710 runtimeCI does not cover newsource. Then next required chart slice is formal exact hover (reuse native point titles/readout); full equity/drawdown/trade-date linkage still requires actual bounded server-date filtering, not filtering only current200 rows. Keep native2552ms diagnostic and targetunproven, optional physical comparison separate. Full U1-U8/M0-M5/lawful forward/current authorities/after-start receipt/plan/constrained processing and genuine missing-ledger facts remain, not a smaller local-only substitute. No privacy/security/cache bypass, merge/tag/release or strategy/OOS rerun.",
+  "next_task": "Exact formal benchmark/reflow batchb020bb7 CI37054020278 backend/frontend/ComposePASS, draftPR32 matches; later checkpoint-only writes not covered. Scoped579frontend/14focused/16DOM/69-file sealed Chrome proof and independent source/artifact/erratumPASS; metrics/table/rolling unchanged, mobile533->375 root fixes. Next required safe chart slice: formal exact hover, reuse existing native point titles/readout and precise raw strings with null/hidden-benchmark regression and actualChrome proof; full equity/drawdown/trade-date linkage then requires actual bounded server-date filtering, not filtering only current200 rows. Keep native2552ms failure/targetunproven and running ChromeversionUNVERIFIED, optional foreground comparison separate. Full U1-U8/M0-M5/lawful forward/current authorities/after-start receipt/plan/constrained processing and genuine missing-ledger facts remain, not a local-only substitute. No privacy/security/cache bypass, merge/tag/release or strategy/OOS rerun.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
