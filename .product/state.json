@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-01T23:58:08Z",
+  "updated_at_utc": "2026-10-02T00:08:31Z",
+  "m5_isolated_packaged_stack_20261002_gate": {
+    "status": "PASS_BOUNDED_PACKAGED_SYNTHETIC_FLOW_AND_BACKEND_RESTART_NOT_RELEASE",
+    "source_head": "3cd1b352e206be501474b1b0c09bc4eefff4284d",
+    "proof": "Current-source backend and release frontend images sha256:f9f6799a1ed9285aadaeb0d814a7b32c1a89361995564d6a8ac0b7d7d35cef7c and sha256:19faa97720f11db98e990866fb9a5f1194e1ae195f3aeac19db2a8da1fb064cd ran on a dedicated Docker network. Scratch PostgreSQL and Redis used tmpfs with no mounts; test-mode backend mounted only the AAPL fixture directory read-only, no private research archive, and product data was tmpfs. The packaged frontend used localhost:8001 and the backend allowed the isolated localhost:50390 origin. Actual Chrome showed an empty workbench with historical DATASET_NOT_MOUNTED and a labeled synthetic demo, completed the four-step wizard, and created one real scratch job 877ce8f9-746e-4f6d-b3af-dc9060e2a6ba, SUCCEEDED 340/340. The result showed +0.39% return, -0.04% drawdown, CNY25 cost, +4.15% synthetic benchmark, risk limitations and no executable next-day plan. Deep-link reload and a scratch backend restart both recovered the same job and result; scratch DB held exactly one job. The owned tab and four scratch containers/network were closed; original Compose stayed up with original product jobs/rows 8/1110, paper sessions/events 5/417, update jobs 4, and frontend/API HTTP 200. See docs/product/ACCEPTANCE.md.",
+    "limits": "Agent-owned synthetic clean-install integration, not real A-share historical archive, actual 2026 forward mode, production APP_ENV, independent novice testing, durable screenshot/video, native 200-percent zoom, screen-reader speech, post-login startup, independent physical backup, recovery of pre-loss paper ledgers, or full U1-U8/M4/M5 release acceptance. The scratch tmpfs database was intentionally discarded; original database, volumes, frozen research and OOS were untouched."
+  },
   "m4_m5_bounded_browser_and_release_smoke_20261002_gate": {
     "status": "PASS_BOUNDED_MOBILE_JOURNAL_AND_PACKAGED_OFFLINE_STATE_NOT_FULL_M4_M5",
     "source_head": "d53e89a13f67d0507b82fed5879598ba66602577",
