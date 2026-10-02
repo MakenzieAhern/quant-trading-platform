@@ -8540,4 +8540,6 @@ research or Official OOS was changed.
 This closes one unknown-strategy recovery defect, not full U2/U8/M4/M5,
 independent novice acceptance, lawful new-market forward simulation or release.
 Browser screenshots were inspected but not saved as durable M5 media. The
-current strategy fix has not yet passed exact-head hosted CI.
+strategy-fix code head `ea51d0f7bd84f349623575974d8506a6230f0c18`
+subsequently passed [CI run 37011283889](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37011283889):
+backend, frontend and Compose all succeeded. PR #32 remains draft/open.

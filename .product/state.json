@@ -1,11 +1,18 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T13:07:00Z",
+  "updated_at_utc": "2026-10-02T13:14:00Z",
+  "pr32_unknown_strategy_ci_20261002_gate": {
+    "status": "PASS_EXACT_CODE_HEAD_CI_NOT_PRODUCT_RELEASE",
+    "source_head": "ea51d0f7bd84f349623575974d8506a6230f0c18",
+    "ci_run": 37011283889,
+    "proof": "GitHub run 37011283889 completed successfully for exact pushed code head ea51d0f7bd84f349623575974d8506a6230f0c18: backend, frontend and Compose all passed. PR32 remained draft/open, and original local Compose services continued running.",
+    "limits": "This covers the unknown-strategy code head, not full U1-U8/M3-M5, lawful forward data, genuine lost ledgers, independent backup, post-login unattended startup, merge, tag or release."
+  },
   "u2_unknown_strategy_deeplink_20261002_gate": {
     "status": "PASS_BOUNDED_BILINGUAL_BROWSER_NOT_FULL_U2_U8_M4_M5",
     "proof": "Independent Chrome baseline showed /strategies/does-not-exist displaying the real momentum title and false service-outage copy while the catalog was online. A bilingual page regression failed before and passed after ProductStrategiesPage separated loaded-catalog miss from fetch error, removed fallback strategy naming and linked back to /strategies. Focused 14/14 and full frontend 568/568 passed, as did lint/type/format/build. Read-only Chrome confirmed English and Chinese missing-ID message and working return to the populated list; original counts remained 5 paper sessions, 417 events, 8 research jobs and 4 update jobs. See docs/product/ACCEPTANCE.md.",
-    "limits": "One unknown strategy route only; actual service failure was not induced against the original backend. No retained current-head media, full U2/U8/M4/M5, lawful forward market receipt, genuine lost ledgers, independent backup, exact new-head hosted CI, merge, tag or release."
+    "limits": "One unknown strategy route only; actual service failure was not induced against the original backend. No retained current-head media, full U2/U8/M4/M5, lawful forward market receipt, genuine lost ledgers, independent backup, merge, tag or release."
   },
   "pr32_offline_recovery_ci_20261002_gate": {
     "status": "PASS_EXACT_CODE_HEAD_CI_NOT_PRODUCT_RELEASE",
@@ -2111,13 +2118,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "bc198bb629b4d57966d78615c58247051fc003cb",
+      "last_verified_head": "ea51d0f7bd84f349623575974d8506a6230f0c18",
       "state": "DRAFT",
-      "ci_run": 37009858550,
+      "ci_run": 37011283889,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "At prior code head 683ccb3, isolated tmpfs Chrome EN/ZH legacy cancellation showed zero fills and unchanged CNY1000. Pushed code head 83c5961 confirmed bilingual unknown-route recovery to Workbench with CI 36965529749. Pushed code head bc198bb corrected packaged Data Center offline copy and confirmed Retry recovery in Chrome; local 567 frontend tests and exact-head CI 37009858550 backend/frontend/Compose passed. Native 200% zoom, screen-reader speech, report file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
+      "browser_gate": "At prior code head bc198bb, packaged Data Center offline copy and Retry recovery were confirmed in Chrome with exact-head CI 37009858550. Current code head ea51d0f confirmed bilingual unknown-strategy recovery to the populated list in read-only Chrome; local 568 frontend tests and exact-head CI 37011283889 backend/frontend/Compose passed. Native 200% zoom, screen-reader speech, report file landing, durable current-head media, independent novice, full visual/A11Y/performance, lawful forward mode, Docker post-login auto-start, genuine lost ledgers and independent backup remain open"
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2132,8 +2139,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. Packaged Data Center offline messaging and unknown strategy deep-link recovery are now corrected with bounded bilingual browser evidence and local tests; the former passed exact-head CI 37009858550. Docker was recovered by manual Desktop start with original counts intact, but unattended post-login startup is unproven. Push the current strategy-fix checkpoint to draft PR32 and verify exact-head CI, then continue safe accessibility, cold/release-stack performance and delivery evidence. Written rights for private local persistent 2026 simulated plans/fills, an after-start completed-session receipt, genuine pre-loss paper ledgers and an independent physical backup remain external gaps. Keep PR32 draft/open; no merge, tag or release.",
-  "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform validate the unknown-strategy code/test/docs diff, confirm remote PR32 head and unchanged Git identity, commit and fast-forward push, then await exact-head backend/frontend/Compose CI. Continue independent safe M4/M5 work afterward. At the next genuine Windows login verify terminal-free Docker startup without inducing a reboot solely for that claim. Do not run financial studies or bypass missing lawful forward-feed rights.",
+  "next_task": "M0-M2 and scoped U3 product isolation pass; full U1-U8/M3-M5 and v1.2 release do not. Packaged Data Center offline messaging and unknown strategy deep-link recovery are corrected with bounded bilingual browser evidence; their pushed code heads passed exact-head CI 37009858550 and 37011283889. Docker was recovered by manual Desktop start with original counts intact, but unattended post-login startup is unproven. Continue safe accessibility, cold/release-stack performance and durable current-head delivery evidence without original financial-data submission or repeating blocked methods. Written rights for private local persistent 2026 simulated plans/fills, an after-start completed-session receipt, genuine pre-loss paper ledgers and an independent physical backup remain external gaps. Keep PR32 draft/open; no merge, tag or release.",
+  "local_next_command": "In WSL /home/yuchen/projects/quant-trading-platform verify branch/head/clean status, original Docker Compose and latest PR32 CI, then pursue one concrete safe M4/M5 defect or durable browser evidence. At the next genuine Windows login verify terminal-free Docker startup without inducing a reboot solely for that claim. Do not run financial studies or bypass missing lawful forward-feed rights.",
   "next_command": "Full U1-U8/M0-M5 objective remains incomplete. Continue safe browser, accessibility, performance, delivery and exact-head CI evidence without bypassing a browser URL-confidence stop. Ask once for any still-missing lawful forward-feed rights, genuine pre-loss ledger evidence and an independent physical backup destination; do not infer approval from public readability or fabricate lost records. Keep PR32 draft/open; no merge, tag or release until all gates pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
