@@ -20,11 +20,14 @@ from app.api.schemas.paper import (
     CreatePaperSessionRequest,
     MarketBarPayload,
     MarketSessionPayload,
+    PaperCollectionKind,
+    PaperCollectionPage,
     PaperEventResponse,
     PaperOrderResponse,
     PaperSessionPage,
     PaperSessionResponse,
     PaperSnapshotResponse,
+    PaperStateResponse,
     PortfolioPayload,
 )
 from app.application.backtests import DatasetRegistry, StrategyRegistry
@@ -202,6 +205,53 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
     if snapshot is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found")
     session, events = snapshot
+    return _snapshot_response(session, events, events[-1].sequence if events else 0)
+
+
+@router.get("/{session_id}/state", response_model=PaperStateResponse)
+async def get_paper_state(session_id: UUID) -> PaperStateResponse:
+    state = await paper_manager.state_snapshot(session_id)
+    if state is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found")
+    session, watermark, events = state
+    return PaperStateResponse.model_validate(
+        _snapshot_response(session, events, watermark).model_dump(
+            exclude={"signals", "risk_decisions", "orders", "fills"}
+        )
+    )
+
+
+@router.get("/{session_id}/collections/{collection}", response_model=PaperCollectionPage)
+async def get_paper_collection(
+    session_id: UUID,
+    collection: PaperCollectionKind,
+    as_of_sequence: Annotated[int, Query(ge=0, le=2147483647)],
+    limit: Annotated[int, Query(ge=1, le=100)] = 100,
+    offset: Annotated[int, Query(ge=0, le=2147483647)] = 0,
+) -> PaperCollectionPage:
+    try:
+        page = await paper_manager.collection_page(
+            session_id, collection, as_of_sequence, limit, offset
+        )
+    except ValueError as exc:
+        raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
+    if page is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found")
+    items, total = page
+    return PaperCollectionPage(
+        session_id=session_id,
+        collection=collection,
+        as_of_sequence=as_of_sequence,
+        limit=limit,
+        offset=offset,
+        total=total,
+        items=[_event_response(item) for item in items],
+    )
+
+
+def _snapshot_response(
+    session: PaperSession, events: tuple[PaperEventRecord, ...], last_sequence: int
+) -> PaperSnapshotResponse:
     latest_bar: MarketBarPayload | None = None
     latest_session: MarketSessionPayload | None = None
     latest_portfolio: PortfolioPayload | None = None
@@ -238,7 +288,7 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
                 last_rebalance_plan = plan
     return PaperSnapshotResponse(
         session=_session_response(session),
-        last_sequence=events[-1].sequence if events else 0,
+        last_sequence=last_sequence,
         latest_bar=latest_bar,
         latest_session=latest_session,
         signals=signals,

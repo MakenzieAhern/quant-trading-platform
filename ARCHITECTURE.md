@@ -84,6 +84,17 @@ For each completed replay Bar, the durable delivery order is `market.bar`, any p
 
 WebSocket delivery is incremental, not authoritative history. Every connection owns a bounded queue of 64 events. Publishing never awaits a browser. When a consumer falls behind, all stale queued items are discarded, then `stream.resync_required` and the newest event occupy the bounded queue; the client closes and reloads REST rather than applying that uncertain increment. Server-side receive monitoring detects a disconnected client even when no market event is being sent, so the queue is removed promptly. The React client connects, hydrates REST, applies only increasing event sequences, deduplicates record identities, strictly validates event envelopes and payloads, and performs authoritative rehydration on reconnect. Terminal sessions close the socket without reconnecting. Origin checks use the configured frontend origin. Payload DTOs expose only explicit JSON fields and Decimal strings—never ORM or arbitrary Python objects.
 
+The additive paper `/state` read holds the same shared writer-row lock and
+returns a journal watermark plus latest bar/session/portfolio and the last
+preview plan, without historical signal/risk/order/fill arrays. Collection reads
+use that validated watermark, SQL counts and at most 100 events per page.
+Orders retain the latest state per canonical UUID, ordered by first appearance;
+signals, risk decisions and fills retain every event in sequence order, including
+multiple fills for one order. Later appends cannot leak into an older page.
+The full `/snapshot`, journal and resume paths remain compatible recovery
+interfaces. This bounds page materialization/transport, not SQL scan complexity
+or an endless provider's in-memory runtime history.
+
 **There is no live broker connectivity in the Phase 9 MVP.** `PaperBroker` is local simulation only. No brokerage credentials, external order endpoints, dynamic providers, or real-money routes exist.
 
 ## Backend modules

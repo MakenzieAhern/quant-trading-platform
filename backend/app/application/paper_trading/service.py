@@ -227,6 +227,20 @@ class PaperTradingManager:
         async with self._session_factory() as db:
             return await SQLAlchemyPaperRepository(db).snapshot(session_id)
 
+    async def state_snapshot(
+        self, session_id: UUID
+    ) -> tuple[PaperSession, int, tuple[PaperEventRecord, ...]] | None:
+        async with self._session_factory() as db:
+            return await SQLAlchemyPaperRepository(db).state_snapshot(session_id)
+
+    async def collection_page(
+        self, session_id: UUID, collection: str, as_of_sequence: int, limit: int, offset: int
+    ) -> tuple[tuple[PaperEventRecord, ...], int] | None:
+        async with self._session_factory() as db:
+            return await SQLAlchemyPaperRepository(db).collection_page(
+                session_id, collection, as_of_sequence, limit, offset
+            )
+
     async def start(self, session_id: UUID) -> PaperSession:
         async with self._lock:
             session = await self.get(session_id)

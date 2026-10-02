@@ -8,6 +8,7 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text, update
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.routes import paper as paper_routes
 from app.api.routes.paper import paper_manager, paper_session_websocket, settings
@@ -187,6 +188,293 @@ def historical_request_body() -> dict[str, object]:
         "default_order_quantity": "1",
         "risk": {"enforce_buying_power": True, "max_leverage": "1"},
     }
+
+
+async def test_bounded_paper_reads_preserve_watermark_order_and_exact_payloads(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Read-contract fixture in disposable PostgreSQL, not a strategy performance run."""
+    monkeypatch.setattr(paper_manager, "_replay_interval_seconds", 0)
+    reference = (await client.post("/api/paper-trading/sessions", json=request_body())).json()
+    reference_id = UUID(reference["session_id"])
+    await paper_manager.start(reference_id)
+    await paper_manager._tasks[reference_id]
+    template = (await client.get(f"/api/paper-trading/sessions/{reference_id}/snapshot")).json()
+    created = (await client.post("/api/paper-trading/sessions", json=request_body())).json()
+    session_id = UUID(created["session_id"])
+    base = f"/api/paper-trading/sessions/{session_id}"
+    now = datetime(2030, 1, 1, tzinfo=UTC)
+    exact = "10.000000000000000001"
+    events = []
+    orders = []
+    for index in range(205):
+        order_id = str(uuid4())
+        order = {**template["orders"][0], "order_id": order_id, "quantity": exact}
+        if index == 1:
+            order["status"] = "ACCEPTED"  # An old pending order must not disappear.
+        orders.append(order)
+        events.extend(
+            [
+                ("signal.created", now, template["signals"][0]),
+                ("risk.decision", now, {**template["risk_decisions"][0], "proposal_id": order_id}),
+                ("order.updated", now, order),
+                (
+                    "fill.created",
+                    now,
+                    {
+                        **template["fills"][0],
+                        "order_id": order_id,
+                        "quantity": exact,
+                        "commission": "0.000000000000000001",
+                    },
+                ),
+            ]
+        )
+    # UUID spellings normalize to one order, but fills are never deduplicated by order ID.
+    events.extend(
+        [
+            (
+                "order.updated",
+                now,
+                {
+                    **orders[0],
+                    "order_id": orders[0]["order_id"].upper(),
+                    "status": "PARTIALLY_FILLED",
+                },
+            ),
+            (
+                "fill.created",
+                now,
+                {**template["fills"][0], "order_id": orders[0]["order_id"], "quantity": exact},
+            ),
+            ("market.bar", now, template["latest_bar"]),
+            (
+                "portfolio.snapshot",
+                now,
+                {
+                    **template["latest_portfolio"],
+                    "plan": {"status": "SIMULATION_PREVIEW", "paper_session_id": str(session_id)},
+                },
+            ),
+            ("portfolio.snapshot", now, {**template["latest_portfolio"], "plan": None}),
+        ]
+    )
+    async with SessionFactory() as db:
+        await SQLAlchemyPaperRepository(db).append_events(session_id, tuple(events))
+    before = (await client.get(f"{base}/snapshot")).json()
+    journal_before = await paper_manager.events(session_id)
+    watermark = before["last_sequence"]
+    assert len(before["orders"]) == 205 and len(before["fills"]) == 206
+    assert before["orders"][0]["status"] == "PARTIALLY_FILLED"
+    assert before["orders"][1]["status"] == "ACCEPTED"
+
+    async def forbid_full_journal(*args, **kwargs):
+        raise AssertionError("bounded reads must not load list_events")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(SQLAlchemyPaperRepository, "list_events", forbid_full_journal)
+        response = await client.get(f"{base}/state")
+        assert response.status_code == 200
+        assert response.json() == {
+            key: value
+            for key, value in before.items()
+            if key not in {"signals", "risk_decisions", "orders", "fills"}
+        }
+        for collection in ("signals", "risk_decisions", "orders", "fills"):
+            combined = []
+            for offset in (0, 100, 200):
+                page = await client.get(
+                    f"{base}/collections/{collection}",
+                    params={
+                        "as_of_sequence": watermark,
+                        "limit": 100,
+                        "offset": offset,
+                    },
+                )
+                assert page.status_code == 200
+                data = page.json()
+                assert data["session_id"] == str(session_id)
+                assert data["as_of_sequence"] == watermark
+                assert data["total"] == len(before[collection])
+                assert data["limit"] == 100 and data["offset"] == offset
+                assert len(data["items"]) == min(100, len(before[collection]) - offset)
+                combined.extend(item["payload"] for item in data["items"])
+            assert combined == before[collection]
+
+        # A later commit must not leak into pages already tied to the old state.
+        async with SessionFactory() as db:
+            appended = await SQLAlchemyPaperRepository(db).append_events(
+                session_id,
+                (
+                    ("order.updated", now, {**orders[0], "status": "FILLED"}),
+                    (
+                        "fill.created",
+                        now,
+                        {
+                            **template["fills"][0],
+                            "order_id": orders[0]["order_id"],
+                            "quantity": exact,
+                        },
+                    ),
+                ),
+            )
+        old_page = (
+            await client.get(
+                f"{base}/collections/orders",
+                params={
+                    "as_of_sequence": watermark,
+                },
+            )
+        ).json()
+        assert old_page["items"][0]["payload"] == before["orders"][0]
+        for collection in ("orders", "fills"):
+            for offset in (100, 200):
+                old_tail = (
+                    await client.get(
+                        f"{base}/collections/{collection}",
+                        params={
+                            "as_of_sequence": watermark,
+                            "offset": offset,
+                        },
+                    )
+                ).json()
+                assert old_tail["total"] == len(before[collection])
+                assert [item["payload"] for item in old_tail["items"]] == before[collection][
+                    offset : offset + 100
+                ]
+        new_state = (await client.get(f"{base}/state")).json()
+        assert new_state["last_sequence"] == watermark + 2
+        new_page = (
+            await client.get(
+                f"{base}/collections/orders",
+                params={
+                    "as_of_sequence": new_state["last_sequence"],
+                },
+            )
+        ).json()
+        assert new_page["total"] == 205 and new_page["items"][0]["payload"]["status"] == "FILLED"
+        fills = (
+            await client.get(
+                f"{base}/collections/fills",
+                params={
+                    "as_of_sequence": new_state["last_sequence"],
+                    "offset": 200,
+                },
+            )
+        ).json()
+        assert fills["total"] == 207 and len(fills["items"]) == 7
+        assert (
+            await client.get(
+                f"{base}/collections/fills",
+                params={
+                    "as_of_sequence": watermark + 3,
+                },
+            )
+        ).status_code == 409
+        for params in ({"limit": 101}, {"limit": 0}, {"offset": -1}, {"as_of_sequence": -1}):
+            assert (
+                await client.get(
+                    f"{base}/collections/fills",
+                    params={
+                        "as_of_sequence": watermark,
+                        **params,
+                    },
+                )
+            ).status_code == 422
+        assert (
+            await client.get(
+                f"{base}/collections/unknown",
+                params={
+                    "as_of_sequence": watermark,
+                },
+            )
+        ).status_code == 422
+        missing = f"/api/paper-trading/sessions/{uuid4()}"
+        assert (await client.get(f"{missing}/state")).status_code == 404
+        assert (
+            await client.get(
+                f"{missing}/collections/fills",
+                params={
+                    "as_of_sequence": watermark,
+                },
+            )
+        ).status_code == 404
+    assert await paper_manager.events(session_id) == (*journal_before, *appended)
+
+
+async def test_paper_state_watermark_holds_shared_writer_lock(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    created = (await client.post("/api/paper-trading/sessions", json=request_body())).json()
+    session_id = UUID(created["session_id"])
+    original_scalar = AsyncSession.scalar
+    captured = asyncio.Event()
+    release = asyncio.Event()
+    writer_started = asyncio.Event()
+
+    async def pause_after_watermark(db, statement, *args, **kwargs):
+        value = await original_scalar(db, statement, *args, **kwargs)
+        if asyncio.current_task().get_name() == "paper-state-lock-test" and (
+            "max(paper_trading_events.sequence)" in str(statement)
+        ):
+            captured.set()
+            await release.wait()
+        return value
+
+    async def append():
+        async with SessionFactory() as db:
+            writer_started.set()
+            return await SQLAlchemyPaperRepository(db).append_events(
+                session_id, (("session.status", datetime.now(UTC), {"status": "CREATED"}),)
+            )
+
+    monkeypatch.setattr(AsyncSession, "scalar", pause_after_watermark)
+    reader = asyncio.create_task(
+        paper_manager.state_snapshot(session_id), name="paper-state-lock-test"
+    )
+    writer = None
+    try:
+        await asyncio.wait_for(captured.wait(), 5)
+        writer = asyncio.create_task(append())
+        await writer_started.wait()
+        done, _ = await asyncio.wait({writer}, timeout=0.03)
+        assert not done, (
+            "journal writer must wait until the state read releases the shared row lock"
+        )
+        release.set()
+        state = await asyncio.wait_for(reader, 5)
+        assert state is not None and state[1] == 1
+        added = await asyncio.wait_for(writer, 5)
+        assert added[0].sequence == 2
+        assert (await paper_manager.state_snapshot(session_id))[1] == 2
+    finally:
+        release.set()
+        await asyncio.gather(
+            reader, *([writer] if writer is not None else []), return_exceptions=True
+        )
+
+
+async def test_bounded_order_page_rejects_status_only_corrupt_payload(client: AsyncClient) -> None:
+    created = (await client.post("/api/paper-trading/sessions", json=request_body())).json()
+    session_id = UUID(created["session_id"])
+    async with SessionFactory() as db:
+        await SQLAlchemyPaperRepository(db).append_events(
+            session_id,
+            (
+                (
+                    "order.updated",
+                    datetime.now(UTC),
+                    {"order_id": str(uuid4()), "status": "CREATED"},
+                ),
+            ),
+        )
+    async with AsyncClient(
+        transport=ASGITransport(app=app, raise_app_exceptions=False), base_url="http://test"
+    ) as safe_client:
+        for suffix in ("collections/orders?as_of_sequence=2", "events", "snapshot"):
+            response = await safe_client.get(f"/api/paper-trading/sessions/{session_id}/{suffix}")
+            assert response.status_code == 500
+            assert response.json() == {"detail": "internal server error"}
 
 
 async def test_historical_a_share_account_creation_has_distinct_mode_and_dated_config(

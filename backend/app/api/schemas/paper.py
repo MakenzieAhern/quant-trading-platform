@@ -215,6 +215,19 @@ class PaperEventResponse(BaseModel):
 
     @model_validator(mode="after")
     def validate_calendar_event(self) -> "PaperEventResponse":
+        expected_payload = {
+            "session.status": SessionStatusPayload,
+            "market.bar": MarketBarPayload,
+            "market.session": MarketSessionPayload,
+            "signal.created": SignalResponse,
+            "risk.decision": RiskDecisionResponse,
+            "order.updated": PaperOrderResponse,
+            "fill.created": FillResponse,
+            "portfolio.snapshot": PortfolioPayload,
+            "calendar.observed": CalendarObservation,
+        }[self.type]
+        if not isinstance(self.payload, expected_payload):
+            raise ValueError("paper event payload does not match its event type")
         if self.type == "calendar.observed":
             if not isinstance(self.payload, CalendarObservation):
                 raise ValueError("calendar event requires a calendar observation")
@@ -223,14 +236,30 @@ class PaperEventResponse(BaseModel):
         return self
 
 
-class PaperSnapshotResponse(BaseModel):
+class PaperStateResponse(BaseModel):
     session: PaperSessionResponse
     last_sequence: int
     latest_bar: MarketBarPayload | None
     latest_session: MarketSessionPayload | None = None
+    latest_portfolio: PortfolioPayload | None
+    last_rebalance_plan: dict[str, Any] | None = None
+
+
+class PaperSnapshotResponse(PaperStateResponse):
     signals: list[SignalResponse]
     risk_decisions: list[RiskDecisionResponse]
     orders: list[PaperOrderResponse]
     fills: list[FillResponse]
-    latest_portfolio: PortfolioPayload | None
-    last_rebalance_plan: dict[str, Any] | None = None
+
+
+PaperCollectionKind = Literal["signals", "risk_decisions", "orders", "fills"]
+
+
+class PaperCollectionPage(BaseModel):
+    session_id: UUID
+    collection: PaperCollectionKind
+    as_of_sequence: int
+    limit: int
+    offset: int
+    total: int
+    items: list[PaperEventResponse]
