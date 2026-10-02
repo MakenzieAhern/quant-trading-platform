@@ -101,9 +101,6 @@ export function MarketUpdatesPanel({
           focused !== document.getElementById("main-content"))
       )
         return;
-      const topbar =
-        document.querySelector(".topbar")?.getBoundingClientRect().bottom ?? 0;
-      target.style.scrollMarginTop = `${Math.ceil(Math.max(0, topbar)) + 8}px`;
       target.focus({ preventScroll: true });
       target.scrollIntoView?.({ block: "start" });
     });

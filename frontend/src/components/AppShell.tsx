@@ -34,6 +34,7 @@ export function AppShell({
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const sidebar = useRef<HTMLElement>(null);
+  const topbar = useRef<HTMLElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
   const lastFocused = useRef<Element | null>(null);
   const resizeFocus = useRef<Element | null>(null);
@@ -108,6 +109,28 @@ export function AppShell({
   useEffect(() => {
     document.title = `${location} · QUANT`;
   }, [location]);
+  useLayoutEffect(() => {
+    const header = topbar.current;
+    if (!header) return;
+    const root = document.documentElement;
+    const previous = root.style.getPropertyValue("--app-topbar-height");
+    const measure = () =>
+      root.style.setProperty(
+        "--app-topbar-height",
+        `${Math.ceil(header.getBoundingClientRect().height)}px`,
+      );
+    measure();
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? undefined
+        : new ResizeObserver(measure);
+    observer?.observe(header);
+    return () => {
+      observer?.disconnect();
+      if (previous) root.style.setProperty("--app-topbar-height", previous);
+      else root.style.removeProperty("--app-topbar-height");
+    };
+  }, []);
   useEffect(() => {
     if (menuOpen) sidebar.current?.querySelector("a")?.focus();
   }, [menuOpen]);
@@ -313,7 +336,7 @@ export function AppShell({
         />
       )}
       <div className="appBody" inert={menuOpen}>
-        <header className="topbar">
+        <header ref={topbar} className="topbar">
           <button
             ref={menuButton}
             className="iconButton mobileMenu"

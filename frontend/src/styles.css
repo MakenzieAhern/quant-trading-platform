@@ -27,6 +27,7 @@
   color: var(--text);
   background: var(--background);
   color-scheme: light;
+  scroll-padding-top: calc(var(--app-topbar-height, 0px) + 8px);
 }
 :root[data-theme="dark"] {
   --background: #16181e;

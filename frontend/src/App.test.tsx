@@ -24,6 +24,53 @@ const health = {
 };
 
 describe("routing", () => {
+  it("tracks the actual sticky header height without changing focus and releases the root inset on unmount", async () => {
+    let resize: ResizeObserverCallback | undefined;
+    const observe = vi.fn();
+    const disconnect = vi.fn();
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(callback: ResizeObserverCallback) {
+          resize = callback;
+        }
+        observe = observe;
+        disconnect = disconnect;
+      },
+    );
+    let height = 109;
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
+      function (this: HTMLElement) {
+        return {
+          height: this.classList.contains("topbar") ? height : 0,
+        } as DOMRect;
+      },
+    );
+    window.history.replaceState({}, "", "/unknown");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    const root = document.documentElement;
+    root.style.setProperty("--app-topbar-height", "12px");
+    const view = render(<App />);
+    await screen.findByText("Service online", { selector: ".serviceText" });
+    expect(observe).toHaveBeenCalledExactlyOnceWith(
+      document.querySelector(".topbar"),
+    );
+    expect(root.style.getPropertyValue("--app-topbar-height")).toBe("109px");
+    const refresh = screen.getByRole("button", {
+      name: "Refresh service and data status",
+    });
+    refresh.focus();
+    height = 153.5;
+    act(() => resize?.([], {} as ResizeObserver));
+    expect(root.style.getPropertyValue("--app-topbar-height")).toBe("154px");
+    expect(refresh).toHaveFocus();
+    view.unmount();
+    expect(disconnect).toHaveBeenCalledOnce();
+    expect(root.style.getPropertyValue("--app-topbar-height")).toBe("12px");
+    root.style.removeProperty("--app-topbar-height");
+  });
+
   it("canonicalizes the accepted study-list alias without losing query, fragment or list history", async () => {
     await i18n.changeLanguage("en-US");
     const state = {

@@ -43,9 +43,6 @@ export function Pagination({
         keepVisible.current = false;
         return;
       }
-      const headerBottom =
-        document.querySelector(".topbar")?.getBoundingClientRect().bottom ?? 0;
-      pager.style.scrollMarginTop = `${Math.ceil(Math.max(0, headerBottom)) + 8}px`;
       pager.scrollIntoView?.({ block: "nearest", inline: "nearest" });
     };
     scroll();
