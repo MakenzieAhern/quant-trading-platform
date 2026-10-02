@@ -1,5 +1,62 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 23:03 UTC three actual defects closed locally
+
+U8: service refresh and all three removable study filters now include visible
+status/value in accessible names. EN/ZH keyboard removal retains other filters
+and focus. [41-file proof](../../../product-evidence/v1.2/m4/20261003-label-in-name/README.md)
+includes real Chrome corrected mobile375/375/40px chips and raw RED/final99/618
+logs. Independent review caught the original cropped prior-paint JPEG; it stays
+FAILED proof and later settled JPEGs match the DOM. Two initial RED failures were
+selector ambiguity, not name failures; misnamed initial green is retained FAIL.
+This is scoped label/focus evidence, not a complete WCAG AA certificate.
+
+M4 financial correctness: FullDataset's cache now includes the one-price status
+bit. [27-file regression/runtime proof](../../../product-evidence/v1.2/m4/20261003-rule-cache-economics/README.md)
+reproduces both cross-security flag directions, then matches uncached resolver
+and convention. An independent veto still rejects flat bars; illegal fills are
+not established. Constructor archive checks are bypassed in this isolated loader
+fixture; no actual-fill/full strategy/archive authority claim. Specific old
+executed personal/formal report impact is unquantified; original outputs/frozen
+data/OOS remain untouched and bilingual guides disclose possible impact.
+
+U5: [25-file observation proof](../../../product-evidence/v1.2/m4/20261003-observation-owner/README.md)
+binds every returned row to dispatched security/inclusive real-date window;
+whole wrong-body rejection, not filtering or number conversion. Five functional
+RED cases and final12 pass. Actual existing-cache Chrome EN→SZSE→ZH and two raw
+HTTP bodies preserve dates/identity/candidate-only permissions. No live corrupt
+HTTP injection, provider acquisition or genuine forward acceptance inferred.
+
+Final combined checks: **1096 backend passed / one optional unmounted archive
+skip; 626 frontend passed /44 files**, Ruff/format/mypy145, ESLint/types/build
+and touched Prettier/diff PASS. Independent source and corrected label artifact
+reviews PASS_SCOPED; final saved runtime/observation review and new exactCI are
+separate gates. >500kB main chunk warning and prior negative timing/zoom remain.
+Guarded backend-only reload after active0 preserves five snapshots/state/pages,
+5STOPPED/417events/8terminal studies/4terminal updates/3formal runs/66metrics/
+Alembic0016; other three original services unchanged, API200/RedisPONG. No frozen
+research/OOS change, durable deletion, merge, tag or release. Whole goal incomplete.
+
+## 2026-10-02 22:38 UTC bounded paper exact CI and independent evidence closure
+
+Source batch `21b8a29183408ec1a008d0fd68eab2f900d12dda` is pushed to
+existing open draft PR32. [Exact CI37072960258](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37072960258)
+completed SUCCESS22:33:38UTC: backend1094PASS/one optional archiveSKIP,
+Ruff/format/mypy145, reversible Alembic/check;frontend616PASS/44files,
+lint/types/build;Compose config and isolated production smoke. This covers
+the final committed tree and does not relabel previous failed CI or manufacture
+raw local frontend stdout. These later checkpoint-only edits are not that tree.
+
+Independent saved65-file review PASS_SCOPED/no newP1P2: unique inventory/hash,
+16current source bindings, saved-only verifier,12new raw page payloads/three
+DOM pages/exact money-order-type comparisons,16actual responsive frames,
+mobile scroll and owner reset. Original five snapshot/state pairs recomputed;
+old original pages remain summary-only, actual replay is not same-order multifill.
+[Separate review and raw hosted logs](../../../product-evidence/v1.2/m4/20261003-paper-bounded-read-review/README.md)
+preserve the original65-file sealed bytes and scoped limitations. All prior
+native timing/zoom failures and missing real-forward/lost-ledger evidence remain.
+No full U1–U8/M0–M5/AA/p95/forward/release acceptance or merge is inferred.
+
 ## 2026-10-02 22:29 UTC bounded paper detail whole-loop local check
 
 Detail now reads `/state` and four fixed-watermark100-event collection pages,

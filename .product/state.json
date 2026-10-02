@@ -1,19 +1,53 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T22:29:00Z",
+  "updated_at_utc": "2026-10-02T23:03:33Z",
+  "u8_label_in_name_20261003_gate": {
+    "status": "PASS_SCOPED_LOCAL_INDEPENDENT_CI_PENDING",
+    "source_base": "21b8a29183408ec1a008d0fd68eab2f900d12dda",
+    "proof": "Existing service refresh accessible name contains actual visible status; three removable study chip names contain actual query/status/mode values in EN/ZH. Real Chrome keyboard removal retains other filters and returns focus to view settings. No new component/dependency/financial calculation.",
+    "tests": "Initial RED4fail/95pass contains two actual name failures and two early ambiguous Data mode fixture failures. Misnamed first green2fail/97pass retained. Final focused99PASS; full618 then final combined626/44files/lint/TS/build/touchedformat PASS. Formatter-only older test layout changes retained, no weakened assertions/timeout/skip.",
+    "browser": "Original5173 GET-only, EN/dark/empty filters restored and viewport reset/tab closed. Saved6locale removal states and service focus pass; mobile375/375 with40px chips. Original mobileJPEG is cropped old desktop paint/FAIL, preserved. Independent review found it; new settled header/form and three-chipJPEGs actually match mobileDOM. Initial corrected JSON empty oldclass selector is width-only, no chip proof. Full AA/native speech/zoom/p95 not established.",
+    "review": "Independent four-source and saved-artifact review PASS_SCOPED/no newP1P2. All four source hashes match; raw failure history and capture limits retained.",
+    "evidence": "product-evidence/v1.2/m4/20261003-label-in-name/README.md",
+    "manifest_files": 41,
+    "manifest_sha256": "7b2d402f1b50e75ffa917e4402ba1eca799fd260eb81159474652e58457f7468"
+  },
+  "m4_per_security_rule_cache_20261003_gate": {
+    "status": "PASS_SCOPED_LOCAL_INDEPENDENT_CI_PENDING",
+    "source_base": "21b8a29183408ec1a008d0fd68eab2f900d12dda",
+    "loader_sha256": "96e33973c5ca680e7d5f9ca1b8308cded512f241dc3a89b8823ac8e8b2fbb9cd",
+    "proof": "Add is_one_price_limit to existing FullDataset rule-cache tuple. Flat-first false rejection and normal-first incorrect executable flag reproduced; independent convention still vetoes flat bars, no illegal fill established. Sorted real temporary partitions/two identities/six sessions compare actual rules to uncached resolver; execution=False unchanged.",
+    "tests": "RED2fail/2pass then4focusedPASS; full1096backend/1optional archiveSKIP/Ruff546/format/mypy145 PASS, isolated quant_test upgrade and test PG stopped. Test fixture bypasses constructor archive checksum validation; no actual fill/full strategy or archive authority acceptance. Independent two-source review PASS_SCOPED/no newP1P2.",
+    "historical_impact": "Personal historical experiments/paper and executed formal candidate studies share execution=True; S0/S1 execution=False unaffected by this cache. Specific saved-report effect not quantified. Old originals/frozen data/methodology/OOS preserved and bilingual manuals disclose the known defect; no formal rerun or new alpha claim.",
+    "runtime": "Fresh active0 and five exact before-snapshots verified before backend-only restart2026-10-02T23:01:06Z. Correct loader hash mounted, backend PID/start intentionally changed; original PG/Redis/frontend PID/start unchanged. After five snapshots/state/bounded pages exact parity;5STOPPED/417events/8terminal studies/4terminal updates/3formal runs/66metrics/Alembic0016 unchanged. Backend healthy/API200/RedisPONG, no durable deletion. Copied verifier writes only new proof, prior sealed bundle unchanged.",
+    "evidence": "product-evidence/v1.2/m4/20261003-rule-cache-economics/README.md",
+    "manifest_files": 27,
+    "manifest_sha256": "1719a8b21ee19c53476ba17aa5d9c0a1f275c4e9dc707b0e0ff08fb8272576ce"
+  },
+  "u5_observation_request_owner_20261003_gate": {
+    "status": "PASS_SCOPED_LOCAL_INDEPENDENT_CI_PENDING",
+    "source_base": "21b8a29183408ec1a008d0fd68eab2f900d12dda",
+    "proof": "Shared observations HTTP parser rejects whole body on wrong sid, non-real/noncanonical date or outside inclusive dispatched dates. Snapshot start/end via destructured parameters; preserve shared-cache semantics, exact strings, bounds and candidate-only authority. Existing backend SQL/receipt verification already correct; no real cross-security incident claimed.",
+    "tests": "Five legitimate+bad-row cases RED5fail/7pass, final12PASS; inclusive endpoints/empty/exactDecimal/afterdispatch caller mutation positive controls and old4 assertions preserved. Full final626frontend/44files/lint/TS/build/touchedformat PASS. Initial formatter failure retained. Independent source review PASS_SCOPED/no newP1P2.",
+    "browser": "Real original Chrome GET-only existing task164c947d; EN600000 thenSZSE000001, ZH preserves2026-09-22 andowner, raw two HTTP responses match settled DOM. Misnamed firstZH JPEG is priorENpaint/NONPROOF, later settledZH screenshot valid. No corrupted-body live browser injection/provider request; rejection proven by unit regression. EN/dark restored/tabclosed; no authority promotion/financial submission.",
+    "evidence": "product-evidence/v1.2/m4/20261003-observation-owner/README.md",
+    "manifest_files": 25,
+    "manifest_sha256": "0bd0b483257e18e140e5d6dd4a3043cebc6f517c1efde1189e61aa95c18e6b8e"
+  },
   "u7_bounded_saved_reads_20261003_gate": {
-    "status": "PASS_SCOPED_LOCAL_HOSTED_CI_PENDING",
+    "status": "PASS_SCOPED_EXACT_CI_AND_INDEPENDENT_REVIEW",
+    "delivered_head": "21b8a29183408ec1a008d0fd68eab2f900d12dda",
     "source_head": "49084fb5988bdd12d501d373050fb4866dbc813f",
     "proof": "Additive shared-row-lock state watermark and SQL bounded100-row saved collections preserve old snapshot/journal/resume. Canonical UUID latest orders ordered first appearance; all signal/risk/fill events retained.205/206-row exact legacy parity, long Decimal strings, old pending order, earlier valid plan, old-watermark later-tail stability/new watermark, futureW409/bounds422/missing404, barrier-blocked writer and forbid-list_events checks pass.",
-    "independent_review": "Backend post-fix and two final frontend read-only reviews PASS_SCOPED/no newP1P2. Actual generic-union200vs500 and lateREST/WS rollback defects reproduced then fixed at shared validators/watermark floor. New saved65-file artifact review is pending; old original-page summaries have no raw bodies and are not independently recomputed raw-page proof.",
+    "independent_review": "Backend post-fix, two final frontend read-only reviews and new65-file saved-artifact review PASS_SCOPED/no newP1P2. Independent65declared=65actual unique file/hash/16current source binding, saved-only verifier exit0,12raw pages/threeDOM/exact types-order-money/16matrix/mobile/account reset reviewed. Actual generic-union200vs500 and lateREST/WS rollback defects reproduced then fixed at shared validators/watermark floor. Old original-page summaries have no raw bodies and are not independently recomputed raw-page proof; actual204unique-order fills are not real same-order multifill evidence.",
     "tests": "1094backend PASS/1optional archiveSKIP/Ruff546/format/mypy145;616frontend PASS/44files, lint/TS/build/format/diff checks pass. Frontend results are explicitly TOOL_OUTPUT_RECORD, not rawstdout, with final test-only fixture correction/check ordering recorded. Old costly201-row case split preserving all assertions; no timeout increase/new skip. No study/OOS/source-authority run.",
     "original_runtime": "Fresh activecount0, fiveSTOPPED/8terminal studies/417events and saved five snapshots before backend-only reload. New original8000 state/pages exact field-for-field against all five saved legacy snapshots; originals counts/statuses unchanged, four services healthy/reachable. Backend PID/start intentionally changed; PostgreSQL/Redis/frontend not restarted. Ordinary current-shell verify-original-reads.ps1 passed, not HTTPkey-order/fullDB restore/forward/performance evidence. Owned tests PG stopped; other restore/media/calendar QA untouched.",
     "evidence": "product-evidence/v1.2/m4/20261003-paper-bounded-read",
     "manifest_files": 65,
     "manifest_sha256": "706fb90e3c44d2490cfb864cba3a0fc9fcdb999866ea8569347463b51c3e010b",
     "browser": "Actual Chrome NEW owned18019/18177 quant_test tmpfs; reused sealed412-bar synthetic input, explicitUICreate/Start STOPPED1852 gives205signals/risk/orders204fills.12raw bounded pages/full legacy/state plus3ZH DOMpages independently-verifiable financial types/order/strings; root saved-only verifier PASS. ENpage3/Previous100/Next4/focus;16actual size/theme/locale frames no overflow;mobilelocalArrowRight0to40. SecondCREATED1 no auto-start/financial rows; original account reopen100firstpage. Snapshot unchanged.3fullsnapshot HTTPreads are root authority captures, not detail client. IntermediateJPEG/initialmatrix/verifier-count failure retained and nonproof. Original5STOPPED/417events/8terminaljobs/fourservices unchanged; only newQA3 stopped afteractive0, otherrestore/media untouched. Browser preferences reset/tabclosed.",
-    "hosted_ci": "Next coherent source/checkpoint batch push only, then inspect exactPR32CI. Previous a3c1033 CI37069722022 FAIL frontend monolithic paging5000ms timeout; preserve failure. No new hostedPASS assumed.",
+    "hosted_ci": "PASS exact21b8a29183408ec1a008d0fd68eab2f900d12dda CI37072960258 completed2026-10-02T22:33:38Z, backend/frontend/ComposeSUCCESS.1094backend/one optional archiveSKIP/Ruff/format/mypy145;616frontend/44files/lint/TS/build;reversible migration/check and isolated production smoke. Result/full hosted log saved in separate bounded-read-review sibling, parent65sealed unchanged. Previous a3c1033 CI37069722022 FAIL frontend monolithic paging5000ms timeout is retained. PR32fresh OPEN/DRAFT; no merge or release. Later checkpoint metadata is not the exact CI tree.",
     "limits": "Four saved history collections only: one parsed page<=100 each, scalar/header state and bounded256WSbuffer, fixed watermarks/owner isolation/lastverified/denied retry. Not holdings memory/measuredheap/SQL O1/endless runtime/p95/AA/native200/current lawful authorities/after-start forward/genuine lost-ledger/full U1-U8 M0-M5/release acceptance. No frozen/.research/OOS/provider-authority/merge/tag/release change."
   },
   "u7_paper_table_paging_20261003_gate": {
@@ -1809,10 +1843,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-02T22:29Z root sole repository/Git/UI/service writer after agents froze frontend source/tests.1094backend/616frontend checks and final independent backend/frontend source reviews PASS_SCOPED. Actual Chrome bounded three-page rawAPI/DOM/money/locale/focus/account and16case matrix PASS; sealed65-file bundle independent review pending. Original5STOPPED/417events/8terminaljobs/fourservices unchanged; only new owned quant_test QA3 stopped afteractive0. No frozen/.research/OOS/provider authority change. Prior a3CI frontend timeoutFAIL retained, coherent source batch push/newexactCI next; PR32draft/open/no merge/release.",
-    "repository_writer": "root only; frontend implementer/test owners completed, remaining artifact reviewer read-only",
-    "database_writer": "root only for owned quant_test tmpfs finite synthetic table QA, both accounts terminal and QA3 stopped; quant-mvp-tests PG remained stopped during frontend one-offs. Original/restored/frozen ledgers read-only; agents read-only.",
-    "queue_writer": "No active QA task. Original/restored five accountsSTOPPED; six personal studiesSUCCEEDED/oneINTERRUPTED/oneCANCELLED. Latest owned finite table QA both accountsSTOPPED (A-share2181/replay1852); QA3 stopped/tmpfs released, media untouched. Earlier async scratch proof remains historical. No original provider/formal/OOS submission.",
+    "latest_verification": "2026-10-02T23:03Z root sole Git/docs/UI/service writer, cache and observation implementers frozen, artifact reviewers read-only.1096backend/one optional skip and final626frontend/fullchecks pass; independent source and corrected Chrome label evidence scoped PASS. Three new sealed41/27/25 bundles. Original backend-only guarded reload23:01Z preserves five snapshots/state/pages and5/417/8/4/3/66; other3 original services and restore/media untouched. Existing21b8CI succeeded. Coherent new milestone commit/push/exactCI next, no merge/release/full-product claim.",
+    "repository_writer": "root only; cache backend2file and observation frontend2file implementers frozen, remaining artifact reviewer read-only",
+    "database_writer": "No original/restore/media financial write. Root full backend tests used inspected tmpfs quant_test PG then stopped it; final frontend one-offs no-deps. Original restart only after fresh active0, frozen/OOS remain read-only.",
+    "queue_writer": "No active QA/provider/experiment/paper work. Original5STOPPED/8terminal experiments/4terminal updates unchanged; no Start/Run/Update submitted. Earlier scratch QA stopped and media/restore unchanged.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -1822,6 +1856,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-02 23:03UTC actual Label-in-Name/service+3chip fix, per-security execution-cache correction, candidate observation sid/date-window trust-boundary fix: independent source reviews and corrected realChrome evidence PASS_SCOPED;1096backend/one optional skip/626frontend/fullchecks. Five original exact snapshots/state/pages and5/417/8/4/3/66 unchanged after guarded backend-only reload;PG/Redis/frontend unchanged. Three41/27/25-file bundles sealed and failed/partial evidence retained. Coherent new exactCI pending; no full product/forward/release claim.",
+    "2026-10-02 22:38UTC exact21b8CI37072960258 SUCCESS1094backend/616frontend/Compose; independent65-file bounded read artifact review PASS_SCOPED, all old original-summary/same-order-multifill/native timing/zoom limits retained. No need repeat accepted bounded-read gate just for status.",
     "2026-10-02 21:49UTC b293a73 shared100-row DOM paper paging113focused/583frontend/fullchecks and actual Chrome205/204-record3pages/16matrix/mobile scroll/account switch/raw snapshot parity PASS_SCOPED;47-file root verifier PASS, independent review/newCI pending. Exact0142526 async CI37066797547 SUCCESS. Original runtime5/417/8 preserved, ownedQA3 stopped, no frozen/OOS/provider change. Legacy snapshot/client retention and full mandatory product remain incomplete.",
     "2026-10-02 21:23UTC9db4fda cancellable async-session wait66focused/1091backend+oneoptionalskip/582frontend/fullchecks and actual Chrome graceful pause/restart/resume/stop/shutdown integration PASS_SCOPED;71-file independent saved/sourcehash review PASS_SCOPED, separate shell-policy note preserved, new exactCI pending. Original runtime/counts preserved, owned QA stopped. Prior10export/17mechanism+errata/8zoom saved scoped evidence checkpointed, failed landing/native200/p95 retained. Full mandatory product incomplete.",
     "2026-10-02 20:41UTC exact9dfa CI37060637944 all three jobsSUCCESS;104/31-file independent saved reviewsPASS_SCOPED. Original backend-only reload loads real bounded dates while all statuses/counts/migration/metrics remain unchanged; actual original5173 keyboard table paging/local scroll and explicit motion-off work, preferences restored. Scope limited, full U1-U8/M0-M5/AA/native200/p95/lawful after-start forward/genuine missing ledgers remain required. No docs-only push/CI loop or merge/release.",
@@ -2394,7 +2430,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Finish independent sealed65-file bounded-read artifact review; coherent frontend/checkpoint commit plus49084fb backend milestone push to existingPR32, then inspect/fix exactCI. Local1094backend/616frontend/source reviews/realChrome raw12pages-threeDOM/money/focus/locale/account/16matrix verified, no need repeat those or prior accepted source/date/keyboard/async/DOM/native/download probes. Continue next actual M3/M4 mandatory gap from scope audit after CI; full U1-U8/M0-M5/lawful current authorities/real after-start forward/genuine lost ledgers remain mandatory. No optimistic heap/p95/synthetic substitutes/frozen/.research/OOS bypass, merge/tag/release before all gates.",
+  "next_task": "Finish remaining saved-runtime/observation artifact review, coherent three-fix/checkpoint milestone commit/push to existingPR32 and exactCI. Source focused/full1096backend/626frontend and corrected Chrome name/mobile/cache proof already passed; do not repeat accepted gates just for status. Then pursue actual remaining mandatory full U1-U8/M0-M5 gaps, especially truthful dated result/version interpretation and complete required M4/M5 evidence. Current lawful source/current-authority and genuine after-start forward require external rights; lost-ledger exact recovery requires real old backup. Preserve old report/cache defect uncertainty/failures/native200/p95 obligations, no synthetic/compatibility-only substitution, formal/OOS rerun or merge/tag/release before every required gate truly passes.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

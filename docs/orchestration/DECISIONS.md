@@ -1,5 +1,50 @@
 # Decisions
 
+## v1.2 fix shared trust boundaries without rewriting old evidence — 2026-10-02 23:03 UTC
+
+Keep four label fixes in existing shared controls and observation ownership/date
+checks in the existing HTTP parser, not per-page filters/new dependencies.
+Snapshot dispatched dates; reject an entire mismatching body. Existing backend
+receipt/SQL authority remains unchanged. Real-cache browser reads remain labeled
+candidate-only, never promoted to lawful execution/forward evidence.
+
+The loader cache omitted a resolver input: one-price status. Add that bit once
+for every execution=True caller. Normal securities can previously be falsely
+rejected; flat securities retain the independent convention veto, so illegal
+fills are not established. Old executed formal/personal results may be affected,
+but particular-report impact is unquantified; preserve originals and disclose
+the known defect in both manuals. S0/S1 execution=False do not use this cache.
+Do not rerun formal studies/OOS or mutate frozen facts to erase the defect.
+
+1096backend/one optional skip and626frontend/fullchecks pass, independent source
+review passes. Independent artifact review found a real prior-paint cropped mobile
+JPEG; preserve it, capture genuinely settled mobile layout, and distinguish the
+two selector RED failures from two actual name RED failures. New41/27/25-file
+bundles are sealed; external logs/failed paths remain outside Git. Reuse the old
+read-only ledger verifier only through a NEW copy/output directory. Fresh active0
+guard permits backend-only reload; exact five snapshots and5/417/8/4/3/66 unchanged,
+other service PID/starts untouched. No security policy/data source/financial API
+change, original writes, durable deletion or optimistic whole-product claim.
+
+Root remains sole Git/docs/service/UI writer; implementers are frozen and final
+artifact reviews read-only. Commit coherent code/checkpoint slices then one
+meaningful existingPR32 push/exactCI; no checkpoint-only CI churn. Full mandatory
+U1–U8/M0–M5/current lawful authorities/genuine after-start forward/lost-ledger
+truth/native zoom/p95/release evidence remain, not deleted from acceptance.
+
+## v1.2 close the exact bounded-read milestone, then audit the next real gap — 2026-10-02 22:38 UTC
+
+Exact21b8a29CI37072960258 and independent65-file artifact review both pass
+within their scope. Keep hosted raw logs/review in a separate sibling so the
+sealed parent remains unchanged. Hosted616frontend now covers the final
+source/check ordering; the earlier local result still is a tool-output record.
+Preserve failed a3CI and nonproof intermediate artifacts. No tiny checkpoint-only
+push/CI loop and no rerun of accepted1094/616/bounded-browser gates just for
+status. Root remains sole repository/Git writer; independent next-gap reviews
+are read-only. Next action is an actual unresolved M3/M4 mandatory capability,
+not another passing mock/demo presented as lawful forward acceptance. Whole
+objective, financial/data/source boundaries, frozen history and OOS lock remain.
+
 ## v1.2 preserve bounded paper pages and monotonic state — 2026-10-02 22:29 UTC
 
 Reuse typed `/state`, one100-event page per saved financial collection and the
