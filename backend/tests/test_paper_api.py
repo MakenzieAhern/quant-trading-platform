@@ -1178,6 +1178,52 @@ async def test_layer_failures_are_terminal_and_safely_reported(
     assert "sensitive" not in str(detail)
 
 
+async def test_runtime_failure_cancels_order_persisted_after_replay_started(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    created = await client.post("/api/paper-trading/sessions", json=request_body())
+    session_id = created.json()["session_id"]
+    order_id = uuid4()
+
+    async def fail_after_order_was_saved(
+        _provider: ReplayMarketDataProvider, _on_bar: object
+    ) -> None:
+        async with SessionFactory() as db:
+            await SQLAlchemyPaperRepository(db).append_events(
+                UUID(session_id),
+                (
+                    (
+                        "order.updated",
+                        datetime.now(UTC),
+                        {
+                            "order_id": str(order_id),
+                            "strategy_id": "failure-audit",
+                            "symbol": "AAPL",
+                            "side": "BUY",
+                            "order_type": "MARKET",
+                            "quantity": "10",
+                            "price": None,
+                            "status": "ACCEPTED",
+                            "created_at": "2024-01-08T00:00:00+00:00",
+                        },
+                    ),
+                ),
+            )
+        raise RuntimeError("uncommitted market step")
+
+    monkeypatch.setattr(ReplayMarketDataProvider, "start", fail_after_order_was_saved)
+    await client.post(f"/api/paper-trading/sessions/{session_id}/start")
+    for _ in range(100):
+        snapshot = (await client.get(f"/api/paper-trading/sessions/{session_id}/snapshot")).json()
+        if snapshot["session"]["status"] == "FAILED":
+            break
+        await asyncio.sleep(0.01)
+    assert snapshot["session"]["status"] == "FAILED"
+    assert snapshot["orders"][0]["order_id"] == str(order_id)
+    assert snapshot["orders"][0]["status"] == "CANCELLED"
+    assert snapshot["fills"] == []
+
+
 class FakeWebSocket:
     def __init__(self, *, fail_after_connect: bool = False, origin: str | None = None) -> None:
         self.headers = {"origin": origin or settings.frontend_origin}

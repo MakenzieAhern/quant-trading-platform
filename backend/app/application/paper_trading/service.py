@@ -262,14 +262,7 @@ class PaperTradingManager:
                 logger.info("Stopped idle paper session %s", session_id)
                 return stopped
             if session.status is PaperSessionStatus.PAUSED:
-                events = await self.events(session_id)
-                cancellations = self._pending_order_events(events, self._now())
-                return await self._transition(
-                    session,
-                    PaperSessionStatus.STOPPED,
-                    "session.status",
-                    preceding_events=cancellations,
-                )
+                return await self._transition(session, PaperSessionStatus.STOPPED, "session.status")
             if session.status is PaperSessionStatus.STOPPING:
                 return session
             if session.status not in {
@@ -320,17 +313,6 @@ class PaperTradingManager:
         runtime: PaperTradingRuntime | ASharePaperTradingRuntime | None = None
         history: tuple[PaperEventRecord, ...] = ()
         matched_cursor = False
-        terminal_cancelled: tuple[Order, ...] | None = None
-
-        def cancelled_orders() -> tuple[Order, ...]:
-            nonlocal terminal_cancelled
-            if terminal_cancelled is None:
-                terminal_cancelled = (
-                    runtime.cancel_pending_orders()
-                    if runtime is not None and matched_cursor
-                    else ()
-                )
-            return terminal_cancelled
 
         try:
             history = await self.events(session.id)
@@ -374,12 +356,7 @@ class PaperTradingManager:
                     await self._transition(current, PaperSessionStatus.PAUSED, "session.status")
                     return
                 if current.status is PaperSessionStatus.STOPPING:
-                    await self._transition(
-                        current,
-                        PaperSessionStatus.STOPPED,
-                        "session.status",
-                        preceding_events=self._pending_order_events(history, self._now()),
-                    )
+                    await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
                     return
                 session = await self._transition(
                     current, PaperSessionStatus.RUNNING, "session.status"
@@ -487,17 +464,7 @@ class PaperTradingManager:
                     PaperSessionStatus.RUNNING,
                     PaperSessionStatus.STOPPING,
                 }:
-                    await self._transition(
-                        current,
-                        PaperSessionStatus.STOPPED,
-                        "session.status",
-                        cancelled_orders=cancelled_orders(),
-                        preceding_events=(
-                            self._pending_order_events(history, self._now())
-                            if not matched_cursor
-                            else ()
-                        ),
-                    )
+                    await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
                     logger.info("Paper session %s stopped", session.id)
         except asyncio.CancelledError:
             current = await self.get(session.id)
@@ -513,12 +480,6 @@ class PaperTradingManager:
                         PaperSessionStatus.INTERRUPTED,
                         "session.status",
                         "Paper runtime interrupted by backend shutdown.",
-                        cancelled_orders=cancelled_orders(),
-                        preceding_events=(
-                            self._pending_order_events(history, self._now())
-                            if not matched_cursor
-                            else ()
-                        ),
                     )
                     logger.warning("Paper session %s interrupted by shutdown", session.id)
             raise
@@ -529,17 +490,7 @@ class PaperTradingManager:
                 and current is not None
                 and current.status is PaperSessionStatus.STOPPING
             ):
-                await self._transition(
-                    current,
-                    PaperSessionStatus.STOPPED,
-                    "session.status",
-                    cancelled_orders=cancelled_orders(),
-                    preceding_events=(
-                        self._pending_order_events(history, self._now())
-                        if not matched_cursor
-                        else ()
-                    ),
-                )
+                await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
                 logger.info("Paper session %s stopped after a concurrent command", session.id)
                 return
             logger.error("Paper session %s failed with %s", session.id, type(exc).__name__)
@@ -555,12 +506,6 @@ class PaperTradingManager:
                         PaperSessionStatus.FAILED,
                         "session.status",
                         f"{type(exc).__name__}: paper session failed",
-                        cancelled_orders=cancelled_orders(),
-                        preceding_events=(
-                            self._pending_order_events(history, self._now())
-                            if not matched_cursor
-                            else ()
-                        ),
                     )
         finally:
             if provider is not None:
@@ -737,20 +682,6 @@ class PaperTradingManager:
         return provider, runtime
 
     @staticmethod
-    def _pending_order_events(
-        events: tuple[PaperEventRecord, ...], timestamp: datetime
-    ) -> tuple[tuple[str, datetime, dict[str, object]], ...]:
-        latest: dict[str, dict[str, object]] = {}
-        for event in events:
-            if event.event_type == "order.updated":
-                latest[str(event.payload["order_id"])] = event.payload
-        return tuple(
-            ("order.updated", timestamp, {**payload, "status": "CANCELLED"})
-            for payload in latest.values()
-            if payload.get("status") in {"CREATED", "SUBMITTED", "ACCEPTED", "PARTIALLY_FILLED"}
-        )
-
-    @staticmethod
     def _risk_config(session: PaperSession) -> RiskConfig:
         def optional_decimal(name: str) -> Decimal | None:
             value = session.risk.get(name)
@@ -782,13 +713,8 @@ class PaperTradingManager:
         target: PaperSessionStatus,
         event_type: str,
         error_message: str | None = None,
-        cancelled_orders: tuple[Order, ...] = (),
-        preceding_events: tuple[tuple[str, datetime, dict[str, object]], ...] = (),
     ) -> PaperSession:
         now = self._now()
-        cancellations = tuple(
-            ("order.updated", now, self._order(order)) for order in cancelled_orders
-        )
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
             updated, stored = await repository.transition_with_event(
@@ -798,7 +724,6 @@ class PaperTradingManager:
                 now,
                 event_type,
                 error_message,
-                (*preceding_events, *cancellations),
             )
         for event in stored:
             self.hub.publish(session.id, self._wire_event(event))

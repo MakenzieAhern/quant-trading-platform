@@ -173,18 +173,13 @@ async def test_a_share_terminal_cleanup_excludes_prior_expiry_with_new_pending_o
 
 
 @pytest.mark.parametrize("concurrent_stop", [False, True])
-async def test_terminal_transition_retry_retains_cancelled_order(
+async def test_terminal_transition_retry_reaches_terminal_state(
     concurrent_stop: bool,
 ) -> None:
     runtime = PaperTradingRuntime(
         (MovingAverageCrossoverStrategy("retry-cancel", "AAPL", 2, 3),),
         BacktestConfig(initial_cash=Decimal(100000), default_order_quantity=Decimal(10)),
     )
-    for item in CSVDataProvider(FIXTURES).get_historical_bars("AAPL"):
-        await runtime.process_bar(item)
-        if runtime.broker.pending_orders:
-            break
-    pending_id = runtime.broker.pending_orders[0].id
     session = SimpleNamespace(
         id=uuid4(),
         status=PaperSessionStatus.STARTING,
@@ -198,11 +193,11 @@ async def test_terminal_transition_retry_retains_cancelled_order(
         ReplayMarketDataProvider((), 0),
         runtime,
     )
-    attempts = []
+    attempts: list[PaperSessionStatus] = []
 
-    async def transition(_session, target, *_args, **kwargs):
+    async def transition(_session, target, *_args, **_kwargs):
         if target is PaperSessionStatus.STOPPED and not attempts:
-            attempts.append(kwargs["cancelled_orders"])
+            attempts.append(target)
             session.status = (
                 PaperSessionStatus.STOPPING if concurrent_stop else PaperSessionStatus.RUNNING
             )
@@ -210,7 +205,7 @@ async def test_terminal_transition_retry_retains_cancelled_order(
                 raise PaperSessionConcurrencyError("simulated competing stop")
             raise RuntimeError("simulated write failure")
         if target in {PaperSessionStatus.STOPPED, PaperSessionStatus.FAILED}:
-            attempts.append(kwargs["cancelled_orders"])
+            attempts.append(target)
         session.status = target
         return session
 
@@ -219,7 +214,7 @@ async def test_terminal_transition_retry_retains_cancelled_order(
     assert session.status is (
         PaperSessionStatus.STOPPED if concurrent_stop else PaperSessionStatus.FAILED
     )
-    assert [[order.id for order in batch] for batch in attempts] == [[pending_id], [pending_id]]
+    assert attempts == [PaperSessionStatus.STOPPED, session.status]
 
 
 async def test_historical_session_stream_is_lazy_and_source_is_not_synthetic() -> None:

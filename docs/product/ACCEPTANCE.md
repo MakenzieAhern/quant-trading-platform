@@ -7873,3 +7873,42 @@ An owned installed-Chrome tab opened an existing completed historical result in 
 At clean source head `9b1b59479ca7c7bae7b12d10b825a5b678ef36d7`, an owned in-app Chromium tab used a temporary 390×844 viewport. Read-only DOM geometry checked enabled visible HTML buttons, links, inputs, selects and button-role controls on the first viewport of Task center, Research list, Data center, Simulated accounts, Help and Settings; it also checked the complete saved historical result DOM. No measured control on those surfaces had a width or height below 40 CSS px without a containing clickable label of at least 40 px. Research-list checkbox inputs were 18×18 px but their labels measured 40×40 or about 53 px high. This is a bounded hit-area geometry audit, not native 200% zoom, a screen-reader test, all hidden/expanded controls, every route or complete WCAG 2.2 AA acceptance. The temporary tab was closed and viewport override reset.
 
 A separate read-only GET of the existing completed historical study `5f26f84f-b6da-4eac-805a-fbc28fd27af4` returned HTTP 200 with attachment headers for both JSON (30,021 UTF-8 bytes) and CSV (12,836 UTF-8 bytes). The full JSON held six trade records; filtering to 2011-03-01–2011-03-03 held zero while its full-period summary stayed identical. The equivalent CSV had 28 metadata rows and zero filtered trade rows, versus six full-period trade rows. This corroborates server export semantics and the user-guide wording, not browser file landing. The in-app browser displayed the prepared `blob:` fallback but its download capture timed out; direct attachment navigation reported `net::ERR_BLOCKED_BY_CLIENT`, and no matching file appeared in ordinary Windows Downloads. Earlier download capture attempts were already documented, so this path is stopped without an application-code change or a false PASS/FAIL claim. A later proof needs an observable saved file and content inspection through an authorized download surface. Original product counts stayed eight research jobs, five paper sessions and 417 paper events; no original financial write, frozen research/OOS action, merge, tag or release occurred.
+
+## 2026-10-02 01:04 UTC local execution and terminal paper-ledger repair
+
+GitHub Actions was not needed to run the workbench: the original PostgreSQL,
+Redis and backend services were healthy, the frontend was running, and both
+`/api/health` and `/` returned HTTP 200. Contrary to the anticipated October 1
+CI hold, PR #32 head `f141ca0` already had successful backend, frontend and
+Compose checks in run `36948051557` on October 2. Local `make test`, `make
+lint` and `make build` remain reproducible local development gates, but cannot
+substitute for exact release-head hosted CI.
+
+An independent read-only U7 review found a failure path: processing a market
+session mutates runtime memory before its event batch commits. If the write
+rolls back, the runtime may regard a formerly accepted order as filled while
+the saved journal still says `ACCEPTED`; the old terminal path cancelled only
+runtime-pending orders, leaving an open order on a `FAILED` account. Terminal
+transitions now calculate cancellations from the latest **committed** order
+events under the same PostgreSQL session-row lock as the status transition,
+then append cancellations and terminal status atomically. Newly created but
+uncommitted orders are not written as cancelled. The restart-interruption path
+reuses the same journal computation.
+
+A new isolated `quant_test` failure-injection regression persisted an accepted
+order after replay startup, then raised a runtime failure. Its snapshot ended
+`FAILED`, with the saved order `CANCELLED` and no invented fill. Full isolated
+backend tests passed **1036**, with one optional unmounted-archive skip;
+frontend tests passed **562**. Ruff, formatting, mypy, ESLint, TypeScript and
+production frontend build passed. The original backend alone was restarted to
+load the fix; PostgreSQL/Redis stayed healthy, frontend and API returned 200,
+and original product jobs/paper sessions/events remained **8/5/417**. An
+in-app-browser result page briefly showed a React hook error after a prior
+hot-update state, but a reload and repeated home-to-result navigation displayed
+the complete saved result; it is not yet a reproducible product-code defect.
+
+This is bounded U7 persisted-order failure recovery, **not** recovery of the
+two genuine pre-loss paper ledgers, lawful 2026 forward-market receipt,
+independent backup, unattended Windows login, full M4/M5 or v1.2 release
+acceptance. PR #32 remains draft/open; no frozen dataset, formal study,
+Official OOS, merge, tag or release was changed.

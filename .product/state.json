@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T00:49:57Z",
+  "updated_at_utc": "2026-10-02T01:04:43Z",
+  "u7_terminal_ledger_reconcile_20261002_gate": {
+    "status": "PASS_BOUNDED_PERSISTED_ORDER_CLOSURE_NOT_FULL_U7",
+    "proof": "Independent read-only review found that a failed market-event write could leave a persisted ACCEPTED order open on a terminal FAILED account: runtime memory had advanced while the event batch rolled back. Terminal transitions now derive order cancellations from the latest committed journal under the same PostgreSQL row lock and transaction. A new isolated-DB failure-injection test reproduces a post-start saved order followed by runtime failure and verifies FAILED, CANCELLED, and no fill. Full isolated make test passed backend 1036 with one optional unmounted-archive skip and frontend 562; make lint and make build passed. Original backend restarted healthy with frontend and API HTTP 200; original product jobs, paper sessions and paper events stayed 8/5/417. See docs/product/ACCEPTANCE.md.",
+    "limits": "This closes a local ledger-failure path, not pre-loss paper-ledger recovery, lawful 2026 forward data, independent backup, unattended Windows login, full U7/M4/M5, or release. PR32 remains draft/open; no formal research, Official OOS, merge, tag or release action."
+  },
   "m4_mobile_hit_area_20261002_gate": {
     "status": "PASS_BOUNDED_SEVEN_SURFACES_NOT_FULL_A11Y",
     "source_head": "9b1b59479ca7c7bae7b12d10b825a5b678ef36d7",

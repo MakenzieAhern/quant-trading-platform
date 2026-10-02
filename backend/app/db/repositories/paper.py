@@ -101,7 +101,6 @@ class SQLAlchemyPaperRepository:
         timestamp: datetime,
         event_type: str,
         error_message: str | None = None,
-        preceding_events: tuple[tuple[str, datetime, dict[str, object]], ...] = (),
     ) -> tuple[PaperSession, tuple[PaperEventRecord, ...]]:
         require_transition(expected, target)
         model = await self._session.scalar(
@@ -123,9 +122,18 @@ class SQLAlchemyPaperRepository:
             PaperSessionStatus.INTERRUPTED,
         }:
             model.stopped_at = timestamp
+        cancellations = (
+            await self._pending_order_events(session_id, timestamp)
+            if target
+            in {
+                PaperSessionStatus.STOPPED,
+                PaperSessionStatus.FAILED,
+                PaperSessionStatus.INTERRUPTED,
+            }
+            else ()
+        )
         records = await self._append_events_locked(
-            session_id,
-            (*preceding_events, (event_type, timestamp, {"status": target.value})),
+            session_id, (*cancellations, (event_type, timestamp, {"status": target.value}))
         )
         await self._session.commit()
         return self._to_domain(model), records
@@ -223,25 +231,7 @@ class SQLAlchemyPaperRepository:
             model.status = PaperSessionStatus.INTERRUPTED.value
             model.stopped_at = timestamp
             model.error_message = "Paper runtime interrupted by backend restart."
-            order_events = (
-                await self._session.scalars(
-                    select(PaperTradingEventModel)
-                    .where(
-                        PaperTradingEventModel.session_id == model.id,
-                        PaperTradingEventModel.event_type == "order.updated",
-                    )
-                    .order_by(PaperTradingEventModel.sequence)
-                )
-            ).all()
-            latest_orders: dict[str, dict[str, object]] = {}
-            for event in order_events:
-                payload = dict(event.payload)
-                latest_orders[str(payload.get("order_id"))] = payload
-            cancellations = tuple(
-                ("order.updated", timestamp, {**payload, "status": "CANCELLED"})
-                for payload in latest_orders.values()
-                if payload.get("status") in {"CREATED", "SUBMITTED", "ACCEPTED", "PARTIALLY_FILLED"}
-            )
+            cancellations = await self._pending_order_events(model.id, timestamp)
             await self._append_events_locked(
                 model.id,
                 (
@@ -255,6 +245,29 @@ class SQLAlchemyPaperRepository:
             )
         await self._session.commit()
         return len(models)
+
+    async def _pending_order_events(
+        self, session_id: UUID, timestamp: datetime
+    ) -> tuple[tuple[str, datetime, dict[str, object]], ...]:
+        order_events = (
+            await self._session.scalars(
+                select(PaperTradingEventModel)
+                .where(
+                    PaperTradingEventModel.session_id == session_id,
+                    PaperTradingEventModel.event_type == "order.updated",
+                )
+                .order_by(PaperTradingEventModel.sequence)
+            )
+        ).all()
+        latest_orders: dict[str, dict[str, object]] = {}
+        for event in order_events:
+            payload = dict(event.payload)
+            latest_orders[str(payload.get("order_id"))] = payload
+        return tuple(
+            ("order.updated", timestamp, {**payload, "status": "CANCELLED"})
+            for payload in latest_orders.values()
+            if payload.get("status") in {"CREATED", "SUBMITTED", "ACCEPTED", "PARTIALLY_FILLED"}
+        )
 
     @staticmethod
     def _to_domain(model: PaperTradingSessionModel) -> PaperSession:
