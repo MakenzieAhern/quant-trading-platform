@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { NullableResearchPoint } from "../../types/research";
@@ -85,7 +86,8 @@ export function BenchmarkChart({
   ariaLabel?: string;
   showBenchmark?: boolean;
 }) {
-  const { t } = useTranslation(["accessibility", "research"]);
+  const { t } = useTranslation(["accessibility", "research", "common"]);
+  const [selectedDate, setSelectedDate] = useState("");
   const chartLabel = ariaLabel ?? t("accessibility:benchmarkChart");
   const firstLabel = strategyLabel ?? t("research:strategySeries");
   const secondLabel = benchmarkLabel ?? t("research:benchmark");
@@ -114,11 +116,58 @@ export function BenchmarkChart({
     scaleValues,
     dates,
   );
+  const dateOptions = [...dates.keys()];
+  const activeDate = dates.has(selectedDate)
+    ? selectedDate
+    : (dateOptions.at(-1) ?? "");
+  const pointValue = (points: NullableResearchPoint[]) =>
+    points.find((point) => point.trading_date === activeDate)?.value ??
+    t("common:unavailable");
+  const hitPoints = (
+    points: NullableResearchPoint[],
+    positions: (ChartPoint | null)[],
+    label: string,
+  ) =>
+    positions.map((position, index) =>
+      position === null ? null : (
+        <circle
+          key={`${label}-${points[index].sequence}`}
+          className="researchChartPoint"
+          cx={position.x}
+          cy={position.y}
+          r={6}
+          fill="transparent"
+          onMouseEnter={() => setSelectedDate(points[index].trading_date)}
+          onClick={() => setSelectedDate(points[index].trading_date)}
+        >
+          <title>{`${label} — ${points[index].trading_date}: ${points[index].value}`}</title>
+        </circle>
+      ),
+    );
   return (
     <figure className="researchChart" aria-label={chartLabel}>
+      {dateOptions.length > 0 && (
+        <label className="researchChartDate">
+          {t("research:columns.date")}
+          <select
+            aria-label={`${chartLabel} — ${t("research:columns.date")}`}
+            value={activeDate}
+            onChange={(event) => setSelectedDate(event.target.value)}
+          >
+            {dateOptions.map((date) => (
+              <option key={date} value={date}>
+                {date}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
         {traces(strategyCoordinates, "strategyLine")}
         {showBenchmark && traces(benchmarkCoordinates, "benchmarkLine")}
+        {hitPoints(strategy, strategyCoordinates, firstLabel)}
+        {showBenchmark &&
+          hitPoints(benchmark, benchmarkCoordinates, secondLabel)}
       </svg>
       <figcaption>
         <span className="strategyLegend">{firstLabel}</span>
@@ -126,6 +175,12 @@ export function BenchmarkChart({
           <span className="benchmarkLegend">{secondLabel}</span>
         )}
       </figcaption>
+      {activeDate && (
+        <p className="researchChartReadout" role="status" aria-atomic="true">
+          <strong>{activeDate}</strong> · {firstLabel}: {pointValue(strategy)}
+          {showBenchmark && ` · ${secondLabel}: ${pointValue(benchmark)}`}
+        </p>
+      )}
       {(!scaleValues.length ||
         scaleValues.some((value) => !Number.isFinite(value))) && (
         <p>{t("research:chartUnavailable")}</p>

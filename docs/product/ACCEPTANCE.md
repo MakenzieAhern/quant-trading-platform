@@ -1,5 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 19:48 UTC formal precise point readout and native date picker
+
+U4/U8/UX-CHART scoped display progress: both formal BenchmarkChart callers now
+have raw-value SVG titles, hover/click readout and a40px native date picker.
+Actual Chrome page2 of the existing Development report proved point-click and
+Home/ArrowDown selection; ZH/EN/theme changes retain dates. Benchmark OFF removes
+its200 hitpoints/titles/readout but keeps50 benchmark rows in100-row exact table.
+Rolling null Sharpe remains unavailable, zero drawdown stays zero.16 DOM cases
+cover all four sizes/two languages/themes without page overflow; four separately
+settled PNGs show complete readouts.22 saved metric values and before/after API
+bytes unchangedSHAff5e4a74…a0e1d; original/restored5/417/8/4. Owned frontend restored
+e328/healthy/no mounts; other seven container identities unchanged.580frontend,
+14focused/lint/type/Prettier/buildPASS, independent source reviewPASS_SCOPED;
+independent51-file saved-artifact reviewPASS_SCOPED; exact hosted CI for this
+batch not yet claimed. The review verified saved proof, not current runtime.
+
+[Protocol and explicit limits](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-exact-values/README.md),
+[mobile full-precision readout](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-exact-values/settled-390-en-light.png)
+and [saved-artifact verifier](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-exact-values/verify-evidence.ps1)
+are local external evidence:51 files, manifestSHA256
+`6e6046548425382e887731579d9ccbdd8d281fdbaf346f28dd97ecc8d0afb2aa`.
+No native hover-popup pixels were captured; JSDOM hover/native titles/clicks and
+actual keyboard are distinct evidence. Wrong CSS path/English name, hidden mobile
+theme selector, empty metricGrid capture and null-mount verifier error are retained
+with recovery; no unchanged failure was promoted to PASS. UX-CHART remains
+IN_PROGRESS pending actual SQL-before-pagination range/date APIs and linked
+equity/drawdown/records. Full M3–M5/AA/native200/p95/lawful forward/absent-ledger
+recovery, merge/tag/release or formal strategy/OOS rerun are not claimed.
+
 ## 2026-10-02 19:28 UTC exact formal-chart batch CI and next required work
 
 Source/manual/checkpoint batch `b020bb7aa0d2446eedf7becc6f74ee8b0222baf7`

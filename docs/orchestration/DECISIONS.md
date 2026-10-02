@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 precise formal point values, keep real date linkage required — 2026-10-02 19:48 UTC
+
+Reuse native SVG titles/date select/raw readout in both existing BenchmarkChart
+callers; no tooltip dependency or financial Number roundtrip. New14focused and
+580full frontend checks, real Chrome point click/Home/ArrowDown and16 responsive
+DOM cases passed narrowly. Hidden benchmark removes visual hitpoints/readout,
+not original table data; null rolling value stays unknown.51-file saved verifier
+passed; source and independent51-file saved-artifact reviewsPASS_SCOPED. Exact
+new CI remains pending; saved runtime captures are not a live service check.
+Original/restored ledger counts/metric bytes and other seven runtime identities
+unchanged; owned frontend restored exact e328/healthy/no mounts. Native tooltip
+pixels, broad chart linkage/AA/200%/p95/forward/release remain unproved. Next add
+server SQL date filtering before count/paging, with Shanghai trade dates and
+unchanged full-run metrics, then actual UI linkage. Do not fake whole-history
+filtering over the currently loaded200 rows or issue APIs on every hover.
+
 ## v1.2 exact chart-batch CI, retain full required chart scope — 2026-10-02 19:28 UTC
 
 Exactb020bb7/CI37054020278 backend/frontend/Compose allSUCCESS, draftPR32 matches;

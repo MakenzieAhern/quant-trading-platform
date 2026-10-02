@@ -176,3 +176,78 @@ test("monthly returns remain readable as individual values", () => {
   expect(within(region).getByTitle("2024-01-01: 1%")).toBeInTheDocument();
   expect(within(region).getByText("2024-02")).toBeInTheDocument();
 });
+
+test("exact chart values work with hover, point clicks and keyboard date selection without inventing missing values", async () => {
+  const strategy = [
+    {
+      sequence: 0,
+      trading_date: "2024-01-02",
+      value: "100.123456789012345678",
+    },
+    { sequence: 1, trading_date: "2024-01-03", value: null },
+    { sequence: 2, trading_date: "2024-01-04", value: "102.00" },
+  ];
+  const benchmark = [
+    { sequence: 0, trading_date: "2024-01-02", value: "99.000000000000000001" },
+    { sequence: 1, trading_date: "2024-01-03", value: "0" },
+    { sequence: 2, trading_date: "2024-01-05", value: "103.00" },
+  ];
+  const view = render(
+    <BenchmarkChart strategy={strategy} benchmark={benchmark} />,
+  );
+  const picker = screen.getByRole("combobox", {
+    name: "accessibility:benchmarkChart — research:columns.date",
+  });
+  const readout = screen.getByRole("status");
+  expect(picker).toHaveValue("2024-01-05");
+  expect(readout).toHaveTextContent(
+    "research:strategySeries: common:unavailable",
+  );
+  expect(readout).toHaveTextContent("research:benchmark: 103.00");
+  expect(
+    view.container.querySelectorAll("circle.researchChartPoint"),
+  ).toHaveLength(5);
+  const exactTitle = screen.getByText(
+    "research:strategySeries — 2024-01-02: 100.123456789012345678",
+    { selector: "title" },
+  );
+  await userEvent.hover(exactTitle.parentElement!);
+  expect(picker).toHaveValue("2024-01-02");
+  expect(readout).toHaveTextContent("100.123456789012345678");
+  expect(readout).toHaveTextContent("99.000000000000000001");
+  await userEvent.selectOptions(picker, "2024-01-03");
+  expect(readout).toHaveTextContent(
+    "research:strategySeries: common:unavailable",
+  );
+  expect(readout).toHaveTextContent("research:benchmark: 0");
+  await userEvent.click(exactTitle.parentElement!);
+  expect(picker).toHaveValue("2024-01-02");
+  view.rerender(
+    <BenchmarkChart
+      strategy={strategy}
+      benchmark={benchmark}
+      showBenchmark={false}
+    />,
+  );
+  expect(picker).toHaveValue("2024-01-02");
+  expect(readout).not.toHaveTextContent("research:benchmark");
+  expect(
+    view.container.querySelectorAll("circle.researchChartPoint"),
+  ).toHaveLength(2);
+  expect(view.container.querySelectorAll("svg title")).toHaveLength(2);
+  await userEvent.click(screen.getByText("chartData"));
+  const table = screen.getByRole("table", {
+    name: "accessibility:benchmarkChart",
+  });
+  expect(within(table).getByText("99.000000000000000001")).toBeInTheDocument();
+  expect(within(table).getByText("common:unavailable")).toBeInTheDocument();
+  view.rerender(
+    <BenchmarkChart
+      strategy={[{ sequence: 3, trading_date: "2024-01-08", value: "104.00" }]}
+      benchmark={[]}
+    />,
+  );
+  expect(picker).toHaveValue("2024-01-08");
+  expect(readout).not.toHaveTextContent("2024-01-02");
+  expect(readout).toHaveTextContent("104.00");
+});

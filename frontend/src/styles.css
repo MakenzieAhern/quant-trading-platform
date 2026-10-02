@@ -1348,6 +1348,19 @@ tbody tr:hover {
 .researchChart details {
   margin-top: 16px;
 }
+.researchChartDate {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.researchChartDate select {
+  min-height: 40px;
+  max-width: 100%;
+}
+.researchChartReadout {
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
 .researchChart summary {
   min-height: 44px;
   padding-block: 10px;
