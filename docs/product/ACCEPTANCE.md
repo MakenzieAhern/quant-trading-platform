@@ -1,5 +1,63 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 23:51 UTC independent execution check finds an economic coverage defect
+
+The [two-run proof](../../../product-evidence/v1.2/m4/20261003-corrected-exploration/README.md)
+is now **financial PARTIAL**, not a successful performance validation. Independent
+Decimal review of SZSE's saved10fills/18decisions/20equity/20holdings passes
+internal cash/fee/valuation arithmetic. Retained official SZSE source row for
+002168 records ratio1.000, record-date2011-03-25, ex-date2011-03-28; the frozen
+actions lack it and the first-tradable date is not evidenced. Root reverified
+the source-oracle row and original HTML SHA. The new job held100shares/avg41.5
+across the event, so reported equity/return omit an economic entitlement.
+
+Keep all original numbers, reports and frozen hashes; no corrected return,
+factor-derived event or extra shares are supplied. A completed job and consistent
+arithmetic cannot close U3/U4 financial acceptance. Next is a shared fail-closed
+observed-integrity guard plus later-discovered quality advisories propagated
+through saved report/compare/export/plan paths. This is not a new full event
+census or authority acceptance; formal/OOS remain unrun. Full mandatory product
+gates and the existing external rights/genuine-backup blockers remain open.
+
+## 2026-10-02 23:42 UTC real corrected-engine exploration and honest old-result disclosure
+
+Existing personal, comparison and executed formal FullDataset notice blocks now
+disclose the known old rejection defect in EN/ZH. Specific old-report impact is
+unquantified; correcting the engine does not revalidate old returns. Synthetic,
+pilot and strict S0/S1 exclusions remain distinct; malformed source/candidate
+metadata gets uncertainty, not silent immunity. Independent source and
+[53-payload proof](../../../product-evidence/v1.2/m4/20261003-result-execution-notice/README.md)
+review PASS_SCOPED; 49 focused and **642 frontend/44 files**, lint/types/build/
+touched format pass. Initial RED/precision-regex/review-found array-coercion
+failures remain recorded. EN archive/configuration-only JPEGs are not notice
+proof; EN notice evidence is DOM/JSON, ZH positive JPEGs show it. Seven saved API
+body pairs match, not a full DB assertion. [Sibling review/hosted logs](../../../product-evidence/v1.2/m4/20261003-contract-fixes-review/README.md)
+leave sealed bundles unchanged.
+
+Exactly two new independent already-inspected 2011-03-01..28 experiments were
+created through actual Chrome on original5173: SSE `bc6478e4` and SZSE `0cdfb0e5`,
+same cash/cost/risk/strategy parameters, 297/297 incl prehistory, both successful.
+SSE has20 approved orders and0 fills: all selected17122 frozen official rows lack
+exchange pre-close. The existing convention correctly rejects missing reference;
+do not invent it from yesterday close. SZSE selected24034 rows have reference;
+18 approved orders give10 conservative simulated fills,7 next-open/1rule rejects.
+Negative result/cost retained; accounting/source review is a separate pending
+check, not implied by SUCCEEDED. Both saved backend fingerprints agree. These
+different universes cannot isolate old cache impact or establish alpha.
+
+Real task-center leave/reopen/refresh, measurable230/297 progress, EN/ZH exact
+metrics and2-result comparison work; comparison marks universe data condition
+different, other5 same. Original exact-cash draft backed up then restored via UI.
+[New independent proof](../../../product-evidence/v1.2/m4/20261003-corrected-exploration/README.md)
+saves8 old metadata/6 result bodies/formal-list/paper-list parity and both declared
+new IDs;10studies terminal, no account/provider start or formal/OOS rerun.
+
+[Exact8000CI37075854869](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37075854869)
+SUCCESS1096backend/oneoptionalarchiveSKIP/626frontend/Compose closes the prior
+label/cache/observation batch. It does not cover this later disclosure tree.
+New commit/CI and complete mandatory U1-U8/M0-M5 remain; no full AA/p95/forward,
+genuine lost-ledger recovery, merge/tag/release or goal-complete claim.
+
 ## 2026-10-02 23:03 UTC three actual defects closed locally
 
 U8: service refresh and all three removable study filters now include visible

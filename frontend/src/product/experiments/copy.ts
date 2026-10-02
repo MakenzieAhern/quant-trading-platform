@@ -188,6 +188,10 @@ const en = {
   limits: "Before interpreting these results",
   warningHistorical:
     "This explores dates already inspected, not new unseen market data. It cannot replace the published formal report.",
+  historicalExecutionIssue:
+    "Earlier versions of this historical execution engine could incorrectly reject otherwise executable securities. Older saved results may be affected; the impact on a particular report is not quantified. Fixing the engine does not revalidate old returns. Original reports, frozen data and the out-of-sample lock remain unchanged.",
+  historicalExecutionUnverified:
+    "The saved execution source is not sufficiently verified. We cannot determine whether this report involves the known older-engine rejection issue; do not assume it is unaffected. Original results remain unchanged and have not been revalidated.",
   warningDemo:
     "These prices are synthetic and intentionally demonstrate the workflow. Returns cannot be used as investment evidence.",
   noGuarantee:
@@ -430,6 +434,10 @@ const zh: typeof en = {
   limits: "解读结果前请注意",
   warningHistorical:
     "这是用已查看的历史数据做探索，不是对未见市场数据的新检验，也不能替代已发布的正式报告。",
+  historicalExecutionIssue:
+    "旧版历史执行引擎可能错误拒绝本可成交的证券。旧的已保存结果可能受影响，某份报告的具体影响尚未量化。修复引擎不代表旧收益已重新验证；原报告、冻结数据和样本外锁保持不变。",
+  historicalExecutionUnverified:
+    "已保存的执行来源尚未充分核验，无法判定本报告是否涉及已知旧引擎拒单问题，不能据此视为未受影响。原结果保持不变，也未重新验证。",
   warningDemo: "这里使用合成价格演示操作流程。模拟收益不可作为投资证据。",
   noGuarantee:
     "历史模拟结果不能证明未来可靠收益。成本、执行约束与数据限制都会影响结论。",

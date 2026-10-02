@@ -318,6 +318,14 @@ function Comparison({
                   ? c.warningDemo
                   : c.warningHistorical}
               </p>
+              {job.dataset_id === "cn-a-research-20100101-20251231-v1" && (
+                <p>
+                  {job.mode === "historical_exploration" &&
+                  result.mode === "historical_exploration"
+                    ? c.historicalExecutionIssue
+                    : c.historicalExecutionUnverified}
+                </p>
+              )}
               <ul>
                 {result.limitations.map((code) => (
                   <li key={code}>

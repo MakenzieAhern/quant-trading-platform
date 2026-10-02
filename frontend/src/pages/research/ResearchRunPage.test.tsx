@@ -6,6 +6,8 @@ import { researchApi } from "../../api/research";
 import type { ResearchPoint, ResearchRun } from "../../types/research";
 import { ResearchRunPage } from "./ResearchRunPage";
 
+let language = "en-US";
+
 vi.mock("../../api/research", () => ({
   researchApi: {
     run: vi.fn(),
@@ -20,7 +22,7 @@ vi.mock("../../api/research", () => ({
 }));
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
-    i18n: { language: "en-US" },
+    i18n: { language },
     t: (key: string, values?: { start?: string; end?: string }) =>
       values?.start ? `${key}:${values.start}–${values.end}` : key,
   }),
@@ -53,6 +55,7 @@ function pointPage(offset: number, count: number) {
 }
 
 beforeEach(() => {
+  language = "en-US";
   vi.clearAllMocks();
   vi.mocked(researchApi.run).mockResolvedValue(savedRun);
   vi.mocked(researchApi.metrics).mockResolvedValue(empty);
@@ -65,6 +68,126 @@ beforeEach(() => {
     pointPage(offset ?? 0, offset === 0 ? 200 : 1),
   );
 });
+
+test.each(["DEVELOPMENT", "VALIDATION", "OUT_OF_SAMPLE"] as const)(
+  "%s shows the known execution issue in both languages without changing saved values",
+  async (period_kind) => {
+    vi.mocked(researchApi.run).mockResolvedValue({
+      ...savedRun,
+      period_kind,
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      created_at: "2030-01-01T00:00:00Z",
+      diagnostics: { candidate: "S4" },
+    });
+    vi.mocked(researchApi.metrics).mockResolvedValue({
+      ...empty,
+      total: 1,
+      items: [
+        {
+          period_kind,
+          metric_name: "transaction_costs",
+          value: "12.000000000000000001",
+        },
+      ],
+    });
+    const page = render(<ResearchRunPage runId="saved" />);
+    const notice = await screen.findByText(
+      /Earlier versions of this historical execution engine/,
+    );
+    expect(notice).toHaveTextContent(
+      "impact on a particular report is not quantified",
+    );
+    expect(notice).toHaveTextContent("does not revalidate old returns");
+    const cost = await screen.findByTitle("12.000000000000000001");
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: "research:fullPrecision" }),
+    );
+    expect(cost).toHaveTextContent("12.000000000000000001");
+    language = "zh-CN";
+    page.rerender(<ResearchRunPage runId="saved" />);
+    expect(
+      screen.getByText(/旧版历史执行引擎可能错误拒绝本可成交的证券/),
+    ).toHaveTextContent("具体影响尚未量化");
+    expect(cost).toHaveTextContent("12.000000000000000001");
+    expect(researchApi.run).toHaveBeenCalledTimes(1);
+    expect(researchApi.metrics).toHaveBeenCalledTimes(1);
+    expect(researchApi.points).toHaveBeenCalledTimes(3);
+  },
+);
+
+test.each([undefined, ["S0"], ["S1"]])(
+  "missing or malformed formal execution provenance %j stays unverified rather than being declared unaffected",
+  async (candidate) => {
+    vi.mocked(researchApi.run).mockResolvedValue({
+      ...savedRun,
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      diagnostics: { candidate },
+    });
+    const page = render(<ResearchRunPage runId="saved" />);
+    expect(
+      await screen.findByText(
+        /The saved execution source is not sufficiently verified/,
+      ),
+    ).toHaveTextContent(
+      "cannot determine whether this report involves the known older-engine rejection issue",
+    );
+    expect(
+      screen.queryByText(
+        /Earlier versions of this historical execution engine/,
+      ),
+    ).toBeNull();
+    language = "zh-CN";
+    page.rerender(<ResearchRunPage runId="saved" />);
+    expect(screen.getByText(/已保存的执行来源尚未充分核验/)).toHaveTextContent(
+      "不能据此视为未受影响",
+    );
+    expect(researchApi.run).toHaveBeenCalledTimes(1);
+  },
+);
+
+test.each([
+  {
+    candidate: "S0",
+    period_kind: "VALIDATION",
+    dataset_id: "cn-a-research-20100101-20251231-v1",
+  },
+  {
+    candidate: "S1",
+    period_kind: "VALIDATION",
+    dataset_id: "cn-a-research-20100101-20251231-v1",
+  },
+  {
+    candidate: "S4",
+    period_kind: "PILOT_SMOKE",
+    dataset_id: "cn-a-research-20100101-20251231-v1",
+  },
+  { candidate: "S4", period_kind: "VALIDATION", dataset_id: "saved-dataset" },
+] as const)(
+  "does not attach the FullDataset issue to $candidate / $period_kind / $dataset_id",
+  async ({ candidate, period_kind, dataset_id }) => {
+    vi.mocked(researchApi.run).mockResolvedValue({
+      ...savedRun,
+      strategy_id: "cn_a_cross_sectional_momentum_low_vol_v1",
+      period_kind,
+      dataset_id,
+      diagnostics: { candidate },
+    });
+    render(<ResearchRunPage runId="saved" />);
+    await screen.findByRole("heading", {
+      name: "cn_a_cross_sectional_momentum_low_vol_v1",
+    });
+    expect(
+      screen.queryByText(
+        /Earlier versions of this historical execution engine/,
+      ),
+    ).toBeNull();
+    expect(
+      screen.queryByText(
+        /The saved execution source is not sufficiently verified/,
+      ),
+    ).toBeNull();
+  },
+);
 
 test("one curve page advances all three series without changing stored metrics", async () => {
   render(<ResearchRunPage runId="saved" />);

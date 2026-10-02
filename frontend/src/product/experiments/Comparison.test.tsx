@@ -38,6 +38,154 @@ beforeEach(async () => {
 });
 
 describe("experiment comparison", () => {
+  it.each(["en-US", "zh-CN"])(
+    "discloses the historical execution issue on a saved result in %s without revalidating it",
+    async (locale) => {
+      await i18n.changeLanguage(locale);
+      const saved = {
+        ...runs[0]!,
+        mode: "historical_exploration" as const,
+        dataset_id: "cn-a-research-20100101-20251231-v1",
+        configuration: {
+          ...job.configuration,
+          dataset_id: "cn-a-research-20100101-20251231-v1",
+        },
+        created_at: "2030-01-01T00:00:00Z",
+      };
+      const get = vi.spyOn(experimentApi, "get").mockResolvedValue(saved);
+      const summary = vi
+        .spyOn(experimentApi, "result")
+        .mockResolvedValue({ ...result, mode: "historical_exploration" });
+      vi.spyOn(experimentApi, "equity").mockResolvedValue({
+        items: [],
+        total: 0,
+        limit: 100,
+        offset: 0,
+      });
+      render(<ExperimentDetailPage jobId={ids[0]!} />);
+      const notice = await screen.findByText(
+        locale === "en-US"
+          ? /Earlier versions of this historical execution engine/
+          : /旧版历史执行引擎可能错误拒绝本可成交的证券/,
+      );
+      expect(notice).toHaveTextContent(
+        locale === "en-US"
+          ? "does not revalidate old returns"
+          : "不代表旧收益已重新验证",
+      );
+      await userEvent.click(
+        screen.getByRole("checkbox", {
+          name: locale === "en-US" ? "Show full precision" : "显示完整精度",
+        }),
+      );
+      expect(screen.getByText("12.000000000000000001")).toBeInTheDocument();
+      expect(
+        screen.getByText(/100,012\.123456789012345678/),
+      ).toBeInTheDocument();
+      expect(get).toHaveBeenCalledTimes(1);
+      expect(summary).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it.each(["detail", "comparison"])(
+    "keeps conflicting saved modes unverified in the %s view",
+    async (view) => {
+      vi.spyOn(experimentApi, "get").mockImplementation(async (id) => ({
+        ...runs.find((run) => run.job_id === id)!,
+        ...(id === ids[0]
+          ? {
+              mode: "historical_exploration" as const,
+              dataset_id: "cn-a-research-20100101-20251231-v1",
+              configuration: {
+                ...job.configuration,
+                dataset_id: "cn-a-research-20100101-20251231-v1",
+              },
+            }
+          : {}),
+      }));
+      vi.spyOn(experimentApi, "result").mockImplementation(async (id) => ({
+        ...result,
+        job_id: id,
+      }));
+      vi.spyOn(experimentApi, "equity").mockResolvedValue({
+        items: [],
+        total: 0,
+        limit: 100,
+        offset: 0,
+      });
+      render(
+        view === "detail" ? (
+          <ExperimentDetailPage jobId={ids[0]!} />
+        ) : (
+          <ExperimentComparePage />
+        ),
+      );
+      expect(
+        await screen.findByText(
+          /The saved execution source is not sufficiently verified/,
+        ),
+      ).toHaveTextContent("do not assume it is unaffected");
+      expect(
+        screen.queryByText(
+          /Earlier versions of this historical execution engine/,
+        ),
+      ).toBeNull();
+    },
+  );
+
+  it.each(["en-US", "zh-CN"])(
+    "limits the %s comparison issue to the historical entry and preserves exact costs",
+    async (locale) => {
+      await i18n.changeLanguage(locale);
+      const get = vi
+        .spyOn(experimentApi, "get")
+        .mockImplementation(async (id) => ({
+          ...runs.find((run) => run.job_id === id)!,
+          ...(id === ids[0]
+            ? {
+                mode: "historical_exploration" as const,
+                dataset_id: "cn-a-research-20100101-20251231-v1",
+                configuration: {
+                  ...job.configuration,
+                  dataset_id: "cn-a-research-20100101-20251231-v1",
+                },
+              }
+            : {}),
+        }));
+      const summary = vi
+        .spyOn(experimentApi, "result")
+        .mockImplementation(async (id) => ({
+          ...result,
+          job_id: id,
+          mode: id === ids[0] ? "historical_exploration" : "synthetic_demo",
+        }));
+      render(<ExperimentComparePage />);
+      const notice = await screen.findByText(
+        locale === "en-US"
+          ? /Earlier versions of this historical execution engine/
+          : /旧版历史执行引擎可能错误拒绝本可成交的证券/,
+      );
+      const cards = screen.getAllByRole("article");
+      expect(cards[0]).toContainElement(notice);
+      expect(cards[1]).not.toContainElement(notice);
+      expect(
+        within(cards[1]!).getByText(
+          locale === "en-US"
+            ? /These prices are synthetic/
+            : /这里使用合成价格/,
+        ),
+      ).toBeInTheDocument();
+      await userEvent.click(
+        screen.getByRole("checkbox", {
+          name: locale === "en-US" ? "Show full precision" : "显示完整精度",
+        }),
+      );
+      expect(screen.getAllByText("12.000000000000000001")).toHaveLength(2);
+      expect(get).toHaveBeenCalledTimes(2);
+      expect(summary).toHaveBeenCalledTimes(2);
+    },
+  );
+
   it("starts a comparison from a reopened result with that result selected", async () => {
     window.history.replaceState({}, "", `/experiments/${ids[0]}`);
     vi.spyOn(experimentApi, "get").mockResolvedValue(runs[0]!);
@@ -58,6 +206,11 @@ describe("experiment comparison", () => {
     const link = await screen.findByRole("link", {
       name: "Select for comparison",
     });
+    expect(
+      screen.queryByText(
+        /Earlier versions of this historical execution engine/,
+      ),
+    ).toBeNull();
     expect(link).toHaveAttribute("href", `/experiments?compare_from=${ids[0]}`);
     await act(async () => i18n.changeLanguage("zh-CN"));
     expect(

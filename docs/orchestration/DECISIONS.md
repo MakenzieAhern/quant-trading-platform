@@ -1,5 +1,53 @@
 # Decisions
 
+## v1.2 retain unvalidated economics, guard observed contradictions — 2026-10-02 23:51 UTC
+
+Actual SZSE exploration exposes a source-input defect, not an arithmetic error:
+official cached002168 ratio1.000/ex-date2011-03-28 evidence exists but was not
+accepted into frozen corporate-actions; first-tradability evidence remains open.
+The saved100-share position did not receive that distribution. Record financial
+PARTIAL, preserve the original output and never derive entitlement from a factor
+step or price fall. Root verified the oracle row and retained HTML checksum;
+independent Decimal replay of saved rows establishes arithmetic consistency only.
+
+Prefer a shared observed-reference contradiction guard over a single-security
+special case or an entire historical-source disable. A guard is not proof of
+complete corporate-action coverage. Existing accepted action chains and uncertain
+activation boundaries require separate validation; current-quality advisories
+must also reach saved results/exports/plans without rewriting old summaries,
+ledgers or frozen manifests. New economic repair belongs to independently audited
+new data/experiment versions, never an in-place formal/OOS rewrite. All product
+requirements remain intact; no merge/release/goal-complete claim.
+
+## v1.2 validate the corrected path independently; never manufacture execution references — 2026-10-02 23:42 UTC
+
+Reuse existing notice blocks/shared copy for honest old-engine disclosure on the
+actual results users read, not only the manuals. Keep originals/frozen facts/OOS
+unchanged; missing/malformed source metadata is uncertainty. Independent review
+caught array-to-string candidate coercion; strict identity plus focused regression
+closes it. Preserve RED and first-green failures and distinguish EN DOM positive
+proof from archive/configuration-only screenshots. Final49focused/642frontend
+and independent53-file review pass locally; new exactCI remains separate.
+
+The accepted objective permits independently named known-history validation.
+Actual UI submitted one SSE and one SZSE2011Mar task, not a formal rerun or
+unseen/OOS research. Their identical parameters except universe are engineering
+controls, not a performance optimization. SSE's20 orders correctly cannot fill:
+the official frozen kline source has no exchange pre-close, and the accepted
+convention expressly forbids substituting yesterday raw close. Targeted raw
+statistics and both partition/manifest SHAs verify this source gap without
+reacquisition or mutation. SZSE has official references and10 constrained fills;
+retain its negative result and separately inspect accounting/source evidence.
+Different universes/other historic code changes cannot identify old-report impact.
+
+Original8job metadata/6result HTTP bodies/formal-list/paper-list remain equal
+within the saved scope; only the2declared personal IDs are added. Root restores
+the original123456.789000000000001 draft through its immutable backup and leaves
+old browser versions intact. No provider acquisition, account start, service
+restart, security-policy change, dataset/methodology/freeze or formal/OOS write.
+Whole mandatory product acceptance/current lawful forward/real missing-ledger
+evidence/quality/delivery obligations remain; keep goal active, no merge/release.
+
 ## v1.2 fix shared trust boundaries without rewriting old evidence — 2026-10-02 23:03 UTC
 
 Keep four label fixes in existing shared controls and observation ownership/date

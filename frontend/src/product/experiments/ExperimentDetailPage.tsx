@@ -383,6 +383,14 @@ function ExperimentResults({
         <p>
           {data.mode === "synthetic_demo" ? c.warningDemo : c.warningHistorical}
         </p>
+        {job.dataset_id === "cn-a-research-20100101-20251231-v1" && (
+          <p>
+            {job.mode === "historical_exploration" &&
+            data.mode === "historical_exploration"
+              ? c.historicalExecutionIssue
+              : c.historicalExecutionUnverified}
+          </p>
+        )}
         <p>{c.noGuarantee}</p>
         {data.limitations.length > 0 && (
           <ul>

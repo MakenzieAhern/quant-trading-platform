@@ -182,6 +182,16 @@ export function ResearchRunPage({ runId }: { runId: string }) {
           {t("research:pilotSmokeWarning")}
         </div>
       )}
+      {run.data.dataset_id === "cn-a-research-20100101-20251231-v1" &&
+        run.data.period_kind !== "PILOT_SMOKE" &&
+        run.data.diagnostics.candidate !== "S0" &&
+        run.data.diagnostics.candidate !== "S1" && (
+          <div className="oosGuard" role="note">
+            {run.data.diagnostics.candidate === "S4"
+              ? c.historicalExecutionIssue
+              : c.historicalExecutionUnverified}
+          </div>
+        )}
       <section className="runFacts" aria-label={t("research:lineage")}>
         <div>
           <span>{t("common:dataset")}</span>
