@@ -8239,3 +8239,41 @@ target-size inspection did not identify a new defect. Full U1-U8/M3-M5,
 licensed after-start forward receipt, genuine pre-loss ledgers, independent
 backup, native 200% zoom, screen-reader speech, novice testing, report file
 landing and release remain open.
+
+## 2026-10-02 03:33 UTC bounded visual, login and rights recheck
+
+The running local application was inspected in an owned installed-Chrome tab,
+not a user-owned tab. At 1280×800 in light Chinese, the Workbench retained its
+guided-backtest action and the Data Center distinguished historical research
+through 2025-12-31 from synthetic 2030–2031 demonstration. At 390×844 the
+Data Center and its raw-candidate request form had document/client widths
+375/375, a visible focused security field and separate historical/synthetic
+labels. A bounded computed-color pass over visible direct text found no sampled
+sub-4.5:1 small text; this is **not** a full WCAG or screen-reader test. The
+original English/dark preference and default viewport were restored, and the
+owned tab was closed. No provider request or study/account submission occurred.
+
+Windows last boot was 2026-10-01 17:05:29 local. The single current-user
+`QuantTrading-DockerDesktop-AtLogon` task reported last run at 17:05:43 with
+result 0. Both times precede the duplicate-startup-entry correction recorded
+later on October 1 UTC. The healthy services observed now therefore do **not**
+prove a genuine post-correction unattended login; `M5-DELIVERY` remains FAIL.
+No reboot, logout, task rerun or Docker restart was induced to manufacture it.
+
+A focused read of the current official [SSE market-data service page](https://www.sse.com.cn/transparency/services/index.shtml)
+still points to application/licensing channels. The current [SZSE website legal
+notice](https://www.szse.cn/application/laws/) permits noncommercial browsing
+and downloading of that website's content, but does not identify BaoStock's
+upstream source or expressly grant this product persistent 2026 EOD simulated
+plan/fill use. Together with the specific exchange trading-information rule
+already recorded in [source readiness](SOURCE_READINESS.md), this does not
+close the source-use-rights gate. This is a bounded evidence interpretation,
+not legal advice or a finding that the earlier private candidate trial was
+unlawful. No inquiry, purchase, credential or market request was sent.
+
+After two bounded checks without a new user flow or defect, the next work
+should not repeat the same viewport/download probes. The smallest source
+step is written terms covering the actual private local persistent simulation
+use and upstream exchange rights. Genuine post-change login, independent
+physical backup and pre-loss ledger evidence still need separate real-world
+proof. Full U1–U8/M3–M5 and v1.2 publication remain incomplete.
