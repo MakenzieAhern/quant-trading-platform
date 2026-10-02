@@ -8390,3 +8390,22 @@ account or result-comparison baseline image was saved. Older v1.0 README images
 are not substituted as v1.1 proof. This is a verified three-task media pairing,
 not complete six-flow/current-code-head media, novice usability, M5 PASS or
 release acceptance.
+
+## 2026-10-02 04:28 UTC disposable migration reversal gate
+
+Using only `compose.test.yml`, a separately named
+`qtp-migration-proof-20261002` project started PostgreSQL 16 with
+`quant_test` on tmpfs, no published port or named PostgreSQL volume.
+The current backend image ran `alembic upgrade head` through all 16 revisions
+to `20260924_0016`, then `alembic downgrade base` through all 16 revisions.
+At base, `alembic current` showed no revision and `pg_tables` counted only the
+empty Alembic version table in `public`. A second `alembic upgrade head`
+returned to `20260924_0016`; SQL independently read that version and counted
+44 public tables. Every command exited 0. The exact scratch PostgreSQL
+container and network were verified and removed with `docker compose down`
+without `-v`; the original Compose project was not stopped or targeted.
+
+This proves schema-cycle execution against an **empty disposable** database.
+It is not a populated-database data-preservation rollback, a production
+restore, an independent physical backup, or full QA-RELEASE/M5 PASS. No
+original ledger, frozen research artifact or Official OOS was changed.
