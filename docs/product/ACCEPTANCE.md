@@ -7974,3 +7974,25 @@ source file changed during this browser test. This verifies the current-head
 browser render-fault recovery path, **not**
 the cause of the earlier hot-update blank page, all runtime errors, native
 screen-reader speech, full `UX-ERROR`/M4/M5, lawful forward data or release.
+
+## 2026-10-02 01:39 UTC isolated terminal paper-account restart regression
+
+The existing isolated failure-injection case commits an `ACCEPTED` paper order
+after replay startup, then fails the runtime. It already proved the account is
+`FAILED`, the order is `CANCELLED`, and no fill is invented. The same case now
+constructs a **fresh** paper manager against the test database: startup recovery
+reports zero active sessions to interrupt, its persisted session and event
+snapshot exactly equals the pre-restart snapshot, and it rejects a new start
+from `FAILED` without adding events. This covers the post-failure process-owner
+boundary without writing a real paper account.
+
+Focused regression, Ruff and formatting passed. The whole paper API test file
+passed **47**, with one optional historical-archive test skipped because that
+archive is not mounted in the disposable test stack. The temporary test
+PostgreSQL uses tmpfs and was stopped afterward; no orphan cleanup or volume
+removal was requested. Original product research/paper session/paper event/data
+update counts remained **8/5/417/4**. Original PostgreSQL, Redis and backend
+were healthy, frontend running, and both frontend and `/api/health` returned
+HTTP 200. This is a bounded restart/idempotence regression, **not** a real
+Windows reboot, genuine pre-loss ledger recovery, lawful new-market forward
+receipt, independent physical backup, full U7/M4/M5 or release acceptance.
