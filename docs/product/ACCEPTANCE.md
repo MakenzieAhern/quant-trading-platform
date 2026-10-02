@@ -8430,3 +8430,35 @@ one actionable error-route recovery check, not the full UX-ERROR/accessibility,
 M4/M5, independent novice or release gate. Browser images were inspected in
 the tool, not retained as durable delivery media. Original financial data,
 frozen research and Official OOS were untouched; PR #32 remains draft/open.
+The pushed code head `83c5961825ab599b07cc77ba38b0f660d9f6d921` passed
+[CI run 36965529749](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36965529749):
+backend, frontend and Compose all succeeded. This does not promote the wider
+product or release gate.
+
+## 2026-10-02 04:47 UTC saved result to account, warm-navigation check
+
+On DESKTOP-3EOROGR, an agent-owned in-app Chromium tab at default 1265×720
+opened the existing 293-session historical result `d9f27183` read-only. The
+result exposed its dated simulation-plan preview, including candidates, cash
+need, risk decisions and an explicit warning that this older saved record has
+no recorded account-snapshot trading date and is **not executable**. Its link
+opened a separate historical-account form without creating an account. Since
+the copied research spans more than the 93-calendar-day replay limit, the form
+left the start date empty and required an explicit choice; it did not silently
+copy an invalid interval. Browser Back restored the saved result. No Create or
+Start action was used. The existing `PaperTradingPages.test.tsx` regression
+also covers the 93-day handoff rule.
+
+For a bounded warm-cache interaction measurement on the local Vite dev stack,
+the automation waited for each source link to be visible **before** starting
+its click-to-destination-heading timer. Workbench → saved 293-session result:
+20 samples, median 41.5ms, nearest-rank p95 157ms, max 158ms. Saved result →
+independent account form: 15 samples, median 28ms, nearest-rank p95/max 83ms.
+These wall times include browser-control overhead; the initial rough sample
+that also counted pre-click asynchronous link loading was discarded as an
+invalid click-latency measure. This satisfies the stated ≤200ms target only
+for these two warm local route transitions. It does not prove cold-cache,
+release-build or broader interaction performance, actual screen-reader
+behavior, forward-market plans, missing historical ledgers, independent backup
+or M4/M5 acceptance. The owned tab was closed; no original financial record,
+frozen research or Official OOS was changed.
