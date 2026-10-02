@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T01:39:16Z",
+  "updated_at_utc": "2026-10-02T01:44:15Z",
   "u7_terminal_failure_restart_20261002_gate": {
     "status": "PASS_BOUNDED_ISOLATED_RESTART_REGRESSION_NOT_FULL_U7",
-    "proof": "The existing isolated post-start failure case now creates a fresh paper manager after FAILED/CANCELLED/no-fill persisted state. Its startup recovery finds zero active sessions, its persisted snapshot matches exactly, and starting the terminal account is rejected without journal changes. Focused test, Ruff and formatting passed; full paper API file had 47 passes and one optional unmounted-archive skip. Original database counts remained 8/5/417/4 and original frontend/API returned HTTP 200. See docs/product/ACCEPTANCE.md.",
+    "proof": "The isolated post-start failure case now creates a fresh paper manager after FAILED/CANCELLED/no-fill persisted state. Its startup recovery finds zero active sessions, its persisted snapshot matches exactly, and starting the terminal account is rejected without journal changes. First CI 36952021470 failed because the assertion was mistakenly inserted in an adjacent STOPPED test; moved to the intended FAILED case without weakening it. Corrected full local make test passed backend 1036/one optional skip and frontend 564; make lint and make build passed. Original database counts remained 8/5/417/4 and original frontend/API returned HTTP 200. See docs/product/ACCEPTANCE.md.",
     "limits": "Fresh application manager with an isolated test database, not an induced production backend or Windows reboot. Does not recover two genuine pre-loss ledgers, prove lawful 2026 forward data, independent physical backup, complete U7/M4/M5 or release. PR32 stays draft/open."
   },
   "u8_render_failure_recovery_20261002_gate": {

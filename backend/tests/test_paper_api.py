@@ -872,24 +872,6 @@ async def test_stopping_paused_account_cancels_persisted_pending_order(
     assert snapshot["orders"][0]["status"] == "CANCELLED"
     assert snapshot["fills"] == []
 
-    # A fresh manager must observe the committed terminal journal, not replay
-    # the failed runtime's in-memory order or append another terminal event.
-    before_restart = await paper_manager.snapshot(UUID(session_id))
-    restarted = paper_routes.PaperTradingManager(
-        SessionFactory,
-        paper_routes.DatasetRegistry.phase7(settings.backtest_fixture_path),
-        paper_routes.StrategyRegistry(),
-        historical_datasets=paper_routes.ExperimentDatasetRegistry(settings.research_data_path),
-    )
-    try:
-        assert await restarted.recover_interrupted() == 0
-        assert await restarted.snapshot(UUID(session_id)) == before_restart
-        with pytest.raises(paper_routes.PaperSessionStateError, match="cannot start from FAILED"):
-            await restarted.start(UUID(session_id))
-        assert await restarted.snapshot(UUID(session_id)) == before_restart
-    finally:
-        await restarted.shutdown()
-
 
 async def test_repeated_sessions_release_runtime_resources(
     client: AsyncClient, monkeypatch: pytest.MonkeyPatch
@@ -1240,6 +1222,24 @@ async def test_runtime_failure_cancels_order_persisted_after_replay_started(
     assert snapshot["orders"][0]["order_id"] == str(order_id)
     assert snapshot["orders"][0]["status"] == "CANCELLED"
     assert snapshot["fills"] == []
+
+    # A fresh manager must observe the committed terminal journal, not replay
+    # the failed runtime's in-memory order or append another terminal event.
+    before_restart = await paper_manager.snapshot(UUID(session_id))
+    restarted = paper_routes.PaperTradingManager(
+        SessionFactory,
+        paper_routes.DatasetRegistry.phase7(settings.backtest_fixture_path),
+        paper_routes.StrategyRegistry(),
+        historical_datasets=paper_routes.ExperimentDatasetRegistry(settings.research_data_path),
+    )
+    try:
+        assert await restarted.recover_interrupted() == 0
+        assert await restarted.snapshot(UUID(session_id)) == before_restart
+        with pytest.raises(paper_routes.PaperSessionStateError, match="cannot start from FAILED"):
+            await restarted.start(UUID(session_id))
+        assert await restarted.snapshot(UUID(session_id)) == before_restart
+    finally:
+        await restarted.shutdown()
 
 
 class FakeWebSocket:

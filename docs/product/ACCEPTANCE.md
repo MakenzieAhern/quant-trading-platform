@@ -7996,3 +7996,12 @@ were healthy, frontend running, and both frontend and `/api/health` returned
 HTTP 200. This is a bounded restart/idempotence regression, **not** a real
 Windows reboot, genuine pre-loss ledger recovery, lawful new-market forward
 receipt, independent physical backup, full U7/M4/M5 or release acceptance.
+
+The first exact-head hosted CI run `36952021470` exposed a test-placement
+mistake: the new `FAILED` restart assertion was attached to the neighboring
+normal-stop case, whose correct status is `STOPPED`. The assertion was moved
+to the intended runtime-failure case without weakening it. The corrected
+complete local suite passed backend **1036** with the same optional skip and
+frontend **564**; Ruff, format, mypy, ESLint, TypeScript and production build
+also passed. A new exact-head CI run is required before calling hosted checks
+green. No application runtime code or original account data changed.
