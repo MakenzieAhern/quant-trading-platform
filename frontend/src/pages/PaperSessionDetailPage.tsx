@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { paperApi, paperParsers } from "../api/paper";
 import { ErrorPanel, LoadingPanel } from "../components/AsyncPanel";
 import { Link } from "../components/Link";
+import { Pagination } from "../components/Pagination";
 import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
 import { StatusBadge } from "../components/StatusBadge";
 import { ExperimentPlan } from "../product/experiments/ExperimentPlan";
@@ -14,6 +15,8 @@ import { formatDecimal, formatUtc, shortId } from "../utils/format";
 import { localizeRiskMessage } from "./riskMessage";
 
 type PaperAction = "start" | "pause" | "stop";
+// ponytail: DOM-only paging; long sessions still need bounded server collections.
+const PAPER_TABLE_LIMIT = 100;
 
 function commandConfirmed(
   action: PaperAction,
@@ -721,6 +724,15 @@ function PaperTable({
   rows: string[][];
 }) {
   const { t } = useTranslation("research");
+  const [offset, setOffset] = useState(0);
+  const pageOffset = Math.min(
+    offset,
+    Math.max(
+      0,
+      Math.floor((rows.length - 1) / PAPER_TABLE_LIMIT) * PAPER_TABLE_LIMIT,
+    ),
+  );
+  if (offset !== pageOffset) setOffset(pageOffset);
   return (
     <section className="panel dataPanel">
       <div className="panelHeader">
@@ -746,29 +758,41 @@ function PaperTable({
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, rowIndex) => (
-                <tr key={`${row.join(":")}:${rowIndex}`}>
-                  {row.map((value, index) =>
-                    index === 0 ? (
-                      <th
-                        scope="row"
-                        key={`${headings[index]}-${rowIndex}`}
-                        title={value}
-                      >
-                        {value}
-                      </th>
-                    ) : (
-                      <td key={`${headings[index]}-${rowIndex}`} title={value}>
-                        {value}
-                      </td>
-                    ),
-                  )}
-                </tr>
-              ))}
+              {rows
+                .slice(pageOffset, pageOffset + PAPER_TABLE_LIMIT)
+                .map((row, rowIndex) => (
+                  <tr key={`${row.join(":")}:${pageOffset + rowIndex}`}>
+                    {row.map((value, index) =>
+                      index === 0 ? (
+                        <th
+                          scope="row"
+                          key={`${headings[index]}-${rowIndex}`}
+                          title={value}
+                        >
+                          {value}
+                        </th>
+                      ) : (
+                        <td
+                          key={`${headings[index]}-${rowIndex}`}
+                          title={value}
+                        >
+                          {value}
+                        </td>
+                      ),
+                    )}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
       )}
+      <Pagination
+        label={title}
+        offset={pageOffset}
+        limit={PAPER_TABLE_LIMIT}
+        total={rows.length}
+        onChange={setOffset}
+      />
     </section>
   );
 }

@@ -2778,6 +2778,246 @@ describe("paper trading pages", () => {
     }
   });
 
+  it("bounds paper financial tables without losing exact rows, page context or focus", async () => {
+    installWebSocket();
+    const snapshot = paperSnapshot("RUNNING");
+    const records = Array.from({ length: 201 }, (_, index) => ({
+      id: `00000000-0000-0000-0000-${String(index + 1).padStart(12, "0")}`,
+      symbol: `TEST-${index + 1}`,
+      quantity: `${index + 1}.000000000000000001`,
+    }));
+    snapshot.signals = records.map((record) => ({
+      strategy_id: "moving_average_crossover",
+      symbol: record.symbol,
+      signal_type: "BUY",
+      timestamp: "2026-09-06T02:01:00Z",
+    }));
+    snapshot.risk_decisions = records.map((record) => ({
+      proposal_id: record.id,
+      approved: true,
+      reason_code: "APPROVED",
+      message: "proposal approved",
+      timestamp: "2026-09-06T02:01:00Z",
+    }));
+    snapshot.orders = records.map((record) => ({
+      order_id: record.id,
+      strategy_id: "moving_average_crossover",
+      symbol: record.symbol,
+      side: "BUY",
+      order_type: "MARKET",
+      quantity: record.quantity,
+      price: null,
+      status: "FILLED",
+      created_at: "2026-09-06T02:01:00Z",
+    }));
+    snapshot.fills = records.map((record) => ({
+      order_id: record.id,
+      strategy_id: "moving_average_crossover",
+      symbol: record.symbol,
+      side: "BUY",
+      quantity: record.quantity,
+      price: "12.000000000000000001",
+      commission: "0.000000000000000001",
+      timestamp: "2026-09-06T02:02:00Z",
+    }));
+    snapshot.latest_portfolio = {
+      timestamp: "2026-09-06T02:02:00Z",
+      cash: "100000",
+      market_value: "0",
+      equity: "100000",
+      realized_pnl: "0",
+      unrealized_pnl: "0",
+      cumulative_commission: "0",
+      drawdown: "0",
+      plan: null,
+      positions: records.map((record) => ({
+        symbol: record.symbol,
+        quantity: record.quantity,
+        average_price: "12",
+        market_price: "12",
+        unrealized_pnl: "0",
+        realized_pnl: "0",
+      })),
+    };
+    const otherId = "00000000-0000-0000-0000-000000000999";
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(async (input) =>
+        jsonResponse({
+          ...snapshot,
+          session: {
+            ...snapshot.session,
+            session_id: String(input).includes(otherId) ? otherId : PAPER_ID,
+          },
+        }),
+      );
+    const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await screen.findByRole("table", { name: "Positions" });
+    const titles = [
+      "Positions",
+      "Signals",
+      "Risk decisions",
+      "Paper orders",
+      "Paper fills",
+    ];
+    for (const title of titles) {
+      expect(
+        within(screen.getByRole("table", { name: title })).getAllByRole(
+          "rowheader",
+        ),
+      ).toHaveLength(100);
+      const pager = screen.getByRole("group", {
+        name: `${title} — Pagination`,
+      });
+      const seen: string[][] = [];
+      for (const count of [100, 100, 1]) {
+        const table = screen.getByRole("table", { name: title });
+        const rows = within(table).getAllByRole("row").slice(1);
+        expect(rows).toHaveLength(count);
+        seen.push(
+          ...rows.map((row) =>
+            Array.from(row.querySelectorAll("th,td"), (cell) =>
+              cell.getAttribute("title")!,
+            ),
+          ),
+        );
+        if (count === 100) {
+          await userEvent.click(
+            within(pager).getByRole("button", { name: "Next" }),
+          );
+          expect(pager).toHaveFocus();
+        }
+      }
+      expect(seen).toHaveLength(201);
+      if (["Positions", "Paper orders", "Paper fills"].includes(title))
+        expect(seen.map((row) => row[title === "Positions" ? 1 : 2])).toEqual(
+          records.map((record) => record.quantity),
+        );
+      expect(
+        within(pager).getByRole("button", { name: "Next" }),
+      ).toBeDisabled();
+    }
+    const fillPager = screen.getByRole("group", {
+      name: "Paper fills — Pagination",
+    });
+    const extraFill = {
+      ...snapshot.fills[0]!,
+      order_id: otherId,
+      quantity: "202.000000000000000001",
+    };
+    snapshot.fills = [...snapshot.fills, extraFill];
+    await act(async () =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 1,
+        type: "fill.created",
+        occurred_at: "2026-09-06T02:03:00Z",
+        payload: extraFill,
+      }),
+    );
+    expect(fillPager).toHaveFocus();
+    expect(
+      within(screen.getByRole("table", { name: "Paper fills" })).getAllByRole(
+        "rowheader",
+      ),
+    ).toHaveLength(2);
+    try {
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      await act(async () => MockWebSocket.instances.at(-1)!.open());
+      expect(
+        screen.getByRole("group", {
+          name: `模拟成交 — ${i18n.t("common:pagination")}`,
+        }),
+      ).toHaveFocus();
+      expect(
+        within(screen.getByRole("table", { name: "模拟成交" })).getAllByRole(
+          "rowheader",
+        ),
+      ).toHaveLength(2);
+      expect(screen.getByText("202.000000000000000001")).toHaveAttribute(
+        "title",
+        "202.000000000000000001",
+      );
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+      await act(async () => MockWebSocket.instances.at(-1)!.open());
+    }
+    const positionsPager = screen.getByRole("group", {
+      name: "Positions — Pagination",
+    });
+    const fullPositions = snapshot.latest_portfolio!.positions;
+    positionsPager.focus();
+    snapshot.latest_portfolio = {
+      ...snapshot.latest_portfolio!,
+      positions: snapshot.latest_portfolio!.positions.slice(0, 1),
+    };
+    await act(async () =>
+      MockWebSocket.instances.at(-1)!.message({
+        sequence: 2,
+        type: "portfolio.snapshot",
+        occurred_at: "2026-09-06T02:03:00Z",
+        payload: snapshot.latest_portfolio,
+      }),
+    );
+    expect(positionsPager).toHaveFocus();
+    expect(
+      within(screen.getByRole("table", { name: "Positions" })).getAllByRole(
+        "rowheader",
+      ),
+    ).toHaveLength(1);
+    expect(
+      within(positionsPager).getByRole("button", { name: "Previous" }),
+    ).toBeDisabled();
+    snapshot.latest_portfolio!.positions = [];
+    await act(async () =>
+      MockWebSocket.instances.at(-1)!.message({
+        sequence: 3,
+        type: "portfolio.snapshot",
+        occurred_at: "2026-09-06T02:04:00Z",
+        payload: snapshot.latest_portfolio,
+      }),
+    );
+    expect(positionsPager).toHaveFocus();
+    expect(
+      screen.queryByRole("table", { name: "Positions" }),
+    ).not.toBeInTheDocument();
+    snapshot.latest_portfolio!.positions = fullPositions;
+    await act(async () =>
+      MockWebSocket.instances.at(-1)!.message({
+        sequence: 4,
+        type: "portfolio.snapshot",
+        occurred_at: "2026-09-06T02:05:00Z",
+        payload: snapshot.latest_portfolio,
+      }),
+    );
+    expect(positionsPager).toHaveFocus();
+    expect(
+      within(screen.getByRole("table", { name: "Positions" })).getAllByRole(
+        "rowheader",
+      ),
+    ).toHaveLength(100);
+    expect(
+      within(positionsPager).getByRole("button", { name: "Previous" }),
+    ).toBeDisabled();
+    view.rerender(<PaperSessionDetailPage sessionId={otherId} />);
+    await act(async () => MockWebSocket.instances.at(-1)!.open());
+    await waitFor(() =>
+      expect(
+        within(screen.getByRole("table", { name: "Paper fills" })).getAllByRole(
+          "rowheader",
+        ),
+      ).toHaveLength(100),
+    );
+    expect(
+      within(
+        screen.getByRole("group", { name: "Paper fills — Pagination" }),
+      ).getByRole("button", { name: "Previous" }),
+    ).toBeDisabled();
+    expect(
+      fetch.mock.calls.every(([input]) => String(input).includes("/snapshot")),
+    ).toBe(true);
+  });
+
   it("validates paper strategy parameters before submitting", async () => {
     const fetch = vi.spyOn(globalThis, "fetch");
     render(<CreatePaperSessionPage />);
