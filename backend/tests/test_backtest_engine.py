@@ -264,6 +264,26 @@ def test_real_crossover_strategy_signal_fills_at_following_open() -> None:
     assert result.fills[0].price == Decimal(50)
 
 
+def test_gap_up_buy_respects_enforced_buying_power_at_fill() -> None:
+    bars = [make_bar(0, "100", "100"), make_bar(1, "1000", "1000")]
+    engine = BacktestEngine(
+        StubProvider(bars),
+        (CurrentBarStrategy("gap", "AAPL", {Decimal(100): SignalType.BUY}),),
+        BacktestConfig(
+            initial_cash=Decimal(2000),
+            default_order_quantity=Decimal(10),
+            risk=RiskConfig(enforce_buying_power=True),
+        ),
+    )
+
+    result = engine.run("AAPL")
+
+    assert result.risk_decisions[0].approved
+    assert result.orders[0].status is OrderStatus.CANCELLED
+    assert result.fills == result.active_risk_reservations == ()
+    assert result.portfolio_snapshots[-1].cash == Decimal(2000)
+
+
 def test_signal_on_final_bar_remains_accepted_without_invented_fill() -> None:
     bars = manual_bars()[:2]
 

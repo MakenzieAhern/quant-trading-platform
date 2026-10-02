@@ -53,6 +53,12 @@ class BacktestEngine:
             self._event_bus,
             config.commission_model,
             config.slippage_model,
+            fill_eligible=(
+                lambda fill: fill.side is not OrderSide.BUY
+                or fill.quantity * fill.price + fill.commission <= self._portfolio.cash
+            )
+            if config.risk.enforce_buying_power
+            else None,
         )
         self._order_manager = OrderManager(
             self._event_bus,

@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 03:43 UTC legacy backtest buying-power gap correction
+
+The legacy backtest API accepts `risk.enforce_buying_power`, but its engine did
+not pass the existing fill-time cash guard to `SimulatedBroker`. A two-bar
+regression first failed: a CNY 2,000 account approved a 10-share buy at 100,
+then filled at the next open of 1,000, making cash negative despite the selected
+limit. The engine now uses the same fill-time guard already used by paper replay.
+With the limit enabled, that order is cancelled before any fill and its OMS
+reservation is released; with the limit disabled, prior behavior is unchanged.
+
+The isolated tmpfs `quant_test` suite passed **1039 backend tests** with one
+optional unmounted-archive skip and **566 frontend tests**. Ruff, format, mypy,
+ESLint and TypeScript passed. The original Compose PostgreSQL, Redis and backend
+remained healthy, frontend running, and `/` plus `/api/health` returned 200.
+No original job or account was run, no frozen report/OOS was recomputed, and
+the original application container was not rebuilt for this local code edit.
+This is a bounded new-run engine correction, not recovered historical records,
+browser-path verification, current-head hosted CI, full M4/M5 or v1.2 release.
+
 ## 2026-10-02 00:17 UTC exact chart-date target and keyboard check
 
 The prior pushed head `7c486bf` passed
