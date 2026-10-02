@@ -8166,3 +8166,40 @@ screen-reader speech, current-head durable media, actual report file landing,
 unattended post-login startup, lawful 2026 forward-market authority, genuine
 pre-loss ledger recovery and independent physical backup remain unverified or
 blocked. PR #32 stays draft/open; no merge, tag or release.
+
+## 2026-10-02 03:11 UTC three-study comparison and timing boundary
+
+At source head `08263953dd0a7417e9a7cc36f2c7d98797475790`, an owned
+installed-Chrome tab selected three **existing, completed** A-share historical
+exploratory studies with the visible research-list checkboxes. The comparison
+URL encoded all three IDs and displayed three full-period columns: returns
+`+4.67%`, `-0.47%`, `-0.91%`; drawdowns `-2.48%`, `-0.47%`, `-1.14%`;
+costs CNY `96.05`, `30.19`, `20.17`. It marked the 2010-01-04→2011-03-22,
+2011-03-01→2011-03-28 and 2011-04-01→2011-04-29 periods **Different**,
+while the saved dataset/universe, cost, capital, risk and strategy settings
+matched. Both English and Chinese warned this was not a controlled comparison,
+did not rank/recommend, and distinguished saved-configuration equality from
+unverified implementation/effective statutory cost equality. Reloading the
+shareable URL restored the same three columns and warning. Browser error log
+was empty; original English preference was restored. Read-only original DB
+counts stayed 5 paper sessions, 417 events, 8 research jobs and 4 update
+jobs; tracked `.research` files were unchanged. No new study, account,
+provider call or financial write occurred.
+
+At temporary 390×844 in the same installed Chrome, both English and Chinese
+had document/client width 375/375: no page-level horizontal overflow. The
+results table itself was 307px wide with 680px scroll content and a visible
+horizontal-scroll hint. Keyboard focus remained on the named region; ArrowRight
+reached scrollLeft 373/373 and exposed the third study's values. The original
+English locale and default viewport were restored. These screenshots were
+inspected in-tool only, not saved as durable M5 media.
+
+This closes the bounded **three-study actual-browser/deep-link** gap, not full
+U4, accessible visual matrix, real report file landing or M4/M5. A separate
+exploratory click-to-visible performance sample for one saved detail alternated
+between roughly 155 ms and 1.1 s under browser-control waits; a split sample
+was 27 ms to click and 130 ms to observe the metric, while direct result API
+GETs were 3–10 ms. The browser-control bridge/polling contribution was not
+isolated, so neither a product p95 PASS nor a product latency defect is claimed.
+The next useful performance check needs an on-page timing/profiling surface
+that distinguishes UI render from automation wait overhead.
