@@ -8493,8 +8493,10 @@ original mounts; no Docker volumes/images, original financial rows, frozen
 research or Official OOS were removed or modified. Browser screenshots were
 inspected but not retained as M5 delivery media. This closes one misleading
 offline-copy defect, not full U8/M4/M5, lawful new-market forward use, genuine
-pre-loss ledgers, an independent backup, or v1.2 release acceptance. The new
-local change has not yet passed exact-head GitHub CI.
+pre-loss ledgers, an independent backup, or v1.2 release acceptance. The
+pushed code head `bc198bb629b4d57966d78615c58247051fc003cb` subsequently
+passed [CI run 37009858550](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37009858550):
+backend, frontend and Compose all succeeded.
 
 ## 2026-10-02 12:54 UTC local Docker manual-start recovery
 
@@ -8508,3 +8510,34 @@ frontend returned HTTP 200. A read-only original-database count remained
 matching the prior checkpoint. This is a **manual-start** recovery, not proof
 of unattended startup after Windows login. No `down -v`, prune, factory reset,
 database migration or original-data write was used.
+
+## 2026-10-02 13:07 UTC unknown strategy deep-link recovery (bounded U2/U8)
+
+An independent read-only Chrome check of `/strategies/does-not-exist` found a
+real, online catalog with one registered strategy, yet the page displayed that
+strategy's momentum title and claimed metadata was unavailable until service
+recovery. The missing ID was neither a registered strategy nor a service
+outage. A focused bilingual regression failed against the old page, which had
+no alert or return action. `ProductStrategiesPage` now uses the successful
+catalog response to distinguish a missing ID from a fetch error: it shows no
+fallback executable-strategy name, gives a localized missing-strategy alert,
+and links to `/strategies`. Actual service failures retain `ProductError` and
+Retry. No new API or dependency was needed.
+
+The focused page suite passed **14/14** after the fix; the full frontend suite
+passed **568/568** across 42 files. ESLint, TypeScript, touched-file Prettier,
+Vite production build and `git diff --check` passed; the existing >500 kB
+chunk advisory remained. A second read-only Chrome check on the running local
+Vite app confirmed EN/dark and ZH missing-ID copy, no momentum title or false
+outage, and a working link to the populated strategy list in both languages.
+The initial EN/dark preference was restored and the owned tab closed. A true
+service failure was not induced against the original backend; its existing
+retry-path test remains the regression evidence for that branch. Read-only
+original-database counts stayed 5 paper sessions, 417 events, 8 research jobs
+and 4 update jobs. No financial job was started, and no original data, frozen
+research or Official OOS was changed.
+
+This closes one unknown-strategy recovery defect, not full U2/U8/M4/M5,
+independent novice acceptance, lawful new-market forward simulation or release.
+Browser screenshots were inspected but not saved as durable M5 media. The
+current strategy fix has not yet passed exact-head hosted CI.

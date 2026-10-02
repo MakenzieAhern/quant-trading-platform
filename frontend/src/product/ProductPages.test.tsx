@@ -189,6 +189,28 @@ it("does not promise historical or demo availability while data-center service i
   await act(() => i18n.changeLanguage("en-US"));
 });
 
+it("returns an unknown strategy deep link to the registered catalog", async () => {
+  await act(() => i18n.changeLanguage("en-US"));
+  vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+  render(<ProductStrategiesPage strategyId="does-not-exist" />);
+  const missing = await screen.findByRole("alert");
+  expect(missing).toHaveTextContent("This strategy is not registered");
+  expect(screen.getByRole("heading", { level: 1 })).not.toHaveTextContent(
+    "Momentum & lower volatility",
+  );
+  expect(screen.getByRole("link", { name: "Strategies" })).toHaveAttribute(
+    "href",
+    "/strategies",
+  );
+  await act(() => i18n.changeLanguage("zh-CN"));
+  expect(missing).toHaveTextContent("该策略未注册");
+  expect(screen.getByRole("link", { name: "策略" })).toHaveAttribute(
+    "href",
+    "/strategies",
+  );
+  await act(() => i18n.changeLanguage("en-US"));
+});
+
 it.each(["success", "error"])(
   "keeps keyboard focus in the Workbench after a capabilities Retry returns %s",
   async (outcome) => {

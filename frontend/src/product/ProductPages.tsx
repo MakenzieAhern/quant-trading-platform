@@ -339,14 +339,14 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
     ? i18n.language.startsWith("zh")
       ? strategy.name_zh
       : strategy.name_en
-    : c.strategyName;
+    : c.strategies;
   return (
     <div className="productPage">
       <header className="pageHeader">
         <div>
           <p className="eyebrow">{c.strategies}</p>
           <h1>{strategyId ? name : c.strategyTitle}</h1>
-          <p>{c.strategyIntro}</p>
+          {(!strategyId || strategy) && <p>{c.strategyIntro}</p>}
         </div>
         {strategyId && strategy && (
           <Link
@@ -382,7 +382,16 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
             </details>
           </>
         ) : (
-          !catalog.loading && !catalog.error && <p>{c.noStrategies}</p>
+          !catalog.loading &&
+          !catalog.error &&
+          catalog.data && (
+            <section className="stateCallout" role="alert">
+              <p>{c.strategyNotFound}</p>
+              <Link className="button secondary" href="/strategies">
+                {c.strategies}
+              </Link>
+            </section>
+          )
         )
       ) : (
         <div className="productStrategyCards">

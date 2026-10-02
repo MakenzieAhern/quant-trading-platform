@@ -119,7 +119,6 @@ const en = {
   strategyIntro:
     "Explore the strategy that is actually implemented. Start with its behavior and risks, then inspect the evidence.",
   registered: "Registered A-share strategy",
-  strategyName: "Momentum & lower volatility",
   strategySummary:
     "Ranks eligible A-shares by past momentum, trend and volatility, then periodically builds an equal-weight portfolio.",
   inspectStrategy: "Explore strategy",
@@ -143,8 +142,8 @@ const en = {
   parametersBody:
     "Initial cash, available dates, exchange universe, rebalance sessions, maximum holdings, commission and risk limits. Statutory fees and cash-account safeguards remain active.",
   fullMethod: "Open the frozen methodology",
-  noStrategies:
-    "Strategy metadata is unavailable. Retry when the service is running.",
+  strategyNotFound:
+    "This strategy is not registered. Open the strategy list to choose an available one.",
   guideTitle: "Four modes, different meanings",
   historicalHelp:
     "An experiment on a fixed historical dataset. The dates have already been observed; results are exploratory.",
@@ -299,7 +298,6 @@ const zh: Record<keyof typeof en, string> = {
   strategyTitle: "知道规则，再开始研究",
   strategyIntro: "这里展示已实现的策略。先理解行为和风险，再查看研究证据。",
   registered: "已注册的 A 股策略",
-  strategyName: "动量与低波动",
   strategySummary:
     "综合过去的动量、趋势和波动率，为符合条件的 A 股排序，定期建立等权组合。",
   inspectStrategy: "了解策略",
@@ -323,7 +321,7 @@ const zh: Record<keyof typeof en, string> = {
   parametersBody:
     "本金、可用区间、交易所股票范围、调仓间隔、最多持仓数、佣金和风险限制。法定税费和现金账户约束始终有效。",
   fullMethod: "查看冻结方法说明",
-  noStrategies: "暂时无法读取策略信息。服务恢复后请重试。",
+  strategyNotFound: "该策略未注册。请返回策略中心选择可用策略。",
   guideTitle: "四种模式，四种不同含义",
   historicalHelp:
     "在固定历史数据集上检验假设。这些日期已经被看过，结果属于探索性实验。",
