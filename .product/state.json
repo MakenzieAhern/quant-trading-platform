@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T00:17:38Z",
+  "updated_at_utc": "2026-10-02T00:31:14Z",
+  "m5_isolated_packaged_historical_replay_20261002_gate": {
+    "status": "PASS_BOUNDED_PRODUCTION_MODE_HISTORICAL_FLOW_AND_RESTART_NOT_RELEASE",
+    "source_head": "8865fe418ff34e137760a152e5f8b24377892c07",
+    "proof": "Current-source production-mode backend and packaged frontend ran with separate tmpfs PostgreSQL/Redis on an owned network. Only the audited 2010-2025 historical archive and repository data were bind-mounted read-only. In an owned in-app browser, the four-step Chinese wizard created one inspected-period A-share study, SUCCEEDED 294/294 over 2011-03-01 to 2011-03-23, and displayed final equity CNY 99,964.81, CNY 30.19 costs and CSI300 +0.31%. The result prepared one separate scratch historical paper account; explicit Start replay reached STOPPED with 124 contiguous unique events, 20 orders and six fills, cash 81309.8134, equity 99964.8134 and commission 30.1866. Backend-only restart preserved the same stopped account, sequence, orders, fills and portfolio; fresh browser reload and EN/ZH toggle displayed the saved state. Scratch DB had one study and one paper account. Owned browser tab, four --rm tmpfs containers and empty network were removed. Original Compose remained up and its database counts stayed 8 research jobs, five paper sessions and 417 events. See docs/product/ACCEPTANCE.md.",
+    "limits": "Owned scratch historical replay, not a new forward-market receipt, independent novice test, durable M5 media, native Chrome 200-percent zoom, screen-reader speech, unattended login, independent physical backup, recovery of genuine pre-loss paper ledgers, or full U1-U8/M4/M5 acceptance. Scratch state was intentionally discarded; original database, volumes, frozen research and OOS were untouched. PR32 stays draft/open with no merge, tag or release."
+  },
   "m4_chart_date_target_20261002_gate": {
     "status": "PASS_BOUNDED_TOUCH_TARGET_AND_KEYBOARD_NOT_FULL_M4",
     "proof": "On the current English/dark saved synthetic result, the shared experimentDateButton used by exact chart data and trade-date links measured 32 CSS px high. Its existing minimum height was raised to 40px. Focused Collections tests passed 17/17. In an agent-owned in-app browser tab, the first date button measured 40px, Enter selected 2030-12-20, the exact readout updated, and the focused row was visually inspected. At 390x844 the document/client width remained 375/375 with an explicit local table-scroll hint. The temporary viewport was reset and the owned tab closed. The prior pushed head 7c486bf passed backend/frontend/Compose GitHub CI run 36944647805; this CSS/documentation checkpoint needs its own exact-head CI.",
