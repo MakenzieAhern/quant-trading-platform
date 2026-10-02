@@ -1,5 +1,5 @@
 import asyncio
-from collections.abc import Awaitable, Callable, Iterable, Sequence
+from collections.abc import AsyncIterable, AsyncIterator, Awaitable, Callable, Iterable, Sequence
 from contextlib import suppress
 from dataclasses import dataclass
 from datetime import date, datetime
@@ -85,11 +85,12 @@ class ReplayMarketDataProvider:
 
 
 class SimulatedAShareSessionProvider:
-    """Replay completed cross-sectional sessions, including lazy frozen archives."""
+    """Consume completed sessions; async sources can wait without preventing stop."""
 
     def __init__(
         self,
-        sessions: Iterable[ResearchSession | TradingCalendar],
+        sessions: Iterable[ResearchSession | TradingCalendar]
+        | AsyncIterable[ResearchSession | TradingCalendar],
         interval_seconds: float = 0.5,
         *,
         pace_from_date: date | None = None,
@@ -97,13 +98,13 @@ class SimulatedAShareSessionProvider:
         if interval_seconds < 0:
             raise ValueError("interval_seconds must be non-negative")
         self._streaming = not isinstance(sessions, Sequence)
-        self._sessions = sessions if self._streaming else tuple(sessions)
+        self._sessions = tuple(sessions) if isinstance(sessions, Sequence) else sessions
         self._interval_seconds = interval_seconds
         self._pace_from_date = pace_from_date
         self._running = False
         self._stop = asyncio.Event()
         previous: date | None = None
-        for session in () if self._streaming else self._sessions:
+        for session in self._sessions if isinstance(self._sessions, Sequence) else ():
             if isinstance(session, TradingCalendar):
                 continue
             if previous is not None and session.trading_date <= previous:
@@ -117,14 +118,21 @@ class SimulatedAShareSessionProvider:
     async def start(self, handler: AShareSessionHandler) -> None:
         if self._running:
             raise ReplayProviderError("A-share session provider is already running")
+        iterator = (
+            aiter(self._sessions)
+            if isinstance(self._sessions, AsyncIterable)
+            else iter(self._sessions)
+        )
         self._running = True
         self._stop.clear()
+        primary_error = False
         try:
-            iterator = iter(self._sessions)
             previous: date | None = None
             while not self._stop.is_set():
                 session = (
-                    await asyncio.to_thread(next, iterator, None)
+                    await self._next_async(iterator)
+                    if isinstance(iterator, AsyncIterator)
+                    else await asyncio.to_thread(next, iterator, None)
                     if self._streaming
                     else next(iterator, None)
                 )
@@ -149,8 +157,34 @@ class SimulatedAShareSessionProvider:
                 ):
                     with suppress(TimeoutError):
                         await asyncio.wait_for(self._stop.wait(), timeout=self._interval_seconds)
+        except BaseException:
+            primary_error = True
+            raise
         finally:
-            self._running = False
+            try:
+                close = getattr(iterator, "aclose", None)
+                if close is not None:
+                    await close()
+            except Exception:
+                if not primary_error:
+                    raise  # Cleanup must not replace the original failure or shutdown cancellation.
+            finally:
+                self._running = False
+
+    async def _next_async(
+        self, iterator: AsyncIterator[ResearchSession | TradingCalendar]
+    ) -> ResearchSession | TradingCalendar | None:
+        pending = asyncio.ensure_future(anext(iterator, None))
+        stopped = asyncio.create_task(self._stop.wait())
+        try:
+            await asyncio.wait((pending, stopped), return_when=asyncio.FIRST_COMPLETED)
+            if self._stop.is_set():
+                return None  # Stop wins even when an unread item becomes ready in the same turn.
+            return pending.result()
+        finally:
+            pending.cancel()
+            stopped.cancel()
+            await asyncio.gather(pending, stopped, return_exceptions=True)
 
     async def stop(self) -> None:
         self._stop.set()

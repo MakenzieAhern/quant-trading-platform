@@ -100,7 +100,9 @@ def manager_with_journal(
             strategy=FixtureStrategy(),
         )
         runtimes.append(runtime)
-        items = stream if stream is not None else (INITIAL, FIRST, CALENDAR, CALENDAR, SECOND)
+        items = stream() if callable(stream) else stream
+        if items is None:
+            items = (INITIAL, FIRST, CALENDAR, CALENDAR, SECOND)
         provider = SimulatedAShareSessionProvider(items, 0)
         original_start = provider.start
 
@@ -393,3 +395,98 @@ async def test_resume_can_pause_or_stop_before_trailing_calendar_replay(monkeypa
     assert (await manager.get(initial.id)).status is expected
     assert tuple(journal[: len(before)]) == before
     assert all(item.event_type == "session.status" for item in journal[len(before) :])
+
+
+@pytest.mark.parametrize("command", ["pause", "stop", "shutdown"])
+async def test_manager_can_end_waiting_for_async_session_without_financial_events(
+    monkeypatch, command
+):
+    waiting = asyncio.Event()
+    closed = asyncio.Event()
+
+    async def source():
+        try:
+            yield INITIAL
+            waiting.set()
+            await asyncio.Event().wait()
+            yield FIRST
+        finally:
+            closed.set()
+
+    manager, initial, journal, runtimes = manager_with_journal(monkeypatch, stream=source())
+    task = asyncio.create_task(manager._run(initial))
+    manager._tasks[initial.id] = task  # Same owned task as the normal start dispatcher.
+    try:
+        await asyncio.wait_for(waiting.wait(), 1)
+        before = tuple(journal)
+        assert (await manager.get(initial.id)).status is PaperSessionStatus.RUNNING
+        assert [item.event_type for item in journal].count("calendar.observed") == 1
+        if command == "shutdown":
+            await asyncio.wait_for(manager.shutdown(), 1)
+            assert task.cancelled()
+        else:
+            await getattr(manager, command)(initial.id)
+            await asyncio.wait_for(task, 1)
+        assert (await manager.get(initial.id)).status is {
+            "pause": PaperSessionStatus.PAUSED,
+            "stop": PaperSessionStatus.STOPPED,
+            "shutdown": PaperSessionStatus.INTERRUPTED,
+        }[command]
+        assert tuple(journal[: len(before)]) == before
+        assert all(item.event_type == "session.status" for item in journal[len(before) :])
+        assert closed.is_set() and runtimes[0].completed_sessions == 0
+        assert initial.id not in manager._providers
+    finally:
+        await manager.shutdown()
+
+
+async def test_async_session_provider_resume_rebuilds_fresh_source_and_preserves_journal(
+    monkeypatch,
+):
+    waiting = asyncio.Event()
+    closed = []
+    sources = 0
+
+    async def source():
+        nonlocal sources
+        sources += 1
+        index = sources
+        try:
+            yield INITIAL
+            yield FIRST
+            yield CALENDAR
+            if index == 1:
+                waiting.set()
+                await asyncio.Event().wait()
+            yield SECOND
+        finally:
+            closed.append(index)
+
+    manager, initial, journal, runtimes = manager_with_journal(monkeypatch, stream=source)
+    task = asyncio.create_task(manager._run(initial))
+    manager._tasks[initial.id] = task
+    try:
+        await asyncio.wait_for(waiting.wait(), 1)
+        await manager.pause(initial.id)
+        await asyncio.wait_for(task, 1)
+        assert (await manager.get(initial.id)).status is PaperSessionStatus.PAUSED
+        before = tuple(journal)
+        await manager.start(initial.id)
+        await asyncio.wait_for(manager._tasks[initial.id], 1)
+        assert (await manager.get(initial.id)).status is PaperSessionStatus.STOPPED
+        assert tuple(journal[: len(before)]) == before
+        assert sources == 2 and closed == [1, 2]
+        assert [
+            item.payload["trading_date"] for item in journal if item.event_type == "market.session"
+        ] == ["2024-01-02", "2024-01-03"]
+        assert [
+            item.payload["kind"] for item in journal if item.event_type == "calendar.observed"
+        ] == [
+            "initial",
+            "extension",
+        ]
+        assert not any(item.event_type in {"order.updated", "fill.created"} for item in journal)
+        assert runtimes[-1].completed_sessions == 2
+        assert runtimes[-1].finish().snapshots[-1].cash == initial.initial_cash
+    finally:
+        await manager.shutdown()

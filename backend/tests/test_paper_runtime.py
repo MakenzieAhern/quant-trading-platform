@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import replace
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
@@ -264,6 +265,230 @@ async def test_historical_session_stream_is_lazy_and_source_is_not_synthetic() -
     await provider.start(collect)
     assert yielded == len(received) == 2
     assert received == sorted(received)
+
+
+async def test_async_session_provider_preserves_calendar_controls_and_completed_order() -> None:
+    items = (
+        CALENDAR,
+        _session(date(2024, 1, 2), opening="10"),
+        _session(date(2024, 1, 3), opening="9.9"),
+    )
+    received = []
+    closed = asyncio.Event()
+
+    async def source():
+        try:
+            for item in items:
+                yield item
+        finally:
+            closed.set()
+
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    assert not closed.is_set()
+
+    async def collect(item):
+        received.append(item)
+
+    await provider.start(collect)
+    assert received == list(items)
+    assert closed.is_set() and not provider.running
+
+
+@pytest.mark.parametrize("command", ["stop", "cancel"])
+async def test_async_session_provider_interrupts_pending_read_and_cleans_tasks(command) -> None:
+    waiting = asyncio.Event()
+    closed = asyncio.Event()
+    received = []
+
+    async def source():
+        try:
+            waiting.set()
+            await asyncio.Event().wait()
+            yield _session(date(2024, 1, 2), opening="10")
+        finally:
+            closed.set()
+
+    async def collect(item):
+        received.append(item)
+
+    before = asyncio.all_tasks()
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    task = asyncio.create_task(provider.start(collect))
+    try:
+        await asyncio.wait_for(waiting.wait(), 1)
+        assert received == [] and provider.running
+        if command == "stop":
+            await provider.stop()
+            await provider.stop()
+            await asyncio.wait_for(task, 1)
+        else:
+            task.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+        assert closed.is_set() and not provider.running
+        assert received == [] and asyncio.all_tasks() == before
+    finally:
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
+
+
+async def test_async_session_provider_stop_wins_simultaneous_ready_item() -> None:
+    received = []
+    closed = asyncio.Event()
+
+    async def source():
+        try:
+            await provider.stop()
+            yield _session(date(2024, 1, 2), opening="10")
+        finally:
+            closed.set()
+
+    async def collect(item):
+        received.append(item)
+
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    await provider.start(collect)
+    assert received == [] and closed.is_set() and not provider.running
+
+
+@pytest.mark.parametrize("second_date", [date(2024, 1, 2), date(2024, 1, 1)])
+async def test_async_session_provider_rejects_duplicate_or_older_before_handler(second_date):
+    received = []
+    closed = asyncio.Event()
+    first = _session(date(2024, 1, 2), opening="10")
+
+    async def source():
+        try:
+            yield first
+            yield _session(second_date, opening="10")
+        finally:
+            closed.set()
+
+    async def collect(item):
+        received.append(item)
+
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    with pytest.raises(ReplayProviderError, match="chronological"):
+        await provider.start(collect)
+    assert received == [first] and closed.is_set() and not provider.running
+
+
+@pytest.mark.parametrize("failure", ["source", "handler", "stop_in_handler"])
+async def test_async_session_provider_closes_iterator_at_yield_or_exception(failure):
+    closed = asyncio.Event()
+    received = []
+
+    async def source():
+        try:
+            if failure == "source":
+                raise RuntimeError("offline source failure")
+            yield _session(date(2024, 1, 2), opening="10")
+            pytest.fail("stop or failure must not request another item")
+        finally:
+            closed.set()
+
+    async def collect(item):
+        received.append(item)
+        if failure == "handler":
+            raise RuntimeError("offline handler failure")
+        await provider.stop()
+
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    if failure == "stop_in_handler":
+        await provider.start(collect)
+    else:
+        with pytest.raises(RuntimeError, match=f"offline {failure} failure"):
+            await provider.start(collect)
+    assert closed.is_set() and not provider.running
+    assert len(received) == (0 if failure == "source" else 1)
+
+
+@pytest.mark.parametrize("has_close", [False, True])
+async def test_async_session_provider_accepts_future_awaitables_and_owns_iterator(has_close):
+    first = _session(date(2024, 1, 2), opening="10")
+    items = iter((CALENDAR, first))
+    received = []
+    closed = False
+
+    class Iterator:
+        def __aiter__(self):
+            return self
+
+        def __anext__(self):
+            pending = asyncio.get_running_loop().create_future()
+            item = next(items, None)
+            if item is None:
+                pending.set_exception(StopAsyncIteration())
+            else:
+                pending.set_result(item)
+            return pending
+
+    class ClosingIterator(Iterator):
+        async def aclose(self):
+            nonlocal closed
+            closed = True
+
+    iterator = ClosingIterator() if has_close else Iterator()
+
+    class Source:
+        def __aiter__(self):
+            return iterator
+
+        async def aclose(self):
+            pytest.fail("the factory is not the owned iterator")
+
+    async def collect(item):
+        received.append(item)
+
+    provider = SimulatedAShareSessionProvider(Source(), 0)
+    await provider.start(collect)
+    assert received == [CALENDAR, first]
+    assert closed is has_close and not provider.running
+
+
+@pytest.mark.parametrize("failure", ["cancel", "handler", "stop"])
+async def test_async_session_provider_close_failure_preserves_primary_error(failure):
+    waiting = asyncio.Event()
+    closed = False
+
+    class Source:
+        def __aiter__(self):
+            return self
+
+        async def __anext__(self):
+            if failure == "cancel":
+                waiting.set()
+                await asyncio.Event().wait()
+            return _session(date(2024, 1, 2), opening="10")
+
+        async def aclose(self):
+            nonlocal closed
+            closed = True
+            raise RuntimeError("offline close failure")
+
+    async def collect(item):
+        if failure == "handler":
+            raise ValueError("offline primary handler failure")
+        await provider.stop()
+
+    provider = SimulatedAShareSessionProvider(Source(), 0)
+    task = asyncio.create_task(provider.start(collect))
+    try:
+        if failure == "cancel":
+            await asyncio.wait_for(waiting.wait(), 1)
+            task.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+        elif failure == "handler":
+            with pytest.raises(ValueError, match="primary handler"):
+                await task
+        else:
+            with pytest.raises(RuntimeError, match="close failure"):
+                await task
+        assert closed and not provider.running
+    finally:
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
 
 
 def test_historical_paper_request_rejects_unsafe_ranges_and_risk() -> None:

@@ -61,6 +61,14 @@ Phase 10 adds a second registered simulation route for the frozen A-share strate
 product fixture, not an extension of the audited dataset or formal research evidence. This route
 does not read, rerun, or replace the consumed Official OOS artifact.
 
+The completed-session provider also accepts an asynchronous iterator. Waiting for
+its next item races the session's stop signal; unread items lose to stop, while an
+in-flight handler finishes its existing batch. The provider owns and cleans up
+the iterator/read tasks, preserves shutdown cancellation and source errors, and
+resume reconstructs from a fresh source through the original journal checks.
+This is a lifecycle contract, not a registered new-market provider, source-use
+authorization, or an endless-feed retention guarantee.
+
 Phase 9 runtime collections are bounded by the finite, registered replay dataset; the runtime, provider, strategies, OMS, broker, and their in-memory histories are released when the session task reaches a terminal state. Durable history belongs to PostgreSQL. This finite-replay bound is not a claim that the same collections are ready for an endless vendor feed; any future streaming adapter must introduce explicit rolling retention before it is eligible for use.
 
 The lifecycle is `CREATED -> STARTING -> RUNNING -> STOPPING -> STOPPED`, with terminal `FAILED` and `INTERRUPTED` outcomes. Creation, start, and stop are retry-safe. Lifecycle and typed market/signal/risk/order/fill/portfolio events are appended to PostgreSQL in deterministic sequence. A per-session row lock serializes sequence allocation; lifecycle state and its event commit in one transaction, and each completed-Bar financial batch commits before WebSocket publication. Pending local Orders are explicitly moved from `ACCEPTED` to `CANCELLED` on stop/failure/interruption and their OMS reservations are released before the terminal batch is stored. REST snapshots reconstruct current state from that durable journal and are the recovery authority. An active in-memory runtime is never resumed after process loss: graceful shutdown marks it `INTERRUPTED`, and startup converts any orphaned active row to `INTERRUPTED` before serving traffic.
