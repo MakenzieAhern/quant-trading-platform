@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 18:57 UTC exact saved-result CI and negative native diagnostic
+
+Exact runtime `a71023e56d00e151d1569ae54479a2a63aba75c1` passed
+[CI37048395908](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37048395908):
+backend1065 passed/one optional skip, Ruff/mypy145; frontend577/43 with lint,
+types/build; Compose/scratch migration/release checks. PR32 matches, OPEN/DRAFT.
+Later checkpoint-only changes are not covered by this run; no merge/release.
+
+Changed native method confirms2500ms snapshot censoring, NOT performance PASS.
+Separate6000ms tails preserve actual native grouped maxima3136/2552/2584ms
+for app artificial80ms control / actual saved result / static noReact/API control.
+All three deadline takeRecords/native arrays were empty; callbacks arrived later.
+Actual metric DOM73.3ms and click handler3.3ms do not erase native2552ms. Job GET
+starts2.9ms after click; its resource duration is5.0ms. Static long native timing
+rejects an application-only calculation explanation, not proof of OS/tool cause.
+Split-input/read calls change rAF to91.5ms but native remains missing at6000ms.
+Artificial controls are not product statistics. Preserve the <=200ms target;
+no same-method30 runs, missing-as-zero, pixel-paint or native p95 claim.
+Physical foreground/occlusion/manual-input is an optional next hypothesis,
+not established by document.visible/hasFocus.
+
+[Diagnostic protocol/raw evidence](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-result-native-diagnostic/README.md),
+[actual late native tail](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-result-native-diagnostic/actual-tail.json),
+[read-only verifier](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-result-native-diagnostic/verify-evidence.ps1)
+and [27 per-file hashes](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-result-native-diagnostic/sha256-manifest.json)
+stay outside Git; local WSL-host links are not portable clone attachments.
+Manifest SHA256 `4c0d1933a38845a14bb950865adccc906e19b36cff6c22b48e64d57c20bba6ec`.
+Independent saved-byte/hash/verifier/raw/cleanup review PASS_SCOPED; prior40-file
+bundle unchanged. Owned frontend exacte328/no mounts restored and healthy;
+backend/PG/Redis unchanged, original/restored5/417/8/4, saved resultSHA495de2cf…ecba.
+QA nodes0, viewport reset/tab closed. No original/frozen/OOS/source/queue writes.
+Full product remains incomplete. Next independent required chart gap is the
+formal archive's absent benchmark display toggle, not an invented release gate.
+
 ## 2026-10-02 18:31 UTC saved-result request-start fix (bounded U4/M4)
 
 PASS for removing the observed first saved-result request delay, NOT native

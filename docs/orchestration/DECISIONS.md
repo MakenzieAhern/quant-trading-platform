@@ -1,5 +1,24 @@
 # Decisions
 
+## v1.2 preserve late native failures and resume independent chart work — 2026-10-02 18:57 UTC
+
+Keep immutable2500ms snapshots and separate6000ms tails. Late matching native
+events prove censoring, not a <=200ms pass: actual saved route2552ms; app/static
+80ms controls3136/2584ms. Empty takeRecords rejects already-buffered-at-deadline
+as the demonstrated cause. Static noReact/API weakens app-only calculation;
+split input/read protocol still fails native sampling. Don't inflate to30
+identical runs, discard long entries or infer physical foreground from DOM focus.
+Optional foreground/manual-input comparison is separate and unconfirmed.
+
+Independent27-file saved-artifact review PASS_SCOPED with manifest4c0d1933…ba6ec;
+restore exact owned frontend/no mounts, leave backend/DB/Redis/original data alone.
+Exacta71023e runtime CI37048395908 passed all jobs; later documentation is not
+implicitly covered. Save checkpoint locally without a documentation-only push
+loop. The next independently actionable mandatory defect is missing benchmark
+visibility control in formal archive equity charts. Reuse native checkbox and
+existing display semantics, preserve exact tables/full metrics/rolling charts
+and bounded requests; no new chart library, financial change or OOS run.
+
 ## v1.2 remove core saved-result mount delay, retain native-timing failure — 2026-10-02 18:31 UTC
 
 The actual request timeline placed the300ms gap before the first job GET, not
