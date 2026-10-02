@@ -117,7 +117,11 @@ export function usePaperStream(sessionId: string) {
     sessionId: string;
     value: FillAnnouncement | null;
   }>({ sessionId, value: null });
-  if (announcementState.sessionId !== sessionId)
+  if (
+    announcementState.sessionId !== sessionId ||
+    (announcementState.value !== null &&
+      announcementState.value.language !== i18n.language)
+  )
     setAnnouncementState({ sessionId, value: null });
   const [connection, setConnection] = useState<PaperConnection>("connecting");
   const [error, setError] = useState<{

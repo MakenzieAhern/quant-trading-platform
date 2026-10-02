@@ -2893,7 +2893,7 @@ describe("paper trading pages", () => {
     expect(screen.getByText("AUTHORITATIVE PORTFOLIO")).toBeInTheDocument();
   });
 
-  it("announces only new stream fills, once per sequence, in the receipt language", async () => {
+  it("announces only new stream fills once per sequence and clears them on locale changes", async () => {
     installWebSocket();
     const fill = {
       order_id: PAPER_ID,
@@ -2967,12 +2967,14 @@ describe("paper trading pages", () => {
       );
 
       await act(async () => i18n.changeLanguage("zh-CN"));
-      expect(status.firstElementChild).toBe(secondMessage);
-      expect(status).toHaveTextContent(
-        "New simulated fill: Buy 10 AAPL at 12.",
-      );
+      expect(document.getElementById("paper-fill-announcement")).toBe(status);
+      expect(status).toBeEmptyDOMElement();
+      await act(async () => i18n.changeLanguage("en-US"));
+      expect(status).toBeEmptyDOMElement();
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(status).toBeEmptyDOMElement();
       await act(async () => MockWebSocket.instances.at(-1)!.open());
-      expect(status.firstElementChild).toBe(secondMessage);
+      expect(status).toBeEmptyDOMElement();
       act(() =>
         MockWebSocket.instances.at(-1)!.message({ ...live, sequence: 6 }),
       );
@@ -2980,6 +2982,10 @@ describe("paper trading pages", () => {
         "新增模拟成交：买入 10 股 AAPL，成交价 12。",
       );
       expect(status.firstElementChild).toHaveAttribute("lang", "zh-CN");
+      await act(async () => i18n.changeLanguage("en-US"));
+      expect(status).toBeEmptyDOMElement();
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(status).toBeEmptyDOMElement();
     } finally {
       view.unmount();
       await act(async () => i18n.changeLanguage("en-US"));
