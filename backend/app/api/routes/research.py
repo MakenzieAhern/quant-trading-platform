@@ -1,11 +1,12 @@
 from dataclasses import asdict
+from datetime import date
 from decimal import Decimal
 from typing import Annotated, Any
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, Query, Request, status
 from fastapi.responses import JSONResponse
-from sqlalchemy import Select, func, select
+from sqlalchemy import Date, Select, cast, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.schemas.research import (
@@ -235,11 +236,27 @@ async def _run_rows(
     order_columns: tuple[Any, ...],
     limit: int,
     offset: int,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> tuple[list[Any], int] | JSONResponse:
     required = await _require_run(request, session, run_id)
     if isinstance(required, JSONResponse):
         return required
+    if start_date is not None and end_date is not None and start_date > end_date:
+        return _error(
+            request, 422, "INVALID_DISPLAY_DATE_RANGE", "Start date must not follow end date"
+        )
     statement = select(model).where(model.run_id == run_id).order_by(*order_columns)
+    if start_date is not None or end_date is not None:
+        trading_date = (
+            cast(func.timezone("Asia/Shanghai", model.timestamp), Date)
+            if model is ResearchTradeModel
+            else model.trading_date
+        )
+        if start_date is not None:
+            statement = statement.where(trading_date >= start_date)
+        if end_date is not None:
+            statement = statement.where(trading_date <= end_date)
     return await _page(session, statement, limit, offset)
 
 
@@ -285,8 +302,12 @@ def _point_route(model: type[Any], path: str) -> None:
         session: Annotated[AsyncSession, Depends(get_session)],
         limit: Limit = 200,
         offset: Offset = 0,
+        start_date: date | None = None,
+        end_date: date | None = None,
     ) -> ResearchPage[PointResponse] | JSONResponse:
-        result = await _run_rows(request, session, run_id, model, (model.sequence,), limit, offset)
+        result = await _run_rows(
+            request, session, run_id, model, (model.sequence,), limit, offset, start_date, end_date
+        )
         if isinstance(result, JSONResponse):
             return result
         items, total = result
@@ -351,6 +372,8 @@ async def rolling_metrics(
     session: Annotated[AsyncSession, Depends(get_session)],
     limit: Limit = 200,
     offset: Offset = 0,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> ResearchPage[RollingMetricResponse] | JSONResponse:
     result = await _run_rows(
         request,
@@ -360,6 +383,8 @@ async def rolling_metrics(
         (ResearchRollingMetricModel.trading_date, ResearchRollingMetricModel.metric_name),
         limit,
         offset,
+        start_date,
+        end_date,
     )
     if isinstance(result, JSONResponse):
         return result
@@ -386,6 +411,8 @@ async def rebalances(
     session: Annotated[AsyncSession, Depends(get_session)],
     limit: Limit = 200,
     offset: Offset = 0,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> ResearchPage[RebalanceResponse] | JSONResponse:
     result = await _run_rows(
         request,
@@ -395,6 +422,8 @@ async def rebalances(
         (ResearchRebalanceModel.sequence,),
         limit,
         offset,
+        start_date,
+        end_date,
     )
     if isinstance(result, JSONResponse):
         return result
@@ -422,6 +451,8 @@ async def holdings(
     session: Annotated[AsyncSession, Depends(get_session)],
     limit: Limit = 200,
     offset: Offset = 0,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> ResearchPage[HoldingResponse] | JSONResponse:
     result = await _run_rows(
         request,
@@ -431,6 +462,8 @@ async def holdings(
         (ResearchHoldingModel.sequence,),
         limit,
         offset,
+        start_date,
+        end_date,
     )
     if isinstance(result, JSONResponse):
         return result
@@ -460,9 +493,19 @@ async def trades(
     session: Annotated[AsyncSession, Depends(get_session)],
     limit: Limit = 200,
     offset: Offset = 0,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> ResearchPage[TradeResponse] | JSONResponse:
     result = await _run_rows(
-        request, session, run_id, ResearchTradeModel, (ResearchTradeModel.sequence,), limit, offset
+        request,
+        session,
+        run_id,
+        ResearchTradeModel,
+        (ResearchTradeModel.sequence,),
+        limit,
+        offset,
+        start_date,
+        end_date,
     )
     if isinstance(result, JSONResponse):
         return result

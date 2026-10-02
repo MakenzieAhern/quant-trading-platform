@@ -78,6 +78,8 @@ export function BenchmarkChart({
   benchmarkLabel,
   ariaLabel,
   showBenchmark = true,
+  selectedDate,
+  onSelectDate,
 }: {
   strategy: NullableResearchPoint[];
   benchmark: NullableResearchPoint[];
@@ -85,9 +87,12 @@ export function BenchmarkChart({
   benchmarkLabel?: string;
   ariaLabel?: string;
   showBenchmark?: boolean;
+  selectedDate?: string;
+  onSelectDate?: (date: string) => void;
 }) {
   const { t } = useTranslation(["accessibility", "research", "common"]);
-  const [selectedDate, setSelectedDate] = useState("");
+  const [localDate, setLocalDate] = useState("");
+  const selectDate = onSelectDate ?? setLocalDate;
   const chartLabel = ariaLabel ?? t("accessibility:benchmarkChart");
   const firstLabel = strategyLabel ?? t("research:strategySeries");
   const secondLabel = benchmarkLabel ?? t("research:benchmark");
@@ -117,8 +122,9 @@ export function BenchmarkChart({
     dates,
   );
   const dateOptions = [...dates.keys()];
-  const activeDate = dates.has(selectedDate)
-    ? selectedDate
+  const candidateDate = selectedDate ?? localDate;
+  const activeDate = dates.has(candidateDate)
+    ? candidateDate
     : (dateOptions.at(-1) ?? "");
   const pointValue = (points: NullableResearchPoint[]) =>
     points.find((point) => point.trading_date === activeDate)?.value ??
@@ -137,8 +143,8 @@ export function BenchmarkChart({
           cy={position.y}
           r={6}
           fill="transparent"
-          onMouseEnter={() => setSelectedDate(points[index].trading_date)}
-          onClick={() => setSelectedDate(points[index].trading_date)}
+          onMouseEnter={() => selectDate(points[index].trading_date)}
+          onClick={() => selectDate(points[index].trading_date)}
         >
           <title>{`${label} — ${points[index].trading_date}: ${points[index].value}`}</title>
         </circle>
@@ -152,7 +158,7 @@ export function BenchmarkChart({
           <select
             aria-label={`${chartLabel} — ${t("research:columns.date")}`}
             value={activeDate}
-            onChange={(event) => setSelectedDate(event.target.value)}
+            onChange={(event) => selectDate(event.target.value)}
           >
             {dateOptions.map((date) => (
               <option key={date} value={date}>

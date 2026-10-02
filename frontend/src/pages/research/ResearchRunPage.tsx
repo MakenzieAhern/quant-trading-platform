@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ApiContractError } from "../../api/contracts";
@@ -16,6 +16,9 @@ import { MonthlyReturnHeatmap } from "../../components/research/MonthlyReturnHea
 import { ResearchMetricGrid } from "../../components/research/ResearchMetricGrid";
 import { SplitBadge } from "../../components/research/SplitBadge";
 import { useApiResource } from "../../hooks/useApiResource";
+import { useComparisonCopy } from "../../product/experiments/comparisonCopy";
+import { useExperimentCopy } from "../../product/experiments/copy";
+import type { DateRange } from "../../product/experiments/types";
 import {
   formatDecimal,
   formatPercent,
@@ -40,6 +43,35 @@ export function ResearchRunPage({ runId }: { runId: string }) {
   const [holdingsOffset, setHoldingsOffset] = useState(0);
   const [rebalancesOffset, setRebalancesOffset] = useState(0);
   const [tradesOffset, setTradesOffset] = useState(0);
+  const u = useComparisonCopy();
+  const c = useExperimentCopy();
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
+  const [range, setRange] = useState<DateRange>({});
+  const [invalid, setInvalid] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [activityDate, setActivityDate] = useState("");
+  const firstDate = useRef<HTMLInputElement>(null);
+  const filterAnchor = useRef<HTMLElement>(null);
+  const activityAnchor = useRef<HTMLElement>(null);
+  const invalidRangeId = useId();
+  const activityRange = activityDate
+    ? { start_date: activityDate, end_date: activityDate }
+    : range;
+  const resetRecordOffsets = () => {
+    setHoldingsOffset(0);
+    setRebalancesOffset(0);
+    setTradesOffset(0);
+  };
+  const applyRange = (nextRange: DateRange) => {
+    setRange(nextRange);
+    setInvalid(false);
+    setSelectedDate("");
+    setActivityDate("");
+    setCurveOffset(0);
+    setRollingOffset(0);
+    resetRecordOffsets();
+  };
   const run = useApiResource(
     (signal) => researchApi.run(runId, signal),
     [runId],
@@ -51,9 +83,9 @@ export function ResearchRunPage({ runId }: { runId: string }) {
   const curves = useApiResource(
     async (signal) => {
       const [equity, benchmark, drawdown] = await Promise.all([
-        researchApi.points(runId, "equity", curveOffset, signal),
-        researchApi.points(runId, "benchmark", curveOffset, signal),
-        researchApi.points(runId, "drawdown", curveOffset, signal),
+        researchApi.points(runId, "equity", curveOffset, signal, range),
+        researchApi.points(runId, "benchmark", curveOffset, signal, range),
+        researchApi.points(runId, "drawdown", curveOffset, signal, range),
       ]);
       if (
         equity.total !== benchmark.total ||
@@ -69,32 +101,40 @@ export function ResearchRunPage({ runId }: { runId: string }) {
         throw new ApiContractError();
       return { equity, benchmark, drawdown };
     },
-    [runId, curveOffset],
+    [runId, curveOffset, range.start_date, range.end_date],
   );
   const monthly = useApiResource(
     (signal) => researchApi.monthlyReturns(runId, signal),
     [runId],
   );
   const rolling = useApiResource(
-    (signal) => researchApi.rollingMetrics(runId, rollingOffset, signal),
-    [runId, rollingOffset],
+    (signal) => researchApi.rollingMetrics(runId, rollingOffset, signal, range),
+    [runId, rollingOffset, range.start_date, range.end_date],
   );
   const holdings = useApiResource(
-    (signal) => researchApi.holdings(runId, holdingsOffset, signal),
-    [runId, holdingsOffset],
+    (signal) =>
+      researchApi.holdings(runId, holdingsOffset, signal, activityRange),
+    [runId, holdingsOffset, activityRange.start_date, activityRange.end_date],
   );
   const rebalances = useApiResource(
-    (signal) => researchApi.rebalances(runId, rebalancesOffset, signal),
-    [runId, rebalancesOffset],
+    (signal) =>
+      researchApi.rebalances(runId, rebalancesOffset, signal, activityRange),
+    [runId, rebalancesOffset, activityRange.start_date, activityRange.end_date],
   );
   const trades = useApiResource(
-    (signal) => researchApi.trades(runId, tradesOffset, signal),
-    [runId, tradesOffset],
+    (signal) => researchApi.trades(runId, tradesOffset, signal, activityRange),
+    [runId, tradesOffset, activityRange.start_date, activityRange.end_date],
   );
   if (run.loading) return <LoadingPanel label={t("research:runDetail")} />;
   if (run.error) return <ErrorPanel message={run.error} />;
   if (!run.data) return null;
   const knownLimitations = run.data.diagnostics.known_limitations;
+  const curveDates =
+    curves.data?.equity.items.map((point) => point.trading_date) ?? [];
+  const activeDate = curveDates.includes(selectedDate)
+    ? selectedDate
+    : (curveDates.at(-1) ?? "");
+  const filtered = Boolean(range.start_date || range.end_date);
   const rollingByDate = new Map<string, Record<string, string | null>>();
   for (const item of rolling.data?.items ?? []) {
     const values = rollingByDate.get(item.trading_date) ?? {};
@@ -198,6 +238,93 @@ export function ResearchRunPage({ runId }: { runId: string }) {
         {metrics.loading && <LoadingPanel label={t("research:methodology")} />}
         {metrics.error && <ErrorPanel message={metrics.error} />}
         {metrics.data && <ResearchMetricGrid metrics={metrics.data.items} />}
+        <p>{u.comparisonMetrics}</p>
+      </section>
+      <section
+        className="panel experimentPanel"
+        ref={filterAnchor}
+        tabIndex={-1}
+        aria-label={u.filterTitle}
+      >
+        <h2>{u.filterTitle}</h2>
+        <p>{u.rangeHelp} · Asia/Shanghai</p>
+        <form
+          className="experimentActions"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (start && end && start > end) {
+              setInvalid(true);
+              firstDate.current?.focus();
+              return;
+            }
+            applyRange({
+              ...(start ? { start_date: start } : {}),
+              ...(end ? { end_date: end } : {}),
+            });
+          }}
+        >
+          <label>
+            {c.start}
+            <input
+              type="date"
+              ref={firstDate}
+              value={start}
+              aria-invalid={invalid || undefined}
+              aria-describedby={invalid ? invalidRangeId : undefined}
+              onInput={(event) => {
+                setStart(event.currentTarget.value);
+                if (
+                  !event.currentTarget.value ||
+                  !end ||
+                  event.currentTarget.value <= end
+                )
+                  setInvalid(false);
+              }}
+            />
+          </label>
+          <label>
+            {c.end}
+            <input
+              type="date"
+              value={end}
+              aria-invalid={invalid || undefined}
+              aria-describedby={invalid ? invalidRangeId : undefined}
+              onInput={(event) => {
+                setEnd(event.currentTarget.value);
+                if (
+                  !start ||
+                  !event.currentTarget.value ||
+                  start <= event.currentTarget.value
+                )
+                  setInvalid(false);
+              }}
+            />
+          </label>
+          <button className="button secondary" type="submit">
+            {u.apply}
+          </button>
+          <button
+            className="button secondary"
+            type="button"
+            onClick={() => {
+              setStart("");
+              setEnd("");
+              applyRange({});
+            }}
+          >
+            {u.reset}
+          </button>
+        </form>
+        {invalid && (
+          <p id={invalidRangeId} role="alert">
+            {u.invalidRange}
+          </p>
+        )}
+        <p role="status">
+          {filtered
+            ? `${range.start_date ?? u.noStartLimit} — ${range.end_date ?? u.noEndLimit}`
+            : u.fullSavedInterval}
+        </p>
       </section>
       <section className="panel">
         <div className="panelHeader">
@@ -218,7 +345,9 @@ export function ResearchRunPage({ runId }: { runId: string }) {
         ) : curves.error ? (
           <ErrorPanel message={curves.error} />
         ) : !curves.data?.equity.items.length ? (
-          <EmptyState>{t("common:noData")}</EmptyState>
+          <EmptyState>
+            {filtered ? u.filteredEmpty : t("common:noData")}
+          </EmptyState>
         ) : (
           <>
             <BenchmarkChart
@@ -226,6 +355,8 @@ export function ResearchRunPage({ runId }: { runId: string }) {
               strategy={curves.data.equity.items}
               benchmark={curves.data.benchmark.items}
               showBenchmark={showBenchmark}
+              selectedDate={activeDate}
+              onSelectDate={setSelectedDate}
             />
             <p className="researchChartRange">
               {t("research:displayedDateRange", {
@@ -233,6 +364,17 @@ export function ResearchRunPage({ runId }: { runId: string }) {
                 end: curves.data.equity.items.at(-1)?.trading_date,
               })}
             </p>
+            <button
+              className="button secondary"
+              type="button"
+              onClick={() => {
+                setActivityDate(activeDate);
+                resetRecordOffsets();
+                activityAnchor.current?.focus();
+              }}
+            >
+              {u.inspectActivity}
+            </button>
           </>
         )}
         <Pagination
@@ -256,15 +398,20 @@ export function ResearchRunPage({ runId }: { runId: string }) {
           <DrawdownChart
             key={curveOffset}
             points={curves.data.drawdown.items}
+            selectedDate={activeDate}
+            onSelectDate={setSelectedDate}
           />
         ) : (
-          <EmptyState>{t("common:noData")}</EmptyState>
+          <EmptyState>
+            {filtered ? u.filteredEmpty : t("common:noData")}
+          </EmptyState>
         )}
       </section>
       <section className="panel">
         <div className="panelHeader">
           <h2>{t("research:monthlyReturns")}</h2>
         </div>
+        <p>{u.comparisonMetrics}</p>
         {monthly.loading ? (
           <LoadingPanel label={t("research:monthlyReturns")} />
         ) : monthly.error ? (
@@ -312,8 +459,37 @@ export function ResearchRunPage({ runId }: { runId: string }) {
           onChange={setRollingOffset}
         />
       </section>
+      <section
+        className="panel experimentPanel"
+        ref={activityAnchor}
+        tabIndex={-1}
+        aria-label={u.focusedDate}
+      >
+        <h2>{u.focusedDate}</h2>
+        <p role="status">
+          {activityDate
+            ? `${activityDate} · Asia/Shanghai`
+            : filtered
+              ? `${range.start_date ?? u.noStartLimit} — ${range.end_date ?? u.noEndLimit} · Asia/Shanghai`
+              : u.fullSavedInterval}
+        </p>
+        {activityDate && (
+          <button
+            className="button secondary"
+            type="button"
+            onClick={() => {
+              setActivityDate("");
+              resetRecordOffsets();
+              filterAnchor.current?.focus();
+            }}
+          >
+            {u.clearFocus}
+          </button>
+        )}
+      </section>
       <ResearchTable
         title={t("research:holdings")}
+        emptyMessage={activityDate || filtered ? u.filteredEmpty : undefined}
         loading={holdings.loading}
         error={holdings.error}
         offset={holdingsOffset}
@@ -338,6 +514,7 @@ export function ResearchRunPage({ runId }: { runId: string }) {
       />
       <ResearchTable
         title={t("research:rebalances")}
+        emptyMessage={activityDate || filtered ? u.filteredEmpty : undefined}
         loading={rebalances.loading}
         error={rebalances.error}
         offset={rebalancesOffset}
@@ -358,6 +535,7 @@ export function ResearchRunPage({ runId }: { runId: string }) {
       />
       <ResearchTable
         title={t("research:trades")}
+        emptyMessage={activityDate || filtered ? u.filteredEmpty : undefined}
         loading={trades.loading}
         error={trades.error}
         offset={tradesOffset}
@@ -416,6 +594,7 @@ function ResearchTable({
   offset,
   total,
   onChange,
+  emptyMessage,
 }: {
   title: string;
   headings: string[];
@@ -425,6 +604,7 @@ function ResearchTable({
   offset: number;
   total: number | null;
   onChange: (offset: number) => void;
+  emptyMessage?: string;
 }) {
   const { t } = useTranslation("common");
   return (
@@ -437,7 +617,7 @@ function ResearchTable({
       ) : error ? (
         <ErrorPanel message={error} />
       ) : rows.length === 0 ? (
-        <EmptyState>{t("noData")}</EmptyState>
+        <EmptyState>{emptyMessage ?? t("noData")}</EmptyState>
       ) : (
         <div
           className="tableScroll"

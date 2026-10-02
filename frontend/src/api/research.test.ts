@@ -71,3 +71,44 @@ test("research curves reject a page with an unexpected offset or sequence", asyn
   await expect(researchApi.points("smoke", "equity", 200)).rejects.toThrow();
   await expect(researchApi.points("smoke", "equity", 0)).rejects.toThrow();
 });
+
+test("every dated research collection serializes the same bounded display range", async () => {
+  const fetcher = vi.fn(
+    async () =>
+      new Response(
+        JSON.stringify({
+          items: [],
+          limit: 200,
+          offset: 200,
+          total: 0,
+        }),
+        { status: 200 },
+      ),
+  );
+  vi.stubGlobal("fetch", fetcher);
+  const signal = new AbortController().signal;
+  const range = { start_date: "2024-01-02", end_date: "2024-04-01" };
+  for (const kind of ["equity", "benchmark", "drawdown"] as const)
+    await researchApi.points("saved/id", kind, 200, signal, range);
+  for (const method of [
+    researchApi.holdings,
+    researchApi.trades,
+    researchApi.rebalances,
+    researchApi.rollingMetrics,
+  ])
+    await method("saved/id", 200, signal, range);
+  expect(fetcher).toHaveBeenCalledTimes(7);
+  for (const [url, options] of fetcher.mock.calls as unknown as [
+    string,
+    RequestInit,
+  ][]) {
+    const parsed = new URL(url, "http://localhost");
+    expect(parsed.pathname).toContain("/saved%2Fid/");
+    expect(Object.fromEntries(parsed.searchParams)).toEqual({
+      limit: "200",
+      offset: "200",
+      ...range,
+    });
+    expect(options.signal).toBeInstanceOf(AbortSignal);
+  }
+});

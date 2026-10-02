@@ -1,5 +1,27 @@
 # Decisions
 
+## v1.2 formal dates before paging, explicit activity query — 2026-10-02 20:24 UTC
+
+Reuse shared SQL row helper with optional inclusive date bounds, Shanghai trade
+date cast, existing native date inputs/selects/copy and controlled chart props.
+No new chart library/schema/storage or browser-only partial-history filter.
+Separate draft range, chart preview and confirmed activity day: only explicit
+activity action queries records, resets offsets and moves focus; later preview
+does not mislabel saved records. Full metrics/monthly remain untouched.
+
+Isolated13focused/1073full backend plus19focused/582full frontend checks PASS;
+source/padding reviews PASS_SCOPED. Actual Chrome301-point two-page/raw-metric/
+keyboard/trade-date/empty/reversed/responsive evidence and104-file verifier PASS.
+Initial card padding defect fixed by existing experimentPanel, not new CSS.
+Retain earlier screenshots, loading capture, stale-tab helper failure, fresh-shell
+variable failure and evidence-parser DateTime correction as explicit non-proof.
+Eight personal tasks versus three formal reports are distinct tables, not loss.
+Restore owned backend/frontend to exact baseline, preserve other six runtimes,
+counts and frozen assets. New exact CI/artifact review and original backend
+reload remain pending. No full product/AA/native200/p95/forward/release claim.
+Continue existing draftPR32/full goal; lawful after-start data and genuinely
+absent ledgers remain real requirements, not synthetic substitutes.
+
 ## v1.2 precise formal point values, keep real date linkage required — 2026-10-02 19:48 UTC
 
 Reuse native SVG titles/date select/raw readout in both existing BenchmarkChart

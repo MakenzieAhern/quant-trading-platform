@@ -1,7 +1,20 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T19:48:20Z",
+  "updated_at_utc": "2026-10-02T20:24:26Z",
+  "u4_formal_date_linkage_20261003_gate": {
+    "status": "PASS_SCOPED_LOCAL_EXACT_CI_PENDING",
+    "source_parent": "17817fa67346b8d2afc38cf8db0f53a488d3e6a0",
+    "proof": "Seven dated formal collections filter SQL before count/offset/limit with Shanghai trade dates; native range/controlled equity-drawdown preview/explicit confirmed activity query, clear/reset/focus preserve full metrics/monthly and exact strings. Backend13focused/1073full one optional skip/Ruff546/mypy145; frontend19focused/582full44/lint/types/build PASS. Actual Chrome301points200+101/sequences200..500, Jan18 20holdings/1rebalance/0trades and Feb23 exact oneBUY; preview access logs unchanged, later preview/paging does not relabel confirmed activity.16 final DOM cases four sizes/two locales/themes retain dates/all22 raw metrics/no overflow. Five settled final PNGs checked; actual card padding defect fixed using experimentPanel, desktop23.5/mobile16px. Reversed first-date focus and terminal empty/reset checked. Metrics byteSHAff5e4a74…a0e1d unchanged. Original/restored5paper/417events/8personal research jobs/4updates unchanged; three formal runs are a separate table. Only owned restore backend/frontend changed for QA, restored exactea4aca/e328 healthy/threeRO/no mounts; other six inspected runtime identities unchanged. BrowserZHdark/viewportreset/tabclosed, no financial submission.",
+    "evidence": "product-evidence/v1.2/m4/20261003-formal-date-linkage/README.md",
+    "manifest_files": 104,
+    "manifest_sha256": "cdacac025715463f7d715920a784640de322885389afd93cc9ab33e28a05600a",
+    "independent_source_review": "PASS_SCOPED backend and six frontend files plus padding addendum; no new P1/P2",
+    "independent_artifact_review": "PENDING read-only sealed-artifact review",
+    "hosted_ci": "NOT_YET_RUN_FOR_NEW_DATE_SLICE; prior17817fa CI37057124702 SUCCESS",
+    "original_runtime": "5173 frontend source updated;8000 backend still old no-reload process. Safely reload only after fresh no-active-queue/owner checks and validated milestone; do not claim deployed date linkage yet.",
+    "limits": "Native tooltip-popup pixels/running Chrome version/AA/native200/p95/full-product/forward/release not proved. Existing native2552ms failure retained. Mock total201 with two rows proves wiring only; real SQL/API/Chrome prove bounded paging. Earlier bare-card PNGs/loading capture, closed-tab helper, shell variable failures/empty captures, formal-vs-personal count mistake and DateKind String verifier correction are retained; no failure promoted. No schema/originalDB/frozen/.research/OOS/provider/source/queue/merge/tag/release change. Full U1-U8/M0-M5 scope intact."
+  },
   "u4_formal_exact_values_20261003_gate": {
     "status": "PASS_SCOPED_DISPLAY_NOT_FULL_CHART_LINKAGE",
     "source_parent": "3f0df10e107e8eabe06cde46941f943fe11eba1b",
@@ -11,7 +24,7 @@
     "manifest_sha256": "6e6046548425382e887731579d9ccbdd8d281fdbaf346f28dd97ecc8d0afb2aa",
     "independent_source_review": "PASS_SCOPED no newP1/P2; exactstrings/null/hiddenseries/callers/reflow reviewed",
     "independent_artifact_review": "PASS_SCOPED: independent 51-file checksum/raw-API/16-DOM/22-metric/keyboard/four-PNG/runtime-preservation saved-artifact review; no live runtime or full-product claim",
-    "hosted_ci": "NOT_YET_RUN_FOR_THIS_SOURCE_BATCH; previous b020bb7 CI37054020278 is not proof for it",
+    "hosted_ci": "PASS exact17817fa CI37057124702 backend/frontend/Compose SUCCESS; new uncommitted date slice not covered",
     "limits": "No native hover-popup pixel capture; actual clicks/keyboard plus JSDOM hover and native titles are scoped proof. Initial empty metricGrid selector corrected with separate metricsGrid22-value capture; original raw16DOM files retained. Mobile topbar theme hidden: four cases set visible desktop control before resizing. Wrong EN figure name/no action and CSS formatter path failure retained. Verifier empty-mount null representation fixed without accepting nonempty mounts. Running Chrome versionUNVERIFIED, native2552ms/p95 failure and full200percent/AA/all-product visuals remain. Full date-linkage APIs still lack SQL-date filters; next implement before count/paging, not current200-row client filtering. No backend/schema/originalDB/frozen/.research/OOS/provider/source/queue/merge/release change. Full U1-U8/M0-M5/lawful after-start forward and genuine missing-ledger facts intact."
   },
   "pr32_formal_chart_ci_20261003_gate": {
@@ -1748,10 +1761,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-02T19:48:20Z root sole repository/UI writer, agents read-only. Formal exact-value three-file source PASS_SCOPED and580frontend/14focused;51-file saved verifierPASS. Original/restored5/417/8/4 and metricsSHAff5e4a74…a0e1d, other seven inspected runtime PIDs/start/images unchanged. Owned18173 restored exact e328/healthy/no mounts; PID6870/start19:45:08Z historical only. ZHdark restored, viewport reset, owned tab closed/no UI probe or financial queue. Calendar tmpfs remains stopped/media untouched. Next same goal: true bounded formal-date API and linkage with isolated quant_test; no original/frozen/.research/OOS/provider/source authority write or release. Independent artifact review pending; source reviewPASS, CI for new source not yet claimed.",
+    "latest_verification": "2026-10-02T20:24:26Z root sole repo/UI/service writer, agents read-only.1073backend/582frontend formal-date slice and actual Chrome/API104-file scoped proof passed; source/padding reviewPASS, saved-artifact reviewpending. Original/restored5paper/417events/8personal tasks/4updates unchanged;3formal reports separate. Owned restore backend/frontend restoredea4aca/e328 healthy, threeRO/no mounts, other six image/PID/starts unchanged. Restore PIDs43456/43846 are historical observations only. ZHdark/viewportreset/tabclosed; no financial queue. Calendar stopped/media untouched. Exact newCI/original backend reload remains next; preserve all frozen/.research/OOS/source authority facts. Inventoryerratum: empty failed restore files were never created, only failure attempts described; corrected valid captures sealed.",
     "repository_writer": "root product controller",
-    "database_writer": "root only, owned qtp-v12-oct3-calendar-test tmpfs quant_test (now stopped); agents read-only, original and frozen ledgers read-only",
-    "queue_writer": "Root only finite synthetic calendar fixture in owned oct3 tmpfs; two accounts STOPPED, own services stopped, no active QA task. Existing media/restore and original queues untouched; no external provider or formal/OOS submission.",
+    "database_writer": "root only for isolated quant-mvp-tests tmpfs quant_test fixture tests; no active test worker. Owned restored tmpfs DB only read for formal-date Chrome/API; original and frozen ledgers read-only. Agents read-only.",
+    "queue_writer": "No active QA financial task. Original/restored five accountsSTOPPED; six personal studiesSUCCEEDED/oneINTERRUPTED/oneCANCELLED. Calendar fixture stopped/media untouched; no provider/formal/OOS submission.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -1761,6 +1774,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-02 20:24UTC formal date linkage local milestone: seven SQL-before-paging endpoints, Shanghai trade boundary,1073backend/582frontend, actual301point Chrome pagination/confirmed activity/16final matrix/exact22metrics/fivePNG and104-file saved verifier PASS_SCOPED; original/frozen untouched, owned baseline restored. Artifact review/new exactCI/original backend reload still pending.",
     "2026-10-02T17:56:09Z actual Chrome WS controls/control-only saved-log cue, automatic reconnect, exact PAUSED backend-restart journal/snapshot and one offline synthetic fill recovery/reload/locale/mobile proof PASS.51-file SHA manifest/artifact verifier and independent read-only scoped review PASS; no product code change. Owned test services stopped, original5/417/8/4 and health unchanged as operator checks; fresh docs-batch CI pending. Not lawful forward/full product/release.",
     "2026-10-02 17:20UTC exact pushed036e53b CI37039670325 backend/frontend/Compose SUCCESS; PR32 same head OPEN/DRAFT, local original app still available. Covers a6d6b63 causal journal and reviewed checkpoint, not later CI-record-only local docs or full forward/product/release acceptance.",
     "2026-10-02 17:12UTC a6d6b63 durable causal calendar journal:18 focused/1065 backend+one optional archive skip/576 front, lint/types/build, real SQL manager resume/backend restart/hash equality, reversible disposable migration, actual Chrome bilingual saved logs/mobile local keyboard scrolling and final scoped independent review PASS.29 evidence hashes checked; normal viewport/preferences restored, own test/QA stopped, originals5/417/8/4 unchanged. Hosted exact-batch pending; not true forward/full release.",
@@ -2329,7 +2343,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full mandatory chart workflow: formal raw point-title/readout/native date picker scoped580frontend/14focused/actualChrome16DOM/51sealed proof now passed, reviewartifactpending. Commit coherent source/manual/checkpoint milestone, then implement formal SQL date filters before count/limit/offset (Asia/Shanghai for UTC trades), isolated quant_test boundary/>200/empty/reversed/exact-metrics tests. Wire real range plus selected equity/drawdown/trade/holdings date with explicit activity action; hover itself must not flood APIs. Never filter only current200 rows or recompute full saved metrics. Push meaningful milestone on existing draftPR32 and require exact new CI. Full U1-U8/M0-M5/lawful feed/current authorities/after-start receipt/plan/constrained forward and genuine missing-ledger facts remain intact; native2552ms/p95 and running Chrome versionUNVERIFIED persist. No privacy/security/cache bypass, merge/tag/release or strategy/OOS rerun.",
+  "next_task": "Finish current formal-date milestone: obtain sealed104-file independent review, commit coherent eight-source/bilingual-guide/checkpoint slice and push existing draftPR32, require exact new CI. Then fresh original owner/no-active-task check, targeted backend reload so5173 actual date requests work, verify health/counts/full-metric bytes and real original Chrome read-only range/activity. Continue mandatory M4 chart keyboard/live status/reduced-motion and broader visual/AA/native200/performance/user-flow/delivery audit; do not substitute this scoped slice for full U1-U8/M0-M5. Preserve2552ms native negative/running ChromeUNVERIFIED; diagnose a changed method, not repeat censored probes. Lawful feed/current authorities/after-start receipt/plan/constrained forward and genuine missing ledgers remain intact. No frozen/.research/OOS/provider bypass, merge/tag/release before all gates.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

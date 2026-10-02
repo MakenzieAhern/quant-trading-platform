@@ -1,5 +1,45 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 20:24 UTC formal SQL date range and explicit activity linkage
+
+U4/U8/UX-CHART scoped progress: seven formal dated collections apply inclusive
+SQL bounds before count/offset/limit; trades use Shanghai dates of UTC instants.
+Native draft/apply/reset, linked equity/drawdown readout and explicit activity
+query preserve full saved metrics/monthly records and bounded loading. Later
+preview/paging does not relabel a confirmed activity date; clear restores range
+and stable focus. Empty records are not inferred liquidation. Formal writes,
+frozen assets and OOS remain untouched. Backend13focused/1073full/one optional
+skip/Ruff/mypy145 and frontend19focused/582full44files/lint/types/build PASS.
+Source reviews and padding addendum PASS_SCOPED; artifact review pending.
+
+Actual Chrome/API range301 points:200+101, original sequences200..500. Real
+ArrowDown links both readouts; identical backend access logs prove preview sent
+no requests. Jan18 has20holdings/1rebalance/0trades; Feb23 has one exact saved BUY.
+Page2/next preview retains confirmed Feb23. Reversed dates focus first input;
+empty/reset are terminal checked.16 final DOM cases preserve dates/all22 raw
+metrics/no page overflow; five settled final PNGs inspected. Metrics byteSHA
+ff5e4a74…a0e1d unchanged. Actual initial card-edge defect fixed with existing
+experimentPanel;16px mobile/23.5px desktop insets verified. Earlier failed/empty
+captures and mistaken formal-vs-personal count query remain explicitly non-proof.
+
+[Protocol and retained failures](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-date-linkage/README.md),
+[linked chart page](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-date-linkage/padded-settled-linked-charts-1440-zh-dark.png)
+and [saved verifier](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-date-linkage/verify-evidence.ps1)
+are external local evidence:104 files, manifestSHA256
+`cdacac025715463f7d715920a784640de322885389afd93cc9ab33e28a05600a`.
+[Inventory correction](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-date-linkage-review/artifact-erratum.md):
+the failed fresh-shell attempts produced no empty files, contrary to the sealed
+README's inventory wording. Failures are described there; only corrected valid
+restore captures are sealed. No sealed bytes or acceptance assertion were changed.
+Original/restored5paper/417events/8personal studies/4updates unchanged; three
+formal reports are a separate count. Owned backend/frontend restored exact
+ea4aca/e328 healthy, read-only/no mounts respectively; other six runtime
+identities unchanged. Source17817fa [CI37057124702](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37057124702)
+passed; it does not cover this new slice. New exact CI is pending. UX-CHART/full
+AA/native200/p95/M3–M5/lawful forward/absent-ledger/release remain IN_PROGRESS;
+no merge/tag/release or formal study rerun. Original5173 backend must be safely
+reloaded after exact milestone validation before claiming deployed linkage.
+
 ## 2026-10-02 19:48 UTC formal precise point readout and native date picker
 
 U4/U8/UX-CHART scoped display progress: both formal BenchmarkChart callers now

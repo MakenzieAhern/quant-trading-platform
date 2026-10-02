@@ -20,6 +20,7 @@ vi.mock("../../api/research", () => ({
 }));
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
+    i18n: { language: "en-US" },
     t: (key: string, values?: { start?: string; end?: string }) =>
       values?.start ? `${key}:${values.start}–${values.end}` : key,
   }),
@@ -92,6 +93,7 @@ test("one curve page advances all three series without changing stored metrics",
       kind,
       200,
       expect.any(AbortSignal),
+      {},
     );
   expect(researchApi.metrics).toHaveBeenCalledTimes(1);
   await userEvent.click(
@@ -321,4 +323,180 @@ test("saved research trades and canonical limitations use localized presentation
   expect(
     screen.getByText("research:formalKnownLimitations"),
   ).toBeInTheDocument();
+});
+
+test("formal ranges and linked dates query the server without recalculating metrics or fetching on hover", async () => {
+  vi.mocked(researchApi.points).mockImplementation(
+    async (_id, kind, offset = 0, _signal, range = {}) => {
+      if (range.start_date === "2024-04-02") return { ...empty, offset };
+      const dates = range.start_date
+        ? ["2024-01-03", "2024-04-01"]
+        : ["2024-01-02", "2024-01-03"];
+      return {
+        items: (offset ? dates.slice(1) : dates).map((trading_date, index) => ({
+          sequence: offset + index,
+          trading_date,
+          value:
+            kind === "drawdown"
+              ? "-0.000000000000000001"
+              : "100.000000000000000001",
+        })),
+        limit: 200,
+        offset,
+        total: 201,
+      };
+    },
+  );
+  render(<ResearchRunPage runId="saved" />);
+  const equity = await screen.findByRole("figure", {
+    name: "accessibility:benchmarkChart",
+  });
+  const drawdown = screen.getByRole("figure", {
+    name: "accessibility:drawdownChart",
+  });
+  const first = screen.getByLabelText("First trading date");
+  const last = screen.getByLabelText("Last trading date");
+  expect(
+    screen.getByRole("region", { name: "Displayed trading dates" }),
+  ).toHaveClass("experimentPanel");
+  expect(
+    screen.getByRole("region", { name: "Linked trading date" }),
+  ).toHaveClass("experimentPanel");
+  await userEvent.type(first, "2024-01-03");
+  await userEvent.type(last, "2024-04-01");
+  expect(researchApi.points).toHaveBeenCalledTimes(3);
+  await userEvent.selectOptions(
+    within(equity).getByRole("combobox"),
+    "2024-01-02",
+  );
+  expect(within(drawdown).getByRole("status")).toHaveTextContent("2024-01-02");
+  expect(within(drawdown).getByRole("status")).toHaveTextContent(
+    "-0.000000000000000001",
+  );
+  await userEvent.hover(
+    within(drawdown).getByTitle("2024-01-03: -0.000000000000000001"),
+  );
+  expect(within(equity).getByRole("combobox")).toHaveValue("2024-01-03");
+  expect(researchApi.points).toHaveBeenCalledTimes(3);
+  expect(researchApi.holdings).toHaveBeenCalledTimes(1);
+  expect(researchApi.trades).toHaveBeenCalledTimes(1);
+  await userEvent.click(screen.getByRole("button", { name: "Apply dates" }));
+  await screen.findByText("research:displayedDateRange:2024-01-03–2024-04-01");
+  const range = { start_date: "2024-01-03", end_date: "2024-04-01" };
+  for (const kind of ["equity", "benchmark", "drawdown"])
+    expect(researchApi.points).toHaveBeenCalledWith(
+      "saved",
+      kind,
+      0,
+      expect.any(AbortSignal),
+      range,
+    );
+  for (const method of [
+    researchApi.holdings,
+    researchApi.trades,
+    researchApi.rebalances,
+    researchApi.rollingMetrics,
+  ])
+    expect(method).toHaveBeenLastCalledWith(
+      "saved",
+      0,
+      expect.any(AbortSignal),
+      range,
+    );
+  const equitySection = screen
+    .getByRole("heading", { name: "research:equity / research:benchmarkCurve" })
+    .closest("section")!;
+  await userEvent.click(
+    within(equitySection).getByRole("button", { name: "next" }),
+  );
+  await screen.findByText("research:displayedDateRange:2024-04-01–2024-04-01");
+  for (const kind of ["equity", "benchmark", "drawdown"])
+    expect(researchApi.points).toHaveBeenCalledWith(
+      "saved",
+      kind,
+      200,
+      expect.any(AbortSignal),
+      range,
+    );
+  const curveCalls = vi.mocked(researchApi.points).mock.calls.length;
+  await userEvent.click(
+    screen.getByRole("button", {
+      name: "Show trades and holdings for this date",
+    }),
+  );
+  const linked = { start_date: "2024-04-01", end_date: "2024-04-01" };
+  for (const method of [
+    researchApi.holdings,
+    researchApi.trades,
+    researchApi.rebalances,
+  ])
+    expect(method).toHaveBeenLastCalledWith(
+      "saved",
+      0,
+      expect.any(AbortSignal),
+      linked,
+    );
+  expect(researchApi.points).toHaveBeenCalledTimes(curveCalls);
+  expect(
+    screen.getByRole("region", { name: "Linked trading date" }),
+  ).toHaveFocus();
+  await userEvent.click(
+    within(equitySection).getByRole("button", { name: "previous" }),
+  );
+  await screen.findByText("research:displayedDateRange:2024-01-03–2024-04-01");
+  await userEvent.selectOptions(
+    screen.getByRole("combobox", {
+      name: "accessibility:benchmarkChart — research:columns.date",
+    }),
+    "2024-01-03",
+  );
+  expect(
+    screen.getByRole("region", { name: "Linked trading date" }),
+  ).toHaveTextContent("2024-04-01");
+  expect(researchApi.holdings).toHaveBeenCalledTimes(3);
+  await userEvent.click(
+    screen.getByRole("button", { name: "Clear linked date" }),
+  );
+  expect(
+    screen.getByRole("region", { name: "Displayed trading dates" }),
+  ).toHaveFocus();
+  expect(researchApi.holdings).toHaveBeenLastCalledWith(
+    "saved",
+    0,
+    expect.any(AbortSignal),
+    range,
+  );
+  expect(researchApi.metrics).toHaveBeenCalledTimes(1);
+  expect(researchApi.monthlyReturns).toHaveBeenCalledTimes(1);
+  await userEvent.clear(first);
+  await userEvent.type(first, "2024-04-02");
+  const beforeInvalid = vi.mocked(researchApi.points).mock.calls.length;
+  await userEvent.click(screen.getByRole("button", { name: "Apply dates" }));
+  expect(screen.getByRole("alert")).toHaveTextContent(
+    "Choose a valid date range",
+  );
+  expect(first).toHaveFocus();
+  expect(first).toHaveAttribute("aria-invalid", "true");
+  expect(researchApi.points).toHaveBeenCalledTimes(beforeInvalid);
+  await userEvent.clear(last);
+  await userEvent.type(last, "2024-04-03");
+  await userEvent.click(screen.getByRole("button", { name: "Apply dates" }));
+  expect(
+    await within(equitySection).findByText(
+      "No records match these dates. Clear the date selection or widen the interval.",
+    ),
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", {
+      name: "Show trades and holdings for this date",
+    }),
+  ).toBeNull();
+  await userEvent.click(
+    screen.getByRole("button", { name: "Show full interval" }),
+  );
+  await screen.findByText("research:displayedDateRange:2024-01-02–2024-01-03");
+  expect(first).toHaveValue("");
+  expect(last).toHaveValue("");
+  expect(researchApi.metrics).toHaveBeenCalledTimes(1);
+  expect(researchApi.monthlyReturns).toHaveBeenCalledTimes(1);
 });
