@@ -1,5 +1,28 @@
 # Decisions
 
+## v1.2 paper table DOM ceiling without hiding the payload defect — 2026-10-02 21:49 UTC
+
+Reuse the existing Pagination once in shared PaperTable, no new dependency or
+per-caller special case.100 rendered rows; exact strings preserved.113focused/
+583frontend/full checks, actual205/204-record Chrome pages and16 responsive
+cases PASS_SCOPED. Declared ceiling: legacy snapshot and client arrays still
+unbounded; next work must address saved collection retrieval, not discard ledger
+history or claim p95 from DOM counts. Full mandatory scope remains unchanged.
+
+Owned clean-install18176/18018 quant_test only. Old18175 browser receipts from
+released synthetic tmpfs fail closed; preserve the receipt refusal. Saved DOM
+does not itself prove unsaved GET404/noPOST transport or storage-byte equality;
+the separate sibling proof-boundaries note states this. A new isolated test
+origin is NOT old-ledger recovery/user bypass.
+Finite input sizing uses existing registry/CSV/registered strategy/risk/OMS/
+portfolio; no new authority, US product expansion, performance study or OOS.
+Raw API snapshots unchanged after UI; originals5/417/8/runtime identities kept.
+47-file external proof/root and independent review PASS_SCOPED, no new P1/P2;
+exact source-batch CI pending. Parent sealed bytes unchanged.
+Prior-paint screenshot, hidden mobile control and diagnostic/verifier failures
+remain non-proof. No security policy or strict assertion was weakened. Only
+owned QA services stopped; no durable data deletion, frozen mutation or release.
+
 ## v1.2 async input lifecycle without a fake forward mode — 2026-10-02 21:23 UTC
 
 Reuse existing provider and stdlib asyncio: one owned pending read raced against

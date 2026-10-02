@@ -1,5 +1,48 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 21:49 UTC paper financial tables render bounded pages
+
+U7/M4 source `b293a73e7eaca8ca1523ba71ba8938fe053ce006` reuses shared
+Pagination for five tables:100 rendered rows, independent offsets, persistent
+clamp after shrink, stable empty/nonempty pager focus, locale/account behavior.
+Count-first RED201vs100 then113focused/583full frontend44/ESLint/TS/build PASS;
+201 transport-fixture test includes exact fractional strings/append/shrink0/
+regrow/account reset.528.98kB main chunk/>500 advisory remains. No new API,
+dependency/schema/financial rule. This does NOT bound full snapshot transfers,
+client array retention or O(n) mapping; those remain a real next defect.
+
+Actual Chrome only in owned quant_test tmpfs18018/18176: explicitly created/
+started412-bar synthetic legacy/non-A-share replay produces STOPPED1852,
+205signals/205risk/205orders/204fills/one position. Three pages100/100/5-or4,
+last Next disabled/pager focused; EN preserves page3, actual switch to separate
+A-share13fill account and back resets replay to first100. All IDs/order and raw
+quantity/price/commission compare to saved API; raw snapshots unchanged after
+UI actions.16 terminal-page sizes/locales/themes retain records/no document
+overflow.390 local keyboard region scroll0→40. Settled ZH/EN/mobile JPEG viewed.
+First1000-session A-share fixture had only13fills: retained, not boundary proof.
+The test input changes data sizing only, not registered strategy/risk/accounting.
+
+Existing18175 saved DOM/JPEG shows old-receipt verification refusal. GET404 was
+observed in contemporaneous tool output; source/tests retain the pre-POST guard,
+but this bundle contains no HTTP transport trace or raw storage-byte comparison.
+No receipt was intentionally cleared;18176 is separate clean-install QA, not
+missing-ledger recovery or a user bypass. Initial prior-paint screenshot/hidden mobile
+Theme selector/diagnostic shell-SQL-route errors and verifier automatic UTC
+conversion failure retained; corrected DateKindString keeps strict assertions.
+47 saved files manifest `6732ceeede57c17b173259908a4b3e197a4ea1bcc0b8c94585b506e9acd05976`;
+[scoped protocol](../../../product-evidence/v1.2/m4/20261003-paper-table-pages/README.md).
+Root and independent saved/API/DOM/source-hash/matrix/image/runtime reviews
+PASS_SCOPED, no new P1/P2; new exact source-batch CI pending.
+[Separate proof boundaries](../../../product-evidence/v1.2/m4/20261003-paper-table-pages-review/proof-boundaries.md)
+SHA `acfdfd02cb3cea7a18408dfe8eb9c8430162f9aa73a51ae3d48fd573c7a7bc99`;
+diagnostic SQL/URL errors are execution history, not saved raw error outputs.
+Parent sealed bytes unchanged. Original four container identities and5paper/
+417events/8personaljobs/statuses unchanged;5173/API200/RedisPONG. Only owned QA3
+stopped after both accounts terminal; testPG remains stopped, other restore/media
+untouched, no durable data/image/volume deletion. Viewport/preferences restored,
+owned tabs closed. No frozen/.research/OOS/source promotion/merge/tag/release.
+Full U1-U8/M0-M5/AA/native200/p95/lawful actual forward/lost-ledger work incomplete.
+
 ## 2026-10-02 21:23 UTC async input waiting remains controllable
 
 U7 lifecycle foundation `9db4fda0aa2c1e2f0329385c4acb00cd80f6b05b` accepts
@@ -10,7 +53,9 @@ primary failure was reproduced and fixed centrally. Final source review scoped
 PASS/no new P1/P2.66 focused/1091 full backend/one optional archive skip,
 Ruff546/mypy145; unchanged frontend582/44/lint/type/build PASS. Older1088 log is
 superseded, existing528.79kB/>500kB advisory retained. No schema/dependency or
-public forward mode was added. New exact hosted source-batch CI is pending.
+public forward mode was added. Exact hosted source/checkpoint batch0142526
+CI37066797547 backend/frontend/Compose SUCCESS (2026-10-02T21:28:55Z), not
+coverage for later paper DOM paging or whole-product acceptance.
 
 Actual Chrome ZH/EN on owned quant_test tmpfs18018/18175 waits BEFORE upstream
 yield, not within a financial callback. Only one synthetic initial calendar
