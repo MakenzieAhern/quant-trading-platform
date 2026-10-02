@@ -8027,3 +8027,29 @@ link confirms client preparation, but neither proves a saved user file. Do
 not bypass the browser block or repeat the unchanged click method. A later
 ordinary user-visible download/file inspection or other authorized observable
 route is needed for full `U4`/`M5` acceptance.
+
+## 2026-10-02 02:05 UTC U4 report-date scope clarity
+
+At clean head `7fa6969`, an agent-owned installed-Chrome tab inspected the
+saved historical result at a temporary 390×844 viewport in English and
+Chinese. With no date filter, its report panel showed `… → …`, implying
+unknown dates rather than the actual backend meaning of **no date filter**.
+An independent read-only review traced the empty and one-sided range from
+`ExperimentCollections` into `ExperimentExports` and checked the backend's
+null-bound semantics. This was a P2 explanation defect, not a financial-data
+or export-query defect.
+
+The report panel and prepared-save link accessible name now say “Full saved
+interval (no date filter)” / “完整已保存区间（未筛选日期）” for an empty range, and name
+the unbounded side explicitly when only one date is selected. No request
+parameters, saved results or backend export calculations changed. A focused
+component regression passed **18/18**, the full frontend suite **565/565**;
+ESLint, TypeScript/production build and changed-file Prettier passed. Actual
+Chrome 390×844 showed the corrected EN/ZH labels and document/client widths
+of **375/375** in both languages. The original English preference and default
+viewport were restored; the owned tab was closed. No report download, study,
+paper account, market update or financial-database write was made.
+
+This is bounded U4/U8/M4 clarity progress, not browser file-landing proof,
+native 200% zoom, screen-reader speech, independent novice testing, complete
+M4/M5 or release acceptance. The new code head still requires exact-head CI.

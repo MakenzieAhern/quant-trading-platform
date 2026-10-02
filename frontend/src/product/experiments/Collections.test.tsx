@@ -698,6 +698,56 @@ describe("filtered durable experiment records", () => {
 });
 
 describe("server-generated report downloads", () => {
+  it("explains unfiltered and one-sided report dates in both languages", async () => {
+    vi.stubGlobal(
+      "URL",
+      Object.assign(URL, {
+        createObjectURL: vi.fn().mockReturnValue("blob:unfiltered-report"),
+        revokeObjectURL: vi.fn(),
+      }),
+    );
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(
+      () => undefined,
+    );
+    vi.spyOn(experimentApi, "export").mockResolvedValue(new Blob(["report"]));
+    const view = render(<ExperimentExports jobId={job.job_id} range={{}} />);
+    expect(
+      screen.getByText(/Full saved interval \(no date filter\)/),
+    ).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Download metadata report (JSON)" }),
+    );
+    expect(
+      await screen.findByRole("link", { name: /Save prepared report/ }),
+    ).toHaveAccessibleName(/Full saved interval \(no date filter\)/);
+
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(screen.getAllByText(/完整已保存区间（未筛选日期）/)).toHaveLength(2);
+    expect(
+      screen.getByRole("link", { name: /保存已准备的报告/ }),
+    ).toHaveAccessibleName(/完整已保存区间（未筛选日期）/);
+    view.rerender(
+      <ExperimentExports
+        jobId={job.job_id}
+        range={{ end_date: "2031-01-03" }}
+      />,
+    );
+    expect(screen.getByText(/不限制开始日期 → 2031-01-03/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /保存已准备的报告/ }),
+    ).toHaveAccessibleName(/完整已保存区间（未筛选日期）/);
+    await act(async () => i18n.changeLanguage("en-US"));
+    view.rerender(
+      <ExperimentExports
+        jobId={job.job_id}
+        range={{ start_date: "2031-01-02" }}
+      />,
+    );
+    expect(
+      screen.getByText(/2031-01-02 → No end-date limit/),
+    ).toBeInTheDocument();
+  });
+
   it("keeps a prepared report available when a replacement download fails", async () => {
     const blob = new Blob(["first report"], { type: "text/csv" });
     const replacement = new Blob(["replacement report"], { type: "text/csv" });
