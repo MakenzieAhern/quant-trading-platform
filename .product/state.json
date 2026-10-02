@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T01:44:15Z",
+  "updated_at_utc": "2026-10-02T01:47:28Z",
   "u7_terminal_failure_restart_20261002_gate": {
     "status": "PASS_BOUNDED_ISOLATED_RESTART_REGRESSION_NOT_FULL_U7",
-    "proof": "The isolated post-start failure case now creates a fresh paper manager after FAILED/CANCELLED/no-fill persisted state. Its startup recovery finds zero active sessions, its persisted snapshot matches exactly, and starting the terminal account is rejected without journal changes. First CI 36952021470 failed because the assertion was mistakenly inserted in an adjacent STOPPED test; moved to the intended FAILED case without weakening it. Corrected full local make test passed backend 1036/one optional skip and frontend 564; make lint and make build passed. Original database counts remained 8/5/417/4 and original frontend/API returned HTTP 200. See docs/product/ACCEPTANCE.md.",
+    "proof": "The isolated post-start failure case now creates a fresh paper manager after FAILED/CANCELLED/no-fill persisted state. Its startup recovery finds zero active sessions, its persisted snapshot matches exactly, and starting the terminal account is rejected without journal changes. First CI 36952021470 failed because the assertion was mistakenly inserted in an adjacent STOPPED test; moved to the intended FAILED case without weakening it. Corrected full local make test passed backend 1036/one optional skip and frontend 564; make lint and make build passed. Corrected code head 1c8ea35 passed hosted backend/frontend/Compose in run 36952390536. Original database counts remained 8/5/417/4 and original frontend/API returned HTTP 200. See docs/product/ACCEPTANCE.md.",
     "limits": "Fresh application manager with an isolated test database, not an induced production backend or Windows reboot. Does not recover two genuine pre-loss ledgers, prove lawful 2026 forward data, independent physical backup, complete U7/M4/M5 or release. PR32 stays draft/open."
   },
   "u8_render_failure_recovery_20261002_gate": {
@@ -25,7 +25,7 @@
   },
   "u4_current_export_boundary_20261002_gate": {
     "status": "SERVER_EXPORT_PASS_CURRENT_BROWSER_FILE_LANDING_NOT_VERIFIED",
-    "proof": "Existing completed historical study exported JSON and CSV HTTP 200 with attachment headers and nonempty bodies. Full JSON and CSV had six trade records; filtering 2011-03-01 to 2011-03-03 yielded zero and kept the full-period JSON summary unchanged. CSV retained 28 metadata rows. In-app browser displayed a prepared blob fallback but download capture timed out; direct attachment navigation returned net::ERR_BLOCKED_BY_CLIENT and no matching ordinary Windows Downloads file was observed. Earlier browser capture attempts are documented; no further unchanged retry or speculative code fix. Original database counts stayed 8/5/417. See docs/product/ACCEPTANCE.md.",
+    "proof": "Existing completed historical study exported JSON and CSV HTTP 200 with attachment headers and nonempty bodies. Full JSON and CSV had six trade records; filtering 2011-03-01 to 2011-03-03 yielded zero and kept the full-period JSON summary unchanged. CSV retained 28 metadata rows. At pushed head 1c8ea35, installed Chrome showed a prepared JSON Blob fallback and filename but neither button nor fallback yielded an observable download event or matching ordinary Windows Downloads file. One direct GET of the attachment URL in an owned Chrome tab returned ERR_BLOCKED_BY_CLIENT from the browser-control route; the test tabs were closed. No bypass, unchanged retry or speculative app fix. Original database counts stayed 8/5/417. See docs/product/ACCEPTANCE.md.",
     "limits": "Server semantics are verified, not current-browser file landing or complete M5. A later authorized browser/file-observation route must prove filename, bytes and content. No provider, study, account, frozen research/OOS, merge, tag or release action."
   },
   "m5_bilingual_guide_export_parity_20261002_gate": {

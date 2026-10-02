@@ -8003,5 +8003,27 @@ normal-stop case, whose correct status is `STOPPED`. The assertion was moved
 to the intended runtime-failure case without weakening it. The corrected
 complete local suite passed backend **1036** with the same optional skip and
 frontend **564**; Ruff, format, mypy, ESLint, TypeScript and production build
-also passed. A new exact-head CI run is required before calling hosted checks
-green. No application runtime code or original account data changed.
+also passed. Corrected code head `1c8ea351047775a8e644f4186f7813593f4f44dc`
+then passed hosted backend, frontend and Compose in run `36952390536`.
+No application runtime code or original account data changed.
+
+## 2026-10-02 01:47 UTC current-head Chrome export observation boundary
+
+At pushed head `1c8ea351047775a8e644f4186f7813593f4f44dc`, an agent-owned
+installed-Chrome tab opened the existing English historical result. Clicking
+the JSON export button produced the application's `Download prepared` status
+and a same-origin Blob save link with the expected report filename. Waiting
+for a browser download event timed out for both the initial button and the
+user-activated fallback link; that exact filename was not found in the
+ordinary Windows Downloads directory. The tab had no captured error log.
+One source-derived direct GET of the backend's attachment endpoint in a new
+owned Chrome tab returned `ERR_BLOCKED_BY_CLIENT` from the browser control
+surface. Both owned tabs were closed; the user's unrelated tab was untouched.
+
+This classifies **file landing as unverified through this browser-control
+route**, not an application or server-export failure. Existing server GET
+evidence confirms HTTP 200, attachment headers and report content; the Blob
+link confirms client preparation, but neither proves a saved user file. Do
+not bypass the browser block or repeat the unchanged click method. A later
+ordinary user-visible download/file inspection or other authorized observable
+route is needed for full `U4`/`M5` acceptance.
