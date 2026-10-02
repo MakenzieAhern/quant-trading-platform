@@ -65,6 +65,83 @@ describe("incremental update HTTP contract", () => {
     });
     expect(result.items[0].raw.open).toBe("12.000000000000000001");
   });
+  it.each([
+    ["different security", { security_id: "CN-A:SZSE:000001" }],
+    ["before the requested window", { trading_date: "2025-12-31" }],
+    ["after the requested window", { trading_date: "2026-04-01" }],
+    ["impossible calendar date", { trading_date: "2026-02-30" }],
+    ["noncanonical trading date", { trading_date: "2026-01-05T00:00:00Z" }],
+  ])("rejects the whole observations response for %s", async (_, changed) => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          ...observations,
+          items: [
+            observations.items[0],
+            { ...observations.items[0], ...changed },
+          ],
+          total: 2,
+        }),
+      ),
+    );
+    await expect(
+      marketUpdateApi.observations("CN-A:SSE:600000", {
+        start_date: "2026-01-01",
+        end_date: "2026-03-31",
+      }),
+    ).rejects.toBeInstanceOf(ApiContractError);
+  });
+  it("accepts inclusive observation endpoints without changing exact strings", async () => {
+    const payload = {
+      ...observations,
+      items: [
+        observations.items[0],
+        { ...observations.items[0], trading_date: "2026-01-06" },
+      ],
+      total: 2,
+    };
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response(JSON.stringify(payload)),
+    );
+    const result = await marketUpdateApi.observations("CN-A:SSE:600000", {
+      start_date: "2026-01-05",
+      end_date: "2026-01-06",
+    });
+    expect(result).toEqual(payload);
+    expect(result.items[1].raw.amount).toBe("125000.000000000000000009");
+    expect(result.authority).toEqual(observations.authority);
+  });
+  it("accepts an empty observation cache result", async () => {
+    const payload = { ...observations, items: [], total: 0 };
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response(JSON.stringify(payload)),
+    );
+    await expect(
+      marketUpdateApi.observations("CN-A:SSE:600000", {
+        start_date: "2026-01-05",
+        end_date: "2026-01-06",
+      }),
+    ).resolves.toEqual(payload);
+  });
+  it("validates against the dispatched range when the caller mutates it later", async () => {
+    let complete!: (response: Response) => void;
+    const fetch = vi.spyOn(globalThis, "fetch").mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          complete = resolve;
+        }),
+    );
+    const range = { start_date: "2026-01-05", end_date: "2026-01-06" };
+    const pending = marketUpdateApi.observations("CN-A:SSE:600000", range);
+    expect(fetch).toHaveBeenCalledOnce();
+    range.start_date = "2027-01-05";
+    range.end_date = "2027-01-06";
+    complete(new Response(JSON.stringify(observations)));
+    await expect(pending).resolves.toEqual(observations);
+    expect(fetch.mock.calls[0][0]).toContain(
+      "security_id=CN-A%3ASSE%3A600000&start_date=2026-01-05&end_date=2026-01-06",
+    );
+  });
   it("fails closed on numeric financial fields, executable authority or oversized observations", () => {
     expect(() =>
       parseObservations({

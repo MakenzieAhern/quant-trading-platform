@@ -198,8 +198,16 @@ export function parseObservations(value: unknown): CandidateObservations {
     throw new ApiContractError();
   for (const value of item.items) {
     const row = record(value);
-    for (const key of ["security_id", "trading_date", "receipt_id"])
-      text(row[key]);
+    for (const key of ["security_id", "receipt_id"]) text(row[key]);
+    const day = row.trading_date;
+    text(day);
+    const date = new Date(`${day}T00:00:00Z`);
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(day) ||
+      !Number.isFinite(date.getTime()) ||
+      date.toISOString().slice(0, 10) !== day
+    )
+      throw new ApiContractError();
     for (const key of ["provider_trade_status", "provider_is_st"])
       if (
         !["0", "1"].includes(String(row[key])) ||
@@ -271,13 +279,28 @@ export const marketUpdateApi = {
     ),
   observations: (
     securityId: string,
-    range: Pick<UpdateConfiguration, "start_date" | "end_date">,
+    {
+      start_date,
+      end_date,
+    }: Pick<UpdateConfiguration, "start_date" | "end_date">,
     signal?: AbortSignal,
   ) =>
     apiRequest(
-      `${root}/observations?${new URLSearchParams({ security_id: securityId, ...range })}`,
+      `${root}/observations?${new URLSearchParams({ security_id: securityId, start_date, end_date })}`,
       {},
       signal,
-      parseObservations,
+      (value) => {
+        const parsed = parseObservations(value);
+        if (
+          parsed.items.some(
+            (row) =>
+              row.security_id !== securityId ||
+              row.trading_date < start_date ||
+              row.trading_date > end_date,
+          )
+        )
+          throw new ApiContractError();
+        return parsed;
+      },
     ),
 };
