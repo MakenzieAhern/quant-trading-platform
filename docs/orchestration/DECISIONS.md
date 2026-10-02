@@ -1,5 +1,30 @@
 # Decisions
 
+## v1.2 remove core saved-result mount delay, retain native-timing failure — 2026-10-02 18:31 UTC
+
+The actual request timeline placed the300ms gap before the first job GET, not
+inside the data fetch or financial computation. Same-document cold/warm control
+and installed React19.2.8 retry-throttle source support the causal inference,
+without claiming a directly instrumented internal lane/branch. Use the
+existing ExperimentDetailPage as an eager import rather than modify React,
+introduce a preload abstraction/dependency or patch multiple request callers.
+Lock initial route-commit GET with one regression. No financial/API change.
+
+Three actual fixed cold documents remove the pre-request delay but do not
+repair missing native timing/about1s rAF. Preserve failure, reject background
+visibility as unsupported, and do not repeat the same method30times. DOM metric
+availability is not pixel paint or complete equity/collection readiness.
+Keep p95<=200ms target, entry+25.31kB/+6.07kB gzip tradeoff and unchanged500kB
+warning. Next measurement requires a changed falsifiable hypothesis, not a
+zero for absent native entries or a fabricated full performance pass.
+
+Reuse owned restored frontend/backend and saved293-session report read-only.
+Restore exact frontend image/no mounts; don't restart DB/backend or original
+services. Retain40 hashed external artifacts, true failed verifier assumptions
+and corrected strict assertions. Existing exact3e6b11d CI succeeds separately;
+new runtime slice needs its own exact CI. Full product/source/forward requirements
+and genuine missing-ledger facts remain unchanged, with no merge/tag/release.
+
 ## v1.2 prove actual browser recovery without changing finance — 2026-10-02 17:56 UTC
 
 Reuse the real paper API/journal/hub/runtime and frontend in an owned

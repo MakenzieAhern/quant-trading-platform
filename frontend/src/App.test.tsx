@@ -24,6 +24,17 @@ const health = {
 };
 
 describe("routing", () => {
+  it("starts the saved-study request on the initial route commit", () => {
+    window.history.replaceState({}, "", `/experiments/${RUN_ID}`);
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    const get = vi
+      .spyOn(experimentApi, "get")
+      .mockImplementation(() => new Promise(() => {}));
+    render(<App />);
+    expect(get).toHaveBeenCalledExactlyOnceWith(RUN_ID, expect.anything());
+  });
+
   it("tracks the actual sticky header height without changing focus and releases the root inset on unmount", async () => {
     let resize: ResizeObserverCallback | undefined;
     const observe = vi.fn();

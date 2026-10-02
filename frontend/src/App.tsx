@@ -20,6 +20,8 @@ import {
 } from "./product/ProductPages";
 import { CreateExperimentPage } from "./product/experiments/CreateExperimentPage";
 import { ExperimentsPage } from "./product/experiments/ExperimentsPage";
+// ponytail: eager core result route avoids retry delay; split if startup transfer regresses.
+import { ExperimentDetailPage } from "./product/experiments/ExperimentDetailPage";
 import { ProductDataProvider } from "./product/ProductDataProvider";
 import { MarketsPage } from "./product/markets";
 import { TaskCenterPage } from "./product/TaskCenterPage";
@@ -51,11 +53,6 @@ const ResearchStrategyPage = lazy(() =>
     ({ ResearchStrategyPage }) => ({
       default: ResearchStrategyPage,
     }),
-  ),
-);
-const ExperimentDetailPage = lazy(() =>
-  import("./product/experiments/ExperimentDetailPage").then(
-    ({ ExperimentDetailPage }) => ({ default: ExperimentDetailPage }),
   ),
 );
 const ExperimentComparePage = lazy(() =>

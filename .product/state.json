@@ -1,7 +1,19 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T17:56:09Z",
+  "updated_at_utc": "2026-10-02T18:31:38Z",
+  "u4_saved_result_request_start_20261003_gate": {
+    "status": "PASS_SCOPED_REQUEST_START_NATIVE_TIMING_PARTIAL",
+    "source_head_before": "3e6b11d9dd2ddad74904cc7fad70f6abe25b5ba0",
+    "proof": "Actual Chrome154/1440x900/ZHdark on owned production-built frontend18173/backend18016 reopened the existing293-session historical study, no research/financial write. Same-document cold/warm control changed first jobGET click+303.5 to1.8ms, cumulative-return DOM324.3 to23.5ms. Minimal ExperimentDetailPage eager import removes only that lazy Suspense retry path. Three independent fixed cold documents firstGET2.0-4.1ms and metricDOM66.6-87.2ms/loadingDOM4.2-7.4ms, saved+4.67/-2.48/96.05/-8.83 unchanged. Native entries missing/false/timeout and rAF about995ms retained; not paint/all-result-ready/INP/p95 acceptance. Entry503.48 to528.79kB, production gzip154.86 to160.93kB, existing warning retained. RED0 calls/GREEN24 App tests; full frontend577/43 plus lint/types/touchedPrettier/build PASS. Saved-artifact verifier PASS,40 per-file hashes. Exact e328 owned frontend restored/no mounts; backend/PG/Redis not restarted; result before/after byte hash equal, original/restored5/417/8/4, four endpointsHTTP200, RedisPONG, viewport reset/owned tab closed.",
+    "evidence": "product-evidence/v1.2/m4/20261003-result-timing/README.md",
+    "manifest_files": 40,
+    "manifest_sha256": "0c54b9773b0ad81a0112cca4f13f46af978cc7cac56941386dececd651392f1c",
+    "result_sha256_before_after": "495de2cf7872917cac6b6936f5e1f5b9ecd6487e9bb4d991e7c6ce86f8baecba",
+    "independent_review": "PASS_SCOPED: code/root-cause/test review no newP1/P2; separate read-only evidence reviewer independently matched all40 sizes/hashes plus manifest, ran pre-read verifier, checked raw controls/fixed samples/build/test/REST/cleanup artifacts and final five-file diff/JSON/links. React source/timeline cause explicitly inferred, not instrumented internal branch. No top-level request/financial write added; initial-commit regression not a browser timing assertion. No paint/p95/all-ready/full-product overclaim.",
+    "hosted_ci": "PENDING_THIS_RUNTIME_BATCH; exact3e6b11d CI37044657490 backend/frontend/Compose SUCCESS remains separate",
+    "limits": "Only saved-result request-start defect closed. New-document/no-store static assets, not cold API/OS/DB; cross-origin transferSize0 is opaque not zero/cache proof. MetricDOM precedes equity/collections, not whole-page-ready; no native p95/paint/full200ms or all-route/global startup improvement. Background visibility hypothesis rejected; native/rAF anomaly unresolved. Entry cost increases whole-site initial transfer. QA-only external index/probe/nginx not shipped. Initial artifact-verifier bugs (warm resource history/ANSI styling) repaired without changing raw data or expectations. Prior scoped backend/migration/persistence evidence remains separate; fresh batch CI pending. No frozen/.research/OOS/source promotion/account/queue/provider/old-ledger/merge/tag/release change. Full U1-U8/M0-M5 and lawful after-start feed/plan/constrained forward remain required; local evidence links not portable GitHub attachments."
+  },
   "u7_calendar_ws_recovery_20261003_gate": {
     "status": "PASS_SCOPED_ACTUAL_CHROME_WS_AND_RECOVERY_NOT_FORWARD",
     "source_head": "6ea79097a4545350e06abba062e3bc3685e74d0e",
@@ -10,7 +22,7 @@
     "manifest_files": 51,
     "manifest_sha256": "fc1ee7e4d761d186d4c235fdc9b7080a02963a97b88f897b9607e4e6c1d72b36",
     "independent_review": "PASS_SCOPED: read-only agent independently matched all51 file bytes/hashes and manifest hash, ran artifact verifier, inspected guarded harness/raw traces/snapshots/events/DOM and five-file diff. Control-only pre-refresh cue is DOM proof; screenshot is post-Refresh. Historical external PID/original counts and final owned-service stop are root operator observations, not independently verified raw bundle artifacts. No financial/forward/full-AA/new-head-CI overclaim found.",
-    "hosted_ci": "PENDING_THIS_DOCUMENTATION_BATCH; prior exact036e53b CI37039670325 remains separate, no runtime/dependency/schema change in this batch",
+    "hosted_ci": "PASS_EXACT_DOCUMENTATION_BATCH_3e6b11d9dd2ddad74904cc7fad70f6abe25b5ba0; CI37044657490 backend/frontend/Compose SUCCESS, final job completed2026-10-02T18:03:38Z; subsequent saved-route runtime changes not covered by that run",
     "limits": "Offline synthetic2030 QA only, not lawful after-start market receipt/plan/constrained forward or profit evidence. ASGI send trace alone is not browser consumption; independent control-only DOM cue supplies that proof. Reconnect warning not sampled, no deliberate duplicate fill packet/prolonged retry-exhaustion/RUNNING-crash/power-loss/native speech/native200percent/broad AA/performance claim. EN desktop screenshot omits off-screen controls; EN DOM includes them. Auxiliary guessed DB and early post-restart POST failures summarized, not retained raw logs. Original5/417/8/4 unchanged and services healthy/HTTP200/PONG; restored/media stacks untouched, QA preferences/viewport restored/tab closed. No original ledger/frozen/research/OOS/provider/authority/merge/tag/release change. External local WSL-host links are not portable GitHub artifacts. Full U1-U8/M0-M5 and genuine missing-ledger facts remain unresolved."
   },
   "u7_causal_calendar_journal_20261003_gate": {
@@ -1682,7 +1694,7 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-02T17:56:09Z root sole repository/DB/queue/GUI writer; agents read-only. Actual Chrome calendar/transport/PAUSED-restart/offline-fill QA used only qtp-v12-oct3-calendar-test APP_ENV=test/quant_test/tmpfs backend18018+frontend18175; both accounts terminal and all three owned services freshly verified stopped, temporary data released, external51-file evidence retained. Original four not restarted, current5 paper/417 events/8 research/4 updates unchanged, API8000/frontend5173 HTTP200, RedisPONG, PG/backend/Redis healthy/frontend running. Existing restore/media stacks untouched. No original/frozen/research/OOS/provider/authority write.",
+    "latest_verification": "2026-10-02T18:31:38Z root sole repository/DB/queue/GUI writer, agents read-only; no other WSL writer process found. Existing87829 frontend test handle terminal after577/43/lint/type/prettier/build. Saved-study Chrome QA read-only on owned restore18173/API18016, only frontend temporarily recreated. Exact e328 image/no mounts restored, fresh PID42767/start18:26:42Z healthy (not reusable); backendPID96409/start13:55:10Z, PGPID28923/start13:30:59Z, RedisPID28858/start13:30:59Z unchanged. Original four retained12:50:49Z starts, healthy/backendPGRedis/frontendrunning, API8000/frontend5173 and restoreHTTP200, RedisPONG, original/restored5/417/8/4 unchanged. No active study/account/update or new QA queue action. Calendar tmpfs remains stopped, other media untouched; original/frozen/research/OOS/provider/authority write absent. Viewport reset/owned tab closed,40-file evidence sealed.",
     "repository_writer": "root product controller",
     "database_writer": "root only, owned qtp-v12-oct3-calendar-test tmpfs quant_test (now stopped); agents read-only, original and frozen ledgers read-only",
     "queue_writer": "Root only finite synthetic calendar fixture in owned oct3 tmpfs; two accounts STOPPED, own services stopped, no active QA task. Existing media/restore and original queues untouched; no external provider or formal/OOS submission.",
@@ -2242,13 +2254,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "036e53bd6c649eb7b1a12e40fbb100d43fc70706",
+      "last_verified_head": "3e6b11d9dd2ddad74904cc7fad70f6abe25b5ba0",
       "state": "DRAFT",
-      "ci_run": 37039670325,
+      "ci_run": 37044657490,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Actual owned Chrome live calendar/control-only cue, transport reconnect, PAUSED backend restart and one offline synthetic fill recovery/reload/locale/mobile PASS on6ea7909 (same a6d6b63 financial code). New51-file external evidence/checkpoint separate from prior exact pushed036e53b CI37039670325 SUCCESS. Prior SQL/full tests/saved logs/focus/history/baseline/plan/media remain scoped. No lawful new-market forward/full U1-U8/M3-M5 or missing-ledger recovery, merge/release claim."
+      "browser_gate": "Actual calendar recovery51-file proof and exact3e6b11d CI37044657490 SUCCESS accepted separately. New saved-route eager fix: trusted Chrome three cold-doc request-start2-4ms/metricDOM67-87ms, same saved financial summary, native/RAF timing PARTIAL; independent code review/577frontend checks/40-file artifact verifier and final five-file diff PASS_SCOPED. New runtime fix exact CI pending, not covered by old green. Scoped SQL/focus/history/baseline/plan/media retained. No lawful new-market forward/full U1-U8/M3-M5 or missing-ledger recovery, merge/release claim."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2263,7 +2275,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Read-only51-file actual Chrome calendar WS/reconnect/PAUSED-restart/offline-fill review is PASS; finish documentation milestone push/exact-head CI without rerunning accepted financial tests or QA. Then address existing U4/M4 production-packaged saved293-session result click-feedback/cold-cache measurement gap: reuse external cold-route-timing DOM probe through owned normal QA HTML, first a bounded3-sample pilot before30 independent-document samples, distinguish feedback/loading/result-ready, reject missing native samples rather than0ms, do not clear user Chrome privacy/cache/security or create/rerun research. Full U1-U8/M0-M5 remains required; lawful product-use rights/current authorities and genuine after-start receipt/plan/constrained processing still required, missing-ledger facts unchanged. Do not repeat accepted calendar/source/media work, merge or release.",
+  "next_task": "Final40-file evidence and five-file independent review PASS_SCOPED; finish coherent eager-route/test/checkpoint commit, normal milestone push and exact-head CI. Request-start300ms defect closed by actual cold/warm/fixed Chrome evidence; native measurement remains PARTIAL, so do not expand identical failing observer method to30 samples or claim p95/paint/all-page readiness. Next required safe M4 work: form a changed falsifiable native/input-to-visible measurement hypothesis and inspect remaining core cold-route latency while preserving p95<=200ms target and larger-entry startup tradeoff; reuse scoped evidence rather than repeat accepted calendar/source/media/research. Full U1-U8/M0-M5 stays required; lawful product-use rights/current authorities and genuine after-start receipt/plan/constrained forward still missing, missing-ledger facts unchanged. No privacy/security/cache-clearing bypass, merge/tag/release or strategy/OOS rerun.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

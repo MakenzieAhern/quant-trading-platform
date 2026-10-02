@@ -1,5 +1,56 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 18:31 UTC saved-result request-start fix (bounded U4/M4)
+
+PASS for removing the observed first saved-result request delay, NOT native
+paint/INP/p95/full product acceptance. Actual Chrome154/1440×900/ZHdark used
+owned production-built frontend18173 and unchanged restored backend18016 to
+reopen the same293-session historical study, without rerunning research.
+Cold/warm in the same document: first job GET after click303.5→1.8ms,
+cumulative-return metric DOM324.3→23.5ms. The lazy chunk took only about4ms;
+React19.2.8 retry-throttle source and control support that causal inference;
+the actual internal lane/branch was not instrumented.
+Eager import of the existing core ExperimentDetailPage removes that path;
+other lazy routes/API/financial calculations remain unchanged.
+
+Three independent fixed cold documents started GET after2.0–4.1ms; loading
+DOM4.2–7.4ms and cumulative-return metric DOM66.6–87.2ms. Saved metrics remain
++4.67%/-2.48%/96.05/-8.83%, with historical/seen-period risk explanations.
+Metric DOM is not whole-page ready: equity and other collections load later.
+Every fixed sample lacks native entries and times out; rAF opportunity remains
+about995ms. Visible/focused observations reject the background-tab hypothesis,
+not explain the anomaly. No30-sample/native p95, zero for missing entries,
+pixel-paint/full200ms or whole-site improvement claim. Static no-store/new
+documents are not cold API/OS/database; API transferSize0 is cross-origin opacity.
+
+Initial-route GET test RED0→GREEN;24 App tests and full577/43 frontend tests,
+lint/types/touchedPrettier/build PASS. Entry503.48→528.79kB (+25.31kB), production
+gzip154.86→160.93kB (+6.07kB); full test build160.94kB. Existing500kB warning
+remains visible. Code/root-cause/test independent review PASS_SCOPED/no newP1/P2;
+final independent40-file byte/hash/manifest/verifier/raw-evidence/five-file diff
+review PASS_SCOPED. This is a startup-transfer tradeoff, not
+an all-route performance pass.
+
+[Protocol and limitations](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-result-timing/README.md),
+[actual Chrome screenshot](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-result-timing/fixed-result-1440-zh-dark.jpg),
+[raw three samples](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-result-timing/fixed-cold-1.json),
+[read-only saved-artifact verifier](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-result-timing/verify-evidence.ps1)
+and [40 per-file hashes](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-result-timing/sha256-manifest.json)
+remain outside Git; local WSL-host links are not portable clone attachments.
+Manifest SHA256 `0c54b9773b0ad81a0112cca4f13f46af978cc7cac56941386dececd651392f1c`.
+Verifier bugs in warm-history request selection and ANSI-log matching were
+repaired without changing raw evidence or expectations; final verifier PASS.
+
+Owned frontend restored to exacte328/no mounts, actual reload QA node0 and
+normal HTML lacks QA script. Backend/PG/Redis not restarted; before/after REST
+bytes identical SHA256495de2cf…ecba. Original/restored counts5/417/8/4,
+four UI/API HTTP200, RedisPONG; viewport reset/tab closed. No .research/frozen/
+OOS/authority/account/queue/old-ledger/merge/release change. Exact documentation
+head3e6b11d passed [CI37044657490](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37044657490)
+(backend/frontend/Compose), not the new runtime fix; fresh batch CI pending.
+Full U1–U8/M0–M5, lawful after-start receipt/plan/constrained forward and remaining
+quality/delivery requirements remain incomplete. Keep the active full goal.
+
 ## 2026-10-02 17:56 UTC actual Chrome calendar WebSocket and recovery (bounded U7/M4)
 
 PASS for isolated offline synthetic QA on checkout
