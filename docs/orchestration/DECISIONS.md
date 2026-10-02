@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 fixed-tag before media without database downgrade — 2026-10-02 16:01 UTC
+
+Use cached `v1.1.0` frontend tree ab93b4eca4c7873df6fb5aaf13551ac54e2f9cd9
+and original lockfile for explicitly labeled Oct3 reconstruction on the existing
+restored backend. Keep main checkout/backend/database untouched; fixed old assets
+use a separate nginx root. Temporary server-level GET/HEAD-only guard rejects
+all non-read methods before proxying and preserves the actual18173 WebSocket
+origin. Five write-method probes and before/after44-table/41-GET checks passed.
+Restore exact e328748 frontend with no guard mount afterward; no original service
+restart, research/provider request, account command, downgrade or migration.
+
+Capture loaded old strategy, saved formal validation report and existing STOPPED
+synthetic04301 account; current frontend reads the same strategy/account. Never
+filter/forge current historical responses to satisfy the incompatible old parser.
+Old formal report is not a running personal study; old v1.1 has no personal
+comparison/tasks, so use its real entry context and explicitly state absence.
+Preserve original screenshots and both lost-ledger facts. Old npm's two high
+vulnerabilities are retained as immutable-baseline limits, not hidden or deployed
+publicly. These are real browser artifacts, not complete M5/forward/release proof.
+Independent read-only artifact/docs review passed. Preserve the initial restore
+inspect's starting health; add a separate final healthy/exact-image/no-mount
+observation instead of rewriting it. Keep all32 file hashes and exact CI-head
+attribution; normal viewport and original presentation settings were restored.
+
 ## v1.2 exact batch CI confirmed — 2026-10-02 15:44 UTC
 
 Normal meaningful-batch push `f7f3c6a` passed backend/frontend/Compose in

@@ -1,5 +1,43 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 16:01 UTC fixed-tag reconstructed before media
+
+Actual Chrome1280x800/ZH captured the fixed `v1.1.0` frontend tree
+`ab93b4eca4c7873df6fb5aaf13551ac54e2f9cd9` on the existing restored backend3184281.
+This is **Oct3 reconstructed baseline**, not an original Sep22 screenshot, old
+database recovery or complete v1.1 deployment. The loaded strategy detail gap is
+closed with the same registered identity; the STOPPED synthetic04301 account is
+captured in both frontends with the same129-event snapshot and cash/equity100000000.
+The old formal validation report9fed5018 is a saved read-only result, not a running
+personal task. Old v1.1 has no personal comparison/task view; its actual research
+entry is now linked as context, never a fabricated equivalent. The old AAPL
+long form is a fixture interface, viewed without submission.
+
+Before browser use, an owned nginx guard allowed only GET/HEAD, rejecting
+POST/PUT/PATCH/DELETE/OPTIONS with405 before proxying. The existing18173 origin
+and read-only WebSocket route were preserved, not bypassed. Guard probes passed;
+before/after44 public-table fingerprints and41 GET responses matched the saved
+restore baseline. No study/provider/account command, migration/downgrade or
+original-container restart. The exact current frontend `e328748b...90d7c` was
+restored with mounts=[] and original services remained healthy. Old npm reported
+two high vulnerabilities: immutable baseline dependencies were not rewritten,
+nor was this isolated comparison promoted to a public/production deployment.
+
+[Provenance](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261003-v11-baseline/provenance.json),
+[per-file hashes](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261003-v11-baseline/sha256-manifest.json)
+and [updated media index](DEMO.md#six-flow-media-index-2026-10-03-checkpoint) retain
+capture/build/mixed-version limits. This is a scoped M5 evidence improvement,
+not true after-start forward arrival, lost-ledger recovery, global AA/performance,
+full M5, merge or release acceptance. Existing exact CI still covers f7f3c6a,
+not these later evidence-only docs. Independent read-only guard/artifact/docs
+review passed:10 images/DOM,31 initial hashes and11 added links. The initial
+restore inspect retained `health=starting`; a separate final16:12 observation
+now records healthy/exacte328/mounts=[]/HTTP200, plus original unchanged IDs and
+5173/8000 HTTP200. It is the32nd manifest artifact, not an overwritten observation.
+Temporary viewport was reset to normal1920x911; originalZH/dark retained. A Windows
+UNC `mnt/c` lookup was unavailable; actual WSL path and native C files were
+verified instead, not mislabeled missing or universally usable by every viewer.
+
 ## 2026-10-02 15:44 UTC exact calendar/focus batch CI
 
 [CI37028749727](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37028749727)
