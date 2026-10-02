@@ -1,5 +1,16 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 17:20 UTC exact causal-calendar batch CI
+
+[CI37039670325](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37039670325)
+completed backend/frontend/Compose SUCCESS on exact pushed
+`036e53bd6c649eb7b1a12e40fbb100d43fc70706`, including code `a6d6b63` and the
+reviewed local-evidence checkpoint. Final frontend completed17:18:57UTC. PR32
+head matches and remains OPEN/DRAFT. This proves hosted CI actually runs again;
+the local program never depended on it. It does not promote source authority,
+forward arrival, missing-ledger recovery, full U1–U8/M3–M5, merge or release.
+This later CI-record-only local checkpoint is not part of that exact run.
+
 ## 2026-10-02 17:12 UTC durable causal calendar journal (bounded M3/U7)
 
 Code `a6d6b6314d9de223a5196a1ae2bc1637b5ad907a` reuses the existing

@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T17:12:05Z",
+  "updated_at_utc": "2026-10-02T17:20:54Z",
   "u7_causal_calendar_journal_20261003_gate": {
     "status": "PASS_OFFLINE_DURABLE_FOUNDATION_NOT_FORWARD",
     "source_head": "a6d6b6314d9de223a5196a1ae2bc1637b5ad907a",
     "proof": "Existing row-lock/sequence journal stores strict PAPER_CALENDAR_V1 initial/append-only full-calendar controls with actual UTC, before/after SHA, completed-session count and consumed-date anchor. Commit then apply then publish; resume uses initial knowledge and original count/date boundaries after strict financial/plan replay. Legacy static providers/V1-V3 unchanged, unanchored retrofit refused. Independent review's pause-lock/warmup-wrong-date/resume-command P2s reproduced/fixed; final read-only review no P1/P2. Calendar18, full backend1065+one optional archive skip, Ruff546/mypy145, frontend576/43/lint/type/build/touched-Prettier PASS; existing503.48kB warning retained. Real owned tmpfs SQL/new-manager resume, actual backend restart exact snapshot/event hashes, and Chrome1280ZHlight/ENdark+390ENdark bounded saved control logs/local keyboard scroll PASS. Disposable head-base-head/check passed; owned backend/frontend/postgres stopped; original four not restarted, original5/417/8/4 counts and services unchanged.",
     "evidence": "product-evidence/v1.2/m3/20261003-calendar-journal/README.md",
     "manifest_sha256": "b0dbe9f25f6f8289d90d1912de9f5c9a0a35662033676a4f7349cb5077cdafc6",
-    "hosted_ci": "PENDING_NEW_EXACT_BATCH; previous f7f3c6a success does not cover new code",
+    "hosted_ci": "PASS_EXACT_BATCH_036e53bd6c649eb7b1a12e40fbb100d43fc70706; CI37039670325 backend/frontend/Compose SUCCESS completed2026-10-02T17:18:57Z, PR32 matches/OPEN_DRAFT; later local CI-record-only checkpoint is not covered by this run",
     "limits": "Synthetic254-session/523-event account only, two controls/one normal fixture fill; Chrome REST saved logs not live WS/new-market arrival/real profits. No public forward provider or source/current-rule authority promotion. Harness cached-image import and cross-PowerShell-session comparison errors retained; extra whole-front Prettier failed on six unchanged baseline files. Full U1-U8/M3-M5, lawful after-start feed/plan/constrained execution and genuine missing-ledger evidence remain incomplete. No original DB/frozen/OOS change, new dependency/table/migration, merge/tag/release. QA-originZH/system and normal viewport restored; scratch account removed only by explicitly disposable test/migration lifecycle, external evidence retained."
   },
   "m5_fixed_tag_before_media_20261003_gate": {
@@ -1684,6 +1684,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-02 17:20UTC exact pushed036e53b CI37039670325 backend/frontend/Compose SUCCESS; PR32 same head OPEN/DRAFT, local original app still available. Covers a6d6b63 causal journal and reviewed checkpoint, not later CI-record-only local docs or full forward/product/release acceptance.",
     "2026-10-02 17:12UTC a6d6b63 durable causal calendar journal:18 focused/1065 backend+one optional archive skip/576 front, lint/types/build, real SQL manager resume/backend restart/hash equality, reversible disposable migration, actual Chrome bilingual saved logs/mobile local keyboard scrolling and final scoped independent review PASS.29 evidence hashes checked; normal viewport/preferences restored, own test/QA stopped, originals5/417/8/4 unchanged. Hosted exact-batch pending; not true forward/full release.",
     "2026-10-02 16:01UTC actual fixed-tag old loaded strategy/formal result/context/synthetic account media and same current strategy/account captured;44 tables/41GET unchanged; e328 restored without guard mount. Scoped reconstructed M5 proof, not full product or forward PASS.",
     "2026-09-30 21:11UTC local 596ad3d U8 task-center pagination: generic duplicate group names failed red in EN/ZH; existing bilingual titles passed focused12, full frontend504/504 across38, make lint/build, Prettier and diff check. Original in-app browser accessibility tree confirmed distinct research/raw-data pagination names in both languages; locale restored/tab closed. Independent read-only review no P1/P2. No native screen-reader/full M4/M5 or hosted CI claim; no task/financial/account/GitHub write.",
@@ -2229,13 +2230,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "f7f3c6a86c595cbded8bbe6634c362dbc0346aac",
+      "last_verified_head": "036e53bd6c649eb7b1a12e40fbb100d43fc70706",
       "state": "DRAFT",
-      "ci_run": 37028749727,
+      "ci_run": 37039670325,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Pushed f7f3c6a includes scoped f78f782 calendar and bc7390c actualChrome390/1024 shared sticky-focus repair,569 frontend/1046 backend with one optional archive skip. Exact-head CI37028749727 all three jobs PASS. Prior historical lifecycle/current-baseline restore/date linkage/modal/account-native plan remain scoped evidence. Actual lawful forward chain, genuine missing old ledgers and remaining consolidated relevant M4/M5 proof remain incomplete. No merge/release; preserve scoped native200%, production timing and exports without invented extra gates."
+      "browser_gate": "Pushed036e53b contains a6d6b63 causal calendar journal with actual owned SQL manager/service persistence and Chrome1280ZHlight/ENdark+390ENdark saved controls/local keyboard scroll;1065 backend+one optional archive skip/576 frontend PASS. Exact CI37039670325 all three jobs SUCCESS. Prior calendar/focus/historical lifecycle/restored baseline/plan/media remain scoped. Current calendar Chrome is REST-only, not live WS or lawful forward chain. Genuine missing old ledgers and remaining required M4/M5 proof incomplete; no merge/release or invented extra gates."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2250,7 +2251,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Durable causal calendar journal, date/count replay boundaries, review fixes, SQL manager/process persistence, full tests and bounded Chrome saved-log proof are DONE. Push meaningful batch/update existing PR32 and verify its exact CI SHA before claiming hosted PASS. Next independent M4 work: verify calendar control over actual Chrome WebSocket/disconnect/reconnect using only an owned synthetic session, preserving sequence and financial state/no false fill announcements; current Chrome proof is REST-only. Then choose remaining required M4/M5 user journey from the authoritative acceptance ledger. Genuine forward implementation requires lawful product-use source rights and accepted current authorities first; preserve strict V1-V3, missing-ledger facts, frozen/OOS and full U1-U8/M0-M5. Do not repeat completed calendar/source/media work, merge or release.",
+  "next_task": "Durable causal calendar journal, date/count replay boundaries, review fixes, SQL manager/process persistence, full tests, bounded Chrome saved-log proof and exact pushed036e53b CI37039670325 are DONE; existing PR32 OPEN/DRAFT, later local CI-record-only docs not part of that run. Next independent M4 work: verify calendar control over actual Chrome WebSocket/disconnect/reconnect using only an owned synthetic session, preserving sequence and financial state/no false fill announcements; current Chrome proof is REST-only. Then choose remaining required M4/M5 user journey from the authoritative acceptance ledger. Genuine forward implementation requires lawful product-use source rights and accepted current authorities first; preserve strict V1-V3, missing-ledger facts, frozen/OOS and full U1-U8/M0-M5. Do not repeat completed calendar/source/media/CI work, merge or release.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

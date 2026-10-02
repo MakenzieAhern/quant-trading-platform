@@ -1,5 +1,15 @@
 # Decisions
 
+## v1.2 calendar batch exact CI, no product release — 2026-10-02 17:20 UTC
+
+Normal milestone push `036e53b` passed backend/frontend/Compose in
+CI37039670325, verified against exact PR32 head. Record this separately from
+the earlier pending state and from any later local documentation-only commit;
+do not use an old green run as new-code evidence. Existing draft PR remains
+open/unmerged; all forward-rights/current-authority/real-arrival requirements
+and genuine pre-loss evidence remain unchanged. No billing, identity,
+protection, visibility, merge, tag or release change.
+
 ## v1.2 journal calendar knowledge at its causal boundary — 2026-10-02 17:12 UTC
 
 Use one typed `calendar.observed` control in the existing paper event journal,
