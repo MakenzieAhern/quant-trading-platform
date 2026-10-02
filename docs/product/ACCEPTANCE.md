@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 03:48 UTC local backend restart after buying-power fix
+
+The clean feature branch was at local commit `2d6ef45`, ahead of its remote by
+three commits. Before restarting the original backend, a read-only database
+check showed five paper sessions, all `STOPPED`; eight personal research jobs
+and four market-update jobs were all terminal. Alembic was already at
+`20260924_0016 (head)`. The backend container bind-mounts the patched source,
+so `docker compose restart backend` loaded it without building an image or
+recreating PostgreSQL, Redis, frontend, or any volume. The container ID stayed
+`89aa9e1fa53d19b6c6e32b2d070916adff5d7ba49701c3727e92c76be58bc682`;
+its Uvicorn host PID changed from 73921 to 8345. Startup logs show a clean
+shutdown, migration check and application startup.
+
+After restart, PostgreSQL, Redis and backend were healthy, Redis returned
+`PONG`, frontend and `/api/health` returned HTTP 200. The database counts
+remained paper sessions/events `5/417`, research jobs `8`, market-update jobs
+`4`. An owned installed-Chrome tab opened the existing English/dark Workbench,
+displayed `Service online`, the available historical data date 2025-12-31 and
+recent saved research; the tab was closed without changing settings or data.
+No original backtest or paper session was submitted. The fill-time guard has
+isolated regression coverage, but this read-only browser check is **not** a
+live production-data gap-trade reproduction, complete M4/M5, new hosted CI or
+v1.2 release. PR #32 remains draft/open.
+
 ## 2026-10-02 03:43 UTC legacy backtest buying-power gap correction
 
 The legacy backtest API accepts `risk.enforce_buying_power`, but its engine did
