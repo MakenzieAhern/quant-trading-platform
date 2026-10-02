@@ -111,7 +111,13 @@ function Collection<T>({
   );
 }
 
-function SuccessfulResult({ runId }: { runId: string }) {
+function SuccessfulResult({
+  runId,
+  enforceBuyingPower,
+}: {
+  runId: string;
+  enforceBuyingPower: boolean;
+}) {
   const { t } = useTranslation("backtests");
   const { t: paperT } = useTranslation("paper");
   const result = useApiResource(
@@ -286,6 +292,7 @@ function SuccessfulResult({ runId }: { runId: string }) {
           </tr>
         )}
       />
+      {/* ponytail: Legacy cancellation is only the fill-time cash guard; persist reason codes if that changes. */}
       <Collection<Order>
         title={t("detail.orders")}
         empty={t("detail.noOrders")}
@@ -319,15 +326,24 @@ function SuccessfulResult({ runId }: { runId: string }) {
             <td>
               <span
                 className={
-                  item.status === "REJECTED"
-                    ? "decisionRejected"
-                    : "decisionApproved"
+                  item.status === "FILLED"
+                    ? "decisionApproved"
+                    : item.status === "REJECTED"
+                      ? "decisionRejected"
+                      : undefined
                 }
               >
                 {paperT(`detail.orderStatuses.${item.status}`, {
                   defaultValue: item.status,
                 })}
               </span>
+              {item.status === "CANCELLED" && enforceBuyingPower && (
+                <div className="fieldHint">
+                  {paperT(
+                    "detail.fillCancellationReasons.INSUFFICIENT_BUYING_POWER",
+                  )}
+                </div>
+              )}
             </td>
             <td>{formatUtc(item.created_at)}</td>
           </tr>
@@ -454,7 +470,12 @@ export function BacktestDetailPage({ runId }: { runId: string }) {
           )}
         </section>
       )}
-      {detail.status === "SUCCEEDED" && <SuccessfulResult runId={runId} />}
+      {detail.status === "SUCCEEDED" && (
+        <SuccessfulResult
+          runId={runId}
+          enforceBuyingPower={detail.risk.enforce_buying_power === true}
+        />
+      )}
     </>
   );
 }

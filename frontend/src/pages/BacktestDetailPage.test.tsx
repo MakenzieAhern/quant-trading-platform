@@ -111,7 +111,9 @@ describe("backtest detail", () => {
     vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
       const url = String(input);
       if (url.endsWith(`/api/backtests/${RUN_ID}`))
-        return Promise.resolve(jsonResponse(run()));
+        return Promise.resolve(
+          jsonResponse({ ...run(), risk: { enforce_buying_power: true } }),
+        );
       if (url.includes("/result"))
         return Promise.resolve(
           jsonResponse({
@@ -122,7 +124,7 @@ describe("backtest detail", () => {
             proposal_count: 1,
             risk_decision_count: 1,
             risk_rejection_count: 0,
-            order_count: 1,
+            order_count: 2,
             fill_count: 1,
             snapshot_count: 1,
             reservation_count: 0,
@@ -221,10 +223,21 @@ describe("backtest detail", () => {
                 status: "FILLED",
                 created_at: "2024-01-02T00:00:00Z",
               },
+              {
+                order_id: "a0975744-c58a-49d8-a72d-45f6ed700ca6",
+                strategy_id: "moving_average_crossover:AAPL",
+                symbol: "AAPL",
+                side: "BUY",
+                order_type: "MARKET",
+                quantity: "10",
+                price: null,
+                status: "CANCELLED",
+                created_at: "2024-01-03T00:00:00Z",
+              },
             ],
             limit: 25,
             offset: 0,
-            total: 1,
+            total: 2,
           }),
         );
       if (url.includes("/fills"))
@@ -255,9 +268,13 @@ describe("backtest detail", () => {
     expect(
       await screen.findByTitle("185.140000000000000001"),
     ).toHaveTextContent("185.140000000000000001");
-    expect(screen.getByText("Buy / Market")).toBeInTheDocument();
+    expect(screen.getAllByText("Buy / Market")).toHaveLength(2);
     expect(screen.getByText("Risk check passed")).toBeInTheDocument();
     expect(screen.getByText("Proposal approved.")).toBeInTheDocument();
+    expect(screen.getByText("Cancelled")).not.toHaveClass("decisionApproved");
+    expect(
+      screen.getByText("Actual fill price and fees exceed available cash"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Equity curve")).toBeInTheDocument();
     for (const label of [
       "Equity curve",
@@ -275,9 +292,13 @@ describe("backtest detail", () => {
       });
       expect(screen.getByText("表现")).toBeInTheDocument();
       expect(screen.getByText("权益曲线")).toBeInTheDocument();
-      expect(screen.getByText("买入 / 市价单")).toBeInTheDocument();
+      expect(screen.getAllByText("买入 / 市价单")).toHaveLength(2);
       expect(screen.getByText("风控检查通过")).toBeInTheDocument();
       expect(screen.getByText("提案已通过风控。")).toBeInTheDocument();
+      expect(screen.getByText("已取消")).not.toHaveClass("decisionApproved");
+      expect(
+        screen.getByText("实际成交价及费用超出可用资金"),
+      ).toBeInTheDocument();
       expect(
         screen.getByText("AAPL 的预留数量必须为有限数。"),
       ).toBeInTheDocument();
