@@ -1,5 +1,43 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 20:41 UTC exact dates CI, original deployment and keyboard/motion follow-up
+
+This supersedes the pending CI/reload/review actions in the20:24 checkpoint,
+not its retained failures or scope limits. Exact source `9dfa2665c896dfceb0419f8f80d6b51a0c7372f3`
+[CI37060637944](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37060637944)
+completed SUCCESS in backend/frontend/Compose:1073 backend/one optional skip,
+Ruff546/mypy145;582 frontend/44files/lint/types/build; scratch migration and
+release smoke. It does not cover later checkpoint-only documents. PR32 is draft/open.
+Both104-file and31-file saved-evidence independent reviews are PASS_SCOPED.
+
+After fresh terminal-queue checks, only original backend restarted, retaining
+its image and loading bind-mounted routes. Same range now returns301 rather
+than1944 points; Feb23 one exact saved BUY. Actual original5173 browser date/
+activity flow works. Frontend/PostgreSQL/Redis identities, before/after/final
+statuses, migration0016, counts5paper/417events/8personal studies/4updates and
+22 full-run metrics remain unchanged. Backend PID77041 is historical, not
+authority for future process actions. Latest read-only frontend/API both200.
+
+Actual390 Chrome Enter/Tab/ArrowRight scrolls the named exact table0→80 without
+page overflow;100 rows on both pages exactly match raw equity/benchmark values.
+Enter Next/Previous preserves stable pagination focus and polite page status.
+Null rolling Sharpe is N/A, zero drawdown stays zero. Explicit Settings motion-off
+retains linked date/activity and table operations;11 sampled styles have no
+animation/transition and auto scroll. Original EN/dark/system preferences restored,
+viewport reset/tab closed. This is DOM/keyboard/explicit-motion proof, not AT speech,
+system-reduce, complete AA, native200%, native p95 or full product acceptance.
+
+[Follow-up protocol](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-date-linkage-review/README.md),
+[actual original-instance trade](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-date-linkage-review/original-motion-off-trade.png)
+and [read-only saved verifier](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-formal-date-linkage-review/verify-followup.ps1)
+are external local evidence:31 files, manifest SHA256
+`8070031cea1cb659fae97edf1732192769824f62f3d2339ff068a21448190386`.
+Independent review matched hashes, exact table rows, CI scope, preserved runtimes,
+statuses and restored preferences. Failed shell outputs never existed, as the
+separate inventory erratum explains; neither sealed bundle was rewritten.
+Full U1–U8/M0–M5, native2552ms negative/200ms target, broad quality and genuine
+lawful after-start forward/absent-ledger requirements remain; no merge/release.
+
 ## 2026-10-02 20:24 UTC formal SQL date range and explicit activity linkage
 
 U4/U8/UX-CHART scoped progress: seven formal dated collections apply inclusive
@@ -10,7 +48,10 @@ preview/paging does not relabel a confirmed activity date; clear restores range
 and stable focus. Empty records are not inferred liquidation. Formal writes,
 frozen assets and OOS remain untouched. Backend13focused/1073full/one optional
 skip/Ruff/mypy145 and frontend19focused/582full44files/lint/types/build PASS.
-Source reviews and padding addendum PASS_SCOPED; artifact review pending.
+Source reviews/padding addendum and independent104-file artifact review
+PASS_SCOPED; it verifies saved proof, not current runtime. Feb23 BUY is not a
+UTC-boundary test; that proof is isolated SQL. Only three curves have complete
+raw pagination files; rolling is covered by endpoint tests/GET/DOM, not full raw.
 
 Actual Chrome/API range301 points:200+101, original sequences200..500. Real
 ArrowDown links both readouts; identical backend access logs prove preview sent

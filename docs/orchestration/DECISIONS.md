@@ -1,5 +1,22 @@
 # Decisions
 
+## v1.2 close exact-date deployment checkpoint, continue broad quality — 2026-10-02 20:41 UTC
+
+Exact9dfa CI37060637944 allSUCCESS and independent104/31-file saved reviews
+close the scoped pending actions. Fresh terminal queues allowed only original
+backend restart; original5173 now performs bounded dates/activity with unchanged
+full metrics/statuses/counts/migration and frontend/PG/Redis identities. Native
+keyboard table pagination/local scrolling and explicit motion-off work on the
+original instance; EN/dark/system restored. No new component or dependency was
+needed. Do not rerun that completed flow or trigger a docs-only push/CI cycle.
+
+Persist the104-bundle inventory error as separate erratum, never rewrite sealed
+bytes. Keep actual late/native2552ms observation, unverified running Chrome
+version and all broad AA/native200/p95/user-flow/delivery requirements. Saved
+reviews are not fresh runtime/full-product proof. Continue a concrete remaining
+safe M4/M5 gap while lawful after-start forward and genuine missing-ledger
+resolution stay mandatory. No frozen/.research/OOS/provider bypass/merge/release.
+
 ## v1.2 formal dates before paging, explicit activity query — 2026-10-02 20:24 UTC
 
 Reuse shared SQL row helper with optional inclusive date bounds, Shanghai trade
