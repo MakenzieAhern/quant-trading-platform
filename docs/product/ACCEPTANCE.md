@@ -8120,6 +8120,13 @@ Ruff, formatting, mypy, ESLint, TypeScript and production build passed. The
 original Compose stack and database were not used for tests. This is a bounded
 U7 money-safety fix, not lawful forward-market acceptance, recovery of genuine
 pre-loss ledgers, backup, full M4/M5 or release approval.
+Pushed code head `ddbfdd94c8d7bcb3f99f90625a63160a76462882` passed
+[CI run 36956360451](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36956360451)
+for backend, frontend and Compose. The original backend was restarted only
+after read-only status checks showed no active paper, research or update task;
+PostgreSQL/Redis remained up, backend became healthy, frontend and API returned
+HTTP 200, and original paper accounts/events/research jobs/update jobs stayed
+5/417/8/4.
 
 An additional installed-Chrome attempt on the existing saved historical result
 showed the prepared JSON Blob link and correct filename, but the browser's
