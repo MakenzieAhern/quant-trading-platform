@@ -1,7 +1,16 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T16:12:04Z",
+  "updated_at_utc": "2026-10-02T17:12:05Z",
+  "u7_causal_calendar_journal_20261003_gate": {
+    "status": "PASS_OFFLINE_DURABLE_FOUNDATION_NOT_FORWARD",
+    "source_head": "a6d6b6314d9de223a5196a1ae2bc1637b5ad907a",
+    "proof": "Existing row-lock/sequence journal stores strict PAPER_CALENDAR_V1 initial/append-only full-calendar controls with actual UTC, before/after SHA, completed-session count and consumed-date anchor. Commit then apply then publish; resume uses initial knowledge and original count/date boundaries after strict financial/plan replay. Legacy static providers/V1-V3 unchanged, unanchored retrofit refused. Independent review's pause-lock/warmup-wrong-date/resume-command P2s reproduced/fixed; final read-only review no P1/P2. Calendar18, full backend1065+one optional archive skip, Ruff546/mypy145, frontend576/43/lint/type/build/touched-Prettier PASS; existing503.48kB warning retained. Real owned tmpfs SQL/new-manager resume, actual backend restart exact snapshot/event hashes, and Chrome1280ZHlight/ENdark+390ENdark bounded saved control logs/local keyboard scroll PASS. Disposable head-base-head/check passed; owned backend/frontend/postgres stopped; original four not restarted, original5/417/8/4 counts and services unchanged.",
+    "evidence": "product-evidence/v1.2/m3/20261003-calendar-journal/README.md",
+    "manifest_sha256": "b0dbe9f25f6f8289d90d1912de9f5c9a0a35662033676a4f7349cb5077cdafc6",
+    "hosted_ci": "PENDING_NEW_EXACT_BATCH; previous f7f3c6a success does not cover new code",
+    "limits": "Synthetic254-session/523-event account only, two controls/one normal fixture fill; Chrome REST saved logs not live WS/new-market arrival/real profits. No public forward provider or source/current-rule authority promotion. Harness cached-image import and cross-PowerShell-session comparison errors retained; extra whole-front Prettier failed on six unchanged baseline files. Full U1-U8/M3-M5, lawful after-start feed/plan/constrained execution and genuine missing-ledger evidence remain incomplete. No original DB/frozen/OOS change, new dependency/table/migration, merge/tag/release. QA-originZH/system and normal viewport restored; scratch account removed only by explicitly disposable test/migration lifecycle, external evidence retained."
+  },
   "m5_fixed_tag_before_media_20261003_gate": {
     "status": "PASS_SCOPED_RECONSTRUCTED_BASELINE_NOT_FULL_M5",
     "repository_head_before": "8917d78d75de379eafacf6afa72ad11d4654f548",
@@ -1662,10 +1671,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-02 16:01UTC root sole repository/GUI writer, current8917d78 before evidence-only edits; no competing Git/test/queue writer. Agents read-only. Only owned restored18173 frontend temporarily served fixed old frontend under GET/HEAD-only guard and was restored exactly to e328748, mounts=[]. Original four container IDs and restore/media DB/backends remain unchanged and healthy. Before/after44 tables/41GET match. No financial/source/DB/methodology/frozen write; no original restart.",
+    "latest_verification": "2026-10-02 17:12UTC root sole final repository/test/DB/GUI writer; frontend agent handed over before final tests, reviewer agents read-only and finished. Only qtp-v12-oct3-calendar-test owned tmpfs quant_test used for synthetic calendar integration/Chrome18175+18018/service restart/tests/migration, all three services now stopped. Original four containers not restarted; original5 paper/417 events/8 research/4 update counts, API8000/frontend5173 HTTP200, RedisPONG, PG/backend/Redis healthy/frontend running. Existing restore/media stacks untouched. No new external provider/current authority, original data, frozen research or OOS write.",
     "repository_writer": "root product controller",
-    "database_writer": "root deployment/integration only; formal ledger read-only; agents isolated test DB",
-    "queue_writer": "Root owns only historical replay in qtp-v12-3184281-media (both owned accounts now STOPPED); restore agent owns qtp-v12-3184281-restore packaging and GET-only reads, no financial tasks. No original task submission, provider retrieval or formal/OOS job.",
+    "database_writer": "root only, owned qtp-v12-oct3-calendar-test tmpfs quant_test (now stopped); agents read-only, original and frozen ledgers read-only",
+    "queue_writer": "Root only synthetic calendar fixture in owned oct3 tmpfs (terminal, then disposable tests/migration); no active QA task. Existing media/restore and original queues untouched; no external provider or formal/OOS submission.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -1675,6 +1684,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-02 17:12UTC a6d6b63 durable causal calendar journal:18 focused/1065 backend+one optional archive skip/576 front, lint/types/build, real SQL manager resume/backend restart/hash equality, reversible disposable migration, actual Chrome bilingual saved logs/mobile local keyboard scrolling and final scoped independent review PASS.29 evidence hashes checked; normal viewport/preferences restored, own test/QA stopped, originals5/417/8/4 unchanged. Hosted exact-batch pending; not true forward/full release.",
     "2026-10-02 16:01UTC actual fixed-tag old loaded strategy/formal result/context/synthetic account media and same current strategy/account captured;44 tables/41GET unchanged; e328 restored without guard mount. Scoped reconstructed M5 proof, not full product or forward PASS.",
     "2026-09-30 21:11UTC local 596ad3d U8 task-center pagination: generic duplicate group names failed red in EN/ZH; existing bilingual titles passed focused12, full frontend504/504 across38, make lint/build, Prettier and diff check. Original in-app browser accessibility tree confirmed distinct research/raw-data pagination names in both languages; locale restored/tab closed. Independent read-only review no P1/P2. No native screen-reader/full M4/M5 or hosted CI claim; no task/financial/account/GitHub write.",
     "2026-09-30 20:26UTC local 0a62efb U4 retained export identity: generic old-link name failed red; final bilingual original job/collection/date name and failed-replacement retention passed focused17, exact code-head isolated make test backend1033/one optional archive skip/frontend495, frontend lint/build/Prettier/diff PASS. Actual in-app browser synthetic report A retained old identity after current date range B; independent read-only review no P1/P2. No original account/provider/frozen/OOS or GitHub write. Native speech/media/download landing, full U4/M4/M5 and hosted CI remain open.",
@@ -2240,8 +2250,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Fixed-tag old loaded strategy/account/context media, independent scoped review,44-table/41GET invariants and exact e328/no-mount/healthy restore are DONE; normal viewport/presentation restored. Next necessary M3 foundation is durable observed calendar-extension timeline and sequence-ordered causal replay, not immediate raw-receipt financial processing. Read architecture/roadmap/current PaperManager and journal contracts before any edit, reuse row-lock/sequence/runtime and retain strict historical-plan compatibility. Source rights/current authorities and genuine after-start forward chain remain required; preserve two missing-ledger facts and full U1-U8/M0-M5. Do not recreate old personal comparison/running states or repeat accepted calendar/focus/CI/media work. No merge/release.",
-  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && sed -n '1,$p' ARCHITECTURE.md ROADMAP.md backend/app/application/paper_trading/service.py",
+  "next_task": "Durable causal calendar journal, date/count replay boundaries, review fixes, SQL manager/process persistence, full tests and bounded Chrome saved-log proof are DONE. Push meaningful batch/update existing PR32 and verify its exact CI SHA before claiming hosted PASS. Next independent M4 work: verify calendar control over actual Chrome WebSocket/disconnect/reconnect using only an owned synthetic session, preserving sequence and financial state/no false fill announcements; current Chrome proof is REST-only. Then choose remaining required M4/M5 user journey from the authoritative acceptance ledger. Genuine forward implementation requires lawful product-use source rights and accepted current authorities first; preserve strict V1-V3, missing-ledger facts, frozen/OOS and full U1-U8/M0-M5. Do not repeat completed calendar/source/media work, merge or release.",
+  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

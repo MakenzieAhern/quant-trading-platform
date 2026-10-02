@@ -1,5 +1,62 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 17:12 UTC durable causal calendar journal (bounded M3/U7)
+
+Code `a6d6b6314d9de223a5196a1ae2bc1637b5ad907a` reuses the existing
+row-locked sequence journal and awaited provider callback. Explicit calendar
+inputs record an initial full calendar and append-only extensions with actual
+UTC application time, before/after canonical SHA-256, completed-session count
+and last consumed trading date. Commit precedes runtime application and publish.
+Resume starts from the persisted initial calendar and applies controls at their
+original count/date boundary, after the original financial batch and plan;
+missing/corrupt knowledge fails before a new visible market event. Static
+fixture/archive providers remain unchanged, and an unanchored legacy account
+cannot have later knowledge retrofitted. Captured V1–V3 financial comparisons
+remain strict; no new financial projection or public provider mode was added.
+
+Independent read-only review found three boundary defects and root fixed them:
+pause winning the calendar lock, count-only warmup replay accepting a wrong
+date, and a legitimate pause/stop during incomplete replay being mislabeled
+FAILED. Calendar regressions18 passed; the last issue had two RED failures and
+one genuinely missing-source PASS before the fix. Final full backend1065 passed,
+one optional read-only archive test skipped (not mounted); Ruff/check+546-file
+format and mypy145 passed. Final frontend576/43 passed; ESLint, TypeScript,
+changed-file Prettier and build passed. Existing503.48kB entry warning is retained.
+An extra whole-frontend Prettier check found six unchanged baseline files; it is
+recorded as failed, not concealed or made a new release prerequisite.
+
+Real owned tmpfs `quant_test`/API integration preserves pause/new-manager-resume
+history and financial precision. Actual Chrome1280×800 ZH/light and EN/dark,
+plus390×844 EN/dark, read a STOPPED synthetic2030 account with523 events/two
+calendar controls/one ordinary fixture fill. Ten bounded50-row pages reached
+the initial controls; the log clearly says calendar control is not new market
+data or a fill, with no `Equity undefined` or console errors/warnings. Mobile
+document client/scroll375px matched; only the named337/1107px table region
+scrolled, including keyboard ArrowRight to600px after settling. QA-origin
+ZH/system preferences and normal viewport restored; tab closed. This is saved
+REST-log browser proof, not live WebSocket or authentic forward arrival proof.
+
+An actual owned backend restart retained identical snapshot and early-event
+file hashes. After browser/full-test proof, disposable head20260924_0016→base→
+head and Alembic metadata check passed; all three owned test/QA services were
+stopped. Original containers were not restarted; original5 paper sessions/
+417 events/8 research jobs/4 updates remained, API8000/frontend5173 HTTP200,
+RedisPONG/PG+backend+Redis healthy/frontend running. No original financial write,
+provider acquisition, frozen/research/OOS change, dependency/table/migration,
+merge or release. Auxiliary old-image import and PowerShell-session comparison
+errors are retained with capture limits, not passed off as production defects.
+
+[Evidence and scope](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m3/20261003-calendar-journal/README.md)
+and [29 per-file hashes](../../../../../../mnt/c/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m3/20261003-calendar-journal/sha256-manifest.json)
+have manifest-file SHA-256
+`b0dbe9f25f6f8289d90d1912de9f5c9a0a35662033676a4f7349cb5077cdafc6`.
+These are external local WSL-host evidence links, not portable GitHub/clone
+attachments; the repository retains the scope and checksum, not the large bundle.
+Fresh exact-batch hosted CI is still pending at this checkpoint; the previous
+f7f3c6a run is not attributed to these changes. Lawful source rights/current
+authorities/after-start receipt→plan→constrained execution and genuine pre-loss
+ledgers remain open. This closes a tested offline foundation, not full U7/M3–M5.
+
 ## 2026-10-02 16:01 UTC fixed-tag reconstructed before media
 
 Actual Chrome1280x800/ZH captured the fixed `v1.1.0` frontend tree

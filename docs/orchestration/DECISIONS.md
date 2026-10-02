@@ -1,5 +1,33 @@
 # Decisions
 
+## v1.2 journal calendar knowledge at its causal boundary — 2026-10-02 17:12 UTC
+
+Use one typed `calendar.observed` control in the existing paper event journal,
+not a second table, provider framework or financial event. Full calendar/hash,
+actual UTC, consumed-session count and last trading date are persisted before
+apply/publish. Reconstruct from the stored initial observation and reapply each
+extension after the corresponding original financial batch/strict saved plan.
+Count alone is insufficient for invisible warmup: bind the actual trading date
+as well. Validate immutable full prefixes, hashes, strict dates/booleans and
+version; refuse unanchored legacy retrofit rather than rewriting old knowledge.
+The registered static providers do not gain observations or new behavior.
+
+Normal user pause/stop may legitimately stop before all old controls have been
+replayed. Under the existing lifecycle lock, only RUNNING source exhaustion is
+a failure; PAUSING/STOPPING retain their normal outcome. Independent review's
+three P2s were reproduced/fixed; final scoped review found no remaining P1/P2.
+Frontend treats controls as sequence-only, with bilingual explicit non-market/
+non-fill descriptions; server remains authoritative for checksum/financials.
+No dependencies, migration, raw-data provider authorization or frozen changes.
+
+1065 backend tests (one optional unmounted-archive skip),576 frontend tests,
+lint/types/build and disposable reversible migration passed. Real SQL manager
+resume, backend-process restart and Chrome saved-log/mobile local-scroll proof
+are offline synthetic integration only. Do not promote lawful forward use from
+2030 fixtures, REST hydration or tests. Preserve genuine missing-ledger facts,
+U1–U8/M0–M5 scope and exact-head CI attribution. Auxiliary runner errors and
+the unchanged whole-frontend formatting differences are explicitly retained.
+
 ## v1.2 fixed-tag before media without database downgrade — 2026-10-02 16:01 UTC
 
 Use cached `v1.1.0` frontend tree ab93b4eca4c7873df6fb5aaf13551ac54e2f9cd9
