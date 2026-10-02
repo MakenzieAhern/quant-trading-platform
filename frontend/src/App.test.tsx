@@ -106,7 +106,7 @@ describe("routing", () => {
     expect(document.title).toBe("帮助 · QUANT");
   });
 
-  it("titles an unknown route as not found instead of legacy backtests", async () => {
+  it("returns from an unknown route to the workbench in both languages", async () => {
     await i18n.changeLanguage("en-US");
     window.history.replaceState({}, "", "/does-not-exist");
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
@@ -116,6 +116,14 @@ describe("routing", () => {
       screen.getByRole("heading", { name: "Page not found" }),
     ).toBeInTheDocument();
     expect(document.title).toBe("Page not found · QUANT");
+    expect(
+      screen.getByRole("link", { name: "Return to workbench" }),
+    ).toHaveAttribute("href", "/");
+    await act(() => i18n.changeLanguage("zh-CN"));
+    const recovery = screen.getByRole("link", { name: "返回工作台" });
+    expect(recovery).toHaveAttribute("href", "/");
+    fireEvent.click(recovery);
+    expect(window.location.pathname).toBe("/");
   });
 
   it("closes and restores the strategy drawer with Back and Forward", async () => {

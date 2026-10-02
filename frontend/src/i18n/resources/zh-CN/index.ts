@@ -34,8 +34,7 @@ export const zhCN = {
     run: "运行",
     routeNotFound: "未找到路由",
     pageNotFound: "未找到页面",
-    pageNotFoundBody: "请求的控制台路由不可用。",
-    returnToBacktests: "返回回测",
+    pageNotFoundBody: "请求的页面不可用。请检查地址，或返回工作台。",
     statuses: {
       CREATED: "已创建",
       STARTING: "正在启动",

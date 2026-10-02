@@ -8409,3 +8409,24 @@ This proves schema-cycle execution against an **empty disposable** database.
 It is not a populated-database data-preservation rollback, a production
 restore, an independent physical backup, or full QA-RELEASE/M5 PASS. No
 original ledger, frozen research artifact or Official OOS was changed.
+
+## 2026-10-02 04:38 UTC unknown-route recovery (bounded U8)
+
+An agent-owned in-app browser opened a missing local route before the fix. The
+English recovery link pointed to legacy `/backtests`, despite the v1.2
+Workbench being the current home. `NotFoundPage` now reuses the existing
+localized "Return to workbench" action and links to `/`; the body copy names
+the address check and the recovery action. No new translation or navigation
+abstraction was added. The existing route test now asserts the English and
+Chinese link target and clicks the Chinese action.
+
+On the running four-service local Compose stack, the actual browser then showed
+the corrected English copy and `/` link, switched to Chinese, and reached the
+`工作台` heading at `/` by clicking `返回工作台`. Frontend route tests passed **22/22**;
+full frontend tests **566/566**, ESLint, TypeScript and production Vite build
+also passed. Prettier on the touched files passed after formatting. The build
+still reports an existing >500 kB chunk advisory, not a build failure. This is
+one actionable error-route recovery check, not the full UX-ERROR/accessibility,
+M4/M5, independent novice or release gate. Browser images were inspected in
+the tool, not retained as durable delivery media. Original financial data,
+frozen research and Official OOS were untouched; PR #32 remains draft/open.

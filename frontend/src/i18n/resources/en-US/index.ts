@@ -37,8 +37,8 @@ export const enUS = {
     run: "Run",
     routeNotFound: "ROUTE NOT FOUND",
     pageNotFound: "Page not found",
-    pageNotFoundBody: "The requested dashboard route is not available.",
-    returnToBacktests: "Return to backtests",
+    pageNotFoundBody:
+      "The requested page is unavailable. Check the address or return to the workbench.",
     statuses: {
       CREATED: "Created",
       STARTING: "Starting",
