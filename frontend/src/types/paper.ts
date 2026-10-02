@@ -141,6 +141,23 @@ export interface PaperSnapshot {
   last_rebalance_plan: PaperAccountPlan | null;
 }
 
+export type PaperState = Omit<
+  PaperSnapshot,
+  "signals" | "risk_decisions" | "orders" | "fills"
+>;
+
+export type PaperCollection = "signals" | "risk_decisions" | "orders" | "fills";
+
+export interface PaperCollectionPage {
+  session_id: string;
+  collection: PaperCollection;
+  as_of_sequence: number;
+  limit: number;
+  offset: number;
+  total: number;
+  items: PaperJournalEvent[];
+}
+
 export interface PaperSessionPage {
   items: PaperSession[];
   limit: number;

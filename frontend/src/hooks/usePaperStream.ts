@@ -12,6 +12,7 @@ import type {
   PaperSession,
   PaperSessionStatus,
   PaperSnapshot,
+  PaperState,
   PaperWireEvent,
 } from "../types/paper";
 
@@ -35,33 +36,11 @@ export function applyPaperEvent(
   current: PaperSnapshot,
   event: PaperWireEvent,
 ): PaperSnapshot {
-  if (event.sequence === null || event.sequence <= current.last_sequence)
-    return current;
-  const next = { ...current, last_sequence: event.sequence };
-  if (event.type === "session.status") {
-    const status = event.payload.status;
-    if (typeof status === "string")
-      return {
-        ...next,
-        session: {
-          ...current.session,
-          status: status as PaperSnapshot["session"]["status"],
-        },
-      };
-  }
-  if (event.type === "market.bar")
-    return { ...next, latest_bar: paperParsers.marketBar(event.payload) };
-  if (event.type === "market.session")
-    return {
-      ...next,
-      latest_session: paperParsers.marketSession(event.payload),
-    };
+  const next = applyPaperStateEvent(current, event);
+  if (next === current) return current;
   if (event.type === "signal.created") {
     const signal = paperParsers.signal(event.payload);
-    return {
-      ...next,
-      signals: [...current.signals, signal],
-    };
+    return { ...next, signals: [...current.signals, signal] };
   }
   if (event.type === "risk.decision") {
     const decision = paperParsers.decision(event.payload);
@@ -83,11 +62,36 @@ export function applyPaperEvent(
   }
   if (event.type === "fill.created") {
     const fill = paperParsers.fill(event.payload);
+    return { ...next, fills: [...current.fills, fill] };
+  }
+  return next;
+}
+
+function applyPaperStateEvent<T extends PaperState>(
+  current: T,
+  event: PaperWireEvent,
+): T {
+  if (event.sequence === null || event.sequence <= current.last_sequence)
+    return current;
+  const next = { ...current, last_sequence: event.sequence };
+  if (event.type === "session.status") {
+    const status = event.payload.status;
+    if (typeof status === "string")
+      return {
+        ...next,
+        session: {
+          ...current.session,
+          status: status as PaperState["session"]["status"],
+        },
+      };
+  }
+  if (event.type === "market.bar")
+    return { ...next, latest_bar: paperParsers.marketBar(event.payload) };
+  if (event.type === "market.session")
     return {
       ...next,
-      fills: [...current.fills, fill],
+      latest_session: paperParsers.marketSession(event.payload),
     };
-  }
   if (event.type === "portfolio.snapshot") {
     const portfolio = paperParsers.portfolio(event.payload);
     if (
@@ -112,7 +116,15 @@ export function usePaperStream(sessionId: string) {
   const { t, i18n } = useTranslation("paper");
   const hydrateRef = useRef<(() => Promise<void>) | null>(null);
   const acceptedSequence = useRef<number | null>(null);
-  const [snapshot, setSnapshot] = useState<PaperSnapshot | null>(null);
+  const [snapshot, setSnapshot] = useState<PaperState | null>(null);
+  const [collectionSequence, setCollectionSequence] = useState<{
+    sessionId: string;
+    sequence: number;
+  } | null>(null);
+  const [collectionInvalidation, setCollectionInvalidation] = useState<{
+    sessionId: string;
+    sequence: number;
+  } | null>(null);
   const [announcementState, setAnnouncementState] = useState<{
     sessionId: string;
     value: FillAnnouncement | null;
@@ -139,27 +151,51 @@ export function usePaperStream(sessionId: string) {
     let buffered: PaperWireEvent[] = [];
     let terminal = false;
     let hydrating = false;
+    let hydrationWork: Promise<void> | null = null;
+    let hydrateAgain = false;
+    let collectionRefresh: number | undefined;
+    let verifiedSequence = 0;
+    let provider: PaperSession["provider_type"] | null = null;
     let reconnectAttempts = 0;
     let openingChecked = false;
     let openingController: AbortController | null = null;
 
-    const hydrate = () => {
+    const hydrate = (replacePending = false): Promise<void> => {
+      if (
+        hydrating &&
+        !hydrationController?.signal.aborted &&
+        !replacePending
+      ) {
+        hydrateAgain = true;
+        return hydrationWork ?? Promise.resolve();
+      }
       hydrationController?.abort();
       const controller = new AbortController();
       hydrationController = controller;
       hydrating = true;
-      return paperApi
-        .snapshot(sessionId, controller.signal)
+      hydrateAgain = false;
+      hydrationWork = paperApi
+        .state(sessionId, controller.signal)
         .then((hydrated) => {
           if (!active || controller.signal.aborted) return;
-          const complete = buffered.reduce(applyPaperEvent, hydrated);
+          if (
+            hydrated.last_sequence <
+            Math.max(verifiedSequence, acceptedSequence.current ?? 0)
+          )
+            throw new Error("Paper state watermark moved backwards.");
+          const complete = buffered.reduce(applyPaperStateEvent, hydrated);
           buffered = [];
-          hydrating = false;
+          verifiedSequence = hydrated.last_sequence;
+          provider = hydrated.session.provider_type;
           acceptedSequence.current = Math.max(
             acceptedSequence.current ?? complete.last_sequence,
             complete.last_sequence,
           );
           setSnapshot(complete);
+          setCollectionSequence({
+            sessionId,
+            sequence: hydrated.last_sequence,
+          });
           setError(null);
           firstConnection = false;
           const socketOpen = socket?.readyState === WebSocket.OPEN;
@@ -174,8 +210,11 @@ export function usePaperStream(sessionId: string) {
         })
         .catch((reason: unknown) => {
           if (!active || controller.signal.aborted) return;
-          hydrating = false;
           buffered = [];
+          verifiedSequence = Math.max(
+            verifiedSequence,
+            acceptedSequence.current ?? 0,
+          );
           acceptedSequence.current = null;
           setSnapshot(null);
           setError({
@@ -189,9 +228,27 @@ export function usePaperStream(sessionId: string) {
           )
             terminal = true;
           socket?.close();
+        })
+        .finally(() => {
+          if (hydrationController !== controller) return;
+          hydrating = false;
+          hydrationWork = null;
+          if (hydrateAgain && active && !controller.signal.aborted) {
+            hydrateAgain = false;
+            queueCollectionRefresh();
+          }
         });
+      return hydrationWork;
     };
-    hydrateRef.current = hydrate;
+    const queueCollectionRefresh = () => {
+      if (!active || collectionRefresh !== undefined) return;
+      // Coalesce a financial event burst into one authoritative watermark read.
+      collectionRefresh = window.setTimeout(() => {
+        collectionRefresh = undefined;
+        void hydrate();
+      }, 100);
+    };
+    hydrateRef.current = () => hydrate(true);
 
     const connect = () => {
       if (!active || terminal) return;
@@ -213,6 +270,19 @@ export function usePaperStream(sessionId: string) {
           if (event.type === "stream.resync_required") {
             socket?.close();
             return;
+          }
+          const advances =
+            event.sequence !== null &&
+            (acceptedSequence.current === null ||
+              event.sequence > acceptedSequence.current);
+          if (!hydrating && advances && event.type === "portfolio.snapshot") {
+            const plan = paperParsers.portfolio(event.payload).plan;
+            if (
+              plan &&
+              (provider !== "historical_a_share" ||
+                plan.paper_session_id !== sessionId)
+            )
+              throw new Error("Paper plan does not belong to this account.");
           }
           if (hydrating && buffered.length >= 256) {
             buffered = [];
@@ -253,18 +323,39 @@ export function usePaperStream(sessionId: string) {
             }
             setSnapshot((current) =>
               current?.session.session_id === sessionId
-                ? applyPaperEvent(current, event)
+                ? applyPaperStateEvent(current, event)
                 : current,
             );
           }
           // Status events carry no lifecycle timestamps or sanitized failure text.
           // Refresh REST, buffering subsequent incremental events until it completes.
-          if (event.type === "session.status") hydrate();
+          if (event.type === "session.status") hydrate(true);
+          if (
+            advances &&
+            [
+              "signal.created",
+              "risk.decision",
+              "order.updated",
+              "fill.created",
+            ].includes(event.type)
+          ) {
+            setCollectionInvalidation((current) =>
+              current?.sessionId === sessionId &&
+              current.sequence >= event.sequence!
+                ? current
+                : { sessionId, sequence: event.sequence! },
+            );
+            queueCollectionRefresh();
+          }
           if (terminal) {
             setConnection("closed");
             socket?.close();
           }
         } catch {
+          verifiedSequence = Math.max(
+            verifiedSequence,
+            acceptedSequence.current ?? 0,
+          );
           acceptedSequence.current = null;
           setSnapshot(null);
           setError({
@@ -282,7 +373,7 @@ export function usePaperStream(sessionId: string) {
           const controller = new AbortController();
           openingController = controller;
           void paperApi
-            .snapshot(sessionId, controller.signal)
+            .state(sessionId, controller.signal)
             .then((openingSnapshot) => {
               if (!active || controller.signal.aborted || !firstConnection)
                 return;
@@ -300,6 +391,12 @@ export function usePaperStream(sessionId: string) {
               );
               if (retry !== undefined) window.clearTimeout(retry);
               setSnapshot(openingSnapshot);
+              setCollectionSequence({
+                sessionId,
+                sequence: openingSnapshot.last_sequence,
+              });
+              verifiedSequence = openingSnapshot.last_sequence;
+              provider = openingSnapshot.session.provider_type;
               setError(null);
               setConnection("closed");
               socket?.close();
@@ -325,6 +422,13 @@ export function usePaperStream(sessionId: string) {
         }
         hydrationController?.abort();
         hydrationController = null;
+        hydrationWork = null;
+        hydrating = false;
+        hydrateAgain = false;
+        buffered = [];
+        if (collectionRefresh !== undefined)
+          window.clearTimeout(collectionRefresh);
+        collectionRefresh = undefined;
         if (reconnectAttempts >= 3) {
           acceptedSequence.current = null;
           setSnapshot(null);
@@ -350,12 +454,22 @@ export function usePaperStream(sessionId: string) {
       hydrationController?.abort();
       openingController?.abort();
       if (retry !== undefined) window.clearTimeout(retry);
+      if (collectionRefresh !== undefined)
+        window.clearTimeout(collectionRefresh);
       socket?.close();
     };
   }, [sessionId, t, i18n.language]);
 
   return {
     snapshot: snapshot?.session.session_id === sessionId ? snapshot : null,
+    collectionSequence:
+      collectionSequence?.sessionId === sessionId
+        ? collectionSequence.sequence
+        : null,
+    collectionsPending:
+      collectionInvalidation?.sessionId === sessionId &&
+      (collectionSequence?.sessionId !== sessionId ||
+        collectionInvalidation.sequence > collectionSequence.sequence),
     fillAnnouncement:
       announcementState.sessionId === sessionId
         ? announcementState.value

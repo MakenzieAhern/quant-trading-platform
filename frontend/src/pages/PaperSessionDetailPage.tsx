@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { paperApi, paperParsers } from "../api/paper";
+import { ApiError } from "../api/client";
 import { ErrorPanel, LoadingPanel } from "../components/AsyncPanel";
 import { Link } from "../components/Link";
 import { Pagination } from "../components/Pagination";
@@ -10,12 +11,16 @@ import { StatusBadge } from "../components/StatusBadge";
 import { ExperimentPlan } from "../product/experiments/ExperimentPlan";
 import { tradingDate } from "../product/experiments/api";
 import { usePaperStream } from "../hooks/usePaperStream";
-import type { PaperJournalEvent, PaperSessionStatus } from "../types/paper";
+import type {
+  PaperCollection,
+  PaperCollectionPage,
+  PaperJournalEvent,
+  PaperSessionStatus,
+} from "../types/paper";
 import { formatDecimal, formatUtc, shortId } from "../utils/format";
 import { localizeRiskMessage } from "./riskMessage";
 
 type PaperAction = "start" | "pause" | "stop";
-// ponytail: DOM-only paging; long sessions still need bounded server collections.
 const PAPER_TABLE_LIMIT = 100;
 
 function commandConfirmed(
@@ -31,6 +36,8 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   const { t } = useTranslation("paper");
   const {
     snapshot,
+    collectionSequence,
+    collectionsPending,
     fillAnnouncement,
     connection,
     error,
@@ -414,7 +421,12 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           item.realized_pnl,
         ])}
       />
-      <PaperTable
+      <PaperCollectionTable
+        key={`${sessionId}:signals`}
+        sessionId={sessionId}
+        collection="signals"
+        pending={collectionsPending}
+        asOfSequence={collectionSequence ?? snapshot.last_sequence}
         title={t("detail.signals")}
         empty={t("detail.noSignals")}
         headings={[
@@ -423,18 +435,28 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           t("createPage.symbol"),
           t("detail.signal"),
         ]}
-        rows={snapshot.signals.map((item) => [
-          formatUtc(item.timestamp),
-          t(`strategies.${item.strategy_id}`, {
-            defaultValue: item.strategy_id,
-          }),
-          item.symbol,
-          t(`detail.directions.${item.signal_type}`, {
-            defaultValue: item.signal_type,
-          }),
-        ])}
+        renderRows={(events) =>
+          events.map((event) => {
+            const item = paperParsers.signal(event.payload);
+            return [
+              formatUtc(item.timestamp),
+              t(`strategies.${item.strategy_id}`, {
+                defaultValue: item.strategy_id,
+              }),
+              item.symbol,
+              t(`detail.directions.${item.signal_type}`, {
+                defaultValue: item.signal_type,
+              }),
+            ];
+          })
+        }
       />
-      <PaperTable
+      <PaperCollectionTable
+        key={`${sessionId}:risk_decisions`}
+        sessionId={sessionId}
+        collection="risk_decisions"
+        pending={collectionsPending}
+        asOfSequence={collectionSequence ?? snapshot.last_sequence}
         title={t("detail.riskDecisions")}
         empty={t("detail.noRiskDecisions")}
         headings={[
@@ -443,16 +465,26 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           t("detail.reason"),
           t("detail.message"),
         ]}
-        rows={snapshot.risk_decisions.map((item) => [
-          shortId(item.proposal_id),
-          item.approved ? t("detail.approved") : t("detail.riskRejected"),
-          t(`detail.riskReasons.${item.reason_code}`, {
-            defaultValue: item.reason_code,
-          }),
-          localizeRiskMessage(item.message, t),
-        ])}
+        renderRows={(events) =>
+          events.map((event) => {
+            const item = paperParsers.decision(event.payload);
+            return [
+              shortId(item.proposal_id),
+              item.approved ? t("detail.approved") : t("detail.riskRejected"),
+              t(`detail.riskReasons.${item.reason_code}`, {
+                defaultValue: item.reason_code,
+              }),
+              localizeRiskMessage(item.message, t),
+            ];
+          })
+        }
       />
-      <PaperTable
+      <PaperCollectionTable
+        key={`${sessionId}:orders`}
+        sessionId={sessionId}
+        collection="orders"
+        pending={collectionsPending}
+        asOfSequence={collectionSequence ?? snapshot.last_sequence}
         title={t("detail.orders")}
         empty={t("detail.noOrders")}
         headings={[
@@ -462,15 +494,25 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           t("detail.status"),
           t("detail.utcTime"),
         ]}
-        rows={snapshot.orders.map((item) => [
-          shortId(item.order_id),
-          `${t(`detail.directions.${item.side}`, { defaultValue: item.side })} / ${t(`detail.orderTypes.${item.order_type}`, { defaultValue: item.order_type })}`,
-          item.quantity,
-          `${t(`detail.orderStatuses.${item.status}`, { defaultValue: item.status })}${item.cancellation_reason_code ? ` · ${t(`detail.fillCancellationReasons.${item.cancellation_reason_code}`, { defaultValue: item.cancellation_reason_code })}` : ""}`,
-          formatUtc(item.created_at),
-        ])}
+        renderRows={(events) =>
+          events.map((event) => {
+            const item = paperParsers.order(event.payload);
+            return [
+              shortId(item.order_id),
+              `${t(`detail.directions.${item.side}`, { defaultValue: item.side })} / ${t(`detail.orderTypes.${item.order_type}`, { defaultValue: item.order_type })}`,
+              item.quantity,
+              `${t(`detail.orderStatuses.${item.status}`, { defaultValue: item.status })}${item.cancellation_reason_code ? ` · ${t(`detail.fillCancellationReasons.${item.cancellation_reason_code}`, { defaultValue: item.cancellation_reason_code })}` : ""}`,
+              formatUtc(item.created_at),
+            ];
+          })
+        }
       />
-      <PaperTable
+      <PaperCollectionTable
+        key={`${sessionId}:fills`}
+        sessionId={sessionId}
+        collection="fills"
+        pending={collectionsPending}
+        asOfSequence={collectionSequence ?? snapshot.last_sequence}
         title={t("detail.fills")}
         empty={t("detail.noFills")}
         headings={[
@@ -481,14 +523,19 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           `${t("detail.commission")}${moneyUnit}`,
           t("detail.utcTime"),
         ]}
-        rows={snapshot.fills.map((item) => [
-          shortId(item.order_id),
-          t(`detail.directions.${item.side}`, { defaultValue: item.side }),
-          item.quantity,
-          item.price,
-          item.commission,
-          formatUtc(item.timestamp),
-        ])}
+        renderRows={(events) =>
+          events.map((event) => {
+            const item = paperParsers.fill(event.payload);
+            return [
+              shortId(item.order_id),
+              t(`detail.directions.${item.side}`, { defaultValue: item.side }),
+              item.quantity,
+              item.price,
+              item.commission,
+              formatUtc(item.timestamp),
+            ];
+          })
+        }
       />
       <section className="panel dataPanel">
         <div className="panelHeader">
@@ -712,34 +759,193 @@ function Metric({
   );
 }
 
+function PaperCollectionTable({
+  sessionId,
+  collection,
+  pending,
+  asOfSequence,
+  title,
+  empty,
+  headings,
+  renderRows,
+}: {
+  sessionId: string;
+  collection: PaperCollection;
+  pending: boolean;
+  asOfSequence: number;
+  title: string;
+  empty: string;
+  headings: string[];
+  renderRows: (events: PaperJournalEvent[]) => string[][];
+}) {
+  const [offset, setOffset] = useState(0);
+  const [retry, setRetry] = useState(0);
+  const [result, setResult] = useState<{
+    key: string;
+    retry: number;
+    page: PaperCollectionPage | null;
+    error: Error | null;
+  } | null>(null);
+  const requestKey = `${sessionId}:${collection}:${asOfSequence}:${offset}:${retry}`;
+  const page =
+    result?.page?.session_id === sessionId &&
+    result.page.collection === collection &&
+    result.page.offset === offset
+      ? result.page
+      : null;
+  const pageOffset =
+    page?.as_of_sequence === asOfSequence
+      ? Math.min(
+          offset,
+          Math.max(
+            0,
+            Math.floor((page.total - 1) / PAPER_TABLE_LIMIT) *
+              PAPER_TABLE_LIMIT,
+          ),
+        )
+      : offset;
+  if (pageOffset !== offset) setOffset(pageOffset);
+  const blocked =
+    result?.retry === retry &&
+    result.error instanceof ApiError &&
+    [401, 403, 404].includes(result.error.status);
+  const loading = !blocked && result?.key !== requestKey;
+  const error = loading ? null : (result?.error ?? null);
+
+  useEffect(() => {
+    if (blocked) return;
+    let active = true;
+    const controller = new AbortController();
+    void paperApi
+      .collection(
+        sessionId,
+        collection,
+        asOfSequence,
+        offset,
+        controller.signal,
+      )
+      .then((next) => {
+        if (active && !controller.signal.aborted)
+          setResult({ key: requestKey, retry, page: next, error: null });
+      })
+      .catch((reason: unknown) => {
+        if (!active || controller.signal.aborted) return;
+        const denied =
+          reason instanceof ApiError && [401, 403, 404].includes(reason.status);
+        setResult((current) => ({
+          key: requestKey,
+          retry,
+          page: denied ? null : (current?.page ?? null),
+          error:
+            reason instanceof Error
+              ? reason
+              : new Error("Unable to load saved paper records."),
+        }));
+      });
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [sessionId, collection, asOfSequence, offset, requestKey, retry, blocked]);
+
+  const visible = page?.offset === pageOffset ? page : null;
+  return (
+    <PaperTable
+      title={title}
+      empty={empty}
+      headings={headings}
+      rows={renderRows(visible?.items ?? [])}
+      paging={{
+        offset: pageOffset,
+        total: page?.total ?? null,
+        loading,
+        error,
+        stale: Boolean(
+          visible &&
+          (pending ||
+            loading ||
+            error ||
+            visible.as_of_sequence !== asOfSequence),
+        ),
+        onChange: setOffset,
+        onRetry: () => setRetry((value) => value + 1),
+      }}
+    />
+  );
+}
+
 function PaperTable({
   title,
   empty,
   headings,
   rows,
+  paging,
 }: {
   title: string;
   empty: string;
   headings: string[];
   rows: string[][];
+  paging?: {
+    offset: number;
+    total: number | null;
+    loading: boolean;
+    error: Error | null;
+    stale: boolean;
+    onChange: (offset: number) => void;
+    onRetry: () => void;
+  };
 }) {
   const { t } = useTranslation("research");
+  const { t: paperT } = useTranslation("paper");
+  const panel = useRef<HTMLElement>(null);
   const [offset, setOffset] = useState(0);
-  const pageOffset = Math.min(
-    offset,
-    Math.max(
-      0,
-      Math.floor((rows.length - 1) / PAPER_TABLE_LIMIT) * PAPER_TABLE_LIMIT,
-    ),
-  );
-  if (offset !== pageOffset) setOffset(pageOffset);
+  const pageOffset =
+    paging?.offset ??
+    Math.min(
+      offset,
+      Math.max(
+        0,
+        Math.floor((rows.length - 1) / PAPER_TABLE_LIMIT) * PAPER_TABLE_LIMIT,
+      ),
+    );
+  if (!paging && offset !== pageOffset) setOffset(pageOffset);
+  const visibleRows = paging
+    ? rows
+    : rows.slice(pageOffset, pageOffset + PAPER_TABLE_LIMIT);
   return (
-    <section className="panel dataPanel">
+    <section
+      className="panel dataPanel"
+      ref={panel}
+      aria-busy={paging?.loading}
+    >
       <div className="panelHeader">
         <h2>{title}</h2>
       </div>
-      {rows.length === 0 ? (
-        <p className="emptyState">{empty}</p>
+      {paging?.stale && (
+        <p className="stateCallout" role="status">
+          {paperT("detail.collectionLastVerified")}
+        </p>
+      )}
+      {paging?.error && (
+        <>
+          <ErrorPanel message={paging.error} />
+          <button
+            type="button"
+            onClick={() => {
+              panel.current?.querySelector<HTMLElement>(".pagination")?.focus();
+              paging.onRetry();
+            }}
+          >
+            {paperT("detail.retryCollection", { title })}
+          </button>
+        </>
+      )}
+      {visibleRows.length === 0 && paging?.loading ? (
+        <LoadingPanel label={title} />
+      ) : visibleRows.length === 0 ? (
+        paging?.error ? null : (
+          <p className="emptyState">{empty}</p>
+        )
       ) : (
         <div
           className="tableScroll"
@@ -758,30 +964,25 @@ function PaperTable({
               </tr>
             </thead>
             <tbody>
-              {rows
-                .slice(pageOffset, pageOffset + PAPER_TABLE_LIMIT)
-                .map((row, rowIndex) => (
-                  <tr key={`${row.join(":")}:${pageOffset + rowIndex}`}>
-                    {row.map((value, index) =>
-                      index === 0 ? (
-                        <th
-                          scope="row"
-                          key={`${headings[index]}-${rowIndex}`}
-                          title={value}
-                        >
-                          {value}
-                        </th>
-                      ) : (
-                        <td
-                          key={`${headings[index]}-${rowIndex}`}
-                          title={value}
-                        >
-                          {value}
-                        </td>
-                      ),
-                    )}
-                  </tr>
-                ))}
+              {visibleRows.map((row, rowIndex) => (
+                <tr key={`${row.join(":")}:${pageOffset + rowIndex}`}>
+                  {row.map((value, index) =>
+                    index === 0 ? (
+                      <th
+                        scope="row"
+                        key={`${headings[index]}-${rowIndex}`}
+                        title={value}
+                      >
+                        {value}
+                      </th>
+                    ) : (
+                      <td key={`${headings[index]}-${rowIndex}`} title={value}>
+                        {value}
+                      </td>
+                    ),
+                  )}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -790,8 +991,9 @@ function PaperTable({
         label={title}
         offset={pageOffset}
         limit={PAPER_TABLE_LIMIT}
-        total={rows.length}
-        onChange={setOffset}
+        total={paging ? paging.total : rows.length}
+        loading={paging?.loading}
+        onChange={paging?.onChange ?? setOffset}
       />
     </section>
   );

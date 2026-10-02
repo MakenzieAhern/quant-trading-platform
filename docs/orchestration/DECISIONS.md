@@ -1,5 +1,41 @@
 # Decisions
 
+## v1.2 preserve bounded paper pages and monotonic state — 2026-10-02 22:29 UTC
+
+Reuse typed `/state`, one100-event page per saved financial collection and the
+existing Pagination, not a new cache/grid or truncated ledger. A financial WS
+invalidation stays last-verified until REST watermark/page reads cover it.
+Late REST must not regress the accepted sequence; preserve that floor even
+after a failed read/reconnect. Status notifications/explicit commands replace
+blocked hydration, while financial bursts coalesce.403/401/404 clear prior pages
+and stop automatic access until explicit Retry; other errors can show marked
+last-verified data. No front-end finance calculation or identity normalization.
+
+Review/focused RED found real rollback and typed-payload bugs; common guards fix
+all callers. Split the expensive201-row test without weakening assertions or
+raising timeout.616frontend/1094backend checks and finite205/204-record Chrome
+rawAPI/DOM/money/locale/focus/mobile/account proof PASS_SCOPED; frontend logs are
+tool-output records, not fabricated rawstdout. New65-file evidence is sealed,
+independent saved-bundle/new hostedCI pending. Retain intermediate paint/count
+diagnostic failures honestly. Source promotion/forward receipt/lost-ledger/AA/
+native200/p95/full U1-U8 and release remain mandatory and incomplete.
+
+## v1.2 read the saved paper journal by fixed watermark — 2026-10-02 22:07 UTC
+
+Keep full audit/resume interfaces, but add SQL bounded saved collections instead
+of truncating finance history in React. Shared writer-row lock captures state
+and W; reject future W, then old pages stay immutable. Canonical UUID grouping
+preserves first order appearance/latest state; risk and fills never deduplicate.
+SQL scanning is still a ceiling, not O(1)/p95/continuous-provider certification.
+
+Review found generic payload union could accept a status-only corrupt order.
+Reproduce first, then fix shared event-type/schema validation for all read
+callers; opaque500 prevents invented normal rows.1094backend/fullchecks and
+five original ledger/state/page exact field comparisons pass; frontend/browser
+still pending. Safe backend-only reload required fresh activecount0; no data
+service restart/deletion. Old CI frontend timeout is retained; tests will keep
+assertions while splitting the expensive case, not raising timeout. No release.
+
 ## v1.2 paper table DOM ceiling without hiding the payload defect — 2026-10-02 21:49 UTC
 
 Reuse the existing Pagination once in shared PaperTable, no new dependency or

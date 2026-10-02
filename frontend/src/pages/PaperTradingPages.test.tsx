@@ -15,7 +15,14 @@ import { i18n } from "../i18n";
 import { experimentApi } from "../product/experiments/api";
 import { job, plan } from "../product/experiments/fixtures.test-data";
 import { jsonResponse } from "../test/fixtures";
-import { PAPER_ID, paperSession, paperSnapshot } from "../test/paperFixtures";
+import {
+  PAPER_ID,
+  paperCollection,
+  paperSession,
+  paperSnapshot,
+  paperState,
+} from "../test/paperFixtures";
+import type { PaperCollection, PaperSnapshot } from "../types/paper";
 import { CreatePaperSessionPage } from "./CreatePaperSessionPage";
 import {
   PAPER_CREATE_PENDING_PREFIX,
@@ -24,6 +31,138 @@ import {
 } from "./paperCreateRecovery";
 import { PaperSessionDetailPage } from "./PaperSessionDetailPage";
 import { PaperSessionsPage } from "./PaperSessionsPage";
+
+const paperRequests: Array<{ url: string; options?: RequestInit }> = [];
+
+function mockPaperServer(
+  collectionResponse?: (
+    url: URL,
+    snapshot: PaperSnapshot,
+    options?: RequestInit,
+  ) => Promise<Response>,
+) {
+  // Existing scripted calls are state/command/log responses. Collection requests
+  // use that finite server fixture without consuming a command's response queue.
+  const responses = vi.fn<typeof fetch>();
+  const windows = new Map<string, PaperSnapshot>();
+  vi.stubGlobal(
+    "fetch",
+    async (input: RequestInfo | URL, options?: RequestInit) => {
+      const url = new URL(String(input), "http://test.local");
+      paperRequests.push({ url: String(input), options });
+      if (url.pathname.endsWith("/snapshot"))
+        throw new Error(
+          "Paper detail must not request the legacy full snapshot.",
+        );
+      const match = url.pathname.match(
+        /\/sessions\/([^/]+)\/collections\/([^/]+)$/,
+      );
+      if (match) {
+        const watermark = Number(url.searchParams.get("as_of_sequence"));
+        const offset = Number(url.searchParams.get("offset") ?? 0);
+        const snapshot = windows.get(`${match[1]}:${watermark}`);
+        if (!snapshot)
+          throw new Error("Collection requested without its state watermark.");
+        expect(url.searchParams.get("limit")).toBe("100");
+        expect(options?.method).toBeUndefined();
+        if (collectionResponse)
+          return collectionResponse(url, snapshot, options);
+        return jsonResponse(
+          paperCollection(
+            snapshot,
+            match[2] as PaperCollection,
+            watermark,
+            offset,
+          ),
+        );
+      }
+      const response = await responses(input, options);
+      if (!url.pathname.endsWith("/state") || !response.ok) return response;
+      const snapshot = (await response.json()) as PaperSnapshot;
+      windows.set(
+        `${snapshot.session.session_id}:${snapshot.last_sequence}`,
+        snapshot,
+      );
+      return jsonResponse(paperState(snapshot), response.status);
+    },
+  );
+  return responses;
+}
+
+function financialTableFixture() {
+  const snapshot = paperSnapshot("RUNNING");
+  const records = Array.from({ length: 201 }, (_, index) => ({
+    id: `00000000-0000-0000-0000-${String(index + 1).padStart(12, "0")}`,
+    symbol: `TEST-${index + 1}`,
+    quantity: `${index + 1}.000000000000000001`,
+  }));
+  snapshot.signals = records.map((record) => ({
+    strategy_id: "moving_average_crossover",
+    symbol: record.symbol,
+    signal_type: "BUY",
+    timestamp: "2026-09-06T02:01:00Z",
+  }));
+  snapshot.risk_decisions = records.map((record) => ({
+    proposal_id: record.id,
+    approved: true,
+    reason_code: "APPROVED",
+    message: "proposal approved",
+    timestamp: "2026-09-06T02:01:00Z",
+  }));
+  snapshot.orders = records.map((record) => ({
+    order_id: record.id,
+    strategy_id: "moving_average_crossover",
+    symbol: record.symbol,
+    side: "BUY",
+    order_type: "MARKET",
+    quantity: record.quantity,
+    price: null,
+    status: "FILLED",
+    created_at: "2026-09-06T02:01:00Z",
+  }));
+  snapshot.fills = records.map((record) => ({
+    order_id: record.id,
+    strategy_id: "moving_average_crossover",
+    symbol: record.symbol,
+    side: "BUY",
+    quantity: record.quantity,
+    price: "12.000000000000000001",
+    commission: "0.000000000000000001",
+    timestamp: "2026-09-06T02:02:00Z",
+  }));
+  snapshot.latest_portfolio = {
+    timestamp: "2026-09-06T02:02:00Z",
+    cash: "100000",
+    market_value: "0",
+    equity: "100000",
+    realized_pnl: "0",
+    unrealized_pnl: "0",
+    cumulative_commission: "0",
+    drawdown: "0",
+    plan: null,
+    positions: records.map((record) => ({
+      symbol: record.symbol,
+      quantity: record.quantity,
+      average_price: "12",
+      market_price: "12",
+      unrealized_pnl: "0",
+      realized_pnl: "0",
+    })),
+  };
+  snapshot.last_sequence = 1000;
+  return { snapshot, records };
+}
+
+function tableCells(title: string) {
+  return within(screen.getByRole("table", { name: title }))
+    .getAllByRole("row")
+    .slice(1)
+    .map((row) =>
+      Array.from(row.querySelectorAll("th,td"), (cell) =>
+        cell.getAttribute("title")!,
+      ),
+    );
+}
 
 class MockWebSocket {
   static readonly OPEN = 1;
@@ -71,6 +210,7 @@ describe("paper trading pages", () => {
   const clearPending = () =>
     pendingKeys().forEach((key) => window.localStorage.removeItem(key));
   beforeEach(() => {
+    paperRequests.length = 0;
     clearPending();
     lockTail = Promise.resolve();
     Object.defineProperty(window.navigator, "locks", {
@@ -107,39 +247,37 @@ describe("paper trading pages", () => {
         price: null,
         created_at: "2026-09-06T02:01:00Z",
       };
-      const fetch = vi
-        .spyOn(globalThis, "fetch")
-        .mockImplementation(async (input) =>
-          jsonResponse(
-            String(input).includes("/events?")
-              ? [
-                  {
-                    sequence: 11,
-                    type: "order.updated",
-                    occurred_at: "2026-09-06T02:03:00Z",
-                    payload: {
-                      ...order,
-                      order_id: "d35b2e06-6946-48e5-8f5f-f3bf22fa91d1",
-                      status: "CANCELLED",
-                      cancellation_reason_code: "INSUFFICIENT_BUYING_POWER",
-                    },
+      const fetch = mockPaperServer().mockImplementation(async (input) =>
+        jsonResponse(
+          String(input).includes("/events?")
+            ? [
+                {
+                  sequence: 11,
+                  type: "order.updated",
+                  occurred_at: "2026-09-06T02:03:00Z",
+                  payload: {
+                    ...order,
+                    order_id: "d35b2e06-6946-48e5-8f5f-f3bf22fa91d1",
+                    status: "CANCELLED",
+                    cancellation_reason_code: "INSUFFICIENT_BUYING_POWER",
                   },
-                  {
-                    sequence: 10,
-                    type: "order.updated",
-                    occurred_at: "2026-09-06T02:02:00Z",
-                    payload: { ...order, status: "FILLED" },
-                  },
-                  {
-                    sequence: 9,
-                    type: "order.updated",
-                    occurred_at: "2026-09-06T02:01:00Z",
-                    payload: { ...order, status: "ACCEPTED" },
-                  },
-                ]
-              : paperSnapshot("STOPPED"),
-          ),
-        );
+                },
+                {
+                  sequence: 10,
+                  type: "order.updated",
+                  occurred_at: "2026-09-06T02:02:00Z",
+                  payload: { ...order, status: "FILLED" },
+                },
+                {
+                  sequence: 9,
+                  type: "order.updated",
+                  occurred_at: "2026-09-06T02:01:00Z",
+                  payload: { ...order, status: "ACCEPTED" },
+                },
+              ]
+            : paperSnapshot("STOPPED"),
+        ),
+      );
       try {
         render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
         await act(async () => MockWebSocket.instances[0]!.open());
@@ -198,7 +336,7 @@ describe("paper trading pages", () => {
     const oldPage = new Promise<Response>((resolve) => {
       resolveOld = resolve;
     });
-    vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+    mockPaperServer().mockImplementation(async (input) => {
       const url = String(input);
       if (url.includes(`/sessions/${PAPER_ID}/events?`)) return oldPage;
       if (url.includes(`/sessions/${otherId}/events?`))
@@ -248,18 +386,16 @@ describe("paper trading pages", () => {
       occurred_at: "2026-09-06T02:00:00Z",
       payload: { status: "STOPPED" },
     });
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation(async (input) => {
-        const url = String(input);
-        if (!url.includes("/events?"))
-          return jsonResponse(paperSnapshot("STOPPED"));
-        return jsonResponse(
-          url.includes("before_sequence=53")
-            ? [event(52), event(51)]
-            : Array.from({ length: 51 }, (_, index) => event(102 - index)),
-        );
-      });
+    const fetch = mockPaperServer().mockImplementation(async (input) => {
+      const url = String(input);
+      if (!url.includes("/events?"))
+        return jsonResponse(paperSnapshot("STOPPED"));
+      return jsonResponse(
+        url.includes("before_sequence=53")
+          ? [event(52), event(51)]
+          : Array.from({ length: 51 }, (_, index) => event(102 - index)),
+      );
+    });
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     await userEvent.click(
@@ -307,7 +443,7 @@ describe("paper trading pages", () => {
       resolveRefresh = resolve;
     });
     let latestRequests = 0;
-    vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+    mockPaperServer().mockImplementation(async (input) => {
       const url = String(input);
       if (!url.includes("/events?"))
         return jsonResponse(paperSnapshot("STOPPED"));
@@ -366,9 +502,7 @@ describe("paper trading pages", () => {
           installWebSocket();
           const snapshot = paperSnapshot();
           snapshot.session.provider_type = provider;
-          vi.spyOn(globalThis, "fetch").mockResolvedValue(
-            jsonResponse(snapshot),
-          );
+          mockPaperServer().mockResolvedValue(jsonResponse(snapshot));
           const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
           await act(async () => MockWebSocket.instances[0]!.open());
           const aShare = provider !== "replay";
@@ -419,9 +553,7 @@ describe("paper trading pages", () => {
   it("bounds events waiting for a slow REST hydration and reconnects", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockReturnValue(new Promise(() => {}));
+    const fetch = mockPaperServer().mockReturnValue(new Promise(() => {}));
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     act(() => {
@@ -453,8 +585,7 @@ describe("paper trading pages", () => {
   it("rehydrates after one failed snapshot instead of leaving the page stuck", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse({ detail: "temporary" }, 503))
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
@@ -471,7 +602,7 @@ describe("paper trading pages", () => {
   it("hides stale financial values until a failed reconnect obtains a new snapshot", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    vi.spyOn(globalThis, "fetch")
+    mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockResolvedValueOnce(jsonResponse({ detail: "unavailable" }, 503))
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
@@ -494,7 +625,7 @@ describe("paper trading pages", () => {
   it("hides the last portfolio when socket reconnect attempts are exhausted", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    const fetch = mockPaperServer().mockResolvedValue(
       jsonResponse({
         ...paperSnapshot("RUNNING"),
         latest_portfolio: {
@@ -528,8 +659,7 @@ describe("paper trading pages", () => {
   it("stops snapshot retries on denied access and bounds repeated service failures", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse({ detail: "forbidden" }, 403))
       .mockResolvedValue(jsonResponse({ detail: "unavailable" }, 503));
     const denied = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
@@ -555,11 +685,9 @@ describe("paper trading pages", () => {
   it("classifies a rejected opening socket through the authoritative REST snapshot", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(
-        jsonResponse({ detail: "paper session not found" }, 404),
-      );
+    const fetch = mockPaperServer().mockResolvedValue(
+      jsonResponse({ detail: "paper session not found" }, 404),
+    );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.close());
     expect(screen.getByRole("alert")).toHaveTextContent(
@@ -577,6 +705,7 @@ describe("paper trading pages", () => {
     installWebSocket();
     vi.useFakeTimers();
     const snapshot = paperSnapshot("STOPPED");
+    snapshot.last_sequence = 2;
     snapshot.latest_portfolio = {
       timestamp: "2024-01-09T00:00:00Z",
       cash: "81309.8134",
@@ -601,9 +730,7 @@ describe("paper trading pages", () => {
         timestamp: "2024-01-09T00:00:00Z",
       },
     ];
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(jsonResponse(snapshot));
+    const fetch = mockPaperServer().mockResolvedValue(jsonResponse(snapshot));
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.close());
     expect(screen.getByTitle("81309.8134")).toBeInTheDocument();
@@ -630,7 +757,7 @@ describe("paper trading pages", () => {
       positions: [],
       plan: null,
     };
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(snapshot));
+    mockPaperServer().mockResolvedValue(jsonResponse(snapshot));
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.close());
     expect(screen.queryByTitle("81309.8134")).not.toBeInTheDocument();
@@ -639,7 +766,7 @@ describe("paper trading pages", () => {
   });
 
   it("renders persisted session history and the permanent safety warning", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    mockPaperServer().mockResolvedValue(
       jsonResponse({ items: [paperSession()], limit: 20, offset: 0, total: 1 }),
     );
     render(<PaperSessionsPage />);
@@ -770,7 +897,7 @@ describe("paper trading pages", () => {
 
   it("distinguishes same-strategy sessions without making IDs the primary action", async () => {
     const secondId = "534d9730-a8c9-4f71-a0fc-c4b5d156f2ef";
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    mockPaperServer().mockResolvedValue(
       jsonResponse({
         items: [
           paperSession(),
@@ -822,7 +949,7 @@ describe("paper trading pages", () => {
       paper_session_id: PAPER_ID,
       plan_version: "PAPER_ACCOUNT_PLAN_V3",
     };
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    mockPaperServer().mockResolvedValue(
       jsonResponse({
         ...paperSnapshot("STOPPED"),
         last_rebalance_plan: accountPlan,
@@ -918,7 +1045,7 @@ describe("paper trading pages", () => {
           positions: [],
           plan: null,
         };
-        vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(snapshot));
+        mockPaperServer().mockResolvedValue(jsonResponse(snapshot));
         render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
         await act(async () => MockWebSocket.instances[0]!.open());
 
@@ -965,7 +1092,7 @@ describe("paper trading pages", () => {
       positions: [],
       plan: null,
     };
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(snapshot));
+    mockPaperServer().mockResolvedValue(jsonResponse(snapshot));
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     expect(screen.getByText("AUTHORITATIVE PORTFOLIO")).toBeVisible();
@@ -989,7 +1116,7 @@ describe("paper trading pages", () => {
   });
 
   it("keeps a denied paper-list error typed for actionable guidance", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    mockPaperServer().mockResolvedValue(
       jsonResponse({ detail: "forbidden" }, 403),
     );
     render(<PaperSessionsPage />);
@@ -1000,9 +1127,9 @@ describe("paper trading pages", () => {
   });
 
   it("keeps legacy AAPL replay explicit and creates it with one idempotency key", async () => {
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(jsonResponse(paperSession(), 201));
+    const fetch = mockPaperServer().mockResolvedValue(
+      jsonResponse(paperSession(), 201),
+    );
     render(<CreatePaperSessionPage />);
     expect(screen.getByLabelText("Provider")).toHaveValue("simulated_a_share");
     await userEvent.selectOptions(screen.getByLabelText("Provider"), "replay");
@@ -1029,7 +1156,7 @@ describe("paper trading pages", () => {
   });
 
   it("defaults to a clearly labeled synthetic A-share demo", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    const fetch = mockPaperServer().mockResolvedValue(
       jsonResponse(
         {
           ...paperSession(),
@@ -1067,8 +1194,7 @@ describe("paper trading pages", () => {
 
   it("keeps the create action focused through a failed request and prevents a pending duplicate", async () => {
     let rejectCreate: ((reason: Error) => void) | undefined;
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockImplementationOnce(
         () =>
           new Promise<Response>((_, reject) => {
@@ -1113,8 +1239,7 @@ describe("paper trading pages", () => {
 
   it("retries the exact saved request after a lost response and page remount", async () => {
     window.history.replaceState({}, "", "/paper/new");
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockRejectedValueOnce(new TypeError("response lost"))
       .mockResolvedValueOnce(jsonResponse(paperSession(), 201));
     const first = render(<CreatePaperSessionPage />);
@@ -1158,9 +1283,9 @@ describe("paper trading pages", () => {
   });
 
   it("blocks a changed request until the uncertain one is reconciled", async () => {
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockRejectedValue(new TypeError("response lost"));
+    const fetch = mockPaperServer().mockRejectedValue(
+      new TypeError("response lost"),
+    );
     render(<CreatePaperSessionPage />);
     const create = screen.getByRole("button", {
       name: "Create paper session",
@@ -1189,11 +1314,9 @@ describe("paper trading pages", () => {
   });
 
   it("requires an explicit new-account action after a confirmed creation", async () => {
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation(() =>
-        Promise.resolve(jsonResponse(paperSession(), 201)),
-      );
+    const fetch = mockPaperServer().mockImplementation(() =>
+      Promise.resolve(jsonResponse(paperSession(), 201)),
+    );
     const first = render(<CreatePaperSessionPage />);
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
@@ -1230,8 +1353,7 @@ describe("paper trading pages", () => {
 
   it("verifies a saved confirmed account before opening it", async () => {
     window.history.replaceState({}, "", "/paper/new");
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSession(), 201))
       .mockResolvedValueOnce(jsonResponse(paperSession()));
     const first = render(<CreatePaperSessionPage />);
@@ -1263,9 +1385,9 @@ describe("paper trading pages", () => {
     "does not open a locally confirmed account when the current server is %s",
     async (failure) => {
       window.history.replaceState({}, "", "/paper/new");
-      const fetch = vi
-        .spyOn(globalThis, "fetch")
-        .mockResolvedValueOnce(jsonResponse(paperSession(), 201));
+      const fetch = mockPaperServer().mockResolvedValueOnce(
+        jsonResponse(paperSession(), 201),
+      );
       const first = render(<CreatePaperSessionPage />);
       await userEvent.click(
         screen.getByRole("button", { name: "Create paper session" }),
@@ -1331,8 +1453,7 @@ describe("paper trading pages", () => {
   it("verifies a receipt that was confirmed while a saved retry waited for the lock", async () => {
     window.history.replaceState({}, "", "/paper/new");
     let resolveFirst: ((response: Response) => void) | undefined;
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockImplementationOnce(
         () =>
           new Promise<Response>((resolve) => {
@@ -1368,8 +1489,7 @@ describe("paper trading pages", () => {
   it("serializes two same-origin creation forms before choosing a second key", async () => {
     window.history.replaceState({}, "", "/paper/new");
     let resolveFirst: ((response: Response) => void) | undefined;
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockImplementationOnce(
         () =>
           new Promise<Response>((resolve) => {
@@ -1404,8 +1524,7 @@ describe("paper trading pages", () => {
   it("reuses one key when a second form waits for a lost response", async () => {
     window.history.replaceState({}, "", "/paper/new");
     let rejectFirst: ((reason: Error) => void) | undefined;
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockImplementationOnce(
         () =>
           new Promise<Response>((_, reject) => {
@@ -1439,7 +1558,7 @@ describe("paper trading pages", () => {
   it("does not send a queued create after its page has been cancelled", async () => {
     window.history.replaceState({}, "", "/paper/new");
     let resolveFirst: ((response: Response) => void) | undefined;
-    const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(
+    const fetch = mockPaperServer().mockImplementation(
       () =>
         new Promise<Response>((resolve) => {
           resolveFirst = resolve;
@@ -1475,9 +1594,9 @@ describe("paper trading pages", () => {
         throw new Error("quota exceeded");
       return setItem.call(this, key, value);
     });
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(jsonResponse(paperSession(), 201));
+    const fetch = mockPaperServer().mockResolvedValue(
+      jsonResponse(paperSession(), 201),
+    );
     const first = render(<CreatePaperSessionPage />);
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
@@ -1503,7 +1622,7 @@ describe("paper trading pages", () => {
   });
 
   it("does not POST if the uncertain-create key cannot be saved", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch");
+    const fetch = mockPaperServer();
     const setItem = Storage.prototype.setItem;
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (
       this: Storage,
@@ -1526,7 +1645,7 @@ describe("paper trading pages", () => {
 
   it("does not POST when browser cross-tab locking is unavailable", async () => {
     Reflect.deleteProperty(window.navigator, "locks");
-    const fetch = vi.spyOn(globalThis, "fetch");
+    const fetch = mockPaperServer();
     render(<CreatePaperSessionPage />);
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
@@ -1539,7 +1658,7 @@ describe("paper trading pages", () => {
   });
 
   it("does not POST or poison storage when a request exceeds the recovery bound", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch");
+    const fetch = mockPaperServer();
     render(<CreatePaperSessionPage />);
     fireEvent.change(screen.getByLabelText("Initial cash"), {
       target: { value: "1".repeat(8300) },
@@ -1555,8 +1674,7 @@ describe("paper trading pages", () => {
   });
 
   it("clears a definitely rejected request so its settings can be corrected", async () => {
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockRejectedValueOnce(new ApiError(422, "invalid"))
       .mockResolvedValueOnce(jsonResponse(paperSession(), 201));
     render(<CreatePaperSessionPage />);
@@ -1580,8 +1698,7 @@ describe("paper trading pages", () => {
   });
 
   it("keeps an uncertain key when a later ordinary retry is rejected", async () => {
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockRejectedValueOnce(new TypeError("response lost"))
       .mockRejectedValueOnce(new ApiError(422, "schema changed"))
       .mockResolvedValueOnce(jsonResponse({}, 404));
@@ -1602,8 +1719,7 @@ describe("paper trading pages", () => {
   });
 
   it("recovers a committed receipt after a later ordinary retry gets 422", async () => {
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockRejectedValueOnce(new TypeError("response lost"))
       .mockRejectedValueOnce(new ApiError(422, "schema changed"))
       .mockResolvedValueOnce(jsonResponse(paperSession()));
@@ -1627,8 +1743,7 @@ describe("paper trading pages", () => {
   });
 
   it("keeps an uncertain key when a saved-request retry is rejected", async () => {
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockRejectedValueOnce(new TypeError("response lost"))
       .mockRejectedValueOnce(new ApiError(422, "schema changed"))
       .mockResolvedValueOnce(jsonResponse({}, 404));
@@ -1655,8 +1770,7 @@ describe("paper trading pages", () => {
   it.each([400, 404, 422])(
     "recovers a committed receipt after a saved retry gets %s",
     async (status) => {
-      const fetch = vi
-        .spyOn(globalThis, "fetch")
+      const fetch = mockPaperServer()
         .mockRejectedValueOnce(new TypeError("response lost"))
         .mockRejectedValueOnce(new ApiError(status, "request rejected"))
         .mockResolvedValueOnce(jsonResponse(paperSession()));
@@ -1690,7 +1804,7 @@ describe("paper trading pages", () => {
       `${PAPER_CREATE_PENDING_PREFIX}00000000-0000-0000-0000-000000000001`,
       "{invalid",
     );
-    const fetch = vi.spyOn(globalThis, "fetch");
+    const fetch = mockPaperServer();
     render(<CreatePaperSessionPage />);
     expect(screen.getByRole("alert")).toHaveTextContent(
       "Saved creation requests cannot be read safely",
@@ -1734,14 +1848,12 @@ describe("paper trading pages", () => {
       },
     });
     vi.spyOn(experimentApi, "get").mockRejectedValue(new Error("offline"));
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(
-        jsonResponse(
-          { ...paperSession(), provider_type: "historical_a_share" },
-          201,
-        ),
-      );
+    const fetch = mockPaperServer().mockResolvedValue(
+      jsonResponse(
+        { ...paperSession(), provider_type: "historical_a_share" },
+        201,
+      ),
+    );
     render(<CreatePaperSessionPage />);
     expect(await screen.findByRole("alert")).toBeVisible();
     expect(
@@ -1760,7 +1872,7 @@ describe("paper trading pages", () => {
   it("does not reopen a created session after leaving while the request is pending", async () => {
     window.history.replaceState({}, "", "/paper/new");
     let resolveCreate: ((response: Response) => void) | undefined;
-    const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(
+    const fetch = mockPaperServer().mockImplementation(
       () =>
         new Promise<Response>((resolve) => {
           resolveCreate = resolve;
@@ -1790,9 +1902,9 @@ describe("paper trading pages", () => {
   it.each([401, 403])(
     "treats HTTP %s as denied access, not uncertain creation, in both locales",
     async (status) => {
-      const fetch = vi
-        .spyOn(globalThis, "fetch")
-        .mockRejectedValue(new ApiError(status, "diagnostic"));
+      const fetch = mockPaperServer().mockRejectedValue(
+        new ApiError(status, "diagnostic"),
+      );
       render(<CreatePaperSessionPage />);
       await userEvent.click(
         screen.getByRole("button", { name: "Create paper session" }),
@@ -1816,7 +1928,7 @@ describe("paper trading pages", () => {
   );
 
   it("creates an explicitly historical A-share replay, never a forward session", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    const fetch = mockPaperServer().mockResolvedValue(
       jsonResponse(
         {
           ...paperSession(),
@@ -1865,7 +1977,7 @@ describe("paper trading pages", () => {
   });
 
   it("rejects historical cash above the engine limit without rounding or submitting", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch");
+    const fetch = mockPaperServer();
     render(<CreatePaperSessionPage />);
     await userEvent.selectOptions(
       screen.getByLabelText("Provider"),
@@ -1902,7 +2014,7 @@ describe("paper trading pages", () => {
   });
 
   it("rejects historical excess cash with surrounding whitespace before submitting", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch");
+    const fetch = mockPaperServer();
     render(<CreatePaperSessionPage />);
     await userEvent.selectOptions(
       screen.getByLabelText("Provider"),
@@ -1923,9 +2035,9 @@ describe("paper trading pages", () => {
   });
 
   it("reveals and focuses an invalid advanced historical setting in both languages", async () => {
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(jsonResponse(paperSession(), 201));
+    const fetch = mockPaperServer().mockResolvedValue(
+      jsonResponse(paperSession(), 201),
+    );
     render(<CreatePaperSessionPage />);
     await userEvent.selectOptions(
       screen.getByLabelText("Provider"),
@@ -2014,7 +2126,7 @@ describe("paper trading pages", () => {
         risk: { max_drawdown: "-0.35", max_position_weight: "0.08" },
       },
     });
-    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    const fetch = mockPaperServer().mockResolvedValue(
       jsonResponse(
         {
           ...paperSession(),
@@ -2107,7 +2219,7 @@ describe("paper trading pages", () => {
 
   it("labels persisted historical accounts without presenting archive IDs as the primary mode", async () => {
     installWebSocket();
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    mockPaperServer().mockResolvedValue(
       jsonResponse({
         ...paperSnapshot("STOPPED"),
         session: {
@@ -2139,8 +2251,7 @@ describe("paper trading pages", () => {
 
   it("offers pause while running and resume from a persisted paused account", async () => {
     installWebSocket();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")))
       .mockResolvedValueOnce(
@@ -2150,7 +2261,7 @@ describe("paper trading pages", () => {
     await act(async () => MockWebSocket.instances[0]!.open());
     await userEvent.click(screen.getByRole("button", { name: "Pause replay" }));
     expect(fetch.mock.calls[1]?.[0]).toContain(`/${PAPER_ID}/pause`);
-    expect(fetch.mock.calls[2]?.[0]).toContain(`/${PAPER_ID}/snapshot`);
+    expect(fetch.mock.calls[2]?.[0]).toContain(`/${PAPER_ID}/state`);
     expect(
       screen.getByText("Pausing", { selector: ".statusBadge" }),
     ).toBeVisible();
@@ -2167,8 +2278,7 @@ describe("paper trading pages", () => {
 
   it("can stop an unstarted account without starting its provider", async () => {
     installWebSocket();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("CREATED")))
       .mockResolvedValueOnce(jsonResponse(paperSession("STOPPED")))
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
@@ -2190,8 +2300,7 @@ describe("paper trading pages", () => {
 
   it("reconciles an accepted command while the paper stream is reconnecting", async () => {
     installWebSocket();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")))
       .mockResolvedValueOnce(
@@ -2203,7 +2312,7 @@ describe("paper trading pages", () => {
     expect(screen.getByText("Session connection: reconnecting")).toBeVisible();
 
     await userEvent.click(screen.getByRole("button", { name: "Pause replay" }));
-    expect(fetch.mock.calls[2]?.[0]).toContain(`/${PAPER_ID}/snapshot`);
+    expect(fetch.mock.calls[2]?.[0]).toContain(`/${PAPER_ID}/state`);
     expect(
       screen.getByText("Pausing", { selector: ".statusBadge" }),
     ).toBeVisible();
@@ -2214,8 +2323,7 @@ describe("paper trading pages", () => {
 
   it("keeps an accepted transition when a disconnect aborts its snapshot read", async () => {
     installWebSocket();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")))
       .mockImplementationOnce(
@@ -2245,8 +2353,7 @@ describe("paper trading pages", () => {
   it("keeps a newer stream status over an older command response", async () => {
     installWebSocket();
     let finishPost!: (response: Response) => void;
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockImplementationOnce(
         () => new Promise((resolve) => (finishPost = resolve)),
@@ -2282,8 +2389,7 @@ describe("paper trading pages", () => {
 
   it("does not apply a command response from another paper account", async () => {
     installWebSocket();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockResolvedValueOnce(
         jsonResponse({
@@ -2324,7 +2430,7 @@ describe("paper trading pages", () => {
   it("does not call an accepted command failed when its follow-up read fails", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    vi.spyOn(globalThis, "fetch")
+    mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockResolvedValueOnce(jsonResponse(paperSession("PAUSING")))
       .mockResolvedValueOnce(jsonResponse({ detail: "unavailable" }, 503))
@@ -2348,8 +2454,7 @@ describe("paper trading pages", () => {
   it("keeps the focused paper command during an in-flight failure without duplicate POSTs", async () => {
     installWebSocket();
     let finish!: (response: Response) => void;
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("CREATED")))
       .mockImplementationOnce(
         () => new Promise((resolve) => (finish = resolve)),
@@ -2395,8 +2500,7 @@ describe("paper trading pages", () => {
       for (const statusFirst of [false, true]) {
         installWebSocket();
         let finishPost!: (response: Response) => void;
-        const fetch = vi
-          .spyOn(globalThis, "fetch")
+        const fetch = mockPaperServer()
           .mockResolvedValueOnce(jsonResponse(paperSnapshot(before)))
           .mockImplementationOnce(
             () => new Promise((resolve) => (finishPost = resolve)),
@@ -2495,8 +2599,7 @@ describe("paper trading pages", () => {
     async (action, before, button, statuses) => {
       installWebSocket();
       let finishPost!: (response: Response) => void;
-      const fetch = vi
-        .spyOn(globalThis, "fetch")
+      const fetch = mockPaperServer()
         .mockResolvedValueOnce(jsonResponse(paperSnapshot(before)))
         .mockImplementationOnce(
           () => new Promise((resolve) => (finishPost = resolve)),
@@ -2536,7 +2639,7 @@ describe("paper trading pages", () => {
 
   it("moves focus to the durable status only when a focused paper action disappears", async () => {
     installWebSocket();
-    vi.spyOn(globalThis, "fetch")
+    mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("CREATED")))
       .mockResolvedValueOnce(jsonResponse(paperSession("STARTING")))
       .mockResolvedValue(
@@ -2563,7 +2666,7 @@ describe("paper trading pages", () => {
 
   it("does not steal focus after the user leaves a paper command before a status change", async () => {
     installWebSocket();
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+    mockPaperServer().mockResolvedValueOnce(
       jsonResponse(paperSnapshot("CREATED")),
     );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
@@ -2608,8 +2711,7 @@ describe("paper trading pages", () => {
     "translates a failed %s account command without resubmitting",
     async (status, button, action, english, chinese) => {
       installWebSocket();
-      const fetch = vi
-        .spyOn(globalThis, "fetch")
+      const fetch = mockPaperServer()
         .mockResolvedValueOnce(jsonResponse(paperSnapshot(status)))
         .mockResolvedValueOnce(jsonResponse({ detail: "unavailable" }, 503));
       render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
@@ -2639,9 +2741,10 @@ describe("paper trading pages", () => {
 
   it("explains paper ledger enums and risk decisions in the selected language", async () => {
     installWebSocket();
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    mockPaperServer().mockResolvedValue(
       jsonResponse({
         ...paperSnapshot("STOPPED"),
+        last_sequence: 6,
         latest_portfolio: {
           timestamp: "2011-03-23T07:00:00Z",
           cash: "81309.8134",
@@ -2778,114 +2881,44 @@ describe("paper trading pages", () => {
     }
   });
 
-  it("bounds paper financial tables without losing exact rows, page context or focus", async () => {
-    installWebSocket();
-    const snapshot = paperSnapshot("RUNNING");
-    const records = Array.from({ length: 201 }, (_, index) => ({
-      id: `00000000-0000-0000-0000-${String(index + 1).padStart(12, "0")}`,
-      symbol: `TEST-${index + 1}`,
-      quantity: `${index + 1}.000000000000000001`,
-    }));
-    snapshot.signals = records.map((record) => ({
-      strategy_id: "moving_average_crossover",
-      symbol: record.symbol,
-      signal_type: "BUY",
-      timestamp: "2026-09-06T02:01:00Z",
-    }));
-    snapshot.risk_decisions = records.map((record) => ({
-      proposal_id: record.id,
-      approved: true,
-      reason_code: "APPROVED",
-      message: "proposal approved",
-      timestamp: "2026-09-06T02:01:00Z",
-    }));
-    snapshot.orders = records.map((record) => ({
-      order_id: record.id,
-      strategy_id: "moving_average_crossover",
-      symbol: record.symbol,
-      side: "BUY",
-      order_type: "MARKET",
-      quantity: record.quantity,
-      price: null,
-      status: "FILLED",
-      created_at: "2026-09-06T02:01:00Z",
-    }));
-    snapshot.fills = records.map((record) => ({
-      order_id: record.id,
-      strategy_id: "moving_average_crossover",
-      symbol: record.symbol,
-      side: "BUY",
-      quantity: record.quantity,
-      price: "12.000000000000000001",
-      commission: "0.000000000000000001",
-      timestamp: "2026-09-06T02:02:00Z",
-    }));
-    snapshot.latest_portfolio = {
-      timestamp: "2026-09-06T02:02:00Z",
-      cash: "100000",
-      market_value: "0",
-      equity: "100000",
-      realized_pnl: "0",
-      unrealized_pnl: "0",
-      cumulative_commission: "0",
-      drawdown: "0",
-      plan: null,
-      positions: records.map((record) => ({
-        symbol: record.symbol,
-        quantity: record.quantity,
-        average_price: "12",
-        market_price: "12",
-        unrealized_pnl: "0",
-        realized_pnl: "0",
-      })),
-    };
-    const otherId = "00000000-0000-0000-0000-000000000999";
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation(async (input) =>
-        jsonResponse({
-          ...snapshot,
-          session: {
-            ...snapshot.session,
-            session_id: String(input).includes(otherId) ? otherId : PAPER_ID,
-          },
-        }),
+  it.each([
+    "Positions",
+    "Signals",
+    "Risk decisions",
+    "Paper orders",
+    "Paper fills",
+  ])(
+    "bounds %s with exact ordered rows and independent page focus",
+    async (title) => {
+      installWebSocket();
+      const { snapshot, records } = financialTableFixture();
+      const fetch = mockPaperServer().mockImplementation(async () =>
+        jsonResponse(snapshot),
       );
-    const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
-    await act(async () => MockWebSocket.instances[0]!.open());
-    await screen.findByRole("table", { name: "Positions" });
-    const titles = [
-      "Positions",
-      "Signals",
-      "Risk decisions",
-      "Paper orders",
-      "Paper fills",
-    ];
-    for (const title of titles) {
-      expect(
-        within(screen.getByRole("table", { name: title })).getAllByRole(
-          "rowheader",
-        ),
-      ).toHaveLength(100);
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      for (const other of [
+        "Positions",
+        "Signals",
+        "Risk decisions",
+        "Paper orders",
+        "Paper fills",
+      ])
+        await waitFor(() => expect(tableCells(other)).toHaveLength(100));
       const pager = screen.getByRole("group", {
         name: `${title} — Pagination`,
       });
       const seen: string[][] = [];
       for (const count of [100, 100, 1]) {
-        const table = screen.getByRole("table", { name: title });
-        const rows = within(table).getAllByRole("row").slice(1);
+        const rows = tableCells(title);
         expect(rows).toHaveLength(count);
-        seen.push(
-          ...rows.map((row) =>
-            Array.from(row.querySelectorAll("th,td"), (cell) =>
-              cell.getAttribute("title")!,
-            ),
-          ),
-        );
+        seen.push(...rows);
         if (count === 100) {
+          const first = rows[0];
           await userEvent.click(
             within(pager).getByRole("button", { name: "Next" }),
           );
+          await waitFor(() => expect(tableCells(title)[0]).not.toEqual(first));
           expect(pager).toHaveFocus();
         }
       }
@@ -2897,43 +2930,83 @@ describe("paper trading pages", () => {
       expect(
         within(pager).getByRole("button", { name: "Next" }),
       ).toBeDisabled();
-    }
-    const fillPager = screen.getByRole("group", {
+      for (const other of [
+        "Positions",
+        "Signals",
+        "Risk decisions",
+        "Paper orders",
+        "Paper fills",
+      ])
+        if (other !== title) expect(tableCells(other)).toHaveLength(100);
+      expect(
+        fetch.mock.calls.every(([input]) => String(input).endsWith("/state")),
+      ).toBe(true);
+      expect(
+        paperRequests.every(
+          ({ url, options }) =>
+            (url.endsWith("/state") || url.includes("/collections/")) &&
+            options?.method === undefined,
+        ),
+      ).toBe(true);
+      expect(
+        paperRequests.some(({ url }) => url.includes("/collections/")),
+      ).toBe(true);
+    },
+  );
+
+  it("retains the last fill page and exact appended value through locale changes", async () => {
+    installWebSocket();
+    const { snapshot } = financialTableFixture();
+    snapshot.signals = [];
+    snapshot.risk_decisions = [];
+    snapshot.orders = [];
+    snapshot.latest_portfolio!.positions =
+      snapshot.latest_portfolio!.positions.slice(0, 1);
+    snapshot.last_sequence = 202;
+    mockPaperServer().mockImplementation(async () => jsonResponse(snapshot));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await waitFor(() => expect(tableCells("Paper fills")).toHaveLength(100));
+    const pager = screen.getByRole("group", {
       name: "Paper fills — Pagination",
     });
+    for (const count of [100, 1]) {
+      const first = tableCells("Paper fills")[0];
+      await userEvent.click(
+        within(pager).getByRole("button", { name: "Next" }),
+      );
+      await waitFor(() =>
+        expect(tableCells("Paper fills")[0]).not.toEqual(first),
+      );
+      expect(tableCells("Paper fills")).toHaveLength(count);
+      expect(pager).toHaveFocus();
+    }
     const extraFill = {
       ...snapshot.fills[0]!,
-      order_id: otherId,
+      order_id: "00000000-0000-0000-0000-000000000999",
       quantity: "202.000000000000000001",
     };
-    snapshot.fills = [...snapshot.fills, extraFill];
+    snapshot.fills.push(extraFill);
+    snapshot.last_sequence = 203;
     await act(async () =>
       MockWebSocket.instances[0]!.message({
-        sequence: 1,
+        sequence: 203,
         type: "fill.created",
         occurred_at: "2026-09-06T02:03:00Z",
         payload: extraFill,
       }),
     );
-    expect(fillPager).toHaveFocus();
-    expect(
-      within(screen.getByRole("table", { name: "Paper fills" })).getAllByRole(
-        "rowheader",
-      ),
-    ).toHaveLength(2);
+    await waitFor(() => expect(tableCells("Paper fills")).toHaveLength(2));
+    expect(pager).toHaveFocus();
     try {
       await act(async () => i18n.changeLanguage("zh-CN"));
       await act(async () => MockWebSocket.instances.at(-1)!.open());
+      await waitFor(() => expect(tableCells("模拟成交")).toHaveLength(2));
       expect(
         screen.getByRole("group", {
           name: `模拟成交 — ${i18n.t("common:pagination")}`,
         }),
       ).toHaveFocus();
-      expect(
-        within(screen.getByRole("table", { name: "模拟成交" })).getAllByRole(
-          "rowheader",
-        ),
-      ).toHaveLength(2);
       expect(screen.getByText("202.000000000000000001")).toHaveAttribute(
         "title",
         "202.000000000000000001",
@@ -2942,84 +3015,229 @@ describe("paper trading pages", () => {
       await act(async () => i18n.changeLanguage("en-US"));
       await act(async () => MockWebSocket.instances.at(-1)!.open());
     }
-    const positionsPager = screen.getByRole("group", {
-      name: "Positions — Pagination",
-    });
+    expect(tableCells("Paper fills")).toHaveLength(2);
+    expect(
+      paperRequests
+        .filter(({ url }) => url.includes("/collections/fills"))
+        .every(
+          ({ url }) =>
+            new URL(url, "http://test.local").searchParams.get("offset") !==
+            "300",
+        ),
+    ).toBe(true);
+  });
+
+  it("persists the position-page clamp through shrink, empty and regrow without losing focus", async () => {
+    installWebSocket();
+    const { snapshot } = financialTableFixture();
+    snapshot.signals = [];
+    snapshot.risk_decisions = [];
+    snapshot.orders = [];
+    snapshot.fills = [];
+    snapshot.last_sequence = 0;
+    mockPaperServer().mockImplementation(async () => jsonResponse(snapshot));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await screen.findByRole("table", { name: "Positions" });
+    const pager = screen.getByRole("group", { name: "Positions — Pagination" });
+    for (const count of [100, 1]) {
+      const first = tableCells("Positions")[0];
+      await userEvent.click(
+        within(pager).getByRole("button", { name: "Next" }),
+      );
+      await waitFor(() =>
+        expect(tableCells("Positions")[0]).not.toEqual(first),
+      );
+      expect(tableCells("Positions")).toHaveLength(count);
+    }
     const fullPositions = snapshot.latest_portfolio!.positions;
-    positionsPager.focus();
-    snapshot.latest_portfolio = {
-      ...snapshot.latest_portfolio!,
-      positions: snapshot.latest_portfolio!.positions.slice(0, 1),
-    };
-    await act(async () =>
-      MockWebSocket.instances.at(-1)!.message({
-        sequence: 2,
-        type: "portfolio.snapshot",
-        occurred_at: "2026-09-06T02:03:00Z",
-        payload: snapshot.latest_portfolio,
-      }),
-    );
-    expect(positionsPager).toHaveFocus();
-    expect(
-      within(screen.getByRole("table", { name: "Positions" })).getAllByRole(
-        "rowheader",
-      ),
-    ).toHaveLength(1);
-    expect(
-      within(positionsPager).getByRole("button", { name: "Previous" }),
-    ).toBeDisabled();
+    pager.focus();
+    for (const [index, positions] of [
+      fullPositions.slice(0, 1),
+      [],
+      fullPositions,
+    ].entries()) {
+      snapshot.latest_portfolio!.positions = positions;
+      snapshot.last_sequence = index + 1;
+      await act(async () =>
+        MockWebSocket.instances.at(-1)!.message({
+          sequence: index + 1,
+          type: "portfolio.snapshot",
+          occurred_at: "2026-09-06T02:03:00Z",
+          payload: snapshot.latest_portfolio,
+        }),
+      );
+      expect(pager).toHaveFocus();
+      if (positions.length)
+        expect(tableCells("Positions")).toHaveLength(
+          Math.min(100, positions.length),
+        );
+      else
+        expect(
+          screen.queryByRole("table", { name: "Positions" }),
+        ).not.toBeInTheDocument();
+      expect(
+        within(pager).getByRole("button", { name: "Previous" }),
+      ).toBeDisabled();
+    }
+  });
+
+  it("resets financial collection offsets when switching saved accounts", async () => {
+    installWebSocket();
+    const { snapshot } = financialTableFixture();
+    snapshot.signals = [];
+    snapshot.risk_decisions = [];
+    snapshot.orders = [];
+    snapshot.last_sequence = 202;
     snapshot.latest_portfolio!.positions = [];
-    await act(async () =>
-      MockWebSocket.instances.at(-1)!.message({
-        sequence: 3,
-        type: "portfolio.snapshot",
-        occurred_at: "2026-09-06T02:04:00Z",
-        payload: snapshot.latest_portfolio,
+    const otherId = "00000000-0000-0000-0000-000000000999";
+    mockPaperServer().mockImplementation(async (input) =>
+      jsonResponse({
+        ...snapshot,
+        session: {
+          ...snapshot.session,
+          session_id: String(input).includes(otherId) ? otherId : PAPER_ID,
+        },
       }),
     );
-    expect(positionsPager).toHaveFocus();
-    expect(
-      screen.queryByRole("table", { name: "Positions" }),
-    ).not.toBeInTheDocument();
-    snapshot.latest_portfolio!.positions = fullPositions;
-    await act(async () =>
-      MockWebSocket.instances.at(-1)!.message({
-        sequence: 4,
-        type: "portfolio.snapshot",
-        occurred_at: "2026-09-06T02:05:00Z",
-        payload: snapshot.latest_portfolio,
-      }),
-    );
-    expect(positionsPager).toHaveFocus();
-    expect(
-      within(screen.getByRole("table", { name: "Positions" })).getAllByRole(
-        "rowheader",
-      ),
-    ).toHaveLength(100);
-    expect(
-      within(positionsPager).getByRole("button", { name: "Previous" }),
-    ).toBeDisabled();
+    const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    await waitFor(() => expect(tableCells("Paper fills")).toHaveLength(100));
+    const pager = screen.getByRole("group", {
+      name: "Paper fills — Pagination",
+    });
+    for (const count of [100, 1]) {
+      const first = tableCells("Paper fills")[0];
+      await userEvent.click(
+        within(pager).getByRole("button", { name: "Next" }),
+      );
+      await waitFor(() =>
+        expect(tableCells("Paper fills")[0]).not.toEqual(first),
+      );
+      expect(tableCells("Paper fills")).toHaveLength(count);
+    }
     view.rerender(<PaperSessionDetailPage sessionId={otherId} />);
     await act(async () => MockWebSocket.instances.at(-1)!.open());
-    await waitFor(() =>
-      expect(
-        within(screen.getByRole("table", { name: "Paper fills" })).getAllByRole(
-          "rowheader",
-        ),
-      ).toHaveLength(100),
-    );
+    await waitFor(() => expect(tableCells("Paper fills")).toHaveLength(100));
     expect(
       within(
         screen.getByRole("group", { name: "Paper fills — Pagination" }),
       ).getByRole("button", { name: "Previous" }),
     ).toBeDisabled();
     expect(
-      fetch.mock.calls.every(([input]) => String(input).includes("/snapshot")),
+      paperRequests
+        .filter(({ url }) => url.includes(`/sessions/${otherId}/collections/`))
+        .every(
+          ({ url }) =>
+            new URL(url, "http://test.local").searchParams.get("offset") ===
+            "0",
+        ),
     ).toBe(true);
   });
 
+  it.each(["watermark", "account"] as const)(
+    "discards a delayed financial page after the %s changes",
+    async (change) => {
+      installWebSocket();
+      const { snapshot } = financialTableFixture();
+      snapshot.signals = [];
+      snapshot.risk_decisions = [];
+      snapshot.orders = [];
+      snapshot.latest_portfolio!.positions = [];
+      snapshot.last_sequence = 202;
+      const otherId = "00000000-0000-0000-0000-000000000999";
+      let resolveOld!: (response: Response) => void;
+      let oldSignal: AbortSignal | null | undefined;
+      let oldResponse: Response | undefined;
+      mockPaperServer(async (url, window, options) => {
+        const collection = url.pathname.split("/").at(-1) as PaperCollection;
+        const watermark = Number(url.searchParams.get("as_of_sequence"));
+        const offset = Number(url.searchParams.get("offset") ?? 0);
+        const response = jsonResponse(
+          paperCollection(window, collection, watermark, offset),
+        );
+        if (collection === "fills" && watermark === 202 && offset === 200) {
+          oldSignal = options?.signal;
+          oldResponse = response;
+          return new Promise<Response>((resolve) => {
+            resolveOld = resolve;
+          });
+        }
+        return response;
+      }).mockImplementation(async (input) =>
+        jsonResponse(
+          String(input).includes(otherId)
+            ? {
+                ...snapshot,
+                session: { ...snapshot.session, session_id: otherId },
+                last_sequence: 2,
+                fills: [
+                  { ...snapshot.fills[0]!, quantity: "888.000000000000000001" },
+                ],
+              }
+            : snapshot,
+        ),
+      );
+      const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      await waitFor(() => expect(tableCells("Paper fills")).toHaveLength(100));
+      const pager = screen.getByRole("group", {
+        name: "Paper fills — Pagination",
+      });
+      const first = tableCells("Paper fills")[0];
+      await userEvent.click(
+        within(pager).getByRole("button", { name: "Next" }),
+      );
+      await waitFor(() =>
+        expect(tableCells("Paper fills")[0]).not.toEqual(first),
+      );
+      await userEvent.click(
+        within(pager).getByRole("button", { name: "Next" }),
+      );
+      await waitFor(() => expect(oldResponse).toBeDefined());
+      if (change === "watermark") {
+        const extraFill = {
+          ...snapshot.fills[0]!,
+          quantity: "202.000000000000000001",
+        };
+        snapshot.fills.push(extraFill);
+        snapshot.last_sequence = 203;
+        await act(async () =>
+          MockWebSocket.instances[0]!.message({
+            sequence: 203,
+            type: "fill.created",
+            occurred_at: "2026-09-06T02:03:00Z",
+            payload: extraFill,
+          }),
+        );
+        await waitFor(() => expect(tableCells("Paper fills")).toHaveLength(2));
+        expect(screen.getByTitle("202.000000000000000001")).toBeVisible();
+      } else {
+        view.rerender(<PaperSessionDetailPage sessionId={otherId} />);
+        await act(async () => MockWebSocket.instances.at(-1)!.open());
+        expect(
+          await screen.findByTitle("888.000000000000000001"),
+        ).toBeVisible();
+        expect(tableCells("Paper fills")).toHaveLength(1);
+      }
+      expect(oldSignal?.aborted).toBe(true);
+      await act(async () => resolveOld(oldResponse!));
+      expect(tableCells("Paper fills")).toHaveLength(
+        change === "watermark" ? 2 : 1,
+      );
+      expect(screen.queryByTitle("201.000000000000000001")).toBe(
+        change === "watermark"
+          ? screen.getByTitle("201.000000000000000001")
+          : null,
+      );
+      if (change === "watermark")
+        expect(screen.getByTitle("202.000000000000000001")).toBeVisible();
+      else expect(screen.getByTitle("888.000000000000000001")).toBeVisible();
+    },
+  );
+
   it("validates paper strategy parameters before submitting", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch");
+    const fetch = mockPaperServer();
     render(<CreatePaperSessionPage />);
     await userEvent.selectOptions(screen.getByLabelText("Provider"), "replay");
     fireEvent.change(screen.getByLabelText("Short period"), {
@@ -3040,7 +3258,7 @@ describe("paper trading pages", () => {
   });
 
   it("focuses an impossible RSI oversold threshold before submitting", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch");
+    const fetch = mockPaperServer();
     render(<CreatePaperSessionPage />);
     await userEvent.selectOptions(screen.getByLabelText("Provider"), "replay");
     await userEvent.selectOptions(
@@ -3061,12 +3279,338 @@ describe("paper trading pages", () => {
     );
   });
 
+  it.each([503, 403])(
+    "retries a failed collection page without losing focus or treating HTTP %s as empty",
+    async (status) => {
+      installWebSocket();
+      vi.useFakeTimers();
+      const snapshot = paperSnapshot("RUNNING");
+      snapshot.last_sequence = 2;
+      const fill = {
+        order_id: PAPER_ID,
+        strategy_id: "moving_average_crossover",
+        symbol: "AAPL",
+        side: "BUY",
+        quantity: "1.000000000000000001",
+        price: "12",
+        commission: "0.000000000000000001",
+        timestamp: "2024-01-09T00:00:00Z",
+      };
+      snapshot.fills = [fill];
+      let failed = false;
+      mockPaperServer(async (url, window) => {
+        const collection = url.pathname.split("/").at(-1) as PaperCollection;
+        return collection === "fills" && failed
+          ? jsonResponse({ detail: "collection unavailable" }, status)
+          : jsonResponse(
+              paperCollection(
+                window,
+                collection,
+                Number(url.searchParams.get("as_of_sequence")),
+                Number(url.searchParams.get("offset")),
+              ),
+            );
+      }).mockImplementation(async () => jsonResponse(snapshot));
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      expect(tableCells("Paper fills")).toHaveLength(1);
+      const panel = screen
+        .getByRole("heading", { name: "Paper fills" })
+        .closest("section")!;
+      const pager = within(panel).getByRole("group");
+      failed = true;
+      snapshot.last_sequence = 3;
+      const nextFill = { ...fill, quantity: "2.000000000000000001" };
+      snapshot.fills.push(nextFill);
+      act(() =>
+        MockWebSocket.instances[0]!.message({
+          sequence: 3,
+          type: "fill.created",
+          occurred_at: fill.timestamp,
+          payload: nextFill,
+        }),
+      );
+      await act(async () => vi.advanceTimersByTimeAsync(100));
+      expect(within(panel).getByRole("alert")).toHaveTextContent(
+        "collection unavailable",
+      );
+      expect(
+        within(panel).queryByText(i18n.t("paper:detail.noFills")),
+      ).not.toBeInTheDocument();
+      if (status === 503) {
+        expect(tableCells("Paper fills")).toHaveLength(1);
+        expect(within(panel).getByRole("status")).toHaveTextContent(
+          "last verified page",
+        );
+      } else {
+        expect(within(panel).queryByRole("table")).not.toBeInTheDocument();
+        expect(
+          within(panel).queryByTitle(fill.quantity),
+        ).not.toBeInTheDocument();
+      }
+      failed = false;
+      await act(async () =>
+        fireEvent.click(
+          within(panel).getByRole("button", { name: "Retry Paper fills" }),
+        ),
+      );
+      expect(pager).toHaveFocus();
+      expect(tableCells("Paper fills")).toHaveLength(2);
+      expect(within(panel).queryByRole("alert")).not.toBeInTheDocument();
+      expect(
+        within(panel).queryByText(/last verified page/),
+      ).not.toBeInTheDocument();
+      expect(
+        paperRequests.every(
+          ({ url, options }) =>
+            !url.includes("/snapshot") && options?.method === undefined,
+        ),
+      ).toBe(true);
+    },
+  );
+
+  it("coalesces bounded financial-page refreshes, ignores old events and rehydrates a resync", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const snapshot = paperSnapshot("RUNNING");
+    snapshot.last_sequence = 1;
+    const fill = {
+      order_id: PAPER_ID,
+      strategy_id: "moving_average_crossover",
+      symbol: "AAPL",
+      side: "BUY",
+      quantity: "1.000000000000000001",
+      price: "12.123456789123456789",
+      commission: "0.000000000000000001",
+      timestamp: "2024-01-09T00:00:00Z",
+    };
+    let resolveHeld!: (response: Response) => void;
+    const fetch = mockPaperServer()
+      .mockResolvedValueOnce(jsonResponse(snapshot))
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (resolveHeld = resolve)),
+      )
+      .mockImplementation(async () => jsonResponse(snapshot));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    const append = (sequence: number) => {
+      snapshot.fills.push(fill);
+      snapshot.last_sequence = sequence;
+      MockWebSocket.instances[0]!.message({
+        sequence,
+        type: "fill.created",
+        occurred_at: fill.timestamp,
+        payload: fill,
+      });
+    };
+    act(() => {
+      for (let sequence = 2; sequence <= 101; sequence++) append(sequence);
+    });
+    expect(fetch).toHaveBeenCalledOnce();
+    const fillPanel = screen
+      .getByRole("heading", { name: "Paper fills" })
+      .closest("section")!;
+    expect(within(fillPanel).getByRole("status")).toHaveTextContent(
+      "last verified page",
+    );
+    expect(
+      screen.queryByRole("table", { name: "Paper fills" }),
+    ).not.toBeInTheDocument();
+    await act(async () => vi.advanceTimersByTimeAsync(99));
+    expect(fetch).toHaveBeenCalledOnce();
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    expect(fetch).toHaveBeenCalledTimes(2);
+    const captured = jsonResponse(snapshot);
+    act(() => {
+      append(102);
+      append(103);
+    });
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    expect(fetch).toHaveBeenCalledTimes(2);
+    await act(async () => resolveHeld(captured));
+    expect(tableCells("Paper fills")).toHaveLength(100);
+    expect(within(fillPanel).getByRole("status")).toHaveTextContent(
+      "last verified page",
+    );
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(
+      within(fillPanel).queryByText(/last verified page/),
+    ).not.toBeInTheDocument();
+    const pager = screen.getByRole("group", {
+      name: "Paper fills — Pagination",
+    });
+    expect(pager).toHaveTextContent(
+      i18n.t("common:pageOf", { start: 1, end: 100, total: 102 }),
+    );
+    await act(async () =>
+      fireEvent.click(within(pager).getByRole("button", { name: "Next" })),
+    );
+    expect(tableCells("Paper fills")).toHaveLength(2);
+    expect(pager).toHaveFocus();
+    act(() => {
+      for (const sequence of [103, 102])
+        MockWebSocket.instances[0]!.message({
+          sequence,
+          type: "fill.created",
+          occurred_at: fill.timestamp,
+          payload: fill,
+        });
+    });
+    await act(async () => vi.advanceTimersByTimeAsync(500));
+    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(tableCells("Paper fills")).toHaveLength(2);
+    act(() =>
+      MockWebSocket.instances[0]!.message({
+        sequence: null,
+        type: "stream.resync_required",
+        occurred_at: null,
+        payload: {},
+      }),
+    );
+    expect(MockWebSocket.instances[0]!.readyState).toBe(MockWebSocket.CLOSED);
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    expect(MockWebSocket.instances).toHaveLength(2);
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(fetch).toHaveBeenCalledTimes(4);
+    expect(tableCells("Paper fills")).toHaveLength(2);
+    expect(pager).toHaveFocus();
+    expect(
+      paperRequests.every(
+        ({ url, options }) =>
+          !url.includes("/snapshot") && options?.method === undefined,
+      ),
+    ).toBe(true);
+    expect(
+      paperRequests
+        .filter(({ url }) => url.includes("/collections/"))
+        .every(
+          ({ url }) =>
+            new URL(url, "http://test.local").searchParams.get("limit") ===
+            "100",
+        ),
+    ).toBe(true);
+  });
+
+  it("fails closed on another account's streamed plan without crashing the detail page", async () => {
+    installWebSocket();
+    const snapshot = paperSnapshot("RUNNING");
+    snapshot.session.provider_type = "historical_a_share";
+    snapshot.last_sequence = 1;
+    mockPaperServer().mockResolvedValue(jsonResponse(snapshot));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    act(() =>
+      MockWebSocket.instances[0]!.message({
+        sequence: 2,
+        type: "portfolio.snapshot",
+        occurred_at: "2011-03-22T07:00:00Z",
+        payload: {
+          timestamp: "2011-03-22T07:00:00Z",
+          cash: "100000",
+          market_value: "0",
+          equity: "100000",
+          realized_pnl: "0",
+          unrealized_pnl: "0",
+          cumulative_commission: "0",
+          drawdown: "0",
+          positions: [],
+          plan: {
+            ...plan,
+            mode: "historical_exploration",
+            account_mode: "HISTORICAL_PAPER_REPLAY",
+            submitted_to_account: true,
+            paper_session_id: "a0975744-c58a-49d8-a72d-45f6ed700ca6",
+            plan_version: "PAPER_ACCOUNT_PLAN_V3",
+          },
+        },
+      }),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("malformed");
+    expect(screen.queryByText("Paper portfolio")).not.toBeInTheDocument();
+    expect(screen.queryByText("100000")).not.toBeInTheDocument();
+    expect(MockWebSocket.instances[0]!.readyState).toBe(MockWebSocket.CLOSED);
+  });
+
+  it("fails closed when a late REST state would roll back an accepted stream status and portfolio", async () => {
+    installWebSocket();
+    vi.useFakeTimers();
+    const initial = paperSnapshot("RUNNING");
+    initial.last_sequence = 5;
+    initial.latest_portfolio = {
+      timestamp: "2024-01-09T00:00:00Z",
+      cash: "1000.000000000000000001",
+      market_value: "0",
+      equity: "1000.000000000000000001",
+      realized_pnl: "0",
+      unrealized_pnl: "0",
+      cumulative_commission: "0",
+      drawdown: "0",
+      positions: [],
+      plan: null,
+    };
+    let resolveOld!: (response: Response) => void;
+    const fetch = mockPaperServer()
+      .mockResolvedValueOnce(jsonResponse(initial))
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (resolveOld = resolve)),
+      )
+      .mockImplementation(async () => jsonResponse(initial));
+    render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+    await act(async () => MockWebSocket.instances[0]!.open());
+    act(() => {
+      MockWebSocket.instances[0]!.message({
+        sequence: 6,
+        type: "portfolio.snapshot",
+        occurred_at: initial.latest_portfolio!.timestamp,
+        payload: {
+          ...initial.latest_portfolio,
+          cash: "1100.000000000000000001",
+          equity: "1100.000000000000000001",
+        },
+      });
+      MockWebSocket.instances[0]!.message({
+        sequence: 7,
+        type: "session.status",
+        occurred_at: "2024-01-09T00:00:01Z",
+        payload: { status: "PAUSED" },
+      });
+    });
+    expect(screen.getAllByTitle("1100.000000000000000001")).toHaveLength(2);
+    expect(
+      screen.getByText("Paused", { selector: ".statusBadge" }),
+    ).toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(2);
+    await act(async () => resolveOld(jsonResponse(initial)));
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "watermark moved backwards",
+    );
+    expect(
+      screen.queryByTitle("1000.000000000000000001"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByTitle("1100.000000000000000001"),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Paper portfolio")).not.toBeInTheDocument();
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    await act(async () => MockWebSocket.instances[1]!.open());
+    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "watermark moved backwards",
+    );
+    expect(screen.queryByText("Paper portfolio")).not.toBeInTheDocument();
+    expect(paperRequests.every(({ url }) => !url.includes("/snapshot"))).toBe(
+      true,
+    );
+  });
+
   it("hydrates from REST, ingests typed events once, and reconnects with rehydration", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation(async () => jsonResponse(paperSnapshot("RUNNING")));
+    const snapshot = paperSnapshot("RUNNING");
+    const fetch = mockPaperServer().mockImplementation(async () =>
+      jsonResponse(snapshot),
+    );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     expect(MockWebSocket.instances).toHaveLength(1);
     await act(async () => MockWebSocket.instances[0]!.open());
@@ -3107,6 +3651,8 @@ describe("paper trading pages", () => {
     act(() => MockWebSocket.instances[0]!.message(portfolioEvent));
     expect(screen.getAllByText("Paper portfolio")).toHaveLength(1);
 
+    snapshot.last_sequence = portfolioEvent.sequence;
+    snapshot.latest_portfolio = { ...portfolioEvent.payload, plan: null };
     act(() => MockWebSocket.instances[0]!.close());
     expect(
       screen.getByText("Session connection: reconnecting"),
@@ -3146,7 +3692,7 @@ describe("paper trading pages", () => {
       timestamp: "2026-09-06T02:01:00Z",
     };
     let resolveInitial!: (response: Response) => void;
-    vi.spyOn(globalThis, "fetch")
+    mockPaperServer()
       .mockImplementationOnce(
         () => new Promise((resolve) => (resolveInitial = resolve)),
       )
@@ -3154,7 +3700,7 @@ describe("paper trading pages", () => {
         Promise.resolve(
           jsonResponse({
             ...paperSnapshot("RUNNING"),
-            last_sequence: 5,
+            last_sequence: 6,
             fills: [fill, fill, fill, fill, fill],
           }),
         ),
@@ -3178,7 +3724,7 @@ describe("paper trading pages", () => {
         resolveInitial(
           jsonResponse({
             ...paperSnapshot("RUNNING"),
-            last_sequence: 1,
+            last_sequence: 2,
             fills: [fill],
           }),
         ),
@@ -3216,7 +3762,7 @@ describe("paper trading pages", () => {
       await act(async () => MockWebSocket.instances.at(-1)!.open());
       expect(status).toBeEmptyDOMElement();
       act(() =>
-        MockWebSocket.instances.at(-1)!.message({ ...live, sequence: 6 }),
+        MockWebSocket.instances.at(-1)!.message({ ...live, sequence: 7 }),
       );
       expect(status).toHaveTextContent(
         "新增模拟成交：买入 10 股 AAPL，成交价 12。",
@@ -3245,14 +3791,13 @@ describe("paper trading pages", () => {
       commission: "0.5",
       timestamp: "2026-09-06T02:01:00Z",
     };
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockReturnValueOnce(new Promise<Response>(() => {}))
       .mockResolvedValueOnce(
         jsonResponse({
           ...paperSnapshot("RUNNING"),
-          last_sequence: 1,
+          last_sequence: 2,
           fills: [fill],
         }),
       );
@@ -3296,7 +3841,7 @@ describe("paper trading pages", () => {
   it("closes terminal session streams without reconnecting", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    vi.spyOn(globalThis, "fetch")
+    mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockResolvedValue(
         jsonResponse({
@@ -3330,11 +3875,12 @@ describe("paper trading pages", () => {
   it("recovers a terminal notification after a transient final snapshot failure", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockResolvedValueOnce(jsonResponse({ detail: "temporary" }, 503))
-      .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
+      .mockResolvedValueOnce(
+        jsonResponse({ ...paperSnapshot("STOPPED"), last_sequence: 1 }),
+      );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     await act(async () =>
@@ -3360,11 +3906,12 @@ describe("paper trading pages", () => {
   it("rehydrates terminal state when the server closes before the final snapshot", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
+    const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSnapshot("RUNNING")))
       .mockReturnValueOnce(new Promise(() => {}))
-      .mockResolvedValueOnce(jsonResponse(paperSnapshot("STOPPED")));
+      .mockResolvedValueOnce(
+        jsonResponse({ ...paperSnapshot("STOPPED"), last_sequence: 1 }),
+      );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     act(() => {
@@ -3389,7 +3936,7 @@ describe("paper trading pages", () => {
 
   it("hydrates terminal failure even when it arrives before the initial REST snapshot", async () => {
     installWebSocket();
-    vi.spyOn(globalThis, "fetch")
+    mockPaperServer()
       .mockReturnValueOnce(new Promise(() => {}))
       .mockResolvedValueOnce(
         jsonResponse({
@@ -3420,7 +3967,7 @@ describe("paper trading pages", () => {
 
   it("explains a backend interruption in Chinese and keeps the raw diagnostic for audit", async () => {
     installWebSocket();
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    mockPaperServer().mockResolvedValue(
       jsonResponse({
         ...paperSnapshot("INTERRUPTED"),
         session: {
@@ -3449,7 +3996,7 @@ describe("paper trading pages", () => {
 
   it("offers a configuration-preserving retry for an interrupted session without a stored diagnostic", async () => {
     installWebSocket();
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+    mockPaperServer().mockResolvedValue(
       jsonResponse(paperSnapshot("INTERRUPTED")),
     );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
@@ -3714,9 +4261,9 @@ describe("paper trading pages", () => {
   it("rejects unknown stream events and rehydrates instead of advancing state", async () => {
     installWebSocket();
     vi.useFakeTimers();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation(async () => jsonResponse(paperSnapshot("RUNNING")));
+    const fetch = mockPaperServer().mockImplementation(async () =>
+      jsonResponse(paperSnapshot("RUNNING")),
+    );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     act(() =>
@@ -3738,9 +4285,7 @@ describe("paper trading pages", () => {
 
   it("aborts hydration and closes the socket when navigating away", async () => {
     installWebSocket();
-    const fetch = vi
-      .spyOn(globalThis, "fetch")
-      .mockReturnValue(new Promise(() => {}));
+    const fetch = mockPaperServer().mockReturnValue(new Promise(() => {}));
     const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
     const signal = fetch.mock.calls[0]?.[1]?.signal;
@@ -3756,7 +4301,7 @@ describe("paper trading pages", () => {
     const oldResponse = new Promise<Response>((resolve) => {
       resolveOld = resolve;
     });
-    vi.spyOn(globalThis, "fetch")
+    mockPaperServer()
       .mockReturnValueOnce(oldResponse)
       .mockResolvedValueOnce(
         jsonResponse({

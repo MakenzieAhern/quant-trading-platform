@@ -1,5 +1,58 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 22:29 UTC bounded paper detail whole-loop local check
+
+Detail now reads `/state` and four fixed-watermark100-event collection pages,
+replacing pages rather than accumulating historical arrays. Financial WS bursts
+coalesce; pending/old/error pages remain explicitly last-verified. REST cannot
+roll back accepted WS state, even after failure/reconnect. Wrong-owner plans
+fail closed, denied access hides old pages and stops automatic collection reads.
+Existing snapshot/journal/resume remain compatible; exact money stays backend.
+
+1094backend/one optional archive skip and616frontend/44files pass, with lint,
+types/build/format checks. Frontend evidence is honestly a TOOL_OUTPUT_RECORD,
+not raw captured stdout; check ordering and all RED/failure history are retained.
+No assertions removed, timeout raised or skip added. Final independent backend
+and two frontend reviews PASS_SCOPED/no newP1P2.
+
+[Saved65-file proof](../../../product-evidence/v1.2/m4/20261003-paper-bounded-read/README.md),
+manifest SHA706fb90e3c44d2490cfb864cba3a0fc9fcdb999866ea8569347463b51c3e010b,
+includes actual Chrome explicit finiteUICreate/Start,205/204records across three
+pages,12raw collections/legacy snapshot/state/exact money-order parity,
+EN roundtrip/focus,16actual theme/locale/size frames, mobile local keyboard scroll
+and account-reset/noauto-start. Root saved-only verifier passes; independent
+saved-bundle review/new exact hostedCI remain separate pending gates.
+
+Original fiveSTOPPED/417events/eightterminal personal studies unchanged, four
+services up; only new owned quant_test tmpfs QA3 stopped afteractive0. No frozen
+research/OOS/authority change, no durable data/image/volume deletion. This is
+synthetic integration, not genuinely new-market/heap/SQLcost/p95/native200/fullAA/
+lost-ledger/full-product acceptance. PR32 remains draft/open; no release or merge.
+
+## 2026-10-02 22:07 UTC bounded saved paper read foundation
+
+Backend `49084fb5988bdd12d501d373050fb4866dbc813f` provides shared-row-lock
+state/watermark and SQL-counted100-event collection pages. Canonical UUID/latest
+orders keep first-insertion order; signals/risk/fills keep every event. Existing
+snapshot/journal/resume remain compatible.205/206-item legacy payload parity,
+long decimals, pending orders, earlier preview plan, append-during-paging old
+watermark, futureW/bounds/notfound and writer-lock barrier tests pass.
+Independent review found a typed-union P2; RED200vs500 reproduced and fixed in
+shared event validation, with opaque500 checks for collections/events/snapshot.
+1094backend PASS,1optional unmounted archive SKIP; Ruff546/format/mypy145 PASS.
+
+[Saved logs and readonly original verifier](../../../product-evidence/v1.2/m4/20261003-paper-bounded-read/README.md)
+confirm all five original snapshots and new state/page payloads exact field
+parity after guarded backend-only reload;5STOPPED/417events/8terminal jobs
+unchanged. No byte-order/fullDB restore claim. Other three original services
+not restarted; ownedtestPG stopped, other QA/media untouched.
+
+Frontend bounded retention/real Chrome/final review/new CI remain IN_PROGRESS.
+Prior pushed `a3c1033` CI37069722022 failed a5000ms frontend paging-test timeout;
+other582front tests/backend/Compose passed. Retain all assertions, split costly
+test structure; do not raise timeout. No full hosted PASS/whole-product release
+or forward acceptance inferred. Frozen/.research/OOS/source authorities unchanged.
+
 ## 2026-10-02 21:49 UTC paper financial tables render bounded pages
 
 U7/M4 source `b293a73e7eaca8ca1523ba71ba8938fe053ce006` reuses shared

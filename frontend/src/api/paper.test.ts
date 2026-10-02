@@ -7,11 +7,362 @@ import { jsonResponse } from "../test/fixtures";
 import {
   PAPER_ID,
   paperCalendarEvent,
+  paperCollection,
   paperSession,
   paperSnapshot,
+  paperState,
 } from "../test/paperFixtures";
 
+function boundedSnapshot() {
+  const snapshot = paperSnapshot("STOPPED");
+  snapshot.last_sequence = 1000;
+  const timestamp = "2024-01-09T00:00:00Z";
+  snapshot.signals = Array.from({ length: 205 }, (_, index) => ({
+    strategy_id: "exact-contract-fixture",
+    symbol: `AAPL-${index}`,
+    timestamp,
+    signal_type: "BUY",
+  }));
+  snapshot.risk_decisions = snapshot.signals.map((_, index) => ({
+    proposal_id: `abcdefab-cdef-4000-8000-${(index + 1).toString(16).padStart(12, "0")}`,
+    approved: true,
+    reason_code: "APPROVED",
+    message: "Contract fixture, not market evidence.",
+    timestamp,
+  }));
+  snapshot.orders = snapshot.risk_decisions.map((decision) => ({
+    order_id: decision.proposal_id,
+    strategy_id: "exact-contract-fixture",
+    symbol: "AAPL",
+    side: "BUY",
+    order_type: "LIMIT",
+    quantity: "10.000000000000000001",
+    price: "9.123456789123456789",
+    status: "FILLED",
+    created_at: timestamp,
+  }));
+  snapshot.fills = [...snapshot.orders, snapshot.orders[0]!].map((order) => ({
+    order_id: order.order_id,
+    strategy_id: order.strategy_id,
+    symbol: order.symbol,
+    side: order.side,
+    quantity: order.quantity,
+    price: order.price!,
+    commission: "0.000000000000000001",
+    timestamp,
+  }));
+  snapshot.latest_portfolio = {
+    timestamp,
+    cash: "98160.852500000000000001",
+    market_value: "1851.4",
+    equity: "100012.252500000000000001",
+    realized_pnl: "0.000000000000000001",
+    unrealized_pnl: "12.2",
+    cumulative_commission: "0.000000000000000001",
+    drawdown: "0",
+    positions: [],
+    plan: null,
+  };
+  return snapshot;
+}
+
 describe("paper API contracts", () => {
+  it("loads a collection-free authoritative state with exact Decimal strings", async () => {
+    const snapshot = boundedSnapshot();
+    const header = paperState(snapshot);
+    const controller = new AbortController();
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(header));
+    const result = await paperApi.state(PAPER_ID, controller.signal);
+    expect(result).toEqual(header);
+    expect(result.latest_portfolio?.equity).toBe("100012.252500000000000001");
+    for (const collection of ["signals", "risk_decisions", "orders", "fills"])
+      expect(result).not.toHaveProperty(collection);
+    expect(snapshot.fills).toHaveLength(206);
+    expect(fetch.mock.calls[0]?.[0]).toContain(`/${PAPER_ID}/state`);
+    expect(fetch.mock.calls[0]?.[1]?.method).toBeUndefined();
+    expect(fetch.mock.calls[0]?.[1]?.signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it("rejects invalid state money, watermarks and another account", async () => {
+    const header = paperState(boundedSnapshot());
+    const fetch = vi.spyOn(globalThis, "fetch");
+    const invalid = [
+      ...[-1, 0.5, "1000", 2147483648, Number.MAX_SAFE_INTEGER + 1].map(
+        (last_sequence) => ({ ...header, last_sequence }),
+      ),
+      { ...header, session: { ...header.session, session_id: "other" } },
+      { ...header, session: { ...header.session, initial_cash: 100000 } },
+      {
+        ...header,
+        latest_portfolio: { ...header.latest_portfolio, cash: 98160.85 },
+      },
+      {
+        ...header,
+        latest_portfolio: { ...header.latest_portfolio, equity: "NaN" },
+      },
+    ];
+    for (const payload of invalid) {
+      fetch.mockResolvedValue(jsonResponse(payload));
+      await expect(paperApi.state(PAPER_ID)).rejects.toThrow();
+    }
+  });
+
+  it.each(["signals", "risk_decisions", "orders", "fills"] as const)(
+    "pages all %s at fixed 100 without losing exact payloads",
+    async (collection) => {
+      const snapshot = boundedSnapshot();
+      const fetch = vi
+        .spyOn(globalThis, "fetch")
+        .mockImplementation(async (request) => {
+          const url = new URL(String(request), "http://localhost");
+          expect(url.pathname).toBe(
+            `/api/paper-trading/sessions/${PAPER_ID}/collections/${collection}`,
+          );
+          expect(url.searchParams.get("as_of_sequence")).toBe("1000");
+          expect(url.searchParams.get("limit")).toBe("100");
+          return jsonResponse(
+            paperCollection(
+              snapshot,
+              collection,
+              1000,
+              Number(url.searchParams.get("offset")),
+            ),
+          );
+        });
+      const combined: Record<string, unknown>[] = [];
+      for (const offset of [0, 100, 200]) {
+        const result = await paperApi.collection(
+          PAPER_ID,
+          collection,
+          1000,
+          offset,
+        );
+        expect(result.total).toBe(snapshot[collection].length);
+        expect(result.items).toHaveLength(Math.min(100, result.total - offset));
+        combined.push(...result.items.map((item) => item.payload));
+      }
+      expect(combined).toEqual(snapshot[collection]);
+      expect(fetch).toHaveBeenCalledTimes(3);
+      if (collection === "fills") {
+        expect(combined[0]?.quantity).toBe("10.000000000000000001");
+        expect(combined[0]?.commission).toBe("0.000000000000000001");
+        expect(combined[205]?.order_id).toBe(combined[0]?.order_id);
+      }
+    },
+  );
+
+  it("rejects mismatched collection requests, bounds and incomplete records", async () => {
+    const page = paperCollection(boundedSnapshot(), "fills");
+    const first = page.items[0]!;
+    const fetch = vi.spyOn(globalThis, "fetch");
+    const invalid = [
+      { ...page, session_id: "other" },
+      { ...page, collection: "orders" },
+      { ...page, collection: "unknown" },
+      ...[-1, 0.5, "1000", 999, 2147483648].map((as_of_sequence) => ({
+        ...page,
+        as_of_sequence,
+      })),
+      ...[0, 99, 101, "100"].map((limit) => ({ ...page, limit })),
+      ...[-1, 1, 0.5, "0", 2147483648].map((offset) => ({ ...page, offset })),
+      ...[-1, 0.5, "206", Number.MAX_SAFE_INTEGER + 1].map((total) => ({
+        ...page,
+        total,
+      })),
+      { ...page, items: null },
+      { ...page, items: page.items.slice(0, 99) },
+      { ...page, items: [...page.items, { ...first, sequence: 999 }] },
+      {
+        ...page,
+        items: page.items.map((item, index) =>
+          index === 0
+            ? {
+                ...item,
+                type: "session.status",
+                payload: { status: "CREATED" },
+              }
+            : item,
+        ),
+      },
+      ...[0, -1, 0.5, "616", 1001].map((sequence) => ({
+        ...page,
+        items: [{ ...first, sequence }, ...page.items.slice(1)],
+      })),
+      {
+        ...page,
+        items: [
+          { ...first, sequence: page.items[1]!.sequence },
+          ...page.items.slice(1),
+        ],
+      },
+      {
+        ...page,
+        items: [
+          {
+            ...first,
+            payload: { order_id: first.payload.order_id, status: "CREATED" },
+          },
+          ...page.items.slice(1),
+        ],
+      },
+      {
+        ...page,
+        items: [
+          { ...first, payload: { ...first.payload, quantity: 10 } },
+          ...page.items.slice(1),
+        ],
+      },
+      {
+        ...page,
+        items: [
+          { ...first, payload: { ...first.payload, commission: "Infinity" } },
+          ...page.items.slice(1),
+        ],
+      },
+    ];
+    for (const payload of invalid) {
+      fetch.mockResolvedValue(jsonResponse(payload));
+      await expect(
+        paperApi.collection(PAPER_ID, "fills", 1000, 0),
+      ).rejects.toThrow();
+    }
+  });
+
+  it.each(["signals", "risk_decisions", "fills"] as const)(
+    "rejects reversed %s event order",
+    async (collection) => {
+      const page = paperCollection(boundedSnapshot(), collection);
+      vi.spyOn(globalThis, "fetch").mockResolvedValue(
+        jsonResponse({ ...page, items: [...page.items].reverse() }),
+      );
+      await expect(
+        paperApi.collection(PAPER_ID, collection, 1000, 0),
+      ).rejects.toThrow();
+    },
+  );
+
+  it("accepts current orders in first-seen order, rejecting canonical duplicate IDs", async () => {
+    const snapshot = boundedSnapshot();
+    snapshot.signals = [];
+    snapshot.risk_decisions = [];
+    snapshot.fills = [];
+    snapshot.orders = snapshot.orders.slice(0, 2);
+    const page = paperCollection(snapshot, "orders", 1000, 0, [9, 4]);
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(page));
+    expect(
+      (await paperApi.collection(PAPER_ID, "orders", 1000, 0)).items,
+    ).toEqual(page.items);
+    const orderId = page.items[0]!.payload.order_id as string;
+    fetch.mockResolvedValue(
+      jsonResponse({
+        ...page,
+        items: [
+          page.items[0],
+          {
+            ...page.items[1],
+            payload: {
+              ...page.items[1]!.payload,
+              order_id: orderId.toUpperCase(),
+            },
+          },
+        ],
+      }),
+    );
+    await expect(
+      paperApi.collection(PAPER_ID, "orders", 1000, 0),
+    ).rejects.toThrow();
+  });
+
+  it.each([
+    ["signals", "signal_type", 1],
+    ["risk_decisions", "approved", "true"],
+    ["orders", "price", 9.1],
+    ["fills", "commission", 0.1],
+  ] as const)(
+    "rejects malformed %s financial payloads",
+    async (collection, field, value) => {
+      const page = paperCollection(boundedSnapshot(), collection);
+      const first = page.items[0]!;
+      vi.spyOn(globalThis, "fetch").mockResolvedValue(
+        jsonResponse({
+          ...page,
+          items: [
+            { ...first, payload: { ...first.payload, [field]: value } },
+            ...page.items.slice(1),
+          ],
+        }),
+      );
+      await expect(
+        paperApi.collection(PAPER_ID, collection, 1000, 0),
+      ).rejects.toThrow();
+    },
+  );
+
+  it("rejects abbreviated orders even when their status is a valid session status", async () => {
+    const page = paperCollection(boundedSnapshot(), "orders");
+    const first = page.items[0]!;
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({
+        ...page,
+        items: [
+          {
+            ...first,
+            payload: { order_id: first.payload.order_id, status: "CREATED" },
+          },
+          ...page.items.slice(1),
+        ],
+      }),
+    );
+    await expect(
+      paperApi.collection(PAPER_ID, "orders", 1000, 0),
+    ).rejects.toThrow();
+  });
+
+  it("accepts zero-watermark empty pages and refuses contradictory fixtures", async () => {
+    const snapshot = paperSnapshot();
+    const page = paperCollection(snapshot, "fills", 0, 200);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(page));
+    expect(await paperApi.collection(PAPER_ID, "fills", 0, 200)).toEqual(page);
+    expect(() => paperCollection(boundedSnapshot(), "fills", 5)).toThrow(
+      "fixture",
+    );
+    expect(() =>
+      paperCollection(boundedSnapshot(), "orders", 1000, 0, [1]),
+    ).toThrow("fixture");
+  });
+
+  it.each(["state", "collection"] as const)(
+    "does not accept late %s response bodies after abort",
+    async (method) => {
+      const snapshot = boundedSnapshot();
+      let resolveBody!: (value: unknown) => void;
+      const body = new Promise<unknown>((resolve) => {
+        resolveBody = resolve;
+      });
+      const response = jsonResponse({});
+      vi.spyOn(response, "json").mockReturnValue(body);
+      const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(response);
+      const controller = new AbortController();
+      const pending =
+        method === "state"
+          ? paperApi.state(PAPER_ID, controller.signal)
+          : paperApi.collection(PAPER_ID, "fills", 1000, 0, controller.signal);
+      await Promise.resolve();
+      controller.abort();
+      resolveBody(
+        method === "state"
+          ? paperState(snapshot)
+          : paperCollection(snapshot, "fills"),
+      );
+      await expect(pending).rejects.toMatchObject({ name: "AbortError" });
+      expect(fetch.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+    },
+  );
+
   it.each(["initial", "extension"] as const)(
     "accepts persisted %s calendar observations with the same UTC instant",
     (kind) => {

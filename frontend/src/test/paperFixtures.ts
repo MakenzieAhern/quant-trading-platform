@@ -1,4 +1,10 @@
-import type { PaperSession, PaperSnapshot } from "../types/paper";
+import type {
+  PaperCollection,
+  PaperCollectionPage,
+  PaperSession,
+  PaperSnapshot,
+  PaperState,
+} from "../types/paper";
 
 export const PAPER_ID = "34d97303-a8c9-4f71-a0fc-c4b5d156f2ee";
 
@@ -83,5 +89,75 @@ export function paperSnapshot(
     fills: [],
     latest_portfolio: null,
     last_rebalance_plan: null,
+  };
+}
+
+const COLLECTION_TYPES = {
+  signals: "signal.created",
+  risk_decisions: "risk.decision",
+  orders: "order.updated",
+  fills: "fill.created",
+} as const;
+
+export function paperState(
+  snapshot: PaperSnapshot = paperSnapshot(),
+): PaperState {
+  return {
+    session: snapshot.session,
+    last_sequence: snapshot.last_sequence,
+    latest_bar: snapshot.latest_bar,
+    latest_session: snapshot.latest_session,
+    latest_portfolio: snapshot.latest_portfolio,
+    last_rebalance_plan: snapshot.last_rebalance_plan,
+  };
+}
+
+export function paperCollection(
+  snapshot: PaperSnapshot,
+  collection: PaperCollection,
+  watermark = snapshot.last_sequence,
+  offset = 0,
+  sequences?: readonly number[],
+): PaperCollectionPage {
+  const payloads = snapshot[collection];
+  const kinds = Object.keys(COLLECTION_TYPES) as PaperCollection[];
+  const firstSequence =
+    2 +
+    kinds
+      .slice(0, kinds.indexOf(collection))
+      .reduce((count, kind) => count + snapshot[kind].length, 0);
+  const assigned =
+    sequences ?? payloads.map((_, index) => firstSequence + index);
+  if (
+    !Number.isSafeInteger(watermark) ||
+    watermark < 0 ||
+    watermark > 2147483647 ||
+    !Number.isSafeInteger(offset) ||
+    offset < 0 ||
+    offset > 2147483647 ||
+    assigned.length !== payloads.length ||
+    new Set(assigned).size !== assigned.length ||
+    assigned.some(
+      (sequence) =>
+        !Number.isSafeInteger(sequence) ||
+        sequence <= 0 ||
+        sequence > watermark,
+    )
+  )
+    throw new Error("Inconsistent bounded paper fixture.");
+  return {
+    session_id: snapshot.session.session_id,
+    collection,
+    as_of_sequence: watermark,
+    limit: 100 as const,
+    offset,
+    total: payloads.length,
+    items: payloads.slice(offset, offset + 100).map((payload, index) => ({
+      sequence: assigned[offset + index]!,
+      type: COLLECTION_TYPES[collection],
+      occurred_at:
+        "timestamp" in payload ? payload.timestamp : payload.created_at,
+      payload: { ...payload },
+    })),
   };
 }

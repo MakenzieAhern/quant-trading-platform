@@ -6,6 +6,8 @@ import type {
   MarketBar,
   MarketSession,
   PaperCalendarPayload,
+  PaperCollection,
+  PaperCollectionPage,
   PaperFill,
   PaperJournalEvent,
   PaperOrder,
@@ -16,10 +18,13 @@ import type {
   PaperSessionStatus,
   PaperSignal,
   PaperSnapshot,
+  PaperState,
   PaperWireEvent,
 } from "../types/paper";
 
 const DECIMAL = /^-?\d+(?:\.\d+)?$/;
+const MAX_SEQUENCE = 2147483647;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const STATUSES = new Set<PaperSessionStatus>([
   "CREATED",
   "STARTING",
@@ -345,20 +350,20 @@ const portfolio = (value: unknown): PaperPortfolio => {
   };
 };
 
-function snapshot(value: unknown): PaperSnapshot {
+function state(value: unknown): PaperState {
   const item = record(value);
-  if (!Number.isSafeInteger(item.last_sequence))
+  if (
+    !Number.isSafeInteger(item.last_sequence) ||
+    Number(item.last_sequence) < 0 ||
+    Number(item.last_sequence) > MAX_SEQUENCE
+  )
     throw new Error("Invalid sequence.");
-  const result: PaperSnapshot = {
+  const result: PaperState = {
     session: session(item.session),
     last_sequence: item.last_sequence as number,
     latest_bar: item.latest_bar === null ? null : marketBar(item.latest_bar),
     latest_session:
       item.latest_session == null ? null : marketSession(item.latest_session),
-    signals: array(item.signals, signal),
-    risk_decisions: array(item.risk_decisions, decision),
-    orders: array(item.orders, order),
-    fills: array(item.fills, fill),
     latest_portfolio:
       item.latest_portfolio === null ? null : portfolio(item.latest_portfolio),
     last_rebalance_plan:
@@ -375,6 +380,85 @@ function snapshot(value: unknown): PaperSnapshot {
   )
     throw new Error("Paper plan does not belong to this account.");
   return result;
+}
+
+function snapshot(value: unknown): PaperSnapshot {
+  const item = record(value);
+  return {
+    ...state(item),
+    signals: array(item.signals, signal),
+    risk_decisions: array(item.risk_decisions, decision),
+    orders: array(item.orders, order),
+    fills: array(item.fills, fill),
+  };
+}
+
+const COLLECTION_EVENT_TYPES = {
+  signals: "signal.created",
+  risk_decisions: "risk.decision",
+  orders: "order.updated",
+  fills: "fill.created",
+} as const;
+
+function collectionPage(value: unknown): PaperCollectionPage {
+  const item = record(value);
+  const collection = requiredString(item.collection) as PaperCollection;
+  if (
+    !Object.hasOwn(COLLECTION_EVENT_TYPES, collection) ||
+    !Number.isSafeInteger(item.as_of_sequence) ||
+    Number(item.as_of_sequence) < 0 ||
+    Number(item.as_of_sequence) > MAX_SEQUENCE ||
+    !Number.isSafeInteger(item.limit) ||
+    Number(item.limit) < 1 ||
+    Number(item.limit) > 100 ||
+    !Number.isSafeInteger(item.offset) ||
+    Number(item.offset) < 0 ||
+    Number(item.offset) > MAX_SEQUENCE ||
+    !Number.isSafeInteger(item.total) ||
+    Number(item.total) < 0 ||
+    Number(item.total) > Number(item.as_of_sequence)
+  )
+    throw new Error("Invalid paper collection page.");
+  const count = Math.min(
+    Number(item.limit),
+    Math.max(0, Number(item.total) - Number(item.offset)),
+  );
+  if (!Array.isArray(item.items) || item.items.length !== count)
+    throw new Error("Invalid paper collection records.");
+  const items = item.items.map(journalEvent);
+  if (
+    items.some(
+      (event) =>
+        event.type !== COLLECTION_EVENT_TYPES[collection] ||
+        event.sequence > Number(item.as_of_sequence),
+    ) ||
+    new Set(items.map((event) => event.sequence)).size !== items.length
+  )
+    throw new Error("Invalid paper collection records.");
+  if (collection === "orders") {
+    const ids = items.map((event) => requiredString(event.payload.order_id));
+    if (
+      ids.some((id) => !UUID.test(id)) ||
+      new Set(ids.map((id) => id.toLowerCase())).size !== ids.length
+    )
+      throw new Error("Invalid current paper orders.");
+  } else if (
+    items.some(
+      (event, index) =>
+        index > 0 && event.sequence <= items[index - 1]!.sequence,
+    )
+  ) {
+    throw new Error("Invalid paper collection order.");
+  }
+  return {
+    session_id: requiredString(item.session_id),
+    collection,
+    as_of_sequence: item.as_of_sequence as number,
+    limit: item.limit as number,
+    offset: item.offset as number,
+    total: item.total as number,
+    items,
+  };
 }
 
 function page(value: unknown): PaperSessionPage {
@@ -418,6 +502,44 @@ export const paperApi = {
       {},
       signal,
       snapshot,
+    ),
+  state: (sessionId: string, signal?: AbortSignal) =>
+    apiRequest(
+      `/api/paper-trading/sessions/${sessionId}/state`,
+      {},
+      signal,
+      (value) => {
+        signal?.throwIfAborted();
+        const result = state(value);
+        if (result.session.session_id !== sessionId)
+          throw new Error("Paper state does not belong to this account.");
+        return result;
+      },
+    ),
+  collection: (
+    sessionId: string,
+    collection: PaperCollection,
+    asOfSequence: number,
+    offset = 0,
+    signal?: AbortSignal,
+  ) =>
+    apiRequest(
+      `/api/paper-trading/sessions/${sessionId}/collections/${collection}?as_of_sequence=${asOfSequence}&limit=100&offset=${offset}`,
+      {},
+      signal,
+      (value) => {
+        signal?.throwIfAborted();
+        const result = collectionPage(value);
+        if (
+          result.session_id !== sessionId ||
+          result.collection !== collection ||
+          result.as_of_sequence !== asOfSequence ||
+          result.limit !== 100 ||
+          result.offset !== offset
+        )
+          throw new Error("Paper collection does not match this request.");
+        return result;
+      },
     ),
   events: (sessionId: string, beforeSequence?: number, signal?: AbortSignal) =>
     apiRequest(
@@ -467,6 +589,8 @@ export const paperApi = {
 export const paperParsers = {
   session,
   snapshot,
+  state,
+  collection: collectionPage,
   marketBar,
   marketSession,
   calendar: calendarObservation,

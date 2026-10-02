@@ -7,8 +7,11 @@ import { jsonResponse } from "../test/fixtures";
 import {
   PAPER_ID,
   paperCalendarEvent,
+  paperCollection,
   paperSnapshot,
+  paperState,
 } from "../test/paperFixtures";
+import type { PaperCollection } from "../types/paper";
 import { PaperSessionDetailPage } from "./PaperSessionDetailPage";
 
 class MockWebSocket {
@@ -56,9 +59,23 @@ describe("paper calendar control events", () => {
       snapshot.session.symbol = "CN-A";
       const fetch = vi
         .spyOn(globalThis, "fetch")
-        .mockImplementation(async (url) =>
-          jsonResponse(String(url).includes("/events?") ? events : snapshot),
-        );
+        .mockImplementation(async (input) => {
+          const url = new URL(String(input), "http://test.local");
+          if (url.pathname.endsWith("/events")) return jsonResponse(events);
+          if (url.pathname.endsWith("/state"))
+            return jsonResponse(paperState(snapshot));
+          const collection = url.pathname.split("/").at(-1) as PaperCollection;
+          expect(url.pathname).toContain(`/sessions/${PAPER_ID}/collections/`);
+          expect(url.searchParams.get("limit")).toBe("100");
+          return jsonResponse(
+            paperCollection(
+              snapshot,
+              collection,
+              Number(url.searchParams.get("as_of_sequence")),
+              Number(url.searchParams.get("offset") ?? 0),
+            ),
+          );
+        });
       const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
       try {
         await act(async () => MockWebSocket.instances[0]!.open());

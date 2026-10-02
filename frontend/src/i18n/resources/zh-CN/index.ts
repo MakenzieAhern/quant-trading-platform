@@ -367,6 +367,9 @@ export const zhCN = {
       lastVerifiedPortfolioKicker: "上次核验的组合状态",
       lastVerifiedWarning:
         "连接已中断。当前显示的是上次核验的账户快照，并非实时余额；重新连接后将重新读取。",
+      collectionLastVerified:
+        "当前显示的是上次核验的记录页；更新后的保存记录尚未读取。",
+      retryCollection: "重试{{title}}",
       stalePortfolioWarning:
         "最新已接纳交易日：{{sessionDate}}。下方组合、现金及持仓仅为截至 {{portfolioDate}} 的上次核验状态，并非 {{sessionDate}} 的估值。",
       unknownDate: "日期未知",
