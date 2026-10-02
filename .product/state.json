@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-02T00:08:31Z",
+  "updated_at_utc": "2026-10-02T00:17:38Z",
+  "m4_chart_date_target_20261002_gate": {
+    "status": "PASS_BOUNDED_TOUCH_TARGET_AND_KEYBOARD_NOT_FULL_M4",
+    "proof": "On the current English/dark saved synthetic result, the shared experimentDateButton used by exact chart data and trade-date links measured 32 CSS px high. Its existing minimum height was raised to 40px. Focused Collections tests passed 17/17. In an agent-owned in-app browser tab, the first date button measured 40px, Enter selected 2030-12-20, the exact readout updated, and the focused row was visually inspected. At 390x844 the document/client width remained 375/375 with an explicit local table-scroll hint. The temporary viewport was reset and the owned tab closed. The prior pushed head 7c486bf passed backend/frontend/Compose GitHub CI run 36944647805; this CSS/documentation checkpoint needs its own exact-head CI.",
+    "limits": "One saved synthetic result path and a CSS target-size improvement, not native 200-percent zoom, screen-reader speech, complete keyboard/WCAG/visual matrix, independent novice testing, full M4/M5 or v1.2 release. No study, account, provider, original database, frozen research/OOS, merge, tag or release action."
+  },
   "m5_isolated_packaged_stack_20261002_gate": {
     "status": "PASS_BOUNDED_PACKAGED_SYNTHETIC_FLOW_AND_BACKEND_RESTART_NOT_RELEASE",
     "source_head": "3cd1b352e206be501474b1b0c09bc4eefff4284d",

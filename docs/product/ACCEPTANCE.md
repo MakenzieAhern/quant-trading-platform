@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-10-02 00:17 UTC exact chart-date target and keyboard check
+
+The prior pushed head `7c486bf` passed
+[CI run 36944647805](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/36944647805)
+for backend, frontend and Compose. A current-result browser check found that
+the shared date buttons in exact chart data and trade-date links had a 32px
+minimum height. The existing CSS minimum is now 40px; no component or financial
+logic changed. Focused Collections tests passed 17/17. In an agent-owned
+in-app browser tab, Enter on the first date selected `2030-12-20`, updated the
+exact chart readout and left visible keyboard focus. At 390×844 CSS pixels,
+the button measured 40px and document/client width remained 375/375; the
+table retained its local horizontal-scroll cue. The temporary viewport was
+reset and the tab closed.
+
+This is a bounded M4 touch-target and keyboard improvement, not native 200%
+zoom, screen-reader speech, the full visual/accessibility matrix, independent
+novice testing or M5/release acceptance. No research, account, provider,
+original database, frozen asset or Official OOS was changed. This new
+CSS/documentation head still requires its own exact-head CI check.
+
 ## 2026-10-01 23:45 UTC U3 local product-isolation gate
 
 The exact code head `12fc5cd` passed

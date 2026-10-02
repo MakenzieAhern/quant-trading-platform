@@ -496,7 +496,7 @@
   background: var(--primary-soft);
 }
 .experimentDateButton {
-  min-height: 32px;
+  min-height: 40px;
   color: var(--primary);
   background: transparent;
   border: 0;
