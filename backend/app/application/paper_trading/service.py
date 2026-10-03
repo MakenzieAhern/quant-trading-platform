@@ -27,6 +27,7 @@ from app.data.providers import Timeframe
 from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.domain.market import Bar
 from app.domain.markets.calendar import TradingCalendar
+from app.domain.markets.corporate_actions import OrdinaryDistributionInputError
 from app.domain.risk import RiskConfig, RiskDecision
 from app.domain.trading import Fill, Order, OrderStatus, PortfolioSnapshot, Signal
 from app.paper.a_share_fixture import (
@@ -641,7 +642,9 @@ class PaperTradingManager:
                         current,
                         PaperSessionStatus.FAILED,
                         "session.status",
-                        f"{type(exc).__name__}: paper session failed",
+                        exc.code
+                        if isinstance(exc, OrdinaryDistributionInputError)
+                        else f"{type(exc).__name__}: paper session failed",
                     )
         finally:
             if provider is not None:

@@ -4,7 +4,7 @@ from bisect import bisect_left, bisect_right
 from collections import defaultdict
 from collections.abc import Iterator
 from datetime import date
-from decimal import ROUND_HALF_UP, Context, Decimal, localcontext
+from decimal import Context, Decimal, localcontext
 from importlib import import_module
 from itertools import groupby
 from pathlib import Path
@@ -29,7 +29,11 @@ from app.domain.markets import (
 from app.domain.markets.calendar import TradingCalendar, TradingSession
 from app.domain.markets.cn_a_rules import historical_cn_a_rules
 from app.domain.markets.consolidations import ShareConsolidationEvent
-from app.domain.markets.corporate_actions import CorporateActionType
+from app.domain.markets.corporate_actions import (
+    CorporateActionType,
+    cash_bonus_reference_price,
+    require_unambiguous_ordinary_distributions,
+)
 from app.domain.markets.demergers import DemergerEvent
 from app.domain.markets.mergers import MergerEvent
 from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
@@ -344,23 +348,49 @@ class FullDataset:
                         and Decimal(row["pre_close"]) != previous
                     ):
                         explained = bool(boundaries)
-                        if boundaries and all(
-                            isinstance(event, CorporateAction)
-                            and event.action_type is CorporateActionType.CASH_DIVIDEND
+                        ordinary = [
+                            event
                             for event in boundaries
-                        ):
-                            # A cash event cannot conceal an unmodeled share distribution.
-                            with localcontext(Context(prec=28)):
-                                cash = sum(
-                                    (event.cash_per_share for event in boundaries), Decimal(0)
+                            if isinstance(event, CorporateAction)
+                            and event.action_type
+                            in {
+                                CorporateActionType.CASH_DIVIDEND,
+                                CorporateActionType.STOCK_DIVIDEND,
+                                CorporateActionType.BONUS_SHARE,
+                            }
+                        ]
+                        try:
+                            # Validate the ordinary subset even alongside rights/conversions.
+                            require_unambiguous_ordinary_distributions(ordinary)
+                            shares = [
+                                event
+                                for event in ordinary
+                                if event.action_type is not CorporateActionType.CASH_DIVIDEND
+                            ]
+                            explained = (
+                                explained
+                                and len(shares) <= 1
+                                and (not shares or len({event.ex_date for event in ordinary}) == 1)
+                            )
+                            if explained and len(ordinary) == len(boundaries):
+                                with localcontext(Context(prec=50)):
+                                    cash = sum(
+                                        (event.cash_per_share for event in ordinary), Decimal(0)
+                                    )
+                                ratio = shares[0].share_ratio if shares else Decimal(0)
+                                assert ratio is not None  # Validated by the shared supporter.
+                                expected = cash_bonus_reference_price(
+                                    previous,
+                                    cash_per_old_share=cash,
+                                    aggregate_share_ratio=ratio,
+                                    minimum_tick=rule.minimum_tick,
                                 )
-                                tick = rule.minimum_tick
-                                expected = ((previous - cash) / tick).quantize(
-                                    Decimal(1), rounding=ROUND_HALF_UP
-                                ) * tick
-                            explained = expected == Decimal(row["pre_close"])
-                        # ponytail: structural boundaries retain existing accounting; this
-                        # is an observed-gap guard, not a complete corporate-action census.
+                                explained = expected == Decimal(row["pre_close"])
+                        except ValueError:
+                            explained = False
+                        # ponytail: multi-share/multi-ex distributions require a separate
+                        # reference audit; structural boundaries retain existing accounting.
+                        # This observed-gap guard is not a corporate-action census.
                         if not explained:
                             unexplained.append(sid)
                     rules.append(rule)

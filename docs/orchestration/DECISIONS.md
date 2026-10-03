@@ -1,5 +1,28 @@
 # Decisions
 
+## v1.2 validate ordinary economic groups once before mutation — 2026-10-03
+
+Reproduced19 regression failures: valid rights could mask malformed ordinary legs,
+and a direct session could bypass raw-reference observation guards. Reuse the
+shared corporate-action supporter, reject combined carriers/duplicate economic
+identities/two share kinds, and validate the whole ordinary group before engine
+activation. Receipt hashes are provenance, not duplicate economic identity.
+Preserve existing two-rights policy, explicit structural accounting and originals.
+One pure tick-exact gross-cash/aggregate-share formula reconciles the two cached
+official reference rows; no factors, symbol exemption or full coverage inference.
+
+Only typed OrdinaryDistributionInputError exposes one fixed code through research
+and persisted paper; unknown diagnostics remain opaque. Reuse shared EN/ZH advice,
+no new schema or exception-string allowlist. Final1164backend/one optional skip,
+659frontend/static/build/Ruff547/mypy145/migration reversal pass. Actual scratch
+schema and mocked socket precondition failures are retained separately and fixed
+without deleting assertions. Current portfolio/session atomicity is asserted.
+Real Chrome existing failed-task compatibility, no new strategy/queue/business
+DB writes or service restart. The two-row source audit is not full financial PASS;
+new dataset/version admission and selectable U3/U5/U6 remain next. Independent
+source review no newP1P2; exact committed CI pending. Never mutate frozen v1,
+historical results or consumed Official OOS. Goal remains active, no release.
+
 ## v1.2 correct CLI provenance paths, not CI coverage — 2026-10-03
 
 Exact15a7035 hostedCI37084967922 actually ran and failed1/1123pass/one existing
@@ -10,10 +33,14 @@ change workflow cwd or blame quota.99 focused from repo root/Ruff547/mypy145 pas
 Independent read-only follow-up finds no newP1P2. Immutable v5 canonicalSHA
 24a1028c11eccc7a8f2be25d3b87419fc6c5cde8c6e7cc09b1098728bfe838fc
 changes only main parser/manifest hashes versus v4; events/results still2/140.
-Preserve earlier ledgers and all failure logs. Exact repair CI remains pending.
+Preserve earlier ledgers and all failure logs. Exact repair29f8909 CI37085538373
+completedSUCCESS2026-10-03T01:20:18Z:1124backend/1existing optional skip/656frontend/
+static/build/reversible migration/Compose isolated release smoke.
 Local frontend5173/backend8000 return200, PGhealthy/RedisPONG without restarts;
 GitHub availability is not a prerequisite for local application execution.
 No dataset promotion/freeze, financial PASS, formal/OOS rerun, merge or release.
+Checkpoint-only receipt is saved for the next meaningful milestone, not another
+tiny docs-only push. Continue independently bounded mixed-leg/reference inputs.
 
 ## v1.2 accept explicit same-day issuer terms separately — 2026-10-03
 

@@ -39,3 +39,12 @@ it("explains the held-reference integrity stop without promising a retry repairs
     explainExperimentCode("UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT", "zh-CN"),
   ).toContain("重试不能修复来源缺口");
 });
+
+it("explains an ordinary distribution input stop with a source repair next step", () => {
+  expect(
+    explainExperimentCode("UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT", "en-US"),
+  ).toContain("unchanged retries will not repair");
+  expect(
+    explainExperimentCode("UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT", "zh-CN"),
+  ).toContain("重试不能修复来源缺口");
+});

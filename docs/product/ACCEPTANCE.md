@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-03 ordinary distribution integrity and actionable failures
+
+[Current proof](../../../product-evidence/v1.2/m4/20261003-mixed-reference-inputs/README.md)
+closes a mixed structural-mask/direct-session ambiguity: one shared guard rejects
+duplicate economic legs, multiple share types and embedded cash/share carriers
+before session activation/accounting/fills/valuation. Supported multi-rights
+semantics remain. Ordinary reference reconciliation uses prior actual raw close,
+gross cash, one aggregate same-ex ratio and effective tick/isolated Decimal context.
+Two retained official rows/PDFs/cash ledger/PIT rules/frozen partitions and reversed
+inputs agree exactly; this is not full event coverage or a new financial dataset.
+
+Typed safe failure is persisted/reopened and explained in EN/ZH for research/paper;
+arbitrary diagnostics remain opaque. Final1164backend/one existing optional skip,
+659frontend44files/lint/types/build/Ruff547/mypy145 and isolated reversible migration
+pass. Pre-fix19fail, unmigrated scratch harness and un-opened test-socket failures
+are retained, not hidden. Original services/frozen files/.research remain unchanged.
+Real Chrome reads only the existing held-reference failed task in both locales,
+then restores home/EN/dark; it does not prove new typed-code business execution.
+Independent source review no newP1P2; exact new committed CI remains pending.
+No whole financial/U3/U6/forward/AA/p95/product/release PASS. Next independent
+version/canonical-SHA catalogue and U3/U5/U6 selection, with unresolved coverage
+still an admission constraint rather than normal/complete by default.
+
 ## 2026-10-03 retained same-day bonus source acceptance, not financial promotion
 
 [Bounded source proof](../../../product-evidence/v1.2/m4/20261003-bonus-same-day-source/README.md)
@@ -25,7 +48,11 @@ one existing skip on cwd-relative provenance paths;656frontend/static/build and
 Compose release smoke passed. Source-relative sibling paths plus a tmp_path cwd
 regression now pass99 focused checks from repo root/Ruff547/mypy145.
 Independent follow-up finds no newP1P2; v5 changes only parser/manifest SHA,
-not v4 events/results. Preserve the failed CI and immutable v1-v4; repair CI pending.
+not v4 events/results. Preserve the failed CI and immutable v1-v4. Exact repair
+29f8909 CI37085538373 completedSUCCESS2026-10-03T01:20:18Z:1124backend/one existing
+optional archive skip50.46s,656frontend44files,lint/types/format/build, reversible
+migration and isolated Compose release smoke. [Exact receipt](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37085538373).
+Only this source milestone, not economic completeness or full product acceptance.
 No UI/runtime/source promotion, new dataset, freeze, strategy/formal/OOS or release.
 Next: independently validate mixed-leg/reference inputs, then a genuinely new dataset
 ID/SHA and user-selectable U3/U5/U6 path; do not overwrite or silently replace v1.

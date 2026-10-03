@@ -18,6 +18,7 @@ from app.application.paper_trading.service import PaperTradingManager
 from app.db.models.paper import PaperTradingSessionModel
 from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.db.session import SessionFactory
+from app.domain.markets.corporate_actions import OrdinaryDistributionInputError
 from app.execution import FixedCommission, OrderManager
 from app.main import app
 from app.paper.models import PaperSession, PaperSessionConcurrencyError
@@ -1417,10 +1418,13 @@ async def test_shutdown_marks_an_active_runtime_interrupted(
     assert "backend shutdown" in interrupted.json()["error_message"]
 
 
+@pytest.mark.parametrize("distribution", (False, True))
 async def test_runtime_failure_is_persisted_without_exposing_internal_details(
-    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch, distribution: bool
 ) -> None:
     def fail_to_build_runtime(_session: object, _cursor_date: object) -> object:
+        if distribution:
+            raise OrdinaryDistributionInputError("sensitive provider diagnostics")
         raise RuntimeError("sensitive provider diagnostics")
 
     monkeypatch.setattr(paper_manager, "_build_runtime", fail_to_build_runtime)
@@ -1436,7 +1440,11 @@ async def test_runtime_failure_is_persisted_without_exposing_internal_details(
         await asyncio.sleep(0.01)
 
     assert detail["status"] == "FAILED"
-    assert detail["error_message"] == "RuntimeError: paper session failed"
+    assert detail["error_message"] == (
+        OrdinaryDistributionInputError.code
+        if distribution
+        else "RuntimeError: paper session failed"
+    )
     assert "sensitive" not in str(detail)
 
 

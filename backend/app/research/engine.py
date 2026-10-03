@@ -13,6 +13,7 @@ from app.domain.markets.consolidations import CONSOLIDATION_POLICY
 from app.domain.markets.corporate_actions import (
     corporate_action_sort_key,
     require_supported_corporate_action,
+    require_unambiguous_ordinary_distributions,
 )
 from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
 from app.domain.markets.pass_through import PASS_THROUGH_POLICY
@@ -171,6 +172,7 @@ class ResearchExecutionEngine:
             and self._next_session.get(self._previous_date) != session.trading_date
         ):
             raise ValueError("missing calendar session must be represented explicitly")
+        require_unambiguous_ordinary_distributions(session.corporate_actions)
         unexplained_symbols = {
             _domain_symbol(identity) for identity in session.unexplained_reference_adjustment_ids
         }

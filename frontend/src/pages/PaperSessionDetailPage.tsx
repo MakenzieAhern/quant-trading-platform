@@ -10,6 +10,7 @@ import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
 import { StatusBadge } from "../components/StatusBadge";
 import { ExperimentPlan } from "../product/experiments/ExperimentPlan";
 import { tradingDate } from "../product/experiments/api";
+import { explainExperimentCode } from "../product/experiments/codes";
 import { usePaperStream } from "../hooks/usePaperStream";
 import type {
   PaperCollection,
@@ -33,7 +34,7 @@ function commandConfirmed(
 }
 
 export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
-  const { t } = useTranslation("paper");
+  const { t, i18n } = useTranslation("paper");
   const {
     snapshot,
     collectionSequence,
@@ -274,11 +275,13 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         <section className="stateCallout failedCallout" role="alert">
           <h2>{t("detail.failedTitle")}</h2>
           <p>
-            {t(
-              session.status === "INTERRUPTED"
-                ? "detail.interruptedHelp"
-                : "detail.failedHelp",
-            )}
+            {session.error_message === "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT"
+              ? explainExperimentCode(session.error_message, i18n.language)
+              : t(
+                  session.status === "INTERRUPTED"
+                    ? "detail.interruptedHelp"
+                    : "detail.failedHelp",
+                )}
           </p>
           <Link
             className="button"

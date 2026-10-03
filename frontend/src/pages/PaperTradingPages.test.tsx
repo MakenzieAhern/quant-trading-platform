@@ -4013,6 +4013,34 @@ describe("paper trading pages", () => {
     expect(screen.getByText("Session connection: closed")).toBeInTheDocument();
   });
 
+  it.each(["en-US", "zh-CN"])(
+    "explains unsupported distribution inputs on a reopened paper account (%s)",
+    async (locale) => {
+      installWebSocket();
+      mockPaperServer().mockResolvedValue(
+        jsonResponse({
+          ...paperSnapshot("FAILED"),
+          session: {
+            ...paperSession("FAILED"),
+            error_message: "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT",
+          },
+        }),
+      );
+      await act(async () => i18n.changeLanguage(locale));
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      const alert = await screen.findByRole("alert");
+      expect(alert).toHaveTextContent(
+        locale === "en-US"
+          ? "unchanged retries will not repair the source gap"
+          : "沿用相同数据重试不能修复来源缺口",
+      );
+      expect(
+        screen.queryByRole("button", { name: /Start replay|开始回放/ }),
+      ).not.toBeInTheDocument();
+    },
+  );
+
   it("explains a backend interruption in Chinese and keeps the raw diagnostic for audit", async () => {
     installWebSocket();
     mockPaperServer().mockResolvedValue(

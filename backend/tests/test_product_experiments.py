@@ -33,6 +33,7 @@ from app.application.experiments.runner import (
 )
 from app.data.catalog.checksums import canonical_sha256
 from app.data.catalog.freeze import MARKER
+from app.domain.markets.corporate_actions import OrdinaryDistributionInputError
 
 
 def demo_request(**changes):
@@ -273,6 +274,37 @@ def test_real_engine_demo_has_exact_money_costs_progress_and_repeatable_results(
             assert Decimal(position["weight"]) == Decimal(position["market_value"]) / Decimal(
                 snapshot["equity"]
             )
+
+
+@pytest.mark.parametrize("specific", (True, False))
+def test_distribution_input_failure_keeps_safe_code_without_promoting_other_value_errors(
+    tmp_path, monkeypatch, specific
+):
+    failure = (
+        OrdinaryDistributionInputError("private source diagnostics")
+        if specific
+        else ValueError("private source diagnostics")
+    )
+
+    def fail(*args):
+        raise failure
+
+    monkeypatch.setattr("app.research.engine.ResearchExecutionEngine.process_session", fail)
+    phases = []
+    with pytest.raises(ExperimentInputError if specific else ValueError) as caught:
+        run_experiment(
+            ExperimentDatasetRegistry(tmp_path),
+            demo_request(),
+            DEMO_SHA,
+            Event(),
+            lambda *p: phases.append(p),
+        )
+    if specific:
+        assert caught.value.code == OrdinaryDistributionInputError.code
+        assert "private" not in str(caught.value)
+    else:
+        assert caught.value is failure
+    assert phases == [("VERIFYING_DATA", 0, None), ("EXECUTING", 0, 340)]
 
 
 def test_cancellation_interrupts_at_completed_session_boundary(tmp_path):

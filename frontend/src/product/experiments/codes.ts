@@ -200,6 +200,10 @@ const explanations: Record<string, [string, string]> = {
     "A held security's official price reference changed without an accepted accounting boundary that explains the change. The task stopped before using it for fills or valuation. Check corporate-action coverage in the data center; unchanged retries will not repair the source gap.",
     "持仓证券的官方参考价发生变化，但缺少能解释变化的已接受会计处理边界。任务已在使用该记录成交或估值前停止。请在数据中心检查公司行动覆盖；沿用相同数据重试不能修复来源缺口。",
   ],
+  UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT: [
+    "Cash or share distribution inputs contain duplicate legs or an unsupported combination. The affected session stopped before accounting, fills or valuation. Check corporate-action records in the data center; unchanged retries will not repair the source gap.",
+    "现金或送转股记录含重复分派腿，或未经支持的现金／股份组合。受影响交易日已在入账、成交或估值前停止。请在数据中心检查公司行动记录；沿用相同数据重试不能修复来源缺口。",
+  ],
   KNOWN_ECONOMIC_COVERAGE_GAP: [
     "A later review found an unmodeled corporate-action gap in this frozen data version. Economic completeness is not validated. Original results and plans are preserved; their individual impact has not been quantified. Do not treat their returns or quantities as financially validated. This notice does not repair the data.",
     "后续复核发现此冻结数据版本存在尚未建模的公司行动缺口，经济完整性尚未验证。原始结果与计划保留，单份记录的影响未逐一量化。请勿将其收益或数量视为已通过财务验证。本提示不会修复数据。",

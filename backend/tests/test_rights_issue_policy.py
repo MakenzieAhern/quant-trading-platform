@@ -293,6 +293,80 @@ def test_rights_same_day_ordering_replay_raw_adjustment_separation_and_universe_
     assert third.bars[0].security_id == SecurityId(value="CN-A:SSE:600000")
 
 
+@pytest.mark.parametrize("variant", ("duplicate_cash", "duplicate_share", "two_share_kinds"))
+@pytest.mark.parametrize("held", (False, True))
+@pytest.mark.parametrize("pre_close", (None, Decimal("9.9")))
+def test_ordinary_distribution_ambiguity_fails_before_accounting_even_with_rights(
+    variant, held, pre_close
+):
+    strategy = OneTargetStrategy()
+    engine = ResearchExecutionEngine(
+        strategy,
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+    )
+    if held:
+        engine.process_session(_session(date(2024, 1, 2), opening="10"))
+        engine.process_session(_session(date(2024, 1, 3), opening="9.9"))
+    third = _session(date(2024, 1, 4), opening="9.9")
+    action = rights(
+        security_id=str(third.bars[0].security_id),
+        ex_date="2024-01-04",
+        effective_date="2024-01-04",
+    )
+    common = dict(
+        security_id=action.security_id,
+        ex_date="2024-01-04",
+        completeness="COMPLETE",
+        source_provider="synthetic",
+        source_version="test",
+        source_record_hash="0" * 64,
+    )
+    cash = CorporateAction.model_validate(
+        dict(common, action_type="CASH_DIVIDEND", cash_per_share="1")
+    )
+    bonus = CorporateAction.model_validate(
+        dict(common, action_type="BONUS_SHARE", share_ratio="0.1")
+    )
+    original = cash if variant == "duplicate_cash" else bonus
+    extra = original.model_copy(
+        update={"action_type": CorporateActionType.STOCK_DIVIDEND}
+        if variant == "two_share_kinds"
+        else {"source_version": "another-official-receipt"}
+    )
+    assert extra.event_checksum != original.event_checksum
+    before = engine.finish()
+    calls, completed = strategy.calls, engine.last_completed_session
+    financial_before = (
+        engine._portfolio.cash,
+        tuple(position.model_dump_json() for position in engine._portfolio.positions),
+        engine._portfolio.retained_bonus_rounding_audits,
+        engine._active_session,
+    )
+    for events in ((action, cash, bonus, extra), (extra, bonus, cash, action)):
+        with pytest.raises(
+            ValueError,
+            match=r"DUPLICATE_ORDINARY_DISTRIBUTION|MULTIPLE_SHARE_DISTRIBUTIONS_UNSUPPORTED",
+        ):
+            engine.process_session(
+                replace(
+                    third,
+                    bars=(third.bars[0].model_copy(update={"pre_close": pre_close}),),
+                    corporate_actions=events,
+                )
+            )
+        assert engine.finish() == before
+        assert strategy.calls == calls
+        assert engine.last_completed_session == completed
+        assert (
+            engine._portfolio.cash,
+            tuple(position.model_dump_json() for position in engine._portfolio.positions),
+            engine._portfolio.retained_bonus_rounding_audits,
+            engine._active_session,
+        ) == financial_before
+
+
 @pytest.mark.parametrize(
     "kind",
     [

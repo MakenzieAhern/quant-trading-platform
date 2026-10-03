@@ -23,6 +23,7 @@ from app.application.experiments.models import CreateExperimentRequest
 from app.data.catalog.checksums import canonical_sha256, sha256_file
 from app.data.full_dataset import FullDataset
 from app.domain.markets.calendar import TradingCalendar
+from app.domain.markets.corporate_actions import OrdinaryDistributionInputError
 from app.domain.risk import RiskConfig
 from app.domain.trading import PortfolioSnapshot
 from app.research.analytics import analyze_research_period
@@ -179,7 +180,7 @@ def run_experiment(
         check_cancelled()
         try:
             last_delta = engine.process_session(session)
-        except UnexplainedReferenceAdjustment as exc:
+        except (UnexplainedReferenceAdjustment, OrdinaryDistributionInputError) as exc:
             raise ExperimentInputError(exc.code) from exc
         if completed % 10 == 0 or completed == total:
             progress("EXECUTING", completed, total)
