@@ -196,6 +196,10 @@ const explanations: Record<string, [string, string]> = {
     "The data integrity check failed. Check the registered data source before retrying.",
     "数据完整性检查未通过。重试前请检查已注册数据来源。",
   ],
+  UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT: [
+    "A held security's official price reference changed without an accepted accounting boundary that explains the change. The task stopped before using it for fills or valuation. Check corporate-action coverage in the data center; unchanged retries will not repair the source gap.",
+    "持仓证券的官方参考价发生变化，但缺少能解释变化的已接受会计处理边界。任务已在使用该记录成交或估值前停止。请在数据中心检查公司行动覆盖；沿用相同数据重试不能修复来源缺口。",
+  ],
   DATASET_NOT_REGISTERED: [
     "This data source is not registered. Choose one of the available sources.",
     "该数据源未注册。请选择当前可用来源。",

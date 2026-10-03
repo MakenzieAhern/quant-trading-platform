@@ -1,5 +1,30 @@
 # Decisions
 
+## v1.2 stop held-reference contradictions once in the shared engine — 2026-10-03
+
+Reuse existing accepted input/engine/runner paths. Observe only previous raw close
+and already-reached boundaries; cash-only events explain only their actual sum
+rounded to the effective price tick in fixed Decimal context. Independent review
+identified cash0.1 hiding000788's additional bonus and cash0.20 hiding002230's;
+new failing regressions close this loophole. Do not infer bonus ratios or invent
+execution dates. Reject current held contradictions before any today's mutation.
+Leave missing-reference/first-observation/noncash-mixed/pending-conversion coverage
+explicitly incomplete; guard is not full financial/data acceptance.
+
+97focused/1107backend+one optional skip/643frontend/static/build pass; final8-source
+review noP1P2. Actual independent originalChrome task `a1205675` fails with stable
+code/no summary/no persisted result rows; EN/ZH explains unchanged retry cannot fix
+source gaps. Root restores original exact-cash draft;10metadata/8results/formal/
+paper lists unchanged. Backend alone restarted after fresh terminal/PID checks;
+owned test PG stopped, original durable/frozen/OOS untouched.73-file proof sealed,
+artifact review and new exact CI pending. No full product/financial/forward PASS.
+
+Separate58-file review correction narrows unsaved230/297 wording to actual saved
+70/290UI and210API, and notes independent names/legacy evidence hash limits. Never
+rewrite sealed originals. Later current_dataset_quality belongs in read-response
+copies/export metadata/state envelopes, not persisted summary/plan/journal/frozen
+manifest. All accepted mandatory U1-U8/M0-M5 and external gates remain required.
+
 ## v1.2 retain unvalidated economics, guard observed contradictions — 2026-10-02 23:51 UTC
 
 Actual SZSE exploration exposes a source-input defect, not an arithmetic error:

@@ -2,16 +2,17 @@ import hashlib
 import json
 from dataclasses import replace
 from datetime import UTC, date, datetime
-from decimal import Decimal
+from decimal import Decimal, localcontext
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 from app.data.catalog.normalized import _logical_hash
-from app.data.full_dataset import FullDataset
+from app.data.full_dataset import FullDataset, pq
 from app.domain.markets import Board, Exchange, Market, SecurityId, TradingRuleResolver
 from app.domain.markets.cn_a_rules import historical_cn_a_rules
+from app.domain.markets.corporate_actions import CorporateAction
 from app.domain.trading import Order, OrderSide, OrderType
 from app.research.execution_convention import rejection_reason
 from scripts.materialize_full_dataset import (
@@ -134,6 +135,102 @@ def _cache_fixture(tmp_path: Path, flat_symbol: str) -> FullDataset:
     dataset.actions = {}
     dataset.resolver = TradingRuleResolver(historical_cn_a_rules())
     return dataset
+
+
+def _reference_fixture(
+    tmp_path: Path, *, boundary: str | None = None, cash_per_share: str = "5"
+) -> FullDataset:
+    dataset = _cache_fixture(tmp_path, "600001")
+    days = ("2011-01-31", "2011-02-01", "2011-02-02")
+    original = pq.read_table(tmp_path / dataset.paths[0]).to_pylist()[:2]
+    for month in ("2011-01", "2011-02"):
+        rows = []
+        for day in days:
+            if not day.startswith(month):
+                continue
+            for template in original:
+                # No observation for the affected security on the intervening event day.
+                if day == days[1] and template["symbol"] == "600000":
+                    continue
+                price = "5.1" if day == days[-1] and template["symbol"] == "600000" else "10"
+                rows.append(
+                    {
+                        **template,
+                        "trading_date": day,
+                        "raw_open": price,
+                        "raw_close": price,
+                        "raw_high": str(Decimal(price) + Decimal("0.1")),
+                        "raw_low": str(Decimal(price) - Decimal("0.1")),
+                        "pre_close": "5" if price == "5.1" else "10",
+                    }
+                )
+        writer = StreamingPartition(
+            tmp_path / f"{month}.parquet", RAW_FIELDS, ("trading_date", "security_id")
+        )
+        writer.write(rows)
+        writer.close(f"{month}.parquet")
+    dataset.paths = ("2011-02.parquet", "2011-01.parquet")
+    dataset.calendar_text = days
+    dataset.calendar_days = tuple(date.fromisoformat(day) for day in days)
+    dataset.calendar_index = {day: index for index, day in enumerate(days)}
+    dataset.curves = {sid: ((days[0], days[-1], ((days[0], Decimal(1)),)),) for sid in dataset.ids}
+    if boundary:
+        action = CorporateAction(
+            security_id=dataset.ids["CN-A:SSE:600000"],
+            action_type="CASH_DIVIDEND",
+            ex_date=date.fromisoformat(boundary),
+            cash_per_share=Decimal(cash_per_share),
+            source_provider="isolated-fixture",
+            source_version="1",
+            source_record_hash="a" * 64,
+            completeness="COMPLETE",
+        )
+        dataset.actions = {boundary: {"CORPORATE_ACTION": [action]}}
+    return dataset
+
+
+@pytest.mark.parametrize("boundary", [None, "2011-02-03"])
+def test_reference_marker_crosses_months_without_future_event_or_replay_leak(tmp_path, boundary):
+    dataset = _reference_fixture(tmp_path, boundary=boundary)
+    first = tuple(dataset.sessions())
+    repeated = tuple(dataset.sessions())
+    assert first == repeated
+    sid = dataset.ids["CN-A:SSE:600000"]
+    assert [s.unexplained_reference_adjustment_ids for s in first] == [(), (), (sid,)]
+    assert all(
+        not s.unexplained_reference_adjustment_ids for s in dataset.sessions(execution=False)
+    )
+
+
+@pytest.mark.parametrize("boundary", ["2011-02-01", "2011-02-02"])
+def test_only_observed_intervening_accepted_boundary_accounts_for_reference_change(
+    tmp_path, boundary
+):
+    dataset = _reference_fixture(tmp_path, boundary=boundary)
+    assert all(not s.unexplained_reference_adjustment_ids for s in dataset.sessions())
+
+
+@pytest.mark.parametrize("boundary", ["2011-02-01", "2011-02-02"])
+def test_cash_event_cannot_hide_an_unexplained_reference_component(tmp_path, boundary):
+    dataset = _reference_fixture(tmp_path, boundary=boundary, cash_per_share="0.1")
+    sid = dataset.ids["CN-A:SSE:600000"]
+    assert [s.unexplained_reference_adjustment_ids for s in dataset.sessions()] == [(), (), (sid,)]
+
+
+def test_cash_reference_explanation_uses_rule_tick_and_isolated_decimal_context(tmp_path):
+    # 10 - 4.995 rounds to 5.01, not the observed official reference 5.00.
+    dataset = _reference_fixture(tmp_path, boundary="2011-02-02", cash_per_share="4.995")
+    sid = dataset.ids["CN-A:SSE:600000"]
+    expected = [(), (), (sid,)]
+    assert [s.unexplained_reference_adjustment_ids for s in dataset.sessions()] == expected
+    with localcontext() as context:
+        context.prec = 3
+        assert [s.unexplained_reference_adjustment_ids for s in dataset.sessions()] == expected
+    # A sub-tick accepted cash component may explain the rounded official reference.
+    dataset.actions["2011-02-02"]["CORPORATE_ACTION"][0] = dataset.actions["2011-02-02"][
+        "CORPORATE_ACTION"
+    ][0].model_copy(update={"cash_per_share": Decimal("4.996")})
+    assert all(not s.unexplained_reference_adjustment_ids for s in dataset.sessions())
 
 
 @pytest.mark.parametrize("flat_symbol", ["600000", "600001"])

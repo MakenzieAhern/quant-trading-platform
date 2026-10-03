@@ -566,3 +566,64 @@ def test_normal_sell_uses_same_oms_path_on_following_session_and_costs_once():
     assert result.fills[0].timestamp < result.fills[1].timestamp
     assert result.snapshots[-1].cumulative_commission == Decimal(10)
     assert not result.active_reservations
+
+
+@pytest.mark.parametrize("zero_volume", [False, True])
+def test_unexplained_held_reference_change_stops_before_any_session_side_effect(zero_volume):
+    strategy = OneTargetStrategy()
+    engine = ResearchExecutionEngine(
+        strategy,
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(Decimal(5)),
+        calendar=CALENDAR,
+    )
+    engine.process_session(_session(date(2024, 1, 2), opening="10"))
+    held = engine.process_session(_session(date(2024, 1, 3), opening="9.9"))
+    before = engine.finish()
+    unknown = _session(date(2024, 1, 4), opening="5")
+    unknown = replace(
+        unknown,
+        bars=(
+            unknown.bars[0].model_copy(
+                update={"volume": Decimal(0) if zero_volume else Decimal(10000)}
+            ),
+        ),
+        unexplained_reference_adjustment_ids=(SECURITY_ID,),
+    )
+    with pytest.raises(ValueError, match="UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT"):
+        engine.process_session(unknown)
+    assert engine.finish() == before
+    assert strategy.calls == 2
+    assert engine.last_completed_session == date(2024, 1, 3)
+    assert held.snapshot.positions[0].quantity == Decimal(100)
+    # Rejected input never advances the engine or rewrites its previously saved state.
+    engine.process_session(_session(date(2024, 1, 4), opening="10"))
+    assert strategy.calls == 3
+
+
+def test_reference_marker_does_not_invent_an_entitlement_for_an_unheld_security():
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+    )
+    first = replace(
+        _session(date(2024, 1, 2), opening="10"),
+        unexplained_reference_adjustment_ids=(SECURITY_ID,),
+    )
+    delta = engine.process_session(first)
+    assert len(delta.proposals) == 1
+    assert delta.fills == ()
+    assert delta.snapshot.cash == Decimal(10000)
+    assert delta.snapshot.market_value == 0
+
+
+def test_reference_markers_must_have_distinct_observed_security_identity():
+    session = _session(date(2024, 1, 2), opening="10")
+    for markers in (
+        (SECURITY_ID, SECURITY_ID),
+        (SecurityId(value="CN-A:SZSE:000001"),),
+    ):
+        with pytest.raises(ValueError, match="reference adjustment identity"):
+            replace(session, unexplained_reference_adjustment_ids=markers)

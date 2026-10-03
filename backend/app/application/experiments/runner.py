@@ -27,7 +27,11 @@ from app.domain.risk import RiskConfig
 from app.domain.trading import PortfolioSnapshot
 from app.research.analytics import analyze_research_period
 from app.research.costs import EffectiveDatedAShareCommission
-from app.research.engine import ResearchExecutionDelta, ResearchExecutionEngine
+from app.research.engine import (
+    ResearchExecutionDelta,
+    ResearchExecutionEngine,
+    UnexplainedReferenceAdjustment,
+)
 from app.research.models import PortfolioTarget, ResearchSession
 from app.research.strategy import ChinaAMomentumLowVolResearchStrategy
 from app.strategies.research import ChinaAMomentumLowVolConfig
@@ -173,7 +177,10 @@ def run_experiment(
     last_delta: ResearchExecutionDelta | None = None
     for completed, session in enumerate(data.sessions(), start=1):
         check_cancelled()
-        last_delta = engine.process_session(session)
+        try:
+            last_delta = engine.process_session(session)
+        except UnexplainedReferenceAdjustment as exc:
+            raise ExperimentInputError(exc.code) from exc
         if completed % 10 == 0 or completed == total:
             progress("EXECUTING", completed, total)
     check_cancelled()

@@ -4,7 +4,7 @@ from bisect import bisect_left, bisect_right
 from collections import defaultdict
 from collections.abc import Iterator
 from datetime import date
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Context, Decimal, localcontext
 from importlib import import_module
 from itertools import groupby
 from pathlib import Path
@@ -29,6 +29,7 @@ from app.domain.markets import (
 from app.domain.markets.calendar import TradingCalendar, TradingSession
 from app.domain.markets.cn_a_rules import historical_cn_a_rules
 from app.domain.markets.consolidations import ShareConsolidationEvent
+from app.domain.markets.corporate_actions import CorporateActionType
 from app.domain.markets.demergers import DemergerEvent
 from app.domain.markets.mergers import MergerEvent
 from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
@@ -247,6 +248,9 @@ class FullDataset:
         return matches[0]
 
     def sessions(self, *, execution: bool = True) -> Iterator[ResearchSession]:
+        # Local to this iteration, keyed by stable identity, and retained across months.
+        previous_closes: dict[str, Decimal] = {}
+        pending_boundaries: dict[str, list[Any]] = defaultdict(list)
         paths_by_month: dict[str, list[str]] = defaultdict(list)
         for path in self.paths:
             paths_by_month[Path(path).stem].append(path)
@@ -265,10 +269,23 @@ class FullDataset:
                     raise ValueError(f"EMPTY_ACCEPTED_SESSION:{day}")
                 session_date = date.fromisoformat(day)
                 bars, statuses, lots, rules = [], [], [], []
+                unexplained = []
+                action = self.actions.get(day, {}) if execution else {}
+                for events in action.values():
+                    for event in events:
+                        identity = getattr(event, "security_id", None) or getattr(
+                            event, "parent_security", None
+                        )
+                        if identity is not None:
+                            pending_boundaries[str(identity)].append(event)
                 rule_cache = {}
                 for row in rows:
                     security_id = row["security_id"]
                     sid = self.ids[security_id]
+                    previous = previous_closes.get(security_id)
+                    boundaries = pending_boundaries.pop(security_id, [])
+                    # Observation only; never reconstruct entitlement or execution prices.
+                    previous_closes[security_id] = Decimal(row["raw_close"])
                     member = self._member(security_id, day)
                     blocked = self.blocked_starts.get((security_id, day), False)
                     risky = row["risk_status"] != "NORMAL"
@@ -321,9 +338,33 @@ class FullDataset:
                             listing_age_sessions=age,
                         )
                     rule = rule_cache[key].model_copy(update={"security_id": sid})
+                    if (
+                        previous is not None
+                        and row["pre_close"] is not None
+                        and Decimal(row["pre_close"]) != previous
+                    ):
+                        explained = bool(boundaries)
+                        if boundaries and all(
+                            isinstance(event, CorporateAction)
+                            and event.action_type is CorporateActionType.CASH_DIVIDEND
+                            for event in boundaries
+                        ):
+                            # A cash event cannot conceal an unmodeled share distribution.
+                            with localcontext(Context(prec=28)):
+                                cash = sum(
+                                    (event.cash_per_share for event in boundaries), Decimal(0)
+                                )
+                                tick = rule.minimum_tick
+                                expected = ((previous - cash) / tick).quantize(
+                                    Decimal(1), rounding=ROUND_HALF_UP
+                                ) * tick
+                            explained = expected == Decimal(row["pre_close"])
+                        # ponytail: structural boundaries retain existing accounting; this
+                        # is an observed-gap guard, not a complete corporate-action census.
+                        if not explained:
+                            unexplained.append(sid)
                     rules.append(rule)
                     lots.append((sid, rule.buy_lot_size))
-                action = self.actions.get(day, {}) if execution else {}
                 surrenders = tuple(action.get("PARTIAL_SURRENDER", ()))
                 consolidations = tuple(action.get("SHARE_CONSOLIDATION", ()))
                 consolidation_classes = {item.affected_holder_class for item in consolidations}
@@ -349,6 +390,7 @@ class FullDataset:
                     pass_through_events=tuple(action.get("BONUS_PASS_THROUGH", ())),
                     consolidations=consolidations,
                     consolidation_holder_class=next(iter(consolidation_classes), None),
+                    unexplained_reference_adjustment_ids=tuple(unexplained),
                 )
         if yielded != len(self.calendar_days):
             raise ValueError("SESSION_COUNT_CHANGED")

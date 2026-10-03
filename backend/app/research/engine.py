@@ -34,6 +34,13 @@ from app.risk import RiskEngine
 ZERO = Decimal(0)
 
 
+class UnexplainedReferenceAdjustment(ValueError):
+    code = "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT"
+
+    def __init__(self) -> None:
+        super().__init__(self.code)
+
+
 class ResearchStrategy(Protocol):
     strategy_id: str
 
@@ -164,6 +171,15 @@ class ResearchExecutionEngine:
             and self._next_session.get(self._previous_date) != session.trading_date
         ):
             raise ValueError("missing calendar session must be represented explicitly")
+        unexplained_symbols = {
+            _domain_symbol(identity) for identity in session.unexplained_reference_adjustment_ids
+        }
+        if any(
+            position.quantity != ZERO and position.symbol in unexplained_symbols
+            for position in self._portfolio.positions
+        ):
+            # Fail before today's accounting, fills, marks, strategy calls or progress.
+            raise UnexplainedReferenceAdjustment
         proposal_count = len(self._oms.proposals)
         decision_count = len(self._oms.decisions)
         fill_count = len(self._broker.fills)
@@ -357,6 +373,7 @@ class ResearchExecutionEngine:
                 pass_through_events=(),
                 consolidations=(),
                 consolidation_holder_class=None,
+                unexplained_reference_adjustment_ids=(),
             ),
             snapshot.equity,
         )

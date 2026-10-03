@@ -30,3 +30,12 @@ it("explains corporate-action execution rejections in both languages", () => {
     explainExperimentCode("CORPORATE_ACTION_NON_ORDERABLE", "zh-CN"),
   ).toContain("不能提交新订单");
 });
+
+it("explains the held-reference integrity stop without promising a retry repairs data", () => {
+  expect(
+    explainExperimentCode("UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT", "en-US"),
+  ).toContain("unchanged retries will not repair");
+  expect(
+    explainExperimentCode("UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT", "zh-CN"),
+  ).toContain("重试不能修复来源缺口");
+});

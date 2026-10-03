@@ -1,5 +1,31 @@
 # v1.2 acceptance ledger
 
+## 2026-10-03 observed held-reference contradictions now stop before valuation
+
+[73-payload proof](../../../product-evidence/v1.2/m4/20261003-reference-integrity/README.md)
+records a shared, chronological guard, not a new company-action census. Cash-only
+accepted events must explain the official reference at the effective rule tick;
+insufficient cash cannot mask an unmodeled share distribution. A nonzero held
+position fails before today's accounting/fills/marks/strategy/progress. Noncash
+mixed chains, pending conversions, missing references and first observations
+remain outside this bounded assertion. No original result or frozen input changes.
+
+Final97focused/1107backend+one existing optional archive skip/643frontend and full
+static/build checks pass; independent eight-source review finds no new P1/P2.
+Real original Chrome submitted only `a1205675` known-history SZSE task: FAILED with
+specific EN/ZH cause, NULL summary and zero result rows. Leave/back/reload preserved
+the same task; no retry. Original exact-cash draft restored and10old metadata/
+8result/formal/paper response pairs unchanged. Only backend reloaded after active0;
+original PG/Redis/frontend remained up, tests isolated and owned tmpfs PG stopped.
+Artifact review/exact new CI pending. Later-discovered quality advice still must
+reach saved results/compare/export/plan/data without altering their original facts.
+This does not close full financial U3/U4/U6/U7, AA/p95/forward or release acceptance.
+
+Prior [58-file independent review/correction](../../../product-evidence/v1.2/m4/20261003-corrected-exploration-review/README.md)
+passes scoped hashes/parity/values/source evidence. The sealed prior README's230
+specific progress value lacks saved proof; UI70/297 and290/297/API210/297 are saved,
+both terminal297/297. Keep the original immutable; financial PARTIAL remains.
+
 ## 2026-10-02 23:51 UTC independent execution check finds an economic coverage defect
 
 The [two-run proof](../../../product-evidence/v1.2/m4/20261003-corrected-exploration/README.md)
@@ -45,7 +71,7 @@ Negative result/cost retained; accounting/source review is a separate pending
 check, not implied by SUCCEEDED. Both saved backend fingerprints agree. These
 different universes cannot isolate old cache impact or establish alpha.
 
-Real task-center leave/reopen/refresh, measurable230/297 progress, EN/ZH exact
+Real task-center leave/reopen/refresh, saved70/297 and290/297 progress, EN/ZH exact
 metrics and2-result comparison work; comparison marks universe data condition
 different, other5 same. Original exact-cash draft backed up then restored via UI.
 [New independent proof](../../../product-evidence/v1.2/m4/20261003-corrected-exploration/README.md)
