@@ -29,7 +29,9 @@ class WatchlistService:
 
     async def add(self, dataset_id: str, security_id: str) -> dict[str, Any]:
         security = await asyncio.to_thread(self.reader.security, dataset_id, security_id)
-        source = await asyncio.to_thread(self.reader.registry.resolve, dataset_id)
+        source = await asyncio.to_thread(
+            self.reader.registry.resolve, dataset_id, for_execution=False
+        )
         async with self.factory() as db, db.begin():
             await db.execute(
                 insert(WatchlistItemModel)

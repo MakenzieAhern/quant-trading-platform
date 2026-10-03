@@ -54,7 +54,9 @@ paper_manager = PaperTradingManager(
     SessionFactory,
     DatasetRegistry.phase7(settings.backtest_fixture_path),
     StrategyRegistry(),
-    historical_datasets=ExperimentDatasetRegistry(settings.research_data_path),
+    historical_datasets=ExperimentDatasetRegistry(
+        settings.research_data_path, settings.product_data_path
+    ),
 )
 
 router = APIRouter(prefix="/paper-trading/sessions", tags=["paper-trading"])

@@ -35,8 +35,17 @@ import {
   saveExperimentDraft,
 } from "./draft";
 import { experimentError } from "./errors";
-import type { Capabilities, ExperimentConfiguration } from "./types";
+import { explainExperimentCode } from "./codes";
+import type {
+  Capabilities,
+  DatasetCapability,
+  ExperimentConfiguration,
+} from "./types";
 import "./experiments.css";
+
+function executable(dataset: DatasetCapability | undefined) {
+  return !!dataset?.available && dataset.execution_available !== false;
+}
 
 function finishNewIntent() {
   const url = new URL(window.location.href);
@@ -223,9 +232,9 @@ function initialForm(
 ): ExperimentConfiguration {
   const dataset =
     capabilities.datasets.find(
-      (item) => item.available && item.mode === "historical_exploration",
+      (item) => executable(item) && item.mode === "historical_exploration",
     ) ??
-    capabilities.datasets.find((item) => item.available) ??
+    capabilities.datasets.find(executable) ??
     capabilities.datasets[0];
   const requested = new URLSearchParams(window.location.search).get("strategy");
   const strategy =
@@ -278,7 +287,7 @@ function invalidConfigurationField(
   const dataset = capabilities.datasets.find(
     (item) => item.dataset_id === form.dataset_id,
   );
-  if (!dataset?.available) return "dataset";
+  if (!dataset || !executable(dataset)) return "dataset";
   if (!form.name.trim() || form.name.length > 120) return "name";
   if (
     !isPositiveDecimal(form.initial_cash) ||
@@ -671,12 +680,13 @@ function ExperimentWizard({
                       <option
                         key={entry.dataset_id}
                         value={entry.dataset_id}
-                        disabled={!entry.available}
+                        disabled={!executable(entry)}
                       >
                         {entry.mode === "synthetic_demo"
                           ? c.demo
                           : c.historical}
-                        {!entry.available ? ` · ${c.unavailable}` : ""}
+                        {` · ${entry.dataset_id}`}
+                        {!executable(entry) ? ` · ${c.unavailable}` : ""}
                       </option>
                     ))}
                   </select>
@@ -688,9 +698,15 @@ function ExperimentWizard({
                     {c.securities}
                   </p>
                 )}
-                {!dataset?.available && (
+                {!executable(dataset) && (
                   <p role="alert">
-                    {c.dataUnavailable} <Link href="/data">{c.dataset}</Link>
+                    {dataset?.execution_reason_code
+                      ? explainExperimentCode(
+                          dataset.execution_reason_code,
+                          i18n.language,
+                        )
+                      : c.dataUnavailable}{" "}
+                    <Link href="/data">{c.dataset}</Link>
                   </p>
                 )}
                 <label>

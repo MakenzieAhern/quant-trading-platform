@@ -26,6 +26,8 @@ export interface DatasetCapability {
   dataset_id: string;
   mode: ExperimentMode;
   available: boolean;
+  execution_available?: boolean;
+  execution_reason_code?: string | null;
   reason_code: string | null;
   coverage_start: string;
   coverage_end: string;

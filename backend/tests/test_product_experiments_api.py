@@ -65,7 +65,8 @@ def test_historical_load_classifies_partition_failures_without_hiding_other_erro
     tmp_path, monkeypatch, failure, code
 ):
     registry = ExperimentDatasetRegistry(tmp_path)
-    monkeypatch.setattr(registry, "manifest", lambda: object())
+    monkeypatch.setattr(registry, "resolve", lambda _dataset_id: {"execution_available": True})
+    monkeypatch.setattr(registry, "manifest", lambda _dataset_id: object())
 
     def broken_dataset(*_args):
         raise failure

@@ -48,3 +48,12 @@ it("explains an ordinary distribution input stop with a source repair next step"
     explainExperimentCode("UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT", "zh-CN"),
   ).toContain("重试不能修复来源缺口");
 });
+
+it("separates registered inspection from economic execution approval in both languages", () => {
+  expect(
+    explainExperimentCode("DATASET_EXECUTION_NOT_ACCEPTED", "en-US"),
+  ).toContain("inspection only");
+  expect(
+    explainExperimentCode("DATASET_EXECUTION_NOT_ACCEPTED", "zh-CN"),
+  ).toContain("仅注册用于查看");
+});

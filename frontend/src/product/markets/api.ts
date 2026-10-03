@@ -57,6 +57,13 @@ function dataset(value: unknown): MarketDataset {
   )
     throw new ApiContractError();
   integer(item.security_count);
+  if (
+    item.execution_available !== undefined &&
+    typeof item.execution_available !== "boolean"
+  )
+    throw new ApiContractError();
+  if (item.execution_reason_code !== undefined)
+    nullableText(item.execution_reason_code);
   strings(item.universes);
   return item as unknown as MarketDataset;
 }

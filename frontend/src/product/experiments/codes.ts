@@ -216,6 +216,14 @@ const explanations: Record<string, [string, string]> = {
     "This data source is not registered. Choose one of the available sources.",
     "该数据源未注册。请选择当前可用来源。",
   ],
+  DATASET_EXECUTION_NOT_ACCEPTED: [
+    "This data version is registered for inspection only. Its economic coverage has not been accepted for research or simulated execution. Inspect its provenance in the data center; a checksum or freeze marker alone cannot approve it.",
+    "此数据版本仅注册用于查看，其经济覆盖尚未获准用于研究或模拟执行。请在数据中心检查来源；仅有校验值或冻结标记不能构成准入。",
+  ],
+  DATASET_REGISTRATION_INVALID: [
+    "The local data-version register is invalid. Check the registered IDs and manifest checksums in the data center before retrying; no folder is automatically admitted.",
+    "本地数据版本注册记录无效。重试前请在数据中心核查注册编号和清单校验值；目录不会被自动准入。",
+  ],
   DATES_OUTSIDE_DATASET: [
     "The requested dates fall outside the available data. Adjust the trading period.",
     "所选日期超出可用数据范围，请调整交易区间。",

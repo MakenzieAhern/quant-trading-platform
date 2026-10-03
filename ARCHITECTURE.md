@@ -146,6 +146,17 @@ Collection endpoints order by per-run sequence and enforce `1 <= limit <= 200`. 
 
 Phase 7 execution is intentionally synchronous. FastAPI creates and closes one `AsyncSession` per request, and transaction context managers roll back on exceptions or cancellation. A client disconnect does not provide durable job ownership: cancellation or a process crash after `RUNNING` may leave a stale run because Phase 7 has no worker or recovery lease. Operators can identify those rows by status and timestamps. Automated stale-run recovery, durable cancellation, queues, and workers are explicitly deferred to a future job-execution phase; Phase 7 does not claim crash-safe execution recovery.
 
+## Product dataset-version boundary
+
+The product reuses `ExperimentDatasetRegistry` and `LocalDatasetCatalog` rather
+than scanning archive directories. Optional `PRODUCT_DATA_PATH/datasets/registry.json`
+entries bind an explicit dataset ID to its canonical manifest SHA; the ID resolves
+only beneath that product dataset root. U5 reads and caches use the selected
+root and manifest identity. All additional versions are inspection-only: default
+resolution and the shared U3/U6 loader reject execution until a separate economic
+admission exists. A registration or freeze marker is not that admission. The
+existing research v1 and explicitly synthetic demo remain compatible.
+
 ## Market-data flow
 
 ```text

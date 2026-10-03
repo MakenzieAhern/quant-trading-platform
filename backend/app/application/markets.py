@@ -14,7 +14,6 @@ from app.application.experiments.data import (
     DEMO_END,
     DEMO_ID,
     DEMO_START,
-    HISTORICAL_ID,
     ExperimentDatasetRegistry,
     ExperimentInputError,
 )
@@ -99,13 +98,13 @@ class MarketReader:
         self._lock = Lock()
 
     def _manifest(self, dataset_id: str) -> DatasetManifest | None:
-        self.registry.resolve(dataset_id)
-        return None if dataset_id == DEMO_ID else self.registry.manifest()
+        self.registry.resolve(dataset_id, for_execution=False)
+        return None if dataset_id == DEMO_ID else self.registry.manifest(dataset_id)
 
     def _read(
         self, manifest: DatasetManifest, relative: str, *, filters: Any = None
     ) -> list[dict[str, Any]]:
-        root = self.registry.root / HISTORICAL_ID
+        root = self.registry.dataset_root(manifest.dataset_id)
         path = (root / relative).resolve()
         partition = next((p for p in manifest.partitions if p.relative_path == relative), None)
         if not path.is_relative_to(root.resolve()) or partition is None:
@@ -121,11 +120,12 @@ class MarketReader:
                 partition.sha256,
             )
             with self._lock:
+                key = f"{root}:{manifest.canonical_sha256}:{relative}"
                 # Only a touched immutable partition is hashed, once per file version.
-                if self._verified.get(relative) != stamp:
+                if self._verified.get(key) != stamp:
                     if sha256_file(path) != partition.sha256:
                         raise ExperimentInputError("DATASET_INTEGRITY_FAILED")
-                    self._verified[relative] = stamp
+                    self._verified[key] = stamp
             return cast(list[dict[str, Any]], pq.read_table(path, filters=filters).to_pylist())
         except (OSError, ValueError) as exc:
             raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc
@@ -150,10 +150,14 @@ class MarketReader:
             ]
         # This is a small security index, not the all-market price history.
         try:
-            stamp = (self.registry.root / HISTORICAL_ID / "securities.parquet").stat()
+            root = self.registry.dataset_root(manifest.dataset_id)
+            stamp = (root / "securities.parquet").stat()
         except OSError as exc:
             raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc
-        key = f"{manifest.canonical_sha256}:{stamp.st_mtime_ns}:{stamp.st_ctime_ns}:{stamp.st_size}"
+        key = (
+            f"{root}:{manifest.canonical_sha256}:"
+            f"{stamp.st_mtime_ns}:{stamp.st_ctime_ns}:{stamp.st_size}"
+        )
         with self._lock:
             cached = self._masters.get(key)
         if cached is None:
@@ -182,7 +186,7 @@ class MarketReader:
         }
 
     def _metadata(self, dataset_id: str, manifest: DatasetManifest | None) -> dict[str, Any]:
-        registered = self.registry.resolve(dataset_id)
+        registered = self.registry.resolve(dataset_id, for_execution=False)
         return {
             **registered,
             "provider": manifest.provider if manifest else "DETERMINISTIC_SYNTHETIC_GENERATOR",
@@ -257,7 +261,7 @@ class MarketReader:
         if end < start or (end - start).days >= MAX_DAYS:
             raise ExperimentInputError("MARKET_DATE_RANGE_MUST_BE_1_TO_366_DAYS")
         manifest = self._manifest(dataset_id)
-        registered = self.registry.resolve(dataset_id)
+        registered = self.registry.resolve(dataset_id, for_execution=False)
         if (
             not date.fromisoformat(registered["coverage_start"])
             <= start

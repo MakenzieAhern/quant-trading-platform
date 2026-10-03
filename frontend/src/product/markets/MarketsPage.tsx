@@ -313,6 +313,14 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             )}
           </div>
         )}
+        {dataset?.available && dataset.execution_available === false && (
+          <p role="status">
+            {explainExperimentCode(
+              dataset.execution_reason_code ?? "DATASET_EXECUTION_NOT_ACCEPTED",
+              i18n.language,
+            )}
+          </p>
+        )}
       </section>
       <section className="marketPanel" aria-label={c.search}>
         <h2>{c.search}</h2>

@@ -33,7 +33,7 @@ from app.db.session import SessionFactory, engine
 router = APIRouter(tags=["experiments"])
 experiment_manager = ExperimentManager(
     SessionFactory,
-    ExperimentDatasetRegistry(get_settings().research_data_path),
+    ExperimentDatasetRegistry(get_settings().research_data_path, get_settings().product_data_path),
     engine,
 )
 Key = Annotated[

@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-10-03 explicit inspection versions, not executable financial promotion
+
+[Proof](../../../product-evidence/v1.2/m4/20261003-version-inspection/README.md)
+adds explicit ID/canonical-SHA registration under existing product storage.
+U5/watchlist resolve the selected root and version-scoped caches; new versions
+remain execution-blocked in shared U3/U6 resolution/loader and the research UI.
+Bad optional registrations retain v1/demo; missing five fixed reader tables,
+SHA changes, duplicate/reserved IDs and escaping partitions fail closed.
+No real new dataset exists/was registered, and old catalogue had no reachable
+second historical selection: do not claim an observed old wrong-root incident.
+
+1181 backend / one existing archive skip, 662 frontend / 44 files, Ruff547/mypy145,
+lint/types/build pass; only owned tmpfs quant_test migrated and stopped. Two type
+failures and two test-harness failures are retained. Independent source review
+closed two P2 findings. Real Chrome EN/ZH verifies ID labels and original exact
+draft fields, then restores home/EN/dark; new-ID checks remain private fixtures.
+U6 literals were not partly widened. No economic audit/admission/new-version
+U3/U6/forward/full product PASS; source closure and immutable execution receipt
+remain, alongside all mandatory quality/delivery gates. Exact commit CI pending.
+
 ## 2026-10-03 ordinary distribution integrity and actionable failures
 
 [Current proof](../../../product-evidence/v1.2/m4/20261003-mixed-reference-inputs/README.md)
@@ -18,7 +38,15 @@ pass. Pre-fix19fail, unmigrated scratch harness and un-opened test-socket failur
 are retained, not hidden. Original services/frozen files/.research remain unchanged.
 Real Chrome reads only the existing held-reference failed task in both locales,
 then restores home/EN/dark; it does not prove new typed-code business execution.
-Independent source review no newP1P2; exact new committed CI remains pending.
+Independent source/artifact review no newP1P2. Exactfe6431c hosted
+[CI37088102932](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37088102932)
+completedSUCCESS01:59:54Z with1164backend/one existing skip31.47s,659frontend44files/
+static/build/Compose isolated release smoke. Root subsequently rechecked active0
+and actualPID, then only reloaded backend02:07:30Z; PG/Redis/frontend start times
+unchanged, API/frontend200.33 saved GET response pairs match exactly, five frozen
+partitions/manifest/.research/v1.1 unchanged. No old financial record or new
+business task was written; this is not missing-ledger recovery or a new financial
+acceptance. Earlier no-restart statement refers to the pre-commit checks.
 No whole financial/U3/U6/forward/AA/p95/product/release PASS. Next independent
 version/canonical-SHA catalogue and U3/U5/U6 selection, with unresolved coverage
 still an admission constraint rather than normal/complete by default.

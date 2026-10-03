@@ -123,6 +123,16 @@ export function parseCapabilities(value: unknown): Capabilities {
     integer(dataset.security_count);
     strings(dataset.universes);
     if (typeof dataset.available !== "boolean") throw new ApiContractError();
+    if (
+      dataset.execution_available !== undefined &&
+      typeof dataset.execution_available !== "boolean"
+    )
+      throw new ApiContractError();
+    if (
+      dataset.execution_reason_code !== undefined &&
+      dataset.execution_reason_code !== null
+    )
+      text(dataset.execution_reason_code);
     if (dataset.reason_code !== null) text(dataset.reason_code);
   }
   const defaults = record(item.defaults);

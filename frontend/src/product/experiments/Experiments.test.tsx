@@ -91,6 +91,37 @@ function enableNativeDialog() {
 }
 
 describe("guided experiment", () => {
+  it.each(["en-US", "zh-CN"])(
+    "keeps an inspectable unaccepted version visible but non-executable: %s",
+    async (language) => {
+      await i18n.changeLanguage(language);
+      const blocked = {
+        ...capabilities.datasets[0],
+        dataset_id: "cn-a-product-inspection-test-v2",
+        mode: "historical_exploration" as const,
+        execution_available: false,
+        execution_reason_code: "DATASET_EXECUTION_NOT_ACCEPTED",
+      };
+      vi.spyOn(experimentApi, "capabilities").mockResolvedValue({
+        ...capabilities,
+        datasets: [blocked, ...capabilities.datasets],
+      });
+      const create = vi.spyOn(experimentApi, "create");
+      render(<CreateExperimentPage />);
+      const next = await screen.findByRole("button", {
+        name: language === "en-US" ? "Continue" : "继续",
+      });
+      await userEvent.click(next);
+      const option = screen.getByRole("option", {
+        name: /cn-a-product-inspection-test-v2/,
+      });
+      expect(option).toBeDisabled();
+      expect((option.parentElement as HTMLSelectElement).value).toBe(
+        configuration.dataset_id,
+      );
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
   it.each(["{broken", ""])(
     "preserves unreadable draft bytes before an explicit new start: %s",
     async (raw) => {

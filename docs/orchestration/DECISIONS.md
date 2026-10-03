@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 register inspection identity without inventing financial admission — 2026-10-03
+
+Extend the existing registry and reuse catalogue containment/product storage;
+no directory scan, new table, dependency, environment variable or self-approved
+financial boolean. New explicit ID/SHA entries are inspectable only with the U5
+reader layout, actual selected roots and isolated caches. All new execution
+remains refused at shared admission/loader and research default/validation.
+An arbitrary freeze marker cannot repair coverage or approve a version. Keep
+legacy/demo and saved receipt/idempotency behavior. U6's full selected-ID flow
+must change coherently after real economic admission, not only its schema literal.
+
+Review found and fixed bad-index interference with demo and missing fixed-reader
+table advertising. Full1181backend/one optional skip and662frontend/static/build
+pass; retain type-narrowing and Compose/Alembic harness failures. Actual EN/ZH
+Chrome preserves existing exact draft configuration and shows IDs, not a new
+version financial result. No real new dataset or publication. This prerequisite
+must not substitute for full economic closure or U1–U8/M0–M5 completion.
+
 ## v1.2 validate ordinary economic groups once before mutation — 2026-10-03
 
 Reproduced19 regression failures: valid rights could mask malformed ordinary legs,
@@ -20,7 +38,15 @@ without deleting assertions. Current portfolio/session atomicity is asserted.
 Real Chrome existing failed-task compatibility, no new strategy/queue/business
 DB writes or service restart. The two-row source audit is not full financial PASS;
 new dataset/version admission and selectable U3/U5/U6 remain next. Independent
-source review no newP1P2; exact committed CI pending. Never mutate frozen v1,
+source/artifact review no newP1P2. Exactfe6431c CI37088102932SUCCESS01:59:54Z:
+1164backend/one existing skip31.47s,659frontend44files/static/build/Compose smoke.
+After live active0/PID checks, only backend reloaded02:07:30Z; original durable
+services/frontend remain.33 saved API response bodies are byte-equal; original
+manifest/five partitions/.research/v1.1 unchanged. Prior no-restart notes are
+pre-commit scope. New catalogue must not auto-register old backup IDs or pilot
+partition shapes by freeze-marker presence; source-only2/140 cannot certify a
+repaired executable version. Keep receipt-only edits for next meaningful milestone.
+Never mutate frozen v1,
 historical results or consumed Official OOS. Goal remains active, no release.
 
 ## v1.2 correct CLI provenance paths, not CI coverage — 2026-10-03

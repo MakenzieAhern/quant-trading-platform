@@ -12,13 +12,17 @@ class LocalDatasetCatalog:
     def __init__(self, root: Path) -> None:
         self._root = root.resolve()
 
-    def get(self, dataset_id: str) -> DatasetManifest:
+    def dataset_root(self, dataset_id: str) -> Path:
         allowed = "abcdefghijklmnopqrstuvwxyz0123456789._-"
         if not dataset_id or any(character not in allowed for character in dataset_id):
             raise DatasetNotFoundError("RESEARCH_DATASET_NOT_FOUND")
         dataset_root = (self._root / dataset_id).resolve()
         if not dataset_root.is_relative_to(self._root):
             raise DatasetNotFoundError("RESEARCH_DATASET_NOT_FOUND")
+        return dataset_root
+
+    def get(self, dataset_id: str) -> DatasetManifest:
+        dataset_root = self.dataset_root(dataset_id)
         manifest_path = dataset_root / "manifest.json"
         if not manifest_path.is_file():
             raise DatasetNotFoundError("RESEARCH_DATASET_NOT_FOUND")
