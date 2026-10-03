@@ -23,6 +23,16 @@ HISTORICAL_ID = "cn-a-research-20100101-20251231-v1"
 DEMO_SHA = canonical_sha256({"dataset_id": DEMO_ID, "generator_version": 1, "sessions": 340})
 DEMO_START = date(2030, 1, 2)
 DEMO_END = date(2031, 4, 22)
+HISTORICAL_ECONOMIC_GAP_SHA = "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e"
+
+
+def current_dataset_quality(dataset_id: str, dataset_sha256: object) -> str | None:
+    """Later-discovered read advice, never frozen provenance or result mutation."""
+    if dataset_id != HISTORICAL_ID:
+        return None  # Not covered by this finding, not a financial audit PASS.
+    if isinstance(dataset_sha256, str) and dataset_sha256 == HISTORICAL_ECONOMIC_GAP_SHA:
+        return "KNOWN_ECONOMIC_COVERAGE_GAP"
+    return "HISTORICAL_DATASET_QUALITY_UNKNOWN"
 
 
 class ExperimentInputError(ValueError):
@@ -98,6 +108,9 @@ class ExperimentDatasetRegistry:
             pass
         except (ValueError, KeyError, OSError):
             historical["reason_code"] = "DATASET_INTEGRITY_FAILED"
+        historical["current_dataset_quality"] = current_dataset_quality(
+            historical["dataset_id"], historical["sha256"]
+        )
         return [historical, demo]
 
     def resolve(self, dataset_id: str) -> dict[str, Any]:

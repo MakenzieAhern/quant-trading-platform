@@ -392,6 +392,11 @@ function ExperimentResults({
           </p>
         )}
         <p>{c.noGuarantee}</p>
+        {data.current_dataset_quality && (
+          <p>
+            {explainExperimentCode(data.current_dataset_quality, i18n.language)}
+          </p>
+        )}
         {data.limitations.length > 0 && (
           <ul>
             {data.limitations.map((limitation) => (
@@ -410,7 +415,10 @@ function ExperimentResults({
           ))}
         </details>
       </section>
-      <ExperimentPlan plan={data.simulation_plan ?? null} />
+      <ExperimentPlan
+        plan={data.simulation_plan ?? null}
+        quality={data.current_dataset_quality}
+      />
       {job.status === "SUCCEEDED" && (
         <Link
           className="button secondary"

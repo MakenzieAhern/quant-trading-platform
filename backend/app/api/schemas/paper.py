@@ -243,6 +243,7 @@ class PaperStateResponse(BaseModel):
     latest_session: MarketSessionPayload | None = None
     latest_portfolio: PortfolioPayload | None
     last_rebalance_plan: dict[str, Any] | None = None
+    current_dataset_quality: str | None = None
 
 
 class PaperSnapshotResponse(PaperStateResponse):

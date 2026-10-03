@@ -37,7 +37,7 @@ from app.application.backtests.registry import (
     UnknownDatasetError,
     UnknownStrategyError,
 )
-from app.application.experiments.data import ExperimentDatasetRegistry
+from app.application.experiments.data import ExperimentDatasetRegistry, current_dataset_quality
 from app.application.paper_trading import (
     PaperSessionConflictError,
     PaperSessionStateError,
@@ -288,6 +288,9 @@ def _snapshot_response(
                 last_rebalance_plan = plan
     return PaperSnapshotResponse(
         session=_session_response(session),
+        current_dataset_quality=current_dataset_quality(
+            session.dataset_id, session.strategy_parameters.get("dataset_sha256")
+        ),
         last_sequence=last_sequence,
         latest_bar=latest_bar,
         latest_session=latest_session,

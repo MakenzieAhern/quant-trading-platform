@@ -67,6 +67,22 @@ function boundedSnapshot() {
 }
 
 describe("paper API contracts", () => {
+  it("keeps read quality in the state envelope, never portfolio or plan", async () => {
+    const header = {
+      ...paperState(boundedSnapshot()),
+      current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP",
+    };
+    const before = JSON.stringify(header);
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse(header));
+    expect(await paperApi.state(PAPER_ID)).toEqual(header);
+    expect(JSON.stringify(header)).toBe(before);
+    fetch.mockResolvedValue(
+      jsonResponse({ ...header, current_dataset_quality: "PASS" }),
+    );
+    await expect(paperApi.state(PAPER_ID)).rejects.toThrow();
+  });
   it("loads a collection-free authoritative state with exact Decimal strings", async () => {
     const snapshot = boundedSnapshot();
     const header = paperState(snapshot);
@@ -685,6 +701,7 @@ describe("paper API contracts", () => {
 
   it("retains the last actual rebalance through later non-rebalance stream events", () => {
     const current = paperSnapshot("RUNNING");
+    current.current_dataset_quality = "KNOWN_ECONOMIC_COVERAGE_GAP";
     current.session.provider_type = "historical_a_share";
     const accountPlan = {
       ...plan,
@@ -724,6 +741,10 @@ describe("paper API contracts", () => {
       }),
     );
     expect(later.latest_portfolio?.plan?.status).toBe("NOT_REBALANCE_SESSION");
+    expect(later.current_dataset_quality).toBe(current.current_dataset_quality);
+    expect(later.latest_portfolio?.plan).not.toHaveProperty(
+      "current_dataset_quality",
+    );
     expect(later.last_rebalance_plan?.as_of_trading_date).toBe(
       accountPlan.as_of_trading_date,
     );

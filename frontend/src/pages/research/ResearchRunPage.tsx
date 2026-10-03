@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { explainExperimentCode } from "../../product/experiments/codes";
 
 import { ApiContractError } from "../../api/contracts";
 import { researchApi } from "../../api/research";
@@ -30,7 +31,7 @@ const FORMAL_KNOWN_LIMITATIONS =
   "Daily-bar simulation; Validation did not establish robust alpha; no guarantee of future returns.";
 
 export function ResearchRunPage({ runId }: { runId: string }) {
-  const { t } = useTranslation([
+  const { t, i18n } = useTranslation([
     "research",
     "common",
     "metrics",
@@ -192,6 +193,14 @@ export function ResearchRunPage({ runId }: { runId: string }) {
               : c.historicalExecutionUnverified}
           </div>
         )}
+      {run.data.current_dataset_quality && (
+        <p className="oosGuard" role="note">
+          {explainExperimentCode(
+            run.data.current_dataset_quality,
+            i18n.language,
+          )}
+        </p>
+      )}
       <section className="runFacts" aria-label={t("research:lineage")}>
         <div>
           <span>{t("common:dataset")}</span>

@@ -1,9 +1,29 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-03T00:13:00Z",
+  "updated_at_utc": "2026-10-03T00:46:34Z",
+  "read_time_economic_quality_20261003_gate": {
+    "status": "PASS_SCOPED_LOCAL_SOURCE_INTEGRITY_AND_DOM_PNG_SCOPE_CORRECTED_NEW_CI_PENDING",
+    "source_base": "3ae930a39e92e6ecc8d7902c3979e1e979ec1ad6",
+    "proof": "One saved FullID+canonicalSHA classifier: known unmodeled-action gap or UNKNOWN for missing/differentSHA. No mounted-SHA/date/universe/S0/S1 exemption or claim every report affected. Personal result copy/export metadata, capabilities, paper state envelope to shared plan, formal run/dataset/archive read advice; original summary/plan/event/diagnostics/manifest and frozen/readiness facts unchanged. Historical account no-latest-portfolio parent render fixed.",
+    "tests": "1122backendPASS/one existing optional archiveSKIP/Ruff546formatted/mypy145; final656frontend/44files/lint/types/buildPASS, main518.43kB warning retained. Focused parser/parent/plan hashes/exact amounts and source-review noP1P2. Failed tests/harness retained; paper projection fixture explicitly sets preview, not full-warmup financial proof.",
+    "browser": "OriginalChrome5173 DOM supports saved result/comparison/DataCenter ENZH; legacy account4a6769ab UNKNOWN ENZH, formalValidation/dataset ENZH/archiveEN. Immutable packet PNGs include Loading/wrong page/locale or below-fold captures; independent review correction and separate loaded recaptures in20261003-dataset-quality-advisory-review/README.md govern screenshot scope, not every DOM paired with a matching PNG. GET-only business, no new study/retry/provider/accountStart/formal/OOS. Home/EN/dark and existing draft name restored, wizard not reopened or saved. Not fullAA/native200/p95/release.",
+    "preservation": "32API original-field pairs equal after removing only new advice;8SQL table counts/content digests equal:11terminalstudies/1238rows,5STOPPED/417events,3formal/66metrics/1dataset/4updates;active0. Only backendPID75859→61699 restarted00:32:21Z; originalPG/Redis/frontend unchanged.5frozenSHA/.research unchanged, ownedtmpfs testPG stopped.",
+    "evidence": "product-evidence/v1.2/m4/20261003-dataset-quality-advisory/README.md",
+    "manifest_files": 121,
+    "manifest_sha256": "0015092a60ffee2ca67d5406c42085919bfbfe5f4ffdf0edd426bb754d403a64",
+    "review": "Two read-only source reviews noP1P2; independent121payload/32source/32API/8SQL/5frozen integrity PASS_SCOPED. Separate screenshot-scope correction/loaded recaptures independently reviewed PASS_SCOPED/no remainingP1P2; parent remains immutable. No financial/fullDB/AA certification.",
+    "next": "Coherent commit/push existingPR32 and exactCI. Economic data remediation and all mandatory U1-U8/M0-M5 remain incomplete; no merge/tag/release. Rights and genuine lost-ledger evidence remain external blockers."
+  },
+  "pr32_reference_integrity_exact_ci_20261003_gate": {
+    "status": "PASS_EXACT_COMMITTED_SOURCE",
+    "head": "3ae930a39e92e6ecc8d7902c3979e1e979ec1ad6",
+    "ci_run": 37081276125,
+    "proof": "Hosted backend/frontend/Compose completedSUCCESS; guard/disclosure/artifact source milestone only, not later read-time advisory or complete financial/product acceptance. GitHub accountMakenzieAhern verified live; CI recovered byOct3, localapp never requires hostedCI to run.",
+    "evidence": "product-evidence/v1.2/m4/20261003-reference-integrity-review/ci-final.json"
+  },
   "u3_u7_held_reference_integrity_20261003_gate": {
-    "status": "PASS_SCOPED_LOCAL_SOURCE_AND_ARTIFACT_REVIEW_NEW_CI_PENDING",
+    "status": "PASS_SCOPED_LOCAL_SOURCE_ARTIFACT_AND_EXACT_3AE9_CI",
     "source_base": "b10e42b",
     "proof": "Shared observed-reference marker plus pre-session held-position stop across personal research/historical paper. Only observed prior close and reached accepted events; cash-only boundary must explain change at rule tick/fixed Decimal context. No bonus inference/price substitution/frozen or original summary/ledger rewrite. Noncash mixed boundaries, pending conversion, missing pre_close and first observation remain outside this bounded guard; not full financial correctness.",
     "tests": "Cash-boundary P2 reproduced3fail/8pass, fixed97focused; final1107backendPASS/one existing optional unmountedarchiveSKIP/Ruff/546formatted/mypy145,643frontend/44files/lint/types/build/Prettier PASS. Harness/testfilename/static failures preserved, no weakened assertion/new skip. Main536.37kB warning retained.",
@@ -15,7 +35,7 @@
     "manifest_sha256": "c0314b9a50e6ae08262c1fc0d419ddf68502ec512195713baf2fc68f19b27738"
   },
   "u4_known_execution_disclosure_20261003_gate": {
-    "status": "PASS_SCOPED_LOCAL_INDEPENDENT_NEW_CI_PENDING",
+    "status": "PASS_SCOPED_LOCAL_INDEPENDENT_AND_EXACT_3AE9_CI",
     "source_base": "8000bdf133e20de175672b3b79baa8bdde5f68fc",
     "proof": "Reuse existing notice blocks and two shared EN/ZH strings across personal detail, comparison and executed formal FullDataset reports. Old rejection defect impact remains unquantified; engine correction does not revalidate old returns. Strict candidate identity excludes S0/S1 without coercing malformed arrays; pilot and synthetic sources are not falsely labeled. Unknown source/mode gets uncertainty, not presumed safety. No financial API/calculation/schema/dependency change.",
     "tests": "Raw8fail/37pass RED, firstgreen2fail/43pass due new precision regex missing comma, corrected47 then review-found malformed-candidate guard fixed and final49 focusedPASS. Full642frontend/44files/lint/TS/build/touchedPrettier PASS. All failed logs and existing assertions retained; >500kB advisory remains.",
@@ -2457,13 +2477,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "8000bdf133e20de175672b3b79baa8bdde5f68fc",
+      "last_verified_head": "3ae930a39e92e6ecc8d7902c3979e1e979ec1ad6",
       "state": "DRAFT",
-      "ci_run": 37075854869,
+      "ci_run": 37081276125,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Exact8000CI37075854869 backend1096/1optionalSKIP/frontend626/ComposeSUCCESS closes label/cache/observation batch. Laterb10disclosure and local held-reference guard1107/643 actualChromeFAILclosed/source-review proof are not yet hostedCI-covered. All prior scoped proof retained, not complete U1-U8/M0-M5/AA/native200/p95/lawful forward/genuine missing-ledger recovery/merge/release. PR32OPEN/DRAFT; meaningful batch push/exactCI next."
+      "browser_gate": "Exact3ae930aCI37081276125 backend/frontend/ComposeSUCCESS covers committed disclosure and held-reference guard. Later read-time economic-quality advice1122/656 localtests/source/integrity/DOMPASS_SCOPED, PNG claim limits explicitly corrected separately; new batch not yet hostedCI-covered. All prior scoped proof retained, not complete U1-U8/M0-M5/AA/native200/p95/lawful forward/genuine missing-ledger recovery/merge/release. PR32OPEN/DRAFT; meaningful advice-batch commit/push/exactCI next."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -2478,7 +2498,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Observed held-reference guard now local source-review/browserPASS_SCOPED; finish73fileartifact review, coherent commit/push b10+guard to existingPR32 and exactCI. Then implement read-time current_dataset_quality keyed saved FullID+canonicalSHA across saved result/comparison/export metadata/capabilities and paper state envelope→shared plan prop, never persisted plan/summary/WS payload/hash. Missing/differentSHA UNKNOWN, no S0/S1 cache exemption for this DATAgap. Continue all mandatory U1-U8/M0-M5 including actualeconomicnew-version remediation, AA/native200/p95/full-flow/delivery. No yesterday-close/factor entitlement/oldresult/frozen/formal/OOS rewrite or financialPASS. Lawful after-start forward requires rights; genuine lost-ledger recovery requires real backup. No merge/tag/release until every required gate passes.",
+  "next_task": "Committed disclosure/held-reference guard exact3ae930a CI37081276125 SUCCESS. Read-time current_dataset_quality across saved result/comparison/export metadata/capabilities/paper envelope/shared plan/formal archive/run/dataset is implemented and1122/656 localtests/source/integrity/DOMPASS_SCOPED; separate PNG-scope correction independentlyPASS_SCOPED/no remainingP1P2. Coherent commit/push samePR32 and exactCI next. Never mutate persisted plan/summary/WS payload/hash or infer latest-mounted SHA. Missing/differentSHA UNKNOWN, no S0/S1 data-gap exemption. Then continue all mandatory U1-U8/M0-M5 including actual economic new-version remediation, AA/native200/p95/full-flow/delivery. No yesterday-close/factor entitlement/oldresult/frozen/formal/OOS rewrite or financialPASS. Lawful after-start forward requires rights; genuine lost-ledger recovery requires real backup. No merge/tag/release until every required gate passes.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

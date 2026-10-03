@@ -3,13 +3,22 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, expect, test, vi } from "vitest";
 
 import { researchApi } from "../../api/research";
-import type { ResearchPoint, ResearchRun } from "../../types/research";
+import type {
+  ResearchDataset,
+  ResearchPoint,
+  ResearchRun,
+} from "../../types/research";
 import { ResearchRunPage } from "./ResearchRunPage";
+import { ResearchDatasetPage } from "./ResearchDatasetPage";
+import { ResearchHomePage } from "./ResearchHomePage";
 
 let language = "en-US";
 
 vi.mock("../../api/research", () => ({
   researchApi: {
+    dataset: vi.fn(),
+    datasets: vi.fn(),
+    runs: vi.fn(),
     run: vi.fn(),
     metrics: vi.fn(),
     points: vi.fn(),
@@ -67,6 +76,88 @@ beforeEach(() => {
   vi.mocked(researchApi.points).mockImplementation(async (_id, _kind, offset) =>
     pointPage(offset ?? 0, offset === 0 ? 200 : 1),
   );
+});
+
+test.each(["S0", "S1"])(
+  "does not exempt %s from input-version economic coverage advice",
+  async (candidate) => {
+    const saved = {
+      ...savedRun,
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      dataset_checksum:
+        "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e",
+      diagnostics: { candidate },
+      current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP" as const,
+    };
+    const before = JSON.stringify(saved);
+    vi.mocked(researchApi.run).mockResolvedValue(saved);
+    const view = render(<ResearchRunPage runId="saved" />);
+    expect(
+      await screen.findByText(
+        /A later review found an unmodeled corporate-action gap/,
+      ),
+    ).toHaveAttribute("role", "note");
+    expect(
+      screen.queryByText(
+        /Earlier versions of this historical execution engine/,
+      ),
+    ).toBeNull();
+    language = "zh-CN";
+    view.rerender(<ResearchRunPage runId="saved" />);
+    expect(
+      screen.getByText(/后续复核发现此冻结数据版本存在尚未建模的公司行动缺口/),
+    ).toBeVisible();
+    expect(JSON.stringify(saved)).toBe(before);
+    expect(researchApi.run).toHaveBeenCalledOnce();
+  },
+);
+
+test("shows unknown current quality without rewriting a frozen dataset manifest", async () => {
+  const saved: ResearchDataset = {
+    dataset_id: "old",
+    provider: "audited",
+    provider_version: "1",
+    retrieval_timestamp: "2026-01-01T00:00:00Z",
+    coverage_start: "2010-01-01",
+    coverage_end: "2025-12-31",
+    security_count: 1,
+    canonical_sha256: "a".repeat(64),
+    rule_version: "1",
+    adjustment_method: "separate",
+    readiness_status: "READY",
+    frozen: true,
+    manifest: { checksum: "original" },
+    current_dataset_quality: "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+  };
+  const before = JSON.stringify(saved);
+  vi.mocked(researchApi.dataset).mockResolvedValue(saved);
+  const view = render(<ResearchDatasetPage datasetId="old" />);
+  expect(
+    await screen.findByText(/Economic completeness is unknown/),
+  ).toHaveAttribute("role", "note");
+  language = "zh-CN";
+  view.rerender(<ResearchDatasetPage datasetId="old" />);
+  expect(screen.getByText(/经济完整性未知/)).toBeVisible();
+  expect(JSON.stringify(saved)).toBe(before);
+  expect(researchApi.dataset).toHaveBeenCalledOnce();
+  view.unmount();
+  vi.mocked(researchApi.datasets).mockResolvedValue({
+    ...empty,
+    total: 1,
+    items: [saved],
+  });
+  vi.mocked(researchApi.runs).mockResolvedValue(empty);
+  language = "en-US";
+  const archive = render(<ResearchHomePage />);
+  expect(
+    await screen.findByText(/Economic completeness is unknown/),
+  ).toHaveAttribute("role", "note");
+  expect(screen.getByText(/research:readiness.READY/)).toBeVisible();
+  language = "zh-CN";
+  archive.rerender(<ResearchHomePage />);
+  expect(screen.getByText(/经济完整性未知/)).toBeVisible();
+  expect(JSON.stringify(saved)).toBe(before);
+  expect(researchApi.datasets).toHaveBeenCalledOnce();
 });
 
 test.each(["DEVELOPMENT", "VALIDATION", "OUT_OF_SAMPLE"] as const)(

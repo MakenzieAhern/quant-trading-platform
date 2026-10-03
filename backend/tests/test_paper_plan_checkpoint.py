@@ -63,6 +63,58 @@ def account(version=V1):
     )
 
 
+@pytest.mark.parametrize(
+    "sha", [None, "a" * 64, "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e"]
+)
+async def test_read_quality_is_bound_to_saved_account_not_mutable_plan_or_registry(sha):
+    from app.api.routes.paper import _snapshot_response
+    from app.api.schemas.paper import PaperStateResponse
+    from app.application.experiments.data import (
+        HISTORICAL_ECONOMIC_GAP_SHA,
+        current_dataset_quality,
+    )
+
+    session = account()
+    parameters = {**session.strategy_parameters, "dataset_sha256": sha}
+    session = replace(session, strategy_parameters=parameters)
+    before = dict(parameters)
+    history = await checkpoint(session, V3)
+    history = tuple(
+        replace(
+            event,
+            payload={
+                **event.payload,
+                "plan": {
+                    **event.payload["plan"],
+                    "dataset_sha256": HISTORICAL_ECONOMIC_GAP_SHA,
+                    # Projection fixture: exercise selection of a saved preview, not warmup.
+                    "status": "SIMULATION_PREVIEW",
+                },
+            },
+        )
+        if isinstance(event.payload.get("plan"), dict)
+        else event
+        for event in history
+    )
+    original = repr(history)
+    hashes = [
+        canonical_sha256(event.payload["plan"]) for event in history if "plan" in event.payload
+    ]
+    snapshot = _snapshot_response(session, history, len(history))
+    expected = current_dataset_quality(session.dataset_id, sha)
+    assert snapshot.current_dataset_quality == expected
+    state = PaperStateResponse.model_validate(
+        snapshot.model_dump(exclude={"signals", "risk_decisions", "orders", "fills"})
+    )
+    assert state.current_dataset_quality == expected
+    assert snapshot.last_rebalance_plan is not None
+    assert "current_dataset_quality" not in snapshot.last_rebalance_plan
+    assert session.strategy_parameters == before and repr(history) == original
+    assert [
+        canonical_sha256(event.payload["plan"]) for event in history if "plan" in event.payload
+    ] == hashes
+
+
 def source_runtime(session):
     sessions = (
         _session(date(2024, 1, 2), opening="10"),

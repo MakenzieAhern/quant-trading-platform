@@ -501,6 +501,14 @@ export function DataCenterPage() {
           <p className="dataCardNote">
             {item.mode === "synthetic_demo" ? c.demoHelp : c.staleHint}
           </p>
+          {item.current_dataset_quality && (
+            <p className="inlineNotice" role="note">
+              {explainExperimentCode(
+                item.current_dataset_quality,
+                i18n.language,
+              )}
+            </p>
+          )}
           <details className="technicalDetails">
             <summary>{c.details}</summary>
             <dl>

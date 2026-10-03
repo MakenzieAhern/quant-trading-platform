@@ -1,4 +1,6 @@
 export type ExperimentMode = "historical_exploration" | "synthetic_demo";
+export type CurrentDatasetQuality =
+  "KNOWN_ECONOMIC_COVERAGE_GAP" | "HISTORICAL_DATASET_QUALITY_UNKNOWN" | null;
 export type ExperimentStatus =
   "QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED" | "CANCELLED" | "INTERRUPTED";
 export interface ParameterRange {
@@ -20,6 +22,7 @@ export interface StrategyCapability {
   limitations: string[];
 }
 export interface DatasetCapability {
+  current_dataset_quality?: CurrentDatasetQuality;
   dataset_id: string;
   mode: ExperimentMode;
   available: boolean;
@@ -79,6 +82,7 @@ export interface Experiment {
   result_available: boolean;
 }
 export interface ExperimentResult {
+  current_dataset_quality?: CurrentDatasetQuality;
   job_id: string;
   mode: ExperimentMode;
   metrics: {

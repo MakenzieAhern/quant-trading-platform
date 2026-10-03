@@ -39,6 +39,50 @@ beforeEach(async () => {
 
 describe("experiment comparison", () => {
   it.each(["en-US", "zh-CN"])(
+    "keeps later quality advice scoped to its saved result and comparison card (%s)",
+    async (locale) => {
+      await i18n.changeLanguage(locale);
+      const saved = {
+        ...result,
+        current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP" as const,
+      };
+      const before = JSON.stringify(saved);
+      vi.spyOn(experimentApi, "get").mockImplementation(async (id) =>
+        runs.find((run) => run.job_id === id)!,
+      );
+      vi.spyOn(experimentApi, "result").mockImplementation(async (id) =>
+        id === ids[0] ? saved : result,
+      );
+      vi.spyOn(experimentApi, "equity").mockResolvedValue({
+        items: [],
+        total: 0,
+        limit: 100,
+        offset: 0,
+      });
+      const text =
+        locale === "en-US"
+          ? /A later review found an unmodeled corporate-action gap/
+          : /后续复核发现此冻结数据版本存在尚未建模的公司行动缺口/;
+      const detail = render(<ExperimentDetailPage jobId={ids[0]!} />);
+      const notices = await screen.findAllByText(text);
+      expect(notices).toHaveLength(2); // limitations and shared saved plan
+      expect(screen.getByRole("note")).toHaveTextContent(text);
+      await userEvent.click(
+        screen.getByRole("checkbox", {
+          name: locale === "en-US" ? "Show full precision" : "显示完整精度",
+        }),
+      );
+      expect(screen.getByText("12.000000000000000001")).toBeVisible();
+      detail.unmount();
+      render(<ExperimentComparePage />);
+      const advice = await screen.findByText(text);
+      const cards = screen.getAllByRole("article");
+      expect(cards[0]).toContainElement(advice);
+      expect(cards[1]).not.toContainElement(advice);
+      expect(JSON.stringify(saved)).toBe(before);
+    },
+  );
+  it.each(["en-US", "zh-CN"])(
     "discloses the historical execution issue on a saved result in %s without revalidating it",
     async (locale) => {
       await i18n.changeLanguage(locale);

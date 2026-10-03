@@ -23,6 +23,39 @@ import {
 
 afterEach(() => vi.restoreAllMocks());
 
+it.each(["en-US", "zh-CN"])(
+  "distinguishes readable historical data from economic validation (%s)",
+  async (locale) => {
+    await act(() => i18n.changeLanguage(locale));
+    const historical = {
+      ...capabilities.datasets[0]!,
+      dataset_id: "cn-a-research-20100101-20251231-v1",
+      mode: "historical_exploration" as const,
+      current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP" as const,
+    };
+    const data = {
+      ...capabilities,
+      datasets: [historical, capabilities.datasets[0]!],
+    };
+    const before = JSON.stringify(data);
+    const read = vi
+      .spyOn(experimentApi, "capabilities")
+      .mockResolvedValue(data);
+    render(<DataCenterPage />);
+    const notice = await screen.findByRole("note");
+    expect(notice).toHaveTextContent(
+      locale === "en-US"
+        ? "Economic completeness is not validated"
+        : "经济完整性尚未验证",
+    );
+    expect(historical.available).toBe(true);
+    expect(screen.getAllByRole("note")).toHaveLength(1);
+    expect(JSON.stringify(data)).toBe(before);
+    expect(read).toHaveBeenCalledOnce();
+    await act(() => i18n.changeLanguage("en-US"));
+  },
+);
+
 it.each([
   ["en-US", "New-market forward simulation", "Not available yet."],
   ["zh-CN", "新行情前向模拟", "尚未开放。"],

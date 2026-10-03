@@ -9,6 +9,35 @@ import { plan } from "./fixtures.test-data";
 import type { PaperAccountPlan } from "./types";
 
 describe("saved plan account date", () => {
+  it.each(["en-US", "zh-CN"])(
+    "shows later data-quality advice without changing a saved plan (%s)",
+    async (locale) => {
+      await act(async () => i18n.changeLanguage(locale));
+      const before = JSON.stringify(plan);
+      const view = render(
+        <ExperimentPlan plan={plan} quality="KNOWN_ECONOMIC_COVERAGE_GAP" />,
+      );
+      expect(screen.getByRole("note")).toHaveTextContent(
+        locale === "en-US"
+          ? "Economic completeness is not validated"
+          : "经济完整性尚未验证",
+      );
+      expect(screen.getByText("90,123.000000000000000001")).toBeVisible();
+      view.rerender(
+        <ExperimentPlan
+          plan={plan}
+          quality="HISTORICAL_DATASET_QUALITY_UNKNOWN"
+        />,
+      );
+      expect(screen.getByRole("note")).toHaveTextContent(
+        locale === "en-US"
+          ? "Economic completeness is unknown"
+          : "经济完整性未知",
+      );
+      expect(JSON.stringify(plan)).toBe(before);
+      await act(async () => i18n.changeLanguage("en-US"));
+    },
+  );
   it.each([undefined, null, "2031-04-13"])(
     "warns when the account date is %s without rewriting the record",
     async (snapshotDate) => {

@@ -1,8 +1,13 @@
+import csv
+import io
+import json
 from dataclasses import replace
 from datetime import UTC, date, datetime
 from decimal import Decimal
 from threading import Event
 from types import SimpleNamespace
+from unittest.mock import AsyncMock
+from uuid import uuid4
 
 import pytest
 from pydantic import ValidationError
@@ -12,10 +17,12 @@ from app.application.experiments.data import (
     DEMO_ID,
     DEMO_SHA,
     DEMO_START,
+    HISTORICAL_ECONOMIC_GAP_SHA,
     HISTORICAL_ID,
     ExperimentDatasetRegistry,
     ExperimentInputError,
     SyntheticExperimentDataset,
+    current_dataset_quality,
 )
 from app.application.experiments.models import CreateExperimentRequest
 from app.application.experiments.runner import (
@@ -38,6 +45,127 @@ def demo_request(**changes):
             **changes,
         }
     )
+
+
+@pytest.mark.parametrize(
+    ("dataset_id", "sha", "expected"),
+    [
+        (HISTORICAL_ID, HISTORICAL_ECONOMIC_GAP_SHA, "KNOWN_ECONOMIC_COVERAGE_GAP"),
+        (HISTORICAL_ID, "a" * 64, "HISTORICAL_DATASET_QUALITY_UNKNOWN"),
+        (HISTORICAL_ID, None, "HISTORICAL_DATASET_QUALITY_UNKNOWN"),
+        (HISTORICAL_ID, [HISTORICAL_ECONOMIC_GAP_SHA], "HISTORICAL_DATASET_QUALITY_UNKNOWN"),
+        (DEMO_ID, HISTORICAL_ECONOMIC_GAP_SHA, None),
+        ("cn-a-pilot-akshare-20230101-20240731-v1", HISTORICAL_ECONOMIC_GAP_SHA, None),
+    ],
+)
+def test_later_dataset_quality_uses_saved_exact_identity_not_mode_or_mounted_sha(
+    dataset_id, sha, expected
+):
+    assert current_dataset_quality(dataset_id, sha) == expected
+
+
+@pytest.mark.parametrize("sha", [HISTORICAL_ECONOMIC_GAP_SHA, "b" * 64])
+async def test_read_and_export_quality_do_not_rewrite_original_summary_or_plan(monkeypatch, sha):
+    from app.api.routes import experiments
+    from app.application.experiments.export import export_csv, export_json
+
+    summary = {
+        "metrics": {"cumulative_return": "-0.123456789123456789"},
+        "limitations": [],
+        "simulation_plan": {"dataset_sha256": sha, "account": {"cash": "123.000000000000001"}},
+    }
+    configuration = json_value(demo_request().model_dump())
+    row = SimpleNamespace(
+        id=uuid4(),
+        name="Saved result",
+        status="SUCCEEDED",
+        mode="historical_exploration",
+        dataset_id=HISTORICAL_ID,
+        dataset_sha256=sha,
+        summary=summary,
+        configuration=configuration,
+        configuration_sha256="c" * 64,
+        created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        completed_at=None,
+    )
+    manager = SimpleNamespace(
+        get=AsyncMock(return_value=row), collection=AsyncMock(return_value=([], 0))
+    )
+    monkeypatch.setattr(experiments, "experiment_manager", manager)
+    before = json.dumps([summary, configuration], sort_keys=True)
+    read = await experiments.experiment_result(row.id, None)
+    quality = current_dataset_quality(HISTORICAL_ID, sha)
+    assert read is not summary and read["current_dataset_quality"] == quality
+    assert {k: v for k, v in read.items() if k != "current_dataset_quality"} == summary
+    exported = json.loads("".join([part async for part in export_json(manager, row, None, None)]))
+    assert exported["metadata"]["current_dataset_quality"] == quality
+    assert exported["full_period_summary"] == summary
+    csv_text = "".join([part async for part in export_csv(manager, row, "trades", None, None)])
+    metadata = {item["field"]: item["value"] for item in csv.DictReader(io.StringIO(csv_text))}
+    assert metadata["current_dataset_quality"] == quality
+    assert json.loads(metadata["full_period_summary"]) == summary
+    assert json.dumps([summary, configuration], sort_keys=True) == before
+
+
+@pytest.mark.parametrize(
+    "dataset_id,sha",
+    [
+        (HISTORICAL_ID, HISTORICAL_ECONOMIC_GAP_SHA),
+        (HISTORICAL_ID, "b" * 64),
+        (DEMO_ID, HISTORICAL_ECONOMIC_GAP_SHA),
+        ("cn-a-pilot-akshare-20230101-20240731-v1", HISTORICAL_ECONOMIC_GAP_SHA),
+    ],
+)
+def test_formal_quality_projection_keeps_saved_lineage_manifest_and_diagnostics(dataset_id, sha):
+    from app.api.routes.research import _dataset, _run
+
+    now = datetime(2026, 1, 1, tzinfo=UTC)
+    dataset = SimpleNamespace(
+        dataset_id=dataset_id,
+        provider="audited",
+        provider_version="1",
+        retrieval_timestamp=now,
+        coverage_start=date(2010, 1, 1),
+        coverage_end=date(2025, 12, 31),
+        security_count=1,
+        canonical_sha256=sha,
+        rule_version="1",
+        adjustment_method="separate",
+        readiness_status="READY",
+        frozen=True,
+        manifest={"checksum": "original"},
+    )
+    run = SimpleNamespace(
+        id=uuid4(),
+        dataset_id=dataset_id,
+        dataset_checksum=sha,
+        status="SUCCEEDED",
+        period_kind="VALIDATION",
+        git_commit="a" * 40,
+        provider="audited",
+        provider_version="1",
+        market_rule_version="1",
+        strategy_id="saved",
+        strategy_config_hash="a" * 64,
+        transaction_cost_config={"rate": "0.000300000000000001"},
+        benchmark_id="CSI300",
+        benchmark_version="1",
+        temporal_split_hash="b" * 64,
+        random_seed=0,
+        created_at=now,
+        started_at=None,
+        completed_at=None,
+        failure_code=None,
+        diagnostics={"candidate": "S0"},
+    )
+    before = canonical_sha256(json_value([vars(dataset), vars(run)]))
+    expected = current_dataset_quality(dataset_id, sha)
+    assert _dataset(dataset, detail=True).current_dataset_quality == expected
+    result = _run(run)
+    assert result.current_dataset_quality == expected and result.dataset_checksum == sha
+    assert result.diagnostics == run.diagnostics
+    assert _dataset(dataset, detail=True).manifest == dataset.manifest
+    assert canonical_sha256(json_value([vars(dataset), vars(run)])) == before
 
 
 def test_experiment_validation_rejects_numbers_invalid_dates_and_unsupported_parameters():

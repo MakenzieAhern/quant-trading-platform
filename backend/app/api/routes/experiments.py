@@ -14,7 +14,11 @@ from app.api.schemas.experiments import (
     ExperimentPage,
     ExperimentResponse,
 )
-from app.application.experiments.data import ExperimentDatasetRegistry, ExperimentInputError
+from app.application.experiments.data import (
+    ExperimentDatasetRegistry,
+    ExperimentInputError,
+    current_dataset_quality,
+)
 from app.application.experiments.export import export_csv, export_json
 from app.application.experiments.service import (
     ExperimentConflictError,
@@ -149,7 +153,8 @@ async def experiment_result(job_id: UUID, request: Request) -> dict[str, Any] | 
         row = await experiment_manager.get(job_id)
         if row.summary is None:
             raise ExperimentConflictError("RESULT_NOT_READY")
-        return row.summary
+        quality = current_dataset_quality(row.dataset_id, row.dataset_sha256)
+        return {**row.summary, "current_dataset_quality": quality} if quality else row.summary
     except (LookupError, ExperimentConflictError) as exc:
         return _error(request, exc)
 

@@ -327,6 +327,14 @@ function Comparison({
                 </p>
               )}
               <ul>
+                {result.current_dataset_quality && (
+                  <li>
+                    {explainExperimentCode(
+                      result.current_dataset_quality,
+                      i18n.language,
+                    )}
+                  </li>
+                )}
                 {result.limitations.map((code) => (
                   <li key={code}>
                     {explainExperimentCode(code, i18n.language)}

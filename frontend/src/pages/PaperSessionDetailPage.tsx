@@ -395,9 +395,10 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           </p>
         )}
       </section>
-      {session.provider_type === "historical_a_share" && portfolio && (
+      {session.provider_type === "historical_a_share" && (
         <ExperimentPlan
-          plan={snapshot.last_rebalance_plan ?? portfolio.plan}
+          plan={snapshot.last_rebalance_plan ?? portfolio?.plan ?? null}
+          quality={snapshot.current_dataset_quality}
           account
         />
       )}

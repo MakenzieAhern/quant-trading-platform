@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { formatDecimal, formatPercent, shortId } from "../../utils/format";
 import { explainExperimentCode } from "./codes";
-import type { PaperAccountPlan, SimulationPlan } from "./types";
+import type {
+  CurrentDatasetQuality,
+  PaperAccountPlan,
+  SimulationPlan,
+} from "./types";
 
 const en = {
   title: "Simulated rebalance preview",
@@ -156,9 +160,11 @@ const zh: typeof en = {
 export function ExperimentPlan({
   plan,
   account = false,
+  quality,
 }: {
   plan: SimulationPlan | PaperAccountPlan | null;
   account?: boolean;
+  quality?: CurrentDatasetQuality;
 }) {
   const { i18n } = useTranslation();
   const c = i18n.language.startsWith("zh") ? zh : en;
@@ -174,6 +180,11 @@ export function ExperimentPlan({
       aria-label={title}
     >
       <h2>{title}</h2>
+      {quality && (
+        <p className="experimentNotice" role="note">
+          {explainExperimentCode(quality, i18n.language)}
+        </p>
+      )}
       {!plan ? (
         <p>{account ? c.paperLegacy : c.legacy}</p>
       ) : (

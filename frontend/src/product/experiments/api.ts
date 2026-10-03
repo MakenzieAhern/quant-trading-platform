@@ -17,7 +17,20 @@ import type {
   Page,
   SimulationPlan,
   PaperAccountPlan,
+  CurrentDatasetQuality,
 } from "./types";
+
+export function parseCurrentDatasetQuality(
+  value: unknown,
+): CurrentDatasetQuality {
+  if (value == null) return null;
+  if (
+    value !== "KNOWN_ECONOMIC_COVERAGE_GAP" &&
+    value !== "HISTORICAL_DATASET_QUALITY_UNKNOWN"
+  )
+    throw new ApiContractError();
+  return value;
+}
 
 function record(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value))
@@ -94,6 +107,7 @@ export function parseCapabilities(value: unknown): Capabilities {
   }
   for (const entry of item.datasets) {
     const dataset = record(entry);
+    parseCurrentDatasetQuality(dataset.current_dataset_quality);
     for (const key of [
       "dataset_id",
       "coverage_start",
@@ -161,6 +175,7 @@ export function parseExperiment(value: unknown): Experiment {
 }
 export function parseResult(value: unknown): ExperimentResult {
   const item = record(value);
+  parseCurrentDatasetQuality(item.current_dataset_quality);
   mode(item.mode);
   strings(item.limitations);
   for (const key of ["job_id", "date_start", "date_end", "benchmark_id"])

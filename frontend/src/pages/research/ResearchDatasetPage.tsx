@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { explainExperimentCode } from "../../product/experiments/codes";
 
 import { researchApi } from "../../api/research";
 import { ErrorPanel, LoadingPanel } from "../../components/AsyncPanel";
@@ -7,7 +8,7 @@ import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc } from "../../utils/format";
 
 export function ResearchDatasetPage({ datasetId }: { datasetId: string }) {
-  const { t } = useTranslation(["research", "common", "validation"]);
+  const { t, i18n } = useTranslation(["research", "common", "validation"]);
   const dataset = useApiResource(
     (signal) => researchApi.dataset(datasetId, signal),
     [datasetId],
@@ -27,6 +28,14 @@ export function ResearchDatasetPage({ datasetId }: { datasetId: string }) {
           <h1>{dataset.data.dataset_id}</h1>
         </div>
       </header>
+      {dataset.data.current_dataset_quality && (
+        <p className="oosGuard" role="note">
+          {explainExperimentCode(
+            dataset.data.current_dataset_quality,
+            i18n.language,
+          )}
+        </p>
+      )}
       <section className="runFacts" aria-label={t("research:lineage")}>
         <div>
           <span>{t("research:provider")}</span>

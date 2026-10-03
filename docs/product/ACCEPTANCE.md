@@ -1,5 +1,35 @@
 # v1.2 acceptance ledger
 
+## 2026-10-03 current economic-quality advice reaches saved evidence
+
+[121-payload proof](../../../product-evidence/v1.2/m4/20261003-dataset-quality-advisory/README.md)
+binds32 changed source/test files. Shared read-time classification uses each
+saved FullDataset ID+canonical SHA, never the currently mounted replacement.
+Known missing corporate-action coverage is explicit; missing/different SHA is
+UNKNOWN, not repaired. Synthetic/pilot are outside this finding, not financial
+PASS. Personal detail/comparison/plan, exports metadata, Data Center, paper
+state envelope/shared plan and formal archive/run/dataset show EN/ZH advice.
+S0/S1 execution-cache exceptions do not exempt an input-version data gap.
+
+1122backend/one existing optional archive skip/656frontend plus lint, types,
+format/build pass. Parent regression found and fixed historical plans/advice
+hidden without latest portfolio; original financial precision/objects retained.
+Actual Chrome reads saved results/comparison/data/legacy UNKNOWN account/formal
+Validation and dataset, not new jobs or formal/OOS reruns.32API pairs retain
+original fields;8SQL table counts/content digests and5frozen file SHAs unchanged.
+Only backend reloaded; durable services untouched/testPG stopped/active0.
+Two read-only source reviews find no newP1P2; independent121payload/32source,
+32API/8SQL/5frozen integrity review passes scoped. Review identified a P2 in
+the immutable packet README's PNG claims: some are Loading/wrong page/locale,
+not the matching later DOM; full precision/lower-limitations claims were too
+broad. [Separate correction and loaded recaptures](../../../product-evidence/v1.2/m4/20261003-dataset-quality-advisory-review/README.md)
+withdraw those claims without replacing sealed evidence. Exact new CI is still
+a separate gate. Warning does not repair data, validate returns or complete
+AA/native200/p95/U1-U8/forward/release. PR32 stays draft; no merge or tag.
+
+Earlier guard/disclosure committed at3ae930a has exact hostedCI37081276125
+SUCCESS (backend/frontend/Compose); it does not cover this later advice batch.
+
 ## 2026-10-03 observed held-reference contradictions now stop before valuation
 
 [73-payload proof](../../../product-evidence/v1.2/m4/20261003-reference-integrity/README.md)

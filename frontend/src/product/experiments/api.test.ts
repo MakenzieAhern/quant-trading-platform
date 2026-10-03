@@ -2,10 +2,51 @@ import { describe, expect, it, vi } from "vitest";
 import { API_BASE_URL } from "../../api/config";
 import { ApiContractError } from "../../api/contracts";
 import { jsonResponse } from "../../test/fixtures";
-import { experimentApi } from "./api";
+import {
+  experimentApi,
+  parseCapabilities,
+  parseCurrentDatasetQuality,
+  parseResult,
+} from "./api";
 import { capabilities, configuration, job, result } from "./fixtures.test-data";
 
 describe("experiment HTTP boundary", () => {
+  it("preserves read-time quality, accepts legacy omission and rejects unknown quality claims", () => {
+    const saved = {
+      ...result,
+      current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP",
+    };
+    const before = JSON.stringify(saved);
+    expect(parseResult(saved).current_dataset_quality).toBe(
+      "KNOWN_ECONOMIC_COVERAGE_GAP",
+    );
+    expect(parseResult(result)).toEqual(result);
+    expect(JSON.stringify(saved)).toBe(before);
+    for (const value of [
+      "PASS",
+      ["KNOWN_ECONOMIC_COVERAGE_GAP"],
+      { status: "KNOWN_ECONOMIC_COVERAGE_GAP" },
+      1,
+    ]) {
+      expect(() => parseCurrentDatasetQuality(value)).toThrow(ApiContractError);
+      expect(() =>
+        parseResult({ ...result, current_dataset_quality: value }),
+      ).toThrow(ApiContractError);
+      expect(() =>
+        parseCapabilities({
+          ...capabilities,
+          datasets: capabilities.datasets.map((item) => ({
+            ...item,
+            current_dataset_quality: value,
+          })),
+        }),
+      ).toThrow(ApiContractError);
+    }
+    expect(
+      parseCurrentDatasetQuality("HISTORICAL_DATASET_QUALITY_UNKNOWN"),
+    ).toBe("HISTORICAL_DATASET_QUALITY_UNKNOWN");
+    expect(parseCurrentDatasetQuality(null)).toBeNull();
+  });
   it("requests capabilities from the actual mounted /api route", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")

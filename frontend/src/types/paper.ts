@@ -1,4 +1,7 @@
-import type { PaperAccountPlan } from "../product/experiments/types";
+import type {
+  CurrentDatasetQuality,
+  PaperAccountPlan,
+} from "../product/experiments/types";
 
 export type PaperSessionStatus =
   | "CREATED"
@@ -129,6 +132,7 @@ export interface PaperPortfolio {
 }
 
 export interface PaperSnapshot {
+  current_dataset_quality?: CurrentDatasetQuality;
   session: PaperSession;
   last_sequence: number;
   latest_bar: MarketBar | null;

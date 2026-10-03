@@ -1,5 +1,32 @@
 # Decisions
 
+## v1.2 preserve originals while disclosing later input-version gaps — 2026-10-03
+
+Reuse one pure saved-ID/canonical-SHA classifier and existing bilingual notices;
+no persistent field, dependency, mutable plan metadata or financial recalculation.
+Read advice is distinct from historical authority/readiness/freeze. Never let
+latest mounted SHA, undated name history, factors, candidate S0/S1 or a different
+universe silently certify economic completeness. Formal records use their own
+checksum; unknown account SHA wins even when its plan claims a reviewed version.
+Archive readiness labels retain their original value alongside the later warning.
+
+Real no-latest-portfolio parent regression showed saved plans/advice were hidden;
+historical account plan now safely uses saved preview, optional portfolio or null.
+1122backend/one optional skip/656frontend/static/build pass, independent scoped
+source reviews noP1P2.32API pairs and8SQLtable counts/content digests unchanged;
+5frozenSHA preserved. Original backend-only reload after active0/PID checks,
+PG/Redis/frontend unchanged, testPG stopped.121payload packet is immutable with
+SHA256SUMS0015092a60ffee2ca67d5406c42085919bfbfe5f4ffdf0edd426bb754d403a64;
+failed test/harness logs and projection fixture limits retained. No source repair,
+strategy/account execution, formal/OOS rerun, merge/release or financial PASS.
+Independent121payload/source32/API32/SQL8/frozen5 review passes scoped but finds
+PNG-description P2. Keep the packet immutable; explicitly withdraw Loading,
+wrong-page/locale and overbroad precision/viewport claims in the separate
+20261003-dataset-quality-advisory-review/README.md, with loaded recaptures.
+Correct DOM proves disclosure, not a matching screenshot at the same instant.
+Read-time notices are a safety improvement, not a replacement for new-version
+economic remediation and the complete mandatory product acceptance matrix.
+
 ## v1.2 stop held-reference contradictions once in the shared engine — 2026-10-03
 
 Reuse existing accepted input/engine/runner paths. Observe only previous raw close

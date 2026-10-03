@@ -936,6 +936,54 @@ describe("paper trading pages", () => {
     await act(async () => i18n.changeLanguage("en-US"));
   });
 
+  it.each(["en-US", "zh-CN"])(
+    "passes current quality advice outside a saved account plan (%s)",
+    async (locale) => {
+      await act(async () => i18n.changeLanguage(locale));
+      installWebSocket();
+      const saved = {
+        ...paperSnapshot("STOPPED"),
+        current_dataset_quality: "HISTORICAL_DATASET_QUALITY_UNKNOWN" as const,
+        last_rebalance_plan: {
+          ...plan,
+          mode: "historical_exploration",
+          account_mode: "HISTORICAL_PAPER_REPLAY",
+          submitted_to_account: true,
+          paper_session_id: PAPER_ID,
+          plan_version: "PAPER_ACCOUNT_PLAN_V3",
+        },
+        session: {
+          ...paperSession("STOPPED"),
+          provider_type: "historical_a_share",
+          strategy_type: "cn_a_cross_sectional_momentum_low_vol_v1",
+        },
+      };
+      const before = JSON.stringify(saved);
+      mockPaperServer().mockResolvedValue(jsonResponse(saved));
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      const notice = await screen.findByText(
+        locale === "en-US"
+          ? /The saved historical data checksum cannot be matched/
+          : /保存的历史数据校验值无法匹配当前已复核版本/,
+      );
+      expect(notice).toHaveAttribute("role", "note");
+      expect(notice).toHaveTextContent(
+        locale === "en-US"
+          ? "Economic completeness is unknown"
+          : "经济完整性未知",
+      );
+      expect(screen.getByText("90,123.000000000000000001")).toBeVisible();
+      expect(JSON.stringify(saved)).toBe(before);
+      expect(
+        paperRequests.every(
+          ({ options }) => !options?.method || options.method === "GET",
+        ),
+      ).toBe(true);
+      await act(async () => i18n.changeLanguage("en-US"));
+    },
+  );
+
   it("shows the account's dated plan without implying a live order", async () => {
     installWebSocket();
     const accountPlan = {

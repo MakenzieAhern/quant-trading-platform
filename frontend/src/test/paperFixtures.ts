@@ -103,6 +103,9 @@ export function paperState(
   snapshot: PaperSnapshot = paperSnapshot(),
 ): PaperState {
   return {
+    ...(snapshot.current_dataset_quality === undefined
+      ? {}
+      : { current_dataset_quality: snapshot.current_dataset_quality }),
     session: snapshot.session,
     last_sequence: snapshot.last_sequence,
     latest_bar: snapshot.latest_bar,

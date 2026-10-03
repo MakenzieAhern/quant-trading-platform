@@ -1,6 +1,9 @@
 import { apiRequest } from "./client";
 import { API_BASE_URL } from "./config";
-import { parsePaperAccountPlan } from "../product/experiments/api";
+import {
+  parseCurrentDatasetQuality,
+  parsePaperAccountPlan,
+} from "../product/experiments/api";
 import type {
   CreatePaperSessionRequest,
   MarketBar,
@@ -359,6 +362,13 @@ function state(value: unknown): PaperState {
   )
     throw new Error("Invalid sequence.");
   const result: PaperState = {
+    ...(item.current_dataset_quality === undefined
+      ? {}
+      : {
+          current_dataset_quality: parseCurrentDatasetQuality(
+            item.current_dataset_quality,
+          ),
+        }),
     session: session(item.session),
     last_sequence: item.last_sequence as number,
     latest_bar: item.latest_bar === null ? null : marketBar(item.latest_bar),

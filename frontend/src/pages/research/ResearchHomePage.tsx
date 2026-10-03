@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { explainExperimentCode } from "../../product/experiments/codes";
 
 import { researchApi } from "../../api/research";
 import {
@@ -12,7 +13,7 @@ import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc, shortId } from "../../utils/format";
 
 export function ResearchHomePage() {
-  const { t } = useTranslation(["research", "common", "validation"]);
+  const { t, i18n } = useTranslation(["research", "common", "validation"]);
   const datasets = useApiResource((signal) => researchApi.datasets(signal), []);
   const runs = useApiResource((signal) => researchApi.runs(signal), []);
   return (
@@ -37,6 +38,18 @@ export function ResearchHomePage() {
         <div className="panelHeader">
           <h2>{t("research:datasets")}</h2>
         </div>
+        {datasets.data?.items.map(
+          (dataset) =>
+            dataset.current_dataset_quality && (
+              <p className="oosGuard" role="note" key={dataset.dataset_id}>
+                <strong>{dataset.dataset_id}: </strong>
+                {explainExperimentCode(
+                  dataset.current_dataset_quality,
+                  i18n.language,
+                )}
+              </p>
+            ),
+        )}
         {datasets.loading && <LoadingPanel label={t("research:datasets")} />}
         {datasets.error && <ErrorPanel message={datasets.error} />}
         {datasets.data?.items.length === 0 && (
