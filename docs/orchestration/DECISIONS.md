@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 correct CLI provenance paths, not CI coverage — 2026-10-03
+
+Exact15a7035 hostedCI37084967922 actually ran and failed1/1123pass/one existing
+optional skip: two sibling parser SHA paths depended on caller cwd. Frontend656,
+static/build and isolated Compose release smoke passed. Reproduce from tmp_path,
+reuse pathlib source-relative siblings in the shared CLI; do not weaken tests,
+change workflow cwd or blame quota.99 focused from repo root/Ruff547/mypy145 pass.
+Independent read-only follow-up finds no newP1P2. Immutable v5 canonicalSHA
+24a1028c11eccc7a8f2be25d3b87419fc6c5cde8c6e7cc09b1098728bfe838fc
+changes only main parser/manifest hashes versus v4; events/results still2/140.
+Preserve earlier ledgers and all failure logs. Exact repair CI remains pending.
+Local frontend5173/backend8000 return200, PGhealthy/RedisPONG without restarts;
+GitHub availability is not a prerequisite for local application execution.
+No dataset promotion/freeze, financial PASS, formal/OOS rerun, merge or release.
+
 ## v1.2 accept explicit same-day issuer terms separately — 2026-10-03
 
 Cached002168 final issuer PDF proves record03-25 and ex/credit/unrestricted legal

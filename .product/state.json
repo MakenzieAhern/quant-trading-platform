@@ -1,17 +1,18 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-03T01:07:00Z",
+  "updated_at_utc": "2026-10-03T01:16:00Z",
   "retained_bonus_same_day_20261003_gate": {
     "status": "PASS_SCOPED_SOURCE_CANDIDATE_REVIEW_PENDING_EXACT_SOURCE_CI",
     "source_base": "ca9d9862d97ffb02f7dd4051943d3dd159032c28",
     "proof": "Opt-in cached final issuer same-ex-date credit/unrestricted legal listing, all registered holders, integer components, official URL/PDF-text-date hashes/publication/unique ordinary lifecycle. Shared parser, no symbol special case. Missing/delayed/invalid/conflicting/tentative dates and proposal/negative coexisting clauses fail closed. Legal start is not observed registry credit/liquidity. Legacy default next-session semantics unchanged; new parser provenance differs.",
-    "candidate": "/home/yuchen/data/product-candidates/20261003-bonus-same-day-source/ledger-v4.json",
-    "manifest_sha256": "e4a122383b307e9ac43b168aa60048c19b445c318ee5b9ca53b8c831c014eacc",
-    "bytes_sha256": "82a6fdf30ccb3cae299b7a2e15a918f1a2d730df87ff2a1bad90bfdf10975692",
+    "candidate": "/home/yuchen/data/product-candidates/20261003-bonus-same-day-source/ledger-v5.json",
+    "manifest_sha256": "24a1028c11eccc7a8f2be25d3b87419fc6c5cde8c6e7cc09b1098728bfe838fc",
+    "bytes_sha256": "088a9466c67771f65f987d8d446ca80f64b6ac72b74e988d4cfb81238d37eff7",
+    "ci_failure": "Exact15a7035 run37084967922 completedFAIL:1failed/1123passed/1existing optional skip; frontend656/static/build and Compose release smokePASS. Root cause two cwd-relative sibling provenance paths, not GitHub quota. Both now source-relative Path(__file__).with_name; regression chdir to tmp_path reproduces original failure. New exact repair CI pending.",
     "counts": "oracle7407/integer2011 candidates142/bonuslegs2accepted002168+002477/140unresolved/7265outside.002477 cash0.45 separately confirmed in existing accepted cash ledger, not bonusactioncash0 meaning wholeeventnocash. No census/newdataset/financial PASS.",
-    "tests": "99final focused0.53s/Ruff547/format/mypy145PASS. Earlier1124backend/one existing optional archiveSKIP18.96s before final title/provenance tightening;656frontend44files14.98s/lint/types/buildPASS main518.43kBwarning. Isolated tmpfsquant_test Alembic downgradebaseline/head/checkPASS/testPGstopped. Exact finalCI pending; no newUI/browser acceptance claimed.",
-    "review": "Final independent readonly review no remainingP1P2; actual2 sourcePDF/cache/date-link hashes/terms and7parser/dependencySHA match. P2 proposal-substring and positive+UNKNOWN/negative coexistence fixed using existing title vocabularies, no global selector/ratio change. Iterationledgersv1-v3 and failed tool/test logs retained unpromoted.",
+    "tests": "99final focused0.57s from repository root/Ruff547/format/mypy145PASS after cwd repair. Earlier1124backend/one existing optional archiveSKIP18.96s before final title/provenance tightening;656frontend44files14.98s/lint/types/buildPASS main518.43kBwarning. Isolated tmpfsquant_test Alembic downgradebaseline/head/checkPASS/testPGstopped. Exact repair CI pending; no newUI/browser acceptance claimed.",
+    "review": "Independent readonly cwd/v5 follow-up no remainingP1P2. Actual2 sourcePDF/cache/date-link hashes/terms and7parser/dependencySHA match. V5 differs from immutablev4 only main parserSHA/manifestSHA; events/results identical2accepted/140unresolved, v4bytes unchanged. P2 proposal-substring and positive+UNKNOWN/negative coexistence fixed using existing title vocabularies, no global selector/ratio change. Iterationledgersv1-v4 and failed tool/test/CI logs retained unpromoted.",
     "preservation": "No applicationDB/queue writes, service restarts, provider retrieval or strategy/formal/OOS. Old oracle9727c606...74c8/v32ledger53524472...9531d unchanged; .research diffempty, original fourcontainer start times unchanged and healthy. Old NULL metadata preserved but date-source gap is now resolved in separatecandidate, not olddataset.",
     "evidence": "product-evidence/v1.2/m4/20261003-bonus-same-day-source/README.md",
     "next": "Validate candidate mixed cash/share/reference/holder/lifecycle inputs independently, then new datasetID/SHA and actual user-selectable U3/U5/U6. Never replace mountedv1 or modify frozen/report values; full mandatory product/AA/p95/forward/delivery gates remain."
@@ -2515,7 +2516,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Same-day sourcecandidate v4 accepts2/142 bonuslegs from cached official terms;140unresolved, oldsource/frozen/report values preserved. Finish readonly finalreview, coherentcommit/push samePR32 and exactCI. Then independently audit mixedcash/share/reference/new-version inputs and newdatasetID/SHA user-selectable U3/U5/U6. Do not repeat accepted acquisitions or guard/advice work, never overwrite mountedv1, inferfactorentitlements or re-run formal/OOS. All mandatory U1-U8/M0-M5/AA/native200/p95/fullflow/delivery remain. Lawful after-start forward needs rights; actual missing-ledger recovery needs genuine backup. No merge/tag/release until all required gates pass.",
+  "next_task": "Same-day sourcecandidate v5 accepts2/142 bonuslegs;140unresolved. Exact15a7035 CI ran but failed cwd-sensitive report provenance; both source-relative paths and tmp_path regression fixed, independent review noP1P2,99focused/staticPASS. Coherent repaircommit/push samePR32 and verify exact newCI, not older green runs. Then independently audit mixedcash/share/reference/new-version inputs and newdatasetID/SHA user-selectable U3/U5/U6. Do not repeat accepted acquisitions or guard/advice work, never overwrite mountedv1, inferfactorentitlements or re-run formal/OOS. All mandatory U1-U8/M0-M5/AA/native200/p95/fullflow/delivery remain. Lawful after-start forward needs rights; actual missing-ledger recovery needs genuine backup. No merge/tag/release until all required gates pass.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

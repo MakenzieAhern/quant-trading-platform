@@ -201,8 +201,10 @@ def main():
         counts=dict(Counter(r["status"] for r in rows)),
         inputs=[dict(path=str(p), sha256=sha256_file(p)) for p in sorted(set(paths))],
         parser_sha256=sha256_file(Path(__file__)),
-        terms_parser_sha256=sha256_file(Path("scripts/retained_bonus_terms.py")),
-        issuer_parser_sha256=sha256_file(Path("scripts/reconcile_distribution_cash.py")),
+        terms_parser_sha256=sha256_file(Path(__file__).with_name("retained_bonus_terms.py")),
+        issuer_parser_sha256=sha256_file(
+            Path(__file__).with_name("reconcile_distribution_cash.py")
+        ),
         full_dataset_created=False,
     )
     if args.explicit_same_day:

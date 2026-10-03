@@ -86,6 +86,8 @@ def _manifest(path: Path, data: dict) -> None:
 
 
 def test_opt_in_reconciliation_is_immutable_and_preserves_default_schedule(tmp_path, monkeypatch):
+    # CLI provenance is relative to its own source, not the caller's working directory.
+    monkeypatch.chdir(tmp_path)
     staging = tmp_path / "staging"
     root = staging / "full-distribution-notices-v1"
     bonus = staging / "full-bonus-inventory-v1"
