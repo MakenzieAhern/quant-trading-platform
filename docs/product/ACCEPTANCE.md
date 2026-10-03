@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-10-03 retained same-day bonus source acceptance, not financial promotion
+
+[Bounded source proof](../../../product-evidence/v1.2/m4/20261003-bonus-same-day-source/README.md)
+records an opt-in shared same-day issuer-terms path. Cached final PDF/text/date-link
+hashes, issuer/publication, exact record/ex/credit/unrestricted legal listing,
+all-holder integer ratio and unique ordinary lifecycle are bound. Default next-session
+semantics and original oracle/ledgers/frozen data/results remain unchanged. New parser
+dependency SHAs are explicit; legal listing date is not observed liquidity or registry
+credit. Independent review's proposal-title and positive+UNKNOWN/negative P2 controls
+are fixed without weakening the legacy selectors or declaring every notice supported.
+
+Final ledger-v4 outside Git/frozen research:142 integer2011 candidates,2accepted
+bonus legs (002168 and002477),140unresolved/7265outside. Canonical SHA
+e4a122383b307e9ac43b168aa60048c19b445c318ee5b9ca53b8c831c014eacc.
+002477's0.45 cash leg is separately evidenced in the existing accepted cash ledger;
+no bonus-only blanket reference exemption is certified.99 final focused tests,
+Ruff547/mypy145 pass; local full1124+one existing optional skip and656frontend plus
+static/build/migration pass, with fullbackend preceding last title/provenance tightening.
+Independent final read-only review closes the listedP2 with no remainingP1P2;
+actual2 source terms/hash chains and7parser dependency hashes match. Final exact
+source CI remains a separate gate.
+No UI/runtime/source promotion, new dataset, freeze, strategy/formal/OOS or release.
+Next: independently validate mixed-leg/reference inputs, then a genuinely new dataset
+ID/SHA and user-selectable U3/U5/U6 path; do not overwrite or silently replace v1.
+
 ## 2026-10-03 current economic-quality advice reaches saved evidence
 
 [121-payload proof](../../../product-evidence/v1.2/m4/20261003-dataset-quality-advisory/README.md)
@@ -24,11 +49,14 @@ the immutable packet README's PNG claims: some are Loading/wrong page/locale,
 not the matching later DOM; full precision/lower-limitations claims were too
 broad. [Separate correction and loaded recaptures](../../../product-evidence/v1.2/m4/20261003-dataset-quality-advisory-review/README.md)
 withdraw those claims without replacing sealed evidence. Exact new CI is still
-a separate gate. Warning does not repair data, validate returns or complete
+a separate gate, now SUCCESS for committed sourceca9d986:run37083540461,
+1122backend/one existing skip/656frontend/static/build/Compose release smoke.
+Warning does not repair data, validate returns or complete
 AA/native200/p95/U1-U8/forward/release. PR32 stays draft; no merge or tag.
 
 Earlier guard/disclosure committed at3ae930a has exact hostedCI37081276125
-SUCCESS (backend/frontend/Compose); it does not cover this later advice batch.
+SUCCESS (backend/frontend/Compose); later advice is covered only by exactca9d986
+run37083540461. This source milestone does not close the full product goal.
 
 ## 2026-10-03 observed held-reference contradictions now stop before valuation
 

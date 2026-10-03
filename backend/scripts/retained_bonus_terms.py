@@ -2,9 +2,64 @@
 
 import re
 import unicodedata
+from datetime import date
 from decimal import Decimal, localcontext
 
-from scripts.reconcile_distribution_cash import issuer_code_matches
+from scripts.audit_p1_orphan_cash_facts import LEGACY_NOT_FINAL
+from scripts.audit_p1_retained_cash_sources import NONFINAL_VARIANT, retained_final_title
+from scripts.link_distribution_notices import EX_LABEL, LABEL_DATE_GAP, RECORD_LABELS, notice_dates
+from scripts.reconcile_distribution_cash import issuer_code_matches, normalized_document
+
+
+def same_day_listing(pages, symbol, title, record_date, ex_date):
+    """Accept only explicit final all-holder credit and unrestricted listing on ex-date.
+
+    This is not a next-session estimate or support for delayed/unknown tradability.
+    Other notice layouts remain unresolved until their actual terms are reviewed.
+    """
+    normalized = normalized_document(pages)
+    if (
+        not retained_final_title(title)
+        or NONFINAL_VARIANT.search(title)
+        or LEGACY_NOT_FINAL.search(title)
+        or not issuer_code_matches(normalized, symbol)
+    ):
+        raise ValueError("BONUS_SAME_DAY_FINAL_ISSUER_UNRESOLVED")
+    if date.fromisoformat(record_date) >= date.fromisoformat(ex_date) or notice_dates(pages) != (
+        [record_date],
+        [ex_date],
+    ):
+        raise ValueError("BONUS_SAME_DAY_RECORD_EX_CONFLICT")
+    # Keep page boundaries: a margin/page counter must never complete a date or term.
+    text = "§".join(re.sub(r"\s+", "", unicodedata.normalize("NFKC", page)) for page in pages)
+    if re.search(
+        r"差异化分红送转:是|让渡|重整|缩股|吸收合并|另行公告|拟于|拟实施|B股|H股|"
+        r"未确定|待定|另行通知|待通知|取消|撤销|终止|延期|暂停|暂缓",
+        text,
+    ):
+        raise ValueError("BONUS_SAME_DAY_NONSTANDARD_OR_TENTATIVE")
+    dated = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
+    patterns = (
+        "(?:" + "|".join(RECORD_LABELS) + ")" + LABEL_DATE_GAP + dated,
+        EX_LABEL + LABEL_DATE_GAP + dated,
+        r"本次权益分派对象为:?"
+        + dated
+        + r"[^。;§]{0,200}?收市后[^。;§]{0,200}?登记在册[^。;§]{0,30}?全体股东",
+        r"本次(?:转增股|送股|新增股份)于" + dated + r"直接记入股东证券账户",
+        r"本次(?:转增|送|新增)(?:的)?无限售条件(?:的)?流通股(?:份)?(?:的)?"
+        r"(?:起始交易日|上市流通日)(?:为)?:?" + dated,
+    )
+    for pattern, expected in zip(
+        patterns, (record_date, ex_date, record_date, ex_date, ex_date), strict=True
+    ):
+        matches = re.findall(pattern, text)
+        try:
+            values = {date(*map(int, match)).isoformat() for match in matches}
+        except ValueError as exc:
+            raise ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED") from exc
+        if values != {expected}:
+            raise ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED")
+    return ex_date
 
 
 def retained_ratio(pages, symbol, *, require_integral_components=False):

@@ -10,7 +10,7 @@ from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, s
 from app.data.catalog.freeze import write_immutable
 from app.domain.markets.corporate_actions import CorporateAction, require_supported_corporate_action
 from scripts.reconcile_distribution_cash import verified
-from scripts.retained_bonus_terms import retained_ratio
+from scripts.retained_bonus_terms import retained_ratio, same_day_listing
 
 
 def main():
@@ -18,6 +18,11 @@ def main():
     parser.add_argument("--staging", type=Path, required=True)
     parser.add_argument("--date-links", type=Path, action="append", required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--explicit-same-day",
+        action="store_true",
+        help="Separate candidate ledger requiring official same-ex-date credit/listing terms",
+    )
     args = parser.parse_args()
     root = args.staging / "full-distribution-notices-v1"
     bonus = args.staging / "full-bonus-inventory-v1"
@@ -75,12 +80,13 @@ def main():
             int(key[2][:4]) not in years
             or len(values) != 1
             or any(v <= 0 or v != v.to_integral_value() for v in values)
-            or schedule.get("status") != "NEXT_ACCEPTED_SESSION"
+            or (not args.explicit_same_day and schedule.get("status") != "NEXT_ACCEPTED_SESSION")
         ):
             continue
         ratio = next(iter(values))
         result = dict(symbol=key[0], record_date=key[1], ex_date=key[2], ratio=str(ratio))
         evidence, failures = [], []
+        listing_date = key[2] if args.explicit_same_day else schedule["next_session"]
         for match in sorted(links.get(key, []), key=lambda r: (r["url"], r["source_sha256"])):
             doc = sources[match["url"], match["source_sha256"]]
             pdf = (root / doc["source_path"]).resolve()
@@ -94,8 +100,15 @@ def main():
             ):
                 raise ValueError("BONUS_SOURCE_IDENTITY_CHANGED")
             try:
+                extracted = json.loads(cache.read_bytes())
+                if args.explicit_same_day:
+                    if extracted["source_sha256"] != doc["source_sha256"] or not doc[
+                        "url"
+                    ].startswith("https://static.cninfo.com.cn/finalpage/"):
+                        raise ValueError("BONUS_SAME_DAY_SOURCE_BINDING_CHANGED")
+                    same_day_listing(extracted["pages"], key[0], doc["title"], key[1], key[2])
                 terms = retained_ratio(
-                    json.loads(cache.read_bytes())["pages"],
+                    extracted["pages"],
                     key[0],
                     require_integral_components=True,
                 )
@@ -112,13 +125,20 @@ def main():
             and m["security_id"] in ordinary
             and m["effective_from"] <= key[1] < key[2] <= (m["effective_to"] or "2025-12-31")
             and m["listing_date"] <= key[1]
-            and schedule["next_session"] <= (m["delisting_date"] or "2025-12-31")
+            and listing_date <= (m["delisting_date"] or "2025-12-31")
         ]
         if not evidence or failures or len(members) != 1:
             result["status"] = "UNRESOLVED_TERMS_OR_LIFECYCLE"
             rows.append(result)
             continue
         result["status"] = "EXACT_INTEGER_RETAINED_BONUS"
+        if args.explicit_same_day:
+            result.update(
+                credit_date=listing_date,
+                listing_date=listing_date,
+                holder_class="ORDINARY_EXCHANGE_TRADABLE_A_SHARE_PUBLIC_HOLDER",
+                boundary_authority="OFFICIAL_EXPLICIT_SAME_EX_DATE_CREDIT_AND_LISTING",
+            )
         doc = evidence[0]
         action = CorporateAction.model_validate(
             dict(
@@ -128,14 +148,18 @@ def main():
                 effective_date=key[2],
                 record_date=key[1],
                 ex_date=key[2],
-                listing_date=schedule["next_session"],
+                listing_date=listing_date,
                 share_ratio=str(ratio),
                 source_document=doc["title"],
                 source_url=doc["url"],
                 source_document_sha256=doc["source_sha256"],
                 retrieved_at=doc["retrieved_at_utc"],
                 source_provider="OFFICIAL_ISSUER_CNINFO_EXCHANGE_RECONCILED",
-                source_version="INTEGER_RETAINED_BONUS_V1",
+                source_version=(
+                    "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V1"
+                    if args.explicit_same_day
+                    else "INTEGER_RETAINED_BONUS_V1"
+                ),
                 source_record_hash=canonical_sha256(result),
                 completeness="COMPLETE",
             )
@@ -147,15 +171,27 @@ def main():
                 event=action.model_dump(mode="json"),
                 event_checksum=action.event_checksum,
                 policy_id="BASIS_CONSERVED_RETAINED_BONUS",
-                support_state="SUPPORTED_FOR_INTEGER_HOLDINGS_NEXT_SESSION_SCHEDULE",
+                support_state=(
+                    "SUPPORTED_FOR_INTEGER_HOLDINGS_EXPLICIT_SAME_DAY"
+                    if args.explicit_same_day
+                    else "SUPPORTED_FOR_INTEGER_HOLDINGS_NEXT_SESSION_SCHEDULE"
+                ),
                 source_oracle_evidence_sha256=original["evidence_sha256"],
-                scheduled_listing_not_actual_tradability=True,
-                accounting_scope="INTEGER_HOLDINGS_NO_FRACTION_NEXT_SESSION_SCHEDULE",
+                scheduled_listing_not_actual_tradability=not args.explicit_same_day,
+                accounting_scope=(
+                    "INTEGER_HOLDINGS_NO_FRACTION_EXPLICIT_SAME_DAY"
+                    if args.explicit_same_day
+                    else "INTEGER_HOLDINGS_NO_FRACTION_NEXT_SESSION_SCHEDULE"
+                ),
             )
         )
         rows.append(result)
     report = dict(
-        scope="BOUNDED_INTEGER_NEXT_SESSION_BONUS_NOT_FULL_CENSUS",
+        scope=(
+            "BOUNDED_INTEGER_EXPLICIT_SAME_DAY_BONUS_NOT_FULL_CENSUS"
+            if args.explicit_same_day
+            else "BOUNDED_INTEGER_NEXT_SESSION_BONUS_NOT_FULL_CENSUS"
+        ),
         source_oracle_rows=len(oracle["rows"]),
         candidate_rows=len(rows),
         results=rows,
@@ -169,6 +205,16 @@ def main():
         issuer_parser_sha256=sha256_file(Path("scripts/reconcile_distribution_cash.py")),
         full_dataset_created=False,
     )
+    if args.explicit_same_day:
+        report["same_day_dependency_sha256"] = {
+            name: sha256_file(Path(__file__).with_name(name))
+            for name in (
+                "link_distribution_notices.py",
+                "audit_p1_retained_cash_sources.py",
+                "audit_p1_orphan_cash_facts.py",
+                "audit_p1_cash_census_counterexamples.py",
+            )
+        }
     report["manifest_sha256"] = canonical_sha256(report)
     write_immutable(args.output, canonical_json_bytes(report) + b"\n")
     print(json.dumps({k: v for k, v in report.items() if k not in {"results", "events", "inputs"}}))

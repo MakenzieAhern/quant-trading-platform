@@ -1,5 +1,24 @@
 # Decisions
 
+## v1.2 accept explicit same-day issuer terms separately — 2026-10-03
+
+Cached002168 final issuer PDF proves record03-25 and ex/credit/unrestricted legal
+first-listing03-28; the old next-session selector excluded it before reading terms.
+Reuse retained ratio/title/date/lifecycle helpers, add an opt-in same-day source
+subset and independent immutable ledger; do not rewrite old oracle NULL dates,
+ledger-v32, frozen actions or financial outputs. All-holder, integer-components,
+exact dates, source hashes and actual selector dependencies remain mandatory.
+Independent P2 proposal-title/positive+UNKNOWN or cancelled coexistence controls
+are tightened only here; preserve failed tests/iteration ledgers. V4 accepts2 bonus
+legs from142 candidates,140unresolved;002477 additionally retains its separately
+accepted0.45 cash leg. No ratio/factor-based entitlement or blanket financial PASS.
+99final focused/Ruff547/mypy145 and earlier1124/656 full/local migration pass;
+final independent readonly review no remainingP1P2; exact source CI pending.
+Original services stayed up; testPG stopped.
+Continue independent mixed-leg/reference/new-version input audit and actual new
+ID/SHA selectable product path. Old authorizations are not new dataset acceptance;
+rights and genuine lost-ledger evidence remain external, all U1-U8/M0-M5 mandatory.
+
 ## v1.2 preserve originals while disclosing later input-version gaps — 2026-10-03
 
 Reuse one pure saved-ID/canonical-SHA classifier and existing bilingual notices;
@@ -24,6 +43,9 @@ PNG-description P2. Keep the packet immutable; explicitly withdraw Loading,
 wrong-page/locale and overbroad precision/viewport claims in the separate
 20261003-dataset-quality-advisory-review/README.md, with loaded recaptures.
 Correct DOM proves disclosure, not a matching screenshot at the same instant.
+Separate correction review found no remainingP1P2. Coherent advice sourceca9d986
+pushed to same draftPR32; exact CI37083540461 SUCCESS1122/656/static/build/Compose.
+This is a safety source milestone, not a repair or full financial/product release.
 Read-time notices are a safety improvement, not a replacement for new-version
 economic remediation and the complete mandatory product acceptance matrix.
 
