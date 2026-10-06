@@ -89,3 +89,71 @@ def test_reference_basis_only_strips_identical_running_header_at_page_start():
     pages[1] = pages[1].replace("300522", "002568")
     with pytest.raises(ValueError, match="IMPLEMENTED_DECLARATION"):
         _parse(pages)
+
+
+@pytest.mark.parametrize(
+    ("basis", "declaration", "cash", "ratio"),
+    [
+        (
+            "二、权益分派方案以公司现有总股本剔除已回购股份2,098,000.00股后的"
+            "174,222,000.00股为基数。按公司总股本折算每股现金分红金额。",
+            "在保证本次权益分派方案不变的前提下,本次权益分派实施后的除权除息参考价"
+            "=(除权除息日前一交易日收盘价-按公司总股本折算每股现金分红金额)"
+            "/(1+股份变动比例)=(股权登记日收盘价-0.5928607元/股)/(1+0.3952404)。",
+            "0.5928607",
+            "0.3952404",
+        ),
+        (
+            "公司回购专用证券账户股份不参与分红。按公司总股本折算每股现金红利。",
+            "3、本次权益分派实施后的除权除息价格"
+            "=(本次权益分派股权登记日收盘价-按公司总股本折算的每股现金分红金额)"
+            "/(1+按公司总股本折算的每股转增股数)"
+            "=(本次权益分派股权登记日收盘价-0.3987349元)/(1+0.3987349)。",
+            "0.3987349",
+            "0.3987349",
+        ),
+    ],
+    ids=["explicit_excluded_capital", "current_distribution_price"],
+)
+def test_reference_basis_explicit_exclusion_and_current_distribution_formula(
+    basis, declaration, cash, ratio
+):
+    # Synthetic notice using official grammar, not an issuer-specific allowlist.
+    page = (
+        _page("")
+        .replace(
+            "公司回购专用证券账户股份不参与分红。按公司总股本折算每股现金红利。",
+            "。" + basis,
+        )
+        .removesuffix("本次权益分派实施后的除权除息价格")
+        + declaration
+    )
+    for precision in (3, 50):
+        with localcontext() as context:
+            context.prec = precision
+            result = _parse([page])
+            assert result["cash_per_total_old_share"] == cash
+            assert result["share_ratio_per_total_old_share"] == ratio
+            assert result["changes_holder_entitlements"] is False
+    invalid_pages = [
+        page.replace(basis, basis.replace("不参与", "参与").replace("剔除已回购", "未剔除已回购")),
+        page.replace(declaration, "示例:" + declaration),
+        page.replace(declaration, "已作废的" + declaration),
+        page.replace(declaration, "拟采用" + declaration),
+        page.replace("实施后的", "实施前的"),
+        page + declaration.replace(cash, "0.7"),
+    ]
+    if "剔除" in basis:
+        invalid_pages.extend(
+            [
+                page.replace(basis, "示例:" + basis),
+                page.replace("以公司现有", "拟以公司现有"),
+                page.replace("股份2,098,000.00股", "股份"),
+                page.replace("174,222,000.00股为基数", "为基数"),
+            ]
+        )
+    for invalid in invalid_pages:
+        with pytest.raises(ValueError):
+            _parse([invalid])
+    with pytest.raises(ValueError):
+        _parse([page.split("=(", 1)[0], "=(" + page.split("=(", 1)[1]])

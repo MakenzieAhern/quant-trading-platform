@@ -1,5 +1,35 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 explicit implemented reference formulas — partial
+
+Shared source parser now recognizes actual current distribution basis excluding
+repurchased shares and explicit current-distribution record-day/folded formula.
+No issuer list, price fit or holder-entitlement overwrite.2RED→65focusedPASS;
+final issuer/dates/numeric declaration/conflicting formulas/page guards retained.
+
+Actual complete497sourceevents retained;496limitedreferencePASS+1UNRESOLVED
+000598. Old494PASS payloads exact/foundation114+1 kept/only2grammar closures.
+002972holdercash0.600/ratio0.400 stays separate from0.5928607/0.3952404 reference;
+301080holdercash0.400/ratio0.400 stays separate from0.3987349/0.3987349 reference.
+Complete7407queue/all16years:496NOT_ADMITTED+1referenceUNRESOLVED+288oldfacts
+NOT_REVALIDATED+6622sourceUNRESOLVED; other7405whole rows exact, no identity drop.
+Reference canonical48f3be550be49a60b5fced34b44ec4b8a1e82d516a618a287c538f9d2f1cf07f;
+queue canonical84ef8c2eafa07d2e1be70487595b801d6a254f6050e6ba74359d7ed07fb8dda7.
+
+1247backendPASS/1optionalarchiveSKIP20.68s/Ruff551/mypy145/tmpfs testDB migration
+reversalPASS.709frontend45files18.07s/lint/types/build169msPASS;520.57kB advisory
+retained, notp95. Two independent readonly reviews no evidenced boundedP1/P2;
+58input/code/cache bindings/72frozenpartitions/2officialHTML verified. No independent
+runtime or full financial certification.11payload proof sealed indexSHA
+626c23d1f960d8581f1c6124b43521a9a8d6fc94cade1aaf5132564698444fd2:
+[actual source/checks/preservation/limits](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-explicit-reference-formula/README.md).
+
+Parent9f3 own[CI37503231053](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37503231053)
+allSUCCESS, not laterdiff coverage; new coherent source needs ownCI. No new browser,
+native200/AA/p95 or financial/user-chain proof. OriginalFAILED job/frozen/.research/
+OOS preserved. No appDB test/strategy retry/admission/newdataset/merge/tag/release.
+FullU1-U8/M0-M5 remain required; goalACTIVE, not product completion.
+
 ## 2026-10-07 source-credit grammar and full residual queue — partial
 
 Known FAILED historical job retained, no rerun. Existing read-only session loader

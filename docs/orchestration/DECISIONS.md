@@ -1,5 +1,25 @@
 # Decisions
 
+## v1.2 final implemented total-capital reference is not holder entitlement — 2026-10-07
+
+Use already cached official final002972/301080 notices, not new acquisition or price
+fitting. Extend shared strict grammar for explicit current-basis repurchase exclusion,
+current distribution record-day price and total-capital folded symbolic cash/share
+formula; keep full numeric declaration/finality/issuer/dates/conflict/page boundaries.
+Holder cash/share continues through separate accepted source checks; folded values
+only validate the official ex-price input relation. No entitlement or accounting
+policy changes, security-specific allowlist, dependency or engine/API rewrites.
+2RED then65focused/full1247backend+709frontend/migrations PASS; two independent
+readonly source/batch reviews no boundedP1/P2.497sourceevents/494oldPASS payloads
+exact; only2reference failures close. Full7407queue remains,7405whole rows exact;
+496NOT_ADMITTED/1referenceUNRESOLVED/288oldfacts/6622source gaps, not financePASS.
+Retain initial environment/readbackcwd/formatter/testDB readiness observations;
+correct producing cwd and safe test env, never weaken checks or restart batch.
+Original4services/applicationDB/frozen/.research/formal/OOS/failedjob intact.
+Parent9f3 ownCI nowPASS; this later diff needs ownCI. No merge/tag/release before
+fullU1-U8/M0-M5 acceptance. All mandatory user flows and external source/ledger
+gates remain, goalACTIVE; no cosmetic strategy retry or fake dataset admission.
+
 ## v1.2 implemented future-tense credit is not a guessed boundary — 2026-10-07
 
 Exact cached final000850/002161 notices state dated“将于” credit and same-day

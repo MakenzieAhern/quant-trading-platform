@@ -22,13 +22,21 @@ def repurchase_reference_basis(pages, symbol, title, record_date, ex_date):
     # A margin/page boundary cannot manufacture a number or complete a formula.
     text = "§".join(re.sub(r"\s+", "", unicodedata.normalize("NFKC", p)) for p in pages)
     if (
-        not re.search(r"回购[^。;§]{0,100}?不参与", text)
+        not (
+            re.search(r"回购[^。;§]{0,100}?不参与", text)
+            or re.search(
+                r"(?:^|[。;§])(?:[一二三四五六七八九十]+、权益分派方案)?"
+                r"以公司现有总股本剔除已回购股份\d[\d,]*(?:\.\d+)?股后的"
+                r"\d[\d,]*(?:\.\d+)?股为基数",
+                text,
+            )
+        )
         or not re.search(r"按[^。;§]{0,60}?总股本[^。;§]{0,60}?折算", text)
         or re.search(r"差异化分红送转:?是|让渡|重整|缩股|吸收合并|B股|H股", text)
     ):
         raise ValueError("REFERENCE_REPURCHASE_BASIS_UNRESOLVED")
     price = (
-        r"(?:股权登记日收盘价(?:格)?|"
+        r"(?:(?:本次权益分派)?股权登记日收盘价(?:格)?|"
         r"除权除息日(?:的)?(?:前一交易日|前一日|前一|前)?收盘价(?:格)?)"
     )
     pattern = (
@@ -38,13 +46,15 @@ def repurchase_reference_basis(pages, symbol, title, record_date, ex_date):
     )
     matches = list(re.finditer(pattern, text))
     symbolic = (
-        r"(?:=\(" + price + r"-(?:每股现金红利|按资本公积金转增前总股本折算每股现金分红)\)"
-        r"(?:÷|/)\(1\+(?:股份变动比例|按资本公积金转增前总股本折算的每股股份变动比例)\))?"
+        r"(?:=\(" + price + r"-(?:每股现金红利|按资本公积金转增前总股本折算每股现金分红|"
+        r"按公司总股本折算(?:的)?每股现金分红金额)\)"
+        r"(?:÷|/)\(1\+(?:股份变动比例|按资本公积金转增前总股本折算的每股股份变动比例|"
+        r"按公司总股本折算的每股转增股数)\))?"
     )
     implemented = (
         r"(?:(?:综上,在保证本次权益分派方案不变的前提下,|公司)"
         r"20\d{2}年?年度权益分派实施后的除权除息价格"
-        r"按照上述原则及计算方式执行,即|\d+[、.])?"
+        r"按照上述原则及计算方式执行,即|\d+[、.]|在保证本次权益分派方案不变的前提下,)?"
         r"(?:本次)?权益分派实施后(?:的)?除权除息(?:参考)?价(?:格)?" + symbolic
     )
     authorized = []
