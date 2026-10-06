@@ -1,9 +1,32 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T09:27:13Z",
+  "updated_at_utc": "2026-10-06T09:50:05Z",
+  "cross_year_reference_full_bonus_queue_20261006_gate": {
+    "status": "PASS_SCOPED_REFERENCE_114_AND_FULL_BONUS_QUEUE_NOT_FINANCIAL_ACCEPTANCE",
+    "source_checkpoint": "4588cfe71bccd953c7c893c38ef4fa9dd4052b4a",
+    "reference": "All24candidateinputbytes/6source manifests verified. Same Decimal/cash/officialHTML/PDF/frozenraw/master/calendar/rules assertions, exactly preceding/ex-session pair.115rows114scopedreferencePASS/1same000598grosscashUNRESOLVED. All83oldwholecandidate receipts and82PASS+1oldresultrows preserved except changing code-line positions. New32relations, not financialexecution or new dataset acceptance.",
+    "reference_manifest_sha256": "2d4afbf5504bb57b96a6b25b34bb5f27d7303b14eb45961bfcea2938cee57d46",
+    "queue": "Full7407bonusoracle/all16datedyears2010-2025/37boundinputbytes against actual42792-row frozenactionpartition+2legacybonus/gapledgers and candidate/reference. Disjoint285frozenpresence not revalidated/1total-vs-holder componentreview/2legacy noentitlement not revalidated/114candidate refPASS notadmitted/1candidate unresolved/966integer unresolved/6038outside assessedsubset. Actual reverseoracle equalityPASS. Not allaction-class economic census or accounting acceptance.",
+    "queue_path": "/home/yuchen/data/product-candidates/20261006-cross-year-economic-queue/coverage-v2.json",
+    "queue_manifest_sha256": "26f7e9b2e7c497a6548b3778f406e2195b63d8cc8dc2705f0e2dfc9992b53941",
+    "queue_bytes_sha256": "44dd2bc1c4191fd01a87c8c69d2c6aafe6776cba1a3f5b2a587082281bd0750b",
+    "failures": "Initial external-script execution imported older installedimage module; failed terminal1 retained. ExplicitPYTHONPATH actualrepo newownedcontainer terminal0, no rebuild/install. QueueV1 total-vs-holder ratio mismatch mislabeledconflict; actual600725legacyreceipt total1/holder0.7/fractionpolicy. V1retainedPRE-REVIEW, separateimmutableV2 preserves component/policy/textbindings and requiresreview, not defect/admission claim.",
+    "ownership": "Root sole repo/docs writer. Correctedreference qtp-cross-year-reference-oct6-v2 terminal0/session91100, queueV1/V2terminal0. Lockedexisting23f16image/pullnever/networknone/readonlyroot/repo+research+candidateinputsRO/onlynewqueueoutputRW; noDBmount/endpoints/productionwrites/restart/deletion. Fouroriginalserviceshealthy/up, frozenmanifest693c0b81... and cash-v32bytes56c2739... unchanged.",
+    "review": "Authorized independent read-only reference and V2queue review no boundedP1/P2. Code/proofSHA/currentmoduleSHAs/old83rows/counts/componentbindings checked. Packaging note addressed with separateV2summary/command and explicitV1PRE-REVIEW scope. No independent tests/network/browser/DB/writes/fullgoal certification.",
+    "evidence": "product-evidence/v1.2/m4/20261006-cross-year-reference/README.md",
+    "evidence_payloads": 12,
+    "evidence_manifest_sha256": "2bbd30e72400a332edae6144edbcd95cbf16d56cf489634f598afdf4e0d38b43",
+    "not_run": "No new full dataset/registration/admission/freeze/financialaccounting/strategy/formal/OOS/merge/release. FullU1-U8/M0-M5 financial/API/userflows/AA/native200/p95/visual/delivery not passed. External lawfulforward/genuinemissingpaperledgers unchanged.",
+    "next": "Use whole7407queue for batched ordinary-holder/component/fraction/deferred-boundary closure and all16cachedyears including2023-2025, preserve exactcash/000598/currentraw gaps. Separately audit allactionclasses, then genuinely supported newversion/financial/API/userflow acceptance; no narrowed single2011count substitute. Existing private caches only, no acquisition from zero or frozenrewrite;goalACTIVE."
+  },
   "full_bonus_scope_cached_years_20261006_gate": {
-    "status": "PASS_SCOPED_OFFLINE_EXPANSION_REVIEWED_PENDING_CI_SEAL_NOT_FINANCIAL_ACCEPTANCE",
+    "status": "PASS_SCOPED_OFFLINE_EXPANSION_EXACT_4588_CI_SEALED_NOT_FINANCIAL_ACCEPTANCE",
+    "committed_source": "4588cfe71bccd953c7c893c38ef4fa9dd4052b4a",
+    "ci_run": 37444185690,
+    "evidence_payloads": 15,
+    "evidence_manifest_sha256": "7de12d15fd87b612842aa840e92e7ddb5a5ef2794c5f41130ca2fc109f06ca23",
+    "post_checkpoint": "Exact4588HEAD=origin=OPEN/DRAFTPR32head clean/CIbackendfrontendComposeSUCCESS2026-10-06T09:39:39Z. All15payload hashes native rechecked. Below not_run/next retain pre-reference checkpoint chronology; current cross_year_reference_full_bonus_queue gate supersedes them, not finance/admission.",
     "source_base": "2bdfb918653ee9796706e5729c05b3322d63670e",
     "scope_audit": "Actualbonusoracle7407across2010-2025. PriorV21 only2011integer subset142/83sourcelegs/59unresolved/7265notassessedbythatledger. Standalonechecker usesactualrepo checksumhelper via runpy; canonical/oraclebytebinding/unique memberships/peryear counts/reversedrows/repeatPASS. Not full economic census; other actionclasses/ledgers not audited here.",
     "batch": "Unchanged existing reconciler with13cached dated-year receipts2010-2022, no acquisition.1369within same integer/explicitsame-day scope,115sourcelegs/1254unresolved/6038notassessed. Sourcelegsyear2010=12,2011=83,2012=16,2013=1,2014=1,2015=1,2018=1. New32 sourcelegs, not validated financialevents. Wider unresolved cohort, not old83loss.",
@@ -2801,7 +2824,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Pre-run quality wizard2bdf exactCI/18payloadseal complete. Finish current fullscope/cached-year audit review/seal/checkpoint, then generalize external read-only reference auditor single2011docs to verified candidate source-manifests; audit115 while preserving82+1 baseline, fullraw/reference/calendar/rules/cash-full-coverage-v32/strictassertions. Broader13yearledger1369/115/1254/6038notassessed outof7407 is not fullcensus/admission; build full cross-ledger/fraction/deferred/2023-2025cache queue, not more single2011count milestones. FullU1-U8/M0-M5 financial/API/userflow/visual/AA/native200/p95/delivery unchanged, externalforward/genuinemissingledgers unchanged. Preserve002375/002399/44raw gaps/000598cash, no silentadmission/frozen/OOS/merge/release;goalACTIVE.",
+  "next_task": "Parent4588exactCI/15payloadseal complete; crossyear115reference114PASS+1same000598/old82+1 preserved and full7407bonusqueue all16datedyears/37boundinputs reviewed/sealed12payloads. Use actual immutablecoverage-v2 queue for batched ordinary-holder/fraction/component/deferred-boundary and2023-2025cached source closure, not single2011 parsercount milestones. Frozen285presence/1total-vs-holder component/2noentitlement still not revalidated;114refPASS not admitted;966integer unresolved/6038outside subset. Otheractionclasses/fullfinancial/newversion/API/userflow acceptance remain required. Preserve002375/002399/44raw gaps/000598cash, frozen/OOS/oldresults/DB; external lawfulforward/genuinemissingledger unchanged. FullU1-U8/M0-M5 AA/native200/p95/visual/restart/manual/releasability intact;goalACTIVE.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

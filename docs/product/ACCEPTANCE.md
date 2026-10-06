@@ -1,5 +1,43 @@
 # v1.2 acceptance ledger
 
+## 2026-10-06 cross-year reference and full bonus queue (not financial admission)
+
+Generalized the external read-only auditor to all24bound candidateinputs and
+6source manifests. Actual115rows:114limited reference-inputPASS/1same000598cash
+UNRESOLVED. All83oldwholecandidate receipts/82PASS+1oldrows retained except changed
+code-line locations. Decimal/grosscash/officialHTML/PDF/frozenraw/PITmaster/calendar/
+rules assertions unchanged; preceding/ex bars exactly2; reversedinputsPASS.
+Reference canonical2d4afbf5504bb57b96a6b25b34bb5f27d7303b14eb45961bfcea2938cee57d46.
+
+Full7407bonus-oracle queue indexes actual frozen42792actionrows,2legacybonus/gap
+ledgers and all16datedyears2010-2025/37boundinputfiles. Disjoint285frozenpresence
+NOT_REVALIDATED/1total-vs-holder COMPONENT_REVIEW/2legacy noentitlement NOT_REVALIDATED/
+114candidate referencePASS NOT_ADMITTED/1unresolved/966integer unresolved/
+6038outside assessedsubset. Not allactionclasses/fullaccounting acceptance.
+Original queueV1 compared total1 to holder0.7 for600725 and mislabeledconflict;
+bound legacy fractional receipt distinguishes those ratios. V1 PRE-REVIEW retained,
+separate immutableV2 retains component/policy/textbinding and requiresreview.
+No financial defect/admission inferred. V2canonical26f7e9b2e7c497a6548b3778f406e2195b63d8cc8dc2705f0e2dfc9992b53941.
+
+Initial installedimage import failed; explicit currentrepoPYTHONPATH succeeded
+terminal0, no rebuild/install. Allofflinejobs terminal, noDB/Redis/networkwrites;
+only explicitlynew externalqueueoutput writable. Independent read-only source/
+receipt reviews no boundedP1/P2; no independent runtime/fullfinancial certification.
+Crossyearproof sealed12payloads/SHA256SUMS
+2bbd30e72400a332edae6144edbcd95cbf16d56cf489634f598afdf4e0d38b43.
+[Reference, queue, commands, failures and reviews](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-cross-year-reference/README.md).
+
+Parent4588cfe71bccd953c7c893c38ef4fa9dd4052b4a
+[CI37444185690](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37444185690)
+backend/frontend/ComposeSUCCESS2026-10-06T09:39:39Z, HEAD=origin=PR32head,
+OPEN/DRAFT; fullscopeparent sealed15payloads/SHA256SUMS
+7de12d15fd87b612842aa840e92e7ddb5a5ef2794c5f41130ca2fc109f06ca23.
+The following scope-checkpoint NOT_RUN/next paragraphs are prior chronology,
+superseded by this section, not current reference/queue status.
+Next batched fullqueue holder/component/fraction/deferred/cached2023-2025closure
+and separate allaction/newversion/financial/API/userflow acceptance. No dataset
+admission/freeze/formal/OOS/merge/release; U1-U8/M0-M5 and external gates intact.
+
 ## 2026-10-06 full-source scope and cached-year batch (financial gate still open)
 
 Actual7407-row bonus source oracle spans2010-2025; previous83sourcelegs only

@@ -1,5 +1,28 @@
 # Decisions
 
+## v1.2 cross-year reference closure and full bonus queue — 2026-10-06
+
+Reuse the sealed reference auditor, not a new accounting engine. Verify all24
+candidateinputbytes/6manifests, preserve strictgrosscash/Decimal/official/raw/rules
+and old82PASS+1UNRESOLVED assertions. Actual115 gives114scopedPASS+1same000598;
+new32relations are not financialexecution or admitted data. Initial installedimage
+import failure preserved; explicit currentrepoPYTHONPATH corrects environment.
+
+Index whole7407bonusoracle with actual frozen corporate-actions/checksum and
+legacy ledgers/all16datedyears/37boundinputfiles. Keep independently visible
+presence/source/reference/ordinaryholder/component/cash facts; no presence-to-PASS
+or missing-to-NORMAL/excluded conversion. QueueV1 mistakenly called total-vs-holder
+ratio difference a conflict;600725legacy explicitly distinguishes1total vs0.7
+ordinaryholder with fractionalpolicy. PreserveV1PRE-REVIEW; immutableV2 includes
+component/source/policy/textbindings and requiresreview, not corruption/acceptance.
+
+Independent read-only source/receipt reviews no boundedP1/P2. Externalproof12payloads
+sealed2bbd30e72400a332edae6144edbcd95cbf16d56cf489634f598afdf4e0d38b43;
+parent4588exactCI37444185690SUCCESS/15payloadseal7de12d15... retained. No appcode,
+frozen/research/strategy/OOS/productionDB/admission/policy/merge/release changes.
+Next batched fullqueue holder/fraction/deferred and cached2023-2025 closure plus
+allactionclasses/newversion/financial/API/userflow acceptance; full U1-U8 intact.
+
 ## v1.2 replace single-year count progression with broader cache audit — 2026-10-06
 
 Actual retained7407bonus-oracle rows cover2010-2025, whileV21source83/142 only
