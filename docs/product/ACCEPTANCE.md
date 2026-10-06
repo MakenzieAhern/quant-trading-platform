@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-10-06 all-ratio candidates and bounded financial inputs
+
+Opt-in approved fractions require existing strict terms and explicit same-day
+credit/listing; per-year checksum-bound source pools cover cached2023-2025 too.
+Reviewer P2 fixes: exact approved revision3 fileSHA and wrong-year/duplicate-key
+rejection. Default integer and nonstandard/deferred rejection retained.85focusedPASS.
+
+All7407oracle rows/16years:476SZSEsource candidates115integer+361fraction,
+6931unresolved/zerooutside ratio subset. Allold115whole receipts/pre-review476events
+and results retained,28inputbytes/reversed16args sameimmutableV2.
+Candidate canonical283fb907dcf527ad0bd494f4e43090c278ab15a9ef07fa7909190e574ee9200a.
+
+Separate referenceV2=470limitedPASS+6unresolved/old114+1retained. FrozenPITmaster
+symbol000043 fixes historical source lookup for successor stableID001914.
+V1 retained469+7.000598cash and five exact reference discrepancies stay unresolved;
+no tolerance/NORMAL/admission. Reference10e15ad58548b209efa828a1ee98c6b029dfd4ce3c4de8b59f630ade37ac4919.
+Actual476source events pass1428artificial seeded engine cases/two precisions.
+Cash/basis/floor/audit/noOrderFill/duplicate rejection+cash/audit preservation only;
+not comprehensive atomicity, real userjob/lifecycle/valuation/financial acceptance.
+
+Fullbackend1240PASS/one optionalarchiveSKIP; Ruff549/mypy145/Alembic reversible
+disposable quant_test PASS. Separate actualarchive pause/resume test1PASS94.16s:
+6fills/20pendingorders/newmanager/prefix+payload parity; historical integration only.
+Frontend668PASS44files/lint/types/build;519.40kB chunk advisory, not p95/AA/browser.
+Docker addresspool exhausted; networknone/tmpfs/noport/no-volume temporary PG
+and shared namespace worked. Temporary PG stopped; originalfourservices/data intact.
+Initial import/mount/Symbol/fixture failures preserved, no assertions weakened.
+
+Independent read-only review no boundedP1/P2, not full financial/product certification.
+[31 sealed payloads and commands](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-fraction-full-scope/README.md);
+SHA256SUMS35b57f042c8e200f64df0e68d9a13b4102e70ec79ff546edc0657bf53649fb11.
+Whole7407queue integration/allactionclasses/newversion/fullfinancial/API/UI/visual/
+AA/native200/p95/restart/manual/releasable v1.2 remain required. No dataset admission/
+freeze/formal/OOS/merge/release; external feed rights/missing ledgers intact.
+Earlier checkpoints retain historical scope, superseded here, not deleted.
+
 ## 2026-10-06 cross-year reference and full bonus queue (not financial admission)
 
 Generalized the external read-only auditor to all24bound candidateinputs and

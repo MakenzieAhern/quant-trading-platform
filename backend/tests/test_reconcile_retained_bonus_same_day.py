@@ -761,6 +761,140 @@ def test_opt_in_reconciliation_is_immutable_and_preserves_default_schedule(tmp_p
     assert not event["scheduled_listing_not_actual_tradability"]
     assert event["support_state"] == "SUPPORTED_FOR_INTEGER_HOLDINGS_EXPLICIT_SAME_DAY"
     assert run("same-day.json", "--explicit-same-day") == accepted
+    assert (
+        run("approved-integer.json", "--explicit-same-day", "--fraction-policy")["events"]
+        == accepted["events"]
+    )
+    with pytest.raises(SystemExit) as error:
+        run("unapproved-boundary.json", "--fraction-policy")
+    assert error.value.code == 2
+
+    # Opt-in broadens ratios, never official identity, dates, or registry certainty.
+    originals = {path: path.read_bytes() for path in (oracle, boundary, cache, links)}
+    for name, ratio, terms in (
+        ("fractional", "0.6", "每10股转增6股"),
+        ("combined-fractional", "2", "每股送0.8股、每股转增1.2股"),
+    ):
+        evidence = [{"ratio": ratio}]
+        _manifest(
+            oracle,
+            {
+                "rows": [
+                    {
+                        **identity,
+                        "evidence": evidence,
+                        "evidence_sha256": canonical_sha256(evidence),
+                    }
+                ]
+            },
+        )
+        _manifest(boundary, {"source_sha256": sha256_file(oracle), "rows": []})
+
+        def bind_pages(pages):
+            cache.write_text(json.dumps({"source_sha256": source_sha, "pages": pages}))
+            _manifest(
+                links,
+                {
+                    "year": 2011,
+                    "inputs": [{"path": str(source), "sha256": sha256_file(source)}],
+                    "results": [
+                        {
+                            **identity,
+                            "documents": [
+                                {
+                                    "url": doc["url"],
+                                    "source_sha256": source_sha,
+                                    "extraction_sha256": sha256_file(cache),
+                                }
+                            ],
+                        }
+                    ],
+                },
+            )
+
+        notice = NOTICE.replace("每10股转增10股", terms)
+        bind_pages([notice])
+        assert run(name + "-default.json", "--explicit-same-day")["accepted_events"] == 0
+        candidate = run(name + ".json", "--explicit-same-day", "--fraction-policy")
+        assert candidate["accepted_events"] == 1 and not candidate["full_dataset_created"]
+        receipt = candidate["events"][0]
+        assert receipt["event"]["share_ratio"] == ratio
+        assert receipt["event"]["listing_date"] == EX
+        assert receipt["event"]["source_version"] == "FRACTION_RETAINED_BONUS_EXPLICIT_SAME_DAY_V1"
+        assert receipt["policy_id"] == "CN_A_RETAINED_BONUS_FRACTIONAL_SHARE_POLICY_V1"
+        assert receipt["accounting_scope"] == "WHOLE_POSITION_FLOOR_NO_CASH_BASIS_CONSERVED"
+        assert not receipt["scheduled_listing_not_actual_tradability"]
+        assert run(name + ".json", "--explicit-same-day", "--fraction-policy") == candidate
+        bind_pages([notice.replace("2011年03月28日直接记入", "2011年03月29日直接记入")])
+        rejected = run(name + "-delayed.json", "--explicit-same-day", "--fraction-policy")
+        assert rejected["accepted_events"] == 0
+        assert rejected["results"][0]["unresolved_documents"]
+    for path, content in originals.items():
+        path.write_bytes(content)
+    # Later years must not overwrite another year's authority for the same PDF.
+    pool = staging / "acquisition-pool"
+    extra_source = pool / "batch-v2/source-manifest.json"
+    _manifest(extra_source, {"documents": [{**doc, "issuer": "600001"}]})
+    extra_link = pool / "batch-v2/date-links-2012.json"
+    _manifest(
+        extra_link,
+        {
+            "year": 2012,
+            "inputs": [{"path": str(extra_source), "sha256": sha256_file(extra_source)}],
+            "results": [],
+        },
+    )
+    assert (
+        run("multiple-years.json", "--explicit-same-day", "--date-links", str(extra_link))["events"]
+        == accepted["events"]
+    )
+    _manifest(
+        extra_link,
+        {
+            "year": 2012,
+            "inputs": [{"path": str(extra_source), "sha256": sha256_file(extra_source)}],
+            "results": [{**identity, "documents": []}],
+        },
+    )
+    with pytest.raises(ValueError, match="DATE_LINK_ROW_YEAR_MISMATCH"):
+        run("wrong-year.json", "--explicit-same-day", "--date-links", str(extra_link))
+    original_links = json.loads(originals[links])
+    original_links.pop("manifest_sha256")
+    _manifest(links, {**original_links, "results": original_links["results"] * 2})
+    with pytest.raises(ValueError, match="DUPLICATE_DATE_LINK_IDENTITY"):
+        run("duplicate-row.json", "--explicit-same-day")
+    links.write_bytes(originals[links])
+    pool_pdf = pool / "batch-v1/pdf/notice.pdf"
+    pool_pdf.parent.mkdir(parents=True)
+    pool_pdf.write_bytes(pdf.read_bytes())
+    pool_cache = pool / "batch-v1/text" / f"{source_sha}.json"
+    pool_cache.parent.mkdir(parents=True)
+    pool_cache.write_bytes(originals[cache])
+    _manifest(extra_source, {"documents": [{**doc, "source_path": "batch-v1/pdf/notice.pdf"}]})
+    _manifest(
+        links,
+        {
+            "year": 2011,
+            "inputs": [{"path": str(extra_source), "sha256": sha256_file(extra_source)}],
+            "results": [
+                {
+                    **identity,
+                    "documents": [
+                        {
+                            "url": doc["url"],
+                            "source_sha256": source_sha,
+                            "extraction_sha256": sha256_file(pool_cache),
+                        }
+                    ],
+                }
+            ],
+        },
+    )
+    pooled = run("pooled.json", "--explicit-same-day", "--fraction-policy")
+    assert pooled["accepted_events"] == 1
+    assert pooled["events"][0]["event"]["source_document_sha256"] == source_sha
+    assert pooled["events"][0]["event"]["listing_date"] == EX
+    links.write_bytes(originals[links])
     _manifest(
         boundary,
         {

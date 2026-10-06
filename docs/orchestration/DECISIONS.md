@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 approved fraction batch and strict reference checks — 2026-10-06
+
+Reuse approved exact revision3 policy/shared terms/official same-day boundaries,
+not inferred registry dates or a new engine. Per-year source-pool binding enables
+cached2023-2025; no downloads/dependencies. Independently found P2 policy-term
+substitution and duplicate/wrong-year overwrite fixed once with negative tests.
+All7407assessed ->476source candidates/6931unresolved, old115whole receipts exact.
+FrozenPITsymbol000043, not successor001914 tail, fixes one auditor false failure;
+reference470scopedPASS+6unresolved, old114+1 unchanged. Five exact reference
+mismatches and old000598cash remain failures, no tolerance/admission.
+Actualsource seeded engine checks are not real financial/userflow acceptance.
+
+Fullbackend/frontend/lint/types/build/reversible scratchDB PASS; separate realarchive
+paperpause/resume test PASS. Docker addresspool exhausted: use networknone/tmpfs PG
+and sharednamespace, no prune/network deletion/applicationDB. TemporaryPG stopped.
+31payload seal35b57f04... and immutable reports outside Git; no dataset/freeze/
+formal/OOS/merge/release. Continue wholeeconomic/U1-U8 gates, preserve old proofs.
+
 ## v1.2 cross-year reference closure and full bonus queue — 2026-10-06
 
 Reuse the sealed reference auditor, not a new accounting engine. Verify all24
