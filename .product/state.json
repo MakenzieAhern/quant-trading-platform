@@ -1,9 +1,47 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T21:14:52Z",
+  "updated_at_utc": "2026-10-06T21:43:00Z",
+  "holder_object_sources_20261007_gate": {
+    "status": "PASS_SCOPED_SOURCE_GUARDS_NOT_FINANCIAL_OR_FULL_PRODUCT",
+    "source_parent": "cd108e822d258aceedb33f3e6232571374fc6e3c",
+    "correction": "Shared declared holder-object optional 的/exact利润分配、转增股本的对象 heading and contiguous current-distribution two-date metadata. All finality/issuer/publication/boundary/full-date/all-holder/credit/unrestricted/conflict guards preserved. No issuer exception or date/year inference; default next-session unchanged.",
+    "batch": "All137 rows retained,54->65 source-onlyPASS/83->72unresolved;11newPASS,300036only advances first missingrole toSHARE_CREDIT and remains rejected.125whole rows identical including54oldPASS; allratio/fraction/sourcefields unchanged.300015actual2010credit vs2011ex unresolved/no yearcorrection.000771/000818/300048/allprior/allaction/reference gaps remain.",
+    "validation": "3RED->3PASS/95focused;full1289backend+1optionalarchiveSKIP20.49s/Ruff556formatted/mypy145;guardedownedtmpfsquant_test head-base-head/checkPASS. Node24.21/npm11.19 copied163sources match/4deploymentfilesabsent;715frontend45files17.11s/lint/type/build182ms/audit0/PrettierPASS. Earlier missing testfilename/no-tests/formatter/initialPGnotready errors disclosed, not hidden as PASS.",
+    "review": "Independent reused signed_results_review_oct7 readonly currentcanonical/276bindings/134PDFcachechecks/11newclauses verified, no evidencedscopedP1P2. No reviewer tests/network/DB execution; not financial/fullproduct approval.",
+    "batch_manifest_sha256": "612a844a54e246293fc156c1ed07bde44e9d9326cf8ab625ac050c9f76179d76",
+    "evidence": "product-evidence/v1.2/m4/20261007-holder-object-sources/README.md",
+    "evidence_payloads": 11,
+    "evidence_manifest_sha256": "9672e2472ff49a98b6f219ffb71b78dca0344fe9824ae86b364760e4504f3b72",
+    "preservation": "Current276bindings/reversedinput/immutable repeat and17oldproofpayloads unchanged verified. Frozen693c0b81/v1.1tag/.research unchanged. OriginalDBreadonly0016/RedisPONG/PGRedisbackendhealthy;ownedNode7969f4b/PG30b1cfbSTOPPEDretained. No originalservice restart/recreate/migration/oldfailure retry/provider/account/order/study/OOS/merge/release. No frontendcode/deployment change or new browserfinancialclaim.",
+    "ci": "Coherent newcommit/ownCI pending; exact earliercd108CI37532781861PASS not coverage of this newsource diff.",
+    "event_admitted": false,
+    "full_product_pass": false
+  },
+  "wizard_errors_20261007_gate": {
+    "status": "PASS_SCOPED_CONTROLLED_ERROR_RECOVERY_NOT_FULL_PRODUCT",
+    "code_commit": "cd108e822d258aceedb33f3e6232571374fc6e3c",
+    "ci": "Own37532781861 all3jobs/every stepSUCCESS completed2026-10-06T21:19:54Z, samewatch26411terminal0. FullAPI/extracted logs1286backend+1optional archiveSKIP38.62s/715frontend45files111.06s/fullstaticchecks/disposableAlembicup-down-up/check/Compose release image smokePASS. HEAD==origin==OPEN/DRAFTPR32head verified; no CIrerun/merge/tag/release.",
+    "browser": "Actual Chrome154/currentbuilt localhost5173, controlled GET /api/workbench/capabilities403/408/offline over sole owned QAHTML, every APIwrite forbidden. ENdark1440 andZHdark390 each show permission/timeout/offline guidance rather than submission/request-key advice; mobile document375<=390. Restore real read-only service then actual keyboard Retry focuses persistent wizardH1 and originalstep2/exactcash123456.789000000000001/dates2011-01-04..2011-06-30/costrisk/9versions remain. FailureGETcounts3/3/4 span shell/workbench/wizard, fourth retained without guessingcaller; one restoredGET/case, zero write attempts. No task/account/order/provider action.",
+    "scope": "Controlled fixture, not real service shutdown, denied upstreamaccess bypass, real15second aborttimer, native200/fullAA/p95/financial or whole U1-U8/M0-M5 pass. Six actual JPEG, two selected visually reviewed. Originalnormalindex untouched; finalnormalpage reload fixture0/step2/EN/dark/viewportreset/tabclosed, ownfixturehashchecked and recoverably moved outwebroot. OriginalAPI/frontend200paper, scratchstopped.",
+    "evidence": "product-evidence/v1.2/m4/20261007-wizard-errors/README.md",
+    "evidence_payloads": 11,
+    "evidence_manifest_sha256": "fcd80e195ac3b892dafccd0f31bb6f17ac9e41d67b5853d4b7f59c745aec0954",
+    "full_product_pass": false
+  },
+  "runtime_bind_recheck_20261007_gate": {
+    "status": "FAIL_NEW_BIND_MOUNTS_EXISTING_SERVICES_HEALTHY",
+    "observed": "Existing running backend89aa9e1fa53d19b6c6e32b2d070916adff5d7ba49701c3727e92c76be58bc682 /app/research readable: main.py7bcad66f matcheshost,0017 file exists,frozenmanifest693c0b81 matcheshost. This is filesystem visibility, not newest runtime import or deployed0017 proof. Ubuntu cli-tools empty/usrbin+native socket missing, docker path Windowsbinary.",
+    "probe": "Fresh unique c9708020c1c1e01b908985ab447a1884e0e9a5d330c55c6de933eec746324ae0/qtp-v12-current-mount-probe-oct7 used cachedimageb063f3/no pull/networknone/read-only rootfs/all inheritedbackendmountsRO/noports or worker. It exited1 because new /app is empty and researchdataset absent. Actual inspected/logged, stopped retained. No existing service/data mutation.",
+    "database": "Read-only live PostgreSQL SELECT version_num FROM alembic_version =20260924_0016. AppDB not migrated. Full new0017 CI/disposablechecks pass separately; originalbackend rollout NOT DONE.",
+    "safety": "Existingmount availability cannot establish new-container/restart safety. Do not stop/restart/recreate original backend/frontend or emptybind launch until genuine integration restored/fresh ROprobe passes/backupschecked. No reset/prune/volumeimageDBdeletion/manualhelper/security workaround. CurrentPGRedisbackendhealthy/frontend5173/API8000HTTP200paper retained.",
+    "evidence": "product-evidence/v1.2/m4/20261007-runtime-bind-recheck/README.md",
+    "evidence_payloads": 4,
+    "evidence_manifest_sha256": "be2e7da35742c37e402b9e9af7435aabb162c7ad01461886978c9cde34f71d67",
+    "full_product_pass": false
+  },
   "wizard_quality_20261007_gate": {
-    "status": "PASS_SCOPED_COPY_GEOMETRY_NOT_FULL_PERFORMANCE_EXACT_CI_PENDING",
+    "status": "PASS_SCOPED_COPY_GEOMETRY_EXACT_CI_NOT_FULL_PERFORMANCE",
     "source_parent": "8ca451af3a57fec91966ee9fcc8673731a67c7da",
     "defect": "Pre-submit English falsely claimed task already saved on server. Only shared confirmation copy now says Once created; Chinese already conditional. No API/storage/financial/dependency change; two EN/ZH regressions require conditional notice, disabled unacknowledged submit and no create call.",
     "local_checks": "86focused/715full45files17.58s/lint/types/build163ms/audit0/PrettierPASS. Source and scratch copy SHA copy6cec9c56795c4d3f99ff36266c73f604dcfdd2e0d83dce5e86e8172656ec427b/test7c72663332eaf88df77750ba1a96649326bb8813d2775aebd02c8b2317937ab6 match. Backend unchanged; prior1286+optional archiveSKIP/disposable0017 cycle retained. Own new commit CI pending, earlier8caCI37528782163 all3jobs/every stepPASS verified live.",
@@ -16,7 +54,8 @@
     "evidence_manifest_sha256": "9024a068446ede2add0aefb8e04a5a1bac67718a095e5344d5583d65efe81a43",
     "research_submitted": false,
     "full_product_pass": false,
-    "next": "Coherent copy/test/checkpoint commit, own exact-head CI; then independent mandatory current U8/error/restart/performance and separate newversion financial reconciliation. No merge/tag/release; all U1-U8/M0-M5 remain."
+    "ci": "Subsequent exactcd108e822d258aceedb33f3e6232571374fc6e3c CI37532781861 all3jobs/every stepPASS21:19:54Z, full1286backend+optionalSKIP/715frontend/static/migration/release smoke. Historical localchecks pending-CI text describes precommit phase only, now superseded by this ownCI receipt/wizard_errors gate.",
+    "next": "Copy/test coherentcommit and ownCI passed; controlled wizard errors checked next. Continue fullmandatory quality/runtime integration and separate newversion financial gates; do not turn scoped quality into financial/product PASS. No merge/tag/release."
   },
   "draft_persistence_ci_20261007_gate": {
     "status": "PASS_SCOPED_ASSERTION_TIMING_FIX_EXACT_CI",
@@ -2571,19 +2610,21 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-06T21:14Z / Oct7Sydney: root sole repo writer, fresh ps no competing writer. Exact8caCI37528782163 all3jobs/every stepPASS, PR32OPEN/DRAFT. New minimal pre-submit copy correction/two ENZH tests with86focused/715full/staticchecks and actualChromeconditional-copy/16casegeometry/nativecontrol evidence; performance remainsNOT_MET, no hidden failure. 116payloadseal9024a068/10priorCIseal900e6c76. Originalappfrontend/API200paper/PGRedisbackendhealthy/RedisPONG; scratchnodePGSTOPPEDretained. Normaldraft2/EN/dark/exactconfig/9versions restored/viewportreset/tabclosed, threeownQAHTML recoverably movedoutwebroot. Frozen/tag/.research unchanged; no businessDB/provider/account/order/formal/OOS/merge/release.",
-    "repository_writer": "Root only: shared English pre-submit persistence condition, two ENZH regressions and product checkpoint. Authorized independent signed_results_review_oct7 readonly completed scoped no evidencedP1P2; reviewer no tests/DB/browser/network/process writes. No new agents or competing repo writer.",
-    "database_writer": "Root disposablequant_test tmpfs/no mounts/loopback55471 only, tests/migration checks complete and ownedPG nowSTOPPED/retained. No applicationDBmigration/mutation/restart, no original job retry/backfill, no marketdata or study run. Incomplete genuine lost-ledger recovery unchanged.",
-    "queue_writer": "Root scoped immutable supplemental137row sourcelead/PITmaster queue v4 complete. No worker current, no marketprovider/business/research queue action. Old7407 oracle unchanged; no financial admission. New fullaction completeness still unproven; original failed job date/security remains unknown.",
+    "latest_verification": "2026-10-06T21:43Z / Oct7Sydney: root sole writer; sourceparentcd108e8/origin/OPEN-DRAFTPR32 verified, MakenzieAhern unchanged. New shared explicit holder-object/current-distribution metadata guards:3RED->3PASS/95focused,137all retained54->65sourceonlyPASS/83->72unresolved;11newpasses/300036nextrole/125whole rows same/allratiofields unchanged. New immutable276bindings/reverse/repeatPASS,11payloadseal9672e247. Independent readonly no evidencedscopedP1P2. Full1289backend+1optional archiveSKIP20.49s/715frontend45files17.11s/Ruff556/mypy145/lint/type/build182ms/audit0. Owned tmpfsquant_test head-base-head/checkPASS;liveDBreadonly0016. Scratchnode7969f4b/PG30b1cfb stoppedretained afterterminal tests;originalPGRedisbackendhealthy/RedisPONG/frontendAPI200paper. Frozenmanifest/tag/.research unchanged;no financialadmission/businessDB/provider/account/order/oldfailedjob/formal/OOS/merge/release. Coherentcommit/ownCI next, priorcd108CI37532781861PASS is not newdiffCI.",
+    "repository_writer": "Root only: shared explicit holder-object/current-distribution metadata parser, three offline layout regressions and product checkpoint. Authorized reused signed_results_review_oct7 readonly complete no evidencedscopedP1P2; no tests/DB/browser/network/process mutation by reviewer. No new or competing writer.",
+    "database_writer": "Root guarded disposablequant_test tmpfs/no mounts/loopback55471 only, fulltests/head-base-head/check complete and ownedPGSTOPPEDretained. Read-only applicationDB version0016; no appDBmigration/mutation/restart/job retry/backfill or market/strategy run. Genuine lost-ledger recovery incomplete unchanged.",
+    "queue_writer": "Root new immutable supplemental137rows sourceguardv3 over existing datedqueuev4/currentparser.65sourceonlyPASS/72unresolved, no economic event/dataset admission.276bindings/reverse/repeatPASS/old17proofpayloads preserved. No worker/provider/business/researchqueue action or fullarchive acquisition. Fullaction/reference/cash/holder/tradability completeness still unproven.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "2026-10-06T21:14Z original backend/PG/Redishealthy/RedisPONG/API8000HTTP200paper; owned no-mount fallbacka561fa1250 loopback5173HTTP200/newbuildhashmatch. Exact scratchnode7969f4b idleonly beforestop, PG30b1cfb/node STOPPED retained, QAAPI/web already stopped. Threeown diagnosticHTML moved out webroot after checksums, normalindexnotinstrumented. Originalfrontend STOPPED; no appbackend0017 rollout/WSLintegration recovery claim.",
+    "verified_processes": "2026-10-06T21:43Z originalbackend/PG/Redishealthy/RedisPONG;owned fallbacka561fa1250 no mounts/loopback5173 remainsrunning. OwnedNode7969f4b idleonly and tests terminal before stop;PG30b1cfb guardedtmpfsquant_test0017 only then stopped;bothretained. OriginalfrontendSTOPPED, newprobe c970STOPPED retained. Existingappnotrestarted/recreated/liveDB0016. Genuine Ubuntuintegration/freshmount recovery still needed before0017 rollout; no security/workaround/reset.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-06T21:43Z shared holder-object/current-distribution metadata parser3RED->3PASS/95focused;all137 supplementalrows retained54->65source-onlyPASS/83->72unresolved,11newPASS/300036nextrole/125whole rows same.276bindings/reverse/repeat/old17proofpayloadsPASS,new11payloadseal9672e247. Independent readonly no scopedP1P2;full1289backend+optionalSKIP/715frontend/static/disposablemigrationPASS. OriginalDB0016/servicesnotrestarted,scratchstopped,frozen/tag/.research unchanged; not financial/fullproduct/forward/release. New coherentcommit/ownCI pending.",
+    "2026-10-06T21:27Z minimal pre-submit persistencecopy commitcd108e8 ownCI37532781861 all3jobs/every stepPASS, full1286backend+optionalSKIP/715frontend/static/disposablemigration/release smoke; HEADoriginPR32 agree/OPEN-DRAFT. Actual currentChrome controlled wizard403/408/offline ENZH/currentprecision/keyboard-retry focus/no APIwrites verified,11sealfcd80e19. New readonly mountprobe fails empty app/research despite existingmount visibility, liveDBversion0016: protect existing app from restart. Not financial/fullquality/forward/release; fullgoalACTIVE.",
     "2026-10-06T21:14Z actual pre-submit English task-durability claim corrected to Once created; two ENZH notice/no-create/disabled-submit regressions,86focused/715full/staticchecks/readonly reviewPASS. ActualChromecopy verified,16-case wizard geometry/exactconfiguration/ackfalse retained. Nativecontrol shows264-312ms ordinarybutton too, wizard296-1784ms/handlers4-7ms/no longtasks; performance stillNOT_MET, not financial/U1-U8 complete. 116payloadseal9024a068, all scratch stopped/normaldraftrestored/QAHTMLretired/apphealthy. Exact prior8caCI37528782163PASS preserved10payloadseal900e6c76; newcopycommitCIpending, goalACTIVE.",
     "2026-10-06T20:05Z official300048 correction recovered,192monthly/23682rows revalidated and full2011CSDCC4.11B484rows/137raw gaps audited. v4bind136PITmaster/1unresolvedidentity,134datedleads/1correction/2undated, allevents0admitted. ThreeP2s independentlyclosed,1268backend+1optionalSKIP/713frontend/fullchecks/disposable0017check PASS;40payloadseal16b13392/486bindings. Originals/frozen untouched; ownedscratchstopped, app200. Coherentcommit/exactCI pending; fullgoalACTIVE.",
     "2026-10-07Sydney U8 global beginner-help search actual gap removed. Four existing topics reusable in search/page, first/direct/same-page/sameURL/reselect/locale/BackForward keyboard semantics; independent3P2 closed with RED regressions. Final74focused/696frontend/fullchecks and actual16IABmatrix PASS_SCOPED. OwnhelpCIpending, fullgoalACTIVE; not financial/nativeAA/forward/release acceptance.",
@@ -3147,13 +3188,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "8ca451af3a57fec91966ee9fcc8673731a67c7da",
+      "last_verified_head": "cd108e822d258aceedb33f3e6232571374fc6e3c",
       "state": "DRAFT",
-      "ci_run": 37528782163,
+      "ci_run": 37532781861,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Own8caCI37528782163 backend/frontend/Compose allSUCCESS; failed367 CI retained/persistence test synchronization fixed. Compatible later local copyfix/715tests/currentChromecondition/16casewizardgeometry checked separately, own newCIpending. Native timingtargetNOT_MET_CAUSE_UNPROVEN/control included; native200manualpending. Original appbackend not migrated/restarted while WSLbindbroken. Prior proofs retained; not fullU1-U8/M0-M5/financial/newversionadmission/AA/lawfulforward/genuine lostledgers/merge/release. PR32OPEN/DRAFT."
+      "browser_gate": "Owncd108e8CI37532781861 all3jobs/every stepSUCCESS1286backend+optionalSKIP/715frontend/static/disposablemigration/release smoke. ActualChrome conditionalservercopy/16wizardgeometry/no-submit and controlled403/408/offlineENZH/keyboardRetry/exactdraft/no-write checked. Native performanceNOT_MET_CAUSE_UNPROVEN/controlincluded/currentnative200manualpending. Existingservices200healthy but freshROnewmountprobeempty/liveDB0016: originalbackend not migrated/restarted. Prior proofs/failures retained; not fullU1-U8/M0-M5/financial/newversionadmission/AA/lawfulforward/genuine lostledgers/merge/release. PR32OPEN/DRAFT."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -3168,8 +3209,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Commit minimal conditional pre-submit English notice/two regressions with quality checkpoint, push meaningful milestone and verify own exact-head CI. Then continue mandatory current U8/actionable failures/restart/performance diagnosis and separate newversion financial reconciliation, not a receipt-only commit loop. Native control also fails200ms; keep fail/no zero-imputation/no guessed code. Prior native200 scoped proofs retained, current manualrequestpending without workaround. Preserve83supplemental unresolved/allaction gaps; do not retry/backfill originalfailedjob or redo accepted authorities/archive. App5173/API8000usable; genuine Ubuntuintegration required before original backend0017 rollout. ScratchPG/NodeSTOPPED. FullU1-U8/M0-M5/restore/media/manual/lawful after-start forward/genuine missingledgers remain, goalACTIVE/product_goal_completefalse/no frozen/formal/OOS/merge/tag/release.",
-  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check && git diff --stat && gh pr view 32 --json headRefOid,state,isDraft && gh run list --branch codex/product-v1.2-current-rules --limit 3 --json databaseId,headSha,status,conclusion",
+  "next_task": "Finish coherent shared holder-object parser commit/push/ownCI then continue full mandatory U1-U8/M0-M5 with bounded cached72 supplemental unresolved/fullaction/reference/cash/lifecycle reconciliation and independent productquality, not repeatedacceptedcopy/errorchecks or tiny receipt-onlypush. New65/72source-only guard is not financialadmission; no oldfailedjobretry/backfill/frozen or formal/OOS changes. Currentnative200manualpending/performancecauseunproven: keepfail/no workaround/zero-imputation/thresholdcut. Fresh ROnewcontainer mounts empty despite existingreadablemounts/liveDB0016: doNOTrestart/recreate originalbackend/frontend until genuineintegration/freshROmountPASS/backups. Currentlocalappusable/scratchretainedSTOPPED. Lawfulafter-startforward/genuine missingledgers/restore/media/manual/fullAA/visual/performance/delivery remain;goalACTIVE/product_goal_completefalse/no merge/tag/release.",
+  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git diff --check && git status --short --branch && git diff -- backend/scripts/retained_bonus_terms.py backend/tests/test_reconcile_retained_bonus_same_day.py; commit only the inspected five files, push existing codex/product-v1.2-current-rules, observe exact same-HEAD CI, then reopen ACCEPTANCE mandatory pending rows and cached-source v3 remaining-role queue",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

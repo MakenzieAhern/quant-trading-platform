@@ -1,5 +1,45 @@
 # Decisions
 
+## v1.2 explicit holder-object and contiguous current metadata — 2026-10-07
+
+Bounded cached source inspection proved a shared parser-layout gap, not missing
+economic dates. Recognize optional 的 in the declared current holder object,
+the exact利润分配、转增股本的对象 heading, and anchored current-distribution
+metadata with two complete dates. No issuer special-case/global year correction,
+source finality downgrade, guessed date or page-spliced date. Existing all-holder,
+credit/unrestricted listing/conflict checks and default next-session policy retained.
+3newRED→3PASS/95focused; all137rows retained54→65strictsource-onlyPASS/83→72unresolved;
+11newPASS/300036onlynextmissingrole/125whole rows exact.300015actual2010credit
+vs2011ex remains unresolved. Financial event admission, new dataset, full action
+coverage and application DB rollout are NOT established by this source gate.
+
+276currentbindings/reverse/immutable repeat and17oldproofpayloads verified;
+11payload9672e2472ff49a98b6f219ffb71b78dca0344fe9824ae86b364760e4504f3b72.
+Independent readonly no evidenced scopedP1P2; no reviewer test/DB/network writes.
+Full1289backend+optionalSKIP/715frontend/staticchecks/disposablequant_test
+head-base-head/checkPASS; originalDBreadonly0016/servicesnotrestarted.
+ScratchNode/PGSTOPPEDretained; frozenmanifest/v1.1tag/.research unchanged.
+Current65/72supersedes prior54/83 for source-only status, not historical code bindings.
+Continue full U1–U8/M0–M5 and remaining financial/runtime/accessibility/forward/
+restore/delivery gates; no merge/tag/release. New source commit/ownCI next.
+
+## v1.2 distinguish surviving mounts from safe new mounts — 2026-10-07
+
+Current cd108 exactCI37532781861 all3jobs/every stepPASS1286backend+optionalSKIP/
+715frontend/fullchecks/disposablemigration/releaseimage smoke. Actual compiled
+wizard controlledGET403/408/offline ENZH/retry-focus/precision/no-write check closes
+this browser error scope only; not fullquality/finance/forward/release. Preserve
+all failures/proofs, postCI checkpoint local for next coherentmilestone.
+
+Do not use existing running-container readable code/data to approve a restart:
+fresh unique cachedimage/networknone/read-only-root/inherited-mountsRO probe exited1,
+newapp empty/research absent, though existingbackend main/frozenhashmatch and0017
+fileexists. Read-only liveDBversion0016; deployed migration0017 remains NOT_DONE.
+Evidence4sealbe2e7da3, stoppedprobec970 retained, originalfour services healthy/200
+and no DB/job action. Requires genuine integration/freshROmountPASS/backups before
+original backend migration/recreation. No reset/manualhelper/security bypass or
+emptybind retry. Fullgoal ACTIVE with original mandatoryscope, not a scopedrelease.
+
 ## v1.2 durability wording is conditional; native timing needs a control — 2026-10-07
 
 Actual English pre-submit wizard claimed task already saved server-side; Chinese

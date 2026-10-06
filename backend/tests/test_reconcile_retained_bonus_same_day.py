@@ -198,6 +198,55 @@ def test_explicit_cutoff_and_credit_wording_never_infers_missing_dates(
         )
 
 
+@pytest.mark.parametrize("layout", ["holder-object", "unnumbered-metadata", "numbered-metadata"])
+def test_declared_holder_object_and_current_distribution_metadata_remain_bounded(layout):
+    if layout == "holder-object":
+        notice = NOTICE.replace("三、分派对象", "三、利润分配、转增股本的对象").replace(
+            "本次权益分派对象为:", "本次权益分派的对象为:截止"
+        )
+    else:
+        numbering = ("1、", "2、") if layout == "numbered-metadata" else ("", "")
+        notice = NOTICE.replace(
+            "二、股权登记日与除权除息日\n股权登记日为2011年3月25日,除权除息日为2011年3月28日。",
+            "二、股权登记日与除权除息日"
+            + numbering[0]
+            + "本次权益分派股权登记日为:2011年3月25日"
+            + numbering[1]
+            + "除权除息日为:2011年3月28日",
+        ).replace("三、分派对象", "三、权益分派对象")
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年3月25日下午", "股权登记日下午"),
+        ("全体股东", "控股股东"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("2011年03月28日直接记入", "直接记入"),
+        ("无限售条件", "有限售条件"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+        ("本次权益分派", "讨论本次权益分派"),
+        ("本次权益分派", "拟将本次权益分派"),
+        ("三、", "讨论三、"),
+        ("二、", "讨论二、"),
+        ("二、", "二、其他事项"),
+    ):
+        if layout == "holder-object" and old == "二、":
+            continue  # The existing punctuated holder clause does not rely on metadata.
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    for dated in ("2011年3月25日下午", "2011年03月28日直接记入", "2011年3月28日。"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice + notice.replace("2011年3月25日下午", "2011年3月24日下午")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
 @pytest.mark.parametrize("weekday,listing", [(True, False), (False, True), (True, True)])
 def test_explicit_weekday_and_capital_listing_preserve_all_date_guards(weekday, listing):
     notice = NOTICE

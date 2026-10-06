@@ -1,5 +1,66 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 explicit holder-object source recovery — scoped partial
+
+U3/U4/U6/U7 source dependency: same shared guard now accepts declared
+`本次权益分派的对象`/exact`利润分配、转增股本的对象` heading and contiguous
+current-distribution two-date metadata. No issuer exception, guessed year/date,
+cross-page date, restricted-holder acceptance or next-session policy change.
+3RED→3PASS/95focused;137 raw rows retained54→65source-onlyPASS/83→72unresolved.
+Eleven new PASS;300036 advances diagnostic to SHARE_CREDIT but still rejects;
+125whole rows unchanged including54previousPASS/all ratio/fraction/sourcefields
+unchanged.300015 actual2010credit vs2011ex remains unresolved, never corrected
+by inference.000771/000818/300048/prior/fullaction/reference/cash gaps remain.
+
+[Current immutable source report, verifier and test receipts](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-object-sources/README.md)
+11payload seal`9672e2472ff49a98b6f219ffb71b78dca0344fe9824ae86b364760e4504f3b72`;
+276currentbindings/reversedqueue/immutable repeat verified;17oldproofpayloads
+preserved. Authorized independent readonly reviewer verified134PDF/cache bindings
+and11newclauses, no evidencedscopedP1/P2; did not run tests/approve economic admission.
+Full1289backend+1optionalarchiveSKIP20.49s/Ruff556/mypy145/isolatedtmpfsquant_test
+head-base-head/checkPASS. Copied frontend163current sources match,4deploymentfiles
+absent/not tested:715PASS45files17.11s/lint/type/build182ms/audit0/PrettierPASS,
+522kB chunk warning retained, not performancePASS. Initial filename/format/readiness
+errors preserved. Own newcommit/CI pending; priorcd108CI is not newdiff coverage.
+
+No additional acquisition, economic event/dataset admission, original appDB
+migration/service restart/recreate/oldfailedjob retry/account/order/provider/study
+or OOS action. Existing app remains usable; scratchNode/PG stoppedretained;
+liveDBreadonly0016. Frozenmanifest/tag/.research unchanged. No new frontendcode
+or browserfinancial claim. Full U1–U8/M0–M5 remains IN_PROGRESS, not release approval.
+
+## 2026-10-07 exact copy-fix CI, controlled errors and runtime safety
+
+Owncd108e822d258aceedb33f3e6232571374fc6e3c CI37532781861 all3jobs/every step
+SUCCESS completed21:19:54Z, samewatch26411terminal0. HEAD==origin==OPEN/DRAFTPR32head
+verified. Hosted1286backend+1optional archiveSKIP38.62s/715frontend45files111.06s,
+lint/types/format/build, isolatedAlembicup-down-up/check and releaseimage smokePASS.
+This supersedes pending-CI text of the earlier local copy checkpoint; failures
+and original source/quality proofs retained, no rerun/merge/tag/release.
+
+Actual Chrome154 currentlocal5173 compiledwizard/ProductError: controlled capability
+GET403/408/offline displays corresponding EN/ZH advice, not task-submission advice.
+ENdark1440×900/ZHdark390×844 no overflow(document375); remove fixture then Enter on
+actual app Retry returns originalstep2 and focuses persistent wizardH1. Exactcash/
+dates/costrisk/9versions preserved, zero API writes attempted. FailureGET3/3/4
+spans shell/workbench/wizard; fourth retained, one observed recoveredGET/case.
+Separate QAHTML prohibits writes, normalindex unaffected; finalreload fixture0/
+step2/EN/dark restored, viewportreset/tabclosed, servedfixture hashchecked then
+recoverably moved outsidewebroot. Real services never shut down: simulated408
+does not prove actual15second abort; not native200/fullAA/p95/financial/wholeproduct.
+[Current controlled browser cases and exact CI](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-wizard-errors/README.md)
+11payload seal `fcd80e195ac3b892dafccd0f31bb6f17ac9e41d67b5853d4b7f59c745aec0954`.
+
+Fresh runtime check sharpens original deployment block: existingbackend /app and
+readonly frozenresearch readable/hosthashmatched/0017filepresent, but a unique
+no-network/read-only-root/all-inherited-mountsRO cachedimageprobe exited1 with empty
+new /app/missingresearch. Read-only liveDBversionSELECT=0016. Do NOT restart/recreate
+originalbackend/frontend: existingmount visibility is not fresh-container safety.
+OriginalPGRedisbackendhealthy/frontendAPI200paper retained; no DBmigration/restart.
+[Actual readonly mount failure/inspection](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-runtime-bind-recheck/README.md)
+4payload seal `be2e7da35742c37e402b9e9af7435aabb162c7ad01461886978c9cde34f71d67`.
+Full U1–U8/M0–M5 stays incomplete; these are precise scopes, not release approval.
+
 ## 2026-10-07 conditional task durability and wizard quality — scoped partial
 
 U3/U8/M4: actual English confirmation falsely claimed server persistence before
@@ -32,7 +93,8 @@ no browser-settings/security workaround. Scope is not full U1–U8/M0–M5 accep
 [Actual screenshots, raw native control and runnable verifier](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-wizard-quality/README.md).
 116payload seal `9024a068446ede2add0aefb8e04a5a1bac67718a095e5344d5583d65efe81a43`.
 Backend unchanged: prior1286+optional archiveSKIP/disposable0017 checks retained.
-New copy commit ownCI pending; prior8caCI is separate. OriginalPGRedisbackendhealthy/
+New exactcopycd108 CI37532781861 now all3jobs/every stepPASS, separately recorded
+above; original precommit pending state remains historical. OriginalPGRedisbackendhealthy/
 RedisPONG/frontend&API200paper; scratchPG/nodeSTOPPEDretained. No appDBmigration,
 research/account/order/provider action, frozen/formal/OOS modification or release.
 
