@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 official correction and supplemental oracle — scoped source pass
+
+U3/U4/U6/U7 financial-source dependency: official300048/合康变频 implementation
+2011-020 and correction2011-021 explicitly establish corrected record2011-03-25,
+ex/cash-pay/declared-listing2011-03-28. Original dates are not guessed from price,
+publication or2015 retrospective text. Correction/holder/unrestricted/reference
+integration remains pending; no original failed job retry or financial admission.
+
+All192 cached monthly sources/23682rows revalidated; this surface has no2011
+ChiNext rows. Independent official CSDCC2011 yearbook is coverage-only, not PIT
+event authority. CLI preserves all484 section4.11B rows and137 raw code-shaped
+gaps absent old7407 oracle. v4 retains134 dated official-source leads,1 correction
+chain found-not-integrated,2 unresolved dated sources. Existing PITmaster136
+matches/1 unresolved raw000771/杭汽轮B, never silent A/B or code conversion.
+Prefix3=134/prefix0=3 is not an instrument classification. 000818 management
+equity-adjustment lead is retained unresolved; all other action classes remain.
+
+Independent read-only review closed threeP2s: silent Unicode-boundary row loss,
+malformed comma-number normalization, prefix-as-instrument statistics.16module
+tests; final full1268backend+1existing optional archiveSKIP20.06s/Ruff/mypy pass,
+exact153source Node24 frontend713/45files17.11s/linttypesbuild161ms/audit0.
+Disposablequant_test prior17-migration up/down/up and fresh0017current/check pass;
+no applicationDBmigration/restart. Earlier fresh-tmpfs schema failure and wrong
+working-directory commands retained as failures, not hidden.
+
+[Source facts, screenshots, scoped review and receipts](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-300048-source-recovery/README.md).
+40payloads sealed SHA256 `16b13392bef3154dc08d612cd282e41a1a37e4b0aae774f697978f3d2d742a19`,
+486 bindings verified. Coverage-v4 canonical `becdc871d39b685bd9f546d579dbae947b6cfc9a1a5fe333fa619c2fa430ee73`;
+queue-v4 `b907203d56afb76f761ccb08b6ebda21cd8aa0ab0eb45a9f90e035bceab88e32`.
+Old versions/frozen/tag/.research unchanged, no event/dataset/strategy admission.
+OwnscratchPG/node IDs verified thenSTOPPED/retained; originalPGRedisbackendhealthy,
+RedisPONG/API8000HTTP200/frontend5173HTTP200. New milestone exactCI pending;
+parent97f8 success is not its CI. Fullmandatory U1-U8/M0-M5 remains incomplete.
+
 ## 2026-10-07 observed personal-failure diagnostics — scoped pass
 
 U3/U8/M4: new held-reference failures preserve the actual session date and sorted
@@ -27,7 +61,16 @@ Forty payloads sealed with manifest SHA256
 Final repeat retained the same counts (backend25.26s/frontend19.05s); disposable
 Alembic current/check passed. Owned QA API and three exact scratch containers
 stopped/retained after receipts saved; original services and local UI remain usable.
-New exact commit/CI pending; parent 7ab CI is not coverage for this later diff.
+Own `97f8e4398b5a1803b0606a357fd40d44514bf184`
+[CI37518515391](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37518515391)
+all three jobs/every step SUCCESS, completed 2026-10-06T19:25:26Z; same watch11219
+terminal0. HEAD=origin=PR32head, OPEN/DRAFT. Supplemental actual failed-detail route
+16-case EN/ZH × light/dark × four required viewport sizes has no page overflow,
+main controls42/44px and unknown explanation retained; preferences/reset/tab cleanup
+verified. [Twenty supplemental receipts](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-failure-responsive/README.md)
+seal `8ff96552507c9280cd3545038bb0836715cc7d0d2b09c0c84a410a57605d32ba`;
+previous forty payloads reverified unchanged. No full AA/native zoom/p95/all-route
+claim. Later checkpoint docs local for the next meaningful source milestone.
 Backend deployment still requires genuine WSL integration restoration. Full U1–U8,
 M3–M5, financial/source completeness, lawful forward and genuine lost-ledger recovery
 remain incomplete; no merge/tag/release or full AA/native-200%/p95 claim.

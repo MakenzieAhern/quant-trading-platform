@@ -1,5 +1,28 @@
 # Decisions
 
+## v1.2 completeness oracle must retain omitted identities — 2026-10-07
+
+An independently recovered official300048 correction proves that closing only
+the prior7407 bonus identities cannot establish full action coverage. Reuse
+cached192 monthly files/23682rows and targeted contemporaneous originals; this
+surface has no2011ChiNext rows. Add one official2011 retrospective CSDCC yearbook
+as coverage oracle only, never as effective-date/holder/unrestricted/PIT authority.
+All484 rows parsed fail-closed; preserve137 absent raw code-shaped candidates.
+
+Actual original/correction PDFs explicitly fix2010 typos to2011. Do not globally
+replace years, mix before/after text, weaken publication guards or infer from prices.
+134 cached date-matching leads are not accepted events;1 correction still awaits
+chain integration and2 dates remain unresolved. Prefix labels cannot establish
+instrument identity: v4 binds136 accepted PITmaster intervals and explicitly
+retains raw000771杭汽轮B unresolved, with no code correction or exclusion.
+
+Three reviewedP2s repaired centrally,16module tests and1268backend+1optionalSKIP/
+713frontend/fullchecks pass; independent final review scoped no evidencedP1P2.
+External40payload seal16b13392/486bindings; oldv1-v3/frozen/.research preserved.
+No financial admission, formal study, appDBmigration/restart, merge/tag/release.
+Resume source-chain/reference/holder/fullaction reconciliation in separate version;
+do not replace remaining product U1-U8/M0-M5 with a narrower oracle pass.
+
 ## v1.2 preserve observed failure context, never infer old facts — 2026-10-07
 
 The shared guard previously retained only a stable error code. Add actual session
@@ -16,7 +39,11 @@ actual graceful QA API restart proves already committed context survives, not th
 uncommitted crash gap. Read-only reviewer found no evidenced scoped P1/P2.
 Compatible UI is served at local5173; original backend/app database not migrated or
 restarted while WSL bind is broken. Source evidence and financial acceptance remain
-distinct. New own CI pending; v1.1/frozen/formal/OOS untouched, goal remains active.
+distinct. Own97f8 CI37518515391 all jobs/steps SUCCESS; PR32 OPEN/DRAFT, no merge
+or release. Further real failed-detail16-case responsive evidence is scoped to
+this route, not full AA/native200/p95/financial coverage. v1.1/frozen/formal/OOS
+untouched, goal remains active. Continue cached300048 contemporaneous source
+closure toward separate new-version financial admission, never old-date inference.
 
 ## v1.2 exact own CI is not WSL or financial completion — 2026-10-07
 
