@@ -211,6 +211,51 @@ def test_legacy_headings_keep_explicit_holder_credit_and_unrestricted_listing(
         )
 
 
+@pytest.mark.parametrize(
+    "listing",
+    [
+        "本次所送(转增)股的无限售条件流通股的起始交易时间为",
+        "本次所送(转)的无限售条件流通股的起始交易日为",
+        "本次(转增)股的无限售条件流通股的起始交易时间为",
+        "新增股份起始交易日本次所转增无限售条件流通股的起始交易日为",
+        "转增流通股上市日本次所转增的无限售条件流通股的起始交易日为",
+    ],
+)
+def test_parenthetic_listing_aliases_require_complete_non_tentative_dates(listing):
+    notice = NOTICE.replace("本次转增的无限售条件流通股的起始交易日为", listing)
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        (listing + "2011年3月28日", listing + "2011年3月29日"),
+        (listing + "2011年3月28日", listing + "2011年2月30日"),
+        (listing + "2011年3月28日", listing + "3月28日"),
+        (listing + "2011年3月28日", listing + "2011年3月28"),
+        (listing, "预计" + listing),
+        (listing, "计划" + listing),
+        (listing, "拟上市" + listing),
+        (listing, listing.replace("本次", "计划本次")),
+        (listing, listing.replace("本次", "讨论本次")),
+        ("无限售条件", "有限售条件"),
+        ("本公司全体股东", "本公司控股股东"),
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        # Incomplete credit cannot borrow the complete listing/cash date (002299).
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    first, second = notice.rsplit("2011年3月28日", 1)
+    with pytest.raises(ValueError):
+        same_day_listing([first + "2011年3月", "28日" + second], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice + notice.replace(listing + "2011年3月28日", listing + "2011年3月29日")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
 def test_same_day_requires_same_final_issuer_holder_credit_and_listing():
     assert same_day_listing([NOTICE], "600000", TITLE, RECORD, EX) == EX
     with pytest.raises(ValueError, match="FINAL_ISSUER"):
@@ -393,7 +438,7 @@ def test_opt_in_reconciliation_is_immutable_and_preserves_default_schedule(tmp_p
         )
     }
     event = accepted["events"][0]
-    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V8"
+    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V11"
     assert event["event"]["listing_date"] == EX
     assert event["event"]["share_ratio"] == "1.000"
     assert not event["scheduled_listing_not_actual_tradability"]

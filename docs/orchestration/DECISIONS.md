@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 explicit parenthetic listing aliases and declaration boundaries — 2026-10-06
+
+Full cached final002379/002396/002481 sources have complete all-holder credit
+and explicit unrestricted listing dates under 起始交易时间, (转增)股 and 送(转).
+Expand shared opt-in lexical alternatives only; default next-session unchanged.
+2RED then20focusedPASS. Independent planned-parenthetic P2 reproduced1RED;
+bound all 本次 listing declarations and reject parenthetic planned-action prefixes.
+First stricter boundary dropped2old valid exact-heading clauses; preservation
+assertion failed and remains evidence. Read full002342/002344 cached notices,
+test exact 新增股份起始交易日/转增流通股上市日 headings without unbounded gaps.
+FinalV11 23focusedPASS; V9/V10 candidates NON-ACCEPTED. Immutable ledger-v3
+73sourcelegs/142,69unresolved,7265outside;old70fields exact exceptV8->V11/checksum,
+4dependencies unchanged. Five complete dates/issuer/source/class/lifecycle/
+integral/page/conflict guards retained; no inferred missing002299日.
+72referencePASS/1UNRESOLVED000598 strict cash mismatch remains; unchanged
+auditor/repeat bytes/reversed input. No financial census/dataset admission.
+1202backend/1existing optional archiveSKIP20.00s/lint/types/reversible tmpfs
+testDBPASS. Fresh ownership checks, readiness before same checker restart,
+PGstopped afterward; no original businessDB, deletion/config/security changes.
+Frontend unchanged; prior666/lint/types/independentbuild/exact291CI reused,
+not a new local frontend or browser run. Final independent read-only source/
+caller/docs/proof review no boundedP1P2; exact newCI pending.
+Full U1-U8/M0-M5, economic admission and external lawful-forward/lostledger remain.
+
 ## v1.2 explicit legacy headings and tentative-date refusal — 2026-10-06
 
 Full cached002341/002093/002132 official text has complete explicit holder

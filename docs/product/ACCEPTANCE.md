@@ -9737,6 +9737,11 @@ pending-CI text above is precommit chronology. Later legacy changes need own CI.
 
 ## 2026-10-06 explicit legacy headings and tentative refusal (bounded U3/U5/U6 prerequisite)
 
+Post-commit: exact2912477 [CI37426737408](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37426737408)
+backend/frontend/ComposeSUCCESS2026-10-06T07:00:24Z. PR32OPEN/DRAFT;
+27-payload proof sealedf1d45ea1df1d9d3bc10ffe761e802ba32e171592bf6195992c553739a9b805f7.
+Pending-CI wording below is precommit chronology, not current CI status.
+
 Three full cached final official notices002093/002132/002341 reviewed. Shared
 opt-inV8 recognizes exact权益分配/numbered holder headings, standalone capital
 credit and unrestricted listing-table date with explicit field/method boundaries.
@@ -9764,3 +9769,36 @@ review no remainingP1P2, final hashes/logs/limits verified;newexactCI pending.
 
 Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-legacy-headings/README.md>).
 Full U1-U8/M0-M5/financial admission/forward/genuine missing-ledger gates remain.
+
+## 2026-10-06 parenthetic listing aliases (bounded U3/U5/U6 prerequisite)
+
+Full cached002379/002396/002481 final notices read; explicit complete-date
+unrestricted listing 起始交易时间/(转增)股/送(转) aliases only.2RED→20focusedPASS;
+independent planned-parenthetic P2 reproduced1RED, fixed shared planned guard
+and declaration boundaries. Overstrict first boundary lost2old valid exact
+heading cases: preservation assertion FAILED and kept, full002342/002344 sources
+read, exact heading variants tested. FinalV11 23focusedPASS, V9ledger-v1 and
+V10ledger-v2 NON-ACCEPTED; separate immutable finalledger-v3 canonical
+f595dd848621a9e05c3fe5cf83ac1cc17dd6f2a14b07f295b460f5ebf84750c9,
+bytes6130a60580a3cb3dfcf15db8becb080b8cf8b81c8bd421654b4d4d690718302b.
+73sourcelegs/142,69unresolved,7265outside; old70fields exact exceptV8→V11/checksum,
+4dependencies unchanged/default schedule unchanged/immutable repeat succeeds.
+No missing-date, pagejoin, holder-class or fractional shortcut.
+
+Unchanged reference auditor/full accepted cashv32:72scopedPASS/1UNRESOLVED000598,
+canonical1b07d1e59abb05e1549a22a56f6627369a11dbb5af1f70945ecd4e6ed98faa71;
+repeat stdout/reversed order equal. Strict cash mismatch remains; not full
+financial acceptance, economic census, dataset creation or execution admission.
+Fullraw53date gaps43holder/3credit/5listing/2record-ex; diagnosis not acceptance.
+FinalV11 1202backend/1existing optional archiveSKIP20.00s/Ruff548/mypy145/
+tmpfs testDB head-base-head-checkPASS. V9full1199/20.06s is chronology only.
+Fresh owned PG/network/checker inspected; waitready before tests, PGstopped after.
+Originalfour services preserved; no reset/prune/deletion/config/security change.
+Frontend unchangedtree5fa96199caa8a6493ee4c0551b8d4e4270e1766d; reuse prior666/
+lint/types/independent build/exact291frontend CI, not a new local frontend run.
+Existing regular-dist EACCES/519.13kB limitation unchanged; no UI/new browser claim.
+Final independent read-only source/caller/docs/proof review no boundedP1P2;
+exact newCI pending. Reviewer did not run tests/DB/network or write files.
+
+Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-listing-aliases/README.md>).
+Full U1-U8/M0-M5/economic admission/forward/genuine missing-ledger remain.

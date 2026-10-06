@@ -1,9 +1,32 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T06:49:00Z",
+  "updated_at_utc": "2026-10-06T07:13:21Z",
+  "retained_listing_aliases_20261006_gate": {
+    "status": "PASS_SCOPED_LOCAL_NEW_CI_PENDING",
+    "review": "Independent finalV11 read-only source/caller/docs/proof review no boundedP1P2; V9planned-parenthetic counterexample closed, exact-heading restoration preserves old70 without unbounded matching; final hashes/logs/limits verified. Reviewer ran no DB/network/writes. NewexactCI pending; not full financial/product certification.",
+    "source_base": "29124771d947d0f1dc61fb536497912b17f50673",
+    "candidate": "/home/yuchen/data/product-candidates/20261006-bonus-listing-aliases/ledger-v3.json",
+    "manifest_sha256": "f595dd848621a9e05c3fe5cf83ac1cc17dd6f2a14b07f295b460f5ebf84750c9",
+    "bytes_sha256": "6130a60580a3cb3dfcf15db8becb080b8cf8b81c8bd421654b4d4d690718302b",
+    "closure": "Full cached002379/002396/002481 final official text read. Exact parenthetic transfer/listing-time aliases only; all five explicit dates/source/class/lifecycle/integral/page/conflict guards retained. FinalV11 73sourcelegs/142,69unresolved,7265outside; old70fields exact exceptV8->V11/checksum,4dependencies unchanged, default unchanged. Not financial census/admission.",
+    "failure_fix": "2initialRED->20focusedPASS. Independent planned-parenthetic P2 reproduced1RED/2PASS; tentative guard expanded and all 本次 listing declarations bounded. V10 overstrict boundary lost2old valid exact-heading clauses; preservation assertion failed, failure retained. Full002342/002344 cached sources reviewed, exact新增股份起始交易日/转增流通股上市日 headings tested. Final23focusedPASS. V9ledger-v1/V10ledger-v2 retained NON-ACCEPTED; finalV11ledger-v3 separate immutable.",
+    "reference": "72PASS_SCOPED_REFERENCE_INPUT_RELATIONSHIP/1UNRESOLVED000598 strict cash mismatch remains. Final canonical1b07d1e59abb05e1549a22a56f6627369a11dbb5af1f70945ecd4e6ed98faa71/repeated stdout/reversed equal. Preservation894aca96d83110addb25afa137cc0beb9912b9a3f63ba23f41577c18dc15bb74/immutable repeat succeeds. No cash authority/assertion relaxation, dataset or economic admission.",
+    "tests": "FinalV11 1202backendPASS/1existing optional archiveSKIP20.00s/Ruff548/mypy145/reversible tmpfs testDB head-base-head-checkPASS. Earlier V9full1199/20.06s chronology only. Frontend unchangedtree5fa96199caa8a6493ee4c0551b8d4e4270e1766d; reuse actual666/44files14.06s/lint/types/independent build/exact291frontendPASS, not new local frontend run. Existing EACCES regular-dist/519.13kB limits unchanged.",
+    "residual": "FinalV11 full raw53date failures43holder/3credit/5listing/2record-ex saved, canonical93d82a34b526cf8e536a71a579561d3c38f13c33027c524d7700b43dd4ea337f. One already-unresolved source now fails stricter listing before ratio; no acceptance from diagnosis.002006missinglisting/002299missing日/000598cash mismatch remain.",
+    "ownership": "Root solewriter; independent agent readonly. Fresh own stoppedtmpfsPG/no mounts/no ports/empty ownednetwork inspected, reused with same exited checker only after pg_isready success. Initial readiness noresponse observed without starting checker; bounded samePG observation succeeded. Finalcheckerexited0/PGstopped. No new network/prune/delete/config/security changes, originalfour services healthy/up.",
+    "evidence": "product-evidence/v1.2/m4/20261006-bonus-listing-aliases/README.md",
+    "preservation": ".research/frontend diffempty/v1.1f88b5c6 unchanged. No original businessDB/queue/account/provider/formal/OOS/strategy or frozenchange/datasetadmission/merge/tag/release. No UI change/new browser/full financial/product claim. Full U1-U8/M0-M5 and lawful after-start forward/genuine missingledgers remain.",
+    "next": "Independent finalV11 source/caller/evidence review; commit/push coherent shared parser/tests/provenance/decision/checkpoint with prior exact291CI receipts, verify newexactCI, seal proof. Then43holder/3credit/5listing/2record-ex plus economic/provenance census/new-version admission/U3/U5/U6/AA/native200/p95/delivery. No implicit dates or class/fraction shortcut."
+  },
   "retained_legacy_headings_20261006_gate": {
-    "status": "PASS_SCOPED_LOCAL_INDEPENDENT_PENDING_EXACT_CI",
+    "status": "PASS_SCOPED_EXACT_291_CI",
+    "committed_source": "29124771d947d0f1dc61fb536497912b17f50673",
+    "ci_run": 37426737408,
+    "ci": "Exact291 backend/frontend/ComposeSUCCESS2026-10-06T07:00:24Z; job/step JSON saved/watch3703terminalexit0. Initial runlistHTTP502 preserved then samecommit live/terminal verified. PR32OPEN/DRAFT. Not financial/product acceptance.",
+    "evidence_payloads": 27,
+    "evidence_manifest_sha256": "f1d45ea1df1d9d3bc10ffe761e802ba32e171592bf6195992c553739a9b805f7",
+    "post_ci_checkpoint": "Only state/acceptance exactCI/seal/next-source receipts are local uncommitted; join next coherent source milestone, not per-receipt pushes. Source291head==origin; no source/UI changes after exactCI.",
     "review": "Independent finalV8 bounded source/caller/docs/proof review no remainingP1P2; reviewed预计/计划 false acceptance closed. Source/candidate hashes/fulltests/reference/residual/failure chronology verified;newexactCI pending. Not full financial/product certification.",
     "source_base": "8d777b065acd40e0580acfb3d8073fea95630666",
     "candidate": "/home/yuchen/data/product-candidates/20261006-bonus-legacy-headings/ledger-v3.json",
@@ -17,7 +40,7 @@
     "evidence": "product-evidence/v1.2/m4/20261006-bonus-legacy-headings/README.md",
     "ownership": "Root onlywriter; currentps no competing tests/research/CIwatch/Gitwriter. Own stoppedtmpfs7d4e289e/network reused after fresh checks, fullbackendf04a3906 exited0 then PG stopped afterexactinspect. No prune/delete/config/security changes;originalfourservicesup/healthy.",
     "preservation": ".research/frontend diffempty/v1.1f88b5c6 unchanged. No originalbusinessDB/queue/account/provider/formal/OOS/strategy, frozenchange/datasetadmission/merge/release. Full U1-U8/M0-M5/external lawfulforward/genuine missingledgers remain.",
-    "next": "Finish independent P2fix/final evidence review, coherent commit/push/exactCI/seal. Then remaining source/economic provenance census/new-version execution admission and full product user-flow/a11y/performance/delivery. Do not force PASS from70 sourcelegs or69 reference rows."
+    "next": "Exact291 CI and27-payload seal verified. Full cached002379/002396 read: explicit listing起始交易时间/(转增)股的 and送(转) aliases. RED-test batch these exact terms with all date/scope/tentative/page/source guards before repair; never infer002299missingcredit日. Remaining economic/provenance census/new-version financial admission/full U1-U8/M0-M5/a11y/performance/delivery remain, no forced PASS from70sourcelegs/69reference rows."
   },
   "retained_weekday_listing_20261006_gate": {
     "status": "PASS_SCOPED_EXACT_8D_CI",
@@ -2670,7 +2693,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "FinalV8 legacy-headings/source-boundary local70sourcelegs/72unresolved; old67 preserved except opt-inversion. Finish independent root-cause/evidence review, coherent commit/push/exactCI and seal. V6/V7 intermediate receipts NON-ACCEPTED retained; each预计/计划 P2 actual3RED, bounded declaration repair18GREEN/full1197backend. Reference69PASS/1UNRESOLVED000598 strictcash mismatch remains.55date gaps43holder/3credit/7listing/2record-ex; review fullsources before nextbatch. Docker address pools exhausted, reuse only own freshly inspected stopped tmpfsPG/network, waitready, stop aftertests;no prune/delete/configchange. Full economic/provenance census/new-version financial admission/selectedID+SHA U3/U5/U6/full U1-U8/M0-M5/AA/native200/p95/delivery remain. Lawful after-start forward/genuine missingledger evidence external;no merge/tag/release until mandatory gates pass.",
+  "next_task": "FinalV11 listing-alias candidate73sourcelegs/69unresolved,72referencePASS/1UNRESOLVED000598 strictcash mismatch.23focused/1202backend1optionalarchiveSKIP/lint/types/reversible tmpfs testDBPASS. Independent planned-parenthetic P2 and overstrict boundary preservation failure repaired; V9/V10 candidates NON-ACCEPTED. FinalV11 review, coherent commit/push with prior exact291 receipts, exactnewCI and evidence seal next.53date failures43holder/3credit/5listing/2record-ex plus full economic/provenance census/new-version financial admission/U3/U5/U6/full U1-U8/M0-M5/AA/native200/p95/delivery remain. Dockerpool exhausted; reuse only own fresh-inspected stoppedtmpfsPG/network/waitready/stopafter;no prune/delete/configchange. Lawful after-start forward rights/genuine missingledgers external. No merge/tag/release until mandatory gates pass.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
