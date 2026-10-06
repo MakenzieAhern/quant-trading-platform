@@ -25,6 +25,42 @@ NOTICE = (
 )
 
 
+@pytest.mark.parametrize(
+    ("credit", "listing"),
+    (
+        ("本次所转增股份", "本次所转增"),
+        ("本次所(转增)股", "本次所(转增)"),
+        ("本次所送(转增)股", "本次所送(转增)"),
+    ),
+)
+def test_same_day_retained_notice_wording_keeps_all_dates_and_holder_scope(credit, listing):
+    notice = (
+        NOTICE.replace("本次权益分派对象", "本次分派对象")
+        .replace("本次转增股", credit)
+        .replace("本次转增的无限售", listing + "的无限售")
+        .replace("证券账户", "证券帐户")
+    )
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("本公司全体股东", "本公司控股股东"),
+        ("无限售条件", "有限售条件"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+        ("起始交易日为2011年3月28日", "起始交易日待定"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    # A conflicting alternative wording is still an official-date conflict.
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [NOTICE + notice.replace("2011年03月28日直接记入", "2011年03月29日直接记入")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
 def test_same_day_requires_same_final_issuer_holder_credit_and_listing():
     assert same_day_listing([NOTICE], "600000", TITLE, RECORD, EX) == EX
     with pytest.raises(ValueError, match="FINAL_ISSUER"):
@@ -207,6 +243,7 @@ def test_opt_in_reconciliation_is_immutable_and_preserves_default_schedule(tmp_p
         )
     }
     event = accepted["events"][0]
+    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V2"
     assert event["event"]["listing_date"] == EX
     assert event["event"]["share_ratio"] == "1.000"
     assert not event["scheduled_listing_not_actual_tradability"]

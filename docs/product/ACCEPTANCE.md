@@ -9560,6 +9560,11 @@ backend, frontend and Compose all succeeded. PR #32 remains draft/open.
 
 ## 2026-10-06 selected-version visibility and runtime recovery (bounded U3/U8/M4)
 
+Post-commit receipt: exact09d2e10 [CI37419316569](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37419316569)
+passed backend/frontend/Compose.74-payload external pack sealed SHA256
+f3f5cad9dd337f8416fb01a3dddcee8d73b282a2698949797f5354f1b0c3b4bf.
+Precommit statements below remain historical, not a new pending-CI assertion.
+
 Actual Chrome on the configured localhost5173 app reproduced a native mobile
 select truncating the full dataset ID. The wizard now shows a wrapping selected
 ID beneath the control and includes it in the accessible description; validation
@@ -9593,3 +9598,26 @@ Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/pro
 under the local Windows workspace (not stored in Git). Full U1–U8/M0–M5, new
 economic-version admission, AA/native zoom/performance, lawful after-start
 forward receipts and genuine missing ledgers remain required. No merge/release.
+
+## 2026-10-06 retained official wording (bounded U3/U5/U6 prerequisite)
+
+Observed same-day final-notice spellings now pass existing strict date/holder/
+issuer/unrestricted-listing/source/lifecycle guards. New ledger-v2:55 accepted
+integer share legs,87 unresolved of142 and7265 outside. Source acceptance is
+not full economic completeness. Cash CLI stale-policy failure preserved;
+only exact original/published v1.1 policy bytes accepted, byte edits rejected.
+Existing cash parser reused:916 old event objects exact,214 new source reconciled,
+57 unresolved. No download or policy/frozen-data change.
+
+Initial reference54PASS/1missingcash002376 retained. New input closes55 scoped
+reference relationships with officialHTML/PDF/PITmaster/calendar/rules/raw hashes,
+reversed input and repeat-byte checks. Canonical reference report
+91f114e438dd97d3ec0e9bb70335a246620c440fa73a7be98460f1cf68171513.
+1185backend/one optional archiveSKIP19.48s, Ruff548/mypy145 and ownedtmpfs
+quant_test base/head/check pass; testPG stopped. Frontend unchanged from
+caption666/exact09d CI; new exactCI pending commitment. Independent five-file
+source/final evidence review noP1P2. No UI change/new browser claim, dataset
+creation/admission/strategy run or full financial acceptance.
+
+Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-notice-wording/README.md>).
+All mandatory product gates remain; no merge/release.

@@ -591,6 +591,15 @@ def verified(path):
     return content
 
 
+def require_approved_cash_policy(path):
+    # Exact approved bytes only: original catalog and published v1.1 revision 3.
+    if sha256_file(path) not in {
+        "8e4269e5b62a7a738e4e46a0f0caada47fe07af98b482ae3f81fd946cf759c79",
+        "f7c959ea29bbb6aa1e712ff897947d2cfb2932506ace2e2bef1ce567aec9a754",
+    }:
+        raise ValueError("APPROVED_CASH_POLICY_CHANGED")
+
+
 def exchange_cash_amounts(sse, szse):
     exchange = defaultdict(set)
     for group in sse["groups"]:
@@ -831,11 +840,7 @@ def main():
         policy = (
             Path(__file__).resolve().parents[2] / ".research/corporate_action_policy_matrix_v1.json"
         )
-        if (
-            sha256_file(policy)
-            != "8e4269e5b62a7a738e4e46a0f0caada47fe07af98b482ae3f81fd946cf759c79"
-        ):
-            raise ValueError("APPROVED_CASH_POLICY_CHANGED")
+        require_approved_cash_policy(policy)
         by_symbol = defaultdict(list)
         for member in members:
             by_symbol[member["symbol"]].append(member)

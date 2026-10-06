@@ -1,5 +1,24 @@
 # Decisions
 
+## v1.2 reuse retained notice wording and published cash policy — 2026-10-06
+
+Expand only observed final same-day notice spellings (所转增股份, 所(转增)股,
+所送(转增)股, 分派对象 and 帐户). Keep all five explicit date/holder/listing
+checks, issuer/final-title/source/lifecycle and integral-component guards.
+Opt-in candidate source version is V2; default next-session policy unchanged.
+Existing cash parser reads missing002376 gross0.30. Its CLI failed on a stale
+policy checksum: allow only original exact bytes and published v1.1 revision3
+exact SHA, independently verified against the tag. Frozen policy unchanged.
+
+New external immutable candidate:55 accepted share legs/142,87 unresolved,
+7265 outside. Cash recheck reuses916 rows and preserves916 event objects
+exactly;214 newly parsed,57 unresolved. Initial reference54/1 retained;
+new cash input closes55 scoped relationships with repeat/reversed equality.
+Not full financial execution/census/dataset admission/release.1185 backend/
+one optional skip, lint/types and scratch reversible migrations pass; final
+independent read-only source/evidence review noP1P2. Full product scope and
+external rights/genuine lost-ledger requirements remain.
+
 ## v1.2 keep selected dataset identity readable on mobile — 2026-10-06
 
 Actual settled Chrome showed the native 390px data-source select truncating the

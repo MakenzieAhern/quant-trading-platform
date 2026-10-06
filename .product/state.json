@@ -1,9 +1,27 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T05:32:43Z",
+  "updated_at_utc": "2026-10-06T05:50:39Z",
+  "retained_notice_wording_20261006_gate": {
+    "status": "PASS_SCOPED_LOCAL_PENDING_EXACT_CI",
+    "source_base": "09d2e10c9678a3d95d57073854e945b38f017003",
+    "candidate": "/home/yuchen/data/product-candidates/20261006-bonus-notice-wording/ledger-v2.json",
+    "manifest_sha256": "862d248652546c4ebce5bbb12e0c51440e92540553591323443c9a63029e43f4",
+    "bytes_sha256": "cf596f0149e8bfbe406b3464094af6e1ae67e986befc16cc88159444d7e8a518",
+    "closure": "Observed final notice spellings only;55 accepted integer same-day share legs/142,87 unresolved,7265 outside. All date/holder/source/lifecycle/integral guards retained. Default schedule unchanged, opt-in sourceV2. Not complete census/financial acceptance.",
+    "cash": "Existing gross_cash reads002376 gross0.30. Stale CLI policy pin repaired to allow only original exactSHA and published v1.1 revision3 exactf7c959...754. New immutable cash-ledger2011v2 canonicalb85061...be4e:1130accepted/57unresolved,916 old event objects exact,214 new. --prior reuses accepted rows, not fresh source audit;55 reference cases independently hash sources. No policy mutation.",
+    "reference": "Initial54/1missingcash retained. Final55PASS scoped reference inputs, canonical91f114e438dd97d3ec0e9bb70335a246620c440fa73a7be98460f1cf68171513; repeated stdout byteequal/reversed events equal. Not portfolio accounting replay or new dataset.",
+    "tests": "1185backend/1existing optional archiveSKIP19.48s/Ruff548/mypy145PASS. Ownedtmpfsquant_test Alembic base/head/checkPASS; scratchPG stopped without cleanup. Frontend unchanged from exact09d/666local; newCI pending. Setup/style failures retained.",
+    "review": "Independent readonly five-file review and final candidate/audit/old916 preservation/log recheck noP1P2. Root separate recheck. No UI change/new browser acceptance claimed.",
+    "evidence": "product-evidence/v1.2/m4/20261006-bonus-notice-wording/README.md",
+    "preservation": "Root sole writer; scratchDB only, original four services healthy/up. No businessDB/queue/account/provider/formal/OOS action. .research diffempty/v1.1f88b5c6 unchanged. No acquisition/dataset/admission/merge/release.",
+    "next": "Commit/push samePR32/exactCI. Continue87 unresolved cases/full economic provenance/immutable execution admission and all U1-U8/M0-M5; lawfulrights/genuine missing-ledgers remain external."
+  },
   "u3_selected_version_visibility_20261006_gate": {
-    "status": "PASS_SCOPED_LOCAL_AND_SETTLED_CHROME_PENDING_COMMIT_CI",
+    "status": "PASS_SCOPED_EXACT_09D_CI_AND_SETTLED_CHROME",
+    "committed_source": "09d2e10c9678a3d95d57073854e945b38f017003",
+    "ci_run": 37419316569,
+    "ci": "Exact09d backend/frontend/ComposeSUCCESS completed2026-10-06T05:37:46Z.74payload proof sealedSHA f3f5cad9dd337f8416fb01a3dddcee8d73b282a2698949797f5354f1b0c3b4bf.",
     "source_base": "13a464a53bb37a2ec6b6e444a439535347a50391",
     "defect": "Actual Chrome390 native selected option truncates full dataset ID. Reuse existing translated label and wrapping experimentTechnical caption; combine caption and existing validation descriptions without changing financial inputs or execution admission.",
     "tests": "Initial2RED preserved;81focusedPASS. Final666frontend/44files17.17s/lint/types/build/touchedPrettierPASS. Restored unavailable source focuses invalid select and retains both error/version descriptions in ENZH; no create call. Earlier664full retained separately; final519.13kB warning unchanged.",
@@ -12,7 +30,7 @@
     "preservation": "No business POST/retry/accountStart/provider/formal/OOS; same exact123456.789000000000001/dates20110104-0630/v1 and7named versions retained. Existing draft step0/ENdark/Saveexit/home restored, temporary viewport reset and owned tab closed. Frozen .research diffempty and v1.1f88b5c6 unchanged.",
     "evidence": "product-evidence/v1.2/m4/20261003-version-inspection/README.md",
     "review": "Independent readonly selected_version_review_oct6 two-file dirtydiff/log/settledEN390ZH1024JPEG review noP1P2; no edits/test/browser/DB/network. Root separate recheck also completed. Scopecaption only, not newfinancial/fullAA/productPASS.",
-    "next": "Commit/push same branch/PR32 and verify exactCI. Continue full economic/provenance remediation and mandatory U1-U8/M0-M5; no dataset promotion, merge/tag/release/full goal PASS."
+    "next": "Exact caption CI verified. Continue full economic/provenance remediation and mandatory U1-U8/M0-M5; no dataset promotion, merge/tag/release/full goal PASS."
   },
   "version_inspection_20261003_gate": {
     "status": "PASS_SCOPED_EXACT_13A_CI_AND_OCT6_RUNTIME",
@@ -1975,7 +1993,7 @@
   },
   "ownership": {
     "latest_verification": "2026-10-06T05:32Z root sole Git/docs/UI writer. FreshWSLps only root-owned frontend test94932 now exit0, no concurrent writer/research. AccountMakenzieAhern and exact13a branch/origin/PR32OPENDRAFT verified. Frozen .research diffempty/v1.1f88b5c6 unchanged. Originalfour servicesup/APIfrontend200/PONG after safe existingDesktop start. Final666frontend/81focused and settled caption Chrome scopedPASS; commit/CI next.",
-    "repository_writer": "root only; Oct6 selected-version caption/tests/checkpoint milestone. Existing same goal/task; selected_version_review_oct6 read-only source/artifact review terminal, no writer/test/DB/browser/network action.",
+    "repository_writer": "root only; Oct6 retained wording/cash policy compatibility milestone. Same goal/task; selected_version_review_oct6 read-only source/final evidence review terminal, no writes/test/DB/browser/network.",
     "database_writer": "Oct6 no businessDB POST/test/migration/account/provider/formal/OOS. Original containers auto-resumed after safe existingDesktop start; no forced backend/Compose restart/recreate/reset/deletion. Saved32API byteequal+1expected additivecapabilities versus completeOct3pre snapshot; scoped API only, not fullSQL/lostledger restoration.",
     "queue_writer": "Oct6 completeGET capture active0:11terminalstudies/5STOPPEDaccounts/4terminalupdates/3formal. No submit/retry/provider/accountstart; rootfrontend test94932 terminalexit0. Before any later action reread active jobs and exactprocess identity, historicalPIDs not authority.",
     "agents": {
@@ -1987,6 +2005,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-06T05:50Z retained notice closure55/142source+55reference scopedPASS/repeat. Cash1130accepted/57unresolved with916oldobjects exact and214new. Final1185backend/1optionalSKIP19.48s/Ruff548/mypy145; ownedtmpfsquant_test base/head/checkPASS/PGstopped. Independent readonly source/evidence noP1P2. Caption09d exactCI37419316569PASS. No newdataset/admission/financialPASS/merge/release; goalACTIVE.",
     "2026-10-03T00:13Z shared pre-session held-reference protection:97focused/1107backend+1optionalSKIP/643frontend/fullchecks, final8source independent noP1P2, actualoriginalChrome one newFAILED known-history task/noresult and ENZH cause, old10metadata/8results/formal/paper parity and originaldraft restored.73payloadSHA c0314b9a50e6ae08262c1fc0d419ddf68502ec512195713baf2fc68f19b27738. Not financialcompleteness; later-quality disclosures stillrequired.58filepriorreviewPASS_SCOPED with separate230wordingcorrection, no sealedrewrite.",
     "2026-10-02 23:51UTC newSZSE Decimal/source review yields actionable defect:002168 official1:1 share-distribution missing frozenactions, unresolved firstTradableDate, held100 across2011-03-28. Internal arithmetic passes but return/equity economic completenessPARTIAL; all originals preserved.58-payload proof sealedSHA12086932ace61cf47f0de986b399415ac63043dd40f21be028ca1cedd9dbf6e2; independent artifact review pending. Shared guard and later-quality report/export/plan disclosure required; all mandatory product scope retained.",
     "2026-10-02 23:42UTC U4 known old-execution disclosure closes locally49focused/642fullfrontend/fullchecks and six-source/53-file independent review; failed logs and nonpositive EN frames explicitly scoped. Exact8000CI37075854869 SUCCESS closes prior1096/626 three-fix milestone. Actual Chrome two new2011Mar SSE/SZSE jobs finished297/297, zero reference-ineligible SSEfills vs10constrained SZSEfills, negative returns retained. Old8metadata/6results/formal/paperlist parity; root restored original exact-cash draft. Detailed new accounting review and new commit/exactCI pending; full U1-U8/M0-M5/forward/ledger/AA/p95 remain required.",
@@ -2564,7 +2583,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Exact13a inspectionCI37090369827SUCCESS and Oct6runtime scopedparity verified. Finish coherent selected-version caption/test/checkpoint milestone666frontend/static/build/settledChrome, readonlyreview then commit/push PR32 and exactCI. No actualnewdataset/admission. Continue full economic/provenance closure/immutableSHA-bound executionreceipt before coherent selectedID/SHA U3/U5/U6 (U6literal unchanged); do not glob/promote2accepted/140unresolved/7265outside into fullFinancialPASS or narrow scope. Preserve frozen/formal/OOS and accepted acquisitions. All U1-U8/M0-M5/AA/native200/p95/fullflow/delivery required; afterstart forward requires lawfulrights, genuine lostledger requires backup. No merge/tag/release until mandatory gates pass.",
+  "next_task": "Caption09d exactCI37419316569PASS/sealed. Finish retained wording/current-approvedcash compatibility milestone1185backend/55reference cases, samePR32 commit/push/exactCI. Then continue87 unresolved same-day cases, full independent economic/provenance closure and immutableSHA-bound executionreceipt before actual new-version admission/selectedID+SHA U3/U5/U6.55accepted/87unresolved/7265outside is not fullFinancialPASS. All U1-U8/M0-M5/AA/native200/p95/delivery required; lawful after-start forward and genuine missing-ledger evidence remain external. Preserve frozen/formal/OOS, no merge/tag/release until mandatory gates truly pass.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
