@@ -9629,6 +9629,14 @@ All mandatory product gates remain; no merge/release.
 
 ## 2026-10-06 explicit cutoff/credit wording (bounded U3/U5/U6 prerequisite)
 
+Post-commit: exact655be12 [CI37422444497](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37422444497)
+completed SUCCESS2026-10-06T06:14:36Z for backend/frontend/Compose. PR32OPEN/DRAFT.
+26-payload external proof sealed4687d27ef6e4173c1dd280fd14d63ffc136f9e3d23b8f0a929f866d6070ef3ce.
+Below pending-CI statement is precommit chronology, not current CI state.
+65 remaining date failures of82 classified48holder/9credit/6listing/2record-ex
+in bounded read-only diagnosis; full underlying report is not in this pack.
+New source facts/aliases remain future work, not accepted events.
+
 Observed final holder 截止 and credit 转增的股份 variants pass unchanged strict
 five-date/holder/unrestricted-listing/source/issuer/lifecycle/component guards.
 New immutable opt-inV3 ledger:60 accepted share legs/142,82 unresolved and7265
@@ -9654,3 +9662,32 @@ This is local scoped evidence, not new exact CI/browser/AA/product acceptance.
 
 Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-cutoff-credit/README.md>).
 Full U1-U8/M0-M5 remain; no new dataset/admission/strategy/merge/release.
+
+## 2026-10-06 explicit holder/credit alias batch (bounded U3/U5/U6 prerequisite)
+
+Recognize only source-observed long explicit holder heading,送红股,
+资本公积金 credit prefix and记/计入 spelling. All five full dates/holder/
+unrestricted listing/conflict/page/source/issuer/lifecycle/integral guards remain.
+3newRED/3oldPASS retained, six parameter variants keep all old negatives plus
+cross-page-date rejection;17focusedPASS. Default next-session unchanged.
+New immutable opt-inV4 candidate65/142 accepted share legs,77 unresolved,
+7265outside;old60 event fields exact except source version. Repeat write succeeds.
+
+New002080/002101/002164/002351/002416 source bindings verified. Reuse full
+accepted cashv32:64scoped referencePASS/1UNRESOLVED000598, canonical
+2e70d7f0984736246f3299475badaf50df4da2af6beda4bc97e57834c226a200;
+repeat stdout/reversed order equal. Cash0.102064 versus exchangeDPS0.101 still
+not equivalent;002006 still lacks explicit unrestricted listing. No financial
+acceptance/dataset admission or asserted portfolio replay from source proof.
+
+1191backend/one existing optional private-archiveSKIP23.77s/Ruff548/mypy145
+and owned tmpfs quant_test head/base/head/checkPASS.666frontend/44files14.39s/
+lint/types/independent mktemp-output buildPASS,519.13kB warning retained. Known
+regulardist permission failure not retried or relabeledPASS. ScratchPG stopped
+without cleanup;originalfour servicesup. Independent read-only review noP1P2.
+Corrected diagnostic summary60date failures47holder/4credit/7listing/2record-ex;
+initial heuristic miscategorization preserved, not full raw diagnosis.
+New exactCI pending this coherent commit;no UI change/new browser claim.
+
+Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-holder-credit-aliases/README.md>).
+Full U1-U8/M0-M5/economic admission and external forward/lost-ledger gates remain.

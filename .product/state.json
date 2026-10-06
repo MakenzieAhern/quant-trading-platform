@@ -1,9 +1,28 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T06:10:00Z",
-  "retained_cutoff_credit_20261006_gate": {
+  "updated_at_utc": "2026-10-06T06:25:00Z",
+  "retained_holder_credit_aliases_20261006_gate": {
     "status": "PASS_SCOPED_LOCAL_PENDING_EXACT_CI",
+    "source_base": "655be1285e42befe4d71a663ed9543eed007c9d4",
+    "candidate": "/home/yuchen/data/product-candidates/20261006-bonus-holder-credit-aliases/ledger-v1.json",
+    "manifest_sha256": "ba3eca45bd392a3265d1e7faad42f40e44c8b80fba6917d1ecf77350370b4a15",
+    "bytes_sha256": "a7ae2d1a534f92a26eabe31ef1abca2e944845054cdb33a6bf686a2e3f49059c",
+    "closure": "Only explicit longholder heading,送红股/资本公积金 credit prefix and记/计入 lexical aliases.65accepted share legs/142,77unresolved,7265outside. Prior60 event fields exact except opt-in V3->V4;4dependencies unchanged. New002080/002101/002164/002351/002416;all5 explicit dates/holder/listing/source/lifecycle/integral guards retained. Default next-session unchanged. Not complete census/financial admission.",
+    "reference": "Reuse full accepted cashv32;64PASS_SCOPED_REFERENCE_INPUT_RELATIONSHIP/1UNRESOLVED000598 strict amount mismatch unchanged. Canonical2e70d7f0984736246f3299475badaf50df4da2af6beda4bc97e57834c226a200 repeated stdout/reversed events equal. Candidate immutable repeat succeeds. Preservation/sourcebinding reportf4ff406c3ded007d99d693e769c0c8efd15e9c6a2b8244dc3a06a47f05ac6c3c. No cash authority redo/assertion relaxation.",
+    "tests": "Initial3newRED/3oldPASS preserved;17focusedPASS.1191backend/1existing optional private-archiveSKIP23.77s, Ruff548/mypy145PASS. Owned fresh tmpfs quant_test head/base/head/checkPASS, full migration/test/check output captured.666frontend/44files14.39s/lint/typesPASS and independent mktemp outDir buildPASS,519.13kB warning unchanged. Known root-owned regulardist failure from prior unit not retried/no permissions/profile/install changes.",
+    "review": "Independent read-only source/candidate/saved log review noP1P2;root fullnewsource/preservation check. No UI change/new browser/financial/full product claim.",
+    "evidence": "product-evidence/v1.2/m4/20261006-bonus-holder-credit-aliases/README.md",
+    "residual": "60 date failures of77:47holder/4credit/7listing/2record-ex. Prior literal记入 summarizer miscategorized4credit asrecord-ex;initial summary keptNONPROOF, boundedv2 usesaccountclause and unchanged underlying report18a180505e7876b0d3f8abb58f69e2f0d4b6ac3513d80d699acc334274643c10. No full raw report saved or acceptance from diagnosis.",
+    "ownership": "Root sole writer;freshps no competing writer/test/research. Owned scratchPG7d4e289e stopped after exact project/tmpfs/no mounts/no ports inspection. Originalfour servicesup/healthy;no businessDB/queue/account/provider/formal/OOS action. PastPIDs cannot authorize later actions.",
+    "preservation": "Frozen .research diffempty/v1.1f88b5c6 unchanged. No acquisition/dataset creation/admission/strategy research/merge/tag/release. PR32OPEN/DRAFT exact655 remote verified precommit. Full U1-U8/M0-M5 and external lawfulforward/genuine missing-ledger remain.",
+    "next": "Commit/push coherent sharedalias/sourceversion/tests/decision/checkpoint milestone; verify exactCI. Then full remaining economic/provenance census/new-version admission and77 residual sources; review actual002102 weekday/credit and002212 listing evidence before RED-test, never implicit dates/page joins/missing listing/fraction aggregation."
+  },
+  "retained_cutoff_credit_20261006_gate": {
+    "status": "PASS_SCOPED_EXACT_655_CI",
+    "committed_source": "655be1285e42befe4d71a663ed9543eed007c9d4",
+    "ci_run": 37422444497,
+    "ci": "Exact655 backend/frontend/ComposeSUCCESS2026-10-06T06:14:36Z, job/stepJSON saved. Watch48173terminalexit0. PR32OPEN/DRAFT; no inferred remote test count/full financial or product acceptance.",
     "source_base": "dd8f3339d01b73754abfae823f94af7701726c12",
     "candidate": "/home/yuchen/data/product-candidates/20261006-bonus-cutoff-credit/ledger-v1.json",
     "manifest_sha256": "a5588a5721e9d37fd111cca8dd75f1dab45c943c7967433dae04fca9e64e5211",
@@ -13,9 +32,12 @@
     "tests": "Initial3RED retained;14focusedPASS.1188backend/1existing optional archiveSKIP19.25s/Ruff548/mypy145PASS. Owned tmpfs quant_test upgradehead/downgradebase/upgradehead/checkPASS.666frontend/44files13.21s/lint/typesPASS; regular build EACCES root-owned dist/assets retained. Same npm build with fresh mktemp outDirPASS,519.13kB warning unchanged. No chmod/chown/install/profile change.",
     "review": "Independent read-only source/candidate/saved log review noP1P2; root sourcefacts/preservation recheck. No UI change/new browser or full financial claim.",
     "evidence": "product-evidence/v1.2/m4/20261006-bonus-cutoff-credit/README.md",
+    "evidence_payloads": 26,
+    "evidence_manifest_sha256": "4687d27ef6e4173c1dd280fd14d63ffc136f9e3d23b8f0a929f866d6070ef3ce",
+    "post_ci_checkpoint": "Only state/acceptance exactCI/seal/next-action receipt is local/uncommitted; join next coherent milestone. Source655 head==origin and exactCI pass; no runtime source change after push.",
     "ownership": "Root sole writer. Owned scratchPGffaf6aca stopped after fresh project/tmpfs/no mounts/no publishedports inspection; no cleanup/deletion. Originalfour services healthy/up. No current test/reconcile/CI process inferred from old IDs.",
     "preservation": "No original businessDB/queue/account/provider/formal/OOS operations; frozen .research diffempty/v1.1f88b5c6 unchanged. No acquisition/dataset creation/admission/merge/release. PR32OPEN/DRAFT exactdd8 remote verified before commit.",
-    "next": "Commit coherent parser/provenance/test/decision/state milestone; meaningful push then verify exact CI without inferring new success from dd8. Continue82 unresolved sources and distinct holder cash versus exchange reference input basis; no optimistic admission/full acceptance. Full U1-U8/M0-M5 and external lawful forward/genuine lost-ledger gates remain."
+    "next": "Exact655 CI verified.65 date failures among82residual:48holder/9credit/6listing/2record-ex, bounded hashed summary saved. Full cached002101/002080 next-source originals read; RED-test evidenced explicit送红股/计入 and分红派息及资本公积金转增股本对象 aliases as a batch, no implicit-date/page-join/listing inference. Distinct000598 public cash/exchange quote basis remains unresolved. Full economic census/new-version admission/U1-U8/M0-M5/external forward/lostledger remain."
   },
   "retained_notice_wording_20261006_gate": {
     "status": "PASS_SCOPED_EXACT_DD8_CI",
@@ -2605,7 +2627,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Cutoff/credit lexical milestone local checked:60accepted/82unresolved/7265outside, prior55 same except opt-in V3 provenance. Commit/push meaningful milestone then exactCI. Continue82 residual source gaps, missing002006 unrestricted listing, and000598 cash entitlement0.102064 versus officialDPS0.101 separate-reference-basis accounting; strict reference59PASS/1UNRESOLVED, equal rounded10.82 not input equivalence. Reuse accepted cashv32, no authority redo/frozen mutation. Full economic/provenance census/immutable executionreceipt before actual new-version admission/selectedID+SHA U3/U5/U6 remain. Full U1-U8/M0-M5/AA/native200/p95/delivery required; lawful after-start forward/genuine missing-ledger evidence remain external. No aggregate-fraction shortcut/merge/tag/release until mandatory gates truly pass.",
+  "next_task": "Holder/creditalias batch localPASS,65sourcelegs/77unresolved/7265outside;old60 preserved except opt-inV4. Commit/push meaningful milestone then exactCI. Corrected bounded diagnosis60date failures47holder/4credit/7listing/2record-ex;initial heuristic summary failure preserved. Next inspect full002102 credit-weekday and002212 unrestricted-listing clauses before batched RED tests.0005980.102064 versus exchangeDPS0.101 still strict64PASS/1UNRESOLVED;no input-equivalence from equal quotes.002006missinglisting remains. Reuse existing authorities/cache;no frozen mutation/implicit dates/pagejoins/fraction shortcut. Full economic/provenance census/immutable executionreceipt before new-version admission/selectedID+SHA U3/U5/U6 and full U1-U8/M0-M5/AA/native200/p95/delivery remain. Lawful after-start forward/genuine missing-ledger evidence external;no merge/tag/release until mandatory gates pass.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

@@ -1,5 +1,31 @@
 # Decisions
 
+## v1.2 batch explicit holder/credit aliases — 2026-10-06
+
+Cached final002080/002101/002164 sources show a longer exact holder heading,
+送红股/直接计入 and 资本公积金转增股份 credit wording. Expand these lexical
+alternatives in the shared opt-in same-day parser only; retain five complete
+dates, all-holder/unrestricted-listing, conflict/page/source/issuer/lifecycle and
+integral-component checks. Extend six parameter variants with all old negative
+assertions and new cross-page rejection. Default next-session unchanged;V4
+provenance in a new immutable candidate, never overwrite prior/frozen receipts.
+
+65 accepted share legs/142,77 unresolved,7265outside. Old60 event fields equal
+except source version;new002080/002101/002164/002351/002416 source bindings
+verified.64 scoped reference relationshipsPASS/1UNRESOLVED000598 remains;
+reuse accepted full cashv32 without amount/assertion/policy changes. This is not
+full financial census, new dataset or execution admission.002006 still no listing.
+
+3newRED/3oldPASS then17focusedPASS.1191backend/one optional private-archive
+skip, lint/types and owned tmpfs testDB reversible migrationsPASS;666frontend/
+lint/types/independent-output buildPASS. Known root-owned regulardist failure not
+retried, no permission changes. Independent read-only review noP1P2.
+Diagnostic-only categorization bug preserved: old summary matched literal记入,
+not new[记计]regex, so mislabeled4credit failures. Correct bounded summary uses
+unique account clause:60date failures47holder/4credit/7listing/2record-ex;
+underlying evidence/failed patterns and candidate acceptance are unchanged.
+All U1-U8/M0-M5, external lawful forward/genuine missing ledgers remain.
+
 ## v1.2 explicit cutoff and credit wording, separate cash scope — 2026-10-06
 
 Recognize only observed optional 截止 before the complete holder date and
