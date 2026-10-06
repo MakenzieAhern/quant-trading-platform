@@ -247,6 +247,24 @@ function Comparison({
         <p>{u.versionBoundary}</p>
         <p>{u.noRecommendation}</p>
       </section>
+      {completed.some(({ result }) => result.current_dataset_quality) && (
+        <section className="experimentNotice" role="note">
+          <h2>{c.limits}</h2>
+          {completed.map(({ id, job, result }, index) =>
+            result.current_dataset_quality ? (
+              <div key={id}>
+                <h3>{runLabel(job, index)}</h3>
+                <p>
+                  {explainExperimentCode(
+                    result.current_dataset_quality,
+                    i18n.language,
+                  )}
+                </p>
+              </div>
+            ) : null,
+          )}
+        </section>
+      )}
       <section className="experimentPanel">
         <h2>{u.comparisonMetrics}</h2>
         <label className="experimentCheck">

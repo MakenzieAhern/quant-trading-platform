@@ -1,5 +1,119 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 U4 comparison quality before money — scoped PASS
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-comparison-quality/README.md>):
+current shared comparison repeats existing quality advice for affected numbered
+studies before monetary results; retains bottom cards/exact strings/nulls/six
+conditions, no missing-marker PASS inference. Four RED then40focused/735full
+frontend45files/lint/types/build/scoped formatting PASS; formatter initially
+failed and standard whitespace fix preserved. Offline audit0 is cached only.
+Backend unchanged/not newly run locally. Independent readonly review no scoped
+evidencedP1P2, no reviewer execution or financial approval.
+
+ActualChrome16 ENZH/theme/four-size geometry+exact-value checks pass; all17
+baseline/matrix JPEGdimensions checked/four selected visually reviewed. Mobile
+theme control absent, desktop used for preference changes. ArrowRight settles40px;
+main-locator refocus jumps and extra mobile frames are NOT whole keyboard/warning
+visibility evidence. ENdark/normal viewport restored; same saved results reload,
+QAclosed/exporthandoff retained. Only ownedloopback static frontend published
+after whole backup, oldassets retained. Originalservices/frozen/tag/.research
+unchanged; owned idleNode stopped/retained.99payloadseal`1d7a59b20d9cf722aec1471aa1d2a0fec64455433ae37e13fd4231f08bcc3bd2`.
+Own new commit CI pending, not parentaa4eCI. Not fullU1-U8/M0-M5/AA/economic PASS.
+
+## 2026-10-07 current-baseline logical restore prerequisite — scoped PASS
+
+[Private restore proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261007-pre-integration-backup/README.md>):
+fresh570465byte dumpSHA`c5c6c039239133c306e9627631e04c9012d73cdf994bc3ea0c070d2e8c984d4c`;
+all44 table counts/sortedJSONB fingerprints equal across actual before/after/
+restored snapshots. All18 copiedfiles match original SHA;6 original/restored
+DBreceipt references and existing ReceiptCache.read raw/Parquet/logical checks pass.
+OriginalDB0016/5paperSTOPPED/12research+4updates terminal at backup. Not merely
+oldOct2 counts or an empty fixture restore. Samephysicaldisk/postlossbaseline,
+not two absentledgers recovery/independentdisasterprotection/old-tagrollback.
+
+Failed tmpfs copy/file-restore and initial scratch fingerprint retained. Guarded
+binary stdin restore exit0. Final additional fulltable refresh NOT_RUN after
+Windows .ps1 policy denial: no security change/interpreter or equivalent bypass;
+the three earlier completed snapshots are the recovery evidence. Only exactowned
+0774e721 isolatedtmpfs scratch stoppedexit0 after idlechecks/container retained;
+ephemeral testDB discarded, retained dump/receipts and originalvolumes untouched.
+OriginalPGRedisbackendhealthy/starttimesunchanged/PONG/API+frontend200paper;
+no originalmigration/restart.27payloadseal`77cab5308ac8936f0c74c021d7dc6af83d6cd3a8270d96197799102d4e34a723`;
+independent readonly hash/bounds review no evidencedP1P2, no reviewerexecution.
+
+Desktop running/Ubuntu enabledbut nativecli/sockets absent; WSLmountbridge still
+FAIL. Askeduseronce for actualSettings>Resources>WSLIntegration screenshot only;
+noApplyRestart/toggle/reset. Genuinebridge/freshROmount prerequisite still open.
+
+[Current original UI observation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261007-restored-checkpoint-ui/README.md>):
+actualChrome taskcenter12research/4updateterminal, existingfailedc3d38f7b reopened
+by keyboard Enter, ENZH exact20110301..0328/header/sourcegap/unknownfailurecontext
+retained;0resulttables; ZHtechnicalsummary keyboardopenclose and ENreload checked.
+No linkedretry/businesswrite; ENdark restored/QAclosed/pendingexporttab re-marked.
+This is not a restored-API deployment or fullfinancial/AA/performance/U1-U8/M5 pass.
+
+Four UIpayload hashes rechecked, seal`7cf7ca7f7a03fde5b77846e7d94bc2e461a60706059000295ee5576e33ce4b62`.
+Both JPEGvisuallyreviewed; ZHclosed-summary frame is not proof of earlier openDOM.
+FreshGitHubreadback: MakenzieAhern, PR32OPEN-DRAFT/aa4eHEAD, existingCI37541093320
+completedSUCCESS. No rerun/push/accountchange; not proof of new-run quota. Local
+docs/checkpoints remain uncommitted for a meaningful next milestone.
+
+## 2026-10-07 current Chrome report preparation is not saved-file proof
+
+Existing completed historical study`0cdfb0e5` opened from its saved-list link in
+actualChrome3/currentlocalhost5173/ENdark/no viewportoverride. JSONbutton produced
+prepared guidance and a named fallback. Downloadlistener timedout20s; targeted
+defaultWindowsDownloads showed no matchingfile. Explicituser fallback clickedonce,
+different from asyncauto-click; listener timedout15s. Page has no consoleerror,
+stillprepared. Filelanding **UNVERIFIED**, productfailure **UNPROVEN**, CSVnotrun.
+
+One `chrome://downloads` observation was denied by browser URLpolicy. Stopped and
+closedblanktab; no browser/CDP/native/security/FS workaround or repeatedclick after
+denial. Askeduseronce to inspectnamedfile record manually and give savedpath or
+displayedfailure; no upload or settingchange. Ownedresulttab1661329767 retained
+for handoff, not processwait. Preferences/draft unchanged; no newbusinesscommand.
+
+[Observation proof and screenshot](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261007-current-report-download/README.md>)
+fourpayloadseal`e3d1a288d87cac4d09fedaa6911c22984321b29eb0df85b4f347ace27018b8ce`.
+This adds current evidence to the guide's unverified-file caveat, does not close
+U4-EXPORT/M5. Continue independent safe requiredquality/runtime/restore work while
+awaiting the actualartifact; do not repeat blockedroute or blame React speculatively.
+
+Both bilingualguide changes below independentlyreviewed readonly: no evidenced
+P1/P2, fiveCIpayloads/prior127proof/current167sourcebindings checked. No reviewer
+tests/network/browser/DB, no broaderproduct endorsement. Guide edits postdate CI;
+they are not attributed to the earlier executable-source run.
+
+## 2026-10-07 account-quality exact CI and bilingual guide followup
+
+`aa4e4ad45248b31a1d88cbbc4f1f58d24ffca794` matches HEAD/origin and OPEN/DRAFT
+PR #32. [Own CI37541093320](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37541093320)
+completed2026-10-06T22:33:36Z: all three jobs and every step succeeded;
+samewatch79166terminal0, no rerun. Hosted1294backend/one optional read-only archive
+skip40.95s,729frontend45files96.79s, static checks, isolated head/base/head migration
+and Alembiccheck, Compose release smoke PASS. Not original-PC DB rollout/restart.
+
+[Exact receipt](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-account-quality-ci/README.md>)
+fivepayloadseal`b34f7762aae3978feb5dbcceb0e9455f74316c40488e56b47533c6f73f79801b`;
+127previous UI/frame payloads and167frontend bindings unchanged. Two stale desktop
+frames remain rejected and replaced as documented below. No broadened visual claim.
+
+[Chinese guide](USER_GUIDE.zh-CN.md) / [English guide](USER_GUIDE.en-US.md) now
+explain quality advice before money, retained plan warning, saved ledger versus
+economic validation, current-not-retrospective coverage and absent marker notPASS.
+Plan-fragment navigation does not run an account or submit orders. Startup text
+now names the actualOct7 loopback static fallback, unverified restart and unresolved
+new Ubuntu mounts rather than implying originalfrontend recovery; Oct1/Oct2
+history is retained. Documentation-only changes, not new runtime/browser evidence.
+
+Freshreadonly originalPGRedisbackendhealthy/PONG/frontend andAPI200/liveDB0016.
+Fallbackunless-stopped/no mounts verified, not actualrestart acceptance. No original
+service restart, migration, businesscommand, dataset/formal/OOS/merge/tag/release.
+FullmandatoryU1-U8/M0-M5 still INCOMPLETE; current-sourcefinancial acceptance,
+lawfulforward, genuine lostledgers, runtime/restore, AA/performance and delivery
+gates remain open. This supersedes only the older pending-ownCI checkpoint below.
+
 ## 2026-10-07 account quality beside money and asynchronous plan links
 
 Scoped U6/U7/U8 usability correction, **not financial or full product acceptance**.

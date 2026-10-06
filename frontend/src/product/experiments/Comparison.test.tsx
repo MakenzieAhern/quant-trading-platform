@@ -38,6 +38,84 @@ beforeEach(async () => {
 });
 
 describe("experiment comparison", () => {
+  it.each(
+    ["en-US", "zh-CN"].flatMap((locale) =>
+      ["KNOWN_ECONOMIC_COVERAGE_GAP", "HISTORICAL_DATASET_QUALITY_UNKNOWN"].map(
+        (quality) => ({ locale, quality }),
+      ),
+    ),
+  )(
+    "shows affected study quality before comparison money ($locale / $quality)",
+    async ({ locale, quality }) => {
+      await i18n.changeLanguage(locale);
+      window.history.replaceState({}, "", comparisonUrl(ids.slice(0, 3)));
+      const saved = {
+        ...result,
+        current_dataset_quality: quality as
+          "KNOWN_ECONOMIC_COVERAGE_GAP" | "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+      };
+      const before = JSON.stringify(saved);
+      vi.spyOn(experimentApi, "get").mockImplementation(async (id) =>
+        runs.find((run) => run.job_id === id)!,
+      );
+      vi.spyOn(experimentApi, "result").mockImplementation(async (id) =>
+        id === ids[0] ? saved : result,
+      );
+      render(<ExperimentComparePage />);
+      const table = await screen.findByRole("table", {
+        name:
+          locale === "en-US"
+            ? "Saved full-period results"
+            : "已保存的完整区间结果",
+      });
+      const note = screen.getByRole("note");
+      expect(note).toHaveTextContent("1. Study 1");
+      expect(note).not.toHaveTextContent("2. Study 2");
+      expect(note).not.toHaveTextContent("3. Study 3");
+      expect(
+        note.compareDocumentPosition(table) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(note).toHaveTextContent(
+        quality === "KNOWN_ECONOMIC_COVERAGE_GAP"
+          ? locale === "en-US"
+            ? "Economic completeness is not validated"
+            : "经济完整性尚未验证"
+          : locale === "en-US"
+            ? "unknown"
+            : "未知",
+      );
+      await userEvent.click(
+        screen.getByRole("checkbox", {
+          name: locale === "en-US" ? "Show full precision" : "显示完整精度",
+        }),
+      );
+      expect(within(table).getAllByText("12.000000000000000001")).toHaveLength(
+        3,
+      );
+      expect(JSON.stringify(saved)).toBe(before);
+    },
+  );
+
+  it.each([null, undefined])(
+    "does not infer reviewed quality from a missing marker (%s)",
+    async (quality) => {
+      vi.spyOn(experimentApi, "get").mockImplementation(async (id) =>
+        runs.find((run) => run.job_id === id)!,
+      );
+      vi.spyOn(experimentApi, "result").mockResolvedValue({
+        ...result,
+        current_dataset_quality: quality,
+      });
+      render(<ExperimentComparePage />);
+      await screen.findByRole("table", { name: "Saved full-period results" });
+      expect(screen.queryByRole("note")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/financially validated/),
+      ).not.toBeInTheDocument();
+      expect(screen.getAllByRole("article")).toHaveLength(2);
+    },
+  );
+
   it.each(["en-US", "zh-CN"])(
     "keeps later quality advice scoped to its saved result and comparison card (%s)",
     async (locale) => {
@@ -75,10 +153,13 @@ describe("experiment comparison", () => {
       expect(screen.getByText("12.000000000000000001")).toBeVisible();
       detail.unmount();
       render(<ExperimentComparePage />);
-      const advice = await screen.findByText(text);
+      expect(await screen.findAllByText(text)).toHaveLength(2);
+      expect(screen.getByRole("note")).toHaveTextContent(text);
       const cards = screen.getAllByRole("article");
+      const advice = within(cards[0]!).getByText(text);
       expect(cards[0]).toContainElement(advice);
       expect(cards[1]).not.toContainElement(advice);
+      expect(within(cards[1]!).queryByText(text)).not.toBeInTheDocument();
       expect(JSON.stringify(saved)).toBe(before);
     },
   );

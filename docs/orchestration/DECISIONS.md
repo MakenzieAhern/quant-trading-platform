@@ -1,5 +1,91 @@
 # Decisions
 
+## v1.2 comparison economic warnings before values — 2026-10-07
+
+Actual three-study page placed two known coverage warnings at2251px, after
+metrics at767px. Reuse shared explainExperimentCode/runLabel/experimentNotice
+before money; retain existing later cards. No financial calculation, payload,
+quality inference, dependency or API changes. Four ENZH RED regressions now pass,
+null/undefined do not become approval.735frontend/40focused/static checks PASS;
+one formatter failure fixed with standard whitespace only. Independent readonly
+review no evidenced scopedP1P2; no reviewer execution/financial acceptance.
+
+16 actualChrome cases preserve exact numeric cells and six conditions without
+page overflow. Missing mobile theme selector handled through existing desktop
+control, not a fake selector. Immediate scroll0 precedes settled40px; main-locator
+refocus jumps are failed observation method, not whole keyboard PASS. Retain raw
+failed frames; no identical retry. Only backed-up ownedloopback static frontend
+changed, originalservices/data/research untouched. Private99payload seal1d7a59b2;
+new exactcommit CI remains required, fullproduct goal active/no release.
+
+## v1.2 fresh logical backup before WSL integration repair — 2026-10-07
+
+Reuse native pg_dump/pg_restore, existing full-table fingerprint method and
+ReceiptCache.read; no new backup service/dependency. Fresh dump570465bytes/
+SHA256c5c6c039 matches native original artifact. Three completed44-table snapshots
+equal;18 productfiles match original,6 DBreferences/bundles/raw/Parquet/logical-row
+checks pass. Scope is current post-loss baseline, not missing-ledger recovery,
+independent disaster protection, old-tag rollback or full restored product.
+
+Retain failed docker cp into tmpfs (returned0/file absent), failed pg_restore and
+initial scratch fingerprint. Guarded direct binary stdin restore succeeded; no
+live restore/--clean/migration. Additional final .ps1 refresh was refused by
+Windows script execution policy; stop route, no policy change/bypass/alternate
+interpreter/equivalent table-refresh replacement. Earlier snapshots remain actual
+point-in-time evidence, not a new final check. This denial is not a Docker error.
+
+After exact identity/owner/isolation/idle checks, stop only owned0774e721 scratch,
+exit0/container retained. Its ephemeral tmpfs testDB is discarded; retained dump,
+receipts and all original volumes/data untouched. OriginalPGRedisbackend remain
+healthy/starttimesunchanged/PONG/API+frontend200paper/revision0016. Private27payload
+seal77cab530; independent readonly reviewer checks hashes/bounds, noP1P2.
+
+Desktop running/configUbuntu enabled is not bridge recovery: nativecli/socket
+absent, cached mount-service errorubuntu.sock remains. Ask once for actual Desktop
+Settings>Resources>WSLIntegration screenshot only, before anyApplyRestart/toggle.
+Do not restart original bind containers, inject helper or repeat emptymount probe.
+Existing app stays usable through loopback staticfallback. ActualChrome existing
+failed record reopens by keyboard and reload with ENZH source-gap/unknown-context
+guidance/no fullresult; no retry/submission. Preserve pendingexporttab/no download
+policy workaround. FullU1-U8/M0-M5 remains active/incomplete, no merge/release.
+
+## v1.2 report preparation cannot be promoted to file landing — 2026-10-07
+
+CurrentnativeChrome3/exactaa4efrontend saved0cdfb0e5 historical result: automatic
+JSONdownloadlistener20stimeout; realuser-activated preparedlink15stimeout; page
+prepared/no consoleerror/defaultDownloads no namedmatch. Productfailure unproven,
+filelanding unverified. Do not change exportcode without a demonstratedrootcause.
+One internaldownloadspage inspection denied by URLpolicy; stop thatroute, no
+alternatebrowser/native/CDP/security/FS workaround. Askuseronce manuallyverify
+namedfile/path/failure, keepownedtab1661329767handoff. No newstudy/account/order/
+provider action, CSVnotrun, no fakeexportPASS. Fourpayloadseale3d1a288 includes
+actualpreparedstate JPEG. Continue independent fullobjective gates, goalACTIVE.
+
+Bilingualguide independentreadonlyreview found no evidencedP1P2; CI5/prior127/
+167sourcebindings consistent. GuidespostdateCI/no executablecodechange, no new
+runtime restart, migration, financial/fullAA/fullproduct acceptance or release.
+
+## v1.2 exact account-quality CI and honest recovery instructions — 2026-10-07
+
+Ownaa4eCI37541093320 all3jobs/every stepSUCCESS22:33:36Z; samewatch79166
+terminal0/no rerun.1294backend+optionalarchiveSKIP/729frontend/static/isolated0017
+migration/Compose release smokePASS. HEADoriginOPEN-DRAFTPR32agree. Separate five
+CIpayloads sealedb34f7762; previous127UIframe payloads/167source bindings intact.
+This closes the slice's pendingCI, not financial or whole-product acceptance.
+
+Update both user guides rather than add a second startup/release system. Current
+portfolio authority is saved backend state, not validated economic coverage; a
+current quality warning is not past-day proof and no marker is not PASS. Preserve
+old amounts/results/plans. Document navigation-only async fragment behavior.
+Replace stale current-startup wording with actualOct7 loopback staticfallback:
+unless-stopped/no binds configured, realrestart notverified; newUbuntu mounts
+remain broken. Keep historicalOct1/Oct2 evidence and prevent unsafe original
+container recreation. OriginalDBreadonly0016/serviceshealthy, no restart/migration.
+
+Manual/checkpoint changes stay local for the next coherent milestone, no tiny
+receipt-onlypush. FullU1-U8/M0-M5 remains active, not merged/released; lawfulforward,
+genuine lostledgers and financial/AA/performance/runtime/restore/delivery remain.
+
 ## v1.2 historical account advice and deferred fragment target — 2026-10-07
 
 Keep backend exact ledger authority distinct from economic validation: show the

@@ -1,7 +1,54 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T22:29:48Z",
+  "updated_at_utc": "2026-10-06T23:20:17Z",
+  "comparison_quality_20261007_gate": {
+    "status": "PASS_SCOPED_DISPLAY_NOT_FULL_PRODUCT",
+    "parent_head": "aa4e4ad45248b31a1d88cbbc4f1f58d24ffca794",
+    "repair": "Shared comparison now shows existing EN/ZH quality advice for affected numbered studies before money; original bottom cards, exact/null metrics and six conditions unchanged. No absent-marker PASS inference or data/financial change.",
+    "checks": "4RED missing-note regressions then40focused/735full45files/lint/type/build176ms/scopedformat PASS. Initial format FAIL fixed standard whitespace only. Offline audit cached0, not fresh advisory lookup. Backend unchanged/not rerun locally. Independent readonly review no evidenced scopedP1P2/no reviewer execution.",
+    "browser": "CurrentChrome16 ENZH/lightdark/four-size note-before-money/no pageoverflow/two affected studies/three cards/six conditions/fullprecision/exact numeric cells PASS.17JPEGdimensions checked/four selected visually inspected, not wholeAA. Mobile theme selector absent: changed preference at desktop viewport. ArrowRight settled40px, immediate0 prepaint; main-locator refocus jumps do not prove whole mobile warning visibility/keyboard PASS. Failed frames retained/no identical retry. Reload same saved IDs/roundedvalues/quality; ENdark/normalviewport restored/QAtabclosed/export1661329767handoff.",
+    "evidence": "product-evidence/v1.2/m4/20261007-comparison-quality/README.md",
+    "evidence_payloads": 99,
+    "evidence_manifest_sha256": "1d7a59b20d9cf722aec1471aa1d2a0fec64455433ae37e13fd4231f08bcc3bd2",
+    "preservation": "167host/163scratch sourcebindings match/4deploymentinputs absent. Only ownedloopback a561static files after whole backup/hashcheck; oldassets retained. OriginalPGRedisbackendhealthy/PONG/API200paper; no service restart/migration/business task. ExactidleownedNode7969 stoppedretained exit137 for sleep infinity timeout/OOMfalse, not test failure. Frozen693c/tagf88b/.research unchanged.",
+    "ci": "Coherent local commit/new exact CI pending; aa4e CI is parent evidence only. Full U1-U8/M0-M5 remains required; no merge/tag/release.",
+    "full_product_pass": false
+  },
+  "pre_integration_backup_20261007_gate": {
+    "status": "PASS_CURRENT_BASELINE_LOGICAL_RESTORE_ONLY",
+    "source_head": "aa4e4ad45248b31a1d88cbbc4f1f58d24ffca794",
+    "progress": "Fresh570465-byte native consistent PG dump; retained original-before/original-after/restored44 whole-table counts/sortedJSONB fingerprints equal. All18 copiedproductfiles match original final SHA; all6 original/restored DBreceipt references and ReceiptCache.read raw/Parquet/logical-row checks verified. Originalrevision0016,5paperSTOPPED/12research and4updates terminal at backup. Not oldOct2 snapshot reused as current DB.",
+    "failure_history": "Initial docker cp into scratchtmpfs returned0 but fileabsent; pg_restore and initialscratchfingerprint failed. Corrected guarded binary stdin restore exit0, failures retained. Additional final44-table refresh via WindowsPowerShell5 script denied PSSecurityException/UnauthorizedAccess; routeSTOP/no policychange/alternateinterpreter/equivalentrefresh bypass. Existing complete snapshots remain evidence, notfreshfinaltablePASS.",
+    "cleanup": "Exactowned0774e721/networknone/noports/no mounts/tmpfsPG/ownerroot-pre-integration-20261007 checked/nootherclients; stoppedexit0 andretained. OnlyephemeraltestDB discarded; dump/productcopies/originaltmpdump retained. Original598760PG/df3Redis/89aaBackend runninghealthy/starttimesunchanged/RedisPONG/API+frontendHTTP200paper. No originalrestart/recreate/migration/data deletion.",
+    "evidence": "product-evidence/v1.2/m5/20261007-pre-integration-backup/README.md",
+    "evidence_payloads": 27,
+    "evidence_manifest_sha256": "77cab5308ac8936f0c74c021d7dc6af83d6cd3a8270d96197799102d4e34a723",
+    "review": "Independent reusedsigned_results_review_oct7 readonly:27payloadSHAs/canonicalmanifest/44unique-table3snapshots/dump/18files/6referencedbundlebinding match/noevidencedP1P2. No reviewerDB/script/recovery/network; no independentParquetlogicaldecode claimed.",
+    "wsl": "DesktopEngine29.8 running; configWslEngine/defaultintegrationtrue/Ubuntu enabled but cli-tools/usrbin/nativeDocker sockets absent. Cachedhostlog cross-distro mountservice ubuntu.sock missing. Do not injecthelper/retrysameemptymount or restartoriginalbindcontainer before genuinebridge/freshROprobe. Askeduseronce for Settings>Resources>WSLIntegration screenshot only, noApplyRestart/toggle/reset.",
+    "browser": "ActualChrome3 TaskCenter12research/4updateterminal; keyboardEnter reopenedexistingfailedc3d38f7b. ENZHsame20110301..0328/requestedend header/unknownfailuredate+securities/actionable held-reference/source-gap guidance/noresulttable; ZHtechnicalsummary keyboardopenclose observed, ENreloadsamefailure. OriginalENdark restored/newQAtabclosed. Pendingexporttab1661329767re-markedhandoff/no reload/downloadpolicy workaround. UIproofseparate20261007-restored-checkpoint-ui; notrestoredAPIdeploy/fullAA/financial/release.",
+    "browser_evidence_manifest_sha256": "7cf7ca7f7a03fde5b77846e7d94bc2e461a60706059000295ee5576e33ce4b62",
+    "browser_evidence_caveat": "4payloads/hashchecked/2JPEGvisuallyreviewed; ZHframe has closedtechnicalsummary despite earlieropenDOM, notexpansionimageproof. Natural1920x911/JPEG1905x904, no native200/wholeAA claim.",
+    "remote_readback": "Fresh samehandle72929 terminal0: GitHubaccountMakenzieAhern; PR32OPEN-DRAFT/exactaa4eHEAD; existingCI37541093320completedSUCCESS/samehead. No rerun/push/billing/permissions change; this read does not prove remaining Actions quota or newrun admission.",
+    "limitations": "Samephysicaldisk/postlossbaseline; no missing4b64380f/07d72259 recovery, independentdisasterbackup, original0017 rollout/reboot/old-tagrollback/WSLrepair or fullU1-U8/M0-M5/product/releasePASS. Frozen693c0b81/tagf88b5c/.research unchanged.",
+    "full_product_pass": false
+  },
+  "current_report_download_20261007_gate": {
+    "status": "REPORT_PREPARED_FILE_LANDING_UNVERIFIED",
+    "source_head": "aa4e4ad45248b31a1d88cbbc4f1f58d24ffca794",
+    "actual_browser": "NativeChrome3/currentlocalhost5173/ENdark/no viewportoverride; existingcompleted0cdfb0e5 chosen through saved-study visiblelink. Originalqualitywarning retained;no newbusinessjob/account/order/provider/study/OOS action.",
+    "observed": "JSON automaticbutton prepared realblob/savefilename but documenteddownloadlistener20secondstimeout. TargeteddefaultWindowsDownloads matchnone. Realuser-activated fallbackclickedonce, downloadlistener15secondstimeout. Pageprepared/consolewarnings-errors0;filefailure notestablished.",
+    "access_boundary": "One chrome://downloads observation denied by allowed-http-https URLpolicy. Immediately stoppedroute/closedblanktab;noalternatebrowser/CDP/security/native/FS workaround or repeatclick afterdenial. Useraskedonce manuallyinspect namedfile record and provide localpath/failure, notupload report or changesettings.",
+    "actual_file_landing": "UNVERIFIED",
+    "product_download_failure": "UNPROVEN",
+    "csv_current_build": "NOT_RUN",
+    "handoff_tab": "1661329767 owned savedresult page retained for userdownloadcheck; not liveprocess proof. Reobserve before reuse; ENdark/draft unchanged.",
+    "evidence": "product-evidence/v1.2/m5/20261007-current-report-download/README.md",
+    "evidence_payloads": 4,
+    "evidence_manifest_sha256": "e3d1a288d87cac4d09fedaa6911c22984321b29eb0df85b4f347ace27018b8ce",
+    "full_product_pass": false,
+    "next": "If user supplies downloadedpath/failure, safelyverify that actual artifact and its savedmetadata/precision without fakefinancialPASS. No browser-download-policy workaround or repeatedsameclick. Meanwhilecontinue independent remaining mandatoryuserflow/quality/restore/runtime work;goalACTIVE, notrelease."
+  },
   "account_quality_20261007_gate": {
     "status": "PASS_SCOPED_ACCOUNT_QUALITY_AND_PLAN_FRAGMENT_NOT_FULL_PRODUCT",
     "source_parent": "fffa93a08925dabcdabac7035781bede9bcbef1d",
@@ -20,7 +67,10 @@
     "preservation": "Current167sourcebindings/163scratchmatch/4deploymentabsent, prior14sealedpayloads/276batchbindings unchanged. Frozen693c0b81/tagf88b5c/.research unchanged. Originalstoppedstate138 byteSHA48c5e43b before/after/final equal; DBreadonly0016/PGRedisbackendhealthy/RedisPONG/APIfrontend200. No originalrestart/migration, only ownedfallbackstaticfiles copied after3wholebuildbackups; oldassetsretained. Node7969f4bSTOPPEDretainedafterterminalidlecheck, PG30b1cfbuntouchedSTOPPED.",
     "deployment_index_sha256": "2269663fac3967d0a81e86067be0309a1c2f506fdfc4b2a84dae5fb85b20402d",
     "deployment_main_sha256": "52f1ac161d808a1cc30f7ba135e88427fd1fd7e741c970c323835b4628f8421f",
-    "ci": "New coherentcommit/exactCI pending; priorfffa37537837278PASS is not this slice's CI.",
+    "ci": "Own aa4e4ad45248b31a1d88cbbc4f1f58d24ffca794 CI37541093320 all3jobs/every stepSUCCESS completed2026-10-06T22:33:36Z; samewatch79166terminal0/no rerun. Hosted1294backend+1optionalarchiveSKIP40.95s/729frontend45files96.79s/static/disposable0017-head-base-head-check/Compose release smokePASS. HEADoriginOPEN-DRAFTPR32agree. Separate5payloadseal b34f7762aae3978feb5dbcceb0e9455f74316c40488e56b47533c6f73f79801b; prior127UI/frame payloads and167frontendbindings unchanged. Not originalDBmigration/restart or financial/fullproduct PASS.",
+    "ci_evidence": "product-evidence/v1.2/m4/20261007-account-quality-ci/README.md",
+    "ci_evidence_manifest_sha256": "b34f7762aae3978feb5dbcceb0e9455f74316c40488e56b47533c6f73f79801b",
+    "manual_followup": "Both bilingual guides explain quality-before-money, retained plan warning, backend ledger vs economic validity, current-not-retrospective coverage, absent marker notPASS, and navigation-only async plan fragment. Startup text now discloses actualOct7 staticloopback fallback/unverified restart/newUbuntu mounts stillbroken, preservingOct1/Oct2 historical evidence. Reused independentreadonly signed_results_review_oct7 no evidencedP1P2, exact5CIpayload/prior127proof/167bindings independently checked. No reviewer network/DB/browser/test;guide changes are after CI, not covered by it. Documentation only; executable sources unchanged.",
     "full_product_pass": false,
     "financial_records_modified": false
   },
@@ -2648,8 +2698,8 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-06T22:05Z rootsolewriter/fffa93aHEADoriginOPEN-DRAFTPR32agree;own37537837278 all3jobs/every stepSUCCESS completed22:03:46Z/samewatch21697terminal0. Hosted1294backend+optionalSKIP/715frontend/CIstatic/disposablemigration/ComposePASS;broaderlocalPrettierFAIL3oldfiles notCI.137source71PASS/66unresolved/276bindings/prior14proof/new9CIseal6e33b849 verified/sevenremainingcredit actualcachedcontexts preservedUNRESOLVED,noeventadmission.Originalapphealthy/liveDB0016/scratchSTOPPEDretained/frozen/tag/.research unchanged/no restart/migration/OOS/merge/release. PostCIcheckpointdocs local until next coherent milestone.",
-    "repository_writer": "Root only sharedcredit3line fix/fiveparameterizedregressions/productcheckpoint. Authorizedreusedsigned_results_review_oct7 readonly6completeofficialcachetexts/276bindings no scopedP1P2. No competingwriter or reviewer mutations.",
+    "latest_verification": "2026-10-06T22:37Z rootsolewriter/aa4e4adHEADoriginOPEN-DRAFTPR32agree;own37541093320 all3jobs/every stepSUCCESS22:33:36Z/samewatch79166terminal0.1294backend+optionalSKIP/729frontend/static/disposablemigration/ComposePASS. Freshps no competing repository writer. Currentfrontend167bindings/prior127UIframeproof/frozen/tag/.research preserved;originalDBreadonly0016/PGRedisbackendhealthy/PONG/frontendAPI200. PostCI and bilingualmanual edits local until coherent milestone, not receipt-onlypush.",
+    "repository_writer": "Root sole comparison display/tests/manual/checkpoint writer. Fresh ps no competing repo writer; reused signed_results_review_oct7 independentreadonly review only. Backend unchanged since aa4e; comparison frontend changed and locally validated735tests, exactnewCI pending.",
     "database_writer": "Root guardedownedtmpfsquant_test/no mounts/loopback55471only;1294tests+optionalSKIP/head-base-head/check terminal. PGSTOPPEDretained;originalquant_platform readonly0016/no migration/restart/retry/backfill/strategy. Genuine lostledgers incomplete.",
     "queue_writer": "Root immutable137sourceguardv4;71sourcePASS/66unresolved/6newPASS/5stilllistingreject/65oldPASS wholepreserved/126wholeunchanged.276bindings/reverse/old11proof. No economic event/dataset admission/provider/queueworker/fullarchive action;fullaction/reference/cash/lifecycle incomplete.",
     "agents": {
@@ -2657,10 +2707,12 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "2026-10-06T22:00Z originalPGRedisbackendhealthy/fallbacka561loopback5173running. OwnedNode7969tests terminalidle/PG30b1active0 beforeSTOPPEDretained. Originalfrontend andmountprobec970STOPPEDretained;freshROmount/integration before originalrestart/0017rollout. No reset/securityworkaround.",
+    "verified_processes": "2026-10-06T22:36Z originalPGRedisbackendhealthy/fallback5173running. Fallbackinspect unless-stopped/no mounts;restart not tested. No originalservice restart or appmigration;liveDB0016. Existing scratchSTOPPEDretained, originalfrontend/mountprobe untouched. Genuineintegration/freshROmount/backups remain before originalrestart/0017rollout. No reset/securityworkaround.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-06T22:43Z bilingualmanual independentreadonly review no evidencedP1P2;CI5payload/prior127proof/167sources independently consistent. CurrentnativeChrome JSONpreparation observed but bothdownloadlisteners timedout20s/15s; filelandingUNVERIFIED/notproductfailure proof. Browserinternaldownloads URLdenied, stoppedwithoutworkaround;useraskedonce localpath/failure/ownresulttab1661329767handoff. Fourobservationpayloadsealed e3d1a288, notdownloadPASS. GoalACTIVE/no newfinancial/data/business/release action.",
+    "2026-10-06T22:37Z ownaa4eCI37541093320 alljobs/every stepSUCCESS1294backend+optionalSKIP/729frontend/static/disposable0017migration/Compose release smoke;samewatch79166terminal0/no rerun. FivepayloadCIseal b34f7762/127priorproof/167sourcebindings verified unchanged. Bilingualmanual now distinguishes currentfallback startup from recoveredintegration and exact savedledger from economic validity;manual-only followup notfullM5. Originalservices/APIfrontendhealthy/liveDBreadonly0016/no restart/migration/frozen/OOS/merge/release. GoalACTIVE.",
     "2026-10-06T22:29Z actualaccount quality-before-money and async shared planfragment repaired:8+2RED/final729frontend/static/reviewPASS.16currentDOMcases and ENZH390reload/exact6titles verified; originalstate138 byteSHA48c5e43b unchanged/DB0016/originalservicesuntouched/ownedNodeSTOPPED.122proof8b97afb5+5JPEGframecorrection50cc110f sealed;two stale light1440 frames rejected, notfullvisualAA. Source71/66/276/frozen/tag/.research unchanged. Coherentcommit/ownCI pending;fullgoalACTIVE/no financial or releasePASS.",
     "2026-10-06T22:05Z fffa93a ownCI37537837278 all3jobs/every stepSUCCESS1294backend+optionalSKIP/715frontend/Ruff556/mypy145/disposableAlembiccheck/Compose release smoke; samewatch21697terminal0/HEADoriginOPEN-DRAFTPR32agree.71sourceonlyPASS/66unresolved/276bindings/prior14proof unchanged;7actualnextcredit sourcecontexts remainUNRESOLVED,separate9seal6e33b849. BroaderlocalPrettierFAIL3oldfiles preserved separately. Localapp200paper/originalDB0016/scratchSTOPPED/no restart or financialadmission/frozen/OOS/merge/release;fullgoalACTIVE.",
     "2026-10-06T22:00Z shared credit boundary/literal grammar5RED->5PASS/94focused;137all retained65->71sourceonlyPASS/72->66unresolved/6newPASS/5stilllistingreject/126whole unchanged.276bindings/reversed input/old11proofPASS/new14sealedd06c00;independent6complete source review no scopedP1P2.1294backend+optionalSKIP/715frontend/CIstatic/tmpfsmigrationPASS;broaderPrettierFAIL3existingfiles preserved separately. Originalapphealthy/liveDB0016/scratchSTOPPEDretained/frozen/tag/.research unchanged;notfinancial/fullproduct,newcommitCIpending.",
@@ -3230,13 +3282,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "fffa93a08925dabcdabac7035781bede9bcbef1d",
+      "last_verified_head": "aa4e4ad45248b31a1d88cbbc4f1f58d24ffca794",
       "state": "DRAFT",
-      "ci_run": 37537837278,
+      "ci_run": 37541093320,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Ownfffa93aCI37537837278 all3jobs/every stepPASS1294backend+optionalSKIP/715frontend/static/disposablemigration/Compose release smoke.71sourceonlyPASS/66unresolved/276bindingsNOTfinancialadmission;frontendunchanged/prioractualChrome controlledENZHerrors/currentcopy/draft/geometry scopedproof retained,no newbrowserfinancialclaim. BroadlocalPrettierFAIL3oldfiles. NativeperformanceNOT_MET_CAUSE_UNPROVEN/currentnative200pending;freshROmountempty/liveDB0016 protectsoriginalrestart. FullU1-U8/M0-M5 financial/AA/lawfulforward/restore/genuine lostledgers/delivery incomplete;PR32OPEN-DRAFT/no merge/release."
+      "browser_gate": "Ownaa4eCI37541093320 all3jobs/every stepPASS1294backend+optionalSKIP/729frontend/static/disposablemigration/Compose release smoke. Actual account-quality-before-money and shared async planfragment ENZH390 reload scopedPASS;16DOMcases/exact6amounts/127UIframeproof preserved. Two stale desktopJPEGframes remain rejected/replaced, notfullAA. Bilingualmanual currentfallback/money-quality clarified;no newbrowserclaim.71sourceonlyPASS/66unresolved/276bindingsNOTfinancialadmission. BroadlocalPrettierFAIL3oldfiles/nativeperformanceNOT_MET_CAUSE_UNPROVEN/currentnative200pending/newROmountempty/liveDB0016 retained. FullU1-U8/M0-M5 financial/AA/lawfulforward/restore/genuine lostledgers/delivery incomplete;PR32OPEN-DRAFT/no merge/release."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -3251,7 +3303,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full mandatory U1-U8/M0-M5. Account-quality-before-money and shared asyncplan-fragment defects corrected;729frontend/fullstatic, actual16DOM cases+ENZH390reload, independentreadonly review,122proof+5framecorrection sealed. First two staleJPEGframes rejected/superseded; not fullAA/native200/performance/financialPASS. Next coherentcommit/push/exactCI, then smallest independent missing userflow/manual/media/restore/runtime gate without repeatedfailed security/nativeperf methods. Accepted71source-onlyPASS/66unresolved/276bindings remain unchanged; seven cached credit leads/missing日300036/yearconflict300015/fullaction/reference/cash/lifecycle unresolved, no source-only count as economic acceptance. GenuineUbuntuintegration+freshROmount/backups before originalrestart/0017rollout;liveDB0016/appusable. Lawfulafter-startforward and genuine lostledgers remain. GoalACTIVE/product_goal_completefalse;no frozen/formal/OOS/merge/tag/release.",
+  "next_task": "Continue full mandatory U1-U8/M0-M5. Fresh currentbaseline PG restore44tables/6bundles/18files scopedPASS sealed77cab530 and independentlyreviewed; finaladditional.ps1 table refresh policydenied/STOP/no bypass, notfreshfinaltablePASS. Own0774scratchSTOPPEDretained, originalhealthy0016/appusable/staticfallback. DockerEngine/configUbuntu enabledbut actualbridge/sockets missing: useraskedonce for Settings>Resources>WSLIntegration screenshot ONLY/noApplyRestart/toggle/reset. On evidence-driven supported bridge repair, verify nativeCLI/socket and freshROmount before originalrestart/0017 rollout. Meanwhileadvance remaining safeactual U3/U4/U8/AA/financial/delivery work, not endlessstatus/waits or repeatsecurity/nativeperf methods. ActualChrome savedfailedc3d38f7b ENZH/currentdates/unknowncontext/sourcegap/reload checked/no retry; pendingexporttab1661329767handoff, filelanding stillUNVERIFIED/userpathfailure pending/no policyworkaround. Ownexactaa4eCI historicalalljobsPASS and729frontend/accountquality/asyncplan/manualproof retained; newdocs notcoveredbyearlierCI/no tinyreceiptpush. FullAA/native200/performance/economicPASS stillunproven. Accepted71source-onlyPASS/66unresolved/276bindings unchanged; remaining source/lifecycle/reference/cash gaps notfinancialadmission. Lawfulafter-startforward and genuine lostledgers remain. GoalACTIVE/product_goal_completefalse;no frozen/formal/OOS/merge/tag/release.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check && gh pr view 32 --json headRefOid,state,isDraft,url && gh run list --branch codex/product-v1.2-current-rules --limit 3 --json databaseId,headSha,status,conclusion && rg -n 'U7-FORWARD|U7-RECOVER|QA-A11Y|QA-PERF|M5-' docs/product/ACCEPTANCE.md",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
