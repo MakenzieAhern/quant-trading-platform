@@ -9665,6 +9665,12 @@ Full U1-U8/M0-M5 remain; no new dataset/admission/strategy/merge/release.
 
 ## 2026-10-06 explicit holder/credit alias batch (bounded U3/U5/U6 prerequisite)
 
+Post-commit: exact1503330 [CI37423904797](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37423904797)
+completed SUCCESS2026-10-06T06:30:54Z, backend/frontend/Compose all success.
+PR32OPEN/DRAFT;22-payload proof sealed
+c877271b5d391fe51fae7032b4886b9a70460154538ea0219448929d115533b6.
+Pending-CI wording below is precommit chronology, not current CI status.
+
 Recognize only source-observed long explicit holder heading,送红股,
 资本公积金 credit prefix and记/计入 spelling. All five full dates/holder/
 unrestricted listing/conflict/page/source/issuer/lifecycle/integral guards remain.
@@ -9691,3 +9697,35 @@ New exactCI pending this coherent commit;no UI change/new browser claim.
 
 Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-holder-credit-aliases/README.md>).
 Full U1-U8/M0-M5/economic admission and external forward/lost-ledger gates remain.
+
+## 2026-10-06 explicit weekday and capital-listing batch (bounded U3/U5/U6 prerequisite)
+
+Full cached002102/002212 official notice terms read, no acquisition. Shared
+opt-inV5 accepts complete-date weekday annotation (verified against calendar)
+and exact新增资本公积金转增股本 unrestricted listing. Five explicit dates,
+all-holder/unrestricted class/source/lifecycle/integral/page/conflict checks
+remain;default next-session unchanged.3RED then15focusedPASS, all negative
+assertions retained.67sourcelegs/142,75unresolved,7265outside;old65 event fields
+exact except version/checksums, dependency4/repeated immutable bytes preserved.
+
+Reuse accepted full cashv32/unchanged sealed reference auditor:66scopedPASS/
+1UNRESOLVED000598, canonicalcdba08592bdd5ac4866f149b2b80e9ca828387b221b9a3625ca74a1595a3e70d.
+Repeat stdout/reversed input equal. Cash0.102064 versus exchangeDPS0.101 still
+not identical;002006 missing listing remains. No financial acceptance/dataset
+admission or accounting replay inferred from source/reference relationships.
+
+Full1194backendPASS/1existing optional archiveSKIP24.95s/Ruff548/mypy145/
+owned tmpfs testDB head-base-head-checkPASS. New network address-pool refusal
+retained; freshly inspected owned stopped tmpfsPG/network safely reused, then
+PG stopped. No prune/reset/delete/config/security changes.666frontend/44files
+14.06s/lint/types/independent mktemp buildPASS, existing519.13kB warning.
+Known root-owned regular-dist failure not retried or relabeledPASS. Independent
+read-only source/final evidence review noP1P2. Recognized adjacent(星期...)
+annotations only, not every weekday format. Prestart exited/empty network is
+tool-history918271 observation; after-start reuse file does not independently
+prove it. Exact newCI pending.
+Full raw read-only residual diagnosis58date failures47holder/3credit/6listing/
+2record-ex saved; no acceptance from diagnosis. No UI change/new browser claim.
+
+Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-weekday-listing/README.md>).
+Full U1-U8/M0-M5/economic admission/external forward/genuine lost-ledger remain.

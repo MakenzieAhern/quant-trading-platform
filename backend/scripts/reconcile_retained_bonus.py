@@ -156,7 +156,7 @@ def main():
                 retrieved_at=doc["retrieved_at_utc"],
                 source_provider="OFFICIAL_ISSUER_CNINFO_EXCHANGE_RECONCILED",
                 source_version=(
-                    "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V4"
+                    "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V5"
                     if args.explicit_same_day
                     else "INTEGER_RETAINED_BONUS_V1"
                 ),

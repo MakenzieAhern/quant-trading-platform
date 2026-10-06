@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 explicit weekday and capital-reserve listing clauses — 2026-10-06
+
+Full cached official002102/002212 notices show complete credit dates followed
+by weekdays and exact新增资本公积金转增股本 unrestricted listing. Shared opt-in
+same-day parser accepts those lexical forms only; recognized adjacent explicit
+(星期...) annotations must agree with calendar, not every weekday notation.
+Five complete dates,
+holder/unrestricted listing, issuer/source/lifecycle/integral/page/conflict
+guards remain. Default next-session unchanged; immutable opt-inV5 receipt.
+3targetedRED then15focusedPASS, negative assertions retained.67sourcelegs/142,
+75unresolved/7265outside;old65 exact except version/checksums.66referencePASS/
+1UNRESOLVED000598 strict cash difference;002006 missing listing remains.
+Not complete economic census, dataset or financial admission.
+
+New Docker scratch network refused address-pool exhaustion. No prune/reset/
+network deletion/config/security changes. Reused freshly inspected own previous
+stopped tmpfs quant_test PG/no mounts/noports/empty owned network.1194backend/
+1optional archiveSKIP/reversible testDB/lint/types and666frontend/lint/types/
+independent-output buildPASS. Existing regular-dist failure not reclassified;
+testPG stopped afterward without cleanup. Original services/data untouched.
+Independent read-only source review noP1P2;full raw58residual date diagnosis
+saved,47holder/3credit/6listing/2record-ex. Diagnosis is not event acceptance.
+Full U1-U8/M0-M5 and external lawful forward/missing-ledger gates remain.
+
 ## v1.2 batch explicit holder/credit aliases — 2026-10-06
 
 Cached final002080/002101/002164 sources show a longer exact holder heading,

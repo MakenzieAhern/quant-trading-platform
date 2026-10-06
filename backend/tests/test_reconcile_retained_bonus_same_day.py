@@ -121,6 +121,49 @@ def test_explicit_cutoff_and_credit_wording_never_infers_missing_dates(
         )
 
 
+@pytest.mark.parametrize("weekday,listing", [(True, False), (False, True), (True, True)])
+def test_explicit_weekday_and_capital_listing_preserve_all_date_guards(weekday, listing):
+    notice = NOTICE
+    if weekday:
+        notice = notice.replace("25日", "25日(星期五)").replace("28日", "28日(星期一)")
+    if listing:
+        notice = notice.replace("本次转增的无限售", "本次新增资本公积金转增股本的无限售")
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("2011年03月28日", "2011年03月29日"),
+        ("2011年03月28日", "2011年02月30日"),
+        ("2011年03月28日", "3月28日"),
+        ("本公司全体股东", "本公司控股股东"),
+        ("无限售条件", "有限售条件"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+        ("起始交易日为2011年3月28日", "起始交易日待定"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    if weekday:
+        for old, new in (
+            ("星期一", "星期二"),
+            ("星期五", "星期四"),
+            ("(星期一)", "(预计入账)"),
+            ("2011年03月28日(星期一)", "(星期一)"),
+        ):
+            with pytest.raises(ValueError):
+                same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    first, second = notice.split("2011年03月28日")
+    with pytest.raises(ValueError):
+        same_day_listing([first + "2011年03月", "28日" + second], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing([notice.split("五、本次")[0]], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice + notice.replace("2011年03月28日", "2011年03月29日")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
 def test_same_day_requires_same_final_issuer_holder_credit_and_listing():
     assert same_day_listing([NOTICE], "600000", TITLE, RECORD, EX) == EX
     with pytest.raises(ValueError, match="FINAL_ISSUER"):
@@ -303,7 +346,7 @@ def test_opt_in_reconciliation_is_immutable_and_preserves_default_schedule(tmp_p
         )
     }
     event = accepted["events"][0]
-    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V4"
+    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V5"
     assert event["event"]["listing_date"] == EX
     assert event["event"]["share_ratio"] == "1.000"
     assert not event["scheduled_listing_not_actual_tradability"]

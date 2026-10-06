@@ -39,6 +39,16 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
     ):
         raise ValueError("BONUS_SAME_DAY_NONSTANDARD_OR_TENTATIVE")
     dated = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
+    # A weekday annotation supplements a complete date, never supplies one.
+    for year, month, day, weekday in re.findall(dated + r"\(星期([^()§。;]{1,4})\)", text):
+        try:
+            if (
+                weekday.replace("天", "日")
+                != "一二三四五六日"[date(int(year), int(month), int(day)).weekday()]
+            ):
+                raise ValueError("BONUS_SAME_DAY_WEEKDAY_CONFLICT")
+        except ValueError as exc:
+            raise ValueError("BONUS_SAME_DAY_WEEKDAY_CONFLICT") from exc
     patterns = (
         "(?:" + "|".join(RECORD_LABELS) + ")" + LABEL_DATE_GAP + dated,
         EX_LABEL + LABEL_DATE_GAP + dated,
@@ -47,8 +57,8 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + r"[^。;§]{0,200}?收市后[^。;§]{0,200}?登记在册[^。;§]{0,30}?全体股东",
         r"本次(?:所|资本公积金)?(?:转增(?:的)?股(?:份)?|送(?:红)?股|新增股份|(?:送)?\(转增\)股)于"
         + dated
-        + r"直接[记计]入股东证券[账帐]户",
-        r"本次(?:所)?(?:转增|送|新增|(?:送)?\(转增\))(?:的)?"
+        + r"(?:\(星期[一二三四五六日天]\))?直接[记计]入股东证券[账帐]户",
+        r"本次(?:所)?(?:转增|送|新增(?:资本公积金转增股本)?|(?:送)?\(转增\))(?:的)?"
         r"无限售条件(?:的)?流通股(?:份)?(?:的)?"
         r"(?:起始交易日|上市流通日)(?:为)?:?" + dated,
     )
