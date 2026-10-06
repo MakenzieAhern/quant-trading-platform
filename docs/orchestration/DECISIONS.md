@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 explicit cutoff and credit wording, separate cash scope — 2026-10-06
+
+Recognize only observed optional 截止 before the complete holder date and
+转增的股份 credit wording. Retain five independent explicit dates, final issuer,
+all-holder/unrestricted-listing/source/lifecycle/integral-component guards.
+Opt-in same-day source version V3; default next-session branch unchanged.
+Initial3RED retained;14 focusedPASS. New immutable source candidate60/142,
+82 unresolved,7265outside. Prior55 event fields equal except source version.
+002006 still has no explicit unrestricted-listing date; never infer from credit.
+
+Reuse accepted full cash authority rather than re-acquire/re-approve it:000598
+already has ordinary public old-share gross0.102064 in cash-full-coverage-v32.
+Official exchange table DPS0.101 differs. Strict reference audit59PASS/1unresolved
+is retained. Both values round to10.82 in this case; that is not evidence of
+identical cash entitlement/reference basis or complete accounting support.
+No strategy, dataset promotion, cash-policy edit or lowered assertion.
+
+1188 backend/one optional private-archive skip, Ruff/mypy and fresh isolated
+tmpfs testDB reversible migrationsPASS.666 frontend/lint/typesPASS; regular
+build failed on existing root-owned dist/assets. Fresh independent mktemp outDir
+buildPASS without changing permissions or existing runtime build directory.
+Read-only independent review noP1P2. No new UI/financial/full product acceptance.
+Keep all required U1-U8/M0-M5 and external lawful-forward/lost-ledger gates.
+
 ## v1.2 reuse retained notice wording and published cash policy — 2026-10-06
 
 Expand only observed final same-day notice spellings (所转增股份, 所(转增)股,

@@ -9601,6 +9601,11 @@ forward receipts and genuine missing ledgers remain required. No merge/release.
 
 ## 2026-10-06 retained official wording (bounded U3/U5/U6 prerequisite)
 
+Post-commit: exactdd8f333 [CI37420836138](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37420836138)
+completed SUCCESS2026-10-06T05:56:21Z for backend/frontend/Compose. PR32 remains
+OPEN/DRAFT. The pending-CI statements below are precommit chronology. Full
+product/financial acceptance remains incomplete.
+
 Observed same-day final-notice spellings now pass existing strict date/holder/
 issuer/unrestricted-listing/source/lifecycle guards. New ledger-v2:55 accepted
 integer share legs,87 unresolved of142 and7265 outside. Source acceptance is
@@ -9621,3 +9626,31 @@ creation/admission/strategy run or full financial acceptance.
 
 Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-notice-wording/README.md>).
 All mandatory product gates remain; no merge/release.
+
+## 2026-10-06 explicit cutoff/credit wording (bounded U3/U5/U6 prerequisite)
+
+Observed final holder 截止 and credit 转增的股份 variants pass unchanged strict
+five-date/holder/unrestricted-listing/source/issuer/lifecycle/component guards.
+New immutable opt-inV3 ledger:60 accepted share legs/142,82 unresolved and7265
+outside. All prior55 event fields equal except source version; no default
+next-session change.002006 still fails missing unrestricted listing date.
+Initial3RED and final14focusedPASS retained; repeated immutable write succeeds.
+
+Reference audit using accepted full cashv32:59PASS/1UNRESOLVED000598,
+canonical98c62a1b9fcca5511ae8467f016f5d70501e157126ce1efa8697a817940863bb,
+repeat bytes and reversed input equal. Earlier narrower cash audit failure
+retained too.000598 actual public old-share cash0.102064 differs from exchange
+DPS0.101. Both round10.82 here; do not substitute equal rounded quotes for
+financial input equivalence. Source facts/PDF/HTML/raw-partition hashes verified;
+no cash authority redo, assertion relaxation or full financial acceptance.
+
+1188backend/one existing optional archiveSKIP19.25s, Ruff548/mypy145 and owned
+tmpfs quant_test upgradehead/downgradebase/upgradehead/checkPASS.666frontend/
+44files13.21s/lint/typesPASS. Regular build EACCES root-owned dist/assets is
+retained; unchanged npm build with fresh mktemp outDirPASS, existing519.13kB
+warning retained. No chmod/chown/install; scratchPG stopped without deleting
+volumes/images; original four services up. Independent read-only review noP1P2.
+This is local scoped evidence, not new exact CI/browser/AA/product acceptance.
+
+Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-cutoff-credit/README.md>).
+Full U1-U8/M0-M5 remain; no new dataset/admission/strategy/merge/release.
