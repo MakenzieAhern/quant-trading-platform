@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 source-credit grammar and full residual queue — partial
+
+Known FAILED historical job retained, no rerun. Existing read-only session loader
+found11March markers/fourafter290checkpoint, not the exact failed held security.
+Final official dated“将于” and“送股份” missed by shared credit parser; two-line
+fix preserves every issuer/final/holder/date/listing/tentative/conflict/page guard.
+All16cachedyears/all7407 oracle:497sourcecandidates=whole476old+21new.
+494limitedreferencePASS+3UNRESOLVED;475oldPASS rows exact/114+1foundation kept.
+Fullqueue21changes only:494NOT_ADMITTED+3referenceUNRESOLVED+288oldfacts NOT
+REVALIDATED+6622sourceUNRESOLVED. Not financial acceptance or new dataset.
+61focused/full1245backend+1optionalSKIP/Ruff/mypy145/testDB migrations PASS;
+709frontend/lint/type/build168ms PASS. Final independent source and batch-proof
+review found no boundedP1/P2; hashes/payload preservation checked, not runtime
+or financial certification. No current browser/fullAA/native200/p95 proof.
+Prior Workbench e0b ownCI37499756705SUCCESS verified, not later parserdiff CI.
+Proof: [diagnostic and preservation receipts](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-reference-marker-diagnostic/README.md).
+FullU1–U8/M0–M5 remain required; goalACTIVE. No frozen/research/OOS/appDB/result
+rewrite, candidate admission, merge/tag/release; new source milestone ownCI next.
+
 ## 2026-10-07 actual novice task failure and Workbench lifecycle visibility
 
 Real Chrome ordinary historical QA c3d38f7b-d942-475e-b49a-206689c1658c is

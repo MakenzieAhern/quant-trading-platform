@@ -1,7 +1,31 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T16:53:02Z",
+  "updated_at_utc": "2026-10-06T17:18:06Z",
+  "implemented_credit_source_20261007_gate": {
+    "status": "PASS_SCOPED_SOURCE_EXPANSION_REFERENCE_PARTIAL_NOT_FINANCIAL_ACCEPTANCE",
+    "source_parent": "e0b014624da257436288639b8b83715a6b423fbf",
+    "parent_ci": "Actual own e0b CI37499756705 backend/frontend/Compose SUCCESS2026-10-06T16:59:45Z, OPEN/DRAFTPR32. Not CI for later parser diff; no merge/release.",
+    "diagnosis": "Pure existing FullDataset observation scan297sessions;219markers overall/11requestedMarch2011/4aftercheckpoint290. No engine/portfolio/strategy/DB/network calls; cannot identify actual failed held security/date. c3d38 original remainsFAILED/noresult/attempt1, no retry.",
+    "correction": "Shared final credit clause recognizes explicit dated 将于 and 送股份. Two-line regex fix, no loosened issuer/final/date/allholder/unrestrictedlisting/tentative/conflict/page checks; source000850/002161 actual PDF+text binding reviewed. 2RED cases then61focusedPASS including immutable CLI. Final independent readonly source+allcandidate proof review no evidenced boundedP1P2;476oldwholeevents/475PASS/114+1/7386wholequeue rows/58inputcodebindings+131sourcepartition files confirmed. No independent runtime or financial/fullgoal certification.",
+    "candidate": "/home/yuchen/data/product-candidates/20261007-bonus-will-credit/ledger-v1.json",
+    "candidate_manifest_sha256": "6971a669b1b63482e40e231595071e65d65a57d6a864014b568fd175fe0c980e",
+    "candidate_bytes_sha256": "791413cd0277e17d6e42ee3ee60283ace2a21ce39c4ece764e698985c9468a0d",
+    "candidate_scope": "All16cachedyears/all7407oracle same28inputbindings;497sourcecandidates=476oldwholeevents exact+21new. Candidate evidence only, no dataset admission/registration/financial acceptance. No acquisition or frozen edits.",
+    "reference": "All497 actual strict source/reference audit;494limitedPASS+3UNRESOLVED.475oldPASS payloads exact/old115foundation114+1 preserved/reverseorder same.0005982011-08-16 persists;new0029722023-05-25 repurchasebasisUNRESOLVED/3010802025-07-11 implementeddeclarationUNRESOLVED. No cash overwrite/tolerance/pricefit.",
+    "reference_manifest_sha256": "0f58e0b69ecec71315205cf95b7dde5ac57f68e71104381b71a4d72581dc4943",
+    "reference_bytes_sha256": "b667c4443264414d32597651f01eb1764b51d9ac94b50dba0adfbe318ef7ee1d",
+    "queue": "Complete7407:494NOT_ADMITTED+3referenceUNRESOLVED+285frozenpresence+1component+2noentitlementNOT_REVALIDATED+6622sourceUNRESOLVED. Exactly21source/referencechanges (19limitedPASS/2unresolved);other7386whole rows exact/all16years/reverseorder. Not allactionclasses/financial acceptance.",
+    "queue_manifest_sha256": "93f5d6f28a22997257a02c9e389d78ff1ff3e1e94073a73ab50ca511b783f686",
+    "queue_bytes_sha256": "b2491d3b4122a341bd82db71f77988aba4a8c976eb2d98b2a5a96453673c5d6a",
+    "tests": "61focusedPASS0.27s/fullbackend1245PASS+1optionalarchiveSKIP21.44s/Ruff551/mypy145/Alembic testDB up-down-up-check PASS.709frontend45files18.00s/lint/type/build168ms PASS;520.57kB advisory notp95. No new browser/AA/native200/fullfinancial claim.",
+    "ownership": "Root solewriter/no competingrepository or jobworker observed. Sourcebatch59117terminal0, originalbackend pure diagnostic23716terminal0, correctedreference21713terminal0/queueterminal0, backend80702/frontend61079terminal0. NewtestPG30b1cfb5 onlyloopback55471/tmpfs/no volumes stopped. Original4Compose intact, appDB unused. Failedisolated mounts/proofvirtualpath/queuecwd observations retained; no resets/deletion/research rerun.",
+    "evidence": "product-evidence/v1.2/m4/20261007-reference-marker-diagnostic/README.md",
+    "evidence_payloads": 12,
+    "evidence_manifest_sha256": "9e2467f7df4989c5f9c158c2785a80550895e85b6c03563ba0e426fb0535d2ca",
+    "ci": "This coherent source milestone needs commit/push/ownCI; e0b prior PASS is not newdiff coverage. Existing Gitidentity unchanged/PR32draft/unmerged.",
+    "next": "Complete independent batch proof review and source milestone, then close exact remaining source/reference/holder/component/allactionclass requirements and supported newversion financial/API/userjourney.002014 conditional incentive prose and300048 missing dated-link remain targeted March clues, not guessed executiondates. Full6643oldsource queue is now6622 but all7407 preserved. Continue mandatory native200/AA/p95/errors/restart/restorable/manual/delivery; external lawful actualafterstartforward/genuine missingledger unchanged. FullU1-U8/M0-M5/goalACTIVE/product_goal_complete false, no frozen/formal/OOS/merge/tag/release."
+  },
   "novice_task_failure_20261007_gate": {
     "status": "PARTIAL_USER_FLOW_ACTUAL_HISTORICAL_JOB_FAILED_SOURCE_GUARD",
     "source_parent": "d850fcd4b812ed2f09da8d1b078e9aed5b3c5273",
@@ -13,7 +37,7 @@
     "evidence": "product-evidence/v1.2/m4/20261007-novice-task-failure/README.md",
     "evidence_payloads": 8,
     "evidence_manifest_sha256": "5cbab91ebe30747024698e7b2b214ad9e52846f5e107a45737986d36028f1cf9",
-    "ci": "New coherent source milestone requires own commit/push/exactCI. Parentd850CI37494535320SUCCESS not coverage of this new diff. Git identity/auth MakenzieAhern unchanged; PR32OPEN/DRAFT.",
+    "ci": "Own e0b014624da257436288639b8b83715a6b423fbf CI37499756705 backend/frontend/Compose SUCCESS2026-10-06T16:59:45Z, fresh readback confirmed. Earlier d850PASS is historical only. Git identity/auth MakenzieAhern unchanged; PR32OPEN/DRAFT, no merge/release.",
     "next": "Do not run another ordinary historical experiment just to demonstrate known source failure. Prioritize full economic/source/new-version closure and required financial/API acceptance; use preserved failure and existing cached evidence, no frozen rewrite/engine-guard bypass/strategytuning. Remaining independent mandatory native200/AA/p95/errors/restart/restorable/manual/delivery can proceed. Full U1-U8/M0-M5 and lawful actualafterstartforward/genuine missingledger requirements remain, goalACTIVE/product_goal_complete false. No formal/OOS/accountstart/provider/migration/restart/merge/tag/release."
   },
   "chrome_result_flow_20261007_gate": {
@@ -2982,7 +3006,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Complete current coherent Workbench lifecycle milestone commit/push/exactCI, then prioritize complete source/economic/newversion/financial/API closure and remaining mandatory U1-U8/M0-M5 native200/AA/p95/error/restart/manual/restorable delivery. Actual ordinaryChrome taskc3d38FAILED at held-reference guard/no result; do not repeat known-source-failure jobs or tune cash/interval for cosmeticPASS. Originaldraft restored/8payloadproof sealed/709frontendPASS/independentreview complete. Parentd850/48/ed3 CI alreadyPASS, not newdiff coverage. Fullscope475+1/7407/6643source/600725component/002375/002399/44rawgaps retained;000598 requires independent implemented composite-reference and aggregate evidence, never repeated weightedpricefit. No frozen/research/OOS/oldresults/productionDB rewrite. Exports landing notverified after boundedtimeouts/internalpagepolicydenied; no workaround. Native200 needs genuine measuredzoom; viewport/ineffectiveCtrlplus notsubstitute. Lawful actualafterstartforward and genuine missingpaperledger restoration still external. UbuntuGUIintegration requested/notverified; Windowsengine/services work. Full requirements intact/goalACTIVE/product_goal_complete false; no merge/tag/release until wholeproductproof.",
+  "next_task": "Commit/push/ownCI the coherent implemented-credit parser milestone after sealed independentproof; e0b WorkbenchCI37499756705 alreadyPASS. Full7407queue now494NOT_ADMITTED+3referenceUNRESOLVED+288oldfactsNOT_REVALIDATED+6622sourceUNRESOLVED, no identity dropped/whole476old candidates and475PASS payloads preserved. Close exact source/reference/holder/component/allactionclass requirements and supported separate newversion financial/API/userjourneys, not cosmetic known-failure job retries. Target new002972/301080 source formula gaps and conditional incentive prose002014/missingdated300048 without new semantics inferred from prices;000598 requires independent implemented composite-reference and aggregate evidence, never weightedpricefit or cash overwrite.600725component/002375/002399/44rawgaps retained. Continue all mandatory native200/AA/p95/errors/restart/restorable/manual/delivery; exports landing notverified/internalpagepolicy not bypassed. Lawful actualafterstartforward and genuine missingpaperledgers external remain. UbuntuGUIintegration requested/notverified; Windowsengine/originalservices working. FullU1-U8/M0-M5/goalACTIVE/product_goal_complete false, frozen/.research/oldresults/OOS protected, no merge/tag/release until completeproductproof.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git log -1 --oneline && gh pr view 32 --json headRefOid,state,isDraft && gh run list --branch codex/product-v1.2-current-rules --limit 1 --json databaseId,headSha,status,conclusion",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

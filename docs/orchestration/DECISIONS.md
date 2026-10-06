@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 implemented future-tense credit is not a guessed boundary — 2026-10-07
+
+Exact cached final000850/002161 notices state dated“将于” credit and same-day
+unrestricted listing for all holders. Recognize that literal and“送股份” once
+in shared parser, not exchange-date inference or a security-specific exception.
+Keep issuer/final/holder/date/listing/tentative/conflict/page guards and RED cases.
+Rerun all16years/all7407 rather than only those two stocks:21newsourcecandidates,
+whole476old preserved;19newlimitedreferencePASS/2newUNRESOLVED, no admission.
+Completequeue keepsall7407/other7386whole rows exact/288oldfacts unpromoted.
+Original job FAILED and frozen assets retained; no new backtest for a cosmeticPASS.
+WSL missing mount-service blocks newbinds, not original running services; use pure
+readonly existing loader for diagnosis and actualinstalledWSLvenv for source work.
+Old/proof preservation mapping keeps exact checksums; queue uses producingbackend
+cwd. NewtestDB tmpfs/loopback only, stopped after tests; appDB never test target.
+Parent e0b ownCI now verified SUCCESS; not new parserdiff CI or product completion.
+
 ## v1.2 novice failure and truthful recent-job status — 2026-10-07
 
 Actual separate Chrome QA c3d38 fails closed on unexplained held reference change,

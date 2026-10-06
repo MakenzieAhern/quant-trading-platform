@@ -25,6 +25,36 @@ NOTICE = (
 )
 
 
+@pytest.mark.parametrize("credit", ["本次所送(转增)股", "本次所送股份"])
+def test_implemented_will_credit_wording_still_requires_exact_dates_and_all_holders(credit):
+    notice = NOTICE.replace("本次转增股于", credit + "将于")
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        (credit + "将于", "预计" + credit + "将于"),
+        (credit + "将于", "拟将" + credit + "将于"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("2011年03月28日直接记入", "直接记入"),
+        ("本公司全体股东", "本公司控股股东"),
+        ("无限售条件", "有限售条件"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice + notice.replace("2011年03月28日直接记入", "2011年03月29日直接记入")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+    first, second = notice.split("2011年03月28日直接记入")
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [first + "2011年03月", "28日直接记入" + second], "600000", TITLE, RECORD, EX
+        )
+
+
 @pytest.mark.parametrize(
     ("credit", "listing"),
     (
