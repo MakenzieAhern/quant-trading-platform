@@ -1,6 +1,48 @@
 # v1.2 acceptance ledger
 
+## 2026-10-06 holder account/page boundaries (bounded U3/U5/U6 prerequisite)
+
+Full cached official002304/002368/002425/002436/002573 read: complete holder dates,
+explicit share credit and unrestricted listing. Numbered cutoff/share-account
+wording and bounded registry prose continuation do not derive dates across pages.
+V18 79sourcelegs/63unresolved; V19 draft74/68 lost9old despite52focusedPASS and
+is NOT ACCEPTED. Full9notices read, contiguous metadata/exact headings/identical
+first-page running header/heading-counter handoff restore them;7RED then1proposed
+metadata RED corrected without deleting tests or relaxing assertions. Independent
+V20P2 Arabic newsection swallowed by prose reproduced2RED/2PASS;shared numbered
+boundary corrected. V20 NOT ACCEPTED. Final58focusedPASS.
+FinalV21 separate immutableledger-v4 canonical
+f2466d5c8662a6efb977eba4784030e57b77824be0b6de5ee8da6698db4c9714,
+bytesa27c42d738d79c6e17e8946d243c61564c5d5b64f5a3b860af22ce1900f076d7:
+83sourcelegs/142,59unresolved,7265outside. Old78fields/receipts exact except
+opt-inversion/checksum/fourdependencies/default unchanged;new5sourcebindings
+and immutable repeatPASS.002436printed2010AGM typo retained separately from its
+explicit2011 implementation dates, not silently corrected.
+
+Unchanged reference auditor82scopedPASS/1UNRESOLVED000598 strictcash mismatch;
+canonical245ebe58b35dfcaa0d2dedb2e92350066318cef6981c5dc7b27116a0ebd852c2,
+repeat stdout/reversed equal.44rawdate failures38holder/3credit/1listing/2record-ex
+remain diagnosis only, not whole economic census or new-version admission.
+Final1238backendPASS/one optional archiveSKIP19.74s/Ruff548/mypy145/reversible
+ownedtmpfsDB head-base-head-checkPASS;checkerterminal0/ownedPGstopped.
+Originalfourservicesup/healthy/APIfrontend200/RedisPONG, no production migration
+or restart. Frontend unchanged;historical666/lint/types/independentbuild and
+exactc2379frontendCI reused, not new browser/AA/native200/p95 certification.
+Independent finalV21 source/allcallers/tests/candidate/docs/proof review found no
+remaining boundedP1P2 or scope overclaim;reviewer ran no tests/network/DB/writes.
+Exact newCI/seal pending. All U1-U8/M0-M5 remain required;
+lawful after-start forward/genuine missing ledgers/economic admission/delivery
+incomplete. No frozen asset/formal/OOS/provider/account/promotion/merge/release change.
+Evidence: [external proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-numbered-holder-account/README.md>).
+
 ## 2026-10-06 numbered metadata and long-holder declarations (bounded U3/U5/U6 prerequisite)
+
+Post-commit: exactc2379d3415a5097da4f6d762044a1f7488e69c5e
+[CI37433498969](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37433498969)
+backend/frontend/ComposeSUCCESS2026-10-06T08:05:29Z, PR32OPEN/DRAFT/head==origin.
+26-payload proof sealed162a4000c048e0171e4f16bc5c05e89ff3c34cf130900ac0b4e7397efd0be656;
+all26SHA checksPASS. Pending-CI/seal wording below is precommit chronology.
+Only postCI receipts local; no new source/UI or full financial/product claim.
 
 Full cached official002479/002493/002503/002519 read. Shared opt-in V17
 recognizes exact numbered long-holder and unrestricted listing交易日 declarations,

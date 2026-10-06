@@ -35,11 +35,45 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
     if re.search(
         r"差异化分红送转:是|让渡|重整|缩股|吸收合并|另行公告|拟于|拟实施|B股|H股|"
         r"未确定|待定|另行通知|待通知|取消|撤销|终止|延期|暂停|暂缓|预计|预期|"
-        r"拟新增|拟上市|拟转增|拟送|计划(?:本次)?(?:所)?(?:新增|资本公积金转增|转增|送|\(转(?:增)?\))",
+        r"拟新增|拟上市|拟转增|拟送|计划(?:本次)?(?:所)?(?:新增|资本公积金转增|转增|送|\(转(?:增)?\))|"
+        r"(?:拟将|讨论)[一二三四五六七八九十]+、(?:股权登记日|分红派息日期)",
         text,
     ):
         raise ValueError("BONUS_SAME_DAY_NONSTANDARD_OR_TENTATIVE")
     dated = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
+    plain_date = r"20\d{2}年\d{1,2}月\d{1,2}日"
+    page_number = r"(?:[-—]\d+[-—]|\d+(?:/\d+)?)?"
+    repeated_header = re.match(
+        r"([\u4e00-\u9fff]+股份有限公司20\d{2}年(?:度|半年度)权益分派实施公告)\d+", text
+    )
+    boundary = r"(?:^|[。;]|§" + page_number
+    if repeated_header:
+        # Only the identical first-page running header is a page-start boundary.
+        boundary += "|§" + re.escape(repeated_header[1]) + r"\d+"
+    boundary += ")"
+    metadata = (
+        r"[一二三四五六七八九十]+、(?:股权登记日、除权除息日、"
+        r"新增无限售条件流通股份上市日和红利发放日|分红派息日期)"
+        r"1[、.]股权登记日(?:为)?:?" + plain_date + r"2[、.]除权除息日(?:为)?:?" + plain_date
+    )
+    holder_metadata = (
+        "(?:" + metadata + r"(?:3[、.]新增无限售条件流通股份上市(?:交易)?日:?" + plain_date + r")?|"
+        r"[一二三四五六七八九十]+、(?:股权登记日与除权除息日|"
+        r"股权登记日、除息日、红利发放日)"
+        r"1[、.]股权登记日(?:为)?:?"
+        + plain_date
+        + r"2[、.]除(?:权除)?息日(?:为)?:?"
+        + plain_date
+        + r"(?:3[、.]红利发放日(?:为)?:?"
+        + plain_date
+        + r")?|"
+        r"[一二三四五六七八九十]+、股权登记日与除权\(除息\)日"
+        r"本次权益分派股权登记日为:?" + plain_date + r"除权\(除息\)日为:?" + plain_date + ")"
+    )
+    # Page markers remain in prose; neither a date nor another declaration can
+    # be assembled across pages. A holder sentence cannot swallow a later section/date.
+    holder_prose = r"(?:(?![一二三四五六七八九十]+、|\d+[、.]|20\d{2}年)[^。;])"
+    page_counter = r"(?:§" + page_number + ")?"
     # A weekday annotation supplements a complete date, never supplies one.
     for year, month, day, weekday in re.findall(dated + r"\(星期([^()§。;]{1,4})\)", text):
         try:
@@ -53,13 +87,25 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
     patterns = (
         "(?:" + "|".join(RECORD_LABELS) + ")" + LABEL_DATE_GAP + dated,
         EX_LABEL + LABEL_DATE_GAP + dated,
-        r"(?:本次(?:(?:权益)?分[派配]|分红派息及资本公积金转增股本)对象为:?(?:截[止至])?|"
-        r"(?:^|[。;]|§\d*)(?:\d+[、.]红利发放日:?20\d{2}年\d{1,2}月\d{1,2}日)?"
-        r"[一二三四五六七八九十]+、"
-        r"分红派息及资本公积金转增股本对象:?截[止至]|"
-        r"[一二三四五六七八九十]+、(?:分红派息|利润分配和转增)对象:?截[止至])"
+        boundary + r"(?:\d+[、.]红利发放日:?" + plain_date + "|" + holder_metadata + r")?"
+        r"(?:[一二三四五六七八九十]+、(?:分派对象|权益分派对象|"
+        r"分红派息及资本公积金转增股本对象|分红派息对象|"
+        r"利润分配和资本公积金转增股本对象):?)?"
+        + page_counter
+        + r"(?:本次(?:(?:权益)?分[派配]|分红派息及资本公积金转增股本)对象为:?(?:截[止至])?|"
+        r"[一二三四五六七八九十]+、(?:分红派息及资本公积金转增股本|权益分派|"
+        r"分红派息|利润分配和转增)对象:?截[止至])"
         + dated
-        + r"[^。;§]{0,200}?收市后[^。;§]{0,200}?登记在册[^。;§]{0,30}?全体股东",
+        + holder_prose
+        + r"{0,200}?收市后"
+        + holder_prose
+        + r"{0,200}?登记"
+        + page_counter
+        + "在"
+        + page_counter
+        + "册"
+        + holder_prose
+        + r"{0,30}?全体股东",
         r"(?:(?:^|[。;]|§\d*)(?:[一二三四五六七八九十]+、"
         r"(?:转增股本方法|权益分[派配]方法|权益分派办法|"
         r"利润分配和(?:资本公积金)?转增股本方法|分配、转增股份方法|"
@@ -68,17 +114,13 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"(?:送)?\(转增\)(?:的)?股(?:份)?)|"
         r"(?:^|[。;§]|[一二三四五六七八九十]+、转增股本方法)资本公积金转增的股份)于"
         + dated
-        + r"(?:\(星期[一二三四五六日天]\))?直接[记计]入股东证券[账帐]户",
+        + r"(?:\(星期[一二三四五六日天]\))?直接[记计]入股东(?:证券)?[账帐]户",
         r"(?:(?:^|[。;§]|[一二三四五六七八九十]+、"
         r"(?:新增股份起始交易日|转增流通股上市日)?|\d+[、.])本次(?:所)?"
         r"(?:转增|送|新增(?:资本公积金转增股本)?|(?:送)?\(转(?:增)?\)股?)(?:的)?"
         r"无限售条件(?:的)?流通股(?:份)?(?:的)?"
         r"(?:起始交易(?:日|时间)|上市流通日)(?:为)?:?|"
-        r"(?:^|[。;§])"
-        r"(?:[一二三四五六七八九十]+、(?:股权登记日、除权除息日、"
-        r"新增无限售条件流通股份上市日和红利发放日|分红派息日期)"
-        r"1[、.]股权登记日(?:为)?:?20\d{2}年\d{1,2}月\d{1,2}日"
-        r"2[、.]除权除息日(?:为)?:?20\d{2}年\d{1,2}月\d{1,2}日)?"
+        r"(?:^|[。;§])(?:" + metadata + r")?"
         r"(?:[一二三四五六七八九十]+、|\d+[、.])?"
         r"新增无限售条件流通股份上市(?:交易)?日:?)" + dated,
     )

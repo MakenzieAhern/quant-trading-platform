@@ -1,9 +1,32 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T07:58:53Z",
+  "updated_at_utc": "2026-10-06T08:30:18Z",
+  "retained_holder_page_account_20261006_gate": {
+    "status": "PASS_SCOPED_REVIEW_PENDING_EXACT_CI",
+    "source_base": "c2379d3415a5097da4f6d762044a1f7488e69c5e",
+    "candidate": "/home/yuchen/data/product-candidates/20261006-bonus-numbered-holder-account/ledger-v4.json",
+    "manifest_sha256": "f2466d5c8662a6efb977eba4784030e57b77824be0b6de5ee8da6698db4c9714",
+    "bytes_sha256": "a27c42d738d79c6e17e8946d243c61564c5d5b64f5a3b860af22ce1900f076d7",
+    "closure": "Five fully read cached notices002304/002368/002425/002436/002573: numbered holder cutoff, explicit share-credit account wording and bounded prose page continuation. FinalV21 83sourcelegs/142,59unresolved,7265outside. Old78event fields/receipts exact except opt-inversion/checksum;fourdependencies/default unchanged. No new economic census/dataset admission or financial PASS.",
+    "failure_fix": "V18 79/63 then V19 draft74/68 lost9old records despite52focusedPASS. V19 NOT ACCEPTED. Read all9 complete source notices; add reviewed contiguous record/ex/cash metadata, exact holder heading, identical first-page running-header boundary and heading/page-counter handoff.7newRED then57PASS/1RED exposed proposed metadata chapter, bounded tentative guard added.58focusedPASS. Dates never completed across pages; other chapter/date cannot complete holder prose. No removed tests or relaxed assertions. Independent V20 P2 Arabic new section swallowed by prose reproduced2RED/2PASS;V20 NOT ACCEPTED. Shared numbered-declaration guard fixed,final58focusedPASS.",
+    "preservation": "Strict old78 preservation9208ec79491477c1800fdd56d834a1bde3ececd93ea90e18e3ef0e65078b9aa1;new5PDF/extraction/officialURL/datebindings verified. Immutable repeat succeeds. v1.1 target unchanged/.research/frontend diffempty/no frozen mutation, formal/OOS rerun, promotion/merge/tag/release.",
+    "reference": "Unchanged auditor82PASS_SCOPED_REFERENCE_INPUT_RELATIONSHIP/1UNRESOLVED000598 strictcash mismatch. Canonical245ebe58b35dfcaa0d2dedb2e92350066318cef6981c5dc7b27116a0ebd852c2;repeat stdout/reversed events identical. No tolerance/assertion relaxation.",
+    "residual": "44raw dated-pattern failures:38holder/3credit/1listing/2record-ex, canonical5087fa8fcd754673706feb280b5dd966367faf451c45dab62d69e750c8e0fc3e. Stricter holder boundary changes earlier failure location for already-unresolved rows; not newly lost accepted events.002006missing listing/002299missing credit日/002245fraction/000598cash still unresolved.",
+    "tests": "1238backendPASS/1existing optional historical archiveSKIP19.74s/Ruff548/mypy145/reversible ownedtmpfs testDB head-base-head-checkPASS. Fresh owner/image/mount/network/testENV verified. Checker f04a390 exited0 2026-10-06T08:30:05.347148439Z/ownedPG7d4e289 stopped. Originalfourservices healthy/up/APIfrontend200/RedisPONG;no productionDB migration/restart or Docker cleanup. First PG readiness noresponse;same livePG checked ready,not restarted.",
+    "review": "Independent finalV21 read-only source/allcallers/tests/candidate/docs/proof review no remaining boundedP1P2 or scoped overclaim. Arabic4、/4. counterexample closed/all4pagecontinuation negatives retained;old78/deps4/default/new5/sourcehash/reference82+1/repeat/raw44/full1238 scopes agree. Reviewer performed no tests/network/DB/writes. Not full financial/product certification;exactCI/seal pending.",
+    "frontend_scope": "Frontend tree unchanged;reuse historical666/local lint/types/independentbuild and exactc2379frontendCI, not another local frontend/browser/AA/native200/p95 certification. Independent final reviewPASS_SCOPED;new exactCI/seal pending. Existing EACCES/519.13kB advisory unchanged.",
+    "evidence": "product-evidence/v1.2/m4/20261006-bonus-numbered-holder-account/README.md",
+    "remaining_scope": "Full U1-U8/M0-M5 and new-version financial admission/user-flow/AA/native200/p95/delivery remain. Lawful after-start forward and genuine missing paper-ledger external gaps unchanged. Goal ACTIVE, not complete."
+  },
   "retained_numbered_metadata_20261006_gate": {
-    "status": "PASS_SCOPED_LOCAL_V17_REVIEW_AND_EXACT_CI_PENDING",
+    "status": "PASS_SCOPED_EXACT_C2379_CI",
+    "committed_source": "c2379d3415a5097da4f6d762044a1f7488e69c5e",
+    "ci_run": 37433498969,
+    "ci": "Exactc2379 backend/frontend/ComposeSUCCESS2026-10-06T08:05:29Z. Full jobs/steps JSON saved, watch65473 terminalexit0. Head==origin/PR32head, PR32OPEN/DRAFT. Pending-CI text in prior reviewed records is precommit chronology, not current failure or full financial/product acceptance.",
+    "evidence_payloads": 26,
+    "evidence_manifest_sha256": "162a4000c048e0171e4f16bc5c05e89ff3c34cf130900ac0b4e7397efd0be656",
+    "post_ci_checkpoint": "26payloadSHA checks allPASS. Only state/acceptance CI+seal+nexttask receipts local after coherent c2379 milestone; join next meaningful commit, no tiny receipt push. No code/UI changes after exactCI.",
     "source_base": "fb27ca3613799a35af158cee1ad46478c6dbc7b0",
     "candidate": "/home/yuchen/data/product-candidates/20261006-bonus-numbered-long-holder/ledger-v4.json",
     "manifest_sha256": "3f416919b9aaabfbbcf929555dd1c270607d95106710a7f9df2546bfe6dfba9f",
@@ -2739,7 +2762,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "V17 numberedmetadata batch78sourcelegs/64unresolved,77scopedreference/1UNRESOLVED000598,45focused/1224backend1optionalSKIP/allstatic/reversible ownedtmpfsDBPASS; old74/default/dependency4/immutable/reversed preserved. Final independent source/docs/proof review no boundedP1P2/overclaim; coherent milestone commit/push/exactCI and external proof seal next. Then address remaining actual economic/provenance census gaps from cached48date-pattern diagnosis or a concrete unmet user-flow gate; do not repeat accepted four-source batch or substitute candidate count for full U3/U5/U6 financial admission. Full mandatory U1-U8/M0-M5/AA/native200/p95/delivery remain. Originalfourserviceshealthy/up200/checkerexited0/ownedPGstopped. No frozenchange/OOS/merge/release; lawful after-start forward and genuine missing-ledgers external gaps remain.",
+  "next_task": "FinalV21 source/candidate83/59 has58focused/1238fullbackend1optionalSKIP/static/reversibletmpfsDBPASS;old78/new5sourcebindings/immutable/reference82scoped1UNRESOLVED000598/repeat/reversedPASS. V19lost9/V20ArabicsectionP2 NOT ACCEPTED;fullsources/preservation/rootguard fixed with actualRED. Independent final read-only review no boundedP1P2/overclaim;next coherent commit/push/exactCI/seal.44rawdate gaps38holder/3credit/1listing/2record-ex/full economic census/new-version financial admission remain.002375listing alias/002399heading handoff+credit/listing gaps not accepted. Do not substitute sourcecandidate count for U3/U5/U6 financial/user-flow acceptance. Full U1-U8/M0-M5/AA/native200/p95/delivery and external lawfulafter-startforward/genuinemissingledgers remain. Originalfourserviceshealthy/up200/checkerexited0/ownedPGstopped;no current test/sourceworker. No frozenchange/OOS/merge/release;goalACTIVE.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

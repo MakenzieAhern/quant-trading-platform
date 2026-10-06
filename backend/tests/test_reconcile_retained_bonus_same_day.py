@@ -388,6 +388,191 @@ def test_numbered_long_holder_and_listing_trade_day_keep_explicit_declarations(
         )
 
 
+@pytest.mark.parametrize("holder,account", [(True, False), (False, True), (True, True)])
+def test_numbered_equity_holder_and_share_account_require_complete_explicit_terms(holder, account):
+    notice = NOTICE
+    if holder:
+        notice = notice.replace("三、分派对象\n本次权益分派对象为:", "三、权益分派对象\n截止")
+    if account:
+        notice = notice.replace("股东证券账户", "股东账户")
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年3月25日下午", "股权登记日下午"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+        ("2011年03月28日直接记入", "直接记入"),
+        ("本次转增股于", "本次现金红利于"),
+        ("全体股东", "控股股东"),
+        ("无限售条件", "有限售条件"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    account_label = "股东账户" if account else "股东证券账户"
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice.replace(account_label, "股东资金账户")], "600000", TITLE, RECORD, EX
+        )
+    for declaration in (["三、权益分派对象"] if holder else []) + ["本次转增股于"]:
+        for prefix in ("预计", "计划", "拟将", "讨论"):
+            with pytest.raises(ValueError):
+                same_day_listing(
+                    [notice.replace(declaration, prefix + declaration)], "600000", TITLE, RECORD, EX
+                )
+    for dated in ("2011年3月25日下午", "2011年03月28日直接记入", "2011年3月28日。"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice + notice.replace("2011年03月28日", "2011年03月29日")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
+@pytest.mark.parametrize(
+    "split_after,counter",
+    [("收市后,", ""), ("在中国", "-2-"), ("登记", ""), ("登记在", "")],
+)
+def test_holder_prose_page_continuation_never_completes_a_date_or_changes_scope(
+    split_after, counter
+):
+    notice = NOTICE.replace("在登记结算公司", "在中国证券登记结算公司")
+    first, second = notice.rsplit(split_after, 1)
+    pages = [first + split_after, counter + second]
+    assert same_day_listing(pages, "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年3月25日下午", "股权登记日下午"),
+        ("全体股东", "控股股东"),
+        ("无限售条件", "有限售条件"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("本次权益分派对象为:", "拟将本次权益分派对象为:"),
+        ("本次权益分派对象为:", "讨论本次权益分派对象为:"),
+        ("登记", "四、其他分派对象登记"),
+        ("登记", "2011年3月24日登记"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([p.replace(old, new) for p in pages], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing([pages[0] + "。", pages[1]], "600000", TITLE, RECORD, EX)
+    for section in ("4、其他分派对象", "4.其他分派对象"):
+        with pytest.raises(ValueError):
+            same_day_listing([pages[0], section + pages[1]], "600000", TITLE, RECORD, EX)
+    for dated in ("2011年3月25日下午", "2011年03月28日直接记入", "2011年3月28日。"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [first + dated[:6], "2" + dated[6:] + second], "600000", TITLE, RECORD, EX
+            )
+    # A second valid-looking holder clause with a different complete date conflicts.
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [*pages, notice.replace("2011年3月25日下午", "2011年3月24日下午")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
+@pytest.mark.parametrize(
+    "metadata,heading",
+    [
+        (
+            "二、股权登记日与除权除息日1、股权登记日:2011年3月25日2、除权除息日:2011年3月28日",
+            "三、分派对象",
+        ),
+        (
+            "二、分红派息日期1、股权登记日为:2011年3月25日2、除权除息日为:2011年3月28日",
+            "三、分红派息对象",
+        ),
+        (
+            "二、股权登记日、除息日、红利发放日1、股权登记日为:2011年3月25日"
+            "2、除息日为:2011年3月28日3、红利发放日为:2011年3月28日",
+            "三、权益分派对象",
+        ),
+        (
+            "二、股权登记日与除权(除息)日本次权益分派股权登记日为:2011年3月25日"
+            "除权(除息)日为:2011年3月28日",
+            "三、权益分派对象",
+        ),
+        (
+            "二、股权登记日与除权除息日股权登记日为2011年3月25日,除权除息日为2011年3月28日。",
+            "三、利润分配和资本公积金转增股本对象",
+        ),
+    ],
+)
+def test_holder_metadata_chain_is_contiguous_and_not_a_proposed_internal_anchor(metadata, heading):
+    notice = NOTICE.replace(
+        "二、股权登记日与除权除息日\n股权登记日为2011年3月25日,"
+        "除权除息日为2011年3月28日。三、分派对象",
+        metadata + heading,
+    )
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for label in ("二、", heading, "本次权益分派对象为:"):
+        for prefix in ("拟将", "讨论"):
+            with pytest.raises(ValueError):
+                same_day_listing(
+                    [notice.replace(label, prefix + label)], "600000", TITLE, RECORD, EX
+                )
+    for old, new in (
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("全体股东", "控股股东"),
+        ("无限售条件", "有限售条件"),
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    for dated in ("2011年3月25日下午", "2011年03月28日直接记入", "2011年3月28日。"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [first + dated[:6], "2" + dated[6:] + second], "600000", TITLE, RECORD, EX
+            )
+
+
+@pytest.mark.parametrize("layout", ["repeated-header", "heading-page-counter"])
+def test_holder_page_start_preserves_header_identity_and_complete_date(layout):
+    header = "测试股份有限公司2010年度权益分派实施公告"
+    if layout == "repeated-header":
+        first, second = NOTICE.split("三、分派对象", 1)
+        pages = [header + "1" + first, header + "2三、分派对象" + second]
+    else:
+        first, second = NOTICE.split("本次权益分派对象为:", 1)
+        pages = [first, "2/3本次权益分派对象为:" + second]
+    assert same_day_listing(pages, "600000", TITLE, RECORD, EX) == EX
+    for prefix in ("拟将", "讨论"):
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [pages[0], pages[1].replace("本次权益分派对象为:", prefix + "本次权益分派对象为:")],
+                "600000",
+                TITLE,
+                RECORD,
+                EX,
+            )
+    for old, new in (
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年3月25日下午", "股权登记日下午"),
+        ("全体股东", "控股股东"),
+        ("无限售条件", "有限售条件"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([p.replace(old, new) for p in pages], "600000", TITLE, RECORD, EX)
+    if layout == "repeated-header":
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [pages[0], pages[1].replace("测试股份", "其他股份")], "600000", TITLE, RECORD, EX
+            )
+    first, second = NOTICE.split("2011年3月25日下午", 1)
+    with pytest.raises(ValueError):
+        same_day_listing([first + "2011年3月", "2/328日下午" + second], "600000", TITLE, RECORD, EX)
+
+
 def test_same_day_requires_same_final_issuer_holder_credit_and_listing():
     assert same_day_listing([NOTICE], "600000", TITLE, RECORD, EX) == EX
     with pytest.raises(ValueError, match="FINAL_ISSUER"):
@@ -570,7 +755,7 @@ def test_opt_in_reconciliation_is_immutable_and_preserves_default_schedule(tmp_p
         )
     }
     event = accepted["events"][0]
-    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V17"
+    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V21"
     assert event["event"]["listing_date"] == EX
     assert event["event"]["share_ratio"] == "1.000"
     assert not event["scheduled_listing_not_actual_tradability"]

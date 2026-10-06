@@ -1,5 +1,31 @@
 # Decisions
 
+## v1.2 holder account/prose continuation and preservation repair — 2026-10-06
+
+Full cached002304/002368/002425/002436/002573 final notices supply explicit same-day
+credit/listing and complete all-holder record dates. Recognize numbered cutoff,
+share-credit股东账户 and bounded prose page continuation; never complete any date
+across pages or infer listing from cash/credit. Preserve002436printed2010AGM typo
+as a source caveat, separately from explicit2011 implementation dates.
+V18=79/63; V19draft=74/68 drops9old records despite52focusedPASS: NOT ACCEPTED.
+Read full9sources; require exact contiguous dated metadata and reviewed headings,
+identical running header derived from firstpage, explicit heading-counter handoff.
+7newRED then1proposedmetadata RED; shared guard correction, no deleted tests or
+relaxed assertions. IndependentV20P2 Arabic section swallowed by prose reproduced
+2RED/2PASS;shared numbered-boundary guard closes root cause. V20 NOT ACCEPTED.
+FinalV21=83/59 out of142;old78fields/receipts unchanged except
+opt-inversion/checksum/fourdependencies/default unchanged.5newPDF/extraction/URL
+bindings validated;immutable repeatPASS.44rawdate failures remain diagnosis only.
+Unchanged reference auditor82scopedPASS/1UNRESOLVED000598 cash mismatch/repeat/
+reversed equal.Final1238backendPASS/1optionalarchiveSKIP19.74s/static/reversible owned
+tmpfs testDBPASS;checkerexited0/ownedPGstopped, original4healthy/up200/PONG.
+Frontend unchanged;historical666/static/build and exactc2379CI reused honestly.
+Independent finalV21 source/allcallers/tests/candidate/docs/proof review found no
+boundedP1P2 or scope overclaim;no tests/network/DB/writes by reviewer.
+New exactCI/seal pending. No full financial/product acceptance,
+new dataset, frozen mutation, OfficialOOS rerun, lost-ledger fabrication or release.
+U1-U8/M0-M5 and lawful forward/genuine lost-record external gates remain.
+
 ## v1.2 numbered metadata and explicit long holder declarations — 2026-10-06
 
 Read full cached official002479/002493/002503/002519 notices; accept lexical
