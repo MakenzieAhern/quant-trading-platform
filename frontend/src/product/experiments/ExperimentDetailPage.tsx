@@ -3,7 +3,12 @@ import { useTranslation } from "react-i18next";
 import { requestOutcomeUncertain } from "../../api/client";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
-import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
+import {
+  formatDecimal,
+  formatPercent,
+  formatSignedPercent,
+  formatUtc,
+} from "../../utils/format";
 import { navigate } from "../../utils/navigation";
 import { usePageDataContext } from "../dataContext";
 import { experimentApi } from "./api";
@@ -339,10 +344,6 @@ function ExperimentResults({
     );
   if (!result.data) return null;
   const data = result.data;
-  const signedPercent = (value: string | null) =>
-    value !== null && !value.startsWith("-") && /[1-9]/.test(value)
-      ? `+${formatPercent(value, places)}`
-      : formatPercent(value, places);
   return (
     <>
       <section aria-label={c.resultTitle}>
@@ -358,13 +359,19 @@ function ExperimentResults({
         <p className="experimentHelp">{u.roundedSummary}</p>
         <dl className="experimentMetrics">
           {[
-            [c.return, signedPercent(data.metrics.cumulative_return)],
+            [
+              c.return,
+              formatSignedPercent(data.metrics.cumulative_return, places),
+            ],
             [
               c.drawdownMetric,
               formatPercent(data.metrics.maximum_drawdown, places),
             ],
             [c.cost, formatDecimal(data.metrics.transaction_costs, places)],
-            [c.benchmark, signedPercent(data.metrics.benchmark_return)],
+            [
+              c.benchmark,
+              formatSignedPercent(data.metrics.benchmark_return, places),
+            ],
           ].map(([label, value]) => (
             <div className="experimentPanel" key={label}>
               <dt>{label}</dt>
@@ -374,8 +381,8 @@ function ExperimentResults({
         </dl>
         <p className="experimentHelp">
           {c.capitalEnd}: {formatDecimal(data.metrics.final_equity, places)} ·{" "}
-          {c.excess}: {signedPercent(data.metrics.excess_return)} ·{" "}
-          {experimentBenchmarkName(data.benchmark_id, c)}
+          {c.excess}: {formatSignedPercent(data.metrics.excess_return, places)}{" "}
+          · {experimentBenchmarkName(data.benchmark_id, c)}
         </p>
       </section>
       <section className="experimentNotice" aria-label={c.limits}>

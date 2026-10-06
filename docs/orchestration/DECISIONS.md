@@ -1,5 +1,28 @@
 # Decisions
 
+## v1.2 signed result direction and safe runtime recovery — 2026-10-07
+
+Use existing exact decimal-string percentage formatting plus strict positive-value
+validation once, shared by detail and comparison. Add directional + only to valid
+positive returns; do not change costs, weights, drawdowns, persisted financial values
+or API payloads. Bilingual precise/null/zero/tiny sign regressions and actual saved
+result browser checks cover this root fix; do not rank incomparable experiments.
+Readonly reload is not a failed-study retry: actual failed comparison retains all
+requested studies and explains missing results; Enter reload keeps heading focus,
+detail explains source gap, and same-data retry cannot repair that source gap.
+Current API equality proves four selected records only, not financial validity.
+
+Docker Desktop was not running at resume. Start the existing official4.92.0 once;
+original containers auto-resume, Windows engine reachable, application HTTP200.
+Ubuntu proxy integration separately fails absent backend.sock. Stop repeating the
+same WSL command, use the already installed Windows client for original-container
+frontend checks, and request official GUI integration restart once. Never reset,
+delete/prune volumes, rewrite Docker settings/security or fabricate WSL recovery.
+674frontend/lint/types/build/format pass, independent readonly review noP1/P2;
+new slice requires its own CI, not base8c green. No frozen/research/OOS/DB/merge/
+release change; full economic/newversion/financial/user-flow/native/delivery and
+lawful-forward/genuine missing-ledger gates remain unchanged, goal ACTIVE.
+
 ## v1.2 composite-cash conflict and restored-step labeling — 2026-10-06
 
 Cached000598 final composite allocation cannot be replaced with monthlyDPS.101.

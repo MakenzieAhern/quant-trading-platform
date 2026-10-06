@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
-import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
+import {
+  formatDecimal,
+  formatPercent,
+  formatSignedPercent,
+  formatUtc,
+} from "../../utils/format";
 import { experimentApi } from "./api";
 import {
   comparisonConditions,
@@ -182,7 +187,7 @@ function Comparison({
     {
       label: c.return,
       value: (r: ExperimentResult) =>
-        formatPercent(r.metrics.cumulative_return, places),
+        formatSignedPercent(r.metrics.cumulative_return, places),
     },
     {
       label: c.drawdownMetric,
@@ -197,12 +202,12 @@ function Comparison({
     {
       label: c.benchmark,
       value: (r: ExperimentResult) =>
-        `${formatPercent(r.metrics.benchmark_return, places)}\n${experimentBenchmarkName(r.benchmark_id, c)}`,
+        `${formatSignedPercent(r.metrics.benchmark_return, places)}\n${experimentBenchmarkName(r.benchmark_id, c)}`,
     },
     {
       label: c.excess,
       value: (r: ExperimentResult) =>
-        formatPercent(r.metrics.excess_return, places),
+        formatSignedPercent(r.metrics.excess_return, places),
     },
     {
       label: c.capitalEnd,

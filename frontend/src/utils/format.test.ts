@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDecimal, formatPercent } from "./format";
+import { formatDecimal, formatPercent, formatSignedPercent } from "./format";
 
 describe("readable summary precision", () => {
   it("rounds only the display without floating point or losing exact source values", () => {
@@ -16,5 +16,20 @@ describe("readable summary precision", () => {
     expect(formatPercent(null, 2)).toBe("N/A");
     expect(formatDecimal("invalid", 2)).toBe("invalid");
     expect(() => formatDecimal("1.2", -1)).toThrow(RangeError);
+  });
+
+  it("signs only valid positive percentages without changing exact or unknown values", () => {
+    expect(formatSignedPercent("0.010961967992773949350054841", 2)).toBe(
+      "+1.10%",
+    );
+    expect(formatSignedPercent("0.0000000000000000000001")).toBe(
+      "+0.00000000000000000001%",
+    );
+    expect(formatSignedPercent("0.0000000000000000000001", 2)).toBe("+0.00%");
+    expect(formatSignedPercent("-0.0000000000000000000001", 2)).toBe("-0.00%");
+    expect(formatSignedPercent("000.000", 2)).toBe("0%");
+    expect(formatSignedPercent(null, 2)).toBe("N/A");
+    expect(formatSignedPercent("not 1.2")).toBe("not 1.2");
+    expect(formatSignedPercent(" 1.2 ")).toBe(" 1.2 ");
   });
 });

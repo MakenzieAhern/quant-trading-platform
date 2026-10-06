@@ -824,7 +824,7 @@ describe("experiment comparison", () => {
     expect(heading).toHaveFocus();
     expect(screen.getAllByRole("table")).toHaveLength(2);
     expect(screen.getByRole("row", { name: /^累计收益/ })).toHaveTextContent(
-      "0.01%0.01%",
+      "+0.01%+0.01%",
     );
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(screen.queryByText("Study 2")).not.toBeInTheDocument();

@@ -1,7 +1,23 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T11:23:16Z",
+  "updated_at_utc": "2026-10-06T15:18:55Z",
+  "signed_results_and_readonly_flow_20261007_gate": {
+    "status": "PASS_SCOPED_SIGNED_RESULTS_AND_READONLY_USER_FLOWS_NOT_FULL_PRODUCT",
+    "source_parent": "8c2db8b6e426646cee21c4c7c794da8a270e1000",
+    "scope": "U4/U8 shared exact-string sign formatting for cumulative/benchmark/excess return in detail/comparison; no Number financial conversion, payload/result recomputation, cost/drawdown/weight change or dependency.",
+    "tests": "Resumed full frontend674PASS45files18.65s/lint/types/build180ms/sixfilePrettierPASS; Windows original frontend exec/session20620terminal0. Earlier unsupported test query option/unsigned expectation/format failures corrected without dropping assertions. Backend tree unchanged; prior1243/optionalarchiveSKIP/migration retained, not rerun locally.",
+    "browser": "Prior actual IAB16before+16after four sizes/two languages/themes preserve exact metrics/conditions/quality labels. Resumed real success+failed comparison ENdesktop/ZH390 keeps both selected links, no partial table, Enter read-only reload focusesH1; actual failed detail explains source gap, Back sameids. Three saved results after restart retain exact signed metrics. IAB is not nativeChrome/200/AT/fullAA/p95/financial certification.",
+    "api": "Four existing saved jobs metrics/plans/configuration/datasetSHA re-read equal to initial capture. No create/retry/account/order/draft/provider requests. Selected readback equality, not wholeDB durability or lostledger recovery.",
+    "review": "Independent authorized readonly signed_results_review_oct7 fullchangedsource/callers/tests/savedJSON no boundedP1/P2; no execution/browser/screenshot/DB/network/fullgoal certification.",
+    "runtime": "Existing Desktop4.92.0 launched once after absence; Windows engine29.8.0 and originalfourcontainers auto-resumed healthy/frontendup, HTTP2005173+8000health/RedisPONG. Ubuntu proxy WSL integration failed missing backend.sock; GUI integration restart requested once, NOT_VERIFIED. Existing Windows Docker client safely used for frontend checks; no reset/delete/prune/configsecurity change.",
+    "base_ci": "Exact8c CI37456491066 backend/frontend/ComposeSUCCESS; not certification of new signed diff. New committed source requires own CI; PR32OPEN/DRAFT, no merge/release.",
+    "evidence": "product-evidence/v1.2/m4/20261006-ci-and-result-flow/README.md",
+    "evidence_payloads": 24,
+    "evidence_manifest_sha256": "0ba497527fe75594c4d25fa4cecdff359b22e390a469008bb81aa239d59c1e49",
+    "protected": "Frozenmanifestbytes693c0b81d942d9532c6ec6c6455fbafab76921a40c8093bace32f1fac9cf2cd0/v1.1peeledf88b5c60d29fc1a928b59daf1c2e7818395b7702 rechecked; backend/.researchunchanged; no strategy/formal/OOS/admission/freeze/merge/tag/release.",
+    "goal": "ACTIVE. Interrupted previous goal turn NO_PROGRESS (read-only recovery only); this turn PROGRESS: restored live program via existingDesktop, completed actual comparison error/keyboard/Back path, sealed sign-fix proof and own review/checks. WholeU1-U8/M0-M5 unchanged; source475+1/7407/000598, native/financial/newversion/delivery and lawfulafterstartforward/genuinemissingledger gates remain."
+  },
   "composite_cash_and_restored_step_20261006_gate": {
     "status": "PASS_SCOPED_UI_FIX_SOURCE_CONFLICT_REMAINS_UNRESOLVED",
     "source_parent": "b9da3a902f59298474c540d4b5d24e1008a245d0",
@@ -2313,8 +2329,8 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-06T09:04Z freshWSLps no competingwriter/test/research, rootsolewriter. CurrentHEAD21ba6 branch/origin latestCISUCCESS; originalfourComposehealthy/up/frontend5173andbackend8000HTTP200. Newwizard668frontend/static/build complete; ownedIABtabclosed/preferences/draftrestored. HistoricalPIDs not current authority.",
-    "repository_writer": "root only; same Oct6 U3/U8 pre-run source-quality disclosure unit. Reused selected_version_review_oct6 independent read-only code review terminal, finalartifact review next; no writes/test/DB/browser/network by reviewer.",
+    "latest_verification": "2026-10-07Sydney freshWSLps no competingwriter/test/research; rootsolewriter. Base8c HEAD=origin=OPEN/DRAFTPR32, own signed fix/checkpoint local. ExistingDesktop launchedonce -> Windowsengine29.8.0/fouroriginalserviceshealthy/frontendup/HTTP200/RedisPONG; Ubuntuintegration failed backend.sock, not recovered. Frontend20620/API37823/check6054terminal0; ownedIABtabclosed/Chinese-system/defaultviewport restored. No historicalPID reuse.",
+    "repository_writer": "root only; current signed result and readonly comparison recovery slice. Authorized signed_results_review_oct7 independent readonly reviewer terminal, no writes/tests/DB/browser/network. No concurrent source/queue/database worker started by this unit.",
     "database_writer": "Oct6 no businessDB POST/test/migration/account/provider/formal/OOS. Original containers auto-resumed after safe existingDesktop start; no forced backend/Compose restart/recreate/reset/deletion. Saved32API byteequal+1expected additivecapabilities versus completeOct3pre snapshot; scoped API only, not fullSQL/lostledger restoration.",
     "queue_writer": "Oct6 completeGET capture active0:11terminalstudies/5STOPPEDaccounts/4terminalupdates/3formal. No submit/retry/provider/accountstart; rootfrontend test94932 terminalexit0. Before any later action reread active jobs and exactprocess identity, historicalPIDs not authority.",
     "agents": {
@@ -2905,7 +2921,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Composite source diagnosis quantifies000598 issuer/monthly aggregate563880.67 disagreement and printed-rate-1.271168 discrepancy; .102064holder vs .101monthly and reference475+1/whole7407queue remain unchanged. Do not repeat rejected same-cache weighted-price hypothesis or forcePASS; next source evidence must independently authorize implemented composite reference basis and reconcile conflicting aggregate, with existing holder eligibility not newly approved. Continue independent actual U4 result/2-3compare/datedplan route-recovery and empty/error/keyboard userflow checks, then remaining U1-U8/M0-M5 AA/native200/p95/visual/restart/manual/restorable delivery; currentIAB is notChrome/native proof. Restored-wizard staticstep defect fixed/671frontendPASS, backend prior1243 receipt notrerun. Local source+UI changes await their own remoteCI, no olderCI substitution. Newversion reference integration requires complete source/holder/date/allactionclass/fullfinancial admission;6643source/600725component/002375/002399/44rawgaps remain. Preserve frozen/research/OOS/oldresults/productionDB/lawfulforward/genuine missing-ledger external gates;goalACTIVE.",
+  "next_task": "Complete own exact-head CI for shared signed-return fix, then continue full U1-U8/M0-M5 user-flow/financial/API/error/native200/AA/p95/restart/manual/restorable delivery, not formatting-only acceptance. Actual 2-3 saved comparison/dated-plan and failed-task read-only recovery proven within IAB scope; frozen historical economics remain NOT_FINANCIALLY_VALIDATED. Ubuntu proxy integration currently needs official GUI Restart WSL integration; Windows engine/services operate. Continue complete source/holder/date/allaction-class new-version remediation:475+1/7407queue/6643source/600725component/002375/002399/44rawgaps remain.000598 official implemented composite-reference basis and conflicting aggregate require independent evidence, never repeated weighted-price fit or forcedPASS. Preserve frozen/research/OOS/oldresults/productionDB; lawful truly after-start forward source and genuine missing-ledger disposition remain external. No merge/tag/release until complete accepted product scope verified; goalACTIVE.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git log -1 --oneline && rg -n 'comparison|simulation_plan|current_dataset_quality|focus' frontend/src/product/experiments/ExperimentComparePage.tsx frontend/src/product/experiments/ExperimentDetailPage.tsx frontend/src/product/experiments/ExperimentPlan.tsx",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

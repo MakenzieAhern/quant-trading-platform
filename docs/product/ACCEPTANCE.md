@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 signed result direction and real comparison recovery
+
+U4/U8 scoped fix: detail and comparison disagreed on the same positive benchmark
+sign. Reuse one strict exact-string formatter for cumulative/benchmark/excess
+returns, preserving zero/null/tiny-negative/malformed values, costs and payloads.
+Full frontend674PASS45files18.65s/lint/types/build180ms/changed-filePrettierPASS;
+owned original frontend exec20620 terminal0. Chunk519.29kB warning is not p95.
+Independent authorized read-only source/tests/callers/savedJSON review no boundedP1/P2.
+
+Actual prior IAB16before+16after four sizes/two themes/locales retain comparison
+conditions and warnings. Resumed ENdesktop/ZH390 success+failed comparison keeps
+both studies, no partial table, keyboard read-only reload focusesH1; failed detail
+explains the accounting/source gap and Back restores identical ids. Reopened three
+existing studies keep exact signed values. Four saved API metrics/plans/configs/
+datasetSHA equal initial capture; no create/retry/order/account/draft mutation.
+Legacy32candidate/five-risk-reject/date-missing plan evidence remains limited;
+missing dates are not filled or made executable. Not full U4/financial certification.
+
+Desktop4.92.0 was absent after interruption; launching existing executable once
+restored Windows engine29.8.0 and original four services, HTTP200/RedisPONG.
+Ubuntu proxy integration still fails missing backend.sock; GUI integration restart
+requested once. Windows Docker safely ran frontend checks; do not call WSL healthy.
+Exact base8c CI37456491066 SUCCESS, but new signed change awaits own CI afterpush.
+Backend/.research/frozenmanifest/v1.1tag unchanged; backend prior1243/migration
+receipt retained, not rerun locally for presentation-only change.
+[24 sealed proof payloads, actual screenshots/checks and limits](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-ci-and-result-flow/README.md).
+IndexSHA0ba497527fe75594c4d25fa4cecdff359b22e390a469008bb81aa239d59c1e49.
+Full U1-U8/M0-M5/source/newversion/financial/native200/AT/AA/p95/restart/manual/
+restorable release and lawful-forward/genuine missing-ledger gates remain ACTIVE.
+No formalstudy/OOS/dataadmission/freeze/merge/tag/release. Earlier dated LOCAL/CI
+statements below are historical boundaries; this receipt does not rewrite them.
+
 ## 2026-10-06 restored wizard step and explicit composite-cash disagreement
 
 U3/U8 scoped correction: actual restored capital/data page incorrectly retained a
