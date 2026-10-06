@@ -936,22 +936,45 @@ describe("paper trading pages", () => {
     await act(async () => i18n.changeLanguage("en-US"));
   });
 
-  it.each(["en-US", "zh-CN"])(
-    "passes current quality advice outside a saved account plan (%s)",
-    async (locale) => {
+  it.each(
+    ["en-US", "zh-CN"].flatMap((locale) =>
+      [
+        "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+        "KNOWN_ECONOMIC_COVERAGE_GAP",
+      ].flatMap((quality) =>
+        [true, false].map((hasPlan) => ({ locale, quality, hasPlan })),
+      ),
+    ),
+  )(
+    "shows current quality before portfolio amounts and inside the plan ($locale / $quality / saved plan $hasPlan)",
+    async ({ locale, quality, hasPlan }) => {
       await act(async () => i18n.changeLanguage(locale));
       installWebSocket();
       const saved = {
         ...paperSnapshot("STOPPED"),
-        current_dataset_quality: "HISTORICAL_DATASET_QUALITY_UNKNOWN" as const,
-        last_rebalance_plan: {
-          ...plan,
-          mode: "historical_exploration",
-          account_mode: "HISTORICAL_PAPER_REPLAY",
-          submitted_to_account: true,
-          paper_session_id: PAPER_ID,
-          plan_version: "PAPER_ACCOUNT_PLAN_V3",
+        current_dataset_quality: quality,
+        latest_portfolio: {
+          timestamp: "2011-03-23T07:00:00Z",
+          cash: "81309.813400000000000001",
+          market_value: "18655",
+          equity: "99964.813400000000000001",
+          realized_pnl: "0",
+          unrealized_pnl: "-5",
+          cumulative_commission: "30.1866",
+          drawdown: "0.000351866",
+          plan: null,
+          positions: [],
         },
+        last_rebalance_plan: hasPlan
+          ? {
+              ...plan,
+              mode: "historical_exploration",
+              account_mode: "HISTORICAL_PAPER_REPLAY",
+              submitted_to_account: true,
+              paper_session_id: PAPER_ID,
+              plan_version: "PAPER_ACCOUNT_PLAN_V3",
+            }
+          : null,
         session: {
           ...paperSession("STOPPED"),
           provider_type: "historical_a_share",
@@ -962,18 +985,53 @@ describe("paper trading pages", () => {
       mockPaperServer().mockResolvedValue(jsonResponse(saved));
       render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
       await act(async () => MockWebSocket.instances[0]!.open());
-      const notice = await screen.findByText(
-        locale === "en-US"
-          ? /The saved historical data checksum cannot be matched/
-          : /保存的历史数据校验值无法匹配当前已复核版本/,
+      const portfolio = (
+        await screen.findByRole("heading", {
+          name: locale === "en-US" ? "Paper portfolio" : "模拟交易组合",
+        })
+      ).closest("section")!;
+      const notice = within(portfolio).getByRole("note");
+      const planRegion = screen.getByRole("region", {
+        name:
+          locale === "en-US"
+            ? "This account's historical rebalance plan"
+            : "此模拟账户的历史调仓计划",
+      });
+      expect(within(planRegion).getByRole("note")).toHaveTextContent(
+        notice.textContent!,
       );
-      expect(notice).toHaveAttribute("role", "note");
       expect(notice).toHaveTextContent(
-        locale === "en-US"
-          ? "Economic completeness is unknown"
-          : "经济完整性未知",
+        quality === "KNOWN_ECONOMIC_COVERAGE_GAP"
+          ? locale === "en-US"
+            ? "Economic completeness is not validated"
+            : "经济完整性尚未验证"
+          : locale === "en-US"
+            ? "Economic completeness is unknown"
+            : "经济完整性未知",
       );
-      expect(screen.getByText("90,123.000000000000000001")).toBeVisible();
+      const metrics = portfolio.querySelector(".metricsGrid")!;
+      expect(
+        notice.compareDocumentPosition(metrics) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).not.toBe(0);
+      expect(
+        Array.from(metrics.querySelectorAll("strong"), (item) => item.title),
+      ).toEqual([
+        "81309.813400000000000001",
+        "18655",
+        "99964.813400000000000001",
+        "0",
+        "-5",
+        "30.1866",
+      ]);
+      if (hasPlan)
+        expect(screen.getByText("90,123.000000000000000001")).toBeVisible();
+      else
+        expect(planRegion).toHaveTextContent(
+          locale === "en-US"
+            ? "This older account has no saved account-native plan"
+            : "该较早账户未保存账户专属计划",
+        );
       expect(JSON.stringify(saved)).toBe(before);
       expect(
         paperRequests.every(
@@ -981,6 +1039,36 @@ describe("paper trading pages", () => {
         ),
       ).toBe(true);
       await act(async () => i18n.changeLanguage("en-US"));
+    },
+  );
+
+  it.each([
+    ["historical_a_share", null],
+    ["historical_a_share", undefined],
+    ["simulated_a_share", "KNOWN_ECONOMIC_COVERAGE_GAP"],
+    ["replay", "HISTORICAL_DATASET_QUALITY_UNKNOWN"],
+  ])(
+    "does not invent historical portfolio quality advice (%s / %s)",
+    async (provider, quality) => {
+      installWebSocket();
+      mockPaperServer().mockResolvedValue(
+        jsonResponse({
+          ...paperSnapshot("STOPPED"),
+          session: { ...paperSession("STOPPED"), provider_type: provider },
+          current_dataset_quality: quality,
+        }),
+      );
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      const portfolio = (
+        await screen.findByRole("heading", { name: "Paper portfolio" })
+      ).closest("section")!;
+      expect(within(portfolio).queryByRole("note")).not.toBeInTheDocument();
+      expect(
+        paperRequests.every(
+          ({ options }) => !options?.method || options.method === "GET",
+        ),
+      ).toBe(true);
     },
   );
 

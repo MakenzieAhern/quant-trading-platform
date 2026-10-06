@@ -1,5 +1,58 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 account quality beside money and asynchronous plan links
+
+Scoped U6/U7/U8 usability correction, **not financial or full product acceptance**.
+Actual Chrome showed historical portfolio money without quality advice, while the
+same warning was below in the plan. Reuse existing guarded bilingual note before
+metrics, retain plan notice. An EN390 direct fragment reload also missed the async
+target (warningTop1967>844); shared ExperimentPlan now scrolls its own requested
+fragment only on mount, not ordinary socket/quality/locale updates. No financial,
+API, focus or animation change; both production plan callers use the same fix.
+
+8qualityRED/2fragmentRED; final729frontend/45files, lint/type/scoped4-file formatting,
+build175ms/audit0 PASS. Earlier wrongZHheading/unsupportedTestingLibraryexact and
+721PASS/4newnegativeFAIL caused by omitted mock.open are recorded, not concealed;
+hydration test fixed, no timeout/assertion relaxation. Backend unchanged; prior
+fffa1294+optionalarchiveSKIP is not a new local backend run. Independent read-only
+source/test review no evidenced scopedP1/P2; not browser/financial/AA endorsement.
+
+Final current Chrome16 ENZH/lightdark/required-size DOM cases: warning-before-money,
+matching plan warning, six exact amount titles retained, no page overflow. Actual
+ENZH390 fragment reload now has warning fully visible below sticky header. First
+Tab reaches skip link; preferences EN/dark restored, viewportreset/tabclosed/draft
+untouched. Screenshot inspection exposed two stale light1440 frames (412px), now
+explicitly rejected and superseded by fresh observed desktop JPG. All16 selected
+frame dimensions checked, not all-page visual/AA/native200/p95 acceptance.
+
+[UI proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-account-quality/README.md>)
+122payloadseal`8b97afb5becdba94319141d4e7e1c1ecfc363485b4ce92d664d5ea0766f3d6fd`;
+[frame correction](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-account-quality-visual-checked/README.md>)
+5payloadseal`50cc110f73c71664f342e8c334fff022a87d8ddf8bd65a3d29f224a2c4b61686`.
+167current sourcebindings/163copied match/4deploymentfiles absent; prior14sealed
+payloads and276sourcebindings unchanged. Original stopped account138 state byteSHA
+48c5e43b before/after/final identical, DBreadonly0016/PGRedisbackendhealthy/RedisPONG/
+APIfrontend200. Only ownedfallback staticfiles replaced after wholebuild backups;
+oldassets retained, Node7969f4bSTOPPEDretained. No originalrestart/migration/frozen/
+formal/OOS/businesscommand/merge/tag/release. Entire U1-U8/M0-M5 remains incomplete;
+new owncommit/exactCI pending, not inherited from fffaCI. GoalACTIVE.
+
+## 2026-10-07 credit-layout exact CI and preserved next seven sources
+
+Own`fffa93a08925dabcdabac7035781bede9bcbef1d`
+[CI37537837278](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37537837278)
+allthreejobs/every stepSUCCESS22:03:46Z/samewatch21697terminal0. Hosted1294backend/
+1optionalarchiveSKIP45.70s,715frontend/Ruff556/mypy145/Alembiccheck/Compose release
+smokePASS. HEAD==origin==OPEN/DRAFTPR32head. Earlier pendingCI is chronology.
+BroaderlocalPrettierFAIL3oldfiles remains distinct; no frontendcode/browserclaim.
+[Exact CI and source diagnosis proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-credit-layout-ci/README.md>)
+9payloadseal`6e33b8498f9ef5d8c6cefe4689739669356351b575429f66f9954946c76f2d77`;
+prior14sourceproof/276bindings unchanged. Seven complete remainingcredit sources
+read and exactSHA-bound excerpts retained, allUNRESOLVED/noeventadmission.
+300036missing日/300126AGMyearwordingconflict/300198accountword-pageheader split
+not repaired.71PASS/66unresolved still source-only. No CIrerun, originalrestart/
+migration, frozen/formal/OOS/action/admission/merge/tag/release. FullgoalACTIVE.
+
 ## 2026-10-07 exact credit grammar and fractional page counters
 
 Bounded U3/U5/U6 source prerequisite, **not financial or full product acceptance**.

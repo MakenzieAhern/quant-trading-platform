@@ -357,6 +357,15 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             <h2>{t("detail.portfolio")}</h2>
           </div>
         </div>
+        {session.provider_type === "historical_a_share" &&
+          snapshot.current_dataset_quality && (
+            <p className="experimentNotice" role="note">
+              {explainExperimentCode(
+                snapshot.current_dataset_quality,
+                i18n.language,
+              )}
+            </p>
+          )}
         {stalePortfolio && (
           <p className="stateCallout" role="alert">
             {t("detail.stalePortfolioWarning", {

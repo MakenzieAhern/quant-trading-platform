@@ -1,5 +1,40 @@
 # Decisions
 
+## v1.2 historical account advice and deferred fragment target — 2026-10-07
+
+Keep backend exact ledger authority distinct from economic validation: show the
+existing current-quality explanation before historical account money, and retain
+the plan-local warning for direct readers. No rewritten old values/results/plans.
+Reuse shared ExperimentPlan for async fragment readiness on mount; avoid a global
+observer, focus steal, dependency or ordinary-update scroll replay. 8+2RED/final729
+frontend/staticPASS; independent readonly review no scopedP1/P2. DevStrictMode
+single-effect semantics are not claimed by production unit tests.
+
+Actual16 DOM cases+ENZH390 reload/exact originals validated. Two first light1440
+screenshots were stale mobile frames; retain/reject originals, supersede with fresh
+desktop JPG from separate observation/capture calls. 122proof8b97afb5 +5correction
+50cc110f sealed. Correct format is JPEG even where historical filename says PNG.
+Do not promote geometry or dimensional evidence to full WCAG/visual acceptance.
+
+Original state138 byte-identical, applicationDB0016 readonly, ownedNodeSTOPPED,
+original services untouched, fallbackpublic backups retained. Current167/163
+sourcecopy and prior14/276source proof preserved;71/66source status unchanged.
+No frozen/formal/OOS/account-order/provider action or release. Keep full goal active;
+new exactCI pending; advance independent remaining UX/runtime/restore/delivery gates.
+
+## v1.2 credit-layout own CI and next source boundaries — 2026-10-07
+
+fffa93a==origin==OPEN/DRAFTPR32head;37537837278all3jobs/every stepSUCCESS22:03:46Z,
+samewatch21697terminal0. Hosted1294backend+optionalarchiveSKIP/715frontend/static/
+disposablemigration/Compose release smokePASS. NinepayloadCI/contextproofseal
+6e33b8498f9ef5d8c6cefe4689739669356351b575429f66f9954946c76f2d77 preserves14
+sourceproof/276bindings. Seven remainingcredit fullsources reviewed:literal
+optional的/送转股份/companyprefix/exactrunningheaders can be next test hypotheses,
+not accepted evidence. Actualmissing日300036,AGMyearwording300126 andaccountword
+pageheader300198 remain unmodified.71sourcePASS/66unresolved, notfinancial/product.
+No rerun/merge/release; retainlocalbroaderPrettierFAIL3oldfiles. Next work must also
+advance mandatorynon-source userflow/quality/runtime/restore/delivery gates.
+
 ## v1.2 credit grammar uses existing boundaries, not inferred dates — 2026-10-07
 
 Reuse shared holder page boundary for credit; exact reviewed股本方法/所送(转)股

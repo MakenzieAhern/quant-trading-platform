@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { formatDecimal, formatPercent, shortId } from "../../utils/format";
 import { explainExperimentCode } from "./codes";
@@ -167,6 +168,11 @@ export function ExperimentPlan({
   quality?: CurrentDatasetQuality;
 }) {
   const { i18n } = useTranslation();
+  const panel = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (window.location.hash === "#simulation-plan")
+      panel.current?.scrollIntoView?.({ block: "start" });
+  }, []);
   const c = i18n.language.startsWith("zh") ? zh : en;
   const title = account ? c.paperTitle : c.title;
   const unverifiedDate = Boolean(
@@ -175,6 +181,7 @@ export function ExperimentPlan({
   );
   return (
     <section
+      ref={panel}
       className="experimentPanel"
       id="simulation-plan"
       aria-label={title}

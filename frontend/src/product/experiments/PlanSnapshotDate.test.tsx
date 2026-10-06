@@ -1,5 +1,5 @@
 import { act, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { i18n } from "../../i18n";
 import { PAPER_ID } from "../../test/paperFixtures";
@@ -9,6 +9,58 @@ import { plan } from "./fixtures.test-data";
 import type { PaperAccountPlan } from "./types";
 
 describe("saved plan account date", () => {
+  it.each([true, false])(
+    "reveals a directly linked plan after it mounts, without rescrolling updates (account %s)",
+    (account) => {
+      const scroll = vi.fn();
+      const previous = HTMLElement.prototype.scrollIntoView;
+      HTMLElement.prototype.scrollIntoView = scroll;
+      try {
+        window.history.replaceState({}, "", "/paper/test#simulation-plan");
+        const view = render(<div>Loading</div>);
+        expect(scroll).not.toHaveBeenCalled();
+        view.rerender(<ExperimentPlan plan={plan} account={account} />);
+        expect(scroll).toHaveBeenCalledExactlyOnceWith({ block: "start" });
+        expect(scroll.mock.contexts[0]).toBe(
+          document.getElementById("simulation-plan"),
+        );
+        view.rerender(
+          <ExperimentPlan
+            plan={plan}
+            account={account}
+            quality="KNOWN_ECONOMIC_COVERAGE_GAP"
+          />,
+        );
+        expect(scroll).toHaveBeenCalledOnce();
+        expect(screen.getByText("90,123.000000000000000001")).toBeVisible();
+      } finally {
+        if (previous) HTMLElement.prototype.scrollIntoView = previous;
+        else Reflect.deleteProperty(HTMLElement.prototype, "scrollIntoView");
+      }
+    },
+  );
+
+  it.each(["", "#other"])(
+    "does not scroll an unrequested plan fragment (%s)",
+    (fragment) => {
+      const scroll = vi.fn();
+      const previous = HTMLElement.prototype.scrollIntoView;
+      HTMLElement.prototype.scrollIntoView = scroll;
+      try {
+        window.history.replaceState({}, "", `/experiments/test${fragment}`);
+        const view = render(<ExperimentPlan plan={plan} />);
+        expect(scroll).not.toHaveBeenCalled();
+        view.rerender(
+          <ExperimentPlan plan={plan} quality="KNOWN_ECONOMIC_COVERAGE_GAP" />,
+        );
+        expect(scroll).not.toHaveBeenCalled();
+      } finally {
+        if (previous) HTMLElement.prototype.scrollIntoView = previous;
+        else Reflect.deleteProperty(HTMLElement.prototype, "scrollIntoView");
+      }
+    },
+  );
+
   it.each(["en-US", "zh-CN"])(
     "shows later data-quality advice without changing a saved plan (%s)",
     async (locale) => {
