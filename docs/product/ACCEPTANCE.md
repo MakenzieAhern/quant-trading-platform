@@ -1,5 +1,58 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 hypothetical option clause — scoped source closure, product partial
+
+Shared same-day parser no longer mistakes a complete quoted hypothetical option
+adjustment sentence for an implemented consolidation. Only keyword-guard text is
+filtered; every effective date/holder/credit/unrestricted-listing check retains
+original page-boundary text. Actual consolidation/restructuring/conflicts and
+incomplete conditional text still rejected.2RED→67focusedPASS; no issuer exception.
+
+Actual all16years/7407source rows:498candidate events=497old whole receipts+only
+0020142011-03-17. Exact holder0.300/cash0.400 and actual prior23.90 yield18.08,
+matching official18.080/raw preclose18.08. Complete498reference audit/reversed
+input:497limitedPASS+1UNRESOLVED000598; old496PASS/foundation114+1 retained.
+Full7407queue only002014 change/other7406whole source and queue rows exact;
+497NOT_ADMITTED+1referenceUNRESOLVED+288oldfactsNOT_REVALIDATED+6621source gaps.
+58input/code/cache bindings/72frozen partitions checked; no dataset admission.
+
+1249backendPASS/1optionalarchiveSKIP21.61s/Ruff551/mypy145/tmpfs testDB reversible
+migrationsPASS.709frontend45files17.11s/lint/types/build175msPASS;520.57kB advisory
+notp95. Two independent readonly code/batch reviews no boundedP1/P2; actual
+preservation/58bindings/72frozen partitions verified, not financial certification.
+[Actual producer/readback/checks and limitations](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-conditional-option/README.md).
+Nine-payload sealed indexSHA11363250a022ebeff1bcb2af4b7f830cb7601df980ef565aa1b0b2eb2d671935.
+New own source CI required;34a success does not cover later code. No new browser,
+native200/AA/p95 or successful full historical chain claim.300048 outside-oracle
+gap remains;2015 legal-history discovery is not contemporary2011 execution evidence.
+No strategy retry/frozen/.research/OOS/appDB rewrite/newdataset/merge/tag/release.
+AllU1-U8/M0-M5 remain required; goalACTIVE/product_goal_completefalse.
+
+## 2026-10-07 exact reference-formula CI and coverage blind spot — partial
+
+Own34a13d7 [CI37506137137](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37506137137)
+backend/frontend/Compose allSUCCESS2026-10-06T17:49:05Z; exact jobs/steps verified,
+samewatch85189terminal0. HEAD=origin=OPEN/DRAFTPR32head. Earlier CI-pending text
+below is prepush chronology, not current state. Fresh frontend5173/APIhealth8000
+HTTP200/statusok/paper; local running does not depend on GitHub Actions.
+
+Read-only cached source probe:0020142011-03-17 ratio0.3, rejected缩股 token occurs
+in conditional stock-option incentive prose; no parser change or event admission.
+3000482011-03-28 actual marker has no matching oracle/date-link/candidate/cashv32/
+cachedofficialMarch row. March table23rows includingheader/0ChiNext rows, not proof
+of every month's coverage. Full7407 closure alone cannot explain this outside-oracle
+marker; separately dated official evidence/wider completeness check still required.
+Never infer effective dates/holder terms from a price ratio.
+
+Actual Chrome probe reset viewport before ctrlplus;1920x911/DPR1/visualScale1 stayed
+unchanged. Native200 NOT_VERIFIED;100percent screenshot inline-only, ownedtab closed,
+override reset/ENdark/draft retained. No CSSzoom or security/native bypass, no AA/p95
+or full user-chain claim. Five-payload [sealed own-CI/diagnostic checkpoint](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-reference-formula-checkpoint/README.md),
+manifestSHA95fdeefe7bd7bd2dd92f39e4979cd62433d38ace2ae7dac33cf49a4bfefee5d7.
+Original FAILED job/frozen/.research/OOS retained; no retry/newdataset/admission/
+merge/tag/release. FullU1-U8/M0-M5 required, goalACTIVE/product_goal_completefalse.
+PostCI docs local until next coherent code milestone, not another receipt-only push.
+
 ## 2026-10-07 explicit implemented reference formulas — partial
 
 Shared source parser now recognizes actual current distribution basis excluding

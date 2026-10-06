@@ -1,5 +1,49 @@
 # Decisions
 
+## v1.2 complete option condition is not an actual consolidation — 2026-10-07
+
+Recognize the complete fixed quoted-plan pre-exercise option-adjustment sentence
+in the shared same-day keyword guard, not a security-specific exemption or removal
+of the incentive section. Every date/holder/credit/listing check keeps full text;
+actual nonstandard actions and conflicting/missing dates still reject. No dependency,
+numeric fit, source-effective-date inference, policy or holder-accounting changes.
+2RED→67focusedPASS/full1249backend+709frontend/migrations PASS; independent
+readonly code review no boundedP1/P2. Full498source/reference audit preserves
+old497events/496PASS and7406other source/queue rows; only002014 new candidate,
+not financial admission. Full7407bonus oracle alone is not complete economic
+coverage.300048 needs separate contemporaneous official execution evidence;
+2015 legal-history search lead cannot leak into2011 PIT information. No strategy
+retry, frozen/research/formal/OOS or appDB mutation. Prior evidence unchanged.
+Initial CRLF/JS/migration-cwd/baseline-lineage mistakes failed before producer or
+publication; corrected exact lineage and backend cwd, never weaken checks or
+restart a live process. Scratch testDB stopped; original four services retained.
+Independent batch proof review completed no boundedP1/P2; sealed nine-payload
+index11363250a022ebeff1bcb2af4b7f830cb7601df980ef565aa1b0b2eb2d671935.
+Own source CI required before code gate; full product gates
+remain, no merge/tag/release or goal completion.
+
+## v1.2 own CI is not oracle completeness or native zoom — 2026-10-07
+
+Exact34a source milestone CI37506137137 backend/frontend/Compose allSUCCESS;
+fresh jobs/steps and PR32OPEN/DRAFThead verified. Local frontend/APIHTTP200 can
+run independently of GitHub Actions; no hosted-runner replacement or security
+change needed. Preserve later local checkpoint docs for next coherent code slice.
+002014's only缩股 token is hypothetical stock-option adjustment, not ordinary
+distribution; review narrowly scoped grammar before changing a failclosed guard.
+300048's dated actual marker has zero rows in7407oracle/date-links/candidate/cash/
+official cachedMarch surface. Do not equate the7407 bonus oracle with complete
+economic-action coverage, infer missing terms from price, or cosmetically retry
+the FAILED strategy job. Seek separate official dated evidence and wider coverage.
+Changed Chrome hypothesis removed viewport override before ctrlplus but actual
+zoom stayed100percent; record NOT_VERIFIED, no CSS/native/security bypass. Inline
+screenshot is not a saved file or200percent proof. Five-payload sealed checkpoint
+95fdeefe7bd7bd2dd92f39e4979cd62433d38ace2ae7dac33cf49a4bfefee5d7 retained.
+No frozen/research/OOS/appDB/account/source-admission/merge/tag/release changes;
+full U1-U8/M0-M5 remain, goalACTIVE rather than completion or forced blocker.
+Initial diagnostic guessed compose.yaml, which does not exist; rg identified the
+existing docker-compose.yml. Correct read-only compose ps showed all4original
+services up/postgres-redis-backend healthy, and redis-cli PONG. No service restart.
+
 ## v1.2 final implemented total-capital reference is not holder entitlement — 2026-10-07
 
 Use already cached official final002972/301080 notices, not new acquisition or price

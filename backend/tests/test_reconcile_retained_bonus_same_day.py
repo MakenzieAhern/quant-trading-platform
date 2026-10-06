@@ -25,6 +25,45 @@ NOTICE = (
 )
 
 
+@pytest.mark.parametrize("separate_page", [False, True])
+def test_conditional_option_adjustment_is_not_an_implemented_share_consolidation(separate_page):
+    option_clause = (
+        "八、股权激励计划相关事项2、股票期权激励计划调整事项"
+        "本公司《限制性股票与股票期权激励计划》规定:"
+        "若在行权前公司有资本公积金转增股份、派送股票红利、股票拆细、配股或缩股等事项,"
+        "应对股票期权数量和行权价格进行相应的调整。"
+    )
+
+    def pages(clause=option_clause, notice=NOTICE):
+        return [notice, clause] if separate_page else [notice + clause]
+
+    assert same_day_listing(pages(), "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("规定:", "说明:"),
+        ("若在行权前", "本次权益分派实施后"),
+        ("若在行权前", "在行权前"),
+        ("应对股票期权数量", "应对普通股数量"),
+        ("进行相应的调整。", "进行相应的调整"),
+        ("缩股等事项", "缩股已实施等事项"),
+        ("缩股等事项", "缩股和重整等事项"),
+    ):
+        with pytest.raises(ValueError, match="NONSTANDARD_OR_TENTATIVE"):
+            same_day_listing(pages(option_clause.replace(old, new)), "600000", TITLE, RECORD, EX)
+    for suffix in ("本次缩股已实施。", "本次重整已实施。", "上市日期另行公告。"):
+        with pytest.raises(ValueError, match="NONSTANDARD_OR_TENTATIVE"):
+            same_day_listing(pages(option_clause + suffix), "600000", TITLE, RECORD, EX)
+    first, second = option_clause.split("行权价格")
+    with pytest.raises(ValueError, match="NONSTANDARD_OR_TENTATIVE"):
+        same_day_listing([NOTICE + first, "行权价格" + second], "600000", TITLE, RECORD, EX)
+    for old, new in (
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("本公司全体股东", "本公司控股股东"),
+        ("无限售条件", "有限售条件"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing(pages(notice=NOTICE.replace(old, new)), "600000", TITLE, RECORD, EX)
+
+
 @pytest.mark.parametrize("credit", ["本次所送(转增)股", "本次所送股份"])
 def test_implemented_will_credit_wording_still_requires_exact_dates_and_all_holders(credit):
     notice = NOTICE.replace("本次转增股于", credit + "将于")

@@ -32,12 +32,20 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         raise ValueError("BONUS_SAME_DAY_RECORD_EX_CONFLICT")
     # Keep page boundaries: a margin/page counter must never complete a date or term.
     text = "§".join(re.sub(r"\s+", "", unicodedata.normalize("NFKC", page)) for page in pages)
+    # A complete quoted hypothetical option adjustment is not an actual consolidation.
+    # Only the guard uses this view; every effective-date/holder check keeps the full text.
+    guard_text = re.sub(
+        r"(?<=》规定:)若在行权前公司有资本公积金转增股份、派送股票红利、"
+        r"股票拆细、配股或缩股等事项,应对股票期权数量和行权价格进行相应的调整。",
+        "",
+        text,
+    )
     if re.search(
         r"差异化分红送转:是|让渡|重整|缩股|吸收合并|另行公告|拟于|拟实施|B股|H股|"
         r"未确定|待定|另行通知|待通知|取消|撤销|终止|延期|暂停|暂缓|预计|预期|"
         r"拟新增|拟上市|拟转增|拟送|计划(?:本次)?(?:所)?(?:新增|资本公积金转增|转增|送|\(转(?:增)?\))|"
         r"(?:拟将|讨论)[一二三四五六七八九十]+、(?:股权登记日|分红派息日期)",
-        text,
+        guard_text,
     ):
         raise ValueError("BONUS_SAME_DAY_NONSTANDARD_OR_TENTATIVE")
     dated = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
