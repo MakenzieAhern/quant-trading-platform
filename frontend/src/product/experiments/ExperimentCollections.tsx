@@ -260,7 +260,7 @@ function EquityDisplay({
   const high = finite ? Math.max(...values) : 1;
   const range = high - low || 1;
   const x = (index: number) =>
-    24 + (index / Math.max(1, points.length - 1)) * 852;
+    points.length === 1 ? 450 : 24 + (index / (points.length - 1)) * 852;
   const y = (value: string) => 210 - ((Number(value) - low) / range) * 180;
   const equityLine = finite
     ? points.map((item, index) => `${x(index)},${y(item.equity)}`).join(" ")
@@ -356,19 +356,47 @@ function EquityDisplay({
           />
           {finite ? (
             <>
-              <polyline className="experimentEquityLine" points={equityLine} />
-              {showBenchmark && benchmarkLine && (
+              {points.length > 1 && (
                 <polyline
-                  className="experimentBenchmarkLine"
-                  points={benchmarkLine}
+                  className="experimentEquityLine"
+                  points={equityLine}
                 />
               )}
-              {drawdownLine && (
-                <polyline
-                  className="experimentDrawdownLine"
-                  points={drawdownLine}
-                />
-              )}
+              {showBenchmark &&
+                benchmarkLine &&
+                (points.length === 1 ? (
+                  <circle
+                    className="experimentBenchmarkLine"
+                    cx={x(0)}
+                    cy={y(points[0].benchmark!)}
+                    r="6"
+                    fill="none"
+                    strokeWidth="2"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                ) : (
+                  <polyline
+                    className="experimentBenchmarkLine"
+                    points={benchmarkLine}
+                  />
+                ))}
+              {drawdownLine &&
+                (points.length === 1 ? (
+                  <circle
+                    className="experimentDrawdownLine"
+                    cx={x(0)}
+                    cy={260 + (drawdowns[0]! / lowestDrawdown) * 70}
+                    r="4"
+                    fill="none"
+                    strokeWidth="2"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                ) : (
+                  <polyline
+                    className="experimentDrawdownLine"
+                    points={drawdownLine}
+                  />
+                ))}
               {selectedIndex >= 0 && (
                 <line
                   x1={x(selectedIndex)}

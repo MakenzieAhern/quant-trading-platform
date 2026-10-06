@@ -374,6 +374,133 @@ describe("filtered durable experiment records", () => {
     ).toBeInTheDocument();
   });
 
+  it.each(["en-US", "zh-CN"])(
+    "keeps all recorded series visible when only one trading date is displayed (%s)",
+    async (locale) => {
+      await i18n.changeLanguage(locale);
+      const single = {
+        ...point,
+        benchmark: "100001.000000000000000007",
+        drawdown: "-0.000000000000000009",
+      };
+      const equity = vi.spyOn(experimentApi, "equity").mockResolvedValue({
+        items: [single],
+        total: 1,
+        limit: 100,
+        offset: 0,
+      });
+      const create = vi.spyOn(experimentApi, "create");
+      const view = render(<ExperimentCollections jobId={job.job_id} />);
+      await screen.findByRole("combobox", {
+        name: locale === "en-US" ? "Inspect a trading date" : "查看指定交易日",
+      });
+      for (const className of [
+        "experimentChartPoint",
+        "experimentBenchmarkLine",
+        "experimentDrawdownLine",
+      ]) {
+        const marker = view.container.querySelector(`svg circle.${className}`);
+        expect(marker).not.toBeNull();
+        expect(marker).toHaveAttribute("cx", "450");
+        expect(Number(marker!.getAttribute("cy"))).toBeGreaterThanOrEqual(24);
+        expect(Number(marker!.getAttribute("cy"))).toBeLessThanOrEqual(335);
+      }
+      expect(view.container.querySelectorAll("svg polyline")).toHaveLength(0);
+      expect(
+        view.container.querySelector(".experimentChartReadout"),
+      ).toHaveTextContent("100,001.000000000000000007");
+      expect(
+        view.container.querySelector(".experimentChartReadout"),
+      ).toHaveTextContent("-0.0000000000000009%");
+      const toggle = screen.getByRole("checkbox", {
+        name: locale === "en-US" ? "Show benchmark" : "显示基准",
+      });
+      await userEvent.click(toggle);
+      expect(
+        view.container.querySelector(".experimentBenchmarkLine"),
+      ).toBeNull();
+      expect(
+        view.container.querySelector("circle.experimentDrawdownLine"),
+      ).not.toBeNull();
+      await userEvent.click(toggle);
+      expect(
+        view.container.querySelector("circle.experimentBenchmarkLine"),
+      ).not.toBeNull();
+      expect(equity).toHaveBeenCalledTimes(1);
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    [null, null],
+    [null, "0"],
+    ["0", null],
+    ["0", "0"],
+  ])(
+    "does not confuse missing single-date series with recorded zero (%s, %s)",
+    async (benchmark, drawdown) => {
+      vi.spyOn(experimentApi, "equity").mockResolvedValue({
+        items: [{ ...point, benchmark, drawdown }],
+        total: 1,
+        limit: 100,
+        offset: 0,
+      });
+      const view = render(<ExperimentCollections jobId={job.job_id} />);
+      await screen.findByRole("combobox", { name: "Inspect a trading date" });
+      expect(
+        view.container.querySelectorAll("circle.experimentBenchmarkLine"),
+      ).toHaveLength(benchmark === null ? 0 : 1);
+      expect(
+        view.container.querySelectorAll("circle.experimentDrawdownLine"),
+      ).toHaveLength(drawdown === null ? 0 : 1);
+      if (drawdown === "0")
+        expect(
+          view.container.querySelector("circle.experimentDrawdownLine"),
+        ).toHaveAttribute("cy", "260");
+      expect(
+        screen
+          .getByRole("checkbox", { name: "Show benchmark" })
+          .hasAttribute("disabled"),
+      ).toBe(benchmark === null);
+      expect(
+        view.container.querySelector(".experimentChartReadout"),
+      ).toHaveTextContent(drawdown === null ? "Drawdown: N/A" : "Drawdown: 0%");
+    },
+  );
+
+  it("keeps multi-date curves rather than replacing them with single-date markers", async () => {
+    vi.spyOn(experimentApi, "equity").mockResolvedValue({
+      items: [
+        { ...point, benchmark: "100000", drawdown: "0" },
+        {
+          ...point,
+          sequence: 1,
+          trading_date: "2031-01-04",
+          benchmark: "100001",
+          drawdown: "-0.01",
+        },
+      ],
+      total: 2,
+      limit: 100,
+      offset: 0,
+    });
+    const view = render(<ExperimentCollections jobId={job.job_id} />);
+    await screen.findByRole("combobox", { name: "Inspect a trading date" });
+    expect(view.container.querySelectorAll("svg polyline")).toHaveLength(3);
+    expect(
+      view.container.querySelectorAll("circle.experimentChartPoint"),
+    ).toHaveLength(2);
+    expect(
+      view.container.querySelector("circle.experimentChartPoint"),
+    ).toHaveAttribute("cx", "24");
+    expect(
+      view.container.querySelector("circle.experimentBenchmarkLine"),
+    ).toBeNull();
+    expect(
+      view.container.querySelector("circle.experimentDrawdownLine"),
+    ).toBeNull();
+  });
+
   it("keeps the chosen benchmark visibility when chart pages change", async () => {
     vi.spyOn(experimentApi, "equity")
       .mockResolvedValueOnce({

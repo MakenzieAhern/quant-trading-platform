@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 single-date chart and saved records (scoped correction)
+
+Actual saved March23 inspection showed equity at x24 and three single-vertex
+polylines: benchmark/drawdown had no visible trace despite their legends/readout.
+Center one-date geometry and render native SVG markers; keep multi-date curves,
+exact strings, null vs recordedzero, dates/paging/full-period metrics unchanged.
+Two bilingual RED cases, then preserved single-equity-polyline assertions failed
+in the initial correction; fixed source rather than lowering assertions.
+Final29focused/703frontendPASS45files18.49s/lint/types/build186ms/PrettierPASS.
+Independent full two-file/callers/styles review: no boundedP1/P2.
+
+Actual IAB16cases/four specified sizes/two locales/themes retain three markers,
+exact displayed values,10savedtrade/10position rows and no pageoverflow. FourZHlight
+images inspected. ENmobile benchmark off/on, keyboard day link/clear, negative
+March28 drawdown and20-date/three-line full restoration checked. Four real summary
+values equal in filtered/full/nonzero-date views; API200 recorded equity1/trades10/
+holdings1 agrees with UI. Dataset economics warning retained, not revalidated.
+Ownedtab4closed, originalZH/system/defaultviewport restored, no businessPOST.
+[12-payload actual proof, failures and limits](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-single-day-chart/README.md),
+index3c5e77676d0b985d9b0f464e3aa6eaa0366f9b6e99cad227666e51e33f27a938.
+Own exactCI pending coherent commit/push; no merge/tag/release/fullgoalPASS.
+
+Earlier help commit48ea3bf4210226e3dd228521caf5501a58147d55 is now covered by
+[exactCI37490580136](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37490580136):
+backend1243PASS/1optionalSKIP, frontend696PASS, ComposeSUCCESS. HEAD=origin=OPEN/
+DRAFTPR32 and MakenzieAhern verified before the later chart slice; that CI does
+not certify the chart diff. [Separate2-payload CI checkpoint](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-command-help-checkpoint/README.md),
+indexb6529c54a44633874d363900e4a1d3a4390c579885eb2323ac66209f9b0d9178.
+Older CI-pending entries below remain prepush chronology, not current help status.
+Full U1-U8/M0-M5/source/newversion/financial/forward/AA/performance/recovery/delivery
+unchanged; goalACTIVE. No OOS/frozen/formal change or new authority acceptance.
+
 ## 2026-10-07 U8 searchable beginner help (local slice)
 
 Global search omitted all four existing help concepts. Reuse existing bilingual

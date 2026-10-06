@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 single-date geometry — 2026-10-07
+
+Correct the actual shared experiment chart, not per-job data: one-vertex SVG
+polylines do not provide a visible trace. Native benchmark/drawdown circles and
+the existing equity point share centered x450 for one date; multi-date lines,
+exact strings and existing null/zero/benchmark/date/paging semantics stay intact.
+No dependency, CSS framework, financial calculation or API mutation. Preserve
+RED assertions and repair the remaining single-equity-polyline source condition.
+29focused/703fullfrontend and actual16IABcases PASS_SCOPED; independent readonly
+review no P1/P2. Own laterCI required; earlier help48 CI37490580136 nowPASS in a
+separate sealed checkpoint. No source/financial/fullgoal promotion or release.
+
 ## v1.2 searchable beginner help and modal navigation — 2026-10-07
 
 Reuse the existing four bilingual questions once for both Help and command search.

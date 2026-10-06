@@ -1,9 +1,24 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T15:48:12Z",
-  "searchable_help_20261007_gate": {
+  "updated_at_utc": "2026-10-06T16:17:07Z",
+  "single_day_chart_20261007_gate": {
     "status": "PASS_LOCAL_USER_FLOW_REVIEW_EXACT_CI_PENDING",
+    "source_parent": "48ea3bf4210226e3dd228521caf5501a58147d55",
+    "user_capability": "Inspecting one saved trading day now visibly plots equity, benchmark and drawdown with centered native SVG markers. Multi-date lines, exact strings, null/zero distinction, bounded date-linked records and full-period metrics remain unchanged.",
+    "tests": "2EN/ZH RED atcx24; initial correction retained unused equitypolyline and failed2 assertions, fixed source not tests. Final29focused and703frontendPASS45files18.49s/lint/types/build186ms/two-filePrettierPASS. Originalfrontend WindowsDocker40806terminal0. 520.54kB advisory is notp95; backend unchanged, ownparent48 CI1243+1 retained, not newlocalbackend run.",
+    "browser": "Actual IAB16cases/four sizes/two locales/themes: three centeredmarkers, exact displayedmoney/zeroDD,10savedtrades/10positions, no pageoverflow. ENmobile benchmarkoff/on, keyboardlinkedclear/nonzeroMarch28 date and20-date/3-line full restoration;4role-based summaryvalues equal acrossthreeviews. FourZHlightJPGs inspected. OriginalZH/system/viewport restored, ownedtab4closed. No POST/task/account/order/provider/research/OOS.",
+    "api": "Actual read-only API200 equity1/trades10/holdings1 matches savedMarch23 browser. Result SHA015808959cbae2e2c5ef38d9e5e2c954e86ce33b77c928c7c7091f3825d11544 keeps KNOWN_ECONOMIC_COVERAGE_GAP; not financialrevalidation/fullDBdurability.",
+    "review": "Authorized existing independent readonly full two-file/callers/styles review no boundedP1/P2 or unnecessarycomplexity. No reviewer execution/browser/DB/network/write/fullproductcertification.",
+    "evidence": "product-evidence/v1.2/m4/20261007-single-day-chart/README.md",
+    "evidence_payloads": 12,
+    "evidence_manifest_sha256": "3c5e77676d0b985d9b0f464e3aa6eaa0366f9b6e99cad227666e51e33f27a938",
+    "limits": "IAB is not nativeChrome200/AT/fullAA/p95 or fullfinancial/source/newversion/forward/restoration/release proof. GoalACTIVE/fullU1-U8/M0-M5 remain. New ownexactCI required before codegate. No merge/tag/release; UbuntuGUIintegration separately notverified."
+  },
+  "searchable_help_20261007_gate": {
+    "status": "PASS_SCOPED_USER_FLOW_REVIEW_AND_EXACT_CI",
+    "committed_source": "48ea3bf4210226e3dd228521caf5501a58147d55",
+    "post_ci": "Own CI37490580136 completedSUCCESS2026-10-06T15:50:35Z; allbackend/frontend/ComposePASS. Actual logs frontend696/45files/build303ms, backend1243+1optionalSKIP37.90s/Ruff/mypy145. HEAD=origin=OPEN/DRAFTPR32/accountMakenzieAhern rechecked before laterchartcommit. Two-payload supplemental indexb6529c54a44633874d363900e4a1d3a4390c579885eb2323ac66209f9b0d9178 at product-evidence/v1.2/m4/20261007-command-help-checkpoint/README.md. Not coverage of later single-day chart diff. Prior sealed13help/5signed folders untouched.",
     "source_parent": "ed3eac6c6ad4cf61ab77e36728a6360d20975e06",
     "user_capability": "Global search now finds the existing four beginner help questions and Enter opens/focuses the exact answer. Reuses bilingual copy; no new library, financial calculation or API/data mutation.",
     "corrections": "17RED->50focusedPASS. Independent3P2: locale reopened collapsed answer/stole focus, same-fragment reselect noop, same-page dialog cleanup stole answer focus. Additional locale1RED and real Dialog samepage2RED fixed, assertions retained. Locale-independent rendered topic allowlist, cancelable RAF afterdialogclose, samefragment existing navigation notification without historywrite; nonfragment sameURL remainsnoop.",
@@ -14,7 +29,7 @@
     "evidence_payloads": 13,
     "evidence_manifest_sha256": "6a574558a0c7677d5aae188af300e44cfb67c53cd229a3808bd4bce9c03f70f3",
     "ownership": "Root sole repo/docs writer. Owned fullfrontend93832 terminal0; originalfourservices retained. No business task/account/order/provider/formal/OOS/DB request, no service restart/deletion. Ubuntu GUI integration recovery separately notverified; installed Windows Docker client works.",
-    "remaining": "Full U1-U8/M0-M5/source/financial/newversion/forward/lostledger/native/quality/delivery unchanged; goal ACTIVE, not complete. New exactCI required, no merge/tag/release."
+    "remaining": "Full U1-U8/M0-M5/source/financial/newversion/forward/lostledger/native/quality/delivery unchanged; goal ACTIVE, not complete. Own48 helpCI PASS; later single-day chart requires ownCI. No merge/tag/release."
   },
   "signed_results_and_readonly_flow_20261007_gate": {
     "status": "PASS_SCOPED_SIGNED_RESULTS_AND_READONLY_USER_FLOWS_NOT_FULL_PRODUCT",
@@ -2344,8 +2359,8 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-07Sydney freshWSLps no competingwriter/test/research; rootsolewriter, ghuserMakenzieAhern. ed3HEAD=origin=OPEN/DRAFTPR32 with exactCI37486662961PASS beforelocalhelpedits. Finalfrontend93832terminal0, readonlyreviewterminal. ActualIAB16help cases and5edgepaths, ownedtabclosed/ZHsystem/defaultviewport restored. Both13help+5signedpostCI payloadhashes rechecked. No historicalPID reuse; UbuntuGUIintegration notverified.",
-    "repository_writer": "Root only; helpsearch/modalnavigation/frontend/docs/checkpoint slice. Authorized signed_results_review_oct7 final independent readonly reviewer terminal, no writes/tests/DB/browser/network. No concurrent source/queue/database worker started by this unit.",
+    "latest_verification": "2026-10-06T16:17:07Z / Oct7Sydney fresh WSLps no competing writer/test/research; root sole writer, Git identity and ghuser MakenzieAhern unchanged. HEAD48ea3bf parent exactCI37490580136SUCCESS. Existing single-day chart local29/703 checks terminal0, independent readonly review terminal,16IAB cases completed/ownedtab4closed/preferences restored. All12 sealed chart payloads and index3c5e7767... verified again. WindowsDocker four originalserviceshealthy/up and loopback5173/8000health HTTP200. No historicalPID reused; Ubuntu GUIintegration separately notverified.",
+    "repository_writer": "Root only; shared single-day chart/frontend tests/docs/checkpoint slice. Authorized signed_results_review_oct7 final independent readonly reviewer terminal, no writes/tests/DB/browser/network. No concurrent source/queue/database worker started by this unit.",
     "database_writer": "Oct6 no businessDB POST/test/migration/account/provider/formal/OOS. Original containers auto-resumed after safe existingDesktop start; no forced backend/Compose restart/recreate/reset/deletion. Saved32API byteequal+1expected additivecapabilities versus completeOct3pre snapshot; scoped API only, not fullSQL/lostledger restoration.",
     "queue_writer": "Oct6 completeGET capture active0:11terminalstudies/5STOPPEDaccounts/4terminalupdates/3formal. No submit/retry/provider/accountstart; rootfrontend test94932 terminalexit0. Before any later action reread active jobs and exactprocess identity, historicalPIDs not authority.",
     "agents": {
@@ -2938,7 +2953,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Finish coherent help-search commit/exactCI, then continue full U1-U8/M0-M5 financial/API/user-flow/native200/AA/p95/error/restart/manual/restorable delivery. Existing signedreturn ed3CI alreadyPASS, do not repeat its checks as if pending. Actual beginnerhelp/2-3comparison/datedplan/failedtask read-only recovery limitedIAB proof; exports currentfiledelivery NOT_VERIFIED, source economics NOT_FINANCIALLY_VALIDATED. Ubuntu proxyintegration needs alreadyrequested officialGUIrestart; Windowsengine/services operate. Source/newversion remains fullscope475+1/7407/6643source/600725component/002375/002399/44rawgaps;000598 needs independent implemented composite-reference/aggregate evidence, never repeated weightedpricefit. Preserve frozen/research/OOS/oldresults/productionDB; lawfulafterstartforward and genuine missingledger decisions external. No merge/tag/release until allacceptedfullproductscope verified; goalACTIVE.",
+  "next_task": "Finish coherent single-day chart commit/exactCI, then continue full U1-U8/M0-M5 financial/API/user-flow/native200/AA/p95/error/restart/manual/restorable delivery. Help48 and signedreturned3 exactCI alreadyPASS; do not repeat completed checks as pending. Actual beginnerhelp/comparison/datedplan/failedtask and single-day linkedrecords limitedIAB proof, not wholeproduct; exports currentfiledelivery NOT_VERIFIED, economics NOT_FINANCIALLY_VALIDATED. Ubuntu proxyintegration needs alreadyrequested officialGUIrestart; Windowsengine/services operate. Source/newversion remains fullscope475+1/7407/6643source/600725component/002375/002399/44rawgaps;000598 needs independent implemented composite-reference/aggregate evidence, never repeated weightedpricefit. Preserve frozen/research/OOS/oldresults/productionDB; lawfulafterstartforward and genuine missingledger decisions external. No merge/tag/release until fullacceptedproductscope actuallyverified; goalACTIVE.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git log -1 --oneline && gh pr view 32 --json headRefOid,state,isDraft && gh run list --branch codex/product-v1.2-current-rules --limit 1 --json databaseId,headSha,status,conclusion",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
