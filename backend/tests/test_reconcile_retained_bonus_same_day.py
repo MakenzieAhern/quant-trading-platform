@@ -70,6 +70,9 @@ def test_same_day_retained_notice_wording_keeps_all_dates_and_holder_scope(credi
         ("", "本次所送红股", "本次分派对象", "计"),
         ("", "本次所(转增)股", "本次分红派息及资本公积金转增股本对象", "记"),
         ("", "本次资本公积金转增股份", "本次分派对象", "记"),
+        ("截至", "本次转增股", "本次分派对象", "记"),
+        ("截止", "本次所(转增)的股份", "本次分派对象", "记"),
+        ("截至", "本次所(转增)的股份", "本次分派对象", "记"),
     ),
 )
 def test_explicit_cutoff_and_credit_wording_never_infers_missing_dates(
@@ -89,6 +92,11 @@ def test_explicit_cutoff_and_credit_wording_never_infers_missing_dates(
         ("2011年3月25日下午", "股权登记日下午"),
         ("2011年03月28日" + entry_text, "2011年03月29日" + entry_text),
         ("2011年03月28日" + entry_text, entry_text),
+        ("2011年03月28日" + entry_text, "2011年03月28" + entry_text),
+        (credit + "于", "预计" + credit + "于"),
+        (credit + "于", "计划" + credit + "于"),
+        (credit + "于", "拟将" + credit + "于"),
+        (credit + "于", "讨论" + credit + "于"),
         ("全体股东", "控股股东"),
         ("无限售条件", "有限售条件"),
         ("2011年3月28日。", "上市日期另行公告。"),
@@ -162,6 +170,39 @@ def test_explicit_weekday_and_capital_listing_preserve_all_date_guards(weekday, 
             RECORD,
             EX,
         )
+
+
+@pytest.mark.parametrize(
+    "heading",
+    [
+        "四、转增股本方法",
+        "四、权益分派方法",
+        "四、权益分派方法1、",
+        "四、权益分派方法:1、",
+        "四、权益分派方法1.",
+        "四、权益分配方法1、",
+        "四、权益分派办法1、",
+        "四、利润分配和转增股本方法",
+        "五、利润分配和资本公积金转增股本方法",
+        "四、利润分配和资本公积金转增股本方法1、",
+        "四、分配、转增股份方法1、",
+        "四、分红派息及资本公积金转增股本方法1、",
+        "2、",
+        "",
+    ],
+)
+def test_credit_declaration_requires_boundary_and_reviewed_method_heading(heading):
+    notice = NOTICE.replace("四、转增股本方法\n", heading)
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for prefix in ("拟将", "讨论", "拟将1、", "讨论四、权益分派方法"):
+        with pytest.raises(ValueError, match="DATES_UNRESOLVED"):
+            same_day_listing(
+                [notice.replace("本次转增股于", prefix + "本次转增股于")],
+                "600000",
+                TITLE,
+                RECORD,
+                EX,
+            )
 
 
 @pytest.mark.parametrize(
@@ -438,7 +479,7 @@ def test_opt_in_reconciliation_is_immutable_and_preserves_default_schedule(tmp_p
         )
     }
     event = accepted["events"][0]
-    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V11"
+    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V13"
     assert event["event"]["listing_date"] == EX
     assert event["event"]["share_ratio"] == "1.000"
     assert not event["scheduled_listing_not_actual_tradability"]

@@ -1,5 +1,27 @@
 # Decisions
 
+## v1.2 explicit cutoff/parenthetic credit and root declaration boundaries — 2026-10-06
+
+Full cached002357 final notice explicitly states截至 record-date allholders,
+(转增)的股份 complete credit and unrestricted listing dates. Lexical equivalents
+only; do not derive dates from undated order or another clause. Initial3RED then
+26focusedPASS/V12 candidate is chronology, not accepted after independent拟将
+counterexample.9RED establishes all shared本次 credit branches could match inside
+proposed/discussion text. Require sentence/page boundary, reviewed exact method
+heading and optional numberedfield, rather than another keyword-only blacklist.
+Read complete cached000523/002132/002168/002011/002080/002163/002497 notices before
+preserving their exact headings.40focusedPASS; separate immutableV13ledger-v2
+preserves all old73fields exceptversion/checksum,4dependencies/default unchanged;
+74sourcelegs/142,68unresolved,7265outside. V12ledger-v1 NON-ACCEPTED.
+73referencePASS/1UNRESOLVED000598 strictcash mismatch remains; repeat/reversed
+agree.1219backend/one optional archiveSKIP20.20s/lint/types/reversibletmpfsDBPASS.
+Same owned stoppedchecker/readiness verified; failed inspect template corrected
+before checker start; PGstopped after terminal0. No originaldata/queue/provider/
+frozen/OOS changes or financial admission. Frontend unchanged, prior666/static/
+build/exact2332CI reused; not a new frontend/browser run. Independent V13 source
+and final source/docs/proof review no boundedP1P2/overclaim; exactCI pending.
+Full mandatory product remains.
+
 ## v1.2 explicit parenthetic listing aliases and declaration boundaries — 2026-10-06
 
 Full cached final002379/002396/002481 sources have complete all-holder credit

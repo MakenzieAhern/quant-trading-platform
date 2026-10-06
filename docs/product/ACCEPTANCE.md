@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-10-06 cutoff/parenthetic credit and fail-closed declaration boundary
+
+[Proof](../../../product-evidence/v1.2/m4/20261006-bonus-cutoff-parenthetic-credit/README.md)
+records exact 截至/(转增)的股份 wording from full cached002357 final notice.
+Initial3RED then26focusedPASS exposed an independent拟将 prefix P2;9RED
+reproduced. Bind all shared本次 credit branches to sentence/page boundaries,
+reviewed exact method headings and numbered fields, not arbitrary inner text.
+FinalV13 immutableledger-v2:74sourcelegs/142,68unresolved,7265outside;old73fields
+exact except opt-in version/checksum and4dependencies unchanged/default unchanged.
+V12ledger-v1 remains NON-ACCEPTED chronology. No inferred dates/page joins or
+fraction-component shortcut; source acceptance is not full economic admission.
+
+40focused/1219backendPASS/one existing optional archiveSKIP20.20s/Ruff548/mypy145/
+reversible ownedtmpfsDBPASS.73referencePASS/1UNRESOLVED000598 strict cash mismatch;
+unchanged auditor/repeated stdout/reversed inputs agree.52date failures remain
+(40holder/7credit/3listing/2record-ex); strictercredit moves2already-unresolved
+listing failures earlier, not acceptance loss. Independent source review no
+boundedP1P2; final source/docs/proof review also noP1P2 or overclaim. Exact newCI
+pending. Frontend unchanged; prior
+actual666/lint/types/independentbuild and exact2332frontendCI reused, no new local
+frontend/browser/AA/performance claim. TestPGstopped; originalfourservicesup/
+healthy andfrontend/API200. Frozen assets/.research/v1.1 unchanged. Full U1–U8/
+M0–M5, economic admission and external lawful-forward/genuine-lostledger remain.
+
 ## 2026-10-03 explicit inspection versions, not executable financial promotion
 
 [Proof](../../../product-evidence/v1.2/m4/20261003-version-inspection/README.md)
@@ -9771,6 +9795,12 @@ Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/pro
 Full U1-U8/M0-M5/financial admission/forward/genuine missing-ledger gates remain.
 
 ## 2026-10-06 parenthetic listing aliases (bounded U3/U5/U6 prerequisite)
+
+Post-commit: exact2332f2c [CI37428627750](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37428627750)
+backend/frontend/ComposeSUCCESS2026-10-06T07:18:17Z; PR32OPEN/DRAFT,
+head==origin.28payload proof sealed
+f38a98dfec2adefb85ab50b7fb1d77434c29a94f194771716d711c589d178870;
+precommit pending-CI text below is chronology, not current status.
 
 Full cached002379/002396/002481 final notices read; explicit complete-date
 unrestricted listing 起始交易时间/(转增)股/送(转) aliases only.2RED→20focusedPASS;
