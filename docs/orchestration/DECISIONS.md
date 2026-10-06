@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 holder cash versus official ex-price inputs — 2026-10-06
+
+Reuse strict cash/share parsers and Decimal reference helper. Cached final notices
+for five repurchase-excluded distributions explicitly distinguish actual public
+holder entitlement from total-capital-folded reference cash/share inputs. Bind both
+independently; never replace holder cash/share legs with folded ratios or infer a
+ratio from observed prices. Source parser requires positive final implemented
+declaration grammar and rejects conflicting numeric equations, wrong issuer/date,
+page-manufactured numbers and nonstandard events. Independent source-semantic P2
+fixed and regressions pass. Original .research/frozen data/policies/results untouched.
+New limited reference475+1 and all7407queueV4 retain470priorPASS/old114+1/288oldfacts;
+000598composite public cash .102064 vs monthly .101 stays referenceUNRESOLVED.
+New version/allaction/fullfinancial/product gates remain, not a sourcecount release.
+Local1243backendPASS/1archiveSKIP and668frontendPASS; isolated disposable testDB only.
+Do not use719historicalCI as proof for this new local source slice. User reports
+GitHub availability delay; local development/checks/commits continue, no retries or
+protection bypass/merge/tag/release before required current gates actually pass.
+
 ## v1.2 approved fraction batch and strict reference checks — 2026-10-06
 
 Reuse approved exact revision3 policy/shared terms/official same-day boundaries,

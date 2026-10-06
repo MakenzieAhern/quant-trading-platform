@@ -1,5 +1,55 @@
 # v1.2 acceptance ledger
 
+## 2026-10-06 distinct holder entitlement and issuer ex-price basis (local slice)
+
+Five exact reference failures explained from already cached issuer PDFs, not price
+inference:3005222021,0025682021/2022,3001002025,3010262025. Holder cash/share
+entitlements remain .2/.5/.4 etc; reference uses expressly declared total-capital
+repurchase-folded inputs. Positive final-declaration grammar, exact repeated page
+header, bound PDF/extraction/date links and strict computed==official==raw required.
+Independent P2 arbitrary/invalidated numeric formula acceptance fixed; negatives
+and exact-header regression added. No financial engine or frozen-data change.
+
+Actual immutable referenceV2 canonical
+d7f7837c5c8a2e21484bdb6e837cda12aa770fd67ac783c6b1417847edcc81f6:
+475limitedPASS+1UNRESOLVED;470oldPASS/old114+1 retained.000598source confirms
+public-holder cash .102064 while monthlyDPS .101 is not that holder entitlement;
+reference closure still open, not silently rewritten or admitted.
+Whole7407queueV4 canonical79cf30b322e3d749c41d7f90550c15f9d4be8fc001cfffec48ea37bb4135fd10:
+exactly5 status changes, other7402whole rows exact;475NOT_ADMITTED+1referenceopen+
+288oldpresence/component/noentitlementNOT_REVALIDATED+6643sourceopen. Not allactions.
+
+122focusedPASS; full1243backendPASS/1optional archiveSKIP/Ruff551/mypy145/Alembic
+reversible disposablequant_test PASS. Frontend668PASS44files/lint/types/build174ms;
+519.40kB chunk advisory not measuredp95. Temporary isolated noport/volume tmpfs PG
+stopped after checks; original fourservices intact. No archive test rerun this slice.
+Read-only independent final code/reference/queue review no boundedP1/P2, not full
+financial/product certification. New source slice local; CI NOT_RUN for this slice,
+prior719 green is historical evidence only, no bypass or merge/release.
+[Commands, actual readback, failures and review](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-reference-basis/README.md).
+Full source/allaction/newversion/financial/API/UI/U1-U8/M0-M5/AA/native200/p95/restart/
+manual/releasability and external gates remain; goalACTIVE, no new acceptance scope.
+
+## 2026-10-06 exact fraction milestone CI and integrated full queue
+
+Commit719391abf36bad1bbd4c76777e20e78d098bfc7b HEAD=origin=OPEN/DRAFTPR32head.
+[Exact CI37450498245](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37450498245)
+backend/frontend/Compose SUCCESS2026-10-06T10:35:29Z; watch terminal0.
+Three checkpointpayloads sealed912ea01dc158f298ce797055ab7fbcfccc2a54755ee2ef77543571c6b3334246.
+No code/UI change after exactCI; receipt-only state/docs updates local for next milestone.
+
+Immutable fullbonus queueV3 canonical60b4e725f3df09a83dfdcd1d6d7575d75e65184551a34d271ab9a055f4d8c8ff:
+7407rows/16years/38bound files, disjoint285frozenpresence NOT_REVALIDATED/1component/
+2legacy noentitlement NOT_REVALIDATED/470candidate reference NOT_ADMITTED/
+6referenceUNRESOLVED/6643sourceUNRESOLVED. All7407identities and288oldfacts preserved.
+6931sourceunresolved minus288oldpresence explains6643; not acceptance or exclusion.
+Unique frozenPITsymbol/exchange/record->ex interval mapping fixes historical source
+keys across ledgers. Initial duplicate2023-2025inputs failed beforepublication;
+removed old redundant append without weakening unique-year gate. ReversedrowsPASS.
+[Seven queuepayloads](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-fraction-coverage-queue/README.md)
+sealed2c561494be489d93132269657bb5ebeb90430e36c95cabddd295e826b4228eb9. Independent read-only bounded review noP1/P2;
+not allactionclass/financial/newdataset/UI/product acceptance. Fullgoal remains ACTIVE.
+
 ## 2026-10-06 all-ratio candidates and bounded financial inputs
 
 Opt-in approved fractions require existing strict terms and explicit same-day
