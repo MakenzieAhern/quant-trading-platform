@@ -6,6 +6,7 @@ import { LanguageSelector } from "../components/LanguageSelector";
 import { useApiResource } from "../hooks/useApiResource";
 import { navigate, replaceUrl } from "../utils/navigation";
 import { experimentApi } from "./experiments/api";
+import { useExperimentCopy } from "./experiments/copy";
 import { readExperimentDraft } from "./experiments/draft";
 import { explainExperimentCode } from "./experiments/codes";
 import { productHelpTopics, useProductCopy } from "./copy";
@@ -81,6 +82,7 @@ export function ModeGuide() {
 }
 export function WorkbenchPage() {
   const c = useProductCopy();
+  const experiments = useExperimentCopy();
   const { i18n } = useTranslation();
   const [retry, setRetry] = useState(0);
   const dataHeading = useRef<HTMLHeadingElement>(null);
@@ -226,7 +228,8 @@ export function WorkbenchPage() {
                   <strong>{job.name}</strong>
                   <span>
                     {job.configuration.start_date} —{" "}
-                    {job.configuration.end_date}
+                    {job.configuration.end_date} ·{" "}
+                    {experiments.statuses[job.status]}
                   </span>
                 </div>
                 <span className="quietTag">

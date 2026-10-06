@@ -1,5 +1,30 @@
 # Decisions
 
+## v1.2 novice failure and truthful recent-job status — 2026-10-07
+
+Actual separate Chrome QA c3d38 fails closed on unexplained held reference change,
+no result. Preserve exact configuration and FAILED record; no retry/cash-tuning or
+guard relaxation to claim success. Last290/297 is a checkpoint, not exact failed
+date/security. Current ENZH failure explanation already correct. Restore original
+browser draft from exact16:36:48Z immutable backup via normal backup-first UI.
+Homepage lacked lifecycle state; reuse existing bilingual status mapping beside
+dates, preserve mode/URL/payload/request semantics. SixRED→32focused/709fullPASS,
+16actualChrome DOM cases and independent readonly review scoped, not financePASS.
+Stop redundant known-failure job demonstrations and prioritize complete source/
+economic/new-version closure plus remaining required product gates. GoalACTIVE,
+all U1-U8/M0-M5 retained, no frozen/formal/OOS/merge/release changes.
+
+## v1.2 chart exact CI and Chrome evidence boundary — 2026-10-07
+
+Own d850CI37494535320SUCCESS closes the chart source code gate, not product
+acceptance. Supported Chrome extension, now available, provides actual16 geometry
+and16 accessible record/metric cases plus keyboard restore proof. Do not infer
+native200 from ineffectiveCtrlplus under viewport override, or file landing from
+prepared-report status/download-observer timeouts. Denied internal downloads page
+is not bypassed. Preserve wrongly timed screenshots as NOT_ACCEPTED rather than
+mislabeling their locale/theme; separately inspect settled frames. Continue full
+mandatory U1-U8/M0-M5 independently, no source/financial/release promotion.
+
 ## v1.2 single-date geometry — 2026-10-07
 
 Correct the actual shared experiment chart, not per-job data: one-vertex SVG

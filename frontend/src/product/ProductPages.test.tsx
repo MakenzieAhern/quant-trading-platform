@@ -10,7 +10,11 @@ import { afterEach, expect, it, vi } from "vitest";
 import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
 import { experimentApi } from "./experiments/api";
-import { capabilities, configuration } from "./experiments/fixtures.test-data";
+import {
+  capabilities,
+  configuration,
+  job,
+} from "./experiments/fixtures.test-data";
 import { EXPERIMENT_DRAFT_KEY } from "./experiments/draft";
 import {
   DataCenterPage,
@@ -22,6 +26,42 @@ import {
 } from "./ProductPages";
 
 afterEach(() => vi.restoreAllMocks());
+
+it.each([
+  ["QUEUED", "Queued", "排队中"],
+  ["RUNNING", "Running", "运行中"],
+  ["SUCCEEDED", "Complete", "已完成"],
+  ["FAILED", "Failed", "失败"],
+  ["CANCELLED", "Cancelled", "已取消"],
+  ["INTERRUPTED", "Interrupted", "已中断"],
+] as const)(
+  "shows the server's %s status on recent research without changing its mode or record",
+  async (status, english, chinese) => {
+    await act(() => i18n.changeLanguage("en-US"));
+    const item = { ...job, status };
+    const before = JSON.stringify(item);
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    const list = vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [item],
+      limit: 4,
+      offset: 0,
+      total: 1,
+    });
+    render(<WorkbenchPage />);
+    const link = await screen.findByRole("link", {
+      name: new RegExp(job.name),
+    });
+    expect(link).toHaveTextContent(english);
+    expect(link).toHaveTextContent("Synthetic demonstration");
+    expect(link).toHaveAttribute("href", `/experiments/${job.job_id}`);
+    await act(() => i18n.changeLanguage("zh-CN"));
+    expect(link).toHaveTextContent(chinese);
+    expect(link).toHaveTextContent("合成演示");
+    expect(JSON.stringify(item)).toBe(before);
+    expect(list).toHaveBeenCalledOnce();
+    await act(() => i18n.changeLanguage("en-US"));
+  },
+);
 
 it.each([
   ["en-US", "backtest", "What is a backtest?"],

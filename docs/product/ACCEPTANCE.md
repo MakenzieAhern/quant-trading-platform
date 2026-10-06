@@ -1,5 +1,56 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 actual novice task failure and Workbench lifecycle visibility
+
+Real Chrome ordinary historical QA c3d38f7b-d942-475e-b49a-206689c1658c is
+FAILED/UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT, no result, persisted290/297.
+Fresh GET total12/active0/exactname1; no retry or cashchange. ENZH detail and
+keyboardRefresh preserve cause/config/identity/terminalfocus. Previous agent
+draft/task walkthrough does NOT prove the full successful historical chain.
+Error response has no exact failed security/date; do not infer from progress.
+Normal backup-first UI restored original exactcash Jan4-Jun30 draft/name from
+16:36:48Z backup, versions8→9 retained; ENdark/viewport/ownedtab cleaned up.
+
+Observed homepage cards omitted lifecycle status. Reuse existing six bilingual
+status labels beside dates, not new mode/financial computation. SixRED/26oldPASS
+→32focusedPASS; full709frontend45files17.27s/lint/types/build160ms/formatPASS,
+original78440terminal0. Independent readonly source review no boundedP1P2.
+Actual Chrome16 specified viewport/locale/theme DOM cases retain4links/date/mode/
+first2FAILED/last2SUCCEEDED and no pageoverflow; keyboardTab focuses next card.
+ThreeactualJPGs inspected; mobileTheme and whitespace-selector failures retained,
+corrected from actual UI, not app defects. Not fullAA/native200/p95/financePASS.
+[Eight-payload proof and limits](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-novice-task-failure/README.md),
+index5cbab91ebe30747024698e7b2b214ad9e52846f5e107a45737986d36028f1cf9.
+New source requires its own coherent commit/push/exactCI; parentd850CI not enough.
+Full economic/source/newversion/U1-U8/M0-M5/forward/genuine restoration still
+required. No frozen/formal/OOS/paperstart/provider/restart/merge/tag/release.
+
+## 2026-10-07 exact chart CI and current Chrome records
+
+[Own d850CI37494535320](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37494535320)
+completed SUCCESS: frontend703/45files/build209ms; backend1243/1optionalSKIP39.49s,
+Ruff/mypy145, Compose release/scratch smokePASS. Samewatch12998 terminal0.
+HEAD=origin=OPEN/DRAFTPR32head; no merge/tag/release. [Two-payload CI supplement](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-single-day-chart-checkpoint/README.md),
+indexa5e4afe7a5f2d4e7cfae7acf077bb951c54110b7ab05b67a736d5d85a0391f70.
+Below earlier CI-pending chart entry is prepush chronology, not current status.
+
+Actual supported Chrome, not IAB: all16 required viewport/locale/theme cases retain
+three centered markers/exact values/no pageoverflow; separately all16 accessible
+table/metric assertions retain10trades/10positions and unchanged full-run metrics.
+Space benchmark toggle and Enter dateclear/negativeMarch28 restore passed. No new
+business task/account/order, formal/OOS or dataset mutation. OriginalENdark restored,
+viewport reset and ownedtabs closed. [Eight-payload browser evidence and limits](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-chrome-chart-export/README.md),
+index84f76579665a40784501d711d096315b1008f06d110219ff6817a406d332d814.
+Two incorrectly timed screenshot frames explicitly NOT_ACCEPTED; actual3ZHlight
+chart images and separately settledENdark prepared-report image were inspected.
+
+JSON automatic event/fallback observation timed out; actual full-range prepared
+link/status exist but FILE_LANDING=NOT_VERIFIED. Default matching filename search
+empty does not prove otherpaths. chrome://downloads POLICY_DENIED/no workaround.
+Ctrlplus did not change1440x900/dpr1; not native200%. No speech/fullAA/p95/full
+financial/source/newversion/forward/recovery/productPASS. AllU1-U8/M0-M5 remain
+required, goalACTIVE. Subsequent receipt-only state/docs do not change tested code.
+
 ## 2026-10-07 single-date chart and saved records (scoped correction)
 
 Actual saved March23 inspection showed equity at x24 and three single-vertex
