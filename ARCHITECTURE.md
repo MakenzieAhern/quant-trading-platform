@@ -146,6 +146,18 @@ Collection endpoints order by per-run sequence and enforce `1 <= limit <= 200`. 
 
 Phase 7 execution is intentionally synchronous. FastAPI creates and closes one `AsyncSession` per request, and transaction context managers roll back on exceptions or cancellation. A client disconnect does not provide durable job ownership: cancellation or a process crash after `RUNNING` may leave a stale run because Phase 7 has no worker or recovery lease. Operators can identify those rows by status and timestamps. Automated stale-run recovery, durable cancellation, queues, and workers are explicitly deferred to a future job-execution phase; Phase 7 does not claim crash-safe execution recovery.
 
+## Personal experiment failure diagnostics
+
+The shared held-reference guard stops before daily accounting and reports only
+the observed trading date and stable held security identities. Personal jobs
+persist this allowlisted context in nullable `error_context` JSONB in the same
+FAILED transaction, independently of `summary` and result rows. Temporary terminal
+write retries retain the context; process death before commit is not durable
+recovery. API/browser validation prevents diagnostics from becoming a result.
+Older records remain unknown, never inferred from progress or backfilled.
+Alembic `20261007_0017` must precede backend rollout; downgrade removes only this
+diagnostic column and therefore intentionally removes its newly stored context.
+
 ## Product dataset-version boundary
 
 The product reuses `ExperimentDatasetRegistry` and `LocalDatasetCatalog` rather

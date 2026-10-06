@@ -1269,6 +1269,64 @@ describe("durable experiment detail", () => {
     expect(window.location.pathname).toBe("/experiments/accepted-child");
   });
 
+  it.each(["en-US", "zh-CN"])(
+    "shows observed failure date and held IDs, never a result or an automatic retry: %s",
+    async (language) => {
+      await i18n.changeLanguage(language);
+      vi.spyOn(experimentApi, "get").mockResolvedValue({
+        ...job,
+        status: "FAILED",
+        phase: "FAILED",
+        error_code: "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT",
+        error_context: {
+          trading_date: "2024-01-04",
+          security_ids: ["CN-A:SSE:600000"],
+          security_count: 1,
+        },
+      });
+      const readResult = vi.spyOn(experimentApi, "result");
+      const retry = vi.spyOn(experimentApi, "retry");
+      render(<ExperimentDetailPage jobId={job.job_id} />);
+      const zh = language.startsWith("zh");
+      await screen.findByText(
+        zh
+          ? "在该交易日处理前停止（Asia/Shanghai）: 2024-01-04"
+          : "Stopped before trading session (Asia/Shanghai): 2024-01-04",
+      );
+      expect(
+        screen.getByText(
+          zh ? "涉及的持仓证券: 1" : "Affected held securities: 1",
+        ),
+      ).toBeInTheDocument();
+      await userEvent.click(
+        screen.getByText(zh ? "技术详情" : "Technical details"),
+      );
+      expect(screen.getByText("CN-A:SSE:600000")).toBeVisible();
+      await act(async () => {
+        await i18n.changeLanguage(zh ? "en-US" : "zh-CN");
+      });
+      expect(screen.getByText("CN-A:SSE:600000")).toBeVisible();
+      expect(readResult).not.toHaveBeenCalled();
+      expect(retry).not.toHaveBeenCalled();
+    },
+  );
+
+  it("keeps a legacy failure date unknown even when session progress is available", async () => {
+    vi.spyOn(experimentApi, "get").mockResolvedValue({
+      ...job,
+      status: "FAILED",
+      phase: "FAILED",
+      completed_sessions: 290,
+      total_sessions: 297,
+      error_code: "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT",
+    });
+    render(<ExperimentDetailPage jobId={job.job_id} />);
+    await screen.findByText(/This record did not save the exact failure date/);
+    expect(
+      screen.queryByText(/Stopped before trading session/),
+    ).not.toBeInTheDocument();
+  });
+
   it("polls the same durable job until terminal status and then stops", async () => {
     vi.useFakeTimers();
     const get = vi

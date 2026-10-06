@@ -302,9 +302,68 @@ def test_distribution_input_failure_keeps_safe_code_without_promoting_other_valu
     if specific:
         assert caught.value.code == OrdinaryDistributionInputError.code
         assert "private" not in str(caught.value)
+        assert caught.value.context is None
     else:
         assert caught.value is failure
     assert phases == [("VERIFYING_DATA", 0, None), ("EXECUTING", 0, 340)]
+
+
+def test_reference_failure_preserves_observed_context_without_advancing_progress(
+    tmp_path, monkeypatch
+):
+    from app.research.engine import UnexplainedReferenceAdjustment
+
+    def fail(_engine, session):
+        raise UnexplainedReferenceAdjustment(
+            session.trading_date, ("CN-A:SSE:600000", "CN-A:SZSE:000001")
+        )
+
+    monkeypatch.setattr("app.research.engine.ResearchExecutionEngine.process_session", fail)
+    phases = []
+    with pytest.raises(ExperimentInputError) as caught:
+        run_experiment(
+            ExperimentDatasetRegistry(tmp_path),
+            demo_request(),
+            DEMO_SHA,
+            Event(),
+            lambda *p: phases.append(p),
+        )
+    assert caught.value.code == UnexplainedReferenceAdjustment.code
+    assert caught.value.context.model_dump(mode="json") == {
+        "trading_date": DEMO_START.isoformat(),
+        "security_ids": ["CN-A:SSE:600000", "CN-A:SZSE:000001"],
+        "security_count": 2,
+    }
+    assert str(caught.value) == UnexplainedReferenceAdjustment.code
+    assert phases == [("VERIFYING_DATA", 0, None), ("EXECUTING", 0, 340)]
+
+
+def test_failure_context_rejects_invalid_or_unbounded_untrusted_diagnostics():
+    from app.application.experiments.models import ExperimentFailureContext
+
+    valid = {"trading_date": "2024-01-04", "security_ids": ["CN-A:SSE:600000"], "security_count": 1}
+    assert ExperimentFailureContext.model_validate(valid).model_dump(mode="json") == valid
+    for change in (
+        {"trading_date": "2024-02-30"},
+        {"security_ids": []},
+        {"security_ids": ["private/path"]},
+        {"security_count": True},
+        {"security_count": 0},
+        {"security_count": 2},
+        {"traceback": "private"},
+        {"security_ids": ["CN-A:SZSE:000001", "CN-A:SSE:600000"], "security_count": 2},
+        {"security_ids": ["CN-A:SSE:600000"] * 2, "security_count": 2},
+        {"security_ids": [f"CN-A:SSE:{i:06d}" for i in range(101)], "security_count": 101},
+    ):
+        with pytest.raises(ValidationError):
+            ExperimentFailureContext.model_validate({**valid, **change})
+    prefix = [f"CN-A:SSE:{i:06d}" for i in range(100)]
+    assert (
+        ExperimentFailureContext.model_validate(
+            {**valid, "security_ids": prefix, "security_count": 101}
+        ).security_count
+        == 101
+    )
 
 
 def test_cancellation_interrupts_at_completed_session_boundary(tmp_path):

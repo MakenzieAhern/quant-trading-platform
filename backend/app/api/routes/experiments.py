@@ -63,6 +63,7 @@ def _response(row: ExperimentJobModel) -> ExperimentResponse:
             "total_sessions": row.total_sessions,
             "cancel_requested": row.cancel_requested,
             "error_code": row.error_code,
+            "error_context": row.error_context,
             "retry_of": row.retry_of,
             "attempt": row.attempt,
             "result_available": row.summary is not None,

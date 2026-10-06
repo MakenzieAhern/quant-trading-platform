@@ -79,6 +79,11 @@ export interface Experiment {
   total_sessions: number | null;
   cancel_requested: boolean;
   error_code: string | null;
+  error_context?: {
+    trading_date: string;
+    security_ids: string[];
+    security_count: number;
+  } | null;
   retry_of: string | null;
   attempt: number;
   result_available: boolean;

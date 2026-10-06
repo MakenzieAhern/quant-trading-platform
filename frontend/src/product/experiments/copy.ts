@@ -169,6 +169,12 @@ const en = {
     "This task and its status are saved. It is safe to leave and return.",
   failureHelp:
     "The task stopped without a complete result. Review the error and data status before starting a linked retry.",
+  failureDate: "Stopped before trading session (Asia/Shanghai)",
+  failureSecurities: "Affected held securities",
+  failureContextMissing:
+    "This record did not save the exact failure date or securities. They remain unknown; completed-session progress cannot identify them.",
+  failureContextTruncated:
+    "Technical details list the first 100 identities in stable order, not the full affected set.",
   cancelledHelp:
     "This task was cancelled. No incomplete result is presented as a completed study.",
   interruptedHelp:
@@ -417,6 +423,12 @@ const zh: typeof en = {
   persisted: "任务及状态已保存，可离开页面后继续查看。",
   failureHelp:
     "任务在产出完整结果前停止。请检查错误与数据状态，再创建关联重试。",
+  failureDate: "在该交易日处理前停止（Asia/Shanghai）",
+  failureSecurities: "涉及的持仓证券",
+  failureContextMissing:
+    "本记录未保存确切失败交易日及证券，仍为未知；已完成交易日的进度不能用于推断。",
+  failureContextTruncated:
+    "技术详情按稳定顺序列出前 100 个标识，不代表完整受影响集合。",
   cancelledHelp: "任务已取消。不完整结果不会被展示为已完成研究。",
   interruptedHelp: "服务在任务完成前重启。可使用已保存配置创建新的关联重试。",
   resultTitle: "如何理解这次结果",

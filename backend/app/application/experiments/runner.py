@@ -19,7 +19,7 @@ from app.application.experiments.data import (
     ExperimentInputError,
     load_experiment_dataset,
 )
-from app.application.experiments.models import CreateExperimentRequest
+from app.application.experiments.models import CreateExperimentRequest, ExperimentFailureContext
 from app.data.catalog.checksums import canonical_sha256, sha256_file
 from app.data.full_dataset import FullDataset
 from app.domain.markets.calendar import TradingCalendar
@@ -180,7 +180,16 @@ def run_experiment(
         check_cancelled()
         try:
             last_delta = engine.process_session(session)
-        except (UnexplainedReferenceAdjustment, OrdinaryDistributionInputError) as exc:
+        except UnexplainedReferenceAdjustment as exc:
+            # ponytail: first 100 identities bound job-list payloads; the count explicitly
+            # reports truncation. Add a paginated diagnostic collection if more are needed.
+            context = ExperimentFailureContext(
+                trading_date=exc.trading_date,
+                security_ids=exc.security_ids[:100],
+                security_count=len(exc.security_ids),
+            )
+            raise ExperimentInputError(exc.code, context) from exc
+        except OrdinaryDistributionInputError as exc:
             raise ExperimentInputError(exc.code) from exc
         if completed % 10 == 0 or completed == total:
             progress("EXECUTING", completed, total)

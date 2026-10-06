@@ -9,6 +9,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
+from app.application.experiments.models import ExperimentFailureContext
 from app.data.catalog import load_manifest
 from app.data.catalog.checksums import canonical_sha256
 from app.data.catalog.freeze import MARKER
@@ -39,9 +40,10 @@ def current_dataset_quality(dataset_id: str, dataset_sha256: object) -> str | No
 
 
 class ExperimentInputError(ValueError):
-    def __init__(self, code: str) -> None:
+    def __init__(self, code: str, context: ExperimentFailureContext | None = None) -> None:
         super().__init__(code)
         self.code = code
+        self.context = context
 
 
 class ProductDatasetRegistration(BaseModel):

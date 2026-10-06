@@ -36,6 +36,7 @@ class ExperimentJobModel(Base):
     total_sessions: Mapped[int | None] = mapped_column(Integer)
     cancel_requested: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     error_code: Mapped[str | None] = mapped_column(String(64))
+    error_context: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
     retry_of: Mapped[UUID | None] = mapped_column(
         PGUUID(as_uuid=True), ForeignKey("product_research_jobs.id", ondelete="RESTRICT")
     )

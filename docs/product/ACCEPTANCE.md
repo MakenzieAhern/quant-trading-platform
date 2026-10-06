@@ -1,5 +1,54 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 observed personal-failure diagnostics — scoped pass
+
+U3/U8/M4: new held-reference failures preserve the actual session date and sorted
+affected held security IDs, not estimated progress. Nullable diagnostic JSONB is
+separate from the result; old records explicitly remain unknown. Strict validation,
+100-ID prefix/full-count disclosure and bilingual UI use existing components.
+Temporary terminal-write failure retains context, linked retries do not overwrite
+the original, and FAILED records do not acquire results.
+
+Backend 103 targeted / 1252 full passes + one existing optional archive skip,
+Ruff/mypy pass; frontend 96 targeted / 713 full passes across 45 files,
+lint/type/build pass and audit zero. Reversible 0017 migration ran only on
+inspected disposable tmpfs `quant_test`: existing non-context row digest unchanged,
+old context null after upgrade. No application database migration or backend restart.
+Actual Chrome synthetic observed/unknown fixtures passed ZH/EN/reload and 390×844
+without page overflow; committed diagnostic survived the owned API graceful restart.
+This is not crash-before-commit recovery, a historical run or forward-market evidence.
+Actual localhost:5173 original failed record shows the unknown explanation in both
+languages after compatible static UI deployment; no retry/backfill/business mutation.
+Independent static read-only review found no evidenced scoped P1/P2.
+
+[Scoped screenshots and receipts](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-failure-context/README.md).
+Forty payloads sealed with manifest SHA256
+`56cd9b200b70bdd89c17902ed4a81540eb667531eb03bceb82309a2f396df341`.
+Final repeat retained the same counts (backend25.26s/frontend19.05s); disposable
+Alembic current/check passed. Owned QA API and three exact scratch containers
+stopped/retained after receipts saved; original services and local UI remain usable.
+New exact commit/CI pending; parent 7ab CI is not coverage for this later diff.
+Backend deployment still requires genuine WSL integration restoration. Full U1–U8,
+M3–M5, financial/source completeness, lawful forward and genuine lost-ledger recovery
+remain incomplete; no merge/tag/release or full AA/native-200%/p95 claim.
+
+## 2026-10-07 exact security CI and scoped local restart checkpoint
+
+Own7ab93a552744912187598d659316a0dde77f9e23
+[CI37513352731](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37513352731)
+all3jobs/every stepSUCCESS completed2026-10-06T18:45:02Z; samewatch36922terminal0.
+HEAD=origin=OPEN/DRAFTPR32head; not merge/release/fullproductacceptance.
+Owned fallbacka561fa1250 only restartPASS, root/research deep/API200 and served
+index/mainJS hashes unchanged; originalPG/Redis/backendhealthy/notrestarted,
+originalfrontendretainedSTOPPED. Windowsreboot/unattendedpersistence nottested.
+ReadonlynativeUbuntu: cli-tools/socketdirectoriesempty/broken/usrbinDockerlink,
+nointegrationhelperobserved. GUI screenshotrequested; no reset/Apply/restart,
+manualhelper/mount/config/security repair or data deletion.
+[Separate six-payload exact checkpoint](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-source-map-checkpoint/README.md)
+manifestSHA9fe79cfbb1dcc4ae6e093c2b8570523957afe0521b08a488c057b6a10b393e60;
+prior13payloadsealedproofunchanged. Latercheckpointdocs localfornextcoherent
+milestone, not tinyreceipt-onlypush/CIloop. FullU1-U8/M0-M5/goalACTIVE.
+
 ## 2026-10-07 dependency security and local runtime recovery — partial
 
 Own parser head0d90562e1e036f86b2db1d70149f28495a2628b4

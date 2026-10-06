@@ -209,9 +209,38 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
           {data.error_code && (
             <div>
               <p>{explainExperimentCode(data.error_code, i18n.language)}</p>
+              {data.error_context ? (
+                <>
+                  <p>
+                    {c.failureDate}: {data.error_context.trading_date}
+                  </p>
+                  <p>
+                    {c.failureSecurities}: {data.error_context.security_count}
+                  </p>
+                </>
+              ) : (
+                data.error_code === "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT" && (
+                  <p className="experimentHelp">{c.failureContextMissing}</p>
+                )
+              )}
               <details className="experimentTechnical">
                 <summary>{c.technical}</summary>
                 <code>{data.error_code}</code>
+                {data.error_context && (
+                  <>
+                    {data.error_context.security_count >
+                      data.error_context.security_ids.length && (
+                      <p>{c.failureContextTruncated}</p>
+                    )}
+                    <ul aria-label={c.failureSecurities}>
+                      {data.error_context.security_ids.map((id) => (
+                        <li key={id}>
+                          <code>{id}</code>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
               </details>
             </div>
           )}

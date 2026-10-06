@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, a
 from sqlalchemy.sql.elements import ColumnElement
 
 from app.application.experiments.data import ExperimentDatasetRegistry, ExperimentInputError
-from app.application.experiments.models import CreateExperimentRequest
+from app.application.experiments.models import CreateExperimentRequest, ExperimentFailureContext
 from app.application.experiments.runner import ExperimentCancelled, json_value, run_experiment
 from app.data.catalog.checksums import canonical_sha256
 from app.db.models.experiments import ExperimentJobModel, ExperimentResultRowModel
@@ -58,7 +58,9 @@ class ExperimentManager:
         self._active_cancel: Event | None = None
         self._active_id: UUID | None = None
         self._ownership: AsyncConnection | None = None
-        self._pending_terminal: tuple[UUID, str, str | None] | None = None
+        self._pending_terminal: (
+            tuple[UUID, str, str | None, ExperimentFailureContext | None] | None
+        ) = None
         self._ownership_failed = False
         self._owner_pid: int | None = None
 
@@ -453,17 +455,30 @@ class ExperimentManager:
             code = (
                 exc.code if isinstance(exc, ExperimentInputError) else "EXPERIMENT_EXECUTION_FAILED"
             )
-            await self._record_terminal(job.id, "FAILED", code)
+            context = exc.context if isinstance(exc, ExperimentInputError) else None
+            await self._record_terminal(job.id, "FAILED", code, context)
         finally:
             self._active_cancel = None
             self._active_id = None
 
-    async def _record_terminal(self, identifier: UUID, status: str, code: str | None) -> None:
-        self._pending_terminal = (identifier, status, code)
-        await self._finish_failure(identifier, status, code)
+    async def _record_terminal(
+        self,
+        identifier: UUID,
+        status: str,
+        code: str | None,
+        context: ExperimentFailureContext | None = None,
+    ) -> None:
+        self._pending_terminal = (identifier, status, code, context)
+        await self._finish_failure(identifier, status, code, context)
         self._pending_terminal = None
 
-    async def _finish_failure(self, identifier: UUID, status: str, code: str | None) -> None:
+    async def _finish_failure(
+        self,
+        identifier: UUID,
+        status: str,
+        code: str | None,
+        context: ExperimentFailureContext | None = None,
+    ) -> None:
         async with self.factory() as db, db.begin():
             row = await db.scalar(
                 select(ExperimentJobModel)
@@ -473,4 +488,5 @@ class ExperimentManager:
             if row is not None and row.status == "RUNNING":
                 row.status = row.phase = status
                 row.error_code = code
+                row.error_context = context.model_dump(mode="json") if context else None
                 row.completed_at = datetime.now(UTC)

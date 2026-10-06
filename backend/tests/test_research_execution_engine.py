@@ -590,8 +590,10 @@ def test_unexplained_held_reference_change_stops_before_any_session_side_effect(
         ),
         unexplained_reference_adjustment_ids=(SECURITY_ID,),
     )
-    with pytest.raises(ValueError, match="UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT"):
+    with pytest.raises(ValueError, match="UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT") as caught:
         engine.process_session(unknown)
+    assert caught.value.trading_date == date(2024, 1, 4)
+    assert caught.value.security_ids == (str(SECURITY_ID),)
     assert engine.finish() == before
     assert strategy.calls == 2
     assert engine.last_completed_session == date(2024, 1, 3)

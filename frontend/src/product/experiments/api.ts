@@ -181,6 +181,36 @@ export function parseExperiment(value: unknown): Experiment {
   )
     throw new ApiContractError();
   parseConfiguration(item.configuration);
+  if (item.error_context != null) {
+    const context = record(item.error_context);
+    text(context.trading_date);
+    strings(context.security_ids);
+    integer(context.security_count);
+    const parsedDate = new Date(`${context.trading_date}T00:00:00Z`);
+    if (
+      item.status !== "FAILED" ||
+      item.error_code !== "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT" ||
+      item.result_available ||
+      Object.keys(context).some(
+        (key) =>
+          !["trading_date", "security_ids", "security_count"].includes(key),
+      ) ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(context.trading_date) ||
+      !Number.isFinite(parsedDate.getTime()) ||
+      parsedDate.toISOString().slice(0, 10) !== context.trading_date ||
+      context.security_ids.length === 0 ||
+      context.security_ids.length > 100 ||
+      context.security_ids.some(
+        (id, index, ids) =>
+          !/^CN-A:[A-Z]+:[0-9]{6}$/.test(id) ||
+          (index > 0 && id <= ids[index - 1]),
+      ) ||
+      context.security_count < context.security_ids.length ||
+      (context.security_count > context.security_ids.length &&
+        context.security_ids.length !== 100)
+    )
+      throw new ApiContractError();
+  }
   return item as unknown as Experiment;
 }
 export function parseResult(value: unknown): ExperimentResult {

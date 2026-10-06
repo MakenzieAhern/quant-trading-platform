@@ -1,5 +1,37 @@
 # Decisions
 
+## v1.2 preserve observed failure context, never infer old facts — 2026-10-07
+
+The shared guard previously retained only a stable error code. Add actual session
+date and sorted held stable IDs without changing which holdings fail or relaxing
+accounting. Carry typed allowlisted metadata through runner and manager's pending
+terminal tuple, then nullable JSONB in the same FAILED transaction. Summary/result
+semantics remain unchanged; arbitrary exception text, paths and traces are excluded.
+First 100 IDs bound collection payloads with full count and explicit truncation.
+Old null/absent context stays unknown; no original job retry or backfill.
+
+1252 backend + one existing optional archive skip / 713 frontend and checks passed.
+0017 upgrade/down/up and synthetic browser receipts use disposable quant_test only;
+actual graceful QA API restart proves already committed context survives, not the
+uncommitted crash gap. Read-only reviewer found no evidenced scoped P1/P2.
+Compatible UI is served at local5173; original backend/app database not migrated or
+restarted while WSL bind is broken. Source evidence and financial acceptance remain
+distinct. New own CI pending; v1.1/frozen/formal/OOS untouched, goal remains active.
+
+## v1.2 exact own CI is not WSL or financial completion — 2026-10-07
+
+7ab ownCI37513352731 all3jobs/stepsSUCCESS2026-10-06T18:45:02Z; PR32OPEN/DRAFT.
+Continuefullgoal ratherthanmerge/release. Owned verifiedstaticfrontend survives
+itsownrestart withsamechecksums/HTTP200; originalPG/Redis/backendnotrestarted,
+originalfrontendretainedSTOPPED. ActualUbuntu CLItools/sockets empty/brokenlink/
+nohelper: askforGUI integrationpageevidence, no manual mount/helper/security
+bypass or blindDockerreset/restart. Sixpayloadcheckpointseal9fe79cfbb1dcc4ae6e093c2b8570523957afe0521b08a488c057b6a10b393e60.
+Readonlyerror-flowdiagnosis: engineguard/runner/jobpreserve onlycode/no exact
+securitydate. Do not inventoldfailedcontext from290/297progress, rerunstrategy
+for cosmeticproof, or relaxfinancialguard. No diagnosticsimplementation/schema
+or businessDB change inthisunit. Keepfullsource/newversionfinancial/API/quality/
+actual lawfulforward/restoration requirements and priorfrozen/formal/OOS intact.
+
 ## v1.2 compatible transitive patch and non-destructive local recovery — 2026-10-07
 
 Fresh actual dev audit1HIGH source-map-js1.2.1; official GHSA-68fv-2mgg-jv7q

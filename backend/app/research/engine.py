@@ -38,8 +38,10 @@ ZERO = Decimal(0)
 class UnexplainedReferenceAdjustment(ValueError):
     code = "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT"
 
-    def __init__(self) -> None:
+    def __init__(self, trading_date: date, security_ids: tuple[str, ...]) -> None:
         super().__init__(self.code)
+        self.trading_date = trading_date
+        self.security_ids = security_ids
 
 
 class ResearchStrategy(Protocol):
@@ -173,15 +175,19 @@ class ResearchExecutionEngine:
         ):
             raise ValueError("missing calendar session must be represented explicitly")
         require_unambiguous_ordinary_distributions(session.corporate_actions)
-        unexplained_symbols = {
-            _domain_symbol(identity) for identity in session.unexplained_reference_adjustment_ids
+        held_symbols = {
+            position.symbol for position in self._portfolio.positions if position.quantity != ZERO
         }
-        if any(
-            position.quantity != ZERO and position.symbol in unexplained_symbols
-            for position in self._portfolio.positions
-        ):
+        unexplained_ids = tuple(
+            sorted(
+                str(identity)
+                for identity in session.unexplained_reference_adjustment_ids
+                if _domain_symbol(identity) in held_symbols
+            )
+        )
+        if unexplained_ids:
             # Fail before today's accounting, fills, marks, strategy calls or progress.
-            raise UnexplainedReferenceAdjustment
+            raise UnexplainedReferenceAdjustment(session.trading_date, unexplained_ids)
         proposal_count = len(self._oms.proposals)
         decision_count = len(self._oms.decisions)
         fill_count = len(self._broker.fills)

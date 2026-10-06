@@ -491,7 +491,19 @@ async def test_cancel_committed_before_save_leaves_no_partial_results(manager, m
     assert await manager.collection(job.id, "equity", 20, 0) == ([], 0)
 
 
-async def test_failed_terminal_write_is_reconciled_before_claiming_more_work(manager, monkeypatch):
+@pytest.mark.parametrize("observed_context", (False, True))
+async def test_failed_terminal_write_is_reconciled_before_claiming_more_work(
+    manager, monkeypatch, observed_context
+):
+    from app.application.experiments.models import ExperimentFailureContext
+
+    context = (
+        ExperimentFailureContext(
+            trading_date=date(2030, 1, 2), security_ids=("CN-A:SSE:600000",), security_count=1
+        )
+        if observed_context
+        else None
+    )
     job = await manager.create(CreateExperimentRequest.model_validate(payload()), "terminal-outage")
     failed_write = asyncio.Event()
     original_finish = manager._finish_failure
@@ -515,6 +527,8 @@ async def test_failed_terminal_write_is_reconciled_before_claiming_more_work(man
         await original_finish(*args)
 
     def failed_calculation(*args):
+        if context:
+            raise ExperimentInputError("UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT", context)
         raise RuntimeError("test-only calculation failure")
 
     monkeypatch.setattr(manager, "_claim", tracked_claim)
@@ -526,10 +540,24 @@ async def test_failed_terminal_write_is_reconciled_before_claiming_more_work(man
     row = await asyncio.wait_for(terminal(manager, job.id), 4)
     assert row.status == "FAILED"
     assert writes == 2
-    assert row.error_code == "EXPERIMENT_EXECUTION_FAILED"
+    assert row.error_code == (
+        "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT" if context else "EXPERIMENT_EXECUTION_FAILED"
+    )
+    assert row.error_context == (context.model_dump(mode="json") if context else None)
+    assert row.summary is None
+    reopened = ExperimentManager(SessionFactory, manager.registry, engine)
+    assert (await reopened.get(job.id)).error_context == row.error_context
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        detail = (await client.get(f"/api/experiments/{job.id}")).json()
+        assert detail["error_context"] == row.error_context
+        assert detail["result_available"] is False
+        assert (await client.get(f"/api/experiments/{job.id}/result")).status_code == 409
+    assert await manager.collection(job.id, "equity", 20, 0) == ([], 0)
     await manager.shutdown()
     retried = await manager.retry(job.id, "after-outage")
     assert retried.status == "QUEUED" and retried.retry_of == job.id
+    assert retried.error_context is None
+    assert (await manager.get(job.id)).error_context == row.error_context
 
 
 async def test_startup_failure_releases_session_lock_before_returning_connection_to_pool(

@@ -6,11 +6,83 @@ import {
   experimentApi,
   parseCapabilities,
   parseCurrentDatasetQuality,
+  parseExperiment,
   parseResult,
 } from "./api";
 import { capabilities, configuration, job, result } from "./fixtures.test-data";
 
 describe("experiment HTTP boundary", () => {
+  it("validates observed failure identity without inventing legacy context", () => {
+    const error_context = {
+      trading_date: "2024-01-04",
+      security_ids: ["CN-A:SSE:600000"],
+      security_count: 1,
+    };
+    const failed = {
+      ...job,
+      status: "FAILED",
+      error_code: "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT",
+      error_context,
+    };
+    expect(parseExperiment(job)).toEqual(job);
+    expect(
+      parseExperiment({ ...failed, error_context: null }).error_context,
+    ).toBeNull();
+    expect(parseExperiment(failed).error_context).toEqual(error_context);
+    for (const change of [
+      { trading_date: "2024-02-30" },
+      { trading_date: "2024-01-04T00:00:00Z" },
+      { security_ids: [] },
+      { security_ids: ["private/path"] },
+      {
+        security_ids: ["CN-A:SSE:600000", "CN-A:SSE:600000"],
+        security_count: 2,
+      },
+      {
+        security_ids: ["CN-A:SZSE:000001", "CN-A:SSE:600000"],
+        security_count: 2,
+      },
+      { security_count: true },
+      { security_count: 0 },
+      { security_count: 2 },
+      { traceback: "private" },
+      {
+        security_ids: Array.from(
+          { length: 101 },
+          (_, n) => `CN-A:SSE:${String(n).padStart(6, "0")}`,
+        ),
+        security_count: 101,
+      },
+    ])
+      expect(() =>
+        parseExperiment({
+          ...failed,
+          error_context: { ...error_context, ...change },
+        }),
+      ).toThrow(ApiContractError);
+    for (const change of [
+      { status: "SUCCEEDED" },
+      { error_code: "EXPERIMENT_EXECUTION_FAILED" },
+      { result_available: true },
+    ])
+      expect(() => parseExperiment({ ...failed, ...change })).toThrow(
+        ApiContractError,
+      );
+    const prefix = Array.from(
+      { length: 100 },
+      (_, n) => `CN-A:SSE:${String(n).padStart(6, "0")}`,
+    );
+    expect(
+      parseExperiment({
+        ...failed,
+        error_context: {
+          ...error_context,
+          security_ids: prefix,
+          security_count: 101,
+        },
+      }).error_context?.security_count,
+    ).toBe(101);
+  });
   it("preserves read-time quality, accepts legacy omission and rejects unknown quality claims", () => {
     const saved = {
       ...result,
