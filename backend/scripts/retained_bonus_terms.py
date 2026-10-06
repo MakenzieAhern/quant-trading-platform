@@ -92,6 +92,12 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
                 raise ValueError("BONUS_SAME_DAY_WEEKDAY_CONFLICT")
         except ValueError as exc:
             raise ValueError("BONUS_SAME_DAY_WEEKDAY_CONFLICT") from exc
+    # Only the identical declared title at every page start is a running header.
+    # Guards above retain the full source; never join a date across page boundaries.
+    compact_pages = [re.sub(r"\s+", "", unicodedata.normalize("NFKC", page)) for page in pages]
+    heading = re.sub(r"\s+", "", unicodedata.normalize("NFKC", title))
+    if len(compact_pages) > 1 and all(page.startswith(heading) for page in compact_pages):
+        text = "§".join(page.removeprefix(heading) for page in compact_pages)
     patterns = (
         "(?:" + "|".join(RECORD_LABELS) + ")" + LABEL_DATE_GAP + dated,
         EX_LABEL + LABEL_DATE_GAP + dated,
@@ -132,16 +138,23 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"(?:[一二三四五六七八九十]+、|\d+[、.])?"
         r"新增无限售条件流通股份上市(?:交易)?日:?)" + dated,
     )
-    for pattern, expected in zip(
-        patterns, (record_date, ex_date, record_date, ex_date, ex_date), strict=True
+    for pattern, expected, role in zip(
+        patterns,
+        (record_date, ex_date, record_date, ex_date, ex_date),
+        ("RECORD_DATE", "EX_DATE", "HOLDER_CUTOFF", "SHARE_CREDIT", "UNRESTRICTED_LISTING"),
+        strict=True,
     ):
         matches = re.findall(pattern, text)
         try:
             values = {date(*map(int, match)).isoformat() for match in matches}
         except ValueError as exc:
-            raise ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED") from exc
+            error = ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED")
+            error.add_note(role)
+            raise error from exc
         if values != {expected}:
-            raise ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED")
+            error = ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED")
+            error.add_note(role)
+            raise error
     return ex_date
 
 

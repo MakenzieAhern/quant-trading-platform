@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 explicit date-correction context and shared page headers — scoped pass
+
+U3/U4/U6/U7 source dependency: the linked official300048 pair produces a separate
+date-only view, record2011-03-25/ex2011-03-28/availability2011-03-23. Four table
+and two quoted dates change, original text/ratio1/grosscash0.25 do not. Full
+introduction/items/fixed same-company footer consumption rejects unknown extra
+financial amendments. Independent review exposed this P2; actual3FAIL12PASS
+regression then six before/after negative cases and107 focused tests pass.
+300048 still fails UNRESTRICTED_LISTING; generic listing is not its authority.
+
+Shared source guard strips only identical declared titles at every page start,
+after raw negative/issuer/date/weekday checks. Native exception notes explain
+the first failed role. All137 raw rows retained:54 source-only pass/83 unresolved;
+only300072/300123 change, other135 existing fields equal. No economic admission.
+Full1286backend+1optional archiveSKIP20.25s/Ruff/mypy pass; isolated tmpfs DB
+head-base-head/check pass. Frontend713/45files17.75s/lint/types/build/audit0,
+163 copied tracked inputs match; four deployment files absent from test copy.
+No appDB migration/restart, dataset/formal/OOS/old-failure modification.
+
+[Scoped source proof and independent review](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-correction-chain/README.md)
+17payload seal `6197495480e72510ffea9ad517245670b38fcc001df6cc04017cc2f7430fc08e`,
+282 current bindings verified. v1 historical reports retained, not current parser
+bindings. Independent review verified all v2 inputs and raw rows, no evidenced
+remaining scopedP1/P2; no independent test or financial/product approval claimed.
+Own commit/CI pending. Full mandatory U1–U8/M0–M5 remains incomplete; continue
+actual Chrome quality as well as unresolved separate-version financial sources.
+
 ## 2026-10-07 official correction and supplemental oracle — scoped source pass
 
 U3/U4/U6/U7 financial-source dependency: official300048/合康变频 implementation
@@ -31,8 +58,13 @@ working-directory commands retained as failures, not hidden.
 queue-v4 `b907203d56afb76f761ccb08b6ebda21cd8aa0ab0eb45a9f90e035bceab88e32`.
 Old versions/frozen/tag/.research unchanged, no event/dataset/strategy admission.
 OwnscratchPG/node IDs verified thenSTOPPED/retained; originalPGRedisbackendhealthy,
-RedisPONG/API8000HTTP200/frontend5173HTTP200. New milestone exactCI pending;
-parent97f8 success is not its CI. Fullmandatory U1-U8/M0-M5 remains incomplete.
+RedisPONG/API8000HTTP200/frontend5173HTTP200. Ownb3efca7564807f57c96f3086ba7b8617536072e6
+equals origin/OPEN-DRAFTPR32 head; CI37523966642 all3jobs/every stepSUCCESS
+completed2026-10-06T20:08:30Z, samewatch38655terminal0. GitHub Actions currently
+runs; [separate exact CI receipt](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-source-oracle-ci/README.md)
+4payloadseal `aa15ea619a35a07b21c7237392825f38100e7d64b0818d45c09cfb061b40ac4e`.
+Earlier40sourceproof unchanged. No merge/release; fullmandatory U1-U8/M0-M5
+remains incomplete. PostCIcheckpoint changes staylocal for next coherent milestone.
 
 ## 2026-10-07 observed personal-failure diagnostics — scoped pass
 

@@ -1,5 +1,26 @@
 # Decisions
 
+## v1.2 date-only amendments consume all substantive text — 2026-10-07
+
+Matching a date table/two quotes plus a keyword blacklist was insufficient:
+independent review found ignored extra cash/ratio/holder revisions. Reproduced
+3 failing cases, then require complete standard introduction, every item and
+same-company fixed signature/footer, with six prefix/suffix negative cases.
+Unknown layouts reject; no issuer exception or global year replacement. Derived
+300048 dates now correct, original terms unchanged; unrestricted listing remains
+unresolved and financial admission is forbidden.
+
+Fix repeated page titles once in shared same_day_listing, after full raw risk/date
+guards and without deleting page boundaries. Native error notes expose the failed
+role rather than widening acceptance. All137 supplemental rows stay; only300072
+and300123 guards change52→54 source-only pass,83 unresolved. Separate v2 binds
+current parsers; preserve v1 evidence without falsely claiming current bindings.
+Independent final review verifies all raw rows and285 per-report inputs, scoped
+no remaining evidencedP1/P2. Full backend1286+optional skip/frontend713/static
+checks and disposable migration pass;17payload seal61974954. No frozen/formal/OOS,
+application DB migration/restart or release. After coherent commit/CI, prioritize
+actual Chrome mandatory quality too; source archaeology cannot replace U1–U8.
+
 ## v1.2 completeness oracle must retain omitted identities — 2026-10-07
 
 An independently recovered official300048 correction proves that closing only
@@ -22,6 +43,10 @@ External40payload seal16b13392/486bindings; oldv1-v3/frozen/.research preserved.
 No financial admission, formal study, appDBmigration/restart, merge/tag/release.
 Resume source-chain/reference/holder/fullaction reconciliation in separate version;
 do not replace remaining product U1-U8/M0-M5 with a narrower oracle pass.
+Ownb3efca7 CI37523966642 all3jobs/every stepSUCCESS20:08:30Z, exacthead==origin
+and OPEN/DRAFTPR32; GitHub Actions now demonstrably runs. Separate4receipt seal
+aa15ea61 preserves prior40sourceproof. No merge/release, postCI docs remain local
+for next coherent source integration rather than a receipt-only commit/push loop.
 
 ## v1.2 preserve observed failure context, never infer old facts — 2026-10-07
 
