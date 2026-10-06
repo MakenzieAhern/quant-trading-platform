@@ -1,9 +1,25 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T20:44:00Z",
+  "updated_at_utc": "2026-10-06T21:14:52Z",
+  "wizard_quality_20261007_gate": {
+    "status": "PASS_SCOPED_COPY_GEOMETRY_NOT_FULL_PERFORMANCE_EXACT_CI_PENDING",
+    "source_parent": "8ca451af3a57fec91966ee9fcc8673731a67c7da",
+    "defect": "Pre-submit English falsely claimed task already saved on server. Only shared confirmation copy now says Once created; Chinese already conditional. No API/storage/financial/dependency change; two EN/ZH regressions require conditional notice, disabled unacknowledged submit and no create call.",
+    "local_checks": "86focused/715full45files17.58s/lint/types/build163ms/audit0/PrettierPASS. Source and scratch copy SHA copy6cec9c56795c4d3f99ff36266c73f604dcfdd2e0d83dce5e86e8172656ec427b/test7c72663332eaf88df77750ba1a96649326bb8813d2775aebd02c8b2317937ab6 match. Backend unchanged; prior1286+optional archiveSKIP/disposable0017 cycle retained. Own new commit CI pending, earlier8caCI37528782163 all3jobs/every stepPASS verified live.",
+    "review": "Authorized independent signed_results_review_oct7 readonly: no evidenced scopedP1P2; traced sole caller/real POST-commit semantics and preserved exact assertions. No reviewer execution or mutation, not full product acceptance.",
+    "browser": "Actual Chrome154.0.8037.98 on localhost5173:16case ENZH/lightdark/four required sizes no pageoverflow, visible main buttons>=40px/ackfalse/Run disabled/exactcash123456.789000000000001/dates2011-01-04..2011-06-30/costrisk/9versions retained. Four selected images visually inspected, not all16 fullAA. Matrix precedes copy change; actual after-copy1440 screenshot/currentDOM confirms conditional text. No submission. Finally normal index reloaded, diagnosticnodes0, step2/EN/dark/exact configuration/9versions restored, viewportreset/ownedtabclosed.",
+    "performance": "NOT_MET_CAUSE_UNPROVEN. Tool-inclusive DOM20Enter p95=17.6954ms is not paint;20pointerp95=1016.1482ms. Native attempt1 deferred; attempt2 only19gestures/18matched and null last entry, not20. Fresh missing oldtab confirmed, no restart solelytimeout. New bounded control18trusted inputs/63raw native entries/zero longtasks/allvisiblefocused: ordinary baseline pointer264-312ms with0.1-0.2ms handlers, wizard pointer296-1784ms with4-7ms handlers. BaselineEnter16-24ms, wizardEnter16-1376ms despite2RAF<=22.4ms. Rules out exclusively blaming React handlers, does not prove no product paint delay. All failures/raw/nulls retained; no zero-imputation or guessed code change. Native200 user-set request still pending after policydenial, no workaround.",
+    "deployment": "Owned fallback a561fa1250 no mounts/127.0.0.1:5173 only, original/new whole public builds backed up outsideGit, oldassets retained. Newindex6efb5ef7/mainJS3a960982 hashes match; original index never instrumented. Three own QAHTML hashchecked then recoverably moved out webroot to /tmp/qtp-owned-timing-retired-20261007. OriginalPGRedisbackend healthy/RedisPONG/API200paper/frontend200; no appDBmigration/restart. Scratchnode7969f4b/PG30b1cfb STOPPED retained; Ubuntu Docker integration unresolved.",
+    "evidence": "product-evidence/v1.2/m4/20261007-wizard-quality/README.md",
+    "evidence_payloads": 116,
+    "evidence_manifest_sha256": "9024a068446ede2add0aefb8e04a5a1bac67718a095e5344d5583d65efe81a43",
+    "research_submitted": false,
+    "full_product_pass": false,
+    "next": "Coherent copy/test/checkpoint commit, own exact-head CI; then independent mandatory current U8/error/restart/performance and separate newversion financial reconciliation. No merge/tag/release; all U1-U8/M0-M5 remain."
+  },
   "draft_persistence_ci_20261007_gate": {
-    "status": "PASS_LOCAL_ASSERTION_TIMING_FIX_EXACT_CI_PENDING",
+    "status": "PASS_SCOPED_ASSERTION_TIMING_FIX_EXACT_CI",
     "source_parent": "3674329dede5627a9045d43a2f9ecd4fb9f3ec86",
     "observed_failure": "Exact CI37527954362 terminalfailure: backend/ComposePASS; frontend712PASS1FAIL fresh strategy heading visible before queued draft persistence. No falseCIpass or blind rerun.",
     "fix": "Existing test awaits same original saved step/strategy object with waitFor. Production queueMicrotask(save)/storage unchanged; every URL/exactstring/locale/no-create assertion retained, no timeout increase or test removal.",
@@ -11,7 +27,8 @@
     "review": "Independent readonly signed_results_review_oct7 traced real persistence microtask and confirmed assertion semantics preserved; no evidenced scopedP1P2, reviewer did not execute tests.",
     "browser": "Actual Chrome localhost5173 restored existing step2draft, keyboard Enter continued2→3→4 and Back4→3→2 with current headings focused. EN→ZH→EN retains exactcash123456.789000000000001/dates2011-01-04..2011-06-30/strategy/costrisk. ZHdark review1920x911 and390x844; mobile document375<=390. No acknowledged run/submission; original step2/EN/dark restored, viewport reset/tabclosed. Not native200/p95/4size/AA/fullfinancial acceptance.",
     "evidence": "product-evidence/v1.2/m4/20261007-correction-chain-ci/README.md",
-    "next": "Commit async assertion fix with checkpoint and verify exact new-head CI; keep all source/financial/product gates open. No merge/tag/release."
+    "ci": "Own8ca451af3a57fec91966ee9fcc8673731a67c7da CI37528782163 all3jobs/every stepSUCCESS completed2026-10-06T20:47:25Z, samewatch12079terminal0 and fresh liveAPI21:13Z verification. HEAD==origin==OPEN/DRAFTPR32head before copy changes. Earlier375279 failure retained, no blind rerun. Separate10payload postcommit seal900e6c76e930672d650bcf5259059e3cc14070a879e12106786c43acb2f76066; prior17sourceproof unchanged.",
+    "next": "Accepted scoped persistence-assertion synchronization; preserve failure and exact8caCI. Continue wizard-quality gate and full mandatory product/research safeguards, not merge/release."
   },
   "correction_chain_20261007_gate": {
     "status": "PASS_SCOPED_DATE_CONTEXT_AND_SHARED_SOURCE_GUARDS_NOT_FINANCIAL",
@@ -27,7 +44,7 @@
     "evidence_payloads": 17,
     "evidence_manifest_sha256": "6197495480e72510ffea9ad517245670b38fcc001df6cc04017cc2f7430fc08e",
     "preservation": "282 currentv2 bindings verified. v1 reports/producers retained as historical NOT currentcodebindings. Frozenmanifest693c0b81/v1.1 tag/.research unchanged. Original appfrontend/APIHTTP200/paper; application DB not migrated or restarted. Only owned scratchPG30b1cfb/node7969f4b stopped/retained after terminal tests. Ubuntu Docker integration unresolved, no emptybind restart/reset/Apply/security changes.",
-    "ci": "Own3674329dede5627a9045d43a2f9ecd4fb9f3ec86 CI37527954362 terminalfailure: backend/ComposePASS, frontend712PASS1FAIL due asynchronous initial-draft assertion. Root-cause test synchronization fixed separately, newexactCI pending. Previousb3efCI historicalPASS, not substitute.",
+    "ci": "Own3674329 CI37527954362 failed frontend initial-draft timing assertion/backendComposePASS. Same original saved-object assertion now awaits queued persistence, production unchanged. Exact followup8ca451af3a57fec91966ee9fcc8673731a67c7da CI37528782163 all3jobs/every stepSUCCESS20:47:25Z. Earlier failed receipt/source proofs retained; not future wizard-copy CI or fullfinancial/product acceptance.",
     "ownership": "Root sole repo/candidate writer; fresh ps no competing writer/source/job worker. Same handles backend69834/frontend95111/checkpoint75377 terminal0, owned PG30b1cfb/node7969f4b STOPPED retained after tests. Independent reviewer readonly, no appDB/provider/account/order/businessjob or formal/OOS action.",
     "event_admitted": false,
     "dataset_modified": false,
@@ -2554,8 +2571,8 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-06T20:44Z / Oct7Sydney: root sole writer. Sourcefix3674329 pushed, exactCI37527954362 backend/ComposePASS but frontend712/1FAIL. Samewatch28217 terminal1. No blindrerun: assertion now awaits actual queued draft save,84focused/713full/staticchecksPASS/node89156terminal0. ActualChrome keyboard steps/back/locales/exactdraft/390nooverflow checked without submission; prefs/step/viewport restored/tabclosed. New coherenttestfix commit/CI pending. Originalappfrontend/API200, frozen/tag/.research unchanged; no businessDB/provider/account/order/formal/OOS/merge/release.",
-    "repository_writer": "Root only: scoped retrospective coverage CLI/16tests and checkpoint docs. Existing accepted original-failure diagnostic code unchanged. Reused authorized signed_results_review_oct7 read-only review COMPLETE; threeP2s fixed, no remaining evidenced scopedP1P2, no reviewer tests/DB/browser/network/process writes.",
+    "latest_verification": "2026-10-06T21:14Z / Oct7Sydney: root sole repo writer, fresh ps no competing writer. Exact8caCI37528782163 all3jobs/every stepPASS, PR32OPEN/DRAFT. New minimal pre-submit copy correction/two ENZH tests with86focused/715full/staticchecks and actualChromeconditional-copy/16casegeometry/nativecontrol evidence; performance remainsNOT_MET, no hidden failure. 116payloadseal9024a068/10priorCIseal900e6c76. Originalappfrontend/API200paper/PGRedisbackendhealthy/RedisPONG; scratchnodePGSTOPPEDretained. Normaldraft2/EN/dark/exactconfig/9versions restored/viewportreset/tabclosed, threeownQAHTML recoverably movedoutwebroot. Frozen/tag/.research unchanged; no businessDB/provider/account/order/formal/OOS/merge/release.",
+    "repository_writer": "Root only: shared English pre-submit persistence condition, two ENZH regressions and product checkpoint. Authorized independent signed_results_review_oct7 readonly completed scoped no evidencedP1P2; reviewer no tests/DB/browser/network/process writes. No new agents or competing repo writer.",
     "database_writer": "Root disposablequant_test tmpfs/no mounts/loopback55471 only, tests/migration checks complete and ownedPG nowSTOPPED/retained. No applicationDBmigration/mutation/restart, no original job retry/backfill, no marketdata or study run. Incomplete genuine lost-ledger recovery unchanged.",
     "queue_writer": "Root scoped immutable supplemental137row sourcelead/PITmaster queue v4 complete. No worker current, no marketprovider/business/research queue action. Old7407 oracle unchanged; no financial admission. New fullaction completeness still unproven; original failed job date/security remains unknown.",
     "agents": {
@@ -2563,10 +2580,11 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "2026-10-06T20:05Z original backend/PG/Redis healthy andRedisPONG/API8000HTTP200; no-mount fallbacka561fa1250 loopback5173HTTP200. Exact no-mount scratchPG30b1cfb/node7969f4b stopped after1268/713tests terminal; QAAPI/web alreadystopped. Originalfrontend remainsSTOPPED; no appbackend0017 rollout or WSLintegration recovery claim.",
+    "verified_processes": "2026-10-06T21:14Z original backend/PG/Redishealthy/RedisPONG/API8000HTTP200paper; owned no-mount fallbacka561fa1250 loopback5173HTTP200/newbuildhashmatch. Exact scratchnode7969f4b idleonly beforestop, PG30b1cfb/node STOPPED retained, QAAPI/web already stopped. Threeown diagnosticHTML moved out webroot after checksums, normalindexnotinstrumented. Originalfrontend STOPPED; no appbackend0017 rollout/WSLintegration recovery claim.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-06T21:14Z actual pre-submit English task-durability claim corrected to Once created; two ENZH notice/no-create/disabled-submit regressions,86focused/715full/staticchecks/readonly reviewPASS. ActualChromecopy verified,16-case wizard geometry/exactconfiguration/ackfalse retained. Nativecontrol shows264-312ms ordinarybutton too, wizard296-1784ms/handlers4-7ms/no longtasks; performance stillNOT_MET, not financial/U1-U8 complete. 116payloadseal9024a068, all scratch stopped/normaldraftrestored/QAHTMLretired/apphealthy. Exact prior8caCI37528782163PASS preserved10payloadseal900e6c76; newcopycommitCIpending, goalACTIVE.",
     "2026-10-06T20:05Z official300048 correction recovered,192monthly/23682rows revalidated and full2011CSDCC4.11B484rows/137raw gaps audited. v4bind136PITmaster/1unresolvedidentity,134datedleads/1correction/2undated, allevents0admitted. ThreeP2s independentlyclosed,1268backend+1optionalSKIP/713frontend/fullchecks/disposable0017check PASS;40payloadseal16b13392/486bindings. Originals/frozen untouched; ownedscratchstopped, app200. Coherentcommit/exactCI pending; fullgoalACTIVE.",
     "2026-10-07Sydney U8 global beginner-help search actual gap removed. Four existing topics reusable in search/page, first/direct/same-page/sameURL/reselect/locale/BackForward keyboard semantics; independent3P2 closed with RED regressions. Final74focused/696frontend/fullchecks and actual16IABmatrix PASS_SCOPED. OwnhelpCIpending, fullgoalACTIVE; not financial/nativeAA/forward/release acceptance.",
     "2026-10-06T15:23:16Z exacted3 signedreturns CI37486662961 backend/frontend/ComposeSUCCESS1243backend+1optionalSKIP; fivepayload supplemental proof sealedca8850e5...f72. Export APIs200/rawUTCcorrect, IABfilelandingNOT_VERIFIED. Originalfourservices usable viaWindowsDocker; Ubuntuintegration remains separateGUIaction. No merge/tag/release.",
@@ -3129,13 +3147,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "97f8e4398b5a1803b0606a357fd40d44514bf184",
+      "last_verified_head": "8ca451af3a57fec91966ee9fcc8673731a67c7da",
       "state": "DRAFT",
-      "ci_run": 37518515391,
+      "ci_run": 37528782163,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Own97f8CI37518515391 backend/frontend/Compose allSUCCESS. Shared observed-failure context/nullable0017 isolated migration and actualChrome syntheticcontext/oldunknown ZHEN/reload verified. Originalfailed-detail16cases4sizes2themes2languages no pageoverflow/maincontrols42px; appbackend not migrated/restarted while WSLbind broken. Prior scoped proofs retained; not fullU1-U8/M0-M5/financial/newversionadmission/AA/native200/p95/lawfulforward/genuine lostledgers/merge/release. PR32OPEN/DRAFT."
+      "browser_gate": "Own8caCI37528782163 backend/frontend/Compose allSUCCESS; failed367 CI retained/persistence test synchronization fixed. Compatible later local copyfix/715tests/currentChromecondition/16casewizardgeometry checked separately, own newCIpending. Native timingtargetNOT_MET_CAUSE_UNPROVEN/control included; native200manualpending. Original appbackend not migrated/restarted while WSLbindbroken. Prior proofs retained; not fullU1-U8/M0-M5/financial/newversionadmission/AA/lawfulforward/genuine lostledgers/merge/release. PR32OPEN/DRAFT."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -3150,8 +3168,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Finish own correction-context/shared-header coherent commit and exact-head CI, then independently advance actual Chrome guided research keyboard/native zoom/current p95 and actionable service-error checks. Preserve 83 supplemental source unresolved rows/allaction gaps for separate version reconciliation; date-only300048 context is not unrestricted tradability or financial admission. Do not redo accepted sources/fullarchive or retry/backfill original failed job. Keep localhost5173/API8000 usable; original WSLbound backend migration/restart waits genuine integration. Scratch PG/NodeSTOPPED retained. FullU1-U8/M0-M5/errors/restore/media/manual/lawful actual after-start forward/genuine missingledgers remain, goalACTIVE/product_goal_completefalse/no frozen/formal/OOS/merge/tag/release.",
-  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git log -1 --oneline && gh pr view 32 --json headRefOid,state,isDraft && rg -n 'same_day_listing|current_notice_dates|更正' backend/scripts/reconcile_retained_bonus.py backend/scripts/retained_bonus_terms.py backend/scripts/link_distribution_notices.py backend/scripts/reconcile_distribution_cash.py",
+  "next_task": "Commit minimal conditional pre-submit English notice/two regressions with quality checkpoint, push meaningful milestone and verify own exact-head CI. Then continue mandatory current U8/actionable failures/restart/performance diagnosis and separate newversion financial reconciliation, not a receipt-only commit loop. Native control also fails200ms; keep fail/no zero-imputation/no guessed code. Prior native200 scoped proofs retained, current manualrequestpending without workaround. Preserve83supplemental unresolved/allaction gaps; do not retry/backfill originalfailedjob or redo accepted authorities/archive. App5173/API8000usable; genuine Ubuntuintegration required before original backend0017 rollout. ScratchPG/NodeSTOPPED. FullU1-U8/M0-M5/restore/media/manual/lawful after-start forward/genuine missingledgers remain, goalACTIVE/product_goal_completefalse/no frozen/formal/OOS/merge/tag/release.",
+  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check && git diff --stat && gh pr view 32 --json headRefOid,state,isDraft && gh run list --branch codex/product-v1.2-current-rules --limit 3 --json databaseId,headSha,status,conclusion",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

@@ -78,7 +78,7 @@ const en = {
   confirm: "Run this configuration",
   submitting: "Submitting…",
   submitInfo:
-    "The task is saved on the server. You can leave and reopen it while it runs.",
+    "Once created, the task is saved on the server. You can leave and reopen it while it runs.",
   acknowledge:
     "I understand that this is an exploratory simulation, not new unseen evidence or a trading recommendation.",
   validation:

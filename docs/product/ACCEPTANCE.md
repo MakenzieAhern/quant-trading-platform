@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 conditional task durability and wizard quality — scoped partial
+
+U3/U8/M4: actual English confirmation falsely claimed server persistence before
+submission. Shared copy now says “Once created”; Chinese already conditional.
+Two regressions require the EN/ZH notice, disabled unacknowledged submit and no
+create request. No storage/API/financial behavior or dependency change. 86 focused,
+715 full/45 files17.58s, lint/type/build/audit0/Prettier pass; independent readonly
+review scoped no evidencedP1/P2, not test execution or financial approval.
+
+Actual Chrome154 on localhost5173:16 ENZH/lightdark/four-required-size wizard
+geometry/text cases retain exact capital/dates/config/9 versions, no page overflow,
+main controls≥40px, acknowledgementfalse/Run disabled. Four images visually reviewed,
+not all16 full visual/AA. Actual after-copy1440 screenshot/currentDOM verifies
+conditional text. Original normalindex never instrumented. Owned static deployment
+old/new full public builds backed up outsideGit; only loopback no-mount frontend
+changed. Final originaldraft step2/EN/dark/exact values restored, viewportreset/tab
+closed; own temporary QAHTML hashchecked and recoverably moved outsidewebroot.
+
+Performance not passed:20 tool-inclusive Enter DOM p95=17.6954ms is not paint;
+20pointerp95=1016.1482ms. Native attempt2 incomplete19/20 gestures with18matched/null
+last; earlier failed observations preserved, no timeout-based restart. New same-build
+plain-native-control experiment retains18 inputs/63native entries/zero observed
+longtasks/allvisiblefocused. Baseline pointer264–312ms also misses200ms; wizard
+pointer296–1784ms with4–7ms handlers, keyboard native16–1376ms while secondRAF≤22.4ms.
+Exclusively blaming React handlers is unsupported; paint root cause still unproven.
+No data dropping/zero-imputation/threshold relaxation or speculative productionfix.
+QA-PERF remains IN_PROGRESS/targetnotmet; actual native200 manual request pending,
+no browser-settings/security workaround. Scope is not full U1–U8/M0–M5 acceptance.
+
+[Actual screenshots, raw native control and runnable verifier](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-wizard-quality/README.md).
+116payload seal `9024a068446ede2add0aefb8e04a5a1bac67718a095e5344d5583d65efe81a43`.
+Backend unchanged: prior1286+optional archiveSKIP/disposable0017 checks retained.
+New copy commit ownCI pending; prior8caCI is separate. OriginalPGRedisbackendhealthy/
+RedisPONG/frontend&API200paper; scratchPG/nodeSTOPPEDretained. No appDBmigration,
+research/account/order/provider action, frozen/formal/OOS modification or release.
+
 ## 2026-10-07 initial draft assertion and current Chrome guided flow
 
 Exact sourcefix3674329 CI37527954362: backend/Compose passed, frontend712/713
@@ -8,7 +44,10 @@ useEffect's queued save; test now waits for the same original saved step/strateg
 object. Production behavior, all other exact assertions and timeouts unchanged.
 84 focused/713 full17.20s/lint/types/build/audit0/Prettier pass; independent
 read-only review confirms synchronization semantics, not a financial approval.
-New exact-head CI remains pending; original failure is preserved.
+Exact followup8ca451af3a57fec91966ee9fcc8673731a67c7da CI37528782163 all3jobs/every
+step SUCCESS completed2026-10-06T20:47:25Z; samewatch12079terminal0, freshAPI checked.
+Original failure preserved; this exact pass is not subsequent copyfix CI.
+10payload supplemental seal900e6c76e930672d650bcf5259059e3cc14070a879e12106786c43acb2f76066.
 
 Actual installed Chrome on current localhost5173 restored the existing draft:
 Enter2→3→4, Back4→3→2 focuses each heading; EN→ZH→EN preserves exact cash
@@ -43,7 +82,8 @@ No appDB migration/restart, dataset/formal/OOS/old-failure modification.
 282 current bindings verified. v1 historical reports retained, not current parser
 bindings. Independent review verified all v2 inputs and raw rows, no evidenced
 remaining scopedP1/P2; no independent test or financial/product approval claimed.
-Own commit/CI pending. Full mandatory U1–U8/M0–M5 remains incomplete; continue
+Own367 CI failed only queued initial-draft timing; exact followup8ca CI37528782163
+now all3jobs/every step PASS, original failure retained. Full U1–U8/M0–M5 remains incomplete; continue
 actual Chrome quality as well as unresolved separate-version financial sources.
 
 ## 2026-10-07 official correction and supplemental oracle — scoped source pass

@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 durability wording is conditional; native timing needs a control — 2026-10-07
+
+Actual English pre-submit wizard claimed task already saved server-side; Chinese
+and POST/commit semantics only promise persistence once created. Correct sole shared
+copy caller, add ENZH notice/no-create/unacknowledged-disabled regressions. No API,
+storage/finance or dependency change.86focused/715full/staticchecks/independent scoped
+readonly review and actual after-copy Chrome screenshot/DOM pass.16-case wizard
+geometry/text/no-submit checks are not fullAA/native200/product acceptance.
+
+Do not optimize from unproven timing causes: tool-inclusive DOM Enter is fast but
+pointer/native presentation failed. Preserve incomplete19gesture receipt after actual
+oldtab disappearance, not a timeout-based restart. Changed hypothesis: same-build
+plain-native button control.18trusted visible/focused inputs/63native entries/no
+longtasks show baseline pointer264–312ms too, while handlers0.1–0.2ms and wizard
+handlers4–7ms. Keyboard native wizard up to1376ms despite secondRAF≤22.4ms. This
+rules out exclusively attributing delay to React work; does not exonerate product
+paint or replace native duration with RAF/DOM. Target remains NOT_MET/CAUSE_UNPROVEN,
+no imputedzeros/looser thresholds or speculative code. Actual200 manual request
+stillpending after toolpolicydenial; no workaround. Bound QAHTML retained outside
+Git and recoverably moved out owned webroot; normalindex/draft2/EN/dark restored,
+viewportreset/tabclosed and scratchPG/node stopped. Original app/data untouched.
+116payload seal9024a068, exact prior8caCI alljobsPASS separately10seal900e6c76;
+new copy commit CI required. Fullgoal remains ACTIVE/no merge/tag/release.
+
 ## v1.2 wait for persistence, not just a rendered heading — 2026-10-07
 
 3674329 exact hostedCI failed one fresh-draft assertion while backend/Compose
@@ -8,7 +32,9 @@ a heading is not a persistence barrier. Reuse waitFor around the unchanged
 saved-object assertion. Do not alter production scheduling, delete tests, widen
 timeouts or hide CI failure. All URL/strategy/precision/locale/no-create assertions
 remain;84focused/713full/localchecks pass, independent readonly review agrees.
-New exactCI required. ActualChrome current draft keyboard/back/locale/mobile
+Exact8caCI37528782163 completed all3jobs/every stepSUCCESS20:47:25Z, samewatch12079
+exit0 and freshAPIverified; original failure retained. New copyfix needs its ownCI.
+ActualChrome current draft keyboard/back/locale/mobile
 check preserves configuration; no job or account operation. Fullgoal stays open.
 
 ## v1.2 date-only amendments consume all substantive text — 2026-10-07

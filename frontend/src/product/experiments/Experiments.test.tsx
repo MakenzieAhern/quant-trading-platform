@@ -91,6 +91,30 @@ function enableNativeDialog() {
 }
 
 describe("guided experiment", () => {
+  it.each([
+    [
+      "en-US",
+      "Once created, the task is saved on the server. You can leave and reopen it while it runs.",
+      "Run this configuration",
+    ],
+    [
+      "zh-CN",
+      "任务创建后保存在服务端。运行时可离开页面，之后继续查看。",
+      "运行当前配置",
+    ],
+  ])(
+    "describes server persistence only after creation: %s",
+    async (language, notice, submit) => {
+      await i18n.changeLanguage(language);
+      saveExperimentDraft(configuration, 3, "not-submitted-request");
+      vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+      const create = vi.spyOn(experimentApi, "create");
+      render(<CreateExperimentPage />);
+      expect(await screen.findByText(notice)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: submit })).toBeDisabled();
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
   it.each(["en-US", "zh-CN"])(
     "exposes the full selected version outside a potentially truncated native option: %s",
     async (language) => {
