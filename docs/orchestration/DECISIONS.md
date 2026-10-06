@@ -1,5 +1,34 @@
 # Decisions
 
+## v1.2 credit grammar uses existing boundaries, not inferred dates — 2026-10-07
+
+Reuse shared holder page boundary for credit; exact reviewed股本方法/所送(转)股
+layouts only.5RED→5PASS/94focused.137source rows65→71PASS/72→66unresolved;
+6new complete officialsourcePASS/5stillUNRESTRICTED_LISTING rejected;allold65PASS,
+ratios/identity/provenance retained,276bindings/reversedinput/old11proofunchanged.
+Independent readonly6notice review no scopedP1P2;not economic/financial admission.
+1294backend+optionalarchiveSKIP/715frontend/CIstatic/disposablemigrationPASS.
+BroaderPrettierFAIL3existingfiles is separate from CI checks, no cosmetic rewrite
+in this parser slice or altered acceptance. Root only writer;ownedscratchstopped,
+originalDB0016/runtime/frozen/tag/OOS untouched. New exactCI pending.14proofseal
+edd06c0012377ec512a435f243b97a0094235622b5e6d5bc58c7f29aa1b7caf1.
+Continue entireU1-U8/M0-M5, not just sourcecount; no originalrestart/newbind risk,
+fake forward/recoveredledger/native200/performance/financialPASS or release.
+
+## v1.2 exact holder-layout CI and preserved next-role diagnosis — 2026-10-07
+
+ea7155cdb25c043d11d9e0edfa65f44795316aa0==origin==OPEN/DRAFTPR32head;
+own37535999546 all3jobs/every stepSUCCESS21:46:27Z/samewatch46350terminal0.
+1289backend+optionalarchiveSKIP/715frontend/fullstatic/disposablemigration/
+Compose release smokePASS. No rerun/merge/tag/release. Separate8postCI/18gap
+source-context payloads sealed16667a9d9dcaf95f57a5ebca764352f0b4903f4cb75f4885b2d59cac17ee1a97;
+earlier11sourceproof immutable. All18 SHARE_CREDIT gaps remain unresolved despite
+some complete-looking excerpts. Next tested hypotheses must preserve boundary/
+complete dates/allholders/listing/conflicts; do not borrow300036cash date or
+repair300015year by inference. No financial/event/dataset admission, original
+appDB0017 migration or existingservice restart. PostCI docs intentionally local
+until next coherent milestone; fullproductgoal ACTIVE, not narrowed or achieved.
+
 ## v1.2 explicit holder-object and contiguous current metadata — 2026-10-07
 
 Bounded cached source inspection proved a shared parser-layout gap, not missing

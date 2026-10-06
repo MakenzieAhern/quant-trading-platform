@@ -1,5 +1,54 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 exact credit grammar and fractional page counters
+
+Bounded U3/U5/U6 source prerequisite, **not financial or full product acceptance**.
+Shared credit parser reuses the holder page boundary, exact分配、转增股本方法
+and所送(转)股 grammar. No issuer exception, inferred year/date, cash-date borrowing
+or next-session change. Five new parameterized regressions5RED→5PASS;94focused.
+All137 cached rows retained:65→71source-onlyPASS/72→66unresolved; six complete
+notices300001/300014/300035/300098/300125/300148 support the new source checks.
+Five other credit fixes remain rejected atUNRESTRICTED_LISTING. Old65PASS whole
+payloads preserved,126whole rows unchanged/allratio/provenance unchanged;276
+bindings, reversedinput and old11sealedproofpayloads verified. Missing日300036,
+actual2010vs2011credit300015 and fullaction/reference/cash/lifecycle gaps remain.
+Independent read-only review read six complete sources and hashes; no scopedP1/P2.
+
+Backend1294PASS/1optionalarchiveSKIP20.60s/Ruff556/mypy145; owned tmpfs quant_test
+head-base-head/checkPASS. Originalquant_platform only read, remains0016. Current
+copiedfrontend163/167sourcesmatch/four deploymentfilesabsent;715PASS45files17.27s,
+lint/type/build183ms/audit0PASS. BroaderPrettier3.9.6 check **FAIL** three existing
+filesEquityChart.tsx/ExperimentsPage.tsx/fixtures.test-data.ts; not a CI step and
+not silently rewritten or reportedPASS. Build522kB warning remains. Wrong guessed
+paths/testname/no-tests,RUF005 and transientUNC failure preserved in observations.
+Owned scratchNode/PG stopped only after terminal tests/idle guards, retained.
+Originalruntime untouched; no newUI/browser/financial/forward/release claim.
+
+[Reproducible external proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-credit-layout-sources/README.md>)
+14payloadseal`edd06c0012377ec512a435f243b97a0094235622b5e6d5bc58c7f29aa1b7caf1`;
+batchcanonical`d74b5e58f3aefca421234dd02d2cf63cb6c10aa26262407c91559deecba4a235`.
+New exact commit/CI pending; prior ea715CI does not cover this diff. FullU1-U8/M0-M5
+runtime/newmount/native200/performance/AA/financial/lawfulforward/genuine lost
+ledgers/restore/media/manual/terminal-free gates remain open; goalACTIVE.
+
+## 2026-10-07 holder-layout exact CI and next-gap checkpoint
+
+Own`ea7155cdb25c043d11d9e0edfa65f44795316aa0` CI37535999546 all3jobs/every step
+SUCCESS completed2026-10-06T21:46:27Z; samewatch46350terminal0, no rerun.
+HEAD==origin==OPEN/DRAFTPR32head. Hosted1289backend+1optionalarchiveSKIP41.63s/
+715frontend/Ruff556/mypy145/lint/type/build/disposablemigration/Compose release
+smokePASS. This supersedes pending-CI text of the precommit source checkpoint.
+[Exact CI and complete next18 source contexts](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-object-ci/README.md)
+8payloadseal`16667a9d9dcaf95f57a5ebca764352f0b4903f4cb75f4885b2d59cac17ee1a97`;
+11priorproofpayloads/276sourcebindings unchanged.65/72 remain source-only.
+All18first SHARE_CREDIT failures retained with actual cached excerpts/SHA;
+missing日 in300036 cannot borrow cashdate,3000152010credit stays unresolved.
+Other candidate explicit method/parenthetic layouts are next hypotheses, not
+automatically accepted. No new financial event/dataset or browserfinancial claim.
+Originalappfrontend/API200paper/serviceshealthy/liveDB0016/scratchstoppedretained;
+no appDBmigration/restart/oldfailedjobretry/frozen/formal/OOS/merge/release.
+Full U1–U8/M0–M5 IN_PROGRESS; postCI docs local for next coherent milestone.
+
 ## 2026-10-07 explicit holder-object source recovery — scoped partial
 
 U3/U4/U6/U7 source dependency: same shared guard now accepts declared

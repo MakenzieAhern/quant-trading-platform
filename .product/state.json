@@ -1,7 +1,23 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T21:43:00Z",
+  "updated_at_utc": "2026-10-06T22:00:00Z",
+  "credit_layout_sources_20261007_gate": {
+    "status": "PASS_SCOPED_SOURCE_GUARDS_NOT_FINANCIAL_OR_FULL_PRODUCT",
+    "source_parent": "ea7155cdb25c043d11d9e0edfa65f44795316aa0",
+    "correction": "Reuse existing page_number/running-header boundary for credit; exact分配、转增股本方法 and所送(转)股 variants. No issuer exception/date inference/cash-date borrowing/next-session change.",
+    "batch": "All137 retained;65->71 source-onlyPASS/72->66unresolved.6newsourcePASS300001/300014/300035/300098/300125/300148;5othercredit fixes still rejectedUNRESTRICTED_LISTING. Old65wholePASS exactly preserved/126whole rows unchanged/allratio and sourcefields unchanged. Missing日300036/yearconflict300015 not repaired;fullaction/reference/cash/lifecycle gaps remain.",
+    "validation": "5RED->5PASS/94focused;1294backendPASS+1optionalarchiveSKIP20.60s/Ruff556/mypy145/ownedtmpfsquant_test head-base-head/checkPASS. Currentcopiedfrontend163/167sourceSHA match/4deploymentfilesabsent;715tests45files17.27s/lint/type/build183ms/audit0PASS. BroaderPrettier3.9.6src checkFAIL3pre-existingfiles (EquityChart.tsx/ExperimentsPage.tsx/fixtures.test-data.ts), notCIgate;no frontendcodechange. Errorswrongpath/filename/RUF005/transientUNC recorded.",
+    "review": "Independent reusedsigned_results_review_oct7 read-only6completePDFcachetexts/276bindings/134sourcechecks/canonical/allpreviousPASS preserved/no evidencedP1P2. Reviewer did not run tests;notfinancial/fullproduct approval.",
+    "batch_manifest_sha256": "d74b5e58f3aefca421234dd02d2cf63cb6c10aa26262407c91559deecba4a235",
+    "evidence": "product-evidence/v1.2/m4/20261007-credit-layout-sources/README.md",
+    "evidence_payloads": 14,
+    "evidence_manifest_sha256": "edd06c0012377ec512a435f243b97a0094235622b5e6d5bc58c7f29aa1b7caf1",
+    "preservation": "276currentbindings/reversedinput/prior11proofpayloads/frozen693c0b81/v1.1tag/.research unchanged. OriginalDBreadonly0016/serviceshealthy/no originalrestart/recreate/migration. OwnedNode7969f4b/PG30b1cfb terminalidle thenSTOPPEDretained. No event/dataset/strategy/formal/OOS/account/order/provider/merge/tag/release action.",
+    "ci": "New coherent commit/own CI pending; ea71537535999546 is prior successful CI, not evidence covering this diff.",
+    "event_admitted": false,
+    "full_product_pass": false
+  },
   "holder_object_sources_20261007_gate": {
     "status": "PASS_SCOPED_SOURCE_GUARDS_NOT_FINANCIAL_OR_FULL_PRODUCT",
     "source_parent": "cd108e822d258aceedb33f3e6232571374fc6e3c",
@@ -14,7 +30,7 @@
     "evidence_payloads": 11,
     "evidence_manifest_sha256": "9672e2472ff49a98b6f219ffb71b78dca0344fe9824ae86b364760e4504f3b72",
     "preservation": "Current276bindings/reversedinput/immutable repeat and17oldproofpayloads unchanged verified. Frozen693c0b81/v1.1tag/.research unchanged. OriginalDBreadonly0016/RedisPONG/PGRedisbackendhealthy;ownedNode7969f4b/PG30b1cfbSTOPPEDretained. No originalservice restart/recreate/migration/oldfailure retry/provider/account/order/study/OOS/merge/release. No frontendcode/deployment change or new browserfinancialclaim.",
-    "ci": "Coherent newcommit/ownCI pending; exact earliercd108CI37532781861PASS not coverage of this newsource diff.",
+    "ci": "Own ea7155cdb25c043d11d9e0edfa65f44795316aa0 CI37535999546 all3jobs/every stepSUCCESS completed2026-10-06T21:46:27Z, samewatch46350terminal0. Hosted1289backend+optionalSKIP41.63s/715frontend/Ruff556/mypy145/static/disposablemigration/Compose release smokePASS;HEADoriginOPEN-DRAFTPR32agree. EarlierpendingCI describes precommit checkpoint, now superseded. Separate8payloadCI/18gap-source diagnosis seal16667a9d9dcaf95f57a5ebca764352f0b4903f4cb75f4885b2d59cac17ee1a97; original11proof unchanged. No rerun/merge/tag/release.",
     "event_admitted": false,
     "full_product_pass": false
   },
@@ -2610,19 +2626,21 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-06T21:43Z / Oct7Sydney: root sole writer; sourceparentcd108e8/origin/OPEN-DRAFTPR32 verified, MakenzieAhern unchanged. New shared explicit holder-object/current-distribution metadata guards:3RED->3PASS/95focused,137all retained54->65sourceonlyPASS/83->72unresolved;11newpasses/300036nextrole/125whole rows same/allratiofields unchanged. New immutable276bindings/reverse/repeatPASS,11payloadseal9672e247. Independent readonly no evidencedscopedP1P2. Full1289backend+1optional archiveSKIP20.49s/715frontend45files17.11s/Ruff556/mypy145/lint/type/build182ms/audit0. Owned tmpfsquant_test head-base-head/checkPASS;liveDBreadonly0016. Scratchnode7969f4b/PG30b1cfb stoppedretained afterterminal tests;originalPGRedisbackendhealthy/RedisPONG/frontendAPI200paper. Frozenmanifest/tag/.research unchanged;no financialadmission/businessDB/provider/account/order/oldfailedjob/formal/OOS/merge/release. Coherentcommit/ownCI next, priorcd108CI37532781861PASS is not newdiffCI.",
-    "repository_writer": "Root only: shared explicit holder-object/current-distribution metadata parser, three offline layout regressions and product checkpoint. Authorized reused signed_results_review_oct7 readonly complete no evidencedscopedP1P2; no tests/DB/browser/network/process mutation by reviewer. No new or competing writer.",
-    "database_writer": "Root guarded disposablequant_test tmpfs/no mounts/loopback55471 only, fulltests/head-base-head/check complete and ownedPGSTOPPEDretained. Read-only applicationDB version0016; no appDBmigration/mutation/restart/job retry/backfill or market/strategy run. Genuine lost-ledger recovery incomplete unchanged.",
-    "queue_writer": "Root new immutable supplemental137rows sourceguardv3 over existing datedqueuev4/currentparser.65sourceonlyPASS/72unresolved, no economic event/dataset admission.276bindings/reverse/repeatPASS/old17proofpayloads preserved. No worker/provider/business/researchqueue action or fullarchive acquisition. Fullaction/reference/cash/holder/tradability completeness still unproven.",
+    "latest_verification": "2026-10-06T22:00Z rootsolewriter/ea715parent/PR32OPEN-DRAFT. Credit5RED->5PASS/94focused/1294backend+optionalSKIP/715frontend/CIstatic/tmpfsmigrationPASS;broaderPrettierFAIL3oldfiles notCI.137source71PASS/66unresolved/276bindings/reverse/old11proof/new14sealedd06c verified,noeventadmission.Originalapphealthy/liveDB0016/scratchSTOPPEDretained;frozen/tag/.research unchanged/newcommitCIpending.",
+    "repository_writer": "Root only sharedcredit3line fix/fiveparameterizedregressions/productcheckpoint. Authorizedreusedsigned_results_review_oct7 readonly6completeofficialcachetexts/276bindings no scopedP1P2. No competingwriter or reviewer mutations.",
+    "database_writer": "Root guardedownedtmpfsquant_test/no mounts/loopback55471only;1294tests+optionalSKIP/head-base-head/check terminal. PGSTOPPEDretained;originalquant_platform readonly0016/no migration/restart/retry/backfill/strategy. Genuine lostledgers incomplete.",
+    "queue_writer": "Root immutable137sourceguardv4;71sourcePASS/66unresolved/6newPASS/5stilllistingreject/65oldPASS wholepreserved/126wholeunchanged.276bindings/reverse/old11proof. No economic event/dataset admission/provider/queueworker/fullarchive action;fullaction/reference/cash/lifecycle incomplete.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "2026-10-06T21:43Z originalbackend/PG/Redishealthy/RedisPONG;owned fallbacka561fa1250 no mounts/loopback5173 remainsrunning. OwnedNode7969f4b idleonly and tests terminal before stop;PG30b1cfb guardedtmpfsquant_test0017 only then stopped;bothretained. OriginalfrontendSTOPPED, newprobe c970STOPPED retained. Existingappnotrestarted/recreated/liveDB0016. Genuine Ubuntuintegration/freshmount recovery still needed before0017 rollout; no security/workaround/reset.",
+    "verified_processes": "2026-10-06T22:00Z originalPGRedisbackendhealthy/fallbacka561loopback5173running. OwnedNode7969tests terminalidle/PG30b1active0 beforeSTOPPEDretained. Originalfrontend andmountprobec970STOPPEDretained;freshROmount/integration before originalrestart/0017rollout. No reset/securityworkaround.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-06T22:00Z shared credit boundary/literal grammar5RED->5PASS/94focused;137all retained65->71sourceonlyPASS/72->66unresolved/6newPASS/5stilllistingreject/126whole unchanged.276bindings/reversed input/old11proofPASS/new14sealedd06c00;independent6complete source review no scopedP1P2.1294backend+optionalSKIP/715frontend/CIstatic/tmpfsmigrationPASS;broaderPrettierFAIL3existingfiles preserved separately. Originalapphealthy/liveDB0016/scratchSTOPPEDretained/frozen/tag/.research unchanged;notfinancial/fullproduct,newcommitCIpending.",
+    "2026-10-06T21:48Z ea7155c ownCI37535999546 all3jobs/every stepSUCCESS1289backend+optionalSKIP/715frontend/static/disposablemigration/Compose release smoke; samewatch46350terminal0/HEADoriginOPEN-DRAFTPR32agree.65sourceonlyPASS/72unresolved and276bindings/new11proof9672e247 unchanged;18actualnext-credit contexts allcached verified, separate8seal16667a9d. Localappfrontend/API200paper/scratchSTOPPED/no originalrestart or appDBmigration/frozen/OOS/merge/release;fullgoalACTIVE.",
     "2026-10-06T21:43Z shared holder-object/current-distribution metadata parser3RED->3PASS/95focused;all137 supplementalrows retained54->65source-onlyPASS/83->72unresolved,11newPASS/300036nextrole/125whole rows same.276bindings/reverse/repeat/old17proofpayloadsPASS,new11payloadseal9672e247. Independent readonly no scopedP1P2;full1289backend+optionalSKIP/715frontend/static/disposablemigrationPASS. OriginalDB0016/servicesnotrestarted,scratchstopped,frozen/tag/.research unchanged; not financial/fullproduct/forward/release. New coherentcommit/ownCI pending.",
     "2026-10-06T21:27Z minimal pre-submit persistencecopy commitcd108e8 ownCI37532781861 all3jobs/every stepPASS, full1286backend+optionalSKIP/715frontend/static/disposablemigration/release smoke; HEADoriginPR32 agree/OPEN-DRAFT. Actual currentChrome controlled wizard403/408/offline ENZH/currentprecision/keyboard-retry focus/no APIwrites verified,11sealfcd80e19. New readonly mountprobe fails empty app/research despite existingmount visibility, liveDBversion0016: protect existing app from restart. Not financial/fullquality/forward/release; fullgoalACTIVE.",
     "2026-10-06T21:14Z actual pre-submit English task-durability claim corrected to Once created; two ENZH notice/no-create/disabled-submit regressions,86focused/715full/staticchecks/readonly reviewPASS. ActualChromecopy verified,16-case wizard geometry/exactconfiguration/ackfalse retained. Nativecontrol shows264-312ms ordinarybutton too, wizard296-1784ms/handlers4-7ms/no longtasks; performance stillNOT_MET, not financial/U1-U8 complete. 116payloadseal9024a068, all scratch stopped/normaldraftrestored/QAHTMLretired/apphealthy. Exact prior8caCI37528782163PASS preserved10payloadseal900e6c76; newcopycommitCIpending, goalACTIVE.",
@@ -3188,13 +3206,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "cd108e822d258aceedb33f3e6232571374fc6e3c",
+      "last_verified_head": "ea7155cdb25c043d11d9e0edfa65f44795316aa0",
       "state": "DRAFT",
-      "ci_run": 37532781861,
+      "ci_run": 37535999546,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Owncd108e8CI37532781861 all3jobs/every stepSUCCESS1286backend+optionalSKIP/715frontend/static/disposablemigration/release smoke. ActualChrome conditionalservercopy/16wizardgeometry/no-submit and controlled403/408/offlineENZH/keyboardRetry/exactdraft/no-write checked. Native performanceNOT_MET_CAUSE_UNPROVEN/controlincluded/currentnative200manualpending. Existingservices200healthy but freshROnewmountprobeempty/liveDB0016: originalbackend not migrated/restarted. Prior proofs/failures retained; not fullU1-U8/M0-M5/financial/newversionadmission/AA/lawfulforward/genuine lostledgers/merge/release. PR32OPEN/DRAFT."
+      "browser_gate": "Ownea715CI37535999546 all3jobs/every stepPASS1289backend+optionalSKIP/715frontend/static/disposablemigration/Compose release smoke. Newsource65PASS/72unresolved/276bindings is NOTfinancialadmission;frontendcodeunchanged/prioractualChrome controlledENZHerrors/currentcopy/draft/geometry scopedproof retained, no newbrowserfinancialclaim. NativeperformanceNOT_MET_CAUSE_UNPROVEN/currentnative200pending. FreshROnewmountempty/liveDB0016 protectsoriginalbackend fromrestart/migration. FullU1-U8/M0-M5 financial/AA/lawfulforward/restore/genuine lostledgers/delivery incomplete;PR32OPEN-DRAFT/no merge/release."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -3209,8 +3227,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Finish coherent shared holder-object parser commit/push/ownCI then continue full mandatory U1-U8/M0-M5 with bounded cached72 supplemental unresolved/fullaction/reference/cash/lifecycle reconciliation and independent productquality, not repeatedacceptedcopy/errorchecks or tiny receipt-onlypush. New65/72source-only guard is not financialadmission; no oldfailedjobretry/backfill/frozen or formal/OOS changes. Currentnative200manualpending/performancecauseunproven: keepfail/no workaround/zero-imputation/thresholdcut. Fresh ROnewcontainer mounts empty despite existingreadablemounts/liveDB0016: doNOTrestart/recreate originalbackend/frontend until genuineintegration/freshROmountPASS/backups. Currentlocalappusable/scratchretainedSTOPPED. Lawfulafter-startforward/genuine missingledgers/restore/media/manual/fullAA/visual/performance/delivery remain;goalACTIVE/product_goal_completefalse/no merge/tag/release.",
-  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git diff --check && git status --short --branch && git diff -- backend/scripts/retained_bonus_terms.py backend/tests/test_reconcile_retained_bonus_same_day.py; commit only the inspected five files, push existing codex/product-v1.2-current-rules, observe exact same-HEAD CI, then reopen ACCEPTANCE mandatory pending rows and cached-source v3 remaining-role queue",
+  "next_task": "Continue full mandatory U1-U8/M0-M5. Creditv4 all137 retained71source-onlyPASS/66unresolved/6newPASS/5stilllistingreject/276bindings preserved,notfinancial. Complete coherentcreditcommit/ownexactCI,retainbroaderPrettierFAIL3oldfiles separately. Then prioritize independentquality/runtime/restore/media/manual or bounded7remainingSHARE_CREDIT cachegaps,not blanketacceptance/performance repeat/fullarchive acquisition. Missing日300036/yearconflict300015/identity000771/datedsource000818/fullaction-reference-cash-lifecycle remain. GenuineUbuntuintegration/freshROmountPASS/backups before originalrestart/0017rollout;appusable/liveDB0016. Native200manualpending/performanceNOT_MET_CAUSE_UNPROVEN/lawfulafter-startforward/genuine lostledgers remain. GoalACTIVE/product_goal_completefalse/no frozen/formal/OOS/merge/tag/release.",
+  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check && rg -n 'U3-JOB|U5-UPDATE|U6-PLAN|U7-FORWARD|QA-PERF|QA-A11Y|M5-' docs/product/ACCEPTANCE.md && rg -n '分配、转增|SHARE_CREDIT' backend/scripts/retained_bonus_terms.py backend/tests/test_reconcile_retained_bonus_same_day.py",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

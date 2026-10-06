@@ -324,6 +324,84 @@ def test_credit_declaration_requires_boundary_and_reviewed_method_heading(headin
 
 
 @pytest.mark.parametrize(
+    "heading,credit,counter",
+    [
+        ("四、分配、转增股本方法1、", "本次所转增股", ""),
+        ("四、转增股本方法", "本次所送(转)股", ""),
+        ("四、分配、转增股本方法1、", "本次所送(转)股", ""),
+        ("四、权益分派方法1.", "本次所(转增)股", "2/3"),
+        ("四、分配、转增股本方法1、", "本次转增的股份", "-2-"),
+    ],
+)
+def test_credit_method_parenthetic_transfer_and_page_counter_keep_complete_terms(
+    heading, credit, counter
+):
+    notice = NOTICE.replace("四、转增股本方法\n", heading).replace("本次转增股于", credit + "于")
+
+    def pages(text):
+        if counter:
+            first, second = text.split(heading, 1)
+            return [first, counter + heading + second]
+        return [text]
+
+    assert same_day_listing(pages(notice), "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("2011年03月28日直接记入", "2010年03月28日直接记入"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+        ("2011年03月28日直接记入", "3月28日直接记入"),
+        ("2011年03月28日直接记入", "直接记入"),
+        ("全体股东", "控股股东"),
+        ("无限售条件", "有限售条件"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+        (credit + "于", "讨论" + credit + "于"),
+        (credit + "于", "拟将" + credit + "于"),
+        (credit + "于", "预计" + credit + "于"),
+        (credit, "本次现金红利"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing(pages(notice.replace(old, new)), "600000", TITLE, RECORD, EX)
+    for prefix in ("讨论", "拟将", "预计"):
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [page.replace(heading, prefix + heading) for page in pages(notice)],
+                "600000",
+                TITLE,
+                RECORD,
+                EX,
+            )
+    for dated in ("2011年3月25日下午", "2011年03月28日直接记入", "2011年3月28日。"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [first + dated[:6], counter + dated[6:] + second], "600000", TITLE, RECORD, EX
+            )
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [
+                *pages(notice),
+                *pages(notice.replace("2011年03月28日直接记入", "2011年03月29日直接记入")),
+            ],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+    # A separately complete cash date cannot repair the actual incomplete share date.
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [
+                *pages(notice.replace("2011年03月28日直接记入", "2011年03月28直接记入")),
+                "本次现金红利于2011年03月28日直接记入股东资金账户。",
+            ],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
+@pytest.mark.parametrize(
     "holder,credit,listing",
     [
         ("本次权益分配对象为:", "本次转增股", "本次转增的无限售条件流通股的起始交易日为"),
