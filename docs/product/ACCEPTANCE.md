@@ -1,5 +1,71 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 explicit cached credit wording — source-only scoped PASS
+
+[Private reproducible proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-credit-wording-sources/README.md>):
+four shared grammar variants from complete cached official notices, four RED
+regressions then93relatedPASS; full1298backendPASS+1optionalarchiveSKIP20.63s,
+Ruff556/mypy145 and ownedtmpfsquant_test head-base-head-check PASS. Initial full
+run failed absenttestschema (1149passed/149errors/1failed); failure excerpt kept,
+readiness confirmed and scratch-only migration before passing rerun.
+
+All137source rows retained,75strict source-onlyPASS/62unresolved; old71PASS exact,
+133whole rows unchanged/allratio+source+identity fields preserved,276bindings,
+reverse-order repeatability; immutable batch`e2b6b2957dbfa29e46937782d4ee70808dc12813f7da31d24f72de99af9cf7fb`.
+300036 missing日/300126 unresolvedconflict/header/300198splitaccount remain.
+No economic event/dataset admission, fullfinancialPASS or formal/OOS rerun.
+OriginalDBreadonly0016/serviceshealthy/HTTP200/PONG; testPGstoppedretained.
+No frontend/UI change or new browser claim; reuse earlier735frontend only as
+historical unchanged-source evidence. Independentreadonly4completecaches/276
+bindings/137rows/old71exact/133unchanged no evidencedscopedP1P2, no reviewer
+execution.14payloadseal`199188cab36927c5ac91a4ef40893843c97e9c9d6094f573d4398ce0e0d8016f`.
+New exact-head CI required; full
+U1-U8/M0-M5/AA/performance/forward/recovery/delivery gates remain open.
+
+## 2026-10-07 current formal range/benchmark/exact-table flow — scoped PASS
+
+[Private retained readbacks](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-chart-range-table/README.md>)
+and [independent-review screenshot erratum](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-chart-range-table-correction/README.md>):
+existing read-only Development report, four actual dates, linked equity/drawdown,
+keyboard benchmark/precision/table controls, invalid-range focus/aria/recovery,
+weekend empty state and full-interval restore. Persisted4x22metric readbacks retain
+exact values; EN/ZH8equity rows and4drawdown rows agree.16DOM locale/theme/size
+cases retain dates/values/8+4rows without whole-page overflow; keyboard mobile
+scroll remains table-local. Actual table100of400 next/back stays bounded and
+retains benchmark values, chart200of1944. Existing code/test/CI unchanged.
+
+Original10payload seal`a66026b4e6067d1bb548cb44d8fcafe6b63122249763ff61180e9cd29fb255ad`.
+Independent review verified hashes/readbacks and found one evidenceP2: EN-labelled
+mobile stillZHpaint. It is explicitly NOT_ACCEPTED, alongside2old desktop frames;
+separate trueENmobile replacement/erratum2payload seal`d3ca71f4dd37248ed34b5f805c75ec0f223a4e7dec9381d3834a6c14477db2d2`.
+Readonly follow-up verified the erratum/seal, original10unchanged and realEN
+mobile/English8rows; evidenceP2closed/no new evidencedP1P2. Not independent
+DOMfocus/scroll measurement or new reviewer runtime/test/financial approval.
+Not16visual passes, native200/wholeAA/hover/performance/financial acceptance.
+Original reports/frozen/OOS, services and DB unchanged. Goal still active; no
+merge/tag/release. User guides already describe the working flow, not duplicated.
+
+## 2026-10-07 exact comparison CI and preserved chart linkage — scoped PASS
+
+[CI37546062465](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37546062465)
+on`a694f224c9f600f0bbdbc5f5d3b4ac3739dda922`: all3jobs/every stepSUCCESS
+23:23:43Z, samewatch47283terminal0.1294backend+1SKIP/735frontend45files/static/
+isolated0017cycle/check/Compose production scratch smoke PASS. New run admission
+verified, not a future billing-quota guarantee or proof of current originalDB
+rollout/restart. PR32 remains OPEN-DRAFT, no merge/tag/release.
+
+[Private current chart/CI proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-current-chart-linkage/README.md>):
+actualChrome read-only preserved Developmentb38081a7. Keyboard Home links
+20100104 strategy/drawdown/exact100000000/100000000/0; Enter activity shows three
+explicit empty collections, clear restores saved records. Bounded curve page200
+of1944 provides real20110223 trade date; linked exact100384781.6806/
+89802926.54226174817480050803/0 and one saved211100-share trade/cost1531.3194.
+All22fullperiod values/titles unchanged; ZH dates/exacttitles/tradeamounts retained.
+Natural1920x911/ENZHdark only; screenshot shows date/emptyholdings, filled trade
+proven by DOM, not screenshot visibility. ENdark restored/QAclosed/exporthandoff;
+no formalstudy rerun/financialwrite/source/OOS action.7payloadseal`7ebe19d5fff23f788405766d26683ee33e152359956adb3edef4726514e94a0b`,
+prior99comparisonproof intact. Not wholechart/AA/performance/economic/product PASS.
+
 ## 2026-10-07 U4 comparison quality before money — scoped PASS
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-comparison-quality/README.md>):

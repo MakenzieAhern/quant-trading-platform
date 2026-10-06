@@ -824,6 +824,87 @@ def test_same_day_requires_same_final_issuer_holder_credit_and_listing():
         )
 
 
+@pytest.mark.parametrize(
+    "credit,account,listing",
+    [
+        ("本次所转增股", "股东的证券帐户", "本次所转增"),
+        ("本次送转股份将", "股东证券账户", "本次所送(转)"),
+        ("公司本次所转增股", "股东证券账户", "公司本次所转增"),
+    ],
+)
+def test_reviewed_credit_aliases_preserve_complete_dates_holder_and_account(
+    credit, account, listing
+):
+    notice = (
+        NOTICE.replace("本次转增股于", credit + "于")
+        .replace("股东证券账户", account)
+        .replace("本次转增的无限售", listing + "的无限售")
+    )
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        (account, "股东的资金账户"),
+        (account, "第三方证券账户"),
+        ("全体股东", "控股股东"),
+        ("无限售条件", "有限售条件"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+        (credit + "于", "讨论" + credit + "于"),
+        (credit + "于", "计划" + credit + "于"),
+        (listing + "的无限售", "讨论" + listing + "的无限售"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    for dated in ("2011年03月28日直接记入", "2011年3月28日。"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice + notice.replace("2011年03月28日直接记入", "2011年03月29日直接记入")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
+def test_implemented_notice_header_alias_requires_identical_page_start_and_complete_date():
+    title = "2010年度权益分派实施的公告"
+    header = "测试股份有限公司" + title
+    first, second = NOTICE.split("四、转增股本方法", 1)
+    pages = [header + "1" + first, header + "2四、转增股本方法" + second]
+    assert same_day_listing(pages, "600000", title, RECORD, EX) == EX
+    for replacement in (
+        header.replace("测试股份", "其他股份"),
+        header.replace("2010年度", "2011年度"),
+        "讨论" + header,
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [pages[0], pages[1].replace(header, replacement)], "600000", title, RECORD, EX
+            )
+    for old, new in (
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("全体股东", "控股股东"),
+        ("无限售条件", "有限售条件"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [page.replace(old, new) for page in pages], "600000", title, RECORD, EX
+            )
+    before, after = NOTICE.split("2011年03月28日直接记入", 1)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [header + "1" + before + "2011年03月", header + "228日直接记入" + after],
+            "600000",
+            title,
+            RECORD,
+            EX,
+        )
+
+
 def _manifest(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({**data, "manifest_sha256": canonical_sha256(data)}))

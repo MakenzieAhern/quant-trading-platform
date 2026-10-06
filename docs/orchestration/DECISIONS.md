@@ -1,5 +1,58 @@
 # Decisions
 
+## v1.2 cached explicit credit wording — 2026-10-07
+
+Reuse same_day_listing after reading complete cached official300021/300071/
+300132/300162 notices. Exact optional shareholder 的, 送转股份, 公司本次
+credit/listing and identical company/year 实施的公告 running-header variants;
+no issuer special case, dependency, date inference or cross-page date repair.
+Four RED regressions then93related PASS; 137source rows retained, old71wholePASS
+preserved,75source-onlyPASS/62unresolved,133whole rows unchanged,276bindings and
+reverse ordering checked. Source-only terms are not financial event admission.
+
+Initial full suite failed against freshly restarted tmpfs testDB with absent
+schema; readiness also initially failed. Retain failure excerpt (1149passed/
+149errors/1failed), confirm ready and migrate ONLY ownedquant_test55471.
+Final1298passed/1optionalarchiveSKIP20.63s, head-base-head-check/Ruff556/mypy145
+PASS. Two initial long test lines fixed by normal formatter. OriginalDBreadonly
+0016, runtime4services retained/PONG/frontend+API200; ownedidlePGstoppedretained.
+Frontend/UI unchanged; earlier735frontend/currentChrome evidence not a new run.
+Independentreadonly source/hash/preservation review no evidencedscopedP1P2;
+14payloadseal199188ca. Exact new-head CI required; no event/dataset,
+formal/OOS, originalrestart/migration, merge/tag/release. FullU1-U8/M0-M5 active.
+
+## v1.2 current formal range/table validation — 2026-10-07
+
+Reuse existing BenchmarkChart/ResearchRunPage/native inputs/tables; no new chart
+library, component or source/test edit was needed. Current actual Chrome closes
+the scoped four-date range/benchmark/keyboard/exact-table/empty-invalid-recovery
+flow, with4x22raw metric reads now retained for independent comparison.16DOM
+geometry cases are not a full visual or AA claim. Reviewer confirmed numeric
+consistency but caught an EN-labelled mobile screenshot with staleZHpaint; retain
+original immutable10payloads, explicitly reject that and2desktop frames, and
+separately observe/capture trueENmobile in a2payload erratum. First filename-based
+PNG check failed on genuineJPEG bytes; correct format without modifying bytes.
+No original service/DB/financial/research writes or CI rerun. Continue required
+financial/reference-cash-lifecycle reconciliation and remaining AA/performance/
+runtime/delivery gates, not repeated chart implementation or prematurely release.
+
+## v1.2 current exact CI and saved chart-date recheck — 2026-10-07
+
+Newa694f224 CI37546062465 actually admitted and completedSUCCESS/all3jobs/every
+step23:23:43Z; samewatch47283terminal0, no rerun.1294backend+1SKIP/735frontend/
+static/isolated0017cycle/check/productionCompose smoke. This supersedes this
+slice's pendingCI but not remaining fullproduct/runtime/financial gates or
+future billing availability. No workflow/security/identity modification.
+
+Read actual current BenchmarkChart/ResearchRunPage rather than repeat the old
+claim that precise date linking is missing: already implemented. RealChrome
+preservedDevelopment recheck uses keyboard date/activity/clear/paging plus an
+observed real20110223 trade date, exact curve strings and22fullmetrics unchanged.
+ZH preserves financial fields/dates. No new code/test abstraction was needed;
+do not modify stable components solely to create more work. Pointer/fullinterval/
+wholeAA/economic gates remain unproven. New7payloadseal7ebe19d5 includes own CI;
+previous99proof intact. PostCI checkpoint docs remain local until next milestone.
+
 ## v1.2 comparison economic warnings before values — 2026-10-07
 
 Actual three-study page placed two known coverage warnings at2251px, after
