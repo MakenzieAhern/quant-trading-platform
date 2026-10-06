@@ -1,9 +1,27 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T08:30:18Z",
+  "updated_at_utc": "2026-10-06T09:04:59Z",
+  "u3_pre_run_source_quality_20261006_gate": {
+    "status": "PASS_SCOPED_LOCAL_REVIEW_PENDING_CI",
+    "source_base": "21ba6fdc3e62cfd43710a2658704cfb9953fb228",
+    "defect": "Actual IAB restored historicalv1 draft capabilities KNOWN_ECONOMIC_COVERAGE_GAP but source/finalreview omitted explanation. Shared wizard now reuses bilingual quality explanation and dataset version+quality description. Not data repair, backend admission, new financial calculation or quality-based veto.",
+    "tests": "2parameterized known/unknown quality tests: exactcash/config/key/locale/focus/finalreview/noPOST/synthetic no-metadata removal.99focusedPASS;full668frontendPASS/44files13.72s/lint/types/PrettierPASS. Explicit fresh tempdir buildPASS145ms/519.40kB advisory. Previous21ba6backend1238/optionalSKIP/reversible testDB and exactCI reused, not new local backend run.",
+    "failures": "Initial2RED omission;firstgreen2FAIL/97PASS stale detached select after Back, fixed fresh semantic query without weakening assertions. WSLlogin npm absent, reused installedmiseNode24. First full wrapper exit1 after passing tests/lint/types because emptyoutDir; explicit newtmpdir corrected. All failure logs retained.",
+    "browser": "Four distinct actual IAB cases1440x900ZHlight/1280x800ENdark/1024x768ZHdark/390x844ENlight notevisible/no pageoverflow, not16crossproduct/newChrome/native200/speech/p95/fullAA. Source390ENZH/1024EN descriptionIDs targets/focus verified. OriginalIAB100000/date/cost/risk exactform restoredstep1/ZH/system/home/default1280x720/ownedtabclosed. Not byte-identical autosave or another Chrome origin. Unchecked acknowledgement, not quality, disablesRun.",
+    "review": "Independent read-only source/callers/tests/artifact review no bounded codeP1/P2;99/668/static/correctedbuild/failurechronology match logs. One broken relativeprooflink corrected to verified absolute external paths. Reviewer performed no tests/browser/DB/network/writes;root visuallyinspected originalJPEGs. ExactnewCI/seal pending, not financial/fullproduct certification.",
+    "preservation": "No businesssubmit/retry/provider/account/formal/OOS or engine/backend/.research/frozen change. Source/new data/execution acceptance not promoted; v1.1 unchanged; PR32OPEN/DRAFT/no merge/tag/release. Complete GET scope11terminalstudies/5STOPPEDaccounts/4terminalupdates unchanged counts, not fullDBhash or lostledger recovery.",
+    "evidence": "product-evidence/v1.2/m4/20261006-wizard-data-quality/README.md",
+    "remaining_scope": "Exact newCI and seal then consolidated U1-U8/M0-M5 financial/API/user-flow/visual/AA/native200/p95/delivery. Lawful after-start forward and genuine missing paper-ledger external gaps unchanged; goalACTIVE."
+  },
   "retained_holder_page_account_20261006_gate": {
-    "status": "PASS_SCOPED_REVIEW_PENDING_EXACT_CI",
+    "status": "PASS_SCOPED_EXACT_21BA6_CI",
+    "committed_source": "21ba6fdc3e62cfd43710a2658704cfb9953fb228",
+    "ci_run": 37437122863,
+    "ci": "Exact21ba6 backend/frontend/Compose SUCCESS completed2026-10-06T08:38:03Z; live readback confirms all jobs successful, HEAD==origin==OPEN/DRAFT PR32head. Terminal watcher30531exit0 is historical, not a live process.",
+    "evidence_payloads": 34,
+    "evidence_manifest_sha256": "e8ca8ffedffeed9bcae4dd89f4540d99de1430e37ab78b136dfe0e0111f796b5",
+    "post_ci_checkpoint": "All34 sealed payloadSHA rechecked2026-10-06. Receipt-only state/ACCEPTANCE updates stay local for next meaningful milestone; no source/UI changes after exactCI, no sealed proof edits.",
     "source_base": "c2379d3415a5097da4f6d762044a1f7488e69c5e",
     "candidate": "/home/yuchen/data/product-candidates/20261006-bonus-numbered-holder-account/ledger-v4.json",
     "manifest_sha256": "f2466d5c8662a6efb977eba4784030e57b77824be0b6de5ee8da6698db4c9714",
@@ -14,8 +32,8 @@
     "reference": "Unchanged auditor82PASS_SCOPED_REFERENCE_INPUT_RELATIONSHIP/1UNRESOLVED000598 strictcash mismatch. Canonical245ebe58b35dfcaa0d2dedb2e92350066318cef6981c5dc7b27116a0ebd852c2;repeat stdout/reversed events identical. No tolerance/assertion relaxation.",
     "residual": "44raw dated-pattern failures:38holder/3credit/1listing/2record-ex, canonical5087fa8fcd754673706feb280b5dd966367faf451c45dab62d69e750c8e0fc3e. Stricter holder boundary changes earlier failure location for already-unresolved rows; not newly lost accepted events.002006missing listing/002299missing credit日/002245fraction/000598cash still unresolved.",
     "tests": "1238backendPASS/1existing optional historical archiveSKIP19.74s/Ruff548/mypy145/reversible ownedtmpfs testDB head-base-head-checkPASS. Fresh owner/image/mount/network/testENV verified. Checker f04a390 exited0 2026-10-06T08:30:05.347148439Z/ownedPG7d4e289 stopped. Originalfourservices healthy/up/APIfrontend200/RedisPONG;no productionDB migration/restart or Docker cleanup. First PG readiness noresponse;same livePG checked ready,not restarted.",
-    "review": "Independent finalV21 read-only source/allcallers/tests/candidate/docs/proof review no remaining boundedP1P2 or scoped overclaim. Arabic4、/4. counterexample closed/all4pagecontinuation negatives retained;old78/deps4/default/new5/sourcehash/reference82+1/repeat/raw44/full1238 scopes agree. Reviewer performed no tests/network/DB/writes. Not full financial/product certification;exactCI/seal pending.",
-    "frontend_scope": "Frontend tree unchanged;reuse historical666/local lint/types/independentbuild and exactc2379frontendCI, not another local frontend/browser/AA/native200/p95 certification. Independent final reviewPASS_SCOPED;new exactCI/seal pending. Existing EACCES/519.13kB advisory unchanged.",
+    "review": "Independent finalV21 read-only source/allcallers/tests/candidate/docs/proof review no remaining boundedP1P2 or scoped overclaim. Arabic4、/4. counterexample closed/all4pagecontinuation negatives retained;old78/deps4/default/new5/sourcehash/reference82+1/repeat/raw44/full1238 scopes agree. Reviewer performed no tests/network/DB/writes. ExactCI/seal now complete; not full financial/product certification.",
+    "frontend_scope": "Frontend tree5fa96199 unchanged; exact21ba6 frontend test/lint/types/build CI SUCCESS. Actual IAB strategy firstclick and Esc triggerfocus bounded proof, width437 no pageoverflow; Chrome connection unavailable. No new Chrome/AA/native200/p95 certification; historical local666 checks retained. Existing EACCES/519.13kB advisory unchanged.",
     "evidence": "product-evidence/v1.2/m4/20261006-bonus-numbered-holder-account/README.md",
     "remaining_scope": "Full U1-U8/M0-M5 and new-version financial admission/user-flow/AA/native200/p95/delivery remain. Lawful after-start forward and genuine missing paper-ledger external gaps unchanged. Goal ACTIVE, not complete."
   },
@@ -2170,8 +2188,8 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-06T05:32Z root sole Git/docs/UI writer. FreshWSLps only root-owned frontend test94932 now exit0, no concurrent writer/research. AccountMakenzieAhern and exact13a branch/origin/PR32OPENDRAFT verified. Frozen .research diffempty/v1.1f88b5c6 unchanged. Originalfour servicesup/APIfrontend200/PONG after safe existingDesktop start. Final666frontend/81focused and settled caption Chrome scopedPASS; commit/CI next.",
-    "repository_writer": "root only; Oct6 retained wording/cash policy compatibility milestone. Same goal/task; selected_version_review_oct6 read-only source/final evidence review terminal, no writes/test/DB/browser/network.",
+    "latest_verification": "2026-10-06T09:04Z freshWSLps no competingwriter/test/research, rootsolewriter. CurrentHEAD21ba6 branch/origin latestCISUCCESS; originalfourComposehealthy/up/frontend5173andbackend8000HTTP200. Newwizard668frontend/static/build complete; ownedIABtabclosed/preferences/draftrestored. HistoricalPIDs not current authority.",
+    "repository_writer": "root only; same Oct6 U3/U8 pre-run source-quality disclosure unit. Reused selected_version_review_oct6 independent read-only code review terminal, finalartifact review next; no writes/test/DB/browser/network by reviewer.",
     "database_writer": "Oct6 no businessDB POST/test/migration/account/provider/formal/OOS. Original containers auto-resumed after safe existingDesktop start; no forced backend/Compose restart/recreate/reset/deletion. Saved32API byteequal+1expected additivecapabilities versus completeOct3pre snapshot; scoped API only, not fullSQL/lostledger restoration.",
     "queue_writer": "Oct6 completeGET capture active0:11terminalstudies/5STOPPEDaccounts/4terminalupdates/3formal. No submit/retry/provider/accountstart; rootfrontend test94932 terminalexit0. Before any later action reread active jobs and exactprocess identity, historicalPIDs not authority.",
     "agents": {
@@ -2762,7 +2780,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "FinalV21 source/candidate83/59 has58focused/1238fullbackend1optionalSKIP/static/reversibletmpfsDBPASS;old78/new5sourcebindings/immutable/reference82scoped1UNRESOLVED000598/repeat/reversedPASS. V19lost9/V20ArabicsectionP2 NOT ACCEPTED;fullsources/preservation/rootguard fixed with actualRED. Independent final read-only review no boundedP1P2/overclaim;next coherent commit/push/exactCI/seal.44rawdate gaps38holder/3credit/1listing/2record-ex/full economic census/new-version financial admission remain.002375listing alias/002399heading handoff+credit/listing gaps not accepted. Do not substitute sourcecandidate count for U3/U5/U6 financial/user-flow acceptance. Full U1-U8/M0-M5/AA/native200/p95/delivery and external lawfulafter-startforward/genuinemissingledgers remain. Originalfourserviceshealthy/up200/checkerexited0/ownedPGstopped;no current test/sourceworker. No frozenchange/OOS/merge/release;goalACTIVE.",
+  "next_task": "Finish bounded U3/U8 pre-run quality disclosure finalartifactreview/coherentcommit/push/exactCI/seal;99focused/668fullfrontend/static/build and four actualIABcases already pass. Then prioritize full U1-U8/M0-M5 consolidated user-flow/financial/API/visual/AA/native200/p95/delivery, not source-count milestones alone. ScopedV21 source83/59 not economic/dataset admission. Preserve002375 generic listing/unrestricted-authority/table gaps,002399heading/page/credit/unrestricted wording,44rawdate failures/000598strictcash; never silently admit. External lawfulafter-startforward/genuine missingledgers unchanged. Originalfourhealthy/up200/no currenttest/sourceworker. No frozenchange/OOS/merge/release;goalACTIVE.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

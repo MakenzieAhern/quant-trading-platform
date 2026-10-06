@@ -1,5 +1,32 @@
 # Decisions
 
+## v1.2 disclose source quality before running — 2026-10-06
+
+Actual IAB restored historical draft shows a known economic-coverage gap in its
+capabilities but no explanation before Run. Fix the shared four-step wizard once:
+reuse existing translated quality codes at source selection/final confirmation;
+associate the select with existing version and new quality note. No new dependency,
+financial calculation, dataset admission, API or acknowledgement semantics.
+The note does not repair economic coverage or validate old returns/quantities.
+No-metadata/synthetic selection removes the note and its description association.
+
+Two RED cases prove omission; first green2FAIL/97PASS identified a stale test
+select after Back remounted it. Fresh semantic query, unchanged assertions:
+99focusedPASS; full668frontendPASS/44files13.72s/lint/types/PrettierPASS.
+WSLlogin initially lacked npm; reused installed miseNode24, no install. First full
+command subsequently failed because shell expansion emptied the build outDir;
+explicit newtmpdir buildPASS145ms/519.40kB advisory retained. No old dist overwritten.
+
+Four distinct actual IAB confirmation cases cover required widths and both locales/
+themes, not full16/native200/Chrome/p95/AA. Back/locale/accessibility-description
+targets checked. Original IAB draft100000/date/cost/risk retained and saved at
+step1; ZH/system/home/defaultviewport restored, owned tab closed. No businessPOST.
+Chrome binding unavailable; no alternate security bypass. Mobile theme selector
+is intentionally hidden; visible desktop selector used before narrow observation.
+Independent source/artifact reviewer found no bounded codeP1/P2; broken relative
+proof links corrected to actual external Windows files. Exact newCI/seal pending.
+Full product acceptance and lawful forward/genuine missing-ledger gaps unchanged.
+
 ## v1.2 holder account/prose continuation and preservation repair — 2026-10-06
 
 Full cached002304/002368/002425/002436/002573 final notices supply explicit same-day

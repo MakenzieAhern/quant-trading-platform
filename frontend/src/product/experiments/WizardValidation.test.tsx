@@ -12,6 +12,7 @@ import {
   saveExperimentDraft,
 } from "./draft";
 import { capabilities, configuration } from "./fixtures.test-data";
+import { explainExperimentCode } from "./codes";
 
 beforeEach(async () => {
   localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
@@ -174,3 +175,68 @@ it("focuses an asynchronous server error summary without inventing an invalid fi
   expect(readExperimentDraft()?.idempotencyKey).toBe("server-error");
   expect(create).toHaveBeenCalledTimes(1);
 });
+
+it.each([
+  "KNOWN_ECONOMIC_COVERAGE_GAP",
+  "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+] as const)(
+  "discloses selected source quality before running, preserving the translated exact draft: %s",
+  async (quality) => {
+    const create = vi.spyOn(experimentApi, "create");
+    const historical = {
+      ...capabilities.datasets[0]!,
+      dataset_id: "cn-a-test-history-v1",
+      mode: "historical_exploration" as const,
+      current_dataset_quality: quality,
+    };
+    vi.mocked(experimentApi.capabilities).mockResolvedValue({
+      ...capabilities,
+      datasets: [historical, capabilities.datasets[0]!],
+    });
+    const form = { ...configuration, dataset_id: historical.dataset_id };
+    saveExperimentDraft(form, 1, "quality-disclosure");
+    render(<CreateExperimentPage />);
+    const source = await screen.findByLabelText("Data source");
+    const english = explainExperimentCode(quality, "en-US");
+    expect(screen.getByRole("note")).toHaveTextContent(english);
+    expect(source).toHaveAccessibleDescription(
+      `Data source: ${historical.dataset_id} ${english}`,
+    );
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    const chinese = explainExperimentCode(quality, "zh-CN");
+    expect(screen.getByRole("note")).toHaveTextContent(chinese);
+    expect(source).toHaveAccessibleDescription(
+      `数据来源: ${historical.dataset_id} ${chinese}`,
+    );
+    expect(screen.getByLabelText("初始本金（人民币）")).toHaveValue(
+      form.initial_cash,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "继续" }));
+    await userEvent.click(screen.getByRole("button", { name: "继续" }));
+    expect(screen.getByRole("heading", { name: "确认运行" })).toHaveFocus();
+    expect(screen.getByRole("note")).toHaveTextContent(chinese);
+    expect(screen.getByRole("button", { name: "运行当前配置" })).toBeDisabled();
+    expect(readExperimentDraft()?.form).toEqual(form);
+    expect(readExperimentDraft()?.idempotencyKey).toBe("quality-disclosure");
+    expect(create).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole("button", { name: "上一步" }));
+    await userEvent.click(screen.getByRole("button", { name: "上一步" }));
+    const demoSource = screen.getByLabelText("数据来源");
+    await userEvent.selectOptions(demoSource, configuration.dataset_id);
+    expect(screen.queryByRole("note")).toBeNull();
+    expect(demoSource).toHaveAccessibleDescription(
+      `数据来源: ${configuration.dataset_id}`,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "继续" }));
+    await userEvent.click(screen.getByRole("button", { name: "继续" }));
+    expect(screen.queryByRole("note")).toBeNull();
+    expect(
+      screen.getByText(
+        "这里使用合成价格演示操作流程。模拟收益不可作为投资证据。",
+      ),
+    ).toBeVisible();
+    expect(create).not.toHaveBeenCalled();
+  },
+);

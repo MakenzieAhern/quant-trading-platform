@@ -1,6 +1,52 @@
 # v1.2 acceptance ledger
 
+## 2026-10-06 pre-run data-quality disclosure (bounded U3/U8)
+
+Actual restored IAB draft selected the frozen historical v1 whose capabilities
+report `KNOWN_ECONOMIC_COVERAGE_GAP`; source selection/final confirmation omitted
+the existing explanation. The shared wizard now reuses the same bilingual
+quality-code explanation in both steps, with the dataset selector described by
+both version and quality. New/restored/copied configurations share this component.
+No data repair, financial calculation, backend admission or quality-based veto
+was added. Run remains disabled until the existing acknowledgement is checked.
+
+Two parameterized tests cover known/unknown quality, exact saved cash/config/key,
+locale/focus, final confirmation and synthetic/no-metadata removal without POST.
+Initial2RED reproduced the missing note; first green attempt2FAIL/97PASS was a
+detached test locator after Back. Re-querying the mounted select fixed the harness;
+assertions were not weakened. Final99focusedPASS; full668frontendPASS/44files13.72s,
+lint/types/PrettierPASS. An empty temporary outDir argument failed the first build
+wrapper; explicit fresh directory buildPASS145ms. The519.40kB chunk advisory remains.
+Unchanged backend/migration evidence from21ba6 is reused, not a new local run.
+
+Actual IAB screenshots inspected for1440x900ZHlight,1280x800ENdark,1024x768ZHdark,
+390x844ENlight: note visible/no page-level overflow. These are four distinct cases,
+not the full16 combinations, new Chrome/native200%, speech, p95 or fullAA acceptance.
+Back/locale/source-description targets checked; original IAB100000/date/cost/risk
+draft restored to step1, ZH/system, home/defaultviewport, owned tab closed. No
+business submit/provider/account/formal/OOS action. Browser draft restoration does
+not claim byte-identical autosave timestamps or preservation of another Chrome origin.
+Independent read-only source/artifact review found no bounded codeP1/P2; one
+broken repository-relative proof link corrected to the verified external paths.
+Exact new CI and proof seal pending. PR32 remains OPEN/DRAFT, no merge/release.
+
+[Walkthrough and failure chronology](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-wizard-data-quality/README.md),
+[confirmation screenshot](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-wizard-data-quality/confirm-1440-zh-light.jpg),
+[mobile source screenshot](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-wizard-data-quality/source-390-zh-light.jpg).
+Proof is external to Git; full U1-U8/M0-M5 acceptance and external gates remain open.
+
 ## 2026-10-06 holder account/page boundaries (bounded U3/U5/U6 prerequisite)
+
+Post-commit: exact21ba6fdc3e62cfd43710a2658704cfb9953fb228
+[CI37437122863](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37437122863)
+backend/frontend/ComposeSUCCESS2026-10-06T08:38:03Z; HEAD==origin==PR32head,
+PR32OPEN/DRAFT. All34 sealed payload hashes rechecked; SHA256SUMS SHA
+e8ca8ffedffeed9bcae4dd89f4540d99de1430e37ab78b136dfe0e0111f796b5.
+Pending-CI/seal wording below is precommit chronology, not the current gate.
+Actual IAB strategy firstclick/Esc triggerfocus passed in bounded observation;
+Chrome unavailable, no new Chrome/native200/AA/p95 claim. Frontend tree unchanged.
+Only state/acceptance postCI receipts local for the next meaningful milestone;
+sealed evidence untouched. Full economic admission and product scope remain open.
 
 Full cached official002304/002368/002425/002436/002573 read: complete holder dates,
 explicit share credit and unrestricted listing. Numbered cutoff/share-account

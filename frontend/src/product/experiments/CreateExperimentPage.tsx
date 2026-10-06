@@ -385,21 +385,24 @@ function ExperimentWizard({
     error === "validation"
       ? invalidConfigurationField(form, capabilities, 3)
       : null;
+  const dataset = capabilities.datasets.find(
+    (item) => item.dataset_id === form.dataset_id,
+  );
   const fieldAccessibility = (field: ConfigurationField) => ({
     "aria-invalid": invalidField === field || undefined,
     "aria-describedby":
       [
         invalidField === field ? "experiment-validation-error" : null,
         field === "dataset" ? "experiment-dataset-version" : null,
+        field === "dataset" && dataset?.current_dataset_quality
+          ? "experiment-dataset-quality"
+          : null,
       ]
         .filter(Boolean)
         .join(" ") || undefined,
   });
   const strategy = capabilities.strategies.find(
     (item) => item.strategy_id === form.strategy_id,
-  );
-  const dataset = capabilities.datasets.find(
-    (item) => item.dataset_id === form.dataset_id,
   );
   const chinese = i18n.language.startsWith("zh");
   usePageDataContext(
@@ -605,6 +608,18 @@ function ExperimentWizard({
           <h2 ref={heading} tabIndex={-1}>
             {c.steps[step]}
           </h2>
+          {(step === 1 || step === 3) && dataset?.current_dataset_quality && (
+            <p
+              id="experiment-dataset-quality"
+              className="experimentNotice"
+              role="note"
+            >
+              {explainExperimentCode(
+                dataset.current_dataset_quality,
+                i18n.language,
+              )}
+            </p>
+          )}
           <fieldset disabled={pending}>
             {step === 0 && (
               <div className="experimentStrategyChoices">
