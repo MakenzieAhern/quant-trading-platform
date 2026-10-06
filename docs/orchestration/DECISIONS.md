@@ -1,5 +1,32 @@
 # Decisions
 
+## v1.2 numbered metadata and explicit long holder declarations — 2026-10-06
+
+Read full cached official002479/002493/002503/002519 notices; accept lexical
+equivalence only with complete effective dates, all-holder scope, explicit
+unrestricted listing and existing issuer/lifecycle/integral/source guards.
+DraftV15 arbitrary preceding-date anchors matched inside拟将 fields (actual
+1RED/3PASS). Bind declaration boundary and complete contiguous numbered metadata
+chain instead of a keyword-only blacklist. V16 dropped old002093 short heading;
+read full cached source and explicitly preserve分红派息日期 alongside the exact
+long metadata heading. FinalV17 separate immutableledger-v4:78sourcelegs,
+64unresolved/142,7265outside. Old74event fields/receipts unchanged except opt-in
+version/checksum, four dependencies and default next-session unchanged.
+V14/V15/V16 ledgers retained as non-accepted chronology, not rewritten.
+45focusedPASS; first full1224 tests passed but format check failed, corrected test
+format and repeated full1224/one optional archiveSKIP19.59s/Ruff548/mypy145/
+disposable tmpfsDB head-base-head-checkPASS. No productionDB touched.
+Reference77scopedPASS/1UNRESOLVED000598 strictcash mismatch remains; no tolerance
+or assertion relaxation. Immutable/stdout-repeat/reversed equality verified.
+Also repair duplicate product checkpoint key: newfb27 parenthetic gate distinct
+from old655 cutoff gate; stdlib validator preserves both and forbids nested
+duplicate keys. Existing sealed proofs and frozen research unchanged.
+Independent final source/docs/proof review no boundedP1P2/overclaim; newexactCI
+and seal pending.
+Frontend unchanged; reuse historical666/static/build/exactfb27CI honestly, no
+new local frontend/browser or full product/financial certification. Full U1-U8/
+M0-M5 remain, including lawful after-start forward and genuine absent ledgers.
+
 ## v1.2 explicit cutoff/parenthetic credit and root declaration boundaries — 2026-10-06
 
 Full cached002357 final notice explicitly states截至 record-date allholders,

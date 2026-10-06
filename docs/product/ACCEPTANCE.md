@@ -1,5 +1,43 @@
 # v1.2 acceptance ledger
 
+## 2026-10-06 numbered metadata and long-holder declarations (bounded U3/U5/U6 prerequisite)
+
+Full cached official002479/002493/002503/002519 read. Shared opt-in V17
+recognizes exact numbered long-holder and unrestricted listing交易日 declarations,
+never an undated inferred effective date. DraftV15 preceding-date anchors wrongly
+accepted拟将 fields (actual1RED/3PASS); declaration boundary plus exact contiguous
+numbered metadata chain fixes root cause. V16 overstrict long-heading path lost
+old002093; full source reviewed and exact short分红派息日期 added. All five complete
+date/conflict/page/issuer/source/lifecycle/integral/default guards preserved.
+Misplaced test block caught during inspection and moved before execution.
+45focusedPASS; separate immutable finalV17ledger-v4 canonical
+3f416919b9aaabfbbcf929555dd1c270607d95106710a7f9df2546bfe6dfba9f,
+bytes2853b13fc6766b00c30936af9cae767ae7ef349b2ffe9a6eaaadaa6fdc6c18ff.
+78sourcelegs/142,64unresolved,7265outside; old74event fields/receipts exact except
+opt-inversion/checksum/fourdependencies unchanged/immutable repeat succeeds.
+V14/V15/V16 are preserved non-accepted drafts, not current acceptance.
+
+Reference77scopedPASS/1UNRESOLVED000598 cash mismatch; canonical
+8ad877aa7167a0bf5036c371d47daea0a2295d1c4d459838839b1f3b375ac336,
+repeat stdout/reversed order equal. No cash authority/tolerance/assertion change,
+newdataset, economic census or financial admission claim. Raw48dated-pattern gaps
+36holder/7credit/3listing/2record-ex remain diagnosis only.
+First full1224 run failed format after tests/lint; format corrected and full
+1224backend/one existing optional archiveSKIP19.59s/Ruff548/mypy145/reversible
+ownedtmpfsDB head-base-head-checkPASS. Checker exited0/ownedPGstopped; original
+fourservices healthy/up/APIfrontend200/RedisPONG. No production migration/restart.
+Frontend tree unchanged; historical666/lint/types/build/exactfb27CI reused,
+not another local frontend/browser or AA/native200/p95 run. Existing EACCES/
+519.13kB advisory unchanged. Independent final source/callers/tests/candidate/
+docs/proof review no boundedP1P2 or overclaim; newexactCI and seal pending.
+
+Checkpoint duplicate-key repair keeps fb27 parenthetic and655 cutoff gates under
+distinct keys; external stdlib validator checks all nested uniqueness and exact
+historical SHAs. No sealed history rewritten.
+Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-numbered-long-holder/README.md>).
+All required U1-U8/M0-M5, full economic admission, lawful after-start forward,
+genuine missing-ledger and delivery gates remain incomplete.
+
 ## 2026-10-06 cutoff/parenthetic credit and fail-closed declaration boundary
 
 [Proof](../../../product-evidence/v1.2/m4/20261006-bonus-cutoff-parenthetic-credit/README.md)
@@ -23,6 +61,15 @@ actual666/lint/types/independentbuild and exact2332frontendCI reused, no new loc
 frontend/browser/AA/performance claim. TestPGstopped; originalfourservicesup/
 healthy andfrontend/API200. Frozen assets/.research/v1.1 unchanged. Full U1–U8/
 M0–M5, economic admission and external lawful-forward/genuine-lostledger remain.
+
+Subsequently exactfb27ca3613799a35af158cee1ad46478c6dbc7b0
+[CI37430703563](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37430703563)
+completedSUCCESS2026-10-06T07:38:52Z backend/frontend/Compose; fulljob/stepJSON
+and terminalwatchexit0 saved.25payload seal75ca935bd305e38deeb492223feb197e37ee078161d25d9a0a5f66c755081fb7
+verified. Pending wording above is precommit chronology. Only state/acceptance
+postCI receipts local for next coherent milestone; no source/UI change after CI.
+Next batch: full cached002479/002493/002503/002519 explicit longholder/listing
+clauses already read, not accepted from read-only diagnosis. All broad gates remain.
 
 ## 2026-10-03 explicit inspection versions, not executable financial promotion
 

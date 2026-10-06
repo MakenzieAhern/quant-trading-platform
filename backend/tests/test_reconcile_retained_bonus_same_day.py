@@ -297,6 +297,97 @@ def test_parenthetic_listing_aliases_require_complete_non_tentative_dates(listin
         )
 
 
+@pytest.mark.parametrize(
+    "holder,listing,adjacent",
+    [
+        (True, False, False),
+        (False, True, False),
+        (True, True, False),
+        (True, True, True),
+        (True, True, "short"),
+    ],
+)
+def test_numbered_long_holder_and_listing_trade_day_keep_explicit_declarations(
+    holder, listing, adjacent
+):
+    notice = NOTICE
+    if holder:
+        notice = notice.replace(
+            "三、分派对象\n本次权益分派对象为:",
+            "三、分红派息及资本公积金转增股本对象\n截止",
+        )
+    if listing:
+        notice = notice.replace(
+            "五、本次转增的无限售条件流通股的起始交易日为",
+            "3、新增无限售条件流通股份上市交易日:",
+        )
+    if adjacent:
+        # Reviewed 002479/002093 layouts have no full stop between dated fields.
+        metadata_heading = (
+            "二、分红派息日期"
+            if adjacent == "short"
+            else "二、股权登记日、除权除息日、新增无限售条件流通股份上市日和红利发放日"
+        )
+        notice = (
+            notice.replace("。三、分红派息", "。4、红利发放日:2011年3月28日三、分红派息")
+            .replace("3、新增无限售条件流通股份上市交易日:2011年3月28日。", "")
+            .replace(
+                "二、股权登记日与除权除息日\n股权登记日为2011年3月25日,除权除息日为2011年3月28日。",
+                metadata_heading + "1、股权登记日为:2011年3月25日"
+                "2、除权除息日为:2011年3月28日"
+                "3、新增无限售条件流通股份上市交易日:2011年3月28日。",
+            )
+        )
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    if adjacent:
+        for label in ("4、红利发放日", "2、除权除息日", metadata_heading):
+            for prefix in ("拟将", "讨论"):
+                with pytest.raises(ValueError):
+                    same_day_listing(
+                        [notice.replace(label, prefix + label)], "600000", TITLE, RECORD, EX
+                    )
+    for old, new in (
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年3月25日下午", "股权登记日下午"),
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("2011年3月28日。", "2011年3月29日。"),
+        ("2011年3月28日。", "2011年2月30日。"),
+        ("2011年3月28日。", "上市日期待定。"),
+        ("全体股东", "控股股东"),
+        ("无限售条件", "有限售条件"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    declarations = []
+    if holder:
+        declarations.append("三、分红派息及资本公积金转增股本对象")
+    if listing:
+        declarations.append("3、新增无限售条件流通股份上市交易日:")
+    for declaration in declarations:
+        for prefix in ("预计", "计划", "拟将", "讨论"):
+            with pytest.raises(ValueError):
+                same_day_listing(
+                    [notice.replace(declaration, prefix + declaration)],
+                    "600000",
+                    TITLE,
+                    RECORD,
+                    EX,
+                )
+    for dated in ("2011年3月25日下午", "2011年03月28日直接记入", "2011年3月28日。"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice + notice.replace("2011年3月25日下午", "2011年3月24日下午")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
 def test_same_day_requires_same_final_issuer_holder_credit_and_listing():
     assert same_day_listing([NOTICE], "600000", TITLE, RECORD, EX) == EX
     with pytest.raises(ValueError, match="FINAL_ISSUER"):
@@ -479,7 +570,7 @@ def test_opt_in_reconciliation_is_immutable_and_preserves_default_schedule(tmp_p
         )
     }
     event = accepted["events"][0]
-    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V13"
+    assert event["event"]["source_version"] == "INTEGER_RETAINED_BONUS_EXPLICIT_SAME_DAY_V17"
     assert event["event"]["listing_date"] == EX
     assert event["event"]["share_ratio"] == "1.000"
     assert not event["scheduled_listing_not_actual_tradability"]
