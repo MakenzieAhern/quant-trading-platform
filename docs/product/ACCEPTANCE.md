@@ -9729,3 +9729,38 @@ Full raw read-only residual diagnosis58date failures47holder/3credit/6listing/
 
 Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-weekday-listing/README.md>).
 Full U1-U8/M0-M5/economic admission/external forward/genuine lost-ledger remain.
+
+Post-commit weekday batch exact8d777b0 [CI37425228406](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37425228406)
+backend/frontend/ComposeSUCCESS.23-payload proof sealed
+9e7f3c0b36fc2ac4629a9b78207630da907c1f3684b4ff771a8b4793245846c4;
+pending-CI text above is precommit chronology. Later legacy changes need own CI.
+
+## 2026-10-06 explicit legacy headings and tentative refusal (bounded U3/U5/U6 prerequisite)
+
+Three full cached final official notices002093/002132/002341 reviewed. Shared
+opt-inV8 recognizes exact权益分配/numbered holder headings, standalone capital
+credit and unrestricted listing-table date with explicit field/method boundaries.
+All five complete dates/source/holder/lifecycle/integral/page/conflict guards and
+default next-session remain.3RED→harness duplicate-date split failure retained
+and corrected; independent预计 and计划 P2 counterexamples each reproduced3RED.
+Root-cause standalone-boundary repair/shared tentative guards;18focusedPASS.
+IntermediateV6/V7 immutable ledgers retained NON-ACCEPTED, final ledger-v3
+V8candidate70accepted/142,72unresolved,7265outside;old67fields exact except
+version/checksum/dependency4 preserved/repeated immutable write succeeds.
+
+Reference69scopedPASS/1UNRESOLVED000598;canonical
+e375742abf60ca865b9d28eaec382539d982f11c87d552d29b14ba850c569616,
+repeat bytes/reversed input equal. No cash-authority/assertion relaxation, full
+financial census/new-version execution admission or dataset creation claim.
+55date gaps43holder/3credit/7listing/2record-ex full raw diagnosis saved.
+
+FinalV8full1197backend/1existingoptionalarchiveSKIP19.22s/Ruff548/mypy145/
+tmpfs testDB head-base-head-checkPASS. Startup-race failure preserved, readiness
+confirmed before same ownedtestcontainer restart. ScratchPG stopped after
+identity recheck; no delete/prune/reset/config/security change. Frontend
+unchanged; reuse prior666/fullchecks/exact8dCI, not another local frontend run.
+No UI change/new browser claim. Independent finalV8 source/caller/evidence
+review no remainingP1P2, final hashes/logs/limits verified;newexactCI pending.
+
+Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-bonus-legacy-headings/README.md>).
+Full U1-U8/M0-M5/financial admission/forward/genuine missing-ledger gates remain.

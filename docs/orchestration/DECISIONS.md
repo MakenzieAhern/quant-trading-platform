@@ -1,5 +1,26 @@
 # Decisions
 
+## v1.2 explicit legacy headings and tentative-date refusal — 2026-10-06
+
+Full cached002341/002093/002132 official text has complete explicit holder
+dates under权益分配 or numbered sections, standalone capital-credit and
+unrestricted listing-table date. Shared opt-in aliases only, five dates/source/
+scope/lifecycle/integral/page/conflict guards/default next-session preserved.
+3RED, test-harness duplicate-date split failure kept/fixed rsplit last occurrence.
+Independent P2预计 listing false-definiteness reproduced3RED; shared guard now
+rejects预计/预期/拟新增/拟上市/拟转增/拟送. Second计划 prefix P2 reproduced3RED;
+standalone fields now require sentence/page/numbered-field or exact method
+heading boundaries plus shared planned-action refusal.18focusedPASS.
+IntermediateV6ledger-v1/V7ledger-v2 retained NON-ACCEPTED; finalV8ledger-v3
+immutable70source/72unresolved/7265outside;
+old67 exact exceptversion/checksums,4dependencies unchanged.69referencePASS/
+1UNRESOLVED000598 strict mismatch remains, no financial census/admission PASS.
+FinalV8 1197backend/1optionalarchiveSKIP19.22s/lint/types/reversible tmpfs testDBPASS.
+Startup-race failure preserved; sameexactownedtestcontainer restarted after
+PGhealthy. TestPG stopped afterward;no cleanup/config/security/businessdata changes.
+Frontend unchanged, prior666/fullchecks/exact8dCI reused honestly, no newUI claim.
+Full U1-U8/M0-M5/sourceadmission/forward/lostledger requirements remain.
+
 ## v1.2 explicit weekday and capital-reserve listing clauses — 2026-10-06
 
 Full cached official002102/002212 notices show complete credit dates followed
