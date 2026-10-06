@@ -1,5 +1,26 @@
 # Decisions
 
+## v1.2 compatible transitive patch and non-destructive local recovery — 2026-10-07
+
+Fresh actual dev audit1HIGH source-map-js1.2.1; official GHSA-68fv-2mgg-jv7q
+patched1.2.2. Change only3lockfields with npmregistry SRI, compatibleexisting
+css-tree/postcss ^1.2.1. No broad audit-fix/override/newdependency/applicationcode.
+Clean independentnpmci/full+prod audits0/709frontend/lint/type/build PASS;
+backend58pinnedentries audit0/pipcheckPASS. Reused independent readonlyreview
+no evidenced boundedP1/P2; parent0d CI37510822018 all3jobsSUCCESS is earlier
+parser proof, not newsecuritycommit. Separate13-payload proofsealed
+ ebfadaeceb671cbadadddbf3118ad0cd8a9521af10d4e9c9664940a9b4eea647.
+
+Only originalfrontend restart revealed absent/app package+lock/existingWSLbind
+and npmciEUSAGE. Stopthatloop, preservecontainer/dependencyvolume. Do not repeatedly
+restart, resetDocker, deletevolumes/images/data/WSL, altersettings/securityor
+restartoriginalbackend. NativeUbuntuCLIintegration actuallyunavailable despite
+configureddefault/Ubuntu true. Safe alternative: existing exact Nginxreleaseimage
+with only verifiedscratchdist in owned no-mount container onloopback5173.
+Currentfrontend/API200/threeoriginaldependentserviceshealthy and Chrome
+bilingualhome/strategy/list readbackPASS; originalfrontendstopped/integrationnot
+repaired. Data/formal/frozen/OOS/failedQA untouched; fullreleasegates remain.
+
 ## v1.2 complete option condition is not an actual consolidation — 2026-10-07
 
 Recognize the complete fixed quoted-plan pre-exercise option-adjustment sentence

@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 dependency security and local runtime recovery — partial
+
+Own parser head0d90562e1e036f86b2db1d70149f28495a2628b4
+[CI37510822018](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37510822018)
+backend/frontend/Compose allSUCCESS completed2026-10-06T18:25:16Z.
+Complete exact jobs/steps saved separately; earlier sealed source proof unchanged.
+
+Fresh audit found source-map-js1.2.1 dev-transitive HIGH
+[official GHSA](https://github.com/advisories/GHSA-68fv-2mgg-jv7q).
+Only lock version/resolved/integrity changed to compatible1.2.2 with actual
+registry SRI. package.json byte-exact, all other lock semantics exact; no override,
+new dependency or business/financial code. Isolated clean npmci244packages:
+both chains1.2.2/fullandprod audits0;709tests/45files16.91s/lint/types/build193ms
+PASS. Backend58lockeddependencies pip-audit zero known vulnerabilities/pipcheck
+PASS. Readonly independent review no evidenced boundedP1/P2; not fullsecurity
+certification. New security head needs its own CI, not parent parser coverage.
+
+Restarting only originalfrontend exposed failing existing WSLbind: package/lock
+absent inside/app, npmci EUSAGE. Loop stopped; originalcontainer/dependencyvolume
+retained. NativeUbuntu docker integration unavailable, not regularComposePASS.
+PG/Redis/backend remain healthy/RedisPONG/API200; no restart or data deletion.
+Safe owned currentbuilt Nginx fallback qtp-v12-frontend-source-map-oct7 uses no
+mounts and serves exact verified scratchdist on127.0.0.1:5173, root/deepHTTP200
+and security headers. This restores local use, not WSLintegration/fullrelease.
+Do not restart originalbackend until bind mappings are genuinely restored.
+
+ActualChrome ENhome/strategy drawer Escapefocus/12savedstudies, ZHlist/home
+and originalENdark restored; ownedtabclosed. No study/account/provider/strategy
+or failedjobretry. Native1920x911ZHdark JPEG savedandinspected, not requested
+4size/native200/AA/p95/fullfinancial or lawful afterstartforward proof.
+[13-payload sealed proof](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-source-map-security/README.md),
+manifestSHAebfadaeceb671cbadadddbf3118ad0cd8a9521af10d4e9c9664940a9b4eea647.
+FullU1-U8/M0-M5 remain; goalACTIVE/product_goal_completefalse, no merge/tag/release.
+
 ## 2026-10-07 hypothetical option clause — scoped source closure, product partial
 
 Shared same-day parser no longer mistakes a complete quoted hypothetical option
