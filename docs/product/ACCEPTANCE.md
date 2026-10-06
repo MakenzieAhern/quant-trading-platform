@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-10-06 restored wizard step and explicit composite-cash disagreement
+
+U3/U8 scoped correction: actual restored capital/data page incorrectly retained a
+fixed `Choose a strategy` header. Remove only the redundant static label; retain
+real aria-current step/h2, configuration, recovery and idempotent submission.
+Three RED cases ->21focusedPASS; full frontend671PASS44files/lint/types/build180ms.
+Actual IAB16cases across required four sizes/two locales/themes preserve8values,
+selected version/quality warning and no pageoverflow. EN mobile forward/back and
+reload restores original capital step; review heading focused/unchecked submit
+disabled. Four settled ZH/light JPGs plus mobile ENreview inspected. Not Chrome,
+native200/AT/fullAA/p95 or complete U3/userfinancial certification.
+
+New immutable selected source diagnosis canonical
+cfcfe3a2daed07d0956baf834e35e4b76431b7361a49f1f42f40162700621b03,
+bytes16e2c776cee52eaa0b4ac19548b9cb20ca73d4421724babe4d5cff72c4041deb:
+000598 holdercash .102064 vs monthly .101; issuer aggregate58302883.33 vs
+monthly58866764 differs563880.67; legacy declared rate vs aggregate differs
+-1.271168. Both authorities retained, no price-fit/weighted-reference admission,
+holder-class approval or source substitution. Prior475+1/whole7407queue unchanged.
+Final isolated readonly/networknone diagnostic and immutable repeat terminal0;
+earlier path/encoding/wrong expected constant failures retained, not relaxed.
+
+Read-only independent source/diff/report/IAB proof review no boundedP1/P2.
+Backend/.research tree unchanged, earlier1243backend/optionalSKIP/migration evidence
+retained but not rerun. Original Compose services healthy/RedisPONG/HTTP200.
+New local change CI NOT_RUN; older green CI does not cover changed frontend/parser.
+No frozen/source authority/methodology/OOS/results/DB changes, merge/tag/release.
+[Reproducible diagnosis, actual checks, screenshots and limitations](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-composite-cash-and-restored-step/README.md).
+Full U1-U8/M0-M5/economic/newversion/native200/AA/p95/restart/delivery and external
+lawful-forward/genuine missing-ledger gates remain; goal ACTIVE.
+
 ## 2026-10-06 distinct holder entitlement and issuer ex-price basis (local slice)
 
 Five exact reference failures explained from already cached issuer PDFs, not price

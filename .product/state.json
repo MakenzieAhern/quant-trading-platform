@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T11:01:32Z",
+  "updated_at_utc": "2026-10-06T11:23:16Z",
+  "composite_cash_and_restored_step_20261006_gate": {
+    "status": "PASS_SCOPED_UI_FIX_SOURCE_CONFLICT_REMAINS_UNRESOLVED",
+    "source_parent": "b9da3a902f59298474c540d4b5d24e1008a245d0",
+    "diagnosis": "/home/yuchen/data/product-candidates/20261006-composite-cash/diagnosis-v1.json",
+    "diagnosis_manifest_sha256": "cfcfe3a2daed07d0956baf834e35e4b76431b7361a49f1f42f40162700621b03",
+    "diagnosis_bytes_sha256": "16e2c776cee52eaa0b4ac19548b9cb20ca73d4421724babe4d5cff72c4041deb",
+    "diagnostic_program_sha256": "ad3414a967befe27b7eb4dbdea32013309753db2b481063d7bfb28454819cceb",
+    "source_scope": "Selected offline diagnostic, not production parser/reference authority or new holder-eligibility acceptance. Holder .102064 vs monthly .101; issuer aggregate58302883.33 vs monthly58866764 difference563880.67; legacy printed rate/aggregate difference-1.271168. Official PDF/date-link extraction/monthly row/input bytes bound; immutable repeat exact. Prior475+1 andwhole7407queue unchanged. No weighted-price fit/promotion/financial acceptance.",
+    "ui_fix": "Delete only redundant c.steps[0] header wrongly labeling restored capital/cost/review as strategy selection. Existing aria-current/h2/draft/request-key/create flow untouched. Three EN-toZH restored-step tests preserveform/step/key/noCreate RED3->GREEN21.",
+    "browser": "Actual IAB16cases/four required sizes/two languages/themes keep8form values/selected version/quality warning/no pageoverflow; four settled ZHlightJPGs inspected. ENmobile capital->costs->review focusesactualh2, uncheckedsubmitdisabled, back twice/reload restores originalcapitalstep. Requestkey browserbytes notinspected; unit-only. ZH/system/originalstep restored, viewportreset/ownedtabclosed. No Chrome/native200/AT/fullAA/p95/fullfinancial proof.",
+    "tests": "Frontend671PASS44files17.19s/lint/types/build180ms, rawcompleteoutput saved;519.33kB advisory remains. Backend/.research no changes fromb9da3a9, prior1243PASS1archiveSKIP/migration receipt retained but notrerun. No productionDB test storage.",
+    "review": "Independent read-only actualdiff/diagnostic/16IABcases/390JPG no boundedP1/P2. Reviewer didnotexecute/tests/DB/network/fullproduct certification; legacyholder eligibility notnewlyvalidated.",
+    "ownership": "Root sole writer. Frontend50912terminal0. Owned readonly/networknone diagnosticcontainers path/encoding/wrongexpectedconstant failures terminal1; finalqtp-composite-cash-precision-checked-oct6 and intentional immutable repeat terminal0. No source/queue/applicationDB writer. Composefour originalservices leftup/healthy, RedisPONG/frontend+healthHTTP200.",
+    "ci": "LOCAL_NOT_PUSHED_CI_NOT_RUN. Older719green cannot cover b9da3a9 or this UI diff; user availability delay, no repeated remote request/protection bypass/merge/tag/release.",
+    "evidence": "product-evidence/v1.2/m4/20261006-composite-cash-and-restored-step/README.md",
+    "goal": "ACTIVE. Previous service-status-only turn NO_PROGRESS toward remaining acceptance; revalidated savedwork then this turn PROGRESS: actual restored-step defect removed and unresolvedcash evidence changes next source action. Whole U1-U8/M0-M5 mandatory scope unchanged."
+  },
   "reference_basis_20261006_gate": {
     "status": "PASS_SCOPED_475_PLUS_1_NOT_DATASET_OR_FINANCIAL_ACCEPTANCE",
     "source_parent": "719391abf36bad1bbd4c76777e20e78d098bfc7b",
@@ -2888,8 +2905,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Current source-root helper separates actual holder cash/ratio from explicitly declared total-capital repurchase-folded reference basis; reference475+1 and whole7407queueV4 preserve470oldPASS/288oldfacts. New local source slice awaits remoteCI (prior719CI notcurrent). Next close000598composite public-holder cash .102064 vs monthlyDPS .101 using exact cached source allocation/basis and independent reference evidence, never overwrite cash with .101 or forcePASS. Persist reference inputs separately in genuinely new version only after complete source/holder/date/allactionclass/fullfinancial gates; 6643source rows and600725component stillopen. Continue actual API/UI/U1-U8/M0-M5 AA/native200/p95/visual/restart/manual/restorable release, preserve002375/002399/44rawgaps/frozen/OOS/oldresults/productionDB and lawfulforward/genuine missing-ledger gates;goalACTIVE.",
-  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git log -1 --oneline && rg -n 'cash_bonus_reference_price|unexplained_reference_adjustment' backend/app/data/full_dataset.py backend/tests/test_full_dataset_materializer.py",
+  "next_task": "Composite source diagnosis quantifies000598 issuer/monthly aggregate563880.67 disagreement and printed-rate-1.271168 discrepancy; .102064holder vs .101monthly and reference475+1/whole7407queue remain unchanged. Do not repeat rejected same-cache weighted-price hypothesis or forcePASS; next source evidence must independently authorize implemented composite reference basis and reconcile conflicting aggregate, with existing holder eligibility not newly approved. Continue independent actual U4 result/2-3compare/datedplan route-recovery and empty/error/keyboard userflow checks, then remaining U1-U8/M0-M5 AA/native200/p95/visual/restart/manual/restorable delivery; currentIAB is notChrome/native proof. Restored-wizard staticstep defect fixed/671frontendPASS, backend prior1243 receipt notrerun. Local source+UI changes await their own remoteCI, no olderCI substitution. Newversion reference integration requires complete source/holder/date/allactionclass/fullfinancial admission;6643source/600725component/002375/002399/44rawgaps remain. Preserve frozen/research/OOS/oldresults/productionDB/lawfulforward/genuine missing-ledger external gates;goalACTIVE.",
+  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git log -1 --oneline && rg -n 'comparison|simulation_plan|current_dataset_quality|focus' frontend/src/product/experiments/ExperimentComparePage.tsx frontend/src/product/experiments/ExperimentDetailPage.tsx frontend/src/product/experiments/ExperimentPlan.tsx",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

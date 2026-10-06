@@ -1,5 +1,28 @@
 # Decisions
 
+## v1.2 composite-cash conflict and restored-step labeling — 2026-10-06
+
+Cached000598 final composite allocation cannot be replaced with monthlyDPS.101.
+Retain actual public-holder cash.102064 and explicit issuer/monthly aggregates:
+58302883.33 versus58866764, difference563880.67; printed legacy per-share rate
+and declared total also differ by-1.271168. Exact Decimal diagnostic independently
+binds PDF/extraction/date links/monthly row and existing cash/share/date receipts;
+repeat immutable report succeeds. No fitted prices, weighted-input authority,
+new holder-eligibility approval, financial promotion or relaxed assertion.
+Selected reference remainsUNRESOLVED;475+1/7407queue byte-identical. Next source
+action requires independent official implemented composite-reference evidence,
+not repeating the rejected same-cache arithmetic hypothesis.
+
+Continue independent visible product quality: actual restored-step UI incorrectly
+saidChoose a strategy despite capital step. Delete fixed duplicate header label,
+reuse correct existing aria-current/h2 rather than duplicate wizard state.
+Three restored-step bilingual/request-key/no-create regressions RED->GREEN;
+full671frontendPASS/lint/types/build; actual16IABcases and forward/back/reload
+preserve config/quality warning/unchecked submission. Scoped independent review
+noP1/P2. Do not equate IAB with Chrome/native200/p95/AA/full product acceptance.
+No backend/frozen/.research/formal/OOS/originalDB change or remoteCI rerun; source
+slice and UI slice remain local, no merge/release until all required gates pass.
+
 ## v1.2 holder cash versus official ex-price inputs — 2026-10-06
 
 Reuse strict cash/share parsers and Decimal reference helper. Cached final notices

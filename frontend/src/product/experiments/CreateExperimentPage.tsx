@@ -101,7 +101,6 @@ export function CreateExperimentPage() {
   return (
     <div className="experimentWorkspace">
       <header className="experimentHeader">
-        <p className="experimentEyebrow">{c.steps[0]}</p>
         <h1>{c.title}</h1>
         <p>{c.intro}</p>
       </header>

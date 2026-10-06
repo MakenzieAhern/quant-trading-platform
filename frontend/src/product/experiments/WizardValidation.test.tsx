@@ -23,6 +23,39 @@ beforeEach(async () => {
   vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
 });
 
+it.each([
+  [1, "Capital & data", "本金与数据"],
+  [2, "Costs & risk", "成本与风险"],
+  [3, "Review & run", "确认运行"],
+] as const)(
+  "does not label a restored step %s as strategy selection, including after translation",
+  async (step, english, chinese) => {
+    const create = vi.spyOn(experimentApi, "create");
+    saveExperimentDraft(configuration, step, "restored-step-request");
+    render(<CreateExperimentPage />);
+    await screen.findByRole("heading", { level: 2, name: english });
+    const header = screen.getByRole("heading", { level: 1 }).closest("header");
+    expect(header).not.toHaveTextContent("Choose a strategy");
+    expect(document.querySelector('[aria-current="step"]')).toHaveTextContent(
+      english,
+    );
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(header).not.toHaveTextContent("选择策略");
+    expect(
+      screen.getByRole("heading", { level: 2, name: chinese }),
+    ).toBeVisible();
+    expect(document.querySelector('[aria-current="step"]')).toHaveTextContent(
+      chinese,
+    );
+    expect(readExperimentDraft()).toMatchObject({
+      form: configuration,
+      step,
+      idempotencyKey: "restored-step-request",
+    });
+    expect(create).not.toHaveBeenCalled();
+  },
+);
+
 it("identifies and focuses invalid capital, translates its explanation and clears it after correction", async () => {
   const create = vi.spyOn(experimentApi, "create");
   saveExperimentDraft(
