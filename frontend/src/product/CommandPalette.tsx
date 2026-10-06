@@ -5,7 +5,7 @@ import { Pagination } from "../components/Pagination";
 import { useApiResource } from "../hooks/useApiResource";
 import { experimentApi } from "./experiments/api";
 import { marketApi, securityName } from "./markets/api";
-import { useProductCopy } from "./copy";
+import { productHelpTopics, useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
 import { ProductError } from "./ProductPages";
 
@@ -57,6 +57,10 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
     { label: copy.data, href: "/data" },
     { label: copy.help, href: "/help" },
     { label: copy.settings, href: "/settings" },
+    ...productHelpTopics(copy).map((topic) => ({
+      label: topic.question,
+      href: `/help#help-${topic.id}`,
+    })),
     ...(capabilities.data?.strategies ?? []).map((item) => ({
       label: i18n.language.startsWith("zh") ? item.name_zh : item.name_en,
       href: `/strategies/${encodeURIComponent(item.strategy_id)}`,

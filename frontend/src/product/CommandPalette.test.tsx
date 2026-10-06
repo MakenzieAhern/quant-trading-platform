@@ -7,11 +7,12 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { StrictMode } from "react";
+import { StrictMode, useState } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../api/client";
 import { i18n } from "../i18n";
 import { CommandPalette } from "./CommandPalette";
+import { HelpPage } from "./ProductPages";
 import { experimentApi } from "./experiments/api";
 import { capabilities, job } from "./experiments/fixtures.test-data";
 import { marketApi } from "./markets/api";
@@ -50,6 +51,80 @@ beforeEach(async () => {
   });
 });
 describe("bounded server command search", () => {
+  it.each([
+    ["drawdown", "What is maximum drawdown?"],
+    ["benchmark", "Why compare with a benchmark?"],
+  ])(
+    "reveals %s after closing a real same-page search dialog",
+    async (topic, question) => {
+      window.history.replaceState({}, "", "/help#help-drawdown");
+      function HelpSearch() {
+        const [open, setOpen] = useState(false);
+        return (
+          <>
+            <button onClick={() => setOpen(true)}>Search</button>
+            <HelpPage />
+            {open && <CommandPalette onClose={() => setOpen(false)} />}
+          </>
+        );
+      }
+      render(<HelpSearch />);
+      const drawdown = screen.getByText("What is maximum drawdown?");
+      await waitFor(() => expect(drawdown).toHaveFocus());
+      fireEvent.click(drawdown);
+      expect(drawdown.closest("details")).not.toHaveAttribute("open");
+      await userEvent.click(screen.getByRole("button", { name: "Search" }));
+      fireEvent.change(screen.getByRole("searchbox"), {
+        target: { value: topic },
+      });
+      const command = await screen.findByRole("link", { name: question });
+      command.focus();
+      await userEvent.keyboard("{Enter}");
+      await waitFor(() =>
+        expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+      );
+      const answer = screen.getByText(question);
+      expect(answer.closest("details")).toHaveAttribute("open");
+      await waitFor(() => expect(answer).toHaveFocus());
+      expect(location.hash).toBe(`#help-${topic}`);
+    },
+  );
+
+  it.each([
+    ["en-US", "backtest", "backtest", "What is a backtest?"],
+    ["en-US", "drawdown", "drawdown", "What is maximum drawdown?"],
+    [
+      "en-US",
+      "win",
+      "win rate",
+      "Is a high win rate the same as a good return?",
+    ],
+    ["en-US", "benchmark", "benchmark", "Why compare with a benchmark?"],
+    ["zh-CN", "backtest", "回测", "什么是回测？"],
+    ["zh-CN", "drawdown", "回撤", "什么是最大回撤？"],
+    ["zh-CN", "win", "胜率", "胜率高，收益就好吗？"],
+    ["zh-CN", "benchmark", "基准", "为什么要看基准？"],
+  ])(
+    "finds the %s %s help answer without a task submission",
+    async (locale, topic, query, question) => {
+      await i18n.changeLanguage(locale);
+      const create = vi.spyOn(experimentApi, "create");
+      const close = vi.fn();
+      render(<CommandPalette onClose={close} />);
+      fireEvent.change(screen.getByRole("searchbox"), {
+        target: { value: query },
+      });
+      const answer = await screen.findByRole("link", { name: question });
+      expect(answer).toHaveAttribute("href", `/help#help-${topic}`);
+      answer.focus();
+      await userEvent.keyboard("{Enter}");
+      expect(location.pathname).toBe("/help");
+      expect(location.hash).toBe(`#help-${topic}`);
+      expect(close).toHaveBeenCalledOnce();
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+
   it.each([
     [
       "en-US",

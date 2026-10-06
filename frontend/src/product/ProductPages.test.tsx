@@ -23,6 +23,96 @@ import {
 
 afterEach(() => vi.restoreAllMocks());
 
+it.each([
+  ["en-US", "backtest", "What is a backtest?"],
+  ["en-US", "drawdown", "What is maximum drawdown?"],
+  ["en-US", "win", "Is a high win rate the same as a good return?"],
+  ["en-US", "benchmark", "Why compare with a benchmark?"],
+  ["zh-CN", "backtest", "什么是回测？"],
+  ["zh-CN", "drawdown", "什么是最大回撤？"],
+  ["zh-CN", "win", "胜率高，收益就好吗？"],
+  ["zh-CN", "benchmark", "为什么要看基准？"],
+])(
+  "opens and focuses the %s %s answer on a direct help link",
+  async (locale, topic, question) => {
+    await act(() => i18n.changeLanguage(locale));
+    const originalUrl = location.href;
+    window.history.replaceState({}, "", `/help#help-${topic}`);
+    const view = render(<HelpPage />);
+    try {
+      const summary = screen.getByText(question);
+      expect(summary.closest("details")).toHaveAttribute("open");
+      await waitFor(() => expect(summary).toHaveFocus());
+      expect(document.querySelectorAll("details[open]")).toHaveLength(1);
+    } finally {
+      view.unmount();
+      window.history.replaceState({}, "", originalUrl);
+      await act(() => i18n.changeLanguage("en-US"));
+    }
+  },
+);
+
+it("handles help-topic traversal without closing other manually opened answers", async () => {
+  await act(() => i18n.changeLanguage("en-US"));
+  const originalUrl = location.href;
+  window.history.replaceState({}, "", "/help");
+  const view = render(<HelpPage />);
+  try {
+    fireEvent.click(screen.getByText("What is a backtest?"));
+    const drawdown = screen.getByText("What is maximum drawdown?");
+    const scroll = vi.fn();
+    drawdown.closest("details")!.scrollIntoView = scroll;
+    window.history.pushState({}, "", "/help#help-drawdown");
+    fireEvent(window, new PopStateEvent("popstate"));
+    expect(drawdown.closest("details")).toHaveAttribute("open");
+    await waitFor(() => expect(drawdown).toHaveFocus());
+    expect(scroll).toHaveBeenCalledOnce();
+    expect(
+      screen.getByText("What is a backtest?").closest("details"),
+    ).toHaveAttribute("open");
+    window.history.pushState({}, "", "/help#help-benchmark");
+    fireEvent(window, new HashChangeEvent("hashchange"));
+    await waitFor(() =>
+      expect(screen.getByText("Why compare with a benchmark?")).toHaveFocus(),
+    );
+    window.history.pushState({}, "", "/help#not-a-topic");
+    fireEvent(window, new PopStateEvent("popstate"));
+    expect(screen.getByText("Why compare with a benchmark?")).toHaveFocus();
+  } finally {
+    view.unmount();
+    window.history.replaceState({}, "", originalUrl);
+  }
+});
+
+it("preserves a manually collapsed linked answer and language-control focus", async () => {
+  await act(() => i18n.changeLanguage("en-US"));
+  const originalUrl = location.href;
+  window.history.replaceState({}, "", "/help#help-drawdown");
+  const view = render(
+    <>
+      <button>Language</button>
+      <HelpPage />
+    </>,
+  );
+  try {
+    await waitFor(() =>
+      expect(screen.getByText("What is maximum drawdown?")).toHaveFocus(),
+    );
+    fireEvent.click(screen.getByText("What is maximum drawdown?"));
+    const language = screen.getByRole("button", { name: "Language" });
+    language.focus();
+    await act(() => i18n.changeLanguage("zh-CN"));
+    expect(
+      screen.getByText("什么是最大回撤？").closest("details"),
+    ).not.toHaveAttribute("open");
+    expect(language).toHaveFocus();
+  } finally {
+    view.unmount();
+    window.history.replaceState({}, "", originalUrl);
+    await act(() => i18n.changeLanguage("en-US"));
+  }
+});
+
 it.each(["en-US", "zh-CN"])(
   "distinguishes readable historical data from economic validation (%s)",
   async (locale) => {

@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 U8 searchable beginner help (local slice)
+
+Global search omitted all four existing help concepts. Reuse existing bilingual
+questions for safe links to exact answers, expanded with keyboard focus.17RED ->
+50focusedPASS; independent3P2 found locale reopening/focus theft, sameURL noop and
+samepage Dialog cleanup focus race. Additional1+2RED retained; root corrections
+preserve language state, focus after modal cleanup and notify samefragment without
+duplicate history.74focusedPASS; final696frontendPASS45files17.94s/lint/types/
+build179ms/changed-filePrettierPASS.520.18kB advisory is not measuredp95.
+Final independent seven-source/allnavigation-callers read-only review no boundedP1/P2.
+
+Actual IAB Enter/firstEscape, samepage/reselect, locale collapse/focus and BackForward
+verified;16cases/four sizes/two themes/locales targetfocused/open/no pageoverflow.
+Four ZH-light JPGs inspected; ownedtabclosed/ZH-system/viewport restored. No job/
+account/order/source/DB write or frozen/formal/OOS change. Native200/speech/fullAA/
+p95/financial/newversion/forward/restart/delivery gates remain open, goalACTIVE.
+[Actual proof and limitations](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-command-help/README.md).
+13payloadSHA rechecked, index6a574558a0c7677d5aae188af300e44cfb67c53cd229a3808bd4bce9c03f70f3.
+New help slice requires own exactCI; no merge/tag/release.
+
+Earlier signed-return slice is now independently covered by exacted3 CI37486662961
+backend/frontend/ComposeSUCCESS2026-10-06T15:23:16Z, backend1243+1optionalSKIP.
+[Five-payload post-CI/export observation](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-signed-results-checkpoint/README.md)
+indexca8850e5dba7d5ec930e856d6d83cb07b3d347e1d53bb9f332e825c4f8902f72.
+Current IAB report prepared but filelanding NOT_VERIFIED; APIs200 are not substitute.
+Earlier below CI-pending wording describes prepush chronology, not currented3CI.
+
 ## 2026-10-07 signed result direction and real comparison recovery
 
 U4/U8 scoped fix: detail and comparison disagreed on the same positive benchmark

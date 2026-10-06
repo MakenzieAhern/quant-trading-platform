@@ -25,8 +25,8 @@ const en = {
   legacy: "Legacy fixture backtests",
   search: "Search pages, strategies, research and watchlist",
   searchScope:
-    "Studies are searched by saved name or ID; watchlist entries by symbol, ID or saved source name. Both searches cover server history, 20 matches per page. Formal archive contents are not searched.",
-  searchCommands: "Pages and registered strategies",
+    "Search pages, registered strategies and help questions by name. Studies are searched by saved name or ID; watchlist entries by symbol, ID or saved source name. Both searches cover server history, 20 matches per page. Formal archive contents are not searched.",
+  searchCommands: "Pages, registered strategies and help",
   searchStudies: "Matching personal studies",
   searchWatchlist: "Matching watchlist entries",
   searchMatches: "Server matches",
@@ -209,8 +209,8 @@ const zh: Record<keyof typeof en, string> = {
   legacy: "旧版样例回测",
   search: "搜索页面、策略、研究和自选",
   searchScope:
-    "研究按保存名称或标识搜索，自选按代码、标识或保存的来源名称搜索。两者查询服务器完整记录，每页最多 20 项；不检索正式研究档案内容。",
-  searchCommands: "页面与已注册策略",
+    "页面、已注册策略和帮助问题按名称搜索。研究按保存名称或标识搜索，自选按代码、标识或保存的来源名称搜索。两者查询服务器完整记录，每页最多 20 项；不检索正式研究档案内容。",
+  searchCommands: "页面、已注册策略和帮助",
   searchStudies: "匹配的个人研究",
   searchWatchlist: "匹配的自选记录",
   searchMatches: "服务器匹配数",
@@ -361,4 +361,25 @@ const zh: Record<keyof typeof en, string> = {
 export function useProductCopy(): Record<keyof typeof en, string> {
   const { i18n } = useTranslation();
   return i18n.language.startsWith("zh") ? zh : en;
+}
+
+export function productHelpTopics(copy: ReturnType<typeof useProductCopy>) {
+  return [
+    {
+      id: "backtest",
+      question: copy.backtestQuestion,
+      answer: copy.backtestAnswer,
+    },
+    {
+      id: "drawdown",
+      question: copy.drawdownQuestion,
+      answer: copy.drawdownAnswer,
+    },
+    { id: "win", question: copy.winQuestion, answer: copy.winAnswer },
+    {
+      id: "benchmark",
+      question: copy.benchmarkQuestion,
+      answer: copy.benchmarkAnswer,
+    },
+  ];
 }

@@ -39,7 +39,15 @@ function historyIndex(): number {
 
 export function navigate(path: string): boolean {
   const destination = new URL(path, window.location.href);
-  if (destination.href === window.location.href) return true;
+  if (destination.href === window.location.href) {
+    if (destination.hash)
+      window.dispatchEvent(
+        new PopStateEvent("popstate", {
+          state: { [APPROVED_NAVIGATION]: true },
+        }),
+      );
+    return true;
+  }
   const changingLocation =
     destination.pathname !== window.location.pathname ||
     destination.search !== window.location.search;

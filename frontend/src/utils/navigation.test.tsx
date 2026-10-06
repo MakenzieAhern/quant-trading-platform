@@ -31,6 +31,26 @@ function TwoLocationReaders() {
 }
 
 describe("shared navigation guard", () => {
+  it.each(["/help", "/help#help-drawdown"])(
+    "reselects only a current fragment without adding history: %s",
+    (url) => {
+      window.history.replaceState({ saved: true }, "", url);
+      const state = window.history.state;
+      const length = window.history.length;
+      const notified = vi.fn();
+      window.addEventListener("popstate", notified);
+      try {
+        expect(navigate(url)).toBe(true);
+        expect(notified).toHaveBeenCalledTimes(url.includes("#") ? 1 : 0);
+        expect(window.history.length).toBe(length);
+        expect(window.history.state).toBe(state);
+        expect(window.location.pathname).toBe("/help");
+      } finally {
+        window.removeEventListener("popstate", notified);
+      }
+    },
+  );
+
   it("canonicalizes a managed study-list alias and preserves its native return entry", async () => {
     window.history.replaceState({}, "", "/strategies");
     render(<RouterHarness />);

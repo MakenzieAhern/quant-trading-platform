@@ -68,6 +68,10 @@ This area is currently a **candidate raw cache, not approved for trading**. “R
 
 Open [Help](http://localhost:5173/help) for further explanations.
 
+You can also open the top-bar search (or press Ctrl/Cmd+K), type “backtest”,
+“drawdown”, “win rate” or “benchmark”, and select the question. Its answer opens
+with keyboard focus. Changing language preserves answers you opened or closed.
+
 ## Simulated accounts and recovery
 
 In [Simulated accounts](http://localhost:5173/paper), the creation form defaults to a clearly labeled 2030 synthetic A-share demo; the legacy AAPL fixture remains an explicit non-A-share choice. Audited historical replay can be created only when Data center shows that archive is available. Start the account explicitly; the page supports pause, resume and stop, with cash, holdings, orders, fills and logs. None are real trades. New-market forward mode is not yet usable; a historical catch-up is not a new-market receipt.

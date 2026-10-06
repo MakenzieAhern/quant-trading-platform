@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 searchable beginner help and modal navigation — 2026-10-07
+
+Reuse the existing four bilingual questions once for both Help and command search.
+No new help corpus, search service, dependency or financial/data mutation. Safe
+topic links reveal actual rendered answers, not arbitrary code or selectors.
+Independent review exposed locale reopening, samefragment noop and dialog cleanup
+focus race. Keep locale independent of navigation, cancel pending focus on unknown
+topic/unmount, and focus one frame after modal cleanup. Samefragment re-selection
+notifies existing navigation listeners without history writes; same nonfragment
+URL remainsnoop, guarded path/query changes unchanged. Add real Dialog lifecycle
+regressions rather than removing assertions or restoring only the search trigger.
+Final74focused/696frontend/fullchecks and actual16IABcases PASS_SCOPED; independent
+review closed boundedP1/P2. New exactCI required. Signedreturns ed3CI verifiedPASS,
+not coverage of this latercode. Fullgoal/source/financial/native/delivery/forward/
+genuine missingledgers and UbuntuGUIintegration remain; no merge/release.
+
 ## v1.2 signed result direction and safe runtime recovery — 2026-10-07
 
 Use existing exact decimal-string percentage formatting plus strict positive-value

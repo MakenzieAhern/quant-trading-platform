@@ -8,7 +8,7 @@ import { navigate, replaceUrl } from "../utils/navigation";
 import { experimentApi } from "./experiments/api";
 import { readExperimentDraft } from "./experiments/draft";
 import { explainExperimentCode } from "./experiments/codes";
-import { useProductCopy } from "./copy";
+import { productHelpTopics, useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
 import { usePreferences } from "./preferences";
 import { MarketUpdatesPanel } from "./marketUpdates";
@@ -535,8 +535,33 @@ export function DataCenterPage() {
 }
 export function HelpPage() {
   const c = useProductCopy();
+  const page = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let frame = 0;
+    const reveal = () => {
+      const answer = Array.from(
+        page.current?.querySelectorAll<HTMLDetailsElement>("details[id]") ?? [],
+      ).find((item) => window.location.hash === `#${item.id}`);
+      window.cancelAnimationFrame(frame);
+      if (!answer) return;
+      answer.open = true;
+      // Focus after the command dialog closes and restores its trigger.
+      frame = window.requestAnimationFrame(() => {
+        answer.querySelector("summary")?.focus({ preventScroll: true });
+        answer.scrollIntoView?.({ block: "start" });
+      });
+    };
+    reveal();
+    window.addEventListener("popstate", reveal);
+    window.addEventListener("hashchange", reveal);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("popstate", reveal);
+      window.removeEventListener("hashchange", reveal);
+    };
+  }, []);
   return (
-    <div className="productPage readingPage">
+    <div ref={page} className="productPage readingPage">
       <header className="pageHeader">
         <div>
           <p className="eyebrow">{c.help}</p>
@@ -547,15 +572,10 @@ export function HelpPage() {
         <h2>{c.guideTitle}</h2>
         <ModeGuide />
       </section>
-      {[
-        ["backtest", c.backtestQuestion, c.backtestAnswer],
-        ["drawdown", c.drawdownQuestion, c.drawdownAnswer],
-        ["win", c.winQuestion, c.winAnswer],
-        ["benchmark", c.benchmarkQuestion, c.benchmarkAnswer],
-      ].map(([id, q, a]) => (
-        <details className="helpQuestion" key={id}>
-          <summary>{q}</summary>
-          <p>{a}</p>
+      {productHelpTopics(c).map(({ id, question, answer }) => (
+        <details id={`help-${id}`} className="helpQuestion" key={id}>
+          <summary>{question}</summary>
+          <p>{answer}</p>
         </details>
       ))}
       <Link className="button" href="/research/new?new=1">
