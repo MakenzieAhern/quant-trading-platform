@@ -1,18 +1,39 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T09:04:59Z",
+  "updated_at_utc": "2026-10-06T09:27:13Z",
+  "full_bonus_scope_cached_years_20261006_gate": {
+    "status": "PASS_SCOPED_OFFLINE_EXPANSION_REVIEWED_PENDING_CI_SEAL_NOT_FINANCIAL_ACCEPTANCE",
+    "source_base": "2bdfb918653ee9796706e5729c05b3322d63670e",
+    "scope_audit": "Actualbonusoracle7407across2010-2025. PriorV21 only2011integer subset142/83sourcelegs/59unresolved/7265notassessedbythatledger. Standalonechecker usesactualrepo checksumhelper via runpy; canonical/oraclebytebinding/unique memberships/peryear counts/reversedrows/repeatPASS. Not full economic census; other actionclasses/ledgers not audited here.",
+    "batch": "Unchanged existing reconciler with13cached dated-year receipts2010-2022, no acquisition.1369within same integer/explicitsame-day scope,115sourcelegs/1254unresolved/6038notassessed. Sourcelegsyear2010=12,2011=83,2012=16,2013=1,2014=1,2015=1,2018=1. New32 sourcelegs, not validated financialevents. Wider unresolved cohort, not old83loss.",
+    "candidate": "/home/yuchen/data/product-candidates/20261006-bonus-full-cached-years/ledger-v2.json",
+    "candidate_manifest_sha256": "d58476f361dc9675eb607e68b206a547631651bba3b9d5953bf323c896cbfc5d",
+    "candidate_bytes_sha256": "77dc093cad6b0ef323d0e21661c265a92f2082aeeb5f6527e763fba2f173a6ad",
+    "preservation": "All83old entire receipts/checksums/version exact;4dependencies unchanged/allcandidateinputbytehashes valid/32new officialPDF-extraction-URL-datebindings checked. Finalapproved-extraction canonical33d60834939d4173598a5d73ba263ec0bdcb35fe24bc150111ff5637eda80070. Reversed13date-link arguments sameimmutablev2/stdout/canonical/bytes PASS. Sourcebindings not fullmanualPDF/holderclass/financialaudit.",
+    "failures": "Standalonepackage import required absentPydantic; useactualpurechecksumhelper via runpy, no install/copy. Firstbatchledger-v1 container-onlypolicy /workspace/repo path not hostreplay candidate; retained. Actualpathmount generated separateimmutablev2, payloadequalexceptinputs/manifest. IndependentP2 firstpreservation checker measured extractionhash but not approvedbinding; exactsymbol-record-ex-URL-PDF date-linkhash now compared, changed-pages fixture preservingPDFhash rejected. Pre-reviewpreservation.json NOT_ACCEPTED for extractionclaim, finalapproved receipt valid; no actualcachechange/assertionrelaxation. No dates/terms silently changed.",
+    "ownership": "Root sole repo/docs writer. Ownedqtp-bonus-full-cache-oct6/v2/order allterminalexit0, networknone/readonlyroot/repo+stagingRO/onlynewoutputRW/noDBmount. Existingbackendimage23f16... locked/pullnever. OriginalfourComposehealthy/up, no restart/deletion. No runningbatch inferred from historic container names.",
+    "not_run": "New115 reference-input audit/full financial accounting/full7407cross-ledger census/new full dataset/admission not done. Prior82referencePASS+1UNRESOLVED000598 not reused as newbatch proof. No frozen/research/OOS/DB/strategy/merge/release changes.",
+    "evidence": "product-evidence/v1.2/m4/20261006-full-economic-scope/README.md",
+    "review": "Final independent read-only review no remaining boundedP1/P2. Approvedextraction assertion exactdate-link identity/byteSHA and finalcheckerSHA0188e3851b27cd49e3a88d14893f2a94de19d3a94c877dce7cd057db66a4388e match receipt33d608...; oldpre-review receipt explicitlynotaccepted. Reviewer no tests/DB/network/browser/writes/fullgoal certification. CheckpointCI/seal next.",
+    "next": "Generalize separate read-only referenceauditor document lookup to checksum-bound candidate source-manifests acrossyears; preserve82+1 baseline and auditall115 against frozenraw/reference/calendar/rules/cash-full-coverage-v32 unchanged assertions. Buildcomplete7407cross-ledger/fraction/deferred/2023-2025queue fromcache, not single2011 parserloop. FullU1-U8/M0-M5/financial/visual/AA/native200/p95/delivery and externalforward/genuinemissingledger remain;goalACTIVE."
+  },
   "u3_pre_run_source_quality_20261006_gate": {
-    "status": "PASS_SCOPED_LOCAL_REVIEW_PENDING_CI",
+    "status": "PASS_SCOPED_EXACT_2BDF_CI_SEALED",
+    "committed_source": "2bdfb918653ee9796706e5729c05b3322d63670e",
+    "ci_run": 37440958222,
+    "evidence_payloads": 18,
+    "evidence_manifest_sha256": "738abcca75d21c6d568c5061840e615f01e29057e1199e7394cc22502c4c4e67",
+    "ci": "Exact2bdf backend/frontend/Compose allSUCCESS2026-10-06T09:11:41Z. HEAD==origin==OPEN/DRAFT PR32head, samewatch69032terminal0. All jobs/steps saved; no code changes after exactCI. Not financial/fullproduct acceptance.",
     "source_base": "21ba6fdc3e62cfd43710a2658704cfb9953fb228",
     "defect": "Actual IAB restored historicalv1 draft capabilities KNOWN_ECONOMIC_COVERAGE_GAP but source/finalreview omitted explanation. Shared wizard now reuses bilingual quality explanation and dataset version+quality description. Not data repair, backend admission, new financial calculation or quality-based veto.",
     "tests": "2parameterized known/unknown quality tests: exactcash/config/key/locale/focus/finalreview/noPOST/synthetic no-metadata removal.99focusedPASS;full668frontendPASS/44files13.72s/lint/types/PrettierPASS. Explicit fresh tempdir buildPASS145ms/519.40kB advisory. Previous21ba6backend1238/optionalSKIP/reversible testDB and exactCI reused, not new local backend run.",
     "failures": "Initial2RED omission;firstgreen2FAIL/97PASS stale detached select after Back, fixed fresh semantic query without weakening assertions. WSLlogin npm absent, reused installedmiseNode24. First full wrapper exit1 after passing tests/lint/types because emptyoutDir; explicit newtmpdir corrected. All failure logs retained.",
     "browser": "Four distinct actual IAB cases1440x900ZHlight/1280x800ENdark/1024x768ZHdark/390x844ENlight notevisible/no pageoverflow, not16crossproduct/newChrome/native200/speech/p95/fullAA. Source390ENZH/1024EN descriptionIDs targets/focus verified. OriginalIAB100000/date/cost/risk exactform restoredstep1/ZH/system/home/default1280x720/ownedtabclosed. Not byte-identical autosave or another Chrome origin. Unchecked acknowledgement, not quality, disablesRun.",
-    "review": "Independent read-only source/callers/tests/artifact review no bounded codeP1/P2;99/668/static/correctedbuild/failurechronology match logs. One broken relativeprooflink corrected to verified absolute external paths. Reviewer performed no tests/browser/DB/network/writes;root visuallyinspected originalJPEGs. ExactnewCI/seal pending, not financial/fullproduct certification.",
+    "review": "Independent read-only source/callers/tests/artifact review no bounded codeP1/P2;99/668/static/correctedbuild/failurechronology match logs. One broken relativeprooflink corrected to verified absolute external paths. FinalCI/Git/qualityreceipt recheck no artifactP1/P2;18payloadSHAsealed/allrechecked. Reviewer no tests/browser/DB/network/writes or image/fullgoal recertification;root inspectedJPEGs. Not financial/fullproduct certification.",
     "preservation": "No businesssubmit/retry/provider/account/formal/OOS or engine/backend/.research/frozen change. Source/new data/execution acceptance not promoted; v1.1 unchanged; PR32OPEN/DRAFT/no merge/tag/release. Complete GET scope11terminalstudies/5STOPPEDaccounts/4terminalupdates unchanged counts, not fullDBhash or lostledger recovery.",
     "evidence": "product-evidence/v1.2/m4/20261006-wizard-data-quality/README.md",
-    "remaining_scope": "Exact newCI and seal then consolidated U1-U8/M0-M5 financial/API/user-flow/visual/AA/native200/p95/delivery. Lawful after-start forward and genuine missing paper-ledger external gaps unchanged; goalACTIVE."
+    "remaining_scope": "ExactCI/seal complete; continue full U1-U8/M0-M5 financial/API/user-flow/visual/AA/native200/p95/delivery. Lawful after-start forward and genuine missing paper-ledger external gaps unchanged; goalACTIVE."
   },
   "retained_holder_page_account_20261006_gate": {
     "status": "PASS_SCOPED_EXACT_21BA6_CI",
@@ -2780,7 +2801,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Finish bounded U3/U8 pre-run quality disclosure finalartifactreview/coherentcommit/push/exactCI/seal;99focused/668fullfrontend/static/build and four actualIABcases already pass. Then prioritize full U1-U8/M0-M5 consolidated user-flow/financial/API/visual/AA/native200/p95/delivery, not source-count milestones alone. ScopedV21 source83/59 not economic/dataset admission. Preserve002375 generic listing/unrestricted-authority/table gaps,002399heading/page/credit/unrestricted wording,44rawdate failures/000598strictcash; never silently admit. External lawfulafter-startforward/genuine missingledgers unchanged. Originalfourhealthy/up200/no currenttest/sourceworker. No frozenchange/OOS/merge/release;goalACTIVE.",
+  "next_task": "Pre-run quality wizard2bdf exactCI/18payloadseal complete. Finish current fullscope/cached-year audit review/seal/checkpoint, then generalize external read-only reference auditor single2011docs to verified candidate source-manifests; audit115 while preserving82+1 baseline, fullraw/reference/calendar/rules/cash-full-coverage-v32/strictassertions. Broader13yearledger1369/115/1254/6038notassessed outof7407 is not fullcensus/admission; build full cross-ledger/fraction/deferred/2023-2025cache queue, not more single2011count milestones. FullU1-U8/M0-M5 financial/API/userflow/visual/AA/native200/p95/delivery unchanged, externalforward/genuinemissingledgers unchanged. Preserve002375/002399/44raw gaps/000598cash, no silentadmission/frozen/OOS/merge/release;goalACTIVE.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && gh pr view 32 --json headRefOid,statusCheckRollup,state,isDraft",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

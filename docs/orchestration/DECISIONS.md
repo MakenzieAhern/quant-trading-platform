@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 replace single-year count progression with broader cache audit — 2026-10-06
+
+Actual retained7407bonus-oracle rows cover2010-2025, whileV21source83/142 only
+assesses integer2011cases. Preserve its accepted scoped receipts but do not
+substitute them for the required complete economic/financial data version.
+Reuse13cached date/source manifests2010-2022 offline, unchanged parser/policy:
+1369assessed,115sourcelegs/1254unresolved/6038not assessed by this ledger.
+Allold83whole receipts exact;4dependencies/inputhashes/32newsourcebindings pass.
+Reversedargument repeat yields same immutablev2/stdout/bytes. No new financialPASS.
+IndependentP2 firstpreservation checker did not compare approved extractionSHA;
+resolve exactsymbol/record/ex/URL/PDF in verified date-links and assert byteSHA.
+Changed-pages fixture retainsPDFinnerSHA but is rejected; no realcache mutation or
+assertion relaxation. Pre-reviewreceipt retained, finalapproved receipt supersedes.
+First standalone helper import lackedPydantic, reused pure repo helper via runpy;
+first batchv1 container-onlypolicy path retained, actualpathmount separatev2
+changes onlyinputs/manifest. No install or dates/terms/oldreceipt edits.
+Ownedcontainers lockedexistingimage/networknone/read-onlyroot/repo+staging/noDB;
+only newowned output writable. Allterminal0/originalfourhealthy/up/no deletion.
+Next external reference auditor must cover checksum-bound manifests acrossyears,
+not its old single2011sourcefile; preserve82+1 baseline/strictcash assertions.
+Broaderfull7407cross-ledger/fraction/deferred/2023-2025 queue remains required,
+as do allU1-U8/M0-M5, lawful genuine forward and original lost-ledger gates.
+No new full dataset/registration/admission/freeze/strategy/OOS/merge/release.
+
 ## v1.2 disclose source quality before running — 2026-10-06
 
 Actual IAB restored historical draft shows a known economic-coverage gap in its

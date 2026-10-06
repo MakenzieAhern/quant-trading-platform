@@ -1,6 +1,56 @@
 # v1.2 acceptance ledger
 
+## 2026-10-06 full-source scope and cached-year batch (financial gate still open)
+
+Actual7407-row bonus source oracle spans2010-2025; previous83sourcelegs only
+covered142integer2011 cases, not full economic completeness. A read-only check
+validates actual oracle/candidate hashes, unique keys, year counts and reversed
+input order. Reusing13cached dated/source manifests2010-2022 with the unchanged
+reconciler expands assessment to1369:115sourcelegs/1254unresolved/6038not assessed
+by this ledger. NOT_ASSESSED is neither accepted nor excluded, and other action
+classes/ledgers are not audited here. The larger unresolved cohort is not loss of
+old83; all83whole receipts remain exact,4dependencies unchanged/allinputhashes
+verified/32newPDF-extraction-URL-datebindings/reversedarguments immutable repeatPASS.
+No fullmanualPDF/holderclass/financial certification of new32 is claimed.
+IndependentP2: initial preservation checker measured cache hashes without approved
+date-link hash comparison. Pre-reviewpreservation.json not accepted for extraction
+binding. Exactsymbol/record/ex/URL/PDF lookup and approved extractionSHA assertion
+added; changed-page pure-byte fixture keeping innerPDFsha rejected. No realcache
+mutation/weakening. Finalapproved receipt33d60834939d4173598a5d73ba263ec0bdcb35fe24bc150111ff5637eda80070.
+
+Candidate ledger-v2 canonicald58476f361dc9675eb607e68b206a547631651bba3b9d5953bf323c896cbfc5d;
+bytes77dc093cad6b0ef323d0e21661c265a92f2082aeeb5f6527e763fba2f173a6ad.
+Initial local packageimport lackedPydantic; pure actualchecksumhelper reused via
+runpy, no install. Firstv1container policy path retained as non-host-replay receipt;
+actualpathmount separatev2 differs onlyinputs/manifest. No old file overwritten.
+Ownedofflinecontainers terminal0/networknone/read-onlyrepo+staging/noDBmount;
+only newoutput writable. Originalfourhealthy/up/no restart/volume/data cleanup.
+
+New115 reference/financial audit NOT_RUN; prior82scopedPASS+1UNRESOLVED000598 does
+not certify expanded batch. Frozen data/results/research/OOS unchanged; no new
+dataset/registration/admission/freeze/strategy/merge/tag/release. Historical PASS
+rows below remain scoped old behavior evidence, not current economic acceptance
+of U3/U4/U6/U7 results/plans. Full U1-U8/M0-M5 remains incomplete.
+
+Next: checksum-bound all-selected-manifest reference audit preserving old82+1,
+then complete7407cross-ledger/fraction/deferred/2023-2025coverage queue from cache.
+No substitute single2011parser loop or optimistic exclusion. Final independent
+read-only receipt/checker review no remaining boundedP1/P2; no tests/network/DB/
+browser/writes or wholefinancial/product certification. CheckpointCI/seal next.
+[Reproducible scope, batch, failures and next action](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261006-full-economic-scope/README.md).
+
 ## 2026-10-06 pre-run data-quality disclosure (bounded U3/U8)
+
+Post-commit source2bdfb918653ee9796706e5729c05b3322d63670e:
+[CI37440958222](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37440958222)
+backend/frontend/Compose allSUCCESS2026-10-06T09:11:41Z; HEAD==origin==PR32head,
+PR32OPEN/DRAFT, no merge/release. Below pending wording is precommit chronology.
+Actual current capabilities and saved SSE/SZSE results still report
+`KNOWN_ECONOMIC_COVERAGE_GAP`; a pre-run notice is not financial acceptance.
+Two resultIDs match, SSE20missing-reference/0fills and SZSE18orders/10fills remain
+stored facts, not a new economic validation. Full original U1-U8/M0-M5 unchanged.
+Independent final receipt review no bounded artifactP1/P2; all18sealed payloadSHA
+rechecked. SHA256SUMS738abcca75d21c6d568c5061840e615f01e29057e1199e7394cc22502c4c4e67.
 
 Actual restored IAB draft selected the frozen historical v1 whose capabilities
 report `KNOWN_ECONOMIC_COVERAGE_GAP`; source selection/final confirmation omitted
