@@ -1,7 +1,18 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-06T20:37:00Z",
+  "updated_at_utc": "2026-10-06T20:44:00Z",
+  "draft_persistence_ci_20261007_gate": {
+    "status": "PASS_LOCAL_ASSERTION_TIMING_FIX_EXACT_CI_PENDING",
+    "source_parent": "3674329dede5627a9045d43a2f9ecd4fb9f3ec86",
+    "observed_failure": "Exact CI37527954362 terminalfailure: backend/ComposePASS; frontend712PASS1FAIL fresh strategy heading visible before queued draft persistence. No falseCIpass or blind rerun.",
+    "fix": "Existing test awaits same original saved step/strategy object with waitFor. Production queueMicrotask(save)/storage unchanged; every URL/exactstring/locale/no-create assertion retained, no timeout increase or test removal.",
+    "local_checks": "84focused/713full45files17.20s, lint/type/build163ms/audit0/PrettierPASS; exactchangedtest sourceSHA573391458972253fc15a04ea1088ef6dc16f0b819c54b907dba0d108dc2786d8 matches scratchcopy. Backend1286+optionalSKIP/disposablemigration evidence remains from unchanged backend; own3674329 hostedbackend/ComposePASS.",
+    "review": "Independent readonly signed_results_review_oct7 traced real persistence microtask and confirmed assertion semantics preserved; no evidenced scopedP1P2, reviewer did not execute tests.",
+    "browser": "Actual Chrome localhost5173 restored existing step2draft, keyboard Enter continued2→3→4 and Back4→3→2 with current headings focused. EN→ZH→EN retains exactcash123456.789000000000001/dates2011-01-04..2011-06-30/strategy/costrisk. ZHdark review1920x911 and390x844; mobile document375<=390. No acknowledged run/submission; original step2/EN/dark restored, viewport reset/tabclosed. Not native200/p95/4size/AA/fullfinancial acceptance.",
+    "evidence": "product-evidence/v1.2/m4/20261007-correction-chain-ci/README.md",
+    "next": "Commit async assertion fix with checkpoint and verify exact new-head CI; keep all source/financial/product gates open. No merge/tag/release."
+  },
   "correction_chain_20261007_gate": {
     "status": "PASS_SCOPED_DATE_CONTEXT_AND_SHARED_SOURCE_GUARDS_NOT_FINANCIAL",
     "source_parent": "b3efca7564807f57c96f3086ba7b8617536072e6",
@@ -16,7 +27,7 @@
     "evidence_payloads": 17,
     "evidence_manifest_sha256": "6197495480e72510ffea9ad517245670b38fcc001df6cc04017cc2f7430fc08e",
     "preservation": "282 currentv2 bindings verified. v1 reports/producers retained as historical NOT currentcodebindings. Frozenmanifest693c0b81/v1.1 tag/.research unchanged. Original appfrontend/APIHTTP200/paper; application DB not migrated or restarted. Only owned scratchPG30b1cfb/node7969f4b stopped/retained after terminal tests. Ubuntu Docker integration unresolved, no emptybind restart/reset/Apply/security changes.",
-    "ci": "Pending own coherent milestone commit and exact-head CI; previous b3ef source-oracle CI remains historical PASS.",
+    "ci": "Own3674329dede5627a9045d43a2f9ecd4fb9f3ec86 CI37527954362 terminalfailure: backend/ComposePASS, frontend712PASS1FAIL due asynchronous initial-draft assertion. Root-cause test synchronization fixed separately, newexactCI pending. Previousb3efCI historicalPASS, not substitute.",
     "ownership": "Root sole repo/candidate writer; fresh ps no competing writer/source/job worker. Same handles backend69834/frontend95111/checkpoint75377 terminal0, owned PG30b1cfb/node7969f4b STOPPED retained after tests. Independent reviewer readonly, no appDB/provider/account/order/businessjob or formal/OOS action.",
     "event_admitted": false,
     "dataset_modified": false,
@@ -2543,7 +2554,7 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-06T20:10Z / Oct7Sydney: root sole writer/no test/source/DB/queue worker. Ownb3efca7==origin==OPEN/DRAFTPR32head, CI37523966642 all3jobs/every stepSUCCESS20:08:30Z/watch38655terminal0. Source40payloadseal16b13392/486bindings unchanged; separate4CIreceiptsseal aa15ea61. Final1268backend+1optionalSKIP/713frontend/fullchecks/disposable0017check PASS. OwnedPG30b1cfb/node7969f4bSTOPPED/retained aftertests. OriginalPGRedisbackendhealthy/RedisPONG/API8000HTTP200/fallback5173HTTP200, originalfrontendSTOPPED. v1.1/frozen/.research untouched/no merge/tag/release. Later3postCIcheckpointdocs local for next coherent milestone.",
+    "latest_verification": "2026-10-06T20:44Z / Oct7Sydney: root sole writer. Sourcefix3674329 pushed, exactCI37527954362 backend/ComposePASS but frontend712/1FAIL. Samewatch28217 terminal1. No blindrerun: assertion now awaits actual queued draft save,84focused/713full/staticchecksPASS/node89156terminal0. ActualChrome keyboard steps/back/locales/exactdraft/390nooverflow checked without submission; prefs/step/viewport restored/tabclosed. New coherenttestfix commit/CI pending. Originalappfrontend/API200, frozen/tag/.research unchanged; no businessDB/provider/account/order/formal/OOS/merge/release.",
     "repository_writer": "Root only: scoped retrospective coverage CLI/16tests and checkpoint docs. Existing accepted original-failure diagnostic code unchanged. Reused authorized signed_results_review_oct7 read-only review COMPLETE; threeP2s fixed, no remaining evidenced scopedP1P2, no reviewer tests/DB/browser/network/process writes.",
     "database_writer": "Root disposablequant_test tmpfs/no mounts/loopback55471 only, tests/migration checks complete and ownedPG nowSTOPPED/retained. No applicationDBmigration/mutation/restart, no original job retry/backfill, no marketdata or study run. Incomplete genuine lost-ledger recovery unchanged.",
     "queue_writer": "Root scoped immutable supplemental137row sourcelead/PITmaster queue v4 complete. No worker current, no marketprovider/business/research queue action. Old7407 oracle unchanged; no financial admission. New fullaction completeness still unproven; original failed job date/security remains unknown.",

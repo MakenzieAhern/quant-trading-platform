@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 initial draft assertion and current Chrome guided flow
+
+Exact sourcefix3674329 CI37527954362: backend/Compose passed, frontend712/713
+passed with one fresh-draft assertion failure. The heading can render before
+useEffect's queued save; test now waits for the same original saved step/strategy
+object. Production behavior, all other exact assertions and timeouts unchanged.
+84 focused/713 full17.20s/lint/types/build/audit0/Prettier pass; independent
+read-only review confirms synchronization semantics, not a financial approval.
+New exact-head CI remains pending; original failure is preserved.
+
+Actual installed Chrome on current localhost5173 restored the existing draft:
+Enter2→3→4, Back4→3→2 focuses each heading; EN→ZH→EN preserves exact cash
+123456.789000000000001, dates2011-01-04..2011-06-30 and all configuration.
+Review remains disabled before acknowledgement; no submission performed.
+ZHdark desktop1920x911 and390x844 screenshots saved; mobile document375px,
+no page overflow. Initial step2/EN/dark restored, viewport reset/tabclosed.
+This is not native200/p95/all four sizes/fullAA or financial-chain acceptance.
+[Failure receipt and actual browser screenshots](C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-correction-chain-ci/README.md).
+
 ## 2026-10-07 explicit date-correction context and shared page headers — scoped pass
 
 U3/U4/U6/U7 source dependency: the linked official300048 pair produces a separate

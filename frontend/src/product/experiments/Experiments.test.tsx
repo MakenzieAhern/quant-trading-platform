@@ -395,10 +395,13 @@ describe("guided experiment", () => {
     );
     render(<CreateExperimentPage />);
     await screen.findByRole("heading", { name: "Choose a strategy" });
-    expect(readExperimentDraft()).toMatchObject({
-      step: 0,
-      form: { strategy_id: configuration.strategy_id },
-    });
+    // Rendering the step precedes its queued persistence; await the real saved state.
+    await waitFor(() =>
+      expect(readExperimentDraft()).toMatchObject({
+        step: 0,
+        form: { strategy_id: configuration.strategy_id },
+      }),
+    );
     expect(new URLSearchParams(window.location.search).get("new")).toBeNull();
     expect(new URLSearchParams(window.location.search).get("strategy")).toBe(
       configuration.strategy_id,

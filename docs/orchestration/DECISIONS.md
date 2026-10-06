@@ -1,5 +1,16 @@
 # Decisions
 
+## v1.2 wait for persistence, not just a rendered heading — 2026-10-07
+
+3674329 exact hostedCI failed one fresh-draft assertion while backend/Compose
+passed. Trace confirms wizard useEffect queues storage save after DOM creation;
+a heading is not a persistence barrier. Reuse waitFor around the unchanged
+saved-object assertion. Do not alter production scheduling, delete tests, widen
+timeouts or hide CI failure. All URL/strategy/precision/locale/no-create assertions
+remain;84focused/713full/localchecks pass, independent readonly review agrees.
+New exactCI required. ActualChrome current draft keyboard/back/locale/mobile
+check preserves configuration; no job or account operation. Fullgoal stays open.
+
 ## v1.2 date-only amendments consume all substantive text — 2026-10-07
 
 Matching a date table/two quotes plus a keyword blacklist was insufficient:
