@@ -9557,3 +9557,39 @@ Browser screenshots were inspected but not saved as durable M5 media. The
 strategy-fix code head `ea51d0f7bd84f349623575974d8506a6230f0c18`
 subsequently passed [CI run 37011283889](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37011283889):
 backend, frontend and Compose all succeeded. PR #32 remains draft/open.
+
+## 2026-10-06 selected-version visibility and runtime recovery (bounded U3/U8/M4)
+
+Actual Chrome on the configured localhost5173 app reproduced a native mobile
+select truncating the full dataset ID. The wizard now shows a wrapping selected
+ID beneath the control and includes it in the accessible description; validation
+errors retain their own description and focus. Reuse existing CSS and translated
+copy, no financial/business changes. Initial two failing tests are retained;
+final81 focused and666 full frontend tests across44 files pass, together with
+lint, TypeScript, touched-file Prettier and production build. The519.13kB build
+advisory remains unchanged. A separate root source/browser recheck found no
+blocking issue within this caption scope. Independent read-only review of the
+two-file diff, full log and settled EN390/ZH1024 JPEGs found no P1/P2; no broader
+accessibility/product certification follows.
+
+Settled EN/dark390 and ZH390, ZH/dark1440, EN/light1280 and ZH/light1024 screenshots
+show the caption. Checked390/1024 DOM geometry has no page overflow. The earlier
+16-case responsive matrix proves prepatch DOM configuration only; rapid stale/
+mismatched and cropped JPEGs are retained as nonproof, not a16-case visual pass.
+Exact cash123456.789000000000001, dates2011-01-04 to2011-06-30, v1 selection and
+seven named versions remain; draft step0/EN-dark/Save-and-exit/home restored,
+viewport reset and owned tab closed. No study/account/provider action was sent.
+
+Existing Docker Desktop4.92 safely started when stopped; original four services
+auto-resumed, API/frontend200 and RedisPONG.32 saved API responses match the
+Oct3 capture byte-for-byte; one capabilities response has only expected additive
+execution-admission fields.11 studies/5 accounts/4 updates/3 formal, active0.
+This is scoped API parity, not full SQL checksum, lost-ledger restoration or
+unattended host-reboot acceptance. Product registry remains absent: no new full
+version/admission or financial result was manufactured. Exact13a CI37090369827
+passed backend/frontend/Compose but does not cover the new caption until committed.
+
+Evidence: [external proof README](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261003-version-inspection/README.md>)
+under the local Windows workspace (not stored in Git). Full U1–U8/M0–M5, new
+economic-version admission, AA/native zoom/performance, lawful after-start
+forward receipts and genuine missing ledgers remain required. No merge/release.

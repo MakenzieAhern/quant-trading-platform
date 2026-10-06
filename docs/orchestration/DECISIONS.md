@@ -1,5 +1,24 @@
 # Decisions
 
+## v1.2 keep selected dataset identity readable on mobile — 2026-10-06
+
+Actual settled Chrome showed the native 390px data-source select truncating the
+selected version ID. Reuse the existing wrapping technical-text class and
+translated label beneath it, and associate that caption as an accessible
+description alongside any validation error. No new component/dependency, money
+calculation or execution admission. Two pre-fix failures are retained; final
+666 frontend tests, static/build and 81 focused tests pass, including unavailable
+restored-version error/focus checks in both languages. Settled EN/ZH screenshots
+are evidence for the caption only; rapid stale/cropped frames remain nonproof.
+
+The existing Docker Desktop was safely started after it was found stopped;
+original services resumed, saved32 API bodies match and capabilities have only
+expected inspection-admission additions. Exact13a CI37090369827 is successful,
+separate from this uncommitted fix. No reset, data deletion, financial job,
+frozen research change or broad recovery/product PASS. Continue the full product
+goal and real data-admission work; forward rights and genuine lost-ledger evidence
+remain external gaps, not reasons to repeat accepted source work.
+
 ## v1.2 register inspection identity without inventing financial admission — 2026-10-03
 
 Extend the existing registry and reuse catalogue containment/product storage;

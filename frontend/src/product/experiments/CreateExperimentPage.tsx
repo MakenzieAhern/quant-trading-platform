@@ -388,7 +388,12 @@ function ExperimentWizard({
   const fieldAccessibility = (field: ConfigurationField) => ({
     "aria-invalid": invalidField === field || undefined,
     "aria-describedby":
-      invalidField === field ? "experiment-validation-error" : undefined,
+      [
+        invalidField === field ? "experiment-validation-error" : null,
+        field === "dataset" ? "experiment-dataset-version" : null,
+      ]
+        .filter(Boolean)
+        .join(" ") || undefined,
   });
   const strategy = capabilities.strategies.find(
     (item) => item.strategy_id === form.strategy_id,
@@ -691,6 +696,12 @@ function ExperimentWizard({
                     ))}
                   </select>
                 </label>
+                <p
+                  id="experiment-dataset-version"
+                  className="experimentTechnical"
+                >
+                  {c.dataset}: {form.dataset_id}
+                </p>
                 {dataset && (
                   <p className="experimentHelp">
                     {c.coverage}: {dataset.coverage_start} —{" "}

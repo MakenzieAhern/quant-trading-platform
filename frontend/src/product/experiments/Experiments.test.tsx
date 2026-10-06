@@ -92,6 +92,70 @@ function enableNativeDialog() {
 
 describe("guided experiment", () => {
   it.each(["en-US", "zh-CN"])(
+    "exposes the full selected version outside a potentially truncated native option: %s",
+    async (language) => {
+      await i18n.changeLanguage(language);
+      const historical = {
+        ...capabilities.datasets[0],
+        dataset_id: "cn-a-research-20100101-20251231-v1",
+        mode: "historical_exploration" as const,
+      };
+      vi.spyOn(experimentApi, "capabilities").mockResolvedValue({
+        ...capabilities,
+        datasets: [historical, ...capabilities.datasets],
+      });
+      const create = vi.spyOn(experimentApi, "create");
+      render(<CreateExperimentPage />);
+      await userEvent.click(
+        await screen.findByRole("button", {
+          name: language === "en-US" ? "Continue" : "继续",
+        }),
+      );
+      const label = language === "en-US" ? "Data source" : "数据来源";
+      const source = screen.getByRole("combobox", { name: label });
+      expect(source).toHaveAccessibleDescription(
+        `${label}: ${historical.dataset_id}`,
+      );
+      await userEvent.selectOptions(source, configuration.dataset_id);
+      expect(source).toHaveAccessibleDescription(
+        `${label}: ${configuration.dataset_id}`,
+      );
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+  it.each(["en-US", "zh-CN"])(
+    "retains both validation and selected-version descriptions for an unavailable restored source: %s",
+    async (language) => {
+      await i18n.changeLanguage(language);
+      const datasetId = "unavailable-source-v1";
+      saveExperimentDraft(
+        { ...configuration, dataset_id: datasetId },
+        1,
+        "unavailable-draft-request",
+      );
+      vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+      const create = vi.spyOn(experimentApi, "create");
+      render(<CreateExperimentPage />);
+      await userEvent.click(
+        await screen.findByRole("button", {
+          name: language === "en-US" ? "Continue" : "继续",
+        }),
+      );
+      const label = language === "en-US" ? "Data source" : "数据来源";
+      const source = screen.getByRole("combobox", { name: label });
+      expect(source).toHaveFocus();
+      expect(source).toHaveAttribute("aria-invalid", "true");
+      expect(source).toHaveAttribute(
+        "aria-describedby",
+        "experiment-validation-error experiment-dataset-version",
+      );
+      expect(source).toHaveAccessibleDescription(
+        new RegExp(`${label}: ${datasetId}$`),
+      );
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+  it.each(["en-US", "zh-CN"])(
     "keeps an inspectable unaccepted version visible but non-executable: %s",
     async (language) => {
       await i18n.changeLanguage(language);
