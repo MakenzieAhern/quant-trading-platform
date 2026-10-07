@@ -50,6 +50,20 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         raise ValueError("BONUS_SAME_DAY_NONSTANDARD_OR_TENTATIVE")
     dated = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
     plain_date = r"20\d{2}年\d{1,2}月\d{1,2}日"
+    # Recognized current metadata cannot contradict listing evidence or prove it.
+    listing_metadata = re.findall(
+        r"(?:新增可流通股份上市日|转增可流通股上市日)(?:为)?:?" + dated, text
+    )
+    try:
+        consistent = all(
+            date(*map(int, fields)).isoformat() == ex_date for fields in listing_metadata
+        )
+    except ValueError:
+        consistent = False
+    if not consistent:
+        error = ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED")
+        error.add_note("LISTING_METADATA_CONFLICT")
+        raise error
     page_number = r"(?:[-—]\d+[-—]|\d+(?:/\d+)?)?"
     page_counter = r"(?:§" + page_number + ")?"
     repeated_header = re.match(
@@ -98,6 +112,10 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + plain_date
         + r";?(?:2[、.])?(?:本次权益分派)?除权除息日(?:为)?:?"
         + plain_date
+        # 可流通 is only adjacent metadata, never independent unrestricted proof.
+        + r"(?:3[、.]转增可流通股上市日:?"
+        + plain_date
+        + r")?"
         + "|"
         r"[一二三四五六七八九十]+、股权登记日与除权除息日"
         r"本次权益分派的股权登记日为:?" + plain_date + r"除权出息日为:?" + plain_date + "|"
@@ -170,6 +188,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + page_counter
         + r"(?:本次(?:(?:权益)?分[派配]|转增股本|分红派息(?:及资本公积金转增股本)?)"
         r"(?:的)?对象为:?(?:截[止至])?|"
+        r"本次权益分派对象:|"
         r"[一二三四五六七八九十]+、(?:分红派息及资本公积金转增股本|权益分派|"
         r"分红派息|利润分配和转增)对象:?截[止至]|"
         r"[一二三四五六七八九十]+、(?:权益分派对象|分派对象):?)"
@@ -187,7 +206,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + holder_prose
         + r"{0,30}?全体股东",
         "(?:" + boundary + r"(?:[一二三四五六七八九十]+、"
-        r"(?:转增股本方法|权益分[派配]方法|权益分派办法|"
+        r"(?:转增股本方法|权益分[派配]方法|权益分派办法|分配办法|"
         r"利润分配和(?:资本公积金)?转增股本方法|分配、转增股(?:份|本)方法|"
         r"分红派息(?:及资本公积金转增股本)?方法):?)?(?:\d+[、.])?"
         r"(?:公司)?本次(?:所|资本公积金|资本公积所)?"

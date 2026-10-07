@@ -1249,6 +1249,7 @@ def test_distribution_metadata_fields_never_supply_missing_share_dates(layout):
         ("全体股东", "控股股东"),
         ("现金红利发放日", "讨论现金红利发放日"),
         ("新增可流通股份上市日", "预计新增可流通股份上市日"),
+        ("新增可流通股份上市日:2011年3月28日", "新增可流通股份上市日:2011年3月29日"),
         ("重大遗漏。§", "重大遗漏。§其他说明"),
     ):
         if old in notice:
@@ -1494,6 +1495,72 @@ def test_displaced_complete_page_banner_preserves_holder_prose_not_date_fragment
     )
     with pytest.raises(ValueError):
         same_day_listing(conflicting, "600000", TITLE, RECORD, EX)
+
+
+@pytest.mark.parametrize(
+    "layout", ["plain", "numbered-metadata", "page-holder", "distribution-heading"]
+)
+def test_bare_current_holder_object_keeps_independent_credit_and_listing(layout):
+    notice = NOTICE.replace("本次权益分派对象为:", "本次权益分派对象:")
+    if layout == "numbered-metadata":
+        notice = notice.replace(
+            "股权登记日为2011年3月25日,除权除息日为2011年3月28日。",
+            "1、本次权益分派股权登记日:2011年3月25日2、除权除息日:2011年3月28日"
+            "3、转增可流通股上市日:2011年3月28日",
+        )
+    credit_statement = "本次转增股于2011年03月28日直接记入股东证券账户。"
+    if layout == "distribution-heading":
+        credit_statement = "本次资本公积金转增的股份于2011年03月28日直接计入股东的证券账户。"
+        notice = notice.replace("四、转增股本方法", "四、分配办法").replace(
+            "本次转增股于2011年03月28日直接记入股东证券账户。", credit_statement
+        )
+
+    def source_pages(value):
+        if layout != "page-holder":
+            return [value]
+        first, second = value.split("在登记结算公司", 1)
+        return [first + "在登记结算公司", second]
+
+    assert same_day_listing(source_pages(notice), "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("本次权益分派对象:", "讨论本次权益分派对象:"),
+        ("本次权益分派对象:", "拟实施本次权益分派对象:"),
+        ("本次权益分派对象:", "本次权益分派对象"),
+        ("转增可流通股上市日:2011年3月28日", "转增可流通股上市日:2011年3月29日"),
+        ("转增可流通股上市日:2011年3月28日", "转增可流通股上市日:2011年2月31日"),
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("全体股东", "控股股东"),
+        ("证券账户", "资金账户"),
+        ("2011年03月28日直接", "2011年03月29日直接"),
+        ("无限售条件流通股", "可流通股"),
+    ):
+        if old not in notice:
+            continue
+        with pytest.raises(ValueError):
+            same_day_listing(source_pages(notice.replace(old, new)), "600000", TITLE, RECORD, EX)
+    for credit, role in (
+        (credit_statement, "SHARE_CREDIT"),
+        ("五、本次转增的无限售条件流通股的起始交易日为2011年3月28日。", "UNRESTRICTED_LISTING"),
+    ):
+        with pytest.raises(ValueError) as missing:
+            same_day_listing(source_pages(notice.replace(credit, "")), "600000", TITLE, RECORD, EX)
+        assert missing.value.__notes__ == [role]
+    with pytest.raises(ValueError) as incomplete:
+        same_day_listing(
+            source_pages(notice.replace("2011年03月28日直接", "2011年03月28直接")),
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+    assert incomplete.value.__notes__ == ["SHARE_CREDIT"]
+    for dated in ("2011年3月25日", "2011年03月28日", "2011年3月28日"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
+    conflict = notice + "本次权益分派对象:2011年3月24日下午收市后在登记结算公司登记在册的全体股东。"
+    with pytest.raises(ValueError):
+        same_day_listing(source_pages(conflict), "600000", TITLE, RECORD, EX)
 
 
 def _manifest(path: Path, data: dict) -> None:
