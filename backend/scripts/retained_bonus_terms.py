@@ -106,7 +106,22 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
     )
     # Page markers remain in prose; neither a date nor another declaration can
     # be assembled across pages. A holder sentence cannot swallow a later section/date.
-    holder_prose = r"(?:(?![一二三四五六七八九十]+、|\d+[、.]|20\d{2}年)[^。;])"
+    # Reviewed boxes are above the body but displaced to page extraction tails.
+    # Accept a complete known box only within holder prose, never strip source text.
+    holder_banner = (
+        r"(?:本公司及全体董事、监事、高级管理人员保证公告内容真实、准确和完整,"
+        r"不存在虚假记载、误导性陈述或者重大遗漏。|"
+        r"本公司及董事会全体成员保证(?:公告内容|信息披露的内容)真实、准确、完整,"
+        r"没有虚假记载、误导性陈述或重大遗漏。|"
+        r"本公司及其董事、监事、高级管理人员保证公告内容真实、准确和完整,"
+        r"并对公告中的虚假记载、误导性陈述或者重大遗漏承担责任。)"
+    )
+    holder_prose = (
+        r"(?:(?![一二三四五六七八九十]+、|\d+[、.]|20\d{2}年)(?:"
+        + holder_banner
+        + r"(?=§)|(?!本公司及)[^。;]))"
+    )
+    holder_page_counter = r"(?:" + holder_banner + r"?§" + page_number + ")?"
     # A weekday annotation supplements a complete date, never supplies one.
     for year, month, day, weekday in re.findall(dated + r"\(星期([^()§。;]{1,4})\)", text):
         try:
@@ -162,10 +177,12 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + holder_prose
         + r"{0,200}?收市后"
         + holder_prose
-        + r"{0,200}?登记"
-        + page_counter
+        + r"{0,200}?登"
+        + holder_page_counter
+        + "记"
+        + holder_page_counter
         + "在"
-        + page_counter
+        + holder_page_counter
         + "册"
         + holder_prose
         + r"{0,30}?全体股东",

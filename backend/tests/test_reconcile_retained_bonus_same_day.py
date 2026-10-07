@@ -1425,6 +1425,77 @@ def test_numbered_ex_metadata_and_object_heading_keep_all_five_date_roles(layout
         same_day_listing(source_pages(conflict), "600000", TITLE, RECORD, EX)
 
 
+@pytest.mark.parametrize(
+    "banner",
+    [
+        "本公司及全体董事、监事、高级管理人员保证公告内容真实、准确和完整,不存在"
+        "虚假记载、误导性陈述或者重大遗漏。",
+        "本公司及董事会全体成员保证公告内容真实、准确、完整,没有虚假记载、误导性陈述或重大遗漏。",
+        "本公司及董事会全体成员保证信息披露的内容真实、准确、完整,没有虚假记载、"
+        "误导性陈述或重大遗漏。",
+        "本公司及其董事、监事、高级管理人员保证公告内容真实、准确和完整,并对公告中的"
+        "虚假记载、误导性陈述或者重大遗漏承担责任。",
+    ],
+)
+@pytest.mark.parametrize("split_term", ["在登记结算公司", "登", "登记在", "登记在册"])
+def test_displaced_complete_page_banner_preserves_holder_prose_not_date_fragments(
+    banner, split_term
+):
+    # The six reviewed PDFs place this box above the body; extraction appends it.
+    def source_pages(notice=NOTICE, margin=banner):
+        first, second = notice.rsplit(split_term, 1)
+        return [first + split_term + margin, "2\n" + second]
+
+    assert same_day_listing(source_pages(), "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("本公司全体股东", "本公司控股股东"),
+        ("2011年03月28日直接记入", "2010年03月28日直接记入"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("证券账户", "资金账户"),
+        ("无限售条件流通股", "可流通股"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing(source_pages(NOTICE.replace(old, new)), "600000", TITLE, RECORD, EX)
+    for altered in (
+        banner.replace("保证", "讨论保证"),
+        banner.replace("内容", "内容及2011年3月24日登记情况"),
+        banner.replace("重大遗漏", "重大遗漏另行公告"),
+        banner + "其他说明。",
+        "其他说明。" + banner,
+        banner[:-1],
+    ):
+        assert altered != banner
+        with pytest.raises(ValueError):
+            same_day_listing(source_pages(margin=altered), "600000", TITLE, RECORD, EX)
+    for term, role in (
+        ("本次转增股于2011年03月28日直接记入股东证券账户。", "SHARE_CREDIT"),
+        ("五、本次转增的无限售条件流通股的起始交易日为2011年3月28日。", "UNRESTRICTED_LISTING"),
+    ):
+        with pytest.raises(ValueError) as missing:
+            same_day_listing(source_pages(NOTICE.replace(term, "")), "600000", TITLE, RECORD, EX)
+        assert missing.value.__notes__ == [role]
+    for dated in ("2011年3月25日", "2011年03月28日", "2011年3月28日"):
+        first, second = NOTICE.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [first + dated[:6] + banner, "2\n" + dated[6:] + second],
+                "600000",
+                TITLE,
+                RECORD,
+                EX,
+            )
+    with pytest.raises(ValueError):
+        same_day_listing(["".join(source_pages())], "600000", TITLE, RECORD, EX)
+    conflicting = source_pages()
+    conflicting[-1] += (
+        "本次权益分派对象为:2011年3月24日下午交易所收市后,在登记结算公司登记在册的本公司全体股东。"
+    )
+    with pytest.raises(ValueError):
+        same_day_listing(conflicting, "600000", TITLE, RECORD, EX)
+
+
 def _manifest(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({**data, "manifest_sha256": canonical_sha256(data)}))
