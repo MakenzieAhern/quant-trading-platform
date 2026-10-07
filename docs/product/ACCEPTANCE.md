@@ -1,5 +1,22 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 source queue compression and personal-result recovery recheck
+
+[34-row private full-cache holder-layout queue](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-role-triage/README.md>)
+verifies prior V11 fifteen payloads/276 bindings; literal31收市后/2收市时/1NONE.
+All34 remain unresolved: no inferred dates or admission. Immutable repeat PASS,
+five-payload seal46f7c4e3616fc46a8ee8e44ccbf56896f932d40d3ce30cef79c8fe16cbc6e68b.
+[Actual Chrome existing personal-result recheck](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-result-range-recovery/README.md>)
+invaliddate alert/firstfield focus/ARIA, ENZH retained inputs/translated error,
+fullinterval cleared error/inputs and unchanged saved summary observed.
+Three-payload seald6e306ae2cc8505c81aba1ec7cd7d7373b59a9ad5d61a87ce472938d08093a18;
+settled JPEG shows restored controls only, not earlierinvalid/Chinese image proof.
+Original ENdark/workbench/draft restored. Existing financial warning retained;
+not new financial acceptance/fullAA/performance/new userflow. No new code/test/
+deployment/job/account/order/download/provider/strategy/OOS/GitHub action.
+Next source work addresses repeated complete layouts as a shared batch rootcause,
+not one-stock exceptions; prior82 whole sourcePASS and all137 rows stay protected.
+
 ## 2026-10-07 complete issuer running-header line — U3/U5/U6 source prerequisite
 
 [Private official PDF, RED/GREEN, full tests and immutable V11 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-issuer-running-header/README.md>).

@@ -1,5 +1,17 @@
 # Decisions
 
+## v1.2 Batch holder-layout triage rather than per-security patches — 2026-10-07
+
+Reuse V11 all137 and full sourcecache/provenance for remaining34HOLDER_CUTOFF.
+Literal31收市后/2收市时/1NONE is triage only; all34 remain unresolved. Five-payload
+immutable proof/repeat checks preserve V11seal+276bindings, no reacquisition.
+Next inspect repeated metadata/holder layouts and test a shared exact boundary
+fix; first-role improvement must not hide later credit/unrestricted gaps.
+Actual existingpersonal-result ENZH invalidrange/recovery recheck passed scoped
+focus/ARIA/inputpreservation/clear/summary checks. Not new implementation or broad
+financial/product acceptance. Original ENdarkWorkbench/draft restored; no business
+task/account/order, deployment/provider/GitHub/strategy/OOS or denied-path retry.
+
 ## v1.2 Exact whole issuer/notice first line, not arbitrary page text — 2026-10-07
 
 Full cached300126 PDF SHA checked/rendered/read; direct pypdf/NFKC equals cache.
