@@ -1563,6 +1563,90 @@ def test_bare_current_holder_object_keeps_independent_credit_and_listing(layout)
         same_day_listing(source_pages(conflict), "600000", TITLE, RECORD, EX)
 
 
+@pytest.mark.parametrize("weekday", [False, True])
+@pytest.mark.parametrize("listing_margin", [False, True])
+def test_explicit_closed_session_holder_and_adjacent_listing_metadata(weekday, listing_margin):
+    notice = NOTICE.replace("对象为:", "对象为:截至").replace("收市后", "收市时")
+    if weekday:
+        notice = notice.replace("2011年3月25日下午", "2011年3月25日(星期五)下午")
+
+    def source_pages(value):
+        if not listing_margin:
+            return [value]
+        first, second = value.split("三、分派对象", 1)
+        return [first, "2\n转增流通股上市日:2011年3月28日三、分派对象" + second]
+
+    assert same_day_listing(source_pages(notice), "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("收市时", "收市前"),
+        ("收市时", "收市时段"),
+        ("收市时", "收市时之前"),
+        ("收市时", "收市时然后次日"),
+        ("对象为:截至", "对象为:讨论截至"),
+        ("2011年3月25日", "2011年3月24日"),
+        ("全体股东", "控股股东"),
+        ("证券账户", "资金账户"),
+        ("2011年03月28日直接", "2011年03月29日直接"),
+        ("无限售条件流通股", "可流通股"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing(source_pages(notice.replace(old, new)), "600000", TITLE, RECORD, EX)
+    if weekday:
+        with pytest.raises(ValueError, match="WEEKDAY_CONFLICT"):
+            same_day_listing(
+                source_pages(notice.replace("星期五", "星期四")), "600000", TITLE, RECORD, EX
+            )
+    for term, role in (
+        ("本次转增股于2011年03月28日直接记入股东证券账户。", "SHARE_CREDIT"),
+        ("五、本次转增的无限售条件流通股的起始交易日为2011年3月28日。", "UNRESTRICTED_LISTING"),
+    ):
+        with pytest.raises(ValueError) as missing:
+            same_day_listing(source_pages(notice.replace(term, "")), "600000", TITLE, RECORD, EX)
+        assert missing.value.__notes__ == [role]
+    for dated in ("2011年3月25日", "2011年03月28日", "2011年3月28日", "收市时"):
+        first, second = notice.rsplit(dated, 1)
+        cut = 6 if len(dated) > 6 else 2
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [first + dated[:cut], dated[cut:] + second],
+                "600000",
+                TITLE,
+                RECORD,
+                EX,
+            )
+    if listing_margin:
+        pages = source_pages(notice)
+        for value in ("2011年3月29日", "2011年2月31日"):
+            with pytest.raises(ValueError) as conflict:
+                same_day_listing(
+                    [
+                        pages[0],
+                        pages[1].replace(
+                            "转增流通股上市日:2011年3月28日", "转增流通股上市日:" + value
+                        ),
+                    ],
+                    "600000",
+                    TITLE,
+                    RECORD,
+                    EX,
+                )
+            assert conflict.value.__notes__ == ["LISTING_METADATA_CONFLICT"]
+        for extra in ("不明说明", "3、讨论方案"):
+            with pytest.raises(ValueError):
+                same_day_listing(
+                    [pages[0], pages[1].replace("三、分派对象", extra + "三、分派对象")],
+                    "600000",
+                    TITLE,
+                    RECORD,
+                    EX,
+                )
+    conflict = (
+        notice + "本次权益分派对象为:2011年3月24日下午收市时,在登记结算公司登记在册的全体股东。"
+    )
+    with pytest.raises(ValueError):
+        same_day_listing(source_pages(conflict), "600000", TITLE, RECORD, EX)
+
+
 def _manifest(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({**data, "manifest_sha256": canonical_sha256(data)}))
