@@ -120,7 +120,12 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"[一二三四五六七八九十]+、股权登记日与除权除息日"
         r"本次权益分派的股权登记日为:?" + plain_date + r"除权出息日为:?" + plain_date + "|"
         r"[一二三四五六七八九十]+、股权登记日与除权\(除息\)日"
-        r"本次权益分派股权登记日为:?" + plain_date + r"除权\(除息\)日为:?" + plain_date + ")"
+        r"本次权益分派股权登记日为:?" + plain_date + r"除权\(除息\)日为:?" + plain_date + "|"
+        r"[一二三四五六七八九十]+、股权登记日、除权除息日股权登记日:?"
+        + plain_date
+        + r"(?:\(周[一二三四五六日天]\))?除权除息日:?"
+        + plain_date
+        + r"(?:\(周[一二三四五六日天]\))?)"
     )
     # Page markers remain in prose; neither a date nor another declaration can
     # be assembled across pages. A holder sentence cannot swallow a later section/date.
@@ -135,13 +140,13 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"并对公告中的虚假记载、误导性陈述或者重大遗漏承担责任。)"
     )
     holder_prose = (
-        r"(?:(?![一二三四五六七八九十]+、|\d+[、.]|20\d{2}年)(?:"
+        r"(?:(?![一二三四五六七八九十]+、|\d+[、.]|20\d{2}年|讨论|次日)(?:"
         + holder_banner
         + r"(?=§)|(?!本公司及)[^。;]))"
     )
     holder_page_counter = r"(?:" + holder_banner + r"?§" + page_number + ")?"
     # A weekday annotation supplements a complete date, never supplies one.
-    for year, month, day, weekday in re.findall(dated + r"\(星期([^()§。;]{1,4})\)", text):
+    for year, month, day, weekday in re.findall(dated + r"\((?:星期|周)([^()§。;]{1,4})\)", text):
         try:
             if (
                 weekday.replace("天", "日")
@@ -199,10 +204,14 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"本次权益分派对象:|"
         r"[一二三四五六七八九十]+、(?:分红派息及资本公积金转增股本|权益分派|"
         r"分红派息|利润分配和转增)对象:?截[止至]|"
-        r"[一二三四五六七八九十]+、(?:权益分派对象|分派对象):?)"
+        r"[一二三四五六七八九十]+、(?:权益分派对象|分派对象):?(?:截至)?)"
+        + r"(?:股权登记日(?P<holder_parenthesis>\()?)?"
         + dated
+        + r"(?(holder_parenthesis)\))(?!\))"
         + holder_prose
-        + r"{0,200}?(?:收市后|收市时(?=,))"
+        + r"{0,200}?(?:收"
+        + page_counter
+        + r"市后|收市时(?=,))"
         + holder_prose
         + r"{0,200}?登"
         + holder_page_counter
@@ -241,6 +250,9 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         strict=True,
     ):
         matches = re.findall(pattern, text)
+        if role == "HOLDER_CUTOFF":
+            # The structural opening-parenthesis capture is not a date field.
+            matches = [match[1:] for match in matches]
         try:
             values = {date(*map(int, match)).isoformat() for match in matches}
         except ValueError as exc:
