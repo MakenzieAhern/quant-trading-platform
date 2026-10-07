@@ -1,5 +1,31 @@
 # Decisions
 
+## v1.2 Reconcile existing economic keys before candidate integration — 2026-10-08
+
+The new V30 overlay reuses approved cash/bonus/Portfolio paths for44 actual
+synthetic holding witnesses,21 positive pairs+1 explicit-zero BONUS-only. Preserve
+the previous72 full event/case objects and144 old checks without claiming rerun.
+Generic source-SHA/event-key gap lookup blocks300147/155; all8 unknown cash and
+33 source gaps stay visible. Do not create a fictional zero-cash dividend or
+derive payment dates. No new financial convention or production model change.
+
+The intended187 overlay legs are all already present in the frozen42792 actions
+with matching economic fields and source PDF SHA. Relative-to-old40353/498
+"new source" does not mean new frozen economic event. Future full product
+materialization must reconcile stable and economic identity, expose provenance/
+checksum differences, retain all kinds and all7407+137 oracle rows, and never
+append duplicates. Frozen base itself contains147/155 contradictions: gate that
+base as well, not only additions.498 other retained bonus candidates are pending
+full economics, not implicitly admitted by this supplemental check.
+
+419 actual bindings/two identical runs/reference-list reversal/negative-O/static
+and two independent readonly reviews PASS within scope; no remaining evidenced
+P1/P2. Four development failures and guard fixes retained before first publication.
+Candidate d10421c3 is private14.8MB; seven-payload f574198a seal verified twice,
+previous six-payload preflight seal intact. No full test/browser rerun, dataset
+registration/execution, original SQL/deployment, frozen/.research/OOS or GitHub
+request/push/merge/tag/release. All original U1–U8/M0–M5 remain required.
+
 ## v1.2 Carry V30 into independent financial checks, not source-count admission — 2026-10-08
 
 Old cash overlay used78 source-pass rows. New immutable private preflight processes

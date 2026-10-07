@@ -1,5 +1,43 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 V30 supplemental accounting — not full dataset admission
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-v30-financial-overlay/README.md>)
+binds parent3f452f0,419 current files and immutable candidate canonical
+d10421c373c2e185dacbaaa9148a90aac162d5783cd87e469a82a0c511948114.
+Unchanged actual repeat/reference-list reversal PASS; optimized-Python negative
+rejects before work. Reuse existing issuer/PIT/Portfolio and old positive helper,
+no production/policy/API/migration or dependency change.
+
+44 new synthetic holding checks cover21 positive cash+bonus pairs and1 explicit
+no-cash BONUS-only300142,100/101 shares. 300142 yields150/151,basis9740/9837.40,
+cash1000 unchanged,fraction0/.5,approved audit/duplicate rejection/no generated
+ORDER events. No fake zero CASH_DIVIDEND. The one seed Fill is explicitly synthetic.
+Old72 events/72cases/144checks and entire old overlay object preserved, not rerun;
+40353 parent cash/498 prior bonus/7407 coverage/137 current V30 source/104 financial
+rows remain whole. Unknown8cash and2 source contradictions are blocked;33 full
+source-unresolved objects remain. No unknown-tozero or invented payment date.
+
+Actual frozen42792-row partition matched its accepted hash. All187 overlay legs
+(93cash/94bonus) already exist, with matching stable keys/amounts/ratios/PDF SHA;
+all append_allowed=false and original/candidate checksums visible. Do not blindly
+append them or call source evidence new economic actions. Full candidate must
+also block147/155 already present in frozen baseline;33 source gaps cannot be
+erased by legacy R5 PASS. Retained498 candidates still need full-kind/oracle gates.
+
+Two independent readonly reviews recalculate419 hashes/44 Decimal outcomes,
+oldwhole objects/187 mappings; no evidenced scopedP1/P2. Four prepublication
+development failures retained and corrected, including relative partition paths,
+missing diagnostic SID, snapshot property and source-counter shape. Expected
+hashes verified before new binding updates; old helper hash checked before import.
+Explicit-file lint/format PASS; ignored-directory Ruff no-files is not evidence.
+7-payload sealf574198ae23316f08cdc928690f6ff4ec066e373e8f64de7c550e6724e52ed7a
+verified twice and prior6 intact. No full test/browser rerun;1461+optionalSKIP
+backend/794frontend remain prior unit receipts. Original services/frozen/tag
+preserved; no SQL/deployment/provider/strategy/OOS/GitHub operation.
+Full U1–U8/M0–M5/new-version financial/lifecycle/quality/forward/ledger/delivery/
+remote release remain IN_PROGRESS. This is a prerequisite, not a passing user flow.
+
 ## 2026-10-08 V30 downstream reference preflight — scoped, not dataset admission
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-v30-financial-preflight/README.md>)

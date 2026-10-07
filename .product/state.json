@@ -1,4 +1,32 @@
 {
+  "v30_financial_overlay_20261008_gate": {
+    "status": "PASS_SCOPED_ACCOUNTING_AND_FROZEN_KEY_RECONCILIATION_NOT_ADMISSION",
+    "previous_goal_turn_classification": "NO_PROJECT_PROGRESS: user CI availability question answered by readonly live service checks. Current checkpoint revalidated and safe next financial task executed; this unit adds44 actual accounting witnesses and full existing-key evidence, so PROGRESS.",
+    "source_parent": "3f452f0960a930da8534841db74f3a92e96d19e0",
+    "implementation": "Private immutable producer reuses sealed old positive-cash helper and current cash/ratio/same-day/PIT/Portfolio engines. BONUS-only witness uses one real action, one synthetic seed Fill, all ORDER subscriptions, existing approved fraction audit and duplicate rejection. No production API/model/formula/policy/migration/dependency change.",
+    "accounting": "21 new positive cash+bonus pairs and1 explicit-zero BONUS-only300142 with100/101 holdings:44 new checks PASS. 300142100->150/basis9740;101->151/basis9837.40, cash1000unchanged, fraction0/.5, no zero CASH_DIVIDEND or generated orders/fills. Old144 receipts retained, not rerun.",
+    "closure": "Full104 terminal rows:72 old cases preserved whole/21 positive pairs/1 explicit-zero/8 unknowncash/2 source contradictions. Source-SHA plus stable-key lookup blocks300147/155; all33 unresolved source rows remain whole. No missing-tozero/paymentdate/source-character repair.",
+    "preservation": "Original old overlay whole object and72 events/72case objects exactly equal;40353 cash parent/498 prior bonus/7407 coverage/137 current V30 sources/104 financial rows retained whole. Old137 source snapshot remains inside old whole object, not overwritten by V30.",
+    "frozen_reconciliation": "Actual42792-row action partition hash verified against accepted manifest. All93 cash+94 bonus overlay legs already exist by unique stable key, matching cash/ratio/source PDF SHA;187 records append_allowed=false, old and candidate checksums visible. This is NOT renewed full-census/lifecycle admission. Frozen base also contains300147/155 contradictions: future full candidate gate must block them, not merely exclude new overlay additions.",
+    "verification": "419 current file hashes match; preflight expected hashes checked before current-binding updates and old helper SHA checked before import. Unchanged producer two actualexit0 runs/canonical d10421c3, reference-list reversal equal;actual -O rejectedexit1. Two explicit-file Ruff lint/format PASS; ignored-directory no-files receipt not counted. Four pre-publication development failures retained.",
+    "independent_review": "Two independent readonly reviewers verify canonical,419 hashes,44 Decimal accounting outcomes,whole old objects and187 frozen mappings; no evidenced remaining scopedP1/P2. Earlier relative-path/public-snapshot/expected-hash guards corrected before first publication. No reviewer producer/test/SQL/network/write.",
+    "report_sha256": "d10421c373c2e185dacbaaa9148a90aac162d5783cd87e469a82a0c511948114",
+    "report_bytes_sha256": "2eeb5f661d54e83300d21bd79f35ca8a0f13049ea420af504f5f400fbc8c3969",
+    "producer_sha256": "e411c46b44d9e42df203e847b51ac6e1e32f811c9bdee6912fa36fb719a2ab5d",
+    "evidence": "product-evidence/v1.2/m4/20261008-v30-financial-overlay/README.md",
+    "evidence_payloads": 7,
+    "evidence_manifest_sha256": "f574198ae23316f08cdc928690f6ff4ec066e373e8f64de7c550e6724e52ed7a",
+    "evidence_verification": "Twice actual immutable verifier/seal PASS; prior6 V30 preflight payloads intact. Private14.8MB candidate outside Git.",
+    "services": "Original Compose PG/Redis/backendhealthy, RedisPONG; actual Windows frontend5173/API8000 HTTP200 this turn. Frozen manifest693c0b81 andv1.1.0 peeledf88b5c60 unchanged. Disposable testPG30b1 remained stopped0/OOMfalse; no original SQL/restart/deployment.",
+    "tests": "44 new private accounting witnesses/repeat/negative/static checked. Prior1461backend/one optionalSKIP and794frontend retained, not new full-suite/browser results.",
+    "financial_admission": false,
+    "new_overlay_created": true,
+    "dataset_created": false,
+    "dataset_registered": false,
+    "strategy_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD; no GitHub request/push/merge/tag/release"
+  },
   "v30_financial_preflight_20261008_gate": {
     "status": "PASS_SCOPED_REFERENCE_PREFLIGHT_NOT_FINANCIAL_ADMISSION",
     "source_parent": "03902e7b45276d9de45a7d2d4457084cc5ea1a29",
@@ -468,7 +496,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T19:07:39Z",
+  "updated_at_utc": "2026-10-07T19:29:39Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3443,16 +3471,16 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 V30 downstream104 reference-only:95 cash-leg missing/1 explicit-zero/8 unknowncash;old78 whole outcomes equal/26 added/498+498+7407+137 whole rows preserved.303inputs101code12partitions/canonical72c0598d/repeat/independent review and6-payload7a099904 twice preservesprior27. All-kind fix03902e7 final1461 backend1optionalSKIP/fresh37 retained. No overlay/dataset/financial/product admission or strategy; original services/frozen/OOS unchanged, GitHub hold.",
-    "repository_writer": "Root sole code/docs/state/evidence writer; fresh PID/start/args no competing tests/producer. checkpoint_review_oct8 readonly source/binding/seal review; local_run_options readonly stable-key financial delta review, no reviewer writes. Full/focused/audit sessions terminal0; testPG30b1 stopped0/OOMfalse183839Z retained. No GitHub/frozen/OOS mutation.",
-    "database_writer": "Root sole writer only owned strict APP_ENV=test/quant_test55471 for full1461 suite; testPG30b1 stopped0 retained183839Z, tmpfs rows disposable. Fresh37 no SQL. Original services unchanged/no original migration/restart/failed-job retry/backfill/strategy. Historical selected counts remain prior evidence, not fresh queries. No denied44table/reset/prune/delete/fake lost ledger.",
-    "queue_writer": "Root sole private candidate/evidence writer. V30 source104/33 unchanged; new downstream104 reference-only/95missinglegs1explicitzero8unknowncash, old78 outcomes identical/26 new. Known300147/155 event-specific contradiction gaps persisted; no new overlay/provider/event/research queue/DB write. All producer sessions terminal0; full economic/newversion admission unfinished.",
+    "latest_verification": "Oct8 V30 overlay44 new synthetic accounting checks PASS, old72 full/144checks whole retained;93cash94bonus/187legs already frozen, no blind append.104classifications72retained21positive1zero8unknown2conflicts;all33source gaps remain.419bindings/repeat/-O/static/two independent scoped reviews;7payloadf574198a twice preservesprior6. No financial/fullproduct admission; GitHub hold.",
+    "repository_writer": "Root sole docs/state/private candidate/evidence writer. Fresh PID/start/args no competing test/producer; two reviewers readonly, final scoped no evidencedP1/P2. No productioncode/dependency/API/policy change this unit. Two producer runs/verifiers terminal0, negative-Oexpected1; testPG30b1 remained stopped0/OOMfalse. No GitHub/frozen/OOS mutation.",
+    "database_writer": "No SQL/testDB start/original migration/restart/deployment this unit. Original Compose PG/Redis/backend healthy;RedisPONG/actualWindows5173/API8000HTTP200 checked. Prior selected ledger counts are historical, not fresh queries. TestPG30b1 remains stopped0/OOMfalse retained. No denied44table/reset/prune/delete/fake lostledger.",
+    "queue_writer": "Root sole private candidate/evidence writer. New immutable overlay-v1d10421c3/current419bindings. Old overlay whole preserved,44newchecks21pairs+1zero;source conflicts andunknowncash not admitted. All137V30source/7407coverage/498bonus preserved;187overlaylegs already frozen/noappend. All sessions terminal; full all-kind/oracle/lifecycle/newversion admission pending.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "Oct8nativeUbuntuDocker/Compose working. OriginalPG5987601/Redisdf3dc24/backendhealthy/actual5173nginxa561fa/API200;selected12jobs5paper417events4updates/formal1/3/310/schema0017 preserved. Servedba789d34/6ef228f9/d1b21e37/bodyIABproofscoped. Alltestchildren/1424fullterminal0/no producerlive;Node7969STOPPED137OOMfalse/testPG30b1STOPPED0OOMfalse retained.",
+    "verified_processes": "Oct8 actualUbuntuCompose3projectservices healthy,RedisPONG/Windowsfrontend5173API8000HTTP200. Frozenmanifest693c0b81/v1.1tagf88b5c60 preserved. OriginalDB selected counts remain prior evidence, no SQLrefresh/deployment. DisposabletestPG30b1exited0OOMfalse unchanged; all private producer/verifier sessions terminal, no producerlive. Existing frontendnginx, no UIchange/browserclaim.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
@@ -4082,8 +4110,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5: construct independent new supplemental overlay preserving old72 whole records. Added26 preflight contains23 positive-cash relationships (2 known source contradictions must be blocked),1 explicit-zero bonus-only300142,2 unknown cash; all8 unknown cash stay unknown. Reuse existing cash_event/accounting engines and evidence-bound known-source-gaps.json, no per-symbol financial parser or fake zero-cash event. Then whole financial/reference/all-action/lifecycle and new-version admission plus currentAA/performance/export/media/fullrestore. Lawful after-start forward, unresolved old-ledger fact and exact remote CI/release remain.",
-  "local_next_command": "Read current V30 preflight gate/known-source-gaps/source bindings and cash_overlay.py/Portfolio bonus paths. New immutable overlay version/output only; preserve old72 whole and40353/498 parents. Use generic source-SHA event-gap lookup to block300147/155, all8 unknown cash fail closed; validate21 new positive cash+bonus pairs and explicit-zero300142 bonus-only accounting with100/101 shares before any whole-candidate financial admission. No formal materializer .research changes, old receipt overwrite, strategy/OOS/frozen/GitHub/denied-route action.",
+  "next_task": "Continue full U1-U8/M0-M5: full all-action/oracle financial census and new-version admission. New immutable V30 overlay44 accountingchecks passed; never append its187 legs blindly: all already exist in frozen42792 and must stable-key reconcile. Preserve all40353/498/7407/137 parents and allrights/merger/structural kinds, explicitly retain33 source gaps/8 cashunknown/2 contradictions and000598. Full quality/currentAA/performance/export/media/restore plus lawful after-start forward, genuine missing-ledger fact and remoteCI/release remain.",
+  "local_next_command": "Read current overlay gate and full source census. Inspect/reuse materialize_full_dataset action_row/event_rows/structural_event_rows and audit_full_dataset all-kind gates, but do not run their old frozen-ID/.research writer path. Build independent full stable-key/economic-identity reconciliation over42792 frozen actions plus498 prior bonus candidates and full7407+137 oracle. Reuse bound authority/census/checksum inputs; persist overlaps, conflicts, missing and unresolved rows. Block300147/155 in frozen base too, not onlynew additions; no count-based or reference-match admission. No dataset registration/execution until whole financial/lifecycle gates pass; no old receipts/frozen/.research/strategy/OOS/GitHub/denied-route mutation.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
