@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 Contiguous equity dates and literal capital-credit prefix — 2026-10-07
+
+Complete cached300051 official PDF rendered/read. Reuse existing exact numbered
+metadata chain with 权益分派日期 alias and literal 资本公积所 credit prefix;
+not arbitrary heading skips or inferred dates. Record/cutoff, credit and explicitly
+unrestricted listing remain separate complete dated terms. Three RED then84
+relatedPASS;1345fullbackend/1optionalSKIP/static/testDBmigrationcycle PASS.
+Formatter failure retained/corrected, no originalDB substitution. Independent
+read-only no evidenced scopedP1/P2. V9 source-only80PASS57unresolved,old79wholePASS
+and136wholeunchanged;no ratio/identity/source change or economic event admission.
+Original0016/services/frozen/tag unchanged;testPGstopped retained;no deployment/
+frontend/browser/GitHub/strategy/formal/OOS action. All product gates retained.
+
 ## v1.2 Explicit capital-transfer holder object — 2026-10-07
 
 Reuse cached final300053 evidence; full three-page PDF rendered/read, not new

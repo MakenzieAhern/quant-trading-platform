@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 equity date chain — bounded U3/U5/U6 source prerequisite
+
+[Private source, RED/GREEN and immutable V9 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-equity-date-chain/README.md>).
+Complete cached300051 three-page PDF SHA verified/rendered/read. Shared parser
+adds exact numbered 权益分派日期 chain and 资本公积所 credit prefix; separate
+all-holder2011-05-10/credit2011-05-11/unrestricted2011-05-11 evidence remains
+required. Three layout RED then84 relatedPASS. Full isolated backend1345PASS/
+one pre-existing optional archiveSKIP20.54s, Ruff/format558/mypy146 PASS;
+test-only head/base/head/check PASS, first format failure retained and repaired.
+V9 all137/80source-onlyPASS/57unresolved, only300051 changed; old79wholePASS,
+other136whole rows/source/ratio/identity/276bindings/reverse+immutable retained.
+Batch57d62e82784ff72fef24fd616b92488341120b7656a308fabeab440177dee5f4;
+16-payload seal2aa0f934a668e4631fcf55498fa53f640effb4d699bc9c3b1302fa2fa75c786d.
+Independent read-only no evidenced scopedP1/P2, not full financial acceptance.
+OriginalDB0016/frozen/tag/services unchanged; ownedtmpfs testPG zero other clients,
+stopped0retained. No original restart/migration/backend deployment/frontend/UI/
+browser/provider/strategy/OOS/GitHub action; current-head CI NOT_RUN under hold.
+Remaining6cash/57source/000598/300048/allaction-reference-lifecycle-newversion
+admission and full U1-U8/M0-M5 gates remain. PRODUCT_GOAL_COMPLETE remains false.
+
 ## 2026-10-07 capital-transfer holder wording — bounded U3/U5/U6 prerequisite
 
 [Private source, tests and immutable V8 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-capital-holder-sources/README.md>).

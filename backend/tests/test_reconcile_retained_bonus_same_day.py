@@ -448,6 +448,49 @@ def test_legacy_headings_keep_explicit_holder_credit_and_unrestricted_listing(
         )
 
 
+@pytest.mark.parametrize("layout", ["equity-dates", "capital-credit", "both"])
+def test_equity_date_chain_and_capital_credit_still_require_separate_complete_dates(layout):
+    notice = NOTICE
+    if layout != "capital-credit":
+        notice = notice.replace(
+            "二、股权登记日与除权除息日\n股权登记日为2011年3月25日,除权除息日为2011年3月28日。",
+            "二、权益分派日期1、股权登记日:2011年3月25日2、除权除息日:2011年3月28日",
+        )
+    if layout != "equity-dates":
+        notice = notice.replace("本次转增股于", "本次资本公积所转增的股份于")
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("二、权益分派日期", "讨论二、权益分派日期"),
+        ("二、权益分派日期", "二、其他事项"),
+        ("2、除权除息日:", "讨论2、除权除息日:"),
+        ("本次资本公积所转增", "计划本次资本公积所转增"),
+        ("本次资本公积所转增", "讨论本次资本公积所转增"),
+        ("本次资本公积所转增", "本次现金红利所转增"),
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+        ("本公司全体股东", "本公司控股股东"),
+        ("无限售条件", "可流通"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+        ("股东证券账户", "股东资金账户"),
+    ):
+        if old in notice:
+            with pytest.raises(ValueError):
+                same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    for dated in ("2011年3月25日下午", "2011年03月28日直接记入", "2011年3月28日。"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice + notice.replace("2011年03月28日直接记入", "2011年03月29日直接记入")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
 @pytest.mark.parametrize("split_prose", [False, True])
 def test_capital_transfer_holder_object_keeps_complete_dates_and_all_holder_scope(split_prose):
     notice = NOTICE.replace("三、分派对象", "三、转增股本对象").replace(
