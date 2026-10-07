@@ -1857,6 +1857,109 @@ def test_complete_numbered_ex_date_chain_requires_separate_unrestricted_listing(
         same_day_listing([conflict], "600000", TITLE, RECORD, EX)
 
 
+@pytest.mark.parametrize("layout", ["implementation", "dotted"])
+def test_implementation_and_dotted_sections_keep_all_effective_roles_independent(layout):
+    notice = NOTICE
+    if layout == "implementation":
+        notice = notice.replace(
+            "二、股权登记日与除权除息日\n股权登记日为2011年3月25日,除权除息日为2011年3月28日。",
+            "三、利润分配方案具体实施日期1、股权登记日:2011年3月25日"
+            "2、除权除息日:2011年3月28日3、现金红利发放日:2011年3月28日",
+        ).replace("三、分派对象\n本次权益分派对象为:", "四、分派对象截止")
+        notice = notice.replace("四、转增股本方法", "五、分配实施办法")
+    else:
+        notice = notice.replace(
+            "三、分派对象\n本次权益分派对象为:", "三.权益分派对象本次分配对象为:截止"
+        ).replace("四、转增股本方法", "四.分配分派方法")
+        notice = notice.replace("五、本次", "五.本次")
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("全体股东", "控股股东"),
+        ("证券账户", "资金账户"),
+        ("收市后", "收市前"),
+        ("收市后,", "收市后,四.其他事项"),
+        ("收市后", "收市后讨论次日"),
+        ("无限售条件流通股", "可流通股"),
+        ("2011年03月28日直接", "2011年03月29日直接"),
+        ("分配实施办法" if layout == "implementation" else "分配分派方法", "未知实施事项"),
+    ):
+        altered = notice.replace(old, new)
+        assert altered != notice
+        with pytest.raises(ValueError):
+            same_day_listing([altered], "600000", TITLE, RECORD, EX)
+    if layout == "implementation":
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [notice.replace("利润分配方案具体实施日期", "未说明实施日期")],
+                "600000",
+                TITLE,
+                RECORD,
+                EX,
+            )
+    for term, role in (
+        ("本次转增股于2011年03月28日直接记入股东证券账户。", "SHARE_CREDIT"),
+        ("本次转增的无限售条件流通股的起始交易日为2011年3月28日。", "UNRESTRICTED_LISTING"),
+    ):
+        with pytest.raises(ValueError) as missing:
+            same_day_listing([notice.replace(term, "")], "600000", TITLE, RECORD, EX)
+        assert missing.value.__notes__ == [role]
+    for dated in ("2011年3月25日", "2011年03月28日", "2011年3月28日"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
+    conflict = notice + "三.分派对象截止2011年3月24日下午收市后在登记结算公司登记在册的全体股东。"
+    with pytest.raises(ValueError):
+        same_day_listing([conflict], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError, match="NONSTANDARD_OR_TENTATIVE"):
+        same_day_listing([notice + "讨论三.股权登记日"], "600000", TITLE, RECORD, EX)
+
+
+@pytest.mark.parametrize("marker", ["、", "."])
+@pytest.mark.parametrize(
+    "section",
+    [
+        "三、分派对象",
+        "四、转增股本方法",
+        "五、本次转增的无限售条件流通股的起始交易日",
+    ],
+)
+def test_tentative_section_cannot_supply_any_effective_role(marker, section):
+    for prefix in ("讨论", "拟将"):
+        altered = NOTICE.replace(section, prefix + section.replace("、", marker))
+        assert altered != NOTICE
+        expected = "NONSTANDARD_OR_TENTATIVE" if section.startswith("五") else "DATES_UNRESOLVED"
+        with pytest.raises(ValueError, match=expected):
+            same_day_listing([altered], "600000", TITLE, RECORD, EX)
+
+
+@pytest.mark.parametrize("marker", ["、", "."])
+@pytest.mark.parametrize("section", ["五", "5"])
+@pytest.mark.parametrize("heading", ["", "新增股份起始交易日", "转增流通股上市日"])
+def test_tentative_listing_section_uses_the_same_titles_and_numbering(marker, section, heading):
+    section_heading = section + marker + heading
+    notice = NOTICE.replace("五、本次", section_heading + "公司本次所")
+    supported = section != "5" or not heading
+    if supported:
+        assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    else:
+        with pytest.raises(ValueError, match="DATES_UNRESOLVED"):
+            same_day_listing([notice], "600000", TITLE, RECORD, EX)
+    for prefix in ("讨论", "拟将"):
+        expected = "NONSTANDARD_OR_TENTATIVE" if supported else "DATES_UNRESOLVED"
+        with pytest.raises(ValueError, match=expected):
+            same_day_listing(
+                [
+                    notice.replace(
+                        section_heading + "公司本次", prefix + section_heading + "公司本次"
+                    )
+                ],
+                "600000",
+                TITLE,
+                RECORD,
+                EX,
+            )
+
+
 def _manifest(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({**data, "manifest_sha256": canonical_sha256(data)}))

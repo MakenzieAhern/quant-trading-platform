@@ -32,6 +32,16 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         raise ValueError("BONUS_SAME_DAY_RECORD_EX_CONFLICT")
     # Keep page boundaries: a margin/page counter must never complete a date or term.
     text = "§".join(re.sub(r"\s+", "", unicodedata.normalize("NFKC", page)) for page in pages)
+    # The tentative guard and actual listing matcher must share the same grammar.
+    listing_section = (
+        r"(?:[一二三四五六七八九十]+[、.](?:新增股份起始交易日|转增流通股上市日)?|\d+[、.])"
+    )
+    listing_term = (
+        r"(?:公司)?本次(?:所)?"
+        r"(?:转增|送|新增(?:资本公积金转增股本)?|(?:送)?\(转(?:增)?\)股?)(?:的)?"
+        r"无限售(?:条件)?(?:的)?流通股(?:份)?(?:的)?"
+        r"(?:起始交易(?:日|时间)|上市(?:流通)?日)(?:为)?:?"
+    )
     # A complete quoted hypothetical option adjustment is not an actual consolidation.
     # Only the guard uses this view; every effective-date/holder check keeps the full text.
     guard_text = re.sub(
@@ -44,7 +54,8 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"差异化分红送转:是|让渡|重整|缩股|吸收合并|另行公告|拟于|拟实施|B股|H股|"
         r"未确定|待定|另行通知|待通知|取消|撤销|终止|延期|暂停|暂缓|预计|预期|"
         r"拟新增|拟上市|拟转增|拟送|计划(?:本次)?(?:所)?(?:新增|资本公积金转增|转增|送|\(转(?:增)?\))|"
-        r"(?:拟将|讨论)[一二三四五六七八九十]+、(?:股权登记日|分红派息日期)",
+        r"(?:拟将|讨论)[一二三四五六七八九十]+[、.](?:股权登记日|分红派息日期)|"
+        r"(?:拟将|讨论)" + listing_section + listing_term,
         guard_text,
     ):
         raise ValueError("BONUS_SAME_DAY_NONSTANDARD_OR_TENTATIVE")
@@ -103,7 +114,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + plain_date
         + r")?|"
         r"[一二三四五六七八九十]+、(?:股权登记日与除权除息日|"
-        r"股权登记日、除息日、红利发放日)"
+        r"股权登记日、除息日、红利发放日|利润分配方案具体实施日期)"
         r"(?:1[、.])?股权登记日(?:为)?:?"
         + plain_date
         + r"(?:2[、.])?除(?:权除)?息日(?:为)?:?"
@@ -144,7 +155,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"并对公告中的虚假记载、误导性陈述或者重大遗漏承担责任。)"
     )
     holder_prose = (
-        r"(?:(?![一二三四五六七八九十]+、|\d+[、.]|20\d{2}年|讨论|次日)(?:"
+        r"(?:(?![一二三四五六七八九十]+[、.]|\d+[、.]|20\d{2}年|讨论|次日)(?:"
         + holder_banner
         + r"(?=§)|(?!本公司及)[^。;]))"
     )
@@ -199,7 +210,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + "|"
         + holder_metadata
         + r")?"
-        r"(?:[一二三四五六七八九十]+、(?:分派对象|权益分派对象(?:为)?|转增股本对象|"
+        r"(?:[一二三四五六七八九十]+[、.](?:分派对象|权益分派对象(?:为)?|转增股本对象|"
         r"分红派息及资本公积金转增股本对象|利润分配及资本公积金转增股本对象|分红派息对象|"
         r"利润分配和资本公积金转增股本对象|利润分配、转增股本的对象):?)?"
         + page_counter
@@ -209,7 +220,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"本次权益分派对象:|"
         r"[一二三四五六七八九十]+、(?:分红派息及资本公积金转增股本|权益分派|"
         r"分红派息|利润分配和转增)对象:?截[止至]|"
-        r"[一二三四五六七八九十]+、(?:权益分派对象|分派对象):?(?:截至)?)"
+        r"[一二三四五六七八九十]+[、.](?:权益分派对象|分派对象):?(?:截[止至])?)"
         + r"(?:股权登记日(?P<holder_parenthesis>\()?)?"
         + dated
         + r"(?(holder_parenthesis)\))(?!\))"
@@ -227,8 +238,9 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + "册"
         + holder_prose
         + r"{0,30}?全体股东",
-        "(?:" + boundary + r"(?:[一二三四五六七八九十]+、"
-        r"(?:转增股本方法|权益分[派配]方法|权益分派办法|分配办法|实施方法|"
+        "(?:" + boundary + r"(?:[一二三四五六七八九十]+[、.]"
+        r"(?:转增股本方法|权益分[派配]方法|权益分派办法|分配办法|分配实施办法|"
+        r"分配分派方法|实施方法|"
         r"利润分配和(?:资本公积金)?转增股本方法|分配、转增股(?:份|本)方法|"
         r"分红派息(?:及资本公积金转增股本)?方法):?)?(?:\d+[、.])?"
         r"(?:公司)?本次(?:所|资本公积金|资本公积所)?"
@@ -239,11 +251,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + r"(?:\(星期[一二三四五六日天]\))?直接[记计]入股东(?:的)?(?:证券)?[账帐]"
         + page_counter
         + "户",
-        r"(?:(?:^|[。;§]|[一二三四五六七八九十]+、"
-        r"(?:新增股份起始交易日|转增流通股上市日)?|\d+[、.])(?:公司)?本次(?:所)?"
-        r"(?:转增|送|新增(?:资本公积金转增股本)?|(?:送)?\(转(?:增)?\)股?)(?:的)?"
-        r"无限售(?:条件)?(?:的)?流通股(?:份)?(?:的)?"
-        r"(?:起始交易(?:日|时间)|上市(?:流通)?日)(?:为)?:?|"
+        r"(?:(?:^|[。;§]|" + listing_section + ")" + listing_term + "|"
         r"(?:^|[。;§])(?:" + metadata + r")?"
         r"(?:[一二三四五六七八九十]+、|\d+[、.])?"
         r"新增无限售条件流通股份上市(?:交易)?日:?)" + dated,
