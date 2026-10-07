@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 complete numbered ex-date metadata — source-only repair
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-ex-date-metadata/README.md>).
+Source57a1318 recognizes the complete numbered record/除权日/unrestrictedlisting
+title and secondlabel. Original066090/all5pages visual/read/SHA/directNFKCcache
+equal15bindings.090has independent dated unlimitedlisting thirdfield;066only
+可流通metadata/table and duplicated为, remains unresolved with source gap persisted.
+2RED139PASS→141focused0.78s;full22515terminal0:1399backend1optionalarchiveSKIP28.08s/
+Ruff558/mypy146/test-onlyhead-base-head/checkPASS. V25all137100source-onlyPASS37unresolved/
+276bindings/reverse-repeat;only090change/old99wholePASS136wholeunchanged.
+Canonical501409ff71f740a82483f665d67529f75a4a8b73546deb14b0335b2309ea83ad;
+sourceinspectionf70c1fa99b4f60baf36f23680b8dcbd3b7e16cb4a7630a913c008fc196805f9b.
+ReadonlyNOscopedP1P2/23payloadseal0fb9bad1e1b0bb08b6d201235c2414c48598bfbcc0f148305a005acbeb3c57e5
+twice preservesprior24. OwnedtestPG stopped0/OOMfalse retained;original0016/PONG/
+frontendAPI200/frozen/tag intact. Frontend/browser unchanged notrerun;no original
+migration/restart/deployment/GitHub/event/dataset/strategy/OOS action.
+Remaining21listing8holder3credit1ex4special;fullfinancial/newversion and all U1–U8/
+M0–M5 gates remain. Source-only100/137 is not economic or fullproduct admission.
+
 ## 2026-10-07 complete profit-capital scheme holder — source-only repair
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-profit-scheme/README.md>).

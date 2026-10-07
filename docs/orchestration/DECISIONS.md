@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 A numbered ex-date chain preserves independent listing evidence — 2026-10-07
+
+Complete090original/all2pages states separate numbered record/除权日/unrestricted
+listing fields and full dated all-holder/direct-share-account credit. Add only
+the exact full heading and secondlabel to shared metadata; the listing field must
+still independently match ex-date. Missingrole/unknownmetadata/date-page/second
+listing conflict negatives remain.066all3pages only可流通metadata and structures:
+keep sourcegap unresolved; neither duplicated为 repair nor table inference allowed.
+2RED→141focused1399backend1optionalSKIP/static/test-onlymigration PASS;V25only090changes/
+old99PASS136wholeunchanged/276bindings. Source57a1318/23payloadseal0fb9bad1/prior24preserved.
+Original0016/services/frozen/tag untouched/GitHubhold/fullgoalACTIVE;no financialadmission.
+Next155169fulloriginal classification before boundedsharedgrammar,not per-symbol exceptions.
+
 ## v1.2 Full scheme holder identity is a reviewed shared alias — 2026-10-07
 
 Original099103 notices/all7pages have complete effective-dated all-holder cutoff,
