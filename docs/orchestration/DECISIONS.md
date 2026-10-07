@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 Source-year conflict is not parser normalization — 2026-10-07
+
+Full original300015PDF/cache/rendered3pages show literal sharecredit2010-09-06
+beside record/ex/listing2011 dates. Do not silently repair the year or accept a
+later annual report as an effective2011 credit declaration. Existing46 cached
+implementation-query pages are not all issuer announcements; no absence claim.
+Only targeted independent official correction/execution evidence can close this gap.
+300062 complete original3page notice has all independent exact dates; shared
+holder metadata adds its literal adjacent fields, reusing already accepted EX_LABEL.
+No arbitrary text/date joins, per-symbol patch or independent-role weakening.
+1RED96focused1358backend1optionalSKIP/static/disposablemigrationPASS; V15only300062
+changes85source-onlyPASS52unresolved/old84wholePASS136unchanged/276bindings/repeat.
+Source-only validation is not full action/reference/lifecycle or dataset admission.
+Private initial seal retained with its empty pending search observation; final
+seal verifies terminal14836 actual receipt, all46 input hashes and prior payloads.
+Do not restart a yielded process or treat an empty observation as completed output.
+Original0016/frozen/tag intact, testPG stopped retained; no deployment/GitHub/OOS.
+
 ## v1.2 Failed reads do not prove saved records survived — 2026-10-07
 
 apiRequest can fail on transport, invalidJSON or schema contracts; useApiResource

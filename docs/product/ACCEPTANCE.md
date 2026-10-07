@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 holder-source conflict and complete legacy dates — scoped repair
+
+[Final private evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-date-contradiction/README_FINAL.md>).
+Source3b9e22cebb96c91befb92610b9fad8a21de1474e recognizes one complete adjacent
+record/ex metadata chain with the already supported literal 除权出息日 label.
+Two full official PDFs/all6pages inspected; SHA/directpypdfNFKC full-cache equality.
+300062 now satisfies independent holder/credit/unrestricted dates. 300015 original
+2010credit conflicts2011event; unresolved, no inferred year correction.
+1RED->96focused/1358backend1optionalarchiveSKIP20.74s/Ruff558/mypy146/disposable
+head-base-head/checkPASS. V15all137/85source-onlyPASS52unresolved/old84PASS136whole
+rows unchanged/276bindings/reverse-repeatPASS; not financial event/dataset admission.
+Existing46 implementation-query pages/two300015 notices verified, not complete
+issuer archive or absence proof. Retrospective2013 annual-report lead is not2011
+credit-date correction; web PDF screenshot cache-miss is not visual evidence.
+Initial23payload seal/empty pending search placeholder retained; final28payload
+seal2eaf48349960a4d9681ea73f6dc27e803e95e280bc11492a7a8d9e4c02405f9a
+requires terminal14836 search receipt/all46 input hashes. Fulltest82240terminal0.
+Independent readonly no evidenced scopedP1/P2. Owned30b1testPG stopped0/OOMfalse
+retained; original0016/PONG/app200/frozen693c/tagf88b preserved. Frontend unchanged,
+prior784 tests not rerun. No backend deployment/research/OOS/GitHub action.
+Full U1-U8/M0-M5 financial, recovery, forward, quality and release gates stay open.
+
 ## 2026-10-07 unverified reads — shared error honesty and safe retry
 
 [Private repeatable evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-unverified-record-errors/README.md>).
