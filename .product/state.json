@@ -1,4 +1,29 @@
 {
+  "action_record_integrity_20261008_gate": {
+    "status": "PASS_SCOPED_RECORD_INTEGRITY_NOT_FINANCIAL_ADMISSION",
+    "source_parent": "211297849e2fd447c7edc1c3a9c62b18a7878a14",
+    "implementation_sha256": "1d88c649a27f95071a3c4dca19ac5ed26513d02db0dd43f189781f24f3c169a9",
+    "test_sha256": "52d2c1e9962493efe306083c7c65b877bd213adff9af0e22ec7e717186bb165b",
+    "repair": "Validate all seven accounting kinds and price-only reference carrier dates/checksums before period filtering. Reuse approved model application boundaries; preserve future filtering, reference error codes, event models/checksums and financial formulas. 28 original negative cases reproduced the missing guard.",
+    "tests": "Final full backend 1461 PASS / one existing optional unmounted archive SKIP in 23.84s; Ruff app/tests, 332 formatted files, mypy146, Alembic check no new operations, exit0. Fresh 37 new regressions and two-file lint/format PASS. Historical106 formatter-failure log retained, not current evidence. Frontend unchanged; prior794 not rerun.",
+    "record_audit": "42792 frozen records accepted with matching decoded checksum multiset: 42598 ordinary, 153 rights, 24 merger, 2 demerger, 13 surrender, 1 pass-through, 1 consolidation. 40353 parent cash/498 bonus checksums preserved. Record compatibility is not renewed all-action economic admission.",
+    "bonus_observations": "570 unique common-A PIT record/ex-date memberships. Current production suspension index plus actual raw ex-day observation: 569 OPEN_OBSERVATION_NOT_ADMISSION, 1 blocked002549@2015-06-03 (suspended/volume0). Supersedes only eight earlier unchecked per-row observations; not execution authorization/full lifecycle admission.",
+    "source_000598": "Four actual issuer PDF pages and existing approved public-holder policy inspected. Holder gross0.102064 distinct from summary0.101; issuer total58302883.33 versus exchange58866764 and displayed-rate legacy total624299.601168 versus declared624298.33 remain conflicts. Equal computed/observed10.82 tick is not cash equality/admission. Original source URL/publication/retrieval/hash retained.",
+    "report_sha256": "58181da11c86c575a59fb2310008fcc767e28024eaaf132f24cff2d6ebe10994",
+    "report_bindings": "Final unchanged V3 repeated twice: 57 code /10 input /73 partition hashes. Manifest is separate, not74 partitions. V1/V2 nonaccepted diagnostics retained; their previous producer bytes unavailable, no repeatability claim.",
+    "isolation": "Only owned30b1 testPG (no mounts/tmpfs/loopback55471 quant_test) used by full suite; stopped0/OOMfalse2026-10-07T18:38:39.966Z and retained. Fresh37 filesystem tests use dummy quant_test namespace/no connection or restart. Initial Settings rejection and wrong manifest path retained/corrected.",
+    "preservation": "Fresh original PG/Redis/backend healthy, Redis PONG, API/frontend200, paper mode, same mounts/volumes/frozen693c0b81/tagf88b5c60. No original SQL counts re-query, migration/restart/account/strategy/OOS/frozen/.research mutation. Running backend rollout of the new loader not proven.",
+    "review": "Independent readonly no evidenced scopedP1/P2; 57/10/73 actual hashes and canonical V3 checked. Prior22 committed-context proof final review completed without changes. No reviewer tests/producer/SQL/browser/network.",
+    "evidence": "product-evidence/v1.2/m4/20261008-action-record-integrity/REVIEW_CORRECTION.md",
+    "evidence_payloads": 27,
+    "evidence_manifest_sha256": "72158689bdf4f687651766e4a57bbe870deaeb6bde580430384c0ee8aba1c181",
+    "evidence_verification": "Twice immutable canonical V1 and V2 verification PASS; V2 preserves all23 original payloads/seal plus reviewed correction. Old README108 assertion superseded: current accepted focused37, not unretained108. Current inputs/code/73 partitions/source/test/final receipts and prior22 bound. Private outside Git.",
+    "financial_admission": false,
+    "dataset_created": false,
+    "dataset_registered": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD; no request/push/merge/tag/release"
+  },
   "committed_context_durability_20261008_gate": {
     "status": "PASS_COMMITTED_CONTEXT_TWO_PROCESSES_NOT_FULL_RESTART_OR_PRODUCT",
     "source_parent": "240503c6dcbe46d15f0ac9041ee975743e5db0c0",
@@ -9,7 +34,7 @@
     "isolation": "Fresh30b1/imagecf78/no mounts/tmpfs/loopback55471quant_test0otherclients;normalemptytestDBheadmigration. Healthtemplate/quoting/wrongcwdcommanderrors preservedandcorrected. Final0clients/exactidentity thenstop0OOMfalse175847Zretained;tmpfsrowsNOTpreservedafterstop.",
     "preservation": "No originalbackend/PGRedisrestart/migration/failedjobmutation. Original0017/selected5paper417events12jobs4updates/formal1/3/310/healthy/PONG/APIfrontend200/frozen693c/tagf88b/.research retained. No denied44table/clean-demo/PSroute/provider/OOS/GitHub.",
     "limits": "Committedcontextacrosschildlifetimes whiletestPGalive ONLY;notcrashbeforecommit/physicalDBrestart/disaster/lostledger/fullfinancial/AA/productPASS. No unsupportedassurancegateorfullgoalscopechange.",
-    "review": "Readonlyreview priorCLIisolationP1 closed/nonassertguard;mode/IDs/storage/optimizedpositiveevidence bounded. Reviewer no SQL/test/UI/network. Finalproofindependenthashreview separately pending.",
+    "review": "Readonlyreview priorCLIisolationP1 closed/nonassertguard;mode/IDs/storage/optimizedpositiveevidence bounded. Reviewer no SQL/test/UI/network. Final22-payload independent hash review completed and reverified by action-record proof without prior bytes changing.",
     "evidence": "product-evidence/v1.2/m4/20261008-committed-context-durability/README.md",
     "evidence_payloads": 22,
     "evidence_manifest_sha256": "d500a7426ff4e089895c2c232c75d5f5cb65590321af40522e2de1ac40eeb2c0",
@@ -421,7 +446,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T18:03:09Z",
+  "updated_at_utc": "2026-10-07T18:51:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3396,9 +3421,9 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8committedcontext16709->16734 exactJSON/storage/quant_test0017/opt0PASS;1424backend1optionalSKIP/static331/mypy146/Alembiccheck0/22payloadd500a742twice/prior41preserved. Body794/16Help/4validmodal remainscurrentfrontend. Original0017/selectedcounts/app200/frozen/tag retained. FullgoalACTIVE/notfullfinancial/AA/perf/nativeChrome/CIreleasePASS.",
-    "repository_writer": "Root sole code/docs/state/evidence writer;freshPID/start/args no competingwriter. checkpoint_review_oct8 readonlybodyseal/sourceisolationP1review andnextfullgoalpriorities;no reviewerwrites. Alltestsessionsterminal0;exactownedidleNode7969stopped137OOMfalse174152Z/testPG30b1stopped0OOMfalse175847Z retained. No GitHub/frozenOOS mutation.",
-    "database_writer": "Rootsolewriter onlyownedstrictAPP_ENVtest/quant_test55471:emptymigration/fixtures/normalterminalwitness;testPG30b1stopped0retained175847Z,tmpfsrowsdisposable. Original0017/selected7tablecounts unchanged/no originalmigration/restart/failedjobretry/backfill/strategy. No denied44table/reset/prune/delete/fakelostledger.",
+    "latest_verification": "Oct8 all-kind loader guard: final1461 backend/1optionalSKIP/static332/mypy146/Alembiccheck0; fresh37 filesystem regressions PASS. V3 canonical58181da/57code10inputs73partitions/42792 records/570 bonus observations verified;27-payload V2 seal72158689 twice preserves original23/prior22. Reviewed old108 summary assertion corrected without replacing sealed evidence. Original services/mounts/app200/frozen/tag intact; selectedSQL counts not refreshed. Fullgoal ACTIVE, not financial/newversion/AA/performance/remote release PASS.",
+    "repository_writer": "Root sole code/docs/state/evidence writer; fresh PID/start/args no competing tests/producer. checkpoint_review_oct8 readonly source/binding/seal review; local_run_options readonly stable-key financial delta review, no reviewer writes. Full/focused/audit sessions terminal0; testPG30b1 stopped0/OOMfalse183839Z retained. No GitHub/frozen/OOS mutation.",
+    "database_writer": "Root sole writer only owned strict APP_ENV=test/quant_test55471 for full1461 suite; testPG30b1 stopped0 retained183839Z, tmpfs rows disposable. Fresh37 no SQL. Original services unchanged/no original migration/restart/failed-job retry/backfill/strategy. Historical selected counts remain prior evidence, not fresh queries. No denied44table/reset/prune/delete/fake lost ledger.",
     "queue_writer": "PrivateV30all137104sourcePASS33unresolved/current276bindings;only146147change/old102wholePASS135wholeunchanged. Literal156 andknowncredit/year/listing/cash/tablecontradictions retained. Fullfinancial/newversion/dataadmission unfinished;no provider/event/researchqueue writes.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
@@ -3409,6 +3434,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8 all-kind record root guard: 28 RED ->37 new focused PASS/final1461 backend1optionalSKIP/static332/mypy146/Alembiccheck0. Actual frozen42792 records/all7 kinds intact;570 bonus PIT/ex observations569open1blocked, not economic admission. V3 58181da/57code10inputs73partitions/repeated;27-payload V2 72158689 twice/original23+prior22 unchanged/independent scoped review. Old108 summary assertion superseded37 without replacing sealed bytes. 000598 source conflicts retained. Original services/APIfrontend200/frozen/tag intact; owned testPG30b1 stopped0 retained183839Z. No strategy/frozen/OOS/GitHub; fullgoal ACTIVE.",
     "Oct8committedfailurecontext SQLtwo-processwriter16709reader16734/opt0/quant_test0017/same2IDs+fullJSON+storagePASS;JSONBobject/freshSQLNULL preserveunknown/noresult. CLIisolationP1closedwithnonassertconftestguard/argument+positiveoptguard. Final1424backend1optionalSKIP23.95s/static331/mypy146/Alembiccheck0.22payloadd500a742twice/prior41preserved. Original0017/selectedcounts/app200/frozen/tag intact;ownedtestPG30b1zerootherclientsSTOPPED0OOMfalse175847Z retained/tmpfsrowsnotdurableafterstop. FullgoalACTIVE/notstrategy/financial/fullrestart/GitHubPASS.",
     "Oct8sharedbody15:7CSSdeletions/1RED->794frontend48files/linttypes/build171/audit0. Actual16ENZHthemefoursizeHelp/4validmodalkeyboard+missingcacheerror scopedPASS;default452mismatchretainedcorrected/desktopsoftJPEGnotvisualPASS.41payload81cee057twice preservesprior170/atomicservedba789d34+6ef228f9+d1b21e37/priorrollback. Original0017/selectedcounts/app200/frozen/tag intact;ownedidleNode7969stopped137OOMfalse. IndependentreadonlynoevidencedscopedP1P2/fullgoalACTIVE/GitHubhold.",
     "Oct8U4samepath/batchedsource/cleanForward selection closure:4RED+3reviewRED->793frontend47files/49comparison/static/build170ms/audit0. ActualIABexisting2jobhandoff/manual/ENZH/compare/BackForward and16correctedpickerlayouts PASSscoped;170payload2d4ea856twice/prior6preserved/fullrollback/atomicserved34e868ad+98cb3bc6. Original0017/selectedcounts/PONG/APIfrontend200/frozen/tag retained/ownedNode7969stopped137notOOM. Independent no evidenced scopedP1P2/noepochspeculation/GitHubhold/fullgoalACTIVE.",
@@ -4033,8 +4059,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue fullU1-U8/M0-M5: committedcontextcurrent1424/22payloadd500a742 andbody794/41payload closedSCOPED. Prioritize trustworthyselfserviceAshareeconomic/action/reference/lifecycle/newversion admission andcurrentAA/performance/export/media/fullrestore ratherthanmorefont/PDFacquisitioncounts. ReuseacceptedV30source104/33 andreference_runtime candidate/currentauthority honestly;source-onlynotfinancialadmission. Lawfulafterstartforward/unresolvedmissingledgerfact/exactremoteCIrelease remain;preservefrozen/OOS/GitHubhold/deniedboundaries, noaddedindependentphysicalbackupmandatorygate.",
-  "local_next_command": "Readfullobjective/ProductMaster/completionScope/currentownership/contextgate;verify22payloadd500a742/prior41 withouttestreplay. Inspectremainingfinancial/reference/newversion existingproducer+evidence andchoosehighestvalueconcreteuserflowgap;independentreviewnextpriorities. Preserveall137coverageoracle/unknownfailclosed andoldimmutableoutputs, no source-onlyPASSasfinancial/unknown-tozero/strategyperformancefit. Inparallel currentexportlanding/nativeAA/performance viaallowedactualbrowser;no deniedroute/permission/retryorGitHub/dateassumptionbypass.",
+  "next_task": "Continue full U1-U8/M0-M5: integrate V30 source-only104 through independent supplemental financial preflight. Stable-key delta versus72 overlay is32 (26 newly source-cleared +6 existing missing gross cash); none in original498 bonus/40353 cash. Establish real cash/reference/accounting/lifecycle evidence in a new private candidate, preserve every prior class/receipt and explicit gaps. Then independent whole new-version admission, currentAA/performance/export/media/fullrestore. Lawful after-start forward, unresolved old-ledger fact and exact remote CI/release remain; no added independent-physical-backup mandatory gate.",
+  "local_next_command": "Read existing cash_overlay.py/audit_v3.py/combined-financial audit.py and shared cash_event/gross_cash/source_ratio/same_day_listing helpers completely. New independent 20261008-v30-financial-preflight producer/output, not old hardcoded78/72/570 receipts or frozen materializer state. Verify32 stable-key delta and104 PIT IDs, then explicit gross cash/raw/reference/action/accounting guards; no missing cash-tozero, source-only financialPASS or strategy performance fitting. Preserve .research/OOS/GitHub hold and denied routes.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

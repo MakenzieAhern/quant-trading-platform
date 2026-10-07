@@ -237,15 +237,24 @@ class FullDataset:
             "ORDINARY_REFERENCE": OrdinaryDistributionReference,
         }
         grouped: dict[str, Any] = defaultdict(lambda: defaultdict(list))
-        for row in pq.read_table(
-            self.root / "corporate-actions.parquet", filters=[("application_date", "<=", end)]
-        ).to_pylist():
+        # Validate before filtering: a wrong later record date must not hide a due event.
+        for row in pq.read_table(self.root / "corporate-actions.parquet").to_pylist():
             event = classes[row["event_kind"]].model_validate_json(row["event_json"])
-            if isinstance(event, OrdinaryDistributionReference) and (
-                row["application_date"] != event.ex_date.isoformat()
+            is_reference = isinstance(event, OrdinaryDistributionReference)
+            application_date = (
+                event.ex_date
+                if is_reference
+                else getattr(event, "application_date", event.effective_date)
+            )
+            if (
+                application_date is None
+                or row["application_date"] != application_date.isoformat()
                 or row.get("event_checksum") != event.event_checksum
             ):
-                raise ValueError("ORDINARY_REFERENCE_RECORD_MISMATCH")
+                prefix = "ORDINARY_REFERENCE" if is_reference else "CORPORATE_ACTION"
+                raise ValueError(f"{prefix}_RECORD_MISMATCH")
+            if row["application_date"] > end:
+                continue
             grouped[row["application_date"]][row["event_kind"]].append(event)
         for kinds in grouped.values():
             seen = set()

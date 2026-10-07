@@ -1,5 +1,36 @@
 # Decisions
 
+## v1.2 Validate event carriers before point-in-time filtering — 2026-10-08
+
+Production FullDataset validated only price-only references, so wrong carrier
+dates/checksums in seven accounting kinds could be silently accepted or hidden
+after cutoff. Reuse each existing model's approved application boundary/checksum
+once in the shared loader before filtering. Preserve 600649 research/legal date
+distinction, future exclusion, reference error codes and financial formulas.
+28 RED cases plus37 final new regressions and1461 backend/optional1SKIP/static/
+Alembiccheck pass. No API/model/checksum/Portfolio/migration change.
+
+Actual42792 frozen records/all retained kinds load consistently under current code,
+but compatibility is not a new economic census. Complete570 bonus PIT/ex raw and
+suspension observations retain002549 blocked; non-suspension is not authorization.
+000598 original issuer/public-holder and exchange-summary fields remain distinct,
+with unresolved aggregate and displayed-rate contradictions; equal rounded10.82
+reference is not financial-input equality. Do not change cash/tolerance or old data.
+V3 repeated and independently checked57code10input73partition bindings;23-payload
+seal c624e775 preserves prior22; reviewed README108 assertion superseded by actual37
+receipt in new27-payload V2 seal72158689, with original23/seal unchanged. Private
+report V1/V2 are nonaccepted diagnostics, no lost producer
+repeatability claim. Wrong-path and test-namespace rejection preserved/corrected.
+Original services/frozen/tag unchanged; original SQL counts not freshly queried,
+backend rollout not yet proven. No research/OOS/remote write or dataset admission.
+
+Next integrate V30 through a NEW independent supplemental financial candidate:
+104 source-pass keys contain old72 plus32 new-to-overlay (26 newly source-cleared,
+6 still missing explicit gross cash), none in old498 bonus/40353 cash. Reuse existing
+financial/accounting helpers and preserve all action classes/full coverage oracle.
+Never substitute source-only counts for financial/event/dataset/user-flow acceptance.
+Full U1-U8/M0-M5, forward/lost-ledger/quality/delivery and remote gates remain intact.
+
 ## v1.2 Prove committed diagnostic SQL without altering original failures — 2026-10-08
 
 Existingmanagerreopen was sameprocess;historicaltemporaryseed unavailable/tmpfs

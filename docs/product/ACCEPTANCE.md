@@ -1,5 +1,36 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 all-kind action record integrity — scoped financial trust boundary
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-action-record-integrity/REVIEW_CORRECTION.md>)
+binds parent2112978, loader1d88c649/test52d2c1e9. Wrong serialized application
+dates/checksums in seven accounting kinds previously passed, and filtering could
+hide a due event. 28 negatives reproduced; shared model-date/checksum guard now
+runs before filtering, preserving approved research dates/future exclusion and
+reference error codes. Final1461 backend/1optional archive SKIP23.84s, Ruff332,
+mypy146/Alembiccheck0; fresh37 new regressions plus focused lint/format PASS.
+Old106 formatter-failure receipt retained; frontend unchanged,794 not rerun.
+
+V3 canonical58181da11c86c575a59fb2310008fcc767e28024eaaf132f24cff2d6ebe10994
+repeated unchanged;57code/10inputs/73partitions (manifest separately). All42792
+frozen records/153rights/24mergers/other retained kinds compatible;40353cash/498bonus
+checksums intact, NOT renewed economic census. All570 bonus record/ex memberships
+and raw/suspension observations checked:569 open-not-admitted/1blocked002549volume0.
+000598 actual four-page PDF retains gross0.102064 versus summary0.101 and total/rate
+conflicts; same10.82 price tick does not resolve them or admit an event.
+
+27-payload immutable V2 seal72158689bdf4f687651766e4a57bbe870deaeb6bde580430384c0ee8aba1c181
+verified twice/original23/prior22 intact; independent readonly no evidenced scopedP1/P2.
+Reviewed original README108 assertion superseded by actual37 receipt; sealed bytes
+retained with a separate correction, not overwritten to hide the inconsistency.
+Owned tmpfs quant_test only/full tests, stopped0 and retained; fresh37 no SQL.
+Original services/mounts/PONG/APIfrontend200/frozen/tag preserved, selected original
+SQL counts not re-queried and running backend loader rollout not proven. No original
+migration/restart/strategy/OOS/GitHub. New dataset absent/unregistered/financially
+unadmitted; full U1-U8/M0-M5 and quality/forward/ledger/delivery/remote gates remain.
+Next32 stable-key delta:26 newly source-cleared plus6 still missing gross cash,
+not104 already financially accepted events.
+
 ## 2026-10-08 committed failure context — scoped cross-process SQL witness
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-committed-context-durability/README.md>)
