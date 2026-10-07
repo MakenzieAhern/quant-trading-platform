@@ -1,5 +1,44 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 full failure count versus bounded identities — scoped bilingual PASS
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-failure-prefix/README.md>)
+binds parentc6794d5,167current repository files/5inputs and30payload seal
+`c2ccf215eca71267d1c1813d0621098b2758bdedd8183e7b8777e463aeee7f9a` twicePASS.
+Four new EN/ZH ×100/101 parse-to-render regressions distinguish the full affected
+count from the100-ID prefix, require truncation only101 and no result/retry call.
+Onlytest source changes;no productionmodel/component/API/policy/migration.
+
+102focused/2files6.01s,798fullfrontend/48files15.22s,changedtestPrettier/types/lint/
+isolatedVite133modules193msPASS.13buildartifacts retained;527.96kB/outdir warnings
+not erased or interaction-p95 proof. Backendfullsuite/audit not refreshed.
+Actual IAB8 unique ENZH×100101×recorded1280x720/390x844 cases/9rawframes including
+one unnamed exploratoryduplicate. Schema-validated synthetic2031 GET-only RAM
+fixtures/noSQL/engine/tasks/trades;4write methods actually405. Fullcount/date/
+100stableIDs/conditionaldisclosure/nooverflow corroborated byframes and8JPEGs.
+Encoded1265x712/375x812,not exactviewportpixels/native200. Onlyzh101desktop and
+mobileEN101 images directly show truncation;others also need DOM. Intentional
+QAcapabilities404 not originalservicefailure. Not realmarket>100holdings/fullAA.
+
+Readonly review no evidenced scopedproductP1P2;initialmissingREADME/seal/mapping
+addressed with existingstdlibchecker. Preseal formatfailure corrected/retained.
+OwnedQA711799 freshPID/start/cmd verified thenTERM/session87034intentionalexit1;
+tabclosed/viewportreset/originalZHsystemcontext retained. All3network-none test/
+buildcontainers exited0 retained. Originalservices healthy/PONG/APIfrontend200;
+no originalSQL/restart/deploy/frozen/.research/OOS/GitHub operation.
+
+One targeted existing nativeSSE directory request60072520171130..1201 returned
+200/pageCount1/total2, identifies20171201 officialresumptionnotice1000000000606348
+andexact`600725_20171201_2.pdf`;snapshot67b421ce/retrievalUTC221208 preserved.
+Metadata only—not body/effective/reference/execution proof. PriorwwwSSEPDF
+ACCESS_DENIED_STOP retained;target itself not requested/no alternatehost/identity/
+CNINFO retry. Actualopen2.85 never replacesNULLpre_close;fullfinancialPARTIAL.
+
+Full U1-U8/M0-M5 remainsACTIVE. NextUX-VIEWSdistinct22row paged-return regression
+must distinguish pages/returnhref/focus/scroll;currentreal12studies cannot prove
+page2. CurrentnativeAA/performance/export/media/restore/lawfulforward/genuine
+lostledger/wholefinancial/remote delivery remainrequired;no narrowedcompletion.
+
 ## 2026-10-08 600725 net-holder component closure — financial gate still PARTIAL
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-restructuring-components/README.md>)

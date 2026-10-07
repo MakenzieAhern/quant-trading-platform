@@ -1,5 +1,32 @@
 # Decisions
 
+## v1.2 Seal bounded full-count diagnostics, then target a real paged-return gap — 2026-10-08
+
+Reuse existing parse/schema/detail branch;onlyfour ENZH100101 regression cases,
+not another errorcomponent or financial exception. Actual8unique IABcases show
+full affected count separately from100stableidentities and conditionaltruncation.
+Synthetic GET-only validatedRAM/2031fixtures/no originalSQL/engine/task/trade are
+strictly not real>100holdings/financial/native200/fullAA evidence. Viewport and
+JPEG sizes differ;one exploratoryduplicate is not another case. Independent
+review's evidence gaps closed with README, deterministiccase→JPEG existence
+checks andimmutable30payloadc2ccf215 seal twicePASS;format-onlyfailure retained.
+102focused/798fullfrontend/type/lint/isolatedbuildPASS,notfreshbackend/audit/p95.
+No productioncode/dependency/policy/migration/deploy/originalrestart change.
+
+Do not repeat previouslyaccepted1/nullcontext UI or unchanged contaminatednative
+timing expansion. NextUX-VIEWS requirement has a falsifiable coverage gap: current
+offset20 test returns samejob onbothpages andcannotprove same-row focus/scroll.
+Use22distinctmockIDs/20+2slice as smallestregression;actualrealDB12studies remains
+insufficient for pagedbrowserproof. Full objective unchanged/GitHubHOLD retained.
+
+The single bounded officialSSEdirectory query now identifies the precise missing
+60072520171201 resumptionnotice/PDF1000000000606348. Preserveofficialmetadata,
+snapshotSHA67b421ce andUTC221208,not inferred effective/reference/executionfacts.
+PriorwwwSSEdisclosurePDFroutebotSTOP remains. NewtargetPDFnotrequested;neverclaim
+target403 or usealternatehost/transport/identity. Exact-titleindexonlyderivative/
+earliersources. LegitimateauthenticPDFcopy is thespecificnextsourceinput;cached
+open2.85 isnotNULLpre_close. Wholefinancial andmandatoryproduct/releasegates open.
+
 ## v1.2 Net restructuring allocation is not a ratio conflict or extra holder leg — 2026-10-08
 
 Close6007252016 sourcecomponents with the unchanged5-page implementation and

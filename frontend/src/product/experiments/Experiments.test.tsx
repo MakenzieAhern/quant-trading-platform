@@ -1338,6 +1338,61 @@ describe("durable experiment detail", () => {
     },
   );
 
+  it.each([
+    ["en-US", 100],
+    ["en-US", 101],
+    ["zh-CN", 100],
+    ["zh-CN", 101],
+  ] as const)(
+    "distinguishes the full failure count from its bounded identity list: %s/%i",
+    async (language, count) => {
+      await i18n.changeLanguage(language);
+      const prefix = Array.from(
+        { length: 100 },
+        (_, n) => `CN-A:SSE:${String(600000 + n)}`,
+      );
+      vi.spyOn(experimentApi, "get").mockResolvedValue(
+        parseExperiment({
+          ...job,
+          status: "FAILED",
+          phase: "FAILED",
+          error_code: "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT",
+          error_context: {
+            trading_date: "2031-01-04",
+            security_ids: prefix,
+            security_count: count,
+          },
+        }),
+      );
+      const readResult = vi.spyOn(experimentApi, "result");
+      const retry = vi.spyOn(experimentApi, "retry");
+      const zh = language.startsWith("zh");
+      render(<ExperimentDetailPage jobId={job.job_id} />);
+      await screen.findByText(
+        `${zh ? "涉及的持仓证券" : "Affected held securities"}: ${count}`,
+      );
+      await userEvent.click(
+        screen.getByText(zh ? "技术详情" : "Technical details"),
+      );
+      const identities = screen.getByRole("list", {
+        name: zh ? "涉及的持仓证券" : "Affected held securities",
+      });
+      expect(within(identities).getAllByRole("listitem")).toHaveLength(100);
+      expect(within(identities).getByText(prefix[0])).toBeVisible();
+      expect(within(identities).getByText(prefix[99])).toBeVisible();
+      expect(screen.queryByText("CN-A:SSE:600100")).not.toBeInTheDocument();
+      const disclosure = screen.queryByText(
+        zh
+          ? "技术详情按稳定顺序列出前 100 个标识，不代表完整受影响集合。"
+          : "Technical details list the first 100 identities in stable order, not the full affected set.",
+      );
+      if (count > prefix.length) expect(disclosure).toBeVisible();
+      else expect(disclosure).not.toBeInTheDocument();
+      expect(readResult).not.toHaveBeenCalled();
+      expect(retry).not.toHaveBeenCalled();
+    },
+  );
+
   it("keeps a legacy failure date unknown even when session progress is available", async () => {
     vi.spyOn(experimentApi, "get").mockResolvedValue({
       ...job,

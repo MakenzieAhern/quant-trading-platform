@@ -1,4 +1,41 @@
 {
+  "failure_prefix_20261008_gate": {
+    "status": "PASS_SCOPED_SYNTHETIC_100_101_NOT_FULL_PRODUCT",
+    "previous_goal_turn_classification": "Previous CI availability answer only rechecked unchanged local services: NO_PROJECT_PROGRESS, not a verified process wait. This continuation completes pending four-regression/eight-case evidence with exact source bindings, screenshot mapping, repeatable immutable seal and persistent checkpoint: PROGRESS. Full U1-U8/M0-M5 unchanged.",
+    "source_parent": "c6794d5596ca2b8b563da696ae249b38d7760d59",
+    "implementation": "Only55-line parameterized test addition in Experiments.test.tsx: EN/ZH x100/101 parse-to-render full count, bounded100 IDs/first-last, truncation only101 and no incidental result/retry. No production component/API/model/migration/policy/dependency/deployment change.",
+    "tests": "Actual cachednetwork-none Node24:102focused/2files6.01s;798fullfrontend/48files15.22s;Prettier changedtest/TypeScript/ESLint exit0;isolatedVite133modules193ms/13artifacts.527.96kB/outdir warnings retained,not interactionp95. Backend fullsuite/audit not refreshed.",
+    "browser": "Actual IAB8 unique ENZH x100101 x recorded1280x720/390x844;9rawframes includes one unnamed zh101 exploratory duplicate. Current schemas validate synthetic2031 GET-only RAM fixtures;4write methods actually405/no applicationSQL/engine/tasks/accounts/orders. Full count/list/disclosure/date/nooverflow verified, not realmarket holdingsabove100.",
+    "screenshots": "8unedited JPEGs/frame-case mapping;encodeddesktop1265x712/mobile375x812,not exactviewportpixels/native200. zh101desktop/mobileEN101 directly show truncation;other101 frames require DOMcorroboration. Intentionalcapabilities404 gives QAheader unavailable,not originalservice failure.",
+    "bindings": "167current repository file SHA and5inputs:targetedSSEJSON/meta,2priorPDFdenialreceipts,frozenmanifest. Two savedHTTPresponses validated bycurrent backend schema;13isolatedbuildartifact bytes sealed. No originalfrontend redeploy.",
+    "independent_review": "Readonly source/test/frames/all8JPEG review found no evidenced scoped productP1P2. MissingREADME/seal/frame-JPEG mapping addressed via existingstdlibverifier;initialformat-only failure recorded/corrected before seal. Reviewer did not execute browser/tests/checker/network/SQL.",
+    "evidence": "product-evidence/v1.2/m4/20261008-failure-prefix/README.md",
+    "evidence_payloads": 30,
+    "evidence_manifest_sha256": "c2ccf215eca71267d1c1813d0621098b2758bdedd8183e7b8777e463aeee7f9a",
+    "verification": "Rufflint/format PASS;two actual immutable verifier exit0 runs with identical30payload seal/current167+5bindings. Existing1/nullcontext UI and known contaminatednative timing method not repeated.",
+    "services_and_ownership": "FreshUbuntu/WindowsPID/start/args no competingproducer. QA711799 PID/start/cmd rechecked then TERM;session87034exit1 intentional/not appfailure;ownedQAtabclosed/viewportreset/originalZHsystemtab retained. Test0028c9ae/builded852696/fulltest25b7aac5 exited0/OOMfalse/networknone/retained. OriginalCompose3healthy/RedisPONG/Windows5173frontend+API8000HTTP200paper;no SQL/originalrestart/deploy/testPGstart.",
+    "financial_coverage": "PARTIAL",
+    "financial_admission": false,
+    "strategy_run": false,
+    "dataset_created": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD;no remote request/push/merge/tag/release;pastOctober1 estimate not recoveryproof",
+    "next": "UX-VIEWS paged saved-study return:existingoffset20test returns samejob onbothpages and cannot falsify wrong-row return. Use22distinctmock IDs/20+2 slice to check offset20+sort+samehref focus/scroll/no create orretry;actualoriginalDBonly12studies,so no realpage2 browser claim. CurrentnativeAA/performance/export/media/restore/lawfulforward/genuinelostledger/wholefinancial/remote delivery still required."
+  },
+  "resumption_directory_20261008_gate": {
+    "status": "OFFICIAL_METADATA_LEAD_ONLY_BODY_AND_EXECUTION_UNRESOLVED",
+    "source": "One existing nativefetch SSEqueryCompanyBulletinNew for6007252017-11-30..12-01;HTTP200/pageCount1/total2. RetrievedUTC2026-10-07T22:12:08.929755+00:00;no acquisition restart/retry.",
+    "snapshot": "/home/yuchen/data/product-candidates/20261008-resumption-600725/600725-20171130-20171201-p001.json",
+    "snapshot_sha256": "67b421ceda7fe53a39d6ce2ab1c72aba46cab2e2581f1b69b29e1f313d38e48d",
+    "target_title": "ST云维关于公司股票复牌的提示性公告",
+    "publication_date": "2017-12-01",
+    "bulletin_id": "1000000000606348",
+    "official_pdf_url": "https://www.sse.com.cn/disclosure/listedinfo/announcement/c/2017-12-01/600725_20171201_2.pdf",
+    "boundary": "wwwSSE disclosurePDF endpoint has priorACCESS_DENIED_STOP bot receipts. No targetPDFrequest/alternatehost/transport/identity/CNINFO retry. Do not claim targetitself returned403. Exacttitle independentindex gave derivative/earlier sources only;not accepted official body.",
+    "admission": "Metadata never establishes effective/resumption-at-open/reference/executiondate. Actualcached20171201positive/open2.85 retained;pre_closeNULL neverfilledfromopen. Whole7544/6583gaps/33supplemental/8cashunknown/2contradictions/000598/000771/original1696pending5711not-evidenced remain unchanged.",
+    "smallest_specific_input": "Authentic copy of now-identified official20171201resumptionPDF;not permission to bypass stopped endpoint. Other required financial/product gates remain.",
+    "evidence": "product-evidence/v1.2/m4/20261008-failure-prefix/README.md"
+  },
   "restructuring_components_20261008_gate": {
     "status": "PASS_SCOPED_ONE_SOURCE_COMPONENT_ARITHMETIC_AND_ACCOUNTING_NOT_FINANCIAL_ADMISSION",
     "previous_goal_turn_classification": "Last autonomous fe38b5f checkpoint was PROGRESS with new IAB keyboard evidence/local commit. Subsequent user CI-availability answer was readonly unchanged-service status, NO_PROJECT_PROGRESS toward full goal and not a live-process wait. This turn completes one source ambiguity and four accounting witnesses plus first-positive-volume cache evidence: PROGRESS;full objective unchanged.",
@@ -607,7 +644,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T22:00:39Z",
+  "updated_at_utc": "2026-10-07T22:35:51Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3582,8 +3619,8 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 current Market modal actualIAB16cases/407frames/threefull-loopscenarios/oneEN390BackForward scopedPASS;40focusedtests/freshbuild13runtimehashes/current10source/tree744131 binding.41payload05ea4544 twice sealed/prior50intact/independent no evidenced scopedP1P2. No apppatch/deployment/SQL;financialPARTIAL/GitHubhold/fullgoalACTIVE.",
-    "repository_writer": "Root sole docs/state/private proof writer;freshUbuntuPID/start/args andWindows scoped process probe no competing repo writer observed. Two existing agents readonly. Test/build/checker sessions terminal0;optimized negative1. No appsource/API/dependency/policy/migration/runtime/GitHub/frozen/OOS mutation.",
+    "latest_verification": "Oct8 failed-study boundedprefix4newtests/102focused/798fullfrontend/static/buildPASS andactual8IABcases;30payloadc2ccf215 twice immutable/current167+5bindings/readonly no evidenced scopedP1P2. Target600725 exact officialresumptionmetadata found/body not fetched due priorPDFrouteSTOP. No productionpatch/SQL/deploy/strategy/GitHub;financialPARTIAL/fullgoalACTIVE.",
+    "repository_writer": "Root sole test/docs/state/private-proof writer;freshUbuntuPID/start/args andWindows scopedCIM no competingproducer observed. Existingagents readonly. Ownedfocused/fulltest/build exited0/networknone/retained;privatechecker twice0. No productionAPI/model/dependency/policy/migration/runtime/GitHub/frozen/OOS mutation.",
     "database_writer": "No SQL/testDB start/original migration/restart/deployment this unit. Original Compose PG/Redis/backend healthy;RedisPONG/actualWindows5173/API8000HTTP200 checked. Prior selected ledger counts and testPG30b1 stopped state remain historical, not refreshed. No denied44table/reset/prune/delete/fake lostledger.",
     "queue_writer": "No financial producer/source/candidate queue write this unit. Prior all7544/fullV2e59c40a3/two-caseV26f3e0da7/6583gaps/no-holder2/scope38/000771unmerged/187noappend/498candidates retained. Prior9no-holder payloads hash-intact;changedhelper old-runtime acceptance not rerun. No datasetregistration/strategy/.research or frozen rewrite;wholefinancial gatepending.",
     "agents": {
@@ -3591,10 +3628,11 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "Oct8 actualCompose3healthy/RedisPONG/Windowsfrontend5173API8000HTTP200 andfrontendnginxa561fa12running/no mounts/loopback5173;ownednetworknone Node test62add26/buildb9a93910 exited0 retained, no live producer. BrowserIAB16 boundedcases/preferencesrestored/tabhandoff. Frozenmanifest693c0b81/tagf88b5c60 preserved;no SQL/deployment/testPG30b1 refresh. Historical PIDs not reused.",
+    "verified_processes": "Oct8 actualCompose3healthy/RedisPONG/Windows5173frontend+API8000HTTP200/paper;retainedfrontendnginxa561fa12/no mounts/loopback5173. Ownednetwork-none Node0028c9ae/ed852696/25b7aac5 exited0 retained;loopbackQA711799freshidentitycheckedthenTERM/session87034intentional1/notlive. Browser8boundedcases/ownedtabclosed/viewportreset/originaltabretained. Frozenmanifest693c0b81/tagf88b5c60 unchanged/no SQL/deploy/testPG30b1 refresh;historicalPID not reused.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8 bounded errorprefix:4new ENZH100101 parse-render regressions/102focused/798fullfrontend/static+buildPASS;actual8unique IABcases/9rawframes/8JPEGs/schema-validated RAM GET-only/noSQL;167repo+5inputbindings/30payloadc2ccf215 twice immutable/independent no evidenced scopedP1P2. Originalserviceshealthy/no productiondeploy. One precise official600725resumption directory leadHTTP200/canonical67b421ce metadata only;PDFrouteSTOP preserved/bodyexecutiongateOPEN. FullgoalACTIVE/GitHubHOLD.",
     "Oct8 current Market modal actualIAB16 unique cases/407rawframes;50/50/19 pagination+folded/terminal dual edges+Escsamecontext,three15/15/36 full-loop scenarios andEN390BackForward scopedPASS.40focusedfrontend2files3.92s/freshVite133modules223ms/all13runtimehashes/current10source/tree744131match;no apppatch/deployment.41payload05ea4544 twice immutable/prior50intact/readonly no evidenced scopedP1P2. Actual3services/PONG/APIfrontend200/frozen/tag intact;test/buildcontainers exited0 retained. Not Chrome/native200/fullAA/p95/fullfinancial/release;GitHubHOLD/fullgoalACTIVE.",
     "Oct8 V30 independent downstream:104=95 cashleg-missing relationships/1 explicitzero300142/8 NO_EXPLICIT_GROSS_CASH;26 new=23positive1zero2unknown, old78 whole equal/498+498+7407+137 preserved. Actual303input101code12frozenpartition/reversed order/repeatedcanonical72c0598d;6-payload7a099904 twice/prior27 intact/independent scoped review. Explicit300147/155 source contradiction event blockers persisted. No new overlay/dataset/admission/strategy/SQL/frozen/OOS/GitHub; fullgoal ACTIVE.",
     "Oct8 all-kind record root guard: 28 RED ->37 new focused PASS/final1461 backend1optionalSKIP/static332/mypy146/Alembiccheck0. Actual frozen42792 records/all7 kinds intact;570 bonus PIT/ex observations569open1blocked, not economic admission. V3 58181da/57code10inputs73partitions/repeated;27-payload V2 72158689 twice/original23+prior22 unchanged/independent scoped review. Old108 summary assertion superseded37 without replacing sealed bytes. 000598 source conflicts retained. Original services/APIfrontend200/frozen/tag intact; owned testPG30b1 stopped0 retained183839Z. No strategy/frozen/OOS/GitHub; fullgoal ACTIVE.",
@@ -4222,8 +4260,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue fullU1-U8/M0-M5. 600725total1/net-holder0.7 components,special2.85 arithmetic and4scopedaccountingchecks closed;cachedactualpositive2017-12-01 observed,butofficialresumption-at-open/firstpre_close/runtimeadmission remainOPEN. Target2017-11-30/12-01 officialresumption/reference evidence,not reacquiringarchive or0.3holderevent. FinancialPARTIAL/6583source-lifecycle/33supplemental/8cashunknown/2contradictions/000598/000771/original1696pending5711not-evidenced remain. Preservewhole7544/frozen/no blind187append. CurrentnativeAA/performance/export/media/restore/lawfulforward/genuine lostledgers/remoteCIrelease required;no unchangedIABrepeat/fullAApromotion.",
-  "local_next_command": "Read restructuring_components_20261008_gate/README andverify15payloade670084c seal;566inputs57code/current4witnesses/source7pages/cacheNov-Decfirstpositive andpriorMarket41/no-holder9 bytechecks preserved. Nextspecific600725official2017-11-30/12-01 resumption/reference sourcegap;do not substituteopen2.85 forNULLpre_close orscheduled12-29/endStopDate11-30 fortradability. No newdataset/admission untilwholefinancialPASS;no frozen/.research/OOS rewrite. CurrentIAB16caseclosed/no unchangedrepeat. DownloadrouteSTOP/no alternatebrowserCDPthirdclick withoutpermittedobservablepath. GitHubHOLD until directhumanrecoveryconfirmation;localapp5173/API8000 usable.",
+  "next_task": "Continue fullU1-U8/M0-M5. Nextsafe UX-VIEWS paged saved-study return:22distinctmock IDs/20+2 andoffset20+sort+samehref focus/scroll/no create-retry;existingtwo-page test aliases samejob andrealDBonly12studies. Readonlyreview confirmedOct3 fixed-tag beforemedia alreadycloses oldloadedstrategy/report/account comparison withmatchinghashes/tagf88b;cancel duplicate rebuild,not fullM5. 600725official20171201resumptionPDF exactmetadata nowidentified;authenticbody/reference/runtime evidence stillneeded/no deniedroute retry. Wholefinancial/lawfulafterstartforward/genuinelostledgers/currentAA/native200/performance/export/media/restore/remote gates retained,not simplified to localtests.",
+  "local_next_command": "Read failure_prefix_20261008_gate/30payloadc2ccf215 evidence,then inspect Experiments.test.tsx pagedReturn offset20 case andshared ExperimentsPage returntoken/focus/scroll callers. Add smallest distinct22row regression and followactualbrowseronlyif safeisolatedGET-only schema-validatedfixture,notoriginalSQL/newstrategy or true-market claim. No unchanged1-null/prefixmatrix/native contaminatedtiming expansion/download thirdclick. Exact600725PDFbody waits legitimateinput;no alternateendpoint bypass/pre_close=open/blind187append/frozenresearch change. GitHubHOLD until directhumanrecoveryconfirmation;local5173/API8000 usable.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
