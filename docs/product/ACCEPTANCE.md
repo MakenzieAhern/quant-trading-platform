@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 bounded account continuation — U3/U5/U6 source prerequisite
+
+[Private official PDF, tests and immutable V10 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-credit-account-boundary/README.md>).
+Complete300198 PDF rendered/read: full2011-09-27 credit date on page1,
+only 账/户 split at page boundary; explicit unrestricted listing2011-09-27.
+Reuse page_counter between those characters, exact identical all-page declared
+title/company margin prefix only, full raw deny guards retained and § kept.
+No date assembly or arbitrary prose/section/header skip.3RED→87 relatedPASS;
+1348fullbackend/1existing optional archiveSKIP20.63s/Ruff/format558/mypy146/
+test-only head-base-head-check PASS. Independent read-only no scopedP1/P2.
+V10 all137/81sourcePASS56unresolved,only300198 changed;old80wholePASS/136whole
+unchanged/allratios-source-identity/276bindings/reverse-immutable preserved.
+Batchb4d92fe1a5576bf29459e0a5fb398f0e674dee0c43206c86edb716a68976687b;
+15payload seal4548669e45b07f2102a3e01c7174aad9eb8336deb4e356ef96859d03aba8f402.
+Not economic/all-action/reference/lifecycle/runtime financial admission.
+OriginalDB0016/frozen/tag/services retained;ownedtmpfs testPG zero other clients,
+stopped0retained. No original restart/migration/deployment/frontend/browser/
+provider/strategy/formal/OOS/GitHub action; current CI NOT_RUN under hold.
+Remaining6cash/56sources/000598/300048/fullfinancial and full U1-U8/M0-M5 gates
+still mandatory; goal IN_PROGRESS, not product acceptance.
+
 ## 2026-10-07 equity date chain — bounded U3/U5/U6 source prerequisite
 
 [Private source, RED/GREEN and immutable V9 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-equity-date-chain/README.md>).

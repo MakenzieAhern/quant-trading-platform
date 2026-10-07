@@ -995,6 +995,73 @@ def test_reviewed_credit_aliases_preserve_complete_dates_holder_and_account(
         )
 
 
+@pytest.mark.parametrize("margin", ["", "title", "title-company"])
+def test_credit_account_page_continuation_never_completes_dates_or_skips_text(margin):
+    title = "2011年上半年权益分派实施公告"
+    header = title if margin else ""
+    if margin == "title-company":
+        header += "测试股份有限公司"
+    notice = NOTICE.replace(TITLE, title)
+
+    def pages(text):
+        first, second = text.split("账户", 1)
+        return [header + first + "账", header + "户" + second]
+
+    assert same_day_listing(pages(notice), "600000", title, RECORD, EX) == EX
+    for old, new in (
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+        ("2011年03月28日直接记入", "直接记入"),
+        ("本次转增股于", "讨论本次转增股于"),
+        ("本次转增股于", "预计本次转增股于"),
+        ("全体股东", "控股股东"),
+        ("证券账户", "资金账户"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+        ("无限售条件", "可流通"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing(pages(notice.replace(old, new)), "600000", title, RECORD, EX)
+    for insertion in ("四、其他事项", "2011年3月29日", "。", "任意说明", "资金"):
+        first, second = pages(notice)
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [first, header + insertion + second[len(header) :]], "600000", title, RECORD, EX
+            )
+    for dated in ("2011年3月25日下午", "2011年03月28日直接记入", "2011年3月28日。"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [header + first + dated[:6], header + dated[6:] + second],
+                "600000",
+                title,
+                RECORD,
+                EX,
+            )
+    if header:
+        first, second = pages(notice)
+        for wrong in ("讨论" + header, header.replace("2011年", "2012年")):
+            with pytest.raises(ValueError):
+                same_day_listing(
+                    [first, wrong + second[len(header) :]], "600000", title, RECORD, EX
+                )
+        if margin == "title-company":
+            with pytest.raises(ValueError):
+                same_day_listing(
+                    [first, second.replace("测试股份", "其他股份")], "600000", title, RECORD, EX
+                )
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [
+                *pages(notice),
+                *pages(notice.replace("2011年03月28日直接记入", "2011年03月29日直接记入")),
+            ],
+            "600000",
+            title,
+            RECORD,
+            EX,
+        )
+
+
 def test_implemented_notice_header_alias_requires_identical_page_start_and_complete_date():
     title = "2010年度权益分派实施的公告"
     header = "测试股份有限公司" + title

@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 Credit account word crosses a page, not its date — 2026-10-07
+
+Complete300198 cachedPDF3pages rendered/read. Permit only 账/帐→page_counter→户
+continuation. Strip identical declared title/company margin only if every extracted
+page begins with the exact prefix. Raw deny guards still inspect full source;
+§ retained, no date/page synthesis or arbitrary section/prose skipping. Three
+RED→87 relatedPASS;1348fullbackend+1optionalSKIP/static/testDBmigrationcyclePASS.
+Independent read-only guards/source/all137/276bindings review no scopedP1/P2.
+V10 source-only81PASS56unresolved,only300198 changed;old80wholePASS/136unchanged,
+ratios/source/identity untouched. Not event or financial admission. Original0016/
+frozen/tag/services preserved,testPGstopped retained,no runtime deployment/new
+browser/currentCI/GitHub/formal/OOS action; all mandatory product gates retained.
+
 ## v1.2 Contiguous equity dates and literal capital-credit prefix — 2026-10-07
 
 Complete cached300051 official PDF rendered/read. Reuse existing exact numbered

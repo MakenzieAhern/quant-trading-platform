@@ -103,6 +103,11 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
     compact_pages = [re.sub(r"\s+", "", unicodedata.normalize("NFKC", page)) for page in pages]
     heading = re.sub(r"\s+", "", unicodedata.normalize("NFKC", title))
     if len(compact_pages) > 1 and all(page.startswith(heading) for page in compact_pages):
+        # Identical title/company page margins can precede continued prose,
+        # but the retained page marker still cannot complete any date.
+        company = re.match(r"[\u4e00-\u9fff]+股份有限公司", compact_pages[0][len(heading) :])
+        if company and all(page.startswith(heading + company[0]) for page in compact_pages):
+            heading += company[0]
         text = "§".join(page.removeprefix(heading) for page in compact_pages)
     patterns = (
         "(?:" + "|".join(RECORD_LABELS) + ")" + LABEL_DATE_GAP + dated,
@@ -137,7 +142,9 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"(?:送)?\(转(?:增)?\)(?:的)?股(?:份)?)|"
         r"(?:^|[。;§]|[一二三四五六七八九十]+、转增股本方法)资本公积金转增的股份)(?:将)?于"
         + dated
-        + r"(?:\(星期[一二三四五六日天]\))?直接[记计]入股东(?:的)?(?:证券)?[账帐]户",
+        + r"(?:\(星期[一二三四五六日天]\))?直接[记计]入股东(?:的)?(?:证券)?[账帐]"
+        + page_counter
+        + "户",
         r"(?:(?:^|[。;§]|[一二三四五六七八九十]+、"
         r"(?:新增股份起始交易日|转增流通股上市日)?|\d+[、.])(?:公司)?本次(?:所)?"
         r"(?:转增|送|新增(?:资本公积金转增股本)?|(?:送)?\(转(?:增)?\)股?)(?:的)?"
