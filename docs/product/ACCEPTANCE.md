@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 complete holder labels — source-only repair
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-date-label/README.md>).
+Source85d4222 recognizes complete record labels, balanced parentheses, unnumbered
+metadata and bounded 收/pagecounter/市后; 周 calendar conflicts and discussed
+next-day registration reject. Independent source/SHA/date/holder/credit/unrestricted
+listing/ratio/lifecycle guards remain. Prior4original13pages reused, not re-extracted.
+8RED then135PASS;2metadataRED then137focused0.59s. Full86307terminal0:
+1395backend1optionalarchiveSKIP32.26s/Ruff558/mypy146/test-onlyhead-base-head-checkPASS.
+FINALV23all13797source-onlyPASS40unresolved/276bindings/reverse-repeat;old95whole
+PASS134whole rows preserved,only080171215change.171215sourcePASS,080stilllisting,
+064stillholder. Canonicalf72a1091bb1b0b63175f86a6369276f28f2e5cba8fb7d53ed46ce9f1f7eefed2;
+readonlyNOscopedP1P2/19payloadseal523d1c7f93c4be3efbc76b277826ffb048b1aaf604106e7f5d2554bff6afe33b
+twice preservesprevious23+25payloads. Owned testPG stopped0/OOMfalse retained;
+original0016/PONG/app200/frozen/tag intact. Frontend/browser unchanged notrerun;
+no originalmigration/restart/GitHub/event/dataset/strategy/OOS action.
+Remaining21listing11holder3credit1ex4special;fullfinancial/newversion and U1–U8/M0–M5
+gates remain. Source-only is not economic event or full product acceptance.
+
 ## 2026-10-07 parenthetical/date-label leads — grounded next action, not acceptance
 
 [Full private source triage](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-parenthetical-triage/README.md>).

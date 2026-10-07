@@ -1,5 +1,19 @@
 # Decisions
 
+## v1.2 Complete label syntax cannot replace source authority — 2026-10-07
+
+Reuse sharedholder grammar for complete explicit record labels, balanced date
+parentheses, literal bounded 收/page-counter/市后 and complete adjacent metadata.
+Raw 周 annotations must agree with full dates. RED revealed old holder prose
+swallowed 讨论次日; reject it in the shared root rather than individual callers.
+No arbitrary deletion/date-page join/missing日 or source-year correction.
+Prior13page fullsource review reused;V23closes171215source guards but080still lacks
+independent listing and064has syntax/source gaps.97/137sourcePASS is not financial
+admission. Keep them unresolved;next099103fulloriginal shared-family inspection.
+Full1395backend1optionalSKIP/static/test-onlymigration and readonly review pass;
+source85d4222/19payloadseal523d1c7f preserve previous23+25. Original0016/frozen/tag/
+services intact. GitHubhold remains; full U1–U8/M0–M5 scope/all remaining gates kept.
+
 ## v1.2 First parser failure must not conceal another source gap — 2026-10-07
 
 Full4originalPDF13page review distinguishes syntax from genuinely missing evidence.
