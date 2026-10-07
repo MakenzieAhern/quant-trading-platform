@@ -1,5 +1,22 @@
 # Decisions
 
+## v1.2 Closed-session wording is syntax, not inferred timing — 2026-10-07
+
+Both original300078/300113 PDFs/all6pages state a complete date followed by
+收市时, and separate sharecredit/unrestricted listing. Reuse exact sharedholder
+grammar rather than symbol branches or inferred boundary; beforeclose/time-span,
+unknown prose, cross-page date/term, conflict/weekday and missingrole negatives
+stay rejected. Adjacent page-start 转增流通股上市日 metadata never proves unrestricted
+listing; raw full-date guard also rejects third recognized label contradictions.
+4RED/152historicalrelated then126freshfocused/1384backend1optionalSKIP/static/
+test-onlymigrationPASS. Two resumed testcommand errors preserved and corrected
+after actual filename inspection; not test failures hidden as PASS. V21only078113
+advance95source-onlyPASS42unresolved/old93wholePASS135unchanged276bindings/repeat.
+Readonly no evidenced scopedP1P2;25payloadseal/prior36preserved. Original0016/
+frozen/tag/application preserved;ownedtestPGstopped retained,no GitHub/deployment/
+economicadmission/OOS action. Next full source layouts300064300080300171300215;
+fullU1-U8/M0-M5 financial/recovery/forward/quality/release remains ACTIVE.
+
 ## v1.2 Recognized metadata must reject contradictions — 2026-10-07
 
 Full3PDF9pages show exactbare 本次权益分派对象:, adjacent numbered可流通上市日

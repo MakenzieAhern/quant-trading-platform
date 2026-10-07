@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 explicit closed-session holder cutoff — scoped repair
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-close-session/README.md>).
+Sourcea0ca762748df38247caead93f53db2c7c61b67ed recognizes exact 收市时, and
+adjacent page-start 转增流通股上市日 metadata-only; third metadata label shares
+raw full-date/calendar conflict guard. Both unchanged originalPDFs/all6pages
+visual/read/SHA/directNFKCcache match; independent dated all-holder, actual share
+credit and unrestricted listing remain required. No symbol-specific/source repair.
+4RED→152 historical related; test-only split-loop simplification then1384backend
+1optionalarchiveSKIP20.81s/Ruff558/mypy146/test-onlyhead-base-head/checkPASS.
+Two resumed targeted command errors retained (guard rejected env then nonexistent
+test filenames/no tests); corrected126focused0.48s/staticPASS. V21canonical
+16ca5b9dcfbaebedd04e74b0274388243eb3233db3886937ce4fafef4ab2c6b9:
+137rows95source-onlyPASS42unresolved,only078113newPASS,old93wholePASS135unchanged,
+276bindings/reversed-input/immutable repeat. Independent readonly no evidenced
+scopedP1P2,not financial/fullproduct.25payloadsealdc4ae8a61656468a87898d44915dd5dc2e15e6fe18acf2f142e5936cd583c831,
+prior36payloads preserved.86016terminal0;owned30b1stopped0/OOMfalse070542Z retained;
+original0016/PONG/frontendAPI200/frozen693c/tagf88b/.research unchanged. No frontend
+change/rerun/browser/deployment/GitHub/provider/economicdataset/strategy/OOS action.
+14holder20listing3credit1ex4special and fullU1-U8/M0-M5 gates remain;goalACTIVE.
+
 ## 2026-10-07 current holder syntax and listing metadata conflict — scoped repair
 
 [Final private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-bare-object/README.md>).
