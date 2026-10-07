@@ -96,7 +96,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"[一二三四五六七八九十]+、股权登记日与除权除息日"
         r"(?:1[、.])?本次权益分派股权登记日(?:为)?:?"
         + plain_date
-        + r";?(?:2[、.])?除权除息日(?:为)?:?"
+        + r";?(?:2[、.])?(?:本次权益分派)?除权除息日(?:为)?:?"
         + plain_date
         + "|"
         r"[一二三四五六七八九十]+、股权登记日与除权除息日"
@@ -149,7 +149,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         "(?:" + "|".join(RECORD_LABELS) + ")" + LABEL_DATE_GAP + dated,
         EX_LABEL + LABEL_DATE_GAP + dated,
         boundary + r"(?:\d+[、.]红利发放日:?" + plain_date + "|" + holder_metadata + r")?"
-        r"(?:[一二三四五六七八九十]+、(?:分派对象|权益分派对象|转增股本对象|"
+        r"(?:[一二三四五六七八九十]+、(?:分派对象|权益分派对象(?:为)?|转增股本对象|"
         r"分红派息及资本公积金转增股本对象|分红派息对象|"
         r"利润分配和资本公积金转增股本对象|利润分配、转增股本的对象):?)?"
         + page_counter
