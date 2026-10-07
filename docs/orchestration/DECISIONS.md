@@ -1,6 +1,35 @@
 # Decisions
 
+## v1.2 explicit unrestricted listing wording — 2026-10-07
+
+Reuse shared same_day_listing: accept literal 上市日 and 无限售流通股 only
+after complete cached300088/300144notices. No issuerexception/newdependency,
+ratio/date inference, pagejoin or capital-table-derived unrestricted date.
+Initial supposedRED98235 was delayed until after fix and passed7cases: reject
+as fail-before-fix evidence. Temporarily restore only our2lines to exactHEAD,
+await terminal2RED/5PASS/69deselected, restore fix and94relatedPASS. Add可流通
+negative;existing missing/conflicting/tentative/date/holder/page guards retained.
+Full1300PASS+1optionalarchiveSKIP20.66s/static/migrationPASS on ownedtmpfs
+quant_test only;initialpgready noresponse retained, thenmigration+explicitready.
+OriginalDB0016 untouched;ownscratchstopped0otherclients, retainedcontainer.
+V6all137/276bindings/77source-onlyPASS/60unresolved;old75wholePASS/135unchanged,
+only2rowschange/allsource-ratio-identity preserved/reversedrepeat. Independent
+readonly review no evidencedscopedP1P2;17payloadseal5ddb3d54. Not economic event,
+financial or fullproduct acceptance. Frontendunchanged/no newbrowserclaim;
+exactnewCI required. FullU1-U8/M0-M5 active;no frozen/OOS/merge/tag/release.
+
+
 ## v1.2 cached explicit credit wording — 2026-10-07
+
+Post-commit exact26eb11a8 CI37549281120 all3jobs/every stepSUCCESS completed
+23:59:08Z/samewatch47158terminal0.1298backend+optionalarchiveSKIP38.16s/
+735frontend45files/static/isolatedmigration/productionCompose smokePASS.
+HEADoriginOPEN-DRAFTPR32agree,9payload seal d8506c6d, original14proof unchanged.
+Fresh CI admission not futurecapacity guarantee; precommitpending text below
+is chronology. No merge/tag/release. Next62source-only residual split retained:
+58roles+1guard+3no-matchingchecks, including rawBshare000771 and300048existing
+correctionchain. Read full300088cache; literal上市日 is next tested hypothesis,
+not newevent admission. PostCI checkpointdocs remain local until coherent slice.
 
 Reuse same_day_listing after reading complete cached official300021/300071/
 300132/300162 notices. Exact optional shareholder 的, 送转股份, 公司本次

@@ -1,6 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 unrestricted listing wording — source-only scoped PASS
+
+[Private reproducible proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-listing-wording-sources/README.md>):
+two complete official caches support shared 上市日/无限售流通股 aliases;
+explicit unrestricted/all-holder/exact-date/account-credit guards unchanged.
+Initial delayed supposedRED98235 passed7cases and is REJECTED as RED. ExactHEAD
+parser temporarily restored:2failed/5passed/69deselected; repaired94relatedPASS.
+Full1300backendPASS+1optionalarchiveSKIP20.66s/Ruff556/mypy145/ownedtmpfs
+quant_test55471 head-base-head-checkPASS;initialreadiness noresponse retained.
+
+137source rows retained:75->77source-onlyPASS/62->60unresolved;old75wholePASS
+preserved/135wholeunchanged/allsource-ratio-identity fields retained/276bindings/
+reverse+immutable repeat. Only300088/300144change;V6canonical`b863b369d6148c15302d421ee36d3c3e9a08ac76fd128b2e29c83f3d13e7c37a`.
+Independentreadonly2completecaches/allbindings/allrows/preservation no evidenced
+scopedP1P2;no reviewerexecution.17payloadseal`5ddb3d54e51366e08b8711adf369f544ee0ff1548dad8a4ea470185df032796c`.
+No economic event/dataset admission or frontend/UI/newbrowserclaim. Original
+DB0016/serviceshealthy/frozen/tag/.research unchanged;ownscratch stoppedretained.
+NewexactCI pending;parent26ebCI is historical only. FullU1-U8/M0-M5 remains open.
+
+
 ## 2026-10-07 explicit cached credit wording — source-only scoped PASS
+
+Post-commit: [exact26eb11a CI37549281120](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37549281120)
+all3jobs/every stepSUCCESS23:59:08Z/samewatch47158terminal0. Hosted1298backend+
+optionalarchiveSKIP38.16s/735frontend45files/lint-types-build/Ruff556/mypy145/
+isolated0017migrationcycle/check/productionCompose smokePASS. HEADoriginPR32
+agree/OPEN-DRAFT.9payload CI/nextdiagnosis seal`d8506c6d6ac6bcb443b3eaaa90b5a96c1aaf1ea3d1a5d91f168878677b7b5f03`;
+original14sourceproof/276bindings unchanged. ExactCIpending below is chronology,
+not current; admission does not guarantee future quota or full product release.
 
 [Private reproducible proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-credit-wording-sources/README.md>):
 four shared grammar variants from complete cached official notices, four RED

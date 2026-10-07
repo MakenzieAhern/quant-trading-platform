@@ -456,6 +456,8 @@ def test_legacy_headings_keep_explicit_holder_credit_and_unrestricted_listing(
         "本次(转增)股的无限售条件流通股的起始交易时间为",
         "新增股份起始交易日本次所转增无限售条件流通股的起始交易日为",
         "转增流通股上市日本次所转增的无限售条件流通股的起始交易日为",
+        "本次所转增的无限售条件流通股上市日为:",
+        "本次所转增的无限售流通股的起始交易日为",
     ],
 )
 def test_parenthetic_listing_aliases_require_complete_non_tentative_dates(listing):
@@ -471,7 +473,8 @@ def test_parenthetic_listing_aliases_require_complete_non_tentative_dates(listin
         (listing, "拟上市" + listing),
         (listing, listing.replace("本次", "计划本次")),
         (listing, listing.replace("本次", "讨论本次")),
-        ("无限售条件", "有限售条件"),
+        ("无限售", "有限售"),
+        ("无限售", "可流通"),
         ("本公司全体股东", "本公司控股股东"),
         ("2011年3月25日下午", "2011年3月24日下午"),
         ("2011年03月28日直接记入", "2011年03月29日直接记入"),
