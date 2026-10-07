@@ -1,5 +1,26 @@
 # Decisions
 
+## v1.2 Verify existing shared Market keyboard behavior, no duplicate patch — 2026-10-08
+
+Current sharedDialog/Pagination did not reproduce a new keyboard defect. Close
+the actual bounded IAB gate with16locale/theme/four-size cases,407raw frames and
+three full-loop scenarios;do not add another focus trap or a page workaround.
+40focusedtests plus fresh all13runtime/build byte matches/current10source hashes
+bind the evidence to64c529a/frontendtree744131. No originalSQL/deployment/restart.
+
+Keep exact limits:Back/Forward onlyEN390dark,20JPEGs soft/nonphysicalsize;not
+Chrome/native200/fullAA/p95/fullfinancial/product PASS. Preferences restored;
+independentread-only review no evidenced scopedP1/P2.41payload05ea4544 twice
+immutable;priorbody41/no-holder9 byte-intact. No old-runtime checker promotion.
+Existing report-download STOP remains:no IAB/CDP/alternate browser workaround.
+
+Localapp5173/API8000/3Composehealthy/PONG remains usable during GitHubHOLD.
+Remote recovery requires directhumanconfirmation,not the pastOct1 estimate.
+Preserve frozen693c0b81/v1.1tagf88b5c60 andall financial/source/lifecycle gates.
+Next600725 review separates source70/30allocation/ordinaryholder0.7 fromtotal1
+and specialtotal-ratio reference2.85;listing2016-12-29 is not actualtradability.
+Do not mint0.3ordinaryholder event or closewholefinancial gate byprice match.
+
 ## v1.2 Positive holder components precede unrelated no-award terms — 2026-10-08
 
 The shared restructuring_holder_ratio incorrectly returned0 before inspecting

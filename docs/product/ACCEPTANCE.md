@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 current Market modal keyboard gate — bounded IAB PASS
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-market-modal-focus/README.md>)
+binds source64c529a/frontendtree744131965f6cfca083f541641754360e8b5b843f.
+No app defect reproduced or new patch needed. Actual IAB16 unique four-size ×
+EN/ZH × light/dark cases,16frames each:Close/source-summary folded boundaries,
+historical119 observations/50-50-19 pages, persistent pagination-group focus,
+disabled terminalNext skip, reverse edges/Escape same trigger/URL/query/vertical
+scroll and no page overflow.407raw frames include256matrix/151exploratory.
+
+Full actual sequential loops ONLY ZH390dark15/15,EN1440light15/15 andEN390dark
+expanded19rows+sourceaudit36/36;all steps stay modal/endClose. Close-button and
+Back/Forward additionally ONLY EN390dark. Native date-picker internal segments
+not proof of a constant host ring. OriginalZH/system/defaultviewport restored,
+motion untouched/0dialogs. No study/account/order/watchlist/newmarket action.
+
+40existing focusedtests/2files PASS3.92s;freshcachednetworknone Vite133modules/
+223ms build/all13runtime artifact hashes/10current source bindings PASS. Current
+frontendtree equals prior240503c deployment;no redeploy/overwrite ofolderhostdist.
+No .map;source-map containername is dependency recovery,not source-map provenance.
+527.96kB/outdir warnings retained;no fresh fullsuite/p95 claim.20actual JPEGs have
+encoded sizes1425x891/1265x791/1009x757/375x812,not requestedphysicaldimensions;
+desktopsoft/not nativeChrome200/fullAA/highqualityvisual. Historical2011window
+labels preserve source/asof2025-12-31,not new or unseen/OOS evidence.
+
+Independent readonly raw/source/build/all20images/prior50payload review no
+evidenced scopedP1/P2. Existingcanonical/immutable helper checker twiceexit0:
+41payloadseal05ea4544ad05fc90115b903d4e18bd4c1308127f607604fa40ef15dc7eee4ba7;
+prior41body+9no-holder payloads intact. CheckerstaticPASS/-Orejected;corrected
+Gitbrace/lint/harness errors retained,not product failures. Original3Compose
+healthy/RedisPONG/Windows5173+API8000HTTP200/frozen693c0b81/tagf88b5c60 unchanged;
+ownedtest/buildcontainers exited0retained. No SQL/testPGrefresh/restart/deploy.
+GitHubHOLD/no remote request/push/merge/tag/release;localapp still runs. Financial
+PARTIAL/currentnativequality/performance/export/media/restore/forward/lostledger/
+delivery remain required;fullU1-U8/M0-M5 goalACTIVE,not completion.
+
 ## 2026-10-08 no-holder source closure and shared parser fix — still PARTIAL
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-no-holder-entitlement-review/README.md>)
