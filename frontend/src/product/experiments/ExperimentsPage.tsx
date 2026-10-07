@@ -150,6 +150,7 @@ function readSelection(): Selection {
 export function ExperimentsPage() {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
+  const [search, setSearch] = useState(window.location.search);
   const [selected, setSelected] = useState(readSelection);
   const [offset, setOffset] = useState(readOffset);
   const [view, setView] = useState(readSavedView);
@@ -159,6 +160,7 @@ export function ExperimentsPage() {
     new URLSearchParams(window.location.search).has("compare_from"),
   );
   const [compareRevision, setCompareRevision] = useState(0);
+  const sourceSearch = useRef(search);
   const [revision, setRevision] = useState(0);
   const scrollToRestore = useRef(readScrollPosition());
   const returnToRestore = useRef(readExperimentReturn());
@@ -185,12 +187,29 @@ export function ExperimentsPage() {
     error: unknown;
   }>({ key: queryKey, data: null, error: null });
   useEffect(() => {
-    const ids = new URLSearchParams(window.location.search).getAll(
-      "compare_from",
-    );
+    const update = () => {
+      const next = window.location.search;
+      const hasSource = new URLSearchParams(next).has("compare_from");
+      if (
+        !hasSource &&
+        Object.hasOwn(window.history.state ?? {}, "experimentSelection")
+      )
+        setSelected(readSelection());
+      if (next === sourceSearch.current) return;
+      sourceSearch.current = next;
+      setSearch(next);
+      setCompareRevision((value) => value + 1);
+      setCompareImportError(null);
+      setComparePending(hasSource);
+      restoreCompareFocus.current = false;
+    };
+    window.addEventListener("popstate", update);
+    return () => window.removeEventListener("popstate", update);
+  }, []);
+  useEffect(() => {
+    const ids = new URLSearchParams(search).getAll("compare_from");
     if (window.location.pathname !== "/experiments" || ids.length === 0) return;
     const id = ids[0] ?? "";
-    const sourceUrl = window.location.href;
     const controller = new AbortController();
     const source =
       ids.length === 1 && UUID_PATTERN.test(id)
@@ -198,7 +217,11 @@ export function ExperimentsPage() {
         : Promise.reject("INVALID_ID");
     void source.then(
       (run) => {
-        if (controller.signal.aborted || window.location.href !== sourceUrl)
+        if (
+          controller.signal.aborted ||
+          window.location.pathname !== "/experiments" ||
+          window.location.search !== search
+        )
           return;
         if (
           document.activeElement?.closest(".experimentCompareSelection") ||
@@ -219,9 +242,15 @@ export function ExperimentsPage() {
           ]);
         setComparePending(false);
         replaceUrl("/experiments");
+        sourceSearch.current = "";
+        setSearch("");
       },
       (reason) => {
-        if (controller.signal.aborted || window.location.href !== sourceUrl)
+        if (
+          controller.signal.aborted ||
+          window.location.pathname !== "/experiments" ||
+          window.location.search !== search
+        )
           return;
         if (
           restoreCompareFocus.current &&
@@ -235,12 +264,15 @@ export function ExperimentsPage() {
           reason === "INVALID_ID" ||
           (reason instanceof ApiError &&
             [400, 404, 422].includes(reason.status))
-        )
+        ) {
           replaceUrl("/experiments");
+          sourceSearch.current = "";
+          setSearch("");
+        }
       },
     );
     return () => controller.abort();
-  }, [compareRevision]);
+  }, [compareRevision, search]);
   if (jobs.key !== queryKey)
     setJobs({ key: queryKey, data: null, error: null });
   useLayoutEffect(() => {
@@ -631,6 +663,8 @@ export function ExperimentsPage() {
                 onClick={() => {
                   selectionStatus.current?.focus();
                   replaceUrl("/experiments");
+                  sourceSearch.current = "";
+                  setSearch("");
                   setCompareImportError(null);
                   setComparePending(false);
                 }}

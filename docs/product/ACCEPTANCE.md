@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 comparison-source navigation — current scoped U4 repair
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-comparison-navigation/README.md>)
+binds ede332b parent/sourcee42bceec/test370c87e3:4initialRED then3independentP2RED
+closed by local popstate/query synchronization, stale read cancellation and explicit
+saved-history selection restoration. Final793frontend/47files/49comparison, lint/
+types/build170ms/audit0 PASS. Two speculative epoch checks actually PASS/no RED;
+no extra epoch machinery. 527.96kB warning remains, not p95 acceptance.
+Actual IAB existing-result handoff/manual selection/ENZH/compare/BackForward and
+16 picker viewport/theme/locale cases PASS_SCOPED;3stale resize reads corrected,
+stale darkmobile frame retained as nonaccepted/new390x844 frame inspected. No new
+job or browser latency injection. Not native Chrome/200%/full AA/financial PASS.
+New nginx static served hashes equalbuild;old fulltree/assets retained/atomicindex
+publication. Original0017/5paper417events12research4updates/formal1/3/310/PONG/API+
+frontend200/frozen/tag/.research retained;no DBrestart/migration/provider/study/OOS.
+Owned idleNode7969 stopped137/OOMfalse retained;test sessions all terminal0.
+170payload seal2d4ea8562de4f1e83f0a6e3d036f0f5bbfdb1aa5880d506c20a860591710ad65
+twice preserves prior6nativeDesktop payloads. Independent read-only review no
+evidenced scopedP1/P2. No GitHub request/push/merge/release; full mandatory product
+and financial/forward/ledger/AA/performance/export/media/exactCI gates remain open.
+
 ## 2026-10-08 native Desktop recovery and recovered source checkpoint
 
 [Runtime proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261008-normal-desktop-recovery/README.md>)

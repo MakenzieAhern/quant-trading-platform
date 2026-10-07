@@ -1,5 +1,27 @@
 # Decisions
 
+## v1.2 Synchronize comparison source navigation without a global router rewrite — 2026-10-08
+
+Actual same-path navigation leaves ExperimentsPage mounted. Imperatively reading
+compare_from only on retry misses query removal, batched A->B->A and saved clean
+history entries. Four original regressions and three independent review regressions
+reproduced these defects. Reuse local popstate/search pattern, a synchronous query
+ref plus revision, abort old reads and restore only explicitly owned selections.
+Successful/terminal URL cleanup retains its actual selection/error; locale/hash,
+filters and pagination are independent. No dependencies/global route abstraction.
+Two epoch hypothesis tests passed without another change: no RED, no invented
+defect or speculative epoch layer. Final793frontend/49comparison/static/audit PASS.
+
+Deploy only existing frontend assets then atomicindex, retain fullrollback/oldassets.
+Actual available IAB walked existing two-job selection/compare/BackForward and16
+corrected picker layouts; Chrome unavailable, no simulated latency/new task or
+whole AA/native200/p95/financial certification. Preserve stale observation/frame
+as chronology, not accepted replacement proof. Original0017/selectedcounts/health/
+frozen/tag remain;no originalbackend/PGRedisrestart/migration/OOS. Stop only exact
+owned idleNode7969 after fresh identity/top, retain dependencies/data. 170payload
+private seal2d4ea856 twice preserves prior6. Root solewriter/reviewerreadonly/no
+remaining evidenced scopedP1/P2. GitHub hold remains; fullU1-U8/M0-M5 unchanged.
+
 ## v1.2 Separate historical source proof from actual runtime recovery — 2026-10-08
 
 Recover interruption without redoing accepted source/test work:8b6257c and V30

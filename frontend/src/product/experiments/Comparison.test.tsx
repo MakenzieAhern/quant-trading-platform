@@ -10,6 +10,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../api/client";
 import { i18n } from "../../i18n";
+import { navigate } from "../../utils/navigation";
 import { experimentApi } from "./api";
 import {
   comparisonConditions,
@@ -446,6 +447,318 @@ describe("experiment comparison", () => {
         name: /Select for comparison: Study 1/,
       }),
     ).toBeChecked();
+  });
+
+  it.each(["success", "failure"])(
+    "abandons a pending source on same-path navigation without a late %s changing manual selection",
+    async (outcome) => {
+      window.history.replaceState(
+        {},
+        "",
+        `/experiments?compare_from=${ids[0]}`,
+      );
+      let resolve!: (run: Experiment) => void;
+      let reject!: (reason: Error) => void;
+      const get = vi.spyOn(experimentApi, "get").mockReturnValue(
+        new Promise((done, fail) => {
+          resolve = done;
+          reject = fail;
+        }),
+      );
+      vi.spyOn(experimentApi, "list").mockResolvedValue({
+        items: runs.slice(0, 2),
+        total: 2,
+        offset: 0,
+        limit: 20,
+      });
+      render(<ExperimentsPage />);
+      const other = await screen.findByRole("checkbox", {
+        name: /Select for comparison: Study 2/,
+      });
+      expect(other).toBeDisabled();
+      const signal = get.mock.calls[0]![1]!;
+      act(() => {
+        navigate("/experiments");
+      });
+      await waitFor(() => expect(signal.aborted).toBe(true));
+      expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
+      expect(other).toBeEnabled();
+      await userEvent.click(other);
+      await act(async () => {
+        if (outcome === "success") resolve(runs[0]!);
+        else reject(new TypeError("offline"));
+      });
+      expect(other).toBeChecked();
+      expect(screen.getByText("Selected: 1 / 3")).toBeInTheDocument();
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: /Remove Study 1/ }),
+      ).toBeNull();
+    },
+  );
+
+  it("switches a pending source on the same path and preserves identity across locale changes", async () => {
+    window.history.replaceState({}, "", `/experiments?compare_from=${ids[0]}`);
+    let resolveA!: (run: Experiment) => void;
+    let resolveB!: (run: Experiment) => void;
+    const get = vi
+      .spyOn(experimentApi, "get")
+      .mockReturnValueOnce(
+        new Promise((done) => {
+          resolveA = done;
+        }),
+      )
+      .mockReturnValueOnce(
+        new Promise((done) => {
+          resolveB = done;
+        }),
+      )
+      .mockResolvedValue(runs[1]!);
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: runs.slice(0, 2),
+      total: 2,
+      offset: 0,
+      limit: 20,
+    });
+    render(<ExperimentsPage />);
+    await screen.findByRole("checkbox", {
+      name: /Select for comparison: Study 2/,
+    });
+    act(() => {
+      navigate(`/experiments?compare_from=${ids[1]}`);
+    });
+    await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+    expect(get.mock.calls[0]![1]!.aborted).toBe(true);
+    expect(get.mock.calls[1]![0]).toBe(ids[1]);
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(get).toHaveBeenCalledTimes(2);
+    act(() => {
+      navigate(`/experiments?compare_from=${ids[1]}#selection`);
+    });
+    expect(get.mock.calls[1]![1]!.aborted).toBe(false);
+    expect(
+      screen.getByRole("checkbox", { name: /选择用于比较: Study 2/ }),
+    ).toBeDisabled();
+    await act(async () => resolveA(runs[0]!));
+    expect(screen.queryByRole("button", { name: /移除 Study 1/ })).toBeNull();
+    await act(async () => resolveB(runs[1]!));
+    expect(
+      screen.getByRole("checkbox", { name: /选择用于比较: Study 2/ }),
+    ).toBeChecked();
+    expect(window.location.search).toBe("");
+    await act(async () => i18n.changeLanguage("en-US"));
+    expect(screen.getByText("Selected: 1 / 3")).toBeInTheDocument();
+    expect(get).toHaveBeenCalledTimes(2);
+    act(() => {
+      navigate(`/experiments?compare_from=${ids[1]}`);
+    });
+    await waitFor(() => expect(get).toHaveBeenCalledTimes(3));
+    await waitFor(() => expect(window.location.search).toBe(""));
+    expect(screen.getByText("Selected: 1 / 3")).toBeInTheDocument();
+  });
+
+  it.each(["pending", "failed"])(
+    "reloads the final source after batched A→B→A navigation from a %s request",
+    async (state) => {
+      window.history.replaceState(
+        {},
+        "",
+        `/experiments?compare_from=${ids[0]}`,
+      );
+      const get = vi
+        .spyOn(experimentApi, "get")
+        .mockImplementationOnce(() =>
+          state === "failed"
+            ? Promise.reject(new TypeError("offline"))
+            : new Promise(() => {}),
+        )
+        .mockResolvedValueOnce(runs[0]!);
+      vi.spyOn(experimentApi, "list").mockResolvedValue({
+        items: runs.slice(0, 2),
+        total: 2,
+        offset: 0,
+        limit: 20,
+      });
+      render(<ExperimentsPage />);
+      await screen.findByRole("checkbox", {
+        name: /Select for comparison: Study 2/,
+      });
+      if (state === "failed") await screen.findByRole("alert");
+      act(() => {
+        navigate(`/experiments?compare_from=${ids[1]}`);
+        navigate(`/experiments?compare_from=${ids[0]}`);
+      });
+      await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+      expect(get.mock.calls[1]![0]).toBe(ids[0]);
+      expect(get.mock.calls[0]![1]!.aborted).toBe(true);
+      await screen.findByText("Selected: 1 / 3");
+      expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      expect(window.location.search).toBe("");
+    },
+  );
+
+  it.each(["success", "not_ready"])(
+    "ignores an obsolete source response before cleanup after a same-batch round trip (%s)",
+    async (outcome) => {
+      window.history.replaceState(
+        {},
+        "",
+        `/experiments?compare_from=${ids[0]}`,
+      );
+      let resolveOld!: (run: Experiment) => void;
+      const get = vi
+        .spyOn(experimentApi, "get")
+        .mockReturnValueOnce(
+          new Promise((done) => {
+            resolveOld = done;
+          }),
+        )
+        .mockResolvedValueOnce(runs[0]!);
+      vi.spyOn(experimentApi, "list").mockResolvedValue({
+        items: runs.slice(0, 2),
+        total: 2,
+        offset: 0,
+        limit: 20,
+      });
+      render(<ExperimentsPage />);
+      await screen.findByRole("checkbox", {
+        name: /Select for comparison: Study 2/,
+      });
+      await act(async () => {
+        navigate(`/experiments?compare_from=${ids[1]}`);
+        navigate(`/experiments?compare_from=${ids[0]}`);
+        resolveOld({
+          ...runs[0]!,
+          name: "Obsolete source",
+          ...(outcome === "not_ready"
+            ? { status: "RUNNING", result_available: false }
+            : {}),
+        });
+        await Promise.resolve();
+      });
+      await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+      expect(
+        screen.getByRole("button", { name: /Remove Study 1/ }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: /Remove Obsolete source/ }),
+      ).toBeNull();
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
+    },
+  );
+
+  it("restores manual selection on Forward between clean same-path history entries", async () => {
+    window.history.replaceState({}, "", `/experiments?compare_from=${ids[0]}`);
+    const get = vi
+      .spyOn(experimentApi, "get")
+      .mockReturnValueOnce(new Promise(() => {}))
+      .mockResolvedValueOnce(runs[0]!);
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: runs.slice(0, 2),
+      total: 2,
+      offset: 0,
+      limit: 20,
+    });
+    render(<ExperimentsPage />);
+    await screen.findByRole("checkbox", {
+      name: /Select for comparison: Study 2/,
+    });
+    act(() => {
+      navigate("/experiments");
+    });
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: /Select for comparison: Study 2/ }),
+    );
+    expect(window.history.state.experimentSelection[0].id).toBe(ids[1]);
+    act(() => window.history.back());
+    await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(window.location.search).toBe(""));
+    expect(
+      screen.getByRole("checkbox", { name: /Select for comparison: Study 1/ }),
+    ).toBeChecked();
+    act(() => window.history.forward());
+    await waitFor(() =>
+      expect(window.history.state.experimentSelection[0].id).toBe(ids[1]),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole("checkbox", {
+          name: /Select for comparison: Study 2/,
+        }),
+      ).toBeChecked(),
+    );
+    expect(
+      screen.getByRole("checkbox", { name: /Select for comparison: Study 1/ }),
+    ).not.toBeChecked();
+    expect(get).toHaveBeenCalledTimes(2);
+  });
+
+  it("reloads the source on Back/Forward without restarting the filtered list", async () => {
+    window.history.replaceState(
+      {
+        experimentOffset: 20,
+        experimentView: {
+          q: "Study",
+          status: "SUCCEEDED",
+          mode: "",
+          sort: "oldest",
+          columns: { mode: true, period: true, created: true },
+        },
+      },
+      "",
+      `/experiments?compare_from=${ids[0]}`,
+    );
+    const pending: ((run: Experiment) => void)[] = [];
+    const get = vi.spyOn(experimentApi, "get").mockImplementation(
+      () =>
+        new Promise((done) => {
+          pending.push(done);
+        }),
+    );
+    const list = vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: runs.slice(0, 2),
+      total: 40,
+      offset: 20,
+      limit: 20,
+    });
+    render(<ExperimentsPage />);
+    await screen.findByRole("checkbox", {
+      name: /Select for comparison: Study 2/,
+    });
+    act(() => {
+      navigate("/experiments");
+    });
+    act(() => window.history.back());
+    await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+    act(() => window.history.forward());
+    await waitFor(() => expect(window.location.search).toBe(""));
+    await waitFor(() => expect(get.mock.calls[1]![1]!.aborted).toBe(true));
+    act(() => window.history.back());
+    await waitFor(() => expect(get).toHaveBeenCalledTimes(3));
+    await act(async () => {
+      pending[0]!(runs[1]!);
+      pending[1]!(runs[1]!);
+      pending[2]!(runs[0]!);
+    });
+    expect(screen.getByText("Selected: 1 / 3")).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: /Select for comparison: Study 1/ }),
+    ).toBeChecked();
+    expect(screen.getByRole("searchbox")).toHaveValue("Study");
+    expect(list).toHaveBeenCalledTimes(1);
+    expect(list).toHaveBeenCalledWith(
+      expect.any(AbortSignal),
+      20,
+      20,
+      "Study",
+      {
+        status: "SUCCEEDED",
+        mode: undefined,
+        sort: "oldest",
+      },
+    );
   });
 
   it("retains the source on transient failure, then retries or lets users choose manually", async () => {
