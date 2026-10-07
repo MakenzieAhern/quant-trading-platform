@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 native Desktop recovery and recovered source checkpoint
+
+[Runtime proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261008-normal-desktop-recovery/README.md>)
+records actual Desktop absence/pipe failure, then one normal hidden startup.
+Engine29.8.0/nativeUbuntuDocker/Compose5.5.1 and fresh exact-image/networknone/RO
+mount4391e7c7 checksum PASS. Original named volumes/code/frozen archive retained;
+PG/Redis/backend healthy, API/frontend200. Existing backend startup automatically
+applied additive0017; current schema is0017, not historical0016. Selected current
+12research/5paper/417events/4updates and formal1dataset/3runs/310trades match backup
+counts, all terminal. This is selected persistence, NOT a denied44-table refresh,
+lost-ledger recovery, failure-context durability or complete restart/browser gate.
+Six runtime payloads seal a67e68572c358e137ad464f3485bf39a53066daa49beba25e11b222e7786d33e
+twice preserves prior27 backup payloads. Prior Docker bridge blocker RESOLVED.
+
+[Recovered source proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-weekday-page-boundary/README.md>)
+binds8b6257c:3original10pages/23bindings, no recovery re-extraction;146147 complete
+weekday/metadata/pagecounter/identical-margin syntax closes two source guards.
+156 literal defect and147 contradictory table retained.3RED→165focused;1423backend
+1optional archiveSKIP/Ruff558/mypy146/disposable migration cycle PASS. No new suite
+run on Oct8; middle percentage-only chunk omitted, suite result logs preserved.
+V30 all137104source-onlyPASS33unresolved/276currentbindings/reverse-repeat;
+only146147change/old102wholePASS135wholeunchanged.29payloadseal49052186d1a2342d0c29a735aa4b26b96111a4def41fd3b4a14c71cf33a6afd7
+twice preserves prior45; independent source/binding/log review no scopedP1/P2.
+Source-only result is NOT full financial/event/dataset or U1–U8/M0–M5 acceptance.
+Full financial/newversion, lawful after-start forward receipt, genuine old ledgers,
+current browser/AA/performance/export/media/remoteCI/release gates remain open.
+No strategy/formal/OOS rerun or GitHub mutation; frozen research remains unchanged.
+
 ## 2026-10-07 implementation metadata and dotted sections — source-only closure
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-implementation-dot/README.md>).

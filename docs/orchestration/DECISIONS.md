@@ -1,5 +1,26 @@
 # Decisions
 
+## v1.2 Separate historical source proof from actual runtime recovery — 2026-10-08
+
+Recover interruption without redoing accepted source/test work:8b6257c and V30
+104/137sourcePASS33unresolved are bound to existing23source/276batch checksums,
+165focused/1423backend1optionalSKIP and isolated reversible migration results.
+Original146147 effective dates remain independent; complete weekday/comma fields,
+page counters between complete fields and identical running margins only are shared
+syntax.156 raw typo/147 table contradiction not repaired or financially admitted.
+Readonly review/29payloadseal49052186d preserve prior45; full objective unchanged.
+
+Oct8 actual Desktop had exited, not the earlier AF_UNIX failure. Start the installed
+Desktop normally once; do not reinstall/reset/toggle security or delete data.
+NativeDocker/Compose and newnetworknoneROmount then PASS. Existing backend startup
+automatically upgraded0016→0017; record this actual production change separately
+from historical source receipt's no-migration flags. Original volumes, mounted
+source/archive SHA and selected7table counts retained; no claim full44-row integrity,
+lost-ledger restoration or current fullbrowser/financial acceptance. Old denied
+PowerShell fingerprint refresh is NOT retried through another interpreter.
+Runtime6payloadseala67e6857 preserves prior27backup; Docker bridge blocker resolved.
+Missing lawful forward authority/genuine old ledgers and full product gates remain.
+
 ## v1.2 Share listing grammar with its tentative guard — 2026-10-07
 
 Full six-page review of existing155169 originals supports exact implementation
