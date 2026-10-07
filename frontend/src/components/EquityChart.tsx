@@ -34,9 +34,7 @@ export function EquityChart({ points }: { points: EquityPoint[] }) {
         aria-labelledby="equity-title equity-desc"
       >
         <title id="equity-title">{t("detail.chartTitle")}</title>
-        <desc id="equity-desc">
-          {t("detail.chartDescription")}
-        </desc>
+        <desc id="equity-desc">{t("detail.chartDescription")}</desc>
         <line x1={PAD} x2={WIDTH - PAD} y1={HEIGHT - PAD} y2={HEIGHT - PAD} />
         <line x1={PAD} x2={PAD} y1={PAD} y2={HEIGHT - PAD} />
         {finite ? (
@@ -53,7 +51,9 @@ export function EquityChart({ points }: { points: EquityPoint[] }) {
         <span>{formatUtc(points.at(-1)?.timestamp ?? null)}</span>
       </figcaption>
       <details>
-        <summary>{t("detail.accessibleEquity", { count: points.length })}</summary>
+        <summary>
+          {t("detail.accessibleEquity", { count: points.length })}
+        </summary>
         <table>
           <thead>
             <tr>
