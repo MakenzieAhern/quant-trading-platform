@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Link } from "../components/Link";
 import {
+  managedReturnHref,
   navigate,
   navigateBack,
   replaceUrl,
@@ -31,6 +32,79 @@ function TwoLocationReaders() {
 }
 
 describe("shared navigation guard", () => {
+  it("finds the nearest same-origin list through nested details without modifying history", () => {
+    window.history.replaceState({}, "", "/experiments");
+    navigate("/experiments/first");
+    const source = "/experiments?compare_from=second#main-content";
+    navigate(source);
+    navigate("/experiments/compare?ids=first,second");
+    navigate("/experiments/second");
+    const replace = vi.spyOn(window.history, "replaceState");
+    expect(managedReturnHref("/experiments")).toBe(source);
+    expect(managedReturnHref("/experiments?explicit=1")).toBe(
+      "/experiments?explicit=1",
+    );
+    expect(managedReturnHref("/experiments#explicit")).toBe(
+      "/experiments#explicit",
+    );
+    expect(replace).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    {},
+    { quantNavigationIndex: -1 },
+    {
+      quantNavigationIndex: 2,
+      quantNavigationUrl: "http://localhost/experiments/unknown",
+    },
+    {
+      quantNavigationIndex: 2,
+      quantNavigationReturns: [
+        { url: "http://localhost/experiments?wrong=1", index: 0 },
+      ],
+    },
+    {
+      quantNavigationIndex: 1,
+      quantNavigationReturns: [{ url: "not a URL", index: 0 }],
+    },
+    {
+      quantNavigationIndex: 1,
+      quantNavigationReturns: [
+        { url: "https://example.invalid/experiments?wrong=1", index: 0 },
+      ],
+    },
+    {
+      quantNavigationIndex: 1,
+      quantNavigationReturns: [
+        {
+          url: "http://localhost/experiments/compare?ids=first,second",
+          index: 0,
+        },
+      ],
+    },
+    {
+      quantNavigationIndex: 1,
+      quantNavigationReturns: [
+        { url: "http://localhost/experiments-other", index: 0 },
+      ],
+    },
+  ])(
+    "uses the internal fallback for unknown or unsafe list ancestry %j",
+    (patch) => {
+      window.history.replaceState(
+        { quantNavigationUrl: "http://localhost/experiments/direct", ...patch },
+        "",
+        "/experiments/direct",
+      );
+      const replace = vi.spyOn(window.history, "replaceState");
+      expect(managedReturnHref("/experiments")).toBe("/experiments");
+      expect(managedReturnHref("https://example.invalid/experiments")).toBe(
+        "https://example.invalid/experiments",
+      );
+      expect(replace).not.toHaveBeenCalled();
+    },
+  );
+
   it.each(["/help", "/help#help-drawdown"])(
     "reselects only a current fragment without adding history: %s",
     (url) => {

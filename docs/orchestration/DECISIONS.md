@@ -1,5 +1,35 @@
 # Decisions
 
+## v1.2 Preserve the actual list URL at the shared Back boundary — 2026-10-08
+
+Real page2 return reproduction showed fixed `/experiments` skipped or replaced
+the nearer `/experiments?compare_from=…` entry after transient source-import failure.
+Reuse existing validated bounded ancestry with a pure nearest same-origin/path
+resolver; one shared Link href/click destination repairs all3 Back callers. Do not
+loosen navigateBack exact matching, add page-specific exceptions or mutate history
+while rendering. Explicit search/hash/external targets and malformed ancestry keep
+their fallback. Independent external-origin P2 addressed before final811 suite;
+RED evidence and all existing assertions retained, no dependency/policy/API change.
+
+Three synthetic paged/query returns and two actual original saved-study bilingual
+returns passed exact context/focus/scroll checks. Original12rows cannot establish
+realpage2; synthetic2031 is not financial/new-market proof. Seal32payload34cfa1cd
+preserves pre-deployment history; subsequent328payload9daca8c0 records localdeploy.
+Reuse owned no-mount Nginx:full old144files backup, retain old immutableassets,
+assets-first/atomicindex publication and actual old5fileSHA rollback→newforward.
+No backend/DB/Redis restart or migration;13 served newhashes/headers200 verified.
+Wrongcompose.yml command failed, corrected service check healthy;never call it an
+application failure. Static runtime override is not a new immutable release image.
+
+Readonly review supports saved endpoints/assets/rollback/service results, not a
+complete independent click trace or atomic-command reconstruction. Root actualtool
+transcript covers those steps;scope remains bounded. Oldcode checker is historical
+after intentional4file changes;oldpayloads not rewritten. No financial admission,
+strategy, frozen/.research/OOS or GitHub action;fullproductgoal staysACTIVE.
+Next run actual failed-detail summary Tab/Enter/Space and named100-IDlist semantics
+on existingGET-only ENZH100101 fixtures, not duplicate Market/content-onlymatrix or
+the known contaminated native-p95 method. All remaining mandatory gates retained.
+
 ## v1.2 Seal bounded full-count diagnostics, then target a real paged-return gap — 2026-10-08
 
 Reuse existing parse/schema/detail branch;onlyfour ENZH100101 regression cases,

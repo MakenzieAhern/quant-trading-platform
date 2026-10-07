@@ -90,6 +90,34 @@ export function replaceUrl(path: string): void {
   );
 }
 
+/** Preserve a list's query/hash without changing history while rendering its Back link. */
+export function managedReturnHref(path: string): string {
+  const target = new URL(path, window.location.href);
+  const index: unknown = window.history.state?.[HISTORY_INDEX];
+  if (
+    target.origin !== window.location.origin ||
+    target.search ||
+    target.hash ||
+    typeof index !== "number" ||
+    !Number.isSafeInteger(index) ||
+    index < 0
+  )
+    return path;
+  for (const entry of returnEntries(index).slice().reverse()) {
+    try {
+      const source = new URL(entry.url);
+      if (
+        source.origin === target.origin &&
+        source.pathname === target.pathname
+      )
+        return `${source.pathname}${source.search}${source.hash}`;
+    } catch {
+      // An unparseable ancestor is not a safe return destination.
+    }
+  }
+  return path;
+}
+
 export function navigateBack(path: string): void {
   const index = historyIndex();
   const url = new URL(path, window.location.href).href;

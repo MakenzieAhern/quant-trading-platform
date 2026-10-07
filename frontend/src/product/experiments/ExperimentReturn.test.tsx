@@ -3,7 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, expect, it, vi } from "vitest";
 import { ApiError } from "../../api/client";
 import { i18n } from "../../i18n";
-import { experimentApi } from "./api";
+import { navigate, usePathname } from "../../utils/navigation";
+import { experimentApi, parseExperiment } from "./api";
+import { ExperimentDetailPage } from "./ExperimentDetailPage";
 import { EXPERIMENT_VIEW_KEY, ExperimentsPage } from "./ExperimentsPage";
 import { job } from "./fixtures.test-data";
 import type { Experiment, Page } from "./types";
@@ -72,6 +74,153 @@ beforeEach(async () => {
   window.localStorage.removeItem(EXPERIMENT_VIEW_KEY);
   window.history.replaceState({}, "", "/experiments");
 });
+
+function ReturnRouter() {
+  const pathname = usePathname();
+  return pathname === "/experiments" ? (
+    <ExperimentsPage />
+  ) : (
+    <ExperimentDetailPage jobId={job.job_id} />
+  );
+}
+
+it.each(["name", "open"])(
+  "returns through the UI to the query list after transient import failure and opening %s",
+  async (kind) => {
+    const sourceId = "cc000000-0000-4000-8000-000000000001";
+    const sourceUrl = `/experiments?compare_from=${sourceId}`;
+    navigate(sourceUrl);
+    window.history.replaceState(
+      { ...window.history.state, experimentView: view, experimentOffset: 20 },
+      "",
+    );
+    vi.spyOn(experimentApi, "get").mockImplementation((id) =>
+      id === sourceId
+        ? Promise.reject(new TypeError("offline"))
+        : new Promise(() => {}),
+    );
+    const list = vi.spyOn(experimentApi, "list").mockResolvedValue(page);
+    const create = vi.spyOn(experimentApi, "create");
+    const retry = vi.spyOn(experimentApi, "retry");
+    render(<ReturnRouter />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Could not confirm a response",
+    );
+    await screen.findByRole("link", { name: /^Open experiment:/ });
+    vi.stubGlobal("scrollY", 932);
+    screen.getByRole("region", { name: "Your experiments" }).scrollLeft = 123;
+    await userEvent.click(target(kind));
+    const back = await screen.findByRole("link", {
+      name: "← Back to experiments",
+    });
+    expect(back).toHaveAttribute("href", sourceUrl);
+    const length = window.history.length;
+    vi.mocked(window.scrollTo).mockClear();
+    await userEvent.click(back);
+    await waitFor(() => expect(target(kind)).toHaveFocus());
+    expect(window.location.search).toBe(`?compare_from=${sourceId}`);
+    expect(window.history.length).toBe(length);
+    expect(screen.getByLabelText("Search saved studies")).toHaveValue(
+      "Precision",
+    );
+    expect(screen.getByLabelText("Sort studies")).toHaveValue("name_asc");
+    expect(
+      screen.getByRole("region", { name: "Your experiments" }).scrollLeft,
+    ).toBe(123);
+    expect(window.scrollTo).toHaveBeenCalledExactlyOnceWith({
+      top: 932,
+      left: 0,
+      behavior: "instant",
+    });
+    expect(list).toHaveBeenLastCalledWith(
+      expect.any(AbortSignal),
+      20,
+      20,
+      "Precision",
+      {
+        status: "SUCCEEDED",
+        mode: undefined,
+        sort: "name_asc",
+      },
+    );
+    expect(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)).toBeNull();
+    expect(create).not.toHaveBeenCalled();
+    expect(retry).not.toHaveBeenCalled();
+    act(() => window.history.forward());
+    await waitFor(() =>
+      expect(window.location.pathname).toBe(`/experiments/${job.job_id}`),
+    );
+  },
+);
+
+it.each(["name", "open"])(
+  "returns to the second distinct row on page two after opening its %s link",
+  async (kind) => {
+    const rows = Array.from({ length: 22 }, (_, index) => {
+      const name = `Precision page ${String(index + 1).padStart(2, "0")}`;
+      return parseExperiment({
+        ...complete,
+        job_id: `aa000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+        name,
+        configuration: { ...complete.configuration, name },
+      });
+    });
+    const list = vi
+      .spyOn(experimentApi, "list")
+      .mockImplementation(async (_signal, limit = 20, offset = 0) => ({
+        items: rows.slice(offset, offset + limit),
+        total: rows.length,
+        limit,
+        offset,
+      }));
+    const create = vi.spyOn(experimentApi, "create");
+    const retry = vi.spyOn(experimentApi, "retry");
+    window.history.replaceState({ experimentView: view }, "");
+    const first = render(<ExperimentsPage />);
+    await screen.findByRole("link", { name: /^Precision page 01 ·/ });
+    expect(screen.queryByText(rows[21].name)).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Next" }));
+    const linkName =
+      kind === "name"
+        ? /^Precision page 22 ·/
+        : /^Open experiment: Precision page 22 ·/;
+    const opened = await screen.findByRole("link", { name: linkName });
+    expect(screen.queryByText(rows[0].name)).not.toBeInTheDocument();
+    vi.stubGlobal("scrollY", 932);
+    screen.getByRole("region", { name: "Your experiments" }).scrollLeft = 123;
+    await userEvent.click(opened);
+    expect(window.location.pathname).toBe(`/experiments/${rows[21].job_id}`);
+    first.unmount();
+    vi.mocked(window.scrollTo).mockClear();
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe("/experiments"));
+    render(<ExperimentsPage />);
+    const returned = await screen.findByRole("link", { name: linkName });
+    expect(returned).toHaveFocus();
+    expect(returned).toHaveAttribute("href", `/experiments/${rows[21].job_id}`);
+    expect(screen.queryByText(rows[0].name)).not.toBeInTheDocument();
+    expect(screen.getAllByRole("row")).toHaveLength(3);
+    expect(
+      screen.getByRole("region", { name: "Your experiments" }).scrollLeft,
+    ).toBe(123);
+    expect(window.scrollTo).toHaveBeenCalledExactlyOnceWith({
+      top: 932,
+      left: 0,
+      behavior: "instant",
+    });
+    expect(list).toHaveBeenLastCalledWith(
+      expect.any(AbortSignal),
+      20,
+      20,
+      "Precision",
+      { status: "SUCCEEDED", mode: undefined, sort: "name_asc" },
+    );
+    expect(window.history.state.experimentReturn).toBeNull();
+    expect(window.localStorage.getItem(EXPERIMENT_VIEW_KEY)).toBeNull();
+    expect(create).not.toHaveBeenCalled();
+    expect(retry).not.toHaveBeenCalled();
+  },
+);
 
 it.each(["name", "open"])(
   "restores the exact %s link, both scroll axes and retained view only after rows load",

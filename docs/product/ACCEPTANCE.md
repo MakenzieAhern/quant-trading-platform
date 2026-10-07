@@ -1,5 +1,48 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 saved-study query return repaired and locally deployed — scoped PASS
+
+[Source/browser proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-study-page-return/README.md>)
+binds172 source/3inputs and32payload seal
+`34cfa1cd140a6648957daf2e7c12c72559e14badc2ec0f6f0b6269818d44fed9` twicePASS.
+Actual page2/query→detail→UIBack previously lost filters/sort/row context. One
+pure shared-history resolver plus shared Link destination fixes all3 list-Back
+callers; exact navigateBack/nativeForward, explicit query/hash/external fallback
+stay intact. Two expectedRED assertions;4new name/Open return regressions use
+22distinct validated IDs/20+2;9 helper cases. Final811frontend/48files/types/lint/
+changed-filePrettier/build PASS after review's origin guard. No backend/audit/CI rerun.
+
+Actual synthetic IAB15frames/6JPEG/3 finalexact paired returns ENdesktop/query,
+ZHmobile/query andZHmobile/clean restoreURL/filters/page2row22/focus/bothscrollaxes.
+2031 GET-only RAM/current schemas/noSQL/engine/jobs/trades;4write probes405.
+Animation174-vs175 frame retained but not equality witness. Not realpage2/market/
+native200/fullAA/p95. Prior30payload bytes unchanged;its old-code binding is historical.
+
+[Daily-app deploy/rollback proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-return-deployment/README.md>)
+seals328payloads `9daca8c00d7ea4ef8ff16b8ff5bd532d4d1a15b4bb66d69a2151657525a4bff5`
+twicePASS. Fresh realAPI8000/networknone build passes; existinga561fa/no-mount/
+loopback5173 Nginx was not restarted. Old144files retained, newassets staged then
+index6b78b067 published. All13 actualWindowsGET hashes200/nosniff/no-referrer match.
+Actual oldindex/main/api/format/CSS rollback5hashes200, then newindexforward200;
+published155files preserve143old non-index assets. Static rollback only, not new
+immutableimage/database/lost-ledger/fullrelease. Wrongcompose.yml probeexit1
+retained/corrected:all3 existingPGRedisbackend identities/starttimes unchangedhealthy,
+RedisPONG/API200paper. Frozen693c0b81/tagf88b5c60/.research untouched.
+
+Actual dailyapp existingFAILEDstudy read-only ZHname/ENOpen→loadeddetail→Back:
+Chrome/FAILED/name_asc/sameURL/row/exactanchor restored, scrollZH340/0 EN380/213.
+Four endpointframes/twoJPEGs/currentSRFscript; original12studies do not provepage2.
+DefaultIAB1280x720/system/pageWidth==rootclientWidth1265, not fullmatrix/nativeAA.
+Failed held-reference/source-gap andunknown exactdate remainvisible/notmadePASS.
+Readonlyreview no scopedP1P2;artifactreview supports endpoints/rollback/results,
+not independently reconstructed fullclicktrace/atomicimplementation. Ownedtabclosed,
+ZHsystem/originalMarket retained;no SQL/queue/strategy/OOS/GitHub/downloadSTOP retry.
+
+Full U1-U8/M0-M5 remainsACTIVE/PARTIAL. NextQA-A11Y is failed-detail native
+summary/list keyboard+AX, not another content-only100101 pass. Wholefinancial,
+lawful after-start forward/genuine lostledgers/currentnative200/p95/exportlanding/
+media/restore/authorizedremote gates remain required.
+
 ## 2026-10-08 full failure count versus bounded identities — scoped bilingual PASS
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-failure-prefix/README.md>)
