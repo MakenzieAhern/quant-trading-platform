@@ -51,6 +51,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
     dated = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
     plain_date = r"20\d{2}年\d{1,2}月\d{1,2}日"
     page_number = r"(?:[-—]\d+[-—]|\d+(?:/\d+)?)?"
+    page_counter = r"(?:§" + page_number + ")?"
     repeated_header = re.match(
         r"([\u4e00-\u9fff]+股份有限公司20\d{2}年(?:度|半年度)权益分派实施(?:的)?公告)\d+", text
     )
@@ -65,7 +66,24 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"1[、.]股权登记日(?:为)?:?" + plain_date + r"2[、.]除权除息日(?:为)?:?" + plain_date
     )
     holder_metadata = (
-        "(?:" + metadata + r"(?:3[、.]新增无限售条件流通股份上市(?:交易)?日:?" + plain_date + r")?|"
+        # 可流通 only supplies metadata structure, never unrestricted listing proof.
+        r"(?:[一二三四五六七八九十]+、分红派息日期"
+        r"(?:本公司及董事会全体成员保证信息披露的内容真实、准确、完整,没有虚假记载、"
+        r"误导性陈述或重大遗漏。§" + page_number + r")?"
+        r"(?:1[、.])?(?:本次分红派息)?股权登记日(?:为)?:?"
+        + plain_date
+        + r"(?:2[、.])?(?:除权除息日|除权日\(除息日\))(?:为)?:?"
+        + plain_date
+        + page_counter
+        + r"(?:3[、.])?新增可流通股份上市日(?:为)?:?"
+        + plain_date
+        + r"(?:4[、.])?(?:现金)?(?:股利|红利)发放日(?:为)?:?"
+        + plain_date
+        + "|"
+        + metadata
+        + r"(?:3[、.]新增无限售条件流通股份上市(?:交易)?日:?"
+        + plain_date
+        + r")?|"
         r"[一二三四五六七八九十]+、(?:股权登记日与除权除息日|"
         r"股权登记日、除息日、红利发放日)"
         r"(?:1[、.])?股权登记日(?:为)?:?"
@@ -87,7 +105,6 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
     # Page markers remain in prose; neither a date nor another declaration can
     # be assembled across pages. A holder sentence cannot swallow a later section/date.
     holder_prose = r"(?:(?![一二三四五六七八九十]+、|\d+[、.]|20\d{2}年)[^。;])"
-    page_counter = r"(?:§" + page_number + ")?"
     # A weekday annotation supplements a complete date, never supplies one.
     for year, month, day, weekday in re.findall(dated + r"\(星期([^()§。;]{1,4})\)", text):
         try:
@@ -134,7 +151,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"分红派息及资本公积金转增股本对象|分红派息对象|"
         r"利润分配和资本公积金转增股本对象|利润分配、转增股本的对象):?)?"
         + page_counter
-        + r"(?:本次(?:(?:权益)?分[派配]|转增股本|分红派息及资本公积金转增股本)"
+        + r"(?:本次(?:(?:权益)?分[派配]|转增股本|分红派息(?:及资本公积金转增股本)?)"
         r"(?:的)?对象为:?(?:截[止至])?|"
         r"[一二三四五六七八九十]+、(?:分红派息及资本公积金转增股本|权益分派|"
         r"分红派息|利润分配和转增)对象:?截[止至]|"
@@ -153,9 +170,9 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         "(?:" + boundary + r"(?:[一二三四五六七八九十]+、"
         r"(?:转增股本方法|权益分[派配]方法|权益分派办法|"
         r"利润分配和(?:资本公积金)?转增股本方法|分配、转增股(?:份|本)方法|"
-        r"分红派息及资本公积金转增股本方法):?)?(?:\d+[、.])?"
+        r"分红派息(?:及资本公积金转增股本)?方法):?)?(?:\d+[、.])?"
         r"(?:公司)?本次(?:所|资本公积金|资本公积所)?"
-        r"(?:转增(?:的)?股(?:份)?|送(?:红)?股(?:份)?|送转股份|新增股份|"
+        r"(?:转增(?:的)?股(?:份)?|送(?:红)?股(?:份)?|送转(?:的)?股份|新增股份|"
         r"(?:送)?\(转(?:增)?\)(?:的)?股(?:份)?)|"
         r"(?:^|[。;§]|[一二三四五六七八九十]+、转增股本方法)资本公积金转增的股份)(?:将)?于"
         + dated
