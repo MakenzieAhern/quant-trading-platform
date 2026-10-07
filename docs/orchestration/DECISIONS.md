@@ -1,5 +1,22 @@
 # Decisions
 
+## v1.2 Distribution metadata is not unrestricted-listing authority — 2026-10-07
+
+Complete four official PDFs/all17pages retain full-cache/SHA provenance. Shared
+complete date metadata and literal holder/credit aliases fix parser layouts,
+without arbitrary prose/date joins or independent-role weakening. FinalV14 still
+84source-onlyPASS53unresolved: four holder failures now expose actual missing
+unrestricted-listing evidence. No new sourcePASS or financial admission. Persist
+precise source/date/pages-searched/next-evidence gap records, not silent exclusions.
+Do not substitute 可流通, cash date or capital table for a dated unrestricted
+declaration; do not keep loosening parser for these four known authority gaps.
+113related/1357backend1optionalSKIP/static/testDB/review proofs preserved and
+39payloadseal reverified, originals/frozen/OOS untouched. WindowsDocker/services
+healthy despite missing WSLnativeCLI; local use/tests need not await GitHub, but
+local checks cannot satisfy remote CI/release gates. Next work rotates to an actual
+user-facing quality requirement rather than another PDF-only iteration; full
+product scope remains incomplete and ACTIVE, GitHub hold unchanged.
+
 ## v1.2 Complete holder metadata, not loose section anchors - 2026-10-07
 
 Full300086/3001953pagePDFs rendered/read/SHAchecked and directpypdf/NFKCcache

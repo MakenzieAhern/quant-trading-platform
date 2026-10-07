@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 distribution-date metadata — parser repaired, source still unresolved
+
+[Private four-source preservation and exact evidence gaps](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-distribution-date-metadata/README.md>).
+Source commit60d3c41847acc892c5249c9607698395dda208f5; all17PDFpages inspected,
+SHA/directpypdfNFKC full-cache equality. Shared complete metadata/holder/credit
+aliases repaired; exact guarantee boundary and full-date page boundaries retained.
+Independent credit/unrestricted declarations required; no cash/date/table borrowing.
+113related/1357backend1optionalarchiveSKIP/static/test-onlymigrationPASS are prior
+unit results, reverified immutable here, not newly rerun. Independent readonly
+review no evidenced scopedP1/P2. FinalV14 all137/84source-onlyPASS53unresolved,
+four first roles now UNRESTRICTED_LISTING; zero new sourcePASS, old84wholePASS,
+133wholeunchanged/276bindings/reverse+immutablePASS. Final canonical
+caf5953ccae330f77dea80d44d9ac4c580d330e86f7ed3ca674c021a21cf2b99;
+39payload seal d91ecb6e4e8eb63eb118fca196b96f00d378b4299e00ec36c184a2c0120f5d51.
+300041/300054/300083/300182 exact dated unrestricted-listing source gaps persisted,
+not exclusions/admission. 可流通 and capital tables alone do not close them.
+OriginalDB0016/RedisPONG/WindowsDocker/frontendAPI200 freshly verified; testPG
+stopped0/retained. WSLnativeCLI still unavailable, no application outage or repair
+claim. No backenddeployment/originalrestart/migration/provider/business/research/
+OOS/accountGitHub action. Not financial/newversion/full-product acceptance.
+Continue user-visible remaining quality work; all U1–U8/M0–M5 remain required.
+
 ## 2026-10-07 complete holder metadata - U3/U5/U6 source prerequisite
 
 [Full private PDF/test/V12 preservation proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-metadata-chain/README.md>).

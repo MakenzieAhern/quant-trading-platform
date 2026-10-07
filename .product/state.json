@@ -1,4 +1,22 @@
 {
+  "distribution_date_metadata_sources_20261007_gate": {
+    "status": "PASS_SCOPED_PARSER_REPAIRS_NO_NEW_SOURCE_ADMISSION",
+    "source_head": "60d3c41847acc892c5249c9607698395dda208f5",
+    "parent_head": "d6d6c24d1c7e0146f4af353a64012bd2534b4ac5",
+    "repair": "Four complete official PDFs/all17pages inspected; SHA and directpypdfNFKC full-cache equality retained. Shared complete numbered/unnumbered record-ex-listing-cash metadata, exact guarantee plus page boundary, literal holder/credit aliases; independent credit and unrestricted dates still mandatory. No date joining/arbitrary skip/cash borrowing/可流通 promotion.",
+    "batch": "FinalV14all137/84source-onlyPASS53unresolved;four first roles HOLDER_CUTOFF->UNRESTRICTED_LISTING only, no new sourcePASS. Old84wholePASS/133wholeunchanged/276bindings/reverse-immutablePASS. Remaining28holder19unrestricted1credit1ex4special. IntermediateV13 explicitly not final.",
+    "batch_manifest_sha256": "caf5953ccae330f77dea80d44d9ac4c580d330e86f7ed3ca674c021a21cf2b99",
+    "validation": "4RED89deselected->111relatedPASS;2creditRED93deselected->113finalrelatedPASS;1357fullbackend1existingoptionalarchiveSKIP20.65s/Ruff558format/mypy146/test-onlyhead-base-head-checkPASS. Reverified39payloadseal and all bindings at2026-10-07T05:12:27Z;not a new test rerun.",
+    "source_gaps": "300041/300054/300083/300182 still lack explicit dated unrestricted listing evidence. Immutable listing-source-gaps.json records exact dates, provenance, all pages searched and next official evidence needed; no exclusions/event admission. Do not repeatedly loosen this parser for these known evidence gaps.",
+    "review": "Existing signed_results_review_oct7 independent readonly review of shared callers/tests/fullcache/PDFSHA/V14canonical/all137/276bindings/old84PASS133unchanged found no evidenced scopedP1/P2. Reviewer did not run tests/producer/verifier/DB/browser/network or approve financial admission.",
+    "preservation": "Original5432schema0016/RedisPONG freshly rechecked. WindowsDocker29.8.0/Desktop4.92.0 reachable;originalPGRedisbackendhealthy/frontendAPI200/paper1.1.0. WSLnativeDocker CLI still unavailable;no integration repair claimed. Exactowned30b1tmpfs/no mounts55471quant_testSTOPPED0/OOMfalse retained050622Z. Frozen693c/tagf88b/.research unchanged;no originalrestart/migration/deployment.",
+    "evidence": "product-evidence/v1.2/m4/20261007-distribution-date-metadata/README.md",
+    "evidence_payloads": 39,
+    "evidence_manifest_sha256": "d91ecb6e4e8eb63eb118fca196b96f00d378b4299e00ec36c184a2c0120f5d51",
+    "ci": "NOT_RUN_GITHUB_HOLD;historicalCI not currenthead. No push/merge/tag/release;only public GitHub documentation read during user runtime question, not account/repo/Actions access.",
+    "event_admitted": false,
+    "full_product_pass": false
+  },
   "holder_metadata_chain_sources_20261007_gate": {
     "status": "PASS_SCOPED_SOURCE_GUARDS_NOT_FINANCIAL_OR_FULL_PRODUCT",
     "source_head": "a4a0d636c71f51921fc0b9079659c406f8469bed",
@@ -95,7 +113,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T04:57:47Z",
+  "updated_at_utc": "2026-10-07T05:12:27Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3070,10 +3088,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-07 source a4a0d63 clean before checkpoint;V12source84PASS53unresolved/137/276bindings/19payloadc440a303;only300086300195 changed/old82wholePASS135unchanged. Bothcomplete3pagePDFs/directpypdfcache equality;2RED107related1351fullbackend+optionalSKIP/static/testDBPASS/read-only no scopedP1P2. Original0016/PONG/frozen/tag intact/no deployment/GitHub/strategy/OOS;fullgoalACTIVE.",
-    "repository_writer": "Root parser/tests/docs/state sole writer; fresh WSL PID/start/command inventory no concurrent repository/provider writer. Existing signed_results_review_oct7 readonly completed.96664/44192terminal0. No second task/GitHub;frozen/formal/OOS untouched.",
-    "database_writer": "Only exactowned30b1cfb/tmpfs/no mounts/55471quant_test head-base-head-check/fulltests;0017/zerootherclients thenSTOPPED0/OOMfalse retained20261007T045547Z. Initial readiness notyetready thensamecontainerready/no restart. Original5432 never tests/migration/restart;schema0016/PONG freshly verified. No create/prune/reset/delete/securitychange or deniedclean-demo retry.",
-    "queue_writer": "Root private immutableV12source137/84PASS53unresolved;priorV11 15sealedpayloads preserved/276currentbindings/repeatPASS. Original34holder-layout queue remains sealedtriage, latestfirst-roleholder32. No provider/research/economicqueuewrites. Sixcash53sources000598300048/allaction-reference-lifecycle-newversion admission remains.",
+    "latest_verification": "2026-10-07 source60d3c41 clean before checkpoint;V14all137/84source-onlyPASS53unresolved/276bindings/39payloadsd91ecb6e;four holder/credit layouts repaired but explicit unrestricted listing still missing, old84wholePASS133unchanged. 113related1357fullbackend1optionalSKIP/static/testDBPASS are preserved prior-unit results, not rerun this checkpoint. Fresh verifier/0016/PONG/frozen/tag/HTTP200/WindowsDocker healthy;fullgoalACTIVE.",
+    "repository_writer": "Root sole repository/private-queue writer; fresh WSL PID/start/args inventory at051155Z no concurrent repository/provider writer. Existing signed_results_review_oct7 completed prior-unit readonly review. No live test/producer handle;no second task/account GitHub action/frozen/formal/OOS mutation.",
+    "database_writer": "Exactowned30b1cfb/tmpfs/no mounts/55471quant_test prior-unit head-base-head-check/fulltests;0017/zerootherclients thenSTOPPED0/OOMfalse retained20261007T050622Z and now freshly inspected exited. Original5432 never tests/migration/restart;schema0016/PONG freshly verified. No create/prune/reset/delete/securitychange or deniedclean-demo retry.",
+    "queue_writer": "Root private immutableV14source137/84PASS53unresolved;priorV12all19payloads preserved/276currentbindings/repeatPASS. Four explicit listing-source-gap records are evidence needs, not exclusions/admission. Original34holder triage remains sealed;latestfirst-roleholder28. No provider/research/economicqueuewrites. Sixcash53sources000598300048/allaction-reference-lifecycle-newversion admission remains.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -3083,6 +3101,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-07T05:12:27Z checkpoint source60d3c41 V14/shared complete distributionmetadata+credit aliases:four parser errors resolved but0newsourcePASS/84PASS53unresolved/old84wholePASS133unchanged/276bindings/39payloadsd91ecb6e. Four exact listing gaps persisted;113related1357backend1optionalSKIP/static/testDB prior-unit evidence verified, not rerun. Fresh WindowsDocker/frontend/API200/original0016/PONG/testPGstopped/frozen/tag intact. No deployment/research/OOS/accountGitHub action;fullgoalACTIVE.",
     "2026-10-07 complete holder-metadata sharedfix sourcea4a0d63;full300086300195PDF3pages/render/directpypdfcache equality/2RED107related1351fullbackend1optionalSKIP/static/testDBPASS. V12all137/84source-onlyPASS53unresolved/old82wholePASS135unchanged/276bindings/19payloadc440a303seal;readonlynoP1P2. Original0016/frozen/tag/testPGstopped retained;no deployment/GitHub/strategy/OOS;fullgoalACTIVE.",
     "2026-10-07 V11 source-only closed300126 via completeissuer-notice firstline;PDF/directpypdfcache equality/1RED105related1349fullbackend+1optionalSKIP/static/testDBPASS;all137/82PASS55unresolved/only300126/old81wholePASS136unchanged/276bindings/15payload1ca1167bseal;readonlynoP1P2. Original0016/frozen/tag retained, testPGstopped;no deploy/GitHub/strategy/OOS;goalACTIVE/fullproductunproven.",
     "2026-10-07 fullcreditdate andaccountword page-continuation sharedfix;complete300198PDF3pages rendered/read;3RED→87related/1348fullbackend+1optionalSKIP/static/testDBmigrationcyclePASS;V10source-only81PASS56unresolved/old80wholePASS+136unchanged/276bindings/reverse-immutable retained;readonly no scopedP1P2. Original0016/frozen/tag/research preserved;testPGstopped retained/no deployment/GitHub/economicadmission.",
@@ -3691,8 +3710,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5 afterV12source-only84PASS53unresolved;only300086300195 closed/all137/prior84 protected.1351backend1optionalSKIP/static/testDBPASS;backend NOT deployed. Sixcash53sources000598300048/allaction-reference-economic-lifecycle-newversion admission/lawfulafterstartforward/genuineoldledgers/original0017restore-durability/fullAA-performance-export-manual-media-release remain. Safe independentwork, GitHubhold/frozen-OOS/deniedDocker-native-download boundaries;goalACTIVE.",
-  "local_next_command": "Read holder_metadata_chain_sources_20261007_gate/latestV12/originalholder-layoutqueue/fullobjective;verify freshownership. Inspect complete cachednotices/originalPDFs for repeated numbered date metadata with 可流通 and cash fields (300041300054300083300182) and literalholderprefix classes among remaining32. Sharedrootcause/RED/negativeguards/all137/prior84wholePASS, independentcredit/listing still required;do NOT promote可流通 or source-only tofinancialadmission. Continue mandatoryactualfinancial/newversion/UI/restore/forward/media/release safely;no repeatedacceptedcases/GitHub/frozen-OOS/deniednative-download-clean-demo workaround.",
+  "next_task": "Continue full U1-U8/M0-M5 afterV14source-only84PASS53unresolved;four layout repairs expose actual unrestricted-listing gaps, not sourcePASS.113related1357backend1optionalSKIP/static/testDB prior-unitPASS;backend NOT deployed. Switch next unit to user-visible remaining flow/quality, not repeated PDF-only iterations. Sixcash53sources000598300048/allaction-reference-economic-lifecycle-newversion admission/lawfulafterstartforward/genuineoldledgers/original0017restore-durability/fullAA-performance-export-manual-media-release remain. GitHubhold/frozen-OOS/deniedDocker-native-download boundaries;goalACTIVE.",
+  "local_next_command": "Read distribution_date_metadata_sources_20261007_gate/fullobjective and fresh ownership; inspect actual Chrome user-facing remaining flow against acceptance/manuals and fix an evidenced shared defect without account/order/strategy/OOS writes. For source work reuse V14/276bindings and targeted listing-source-gaps.json, not looser parsing of four known missing declarations;remaining28holder layouts still queued. Do not promote source-only to financial admission or bypass native200/export/clean-demo policy denial. Continue complete mandatory product goal;no GitHub/frozen-OOS actions.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
