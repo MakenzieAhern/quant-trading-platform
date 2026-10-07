@@ -1,7 +1,43 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T00:09:51Z",
+  "updated_at_utc": "2026-10-07T00:32:00Z",
+  "dated_holder_sources_20261007_gate": {
+    "status": "PASS_SCOPED_SOURCE_GUARDS_NOT_FINANCIAL_OR_FULL_PRODUCT",
+    "parent_head": "6525520797cc46bff9d41c939b6ad2f2e6eb8b1b",
+    "repair": "Exact numbered 权益分派对象/分派对象 heading directly before complete all-holder cutoff; complete300028 cache read. Not optional arbitrary prefix/date repair/pagejoin/issuerexception.",
+    "batch": "137rows/78source-onlyPASS/59unresolved/276bindings;old77wholePASS/136wholeunchanged/only300028;allratio-source-identity/reverse/immutable repeat preserved.",
+    "batch_manifest_sha256": "6ce30731e2912939adb7711d35389cc705c7f44d488ac495161f094b505e51a5",
+    "validation": "Actual2RED/76deselected then79same-day+ratioPASS;1302fullbackendPASS+1existingoptionalarchiveSKIP20.44s/Ruff556/mypy145/ownedtmpfsquant_test55471head-base-head-checkPASS.",
+    "review": "Independentreadonly3page officialsource/276bindings/all137/old77/136unchanged. NamingP2 caught/fixed:initialnew-dirv6artifact retained NON-ACCEPTED;producer name corrected and newV7 canonical binds changed producerSHA. No remaining evidencedscopedP1P2, no reviewerexecution/finalsealreview/economic/fullproductapproval.",
+    "evidence": "product-evidence/v1.2/m4/20261007-dated-holder-sources/README.md",
+    "evidence_payloads": 18,
+    "evidence_manifest_sha256": "9b5574a2f10221afc97e60f2f7a5d7ff472b3ca3a57b8117b7ebdcfcdd8710e7",
+    "ci": "Exactnewhead CI PENDING; parent6525520CI is historical, not currentdiff evidence.",
+    "preservation": "OriginalDB0016/runtime4healthy/frozen693c/tagf88b/.research/frontendtree1bafd unchanged. OwnedtmpfsPG0otherclients stopped/retained. No originalrestart/migration/financialwrites/deletion/securitychange.",
+    "event_admitted": false,
+    "full_product_pass": false
+  },
+  "orientation_keyboard_20261007_gate": {
+    "status": "PASS_SCOPED_OPEN_ESCAPE_MOBILE_NOT_FULL_TAB_AA",
+    "evidence": "product-evidence/v1.2/m4/20261007-orientation-keyboard/README.md",
+    "payloads": 6,
+    "manifest_sha256": "c03a4fda1ec95b9567f8861afb95d95043bf633df7c52377a469c126262390e8",
+    "observed": "Actual ENZHdark390x844 modal mode explanations/forward unavailable/initialClosefocus/firstTabcontinue/Escapeexacttriggerreturn;doc375client375/modal351/close40x40/continue42high.2settledactualJPEGs independently read;no evidencedP1P2. LocaleEN/defaultviewport restored/QAtabclosed/exporthandoffretained.",
+    "limits": "EN finalTab/reverseTab returned outside-dialog/null/wholebodytext;nativebrowser boundary remains UNRESOLVED. document.hasFocus unsupported toolscope;no productbug inferred/customtrap/securityworkaround. Notfullfocuscycle/AA/newuser/financial/forwardPASS.",
+    "full_product_pass": false
+  },
+  "residual_source_roles_20261007_gate": {
+    "status": "UNRESOLVED_SOURCE_DIAGNOSIS_NOT_FINANCIAL_ACCEPTANCE",
+    "evidence": "product-evidence/v1.2/m4/20261007-residual-source-roles/README.md",
+    "payloads": 4,
+    "manifest_sha256": "500dad62a5cafe4d8e0fbc3b3790d6c5a3752b7264e2428b8a6997b6bab00589",
+    "rows": 60,
+    "roles": "37HOLDER_CUTOFF/15UNRESTRICTED_LISTING/3SHARE_CREDIT/1EX_DATE;plus000425nonstandardguard/3no-check000771000818300048",
+    "contexts_manifest_sha256": "1010decc48e756f7c71b6e35981751418482b0532f58284e2b760bcbc837bef7",
+    "next_hypothesis": "Full3000283page cache read;explicit权益分派对象 heading directly precedes completecutoff/allholders;phrase本次对象为 absent. Test exact-heading alternative with allguards;not implemented/accepted. First-token contexts can be capitaltables/prior scheme, not date evidence.",
+    "event_admitted": false
+  },
   "listing_wording_sources_20261007_gate": {
     "status": "PASS_SCOPED_SOURCE_GUARDS_NOT_FINANCIAL_OR_FULL_PRODUCT",
     "parent_head": "26eb11a8bef3f34eb7baace71cb2fe4324d090ae",
@@ -13,7 +49,9 @@
     "evidence": "product-evidence/v1.2/m4/20261007-listing-wording-sources/README.md",
     "evidence_payloads": 17,
     "evidence_manifest_sha256": "5ddb3d54e51366e08b8711adf369f544ee0ff1548dad8a4ea470185df032796c",
-    "ci": "Exact new commit CI pending;parent26ebCI37549281120 historicalSUCCESS. PR32OPEN-DRAFT/no merge/release.",
+    "ci": "Own6525520797cc46bff9d41c939b6ad2f2e6eb8b1b CI37550587482 all3jobs/every stepSUCCESS20261007T00:12:35Z/samewatch68948terminal0. Hosted1300backend+optionalSKIP39.99s/735frontend45files/lint-types-build181ms/Ruff556/mypy145/disposable0017check/Compose smokePASS.5payloadCIsealdd293f38. Fresh admission not futurequota guarantee. HEADoriginOPEN-DRAFTPR32agree/no merge/release.",
+    "ci_evidence": "product-evidence/v1.2/m4/20261007-listing-wording-ci/README.md",
+    "ci_evidence_manifest_sha256": "dd293f38f4a75ec9ece709f031bce3167c7d014c6aac95b422a12ada8d90fe3b",
     "preservation": "OriginalDB0016/serviceshealthy/APIfrontend200/PONG/frozen693c/v1.1tagf88bunchanged/.researchuntouched. Owned30b1tmpfstestPG0otherclients stoppedexit0/retained;no originalrestart/migration/financialwrites.",
     "event_admitted": false,
     "full_product_pass": false
@@ -2758,7 +2796,7 @@
   },
   "ownership": {
     "latest_verification": "2026-10-07T00:00:35Z solewriter/26eb11aHEADoriginOPEN-DRAFTPR32agree; ownCI37549281120 all3jobs/every stepSUCCESS23:59:08Z/terminalwatch47158exit0.1298backend+optionalSKIP/735frontend/static/isolatedmigration/ComposePASS. OriginalPGRedisbackendhealthy/fallbackAPIfrontend200/PONG/read-only0016;frozen/tag/.research preserved;no originalrestart or financial/business task.",
-    "repository_writer": "Root sole sharedofflinecreditparser/tests/checkpoint writer;4RED->93related/full1298+optionalSKIP/static/scratchmigrationPASS. Reused signed_results_review_oct7 independently readonly reviewed4complete caches/276bindings/preservation;no evidencedP1P2/no reviewer execution. Coherent26eb11a pushed/currentCI37549281120 SUCCESS. PostCI docs only local until next milestone.",
+    "repository_writer": "Root sole current parser/tests/checkpoint writer;actual2RED->94related/full1300+optionalSKIP/static/scratchmigrationPASS;owned30b1PGstopped.6525520 pushed/exactCI37550587482SUCCESS. Reused signed_results_review_oct7 readonly source+2JPEG/CI evidence review no evidencedscopedP1P2;no reviewerexecution. PostCI/UI/residual checkpoint docs local until next coherent milestone.",
     "database_writer": "Root guardedownedtmpfsquant_test/no mounts/loopback55471only;1294tests+optionalSKIP/head-base-head/check terminal. PGSTOPPEDretained;originalquant_platform readonly0016/no migration/restart/retry/backfill/strategy. Genuine lostledgers incomplete.",
     "queue_writer": "Root immutable137sourceguardv5;75sourcePASS/62unresolved/4newPASS/71oldPASS wholepreserved/133wholeunchanged/276bindings/reverse/prior14proof intact.62diagnosis=58roles+1guard+3nomatchingchecks;000771Bscope and300048alreadyfoundcorrectionchain distinct. No economic event/dataset admission/provider acquisition/queueworker/fullarchive action;fullaction/reference/cash/lifecycle incomplete.",
     "agents": {
@@ -2770,6 +2808,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-07T00:19:41Z actual2RED/94related/full1300PASS+optionalSKIP/sharedlisting77sourceonlyPASS60unresolved;own6525520CI37550587482alljobs/every stepSUCCESS/735frontend/static/migration/ComposePASS.17sourceproof5ddb/5CIproofdd293 retained. ActualENZHdark390orientationopen/firstTab/Escape/40px6proofc03a scopedPASS;final/reverseTabboundaryUNRESOLVED. All60residual4proof500d/next300028fullcache hypothesis recorded. Originals/frozen/OOS unchanged;fullgoalACTIVE/no merge/release.",
     "2026-10-06T23:26Z shared comparison quality-before-money4RED->40focused/735full/static/currentChrome16cases/independentreadonly review PASS_SCOPED.99proofseal1d7a59b2;owna694CI37546062465 all3jobs/every stepSUCCESS23:23:43Z1294backend+1SKIP/735frontend/isolatedmigration/ComposePASS/samewatch47283terminal0. Currentread-onlyDevelopmentdate20110223 links exactcurves+oneactualsavedtrade/22fullmetrics preserved/ENZHcontinuity;7payloadseal7ebe19d5/prior99payloadunchanged. RootownedNode idleSTOPPED137/OOMfalse retained, originalhealthy no restart/data/task/OOS action. FullgoalACTIVE/no merge/tag/release.",
     "2026-10-06T22:43Z bilingualmanual independentreadonly review no evidencedP1P2;CI5payload/prior127proof/167sources independently consistent. CurrentnativeChrome JSONpreparation observed but bothdownloadlisteners timedout20s/15s; filelandingUNVERIFIED/notproductfailure proof. Browserinternaldownloads URLdenied, stoppedwithoutworkaround;useraskedonce localpath/failure/ownresulttab1661329767handoff. Fourobservationpayloadsealed e3d1a288, notdownloadPASS. GoalACTIVE/no newfinancial/data/business/release action.",
     "2026-10-06T22:37Z ownaa4eCI37541093320 alljobs/every stepSUCCESS1294backend+optionalSKIP/729frontend/static/disposable0017migration/Compose release smoke;samewatch79166terminal0/no rerun. FivepayloadCIseal b34f7762/127priorproof/167sourcebindings verified unchanged. Bilingualmanual now distinguishes currentfallback startup from recoveredintegration and exact savedledger from economic validity;manual-only followup notfullM5. Originalservices/APIfrontendhealthy/liveDBreadonly0016/no restart/migration/frozen/OOS/merge/release. GoalACTIVE.",
@@ -3342,13 +3381,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "a694f224c9f600f0bbdbc5f5d3b4ac3739dda922",
+      "last_verified_head": "6525520797cc46bff9d41c939b6ad2f2e6eb8b1b",
       "state": "DRAFT",
-      "ci_run": 37546062465,
+      "ci_run": 37550587482,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Ownaa4eCI37541093320 all3jobs/every stepPASS1294backend+optionalSKIP/729frontend/static/disposablemigration/Compose release smoke. Actual account-quality-before-money and shared async planfragment ENZH390 reload scopedPASS;16DOMcases/exact6amounts/127UIframeproof preserved. Two stale desktopJPEGframes remain rejected/replaced, notfullAA. Bilingualmanual currentfallback/money-quality clarified;no newbrowserclaim.71sourceonlyPASS/66unresolved/276bindingsNOTfinancialadmission. BroadlocalPrettierFAIL3oldfiles/nativeperformanceNOT_MET_CAUSE_UNPROVEN/currentnative200pending/newROmountempty/liveDB0016 retained. FullU1-U8/M0-M5 financial/AA/lawfulforward/restore/genuine lostledgers/delivery incomplete;PR32OPEN-DRAFT/no merge/release."
+      "browser_gate": "Current6525520CI37550587482 all3jobs/every stepPASS1300backend+optionalSKIP/735frontend/static/disposablemigration/Compose smoke. Earlier quality-before-money/asyncplan/chart-range proofs retained, unchangedfrontendtree1bafd86e. CurrentENZHdark390modeorientation Enter/firstTab/Escape/40px scopedPASS; EN final/reverseTab boundary UNRESOLVED, notfullAA. SourceV677/60/276bindings is NOT financialadmission. NativeperformanceNOT_MET_CAUSE_UNPROVEN/native200pending/newROmountempty/liveDB0016;freshUbuntuDockerwrapperstillintegrationfailure. FullU1-U8/M0-M5 financial/AA/forward/genuine lostledgers/recovery/delivery incomplete;PR32OPEN-DRAFT/no merge/release."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -3363,7 +3402,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full mandatory U1-U8/M0-M5. Source-onlyV6 137rows/77PASS/60unresolved/276bindings is NOT economic acceptance;two shared listing variants closed with actual2RED/94relatedPASS/full1300backend+optionalSKIP/static/scratchmigrationPASS and independent static review.17payloadseal5ddb3d54;prior sealed proofs untouched. Publish coherent existingPR32 slice and observe its exact newCI to terminal, not parent26ebCI. Remaining56roles37holder/15listing/3credit/1ex+000425guard+000771Bscope/000818datedsource/300048existingcorrectionchain. Reuse cachedsources, no acquisitionrestart/dateinference/eventadmission/frozenchange. Continue separate financial/reference/cash/lifecycle and AA/performance/runtime/delivery gates;do not repeat accepted chart/range/benchmark or parservariants. Originalhealthy0016/staticfallback5173,own30b1scratchstopped. GenuineWSLbridge/newROmount required before originalrestart/0017rollout;pendingSettings screenshot once. Export1661329767landingUNVERIFIED/manualfile-failure pending;no denied-download/PSscript/security workaround. Lawfulafter-startforward and genuine missingledgers still need evidence. FullgoalACTIVE/product_goal_completefalse;no formal/OOS rerun/merge/tag/release.",
+  "next_task": "Continue full mandatory U1-U8/M0-M5; product incomplete, not only parser/CI. Shared exact numbered holder-heading fix: V7all137/78source-onlyPASS/59unresolved/276bindings/old77wholePASS/136wholeunchanged/only300028;18payloadseal9b5574a2. No economic admission. Full1302backend+optionalSKIP/static/ownedtmpfs0017cyclePASS; frontend unchanged. Independent namingP2 fixed, erroneous new-dirv6 retained NON-ACCEPTED, finalV7canonical6ce30731; oldV6 seal untouched. Commit/push coherent existingPR32 milestone and verify own exact CI; parent652CI historical. Continue actual economic/reference/cash/lifecycle closure, reuse existing300048correctionchain (metadata59159565/20110323 located, not integrated), no acquisitionrestart/date inference. Preserve3000152010credit/3000092010listing/missing日/pagejoin failures. Continue independent AA/performance/runtime/delivery; orientation6sealc03a scoped Enter/firstTab/Escape only, ENendTab/reverse nativeboundary unresolved. OriginalDB0016/serviceshealthy/staticfrontend5173; genuine nativeWSLbridge/newROmount needed before originalrestart/0017rollout, Settings screenshot already pending. Export1661329767handoff retained/filelandingunverified; no denied-download/PSscript/security workaround. Lawful after-start forward and genuine missingledgers need evidence. FullgoalACTIVE/product_goal_completefalse; no formal/OOS/frozen/merge/tag/release.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check && gh pr view 32 --json headRefOid,state,isDraft,url && gh run list --branch codex/product-v1.2-current-rules --limit 3 --json databaseId,headSha,status,conclusion && rg -n 'U7-FORWARD|U7-RECOVER|QA-A11Y|QA-PERF|M5-' docs/product/ACCEPTANCE.md",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

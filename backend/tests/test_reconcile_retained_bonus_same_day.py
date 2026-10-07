@@ -448,6 +448,39 @@ def test_legacy_headings_keep_explicit_holder_credit_and_unrestricted_listing(
         )
 
 
+@pytest.mark.parametrize("heading", ["三、权益分派对象", "三、分派对象"])
+def test_dated_holder_heading_requires_complete_date_and_all_holders(heading):
+    notice = NOTICE.replace("三、分派对象\n本次权益分派对象为:", heading + "\n")
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        (heading, "拟" + heading),
+        (heading, "讨论" + heading),
+        (heading, "计划" + heading),
+        (heading, "三、权益分派方案"),
+        (heading, ""),
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年3月25日下午", "2011年2月30日下午"),
+        ("2011年3月25日下午", "2011年3月25下午"),
+        ("2011年3月25日下午", "股权登记日下午"),
+        ("本公司全体股东", "本公司控股股东"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("无限售条件", "有限售条件"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    first, second = notice.split("2011年3月25日下午")
+    with pytest.raises(ValueError):
+        same_day_listing([first + "2011年3月", "25日下午" + second], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [notice + notice.replace("2011年3月25日下午", "2011年3月24日下午")],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
 @pytest.mark.parametrize(
     "listing",
     [

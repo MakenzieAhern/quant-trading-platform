@@ -1,5 +1,52 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 direct-dated holder heading — source-only validation
+
+[Private V7 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-dated-holder-sources/README.md>):
+complete300028 notice read, exact numbered对象 heading plus full date/allholders;
+no arbitrary-prefix/date repair/issuer exception.2RED→79same-day/ratioPASS,
+1302fullbackendPASS+1optionalarchiveSKIP20.44s/static/disposablemigrationPASS.
+All137retained:78source-onlyPASS/59unresolved;old77wholePASS/136wholeunchanged,
+all276bindings and ratio/source/identity fields retained/reverse+repeatPASS.
+Canonical`6ce30731e2912939adb7711d35389cc705c7f44d488ac495161f094b505e51a5`.
+Reviewer P2 caught V7producer output filename mismatch;first new-directoryv6
+artifact retained NON-ACCEPTED, producer corrected and V7repeat regenerated.
+Only300028change. OriginalDB0016/services healthy;testPGstopped/retained;
+frozen/tag/.research/frontend unchanged. No new UI/browser or economic admission.
+Independent readonly review: namingP2 fixed/no remaining evidencedscopedP1P2;
+18payload proof seal`9b5574a2f10221afc97e60f2f7a5d7ff472b3ca3a57b8117b7ebdcfcdd8710e7`
+verified twice. Reviewer did not execute tests/runtime or review final seal.
+Exact new-head CI pending;
+prior652CI remains historical. Fullfinancial/AA/performance/forward/recovery/
+delivery and U1-U8/M0-M5 remain incomplete;PRODUCT_GOAL_COMPLETE=false.
+
+## 2026-10-07 current checkpoint — exact CI and bounded orientation
+
+Exact6525520 [CI37550587482](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37550587482)
+all3jobs/every stepSUCCESS00:12:35Z/samewatch68948terminal0;1300backend+
+optionalarchiveSKIP39.99s/735frontend45files/lint-types-build/Ruff556/mypy145/
+disposable0017check/Compose release smokePASS. HEADoriginOPEN-DRAFTPR32agree.
+[CI5payload proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-listing-wording-ci/README.md>)
+seal`dd293f38f4a75ec9ece709f031bce3167c7d014c6aac95b422a12ada8d90fe3b`;
+source17payload5ddb unchanged. Pending-CI below is chronology, not current.
+
+[Actual EN/ZH orientation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-orientation-keyboard/README.md>):
+keyboard Enter/initialclosefocus/firstTabcontinue/Escapeexacttriggerreturn;
+dark390x844all4modes/forwardunavailable/doc375client375/modal351/40pxclose.
+Two actual settledJPEGs independently reviewed;6payloadseal`c03a4fda1ec95b9567f8861afb95d95043bf633df7c52377a469c126262390e8`.
+EN final/reverseTab outside-dialog boundary remains UNRESOLVED;read-only
+document.hasFocus unsupported. No customtrap or fullAA/newuser claim.
+Original ENdark/defaultviewport restored/QAtabclosed/exporthandoff preserved.
+
+[All60source residual diagnosis](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-residual-source-roles/README.md>):
+56roles37holder/15listing/3credit/1ex+000425guard+3no-check rows;none dropped.
+4payloadseal`500dad62a5cafe4d8e0fbc3b3790d6c5a3752b7264e2428b8a6997b6bab00589`.
+Full300028cache read;exactholder-heading alternative is next hypothesis, not
+accepted event. Fresh nativeUbuntu Docker wrapper stillreports commandnotfound/
+integrationneeded;Windowsengine/original4serviceshealthy/APIfrontend200paper,
+DB0016unchanged. FullU1-U8/M0-M5 remains incomplete;no formal/OOS/merge/release.
+
+
 ## 2026-10-07 unrestricted listing wording — source-only scoped PASS
 
 [Private reproducible proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-listing-wording-sources/README.md>):

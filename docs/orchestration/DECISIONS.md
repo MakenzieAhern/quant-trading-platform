@@ -1,5 +1,41 @@
 # Decisions
 
+## v1.2 direct-dated holder heading — 2026-10-07
+
+Complete cached300028 three-page official implementation notice supplies a
+numbered 权益分派对象 heading immediately before the complete all-holder cutoff.
+Reuse same_day_listing with that exact heading alternative (also 分派对象);
+do not make all prefixes optional or infer any missing date. Actual terminal
+2RED/76deselected before source edit;79same-day/ratio tests and1302fullbackend+
+one existing optional archiveSKIP20.44s. Ruff556/mypy145 and ownedtmpfs
+quant_test55471 head-base-head-checkPASS; originalDB0016/services retained.
+V7all137/276bindings/78source-onlyPASS/59unresolved; old77wholePASS preserved,
+136whole rows unchanged, only300028change/allratio-source-identity preserved.
+Reverse ordering/immutable repeatPASS; no event/dataset/strategy admission.
+Independent reviewer caught output filenameP2;first new-dirv6artifact retained
+NON-ACCEPTED, producer corrected/newV7canonical6ce30731 generated twice. No
+remaining evidencedscopedP1P2.18payloadseal9b5574a2 verified twice; reviewer
+did not run tests or verify finalseal. ExactnewheadCI pending;
+parent6525520CI is historical, not new-diff evidence. Full U1-U8/M0-M5 required.
+
+## v1.2 listing CI, current orientation and next source boundary — 2026-10-07
+
+Exact6525520 CI37550587482 all3jobs/every stepSUCCESS00:12:35Z;1300backend+
+optionalSKIP/735frontend/static/migration/ComposePASS.5CIproofdd293/source17
+proof5ddb retained. Fresh acceptedrun is not futurequota guarantee;no rerun.
+Use nativeDialog, no speculative customtrap: actualENZHdark390Enter/firstTab/
+Escape and40pxcontrols match UI; final/reverseTab returns outside-dialog/null/
+wholebodytext and remainsUNRESOLVED nativebrowserboundary, not productbugproof.
+Read-only hasFocus unavailable in toolscope;do not bypass tool/security policy.
+Independent2JPEG/source/CIreview no evidencedscopedP1P2, not fullAA/financial.
+6UIproofc03a;localeEN/defaultviewport restored/QAclosed/exporthandoff re-marked.
+All60residual diagnosis4proof500d preserves56roles+1guard+3no-check. Full300028
+3pages support next exactholder-heading hypothesis, requiringRED/sharedguards;
+no date inference, financialadmission or sourceacquisitionrestart. FreshUbuntu
+Dockerwrapper stillintegrationfailure;Windowsengine/apphealthy0016/staticfallback.
+PostCI docs saved locally for next coherent milestone;fullgoalACTIVE/no release.
+
+
 ## v1.2 explicit unrestricted listing wording — 2026-10-07
 
 Reuse shared same_day_listing: accept literal 上市日 and 无限售流通股 only
