@@ -1,5 +1,22 @@
 # Decisions
 
+## v1.2 Failed reads do not prove saved records survived — 2026-10-07
+
+apiRequest can fail on transport, invalidJSON or schema contracts; useApiResource
+then has no data and cannot verify persisted server records. Replace only the
+shared default ProductError copy in both languages with explicit uncertainty,
+local-service retry and safe Help. Browser-readable local drafts remain distinct
+from server record availability. Keep permission/timeout/offline/caller fallbacks
+and request/focus/storage/financial behavior unchanged; no new mechanism.
+8RED/73related/784fullfrontend/static/build/169bindings passed. Actual controlled
+eight Chrome error cases/two real GET keyboard recoveries/normal Help passed;
+zero writes and originals intact. Do not claim controlled errors are real outage
+or lost-ledger restoration. DOM localStorage is unavailable: use existing exact
+byte regression plus visible browser form, without an alternate access channel.
+An observation timeout did not restart any request.153payload private proof sealed,
+frontend-only atomic publication retains oldassets/backups; no DB/backend restart.
+Full product/financial/new-source/recovery/quality/remote release gates remain open.
+
 ## v1.2 Local use is independent of remote CI — novice help, not gate bypass
 
 Actual Help lacked local-operation/recovery guidance raised by the user. Reuse

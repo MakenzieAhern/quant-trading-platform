@@ -1,4 +1,21 @@
 {
+  "unverified_record_reads_20261007_gate": {
+    "status": "PASS_SCOPED_ERROR_HONESTY_AND_REAL_READ_RETRY_NOT_RECORD_RESTORATION",
+    "source_head": "a6ffd167eed85a815aef4241c244db73a654af58",
+    "parent_head": "7a77f90ae6efeff286268437d7f77847f0e2bc92",
+    "repair": "Shared default ProductError two EN/ZH strings no longer unconditionally promise saved work preserved after unsuccessful reads. All callers traced; permission/timeout/offline/custom fallback/retry/focus unchanged. No API/dependency/storage/financial/backend behavior change.",
+    "tests": "8newRED36filteredSKIP->73relatedPASS;784fullfrontend47files17.27s/ESLint/TypeScript/scopedPrettier/build181ms/133modules/169exactsourcebindingsPASS.527.43kBmainchunkwarning remains,notperformance. Full52706terminal0;backendnotrerun/deployed,prior1357+optionalSKIP separatehistory.",
+    "browser": "ActualChrome controlled GET capability503/invalidJSON xWorkbench/wizard xENdark1440/ZHdark390 eighterrorcases/nooverflowPASS;two real GET keyboardRetry focuspersistentH1/originalstep2/exactcash123456.789000000000001/dates20110104..20110630/costrisk/nineversions. AllreceiptszeroattemptedAPIwrites;normalHelpactuallyexpanded/no fixture. Notrealoutage/lostledger/fullAA/speech/native200/p95/financial/fullproduct.",
+    "limitations": "Browser DOM scope localStorage unavailable; exactbytes proven onlybyexistingcomponenttests,visibleformbrowserseparate. Guessed Studyname waitfailed butobserved Experimentname/successfulretry;notrepeated. CDPobservationtimeout same-tabinspectionprovednavigationcomplete. RootinspectedsettledEN503wizard/ZHinvalidJSONwizardJPEGs;notall8pixel matrix.",
+    "deployment": "Existinga561fa/no mounts/loopback5173 only staticfrontend;completeoldwebtreehost+containerbackup/fiveidenticalassetcollisions/newassets+atomicindex;13newservedhashes/all4oldentryassetsPASS. Newindex4e12df7c4e92d040ffdb0a72e2d8eacb703b04b9b107ac3caf3f631bab936ed4. QAHTMLd65db2a8 matched served and recoverablyretiredoutsidewebroot;normalUI/ENdark/defaultviewport restored/QAclosed.",
+    "review": "Existing signed_results_review_oct7 independentreadonly no evidencedscopedP1/P2;no reviewer tests/Docker/DB/browser/network/write or recordrestorationapproval.",
+    "preservation": "OriginalPGRedisbackendhealthy/0016/PONG/API200paper1.1.0;testPG30b1stopped0unchanged. OwnedNode7969 freshno mounts/ports/sole sleepPID18559 thenSTOPPED137/OOMfalse retained20261007T054122Z. No originalrestart/migration/newcontainer/prune/reset/delete/securitychange/research-OOS/GitHub action. v1.1tagf88b/.researchnodiff verified.",
+    "evidence": "product-evidence/v1.2/m4/20261007-unverified-record-errors/README.md",
+    "evidence_payloads": 153,
+    "evidence_manifest_sha256": "c68ee4578de1cc51aaf9c5690a5b34ecd2904030233999331a6f3a671558024c",
+    "ci": "NOT_RUN_GITHUB_HOLD;no push/merge/tag/release,olderCIhistoricalonly.",
+    "full_product_pass": false
+  },
   "local_runtime_help_20261007_gate": {
     "status": "PASS_SCOPED_LOCAL_HELP_AND_KEYBOARD_NOT_FULL_PRODUCT",
     "source_head": "e80edb63fadbdfa218289d1e2858e029fd7c300e",
@@ -130,7 +147,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T05:25:53Z",
+  "updated_at_utc": "2026-10-07T05:43:47Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3105,19 +3122,20 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-07 sourcee80edb6 shared local-help:6RED65related776fullfrontend/static/buildPASS/169sourcebindings/16DOMgeometrycases/actualENZHkeyboardsearch andsettled2images.140payloadsealf2ca5526/13servedhashes/4oldassets retained;original0016/PONG/HTTP200healthy. V14all137/84source-onlyPASS53unresolved/276bindings/39payloadsd91ecb6e unchanged,notfinancialadmission. Backend unchanged/notrerun/deployed;fullgoalACTIVE.",
-    "repository_writer": "Root sole code/docs/state/private-evidence writer;fresh WSL PID/start/args inventory no competing repository/provider writer. Existing signed_results_review_oct7 completed current readonly review. Test37604/sourcecommit28686 terminal0;no live test/producer handle. No second task/accountGitHub action/frozen/formal/OOS mutation.",
-    "database_writer": "Exactowned30b1cfb/tmpfs/no mounts/55471quant_test prior-unit head-base-head-check/fulltests;0017/zerootherclients thenSTOPPED0/OOMfalse retained20261007T050622Z and now freshly inspected exited. Original5432 never tests/migration/restart;schema0016/PONG freshly verified. No create/prune/reset/delete/securitychange or deniedclean-demo retry.",
+    "latest_verification": "2026-10-07 sourcea6ffd16 sharedunverifiedreadcopy8RED73related784fullfrontend/static/build169bindingsPASS;actualChrome8controlledreadcases/tworealGETkeyboardrecoveries/normalHelp/zeroAPIwrites.153payloadsealc68ee457/13newservedhashes/4oldassets preserved;original0016/PONG/API200healthy. V14source-only84PASS53unresolved unchanged;backendnotrerun/deployed/fullgoalACTIVE.",
+    "repository_writer": "Root solecode/docs/state/private-evidencewriter;freshWSLPID/start/args no competingrepo/providerwriter. Existing signed_results_review_oct7 currentreadonlyreviewcomplete. Fulltest52706/sourcecommit55658 terminal0;no live test/producerhandle. No secondtask/GitHub/frozen-formal-OOSmutation.",
+    "database_writer": "No testDB activity this frontendunit. Exactowned30b1/no mounts/tmpfs55471quant_test remainsSTOPPED0/OOMfalse retained050622Z. Original5432selectonly schema20260924_0016/PONG/API200fresh;no tests/migration/restart/create/prune/reset/delete/securitychange or deniedclean-demo retry.",
     "queue_writer": "Root private immutableV14source137/84PASS53unresolved;priorV12all19payloads preserved/276currentbindings/repeatPASS. Four explicit listing-source-gap records are evidence needs, not exclusions/admission. Original34holder triage remains sealed;latestfirst-roleholder28. No provider/research/economicqueuewrites. Sixcash53sources000598300048/allaction-reference-lifecycle-newversion admission remains.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "2026-10-07T05:25UTC ownedNode7969f4b STOPPED137/OOMfalse after776frontend/static/build terminal0;freshidentity/top sole sleepPID7288/no mounts/ports retained052250Z. OwnedPG30b1cfbSTOPPED0 untouched. OriginalPGRedisbackendUp14hhealthy/ownedfrontendUp11h/newindex6a54/13servedhashesmatch/APIfrontend200/RedisPONG/liveDB0016 freshlychecked. No clean-demo retry/newcontainer/nativeRPCworkaround/originalrestart/appmigration/reset/prune/deletion/securitychange.",
+    "verified_processes": "2026-10-07T05:41UTC ownedNode7969f4b STOPPED137/OOMfalse after784frontend/static/build terminal0;freshidentity/top solesleepPID18559/no mounts/ports retained054122Z. OwnedPG30b1STOPPED0untouched. OriginalPGRedisbackendUp15hhealthy/ownedfrontendUp11h/newindex4e12/13servedhashes/4oldentryassetsmatch/APIfrontend200/PONG/0016fresh. No deniedclean-demo retry/newcontainer/nativeRPCworkaround/originalrestart/appmigration/reset/prune/delete/securitychange.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-07T05:43:47Z sourcea6ffd16 sharedsaved-record promise fixed once:8RED73related784frontend47files17.27s/static/build181ms/169bindingsPASS. ActualChrome8controlled503-invalidJSONerrors/tworealGETkeyboardrecoveries/exactform/H1/normalHelp/zeroAPIwrites;153payloadsealc68ee457/13newservedhashes/4oldassets retained. Original0016/PONG/API200healthy/testNodestopped137retained/testPGuntouched/normalUIrestored. No actualledgerrestore/financial-fullAA/p95/releaseclaim;backendnotrerun/deployed/GitHubhold/fullgoalACTIVE.",
     "2026-10-07T05:25:53Z sourcee80edb6 adds actualmissing shared bilingual local-help/commandsearch:6RED65related776fullfrontend47files17.62s/static/build164ms/169bindingsPASS. Actual16DOMgeometrycases/ENdesktop-ZHmobilekeyboardsearch/reselectfocus and2settledimages;140proofsealf2ca5526/13servedhashes/4oldassets/backupsPASS. Original0016/PONG/app200healthy/testNodeSTOPPEDretained/normalUIrestored;no business/research/OOS/GitHub action. FullgoalACTIVE,not fullfinancial/AA/performance/release.",
     "2026-10-07T05:12:27Z checkpoint source60d3c41 V14/shared complete distributionmetadata+credit aliases:four parser errors resolved but0newsourcePASS/84PASS53unresolved/old84wholePASS133unchanged/276bindings/39payloadsd91ecb6e. Four exact listing gaps persisted;113related1357backend1optionalSKIP/static/testDB prior-unit evidence verified, not rerun. Fresh WindowsDocker/frontend/API200/original0016/PONG/testPGstopped/frozen/tag intact. No deployment/research/OOS/accountGitHub action;fullgoalACTIVE.",
     "2026-10-07 complete holder-metadata sharedfix sourcea4a0d63;full300086300195PDF3pages/render/directpypdfcache equality/2RED107related1351fullbackend1optionalSKIP/static/testDBPASS. V12all137/84source-onlyPASS53unresolved/old82wholePASS135unchanged/276bindings/19payloadc440a303seal;readonlynoP1P2. Original0016/frozen/tag/testPGstopped retained;no deployment/GitHub/strategy/OOS;fullgoalACTIVE.",
@@ -3728,8 +3746,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue completeU1-U8/M0-M5 after local-help scopedPASS;776frontend/static/build/169bindings/16DOMgeometry/13servedhashes current,notfullAA-performance. Investigate sharedload/recovery guidance for unsupported unconditional saved-record claims and complete remaining genuine userflows. V14source-only84PASS53unresolved/6cash/000598/300048/allaction-reference-lifecycle-newversion admission remain. Backendnotdeployed/original0017restore-durability/lawfulafterstartforward/genuineoldledgers/export/native200/media/remoteCI-release incomplete. GitHubhold/frozen-OOS/deniedDocker-native-download boundaries;goalACTIVE.",
-  "local_next_command": "Read local_runtime_help_20261007_gate/fullobjective/freshownership. Audit useProductCopy loadingError and every caller against actuallost-ledger/persistence evidence: generic read failure cannot unconditionally promise saved records preserved. Reproduce scopedunsupported guarantee with existingfixtures,sharedfix/tests/Chrome non-mutating QA ifavailable;do not fake recordrecovery. Keep140sealedpayloads/sourcee80edb6 ashistory. Reuse V14targetedlistinggaps/28holderqueue forsourcework;no repetitivefourgapparserweakening/source-onlyfinancialpromotion. Continuefullgoal without GitHub/frozen-OOS/denied-native-export-clean-demo workarounds.",
+  "next_task": "Continue fullU1-U8/M0-M5 after scopederrorhonesty/retryPASS;784frontend/static/build/169bindings and8controlledChromereadcases/tworealGETrecoveries are notwholefinancial/quality acceptance. Reuse actualV14remaining28holder-source roles to close financial input gaps, then allaction/reference/lifecycle/newversion admission. Sixcash53sources000598300048 remain;no broadsource-onlyPASS promotion. Original0017restore-durability/lawfulafterstartforward/genuineoldledgers/export/native200/media/remoteCI-release incomplete. GitHubhold/frozenOOS/deniedDocker-native-downloadboundaries;goalACTIVE.",
+  "local_next_command": "Read unverified_record_reads_20261007_gate/fullobjective/freshownership. Shared saved-record promise is fixed/tested/deployed;do not re-run that unit or fakeledgerrestore. Preserve153sealedpayloads/sourcea6ffd16 ashistory. Inspect currentV14unresolved28HOLDER_CUTOFF fullcache/provenance against existingtriage;identify actualexplicit dated holder wording or terminalsource gap before targetedparser/PDFwork. Do not repeat4knownlistinggaps or weaken independentroles. Advance fullfinancial/newversion and genuineuserflows without GitHub/frozenOOS/denied-native-export-clean-demo workaround.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

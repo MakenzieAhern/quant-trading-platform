@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 unverified reads — shared error honesty and safe retry
+
+[Private repeatable evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-unverified-record-errors/README.md>).
+Source a6ffd167eed85a815aef4241c244db73a654af58: two shared bilingual default
+strings no longer promise saved server records survived an unsuccessful read.
+All callers traced; permissions/timeout/offline/custom fallback/retry/focus unchanged.
+8RED ->73related ->784frontend/47files17.27s/static/build181ms/169bindings PASS.
+527.43kB chunk warning remains. Backend unchanged/not rerun/deployed.
+Actual Chrome controlled capability503/invalidJSON: Workbench and wizard,
+ENdark1440/ZHdark390 eight error cases; two real GET keyboard retries restore
+persistent H1/original step2/exactcash/dates/cost/risk/9versions. Zero API write
+attempts, normal Help expanded; no service outage/record recovery or full AA claim.
+Two settled wizard JPEGs root-inspected. DOM storage unavailable, guessed label
+and observation timeout retained as tooling limitations; no alternate storage or
+repeated request workaround. Existing frontend backup/atomicindex/13new hashes/
+4old entry assets verified; new index4e12df7c4e92d040ffdb0a72e2d8eacb703b04b9b107ac3caf3f631bab936ed4.
+153 private payloads sealed c68ee4578de1cc51aaf9c5690a5b34ecd2904030233999331a6f3a671558024c.
+Independent readonly no evidenced scopedP1/P2; original0016/PONG/API200 healthy,
+testNode stopped137/OOMfalse retained/testPG untouched, QA HTML retired recoverably.
+No research/OOS/DB migration/GitHub action. U1-U8/M0-M5 remains incomplete.
+
 ## 2026-10-07 local operation and safe recovery — U1/U8 scoped help
 
 [Private test/build/browser/preservation proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-local-runtime-help/README.md>).
