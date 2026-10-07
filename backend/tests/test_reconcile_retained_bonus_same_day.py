@@ -1801,6 +1801,62 @@ def test_full_profit_capital_scheme_holder_keeps_independent_dates(full_metadata
         same_day_listing([conflict], "600000", TITLE, RECORD, EX)
 
 
+@pytest.mark.parametrize("listing_label", ["上市日", "上市交易日"])
+def test_complete_numbered_ex_date_chain_requires_separate_unrestricted_listing(listing_label):
+    metadata = (
+        "二、股权登记日、除权日、新增无限售条件流通股份上市日"
+        "1、股权登记日为:2011年3月25日2、除权日:2011年3月28日"
+        "3、新增无限售条件流通股份" + listing_label + ":2011年3月28日"
+    )
+    notice = (
+        NOTICE.replace(
+            "二、股权登记日与除权除息日\n股权登记日为2011年3月25日,除权除息日为2011年3月28日。",
+            metadata,
+        )
+        .replace(
+            "三、分派对象\n本次权益分派对象为:",
+            "三、分红派息及资本公积金转增股本对象截止",
+        )
+        .replace("五、本次转增的无限售条件流通股的起始交易日为2011年3月28日。", "")
+    )
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("二、股权登记日、除权日", "二、其他事项"),
+        ("2、除权日:", "2、未知说明除权日:"),
+        ("3、新增无限售条件流通股份", "3、新增可流通股份"),
+        ("全体股东", "控股股东"),
+        ("证券账户", "资金账户"),
+        ("收市后", "收市前"),
+        ("收市后", "收市后讨论次日"),
+        ("2011年03月28日直接", "2011年03月29日直接"),
+    ):
+        altered = notice.replace(old, new)
+        assert altered != notice
+        with pytest.raises(ValueError):
+            same_day_listing([altered], "600000", TITLE, RECORD, EX)
+    for term, role in (
+        ("本次转增股于2011年03月28日直接记入股东证券账户。", "SHARE_CREDIT"),
+        ("3、新增无限售条件流通股份" + listing_label + ":2011年3月28日", "UNRESTRICTED_LISTING"),
+    ):
+        with pytest.raises(ValueError) as missing:
+            same_day_listing([notice.replace(term, "")], "600000", TITLE, RECORD, EX)
+        assert missing.value.__notes__ == [role]
+    for label in (
+        "1、股权登记日为:",
+        "2、除权日:",
+        "3、新增无限售条件流通股份" + listing_label + ":",
+    ):
+        dated = "2011年3月25日" if label.startswith("1") else "2011年3月28日"
+        first, second = notice.split(label + dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [first + label + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX
+            )
+    conflict = notice + "3、新增无限售条件流通股份上市交易日:2011年3月29日"
+    with pytest.raises(ValueError):
+        same_day_listing([conflict], "600000", TITLE, RECORD, EX)
+
+
 def _manifest(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({**data, "manifest_sha256": canonical_sha256(data)}))

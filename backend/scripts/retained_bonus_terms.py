@@ -76,8 +76,12 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
     boundary += ")"
     metadata = (
         r"[一二三四五六七八九十]+、(?:股权登记日、除权除息日、"
-        r"新增无限售条件流通股份上市日和红利发放日|分红派息日期|权益分派日期)"
-        r"1[、.]股权登记日(?:为)?:?" + plain_date + r"2[、.]除权除息日(?:为)?:?" + plain_date
+        r"新增无限售条件流通股份上市日和红利发放日|"
+        r"股权登记日、除权日、新增无限售条件流通股份上市日|分红派息日期|权益分派日期)"
+        r"1[、.]股权登记日(?:为)?:?"
+        + plain_date
+        + r"2[、.](?:除权除息日|除权日)(?:为)?:?"
+        + plain_date
     )
     holder_metadata = (
         # 可流通 only supplies metadata structure, never unrestricted listing proof.
