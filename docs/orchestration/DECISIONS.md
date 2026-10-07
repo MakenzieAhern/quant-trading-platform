@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 Recognized metadata must reject contradictions — 2026-10-07
+
+Full3PDF9pages show exactbare 本次权益分派对象:, adjacent numbered可流通上市日
+and 分配办法 syntax; minimal sharedaliases preserve independent financial roles.
+Initialall-rowcheck exposed furthercredit/header gates; do not stop at synthetic
+positive or infer a missing source character.121143literalcredit lacks日;remain
+unresolved.142completeindependentcredit/listing allows source-only PASS, notevent.
+IndependentreviewP2 correctly exposed known metadata dates consumed without
+checking conflict. Reproduce5RED (4old/new1), add shared raw full-date equality/
+calendar guard for both supported 可流通 labels. No metadata does not add a
+requirement; metadata agreement cannot supply independent unrestricted proof.
+Final148related1380backend1optionalSKIP/static/test-onlymigrationPASS;FINALV20
+93source-onlyPASS44unresolved/old92PASS134unchanged276bindings/repeat;V18V19 historical.
+FinalreadonlyP2closed/no remaining evidencedP1P2;36payloadseal/prior44 unchanged.
+Original0016/frozen/tag preserved/testPGstopped retained; no provider/GitHub/
+deployment/strategy/OOS action. Nextfull6pages300078300113literal收市时group;
+fullU1-U8/M0-M5 financial/recovery/forward/quality/release remains ACTIVE.
+
 ## v1.2 Displaced boxes remain source text — 2026-10-07
 
 Full6PDF20pages show guarantee boxes above body, displaced by extraction to

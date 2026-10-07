@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 current holder syntax and listing metadata conflict — scoped repair
+
+[Final private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-bare-object/README.md>).
+Source9db4f07d7107ff98ee1da89ef50e8efc59f7e869: three exact shared forms,
+bare 本次权益分派对象:, adjacent numbered转增可流通股上市日 metadata-only,
+分配办法 credit heading. All3original PDFs9pages fullvisual/SHA/directNFKCcache
+equal.121143literal sharecredit lacks日/different reserve prefix stays unresolved;
+142independent credit/listing complete. No source repair/datejoin/symbol branch.
+IndependentP2 conflicting metadata reproduced5RED across new and4old layouts;
+shared raw conflict/invalid-calendar guard covers both recognized 可流通 labels,
+not proof for missing credit/unrestricted listing. Final148related0.55s/
+1380backend1optionalarchiveSKIP20.63s/Ruff558/mypy146/test-onlyhead-base-head/check
+PASS.3bareRED/2headingRED and previous1379/1380full logs kept as chronology.
+FINALV20canonicaldeae1280a4ea195e7f66991e1c6ae7569e6329e74ccdbe5de719a49bcb3dd2f7:
+137rows93source-onlyPASS44unresolved/old92wholePASS134whole unchanged276bindings/
+reverse-immutable repeat;only142newPASS121143holder->credit. V18V19 notfinalacceptance.
+ReadonlyfinalP2closed/no remaining evidenced scopedP1P2;not financial/fullproduct
+review.36payloadseal17364d7899d82f94e393a1b55be70134e78266bbb12ba9194c1904a471b5f462,
+prior44sealedpayloads preserved. Final83595terminal0;owned30b1stopped0/OOMfalse
+065015Z retained/original0016/PONG/app200/frozen693c/tagf88b/.research unchanged.
+No frontend change/rerun/browser/deployment/GitHub/provider/economicdataset/strategy/
+OOS action.16holder20listing3credit1ex4special remain;full U1-U8/M0-M5 goalACTIVE.
+
 ## 2026-10-07 holder-only complete page declarations — scoped shared repair
 
 [Private evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-guarantee-margin-batch/README.md>).
