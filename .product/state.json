@@ -1,4 +1,20 @@
 {
+  "holder_parenthetical_triage_20261007_gate": {
+    "status": "PASS_SCOPED_STRUCTURAL_TRIAGE_NO_NEW_SOURCE_OR_FINANCIAL_ACCEPTANCE",
+    "source_head": "a0ca762748df38247caead93f53db2c7c61b67ed",
+    "parent_checkpoint": "7fec4d4b04fa9a923011b6f9c9e8912112902ba8",
+    "sources": "Four unchangedoriginalPDFs13pages fullvisual/read/SHA/directNFKCcache equality29bindings.064080only 可流通metadata/structuretable, no independent datedunrestricted listing.171explicit date-label/周annotations/knownboxed在册boundary plusindependentcredit/listing.215paired date-label/literal收§2市后 continuation plusindependentcredit/listing.",
+    "classification": "All4remain actualHOLDER_CUTOFF unresolved equalV21;no parser edit/event/dataset/admission. Syntax alone cannot close064080 actuallisting gaps;targetspecific officialevidence.171215candidate sharedsyntax only with completepaired-date/weekday/conflict/page/role guards.",
+    "source_inspection_sha256": "2c8273359e8dba4b581b4f63c3752e292c87150e918d72b2cc3112d898db6a18",
+    "batch": "V21all13795source-onlyPASS42unresolved unchanged/276boundinputs verified.14firstholder roles include064080knownindependentlistinggaps;firstfailure is not fullfinancial classification.",
+    "validation": "Readonly sourceinspection terminal0/twice sealrepeatPASS. No extra backend/frontend/browser claim: code unchanged,prior sealed1384backend1optionalSKIP/static/test-onlymigration belongsclose-sessiongate. No newprovider/DB/GitHub action.",
+    "review": "Existing signed_results_review_oct7 readonly complete13cachepages/29bindings/fouractualerrors/V21/prior25payloadseal;NO_EVIDENCED_P1_P2_SCOPED_TRIAGE. No reviewer execution/extraction/render/economic/fullproduct audit.",
+    "evidence": "product-evidence/v1.2/m4/20261007-holder-parenthetical-triage/README.md",
+    "evidence_payloads": 23,
+    "evidence_manifest_sha256": "0dedecdd086baa53eed8368e04978cdbe23a88681e3808a24eb37b68db6fd37c",
+    "event_admitted": false,
+    "full_product_pass": false
+  },
   "holder_close_session_20261007_gate": {
     "status": "PASS_SCOPED_SOURCE_REPAIR_NOT_FINANCIAL_OR_FULL_PRODUCT",
     "source_head": "a0ca762748df38247caead93f53db2c7c61b67ed",
@@ -238,7 +254,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T07:08:20Z",
+  "updated_at_utc": "2026-10-07T07:17:29Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3213,10 +3229,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-07 sourcea0ca762 closed-session holder/adjacent metadata sharedguard126freshfocused1384backend1optionalSKIP/static/test-onlymigrationPASS. TwoPDF6pagesSHA/cache;V21all13795source-onlyPASS42unresolved/old93PASS135unchanged276bindings/repeat/25payloadsealdc4ae8a6/prior36preserved. Original0016/PONG/app200/frozen/tag preserved;frontendunchanged/no deployment/fullgoalACTIVE.",
-    "repository_writer": "Root sole code/docs/state/private-evidence writer;freshWSLPID/start/args no competing writer. Existing signed_results_review_oct7 readonly no evidenced scopedP1P2. Full86016/focused/producer91924/sourcecommit84501 terminal0;no live producer/test. No newtask/GitHub/frozenOOSmutation.",
+    "latest_verification": "2026-10-07 sourcea0ca762/7fec4d4 next4source13pagefullvisual/SHA/cache29bindings/actualHOLDER_CUTOFF equalV21/readonlyreview/23payloadseal0dedecdd/prior25preserved.064080actualindependentlistinggaps notgrammar-only;171215minimalsharedsyntax candidates. V21all13795PASS42unresolved unchanged. Priorsealed126focused1384backend1optionalSKIP/static/testDBcyclePASS;original0016/app200/frozen/tag intact/fullgoalACTIVE.",
+    "repository_writer": "Root sole code/docs/state/private-evidence writer;freshWSLPID/start/args no competing writer. Existing signed_results_review_oct7 readonly sourcefix and nexttriage no evidenced scopedP1P2. Full86016/focused/producer91924/sourcecommit84501/docscommit/nextinspection/seal37808 terminal0;no live producer/test. No newtask/GitHub/frozenOOSmutation.",
     "database_writer": "Only exactowned30b1/no mounts/tmpfs55471quant_test used for1384backend/head-base-head/check;APP_ENV=test/private actual config. Zero other clients beforestop;STOPPED0/OOMfalse retained070542Z. Original5432readonly0016/PONG/app200;no applicationtests/migration/restart/create/prune/reset/delete/deniedclean-demo retry.",
-    "queue_writer": "Root private immutableV21source13795PASS42unresolved;priorV20all36sealedpayloads preserved/276bindings/reverse-repeatPASS. Only078113source-onlyPASS,old93wholePASS135unchanged. Remaining14holder20listing3credit1ex4special,300015yearconflict/121143missing日 unchanged. No provider/research/economic queue writes. Sixcash52sources000598300048/allaction-reference-lifecycle-newversion admission remain.",
+    "queue_writer": "Root privateV21all13795sourcePASS42unresolved unchanged after4source13pagetriage.064080missing independentlisting,171215explicitdate-label/continuation candidates;firstHOLDER_CUTOFF notterminal fullroles.23payloadseal0dedecdd preservesprior25/36payloads;276V21bindings unchanged. Remaining14holder20listing3credit1ex4special/300015yearconflict/121143missing日. No provider/research/economic queue writes;sixcash52sources000598300048/fullaction-reference-lifecycle-newversion admission remain.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -3226,6 +3242,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-07 readonly4source13pagefullvisual/SHA/directcache29bindings/rootcurrentguards equalV21;independentreviewno evidenced scopedP1P2/23payloadseal0dedecdd preservesprior25.064080actualindependentlistinggap cannotgrammar-close;171215date-label/weekday/paired-date/word-continuation nextsharedfix candidates. No code/data/DB/provider/GitHub writes,V21all13795PASS42unresolved unchanged;goalACTIVE/fullscope intact.",
     "2026-10-07 sourcea0ca762 exactclosed-session holder+adjacentlistingmetadata/sharedconflictguard4RED->152historicalrelated126freshfocused1384backend1optionalSKIP/static/testDBcyclePASS. TwoPDF6pagesSHA/cache;V21all13795source-onlyPASS42unresolved/old93PASS135unchanged276bindings/repeat/25payloadsealdc4ae8a6/prior36preserved. Readonlyno evidencedP1P2;original0016/frozen/tag/PONG/app200/ownedPGstopped retained. Two corrected testcommand errors kept;no deployment/GitHub/economicadmission/fullgoalACTIVE.",
     "2026-10-07 source9db4f07 exactbare-holder/metadata/creditheading plusreviewP2conflict rootfix:3RED2RED5reviewRED->148related1380backend1optionalSKIP/static/testDBcyclePASS.3originalPDF9pages/SHA/cache;FINALV20all13793source-onlyPASS44unresolved/old92PASS134unchanged276bindings/repeat/36payloadseal17364d78/prior44preserved. FinalreadonlyP2closed/no remainingP1P2;original0016/frozen/tag/PONG/app200/ownedPGstopped retained. No deployment/GitHub/economicadmission/fullgoalACTIVE.",
     "2026-10-07 source0daa1c1 sharedholder-only completeboxed declarations/登记boundary144related1376backend1optionalSKIP/static/testDBcyclePASS. SevenoriginalPDF23pagesSHA/cache;V17all13792source-onlyPASS45unresolved/old87PASS131unchanged276bindings/repeat/44payloadseal7982e2ed/prior20preserved. ReadonlynoP1P2;original0016/frozen/tag/PONG/serviceshealthy/ownedPGstopped retained. No deployment/GitHub/economicadmission/fullgoalACTIVE.",
@@ -3842,8 +3859,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue fullU1-U8/M0-M5 after scopedV21source95PASS42unresolved,notfinancial admission. Next sharedholder date-label/parenthetical group300064300080300171300215:completeoriginalPDFs before exact common alias;remaining14holder20listing3credit1ex4special.300015source-year conflict and121143missing日 stay unresolved withoutindependent authority,no source correction. Close source/reference/lifecycle/action newversion gaps including sixcash000598300048. Original0017 rollout/restore-durability/lawfulafterstartforward/genuine lostledgers/export/native200/performance/media/remoteCI-release remain. GitHubhold/frozenOOS/deniedoperation boundaries;goalACTIVE.",
-  "local_next_command": "Read holder_close_session_20261007_gate/fullobjective/freshownership and25payloadsealdc4ae8a6. Reuse27rowSHAtriage/fullcaches/sourcePDFs300064300080300171300215:fullvisual/textreview then bounded common grammar/negativeguards/all137preservation. Old95PASS mustremain whole,121143missing日/300015yearconflict not repaired. No arbitraryprose removal/datejoins/originalDBtests/restart/economicadmission/GitHub/frozenOOS/deniedoperation workaround;retainfullgoal.",
+  "next_task": "Continue fullU1-U8/M0-M5 fromV21source95PASS42unresolved. Full4source13pageinspection nowsealed:do not repeat render/extract. Next minimalshared explicit股权登记日 date-label/paired-parenthesis and literal收/pagecounter/市后 continuation for171215;include周 weekday conflict checks/all independentroles/fulldate-page negatives.064080actualindependentdatedunrestrictedlisting absent,grammar alone cannotadmit;targetspecificexistingcache/officialevidence. Remaining14firstholder20listing3credit1ex4special/300015yearconflict/121143missing日. Close fullaction-reference-lifecycle-newversion gaps/sixcash000598300048;original0017 rollout/restore-durability/lawfulafterstartforward/genuineledgers/export/native200/performance/media/remoteCI-release remain. FullgoalACTIVE/GitHubhold/frozenOOS/deniedoperation boundaries.",
+  "local_next_command": "Read holder_parenthetical_triage_20261007_gate/fullobjective/freshownership and23payloadseal0dedecdd +prior25dc4ae8a6. Reusecomplete13page sourceinspection2c827335/currentV21all13795PASS42unresolved. Trace sharedsame_day_listing/allcallers;RED exactplain/paired股权登记日 aliases/周weekday conflict/literal收§2市后 and negativepaired-date/page-prose guards before boundedfix. Old95wholePASS preserved,064080missingindependentlisting unresolved,121143missing日/300015yearconflict not repaired. New immutableV22 after codebindchanges;no arbitraryprose removal/datejoin/originalDBtests/restart/economicadmission/GitHub/frozenOOS/deniedoperation workaround/fullscope intact.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

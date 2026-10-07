@@ -1,5 +1,19 @@
 # Decisions
 
+## v1.2 First parser failure must not conceal another source gap — 2026-10-07
+
+Full4originalPDF13page review distinguishes syntax from genuinely missing evidence.
+064080parentheticalholder forms do not supply independent unrestricted listing;
+the only dated 可流通metadata/table is not accepted unrestricted boundary authority.
+Do not repair grammar then relabel them financialPASS.171215explicit complete
+roles support bounded shared date-label/paired-parenthesis/word-continuation
+experiments,including 周weekday conflicts and strict date/page/section guards.
+All4actualHOLDER_CUTOFF errors remain equalV21/all13795sourcePASS42unresolved;
+no parser edit/admission. Rootfullvisual/SHA/directcache29bindings/independentreadonly
+classification checks/repeat23payloadseal preservepreceding25payloads. Reuse this
+complete source review;next actionable repair171215,064080specificofficial evidence
+gap. Frozen/original data/fullgoal and GitHubhold preserved;no newtest claim.
+
 ## v1.2 Closed-session wording is syntax, not inferred timing — 2026-10-07
 
 Both original300078/300113 PDFs/all6pages state a complete date followed by

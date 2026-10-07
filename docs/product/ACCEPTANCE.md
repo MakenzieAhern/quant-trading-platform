@@ -1,5 +1,20 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 parenthetical/date-label leads — grounded next action, not acceptance
+
+[Full private source triage](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-parenthetical-triage/README.md>).
+FouroriginalPDFs13pages fullvisual/read/SHA/directNFKCcache equality29bindings;
+current fourHOLDER_CUTOFF errors equalV21.064080lack independent dated unrestricted
+listing anywhere in complete source; 可流通metadata/share tables cannot supply it.
+171has explicitdate-label/周weekday annotations/knownboxed在册boundary pluscredit/
+listing;215has parentheticaldate and literal收§2市后 continuation pluscredit/listing.
+Next minimal sharedsyntax candidates,not economic events. No code changes/new
+tests/data/provider/DB actions; previoussealed1384backend evidence is not rerun.
+Sourceinspectioncanonical2c8273359e8dba4b581b4f63c3752e292c87150e918d72b2cc3112d898db6a18,
+readonlyreview no evidencedscopedP1P2;23payloadseal0dedecdd086baa53eed8368e04978cdbe23a88681e3808a24eb37b68db6fd37c
+preservesprior25. V21all13795source-onlyPASS42unresolved unchanged;first failedrole
+is not completefinancial classification. FullU1-U8/M0-M5 goalACTIVE.
+
 ## 2026-10-07 explicit closed-session holder cutoff — scoped repair
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-close-session/README.md>).
