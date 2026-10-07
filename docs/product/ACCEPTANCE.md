@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 complete holder metadata - U3/U5/U6 source prerequisite
+
+[Full private PDF/test/V12 preservation proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-metadata-chain/README.md>).
+Complete300086/300195 cached notices and all3PDFpages rendered/read/SHAchecked;
+directpypdf/NFKC equals fullcache. Shared known record-to-ex metadata accepts
+unnumbered fields/explicit cash-redemption field and bounded semicolon, not
+arbitrary prose skip/date join/cash borrowing/可流通-to-unrestricted inference.
+Independent full holder/credit/unrestricted dates required; sourceEPS-capital
+discrepancy in300195 preserved/not economic-accounting authority.
+2RED->107relatedPASS;1351fullbackend1existingoptionalarchiveSKIP20.75s,
+Ruff558format/mypy146/test-onlyhead-base-head-checkPASS;independent readonly
+no evidenced scopedP1/P2. V12all137/84source-onlyPASS53unresolved;only2changed,
+old82wholePASS/135wholeunchanged/276bindings/reverse-immutable preserved.
+Canonical7113d4da7466dc4ebfb748f9622ada598e3e9d61106938b55995ebe5ee71ad24;
+19payloadsealc440a303e0484b789ef83cba2662500cfdfe06cd935658e65d3c1f5d6f56a00b.
+Sourcecommita4a0d636c71f51921fc0b9079659c406f8469bed. Original0016/PONG/frozen/
+v1.1 retained;owned mountless tmpfs55471testPG0017/zerootherclients thenSTOPPED0
+retained. No originalDBrestart/migration/deployment, frontend/browser/provider/
+strategy/OOS/GitHub action. No financial/event/lifecycle/product admission.
+Sixcash/53sources/000598/300048/all-action/newversion and all U1-U8/M0-M5 remain.
+
 ## 2026-10-07 source queue compression and personal-result recovery recheck
 
 [34-row private full-cache holder-layout queue](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-role-triage/README.md>)

@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 Complete holder metadata, not loose section anchors - 2026-10-07
+
+Full300086/3001953pagePDFs rendered/read/SHAchecked and directpypdf/NFKCcache
+equality. Shared holder_metadata accepts omitted numbered list markers/explicit
+cash-redemption field and semicolon only between complete existing record/ex
+terms. Fullrawguards/§/date boundaries and independent share-credit/unrestricted
+listing preserved; no arbitraryskip/datejoin/cashborrow/可流通 inference.
+Original300195EPS-capital discrepancy retained/notaccounting authority.
+2RED107related1351backend+optionalSKIP/static/testDBmigrationPASS; independent
+readonly scoped noP1P2. V12all137/84source-onlyPASS53unresolved/onlytwochanged/
+old82wholePASS135unchanged/276bindings/19payloadc440a303seal. Not economic event,
+lifecycle/newversion or product admission. Original0016/frozen/tag retained,
+owned testPGstopped/retained;no runtime/frontend/browser/GitHub/strategy/OOS.
+Continue remaining32holder layouts and full required user/product gates; keep
+source evidence separate from financial and full product PASS.
+
 ## v1.2 Batch holder-layout triage rather than per-security patches — 2026-10-07
 
 Reuse V11 all137 and full sourcecache/provenance for remaining34HOLDER_CUTOFF.
