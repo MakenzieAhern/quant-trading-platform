@@ -99,6 +99,8 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + r";?(?:2[、.])?除权除息日(?:为)?:?"
         + plain_date
         + "|"
+        r"[一二三四五六七八九十]+、股权登记日与除权除息日"
+        r"本次权益分派的股权登记日为:?" + plain_date + r"除权出息日为:?" + plain_date + "|"
         r"[一二三四五六七八九十]+、股权登记日与除权\(除息\)日"
         r"本次权益分派股权登记日为:?" + plain_date + r"除权\(除息\)日为:?" + plain_date + ")"
     )
