@@ -1,5 +1,25 @@
 # Decisions
 
+## v1.2 Complete numbered metadata and object heading — 2026-10-07
+
+Complete300055/300091 sourcePDFs/full6pages/cache/SHA reviewed. Prefer two exact
+aliases in existing same_day_listing to per-symbol handling or new parsers.
+Repeat 本次权益分派 ex-field prefix and heading 权益分派对象为 are syntax;
+independent record/ex/holder/sharecredit/unrestricted listing facts remain required.
+Existing repeated-title margins already handle continued holder prose; do not
+add another margin stripper. Source meeting-date/cash wording typos remain original
+and source-only bonus PASS does not grant cash or economic authority.
+2RED128focused1360backend1optionalSKIP/static/test-onlymigrationPASS;V16only055091
+changes87source-onlyPASS50unresolved/old85PASS135unchanged/276bindings/repeat.
+27-row cache triage preserves all first-failure holder rows and evidence; overlapping
+layout flags are leads, not full visual review or terminal financial classification.
+Next shared group: six guarantee-margin holder interruptions, full original pages
+first; no arbitrary prose deletion/date joins.300015source2010credit conflict and
+four missing-listing notices remain unresolved without inferred fixes.
+20privatepayloads/prior28preserved;readonly scoped review no evidencedP1/P2.
+Original0016/frozen/tag intact;owned testPG stopped retained. No deployment,
+GitHub/strategy/OOS;complete U1-U8/M0-M5 goal remains ACTIVE.
+
 ## v1.2 Source-year conflict is not parser normalization — 2026-10-07
 
 Full original300015PDF/cache/rendered3pages show literal sharecredit2010-09-06

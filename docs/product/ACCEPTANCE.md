@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 complete numbered holder fields — scoped shared repair
+
+[Private evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-numbered-margins/README.md>).
+Source578aa41038cab41e628ef04b442f71191fef323b adds two exact shared aliases:
+numbered ex metadata repeats 本次权益分派; object heading includes 为. Reuses
+existing identical-title margins; no symbol exception, date inference or guard removal.
+Two original PDFs/all6pages rendered/read/SHA/directpypdfNFKC fullcache equality.
+V15's27holder rows retained in structural cache triage, not27visual/financial audits.
+2RED->128relatedPASS;1360backend1optionalarchiveSKIP20.79s/Ruff558/mypy146/
+owned disposable head-base-head/checkPASS. V16all137/87source-onlyPASS50unresolved;
+only300055/300091 change,old85wholePASS135unchanged/276bindings/reverse-repeatPASS.
+Independent readonly no evidenced scopedP1/P2. Prior28sealedpayloads preserved;
+20payload seal e95c31cc293a196323d24439b65b594c628a75e1978b65127ad22beb4953a99e.
+Test84025terminal0/owned30b1 stopped0/OOMfalse retained062056Z;original0016/
+PONG/frontendAPI200/frozen693c/tagf88b/.research preserved. No originalrestart,
+migration/deployment/GitHub/provider/economicdataset/strategy/OOS action.
+25holder19unrestricted1credit1ex4special remain,300015yearconflict unchanged.
+Frontend unchanged/not rerun. Full financial/recovery/forward/quality/release open.
+
 ## 2026-10-07 holder-source conflict and complete legacy dates — scoped repair
 
 [Final private evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-date-contradiction/README_FINAL.md>).
