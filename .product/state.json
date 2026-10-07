@@ -1,4 +1,26 @@
 {
+  "v30_financial_preflight_20261008_gate": {
+    "status": "PASS_SCOPED_REFERENCE_PREFLIGHT_NOT_FINANCIAL_ADMISSION",
+    "source_parent": "03902e7b45276d9de45a7d2d4457084cc5ea1a29",
+    "implementation": "New private version of existing audit_v3; current source/cash/ratio/rule helpers and production FullDataset suspension-open index, optimized Python rejected. No original dataset, API, domain model or methodology change.",
+    "results": "104 source-pass rows:95 issuer/raw reference relationships missing legacy cash legs,1 explicit-zero relationship,8 NO_EXPLICIT_GROSS_CASH. Other33 source rows unresolved. Compared to78 old financial rows,26 added =23 positive-cash relationships +1 explicit-zero300142 +2 unknown300053/300090. Reference matching is not admission.",
+    "preservation": "498 prior bonus events/498 prior reference rows/7407 coverage rows/137 source rows retained whole;78 old financial rows exactly equal. Old72 cash overlay unchanged,32 stable-key delta includes26 new rows and6 prior unknown cash. None in old498 bonus/40353 cash. New overlay not constructed by this preflight.",
+    "known_source_gaps": "Private known-source-gaps.json persists event-specific300147@2011-05-23 unrestricted aggregate0 versus3100->6200万股 and300155@2011-05-06 exact72000000*0.8=57600000 versus stated576000000; both block new economic candidates regardless of price match. No whole-security exclusion or source-character repair. 300142 explicit no-cash statement is distinct from missing terms.",
+    "verification": "Unchanged producer repeated twice, canonical72c0598d;303 actual input/101 current code/12 frozen manifest-partition hashes and reversed input order checked. Independent readonly all bindings and whole rows verified/no evidenced scopedP1/P2; next-overlay row-level blocker risk explicitly recorded. Verifier RuffE731 corrected before execution, no unsafe fixes.",
+    "report_sha256": "72c0598dce50d7d3f64ac263d141ae8efc2c67c45a04bb2d436890a011ae605a",
+    "evidence": "product-evidence/v1.2/m4/20261008-v30-financial-preflight/README.md",
+    "evidence_payloads": 6,
+    "evidence_manifest_sha256": "7a0999048f5671e4c1ad9c0465b2dfef6a1f380b408a28ef76563c533a743c65",
+    "evidence_verification": "Twice immutable canonical verification/seal PASS; prior27 action-record payloads intact and candidate path/actual byte hash bound. Private outside Git.",
+    "tests": "Private producer/verifier lint and repeated actual preflight PASS. Prior1461 backend/1optionalSKIP and794 frontend retained from earlier units, not rerun or new full dataset/browser/product validation.",
+    "financial_admission": false,
+    "new_overlay_created": false,
+    "dataset_created": false,
+    "dataset_registered": false,
+    "strategy_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD; no request/push/merge/tag/release"
+  },
   "action_record_integrity_20261008_gate": {
     "status": "PASS_SCOPED_RECORD_INTEGRITY_NOT_FINANCIAL_ADMISSION",
     "source_parent": "211297849e2fd447c7edc1c3a9c62b18a7878a14",
@@ -446,7 +468,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T18:51:00Z",
+  "updated_at_utc": "2026-10-07T19:07:39Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3421,10 +3443,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 all-kind loader guard: final1461 backend/1optionalSKIP/static332/mypy146/Alembiccheck0; fresh37 filesystem regressions PASS. V3 canonical58181da/57code10inputs73partitions/42792 records/570 bonus observations verified;27-payload V2 seal72158689 twice preserves original23/prior22. Reviewed old108 summary assertion corrected without replacing sealed evidence. Original services/mounts/app200/frozen/tag intact; selectedSQL counts not refreshed. Fullgoal ACTIVE, not financial/newversion/AA/performance/remote release PASS.",
+    "latest_verification": "Oct8 V30 downstream104 reference-only:95 cash-leg missing/1 explicit-zero/8 unknowncash;old78 whole outcomes equal/26 added/498+498+7407+137 whole rows preserved.303inputs101code12partitions/canonical72c0598d/repeat/independent review and6-payload7a099904 twice preservesprior27. All-kind fix03902e7 final1461 backend1optionalSKIP/fresh37 retained. No overlay/dataset/financial/product admission or strategy; original services/frozen/OOS unchanged, GitHub hold.",
     "repository_writer": "Root sole code/docs/state/evidence writer; fresh PID/start/args no competing tests/producer. checkpoint_review_oct8 readonly source/binding/seal review; local_run_options readonly stable-key financial delta review, no reviewer writes. Full/focused/audit sessions terminal0; testPG30b1 stopped0/OOMfalse183839Z retained. No GitHub/frozen/OOS mutation.",
     "database_writer": "Root sole writer only owned strict APP_ENV=test/quant_test55471 for full1461 suite; testPG30b1 stopped0 retained183839Z, tmpfs rows disposable. Fresh37 no SQL. Original services unchanged/no original migration/restart/failed-job retry/backfill/strategy. Historical selected counts remain prior evidence, not fresh queries. No denied44table/reset/prune/delete/fake lost ledger.",
-    "queue_writer": "PrivateV30all137104sourcePASS33unresolved/current276bindings;only146147change/old102wholePASS135wholeunchanged. Literal156 andknowncredit/year/listing/cash/tablecontradictions retained. Fullfinancial/newversion/dataadmission unfinished;no provider/event/researchqueue writes.",
+    "queue_writer": "Root sole private candidate/evidence writer. V30 source104/33 unchanged; new downstream104 reference-only/95missinglegs1explicitzero8unknowncash, old78 outcomes identical/26 new. Known300147/155 event-specific contradiction gaps persisted; no new overlay/provider/event/research queue/DB write. All producer sessions terminal0; full economic/newversion admission unfinished.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -3434,6 +3456,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8 V30 independent downstream:104=95 cashleg-missing relationships/1 explicitzero300142/8 NO_EXPLICIT_GROSS_CASH;26 new=23positive1zero2unknown, old78 whole equal/498+498+7407+137 preserved. Actual303input101code12frozenpartition/reversed order/repeatedcanonical72c0598d;6-payload7a099904 twice/prior27 intact/independent scoped review. Explicit300147/155 source contradiction event blockers persisted. No new overlay/dataset/admission/strategy/SQL/frozen/OOS/GitHub; fullgoal ACTIVE.",
     "Oct8 all-kind record root guard: 28 RED ->37 new focused PASS/final1461 backend1optionalSKIP/static332/mypy146/Alembiccheck0. Actual frozen42792 records/all7 kinds intact;570 bonus PIT/ex observations569open1blocked, not economic admission. V3 58181da/57code10inputs73partitions/repeated;27-payload V2 72158689 twice/original23+prior22 unchanged/independent scoped review. Old108 summary assertion superseded37 without replacing sealed bytes. 000598 source conflicts retained. Original services/APIfrontend200/frozen/tag intact; owned testPG30b1 stopped0 retained183839Z. No strategy/frozen/OOS/GitHub; fullgoal ACTIVE.",
     "Oct8committedfailurecontext SQLtwo-processwriter16709reader16734/opt0/quant_test0017/same2IDs+fullJSON+storagePASS;JSONBobject/freshSQLNULL preserveunknown/noresult. CLIisolationP1closedwithnonassertconftestguard/argument+positiveoptguard. Final1424backend1optionalSKIP23.95s/static331/mypy146/Alembiccheck0.22payloadd500a742twice/prior41preserved. Original0017/selectedcounts/app200/frozen/tag intact;ownedtestPG30b1zerootherclientsSTOPPED0OOMfalse175847Z retained/tmpfsrowsnotdurableafterstop. FullgoalACTIVE/notstrategy/financial/fullrestart/GitHubPASS.",
     "Oct8sharedbody15:7CSSdeletions/1RED->794frontend48files/linttypes/build171/audit0. Actual16ENZHthemefoursizeHelp/4validmodalkeyboard+missingcacheerror scopedPASS;default452mismatchretainedcorrected/desktopsoftJPEGnotvisualPASS.41payload81cee057twice preservesprior170/atomicservedba789d34+6ef228f9+d1b21e37/priorrollback. Original0017/selectedcounts/app200/frozen/tag intact;ownedidleNode7969stopped137OOMfalse. IndependentreadonlynoevidencedscopedP1P2/fullgoalACTIVE/GitHubhold.",
@@ -4059,8 +4082,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5: integrate V30 source-only104 through independent supplemental financial preflight. Stable-key delta versus72 overlay is32 (26 newly source-cleared +6 existing missing gross cash); none in original498 bonus/40353 cash. Establish real cash/reference/accounting/lifecycle evidence in a new private candidate, preserve every prior class/receipt and explicit gaps. Then independent whole new-version admission, currentAA/performance/export/media/fullrestore. Lawful after-start forward, unresolved old-ledger fact and exact remote CI/release remain; no added independent-physical-backup mandatory gate.",
-  "local_next_command": "Read existing cash_overlay.py/audit_v3.py/combined-financial audit.py and shared cash_event/gross_cash/source_ratio/same_day_listing helpers completely. New independent 20261008-v30-financial-preflight producer/output, not old hardcoded78/72/570 receipts or frozen materializer state. Verify32 stable-key delta and104 PIT IDs, then explicit gross cash/raw/reference/action/accounting guards; no missing cash-tozero, source-only financialPASS or strategy performance fitting. Preserve .research/OOS/GitHub hold and denied routes.",
+  "next_task": "Continue full U1-U8/M0-M5: construct independent new supplemental overlay preserving old72 whole records. Added26 preflight contains23 positive-cash relationships (2 known source contradictions must be blocked),1 explicit-zero bonus-only300142,2 unknown cash; all8 unknown cash stay unknown. Reuse existing cash_event/accounting engines and evidence-bound known-source-gaps.json, no per-symbol financial parser or fake zero-cash event. Then whole financial/reference/all-action/lifecycle and new-version admission plus currentAA/performance/export/media/fullrestore. Lawful after-start forward, unresolved old-ledger fact and exact remote CI/release remain.",
+  "local_next_command": "Read current V30 preflight gate/known-source-gaps/source bindings and cash_overlay.py/Portfolio bonus paths. New immutable overlay version/output only; preserve old72 whole and40353/498 parents. Use generic source-SHA event-gap lookup to block300147/155, all8 unknown cash fail closed; validate21 new positive cash+bonus pairs and explicit-zero300142 bonus-only accounting with100/101 shares before any whole-candidate financial admission. No formal materializer .research changes, old receipt overwrite, strategy/OOS/frozen/GitHub/denied-route action.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

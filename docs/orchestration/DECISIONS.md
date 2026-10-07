@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 Carry V30 into independent financial checks, not source-count admission — 2026-10-08
+
+Old cash overlay used78 source-pass rows. New immutable private preflight processes
+all104 V30 passes using existing financial/rule helpers and current production
+suspension-open index. Reject optimized Python, bind303 inputs/101 code/12 frozen
+partitions, reverse/repeat checks; all78 old outcomes exactly equal and original
+498/498/7407/137 whole rows preserved.26 new rows yield23 positive-cash reference
+relationships,1 explicit no-cash300142,2 missing explicit cash300053/090. Total104
+is95 cash-leg missing/1 explicitzero/8 cash-unknown; not104 admitted economic events.
+
+Do not interpret a capital-reserve-only notice as zero cash.300142 contains explicit
+no-cash prose, unlike300053/090. Known300147 unrestricted aggregate0 versus3100→6200
+and30015572000000*0.8 versus contradictory576000000 persist as event-specific,
+source-SHA-bound gap data. Price equality cannot clear them. Next overlay must
+block those exact evidence gaps generically, preserve old72 whole, and validate
+bonus-only accounting without inventing zero-cash dividends. No new policy/formula,
+whole-security exclusion or source correction. Financial/dataset/full-product false.
+
+Independent scoped readonly review verifies current bindings/whole outcomes; no
+reviewer tests/producer/SQL/network.6-payload7a099904 immutable seal twice preserves
+prior27 action-record proof; first verifier lintE731 corrected before execution.
+No original DB/provider/strategy/frozen/.research/OOS/GitHub action. Entire U1-U8/
+M0-M5 and real forward/ledger/quality/delivery/remote release gates remain required.
+
 ## v1.2 Validate event carriers before point-in-time filtering — 2026-10-08
 
 Production FullDataset validated only price-only references, so wrong carrier

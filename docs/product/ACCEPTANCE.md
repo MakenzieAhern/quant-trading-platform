@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 V30 downstream reference preflight — scoped, not dataset admission
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-v30-financial-preflight/README.md>)
+binds03902e7/new private producer,303 input/101 code/12 frozen partitions.
+Unchanged repeat and reversed input PASS; canonical72c0598dce50d7d3f64ac263d141ae8efc2c67c45a04bb2d436890a011ae605a.
+All104 source-pass rows examined:95 scoped issuer/raw matches still missing cash
+legs,1 explicit-zero match,8 missing explicit cash. Other33 source gaps retained.
+Old498 bonus/498 reference/7407 coverage/137 source/78 financial whole rows preserved.
+26 new rows =23 positive-cash relationships/1 explicit-zero300142/2 unknown300053/090;
+old72 overlay unchanged. No unknown-tozero, dataset/overlay/financial admission.
+
+Known-source-gaps.json binds300147 share-table aggregate contradiction and300155
+ten-times cash-total contradiction to original source SHA and event dates. Both
+block next economic candidates despite reference equality, not whole securities.
+Next must use row-level gap lookup, not just filter reference-match status.
+Independent readonly hashes/whole-row/evidence review no evidenced scopedP1/P2,
+not financial acceptance.6-payload seal7a0999048f5671e4c1ad9c0465b2dfef6a1f380b408a28ef76563c533a743c65
+twice/prior27 intact. No test suite/SQL/browser rerun, strategy/frozen/OOS/GitHub.
+Prior1461/optional1SKIP backend and794 frontend remain their scoped unit evidence;
+full U1-U8/M0-M5/financial/newversion/forward/ledger/quality/delivery/remote open.
+
 ## 2026-10-08 all-kind action record integrity — scoped financial trust boundary
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-action-record-integrity/REVIEW_CORRECTION.md>)
