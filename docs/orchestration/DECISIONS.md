@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 Local use is independent of remote CI — novice help, not gate bypass
+
+Actual Help lacked local-operation/recovery guidance raised by the user. Reuse
+productHelpTopics once for bilingual Help/search, with stable local-app fragment
+and existing focus behavior. Explain installed local services, safe menu recovery,
+same browser origin and data/financial/CI distinctions. No framework/API/worker.
+6RED65related776frontend/static/build/169bindings passed; scoped actualChrome
+16geometry cases and bilingualkeyboardsearch plus2settledimages. A stale batch
+image is rejected; mobile hides topbar Theme, so change theme at desktop before
+resizing. Preserved complete previous staticfrontend and4entryassets before atomic
+publication; no original service restart/DB migration or frozen/OOS change.
+Read-only independent no evidencedP1/P2; not novice satisfaction/fullAA/financial/
+performance/release acceptance. GitHub hold remains; local checks cannot replace
+remote CI/protected merge/release. Goal stays fullscopeACTIVE.
+
 ## v1.2 Distribution metadata is not unrestricted-listing authority — 2026-10-07
 
 Complete four official PDFs/all17pages retain full-cache/SHA provenance. Shared

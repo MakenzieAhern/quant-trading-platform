@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 local operation and safe recovery — U1/U8 scoped help
+
+[Private test/build/browser/preservation proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-local-runtime-help/README.md>).
+[In-app help](http://localhost:5173/help#help-local-app) and global search share
+one bilingual registered topic: existing local services do not require GitHubCI;
+online does not mean fresh/economically validated data. InstalledDocker menu,
+same-origin saved drafts/uncertain request IDs, no reset/delete or CI bypass.
+Actual missing Help observed before change.6RED->65relatedPASS;776fullfrontend/
+47files17.62s/169bindings/ESLint/types/scopedPrettier/build164msPASS.527.32kBmain
+chunk warning remains, not performance acceptance. Sourcee80edb63fadbdfa218289d1e2858e029fd7c300e.
+ActualChrome ENdesktop/ZH390 GitHub search/Tab/Enter/sameURL expanded-answer focus;
+16viewport/locale/theme DOM/content/14px/70..89.5px/nooverflow checks PASS_SCOPED.
+SettledENdark1440/ZHlight390 images root-inspected; first stale frame rejected.
+Mobile-hidden theme selector required desktop-before-theme test correction,
+not an application defect. No fullAA/speech/native200/novice/performance claim.
+Existing loopback frontend complete backup, assets preserved/atomicindexreplace;
+13served hashes and4oldentryassets checked. Newindex6a54e2ff7e1fe917d162c11932cea2fb4fa2726a69b14246b45f7b4cd2b7c032.
+140payload seal f2ca5526f45df775b59c34756417ec8d68fb509d53a366bf73baa55cf7f4cff1.
+Independent readonly no evidencedP1/P2. Original0016/PONG/services200healthy,
+testNode stopped137/OOMfalse retained; normal UI restored. Backend unchanged,
+no business/data/research/OOS/GitHub action; full U1–U8/M0–M5 remains incomplete.
+
 ## 2026-10-07 distribution-date metadata — parser repaired, source still unresolved
 
 [Private four-source preservation and exact evidence gaps](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-distribution-date-metadata/README.md>).
