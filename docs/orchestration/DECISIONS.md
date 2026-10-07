@@ -1,5 +1,43 @@
 # Decisions
 
+## v1.2 Supplemental cash/reference remains candidate-only — 2026-10-07
+
+Reuse approved cash_event/source-ratio/whole-position fraction accounting; no
+new policy, missing-to-zero substitution or invented payment date. Batch78
+strict source rows:72 exact issuer/raw reference relationships and6 unknown
+cash. Independent review required full same-security suspension intervals and
+current financial code hashes; V2 preserved NON-ACCEPTED, immutable V3 closes
+both evidence defects. Separate source, numeric reference, cash integration and
+financial admission statuses. No official monthly ex-price evidence invented.
+
+Private72 cash+72 companion bonus overlay,144 synthetic holding checks and57
+targeted tests pass; old40353 cash parent/498 bonus/498 reference/7407 coverage/
+137 source preserved. Overlay not a replacement complete ledger or recovered
+real paper accounts. No dataset registration/admission, study or frozen rewrite.
+Full product scope remains; next reproduce actual FullDataset start-only halt
+indexing with bounded fixtures and reuse shared interval semantics if defective.
+
+Orientation16 measured layouts contrast/Enter/Escape pass only. Complete final
+Tab cycle remains unknown at native browser boundary; no speculative custom
+trap.13px text not claimed15px. No current fullAA/native200/performance approval.
+Keep private payloads outside Git and record pointers/hashes in product ledger.
+No GitHub polling/push/merge/release in this local checkpoint; historical exact
+1da55ad CI remains source-parent evidence, not a guarantee of current availability.
+
+## v1.2 Saved versus temporary views — 2026-10-07
+
+Keep existing history-over-saved precedence: unsaved currentlist settings survive
+same-entry refresh/Back. Actualreload after chip removal disproved the initial
+assumption it would reload explicit saved settings; genuinelyfreshentry proved
+the savedview independently. No code change to erase intended temporary context.
+Bothlocale/dark390 threechipEnter removals focussettings/preserveotherconditions;
+defaultsreset atQAend. Bilingual guides describe the distinction and resetscope.
+Exact1da55adCI37557042316all3jobs/every stepSUCCESS;1302backend+optionalSKIP/
+760frontend/static/isolatedmigration/ComposePASS,watch87339terminal0.
+4privatepayloadseal f6d7a1a5 verified; fullgoal not achieved. Guide/checkpoint
+docs staylocal untilnextmeaningfulmilestone, not another tinyCI-onlypush.
+Originaldata/services/frozen/OOS preserved;ownedidleNode stopped137retained.
+
 ## v1.2 Research list return and consumed-token lifecycle — 2026-10-07
 
 Reuse existing history/view/page/scroll machinery, not a new router/framework.

@@ -1,5 +1,85 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 orientation matrix and supplemental cash/reference closure
+
+U1/U8 scoped layout/color/Enter/Escape evidence, not full keyboard/AA approval:
+[seven private orientation payloads](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-orientation-matrix/README.md>)
+seal `b5f49c7de07259b46aff126f7c11e84977c38f0293060cc819f12593f4e4731f`.
+Actual current-build Chrome EN/ZH x light/dark x1440/1280/1024/390:16 cases,
+four complete mode explanations, no measured horizontal overflow/clipping,
+minimum sampled contrast dark7.653/light6.058; close40x40/continue42px high.
+Exact Escape opener restoration. Four settled mobile screenshots retained;
+stale resize paint rejected. BODY after finalTab does not prove browser-chrome
+focus or an app escape; complete native Tab cycle remains UNRESOLVED. Existing
+13px paragraphs/continue not claimed universal15px. No custom focus trap.
+
+U3/U5/U6 financial prerequisite remains PARTIAL:
+[private reproducible financial proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-supplemental-financial-preflight/README.md>).
+Twelve-payload SHA seal
+`57be4695b3a22cfc8d6b03d32855fff067be96a51baac0a0b271c2beb646a788`.
+Latest498 prior bonus events (including002014),498 reference rows,7407 coverage
+and137 supplemental sources preserved whole. V1 early cash gate78 unresolved;
+V2 diagnostic superseded after review found start-day-only suspension query and
+unbound financial code. Final V3 reuses existing complete interval/resumption
+semantics, rejects unknown/blocked open and zero volume;100 code/303 input/11
+partition SHA verified, five boundary checks. Canonical
+`49533fd818a241c0aa99448d5164d0ac1a29878936308a23c23e24ee22aac238`:
+72 scoped issuer/raw reference matches,6 NO_EXPLICIT_GROSS_CASH, no missing-to-zero.
+
+New private cash overlay under existing approved gross ex-date policy:72 cash
+legs plus72 bonus companions;144 synthetic100/101-share accounting cases pass
+cash-on-old-shares, floor/basis retention/no generated orders or fills. Old40353
+cash events unchanged in SHA-bound parent, not replaced by a partial ledger.
+Payment dates staynull. Overlay canonical
+`296ef0b231bc34aa663031591a5c3414621555b3e97b5fbbb424a042de65bfcf`;
+exact immutable rerun agrees.57 database-independent targeted backend testsPASS
+0.99s; test-environment guard failure retained then test-only config used, not
+application history. Independent reviewer checked V3 numeric/reference binding
+and overlay402 hashes/144 checksums/144 exact arithmetic cases; no scopedP1/P2.
+Root verifier800 binding checks/whole retention/non-overlapPASS. No new full
+suite/frontend build/CI/strategy/research/dataset-registration claim this unit.
+
+Financial admission remainsfalse;6 cash/59 source/original000598/300048 gaps,
+independent official reference corroboration and all-action/lifecycle closure
+remain. Next actual-code hypothesis: FullDataset start-only suspension indexing
+may differ from inspection helper; reproduce with synthetic loader fixtures,
+not a study. Full U1-U8/M3-M5, lawful after-start forward data, genuine lost
+ledgers, runtime/deployment/recovery/native200/AA/performance/delivery remain
+open. v1.1/frozen/OOS/identity/security unchanged; no merge/tag/release.
+
+## 2026-10-07 exact research-return CI and saved-view keyboard
+
+Exact1da55ad [CI37557042316](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37557042316)
+all3jobs/every stepSUCCESS01:28:23Z/samewatch87339terminal0:
+1302backend/1existingoptionalarchiveSKIP31.50s;760frontend46files/static/build293ms;
+Ruff/mypy145; isolatedhead-baseline0001-head-check/ComposeproductionsmokePASS.
+HEADoriginPR32OPEN-DRAFTagree; pendingCI below is precommit chronology only.
+[Four private proof payloads](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-research-return-ci-views/README.md>)
+seal `f6d7a1a53b659fdfbc7135c02d33d2d73078df6882cebb88df82521b0edcba1d`
+verified without mismatches; old41payload/caption unchanged.
+
+ActualChrome dark390 EN/ZH: explicitSave view restored at genuinelyfreshentry
+Chrome/SUCCEEDED/historical/name_asc/Createdhidden/1row. Three chipEnter removals
+eachlocale focusviewsettings, onlytargetconditionremoved/rows1->2->8->12;
+ZH40px/ENquery-status40px/longmode60.5px;document375client375. Same-entry
+reload keeps temporary history, not saved storage: initial storagehypothesis
+rejected; newentry independently verified. Exact-label/nochip lookupfailures
+retained and retargeted using currentDOM, no productfailure fabricated.
+Only EN final-focus screenshot; notZHvisual/fullAA/native200/speech/performance.
+Defaults/ENdark restored;ownQAtabsclosed/viewportreset/exporthandoffpreserved.
+Both user guides now explain these actual paths; not finalM5 delivery approval.
+
+Fresh exactownedNode7969f4b idle/no mounts/sleep rechecked;stoppedexit137cleanup,
+notfailingtest/retained. OriginalsPGRedisbackendhealthy/APIfrontend200/no restart.
+Codeunchangedsince1da55ad;5checkpoint/guide docs local untilnextcoherentmilestone.
+FullmandatoryU1-U8/M0-M5/financial/forward/genuinemissingledgers/runtime/
+quality/recoverabledeployment/delivery open;noformalOOS/merge/tag/release.
+Further bounded [native bridge diagnosis](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-native-wsl-bridge/README.md>):
+Windowsengine running/currentapp200, but Ubuntu nativeDocker dangling target and
+guest/varrun sockets absent. No documented installedCLIintegrationrepair;
+notPASS, no wrapper substitution/reset/securitybypass/originalrestart.
+Initialblankvariableloop REJECTED; explicitpositional ls is actualpath evidence.
+
 ## 2026-10-07 Research list — exact return context and one-shot history
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-research-return/README.md>)

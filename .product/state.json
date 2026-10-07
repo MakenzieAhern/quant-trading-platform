@@ -1,7 +1,52 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T01:22:18Z",
+  "updated_at_utc": "2026-10-07T02:08:52Z",
+  "supplemental_financial_20261007_gate": {
+    "status": "PARTIAL_PRIVATE_CASH_REFERENCE_ACCOUNTING_NOT_FINANCIAL_ADMISSION",
+    "source_head": "1da55ad6f6ec25632d7c892ba0f405bde4b0a39b",
+    "prior_preserved": "498 bonus events including002014,498 reference rows,7407 coverage rows,137 supplemental sources retained whole;40353 legacy cash events remain in unchanged SHA-bound parent.",
+    "preflight": "V1 all78 unresolved at early cash gate. V2 NON-ACCEPTED diagnostic superseded after review. V3 complete interval/resumption helper plus positive ex-volume;100 code/303 input/11 partition SHAs;5 boundary selfchecks;72 scoped reference matches and6 NO_EXPLICIT_GROSS_CASH.",
+    "preflight_manifest_sha256": "49533fd818a241c0aa99448d5164d0ac1a29878936308a23c23e24ee22aac238",
+    "cash_overlay": "72 private cash legs plus72 companion bonuses under existing approved ex-date cash/fraction policies;144 synthetic holding checks, input reversal and immutable rerun pass. No payment dates invented, strategy, real account recovery or original ledger rewrite.",
+    "cash_overlay_manifest_sha256": "296ef0b231bc34aa663031591a5c3414621555b3e97b5fbbb424a042de65bfcf",
+    "checks": "57 database-independent backend targetsPASS0.99s; test-config guard failure retained then disposable quant_test identity used. Root800 input/code binding checks/whole retention/deduplicationPASS. No new full-suite/frontend/CI claim.",
+    "review": "Independent read-only V3 hashes and72 rational reference rederivations; overlay402 hashes/144 event checksums/144 arithmetic cases verified; no scopedP1/P2. Reviewer did not execute scripts/tests/DB/financial tasks.",
+    "evidence": "product-evidence/v1.2/m4/20261007-supplemental-financial-preflight/README.md",
+    "proof_payloads": 12,
+    "proof_manifest_sha256": "57be4695b3a22cfc8d6b03d32855fff067be96a51baac0a0b271c2beb646a788",
+    "remaining": "6 explicit cash terms unknown,59 supplemental source gaps,000598/300048 and official independent reference/all-action/lifecycle gates open. Actual FullDataset start-only suspension index needs bounded-fixture reproduction and shared interval fix if defective.",
+    "financial_admission": false,
+    "full_product_pass": false
+  },
+  "orientation_matrix_20261007_gate": {
+    "status": "PASS_SCOPED_LAYOUT_COLOR_ENTER_ESCAPE_NOT_FULL_TAB_AA",
+    "evidence": "product-evidence/v1.2/m4/20261007-orientation-matrix/README.md",
+    "payloads": 7,
+    "manifest_sha256": "b5f49c7de07259b46aff126f7c11e84977c38f0293060cc819f12593f4e4731f",
+    "checks": "Actual Chrome EN/ZH light/dark four required viewports:16 cases/four modes/no measured horizontal overflow/min contrast7.653dark6.058light/close40x40/continue42h/Enter/Escape exact opener focus. Four settled mobile JPEGs retained, stale paint rejected;4 current source SHA/servedD28 bindings unchanged.",
+    "limits": "Curated DOM observations, existing user not clean/novice study. Native finalTab BODY/browser chrome unknown; full focus cycle not proven.13px paragraphs not universal15px, no fullAA/native200/performance/financial claim. LocaleEN/dark/default viewport restored/QA tab closed/export handoff retained.",
+    "full_product_pass": false
+  },
+  "native_wsl_bridge_20261007_readonly": {
+    "status": "OPEN_NATIVE_INTEGRATION_NOT_APPLICATION_OUTAGE",
+    "observed": "WindowsDockerdesktopstatusrunning/originalPGRedisbackendhealthy/APIfrontend200. Ubuntu/usr/bin/docker danglingtarget/mnt/wsl/docker-desktop/cli-tools/usr/bin/docker;target/guestservicesdocker.sock/varrundocker.sock absent. command-v resolves Windowsbin wrapper, not healthy nativeintegration. InitialvariableloopblankMissing output REJECTED; explicitpositional ls authoritative.",
+    "boundary": "Installed desktop enable exposes model-runner only, no documentedWSLrepair. No GUIautomationavailable/no inventedCLI/security/helperworkaround/restart/factoryreset/data deletion. Existing currentD28loopbackfrontend remainsusable; requiregenuinebridge/newROmountbefore originalbindrestart/0017rollout.",
+    "evidence": "product-evidence/v1.2/m4/20261007-native-wsl-bridge/README.md",
+    "next": "Do not repeat unchanged bridge probes until meaningful external state change; continue independent remaining financial/AA/performance/user-flow/delivery work while native integration remains unresolved. Fullrequiredscope unchanged."
+  },
+  "research_ci_views_20261007_gate": {
+    "status": "PASS_SCOPED_EXACT_CI_AND_SAVED_VIEW_KEYBOARD_NOT_FULL_PRODUCT",
+    "head": "1da55ad6f6ec25632d7c892ba0f405bde4b0a39b",
+    "ci": "37557042316/all3jobs/every stepSUCCESS2026-10-07T01:28:23Z/samewatch87339terminal0;1302backend1optionalarchiveSKIP31.50s/760frontend46files/static/build293ms/mypy145/isolatedhead-baseline0001-head-check/ComposeproductiontmpfssmokePASS. HEADoriginPR32OPEN-DRAFTagree.",
+    "user_flow": "ActualChrome dark390 EN/ZH all3filterchips Enter removes onlythatcondition/focusviewsettings/1to2to8to12rows;nonmatchlabel retargetedfromfreshDOM. ExplicitSave view proved at genuinelynewentry ChromeSUCCEEDEDhistoricalname_ascCreatedhidden. Same-entryreload correctlyretainsunsavedhistory; false storagerestorehypothesis rejected. Bothlocale3chips40pxminimum,longEN60.5px/doc375client375. Defaultsreset/ENdark/restored/viewportreset/ownQAtabsclosed/exporthandoffkept.",
+    "evidence": "product-evidence/v1.2/m4/20261007-research-return-ci-views/README.md",
+    "proof_payloads": 4,
+    "proof_seal_sha256": "f6d7a1a53b659fdfbc7135c02d33d2d73078df6882cebb88df82521b0edcba1d",
+    "cleanup": "ExactownedNode7969f4b no mounts/noports sleepinfinityonly rechecked, stopped/exit137/notOOM claim andretained. This137 is cleanup not failingtest; alltesthandlespreviouslyterminal0. OriginalPGRedisbackendhealthy/starttimesunchanged/APIfrontend200;no originalrestart/migration/data deletion.",
+    "delivery": "Bilingual user guides now explain saved vs temporary view, chips, reset and exactreturn. Fivecheckpoint/guide docs local until nextcoherentmilestone; code1da55adpushed/currentCIgreen, no tinyfollowup push. Not finalM5manual/demo/release acceptance.",
+    "remaining": "FullmandatoryU1-U8/M0-M5 unchanged. Financial/economicreferencecashlifecycle, lawful genuinelynewforwardarrival, realmissingledgers, fullAA/native200/performance/runtime/recoverabledeployment/delivery open. No formalOOS/datafreeze/methodology/identity/security/visibility/merge/tag/release."
+  },
   "research_return_20261007_gate": {
     "status": "PASS_SCOPED_RESEARCH_DETAIL_RETURN_AND_HISTORY_TOKEN_LIFECYCLE_NOT_FULL_PRODUCT",
     "source_parent": "e7ac5682ac7dc25e11ea223e6c228d81be1a797b",
@@ -18,7 +63,7 @@
       "ExperimentsPage": "56d360d9e4a0469bcab943446eac1f6ddad85f5d717784d4d8b0c71c8b81f60d",
       "ExperimentReturnTest": "75adfbb65038dea4514f3be68cf0ab92d72311393f44fccdb605a860bb0df7fa"
     },
-    "ci": "Exact parente7ac568 CI37555553960 all3jobs/every stepSUCCESS at01:10:40Z/samewatch77232terminal0; not current uncommitted diff CI. Newexacthead CI pending coherentcommit/push.",
+    "ci": "Exact1da55ad37557042316 all3jobs/every stepSUCCESS01:28:23Z/samewatch87339terminal0/1302backendoptionalSKIP760frontend/static/migration/Compose. Parente7CI chronology only. No code changes after1da55ad; later guide/checkpoint docs local.",
     "limitations": "525.08kB warning persists; darkmobiletwoLang/twoentry and desktop2streamsmoke are not fullresponsive/native200/speech/fullAA/performance. Missing/error/externalfocus/stale token component-tested only. Old16layout/747 proof historicalto e7 source. Financial/cash/reference/lifecycle/forward/lostledgers/runtime/deployment/M5 remain incomplete.",
     "preservation": "Rootsolewriter; originalDB5sessions417events12research4raw0016; originalPGRedisbackendhealthy/PONG/APIfrontend200;frozen693c/tagf88b/.research unchanged. No new task/provider/strategy/formal/OOS/freeze/identity/visibility/security/migration/originalrestart/merge/tag/release. Export handoff retained/filelandingunverified; viewportreset/ENdark/restored/ownQAtabclosed.",
     "goal_scope": "All mandatory U1-U8/M0-M5 unchanged; goalACTIVE/product_goal_complete=false."
@@ -2834,10 +2879,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-07T01:22Z sole root writer/current e7ac568 originOPEN-DRAFTPR32;4codeSHA unchanged37focused760full/static terminal0;41payloadseal verified. Windowsengine/originalPGRedisbackendhealthy/APIfrontend200, no newfinancialtasks. Olde7CI37555553960SUCCESS, newdiffpending.",
-    "repository_writer": "Root sole4frontendfiles/docs/checkpoint writer; existing signed_results_review_oct7 read-only review P2 closed/finalnewproof review pending. No competing git/test writer observed. No new PR or merge/release.",
-    "database_writer": "Root guardedownedtmpfsquant_test/no mounts/loopback55471only;1294tests+optionalSKIP/head-base-head/check terminal. PGSTOPPEDretained;originalquant_platform readonly0016/no migration/restart/retry/backfill/strategy. Genuine lostledgers incomplete.",
-    "queue_writer": "Root immutable137sourceguardv5;75sourcePASS/62unresolved/4newPASS/71oldPASS wholepreserved/133wholeunchanged/276bindings/reverse/prior14proof intact.62diagnosis=58roles+1guard+3nomatchingchecks;000771Bscope and300048alreadyfoundcorrectionchain distinct. No economic event/dataset admission/provider acquisition/queueworker/fullarchive action;fullaction/reference/cash/lifecycle incomplete.",
+    "latest_verification": "2026-10-07T02:08:52Z root sole writer; source HEAD1da55ad and five local checkpoint/guide files only. V3 and overlay terminal0,57 targeted backend tests and immutable overlay replay terminal0.12 financial/7 orientation payload seals verified; frozen manifest693c/tagf88b/.research unchanged. Original services last observed healthy/frontendAPI200 at01:57UTC; no original restart/data write. No new remote check.",
+    "repository_writer": "Root owns five checkpoint/guide docs for a coherent local commit. Application source unchanged from1da55ad; existing signed_results_review_oct7 read-only V3 and overlay reviews found no evidenced scopedP1/P2. Current final seal review is read-only, not an economic approval.",
+    "database_writer": "No DB writer in this unit;57 targets database-independent with test-only quant_test identity on loopback55471. Original DB not used for tests, not migrated or restarted; last original0016 counts5/417/12/4 remain historical, not a fresh count. Scratch PG remains stopped/retained; genuine lost ledgers incomplete.",
+    "queue_writer": "Root owns immutable V3 reference diagnostic and72 cash/bonus candidate overlay outside Git. All processes terminal; no active queue worker/provider/full archive acquisition. Whole498 bonus/498 reference/7407 coverage/137 sources/parent40353 cash preserved. Source V7 is78 source-only pass/59 unresolved;6 cash unknown. Full economic/reference/cash/lifecycle admission remains incomplete.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -2847,6 +2892,8 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-07T02:08:52Z V3 fixes both diagnostic review defects;72 scoped issuer/raw matches/6 unknown cash. Private72 cash+72 bonus overlay144 synthetic accounting checks/57 targeted backendPASS and same immutable rerun. Independent hashes/checksums/arithmetic and root800 binding checks/whole preservation pass;12 financial and7 orientation payload seals verified. All processes terminal, source unchanged, no original data/strategy/remote/release action. Full goal remains ACTIVE.",
+    "2026-10-07T01:31:50Z exact1da55adCI37557042316all3SUCCESS1302backend1SKIP760frontend/static/scratchmigration/ComposePASS. ChromeENZHdark390SavedViewfreshentry/3filterchipEnterfocus/resetPASS;4payloadseal f6d7a1a5;guides updatedlocal. OwnednodeSTOPPED137sleepcleanup/retained;original4services200healthy/data0016unchanged. FullproductgoalACTIVE/no merge/release.",
     "2026-10-07T01:22Z researchName/Open exactfocus/window/table context fixed; stale historyP2 closed in research+TaskCenter. Actual3RED37focused760fullfrontend/static/buildPASS, currentD28ENZHmobile4returns anddesktopZH2streamsmoke,41privateproofseal e1a92f67 verified. e7CI37555553960all3SUCCESShistorical; newdiffCIpending. FullgoalACTIVE/originalassets/data0016 preserved.",
     "2026-10-07T00:19:41Z actual2RED/94related/full1300PASS+optionalSKIP/sharedlisting77sourceonlyPASS60unresolved;own6525520CI37550587482alljobs/every stepSUCCESS/735frontend/static/migration/ComposePASS.17sourceproof5ddb/5CIproofdd293 retained. ActualENZHdark390orientationopen/firstTab/Escape/40px6proofc03a scopedPASS;final/reverseTabboundaryUNRESOLVED. All60residual4proof500d/next300028fullcache hypothesis recorded. Originals/frozen/OOS unchanged;fullgoalACTIVE/no merge/release.",
     "2026-10-06T23:26Z shared comparison quality-before-money4RED->40focused/735full/static/currentChrome16cases/independentreadonly review PASS_SCOPED.99proofseal1d7a59b2;owna694CI37546062465 all3jobs/every stepSUCCESS23:23:43Z1294backend+1SKIP/735frontend/isolatedmigration/ComposePASS/samewatch47283terminal0. Currentread-onlyDevelopmentdate20110223 links exactcurves+oneactualsavedtrade/22fullmetrics preserved/ENZHcontinuity;7payloadseal7ebe19d5/prior99payloadunchanged. RootownedNode idleSTOPPED137/OOMfalse retained, originalhealthy no restart/data/task/OOS action. FullgoalACTIVE/no merge/tag/release.",
@@ -3222,7 +3269,7 @@
     "RESOLVED: transient Chrome browser-control binding timeouts were followed by successful Chrome Back/Forward and CSV/JSON acceptance; the temporary QA draft name was restored. No app defect was inferred from the tool timeout"
   ],
   "external_blockers": [
-    "DOCKER-WSL-INTEGRATION: configured Ubuntu/default integration true but nativeUbuntu docker unavailable and restarting originalfrontend exposed empty existing bind. Originalfrontend safely stopped; exact current-build loopback5173 static fallback works, PG/Redis/backend healthy and data retained. Genuine integration restoration required before oldbindcontainer restart; no factory reset or data deletion.",
+    "DOCKER-WSL-INTEGRATION: Oct7boundedreadonlyprobe confirms native/usrbin/docker dangling/mnt/wsl/docker-desktop/cli-tools target andnativeguestsocket/varrunsocketabsent. WindowsDesktopengine+originalPGRedisbackendhealthy/loopbackcurrentD28frontendAPI200;not applicationoutage. No documentedCLIintegrationrepair/model-runneronly;no GUIavailable/no inventedwrapper/securitybypass/originalrestart. Prior newROmount empty remains unverified, requiregenuineintegration beforeoriginalbindrestart/0017rollout. Proof20261007-native-wsl-bridge;no reset/deletion. Do not repeat unchanged probes.",
     "U7-FORWARD: lawful product-use rights for a genuinely new A-share market-data feed have not been established; a public SDK or historical candidate receipt does not grant execution authority",
     "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay"
   ],
@@ -3442,8 +3489,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue all mandatory U1-U8/M0-M5. Finish currentresearch-return proof independent review/coherentcommit/push/exacthead CI;4sources bound toD28/760tests37focused;oldTaskCenter16layout/747 historicale7. Then actual saved-filter chips/keyboard/removal/persistence and remaining fullAA/native200/performance/runtime/recoverable delivery; do not cycleonlyonparser orCI. Economic/reference/cash/lifecycle fullclosure stillrequired;137source-only78PASS59unresolved276bindings not economicadmission. Preservefrozen693c/tagf88b/research/originalDB0016 counts5/417/12/4/no formalOOSrerun. NativeWSLbridge/newROmount/0017rollout/restartopen; lawful after-start forward and genuine lostledgers required;exporthandofffilelandingunverified/no securitybypass. Independent physicalDR optional not replacementgate. No merge/tag/release untilfullrequiredacceptance;product_goal_complete=false.",
-  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check && gh pr view 32 --json headRefOid,state,isDraft,url && gh run list --branch codex/product-v1.2-current-rules --limit 3 --json databaseId,headSha,status,conclusion && rg -n 'U7-FORWARD|U7-RECOVER|QA-A11Y|QA-PERF|M5-' docs/product/ACCEPTANCE.md",
+  "next_task": "Continue all U1-U8/M0-M5. New V3 supplemental reference audit72 PARTIAL+6 unknown and private72 cash/bonus overlay144 synthetic accounting checks/57 targets/immutable replay independently reviewed; not financial admission. Preserve40353 parentcash/498 bonus/498 reference/7407 coverage/137 sources. Next available engineering action: reproduce actual FullDataset start-only suspension indexing on earlier-start/ongoing/ex-resumption/unknown boundaries using bounded synthetic loader fixtures; reuse common interval semantics without application-to-data dependency or changing frozen assets. Then integrate candidate cash/reference and complete full economic/lifecycle admission, plus remaining fullAA/native200/performance/user-flow/manual/media/recoverable runtime. Orientation16 layout/color/Enter/Escape proof sealed, fullTab unknown. Native WSL bridge remains unresolved; do not repeat unchanged probes or invent wrapper/reset/restart unsafe binds. Original services/currentD28 frontend API200; originalDB0016 last historical counts5/417/12/4 not reverified this unit. Frozen693c/tagf88b/research/OOS/identity/security preserved. Lawful after-start forward, genuine missing paper ledgers, runtime0017/deployment/export landing/full delivery open. Historical exact1da55ad CIgreen, no new remote availability claim/poll/push/merge/tag/release. GoalACTIVE/product_goal_complete=false.",
+  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check && rg -n 'blocked_starts|_blocked_starts|suspension_evidence' backend/app/data/full_dataset.py backend/app/application/markets.py backend/tests/test_full_dataset_materializer.py backend/tests/test_product_markets.py; then use bounded synthetic loader fixtures, not a study or provider download. No unchanged GitHub/WSL recovery polling.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
