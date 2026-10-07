@@ -1,5 +1,28 @@
 # Decisions
 
+## v1.2 Native dialog edges and current GitHub hold — 2026-10-07
+
+Actual Chrome native modal footer Tab escaped to BODY. Reuse the shared Dialog;
+intercept only unhandled, unmodified Tab at the first/last current visible enabled
+non-inert sequential control. Preserve native interior navigation, child Esc,
+cancel and live trigger restore. No new library or six caller-specific traps.
+Seven focused regressions plus 767 full frontend tests/169 source bindings/static
+checks/build/audit0 PASS. Independent bounded code review found no evidenced
+P1/P2; root performed actual Chrome16 guide combinations and search/strategy
+sibling keyboard/history rechecks. Do not equate this with full AA/native200.
+
+Publish only owned loopback5173 frontend files: back up complete static tree to
+host and container, add current hashed assets, then atomically replace index.
+Keep old assets for open tabs and rollback; no restart of original database or
+backend. Settled screenshots replace lagging batch images as visual evidence,
+without deleting the failed observations.
+
+Latest user reports CI/CD unavailable until October1; current date October7, so
+the estimate does not prove recovery. Earlier successful Actions remain historical.
+Continue local commits and verification, with no GitHub request/push/merge/tag or
+release until availability is established. No billing/security/protection bypass.
+Full product/financial/forward/persistence/release requirements are unchanged.
+
 ## v1.2 Reference authority is price-only and fail-closed — 2026-10-07
 
 Reuse the existing checksum-bound corporate-actions partition and shared Decimal

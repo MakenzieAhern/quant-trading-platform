@@ -38,8 +38,11 @@ Primary action visually unique on first use. Avoid giant financial KPIs on homep
 No long hashes on first-use surfaces; lineage remains available in disclosure/details.
 All async areas keep their surrounding navigation. Errors explain next step and retry.
 Drafts persist before leaving; exit has explicit keep/discard/stay semantics.
-Dialog uses native modal focus handling; all essential actions also visible outside
-keyboard shortcuts. The strategy card drawer uses a URL fragment so Back closes it,
+Dialog uses native modal focus handling with a shared Tab/Shift+Tab edge loop:
+only the first/last visible, enabled, non-inert sequential control is wrapped.
+Interior navigation, child-handled keys, browser-modified shortcuts, native Esc
+and trigger-focus restoration retain their existing behavior. Essential actions
+are also visible outside keyboard shortcuts. The strategy card drawer uses a URL fragment so Back closes it,
 Forward restores it, and a direct link opens it without changing the list's scroll.
 Market security detail uses the same native modal/history behavior with exact
 dataset and security IDs in its fragment; hash-only traversal preserves the

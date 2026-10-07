@@ -1,5 +1,43 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 shared modal keyboard edges — bounded U1/U2/U8 PASS
+
+[Private browser/test/rollback evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-dialog-edges/README.md>).
+Actual old EN guide footer Tab reached BODY outside the open modal. Shared Dialog
+now wraps only sequential first/last controls; disabled fieldsets, hidden/layoutless,
+visibility-hidden, inert and negative-tabindex nodes do not define the boundary.
+Internal Tab, handled child keys, modified shortcuts, Esc and live trigger return
+are retained. Six production callers reviewed; no dependency or per-page trap.
+
+Seven regressions include the independent hidden/inert counterexample. Current
+169 exact source bindings, 767 tests/47 files, lint/types/Prettier/build PASS;
+audit zero vulnerabilities. Build 160ms; 525.57kB chunk warning retained, not a
+performance result. Backend unchanged; prior1340/1optionalSKIP is historical,
+not a new backend/DB/CI run.
+
+Current Chrome guide: 16 locale/theme/viewport combinations (1440x900,1280x800,
+1024x768,390x844), initial/interior/final/reverse/Esc/trigger restoration and no
+page horizontal overflow PASS. Viewport overrides are not native200% evidence.
+Search empty server results preserve input autofocus, both edges and child Esc;
+strategy drawer edges/Back/Forward/Esc/trigger return PASS. These are bounded
+flows, not browser coverage of every modal or complete WCAG AA/novice acceptance.
+
+Fast batch screenshots lagged the DOM and are explicitly NON-ACCEPTED. Separate
+settled default EN-dark and mobile ZH-light captures visibly show the modal/focus
+ring. Mobile theme uses existing Settings; no extensions/security changed. Wrong
+ZH footer expectation, missing mobile header theme control, and extension-added
+search accessible name are preserved as harness/locator failures.
+
+Only owned loopback5173 static frontend updated, preserving old hashed assets and
+complete host/container rollback copies. New index1a25bb23/13 served artifact
+hashes PASS. Original backend/PG/Redis unchanged, API/frontend HTTP200. No app DB
+migration/restart, study, provider acquisition, frozen/formal/OOS mutation.
+Latest user reports GitHub unavailable; October1 is past, current recovery is
+UNVERIFIED. No request/push/merge/tag/release. Prior successful CI is history only.
+Export landing/full financial admission/genuine old ledgers/lawful after-start
+forward/full AA/native200/performance/durable rollout/media/release stay open;
+U1–U8/M0–M5 and product goal remain IN_PROGRESS.
+
 ## 2026-10-07 price-only authority runtime and carryover guard
 
 [Private scoped proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-reference-runtime/README.md>)

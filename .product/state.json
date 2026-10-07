@@ -1,7 +1,23 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T03:11:00Z",
+  "updated_at_utc": "2026-10-07T03:32:35Z",
+  "dialog_edges_20261007_gate": {
+    "status": "PASS_SCOPED_KEYBOARD_NOT_FULL_AA",
+    "source_parent": "802373fb4b4859e6121a9ee234a039f339ee8d8e",
+    "defect": "Actual old EN guide footerTab reachedBODY while dialog open. Shared first/last sequential visible enabled non-inert control guard closes edge escape; native interior/childhandled/modifiedkeys/Esc/triggerrestore retained.",
+    "tests": "Seven regressions; hidden/inert counterexample2RED then fixed; full767PASS47files,169exactsourcebindings,lint/types/fullPrettier/repeatbuild160ms/audit0PASS. 525.57kBchunk warning remains. Backendunchanged prior1340/1optionalSKIP is historical; no newDBtest/CI claim.",
+    "browser": "ActualChrome16guide cases ENZH/lightdark/1440x9001280x8001024x768390x844:initial/interior/forward/reverse/Esc/triggerrestore/no page horizontal overflowPASS. Search0servermatches/inputautofocus/bothedges/childEscPASS;strategyedges/Back/Forward/Esc/triggerPASS. Not everymodal/fullAA/native200/speech/novice proof. OriginalENdark restored andviewportreset.",
+    "visual": "Fast batch screenshots lagged DOM, NON-ACCEPTED/retained. Separate settleddefaultENdark andmobileZHlight visiblyshowmodal/focusring. WrongZHfooter/missingmobileheadertheme/extensionaddedsearchname are locator/harness failures, not productPASS. No extension/security change.",
+    "deployment": "Only owned frontend a561fa1250ed498155a28c58489a46a4a23324ae4b46abad290fe19be33127ba/no mounts/127.0.0.1:5173 inspected; complete host andcontainerhtml-before-dialog-edges-20261007 snapshots saved; keepold99assets thenatomicindexreplace.13deployedhashesPASS/newindex1a25bb23/newJSaa91bda8. Chromeexplicitreload/APIfrontend200/originalPGRedisbackendhealthy unchanged.",
+    "guide_matrix_sha256": "79330396084b86d7f81003fc5e6a89710665732c1b8d285e0bcc13aed45829ee",
+    "sibling_receipt_sha256": "b9dd77d293d5d5dbdd2108f2c7e285b23a0171bd465e85de50b59fc660b2d093",
+    "test_result_sha256": "fda50a9bf77d9556aa8c3f7e8044bbe239b33da95216ceb0b01d7bf7b0bca984",
+    "review": "Independentreadonly code/all6caller/test review and finalsource/3JSONhashes/16matrix/767tests/47files/two settledpixel/docscope recheck no evidencedscopedP1P2. Reviewer no tests/browser/runtime/DB/network; actual deployment/runtime root verified. Root solewriter/no second task.",
+    "evidence": "product-evidence/v1.2/m4/20261007-dialog-edges/README.md",
+    "remaining": "Full U1-U8/M0-M5 unchanged. Financial6cash59source000598300048/allaction/lifecycle/newversionadmission;actualexportlanding;lawfulafterstartforward;genuineoldledgers;original0017rollout/restore/restart;fullAA/native200/performance/manualmedia/release remain. No dataset/formal/OOS/methodology change/no GitHub request.",
+    "product_goal_complete": false
+  },
   "reference_runtime_20261007_gate": {
     "status": "PASS_SCOPED_RUNTIME_REPAIR_NOT_FINANCIAL_ADMISSION_NOT_DEPLOYED",
     "source_parent": "a7d683a9097913624c6c89a7ebb1be4fc6e74f8b",
@@ -2908,10 +2924,12 @@
   "github_recovery_hold": {
     "reported_by": "user",
     "estimated_recovery_date": "2026-10-01",
-    "reported_wait": "historical user estimate was October 1; actual recovery subsequently verified by a successful October Actions run",
+    "reported_wait": "Historical estimate October1 and earlier actual successful Actions retained below. Latest user message on October7 reports CI/CD unavailable untilOctober1; estimate is past, current availability UNVERIFIED, not presumed restored.",
+    "latest_unavailability_reported_at_utc": "2026-10-07",
+    "current_availability": "UNVERIFIED_USER_REPORTED_UNAVAILABLE",
     "actual_recovery_verified": true,
     "last_readonly_check": "2026-10-02: GitHub Actions run37018861446 completed SUCCESS on exact pushed b17650deb8d4c1321c05d503b0d05675f34adf26; backend/frontend/Compose succeeded. PR32 remains OPEN DRAFT. Historical billing block is not the present CI state; no billing/limit setting changed. Subsequent checkpoint edits are not attributed to this run.",
-    "policy": "The September Actions admission hold is resolved by an actual successful October run. Normal feature-branch pushes and exact-head CI checks may proceed; this does not authorize merge or release. Reverify CI against the latest pushed head at the release gate. No payment, limit change or gate bypass."
+    "policy": "Latest user-reported outage takes precedence for this work unit: continue local commits/tests/app, no GitHub request/push/merge/tag/release. Previous verified recovery/CI is historical only, not current-head acceptance. Reverify actual availability and exact-head CI at the authorized release gate; no billing/security/protection bypass."
   },
   "milestone": "M3_FORWARD_FOUNDATION_AND_M4_QUALITY",
   "status": "IN_PROGRESS",
@@ -2931,19 +2949,20 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-07T02:25:15Z rootsolewriter featureparent46a6520 cleanbeforeunit. Actualsuspension defect8RED/105focused/1317fullPASS1optionalSKIP;Ruff557/mypy146/scratchmigrationcyclePASS. Finalfrontend168binding/760/static/build175ms/format/audit0PASS. Alltesthandles71990/93884/23140 terminal; readonlycensuscanonical7c686a20/code/inputs independentlychecked. No originalrestart/migration/strategy/GitHub call.",
-    "repository_writer": "Root owns sharedbackendintervalrepair/focusedtests/docs/checkpoint and5lockedPrettierformat-onlyfrontendfiles. Existing signed_results_review_oct7 reads only; backend/code/input and separateformatting/doc reviews complete/noevidencedscopedP1P2. Coherentlocalcommits; no push whileGitHubavailability unresolved, no second task.",
-    "database_writer": "Root testwriter only reverifiedowned30b1cfb tmpfs/no mounts/loopback55471 quant_test; fulltests andhead-base-head-current0017-check complete, nowstoppedexit0/retained. OriginalDB5432 never used for tests/migration/restart; historical5/417/12/4 counts not fresh. Lostpaperledgers remain unresolved. Node7969f4b sleep-only cleanupstop137/retained, not testfailure; no volumes/prune.",
+    "latest_verification": "2026-10-07T03:32:35Z rootsolewriter parent802373f/onlyDialog+new7testsbeforeunit;current767frontend47files/169sourcebindings/static/build160ms/audit0PASS,handles13831/5037terminal0. ActualChrome16guide plus search/strategy edges/history verified;13servedartifacthashes checked. Prior1340backend/migration historical unchanged. No originalDBrestart/migration/strategy/GitHub action.",
+    "repository_writer": "Root owns Dialog sharededgeguard/test/docs/state;existing signed_results_review_oct7 readonly. No concurrent agent writer or matchingWSLgit/testworker observed. Coherentlocalcommit/no push during latestuserreportedGitHub outage/no second task. Allfinancial source/frozen/OOS records untouched.",
+    "database_writer": "This Dialog unit has noDBwriter. Priorowned30b1cfb tmpfs/no mounts/55471 quant_test fulltests/reversible0017-check terminal, STOPPED0retained. OriginalDB5432 never used for tests/migration/restart; prior5/417/12/4 counts historical/not fresh. Genuine lostledgers unresolved. Node7969f4b currentlyRUNNING idle/no mounts/no ports/frontendtesthandles13831/5037terminal0, not financialqueueworker. No volumes/prune.",
     "queue_writer": "No activefinancial/provider/researchqueuewriter. Root immutablecensus7c686a20 and6payloadproofseal17380b19 terminal/bindingschecked; priorV3/72cash overlay andwhole498bonus/498reference/7407coverage/137sources/parent40353cash untouched andsource-boundhistorical. SourceV7 78sourceonlyPASS/59unresolved,6cashunknown. Fullfinancial/economic/reference/lifecycleadmission incomplete; no studyexecution.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "2026-10-07T02:28UTC ownedNode7969f4b STOPPED137cleanup/PG30b1cfb STOPPED0retained;alltesthandlesterminal. OriginalPGRedisbackendstillUp11hhealthy/currentD28frontendUp8h;API8000/frontend5173 HTTP200. No originalrestart/appmigration;liveDB0016historynotfreshcounts. Nativeintegration/freshROmount/backups remain before originalrestart/0017rollout; no unchangedrecoveryprobe/reset/securityworkaround.",
+    "verified_processes": "2026-10-07T03:32UTC ownedNode7969f4b RUNNING sleep-only/no mounts/no ports/alltesthandlesterminal;PG30b1cfb priorSTOPPED0retained. OriginalPGRedisbackendUp12hhealthy/ownedfrontendUp9h. Frontend-onlystaticupdate13hashes/newD3eks9Zv serves200/API200, oldtree/99assetsretained. No originalrestart/appmigration;liveDB0016historynotfreshcounts. Nativeintegration/freshROmount/backups before originalrestart/0017rollout; no reset/prune/deletion/securityworkaround.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-07T03:32:35Z sharedDialogedge escapeclosed:7regressions/767fullfrontend47files/169sourcebindings/static/repeatbuild160ms/audit0PASS;actualChrome16guidecases/search0matches/strategyBackForwardEsc/restoredfocusPASS. Frontend-only13hash publication with complete recoverableoldtree; settledmodal screenshots valid/batchlag imagesNON-ACCEPTED. OriginalDB/backend/frozen/formal/OOS unchanged/no GitHub call/fullgoalACTIVE.",
     "2026-10-07T03:11:00Z 7realinput/14syntheticruntimecases/P2carryover4controlsPASS;76focused1340backend1optionalSKIP/static/tmpfsmigrationPASS. Independent436bindings11partitions2history/docscope review;8seal00743b92. OwnedPGstopped/originalassets preserved;nativeChromeURLsafety STOP/exportlandingnotverified. GoalACTIVE/nofinancial or releasePASS.",
     "2026-10-07T02:45:59Z full40995ordinary parent+72cash+72bonus composition unambiguous/reversible order/currentproofPASS;562direct +7official price-only reference/accounting relationships/1138syntheticcases.817bindings/72partitions;all570exstates569open1blocked002549zero-volume. Seven loader-basis unsupported cases retained;6/59/000598/300048 gaps unchanged. Source/app/DB/frozen/formal/remote unchanged;goalACTIVE.",
     "2026-10-07T02:25:15Z sharedactualsuspensionintervalrootfix old8RED2PASS→105focused/1317fullbackendPASS1optionalSKIP;Ruff557/mypy146/quant_test55471 reversiblehead-base-head/checkPASS. Frozenreadonlyindex443217newlyprotectedsecuritydays3223IDs5057unknown nonoptimistic;reportcanonical7c686a20 bound/reviewed, not actualfill/financialadmission. Frontend5baselineformatfail fixedonlyformatter,168sourcebinding/760tests17.72s/static/build175ms/format/audit0PASS. Backendnotdeployed/formalnotrun/fullgoalACTIVE/CIdeferred.",
@@ -3544,8 +3563,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5. Seven official price-only runtime gaps and reviewP2 carryover/rights bypass closed with shared typed authority/guard;new immutable4e02463e proof8payloadseal00743b92. Wholefinancial admission open6cash59source000598300048/all-action/lifecycle;originaleventchecksums/holderentitlements/frozen/formal unchanged. Next verify Git/process/code+proof, then independentquality/delivery: nativeChrome reportfilelanding/fullAA/200percent/performance/coreflows/manual/media/recovery. NativeComputerUse STOPPED currentURL policyvalidation after minimizedChrome918216 activation; no furtherinputthisturn/no stalehandle reuse/no downloadsuccessclaim. Fresh nextturnwindow/browser selection before recovery. OriginalappD28/backendnotdeployed/liveDB0016historical;lawfulafterstartforward/genuineoldledgers/newversionadmission open. No unchangedGitHub/WSLpolling or remoteactions. GoalACTIVE/product_goal_complete=false.",
-  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check; read reference_runtime_20261007_gate/fullobjective; verify sealedcurrentruntimebindings. Fresh browser/window selection in new turn before nativeUI; do not reuse stoppedComputerUse context or callGitHub. Retainfinancialgaps/oldproof/frozen/OOS/no premature release.",
+  "next_task": "Continue full U1-U8/M0-M5. CurrentsharedDialogedge defectclosed/Chrome16guide+search+strategy proof saved; finalreadonlyevidence review/localcommit then pursue current-code clean-install syntheticdemo guidedjob/results/plan/account terminal-free rehearsal in isolatedDB/backend if existing tooling permits, never private/currentDB replacement. Also actualexportlanding/fullAA/native200/performance/manualmedia/recovery/financialadmission/afterstartforward remain. Chromeinternaldownloads policyblocked: no alternateinternalURL/raw/browserDB/security workaround or exportlandingPASS. Originalbackendnotdeployed/liveDB0016historical,frontendD3onlyupdated with recoverableoldassets. LatestuserGitHuboutage: no remoteactions/unchangedpolling. GoalACTIVE/product_goal_complete=false.",
+  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check; read dialog_edges_20261007_gate/fullobjective; finish readonlyreview/coherentlocalcommit. Inspect existing clean-install demo rehearsal tooling and exact container/process ownership; retainoriginalDB/backend/frozen/OOS. Do not callGitHub or reopen forbiddenChromeinternaldownloads; resettemporaryviewport/theme beforehandoff.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
