@@ -1,6 +1,41 @@
 # Decisions
 
+## v1.2 Task Center return context and panel reuse — 2026-10-07
+
+Actual mobile review found zero panel padding; reuse existing experimentPanel,
+not new CSS/dependency. Existing saved detail/Back then exposed lost task focus
+and scroll after rows loaded. Store validated return href/scroll and independent
+pages in the existing history entry, preserving navigation ancestry; wait both
+streams, consume once, do not steal focus after a user leaves main. This one
+shared handler serves research and raw-data links. Modified clicks remain native.
+Independent read-only review caught obsolete saved-scroll hiding missing/error
+fallback: exact task only uses preventScroll+saved scroll; fallback normal focus.
+Both streams×missing/error produced4RED before fix;24focused/747full frontend,
+lint/types/build/formatPASS. No weakened tests, no custom framework/dependency.
+
+Actual16 layout geometry/screenshot cases and final mobile EN/ZH research/raw
+Enter→detail→Back prove readable padding/exact focus/click-time scroll only,
+not full AA/performance/native200 or economic product acceptance. Stale ENlight
+1440 and enraw-after paint observations retained NON-ACCEPTED/replacements used.
+34 private proof payloads sealed7e79fbec, all hashes verified.523.64kB main chunk
+warning persists. Exact new-head CI and final evidence review pending. Existing
+parent37552485964 fresh green is historical to this diff, not a reason to skip CI.
+Original DB0016/counts5/417/12/4/services/data/tag/OOS preserved; no task start,
+provider retrieval, migration/restart, merge/tag/release. Full goal stays active.
+
+Final independent read-only review verified34payloadseal/source/test/build/frozen
+bindings and terminal receipts; no remaining evidenced scopedP1/P2. No reviewer
+test execution/native fallback injection; exact new-head CI remains pending.
+
 ## v1.2 direct-dated holder heading — 2026-10-07
+
+Post-commit exactd0428d6 CI37552485964 all3jobs/every stepSUCCESS00:34:17Z;
+1302backend+optionalSKIP/735frontend/static/migration/ComposePASS. Samewatch83608
+terminal0/7proofseal7fe22207;fresh admission not futurequota guarantee.
+Final18sourcepayloadseal9b5574a2 independently checked;pending text chronology.
+Fullcached300048primary/correction read supports guarded explicitold-new chain
+work only, not blanket yearfix or unrestricted-listing inference. No event or
+fullproduct acceptance. NativeUbuntuintegration persists;no destructive repair.
 
 Complete cached300028 three-page official implementation notice supplies a
 numbered 权益分派对象 heading immediately before the complete all-holder cutoff.

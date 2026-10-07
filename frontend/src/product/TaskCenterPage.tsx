@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "../components/Link";
 import { Pagination } from "../components/Pagination";
@@ -12,13 +18,48 @@ import { marketUpdateApi } from "./marketUpdates/api";
 import { updateError, useUpdateCopy } from "./marketUpdates/copy";
 import { useProductCopy } from "./copy";
 
+type TaskReturn = {
+  url: string;
+  href: string;
+  scrollY: number;
+  researchOffset: number;
+  updateOffset: number;
+};
+
+function readTaskReturn(): TaskReturn | null {
+  const value = window.history.state
+    ?.taskCenterReturn as Partial<TaskReturn> | null;
+  const validOffset = (offset: unknown): offset is number =>
+    typeof offset === "number" &&
+    Number.isSafeInteger(offset) &&
+    offset >= 0 &&
+    offset % 20 === 0;
+  return window.location.pathname === "/tasks" &&
+    value &&
+    value.url === window.location.href &&
+    typeof value.href === "string" &&
+    typeof value.scrollY === "number" &&
+    Number.isFinite(value.scrollY) &&
+    value.scrollY >= 0 &&
+    validOffset(value.researchOffset) &&
+    validOffset(value.updateOffset)
+    ? (value as TaskReturn)
+    : null;
+}
+
 export function TaskCenterPage() {
   const c = useProductCopy();
   const e = useExperimentCopy();
   const u = useUpdateCopy();
   const { i18n } = useTranslation();
-  const [researchOffset, setResearchOffset] = useState(0);
-  const [updateOffset, setUpdateOffset] = useState(0);
+  const taskReturn = useRef(readTaskReturn());
+  const workspace = useRef<HTMLDivElement>(null);
+  const [researchOffset, setResearchOffset] = useState(
+    () => readTaskReturn()?.researchOffset ?? 0,
+  );
+  const [updateOffset, setUpdateOffset] = useState(
+    () => readTaskReturn()?.updateOffset ?? 0,
+  );
   const [revision, setRevision] = useState(0);
   const focusedList = useRef<"research" | "updates" | null>(null);
   const researchHeading = useRef<HTMLHeadingElement>(null);
@@ -41,6 +82,55 @@ export function TaskCenterPage() {
         ),
     },
   );
+  useLayoutEffect(() => {
+    const saved = taskReturn.current;
+    if (!saved || research.loading || updates.loading) return;
+    taskReturn.current = null;
+    if (
+      document.activeElement !== document.body &&
+      document.activeElement !== document.getElementById("main-content")
+    )
+      return;
+    const trigger = Array.from(
+      workspace.current?.querySelectorAll<HTMLAnchorElement>(
+        ".taskCenterList a",
+      ) ?? [],
+    ).find((link) => link.getAttribute("href") === saved.href);
+    const isResearch = saved.href.startsWith("/experiments/");
+    const fallback = isResearch
+      ? (research.error ? researchError : researchHeading).current
+      : (updates.error ? updateErrorFocus : updateHeading).current;
+    if (trigger) {
+      trigger.focus({ preventScroll: true });
+      window.scrollTo({ top: saved.scrollY, left: 0, behavior: "instant" });
+    } else {
+      fallback?.focus();
+    }
+  }, [research.loading, updates.loading, research.error, updates.error]);
+  function rememberReturn(event: MouseEvent<HTMLAnchorElement>) {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    )
+      return;
+    window.history.replaceState(
+      {
+        ...window.history.state,
+        taskCenterReturn: {
+          url: window.location.href,
+          href: event.currentTarget.getAttribute("href"),
+          scrollY: window.scrollY,
+          researchOffset,
+          updateOffset,
+        },
+      },
+      "",
+    );
+  }
   useEffect(() => {
     if (document.activeElement !== document.body) return;
     if (
@@ -58,7 +148,7 @@ export function TaskCenterPage() {
     }
   }, [research.data, research.error, updates.data, updates.error]);
   return (
-    <div className="productPage">
+    <div ref={workspace} className="productPage">
       <header className="pageHeader">
         <div>
           <h1>{c.tasks}</h1>
@@ -71,7 +161,7 @@ export function TaskCenterPage() {
           {e.refresh}
         </button>
       </header>
-      <section className="panel" aria-label={c.researchTasks}>
+      <section className="panel experimentPanel" aria-label={c.researchTasks}>
         <h2 ref={researchHeading} tabIndex={-1}>
           {c.researchTasks}
         </h2>
@@ -101,6 +191,7 @@ export function TaskCenterPage() {
                   </div>
                   <Link
                     className="button secondary"
+                    onClick={rememberReturn}
                     href={`/experiments/${job.job_id}`}
                     aria-label={`${e.open}: ${job.name} · ${formatUtc(job.created_at)}`}
                   >
@@ -120,7 +211,7 @@ export function TaskCenterPage() {
           onChange={setResearchOffset}
         />
       </section>
-      <section className="panel" aria-label={c.updateTasks}>
+      <section className="panel experimentPanel" aria-label={c.updateTasks}>
         <h2 ref={updateHeading} tabIndex={-1}>
           {c.updateTasks}
         </h2>
@@ -152,6 +243,7 @@ export function TaskCenterPage() {
                   </div>
                   <Link
                     className="button secondary"
+                    onClick={rememberReturn}
                     href={`/data?updateJob=${encodeURIComponent(job.job_id)}`}
                     aria-label={`${u.open}: ${job.configuration.security_ids.join(", ")} · ${job.configuration.start_date}–${job.configuration.end_date} · ${formatUtc(job.created_at)}`}
                   >

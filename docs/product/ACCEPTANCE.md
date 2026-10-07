@@ -1,6 +1,49 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 Task Center — readable panels and detail-return restoration
+
+[Private before/after/browser/check proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-task-views-matrix/README.md>)
+binds current source39e66c48/test37fa0355 and final build index-umjfCKCJ.js.
+34 payload seal `7e79fbecfd9123e3d70a5c645981422f65b7c4f045e5193b33c90394b4373be1`
+verified without mismatches. U8/M4 scoped PASS, not full product acceptance.
+Existing experimentPanel restores 22.5px desktop/15px mobile padding in both
+streams. Actual Chrome EN/ZH × light/dark ×1440/1280/1024/390:16 observations,
+12research+4raw,16 unique accessible link names,42px controls/no page/row overflow.
+Final mobile dark keyboard Enter→saved detail→Back restores exact originating
+research/raw link focus and click-time scroll in both locales (stable51/25/2631/2308).
+Component tests additionally cover independent pages40/20, both loads, history
+ancestry, malformed context, no focus steal, both missing/error stream fallbacks.
+
+Actual layout1RED and return3RED; review found fallback stale-scrollP2,
+four failing cases reproduced then24focusedPASS. Final747frontend/45files17.38s,
+lint/types/build177ms/formatPASS, same5412terminal0. Initial ref/lint/generated
+build scan/format failures retained; no tests weakened or runtime data deleted.
+Two stale-paint screenshots explicitly NON-ACCEPTED with settled replacements.
+Viewport crops/four mobile returns do not prove full AA/native200/speech or
+performance; native missing/error visibility not live-injected.523.64kB chunk
+warning remains. Independent final proof review pending; exact new-head CI
+pending commit/push, parentd0428d6 green is not proof of this new diff.
+
+Final independent read-only review now verified all34payload hashes and the seal,
+source/test/finalbuild/frozen bindings and retained terminal receipts; no remaining
+evidenced scopedP1/P2. Reviewer did not rerun checks or native failure injection.
+Pending-review wording above records chronology, not the current review state.
+
+Original DB5sessions/417events/12research/4updates/0016 and healthy services
+unchanged, RedisPONG/APIfrontend200/frozen693c/v1.1f88b preserved. No new
+financial jobs, provider fetch, original migration/restart, OOS/frozen/identity
+change or merge/release. Full U1-U8/M0-M5 and PRODUCT_GOAL_COMPLETE=false remain.
+
 ## 2026-10-07 direct-dated holder heading — source-only validation
+
+Post-commit exactd0428d6 [CI37552485964](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37552485964)
+all3jobs/every stepSUCCESS00:34:17Z/samewatch83608terminal0:1302backend+
+optionalSKIP37.07s/735frontend45files/static/build236ms/disposablemigration/
+ComposePASS.HEADoriginOPEN-DRAFTPR32agree.7payloadCIseal`7fe222076b62a74b7661b54f12d64e40682bc84ee13adb35aea44e5e381c0cbc`.
+Independent final18sourcepayload/seal9b5574a2 verified;pendingCI/review limits
+below are chronology. Full300048primary/correction read narrows next action
+only:chain NOT_INTEGRATED/genericlisting not unrestricted. NativeUbuntuDocker
+wrapper still exits1;originalAPIfrontend200paper/DB0016 preserved. GoalACTIVE.
 
 [Private V7 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-dated-holder-sources/README.md>):
 complete300028 notice read, exact numbered对象 heading plus full date/allholders;

@@ -10,6 +10,243 @@ import { job as updateJob } from "./marketUpdates/fixtures.test-data";
 import { TaskCenterPage } from "./TaskCenterPage";
 
 describe("task center", () => {
+  it.each(["research", "updates"])(
+    "restores the %s task, independent pages and scroll after both streams load",
+    async (stream) => {
+      await i18n.changeLanguage("en-US");
+      const href =
+        stream === "research"
+          ? `/experiments/${researchJob.job_id}`
+          : `/data?updateJob=${updateJob.job_id}`;
+      window.history.replaceState(
+        {
+          taskCenterReturn: {
+            url: new URL("/tasks", window.location.href).href,
+            href,
+            scrollY: 1200,
+            researchOffset: 40,
+            updateOffset: 20,
+          },
+        },
+        "",
+        "/tasks",
+      );
+      const research = vi.spyOn(experimentApi, "list").mockResolvedValue({
+        items: [researchJob],
+        total: 61,
+        limit: 20,
+        offset: 40,
+      });
+      let finishUpdates!: (value: {
+        items: (typeof updateJob)[];
+        total: number;
+        limit: number;
+        offset: number;
+      }) => void;
+      const updates = vi.spyOn(marketUpdateApi, "list").mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            finishUpdates = resolve;
+          }),
+      );
+      render(
+        <main id="main-content" tabIndex={-1}>
+          <TaskCenterPage />
+        </main>,
+      );
+      const main = screen.getByRole("main");
+      main.focus();
+      await screen.findByRole("link", { name: /^Open experiment:/ });
+      expect(main).toHaveFocus();
+      await act(async () =>
+        finishUpdates({ items: [updateJob], total: 41, limit: 20, offset: 20 }),
+      );
+      const link = screen.getByRole("link", {
+        name: stream === "research" ? /^Open experiment:/ : /^Open task:/,
+      });
+      expect(link).toHaveFocus();
+      expect(window.scrollTo).toHaveBeenCalledWith({
+        top: 1200,
+        left: 0,
+        behavior: "instant",
+      });
+      expect(research).toHaveBeenCalledWith(expect.any(AbortSignal), 20, 40);
+      expect(updates).toHaveBeenCalledWith(20, expect.any(AbortSignal));
+    },
+  );
+
+  it("preserves the task return entry without replacing navigation ancestry", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({ owner: "preserved" }, "", "/tasks");
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [researchJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(marketUpdateApi, "list").mockResolvedValue({
+      items: [updateJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    const replace = vi.spyOn(window.history, "replaceState");
+    render(<TaskCenterPage />);
+    await userEvent.click(
+      await screen.findByRole("link", { name: /^Open task:/ }),
+    );
+    expect(replace).toHaveBeenCalledWith(
+      expect.objectContaining({
+        owner: "preserved",
+        taskCenterReturn: expect.objectContaining({
+          href: `/data?updateJob=${updateJob.job_id}`,
+          researchOffset: 0,
+          updateOffset: 0,
+          scrollY: 0,
+        }),
+      }),
+      "",
+    );
+  });
+
+  it("does not steal focus when the user leaves main before saved rows load", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState(
+      {
+        taskCenterReturn: {
+          url: new URL("/tasks", window.location.href).href,
+          href: `/experiments/${researchJob.job_id}`,
+          scrollY: 1200,
+          researchOffset: 0,
+          updateOffset: 0,
+        },
+      },
+      "",
+      "/tasks",
+    );
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [researchJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(marketUpdateApi, "list").mockResolvedValue({
+      items: [updateJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    render(<TaskCenterPage />);
+    const refresh = screen.getByRole("button", { name: "Refresh" });
+    refresh.focus();
+    await screen.findByRole("link", { name: /^Open experiment:/ });
+    expect(refresh).toHaveFocus();
+    expect(window.scrollTo).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["research", "missing"],
+    ["research", "error"],
+    ["updates", "missing"],
+    ["updates", "error"],
+  ])(
+    "keeps the %s %s fallback visible instead of restoring obsolete scroll",
+    async (stream, state) => {
+      await i18n.changeLanguage("en-US");
+      window.history.replaceState(
+        {
+          taskCenterReturn: {
+            url: new URL("/tasks", window.location.href).href,
+            href:
+              stream === "research"
+                ? `/experiments/${researchJob.job_id}`
+                : `/data?updateJob=${updateJob.job_id}`,
+            scrollY: 1200,
+            researchOffset: 0,
+            updateOffset: 0,
+          },
+        },
+        "",
+        "/tasks",
+      );
+      const research = vi.spyOn(experimentApi, "list");
+      const updates = vi.spyOn(marketUpdateApi, "list");
+      if (stream === "research" && state === "error")
+        research.mockRejectedValue(new ApiError(503, "unavailable"));
+      else
+        research.mockResolvedValue({
+          items: stream === "research" ? [] : [researchJob],
+          total: 0,
+          limit: 20,
+          offset: 0,
+        });
+      if (stream === "updates" && state === "error")
+        updates.mockRejectedValue(new ApiError(503, "unavailable"));
+      else
+        updates.mockResolvedValue({
+          items: stream === "updates" ? [] : [updateJob],
+          total: 1,
+          limit: 20,
+          offset: 0,
+        });
+      render(<TaskCenterPage />);
+      await screen.findByRole("link", {
+        name: stream === "research" ? /^Open task:/ : /^Open experiment:/,
+      });
+      expect(
+        state === "error"
+          ? screen.getByRole("alert")
+          : screen.getByRole("heading", {
+              name:
+                stream === "research"
+                  ? "Research tasks"
+                  : "Raw-data request tasks",
+            }),
+      ).toHaveFocus();
+      expect(window.scrollTo).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    { researchOffset: -20 },
+    { updateOffset: 1 },
+    { scrollY: Number.POSITIVE_INFINITY },
+    { url: "https://example.invalid/tasks" },
+  ])("rejects malformed task return context %j", async (patch) => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState(
+      {
+        taskCenterReturn: {
+          url: new URL("/tasks", window.location.href).href,
+          href: `/experiments/${researchJob.job_id}`,
+          scrollY: 1200,
+          researchOffset: 40,
+          updateOffset: 20,
+          ...patch,
+        },
+      },
+      "",
+      "/tasks",
+    );
+    const research = vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [researchJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    const updates = vi.spyOn(marketUpdateApi, "list").mockResolvedValue({
+      items: [updateJob],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    render(<TaskCenterPage />);
+    await screen.findByRole("link", { name: /^Open experiment:/ });
+    expect(research).toHaveBeenCalledWith(expect.any(AbortSignal), 20, 0);
+    expect(updates).toHaveBeenCalledWith(0, expect.any(AbortSignal));
+    expect(window.scrollTo).not.toHaveBeenCalled();
+  });
+
   it("refreshes only active research and update rows without restarting work", async () => {
     await i18n.changeLanguage("en-US");
     vi.useFakeTimers();
@@ -47,6 +284,8 @@ describe("task center", () => {
     await act(async () => {});
     const study = screen.getByRole("region", { name: "Research tasks" });
     const raw = screen.getByRole("region", { name: "Raw-data request tasks" });
+    expect(study).toHaveClass("experimentPanel");
+    expect(raw).toHaveClass("experimentPanel");
     expect(within(study).getByRole("status")).toHaveTextContent("Running");
     expect(within(raw).getByRole("status")).toHaveTextContent("Running");
     await act(async () => vi.advanceTimersByTime(5000));

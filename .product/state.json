@@ -1,7 +1,22 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T00:32:00Z",
+  "updated_at_utc": "2026-10-07T01:10:00Z",
+  "task_center_return_20261007_gate": {
+    "status": "PASS_SCOPED_LAYOUT_AND_DETAIL_RETURN_NOT_FULL_PRODUCT",
+    "source_parent": "d0428d611b083b4d31e933ec2ab0f8a0cd6b46b5",
+    "implementation": "Reuse experimentPanel padding for both streams; preserve validated independent offsets, original href and click-time scroll in the existing history entry; restore once after both streams settle without stealing external focus; missing/error fallback uses normal focus, not obsolete scroll.",
+    "checks": "Layout 1RED/11PASS to12PASS; return3RED/12PASS; independent fallbackP2 reproduced4RED then24focusedPASS. Final747tests45files17.38s/lint/types/build177ms/formatPASS, same5412terminal0; unchanged source hashes verified on recovery. Intermediate lint/ref/generated-dir and formatting failures retained, no weakened assertions or deleted data.",
+    "browser": "Actual Chrome EN/ZH x light/dark x1440/1280/1024/390:16 layout observations,12research+4raw,16unique link names,42px,documentclient=scroll,zero row overflow. Final mobile dark EN/ZH research/raw Enter-detail-Back restores exact originating href/focus; stable scroll51/25/2631/2308 unchanged.",
+    "review": "Independent read-only reviewer identified stale-scroll fallbackP2; fixed and both streams x missing/error tests cover normal fallback focus/no saved-scroll. Final review found no remaining evidenced scopedP1/P2;34payload hashes/seal/source/build/frozen bindings verified. Reviewer did not execute tests or inject native fallback failures.",
+    "evidence": "product-evidence/v1.2/m4/20261007-task-views-matrix/README.md",
+    "proof_payloads": 34,
+    "proof_seal_sha256": "7e79fbecfd9123e3d70a5c645981422f65b7c4f045e5193b33c90394b4373be1",
+    "limitations": "Viewport screenshots not full-page all-row/native200/speech/fullAA/performance. Missing/error native visibility component-tested only. Two stale-paint images explicitly rejected and retained. Main chunk523.64kB warning persists; no performancePASS.",
+    "preservation": "OriginalDB5sessions/417events/12research/4updates/revision0016 and PG/backend/Redis healthy/PONG; API/frontend200. No original restart/migration, new tasks/provider/strategy/OOS/frozen/identity/visibility/merge/tag/release. Intermediate builds and old preview assets retained outside Git.",
+    "ci": "Parent37552485964 success verified fresh, not new-diff evidence. Exact new-head CI pending coherent commit/push.",
+    "goal_scope": "All mandatory U1-U8/M0-M5 remain unchanged; product_goal_complete=false. Continue independent product flows and genuine financial/forward/runtime/quality/release work."
+  },
   "dated_holder_sources_20261007_gate": {
     "status": "PASS_SCOPED_SOURCE_GUARDS_NOT_FINANCIAL_OR_FULL_PRODUCT",
     "parent_head": "6525520797cc46bff9d41c939b6ad2f2e6eb8b1b",
@@ -13,7 +28,10 @@
     "evidence": "product-evidence/v1.2/m4/20261007-dated-holder-sources/README.md",
     "evidence_payloads": 18,
     "evidence_manifest_sha256": "9b5574a2f10221afc97e60f2f7a5d7ff472b3ca3a57b8117b7ebdcfcdd8710e7",
-    "ci": "Exactnewhead CI PENDING; parent6525520CI is historical, not currentdiff evidence.",
+    "ci": "Exactd0428d611b083b4d31e933ec2ab0f8a0cd6b46b5 CI37552485964 all3jobs/every stepSUCCESS20261007T00:34:17Z/samewatch83608terminal0.1302backend+optionalSKIP37.07s/735frontend45files/lint-types-build236ms/Ruff556/mypy145/disposablemigrationcheck/Compose smokePASS;PR32OPEN-DRAFT/no merge/release. Fresh admission not futurequota guarantee.",
+    "ci_evidence": "product-evidence/v1.2/m4/20261007-dated-holder-ci/README.md",
+    "ci_evidence_manifest_sha256": "7fe222076b62a74b7661b54f12d64e40682bc84ee13adb35aea44e5e381c0cbc",
+    "final_seal_review": "Independent readonly final18payloadSHAs/canonical9b5574a2/verification canonical confirmed;no new evidencedscopedP1P2/no execution. Earlier review limit is chronology.",
     "preservation": "OriginalDB0016/runtime4healthy/frozen693c/tagf88b/.research/frontendtree1bafd unchanged. OwnedtmpfsPG0otherclients stopped/retained. No originalrestart/migration/financialwrites/deletion/securitychange.",
     "event_admitted": false,
     "full_product_pass": false
@@ -3381,9 +3399,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "6525520797cc46bff9d41c939b6ad2f2e6eb8b1b",
+      "last_verified_head": "d0428d611b083b4d31e933ec2ab0f8a0cd6b46b5",
       "state": "DRAFT",
-      "ci_run": 37550587482,
+      "ci_run": 37552485964,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
@@ -3402,7 +3420,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full mandatory U1-U8/M0-M5; product incomplete, not only parser/CI. Shared exact numbered holder-heading fix: V7all137/78source-onlyPASS/59unresolved/276bindings/old77wholePASS/136wholeunchanged/only300028;18payloadseal9b5574a2. No economic admission. Full1302backend+optionalSKIP/static/ownedtmpfs0017cyclePASS; frontend unchanged. Independent namingP2 fixed, erroneous new-dirv6 retained NON-ACCEPTED, finalV7canonical6ce30731; oldV6 seal untouched. Commit/push coherent existingPR32 milestone and verify own exact CI; parent652CI historical. Continue actual economic/reference/cash/lifecycle closure, reuse existing300048correctionchain (metadata59159565/20110323 located, not integrated), no acquisitionrestart/date inference. Preserve3000152010credit/3000092010listing/missing日/pagejoin failures. Continue independent AA/performance/runtime/delivery; orientation6sealc03a scoped Enter/firstTab/Escape only, ENendTab/reverse nativeboundary unresolved. OriginalDB0016/serviceshealthy/staticfrontend5173; genuine nativeWSLbridge/newROmount needed before originalrestart/0017rollout, Settings screenshot already pending. Export1661329767handoff retained/filelandingunverified; no denied-download/PSscript/security workaround. Lawful after-start forward and genuine missingledgers need evidence. FullgoalACTIVE/product_goal_completefalse; no formal/OOS/frozen/merge/tag/release.",
+  "next_task": "Continue all mandatory U1-U8/M0-M5, not a parser/CI-only goal. Task-center slice source39e66c48/test37fa0355/finalumjf: readable panels + validated both-stream detail/Back exact focus/independent pages/scroll,24focused+747full frontend/static/build/formatPASS;16layout/fourfinalmobile return observations,34payloadseal7e79fbec. Independent fallbackP2 fixed; final evidence review and exact new-head CI pending coherent commit/push. Then inspect actual research-list saved filters/sort/columns/detail-return keyboard and quality; continue remaining economic/reference/cash/lifecycle closure reusing300048 cached correction chain, full AA/native200/performance/runtime/recoverable delivery. Parentd0428d6CI37552485964 all3SUCCESS verified but not new-diff evidence. Existing137source-only rows78PASS/59unresolved/276bindings are not economic admission. Preserve frozen693c/tagf88b/.research/originalDB0016/counts5/417/12/4, no strategy/OOS rerun; nativeWSLbridge/newROmount and original0017rollout/restart remain open. Export1661329767 handoff/filelanding unverified; no denied-download/PS/security workaround. Lawful after-start forward and genuine missing ledger evidence remain required; independent physical DR optional assurance, not replacement acceptance gate. No merge/tag/release until full required gates; product_goal_complete=false/goal ACTIVE.",
   "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check && gh pr view 32 --json headRefOid,state,isDraft,url && gh run list --branch codex/product-v1.2-current-rules --limit 3 --json databaseId,headSha,status,conclusion && rg -n 'U7-FORWARD|U7-RECOVER|QA-A11Y|QA-PERF|M5-' docs/product/ACCEPTANCE.md",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
