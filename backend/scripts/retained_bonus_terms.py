@@ -54,7 +54,7 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         r"差异化分红送转:是|让渡|重整|缩股|吸收合并|另行公告|拟于|拟实施|B股|H股|"
         r"未确定|待定|另行通知|待通知|取消|撤销|终止|延期|暂停|暂缓|预计|预期|"
         r"拟新增|拟上市|拟转增|拟送|计划(?:本次)?(?:所)?(?:新增|资本公积金转增|转增|送|\(转(?:增)?\))|"
-        r"(?:拟将|讨论)[一二三四五六七八九十]+[、.](?:股权登记日|分红派息日期)|"
+        r"(?:拟将|讨论)[一二三四五六七八九十]+[、.](?:(?:股权|权益)登记日|分红派息日期)|"
         r"(?:拟将|讨论)" + listing_section + listing_term,
         guard_text,
     ):
@@ -113,10 +113,11 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + r"(?:3[、.]新增无限售条件流通股份上市(?:交易)?日:?"
         + plain_date
         + r")?|"
-        r"[一二三四五六七八九十]+、(?:股权登记日与除权除息日|"
+        r"[一二三四五六七八九十]+、(?:(?:股权|权益)登记日与除权除息日|"
         r"股权登记日、除息日、红利发放日|利润分配方案具体实施日期)"
         r"(?:1[、.])?股权登记日(?:为)?:?"
         + plain_date
+        + page_counter
         + r"(?:2[、.])?除(?:权除)?息日(?:为)?:?"
         + plain_date
         + r"(?:(?:3[、.])?(?:现金)?红利发放日(?:为)?:?"
@@ -140,7 +141,17 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
         + plain_date
         + r"(?:\(周[一二三四五六日天]\))?除权除息日:?"
         + plain_date
-        + r"(?:\(周[一二三四五六日天]\))?)"
+        + r"(?:\(周[一二三四五六日天]\))?|"
+        r"[一二三四五六七八九十]+、股权登记日与除权除息日"
+        r"本次权益分派股权登记日为:?"
+        + plain_date
+        + r"(?:\(下周[一二三四五六日天]\))?,除权除息日为:?"
+        + plain_date
+        + r"(?:\(下周[一二三四五六日天]\))?,新增可流通股份上市日:?"
+        + plain_date
+        + r",红利发放日:?"
+        + plain_date
+        + ")"
     )
     # Page markers remain in prose; neither a date nor another declaration can
     # be assembled across pages. A holder sentence cannot swallow a later section/date.
@@ -156,12 +167,16 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
     )
     holder_prose = (
         r"(?:(?![一二三四五六七八九十]+[、.]|\d+[、.]|20\d{2}年|讨论|次日)(?:"
+        # An identical running margin can interrupt prose, never a date field.
+        + ("§" + re.escape(repeated_header[1]) + r"\d+|" if repeated_header else "")
         + holder_banner
         + r"(?=§)|(?!本公司及)[^。;]))"
     )
     holder_page_counter = r"(?:" + holder_banner + r"?§" + page_number + ")?"
     # A weekday annotation supplements a complete date, never supplies one.
-    for year, month, day, weekday in re.findall(dated + r"\((?:星期|周)([^()§。;]{1,4})\)", text):
+    for year, month, day, weekday in re.findall(
+        dated + r"\((?:星期|下周|周)([^()§。;]{1,4})\)", text
+    ):
         try:
             if (
                 weekday.replace("天", "日")

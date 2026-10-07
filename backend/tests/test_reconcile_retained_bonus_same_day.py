@@ -1960,6 +1960,107 @@ def test_tentative_listing_section_uses_the_same_titles_and_numbering(marker, se
             )
 
 
+@pytest.mark.parametrize(
+    "layout", ["weekday-comma", "weekday-running-header", "numbered-page", "numbered-inline"]
+)
+def test_complete_weekday_or_cross_page_metadata_never_supplies_missing_share_roles(layout):
+    if layout.startswith("weekday"):
+        metadata = (
+            "二、股权登记日与除权除息日本次权益分派股权登记日为:2011年3月25日(下周五),"
+            "除权除息日为:2011年3月28日(下周一),"
+            "新增可流通股份上市日:2011年3月28日,红利发放日:2011年3月28日"
+        )
+    else:
+        metadata = (
+            "二、权益登记日与除权除息日1、股权登记日为:2011年3月25日"
+            + ("§2" if layout == "numbered-page" else "")
+            + "2、除权除息日为:2011年3月28日3、现金红利发放日为:2011年3月28日"
+        )
+    old = "二、股权登记日与除权除息日\n股权登记日为2011年3月25日,除权除息日为2011年3月28日。"
+    notice = NOTICE.replace(old, metadata)
+
+    def pages(value):
+        if layout != "weekday-running-header":
+            return value.split("§")
+        first, second = value.split("登记结算公司", 1)
+        margin = "测试股份有限公司" + TITLE
+        return [margin + "1" + first + "登记结算公", margin + "2司" + second]
+
+    assert same_day_listing(pages(notice), "600000", TITLE, RECORD, EX) == EX
+    for previous, changed in (
+        ("全体股东", "控股股东"),
+        ("收市后", "收市前"),
+        ("证券账户", "资金账户"),
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年03月28日直接", "2011年03月29日直接"),
+        ("无限售条件流通股", "可流通股"),
+        ("二、", "讨论二、"),
+        ("二、", "拟将二、"),
+        ("二、", "二、其他说明"),
+        ("三、分派对象", "讨论三、分派对象"),
+        ("除权除息日为:", "说明除权除息日为:"),
+    ):
+        altered = notice.replace(previous, changed)
+        assert altered != notice
+        with pytest.raises(ValueError):
+            same_day_listing(pages(altered), "600000", TITLE, RECORD, EX)
+    for term, role in (
+        ("本次转增股于2011年03月28日直接记入股东证券账户。", "SHARE_CREDIT"),
+        ("本次转增的无限售条件流通股的起始交易日为2011年3月28日。", "UNRESTRICTED_LISTING"),
+    ):
+        with pytest.raises(ValueError) as missing:
+            same_day_listing(pages(notice.replace(term, "")), "600000", TITLE, RECORD, EX)
+        assert missing.value.__notes__ == [role]
+    for dated in ("2011年3月25日", "2011年3月28日", "2011年03月28日", "2011年3月25日下午"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing(
+                (first + dated[:6] + "§2" + dated[6:] + second).split("§"),
+                "600000",
+                TITLE,
+                RECORD,
+                EX,
+            )
+    if layout.startswith("weekday"):
+        for wrong in ("下周二", "下周七", "下周星期一"):
+            with pytest.raises(ValueError, match="WEEKDAY_CONFLICT"):
+                same_day_listing(
+                    pages(notice.replace("下周一", wrong)), "600000", TITLE, RECORD, EX
+                )
+        with pytest.raises(ValueError):
+            same_day_listing(
+                [
+                    notice.replace(
+                        "新增可流通股份上市日:2011年3月28日", "新增可流通股份上市日:2011年3月29日"
+                    )
+                ],
+                "600000",
+                TITLE,
+                RECORD,
+                EX,
+            )
+    if layout == "numbered-page":
+        with pytest.raises(ValueError):
+            same_day_listing(
+                notice.replace("§2", "§2其他说明").split("§"), "600000", TITLE, RECORD, EX
+            )
+    if layout == "weekday-running-header":
+        source = pages(notice)
+        for old_margin, new_margin in (
+            ("测试股份有限公司", "其他股份有限公司"),
+            ("2010年度", "2011年度"),
+            ("测试股份有限公司", "讨论测试股份有限公司"),
+        ):
+            with pytest.raises(ValueError):
+                same_day_listing(
+                    [source[0], source[1].replace(old_margin, new_margin)],
+                    "600000",
+                    TITLE,
+                    RECORD,
+                    EX,
+                )
+
+
 def _manifest(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({**data, "manifest_sha256": canonical_sha256(data)}))
