@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 Exact whole issuer/notice first line, not arbitrary page text — 2026-10-07
+
+Full cached300126 PDF SHA checked/rendered/read; direct pypdf/NFKC equals cache.
+Repeated extracted code/name/notice-ID line confirmed; rendered header visible
+page1 only. Shared same_day_listing strips it only for expected issuer and an
+identical complete first line including newline on ALL pages. This avoids ID
+014/0141 prefix equivalence; full raw source guards precede strip, § retained.
+Complete2011-04-28 holder/record and2011-04-29 credit/unrestricted listing remain
+required; unrelated2010 meeting date not repaired/inferred. No stock exception,
+arbitrary body skipping/cash borrowing/date join.1RED→105related/1349fullbackend
++optionalSKIP/static/testDBmigrationPASS. Read-only independent scoped noP1P2.
+V11 source-only82PASS55unresolved/only300126/old81wholePASS+136unchanged;
+not financial/event/lifecycle admission. Original0016/frozen/tag unchanged,
+testPG stopped/retained; no deployment/frontend/browser/GitHub/strategy/OOS.
+Continue all required product gates; source evidence is not full product PASS.
+
 ## v1.2 Credit account word crosses a page, not its date — 2026-10-07
 
 Complete300198 cachedPDF3pages rendered/read. Permit only 账/帐→page_counter→户

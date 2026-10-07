@@ -98,9 +98,26 @@ def same_day_listing(pages, symbol, title, record_date, ex_date):
                 raise ValueError("BONUS_SAME_DAY_WEEKDAY_CONFLICT")
         except ValueError as exc:
             raise ValueError("BONUS_SAME_DAY_WEEKDAY_CONFLICT") from exc
-    # Only the identical declared title at every page start is a running header.
+    # Only identical declared-title or issuer/notice margins are running headers.
     # Guards above retain the full source; never join a date across page boundaries.
     compact_pages = [re.sub(r"\s+", "", unicodedata.normalize("NFKC", page)) for page in pages]
+    compact_lines = [re.sub(r"[^\S\n]+", "", unicodedata.normalize("NFKC", page)) for page in pages]
+    issuer_heading = re.match(
+        r"证券代码:"
+        + re.escape(symbol)
+        + r"证券简称:[A-Za-z\u4e00-\u9fff*]+公告编号:20\d{2}-\d+\n",
+        compact_lines[0],
+    )
+    if (
+        len(pages) > 1
+        and issuer_heading
+        and all(page.startswith(issuer_heading[0]) for page in compact_lines)
+    ):
+        # Retain the newline when checking the whole identifier, not a numeric prefix.
+        compact_pages = [
+            page.removeprefix(issuer_heading[0].rstrip("\n")) for page in compact_pages
+        ]
+        text = "§".join(compact_pages)
     heading = re.sub(r"\s+", "", unicodedata.normalize("NFKC", title))
     if len(compact_pages) > 1 and all(page.startswith(heading) for page in compact_pages):
         # Identical title/company page margins can precede continued prose,

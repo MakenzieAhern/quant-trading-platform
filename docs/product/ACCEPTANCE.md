@@ -1,5 +1,27 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 complete issuer running-header line — U3/U5/U6 source prerequisite
+
+[Private official PDF, RED/GREEN, full tests and immutable V11 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-issuer-running-header/README.md>).
+Complete cached300126 PDF SHA checked/rendered/read. Direct pypdf/NFKC pages
+equal cached pages; repeated extracted identifier line is not claimed visible
+on every rendered page. Record/all-holder2011-04-28, credit/unrestricted2011-04-29
+explicit; unrelated2010 shareholder-meeting date preserved, not repaired/used.
+Shared parser requires expected issuer, identical complete code/name/notice-ID
+first line including newline on every page; no numeric-prefix ID match.
+Full raw deny/date/weekday guards and § retained; no arbitrary skip/date join.
+1RED→105relatedPASS;1349fullbackend/1existing optional archiveSKIP20.78s,
+Ruff/format558/mypy146/test-only head-base-head-check PASS. Independent read-only
+no evidenced scopedP1/P2. V11 all137/82source-onlyPASS55unresolved;only300126
+changed,old81wholePASS/136wholeunchanged/276bindings/reverse+immutablePASS.
+Batch75d0125b557b701947a944eb5cef1630104eba6fa047119157cf7a38d9bd8791;
+15payload seal1ca1167b55c2019d18b615af70eeff0fb32e9ae52d9e4ba291fc76e292d65621.
+OriginalDB0016/frozen/tag retained; exact owned mountless tmpfs testPG55471
+zero other clients/schema0017 then stopped0/retained. No original restart,
+migration/deployment, frontend/browser/provider/strategy/OOS/GitHub action.
+Not financial/event/lifecycle/full-product acceptance. Sixcash/55source/000598/
+300048/all-action-reference-admission and full U1–U8/M0–M5 remain required.
+
 ## 2026-10-07 bounded account continuation — U3/U5/U6 source prerequisite
 
 [Private official PDF, tests and immutable V10 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-credit-account-boundary/README.md>).
