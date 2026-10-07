@@ -1,4 +1,35 @@
 {
+  "restructuring_components_20261008_gate": {
+    "status": "PASS_SCOPED_ONE_SOURCE_COMPONENT_ARITHMETIC_AND_ACCOUNTING_NOT_FINANCIAL_ADMISSION",
+    "previous_goal_turn_classification": "Last autonomous fe38b5f checkpoint was PROGRESS with new IAB keyboard evidence/local commit. Subsequent user CI-availability answer was readonly unchanged-service status, NO_PROJECT_PROGRESS toward full goal and not a live-process wait. This turn completes one source ambiguity and four accounting witnesses plus first-positive-volume cache evidence: PROGRESS;full objective unchanged.",
+    "source_parent": "fe38b5f41bcf3ebfc43afe01829ece7da68b5537",
+    "implementation": "Private check reuses restructuring_holder_ratio, Decimal reference arithmetic, FullDataset._actions and PortfolioEngine;no productioncode/model/API/dependency/policy/migration change or new event.",
+    "source": "Unchanged600725 official2016-12-23 implementation5pages and12-29 completion2pages rendered/read;freshpypdf6.16.1 equalscached7pages/issuer/date/PDF/cache/source-manifestSHA. Originalretrievaloffset retained;normalizedUTC is historicalretrieval,not a new retrieval.",
+    "components": "Companyold/new616235000 each,total1. Ordinaryholder431364500/ratio0.7;other184870500/ratio0.3 =creditor77119247+administrator107751253.15tableamounts sumexactly.15percent is ofpostcapital,notold-share/basis removal. No extra0.3holderevent.",
+    "reference": "Bothofficial `(5.7-0)/(1+1)=2.85` formulas verified usingexistingDecimal helper. Holder0.7 gives3.35,not thatspecialreference. Arithmetic only,notOrdinaryDistributionReference/cashdividend/compensation/actualtrade/runtimeadmission.",
+    "accounting": "Current FullDataset._actions validates42792 frozenrows;uniqueexistingc09067f2 BONUS_SHARE0.7 exactlyequalslegacy receipt.4new scopedsynthetic100/101 x ambientprecision6/50 checks:100->170,101->171 with0.7research-floor,no cashcompensation. Exactaggregatebasis1000/1010/cash1000 retained,no generatedorders/fills/actionrealizedPnL;duplicate rejects withfullsnapshotunchanged. Notfullconstructor/ResearchEngine/strategy/pending-tradability acceptance.",
+    "temporal": "Record2016-12-27/ex12-28/schedulednewlisting12-29 separate. Completionpublished12-29 reportsregistrycompleteasof12-28,not earlier/intradayknowledge. Officialresumption-at-open/intradayregistrytimestamp remainNOT_EVIDENCED;frozenDecember2016 zeroobservations notNORMAL/suspensionproof.",
+    "actual_cached_observation": "Frozen2017-11 zero600725rows/2017-12 21rows, bothmanifesthashesMATCH. Firstpositivechecked2017-12-01 open2.8500/close2.9900/volume4018528/amount11739230/ST/source_lineageSSE_OFFICIAL_DAILY;pre_closeNULL. ExactofficialSSEdayk600725JSON38ff3b79/metadatabytes3c039b9f confirm adjacentcached2016-09-22close5.7 ->2017-12-01. This is actualobservedtrading,not officialfirst-open/reference/executionclosure. No open->pre_close substitution.",
+    "follow_on_targeted_source_search": "After sealing the completed private unit,2bounded official-domain websearch batches/5queries for6007252017-11-30/12-01 resumption found no usable terminalnotice. Broadindex hits included wrongissuers andearlierMarch2017 continuedstoppage;exactissuer/date queries returnedempty. No PDFdownload/newsource/event/date admitted,no dataset/source reacquisition or GitHub access;do not confuse indexedsearch snippets with accepted evidence.",
+    "closure": "Wholeimmutable7544 parent/no-holder2 retained bycanonical+bytehash;onlyonecomponent annotation->SOURCE_COMPONENTS_REFERENCE_ARITHMETIC_VERIFIED_LIFECYCLE_UNRESOLVED,other7543statusesunchanged.6583missing andoriginal1696pending/5711not-evidenced counts unchanged;not an admitteddataset or closedallfinancialgate.",
+    "report_v2_sha256": "919c1fdef3a93f76ecd8ad44835ce1ebc543b275689a94678636590b55d330d4",
+    "report_v2_bytes_sha256": "13a66c2439293dde895f01aedaf3c8ab56d2ecbcd9ad7a9c2837c92cbef6d720",
+    "verification": "566input/57codebindings MATCH;V2repeat/reverse exactsamebytes. Producer-O rejectsbeforework,wrongtotal-as-holder fixture rejects,changedoutput cannotoverwriteV1. Two prepublicationharnessfailures/table-rowseparatorrootfix andformatfailure retained. V1a3a7a33a preliminary;onlyproducer formattingSHA/manifest changed,V2alleconomics/witnessesidentical. Explicitproducer/verifier Rufflint+format PASS.",
+    "independent_review": "Two readonly reviewers:finalV2 source/bytebindings/witness/wholeparent no evidenced scopedP1/P2;cachedraw/officialSSE/suspension metadata review retains genuinefirst-sessionreference gap. No reviewer producer/tests/network/SQL/write execution;not fullfinancial/product certification.",
+    "evidence": "product-evidence/v1.2/m4/20261008-restructuring-components/README.md",
+    "evidence_payloads": 15,
+    "evidence_manifest_sha256": "e670084cda432eef9b46aab50ae7c0d9b5535e51e447bfaebf2039e91e18172d",
+    "prior_evidence": "PriorMarket41/no-holder9 payloads byte-intact;new15payload immutablechecker twicePASS. Currentfrozenmanifest693c0b81/v1.1tagf88b5c60 unchanged/.research no diff. FreshUbuntu/WindowsPID probes no competingproducer.",
+    "services": "Fresh3Compose backend/PostgreSQL/Redis healthy,RedisPONG;Windows5173frontend/API8000HTTP200/paper mode. No SQL/originalrestart/deployment/testPGstart or freshfullsuite/browserclaim.",
+    "financial_coverage": "PARTIAL",
+    "financial_admission": false,
+    "dataset_created": false,
+    "dataset_registered": false,
+    "strategy_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD;no remote request/push/merge/tag/release",
+    "next": "Targetexisting6007252017-11-30/12-01 officialresumption-at-open/reference evidence andpending/runtime integration;do not inferfromscheduled12-29,endStopDate11-30,rawabsence oropen2.85. Wholefinancial/new-version andall currentproductquality/forward/lostledger/remote delivery gates remainrequired."
+  },
   "market_modal_keyboard_20261008_gate": {
     "status": "PASS_SCOPED_IAB_16_CASES_NOT_FULL_AA",
     "source_parent": "64c529a45997eaf16dd679dd464a7c1cc6ad4cf4",
@@ -576,7 +607,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T21:29:59Z",
+  "updated_at_utc": "2026-10-07T22:00:39Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4191,8 +4222,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue fullU1-U8/M0-M5. CurrentIABMarket16case gate closed;no unchanged repeat/fullAA promotion. Nextsource-bound60072570/30components/ordinaryholder0.7 versus total1/special reference2.85 and2016-12-29listing-versus-actualtrading proof;not data-corruption shortcut or0.3holder bonus. FinancialPARTIAL/6583source-lifecycle/33supplemental/8cashunknown/2contradictions/000598/000771/original1696pending5711not-evidenced remain. Preserve all7544/frozen andno blind187append. CurrentnativeAA/performance/export/media/restore/lawfulforward/genuine lostledgers/remoteCIrelease required.",
-  "local_next_command": "Read market_modal_keyboard_20261008_gate/README andverify41payload05ea4544 seal;priorbody41/no-holder9 already bytechecked without old-code runtimeacceptance. No repeated16caseIABunless relevantsourcechanges. Read existing20261006-cross-year-reference/20261008-full-action-reconciliation proof and600725 exactofficial70/30/total-reference/lifecycle components;actuallisting date is not tradability, frozen2016-12raw absence retained. No newdataset/admission untilwholefinancialPASS;no frozen/.research/OOS rewrite. DownloadrouteSTOP/no alternatebrowserCDPthirdclick withoutpermittedobservablepath. GitHubHOLD until directhumanrecoveryconfirmation;localapp5173/API8000 usable.",
+  "next_task": "Continue fullU1-U8/M0-M5. 600725total1/net-holder0.7 components,special2.85 arithmetic and4scopedaccountingchecks closed;cachedactualpositive2017-12-01 observed,butofficialresumption-at-open/firstpre_close/runtimeadmission remainOPEN. Target2017-11-30/12-01 officialresumption/reference evidence,not reacquiringarchive or0.3holderevent. FinancialPARTIAL/6583source-lifecycle/33supplemental/8cashunknown/2contradictions/000598/000771/original1696pending5711not-evidenced remain. Preservewhole7544/frozen/no blind187append. CurrentnativeAA/performance/export/media/restore/lawfulforward/genuine lostledgers/remoteCIrelease required;no unchangedIABrepeat/fullAApromotion.",
+  "local_next_command": "Read restructuring_components_20261008_gate/README andverify15payloade670084c seal;566inputs57code/current4witnesses/source7pages/cacheNov-Decfirstpositive andpriorMarket41/no-holder9 bytechecks preserved. Nextspecific600725official2017-11-30/12-01 resumption/reference sourcegap;do not substituteopen2.85 forNULLpre_close orscheduled12-29/endStopDate11-30 fortradability. No newdataset/admission untilwholefinancialPASS;no frozen/.research/OOS rewrite. CurrentIAB16caseclosed/no unchangedrepeat. DownloadrouteSTOP/no alternatebrowserCDPthirdclick withoutpermittedobservablepath. GitHubHOLD until directhumanrecoveryconfirmation;localapp5173/API8000 usable.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

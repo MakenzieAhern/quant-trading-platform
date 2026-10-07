@@ -1,5 +1,41 @@
 # Decisions
 
+## v1.2 Net restructuring allocation is not a ratio conflict or extra holder leg — 2026-10-08
+
+Close6007252016 sourcecomponents with the unchanged5-page implementation and
+2-page completion notices. Companytotal1 splitsoriginal-holder0.7/directcreditor-
+administrator0.3;all recipient amounts reconcile. Existingfrozenevent0.7 is not
+corrupt and must not be appended again. No additional0.3holderbonus, full1bonus
+plus original-basis surrender, zeroCASH, compensation or inventedrealizedloss.
+
+The source's special2.85 openingreference uses totalcirculating change1,not the
+holder0.7. Reuse existing Decimal arithmetic andPortfolio paths for bounded checks,
+not a new production model before temporal/execution evidence is complete. Four
+actualloader-to-Portfolio synthetic100/101 × precision6/50 witnesses andduplicate
+guard preservebasis/cash. Wrongtotal-as-holder fixture rejects;no fullruntimePASS.
+
+Preservepublication12-23/12-29,record12-27,ex12-28,scheduledlisting12-29 andreported
+registrycompletionasof12-28 separately. Laterpublication is not backdatedknowledge.
+Freshcachedraw/source comparison establishes a positive-volume2017-12-01 Bar,not
+officialresumption-at-open orpre_close. BothSSEstoppingendpoint11-30 uncertainty
+andmissingpre_close remain;never substituteopen2.85 forpre_close orinfernormalfrom
+missingbars. Nexttarget is the specific2017-11-30/12-01 officialresumption/reference
+evidence chain;do not refetch the historicalarchive or reopen acceptedauthorities.
+
+Immutablewhole7544 parent retained;only1annotation updated. FinancialPARTIAL,
+6583source/lifecycle gaps,1696pending/5711not-evidenced andall otherunknowns remain.
+PrivateV2 canonical919c1fde binds566inputs/57code. V1 retainedpreliminary after
+format-only sourcechange,no currentcodeacceptanceclaim. Repeat/reverse/negative/
+static checks andindependentreadonlyreviews passed;15payloade670084c twice sealed.
+No production/frozen/.research/OOS/SQL/runtime write;localcommit only/GitHubHOLD.
+All mandatory productquality/realforward/genuinelostledger/delivery gates remain.
+
+After sealing this unit, two bounded official-domain search batches (five
+queries) found no usable6007252017-11-30/12-01 terminalnotice. Reject wrongissuer
+index hits; earlierMarch2017 continued-stoppage notices are not resumption.
+No newPDF/source/event/date admitted. Preserve this failed discovery evidence;
+next source retrieval must target the official archive,not repeat loosequeries.
+
 ## v1.2 Verify existing shared Market keyboard behavior, no duplicate patch — 2026-10-08
 
 Current sharedDialog/Pagination did not reproduce a new keyboard defect. Close

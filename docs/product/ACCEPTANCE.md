@@ -1,5 +1,40 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 600725 net-holder component closure — financial gate still PARTIAL
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-restructuring-components/README.md>)
+binds parentfe38b5f and immutable V2 canonical919c1fde/bytes13a66c24.
+Two unchanged official PDFs/7 complete pages, freshpypdf/cache equality and
+original source metadata explain total1 versus net original-holder0.7;remaining
+0.3 registers directly to creditor/administrator.15recipient amounts reconcile.
+Special `(5.7-0)/(1+1)=2.85` arithmetic is not an ordinaryreference/cash event,
+holder compensation, actual price or runtime admission. Wrong holder-basis3.35
+does not match that official formula;synthetic wrong-total-as-holder input rejects.
+
+Actual FullDataset._actions validates42792 frozen rows, finds the unique existing
+c09067f2 event0.7 and dispatches it once in4new synthetic100/101 × precision6/50
+Portfolio checks.170/171whole shares, exactbasis1000/1010 andcash1000 retained;
+101 discards0.7 under approved research-floor policy,no compensation/actionPnL/
+generatedorders/fills. Duplicate rejects without changing fullsnapshot. This is
+not fullconstructor/ResearchEngine/pending-entitlement or strategy acceptance.
+
+Whole7544 parent/no-holder2 andother7543 statuses retained. One component review
+now explained, but lifecycle remains unresolved;6583missing andoriginal1696pending/
+5711not-evidenced unchanged. Listing12-29 notactualtrading. Completionpublished12-29
+reportsregistrycompleteasof12-28,not earlier/intraday knowledge. CachedDecember2016
+rawabsence notNORMAL/suspension proof. Additional hash-boundNovember2017 has0rows,
+December21rows;officialSSEdayk matchesfirstpositive2017-12-01/open2.85/close2.99.
+pre_close=NULL, source_lineage=SSE_OFFICIAL_DAILY, ST. This is an actual observation,
+not an officialresumption-at-open/reference/execution gate;never fillpre_close=open.
+
+566input/57code hashes/repeat/reverse/-O/immutable negatives/staticPASS. Initial
+KeyError/table-whitespace/format failures retained;V1 preliminary only,V2 differs
+solelybyproducer formattingSHA/manifest. Two readonly reviews no evidenced scoped
+P1/P2;15payloadseale670084c twicePASS;priorMarket41/no-holder9 payloads intact.
+Currentserviceshealthy/RedisPONG/Windows5173+API8000HTTP200/frozen693c0b81/tagf88b5c60
+unchanged. No productioncode/API/migration/SQL/deploy/restart/acquisition/strategy/
+OOS/GitHub operation or freshfullsuite/browserclaim. FullU1-U8/M0-M5 remainsACTIVE.
+
 ## 2026-10-08 current Market modal keyboard gate — bounded IAB PASS
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-market-modal-focus/README.md>)
