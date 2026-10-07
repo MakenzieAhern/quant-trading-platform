@@ -1,5 +1,29 @@
 # Decisions
 
+## v1.2 Full-source reconciliation is not financial coverage — 2026-10-08
+
+Reconstruct the whole42,792 frozen action objects from their six original censuses
+and all15 contracts;keep both merger-v4 execution and structural-v3 provenance,
+and recover actual old approvedpolicy bytes from localGit rather than overwrite.
+187 cash/bonus overlay legs already exist, so never append them.498 unmatched
+source candidates do not automatically create/admit a43,290-row product dataset.
+
+Preserve all7,544 observed oracle keys and the complete V1 report in immutableV2.
+Only38 official contemporaneous monthly B-name/200xxx observations receive
+outside-approved-A scope annotations after SHA/meta/URL/14-cell reparse agreement;
+no stableidentity/event/whole-security exclusion.000771 stays unresolved and its
+potentialalias200771 remains two original observations with differing totalshares.
+Observed keys are not proved independently distinct economic events.
+
+Keep lifecycle separate from economic matches:1,696 separate-listing and5,711
+not-evidenced original observations still require evidence. Two legacy no-holder-
+entitlement classifications need current verification, not synthesizedbonus.
+600725total1/ordinaryholder0.7 needs component review;8cashunknown,2contradictions,
+33supplementalsource gaps and000598 remain blocked. Correct scope counting cannot
+turn PARTIAL into financialPASS. New immutable full proof10payload3b5d05f9 is
+scoped verification only;no frozen/.research/study/OOS or GitHub mutation.
+
+
 ## v1.2 Reconcile existing economic keys before candidate integration — 2026-10-08
 
 The new V30 overlay reuses approved cash/bonus/Portfolio paths for44 actual

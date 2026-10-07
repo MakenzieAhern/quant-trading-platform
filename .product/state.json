@@ -1,4 +1,32 @@
 {
+  "full_action_reconciliation_20261008_gate": {
+    "status": "PASS_SCOPED_FULL_RECONCILIATION_AND_SCOPE_NOT_FINANCIAL_ADMISSION",
+    "previous_goal_turn_classification": "NO_PROJECT_PROGRESS: user CI availability question received only readonly service checks. Current turn revalidated the checkpoint and completed whole42792 provenance reconstruction plus7544 oracle reconciliation and38 evidenced scope annotations: PROGRESS, not product completion.",
+    "source_parent": "c11a8d099a9cb106b2d1fdbac5b3b06c317d8f56",
+    "implementation": "Private existing-source event_rows/structural_event_rows and typed model validation; minimal immutable V2 annotation layer retains whole V1 report. No production code/API/policy/dependency/migration change or historical source replacement.",
+    "full_reconstruction": "42792 full rows exactly equal six original source objects/checksums/stable keys:40479cash+286bonus+1833gap ordinary and194rights/merger/demerger/surrender/pass-through/consolidation.15 contracts verified. Preserve merger-v4 executable and structural merger-v3 bindings; historical policy8e426 bytes recovered from local2b34e62 Git blob, not edited.",
+    "candidate_reconciliation": "All187 previous overlay legs already frozen/appendfalse.498 prior bonus source candidates no frozen stable-key overlap; provisional43290all-kind union is NOT a created or admitted dataset. Full economic-identity guard forward/reverse PASS, not full financial coverage.",
+    "oracle_closure": "All7407 primary+137 supplemental observed keys retained whole, not7544 proved independent economic events.38 official monthly200xxx/B observations outside approvedA scope with exact14cells/SHA/meta/officialURL evidence, no stable ID or whole-security exclusion.7506 other parent terminal rows unchanged.000771 remains unresolved;potentialalias with200771 not merged, original92274000 versus145002000 totals retained.",
+    "economic_statuses": "6585missing source/lifecycle;876matched fields/not admission;32unresolved terms/dates;8unknown cash;2source contradictions;1referencegap;1total-vs-holder component;38scopeobservations;1PITunknown.600725total1/holder.7 remains review;600423/600595 no-holder-entitlement notes retain originalmissing status pending verification, never synthesizebonus.",
+    "lifecycle": "Orthogonal7407 original lifecycle1696separate-listing/pending review+5711not-evidenced.782primary economicmatches include285pending+497not-evidenced.498 prior candidates allNOT_EVIDENCED;support117/381 are not ratio-integer/fraction classes.601360 dated alias preservesPIT601313 andfirst-trade20130409;no future-name backdating.",
+    "verification": "V1 repeat same1317e094 canonical;V2 final/repeat/reversed-input samee59c40a3. Both optimizedPython rejected beforework.472V1inputs/47code;551V2inputs/24code actualhashes match.Explicit2producer+verifier Rufflint/formatPASS.4prepublication failures retained;no failed artifact admitted.10payload seal twicePASS andprior7payloads intact.",
+    "independent_review": "Two readonly independent actualJSON/source/checksum/whole-parent reviews no evidenced scopedP1/P2. No reviewer test/producer/SQL/network/write;not fullfinancial/product acceptance.",
+    "report_v1_sha256": "1317e094c0973bf909ae3b4e981fd04bec98733d22291c5856ef49e869608538",
+    "report_v2_sha256": "e59c40a375ac8e2fe2550335773c591ce428df760d61acec3c11a64b02ef4e8f",
+    "report_v2_bytes_sha256": "26fcf75434196c09c2334fe207ae48ef7ae30734833b57f0d5dcc638f5a2ada2",
+    "evidence": "product-evidence/v1.2/m4/20261008-full-action-reconciliation/README.md",
+    "evidence_payloads": 10,
+    "evidence_manifest_sha256": "3b5d05f99315e3b25a31589af92f42d838958cbe242412382dc7e29dd3db9de9",
+    "services": "Fresh Compose3serviceshealthy/RedisPONG/Windowsfrontend5173+API8000HTTP200. DisposabletestPG30b1stillExited0. No originalSQL/restart/deployment;frozenmanifest693c0b81/v1.1tagf88b5c60 preserved.",
+    "tests": "Private FS reconstruction/repeat/reverse/negative/static/verifier only. Prior1461backend/optionalarchiveSKIP and794frontend not rerun;no newbrowser/fullsuite claim.",
+    "financial_coverage": "PARTIAL",
+    "financial_admission": false,
+    "dataset_created": false,
+    "dataset_registered": false,
+    "strategy_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD;no remote request/push/merge/tag/release"
+  },
   "v30_financial_overlay_20261008_gate": {
     "status": "PASS_SCOPED_ACCOUNTING_AND_FROZEN_KEY_RECONCILIATION_NOT_ADMISSION",
     "previous_goal_turn_classification": "NO_PROJECT_PROGRESS: user CI availability question answered by readonly live service checks. Current checkpoint revalidated and safe next financial task executed; this unit adds44 actual accounting witnesses and full existing-key evidence, so PROGRESS.",
@@ -496,7 +524,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T19:29:39Z",
+  "updated_at_utc": "2026-10-07T20:14:30Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3471,10 +3499,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 V30 overlay44 new synthetic accounting checks PASS, old72 full/144checks whole retained;93cash94bonus/187legs already frozen, no blind append.104classifications72retained21positive1zero8unknown2conflicts;all33source gaps remain.419bindings/repeat/-O/static/two independent scoped reviews;7payloadf574198a twice preservesprior6. No financial/fullproduct admission; GitHub hold.",
-    "repository_writer": "Root sole docs/state/private candidate/evidence writer. Fresh PID/start/args no competing test/producer; two reviewers readonly, final scoped no evidencedP1/P2. No productioncode/dependency/API/policy change this unit. Two producer runs/verifiers terminal0, negative-Oexpected1; testPG30b1 remained stopped0/OOMfalse. No GitHub/frozen/OOS mutation.",
+    "latest_verification": "Oct8 full42792six-source reconstruction and whole7544oracle reconciliation;V2wholeV1retained,38officialBscope observations/000771unresolved/1potentialaliasnotmerged.1696pending+5711not-evidenced/6585source-lifecycle gaps;financialPARTIAL.10payload3b5d05f9 twice sealed,prior7 intact;two scoped independentreviews/repeats/-O/static. GitHub hold.",
+    "repository_writer": "Root sole docs/state/private candidate/evidence writer;freshPID/start/args no competing writer. Two independentreviewers readonly, final scoped no evidencedP1/P2. V1final/repeat andV2final/repeat/reverse/verifier allterminal0;expectednegative-O1. No productioncode/API/dependency/policy change this unit or GitHub/frozen/OOS mutation.",
     "database_writer": "No SQL/testDB start/original migration/restart/deployment this unit. Original Compose PG/Redis/backend healthy;RedisPONG/actualWindows5173/API8000HTTP200 checked. Prior selected ledger counts are historical, not fresh queries. TestPG30b1 remains stopped0/OOMfalse retained. No denied44table/reset/prune/delete/fake lostledger.",
-    "queue_writer": "Root sole private candidate/evidence writer. New immutable overlay-v1d10421c3/current419bindings. Old overlay whole preserved,44newchecks21pairs+1zero;source conflicts andunknowncash not admitted. All137V30source/7407coverage/498bonus preserved;187overlaylegs already frozen/noappend. All sessions terminal; full all-kind/oracle/lifecycle/newversion admission pending.",
+    "queue_writer": "Root sole private evidence/candidate writer. ImmutablefullV11317e094/V2e59c40a3;whole42792/7544/498/137/15contracts/6census preserved,187overlaylegsnoappend. Scope38observationsnotstableIDs;000771notmerged. Source/cash/component/lifecycle gaps persist;no datasetregistration/execution. All producers/verifiers terminal,fullfinancialnew-version gatepending.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -4110,8 +4138,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5: full all-action/oracle financial census and new-version admission. New immutable V30 overlay44 accountingchecks passed; never append its187 legs blindly: all already exist in frozen42792 and must stable-key reconcile. Preserve all40353/498/7407/137 parents and allrights/merger/structural kinds, explicitly retain33 source gaps/8 cashunknown/2 contradictions and000598. Full quality/currentAA/performance/export/media/restore plus lawful after-start forward, genuine missing-ledger fact and remoteCI/release remain.",
-  "local_next_command": "Read current overlay gate and full source census. Inspect/reuse materialize_full_dataset action_row/event_rows/structural_event_rows and audit_full_dataset all-kind gates, but do not run their old frozen-ID/.research writer path. Build independent full stable-key/economic-identity reconciliation over42792 frozen actions plus498 prior bonus candidates and full7407+137 oracle. Reuse bound authority/census/checksum inputs; persist overlaps, conflicts, missing and unresolved rows. Block300147/155 in frozen base too, not onlynew additions; no count-based or reference-match admission. No dataset registration/execution until whole financial/lifecycle gates pass; no old receipts/frozen/.research/strategy/OOS/GitHub/denied-route mutation.",
+  "next_task": "Continue fullU1-U8/M0-M5. Full42792source reconstruction+7544observed-key reconciliation complete scoped,financialPARTIAL. Verify2legacy no-holder-entitlement cases from existing officialsnapshots;review600725total-vs-holder components and proper1696pending/5711not-evidenced lifecycle before fullnew-version admission. Preserve6585source/lifecycle gaps/33supplementalgaps/8cashunknown/2contradictions/000598/000771;no automaticalias merge orblind187append. Required currentAA/performance/export/media/restore,lawful after-start forward/genuine lostledger fact andremoteCI/release remain.",
+  "local_next_command": "Read full_action_reconciliation_20261008_gate and privateREADME;verify immutableV2 andprior7seal first. Inspect existing audit_p1_restructuring_no_entitlement and its2cachedofficialdocuments/approvedpass-through policy for600423/600595;reuse current source helpers without old.research writer,do not synthesizeholderbonus. Prioritize explicitwhole-event/lifecycle distinctions in full7544queue;6585missing counts include2legacy no-entitlement awaitingverification. No newdatasetregistration/execution until wholefinancial/lifecycle/reference/source gate passes;block300147/155evenfrozenbase,no name/code/dateguess oroldfrozen/.research/OOS/GitHub/denied-route mutation. Continue independent productquality tasks while source/forward/delivery barriersremain.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

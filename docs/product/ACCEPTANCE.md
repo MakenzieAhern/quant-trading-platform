@@ -1,5 +1,42 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 full-action reconciliation — coverage remains PARTIAL
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-full-action-reconciliation/README.md>)
+binds parent c11a8d0, immutable V1 canonical1317e094 and V2 canonicale59c40a3.
+Whole42,792 frozen rows exactly reconstruct from six source chains/15 contracts,
+including194 nonordinary rows. Preserve merger-v4 executable and structural
+merger-v3 bindings plus verified historical policy bytes, without replacing inputs.
+187 prior overlay legs already frozen/no append;498 potential additions remain
+source candidates, not financially admitted or a created43,290-row dataset.
+
+All7,407 primary+137 supplemental observed keys retained;V2 embeds wholeV1.
+38 official monthly B-name/200xxx observations have exact SHA/meta/14-cell evidence
+outside approvedA scope, without stableID or whole-security exclusion. Other7,506
+terminals unchanged;000771 remains unresolved. Its potentialalias200771 is NOT
+merged:92,274,000 versus145,002,000 original quantities both retained.
+601360 retains datedPIT601313/2013-04-09 firsttrade, not future-name backdating.
+
+Economic statuses:6,585 missing source/lifecycle;876 field matches/not admission;
+32 source terms/dates;8 cashunknown;2 contradictions;1 reference gap;1 component
+review;38 outside-scope observations;1 PITunknown. Lifecycle is orthogonal:
+1,696 separate-listing pending-review+5,711 not-evidenced;even782 primary matches
+contain285pending+497not-evidenced. All498 candidates have NOT_EVIDENCED tradability;
+117/381 source support labels are not numeric integer/fraction classes.
+600423/600595 no-holder-entitlement evidence is noted, not revalidated/converted
+into bonus;600725 total1/ordinary-holder0.7 remains component review.
+
+Actual V1 repeat/V2repeat+reversed-input hashes match;optimizedPython negatives
+reject beforework;explicit producers/verifier Rufflint/format PASS.472V1inputs/47code
+and551V2inputs/24code verified. Four pre-publication failures preserved. Two scoped
+independent read-only reviews no evidencedP1/P2;10payload seal3b5d05f9 twice PASS,
+prior7 intact. No production change/SQL/testDB start/restart/deployment/browser or
+new full-suite claim. Fresh serviceshealthy/RedisPONG/frontend/API200;frozenmanifest
+693c0b81/v1.1tagf88b5c60 unchanged. GitHub hold respected, no remote operation.
+Full U1–U8/M0–M5, financial/lifecycle admission, lawful forward/genuine missing
+ledgers/current quality/restore/media/CI/release remain incomplete.
+
+
 ## 2026-10-08 V30 supplemental accounting — not full dataset admission
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-v30-financial-overlay/README.md>)
