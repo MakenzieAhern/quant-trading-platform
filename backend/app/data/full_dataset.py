@@ -32,6 +32,7 @@ from app.domain.markets.cn_a_rules import historical_cn_a_rules
 from app.domain.markets.consolidations import ShareConsolidationEvent
 from app.domain.markets.corporate_actions import (
     CorporateActionType,
+    OrdinaryDistributionReference,
     cash_bonus_reference_price,
     require_unambiguous_ordinary_distributions,
 )
@@ -47,6 +48,12 @@ from app.research.splits import TemporalPeriod
 
 pa: Any = import_module("pyarrow")
 pq: Any = import_module("pyarrow.parquet")
+
+
+def _adjusted_close(raw_close: str, factor: Decimal) -> Decimal:
+    # Preserve the existing normal 28-digit output, independent of caller context.
+    with localcontext(Context(prec=28)):
+        return Decimal(raw_close) * factor
 
 
 def _raw_paths(manifest: DatasetManifest, end: date) -> tuple[str, ...]:
@@ -185,7 +192,9 @@ class FullDataset:
                     security_id=self.ids[row["security_id"]],
                     trading_date=date.fromisoformat(row["trading_date"]),
                     raw_close=Decimal(row["raw_close"]),
-                    adjusted_close=Decimal(row["raw_close"]) * Decimal(row["hfq_factor_at_day"]),
+                    adjusted_close=_adjusted_close(
+                        row["raw_close"], Decimal(row["hfq_factor_at_day"])
+                    ),
                     volume_lower=Decimal(row["volume_lower"]),
                     volume_upper=Decimal(row["volume_upper"]),
                     amount_lower=Decimal(row["amount_lower"]),
@@ -225,14 +234,40 @@ class FullDataset:
             "PARTIAL_SURRENDER": MandatoryPartialShareSurrenderEvent,
             "BONUS_PASS_THROUGH": RestructuringBonusPassThroughEvent,
             "SHARE_CONSOLIDATION": ShareConsolidationEvent,
+            "ORDINARY_REFERENCE": OrdinaryDistributionReference,
         }
         grouped: dict[str, Any] = defaultdict(lambda: defaultdict(list))
         for row in pq.read_table(
             self.root / "corporate-actions.parquet", filters=[("application_date", "<=", end)]
         ).to_pylist():
-            grouped[row["application_date"]][row["event_kind"]].append(
-                classes[row["event_kind"]].model_validate_json(row["event_json"])
-            )
+            event = classes[row["event_kind"]].model_validate_json(row["event_json"])
+            if isinstance(event, OrdinaryDistributionReference) and (
+                row["application_date"] != event.ex_date.isoformat()
+                or row.get("event_checksum") != event.event_checksum
+            ):
+                raise ValueError("ORDINARY_REFERENCE_RECORD_MISMATCH")
+            grouped[row["application_date"]][row["event_kind"]].append(event)
+        for kinds in grouped.values():
+            seen = set()
+            for reference in kinds.get("ORDINARY_REFERENCE", ()):
+                key = (reference.security_id, reference.ex_date)
+                if key in seen:
+                    raise ValueError("DUPLICATE_ORDINARY_REFERENCE")
+                seen.add(key)
+                pair = [
+                    event
+                    for kind, events in kinds.items()
+                    if kind != "ORDINARY_REFERENCE"
+                    for event in events
+                    if (
+                        getattr(event, "security_id", None)
+                        or getattr(event, "parent_security", None)
+                    )
+                    == reference.security_id
+                ]
+                if any(not isinstance(event, CorporateAction) for event in pair):
+                    raise ValueError("ORDINARY_REFERENCE_STRUCTURAL_BOUNDARY_UNSUPPORTED")
+                reference.require_matching_actions(pair)
         return grouped
 
     def _costs(self) -> tuple[TransactionCostSchedule, ...]:
@@ -264,6 +299,7 @@ class FullDataset:
         # Local to this iteration, keyed by stable identity, and retained across months.
         previous_closes: dict[str, Decimal] = {}
         pending_boundaries: dict[str, list[Any]] = defaultdict(list)
+        pending_references: dict[str, list[OrdinaryDistributionReference]] = defaultdict(list)
         paths_by_month: dict[str, list[str]] = defaultdict(list)
         for path in self.paths:
             paths_by_month[Path(path).stem].append(path)
@@ -284,7 +320,11 @@ class FullDataset:
                 bars, statuses, lots, rules = [], [], [], []
                 unexplained = []
                 action = self.actions.get(day, {}) if execution else {}
-                for events in action.values():
+                for kind, events in action.items():
+                    if kind == "ORDINARY_REFERENCE":
+                        for reference in events:
+                            pending_references[str(reference.security_id)].append(reference)
+                        continue
                     for event in events:
                         identity = getattr(event, "security_id", None) or getattr(
                             event, "parent_security", None
@@ -297,6 +337,7 @@ class FullDataset:
                     sid = self.ids[security_id]
                     previous = previous_closes.get(security_id)
                     boundaries = pending_boundaries.pop(security_id, [])
+                    references = pending_references.pop(security_id, [])
                     # Observation only; never reconstruct entitlement or execution prices.
                     previous_closes[security_id] = Decimal(row["raw_close"])
                     member = self._member(security_id, day)
@@ -316,7 +357,7 @@ class FullDataset:
                             + (":UNCERTAIN_OPEN" if open_state is None else "")
                         ),
                     )
-                    adjusted = Decimal(row["raw_close"]) * self.factor_at(security_id, day)
+                    adjusted = _adjusted_close(row["raw_close"], self.factor_at(security_id, day))
                     fields = {
                         key: value
                         for key, value in row.items()
@@ -385,6 +426,7 @@ class FullDataset:
                                 explained
                                 and len(shares) <= 1
                                 and (not shares or len({event.ex_date for event in ordinary}) == 1)
+                                and (not references or len(ordinary) == len(boundaries))
                             )
                             if explained and len(ordinary) == len(boundaries):
                                 with localcontext(Context(prec=50)):
@@ -393,17 +435,25 @@ class FullDataset:
                                     )
                                 ratio = shares[0].share_ratio if shares else Decimal(0)
                                 assert ratio is not None  # Validated by the shared supporter.
-                                expected = cash_bonus_reference_price(
-                                    previous,
-                                    cash_per_old_share=cash,
-                                    aggregate_share_ratio=ratio,
-                                    minimum_tick=rule.minimum_tick,
-                                )
+                                if references:
+                                    if len(references) != 1:
+                                        raise ValueError("MULTIPLE_ORDINARY_REFERENCES_UNSUPPORTED")
+                                    expected = references[0].reference_price(
+                                        previous, rule.minimum_tick, ordinary
+                                    )
+                                else:
+                                    expected = cash_bonus_reference_price(
+                                        previous,
+                                        cash_per_old_share=cash,
+                                        aggregate_share_ratio=ratio,
+                                        minimum_tick=rule.minimum_tick,
+                                    )
                                 explained = expected == Decimal(row["pre_close"])
                         except ValueError:
                             explained = False
                         # ponytail: multi-share/multi-ex distributions require a separate
-                        # reference audit; structural boundaries retain existing accounting.
+                        # reference audit; mixed explicit-reference boundaries fail closed.
+                        # Without a reference, structural boundaries retain existing accounting.
                         # This observed-gap guard is not a corporate-action census.
                         if not explained:
                             unexplained.append(sid)

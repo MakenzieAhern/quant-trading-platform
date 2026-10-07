@@ -171,6 +171,19 @@ existing research v1 and explicitly synthetic demo remain compatible.
 
 ## Market-data flow
 
+Explicit issuer repurchase-excluded ordinary-distribution price inputs are a
+separate immutable `OrdinaryDistributionReference`, never an accounting event.
+New candidate manifests may bind `ORDINARY_REFERENCE` rows in the existing
+corporate-actions partition. The loader requires a unique effective-dated record,
+its own checksum and exact cash/share event checksums, dates and final source
+identity. Only price comparison uses the companion; Portfolio receives unchanged
+shareholder cash/share events. A reference carried across absent bars cannot use
+a later rights/structural boundary to bypass price validation. Mixed boundaries
+remain unexplained; old datasets without companions keep their existing behavior.
+Adjusted-close views share the original fixed 28-digit context independently of
+the caller. Runtime support is not economic admission, source completeness or
+permission to modify frozen datasets or financial results.
+
 Accepted suspension timestamps are interpreted once in `app.data.suspensions`,
 shared by bounded market inspection and `FullDataset`. The loader indexes the
 complete interval over its accepted calendar, normalizing slash/intraday dates

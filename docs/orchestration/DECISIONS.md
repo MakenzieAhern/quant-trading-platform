@@ -1,5 +1,33 @@
 # Decisions
 
+## v1.2 Reference authority is price-only and fail-closed — 2026-10-07
+
+Reuse the existing checksum-bound corporate-actions partition and shared Decimal
+reference helper; do not create a second ledger or accounting engine. A separate
+ORDINARY_REFERENCE model links exact dated cash/share checksums to the final
+issuer's explicit repurchase-excluded price basis. It is not a cash entitlement,
+share quantity or execution-admission marker. Unknown, duplicate, source/date
+mismatched records reject, and original event serialization remains unchanged.
+
+Seven runtime RED cases exposed missing support; low caller Decimal context then
+exposed instability in both adjusted-close views. Preserve normal 28-digit output
+in their shared helper. Independent review found a missing-bar carryover/rights
+bypass; root2RED/2legacyPASS followed by the shared mixed-boundary rejection and
+four regressions. Do not relax no-reference legacy behavior or hide unknown gaps.
+
+Final76focused/1340backendPASS1optionalarchiveSKIP/full Ruff-format-mypy PASS;
+owned tmpfs55471 downgrade/read/reupgrade0017PASS. First invalid revision and
+verifier self-hash failures preserved as harness errors, not relabeled successes.
+Seven actual-source/raw projections/14 synthetic Portfolio checks and four
+negative/compatibility fixtures bind436inputs/code/11frozenpartitions to a new
+immutable V2 proof, canonical4e02463e; V1 remains pre-review only.
+
+No original app restart/migration, dataset registration/freeze, strategy/OOS,
+financial admission or GitHub request. Runtime support reduces a real defect;
+sixcash/59source/000598/300048 and whole economic/lifecycle gates stay open.
+Proceed with the complete U1–U8/M0–M5 quality and delivery loop, not another
+undirected PDF pass or a narrowed definition of product completion.
+
 ## v1.2 Whole ordinary composition and price-only basis boundary — 2026-10-07
 
 Preserve all40353cash/498bonus parent events;72newcash/72bonus compose40995

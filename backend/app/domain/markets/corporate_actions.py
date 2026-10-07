@@ -4,6 +4,7 @@ from collections.abc import Iterable
 from datetime import date
 from decimal import ROUND_HALF_UP, Context, Decimal, localcontext
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -212,6 +213,93 @@ def corporate_action_sort_key(action: CorporateAction) -> tuple[date, str, int, 
 
 class OrdinaryDistributionInputError(ValueError):
     code = "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT"
+
+
+class OrdinaryDistributionReference(BaseModel):
+    """Price-only official inputs; never cash, shares or an accounting event."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    security_id: SecurityId
+    announcement_date: date
+    record_date: date
+    ex_date: date
+    cash_event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    share_event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    cash_per_total_old_share: NonNegativeDecimal
+    share_ratio_per_total_old_share: PositiveDecimal
+    basis: Literal["ISSUER_EXPLICIT_TOTAL_CAPITAL_REPURCHASE_EXCLUDED"]
+    source_document: str = Field(min_length=1)
+    source_url: str = Field(pattern=r"^https://\S+$")
+    source_document_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    retrieved_at: UtcDateTime
+    source_version: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_dates(self) -> "OrdinaryDistributionReference":
+        if not self.announcement_date <= self.record_date < self.ex_date:
+            raise ValueError("ORDINARY_REFERENCE_DATES_UNRESOLVED")
+        return self
+
+    @property
+    def event_checksum(self) -> str:
+        payload = json.dumps(self.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(payload.encode()).hexdigest()
+
+    def require_matching_actions(self, actions: Iterable[CorporateAction]) -> None:
+        pair = tuple(actions)
+        require_unambiguous_ordinary_distributions(pair)
+        if len(pair) != 2 or {a.event_checksum for a in pair} != {
+            self.cash_event_checksum,
+            self.share_event_checksum,
+        }:
+            raise ValueError("ORDINARY_REFERENCE_ENTITLEMENT_PAIR_MISMATCH")
+        cash = [a for a in pair if a.action_type is CorporateActionType.CASH_DIVIDEND]
+        shares = [
+            a
+            for a in pair
+            if a.action_type
+            in {CorporateActionType.STOCK_DIVIDEND, CorporateActionType.BONUS_SHARE}
+        ]
+        if (
+            len(cash) != 1
+            or len(shares) != 1
+            or any(
+                a.security_id != self.security_id
+                or a.record_date != self.record_date
+                or a.ex_date != self.ex_date
+                or a.effective_date != self.ex_date
+                or a.announcement_date is None
+                or a.announcement_date > self.record_date
+                for a in pair
+            )
+        ):
+            raise ValueError("ORDINARY_REFERENCE_ENTITLEMENT_DATES_MISMATCH")
+        share = shares[0]
+        if (
+            cash[0].event_checksum != self.cash_event_checksum
+            or share.event_checksum != self.share_event_checksum
+            or share.announcement_date != self.announcement_date
+            or share.source_document_sha256 != self.source_document_sha256
+            or share.source_url != self.source_url
+            or share.source_document != self.source_document
+            or share.listing_date != self.ex_date
+        ):
+            raise ValueError("ORDINARY_REFERENCE_SOURCE_MISMATCH")
+
+    def reference_price(
+        self,
+        previous_close: Decimal,
+        minimum_tick: Decimal,
+        actions: Iterable[CorporateAction],
+    ) -> Decimal:
+        self.require_matching_actions(actions)
+        return cash_bonus_reference_price(
+            previous_close,
+            cash_per_old_share=self.cash_per_total_old_share,
+            aggregate_share_ratio=self.share_ratio_per_total_old_share,
+            minimum_tick=minimum_tick,
+        )
 
 
 def require_supported_corporate_action(action: CorporateAction) -> None:

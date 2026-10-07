@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 price-only authority runtime and carryover guard
+
+[Private scoped proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-reference-runtime/README.md>)
+closes seven known runtime-support gaps, not the financial admission gate.
+Unique typed ORDINARY_REFERENCE rows bind their own checksum, whole dated
+cash/share pair and source identity. Existing CorporateAction hashes/holder
+entitlements and accounting events remain unchanged. Real-input isolated
+two-session projections: seven PASS/14 synthetic holding checks; reversed input,
+prior-date exclusion and low Decimal context repeat. Both adjusted-close views
+use the original 28-digit context independent of caller state.
+
+Independent P2 carryover/rights bypass reproduced2RED/2legacyPASS; shared guard
+now rejects mixed boundaries with a pending explicit reference, without changing
+no-reference legacy behavior. Final76focused/1340fullbackendPASS1existing
+optionalarchiveSKIP/Ruff558/mypy146/disposable55471 migration0017→0016→0017PASS.
+First wrong downgrade revision and verifier self-hash failures retained; neither
+changed application DB or report. V1 pre-review proof immutable; separate final
+V2 canonical4e02463e/436bindings/11frozenpartitions/repeatPASS.
+
+No frontend/UI/current CI/deployment claim. Sixcash/59source/000598/300048 and
+whole all-action/lifecycle/economic admission remain. No original dataset,
+formal/OOS report, genuine lost account or release changed. U1–U8/M0–M5 remains
+in progress; source-parent and exact code bindings are separate in private proof.
+
 ## 2026-10-07 whole-parent ordinary composition (not runtime admission)
 
 [Private current-code proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-combined-financial/README.md>)
