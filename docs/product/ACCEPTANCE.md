@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 capital-transfer holder wording — bounded U3/U5/U6 prerequisite
+
+[Private source, tests and immutable V8 proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-capital-holder-sources/README.md>).
+Complete three-page cached official300053 PDF SHA-checked, rendered and visually
+reviewed. Shared parser accepts exact 转增股本对象 / 本次转增股本对象为 only;
+record2011-05-20, credit and explicitly unrestricted listing2011-05-23 remain
+independently stated. No inferred dates, arbitrary prefix, scope relaxation or
+missing-date/page repair. Two RED then81 same-day/ratio PASS; full isolated
+backend1342 PASS/one existing optional archive SKIP20.61s, Ruff/format558/mypy146,
+test-only head/base/head/check PASS. Initial readiness/auth and line-length
+failures retained, not passes; originalDB never substituted.
+
+V8 all137:79 source-only PASS/58 unresolved; only300053 changed, old78wholePASS
+and other136whole rows preserved; all source/identity/ratio/276bindings/reversed
+input/immutable repeat verified. Canonical f4483858a5a037337470ebc0b688e292fb48dd6e7aa2d18db90e56f0afcac7d7;
+15-payload private seal98f92676ff8f4d1181679a819e09078c87d4c5f796b1aea6e67d9b92e6aa3989.
+Independent read-only review no evidenced scoped P1/P2. Not economic event or
+runtime dataset admission, not full financial/user-flow/product acceptance.
+OriginalDB0016/services/frozen693c/v1.1tagf88b/.research retained; exact owned
+tmpfs quant_test55471 stopped exit0 after zero other clients, container retained.
+No original restart/migration, provider retrieval, dataset/strategy/formal/OOS,
+frontend/browser/GitHub action. New backend NOT deployed; frontend unchanged.
+CI NOT_RUN under GitHub hold, historical CI not current-head evidence.
+Remaining6cash/58source/000598/300048/fullaction-economic-lifecycle admission,
+lawful after-start forward, genuine lost ledgers, original0017 restore/durability,
+full AA/performance/export/media/manual/release gates remain. Goal IN_PROGRESS.
+
 ## 2026-10-07 saved-scope explanation and draft exit — bounded U2/U3/U8 PASS
 
 [Private before/after, browser, test and rollback evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-config-scope/README.md>).

@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 Explicit capital-transfer holder object — 2026-10-07
+
+Reuse cached final300053 evidence; full three-page PDF rendered/read, not new
+archive acquisition. Shared same_day_listing adds exact 转增股本对象 heading
+and 本次转增股本对象为 prefix. Complete final issuer/all-holder cutoff/credit/
+unrestricted dates remain mandatory; no 可流通 inference or date repair.
+2RED→81 focused PASS;1342 full backend PASS/one optional archive SKIP, static
+and owned tmpfs testDB migration cycle PASS. Readiness/auth/line-length failures
+retained and corrected, never fallback to originalDB. Independent read-only
+source/276bindings/137rows review no evidenced scopedP1/P2. V8 source-only
+79PASS/58unresolved;old78wholePASS and136wholeunchanged, no ratio or source change.
+Prior V7 closure of300028 remains accepted; old residual-source diagnosis is
+superseded rather than repeated. Source-only is not financial/event admission.
+OriginalDB0016/frozen/tag/services preserved, scratch stopped retained; no
+frontend/backend deployment or new browser/CI claim. GitHub hold continues.
+
 ## v1.2 Explain saved universes without rewriting snapshots — 2026-10-07
 
 Actual restore preview leaked ALL/SSE/SZSE as novice-facing values. Reuse

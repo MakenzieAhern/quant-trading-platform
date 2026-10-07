@@ -448,6 +448,53 @@ def test_legacy_headings_keep_explicit_holder_credit_and_unrestricted_listing(
         )
 
 
+@pytest.mark.parametrize("split_prose", [False, True])
+def test_capital_transfer_holder_object_keeps_complete_dates_and_all_holder_scope(split_prose):
+    notice = NOTICE.replace("三、分派对象", "三、转增股本对象").replace(
+        "本次权益分派对象为:", "本次转增股本对象为:"
+    )
+
+    def pages(text):
+        if split_prose:
+            first, second = text.split("在登记结算公司", 1)
+            return [first + "在登记", "结算公司" + second]
+        return [text]
+
+    assert same_day_listing(pages(notice), "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("三、转增股本对象", "讨论三、转增股本对象"),
+        ("三、转增股本对象", "三、其他事项"),
+        ("本次转增股本对象为:", "拟将本次转增股本对象为:"),
+        ("本次转增股本对象为:", "讨论本次转增股本对象为:"),
+        ("本次转增股本对象为:", "预计本次转增股本对象为:"),
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("2011年3月25日下午", "2011年3月25下午"),
+        ("2011年3月25日下午", "股权登记日下午"),
+        ("全体股东", "控股股东"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+        ("无限售条件", "可流通"),
+        ("起始交易日为2011年3月28日", "起始交易日为2011年3月29日"),
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing(pages(notice.replace(old, new)), "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError, match="FINAL_ISSUER"):
+        same_day_listing(pages(notice), "600001", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(pages(notice), "600000", "转增股本预案", RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [*pages(notice), *pages(notice.replace("2011年3月25日下午", "2011年3月24日下午"))],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+    first, second = notice.split("2011年3月25日下午")
+    with pytest.raises(ValueError):
+        same_day_listing([first + "2011年3月", "25日下午" + second], "600000", TITLE, RECORD, EX)
+
+
 @pytest.mark.parametrize("heading", ["三、权益分派对象", "三、分派对象"])
 def test_dated_holder_heading_requires_complete_date_and_all_holders(heading):
     notice = NOTICE.replace("三、分派对象\n本次权益分派对象为:", heading + "\n")

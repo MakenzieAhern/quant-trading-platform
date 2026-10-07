@@ -1,7 +1,23 @@
 {
+  "capital_holder_sources_20261007_gate": {
+    "status": "PASS_SCOPED_SOURCE_GUARDS_NOT_FINANCIAL_OR_FULL_PRODUCT",
+    "parent_head": "f380faf207e6c61c5b966a2f8ba563a538fccf46",
+    "repair": "Full3000533page official PDF SHA-checked/rendered/read;exact 转增股本对象 heading and 本次转增股本对象为 prefix in shared parser. Explicitrecord20110520/credit-unrestricted20110523/allholders preserved;no inference/missingdate/pagejoin/issuerexception/可流通 promotion.",
+    "batch": "V8 all137/79source-onlyPASS/58unresolved;only300053changed;old78wholePASS and136wholeunchanged/allratios-source-identity/276bindings/reverse+immutable repeat preserved. V7alreadyclosed300028,not repeated.",
+    "batch_manifest_sha256": "f4483858a5a037337470ebc0b688e292fb48dd6e7aa2d18db90e56f0afcac7d7",
+    "validation": "Actual2RED/78deselected then81same-day+ratioPASS;1342fullbackendPASS/1existingoptionalarchiveSKIP20.61s/Ruff+format558/mypy146/ownedtmpfsquant_test55471head-base-head-checkPASS. Readiness noresponse/InvalidPasswordError/E501 retained and corrected,never originalDB substitution.",
+    "review": "Independent read-only complete3pagecache/V8canonical/276bindings/all137/old78PASS/136unchanged/no evidencedscopedP1P2;no reviewer producer/test/browser/DB/network execution or financial/productapproval.",
+    "preservation": "OriginalDB0016/healthyPGRedisbackend/frontendrunning/PONG/frozen693c/tagf88b/.researchunchanged;no originalrestart/migration/deployment. Owned30b1tmpfs/no mounts/55471 testDB0017/zerootherclients beforestop;STOPPED0retained. No create/prune/delete/reset/securitychange.",
+    "evidence": "product-evidence/v1.2/m4/20261007-capital-holder-sources/README.md",
+    "evidence_payloads": 15,
+    "evidence_manifest_sha256": "98f92676ff8f4d1181679a819e09078c87d4c5f796b1aea6e67d9b92e6aa3989",
+    "ci": "NOT_RUN_GITHUB_HOLD;historical CI is not currenthead evidence. No GitHub request/push/merge/tag/release;no frontendchange/newbrowserclaim/runtimebackenddeployment.",
+    "event_admitted": false,
+    "full_product_pass": false
+  },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T03:56:22Z",
+  "updated_at_utc": "2026-10-07T04:13:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -206,7 +222,8 @@
     "full_product_pass": false
   },
   "residual_source_roles_20261007_gate": {
-    "status": "UNRESOLVED_SOURCE_DIAGNOSIS_NOT_FINANCIAL_ACCEPTANCE",
+    "status": "SUPERSEDED_DIAGNOSIS_NOT_FINANCIAL_ACCEPTANCE",
+    "superseded_by": "dated_holder_sources_20261007_gate closed300028;capital_holder_sources_20261007_gate closes300053,current58sourcegaps. Preserve olddiagnostic payloads/counts but do not rerun old300028hypothesis.",
     "evidence": "product-evidence/v1.2/m4/20261007-residual-source-roles/README.md",
     "payloads": 4,
     "manifest_sha256": "500dad62a5cafe4d8e0fbc3b3790d6c5a3752b7264e2428b8a6997b6bab00589",
@@ -2975,10 +2992,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-07T03:56:22Z rootsolewriter parenta3fc595/sharedconfigurationpreview+3bilingualtests;770frontend47files/169sourcebindings/static/build168ms/cachedofflineaudit0PASS,66193/75434terminal0. ActualChrome4pairedpreview cases plus ENdesktop/ZHmobile saveexit/resume PASS_SCOPED;13servedartifacthasheschecked. Prior1340backend/testDB historical unchanged. No originalDBrestart/migration/strategy/GitHub action.",
-    "repository_writer": "Root owns sharedConfigurationVersionsPanel/test/docs/state;existing signed_results_review_oct7 readonly no evidenced scopedP1P2. Fresh WSL process inventory no concurrent repository/test/provider writer. Coherentlocalcommit/no push during GitHub hold/no second task. Financial/frozen/formal/OOS records untouched.",
-    "database_writer": "Current saved-scope/exit unit no DBwriter. OriginalDB5432 never used for tests/migration/restart; prior5/417/12/4 counts historical/not fresh;genuine lostledgers unresolved. Priorowned30b1cfb tmpfs/no mounts/55471 testDB remainsSTOPPED0retained. Existing Node7969f4b restarted only for current frontendchecks66193/75434terminal0;after freshidentity/top idlecheckSTOPPED137/OOMfalse retained03:56:21Z. Original rejectedclean-demo command not recreated/no newcontainers. No volumes/prune.",
-    "queue_writer": "No activefinancial/provider/researchqueuewriter. Root immutablecensus7c686a20 and6payloadproofseal17380b19 terminal/bindingschecked; priorV3/72cash overlay andwhole498bonus/498reference/7407coverage/137sources/parent40353cash untouched andsource-boundhistorical. SourceV7 78sourceonlyPASS/59unresolved,6cashunknown. Fullfinancial/economic/reference/lifecycleadmission incomplete; no studyexecution.",
+    "latest_verification": "2026-10-07T04:13:00Z rootsolewriter parentf380faf;exactcapital-holder wording2RED->81focusedPASS/1342fullbackend+1optionalSKIP20.61s/static558+mypy146/ownedtestDBmigrationcyclePASS. V8 all137/79sourcePASS58unresolved/only300053/old78PASS+136unchanged/276bindings/reverse-immutablePASS,15payload98f92676seal. Independentreadonly no scopedP1P2. OriginalDB0016/runtime/frozen/tag/research unchanged;no deployment/strategy/GitHub. UI770/browser evidence remains historical/current frontend unchanged.",
+    "repository_writer": "Root owns shared retained_bonus_terms.py/test/docs/state; signed_results_review_oct7 readonly. Fresh WSL process inventory no concurrent repository/test/provider writer;74287 terminal0. Local coherentcommit only/GitHubhold/no second task. Frozen/formal/OOS untouched.",
+    "database_writer": "Only existing exactowned30b1cfb no-mount/tmpfs55471 quant_test restarted/migrated/head-base-head-check/fulltests. OriginalDB5432 never tests/restart/migration; schema0016 verified. TestDB0017/0otherclients thenSTOPPED0retained20261007T041117Z. Originalfour services unchanged. PriorNode7969STOPPEDretained,not used this unit. No rejectedclean-demo recreation/newcontainers/volumes/prune.",
+    "queue_writer": "Rootsolewriter separateprivate immutable sourceV8,not research/economic queue. All137 sourceonly79PASS/58unresolved;276bindings andold78wholePASS/136wholeunchanged verified. V7/V6seals andprior cash/bonus/reference/census frozenrecords preserved. Fullfinancial/economic/reference/lifecycleadmission incomplete;6cashunknown/000598/300048 remain;no study/providerretrieval.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -2988,6 +3005,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-07 capital-holder exactwording fix; complete official3000533pagePDF rendered/read;2RED->81focused/1342fullbackend+1optionalSKIP/static/testDBmigrationcyclePASS;V8source-only79PASS58unresolved old78wholePASS+136unchanged/276bindings/reverse+immutable preserved;independentreadonly no evidenced scopedP1P2. OriginalDB0016/frozen/tag/services retained;no backenddeployment/GitHub/economicadmission.",
     "2026-10-07T03:32:35Z sharedDialogedge escapeclosed:7regressions/767fullfrontend47files/169sourcebindings/static/repeatbuild160ms/audit0PASS;actualChrome16guidecases/search0matches/strategyBackForwardEsc/restoredfocusPASS. Frontend-only13hash publication with complete recoverableoldtree; settledmodal screenshots valid/batchlag imagesNON-ACCEPTED. OriginalDB/backend/frozen/formal/OOS unchanged/no GitHub call/fullgoalACTIVE.",
     "2026-10-07T03:11:00Z 7realinput/14syntheticruntimecases/P2carryover4controlsPASS;76focused1340backend1optionalSKIP/static/tmpfsmigrationPASS. Independent436bindings11partitions2history/docscope review;8seal00743b92. OwnedPGstopped/originalassets preserved;nativeChromeURLsafety STOP/exportlandingnotverified. GoalACTIVE/nofinancial or releasePASS.",
     "2026-10-07T02:45:59Z full40995ordinary parent+72cash+72bonus composition unambiguous/reversible order/currentproofPASS;562direct +7official price-only reference/accounting relationships/1138syntheticcases.817bindings/72partitions;all570exstates569open1blocked002549zero-volume. Seven loader-basis unsupported cases retained;6/59/000598/300048 gaps unchanged. Source/app/DB/frozen/formal/remote unchanged;goalACTIVE.",
@@ -3591,8 +3609,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5 after actual saved-scope defect correction and browser restore-preview/exit/resume PASS_SCOPED. Do not redo accepted guide/search/strategy/preview paths or claim allAA. Pending actualexportfile/native200user evidence; verify ifreceived, otherwise advance remaining mandatory safeUI/API/manualmedia/fullfinancial prerequisite work. Financial6cash59source000598300048/allaction/lifecycle/newversionadmission,lawfulafterstartforward,genuineoldledgers,original0017durability/restore,fullAA/performance/release remain. Clean-demoexecutiondenied/SkyRPCunconfigured: no equivalentworkaround/retry. No Chromeinternaldownloads/browserDB/security bypass/GitHub calls. Originaldata/backendpreserved;currentfrontendc106index deployed withbackup;ENdark restored/viewportreset;ownedNodeSTOPPEDretained;goalACTIVE.",
-  "local_next_command": "Read dialog_edges_20261007_gate and clean_demo_attempt_20261007_gate/fullobjective; verify repo/localcommit/service ownership before nextsafe action. If actualexportfiles ornative200screenshots arrive, validate against current savedreport/build; do not infer success. Otherwise continue permitted independent UI/API/manual/media/financial work, not rejectedDockercreate/start via alternative shell/tool. GitHub hold/no unchangedrecoverypolling/frozen/OOS boundaries remain.",
+  "next_task": "Continue full U1-U8/M0-M5 after source-onlyV8closed300053 (79PASS/58unresolved);allratios/source/old78wholePASS preserved. Reuse cachedofficials and latestV8,not superseded300028diagnosis. Full1342backend/1optionalSKIP/static/testDBmigrationsPASS,newbackendNOTdeployed. Remaining6cash58source000598300048/allaction-economic-lifecycle/newversionadmission;lawfulafterstartforward/genuineoldledgers/original0017restore-durability/fullAA-performance-export-media-manual-release remain. Actualexport/native200evidenceifreceived validate;otherwise advance safeindependent UI/API/manual/media/financialwork. Originaldata/backend preserved/frontendc106indexunchanged/testPGSTOPPED0retained. GitHubhold/no rejectedclean-demo/native/download workaround/frozen/OOS boundaries;goalACTIVE.",
+  "local_next_command": "Read capital_holder_sources_20261007_gate/latestV8/fullobjective and verify ownership; preserve137rows/old79sourcePASS when investigating remaining58cachedsourcegaps. Next concrete sourcehypothesis300051: numbered权益分派日期 metadata beforeholder plusliteral资本公积所转增的股份 credit; render/read complete source before RED/strictsharedfix/new immutablebatch. No date inference/unrestrictedalias loosening. Also pursue remaining mandatoryUI/API/manual/media/export gates without rejectedDocker/native/download workarounds. GitHubhold/frozen/OOS/originalDB boundaries remain.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
