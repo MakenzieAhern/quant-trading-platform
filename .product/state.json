@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T02:28:33Z",
+  "updated_at_utc": "2026-10-07T02:45:59Z",
+  "combined_financial_20261007_gate": {
+    "status": "PARTIAL_WHOLE_ORDINARY_COMPOSITION_NOT_RUNTIME_ADMISSION",
+    "source_head": "be895a817c27e001603667580ed7db8bd821adc5",
+    "parents": "Whole40353cash/498bonus retained;72newcash+72bonus candidates compose40995ordinary events40425cash570bonus. Shared support/uniqueness/order guards PASS, no economic-leg duplicates or six unknown-cash substitutions.",
+    "reference_accounting": "New current-code report562scoped reference/accountingPASS,7ordinary-formula failures retained,1original000598unresolved. Separate7cachedfinalissuer price-only repurchase bases reproduce raw+cachedofficial references without changingholder cash/ratio;14additional holding checks.569scoped relationships/1138synthetic100/101sharecases; not strategy/paper returns.",
+    "lifecycle": "Current production intervalindex all570bonus ex-days:569open/1blocked002549@2015-06-03 rawvolume0. Distribution existence not tradability; no execution during suspension. Ordinary composition is not an all-action census.",
+    "checks": "817input/code bindings and72frozen raw/metadata partition hashes verified; unchanged immutable producers rerun/reversedinput identical. Historical2changedcode verified Git1da55ad objects, not rebound to currentcode. First harness576-vs570 assumption failure and seven-formula failure preserved. Private Ruff diagnostic has one F401 unused date import in immutable audit producer; no private style/fullsuite/CI PASS claimed.",
+    "review": "Independent read-only review no evidencedscopedP1P2: fullpayload7407coverage/137sources/498bonus40353cash preservation;817bindings/72partitions separately executed verifier;sevenfullcached notices read/7pricebases14holdingcases independently recomputed;2historical Gitobject SHAs match. No writes/DB/services/strategy/GitHub;not financial or full product approval.",
+    "proof_seal_sha256": "16c6a7dadca3db001d61e78b610a338156000d63b3e11fc04744537b47c941c8",
+    "proof_payloads": 8,
+    "report_manifest_sha256": "b49f0d8c6c922e3a9b11e7254deb82e4a7dae656966568bf9f738e6019825ac5",
+    "price_basis_manifest_sha256": "e04b756c0ca8356516fcb88d38534d29a6fb060e0d2aa322c352a6af432cb6ac",
+    "evidence": "product-evidence/v1.2/m4/20261007-combined-financial/README.md",
+    "remaining": "Runtime has no new companion-reference authority for seven explicit price-only bases; do not substitute holdercash/ratio, observedprice inference or loosen gap guard. Sixcash/59sources/000598/300048 remain. Whole all-action/economic/lifecycle admission still open.",
+    "financial_admission": false,
+    "product_goal_complete": false
+  },
   "suspension_interval_20261007_gate": {
     "status": "PASS_SCOPED_LOADER_REPAIR_NOT_DEPLOYED_NOT_FINANCIAL_ADMISSION",
     "source_parent": "46a6520a2617e2bd93f448cd8f07306c61647c10",
@@ -32,7 +49,7 @@
     "evidence": "product-evidence/v1.2/m4/20261007-supplemental-financial-preflight/README.md",
     "proof_payloads": 12,
     "proof_manifest_sha256": "57be4695b3a22cfc8d6b03d32855fff067be96a51baac0a0b271c2beb646a788",
-    "remaining": "6 explicit cash terms unknown,59 supplemental source gaps,000598/300048 and official independent reference/all-action/lifecycle gates open. Actual FullDataset start-only suspension index needs bounded-fixture reproduction and shared interval fix if defective.",
+    "remaining": "Historical checkpoint gaps:6 explicitcash unknown/59sources/000598/300048/officialindependentreference/all-action/lifecycle. The former start-only suspension defect was subsequently repaired by suspension_interval_20261007_gate; combined_financial_20261007_gate owns newest composition/price-basis findings. Do not reopen accepted intervalfix or rewrite source-bound V3/overlay.",
     "financial_admission": false,
     "full_product_pass": false
   },
@@ -2909,6 +2926,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "2026-10-07T02:45:59Z full40995ordinary parent+72cash+72bonus composition unambiguous/reversible order/currentproofPASS;562direct +7official price-only reference/accounting relationships/1138syntheticcases.817bindings/72partitions;all570exstates569open1blocked002549zero-volume. Seven loader-basis unsupported cases retained;6/59/000598/300048 gaps unchanged. Source/app/DB/frozen/formal/remote unchanged;goalACTIVE.",
     "2026-10-07T02:25:15Z sharedactualsuspensionintervalrootfix old8RED2PASS→105focused/1317fullbackendPASS1optionalSKIP;Ruff557/mypy146/quant_test55471 reversiblehead-base-head/checkPASS. Frozenreadonlyindex443217newlyprotectedsecuritydays3223IDs5057unknown nonoptimistic;reportcanonical7c686a20 bound/reviewed, not actualfill/financialadmission. Frontend5baselineformatfail fixedonlyformatter,168sourcebinding/760tests17.72s/static/build175ms/format/audit0PASS. Backendnotdeployed/formalnotrun/fullgoalACTIVE/CIdeferred.",
     "2026-10-07T02:08:52Z V3 fixes both diagnostic review defects;72 scoped issuer/raw matches/6 unknown cash. Private72 cash+72 bonus overlay144 synthetic accounting checks/57 targeted backendPASS and same immutable rerun. Independent hashes/checksums/arithmetic and root800 binding checks/whole preservation pass;12 financial and7 orientation payload seals verified. All processes terminal, source unchanged, no original data/strategy/remote/release action. Full goal remains ACTIVE.",
     "2026-10-07T01:31:50Z exact1da55adCI37557042316all3SUCCESS1302backend1SKIP760frontend/static/scratchmigration/ComposePASS. ChromeENZHdark390SavedViewfreshentry/3filterchipEnterfocus/resetPASS;4payloadseal f6d7a1a5;guides updatedlocal. OwnednodeSTOPPED137sleepcleanup/retained;original4services200healthy/data0016unchanged. FullproductgoalACTIVE/no merge/release.",
@@ -3507,8 +3525,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue fullU1-U8/M0-M5. ActualFullDataset intervalbug nowclosed andboundedfixture/fullbackend/static/isolatedmigration/readonlyactualindex/review evidence saved; frontend5baselineformatfail correctedonlyformatter and760/fullstatic/build/auditPASS. Preserveoldsourcebound financialV3/72cash overlay/40353parentcash/498bonus/498reference/7407coverage/137sources; financialadmissionfalse. Next integrate accepted candidate cash/reference in a NEW private economic/lifecycle admission proof bound to current sharedloader, retaining6cash/59source/original000598/300048 gaps until supported. No overwrite oldreport/bypassambiguousinterval; don't repeatwholehistoryacquisition/formal/OOS. Continue remainingfullAA/native200/performance/userflow/manual/media/recovery; currentfrontendD28 unchanged/not newformatdeploy or browserproof. NativeWSLbridge/open0017 rollout/genuine lostledgers/lawful after-start source/export landing/full delivery unresolved, but independentengineering available. No unchangedGitHub/WSLpolling; CIpendinguserreportedavailability, no merge/tag/release. GoalACTIVE/product_goal_complete=false.",
-  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check; read new suspension_interval_20261007_gate and supplemental_financial_20261007_gate, then verify existing private candidate parents/checksums and design the next bounded current-source financial admission proof. Do not run a strategy or mutate frozen/source-bound old evidence. No unchanged remote/Docker-bridge retries.",
+  "next_task": "Continue fullU1-U8/M0-M5. Whole40995ordinary composition and569scoped reference/accountingrelationships proven with current code;7explicitprice-only repurchase bases explained but not supportedbyruntime. Next read architecture/catalog/FullDataset callers and add minimal checksum-bound effective-dated companion reference authority for NEW candidate dataset only, preserving old event checksums/holdercash/ratio and frozen dataset. Reproduce7runtime reference cases RED, fixsharedloader/helper once, preserve unknown/reference-gap rejection, testcash-on-oldshares/basis/fraction/candidateordering. Do not create/register/admit whole dataset untilall-action/economic/lifecycle gates trulyclose;6cash/59source/000598/300048 remain. OriginalV3/overlay/report-v1/price-basis-v1 immutable. Avoid another undirected PDF or diagnostic-only cycle: actual runtime defect/flow closure next, then fullAA/native200/performance/userflow/manual/media/recovery. FrontendD28 unchanged/not newestformatbuild deployed;0017application rollout/genuine lostledgers/lawful after-start forward/export landing/full delivery open. No unchangedGitHub/WSLpolling; CIuserreportedunavailable/no merge/tag/release. GoalACTIVE/product_goal_complete=false.",
+  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check; read combined_financial_20261007_gate/ARCHITECTURE.md/catalog models/FullDataset ordinary reference tests, then implement new-version-only official price-basis companion support with RED regression. Do not modify frozen partition, original event model checksums, financial entitlements or formal/OOS outputs; no unchangedremote retries.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

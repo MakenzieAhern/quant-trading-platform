@@ -1,5 +1,31 @@
 # Decisions
 
+## v1.2 Whole ordinary composition and price-only basis boundary — 2026-10-07
+
+Preserve all40353cash/498bonus parent events;72newcash/72bonus compose40995
+ordinary events with existing support/uniqueness/order checks. New current-code
+financial proof found7 generic-reference mismatches among570bonus candidates.
+Existing official final issuer formulas explain these as repurchase-excluded
+total-capital **price** bases, not smaller ordinary shareholder entitlements.
+Reusing the strict source parser/reference helper and unchanged Portfolio yields
+569 scoped reference/accounting relationships/1138 synthetic holding cases.
+Keep seven current runtime-support failures and original000598 reference gap;
+do not transform scoped explanatory evidence into financial/data admission.
+
+002549@2015-06-03 has an accepted distribution while suspended and rawvolume0.
+It may have an entitlement but must not become tradeable. Current interval
+index verifies all570ex-days; sixcash/59source/300048 gaps remain, unchanged.
+Historical code bindings stay tied to1da55ad; originals/frozen/formal untouched.
+Next actual engineering work: independent effective-dated checksum-bound
+reference companion authority in a NEW candidate dataset, preserving event
+checksums/holder cash/share ratio/default rejection and old datasets. Do not
+infer a price-only formula from observed prices or treat missing cash aszero.
+No new fullsuite/CI/browser/release claim. Private immutable producer F401 is a
+recorded style diagnostic, not a passed lint gate. Independent read-only review
+found no evidenced scopedP1/P2; separately verified source notices, price bases,
+holding cases, complete payload retention and historical/current bindings.
+Eight-payload evidence seal16c6a7da retains the negative report, not a runtime fix.
+
 ## v1.2 Shared complete suspension intervals — 2026-10-07
 
 Actual loader fixture reproduction:10 cases gave8 failures/2 passes on the old

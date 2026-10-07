@@ -1,5 +1,38 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 whole-parent ordinary composition (not runtime admission)
+
+[Private current-code proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-combined-financial/README.md>)
+preserves the whole40353 cash/498bonus parents and composes72cash/72bonus new
+candidates:40995ordinary events, no duplicate legs under shared domain guards.
+562 direct reference/accounting checks pass;7 generic-holder reference formula
+failures retained;1 original000598 reference unresolved. Separate existing
+official cached final formulas explain all7 repurchase-excluded **price-only**
+bases, without replacing shareholder cash/ratio. Total569 scoped relationships/
+1138 synthetic100/101share scenarios. Current loader cannot yet consume an
+independent companion reference basis; financial admission remainsfalse.
+817 input/code bindings/72 frozen partitions verified; same immutable output
+and reversed input replayed. Historical changed code is verified against1da55ad
+Git objects, not silently rebound. Current production suspension index all570
+bonus ex-days:569open/1blocked002549@2015-06-03, rawvolume0, non-tradeable.
+Retain7407coverage/137sources,6cash/59source/000598/300048 gaps. No strategy,
+dataset registration, original paper-ledger recovery, app/DB deployment or
+GitHub action. Private producer Ruff diagnostic F401 retained; no new full-suite,
+frontend, CI, UI or broad acceptance claim. Independent read-only review found
+no evidenced scopedP1/P2: whole preserved payloads,817bindings/72partitions,
+seven full cached notices/seven price bases/14cases/two historical Git objects
+independently verified. Eight private payloads sealed
+`16c6a7dadca3db001d61e78b610a338156000d63b3e11fc04744537b47c941c8`.
+Producer replay is source-parentbe895 bound (use a separate matching checkout
+after later commits); the read-only verifier checks the saved bindings without
+producing a new report or claiming new execution admission.
+
+Canonical composition`b49f0d8c6c922e3a9b11e7254deb82e4a7dae656966568bf9f738e6019825ac5`;
+price-only`e04b756c0ca8356516fcb88d38534d29a6fb060e0d2aa322c352a6af432cb6ac`.
+Next engineering action is checksum-bound/effective-dated new-version companion
+reference support with a failing runtime regression, not another unbounded
+source search or a reduced product scope.
+
 ## 2026-10-07 actual suspension-loader defect closure
 
 U3/U5/U6 backend correctness repair, not full financial or product admission:
