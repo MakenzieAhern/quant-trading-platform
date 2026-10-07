@@ -1,5 +1,40 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 actual suspension-loader defect closure
+
+U3/U5/U6 backend correctness repair, not full financial or product admission:
+[private reproducible index evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-suspension-intervals/README.md>).
+Actual old loader10 fixture cases:8 FAIL/2 PASS. Shared inspection/data helper
+now covers continuing intervals, normalized slash/intraday dates, SSE uncertain
+end boundaries, SZSE explicit resumption, overlapping rows and future isolation.
+Unknown opens remainNone in the index, conservatively non-tradeable with
+UNCERTAIN_OPEN lineage. Invalid boundaries fail closed in both callers.
+Targeted105 PASS2.33s; full1317 PASS/1 existing optional archive SKIP24.55s.
+Ruff557 formatted/mypy146 PASS. Disposable quant_test55471 head→base→head/check
+PASS; no application DB migration, restart, ledger overwrite or formal study.
+
+Frontend source-copy168 SHA matched; locked-format-only baseline5 files repaired
+after a recorded Prettier FAIL. Final760 tests/46files17.72s/lint/types/build175ms/
+fullPrettier PASS, dependency audit0 vulnerabilities. Main525.09KB chunk warning
+remains, not measured performance acceptance. Independent formatting review saw
+no behavioral changes. Six private proof payloads plus168 source bindings sealed:
+`17380b199e55ef29c68921a60a737c360f0b8435fd2ccc85e1d38e188ca0c1ef`.
+Verifier repeatPASS only proves binding, not re-execution of tests. Owned test
+containers stopped/retained; original services remainhealthy/API/frontend200.
+
+Real immutable archive read-only index census:38470 events/3886 sessions,
+16207 old blocked index-days vs459424 new, including5057 unknown blocked.
+Added443217 indexed security-days/3223 IDs, not necessarily raw observations
+or executed positions. Canonical report
+`7c686a20f3055d27e0bca5c68a7f100ba72f1734ad8b1ad07902adb2aab3a5f9`;
+four current code SHAs/producer/three frozen inputs/legacy code bound and
+independently verified. No evidenced scopedP1/P2; independent review did not run
+tests. Original financial V3 evidence remains source-bound historical evidence,
+not fresh proof against changed source. Original reports preserved, particular
+financial impact unknown. Current online backend remains unreplaced; no new
+browser deployment proof or frontend UI change is claimed. Remote CI deferred,
+not inferred from old green checks. Full U1-U8/M0-M5 scope and open gates remain.
+
 ## 2026-10-07 orientation matrix and supplemental cash/reference closure
 
 U1/U8 scoped layout/color/Enter/Escape evidence, not full keyboard/AA approval:

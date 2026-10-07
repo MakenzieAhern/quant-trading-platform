@@ -17,6 +17,7 @@ from app.data.providers.research import (
     FeatureOnlyDailyObservation,
     SecurityStatusRecord,
 )
+from app.data.suspensions import suspension_boundary, suspension_evidence
 from app.domain.markets import (
     Board,
     CorporateAction,
@@ -133,7 +134,7 @@ class FullDataset:
         }
         self.curves = self._curves(end)
         self.features = self._features(end)
-        self.blocked_starts = self._blocked_starts(end)
+        self.suspension_open_states = self._suspension_open_states(end)
         self.actions = self._actions(end)
         self.resolver = TradingRuleResolver(historical_cn_a_rules())
         self.cost_model = EffectiveDatedAShareCommission(self._costs())
@@ -197,14 +198,22 @@ class FullDataset:
             for key, values in grouped.items()
         }
 
-    def _blocked_starts(self, end: str) -> dict[tuple[str, str], bool]:
-        result: dict[tuple[str, str], bool] = {}
-        for row in pq.read_table(
-            self.root / "suspension-events.parquet", filters=[("suspended_at", "<=", end)]
-        ).to_pylist():
-            key = (row["security_id"], row["suspended_at"])
-            blocked = row["execution_open_blocked"] != "0"
-            result[key] = result.get(key, False) or blocked
+    def _suspension_open_states(self, end: str) -> dict[tuple[str, str], bool | None]:
+        result: dict[tuple[str, str], bool | None] = {}
+        # Raw slash dates/intraday text cannot be filtered against ISO date strings.
+        for row in pq.read_table(self.root / "suspension-events.parquet").to_pylist():
+            start, _ = suspension_boundary(row["suspended_at"])
+            finish, _ = suspension_boundary(row["resumed_or_ended_at"])
+            if start is None or (finish is not None and finish < start):
+                raise ValueError("DATASET_INTEGRITY_FAILED")
+            first = bisect_left(self.calendar_text, start)
+            last = bisect_right(self.calendar_text, min(finish or end, end))
+            for day in self.calendar_text[first:last]:
+                evidence = suspension_evidence(row, day)
+                assert evidence is not None
+                key = (row["security_id"], day)
+                states = (result.get(key, False), evidence["day_open_blocked"])
+                result[key] = True if True in states else None if None in states else False
         return result
 
     def _actions(self, end: str) -> dict[str, Any]:
@@ -291,7 +300,9 @@ class FullDataset:
                     # Observation only; never reconstruct entitlement or execution prices.
                     previous_closes[security_id] = Decimal(row["raw_close"])
                     member = self._member(security_id, day)
-                    blocked = self.blocked_starts.get((security_id, day), False)
+                    open_state = self.suspension_open_states.get((security_id, day), False)
+                    # Unknown boundaries prohibit execution; they are not normal states.
+                    blocked = open_state is not False
                     risky = row["risk_status"] != "NORMAL"
                     status = DailySecurityStatus(
                         security_id=sid,
@@ -300,7 +311,10 @@ class FullDataset:
                         is_suspended=blocked,
                         is_tradeable=not blocked,
                         is_one_price_limit=row["raw_high"] == row["raw_low"],
-                        source_version=f"{row['source_lineage']}:FULL_SUSPENSION_V1",
+                        source_version=(
+                            f"{row['source_lineage']}:FULL_SUSPENSION_INTERVAL_V2"
+                            + (":UNCERTAIN_OPEN" if open_state is None else "")
+                        ),
                     )
                     adjusted = Decimal(row["raw_close"]) * self.factor_at(security_id, day)
                     fields = {

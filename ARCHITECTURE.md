@@ -171,6 +171,16 @@ existing research v1 and explicitly synthetic demo remain compatible.
 
 ## Market-data flow
 
+Accepted suspension timestamps are interpreted once in `app.data.suspensions`,
+shared by bounded market inspection and `FullDataset`. The loader indexes the
+complete interval over its accepted calendar, normalizing slash/intraday dates
+before comparison. SSE end-stop dates are not inferred resumption-at-open dates;
+SZSE start and resumption flags retain their distinct meanings. Overlaps use
+blocked > unknown > open, independently of input order. Unknown opens retain an
+`UNCERTAIN_OPEN` lineage marker and prohibit execution conservatively. This fixes
+the former start-day-only index; it does not change frozen inputs or revalidate
+saved financial results. Original studies remain untouched.
+
 ```text
 CSV / future data source
           │

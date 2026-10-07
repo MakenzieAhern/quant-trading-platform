@@ -1,5 +1,34 @@
 # Decisions
 
+## v1.2 Shared complete suspension intervals — 2026-10-07
+
+Actual loader fixture reproduction:10 cases gave8 failures/2 passes on the old
+start-only index. Move existing inspection semantics into `app.data.suspensions`;
+both callers reuse it without a data-to-application import. Index normalized
+intervals only within accepted loaded calendar sessions, not raw timestamp string
+comparisons. Preserve SSE end-date uncertainty and SZSE boundary meanings;
+overlap priority blocked > unknown > open. Unknown opens are explicitly retained
+and conservatively non-executable, never guessed NORMAL.
+
+Root targeted105 tests, full1317/1 existing optional archive skip, Ruff557 and
+mypy146 passed. Owned tmpfs quant_test55471 only: head→base→head/check passed.
+Read-only frozen census38470 event rows/3886 sessions, blocked index16207→459424,
+including5057 unknown opens;443217 additional indexed security-days/3223 IDs.
+These counts do not prove raw bars or actual past illegal fills. Original inputs,
+reports/OOS and source-bound historical candidate diagnostics are unchanged;
+current economic admission remains incomplete. Independent read-only review
+verified code/input/producer/legacy/canonical bindings, no evidenced scopedP1/P2.
+Running application backend has not been replaced or migrated. Local checks are
+not remote CI, which is deferred under the user's GitHub-unavailable notice.
+Evidence: product-evidence/v1.2/m4/20261007-suspension-intervals/README.md.
+
+Fullfrontend compatibility revealed5 existing formatter failures; use only
+the locked Prettier on those files, then repeat760 tests/lint/types/build/full
+format/audit0 and verify168 source-copy SHAs. Keep formatting in a separate
+coherent local commit. Independent read-only review found no behavioral changes.
+Current served frontend remains priorD28; package-size warning is still open.
+Owned tests stop/retain only after terminal handles; original services stayup.
+
 ## v1.2 Supplemental cash/reference remains candidate-only — 2026-10-07
 
 Reuse approved cash_event/source-ratio/whole-position fraction accounting; no

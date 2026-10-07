@@ -37,6 +37,14 @@ Unsaved changes also stay with the current list entry, including refresh and ret
 
 ### Formal research archives (read-only)
 
+Another confirmed loader defect (2026-10-07): the old loader blocked only the
+suspension start day, potentially missing continuing halts and timestamps.
+Development source now interprets the whole interval; uncertain opens prohibit
+execution rather than imply a normal trading day. This fix is not yet deployed
+to the currently running backend and does not establish illegal past fills.
+Original reports remain; their individual impact is not quantified and their
+returns have not been revalidated.
+
 Known engine defect (2026-10-03): the old historical loader could reuse the first
 security's single-price non-executable flag for another security in the same
 cache group, incorrectly rejecting a normal security. The new version separates

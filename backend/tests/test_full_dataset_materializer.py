@@ -9,7 +9,7 @@ from unittest.mock import patch
 import pytest
 
 from app.data.catalog.normalized import _logical_hash
-from app.data.full_dataset import FullDataset, pq
+from app.data.full_dataset import FullDataset, pa, pq
 from app.domain.markets import Board, Exchange, Market, SecurityId, TradingRuleResolver
 from app.domain.markets.cn_a_rules import historical_cn_a_rules
 from app.domain.markets.corporate_actions import CorporateAction, cash_bonus_reference_price
@@ -79,13 +79,13 @@ def test_resolver_risk_and_official_cash_overlay_are_deterministic() -> None:
     ]
 
 
-def _cache_fixture(tmp_path: Path, flat_symbol: str) -> FullDataset:
+def _cache_fixture(tmp_path: Path, flat_symbol: str, exchange: str = "SSE") -> FullDataset:
     days = ("2011-01-04", "2011-01-05", "2011-01-06", "2011-01-07", "2011-01-10", "2011-01-11")
-    symbols = ("600000", "600001")
+    symbols = ("600000", "600001") if exchange == "SSE" else ("000001", "000002")
     rows = [
         {
-            "security_id": f"CN-A:SSE:{symbol}",
-            "exchange": "SSE",
+            "security_id": f"CN-A:{exchange}:{symbol}",
+            "exchange": exchange,
             "symbol": symbol,
             "trading_date": day,
             "raw_open": "10",
@@ -115,26 +115,179 @@ def _cache_fixture(tmp_path: Path, flat_symbol: str) -> FullDataset:
     dataset.calendar_days = tuple(date.fromisoformat(day) for day in days)
     dataset.calendar_index = {day: index for index, day in enumerate(days)}
     dataset.ids = {
-        f"CN-A:SSE:{symbol}": SecurityId(value=f"CN-A:SSE:{symbol}") for symbol in symbols
+        f"CN-A:{exchange}:{symbol}": SecurityId(value=f"CN-A:{exchange}:{symbol}")
+        for symbol in symbols
     }
     dataset.members = {
         sid: [
             {
                 "effective_from": days[0],
                 "effective_to": None,
-                "board": "SSE_MAIN",
-                "exchange": "SSE",
+                "board": f"{exchange}_MAIN",
+                "exchange": exchange,
             }
         ]
         for sid in dataset.ids
     }
     dataset.listing_dates = dict.fromkeys(dataset.ids, days[0])
     dataset.curves = {sid: ((days[0], days[-1], ((days[0], Decimal(1)),)),) for sid in dataset.ids}
-    dataset.blocked_starts = {}
+    dataset.suspension_open_states = {}
     dataset.features = {}
     dataset.actions = {}
     dataset.resolver = TradingRuleResolver(historical_cn_a_rules())
     return dataset
+
+
+@pytest.mark.parametrize(
+    "exchange,start,end,recorded,expected",
+    (
+        ("SSE", "2010-12-30", None, "1", (True, True, True, True, True, True)),
+        ("SSE", "2011-01-05", "2011-01-07", "1", (False, True, True, True, False, False)),
+        ("SSE", "2011-01-05", "2011-01-05", "1", (False, True, False, False, False, False)),
+        ("SSE", "2011-01-05", "2011-01-07", "0", (False, False, True, True, False, False)),
+        (
+            "SZSE",
+            "2011/01/05 09:30",
+            "2011/01/07 09:30",
+            "0",
+            (False, True, True, False, False, False),
+        ),
+        (
+            "SZSE",
+            "2011/01/05 13:00",
+            "2011/01/07 13:00",
+            "1",
+            (False, False, True, True, False, False),
+        ),
+        (
+            "SZSE",
+            "2011/01/05 即时",
+            "2011-01-07",
+            "0",
+            (False, True, True, False, False, False),
+        ),
+        (
+            "SZSE",
+            "2011/01/05 09:30",
+            "2011-01-07",
+            None,
+            (False, True, True, True, False, False),
+        ),
+        ("SZSE", "2010/12/30 09:30", None, None, (True, True, True, True, True, True)),
+        ("SZSE", "2011/01/12 09:30", None, None, (False, False, False, False, False, False)),
+    ),
+)
+def test_full_dataset_suspension_intervals_reach_status_and_execution(
+    tmp_path, exchange, start, end, recorded, expected
+):
+    dataset = _cache_fixture(tmp_path, "", exchange)
+    sid, other = tuple(dataset.ids)
+    fields = (
+        "security_id",
+        "exchange",
+        "suspended_at",
+        "resumed_or_ended_at",
+        "execution_open_blocked",
+    )
+    source = dict(zip(fields, (sid, exchange, start, end, recorded), strict=True))
+    writer = StreamingPartition(tmp_path / "suspension-events.parquet", fields, ("security_id",))
+    writer.write([source])
+    writer.close("suspension-events.parquet")
+    dataset.suspension_open_states = dataset._suspension_open_states(dataset.calendar_text[-1])
+    sessions = tuple(dataset.sessions())
+    assert sessions == tuple(dataset.sessions())
+    for session, blocked in zip(sessions, expected, strict=True):
+        statuses = {str(item.status.security_id): item.status for item in session.statuses}
+        assert statuses[sid].is_suspended is blocked
+        assert statuses[sid].is_tradeable is not blocked
+        assert not statuses[other].is_suspended
+        rules = {str(item.security_id): item for item in session.trading_rules}
+        if blocked:
+            assert not rules[sid].executable
+            bar = next(item for item in session.bars if str(item.security_id) == sid)
+            order = Order(
+                strategy_id="isolated-suspension-fixture",
+                symbol=f"{sid.rsplit(':', 1)[1]}.{exchange}",
+                side=OrderSide.BUY,
+                order_type=OrderType.LIMIT,
+                quantity=Decimal(100),
+                price=Decimal(10),
+                intended_execution_session=session.trading_date,
+                created_at=datetime(2011, 1, 3, 7, tzinfo=UTC),
+            )
+            assert rejection_reason(order, bar, statuses[sid], rules[sid], Decimal(0)) is not None
+    observations = tuple(dataset.sessions(execution=False))
+    assert [item.statuses for item in observations] == [item.statuses for item in sessions]
+
+
+def test_suspension_unknown_overlap_order_and_future_boundaries(tmp_path):
+    dataset = _cache_fixture(tmp_path, "")
+    sid = next(iter(dataset.ids))
+    fields = (
+        "security_id",
+        "exchange",
+        "suspended_at",
+        "resumed_or_ended_at",
+        "execution_open_blocked",
+    )
+    rows = [
+        dict(zip(fields, values, strict=True))
+        for values in (
+            (sid, "SSE", "2011-01-04", "2011-01-07", "1"),
+            (sid, "SSE", "2011-01-06", "2011-01-06", "0"),
+            (sid, "SSE", "2011-01-12", None, "1"),
+        )
+    ]
+    original = None
+    for ordered in (rows, list(reversed(rows))):
+        # Deliberately unordered disposable input; the publisher correctly rejects it.
+        pq.write_table(pa.Table.from_pylist(ordered), tmp_path / "suspension-events.parquet")
+        states = dataset._suspension_open_states(dataset.calendar_text[-1])
+        assert states == {
+            (sid, "2011-01-04"): True,
+            (sid, "2011-01-05"): True,
+            (sid, "2011-01-06"): True,
+            (sid, "2011-01-07"): None,
+        }
+        dataset.suspension_open_states = states
+        sessions = tuple(dataset.sessions())
+        assert original is None or sessions == original
+        original = sessions
+        unknown = sessions[3].statuses[0].status
+        assert unknown.is_suspended and not unknown.is_tradeable
+        assert unknown.source_version.endswith(":UNCERTAIN_OPEN")
+        assert not sessions[4].statuses[0].status.is_suspended
+        # Capping the loaded period inside an ongoing interval must not lose its start.
+        assert dataset._suspension_open_states("2011-01-05") == {
+            (sid, "2011-01-04"): True,
+            (sid, "2011-01-05"): True,
+        }
+
+
+@pytest.mark.parametrize(
+    "start,end",
+    [(None, None), ("invalid", None), ("2011-02-30", None), ("2011-01-07", "2011-01-04")],
+)
+def test_suspension_invalid_boundaries_fail_closed_in_both_callers(tmp_path, start, end):
+    from app.application.experiments.data import ExperimentInputError
+    from app.application.markets import _suspension_evidence
+
+    dataset = _cache_fixture(tmp_path, "")
+    fields = (
+        "security_id",
+        "exchange",
+        "suspended_at",
+        "resumed_or_ended_at",
+        "execution_open_blocked",
+    )
+    row = dict(zip(fields, (next(iter(dataset.ids)), "SSE", start, end, "1"), strict=True))
+    writer = StreamingPartition(tmp_path / "suspension-events.parquet", fields, ("security_id",))
+    writer.write([row])
+    writer.close("suspension-events.parquet")
+    with pytest.raises(ValueError):
+        dataset._suspension_open_states(dataset.calendar_text[-1])
+    with pytest.raises(ExperimentInputError, match="DATASET_INTEGRITY_FAILED"):
+        _suspension_evidence(row, "2011-01-04")
 
 
 def _reference_fixture(
