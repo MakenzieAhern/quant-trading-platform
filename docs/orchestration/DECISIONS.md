@@ -23,6 +23,17 @@ Continue local commits and verification, with no GitHub request/push/merge/tag o
 release until availability is established. No billing/security/protection bypass.
 Full product/financial/forward/persistence/release requirements are unchanged.
 
+Post-commit bbc5cc1 independent proof/pixel/doc review complete without evidenced
+scoped P1/P2. Current clean-demo environment attempt hit exhausted Docker default
+network pools, then execution-policy denial before scratch create/copy/start.
+Do not prune networks/change global pools, split the denied command, change tool
+or substitute original DB for clean-install proof. Archive only retained; no new
+containers, migration or jobs. Fresh native Sky inventory is unavailable because
+Trusted RPC is unconfigured; no native input or security configuration workaround.
+Request actual app exports and Chrome200 screenshot from user, then pursue other
+permitted full-scope tasks. These are NOT_RUN, not product or CI PASS. Original
+four services retained; idle Node cleanup137/OOMfalse is not a failed test.
+
 ## v1.2 Reference authority is price-only and fail-closed — 2026-10-07
 
 Reuse the existing checksum-bound corporate-actions partition and shared Decimal

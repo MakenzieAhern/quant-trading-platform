@@ -38,6 +38,20 @@ Export landing/full financial admission/genuine old ledgers/lawful after-start
 forward/full AA/native200/performance/durable rollout/media/release stay open;
 U1–U8/M0–M5 and product goal remain IN_PROGRESS.
 
+Post-commit `bbc5cc1`: final independent source/three-JSON/hash/16-case/test-count
+and two settled-pixel review found no evidenced scoped P1/P2; reviewer did not
+re-run tests or inspect runtime. Idle owned Node stopped137/OOMfalse/retained.
+Current-head isolated clean-demo preparation produced tracked backend tar only:
+network creation failed exhausted default pools, then combined scratch creation/
+copy/start exec was rejected before process creation (`blocked by policy`). No
+split-command/alternate-tool workaround or scratch runtime claim. Separate fresh
+native Sky inventory failed `Trusted RPC service is not configured: sky`, before
+window selection/input. Current clean-demo and native200 remain NOT_RUN; original
+four services healthy. [Attempt record](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-current-clean-demo/README.md>).
+Actual exported files and user Chrome200% screenshot requested asynchronously;
+not received/validated. Full goal ACTIVE; do not turn method-specific blocks
+into a narrower completion definition or erase earlier historical passes.
+
 ## 2026-10-07 price-only authority runtime and carryover guard
 
 [Private scoped proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-reference-runtime/README.md>)

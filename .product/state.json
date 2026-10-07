@@ -1,7 +1,17 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T03:32:35Z",
+  "updated_at_utc": "2026-10-07T03:43:37Z",
+  "clean_demo_attempt_20261007_gate": {
+    "status": "NOT_RUN_EXECUTION_POLICY_DENIED",
+    "source_head": "bbc5cc1b98ba8824c4030abe7de0fe1880537e1a",
+    "preparation": "Exact trackedbackend archive4,546,560bytes produced, SHAA95870A8; no privatearchive/.env data copied. Proposed ports18181/18173 hadno listeners. Cachedbackendimage b5f inspected, but plannedrequirementlock comparison NOT_RUN; do not claim newbackend source binding/deployment.",
+    "first_failure": "docker network create --internal failed: all predefined address pools have been fully subnetted. No networkprune or Dockerdaemon config change. Existing quant-mvp-tests_default84f08209 inspected0attachedcontainers, distinctfromoriginal, as scoped reuse candidate only.",
+    "policy_stop": "Whole subsequent archive-extraction/scratchcontainer-create/source-copy/start exec was rejected before CreateProcess: blocked by policy. No execution, no scratchcontainers/network found on read-only check; only backend-source.tar exists. No splitcommand/shell/tool/identity workaround. Existing October1 cleaninstallPASS remains historical; current-head rehearsal NOT_RUN.",
+    "native_ui": "After completeComputerUse skill/guidance/API/confirmation reads, freshsky.list_apps failed Trusted RPC service is not configured: sky. No window selected or input sent, no native200PASS or security/helper workaround. Browser DOM/settledscreenshot checks remain usable, not native Windows-control proof.",
+    "user_evidence_requested": "Asynchronous request for actualJSON/CSV exports from savedhistoricalQA result0cdfb0e5 and Chrome200percent screenshot. No downloadinternalURL/settings/security workaround; responses not yet received, no fabricated savedfile/zoom success.",
+    "safety": "Originalfourservicesstillhealthy andfrontend200/API200. No originalDBrestart/migration/newjob/paper/provider/study/frozen/OOS change. IdleownedNode7969f4b identity/mounts/ports/top sole sleep checked thenSTOPPED137/OOMfalse/retained, cleanup not testfailure. GitHub untouched/fullgoalACTIVE."
+  },
   "dialog_edges_20261007_gate": {
     "status": "PASS_SCOPED_KEYBOARD_NOT_FULL_AA",
     "source_parent": "802373fb4b4859e6121a9ee234a039f339ee8d8e",
@@ -2951,14 +2961,14 @@
   "ownership": {
     "latest_verification": "2026-10-07T03:32:35Z rootsolewriter parent802373f/onlyDialog+new7testsbeforeunit;current767frontend47files/169sourcebindings/static/build160ms/audit0PASS,handles13831/5037terminal0. ActualChrome16guide plus search/strategy edges/history verified;13servedartifacthashes checked. Prior1340backend/migration historical unchanged. No originalDBrestart/migration/strategy/GitHub action.",
     "repository_writer": "Root owns Dialog sharededgeguard/test/docs/state;existing signed_results_review_oct7 readonly. No concurrent agent writer or matchingWSLgit/testworker observed. Coherentlocalcommit/no push during latestuserreportedGitHub outage/no second task. Allfinancial source/frozen/OOS records untouched.",
-    "database_writer": "This Dialog unit has noDBwriter. Priorowned30b1cfb tmpfs/no mounts/55471 quant_test fulltests/reversible0017-check terminal, STOPPED0retained. OriginalDB5432 never used for tests/migration/restart; prior5/417/12/4 counts historical/not fresh. Genuine lostledgers unresolved. Node7969f4b currentlyRUNNING idle/no mounts/no ports/frontendtesthandles13831/5037terminal0, not financialqueueworker. No volumes/prune.",
+    "database_writer": "This Dialog/attemptedclean-demo unit has noDBwriter. Priorowned30b1cfb tmpfs/no mounts/55471 quant_test fulltests/reversible0017-check terminal, STOPPED0retained. OriginalDB5432 never used for tests/migration/restart; prior5/417/12/4 counts historical/not fresh. Genuine lostledgers unresolved. Node7969f4b nowSTOPPED137/OOMfalse idlecleanup/retained after freshidentity/top check;frontendhandles13831/5037terminal0. Rejectednewbackend/PG command neverexecuted/no scratchcontainers. No volumes/prune.",
     "queue_writer": "No activefinancial/provider/researchqueuewriter. Root immutablecensus7c686a20 and6payloadproofseal17380b19 terminal/bindingschecked; priorV3/72cash overlay andwhole498bonus/498reference/7407coverage/137sources/parent40353cash untouched andsource-boundhistorical. SourceV7 78sourceonlyPASS/59unresolved,6cashunknown. Fullfinancial/economic/reference/lifecycleadmission incomplete; no studyexecution.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "2026-10-07T03:32UTC ownedNode7969f4b RUNNING sleep-only/no mounts/no ports/alltesthandlesterminal;PG30b1cfb priorSTOPPED0retained. OriginalPGRedisbackendUp12hhealthy/ownedfrontendUp9h. Frontend-onlystaticupdate13hashes/newD3eks9Zv serves200/API200, oldtree/99assetsretained. No originalrestart/appmigration;liveDB0016historynotfreshcounts. Nativeintegration/freshROmount/backups before originalrestart/0017rollout; no reset/prune/deletion/securityworkaround.",
+    "verified_processes": "2026-10-07T03:43UTC ownedNode7969f4b STOPPED137/OOMfalse idlecleanup after freshidentity/top sole sleep/no mounts/ports/alltesthandlesterminal;retained. PG30b1cfb priorSTOPPED0retained. OriginalPGRedisbackendUp13hhealthy/ownedfrontendUp9h/newD3frontend-onlystatic13hashes preserved/APIfrontend200. Newclean-demo containers absent; rejected command neverexecuted, tar only. No originalrestart/appmigration;liveDB0016historynotfreshcounts. No reset/prune/deletion/securityworkaround.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
@@ -3296,6 +3306,7 @@
     "2026-09-23 in-app browser dirty sidebar exit confirmation dismissed and preserved draft; shared guard listener stabilized with one regression; frontend204 tests, lint, types and build PASS"
   ],
   "observed_failures": [
+    "2026-10-07 current-head clean-demoNOT_RUN: newinternalnetworkdefaultpool exhausted, then whole scopedcreate/copy/start exec rejected before CreateProcess blocked by policy. No retry via split/alternatetool, no scratchcontainers or source copy; only tracked tar saved. NativeSky inventory separately failed Trusted RPC service is not configured: sky; no window/input/native200 proof. BrowserDOM and settledframes still usable.",
     "RESOLVED bounded UX-KEYBOARD-PAGING: original BODY-focus regression repaired with persistent shared Pagination group and parent date-link focus; all21 callers reviewed, full frontend294/lint/type/build and actual Chrome 293-session page/market-search focus recheck passed (ACCEPTANCE 2026-09-26 05:46 UTC). Screen-reader speech/full WCAG AA remain open; do not repeat this as an active bug",
     "RESOLVED bounded comparison result-error UI: successful job metadata followed by failed result GET discarded known name, and unknown API code suggested absent technical details. Same-request name retention/shared HTTP fallback passed failing regression, production Chrome ZH/EN503 retry and independent read-only review; no partial metrics or financial changes",
     "CODE FIXED / BROWSER TRANSITION OPEN: AppShell listened only to window focus, so visibility-only tab return retained stale service/data status. Failing then passing App regression and normal real-Chrome manual refresh verified the fix/compatibility; genuine tab hide/return could not be produced by available browser controls, whose observed document remained visible. Do not relabel that as real-tab acceptance",
@@ -3348,6 +3359,7 @@
     "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay"
   ],
   "not_run": [
+    "Current bbc5cc1 clean-demo runtime/migration/newjob due executionpolicy rejection; native200 Windows input due unconfiguredSkyTrustedRPC; actualJSON/CSV savedfile validation awaiting supplied file/path. Existing narrow/historical passes do not fill these gates. No blocked-operation workaround.",
     "U5 current master/calendar/ST/suspension/actions/cost reconciliation, executable 2026 rule promotion and source authority promotion; U7 after-start forward receipt and unplanned mid-run recovery",
     "Full remaining M2-M5 matrix, real-user testing not claimed"
   ],
@@ -3563,8 +3575,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5. CurrentsharedDialogedge defectclosed/Chrome16guide+search+strategy proof saved; finalreadonlyevidence review/localcommit then pursue current-code clean-install syntheticdemo guidedjob/results/plan/account terminal-free rehearsal in isolatedDB/backend if existing tooling permits, never private/currentDB replacement. Also actualexportlanding/fullAA/native200/performance/manualmedia/recovery/financialadmission/afterstartforward remain. Chromeinternaldownloads policyblocked: no alternateinternalURL/raw/browserDB/security workaround or exportlandingPASS. Originalbackendnotdeployed/liveDB0016historical,frontendD3onlyupdated with recoverableoldassets. LatestuserGitHuboutage: no remoteactions/unchangedpolling. GoalACTIVE/product_goal_complete=false.",
-  "local_next_command": "cd /home/yuchen/projects/quant-trading-platform && git status --short --branch && git diff --check; read dialog_edges_20261007_gate/fullobjective; finish readonlyreview/coherentlocalcommit. Inspect existing clean-install demo rehearsal tooling and exact container/process ownership; retainoriginalDB/backend/frozen/OOS. Do not callGitHub or reopen forbiddenChromeinternaldownloads; resettemporaryviewport/theme beforehandoff.",
+  "next_task": "Continue full U1-U8/M0-M5. Dialogfix bbc5cc1 locallycommitted/deployed/independentreview +16guide/search/strategy PASS_SCOPED. Current-head clean-demo attemptedpreparation but NOT_RUN: networkdefaultpool exhausted then exactcreate/start composite exec policydenied; no workaround/newcontainers. NativeSkyTrustedRPCnotconfigured/no input. Pending useractualexportfile andnative200screenshot; verify ifreceived, otherwise advance safe independent currentUI/API/manual/media/fullfinancial prerequisite work without reenacting rejected execution. Allfinancial6cash59source000598300048/allaction/lifecycle/newversionadmission,lawfulafterstartforward,genuineoldledgers,original0017durability/restore,fullAA/performance/release remain. No Chromeinternaldownloads/browserDB/security workaround/no GitHub calls. Originaldata/backendpreserved/viewportreset/ENdark restored/NodeidleSTOPPEDretained/fullgoalACTIVE.",
+  "local_next_command": "Read dialog_edges_20261007_gate and clean_demo_attempt_20261007_gate/fullobjective; verify repo/localcommit/service ownership before nextsafe action. If actualexportfiles ornative200screenshots arrive, validate against current savedreport/build; do not infer success. Otherwise continue permitted independent UI/API/manual/media/financial work, not rejectedDockercreate/start via alternative shell/tool. GitHub hold/no unchangedrecoverypolling/frozen/OOS boundaries remain.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
