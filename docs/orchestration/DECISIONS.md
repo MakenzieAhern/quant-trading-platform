@@ -1,5 +1,19 @@
 # Decisions
 
+## v1.2 Full scheme holder identity is a reviewed shared alias — 2026-10-07
+
+Original099103 notices/all7pages have complete effective-dated all-holder cutoff,
+direct share-account credit and independent unrestricted listing. The full
+利润分配及资本公积金转增股本方案 declaration/metadata/heading and 实施方法 heading
+are literal source syntax, not per-symbol exceptions or table-derived authority.
+Four bounded shared aliases close both sourceguards; date/page/conflicting-holder/
+account/independent listing/source SHA/ratio/lifecycle negatives remain.
+2RED→139focused1397backend1optionalSKIP/static/test-onlymigration PASS;V24only099103
+change/old97wholePASS135unchanged/276bindings. No economic/fullfinancial admission.
+Source1517e46/24payloadseala8ff3ebf preserveprior19;original0016/app/frozen/tag untouched.
+Next066090fulloriginal inspection before more grammar;known064080listinggaps/
+015yearconflict/121143missing日 retained. FullgoalACTIVE/GitHubhold/scope unchanged.
+
 ## v1.2 Complete label syntax cannot replace source authority — 2026-10-07
 
 Reuse sharedholder grammar for complete explicit record labels, balanced date
