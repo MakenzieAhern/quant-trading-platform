@@ -86,6 +86,10 @@ export function TaskCenterPage() {
     const saved = taskReturn.current;
     if (!saved || research.loading || updates.loading) return;
     taskReturn.current = null;
+    window.history.replaceState(
+      { ...window.history.state, taskCenterReturn: null },
+      "",
+    );
     if (
       document.activeElement !== document.body &&
       document.activeElement !== document.getElementById("main-content")

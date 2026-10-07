@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { Link } from "../../components/Link";
 import { Pagination } from "../../components/Pagination";
 import { ApiError } from "../../api/client";
@@ -70,6 +70,16 @@ function readScrollPosition(): number | null {
     ? position : null;
 }
 
+type ExperimentReturn = { url: string; href: string; kind: "name" | "open"; scrollLeft: number };
+function readExperimentReturn(): ExperimentReturn | null {
+  const value = window.history.state?.experimentReturn as Partial<ExperimentReturn> | null;
+  return window.location.pathname === "/experiments" && value &&
+    value.url === window.location.href && typeof value.href === "string" &&
+    (value.kind === "name" || value.kind === "open") &&
+    typeof value.scrollLeft === "number" && Number.isFinite(value.scrollLeft) && value.scrollLeft >= 0
+    ? value as ExperimentReturn : null;
+}
+
 function readSelection(): Selection {
   if (new URLSearchParams(window.location.search).has("compare_from")) return [];
   const selected: unknown = window.history.state?.experimentSelection;
@@ -107,6 +117,8 @@ export function ExperimentsPage() {
   const [compareRevision, setCompareRevision] = useState(0);
   const [revision, setRevision] = useState(0);
   const scrollToRestore = useRef(readScrollPosition());
+  const returnToRestore = useRef(readExperimentReturn());
+  const table = useRef<HTMLDivElement>(null);
   const focusedList = useRef(false);
   const listHeading = useRef<HTMLHeadingElement>(null);
   const listError = useRef<HTMLDivElement>(null);
@@ -161,12 +173,46 @@ export function ExperimentsPage() {
   }, [compareRevision]);
   if (jobs.key !== queryKey) setJobs({ key: queryKey, data: null, error: null });
   useLayoutEffect(() => {
+    const saved = returnToRestore.current;
+    if (saved && (jobs.data || jobs.error !== null)) {
+      returnToRestore.current = null;
+      window.history.replaceState({ ...window.history.state, experimentReturn: null }, "");
+      const position = scrollToRestore.current;
+      scrollToRestore.current = null;
+      if (document.activeElement !== document.body &&
+          document.activeElement !== document.getElementById("main-content")) return;
+      const trigger = Array.from(table.current?.querySelectorAll<HTMLAnchorElement>(
+        saved.kind === "name" ? "tbody th a" : "tbody td a",
+      ) ?? []).find((link) => link.getAttribute("href") === saved.href);
+      if (trigger) {
+        trigger.focus({ preventScroll: position !== null });
+        if (table.current) table.current.scrollLeft = saved.scrollLeft;
+        if (position !== null) window.scrollTo({ top: position, left: 0, behavior: "instant" });
+      } else {
+        (jobs.error !== null ? listError : listHeading).current?.focus();
+      }
+      return;
+    }
     if (jobs.data && scrollToRestore.current !== null) {
       // Native Back can clamp the position while this asynchronous list is loading.
       window.scrollTo({ top: scrollToRestore.current, left: 0, behavior: "instant" });
       scrollToRestore.current = null;
     }
-  }, [jobs.data]);
+  }, [jobs.data, jobs.error]);
+  function rememberReturn(event: MouseEvent<HTMLAnchorElement>) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey ||
+        event.ctrlKey || event.shiftKey || event.altKey) return;
+    window.history.replaceState({
+      ...window.history.state,
+      experimentScrollY: window.scrollY,
+      experimentReturn: {
+        url: window.location.href,
+        href: event.currentTarget.getAttribute("href"),
+        kind: event.currentTarget.closest("th") ? "name" : "open",
+        scrollLeft: table.current?.scrollLeft ?? 0,
+      },
+    }, "");
+  }
   useEffect(() => {
     if (!jobs.data) return;
     const saveScroll = () => {
@@ -196,9 +242,10 @@ export function ExperimentsPage() {
     setSaveStatus(null);
     if (queryChanged) {
       scrollToRestore.current = null;
+      returnToRestore.current = null;
       if (window.location.pathname === "/experiments")
         window.history.replaceState(
-          { ...window.history.state, experimentScrollY: null }, "",
+          { ...window.history.state, experimentScrollY: null, experimentReturn: null }, "",
         );
       setOffset(0);
     }
@@ -440,7 +487,7 @@ export function ExperimentsPage() {
               ) : <Link href="/research/new?new=1">{c.newExperiment}</Link>}
             </div>
           ) : (
-            <div className="experimentTableScroll" role="region" tabIndex={0} aria-label={c.listTitle}
+            <div ref={table} className="experimentTableScroll" role="region" tabIndex={0} aria-label={c.listTitle}
               onFocusCapture={() => (focusedList.current = true)}
               onBlurCapture={() => (focusedList.current = false)}>
               <p className="experimentHelp">{c.tableScroll}</p>
@@ -465,7 +512,7 @@ export function ExperimentsPage() {
                           ? [...items, { id: job.job_id, name: job.name, createdAt: job.created_at }]
                           : items.filter((item) => item.id !== job.job_id))} />
                     </label></td>
-                    <th scope="row"><Link href={`/experiments/${job.job_id}`}
+                    <th scope="row"><Link onClick={rememberReturn} href={`/experiments/${job.job_id}`}
                       aria-label={`${job.name} · ${c.statuses[job.status]} · ${formatUtc(job.created_at)}`}>{job.name}</Link></th>
                     {view.columns.mode && <td>{job.mode === "synthetic_demo" ? c.demo : c.historical}</td>}
                     {view.columns.period && <td>{job.configuration.start_date} → {job.configuration.end_date}</td>}
@@ -473,7 +520,7 @@ export function ExperimentsPage() {
                     <td><span className={`experimentStatus experimentStatus--${job.status.toLowerCase()}`}>
                       {c.statuses[job.status]}
                     </span></td>
-                    <td><Link className="button secondary" href={`/experiments/${job.job_id}`}
+                    <td><Link onClick={rememberReturn} className="button secondary" href={`/experiments/${job.job_id}`}
                       aria-label={`${c.open}: ${job.name} · ${formatUtc(job.created_at)}`}>{c.open}</Link></td>
                   </tr>
                 ))}</tbody>

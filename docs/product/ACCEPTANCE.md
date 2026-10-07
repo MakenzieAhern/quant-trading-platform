@@ -1,5 +1,45 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 Research list — exact return context and one-shot history
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-research-return/README.md>)
+binds four final source/test SHAs and build index-D28HgznU.js;41payload seal
+`e1a92f67f9b0d2a43c69994f371fccfa738dda1b3fca83102b217d5f5f6b4e85`
+verified without mismatches. Scoped U4/U8 UX-DETAIL/UX-VIEWS PASS only.
+
+Name/Open primary-click context reuses existing history/view/offset/scroll.
+Exact originating focus and both axes after rows load; malformed context rejected,
+external focus preserved, missing/error normal fallback, filter changes clear
+pending context. Independent review found stale history token surviving consumption:
+clear owned token in BOTH research and Task Center, preserving other history fields.
+3 actual failing regressions to37focusedPASS; original research7RED/1PASS retained.
+Final760frontend/46files17.72s/lint/types/build161ms/format terminal0.
+Intermediate759/B5 build is chronology;525.08kB chunk warning is not performancePASS.
+
+Final actual dark390x844 EN Open730/686 Name730/152; ZH Name606/106 Open606/414
+before==after/exactfocus. Chrome/SUCCEEDED/name_asc/Createdhidden/2rows retained,
+language preserves filters/columns; ZHdoc375client375. CurrentD28desktopZH
+TaskCenter raw1341->1341/research0->0 exacthref/main16items. Wrong initial.taskList
+selector count0 explicitly rejected; two stale-paint images retained NON-ACCEPTED.
+No full AA/native200/performance/failure-injection claim. Native tests read-only
+saved tasks, no new requests. QA tab closed/viewportreset/ENdark/exporthandoff kept.
+The final TaskCenter desktop image is EN after preference restoration; Chinese
+exact-focus/scroll smoke is DOM evidence, not Chinese screenshot acceptance.
+Supplemental [caption clarification](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-research-return/CAPTION.md>)
+preserves the original41-payload sealed snapshot unchanged.
+
+Final independent read-only review matched41payload/seal/4SHA/check receipts/
+checkpoint and caption supplement; no remaining evidenced scopedP1/P2.
+Reviewer did not execute tests/browser/DB or full financial/AA acceptance.
+Exact e7ac568 [CI37555553960](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/37555553960)
+all3jobs/every stepSUCCESS01:10:40Z/watch77232terminal0 is the parent,
+not the current uncommitted diff. Newexacthead CI pending commit/push.
+The prior TaskCenter16-layout/747 proof below is historical to e7source.
+
+OriginalDB0016/counts5/417/12/4, PGRedisbackend/APIfrontend/frozen/tag preserved.
+No newfinancialtask/provider/formal/OOS/migration/originalrestart/freeze/identity/
+security/visibility/merge/release. FullU1-U8/M0-M5/product_goal_complete=false.
+
 ## 2026-10-07 Task Center — readable panels and detail-return restoration
 
 [Private before/after/browser/check proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-task-views-matrix/README.md>)

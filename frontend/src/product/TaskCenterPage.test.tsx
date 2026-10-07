@@ -65,6 +65,7 @@ describe("task center", () => {
         name: stream === "research" ? /^Open experiment:/ : /^Open task:/,
       });
       expect(link).toHaveFocus();
+      expect(window.history.state.taskCenterReturn).toBeNull();
       expect(window.scrollTo).toHaveBeenCalledWith({
         top: 1200,
         left: 0,

@@ -1,5 +1,27 @@
 # Decisions
 
+## v1.2 Research list return and consumed-token lifecycle — 2026-10-07
+
+Reuse existing history/view/page/scroll machinery, not a new router/framework.
+Actual saved detail/Back lacked originating Name/Open focus; primary unmodified
+click now records exact entry kind and both axes. Validate context, wait for rows,
+respect external focus and visible missing/error fallback. Clear on query change.
+Independent readonly review found stale token could survive later non-row
+navigation: clear each owned history token at consumption in BOTH list pages,
+preserving ancestry and all other entry fields.3RED->37focusedPASS; final760
+frontend/static/build/formatPASS.13newresearch regressions retain trust boundaries.
+
+CurrentD28 Chrome EN/ZH mobile four returns and ZH desktop both task streams
+prove exact link/context only, not fullAA/native200/performance/financial admission.
+41privatepayloadseal e1a92f67 verified; stale paints and wrong selector explicitly
+NON-ACCEPTED. Olde7CI37555553960all3SUCCESS not proof of uncommitted diff.
+Independent final source/evidence/checkpoint review P2 closed and41payload/
+seal/4SHA/37focused760full/static/parentCI verified; newexactheadCI pending.
+Supplemental CAPTION.md corrects locale: finaldesktopimageEN, ZHsmokeDOMonly,
+notZHvisualPASS. Originalsealedpayloads unchanged; reviewerexecutionnotclaimed.
+No financial/schema/data/methodology/dependency/security change;original0016
+and5/417/12/4 counts/frozen/tag/OOS preserved. FullU1-U8/M0-M5 still active.
+
 ## v1.2 Task Center return context and panel reuse — 2026-10-07
 
 Actual mobile review found zero panel padding; reuse existing experimentPanel,
