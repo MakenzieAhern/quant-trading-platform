@@ -1,5 +1,33 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 implementation metadata and dotted sections — source-only closure
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-implementation-dot/README.md>).
+Source d96daa3 recognizes complete implementation-date metadata, bare 截止 holder,
+two credit headings and dotted sections. Both unchanged originals (155/169), all
+six pages, were visually/textually inspected with 16 checksum bindings. Independent
+dated holder, direct share credit and unrestricted listing remain required.
+Original155 prints cash total576000000 despite72000000 × 0.8 = 57600000:
+retain this separate contradiction; no cash or financial admission claimed.
+
+Independent P2 review reproduced optimistic discussion-only listing. Final actual
+matcher and tentative guard share the exact supported section/term grammar;
+Chinese/digit markers and supported optional titles are covered. Unsupported
+numeric/title combinations and all old negative assertions remain unchanged.
+Rejected broad-guard/error-code regressions and V26–V28 are retained chronology,
+not final acceptance. Final161focused/1419backend pass, one optional unmounted
+archive check skips; Ruff,558-file format,mypy146 and isolated head→base→head/check
+pass. Full59497 terminal0; final scoped review found no P1/P2.
+
+FINALV29:137rows102source-onlyPASS35unresolved;only155169change,old100 wholePASS/
+135 whole rows preserved,276currentbindings/reverse-repeat. Canonical
+1dce7e1e9661b19734e6f44161450bda48910c3e0975099062f6f5eb515b3b8f.
+45-payloadseal dad407da0a50d09203e42ef1ed5668bb85a5e6b32a31c086e5f8e1f933d3e2e6
+twice/prior23unchanged. OwnedtestPGstopped0/OOMfalse retained;original0016/PONG/
+app200/frozen/tag intact. No originalmigration/restart/provider/event/dataset/
+strategy/OOS/GitHub action. Frontend unchanged/notrerun. FullU1-U8/M0-M5,
+economic coverage and release acceptance remain incomplete.
+
 ## 2026-10-07 complete numbered ex-date metadata — source-only repair
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-ex-date-metadata/README.md>).

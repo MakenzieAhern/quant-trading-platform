@@ -1,5 +1,24 @@
 # Decisions
 
+## v1.2 Share listing grammar with its tentative guard — 2026-10-07
+
+Full six-page review of existing155169 originals supports exact implementation
+metadata/bare截止/credit-heading/dotted-section syntax, not inferred economic dates.
+Independent review and RED checks exposed discussion-only listing being matched
+inside section prefixes, including optional titles and numeric chapters. Reuse the
+same listing_section and listing_term for matching and tentative rejection; do not
+maintain a second partial grammar. Reject a broad chapter guard because it changes
+existing credit diagnostics; old assertions untouched. Unsupported numeric/title
+combinations stay unsupported. Original155 contradictory cash total is retained
+explicitly, not silently repaired or admitted by the bonus syntax result.
+
+Final source d96daa3:161focused,1419backend/one optional archive skip,static checks
+and isolated migration cycle pass;scoped independentP2 closed. FINALV29 102/137
+source-onlyPASS35unresolved;old100 wholePASS/135whole rows preserved.45-payload
+private seal dad407da/prior23 preserved. Economic/event/dataset/product acceptance
+remain separate. Original0016/services/frozen/OOS/tag unchanged;GitHubhold and full
+product goal remain. Next146147156fulloriginalclassification before sharedrepair.
+
 ## v1.2 A numbered ex-date chain preserves independent listing evidence — 2026-10-07
 
 Complete090original/all2pages states separate numbered record/除权日/unrestricted
