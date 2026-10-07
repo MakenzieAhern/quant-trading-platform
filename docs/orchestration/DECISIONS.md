@@ -1,5 +1,22 @@
 # Decisions
 
+## v1.2 Prove committed diagnostic SQL without altering original failures — 2026-10-08
+
+Existingmanagerreopen was sameprocess;historicaltemporaryseed unavailable/tmpfs
+stop is not durable. Oneguardedrunnabletest reuses normalterminal/strictresponse
+andtwoindependentprocesses in ownedquant_test. Readonlyreview exposes assert-only
+CLIisolationP1: reuse nonassertconftestguard+runtimeargumentchecks beforeSQL;
+negative-Opaths validate andpositiveoptguard prevents silent assertion removal.
+Actual16709/16734opt0 preservecompleteJSON;readISNULL/jsonb_typeof separately rather
+thaninfer SQLstorage from API null. Actualfreshunknownrow SQLNULL,not proof ofold
+migratedrow; noproductionJSONB/accounting change orfake historical execution.
+Final1424backend1optionalSKIP/static/AlembiccheckPASS/22payloadd500a742twice/prior41
+retained. Originalcounts/schema/app/frozen/tag unchanged/testPGstopped0retained.
+Onlycommittedcontextacrosschildlifetimes whilePGalive accepted; precommitcrash,
+physicalDBloss/oldledger/fullfinancial/productquality remain distinct. Current
+fullgoal prioritiesreturntoeconomicallytrustworthyAshare/newversion andfulluser
+quality/delivery, not more tinyCSS or downloaded-source counts. GitHubhold retained.
+
 ## v1.2 Inherit the existing body size across mode/help/actionable errors — 2026-10-08
 
 Actualroot15 versusmode/error13/help14 andallsharedcallers justify deleting7CSS

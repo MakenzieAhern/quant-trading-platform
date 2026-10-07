@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 committed failure context — scoped cross-process SQL witness
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-committed-context-durability/README.md>)
+binds240503c/testb13df80e. Newtestonly/productionAPIservice/migrations unchanged.
+Normalterminaltransaction+strictresponse: actualwriter16709→reader16734/optimize0/
+quant_test0017 same2syntheticIDs/fullJSON/storage equal. ObservedJSONBobject and
+freshSQLNULL/API null/noresult/summaryNone/0rows retained;notoriginallegacybackfill.
+CLIassertisolationP1 fixed with existingnonassertconftestguard/runtimearguments;
+negative-Odevelopment/malformed/positiveoptimizedwrite reject beforeSQL. Final
+1424backend/1existingoptionalarchiveSKIP23.95s/Ruff331/mypy146/Alembiccheck0.
+Frontendunchanged previous794currentPASS/notrerun. TestPG30b1exclusive/tmpfs/no
+mounts/55471/0clients thenstop0OOMfalse retained;testrowsnotretainedafterstop.
+Original0017/selectedcounts/app200/frozen/tag/.research intact/no originalrestart.
+22payloadd500a7426ff4e089895c2c232c75d5f5cb65590321af40522e2de1ac40eeb2c0 twice
+preservesprior41. PASSonlycommittedcontextacrossprocesses whilePGalive,NOT precommit
+crash/physicalDBrestore/lostledger/economic/fullproduct. FullU1-U8/M0-M5/current
+AA/performance/export/media/financialnewversion/lawfulforward/remoteCIrelease open.
+
 ## 2026-10-08 shared body readability — scoped U1/U8 repair
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-body-readability/README.md>)

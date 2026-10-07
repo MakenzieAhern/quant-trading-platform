@@ -1,4 +1,22 @@
 {
+  "committed_context_durability_20261008_gate": {
+    "status": "PASS_COMMITTED_CONTEXT_TWO_PROCESSES_NOT_FULL_RESTART_OR_PRODUCT",
+    "source_parent": "240503c6dcbe46d15f0ac9041ee975743e5db0c0",
+    "test_sha256": "b13df80e77334d9d33aa71bd1b49f3db731f2553724e9cf8ac8f53be9848533f",
+    "implementation": "One testfile/normalmanagerterminaltransaction+strictresponse+existingnonassertconftestguard. Twoexplicitnewsyntheticjobs,no worker/calculation; productionservice/API/model/migrations unchanged. DirectCLIassertisolationP1 corrected;explicitmodeIDs andpositiveoptimizeguard beforeSQL;negative-Odevelopment/malformedwrite tested.",
+    "sql_witness": "Finalwriter16709/reader16734 exit0/optimize0/quant_test0017: same2IDs/fullresponseJSON/storageexactequal. Observedcontext2030-01-02/600000/count1 JSONBobject;freshunknownfixtureSQLNULL/API null remainsunknown. BothFAILED/noresult/summaryNone/0rows. Not migrated-originallegacy orstrategy/researchreturns.",
+    "tests": "21focused/static331/mypy146;final1424backend/1existingunmountedoptionalarchiveSKIP23.95s/Ruffapp+tests331/mypy146/Alembicchecknonewops terminal0. Earlier24.02sfullpreoptimizationguard retainedchronology. Frontendunchanged previous794currentbodyPASS,notrerun.",
+    "isolation": "Fresh30b1/imagecf78/no mounts/tmpfs/loopback55471quant_test0otherclients;normalemptytestDBheadmigration. Healthtemplate/quoting/wrongcwdcommanderrors preservedandcorrected. Final0clients/exactidentity thenstop0OOMfalse175847Zretained;tmpfsrowsNOTpreservedafterstop.",
+    "preservation": "No originalbackend/PGRedisrestart/migration/failedjobmutation. Original0017/selected5paper417events12jobs4updates/formal1/3/310/healthy/PONG/APIfrontend200/frozen693c/tagf88b/.research retained. No denied44table/clean-demo/PSroute/provider/OOS/GitHub.",
+    "limits": "Committedcontextacrosschildlifetimes whiletestPGalive ONLY;notcrashbeforecommit/physicalDBrestart/disaster/lostledger/fullfinancial/AA/productPASS. No unsupportedassurancegateorfullgoalscopechange.",
+    "review": "Readonlyreview priorCLIisolationP1 closed/nonassertguard;mode/IDs/storage/optimizedpositiveevidence bounded. Reviewer no SQL/test/UI/network. Finalproofindependenthashreview separately pending.",
+    "evidence": "product-evidence/v1.2/m4/20261008-committed-context-durability/README.md",
+    "evidence_payloads": 22,
+    "evidence_manifest_sha256": "d500a7426ff4e089895c2c232c75d5f5cb65590321af40522e2de1ac40eeb2c0",
+    "evidence_verification": "TwicecanonicalimmutablePASS/prior41bodypayloads preserved/actualwriterreader/sourceB13/finaltests/negativeguard/selectedpreservation bound. PrivateoutsideGit.",
+    "ci": "NOT_RUN_GITHUB_HOLD; no remote request/push/merge/tag/release",
+    "full_product_pass": false
+  },
   "body_readability_20261008_gate": {
     "status": "PASS_SCOPED_BODY_READABILITY_NOT_FULL_PRODUCT",
     "source_parent": "23c088be38ac9105d753db52f12fd6fbaffaffa5",
@@ -403,7 +421,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T17:44:32Z",
+  "updated_at_utc": "2026-10-07T18:03:09Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3378,19 +3396,20 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8body15/readability closes shared13/14 overrides:794frontend/actual16Helpmatrix+4validmodal/scopedmissingcacheerror PASS;41payload81cee057twice/prior170preserved. Original0017/selectedcounts/app200/frozen/tag retained. FullgoalACTIVE/notfinancial/AA/performance/nativeChromePASS;GitHubhold.",
-    "repository_writer": "Root sole code/docs/state/evidence writer;freshPID/start/args no competingwriter. checkpoint_review_oct8 readonlybodyreview andnext0017SQLwitnessdesign;no reviewerwrites. Allfrontendtestsessionsterminal0;exactownedidleNode7969stopped137/OOMfalse174152Z retained. No GitHub/frozenOOS mutation.",
-    "database_writer": "No Oct8test/restore/strategy. Originalbackend normalDesktop lifecycle auto-upgrade0016->0017 nullableJSONB;readonlyselected7tablecounts matchbaseline/allterminal. ExacttestPG30b1stopped0/OOMfalse084026Zretained;no denied44table refresh/reset/prune/delete/oldfakeledger.",
+    "latest_verification": "Oct8committedcontext16709->16734 exactJSON/storage/quant_test0017/opt0PASS;1424backend1optionalSKIP/static331/mypy146/Alembiccheck0/22payloadd500a742twice/prior41preserved. Body794/16Help/4validmodal remainscurrentfrontend. Original0017/selectedcounts/app200/frozen/tag retained. FullgoalACTIVE/notfullfinancial/AA/perf/nativeChrome/CIreleasePASS.",
+    "repository_writer": "Root sole code/docs/state/evidence writer;freshPID/start/args no competingwriter. checkpoint_review_oct8 readonlybodyseal/sourceisolationP1review andnextfullgoalpriorities;no reviewerwrites. Alltestsessionsterminal0;exactownedidleNode7969stopped137OOMfalse174152Z/testPG30b1stopped0OOMfalse175847Z retained. No GitHub/frozenOOS mutation.",
+    "database_writer": "Rootsolewriter onlyownedstrictAPP_ENVtest/quant_test55471:emptymigration/fixtures/normalterminalwitness;testPG30b1stopped0retained175847Z,tmpfsrowsdisposable. Original0017/selected7tablecounts unchanged/no originalmigration/restart/failedjobretry/backfill/strategy. No denied44table/reset/prune/delete/fakelostledger.",
     "queue_writer": "PrivateV30all137104sourcePASS33unresolved/current276bindings;only146147change/old102wholePASS135wholeunchanged. Literal156 andknowncredit/year/listing/cash/tablecontradictions retained. Fullfinancial/newversion/dataadmission unfinished;no provider/event/researchqueue writes.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "Oct8nativeUbuntuDocker/Compose working. OriginalPG5987601/Redisdf3dc24/backendhealthy/actual5173nginxa561fa/API200;selected12jobs5paper417events4updates/formal1/3/310/schema0017 preserved. Newservedba789d34/6ef228f9/d1b21e37/currentIABbodyproofscoped. No test/producerlive;Node7969STOPPED137/OOMfalse retained174152Z.",
+    "verified_processes": "Oct8nativeUbuntuDocker/Compose working. OriginalPG5987601/Redisdf3dc24/backendhealthy/actual5173nginxa561fa/API200;selected12jobs5paper417events4updates/formal1/3/310/schema0017 preserved. Servedba789d34/6ef228f9/d1b21e37/bodyIABproofscoped. Alltestchildren/1424fullterminal0/no producerlive;Node7969STOPPED137OOMfalse/testPG30b1STOPPED0OOMfalse retained.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8committedfailurecontext SQLtwo-processwriter16709reader16734/opt0/quant_test0017/same2IDs+fullJSON+storagePASS;JSONBobject/freshSQLNULL preserveunknown/noresult. CLIisolationP1closedwithnonassertconftestguard/argument+positiveoptguard. Final1424backend1optionalSKIP23.95s/static331/mypy146/Alembiccheck0.22payloadd500a742twice/prior41preserved. Original0017/selectedcounts/app200/frozen/tag intact;ownedtestPG30b1zerootherclientsSTOPPED0OOMfalse175847Z retained/tmpfsrowsnotdurableafterstop. FullgoalACTIVE/notstrategy/financial/fullrestart/GitHubPASS.",
     "Oct8sharedbody15:7CSSdeletions/1RED->794frontend48files/linttypes/build171/audit0. Actual16ENZHthemefoursizeHelp/4validmodalkeyboard+missingcacheerror scopedPASS;default452mismatchretainedcorrected/desktopsoftJPEGnotvisualPASS.41payload81cee057twice preservesprior170/atomicservedba789d34+6ef228f9+d1b21e37/priorrollback. Original0017/selectedcounts/app200/frozen/tag intact;ownedidleNode7969stopped137OOMfalse. IndependentreadonlynoevidencedscopedP1P2/fullgoalACTIVE/GitHubhold.",
     "Oct8U4samepath/batchedsource/cleanForward selection closure:4RED+3reviewRED->793frontend47files/49comparison/static/build170ms/audit0. ActualIABexisting2jobhandoff/manual/ENZH/compare/BackForward and16correctedpickerlayouts PASSscoped;170payload2d4ea856twice/prior6preserved/fullrollback/atomicserved34e868ad+98cb3bc6. Original0017/selectedcounts/PONG/APIfrontend200/frozen/tag retained/ownedNode7969stopped137notOOM. Independent no evidenced scopedP1P2/noepochspeculation/GitHubhold/fullgoalACTIVE.",
     "Oct8 recovered8b6257c/V30source104PASS33unresolved165focused1423backend1optionalSKIP/static/isolatedcycle/29payload49052186+readonly currentbindingreview. NormalDesktoponce restoresnativeDocker/Compose/newROmount/app200;actual0017autoupgrade/selected12jobs5paper417events4updates/formal1/3/310 retained/6payloada67e6857 preservesprior27backup. Frozen/tag/.research intact;no strategy/OOS/GitHub;fullgoalACTIVE.",
@@ -4014,8 +4033,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue fullU1-U8/M0-M5, not scoped/source-only completion. Bodycurrent794/16Help/4validmodal/41payload81cee057 closedscoped. Next actual0017committedfailurecontextcross-processSQLwitness usingfreshinspectedexclusivequant_test fixture/normalterminaltransaction/newreadprocess, neveroriginalDBrestart oroldfailuremutation. Fullfinancial/action/reference/lifecycle/newversion/currentAA/performance/export/media remain. Lawfulafterstartforward/genuineoldledgers/remoteCIrelease required;preserve frozen/OOS/GitHubhold/deniedboundaries;reuseV30/1423historicalproof.",
-  "local_next_command": "Read fullobjective/productmaster/currentownership/bodygate. Preserve41payload81cee057/prior170;no recoveryrerun794suite/PDFs. Inspectexistingqtp-will-credit-testpg-oct7 ownership/image/tmpfs/nooriginalmounts/clients;readnormalExperimentManagerterminal+strictcontract andAPP_ENVtestguard. Safeboundeddual-processwitness onlyquant_test,source/PIDs/exitcode/rowJSON retained; do not retrydenied44tablefingerprint/clean-demo/PSroute viaanotherinterpreter. Keepfullscope/frozenOOS/rights/CIholds.",
+  "next_task": "Continue fullU1-U8/M0-M5: committedcontextcurrent1424/22payloadd500a742 andbody794/41payload closedSCOPED. Prioritize trustworthyselfserviceAshareeconomic/action/reference/lifecycle/newversion admission andcurrentAA/performance/export/media/fullrestore ratherthanmorefont/PDFacquisitioncounts. ReuseacceptedV30source104/33 andreference_runtime candidate/currentauthority honestly;source-onlynotfinancialadmission. Lawfulafterstartforward/unresolvedmissingledgerfact/exactremoteCIrelease remain;preservefrozen/OOS/GitHubhold/deniedboundaries, noaddedindependentphysicalbackupmandatorygate.",
+  "local_next_command": "Readfullobjective/ProductMaster/completionScope/currentownership/contextgate;verify22payloadd500a742/prior41 withouttestreplay. Inspectremainingfinancial/reference/newversion existingproducer+evidence andchoosehighestvalueconcreteuserflowgap;independentreviewnextpriorities. Preserveall137coverageoracle/unknownfailclosed andoldimmutableoutputs, no source-onlyPASSasfinancial/unknown-tozero/strategyperformancefit. Inparallel currentexportlanding/nativeAA/performance viaallowedactualbrowser;no deniedroute/permission/retryorGitHub/dateassumptionbypass.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
