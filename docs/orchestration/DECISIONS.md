@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 Displaced boxes remain source text — 2026-10-07
+
+Full6PDF20pages show guarantee boxes above body, displaced by extraction to
+page tails inside holder prose. Global removal regressed accepted metadata;
+reject that approach. Shared holder-only exact complete declarations preserve
+raw text and independent date guards. Partial declarations must not be generic
+prose; fix the common grammar, not individual securities. Correct a no-op negative
+mutation and assert it changes the source. Existing131whole rows/87wholePASS remain.
+All-row recheck also changed300077 ordinary登/记 split; full original3pages
+independently reviewed/SHA/cache verified before accepting source-only PASS.
+Final144related1376backend1optionalSKIP/static/disposablemigrationPASS;V17
+92source-onlyPASS45unresolved, five newPASS and154onlylistinggap. No financial event
+admission or full product PASS;300171/300015 stay unresolved. Independent scoped
+readonly no evidencedP1/P2.44payload seal/prior20 preserved;testPGstopped retained,
+original0016/frozen/tag unchanged. No GitHub/deployment/OOS action.
+Next shared bare-object syntax group300121300142300143 requires full9PDFpages.
+Full U1-U8/M0-M5 remains the active objective, not a parser-only replacement.
+
 ## v1.2 Complete numbered metadata and object heading — 2026-10-07
 
 Complete300055/300091 sourcePDFs/full6pages/cache/SHA reviewed. Prefer two exact

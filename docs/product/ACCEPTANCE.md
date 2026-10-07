@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 holder-only complete page declarations — scoped shared repair
+
+[Private evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-guarantee-margin-batch/README.md>).
+Source0daa1c1504342ba294212882e6636256c9a6398e recognizes four complete fixed
+boxes only in bounded holder prose at retained page boundaries, plus 登/记/在/册
+page counters. No global text removal, date joins or symbol-specific branch.
+Six originalPDF20pages/fullvisual/SHA/directNFKCcache equality; additional changed
+300077 normal登/记 page break verified separately all3pages. Old metadata preserved;
+partial/altered banners rejected. Earlier8fail/4fail drafts not acceptance.
+Final144related/1376backend1optionalarchiveSKIP20.76s/Ruff558/mypy146/test-only
+head-base-head/checkPASS. V17all13792source-onlyPASS45unresolved,old87wholePASS/
+131whole rows unchanged/276bindings/reverse-immutable repeatPASS. Five newPASS
+073077079102129;154only advances to missing independent unrestricted listing,
+171stillholder. Remaining19holder20listing1credit1ex4special;300015yearconflict intact.
+Independent readonly no evidenced scopedP1/P2, no reviewer execution/economic audit.
+44payload seal7982e2ed07f74669aa6761888f99d1c1229e7998777725dac27aae1d9d4b64d9;
+previous20sealedpayloads unchanged. Exec76306terminal0/owned30b1stopped0/OOMfalse
+063725Z retained; original0016/PONG/healthyservices/frozen693c/tagf88b/.research
+preserved. Frontend unchanged/not rerun;no deployment/GitHub/provider/data/strategy/
+OOS action. Full financial/recovery/forward/quality/release remain open;goalACTIVE.
+
 ## 2026-10-07 complete numbered holder fields — scoped shared repair
 
 [Private evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-holder-numbered-margins/README.md>).
