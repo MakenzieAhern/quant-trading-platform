@@ -42,8 +42,6 @@ def restructuring_holder_ratio(pages: list[str]) -> Decimal:
         return next(iter(holder_ratios))
     if holder_ratios:
         raise ValueError("RESTRUCTURING_ORDINARY_HOLDER_RATIO_UNRESOLVED")
-    if re.search(r"不(?:再)?向(?:原股东|原出资人|股东)(?:进行)?分配", text):
-        return Decimal(0)
     direct = {
         Decimal(value) / Decimal(base)
         for base, value in re.findall(
@@ -56,6 +54,8 @@ def restructuring_holder_ratio(pages: list[str]) -> Decimal:
         return next(iter(direct))
     if direct:
         raise ValueError("RESTRUCTURING_ORDINARY_HOLDER_RATIO_UNRESOLVED")
+    if re.search(r"不(?:再)?向(?:原股东|原出资人|股东)(?:进行)?分配", text):
+        return Decimal(0)
     values = {
         Decimal(value) / Decimal(base)
         for base, value in re.findall(

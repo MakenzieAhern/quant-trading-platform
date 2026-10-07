@@ -1,5 +1,32 @@
 # Decisions
 
+## v1.2 Positive holder components precede unrelated no-award terms — 2026-10-08
+
+The shared restructuring_holder_ratio incorrectly returned0 before inspecting
+its existing direct-positive branch when the same notice granted0.7 toordinary
+holders but sent other newshares elsewhere. Reproduce bothsentence orders red2;
+move only the generic no-award check afterdirectpositive/conflictchecks.9focused
+testsPASS. This is a parser rootfix, not a new economic policy or authority rerun.
+
+Close two date-specific official no-holder classifications:6004232018-12-18 and
+6005952021-10-08,total1/holder0/explicitcash0. Keep all originalsource/date/hash
+evidence andcase-independentotherhistory. Never createzero CASH/BONUS or assign
+creditor/investor newshares to the originalholder.4scoped syntheticseed checks
+load the actualemptycase eventlist andpreserveqty/basis/cash,notfullruntimePASS.
+Missingobservations6585→6583 plus2 explicitnegatives;whole7544 andorthogonal
+original1696pending/5711not-evidenced counts retained. Separate specialreference,
+actualtrading/close andfullfinancialgates remainOPEN;600725 component notclosed.
+
+Independentreview foundV1 omitted the importedcashguardmodulehash. RetainV1;
+publish separateV2 with explicitmodulebinding/localGitbytes/currentguards,
+without alteringcases/witnesses/counts. Preserve priorproofpayloads and verify
+the changedhelper's historicalbytes via local58780e8, not silent replacement or
+claimingold runtimecode checker currentPASS. FinalV26f3e0da7/9payload5edde298
+twiceverified,old10+7intact;no originalSQL/frozen/.research/OOS/GitHub mutation.
+GitHubHOLD andrealforward/genuine lost-ledger/currentquality requirements remain.
+Downloadgate alreadyhit chrome:// policydenial: no alternatebrowser/CDP/third
+unobservedclick without a permittedobservable path;work on independentquality.
+
 ## v1.2 Full-source reconciliation is not financial coverage — 2026-10-08
 
 Reconstruct the whole42,792 frozen action objects from their six original censuses

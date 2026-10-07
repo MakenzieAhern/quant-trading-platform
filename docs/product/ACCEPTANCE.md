@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 no-holder source closure and shared parser fix — still PARTIAL
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-no-holder-entitlement-review/README.md>)
+binds parent58780e8 and immutableV2 canonical6f3e0da7/bytesc3049b16.
+600423 record2018-12-17/ex18 and600595 record2021-09-30/ex2021-10-08
+are official company-total1/ordinary-holder0/explicitcash0 classifications.
+Freshpypdf matches12 complete cached pages across3 source notices, with exact
+issuer/date/PDF/cacheSHA/publication/body/retrieval metadata. No zero CASH/BONUS.
+
+Sharedparser direct-positive/no-award precedence defect reproduced withtwo
+opposite sentence-order tests (0 instead of0.7), then minimal sharedreorder fixes
+all callers.9focused database-independent tests/explicit4file Rufflint+format
+PASS;no newdependency/policy/API/migration/runtime/frontend change.
+ActualFullDataset._actions validates42792 frozen rows andemptycase lists;
+4synthetic100/101seed checks preserveqty/exactquantity*averagebasis/cash1000/
+snapshots/PnL/Noneaggregatebasis/no generatedorders/fills/roundingaudits.
+This is scoped loader-to-Portfolio, not full constructor/runtime/strategy.
+
+Whole7544 immutableparent retained bycanonical/bytehash;other7542 statuses
+unchanged.6585source/lifecyclemissing→6583 plus2 explicit no-holderobservations,
+notfinanciallyadmitted events.1696originalpending/5711not-evidenced remainvisible;
+2date-specific no-holder overrides are not whole-securitynever-rights/cash.
+600423 specialreference/actualresume and600595 actualclose/execution stillOPEN.
+600725total1/holder0.7/components,othergaps/fullfinancialgate remainrequired.
+
+IndependentP2 missingcashguardmodulebinding inV15c2ef42f corrected in separate
+V2withoutoverwritingV1. Final560input/56codebindings, local58780e8 historical
+helper/modulebytes verified. V1repeat/reverse,V2repeat and-Onegatives PASS;
+4prepublicationfailures/red2 preserved. Two readonly reviews,final sourceV2
+P2closed/no evidenced scopedP1/P2.9payloadseal5edde298 twicePASS;prior10+7
+payloads intact. Old runtimecode checker ishistorical afterintentionalhelperfix,
+not claimedcurrentPASS. Frozenmanifest693c0b81/v1.1tagf88b5c60 unchanged;
+testPG30b1stillExited0/noSQL. No fullsuite/browser/deployment/provider/strategy/
+OOS/GitHub operation;1461backend/794frontend remainpriorreceipts. FullU1-U8/
+M0-M5 financial/lifecycle/currentquality/forward/ledger/delivery remain incomplete.
+
 ## 2026-10-08 full-action reconciliation — coverage remains PARTIAL
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-full-action-reconciliation/README.md>)

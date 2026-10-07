@@ -1,4 +1,30 @@
 {
+  "no_holder_entitlement_20261008_gate": {
+    "status": "PASS_SCOPED_TWO_SOURCE_CLASSIFICATIONS_AND_SHARED_PARSER_FIX_NOT_FINANCIAL_ADMISSION",
+    "previous_goal_turn_classification": "NO_PROJECT_PROGRESS: preceding CI availability answer only rechecked unchanged local services. This turn reproduced and fixed shared direct-positive/no-award precedence, completed two current source classifications and closed an independent provenance P2: PROGRESS, not product completion.",
+    "source_parent": "58780e8e766974d2ab6ed789631568f24cd92fa2",
+    "implementation": "Move generic no-award check after existing direct positive-holder branch in shared restructuring_holder_ratio; all callers reuse it. Two opposite sentence-order regressions red2 then green; no dependency/policy/API/migration/runtime/frontend change.",
+    "sources": "600423 record2018-12-17/ex18 and600595 record2021-09-30/ex2021-10-08: company-total1, ordinary-holder0, explicitcash0. Freshpypdf6.16.1 matches both4-page implementation notices plus600595 later4-page notice; issuer/date/PDF/cacheSHA and original publication/body/retrieval dates preserved.",
+    "accounting": "Current FullDataset._actions validates42792 frozen rows; bothSID/ex lists empty.4 scoped synthetic100/101share seed checks preserve quantity/exact quantity*average basis/cash1000/full financial snapshots/PnL andNone aggregatebasis;no generated orders/fills/zero CASH/BONUS/rounding or original-holder pending entitlement. Not full constructor/runtime/strategy acceptance.",
+    "closure": "Whole immutable7544 parent hash reference retained;other7542 statuses unchanged.6585missing source/lifecycle becomes6583 plus2 explicit official no-holder observations, not2 new events. Original1696pending/5711not-evidenced counts remain visible with2 date-specific no-holder overrides;no whole-security never-rights/cash exclusion.",
+    "provenance_correction": "V1 original5c2ef42f/559inputs54code retained. IndependentP2 missing importedcashguard binding corrected in separateV2, explicit moduleSHA+local58780e8 Gitbytes/current3cache/negative rechecks. Changed sharedhelper oldhash independently verified via localGit, old parent report/payload never overwritten; prior runtime oldcode checker not claimed currentPASS.",
+    "report_v1_sha256": "5c2ef42f07d5557754bf98404edb600162d09a71b24a673a8527a453680afca8",
+    "report_v2_sha256": "6f3e0da76179feaa427ab11d7e37c5cdf3a278b618e1655b0a3cc20b902919ab",
+    "report_v2_bytes_sha256": "c3049b16cd5c4f0f5d66d6704279e131f09e6a58a6f7b30c1ad14eaa4d44b10d",
+    "verification": "V1 unchangedrepeat/reverse same5c2ef42f;V2 repeat same6f3e0da7. BothoptimizedPython negatives reject beforework. Final560input/56codeSHA match;9focused database-independent tests/explicit4file Rufflint+format/verifierstatic PASS.4prepublication failures andred2 retained;independentcashguardP2closed/no evidenced current scopedP1/P2.",
+    "evidence": "product-evidence/v1.2/m4/20261008-no-holder-entitlement-review/README.md",
+    "evidence_payloads": 9,
+    "evidence_manifest_sha256": "5edde298223f561daadb4197947bf4358dd661541238604be9e005dcb2b6958c",
+    "prior_evidence": "Original10full-action and7overlay payloads hash-intact;new9payload seal twicePASS. Originalfrozenmanifest693c0b81/v1.1tagf88b5c60 unchanged;ownedtestPG30b1stillExited0/OOMfalse, not started/no SQL.",
+    "remaining": "600423 special reference/actual resumed trading and600595 actual previous-close/execution binding separateOPEN.600725total1/holder0.7 component review,6583source/lifecycle gaps andfullfinancial gate remain. Currentquality/restore/media/lawfulforward/genuine lostledgers/remote delivery remain mandatory.",
+    "financial_coverage": "PARTIAL",
+    "financial_admission": false,
+    "dataset_created": false,
+    "dataset_registered": false,
+    "strategy_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD; no remote request/push/merge/tag/release"
+  },
   "full_action_reconciliation_20261008_gate": {
     "status": "PASS_SCOPED_FULL_RECONCILIATION_AND_SCOPE_NOT_FINANCIAL_ADMISSION",
     "previous_goal_turn_classification": "NO_PROJECT_PROGRESS: user CI availability question received only readonly service checks. Current turn revalidated the checkpoint and completed whole42792 provenance reconstruction plus7544 oracle reconciliation and38 evidenced scope annotations: PROGRESS, not product completion.",
@@ -524,7 +550,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T20:14:30Z",
+  "updated_at_utc": "2026-10-07T20:45:28Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3499,10 +3525,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 full42792six-source reconstruction and whole7544oracle reconciliation;V2wholeV1retained,38officialBscope observations/000771unresolved/1potentialaliasnotmerged.1696pending+5711not-evidenced/6585source-lifecycle gaps;financialPARTIAL.10payload3b5d05f9 twice sealed,prior7 intact;two scoped independentreviews/repeats/-O/static. GitHub hold.",
-    "repository_writer": "Root sole docs/state/private candidate/evidence writer;freshPID/start/args no competing writer. Two independentreviewers readonly, final scoped no evidencedP1/P2. V1final/repeat andV2final/repeat/reverse/verifier allterminal0;expectednegative-O1. No productioncode/API/dependency/policy change this unit or GitHub/frozen/OOS mutation.",
+    "latest_verification": "Oct8 two official no-holder/cash0 classifications and shared positive-holder precedence rootfix;red2/9focusedPASS/current560inputs56code/V2repeat/cashguardP2closed.9payload5edde298 twice sealed;prior10+7 intact. Whole7544 retained,missing6583 plus2explicitno-holder;financialPARTIAL. GitHub hold.",
+    "repository_writer": "Root sole repo/sharedparser/test/docs/state/private candidate/evidence writer;freshPID/start/args no competing writer. Two independentreviewers readonly, currentcashguardP2closed/final no evidenced scopedP1/P2. Allprivateproducers/verifiers terminal0;expectedoptimized negatives1. No API/dependency/policy/migration/frontend/runtime or GitHub/frozen/OOS mutation.",
     "database_writer": "No SQL/testDB start/original migration/restart/deployment this unit. Original Compose PG/Redis/backend healthy;RedisPONG/actualWindows5173/API8000HTTP200 checked. Prior selected ledger counts are historical, not fresh queries. TestPG30b1 remains stopped0/OOMfalse retained. No denied44table/reset/prune/delete/fake lostledger.",
-    "queue_writer": "Root sole private evidence/candidate writer. ImmutablefullV11317e094/V2e59c40a3;whole42792/7544/498/137/15contracts/6census preserved,187overlaylegsnoappend. Scope38observationsnotstableIDs;000771notmerged. Source/cash/component/lifecycle gaps persist;no datasetregistration/execution. All producers/verifiers terminal,fullfinancialnew-version gatepending.",
+    "queue_writer": "Root sole private evidence/candidate writer. Immutabletwo-caseV15c2ef42f/V26f3e0da7 preserve wholefullV2e59c40a3 andall7544 observations;sourceonly no-holder annotations2/missing6583. Currentparserexplicitpositiveprecedence;sourcecashguardbindingP2closed. Scope38observations/000771notmerged/187legsnoappend/498candidates retained. No oldqueue/frozen/.research rewrite or datasetregistration/execution;all producers/verifiers terminal,fullfinancialnew-version gatepending.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -4138,8 +4164,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue fullU1-U8/M0-M5. Full42792source reconstruction+7544observed-key reconciliation complete scoped,financialPARTIAL. Verify2legacy no-holder-entitlement cases from existing officialsnapshots;review600725total-vs-holder components and proper1696pending/5711not-evidenced lifecycle before fullnew-version admission. Preserve6585source/lifecycle gaps/33supplementalgaps/8cashunknown/2contradictions/000598/000771;no automaticalias merge orblind187append. Required currentAA/performance/export/media/restore,lawful after-start forward/genuine lostledger fact andremoteCI/release remain.",
-  "local_next_command": "Read full_action_reconciliation_20261008_gate and privateREADME;verify immutableV2 andprior7seal first. Inspect existing audit_p1_restructuring_no_entitlement and its2cachedofficialdocuments/approvedpass-through policy for600423/600595;reuse current source helpers without old.research writer,do not synthesizeholderbonus. Prioritize explicitwhole-event/lifecycle distinctions in full7544queue;6585missing counts include2legacy no-entitlement awaitingverification. No newdatasetregistration/execution until wholefinancial/lifecycle/reference/source gate passes;block300147/155evenfrozenbase,no name/code/dateguess oroldfrozen/.research/OOS/GitHub/denied-route mutation. Continue independent productquality tasks while source/forward/delivery barriersremain.",
+  "next_task": "Continue fullU1-U8/M0-M5. Two officialno-holder cases nowsource-closed with4scopedno-op checks/sharedparserfix;fullfinancialPARTIAL. Nextreview600725total-vs-holder components and proper1696originalpending/5711not-evidenced lifecycle,6583source/lifecycle gaps/33supplementalgaps/8cashunknown/2contradictions/000598/000771. Preserve all7544 and oldfrozen;no automaticalias merge/blind187append. Required currentAA/performance/export/media/restore,lawfulafter-startforward/genuine lostledger/remoteCIrelease remain.",
+  "local_next_command": "Read no_holder_entitlement_20261008_gate/privateREADME andverify9payloadV2 seal first. Sharedhelper newhash has explicit local58780e8 oldcode lineage;old historical proof runtimechecker not a currentPASS. Review600725actualofficial components andactualholder/reference/tradability scope;do not fabricateBONUS forclosed600423/595 or alteroldfrozen/.research/OOS. No newdataset until wholefinancialgatePASS. Currentreportdownload routepreviouslydenied and no userpath supplied: no alternatebrowser/CDP/thirdsameclick. Continue independent currentAA/nativeperformance/restore/media gate;GitHubHOLD.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
