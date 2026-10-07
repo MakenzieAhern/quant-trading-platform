@@ -91,6 +91,13 @@ describe("bounded server command search", () => {
   );
 
   it.each([
+    [
+      "en-US",
+      "local-app",
+      "GitHub",
+      "Can I use the local app while GitHub CI/CD is unavailable?",
+    ],
+    ["zh-CN", "local-app", "GitHub", "GitHub CI/CD 暂停时，本地平台还能用吗？"],
     ["en-US", "backtest", "backtest", "What is a backtest?"],
     ["en-US", "drawdown", "drawdown", "What is maximum drawdown?"],
     [

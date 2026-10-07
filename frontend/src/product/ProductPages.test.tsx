@@ -64,6 +64,12 @@ it.each([
 );
 
 it.each([
+  [
+    "en-US",
+    "local-app",
+    "Can I use the local app while GitHub CI/CD is unavailable?",
+  ],
+  ["zh-CN", "local-app", "GitHub CI/CD 暂停时，本地平台还能用吗？"],
   ["en-US", "backtest", "What is a backtest?"],
   ["en-US", "drawdown", "What is maximum drawdown?"],
   ["en-US", "win", "Is a high win rate the same as a good return?"],
@@ -89,6 +95,34 @@ it.each([
       window.history.replaceState({}, "", originalUrl);
       await act(() => i18n.changeLanguage("en-US"));
     }
+  },
+);
+
+it.each(["en-US", "zh-CN"])(
+  "explains local-app recovery without claiming fresh data or remote CI (%s)",
+  async (locale) => {
+    await act(() => i18n.changeLanguage(locale));
+    render(<HelpPage />);
+    const answer = document.getElementById("help-local-app");
+    expect(answer).not.toBeNull();
+    expect(answer).toHaveTextContent("http://localhost:5173/");
+    expect(answer).toHaveTextContent("Docker Desktop");
+    expect(answer).toHaveTextContent(
+      locale === "en-US"
+        ? "Service online does not mean prices are current"
+        : "服务在线不代表行情最新",
+    );
+    expect(answer).toHaveTextContent(
+      locale === "en-US"
+        ? "Local checks do not replace remote CI or release approval"
+        : "本地检查不能替代远端 CI 或发布审批",
+    );
+    expect(answer).toHaveTextContent(
+      locale === "en-US"
+        ? "do not reset Docker or delete data"
+        : "不要重置 Docker 或删除数据",
+    );
+    await act(() => i18n.changeLanguage("en-US"));
   },
 );
 

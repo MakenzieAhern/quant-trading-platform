@@ -154,6 +154,10 @@ const en = {
   forwardHelp:
     "Not available yet. This mode requires a legally usable, verified source and an explicitly started account that processes newly completed sessions received after start. Historical backfill and the 2030 demo do not prove forward acceptance.",
   helpTitle: "A few ideas that make the results clearer",
+  localAppQuestion:
+    "Can I use the local app while GitHub CI/CD is unavailable?",
+  localAppAnswer:
+    "Yes, when this PC's installed services are running, open http://localhost:5173/ in the same browser. GitHub CI/CD checks and publishes changes; it is not required to use the existing local app. Local checks do not replace remote CI or release approval. Service online does not mean prices are current or economically validated: check dates, mode and limits in Data center. If the page or service is unavailable, open the installed Docker Desktop from the Windows Start menu, wait for its engine, then refresh the same page. If it still fails, ask the maintainer to check services; do not reset Docker or delete data. Keep the same address to retain browser-saved drafts and uncertain request IDs.",
   backtestQuestion: "What is a backtest?",
   backtestAnswer:
     "It applies explicit trading rules to past data with simulated costs and execution constraints. It tells you what this model did in that history, not what it will earn next.",
@@ -330,6 +334,9 @@ const zh: Record<keyof typeof en, string> = {
   forwardHelp:
     "尚未开放。此模式需要合法可用且经过核验的数据来源，由用户主动启动会话后接收新到达的已完成交易日数据并模拟处理。历史补录和2030演示不能替代前向验收。",
   helpTitle: "读懂结果，从几个概念开始",
+  localAppQuestion: "GitHub CI/CD 暂停时，本地平台还能用吗？",
+  localAppAnswer:
+    "可以，前提是这台 PC 已安装的服务正在运行；在同一浏览器打开 http://localhost:5173/。GitHub CI/CD 用于检查与发布修改，不是使用现有本地平台的前提。本地检查不能替代远端 CI 或发布审批。服务在线不代表行情最新，也不代表经济完整性已验证；请在数据中心查看日期、模式和限制。如果页面或服务无法连接，从 Windows 开始菜单打开已安装的 Docker Desktop，等待引擎运行后刷新原页面。仍然失败时，请维护者检查服务；不要重置 Docker 或删除数据。保留同一地址，避免丢失该浏览器来源下保存的草稿与待确认请求标识。",
   backtestQuestion: "什么是回测？",
   backtestAnswer:
     "把明确的交易规则放到历史数据中，加入模拟成本和成交限制。它描述模型在这段历史里的表现，不预测下一次会赚多少。",
@@ -365,6 +372,11 @@ export function useProductCopy(): Record<keyof typeof en, string> {
 
 export function productHelpTopics(copy: ReturnType<typeof useProductCopy>) {
   return [
+    {
+      id: "local-app",
+      question: copy.localAppQuestion,
+      answer: copy.localAppAnswer,
+    },
     {
       id: "backtest",
       question: copy.backtestQuestion,
