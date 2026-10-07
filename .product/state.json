@@ -1,7 +1,23 @@
 {
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T03:43:37Z",
+  "updated_at_utc": "2026-10-07T03:56:22Z",
+  "saved_scope_and_exit_20261007_gate": {
+    "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
+    "source_parent": "a3fc595",
+    "defect": "Actual Chrome saved configuration preview exposed ALL; shared named-version/page-recovery preview now reuses existing ALL/SSE/SZSE translated labels, unknown code explicit. Raw metadata/snapshots/financial precision/restore validation unchanged.",
+    "tests": "3 parameterized bilingual/raw metadata/storage/no-restore RED then PASS;31focused/770full47files,169sourcehash bindings,lint/types/scopedPrettier/build168msPASS. Offline audit cached0 not fresh advisories.525.68kB mainchunk warning remains,not p95 proof. Backend unchanged/not rerun/deployed, earlier1340+optionalSKIP historical.",
+    "browser": "ActualChrome3:ENdark1440x900/ENlight1280x800/ZHdark1024x768/ZHlight390x844 translatedALL/fullcash/bothTabedges/Esc/triggerrestore/nooverflowPASS. EN1440/ZH390 expanded exactmetadata retainsALL/fullcash/nooverflow. Not full16crossproduct/native200/AA/speech/performance; browserSSE/SZSE not fabricated, tested parameterized only.",
+    "exit": "ENdark1440 andZHlight390 actual exitmodal bothTabedges/Esc,saveexit->Workbench->continue same QA draftPASS;ZHBacktriggerPASS. Name/precisecash123456.789000000000001/date20110104..20110630/20-20/step2 restored,nine immutableversions remain. Only draftsave timestamp changes;no restore confirmation/newversion/newjob/account/order/strategy/provider/OOS action.",
+    "deployment": "Existing exact owned frontend a561fa1250ed/no mounts/127.0.0.1:5173 inspected;full hostfrontend-before and containerhtml-before-config-scope-20261007-0353 backups retained. Oldassets preserved/atomicindexreplace;13servedhashesmatch. Newindexc106cc619d3be02cbef3ca81fdac8cdd25772c5d5716bd58b4fcc3bc6a6dd576,newJSe5c9cc27363d974c4276acdf2bd0b82b7a19a02626c754a16c42e042e74bcb08. OriginalPGRedisbackend healthy/PONG/APIfrontend200,unchanged.",
+    "test_result_sha256": "890199b156a61a3f786fa11b024f9a747c701612cc1acf6b058a88812437097c",
+    "browser_receipt_sha256": "bbdfc626b178c03c0605293baac3faa5bde7f95df0bcabfb0eeed1022808dba8",
+    "review": "Existing signed_results_review_oct7 independentreadonly code/callers/test review no evidencedscopedP1P2;unknowncodefallback static-only,no reviewer execution. Root actually inspected settled ENdesktop/ZHmobile pixels. No second task/newagent/writer.",
+    "cleanup": "Owned7969f4b no mounts/ports restarted only forfrontendtests;66193/75434terminal0;freshtop sole sleep57467 thenSTOPPED137/OOMfalse retained03:56:21Z. Not deniedclean-demo recreation/no networkcreate/originalDBrestart/migration/deletion/securitychange.",
+    "evidence": "product-evidence/v1.2/m4/20261007-config-scope/README.md",
+    "remaining": "Full U1-U8/M0-M5 unchanged;financial6cash59source000598300048/allaction/lifecycle/admission;actualexportlanding;lawfulafterstartforward;genuineoldledgers;original0017durability/restore/restart;fullAA/native200/performance/manualmedia/release open. No GitHub request/push/merge/tag/release. Goal ACTIVE not complete.",
+    "product_goal_complete": false
+  },
   "clean_demo_attempt_20261007_gate": {
     "status": "NOT_RUN_EXECUTION_POLICY_DENIED",
     "source_head": "bbc5cc1b98ba8824c4030abe7de0fe1880537e1a",
@@ -2959,16 +2975,16 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "2026-10-07T03:32:35Z rootsolewriter parent802373f/onlyDialog+new7testsbeforeunit;current767frontend47files/169sourcebindings/static/build160ms/audit0PASS,handles13831/5037terminal0. ActualChrome16guide plus search/strategy edges/history verified;13servedartifacthashes checked. Prior1340backend/migration historical unchanged. No originalDBrestart/migration/strategy/GitHub action.",
-    "repository_writer": "Root owns Dialog sharededgeguard/test/docs/state;existing signed_results_review_oct7 readonly. No concurrent agent writer or matchingWSLgit/testworker observed. Coherentlocalcommit/no push during latestuserreportedGitHub outage/no second task. Allfinancial source/frozen/OOS records untouched.",
-    "database_writer": "This Dialog/attemptedclean-demo unit has noDBwriter. Priorowned30b1cfb tmpfs/no mounts/55471 quant_test fulltests/reversible0017-check terminal, STOPPED0retained. OriginalDB5432 never used for tests/migration/restart; prior5/417/12/4 counts historical/not fresh. Genuine lostledgers unresolved. Node7969f4b nowSTOPPED137/OOMfalse idlecleanup/retained after freshidentity/top check;frontendhandles13831/5037terminal0. Rejectednewbackend/PG command neverexecuted/no scratchcontainers. No volumes/prune.",
+    "latest_verification": "2026-10-07T03:56:22Z rootsolewriter parenta3fc595/sharedconfigurationpreview+3bilingualtests;770frontend47files/169sourcebindings/static/build168ms/cachedofflineaudit0PASS,66193/75434terminal0. ActualChrome4pairedpreview cases plus ENdesktop/ZHmobile saveexit/resume PASS_SCOPED;13servedartifacthasheschecked. Prior1340backend/testDB historical unchanged. No originalDBrestart/migration/strategy/GitHub action.",
+    "repository_writer": "Root owns sharedConfigurationVersionsPanel/test/docs/state;existing signed_results_review_oct7 readonly no evidenced scopedP1P2. Fresh WSL process inventory no concurrent repository/test/provider writer. Coherentlocalcommit/no push during GitHub hold/no second task. Financial/frozen/formal/OOS records untouched.",
+    "database_writer": "Current saved-scope/exit unit no DBwriter. OriginalDB5432 never used for tests/migration/restart; prior5/417/12/4 counts historical/not fresh;genuine lostledgers unresolved. Priorowned30b1cfb tmpfs/no mounts/55471 testDB remainsSTOPPED0retained. Existing Node7969f4b restarted only for current frontendchecks66193/75434terminal0;after freshidentity/top idlecheckSTOPPED137/OOMfalse retained03:56:21Z. Original rejectedclean-demo command not recreated/no newcontainers. No volumes/prune.",
     "queue_writer": "No activefinancial/provider/researchqueuewriter. Root immutablecensus7c686a20 and6payloadproofseal17380b19 terminal/bindingschecked; priorV3/72cash overlay andwhole498bonus/498reference/7407coverage/137sources/parent40353cash untouched andsource-boundhistorical. SourceV7 78sourceonlyPASS/59unresolved,6cashunknown. Fullfinancial/economic/reference/lifecycleadmission incomplete; no studyexecution.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "2026-10-07T03:43UTC ownedNode7969f4b STOPPED137/OOMfalse idlecleanup after freshidentity/top sole sleep/no mounts/ports/alltesthandlesterminal;retained. PG30b1cfb priorSTOPPED0retained. OriginalPGRedisbackendUp13hhealthy/ownedfrontendUp9h/newD3frontend-onlystatic13hashes preserved/APIfrontend200. Newclean-demo containers absent; rejected command neverexecuted, tar only. No originalrestart/appmigration;liveDB0016historynotfreshcounts. No reset/prune/deletion/securityworkaround.",
+    "verified_processes": "2026-10-07T03:56UTC currentNode7969f4b STOPPED137/OOMfalse after currentfrontend770/staticchecks terminal0/freshidentity/top sole sleep57467/no mounts/ports;retained. PriorPG30b1cfbSTOPPED0 untouched. OriginalPGRedisbackendUp13hhealthy/ownedfrontendUp9h/currentCs2VmugL frontend-onlystatic13hashesmatch/APIfrontend200/RedisPONG. No clean-demo commandretry/newcontainer or nativeRPCpolicy workaround. No originalrestart/appmigration;liveDB0016historynotfreshcounts. No reset/prune/deletion/securitychange.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
@@ -3575,7 +3591,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5. Dialogfix bbc5cc1 locallycommitted/deployed/independentreview +16guide/search/strategy PASS_SCOPED. Current-head clean-demo attemptedpreparation but NOT_RUN: networkdefaultpool exhausted then exactcreate/start composite exec policydenied; no workaround/newcontainers. NativeSkyTrustedRPCnotconfigured/no input. Pending useractualexportfile andnative200screenshot; verify ifreceived, otherwise advance safe independent currentUI/API/manual/media/fullfinancial prerequisite work without reenacting rejected execution. Allfinancial6cash59source000598300048/allaction/lifecycle/newversionadmission,lawfulafterstartforward,genuineoldledgers,original0017durability/restore,fullAA/performance/release remain. No Chromeinternaldownloads/browserDB/security workaround/no GitHub calls. Originaldata/backendpreserved/viewportreset/ENdark restored/NodeidleSTOPPEDretained/fullgoalACTIVE.",
+  "next_task": "Continue full U1-U8/M0-M5 after actual saved-scope defect correction and browser restore-preview/exit/resume PASS_SCOPED. Do not redo accepted guide/search/strategy/preview paths or claim allAA. Pending actualexportfile/native200user evidence; verify ifreceived, otherwise advance remaining mandatory safeUI/API/manualmedia/fullfinancial prerequisite work. Financial6cash59source000598300048/allaction/lifecycle/newversionadmission,lawfulafterstartforward,genuineoldledgers,original0017durability/restore,fullAA/performance/release remain. Clean-demoexecutiondenied/SkyRPCunconfigured: no equivalentworkaround/retry. No Chromeinternaldownloads/browserDB/security bypass/GitHub calls. Originaldata/backendpreserved;currentfrontendc106index deployed withbackup;ENdark restored/viewportreset;ownedNodeSTOPPEDretained;goalACTIVE.",
   "local_next_command": "Read dialog_edges_20261007_gate and clean_demo_attempt_20261007_gate/fullobjective; verify repo/localcommit/service ownership before nextsafe action. If actualexportfiles ornative200screenshots arrive, validate against current savedreport/build; do not infer success. Otherwise continue permitted independent UI/API/manual/media/financial work, not rejectedDockercreate/start via alternative shell/tool. GitHub hold/no unchangedrecoverypolling/frozen/OOS boundaries remain.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

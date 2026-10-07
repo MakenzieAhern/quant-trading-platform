@@ -1,5 +1,30 @@
 # Decisions
 
+## v1.2 Explain saved universes without rewriting snapshots — 2026-10-07
+
+Actual restore preview leaked ALL/SSE/SZSE as novice-facing values. Reuse
+experiment copy in the common named-version/browser-recovery preview, preserve
+unknown codes rather than guessing ALL, and keep advanced raw metadata exact.
+No new helper/dependency, financial recalculation, storage rewrite or broader
+restore authority. Three bilingual regressions failed on old raw-code output;
+31 focused/770 full frontend tests, 169 source hashes and static/build checks
+pass. Independent read-only review no evidenced scopedP1/P2, unknown fallback
+static-only. No current backend/DB/CI pass inferred from this UI change.
+
+Actual Chrome four paired locale/theme/size previews plus English desktop and
+Chinese mobile save/exit/resume close the previously unobserved caller paths.
+Do not call this the complete cross-product or native200/AA/performance gate.
+Only the pre-existing QA draft was saved; its timestamp may advance, values and
+nine immutable versions remain, no restore or business task was submitted.
+Use settled, visually checked desktop/mobile captures, not generated mockups.
+
+Publish frontend-only through retained complete static snapshots and atomic index
+replacement, keep old assets. Existing owned isolated Node runtime is used for
+frontend verification only; no clean-demo command recreation or forbidden
+container/network/native/browser-policy workaround. Original services/data,
+frozen/formal/OOS assets, Git identity and GitHub hold unchanged. All mandatory
+financial/source/forward/recovery/release work remains in the full goal.
+
 ## v1.2 Native dialog edges and current GitHub hold — 2026-10-07
 
 Actual Chrome native modal footer Tab escaped to BODY. Reuse the shared Dialog;

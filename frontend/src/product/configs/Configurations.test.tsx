@@ -61,6 +61,44 @@ beforeEach(async () => {
   });
 });
 describe("configuration versions in the guided wizard", () => {
+  it.each([
+    ["ALL", "All available A-shares", "全部可用 A 股"],
+    ["SSE", "Shanghai exchange", "上海证券交易所"],
+    ["SZSE", "Shenzhen exchange", "深圳证券交易所"],
+  ] as const)(
+    "explains saved %s scope in both languages without changing the snapshot",
+    async (universe, english, chinese) => {
+      const target = saveConfigurationVersion("Scope preview", {
+        ...current,
+        form: { ...configuration, universe },
+      });
+      const raw = localStorage.getItem(CONFIG_VERSION_PREFIX + target.id);
+      const restore = vi.fn();
+      render(
+        <ConfigurationVersionsPanel current={current} onRestore={restore} />,
+      );
+      await userEvent.click(
+        screen.getByRole("button", {
+          name: "Review and restore: Scope preview",
+        }),
+      );
+      const dialog = screen.getByRole("dialog");
+      expect(
+        within(dialog).getByText("Stock universe").nextElementSibling,
+      ).toHaveTextContent(english);
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(
+        within(dialog).getByText("股票范围").nextElementSibling,
+      ).toHaveTextContent(chinese);
+      await userEvent.click(within(dialog).getByText("精确配置与草稿元数据"));
+      expect(dialog.querySelector("pre")?.textContent).toContain(
+        `"universe": "${universe}"`,
+      );
+      expect(localStorage.getItem(CONFIG_VERSION_PREFIX + target.id)).toBe(raw);
+      expect(restore).not.toHaveBeenCalled();
+    },
+  );
+
   it("keeps unreadable draft text available to copy after remount and locale change", async () => {
     const id = crypto.randomUUID();
     const raw = '{"version":1,"form":';

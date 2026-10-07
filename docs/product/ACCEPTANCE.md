@@ -1,5 +1,47 @@
 # v1.2 acceptance ledger
 
+## 2026-10-07 saved-scope explanation and draft exit — bounded U2/U3/U8 PASS
+
+[Private before/after, browser, test and rollback evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-config-scope/README.md>).
+Actual Chrome restore preview exposed internal `ALL` despite translated universe
+names elsewhere. Reuse existing experiment copy for ALL/SSE/SZSE in the shared
+named-version/page-recovery preview; unknown values stay explicit. Raw metadata,
+immutable snapshots, precision, restore validation and request identity unchanged.
+Three parameterized bilingual/raw-metadata/storage/no-restore tests first failed
+on the raw codes, then passed. 31 focused and 770 full frontend tests/47 files,
+169 exact host/scratch source bindings, lint/types/scoped Prettier/build PASS.
+Offline audit reports zero cached vulnerabilities, not a fresh advisory lookup.
+Build168ms/main525.68kB warning retained; not p95 acceptance. Backend unchanged,
+not rerun/deployed; earlier backend/DB/CI receipts remain historical.
+
+Chrome verified EN-dark1440x900, EN-light1280x800, ZH-dark1024x768 and
+ZH-light390x844 restore preview: translated ALL, full exact cash, both Tab edges,
+Esc and originating trigger restoration, no page horizontal overflow. Exact
+metadata expanded in EN1440 and ZH390 retains ALL and original precision without
+page overflow. These four paired cases are not the full 16-case cross-product,
+native200%, speech, performance or whole WCAG AA acceptance. Actual saved SSE/SZSE
+previews were not manufactured for browser proof; their translation is covered
+by the parameterized tests.
+
+EN-dark1440 and ZH-light390 exit dialogs passed both Tab edges/Esc, then real
+save/exit → Workbench → continue same draft. Chinese Back also returned to the
+trigger. Current QA draft retains name, precise cash123456.789000000000001,
+dates2011-01-04..2011-06-30, 20/20 settings and step2; nine immutable versions
+remain. Only draft save timestamps changed; no restore confirmation, new named
+version, experiment/account/order/provider acquisition or formal/OOS action.
+Two settled screenshots were actually inspected, including mobile wrapping of
+the full amount, translated scope and accessible footer. Console warnings/errors0.
+
+Only the previously verified no-mount loopback5173 frontend was published, with
+complete host/container backup and old assets retained. All13 served hashes match
+the build; indexc106cc61/mainJSe5c9cc27. Root-only writer, independent read-only
+review no evidenced scopedP1/P2; unknown-code fallback is statically reviewed,
+not a new runtime regression. Owned no-mount/no-port Node scratch restarted for
+tests only, now STOPPED137/OOMfalse after all handles terminal/sole idle sleep;
+retained, not a test failure. Original PG/Redis/backend healthy/PONG, untouched.
+GitHub hold and all full financial/forward/export/native/durability/release gates
+stay open. U1–U8/M0–M5 and PRODUCT_GOAL_COMPLETE remain incomplete.
+
 ## 2026-10-07 shared modal keyboard edges — bounded U1/U2/U8 PASS
 
 [Private browser/test/rollback evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-dialog-edges/README.md>).

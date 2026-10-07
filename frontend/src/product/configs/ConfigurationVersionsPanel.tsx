@@ -336,7 +336,15 @@ export function ConfigurationVersionsPanel({
               <dt>{fields.cash}</dt>
               <dd>{formatDecimal(selected.draft.form.initial_cash)} CNY</dd>
               <dt>{fields.universe}</dt>
-              <dd>{selected.draft.form.universe}</dd>
+              <dd>
+                {selected.draft.form.universe === "ALL"
+                  ? fields.all
+                  : selected.draft.form.universe === "SSE"
+                    ? fields.sse
+                    : selected.draft.form.universe === "SZSE"
+                      ? fields.szse
+                      : selected.draft.form.universe}
+              </dd>
               <dt>{fields.rebalance}</dt>
               <dd>{selected.draft.form.strategy.rebalance_sessions}</dd>
               <dt>{fields.holdings}</dt>
