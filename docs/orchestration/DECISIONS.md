@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 Inherit the existing body size across mode/help/actionable errors — 2026-10-08
+
+Actualroot15 versusmode/error13/help14 andallsharedcallers justify deleting7CSS
+lines, notaddingtokens/dependencies/changingbuttons orfinancialcontent. Source
+guard1RED andfinal794frontend/static/audit0 plusactualIAB16Help/4validmodal/cache
+error DOM close only this bounded readability defect. DesktopJPEGsoft stays a
+visual-proof limitation, not hidden PASS;452defaultphone-request mismatch retained
+andcorrected, AXcheckboxno-match retargetedfromfreshDOMbuttons. Restoreuserprefs.
+Keepfirstunsupportedcontainercpfailure;hoststagingassets/atomicindex/oldrollback
+closesdeployment withoutserviceDBrestart.41payload81cee057twice/prior170protected;
+original0017/selectedcounts/frozen/tag preserved, ownedidleNode137notOOM retained.
+Next useexistingstrictquant_test/normalterminaltransaction andtwoindependent
+processes forcommittederrorcontext SQLwitness;do not mutateoriginalfailedjobs or
+retrydenied44table/clean-demo/PSroutes. Fullproduct/financial/AA/forward/ledger/
+exactremoteCIrelease gates retained; no GitHub action whilehold remains.
+
 ## v1.2 Synchronize comparison source navigation without a global router rewrite — 2026-10-08
 
 Actual same-path navigation leaves ExperimentsPage mounted. Imperatively reading

@@ -1,4 +1,22 @@
 {
+  "body_readability_20261008_gate": {
+    "status": "PASS_SCOPED_BODY_READABILITY_NOT_FULL_PRODUCT",
+    "source_parent": "23c088be38ac9105d753db52f12fd6fbaffaffa5",
+    "styles_sha256": "b3ca01131105b1d7049befb509b3adb1e75377bad4a47043baabc0bdabf92a8a",
+    "test_sha256": "605a1f3003a563011025bc2b1eb8745408703f15896863a07c4d1bef83e5ff23",
+    "repair": "Delete7lines: mode/error13 andHelp14 inheritroot15. Preserveerrorcolor/buttons42/compactfinancialtext/tokens/logic. ExistingVitest+Nodefs guard/no dependency.",
+    "tests": "1RED;2focusedPASS butformatterexit1 thenformatted. Final794frontend48files/lint/types/build171ms/audit0 terminal0.527.96kBwarning notp95PASS. Backend unchanged/notrerun;1423optionalSKIP historical.",
+    "browser": "ActualIAB16ENZH/lightdark/foursizes:4mode+5expandedHelp15/25.5/nohorizontaloverflow. Realmissingcachelink000000error13->15/retry42/dangerpreserved.4dimensionmatchedmodalkeyboard cases/EN390scroll801client782/Skipinside/TabClose/Escapetrigger. One390requestdefault452 retainednotadmitted/corrected. AXcheckboxno-match correctedviafreshDOMbutton. zhCN/system/default452x884/originalexperiments restored. DesktopJPEGsoft nothighqualityvisualacceptance/nativeChrome200AAperformance NOT_RUN.",
+    "deployment": "Container-containercpfailed beforeindex thenstagedhostcopy/atomicindexPASS. a561fa existing5173nginx servedindexba789d34/CSS6ef228f9/JSd1b21e37 equalbuild. Oldassets/priorcomparisonnew-static rollback retained;no whole-tree duplication orserviceDBrestart/migration.",
+    "preservation": "Original0017/selected5paper417events12jobs4updates/formal1/3/310/healthy/PONG/APIfrontend200/frozen693c/tagf88b/.research retained. NOT44tablefingerprint/lostledger/durability. OwnedidleNode7969freshsleep-only thenstop137OOMfalse174152Zretained. No provider/research/OOS/GitHub writes.",
+    "review": "Independent checkpoint_review_oct8 readonlynoevidencedscopedP1P2; source guardnotfullcascade;rootactualDOM supplements. No reviewer tests/UI/DB/network.",
+    "evidence": "product-evidence/v1.2/m4/20261008-body-readability/README.md",
+    "evidence_payloads": 41,
+    "evidence_manifest_sha256": "81cee057a6231628921e9ceefb512002b8075ec514843151220d737465250217",
+    "evidence_verification": "TwicecanonicalimmutablePASS/prior170unchanged/sourcebuildselectedpreservation+actual16matrix+4validmodal bound;privateoutsideGit.",
+    "ci": "NOT_RUN_GITHUB_HOLD; no request/push/merge/tag/release; October1past not recovery evidence",
+    "full_product_pass": false
+  },
   "comparison_navigation_20261008_gate": {
     "status": "PASS_SCOPED_COMPARISON_NAVIGATION_NOT_FULL_PRODUCT",
     "source_parent": "ede332b46af7ea51d090ad646d590f0acf0a3d46",
@@ -385,7 +403,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-07T17:07:21Z",
+  "updated_at_utc": "2026-10-07T17:44:32Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3360,8 +3378,8 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8U4comparison navigation closes4initial+3reviewRED;final793frontend/49comparison/static/audit0/actualIAB16picker+BackForwardPASSscoped;170payload2d4ea856twice/prior6preserved. NativeDocker/Compose/app200/original0017/selectedcounts retained. V30source104/33 and1423backend historical,not fullfinancial. FullgoalACTIVE.",
-    "repository_writer": "Root sole code/docs/state/evidence writer;freshPID/start/args no competingwriter. checkpoint_review_oct8 readonly scopedP2review/nextgap suggestion. All frontend test sessions terminal0;idleNode7969stopped137/OOMfalse17:02:30Zretained;no GitHub/frozenOOS mutation.",
+    "latest_verification": "Oct8body15/readability closes shared13/14 overrides:794frontend/actual16Helpmatrix+4validmodal/scopedmissingcacheerror PASS;41payload81cee057twice/prior170preserved. Original0017/selectedcounts/app200/frozen/tag retained. FullgoalACTIVE/notfinancial/AA/performance/nativeChromePASS;GitHubhold.",
+    "repository_writer": "Root sole code/docs/state/evidence writer;freshPID/start/args no competingwriter. checkpoint_review_oct8 readonlybodyreview andnext0017SQLwitnessdesign;no reviewerwrites. Allfrontendtestsessionsterminal0;exactownedidleNode7969stopped137/OOMfalse174152Z retained. No GitHub/frozenOOS mutation.",
     "database_writer": "No Oct8test/restore/strategy. Originalbackend normalDesktop lifecycle auto-upgrade0016->0017 nullableJSONB;readonlyselected7tablecounts matchbaseline/allterminal. ExacttestPG30b1stopped0/OOMfalse084026Zretained;no denied44table refresh/reset/prune/delete/oldfakeledger.",
     "queue_writer": "PrivateV30all137104sourcePASS33unresolved/current276bindings;only146147change/old102wholePASS135wholeunchanged. Literal156 andknowncredit/year/listing/cash/tablecontradictions retained. Fullfinancial/newversion/dataadmission unfinished;no provider/event/researchqueue writes.",
     "agents": {
@@ -3369,10 +3387,11 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "Oct8nativeUbuntuDocker/Compose working. OriginalPG5987601/Redisdf3dc24/backendhealthy/actual5173nginxa561fa/API200;selected12jobs5paper417events4updates/formal1/3/310/schema0017 preserved. Newserved34e868ad/98cb3bc6/currentIABcomparisonproofscoped. No test/producerlive;Node7969STOPPED137/OOMfalse retained.",
+    "verified_processes": "Oct8nativeUbuntuDocker/Compose working. OriginalPG5987601/Redisdf3dc24/backendhealthy/actual5173nginxa561fa/API200;selected12jobs5paper417events4updates/formal1/3/310/schema0017 preserved. Newservedba789d34/6ef228f9/d1b21e37/currentIABbodyproofscoped. No test/producerlive;Node7969STOPPED137/OOMfalse retained174152Z.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8sharedbody15:7CSSdeletions/1RED->794frontend48files/linttypes/build171/audit0. Actual16ENZHthemefoursizeHelp/4validmodalkeyboard+missingcacheerror scopedPASS;default452mismatchretainedcorrected/desktopsoftJPEGnotvisualPASS.41payload81cee057twice preservesprior170/atomicservedba789d34+6ef228f9+d1b21e37/priorrollback. Original0017/selectedcounts/app200/frozen/tag intact;ownedidleNode7969stopped137OOMfalse. IndependentreadonlynoevidencedscopedP1P2/fullgoalACTIVE/GitHubhold.",
     "Oct8U4samepath/batchedsource/cleanForward selection closure:4RED+3reviewRED->793frontend47files/49comparison/static/build170ms/audit0. ActualIABexisting2jobhandoff/manual/ENZH/compare/BackForward and16correctedpickerlayouts PASSscoped;170payload2d4ea856twice/prior6preserved/fullrollback/atomicserved34e868ad+98cb3bc6. Original0017/selectedcounts/PONG/APIfrontend200/frozen/tag retained/ownedNode7969stopped137notOOM. Independent no evidenced scopedP1P2/noepochspeculation/GitHubhold/fullgoalACTIVE.",
     "Oct8 recovered8b6257c/V30source104PASS33unresolved165focused1423backend1optionalSKIP/static/isolatedcycle/29payload49052186+readonly currentbindingreview. NormalDesktoponce restoresnativeDocker/Compose/newROmount/app200;actual0017autoupgrade/selected12jobs5paper417events4updates/formal1/3/310 retained/6payloada67e6857 preservesprior27backup. Frozen/tag/.research intact;no strategy/OOS/GitHub;fullgoalACTIVE.",
     "2026-10-07 sourced96daa3/FINALV29 all137102source-onlyPASS35unresolved; only155169change/old100wholePASS135wholeunchanged/276bindings.2original6pages16bindings;155cash-totalcontradiction preserved. Independent optimisticlistingP2 reproduced then closed with exactsharedgrammar/oldassertions intact.161focused1419backend1optionalSKIP/static/testDBcyclePASS;45payloadsealdad407da twice/prior23 preserved. OwnedPG30b1STOPPED0/OOMfalse082026Z retained;original0016/PONG/app200/frozen/tag intact;fullgoalACTIVE/no financialadmission/GitHub.",
@@ -3995,8 +4014,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue fullU1-U8/M0-M5, not scoped/source-only completion. U4navigation current793/IAB/170payload closed. Readonlyreview identifies U1/U8 bodyreadability gap: styles.css mode13/error13/help14 vs designbody15; inspect actualDOM/sharedcallers before minimum3rule repair/ENZHthemes4sizes. Then actual0017failurecontextdurability/currentbrowser/AA/performance/export/media and fullfinancial/action/reference/lifecycle/newversion remain. Lawfulafterstartforward/genuineoldledgers/remoteCIrelease required;preserve frozen/OOS/GitHubhold/deniedboundaries;reuseV30 and1423 historicalproof without rerun.",
-  "local_next_command": "Read fullobjective/productmaster/currentownership/comparison_navigation gate. Verify170payload2d4ea856/prior6;no repeat793suite/PDFs simply for recovery. Inspect styles.css three sharedbody rules/fullcallers and actualavailablebrowser. Reproduce measurable readability before minimumCSS/test/browser loop;keep all U1-U8 gates and original0017DB/frozen/methodology/OOS/deniedroutes protected.",
+  "next_task": "Continue fullU1-U8/M0-M5, not scoped/source-only completion. Bodycurrent794/16Help/4validmodal/41payload81cee057 closedscoped. Next actual0017committedfailurecontextcross-processSQLwitness usingfreshinspectedexclusivequant_test fixture/normalterminaltransaction/newreadprocess, neveroriginalDBrestart oroldfailuremutation. Fullfinancial/action/reference/lifecycle/newversion/currentAA/performance/export/media remain. Lawfulafterstartforward/genuineoldledgers/remoteCIrelease required;preserve frozen/OOS/GitHubhold/deniedboundaries;reuseV30/1423historicalproof.",
+  "local_next_command": "Read fullobjective/productmaster/currentownership/bodygate. Preserve41payload81cee057/prior170;no recoveryrerun794suite/PDFs. Inspectexistingqtp-will-credit-testpg-oct7 ownership/image/tmpfs/nooriginalmounts/clients;readnormalExperimentManagerterminal+strictcontract andAPP_ENVtestguard. Safeboundeddual-processwitness onlyquant_test,source/PIDs/exitcode/rowJSON retained; do not retrydenied44tablefingerprint/clean-demo/PSroute viaanotherinterpreter. Keepfullscope/frozenOOS/rights/CIholds.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

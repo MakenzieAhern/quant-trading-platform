@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 shared body readability — scoped U1/U8 repair
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-body-readability/README.md>)
+binds23c088b parent/stylesb3ca0113/test605a1f30.7CSSlines removed: mode/error13
+andHelp14 inheritroot15;buttons42/danger/compactfinanciallogic unchanged.1RED→
+794frontend48files/linttypes/build171ms/audit0;focusedformatterexit1 corrected,
+527.96kB advisory notp95. ActualIAB16Help ENZH/themes/foursizes15/25.5/nooverflow,
+4dimensionmatchedmodalkeyboard/EN390scroll andrealmissingcacheerror15/retry42.
+One452default mismatch retained/corrected;desktopJPEGsoft nothighqualityvisual
+acceptance/nativeChrome200/fullAA/performance. zhCN/system/default/originalroute
+restored. Firstunsupportedcpfailed beforeindex;stagedhostassets/atomicservedhash
+PASS/oldassets+priorrollbackretained. Original0017/selected5/417/12/4/formal1/3/310/
+PONG/app200/frozen/tag intact;ownedidleNode7969stop137OOMfalse retained/no DBrestart.
+41payload81cee057a6231628921e9ceefb512002b8075ec514843151220d737465250217 twice
+preservesprior170;independentreadonlynoevidencedscopedP1P2. No GitHub/provider/
+strategy/OOS;fullfinancial/forward/ledger/currentAA/performance/export/media/
+cross-processfailurecontext/remoteCIrelease andfullU1-U8/M0-M5 remain required.
+
 ## 2026-10-08 comparison-source navigation — current scoped U4 repair
 
 [Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-comparison-navigation/README.md>)

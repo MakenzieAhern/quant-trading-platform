@@ -827,7 +827,6 @@ kbd {
 }
 .productError p {
   color: var(--danger);
-  font-size: 13px;
 }
 .readingPage {
   max-width: 900px;
@@ -844,9 +843,6 @@ kbd {
 .modeGrid h3 {
   font-size: 14px;
 }
-.modeGrid p {
-  font-size: 13px;
-}
 .helpQuestion {
   border-bottom: 1px solid var(--border);
 }
@@ -855,9 +851,6 @@ kbd {
   font-weight: 600;
   min-height: 70px;
   padding: 20px 0;
-}
-.helpQuestion p {
-  font-size: 14px;
 }
 .helpQuestion + .button {
   margin-top: 28px;
