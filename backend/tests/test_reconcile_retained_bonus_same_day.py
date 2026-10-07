@@ -1162,6 +1162,60 @@ def test_implemented_notice_header_alias_requires_identical_page_start_and_compl
         )
 
 
+@pytest.mark.parametrize(
+    "metadata",
+    [
+        "二、股权登记日与除权除息日股权登记日:2011年3月25日"
+        "除权除息日:2011年3月28日现金红利发放日:2011年3月28日",
+        "二、股权登记日与除权除息日本次权益分派股权登记日为:2011年3月25日;"
+        "除权除息日为:2011年3月28日",
+    ],
+)
+def test_holder_complete_metadata_preserves_dates_sections_and_independent_share_roles(metadata):
+    old_metadata = (
+        "二、股权登记日与除权除息日\n股权登记日为2011年3月25日,除权除息日为2011年3月28日。"
+    )
+    notice = NOTICE.replace(old_metadata, metadata)
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        ("二、股权登记日", "讨论二、股权登记日"),
+        ("三、分派对象", "讨论三、分派对象"),
+        ("本次权益分派对象为:", "拟将本次权益分派对象为:"),
+        ("2011年3月25日下午", "2011年3月24日下午"),
+        ("全体股东", "控股股东"),
+        ("无限售条件流通股", "可流通股"),
+        ("2011年03月28日直接记入", "2011年03月29日直接记入"),
+        ("2011年03月28日直接记入", "2011年03月28直接记入"),
+        ("三、分派对象", "五、说明这里不是日期元数据三、分派对象"),
+        ("除权除息日:", "说明除权除息日:"),
+        ("除权除息日为:", "说明除权除息日为:"),
+    ):
+        if old in notice:
+            with pytest.raises(ValueError):
+                same_day_listing([notice.replace(old, new)], "600000", TITLE, RECORD, EX)
+    for dated in ("2011年3月25日", "2011年3月28日"):
+        first, second = notice.split(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
+    for role_term in (
+        "本次转增股于2011年03月28日直接记入股东证券账户。",
+        "五、本次转增的无限售条件流通股的起始交易日为2011年3月28日。",
+    ):
+        with pytest.raises(ValueError):
+            same_day_listing([notice.replace(role_term, "")], "600000", TITLE, RECORD, EX)
+    with pytest.raises(ValueError):
+        same_day_listing(
+            [
+                notice + "本次权益分派对象为:2011年3月24日下午交易所收市后,"
+                "在登记结算公司登记在册的本公司全体股东。"
+            ],
+            "600000",
+            TITLE,
+            RECORD,
+            EX,
+        )
+
+
 def _manifest(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({**data, "manifest_sha256": canonical_sha256(data)}))
