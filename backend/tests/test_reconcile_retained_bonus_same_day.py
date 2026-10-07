@@ -1762,6 +1762,45 @@ def test_complete_unnumbered_record_ex_metadata_precedes_explicit_holder(weekday
             same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
 
 
+@pytest.mark.parametrize("full_metadata", [False, True])
+def test_full_profit_capital_scheme_holder_keeps_independent_dates(full_metadata):
+    declaration = "本次利润分配及资本公积金转增股本方案对象为:"
+    notice = NOTICE.replace("本次权益分派对象为:", declaration + "截止")
+    if full_metadata:
+        notice = notice.replace(
+            "股权登记日为2011", "本次利润分配及资本公积金转增股本方案股权登记日为:2011"
+        ).replace("三、分派对象", "三、利润分配及资本公积金转增股本对象")
+        notice = notice.replace("四、转增股本方法", "四、实施方法")
+    assert same_day_listing([notice], "600000", TITLE, RECORD, EX) == EX
+    for old, new in (
+        (declaration, "本次利润分配及资本公积金转增股本方案拟对象为:"),
+        ("全体股东", "控股股东"),
+        ("证券账户", "资金账户"),
+        ("收市后", "收市前"),
+        ("收市后", "收市后讨论次日"),
+        ("无限售条件流通股", "可流通股"),
+        ("2011年03月28日直接", "2011年03月29日直接"),
+    ):
+        altered = notice.replace(old, new)
+        assert altered != notice
+        with pytest.raises(ValueError):
+            same_day_listing([altered], "600000", TITLE, RECORD, EX)
+    for term, role in (
+        ("本次转增股于2011年03月28日直接记入股东证券账户。", "SHARE_CREDIT"),
+        ("五、本次转增的无限售条件流通股的起始交易日为2011年3月28日。", "UNRESTRICTED_LISTING"),
+    ):
+        with pytest.raises(ValueError) as missing:
+            same_day_listing([notice.replace(term, "")], "600000", TITLE, RECORD, EX)
+        assert missing.value.__notes__ == [role]
+    for dated in ("2011年3月25日", "2011年03月28日", "2011年3月28日"):
+        first, second = notice.rsplit(dated, 1)
+        with pytest.raises(ValueError):
+            same_day_listing([first + dated[:6], dated[6:] + second], "600000", TITLE, RECORD, EX)
+    conflict = notice + declaration + "2011年3月24日下午收市后在登记结算公司登记在册的全体股东。"
+    with pytest.raises(ValueError):
+        same_day_listing([conflict], "600000", TITLE, RECORD, EX)
+
+
 def _manifest(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({**data, "manifest_sha256": canonical_sha256(data)}))
