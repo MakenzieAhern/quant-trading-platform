@@ -114,7 +114,7 @@ const en = {
   step3Hint: "Compare returns with drawdowns and the benchmark.",
   noGuarantee: "Historical results do not guarantee future returns.",
   loadingError:
-    "We could not load this information. Check that the local service is running, then retry. Your saved work is preserved.",
+    "We could not load this information, so we cannot verify that saved records are available. Check that the local service is running, then retry. Open Help for safe recovery steps.",
   strategyTitle: "Know the rules before you run",
   strategyIntro:
     "Explore the strategy that is actually implemented. Start with its behavior and risks, then inspect the evidence.",
@@ -298,7 +298,7 @@ const zh: Record<keyof typeof en, string> = {
   step3Hint: "把收益、回撤与市场基准放在一起看。",
   noGuarantee: "历史结果不保证未来收益。",
   loadingError:
-    "暂时无法加载。请确认本地服务已启动后重试，已保存的工作不会因此丢失。",
+    "暂时无法加载，尚不能核验已保存记录是否可用。请确认本地服务已启动后重试；安全恢复步骤可在“帮助”中查看。",
   strategyTitle: "知道规则，再开始研究",
   strategyIntro: "这里展示已实现的策略。先理解行为和风险，再查看研究证据。",
   registered: "已注册的 A 股策略",

@@ -352,6 +352,87 @@ it("keeps an open help answer expanded when its translated label changes", async
   await act(() => i18n.changeLanguage("en-US"));
 });
 
+it.each([
+  ["en-US", new Error("invalid contract")],
+  ["en-US", new ApiError(502, "invalid JSON")],
+  ["en-US", new ApiError(503, "unavailable")],
+  ["zh-CN", new Error("invalid contract")],
+  ["zh-CN", new ApiError(502, "invalid JSON")],
+  ["zh-CN", new ApiError(503, "unavailable")],
+])(
+  "does not promise saved-record availability on an unverified read (%s, %s)",
+  async (locale, error) => {
+    await act(() => i18n.changeLanguage(locale));
+    const retry = vi.fn();
+    render(<ProductError error={error} retry={retry} />);
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent(
+      locale === "en-US"
+        ? "cannot verify that saved records are available"
+        : "尚不能核验已保存记录是否可用",
+    );
+    expect(alert).toHaveTextContent(locale === "en-US" ? "Help" : "帮助");
+    expect(alert).not.toHaveTextContent(
+      locale === "en-US" ? "Your saved work is preserved" : "不会因此丢失",
+    );
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: locale === "en-US" ? "Try again" : "重新尝试",
+      }),
+    );
+    expect(retry).toHaveBeenCalledOnce();
+    await act(() => i18n.changeLanguage("en-US"));
+  },
+);
+
+it.each(["en-US", "zh-CN"])(
+  "preserves the exact local draft without claiming server records survived a failed read (%s)",
+  async (locale) => {
+    await act(() => i18n.changeLanguage(locale));
+    const original = localStorage.getItem(EXPERIMENT_DRAFT_KEY);
+    const draft = JSON.stringify({
+      version: 1,
+      form: { ...configuration, initial_cash: "123456.789000000000001" },
+      step: 2,
+      idempotencyKey: "read-failure-intent",
+      savedAt: "2026-10-07T00:00:00Z",
+    });
+    const read = vi
+      .spyOn(experimentApi, "capabilities")
+      .mockRejectedValue(new ApiError(503, "unavailable"));
+    const list = vi
+      .spyOn(experimentApi, "list")
+      .mockRejectedValue(new ApiError(503, "unavailable"));
+    const create = vi.spyOn(experimentApi, "create");
+    localStorage.setItem(EXPERIMENT_DRAFT_KEY, draft);
+    const view = render(<WorkbenchPage />);
+    try {
+      const alerts = await screen.findAllByRole("alert");
+      expect(alerts).toHaveLength(2);
+      for (const alert of alerts)
+        expect(alert).toHaveTextContent(
+          locale === "en-US"
+            ? "cannot verify that saved records are available"
+            : "尚不能核验已保存记录是否可用",
+        );
+      expect(
+        screen.getByRole("link", {
+          name: locale === "en-US" ? "Continue your draft" : "继续上次的草稿",
+        }),
+      ).toHaveAttribute("href", "/research/new");
+      expect(localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(draft);
+      expect(read).toHaveBeenCalledOnce();
+      expect(list).toHaveBeenCalledOnce();
+      expect(create).not.toHaveBeenCalled();
+    } finally {
+      view.unmount();
+      if (original === null) localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
+      else localStorage.setItem(EXPERIMENT_DRAFT_KEY, original);
+      await act(() => i18n.changeLanguage("en-US"));
+    }
+  },
+);
+
 it("distinguishes permission, timeout and offline failures while keeping retry", async () => {
   await i18n.changeLanguage("en-US");
   const retry = vi.fn();
