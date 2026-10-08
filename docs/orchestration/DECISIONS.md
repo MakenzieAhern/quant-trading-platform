@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 Reuse exact-version quality across all market reads — 2026-10-08
+
+One dataset parser call validates existing metadata in catalog/search/bars.
+Existing bilingual explanation and notice style display it on source selection
+and actual bar detail. No new component/library/calculation or invented PASS.
+9RED→52focused829fullfrontend/static/build; real ENZH historical cache/dates/raw
+prices/watchlist/demo switch plus raw GET evidence confirm scoped behavior.
+Publish tested13 assets on the existing guarded nginx with backup/assets-first/
+atomicindex, not a service restart; old169backup/168nonindex retained. Native222
+byte proof twicePASS/checksum306e8db6; independent readonly no scoped P1/P2.
+
+Keep source-contract integrity independent: this warning neither fixes the65P0
+provenance nor permits new financial execution. Next use the existing shared
+registry for_execution boundary (including paper before STARTING) and exact saved
+version findings, retaining readonly history/idempotency. No hidden source-path
+remapping/new mount or Docker-time complete source validation claim. All original
+frozen/methodology/results/OOS/identity retained; GitHub HOLD/full goal ACTIVE.
+
 ## v1.2 Fail closed once at full-dataset source boundaries — 2026-10-08
 
 Reuse existing canonical JSON/SHA helpers (array signature widened, serializer

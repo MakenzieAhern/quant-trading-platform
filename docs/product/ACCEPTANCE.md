@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 U5/U8 market economic-quality visibility — scoped PASS
+
+[Private byte-bound evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-market-quality/README.md>)
+and [actual Chinese source notice](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-market-quality/zh-mobile-source.jpg>):
+9 RED → 52 focused / 829 full frontend PASS; lint/types/format/build PASS.
+Reuse strict quality parser/explanations/style in three production files; catalog,
+search and bars validate; source uses selection, detail uses actual metadata.
+Actual IAB ZH390/EN1440 source/detail notices, demo switch clearing, exact historical
+window/raw values and unchanged watchlist PASS; four raw GET API snapshots bind
+the precise canonical version/quality. UNKNOWN/long decimals are unit-only coverage.
+Not native Chrome/full AA/200%/p95/full financial certification; 528.37kB warning retained.
+
+Original nginx/no mounts/start unchanged: assets-first/atomic index `7281f6ac…`,
+all13 Windows HTTP200/SHA/bytes/headers match; all169 prior files backed up,
+168 old nonindex files preserved. No service restart/DB or frozen change. Native
+222-entry checksum twice PASS, `306e8db665d4392c8129c8e3778783c65132ea9db38db6999a55e9742f22a67e`.
+Independent source/DOM/three-JPEG read-only review no scoped P1/P2; no reviewer execution.
+Locale/source/query/dialog restored; reset called but final390 differs initial452,
+so exact viewport-dimension restoration is not claimed. Older frontend-bound proofs historical.
+Next: separate source-integrity read-time status AND shared new-execution admission;
+saved catalog still execution_available=true. Legacy source FAIL is not fixed by
+this economic notice. Full U1–U8/M0–M5 ACTIVE/PARTIAL; GitHub HOLD/no remote action.
+
 ## 2026-10-08 new-version source guards — engineering scoped PASS
 
 [Private reproducible evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-contract-guards/README.md>)

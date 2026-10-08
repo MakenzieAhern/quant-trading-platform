@@ -1,5 +1,28 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-08 v1.2 current local market quality notice — scoped PASS
+
+- Previous CI-availability answer NO_PROJECT_PROGRESS; actual minimal repair,
+  publication/browser/API/checkpoint evidence now PROGRESS, full goal unchanged.
+- Three production files reuse parser/copy/style; all three market read responses
+  validate quality, and detail binds its actual metadata rather than outer source.
+- 9RED→52focused/829frontend48files15.23s/static/buildPASS; 528.37kB warning retained,
+  not interaction p95. Previous1563backend+1optionalSKIP retained, not rerun here.
+- Actual IAB ZH390/EN1440 source/detail notes, raw2011window/119records/watchlist
+  preserved; demo note clears. Four raw GET response snapshots corroborate exact
+  version/quality. UNKNOWN/long-precision behavior unit-only; no full AA claim.
+- Original nginx a561fa/start/no mounts unchanged,13served HTTP/SHA/bytes/headerPASS,
+  169beforebackup/168oldnonindex intact/atomicindex7281f6ac/no restart/deletion.
+  Backup available; rollback not executed. Independent readonly no scoped P1/P2.
+- Native222 byte entries twicePASS:306e8db665d4392c8129c8e3778783c65132ea9db38db6999a55e9742f22a67e.
+  First commit guard aborted before staging because PowerShell evaluated a bash
+  substitution in the Windows nonrepo cwd; use direct WSL `git -C` readback instead.
+  Earlier frontend-bound evidence historical, not resealed. Reset invoked but
+  final390 not initial452; no exact viewport restoration assertion.
+- Legacy source-integrityFAIL/fullfinancialfalse remains; next shared new-execution
+  admission and independent source-status projection (catalog still permits it).
+  Originalservices/frozen/.research/tag/OOS/identity intact; GitHub HOLD/no action.
+
 ## 2026-10-08 v1.2 source guards and freeze identity — scoped PASS
 
 - Previous local-service answer was NO_PROGRESS toward full goal; this repair is

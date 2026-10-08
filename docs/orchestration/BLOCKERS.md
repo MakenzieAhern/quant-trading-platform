@@ -1,5 +1,22 @@
 # Blockers
 
+## v1.2 market omission resolved; invalid-source execution boundary pending — 2026-10-08
+
+U5/U8 dropped economic-quality parsing/display is RESOLVED_SCOPED: 829frontend,
+static/build/current IAB ENZH/cache/demo-switch/API evidence; deployed locally
+without restart, native222 proof306e8db6 twicePASS. Not a source-integrity or
+financial acceptance. Originalservices/data/frozen/research/tag unchanged.
+
+Known legacy source-contract FAIL still requires separate application disclosure
+and fail-closed NEW execution admission: current API catalog execution_available
+is true. Existing readonly cache, saved result/provenance and idempotent receipts
+must remain accessible/intact. Full-source script validation needs state/preflight
+and source paths absent from the ordinary Docker mount; do not invent an online
+15-source PASS. This engineering work is independently actionable without new
+methodology/source acquisition. Other full financial/forward/lawful rights/genuine
+lost ledger/current quality/remote-release requirements remain. Full goal ACTIVE.
+GitHub HOLD does not prevent the working local5173/API8000 program.
+
 ## v1.2 source guard repaired; legacy integrity/product gaps remain — 2026-10-08
 
 The missing publication/acceptance guard is RESOLVED_ENGINEERING_ONLY: shared

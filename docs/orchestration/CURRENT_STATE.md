@@ -1,5 +1,24 @@
 # Current state
 
+## v1.2 visible market notice published; next source admission guard — 2026-10-08
+
+M3/M4/M5 IN_PROGRESS, full U1–U8/M0–M5 ACTIVE/PARTIAL. Market economic-quality
+repair is scoped PASS: 9 RED→52focused/829frontend/static/build, actual bilingual
+historical source/detail and demo-switch verification, four raw GET API snapshots.
+Exact tested13 assets now served on original5173; atomicindex7281f6ac, no restart,
+169oldfile backup/168oldnonindex retained/HTTP SHA match. Independent readonly
+review no scoped P1/P2. Native222 proof twice PASS, checksum306e8db665d4392c8129c8e3778783c65132ea9db38db6999a55e9742f22a67e.
+All four original service identities/starts and frozen/research/tag unchanged.
+
+Legacy source-contract integrity FAIL remains distinct from economic gap; this
+notice is not financial admission. Actual saved catalog still permits execution:
+next shared registry for_execution/new paper STARTING boundary must fail closed
+for known-invalid provenance while retaining readonly cache and old receipts.
+Independently propagate exact saved-version source findings through all metadata
+surfaces, without a false Docker-time15-source PASS or frozen mutation. All other
+financial/forward/lawful-feed/genuine-ledger/quality/delivery gates remain.
+GitHub HOLD/no request/push/merge/tag/release. Prior entries below are historical.
+
 ## v1.2 source-reference guards complete; full product PARTIAL — 2026-10-08
 
 M3/M4/M5 remain IN_PROGRESS and full U1–U8/M0–M5 goal ACTIVE. New engineering

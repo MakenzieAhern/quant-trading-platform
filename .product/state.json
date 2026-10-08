@@ -1,4 +1,27 @@
 {
+  "market_economic_quality_20261008_gate": {
+    "status": "PASS_SCOPED_ENGINEERING_AND_REAL_CACHE_BROWSER",
+    "source_parent": "2fee9be5c5d6f252d2d4e9265754c3ef91b9949b",
+    "progress": "Previous CI-availability answer only rechecked unchanged runtime: NO_PROJECT_PROGRESS. Shared market parser and source/actual-detail notices tested, locally published and browser-reviewed with immutable evidence: PROGRESS; full U1-U8/M0-M5 unchanged/ACTIVE.",
+    "implementation": "Three production files reuse strict current-quality parser, existing bilingual explanations and style. Catalog/search/bars share validation; detail uses actual response metadata, not selected-source assumption. No dependency, API, financial calculation or frozen record change.",
+    "verification": "9 actual RED/43PASS ->52focused/829fullfrontend48files15.23s/PrettierESLintTypeScriptbuildPASS;133modules210ms13assets.528.37kBwarning retained/not p95PASS. Existing backend1563+1optionalSKIP retained/not rerun. Independent readonly source/DOM/3JPEG no evidenced scopedP1P2; reviewers did not execute.",
+    "browser": "Actual IAB2/tab1 historical000025, ZH390x844/EN1440x900/system dark; source and actual detail notices, exact2011-01-04..06-30/raw119=118observed+1suspension/9.44..10.30 retained/no wholepageoverflow. Demo switch removes old notice/empty000025honest; original000001watchlist unchanged. UNKNOWN/longdecimal branches unit-only. Loading frames retained/not completed-load proof.",
+    "api": "Four actual raw GET snapshots catalog/search/bars/watchlist saved024136UTC; exact canonical1d7b6134 and KNOWN_ECONOMIC_COVERAGE_GAP match. Not browser network interception or source-contract PASS; current catalog execution_available=true requires next admission audit.",
+    "publication": "Guarded originala561fa/no mounts/unchangedstart/loopback5173:169oldfiles backup,assets-first/staged atomicindex7281f6ac at023627UTC;13actualWindowsHTTP200/SHA/bytes/nosniff/no-referrer match tested build.168oldnonindex files remain identical/176livefiles. No restart/deletion. Backup available; rollback not executed this slice/not database or full release proof.",
+    "evidence": "product-evidence/v1.2/m4/20261008-market-quality/README.md",
+    "native_sha256sums_sha256": "306e8db665d4392c8129c8e3778783c65132ea9db38db6999a55e9742f22a67e",
+    "sha256_entries": 222,
+    "seal": "Native SHA256SUMS twice exit0/same digest;210private payloads including169backup/13testedassets plus10code+2frozeninput bindings. Authored publication receipt independently compared all13hashes/lengths, no transcription mismatch. No new verifier framework or resealing old proofs; prior frontend-code-bound evidence historical.",
+    "ownership": "Root sole writer; agents readonly/freshWSLprocess and WindowsCIM probes no competingproducer. Testfa8a terminal0 retained; all originalfourIDs/starts unchanged/Composehealthy/PONG/HTTP200. No newSQL/job/account/watchlist/provider/strategy/formal/OOS/frozen/.research/identity/GitHub operation. zh-CN/system/historical/query000025/dialogclosed restored; viewport reset called but final390x844 differs initial452x884, no exactdimensionrestore claim; originaltab handoff retained.",
+    "source_contract_integrity": "FAIL_LEGACY_NOT_CLOSED_BY_ECONOMIC_NOTICE",
+    "full_financial_admission": false,
+    "new_dataset_registered": false,
+    "existing_frozen_dataset_modified": false,
+    "strategy_or_oos_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD; no request/push/merge/tag/release",
+    "commit_guard_failure": "First commit precheck embedded bash command substitution in PowerShell; evaluated git in Windows nonrepo and aborted before staging/commit. Correct with direct git -C WSL command/readback, not a repository or test failure. Sealed222 evidence unchanged."
+  },
   "source_reference_guards_20261008_gate": {
     "status": "PASS_ENGINEERING_SCOPED_ONLY",
     "source_parent": "842541f429ee2189d524cda3263d320f1f348fa8",
@@ -3788,6 +3811,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8 market economic-quality root repair9RED->52focused829fullfrontend/static/buildPASS;actualZH390EN1440 source/detail notices/demo-switch/date/raw/watchlist preserved. Original5173 atomicindex7281f6ac/13actualHTTP hashes/169backup168oldretained/no restart. FourrawAPI GET snapshots exact1d7b6134/KNOWNgap/119bars.222native bindings306e8db6 twicePASS/readonly independent no scopedP1P2. Frozen/research/tag/services intact/sourceintegrityFAIL remains/newexecution audit next/fullgoalACTIVE/GitHubHOLD.",
     "Oct8 saved actual restoredAPI Decimal identities scopedPASS:two captures/20equity/20holdings/40marks/10fills/18decisions/cost50.34364/final97579.65636;three exact-error RAM corruptions rejected. Fourpayload03a0467a twiceverify/all54parent intact/fullbackendtree+cleanstate+fivehashbindings. Independent readonly scope/binding gaps closed;no productcode/SQL/service/strategy/GitHub operation. Original5173+8000HTTP200/PONG/serviceshealthy;financialgap/negative/null retained/fullgoalACTIVE.",
     "Oct8 current-code/Oct7backup applicationrestore scopedPASS:54payload1746a05e twiceverify;44pre/43projectedbusiness+18files unchanged through normalstartup/restart/UI;12RESTexactSHA976163a3;10browserframes/10JPEG ZHEN savedstudies/accounts/reload;all13assetsSHA200/fourwrites405. No financial/release promotion. ExistingtestPG/API/proxy stopped/retained;originals/frozen/research unchanged/GitHubHOLD.",
     "Oct8 failed-detail technical disclosure ENZH100101 actualkeyboard/AX scopedPASS:27frames/4JPEG/15payloadc64a0b1a, twiceimmutableverify/source172+3/parent32+328 intact. No productpatch/newstrategy;ownedQA terminal/originalruntimepreserved;fullAA/financial/restore/release notclaimed.",
@@ -4420,8 +4444,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5 unchanged/ACTIVE. Source-reference guards and four-wayfreeze identity engineeringclosed/155focused1563backend1optionalSKIP/native49bindingsf5d0262c. Legacy65P0 remainsFAIL;no originaldatasetrewrite or financialadmission. NextvisibleU5/U8 fix markets/api dataset parser must reuse parseCurrentDatasetQuality;MarketsPage and actualbar metadata MarketDetail must show existing bilingual economicgap/unknown notices without changingselected source/rawprices/date/filter. Distinguishseparate sourceintegrityFAIL notcurrentlypropagated;do not claim notice fixes both. Then remainingfullfinancial/forward/lawfulfeed/genuineledger/AA200/p95/export/media/authorizedremote gates. GitHubHOLD.",
-  "local_next_command": "Read source_reference_guards_20261008_gate/native49proof and actual markets/api.ts/MarketsPage.tsx/MarketDetail.tsx/markets tests plus experiments currentquality parser/codes/backend metadata callers. Reproduce missing current_dataset_quality validation and ENZHnotice first, minimallyreuse parser/explanations, targeted/fullfrontend/browserreview with actualdetailmetadata/source-switch boundaries. No newsourceacquisition/formalstudy/OOS/originalDB/frozen/.research or GitHub. Existing5173/API8000 healthy;ownedtestPGstopped/alltesthandles terminal. Coherent local commits only, no denied scratch/refresh/download/remote bypass.",
+  "next_task": "Continue full U1-U8/M0-M5 unchanged/ACTIVE. Markets exact-version economic-quality parsing/source+actual-detail ENZH notices locally published/scopedPASS829front/native222proof306e8db6. Legacy source-contract integrity stillFAIL/fullfinancialadmissionfalse. Next trace and repair shared new-execution admission plus independent exact-version read-time source-finding projections across capabilities/markets/results/exports/formal/paper; preserve existing readonly records/idempotent receipts/cacheinspection. Do not pretend Docker can validate unavailable absoluteWSL/preflight paths or label unknown future versions PASS. Then all remainingfullfinancial/forward/lawfulfeed/genuineledger/AA200/p95/export/media/authorizedremote gates;GitHubHOLD.",
+  "local_next_command": "Read market_economic_quality_20261008_gate, existing15-source guard proof, full experiments/data.py and actual job/plan/paper create/start/retry callers plus all read-time metadata schemas/parsers/UI. Reproduce known source-integrity failed version still execution_available=true/newexecution admitted; fix shared for_execution gate and before paper STARTING transition without breaking idempotent old receipts or cache reads; independently expose precise saved-version findings, not an on-request15-source PASS. Current original5173/API8000 healthy/fourIDsstarts retained; alltesthandles terminal/testPGstopped. Coherent local commits only; no originalDB/provider/newstrategy/frozen/.research/OOS/GitHub or denied scratch/refresh/download route.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

@@ -1,8 +1,10 @@
 import { useEffect, useId, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatUtc } from "../../utils/format";
 import { ProductError } from "../ProductPages";
+import { explainExperimentCode } from "../experiments/codes";
 import { usePreferences } from "../preferences";
 import { closingPrice, marketApi, validRange } from "./api";
 import { observationLabel, riskLabel, useMarketCopy } from "./copy";
@@ -178,9 +180,15 @@ function MarketObservation({
   view: "raw" | "adjusted";
 }) {
   const c = useMarketCopy();
+  const { i18n } = useTranslation();
   const { metadata: m, security, items } = data;
   return (
     <>
+      {m.current_dataset_quality && (
+        <p className="marketNotice" role="note">
+          {explainExperimentCode(m.current_dataset_quality, i18n.language)}
+        </p>
+      )}
       <section className="marketPanel">
         <h3>{c.diagnostics}</h3>
         <dl className="marketFacts">

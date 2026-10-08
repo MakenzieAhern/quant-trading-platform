@@ -293,6 +293,14 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             <p>
               {c.asOf}: {dataset.as_of ?? c.notRecorded}
             </p>
+            {dataset.current_dataset_quality && (
+              <p className="marketNotice" role="note">
+                {explainExperimentCode(
+                  dataset.current_dataset_quality,
+                  i18n.language,
+                )}
+              </p>
+            )}
           </>
         )}
         {(!dataset || !dataset.available) && (

@@ -76,6 +76,112 @@ async function openSecurity() {
 }
 
 describe("historical cache markets", () => {
+  it.each([
+    [
+      "KNOWN_ECONOMIC_COVERAGE_GAP",
+      "Economic completeness is not validated",
+      "经济完整性尚未验证",
+    ],
+    [
+      "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+      "Economic completeness is unknown",
+      "经济完整性未知",
+    ],
+  ] as const)(
+    "shows %s in both languages on the selected source and actual observations",
+    async (quality, en, zh) => {
+      vi.mocked(marketApi.datasets).mockResolvedValue([
+        { ...dataset, current_dataset_quality: quality },
+        demo,
+      ]);
+      vi.mocked(marketApi.bars).mockResolvedValue({
+        ...bars,
+        metadata: { ...metadata, current_dataset_quality: quality },
+      });
+      render(<MarketsPage />);
+      const sourceNotice = await screen.findByRole("note");
+      expect(sourceNotice).toHaveTextContent(en);
+      const dialog = await openSecurity();
+      const detailNotice = await within(dialog).findByRole("note");
+      expect(detailNotice).toHaveTextContent(en);
+      await userEvent.selectOptions(
+        within(dialog).getByLabelText("Inspect trading date"),
+        "2024-02-27",
+      );
+      const reads = [
+        vi.mocked(marketApi.search).mock.calls.length,
+        vi.mocked(marketApi.bars).mock.calls.length,
+      ];
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(sourceNotice).toHaveTextContent(zh);
+      expect(detailNotice).toHaveTextContent(zh);
+      expect(within(dialog).getByLabelText("开始日期")).toHaveValue(
+        "2024-02-27",
+      );
+      expect(within(dialog).getByLabelText("结束日期")).toHaveValue(
+        "2024-02-29",
+      );
+      expect(within(dialog).getByLabelText("价格视图")).toHaveValue("raw");
+      expect(
+        within(dialog).getByText("10.123456789012345678", { selector: "dd" }),
+      ).toBeInTheDocument();
+      expect([
+        vi.mocked(marketApi.search).mock.calls.length,
+        vi.mocked(marketApi.bars).mock.calls.length,
+      ]).toEqual(reads);
+    },
+  );
+  it("uses actual detail quality rather than outer source selection, and clears source notice on demo switch", async () => {
+    vi.mocked(marketApi.datasets).mockResolvedValue([
+      { ...dataset, current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP" },
+      demo,
+    ]);
+    vi.mocked(marketApi.bars).mockResolvedValue({
+      ...bars,
+      metadata: {
+        ...metadata,
+        current_dataset_quality: "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+      },
+    });
+    render(<MarketsPage />);
+    expect(await screen.findByRole("note")).toHaveTextContent(
+      "Economic completeness is not validated",
+    );
+    const dialog = await openSecurity();
+    expect(await within(dialog).findByRole("note")).toHaveTextContent(
+      "Economic completeness is unknown",
+    );
+    expect(within(dialog).getByRole("note")).not.toHaveTextContent(
+      "Economic completeness is not validated",
+    );
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: "Close" }),
+    );
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
+    await userEvent.selectOptions(
+      screen.getByLabelText("Data source"),
+      demo.dataset_id,
+    );
+    expect(screen.queryByRole("note")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Data source")).toHaveValue(demo.dataset_id);
+  });
+  it("does not turn missing/null quality into a passing financial audit", async () => {
+    vi.mocked(marketApi.datasets).mockResolvedValue([
+      { ...dataset, current_dataset_quality: null },
+      demo,
+    ]);
+    render(<MarketsPage />);
+    await screen.findByLabelText("Data source");
+    expect(screen.queryByRole("note")).not.toBeInTheDocument();
+    const dialog = await openSecurity();
+    await within(dialog).findByLabelText("Inspect trading date");
+    expect(within(dialog).queryByRole("note")).not.toBeInTheDocument();
+    expect(
+      within(dialog).queryByText(/financially validated/i),
+    ).not.toBeInTheDocument();
+  });
   it("does not misreport a denied dataset catalog as a local archive problem", async () => {
     vi.mocked(marketApi.datasets).mockRejectedValue(
       new ApiError(403, "denied"),
