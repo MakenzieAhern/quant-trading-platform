@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 U3/U5/U7 shared action-session audit — scoped PASS
+
+[Evidence and retained counterexample](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-action-session-preconditions/README.md>).
+Candidate audit now invokes the production holding-independent action validator,
+without creating an execution engine, Portfolio, holdings or fills. A real
+synthetic source/spec/Parquet build whose pass-through event conflicts with a
+same-day raw bar now reports ACTION_SESSION_PRECONDITIONS=FAIL and FAIL_CLOSED;
+its source-event and calendar checks independently remain PASS. The positive
+control remains PARTIAL, with all15 broader obligations NOT_EVIDENCED.
+
+673 selected filesystem/domain/mocked-runtime tests PASS (562+111); static/type
+checks PASS; two retained builder/audit cases PASS; standalone CLI bytes match
+the positive API report. Independent readonly diff review found no scoped P1/P2.
+The engine/helper code pin is checked before loading and before publication;
+both auditor/engine fingerprint-change regressions pass. Original assets/tag and
+Git identity preserved. No real data build, DB, strategy/OOS, provider acquisition,
+runtime deployment, frontend/browser/full-suite or CI run. GitHub HOLD.
+
+This closes a concrete audit omission, not a full user flow or financial gate.
+Actual source contradictions must next be checked against the whole candidate
+event set, not only new overlay rows; genuine lifecycle/accounting/forward/ledger
+and quality/delivery remain. Full U1-U8/M0-M5 ACTIVE.
+
 ## 2026-10-08 U3/U5/U7 successor reference and audit — scoped PASS
 
 [Contract](DATASET_SUCCESSOR.md) and

@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 Reuse execution preconditions in candidate audits — 2026-10-08
+
+Extract the existing holding-independent action checks into one pure function in
+the research engine; call it from production before mutation and from the actual
+candidate session scan. Do not instantiate a zero-holdings engine as accounting
+proof. A supported pass-through event plus a same-day raw bar previously escaped
+the audit's calendar/type checks; the synthetic real-builder counterexample now
+fails the new scoped gate. Preserve public chronological/calendar/ordinary/held
+reference error precedence and all financial application order and policies.
+
+No whole financial/lifecycle gate changes to PASS. Loader-provided holder classes
+prove metadata consistency only, not genuine account applicability. Keep source
+contradictions and incomplete full-event economics separate from this engineering
+check. GitHub remains HOLD; no original runtime, frozen data or research mutation.
+
 ## v1.2 Candidate audit consumes actual bound bytes, not legacy PASS — 2026-10-08
 
 Use the same explicit successor specification for the existing materializer and

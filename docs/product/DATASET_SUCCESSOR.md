@@ -98,6 +98,15 @@ are buffered during parsing; full-archive memory/time measurements remain open.
 This runs no strategy or Portfolio. Missing reference-price explanations and
 action dates absent from the accepted calendar remain explicit failures.
 
+`ACTION_SESSION_PRECONDITIONS` runs the same holding-independent validation as
+the production research engine, before any financial mutation: ambiguous or
+concurrent actions, supported policies, application dates, holder-class metadata,
+pass-through trading conflicts and surrender resumption-boundary requirements.
+Failures retain the observed session date and reason; the helper's source file
+is bound before input loading and rechecked before report publication. This does
+not prove actual account holder eligibility (the loader supplies event metadata),
+complete issuer lifecycles, source economics or any cash/basis/PnL reconciliation.
+
 New reports separate reference rows from accounting rows and bind audit code.
 Legacy accounting, lifecycle, input-order and restart PASS literals are not
 inherited: unexecuted obligations remain `NOT_EVIDENCED`. A partial report is not

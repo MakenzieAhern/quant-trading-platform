@@ -29,6 +29,7 @@ from app.domain.markets.demergers import DemergerEvent
 from app.domain.markets.mergers import MergerEvent
 from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
 from app.domain.markets.surrenders import MandatoryPartialShareSurrenderEvent
+from app.research.engine import require_supported_session_actions
 from app.research.models import ResearchPeriodKind
 from app.research.splits import TemporalPeriod
 from scripts.full_dataset_build_inputs import CandidateBuildInputs, load_candidate_build_inputs
@@ -160,6 +161,7 @@ def audit(
                 Path(__file__),
                 Path(__file__).parents[1] / "app/data/full_dataset.py",
                 Path(__file__).parents[1] / "app/data/catalog/checksums.py",
+                Path(__file__).parents[1] / "app/research/engine.py",
             )
         }
         if build_spec is not None
@@ -634,8 +636,15 @@ def audit(
         )
         runtime_sessions = 0
         unexplained: list[dict[str, str]] = []
+        action_session_failures: list[dict[str, str]] = []
         for session in loader.sessions(execution=True):
             runtime_sessions += 1
+            try:
+                require_supported_session_actions(session)
+            except ValueError as exc:
+                action_session_failures.append(
+                    {"trading_date": session.trading_date.isoformat(), "reason": str(exc)}
+                )
             unexplained.extend(
                 {"trading_date": session.trading_date.isoformat(), "security_id": str(sid)}
                 for sid in session.unexplained_reference_adjustment_ids
@@ -645,6 +654,7 @@ def audit(
             SOURCE_EVENT_SET_MATCH="PASS",
             REFERENCE_PRICE_CONTINUITY="FAIL" if unexplained else "PASS",
             ACTION_SESSION_COVERAGE="FAIL" if absent_dates else "PASS",
+            ACTION_SESSION_PRECONDITIONS="FAIL" if action_session_failures else "PASS",
         )
         reference_count = action_kinds["ORDINARY_REFERENCE"]
         report.update(
@@ -658,6 +668,7 @@ def audit(
                 "sessions": runtime_sessions,
                 "unexplained_reference_adjustments": unexplained,
                 "action_dates_missing_from_calendar": absent_dates,
+                "action_session_failures": action_session_failures,
             },
             accounting_invariant_evidence={
                 "typed_action_rows": len(actions) - reference_count,

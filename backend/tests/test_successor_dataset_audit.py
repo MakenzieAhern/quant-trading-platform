@@ -20,10 +20,11 @@ from tests.test_full_dataset_build_inputs import build
 from tests.test_full_dataset_raw_checkpoint import _source
 from tests.test_full_dataset_sources import _manifest
 from tests.test_merger_accounting import event as merger
+from tests.test_pass_through_accounting import event as pass_through
 from tests.test_successor_reference_inputs import reference_inputs, update_spec
 
 
-def audit_inputs(tmp_path, *, include_reference=True):
+def audit_inputs(tmp_path, *, include_reference=True, conflicting_pass_through=False):
     repository, path, spec, cash, bonus, reference = reference_inputs(tmp_path)
     contracts = {row["name"]: row for row in spec["source_contracts"]}
     sid = SecurityId(value="CN-A:SZSE:000001")
@@ -174,6 +175,29 @@ def audit_inputs(tmp_path, *, include_reference=True):
     preflight["components"]["csi300_benchmark"]["manifest_sha256"] = benchmark_report[
         "manifest_sha256"
     ]
+    if conflicting_pass_through:
+        # Synthetic supported event with a real partition-level trading conflict.
+        event = pass_through()
+        event = type(event).model_validate(
+            {
+                **event.model_dump(),
+                "security_id": SecurityId(value="CN-A:SZSE:000002"),
+                "effective_date": "2015-12-30",
+                "temporary_registration_date": "2015-12-30",
+                "transfer_date": "2015-12-30",
+            }
+        )
+        structural_path = Path(contracts["STRUCTURAL_ACTIONS"]["source_path"])
+        structural = json.loads(structural_path.read_bytes())
+        structural.pop("manifest_sha256")
+        structural["bonus_pass_through_full_census"]["events"] = [
+            {"event": event.model_dump(mode="json"), "event_checksum": event.event_checksum}
+        ]
+        structural = _manifest(structural_path, structural)
+        contracts["STRUCTURAL_ACTIONS"].update(
+            source_file_sha256=sha256_file(structural_path),
+            source_manifest_sha256=structural["manifest_sha256"],
+        )
     preflight_path.write_text(json.dumps(preflight))
     if not include_reference:
         del spec["auxiliary_inputs"]["ordinary_references"]
@@ -203,6 +227,8 @@ def test_candidate_audit_is_version_bound_and_does_not_inherit_financial_pass(tm
     assert report["runtime_scan"]["sessions"] == 7
     assert report["gates"]["REFERENCE_PRICE_CONTINUITY"] == "PASS"
     assert report["gates"]["SOURCE_EVENT_SET_MATCH"] == "PASS"
+    assert report["gates"]["ACTION_SESSION_PRECONDITIONS"] == "PASS"
+    assert report["runtime_scan"]["action_session_failures"] == []
     for gate in (
         "CASH_RECONCILIATION",
         "BASIS_RECONCILIATION",
@@ -215,6 +241,34 @@ def test_candidate_audit_is_version_bound_and_does_not_inherit_financial_pass(tm
     assert report["audit_status"] != "PASS"
     assert not (repository / ".research/project_state.json").exists()
     assert all(sha256_file(Path(p)) == digest for p, digest in before.items())
+
+
+def test_candidate_audit_checks_production_action_boundaries_without_accounting(
+    tmp_path, monkeypatch
+):
+    from app.portfolio import PortfolioEngine
+    from app.research.engine import ResearchExecutionEngine
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("audit must not instantiate a portfolio or strategy execution engine")
+
+    monkeypatch.setattr(PortfolioEngine, "__init__", forbidden)
+    monkeypatch.setattr(ResearchExecutionEngine, "__init__", forbidden)
+    repository, path, spec = audit_inputs(tmp_path, conflicting_pass_through=True)
+    report = run_audit(repository, path, spec, tmp_path / "audit.json")
+    assert report["gates"]["SOURCE_EVENT_SET_MATCH"] == "PASS"
+    assert report["gates"]["ACTION_SESSION_COVERAGE"] == "PASS"
+    assert report["gates"]["ACTION_SESSION_PRECONDITIONS"] == "FAIL"
+    assert report["runtime_scan"]["action_session_failures"] == [
+        {
+            "trading_date": "2015-12-30",
+            "reason": "PASS_THROUGH_TRADING_OBSERVATION_CONFLICT",
+        }
+    ]
+    assert report["audit_status"] == "FAIL_CLOSED"
+    assert report["gates"]["CORPORATE_ACTION_ACCOUNTING"] == "NOT_EVIDENCED"
+    assert not report["accounting_invariant_evidence"]["portfolio_accounting_run"]
+    assert not report["dataset_audited"] and not report["strategy_run"]
 
 
 def test_real_candidate_session_scan_reports_missing_price_companion(tmp_path):
@@ -245,11 +299,13 @@ def test_candidate_audit_rejects_published_event_not_matching_bound_source(tmp_p
     assert not output.exists()
 
 
-def test_auditor_change_during_input_loading_cannot_be_rebound(tmp_path, monkeypatch):
+@pytest.mark.parametrize("code_file", ["scripts/audit_full_dataset.py", "app/research/engine.py"])
+def test_auditor_change_during_input_loading_cannot_be_rebound(tmp_path, monkeypatch, code_file):
     repository, path, spec = audit_inputs(tmp_path)
     load = auditor.load_candidate_build_inputs
     digest = auditor.sha256_file
     changed = False
+    bound_code = Path(auditor.__file__).parents[1] / code_file
 
     def changing_loader(*args, **kwargs):
         nonlocal changed
@@ -258,7 +314,7 @@ def test_auditor_change_during_input_loading_cannot_be_rebound(tmp_path, monkeyp
         return result
 
     def changed_digest(file):
-        if changed and Path(file).resolve() == Path(auditor.__file__).resolve():
+        if changed and Path(file).resolve() == bound_code.resolve():
             return "0" * 64
         return digest(file)
 

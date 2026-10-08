@@ -1,4 +1,25 @@
 {
+  "action_session_preconditions_20261008_gate": {
+    "status": "PASS_SCOPED_ENGINEERING_NOT_FINANCIAL_APPROVAL",
+    "source_parent": "28e014b682797265d1a71e677701e8f19d40a056",
+    "progress": "Previous local-runtime answer verified services but NO_PROJECT_IMPLEMENTATION_PROGRESS. This unit closes an actual candidate audit omission: PROGRESS. Full U1-U8/M0-M5 unchanged/ACTIVE.",
+    "implementation": "One pure holding-independent production action validator reused by candidate session scan; pre-mutation public error order retained. New ACTION_SESSION_PRECONDITIONS and dated failures. Engine code pinned before inputs and checked before immutable publication.",
+    "checks": "673 selected filesystem/domain/mocked-runtime tests PASS (562 in6.17s+111 in1.83s); Ruff/format/two-module mypyPASS. Two retained actual synthetic builder/audit cases PASS0.91s; CLI positive report byte-identical. Regression first failed missing gate before implementation; engine/auditor code-change negatives pass.",
+    "review": "Independent readonly diff review found no scoped P1/P2; no independent test execution claimed.",
+    "evidence": "product-evidence/v1.2/m4/20261008-action-session-preconditions/README.md",
+    "fixtures": "/home/yuchen/data/product-test-fixtures/20261008-action-session-preconditions-proof-v1",
+    "results": "Positive7session/27row fixture PARTIAL. Conflict7session/28row fixture FAIL_CLOSED at2015-12-30 PASS_THROUGH_TRADING_OBSERVATION_CONFLICT despite source-event/calendar PASS. Negative test forbids Portfolio/ResearchExecutionEngine construction during audit. Fifteen broad obligations remain NOT_EVIDENCED.",
+    "limits": "Holding-independent metadata/execution preconditions only. Loader holder-class equality is not genuine account eligibility. No full economics/lifecycle/census/cash/basis/PnL approval. Actual known contradictions in existing base must be linked to entire new candidate event set, not only overlay.",
+    "preservation": "No originalDB/queue/runtime restart/provider/strategy/OOS operation. Original frozen manifest/freeze/contracts/researchstate/tag and Git identity unchanged. Existing local frontend/API200,PG/backendhealthy,RedisPONG previously checked this continuation chain; not a new UI acceptance.",
+    "dataset_created": false,
+    "dataset_audited": false,
+    "dataset_registered": false,
+    "frozen_dataset_modified": false,
+    "strategy_run": false,
+    "full_financial_admission": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "successor_reference_audit_20261008_gate": {
     "status": "PASS_SCOPED_ENGINEERING_NOT_DATASET_OR_FINANCIAL_APPROVAL",
     "source_parent": "9a862b6162ad36963cc4ed57a48ae695d9416002",
@@ -953,7 +974,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T04:49:30Z",
+  "updated_at_utc": "2026-10-08T04:59:09Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4578,8 +4599,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 ACTIVE. Reference inputs and explicit version-aware audit now exercised660tests/173bindings08a43f26; do not repeat completed builder/raw/price-reference plumbing. Next close genuine source/economic/lifecycle gaps and implement dataset-bound accounting verification using existing Portfolio invariants, independent of strategy. Candidate audit correctly remains PARTIAL/FAIL_CLOSED until those facts/evidence exist. No real successor from inspection-only bundle, no frozen/OOS mutation. Lawfulforward/genuineledger/currentquality/delivery remain;GitHubHOLD.",
-  "local_next_command": "Read successor_reference_audit_20261008_gate, retained audit report's NOT_EVIDENCED gates, existing Portfolio action accounting/reconciliation callers and latest financial-source checkpoint. Separate actual missing facts from executable accounting checks; extend the existing auditor with manifest-bound evidence without inventing source approval, fixture counts or copied legacy PASS. Preserve stopped acquisition routes and original runtime/DB; no real builder or strategy until real prerequisites pass.",
+  "next_task": "Full U1-U8/M0-M5 ACTIVE. Shared action-session validation closes candidate audit omission with673tests/retained conflict proof; do not repeat builder/reference/precondition plumbing. Next bind known event-specific source contradictions against whole candidate action set, including legacy-base events, not only overlay. Genuine financial/source/lifecycle/accounting/forward/ledger/quality/delivery remain. No real successor from inspection-only bundle or frozen/OOS mutation;GitHubHOLD.",
+  "local_next_command": "Read action_session_preconditions_20261008_gate and actual known-source-gaps.json in20261008-v30-financial-preflight plus existing overlay audit SID/record/ex/sourceSHA guard. Reuse that exact evidence to add checksum-bound whole-candidate source-economic checks without inventing new facts or source approval. Source coverage remains PARTIAL; cash/basis/PnL and real holder/lifecycle evidence stay separate. No originalDB/runtime/strategy/provider or stopped acquisition route.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

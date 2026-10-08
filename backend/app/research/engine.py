@@ -54,6 +54,83 @@ class ResearchStrategy(Protocol):
     def reset(self) -> None: ...
 
 
+def require_supported_session_actions(session: ResearchSession) -> None:
+    """Validate holding-independent action boundaries without running any accounting."""
+    require_unambiguous_ordinary_distributions(session.corporate_actions)
+    actions = sorted(session.corporate_actions, key=corporate_action_sort_key)
+    demergers = sorted(session.demergers, key=lambda e: str(e.parent_security))
+    mergers = sorted(session.mergers, key=lambda e: str(e.parent_security))
+    surrenders = sorted(session.partial_surrenders, key=lambda e: str(e.security_id))
+    pass_through = sorted(session.pass_through_events, key=lambda e: str(e.security_id))
+    consolidations = sorted(session.consolidations, key=lambda e: str(e.security_id))
+    parents = [str(e.parent_security) for e in demergers] + [
+        str(e.parent_security) for e in mergers
+    ]
+    if len(parents) != len(set(parents)):
+        raise ValueError("duplicate session mandatory conversion")
+    structural_ids = (
+        parents
+        + [str(e.security_id) for e in surrenders]
+        + [str(e.security_id) for e in pass_through]
+        + [str(e.security_id) for e in consolidations]
+    )
+    if len(structural_ids) != len(set(structural_ids)) or any(
+        str(a.security_id) in set(structural_ids) for a in actions
+    ):
+        raise ValueError("partial surrender concurrent action ordering unsupported")
+    for consolidation in consolidations:
+        consolidation.require_supported()
+        if consolidation.effective_date != session.trading_date:
+            raise ValueError("consolidation session mismatch")
+        if session.consolidation_holder_class != consolidation.affected_holder_class:
+            raise ValueError("CONSOLIDATION_HOLDER_APPLICABILITY_UNVERIFIED")
+    for pass_event in pass_through:
+        pass_event.require_supported()
+        if pass_event.effective_date != session.trading_date:
+            raise ValueError("pass-through session mismatch")
+        if any(b.security_id == pass_event.security_id for b in session.bars):
+            raise ValueError("PASS_THROUGH_TRADING_OBSERVATION_CONFLICT")
+    for surrender in surrenders:
+        surrender.require_supported()
+        if surrender.application_date != session.trading_date:
+            raise ValueError("partial surrender session mismatch")
+        if surrender.research_effective_date is not None:
+            status = next(
+                (
+                    s.status
+                    for s in session.statuses
+                    if s.status.security_id == surrender.security_id
+                ),
+                None,
+            )
+            if (
+                not any(b.security_id == surrender.security_id for b in session.bars)
+                or status is None
+                or status.is_tradeable is not True
+                or status.is_suspended is not False
+            ):
+                raise ValueError("SURRENDER_FIRST_TRADABLE_BOUNDARY_REQUIRED")
+        holder_class = dict(session.surrender_holder_classes).get(
+            surrender.security_id, session.surrender_holder_class
+        )
+        if holder_class != surrender.affected_holder_class:
+            raise ValueError("PARTIAL_SURRENDER_HOLDER_APPLICABILITY_UNVERIFIED")
+    for merger in mergers:
+        merger.require_supported()
+        if merger.effective_date != session.trading_date:
+            raise ValueError("merger session mismatch")
+    if len({str(e.parent_security) for e in demergers}) != len(demergers):
+        raise ValueError("duplicate session demerger")
+    for event in demergers:
+        event.require_supported()
+        if event.application_date != session.trading_date:
+            raise ValueError("demerger session mismatch")
+    for action in actions:
+        if action.ex_date != session.trading_date:
+            raise ValueError("corporate action must belong to the research session")
+        require_supported_corporate_action(action)
+
+
 @dataclass(frozen=True, slots=True)
 class ResearchExecutionResult:
     proposals: tuple[OrderProposal, ...]
@@ -240,6 +317,7 @@ class ResearchExecutionEngine:
         self._previous_date = None
 
     def _process_session(self, session: ResearchSession) -> PortfolioTarget | None:
+        require_supported_session_actions(session)
         self._active_session = session
         timestamp = datetime.combine(
             session.trading_date, time(15, 0, 0, 1), tzinfo=ZoneInfo("Asia/Shanghai")
@@ -252,72 +330,7 @@ class ResearchExecutionEngine:
         mergers = sorted(session.mergers, key=lambda e: str(e.parent_security))
         surrenders = sorted(session.partial_surrenders, key=lambda e: str(e.security_id))
         pass_through = sorted(session.pass_through_events, key=lambda e: str(e.security_id))
-        pass_ids = [str(e.security_id) for e in pass_through]
         consolidations = sorted(session.consolidations, key=lambda e: str(e.security_id))
-        consolidation_ids = [str(e.security_id) for e in consolidations]
-        parents = [str(e.parent_security) for e in demergers] + [
-            str(e.parent_security) for e in mergers
-        ]
-        if len(parents) != len(set(parents)):
-            raise ValueError("duplicate session mandatory conversion")
-        structural_ids = (
-            parents + [str(e.security_id) for e in surrenders] + pass_ids + consolidation_ids
-        )
-        if len(structural_ids) != len(set(structural_ids)) or any(
-            str(a.security_id) in set(structural_ids) for a in actions
-        ):
-            raise ValueError("partial surrender concurrent action ordering unsupported")
-        for consolidation in consolidations:
-            consolidation.require_supported()
-            if consolidation.effective_date != session.trading_date:
-                raise ValueError("consolidation session mismatch")
-            if session.consolidation_holder_class != consolidation.affected_holder_class:
-                raise ValueError("CONSOLIDATION_HOLDER_APPLICABILITY_UNVERIFIED")
-        for pass_event in pass_through:
-            pass_event.require_supported()
-            if pass_event.effective_date != session.trading_date:
-                raise ValueError("pass-through session mismatch")
-            if any(b.security_id == pass_event.security_id for b in session.bars):
-                raise ValueError("PASS_THROUGH_TRADING_OBSERVATION_CONFLICT")
-        for surrender in surrenders:
-            surrender.require_supported()
-            if surrender.application_date != session.trading_date:
-                raise ValueError("partial surrender session mismatch")
-            if surrender.research_effective_date is not None:
-                status = next(
-                    (
-                        s.status
-                        for s in session.statuses
-                        if s.status.security_id == surrender.security_id
-                    ),
-                    None,
-                )
-                if (
-                    not any(b.security_id == surrender.security_id for b in session.bars)
-                    or status is None
-                    or status.is_tradeable is not True
-                    or status.is_suspended is not False
-                ):
-                    raise ValueError("SURRENDER_FIRST_TRADABLE_BOUNDARY_REQUIRED")
-            holder_class = dict(session.surrender_holder_classes).get(
-                surrender.security_id, session.surrender_holder_class
-            )
-            if holder_class != surrender.affected_holder_class:
-                raise ValueError("PARTIAL_SURRENDER_HOLDER_APPLICABILITY_UNVERIFIED")
-        for merger in mergers:
-            merger.require_supported()
-            if merger.effective_date != session.trading_date:
-                raise ValueError("merger session mismatch")
-        if len({str(e.parent_security) for e in demergers}) != len(demergers):
-            raise ValueError("duplicate session demerger")
-        for event in demergers:
-            event.require_supported()
-            if event.application_date != session.trading_date:
-                raise ValueError("demerger session mismatch")
-        for action in actions:
-            if action.ex_date != session.trading_date:
-                raise ValueError("corporate action must belong to the research session")
-            require_supported_corporate_action(action)
         for action in actions:
             self._portfolio.apply_corporate_action(
                 _domain_symbol(action.security_id), action, opening
