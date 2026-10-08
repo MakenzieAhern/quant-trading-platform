@@ -1,4 +1,23 @@
 {
+  "source_guard_original_publication_20261008_gate": {
+    "status": "PASS_SCOPED_ORIGINAL_LOCAL_PUBLICATION_NOT_FINANCIAL_APPROVAL",
+    "source_commit": "d183ad36144dfee3b3d43aaef7b3b1ad96a9b642",
+    "backend_tree": "65dda6a8d6f1c17361a0a7414e82d28176005f0c",
+    "frontend_tree": "bbc940613aff17d44fef32970ef44cbb0acde906",
+    "original_runtime_loaded": true,
+    "evidence": "product-evidence/v1.2/m4/20261008-source-admission-publication/README.md",
+    "native_sha256sums_sha256": "adcd949dcd2dc985acffcf7b61b85d691a237393738cd12423b074e72500f631",
+    "sha256_entries": 323,
+    "runtime": "One exact89aa existingbackend restart03:29:52UTC after0017/noactive/nopending checks;sameimage/mount/ports. PG598/Redisdf3/fronta561IDs/Oct7starts unchanged. Healthpaper200/frontend200. Startup NOT read-only. FirststartingHTTP000 then samecontainerhealthy/no repeat restart.",
+    "preservation": "Private dumpd98d8730/list0/cache61ae82fd/176oldfront/parentarchive retained.19 selected GET comparisons preserve18oldbodies exceptadditivefindings/catalogonlyexpectedadmission;independent19savedID+SHAmappings checked. Selectedstatuses/417events/cachetarunchanged. NOTall44tables/restore/lostledger recovery.",
+    "browser": "ActualoriginalIAB EN1440/ZH390 data/results/STOPPEDpaper;sourcewarnings/exact financialstrings/dates preserved/nooverflow.13actualHTTPassetSHAs/securityheaders/index06a9a2d5/175oldnonindexretained. OwnQA tabsclosed/viewportreset/ZHsystemretained. No originalcreate/start/provider/strategy/OOS POST.",
+    "tests": "1579backend1existingoptionalSKIP/840frontend/static/type/build/Alembic from unchangedd183code;independent readonly no scopedP1P2.323nativebindings twicePASS;old124unchanged.",
+    "full_financial_admission": false,
+    "new_dataset_registered": false,
+    "existing_frozen_dataset_modified": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "source_execution_and_read_findings_20261008_gate": {
     "status": "PASS_SCOPED_ENGINEERING_AND_ISOLATED_UI_NOT_ORIGINAL_DEPLOYMENT",
     "source_parent": "1d2da17e224e162800e137b28ef6d20c1da1f4d8",
@@ -841,7 +860,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T03:28:00Z",
+  "updated_at_utc": "2026-10-08T03:43:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3817,19 +3836,20 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 UIregrowth82payload7d52f070/815currentfront/static/build/localD_f unchanged. New00216820payload9a3a58d7/c6f8c55a v2 officialsource+marketboundary proof repeated/RAM7rejects/sourcecontractactual15bytes14canonicalPASS butmaster65referenceMISMATCH_FAIL/fullfinancialfalse. Fresh01:42UTC original3healthy/PONG/8000paper200/5173HTTP200/fourIDsstartsame. SavedAPIbackend4proof unchanged;olderfrontendrestore/shrink bindingshistorical. FullgoalACTIVE/financialPARTIAL/GitHubHOLD.",
-    "repository_writer": "Rootsole repo/docs/state/privateproofwriter;agentsreadonly. UIregrowth localcommit2e52400 done;thisscope checkpoints only/no backend/model/migration/dependency/financialwrite. New20privatepayloads+3candidateJSON outsideGit,existingcachedsources/helper/Parquet only/no remoteoperation. Coherentlocalmilestone/no Gitidentitychange.",
-    "database_writer": "Only existing isolated30b1tmpfs/55471: newemptyquant_test_restore_oct8 import+0017migration;normalcurrentAPIlifespan/2ownedqueues withalljobs/accounts terminal andnojournals. All44pre/43knownprojection+18file fingerprints preserved throughstartup/restart/UI. Earlierfullsuite1463/1optionalSKIP+all17cycle also testonly;root ownsallwriters. OriginalPG598760/Redisdf3/backend89aa unchanged/no SQLwrite/migration/restart/denied44table refresh/reset/prune/delete. TestPGzerootherclients stopped0/retained;tmpfstestDBdiscarded/backupretained.",
+    "latest_verification": "Oct8 original publication d183ad3 verified:19savedGETs/19independentversionmappings/exactmoneydates/cache61ae82fd unchanged;323nativebindingsadcd949d twicePASS/124oldproofintact. Original8000/5173 nowloaded,3healthy/PONG/paper200/frontend200. SourceFAIL/economicPARTIAL/fullgoalACTIVE/GitHubHOLD.",
+    "repository_writer": "Root sole repo/docs/state/private-proof writer;agents readonly. d183ad3 coherentlocal sourceguard milestone committed;publication checkpoint and independent source candidate next. No competing writer observed03:40UTC. No Gitidentity or remote mutation.",
+    "database_writer": "Originalbackend89aa restarted once03:29:52UTC after0017head/alljobs-terminal/no-pending checks and pg_dump backup. Normal startup/recovery NOTread-only. Selected19GET/417events/statuses/cache intact,not all44tables. No new financialproducer/originalPOST/deniedfingerprint refresh. PG598/Redisdf3 unchanged. Owned testPGstoppedretained;no reset/prune/down-v/delete.",
     "queue_writer": "No financial producer/source/candidate queue write this unit. Prior all7544/fullV2e59c40a3/two-caseV26f3e0da7/6583gaps/no-holder2/scope38/000771unmerged/187noappend/498candidates retained. Prior9no-holder payloads hash-intact;changedhelper old-runtime acceptance not rerun. No datasetregistration/strategy/.research or frozen rewrite;wholefinancial gatepending.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "Oct8 01:21UTC originalPG598760/Redisdf3/backend89aa/frontenda561 sameIDs/starttimes/3healthy/PONG/API8000paper200/frontend5173HTTP200. FrontstaticD_fonlychanged/no restart. OwnedQA739448/739602 exactcwd/argv/startfreshmatchedTERM/sessions9835/13300terminalintentional1/15179empty. CorrectedREDexit1/green16/full815/final815/buildallterminal0/networknone/noDB. Priorrestoreworkersterminal/testPG30b1stoppedretained. TmpTabsclosed/viewportreset/originalMarket1ZHsystemquerywatchlistretained. Frozen/tag/.research intact/historicPIDsnotreusableauthority.",
+    "verified_processes": "Oct8 original89aa samecontainer/image/start03:29:52UTC;PG598/Redisdf3/fronta561 sameOct7starts. OriginalCompose3healthy/APIpaper200/front5173Windows200at03:39UTC. Testedfrontend13exactassets/index06a9a2d5;old175assetsretained. All ownedtests/QAterminal/closed;originalMarketretained/ZHsystem. HistoricalPIDsnotactionauthority.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8 d183ad3 loadedoriginal8000/5173:onebackendrestartafter0017/noactive/nopending/backup;19savedGETcomparison+independent19versionmappings/cachetar61ae82fd unchanged;13HTTPassetSHAs/175oldretained/actualIABENZHsavedresultsandSTOPPEDpaper exact.323nativebindingsadcd949d twicePASS/124priorintact. ScopeddeploymentPASS/fullfinancialPARTIAL/fullgoalACTIVE/GitHubHOLD.",
     "Oct8 source-admission/saved-versionfindings:1579backend1optionalSKIP/840frontend/static/type/build/AlembicPASS;IABENZHsyntheticpausedaccount+realregistry proof;independentreadonlynoscopeP1P2;124nativebindings02bebe0082twice. Original8000/5173 notyetloaded;fullgoalACTIVE/financialPARTIAL/GitHubHOLD.",
     "Oct8 market economic-quality root repair9RED->52focused829fullfrontend/static/buildPASS;actualZH390EN1440 source/detail notices/demo-switch/date/raw/watchlist preserved. Original5173 atomicindex7281f6ac/13actualHTTP hashes/169backup168oldretained/no restart. FourrawAPI GET snapshots exact1d7b6134/KNOWNgap/119bars.222native bindings306e8db6 twicePASS/readonly independent no scopedP1P2. Frozen/research/tag/services intact/sourceintegrityFAIL remains/newexecution audit next/fullgoalACTIVE/GitHubHOLD.",
     "Oct8 saved actual restoredAPI Decimal identities scopedPASS:two captures/20equity/20holdings/40marks/10fills/18decisions/cost50.34364/final97579.65636;three exact-error RAM corruptions rejected. Fourpayload03a0467a twiceverify/all54parent intact/fullbackendtree+cleanstate+fivehashbindings. Independent readonly scope/binding gaps closed;no productcode/SQL/service/strategy/GitHub operation. Original5173+8000HTTP200/PONG/serviceshealthy;financialgap/negative/null retained/fullgoalACTIVE.",
@@ -4464,8 +4484,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5 unchanged/ACTIVE. Source admission and saved-version findings now scopedengineering/UI PASS1579backend1optionalSKIP/840frontend/124proof02bebe0082, but original8000/5173 not loaded. Verify pending receipt/terminal queues/current0017/source binding/ownership and publish through existing exact originalbackend restart plus originalnginx assets, preserving savedbusiness evidence and runtime rollback. No deniedscratch/sourcecopy/44table-refresh workaround. Then fullfinancial/newversion sourceclosure/lawfulforward/genuineledger/currentAA200/p95/export/media/authorizedremote release gates;GitHubHOLD.",
-  "local_next_command": "Read source_execution_and_read_findings_20261008_gate. Original0017==head/allknownjobspaper terminal: verify pending receipts empty and queue ownership/source SHA without denied44table refresh. Then a bounded originalbackend89aa-only restart can load existingboundsource; no newcontainer/build/sourcecopy or DB migration change. Preserve originalAPI/business evidence, publish testedfrontend assets withbackup/atomicindex, verify current GET findings and old exactfinancial values before claiming deployed. GitHubHOLD/frozen/methodology/OOS/lostledger and all fullproduct requirements unchanged.",
+  "next_task": "Full U1-U8/M0-M5 remains ACTIVE. Original sourceguard/savedfindings now deployed with323proofadcd949d and preserved19selectedGETs. Next separate inspection-only complete15-source preflight/contracts/pin bundle repairs source-reference chain without old approval/frozen change;not newdataset orfinancialPASS. Continue fullfinancial/newversion/lawfulforward/genuineledger/currentquality/delivery;GitHubHOLD.",
+  "local_next_command": "Read source_guard_original_publication_20261008_gate and existing check_sources/full_dataset_sources. Produce separate candidate-only15-source chain using actual64P0/newinspectionpreflight/minimalpins;preserve13otherrows and all original15sourcebytes,old65/.research/freeze. Verify canonical/file hashes,fullcontracts/lineage and explicit noadmission. Do not run fixed-v1 materializer or denied source routes;financialclosure remains separate.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

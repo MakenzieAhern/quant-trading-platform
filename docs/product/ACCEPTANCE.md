@@ -1,5 +1,21 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 U3–U8 original-runtime source findings — scoped PASS
+
+[Actual publication and exact preservation proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission-publication/README.md>)
+and [actual original data center](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission-publication/data-final-zh.jpg>).
+Original8000/5173 now load d183ad3.19 selected GET comparisons plus independent19
+saved-version mappings preserve original financial/date/plan fields. Actual IAB
+EN1440/ZH390 old result/paper/data center show findings and unchanged exact values.
+13 served assets byte-identical to tested build;323 immutable bindings verified.
+Known-invalid historical execution disabled; demo remains available.
+
+Scope excludes original create/start POST, all-table audit, lost-ledger recovery,
+full-source/economic acceptance, current fullAA/native200/p95 and v1.2 release.
+Prior1579backend+1optionalSKIP/840frontend scoped code tests remain source-bound.
+Full U1–U8/M0–M5 ACTIVE/PARTIAL; GitHub HOLD. Earlier not-deployed entries below
+describe their historical engineering unit, not current local deployment.
+
 ## 2026-10-08 U3/U4/U5/U6/U7/U8 source admission/findings — scoped PASS
 
 [Private source-bound evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission/README.md>)

@@ -1,5 +1,29 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-08 original source-admission publication — scoped PASS
+
+- Source d183ad3/backend tree65dda6a8/frontend treebbc94061 actually loaded.
+  One existing89aa backend restart at03:29:52UTC;0017 alreadyhead;12 research,
+  5 STOPPED paper,4 update jobs terminal and no pending receipts beforehand.
+  Normal startup has recovery writes: NOT a read-only operation.
+- Private pre-action dump d98d8730/list0, product cache61ae82fd,176 frontend
+  files and parent code archive retained; no restoration/lost-ledger claim.
+- 19 selected GET bodies before/after:18 unchanged except additive findings,
+  catalog only expected admission changes. Independent19 saved ID+SHA findings
+  PASS. Cache tar and selected statuses/417events unchanged, not all44tables.
+- Tested13 frontend files HTTP200/SHA/length/security headers exact; atomicindex
+  06a9a2d5;175 prior nonindex files retained/187 live. No frontend restart.
+- Actual original IAB EN1440/ZH390: data history/warnings, old0cdf result and
+  d704 STOPPED account retained exact money/dates; no page overflow. Own tab
+  closed/preferences restored. No original new financial/provider request.
+- Native323 seal adcd949dcd2dc985acffcf7b61b85d691a237393738cd12423b074e72500f631
+  twiceverified; prior124 seal unchanged. Independent scoped review noP1/P2.
+  First health probe during starting reset/HTTP000; same container recovered,
+  no restart loop. Prior documentation patch failed validation and wrote nothing.
+- Prior local-service answer alone was status/no-progress. This checkpoint
+  records completed deployment; next concrete defect is new15-source lineage.
+  Full objective unchanged/ACTIVE; GitHub HOLD; no financial approval/release.
+
 ## 2026-10-08 source admission and saved-version findings — scoped PASS
 
 - Previous user-answer turn completed the live frontend handle13929: terminal0,

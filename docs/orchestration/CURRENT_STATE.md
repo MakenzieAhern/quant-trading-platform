@@ -1,5 +1,26 @@
 # Current state
 
+## v1.2 source guard now deployed locally — 2026-10-08
+
+Original8000/5173 now load source commit d183ad36144dfee3b3d43aaef7b3b1ad96a9b642.
+Known-invalid historical sources reject new execution; cache and saved records
+remain readable with saved-version findings. This resolves rollout, not source
+authority or economic completeness. Full U1–U8/M0–M5 ACTIVE/PARTIAL.
+
+One controlled existing-backend restart after0017/no-active/no-pending checks;
+PG/Redis/frontend IDs and starts unchanged. 19 selected before/after GETs preserve
+old fields and independently verify19 saved-version findings. Product cache tar
+unchanged; selected statuses and417 events unchanged, NOT an all-table audit.
+Actual original IAB EN1440/ZH390 studies/accounts preserve exact financial strings
+and dates; source warnings visible. Tested13 assets HTTP/SHA exact,175 old assets
+retained. No new create/start/provider/strategy request or frozen mutation.
+[Publication proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission-publication/README.md>):
+323 native bindings, adcd949dcd2dc985acffcf7b61b85d691a237393738cd12423b074e72500f631.
+1579backend+1existingoptionalSKIP/840frontend/static/build evidence remains bound.
+Next repair new-version full15-source references in a separate inspection-only
+bundle; never rewrite frozen65 or inherit old approval. GitHub HOLD; financial,
+lawful-forward, genuine-ledger, current quality and release gates remain.
+
 ## v1.2 source execution guard and saved-version findings — 2026-10-08
 
 Scoped engineering and isolated browser PASS; NOT yet loaded by original8000/5173.

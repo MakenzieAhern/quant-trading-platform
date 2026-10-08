@@ -1,5 +1,21 @@
 # Blockers
 
+## v1.2 original runtime rollout RESOLVED_SCOPED — 2026-10-08
+
+Original local backend/frontend now serve d183ad3 source admission/findings.
+Docker/service availability and this rollout are no longer active blockers.
+323-entry publication proof binds real saved GET preservation, independent19
+saved-version mappings, backend restart, frontend assets and bilingual actual UI.
+No original create/start POST was submitted; rejection is source-bound test proof.
+
+Legacy65 source reference and economic incompleteness remain FAIL/PARTIAL.
+Next actionable local unit: distinct candidate-only full15-source/preflight/pin
+chain, preserving original bytes and old authority; no copied approval or financial
+admission. 600725 component arithmetic and seven price companions already done;
+missing official resumption body remains STOP, not a reason to repeat or bypass.
+Full goal ACTIVE; lawful-forward/genuine-ledger/current broad quality/release
+requirements remain. GitHub HOLD and all previous denied-route boundaries remain.
+
 ## v1.2 source admission repaired; original runtime rollout pending — 2026-10-08
 
 Known invalid provenance no longer admits NEW execution in tested source.

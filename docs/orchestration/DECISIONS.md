@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 Preserve original reads during controlled local rollout — 2026-10-08
+
+After current0017/no-active/no-pending checks and retained backup, load existing
+bind-mounted backend with one exact-container restart. Startup recovery is real,
+not read-only; verify selected saved evidence without the denied44-table refresh.
+Publish tested assets first and rename index atomically; retain all old assets.
+This was performed and validated on original8000/5173, not only synthetic QA.
+323-entry proof preserves exact saved results/plans/accounts and independent
+version findings; no original new create/start or strategy run.
+
+Next new-version provenance repair must create separate inspection-only artifacts.
+Reuse full15 contracts and canonical verifier; preserve original65/frozen/.research.
+A valid checksum chain proves integrity, not legal/economic authority or approval.
+Do not copy accepted status from old preflight or run the fixed-v1 materializer.
+No new dependency, methodology/identity/OOS/GitHub change.
+
 ## v1.2 Keep source findings separate from economic quality — 2026-10-08
 
 Reuse the existing registry boundary, parser/error map and note style. Exact known
