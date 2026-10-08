@@ -1,4 +1,39 @@
 {
+  "targeted_source_reconciliation_20261008_gate": {
+    "status": "VERIFIED_NEW_NEGATIVE_EVIDENCE_NOT_SOURCE_CLOSURE",
+    "source_parent": "24b1d4b396ca439dcbda7d56bc834d0b6172c2ae",
+    "progress": "Prior local-runtime answer was NO_PROJECT_PROGRESS, not a live wait. This unit PROGRESS: original-source ambiguity previously absent from negative inventory now joined to the complete real action partition; independent first-filter performance observations change the next measurement plan. Full goal unchanged/ACTIVE.",
+    "source_findings": "300147 annual60629417 is retrospective corroboration only, not correction of the2011 event table. Cached000425 original59101000 has explicit dates but a separate subtotal heading/unit ambiguity; pre/post share counts double consistently. Preserve ambiguity, do not claim per-holder ratio wrong or relax H/date grammar into complete admission.",
+    "actual": "New three-gap inventory8a1f9103 preserves original two records exactly. All42792 frozen action rows/42598ordinarychecked;6cash+bonuslegs matched. New000425@2011-03-16 cash3736d431/bonusbfe74261 agree in event identity, PDF SHA7e96e022 and official URL. Original four findings exactly unchanged; reversed all rows/gaps equal.",
+    "final_report_sha256": "ee5ed5f03d6dceb45274959b5a842796c8a4891e32efe6ee3d243671fd952d7d",
+    "checks": "Finalproducer twice identical;17pins independently reviewed;25existing source-gaptestsPASS3.12s with APP_ENVtest/unreachablequant_test URL. Initial test invocation refused before tests by safety guard; default-vs-backend Ruff format/import corrections retained. Final explicit backendconfigRuff/formatPASS. No new fullsuite/DB/browser-financial pass.",
+    "review": "Independent readonly latestfinal pins/6legs/original findings/scopeverified;no remaining scopedP1P2. Prior producer-pin drift during formatting resolved before finalreview. Reviewer didnotrun producer/tests or visuallyinspectPDF.",
+    "evidence": "product-evidence/v1.2/m4/20261008-targeted-official-reconciliation/README.md",
+    "source_economic_integrity": "FAIL",
+    "preservation": "Frozenmanifest693c0b81/freezerecord228569f1/researchstateb10ce3c5/peeledv1.1tagf88b5c60/Gitidentity unchanged. Old reports/000425original retained;no source-character repair,whole-security exclusion,originalDB/queue/provider/strategy/OOS operation. Annual retrieved once in preceding inspection;no600725 deniedroute.",
+    "date_parser_relaxed": false,
+    "dataset_created": false,
+    "dataset_audited": false,
+    "frozen_dataset_modified": false,
+    "strategy_run": false,
+    "financial_admission": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
+  "report_first_filter_timing_20261008_gate": {
+    "status": "NOT_ACCEPTED_THREE_EXPLORATORY_OBSERVATIONS",
+    "source_parent": "24b1d4b396ca439dcbda7d56bc834d0b6172c2ae",
+    "scope": "ActualChrome154/native1920x911/DPR1/ZHdark/savedDevelopmentb38081a7. First2011-02-01..2011-03-31filter afterfreshdocument. HTTP/servercache NOTcleared;not fullycoldcache. Existing1944curve dates,bounded initial387table rows.",
+    "actual": "3trusted focused/visibleclicks;native interaction-group max40/3072/56ms. DOMready92/91.5/98.1ms,2rAFcallbacks~2seconds. All7filteredGETs200,holdings40/rebalances2/trades1,22exactfullperiodmetricsunchanged. No warning/errorcaptured. No p95 or complete visible-result latency claimed.",
+    "limitations": "Native first response doesnotcover later async results. hasText-on-script wait failed in slow sample;coincidence isnotcausality. Do not discard it, blame application/occlusion/tooling without proof, or optimize speculative code. Target200ms NOTaccepted;fullQA-PERF remainsIN_PROGRESS.",
+    "restoration": "Onlyquery-opt-in temporarylocalobserver in existingfrontend index;allJS/CSS unchanged. Restored originalservedindexb96a802da1361b74405b60abd8f60aae4144a5ecfa4bb4fe0bce6c849c3aedce;Chrome reload no diagnostic,22metrics/online/noerror. Fronta561fa1250ed samestart2026-10-07T16:15:31.157465502Z;no container/backend restart/cachepurge/preferencechange. OwnQAclosed,userWorkbenchtabretained.",
+    "summary_sha256": "0a6d3125cf473d19867e4a914e36ab6fd4bfa3f21a8efe9c9e0041bb635afcf8",
+    "evidence": "product-evidence/v1.2/m4/20261008-report-filter-timing/README.md",
+    "production_source_changed": false,
+    "strategy_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "visible_execution_admission_20261008_gate": {
     "status": "PASS_SCOPED_FRONTEND_NOT_FINANCIAL_OR_FULL_PRODUCT_APPROVAL",
     "source_parent": "2f5d9ec",
@@ -1017,7 +1052,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T05:28:15Z",
+  "updated_at_utc": "2026-10-08T05:53:51Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4006,6 +4041,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8 targeted source/quality checkpoint24b1d4b:three-gap negative inventory now binds6actualoldlegs,original4 unchanged;source-negative-finalee5ed5f0/17pins independentreview/25tests. Not sourceclosure orfinancialPASS. Actualfirst-filter3observations40/3072/56ms retained,performanceNOT_ACCEPTED;originalfrontend restoredbyte-exact,fullgoalactive/GitHubHOLD.",
     "Oct8 independentfull15source reference candidate dfdd998f/no financialadmission;13unchangedrows/20originalinputs/4wholeparents retained/5minimalpins/noapprovalinheritance. Normal+optimizedreverseexactrepeat;111source tests/static/scriptmypyPASS;realP2rebindingREDfixed;readonlyactualartifactreview no scopedP1P2.43nativebindingsadf9a80e twice+nativePASS;original323/124stillverify/apphealthy/noDBorqueue. FullgoalACTIVE/GitHubHOLD.",
     "Oct8 d183ad3 loadedoriginal8000/5173:onebackendrestartafter0017/noactive/nopending/backup;19savedGETcomparison+independent19versionmappings/cachetar61ae82fd unchanged;13HTTPassetSHAs/175oldretained/actualIABENZHsavedresultsandSTOPPEDpaper exact.323nativebindingsadcd949d twicePASS/124priorintact. ScopeddeploymentPASS/fullfinancialPARTIAL/fullgoalACTIVE/GitHubHOLD.",
     "Oct8 source-admission/saved-versionfindings:1579backend1optionalSKIP/840frontend/static/type/build/AlembicPASS;IABENZHsyntheticpausedaccount+realregistry proof;independentreadonlynoscopeP1P2;124nativebindings02bebe0082twice. Original8000/5173 notyetloaded;fullgoalACTIVE/financialPARTIAL/GitHubHOLD.",
@@ -4642,8 +4678,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 ACTIVE/PARTIAL. Visible source/execution admission now fixed and locally published; do not repeat accepted UI/source/session/reference plumbing or green fixtures. Prioritize genuinely unresolved source/lifecycle/accounting and U7 lawful forward evidence. Inspect existing cached factual gap inventory for one currently actionable gap; if no legal accepted evidence exists, report exact external need rather than build placeholders. Genuine missing ledger evidence still absent. No inspection-only successor build,frozen/OOS change orGitHub action.",
-  "local_next_command": "Read visible_execution_admission_20261008_gate, current acceptance, existing source-gap inventory and forward_implementation_audit/external_blockers. Check only cached lawful evidence for concrete source/effective-date/accounting or approved-product-use resolution before proposing code. Preserve denials: no clean-demo/scratch replacement,fingerprint refresh,download bypass or600725 resumption retrieval. No new endpoint/adapter without required facts, no fabricated ledgers. GitHub HOLD; continue local services independently; full scope remains incomplete.",
+  "next_task": "Full U1-U8/M0-M5 ACTIVE/PARTIAL. Do not repeat completed300147annual/000425table/source-negative scan or speculative parser loosening. Use latestthree-gap evidence for any futureisolatedcandidate,never oldtwo-gap as complete. Next concrete quality work must separate native feedback from async visible-result latency and explain three divergent filter observations before claimingp95;reuse alreadyacceptedwarm evidence. Genuine source/lifecycle/accounting/lawfulforward/trueledger gaps remain;no placeholders orfixture-as-forward. No inspection-only successor build,frozen/OOS change orGitHub action.",
+  "local_next_command": "Read targeted_source_reconciliation_20261008_gate/report_first_filter_timing_20261008_gate and their README/current summaries. Currenttemporaryinstrument removed;do notstart duplicateapps. For source work seek only specificindependent cached correction/clarification of currentgaps,not fullarchiveacquisition. For performance use a non-intrusive justified measurement of actualfrontend beforecodeoptimization,retain3072msfailure. Preserve denials:no clean-demo/scratch replacement,fingerprint refresh,download bypass or600725resumptionretrieval. No newadapter withoutrequiredfacts,no fabricatedledgers. GitHubHOLD;localservices available;fullscopeincomplete.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

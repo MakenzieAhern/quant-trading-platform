@@ -1,5 +1,25 @@
 # Decisions
 
+## v1.2 Preserve independent source ambiguity and divergent timing — 2026-10-08
+
+Do not loosen a dates-only guard into source completeness.000425 pre-H-offering
+background is not an H-holder distribution, but the original share-table subtotal
+heading/unit is independently ambiguous. Record it in a new immutable negative
+inventory, preserving the old two facts and all original notices/frozen results.
+Reuse the existing complete-partition negative matcher: six related old legs now
+carry retained evidence, not a whole-security exclusion or an admission policy.
+The later300147 annual report cannot silently fix a2011 event-date table.
+
+For QA-PERF distinguish native first feedback, async DOM readiness and actual
+visible completion. Preserve all three first-filter samples, including3072ms;
+the simultaneous harness wait failure does not establish causality. Do not
+manufacture a p95 from the small mixed-protocol set or optimize speculative
+code. Temporary measurement belongs only on its opt-in local URL and must be
+removed byte-exact without restarting application/data services. Existing warm
+measurements remain scoped historical evidence, not a full performance pass.
+No production-code/financial-methodology change, frozen/OOS mutation or GitHub
+operation; the complete U1-U8/M0-M5 objective remains active and incomplete.
+
 ## v1.2 Readable cache is not execution approval — 2026-10-08
 
 Use one existing-flow helper to interpret explicit dataset source findings and

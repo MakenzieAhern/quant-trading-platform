@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 targeted source facts and first-filter measurement — no new admission
+
+[Source evidence and repeatable full-partition check](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-targeted-official-reconciliation/README.md>).
+The cached000425 notice has explicit all-holder dates, but its original share-
+change subtotal column has a separate heading/unit ambiguity. Preserve it;
+do not repair source characters or claim the per-holder ratio is wrong. No
+same-day parser relaxation. The new three-gap inventory retains the original
+two facts and binds six existing cash/bonus legs across all42,792 action rows
+(42,598 ordinary). Original four findings match exactly, reversal/repeatability
+passes; source economics stays FAIL. Current report `source-negative-final.json`
+SHAee5ed5f0;17pins independently reviewed,25 existing regression tests PASS.
+300147 annual evidence is retrospective corroboration only, not an event-date
+correction. No dataset build/audit, original accounting repair or frozen change.
+
+[Actual first-filter timing observations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-report-filter-timing/README.md>).
+Chrome154/native1920x911/ZHdark, existing Development reportb38081a7, fresh
+document state but HTTP/server caches not cleared. Three trusted first-filter
+observations retain native interaction groups40/3072/56ms and DOM readiness
+92/91.5/98.1ms. Seven filtered GETs return200;40 holdings/2 rebalances/1 trade;
+all22 exact stored full-period metrics remain unchanged. No new study ran.
+Native response does not include later asynchronous results; DOM ready/two-rAF
+callbacks do not prove final visible-result latency. A failed diagnostic selector
+coincides with the slow sample but does not establish its cause. No p95 or
+QA-PERF PASS; no slow sample discarded. Current summary SHA0a6d3125.
+
+Query-only temporary instrumentation was removed; original indexb96a802d and
+all JS/CSS restored/retained. Same frontend container/start, no service restart,
+no original DB/queue write requested. Chrome reload confirms online topbar,
+22 metrics/no error panel/no diagnostic script. Own QA tab closed. Full quality,
+source/accounting, lawful forward, genuine missing-ledger and delivery gates
+remain open; GitHub HOLD. This is progress in actual evidence, not product PASS.
+
 ## 2026-10-08 U3/U5/U7 visible execution admission — scoped PASS
 
 [Reproductions, live Chrome screenshots and preservation evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-admission-language/README.md>).
