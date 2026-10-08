@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 recovery final-page shrink and daily frontend — scoped PASS
+
+[Private repeatable proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-recovery-page-shrink/README.md>)
+seals56payloads `4a32355991f2cf0c6b5f05d6bb3f17ee68a70a527f72a9ed27fbe57345c8badb`;
+checker twicePASS,170tracked frontend hashes/reused QA handler bound. Actual
+two bilingual regression RED expected20/got0;12older PASS. Minimum production
+clamp reused from named versions fixes slice/pager,14focused/813full48files PASS,
+ESLint/TypeScript/Prettier/build PASS, unchanged dependencies/lock. Chunk528.02KB
+warning remains; not performance/audit/currentbackend/CI acceptance.
+
+Actual isolated GET-only browser QA21→20 native cross-tab StorageEvent: EN/ZH
+20remaining rows/exact1–20/20/bothpagerbuttons disabled/groupfocus retained;
+shared and remaining20 JSON raw values unchanged. Chinese actual390×844/dark,
+client/page375 no whole-page overflow. All four write verbs405; no job/DB/engine.
+Failed cached-oldGREEN/desktop-not-mobile/wrong-named images retained, notPASS.
+Independent readonly review corrected exactpager/mobile/13HTTP-set verifier
+gaps; screenshot correspondence/fullTaborder/native200/fullAA not inferred.
+
+Actual API8000 build published assets-first/atomic index to existing a561fa
+frontend without restart:13newfiles verified SHA over real WindowsHTTP200,
+154oldassets/oldindex retained (rollback not executed). Original daily market
+reload loads CXFnQ6ah, preserves000025 query/000001 watchlist/history2025-12-31.
+Four original container IDs/starttimestamps unchanged;3Composehealthy/PONG/
+8000paper200/5173HTTP200. Owned QA stopped after freshargv/cwd/startmatch,
+15179empty/tempTabsclosed/viewportreset; no SQL/queue/financial producer.
+
+Known next case: underlying offset20 persists after shrink, so20→21regrowth
+may return to page2; named versions share this pattern. No claim it is fixed.
+Older sealed frontend restore bindings are historical after this UI change,
+not rewritten/promoted to current-source recovery. Backend tree unchanged;
+savedAPI/frozen/.research/formal/OOS/tag/identity intact. Full U1–U8/M0–M5 ACTIVE/
+PARTIAL; lawful2026feed/genuine lostledger/currentAA200/performance and authorized
+remote gates remain. GitHub HOLD, local-only milestone; no release/push/merge.
+
 ## 2026-10-08 restored saved-API financial identities — scoped PASS
 
 [Repeatable private check](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-restored-financial-identities/README.md>)

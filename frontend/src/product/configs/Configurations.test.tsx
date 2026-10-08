@@ -61,6 +61,66 @@ beforeEach(async () => {
   });
 });
 describe("configuration versions in the guided wizard", () => {
+  it.each(["en-US", "zh-CN"])(
+    "clamps recovery pagination after another tab removes the final page in %s",
+    async (locale) => {
+      await i18n.changeLanguage(locale);
+      const ids = Array.from({ length: 21 }, () => crypto.randomUUID());
+      const raws = ids.map((id, index) => {
+        const raw = JSON.stringify({
+          ...current,
+          form: { ...configuration, name: `Recovery ${index}` },
+          savedAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)).toISOString(),
+        });
+        localStorage.setItem(DRAFT_RECOVERY_PREFIX + id, raw);
+        return raw;
+      });
+      const currentRaw = JSON.stringify(current);
+      localStorage.setItem(EXPERIMENT_DRAFT_KEY, currentRaw);
+      const restore = vi.fn();
+      const create = vi.spyOn(experimentApi, "create");
+      render(
+        <ConfigurationVersionsPanel current={current} onRestore={restore} />,
+      );
+      const summary = screen.getByText(
+        locale === "en-US"
+          ? "Browser page recovery drafts"
+          : "浏览器页面草稿恢复",
+      );
+      await userEvent.click(summary);
+      const recovery = within(summary.closest("details")!);
+      await userEvent.click(
+        recovery.getByRole("button", { name: i18n.t("common:next") }),
+      );
+      expect(recovery.getByRole("list").children).toHaveLength(1);
+      expect(recovery.getByRole("list")).toHaveTextContent("Recovery 0");
+      act(() => {
+        localStorage.removeItem(DRAFT_RECOVERY_PREFIX + ids[0]);
+        fireEvent(
+          window,
+          new StorageEvent("storage", { key: DRAFT_RECOVERY_PREFIX + ids[0] }),
+        );
+      });
+      expect(recovery.getByRole("list").children).toHaveLength(20);
+      expect(recovery.getByRole("group")).toHaveTextContent(
+        i18n.t("common:pageOf", { start: 1, end: 20, total: 20 }),
+      );
+      for (const button of recovery.getAllByRole("button"))
+        if (
+          button.textContent === i18n.t("common:previous") ||
+          button.textContent === i18n.t("common:next")
+        )
+          expect(button).toBeDisabled();
+      for (let index = 1; index < ids.length; index += 1)
+        expect(localStorage.getItem(DRAFT_RECOVERY_PREFIX + ids[index])).toBe(
+          raws[index],
+        );
+      expect(localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(currentRaw);
+      expect(restore).not.toHaveBeenCalled();
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+
   it.each([
     ["ALL", "All available A-shares", "全部可用 A 股"],
     ["SSE", "Shanghai exchange", "上海证券交易所"],

@@ -1,4 +1,19 @@
 {
+  "recovery_page_shrink_20261008_gate": {
+    "status": "PASS_SCOPED_RECOVERY_UI_ONLY",
+    "source_parent": "d61fe2359b56e81e00f9f46b698958166deb213f",
+    "evidence": "product-evidence/v1.2/m4/20261008-recovery-page-shrink/README.md",
+    "evidence_payloads": 56,
+    "evidence_manifest_sha256": "4a32355991f2cf0c6b5f05d6bb3f17ee68a70a527f72a9ed27fbe57345c8badb",
+    "verification": "Twice savedcheckerPASS;170tracked frontend hashes and reused immutable QAhandler binding. Actual2EN/ZH regressionsRED expected20/got0 plus12oldPASS, fixed14focused/813full48filesPASS/Prettier/ESLint0warnings/TypeScript/buildPASS. ExistingcachedNode24.21.0/npm11.19.0/deps unchanged. No backend/SQL/migration/dependency change.",
+    "browser": "Actual GETonly15179 synthetic-origin/native second-tab StorageEvent21to20 EN/ZH20rows/exactlocalized1to20of20/bothbuttonsdisabled/pagergroupfocus. Before22keys to21;20remaining/shareddraft JSON exact unchanged. ActualZH390x844/dark/client+page375/currentCY1bundle. FailedoldcachedGREEN/desktopwrongmobile/wrongnamedpagerimages retained notPASS. Tabframefirstrecoverybutton notfullkeyboardorder. Independentreadonlyreview exactpager/mobile/HTTPset gaps corrected before seal.",
+    "publication": "Guarded existinga561fa frontend/start/index,API8000build/indexCXFnQ6ah;13actualWindowsHTTP200 SHA+bytes matches,154oldassets+oldindex preserved;atomicindex/assetsfirst/no restart. Reloadoriginaldaily5173market preservesquery000025/watchlist000001/history2025-12-31. No rollback execution or cacheheader fix claimed.",
+    "ownership": "Root sole repo/privateproof/UIpublication writer;agentsreadonly/freshps no competingproducer. Original4IDs/startsame,3Composehealthy/PONG/APIpaper200/frontend200. All4syntheticwriteverbs405;no DB/queue/provider/strategy. OwnQA736609 freshcwd/argv/startguardedTERM/session87706intentionalterminal1/15179empty/tempTabsclosed/viewportreset. Alltests terminal. Frozen693c0b81/tagf88b5c/.research/identity intact;GitHubHOLD.",
+    "limitations": "Only final-page shrink. Underlyingoffset20 persists so20to21regrowth canreturnpage2, also namedversions pattern;test next before fix. External focusedrecoverybutton removal/fullTaborder/fullAA/native200/p95 unproven. 528.02KBchunk warning remains. Older frontend restore bindings historical after UIchange;do not rebind. No newfinancial/source/forward/ledger/currentbackend/audit/CI/release acceptance.",
+    "financial_admission": false,
+    "strategy_rerun": false,
+    "full_product_pass": false
+  },
   "restored_api_financial_identities_20261008_gate": {
     "status": "PASS_SAVED_API_IDENTITIES_ONLY",
     "evidence": "product-evidence/v1.2/m4/20261008-restored-financial-identities/README.md",
@@ -727,7 +742,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T00:26:21Z",
+  "updated_at_utc": "2026-10-08T01:07:51Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3703,8 +3718,8 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 restoredAPI financialidentities scopedPASS4payload03a0467a twiceverify:20equity/20holdings/40marks/10fills/18decisions/cost50.34364/final97579.65636;3RAMcorruptions rejected/fullbackendtree+cleanstate/five source hashes.54payload1746a05e current-code restore preserved. Freshoriginal3healthy/PONG/5173+8000paperHTTP200;no productsource/SQL/service/strategy/frozen/formal/GitHub change. FullgoalACTIVE/financialPARTIAL.",
-    "repository_writer": "Root sole docs/state/privateproof writer;freshUbuntuPID/start/args andWindows scopedCIM no competingproducer observed. Agentsreadonly. No newproductcode/API/model/dependency/migrationdefinition/policy/identity. Existing earlier3rootdirtycheckpointfiles incorporated into coherent milestone;private54payload untrackedoutsideGit. No remoteoperation.",
+    "latest_verification": "Oct8 recovery21to20 actualRED/fixed813full+static/build/currentENZHnativeevent/rawdraft/focus/mobile scopedPASS;56payload4a323559 twiceverify/13actualHTTPpublication dailyCXbundle/querywatchlist preserved. Original3healthy/PONG/8000paper200/5173HTTP200/fourIDsstartsame. EarlierAPIidentity4payload03a0467a/backend binding valid,54restore1746a05e frontend binding now historical. FullgoalACTIVE/financialPARTIAL/GitHubHOLD.",
+    "repository_writer": "Root sole repo/docs/state/privateproof/staticpublication writer;freshWSLprocess/start/args no competingproducer. Agentreadonlyreview corrected3verifiergaps before seal. Only2UI/testfiles+3checkpoints changed,existingdeps/policy/identity unchanged. No backend/model/migration/finance write. Private56payload outsideGit;no remoteoperation.",
     "database_writer": "Only existing isolated30b1tmpfs/55471: newemptyquant_test_restore_oct8 import+0017migration;normalcurrentAPIlifespan/2ownedqueues withalljobs/accounts terminal andnojournals. All44pre/43knownprojection+18file fingerprints preserved throughstartup/restart/UI. Earlierfullsuite1463/1optionalSKIP+all17cycle also testonly;root ownsallwriters. OriginalPG598760/Redisdf3/backend89aa unchanged/no SQLwrite/migration/restart/denied44table refresh/reset/prune/delete. TestPGzerootherclients stopped0/retained;tmpfstestDBdiscarded/backupretained.",
     "queue_writer": "No financial producer/source/candidate queue write this unit. Prior all7544/fullV2e59c40a3/two-caseV26f3e0da7/6583gaps/no-holder2/scope38/000771unmerged/187noappend/498candidates retained. Prior9no-holder payloads hash-intact;changedhelper old-runtime acceptance not rerun. No datasetregistration/strategy/.research or frozen rewrite;wholefinancial gatepending.",
     "agents": {
@@ -3712,7 +3727,7 @@
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "Oct8 cleanup00:12:47UTC originalPG598760/Redisdf3/backend89aa/frontenda561 sameIDs/starttimeshealthy/PONG/API8000paper200/frontend5173HTTP200. API728902/729487 exactproc/env/startticks guardedTERM,18115/12398terminalintentional1/completeappshutdown;proxy729430 freshfullargv/startcheckedTERM/40864terminal1. Earlierproxy69910stopped;failednewstartterminal1 hadno listener. ExistingtestPG30b1 stopped0/retained;15179/15181/55471 empty. Ownedtab7/8closed/QA-ZH/originalMarket1retained. NativeDocker29.8/sockethealthy/Compose5.5.1. Frozen/tag/.research intact;historicPIDsnotreusableauthority.",
+    "verified_processes": "Oct8 01:05UTC originalPG598760/Redisdf3/backend89aa/frontenda561 sameIDs/starttimes/3healthy/PONG/API8000paper200/frontend5173HTTP200. FrontstaticCXonlychanged/no restart. OwnedQA736609 exactcwd/argv/startfreshmatchedTERM/session87706terminalintentional1/15179empty. Red816de7exit1,greenb18fe7/full850a9c/livebuildallterminal0,networknone/noDB. Priorrestoreworkersterminal/testPG30b1stopped retained. TmpTabsclosed/viewportreset/originalMarket1ZHsystemquerywatchlistretained. Frozen/tag/.research intact/historicPIDsnotreusableauthority.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
@@ -4348,8 +4363,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5. Current-source application restore/restart and selected saved-API Decimal identities are now scoped PASS, not NOT_RUN;do not rerun unchanged green snapshots. Select the next genuinely uncovered mandatory financial/source or product-flow defect from current acceptance;retain all source/forward/genuine lostledger/currentAA200/performance/export/media/authorizedremote requirements. GitHub outage does not stop local use/tests, but hostedCI/release remain HOLD.",
-  "local_next_command": "Read restored_api_financial_identities_20261008_gate and host_application_restore_20261008_gate, then current uncovered QA-ENGINE/user-flow evidence before one targeted safe action. Immutable4/54 proofs can be verified without services;do not promote their scoped passes to financial admission. Do not recreate deniedscratch,refreshdenied44tables,repeat download thirdclick/nativecontaminatedp95/deniedPDF. Original daily5173/API8000 available;all ownedrestore workers terminal. Local coherent commits only, no GitHub request/push/merge/tag/release until authorized actual recovery.",
+  "next_task": "Continue full U1-U8/M0-M5. Next exact uncoveredcase: recovery offset20 survives21to20clamp and later20to21regrowth may jumpbackpage2;trace sibling namedversion pattern and reproduce before minimum shared-safe correction. Do not rerun unchanged813/browserscope solely for activity. Retain financial/source/forward/genuineledger/AA200/performance/export/media/authorizedremote gates;GitHubHOLD notlocalruntime prerequisite.",
+  "local_next_command": "Read recovery_page_shrink_20261008_gate and both actualfull components/callers, add targeted bilingual shrink-regrowth RED with existing storage events, then smallest justified fix/verification.56proof immutable/currentfrontendbinding;old54frontendrestorebinding historical,API/backend4identityproof unchanged. No financial producer/strategy/frozen/.research/deniedscratch/original44refresh/downloadthirdclick/contaminatedp95/deniedPDF retry. Daily5173/API8000 healthy;allownQA/tests terminal. Local coherent commits only;noGitHub requests/push/merge/tag/release until authorized actualrecovery.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

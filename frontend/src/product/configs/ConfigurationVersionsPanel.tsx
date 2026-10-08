@@ -55,6 +55,10 @@ export function ConfigurationVersionsPanel({
     offset,
     Math.max(0, Math.ceil(library.items.length / 20) - 1) * 20,
   );
+  const recoveryPageOffset = Math.min(
+    recoveryOffset,
+    Math.max(0, Math.ceil(recoveries.items.length / 20) - 1) * 20,
+  );
   const draft = (): ExperimentDraft => ({
     ...current,
     version: 1,
@@ -236,7 +240,7 @@ export function ConfigurationVersionsPanel({
             )}
             <ul className="configurationVersionList">
               {recoveries.items
-                .slice(recoveryOffset, recoveryOffset + 20)
+                .slice(recoveryPageOffset, recoveryPageOffset + 20)
                 .map((entry) => (
                   <li key={entry.id}>
                     <div>
@@ -275,7 +279,7 @@ export function ConfigurationVersionsPanel({
             </ul>
             <Pagination
               label={c.recoveries}
-              offset={recoveryOffset}
+              offset={recoveryPageOffset}
               limit={20}
               total={recoveries.items.length}
               onChange={setRecoveryOffset}

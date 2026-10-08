@@ -1,5 +1,27 @@
 # Decisions
 
+## v1.2 Repair cross-tab recovery pagination locally during CI HOLD — 2026-10-08
+
+GitHub CI is not required for the existing local frontend/API. Continue normal
+local checks without requests/push/release while outage HOLD persists. Actual
+recovery-list21→20 case leaves an empty final page; reuse the existing named
+version clamp for its slice and pager, not a new storage/paging abstraction.
+Two actual failing regressions then14focused/813full+static/build PASS; real
+EN/ZH native cross-tab events preserve shared/remaining draft bytes and pager
+focus. Independent review tightened evidence assertions before56payload seal.
+
+Publish the exact tested current-source API8000 static build to the existing
+frontend only:guardedoriginal identity/start/index, retain oldindex/oldassets,
+13actual HTTP SHA matches, no container restart/backend/DB change. Original
+daily query/watchlist preserved. No financial task/research/source replay;
+synthetic origin cannot write. Cleanup verifiedowned QAonly and resetviewport.
+
+This is scoped U3 recovery progress, not complete U3/AA200/performance/financial
+or release acceptance. Derived oldoffset regrowth remains a specific nextcase;
+do not hide it or rerun unchanged green cases. Keep older immutable frontend
+restore proofs historical after UI source changes. Frozen/OOS/methodology/
+identity protected, remote outage and lawfulfeed/genuineledger gates unchanged.
+
 ## v1.2 Reconcile saved API identities offline during GitHub HOLD — 2026-10-08
 
 GitHub CI unavailability is not a local runtime prerequisite. Original frontend
