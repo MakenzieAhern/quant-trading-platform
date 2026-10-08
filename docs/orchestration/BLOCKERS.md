@@ -1,5 +1,23 @@
 # Blockers
 
+## v1.2 new-version source-contract integrity gap — 2026-10-08
+
+`SOURCE_CONTRACT_MANIFEST_REFERENCE_MISMATCH`:SECURITY_MASTER's frozen provenance
+references a65-character digest, actual canonicalP0 SHA is64characters. The master
+array/sourcefile is intact;15sourcebytechecks and14other selfmanifest references
+pass. The legacy65reference persists through state/preflight/contracts/catalog/
+freeze. Do not overwrite any of those immutable research artifacts or call the
+contract PASS merely because market/source bytes are valid. New-version source
+reference validation is the next safe engineering action; no new acquisition or
+methodology decision needed. Specific002168 date clauses are already available.
+
+Current v1.2 overall financial admission remains PARTIAL/false;missing share-event
+and other full-input/source contradictions remain, not solved by this metadata
+finding alone. Separate lawful forward-data rights/genuine lostledger/current
+quality and remote release gates remain. GitHub user-outage HOLD is not a runtime
+blocker:original5173/API8000paper/Composehealthy. Historicalv1.1 checkpoints below
+remain historical;fullv1.2 product goal ACTIVE, not complete/narrowed/blocked.
+
 ## Current release status — 2026-09-22
 
 No active local release blocker remains. `DOCKER_SAILOR_INGEST_SOCKET_STALE_ACCESS_FAILURE` is

@@ -1,5 +1,27 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-08 v1.2 local UI milestone and provenance integrity discovery
+
+- Stage:M3/M4 active,M5 notcomplete;all U1–U8/M0–M5 retained,goalACTIVE.
+- Frontend:4actualregressionRED→16focused/815full/static/buildPASS;existingrefresh
+  persists draftpage clamps. RealENZH/nativecross-tab rows/bytes/focus verified;
+ 82payload7d52f070 twicecheck/localatomicstaticpublication/no backendrestart.
+- Services:01:42UTC originalfourIDs/starttimes unchanged;Compose3healthy,RedisPONG,
+  API8000HTTP200paper,frontend5173HTTP200. Existing program can run without GitHub.
+- 002168:cachedofficialcredit/list2011-03-28 joined to exactnotice/ratio/date identity,
+  threeactualraw observations/calendar/master/21suspension intervals. No same
+  record/ex BONUS/STOCK amongall3frozensecurityactions;not actualcustodian/fill proof.
+- Provenance:all15sourcefileSHA valid;14othercanonicalreferences valid. MasterP0
+  authority has64SHA but oldstate/preflight/contract/catalog/freeze holds65SHA.
+  SOURCE_CONTRACT_INTEGRITY=FAIL,financialadmission=false/coveragePARTIAL.
+- New20payload9a3a58d7/c6f8c55a v2 proof:normal/reversedrepeat/7RAMnegativecontrols,
+  readonlyreview/scopedcheckerPASS of savedPARTIAL evidence,not datasetPASS.
+- No new dataset registration/freeze/strategy/officialstudy/OOS/DB/provider action;
+  frozen/.research/backend/identity unchanged. NewcandidateJSON/privateQA outsideGit.
+- GitHub:HOLD/no requests/push/merge/tag/release;PR32 onlycachedOPEN/DRAFT,notfreshCI.
+- Next:new-version canonical-reference validation/metadata correction without
+  rewriting legacyfreeze,then remaining fullinput financial/mandatoryquality gates.
+
 ## 2026-09-22 final local release QA PASS / PR integration active
 
 - Docker Desktop / Engine / Compose: 4.92.0 / 29.8.0 / 5.5.1; WSL2 integration PASS

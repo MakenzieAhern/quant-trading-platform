@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 002168 official boundary joined; source-contract integrity PARTIAL
+
+[Private immutable proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-002168-listing-boundary/README.md>)
+seals20payloads `9a3a58d74be88d390fcf3a2cacb19348ad429108837150f5f71f2c4a8ad49a44`;
+twice checker verifies savedPARTIAL evidence,not financialPASS. Newv2canonical
+`c6f8c55a568de8596ad67259bf19dc452b3901d0be3f56f656c1d4fa7f514880`,normal/reverse
+exactrepeat. Cached002168 final2010notice/PDF d4b8a685/date-links/meta/HTTP200/retrieval
+bound and bothpages visually read:record2011-03-25,credit/unrestricted public-share
+firsttrade2011-03-28,ratio1,signed03-21/published03-22 distinct. Strict existing
+five-date-role/integercomponent/eventchecksum helpers reused,not oracleordering.
+
+Currentfrozen3rawbars03-25/28/29/OHLC/positivevolume+amount/reference21.73,accepted
+open-sessioncalendar/PITCOMMON_A/SZSE_MAINmaster/21suspensionintervals bind by SHA.
+All3frozen002168 actionrows have no same record/ex BONUS/STOCK identity,regardless
+applicationdate. FourRAM source/market corruptions and3explicitPDF/URL/listing
+join corruptions rejected. Reviewer closed semanticjoin/absence-scope gaps in
+newv2wrapper;v1/parent7544oracle/498candidates/oldNOT_EVIDENCED/checksums immutable.
+No actualcustomer settlement/fill/non-public-holder/all-action completeness claim.
+
+Realintegritygap:all15sourcefilebytes valid,14other selfcanonicalmanifestreferences
+valid. Masterarray canonicalc1a78056 matches validP0 report/fileee043f8e,actual
+authority64SHA `3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235c6d98e12a8150faf8`.
+Old master reference65SHA
+`3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235cc6d98e12a8150faf8`
+has extra c in state/preflight/contract/cataloglineage/freeze. Frozen/actualsource
+bytes unchanged;not masterdamage or harmlessdisplay. Materializer copiesstate,
+audit checksbytes/masterstatus but notcanonicalreference,freeze copiescontract.
+SOURCE_CONTRACT_INTEGRITY=FAIL/FULL_FINANCIAL_ADMISSION=false;engineering fix must
+validate/correct references in a separate new-version path,not overwritefreeze.
+
+Offlineonly/private3newJSON outsideGit/RuffPASS/no provider/SQL/queue/engine/study.
+No production backend/sourceauthority/methodology/frozen/.research/result change.
+Currentfront815 retained;fresh01:42UTC originalfourIDs/startsame/Compose3healthy/
+PONG/API8000paper200/5173HTTP200. Full U1–U8/M0–M5 ACTIVE/PARTIAL;GitHubHOLD/no
+remote,currentfinancial/forward/genuineledger/fullquality/release gates remain.
+
 ## 2026-10-08 draft shrink/regrowth and current local frontend — scoped PASS
 
 [Private repeatable proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-draft-page-regrowth/README.md>)

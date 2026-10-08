@@ -1,5 +1,24 @@
 # Decisions
 
+## v1.2 Separate a valid official boundary from broken provenance references — 2026-10-08
+
+Do not retrieve002168 dates alreadyexplicit in accepted source candidates.
+Join exact issuer/PDF/URL/record/ex/effective/listing/ratio to existingraw/calendar/
+suspension/PITmaster,not simply replace oracleNOT_EVIDENCED or run a study.
+Newimmutable20payload proof9a3a58d7/c6f8c55a v2 repeats normal/reversed inputs,
+7RAM corruptions rejected;readonly review tightened join and full event-identity
+absence while v1/old7544rows/498candidates/frozen inputs remain unchanged.
+
+Retain genuinefailure:SecurityMastersourcefile/P0 canonicalarray valid,but old
+contract references65hex digest instead of actual64,propagated state→preflight→
+catalog/freeze. All15sourcebytes/14othercanonicalreferences verified independently.
+Not newmethodology or sourcepurchase;not silently normalize an immutable report.
+Newversion engineering must validate digest shape and exact canonical authority
+relationships before any publication/admission. Existingformal/OOS/registry/
+frozen/.research/identity unchanged;fullfinance/goal remainsPARTIAL/ACTIVE.
+GitHubHOLD not a local runtime dependency;sourcecontractFAIL does not mean Docker
+is down. Daily5173/API8000paper/Composehealthy retained;no push/merge/tag/release.
+
 ## v1.2 Persist draft pagination at the existing refresh boundary — 2026-10-08
 
 Derived display clamps do not repair underlying offset:after21→20→21 regrowth

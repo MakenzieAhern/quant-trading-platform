@@ -1,4 +1,24 @@
 {
+  "official_listing_boundary_002168_20261008_gate": {
+    "status": "PARTIAL_SOURCE_CONTRACT_MISMATCH",
+    "evidence": "product-evidence/v1.2/m4/20261008-002168-listing-boundary/README.md",
+    "evidence_payloads": 20,
+    "evidence_manifest_sha256": "9a3a58d74be88d390fcf3a2cacb19348ad429108837150f5f71f2c4a8ad49a44",
+    "projection_manifest_sha256": "c6f8c55a568de8596ad67259bf19dc452b3901d0be3f56f656c1d4fa7f514880",
+    "official_announced_boundary": "PASS_EXPLICIT_PUBLIC_HOLDER_SOURCE_ONLY",
+    "source_contract_integrity": "FAIL",
+    "declared_master_manifest_sha256": "3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235cc6d98e12a8150faf8",
+    "actual_verified_master_manifest_sha256": "3b80a13fb816ce8b9f3442d57a4b84ae31f7616d7c89235c6d98e12a8150faf8",
+    "verification": "TwicesealedcheckerPASS of PARTIAL evidence/normalreversev2exactrepeat/7RAMsource+market+joinnegativecontrols/RuffPASS. Existingstrictsameday5role/integercomponent/Pydanticeventchecksum/immutablecanonical/suspension helpers reused. OriginalcachedPDFd4b8a685/twopagesvisual/text/meta/date-links/source-manifest bound. record2011-03-25/credit+unrestrictedfirsttrade2011-03-28/ratio1/signed03-21/pub03-22distinct. Threeuniqueofficialrawbars/reference21.73/openacceptedcalendar/PITmaster/21suspensionintervals/no sameBONUSSTOCKidentityamongall3frozensecurityactions. Not actualholdercredit/fill/allactiontypes.",
+    "integrity_gap": "15sourcefilebytes valid/14otherselfcanonicalmanifestreferences valid/masterarray+P0checksumcorrect. Legacy65hexdigest extraccopies state->preflight->sourcecontract->cataloglineage->freeze;newproofretainsbadreferenceFAIL. Existingmaterializer/audit/freeze validatebytes/status butnotexactP0canonicalreference. No masterfiledamage/no harmlessdisplay-onlyclaim/no frozenrewrite. New-version validation required beforefinancialadmission.",
+    "review": "Independentreadonly location/all15sourceverification;secondreview foundsemanticjoin andapplicationdateonlyabsence gaps. Preservev1/currentcode/output,addminimumreusedv2wrapper withPDFURLdatesratiojoin/3RAMguards/fullsecurityeventidentity/15audits/contractrename. Finalreview no scopeP1P2,didnotexecute. Initialmasterdict/bool assumptions andcontractfails retained;fontwarnings saved/actualpagesreadable. Oldreports7544rows/498candidates/NOT_EVIDENCED/eventchecksums retained.",
+    "ownership": "Rootsoleprivateprojection/checkpointwriter;agentsreadonly. Offlinefile/Parquet/helperchecks only/threeprivatecandidateJSON outsideGit/no producer/SQL/queue/provider/DB/strategy/sourceacquisition. Originalservices01:42UTCsamefourIDs/starthealthy/PONG/8000paper200/5173HTTP200;815front unchanged. Frozen693c0b81/tagf88b5c/backendc3b59bb/.research/identity unchanged/GitHubHOLD.",
+    "full_financial_admission": false,
+    "dataset_registered": false,
+    "frozen_dataset_modified": false,
+    "strategy_run": false,
+    "full_product_pass": false
+  },
   "draft_page_regrowth_20261008_gate": {
     "status": "PASS_SCOPED_DRAFT_REGROWTH_ONLY",
     "source_parent": "9a0f4fcec0a13a974a3b4d5eeda988011735cee5",
@@ -757,7 +777,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T01:28:19Z",
+  "updated_at_utc": "2026-10-08T01:42:34Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3733,8 +3753,8 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 regrowth4actualRED/16focused/815full+static/build/currentnativeENZHbothlists21to20to21/manualNext/raw43keys/rowidentities/recoveryfocus/mobile scopedPASS;82payload7d52f070 twiceverify/13actualHTTPpublication dailyD_fbundle/querywatchlist preserved. Original3healthy/PONG/8000paper200/5173HTTP200/fourIDsstartsame. EarlierAPIidentity4payload03a0467a/backend binding valid;56shrink/54restorefrontend binding historical. FullgoalACTIVE/financialPARTIAL/GitHubHOLD.",
-    "repository_writer": "Rootsole repo/docs/state/privateproof/staticpublicationwriter;freshWSLprocess/start/args no competingproducer. Agentreadonlyreview correctedrowidentity/oldREDmiddle verifiergaps beforeseal. Only2UI/testfiles+3checkpoints changed/existingdeps/policy/identity unchanged. No backend/model/migration/financewrite. Private82payload outsideGit/no remoteoperation.",
+    "latest_verification": "Oct8 UIregrowth82payload7d52f070/815currentfront/static/build/localD_f unchanged. New00216820payload9a3a58d7/c6f8c55a v2 officialsource+marketboundary proof repeated/RAM7rejects/sourcecontractactual15bytes14canonicalPASS butmaster65referenceMISMATCH_FAIL/fullfinancialfalse. Fresh01:42UTC original3healthy/PONG/8000paper200/5173HTTP200/fourIDsstartsame. SavedAPIbackend4proof unchanged;olderfrontendrestore/shrink bindingshistorical. FullgoalACTIVE/financialPARTIAL/GitHubHOLD.",
+    "repository_writer": "Rootsole repo/docs/state/privateproofwriter;agentsreadonly. UIregrowth localcommit2e52400 done;thisscope checkpoints only/no backend/model/migration/dependency/financialwrite. New20privatepayloads+3candidateJSON outsideGit,existingcachedsources/helper/Parquet only/no remoteoperation. Coherentlocalmilestone/no Gitidentitychange.",
     "database_writer": "Only existing isolated30b1tmpfs/55471: newemptyquant_test_restore_oct8 import+0017migration;normalcurrentAPIlifespan/2ownedqueues withalljobs/accounts terminal andnojournals. All44pre/43knownprojection+18file fingerprints preserved throughstartup/restart/UI. Earlierfullsuite1463/1optionalSKIP+all17cycle also testonly;root ownsallwriters. OriginalPG598760/Redisdf3/backend89aa unchanged/no SQLwrite/migration/restart/denied44table refresh/reset/prune/delete. TestPGzerootherclients stopped0/retained;tmpfstestDBdiscarded/backupretained.",
     "queue_writer": "No financial producer/source/candidate queue write this unit. Prior all7544/fullV2e59c40a3/two-caseV26f3e0da7/6583gaps/no-holder2/scope38/000771unmerged/187noappend/498candidates retained. Prior9no-holder payloads hash-intact;changedhelper old-runtime acceptance not rerun. No datasetregistration/strategy/.research or frozen rewrite;wholefinancial gatepending.",
     "agents": {
@@ -4378,8 +4398,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5. Priorregrowthcase complete82sealedproof/815currentfrontend/localD_fpublished. Nextmostvaluable financialgate:002168 officialcachedsource/acceptedconditionalledger alreadyexplicit2011-03-28credit+firsttradable,while retainedmonthlyoracle stillnull/NOT_EVIDENCED. Trace statepropagation and independentlyjoin officialsource/raw/calendar/suspension/PITmaster into NEWscoped immutableprojection;do not acquirealreadycachedclause/relabelPASS/changefrozen missingevent. Fullinput498candidates/contradictions/allactionclass admission remainsfalse. Retain lawfulforward/genuineledger/AA200/p95/export/media/authorizedremote requirements/GitHubHOLD.",
-  "local_next_command": "Read currentfull-action-reconciliation report-v2 retained002168 and20261007-conditional-option ledger/sourcecache, existing helpers/callers, bind officialPDF/text/source-manifest/meta and actualfrozenraw/calendar/suspension/master/event0. Preserve old reports/seals/frozen/.research;new scopedproof only/no strategy/DB/provider/GitHub. Daily5173/API8000 healthy/allownQA/tests terminal. Local coherentcommits only;no deniedscratch/original44refresh/downloadthirdclick/contaminatedp95/deniedPDFretry or remote requests/push/merge/tag/release.",
+  "next_task": "Continue full U1-U8/M0-M5. UIregrowthcase complete/815currentfront.002168officialboundary+marketjoin20sealedproof completebutnewrealSOURCE_CONTRACT_MANIFEST_REFERENCE_MISMATCH:masteractualauthority64valid vs65legacyreference propagatedpreflight/catalog/freeze. Nextsafeengineering fixtraceALL materialize/audit/freeze/source-lineage callers and addminimalfailclosed exactcanonicalreference guard for NEWversion,not rewriting .research/frozen/oldreports. Preserveall7544oracles/498candidates/reference+allactionclass contradictions and source-to-economic admissionfalse. No reacquisitionofalreadycached002168clause. Fullforward/lawfulfeed/genuineledger/AA200/p95/export/media/authorizedremote gates remain/GitHubHOLD.",
+  "local_next_command": "Read official_listing_boundary_002168_20261008_gate/private20sealedproof9a3a58d7/v2c6f8c55a and actualmaterialize_full_dataset/audit_full_dataset/freeze_full_dataset/DatasetManifest callsites;reproduce65hex andwellformed-but-wrongcanonicalreference rejection before minimum NEWversion-safe guard. SECURITY_MASTER rawarray binds viaP0report,other14selfmanifests currentlyvalid. Do not alterlegacyfrozen/.research/statuslabels/formalresults/strategy/DB/provider/GitHub. Daily5173/API8000 healthy/allownQA/tests terminal. Localcoherentcommits only/no deniedscratch/original44refresh/downloadthirdclick/contaminatedp95/deniedPDFretry/remote requests/push/merge/tag/release.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

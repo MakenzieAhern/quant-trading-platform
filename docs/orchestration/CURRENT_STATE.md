@@ -1,5 +1,26 @@
 # Current state
 
+## v1.2 local work continues; new-version provenance integrity PARTIAL — 2026-10-08
+
+Current product authority is `docs/product/PRODUCT_MASTER.md` and `.product/state.json`.
+The historical v1.1 research/release checkpoints below are retained evidence, not
+current permission to rerun OOS or assume remote CI is available. Full U1–U8/M0–M5
+v1.2 goal is ACTIVE/PARTIAL; GitHub HOLD, no remote requests/push/merge/tag/release.
+
+Original loopback5173 frontend/API8000paper/Compose PostgreSQL+Redis+backend are
+healthy with unchanged starts. Current frontend815 tests/static/build PASS;
+draft21→20→21 cross-tab regrowth repaired and locally published without restart.
+Independent002168 official source/market boundary proof is complete for its
+unrestricted public-holder share-event identity, not financial admission.
+
+New actual provenance defect:SECURITY_MASTER contract uses65hex manifest reference
+while checksum-valid P0 authority has64hex; masterfile/15sourcebytes are valid.
+Oldstate/preflight/catalog/freeze preserve the65value. New20payload proof9a3a58d7
+records SOURCE_CONTRACT_INTEGRITY=FAIL/full_financial_admission=false. Nextengineering
+step is new-version canonical-reference validation, not frozen/research rewriting
+or reacquisition. All prior studies/OOS/results/identity remain unchanged. Other
+financial/forward/genuineledger/AA/native200/performance/delivery gates remain.
+
 ## Final local release QA PASS / PR integration active — 2026-09-22
 
 Docker Desktop was upgraded in place to 4.92.0 without deleting images, volumes, PostgreSQL,
