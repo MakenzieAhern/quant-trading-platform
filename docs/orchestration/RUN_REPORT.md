@@ -1,5 +1,27 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-08 raw input-bound resume — scoped PASS
+
+- Previous runtime-status answer: NO_PROJECT_PROGRESS. Current shared defect
+  and three independently found P2 fixes: PROGRESS; full objective unchanged.
+- Initial21 failures reproduce stale source/master/ST/metadata reuse and unsafe
+  partial/frozen states. Independent2 Decimal/metadata-cleanup failures, then2
+  actual hardlink input-overwrite failures reproduced and repaired.
+- Final244 related tests PASS1.54s (47new/197existing), Ruff/format/script-mypy
+  PASS (missing pyarrow/openpyxl stubs ignored, no project-wide policy change).
+  Earlier formatter/regex/typing failures retained as failures in evidence.
+- Two positive retained JSON/XLSX/Parquet fixtures PASS3.25s: fresh build,
+  reversed-input resume, independent fresh build byte-identical. Synthetic only.
+- Independent readonly final review no scopedP1/P2; reviewer did not rerun tests.
+- [34-file/code bindings and logs](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-raw-resume-input-binding/README.md>)
+  manifest1c3ac57b20d3e0e962cb08280f6d8f6ec6c27bb2882bc2831148b5d51d0576ff verified.
+- Frozen manifest/freeze/contracts/research state/v1.1 tag unchanged; no
+  backend/app/frontend/.research diff, DB/queue/strategy/runtime restart.
+  Compose PG/Redis/backend healthy. New fullsuite/browser/remoteCI NOT_RUN.
+- Next explicit successor identity/approved inputs/owned output contract is NOT
+  implemented yet. Real builder NOT_RUN; financial/lifecycle admission PARTIAL.
+  Whole-pipeline crash recovery not claimed. U1-U8/M0-M5 ACTIVE; GitHub HOLD.
+
 ## 2026-10-08 complete15-source inspection chain — scoped VERIFIED
 
 - Previous service-status answer did not advance project state. This turn records

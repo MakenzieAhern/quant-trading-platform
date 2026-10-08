@@ -1,5 +1,26 @@
 # Decisions
 
+## v1.2 Bind raw checkpoints before version reuse — 2026-10-08
+
+Fix shared raw_stage, not only the planned successor caller. Bind sorted complete
+raw/meta byte hashes, full normalized security/ST intervals (retain duplicates),
+exchange/coverage/fields and explicit parser version. Verify before resume and
+recheck before publication. Legacy unbound receipt or changed input is an error,
+never authority to delete/rebuild published data. Receipt checksum protects all
+lineage/rejection fields; exact same-exchange partition paths and hashes required.
+
+Reuse catalog canonical hashes/freeze guard/immutable writer; no new dependency.
+Parse SZSE from verified bytes. Decimal unit conversion uses an independent context
+with enough digits for exact multiplication, not caller precision. Include metadata
+resolved paths in source/output overlap protection. Immutable receipt publication
+removes the predictable save() temp-file hardlink overwrite; other save callers
+are not changed. Three independent P2 hypotheses were reproduced before fixing.
+
+Unpublished owned .incomplete staging keeps its prior restart cleanup semantics;
+this is not evidence of legacy ownership or full pipeline crash recovery. New
+version inputs and owned work/final/report paths remain explicit next work. No
+real build/approval/freeze/financial PASS follows from synthetic fixture tests.
+
 ## v1.2 Repair provenance in an inspection-only successor bundle — 2026-10-08
 
 Use scripts/inspect_source_reference_candidate.py with explicit repository,

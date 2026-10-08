@@ -1,5 +1,23 @@
 # Current state
 
+## v1.2 raw resume binds actual inputs — 2026-10-08
+
+Shared raw_stage stale-input reuse defect FIXED; 244 related tests PASS,
+including47 new cases with real temporary JSON/XLSX/Parquet. Input ordering,
+source/meta bytes, full master/ST context, coverage/schema/parser, receipt and
+exact partitions are checked. Changed inputs/legacy receipts refuse without
+replacing published outputs. Independent Decimal, metadata-cleanup and hardlink
+P2 defects reproduced/fixed; final scoped review noP1/P2.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-raw-resume-input-binding/README.md>):
+34 bindings1c3ac57b20d3e0e962cb08280f6d8f6ec6c27bb2882bc2831148b5d51d0576ff.
+
+This is a data-build prerequisite, not a new dataset or financial approval.
+Real archive builder NOT_RUN; original frozen/.research/tag hashes unchanged;
+no application/runtime/DB/strategy changes. Fixed-v1 identity/output/approval
+coupling remains the next engineering task, with owned work-root boundaries.
+Whole-pipeline crash recovery and financial gates must not inherit fixture PASS.
+Full U1-U8/M0-M5 ACTIVE/PARTIAL; GitHub HOLD.
+
 ## v1.2 independent full-source reference candidate — 2026-10-08
 
 New isolated candidate reference chain VERIFIED; financial coverage remains

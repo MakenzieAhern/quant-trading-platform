@@ -5,12 +5,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import warnings
 from bisect import bisect_right
 from collections import defaultdict
 from datetime import UTC, datetime
-from decimal import Decimal, InvalidOperation
+from decimal import Context, Decimal, InvalidOperation, localcontext
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
@@ -25,7 +27,8 @@ from app.data.catalog import (
     verify_dataset,
     write_manifest,
 )
-from app.data.catalog.checksums import sha256_file
+from app.data.catalog.checksums import canonical_sha256, sha256_file
+from app.data.catalog.freeze import require_unfrozen, write_immutable
 from scripts.full_dataset_sources import (
     verify_source_contracts,
     verify_source_lineage,
@@ -38,6 +41,8 @@ from scripts.szse_st_recovery import risk_state
 DATASET_ID = "cn-a-research-20100101-20251231-v1"
 START = "2010-01-01"
 END = "2025-12-31"
+# Bump when raw parsing, units, ordering or serialization semantics change.
+RAW_PARSER_VERSION = "OFFICIAL_RAW_INPUT_BOUND_V2"
 RAW_FIELDS = (
     "security_id",
     "exchange",
@@ -60,11 +65,16 @@ def decimal_text(value: object, *, scale: Decimal = Decimal(1)) -> str | None:
     if value in (None, "", "--", "-"):
         return None
     try:
-        parsed = Decimal(str(value).replace(",", "")) * scale
+        parsed = Decimal(str(value).replace(",", ""))
     except InvalidOperation as exc:
         raise ValueError(f"INVALID_DECIMAL:{value}") from exc
-    if not parsed.is_finite():
+    if not parsed.is_finite() or not scale.is_finite():
         raise ValueError(f"INVALID_DECIMAL:{value}")
+    # Unit conversion must be exact and independent of the caller's Decimal context.
+    with localcontext(
+        Context(prec=max(28, len(parsed.as_tuple().digits) + len(scale.as_tuple().digits)))
+    ):
+        parsed *= scale
     return format(parsed, "f")
 
 
@@ -189,12 +199,49 @@ class StreamingPartition:
         )
 
 
-def verified_bytes(path: Path) -> tuple[bytes, dict[str, Any]]:
+def verified_bytes(
+    path: Path, expected: tuple[str, str] | None = None
+) -> tuple[bytes, dict[str, Any]]:
     raw = path.read_bytes()
-    metadata = json.loads(path.with_suffix(path.suffix + ".meta.json").read_bytes())
+    metadata_bytes = path.with_suffix(path.suffix + ".meta.json").read_bytes()
+    metadata = json.loads(metadata_bytes)
     if sha(raw) != metadata["sha256"]:
         raise ValueError(f"SOURCE_CHECKSUM_CHANGED:{path}")
+    if expected is not None and (sha(raw), sha(metadata_bytes)) != expected:
+        raise ValueError(f"RAW_CHECKPOINT_INPUT_MISMATCH:{path}")
     return raw, metadata
+
+
+def _raw_input_snapshot(
+    exchange: str, paths: list[Path], resolver: SecurityResolver, status_resolver: StatusResolver
+) -> tuple[str, dict[str, tuple[str, str]]]:
+    sources = {}
+    for path in paths:
+        raw_sha = sha256_file(path)
+        metadata_bytes = path.with_suffix(path.suffix + ".meta.json").read_bytes()
+        if json.loads(metadata_bytes)["sha256"] != raw_sha:
+            raise ValueError(f"SOURCE_CHECKSUM_CHANGED:{path}")
+        sources[str(path)] = (raw_sha, sha(metadata_bytes))
+    return canonical_sha256(
+        {
+            "parser_version": RAW_PARSER_VERSION,
+            "exchange": exchange,
+            "start": START,
+            "end": END,
+            "fields": RAW_FIELDS,
+            "sources": sources,
+            "security_intervals": sorted(resolver._intervals.items()),
+            "status_intervals": sorted(status_resolver._rows.items()),
+        }
+    ), sources
+
+
+def _require_raw_output(path: Path) -> None:
+    if any(parent.is_symlink() for parent in (path, *path.parents)):
+        raise ValueError(f"UNSAFE_RAW_CHECKPOINT_PATH:{path}")
+    require_unfrozen(path)
+    if path.is_dir():
+        require_unfrozen(path / ".raw-write-check")
 
 
 def raw_stage(
@@ -204,17 +251,58 @@ def raw_stage(
     resolver: SecurityResolver,
     status_resolver: StatusResolver,
 ) -> tuple[list[DatasetPartition], list[dict[str, Any]], list[dict[str, str]]]:
+    if exchange not in {"SSE", "SZSE"}:
+        raise ValueError("INVALID_RAW_EXCHANGE")
+    build = build.absolute()
+    paths = sorted(path.absolute() for path in paths)
+    if not paths or len({path.resolve() for path in paths}) != len(paths):
+        raise ValueError("INVALID_RAW_SOURCE_SET")
     target = build / "raw" / exchange
     receipt_path = build / f"raw-{exchange.lower()}-checkpoint.json"
-    if receipt_path.exists() and target.exists():
-        checkpoint = json.loads(receipt_path.read_bytes())
-        parts = [DatasetPartition.model_validate(row) for row in checkpoint["partitions"]]
-        if all(sha256_file(build / part.relative_path) == part.sha256 for part in parts):
-            return parts, checkpoint["lineage"], checkpoint["rejected"]
-        raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
-
     temporary = build / f".raw-{exchange.lower()}.incomplete"
+    for output in (target, receipt_path, receipt_path.with_suffix(".json.tmp"), temporary):
+        _require_raw_output(output)
+    if any(
+        source.resolve().is_relative_to(build.resolve())
+        for path in paths
+        for source in (path, path.with_suffix(path.suffix + ".meta.json"))
+    ):
+        raise ValueError("RAW_SOURCE_OUTPUT_OVERLAP")
+    if receipt_path.exists() != target.exists():
+        raise ValueError(f"INCOMPLETE_RAW_CHECKPOINT:{exchange}")
+    if receipt_path.exists() and (not receipt_path.is_file() or not target.is_dir()):
+        raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+    input_sha256, source_hashes = _raw_input_snapshot(exchange, paths, resolver, status_resolver)
+    if receipt_path.exists():
+        checkpoint = json.loads(receipt_path.read_bytes())
+        if checkpoint.get("input_sha256") != input_sha256 or checkpoint.get("exchange") != exchange:
+            raise ValueError(f"RAW_CHECKPOINT_INPUT_MISMATCH:{exchange}")
+        recorded_sha = checkpoint.pop("checkpoint_sha256", None)
+        if canonical_sha256(checkpoint) != recorded_sha:
+            raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+        parts = [DatasetPartition.model_validate(row) for row in checkpoint["partitions"]]
+        relative_paths = [part.relative_path for part in parts]
+        if relative_paths != sorted(set(relative_paths)) or any(
+            not re.fullmatch(rf"raw/{exchange}/\d{{4}}-(0[1-9]|1[0-2])\.parquet", name)
+            for name in relative_paths
+        ):
+            raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+        children = list(target.iterdir())
+        for child in children:
+            _require_raw_output(child)
+        if {build / name for name in relative_paths} != set(children) or any(
+            not child.is_file() for child in children
+        ):
+            raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+        if not all(sha256_file(build / part.relative_path) == part.sha256 for part in parts):
+            raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+        if _raw_input_snapshot(exchange, paths, resolver, status_resolver)[0] != input_sha256:
+            raise ValueError(f"RAW_CHECKPOINT_INPUT_MISMATCH:{exchange}")
+        return parts, checkpoint["lineage"], checkpoint["rejected"]
+
     if temporary.exists():
+        for child in temporary.rglob("*"):
+            _require_raw_output(child)
         shutil.rmtree(temporary)
     temporary.mkdir(parents=True)
     writers: dict[str, StreamingPartition] = {}
@@ -240,8 +328,8 @@ def raw_stage(
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", UserWarning)
-        for path in sorted(paths):
-            raw, meta = verified_bytes(path)
+        for path in paths:
+            raw, meta = verified_bytes(path, source_hashes[str(path)])
             lineage.append(
                 {
                     "source_path": str(path),
@@ -288,7 +376,7 @@ def raw_stage(
                         if len(buffers[month]) >= flush_at:
                             flush(month)
             else:
-                workbook = load_workbook(path, read_only=True, data_only=True)
+                workbook = load_workbook(BytesIO(raw), read_only=True, data_only=True)
                 sheet = workbook.active
                 if sheet.calculate_dimension() == "A1:A1":
                     sheet.reset_dimensions()
@@ -359,15 +447,21 @@ def raw_stage(
     for month, writer in sorted(writers.items()):
         relative = f"raw/{exchange}/{month}.parquet"
         parts.append(writer.close(relative))
+    if _raw_input_snapshot(exchange, paths, resolver, status_resolver)[0] != input_sha256:
+        raise ValueError(f"RAW_CHECKPOINT_INPUT_MISMATCH:{exchange}")
+    for output in (target, receipt_path, receipt_path.with_suffix(".json.tmp"), temporary):
+        _require_raw_output(output)
     target.parent.mkdir(parents=True, exist_ok=True)
     temporary.rename(target)
     checkpoint = {
         "exchange": exchange,
+        "input_sha256": input_sha256,
         "partitions": [part.model_dump(mode="json") for part in parts],
         "lineage": lineage,
         "rejected": rejected,
     }
-    save(receipt_path, checkpoint)
+    checkpoint["checkpoint_sha256"] = canonical_sha256(checkpoint)
+    write_immutable(receipt_path, canonical(checkpoint))
     return parts, lineage, rejected
 
 
@@ -590,7 +684,10 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
         manifest = load_manifest(final / "manifest.json")
         verify_source_lineage(contracts, manifest.source_lineage)
         verify_dataset(final, manifest)
-        return json.loads((root / "materialization-report.json").read_bytes())
+        retained_report: dict[str, Any] = json.loads(
+            (root / "materialization-report.json").read_bytes()
+        )
+        return retained_report
     sse_authority_path = staging / "full-sse-st-v1/sse-st-authority-v4.json"
     sse_authority = json.loads(sse_authority_path.read_bytes())
 

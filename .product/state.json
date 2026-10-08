@@ -1,4 +1,24 @@
 {
+  "raw_resume_input_binding_20261008_gate": {
+    "status": "PASS_SCOPED_ENGINEERING_NOT_DATASET_OR_FINANCIAL_APPROVAL",
+    "source_parent": "29edf21619833d19ce7c1f20e1b9ca0d0c38844b",
+    "progress": "Previous local-runtime status answer NO_PROJECT_PROGRESS. This unit fixes reproduced stale raw checkpoint reuse and three independent P2 defects: PROGRESS. Full U1-U8/M0-M5 remains ACTIVE.",
+    "implementation": "Shared raw_stage binds raw/meta bytes, full normalized master/ST, exchange/coverage/schema/parser; verifies receipt digest and exact partition set; rejects unbound/mismatched/incomplete/frozen/symlink states without replacing published output. SZSE parses verified bytes; exact Decimal unit conversion; source+sidecar/output separation; existing immutable writer for receipt.",
+    "checks": "Initial21RED/3PASS; independent Decimal/metadata-cleanup2RED; hardlink2RED; final244relatedPASS1.54s (47new/197existing), Ruff/format/script-mypyPASS. Mypy ignores missing third-party stubs only. Two retained real JSON/XLSX/Parquet fixture repeats PASS3.25s, fresh/reversed resume byte-identical. Full app/frontend/browser/CI NOT_RUN.",
+    "review": "Independent readonly review identified and confirmed closure of3P2; final scoped noP1P2. Reviewer inspected code/logs, did not independently execute tests or original materializer.",
+    "evidence": "product-evidence/v1.2/m4/20261008-raw-resume-input-binding/README.md",
+    "checksum_bindings_sha256": "1c3ac57b20d3e0e962cb08280f6d8f6ec6c27bb2882bc2831148b5d51d0576ff",
+    "checksum_entries": 34,
+    "preservation": "Original manifest693c0b81/freeze228569f1/contracts c8148481/researchstate b10ce3c5/tag f88b5c60 unchanged. No backend/app/frontend/.research diff, runtime restart or originalDB/queue/strategy operation; Compose3healthy.",
+    "limitations": "Synthetic fixtures only. Fixed-v1 materializer still lacks independent successor-version approved input/output identity. Unpublished incomplete cleanup remains owned-staging behavior, not proof of legacy ownership/input. Split receipt/target publication stops safely; whole-pipeline crash recovery not claimed. No financial/source acceptance upgrade.",
+    "dataset_created": false,
+    "dataset_registered": false,
+    "frozen_dataset_modified": false,
+    "strategy_run": false,
+    "full_financial_admission": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "source_reference_candidate_20261008_gate": {
     "status": "VERIFIED_CANDIDATE_REFERENCES_ONLY_NOT_DATASET_APPROVAL",
     "source_parent": "0e5e4c0b417d8c0bd685022bcc4f3e281fae2065",
@@ -887,7 +907,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T03:52:00Z",
+  "updated_at_utc": "2026-10-08T04:08:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4512,8 +4532,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 ACTIVE. Independent full15-reference chain completed:dfdd998f/43proofadf9a80e/111source tests;not a dataset orfinancialapproval. Next remove the fixed-v1 identity/output coupling through an explicit successor-version build-input contract while retaining genuine full-source/financial gates and refusing INSPECTION_ONLY. Inspect architecture/existing builder first;fixture-only verification until economic/lifecycle closure. Continue lawfulforward/genuineledger/currentquality/delivery;GitHubHOLD.",
-  "local_next_command": "Read source_reference_candidate_20261008_gate, ARCHITECTURE.md and existing materialize_full_dataset.py/audit_full_dataset.py identity,output,preflight consumers. Implement explicit new-version inputs without reading/mutating frozen .research or defaulting to v1;prove inspection bundle cannot authorize build with disposable fixtures. Do not execute real materialization/strategy or repeat completed source/arithmetic work. Keep stopped source/download/native routes stopped and fullfinancialPARTIAL.",
+  "next_task": "Full U1-U8/M0-M5 ACTIVE. Full15 inspection chain remains complete; shared raw resume defect now fixed (244tests/34bindings1c3ac57b). Next implement explicit successor-version approved-input and isolated work/final/report identity using existing materializer/audit helpers. No fixed-v1/frozen research fallback or INSPECTION_ONLY approval. Financial/lifecycle closure, lawfulforward/genuineledger/currentquality/delivery remain;GitHubHOLD.",
+  "local_next_command": "Read raw_resume_input_binding_20261008_gate and existing materializer/audit/freeze callers. Implement minimal explicit new-version input/output contract: distinct ID, owned isolated work/final/report paths,15 source contracts+5pins, actual auxiliary input pins, genuine operation approval; do not copy .research or invent approval. Verify with disposable fixtures until financial/lifecycle closure. Audit must not inherit literal legacy accounting/restart PASS or weaken exact corporate-action reconciliation. Do not repeat completed candidate/raw-guard/arithmetic work or execute real builder/strategy; preserve stopped routes.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

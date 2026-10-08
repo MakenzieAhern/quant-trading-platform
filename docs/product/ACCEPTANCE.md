@@ -1,5 +1,19 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 U3/U5/U7 raw resume prerequisite — scoped PASS
+
+[Reproductions, retained fixtures and code-bound evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-raw-resume-input-binding/README.md>)
+prove changed raw/metadata/master/ST cannot silently reuse old Parquet. Exact
+independent Decimal conversion, verified-byte XLSX reads and immutable receipt
+publication close three review P2s.244 related tests/static/type checks PASS;
+fresh/reversed-resume/fresh bytes identical for both exchanges.34bindings1c3ac57b.
+
+Engineering prerequisite only, not new dataset, real financial/user-flow or whole
+pipeline crash-recovery acceptance. No UI/app change; browser/fullsuite NOT_RUN.
+Original frozen records/tag preserved. Successor-version build entry and genuine
+financial/lifecycle/forward/currentquality/delivery remain; full objective ACTIVE.
+GitHub HOLD, no remote acceptance claim.
+
 ## 2026-10-08 U3/U5/U7 source-reference prerequisite — scoped VERIFIED
 
 [Actual isolated source candidate](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-reference-chain/README.md>)

@@ -1,5 +1,19 @@
 # Blockers
 
+## v1.2 stale raw checkpoint defect RESOLVED_SCOPED — 2026-10-08
+
+Shared resume now binds complete input and parser context, rejects stale/legacy
+receipt or partition sets and preserves published output on mismatch. Independent
+Decimal, metadata-cleanup and predictable-temp hardlink defects are also closed.
+244 related tests/static/type checks and two retained fixture repeats pass.
+
+This does not clear financial/lifecycle/source admission. No real dataset was
+built or registered. Next explicit successor-version input/approval/owned output
+contract remains necessary; no use of INSPECTION_ONLY as approval, frozen-state
+fallback, or legacy literal financial PASS. Unpublished partial directory cleanup
+still requires explicit ownership in that entry. Other full objective obligations
+and GitHub HOLD remain; do not repeat completed source chain/raw-guard work.
+
 ## v1.2 candidate reference-chain defect RESOLVED_SCOPED — 2026-10-08
 
 An independent15-source inspection now passes exact canonical/file/lineage checks,
