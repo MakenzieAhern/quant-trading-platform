@@ -9,6 +9,151 @@ from app.data.catalog.checksums import canonical_sha256, sha256_file
 from scripts import audit_full_dataset, freeze_full_dataset, materialize_full_dataset
 from scripts.full_dataset_sources import source_path, verify_source_contracts, verify_source_lineage
 
+
+def _candidate_inputs(tmp_path):
+    (tmp_path / "inputs").mkdir()
+    repository, _, dataset, authority, rows, state = _inputs(tmp_path / "inputs")
+    # Preserve a defective historical reference and its historical PASS; never repair in place.
+    state["p0_public_report_manifest_sha256"] += "a"
+    next(row for row in rows if row["name"] == "SECURITY_MASTER")["source_manifest_sha256"] += "a"
+    (repository / ".research/project_state.json").write_text(json.dumps(state))
+    pq.write_table(pa.Table.from_pylist(rows), dataset / "source-contracts.parquet")
+    (dataset / "manifest.json").write_text("{}")
+    (dataset / ".freeze.json").write_text("{}")
+    paths = {source_path(repository, row["source_path"]) for row in rows}
+    paths.update(
+        {
+            authority,
+            repository / ".research/project_state.json",
+            dataset / "source-contracts.parquet",
+            dataset / "manifest.json",
+            dataset / ".freeze.json",
+        }
+    )
+    proof = tmp_path / "source-check.json"
+    proof.write_text(
+        json.dumps(
+            {
+                "actual_master_authority": json.loads(authority.read_bytes())["manifest_sha256"],
+                "full_financial_admission": False,
+                "input_sha256": {str(path): sha256_file(path) for path in paths},
+            }
+        )
+    )
+    return repository, dataset, tmp_path / "product-candidates/inspection-v1", proof
+
+
+def test_source_candidate_closes_full_chain_without_inheriting_approval(tmp_path):
+    from scripts.inspect_source_reference_candidate import inspect
+
+    repository, dataset, output, proof = _candidate_inputs(tmp_path)
+    before = json.loads(proof.read_bytes())["input_sha256"]
+    rows = pq.read_table(dataset / "source-contracts.parquet").to_pylist()
+    evidence = [
+        (source_path(repository, row["source_path"]), row["source_manifest_sha256"])
+        for row in rows
+        if row["name"] in ("ADJUSTMENTS", "SOURCE_PREFLIGHT")
+    ]
+    report = inspect(repository, dataset, output, proof, sha256_file(proof), evidence)
+    assert report == inspect(
+        repository, dataset, output, proof, sha256_file(proof), list(reversed(evidence))
+    )
+    assert report["status"] == "INSPECTION_ONLY"
+    assert report["reference_integrity"] == "VERIFIED"
+    assert report["full_financial_admission"] is False
+    assert report["financial_coverage"] == "PARTIAL"
+    assert report["unchanged_contract_rows"] == 13
+    preflight = json.loads((output / "inspection-preflight.json").read_bytes())
+    assert preflight["status"] == "INSPECTION_ONLY"
+    assert "approval" not in preflight
+    assert "r5_status" not in preflight
+    pins = json.loads((output / "inspection-pins.json").read_bytes())
+    assert len(pins) == 5
+    candidate = json.loads((output / "inspection-contracts.json").read_bytes())["contracts"]
+    verify_source_contracts(candidate, repository, pins)
+    verify_source_lineage(candidate, report["source_lineage"])
+    assert before == {path: sha256_file(source_path(repository, path)) for path in before}
+    assert not (output / "manifest.json").exists()
+    assert not (output / ".freeze.json").exists()
+
+
+@pytest.mark.parametrize("corruption", ("proof", "source", "missing_pin", "evidence"))
+def test_source_candidate_rejects_unbound_inputs_before_publication(tmp_path, corruption):
+    from scripts.inspect_source_reference_candidate import inspect
+
+    repository, dataset, output, proof = _candidate_inputs(tmp_path)
+    pin = sha256_file(proof)
+    evidence = []
+    if corruption == "proof":
+        proof.write_text("{}")
+    elif corruption == "source":
+        (dataset / "manifest.json").write_text('{"changed": true}')
+    elif corruption == "missing_pin":
+        content = json.loads(proof.read_bytes())
+        del content["input_sha256"][str(dataset / "manifest.json")]
+        proof.write_text(json.dumps(content))
+        pin = sha256_file(proof)
+    else:
+        evidence = [(proof, "0" * 64)]
+    with pytest.raises(ValueError):
+        inspect(repository, dataset, output, proof, pin, evidence)
+    assert not output.exists()
+
+
+def test_source_candidate_evidence_cannot_rebind_an_original_byte_pin(tmp_path, monkeypatch):
+    from scripts import inspect_source_reference_candidate as candidate
+
+    repository, dataset, output, proof = _candidate_inputs(tmp_path)
+    state = json.loads((repository / ".research/project_state.json").read_bytes())
+    authority = source_path(repository, state["p0_public_report_path"])
+    manifest = json.loads(authority.read_bytes())["manifest_sha256"]
+    original_verify = candidate.verify_source_manifest
+    authority_reads = 0
+
+    def changed_during_evidence(path, expected, **kwargs):
+        nonlocal authority_reads
+        if path == authority:
+            authority_reads += 1
+            if authority_reads == 2:
+                # Same canonical authority, different bytes after the original snapshot.
+                authority.write_text(json.dumps(json.loads(authority.read_bytes()), indent=4))
+        return original_verify(path, expected, **kwargs)
+
+    monkeypatch.setattr(candidate, "verify_source_manifest", changed_during_evidence)
+    with pytest.raises(ValueError, match="INSPECTION_INPUT_BINDING_CONFLICT"):
+        candidate.inspect(
+            repository, dataset, output, proof, sha256_file(proof), [(authority, manifest)]
+        )
+    assert not output.exists()
+
+
+@pytest.mark.parametrize(
+    "protected", ("dataset", "repository", "symlink", "file_symlink", "frozen_parent")
+)
+def test_source_candidate_cannot_publish_under_protected_ancestors(tmp_path, protected):
+    from scripts.inspect_source_reference_candidate import inspect
+
+    repository, dataset, output, proof = _candidate_inputs(tmp_path)
+    if protected == "dataset":
+        output = dataset / "product-candidates/inspection"
+    elif protected == "repository":
+        output = repository / "product-candidates/inspection"
+    elif protected == "symlink":
+        output.parent.symlink_to(dataset, target_is_directory=True)
+    elif protected == "file_symlink":
+        output.mkdir(parents=True)
+        (output / "inspection-preflight.json").symlink_to(proof)
+    else:
+        output.parent.mkdir()
+        (output.parent / ".freeze.json").write_text("{}")
+    with pytest.raises(ValueError, match="CANDIDATE_OUTPUT_NOT_ISOLATED"):
+        inspect(repository, dataset, output, proof, sha256_file(proof), [])
+    if protected != "file_symlink":
+        assert not (output / "inspection-preflight.json").exists()
+    else:
+        assert (output / "inspection-preflight.json").read_bytes() == proof.read_bytes()
+
+
 NAMES = (
     "SOURCE_PREFLIGHT",
     "SECURITY_MASTER",

@@ -1,4 +1,31 @@
 {
+  "source_reference_candidate_20261008_gate": {
+    "status": "VERIFIED_CANDIDATE_REFERENCES_ONLY_NOT_DATASET_APPROVAL",
+    "source_parent": "0e5e4c0b417d8c0bd685022bcc4f3e281fae2065",
+    "progress": "Previous service-status answer NO_PROJECT_PROGRESS. This turn records actual runtime publication and produces a real independent source-reference chain with reproduced/repaired byte-rebinding defect: PROGRESS. Full U1-U8/M0-M5 unchanged/ACTIVE.",
+    "implementation": "scripts/inspect_source_reference_candidate.py; existing checksums/immutable writer/full15 source+lineage helpers; isolated direct product-candidates child, frozen/symlink protection,20original pins exact. No copied approval/project state;5reference pins only.",
+    "actual_output": "/home/yuchen/data/product-candidates/20261008-source-reference-chain-v1",
+    "report_manifest_sha256": "dfdd998f4cf316479e648ffdb49bb55b9479e9c61d79b4cbf0d7cde6dbde5706",
+    "preflight_manifest_sha256": "cdb19ccf247db17fa6814d85fe5e983853a572b100ad284d73322f93dbc5605b",
+    "preservation": "All15originalsourcebytes/frozenmanifest/freeze/contracts/researchstate unchanged.13candidate rows identical;mastermanifest andSOURCE_PREFLIGHT path/file/canonical/status differ. Original65reference stillstrictFAIL. Four whole-reconciliation/component/listing/price reports onlyboundhistoricalobservations,not newapproval.",
+    "checks": "111source testsPASS0.94s/Ruff/format/script-mypyPASS.9modulemissingRED,fixtureparent/format/typeharness failures retained;symlinkRED and real independent same-path-byte-rebindingRED repairedbeforeactualwork. Normal and -O reversed-evidence execution identical report;2nativeverifiers+sha256sumPASS.",
+    "evidence": "product-evidence/v1.2/m4/20261008-source-reference-chain/README.md",
+    "native_sha256sums_sha256": "adf9a80e9b810911f38111df737e32d34bca28d92d4539701408b9d14c390cf7",
+    "sha256_entries": 43,
+    "review": "Independent readonly P2 overlap rebinding raised/reproduced/fixed/reviewclosed;final actual4artifacts/15rows/13unchanged/20original25totalinputs/4parents/code/outputSHAs independentlymatched. No remaining scopedP1P2. Reviewer didnotexecute tests/producer/verifier.",
+    "runtime": "No backend/app orfrontend change/restart/originalDB/queue/strategy operation. OriginalCompose3healthy/APIpaper20003:50UTC. Prior323/124proofstillverify;newfullsuite/browserNOT_RUN.",
+    "reference_integrity": "VERIFIED",
+    "legacy_dataset_source_integrity": "FAIL_UNCHANGED",
+    "financial_coverage": "PARTIAL",
+    "full_financial_admission": false,
+    "dataset_created": false,
+    "dataset_registered": false,
+    "frozen_dataset_modified": false,
+    "strategy_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD",
+    "next": "Do not repeat completed chain/arithmetic/reference companion work. Add explicit isolated successor-version input/output contract only with genuine financial/source gates; never consume INSPECTION_ONLY as approval. Full economic/lifecycle/forward/genuine-ledger/quality/release scope remains."
+  },
   "source_guard_original_publication_20261008_gate": {
     "status": "PASS_SCOPED_ORIGINAL_LOCAL_PUBLICATION_NOT_FINANCIAL_APPROVAL",
     "source_commit": "d183ad36144dfee3b3d43aaef7b3b1ad96a9b642",
@@ -860,7 +887,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T03:43:00Z",
+  "updated_at_utc": "2026-10-08T03:52:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3836,10 +3863,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 original publication d183ad3 verified:19savedGETs/19independentversionmappings/exactmoneydates/cache61ae82fd unchanged;323nativebindingsadcd949d twicePASS/124oldproofintact. Original8000/5173 nowloaded,3healthy/PONG/paper200/frontend200. SourceFAIL/economicPARTIAL/fullgoalACTIVE/GitHubHOLD.",
-    "repository_writer": "Root sole repo/docs/state/private-proof writer;agents readonly. d183ad3 coherentlocal sourceguard milestone committed;publication checkpoint and independent source candidate next. No competing writer observed03:40UTC. No Gitidentity or remote mutation.",
+    "latest_verification": "Oct8 separate15source candidate actualdfdd998f normal/-Oreverse identical;43bindingsadf9a80e twicePASS+native;111source tests/Ruff/format/scriptmypyPASS. Readonlyreview original20/total25inputs/4parents/13+2/15scope/output hashes matched,no scopedP1P2. Original323/124proofstillverify/apphealthy;fullfinancialPARTIAL/fullgoalACTIVE/GitHubHOLD.",
+    "repository_writer": "Root sole repo/docs/state/candidate/proof writer;agents readonly. Publication checkpoint0e5e4c0 committed. New offline source-inspection script/tests and checkpoint only;backend/app/frontend/.research unchanged. No competing writer or Gitidentity/remote change.",
     "database_writer": "Originalbackend89aa restarted once03:29:52UTC after0017head/alljobs-terminal/no-pending checks and pg_dump backup. Normal startup/recovery NOTread-only. Selected19GET/417events/statuses/cache intact,not all44tables. No new financialproducer/originalPOST/deniedfingerprint refresh. PG598/Redisdf3 unchanged. Owned testPGstoppedretained;no reset/prune/down-v/delete.",
-    "queue_writer": "No financial producer/source/candidate queue write this unit. Prior all7544/fullV2e59c40a3/two-caseV26f3e0da7/6583gaps/no-holder2/scope38/000771unmerged/187noappend/498candidates retained. Prior9no-holder payloads hash-intact;changedhelper old-runtime acceptance not rerun. No datasetregistration/strategy/.research or frozen rewrite;wholefinancial gatepending.",
+    "queue_writer": "No task/financial/market producer or database queue writes. Root wrote only four isolated inspection JSONs under product-candidates and private43-binding proof. Whole7544/component002168/sevencompanions parents retained;no dataset registration/freeze/strategy or source acquisition. Original admission unchanged false.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -3849,6 +3876,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8 independentfull15source reference candidate dfdd998f/no financialadmission;13unchangedrows/20originalinputs/4wholeparents retained/5minimalpins/noapprovalinheritance. Normal+optimizedreverseexactrepeat;111source tests/static/scriptmypyPASS;realP2rebindingREDfixed;readonlyactualartifactreview no scopedP1P2.43nativebindingsadf9a80e twice+nativePASS;original323/124stillverify/apphealthy/noDBorqueue. FullgoalACTIVE/GitHubHOLD.",
     "Oct8 d183ad3 loadedoriginal8000/5173:onebackendrestartafter0017/noactive/nopending/backup;19savedGETcomparison+independent19versionmappings/cachetar61ae82fd unchanged;13HTTPassetSHAs/175oldretained/actualIABENZHsavedresultsandSTOPPEDpaper exact.323nativebindingsadcd949d twicePASS/124priorintact. ScopeddeploymentPASS/fullfinancialPARTIAL/fullgoalACTIVE/GitHubHOLD.",
     "Oct8 source-admission/saved-versionfindings:1579backend1optionalSKIP/840frontend/static/type/build/AlembicPASS;IABENZHsyntheticpausedaccount+realregistry proof;independentreadonlynoscopeP1P2;124nativebindings02bebe0082twice. Original8000/5173 notyetloaded;fullgoalACTIVE/financialPARTIAL/GitHubHOLD.",
     "Oct8 market economic-quality root repair9RED->52focused829fullfrontend/static/buildPASS;actualZH390EN1440 source/detail notices/demo-switch/date/raw/watchlist preserved. Original5173 atomicindex7281f6ac/13actualHTTP hashes/169backup168oldretained/no restart. FourrawAPI GET snapshots exact1d7b6134/KNOWNgap/119bars.222native bindings306e8db6 twicePASS/readonly independent no scopedP1P2. Frozen/research/tag/services intact/sourceintegrityFAIL remains/newexecution audit next/fullgoalACTIVE/GitHubHOLD.",
@@ -4484,8 +4512,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 remains ACTIVE. Original sourceguard/savedfindings now deployed with323proofadcd949d and preserved19selectedGETs. Next separate inspection-only complete15-source preflight/contracts/pin bundle repairs source-reference chain without old approval/frozen change;not newdataset orfinancialPASS. Continue fullfinancial/newversion/lawfulforward/genuineledger/currentquality/delivery;GitHubHOLD.",
-  "local_next_command": "Read source_guard_original_publication_20261008_gate and existing check_sources/full_dataset_sources. Produce separate candidate-only15-source chain using actual64P0/newinspectionpreflight/minimalpins;preserve13otherrows and all original15sourcebytes,old65/.research/freeze. Verify canonical/file hashes,fullcontracts/lineage and explicit noadmission. Do not run fixed-v1 materializer or denied source routes;financialclosure remains separate.",
+  "next_task": "Full U1-U8/M0-M5 ACTIVE. Independent full15-reference chain completed:dfdd998f/43proofadf9a80e/111source tests;not a dataset orfinancialapproval. Next remove the fixed-v1 identity/output coupling through an explicit successor-version build-input contract while retaining genuine full-source/financial gates and refusing INSPECTION_ONLY. Inspect architecture/existing builder first;fixture-only verification until economic/lifecycle closure. Continue lawfulforward/genuineledger/currentquality/delivery;GitHubHOLD.",
+  "local_next_command": "Read source_reference_candidate_20261008_gate, ARCHITECTURE.md and existing materialize_full_dataset.py/audit_full_dataset.py identity,output,preflight consumers. Implement explicit new-version inputs without reading/mutating frozen .research or defaulting to v1;prove inspection bundle cannot authorize build with disposable fixtures. Do not execute real materialization/strategy or repeat completed source/arithmetic work. Keep stopped source/download/native routes stopped and fullfinancialPARTIAL.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

@@ -1,5 +1,19 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 U3/U5/U7 source-reference prerequisite — scoped VERIFIED
+
+[Actual isolated source candidate](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-reference-chain/README.md>)
+binds full15 sources,13 unchanged rows,20 original inputs and4 whole-scope
+historical reports. Canonicaldfdd998f;normal/optimized/reversed repeat identical.
+111 source tests/static/script-types PASS;independent P2 byte-rebinding repaired.
+43-file native proofadf9a80e twiceverified. Original dataset still FAIL unchanged.
+
+This is provenance engineering,NOT a passed financial dataset or end-user research
+flow. No dataset registered/frozen or strategy started. No new UI/browser/fullsuite
+claim;original local UI remains healthy and its prior323 proof still verifies.
+Financial/lifecycle/forward/currentquality/delivery obligations remain open.
+Full U1–U8/M0–M5 ACTIVE/PARTIAL;GitHub HOLD.
+
 ## 2026-10-08 U3–U8 original-runtime source findings — scoped PASS
 
 [Actual publication and exact preservation proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission-publication/README.md>)

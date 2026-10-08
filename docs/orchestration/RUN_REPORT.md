@@ -1,5 +1,28 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-08 complete15-source inspection chain — scoped VERIFIED
+
+- Previous service-status answer did not advance project state. This turn records
+  actual prior local publication and closes a separate new-version reference
+  defect with real immutable outputs: PROGRESS, full objective unchanged.
+- New offline producer reuses checksum/immutable/source helpers;direct isolated
+  product-candidates child only,freeze/symlink refusal,prior20input pins exact.
+  Four immutable whole-financial/component/listing/reference reports bound.
+- Full15 originalsource bytes preserved;13 rows exact. Master ref corrected only
+  in candidate;new preflight references/state5pins/canonical lineage agree.
+  Historical approval not copied;all outputs INSPECTION_ONLY/financialPARTIAL.
+- Initial9module-absentRED;fixtureparent setup failure corrected;format errors
+  corrected. OutputsymlinkRED and independent P2 same-path byte-rebinding RED
+  preserved. Strict pre-publication conflict guard fixed P2;temporary mypy name
+  collision corrected. Final111 source tests0.94s/Ruff/format/script-mypy PASS.
+- Actual normal+optimized/reverse repeats canonicaldfdd998f4cf316479e648ffdb49bb55b9479e9c61d79b4cbf0d7cde6dbde5706.
+ 43nativebindings twiceverified+sha256sum;adf9a80e9b810911f38111df737e32d34bca28d92d4539701408b9d14c390cf7.
+- Prior323publication/124engineering bindings still verify. New script/tests do
+  not change backend/app,frontend or.research. OriginalCompose3healthy/APIpaper200
+  at03:50UTC;no process/DB/queue/financial/provider operation this offline unit.
+- New dataset creation/registration/freeze/strategy/financialPASS NOT performed.
+  No new browser/fullsuite/remoteCI claimed. GitHub HOLD;full U1–U8/M0–M5 ACTIVE.
+
 ## 2026-10-08 original source-admission publication — scoped PASS
 
 - Source d183ad3/backend tree65dda6a8/frontend treebbc94061 actually loaded.

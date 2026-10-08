@@ -1,5 +1,20 @@
 # Blockers
 
+## v1.2 candidate reference-chain defect RESOLVED_SCOPED — 2026-10-08
+
+An independent15-source inspection now passes exact canonical/file/lineage checks,
+without changing the original65 reference or inheriting approval. The original
+frozen version remains FAIL and source execution remains blocked appropriately.
+This is a prerequisite repair, NOT financial/data acceptance or a new dataset.
+
+Actual candidate publication canonicaldfdd998f/43-bound proofadf9a80e is complete.
+Do not repeat its build or already-closed600725 arithmetic/seven price companions.
+Economic/lifecycle gaps still require whole-scope closure; missing600725 official
+resumption body remains STOP. Fixed-v1 materializer still has no independent
+successor identity/output/approved-input contract; safe engineering can proceed
+without invoking it or using inspection as authorization. Other full objective
+external/quality/delivery requirements and GitHub HOLD remain.
+
 ## v1.2 original runtime rollout RESOLVED_SCOPED — 2026-10-08
 
 Original local backend/frontend now serve d183ad3 source admission/findings.

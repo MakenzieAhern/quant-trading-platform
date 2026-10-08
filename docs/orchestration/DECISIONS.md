@@ -1,5 +1,27 @@
 # Decisions
 
+## v1.2 Repair provenance in an inspection-only successor bundle — 2026-10-08
+
+Use scripts/inspect_source_reference_candidate.py with explicit repository,
+dataset,isolated output,input-proof path+fileSHA and optional evidence path+
+canonicalSHA pairs. Existing full15-source verifier/immutable writer are reused.
+The CLI does not call materialize/audit/freeze or copy the research authorization.
+It creates inspection-preflight/contracts/pins/report JSON,never a dataset manifest.
+
+Correct only the master reference and replacement preflight in a distinct bundle;
+13 other rows and every original byte remain exact. Retained status fields are
+historical source assertions,not new approval. A five-key pin bundle is not project
+state. All artifacts retain financialPARTIAL/noadmission. Whole retained reports
+are bound as historical observations,not reclassified as complete economics.
+
+Independent review exposed dictionary merge hiding a changed original file pin.
+Reproduce with a canonical-preserving P0 whitespace change; reject conflicting
+same-path pins BEFORE first publication,then recheck inputs after work.
+111 source tests and actual immutable repeat verify this correction.
+Successor dataset construction still needs explicit independent version inputs
+and genuine complete preflight;INSPECTION_ONLY must never authorize it.
+No new dependency,original-data mutation,methodology or remote operation.
+
 ## v1.2 Preserve original reads during controlled local rollout — 2026-10-08
 
 After current0017/no-active/no-pending checks and retained backup, load existing

@@ -1,5 +1,25 @@
 # Current state
 
+## v1.2 independent full-source reference candidate — 2026-10-08
+
+New isolated candidate reference chain VERIFIED; financial coverage remains
+PARTIAL/no admission. All15 original source bytes and frozen/.research assets
+unchanged;13 candidate rows exact, only master and preflight references differ.
+Fresh inspection-preflight does not inherit historical PASS/approval;5 pins only.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-reference-chain/README.md>):
+real candidate canonical dfdd998f4cf316479e648ffdb49bb55b9479e9c61d79b4cbf0d7cde6dbde5706,
+43 bindings adf9a80e9b810911f38111df737e32d34bca28d92d4539701408b9d14c390cf7.
+Normal and optimized/reversed repeats identical;111 source tests/Ruff/format/
+script-mypy PASS. Independent byte-rebinding P2 reproduced and repaired before
+real execution. No runtime/frontend changes or new full-suite/browser claim.
+
+Original platform remains healthy with d183ad3 application changes deployed.
+Legacy source integrity still FAIL, candidate is not registered or frozen.
+Next explicit successor-version build inputs/output isolation must preserve all
+financial/source gates and reject INSPECTION_ONLY; do not call fixed-v1 builder.
+Full financial/lifecycle/lawful-forward/genuine-ledger/quality/delivery requirements
+remain; U1–U8/M0–M5 ACTIVE. GitHub HOLD/no remote operations.
+
 ## v1.2 source guard now deployed locally — 2026-10-08
 
 Original8000/5173 now load source commit d183ad36144dfee3b3d43aaef7b3b1ad96a9b642.
