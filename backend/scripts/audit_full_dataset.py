@@ -8,19 +8,30 @@ from bisect import bisect_left, bisect_right
 from collections import Counter, defaultdict
 from datetime import date, timedelta
 from decimal import Decimal
+from io import BytesIO
 from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
 import pyarrow.parquet as pq
 
-from app.data.catalog import finalize_manifest, load_manifest, verify_dataset
+from app.data.catalog import DatasetManifest, finalize_manifest, load_manifest, verify_dataset
+from app.data.catalog.checksums import canonical_json_bytes, sha256_file, verified_file_bytes
+from app.data.catalog.freeze import require_unfrozen, write_immutable
+from app.data.full_dataset import FullDataset, parse_action_records
 from app.domain.markets.consolidations import ShareConsolidationEvent
-from app.domain.markets.corporate_actions import CorporateAction, require_supported_corporate_action
+from app.domain.markets.corporate_actions import (
+    CorporateAction,
+    OrdinaryDistributionReference,
+    require_supported_corporate_action,
+)
 from app.domain.markets.demergers import DemergerEvent
 from app.domain.markets.mergers import MergerEvent
 from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
 from app.domain.markets.surrenders import MandatoryPartialShareSurrenderEvent
+from app.research.models import ResearchPeriodKind
+from app.research.splits import TemporalPeriod
+from scripts.full_dataset_build_inputs import CandidateBuildInputs, load_candidate_build_inputs
 from scripts.full_dataset_sources import source_path, verify_source_contracts, verify_source_lineage
 from scripts.materialize_full_dataset import (
     DATASET_ID,
@@ -29,7 +40,11 @@ from scripts.materialize_full_dataset import (
     START,
     SecurityResolver,
     StatusResolver,
+    event_rows,
+    materialization_report,
+    ordinary_reference_rows,
     risk_from_name,
+    structural_event_rows,
     validate_bar,
 )
 from scripts.reconcile_sse_cninfo import save, sha
@@ -69,19 +84,141 @@ REQUIRED_GATES = frozenset(
 )
 
 
-def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
-    state = json.loads((repository / ".research/project_state.json").read_bytes())
+def candidate_publication(
+    candidate: CandidateBuildInputs, dataset: Path, repository: Path, output: Path, spec_path: Path
+) -> None:
+    """Read-only identity check; auditing must never claim work or repair a build."""
+    inputs = [spec_path, repository / candidate.reference_pins["p0_public_report_path"]]
+    inputs.extend(source_path(repository, row["source_path"]) for row in candidate.source_contracts)
+    inputs.extend(pin.path for pin in candidate.auxiliary_inputs.values())
+    for pins in candidate.raw_sources.values():
+        for pin in pins:
+            inputs.extend((pin.path, pin.path.with_suffix(pin.path.suffix + ".meta.json")))
+    if (
+        any(item.is_symlink() for item in (output, *output.parents))
+        or (output.is_file() and output.stat().st_nlink > 1)
+        or output.resolve() in {item.resolve() for item in inputs}
+        or any(
+            output.resolve().is_relative_to(root.resolve())
+            for root in (repository, candidate.work_root, candidate.final_root)
+        )
+    ):
+        raise ValueError("AUDIT_OUTPUT_NOT_ISOLATED")
+    require_unfrozen(output)
+    if dataset.resolve() != candidate.final_root or any(
+        item.is_symlink() or (item.is_file() and item.stat().st_nlink > 1)
+        for item in (dataset, *dataset.parents, *dataset.rglob("*"))
+    ):
+        raise ValueError("CANDIDATE_PUBLICATION_IDENTITY_CHANGED")
+    owner = candidate.ownership()
+    if any(
+        json.loads(path.read_bytes()) != owner
+        for path in (candidate.work_root / "build-inputs.json", dataset / "build-inputs.json")
+    ):
+        raise ValueError("CANDIDATE_PUBLICATION_IDENTITY_CHANGED")
+
+
+def candidate_action_rows(
+    candidate: CandidateBuildInputs, repository: Path
+) -> list[dict[str, Any]]:
+    def read_json(path: Path) -> Any:
+        return candidate.read_json(repository, path)
+
+    rows = [
+        row
+        for name in ("CASH_ACTIONS", "BONUS_ACTIONS", "GAP_DISTRIBUTION_ACTIONS")
+        for row in event_rows(candidate.source(repository, name), read_json=read_json)
+    ]
+    rows.extend(
+        structural_event_rows(
+            repository,
+            candidate.source(repository, "RIGHTS_ACTIONS"),
+            candidate.source(repository, "MERGER_ACTIONS"),
+            candidate.source(repository, "STRUCTURAL_ACTIONS"),
+            read_json=read_json,
+        )
+    )
+    if pin := candidate.auxiliary_inputs.get("ordinary_references"):
+        rows.extend(ordinary_reference_rows(read_json(pin.path), rows, pin.sha256))
+    return rows
+
+
+def audit(
+    dataset: Path,
+    repository: Path,
+    output: Path,
+    *,
+    build_spec: Path | None = None,
+    build_spec_sha256: str | None = None,
+) -> dict[str, Any]:
+    if (build_spec is None) != (build_spec_sha256 is None):
+        raise ValueError("SELECT_EXACTLY_ONE_AUDIT_INPUT_MODE")
+    audit_code = (
+        {
+            str(path): sha256_file(path)
+            for path in (
+                Path(__file__),
+                Path(__file__).parents[1] / "app/data/full_dataset.py",
+                Path(__file__).parents[1] / "app/data/catalog/checksums.py",
+            )
+        }
+        if build_spec is not None
+        else {}
+    )
+    candidate = (
+        load_candidate_build_inputs(
+            build_spec,
+            build_spec_sha256,
+            repository,
+            legacy_dataset_id=DATASET_ID,
+            coverage=(START, END),
+        )
+        if build_spec is not None and build_spec_sha256 is not None
+        else None
+    )
+    if candidate and build_spec is not None:
+        candidate_publication(candidate, dataset, repository, output, build_spec)
+    state = (
+        candidate.reference_pins
+        if candidate
+        else json.loads((repository / ".research/project_state.json").read_bytes())
+    )
+    manifest_bytes = (dataset / "manifest.json").read_bytes() if candidate else None
+    candidate_manifest = (
+        DatasetManifest.model_validate_json(manifest_bytes) if manifest_bytes is not None else None
+    )
+
+    def partition_source(path: Path) -> Any:
+        if candidate_manifest is None:
+            return path
+        pins = {part.relative_path: part.sha256 for part in candidate_manifest.partitions}
+        return BytesIO(verified_file_bytes(path, pins[str(path.relative_to(dataset))]))
+
+    def table(name: str) -> Any:
+        return pq.read_table(partition_source(dataset / name))
+
     contracts = verify_source_contracts(
-        pq.read_table(dataset / "source-contracts.parquet").to_pylist(),
+        table("source-contracts.parquet").to_pylist(),
         repository,
         state,
     )
-    manifest = load_manifest(dataset / "manifest.json")
+    manifest = candidate_manifest or load_manifest(dataset / "manifest.json")
     verify_source_lineage(list(contracts.values()), manifest.source_lineage)
     verify_dataset(dataset, manifest)
-    if manifest.dataset_id != DATASET_ID or finalize_manifest(manifest.model_dump()) != manifest:
+    dataset_id = candidate.dataset_id if candidate else DATASET_ID
+    if manifest.dataset_id != dataset_id or finalize_manifest(manifest.model_dump()) != manifest:
         raise ValueError("MANIFEST_REPEATABILITY_FAILED")
-    master = pq.read_table(dataset / "securities.parquet").to_pylist()
+    if candidate and (
+        list(contracts.values()) != list(candidate.source_contracts)
+        or (str(manifest.coverage_start), str(manifest.coverage_end)) != candidate.coverage
+        or manifest.rule_version != candidate.market_rule_manifest_sha256
+        or {str(path.relative_to(dataset)) for path in dataset.rglob("*.parquet")}
+        != {part.relative_path for part in manifest.partitions}
+        or json.loads((candidate.work_root / "materialization-report.json").read_bytes())
+        != materialization_report(manifest, dataset / "manifest.json", candidate.ownership())
+    ):
+        raise ValueError("CANDIDATE_PUBLICATION_IDENTITY_CHANGED")
+    master = table("securities.parquet").to_pylist()
     if any(
         row["instrument_type"] != "COMMON_A_SHARE"
         or row["exchange"] not in {"SSE", "SZSE"}
@@ -100,7 +237,7 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
             for left, right in pairwise(rows)
         ):
             raise ValueError("SECURITY_MASTER_INTERVAL_OVERLAP")
-    calendar_rows = pq.read_table(dataset / "calendar.parquet").to_pylist()
+    calendar_rows = table("calendar.parquet").to_pylist()
     sessions = [row["session_date"] for row in calendar_rows]
     if sessions != sorted(set(sessions)) or sessions[0] < START or sessions[-1] > END:
         raise ValueError("TRADING_CALENDAR_INVALID")
@@ -108,7 +245,7 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
     security_resolver = SecurityResolver(master)
     status_rows = []
     for name in ("st-sse-intervals.parquet", "st-szse-intervals.parquet"):
-        status_rows.extend(pq.read_table(dataset / name).to_pylist())
+        status_rows.extend(table(name).to_pylist())
     status_resolver = StatusResolver(status_rows)
     if any(row["status"] == "UNKNOWN" for row in status_rows):
         raise ValueError("UNKNOWN_ST_INTERVAL")
@@ -121,7 +258,7 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
     source_name_unknown = 0
     for partition in sorted((dataset / "raw").glob("*/*.parquet")):
         exchange, month = partition.parent.name, partition.stem
-        parquet = pq.ParquetFile(partition)
+        parquet = pq.ParquetFile(partition_source(partition))
         if tuple(parquet.schema_arrow.names) != RAW_FIELDS:
             raise ValueError(f"RAW_SCHEMA_CHANGED:{partition}")
         previous: tuple[str, ...] | None = None
@@ -161,10 +298,10 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
                 counts["zero_volume_rows"] += Decimal(row["volume"]) == 0
                 observed[row["security_id"]] += 1
 
-    features = pq.read_table(dataset / "feature-only-observations.parquet").to_pylist()
+    features = table("feature-only-observations.parquet").to_pylist()
     if len(features) != 239:
         raise ValueError("FEATURE_ONLY_ROW_COUNT_CHANGED")
-    factors = pq.read_table(dataset / "adjustment-factors.parquet").to_pylist()
+    factors = table("adjustment-factors.parquet").to_pylist()
     factor_keys = [
         (row["security_id"], row["interval_from"], row["effective_date"]) for row in factors
     ]
@@ -175,10 +312,10 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
         if Decimal(row["hfq_factor"]) <= 0:
             raise ValueError(f"NON_POSITIVE_FACTOR:{row['security_id']}:{row['effective_date']}")
         factor_by_id[row["security_id"]].append(row)
-    for rows in factor_by_id.values():
-        rows.sort(key=lambda row: (row["interval_from"], row["effective_date"]))
-        if rows[0]["effective_date"] > rows[0]["interval_from"] or any(
-            row["effective_date"] > row["interval_to"] for row in rows
+    for factor_rows in factor_by_id.values():
+        factor_rows.sort(key=lambda row: (row["interval_from"], row["effective_date"]))
+        if factor_rows[0]["effective_date"] > factor_rows[0]["interval_from"] or any(
+            row["effective_date"] > row["interval_to"] for row in factor_rows
         ):
             raise ValueError("ADJUSTMENT_FACTOR_TEMPORAL_GAP")
     for row in features:
@@ -213,10 +350,10 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
     if missing_observations < 0:
         raise ValueError("OBSERVATIONS_EXCEED_LIFECYCLE")
 
-    benchmark = pq.read_table(dataset / "csi300.parquet").to_pylist()
+    benchmark = table("csi300.parquet").to_pylist()
     if [row["trading_date"] for row in benchmark] != sessions:
         raise ValueError("BENCHMARK_CALENDAR_MISMATCH")
-    actions = pq.read_table(dataset / "corporate-actions.parquet").to_pylist()
+    actions = table("corporate-actions.parquet").to_pylist()
     event_ids = [row["event_checksum"] for row in actions]
     if len(event_ids) != len(set(event_ids)):
         raise ValueError("DUPLICATE_CORPORATE_ACTION")
@@ -231,8 +368,17 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
         "BONUS_PASS_THROUGH": 1,
         "SHARE_CONSOLIDATION": 1,
     }
+    if candidate:
+        expected_actions = candidate_action_rows(candidate, repository)
+        if sorted(map(canonical_json_bytes, actions)) != sorted(
+            map(canonical_json_bytes, expected_actions)
+        ):
+            raise ValueError("CANDIDATE_SOURCE_EVENT_SET_MISMATCH")
+        parse_action_records(actions, END)
+        expected_kinds = Counter(row["event_kind"] for row in expected_actions)
     if action_kinds != expected_kinds:
         raise ValueError(f"CORPORATE_ACTION_CENSUS_CHANGED:{dict(action_kinds)}")
+    parsed: Any
     for row in actions:
         if not START <= row["application_date"] <= END or not row["acceptance_json"]:
             raise ValueError("INVALID_MATERIALIZED_CORPORATE_ACTION")
@@ -258,6 +404,8 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
         elif kind == "SHARE_CONSOLIDATION":
             parsed = ShareConsolidationEvent.model_validate(event)
             parsed.require_supported()
+        elif kind == "ORDINARY_REFERENCE" and candidate:
+            parsed = OrdinaryDistributionReference.model_validate(event)
         else:
             continue
         if parsed.event_checksum != row["event_checksum"]:
@@ -275,8 +423,8 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
         raise ValueError(
             f"UNVALIDATED_CORPORATE_ACTIONS:{dict(action_kinds - validated_action_kinds)}"
         )
-    suspensions = pq.read_table(dataset / "suspension-events.parquet").to_pylist()
-    if not suspensions or any(
+    suspensions = table("suspension-events.parquet").to_pylist()
+    if (not suspensions and not candidate) or any(
         row["execution_open_blocked"] not in {None, "0", "1"}
         or not row["suspended_at"]
         or (
@@ -292,10 +440,14 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
         for row in suspensions
     ):
         raise ValueError("SUSPENSION_EXECUTION_CONTRACT_CHANGED")
-    preflight = json.loads(
-        source_path(repository, contracts["SOURCE_PREFLIGHT"]["source_path"]).read_bytes()
+    preflight = (
+        candidate.read_json(repository, candidate.source(repository, "SOURCE_PREFLIGHT"))
+        if candidate
+        else json.loads(
+            source_path(repository, contracts["SOURCE_PREFLIGHT"]["source_path"]).read_bytes()
+        )
     )
-    source_lineage = pq.read_table(dataset / "source-lineage.parquet").to_pylist()
+    source_lineage = table("source-lineage.parquet").to_pylist()
     if (
         raw_lineage_labels != {"SSE_OFFICIAL_DAILY", "SZSE_OFFICIAL_DAILY"}
         or {row["exchange"] for row in source_lineage} != {"SSE", "SZSE"}
@@ -308,7 +460,7 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
     ):
         raise ValueError("PROVIDER_LINEAGE_CHANGED")
     costs = sorted(
-        pq.read_table(dataset / "transaction-costs.parquet").to_pylist(),
+        table("transaction-costs.parquet").to_pylist(),
         key=lambda row: row["effective_from"],
     )
     cost_intervals_complete = (
@@ -373,7 +525,12 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
         "HISTORICAL_RULE_REGIMES": (
             "PASS"
             if cost_intervals_complete
-            and manifest.rule_version == state["market_rule_manifest_sha256"]
+            and manifest.rule_version
+            == (
+                candidate.market_rule_manifest_sha256
+                if candidate
+                else state["market_rule_manifest_sha256"]
+            )
             else "FAIL"
         ),
         "BENCHMARK_ALIGNMENT": "PASS",
@@ -395,9 +552,13 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
     audit_pass = set(gates) == REQUIRED_GATES and set(gates.values()) == {"PASS"}
     report = {
         "report_id": "R5_FULL_DATASET_AUDIT_V1",
-        "dataset_id": DATASET_ID,
+        "dataset_id": dataset_id,
         "manifest_sha256": manifest.canonical_sha256,
-        "manifest_file_sha256": sha((dataset / "manifest.json").read_bytes()),
+        "manifest_file_sha256": sha(
+            manifest_bytes
+            if manifest_bytes is not None
+            else (dataset / "manifest.json").read_bytes()
+        ),
         "coverage": [START, END],
         "securities": manifest.security_count,
         "security_intervals": len(master),
@@ -442,7 +603,102 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
             None if audit_pass else "FULL_MARKET_STRUCTURAL_CORPORATE_ACTION_CENSUS_NOT_ESTABLISHED"
         ),
     }
-    save(output, report)
+    if candidate and build_spec is not None and build_spec_sha256 is not None:
+        # These checks require dataset-bound execution/accounting/source evidence,
+        # not filenames of unit tests, legacy state, or a source report's PASS label.
+        unproven = {
+            "SURVIVORSHIP",
+            "DELISTING_RETENTION",
+            "LOOK_AHEAD",
+            "CORPORATE_ACTION_COMPLETENESS",
+            "CORPORATE_ACTION_ACCOUNTING",
+            "HISTORICAL_RULE_REGIMES",
+            "STRUCTURAL_CORPORATE_ACTION_CENSUS",
+            "INPUT_ORDER_REPRODUCIBILITY",
+            "RESUME_RESTART",
+            "QUANTITY_RECONCILIATION",
+            "CASH_RECONCILIATION",
+            "BASIS_RECONCILIATION",
+            "CORPORATE_ACTION_PNL_RECONCILIATION",
+            "NO_SYNTHETIC_ORDER_FILL",
+            "NO_ORPHAN_BASIS",
+        }
+        for gate in unproven:
+            gates[gate] = "NOT_EVIDENCED"
+        loader = FullDataset(
+            dataset,
+            manifest,
+            TemporalPeriod(
+                ResearchPeriodKind.FULL_PERIOD, manifest.coverage_start, manifest.coverage_end
+            ),
+        )
+        runtime_sessions = 0
+        unexplained: list[dict[str, str]] = []
+        for session in loader.sessions(execution=True):
+            runtime_sessions += 1
+            unexplained.extend(
+                {"trading_date": session.trading_date.isoformat(), "security_id": str(sid)}
+                for sid in session.unexplained_reference_adjustment_ids
+            )
+        absent_dates = sorted({row["application_date"] for row in actions} - session_set)
+        gates.update(
+            SOURCE_EVENT_SET_MATCH="PASS",
+            REFERENCE_PRICE_CONTINUITY="FAIL" if unexplained else "PASS",
+            ACTION_SESSION_COVERAGE="FAIL" if absent_dates else "PASS",
+        )
+        reference_count = action_kinds["ORDINARY_REFERENCE"]
+        report.update(
+            report_id="SUCCESSOR_FULL_DATASET_AUDIT_V1",
+            build_inputs=candidate.ownership(),
+            audit_code_sha256=audit_code,
+            build_spec_sha256=build_spec_sha256,
+            ordinary_reference_rows=reference_count,
+            accounting_action_rows=len(actions) - reference_count,
+            runtime_scan={
+                "sessions": runtime_sessions,
+                "unexplained_reference_adjustments": unexplained,
+                "action_dates_missing_from_calendar": absent_dates,
+            },
+            accounting_invariant_evidence={
+                "typed_action_rows": len(actions) - reference_count,
+                "validated_action_kinds": dict(sorted(action_kinds.items())),
+                "portfolio_accounting_run": False,
+            },
+            structural_corporate_action_census={
+                "status": "NOT_EVIDENCED",
+                "legacy_state_used": False,
+            },
+            audit_status="FAIL_CLOSED" if "FAIL" in gates.values() else "PARTIAL",
+            dataset_audited=False,
+            dataset_registered=False,
+            full_financial_admission=False,
+            strategy_run=False,
+            unevidenced_gates=sorted(unproven),
+            single_smallest_blocker="SUCCESSOR_DATASET_BOUND_FINANCIAL_LIFECYCLE_EVIDENCE_INCOMPLETE",
+        )
+        # Recheck before immutable publication; neither build nor legacy state is mutated.
+        if (
+            load_candidate_build_inputs(
+                build_spec,
+                build_spec_sha256,
+                repository,
+                legacy_dataset_id=DATASET_ID,
+                coverage=(START, END),
+            )
+            != candidate
+        ):
+            raise ValueError("CANDIDATE_BUILD_SPEC_CHANGED")
+        candidate_publication(candidate, dataset, repository, output, build_spec)
+        verify_dataset(dataset, manifest)
+        if sha256_file(dataset / "manifest.json") != report["manifest_file_sha256"]:
+            raise ValueError("CANDIDATE_MANIFEST_BYTES_CHANGED")
+        if load_manifest(dataset / "manifest.json") != manifest or any(
+            sha256_file(Path(path)) != digest for path, digest in audit_code.items()
+        ):
+            raise ValueError("CANDIDATE_AUDIT_INPUT_CHANGED")
+        write_immutable(output, canonical_json_bytes(report) + b"\n")
+    else:
+        save(output, report)
     return report
 
 
@@ -451,5 +707,18 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", required=True, type=Path)
     parser.add_argument("--repository", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--build-spec", type=Path)
+    parser.add_argument("--build-spec-sha256")
     args = parser.parse_args()
-    print(json.dumps(audit(args.dataset, args.repository, args.output)), flush=True)
+    print(
+        json.dumps(
+            audit(
+                args.dataset,
+                args.repository,
+                args.output,
+                build_spec=args.build_spec,
+                build_spec_sha256=args.build_spec_sha256,
+            )
+        ),
+        flush=True,
+    )

@@ -29,8 +29,10 @@ from app.data.catalog import (
     verify_dataset,
     write_manifest,
 )
-from app.data.catalog.checksums import canonical_sha256, sha256_file
+from app.data.catalog.checksums import canonical_sha256, sha256_file, verified_file_bytes
 from app.data.catalog.freeze import require_unfrozen, write_immutable
+from app.data.full_dataset import parse_action_records
+from app.domain.markets.corporate_actions import OrdinaryDistributionReference
 from scripts.full_dataset_build_inputs import load_candidate_build_inputs, producer_sha256
 from scripts.full_dataset_sources import (
     verify_source_contracts,
@@ -672,6 +674,42 @@ def structural_event_rows(
     return rows
 
 
+def ordinary_reference_rows(
+    report: dict[str, Any], actions: list[dict[str, Any]], file_sha256: str
+) -> list[dict[str, str | None]]:
+    if report.get("manifest_sha256") != canonical_sha256(
+        {key: value for key, value in report.items() if key != "manifest_sha256"}
+    ):
+        raise ValueError("ORDINARY_REFERENCE_REPORT_MANIFEST_MISMATCH")
+    records = report["private_candidate_reference_rows"]
+    if any(row["event_kind"] != "ORDINARY_REFERENCE" for row in records):
+        raise ValueError("ORDINARY_REFERENCE_KIND_MISMATCH")
+    references = [
+        OrdinaryDistributionReference.model_validate_json(row["event_json"]) for row in records
+    ]
+    keys = {(str(reference.security_id), reference.ex_date.isoformat()) for reference in references}
+    if any(not START <= day <= END for _, day in keys):
+        raise ValueError("ORDINARY_REFERENCE_OUTSIDE_BUILD_COVERAGE")
+    paired = [row for row in actions if (row["security_id"], row["application_date"]) in keys]
+    # Use the runtime's full boundary/pair validation, including extra structural legs.
+    parse_action_records([*paired, *records], END)
+    return [
+        action_row(
+            reference.model_dump(mode="json"),
+            reference.event_checksum,
+            event_kind="ORDINARY_REFERENCE",
+            application_date=reference.ex_date.isoformat(),
+            security_id=str(reference.security_id),
+            acceptance={
+                "scope": "PRICE_ONLY_NOT_ACCOUNTING",
+                "input_report_file_sha256": file_sha256,
+                "input_report_manifest_sha256": report["manifest_sha256"],
+            },
+        )
+        for reference in references
+    ]
+
+
 def materialization_report(
     manifest: DatasetManifest, manifest_path: Path, ownership: dict[str, Any] | None
 ) -> dict[str, Any]:
@@ -699,11 +737,31 @@ def materialization_report(
         "dataset_frozen": False,
     }
     if ownership:
+        kinds = (
+            pq.read_table(
+                BytesIO(
+                    verified_file_bytes(
+                        manifest_path.parent / "corporate-actions.parquet",
+                        next(
+                            part.sha256
+                            for part in manifest.partitions
+                            if part.relative_path == "corporate-actions.parquet"
+                        ),
+                    )
+                ),
+                columns=["event_kind"],
+            )
+            .column("event_kind")
+            .to_pylist()
+        )
+        reference_count = kinds.count("ORDINARY_REFERENCE")
         report.update(
             build_inputs=ownership,
             full_financial_admission=False,
             dataset_registered=False,
             operation=ownership["operation"],
+            ordinary_reference_rows=reference_count,
+            accounting_action_rows=counts["corporate-actions.parquet"] - reference_count,
         )
     return report
 
@@ -1051,6 +1109,12 @@ def materialize(
             repository, rights_path, merger_path, structural_path, read_json=read_json
         )
     )
+    if candidate and (reference_pin := candidate.auxiliary_inputs.get("ordinary_references")):
+        corporate_actions.extend(
+            ordinary_reference_rows(
+                read_json(reference_pin.path), corporate_actions, reference_pin.sha256
+            )
+        )
     if len({row["event_checksum"] for row in corporate_actions}) != len(corporate_actions):
         raise ValueError("DUPLICATE_CORPORATE_ACTION")
     corporate_actions.sort(

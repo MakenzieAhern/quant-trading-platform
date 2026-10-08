@@ -49,7 +49,9 @@ def test_accounting_record_retains_event_and_point_in_time_boundary(tmp_path, ki
 
 
 @pytest.mark.parametrize("kind", KINDS)
-@pytest.mark.parametrize("corruption", ("early", "hidden_late", "checksum", "missing_checksum"))
+@pytest.mark.parametrize(
+    "corruption", ("early", "hidden_late", "checksum", "missing_checksum", "security")
+)
 def test_accounting_record_corruption_fails_before_period_filter(tmp_path, kind, corruption):
     loader, _, day, row = record_fixture(tmp_path, kind)
     if corruption in ("early", "hidden_late"):
@@ -58,6 +60,8 @@ def test_accounting_record_corruption_fails_before_period_filter(tmp_path, kind,
         ).isoformat()
     elif corruption == "checksum":
         row["event_checksum"] = "0" * 64
+    elif corruption == "security":
+        row["security_id"] = "CN-A:SSE:600999"
     else:
         del row["event_checksum"]
     pq.write_table(pa.Table.from_pylist([row]), tmp_path / "corporate-actions.parquet")

@@ -160,7 +160,12 @@ class CandidateBuildInputs(BaseModel):
 
 
 def producer_sha256() -> dict[str, str]:
-    code = (Path(__file__), Path(__file__).with_name("materialize_full_dataset.py"))
+    code = (
+        Path(__file__),
+        Path(__file__).with_name("materialize_full_dataset.py"),
+        Path(__file__).parents[1] / "app/data/full_dataset.py",
+        Path(__file__).parents[1] / "app/data/catalog/checksums.py",
+    )
     return {path.name: sha256_file(path) for path in code}
 
 
@@ -194,7 +199,9 @@ def load_candidate_build_inputs(
         raise ValueError("CANDIDATE_TIMESTAMP_MUST_BE_UTC")
     if (
         set(spec.reference_pins) != REFERENCE_PINS
-        or set(spec.auxiliary_inputs) != AUXILIARY_INPUTS
+        or not AUXILIARY_INPUTS
+        <= set(spec.auxiliary_inputs)
+        <= AUXILIARY_INPUTS | {"ordinary_references"}
         or set(spec.raw_sources) != {"SSE", "SZSE"}
         or any(not pins for pins in spec.raw_sources.values())
     ):

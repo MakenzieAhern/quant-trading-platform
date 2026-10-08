@@ -1,5 +1,24 @@
 # Decisions
 
+## v1.2 Candidate audit consumes actual bound bytes, not legacy PASS — 2026-10-08
+
+Use the same explicit successor specification for the existing materializer and
+auditor. Optional ordinary price-reference report is part of input selection;
+its exact event/source/date pairing never changes holder cash/share entitlements.
+Audit compares complete actual event rows to selected sources, parses all kinds,
+and scans real sessions with execution metadata, without a strategy or Portfolio.
+Unrun accounting/lifecycle/restart/order obligations remain NOT_EVIDENCED.
+Audit reports stay immutable outside inputs, repository and owned build roots.
+
+Independent review reproduced three read-binding defects: code fingerprint taken
+after slow input loading; transient A-B-A Parquet replacement; semantically equal
+but byte-different manifest digest. Capture code before loading, parse/hash the
+same partition/manifest bytes and recheck before publication. Shared catalog
+runtime uses the same verified-byte path; no alternative financial implementation.
+One partition buffer is the current memory ceiling, not full-archive performance
+acceptance. Tests remain isolated synthetic evidence; no real successor approved,
+no new human methodology gate, frozen/OOS unchanged. GitHub remains HOLD.
+
 ## v1.2 Explicit independent successor inputs, not inherited approval — 2026-10-08
 
 Reuse the full materializer with --build-spec/whole-file SHA and an explicit

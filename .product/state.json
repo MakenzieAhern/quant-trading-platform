@@ -1,4 +1,27 @@
 {
+  "successor_reference_audit_20261008_gate": {
+    "status": "PASS_SCOPED_ENGINEERING_NOT_DATASET_OR_FINANCIAL_APPROVAL",
+    "source_parent": "9a862b6162ad36963cc4ed57a48ae695d9416002",
+    "progress": "Previous local-runtime answer NO_PROJECT_PROGRESS. This unit completes reference-input and candidate-audit plumbing and repairs three independently reproduced byte-binding defects: PROGRESS. Full U1-U8/M0-M5 ACTIVE.",
+    "implementation": "Optional ordinary_references input is preflight/hash-bound; exact typed pair/source/date validation and separate accounting counts. Existing audit accepts explicit spec/new ID without frozen state, checks full source event rows, scans actual sessions, and publishes isolated immutable report. Real catalog consumers parse same bytes as hashed; record security identity checked before date filter. Unrun financial/lifecycle/order/restart gates NOT_EVIDENCED, not inherited PASS.",
+    "checks": "660selected filesystem/domain tests PASS6.86s; Ruff/format,3script/2app mypyPASS. Two final retained actual synthetic builders/audits PASS0.91s;7 sessions,27rows=26accounting+1reference. No-reference comparison fails exactly SZSE000001/2011-02-02. Standalone CLI report byte-identical. Full backend/database/frontend/browser/CI NOT_RUN.",
+    "review": "Independent readonly3P2 raised,RED reproduced,fixed,reviewclosed: late audit-code fingerprint; transient Parquet A-B-A gap hiding; manifest bytes/fileSHA mismatch. No remaining scopedP1P2. Reviewer did not execute tests or data tasks.",
+    "evidence": "product-evidence/v1.2/m4/20261008-successor-references-audit/README.md",
+    "retained_synthetic_fixtures": "/home/yuchen/data/product-test-fixtures/20261008-successor-reference-audit-proof-v3",
+    "checksum_bindings_sha256": "08a43f2668b9232895fcce0820e445264e0464bbefbe550147a3c3945ac5ae44",
+    "checksum_entries": 173,
+    "verification": "Windows Get-FileHash and WSL sha256sum --check independently match173 files. Positive synthetic manifest8e43d515; report22d903c2. v1/v2 preliminary fixture roots and failed logs retained, not final proof.",
+    "preservation": "Original manifest693c0b81/freeze228569f1/contracts c8148481/researchstate b10ce3c5/tag f88b5c60 and Git identity unchanged. No originalDB/provider/strategy/OOS operation or runtime restart. Compose3healthy. GitHub HOLD.",
+    "limitations": "Synthetic engineering only; no real successor preflight/dataset/audit/admission. Actual economic/source/lifecycle reconciliation and dataset-bound Portfolio evidence remain. Four builder/three auditor code pins are not hermetic dependencies. Verified reads buffer a partition; full-archive memory/time and exhaustive crash/race proof unclaimed.",
+    "dataset_created": false,
+    "dataset_registered": false,
+    "dataset_audited": false,
+    "frozen_dataset_modified": false,
+    "strategy_run": false,
+    "full_financial_admission": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "successor_build_inputs_20261008_gate": {
     "status": "PASS_SCOPED_ENGINEERING_NOT_DATASET_OR_FINANCIAL_APPROVAL",
     "source_parent": "af77ea95a018a63e7db267a7557531292dce364c",
@@ -930,7 +953,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T04:31:00Z",
+  "updated_at_utc": "2026-10-08T04:49:30Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4555,8 +4578,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 ACTIVE. Explicit successor builder/owned output and same-byte input selection now tested (277related/265bindings2ab20883); do not repeat it or full15 inspection. Next wire existing price-only ORDINARY_REFERENCE companions as explicit inputs and make actual audit candidate-ID/input-set aware without old literal PASS or fixed-v1 fallback. Do not create a real successor until source/economic/lifecycle facts support its preflight; inspection-only bundle cannot authorize build. Keep original frozen/research/OOS unchanged. Lawfulforward/genuineledger/currentquality/delivery remain;GitHubHOLD.",
-  "local_next_command": "Read raw_resume_input_binding_20261008_gate and existing materializer/audit/freeze callers. Implement minimal explicit new-version input/output contract: distinct ID, owned isolated work/final/report paths,15 source contracts+5pins, actual auxiliary input pins, genuine operation approval; do not copy .research or invent approval. Verify with disposable fixtures until financial/lifecycle closure. Audit must not inherit literal legacy accounting/restart PASS or weaken exact corporate-action reconciliation. Do not repeat completed candidate/raw-guard/arithmetic work or execute real builder/strategy; preserve stopped routes.",
+  "next_task": "Full U1-U8/M0-M5 ACTIVE. Reference inputs and explicit version-aware audit now exercised660tests/173bindings08a43f26; do not repeat completed builder/raw/price-reference plumbing. Next close genuine source/economic/lifecycle gaps and implement dataset-bound accounting verification using existing Portfolio invariants, independent of strategy. Candidate audit correctly remains PARTIAL/FAIL_CLOSED until those facts/evidence exist. No real successor from inspection-only bundle, no frozen/OOS mutation. Lawfulforward/genuineledger/currentquality/delivery remain;GitHubHOLD.",
+  "local_next_command": "Read successor_reference_audit_20261008_gate, retained audit report's NOT_EVIDENCED gates, existing Portfolio action accounting/reconciliation callers and latest financial-source checkpoint. Separate actual missing facts from executable accounting checks; extend the existing auditor with manifest-bound evidence without inventing source approval, fixture counts or copied legacy PASS. Preserve stopped acquisition routes and original runtime/DB; no real builder or strategy until real prerequisites pass.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

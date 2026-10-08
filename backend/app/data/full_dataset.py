@@ -6,11 +6,12 @@ from collections.abc import Iterator
 from datetime import date
 from decimal import Context, Decimal, localcontext
 from importlib import import_module
+from io import BytesIO
 from itertools import groupby
 from pathlib import Path
 from typing import Any
 
-from app.data.catalog.checksums import sha256_file
+from app.data.catalog.checksums import sha256_file, verified_file_bytes
 from app.data.catalog.models import DatasetManifest
 from app.data.providers.research import (
     DailyBarRecord,
@@ -72,6 +73,67 @@ def _raw_paths(manifest: DatasetManifest, end: date) -> tuple[str, ...]:
     return paths
 
 
+def parse_action_records(rows: list[dict[str, Any]], end: str) -> dict[str, Any]:
+    classes: dict[str, Any] = {
+        "CORPORATE_ACTION": CorporateAction,
+        "RIGHTS_ISSUE": CorporateAction,
+        "MERGER": MergerEvent,
+        "DEMERGER": DemergerEvent,
+        "PARTIAL_SURRENDER": MandatoryPartialShareSurrenderEvent,
+        "BONUS_PASS_THROUGH": RestructuringBonusPassThroughEvent,
+        "SHARE_CONSOLIDATION": ShareConsolidationEvent,
+        "ORDINARY_REFERENCE": OrdinaryDistributionReference,
+    }
+    grouped: dict[str, Any] = defaultdict(lambda: defaultdict(list))
+    # Validate before filtering: a wrong later record date must not hide a due event.
+    for row in rows:
+        if row["event_kind"] not in classes:
+            raise ValueError("CORPORATE_ACTION_RECORD_KIND_UNSUPPORTED")
+        event = classes[row["event_kind"]].model_validate_json(row["event_json"])
+        is_reference = isinstance(event, OrdinaryDistributionReference)
+        application_date = (
+            event.ex_date
+            if is_reference
+            else getattr(event, "application_date", event.effective_date)
+        )
+        if (
+            application_date is None
+            or row["application_date"] != application_date.isoformat()
+            or row.get("event_checksum") != event.event_checksum
+            or (
+                "security_id" in row
+                and row["security_id"]
+                != str(
+                    getattr(event, "security_id", None) or getattr(event, "parent_security", None)
+                )
+            )
+        ):
+            prefix = "ORDINARY_REFERENCE" if is_reference else "CORPORATE_ACTION"
+            raise ValueError(f"{prefix}_RECORD_MISMATCH")
+        if row["application_date"] > end:
+            continue
+        grouped[row["application_date"]][row["event_kind"]].append(event)
+    for kinds in grouped.values():
+        seen = set()
+        for reference in kinds.get("ORDINARY_REFERENCE", ()):
+            key = (reference.security_id, reference.ex_date)
+            if key in seen:
+                raise ValueError("DUPLICATE_ORDINARY_REFERENCE")
+            seen.add(key)
+            pair = [
+                event
+                for kind, events in kinds.items()
+                if kind != "ORDINARY_REFERENCE"
+                for event in events
+                if (getattr(event, "security_id", None) or getattr(event, "parent_security", None))
+                == reference.security_id
+            ]
+            if any(not isinstance(event, CorporateAction) for event in pair):
+                raise ValueError("ORDINARY_REFERENCE_STRUCTURAL_BOUNDARY_UNSUPPORTED")
+            reference.require_matching_actions(pair)
+    return grouped
+
+
 class FullDataset:
     def __init__(self, root: Path, manifest: DatasetManifest, period: TemporalPeriod) -> None:
         self.root = root
@@ -98,9 +160,7 @@ class FullDataset:
         # future prices, statuses or events to the strategy.
         all_calendar_days = tuple(
             date.fromisoformat(row["session_date"])
-            for row in pq.read_table(
-                root / "calendar.parquet", columns=["session_date"]
-            ).to_pylist()
+            for row in self._table(root / "calendar.parquet", columns=["session_date"]).to_pylist()
         )
         self.calendar_days = tuple(day for day in all_calendar_days if day <= period.end)
         next_day = next((day for day in all_calendar_days if day > period.end), None)
@@ -127,7 +187,7 @@ class FullDataset:
         self.calendar_text = tuple(day.isoformat() for day in self.calendar_days)
         self.calendar_index = {day: index for index, day in enumerate(self.calendar_text)}
         self.members: dict[str, list[dict[str, Any]]] = defaultdict(list)
-        for row in pq.read_table(
+        for row in self._table(
             root / "securities.parquet", filters=[("effective_from", "<=", end)]
         ).to_pylist():
             if row["instrument_type"] != "COMMON_A_SHARE":
@@ -147,14 +207,24 @@ class FullDataset:
         self.cost_model = EffectiveDatedAShareCommission(self._costs())
         self.benchmark = {
             row["trading_date"]: Decimal(row["close"])
-            for row in pq.read_table(
+            for row in self._table(
                 root / "csi300.parquet", filters=[("trading_date", "<=", end)]
             ).to_pylist()
         }
 
+    def _table(self, path: Path, **options: Any) -> Any:
+        # Real catalog loaders always have a manifest. Standalone in-memory model
+        # fixtures have none and cannot confer dataset authority.
+        manifest = getattr(self, "manifest", None)
+        source: Any = path
+        if manifest is not None:
+            pins = {part.relative_path: part.sha256 for part in manifest.partitions}
+            source = BytesIO(verified_file_bytes(path, pins[str(path.relative_to(self.root))]))
+        return pq.read_table(source, **options)
+
     def _curves(self, end: str) -> dict[str, Any]:
         grouped: dict[str, Any] = defaultdict(lambda: defaultdict(list))
-        rows = pq.read_table(
+        rows = self._table(
             self.root / "adjustment-factors.parquet", filters=[("effective_date", "<=", end)]
         ).to_pylist()
         for row in rows:
@@ -183,7 +253,7 @@ class FullDataset:
 
     def _features(self, end: str) -> dict[str, tuple[FeatureOnlyDailyObservation, ...]]:
         grouped: dict[str, list[FeatureOnlyDailyObservation]] = defaultdict(list)
-        for row in pq.read_table(
+        for row in self._table(
             self.root / "feature-only-observations.parquet",
             filters=[("trading_date", "<=", end)],
         ).to_pylist():
@@ -210,7 +280,7 @@ class FullDataset:
     def _suspension_open_states(self, end: str) -> dict[tuple[str, str], bool | None]:
         result: dict[tuple[str, str], bool | None] = {}
         # Raw slash dates/intraday text cannot be filtered against ISO date strings.
-        for row in pq.read_table(self.root / "suspension-events.parquet").to_pylist():
+        for row in self._table(self.root / "suspension-events.parquet").to_pylist():
             start, _ = suspension_boundary(row["suspended_at"])
             finish, _ = suspension_boundary(row["resumed_or_ended_at"])
             if start is None or (finish is not None and finish < start):
@@ -226,58 +296,9 @@ class FullDataset:
         return result
 
     def _actions(self, end: str) -> dict[str, Any]:
-        classes: dict[str, Any] = {
-            "CORPORATE_ACTION": CorporateAction,
-            "RIGHTS_ISSUE": CorporateAction,
-            "MERGER": MergerEvent,
-            "DEMERGER": DemergerEvent,
-            "PARTIAL_SURRENDER": MandatoryPartialShareSurrenderEvent,
-            "BONUS_PASS_THROUGH": RestructuringBonusPassThroughEvent,
-            "SHARE_CONSOLIDATION": ShareConsolidationEvent,
-            "ORDINARY_REFERENCE": OrdinaryDistributionReference,
-        }
-        grouped: dict[str, Any] = defaultdict(lambda: defaultdict(list))
-        # Validate before filtering: a wrong later record date must not hide a due event.
-        for row in pq.read_table(self.root / "corporate-actions.parquet").to_pylist():
-            event = classes[row["event_kind"]].model_validate_json(row["event_json"])
-            is_reference = isinstance(event, OrdinaryDistributionReference)
-            application_date = (
-                event.ex_date
-                if is_reference
-                else getattr(event, "application_date", event.effective_date)
-            )
-            if (
-                application_date is None
-                or row["application_date"] != application_date.isoformat()
-                or row.get("event_checksum") != event.event_checksum
-            ):
-                prefix = "ORDINARY_REFERENCE" if is_reference else "CORPORATE_ACTION"
-                raise ValueError(f"{prefix}_RECORD_MISMATCH")
-            if row["application_date"] > end:
-                continue
-            grouped[row["application_date"]][row["event_kind"]].append(event)
-        for kinds in grouped.values():
-            seen = set()
-            for reference in kinds.get("ORDINARY_REFERENCE", ()):
-                key = (reference.security_id, reference.ex_date)
-                if key in seen:
-                    raise ValueError("DUPLICATE_ORDINARY_REFERENCE")
-                seen.add(key)
-                pair = [
-                    event
-                    for kind, events in kinds.items()
-                    if kind != "ORDINARY_REFERENCE"
-                    for event in events
-                    if (
-                        getattr(event, "security_id", None)
-                        or getattr(event, "parent_security", None)
-                    )
-                    == reference.security_id
-                ]
-                if any(not isinstance(event, CorporateAction) for event in pair):
-                    raise ValueError("ORDINARY_REFERENCE_STRUCTURAL_BOUNDARY_UNSUPPORTED")
-                reference.require_matching_actions(pair)
-        return grouped
+        return parse_action_records(
+            self._table(self.root / "corporate-actions.parquet").to_pylist(), end
+        )
 
     def _costs(self) -> tuple[TransactionCostSchedule, ...]:
         return tuple(
@@ -290,7 +311,7 @@ class FullDataset:
                 valid_to=date.fromisoformat(row["effective_to"]),
                 source_version="APPROVED_RESEARCH_ACCOUNT_CONVENTION",
             )
-            for row in pq.read_table(self.root / "transaction-costs.parquet").to_pylist()
+            for row in self._table(self.root / "transaction-costs.parquet").to_pylist()
         )
 
     def _member(self, security_id: str, day: str) -> dict[str, Any]:
@@ -315,7 +336,7 @@ class FullDataset:
         yielded = 0
         for month in sorted(paths_by_month):
             table = pa.concat_tables(
-                [pq.read_table(self.root / path) for path in sorted(paths_by_month[month])]
+                [self._table(self.root / path) for path in sorted(paths_by_month[month])]
             ).sort_by([("trading_date", "ascending"), ("security_id", "ascending")])
             rows_by_day = {
                 day: list(rows)

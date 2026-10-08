@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 U3/U5/U7 successor reference and audit — scoped PASS
+
+[Contract](DATASET_SUCCESSOR.md) and
+[reproductions/final synthetic fixtures/CLI evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-successor-references-audit/README.md>).
+660 selected filesystem/domain tests PASS6.86s; lint/format and script/app types
+PASS. Real synthetic builder/audit/CLI:7 sessions,27 rows=26 accounting+1 price
+companion; cross-month absent-bar reference continuity PASS, same input without
+companion fails exactly000001/2011-02-02. CLI report byte-identical to API.
+173 bindings08a43f26 verified independently by Windows and WSL native SHA.
+
+Independent review raised three P2s (late audit fingerprint, transient Parquet
+replacement, manifest byte/digest mismatch), reproduced then repaired and closed.
+Same-byte reads now cover candidate audit and actual FullDataset consumers.
+Optional serialized security identity is checked before period filtering.
+
+This is engineering evidence, not financial approval. Actual candidate audit no
+longer inherits old ID/state/counts/PASS literals; unresolved accounting/lifecycle/
+restart/order obligations stay NOT_EVIDENCED, and all financial/registration/
+freeze flags stay false. No real successor, strategy/OOS, runtime restart, original
+DB, new full-suite/frontend/browser/CI run. Originals/tag/identity preserved.
+Full U1-U8/M0-M5 remains ACTIVE; actual source/economic/lifecycle reconciliation,
+dataset-bound accounting, forward/genuine-ledger/quality/delivery remain. GitHub HOLD.
+
 ## 2026-10-08 U3/U5/U7 isolated successor entry — scoped PASS
 
 [Build contract](DATASET_SUCCESSOR.md) and

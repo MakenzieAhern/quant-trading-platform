@@ -27,10 +27,14 @@ strict schema is `CandidateBuildInputs` in `backend/scripts/full_dataset_build_i
   retain the existing repository/backend-relative convention; the P0 report
   path is repository-relative. Work/final/raw/auxiliary relative paths use the
   specification directory. Absolute paths are recommended for retained specs.
-- Five `auxiliary_inputs`, each with `path` and `sha256`: adjustment inventory,
+- Five required `auxiliary_inputs`, each with `path` and `sha256`: adjustment inventory,
   rights inventory, normalized suspension events, feature-only observations and
   benchmark Parquet. Parent references are checked where they exist; normalized
   suspensions have an explicit byte pin, not an invented parent-output reference.
+  Optional `ordinary_references` binds the existing canonical report containing
+  `private_candidate_reference_rows`. Each price-only companion must match its
+  exact cash/share event checksums, source, identity and date. It never replaces
+  shareholder entitlements or becomes an accounting event.
 - Exact nonempty `raw_sources.SSE` and `.SZSE` lists, each pinning `path`, `sha256`
   and adjacent `metadata_sha256`. Raw filename/metadata identity cannot use
   symlinks. Explicit `market_rule_manifest_sha256`; never inherit frozen state.
@@ -45,7 +49,7 @@ and output directories are excluded to avoid a circular hash. Changing the
 selection requires a new genuinely verified preflight, not just resigning a spec.
 
 Builds verify the exact bytes parsed, retain immutable ownership/report records
-and bind the two entry-point source files. The shared raw parser also requires
+and bind the two entry-point files plus the shared event/session parser and byte-checksum helper. The raw parser requires
 the exact selected raw/meta hashes. Resume validates the manifest, partitions,
 source lineage and reconstructed report; it cannot inherit edited audit flags.
 A crash after raw completion reuses those validated raw partitions. A crash after
@@ -67,7 +71,35 @@ candidate remains inspection-only and cannot be fed to this entry point.
 
 The current pipeline deliberately retains the legacy 239 feature-only rows,
 24-merger census and approved cost convention; it is not a generic new market
-or new methodology builder. Next integrate the already implemented price-only
-`ORDINARY_REFERENCE` companions and version-aware actual audit results using
-the explicit candidate inputs. Replace neither unresolved source facts nor
+or new methodology builder. Replace neither unresolved source facts nor
 financial/lifecycle checks with fixture counts or old audit PASS literals.
+
+## Independent candidate audit
+
+The existing auditor accepts the same explicit inputs, without reading frozen
+research state, rebuilding, registering or freezing:
+
+```text
+python -m scripts.audit_full_dataset --repository /absolute/repository \
+  --dataset /absolute/new-dataset-id --output /absolute/reports/audit.json \
+  --build-spec /absolute/new-build-spec.json --build-spec-sha256 <64-hex-SHA256>
+```
+
+The report must be outside the repository, owned build/dataset roots and input
+files, with no symbolic/hard-link alias. It is immutable and repeatable for the
+same inputs/code. The auditor checks candidate ownership, exact partition set,
+source contracts, materialization report and manifest. It compares serialized
+events with the bound source ledgers (including companions), validates typed
+event records, and traverses actual sessions with execution metadata enabled.
+All candidate Parquet reads and catalog-backed runtime reads hash and parse the
+same partition bytes. Manifest file identity uses the same bytes as parsing,
+and audit code identity is captured before input loading. One partition's bytes
+are buffered during parsing; full-archive memory/time measurements remain open.
+This runs no strategy or Portfolio. Missing reference-price explanations and
+action dates absent from the accepted calendar remain explicit failures.
+
+New reports separate reference rows from accounting rows and bind audit code.
+Legacy accounting, lifecycle, input-order and restart PASS literals are not
+inherited: unexecuted obligations remain `NOT_EVIDENCED`. A partial report is not
+financial admission. The legacy three-argument audit and freeze interface stay
+unchanged; no candidate report may be used to unlock old research/OOS.
