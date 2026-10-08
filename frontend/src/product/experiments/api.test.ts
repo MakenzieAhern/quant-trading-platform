@@ -6,12 +6,49 @@ import {
   experimentApi,
   parseCapabilities,
   parseCurrentDatasetQuality,
+  parseCurrentSourceIntegrity,
   parseExperiment,
   parseResult,
 } from "./api";
 import { capabilities, configuration, job, result } from "./fixtures.test-data";
 
 describe("experiment HTTP boundary", () => {
+  it("validates independent source findings without approving missing or unknown versions", () => {
+    for (const value of [
+      "SOURCE_CONTRACT_INTEGRITY_FAILED",
+      "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+      null,
+      undefined,
+    ]) {
+      const saved = { ...result, current_source_integrity: value };
+      expect(parseResult(saved)).toEqual(saved);
+      expect(parseCurrentSourceIntegrity(value)).toBe(value ?? null);
+    }
+    for (const value of [
+      "PASS",
+      "",
+      true,
+      [],
+      {},
+      "KNOWN_ECONOMIC_COVERAGE_GAP",
+    ]) {
+      expect(() => parseCurrentSourceIntegrity(value)).toThrow(
+        ApiContractError,
+      );
+      expect(() =>
+        parseResult({ ...result, current_source_integrity: value }),
+      ).toThrow(ApiContractError);
+      expect(() =>
+        parseCapabilities({
+          ...capabilities,
+          datasets: capabilities.datasets.map((item) => ({
+            ...item,
+            current_source_integrity: value,
+          })),
+        }),
+      ).toThrow(ApiContractError);
+    }
+  });
   it("validates observed failure identity without inventing legacy context", () => {
     const error_context = {
       trading_date: "2024-01-04",

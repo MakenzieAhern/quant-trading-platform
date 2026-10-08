@@ -14,7 +14,7 @@ import { usePageDataContext } from "../dataContext";
 import { experimentApi } from "./api";
 import { experimentBenchmarkName, useExperimentCopy } from "./copy";
 import { useComparisonCopy } from "./comparisonCopy";
-import { explainExperimentCode } from "./codes";
+import { explainDatasetFindings, explainExperimentCode } from "./codes";
 import { experimentError } from "./errors";
 import { ExperimentCollections } from "./ExperimentCollections";
 import { ExperimentPlan } from "./ExperimentPlan";
@@ -428,10 +428,8 @@ function ExperimentResults({
           </p>
         )}
         <p>{c.noGuarantee}</p>
-        {data.current_dataset_quality && (
-          <p>
-            {explainExperimentCode(data.current_dataset_quality, i18n.language)}
-          </p>
+        {(data.current_dataset_quality || data.current_source_integrity) && (
+          <p>{explainDatasetFindings(data, i18n.language)}</p>
         )}
         {data.limitations.length > 0 && (
           <ul>
@@ -454,6 +452,7 @@ function ExperimentResults({
       <ExperimentPlan
         plan={data.simulation_plan ?? null}
         quality={data.current_dataset_quality}
+        sourceIntegrity={data.current_source_integrity}
       />
       {job.status === "SUCCEEDED" && (
         <Link

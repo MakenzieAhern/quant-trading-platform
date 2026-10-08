@@ -14,6 +14,8 @@ import { Link } from "../components/Link";
 import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
 import { useApiResource } from "../hooks/useApiResource";
 import { experimentApi } from "../product/experiments/api";
+import { explainExperimentCode } from "../product/experiments/codes";
+import { executionAdmissionCode } from "../product/experiments/errors";
 import { canUsePaperHandoff } from "../product/experiments/paperHandoff";
 import type { Experiment } from "../product/experiments/types";
 import type { CreatePaperSessionRequest, PaperSession } from "../types/paper";
@@ -278,6 +280,8 @@ function definitelyNotCreated(reason: unknown): boolean {
 }
 
 function paperCreateError(reason: unknown): string {
+  const admission = executionAdmissionCode(reason);
+  if (admission) return admission;
   return reason instanceof ApiError &&
     (reason.status === 401 || reason.status === 403)
     ? "common:loadErrors.permission"
@@ -331,7 +335,7 @@ function PaperCreateRecoveryPanel({
   saved: PendingPaperCreate[] | null;
   onSavedChange: () => void;
 }) {
-  const { t } = useTranslation("paper");
+  const { t, i18n } = useTranslation("paper");
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const locked = useRef(false);
@@ -482,7 +486,11 @@ function PaperCreateRecoveryPanel({
           );
         })}
       </ul>
-      {error && <p role="alert">{t(error)}</p>}
+      {error && (
+        <p role="alert">
+          {explainExperimentCode(error, i18n.language, t(error))}
+        </p>
+      )}
     </section>
   );
 }
@@ -602,7 +610,7 @@ function PaperSessionForm({
   onSavedChange: () => void;
   canCreateAnother: boolean;
 }) {
-  const { t } = useTranslation("paper");
+  const { t, i18n } = useTranslation("paper");
   const sourceConfig = sourceJob?.configuration;
   const historicalDraft =
     sourceDraft?.provider_type === "historical_a_share" ? sourceDraft : null;
@@ -1279,7 +1287,7 @@ function PaperSessionForm({
         )}
         {error && (
           <div id="paper-form-error" className="formError" role="alert">
-            {t(error)}
+            {explainExperimentCode(error, i18n.language, t(error))}
           </div>
         )}
         <div className="formActions">

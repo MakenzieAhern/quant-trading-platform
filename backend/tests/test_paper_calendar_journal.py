@@ -43,7 +43,18 @@ def manager_with_journal(
     )
     journal = []
     current = initial
-    manager = PaperTradingManager(MagicMock(), MagicMock(), MagicMock(), clock=lambda: NOW)
+    # Only synthetic calendar/runtime inputs below; source admission is separately tested.
+    admitted_fixture = MagicMock()
+    admitted_fixture.resolve.return_value = {
+        "sha256": initial.strategy_parameters["dataset_sha256"]
+    }
+    manager = PaperTradingManager(
+        MagicMock(),
+        MagicMock(),
+        MagicMock(),
+        historical_datasets=admitted_fixture,
+        clock=lambda: NOW,
+    )
     manager.events = AsyncMock(side_effect=lambda _: tuple(journal))
     manager.get = AsyncMock(side_effect=lambda _: current)
     runtimes = []

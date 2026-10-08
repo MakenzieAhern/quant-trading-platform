@@ -1,5 +1,30 @@
 # Current state
 
+## v1.2 source execution guard and saved-version findings — 2026-10-08
+
+Scoped engineering and isolated browser PASS; NOT yet loaded by original8000/5173.
+Shared registry rejects known-invalid/unverified historical sources; paper checks
+its saved SHA before STARTING. Cache reads and old idempotent receipts remain.
+Saved results/exports/formal records/accounts project independent source findings
+using their own ID+SHA; old plans, financial strings and frozen bytes stay intact.
+Frontend reuses one bilingual explanation/strict parsers, including source-only
+notes and accessible descriptions.
+
+1579 backend PASS +1 existing optional archive SKIP, 840 frontend PASS in49files,
+Ruff/format/mypy/ESLint/types/build/Alembic check PASS. Independent read-only reviews
+no scoped P1/P2. Actual IAB EN1440/ZH390 proof uses synthetic paused account plus
+real readonly registry/projection, not original DB/financial execution. Native124
+bindings twicePASS:02bebe0082f034d1524aa4f6acf0a6c8eb69ad631854c0e7f595d0acf199187b.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission/README.md>).
+
+Own QA stopped/closed; disposable tmpfs test PG stopped0/retained. Original four
+services unchanged/healthy, source/frozen/research/tag intact. Fresh original DB
+0017==head; 12 research/5 STOPPED paper/4 update jobs terminal,417paper events.
+Next verify pending receipts/ownership and a bounded original-backend-only restart
+plus frontend publication; do not recreate/copy scratch or refresh denied44tables.
+This is not source repair or full financial admission. All U1–U8/M0–M5 ACTIVE,
+M3/M4/M5 IN_PROGRESS; GitHub HOLD/no requests/push/merge/tag/release.
+
 ## v1.2 visible market notice published; next source admission guard — 2026-10-08
 
 M3/M4/M5 IN_PROGRESS, full U1–U8/M0–M5 ACTIVE/PARTIAL. Market economic-quality

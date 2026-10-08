@@ -1,5 +1,37 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-08 source admission and saved-version findings — scoped PASS
+
+- Previous user-answer turn completed the live frontend handle13929: terminal0,
+  840tests/static/build. That validation completion is PROGRESS; service-status
+  restatements alone are not progress. Full objective unchanged.
+- Actual REDs: admission9, stronger real-registry pin3, read projection9,
+  notice5; final1579backend/1existingoptionalSKIP28.60s +840frontend49files16.10s.
+  Ruff/format/mypy146/ESLint/types/build/0017/Alembic check PASS. No test weakened.
+- Shared expected SHA compares one registry read; paper guard precedes transition,
+  old active/receipt idempotency and readonly candidate cache remain. Source code
+  identifies exact saved versions independently from economic quality.
+- Results/JSONCSV/formal/archive/accounts and existing notices use saved lineage;
+  tests preserve old summary/plan/Decimal strings. Strict enum parser and localized
+  create/resume422 errors retain unrelated-error fallback. Source-only note/aria
+  regression explicitly added; independent backend/frontend review no scopedP1P2.
+- IAB current-built UI EN1440/ZH390: data-card combined note/demo clear, account
+  portfolio/plan notices, one resume422 and no locale resubmit/PAUSED retained.
+  Synthetic account+actual registry, no DB/manager/fill/real financial proof.
+  Deliberate missing QA update APIs404 and initial WS failure retained/scoped.
+- Native124 bindings twicePASS checksum02bebe0082f034d1524aa4f6acf0a6c8eb69ad631854c0e7f595d0acf199187b.
+  All logs closed before seal; old code-bound evidence historical, not resealed.
+- Own QA762760 fresh argv/cwd/start verified then TERM/application complete;
+  handle53202 intentional1. Existing tmpfs PGbe259c15 no mounts/ports/otherclients,
+  stopped0/OOMfalse/retained (only disposable rows lost). Original fourstarts same,
+  HTTP200paper/5173/PONG/PGready; frozen/research/tag unchanged.
+- Initial cleanup shell quoting failed before execution; direct read-only probes
+  fixed. Later publication preflight wrong DB/table/file guesses failed read-only,
+  then actual inventory resolved quant_platform/paper_trading_sessions/0017.
+- Original code NOT yet reloaded/deployed. Next bounded existing-container
+  publication, never denied scratch/source-copy/44table refresh. No strategy/OOS,
+  provider acquisition, original SQL write or GitHub action in this unit.
+
 ## 2026-10-08 v1.2 current local market quality notice — scoped PASS
 
 - Previous CI-availability answer NO_PROJECT_PROGRESS; actual minimal repair,

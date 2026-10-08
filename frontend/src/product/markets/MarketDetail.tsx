@@ -4,7 +4,7 @@ import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatUtc } from "../../utils/format";
 import { ProductError } from "../ProductPages";
-import { explainExperimentCode } from "../experiments/codes";
+import { explainDatasetFindings } from "../experiments/codes";
 import { usePreferences } from "../preferences";
 import { closingPrice, marketApi, validRange } from "./api";
 import { observationLabel, riskLabel, useMarketCopy } from "./copy";
@@ -184,9 +184,9 @@ function MarketObservation({
   const { metadata: m, security, items } = data;
   return (
     <>
-      {m.current_dataset_quality && (
+      {(m.current_dataset_quality || m.current_source_integrity) && (
         <p className="marketNotice" role="note">
-          {explainExperimentCode(m.current_dataset_quality, i18n.language)}
+          {explainDatasetFindings(m, i18n.language)}
         </p>
       )}
       <section className="marketPanel">

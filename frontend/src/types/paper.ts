@@ -1,5 +1,6 @@
 import type {
   CurrentDatasetQuality,
+  CurrentSourceIntegrity,
   PaperAccountPlan,
 } from "../product/experiments/types";
 
@@ -133,6 +134,7 @@ export interface PaperPortfolio {
 
 export interface PaperSnapshot {
   current_dataset_quality?: CurrentDatasetQuality;
+  current_source_integrity?: CurrentSourceIntegrity;
   session: PaperSession;
   last_sequence: number;
   latest_bar: MarketBar | null;

@@ -244,6 +244,7 @@ class PaperStateResponse(BaseModel):
     latest_portfolio: PortfolioPayload | None
     last_rebalance_plan: dict[str, Any] | None = None
     current_dataset_quality: str | None = None
+    current_source_integrity: str | None = None
 
 
 class PaperSnapshotResponse(PaperStateResponse):

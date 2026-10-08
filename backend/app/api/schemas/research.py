@@ -27,6 +27,7 @@ class MarketResponse(ApiModel):
 class DatasetResponse(ApiModel):
     dataset_id: str
     current_dataset_quality: str | None = None
+    current_source_integrity: str | None = None
     provider: str
     provider_version: str
     retrieval_timestamp: datetime
@@ -61,6 +62,7 @@ class CreateResearchRunRequest(ApiModel):
 class ResearchRunResponse(ApiModel):
     run_id: UUID
     current_dataset_quality: str | None = None
+    current_source_integrity: str | None = None
     status: str
     period_kind: ResearchPeriodKind
     git_commit: str

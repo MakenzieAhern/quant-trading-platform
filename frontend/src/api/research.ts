@@ -13,7 +13,10 @@ import type {
 } from "../types/research";
 import { ApiContractError } from "./contracts";
 import { apiRequest } from "./client";
-import { parseCurrentDatasetQuality } from "../product/experiments/api";
+import {
+  parseCurrentDatasetQuality,
+  parseCurrentSourceIntegrity,
+} from "../product/experiments/api";
 import type { DateRange } from "../product/experiments/types";
 
 const DECIMAL = /^-?\d+(?:\.\d+)?$/;
@@ -50,6 +53,7 @@ function page<T>(value: unknown, parse: (item: unknown) => T): ResearchPage<T> {
 function dataset(value: unknown): ResearchDataset {
   const item = record(value);
   parseCurrentDatasetQuality(item.current_dataset_quality);
+  parseCurrentSourceIntegrity(item.current_source_integrity);
   for (const key of [
     "dataset_id",
     "provider",
@@ -94,6 +98,7 @@ function strategy(value: unknown): ResearchStrategy {
 function run(value: unknown): ResearchRun {
   const item = record(value);
   parseCurrentDatasetQuality(item.current_dataset_quality);
+  parseCurrentSourceIntegrity(item.current_source_integrity);
   for (const key of [
     "run_id",
     "status",

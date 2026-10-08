@@ -212,6 +212,7 @@ it("focuses an asynchronous server error summary without inventing an invalid fi
 it.each([
   "KNOWN_ECONOMIC_COVERAGE_GAP",
   "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+  null,
 ] as const)(
   "discloses selected source quality before running, preserving the translated exact draft: %s",
   async (quality) => {
@@ -221,6 +222,7 @@ it.each([
       dataset_id: "cn-a-test-history-v1",
       mode: "historical_exploration" as const,
       current_dataset_quality: quality,
+      current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED" as const,
     };
     vi.mocked(experimentApi.capabilities).mockResolvedValue({
       ...capabilities,
@@ -230,7 +232,10 @@ it.each([
     saveExperimentDraft(form, 1, "quality-disclosure");
     render(<CreateExperimentPage />);
     const source = await screen.findByLabelText("Data source");
-    const english = explainExperimentCode(quality, "en-US");
+    const english = [quality, "SOURCE_CONTRACT_INTEGRITY_FAILED"]
+      .filter((code) => code !== null)
+      .map((code) => explainExperimentCode(code, "en-US"))
+      .join(" ");
     expect(screen.getByRole("note")).toHaveTextContent(english);
     expect(source).toHaveAccessibleDescription(
       `Data source: ${historical.dataset_id} ${english}`,
@@ -238,7 +243,10 @@ it.each([
     await act(async () => {
       await i18n.changeLanguage("zh-CN");
     });
-    const chinese = explainExperimentCode(quality, "zh-CN");
+    const chinese = [quality, "SOURCE_CONTRACT_INTEGRITY_FAILED"]
+      .filter((code) => code !== null)
+      .map((code) => explainExperimentCode(code, "zh-CN"))
+      .join(" ");
     expect(screen.getByRole("note")).toHaveTextContent(chinese);
     expect(source).toHaveAccessibleDescription(
       `数据来源: ${historical.dataset_id} ${chinese}`,

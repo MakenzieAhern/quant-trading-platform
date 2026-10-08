@@ -8,7 +8,7 @@ from collections.abc import AsyncIterator, Iterable
 from datetime import UTC, date, datetime
 from typing import Any
 
-from app.application.experiments.data import current_dataset_quality
+from app.application.experiments.data import current_dataset_quality, current_source_integrity
 from app.application.experiments.service import (
     COLLECTIONS,
     ExperimentManager,
@@ -75,6 +75,7 @@ def report_metadata(
     return {
         "report_schema_version": 1,
         "current_dataset_quality": current_dataset_quality(row.dataset_id, row.dataset_sha256),
+        "current_source_integrity": current_source_integrity(row.dataset_id, row.dataset_sha256),
         "job_id": str(row.id),
         "name": row.name,
         "status": row.status,

@@ -88,6 +88,7 @@ test.each(["S0", "S1"])(
         "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e",
       diagnostics: { candidate },
       current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP" as const,
+      current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED" as const,
     };
     const before = JSON.stringify(saved);
     vi.mocked(researchApi.run).mockResolvedValue(saved);
@@ -98,6 +99,11 @@ test.each(["S0", "S1"])(
       ),
     ).toHaveAttribute("role", "note");
     expect(
+      screen.getByText(
+        /A later review found an unmodeled corporate-action gap/,
+      ),
+    ).toHaveTextContent("source references failed verification");
+    expect(
       screen.queryByText(
         /Earlier versions of this historical execution engine/,
       ),
@@ -107,6 +113,9 @@ test.each(["S0", "S1"])(
     expect(
       screen.getByText(/后续复核发现此冻结数据版本存在尚未建模的公司行动缺口/),
     ).toBeVisible();
+    expect(
+      screen.getByText(/后续复核发现此冻结数据版本存在尚未建模的公司行动缺口/),
+    ).toHaveTextContent("来源引用未通过验证");
     expect(JSON.stringify(saved)).toBe(before);
     expect(researchApi.run).toHaveBeenCalledOnce();
   },
@@ -128,6 +137,7 @@ test("shows unknown current quality without rewriting a frozen dataset manifest"
     frozen: true,
     manifest: { checksum: "original" },
     current_dataset_quality: "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+    current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
   };
   const before = JSON.stringify(saved);
   vi.mocked(researchApi.dataset).mockResolvedValue(saved);
@@ -135,6 +145,9 @@ test("shows unknown current quality without rewriting a frozen dataset manifest"
   expect(
     await screen.findByText(/Economic completeness is unknown/),
   ).toHaveAttribute("role", "note");
+  expect(screen.getByRole("note")).toHaveTextContent(
+    "source integrity has not been verified",
+  );
   language = "zh-CN";
   view.rerender(<ResearchDatasetPage datasetId="old" />);
   expect(screen.getByText(/经济完整性未知/)).toBeVisible();

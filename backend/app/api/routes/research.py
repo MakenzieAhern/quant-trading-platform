@@ -24,7 +24,7 @@ from app.api.schemas.research import (
     TradeResponse,
 )
 from app.application.backtests.decimal_policy import canonical_decimal
-from app.application.experiments.data import current_dataset_quality
+from app.application.experiments.data import current_dataset_quality, current_source_integrity
 from app.db.models.research import (
     ResearchBenchmarkPointModel,
     ResearchDatasetModel,
@@ -89,6 +89,7 @@ def _dataset(model: ResearchDatasetModel, *, detail: bool = False) -> DatasetRes
     return DatasetResponse(
         dataset_id=model.dataset_id,
         current_dataset_quality=current_dataset_quality(model.dataset_id, model.canonical_sha256),
+        current_source_integrity=current_source_integrity(model.dataset_id, model.canonical_sha256),
         provider=model.provider,
         provider_version=model.provider_version,
         retrieval_timestamp=model.retrieval_timestamp,
@@ -108,6 +109,7 @@ def _run(model: ResearchRunModel) -> ResearchRunResponse:
     return ResearchRunResponse(
         run_id=model.id,
         current_dataset_quality=current_dataset_quality(model.dataset_id, model.dataset_checksum),
+        current_source_integrity=current_source_integrity(model.dataset_id, model.dataset_checksum),
         status=model.status,
         period_kind=ResearchPeriodKind(model.period_kind),
         git_commit=model.git_commit,

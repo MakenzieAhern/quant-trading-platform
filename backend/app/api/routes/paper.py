@@ -37,7 +37,12 @@ from app.application.backtests.registry import (
     UnknownDatasetError,
     UnknownStrategyError,
 )
-from app.application.experiments.data import ExperimentDatasetRegistry, current_dataset_quality
+from app.application.experiments.data import (
+    ExperimentDatasetRegistry,
+    ExperimentInputError,
+    current_dataset_quality,
+    current_source_integrity,
+)
 from app.application.paper_trading import (
     PaperSessionConflictError,
     PaperSessionStateError,
@@ -162,6 +167,8 @@ async def start_paper_session(session_id: UUID) -> PaperSessionResponse:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found") from exc
     except PaperSessionStateError as exc:
         raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
+    except ExperimentInputError as exc:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, exc.code) from exc
 
 
 @router.post("/{session_id}/stop", response_model=PaperSessionResponse)
@@ -291,6 +298,9 @@ def _snapshot_response(
     return PaperSnapshotResponse(
         session=_session_response(session),
         current_dataset_quality=current_dataset_quality(
+            session.dataset_id, session.strategy_parameters.get("dataset_sha256")
+        ),
+        current_source_integrity=current_source_integrity(
             session.dataset_id, session.strategy_parameters.get("dataset_sha256")
         ),
         last_sequence=last_sequence,

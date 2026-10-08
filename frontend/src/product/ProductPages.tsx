@@ -8,7 +8,10 @@ import { navigate, replaceUrl } from "../utils/navigation";
 import { experimentApi } from "./experiments/api";
 import { useExperimentCopy } from "./experiments/copy";
 import { readExperimentDraft } from "./experiments/draft";
-import { explainExperimentCode } from "./experiments/codes";
+import {
+  explainDatasetFindings,
+  explainExperimentCode,
+} from "./experiments/codes";
 import { productHelpTopics, useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
 import { usePreferences } from "./preferences";
@@ -504,12 +507,9 @@ export function DataCenterPage() {
           <p className="dataCardNote">
             {item.mode === "synthetic_demo" ? c.demoHelp : c.staleHint}
           </p>
-          {item.current_dataset_quality && (
+          {(item.current_dataset_quality || item.current_source_integrity) && (
             <p className="inlineNotice" role="note">
-              {explainExperimentCode(
-                item.current_dataset_quality,
-                i18n.language,
-              )}
+              {explainDatasetFindings(item, i18n.language)}
             </p>
           )}
           <details className="technicalDetails">

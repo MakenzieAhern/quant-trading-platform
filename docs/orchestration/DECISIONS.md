@@ -1,5 +1,26 @@
 # Decisions
 
+## v1.2 Keep source findings separate from economic quality — 2026-10-08
+
+Reuse the existing registry boundary, parser/error map and note style. Exact known
+saved version gets SOURCE_CONTRACT_INTEGRITY_FAILED; other historical pins get
+UNVERIFIED, never optimistic PASS. Check expected SHA against the same registry
+item before execution admission; paper missing pins reject before STARTING.
+Readonly cache inspection and prior idempotent receipts remain legitimate reads.
+
+Project source findings from each saved record's ID+SHA; do not mutate stored
+summary/plan or borrow today's mounted version/plan SHA. One bilingual helper
+renders independent economic/source findings without duplicated note regions.
+Strict unknown-code rejection and source-only aria/plan tests protect UI boundaries.
+1579backend+1optionalSKIP/840frontend/static/type/build/Alembic PASS; independent
+readonly scoped review complete,124private byte bindings sealed02bebe0082.
+
+Isolated browser account/idle WS is explicitly synthetic. Original service health
+is not proof it has loaded these changes. Existing backend-only restart can be
+considered separately after0017/no-active/no-pending/ownership checks; startup is
+not read-only. Keep prior denied scratch/source-copy/44-table-refresh routes stopped.
+No new dependency, dataset approval, frozen/methodology/OOS/identity/GitHub change.
+
 ## v1.2 Reuse exact-version quality across all market reads — 2026-10-08
 
 One dataset parser call validates existing metadata in catalog/search/bars.

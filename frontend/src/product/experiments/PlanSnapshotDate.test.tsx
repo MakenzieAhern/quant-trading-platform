@@ -67,7 +67,11 @@ describe("saved plan account date", () => {
       await act(async () => i18n.changeLanguage(locale));
       const before = JSON.stringify(plan);
       const view = render(
-        <ExperimentPlan plan={plan} quality="KNOWN_ECONOMIC_COVERAGE_GAP" />,
+        <ExperimentPlan
+          plan={plan}
+          quality="KNOWN_ECONOMIC_COVERAGE_GAP"
+          sourceIntegrity="SOURCE_CONTRACT_INTEGRITY_FAILED"
+        />,
       );
       expect(screen.getByRole("note")).toHaveTextContent(
         locale === "en-US"
@@ -75,6 +79,11 @@ describe("saved plan account date", () => {
           : "经济完整性尚未验证",
       );
       expect(screen.getByText("90,123.000000000000000001")).toBeVisible();
+      expect(screen.getByRole("note")).toHaveTextContent(
+        locale === "en-US"
+          ? "source references failed verification"
+          : "来源引用未通过验证",
+      );
       view.rerender(
         <ExperimentPlan
           plan={plan}
@@ -85,6 +94,21 @@ describe("saved plan account date", () => {
         locale === "en-US"
           ? "Economic completeness is unknown"
           : "经济完整性未知",
+      );
+      expect(JSON.stringify(plan)).toBe(before);
+      view.rerender(
+        <ExperimentPlan
+          plan={plan}
+          sourceIntegrity="SOURCE_CONTRACT_INTEGRITY_UNVERIFIED"
+        />,
+      );
+      expect(screen.getByRole("note")).toHaveTextContent(
+        locale === "en-US"
+          ? "source integrity has not been verified"
+          : "来源完整性尚未验证",
+      );
+      expect(screen.getByRole("note")).not.toHaveTextContent(
+        locale === "en-US" ? "Economic completeness" : "经济完整性",
       );
       expect(JSON.stringify(plan)).toBe(before);
       await act(async () => i18n.changeLanguage("en-US"));

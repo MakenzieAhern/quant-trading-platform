@@ -196,6 +196,7 @@ it.each(["en-US", "zh-CN"])(
       dataset_id: "cn-a-research-20100101-20251231-v1",
       mode: "historical_exploration" as const,
       current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP" as const,
+      current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED" as const,
     };
     const data = {
       ...capabilities,
@@ -213,6 +214,11 @@ it.each(["en-US", "zh-CN"])(
         : "经济完整性尚未验证",
     );
     expect(historical.available).toBe(true);
+    expect(notice).toHaveTextContent(
+      locale === "en-US"
+        ? "source references failed verification"
+        : "来源引用未通过验证",
+    );
     expect(screen.getAllByRole("note")).toHaveLength(1);
     expect(JSON.stringify(data)).toBe(before);
     expect(read).toHaveBeenCalledOnce();

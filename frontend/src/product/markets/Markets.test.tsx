@@ -91,19 +91,33 @@ describe("historical cache markets", () => {
     "shows %s in both languages on the selected source and actual observations",
     async (quality, en, zh) => {
       vi.mocked(marketApi.datasets).mockResolvedValue([
-        { ...dataset, current_dataset_quality: quality },
+        {
+          ...dataset,
+          current_dataset_quality: quality,
+          current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED",
+        },
         demo,
       ]);
       vi.mocked(marketApi.bars).mockResolvedValue({
         ...bars,
-        metadata: { ...metadata, current_dataset_quality: quality },
+        metadata: {
+          ...metadata,
+          current_dataset_quality: quality,
+          current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED",
+        },
       });
       render(<MarketsPage />);
       const sourceNotice = await screen.findByRole("note");
       expect(sourceNotice).toHaveTextContent(en);
+      expect(sourceNotice).toHaveTextContent(
+        "source references failed verification",
+      );
       const dialog = await openSecurity();
       const detailNotice = await within(dialog).findByRole("note");
       expect(detailNotice).toHaveTextContent(en);
+      expect(detailNotice).toHaveTextContent(
+        "source references failed verification",
+      );
       await userEvent.selectOptions(
         within(dialog).getByLabelText("Inspect trading date"),
         "2024-02-27",
@@ -115,6 +129,8 @@ describe("historical cache markets", () => {
       await act(async () => i18n.changeLanguage("zh-CN"));
       expect(sourceNotice).toHaveTextContent(zh);
       expect(detailNotice).toHaveTextContent(zh);
+      expect(sourceNotice).toHaveTextContent("来源引用未通过验证");
+      expect(detailNotice).toHaveTextContent("来源引用未通过验证");
       expect(within(dialog).getByLabelText("开始日期")).toHaveValue(
         "2024-02-27",
       );

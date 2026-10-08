@@ -1062,12 +1062,23 @@ async def test_missing_resume_checkpoint_does_not_append_unverified_market_ledge
     assert (await client.post(f"/api/paper-trading/sessions/{session_id}/start")).status_code == 409
 
 
-async def test_real_archive_pause_resume_preserves_pending_orders_and_fills(
+async def test_real_archive_admission_or_pause_resume_preserves_pending_orders_and_fills(
     client: AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     if not (settings.research_data_path / HISTORICAL_ID).is_dir():
         pytest.skip("optional read-only historical archive is not mounted")
     body = historical_request_body()
+    registered = paper_routes.ExperimentDatasetRegistry(settings.research_data_path).resolve(
+        HISTORICAL_ID, for_execution=False
+    )
+    if not registered["execution_available"]:
+        before = (await client.get("/api/paper-trading/sessions")).json()
+        denied = await client.post("/api/paper-trading/sessions", json=body)
+        assert denied.status_code == 422
+        assert denied.json()["detail"] == registered["execution_reason_code"]
+        assert (await client.get("/api/paper-trading/sessions")).json() == before
+        assert not paper_manager._tasks
+        return
     assert isinstance(body["strategy"], dict)
     body["strategy"]["parameters"]["end_date"] = "2011-03-23"
 

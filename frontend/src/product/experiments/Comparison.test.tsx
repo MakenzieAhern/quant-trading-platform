@@ -54,6 +54,7 @@ describe("experiment comparison", () => {
         ...result,
         current_dataset_quality: quality as
           "KNOWN_ECONOMIC_COVERAGE_GAP" | "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+        current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED" as const,
       };
       const before = JSON.stringify(saved);
       vi.spyOn(experimentApi, "get").mockImplementation(async (id) =>
@@ -70,6 +71,11 @@ describe("experiment comparison", () => {
             : "已保存的完整区间结果",
       });
       const note = screen.getByRole("note");
+      expect(note).toHaveTextContent(
+        locale === "en-US"
+          ? "source references failed verification"
+          : "来源引用未通过验证",
+      );
       expect(note).toHaveTextContent("1. Study 1");
       expect(note).not.toHaveTextContent("2. Study 2");
       expect(note).not.toHaveTextContent("3. Study 3");
@@ -124,6 +130,7 @@ describe("experiment comparison", () => {
       const saved = {
         ...result,
         current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP" as const,
+        current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED" as const,
       };
       const before = JSON.stringify(saved);
       vi.spyOn(experimentApi, "get").mockImplementation(async (id) =>

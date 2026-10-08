@@ -18,6 +18,7 @@ from app.application.experiments.data import (
     ExperimentDatasetRegistry,
     ExperimentInputError,
     current_dataset_quality,
+    current_source_integrity,
 )
 from app.application.experiments.export import export_csv, export_json
 from app.application.experiments.service import (
@@ -155,7 +156,16 @@ async def experiment_result(job_id: UUID, request: Request) -> dict[str, Any] | 
         if row.summary is None:
             raise ExperimentConflictError("RESULT_NOT_READY")
         quality = current_dataset_quality(row.dataset_id, row.dataset_sha256)
-        return {**row.summary, "current_dataset_quality": quality} if quality else row.summary
+        integrity = current_source_integrity(row.dataset_id, row.dataset_sha256)
+        return (
+            {
+                **row.summary,
+                "current_dataset_quality": quality,
+                "current_source_integrity": integrity,
+            }
+            if quality or integrity
+            else row.summary
+        )
     except (LookupError, ExperimentConflictError) as exc:
         return _error(request, exc)
 

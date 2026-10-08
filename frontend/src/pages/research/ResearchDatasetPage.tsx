@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { explainExperimentCode } from "../../product/experiments/codes";
+import { explainDatasetFindings } from "../../product/experiments/codes";
 
 import { researchApi } from "../../api/research";
 import { ErrorPanel, LoadingPanel } from "../../components/AsyncPanel";
@@ -28,12 +28,10 @@ export function ResearchDatasetPage({ datasetId }: { datasetId: string }) {
           <h1>{dataset.data.dataset_id}</h1>
         </div>
       </header>
-      {dataset.data.current_dataset_quality && (
+      {(dataset.data.current_dataset_quality ||
+        dataset.data.current_source_integrity) && (
         <p className="oosGuard" role="note">
-          {explainExperimentCode(
-            dataset.data.current_dataset_quality,
-            i18n.language,
-          )}
+          {explainDatasetFindings(dataset.data, i18n.language)}
         </p>
       )}
       <section className="runFacts" aria-label={t("research:lineage")}>

@@ -72,6 +72,7 @@ async def test_read_quality_is_bound_to_saved_account_not_mutable_plan_or_regist
     from app.application.experiments.data import (
         HISTORICAL_ECONOMIC_GAP_SHA,
         current_dataset_quality,
+        current_source_integrity,
     )
 
     session = account()
@@ -103,12 +104,16 @@ async def test_read_quality_is_bound_to_saved_account_not_mutable_plan_or_regist
     snapshot = _snapshot_response(session, history, len(history))
     expected = current_dataset_quality(session.dataset_id, sha)
     assert snapshot.current_dataset_quality == expected
+    integrity = current_source_integrity(session.dataset_id, sha)
+    assert snapshot.current_source_integrity == integrity
     state = PaperStateResponse.model_validate(
         snapshot.model_dump(exclude={"signals", "risk_decisions", "orders", "fills"})
     )
     assert state.current_dataset_quality == expected
+    assert state.current_source_integrity == integrity
     assert snapshot.last_rebalance_plan is not None
     assert "current_dataset_quality" not in snapshot.last_rebalance_plan
+    assert "current_source_integrity" not in snapshot.last_rebalance_plan
     assert session.strategy_parameters == before and repr(history) == original
     assert [
         canonical_sha256(event.payload["plan"]) for event in history if "plan" in event.payload

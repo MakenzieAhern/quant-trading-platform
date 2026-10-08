@@ -3,6 +3,18 @@ import { i18n } from "../../i18n";
 import { explainExperimentCode } from "./codes";
 import type { ExperimentCopy } from "./copy";
 
+export function executionAdmissionCode(reason: unknown): string | null {
+  if (!(reason instanceof ApiError) || reason.status !== 422) return null;
+  const code = reason.code ?? reason.message;
+  return [
+    "SOURCE_CONTRACT_INTEGRITY_FAILED",
+    "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+    "DATASET_CHANGED_SINCE_SUBMISSION",
+  ].includes(code)
+    ? code
+    : null;
+}
+
 export function experimentError(reason: unknown, c: ExperimentCopy) {
   if (!(reason instanceof ApiError)) return c.networkError;
   if (reason.status === 401 || reason.status === 403)

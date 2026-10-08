@@ -71,6 +71,7 @@ describe("paper API contracts", () => {
     const header = {
       ...paperState(boundedSnapshot()),
       current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP",
+      current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED",
     };
     const before = JSON.stringify(header);
     const fetch = vi
@@ -80,6 +81,10 @@ describe("paper API contracts", () => {
     expect(JSON.stringify(header)).toBe(before);
     fetch.mockResolvedValue(
       jsonResponse({ ...header, current_dataset_quality: "PASS" }),
+    );
+    await expect(paperApi.state(PAPER_ID)).rejects.toThrow();
+    fetch.mockResolvedValue(
+      jsonResponse({ ...header, current_source_integrity: "PASS" }),
     );
     await expect(paperApi.state(PAPER_ID)).rejects.toThrow();
   });

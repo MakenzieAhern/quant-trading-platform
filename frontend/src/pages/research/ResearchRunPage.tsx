@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { explainExperimentCode } from "../../product/experiments/codes";
+import { explainDatasetFindings } from "../../product/experiments/codes";
 
 import { ApiContractError } from "../../api/contracts";
 import { researchApi } from "../../api/research";
@@ -193,12 +193,10 @@ export function ResearchRunPage({ runId }: { runId: string }) {
               : c.historicalExecutionUnverified}
           </div>
         )}
-      {run.data.current_dataset_quality && (
+      {(run.data.current_dataset_quality ||
+        run.data.current_source_integrity) && (
         <p className="oosGuard" role="note">
-          {explainExperimentCode(
-            run.data.current_dataset_quality,
-            i18n.language,
-          )}
+          {explainDatasetFindings(run.data, i18n.language)}
         </p>
       )}
       <section className="runFacts" aria-label={t("research:lineage")}>

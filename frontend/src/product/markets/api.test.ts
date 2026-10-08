@@ -11,6 +11,39 @@ import {
 } from "./fixtures.test-data";
 
 describe("market HTTP boundary", () => {
+  it("rejects source PASS claims in catalog, search and bars", async () => {
+    const invalid = { ...metadata, current_source_integrity: "PASS" };
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        jsonResponse([{ ...dataset, current_source_integrity: "PASS" }]),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          items: [],
+          total: 0,
+          limit: 20,
+          offset: 0,
+          metadata: invalid,
+        }),
+      );
+    await expect(marketApi.datasets()).rejects.toThrow();
+    await expect(
+      marketApi.search(dataset.dataset_id, "", "ALL"),
+    ).rejects.toThrow();
+    expect(() => parseBars({ ...bars, metadata: invalid })).toThrow();
+    for (const value of [
+      "SOURCE_CONTRACT_INTEGRITY_FAILED",
+      "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+      null,
+      undefined,
+    ]) {
+      const input = {
+        ...bars,
+        metadata: { ...metadata, current_source_integrity: value },
+      };
+      expect(parseBars(input)).toEqual(input);
+    }
+  });
   it.each(["PASS", true, 0, {}, [], "__proto__"])(
     "rejects unrecognized current quality %j in catalog, search and bars",
     async (quality) => {

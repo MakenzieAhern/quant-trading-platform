@@ -23,6 +23,7 @@ from app.application.experiments.data import (
     ExperimentInputError,
     SyntheticExperimentDataset,
     current_dataset_quality,
+    current_source_integrity,
 )
 from app.application.experiments.models import CreateExperimentRequest
 from app.application.experiments.runner import (
@@ -63,6 +64,14 @@ def test_later_dataset_quality_uses_saved_exact_identity_not_mode_or_mounted_sha
     dataset_id, sha, expected
 ):
     assert current_dataset_quality(dataset_id, sha) == expected
+    assert (
+        current_source_integrity(dataset_id, sha)
+        == {
+            "KNOWN_ECONOMIC_COVERAGE_GAP": "SOURCE_CONTRACT_INTEGRITY_FAILED",
+            "HISTORICAL_DATASET_QUALITY_UNKNOWN": "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+            None: None,
+        }[expected]
+    )
 
 
 @pytest.mark.parametrize("sha", [HISTORICAL_ECONOMIC_GAP_SHA, "b" * 64])
@@ -97,13 +106,21 @@ async def test_read_and_export_quality_do_not_rewrite_original_summary_or_plan(m
     read = await experiments.experiment_result(row.id, None)
     quality = current_dataset_quality(HISTORICAL_ID, sha)
     assert read is not summary and read["current_dataset_quality"] == quality
-    assert {k: v for k, v in read.items() if k != "current_dataset_quality"} == summary
+    integrity = current_source_integrity(HISTORICAL_ID, sha)
+    assert read["current_source_integrity"] == integrity
+    assert {
+        k: v
+        for k, v in read.items()
+        if k not in {"current_dataset_quality", "current_source_integrity"}
+    } == summary
     exported = json.loads("".join([part async for part in export_json(manager, row, None, None)]))
     assert exported["metadata"]["current_dataset_quality"] == quality
+    assert exported["metadata"]["current_source_integrity"] == integrity
     assert exported["full_period_summary"] == summary
     csv_text = "".join([part async for part in export_csv(manager, row, "trades", None, None)])
     metadata = {item["field"]: item["value"] for item in csv.DictReader(io.StringIO(csv_text))}
     assert metadata["current_dataset_quality"] == quality
+    assert metadata["current_source_integrity"] == integrity
     assert json.loads(metadata["full_period_summary"]) == summary
     assert json.dumps([summary, configuration], sort_keys=True) == before
 
@@ -162,8 +179,11 @@ def test_formal_quality_projection_keeps_saved_lineage_manifest_and_diagnostics(
     before = canonical_sha256(json_value([vars(dataset), vars(run)]))
     expected = current_dataset_quality(dataset_id, sha)
     assert _dataset(dataset, detail=True).current_dataset_quality == expected
+    integrity = current_source_integrity(dataset_id, sha)
+    assert _dataset(dataset, detail=True).current_source_integrity == integrity
     result = _run(run)
     assert result.current_dataset_quality == expected and result.dataset_checksum == sha
+    assert result.current_source_integrity == integrity
     assert result.diagnostics == run.diagnostics
     assert _dataset(dataset, detail=True).manifest == dataset.manifest
     assert canonical_sha256(json_value([vars(dataset), vars(run)])) == before

@@ -1,7 +1,10 @@
 import { ApiError, apiRequest, REQUEST_TIMEOUT_MS } from "../../api/client";
 import { API_BASE_URL } from "../../api/config";
 import { ApiContractError } from "../../api/contracts";
-import { parseCurrentDatasetQuality } from "../experiments/api";
+import {
+  parseCurrentDatasetQuality,
+  parseCurrentSourceIntegrity,
+} from "../experiments/api";
 import type { Page } from "../experiments/types";
 import type {
   MarketBar,
@@ -67,6 +70,7 @@ function dataset(value: unknown): MarketDataset {
     nullableText(item.execution_reason_code);
   strings(item.universes);
   parseCurrentDatasetQuality(item.current_dataset_quality);
+  parseCurrentSourceIntegrity(item.current_source_integrity);
   return item as unknown as MarketDataset;
 }
 function security(value: unknown): Security {

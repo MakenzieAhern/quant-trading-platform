@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 U3/U4/U5/U6/U7/U8 source admission/findings — scoped PASS
+
+[Private source-bound evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission/README.md>)
+and [bilingual account example](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission/read-paper-en.jpg>).
+Shared new-execution gate and exact saved-version read projections are covered by
+1579backend+1optionalarchiveSKIP/840frontend49files/static/type/build/Alembic PASS.
+Real-registry pin REDs, read projection and notice REDs retained; source-only
+note/accessible-description branches and immutable plan/summary/precise strings
+tested. Independent read-only reviews no evidenced scopedP1/P2.
+
+IAB EN1440/ZH390 shows source/economic notices, known rejection, unchanged PAUSED
+synthetic account and no locale-triggered resubmit; no page overflow. This is
+synthetic-account UI + actual readonly registry, not production DB/manager,
+real financial path, full AA/native200/p95 or source-authority certification.
+QA data-update404s and initial WS failure remain explicitly out of passed scope.
+Native124 hash bindings twicePASS,02bebe0082f034d1524aa4f6acf0a6c8eb69ad631854c0e7f595d0acf199187b.
+
+Original8000/5173 NOT updated in this unit. All four originalservice starts,
+frozen/research/tag unchanged; temporary QA and isolated testPG stopped/retained.
+Full financial/source completeness and U1–U8/M0–M5 remain PARTIAL/ACTIVE.
+Next separately verify/load the existing local runtime without denied-route bypass.
+GitHub HOLD; no remote CI/current-head release claim.
+
 ## 2026-10-08 U5/U8 market economic-quality visibility — scoped PASS
 
 [Private byte-bound evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-market-quality/README.md>)

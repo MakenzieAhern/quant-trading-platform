@@ -260,7 +260,10 @@ class MarketUpdateManager:
             raise UpdateConflict("RECEIPT_PERSISTENCE_BLOCKED")
         if self.transport is fetch and not sdk_available():
             raise UpdateError("BAOSTOCK_SDK_NOT_INSTALLED")
-        dataset = await asyncio.to_thread(self.reader.registry.resolve, HISTORICAL_ID)
+        # Raw candidates use the archive as inspection context, never execution authority.
+        dataset = await asyncio.to_thread(
+            self.reader.registry.resolve, HISTORICAL_ID, for_execution=False
+        )
         if request.start_date <= date.fromisoformat(dataset["coverage_end"]):
             raise UpdateError("UPDATE_MUST_FOLLOW_FROZEN_COVERAGE")
         if request.end_date > latest_publishable_date(self.now()):

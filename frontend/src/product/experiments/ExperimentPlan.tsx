@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { formatDecimal, formatPercent, shortId } from "../../utils/format";
-import { explainExperimentCode } from "./codes";
+import { explainDatasetFindings, explainExperimentCode } from "./codes";
 import type {
   CurrentDatasetQuality,
+  CurrentSourceIntegrity,
   PaperAccountPlan,
   SimulationPlan,
 } from "./types";
@@ -162,10 +163,12 @@ export function ExperimentPlan({
   plan,
   account = false,
   quality,
+  sourceIntegrity,
 }: {
   plan: SimulationPlan | PaperAccountPlan | null;
   account?: boolean;
   quality?: CurrentDatasetQuality;
+  sourceIntegrity?: CurrentSourceIntegrity;
 }) {
   const { i18n } = useTranslation();
   const panel = useRef<HTMLElement>(null);
@@ -187,9 +190,15 @@ export function ExperimentPlan({
       aria-label={title}
     >
       <h2>{title}</h2>
-      {quality && (
+      {(quality || sourceIntegrity) && (
         <p className="experimentNotice" role="note">
-          {explainExperimentCode(quality, i18n.language)}
+          {explainDatasetFindings(
+            {
+              current_dataset_quality: quality,
+              current_source_integrity: sourceIntegrity,
+            },
+            i18n.language,
+          )}
         </p>
       )}
       {!plan ? (

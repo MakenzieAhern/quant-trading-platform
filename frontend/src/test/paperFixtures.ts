@@ -106,6 +106,9 @@ export function paperState(
     ...(snapshot.current_dataset_quality === undefined
       ? {}
       : { current_dataset_quality: snapshot.current_dataset_quality }),
+    ...(snapshot.current_source_integrity === undefined
+      ? {}
+      : { current_source_integrity: snapshot.current_source_integrity }),
     session: snapshot.session,
     last_sequence: snapshot.last_sequence,
     latest_bar: snapshot.latest_bar,

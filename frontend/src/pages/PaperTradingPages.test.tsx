@@ -953,6 +953,7 @@ describe("paper trading pages", () => {
       const saved = {
         ...paperSnapshot("STOPPED"),
         current_dataset_quality: quality,
+        current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED",
         latest_portfolio: {
           timestamp: "2011-03-23T07:00:00Z",
           cash: "81309.813400000000000001",
@@ -991,6 +992,11 @@ describe("paper trading pages", () => {
         })
       ).closest("section")!;
       const notice = within(portfolio).getByRole("note");
+      expect(notice).toHaveTextContent(
+        locale === "en-US"
+          ? "source references failed verification"
+          : "来源引用未通过验证",
+      );
       const planRegion = screen.getByRole("region", {
         name:
           locale === "en-US"

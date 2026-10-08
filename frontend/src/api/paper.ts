@@ -2,6 +2,7 @@ import { apiRequest } from "./client";
 import { API_BASE_URL } from "./config";
 import {
   parseCurrentDatasetQuality,
+  parseCurrentSourceIntegrity,
   parsePaperAccountPlan,
 } from "../product/experiments/api";
 import type {
@@ -362,6 +363,13 @@ function state(value: unknown): PaperState {
   )
     throw new Error("Invalid sequence.");
   const result: PaperState = {
+    ...(item.current_source_integrity === undefined
+      ? {}
+      : {
+          current_source_integrity: parseCurrentSourceIntegrity(
+            item.current_source_integrity,
+          ),
+        }),
     ...(item.current_dataset_quality === undefined
       ? {}
       : {

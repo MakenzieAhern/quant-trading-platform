@@ -1,4 +1,23 @@
 {
+  "source_execution_and_read_findings_20261008_gate": {
+    "status": "PASS_SCOPED_ENGINEERING_AND_ISOLATED_UI_NOT_ORIGINAL_DEPLOYMENT",
+    "source_parent": "1d2da17e224e162800e137b28ef6d20c1da1f4d8",
+    "progress": "Prior goal turn completed live frontend13929 terminal0/840tests/static/build: PROGRESS. Current browser/review/seal/checkpoint completes this implementation unit. Full U1-U8/M0-M5 remains ACTIVE.",
+    "implementation": "Shared registry fail-closed independent source finding plus same-item expected SHA; paper missing pin and admission before STARTING/task. Cache reads/old receipts/active idempotency preserved. Results/export/formal/paper project saved ID+SHA independently from economic quality, old summary/plan/Decimal/checksums immutable. Strict parsers/reused bilingual note+422 errors, no dependencies.",
+    "tests": "Admission9RED/pin3real-registryRED/read9RED/notice5RED retained; final1579backendPASS1existingoptionalarchiveSKIP28.60s/Ruff/format/mypy146/0017/Alembic;840frontend49files16.10s/PrettierESLintTypeScriptbuildPASS. Source-only aria/plan tests and immutable saved values covered.529.13kB warning not p95. Optionalrealarchive reject branch NOT_RUN.",
+    "browser": "ActualIAB EN1440/ZH390 dark/currentqa-read-build index-zRbW5XuD; historical data combinednote/demo clear, savedaccount portfolio/plan notices, one resumePOST422 thenlocaleENZH no resubmit/PAUSED unchanged/client=scroll390. Synthetic000...1+actualreadonlyregistry/projection only,no DB/engine/financial/fullChromeAA200/p95 claim. MissingQAupdateAPIs404/initialstdlibWSfailure retained.",
+    "evidence": "product-evidence/v1.2/m4/20261008-source-admission/README.md",
+    "native_sha256sums_sha256": "02bebe0082f034d1524aa4f6acf0a6c8eb69ad631854c0e7f595d0acf199187b",
+    "sha256_entries": 124,
+    "review": "Independent backend/frontend readonly no evidenced scopedP1P2; source-only supplements verified. Reviewers did not execute or claim deployedoriginal guard.",
+    "cleanup": "OwnedQA762760 argv/cwd/start revalidated thenTERM/completeappshutdown/session53202 intentional1. Own tabclosed/viewportreset/originalMarket retained. TestPGbe259c15 verifiedtmpfs/no mounts/ports/0otherclients thenstopped0/OOMfalse/retained;onlydisposabletestrows discarded.",
+    "preservation": "Originalbackend89aa/PG598/Redisdf3/fronta561sameOct7starts healthy/PONG/PGready/APIpaper200/frontend200. Frozen693c0b81/freeze228569f1/contracts c8148481/researchb10ce3c5/tagf88b5c unchanged. No originalSQL/queue/provider/strategy/OOS/frozen/.research/identity/GitHub mutation.",
+    "original_runtime_loaded": false,
+    "original_readonly_preflight": "0017==alembichead;12researchterminal/5STOPPEDpaper/4updateterminal/417events. Pendingreceipt/ownership verification required before restart; normal startup has DBrecovery semantics. Do not use denied44table/scratch/sourcecopy routes.",
+    "full_financial_admission": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "market_economic_quality_20261008_gate": {
     "status": "PASS_SCOPED_ENGINEERING_AND_REAL_CACHE_BROWSER",
     "source_parent": "2fee9be5c5d6f252d2d4e9265754c3ef91b9949b",
@@ -822,7 +841,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T02:20:22Z",
+  "updated_at_utc": "2026-10-08T03:28:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -3811,6 +3830,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct8 source-admission/saved-versionfindings:1579backend1optionalSKIP/840frontend/static/type/build/AlembicPASS;IABENZHsyntheticpausedaccount+realregistry proof;independentreadonlynoscopeP1P2;124nativebindings02bebe0082twice. Original8000/5173 notyetloaded;fullgoalACTIVE/financialPARTIAL/GitHubHOLD.",
     "Oct8 market economic-quality root repair9RED->52focused829fullfrontend/static/buildPASS;actualZH390EN1440 source/detail notices/demo-switch/date/raw/watchlist preserved. Original5173 atomicindex7281f6ac/13actualHTTP hashes/169backup168oldretained/no restart. FourrawAPI GET snapshots exact1d7b6134/KNOWNgap/119bars.222native bindings306e8db6 twicePASS/readonly independent no scopedP1P2. Frozen/research/tag/services intact/sourceintegrityFAIL remains/newexecution audit next/fullgoalACTIVE/GitHubHOLD.",
     "Oct8 saved actual restoredAPI Decimal identities scopedPASS:two captures/20equity/20holdings/40marks/10fills/18decisions/cost50.34364/final97579.65636;three exact-error RAM corruptions rejected. Fourpayload03a0467a twiceverify/all54parent intact/fullbackendtree+cleanstate+fivehashbindings. Independent readonly scope/binding gaps closed;no productcode/SQL/service/strategy/GitHub operation. Original5173+8000HTTP200/PONG/serviceshealthy;financialgap/negative/null retained/fullgoalACTIVE.",
     "Oct8 current-code/Oct7backup applicationrestore scopedPASS:54payload1746a05e twiceverify;44pre/43projectedbusiness+18files unchanged through normalstartup/restart/UI;12RESTexactSHA976163a3;10browserframes/10JPEG ZHEN savedstudies/accounts/reload;all13assetsSHA200/fourwrites405. No financial/release promotion. ExistingtestPG/API/proxy stopped/retained;originals/frozen/research unchanged/GitHubHOLD.",
@@ -4444,8 +4464,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5 unchanged/ACTIVE. Markets exact-version economic-quality parsing/source+actual-detail ENZH notices locally published/scopedPASS829front/native222proof306e8db6. Legacy source-contract integrity stillFAIL/fullfinancialadmissionfalse. Next trace and repair shared new-execution admission plus independent exact-version read-time source-finding projections across capabilities/markets/results/exports/formal/paper; preserve existing readonly records/idempotent receipts/cacheinspection. Do not pretend Docker can validate unavailable absoluteWSL/preflight paths or label unknown future versions PASS. Then all remainingfullfinancial/forward/lawfulfeed/genuineledger/AA200/p95/export/media/authorizedremote gates;GitHubHOLD.",
-  "local_next_command": "Read market_economic_quality_20261008_gate, existing15-source guard proof, full experiments/data.py and actual job/plan/paper create/start/retry callers plus all read-time metadata schemas/parsers/UI. Reproduce known source-integrity failed version still execution_available=true/newexecution admitted; fix shared for_execution gate and before paper STARTING transition without breaking idempotent old receipts or cache reads; independently expose precise saved-version findings, not an on-request15-source PASS. Current original5173/API8000 healthy/fourIDsstarts retained; alltesthandles terminal/testPGstopped. Coherent local commits only; no originalDB/provider/newstrategy/frozen/.research/OOS/GitHub or denied scratch/refresh/download route.",
+  "next_task": "Continue full U1-U8/M0-M5 unchanged/ACTIVE. Source admission and saved-version findings now scopedengineering/UI PASS1579backend1optionalSKIP/840frontend/124proof02bebe0082, but original8000/5173 not loaded. Verify pending receipt/terminal queues/current0017/source binding/ownership and publish through existing exact originalbackend restart plus originalnginx assets, preserving savedbusiness evidence and runtime rollback. No deniedscratch/sourcecopy/44table-refresh workaround. Then fullfinancial/newversion sourceclosure/lawfulforward/genuineledger/currentAA200/p95/export/media/authorizedremote release gates;GitHubHOLD.",
+  "local_next_command": "Read source_execution_and_read_findings_20261008_gate. Original0017==head/allknownjobspaper terminal: verify pending receipts empty and queue ownership/source SHA without denied44table refresh. Then a bounded originalbackend89aa-only restart can load existingboundsource; no newcontainer/build/sourcecopy or DB migration change. Preserve originalAPI/business evidence, publish testedfrontend assets withbackup/atomicindex, verify current GET findings and old exactfinancial values before claiming deployed. GitHubHOLD/frozen/methodology/OOS/lostledger and all fullproduct requirements unchanged.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

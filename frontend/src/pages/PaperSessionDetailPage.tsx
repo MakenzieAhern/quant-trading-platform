@@ -10,7 +10,11 @@ import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
 import { StatusBadge } from "../components/StatusBadge";
 import { ExperimentPlan } from "../product/experiments/ExperimentPlan";
 import { tradingDate } from "../product/experiments/api";
-import { explainExperimentCode } from "../product/experiments/codes";
+import {
+  explainDatasetFindings,
+  explainExperimentCode,
+} from "../product/experiments/codes";
+import { executionAdmissionCode } from "../product/experiments/errors";
 import { usePaperStream } from "../hooks/usePaperStream";
 import type {
   PaperCollection,
@@ -47,7 +51,10 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   } = usePaperStream(sessionId);
   const [contractErrorId, setContractErrorId] = useState<string | null>(null);
   const [commandPending, setCommandPending] = useState(false);
-  const [commandError, setCommandError] = useState<PaperAction | null>(null);
+  const [commandError, setCommandError] = useState<{
+    action: PaperAction;
+    code: string | null;
+  } | null>(null);
   const [logOpen, setLogOpen] = useState(false);
   const commandLock = useRef(false);
   const pendingAction = useRef<PaperAction | null>(null);
@@ -73,7 +80,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
       pendingCommandConfirmed.current = true;
   }, [status]);
   const commandErrorIsStale =
-    commandError !== null && commandConfirmed(commandError, status);
+    commandError !== null && commandConfirmed(commandError.action, status);
   if (commandErrorIsStale) setCommandError(null);
 
   const command = async (action: PaperAction) => {
@@ -95,9 +102,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
       accepted = true;
       acknowledge(before, response);
       await refresh();
-    } catch {
+    } catch (reason) {
       if (!accepted && !pendingCommandConfirmed.current)
-        setCommandError(action);
+        setCommandError({ action, code: executionAdmissionCode(reason) });
     } finally {
       pendingAction.current = null;
       commandLock.current = false;
@@ -240,7 +247,9 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
       )}
       {commandError && !commandErrorIsStale && (
         <p className="stateCallout" role="alert">
-          {t(`detail.${commandError}Error`)}
+          {commandError.code
+            ? explainExperimentCode(commandError.code, i18n.language)
+            : t(`detail.${commandError.action}Error`)}
         </p>
       )}
       {error && <ErrorPanel message={error} />}
@@ -358,12 +367,10 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           </div>
         </div>
         {session.provider_type === "historical_a_share" &&
-          snapshot.current_dataset_quality && (
+          (snapshot.current_dataset_quality ||
+            snapshot.current_source_integrity) && (
             <p className="experimentNotice" role="note">
-              {explainExperimentCode(
-                snapshot.current_dataset_quality,
-                i18n.language,
-              )}
+              {explainDatasetFindings(snapshot, i18n.language)}
             </p>
           )}
         {stalePortfolio && (
@@ -411,6 +418,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         <ExperimentPlan
           plan={snapshot.last_rebalance_plan ?? portfolio?.plan ?? null}
           quality={snapshot.current_dataset_quality}
+          sourceIntegrity={snapshot.current_source_integrity}
           account
         />
       )}

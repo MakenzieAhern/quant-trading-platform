@@ -28,6 +28,9 @@ DEMO_SHA = canonical_sha256({"dataset_id": DEMO_ID, "generator_version": 1, "ses
 DEMO_START = date(2030, 1, 2)
 DEMO_END = date(2031, 4, 22)
 HISTORICAL_ECONOMIC_GAP_SHA = "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e"
+HISTORICAL_SOURCE_CONTRACT_FAILURE_SHA = (
+    "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e"
+)
 
 
 def current_dataset_quality(dataset_id: str, dataset_sha256: object) -> str | None:
@@ -37,6 +40,15 @@ def current_dataset_quality(dataset_id: str, dataset_sha256: object) -> str | No
     if isinstance(dataset_sha256, str) and dataset_sha256 == HISTORICAL_ECONOMIC_GAP_SHA:
         return "KNOWN_ECONOMIC_COVERAGE_GAP"
     return "HISTORICAL_DATASET_QUALITY_UNKNOWN"
+
+
+def current_source_integrity(dataset_id: str, dataset_sha256: object) -> str | None:
+    """Exact-version finding from the source audit, not an online source revalidation."""
+    if dataset_id != HISTORICAL_ID:
+        return None  # Not covered by this finding, not a source-authority PASS.
+    if isinstance(dataset_sha256, str) and dataset_sha256 == HISTORICAL_SOURCE_CONTRACT_FAILURE_SHA:
+        return "SOURCE_CONTRACT_INTEGRITY_FAILED"
+    return "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED"
 
 
 class ExperimentInputError(ValueError):
@@ -188,21 +200,26 @@ class ExperimentDatasetRegistry:
         historical["current_dataset_quality"] = current_dataset_quality(
             historical["dataset_id"], historical["sha256"]
         )
-        historical["execution_available"] = historical["available"] and dataset_id == HISTORICAL_ID
+        historical["current_source_integrity"] = current_source_integrity(
+            historical["dataset_id"], historical["sha256"]
+        )
         historical["execution_reason_code"] = (
             historical["reason_code"]
             if not historical["available"]
-            else None
-            if dataset_id == HISTORICAL_ID
-            else "DATASET_EXECUTION_NOT_ACCEPTED"
+            else historical["current_source_integrity"] or "DATASET_EXECUTION_NOT_ACCEPTED"
         )
+        historical["execution_available"] = historical["execution_reason_code"] is None
         return historical
 
-    def resolve(self, dataset_id: str, *, for_execution: bool = True) -> dict[str, Any]:
+    def resolve(
+        self, dataset_id: str, *, for_execution: bool = True, expected_sha256: str | None = None
+    ) -> dict[str, Any]:
         for item in self.datasets():
             if item["dataset_id"] == dataset_id:
                 if not item["available"]:
                     raise ExperimentInputError(item["reason_code"])
+                if expected_sha256 is not None and item["sha256"] != expected_sha256:
+                    raise ExperimentInputError("DATASET_CHANGED_SINCE_SUBMISSION")
                 if for_execution and not item["execution_available"]:
                     raise ExperimentInputError(item["execution_reason_code"])
                 return item

@@ -35,7 +35,7 @@ import {
   saveExperimentDraft,
 } from "./draft";
 import { experimentError } from "./errors";
-import { explainExperimentCode } from "./codes";
+import { explainDatasetFindings, explainExperimentCode } from "./codes";
 import type {
   Capabilities,
   DatasetCapability,
@@ -393,7 +393,8 @@ function ExperimentWizard({
       [
         invalidField === field ? "experiment-validation-error" : null,
         field === "dataset" ? "experiment-dataset-version" : null,
-        field === "dataset" && dataset?.current_dataset_quality
+        field === "dataset" &&
+        (dataset?.current_dataset_quality || dataset?.current_source_integrity)
           ? "experiment-dataset-quality"
           : null,
       ]
@@ -607,18 +608,18 @@ function ExperimentWizard({
           <h2 ref={heading} tabIndex={-1}>
             {c.steps[step]}
           </h2>
-          {(step === 1 || step === 3) && dataset?.current_dataset_quality && (
-            <p
-              id="experiment-dataset-quality"
-              className="experimentNotice"
-              role="note"
-            >
-              {explainExperimentCode(
-                dataset.current_dataset_quality,
-                i18n.language,
-              )}
-            </p>
-          )}
+          {(step === 1 || step === 3) &&
+            dataset &&
+            (dataset.current_dataset_quality ||
+              dataset.current_source_integrity) && (
+              <p
+                id="experiment-dataset-quality"
+                className="experimentNotice"
+                role="note"
+              >
+                {explainDatasetFindings(dataset, i18n.language)}
+              </p>
+            )}
           <fieldset disabled={pending}>
             {step === 0 && (
               <div className="experimentStrategyChoices">

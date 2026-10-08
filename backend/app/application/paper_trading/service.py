@@ -16,6 +16,7 @@ from app.application.backtests.registry import DatasetRegistry, StrategyRegistry
 from app.application.experiments.data import (
     HISTORICAL_ID,
     ExperimentDatasetRegistry,
+    ExperimentInputError,
     load_experiment_dataset,
 )
 from app.application.experiments.models import CreateExperimentRequest
@@ -252,6 +253,15 @@ class PaperTradingManager:
             if session.status not in {PaperSessionStatus.CREATED, PaperSessionStatus.PAUSED}:
                 raise PaperSessionStateError(
                     f"paper session cannot start from {session.status.value}"
+                )
+            if session.provider_type == "historical_a_share":
+                if self._historical_datasets is None:
+                    raise ExperimentInputError("DATASET_NOT_REGISTERED")
+                pinned = session.strategy_parameters.get("dataset_sha256")
+                if not isinstance(pinned, str) or not pinned:
+                    raise ExperimentInputError("DATASET_CHANGED_SINCE_SUBMISSION")
+                await asyncio.to_thread(
+                    self._historical_datasets.resolve, session.dataset_id, expected_sha256=pinned
                 )
             session = await self._transition(session, PaperSessionStatus.STARTING, "session.status")
             task = asyncio.create_task(self._run(session), name=f"paper-session-{session_id}")

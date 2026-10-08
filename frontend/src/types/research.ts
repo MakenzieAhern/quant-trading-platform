@@ -1,4 +1,7 @@
-import type { CurrentDatasetQuality } from "../product/experiments/types";
+import type {
+  CurrentDatasetQuality,
+  CurrentSourceIntegrity,
+} from "../product/experiments/types";
 
 export type ResearchPeriod =
   | "DEVELOPMENT"
@@ -17,6 +20,7 @@ export interface ResearchPage<T> {
 export interface ResearchDataset {
   dataset_id: string;
   current_dataset_quality?: CurrentDatasetQuality;
+  current_source_integrity?: CurrentSourceIntegrity;
   provider: string;
   provider_version: string;
   retrieval_timestamp: string;
@@ -44,6 +48,7 @@ export interface ResearchStrategy {
 export interface ResearchRun {
   run_id: string;
   current_dataset_quality?: CurrentDatasetQuality;
+  current_source_integrity?: CurrentSourceIntegrity;
   status: string;
   period_kind: ResearchPeriod;
   git_commit: string;

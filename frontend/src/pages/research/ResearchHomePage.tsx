@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { explainExperimentCode } from "../../product/experiments/codes";
+import { explainDatasetFindings } from "../../product/experiments/codes";
 
 import { researchApi } from "../../api/research";
 import {
@@ -40,13 +40,11 @@ export function ResearchHomePage() {
         </div>
         {datasets.data?.items.map(
           (dataset) =>
-            dataset.current_dataset_quality && (
+            (dataset.current_dataset_quality ||
+              dataset.current_source_integrity) && (
               <p className="oosGuard" role="note" key={dataset.dataset_id}>
                 <strong>{dataset.dataset_id}: </strong>
-                {explainExperimentCode(
-                  dataset.current_dataset_quality,
-                  i18n.language,
-                )}
+                {explainDatasetFindings(dataset, i18n.language)}
               </p>
             ),
         )}

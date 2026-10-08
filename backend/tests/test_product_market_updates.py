@@ -75,12 +75,13 @@ def envelope(day="2026-09-18", **overrides):
 
 class FixtureReader:
     def __init__(self, path):
+        def resolve(_, *, for_execution=True):
+            assert for_execution is False, "raw candidates must not request execution authority"
+            return {"coverage_end": "2025-12-31", "sha256": "a" * 64}
+
         self.registry = SimpleNamespace(
             root=path,
-            resolve=lambda _: {
-                "coverage_end": "2025-12-31",
-                "sha256": "a" * 64,
-            },
+            resolve=resolve,
             datasets=lambda: [],
         )
 

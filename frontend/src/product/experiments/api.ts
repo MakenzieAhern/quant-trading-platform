@@ -18,6 +18,7 @@ import type {
   SimulationPlan,
   PaperAccountPlan,
   CurrentDatasetQuality,
+  CurrentSourceIntegrity,
 } from "./types";
 
 export function parseCurrentDatasetQuality(
@@ -27,6 +28,18 @@ export function parseCurrentDatasetQuality(
   if (
     value !== "KNOWN_ECONOMIC_COVERAGE_GAP" &&
     value !== "HISTORICAL_DATASET_QUALITY_UNKNOWN"
+  )
+    throw new ApiContractError();
+  return value;
+}
+
+export function parseCurrentSourceIntegrity(
+  value: unknown,
+): CurrentSourceIntegrity {
+  if (value == null) return null;
+  if (
+    value !== "SOURCE_CONTRACT_INTEGRITY_FAILED" &&
+    value !== "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED"
   )
     throw new ApiContractError();
   return value;
@@ -108,6 +121,7 @@ export function parseCapabilities(value: unknown): Capabilities {
   for (const entry of item.datasets) {
     const dataset = record(entry);
     parseCurrentDatasetQuality(dataset.current_dataset_quality);
+    parseCurrentSourceIntegrity(dataset.current_source_integrity);
     for (const key of [
       "dataset_id",
       "coverage_start",
@@ -216,6 +230,7 @@ export function parseExperiment(value: unknown): Experiment {
 export function parseResult(value: unknown): ExperimentResult {
   const item = record(value);
   parseCurrentDatasetQuality(item.current_dataset_quality);
+  parseCurrentSourceIntegrity(item.current_source_integrity);
   mode(item.mode);
   strings(item.limitations);
   for (const key of ["job_id", "date_start", "date_end", "benchmark_id"])

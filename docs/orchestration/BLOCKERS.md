@@ -1,5 +1,22 @@
 # Blockers
 
+## v1.2 source admission repaired; original runtime rollout pending — 2026-10-08
+
+Known invalid provenance no longer admits NEW execution in tested source.
+Saved ID+SHA findings and bilingual UI/errors pass scoped tests/browser review.
+Engineering omission RESOLVED_SCOPED, not original runtime deployment:8000/5173
+still serve the prior loaded application. Safe existing-container rollout is
+next; it must verify no active jobs or pending receipts and preserve real state.
+Current original0017 equals repository head; startup has real queue-recovery
+side effects even when the migration is a no-op. Do not call restart read-only.
+
+Legacy65 reference/economic incompleteness remain FAIL/PARTIAL, full financial
+admission false. Unknown future versions remain UNVERIFIED; no frozen repair,
+new dataset authority or full15-source online verification is inferred.
+External lawful-forward/genuine-lost-ledger/current broad quality/release gates
+remain. No denied scratch/source-copy/44table-refresh/download workaround.
+Full goal ACTIVE; GitHub HOLD does not prevent local work.
+
 ## v1.2 market omission resolved; invalid-source execution boundary pending — 2026-10-08
 
 U5/U8 dropped economic-quality parsing/display is RESOLVED_SCOPED: 829frontend,

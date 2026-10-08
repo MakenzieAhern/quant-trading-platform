@@ -16,7 +16,7 @@ import {
 } from "./comparison";
 import { useComparisonCopy } from "./comparisonCopy";
 import { experimentBenchmarkName, useExperimentCopy } from "./copy";
-import { explainExperimentCode } from "./codes";
+import { explainDatasetFindings, explainExperimentCode } from "./codes";
 import { experimentError } from "./errors";
 import type { Experiment, ExperimentResult } from "./types";
 import "./experiments.css";
@@ -247,19 +247,18 @@ function Comparison({
         <p>{u.versionBoundary}</p>
         <p>{u.noRecommendation}</p>
       </section>
-      {completed.some(({ result }) => result.current_dataset_quality) && (
+      {completed.some(
+        ({ result }) =>
+          result.current_dataset_quality || result.current_source_integrity,
+      ) && (
         <section className="experimentNotice" role="note">
           <h2>{c.limits}</h2>
           {completed.map(({ id, job, result }, index) =>
-            result.current_dataset_quality ? (
+            result.current_dataset_quality ||
+            result.current_source_integrity ? (
               <div key={id}>
                 <h3>{runLabel(job, index)}</h3>
-                <p>
-                  {explainExperimentCode(
-                    result.current_dataset_quality,
-                    i18n.language,
-                  )}
-                </p>
+                <p>{explainDatasetFindings(result, i18n.language)}</p>
               </div>
             ) : null,
           )}
@@ -350,13 +349,9 @@ function Comparison({
                 </p>
               )}
               <ul>
-                {result.current_dataset_quality && (
-                  <li>
-                    {explainExperimentCode(
-                      result.current_dataset_quality,
-                      i18n.language,
-                    )}
-                  </li>
+                {(result.current_dataset_quality ||
+                  result.current_source_integrity) && (
+                  <li>{explainDatasetFindings(result, i18n.language)}</li>
                 )}
                 {result.limitations.map((code) => (
                   <li key={code}>

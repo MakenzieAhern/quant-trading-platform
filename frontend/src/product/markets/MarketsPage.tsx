@@ -8,7 +8,10 @@ import { navigate, replaceUrl } from "../../utils/navigation";
 import { Dialog } from "../Dialog";
 import { ProductError } from "../ProductPages";
 import { usePageDataContext } from "../dataContext";
-import { explainExperimentCode } from "../experiments/codes";
+import {
+  explainDatasetFindings,
+  explainExperimentCode,
+} from "../experiments/codes";
 import { marketApi, securityName } from "./api";
 import { boardLabel, useMarketCopy } from "./copy";
 import { MarketDetail } from "./MarketDetail";
@@ -293,12 +296,10 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             <p>
               {c.asOf}: {dataset.as_of ?? c.notRecorded}
             </p>
-            {dataset.current_dataset_quality && (
+            {(dataset.current_dataset_quality ||
+              dataset.current_source_integrity) && (
               <p className="marketNotice" role="note">
-                {explainExperimentCode(
-                  dataset.current_dataset_quality,
-                  i18n.language,
-                )}
+                {explainDatasetFindings(dataset, i18n.language)}
               </p>
             )}
           </>

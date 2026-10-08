@@ -1,3 +1,18 @@
+import type { DatasetCapability } from "./types";
+
+export function explainDatasetFindings(
+  data: Pick<
+    DatasetCapability,
+    "current_dataset_quality" | "current_source_integrity"
+  >,
+  language: string,
+): string {
+  return [data.current_dataset_quality, data.current_source_integrity]
+    .filter((code) => code != null)
+    .map((code) => explainExperimentCode(code, language))
+    .join(" ");
+}
+
 const explanations: Record<string, [string, string]> = {
   EXPERIMENT_WORKER_OWNERSHIP_LOST: [
     "The worker lost ownership of this task. Restart the local service, then retry the interrupted task.",
@@ -195,6 +210,14 @@ const explanations: Record<string, [string, string]> = {
   DATASET_INTEGRITY_FAILED: [
     "The data integrity check failed. Check the registered data source before retrying.",
     "数据完整性检查未通过。重试前请检查已注册数据来源。",
+  ],
+  SOURCE_CONTRACT_INTEGRITY_FAILED: [
+    "This data version's source references failed verification. New research and historical paper execution are blocked. Cached data and saved results remain readable. Check source status in the data center; retrying the same version cannot repair it.",
+    "此数据版本的来源引用未通过验证，已阻止新的研究和历史模拟执行。仍可查看缓存数据与已保存结果。请在数据中心检查来源状态；重试相同版本不能修复问题。",
+  ],
+  SOURCE_CONTRACT_INTEGRITY_UNVERIFIED: [
+    "This historical data version's source integrity has not been verified. New research and historical paper execution are blocked. Inspect the saved data version in the data center; cached data and saved results remain readable.",
+    "此历史数据版本的来源完整性尚未验证，已阻止新的研究和历史模拟执行。请在数据中心检查保存的数据版本；仍可查看缓存数据与已保存结果。",
   ],
   UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT: [
     "A held security's official price reference changed without an accepted accounting boundary that explains the change. The task stopped before using it for fills or valuation. Check corporate-action coverage in the data center; unchanged retries will not repair the source gap.",

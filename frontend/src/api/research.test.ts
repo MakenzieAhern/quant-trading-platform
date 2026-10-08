@@ -3,6 +3,66 @@ import { researchApi } from "./research";
 
 afterEach(() => vi.unstubAllGlobals());
 
+test("research dataset and saved-run boundaries preserve independent source findings, never PASS", async () => {
+  const original = {
+    ...Object.fromEntries(
+      [
+        "dataset_id",
+        "provider",
+        "provider_version",
+        "retrieval_timestamp",
+        "coverage_start",
+        "coverage_end",
+        "canonical_sha256",
+        "rule_version",
+        "adjustment_method",
+        "readiness_status",
+        "run_id",
+        "status",
+        "period_kind",
+        "git_commit",
+        "dataset_checksum",
+        "market_rule_version",
+        "strategy_id",
+        "strategy_config_hash",
+        "benchmark_id",
+        "benchmark_version",
+        "temporal_split_hash",
+        "created_at",
+      ].map((key) => [key, "contract-fixture"]),
+    ),
+    security_count: 0,
+    frozen: true,
+    manifest: null,
+    transaction_cost_config: {},
+    diagnostics: {},
+  };
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  for (const value of [
+    "SOURCE_CONTRACT_INTEGRITY_FAILED",
+    "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+    null,
+    undefined,
+    "PASS",
+    true,
+    {},
+    [],
+  ]) {
+    const payload = { ...original, current_source_integrity: value };
+    fetcher.mockImplementation(
+      async () => new Response(JSON.stringify(payload), { status: 200 }),
+    );
+    for (const read of [researchApi.dataset, researchApi.run]) {
+      if (value == null || (typeof value === "string" && value !== "PASS"))
+        expect(await read("saved")).toEqual(
+          value === undefined ? original : payload,
+        );
+      else await expect(read("saved")).rejects.toThrow();
+    }
+  }
+});
+
 test("research curves fetch only the requested page and preserve exact decimal strings", async () => {
   const rows = Array.from({ length: 382 }, (_, sequence) => ({
     sequence,
