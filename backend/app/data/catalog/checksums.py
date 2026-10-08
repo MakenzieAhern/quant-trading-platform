@@ -1,8 +1,6 @@
 import hashlib
 import json
-from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
 
 
 def sha256_file(path: Path) -> str:
@@ -13,7 +11,7 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def canonical_json_bytes(value: Mapping[str, Any]) -> bytes:
+def canonical_json_bytes(value: object) -> bytes:
     return json.dumps(
         value,
         ensure_ascii=False,
@@ -23,5 +21,5 @@ def canonical_json_bytes(value: Mapping[str, Any]) -> bytes:
     ).encode("utf-8")
 
 
-def canonical_sha256(value: Mapping[str, Any]) -> str:
+def canonical_sha256(value: object) -> str:
     return hashlib.sha256(canonical_json_bytes(value)).hexdigest()

@@ -1,5 +1,37 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 new-version source guards — engineering scoped PASS
+
+[Private reproducible evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-contract-guards/README.md>)
+uses native SHA256SUMS, 49 entries (22 payloads, 7 code/config files, 20 original
+inputs), twice verified; checksum
+`f5d0262cfe109aa33bd24de2acf176fca4a8d35ef7cf489af5c97158da28b3a4`.
+Materialize fresh/resume, audit and freeze now share exact unique-15 contract,
+byte/canonical/P0/state/preflight/lineage validation before publication. Eight
+explicit preflight component links and two file pins are enforced, not fabricated
+links from aggregate corporate-actions to individual ledgers. Freeze requires
+all four identity digests equal, replacing unsafe chained inequalities.
+
+Actual 8 original guard REDs, 4 re-signing REDs and 6 identity sentinel REDs;
+155 focused and 1563 full backend PASS, 1 existing optional archive SKIP;
+Ruff/format/mypy/17 migrations/Alembic check/test Compose isolation PASS.
+First full run's 4 harness failures repaired with only test PYTHONPATH/exact
+read-only policy mount; wrong focused filename and initial verifier assumption
+retained as failures, not counted PASS. Independent final read-only review found
+no remaining scoped P1/P2 and did not execute tests.
+
+Twice read-only original checks are byte-identical: 15 source bytes and 14
+nonmaster canonical refs valid; original 65-character master reference remains
+FAIL. RAM-only master correction still fails pinned preflight. No actual full
+dataset pipeline, new registration/freeze, strategy/OOS or production DB action.
+Original service IDs/starts unchanged, API8000paper/5173 HTTP200, Redis PONG.
+Only owned tmpfs test PG stopped; no images/volumes/data removed. Frontend unchanged
+(815 prior tests retained); prior backend-bound proofs are historical, not resealed.
+Full financial admission remains false; U1–U8/M0–M5 remain ACTIVE/PARTIAL.
+Next: propagate existing exact-version economic quality into markets parsing/UI;
+source-contract integrity is separate and must not be hidden or mislabeled PASS.
+GitHub HOLD; no remote requests/push/merge/tag/release.
+
 ## 2026-10-08 002168 official boundary joined; source-contract integrity PARTIAL
 
 [Private immutable proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-002168-listing-boundary/README.md>)

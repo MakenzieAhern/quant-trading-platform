@@ -1,5 +1,29 @@
 # Current state
 
+## v1.2 source-reference guards complete; full product PARTIAL — 2026-10-08
+
+M3/M4/M5 remain IN_PROGRESS and full U1–U8/M0–M5 goal ACTIVE. New engineering
+guard milestone PASS only: 155 focused / 1563 full backend PASS + 1 existing
+optional-archive SKIP, Ruff/format/mypy/17 migrations/Alembic/test Compose PASS.
+Independent scoped read-only review found no remaining P1/P2. Native 49-entry
+proof twice verifies payload/code/original bytes, SHA `f5d0262cfe109aa33bd24de2acf176fca4a8d35ef7cf489af5c97158da28b3a4`.
+Fresh/resume/audit/freeze now reject malformed, rebound or unapproved source refs;
+four-way freeze identity equality repaired. No original full dataset job ran.
+
+Legacy 65-character P0 reference is still FAIL, not silently corrected. All 20
+original inputs/frozen/.research/tag unchanged; financial admission false.
+Original PG/Redis/backend/frontend IDs/starts unchanged and healthy/HTTP200/paper;
+owned test tmpfs PG stopped cleanly. Frontend 815 prior results retained; older
+backend-code-bound proofs remain historical after this code change.
+
+Next safe product action: markets currently receives exact-version economic
+quality metadata but drops parser validation and page/detail notices. Reuse the
+existing parser/explanations, test both languages/actual detail metadata and
+source switching, then browser review. Source-contract failure is a separate
+unpropagated application status, not solved by an economic notice alone.
+No frozen/methodology/OOS/production DB/provider change; GitHub HOLD, no requests
+or push/merge/release. Earlier checkpoints below are retained historical evidence.
+
 ## v1.2 local work continues; new-version provenance integrity PARTIAL — 2026-10-08
 
 Current product authority is `docs/product/PRODUCT_MASTER.md` and `.product/state.json`.

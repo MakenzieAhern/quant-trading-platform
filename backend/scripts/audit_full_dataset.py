@@ -21,6 +21,7 @@ from app.domain.markets.demergers import DemergerEvent
 from app.domain.markets.mergers import MergerEvent
 from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
 from app.domain.markets.surrenders import MandatoryPartialShareSurrenderEvent
+from scripts.full_dataset_sources import source_path, verify_source_contracts, verify_source_lineage
 from scripts.materialize_full_dataset import (
     DATASET_ID,
     END,
@@ -68,17 +69,18 @@ REQUIRED_GATES = frozenset(
 )
 
 
-def _source_path(repository: Path, value: str) -> Path:
-    path = Path(value)
-    return path if path.is_absolute() else (repository / "backend" / path).resolve()
-
-
 def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
+    state = json.loads((repository / ".research/project_state.json").read_bytes())
+    contracts = verify_source_contracts(
+        pq.read_table(dataset / "source-contracts.parquet").to_pylist(),
+        repository,
+        state,
+    )
     manifest = load_manifest(dataset / "manifest.json")
+    verify_source_lineage(list(contracts.values()), manifest.source_lineage)
     verify_dataset(dataset, manifest)
     if manifest.dataset_id != DATASET_ID or finalize_manifest(manifest.model_dump()) != manifest:
         raise ValueError("MANIFEST_REPEATABILITY_FAILED")
-    state = json.loads((repository / ".research/project_state.json").read_bytes())
     master = pq.read_table(dataset / "securities.parquet").to_pylist()
     if any(
         row["instrument_type"] != "COMMON_A_SHARE"
@@ -290,16 +292,8 @@ def audit(dataset: Path, repository: Path, output: Path) -> dict[str, Any]:
         for row in suspensions
     ):
         raise ValueError("SUSPENSION_EXECUTION_CONTRACT_CHANGED")
-    contracts = {
-        row["name"]: row for row in pq.read_table(dataset / "source-contracts.parquet").to_pylist()
-    }
-    if any(
-        sha(_source_path(repository, row["source_path"]).read_bytes()) != row["source_file_sha256"]
-        for row in contracts.values()
-    ):
-        raise ValueError("SOURCE_CONTRACT_BYTES_CHANGED")
     preflight = json.loads(
-        _source_path(repository, contracts["SOURCE_PREFLIGHT"]["source_path"]).read_bytes()
+        source_path(repository, contracts["SOURCE_PREFLIGHT"]["source_path"]).read_bytes()
     )
     source_lineage = pq.read_table(dataset / "source-lineage.parquet").to_pylist()
     if (

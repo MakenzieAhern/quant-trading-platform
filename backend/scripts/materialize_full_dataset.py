@@ -26,6 +26,11 @@ from app.data.catalog import (
     write_manifest,
 )
 from app.data.catalog.checksums import sha256_file
+from scripts.full_dataset_sources import (
+    verify_source_contracts,
+    verify_source_lineage,
+    verify_source_manifest,
+)
 from scripts.publish_akshare_pilot import write_table
 from scripts.reconcile_sse_cninfo import canonical, save, sha
 from scripts.szse_st_recovery import risk_state
@@ -563,43 +568,34 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
         or sha(preflight_path.read_bytes()) != state["full_source_preflight_file_sha256"]
     ):
         raise ValueError("FULL_DATASET_MATERIALIZATION_NOT_AUTHORIZED")
+    verify_source_manifest(preflight_path, state["full_source_preflight_manifest_sha256"])
+    master_path = staging / "full-master-public-v1-final/point-in-time-security-master.json"
+    master_authority_path = repository / state["p0_public_report_path"]
+    master = verify_source_manifest(
+        master_path,
+        state["p0_public_report_manifest_sha256"],
+        master_authority_path=master_authority_path,
+    )
+    if (
+        preflight["components"]["security_master"]["manifest_sha256"]
+        != state["p0_public_report_manifest_sha256"]
+    ):
+        raise ValueError("SOURCE_PREFLIGHT_MASTER_REFERENCE_MISMATCH")
     final = staging.parent / DATASET_ID
     root = staging / "full-dataset-build-v1"
     build = root / "catalog-build"
     if final.exists():
+        contracts = pq.read_table(final / "source-contracts.parquet").to_pylist()
+        verify_source_contracts(contracts, repository, state)
         manifest = load_manifest(final / "manifest.json")
+        verify_source_lineage(contracts, manifest.source_lineage)
         verify_dataset(final, manifest)
         return json.loads((root / "materialization-report.json").read_bytes())
-    build.mkdir(parents=True, exist_ok=True)
-
-    master_path = staging / "full-master-public-v1-final/point-in-time-security-master.json"
-    master = json.loads(master_path.read_bytes())
-    resolver = SecurityResolver(master)
     sse_authority_path = staging / "full-sse-st-v1/sse-st-authority-v4.json"
     sse_authority = json.loads(sse_authority_path.read_bytes())
-    sse_status = StatusResolver(sse_authority["intervals"])
+
     szse_st_path = staging / "full-szse-st-v1/dated-name-coverage-probe-v9.json"
     szse_st_authority = json.loads(szse_st_path.read_bytes())
-    szse_status = StatusResolver(szse_st_authority["daily_replay"]["intervals"])
-    raw_root = staging / "full-raw-coverage-v1"
-    sse_parts, sse_lineage, sse_rejected = raw_stage(
-        build,
-        "SSE",
-        [
-            path
-            for path in (raw_root / "sse-official-day-controls-v1").glob("*.json")
-            if len(path.stem) == 6 and path.stem.isdigit()
-        ],
-        resolver,
-        sse_status,
-    )
-    szse_parts, szse_lineage, szse_rejected = raw_stage(
-        build,
-        "SZSE",
-        list((raw_root / "szse-official-day-controls-v1").glob("[0-9]*.xlsx")),
-        resolver,
-        szse_status,
-    )
 
     inventory_path = staging / "full-adjustment-audit-v1/retained-curve-inventory-v2.json"
     adjustment_authority_path = (
@@ -607,49 +603,6 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
     )
     inventory = json.loads(inventory_path.read_bytes())
     adjustment_authority = json.loads(adjustment_authority_path.read_bytes())
-    factors = adjustment_rows(inventory, adjustment_authority)
-    partial_path = raw_root / "szse-20110725-monthly-reconstruction-v6/report.json"
-    partial = json.loads(partial_path.read_bytes())
-    feature_rows = []
-    for row in sorted(partial["results"], key=lambda item: item["security_id"]):
-        raw_close = Decimal(row["official_target_close"])
-        current = factor_at(factors, row["security_id"], partial["target_date"])
-        feature_rows.append(
-            {
-                "security_id": row["security_id"],
-                "trading_date": partial["target_date"],
-                "raw_close": raw_close,
-                "hfq_factor_at_day": current,
-                "volume_lower": row["official_volume_interval_shares"][0],
-                "volume_upper": row["official_volume_interval_shares"][1],
-                "amount_lower": row["official_amount_interval_cny"][0],
-                "amount_upper": row["official_amount_interval_cny"][1],
-                "risk_status": szse_status.resolve(row["security_id"], partial["target_date"]),
-                "lineage": "OFFICIAL_PARTIAL_FEATURE_ONLY_NON_TRADABLE",
-            }
-        )
-    if len(feature_rows) != 239:
-        raise ValueError("FEATURE_ONLY_ROW_COUNT_CHANGED")
-
-    suspension_path = (
-        staging / "full-suspension-revalidation-v36/normalized-suspension-events-v1.json"
-    )
-    suspension = json.loads(suspension_path.read_bytes())
-    suspensions = []
-    for exchange in ("sse", "szse"):
-        for row in suspension[exchange]:
-            suspensions.append(
-                {
-                    "security_id": row["security_id"],
-                    "exchange": row["exchange"],
-                    "suspended_at": row["suspended_at"],
-                    "resumed_or_ended_at": row.get("resumed_or_ended_at", row.get("resumed_at")),
-                    "execution_open_blocked": row["execution_open_blocked"],
-                    "closure": row.get("closure"),
-                    "source_files_json": canonical(row["source_files"]).decode(),
-                    "source_sha256_json": canonical(row["source_sha256"]).decode(),
-                }
-            )
 
     cash_path = staging / "full-distribution-notices-v1/cash-full-coverage-v43.json"
     bonus_path = staging / "full-bonus-inventory-v1/retained-bonus-ledger-v32.json"
@@ -659,31 +612,11 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
     rights_path = staging / "full-rights-inventory-v1/full-rights-census-v1.json"
     merger_path = staging / "full-merger-v1/merger-candidate-census-v4.json"
     structural_path = staging / "full-structural-census-v1/structural-action-census-v1.json"
-    corporate_actions = (
-        event_rows(cash_path)
-        + event_rows(bonus_path)
-        + event_rows(gap_distribution_path)
-        + structural_event_rows(repository, rights_path, merger_path, structural_path)
-    )
-    if len({row["event_checksum"] for row in corporate_actions}) != len(corporate_actions):
-        raise ValueError("DUPLICATE_CORPORATE_ACTION")
-    corporate_actions.sort(
-        key=lambda row: (
-            row["application_date"] or "",
-            row["security_id"] or "",
-            row["event_checksum"] or "",
-        )
-    )
+
     calendar_path = staging / "full-calendar-v1/calendar-manifest-v3.json"
     calendar = json.loads(calendar_path.read_bytes())
     benchmark_root = staging / "full-benchmark-v1"
     benchmark_manifest = json.loads((benchmark_root / "acceptance-manifest-v2.json").read_bytes())
-    benchmark_source = benchmark_root / "benchmark.parquet"
-    if sha256_file(benchmark_source) != benchmark_manifest["partition"]["sha256"]:
-        raise ValueError("BENCHMARK_CHANGED")
-    benchmark_target = build / "csi300.parquet"
-    if not benchmark_target.exists():
-        shutil.copyfile(benchmark_source, benchmark_target)
 
     source_contracts = [
         ("SOURCE_PREFLIGHT", preflight_path, preflight["manifest_sha256"], preflight["status"]),
@@ -767,6 +700,99 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
         }
         for name, path, manifest_sha, status in source_contracts
     ]
+    verify_source_contracts(contracts, repository, state)
+
+    build.mkdir(parents=True, exist_ok=True)
+
+    resolver = SecurityResolver(master)
+    sse_status = StatusResolver(sse_authority["intervals"])
+    szse_status = StatusResolver(szse_st_authority["daily_replay"]["intervals"])
+    raw_root = staging / "full-raw-coverage-v1"
+    sse_parts, sse_lineage, sse_rejected = raw_stage(
+        build,
+        "SSE",
+        [
+            path
+            for path in (raw_root / "sse-official-day-controls-v1").glob("*.json")
+            if len(path.stem) == 6 and path.stem.isdigit()
+        ],
+        resolver,
+        sse_status,
+    )
+    szse_parts, szse_lineage, szse_rejected = raw_stage(
+        build,
+        "SZSE",
+        list((raw_root / "szse-official-day-controls-v1").glob("[0-9]*.xlsx")),
+        resolver,
+        szse_status,
+    )
+
+    factors = adjustment_rows(inventory, adjustment_authority)
+    partial_path = raw_root / "szse-20110725-monthly-reconstruction-v6/report.json"
+    partial = json.loads(partial_path.read_bytes())
+    feature_rows = []
+    for row in sorted(partial["results"], key=lambda item: item["security_id"]):
+        raw_close = Decimal(row["official_target_close"])
+        current = factor_at(factors, row["security_id"], partial["target_date"])
+        feature_rows.append(
+            {
+                "security_id": row["security_id"],
+                "trading_date": partial["target_date"],
+                "raw_close": raw_close,
+                "hfq_factor_at_day": current,
+                "volume_lower": row["official_volume_interval_shares"][0],
+                "volume_upper": row["official_volume_interval_shares"][1],
+                "amount_lower": row["official_amount_interval_cny"][0],
+                "amount_upper": row["official_amount_interval_cny"][1],
+                "risk_status": szse_status.resolve(row["security_id"], partial["target_date"]),
+                "lineage": "OFFICIAL_PARTIAL_FEATURE_ONLY_NON_TRADABLE",
+            }
+        )
+    if len(feature_rows) != 239:
+        raise ValueError("FEATURE_ONLY_ROW_COUNT_CHANGED")
+
+    suspension_path = (
+        staging / "full-suspension-revalidation-v36/normalized-suspension-events-v1.json"
+    )
+    suspension = json.loads(suspension_path.read_bytes())
+    suspensions = []
+    for exchange in ("sse", "szse"):
+        for row in suspension[exchange]:
+            suspensions.append(
+                {
+                    "security_id": row["security_id"],
+                    "exchange": row["exchange"],
+                    "suspended_at": row["suspended_at"],
+                    "resumed_or_ended_at": row.get("resumed_or_ended_at", row.get("resumed_at")),
+                    "execution_open_blocked": row["execution_open_blocked"],
+                    "closure": row.get("closure"),
+                    "source_files_json": canonical(row["source_files"]).decode(),
+                    "source_sha256_json": canonical(row["source_sha256"]).decode(),
+                }
+            )
+
+    corporate_actions = (
+        event_rows(cash_path)
+        + event_rows(bonus_path)
+        + event_rows(gap_distribution_path)
+        + structural_event_rows(repository, rights_path, merger_path, structural_path)
+    )
+    if len({row["event_checksum"] for row in corporate_actions}) != len(corporate_actions):
+        raise ValueError("DUPLICATE_CORPORATE_ACTION")
+    corporate_actions.sort(
+        key=lambda row: (
+            row["application_date"] or "",
+            row["security_id"] or "",
+            row["event_checksum"] or "",
+        )
+    )
+    benchmark_source = benchmark_root / "benchmark.parquet"
+    if sha256_file(benchmark_source) != benchmark_manifest["partition"]["sha256"]:
+        raise ValueError("BENCHMARK_CHANGED")
+    benchmark_target = build / "csi300.parquet"
+    if not benchmark_target.exists():
+        shutil.copyfile(benchmark_source, benchmark_target)
+
     lineage = sse_lineage + szse_lineage
     rejected = sse_rejected + szse_rejected
     costs = [

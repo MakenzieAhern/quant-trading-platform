@@ -1,5 +1,32 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-08 v1.2 source guards and freeze identity — scoped PASS
+
+- Previous local-service answer was NO_PROGRESS toward full goal; this repair is
+  PROGRESS: eight initial malformed/wrong reference REDs, four re-signing REDs,
+  six freeze identity sentinel REDs now reject before forbidden processing.
+- Shared exact-15/canonical/byte/P0/state/preflight/lineage guard across fresh,
+  resume, audit, freeze; eight explicit component links/two file pins, no aggregate
+  ledger misbinding. Four identity digests must all agree.
+- Final 155 focused / 1563 backend PASS + 1 optional archive SKIP; Ruff/format,
+  mypy147, migrations0017 and Alembic check/test Compose isolation PASS.
+- Retained initial four full-test failures fixed solely in test Compose import
+  path/read-only policy fixture. Incorrect test filename and verifier assumption
+  preserved; no tests/assertions deleted or weakened. Reviewer read-only only.
+- Native49-entry proof twice PASS, SHA
+  `f5d0262cfe109aa33bd24de2acf176fca4a8d35ef7cf489af5c97158da28b3a4`.
+  Read-only repeated original outputs identical/all20 input bytes unchanged;
+  legacy source integrity FAIL, RAM metadata-only correction also rejected.
+- No new dataset registration/freeze/actual audit pipeline/strategy/OOS/SQL or
+  provider job. Originalfour IDs/starttimes and healthy PG/Redis/backend/APIpaper/
+  frontend5173 unchanged. Owned isolated tmpfs test PG had zero other clients,
+  stopped0; test containers/logs retained, no data/images/volumes deleted.
+- M3/M4/M5 IN_PROGRESS/full U1–U8/M0–M5 ACTIVE/PARTIAL/financial admissionfalse.
+  Frontend815 retained; prior backend-bound proof historical, never resealed.
+- Next: existing economic quality parsing/rendering in markets/page/detail,
+  followed by separate source-integrity propagation and remaining full gates.
+  GitHub HOLD/no request/push/merge/tag/release; no CI or release acceptance claim.
+
 ## 2026-10-08 v1.2 local UI milestone and provenance integrity discovery
 
 - Stage:M3/M4 active,M5 notcomplete;all U1–U8/M0–M5 retained,goalACTIVE.

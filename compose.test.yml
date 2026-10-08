@@ -17,11 +17,13 @@ services:
     build: ./backend
     environment:
       APP_ENV: test
+      PYTHONPATH: /app
       DATABASE_URL: postgresql+asyncpg://quant:test_only@postgres:5432/quant_test
       BACKTEST_FIXTURE_PATH: /data/fixtures
     volumes:
       - ./backend:/app
       - ./data:/data:ro
+      - ./.research/corporate_action_policy_matrix_v1.json:/.research/corporate_action_policy_matrix_v1.json:ro
     depends_on:
       postgres:
         condition: service_healthy

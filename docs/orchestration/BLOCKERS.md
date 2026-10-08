@@ -1,5 +1,26 @@
 # Blockers
 
+## v1.2 source guard repaired; legacy integrity/product gaps remain — 2026-10-08
+
+The missing publication/acceptance guard is RESOLVED_ENGINEERING_ONLY: shared
+fresh/resume/audit/freeze validation and exact four-way freeze identity reject
+unapproved refs. 155 focused/1563 full backend+1 optional SKIP/static/type/Alembic
+PASS; independent scoped review complete. No actual new dataset was admitted.
+
+`SOURCE_CONTRACT_MANIFEST_REFERENCE_MISMATCH` remains a real legacy artifact
+failure: 65-character P0 reference still in frozen provenance/preflight/state;
+no immutable record overwritten. All source bytes and P0 master binding remain
+valid. A metadata-only RAM correction still fails approved preflight. Full
+economic coverage and financial admission remain PARTIAL/false.
+
+Next independently actionable U5/U8 defect: markets receives existing economic
+quality metadata but its parser and page/detail omit validation/notices. Repair
+with existing parser/explanation, not source reacquisition or new methodology.
+Separate source-integrity API/UI propagation remains needed; an economic notice
+must not imply source-integrity PASS. Lawful forward-data rights/genuine lost
+ledger/full current AA/native200/performance/delivery and remote release remain.
+GitHub HOLD does not prevent local5173/API8000 usage. Goal ACTIVE/full scope intact.
+
 ## v1.2 new-version source-contract integrity gap — 2026-10-08
 
 `SOURCE_CONTRACT_MANIFEST_REFERENCE_MISMATCH`:SECURITY_MASTER's frozen provenance

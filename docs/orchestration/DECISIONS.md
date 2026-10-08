@@ -1,5 +1,31 @@
 # Decisions
 
+## v1.2 Fail closed once at full-dataset source boundaries — 2026-10-08
+
+Reuse existing canonical JSON/SHA helpers (array signature widened, serializer
+unchanged) and one shared contract guard for materializer fresh/resume, audit and
+freeze. Exact15 names, actual source bytes/canonical refs/P0 authority/state pins,
+catalog lineage and eight explicit preflight component references bind before
+build/checkpoints/publication. Two explicit file pins also bind; corporate-actions
+aggregate and raw-coverage report are not individual-ledger references.
+Replace freeze's faulty chained inequalities with four-way equality. Preserve
+legacy65 reference as FAIL and require separately verified future inputs; do not
+normalize frozen/.research or promote full financial admission.
+
+Actual8+4+6 REDs then155focused/1563backend+1existingoptionalSKIP PASS; final readonly
+independent review no scoped P1/P2. Initialfulltest4 failures were test-environment
+faults (one exact accepted policy mount and current child import path), repaired
+only in compose.test.yml. Assertions unchanged; first failed logs retained.
+Native SHA256SUMS verifies49 bytes bindings twice, checksumf5d0262c; no new proof
+framework/dependency. All20 original input hashes unchanged; only synthetic
+fixtures/tmpfs quant_test written. TestPG stopped0/no removal; originalservices
+IDs/starts/health, frozen/tag/OOS/methodology/Git identity preserved.
+
+This reduces an engineering defect, not completes U1–U8 or release. Older backend
+source-bound evidence remains historical. Next visible product fix reuses existing
+economic quality parser/explanations in markets/page/detail; source-integrity is
+a separate status and must not be erased by that notice. GitHub stays HOLD.
+
 ## v1.2 Separate a valid official boundary from broken provenance references — 2026-10-08
 
 Do not retrieve002168 dates alreadyexplicit in accepted source candidates.

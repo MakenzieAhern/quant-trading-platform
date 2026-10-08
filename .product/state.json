@@ -1,4 +1,26 @@
 {
+  "source_reference_guards_20261008_gate": {
+    "status": "PASS_ENGINEERING_SCOPED_ONLY",
+    "source_parent": "842541f429ee2189d524cda3263d320f1f348fa8",
+    "evidence": "product-evidence/v1.2/m4/20261008-source-contract-guards/README.md",
+    "native_sha256sums_sha256": "f5d0262cfe109aa33bd24de2acf176fca4a8d35ef7cf489af5c97158da28b3a4",
+    "sha256_entries": 49,
+    "progress": "Previous service-status answer NO_PROGRESS for full goal; current shared source guards and freeze identity defect reductions are PROGRESS. Full U1-U8/M0-M5 unchanged/ACTIVE.",
+    "verification": "8 initial guard REDs/4 self-signing REDs/6 freeze identity sentinel REDs, final155focused/1563fullbackendPASS+1existingoptionalarchiveSKIP27.30s/Ruff562/mypy147/17migrations/Alembiccheck/testComposeisolationPASS. Native49bindings twicePASS:22payloads+7code/config+20originalinputs. New100guardchecks cover all4entrypaths/7manifest+2bytepins/reversedlineage/digeststate/duplicate/set/master/6four-wayidentity cases. No assertions weakened.",
+    "implementation": "One existing-checksum shared helper before freshbuild/resume/audit/freeze; exact15contracts/bytes/canonical64/P0array/stateP0+preflightpins/exactcataloglineage/8directpreflightcomponentlinks/2filepins. Aggregatecorporate_actions/raw_ohlcv not misbound to ledger. Freeze identity fourway setcardinality1,not Pythonchainedinequality. Serializer unchanged;testPYTHONPATH andexactacceptedpolicyROmount onlyenvironmentfix.",
+    "legacy_source_contract_integrity": "FAIL",
+    "original_check": "Twicebyteidentical readonlysourcecheck:15sourcefilebytes/14nonmaster selfcanonicalrefs valid/rawmastermatchesactual64P0. Original65reference rejectedSOURCE_MANIFEST_INVALID;RAMonlymastercorrection rejectedSOURCE_PREFLIGHT_MASTER_REFERENCE_MISMATCH. All20originalSHA equal/frozen693c0b81/tagf88b5c/.researchunchanged. No originalpipeline/producer/provider/DB/strategy/freeze invoked.",
+    "failures_retained": "Firstfulltest4failmissingexactpolicy/currentchildimportfixedtestonly;wrongfocusedfilename no testsran retainedseparatelog;initialconfigverifier wronglyexpectedvolumes insteadtmpfs retainedemptylog/notPASS. FirstfreezeidentityREDreachedlatermissingfixturekey, strengthened6sentinelREDs beforefix. Oldambiguousrawscopefields retained,newexplicitfieldsfalse;oldfrozendataset remainsfrozen.",
+    "review": "Independentfinalreadonly no remaining scopeP1P2;reviewer didnotexecute. Earlierfixture-onlymaster observation corrected fromactualfinalcompletecomponents. Redundantstatepathpins not individuallycompared;exact approvedpreflight/byte/manifest bindings enforced,not sourceauthorization/fullfinancial proof.",
+    "ownership": "Rootsolewriter;reviewagentsreadonly/no competingWSLproducer. Finaltestcontainerf6630f33 exited0 02:18:46UTC;testPGbe259c15 tmpfs/nohostports had0otherclients/stopped0/retained. OriginalfourIDs/starts unchanged02:20:22UTC/Compose3healthy/PONG/API8000paper200/5173HTTP200. No remove/prune/down/restart/newdeps/originalSQL. GitHubHOLD/no requests/push/merge/tag/release/Gitidentityunchanged.",
+    "limitations": "Engineering guards only;legacydataFAIL/fullfinancialPARTIAL. No new browser/forward/lostledger/fullAA/native200/p95/CI/release gate. Frontendunchanged815priorPASS retained;olderbackendcodeboundproofs nowhistorical andnotresealed. Markets drops existing exact-version economic quality parsing/rendering;separate sourceintegritynotyetapplicationvisible.",
+    "full_financial_admission": false,
+    "new_dataset_registered": false,
+    "existing_frozen_dataset_modified": false,
+    "freeze_operation_performed": false,
+    "new_strategy_or_oos_run": false,
+    "full_product_pass": false
+  },
   "official_listing_boundary_002168_20261008_gate": {
     "status": "PARTIAL_SOURCE_CONTRACT_MISMATCH",
     "evidence": "product-evidence/v1.2/m4/20261008-002168-listing-boundary/README.md",
@@ -777,7 +799,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T01:42:34Z",
+  "updated_at_utc": "2026-10-08T02:20:22Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4398,8 +4420,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Continue full U1-U8/M0-M5. UIregrowthcase complete/815currentfront.002168officialboundary+marketjoin20sealedproof completebutnewrealSOURCE_CONTRACT_MANIFEST_REFERENCE_MISMATCH:masteractualauthority64valid vs65legacyreference propagatedpreflight/catalog/freeze. Nextsafeengineering fixtraceALL materialize/audit/freeze/source-lineage callers and addminimalfailclosed exactcanonicalreference guard for NEWversion,not rewriting .research/frozen/oldreports. Preserveall7544oracles/498candidates/reference+allactionclass contradictions and source-to-economic admissionfalse. No reacquisitionofalreadycached002168clause. Fullforward/lawfulfeed/genuineledger/AA200/p95/export/media/authorizedremote gates remain/GitHubHOLD.",
-  "local_next_command": "Read official_listing_boundary_002168_20261008_gate/private20sealedproof9a3a58d7/v2c6f8c55a and actualmaterialize_full_dataset/audit_full_dataset/freeze_full_dataset/DatasetManifest callsites;reproduce65hex andwellformed-but-wrongcanonicalreference rejection before minimum NEWversion-safe guard. SECURITY_MASTER rawarray binds viaP0report,other14selfmanifests currentlyvalid. Do not alterlegacyfrozen/.research/statuslabels/formalresults/strategy/DB/provider/GitHub. Daily5173/API8000 healthy/allownQA/tests terminal. Localcoherentcommits only/no deniedscratch/original44refresh/downloadthirdclick/contaminatedp95/deniedPDFretry/remote requests/push/merge/tag/release.",
+  "next_task": "Continue full U1-U8/M0-M5 unchanged/ACTIVE. Source-reference guards and four-wayfreeze identity engineeringclosed/155focused1563backend1optionalSKIP/native49bindingsf5d0262c. Legacy65P0 remainsFAIL;no originaldatasetrewrite or financialadmission. NextvisibleU5/U8 fix markets/api dataset parser must reuse parseCurrentDatasetQuality;MarketsPage and actualbar metadata MarketDetail must show existing bilingual economicgap/unknown notices without changingselected source/rawprices/date/filter. Distinguishseparate sourceintegrityFAIL notcurrentlypropagated;do not claim notice fixes both. Then remainingfullfinancial/forward/lawfulfeed/genuineledger/AA200/p95/export/media/authorizedremote gates. GitHubHOLD.",
+  "local_next_command": "Read source_reference_guards_20261008_gate/native49proof and actual markets/api.ts/MarketsPage.tsx/MarketDetail.tsx/markets tests plus experiments currentquality parser/codes/backend metadata callers. Reproduce missing current_dataset_quality validation and ENZHnotice first, minimallyreuse parser/explanations, targeted/fullfrontend/browserreview with actualdetailmetadata/source-switch boundaries. No newsourceacquisition/formalstudy/OOS/originalDB/frozen/.research or GitHub. Existing5173/API8000 healthy;ownedtestPGstopped/alltesthandles terminal. Coherent local commits only, no denied scratch/refresh/download/remote bypass.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
