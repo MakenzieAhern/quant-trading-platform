@@ -1,4 +1,20 @@
 {
+  "blocked_audit_20261008": {
+    "status": "REQUIRES_USER_ACTION_OR_EXTERNAL_EVIDENCE_CHANGE",
+    "base_head": "04d829f500c71ef61c6e54bc111120bd648848a0",
+    "consecutive_condition_occurrences": 3,
+    "occurrence_evidence": [
+      "2e065e7 end: actual Chrome foreground/system reduced-motion preparation requested; source and external evidence gates unresolved",
+      "04d829f end: authoritative matrix contradiction repaired, but same user preparation and external conditions unchanged",
+      "Current continuation: no human preparation reply or new external evidence; clean repository, no live owned test/QA process to wait for"
+    ],
+    "turn_classification": "Previous unit PROGRESS in authoritative documentation, not new product capability. Current unit NO_PROGRESS, not VERIFIED_WAIT; this checkpoint is not counted as implementation progress.",
+    "feasibility": "Independent readonly bounded review identifies no remaining specific safe substantive action without genuine user preparation or new external evidence. Completed tests, existing screenshots and source scans must not be repeated as progress. September blocked counts and optional independent backup/novice gates are not used.",
+    "smallest_user_action": "Keep the platform Chrome window in the foreground, temporarily disable Windows animation effects for the scoped system-reduced-motion check, then explicitly confirm readiness. Do not assume automatic continuation confirms this or bypass native tool limits. Restore the prior setting after the check.",
+    "other_required_gates": "Source/economic/lifecycle/accounting reconciliation; lawful new-data use and real after-start receipt/plan/constrained handling; genuine missing-ledger recovery or explicit unresolved-loss disposition; remaining quality coverage; GitHub exact-head CI and release. No scope reduction or approval inferred.",
+    "preservation": "No application/code/data/runtime/queue/study/provider/remote action this unit. Local services untouched; all owned test handles terminal. Frozen research/OOS unchanged. Full U1-U8/M0-M5 remains incomplete.",
+    "product_goal_complete": false
+  },
   "acceptance_matrix_reconciliation_20261008_gate": {
     "status": "PASS_SCOPED_DOCUMENTATION_CORRECTION_NOT_PRODUCT_ACCEPTANCE",
     "source_parent": "2e065e7d0880cc64d096b2215090922c3c04f195",
@@ -1085,7 +1101,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T06:17:28Z",
+  "updated_at_utc": "2026-10-08T06:19:59Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4044,7 +4060,7 @@
     "policy": "Latest user-reported outage takes precedence for this work unit: continue local commits/tests/app, no GitHub request/push/merge/tag/release. Previous verified recovery/CI is historical only, not current-head acceptance. Reverify actual availability and exact-head CI at the authorized release gate; no billing/security/protection bypass."
   },
   "milestone": "M3_FORWARD_FOUNDATION_AND_M4_QUALITY",
-  "status": "IN_PROGRESS",
+  "status": "BLOCKED",
   "product_goal_complete": false,
   "baseline": {
     "tag": "v1.1.0",
@@ -4711,7 +4727,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 ACTIVE/PARTIAL. Current-source local regression/migration completed; do not rerun unchanged suites or repeat bounded frame/source scans as progress. Need an explicitly observed native foreground presentation context for a predeclared consistent performance protocol; system reduced-motion=true keyboard check needs real user setting or a documented supported media capability (currently unavailable). Preserve all slow timings; no speculative React optimization. Source/lifecycle/accounting/lawfulforward/trueledger gates remain; use latest three-gap inventory, never loosen grammar into admission or build inspection-only successor. No frozen/OOS change or GitHub action. If no safe substantive next action exists across3consecutive goal turns, mark BLOCKED rather than loop.",
+  "next_task": "BLOCKED after three consecutive occurrences of the same missing user preparation/external-evidence condition. Resume this same full U1-U8/M0-M5 task on explicit Chrome foreground/system reduced-motion readiness or meaningful required external-evidence change. Verify actual conditions before a consistent performance/keyboard protocol; preserve all slow samples and restore user settings afterward. Do not repeat unchanged tests/source scans, invent a React fix, bypass denied routes or claim a live background wait. Source/lifecycle/accounting/lawfulforward/trueledger/GitHub gates remain; no frozen/OOS or release change.",
   "local_next_command": "Read targeted_source_reconciliation_20261008_gate/report_first_filter_timing_20261008_gate and their README/current summaries. Currenttemporaryinstrument removed;do notstart duplicateapps. For source work seek only specificindependent cached correction/clarification of currentgaps,not fullarchiveacquisition. For performance use a non-intrusive justified measurement of actualfrontend beforecodeoptimization,retain3072msfailure. Preserve denials:no clean-demo/scratch replacement,fingerprint refresh,download bypass or600725resumptionretrieval. No newadapter withoutrequiredfacts,no fabricatedledgers. GitHubHOLD;localservices available;fullscopeincomplete.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
