@@ -1,5 +1,27 @@
 # Decisions
 
+## v1.2 Explicit independent successor inputs, not inherited approval — 2026-10-08
+
+Reuse the full materializer with --build-spec/whole-file SHA and an explicit
+new identity, stable UTC timestamp, 15 contracts, five reference pins, five
+auxiliaries and exact raw/meta selection. Existing v1.2 goal authorizes this
+engineering operation; it does not supply missing source/financial facts or
+create a new human gate. New preflight binds input selection excluding its own
+digest/output paths; inspection-only and copied R5 approval are rejected.
+
+Reuse catalog immutable/freeze/checksum helpers and the raw parser. Read/hash/
+parse the same bytes and bridge selected raw pins into the shared stage.
+Capture producer before expensive loading and compare before publication.
+Owned work/final directories are isolated; resume derives the whole report
+from verified output instead of trusting mutable status/count fields. A missing
+post-rename receipt can be restored without rebuilding a published dataset.
+
+New build output never means financial/audit/registration/freeze approval. Tests
+are explicitly synthetic; keep existing 239/24 and cost conventions unchanged.
+Next wire price-only companions and replace fixed-v1 audit assumptions with
+actual versioned evidence. No real materialization from the inspection bundle.
+No new framework/dependency, research-state mutation, strategy run or GitHub use.
+
 ## v1.2 Bind raw checkpoints before version reuse — 2026-10-08
 
 Fix shared raw_stage, not only the planned successor caller. Bind sorted complete

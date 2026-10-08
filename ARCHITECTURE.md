@@ -171,6 +171,14 @@ existing research v1 and explicitly synthetic demo remain compatible.
 
 ## Market-data flow
 
+Independent successor materialization reuses the existing offline full-dataset
+pipeline through an explicit input specification, not frozen `.research` state.
+New ID/coverage/source selection, raw and auxiliary bytes, producer ownership and
+isolated atomic output/report identity are checked before reuse/publication.
+This creates no execution admission, registration or freeze. See
+[successor build contract](docs/product/DATASET_SUCCESSOR.md) for boundaries and
+the separate remaining financial/source and version-aware audit work.
+
 Explicit issuer repurchase-excluded ordinary-distribution price inputs are a
 separate immutable `OrdinaryDistributionReference`, never an accounting event.
 New candidate manifests may bind `ORDINARY_REFERENCE` rows in the existing

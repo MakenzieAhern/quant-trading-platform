@@ -1,4 +1,27 @@
 {
+  "successor_build_inputs_20261008_gate": {
+    "status": "PASS_SCOPED_ENGINEERING_NOT_DATASET_OR_FINANCIAL_APPROVAL",
+    "source_parent": "af77ea95a018a63e7db267a7557531292dce364c",
+    "progress": "Previous local-runtime answer NO_PROJECT_PROGRESS. This unit implements isolated successor input/output identity and closes reproduced selection/report/transient-read/producer/raw-pin defects: PROGRESS. Full U1-U8/M0-M5 remains ACTIVE.",
+    "implementation": "Existing materializer --build-spec plus whole-file SHA; no frozen research-state fallback. Exact15 sources/5 pins/5 auxiliaries/raw+meta/rule/ID/UTC selection bound to new preflight; isolated owned work/final directories; same-byte consumption; producer snapshot; complete resume report and atomic publication receipt. Existing legacy path retained.",
+    "checks": "277relatedPASS2.77s (33new/244existing), Ruff/format/script-mypyPASS. Four retained real synthetic JSON/XLSX/Parquet build/reorder/interruption cases PASS0.92s; standalone CLI resumes same manifest5fd015f5. Raw bytes+mtimes preserved across after-raw and after-rename interruption. Exact seven initial failures, transient inventory failure, two spec/producer failures, two raw-selection failures reproduced then fixed.",
+    "review": "Independent readonly final review closed all reported P2s; no remaining scopedP1P2. Reviewer did not execute tests, real source tasks or builder.",
+    "evidence": "product-evidence/v1.2/m4/20261008-successor-build-inputs/README.md",
+    "retained_synthetic_fixtures": "/home/yuchen/data/product-test-fixtures/20261008-successor-build-inputs-proof-v1",
+    "checksum_bindings_sha256": "2ab20883d397d985c17a303f25f3528dc584cf1e9003531364bc37b43af64597",
+    "checksum_entries": 265,
+    "verification": "Windows Get-FileHash and WSL sha256sum --check independently match all265 bound files. Missing fixture parent and Windows pytest symlink-inventory errors retained/described; only pytest aliases excluded, no concrete data files.",
+    "preservation": "Original manifest693c0b81/freeze228569f1/contracts c8148481/researchstate b10ce3c5/tag f88b5c60 and Git identity unchanged. No app/frontend/research diff, database/provider/strategy operation or runtime restart. Compose3healthy; previous runtime answer verified frontend/API200 and RedisPONG.",
+    "limitations": "Synthetic engineering only. No real successor preflight/dataset/audit/admission. Existing239 feature-only/24merger/cost conventions retained; explicit ORDINARY_REFERENCE input and version-aware actual audit remain. Ownership binds two entry files, not hermetic runtime; two injected interruption points not exhaustive crash proof. Full backend/frontend/browser/CI NOT_RUN.",
+    "dataset_created": false,
+    "dataset_registered": false,
+    "dataset_audited": false,
+    "frozen_dataset_modified": false,
+    "strategy_run": false,
+    "full_financial_admission": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "raw_resume_input_binding_20261008_gate": {
     "status": "PASS_SCOPED_ENGINEERING_NOT_DATASET_OR_FINANCIAL_APPROVAL",
     "source_parent": "29edf21619833d19ce7c1f20e1b9ca0d0c38844b",
@@ -907,7 +930,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T04:08:00Z",
+  "updated_at_utc": "2026-10-08T04:31:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4532,7 +4555,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 ACTIVE. Full15 inspection chain remains complete; shared raw resume defect now fixed (244tests/34bindings1c3ac57b). Next implement explicit successor-version approved-input and isolated work/final/report identity using existing materializer/audit helpers. No fixed-v1/frozen research fallback or INSPECTION_ONLY approval. Financial/lifecycle closure, lawfulforward/genuineledger/currentquality/delivery remain;GitHubHOLD.",
+  "next_task": "Full U1-U8/M0-M5 ACTIVE. Explicit successor builder/owned output and same-byte input selection now tested (277related/265bindings2ab20883); do not repeat it or full15 inspection. Next wire existing price-only ORDINARY_REFERENCE companions as explicit inputs and make actual audit candidate-ID/input-set aware without old literal PASS or fixed-v1 fallback. Do not create a real successor until source/economic/lifecycle facts support its preflight; inspection-only bundle cannot authorize build. Keep original frozen/research/OOS unchanged. Lawfulforward/genuineledger/currentquality/delivery remain;GitHubHOLD.",
   "local_next_command": "Read raw_resume_input_binding_20261008_gate and existing materializer/audit/freeze callers. Implement minimal explicit new-version input/output contract: distinct ID, owned isolated work/final/report paths,15 source contracts+5pins, actual auxiliary input pins, genuine operation approval; do not copy .research or invent approval. Verify with disposable fixtures until financial/lifecycle closure. Audit must not inherit literal legacy accounting/restart PASS or weaken exact corporate-action reconciliation. Do not repeat completed candidate/raw-guard/arithmetic work or execute real builder/strategy; preserve stopped routes.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

@@ -1,5 +1,27 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-08 isolated successor build inputs — scoped PASS
+
+- Prior runtime-status answer NO_PROJECT_PROGRESS. New explicit entry and
+  reproduced input/report/race defects fixed: PROGRESS, full goal unchanged.
+- Seven selection/report RED cases; one transient inventory RED (tool transcript);
+  two spec/producer RED and two SSE/SZSE raw-selection RED cases repaired.
+  Readonly independent review closed all reported P2s; no scopedP1P2 remains.
+- Final277relatedPASS2.77s (33new/244existing), Ruff/format/script-mypy PASS.
+  Four retained positive synthetic builds PASS0.92s; input-order/fresh manifest
+  repeat and two interrupted resumes retain raw hashes/mtimes. CLI resume actual
+  canonical5fd015f5. Ownership binds entry files, not a hermetic environment.
+- [265 inputs/outputs/log/code bindings](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-successor-build-inputs/README.md>)
+  SHA2ab20883d397d985c17a303f25f3528dc584cf1e9003531364bc37b43af64597 verified
+  by Windows and WSL. Missing fixture parent / three pytest alias inventory
+  errors preserved; corrected without deleting real or sealed outputs.
+- Frozen/.research/tag/identity unchanged; no app/frontend changes, runtime
+  restart, DB, provider, strategy or OOS action. Compose healthy. No actual
+  successor dataset created/audited/registered/frozen. Full app/frontend/browser
+  and remote CI NOT_RUN. Real preflight cannot reuse inspection-only evidence.
+- Next: explicit price-only companion inputs and version-aware actual audit,
+  keeping genuine source/economic/lifecycle and full product gates. GitHub HOLD.
+
 ## 2026-10-08 raw input-bound resume — scoped PASS
 
 - Previous runtime-status answer: NO_PROJECT_PROGRESS. Current shared defect

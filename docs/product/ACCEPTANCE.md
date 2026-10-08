@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 U3/U5/U7 isolated successor entry — scoped PASS
+
+[Build contract](DATASET_SUCCESSOR.md) and
+[reproductions/retained fixtures/CLI/code-bound evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-successor-build-inputs/README.md>).
+277 related tests (33 new) and lint/format/script types PASS. Four retained
+synthetic build/reorder/interruption cases and standalone CLI resume preserve
+canonical manifest5fd015f5.265 bindings2ab20883 independently verified in Windows
+and WSL. Independent readonly review closed reported P2s; no remaining scopedP1P2.
+
+New ID/explicit selected-source preflight/owned outputs no longer inherit fixed
+v1 or frozen research state. Exact parsed bytes/raw selection, producer snapshot,
+report reconstruction and post-rename receipt are checked. This is engineering,
+not real financial or user-flow acceptance. No real dataset created/audited/
+registered/frozen, strategy run or new full-suite/browser/CI result. Original
+assets/tag/identity/runtime preserved; GitHub HOLD. Existing price-only companion
+input integration and version-aware actual audit, genuine source/economic/
+lifecycle/forward/currentquality/delivery remain. Full U1-U8/M0-M5 ACTIVE.
+
 ## 2026-10-08 U3/U5/U7 raw resume prerequisite — scoped PASS
 
 [Reproductions, retained fixtures and code-bound evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-raw-resume-input-binding/README.md>)

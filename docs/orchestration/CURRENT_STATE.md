@@ -1,5 +1,25 @@
 # Current state
 
+## v1.2 isolated successor build entry — 2026-10-08
+
+Explicit new-version input/owned output entry implemented in the existing
+materializer, without `.research` fallback or inherited legacy approval.
+Selected raw/meta/auxiliary/rule/source inputs are bound to a new preflight;
+parser consumes verified bytes. Resume rebuilds the report from the checked
+manifest, preserves false audit/financial flags and recovers only missing
+post-rename receipt. Legacy fixed entry remains compatible.
+277 related tests/static/type checks PASS; four retained synthetic build/reorder/
+interruption cases plus actual CLI resume PASS. Independent readonly scoped
+review closed P2s. [265-file proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-successor-build-inputs/README.md>)
+manifest2ab20883d397d985c17a303f25f3528dc584cf1e9003531364bc37b43af64597.
+
+No real dataset or financial approval. Next integrate existing price-only
+companions and new-version actual audit inputs/results, without copying old
+fixed-count/literal PASS acceptance. The real reference bundle remains inspection
+only; full source/economic/lifecycle facts still govern materialization/admission.
+Original frozen assets/.research/OOS/tag/runtime unchanged. No app/DB/provider/
+strategy action; full U1-U8/M0-M5 ACTIVE/PARTIAL and GitHub HOLD.
+
 ## v1.2 raw resume binds actual inputs — 2026-10-08
 
 Shared raw_stage stale-input reuse defect FIXED; 244 related tests PASS,
