@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from bisect import bisect_left, bisect_right
 from collections import Counter, defaultdict
 from datetime import date, timedelta
@@ -22,10 +23,12 @@ from app.data.full_dataset import FullDataset, parse_action_records
 from app.domain.markets.consolidations import ShareConsolidationEvent
 from app.domain.markets.corporate_actions import (
     CorporateAction,
+    CorporateActionType,
     OrdinaryDistributionReference,
     require_supported_corporate_action,
 )
 from app.domain.markets.demergers import DemergerEvent
+from app.domain.markets.identifiers import SecurityId
 from app.domain.markets.mergers import MergerEvent
 from app.domain.markets.pass_through import RestructuringBonusPassThroughEvent
 from app.domain.markets.surrenders import MandatoryPartialShareSurrenderEvent
@@ -86,10 +89,17 @@ REQUIRED_GATES = frozenset(
 
 
 def candidate_publication(
-    candidate: CandidateBuildInputs, dataset: Path, repository: Path, output: Path, spec_path: Path
+    candidate: CandidateBuildInputs,
+    dataset: Path,
+    repository: Path,
+    output: Path,
+    spec_path: Path,
+    *,
+    extra_inputs: tuple[Path, ...] = (),
 ) -> None:
     """Read-only identity check; auditing must never claim work or repair a build."""
     inputs = [spec_path, repository / candidate.reference_pins["p0_public_report_path"]]
+    inputs.extend(extra_inputs)
     inputs.extend(source_path(repository, row["source_path"]) for row in candidate.source_contracts)
     inputs.extend(pin.path for pin in candidate.auxiliary_inputs.values())
     for pins in candidate.raw_sources.values():
@@ -144,6 +154,127 @@ def candidate_action_rows(
     return rows
 
 
+def source_economic_integrity(
+    actions: list[dict[str, Any]], gaps: dict[str, Any] | None
+) -> dict[str, Any]:
+    """Join retained negative evidence to all ordinary events, never grant approval."""
+    records: list[dict[str, Any]] = []
+    if gaps is not None:
+        raw_records = gaps.get("records")
+        if (
+            gaps.get("scope") != "KNOWN_EVENT_SOURCE_CONTRADICTIONS_NOT_WHOLE_SECURITY_EXCLUSIONS"
+            or gaps.get("financial_admission") is not False
+            or not isinstance(raw_records, list)
+            or not raw_records
+            or any(not isinstance(row, dict) for row in raw_records)
+        ):
+            raise ValueError("INVALID_KNOWN_SOURCE_GAPS")
+        records = raw_records
+    keys = set()
+    for gap in records:
+        try:
+            sid = str(SecurityId(value=gap["security_id"]))
+            record_day, ex_day = (
+                date.fromisoformat(gap[key]) for key in ("record_date", "ex_date")
+            )
+            key = sid, record_day.isoformat(), ex_day.isoformat(), gap["source_sha256"]
+            valid = (
+                record_day <= ex_day
+                and key[1:3] == (gap["record_date"], gap["ex_date"])
+                and re.fullmatch(r"[0-9a-f]{64}", gap["source_sha256"])
+                and re.fullmatch(r"https://\S+", gap["source_url"])
+                and gap["status"] == "BLOCKED_SOURCE_AGGREGATE_CONTRADICTION"
+                and isinstance(gap["evidence"], str)
+                and bool(gap["evidence"].strip())
+                and gap["blocks_new_economic_candidate"] is True
+                and gap["reference_price_match_resolves_issue"] is False
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("INVALID_KNOWN_SOURCE_GAP_RECORD") from exc
+        if not valid or key in keys:
+            raise ValueError("INVALID_OR_DUPLICATE_KNOWN_SOURCE_GAP_RECORD")
+        keys.add(key)
+    findings: list[dict[str, Any]] = [
+        {"gap": gap, "events": []}
+        for gap in sorted(
+            records,
+            key=lambda g: (g["security_id"], g["record_date"], g["ex_date"], g["source_sha256"]),
+        )
+    ]
+    checked = 0
+    matched = set()
+    for row in sorted(actions, key=lambda row: row["event_checksum"]):
+        if row["event_kind"] not in {"CORPORATE_ACTION", "RIGHTS_ISSUE"}:
+            continue
+        event = CorporateAction.model_validate_json(row["event_json"])
+        if row["event_checksum"] != event.event_checksum:
+            raise ValueError("SOURCE_GAP_ACTION_CHECKSUM_MISMATCH")
+        if event.action_type not in {
+            CorporateActionType.CASH_DIVIDEND,
+            CorporateActionType.STOCK_DIVIDEND,
+            CorporateActionType.BONUS_SHARE,
+        }:
+            continue
+        checked += 1
+        sid = str(event.security_id)
+        record = event.record_date.isoformat() if event.record_date else None
+        ex = event.ex_date.isoformat() if event.ex_date else None
+        # ponytail: retained gaps are small; index keys if this becomes a full census.
+        for finding in findings:
+            gap = finding["gap"]
+            same_source = event.source_document_sha256 == gap["source_sha256"]
+            same_identity = (sid, record, ex) == (
+                gap["security_id"],
+                gap["record_date"],
+                gap["ex_date"],
+            )
+            related = (
+                same_source
+                or row.get("source_document_sha256") == gap["source_sha256"]
+                or event.source_url == gap["source_url"]
+                or row.get("source_url") == gap["source_url"]
+                or (
+                    sid == gap["security_id"]
+                    and (record == gap["record_date"] or ex == gap["ex_date"])
+                )
+            )
+            if not related:
+                continue
+            finding["events"].append(
+                {
+                    "event_checksum": event.event_checksum,
+                    "event_kind": row["event_kind"],
+                    "action_type": event.action_type.value,
+                    "security_id": sid,
+                    "record_date": record,
+                    "ex_date": ex,
+                    "source_document_sha256": event.source_document_sha256,
+                    "source_url": event.source_url,
+                    "materialized_source_document_sha256": row.get("source_document_sha256"),
+                    "materialized_source_url": row.get("source_url"),
+                    "classification": "KNOWN_SOURCE_CONTRADICTION"
+                    if same_identity and same_source
+                    else "EVENT_SOURCE_IDENTITY_UNRESOLVED",
+                }
+            )
+            matched.add(event.event_checksum)
+    for finding in findings:
+        finding["status"] = (
+            "MATCHED_NEGATIVE_EVIDENCE" if finding["events"] else "UNMATCHED_NOT_RESOLVED"
+        )
+    return {
+        "scope": "KNOWN_ORDINARY_EVENT_SOURCE_GAPS_ONLY",
+        "status": "FAIL" if matched else "NOT_EVIDENCED",
+        "scan_status": "COMPLETED_NEGATIVE_INVENTORY_ONLY" if gaps is not None else "NOT_SUPPLIED",
+        "ordinary_event_rows_checked": checked,
+        "known_gap_count": len(findings),
+        "matched_event_count": len(matched),
+        "unmatched_gap_count": sum(not item["events"] for item in findings),
+        "findings": findings,
+        "financial_admission": False,
+    }
+
+
 def audit(
     dataset: Path,
     repository: Path,
@@ -151,9 +282,18 @@ def audit(
     *,
     build_spec: Path | None = None,
     build_spec_sha256: str | None = None,
+    known_source_gaps: Path | None = None,
+    known_source_gaps_sha256: str | None = None,
 ) -> dict[str, Any]:
     if (build_spec is None) != (build_spec_sha256 is None):
         raise ValueError("SELECT_EXACTLY_ONE_AUDIT_INPUT_MODE")
+    if (known_source_gaps is None) != (known_source_gaps_sha256 is None) or (
+        known_source_gaps is not None and build_spec is None
+    ):
+        raise ValueError("KNOWN_SOURCE_GAPS_REQUIRE_CANDIDATE_AND_EXACT_SHA256")
+    # Bind the consumed identity once; an input alias must not rewrite report lineage.
+    if known_source_gaps is not None:
+        known_source_gaps = known_source_gaps.resolve(strict=True)
     audit_code = (
         {
             str(path): sha256_file(path)
@@ -167,6 +307,16 @@ def audit(
         if build_spec is not None
         else {}
     )
+    gap_payload = (
+        json.loads(verified_file_bytes(known_source_gaps, known_source_gaps_sha256))
+        if known_source_gaps is not None and known_source_gaps_sha256 is not None
+        else None
+    )
+    if known_source_gaps is not None:
+        if not isinstance(gap_payload, dict):
+            raise ValueError("INVALID_KNOWN_SOURCE_GAPS")
+        source_economic_integrity([], gap_payload)
+    extra_inputs = (known_source_gaps,) if known_source_gaps is not None else ()
     candidate = (
         load_candidate_build_inputs(
             build_spec,
@@ -179,7 +329,9 @@ def audit(
         else None
     )
     if candidate and build_spec is not None:
-        candidate_publication(candidate, dataset, repository, output, build_spec)
+        candidate_publication(
+            candidate, dataset, repository, output, build_spec, extra_inputs=extra_inputs
+        )
     state = (
         candidate.reference_pins
         if candidate
@@ -627,6 +779,14 @@ def audit(
         }
         for gate in unproven:
             gates[gate] = "NOT_EVIDENCED"
+        economic_check = source_economic_integrity(actions, gap_payload)
+        economic_check.update(
+            known_source_gaps_path=str(known_source_gaps.resolve()) if known_source_gaps else None,
+            known_source_gaps_sha256=known_source_gaps_sha256,
+        )
+        gates["SOURCE_ECONOMIC_INTEGRITY"] = economic_check["status"]
+        if economic_check["status"] == "NOT_EVIDENCED":
+            unproven.add("SOURCE_ECONOMIC_INTEGRITY")
         loader = FullDataset(
             dataset,
             manifest,
@@ -662,6 +822,7 @@ def audit(
             build_inputs=candidate.ownership(),
             audit_code_sha256=audit_code,
             build_spec_sha256=build_spec_sha256,
+            source_economic_integrity=economic_check,
             ordinary_reference_rows=reference_count,
             accounting_action_rows=len(actions) - reference_count,
             runtime_scan={
@@ -685,7 +846,11 @@ def audit(
             full_financial_admission=False,
             strategy_run=False,
             unevidenced_gates=sorted(unproven),
-            single_smallest_blocker="SUCCESSOR_DATASET_BOUND_FINANCIAL_LIFECYCLE_EVIDENCE_INCOMPLETE",
+            single_smallest_blocker=(
+                "KNOWN_SOURCE_ECONOMIC_EVIDENCE_UNRESOLVED"
+                if economic_check["status"] == "FAIL"
+                else "SUCCESSOR_DATASET_BOUND_FINANCIAL_LIFECYCLE_EVIDENCE_INCOMPLETE"
+            ),
         )
         # Recheck before immutable publication; neither build nor legacy state is mutated.
         if (
@@ -699,7 +864,14 @@ def audit(
             != candidate
         ):
             raise ValueError("CANDIDATE_BUILD_SPEC_CHANGED")
-        candidate_publication(candidate, dataset, repository, output, build_spec)
+        candidate_publication(
+            candidate, dataset, repository, output, build_spec, extra_inputs=extra_inputs
+        )
+        if (
+            known_source_gaps is not None
+            and sha256_file(known_source_gaps) != known_source_gaps_sha256
+        ):
+            raise ValueError("KNOWN_SOURCE_GAPS_CHANGED_DURING_AUDIT")
         verify_dataset(dataset, manifest)
         if sha256_file(dataset / "manifest.json") != report["manifest_file_sha256"]:
             raise ValueError("CANDIDATE_MANIFEST_BYTES_CHANGED")
@@ -720,6 +892,8 @@ if __name__ == "__main__":
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--build-spec", type=Path)
     parser.add_argument("--build-spec-sha256")
+    parser.add_argument("--known-source-gaps", type=Path)
+    parser.add_argument("--known-source-gaps-sha256")
     args = parser.parse_args()
     print(
         json.dumps(
@@ -729,6 +903,8 @@ if __name__ == "__main__":
                 args.output,
                 build_spec=args.build_spec,
                 build_spec_sha256=args.build_spec_sha256,
+                known_source_gaps=args.known_source_gaps,
+                known_source_gaps_sha256=args.known_source_gaps_sha256,
             )
         ),
         flush=True,

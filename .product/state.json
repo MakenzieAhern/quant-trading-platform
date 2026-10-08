@@ -1,4 +1,26 @@
 {
+  "known_source_gap_audit_20261008_gate": {
+    "status": "PASS_SCOPED_ENGINEERING_SOURCE_ECONOMICS_FAIL",
+    "source_parent": "3df8ed1",
+    "progress": "Previous shared-session unit PROGRESS. This unit closes whole-base negative-evidence omission and2independent review defects, with actual full-partition findings: PROGRESS. Full U1-U8/M0-M5 unchanged/ACTIVE.",
+    "implementation": "Candidate audit-only paired known-source-gaps path+SHA; fixed resolved path/same-byte parsing/output isolation/final pin. Whole typed ordinary cash-stock-bonus join uses PDF/source refs or sameSID with record/ex anchor. Genuine rights/structural/price companions not treated as ordinary economics. No inventory/no related eventNE; related evidenceFAIL, no new PASS.",
+    "actual": "Read all42792unchanged frozen action rows;42598ordinarychecked;2sealed source contradictions link4existinglegs:300147@2011-05-23 and300155@2011-05-06,eachcash+bonus. No source arithmetic repeated/repair/exclusion. Whole financial/source scope remainsPARTIAL.",
+    "actual_final_report_sha256": "35f365461f4f85d7a79cf9366728a46a361b190bf846c4b649a84c37a2d79014",
+    "checks": "242relatedtests incl25newPASS7.38s;Ruff/format/mypyPASS.2retained actual synthetic builders/auditsPASS0.92s;candidateCLI/APIbytes7750db36identical. Finalactualnegativeproducer repeats identical and reverses entire rows/gaps. Fullsuite/DB/frontend/browser/CI NOT_RUN.",
+    "review": "Independent readonly2P2s reproducedRED and repaired/closed: inputaliasA-B-A reportpath drift; outerkind relabel hiding typed ordinary. No remaining scopedP1P2. Reviewer didnotexecute producer/tests.",
+    "evidence": "product-evidence/v1.2/m4/20261008-known-source-gap-audit/README.md",
+    "fixtures": "/home/yuchen/data/product-test-fixtures/20261008-known-source-gap-audit-proof-v1",
+    "limits": "Negative ordinary inventory only,not complete corporate economics/lifecycle/accounting or structural multidocument discovery. Simultaneous replacement of allanchors needs independent fullsource/eventbinding. Preliminary realreport8d50844c retained historical,not final code proof.",
+    "preservation": "Original frozen manifest/freeze/contracts/actionpartition/researchstate unchanged;v1.1tag andGitidentity preserved. No originalDB/queue/runtime/strategy/OOS/provider acquisition. GitHubHOLD.",
+    "source_economic_integrity": "FAIL",
+    "dataset_created": false,
+    "dataset_audited": false,
+    "frozen_dataset_modified": false,
+    "strategy_run": false,
+    "full_financial_admission": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "action_session_preconditions_20261008_gate": {
     "status": "PASS_SCOPED_ENGINEERING_NOT_FINANCIAL_APPROVAL",
     "source_parent": "28e014b682797265d1a71e677701e8f19d40a056",
@@ -974,7 +996,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T04:59:09Z",
+  "updated_at_utc": "2026-10-08T05:09:43Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4599,8 +4621,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 ACTIVE. Shared action-session validation closes candidate audit omission with673tests/retained conflict proof; do not repeat builder/reference/precondition plumbing. Next bind known event-specific source contradictions against whole candidate action set, including legacy-base events, not only overlay. Genuine financial/source/lifecycle/accounting/forward/ledger/quality/delivery remain. No real successor from inspection-only bundle or frozen/OOS mutation;GitHubHOLD.",
-  "local_next_command": "Read action_session_preconditions_20261008_gate and actual known-source-gaps.json in20261008-v30-financial-preflight plus existing overlay audit SID/record/ex/sourceSHA guard. Reuse that exact evidence to add checksum-bound whole-candidate source-economic checks without inventing new facts or source approval. Source coverage remains PARTIAL; cash/basis/PnL and real holder/lifecycle evidence stay separate. No originalDB/runtime/strategy/provider or stopped acquisition route.",
+  "next_task": "Full U1-U8/M0-M5 ACTIVE. Whole-event negative evidence now bound and actual4baselegs confirmed;do not repeat accepted source/session/reference plumbing. Genuine source contradictions/lifecycle/accounting/forward/ledger remain unresolved. Next inspect existing U5 source-integrity findings and U3/U6 admission paths so current negative evidence is consistently explained/enforced, then prioritize remaining runnable end-to-end quality work. No real successor from inspection-only bundle,frozen/OOS change,orGitHub action.",
+  "local_next_command": "Read known_source_gap_audit_20261008_gate/finalrealreport35f36546 and current acceptance. Inspect existing read-only source findings API/UI and shared experiment/paper dataset eligibility callers before edits. Determine whether newly verified event-level negative evidence can reuse current immutable findings route without new runtime/DB/provider/strategy actions or misleading full-source PASS. Keep stopped routes stopped;do not invent missing facts or genuine ledger. Fullproductscope remains open.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

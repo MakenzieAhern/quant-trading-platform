@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 Negative source evidence covers base events, never grants approval — 2026-10-08
+
+Treat the existing checksum-bound contradiction inventory as separate audit-only
+evidence. Match the full typed ordinary event set, not only newly proposed overlay
+rows. Retain all gaps, matched checksums, dates and source references; related
+identity changes are unresolved, not repaired facts. Missing/unmatched negative
+evidence remains NOT_EVIDENCED, never a clean economic certificate. Real old base
+contains four legs for the two known contradictory issuer notices; preserve them
+and all original frozen outputs. No whole-security exclusion or methodology change.
+
+Independent review reproduced transient input-symlink path misbinding and an outer
+RIGHTS_ISSUE label hiding a typed ordinary event. Resolve the gap input once and
+filter by typed economic action after parsing either supported container kind.
+Neither fix changes Portfolio or executes a strategy. Full source/lifecycle and
+genuine financial admission remain required; GitHub stays HOLD.
+
 ## v1.2 Reuse execution preconditions in candidate audits — 2026-10-08
 
 Extract the existing holding-independent action checks into one pure function in

@@ -112,3 +112,26 @@ Legacy accounting, lifecycle, input-order and restart PASS literals are not
 inherited: unexecuted obligations remain `NOT_EVIDENCED`. A partial report is not
 financial admission. The legacy three-argument audit and freeze interface stay
 unchanged; no candidate report may be used to unlock old research/OOS.
+
+### Retained negative source evidence
+
+Candidate audit optionally accepts `--known-source-gaps /absolute/gaps.json`
+and `--known-source-gaps-sha256 <whole-file-sha256>` together. These are audit
+evidence, not builder inputs or a replacement preflight. The input path is
+resolved once, parsed from exactly the hashed bytes, protected from output aliases
+and rechecked before immutable publication. Legacy audit rejects these options.
+
+The existing `KNOWN_EVENT_SOURCE_CONTRADICTIONS_NOT_WHOLE_SECURITY_EXCLUSIONS`
+inventory binds security/record/ex/PDF-SHA/URL and preserves its complete findings.
+All typed ordinary cash/stock/bonus events are checked, including base events and
+ordinary events carried under either CorporateAction container label. Price-only
+companions, genuine rights and structural multi-document events are not ordinary
+economics. Match original document references OR the same security and either
+event date; partial identity changes remain unresolved, not silently cleared.
+No whole-security exclusion or entitlement correction occurs.
+
+`SOURCE_ECONOMIC_INTEGRITY` is FAIL on related negative evidence and otherwise
+NOT_EVIDENCED, including missing inventories and unmatched entries. A negative
+list cannot establish complete economics. Simultaneously replacing all identity
+and reference anchors is outside this join's evidence; full source/event-set
+binding and genuine admission remain required. No accounting or strategy runs.

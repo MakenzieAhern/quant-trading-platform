@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 whole-event negative source evidence — scoped engineering PASS, economics FAIL
+
+[Actual read-only report, regressions and retained CLI evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-known-source-gap-audit/README.md>).
+Final current-code scan reads the entire unchanged42,792-row old partition,
+checks42,598 typed ordinary rows and links4existing cash/bonus legs to the sealed
+two source contradictions:300147@2011-05-23 and300155@2011-05-06. Repeated/reversed
+input output35f36546 is identical. This is negative evidence, NOT a new full audit
+or admission. Original data, accounting and methods remain unchanged.
+
+Candidate audit accepts a separate pinned negative inventory and reports FAIL
+despite source-set/price checks passing; no inventory/no match remains NOT_EVIDENCED.
+242 related tests (25 new) and static/type checks PASS. Two retained real synthetic
+builders/audits PASS; CLI/API report7750db36 byte-identical. Independent review
+raised2P2s (transient input alias/path rebinding; outer-kind hiding typed ordinary
+economics), both RED reproduced, fixed and review-closed. No remaining scopedP1/P2.
+
+Actual source contradictions are NOT resolved by this code. Other financial,
+lifecycle/forward/genuine-ledger/current end-to-end/quality/delivery obligations
+remain; no original DB/runtime/strategy/OOS/new acquisition or full-suite/browser/
+CI run. Full U1-U8/M0-M5 ACTIVE; GitHub HOLD.
+
 ## 2026-10-08 U3/U5/U7 shared action-session audit — scoped PASS
 
 [Evidence and retained counterexample](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-action-session-preconditions/README.md>).
