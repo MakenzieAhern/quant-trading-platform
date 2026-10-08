@@ -1,5 +1,69 @@
 # Decisions
 
+## v1.2 Reconcile saved API identities offline during GitHub HOLD — 2026-10-08
+
+GitHub CI unavailability is not a local runtime prerequisite. Original frontend
+5173/API8000 are freshly HTTP200, Compose3healthy and RedisPONG. Do not restart
+the standalone frontend or run `make up` merely to answer the local-use question;
+that can introduce a5173 conflict. Local test targets use disposable PostgreSQL,
+not the live database; hosted exact-head CI/release remain distinct HOLD gates.
+
+The current-code restore/restart now passes its scoped gate. Its JSON-equality
+check did not establish accounting identities, so reuse its sealed actual API
+files for a separate Decimal reconciliation, without another restore or study.
+Both20date/40position/10fill/18decision captures agree on cash/MV/equity and
+per-date/summary cost50.34364/final equity97579.65636. Three RAM corruptions are
+rejected. Readonly independent review prompted binding both runtime backend
+trees to clean currentsource and documenting all-zero pending values, warmup,
+transaction-component costs and prior-date vs exact-next-session limitations.
+Final4payload proof03a0467a twicePASS; source/financial data unchanged.
+
+Retain known economic coverage gap/negative/null results, genuine missing-ledger
+and lawful-feed gates. This is saved-result projection/accounting consistency,
+not a new financial authority, product completion, OOS or release. No GitHub
+request/push/merge/tag/security or frozen/.research/identity change. Root sole
+checkpoint/privateproof writer; keep these coherent milestone changes local.
+
+## v1.2 Restore the current source against the existing backup, not an old image — 2026-10-08
+
+The recovered nativeWSL Docker bridge permits a distinct existing-host workflow:
+reuse owned tmpfsPG30b1/55471, new absent/empty testrestoreDB and existingWSLsource.
+No newcontainer/archive/sourcecopy or bypass of deniedscratch/original44refresh.
+Verify sealed27backup inputs, native transactionalpg_restore,44pre/43projected
+business fingerprints/18receiptfiles, test-only0016→0017 migration and normal
+currentlifespan. Terminal-only inputs/no journals avoid financial/research replay.
+Bind appprocess to maskedDBtarget/ownerlocks, restart exact ownedAPI, compare
+12REST bodies and reopen savedrecords through source-bound GET-only UIproxy.
+
+Readonly review required process/DB evidence, exactschema and savedHTTPchecks;
+all added. Preserve the first concurrentlog corruption/failed guard/locator/
+closed-tab attempt; Lock and returned fresh tab fix only future evidence. Stop
+ownedprocesses beforeseal;54payload1746a05e repeatedPASS, originalservices/data
+unchanged. This proves currentcode reads an Oct7 post-loss baseline, not latest
+liveequivalence/lostledgers/financial completeness/fullWS/disaster/release.
+Do not treat pastOctober1 as GHrecovery; remoteHOLD remains. Native29.8/socket
+is currently healthy; old missingbridge diagnosis is historical. Fullproduct
+goal persists with remaining financial/forward/quality/delivery gates.
+
+## v1.2 Native failure disclosure needs evidence, not another component — 2026-10-08
+
+Existing details/summary, namedlist and focus-visible worked in actual mobile
+EN/ZH100101 keyboard/AX. No apppatch or dependency: seal27rawframes/fourJPEGs,
+currentserved schema responses and immutable source/build parents. The private
+checker initially mishandled typed failurecontext; fix the checker, not the API.
+Independent review's optionalAX/unboundURL-script/text checks strengthened before
+seal15payloadc64a0b1a/twicerepeatPASS. Missing ZH100 auditframe, fullproviderlog,
+speech/native200/fullAA/financial remain explicit, not recreated after the fact.
+Stoponly fresh-owned QA725834/same30714; originalruntime/frozen/research unchanged.
+
+Advance to application-restore eligibility rather than another unchanged matrix.
+Readonly inspect shows existing Oct2 testcontainers terminal255/PGRedis tmpfs/
+historicalimages and RO oldinputs. Oldreplay cannot prove current0017/sourcebound
+restore. No start/import/sourcecopy/recreate/originalDB/migration performed, and
+no attempt to split/substitute the previously policy-denied newscratch/44table
+refresh operation. Retain historical restore evidence and current gap separately;
+continue other permitted mandatory work, never label wholeproduct/release PASS.
+
 ## v1.2 Preserve the actual list URL at the shared Back boundary — 2026-10-08
 
 Real page2 return reproduction showed fixed `/experiments` skipped or replaced

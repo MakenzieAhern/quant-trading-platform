@@ -1,5 +1,98 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 restored saved-API financial identities — scoped PASS
+
+[Repeatable private check](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-restored-financial-identities/README.md>)
+seals4payloads `03a0467a8b20317a0635a149276e0a5251366ed8d3bbe56c5151b0dd04cb5a97`,
+twice checkerPASS. The 54-payload restore parent remains immutable. Both actual
+saved API captures of study0cdf reconcile20 equity/20 holdings/40 position marks:
+cash+MV=holding equity=curve, quantity*mark=position MV, positions+pending=MV;
+10 fills have prior matching approved identities among18 decisions. Per-date
+and final/summary costs equal50.34364; final equity97579.65636. Complete pages,
+unique contiguous sequences and paired ordered exchange dates are required.
+Three RAM cash/equity/cost corruptions fail at the intended assertions. Existing
+Decimal/canonical/immutable helpers reused; no float finance/new dependency.
+
+Independent readonly review's fullbackendtree/cleanstate binding gap closed;
+five relevant file hashes also checked. Source/code unchanged, RuffPASS. This is
+QA-ENGINE saved-result internal consistency, not financial admission: all20
+pending values are0; no nonzero corporate-action proof, external price/source
+correctness, exact next accepted-session execution, every study/account, genuine
+missing ledger recovery, newfeed rights, forward/fullAA/performance/CI/release.
+297 warmup/progress sessions are not20 saved result dates. Modeled costs include
+commission/transfer/stamp components, not brokerage-only. Known economic gap,
+negative return-0.0242034364/null metrics preserved; no result rewrite/rerun.
+Offline files/localGit only; no service/SQL/queue/engine/newstrategy/GitHub action.
+Fresh original Compose3healthy/PONG/8000paper200/5173HTTP200; frozen/tag/.research/
+identity intact. Full U1-U8/M0-M5 remains ACTIVE/PARTIAL and GitHub remains HOLD.
+
+## 2026-10-08 current-code application restore / restart — scoped PASS
+
+[Private reproducible proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261008-host-application-restore/README.md>)
+seals54payloads `1746a05eb9ca52b88c313d23e478f2b2e5e1bc19afa9f623a547f5de30d166d8`,
+twice checkerPASS. Reuse existing isolated tmpfsPG30b1/55471 and currentWSLsource;
+new empty `quant_test_restore_oct8` imports sealed Oct7 dump,18working product files.
+All44 retained0016 fingerprints equal; only testrestore upgrades0017/Alembiccheck.
+Known nullable failure-context column staysNULL; all43 business fingerprints,
+18files/sixReceiptCache bundles/12+4terminaljobs/5STOPPEDaccounts unchanged through
+normalstartup, ownedAPIrestart and UI/proxy write-block checks. No originalDB
+restore/migration/44table refresh, newcontainer or denied-operation workaround.
+
+Fresh process/env/startticks/DB target/2ownerlocks bind current backendtreec3b59bb
+to restoreDB. PID728902→729487;12 exactRESTJSON bodies SHA976163a3 unchanged.
+Current bound13QAassets API15179→GET-only15181, all13HTTP200/SHA and4writes405;
+WS intentionally405, not a WebSocket recovery pass. Actual IABZHEN10AXDOMframes/
+10JPEG show savedstudy0cdf, FAILEDc3d38 and STOPPEDd704 account, reopen/reload after
+backendrestart, exact Decimal values, dates and unchanged economic-gap notices.
+First ENaccount loading frame is nonpass; separate loaded frame retained.
+Independent readonly review gaps closed beforeseal; no evidenced productP1P2.
+Logging/locator/guard/stale-tab failures are retained as evidence-tool failures.
+
+NativeWSL Docker29.8/29.8/socket currently recovered;Compose5.5.1. Existing
+testPG stopped0/retained, ownedAPI/proxy terminal afterfreshguards/tabcleanup;
+all originalserviceIDs/starttimes remain healthy/PONG/5173+8000HTTP200paper.
+Frozen/tag/.research/identity intact, no GitHub operation/formal study/OOS rerun.
+Retained immediately prior currentbackend1463PASS/1existingoptionalarchiveSKIP,
+Ruff560/mypy146 and test-only17migration head-base-head/checkPASS, not new rerun;
+frontend unchanged retains811/static/build. Not hostedCI, originalrollout,
+missing-ledger/financial/forward/fullAA/p95/fullrelease acceptance. Full U1-U8/
+M0-M5 remains ACTIVE/PARTIAL. Earlier same-day old-container feasibility probe
+below is historical and superseded by this distinct host application proof.
+
+## 2026-10-08 failure technical disclosure keyboard / AX — scoped PASS
+
+[Private proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-failure-keyboard/README.md>)
+seals15payloads `c64a0b1a878ec215688fb7f2333c7e5b97f8679e118daeaf456faeb08bbe8ae0`
+twicePASS, reusing current172source/3inputs and parent32/328 immutable payloads.
+Actual IAB390x844 EN/ZH×100/101: Tab reaches native technical summary, Enter/Space
+toggle without lost focus, Tab leaves/ShiftTab returns, Enter closes.27frames/
+4uneditedJPEGs show44px target/3px visibleoutline belowheader/page==client375;
+open native AX namedlist100stableIDs, closedlist absent, only101 exact translated
+first100/not-fullset disclosure. ZH100 forward-audit action lacks a saved frame;
+the other3audit frames and its reverse-return are retained. Not native200, speech,
+fullresponsive/theme/AA/performance, actualfinancial or forward acceptance.
+
+No product code/API/dependency/migration change; existing GET-only RAM2031
+fixtures/current13assetQA build and currenttyped schemas are reused. Two served
+response hashes/counts checked. No SQL/engine/create/retry/plan/order/fill; expected
+capabilities404 is not original outage. First privatechecker failed typedcontext
+dict assumption; fixed fromactualtuple schema. Independent readonly review's
+optionalAX/URL-script/text weaknesses fixed beforeseal;26fulltrees/27exactURL+
+currententry/exactdisclosure now mandatory. Reviewer didnotexecute; final no
+productP1P2. No fulltest rerun: unchanged source retains final811/static/build.
+OwnedQA freshidentitychecked/TERM/session30714 terminalintentional1, tab6closed/
+viewportreset/QA-ZHrestored/originalMarket retained. Fullaccesslog was not saved,
+so observed GETs are not claimed as complete request trace. Originalservices/
+frozen/tag/.research/identity retained, GitHubHOLD/no remote operations.
+
+Next required current application-restore feasibility checked read-only: existing
+Oct2 fourcontainers are stopped/tmpfs PG+Redis/historicalcode+RO oldinputs. They
+cannot preserve a stopped restoredDB or prove current0017/source. No start/import/
+copy/recreate/migration was done. Historical Oct2 applicationrestore and Oct7
+44table/18file logicalrestore remain scoped; do not bypass prior deniedscratch/
+original44table routes or replayoldcode for a misleading currentPASS. Fullgoal
+U1-U8/M0-M5 remains ACTIVE/PARTIAL; this is not release readiness.
+
 ## 2026-10-08 saved-study query return repaired and locally deployed — scoped PASS
 
 [Source/browser proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-study-page-return/README.md>)
