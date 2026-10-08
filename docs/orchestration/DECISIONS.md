@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 Stop unsupported timing attribution; verify locally during GitHub hold — 2026-10-08
+
+Native Long Tasks/Long Animation Frames plus bounded frame callbacks distinguish
+DOM completion from presentation scheduling. Approximately1Hz callbacks with
+empty script attribution and zero reported blocking do not justify speculative
+React memoization; nor do they prove a specific browser/tool/occlusion cause.
+Retain every old/new sample, do not pool different protocols into p95, and leave
+QA-PERF open until the actual foreground presentation context is established.
+Current tools expose viewport sizing only, not reduced-motion media simulation;
+do not spoof matchMedia or silently change Windows preferences for acceptance.
+
+GitHub unavailability does not prevent full local checks. Reuse cached test
+images and the existing isolated quant_test tmpfs;1730backendPASS/1explicitSKIP,
+848frontendPASS,static/buildPASS and latestmigration0017down/upPASS. No original
+database migration/restart or new financial job. Stop testPG after check handles
+are terminal, preserve all logs/containers, and never promote local green checks
+to remote CI, financial source approval or complete U1-U8/M0-M5 acceptance.
+
 ## v1.2 Preserve independent source ambiguity and divergent timing — 2026-10-08
 
 Do not loosen a dates-only guard into source completeness.000425 pre-H-offering

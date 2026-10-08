@@ -1,4 +1,24 @@
 {
+  "local_regression_and_frame_diagnosis_20261008_gate": {
+    "status": "LOCAL_REGRESSION_PASS_WITH_ONE_SKIP_PERFORMANCE_UNACCEPTED",
+    "source_parent": "89fdb9e6730be2dc05282f0cb28eff5fb6c22bb1",
+    "progress": "Previous goal source-evidence unit was PROGRESS; the intervening service-status answer made NO_PRODUCT_PROGRESS and was not a live wait. This unit completed current-source full local regression and gained bounded native long-frame evidence. No new end-to-end user capability or product acceptance is claimed. Replan away from repeated timing/source scans; full objective remains ACTIVE.",
+    "tests": "Backend1730PASS/1SKIP45.77s; optional historical archive not mounted. Ruff/570format/mypy146PASS. Frontend848PASS49files20.75s;ESLint/TypeScript/buildPASS. Existing529.59kBwarning retained. Latest0017->0016->0017 migrationPASS in isolated quant_test tmpfs only.",
+    "diagnosis": "ActualChrome154/1920x911/DPR1/ZHdark, existing savedDevelopmentb38081a7. Pointer264/264ms native groups, Enter32ms;DOM80.1/75.6/91.3ms;2rAF261.6/263.2/2041.9ms. No overlapping reported longtasks. Keyboard callbacks approx1Hz and several996-999ms longframes have scripts[]/blockingDuration0. No continuous2sJSblocking evidenced; cause still unassigned. All7filteredGET200/22metrics unchanged in each sample. No p95/optimization claim; old3072 retained.",
+    "review": "Independent readonly review agrees with narrow diagnosis; no new code bug established. System-prefers-reduced-motion=true keyboard path remains unverified; browser capability discovery exposes viewport only, no media emulation. Do not substitute JS spoofing or silently change Windows settings.",
+    "pending_user_action": "Requested user keep Chrome platform in the foreground and temporarily disable Windows animation effects, then report ready. No reply received at checkpoint. Do not assume the setting or foreground changed; restore prior setting after the scoped check. Do not restart completed tests while waiting.",
+    "evidence": [
+      "product-evidence/v1.2/m4/20261008-frame-scheduling-diagnostic/README.md",
+      "product-evidence/v1.2/m4/20261008-local-regression-gates/README.md"
+    ],
+    "frame_summary_sha256": "aabfeb7c41050088d1090f50c53e3c80975497860306ff24b632b98830454ef5",
+    "restoration": "Original servedindexb96a802d restored byteexact;diagnostic page moved out of webroot and retained. Chrome22metrics/noerrors/noinstrument. Same frontend container/start. Testcontainers exited0, testPG returned stopped; no original application DB or service restart. Front/API200,PG/backendhealthy,RedisPONG. Researchstate/tag/identity unchanged.",
+    "limits": "No original archive integration/security-advisory scan/current full financial approval/nativeforeground p95/systemmotiontrue/complete product acceptance. Source/lifecycle/accounting/lawfulforward/trueledger/GitHub gates remain. No real dataset/strategy/OOS operation.",
+    "production_source_changed": false,
+    "strategy_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "targeted_source_reconciliation_20261008_gate": {
     "status": "VERIFIED_NEW_NEGATIVE_EVIDENCE_NOT_SOURCE_CLOSURE",
     "source_parent": "24b1d4b396ca439dcbda7d56bc834d0b6172c2ae",
@@ -1052,7 +1072,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T05:53:51Z",
+  "updated_at_utc": "2026-10-08T06:07:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4678,7 +4698,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 ACTIVE/PARTIAL. Do not repeat completed300147annual/000425table/source-negative scan or speculative parser loosening. Use latestthree-gap evidence for any futureisolatedcandidate,never oldtwo-gap as complete. Next concrete quality work must separate native feedback from async visible-result latency and explain three divergent filter observations before claimingp95;reuse alreadyacceptedwarm evidence. Genuine source/lifecycle/accounting/lawfulforward/trueledger gaps remain;no placeholders orfixture-as-forward. No inspection-only successor build,frozen/OOS change orGitHub action.",
+  "next_task": "Full U1-U8/M0-M5 ACTIVE/PARTIAL. Current-source local regression/migration completed; do not rerun unchanged suites or repeat bounded frame/source scans as progress. Need an explicitly observed native foreground presentation context for a predeclared consistent performance protocol; system reduced-motion=true keyboard check needs real user setting or a documented supported media capability (currently unavailable). Preserve all slow timings; no speculative React optimization. Source/lifecycle/accounting/lawfulforward/trueledger gates remain; use latest three-gap inventory, never loosen grammar into admission or build inspection-only successor. No frozen/OOS change or GitHub action. If no safe substantive next action exists across3consecutive goal turns, mark BLOCKED rather than loop.",
   "local_next_command": "Read targeted_source_reconciliation_20261008_gate/report_first_filter_timing_20261008_gate and their README/current summaries. Currenttemporaryinstrument removed;do notstart duplicateapps. For source work seek only specificindependent cached correction/clarification of currentgaps,not fullarchiveacquisition. For performance use a non-intrusive justified measurement of actualfrontend beforecodeoptimization,retain3072msfailure. Preserve denials:no clean-demo/scratch replacement,fingerprint refresh,download bypass or600725resumptionretrieval. No newadapter withoutrequiredfacts,no fabricatedledgers. GitHubHOLD;localservices available;fullscopeincomplete.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

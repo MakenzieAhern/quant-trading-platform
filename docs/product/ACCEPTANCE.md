@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 current local regression and frame diagnosis — no release approval
+
+[Complete local regression evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-local-regression-gates/README.md>):
+current source89fdb9e, backend1730PASS/1SKIP (optional historical archive absent),
+Ruff/format/mypyPASS; frontend848PASS49files, lint/type/buildPASS. Retained529.59kB
+chunk warning. Isolated quant_test tmpfs0017→0016→0017PASS; original application
+DB/services untouched. Testcontainers exit0/retained, testPG returned stopped.
+Local frontend/API200,PG/backendhealthy,RedisPONG. GitHub not queried or changed.
+
+[Bounded actual-Chrome diagnosis](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-frame-scheduling-diagnostic/README.md>):
+pointer native264/264ms versus Enter32ms; filtered DOM80.1/75.6/91.3ms; two-rAF
+261.6/263.2/2041.9ms. Three observations preserve7GET200s and all22 exact metrics.
+No overlapping reported long tasks. Keyboard/idle frame callbacks near1Hz and
+multiple approximately1s long frames have zero reported blocking/empty scripts;
+no continuous2sJSblock evidenced. Cause unassigned, protocols not pooled, old
+3072ms retained, no p95/optimization/QA-PERF PASS. Original index restored
+byte-exact, diagnostic page outside public root; no production-code change.
+
+Independent review supports this limited inference. Stop repeating this protocol
+or inventing a React fix. Next performance work needs an observed native foreground
+presentation context. System reduced-motion=true remains a separate real-browser
+gap; only viewport capability is exposed, so no unsupported emulation/spoofing.
+These results do not close source economics, lawful forward, missing real ledgers,
+all M4/M5 evidence or full product acceptance. Full goal remains ACTIVE/PARTIAL.
+
 ## 2026-10-08 targeted source facts and first-filter measurement — no new admission
 
 [Source evidence and repeatable full-partition check](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-targeted-official-reconciliation/README.md>).
