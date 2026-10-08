@@ -1,5 +1,16 @@
 # Decisions
 
+## v1.2 Historical workflow evidence is not current execution acceptance — 2026-10-08
+
+Reconcile the central acceptance matrix with the existing source/economic FAIL
+and deployed new-execution denial. U3-JOB is IN_PROGRESS, not PASS merely because
+an earlier job reached SUCCEEDED. Retain that job and the scoped synthetic
+idempotency evidence. U6/U7 retained historical records are readable, not an
+audited execution approval. Their prior IN_PROGRESS/FAIL states stay unchanged.
+Independent read-only review confirmed these three documentation contradictions.
+No source policy, financial result, frozen dataset, runtime or release gate changes.
+Do not repeat completed regressions or create speculative code for this correction.
+
 ## v1.2 Stop unsupported timing attribution; verify locally during GitHub hold — 2026-10-08
 
 Native Long Tasks/Long Animation Frames plus bounded frame callbacks distinguish

@@ -1,4 +1,17 @@
 {
+  "acceptance_matrix_reconciliation_20261008_gate": {
+    "status": "PASS_SCOPED_DOCUMENTATION_CORRECTION_NOT_PRODUCT_ACCEPTANCE",
+    "source_parent": "2e065e7d0880cc64d096b2215090922c3c04f195",
+    "progress": "Previous service-status answer was NO_PRODUCT_PROGRESS, not a verified wait. This unit repairs a concrete authoritative-ledger contradiction: central U3-JOB still claimed PASS and U6/U7 claimed audited history despite current source FAIL/new-execution denial. No additional user capability or runtime proof is claimed.",
+    "correction": "U3-JOB now IN_PROGRESS, retaining historical successful job and synthetic idempotency observations. U6/U7 remove unsupported audited wording and distinguish readable retained records from new execution approval. Their existing IN_PROGRESS/FAIL statuses remain. No historical evidence, source findings or financial requirements removed.",
+    "review": "Independent readonly final-diff review: no remaining scoped P1/P2; historical evidence and non-PASS gates retained, no permission expansion. Current source/economic FAIL and false financial admission remain authoritative. Reviewer did not run tests.",
+    "checks": "JSON parse, unique three-row statuses, explicit source denial, retained historical identifiers/counts, linked admission heading and false full-product flag PASS; git diff --check PASS. Documentation-only, no backend/frontend/runtime regression rerun.",
+    "remaining": "Chrome foreground/system reduced-motion preparation still unconfirmed; do not repeat completed tests or timing/source scans. Required source/lifecycle/accounting, lawful after-start forward data, genuine lost-ledger disposition, full quality and GitHub release gates remain. Full U1-U8/M0-M5 scope unchanged and incomplete.",
+    "runtime_changed": false,
+    "strategy_run": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "local_regression_and_frame_diagnosis_20261008_gate": {
     "status": "LOCAL_REGRESSION_PASS_WITH_ONE_SKIP_PERFORMANCE_UNACCEPTED",
     "source_parent": "89fdb9e6730be2dc05282f0cb28eff5fb6c22bb1",
@@ -1072,7 +1085,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T06:07:00Z",
+  "updated_at_utc": "2026-10-08T06:17:28Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
