@@ -197,6 +197,8 @@ it.each(["en-US", "zh-CN"])(
       mode: "historical_exploration" as const,
       current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP" as const,
       current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED" as const,
+      execution_available: false,
+      execution_reason_code: "SOURCE_CONTRACT_INTEGRITY_FAILED",
     };
     const data = {
       ...capabilities,
@@ -214,6 +216,13 @@ it.each(["en-US", "zh-CN"])(
         : "经济完整性尚未验证",
     );
     expect(historical.available).toBe(true);
+    expect(
+      screen.getByText(
+        locale === "en-US"
+          ? "View only · new execution blocked"
+          : "仅可查看 · 禁止新执行",
+      ),
+    ).toBeInTheDocument();
     expect(notice).toHaveTextContent(
       locale === "en-US"
         ? "source references failed verification"
@@ -222,6 +231,47 @@ it.each(["en-US", "zh-CN"])(
     expect(screen.getAllByRole("note")).toHaveLength(1);
     expect(JSON.stringify(data)).toBe(before);
     expect(read).toHaveBeenCalledOnce();
+    await act(() => i18n.changeLanguage("en-US"));
+  },
+);
+
+it.each(["en-US", "zh-CN"])(
+  "explains inspection-only admission without requiring an old-version finding (%s)",
+  async (locale) => {
+    await act(() => i18n.changeLanguage(locale));
+    const inspection = {
+      ...capabilities.datasets[0]!,
+      dataset_id: "inspection-only-candidate-v2",
+      mode: "historical_exploration" as const,
+      execution_available: false,
+      execution_reason_code: "DATASET_EXECUTION_NOT_ACCEPTED",
+    };
+    const data = {
+      ...capabilities,
+      datasets: [inspection, capabilities.datasets[0]!],
+    };
+    const before = JSON.stringify(data);
+    const read = vi
+      .spyOn(experimentApi, "capabilities")
+      .mockResolvedValue(data);
+    render(<DataCenterPage />);
+    expect(
+      await screen.findByText(
+        locale === "en-US"
+          ? /registered for inspection only/
+          : /此数据版本仅注册用于查看/,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        locale === "en-US" ? "Cached data available" : "可查看缓存",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/source references failed|来源引用未通过/),
+    ).toBeNull();
+    expect(read).toHaveBeenCalledOnce();
+    expect(JSON.stringify(data)).toBe(before);
     await act(() => i18n.changeLanguage("en-US"));
   },
 );

@@ -192,13 +192,14 @@ export const zhCN = {
     eyebrow: "模拟执行账本",
     title: "模拟交易会话",
     description:
-      "可使用合成演示和已审计历史回放账户。真实新行情前向模拟尚不可用；不连接券商。",
+      "管理合成演示与已保存的历史回放账户。新的历史回放执行需通过当前数据准入检查，请查看数据中心。真实新行情前向模拟尚不可用；不连接券商。",
     create: "创建模拟会话",
     persisted: "已持久化会话",
     refresh: "刷新",
     sessionColumn: "会话",
     openSession: "查看会话",
-    empty: "尚无模拟会话。可从明确标记的合成演示或历史回放开始。",
+    empty:
+      "尚无模拟会话。可从明确标记的合成演示开始；历史回放需通过当前数据准入检查。",
     loading: "模拟交易会话",
     safetyTitle: "模拟交易 — 仅限模拟执行",
     safetyBody:
@@ -208,7 +209,7 @@ export const zhCN = {
     providers: {
       replay: "保留的 AAPL 本地测试回放 · 非 A 股数据",
       simulated_a_share: "A股合成演示 · 2030 场景",
-      historical_a_share: "已审计 A 股历史回放",
+      historical_a_share: "A 股历史回放",
     },
     strategies: {
       moving_average_crossover: "移动平均线交叉",
@@ -223,7 +224,7 @@ export const zhCN = {
       provider: "数据源",
       replayLocal: "保留的 AAPL 测试回放（非 A 股）",
       aShareSimulation: "A 股合成演示（2030 场景）",
-      historicalAShare: "A股历史回放（已审计档案）",
+      historicalAShare: "A股历史回放（冻结档案）",
       dataset: "数据集",
       fixture: "AAPL 测试数据",
       symbol: "证券代码",
@@ -234,7 +235,7 @@ export const zhCN = {
       aShareScenarioHint:
         "仅使用确定性的 2030 合成场景数据，不属于研究证据，也不会重跑正式样本外测试。默认的 100,000,000 资金仅为场景输入，不是建议的账户规模。",
       historicalHint:
-        "仅回放过去已审计的交易日，不是新行情或前向收益。单次区间最多 93 个自然日。",
+        "仅使用历史交易日。创建或启动回放前，请在数据中心检查当前数据准入状态；冻结标记不等于财务验证通过。这不是新行情或前向收益。单次区间最多 93 个自然日。",
       historicalRange: "历史回放区间",
       sourceLoading: "已保存研究的设置",
       sourceUnavailable:
@@ -334,7 +335,8 @@ export const zhCN = {
       marketSources: {
         SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1:
           "2030 合成场景 · 非研究证据",
-        FROZEN_HISTORICAL_A_SHARE_REPLAY_V1: "已审计历史档案 · 仅供回放",
+        FROZEN_HISTORICAL_A_SHARE_REPLAY_V1:
+          "已冻结历史档案 · 非当前执行准入证明",
       },
       detailsLabel: "模拟交易会话详情",
       provider: "数据源",

@@ -34,7 +34,7 @@ import {
   parseExperimentDraft,
   saveExperimentDraft,
 } from "./draft";
-import { experimentError } from "./errors";
+import { datasetExecutionCode, experimentError } from "./errors";
 import { explainDatasetFindings, explainExperimentCode } from "./codes";
 import type {
   Capabilities,
@@ -44,7 +44,7 @@ import type {
 import "./experiments.css";
 
 function executable(dataset: DatasetCapability | undefined) {
-  return !!dataset?.available && dataset.execution_available !== false;
+  return !!dataset && datasetExecutionCode(dataset) === null;
 }
 
 function finishNewIntent() {
@@ -726,9 +726,9 @@ function ExperimentWizard({
                 )}
                 {!executable(dataset) && (
                   <p role="alert">
-                    {dataset?.execution_reason_code
+                    {dataset && datasetExecutionCode(dataset)
                       ? explainExperimentCode(
-                          dataset.execution_reason_code,
+                          datasetExecutionCode(dataset)!,
                           i18n.language,
                         )
                       : c.dataUnavailable}{" "}

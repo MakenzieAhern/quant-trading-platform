@@ -295,8 +295,8 @@ const codes: Record<string, [string, string]> = {
     "请使用含首尾 1–366 个自然日的区间。",
   ],
   DATASET_NOT_MOUNTED: [
-    "The audited historical archive is not mounted. Candidate requests cannot verify the security snapshot.",
-    "尚未挂载已审计历史档案，无法验证证券快照并提交候选请求。",
+    "The frozen historical archive is not mounted. Candidate requests cannot verify the security snapshot.",
+    "尚未挂载冻结历史档案，无法验证证券快照并提交候选请求。",
   ],
   DATASET_INTEGRITY_FAILED: [
     "The archive integrity check failed. Stop and inspect the local data.",

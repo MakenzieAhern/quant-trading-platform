@@ -210,14 +210,14 @@ export const enUS = {
     eyebrow: "SIMULATED EXECUTION LEDGER",
     title: "Paper trading sessions",
     description:
-      "Synthetic demo and audited historical replay accounts. New-market forward simulation is not available yet. No broker is connected.",
+      "Manage synthetic demos and saved historical replay accounts. New historical execution requires current data admission; check the data center. New-market forward simulation is not available yet. No broker is connected.",
     create: "Create paper session",
     persisted: "Persisted sessions",
     refresh: "Refresh",
     sessionColumn: "Session",
     openSession: "Open session",
     empty:
-      "No paper sessions yet. Start with a labeled synthetic demo or historical replay.",
+      "No paper sessions yet. Start with a labeled synthetic demo. Historical replay requires current data admission.",
     loading: "paper trading sessions",
     safetyTitle: "PAPER TRADING — SIMULATED EXECUTION ONLY",
     safetyBody:
@@ -227,7 +227,7 @@ export const enUS = {
     providers: {
       replay: "Legacy local AAPL fixture · not A-share data",
       simulated_a_share: "Synthetic A-share demo · 2030 scenario",
-      historical_a_share: "Audited A-share historical replay",
+      historical_a_share: "A-share historical replay",
     },
     strategies: {
       moving_average_crossover: "Moving average crossover",
@@ -243,7 +243,7 @@ export const enUS = {
       provider: "Provider",
       replayLocal: "Legacy AAPL fixture (not A-share)",
       aShareSimulation: "Synthetic A-share demo (2030 scenario)",
-      historicalAShare: "A-share historical replay (audited archive)",
+      historicalAShare: "A-share historical replay (frozen archive)",
       dataset: "Dataset",
       fixture: "AAPL fixture",
       symbol: "Symbol",
@@ -255,7 +255,7 @@ export const enUS = {
       aShareScenarioHint:
         "Deterministic 2030 scenario data only — not research evidence or an OOS rerun. The default 100,000,000 balance is a scenario input, not a recommended account size.",
       historicalHint:
-        "Past audited sessions only. This is replay, not new market data or a forward result. Range is limited to 93 calendar days.",
+        "Past trading sessions only. Check current data admission in the data center before creating or starting replay; a freeze marker is not financial validation. This is not new market data or a forward result. Range is limited to 93 calendar days.",
       historicalRange: "Historical replay range",
       sourceLoading: "saved study settings",
       sourceUnavailable:
@@ -362,7 +362,7 @@ export const enUS = {
         SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1:
           "Synthetic 2030 scenario · not research evidence",
         FROZEN_HISTORICAL_A_SHARE_REPLAY_V1:
-          "Audited historical archive · replay only",
+          "Frozen historical archive · not current execution approval",
       },
       detailsLabel: "Paper session details",
       provider: "Provider",

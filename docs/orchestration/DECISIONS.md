@@ -1,5 +1,22 @@
 # Decisions
 
+## v1.2 Readable cache is not execution approval — 2026-10-08
+
+Use one existing-flow helper to interpret explicit dataset source findings and
+execution denial for both the wizard and data center. An absent/contradictory
+legacy boolean must not overrule a failed or unverified source. Preserve older
+no-finding compatibility and backend authority; do not create frontend financial
+policy or infer full approval from a readable/frozen archive. Saved drafts must
+revalidate admission before advancing/submitting. Old account/report reads remain.
+
+Remove unsupported audited claims from bilingual paper UI and guides. Actual
+Chrome confirms the original mislabel and revised view-only state. Reuse existing
+source projection rather than adding a duplicate findings endpoint. Publish only
+tested static assets into the verified existing frontend, preserving every old
+non-index asset and the old index outside Git; no backend/database restart.
+Local operation/tests continue independently of GitHub, but do not satisfy its
+release checks. Full product/financial scope remains PARTIAL; GitHub stays HOLD.
+
 ## v1.2 Negative source evidence covers base events, never grants approval — 2026-10-08
 
 Treat the existing checksum-bound contradiction inventory as separate audit-only

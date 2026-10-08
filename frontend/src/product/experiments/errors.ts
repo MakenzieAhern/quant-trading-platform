@@ -2,6 +2,21 @@ import { ApiError } from "../../api/client";
 import { i18n } from "../../i18n";
 import { explainExperimentCode } from "./codes";
 import type { ExperimentCopy } from "./copy";
+import type { DatasetCapability } from "./types";
+
+export function datasetExecutionCode(
+  dataset: DatasetCapability,
+): string | null {
+  if (!dataset.available) return dataset.reason_code || "DATASET_NOT_MOUNTED";
+  // Explicit adverse findings outrank an omitted or contradictory legacy flag.
+  return (
+    dataset.current_source_integrity ||
+    dataset.execution_reason_code ||
+    (dataset.execution_available === false
+      ? "DATASET_EXECUTION_NOT_ACCEPTED"
+      : null)
+  );
+}
 
 export function executionAdmissionCode(reason: unknown): string | null {
   if (!(reason instanceof ApiError) || reason.status !== 422) return null;

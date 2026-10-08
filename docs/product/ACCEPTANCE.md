@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 U3/U5/U7 visible execution admission — scoped PASS
+
+[Reproductions, live Chrome screenshots and preservation evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-admission-language/README.md>).
+Readable historical cache no longer appears execution-approved. Data center
+shows explicit view-only denial, paper pages no longer claim audited history,
+and the wizard blocks failed/unverified source findings even when the legacy
+execution flag is missing or contradictory. Saved confirmed drafts cannot bypass
+that UI guard; old records and exact cash/date strings remain unchanged.
+
+Both independent P2 findings reproduced RED and closed. 848 frontend tests in
+49 files plus lint/type/format/build PASS; focused302 also PASS. Actual Chrome
+EN/ZH paper/data/wizard checks PASS at scoped desktop/mobile sizes. Existing draft
+stays at invalid data selection without submission; locale change retains exact
+cash/dates. Not full responsive/AA/p95/financial or real novice acceptance.
+
+Tested static files published to the existing localhost5173 frontend only, with
+old files retained and no container/backend restart. All12served assets and index
+match build bytes;186old non-index files preserved. Selected capabilities and
+paper-state GET bytes unchanged; no write requests in captured browser API log.
+Local frontend/API200,PG/backendhealthy,RedisPONG. GitHub HOLD; no remote checks.
+
+U1-U8/M0-M5 remain incomplete: source/lifecycle/accounting, lawful true forward,
+missing genuine ledgers and full delivery/quality requirements remain. No new
+dataset, frozen/OOS mutation, source acquisition or strategy execution.
+
 ## 2026-10-08 whole-event negative source evidence — scoped engineering PASS, economics FAIL
 
 [Actual read-only report, regressions and retained CLI evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-known-source-gap-audit/README.md>).

@@ -8,6 +8,7 @@ import { navigate, replaceUrl } from "../utils/navigation";
 import { experimentApi } from "./experiments/api";
 import { useExperimentCopy } from "./experiments/copy";
 import { readExperimentDraft } from "./experiments/draft";
+import { datasetExecutionCode } from "./experiments/errors";
 import {
   explainDatasetFindings,
   explainExperimentCode,
@@ -474,62 +475,77 @@ export function DataCenterPage() {
       {data.error && (
         <ProductError error={data.error} retry={() => setRetry(retry + 1)} />
       )}
-      {data.data?.datasets.map((item) => (
-        <section className="panel dataSourceCard" key={item.dataset_id}>
-          <div className="panelHeader">
-            <h2>{item.mode === "synthetic_demo" ? c.demo : c.historical}</h2>
-            <span className="quietTag">
-              {item.available ? c.available : c.unavailable}
-            </span>
-          </div>
-          <div className="dataFacts">
-            <div>
-              <span>{c.coverage}</span>
-              <strong>
-                {item.coverage_start ?? c.notRecorded} —{" "}
-                {item.coverage_end ?? c.notRecorded}
-              </strong>
+      {data.data?.datasets.map((item) => {
+        const executionCode = datasetExecutionCode(item);
+        return (
+          <section className="panel dataSourceCard" key={item.dataset_id}>
+            <div className="panelHeader">
+              <h2>{item.mode === "synthetic_demo" ? c.demo : c.historical}</h2>
+              <span className="quietTag">
+                {!item.available
+                  ? c.unavailable
+                  : executionCode
+                    ? c.readOnlyData
+                    : c.readableData}
+              </span>
             </div>
-            <div>
-              <span>{c.securities}</span>
-              <strong>{item.security_count.toLocaleString()}</strong>
+            <div className="dataFacts">
+              <div>
+                <span>{c.coverage}</span>
+                <strong>
+                  {item.coverage_start ?? c.notRecorded} —{" "}
+                  {item.coverage_end ?? c.notRecorded}
+                </strong>
+              </div>
+              <div>
+                <span>{c.securities}</span>
+                <strong>{item.security_count.toLocaleString()}</strong>
+              </div>
+              <div>
+                <span>{c.dataDate}</span>
+                <strong>{item.as_of ?? c.notRecorded}</strong>
+              </div>
             </div>
-            <div>
-              <span>{c.dataDate}</span>
-              <strong>{item.as_of ?? c.notRecorded}</strong>
-            </div>
-          </div>
-          {!item.available && item.reason_code && (
-            <p role="status" className="inlineNotice">
-              {explainExperimentCode(item.reason_code, i18n.language)}
-            </p>
-          )}
-          <p className="dataCardNote">
-            {item.mode === "synthetic_demo" ? c.demoHelp : c.staleHint}
-          </p>
-          {(item.current_dataset_quality || item.current_source_integrity) && (
-            <p className="inlineNotice" role="note">
-              {explainDatasetFindings(item, i18n.language)}
-            </p>
-          )}
-          <details className="technicalDetails">
-            <summary>{c.details}</summary>
-            <dl>
-              <dt>{c.dataset}</dt>
-              <dd>{item.dataset_id}</dd>
-              <dt>SHA-256</dt>
-              <dd>{item.sha256 ?? c.notRecorded}</dd>
-              <dt>{c.mode}</dt>
-              <dd>{item.mode}</dd>
-            </dl>
-            {item.mode === "historical_exploration" && (
-              <Link href={`/research/a-share/datasets/${item.dataset_id}`}>
-                {c.archive} ↗
-              </Link>
+            {!item.available && item.reason_code && (
+              <p role="status" className="inlineNotice">
+                {explainExperimentCode(item.reason_code, i18n.language)}
+              </p>
             )}
-          </details>
-        </section>
-      ))}
+            <p className="dataCardNote">
+              {item.mode === "synthetic_demo" ? c.demoHelp : c.staleHint}
+            </p>
+            {(item.current_dataset_quality ||
+              item.current_source_integrity) && (
+              <p className="inlineNotice" role="note">
+                {explainDatasetFindings(item, i18n.language)}
+              </p>
+            )}
+            {item.available &&
+              executionCode &&
+              executionCode !== item.current_source_integrity && (
+                <p className="inlineNotice" role="note">
+                  {explainExperimentCode(executionCode, i18n.language)}
+                </p>
+              )}
+            <details className="technicalDetails">
+              <summary>{c.details}</summary>
+              <dl>
+                <dt>{c.dataset}</dt>
+                <dd>{item.dataset_id}</dd>
+                <dt>SHA-256</dt>
+                <dd>{item.sha256 ?? c.notRecorded}</dd>
+                <dt>{c.mode}</dt>
+                <dd>{item.mode}</dd>
+              </dl>
+              {item.mode === "historical_exploration" && (
+                <Link href={`/research/a-share/datasets/${item.dataset_id}`}>
+                  {c.archive} ↗
+                </Link>
+              )}
+            </details>
+          </section>
+        );
+      })}
       <MarketUpdatesPanel dataReady={!data.loading} />
       <p className="inlineNotice">{c.futureUnavailable}</p>
       <p className="smallText">{c.dateZone}</p>

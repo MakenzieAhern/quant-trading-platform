@@ -18,6 +18,7 @@ import {
 } from "../test/paperFixtures";
 import { CreatePaperSessionPage } from "./CreatePaperSessionPage";
 import { PaperSessionDetailPage } from "./PaperSessionDetailPage";
+import { PaperSessionsPage } from "./PaperSessionsPage";
 
 const stream = vi.hoisted(() => vi.fn());
 vi.mock("../hooks/usePaperStream", () => ({ usePaperStream: stream }));
@@ -51,6 +52,41 @@ afterEach(() => {
   window.localStorage.clear();
   Reflect.deleteProperty(window.navigator, "locks");
 });
+
+it.each(["en-US", "zh-CN"])(
+  "does not present a historical provider name as current audit approval (%s)",
+  async (locale) => {
+    await i18n.changeLanguage(locale);
+    const saved = paperSnapshot("STOPPED").session;
+    saved.provider_type = "historical_a_share";
+    saved.dataset_id = "cn-a-research-20100101-20251231-v1";
+    const before = JSON.stringify(saved);
+    const read = vi.spyOn(paperApi, "list").mockResolvedValue({
+      items: [saved],
+      limit: 20,
+      offset: 0,
+      total: 1,
+    });
+    render(<PaperSessionsPage />);
+    await screen.findByRole("link", {
+      name: new RegExp(locale === "en-US" ? "Open session:" : "查看会话:"),
+    });
+    expect(document.body).not.toHaveTextContent(/audited|已审计/i);
+    expect(document.body).toHaveTextContent(
+      locale === "en-US" ? "current data admission" : "当前数据准入",
+    );
+    for (const key of [
+      "createPage.historicalAShare",
+      "createPage.historicalHint",
+      "detail.marketSources.FROZEN_HISTORICAL_A_SHARE_REPLAY_V1",
+    ]) {
+      expect(i18n.exists(`paper:${key}`)).toBe(true);
+      expect(i18n.t(`paper:${key}`)).not.toMatch(/audited|已审计/i);
+    }
+    expect(read).toHaveBeenCalledOnce();
+    expect(JSON.stringify(saved)).toBe(before);
+  },
+);
 
 it.each(messages)(
   "explains %s on historical paper creation and locale switch without resubmitting",

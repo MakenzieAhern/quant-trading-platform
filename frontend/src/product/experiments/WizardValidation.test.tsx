@@ -255,15 +255,12 @@ it.each([
       form.initial_cash,
     );
     await userEvent.click(screen.getByRole("button", { name: "继续" }));
-    await userEvent.click(screen.getByRole("button", { name: "继续" }));
-    expect(screen.getByRole("heading", { name: "确认运行" })).toHaveFocus();
+    expect(source).toHaveFocus();
+    expect(source).toHaveAttribute("aria-invalid", "true");
     expect(screen.getByRole("note")).toHaveTextContent(chinese);
-    expect(screen.getByRole("button", { name: "运行当前配置" })).toBeDisabled();
     expect(readExperimentDraft()?.form).toEqual(form);
     expect(readExperimentDraft()?.idempotencyKey).toBe("quality-disclosure");
     expect(create).not.toHaveBeenCalled();
-    await userEvent.click(screen.getByRole("button", { name: "上一步" }));
-    await userEvent.click(screen.getByRole("button", { name: "上一步" }));
     const demoSource = screen.getByLabelText("数据来源");
     await userEvent.selectOptions(demoSource, configuration.dataset_id);
     expect(screen.queryByRole("note")).toBeNull();
@@ -279,5 +276,50 @@ it.each([
       ),
     ).toBeVisible();
     expect(create).not.toHaveBeenCalled();
+  },
+);
+
+it.each([
+  { current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED" as const },
+  { current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED" as const },
+  {
+    current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED" as const,
+    execution_available: true,
+  },
+  {
+    execution_reason_code: "DATASET_EXECUTION_NOT_ACCEPTED",
+    execution_available: true,
+  },
+])(
+  "does not submit a confirmed restored draft with explicit admission failure: %j",
+  async (finding) => {
+    const historical = {
+      ...capabilities.datasets[0]!,
+      dataset_id: "blocked-history-v2",
+      mode: "historical_exploration" as const,
+      ...finding,
+    };
+    vi.mocked(experimentApi.capabilities).mockResolvedValue({
+      ...capabilities,
+      datasets: [historical, capabilities.datasets[0]!],
+    });
+    const create = vi.spyOn(experimentApi, "create");
+    const form = { ...configuration, dataset_id: historical.dataset_id };
+    saveExperimentDraft(form, 3, "blocked-confirmation");
+    render(<CreateExperimentPage />);
+    await userEvent.click(
+      await screen.findByRole("checkbox", { name: /I understand/ }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Run this configuration" }),
+    );
+    expect(create).not.toHaveBeenCalled();
+    expect(screen.getByLabelText("Data source")).toHaveFocus();
+    expect(screen.getByLabelText("Data source")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+    expect(readExperimentDraft()?.form).toEqual(form);
+    expect(readExperimentDraft()?.idempotencyKey).toBe("blocked-confirmation");
   },
 );

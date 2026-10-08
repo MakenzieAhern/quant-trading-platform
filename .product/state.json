@@ -1,4 +1,25 @@
 {
+  "visible_execution_admission_20261008_gate": {
+    "status": "PASS_SCOPED_FRONTEND_NOT_FINANCIAL_OR_FULL_PRODUCT_APPROVAL",
+    "source_parent": "2f5d9ec",
+    "progress": "PROGRESS: reproduced and fixed readable-cache approval mislabel, unsupported audited paper wording, and saved-wizard eligibility contradiction. No repeated source reconstruction or invented factual closure.",
+    "implementation": "Shared datasetExecutionCode reuses current source/reason projection; explicit negative finding outranks missing/contradictory execution flag. Data center read-only denial, EN/ZH paper/archive labels and guides aligned. Exact cash/dates/draft identity and backend financial authority preserved.",
+    "checks": "Initial display/copy6RED and wizard7RED retained. Focused302PASS; fullfrontend848PASS49files18.37s;ESLint/TypeScript/Prettier/src/buildPASS. Existing529.59kBchunkwarning retained. Backend/DB/migration/fullquality/strategy/OOS/CI NOT_RUN.",
+    "review": "Independent readonly U3/U5 P2s reproduced and closed; no remaining scopedP1P2. Not independent test execution or full financial review.",
+    "browser": "Actual Chrome EN/ZH paper/data/wizard; dark1440x900 plus data390x844(client=scroll375). Saved draftContinue focuses invalid data without submission; exact123456.789000000000001 and2011-01-04..2011-06-30 preserved across language switch. Step3 deny proof mocked only. No browser errors or write requests in captured API log. Own tab closed;ZH/dark restored.",
+    "publication": "Only tested static assets into existing qtp-v12-frontend-source-map-oct7 a561fa1250ed498155a28c58489a46a4a23324ae4b46abad290fe19be33127ba;same start2026-10-07T16:15:31.157465502Z.12assets+indexHTTPbytesmatch;186oldnonindex preserved;oldindex/build/after retained outsideGit. No container/backend restart or new mount.",
+    "served_index_sha256": "b96a802da1361b74405b60abd8f60aae4144a5ecfa4bb4fe0bce6c849c3aedce",
+    "evidence": "product-evidence/v1.2/m4/20261008-admission-language/README.md",
+    "preservation": "Capabilities before/afterc5c9211b andselectedsavedpaperstate905f63d5 byteidentical,not alltablefingerprint. Frozenmanifest693c0b81/freezerecord228569f1/researchstateb10ce3c5/v1.1tagf88b5c60/Gitidentityunchanged. No originalDB/queue/provider/strategy/OOS operations.",
+    "local_runtime": "Frontend5173/API8000health200;PG/backendhealthy;RedisPONG. Local runtime independent ofGitHub. APIreports1.1.0development/paper,notv1.2release.",
+    "limits": "No source/economic/lifecycle/accounting/forwardrights/realreceipt/trueledger gap resolved. No full visual/AA/p95/restart/financial/product acceptance; no new candidate dataset or source authority PASS. Known denied routes remain STOP.",
+    "dataset_created": false,
+    "frozen_dataset_modified": false,
+    "strategy_run": false,
+    "full_financial_admission": false,
+    "full_product_pass": false,
+    "ci": "NOT_RUN_GITHUB_HOLD"
+  },
   "known_source_gap_audit_20261008_gate": {
     "status": "PASS_SCOPED_ENGINEERING_SOURCE_ECONOMICS_FAIL",
     "source_parent": "3df8ed1",
@@ -996,7 +1017,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T05:09:43Z",
+  "updated_at_utc": "2026-10-08T05:28:15Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4621,8 +4642,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Full U1-U8/M0-M5 ACTIVE. Whole-event negative evidence now bound and actual4baselegs confirmed;do not repeat accepted source/session/reference plumbing. Genuine source contradictions/lifecycle/accounting/forward/ledger remain unresolved. Next inspect existing U5 source-integrity findings and U3/U6 admission paths so current negative evidence is consistently explained/enforced, then prioritize remaining runnable end-to-end quality work. No real successor from inspection-only bundle,frozen/OOS change,orGitHub action.",
-  "local_next_command": "Read known_source_gap_audit_20261008_gate/finalrealreport35f36546 and current acceptance. Inspect existing read-only source findings API/UI and shared experiment/paper dataset eligibility callers before edits. Determine whether newly verified event-level negative evidence can reuse current immutable findings route without new runtime/DB/provider/strategy actions or misleading full-source PASS. Keep stopped routes stopped;do not invent missing facts or genuine ledger. Fullproductscope remains open.",
+  "next_task": "Full U1-U8/M0-M5 ACTIVE/PARTIAL. Visible source/execution admission now fixed and locally published; do not repeat accepted UI/source/session/reference plumbing or green fixtures. Prioritize genuinely unresolved source/lifecycle/accounting and U7 lawful forward evidence. Inspect existing cached factual gap inventory for one currently actionable gap; if no legal accepted evidence exists, report exact external need rather than build placeholders. Genuine missing ledger evidence still absent. No inspection-only successor build,frozen/OOS change orGitHub action.",
+  "local_next_command": "Read visible_execution_admission_20261008_gate, current acceptance, existing source-gap inventory and forward_implementation_audit/external_blockers. Check only cached lawful evidence for concrete source/effective-date/accounting or approved-product-use resolution before proposing code. Preserve denials: no clean-demo/scratch replacement,fingerprint refresh,download bypass or600725 resumption retrieval. No new endpoint/adapter without required facts, no fabricated ledgers. GitHub HOLD; continue local services independently; full scope remains incomplete.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

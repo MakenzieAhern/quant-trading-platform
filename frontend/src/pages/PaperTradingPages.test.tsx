@@ -2087,7 +2087,7 @@ describe("paper trading pages", () => {
       screen.getByLabelText("Provider"),
       "historical_a_share",
     );
-    expect(screen.getByText(/Past audited sessions only/)).toBeInTheDocument();
+    expect(screen.getByText(/Past trading sessions only/)).toBeInTheDocument();
     await userEvent.click(
       screen.getByText("Strategy, universe and cost settings"),
     );
@@ -2379,11 +2379,11 @@ describe("paper trading pages", () => {
     );
     render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
     await act(async () => MockWebSocket.instances[0]!.open());
+    expect(await screen.findByText("A-share historical replay")).toBeVisible();
     expect(
-      await screen.findByText("Audited A-share historical replay"),
-    ).toBeVisible();
-    expect(
-      screen.getByText("Audited historical archive · replay only"),
+      screen.getByText(
+        "Frozen historical archive · not current execution approval",
+      ),
     ).toBeVisible();
     expect(
       screen.getByText("cn-a-research-20100101-20251231-v1"),
