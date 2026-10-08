@@ -1,4 +1,15 @@
 {
+  "resumed_runtime_checkpoint_20261009": {
+    "observed_at_utc": "2026-10-08T13:04:58Z",
+    "base_head": "653f84272228116099f81b41f6f16a87f2d36531",
+    "resumed_condition_occurrences": 2,
+    "previous_turn": "PROGRESS: Docker Desktop was absent and Ubuntu lacked docker. One normal launch of the existing app restored the engine and original services. Initial launch returned no targetable window; a readonly refresh confirmed the running app without relaunch. Engine29.8.0/Compose5.5.1, frontend5173/APIhealth8000 HTTP200, ComposePG/Redis/backendhealthy and RedisPONG. Existing named volumes listed; not a full data-integrity audit. No install/reset/delete/rebuild or new study.",
+    "browser_boundary": "Installed Chrome was not running; normal launch enabled the browser extension and the local Workbench loaded. Native Chrome observation then could not establish its URL for policy enforcement and explicitly stopped Computer Use. No native-input workaround or retry. Foreground and system-reduced-motion acceptance remain unproven; no user readiness response.",
+    "current_turn": "NO_PROGRESS, not VERIFIED_WAIT: current ComposePG/Redis/backend stillhealthy; no owned live test/QA job or competing host writer observed. Only persist the prior recovery after the forced turn stop; this checkpoint is not a new user-flow pass.",
+    "audit_policy": "Fresh resumed audit, not the prior three-occurrence count. First resumed turn recovered runtime but retained required user/external conditions; second resumed turn has no such change. Keep goal active until the resumed blocking threshold, unless a safe substantive action becomes available.",
+    "next_action": "Await explicit platform-Chrome foreground/system-motion readiness or a relevant external-evidence change; verify through supported controls before scoped QA. Readiness alone does not guarantee the native URL policy check will succeed. Do not repeat the rejected route or completed tests, fabricate financial evidence, or change frozen/OOS/GitHub state.",
+    "full_product_pass": false
+  },
   "blocked_audit_20261008": {
     "status": "REQUIRES_USER_ACTION_OR_EXTERNAL_EVIDENCE_CHANGE",
     "base_head": "04d829f500c71ef61c6e54bc111120bd648848a0",
@@ -1101,7 +1112,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T06:19:59Z",
+  "updated_at_utc": "2026-10-08T13:04:58Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4060,7 +4071,7 @@
     "policy": "Latest user-reported outage takes precedence for this work unit: continue local commits/tests/app, no GitHub request/push/merge/tag/release. Previous verified recovery/CI is historical only, not current-head acceptance. Reverify actual availability and exact-head CI at the authorized release gate; no billing/security/protection bypass."
   },
   "milestone": "M3_FORWARD_FOUNDATION_AND_M4_QUALITY",
-  "status": "BLOCKED",
+  "status": "WAITING_FOR_USER_ACTION",
   "product_goal_complete": false,
   "baseline": {
     "tag": "v1.1.0",
@@ -4727,7 +4738,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "BLOCKED after three consecutive occurrences of the same missing user preparation/external-evidence condition. Resume this same full U1-U8/M0-M5 task on explicit Chrome foreground/system reduced-motion readiness or meaningful required external-evidence change. Verify actual conditions before a consistent performance/keyboard protocol; preserve all slow samples and restore user settings afterward. Do not repeat unchanged tests/source scans, invent a React fix, bypass denied routes or claim a live background wait. Source/lifecycle/accounting/lawfulforward/trueledger/GitHub gates remain; no frozen/OOS or release change.",
+  "next_task": "Same full U1-U8/M0-M5 goal resumed; runtime recovered, fresh blocking audit at occurrence2. Need explicit Chrome foreground/system reduced-motion readiness or meaningful required external evidence. Native Chrome URL policy check stopped the last UI attempt; do not bypass or blindly retry. Verify actual conditions before scoped QA, preserve all slow samples and restore user settings afterward. Do not repeat unchanged tests/source scans or claim a live background wait. Source/lifecycle/accounting/lawfulforward/trueledger/GitHub gates remain; no frozen/OOS or release change. At three consecutive resumed impasse occurrences, mark goal BLOCKED rather than loop.",
   "local_next_command": "Read targeted_source_reconciliation_20261008_gate/report_first_filter_timing_20261008_gate and their README/current summaries. Currenttemporaryinstrument removed;do notstart duplicateapps. For source work seek only specificindependent cached correction/clarification of currentgaps,not fullarchiveacquisition. For performance use a non-intrusive justified measurement of actualfrontend beforecodeoptimization,retain3072msfailure. Preserve denials:no clean-demo/scratch replacement,fingerprint refresh,download bypass or600725resumptionretrieval. No newadapter withoutrequiredfacts,no fabricatedledgers. GitHubHOLD;localservices available;fullscopeincomplete.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
