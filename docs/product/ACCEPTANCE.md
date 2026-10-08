@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-10-08 draft shrink/regrowth and current local frontend — scoped PASS
+
+[Private repeatable proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-draft-page-regrowth/README.md>)
+seals82payloads `7d52f070be1f241f0155801f671bc25d6ea73755d734200539f8861179c2ce70`;
+twice checkerPASS/current170frontend+4reusedhelper hashes. Actual corrected
+original-source4ENZH/version/recovery RED expected20got1,12oldPASS;current16focused,
+815full48files/Prettier/ESLint/TypeScript/build PASS. Existing refresh boundary
+persists both clamped offsets, preserves page on failed reads, and details-open
+reuses refresh. Explicitsave/restore reset remains deliberate. No new abstraction,
+dependency/backend/model/API/migration/financial change.528.07KB warning retained.
+
+Actual old/native cross-tab21→20→21 returns page2;currentENZH both lists remain
+page1 after regrowth and explicitNext returns exact oldestrow/page2.12rawframes/
+3uneditedJPEG show exact row identities,43→41→43 synthetic/shared byte preservation,
+recoverypager groupfocus;actualZH390×844/client+page375. Reviewer added row-identity
+and REDmiddle-shrink assertions before seal. Initial mixed-pager/keynull harness
+and stale-tab closure failures retained. Not bothpagerfocus/fullTab/native200/
+fullAA/performance/financial/CI. GETonly inheritedhandlers, parent405 not rechecked.
+
+Guarded assets-first/atomic index on originala561fa/no restart:13actualHTTP200
+SHA+bytes/MIME/nosniff,161oldassets/oldindex retained;rollback not executed.
+DailynewD_f4j_ts bundle/000025query/000001watchlist/history2025-12-31 preserved.
+Fouroriginal IDs/starttimes intact,3Composehealthy/PONG/API8000paper200/5173HTTP200.
+OwnedQA739448/739602 freshargv/cwd/start guardedTERM,terminalintentional1,15179empty,
+temporarytabsclosed/viewportreset. Frozen/tag/backend/.research/identity unchanged.
+
+Previous56shrink/54restore frontend bindings now historical, not rewritten.
+SavedAPIidentity backendproof remains scoped/current. Newnext economic gate is
+002168 source/oracle state propagation:existing official cache/ledger already
+explicitly credits and lists bonus shares2011-03-28;oldoracle NOT_EVIDENCED is
+not proof those date clauses are missing. Root still must independently bind
+source/raw/calendar/suspension/master into a new immutable scoped result;missing
+frozen event/fullinput contradictions prevent financial admission. No acquisition
+restart/label-onlyPASS/frozenrewrite/strategy. Full U1–U8/M0–M5 ACTIVE/PARTIAL;
+GitHubHOLD/no remote operations,lawful2026feed/genuineledger/quality/release remain.
+
 ## 2026-10-08 recovery final-page shrink and daily frontend — scoped PASS
 
 [Private repeatable proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-recovery-page-shrink/README.md>)

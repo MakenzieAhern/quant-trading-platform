@@ -1,5 +1,26 @@
 # Decisions
 
+## v1.2 Persist draft pagination at the existing refresh boundary — 2026-10-08
+
+Derived display clamps do not repair underlying offset:after21→20→21 regrowth
+both namedversion/recovery lists jump backpage2. Reproduce four actualENZH REDs,
+then reuse refresh for successful-read stored clamps and details-open;failed
+reads preserve prior page. No new paging/storage layer,dependency or financepath.
+16focused/815full/static/build and actualnativeENZH row/storage/focus boundaries
+pass;readonly reviewer strengthened exact row/old middle-state assertions.
+82payload7d52f070 twicecheckPASS. Publish exacttested API8000 staticfiles guarded/
+assetsfirst/atomicindex,retain161oldassets/index/no restart,13HTTP exactSHA;daily
+savedquery/watchlist intact. OwnedQA stopped/temporarytabsclosed/viewportreset.
+
+This completes the prior specific regrowth case, not fullproduct/AA/financial/
+release acceptance. GitHubHOLD/no requests/push. Frozen/backend/.research/OOS/
+identity unchanged and olderfrontend bindings immutable/historical. Prioritize
+source-to-economic state propagation next:002168 accepted candidate already has
+explicit official credit/list2011-03-28,while stale oracle NOT_EVIDENCED persists.
+Do not retrieve an already-cached clause or merely relabel it financialPASS;
+reconcile actualauthority/calendar/raw/suspension/PITmaster and allinput gaps in
+a new immutable result before any independent dataset execution admission.
+
 ## v1.2 Repair cross-tab recovery pagination locally during CI HOLD — 2026-10-08
 
 GitHub CI is not required for the existing local frontend/API. Continue normal

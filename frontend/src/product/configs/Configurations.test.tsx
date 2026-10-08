@@ -61,18 +61,37 @@ beforeEach(async () => {
   });
 });
 describe("configuration versions in the guided wizard", () => {
-  it.each(["en-US", "zh-CN"])(
-    "clamps recovery pagination after another tab removes the final page in %s",
-    async (locale) => {
+  it.each([
+    ["en-US", "recovery"],
+    ["zh-CN", "recovery"],
+    ["en-US", "version"],
+    ["zh-CN", "version"],
+  ] as const)(
+    "keeps the clamped page after cross-tab shrink and regrowth in %s %s",
+    async (locale, kind) => {
       await i18n.changeLanguage(locale);
+      const prefix =
+        kind === "recovery" ? DRAFT_RECOVERY_PREFIX : CONFIG_VERSION_PREFIX;
       const ids = Array.from({ length: 21 }, () => crypto.randomUUID());
       const raws = ids.map((id, index) => {
-        const raw = JSON.stringify({
+        const draft = {
           ...current,
           form: { ...configuration, name: `Recovery ${index}` },
           savedAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)).toISOString(),
-        });
-        localStorage.setItem(DRAFT_RECOVERY_PREFIX + id, raw);
+        };
+        const raw = JSON.stringify(
+          kind === "recovery"
+            ? draft
+            : {
+                schema: 1,
+                id,
+                name: draft.form.name,
+                createdAt: draft.savedAt,
+                kind: "saved",
+                draft,
+              },
+        );
+        localStorage.setItem(prefix + id, raw);
         return raw;
       });
       const currentRaw = JSON.stringify(current);
@@ -82,39 +101,103 @@ describe("configuration versions in the guided wizard", () => {
       render(
         <ConfigurationVersionsPanel current={current} onRestore={restore} />,
       );
-      const summary = screen.getByText(
+      const libraryLabel =
+        locale === "en-US" ? "Named configuration versions" : "命名配置版本";
+      const recoveryLabel =
         locale === "en-US"
           ? "Browser page recovery drafts"
-          : "浏览器页面草稿恢复",
-      );
-      await userEvent.click(summary);
-      const recovery = within(summary.closest("details")!);
+          : "浏览器页面草稿恢复";
+      const region = screen.getByRole("region", { name: libraryLabel });
+      let recovery;
+      if (kind === "recovery") {
+        const summary = screen.getByText(recoveryLabel);
+        await userEvent.click(summary);
+        recovery = within(summary.closest("details")!);
+      } else {
+        recovery = within(region);
+      }
+      const list = () =>
+        kind === "recovery"
+          ? recovery.getByRole("list")
+          : region.querySelector(":scope > ul")!;
+      const pager = () =>
+        screen.getByRole("group", {
+          name: `${kind === "recovery" ? recoveryLabel : libraryLabel} — ${i18n.t("common:pagination")}`,
+        });
       await userEvent.click(
-        recovery.getByRole("button", { name: i18n.t("common:next") }),
+        within(pager()).getByRole("button", { name: i18n.t("common:next") }),
       );
-      expect(recovery.getByRole("list").children).toHaveLength(1);
-      expect(recovery.getByRole("list")).toHaveTextContent("Recovery 0");
-      act(() => {
-        localStorage.removeItem(DRAFT_RECOVERY_PREFIX + ids[0]);
+      expect(list().children).toHaveLength(1);
+      expect(list()).toHaveTextContent("Recovery 0");
+      const readFailure = vi
+        .spyOn(Storage.prototype, "key")
+        .mockImplementation(() => {
+          throw new DOMException("blocked", "SecurityError");
+        });
+      act(() =>
         fireEvent(
           window,
-          new StorageEvent("storage", { key: DRAFT_RECOVERY_PREFIX + ids[0] }),
+          new StorageEvent("storage", { key: prefix + ids[0] }),
+        ),
+      );
+      expect(
+        screen
+          .getAllByRole("alert")
+          .some((alert) =>
+            alert.textContent?.includes(
+              locale === "en-US" ? "could not be read" : "无法读取浏览器存储",
+            ),
+          ),
+      ).toBe(true);
+      readFailure.mockRestore();
+      act(() =>
+        fireEvent(
+          window,
+          new StorageEvent("storage", { key: prefix + ids[0] }),
+        ),
+      );
+      expect(list().children).toHaveLength(1);
+      expect(list()).toHaveTextContent("Recovery 0");
+      act(() => {
+        localStorage.removeItem(prefix + ids[0]);
+        fireEvent(
+          window,
+          new StorageEvent("storage", { key: prefix + ids[0] }),
         );
       });
-      expect(recovery.getByRole("list").children).toHaveLength(20);
-      expect(recovery.getByRole("group")).toHaveTextContent(
+      expect(list().children).toHaveLength(20);
+      expect(pager()).toHaveTextContent(
         i18n.t("common:pageOf", { start: 1, end: 20, total: 20 }),
       );
-      for (const button of recovery.getAllByRole("button"))
-        if (
-          button.textContent === i18n.t("common:previous") ||
-          button.textContent === i18n.t("common:next")
-        )
-          expect(button).toBeDisabled();
-      for (let index = 1; index < ids.length; index += 1)
-        expect(localStorage.getItem(DRAFT_RECOVERY_PREFIX + ids[index])).toBe(
-          raws[index],
+      for (const button of within(pager()).getAllByRole("button"))
+        expect(button).toBeDisabled();
+      act(() => {
+        localStorage.setItem(prefix + ids[0], raws[0]);
+        fireEvent(
+          window,
+          new StorageEvent("storage", { key: prefix + ids[0] }),
         );
+      });
+      expect(list().children).toHaveLength(20);
+      expect(list()).not.toHaveTextContent("Recovery 0");
+      expect(pager()).toHaveTextContent(
+        i18n.t("common:pageOf", { start: 1, end: 20, total: 21 }),
+      );
+      expect(
+        within(pager()).getByRole("button", {
+          name: i18n.t("common:previous"),
+        }),
+      ).toBeDisabled();
+      expect(
+        within(pager()).getByRole("button", { name: i18n.t("common:next") }),
+      ).toBeEnabled();
+      for (let index = 0; index < ids.length; index += 1)
+        expect(localStorage.getItem(prefix + ids[index])).toBe(raws[index]);
+      await userEvent.click(
+        within(pager()).getByRole("button", { name: i18n.t("common:next") }),
+      );
+      expect(list().children).toHaveLength(1);
+      expect(list()).toHaveTextContent("Recovery 0");
       expect(localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(currentRaw);
       expect(restore).not.toHaveBeenCalled();
       expect(create).not.toHaveBeenCalled();

@@ -36,9 +36,9 @@ export function ConfigurationVersionsPanel({
   const fields = useExperimentCopy();
   const [library, setLibrary] = useState(readConfigurationVersions);
   const [name, setName] = useState("");
-  const [offset, setOffset] = useState(0);
+  const [pageOffset, setOffset] = useState(0);
   const [recoveries, setRecoveries] = useState(readBrowserDraftRecoveries);
-  const [recoveryOffset, setRecoveryOffset] = useState(0);
+  const [recoveryPageOffset, setRecoveryOffset] = useState(0);
   const [unreadableCopies, setUnreadableCopies] = useState(
     readUnreadableDraftCopies,
   );
@@ -51,22 +51,30 @@ export function ConfigurationVersionsPanel({
   const [error, setError] = useState<"failed" | "conflict" | "changed" | null>(
     null,
   );
-  const pageOffset = Math.min(
-    offset,
-    Math.max(0, Math.ceil(library.items.length / 20) - 1) * 20,
-  );
-  const recoveryPageOffset = Math.min(
-    recoveryOffset,
-    Math.max(0, Math.ceil(recoveries.items.length / 20) - 1) * 20,
-  );
   const draft = (): ExperimentDraft => ({
     ...current,
     version: 1,
     savedAt: new Date().toISOString(),
   });
   function refresh() {
-    setLibrary(readConfigurationVersions());
-    setRecoveries(readBrowserDraftRecoveries());
+    const versions = readConfigurationVersions();
+    const drafts = readBrowserDraftRecoveries();
+    setLibrary(versions);
+    setRecoveries(drafts);
+    if (!versions.storageFailed)
+      setOffset((value) =>
+        Math.min(
+          value,
+          Math.max(0, Math.ceil(versions.items.length / 20) - 1) * 20,
+        ),
+      );
+    if (!drafts.storageFailed)
+      setRecoveryOffset((value) =>
+        Math.min(
+          value,
+          Math.max(0, Math.ceil(drafts.items.length / 20) - 1) * 20,
+        ),
+      );
     setUnreadableCopies(readUnreadableDraftCopies());
   }
   useEffect(() => {
@@ -220,8 +228,7 @@ export function ConfigurationVersionsPanel({
       <details
         className="configurationRecovery"
         onToggle={(event) => {
-          if (event.currentTarget.open)
-            setRecoveries(readBrowserDraftRecoveries());
+          if (event.currentTarget.open) refresh();
         }}
       >
         <summary>{c.recoveries}</summary>
