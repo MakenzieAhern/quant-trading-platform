@@ -1,4 +1,15 @@
 {
+  "dependency_advisory_20261009_gate": {
+    "observed_at_utc": "2026-10-09T01:22:06Z",
+    "base_head": "8720ed24764b58ba4a53e5b8c83e80edd301b796",
+    "status": "PASS_LOCKED_DEPENDENCY_ADVISORIES_ONLY",
+    "backend": "pip-audit2.10.1 PyPI/newdedicatedcache exit0: all58 exact pinned name/version pairs covered,0skips,0knownvulnerabilities. --no-deps/--disable-pip, no install/fix; unhashed-lock warning retained. requirements.lock SHA d0b722b4483ae6e66de36d59d448a99dfb7e888ce66e7a9688fdaa2494e8105a.",
+    "frontend": "npm11.19.0/Node24.20.0 audit actual registry advisory POST200 exit0,267 reporteddependencies/0knownvulnerabilities. package-lock SHA54fedf5f3528ca76c4e4fd13d84d7423af24cda1a85f2097eac9a04cc3e7e872. Initial PATH shellparse failure preserved; direct installednode/npm-cli corrected it without package upgrade.",
+    "review": "Bounded root comparison and independent readonly export review: no concrete actionable defect. Supplementary agent in-memory checks are not browser/import or fullflow acceptance. No speculative rewrite.",
+    "evidence": "product-evidence/v1.2/m5/20261009-dependency-advisories/summary.json",
+    "limits": "Online known-advisory snapshot only, not container OS inventory, whole-app security, financial admission or release. Full U1-U8/M0-M5 remains incomplete; existing source/rights/ledger/nativebrowser/GitHub gates unchanged. No app/dependency/data/research/OOS/service/GitHub mutation; no unchanged fulltest rerun.",
+    "full_product_pass": false
+  },
   "resumed_runtime_checkpoint_20261009": {
     "observed_at_utc": "2026-10-08T13:06:31Z",
     "base_head": "653f84272228116099f81b41f6f16a87f2d36531",
@@ -1112,7 +1123,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-08T13:06:31Z",
+  "updated_at_utc": "2026-10-09T01:22:06Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",

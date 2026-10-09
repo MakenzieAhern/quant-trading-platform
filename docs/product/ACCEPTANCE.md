@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-09 current dependency advisories — scoped PASS, not release approval
+
+[Pinned inputs, commands, exact report hashes and limits](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261009-dependency-advisories/summary.json>):
+at source8720ed2, npm11.19.0/Node24.20.0 queried the registry advisory bulk
+endpoint (HTTP200, exit0):267 reported dependencies,0 known vulnerabilities.
+pip-audit2.10.1 queried PyPI using a new dedicated cache: all58 exact locked
+name/version pairs covered,0 skipped,0 known vulnerabilities,exit0. No install,
+upgrade or fix; the unhashed Python-lock warning is retained. Initial npm shell
+PATH parse failure occurred before npm and is retained; direct installed Node
+and npm-cli invocation succeeded without expanding PATH.
+
+Bounded comparison/export code review found no demonstrated actionable defect;
+the independent review's in-memory checks are supplementary, not new browser
+or product-flow acceptance. No speculative code change or full test rerun.
+The advisory result does not cover container OS packages or establish complete
+security. Native foreground/performance/system-motion, source economics,
+lawful forward data, genuine missing ledgers and current remote release gates
+remain incomplete. No service, database, financial, frozen/OOS or GitHub action.
+
 ## 2026-10-08 current local regression and frame diagnosis — no release approval
 
 [Complete local regression evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-local-regression-gates/README.md>):
