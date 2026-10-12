@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-10-12 existing runtime recovered — scoped PASS
+
+[Recovery observations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261012-runtime-recovery/report.json>):
+Docker Desktop4.92.0 was stopped and localhost5173/8000 refused connections.
+One normal launch restored Engine29.8.0/Compose5.5.1 and the original services:
+PostgreSQL/Redis/backendhealthy, pg_isready accepting,RedisPONG, Windows frontend
+and APIhealthHTTP200/paper. Original named volumes remain listed; no complete
+integrity or absent-ledger recovery claim. Normal startup recovery is not wholly
+read-only. No install, reset, prune, volume deletion or new financial task.
+
+Chrome browser control opened the actual Workbench, retaining the saved draft
+and studies. [Actual frame](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261012-runtime-recovery/workbench.jpg>)
+is current recovery evidence. Windows app inventory identifies only a separate
+Chrome New Tab window, so native foreground alignment remains unverified.
+No native p95, system-reduced-motion or whole product acceptance claimed.
+Source economics, lawful forward feed, missing genuine ledgers and current
+GitHub/release gates remain incomplete.
+
 ## 2026-10-09 current dependency advisories — scoped PASS, not release approval
 
 [Pinned inputs, commands, exact report hashes and limits](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261009-dependency-advisories/summary.json>):

@@ -1,4 +1,15 @@
 {
+  "runtime_recovery_20261012_gate": {
+    "observed_at_utc": "2026-10-12T12:54:39Z",
+    "base_head": "a014b6b",
+    "status": "PASS_EXISTING_LOCAL_RUNTIME_RECOVERY_ONLY",
+    "action": "Installed Docker Desktop4.92.0 was not running; one supported normal app launch restored Engine29.8.0/Compose5.5.1 and existing containers. Initial no-targetable-window result resolved by readonly inventory refresh, not relaunch.",
+    "validation": "PostgreSQL/Redis/backend healthy, pg_isready accepting, RedisPONG, Windows frontend5173 and API8000/api/healthHTTP200; broker_mode paper. Original named PG/product/Redis volumes listed, not full data integrity or lost-ledger proof.",
+    "evidence": "product-evidence/v1.2/m4/20261012-runtime-recovery/report.json",
+    "browser": "Chrome extension3 tab1661331145 actual Workbench screenshot4134fb97 retained existing draft/results; Windows inventory only Chrome New Tab window265152. Native foreground alignment not proved. Readonly browser environment probe has unsupported document.hasFocus; no accepted motion/focus result or spoofing. Tab marked handoff.",
+    "next": "Verify current supported Chrome target/control capability before scoped UI QA; retain source/rights/ledger/GitHub gates and original native URL-policy stop. No fabricated foreground/motion/p95 claim.",
+    "full_product_pass": false
+  },
   "dependency_advisory_20261009_gate": {
     "observed_at_utc": "2026-10-09T01:22:06Z",
     "base_head": "8720ed24764b58ba4a53e5b8c83e80edd301b796",
@@ -1123,7 +1134,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-09T01:22:06Z",
+  "updated_at_utc": "2026-10-12T12:54:39Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
