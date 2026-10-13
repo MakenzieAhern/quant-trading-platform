@@ -15,7 +15,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, async_sessionmaker
 
 from app.application.experiments.data import HISTORICAL_ID
-from app.application.market_updates.cache import ReceiptCache
+from app.application.market_updates.cache import ReceiptCache, receipt_reader_diagnostics
 from app.application.market_updates.contracts import (
     AUTHORITY,
     PARSER_VERSION,
@@ -381,13 +381,22 @@ class MarketUpdateManager:
             )
         items = []
         for row in rows:
-            await self._verify_receipt(row)
-            items.append(
-                {"receipt_id": str(row.id), "manifest_sha256": row.manifest_sha256, **row.evidence}
-            )
+            await self.verify_receipt(row, for_execution=False)
+            item = {
+                "receipt_id": str(row.id),
+                "manifest_sha256": row.manifest_sha256,
+                **row.evidence,
+            }
+            diagnostics = receipt_reader_diagnostics(row.manifest_sha256, row.evidence)
+            if diagnostics:
+                item["reader_diagnostics"] = diagnostics
+            items.append(item)
         return items, int(total or 0)
 
-    async def _verify_receipt(self, receipt: MarketReceiptModel) -> list[dict[str, Any]]:
+    async def verify_receipt(
+        self, receipt: MarketReceiptModel, *, for_execution: bool = True
+    ) -> list[dict[str, Any]]:
+        """Read source-reproduced rows bound to this durable receipt, not trading authority."""
         manifest, rows = await asyncio.to_thread(self.cache.read, receipt.manifest_sha256)
         evidence = manifest["evidence"]
         if (
@@ -399,6 +408,8 @@ class MarketUpdateManager:
             or evidence.get("provider") != PROVIDER
         ):
             raise UpdateError("PRODUCT_CACHE_INTEGRITY_FAILED")
+        if for_execution and receipt_reader_diagnostics(receipt.manifest_sha256, evidence):
+            raise UpdateError("PRODUCT_RECEIPT_PARSER_LABEL_MISMATCH")
         return rows
 
     async def observations(self, sid: str, start: date, end: date) -> list[dict[str, Any]]:
@@ -423,8 +434,12 @@ class MarketUpdateManager:
                 )
             )
         verified = {}
+        diagnostics_by_receipt = {}
         for receipt in receipts:
-            source_rows = await self._verify_receipt(receipt)
+            source_rows = await self.verify_receipt(receipt, for_execution=False)
+            diagnostics_by_receipt[receipt.id] = receipt_reader_diagnostics(
+                receipt.manifest_sha256, receipt.evidence
+            )
             for source_row in source_rows:
                 verified[(receipt.id, source_row["security_id"], source_row["trading_date"])] = (
                     source_row
@@ -437,7 +452,13 @@ class MarketUpdateManager:
                 row.payload
             ):
                 raise UpdateError("PRODUCT_CACHE_INTEGRITY_FAILED")
-        return [{**row.payload, "receipt_id": str(row.receipt_id)} for row in rows]
+        items = []
+        for row in rows:
+            item = {**row.payload, "receipt_id": str(row.receipt_id)}
+            if diagnostics := diagnostics_by_receipt.get(row.receipt_id):
+                item["reader_diagnostics"] = diagnostics
+            items.append(item)
+        return items
 
     async def _claim(self) -> MarketUpdateJobModel | None:
         await self._verify_owner()
@@ -624,7 +645,7 @@ class MarketUpdateManager:
         async with self.factory() as db:
             existing = await db.get(MarketReceiptModel, receipt_id)
         if existing is not None:
-            await self._verify_receipt(existing)
+            await self.verify_receipt(existing, for_execution=False)
             if existing.evidence != evidence:
                 raise UpdateError("PRODUCT_CACHE_INTEGRITY_FAILED")
             await asyncio.to_thread(self.cache.acknowledge, journal)

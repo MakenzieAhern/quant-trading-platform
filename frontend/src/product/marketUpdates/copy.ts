@@ -91,6 +91,9 @@ const en = {
   rowCount: "Rows in receipt",
   provider: "Provider",
   parser: "Parser version",
+  legacyReadOnly: "Legacy receipt · read-only",
+  parserLabelMismatch:
+    "The server marked a parser-label mismatch on this retained receipt. Its original label and evidence remain unchanged for read-only inspection; it is not eligible for execution or forward admission. This does not establish source rights or financial acceptance.",
   sha: "Manifest SHA-256",
   rawSha: "Raw response SHA-256",
   snapshot: "Archive master snapshot (not current authority)",
@@ -219,6 +222,9 @@ const zh: typeof en = {
   rowCount: "回执行数",
   provider: "供应商",
   parser: "解析器版本",
+  legacyReadOnly: "旧回执仅供只读",
+  parserLabelMismatch:
+    "服务器标记了保留回执的解析器标签不一致。原标签与证据保持不变，仅供只读查看；该回执不能用于执行或前向准入，也不代表来源许可或金融验收通过。",
   sha: "清单 SHA-256",
   rawSha: "原始响应 SHA-256",
   snapshot: "档案证券主表快照（非当前权威）",

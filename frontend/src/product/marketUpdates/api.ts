@@ -149,6 +149,15 @@ export function parseJob(value: unknown): UpdateJob {
 }
 function receipt(value: unknown): UpdateReceipt {
   const item = record(value);
+  if (
+    item.reader_diagnostics !== undefined &&
+    (!Array.isArray(item.reader_diagnostics) ||
+      item.reader_diagnostics.length > 1 ||
+      item.reader_diagnostics.some(
+        (code) => code !== "PARSER_LABEL_MISMATCH_READ_ONLY",
+      ))
+  )
+    throw new ApiContractError();
   authority(item.authority);
   terms(item.terms);
   for (const key of [

@@ -33,7 +33,6 @@ from app.application.market_updates.contracts import (
 from app.application.market_updates.service import MarketUpdateManager
 from app.application.market_updates.worker import check_result
 from app.core.config import get_settings
-from app.data.catalog.checksums import canonical_sha256
 from app.db.models.market_updates import (
     MarketObservationModel,
     MarketReceiptModel,
@@ -202,13 +201,14 @@ def test_parser_exact_suspension_st_and_duplicate():
 
 
 def test_cache_separation_atomic_repeat_and_corruption(tmp_path):
+    from tests.test_market_update_receipt_verification import receipt_payload
+
     with pytest.raises(UpdateError):
         ReceiptCache(tmp_path / "archive" / "nested", tmp_path / "archive")
     cache = ReceiptCache(tmp_path / "cache", tmp_path / "archive")
-    raw = {"fields": [], "rows": []}
-    evidence = {"raw_response_sha256": canonical_sha256(raw)}
-    first = cache.publish(raw, [], evidence)
-    assert cache.publish(raw, [], evidence) == first
+    raw, rows, evidence = receipt_payload()
+    first = cache.publish(raw, rows, evidence)
+    assert cache.publish(raw, rows, evidence) == first
     manifest = cache.verify(first)
     assert not list(cache.root.glob(".receipt-*"))
     (cache.root / manifest["raw"]["path"]).write_bytes(b"corrupt fixture")

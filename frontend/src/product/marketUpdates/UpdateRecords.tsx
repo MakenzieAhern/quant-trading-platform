@@ -175,7 +175,17 @@ export function UpdateRecords({
               <summary>
                 {row.security_id} · {formatUtc(row.received_at_utc)} ·{" "}
                 {c.rowCount}: {row.row_count}
+                {row.reader_diagnostics?.includes(
+                  "PARSER_LABEL_MISMATCH_READ_ONLY",
+                ) && ` · ${c.legacyReadOnly}`}
               </summary>
+              {row.reader_diagnostics?.includes(
+                "PARSER_LABEL_MISMATCH_READ_ONLY",
+              ) && (
+                <p className="stateCallout" role="note">
+                  {c.parserLabelMismatch}
+                </p>
+              )}
               <dl>
                 <dt>{c.receiptId}</dt>
                 <dd>{row.receipt_id}</dd>

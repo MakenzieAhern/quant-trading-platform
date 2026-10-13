@@ -86,6 +86,7 @@ export interface UpdateJob {
   mode: "raw_only_candidate";
 }
 export interface UpdateReceipt {
+  reader_diagnostics?: "PARSER_LABEL_MISMATCH_READ_ONLY"[];
   receipt_id: string;
   manifest_sha256: string;
   provider: string;
