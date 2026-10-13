@@ -164,6 +164,24 @@ function tableCells(title: string) {
     );
 }
 
+function pnlSnapshot() {
+  const snapshot = paperSnapshot("STOPPED");
+  snapshot.session.initial_cash = "2000";
+  snapshot.latest_portfolio = {
+    timestamp: "2026-09-06T02:02:00Z",
+    cash: "1007.000000000000000001",
+    market_value: "1000",
+    equity: "2007.000000000000000001",
+    realized_pnl: "0",
+    unrealized_pnl: "0",
+    cumulative_commission: "3",
+    drawdown: "0",
+    positions: [],
+    plan: null,
+  };
+  return snapshot;
+}
+
 class MockWebSocket {
   static readonly OPEN = 1;
   static readonly CLOSED = 3;
@@ -231,6 +249,80 @@ describe("paper trading pages", () => {
     clearPending();
     Reflect.deleteProperty(window.navigator, "locks");
   });
+
+  it.each(["en-US", "zh-CN"])(
+    "shows separate trading, corporate-action and net PnL (%s)",
+    async (language) => {
+      await act(async () => i18n.changeLanguage(language));
+      installWebSocket();
+      const snapshot = pnlSnapshot();
+      const payload = {
+        ...snapshot.latest_portfolio!,
+        accounting_version: "PNL_BREAKDOWN_V1",
+        corporate_action_realized_pnl: "10.000000000000000001",
+        total_pnl: "7.000000000000000001",
+        realized_pnl: "0",
+        unrealized_pnl: "0",
+        cumulative_commission: "3",
+      };
+      mockPaperServer().mockImplementation(async () =>
+        jsonResponse({ ...snapshot, latest_portfolio: payload }),
+      );
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      for (const [label, value] of [
+        [
+          language === "en-US" ? "Corporate-action PnL" : "公司行动损益",
+          payload.corporate_action_realized_pnl,
+        ],
+        [
+          language === "en-US"
+            ? "Total PnL (after costs)"
+            : "总盈亏（已扣费用）",
+          payload.total_pnl,
+        ],
+        [
+          language === "en-US" ? "Trading realized PnL" : "交易已实现盈亏",
+          payload.realized_pnl,
+        ],
+        [
+          language === "en-US" ? "Transaction costs" : "交易费用",
+          payload.cumulative_commission,
+        ],
+      ]) {
+        const metric = await screen.findByText(label!);
+        expect(
+          metric.closest(".metric")?.querySelector("strong"),
+        ).toHaveAttribute("title", value);
+      }
+    },
+  );
+
+  it.each(["en-US", "zh-CN"])(
+    "shows legacy unrecorded PnL as unknown (%s)",
+    async (language) => {
+      await act(async () => i18n.changeLanguage(language));
+      installWebSocket();
+      mockPaperServer().mockImplementation(async () =>
+        jsonResponse(pnlSnapshot()),
+      );
+      render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      await act(async () => MockWebSocket.instances[0]!.open());
+      const metric = await screen.findByText(
+        language === "en-US" ? "Corporate-action PnL" : "公司行动损益",
+      );
+      expect(
+        metric.closest(".metric")?.querySelector("strong"),
+      ).toHaveTextContent("—");
+      expect(
+        screen.getByText(
+          language === "en-US"
+            ? "This older snapshot did not record corporate-action or total PnL. Missing values are unknown, not zero."
+            : "这份旧快照未记录公司行动损益和总盈亏；缺失值表示未知，不代表零。",
+        ),
+      ).toBeInTheDocument();
+    },
+  );
 
   it.each(["en-US", "zh-CN"])(
     "shows distinct saved order transitions in a bounded read-only event log (%s)",
@@ -1027,8 +1119,10 @@ describe("paper trading pages", () => {
         "18655",
         "99964.813400000000000001",
         "0",
+        "",
         "-5",
         "30.1866",
+        "",
       ]);
       if (hasPlan)
         expect(screen.getByText("90,123.000000000000000001")).toBeVisible();

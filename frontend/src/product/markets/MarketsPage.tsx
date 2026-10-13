@@ -12,7 +12,7 @@ import {
   explainDatasetFindings,
   explainExperimentCode,
 } from "../experiments/codes";
-import { marketApi, securityName } from "./api";
+import { canReadWatchlistItem, marketApi, securityName } from "./api";
 import { boardLabel, useMarketCopy } from "./copy";
 import { MarketDetail } from "./MarketDetail";
 import type { MarketDataset, MarketRange, Security } from "./types";
@@ -511,10 +511,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                 const source = datasets.find(
                   (d) => d.dataset_id === item.dataset_id,
                 );
-                const canRead =
-                  item.source_available &&
-                  source?.available &&
-                  item.dataset_sha256 === source.sha256;
+                const canRead = canReadWatchlistItem(item, source);
                 return (
                   <article
                     className="marketWatchItem"

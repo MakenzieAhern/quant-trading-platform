@@ -330,7 +330,26 @@ const fill = (value: unknown): PaperFill => {
 
 const portfolio = (value: unknown): PaperPortfolio => {
   const item = record(value);
+  const accounting: Pick<
+    PaperPortfolio,
+    "accounting_version" | "corporate_action_realized_pnl" | "total_pnl"
+  > = {};
+  if (item.accounting_version != null) {
+    if (item.accounting_version !== "PNL_BREAKDOWN_V1")
+      throw new Error("Invalid paper accounting version.");
+    accounting.accounting_version = item.accounting_version;
+    accounting.corporate_action_realized_pnl = decimal(
+      item.corporate_action_realized_pnl,
+    );
+    accounting.total_pnl = decimal(item.total_pnl);
+  } else if (
+    item.corporate_action_realized_pnl != null ||
+    item.total_pnl != null
+  ) {
+    throw new Error("Paper PnL breakdown requires an accounting version.");
+  }
   return {
+    ...accounting,
     timestamp: requiredString(item.timestamp),
     cash: decimal(item.cash),
     market_value: decimal(item.market_value),

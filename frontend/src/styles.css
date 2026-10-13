@@ -935,7 +935,8 @@ kbd {
   max-height: 55vh;
   overflow: auto;
 }
-.commandResults a {
+.commandResults a,
+.commandResults button {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -944,6 +945,12 @@ kbd {
   color: var(--text);
   text-decoration: none;
   border-radius: 6px;
+}
+.commandResults button {
+  background: transparent;
+  border: 0;
+  text-align: left;
+  opacity: 1;
 }
 .commandResults a:hover,
 .commandResults a:focus {

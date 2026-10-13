@@ -4,7 +4,7 @@ import { Link } from "../components/Link";
 import { Pagination } from "../components/Pagination";
 import { useApiResource } from "../hooks/useApiResource";
 import { experimentApi } from "./experiments/api";
-import { marketApi, securityName } from "./markets/api";
+import { canReadWatchlistItem, marketApi, securityName } from "./markets/api";
 import { productHelpTopics, useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
 import { ProductError } from "./ProductPages";
@@ -158,27 +158,43 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
               </p>
               {watches.data.total === 0 && <p>{copy.searchNoWatchlist}</p>}
               <nav className="commandResults" aria-label={copy.searchWatchlist}>
-                {watches.data.items.map((item) => (
-                  <Link
-                    key={`${item.dataset_id}:${item.security_id}`}
-                    href={`/markets?${new URLSearchParams({ dataset: item.dataset_id, q: item.security_id })}#${new URLSearchParams({ dataset: item.dataset_id, security: item.security_id })}`}
-                    onClick={onClose}
-                  >
-                    <span>
-                      {securityName(item.security)} · {item.security_id}
-                      {!item.security.name &&
-                        item.security.source_observed_name && (
-                          <small> · {copy.searchObservedName}</small>
-                        )}
-                    </span>
-                    <small>
-                      {item.dataset_id}
-                      {!item.source_available
-                        ? ` · ${copy.searchSourceUnavailable}`
-                        : ""}
-                    </small>
-                  </Link>
-                ))}
+                {watches.data.items.map((item) => {
+                  const canRead = canReadWatchlistItem(
+                    item,
+                    capabilities.data?.datasets.find(
+                      (source) => source.dataset_id === item.dataset_id,
+                    ),
+                  );
+                  const content = (
+                    <>
+                      <span>
+                        {securityName(item.security)} · {item.security_id}
+                        {!item.security.name &&
+                          item.security.source_observed_name && (
+                            <small> · {copy.searchObservedName}</small>
+                          )}
+                      </span>
+                      <small>
+                        {item.dataset_id}
+                        {!canRead ? ` · ${copy.searchSourceUnavailable}` : ""}
+                      </small>
+                    </>
+                  );
+                  const key = `${item.dataset_id}:${item.security_id}`;
+                  return canRead ? (
+                    <Link
+                      key={key}
+                      href={`/markets?${new URLSearchParams({ dataset: item.dataset_id, q: item.security_id })}#${new URLSearchParams({ dataset: item.dataset_id, security: item.security_id })}`}
+                      onClick={onClose}
+                    >
+                      {content}
+                    </Link>
+                  ) : (
+                    <button key={key} type="button" disabled>
+                      {content}
+                    </button>
+                  );
+                })}
               </nav>
               {watches.data.total > 20 && <p>{copy.searchMore}</p>}
             </>

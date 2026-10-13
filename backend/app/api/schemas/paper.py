@@ -182,6 +182,20 @@ class PortfolioPayload(BaseModel):
     drawdown: str
     positions: list[PositionPayload]
     plan: dict[str, Any] | None = None
+    accounting_version: Literal["PNL_BREAKDOWN_V1"] | None = None
+    corporate_action_realized_pnl: str | None = Field(
+        default=None, strict=True, pattern=r"^-?[0-9]+(?:\.[0-9]+)?$"
+    )
+    total_pnl: str | None = Field(default=None, strict=True, pattern=r"^-?[0-9]+(?:\.[0-9]+)?$")
+
+    @model_validator(mode="after")
+    def validate_accounting(self) -> "PortfolioPayload":
+        if self.accounting_version is None:
+            if self.corporate_action_realized_pnl is not None or self.total_pnl is not None:
+                raise ValueError("paper PnL breakdown requires an accounting version")
+        elif self.corporate_action_realized_pnl is None or self.total_pnl is None:
+            raise ValueError("versioned paper PnL breakdown requires both amounts")
+        return self
 
 
 PaperPayload = (

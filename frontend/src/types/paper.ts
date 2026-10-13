@@ -124,6 +124,9 @@ export interface PaperPortfolio {
   cash: string;
   market_value: string;
   equity: string;
+  accounting_version?: "PNL_BREAKDOWN_V1" | null;
+  corporate_action_realized_pnl?: string | null;
+  total_pnl?: string | null;
   realized_pnl: string;
   unrealized_pnl: string;
   cumulative_commission: string;

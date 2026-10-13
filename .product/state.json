@@ -1,4 +1,20 @@
 {
+  "paper_pnl_and_source_identity_20261013_gate": {
+    "status": "PASS_CODE_AND_LOCAL_REGRESSION_BROWSER_PENDING",
+    "observed_at_utc": "2026-10-13T07:34:00Z",
+    "base_head": "b08e3aa7d2fae5c8d122825add49cd11cec3561e",
+    "scope": "U5 saved-source identity and U7 exact PnL transport/display; no source admission or research/domain calculation change.",
+    "pnl": "PNL_BREAKDOWN_V1 carries engine corporate_action_realized_pnl and total_pnl exact strings. Legacy absence/null remains unknown; original journals unchanged; both providers compare complete old/new/mixed checkpoints before append.",
+    "watchlist": "Shared guard requires source_available, current available dataset, same ID and SHA. Read-only inspection does not require execution approval; unavailable rows remain visible and disabled.",
+    "review": "Independent scoped backend/frontend review; fee label corrected to Transaction costs. No remaining scoped finding; no real-browser claim.",
+    "tests": "backend1788PASS/1optional archiveSKIP;Ruff/format571/mypy146PASS;frontend870PASS49files;lint/typesPASS;latest label-only patch4bilingualPASS;build530.63kBwarning retained in fresh temp output.",
+    "environment": "Isolated tmpfs quant_test empty→0017. Docker subnet-pool exhaustion resolved with verified empty test-only network, no prune. Original four service identities/start unchanged. Tests terminal; testPG stopped and retained.",
+    "ci": "Pending new milestone commit. Prior b08e3aa hosted CI remains historical for changed code; final receipt goes outsideGit.",
+    "deployed": false,
+    "browser_validated": false,
+    "evidence": "product-evidence/v1.2/m4/20261013-pnl-source-guards/README.md",
+    "full_product_pass": false
+  },
   "human_prepared_browser_20261013_gate": {
     "status": "TOOL_URL_VALIDATION_REJECTED_AFTER_PREPARATION",
     "human_preparation_confirmed": true,
@@ -1159,7 +1175,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-13T02:00:22Z",
+  "updated_at_utc": "2026-10-13T07:34:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4135,16 +4151,16 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct8 separate15source candidate actualdfdd998f normal/-Oreverse identical;43bindingsadf9a80e twicePASS+native;111source tests/Ruff/format/scriptmypyPASS. Readonlyreview original20/total25inputs/4parents/13+2/15scope/output hashes matched,no scopedP1P2. Original323/124proofstillverify/apphealthy;fullfinancialPARTIAL/fullgoalACTIVE/GitHubHOLD.",
-    "repository_writer": "Root sole repo/docs/state/candidate/proof writer;agents readonly. Publication checkpoint0e5e4c0 committed. New offline source-inspection script/tests and checkpoint only;backend/app/frontend/.research unchanged. No competing writer or Gitidentity/remote change.",
-    "database_writer": "Originalbackend89aa restarted once03:29:52UTC after0017head/alljobs-terminal/no-pending checks and pg_dump backup. Normal startup/recovery NOTread-only. Selected19GET/417events/statuses/cache intact,not all44tables. No new financialproducer/originalPOST/deniedfingerprint refresh. PG598/Redisdf3 unchanged. Owned testPGstoppedretained;no reset/prune/down-v/delete.",
-    "queue_writer": "No task/financial/market producer or database queue writes. Root wrote only four isolated inspection JSONs under product-candidates and private43-binding proof. Whole7544/component002168/sevencompanions parents retained;no dataset registration/freeze/strategy or source acquisition. Original admission unchanged false.",
+    "latest_verification": "Oct13 backend1788PASS/1optionalSKIP/Ruff/format571/mypy146;frontend870PASS/lint/types/tempbuildPASS; scoped independent review. Original services preserved; full product PARTIAL and current code browser/deployment pending.",
+    "repository_writer": "Root integrates frontend PnL/docs/state. u3_u7_backend_gap_oct13 wrote backend schema/service/test only, now readonly review; u3_u8_frontend_gap_oct13 wrote command/watchlist files only, now completed isolated backend tests. No overlapping writers; identity unchanged.",
+    "database_writer": "Only new disposable quant_test tmpfs written by u3_u8_frontend_gap_oct13 full suite; testPG042f28746a7d stopped/retained, other clients0. Original application DB untouched; four original container ID/PID/command/start records match before/after.",
+    "queue_writer": "No original financial/research/provider/task producer or queue write; no new account, strategy, formal/OOS or frozen dataset change. Simulated fixtures exist only in isolated tests.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "Oct8 original89aa samecontainer/image/start03:29:52UTC;PG598/Redisdf3/fronta561 sameOct7starts. OriginalCompose3healthy/APIpaper200/front5173Windows200at03:39UTC. Testedfrontend13exactassets/index06a9a2d5;old175assetsretained. All ownedtests/QAterminal/closed;originalMarketretained/ZHsystem. HistoricalPIDsnotactionauthority.",
+    "verified_processes": "Oct13 07:30UTC Compose original Postgres/Redis/backend healthy, frontend and API HTTP200. Exact before/after identities in new outsideGit evidence. Isolated test containers terminal0; testPG stopped/retained. Historical process IDs not reusable authority.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
@@ -4785,8 +4801,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Read current-ci.json and match its terminal receipt to GitHEAD. Remaining full U1-U8/M0-M5 requires native-tool URL validation recovery, official source/economic closure, lawful after-start forward evidence and genuine missing-ledger evidence. Human Chrome/animation preparation is already confirmed; do not repeat that request or equivalent denied controls. Current GitHub integration is recovered; no merge/release/formal/OOS/frozen change until all mandatory gates pass.",
-  "local_next_command": "Finish the single CI-result documentation milestone synchronization and verify its actual CI, persisting final receipt outsideGit. Subsequently pursue only concrete changed required inputs or tool capability; no unchanged scans/tests, synthetic forward or ledger substitution, source/scratch/fingerprint/download/600725 bypass. Full product scope remains incomplete.",
+  "next_task": "Commit/push the independently reviewed paper-PnL and saved-source identity milestone to existing draft PR32, verify actual current CI, then continue remaining full U1-U8/M3-M5 gates. Live deployment/browser validation pending; native URL-policy recovery needed before control. Source economics, lawful after-start forward feed and genuine missing-ledger evidence remain unresolved; no merge/release/frozen/OOS change.",
+  "local_next_command": "Verify terminal test logs, diff, exact branch/identity, then normal milestone commit/push and wait for that SHA's CI. Save final CI receipt outsideGit. Do not equate unit tests with live browser acceptance or retry previously denied source/control routes.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

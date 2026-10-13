@@ -67,6 +67,83 @@ function boundedSnapshot() {
 }
 
 describe("paper API contracts", () => {
+  it("retains versioned corporate-action and net PnL exactly through REST and stream", async () => {
+    const snapshot = boundedSnapshot();
+    const payload = {
+      ...snapshot.latest_portfolio!,
+      accounting_version: "PNL_BREAKDOWN_V1",
+      corporate_action_realized_pnl: "10.000000000000000001",
+      total_pnl: "-7.000000000000000001",
+    };
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      jsonResponse({ ...paperState(snapshot), latest_portfolio: payload }),
+    );
+    expect((await paperApi.state(PAPER_ID)).latest_portfolio).toEqual(payload);
+    const event = parseWireEvent({
+      type: "portfolio.snapshot",
+      sequence: snapshot.last_sequence + 1,
+      occurred_at: payload.timestamp,
+      payload,
+    });
+    const next = applyPaperEvent(snapshot, event);
+    expect(next.latest_portfolio).toEqual(payload);
+    expect(applyPaperEvent(next, event)).toBe(next);
+  });
+
+  it.each([
+    {
+      accounting_version: "PNL_BREAKDOWN_V2",
+      corporate_action_realized_pnl: "10",
+      total_pnl: "7",
+    },
+    { accounting_version: "PNL_BREAKDOWN_V1", total_pnl: "7" },
+    {
+      accounting_version: "PNL_BREAKDOWN_V1",
+      corporate_action_realized_pnl: "10",
+    },
+    {
+      accounting_version: "PNL_BREAKDOWN_V1",
+      corporate_action_realized_pnl: 10,
+      total_pnl: "7",
+    },
+    {
+      accounting_version: "PNL_BREAKDOWN_V1",
+      corporate_action_realized_pnl: "10",
+      total_pnl: "NaN",
+    },
+    { corporate_action_realized_pnl: "10", total_pnl: "7" },
+    {
+      accounting_version: null,
+      corporate_action_realized_pnl: "10",
+      total_pnl: "7",
+    },
+  ])("rejects unversioned or incomplete PnL breakdown %j", (accounting) => {
+    const payload = { ...boundedSnapshot().latest_portfolio, ...accounting };
+    expect(() => paperParsers.portfolio(payload)).toThrow();
+    expect(() =>
+      parseWireEvent({
+        type: "portfolio.snapshot",
+        sequence: 2,
+        occurred_at: payload.timestamp,
+        payload,
+      }),
+    ).toThrow();
+  });
+
+  it.each([
+    {},
+    {
+      accounting_version: null,
+      corporate_action_realized_pnl: null,
+      total_pnl: null,
+    },
+  ])("keeps legacy missing PnL unknown, not zero (%j)", (accounting) => {
+    const legacy = boundedSnapshot().latest_portfolio!;
+    expect(paperParsers.portfolio({ ...legacy, ...accounting })).toEqual(
+      legacy,
+    );
+  });
+
   it("keeps read quality in the state envelope, never portfolio or plan", async () => {
     const header = {
       ...paperState(boundedSnapshot()),

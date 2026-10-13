@@ -382,32 +382,46 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           </p>
         )}
         {portfolio ? (
-          <div className="metricsGrid">
-            <Metric
-              label={`${t("detail.cash")}${moneyUnit}`}
-              value={portfolio.cash}
-            />
-            <Metric
-              label={`${t("detail.marketValue")}${moneyUnit}`}
-              value={portfolio.market_value}
-            />
-            <Metric
-              label={`${t("detail.equity")}${moneyUnit}`}
-              value={portfolio.equity}
-            />
-            <Metric
-              label={`${t("detail.realizedPnl")}${moneyUnit}`}
-              value={portfolio.realized_pnl}
-            />
-            <Metric
-              label={`${t("detail.unrealizedPnl")}${moneyUnit}`}
-              value={portfolio.unrealized_pnl}
-            />
-            <Metric
-              label={`${t("detail.commission")}${moneyUnit}`}
-              value={portfolio.cumulative_commission}
-            />
-          </div>
+          <>
+            <div className="metricsGrid">
+              <Metric
+                label={`${t("detail.cash")}${moneyUnit}`}
+                value={portfolio.cash}
+              />
+              <Metric
+                label={`${t("detail.marketValue")}${moneyUnit}`}
+                value={portfolio.market_value}
+              />
+              <Metric
+                label={`${t("detail.equity")}${moneyUnit}`}
+                value={portfolio.equity}
+              />
+              <Metric
+                label={`${t("detail.realizedPnl")}${moneyUnit}`}
+                value={portfolio.realized_pnl}
+              />
+              <Metric
+                label={`${t("detail.corporateActionPnl")}${moneyUnit}`}
+                value={portfolio.corporate_action_realized_pnl}
+              />
+              <Metric
+                label={`${t("detail.unrealizedPnl")}${moneyUnit}`}
+                value={portfolio.unrealized_pnl}
+              />
+              <Metric
+                label={`${t("detail.commission")}${moneyUnit}`}
+                value={portfolio.cumulative_commission}
+              />
+              <Metric
+                label={`${t("detail.totalPnl")}${moneyUnit}`}
+                value={portfolio.total_pnl}
+              />
+            </div>
+            <p className="muted">{t("detail.pnlExplanation")}</p>
+            {portfolio.accounting_version == null && (
+              <p className="stateCallout">{t("detail.legacyPnlUnavailable")}</p>
+            )}
+          </>
         ) : (
           <p className="emptyState">
             {t(aShare ? "detail.noSessionPortfolio" : "detail.noPortfolio")}
@@ -769,13 +783,15 @@ function Metric({
   raw = false,
 }: {
   label: string;
-  value: string;
+  value: string | null | undefined;
   raw?: boolean;
 }) {
   return (
     <div className="metric">
       <span>{label}</span>
-      <strong title={value}>{raw ? value : formatDecimal(value)}</strong>
+      <strong title={value ?? undefined}>
+        {value == null ? "—" : raw ? value : formatDecimal(value)}
+      </strong>
     </div>
   );
 }

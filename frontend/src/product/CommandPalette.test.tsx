@@ -16,7 +16,7 @@ import { HelpPage } from "./ProductPages";
 import { experimentApi } from "./experiments/api";
 import { capabilities, job } from "./experiments/fixtures.test-data";
 import { marketApi } from "./markets/api";
-import { demo, watched } from "./markets/fixtures.test-data";
+import { dataset, demo, watched } from "./markets/fixtures.test-data";
 import type { Experiment, Page } from "./experiments/types";
 
 beforeEach(async () => {
@@ -36,7 +36,10 @@ beforeEach(async () => {
       },
     },
   });
-  vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+  vi.spyOn(experimentApi, "capabilities").mockResolvedValue({
+    ...capabilities,
+    datasets: [dataset, demo],
+  });
   vi.spyOn(experimentApi, "list").mockResolvedValue({
     items: [],
     total: 0,
@@ -274,6 +277,99 @@ describe("bounded server command search", () => {
     expect(close).toHaveBeenCalledOnce();
     expect(location.search).toContain(encodeURIComponent(demo.dataset_id));
     expect(location.hash).toBe(url.hash);
+  });
+  it.each([
+    {
+      reason: "changed source rejected by the server",
+      item: {
+        ...watched,
+        dataset_sha256: "0".repeat(64),
+        source_available: false,
+      },
+      source: dataset,
+    },
+    {
+      reason: "current source SHA mismatch",
+      item: { ...watched, dataset_sha256: "0".repeat(64) },
+      source: dataset,
+    },
+    {
+      reason: "missing server source authority",
+      item: { ...watched, source_available: undefined },
+      source: dataset,
+    },
+    {
+      reason: "unavailable current source",
+      item: watched,
+      source: { ...dataset, available: false },
+    },
+    {
+      reason: "missing current source",
+      item: watched,
+      source: undefined,
+    },
+    {
+      reason: "different current source identity",
+      item: watched,
+      source: { ...dataset, dataset_id: "another-dataset" },
+    },
+    {
+      reason: "unknown current source SHA",
+      item: watched,
+      source: { ...dataset, sha256: null },
+    },
+  ])(
+    "blocks saved-source navigation for $reason without hiding the entry",
+    async ({ item, source }) => {
+      vi.mocked(experimentApi.capabilities).mockResolvedValue({
+        ...capabilities,
+        datasets: source ? [source] : [],
+      });
+      vi.mocked(marketApi.watchlist).mockResolvedValue({
+        items: [item],
+        total: 1,
+        limit: 20,
+        offset: 0,
+      });
+      const close = vi.fn();
+      render(<CommandPalette onClose={close} />);
+      const result = await screen.findByRole("button", {
+        name: /Observed Bank.*600000/,
+      });
+      expect(result).toBeDisabled();
+      expect(result).toHaveTextContent("saved data source unavailable");
+      expect(screen.queryByRole("link", { name: /600000/ })).toBeNull();
+      await userEvent.click(result);
+      expect(close).not.toHaveBeenCalled();
+      expect(location.pathname).toBe("/");
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(result).toHaveTextContent("保存的数据来源不可用");
+      expect(result).toBeDisabled();
+    },
+  );
+  it("opens a matching source for read-only inspection when execution is unavailable", async () => {
+    vi.mocked(experimentApi.capabilities).mockResolvedValue({
+      ...capabilities,
+      datasets: [{ ...dataset, execution_available: false }],
+    });
+    vi.mocked(marketApi.watchlist).mockResolvedValue({
+      items: [watched],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    const close = vi.fn();
+    render(<CommandPalette onClose={close} />);
+    const result = await screen.findByRole("link", {
+      name: /Observed Bank.*600000/,
+    });
+    result.focus();
+    await userEvent.keyboard("{Enter}");
+    expect(close).toHaveBeenCalledOnce();
+    expect(location.pathname).toBe("/markets");
+    const detail = new URLSearchParams(location.hash.slice(1));
+    expect(detail.get("dataset")).toBe(watched.dataset_id);
+    expect(detail.get("security")).toBe(watched.security_id);
   });
   it("loads the next bounded page with unchanged query instead of downloading all results", async () => {
     vi.mocked(experimentApi.list).mockImplementation(

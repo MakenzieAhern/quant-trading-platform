@@ -1,5 +1,24 @@
 # Decisions
 
+## v1.2 Version paper PnL without rewriting old journals — 2026-10-13
+
+Transport the portfolio engine's existing corporate-action and total PnL as exact
+strings under `PNL_BREAKDOWN_V1`; do not calculate them in React or change the
+domain methodology. Trading realized PnL remains before separately reported
+transaction costs. Missing old fields mean unknown, not zero or retrospective
+recalculation. Recovery compares kind/order/all payload fields and only strips
+the three newly emitted fields when the saved snapshot lacks all three. Partial
+or damaged versioned snapshots still fail replay matching before new append.
+Both providers, mixed histories and repeated resume have regression coverage.
+
+Command search must honor the same saved-source identity as watchlist inspection.
+Share the guard; retain unavailable results as visible disabled controls. Execution
+admission and read availability remain different: source-integrity restrictions
+are not removed. Scoped tests/review are not browser acceptance or source approval.
+The changes await live deployment/browser recheck; preserve all frozen assets,
+the genuine missing-ledger limitation and lawful forward-data gate.
+
+
 ## v1.2 Historical workflow evidence is not current execution acceptance — 2026-10-08
 
 Reconcile the central acceptance matrix with the existing source/economic FAIL

@@ -380,9 +380,15 @@ export const zhCN = {
       cash: "现金",
       marketValue: "市值",
       equity: "权益",
-      realizedPnl: "已实现盈亏",
+      realizedPnl: "交易已实现盈亏",
+      corporateActionPnl: "公司行动损益",
+      totalPnl: "总盈亏（已扣费用）",
+      pnlExplanation:
+        "总盈亏由交易已实现盈亏、公司行动损益（如分红）和未实现盈亏合计，再扣除累计交易费用。所有数值均来自已保存的账户快照。",
+      legacyPnlUnavailable:
+        "这份旧快照未记录公司行动损益和总盈亏；缺失值表示未知，不代表零。",
       unrealizedPnl: "未实现盈亏",
-      commission: "佣金",
+      commission: "交易费用",
       noPortfolio: "组合将在收到首根完整 K 线后初始化。",
       noSessionPortfolio: "完成首个 A 股交易日回放后显示组合。",
       positions: "持仓",

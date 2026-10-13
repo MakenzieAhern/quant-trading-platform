@@ -324,6 +324,17 @@ export function validRange(range: MarketRange, dataset: MarketDataset) {
 }
 export const securityName = (item: Security) =>
   item.name ?? item.source_observed_name ?? item.symbol;
+export function canReadWatchlistItem(
+  item: WatchlistItem,
+  source: MarketDataset | undefined,
+): boolean {
+  return (
+    item.source_available === true &&
+    source?.available === true &&
+    source.dataset_id === item.dataset_id &&
+    source.sha256 === item.dataset_sha256
+  );
+}
 export function closingPrice(item: MarketBar, view: "raw" | "adjusted") {
   return item[view].close;
 }

@@ -2,7 +2,7 @@ import asyncio
 import hashlib
 import json
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from contextlib import suppress
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
@@ -333,6 +333,26 @@ class PaperTradingManager:
         self._tasks.clear()
         self._providers.clear()
 
+    @staticmethod
+    def _replay_matches(
+        replayed: Sequence[tuple[str, dict[str, object]]],
+        expected: Sequence[tuple[str, dict[str, object]]],
+    ) -> bool:
+        if len(replayed) != len(expected):
+            return False
+        accounting_fields = {"accounting_version", "corporate_action_realized_pnl", "total_pnl"}
+        for (kind, payload), (saved_kind, saved_payload) in zip(replayed, expected, strict=True):
+            if kind != saved_kind:
+                return False
+            if kind == "portfolio.snapshot" and not accounting_fields.intersection(saved_payload):
+                # Legacy journals predate this projection; compare every previously saved field.
+                payload = {
+                    key: value for key, value in payload.items() if key not in accounting_fields
+                }
+            if payload != saved_payload:
+                return False
+        return True
+
     async def _run(self, initial: PaperSession) -> None:
         session = initial
         provider: ReplayMarketDataProvider | SimulatedAShareSessionProvider | None = None
@@ -437,7 +457,7 @@ class PaperTradingManager:
                     if cursor_time is not None and bar.timestamp <= cursor_time:
                         replayed.extend((kind, payload) for kind, _, payload in events)
                         if bar.timestamp == cursor_time:
-                            if tuple(replayed) != expected_replay:
+                            if not self._replay_matches(replayed, expected_replay):
                                 raise ValueError("paper replay checkpoint no longer matches")
                             matched_cursor = True
                         return
@@ -580,7 +600,7 @@ class PaperTradingManager:
                     if cursor_date is not None and item.trading_date <= cursor_date:
                         replayed.extend((kind, payload) for kind, _, payload in events)
                         if item.trading_date == cursor_date:
-                            if tuple(replayed) != expected_replay:
+                            if not self._replay_matches(replayed, expected_replay):
                                 raise ValueError("paper replay checkpoint no longer matches")
                             matched_cursor = True
                         # Apply knowledge after the original financial batch and plan.
@@ -1057,6 +1077,11 @@ class PaperTradingManager:
             "cash": canonical_decimal(snapshot.cash),
             "market_value": canonical_decimal(snapshot.market_value),
             "equity": canonical_decimal(snapshot.equity),
+            "accounting_version": "PNL_BREAKDOWN_V1",
+            "corporate_action_realized_pnl": canonical_decimal(
+                snapshot.corporate_action_realized_pnl
+            ),
+            "total_pnl": canonical_decimal(snapshot.total_pnl),
             "realized_pnl": canonical_decimal(snapshot.realized_pnl),
             "unrealized_pnl": canonical_decimal(snapshot.unrealized_pnl),
             "cumulative_commission": canonical_decimal(snapshot.cumulative_commission),

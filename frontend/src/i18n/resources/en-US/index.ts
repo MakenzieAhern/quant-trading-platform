@@ -406,9 +406,15 @@ export const enUS = {
       cash: "Cash",
       marketValue: "Market value",
       equity: "Equity",
-      realizedPnl: "Realized PnL",
+      realizedPnl: "Trading realized PnL",
+      corporateActionPnl: "Corporate-action PnL",
+      totalPnl: "Total PnL (after costs)",
+      pnlExplanation:
+        "Total PnL combines trading realized PnL, corporate-action PnL (such as dividends) and unrealized PnL, less accumulated transaction costs. All values come from the saved account snapshot.",
+      legacyPnlUnavailable:
+        "This older snapshot did not record corporate-action or total PnL. Missing values are unknown, not zero.",
       unrealizedPnl: "Unrealized PnL",
-      commission: "Commission",
+      commission: "Transaction costs",
       noPortfolio: "Portfolio initializes on the first completed Bar.",
       noSessionPortfolio:
         "The portfolio appears after the first completed A-share trading day.",

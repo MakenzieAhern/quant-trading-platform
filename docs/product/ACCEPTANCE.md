@@ -1,5 +1,41 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 paper PnL and saved-source identity — code/regression PASS, browser pending
+
+[Evidence and limitations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-pnl-source-guards/README.md>).
+U7 snapshots previously omitted engine-calculated corporate-action and total PnL;
+the account could gain a dividend while visible PnL components omitted that gain.
+New `PNL_BREAKDOWN_V1` snapshots transport both exact Decimal strings. The same
+Chinese/English component distinguishes trading realized, corporate-action,
+unrealized, transaction costs and net total. Old absent fields remain unknown,
+not zero. Both resume paths compare every saved field; only entirely legacy
+snapshots project out the three new fields from the replay comparison. No old
+journal, research result or domain calculation is rewritten.
+
+U5 command search now shares the watchlist's read guard: explicit server source
+authority, current availability, same dataset ID and SHA. Invalid entries remain
+visible and disabled with bilingual guidance; valid read-only sources remain
+inspectable even when execution is blocked. Independent review found no remaining
+scoped defect after correcting the cost label to include non-brokerage fees.
+
+Local full backend1788PASS/1optional archiveSKIP, Ruff/format571/mypy146PASS;
+frontend870PASS49files, lint/typesPASS. Last label-only change separately checked
+with4bilingual PnL cases; current hosted CI must re-run full scope. BuildPASS in a
+fresh temporary directory; retained530.63kB chunk warning. Initial root-owned
+`dist/assets` permission error and Windows shell argument failure retained; no
+permission changes or deletion workaround. Initial full frontend run failed8
+old six-metric assertions plus5 cascading locale failures; expectations now
+include two explicitly missing values and all original financial assertions.
+No test removed or acceptance threshold lowered.
+
+Disposable tmpfs PostgreSQL migrated empty→0017; default subnet pool exhaustion
+resolved by reusing the verified empty test-only network. Tests exited0 and
+testPG stopped/retained; original four services' ID/PID/command/start unchanged.
+No production schema/data change, new account, strategy, formal/OOS or frozen
+asset mutation. Native browser policy rejection remains; these changes are not
+deployed or browser-accepted. Full U1–U8/M3–M5 remains PARTIAL; PR32 stays draft.
+
+
 ## 2026-10-13 hosted integration recovered — scoped PASS
 
 [Actual run38335272279](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38335272279)
