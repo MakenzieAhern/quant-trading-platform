@@ -1,5 +1,15 @@
 # Blockers
 
+## Latest runtime and next engineering gap — 2026-10-13
+
+Receipt milestone4eb7bdf is published and exactCI38406422590 is PASS; Docker,
+GitHub CI and this rollout are not blockers. Finite source context still requires
+future facts at creation. Safe next work is an append-only day-context registration
+and consumption path after start, preserving V1 compatibility and causal journal
+pins. Source qualification, financial/lifecycle gaps300147/000425, genuine missing
+ledger disposition and remaining product quality/delivery gates stay incomplete.
+Do not relabel the full goal blocked while this engineering work is executable.
+
 ## v1.2 current blockers and executable work — 2026-10-13
 
 Docker and GitHub CI are not current blockers. Exact `aa5f529` run38395584853

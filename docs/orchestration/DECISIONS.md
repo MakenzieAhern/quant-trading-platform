@@ -1,5 +1,30 @@
 # Decisions
 
+## 2026-10-13 v1.2 — next context-arrival unit and scoped rollout evidence
+
+Independent review maps the next U7 slice to a V2 immutable eligibility/warmup/
+known-calendar root and append-only dated context registration in existing
+PostgreSQL, with reversible additive migration and a real source-validating
+ingestion entry point. Persist actual first observation separately from source
+publication/registration times; repeated identical input cannot move the first
+time. New conflicting versions stay conflicts, not silent replacements. No HTTP
+approved flag or test source may establish source admission. Keep the finite
+account date boundary and explicit resource limits rather than an endless daemon.
+
+Consume only when both canonical raw and qualified context are available before
+the causal deadline. Bind context ID/SHA and observation UTC with market/plan/
+portfolio provenance; resume by consumed pin, preserving V1 journal compatibility,
+original account start and existing INTERRUPTED behavior. Tests must cover either
+arrival order after start, missing/late/conflicting facts, duplicate registration,
+DB/commit failures and pause/new-manager replay without duplicate fills.
+
+Rollout review also establishes that the public forward capability is fixed false,
+not proof of absent server configuration. Publication separately inspected both
+relevant Settings as absent. The old receipt diagnostic is intentionally also
+returned on its bound observation; strict compatibility permits just that field
+for the two pinned receipts, not arbitrary raw-data changes. Original verifier
+failures were retained and corrected with22tests, without another service restart.
+
 ## 2026-10-13 v1.2 — receipt bridge boundaries and next daily-context gap
 
 Final review also reproduced base transaction-cost disagreement and uncovered

@@ -1,5 +1,26 @@
 # Current state
 
+## v1.2 receipt bridge published; daily-context arrival is next — 2026-10-13
+
+`4eb7bdf` is now served locally. CI38406422590 passed2258backend/1optional archive
+SKIP and950frontend; all3jobs/36steps passed. Backend restarted once at13:49:10UTC;
+PG/Redis/frontend were not restarted.5stopped accounts/417events,12terminal research
+and4terminal updates remain; no source fetch or account start occurred.
+[248-artifact publication and browser evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
+
+Windows verifies13served files and security headers. Actual Chrome ZH/EN shows
+both retained parser labels/hashes plus explicit read-only caveats; creation keeps
+forward/history unavailable and demo modes available. One verifier expectation
+and one omitted observation-diagnostic comparison were corrected with retained
+failures and22tests; no second restart or data rewrite. Source configuration is
+confirmed absent independently of the fixed public capability response.
+
+M3/M4/M5 and full U1–U8 remain PARTIAL. Next implement append-only qualified daily
+context arriving after account start, binding consumed pins/real observation UTC
+into existing journal/resume. The finite bridge is not real-forward acceptance.
+Preserve source/financial gaps300147/000425, missing-ledger disposition and the
+remaining quality/delivery gates; no frozen/OOS/merge/tag/release changes.
+
 ## v1.2 receipt-bound paper isolated integration passed — 2026-10-13
 
 The reviewed implementation connects a deployment-pinned source contract and canonical

@@ -1,5 +1,19 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-13 receipt publication and scoped browser checkpoint
+
+PROGRESS: reviewed fixes committed38eb9d8/4eb7bdf, pushed to existing draftPR32,
+exactCI38406422590 SUCCESS2258backend/1optionalSKIP and950frontend, full static/build
+and Compose PASS. One safe backend restart and assets-first frontend publication
+preserve prior state; Windows13asset/header verification and actual bilingual
+receipt/create-page checks pass. Publication f2999f28 binds248private artifacts.
+[Evidence, actual screenshots and preserved failed verifier checks](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
+
+No account/source producer started, no frozen data/formal study/OOS/merge/release.
+Finite context integration is not continuous new-market acceptance. The active
+goal continues with qualified append-only day-context ingestion after start and
+existing full product/source/financial/quality obligations; not blocked at this unit.
+
 ## 2026-10-13 receipt bridge regression checkpoint
 
 PROGRESS: six actual cached bundles verified without changing18files; strict

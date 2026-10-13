@@ -1,16 +1,19 @@
 {
   "receipt_bound_paper_20261013_gate": {
-    "status": "PASS_SCOPED_ISOLATED_INTEGRATION_PENDING_CI_PUBLICATION_NOT_SOURCE_ADMISSION",
+    "status": "PASS_SCOPED_INTEGRATION_CI_PUBLICATION_AND_READ_ONLY_BROWSER_NOT_SOURCE_ADMISSION",
     "base_head": "aa5f529b06aae98a323f1223582795fe1e889a75",
     "previous_turn": "Status-only response was NO_PROGRESS. This continuation completes actual-cache compatibility evidence and advances the missing production receipt-to-paper path, not a smaller substitute goal.",
     "cache_compatibility": "At13:01:13UTC all6original bundles readable and18files unchanged. Two documented v1-label exceptions inspected with diagnostic and rejected by default strict verifier. No original DB/lifespan/provider access. Receipt objects reconstructed from manifests are not DB-row verification.",
     "implementation": "Deployment-pinned contract plus canonical receipt reader injected into real PaperTradingManager factory; existing RiskEngine/OMS/Portfolio and plan/journal path reused. Daily provenance and post-financial-commit acknowledgement enforce original start/first receipt/next-open windows. No actual contract installed or approved.",
     "review": "Independent scoped review closed stale pre-read clock, wrong saved frontend admission pin, fixed1000 receipt cap, cost-schedule disagreement and missing cost effective coverage. Both original cost counterexamples now fail registry.load. No remaining scoped P1/P2; not full financial/source approval.",
     "verification": "Final isolated backend2258PASS/1optional read-only archiveSKIP in83.03s; Ruff/588format/mypy148PASS. Frontend950PASS/54files,types/lint/19changed-file format/buildPASS. Actual PostgreSQL JSONB, REST, ASGI websocket.send JSON, idempotency, pause and new-manager resume pass; not a browser/TCP or actual-forward proof. Original failed PG cleanup/API fixture run retained; production append-only trigger unchanged.",
+    "ci": "4eb7bdf4236b90cfae2790d4ee074b928c0669d7 CI38406422590 SUCCESS,all3jobs/36steps,2258backend/1optionalSKIP and950frontend. Reader38eb9d8 and bridge4eb7bdf pushed together to existing draftPR32; no merge/tag/release.",
+    "publication": "Backend89aa restarted once2026-10-13T13:49:10.790455362Z; PG/Redis/frontend unchanged. Fresh4backups and315source/13build pins verified.32old selected HTTP bodies equal plus exact OpenAPI extension;2receipts/2observations only exact pinned read-only diagnostics added. Frontend switch retains218old assets,33post-backend bodies equal,Windows13SHA/headerPASS.5STOPPED/417events/12terminalresearch/4terminalupdates/6receipts6observations and no pending preserved.248-artifact publication f2999f2827ee1b90f05d88009fa2b36b2a92ecbe484de5c1573ca28a7b50b21d. Not all-table/restore proof.",
+    "browser": "Actual supported Chrome extension onlocalhost5173: both legacy receipt labels/hashes and explicit read-only caveats retained in ZH/EN; creation keeps history/forward unavailable and demo paths available. No submit/start/provider call. Chinese/dark restored, owned tab closed. Initial English frame shows JSON only; final frame proves callout. One incorrect English nav locator failed without action, then corrected from DOM. No fullAA/native motion/p95/financial acceptance.",
     "next_gap": "Immutable finite contract still requires future daily context before account start. Next separate immutable source eligibility/warmup from append-only qualified day-context arrivals; bind consumed context and observed UTC into journal/resume. Synthetic manifests cannot self-approve sources. Complete this engineering plus actual source/financial and full product gates.",
-    "ownership": "Backend/frontend authors frozen. Root sole integration/Git owner; independent reviewers read-only. Full runner5062 terminal0; test PostgreSQL042f is isolated tmpfs quant_test. No original financial producer started or original service restarted.",
+    "ownership": "All authors frozen; root sole integration/Git/publication owner; independent reviewers read-only. Full runner5062 terminal0; testPG042f remains isolated tmpfs quant_test for next unit. Original backend restarted once for publication; no financial producer or source acquisition started.",
     "evidence": "product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md",
-    "deployed": false,
+    "deployed": true,
     "real_forward_acceptance": false,
     "source_admission": false,
     "full_product_pass": false
@@ -4954,13 +4957,13 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "aa5f529b06aae98a323f1223582795fe1e889a75",
+      "last_verified_head": "4eb7bdf4236b90cfae2790d4ee074b928c0669d7",
       "state": "DRAFT",
-      "ci_run": 38395584853,
+      "ci_run": 38406422590,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
-      "browser_gate": "Oct13 aa5f529 selected Chrome creation/recheck cases verified after frontend publication; prior scoped evidence retained. CI38395584853 SUCCESS2177backend/1optionalSKIP,902frontend and Compose. This does not prove native foreground p95/system motion/fullAA or source/economic/real-forward admission. Missing-ledger disposition and fullquality/delivery remain incomplete. PR32OPEN-DRAFT; no merge/release. Later uncommitted code is not covered by this CI."
+      "browser_gate": "Oct13 4eb7bdf receipt publication f2999f28 verified: actual Chrome ZH/EN two retained legacy receipts show original hashes/labels and read-only warnings; creation forward/history remain unavailable. ExactCI38406422590 SUCCESS2258backend/1optionalSKIP,950frontend and Compose. Earlier scoped browser proof retained. Not native foreground p95/system motion/fullAA or source/economic/real-forward acceptance. PR32OPEN-DRAFT; no merge/release. Later documentation checkpoint is separate from this verified runtime head."
     },
     "33": {
       "branch": "codex/v1.2-test-db-guard",
@@ -4976,7 +4979,7 @@
     }
   },
   "next_task": "Complete continuous daily-context arrival after account start: separate immutable source eligibility from append-only qualified dated status/action/rule inputs, bind consumption and first-observed UTC into journal/replay, and test both arrival orders and late/missing/conflicting context. Finite receipt bridge full regression passed but is not real-forward acceptance. Actual source/financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain; no repeated broad acquisition or frozen/OOS change.",
-  "local_next_command": "Commit/push the independently reviewed reader/finite receipt bridge milestone once; verify exact-head CI. Prepare safe publication with fresh selected-state/backup and source/build pins before any restart. Continue append-only daily context design and implementation, not a smaller finite-fixture completion claim. Served aa5f529 and prior CI remain separate until new publication is verified.",
+  "local_next_command": "Check the documentation checkpoint CI on the existing branch, then implement the reviewed V2 daily-context arrival slice: immutable eligibility/warmup root, source-validated append-only dated context registration, actual receipt-manager/journal/resume wiring, and RED-to-GREEN after-start arrival/late/conflict/duplicate tests in isolated quant_test. Read source_admission.py and receipt_source.py plus latest DECISIONS; preserve V1 journals. Published4eb7bdf unit is complete and must not be rerun; full objective remains active.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 U5/U7/U8 receipt publication and selected browser checks
+
+`4eb7bdf` exact CI38406422590 PASS:2258backend/1optional archiveSKIP,950frontend,
+static/build/Compose. [Publication and real before/after screenshots](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>)
+bind315sources/13assets, fresh backups and248artifacts. Backend restarted once;
+5stopped accounts/417events retained,32legacy HTTP bodies equal plus exact OpenAPI
+extension,2receipts/2observations only gain explicitly bound inspection diagnostics.
+Frontend preserves218old assets;33post-backend bodies equal; Windows13hashes PASS.
+
+Actual Chrome extension confirms both receipt details in ZH/EN retain parser/hash
+and explain read-only/ineligible status. Creation still offers demo/replay only;
+forward and frozen-history execution remain visibly unavailable. No POST/start.
+Chinese/dark preference restored and owned tab closed. First English image only
+shows JSON; the final English image, not that initial capture, is the warning proof.
+This is selected desktop read compatibility, not new-forward, full AA/motion/p95,
+restore/full-database or full U1–U8 acceptance. Next daily context must arrive after
+start; actual qualification and complete M3–M5 still remain required.
+
 ## 2026-10-13 U5/U7/U8 receipt-bound integration — scoped only
 
 [Retained actual-cache and isolated integration evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
