@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 hosted integration recovered — scoped PASS
+
+[Actual run38335272279](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38335272279)
+completed SUCCESS02:08:55UTC on6dd56151. All3jobs and all36steps succeeded:
+backend1730passed/1optional read-only archive skipped,frontend848passed49files,
+Ruff/format/mypy146/lint/types/build and Compose isolated release smoke PASS.
+Disposable GitHub quant_test migrations0017→0001→0017 and alembiccheck PASS;
+this is not a data-preserving production downgrade. Full metadata and selected
+migration/test/static log lines are retained outsideGit; initial backend log
+capture was truncated and labeled, frontend log complete. Existing build-size
+warning and runner-label migration annotation retained; no thresholds relaxed.
+
+[Final current-commit CI receipt](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m5/20261013-remote-ci/current-ci.json>)
+binds the documentation checkpoint's actual commit/run and report hashes without
+a recursive commit/CI recording loop. The original PR32 remainsOPEN-DRAFT.
+Source/economic admission, lawful after-start forward data, missing genuine
+ledgers and native browser quality gates remain incomplete. Human preparation
+is confirmed; the remaining URL verification rejection is a tool gate.
+
 ## 2026-10-13 prepared Chrome still rejected; remote integration resumes
 
 The human confirmed foreground Chrome and temporarily disabled Windows animation.
