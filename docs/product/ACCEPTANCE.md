@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 prepared Chrome still rejected; remote integration resumes
+
+The human confirmed foreground Chrome and temporarily disabled Windows animation.
+Windows inventory then identified the actual Workbench title in the unique Chrome
+window265152. The supported native state capture still explicitly stopped the turn
+because it could not confidently determine the browser URL for policy. Preparation
+is acknowledged; repeat preparation requests are not the next action. System
+reduced-motion behavior and foreground p95 remain unverified. No control bypass.
+
+Bounded GitHub API reads now authenticate MakenzieAhern and confirm existing
+[PR32](https://github.com/MakenzieAhern/quant-trading-platform/pull/32) OPEN/DRAFT.
+Its remote1da55ad6 has historical CI37557042316 SUCCESS fromOctober7. Normal fetch
+shows0behind/77ahead and no divergent writer. Application/workflow/Compose source
+is unchanged from the retained89fdb9e full local regression, so its scoped results
+remain applicable. The authorized next step is normal milestone synchronization
+and current CI verification, not a release claim. API reachability alone does not
+establish current Actions execution or remove financial/native/forward gates.
+
 ## 2026-10-12 existing runtime recovered — scoped PASS
 
 [Recovery observations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261012-runtime-recovery/report.json>):

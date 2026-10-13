@@ -1,4 +1,26 @@
 {
+  "human_prepared_browser_20261013_gate": {
+    "status": "TOOL_URL_VALIDATION_REJECTED_AFTER_PREPARATION",
+    "human_preparation_confirmed": true,
+    "observed_window": "Chrome window265152 now titled 工作台 · QUANT - Google Chrome; unique actual returned app window matched after human preparation.",
+    "rejection": "Computer Use has been stopped for this turn because it could not determine the current browser URL on Windows with enough confidence to enforce policy. Stop your work and send a final message noting why Computer Use ended.",
+    "reduced_motion": "USER_REPORTED_WINDOWS_ANIMATION_OFF; browser/system behavior NOT_VERIFIED because native observation was rejected",
+    "next": "Do not request the same preparation again or retry equivalent control without a meaningful tool-state change. Remaining native URL verification needs the control tool to function; do not bypass its policy. Continue independent authorized integration work.",
+    "full_product_pass": false
+  },
+  "remote_integration_20261013_gate": {
+    "observed_at_utc": "2026-10-13T02:00:22Z",
+    "base_head": "27dc9d9",
+    "account": "MakenzieAhern",
+    "remote_branch": "codex/product-v1.2-current-rules",
+    "remote_head_before_sync": "1da55ad6f6ec25632d7c892ba0f405bde4b0a39b",
+    "fetch": "Normal fetch PASS; remote is ancestor of local,0behind/77ahead; no divergent writer or merge needed.",
+    "pr": "32 OPEN DRAFT, existing branch and stacked base codex/product-v1.2-view-history unchanged",
+    "last_remote_ci": "37557042316 SUCCESS on1da55ad6,completed2026-10-07T01:28:23Z; historical only, not acceptance for current unpublished changes",
+    "local_code_validation": "Current backend/frontend/workflow/Compose/Makefile diff from fully tested89fdb9e is empty. Existing backend1730PASS/1optional archiveSKIP,frontend848PASS/static/build evidence applies to unchanged application source; docs-only changes do not require duplicate whole suite.",
+    "next": "Normal push of the coherent validated milestone to existing draft PR32, then inspect its actual newly triggered CI. API reachability is not proof Actions execution has recovered. No merge/tag/release until all required gates pass.",
+    "full_product_pass": false
+  },
   "runtime_recovery_20261012_gate": {
     "observed_at_utc": "2026-10-12T12:54:39Z",
     "base_head": "a014b6b",
@@ -1134,7 +1156,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-12T12:54:39Z",
+  "updated_at_utc": "2026-10-13T02:00:22Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4086,14 +4108,14 @@
     "estimated_recovery_date": "2026-10-01",
     "reported_wait": "Historical estimate October1 and earlier actual successful Actions retained below. Latest user message on October7 reports CI/CD unavailable untilOctober1; estimate is past, current availability UNVERIFIED, not presumed restored.",
     "latest_unavailability_reported_at_utc": "2026-10-07",
-    "current_availability": "UNVERIFIED_USER_REPORTED_UNAVAILABLE",
+    "current_availability": "API_REACHABLE_ACTIONS_EXECUTION_UNVERIFIED",
     "current_recovery_verified": false,
     "actual_recovery_verified": true,
-    "last_readonly_check": "2026-10-02: GitHub Actions run37018861446 completed SUCCESS on exact pushed b17650deb8d4c1321c05d503b0d05675f34adf26; backend/frontend/Compose succeeded. PR32 remains OPEN DRAFT. Historical billing block is not the present CI state; no billing/limit setting changed. Subsequent checkpoint edits are not attributed to this run.",
-    "policy": "Latest user-reported outage takes precedence for this work unit: continue local commits/tests/app, no GitHub request/push/merge/tag/release. Previous verified recovery/CI is historical only, not current-head acceptance. Reverify actual availability and exact-head CI at the authorized release gate; no billing/security/protection bypass."
+    "last_readonly_check": "2026-10-13: bounded GitHub API requests succeeded; authenticated userMakenzieAhern,PR32OPEN-DRAFT/current remote1da55ad6,latest actualCI37557042316SUCCESS fromOctober7. Fresh fetch confirms remoteancestor/local77ahead. Actions execution at current time is not yet proved; historical checks retained below.",
+    "policy": "The full user goal authorizes normal feature-branch commits/push and CI. The past October1 estimate and an inferred blanket network hold are not permanent prohibitions on bounded readonly verification or normal synchronization. Verify actual current Actions execution after the coherent milestone push; stop on actual auth/billing/permission rejection, with no billing/security/protection bypass. Merge/tag/release still require all mandatory product gates."
   },
   "milestone": "M3_FORWARD_FOUNDATION_AND_M4_QUALITY",
-  "status": "BLOCKED",
+  "status": "IN_PROGRESS",
   "product_goal_complete": false,
   "baseline": {
     "tag": "v1.1.0",
@@ -4760,8 +4782,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "BLOCKED after three consecutive resumed impasse occurrences. Preserve the same full U1-U8/M0-M5 goal and recovered local services. Resume on explicit Chrome foreground/system reduced-motion readiness or meaningful required external evidence, verifying supported controls before scoped QA. Native Chrome URL policy stop must not be bypassed or blindly retried; readiness alone is not proof it is resolved. No unchanged tests/source scans or invented live wait. Source/lifecycle/accounting/lawfulforward/trueledger/GitHub gates remain; no frozen/OOS or release change.",
-  "local_next_command": "Read targeted_source_reconciliation_20261008_gate/report_first_filter_timing_20261008_gate and their README/current summaries. Currenttemporaryinstrument removed;do notstart duplicateapps. For source work seek only specificindependent cached correction/clarification of currentgaps,not fullarchiveacquisition. For performance use a non-intrusive justified measurement of actualfrontend beforecodeoptimization,retain3072msfailure. Preserve denials:no clean-demo/scratch replacement,fingerprint refresh,download bypass or600725resumptionretrieval. No newadapter withoutrequiredfacts,no fabricatedledgers. GitHubHOLD;localservices available;fullscopeincomplete.",
+  "next_task": "Synchronize the validated local milestone to existing draft PR32 and inspect actual new CI. Human Chrome foreground/Windows-animation preparation is already confirmed; native URL validation still rejects observation, so do not ask for the same preparation or retry/bypass equivalent controls. Full U1-U8/M0-M5 source/lifecycle/accounting/lawfulforward/genuineledger/nativequality/release evidence remains required; no formal/OOS/frozen modification.",
+  "local_next_command": "Normal git push of the coherent checked milestone to existing codex/product-v1.2-current-rules, then read actual Actions run for that commit and follow its live handle. Preserve explicit source/scratch/fingerprint/download/600725 denials and all financial/frozen/OOS gates. Human browser preparation is confirmed; no equivalent native URL-policy retry without tool-state change. Local services remain available; full scope incomplete.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
