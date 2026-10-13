@@ -1,5 +1,27 @@
 # Decisions
 
+## v1.2 Enforce existing ordinary action date support before accounting — 2026-10-13
+
+Verified source checksums do not make an unsupported settlement schedule safe.
+An isolated counterexample showed known future cash payment credited on ex date;
+another allowed a200-share sale before new bonus shares were listed when only100
+old shares existed. Reject these cases before changing cash, shares, pending orders
+or the active session; do not invent receivables or separately locked shares.
+
+Reuse shared ordinary-action validation for known effective/record/payment dates.
+Apply listing validation in the session engine, where the accepted next trading
+date is available. Preserve the existing same-ex and next-accepted-session paths:
+all286 explicit delayed listings in the frozen archive are exactly next session.
+A blanket listing-equals-ex requirement would wrongly reject that approved path.
+If a future listing has no known next calendar session, fail closed without guessing.
+Rights retain their independent policy; null legacy metadata remains unknown.
+
+Keep the real300155 action identities and old-to-new lineage, but label proof
+positions/prices/calendar/rules as synthetic. Preserve original source negatives,
+frozen reports and OOS.71new/659related tests and reproducible actual-term proof
+c9390065 establish this bounded fix, not tax-specific settlement, source-economic
+admission, actual after-start forward simulation or complete product acceptance.
+
 ## v1.2 Derive successor dates without rewriting original events — 2026-10-13
 
 Use one versioned, pinned date inventory for both the materializer and auditor.

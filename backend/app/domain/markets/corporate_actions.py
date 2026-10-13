@@ -314,7 +314,19 @@ def require_supported_corporate_action(action: CorporateAction) -> None:
         return
     if action.completeness is not CorporateActionCompleteness.COMPLETE:
         raise ValueError("unsupported or incomplete corporate action")
+    if action.action_type in {
+        CorporateActionType.CASH_DIVIDEND,
+        CorporateActionType.STOCK_DIVIDEND,
+        CorporateActionType.BONUS_SHARE,
+    }:
+        # Known dates must fit ex-date accounting; missing legacy metadata is not proof.
+        if action.ex_date is None or action.effective_date not in (None, action.ex_date):
+            raise OrdinaryDistributionInputError("ORDINARY_DISTRIBUTION_EFFECTIVE_DATE_UNSUPPORTED")
+        if action.record_date is not None and action.record_date >= action.ex_date:
+            raise OrdinaryDistributionInputError("ORDINARY_DISTRIBUTION_RECORD_DATE_UNSUPPORTED")
     if action.action_type is CorporateActionType.CASH_DIVIDEND:
+        if action.payment_date not in (None, action.ex_date):
+            raise OrdinaryDistributionInputError("ORDINARY_DISTRIBUTION_PAYMENT_DATE_UNSUPPORTED")
         if action.share_ratio not in (None, Decimal(0)):
             raise OrdinaryDistributionInputError("CASH_DIVIDEND_WITH_SHARE_RATIO_UNSUPPORTED")
         return

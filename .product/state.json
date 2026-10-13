@@ -1,4 +1,24 @@
 {
+  "ordinary_distribution_accounting_20261013_gate": {
+    "status": "PASS_SCOPED_DATED_ACCOUNTING_AND_UNSUPPORTED_DATE_GUARDS",
+    "observed_at_utc": "2026-10-13T10:22:46Z",
+    "base_head": "465d41bf93b98442193ba92b6d2dcd0f45651e0b",
+    "previous_turn": "User status query was NO_PROGRESS. This continuation closes an actual event-to-engine proof and reproduces/fixes early-credit and early-sale defects: PROGRESS. Full U1-U8/M0-M5 objective remains active and incomplete.",
+    "implementation": "Shared ordinary-action checks reject known effective/record/payment contradictions before accounting. Calendar-aware engine guard admits existing same-ex and next-accepted listing paths, rejects earlier/later/unknown-next explicit listing boundaries. Rights and null legacy metadata remain unchanged; no new delayed settlement or share-lock methodology.",
+    "actual_evidence": "Pinned normalized300155 pair through dated loader and engine: synthetic opening100at10/cash10000/raw3.68 produces cash9080/shares250/basis1000/CApnl80/unrealized-80/total0;fee5 total-5. Nonholder precommitted buy is rejected and reservation released, no entitlement. Real event terms with synthetic accounts/prices/calendar/rules, not strategy performance, actual tax receipts or financial admission.",
+    "verification": "28date RED and12listing RED became71newPASS.659relatedPASS; all backend Ruff/583format/app-mypy146PASS. Normal and python-O proof bytes match with reversed actions/Decimal6and50;10atomic negative cases. Independent scoped review found no remainingP1/P2, verified17inputs/61codepins and repeated identical check-only report. Exact-head hosted CI receipt belongs beside evidence.",
+    "compatibility": "Read-only explicit-date scan only:41786cash/812bonus,286next-accepted listings retained,0newly rejected records.41786cash payment and526share listing dates remain null/unknown. Not a new full-archive audit or blanket source approval.",
+    "evidence": "product-evidence/v1.2/m4/20261013-dated-distribution-accounting/README.md",
+    "report_sha256": "c9390065f40e29214b9892fd5d2d8f073eb813f3af755dfb92f08e294e332d92",
+    "preservation": "Frozenmanifest693c0b81/freeze228569f1/researchstateb10ce3c5/actions27c913ff/v1.1tagf88b5c unchanged. No original runtime/DB/provider/strategy/OOS/actual successor build/registration/freeze/merge/release operation.",
+    "next": "After exact-head CI and independent review, safely publish the date-guard code with existing backup/service/data checks. Continue actual source/economic/lifecycle closure and remaining U1-U8 quality gates; native browser policy control, lawful actual after-start forward data and genuine missing-ledger evidence remain incomplete. Do not repeat accepted acquisition or infer global financial approval from this proof.",
+    "runtime_deployed": false,
+    "successor_dataset_created": false,
+    "dataset_audited": false,
+    "financial_admission": false,
+    "strategy_run": false,
+    "full_product_pass": false
+  },
   "ordinary_distribution_dates_20261013_gate": {
     "status": "PASS_SOURCE_DATE_REPLACEMENTS_NOT_FINANCIAL_ADMISSION",
     "observed_at_utc": "2026-10-13T09:57:26Z",
@@ -4874,8 +4894,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Read pnl-publication/current-ci.json and match terminal receipt to GitHEAD. PnL/source guards now deployed; do not repeat accepted tests/backups/restart without cause. Complete real bilingual account/search walkthrough when native URL-policy control is genuinely repaired; continue independent whole-input source economics/provenance closure and full U1-U8/M3-M5. Lawful after-start forward evidence and genuine missing-ledger evidence remain unresolved. No merge/release/frozen/OOS change.",
-  "local_next_command": "Finish current test/docs commit CI and store terminal receipt outsideGit. Native browser/foreground-performance/system-motion evidence remains pending; user preparation is already confirmed. No equivalent denied-control retry or alternate-route bypass. Read current source-economic gap evidence for independent next action; do not fake source approval, new forward receipts or missing real ledgers.",
+  "next_task": "Match dated-distribution-accounting/current-ci.json to currentGitHEAD. After reviewed exact-head CI, safely publish ordinary-date guards using existing backup/service/data preservation procedure. Then continue source/economic/lifecycle and fullU1-U8/M3-M5; source gaps300147/000425, lawful actual after-start data, genuine missing ledgers and native-browser quality remain open. No merge/release/frozen/OOS change.",
+  "local_next_command": "Complete coherent date-guard milestone push/CI and immutable receipt, then inspect existing local-publication procedure and live process/job/account state before any service action. Do not redo accepted proof or source acquisition. Browser preparation is confirmed; do not retry equivalent denied controls without genuine tool-state repair.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

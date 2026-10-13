@@ -1,5 +1,29 @@
 # Current state
 
+## v1.2 dated ordinary accounting and safe date boundaries — 2026-10-13
+
+The normalized actual 300155 pair now reaches the dated loader, session engine
+and portfolio in an isolated, reproducible proof. Synthetic 100-share opening
+holdings receive cash80 and150shares while basis1000 remains intact; the controlled
+mark reconciles total PnL0, or-5 with fee5. An ex-day pending buy receives no fill
+or entitlement and releases its reservation. This is not historical performance.
+[Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/README.md>).
+
+The proof exposed real early-credit/early-sale input defects. Shared ordinary
+date checks and a calendar-aware listing guard now reject before account mutation.
+Same-ex and next-accepted-session listings remain supported; a read-only date
+scan preserves all286 explicit next-session events and rejects no existing archive
+record. Null metadata stays unknown.71new/659related tests, Ruff/583format/app-mypy146
+PASS. Normal/optimized proof c9390065 and reversed Decimal inputs agree; independent
+review and exact-head CI receipts are retained beside evidence when complete.
+
+The running application has not yet loaded this fix. After review and CI, use the
+existing safe publication procedure, then continue source/lifecycle/accounting and
+full product acceptance. Source-economic gaps300147/000425, native browser control,
+lawful actual forward data and genuine missing ledgers remain unresolved. Frozen
+research/data/OOS and original runtime/DB are unchanged. Full U1–U8/M3–M5 PARTIAL;
+no successor dataset admission, merge or release.
+
 ## v1.2 source derived dates integrated into candidate builds — 2026-10-13
 
 The shared build/audit path now replaces missing ordinary cash payment and bonus

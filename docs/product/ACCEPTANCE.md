@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 dated accounting and unsupported payment or listing boundaries
+
+[Proof and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/README.md>).
+Two actual source-normalized events now pass loader-to-session-to-portfolio
+checks using explicitly synthetic opening positions, prices, calendar and rules.
+Cash80, shares250 and unchanged basis1000 reconcile exact PnL; fees remain separate.
+No-holder ex-day orders are rejected, reservations released, and no action-generated
+trade is created. Input reversal, Decimal6/50 and normal/optimized verification
+produce identical sealed report c9390065. This is not actual market performance,
+registry settlement, new strategy research or whole-dataset financial approval.
+
+28 date and12 listing red cases exposed existing early-credit/early-sale risks.
+Known ordinary effective/record/payment contradictions now reject at the shared
+boundary; listing only accepts same-ex or the next accepted calendar session.
+Missing next-session knowledge does not authorize a guessed listing date. Existing
+rights handling and null legacy metadata remain unchanged.71new/659related tests,
+all backend Ruff/583format/app-mypy146 PASS; exact-head hosted CI and independent
+review receipts are kept alongside the proof. No actual browser acceptance is added.
+
+Targeted explicit-date compatibility preserves286 next-session listings among
+42598 ordinary archived legs; zero newly rejected records. This does not resolve
+unknown date/source fields. Original runtime/DB/frozen/OOS assets are unchanged;
+the new guard still needs safe local publication. Full U1–U8/M3–M5 remains PARTIAL.
+
 ## 2026-10-13 source derived ordinary distribution dates
 
 [Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-ordinary-date-normalization/README.md>).

@@ -1,5 +1,21 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-13 dated ordinary accounting and date guards
+
+- User status query was NO_PROGRESS; reproduced and fixed actual date-boundary
+  defects and sealed the real-event-to-engine proof: PROGRESS. Full goal unchanged.
+- 28 domain-date and12 calendar-listing red cases; final71new/659related PASS.
+  All backend Ruff/583format/app-mypy146 PASS. Normal/optimized proof c9390065,
+  input reversal and Decimal6/50 agree;10 atomic rejection probes pass.
+- Actual300155 terms with synthetic accounts/prices/calendar/rules, not financial
+  admission or a strategy. Explicit-date-only compatibility keeps286 next-session
+  listings and newly rejects0 archived records; null fields remain unknown.
+- [Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/README.md>).
+  Exact-head hosted CI and independent review are recorded beside the proof.
+- Original runtime/DB/frozen/research/OOS/tag unchanged. New guard not deployed yet.
+  After review/CI, safely publish, then continue full source/economic/lifecycle and
+  U1–U8/M3–M5 acceptance. No new actual dataset, merge, tag or release.
+
 ## 2026-10-08 isolated successor build inputs — scoped PASS
 
 - Prior runtime-status answer NO_PROJECT_PROGRESS. New explicit entry and

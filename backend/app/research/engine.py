@@ -11,6 +11,8 @@ from app.domain.market import Bar
 from app.domain.markets.calendar import TradingCalendar
 from app.domain.markets.consolidations import CONSOLIDATION_POLICY
 from app.domain.markets.corporate_actions import (
+    CorporateActionType,
+    OrdinaryDistributionInputError,
     corporate_action_sort_key,
     require_supported_corporate_action,
     require_unambiguous_ordinary_distributions,
@@ -318,6 +320,18 @@ class ResearchExecutionEngine:
 
     def _process_session(self, session: ResearchSession) -> PortfolioTarget | None:
         require_supported_session_actions(session)
+        for action in session.corporate_actions:
+            if (
+                action.action_type
+                in {CorporateActionType.STOCK_DIVIDEND, CorporateActionType.BONUS_SHARE}
+                and action.listing_date is not None
+                and action.listing_date
+                not in (session.trading_date, self._next_session.get(session.trading_date))
+            ):
+                # Ex-day fills are blocked; later listing would need separately locked shares.
+                raise OrdinaryDistributionInputError(
+                    "ORDINARY_DISTRIBUTION_LISTING_DATE_UNSUPPORTED"
+                )
         self._active_session = session
         timestamp = datetime.combine(
             session.trading_date, time(15, 0, 0, 1), tzinfo=ZoneInfo("Asia/Shanghai")
