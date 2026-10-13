@@ -135,3 +135,36 @@ NOT_EVIDENCED, including missing inventories and unmatched entries. A negative
 list cannot establish complete economics. Simultaneously replacing all identity
 and reference anchors is outside this join's evidence; full source/event-set
 binding and genuine admission remain required. No accounting or strategy runs.
+
+### Official cash aggregate corrections
+
+The same gap input can carry a `cash_aggregate_corrections` extension. It does
+not change the CLI, materializer, financial events or runtime admission. The
+extension has `version: CASH_AGGREGATE_CORRECTIONS_V1`, a `parent_inventory`
+file pin, and nonempty `items`. Removing this extension must reproduce the
+complete parent inventory; only record ordering may differ. Old findings and
+their source contradictions remain in the report.
+
+Each item supplies `security_id`, `record_date`, `ex_date`, and five file pins:
+`original_pdf`, `correction_pdf`, `correction_receipt`, `official_index`, and
+`official_index_receipt`. Each pin is `{path, sha256}`; relative paths use the
+gap inventory directory. All resolved inputs are protected from output aliases
+and rechecked before publication, alongside the parser code.
+
+The supported one-page CNINFO correction must explicitly change only the
+aggregate cash total in an otherwise identical paragraph. Verification reads
+the actual hashed PDF and metadata bytes, binds the original notice/issuer and
+first-page paragraph, checks exact monetary arithmetic and the unchanged
+per-holder cash/share terms, and rejects additional changes outside the quoted
+paragraphs. Official metadata supplies the full publication timestamp; retrieval
+time is not historical knowledge time. The correction must predate the record
+day in Asia/Shanghai. Other layouts remain unsupported, not implicitly accepted.
+
+`source_text_resolutions` records the evidence and its match to current candidate
+events separately from the unchanged negative `findings`. Cash/share legs must
+have the exact identity, source, amounts and application dates; changed event
+checksums after separately evidenced date normalization are not automatically
+disqualifying. Remaining matched contradictions keep the gate FAIL. Even with
+every known text contradiction explained, the gate is only NOT_EVIDENCED and
+financial admission remains false: this does not establish complete source
+coverage, payment/listing dates, holder eligibility or correct accounting.

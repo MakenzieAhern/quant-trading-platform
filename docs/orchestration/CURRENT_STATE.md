@@ -1,5 +1,23 @@
 # Current state
 
+## v1.2 official correction now bound to candidate audit — 2026-10-13
+
+Candidate audit now consumes the versioned300155 correction chain, with original
+findings retained and no financial approval. Actual cached-source verification
+checks six known event legs: one cash-total text contradiction explained, two
+source gaps still unresolved. Report28a51c2f repeats exactly under normal/optimized
+Python and input reversal. This is not a new full-archive audit.
+[Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-correction-audit/README.md>).
+
+235 focused tests PASS; all backend Ruff/577format/app-mypy146 PASS. Independent
+review's additional-correction tail defect fixed through full-document matching.
+Final scoped proof review and exact-head CI receipt live in the evidence folder.
+Frozen/research/OOS/tag and local application remain unchanged; no new dataset.
+Next separately normalize evidenced300155 payment/listing dates with original-to-new
+lineage. Continue remaining source/lifecycle/accounting and full U1–U8/M3–M5 gates;
+do not reuse old acquisition windows or turn this explanation into global PASS.
+Full product PARTIAL, PR32 remains draft; no merge or release.
+
 ## v1.2 official aggregate correction recovered — 2026-10-13
 
 Official CNINFO59352083 / notice2011-038 closes300155 cash-total text conflict:

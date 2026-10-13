@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 Bind corrections without erasing negative evidence — 2026-10-13
+
+Extend the existing candidate-audit gap input with a complete immutable parent
+inventory and pinned original/correction PDFs plus official metadata. Derive the
+explanation from those bytes, not a sidecar's self-declared PASS. Keep the old
+negative findings and attach a separate source-text resolution. Every candidate
+cash/bonus leg must preserve identity, provenance and exact per-holder terms;
+all known explanations together can yield only NOT_EVIDENCED, never economic PASS.
+
+Support the reviewed full one-page correction layout only. Independent review
+demonstrated that stopping at the apology marker could hide a second material
+correction; whole-page matching now rejects this. Record official intraday
+publication, not midnight or download time. Original event hashes remain historical
+lineage, while separately proven date normalization may legitimately change new
+hashes. No frozen event, price-only companion, financial rule or approval changes.
+
 ## v1.2 Accept an official cash text correction without rewriting history — 2026-10-13
 
 Use issuer2011-038 (CNINFO59352083, PDF SHA d36fe20a) to explain the specific

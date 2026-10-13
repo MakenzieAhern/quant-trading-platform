@@ -7,6 +7,7 @@ import json
 import re
 from bisect import bisect_left, bisect_right
 from collections import Counter, defaultdict
+from copy import deepcopy
 from datetime import date, timedelta
 from decimal import Decimal
 from io import BytesIO
@@ -35,6 +36,7 @@ from app.domain.markets.surrenders import MandatoryPartialShareSurrenderEvent
 from app.research.engine import require_supported_session_actions
 from app.research.models import ResearchPeriodKind
 from app.research.splits import TemporalPeriod
+from scripts.candidate_cash_corrections import load_cash_corrections
 from scripts.full_dataset_build_inputs import CandidateBuildInputs, load_candidate_build_inputs
 from scripts.full_dataset_sources import source_path, verify_source_contracts, verify_source_lineage
 from scripts.materialize_full_dataset import (
@@ -275,6 +277,91 @@ def source_economic_integrity(
     }
 
 
+def apply_cash_corrections(
+    result: dict[str, Any], actions: list[dict[str, Any]], proofs: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """Explain a verified text contradiction; never approve economics or erase findings."""
+    if not proofs:
+        return result
+    report = deepcopy(result)
+    resolutions = []
+    resolved = set()
+
+    def key(item: dict[str, Any]) -> tuple[str, ...]:
+        return tuple(
+            item[name]
+            for name in ("security_id", "record_date", "ex_date", "source_sha256", "source_url")
+        )
+
+    findings = {key(item["gap"]): item for item in result["findings"]}
+    proof_keys = [key(proof) for proof in proofs]
+    if len(set(proof_keys)) != len(proof_keys) or any(k not in findings for k in proof_keys):
+        raise ValueError("CASH_CORRECTION_GAP_IDENTITY_CHANGED")
+    for proof in sorted(proofs, key=key):
+        finding = findings[key(proof)]
+        checksums = {event["event_checksum"] for event in finding["events"]}
+        rows = [row for row in actions if row["event_checksum"] in checksums]
+        expected_types = Counter({"CASH_DIVIDEND": 1})
+        if Decimal(proof["bonus_share_ratio"]) > 0:
+            expected_types["BONUS_SHARE"] = 1
+        actual_types: Counter[str] = Counter()
+        valid = bool(rows)
+        for row in rows:
+            event = CorporateAction.model_validate_json(row["event_json"])
+            actual_types[event.action_type.value] += 1
+            cash = event.action_type is CorporateActionType.CASH_DIVIDEND
+            valid &= (
+                row["event_kind"] == "CORPORATE_ACTION"
+                and event.event_checksum == row["event_checksum"]
+                and str(event.security_id) == row.get("security_id") == proof["security_id"]
+                and event.record_date is not None
+                and event.record_date.isoformat() == proof["record_date"]
+                and event.ex_date is not None
+                and event.ex_date.isoformat() == row.get("application_date") == proof["ex_date"]
+                and event.effective_date == event.ex_date
+                and event.source_document_sha256
+                == row.get("source_document_sha256")
+                == proof["source_sha256"]
+                and event.source_url == row.get("source_url") == proof["source_url"]
+                and event.cash_per_share == (Decimal(proof["cash_per_share"]) if cash else 0)
+                and (
+                    event.share_ratio in (None, Decimal(0))
+                    if cash
+                    else event.share_ratio == Decimal(proof["bonus_share_ratio"])
+                )
+            )
+        valid &= actual_types == expected_types
+        if valid:
+            resolved.add(key(proof))
+        resolutions.append(
+            {
+                "evidence": deepcopy(proof),
+                "status": "CASH_AGGREGATE_TEXT_RESOLVED"
+                if valid
+                else "CANDIDATE_EVENT_TERMS_UNRESOLVED"
+                if rows
+                else "UNMATCHED_NOT_RESOLVED",
+                "matched_event_checksums": sorted(checksums),
+                "financial_admission": False,
+            }
+        )
+    unresolved_matched = sum(
+        bool(finding["events"]) and identity not in resolved
+        for identity, finding in findings.items()
+    )
+    report.update(
+        original_status=result["status"],
+        status="FAIL" if unresolved_matched else "NOT_EVIDENCED",
+        scan_status="COMPLETED_WITH_VERIFIED_CASH_AGGREGATE_CORRECTIONS",
+        source_text_resolutions=resolutions,
+        resolved_source_text_gap_count=len(resolved),
+        unresolved_source_gap_count=len(findings) - len(resolved),
+        unresolved_matched_gap_count=unresolved_matched,
+        financial_admission=False,
+    )
+    return report
+
+
 def audit(
     dataset: Path,
     repository: Path,
@@ -302,6 +389,11 @@ def audit(
                 Path(__file__).parents[1] / "app/data/full_dataset.py",
                 Path(__file__).parents[1] / "app/data/catalog/checksums.py",
                 Path(__file__).parents[1] / "app/research/engine.py",
+                Path(__file__).with_name("candidate_cash_corrections.py"),
+                Path(__file__).with_name("audit_p1_cash_corrections.py"),
+                Path(__file__).with_name("retained_bonus_terms.py"),
+                Path(__file__).with_name("reconcile_distribution_cash.py"),
+                Path(__file__).with_name("link_distribution_notices.py"),
             )
         }
         if build_spec is not None
@@ -312,11 +404,15 @@ def audit(
         if known_source_gaps is not None and known_source_gaps_sha256 is not None
         else None
     )
+    correction_proofs: list[dict[str, Any]] = []
+    correction_pins: dict[Path, str] = {}
     if known_source_gaps is not None:
         if not isinstance(gap_payload, dict):
             raise ValueError("INVALID_KNOWN_SOURCE_GAPS")
         source_economic_integrity([], gap_payload)
-    extra_inputs = (known_source_gaps,) if known_source_gaps is not None else ()
+        correction_proofs, correction_pins = load_cash_corrections(gap_payload, known_source_gaps)
+    extra_inputs: tuple[Path, ...] = (known_source_gaps,) if known_source_gaps is not None else ()
+    extra_inputs += tuple(correction_pins)
     candidate = (
         load_candidate_build_inputs(
             build_spec,
@@ -780,6 +876,11 @@ def audit(
         for gate in unproven:
             gates[gate] = "NOT_EVIDENCED"
         economic_check = source_economic_integrity(actions, gap_payload)
+        economic_check = apply_cash_corrections(economic_check, actions, correction_proofs)
+        if correction_pins:
+            economic_check["correction_input_sha256"] = {
+                str(path): digest for path, digest in sorted(correction_pins.items())
+            }
         economic_check.update(
             known_source_gaps_path=str(known_source_gaps.resolve()) if known_source_gaps else None,
             known_source_gaps_sha256=known_source_gaps_sha256,
@@ -872,6 +973,8 @@ def audit(
             and sha256_file(known_source_gaps) != known_source_gaps_sha256
         ):
             raise ValueError("KNOWN_SOURCE_GAPS_CHANGED_DURING_AUDIT")
+        if any(sha256_file(path) != digest for path, digest in correction_pins.items()):
+            raise ValueError("CASH_CORRECTION_INPUT_CHANGED_DURING_AUDIT")
         verify_dataset(dataset, manifest)
         if sha256_file(dataset / "manifest.json") != report["manifest_file_sha256"]:
             raise ValueError("CANDIDATE_MANIFEST_BYTES_CHANGED")

@@ -1,4 +1,22 @@
 {
+  "candidate_cash_correction_20261013_gate": {
+    "status": "PASS_SCOPED_TEXT_CORRECTION_LINKAGE_NOT_FINANCIAL_ADMISSION",
+    "observed_at_utc": "2026-10-13T09:22:16Z",
+    "base_head": "414e4df0efca806884c41963d7415cc25b3a3986",
+    "implementation": "Existing candidate-audit gap input now accepts a versioned parent-preserving correction extension. Hash and parse the same original/correction PDF and official metadata bytes; require full supported document frame, issuer/notice/record/ex identity, exact cash/bonus terms and millisecond publication boundary. Candidate terms/source mismatches remain unresolved. Protect all consumed inputs from output aliases and recheck input/code pins before immutable publication.",
+    "actual_evidence": "Production loader and correction join consumed actual cached official300155 evidence and six original known-gap event rows. Old3gap/6leg findings retained exactly;1cash-total text contradiction resolved,300147/000425 still unresolved. Overall SOURCE_ECONOMIC_INTEGRITY remains FAIL; financial_admission=false. This is not a new whole-archive audit.",
+    "evidence": "product-evidence/v1.2/m4/20261013-candidate-correction-audit/README.md",
+    "report_sha256": "28a51c2faa07c435cf7d9d48d4adb9f331ed10d5e990c2097bb3362716ff6915",
+    "tests": "235 focused tests PASS, including183 new; all backend Ruff/577format/app-mypy146 PASS. Actual cached-source normal and python-O reports identical; reversed input ordering identical. Script-specific mypy required ignoring missing external stubs or skipping imports; existing old correction-script call-arg issue was not hidden as full script-type PASS.",
+    "review": "Independent readonly scoped review reproduced an ignored trailing correction; supported whole-page matching and negative cases repaired it. Final source/proof review and exact-head hosted CI receipt recorded outside Git at this evidence directory.",
+    "preservation": "Frozenmanifest693c0b81/freeze228569f1/researchstateb10ce3c5/actions27c913ff/v1.1tagf88b5c verified unchanged. No provider retrieval, dataset materialization/registration/freeze, runtime service restart, database mutation, strategy or OOS run.",
+    "next": "Normalize separately evidenced300155 payment/listing dates in an isolated successor input with explicit original-to-new event lineage, retaining cash0.8/bonus1.5 and correction knowledge boundary. Continue genuine300147/000425 source closure and full lifecycle/accounting gates; do not rerun old acquisition windows or inherit approval. Native browser, lawful actual forward data, missing-ledger disposition and remaining U1-U8 quality/release obligations remain.",
+    "ci": "Exact milestone commit result will be retained in this directory/current-ci.json; no merge/tag/release.",
+    "dataset_audited": false,
+    "financial_admission": false,
+    "strategy_run": false,
+    "full_product_pass": false
+  },
   "official_300155_correction_20261013_gate": {
     "status": "CASH_AGGREGATE_TEXT_CORRECTED_NOT_FINANCIAL_ADMISSION",
     "base_head": "a99016d56a6199a2c8dacdd3c2c63b8de782b6cd",
@@ -1210,7 +1228,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-13T08:13:52Z",
+  "updated_at_utc": "2026-10-13T09:22:16Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",

@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 verified correction consumed by candidate audit
+
+[Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-correction-audit/README.md>).
+The existing audit now accepts a versioned cash-aggregate correction extension
+without changing the materializer, accounting events or runtime admission. Parent
+inventory, original/correction PDFs, official metadata and source identity are
+bound to their actual bytes. Full-page matching rejects extra economic/date
+corrections outside the quoted paragraphs; publication keeps the exact timestamp.
+
+Actual cached evidence joins all six previously identified event legs. Original
+three findings remain intact;300155's cash-total text is explained, while300147
+and000425 remain unresolved. Normal and optimized verification produce identical
+report28a51c2f, also invariant to input reversal. This targeted join is not another
+whole-archive audit. The cash0.8/bonus1.5 terms are unchanged; payment/listing date
+normalization and whole lifecycle/accounting admission remain separate work.
+
+235 focused tests PASS, including183 new parser, source-binding, candidate-term
+and output-isolation cases. All backend Ruff/577format/app-mypy146 PASS. Independent
+review's ignored-tail defect was fixed and covered by negative cases; final review
+and exact-head hosted CI evidence are retained outside Git. No original dataset,
+runtime, DB, strategy or OOS mutation. Financial admission remains false and the
+overall source-economic gate remains FAIL; full U1–U8/M3–M5 acceptance is incomplete.
+
 ## 2026-10-13 official cash correction recovered
 
 [Source evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-official-source-closure/README.md>).
