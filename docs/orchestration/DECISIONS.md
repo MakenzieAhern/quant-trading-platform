@@ -1,5 +1,27 @@
 # Decisions
 
+## v1.2 Derive successor dates without rewriting original events — 2026-10-13
+
+Use one versioned, pinned date inventory for both the materializer and auditor.
+The input selects original event checksums and source PDFs; it cannot declare
+replacement dates. Verify the actual issuer/title, record/ex dates and explicit
+cash-transfer or all-holder credit/listing statements. A quoted final title,
+tentative statement or holder-specific payment arrangement is insufficient.
+
+Replace only the missing payment/listing field and regenerate the event checksum.
+Retain the full original acceptance object under explicit lineage, including old
+metadata-gap flags. Do not change amounts, source-record identity, completeness,
+tradability or financial admission. Limit this path to the existing same-ex-date
+case; a later date does not establish delayed entitlement-accounting support.
+Require new verified price companions when their bound event hashes change,
+rather than silently re-signing old references.
+
+Independent review exposed permissive title/context matches; new negative cases
+now reject them. A broad holder-clause guard also rejected actual tax-rate text,
+so that guard now requires a dated payment statement rather than treating every
+cash amount as a conflicting schedule. Existing frozen research and unresolved
+source-economic findings remain authoritative historical evidence.
+
 ## v1.2 Bind corrections without erasing negative evidence — 2026-10-13
 
 Extend the existing candidate-audit gap input with a complete immutable parent

@@ -53,6 +53,7 @@ from scripts.materialize_full_dataset import (
     structural_event_rows,
     validate_bar,
 )
+from scripts.ordinary_distribution_dates import normalize_ordinary_dates
 from scripts.reconcile_sse_cninfo import save, sha
 
 REQUIRED_GATES = frozenset(
@@ -104,6 +105,7 @@ def candidate_publication(
     inputs.extend(extra_inputs)
     inputs.extend(source_path(repository, row["source_path"]) for row in candidate.source_contracts)
     inputs.extend(pin.path for pin in candidate.auxiliary_inputs.values())
+    inputs.extend(candidate.date_source_pins(repository))
     for pins in candidate.raw_sources.values():
         for pin in pins:
             inputs.extend((pin.path, pin.path.with_suffix(pin.path.suffix + ".meta.json")))
@@ -151,6 +153,8 @@ def candidate_action_rows(
             read_json=read_json,
         )
     )
+    if pin := candidate.auxiliary_inputs.get("ordinary_dates"):
+        rows = normalize_ordinary_dates(rows, read_json(pin.path), pin.path)
     if pin := candidate.auxiliary_inputs.get("ordinary_references"):
         rows.extend(ordinary_reference_rows(read_json(pin.path), rows, pin.sha256))
     return rows
@@ -390,6 +394,11 @@ def audit(
                 Path(__file__).parents[1] / "app/data/catalog/checksums.py",
                 Path(__file__).parents[1] / "app/research/engine.py",
                 Path(__file__).with_name("candidate_cash_corrections.py"),
+                Path(__file__).with_name("ordinary_distribution_dates.py"),
+                Path(__file__).with_name("distribution_payment_terms.py"),
+                Path(__file__).with_name("audit_p1_retained_cash_sources.py"),
+                Path(__file__).with_name("audit_p1_orphan_cash_facts.py"),
+                Path(__file__).parents[1] / "app/domain/markets/corporate_actions.py",
                 Path(__file__).with_name("audit_p1_cash_corrections.py"),
                 Path(__file__).with_name("retained_bonus_terms.py"),
                 Path(__file__).with_name("reconcile_distribution_cash.py"),
@@ -918,6 +927,24 @@ def audit(
             ACTION_SESSION_PRECONDITIONS="FAIL" if action_session_failures else "PASS",
         )
         reference_count = action_kinds["ORDINARY_REFERENCE"]
+        if "ordinary_dates" in candidate.auxiliary_inputs:
+            report["ordinary_date_normalization"] = {
+                "status": "SOURCE_DATES_NORMALIZED_NOT_FINANCIAL_ADMISSION",
+                "source_input_sha256": {
+                    str(path): digest
+                    for path, digest in sorted(candidate.date_source_pins(repository).items())
+                },
+                "replacements": sorted(
+                    (
+                        acceptance["date_normalization"]
+                        for row in actions
+                        if "date_normalization"
+                        in (acceptance := json.loads(row["acceptance_json"]))
+                    ),
+                    key=lambda item: item["original_event_checksum"],
+                ),
+                "financial_admission": False,
+            }
         report.update(
             report_id="SUCCESSOR_FULL_DATASET_AUDIT_V1",
             build_inputs=candidate.ownership(),

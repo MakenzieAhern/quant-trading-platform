@@ -1,5 +1,28 @@
 # Current state
 
+## v1.2 source derived dates integrated into candidate builds — 2026-10-13
+
+The shared build/audit path now replaces missing ordinary cash payment and bonus
+listing dates using pinned source PDFs. Real retained 300155 evidence produces
+two new event hashes, with only the respective date changed. All old acceptance
+and negative findings remain intact. Report `5ab64452` repeats under normal and
+optimized Python and input reversal; the other four selected events are unchanged.
+[Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-ordinary-date-normalization/README.md>).
+
+540 related tests PASS, including 108 new cases. Ruff, 582-file formatting and
+146-file application typing PASS. Independent review defects were repaired;
+final review and exact-head CI receipts belong beside the evidence report.
+Source economic integrity remains FAIL with 300147/000425 unresolved; financial
+admission remains false. No real dataset, runtime, DB, study, OOS or frozen asset
+was changed. Full U1–U8/M3–M5 remains PARTIAL; no merge or release.
+
+Next validate the normalized actual events through the existing dated session
+and portfolio paths in an isolated evidence harness, preserving the original
+holder, cash and basis assumptions. This is distinct from source-gap closure
+and whole-dataset financial admission. Continue the remaining source/lifecycle,
+native-browser, lawful-forward and genuine-ledger requirements without repeating
+accepted acquisition or narrowing the product objective.
+
 ## v1.2 official correction now bound to candidate audit — 2026-10-13
 
 Candidate audit now consumes the versioned300155 correction chain, with original

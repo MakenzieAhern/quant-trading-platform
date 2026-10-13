@@ -90,11 +90,21 @@ class CandidateBuildInputs(BaseModel):
     def read_json(self, repository: Path, path: Path) -> Any:
         return json.loads(self.read_bytes(repository, path))
 
+    def date_source_pins(self, repository: Path) -> dict[Path, str]:
+        # The optional manifest selects parser inputs, not approval or new entitlements.
+        from scripts.ordinary_distribution_dates import date_source_pins
+
+        pin = self.auxiliary_inputs.get("ordinary_dates")
+        return date_source_pins(self.read_json(repository, pin.path), pin.path) if pin else {}
+
     def recheck(self, repository: Path) -> None:
         verify_source_contracts(self.source_contracts, repository, self.reference_pins)
         for pin in self.auxiliary_inputs.values():
             if sha256_file(pin.path) != pin.sha256:
                 raise ValueError(f"CANDIDATE_AUXILIARY_CHANGED:{pin.path.name}")
+        for path, digest in self.date_source_pins(repository).items():
+            if sha256_file(path) != digest:
+                raise ValueError(f"ORDINARY_DATES_SOURCE_CHANGED:{path.name}")
         for pins in self.raw_sources.values():
             for pin in pins:
                 require_unaliased_raw(pin.path)
@@ -163,6 +173,14 @@ def producer_sha256() -> dict[str, str]:
     code = (
         Path(__file__),
         Path(__file__).with_name("materialize_full_dataset.py"),
+        Path(__file__).with_name("ordinary_distribution_dates.py"),
+        Path(__file__).with_name("distribution_payment_terms.py"),
+        Path(__file__).with_name("retained_bonus_terms.py"),
+        Path(__file__).with_name("audit_p1_retained_cash_sources.py"),
+        Path(__file__).with_name("audit_p1_orphan_cash_facts.py"),
+        Path(__file__).with_name("reconcile_distribution_cash.py"),
+        Path(__file__).with_name("link_distribution_notices.py"),
+        Path(__file__).parents[1] / "app/domain/markets/corporate_actions.py",
         Path(__file__).parents[1] / "app/data/full_dataset.py",
         Path(__file__).parents[1] / "app/data/catalog/checksums.py",
     )
@@ -201,7 +219,7 @@ def load_candidate_build_inputs(
         set(spec.reference_pins) != REFERENCE_PINS
         or not AUXILIARY_INPUTS
         <= set(spec.auxiliary_inputs)
-        <= AUXILIARY_INPUTS | {"ordinary_references"}
+        <= AUXILIARY_INPUTS | {"ordinary_references", "ordinary_dates"}
         or set(spec.raw_sources) != {"SSE", "SZSE"}
         or any(not pins for pins in spec.raw_sources.values())
     ):
@@ -251,6 +269,7 @@ def load_candidate_build_inputs(
     inputs = [path, repository / spec.reference_pins["p0_public_report_path"]]
     inputs.extend(source_path(repository, row["source_path"]) for row in spec.source_contracts)
     inputs.extend(pin.path for pin in auxiliary.values())
+    inputs.extend(spec.date_source_pins(repository))
     inputs.extend(raw_paths)
     inputs.extend(raw_path.with_suffix(raw_path.suffix + ".meta.json") for raw_path in raw_paths)
     if any(

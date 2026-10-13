@@ -35,6 +35,8 @@ strict schema is `CandidateBuildInputs` in `backend/scripts/full_dataset_build_i
   `private_candidate_reference_rows`. Each price-only companion must match its
   exact cash/share event checksums, source, identity and date. It never replaces
   shareholder entitlements or becomes an accounting event.
+  Optional `ordinary_dates` binds a versioned source-date inventory described
+  below. Both producer and auditor apply it before checking price companions.
 - Exact nonempty `raw_sources.SSE` and `.SZSE` lists, each pinning `path`, `sha256`
   and adjacent `metadata_sha256`. Raw filename/metadata identity cannot use
   symlinks. Explicit `market_rule_manifest_sha256`; never inherit frozen state.
@@ -60,6 +62,32 @@ deleting/replacing published artifacts. This is not exhaustive crash durability.
 Every build reports `dataset_audited=false`, `dataset_frozen=false`,
 `dataset_registered=false` and `full_financial_admission=false`. No strategy,
 provider acquisition, database, registration or freeze runs here.
+
+## Source derived ordinary distribution dates
+
+`ordinary_dates` is a pinned JSON file with `version` equal to
+`ORDINARY_DISTRIBUTION_DATES_V1` and a nonempty `items` array. Each item contains
+the original `event_checksum`, `source_pdf` (`path`, `sha256`) and `source_title`.
+PDF paths are relative to this inventory, not the build specification. Dates are
+derived from the verified PDF bytes; the input cannot supply replacement dates.
+The inventory participates in the preflight input selection, and its nested
+PDFs are checked for changes and input/output overlap before publication.
+
+Only the reviewed final SZSE distribution-notice layout is supported. The PDF
+heading must identify the original issuer and title. Cash payment requires a
+consistent labeled date and explicit agency transfer wording; bonus listing
+uses the existing all-holder credit and unrestricted-listing parser. Conflicting,
+tentative, holder-specific or unsupported terms fail closed. Both dates must
+equal the existing ex-date; delayed entitlement accounting needs separate work.
+
+The shared normalizer replaces exactly one existing ordinary event per target.
+It changes only missing `payment_date` for cash or `listing_date` for bonus
+shares. All other typed fields, amounts, original source identity, completeness
+and tradability remain unchanged. New event checksums and the complete original
+acceptance object are retained in an explicit lineage envelope; old findings
+are not deleted or relabeled. Existing price companions carrying the old event
+checksums are rejected, not automatically rebound. The audit reports these date
+replacements separately from the still-unproven financial and lifecycle gates.
 
 ## Current proof and remaining work
 

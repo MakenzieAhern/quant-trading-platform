@@ -39,6 +39,7 @@ from scripts.full_dataset_sources import (
     verify_source_lineage,
     verify_source_manifest,
 )
+from scripts.ordinary_distribution_dates import normalize_ordinary_dates
 from scripts.publish_akshare_pilot import write_table
 from scripts.reconcile_sse_cninfo import canonical, save, sha
 from scripts.szse_st_recovery import risk_state
@@ -1109,6 +1110,10 @@ def materialize(
             repository, rights_path, merger_path, structural_path, read_json=read_json
         )
     )
+    if candidate and (date_pin := candidate.auxiliary_inputs.get("ordinary_dates")):
+        corporate_actions = normalize_ordinary_dates(
+            corporate_actions, read_json(date_pin.path), date_pin.path
+        )
     if candidate and (reference_pin := candidate.auxiliary_inputs.get("ordinary_references")):
         corporate_actions.extend(
             ordinary_reference_rows(

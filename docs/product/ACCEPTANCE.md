@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 source derived ordinary distribution dates
+
+[Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-ordinary-date-normalization/README.md>).
+The optional pinned `ordinary_dates` inventory now reaches the same normalizer
+in both candidate materialization and audit, before price companions are checked.
+Nested source PDFs, producer code and input/output isolation are verified. Only
+missing same-ex-date payment/listing metadata can change; delayed accounting,
+financial approval and automatic companion rebinding remain unsupported.
+
+Actual retained 300155 evidence produces two explicit old-to-new event mappings.
+Only the respective date changes; cash 0.8, bonus 1.5, provenance, completeness,
+tradability and original acceptance remain intact. The other four selected rows
+are unchanged. Normal/optimized Python and reversed inputs reproduce report
+`5ab64452`; the official text-correction join still leaves 300147/000425 unresolved.
+This is not a new whole-dataset audit or portfolio reconciliation.
+
+540 related tests PASS, including 108 new parser/replacement/integration cases;
+Ruff, 582-file formatting and 146-file application typing PASS. Independent
+counterexamples for misleading titles and nonbinding/holder-specific clauses
+were fixed without relaxing real-source checks. Exact-head CI and final review
+receipts are kept outside Git. No original dataset, DB, runtime, strategy or OOS
+mutation. Financial admission remains false; full U1–U8/M3–M5 remains incomplete.
+
 ## 2026-10-13 verified correction consumed by candidate audit
 
 [Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-correction-audit/README.md>).

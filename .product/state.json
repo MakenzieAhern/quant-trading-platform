@@ -1,4 +1,24 @@
 {
+  "ordinary_distribution_dates_20261013_gate": {
+    "status": "PASS_SOURCE_DATE_REPLACEMENTS_NOT_FINANCIAL_ADMISSION",
+    "observed_at_utc": "2026-10-13T09:57:26Z",
+    "base_head": "32aba33cee61b73d9b38f3bc6b270665abf14448",
+    "previous_turn": "Status-only response was NO_PROGRESS. This continuation implements and verifies a source-bound date replacement path shared by candidate build and audit: PROGRESS. Full U1-U8/M0-M5 objective remains active and incomplete.",
+    "implementation": "Optional ordinary_dates pins old event identities and original PDFs; dates are derived from verified bytes. Both assembly paths replace before reference checks. Only the target missing payment/listing field may change, with new checksum and complete original acceptance lineage. Nested source/producers/output isolation and final rechecks fail closed; delayed dates and stale companion hashes reject.",
+    "actual_evidence": "Real retained six-event subset:300155 cash payment and bonus listing normalized to2011-05-06; cash0.8/bonus1.5 and every other typed field unchanged, other4events unchanged. Official correction still resolves1text gap;300147/000425 remain unresolved. Original full negative report retained; no new whole-archive audit or financial approval.",
+    "evidence": "product-evidence/v1.2/m4/20261013-ordinary-date-normalization/README.md",
+    "report_sha256": "5ab64452add31ddedda93ed4028261afbcc69874924e3589dd78dc0e1deef0c0",
+    "verification": "Normal/python-O and reversed-input checks reproduce identical outputs.540 related tests PASS including108new; Ruff/582format/app-mypy146PASS. New2module mypy with MYPYPATH=backend/follow-imports=skipPASS, not whole legacy-script typing. Final scoped independent review and exact-head CI receipt retained beside evidence.",
+    "review_fixes": "Quoted or draft-suffixed final titles, nonbinding and holder-specific cash clauses reject. Actual tax-rate prose no longer misclassified as a competing payment schedule. Original acceptance checksum and metadata gaps preserved in a separate envelope.",
+    "preservation": "Frozenmanifest693c0b81/freeze228569f1/researchstateb10ce3c5/actions27c913ff/v1.1tagf88b5c unchanged. No original service, DB, provider, strategy, OOS, real dataset materialization/registration/freeze, merge or release operation.",
+    "next": "Validate normalized actual events through existing dated session/Portfolio paths in an isolated evidence harness without new strategy or financial assumptions. Continue300147/000425 source closure and full lifecycle/accounting gates; native browser, lawful actual after-start forward data, genuine missing-ledger disposition and remaining U1-U8 quality/release obligations remain. Do not repeat accepted acquisition or treat scoped date proof as whole admission.",
+    "ci": "Exact milestone result retained outside Git in this evidence directory/current-ci.json; PR32 remains draft, no merge/tag/release.",
+    "dataset_created": false,
+    "dataset_audited": false,
+    "financial_admission": false,
+    "strategy_run": false,
+    "full_product_pass": false
+  },
   "candidate_cash_correction_20261013_gate": {
     "status": "PASS_SCOPED_TEXT_CORRECTION_LINKAGE_NOT_FINANCIAL_ADMISSION",
     "observed_at_utc": "2026-10-13T09:22:16Z",
@@ -1228,7 +1248,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-13T09:22:16Z",
+  "updated_at_utc": "2026-10-13T09:57:26Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
