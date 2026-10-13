@@ -1,5 +1,18 @@
 # Current state
 
+## v1.2 local PnL publication checkpoint — 2026-10-13
+
+Current product authority remains `.product/state.json` and
+`docs/product/ACCEPTANCE.md`, not the older frozen research checkpoint.
+Exact PnL/source guards are now served locally;27 saved HTTP bodies and417events
+retain prior values, with only explicit legacy-null additions.13 frontend assets
+pass Windows/WSL SHA checks; original containers/volumes retained. Two new
+JSONB/REST/ASGI cases pass in a210PASS/1optionalSKIP related suite. Final test/docs
+CI receipt is outsideGit in `product-evidence/v1.2/m4/20261013-pnl-publication`.
+Browser verification, source economic/integrity admission, lawful real forward
+data and missing-ledger disposition remain. Full productPARTIAL; no merge/release,
+new strategy/OOS run or frozen research mutation.
+
 ## v1.2 isolated successor build entry — 2026-10-08
 
 Explicit new-version input/owned output entry implemented in the existing

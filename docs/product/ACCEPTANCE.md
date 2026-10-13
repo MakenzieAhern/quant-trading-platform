@@ -1,5 +1,31 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 PnL persistence and local deployment pass
+
+[Deployment evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-pnl-publication/README.md>)
+and [isolated persistence tests](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-pnl-api-persistence/README.md>).
+Two new cases verify actual JSONB commit, REST projections and ASGI WebSocket JSON
+frames for versioned and genuinely legacy portfolios. Related suite210PASS with
+one optional archiveSKIP; Ruff/formatPASS. Exact dividend/total values retain18
+decimal places; reading old records never inserts missing accounting fields.
+This is not TCP/browser or a complete worker-production acceptance test.
+
+Application source725d6e8 is now deployed to the original local8000/5173 services.
+One same-container backend restart after schema0017/terminal-jobs/no-pending
+checks and private dump/archive backups.27 selected HTTP bodies preserve every
+old value;103 legacy portfolio projections add only three nulls.5STOPPED accounts,
+417events,12research jobs,4updates, schema and product cache unchanged.13 frontend
+files pass WSL and Windows HTTP/SHA checks;194 old nonindex files retained. No
+container recreation, database downgrade, original producer start or frozen/OOS
+change. Four mocked publication failure/success paths passed independent review;
+no actual rollback was needed. Old backend cannot resume new versioned journals,
+so backend rollback is conditional, not promised by the frontend index backup.
+
+Current browser interaction remains pending because native URL-policy control is
+still rejected. Deployment/ASGI evidence does not replace it or approve historical
+sources/new-market rights. Full U1–U8/M3–M5 remains PARTIAL; PR32 remains draft.
+The final commit's CI receipt is outsideGit in the deployment evidence directory.
+
 ## 2026-10-13 paper PnL and saved-source identity — code/regression PASS, browser pending
 
 [Evidence and limitations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-pnl-source-guards/README.md>).

@@ -1,4 +1,21 @@
 {
+  "paper_pnl_local_publication_20261013_gate": {
+    "status": "PASS_PERSISTENCE_AND_LOCAL_DEPLOYMENT_BROWSER_PENDING",
+    "observed_at_utc": "2026-10-13T08:13:52Z",
+    "application_source_head": "725d6e8c791e494649400e9c3af9796957d4a227",
+    "tests": "2 new actual JSONB/REST/ASGI JSON-frame cases; related210PASS/1optional archiveSKIP; Ruff/formatPASS. Exact18decimal values and legacy raw-journal absence preserved. NotTCP/browser/fullworker acceptance.",
+    "backup": "Private pg_dump66e015789110629295d50a572129bc22fef8729849705abfdda3e099af9f8a69/listPASS; product tar,195frontend files and prior source candidate retained. Not a new restore drill/independent backup/exact old-memory snapshot.",
+    "backend": "Same89aa container restarted once at08:03:24.560203214Z after schema0017,terminal jobs/accounts,no pending receipts. New OpenAPI fields loaded;27 saved HTTP bodies retain every old value with103three-null portfolio additions.5STOPPED/417events/12research/4updates and product tar unchanged; not all-table audit.",
+    "frontend": "13 current build files published assets-first/atomicindex; HTTP200/SHA/security headersPASS and independent Windows13SHA checksPASS.194 old nonindex files retained,total204; samea561 container not restarted.",
+    "review": "Independent persistence/source-lifecycle and publication review; two publication failure-path issues fixed; four fully mocked success/failure casesPASS. Real publicationPASS, rollback not exercised.",
+    "rollback": "Retain old frontend index and both asset sets. Prior backend cannot replay new versioned journals; after new writes keep compatible backend or require separately verified recovery. Never overwrite later user data with old dump.",
+    "preservation": "Frozen manifest693c0b81/freeze228569f1/researchstateb10ce3c5/v1.1f88b5c unchanged. No original create/start/strategy/OOS/provider run; PG/Redis/frontend not restarted; no recreation/deletion/denied fingerprint route.",
+    "ci": "Final test/docs commit receipt will be recorded outsideGit in pnl-publication/current-ci.json; previous application-source725d6e8 CI38364226162PASS remains bound to unchanged application code.",
+    "deployed": true,
+    "browser_validated": false,
+    "evidence": "product-evidence/v1.2/m4/20261013-pnl-publication/README.md",
+    "full_product_pass": false
+  },
   "paper_pnl_and_source_identity_20261013_gate": {
     "status": "PASS_CODE_AND_LOCAL_REGRESSION_BROWSER_PENDING",
     "observed_at_utc": "2026-10-13T07:34:00Z",
@@ -1175,7 +1192,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-13T07:40:56Z",
+  "updated_at_utc": "2026-10-13T08:13:52Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4151,16 +4168,16 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct13 backend1788PASS/1optionalSKIP/Ruff/format571/mypy146;frontend870PASS/lint/types/tempbuildPASS; scoped independent review. Original services preserved; full product PARTIAL and current code browser/deployment pending.",
-    "repository_writer": "Root integrates frontend PnL/docs/state. u3_u7_backend_gap_oct13 wrote backend schema/service/test only, now readonly review; u3_u8_frontend_gap_oct13 wrote command/watchlist files only, now completed isolated backend tests. No overlapping writers; identity unchanged.",
-    "database_writer": "Only new disposable quant_test tmpfs written by u3_u8_frontend_gap_oct13 full suite; testPG042f28746a7d stopped/retained, other clients0. Original application DB untouched; four original container ID/PID/command/start records match before/after.",
+    "latest_verification": "Oct13 newJSONB/REST/ASGI2cases and related210PASS/1optionalSKIP; prior unchanged application1788/870fulltestsCI pass. Original local PnL/source-guard deployment nowPASS with27savedHTTP comparisons and13WSL/Windowsassets. Full productPARTIAL, current browserpending.",
+    "repository_writer": "Root integrates agent-authored backend/tests/test_paper_pnl_api.py plus docs/state. u3_u7 completed test authoring/source review; u3_u8 completed exclusive disposable tests/publication review. No overlapping writers; identity unchanged.",
+    "database_writer": "Only isolated quant_test/tmpfs written by test agent, then stopped0clients/0paperrows. Root performed original read-only checks/pg_dump and one existing-backend restart atschema0017; observed saved values/statuses/417events unchanged. No original financial producer started.",
     "queue_writer": "No original financial/research/provider/task producer or queue write; no new account, strategy, formal/OOS or frozen dataset change. Simulated fixtures exist only in isolated tests.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "Oct13 07:30UTC Compose original Postgres/Redis/backend healthy, frontend and API HTTP200. Exact before/after identities in new outsideGit evidence. Isolated test containers terminal0; testPG stopped/retained. Historical process IDs not reusable authority.",
+    "verified_processes": "Oct13 backend89aa restarted08:03:24.560203214Z andhealthy; PostgreSQL598760/Redisdf3dc/frontend a561 original IDs/start unchanged. Frontend204files served without restart. Isolated test containers terminal0/testPGstopped retained. Exact evidence in pnl-publication; never reuse PID as authority.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
@@ -4801,8 +4818,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Read pnl-source-guards/current-ci.json and match its terminal receipt to GitHEAD; do not recommit/retest accepted source-only work without changes. New PnL and command source guards are code/CI accepted, not deployed/browser accepted. Resume safe deployment and real bilingual account/search walkthrough when native URL-policy control works, then finish full U1-U8/M3-M5 gates. Official source economics, lawful after-start forward evidence and genuine missing-ledger evidence remain unresolved. No merge/release/frozen/OOS change.",
-  "local_next_command": "Verify the final documentation checkpoint CI once and persist its receipt outsideGit. Remaining live deployment/visual interaction/performance gates require supported browser control; user Chrome/animation preparation is already confirmed. Do not retry equivalent denied controls or blocked source routes, claim synthetic forward acceptance or reconstruct missing real ledgers.",
+  "next_task": "Read pnl-publication/current-ci.json and match terminal receipt to GitHEAD. PnL/source guards now deployed; do not repeat accepted tests/backups/restart without cause. Complete real bilingual account/search walkthrough when native URL-policy control is genuinely repaired; continue independent whole-input source economics/provenance closure and full U1-U8/M3-M5. Lawful after-start forward evidence and genuine missing-ledger evidence remain unresolved. No merge/release/frozen/OOS change.",
+  "local_next_command": "Finish current test/docs commit CI and store terminal receipt outsideGit. Native browser/foreground-performance/system-motion evidence remains pending; user preparation is already confirmed. No equivalent denied-control retry or alternate-route bypass. Read current source-economic gap evidence for independent next action; do not fake source approval, new forward receipts or missing real ledgers.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

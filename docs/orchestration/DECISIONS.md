@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 Preserve journals during local PnL deployment — 2026-10-13
+
+Publish the tested exact-PnL and source-identity changes without rebuilding the
+original containers or rewriting old records. Verify current schema equals source
+head, terminal jobs/accounts and absent pending receipt intents; retain a private
+logical dump/product/frontend backup before the one backend restart. Observed
+post-restart HTTP values, statuses, event counts and product cache must match.
+This is selected-record preservation, not an all-table audit or lost-ledger repair.
+
+Frontend publication verifies assets before the atomic index switch and restores
+the retained index on post-switch failure even if diagnostic-file writing fails.
+Keep both asset sets. Prior backend replay is incompatible with newly versioned
+PnL journals: after new writes, frontend-only rollback with the compatible backend
+is the default safe boundary, never a silent old-database restore. Four mocked
+publication paths and real deployment passed; actual rollback was not exercised.
+New persistence cases cover JSONB/REST/ASGI JSON frames, not real-browser acceptance.
+The full product remains PARTIAL and source/rights/browser gates are unchanged.
+
 ## v1.2 Version paper PnL without rewriting old journals — 2026-10-13
 
 Transport the portfolio engine's existing corporate-action and total PnL as exact
