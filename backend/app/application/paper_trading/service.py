@@ -12,7 +12,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.application.backtests.decimal_policy import canonical_decimal, validate_storage_decimal
-from app.application.backtests.registry import DatasetRegistry, StrategyRegistry
+from app.application.backtests.registry import (
+    DatasetRegistry,
+    StrategyRegistry,
+    UnknownDatasetError,
+)
 from app.application.experiments.data import (
     HISTORICAL_ID,
     ExperimentDatasetRegistry,
@@ -69,6 +73,16 @@ class PaperSessionStateError(ValueError):
 Clock = Callable[[], datetime]
 logger = logging.getLogger(__name__)
 HISTORICAL_SOURCE = "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1"
+HISTORICAL_CAPABILITY_REASONS = frozenset(
+    {
+        "DATASET_NOT_REGISTERED",
+        "DATASET_NOT_MOUNTED",
+        "DATASET_INTEGRITY_FAILED",
+        "SOURCE_CONTRACT_INTEGRITY_FAILED",
+        "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+        "DATASET_EXECUTION_NOT_ACCEPTED",
+    }
+)
 
 
 class PaperTradingManager:
@@ -95,6 +109,67 @@ class PaperTradingManager:
         self._tasks: dict[UUID, asyncio.Task[None]] = {}
         self._providers: dict[UUID, ReplayMarketDataProvider | SimulatedAShareSessionProvider] = {}
         self._lock = asyncio.Lock()
+
+    async def capabilities(self) -> dict[str, object]:
+        """Inspect configured sources, not financial acceptance or permission to create."""
+
+        def replay_available() -> bool:
+            provider = self._datasets.resolve("AAPL_fixture", "AAPL")
+            return bool(provider.get_historical_bars("AAPL", None, None, Timeframe.DAY_1))
+
+        replay_reason = None
+        try:
+            if not await asyncio.to_thread(replay_available):
+                replay_reason = "REPLAY_DATA_UNAVAILABLE"
+        except (UnknownDatasetError, OSError):
+            replay_reason = "REPLAY_DATA_UNAVAILABLE"
+        except ValueError:
+            replay_reason = "REPLAY_DATA_INVALID"
+        except Exception:
+            replay_reason = "PAPER_CAPABILITY_CHECK_FAILED"
+
+        historical_reason = None
+        if self._historical_datasets is None:
+            historical_reason = "DATASET_NOT_REGISTERED"
+        else:
+            try:
+                await asyncio.to_thread(
+                    self._historical_datasets.resolve, HISTORICAL_ID, for_execution=True
+                )
+            except ExperimentInputError as exc:
+                historical_reason = (
+                    exc.code
+                    if exc.code in HISTORICAL_CAPABILITY_REASONS
+                    else "PAPER_CAPABILITY_CHECK_FAILED"
+                )
+            except Exception:
+                historical_reason = "PAPER_CAPABILITY_CHECK_FAILED"
+        return {
+            "providers": [
+                {
+                    "provider_type": "replay",
+                    "dataset_id": "AAPL_fixture",
+                    "symbol": "AAPL",
+                    "available": replay_reason is None,
+                    "reason_code": replay_reason,
+                },
+                {
+                    "provider_type": "simulated_a_share",
+                    "dataset_id": SIMULATED_A_SHARE_DATASET_ID,
+                    "symbol": SIMULATED_A_SHARE_SYMBOL,
+                    "available": True,
+                    "reason_code": None,
+                },
+                {
+                    "provider_type": "historical_a_share",
+                    "dataset_id": HISTORICAL_ID,
+                    "symbol": "CN-A",
+                    "available": historical_reason is None,
+                    "reason_code": historical_reason,
+                },
+            ],
+            "forward": {"available": False, "reason_code": "FORWARD_NOT_AVAILABLE"},
+        }
 
     async def recover_interrupted(self) -> int:
         async with self._session_factory() as db:

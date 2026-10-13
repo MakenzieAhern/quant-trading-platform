@@ -13,6 +13,7 @@ import { i18n } from "../i18n";
 import { jsonResponse } from "../test/fixtures";
 import {
   PAPER_ID,
+  paperCapabilities,
   paperCollection,
   paperSnapshot,
 } from "../test/paperFixtures";
@@ -42,6 +43,8 @@ const messages = [
 ] as const;
 
 beforeEach(() => {
+  // A later create/start check can reject a source that passed the read-only preflight.
+  vi.spyOn(paperApi, "capabilities").mockResolvedValue(paperCapabilities());
   window.localStorage.clear();
   Object.defineProperty(window.navigator, "locks", {
     configurable: true,
@@ -97,7 +100,7 @@ it.each(messages)(
       .mockResolvedValue(jsonResponse({ detail: code }, 422));
     vi.stubGlobal("fetch", fetch);
     window.history.replaceState({}, "", "/paper/new");
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     fireEvent.change(screen.getByLabelText("Provider"), {
       target: { value: "historical_a_share" },
     });
@@ -180,7 +183,7 @@ it("keeps unrelated validation errors distinct from source integrity", async () 
       ),
   );
   window.history.replaceState({}, "", "/paper/new");
-  render(<CreatePaperSessionPage />);
+  await act(async () => render(<CreatePaperSessionPage />));
   await userEvent.click(
     screen.getByRole("button", { name: "Create paper session" }),
   );

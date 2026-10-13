@@ -10,6 +10,8 @@ import type {
   MarketBar,
   MarketSession,
   PaperCalendarPayload,
+  PaperCapabilities,
+  PaperCapabilityReason,
   PaperCollection,
   PaperCollectionPage,
   PaperFill,
@@ -81,6 +83,59 @@ function decimal(value: unknown): string {
 
 function nullableString(value: unknown): string | null {
   return value === null ? null : requiredString(value);
+}
+
+const CAPABILITY_REASONS = new Set<PaperCapabilityReason>([
+  "REPLAY_DATA_UNAVAILABLE",
+  "REPLAY_DATA_INVALID",
+  "DATASET_NOT_REGISTERED",
+  "DATASET_NOT_MOUNTED",
+  "DATASET_INTEGRITY_FAILED",
+  "SOURCE_CONTRACT_INTEGRITY_FAILED",
+  "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+  "DATASET_EXECUTION_NOT_ACCEPTED",
+  "PAPER_CAPABILITY_CHECK_FAILED",
+]);
+
+function capabilities(value: unknown): PaperCapabilities {
+  const item = record(value);
+  const identities = [
+    ["replay", "AAPL_fixture", "AAPL"],
+    ["simulated_a_share", "CN_A_SIMULATED_PAPER_FIXTURE_V1", "CN-A"],
+    ["historical_a_share", "cn-a-research-20100101-20251231-v1", "CN-A"],
+  ];
+  if (
+    !Array.isArray(item.providers) ||
+    item.providers.length !== identities.length
+  )
+    throw new Error("Invalid paper capabilities.");
+  const providers = item.providers.map((value, index) => {
+    const provider = record(value);
+    const expected = identities[index]!;
+    if (
+      provider.provider_type !== expected[0] ||
+      provider.dataset_id !== expected[1] ||
+      provider.symbol !== expected[2] ||
+      typeof provider.available !== "boolean" ||
+      (provider.available
+        ? provider.reason_code !== null
+        : !CAPABILITY_REASONS.has(
+            provider.reason_code as PaperCapabilityReason,
+          ))
+    )
+      throw new Error("Invalid paper capability provider.");
+    return provider as unknown as PaperCapabilities["providers"][number];
+  });
+  const forward = record(item.forward);
+  if (
+    forward.available !== false ||
+    forward.reason_code !== "FORWARD_NOT_AVAILABLE"
+  )
+    throw new Error("Invalid forward capability.");
+  return {
+    providers,
+    forward: { available: false, reason_code: "FORWARD_NOT_AVAILABLE" },
+  };
 }
 
 function session(value: unknown): PaperSession {
@@ -517,6 +572,13 @@ function page(value: unknown): PaperSessionPage {
 export const PAPER_WS_BASE_URL = API_BASE_URL.replace(/^http/, "ws");
 
 export const paperApi = {
+  capabilities: (signal?: AbortSignal) =>
+    apiRequest(
+      "/api/paper-trading/sessions/capabilities",
+      { cache: "no-store" },
+      signal,
+      capabilities,
+    ),
   list: (limit = 20, offset = 0, signal?: AbortSignal) =>
     apiRequest(
       `/api/paper-trading/sessions?limit=${limit}&offset=${offset}`,

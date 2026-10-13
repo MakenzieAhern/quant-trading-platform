@@ -221,6 +221,33 @@ export const zhCN = {
       title: "创建模拟交易会话",
       cancel: "取消",
       safeProvider: "安全数据源",
+      capabilitiesTitle: "当前创建可用性",
+      capabilitiesLoading: "正在检查当前数据源可用性…",
+      capabilitiesError:
+        "无法核实当前可用性，暂不能新建账户；仍可恢复上方已保存的账户请求。",
+      capabilityBlocked:
+        "该模式目前不能新建账户。请查看数据准备状态或重新检查可用性；仍可在上方恢复已保存请求。",
+      capabilitiesScope:
+        "可用性仅检查配置与来源访问，不代表完整财务验证通过；创建或启动时服务器仍会重新检查。",
+      recheckCapabilities: "重新检查可用性",
+      checkDataReadiness: "查看数据准备状态",
+      forwardUnavailable: "新行情前向模拟 · 尚未开放",
+      forwardUnavailableHelp:
+        "合法数据使用权、当前来源与规则核验、回执到会话处理的接入仍未完成。历史回放与合成数据不能替代前向验收。",
+      capabilityReasons: {
+        REPLAY_DATA_UNAVAILABLE: "本地回放测试数据不可用。",
+        REPLAY_DATA_INVALID: "本地回放测试数据未通过校验。",
+        DATASET_NOT_REGISTERED: "所需数据集尚未注册。",
+        DATASET_NOT_MOUNTED: "所需历史档案尚未挂载。",
+        DATASET_INTEGRITY_FAILED: "数据集完整性检查失败。",
+        SOURCE_CONTRACT_INTEGRITY_FAILED:
+          "来源完整性检查失败，已阻止新的执行。",
+        SOURCE_CONTRACT_INTEGRITY_UNVERIFIED:
+          "来源完整性尚未核实，已阻止新的执行。",
+        DATASET_EXECUTION_NOT_ACCEPTED: "该数据集尚未通过执行准入。",
+        PAPER_CAPABILITY_CHECK_FAILED:
+          "无法核实可用性，请重新检查后再创建账户。",
+      },
       provider: "数据源",
       replayLocal: "保留的 AAPL 测试回放（非 A 股）",
       aShareSimulation: "A 股合成演示（2030 场景）",

@@ -20,6 +20,7 @@ from app.api.schemas.paper import (
     CreatePaperSessionRequest,
     MarketBarPayload,
     MarketSessionPayload,
+    PaperCapabilitiesResponse,
     PaperCollectionKind,
     PaperCollectionPage,
     PaperEventResponse,
@@ -152,6 +153,12 @@ async def get_paper_create_receipt(
             headers={"Cache-Control": "no-store"},
         )
     return _session_response(session)
+
+
+@router.get("/capabilities", response_model=PaperCapabilitiesResponse)
+async def get_paper_capabilities(response: Response) -> PaperCapabilitiesResponse:
+    response.headers["Cache-Control"] = "no-store"
+    return PaperCapabilitiesResponse.model_validate(await paper_manager.capabilities())
 
 
 @router.get("/{session_id}", response_model=PaperSessionResponse)

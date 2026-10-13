@@ -80,6 +80,17 @@ idempotency check. A missing lookup result means only that no row is committed
 yet; the earlier POST may still commit, so it never authorizes discarding the
 key or making a new request. There is no cancellation/tombstone protocol.
 
+The read-only paper `/sessions/capabilities` endpoint checks the registered local
+replay file and historical execution admission, without opening a database
+session or starting a worker. Its three provider identities are fixed; forward
+mode remains explicitly unavailable. This is a current configuration hint, not
+an execution token or financial certification. The create form blocks new intents
+while availability is unknown or denied, but keeps saved-key recovery independent.
+After asynchronous receipt verification, it rechecks the active page and latest
+availability before generating a new key. Server-side creation and start checks
+remain authoritative; an already committed key is still resolved before mutable
+source checks.
+
 For each completed replay Bar, the durable delivery order is `market.bar`, any prior accepted Order's `order.updated` to `FILLED`, its `fill.created`, current-Bar `signal.created`, `risk.decision`, newly accepted/rejected `order.updated`, then `portfolio.snapshot`. This reflects next-Bar OPEN execution before the strategy consumes that completed Bar while still recording the newly observed Bar first for consumers. A single transaction stores the whole sequence, and WebSocket publication happens only after commit.
 
 WebSocket delivery is incremental, not authoritative history. Every connection owns a bounded queue of 64 events. Publishing never awaits a browser. When a consumer falls behind, all stale queued items are discarded, then `stream.resync_required` and the newest event occupy the bounded queue; the client closes and reloads REST rather than applying that uncertain increment. Server-side receive monitoring detects a disconnected client even when no market event is being sent, so the queue is removed promptly. The React client connects, hydrates REST, applies only increasing event sequences, deduplicates record identities, strictly validates event envelopes and payloads, and performs authoritative rehydration on reconnect. Terminal sessions close the socket without reconnecting. Origin checks use the configured frontend origin. Payload DTOs expose only explicit JSON fields and Decimal strings—never ORM or arbitrary Python objects.

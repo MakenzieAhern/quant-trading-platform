@@ -100,6 +100,64 @@ CreatePaperSessionRequest = (
 )
 
 
+class PaperProviderCapability(StrictModel):
+    provider_type: Literal["replay", "simulated_a_share", "historical_a_share"]
+    dataset_id: Literal[
+        "AAPL_fixture",
+        "CN_A_SIMULATED_PAPER_FIXTURE_V1",
+        "cn-a-research-20100101-20251231-v1",
+    ]
+    symbol: Literal["AAPL", "CN-A"]
+    available: bool = Field(strict=True)
+    reason_code: (
+        Literal[
+            "REPLAY_DATA_UNAVAILABLE",
+            "REPLAY_DATA_INVALID",
+            "DATASET_NOT_REGISTERED",
+            "DATASET_NOT_MOUNTED",
+            "DATASET_INTEGRITY_FAILED",
+            "SOURCE_CONTRACT_INTEGRITY_FAILED",
+            "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+            "DATASET_EXECUTION_NOT_ACCEPTED",
+            "PAPER_CAPABILITY_CHECK_FAILED",
+        ]
+        | None
+    )
+
+    @model_validator(mode="after")
+    def consistent_capability(self) -> "PaperProviderCapability":
+        identities = {
+            "replay": ("AAPL_fixture", "AAPL"),
+            "simulated_a_share": ("CN_A_SIMULATED_PAPER_FIXTURE_V1", "CN-A"),
+            "historical_a_share": ("cn-a-research-20100101-20251231-v1", "CN-A"),
+        }
+        if identities[self.provider_type] != (self.dataset_id, self.symbol):
+            raise ValueError("paper provider capability identity mismatch")
+        if self.available != (self.reason_code is None):
+            raise ValueError("paper capability availability and reason disagree")
+        return self
+
+
+class ForwardPaperCapability(StrictModel):
+    available: Literal[False]
+    reason_code: Literal["FORWARD_NOT_AVAILABLE"]
+
+
+class PaperCapabilitiesResponse(StrictModel):
+    providers: list[PaperProviderCapability] = Field(min_length=3, max_length=3)
+    forward: ForwardPaperCapability
+
+    @model_validator(mode="after")
+    def supported_providers(self) -> "PaperCapabilitiesResponse":
+        if [item.provider_type for item in self.providers] != [
+            "replay",
+            "simulated_a_share",
+            "historical_a_share",
+        ]:
+            raise ValueError("paper capabilities must identify each supported provider in order")
+        return self
+
+
 class PaperSessionResponse(BaseModel):
     session_id: UUID
     status: PaperSessionStatus

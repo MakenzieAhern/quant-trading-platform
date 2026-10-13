@@ -1,5 +1,26 @@
 # Current state
 
+## v1.2 Paper creation availability and receipt safety — 2026-10-13
+
+The creation form now checks configured replay and historical execution admission
+before offering a new request. Unavailable modes remain visible with bilingual
+reasons; rechecking preserves cash, dates and mode. Existing request recovery
+remains independent. An actual delayed-receipt race is fixed: leaving the page
+before submission no longer creates a new account after the receipt check finishes.
+
+Full local backend 2177 PASS/1 optional archive SKIP and frontend 902 PASS;
+static checks and build PASS. [Evidence, failures and publication status](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+The configured-source child probe confirms historical creation still refuses
+source-integrity failure and forward remains unavailable; it is not the served
+process. New code is not deployed yet. Prior797bb012 CI38388164430 SUCCESS is
+separate from the pending new commit's CI.
+
+Next safely publish after exact-head CI, fresh backup and quiescence checks.
+Full U1–U8/M3–M5 remains PARTIAL: actual admitted forward inputs and the production
+receipt-to-plan/account chain, source/financial/lifecycle admission, genuine missing
+ledgers and remaining browser/quality/release acceptance are still required.
+No frozen research, formal study, OOS, merge or release action.
+
 ## v1.2 candidate audit shares the runtime listing boundary — 2026-10-13
 
 The candidate audit could report its action-session precondition PASS for a late

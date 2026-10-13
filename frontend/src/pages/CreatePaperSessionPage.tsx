@@ -44,6 +44,8 @@ type ReplayRequest = Extract<
 type StrategyType = ReplayRequest["strategy"]["type"];
 type ProviderType = CreatePaperSessionRequest["provider_type"];
 
+class PaperCapabilityError extends Error {}
+
 const uuidPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const decimalPattern = /^\d+(?:\.\d+)?$/;
@@ -635,6 +637,20 @@ function PaperSessionForm({
     sourceDraft?.provider_type ??
       (sourceJob ? "historical_a_share" : "simulated_a_share"),
   );
+  const [capabilityRevision, setCapabilityRevision] = useState(0);
+  const capabilities = useApiResource(
+    (signal) => paperApi.capabilities(signal),
+    [capabilityRevision],
+  );
+  const available = (provider: ProviderType) =>
+    capabilities.data?.providers.some(
+      (item) => item.provider_type === provider && item.available,
+    ) === true;
+  const canCreate = available(providerType);
+  const canCreateCurrent = useRef(canCreate);
+  useLayoutEffect(() => {
+    canCreateCurrent.current = canCreate;
+  }, [canCreate]);
   const [strategyType, setStrategyType] = useState<StrategyType>(
     replayDraft?.strategy.type ?? "moving_average_crossover",
   );
@@ -750,6 +766,10 @@ function PaperSessionForm({
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (locked.current) return;
+    if (!canCreateCurrent.current) {
+      setError("createPage.capabilityBlocked");
+      return;
+    }
     const submitter = (event.nativeEvent as SubmitEvent).submitter;
     const createAnother =
       Boolean(sourceSession) ||
@@ -917,6 +937,10 @@ function PaperSessionForm({
           for (const item of previous) await verifiedPaperSessionId(item);
           verifyingReceipts = false;
         }
+        // Receipt verification may outlive the page or the current capability check.
+        if (!active.current || window.location.href !== originatingUrl)
+          throw new Error("Paper creation page was left before submission");
+        if (!canCreateCurrent.current) throw new PaperCapabilityError();
         const priorKeys = new Set(
           readPendingPaperCreates().map((item) => item.key),
         );
@@ -948,13 +972,15 @@ function PaperSessionForm({
     } catch (reason) {
       if (active.current)
         setError(
-          reason instanceof PendingPaperCreateError
-            ? "createPage.resolvePendingFirst"
-            : verifyingReceipts
-              ? "createPage.receiptUnverified"
-              : sent
-                ? paperCreateError(reason)
-                : "createPage.storageError",
+          reason instanceof PaperCapabilityError
+            ? "createPage.capabilityBlocked"
+            : reason instanceof PendingPaperCreateError
+              ? "createPage.resolvePendingFirst"
+              : verifyingReceipts
+                ? "createPage.receiptUnverified"
+                : sent
+                  ? paperCreateError(reason)
+                  : "createPage.storageError",
         );
     } finally {
       locked.current = false;
@@ -1002,8 +1028,17 @@ function PaperSessionForm({
               <select
                 value={providerType}
                 disabled={Boolean(sourceJob || sourceSession)}
+                aria-describedby="paper-capabilities"
                 onChange={(event) => {
                   const value = event.target.value as ProviderType;
+                  if (
+                    ![
+                      "replay",
+                      "simulated_a_share",
+                      "historical_a_share",
+                    ].includes(value)
+                  )
+                    return;
                   setProviderType(value);
                   setInitialCash(
                     value === "simulated_a_share" ? "100000000" : "100000",
@@ -1011,12 +1046,23 @@ function PaperSessionForm({
                   setQuantity(value === "replay" ? "10" : "1");
                 }}
               >
-                <option value="simulated_a_share">
+                <option
+                  value="simulated_a_share"
+                  disabled={!available("simulated_a_share")}
+                >
                   {t("createPage.aShareSimulation")}
                 </option>
-                <option value="replay">{t("createPage.replayLocal")}</option>
-                <option value="historical_a_share">
+                <option value="replay" disabled={!available("replay")}>
+                  {t("createPage.replayLocal")}
+                </option>
+                <option
+                  value="historical_a_share"
+                  disabled={!available("historical_a_share")}
+                >
                   {t("createPage.historicalAShare")}
+                </option>
+                <option value="forward_unavailable" disabled>
+                  {t("createPage.forwardUnavailable")}
                 </option>
               </select>
             </label>
@@ -1044,6 +1090,38 @@ function PaperSessionForm({
             </label>
           </div>
         </fieldset>
+        <section
+          id="paper-capabilities"
+          aria-label={t("createPage.capabilitiesTitle")}
+        >
+          {capabilities.loading && (
+            <p role="status">{t("createPage.capabilitiesLoading")}</p>
+          )}
+          {capabilities.error && (
+            <p role="alert">{t("createPage.capabilitiesError")}</p>
+          )}
+          {capabilities.data?.providers
+            .filter((item) => !item.available)
+            .map((item) => (
+              <p key={item.provider_type}>
+                {t(`providers.${item.provider_type}`)}:{" "}
+                {t(`createPage.capabilityReasons.${item.reason_code}`)}
+              </p>
+            ))}
+          <p>{t("createPage.capabilitiesScope")}</p>
+          <p>{t("createPage.forwardUnavailableHelp")}</p>
+          <Link href="/data">{t("createPage.checkDataReadiness")}</Link>{" "}
+          <button
+            type="button"
+            aria-disabled={capabilities.loading}
+            onClick={() => {
+              if (!capabilities.loading)
+                setCapabilityRevision((value) => value + 1);
+            }}
+          >
+            {t("createPage.recheckCapabilities")}
+          </button>
+        </section>
         <fieldset disabled={pending}>
           <legend>{t("createPage.capitalSizing")}</legend>
           <div className="formGrid">
@@ -1291,11 +1369,20 @@ function PaperSessionForm({
           </div>
         )}
         <div className="formActions">
-          <button className="button buttonPrimary" aria-disabled={pending}>
+          <button
+            className="button buttonPrimary"
+            disabled={!canCreate}
+            aria-disabled={pending || !canCreate}
+          >
             {pending ? t("createPage.creating") : t("createPage.submit")}
           </button>
           {canCreateAnother && !sourceSession && (
-            <button type="submit" value="another" aria-disabled={pending}>
+            <button
+              type="submit"
+              value="another"
+              disabled={!canCreate}
+              aria-disabled={pending || !canCreate}
+            >
               {t("createPage.createAnother")}
             </button>
           )}

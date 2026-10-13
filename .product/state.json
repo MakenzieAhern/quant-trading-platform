@@ -1,4 +1,21 @@
 {
+  "paper_capabilities_20261013_gate": {
+    "status": "PASS_LOCAL_CODE_AND_REGRESSION_DEPLOYMENT_PENDING",
+    "base_head": "797bb012cf3826c29e9a2a737b16c4473c70065b",
+    "scope": "U7 read-only configured-source capabilities and U8 bilingual creation preflight; saved request recovery remains independent. This is not implementation or approval of genuine new-market forward simulation.",
+    "behavior": "Three fixed provider identities use actual replay-file and historical execution admission checks. Unknown/failed/unavailable checks forbid new keys and POSTs, preserve form values and unavailable choices, and never switch historical requests into demo. After receipt/lock waits, active page, URL and latest capability are checked again before a new intent; an already sent POST is not cancellation.",
+    "tests": "2177 backend PASS/1 optional historical-archive SKIP in isolated tmpfs quant_test; 902 frontend PASS/51 files; backend Ruff/584 format/app-mypy146 and frontend lint/types/format/build PASS. Fresh frontend build has13 files and a533.39kB chunk warning. Original RED and intermediate failed runs retained.",
+    "source_probe": "Configured real app in a separate no-lifespan ASGI child: replay and synthetic available, history SOURCE_CONTRACT_INTEGRITY_FAILED, forward false. Four imported source paths and hashes matched host;0 database attempts and original backend PID/start unchanged. Probe v2 SHA8347e73c07d125db4e1d5000ab578fc7cf50b05bc6031cd766ecb979780fc378; not served HTTP or complete import-graph proof.",
+    "review": "Independent backend/frontend review found and closed delayed receipt POST-after-navigation; final recheck-button review recorded with evidence. Old idempotent recovery/server admission remain authoritative.",
+    "evidence": "product-evidence/v1.2/m4/20261013-paper-capabilities/README.md",
+    "ci": "Prior797bb012 CI38388164430 SUCCESS is not CI for this implementation. Exact milestone commit CI receipt belongs outsideGit in this evidence directory.",
+    "ownership": "Backend and frontend authors frozen; root sole repository integration/Git/deployment owner. Publication helper author only writes external preparation, reviewer read-only. Test runner terminal0 and isolated tmpfs PostgreSQL stopped/retained; original financial producer not started.",
+    "next": "Finish reviewed coherent commit/push and exact-head CI; bind fresh build to that source, then take fresh backup/quiescence snapshots before existing-backend restart and assets-first frontend publication. Require exact old selected HTTP/account values plus only expected additive OpenAPI, original volume/container preservation and saved-asset parity. Continue full remaining U1-U8 after scoped publication.",
+    "deployed": false,
+    "browser_validated": false,
+    "forward_implemented": false,
+    "full_product_pass": false
+  },
   "candidate_listing_parity_20261013_gate": {
     "status": "PASS_SHARED_LISTING_PRECONDITION_NOT_FINANCIAL_ADMISSION",
     "base_head": "a369968d06eb08ae1039cf7048214b56c2eac22a",
@@ -1310,7 +1327,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-13T09:57:26Z",
+  "updated_at_utc": "2026-10-13T11:40:54Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4286,19 +4303,20 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct13 newJSONB/REST/ASGI2cases and related210PASS/1optionalSKIP; prior unchanged application1788/870fulltestsCI pass. Original local PnL/source-guard deployment nowPASS with27savedHTTP comparisons and13WSL/Windowsassets. Full productPARTIAL, current browserpending.",
-    "repository_writer": "Root integrates agent-authored backend/tests/test_paper_pnl_api.py plus docs/state. u3_u7 completed test authoring/source review; u3_u8 completed exclusive disposable tests/publication review. No overlapping writers; identity unchanged.",
-    "database_writer": "Only isolated quant_test/tmpfs written by test agent, then stopped0clients/0paperrows. Root performed original read-only checks/pg_dump and one existing-backend restart atschema0017; observed saved values/statuses/417events unchanged. No original financial producer started.",
+    "latest_verification": "Oct13 capability/race milestone:2177 backend PASS/1optionalSKIP,902 frontend PASS and static/build PASS. Prior797bb012 CI38388164430 SUCCESS verified; new exact-head CI/deployment/browser pending. Full productPARTIAL.",
+    "repository_writer": "Root sole integration/docs/Git owner. u3_u7 backend and u3_u8 frontend source frozen; publication helper work external only, xcmg review read-only. No overlapping source writers; identity unchanged.",
+    "database_writer": "Root ran inspected isolated tmpfs quant_test migration/full suite; PostgreSQL042f287 and runner5062fe6 terminal/stopped retained. No original application DB write, financial producer or new account in this capability unit.",
     "queue_writer": "No original financial/research/provider/task producer or queue write; no new account, strategy, formal/OOS or frozen dataset change. Simulated fixtures exist only in isolated tests.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
       "forward_source_audit": "2026-09-26 historical strict count boundary final readonly review NO_P0_P1, actualPOSTunion/validUI/savedaccount compatibility verified; no test/DB/browser/network action"
     },
-    "verified_processes": "Oct13 backend89aa restarted08:03:24.560203214Z andhealthy; PostgreSQL598760/Redisdf3dc/frontend a561 original IDs/start unchanged. Frontend204files served without restart. Isolated test containers terminal0/testPGstopped retained. Exact evidence in pnl-publication; never reuse PID as authority.",
+    "verified_processes": "Oct13 backend89aa latest prior restart10:50:09.99589481UTC healthy; PostgreSQL598760/Redisdf3dc healthy and frontend5173/API8000HTTP200 at status check. New capability not loaded in original process. Fresh deployment snapshots must revalidate exact identities/start; never reuse PID as authority.",
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct13 paper capability API and bilingual form gates close a real new-account-after-navigation race;2177backend/1optionalSKIP,902frontend/static/buildPASS. Strict noDB configured-source child probe8347e73c binds4actualimports, historyremainsdenied/forwardfalse. Root integration and safe publication preparation only; new code not deployed, full product incomplete.",
     "Oct8 targeted source/quality checkpoint24b1d4b:three-gap negative inventory now binds6actualoldlegs,original4 unchanged;source-negative-finalee5ed5f0/17pins independentreview/25tests. Not sourceclosure orfinancialPASS. Actualfirst-filter3observations40/3072/56ms retained,performanceNOT_ACCEPTED;originalfrontend restoredbyte-exact,fullgoalactive/GitHubHOLD.",
     "Oct8 independentfull15source reference candidate dfdd998f/no financialadmission;13unchangedrows/20originalinputs/4wholeparents retained/5minimalpins/noapprovalinheritance. Normal+optimizedreverseexactrepeat;111source tests/static/scriptmypyPASS;realP2rebindingREDfixed;readonlyactualartifactreview no scopedP1P2.43nativebindingsadf9a80e twice+nativePASS;original323/124stillverify/apphealthy/noDBorqueue. FullgoalACTIVE/GitHubHOLD.",
     "Oct8 d183ad3 loadedoriginal8000/5173:onebackendrestartafter0017/noactive/nopending/backup;19savedGETcomparison+independent19versionmappings/cachetar61ae82fd unchanged;13HTTPassetSHAs/175oldretained/actualIABENZHsavedresultsandSTOPPEDpaper exact.323nativebindingsadcd949d twicePASS/124priorintact. ScopeddeploymentPASS/fullfinancialPARTIAL/fullgoalACTIVE/GitHubHOLD.",
@@ -4915,9 +4933,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "4802fdbb3da38bfa27d4237b3b9075a5770d840d",
+      "last_verified_head": "797bb012cf3826c29e9a2a737b16c4473c70065b",
       "state": "DRAFT",
-      "ci_run": 38363718458,
+      "ci_run": 38388164430,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
@@ -4936,8 +4954,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Verify exact-head CI for shared candidate listing precondition, then continue the full product goal. U7 production receipt-to-session/plan/processing bridge is still absent, not merely awaiting a browser check. Inspect existing receipt/admission/current-authority contracts before implementing that complete path; no unused placeholder or flipping raw candidates executable. Keep legal source rights/real after-start acceptance unfulfilled until evidenced. Continue source/lifecycle, genuine-ledger and native-browser gates without repeating accepted proof/acquisition.",
-  "local_next_command": "Finish coherent shared-listing milestone commit/push and exact-head CI, keep publication a369968 receipt distinct. Next read ARCHITECTURE/ROADMAP and concrete market-update/receipt/paper contracts to advance required U7 integration while preserving unknown-rights refusal. Existingthree provider modes and async wait/stop/calendar foundations already implemented; do not duplicate them. FullU1-U8/M3-M5 remains incomplete; no merge/release/frozen/OOS change.",
+  "next_task": "Publish the reviewed paper-capability and delayed-receipt fix after coherent commit/exact-head CI and fresh non-destructive backup/quiescence checks. Then continue full source/financial/lifecycle and U7 actual admitted-input/receipt-to-session/plan/processing chain, genuine-ledger and native-browser quality/release gates. Capability visibility is not a replacement for required forward implementation or lawful real after-start evidence.",
+  "local_next_command": "Review publication helpers/negative tests in20261013-paper-capabilities/publication; commit/push this coherent milestone and save exact-head CI. Bind build source to final commit, capture before/pre-restart, backup, restart only existing backend, compare expected additive API and retained records, publish frontend assets-first and verify all served hashes. No merge/release/frozen/OOS or original strategy/account action.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

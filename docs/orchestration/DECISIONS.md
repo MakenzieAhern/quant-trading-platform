@@ -1,5 +1,21 @@
 # Decisions
 
+## v1.2 Check new paper creation without blocking saved recovery — 2026-10-13
+
+Use a read-only endpoint over the existing configured-source and execution-admission
+checks. A checksum, readable history or raw provider receipt does not establish
+financial acceptance or legal forward use. Keep unavailable modes visible with
+reasons instead of silently selecting demo. Current capabilities are a UI hint;
+the server must still validate every new request.
+
+Apply this preflight only to new request creation. Existing idempotent receipt
+recovery must work even after source availability changes. Recheck current page,
+URL and capability after receipt/lock waits, before generating a new request key.
+The observed POST-after-navigation failure is fixed without pretending that
+navigation cancels a request already sent. Read-only rechecks preserve focus and
+form values. Do not add an unused forward adapter or promote candidate data to
+execution: the full admitted-input/receipt/plan/account chain remains required.
+
 ## v1.2 Share accepted calendar action validation with candidate audit — 2026-10-13
 
 The execution-only listing guard left the independent candidate audit's component

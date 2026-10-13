@@ -1,12 +1,42 @@
 import type {
   PaperCollection,
   PaperCollectionPage,
+  PaperCapabilities,
   PaperSession,
   PaperSnapshot,
   PaperState,
 } from "../types/paper";
 
 export const PAPER_ID = "34d97303-a8c9-4f71-a0fc-c4b5d156f2ee";
+
+export function paperCapabilities(): PaperCapabilities {
+  return {
+    providers: [
+      {
+        provider_type: "replay",
+        dataset_id: "AAPL_fixture",
+        symbol: "AAPL",
+        available: true,
+        reason_code: null,
+      },
+      {
+        provider_type: "simulated_a_share",
+        dataset_id: "CN_A_SIMULATED_PAPER_FIXTURE_V1",
+        symbol: "CN-A",
+        available: true,
+        reason_code: null,
+      },
+      {
+        provider_type: "historical_a_share",
+        dataset_id: "cn-a-research-20100101-20251231-v1",
+        symbol: "CN-A",
+        available: true,
+        reason_code: null,
+      },
+    ],
+    forward: { available: false, reason_code: "FORWARD_NOT_AVAILABLE" },
+  };
+}
 
 export function paperCalendarEvent(
   kind: "initial" | "extension" = "initial",

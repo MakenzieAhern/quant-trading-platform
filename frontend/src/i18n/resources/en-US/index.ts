@@ -240,6 +240,34 @@ export const enUS = {
       title: "Create paper session",
       cancel: "Cancel",
       safeProvider: "Safe provider",
+      capabilitiesTitle: "Current creation availability",
+      capabilitiesLoading: "Checking current data-source availability…",
+      capabilitiesError:
+        "Current availability could not be checked. New creation is blocked; saved account recovery remains available.",
+      capabilityBlocked:
+        "This mode is not currently available for a new account. Review data readiness or recheck availability; saved requests can still be recovered above.",
+      capabilitiesScope:
+        "Availability checks configuration and source access, not complete financial validation. The server checks again when creating or starting an account.",
+      recheckCapabilities: "Recheck availability",
+      checkDataReadiness: "Check data readiness",
+      forwardUnavailable: "New-market forward simulation · unavailable",
+      forwardUnavailableHelp:
+        "Lawful data-use rights, current source and rule checks, and the receipt-to-session processing connection are still missing. Historical replay and synthetic data do not establish forward acceptance.",
+      capabilityReasons: {
+        REPLAY_DATA_UNAVAILABLE: "The local replay fixture is unavailable.",
+        REPLAY_DATA_INVALID: "The local replay fixture failed validation.",
+        DATASET_NOT_REGISTERED: "The required dataset is not registered.",
+        DATASET_NOT_MOUNTED: "The required historical archive is not mounted.",
+        DATASET_INTEGRITY_FAILED: "The dataset integrity check failed.",
+        SOURCE_CONTRACT_INTEGRITY_FAILED:
+          "The source integrity check failed; new execution is blocked.",
+        SOURCE_CONTRACT_INTEGRITY_UNVERIFIED:
+          "Source integrity has not been verified; new execution is blocked.",
+        DATASET_EXECUTION_NOT_ACCEPTED:
+          "The dataset has not been accepted for execution.",
+        PAPER_CAPABILITY_CHECK_FAILED:
+          "Availability could not be verified; recheck before creating an account.",
+      },
       provider: "Provider",
       replayLocal: "Legacy AAPL fixture (not A-share)",
       aShareSimulation: "Synthetic A-share demo (2030 scenario)",

@@ -35,6 +35,28 @@ export interface PaperSession {
   error_message: string | null;
 }
 
+export type PaperCapabilityReason =
+  | "REPLAY_DATA_UNAVAILABLE"
+  | "REPLAY_DATA_INVALID"
+  | "DATASET_NOT_REGISTERED"
+  | "DATASET_NOT_MOUNTED"
+  | "DATASET_INTEGRITY_FAILED"
+  | "SOURCE_CONTRACT_INTEGRITY_FAILED"
+  | "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED"
+  | "DATASET_EXECUTION_NOT_ACCEPTED"
+  | "PAPER_CAPABILITY_CHECK_FAILED";
+
+export interface PaperCapabilities {
+  providers: {
+    provider_type: PaperSession["provider_type"];
+    dataset_id: string;
+    symbol: string;
+    available: boolean;
+    reason_code: PaperCapabilityReason | null;
+  }[];
+  forward: { available: false; reason_code: "FORWARD_NOT_AVAILABLE" };
+}
+
 export interface MarketBar {
   symbol: string;
   timestamp: string;

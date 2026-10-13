@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-13 paper capabilities and receipt race corrected
+
+- Previous status-only turn: NO_PROGRESS. The integrated capability API/form and
+  reproduced delayed-receipt POST fix are PROGRESS, not full forward acceptance.
+- Backend2177 PASS/1 optional archive SKIP; frontend902 PASS/51 files;
+  Ruff/format/mypy/lint/types/build PASS. The isolated tmpfs test DB is stopped
+  and retained. Original application data and workers were not used for tests.
+- [Evidence and negative runs](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+  The separate real-config ASGI child binds four imported source hashes, refuses
+  database use and preserves original backend process identity. History remains
+  source-integrity-blocked; forward remains unavailable.
+- Review, exact new commit CI and safe publication remain distinct gates. Publish
+  after backup/quiescence and retained-record checks, then continue the full
+  product scope. No new strategy, account, dataset, OOS, merge or release.
+
 ## 2026-10-13 candidate listing preconditions corrected
 
 - Progress: complete synthetic candidate exposed audit/runtime mismatch; one

@@ -1,5 +1,19 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 paper creation preflight and delayed receipt safety
+
+[Evidence, exact commands and retained failures](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+U7/U8 scoped code and regression PASS: real configured-source API, strict finite
+response, bilingual unavailable reasons, retained cash/dates/mode and independent
+saved-request recovery. Navigation during receipt verification no longer produces
+a late new POST; current capability is rechecked after lock/receipt waits.
+
+Backend2177 PASS/1 optional archive SKIP; frontend902 PASS/51 files and static/build
+PASS. Configured-source child-ASGI probe binds four actual imports and prohibits
+DB/lifespan, but is not served-runtime or browser acceptance. New deployment and
+exact-head CI receipts are separate gates. Source integrity still denies historical
+creation; actual forward remains unimplemented/unapproved. Full U1–U8/M3–M5 PARTIAL.
+
 ## 2026-10-13 candidate audit and execution listing parity
 
 [Proof, test scope and CI](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-listing-audit/README.md>).

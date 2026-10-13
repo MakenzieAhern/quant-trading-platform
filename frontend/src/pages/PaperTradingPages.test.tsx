@@ -17,6 +17,7 @@ import { job, plan } from "../product/experiments/fixtures.test-data";
 import { jsonResponse } from "../test/fixtures";
 import {
   PAPER_ID,
+  paperCapabilities,
   paperCollection,
   paperSession,
   paperSnapshot,
@@ -228,6 +229,7 @@ describe("paper trading pages", () => {
   const clearPending = () =>
     pendingKeys().forEach((key) => window.localStorage.removeItem(key));
   beforeEach(() => {
+    vi.spyOn(paperApi, "capabilities").mockResolvedValue(paperCapabilities());
     paperRequests.length = 0;
     clearPending();
     lockTail = Promise.resolve();
@@ -1366,7 +1368,7 @@ describe("paper trading pages", () => {
     const fetch = mockPaperServer().mockResolvedValue(
       jsonResponse(paperSession(), 201),
     );
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     expect(screen.getByLabelText("Provider")).toHaveValue("simulated_a_share");
     await userEvent.selectOptions(screen.getByLabelText("Provider"), "replay");
     expect(screen.getByLabelText("Provider")).toHaveValue("replay");
@@ -1405,7 +1407,7 @@ describe("paper trading pages", () => {
         201,
       ),
     );
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     expect(screen.getByLabelText("Provider")).toHaveValue("simulated_a_share");
     expect(screen.getByLabelText("Initial cash")).toHaveValue("100000000");
     expect(screen.getByText(/not a recommended account size/)).toBeVisible();
@@ -1438,7 +1440,7 @@ describe("paper trading pages", () => {
           }),
       )
       .mockRejectedValue(new TypeError("offline"));
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     const create = screen.getByRole("button", {
       name: "Create paper session",
     });
@@ -1478,7 +1480,7 @@ describe("paper trading pages", () => {
     const fetch = mockPaperServer()
       .mockRejectedValueOnce(new TypeError("response lost"))
       .mockResolvedValueOnce(jsonResponse(paperSession(), 201));
-    const first = render(<CreatePaperSessionPage />);
+    const first = await act(async () => render(<CreatePaperSessionPage />));
     fireEvent.change(screen.getByLabelText("Initial cash"), {
       target: { value: "123456.75" },
     });
@@ -1488,7 +1490,7 @@ describe("paper trading pages", () => {
     expect(await screen.findByRole("alert")).toBeVisible();
     first.unmount();
 
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     expect(screen.getByLabelText("Initial cash")).toHaveValue("100000000");
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
@@ -1522,7 +1524,7 @@ describe("paper trading pages", () => {
     const fetch = mockPaperServer().mockRejectedValue(
       new TypeError("response lost"),
     );
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     const create = screen.getByRole("button", {
       name: "Create paper session",
     });
@@ -1553,7 +1555,7 @@ describe("paper trading pages", () => {
     const fetch = mockPaperServer().mockImplementation(() =>
       Promise.resolve(jsonResponse(paperSession(), 201)),
     );
-    const first = render(<CreatePaperSessionPage />);
+    const first = await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -1564,7 +1566,7 @@ describe("paper trading pages", () => {
     );
     first.unmount();
     window.history.replaceState({}, "", "/paper/new");
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     expect(
       screen.getByRole("button", {
         name: "Verify and open saved paper account",
@@ -1592,7 +1594,7 @@ describe("paper trading pages", () => {
     const fetch = mockPaperServer()
       .mockResolvedValueOnce(jsonResponse(paperSession(), 201))
       .mockResolvedValueOnce(jsonResponse(paperSession()));
-    const first = render(<CreatePaperSessionPage />);
+    const first = await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -1603,7 +1605,7 @@ describe("paper trading pages", () => {
     );
     first.unmount();
     window.history.replaceState({}, "", "/paper/new");
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", {
         name: "Verify and open saved paper account",
@@ -1624,7 +1626,7 @@ describe("paper trading pages", () => {
       const fetch = mockPaperServer().mockResolvedValueOnce(
         jsonResponse(paperSession(), 201),
       );
-      const first = render(<CreatePaperSessionPage />);
+      const first = await act(async () => render(<CreatePaperSessionPage />));
       await userEvent.click(
         screen.getByRole("button", { name: "Create paper session" }),
       );
@@ -1651,7 +1653,7 @@ describe("paper trading pages", () => {
       else fetch.mockRejectedValue(new TypeError("offline"));
 
       const key = pendingKeys()[0];
-      render(<CreatePaperSessionPage />);
+      await act(async () => render(<CreatePaperSessionPage />));
       await userEvent.click(
         screen.getByRole("button", {
           name: "Verify and open saved paper account",
@@ -1697,13 +1699,13 @@ describe("paper trading pages", () => {
           }),
       )
       .mockResolvedValueOnce(jsonResponse({ detail: "not found" }, 404));
-    const first = render(<CreatePaperSessionPage />);
+    const first = await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
     const key = pendingKeys()[0];
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Retry saved request 1" }),
     );
@@ -1733,8 +1735,8 @@ describe("paper trading pages", () => {
           }),
       )
       .mockResolvedValue(jsonResponse(paperSession(), 201));
-    render(<CreatePaperSessionPage />);
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
+    await act(async () => render(<CreatePaperSessionPage />));
     const creates = screen.getAllByRole("button", {
       name: "Create paper session",
     });
@@ -1768,8 +1770,8 @@ describe("paper trading pages", () => {
           }),
       )
       .mockResolvedValue(jsonResponse(paperSession(), 201));
-    render(<CreatePaperSessionPage />);
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
+    await act(async () => render(<CreatePaperSessionPage />));
     const creates = screen.getAllByRole("button", {
       name: "Create paper session",
     });
@@ -1800,8 +1802,8 @@ describe("paper trading pages", () => {
           resolveFirst = resolve;
         }),
     );
-    render(<CreatePaperSessionPage />);
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
+    await act(async () => render(<CreatePaperSessionPage />));
     const creates = screen.getAllByRole("button", {
       name: "Create paper session",
     });
@@ -1833,7 +1835,7 @@ describe("paper trading pages", () => {
     const fetch = mockPaperServer().mockResolvedValue(
       jsonResponse(paperSession(), 201),
     );
-    const first = render(<CreatePaperSessionPage />);
+    const first = await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -1845,7 +1847,7 @@ describe("paper trading pages", () => {
     ).toBeUndefined();
     first.unmount();
     window.history.replaceState({}, "", "/paper/new");
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -1869,7 +1871,7 @@ describe("paper trading pages", () => {
         throw new Error("quota exceeded");
       return setItem.call(this, key, value);
     });
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -1882,7 +1884,7 @@ describe("paper trading pages", () => {
   it("does not POST when browser cross-tab locking is unavailable", async () => {
     Reflect.deleteProperty(window.navigator, "locks");
     const fetch = mockPaperServer();
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -1895,7 +1897,7 @@ describe("paper trading pages", () => {
 
   it("does not POST or poison storage when a request exceeds the recovery bound", async () => {
     const fetch = mockPaperServer();
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     fireEvent.change(screen.getByLabelText("Initial cash"), {
       target: { value: "1".repeat(8300) },
     });
@@ -1913,7 +1915,7 @@ describe("paper trading pages", () => {
     const fetch = mockPaperServer()
       .mockRejectedValueOnce(new ApiError(422, "invalid"))
       .mockResolvedValueOnce(jsonResponse(paperSession(), 201));
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -1938,7 +1940,7 @@ describe("paper trading pages", () => {
       .mockRejectedValueOnce(new TypeError("response lost"))
       .mockRejectedValueOnce(new ApiError(422, "schema changed"))
       .mockResolvedValueOnce(jsonResponse({}, 404));
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     const create = screen.getByRole("button", { name: "Create paper session" });
     await userEvent.click(create);
     await screen.findByRole("alert");
@@ -1959,7 +1961,7 @@ describe("paper trading pages", () => {
       .mockRejectedValueOnce(new TypeError("response lost"))
       .mockRejectedValueOnce(new ApiError(422, "schema changed"))
       .mockResolvedValueOnce(jsonResponse(paperSession()));
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     const create = screen.getByRole("button", { name: "Create paper session" });
     await userEvent.click(create);
     await screen.findByRole("alert");
@@ -1983,14 +1985,14 @@ describe("paper trading pages", () => {
       .mockRejectedValueOnce(new TypeError("response lost"))
       .mockRejectedValueOnce(new ApiError(422, "schema changed"))
       .mockResolvedValueOnce(jsonResponse({}, 404));
-    const first = render(<CreatePaperSessionPage />);
+    const first = await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
     await screen.findByRole("alert");
     const key = pendingKeys()[0];
     first.unmount();
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Retry saved request 1" }),
     );
@@ -2010,7 +2012,7 @@ describe("paper trading pages", () => {
         .mockRejectedValueOnce(new TypeError("response lost"))
         .mockRejectedValueOnce(new ApiError(status, "request rejected"))
         .mockResolvedValueOnce(jsonResponse(paperSession()));
-      const first = render(<CreatePaperSessionPage />);
+      const first = await act(async () => render(<CreatePaperSessionPage />));
       await userEvent.click(
         screen.getByRole("button", { name: "Create paper session" }),
       );
@@ -2018,7 +2020,7 @@ describe("paper trading pages", () => {
       const key = pendingKeys()[0];
       first.unmount();
       window.history.replaceState({}, "", "/paper/new");
-      render(<CreatePaperSessionPage />);
+      await act(async () => render(<CreatePaperSessionPage />));
       await userEvent.click(
         screen.getByRole("button", { name: "Retry saved request 1" }),
       );
@@ -2041,7 +2043,7 @@ describe("paper trading pages", () => {
       "{invalid",
     );
     const fetch = mockPaperServer();
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     expect(screen.getByRole("alert")).toHaveTextContent(
       "Saved creation requests cannot be read safely",
     );
@@ -2090,7 +2092,7 @@ describe("paper trading pages", () => {
         201,
       ),
     );
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     expect(await screen.findByRole("alert")).toBeVisible();
     expect(
       screen.queryByRole("button", { name: "Create paper session" }),
@@ -2114,7 +2116,7 @@ describe("paper trading pages", () => {
           resolveCreate = resolve;
         }),
     );
-    const view = render(<CreatePaperSessionPage />);
+    const view = await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.click(
       screen.getByRole("button", { name: "Create paper session" }),
     );
@@ -2126,7 +2128,7 @@ describe("paper trading pages", () => {
     expect(window.location.pathname).toBe("/paper");
     expect(pendingKeys()).toHaveLength(1);
     window.history.replaceState({}, "", "/paper/new");
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     expect(
       screen.getByRole("button", {
         name: "Verify and open saved paper account",
@@ -2141,7 +2143,7 @@ describe("paper trading pages", () => {
       const fetch = mockPaperServer().mockRejectedValue(
         new ApiError(status, "diagnostic"),
       );
-      render(<CreatePaperSessionPage />);
+      await act(async () => render(<CreatePaperSessionPage />));
       await userEvent.click(
         screen.getByRole("button", { name: "Create paper session" }),
       );
@@ -2176,7 +2178,7 @@ describe("paper trading pages", () => {
         201,
       ),
     );
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.selectOptions(
       screen.getByLabelText("Provider"),
       "historical_a_share",
@@ -2214,7 +2216,7 @@ describe("paper trading pages", () => {
 
   it("rejects historical cash above the engine limit without rounding or submitting", async () => {
     const fetch = mockPaperServer();
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.selectOptions(
       screen.getByLabelText("Provider"),
       "historical_a_share",
@@ -2251,7 +2253,7 @@ describe("paper trading pages", () => {
 
   it("rejects historical excess cash with surrounding whitespace before submitting", async () => {
     const fetch = mockPaperServer();
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.selectOptions(
       screen.getByLabelText("Provider"),
       "historical_a_share",
@@ -2274,7 +2276,7 @@ describe("paper trading pages", () => {
     const fetch = mockPaperServer().mockResolvedValue(
       jsonResponse(paperSession(), 201),
     );
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.selectOptions(
       screen.getByLabelText("Provider"),
       "historical_a_share",
@@ -2372,7 +2374,7 @@ describe("paper trading pages", () => {
         201,
       ),
     );
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     expect(
       await screen.findByText(/Settings copied from ‘Saved historical study’/),
     ).toBeVisible();
@@ -2387,6 +2389,14 @@ describe("paper trading pages", () => {
     screen
       .getByRole("link", { name: "Start an independent account instead" })
       .focus();
+    await userEvent.tab();
+    expect(
+      screen.getByRole("link", { name: "Check data readiness" }),
+    ).toHaveFocus();
+    await userEvent.tab();
+    expect(
+      screen.getByRole("button", { name: "Recheck availability" }),
+    ).toHaveFocus();
     await userEvent.tab();
     expect(screen.getByLabelText("Initial cash")).toHaveFocus();
     fireEvent.submit(
@@ -2441,7 +2451,7 @@ describe("paper trading pages", () => {
       status: "SUCCEEDED",
       result_available: true,
     });
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "cannot configure a historical paper account",
     );
@@ -3474,7 +3484,7 @@ describe("paper trading pages", () => {
 
   it("validates paper strategy parameters before submitting", async () => {
     const fetch = mockPaperServer();
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.selectOptions(screen.getByLabelText("Provider"), "replay");
     fireEvent.change(screen.getByLabelText("Short period"), {
       target: { value: "4" },
@@ -3495,7 +3505,7 @@ describe("paper trading pages", () => {
 
   it("focuses an impossible RSI oversold threshold before submitting", async () => {
     const fetch = mockPaperServer();
-    render(<CreatePaperSessionPage />);
+    await act(async () => render(<CreatePaperSessionPage />));
     await userEvent.selectOptions(screen.getByLabelText("Provider"), "replay");
     await userEvent.selectOptions(
       screen.getByLabelText("Strategy type"),
@@ -4310,7 +4320,7 @@ describe("paper trading pages", () => {
       status: "CREATED",
     });
     try {
-      render(<CreatePaperSessionPage />);
+      await act(async () => render(<CreatePaperSessionPage />));
       expect(
         await screen.findByText(/Settings copied from paper session/),
       ).toBeVisible();
@@ -4374,7 +4384,7 @@ describe("paper trading pages", () => {
     vi.spyOn(paperApi, "get").mockResolvedValue(source);
     const create = vi.spyOn(paperApi, "create");
     try {
-      render(<CreatePaperSessionPage />);
+      await act(async () => render(<CreatePaperSessionPage />));
       expect(
         await screen.findByText(/Settings copied from paper session/),
       ).toBeVisible();
@@ -4413,7 +4423,7 @@ describe("paper trading pages", () => {
       status: "CREATED",
     });
     try {
-      render(<CreatePaperSessionPage />);
+      await act(async () => render(<CreatePaperSessionPage />));
       await screen.findByText(/Settings copied from paper session/);
       await userEvent.click(
         screen.getByRole("button", { name: "Create paper session" }),
@@ -4444,7 +4454,7 @@ describe("paper trading pages", () => {
     vi.spyOn(paperApi, "get").mockResolvedValue(source);
     const create = vi.spyOn(paperApi, "create");
     try {
-      render(<CreatePaperSessionPage />);
+      await act(async () => render(<CreatePaperSessionPage />));
       await screen.findByText(/Settings copied from paper session/);
       await userEvent.click(
         screen.getByRole("button", { name: "Create paper session" }),
@@ -4466,7 +4476,7 @@ describe("paper trading pages", () => {
     });
     const create = vi.spyOn(paperApi, "create");
     try {
-      render(<CreatePaperSessionPage />);
+      await act(async () => render(<CreatePaperSessionPage />));
       expect(await screen.findByRole("alert")).toHaveTextContent(
         "cannot safely configure a new account",
       );
@@ -4485,7 +4495,7 @@ describe("paper trading pages", () => {
     );
     const get = vi.spyOn(paperApi, "get");
     try {
-      const page = render(<CreatePaperSessionPage />);
+      const page = await act(async () => render(<CreatePaperSessionPage />));
       expect(await screen.findByRole("alert")).toHaveTextContent(
         "cannot safely configure a new account",
       );
@@ -4500,7 +4510,9 @@ describe("paper trading pages", () => {
         ...paperSession("INTERRUPTED"),
         session_id: "f86a98c6-16ad-44c5-822e-f20404173142",
       });
-      const mismatchedPage = render(<CreatePaperSessionPage />);
+      const mismatchedPage = await act(async () =>
+        render(<CreatePaperSessionPage />),
+      );
       expect(await screen.findByRole("alert")).toHaveTextContent(
         "cannot safely configure a new account",
       );
@@ -4512,7 +4524,7 @@ describe("paper trading pages", () => {
         `/paper/new?from_session=${PAPER_ID.toUpperCase()}`,
       );
       get.mockResolvedValue(paperSession("INTERRUPTED"));
-      render(<CreatePaperSessionPage />);
+      await act(async () => render(<CreatePaperSessionPage />));
       expect(
         await screen.findByText(/Settings copied from paper session/),
       ).toBeVisible();
