@@ -1,4 +1,16 @@
 {
+  "draft_listener_ci_20261013_gate": {
+    "status": "LOCAL_FIX_REVIEWED_HOSTED_CI_PENDING",
+    "failed_head": "4675473cb34040ee139c28e64bc8bbe59cead88f",
+    "failed_run": 38383415919,
+    "failure": "Backend 2152 passed/1 optional skipped and Compose passed; frontend 869 passed/1 failed. A cross-tab beforeunload test dispatched before the wizard's passive listener was installed.",
+    "cause_and_fix": "Controlled DOM-mutation probe reproduced listenerReady=false/leaveAllowed=true. Only changing initial render to awaited act made the same probe true/false. Two native cross-tab tests now flush the async capabilities update and passive effects before dispatch; all original conflict/recovery/unload/no-submit assertions retained. No production code, retry, sleep or skipped assertion.",
+    "verification": "Focused90 and full870 tests/49files pass; full ESLint, TypeScript and production build pass.13 files built in temporary output only; existing530.63kB warning retained. Prettier/diff check pass. Independent readonly review confirms the async capability-to-wizard effect chain and preserved render return/unmount behavior. Exact-head hosted CI receipt remains pending beside the preserved original failure.",
+    "evidence": "product-evidence/v1.2/m4/20261013-dated-distribution-accounting/CI_RECOVERY.md",
+    "runtime_deployed": false,
+    "browser_acceptance": false,
+    "full_product_pass": false
+  },
   "ordinary_distribution_accounting_20261013_gate": {
     "status": "PASS_SCOPED_DATED_ACCOUNTING_AND_UNSUPPORTED_DATE_GUARDS",
     "observed_at_utc": "2026-10-13T10:22:46Z",

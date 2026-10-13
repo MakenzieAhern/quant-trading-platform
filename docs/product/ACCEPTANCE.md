@@ -1,5 +1,16 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 cross tab test scheduling recovery
+
+CI38383415919: backend2152PASS/1optionalSKIP, Compose PASS, frontend869PASS/1FAIL.
+The test observed the wizard DOM before its passive beforeunload listener was
+installed. A controlled probe reproduced this gap and verified awaited act fixes
+the same schedule. Both affected native cross-tab tests retain all existing
+conflict, recovery, cancel-unload and no-create assertions. Production code is
+unchanged; focused90 tests/static checks and independent review PASS.
+[Original failure and subsequent exact-head CI](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/CI_RECOVERY.md>).
+This is test reliability evidence, not full frontend/browser/product acceptance.
+
 ## 2026-10-13 dated accounting and unsupported payment or listing boundaries
 
 [Proof and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/README.md>).

@@ -1,5 +1,20 @@
 # Decisions
 
+## v1.2 Synchronize test effects before native cross tab events — 2026-10-13
+
+Keep the original failed CI run38383415919 and its complete log. Its sole frontend
+failure came from observing a rendered button before React's passive unload
+listener was committed. A controlled DOM probe reproduced the scheduling gap;
+awaiting the same mount through act removed it. Apply that barrier to both native
+cross-tab tests, without sleep, retry, weaker assertions or production changes.
+This corrects test initialization, not a new browser acceptance claim.
+
+For the pending date-guard deployment, extend the existing quiescence check to
+legacy backtest_runs: synchronous legacy requests are absent from product jobs.
+Require only SUCCEEDED/FAILED legacy runs, terminal product jobs, STOPPED accounts
+and no pending receipts. Snapshot checks are not a write lock; compare again
+immediately before restart and afterward. Never restore over later user writes.
+
 ## v1.2 Enforce existing ordinary action date support before accounting — 2026-10-13
 
 Verified source checksums do not make an unsupported settlement schedule safe.

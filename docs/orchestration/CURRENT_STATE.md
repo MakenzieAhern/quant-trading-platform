@@ -1,5 +1,22 @@
 # Current state
 
+## v1.2 cross tab test initialization repair — 2026-10-13
+
+Hosted run38383415919 failed one frontend test after backend2152PASS/1optionalSKIP
+and Compose PASS. A controlled probe confirmed the test dispatched beforeunload
+before the async-loaded wizard installed its listener. Two tests now await React
+effects before native cross-tab events; original assertions and production code
+are unchanged. Focused90PASS/static checks and independent review PASS. Full
+frontend and exact-head CI results are retained with the original failed run in
+[CI recovery evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/CI_RECOVERY.md>).
+
+Date guards are not yet deployed. After successful CI, take fresh private backups
+and verify terminal legacy backtests as well as product jobs, stopped accounts
+and no pending receipts before a backend-only restart. Compare selected saved
+HTTP contents afterward; do not claim an all-table audit or browser acceptance.
+Full U1–U8/M3–M5 remains incomplete; source, lawful-forward and lost-ledger gates
+remain. No dataset admission, frozen/OOS change, merge or release.
+
 ## v1.2 dated ordinary accounting and safe date boundaries — 2026-10-13
 
 The normalized actual 300155 pair now reaches the dated loader, session engine

@@ -852,7 +852,8 @@ describe("guided experiment", () => {
     enableNativeDialog();
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
     saveExperimentDraft(configuration, 1, "first-tab-key");
-    const first = render(<CreateExperimentPage />);
+    // Native cross-tab events need the wizard's passive listeners, not just its DOM.
+    const first = await act(async () => render(<CreateExperimentPage />));
     await screen.findByLabelText("Starting capital (CNY)");
     vi.resetModules();
     const otherTab = await import("./draft");
@@ -929,7 +930,8 @@ describe("guided experiment", () => {
     vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
     const create = vi.spyOn(experimentApi, "create");
     saveExperimentDraft(configuration, 3, "first-tab-key");
-    render(<CreateExperimentPage />);
+    // Commit the asynchronous capabilities update and its unload listener first.
+    await act(async () => render(<CreateExperimentPage />));
     await screen.findByRole("button", { name: "Run this configuration" });
     vi.resetModules();
     const otherTab = await import("./draft");

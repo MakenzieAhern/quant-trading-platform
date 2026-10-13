@@ -1,5 +1,17 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-13 CI recovery and safe publication preparation
+
+- Previous status-only turn was NO_PROGRESS. Current work closes a reproducible
+  test scheduling failure and prepares delivery of the actual accounting fix.
+- Preserve run38383415919 failure: backend2152PASS/1optionalSKIP, Compose PASS,
+  frontend869PASS/1FAIL. Two awaited mounts fix the proven listener race without
+  changing assertions or production code. Focused90/static/independent review PASS.
+- [Exact follow-up validation evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/CI_RECOVERY.md>).
+- Backend-only publication still requires successful CI, fresh backup/quiescence
+  including legacy backtests and exact selected HTTP comparison. No deployment
+  yet; full U1–U8/M0–M5 objective remains active, incomplete and unchanged.
+
 ## 2026-10-13 dated ordinary accounting and date guards
 
 - User status query was NO_PROGRESS; reproduced and fixed actual date-boundary
