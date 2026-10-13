@@ -9,7 +9,7 @@
     "review": "Independent scoped backend/frontend review; fee label corrected to Transaction costs. No remaining scoped finding; no real-browser claim.",
     "tests": "backend1788PASS/1optional archiveSKIP;Ruff/format571/mypy146PASS;frontend870PASS49files;lint/typesPASS;latest label-only patch4bilingualPASS;build530.63kBwarning retained in fresh temp output.",
     "environment": "Isolated tmpfs quant_test empty→0017. Docker subnet-pool exhaustion resolved with verified empty test-only network, no prune. Original four service identities/start unchanged. Tests terminal; testPG stopped and retained.",
-    "ci": "Pending new milestone commit. Prior b08e3aa hosted CI remains historical for changed code; final receipt goes outsideGit.",
+    "ci": "Commit4802fdbb3da38bfa27d4237b3b9075a5770d840d CI38363718458 SUCCESS/all3jobs/all36steps. Backend1788PASS/1optional archiveSKIP;frontend870PASS;static/build/Compose smoke/disposable0017→0001→0017/alembiccheckPASS. Final documentation-commit receipt stored outsideGit in product-evidence/v1.2/m4/20261013-pnl-source-guards/current-ci.json.",
     "deployed": false,
     "browser_validated": false,
     "evidence": "product-evidence/v1.2/m4/20261013-pnl-source-guards/README.md",
@@ -1175,7 +1175,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-13T07:34:00Z",
+  "updated_at_utc": "2026-10-13T07:40:56Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4780,9 +4780,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "6dd56151eb42ade47370ae9dbbfbaebceadf73cc",
+      "last_verified_head": "4802fdbb3da38bfa27d4237b3b9075a5770d840d",
       "state": "DRAFT",
-      "ci_run": 38335272279,
+      "ci_run": 38363718458,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
@@ -4801,8 +4801,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Commit/push the independently reviewed paper-PnL and saved-source identity milestone to existing draft PR32, verify actual current CI, then continue remaining full U1-U8/M3-M5 gates. Live deployment/browser validation pending; native URL-policy recovery needed before control. Source economics, lawful after-start forward feed and genuine missing-ledger evidence remain unresolved; no merge/release/frozen/OOS change.",
-  "local_next_command": "Verify terminal test logs, diff, exact branch/identity, then normal milestone commit/push and wait for that SHA's CI. Save final CI receipt outsideGit. Do not equate unit tests with live browser acceptance or retry previously denied source/control routes.",
+  "next_task": "Read pnl-source-guards/current-ci.json and match its terminal receipt to GitHEAD; do not recommit/retest accepted source-only work without changes. New PnL and command source guards are code/CI accepted, not deployed/browser accepted. Resume safe deployment and real bilingual account/search walkthrough when native URL-policy control works, then finish full U1-U8/M3-M5 gates. Official source economics, lawful after-start forward evidence and genuine missing-ledger evidence remain unresolved. No merge/release/frozen/OOS change.",
+  "local_next_command": "Verify the final documentation checkpoint CI once and persist its receipt outsideGit. Remaining live deployment/visual interaction/performance gates require supported browser control; user Chrome/animation preparation is already confirmed. Do not retry equivalent denied controls or blocked source routes, claim synthetic forward acceptance or reconstruct missing real ledgers.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
