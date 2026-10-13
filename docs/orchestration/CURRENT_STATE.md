@@ -1,5 +1,25 @@
 # Current state
 
+## v1.2 Paper creation checks deployed and browser reviewed — 2026-10-13
+
+The capability and delayed-receipt fixes are served locally from `efd1297`.
+Its CI38392162439 passed all three jobs:2177backend PASS/1optional archive SKIP,
+902frontend PASS, static/build and isolated migration/Compose checks PASS.
+The existing backend restarted once; PostgreSQL, Redis and frontend were not
+restarted. Selected saved responses,5stopped accounts and417events are unchanged.
+[Publication and browser evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+
+Actual Chrome Chinese/English creation checks preserve entered cash and mode
+through a recheck. Unavailable historical/forward choices explain why; saved
+history remains readable. No account was created or started. A one-line styling
+fix for the recheck button passes150focused tests and needs frontend publication
+and visual recheck. This supersedes the deployment-pending entry below.
+
+Full U1–U8/M3–M5 remains PARTIAL. Source gaps300147/000425, financial/lifecycle
+admission, lawful real forward inputs and the receipt-to-plan/account chain,
+genuine missing-ledger disposition and remaining quality/release gates persist.
+No frozen data, formal study, OOS, merge, tag or release action.
+
 ## v1.2 Paper creation availability and receipt safety — 2026-10-13
 
 The creation form now checks configured replay and historical execution admission

@@ -1113,6 +1113,7 @@ function PaperSessionForm({
           <Link href="/data">{t("createPage.checkDataReadiness")}</Link>{" "}
           <button
             type="button"
+            className="button secondary"
             aria-disabled={capabilities.loading}
             onClick={() => {
               if (!capabilities.loading)

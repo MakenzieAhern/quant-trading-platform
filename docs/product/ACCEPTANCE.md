@@ -1,5 +1,22 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 served paper capabilities and bilingual recheck
+
+U7/U8 scoped publication and Chrome creation recheck PASS on `efd1297`:
+cash123456.78 and selected synthetic mode survive Chinese/English rechecks;
+unavailable historical/forward choices retain explicit reasons and saved historical
+accounts remain readable. No create/start/strategy action was performed.
+[CI, publication receipts and exact browser evidence limits](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+
+CI38392162439 passed2177backend/1optionalSKIP and902frontend;13served assets
+match the exact build in Windows and WSL. Fresh backups and31old selected HTTP
+responses preserve5accounts/417events. This is not whole-database restore or
+financial admission. A visible default-style recheck button prompted a one-line
+existing-class fix;150focused tests/staticPASS, final visual recheck pending.
+The first English image contains a stale Chinese frame and is not English visual
+proof; the subsequent final English image is. Full native foreground/motion,
+AA, performance, genuine forward execution and overall U1–U8 remain unaccepted.
+
 ## 2026-10-13 paper creation preflight and delayed receipt safety
 
 [Evidence, exact commands and retained failures](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).

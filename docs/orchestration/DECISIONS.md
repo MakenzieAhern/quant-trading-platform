@@ -1,5 +1,18 @@
 # Decisions
 
+## v1.2 Keep browser and publication evidence scoped — 2026-10-13
+
+Use the supported Chrome extension's verified local URL for DOM and viewport
+checks; do not retry the rejected native Windows URL-control route. These checks
+cannot establish native foreground timing, system motion or full accessibility.
+Retain the full-page timeout and stale first English screenshot as failed or
+limited observations; use the subsequent final English frame for visual evidence.
+
+The actual recheck button lacked the existing design-system class. Reuse
+`button secondary` without new CSS, components or behavior. Publish this frontend
+change separately from the already loaded backend and retain both asset sets;
+there is no reason to restart PostgreSQL, Redis or backend for this correction.
+
 ## v1.2 Check new paper creation without blocking saved recovery — 2026-10-13
 
 Use a read-only endpoint over the existing configured-source and execution-admission

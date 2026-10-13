@@ -1,5 +1,20 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-13 paper capabilities publication and browser correction
+
+- Exact `efd1297` CI38392162439 SUCCESS:2177backend PASS/1optional archive SKIP,
+  902frontend PASS; existing local backend/frontend publication completed.
+- Fresh backups and selected response comparisons retain5stopped accounts and
+  417events; PostgreSQL/Redis/frontend identities and start times are unchanged.
+  Windows and WSL verify all13new frontend asset hashes. No all-table claim.
+- Actual Chrome Chinese/English rechecks preserve entered values and visible
+  unavailable reasons. Saved history remains readable; no new account or study.
+  Reused button styles correct one visible inconsistency;150focused tests pass.
+- [Exact evidence and limitations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+  Final button publication/recheck remains next. The latest status-only reply
+  was NO_PROGRESS; this checkpoint does not repeat the preceding implementation
+  as new work or promote partial checks to full product acceptance.
+
 ## 2026-10-13 paper capabilities and receipt race corrected
 
 - Previous status-only turn: NO_PROGRESS. The integrated capability API/form and
