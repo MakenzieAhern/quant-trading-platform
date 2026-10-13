@@ -1,5 +1,20 @@
 # Current state
 
+## v1.2 official aggregate correction recovered — 2026-10-13
+
+Official CNINFO59352083 / notice2011-038 closes300155 cash-total text conflict:
+576,000,000→57,600,000 CNY; per-holder terms unchanged. Full-page independent
+review and pinned metadata/PDF checks PASS; evidence70d9930b verifies repeatably.
+Publication2011-04-27 15:53 Asia/Shanghai is a hard lower knowledge boundary,
+not midnight or the December governance report date.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-official-source-closure/README.md>).
+
+Preserve old3gap/6leg negative report and frozen rows. Remaining source-text
+gaps300147/000425 are not closed; original300155 dates remain unnormalized.
+Next strictly bind this correction in candidate audit, with old-to-new lineage
+and unresolved findings retained. Current financial admission false, runtime
+unchanged; no new dataset/study/OOS/merge/release. Full U1–U8/M3–M5 PARTIAL.
+
 ## v1.2 local PnL publication checkpoint — 2026-10-13
 
 Current product authority remains `.product/state.json` and

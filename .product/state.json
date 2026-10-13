@@ -1,4 +1,22 @@
 {
+  "official_300155_correction_20261013_gate": {
+    "status": "CASH_AGGREGATE_TEXT_CORRECTED_NOT_FINANCIAL_ADMISSION",
+    "base_head": "a99016d56a6199a2c8dacdd3c2c63b8de782b6cd",
+    "source": "Official CNINFO59352083 / issuer notice2011-038 explicitly corrects2011-037 page1 aggregate576000000 to57600000 CNY. Base72000000 shares and gross8per10 remain unchanged; no per-holder formula change.",
+    "pdf_sha256": "d36fe20a9b1f18547ea01b6f58b0772a0538ffc3ce8952b86154bd00a5bfd786",
+    "published_at_asia_shanghai": "2011-04-27T15:53:00+08:00",
+    "retrieved_at_utc": "2026-10-13T08:38:30.681577+00:00",
+    "point_in_time": "CNINFO metadata publication is after original06:30 same day, before May5 record/May6 ex. No use before15:53 or midnight backdating. Daily decision timing must be validated; December governance report is discovery only, not contemporaneous availability.",
+    "verification": "Root and independent reviewer inspected complete correction page. Original source/issuer/URL/metadata/old6leg negative evidence and new render bytes bound. Normal and optimized verification produce identical evidence70d9930b; no full census rerun.",
+    "evidence": "product-evidence/v1.2/m4/20261013-official-source-closure/README.md",
+    "evidence_sha256": "70d9930baab4b40d23ccc4cbab21bcce3d5ace45e7da85378ce358c78c70ab59",
+    "remaining": "300147 and000425 source-text gaps remain; old3gap6leg negative report retained. Frozen300155 payment/listing nulls still need separate-version normalization and full lifecycle/economic admission. Two original event hashes are lineage, not immutable future-candidate checksums.",
+    "next": "Add strict versioned correction evidence to candidate audit, preserving original negative findings and unresolved gaps. Bind parent/source/metadata/PDF and old-to-new event identity; never repurpose ORDINARY_REFERENCE or make this aggregate correction a global PASS.",
+    "preservation": "Frozenmanifest693c0b81/freeze228569f1/researchstateb10ce3c5/tagf88b5c freshly unchanged. No original service/DB/strategy/OOS/data mutation. Current deployed application/1790backend+1optionalSKIP/870frontend/CI38368445381 unchanged.",
+    "candidate_runtime_admission_changed": false,
+    "financial_admission": false,
+    "full_product_pass": false
+  },
   "paper_pnl_local_publication_20261013_gate": {
     "status": "PASS_PERSISTENCE_AND_LOCAL_DEPLOYMENT_BROWSER_PENDING",
     "observed_at_utc": "2026-10-13T08:13:52Z",

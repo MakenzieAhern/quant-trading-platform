@@ -1,5 +1,23 @@
 # Decisions
 
+## v1.2 Accept an official cash text correction without rewriting history — 2026-10-13
+
+Use issuer2011-038 (CNINFO59352083, PDF SHA d36fe20a) to explain the specific
+300155 cash-total contradiction in2011-037. It corrects only the aggregate;
+base shares and gross8 CNY per10 shares remain unchanged. Do not alter the cash
+formula, manufacture an economic event or use a price-basis ORDINARY_REFERENCE.
+The narrow all-category official index found the correction missed by earlier
+implementation-title queries; this is not a restart of historical acquisition.
+
+Preserve CNINFO publication2011-04-27 15:53 Asia/Shanghai separately from issuer
+signature, original notice,2026 retrieval and retrospective December discovery.
+No decision before publication may use it. Retain the original three negative
+records and six affected legs; layer the verified explanation with exact source
+and lineage pins. Future date-normalized events need explicit old-to-new mapping,
+not forced equality with old checksums. Source300147/000425 and whole economic,
+lifecycle and runtime-admission requirements remain open. Local/full-product
+acceptance is not implied by this single official correction.
+
 ## v1.2 Preserve journals during local PnL deployment — 2026-10-13
 
 Publish the tested exact-PnL and source-identity changes without rebuilding the

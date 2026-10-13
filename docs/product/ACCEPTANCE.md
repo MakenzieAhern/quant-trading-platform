@@ -1,5 +1,24 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 official cash correction recovered
+
+[Source evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-official-source-closure/README.md>).
+CNINFO59352083, issuer notice2011-038, explicitly corrects300155's original
+distribution cash aggregate from576,000,000 to57,600,000 CNY. Base shares and
+per-holder terms are unchanged. Root and independent reviewer inspected its
+complete page; PDF SHA d36fe20a and official metadata are bound in evidence
+70d9930b, which verifies identically in normal and optimized Python.
+
+This closes the cash-total text contradiction only. Metadata publication is
+2011-04-27 15:53 Asia/Shanghai, before theMay5 record date; no earlier decision
+may consume it. December governance evidence only led to the real correction.
+The complete prior3gap/6leg findings remain immutable;300147 and000425 stay
+unresolved, frozen300155 dates still require separate-version normalization.
+Current candidate audit does not consume this correction yet and financial
+admission remains false. Next add its strict versioned audit linkage without
+hiding negative findings or claiming whole-source/lifecycle acceptance.
+No application, dataset, account, strategy or OOS mutation; full product PARTIAL.
+
 ## 2026-10-13 PnL persistence and local deployment pass
 
 [Deployment evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-pnl-publication/README.md>)
