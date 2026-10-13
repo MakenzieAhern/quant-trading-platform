@@ -61,6 +61,48 @@ Phase 10 adds a second registered simulation route for the frozen A-share strate
 product fixture, not an extension of the audited dataset or formal research evidence. This route
 does not read, rerun, or replace the consumed Official OOS artifact.
 
+The optional receipt-bound forward route uses that same completed-session runtime,
+not a second financial engine. A server-configured product-local contract path and
+SHA-256 bind independent source-use evidence, authority coverage, accepted calendar,
+warmup and point-in-time context. An HTTP caller cannot register or approve inputs.
+The optional settings are `PAPER_FORWARD_CONTRACT_PATH` and
+`PAPER_FORWARD_CONTRACT_SHA256`; both must be supplied together and resolve within
+independent product data, outside the research archive. Default Compose supplies
+neither. Setting those names or authoring a manifest is not source qualification.
+No actual contract ships with the app; public forward creation remains unavailable
+until the separate real-source and product acceptance gates are completed.
+
+The canonical observation's original receipt is revalidated against raw source bytes,
+normalized rows and all relevant overlapping receipts. Contradictory recaptures fail;
+later acquisition cannot move first receipt time. Daily provenance binds the account,
+receipt IDs, authority/calendar/session hashes and original UTC reception window.
+Warmup is not account history. The existing atomic financial batch carries its plan
+and provenance; a subsequent `input.committed` journal observation binds the actual
+completed batch and acknowledgement time. Missing/late acknowledgement cannot be
+invented on resume and cannot authorize the next day's processing. This separate
+acknowledgement does not roll back a financial batch already committed before failure.
+Process-loss sessions remain INTERRUPTED, not silently restarted.
+
+The current contract is finite and requires all daily context at creation. It is
+not yet a continuously updateable source admission: a newly observed suspension,
+ST transition or action cannot be presumed in future frames or silently repinned.
+The next required U7 slice must separate immutable account/source eligibility from
+append-only dated context arrivals, bind each consumed context into the journal,
+and wait for both kinds of evidence. That remaining engineering work and actual
+source qualification are not satisfied by the synthetic bridge tests.
+
+Base transaction-cost schedules must cover each admitted day and agree with its
+rule context; explicit user broker commission overrides retain their existing
+meaning. Actual fills use effective-dated fees. The reused commission model's
+buying-power estimate intentionally uses its latest buy-side schedule conservatively;
+this is not a claim that a risk estimate equals that day's final charged fees.
+
+Receipt parsing has separate inspection and execution policies: two immutable
+historical manifest/job bindings documented in SOURCE_READINESS retain their original
+parser labels and receive `PARSER_LABEL_MISMATCH_READ_ONLY`. Inspection reproduces
+their bytes; strict receipt verification refuses their use in the forward route.
+These exceptions are not source admission and cannot be inherited by repackaged data.
+
 The completed-session provider also accepts an asynchronous iterator. Waiting for
 its next item races the session's stop signal; unread items lose to stop, while an
 in-flight handler finishes its existing batch. The provider owns and cleans up

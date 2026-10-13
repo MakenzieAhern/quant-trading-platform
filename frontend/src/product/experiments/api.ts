@@ -1,6 +1,7 @@
 import { ApiError, apiRequest, REQUEST_TIMEOUT_MS } from "../../api/client";
 import { API_BASE_URL } from "../../api/config";
 import { ApiContractError } from "../../api/contracts";
+import { parsePaperInput } from "../../api/paperInput";
 import type {
   Capabilities,
   Experiment,
@@ -260,9 +261,11 @@ export function parseResult(value: unknown): ExperimentResult {
 }
 export function parseSimulationPlan(value: unknown): SimulationPlan {
   const item = record(value);
+  mode(item.mode);
   parsePlanFields(item);
   if (
     item.submitted_to_account !== false ||
+    item.input_provenance != null ||
     !["EXPLORATORY_REPLAY", "SYNTHETIC_DEMO"].includes(
       String(item.account_mode),
     )
@@ -276,9 +279,25 @@ export function parsePaperAccountPlan(value: unknown): PaperAccountPlan {
   parsePlanFields(item);
   text(item.paper_session_id);
   text(item.plan_version);
+  if (item.mode === "forward_paper") {
+    const input = parsePaperInput(item.input_provenance);
+    if (
+      item.account_mode !== "FORWARD_PAPER" ||
+      item.plan_version !== "PAPER_FORWARD_PLAN_V1" ||
+      typeof item.submitted_to_account !== "boolean" ||
+      input.paper_session_id !== item.paper_session_id ||
+      input.trading_date !== item.as_of_trading_date ||
+      input.trading_date !== item.account_snapshot_trading_date ||
+      input.admission_sha256 !== item.dataset_sha256 ||
+      input.input_sha256 !== item.data_snapshot_sha256
+    )
+      throw new ApiContractError();
+    return { ...item, input_provenance: input } as unknown as PaperAccountPlan;
+  }
   if (
     item.mode !== "historical_exploration" ||
     item.account_mode !== "HISTORICAL_PAPER_REPLAY" ||
+    item.input_provenance != null ||
     ![
       "PAPER_ACCOUNT_PLAN_V1",
       "PAPER_ACCOUNT_PLAN_V2",
@@ -291,7 +310,6 @@ export function parsePaperAccountPlan(value: unknown): PaperAccountPlan {
 }
 
 function parsePlanFields(item: Record<string, unknown>): void {
-  mode(item.mode);
   if (item.account_snapshot_trading_date != null)
     text(item.account_snapshot_trading_date);
   for (const key of [

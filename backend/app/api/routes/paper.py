@@ -16,6 +16,7 @@ from fastapi import (
 )
 from sqlalchemy.exc import IntegrityError
 
+from app.api.routes.market_updates import market_update_manager
 from app.api.schemas.paper import (
     CreatePaperSessionRequest,
     MarketBarPayload,
@@ -49,6 +50,14 @@ from app.application.paper_trading import (
     PaperSessionStateError,
     PaperTradingManager,
 )
+from app.application.paper_trading.receipt_source import (
+    CanonicalReceiptReader,
+    ReceiptSessionFactory,
+)
+from app.application.paper_trading.source_admission import (
+    ForwardAdmissionRegistry,
+    ForwardSourceError,
+)
 from app.core.config import get_settings
 from app.db.session import SessionFactory
 from app.domain.risk import RiskConfig
@@ -62,6 +71,12 @@ paper_manager = PaperTradingManager(
     StrategyRegistry(),
     historical_datasets=ExperimentDatasetRegistry(
         settings.research_data_path, settings.product_data_path
+    ),
+    forward_sources=ReceiptSessionFactory(
+        ForwardAdmissionRegistry(
+            settings.paper_forward_contract_path, settings.paper_forward_contract_sha256
+        ),
+        CanonicalReceiptReader(SessionFactory, market_update_manager),
     ),
 )
 
@@ -176,6 +191,8 @@ async def start_paper_session(session_id: UUID) -> PaperSessionResponse:
         raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
     except ExperimentInputError as exc:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, exc.code) from exc
+    except ForwardSourceError as exc:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(exc)) from exc
 
 
 @router.post("/{session_id}/stop", response_model=PaperSessionResponse)

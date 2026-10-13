@@ -1,5 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 U5/U7/U8 receipt-bound integration — scoped only
+
+[Retained actual-cache and isolated integration evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
+U5: six original bundles readable,18files unchanged; two immutable parser-label
+exceptions have explicit read-only diagnostics and remain execution-ineligible.
+U7: production factory, actual disposable PostgreSQL, REST, ASGI WebSocket JSON,
+pause/new-manager resume, causal receipt/commit windows and base-cost consistency
+pass synthetic tests. No real forward source is registered or account started.
+U8: bilingual forward-shaped plan/source details and receipt caveats tested; saved
+account admission pin is required. Public forward creation stays unavailable.
+
+Final backend2258PASS/1optional archiveSKIP; frontend950PASS/54files; static/build
+PASS. New code is not yet deployed/browser-checked; previous CI covers aa5f529 only.
+Fixed future daily context is not continuous after-start ingestion. Actual source,
+financial, forward and remaining quality/delivery requirements remain PARTIAL.
+
+## 2026-10-13 recheck button correction verified in Chrome
+
+[Current build, publication and five selected visual cases](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities-style/README.md>).
+`aa5f529` frontend-only publication PASS; all4container starts and33selected
+responses unchanged, Windows13asset checks PASS. CI38395584853 passed2177backend/
+1optionalSKIP and902frontend. Actual Chrome confirms existing42px secondary
+styling, retained cash and mode, recheck-to-cash Tab and preceding readiness-link
+focus; checked narrow document widths do not overflow. Selected1440/1280/1024/390
+cases span ZH/EN and light/dark, not the full cross-product or all-page AA.
+One stale mobile image is retained and excluded. Preferences/viewport restored,
+form cancelled and tab closed; no account or strategy was started. Full product
+remains PARTIAL, particularly actual admitted forward input and processing.
+
 ## 2026-10-13 served paper capabilities and bilingual recheck
 
 U7/U8 scoped publication and Chrome creation recheck PASS on `efd1297`:

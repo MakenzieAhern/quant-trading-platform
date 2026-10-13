@@ -164,14 +164,27 @@ export interface SimulationPlan {
 
 export type PaperAccountPlan = Omit<
   SimulationPlan,
-  "account_mode" | "submitted_to_account"
+  "mode" | "account_mode" | "submitted_to_account"
 > & {
-  account_mode: "HISTORICAL_PAPER_REPLAY";
   submitted_to_account: boolean;
   paper_session_id: string;
-  plan_version:
-    "PAPER_ACCOUNT_PLAN_V1" | "PAPER_ACCOUNT_PLAN_V2" | "PAPER_ACCOUNT_PLAN_V3";
-};
+} & (
+    | {
+        mode: "historical_exploration";
+        account_mode: "HISTORICAL_PAPER_REPLAY";
+        plan_version:
+          | "PAPER_ACCOUNT_PLAN_V1"
+          | "PAPER_ACCOUNT_PLAN_V2"
+          | "PAPER_ACCOUNT_PLAN_V3";
+        input_provenance?: never;
+      }
+    | {
+        mode: "forward_paper";
+        account_mode: "FORWARD_PAPER";
+        plan_version: "PAPER_FORWARD_PLAN_V1";
+        input_provenance: import("../../types/paper").PaperInputProvenance;
+      }
+  );
 export interface ExperimentEquity {
   sequence: number;
   trading_date: string;

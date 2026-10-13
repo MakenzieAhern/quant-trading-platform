@@ -1,5 +1,35 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-13 receipt bridge regression checkpoint
+
+PROGRESS: six actual cached bundles verified without changing18files; strict
+execution still rejects the two documented parser-label exceptions. New canonical
+receipt/manager integration reuses existing risk, OMS, accounting and journal.
+Independent review found and closed causal-clock, account-pin, receipt-budget and
+effective-cost defects. Final backend2258PASS/1optional archiveSKIP, frontend950PASS,
+static/type/build PASS; actual disposable PostgreSQL/REST/ASGI socket/resume passes.
+[Evidence and preserved failures](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
+
+No original account/feed/provider, service restart, frozen data/OOS, merge or release
+action. aa5f529 remains served; the new tree needs exact-head CI and publication.
+The fixed future-context contract is only finite integration. Continuous arrivals
+after account start, qualified real sources and full product acceptance remain open.
+Next append-only daily-context binding must preserve existing financial semantics.
+
+## 2026-10-13 style publication complete and receipt connection active
+
+The previous status-only turn was NO_PROGRESS. Live GitHub reads reconfirm
+`aa5f529` CI38395584853 SUCCESS and PR32 OPEN/DRAFT. The frontend style correction
+is already published and its selected Chrome checks complete; older pending
+entries below describe earlier checkpoints, not work to repeat.
+[Publication, retained state and exact browser scope](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities-style/README.md>).
+
+The one remaining targeted 300147 document retrieval is complete. Its printed
+share totals conflict, so it does not close the original finding. No new index
+request, other security acquisition, dataset admission or financial execution.
+The next engineering unit is verified receipt consumption in the existing paper
+manager; source admission and real after-start causal evidence remain required.
+
 ## 2026-10-13 paper capabilities publication and browser correction
 
 - Exact `efd1297` CI38392162439 SUCCESS:2177backend PASS/1optional archive SKIP,

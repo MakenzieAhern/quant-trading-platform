@@ -210,6 +210,7 @@ export const zhCN = {
       replay: "保留的 AAPL 本地测试回放 · 非 A 股数据",
       simulated_a_share: "A股合成演示 · 2030 场景",
       historical_a_share: "A 股历史回放",
+      forward_a_share: "回执绑定的 A 股前向模拟",
     },
     strategies: {
       moving_average_crossover: "移动平均线交叉",
@@ -347,6 +348,27 @@ export const zhCN = {
       resume: "继续回放",
       pause: "暂停回放",
       stop: "停止回放",
+      forwardStart: "开始前向模拟",
+      forwardResume: "继续前向模拟",
+      forwardPause: "暂停前向模拟",
+      forwardStop: "停止前向模拟",
+      forwardBoundary:
+        "服务器记录的回执绑定前向模拟。展示来源记录不代表来源许可、金融验收或实盘交易授权。公开前向创建入口仍不可用。",
+      marketInput: "已记录行情输入来源",
+      portfolioInput: "已记录组合输入来源",
+      inputChecksum: "逐日输入校验和",
+      admissionChecksum: "准入契约校验和",
+      closedAt: "交易日收盘（UTC）",
+      nextOpenAt: "下次开盘（UTC）",
+      receipts: "证券 · 回执编号 · 首次接收时间（UTC）· 清单校验和",
+      receiptCount:
+        "显示 {{total}} 条已记录回执中的前 {{shown}} 条；完整来源链保留在已保存的 API 记录中。",
+      forwardEndedHelp:
+        "本次前向模拟已结束。请保留已记录的输入、计划与财务流水；部分记录不代表完整验证。",
+      forwardCopyUnavailable:
+        "前向账户不能通过回放创建表单复制；不会创建替代账户。",
+      inputCommitSummary:
+        "{{date}} 输入提交，财务批次 {{first}}–{{last}}。仅控制记录，不产生新成交或组合金额。",
       startError: "无法开始模拟交易会话。重试前请先检查当前会话状态和连接。",
       pauseError: "无法暂停模拟交易会话。重试前请先检查当前会话状态和连接。",
       stopError: "无法停止模拟交易会话。重试前请先检查当前会话状态和连接。",
@@ -364,6 +386,8 @@ export const zhCN = {
           "2030 合成场景 · 非研究证据",
         FROZEN_HISTORICAL_A_SHARE_REPLAY_V1:
           "已冻结历史档案 · 非当前执行准入证明",
+        RECEIPT_BOUND_FORWARD_A_SHARE_V1:
+          "服务器记录的回执绑定前向输入 · 非验收通过证明",
       },
       detailsLabel: "模拟交易会话详情",
       provider: "数据源",
@@ -472,6 +496,7 @@ export const zhCN = {
         session: { status: "账户状态" },
         market: { bar: "完整 K 线", session: "交易日" },
         calendar: { observed: "日历控制记录" },
+        input: { committed: "输入提交控制记录" },
         signal: { created: "策略信号" },
         risk: { decision: "风控决策" },
         order: { updated: "订单更新" },

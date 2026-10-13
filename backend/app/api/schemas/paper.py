@@ -15,6 +15,11 @@ from app.api.schemas.backtests import (
     StrategyRequest,
     StrictModel,
 )
+from app.application.paper_trading.source_admission import (
+    ZONE,
+    DailyInputProvenance,
+    InputCommitObservation,
+)
 from app.paper.calendar import CalendarObservation
 from app.paper.models import PaperSessionStatus
 
@@ -93,10 +98,34 @@ class HistoricalASharePaperSessionRequest(StrictModel):
         return self
 
 
+class ForwardASharePaperSessionRequest(StrictModel):
+    provider_type: Literal["forward_a_share"]
+    dataset_id: str = Field(pattern=r"^[a-z0-9][a-z0-9._-]{2,127}$")
+    symbol: Literal["CN-A"]
+    strategy: HistoricalAShareStrategy
+    initial_cash: PositiveDecimalString = Field(default=Decimal("100000"))
+    default_order_quantity: PositiveDecimalString = Field(default=Decimal(1))
+    risk: RiskRequest = Field(default_factory=lambda: RiskRequest(enforce_buying_power=True))
+
+    @model_validator(mode="after")
+    def safe_risk(self) -> "ForwardASharePaperSessionRequest":
+        if not self.risk.enforce_buying_power or (
+            self.risk.max_leverage is not None and self.risk.max_leverage > 1
+        ):
+            raise ValueError("forward A-share paper requires unlevered buying-power enforcement")
+        if self.risk.max_drawdown is not None and not (-1 <= self.risk.max_drawdown <= 0):
+            raise ValueError("forward paper drawdown must be between -1 and 0")
+        self.risk.max_leverage = Decimal(1)
+        if self.risk.max_drawdown is None:
+            self.risk.max_drawdown = Decimal("-0.2")
+        return self
+
+
 CreatePaperSessionRequest = (
     ReplayPaperSessionRequest
     | SimulatedASharePaperSessionRequest
     | HistoricalASharePaperSessionRequest
+    | ForwardASharePaperSessionRequest
 )
 
 
@@ -202,7 +231,24 @@ class MarketSessionPayload(BaseModel):
     source: Literal[
         "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1",
         "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1",
+        "RECEIPT_BOUND_FORWARD_A_SHARE_V1",
     ]
+    input_provenance: DailyInputProvenance | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+
+    @model_validator(mode="after")
+    def validate_input(self) -> "MarketSessionPayload":
+        if self.source == "RECEIPT_BOUND_FORWARD_A_SHARE_V1":
+            if (
+                self.input_provenance is None
+                or self.trading_date != self.input_provenance.trading_date
+                or self.security_count != len(self.input_provenance.receipts)
+            ):
+                raise ValueError("forward market session requires bound input provenance")
+        elif self.input_provenance is not None:
+            raise ValueError("legacy market source cannot claim forward input provenance")
+        return self
 
 
 class PaperOrderResponse(BaseModel):
@@ -240,6 +286,9 @@ class PortfolioPayload(BaseModel):
     drawdown: str
     positions: list[PositionPayload]
     plan: dict[str, Any] | None = None
+    input_provenance: DailyInputProvenance | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
     accounting_version: Literal["PNL_BREAKDOWN_V1"] | None = None
     corporate_action_realized_pnl: str | None = Field(
         default=None, strict=True, pattern=r"^-?[0-9]+(?:\.[0-9]+)?$"
@@ -248,6 +297,13 @@ class PortfolioPayload(BaseModel):
 
     @model_validator(mode="after")
     def validate_accounting(self) -> "PortfolioPayload":
+        if self.input_provenance is not None:
+            if self.timestamp.astimezone(ZONE).date() != self.input_provenance.trading_date:
+                raise ValueError("forward portfolio input date mismatch")
+            if self.plan is None or self.plan.get(
+                "input_provenance"
+            ) != self.input_provenance.model_dump(mode="json"):
+                raise ValueError("forward portfolio plan input mismatch")
         if self.accounting_version is None:
             if self.corporate_action_realized_pnl is not None or self.total_pnl is not None:
                 raise ValueError("paper PnL breakdown requires an accounting version")
@@ -266,6 +322,7 @@ PaperPayload = (
     | FillResponse
     | PortfolioPayload
     | CalendarObservation
+    | InputCommitObservation
 )
 
 
@@ -281,6 +338,7 @@ class PaperEventResponse(BaseModel):
         "fill.created",
         "portfolio.snapshot",
         "calendar.observed",
+        "input.committed",
     ]
     occurred_at: datetime
     payload: PaperPayload
@@ -297,6 +355,7 @@ class PaperEventResponse(BaseModel):
             "fill.created": FillResponse,
             "portfolio.snapshot": PortfolioPayload,
             "calendar.observed": CalendarObservation,
+            "input.committed": InputCommitObservation,
         }[self.type]
         if not isinstance(self.payload, expected_payload):
             raise ValueError("paper event payload does not match its event type")
@@ -305,6 +364,11 @@ class PaperEventResponse(BaseModel):
                 raise ValueError("calendar event requires a calendar observation")
             if self.occurred_at != self.payload.applied_at:
                 raise ValueError("calendar application timestamp mismatch")
+        if isinstance(self.payload, InputCommitObservation) and (
+            self.occurred_at != self.payload.commit_observed_at
+            or self.sequence <= self.payload.journal_last_sequence
+        ):
+            raise ValueError("forward commit event timestamp/sequence mismatch")
         return self
 
 

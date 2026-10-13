@@ -1,5 +1,65 @@
 # Decisions
 
+## 2026-10-13 v1.2 — receipt bridge boundaries and next daily-context gap
+
+Final review also reproduced base transaction-cost disagreement and uncovered
+dates. Reject these at source admission, before the existing explicit user broker
+commission overrides. Require one base schedule per warmup/forward date, equal to
+all rule contexts. Retain the existing conservative buying-power estimate; do not
+claim it equals effective-dated final fill fees or silently change methodology.
+Receipt reconciliation budget scales with the admitted universe; overflow fails
+explicitly rather than silently truncating or excluding the1001st security.
+
+Retained raw bytes must reproduce normalized receipt rows; recomputing hashes
+alone cannot authorize a changed price or coerced Boolean. The two previously
+documented immutable parser-label exceptions keep original evidence, receive an
+inspection diagnostic, and remain rejected by strict execution verification.
+
+The initial forward bridge reuses the actual manager, RiskEngine, OMS, Portfolio,
+plan and atomic journal. Synthetic contract tests are engineering evidence only.
+Its fixed daily-context manifest is a finite prerequisite: it cannot prove future
+ST, suspension, adjustment or corporate-action facts, nor support newly arriving
+daily context after account start. Independent design review identifies this as
+the next required U7 integration gap, not a completed forward mode. Preserve
+immutable source eligibility and add separately pinned append-only dated context
+arrivals and replay bindings; do not infer facts from missing events or vendor flags.
+
+Review also reproduced stale-clock rejection during a receipt read and frontend
+acceptance of internally consistent provenance from the wrong saved admission.
+Both require root-cause shared guards and negative tests. A failed disposable-PG
+test attempted DELETE against append-only evidence and masked its invalid API
+fixture field. Fix only the test request and guarded quant_test cleanup; never
+weaken the production append-only trigger. Original failure evidence remains.
+
+## v1.2 Bind new-market processing to verified receipts and causal dates — 2026-10-13
+
+The receipt cache records facts, not execution admission. The new-market path
+must verify the original raw response against normalized rows, retain the first
+canonical observation's receipt, and bind independently accepted calendar,
+security status, rules, actions and costs. Reacquiring an old row after account
+start must not create a new first-seen time. A late daily input must not create
+an order retrospectively executable at an opening that already occurred.
+
+Reuse the current paper manager, plans and atomic event journal. Existing paused
+accounts preserve their original start time; interrupted accounts currently do
+not resume. Do not claim automatic process-loss continuation or enable a forward
+mode until its actual source and runtime requirements pass. Private local trial
+terms and complete financial-source admission are distinct questions; no new
+commercial-license requirement is inferred from an incomplete data contract.
+
+## v1.2 Retain the 300147 supporting-source contradiction — 2026-10-13
+
+The bounded official offline-listing notice review found another printed conflict:
+the unrestricted-share row's stated result exceeds its stated total capital.
+Arithmetic cannot silently correct that source or prove the absence of changes
+between March and May. The original event finding remains unresolved.
+[Document review and immutable evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-300147-offline-listing-review/README.md>).
+
+The implemented cash-correction loader is narrow; it does not establish a policy
+that only explicit correction notices could ever resolve all source conflicts.
+No independent share-class chain is admitted or implemented here. Continue the
+product connection work without another broad historical acquisition pass.
+
 ## v1.2 Keep browser and publication evidence scoped — 2026-10-13
 
 Use the supported Chrome extension's verified local URL for DOM and viewport

@@ -164,11 +164,15 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     latest_portfolio: portfolio,
   } = snapshot;
   const active = session.status === "STARTING" || session.status === "RUNNING";
+  const forward = session.provider_type === "forward_a_share";
   const aShare =
     session.provider_type === "simulated_a_share" ||
-    session.provider_type === "historical_a_share";
+    session.provider_type === "historical_a_share" ||
+    forward;
   const moneyUnit =
-    session.provider_type === "historical_a_share" ? t("detail.cnySuffix") : "";
+    session.provider_type === "historical_a_share" || forward
+      ? t("detail.cnySuffix")
+      : "";
   const portfolioDate = portfolio ? tradingDate(portfolio) : null;
   const stalePortfolio = Boolean(
     aShare &&
@@ -213,7 +217,13 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
               onClick={() => void command("start")}
             >
               {t(
-                session.status === "PAUSED" ? "detail.resume" : "detail.start",
+                forward
+                  ? session.status === "PAUSED"
+                    ? "detail.forwardResume"
+                    : "detail.forwardStart"
+                  : session.status === "PAUSED"
+                    ? "detail.resume"
+                    : "detail.start",
               )}
             </button>
           )}
@@ -223,7 +233,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
               aria-disabled={commandPending}
               onClick={() => void command("pause")}
             >
-              {t("detail.pause")}
+              {t(forward ? "detail.forwardPause" : "detail.pause")}
             </button>
           )}
           {(session.status === "CREATED" ||
@@ -235,7 +245,7 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
               aria-disabled={commandPending}
               onClick={() => void command("stop")}
             >
-              {t("detail.stop")}
+              {t(forward ? "detail.forwardStop" : "detail.stop")}
             </button>
           )}
         </div>
@@ -278,6 +288,58 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           <strong>{formatUtc(session.stopped_at)}</strong>
         </div>
       </section>
+      {forward && (
+        <section className="panel">
+          <p className="stateCallout" role="note">
+            {t("detail.forwardBoundary")}
+          </p>
+          {(
+            [
+              ["marketInput", marketSession?.input_provenance],
+              ["portfolioInput", portfolio?.input_provenance],
+            ] as const
+          ).map(
+            ([label, input]) =>
+              input && (
+                <details key={label}>
+                  <summary>
+                    {t(`detail.${label}`)} · {input.trading_date}
+                  </summary>
+                  <dl>
+                    <dt>{t("detail.inputChecksum")}</dt>
+                    <dd>
+                      <code>{input.input_sha256}</code>
+                    </dd>
+                    <dt>{t("detail.admissionChecksum")}</dt>
+                    <dd>
+                      <code>{input.admission_sha256}</code>
+                    </dd>
+                    <dt>{t("detail.closedAt")}</dt>
+                    <dd>{formatUtc(input.closed_at)}</dd>
+                    <dt>{t("detail.nextOpenAt")}</dt>
+                    <dd>{formatUtc(input.next_open_at)}</dd>
+                    <dt>{t("detail.receipts")}</dt>
+                    <dd>
+                      {t("detail.receiptCount", {
+                        shown: Math.min(input.receipts.length, 10),
+                        total: input.receipts.length,
+                      })}
+                    </dd>
+                    {input.receipts.slice(0, 10).map((receipt) => (
+                      <dd key={receipt.security_id}>
+                        {receipt.security_id} ·{" "}
+                        <code>{receipt.receipt_id}</code> ·{" "}
+                        {formatUtc(receipt.first_received_at)}
+                        <br />
+                        <code>{receipt.manifest_sha256}</code>
+                      </dd>
+                    ))}
+                  </dl>
+                </details>
+              ),
+          )}
+        </section>
+      )}
       {(session.error_message ||
         session.status === "FAILED" ||
         session.status === "INTERRUPTED") && (
@@ -287,17 +349,23 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             {session.error_message === "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT"
               ? explainExperimentCode(session.error_message, i18n.language)
               : t(
-                  session.status === "INTERRUPTED"
-                    ? "detail.interruptedHelp"
-                    : "detail.failedHelp",
+                  forward
+                    ? "detail.forwardEndedHelp"
+                    : session.status === "INTERRUPTED"
+                      ? "detail.interruptedHelp"
+                      : "detail.failedHelp",
                 )}
           </p>
-          <Link
-            className="button"
-            href={`/paper/new?from_session=${encodeURIComponent(session.session_id)}`}
-          >
-            {t("detail.createAgain")}
-          </Link>
+          {forward ? (
+            <p>{t("detail.forwardCopyUnavailable")}</p>
+          ) : (
+            <Link
+              className="button"
+              href={`/paper/new?from_session=${encodeURIComponent(session.session_id)}`}
+            >
+              {t("detail.createAgain")}
+            </Link>
+          )}
           {session.error_message && (
             <details>
               <summary>{t("detail.auditError")}</summary>
@@ -428,12 +496,13 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           </p>
         )}
       </section>
-      {session.provider_type === "historical_a_share" && (
+      {(session.provider_type === "historical_a_share" || forward) && (
         <ExperimentPlan
           plan={snapshot.last_rebalance_plan ?? portfolio?.plan ?? null}
           quality={snapshot.current_dataset_quality}
           sourceIntegrity={snapshot.current_source_integrity}
           account
+          forward={forward}
         />
       )}
       <PaperTable
@@ -661,6 +730,14 @@ function PaperEventJournal({
       return t(`common:statuses.${String(payload.status)}`);
     if (event.type === "market.bar") return String(payload.symbol);
     if (event.type === "market.session") return String(payload.trading_date);
+    if (event.type === "input.committed") {
+      const input = paperParsers.inputCommit(payload);
+      return t("detail.inputCommitSummary", {
+        date: input.trading_date,
+        first: input.journal_first_sequence,
+        last: input.journal_last_sequence,
+      });
+    }
     if (event.type === "calendar.observed") {
       const observation = paperParsers.calendar(payload);
       return t(`detail.calendarSummary.${observation.kind}`, {

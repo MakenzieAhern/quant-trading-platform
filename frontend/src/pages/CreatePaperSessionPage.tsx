@@ -54,6 +54,7 @@ function copiedPaperRequest(
   source: PaperSession,
 ): CreatePaperSessionRequest | null {
   if (
+    source.provider_type === "forward_a_share" ||
     !["STOPPED", "FAILED", "INTERRUPTED"].includes(source.status) ||
     !isPositiveDecimal(source.initial_cash) ||
     !isPositiveDecimal(source.default_order_quantity)

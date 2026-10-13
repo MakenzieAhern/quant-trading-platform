@@ -1,10 +1,17 @@
 import { apiRequest } from "./client";
 import { API_BASE_URL } from "./config";
 import {
+  parsePaperInput,
+  parsePaperInputCommit,
+  paperInputUtc,
+} from "./paperInput";
+import {
   parseCurrentDatasetQuality,
   parseCurrentSourceIntegrity,
   parsePaperAccountPlan,
+  tradingDate,
 } from "../product/experiments/api";
+import type { PaperAccountPlan } from "../product/experiments/types";
 import type {
   CreatePaperSessionRequest,
   MarketBar,
@@ -49,6 +56,7 @@ const EVENT_TYPES = new Set<PaperWireEvent["type"]>([
   "market.bar",
   "market.session",
   "calendar.observed",
+  "input.committed",
   "signal.created",
   "risk.decision",
   "order.updated",
@@ -148,7 +156,8 @@ function session(value: unknown): PaperSession {
   if (
     provider !== "replay" &&
     provider !== "simulated_a_share" &&
-    provider !== "historical_a_share"
+    provider !== "historical_a_share" &&
+    provider !== "forward_a_share"
   )
     throw new Error("Invalid paper provider.");
   const strategy = requiredString(
@@ -160,6 +169,17 @@ function session(value: unknown): PaperSession {
     strategy !== "cn_a_cross_sectional_momentum_low_vol_v1"
   )
     throw new Error("Invalid paper strategy.");
+  if (
+    provider === "forward_a_share" &&
+    (item.symbol !== "CN-A" ||
+      strategy !== "cn_a_cross_sectional_momentum_low_vol_v1" ||
+      !requiredString(item.dataset_id).trim() ||
+      !UUID.test(requiredString(item.session_id)) ||
+      !/^[a-f0-9]{64}$/.test(
+        requiredString(record(item.strategy_parameters).dataset_sha256),
+      ))
+  )
+    throw new Error("Invalid forward paper identity.");
   return {
     session_id: requiredString(item.session_id),
     status,
@@ -315,13 +335,27 @@ const marketSession = (value: unknown): MarketSession => {
     throw new Error("Invalid A-share market session.");
   if (
     item.source !== "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1" &&
-    item.source !== "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1"
+    item.source !== "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1" &&
+    item.source !== "RECEIPT_BOUND_FORWARD_A_SHARE_V1"
   )
     throw new Error("Invalid A-share simulation source.");
+  const input =
+    item.input_provenance == null
+      ? undefined
+      : parsePaperInput(item.input_provenance);
+  if (
+    item.source === "RECEIPT_BOUND_FORWARD_A_SHARE_V1"
+      ? !input ||
+        input.trading_date !== item.trading_date ||
+        input.receipts.length !== item.security_count
+      : input !== undefined
+  )
+    throw new Error("Invalid A-share source provenance.");
   return {
     trading_date: requiredString(item.trading_date),
     security_count: item.security_count as number,
     source: item.source,
+    ...(input ? { input_provenance: input } : {}),
   };
 };
 
@@ -385,6 +419,21 @@ const fill = (value: unknown): PaperFill => {
 
 const portfolio = (value: unknown): PaperPortfolio => {
   const item = record(value);
+  const input =
+    item.input_provenance == null
+      ? undefined
+      : parsePaperInput(item.input_provenance);
+  const plan = item.plan == null ? null : parsePaperAccountPlan(item.plan);
+  if (
+    (input &&
+      tradingDate({ timestamp: requiredString(item.timestamp) }) !==
+        input.trading_date) ||
+    (plan?.mode === "forward_paper" &&
+      (!input ||
+        JSON.stringify(plan.input_provenance) !== JSON.stringify(input))) ||
+    (input && plan?.mode !== "forward_paper")
+  )
+    throw new Error("Invalid portfolio input provenance.");
   const accounting: Pick<
     PaperPortfolio,
     "accounting_version" | "corporate_action_realized_pnl" | "total_pnl"
@@ -405,6 +454,7 @@ const portfolio = (value: unknown): PaperPortfolio => {
   }
   return {
     ...accounting,
+    ...(input ? { input_provenance: input } : {}),
     timestamp: requiredString(item.timestamp),
     cash: decimal(item.cash),
     market_value: decimal(item.market_value),
@@ -424,9 +474,105 @@ const portfolio = (value: unknown): PaperPortfolio => {
         realized_pnl: decimal(position.realized_pnl),
       };
     }),
-    plan: item.plan == null ? null : parsePaperAccountPlan(item.plan),
+    plan,
   };
 };
+
+type AccountIdentity = Pick<
+  PaperSession,
+  "session_id" | "provider_type" | "strategy_parameters"
+>;
+
+function accountInput(
+  account: AccountIdentity,
+  input: MarketSession["input_provenance"],
+) {
+  const pin = account.strategy_parameters.dataset_sha256;
+  if (
+    !input ||
+    input.paper_session_id !== account.session_id ||
+    typeof pin !== "string" ||
+    !/^[a-f0-9]{64}$/.test(pin) ||
+    input.admission_sha256 !== pin
+  )
+    throw new Error(
+      "Paper input does not match this account's saved admission.",
+    );
+}
+
+function accountPlan(
+  account: AccountIdentity,
+  plan: PaperAccountPlan | null | undefined,
+) {
+  if (
+    plan &&
+    (plan.paper_session_id !== account.session_id ||
+      (plan.mode === "forward_paper"
+        ? account.provider_type !== "forward_a_share"
+        : account.provider_type !== "historical_a_share"))
+  )
+    throw new Error("Paper plan does not belong to this account.");
+  if (plan?.mode === "forward_paper")
+    accountInput(account, plan.input_provenance);
+}
+
+function accountMarket(account: AccountIdentity, market: MarketSession | null) {
+  if (!market) return;
+  const forward = account.provider_type === "forward_a_share";
+  if (forward !== (market.source === "RECEIPT_BOUND_FORWARD_A_SHARE_V1"))
+    throw new Error("Paper market input does not belong to this account.");
+  if (forward) accountInput(account, market.input_provenance);
+}
+
+function accountPortfolio(
+  account: AccountIdentity,
+  value: PaperPortfolio | null,
+) {
+  if (!value) return;
+  const input = value.input_provenance;
+  if (account.provider_type === "forward_a_share") accountInput(account, input);
+  else if (input !== undefined)
+    throw new Error("Paper portfolio input does not belong to this account.");
+  accountPlan(account, value.plan);
+}
+
+export function validatePaperAccountEvent(
+  account: AccountIdentity,
+  event: PaperWireEvent,
+) {
+  if (event.type === "market.session")
+    accountMarket(account, marketSession(event.payload));
+  else if (event.type === "portfolio.snapshot")
+    accountPortfolio(account, portfolio(event.payload));
+  else if (event.type === "input.committed") {
+    const input = parsePaperInputCommit(event.payload);
+    if (
+      account.provider_type !== "forward_a_share" ||
+      input.paper_session_id !== account.session_id
+    )
+      throw new Error("Paper input commit does not belong to this account.");
+  } else if (
+    event.type === "market.bar" &&
+    account.provider_type === "forward_a_share"
+  )
+    throw new Error("Invalid forward paper market event.");
+}
+
+export function validatePaperInputState(value: PaperState) {
+  if (value.session.provider_type !== "forward_a_share") return;
+  const inputs = [
+    value.latest_session?.input_provenance,
+    value.latest_portfolio?.input_provenance,
+    value.last_rebalance_plan?.input_provenance,
+  ].filter((input) => input !== undefined);
+  for (let index = 0; index < inputs.length; index++)
+    for (const other of inputs.slice(index + 1))
+      if (
+        inputs[index]!.trading_date === other.trading_date &&
+        JSON.stringify(inputs[index]) !== JSON.stringify(other)
+      )
+        throw new Error("Conflicting paper inputs for one trading date.");
+}
 
 function state(value: unknown): PaperState {
   const item = record(value);
@@ -463,14 +609,12 @@ function state(value: unknown): PaperState {
         ? null
         : parsePaperAccountPlan(item.last_rebalance_plan),
   };
-  if (
-    (result.latest_portfolio?.plan || result.last_rebalance_plan) &&
-    (result.session.provider_type !== "historical_a_share" ||
-      [result.latest_portfolio?.plan, result.last_rebalance_plan].some(
-        (plan) => plan && plan.paper_session_id !== result.session.session_id,
-      ))
-  )
-    throw new Error("Paper plan does not belong to this account.");
+  accountMarket(result.session, result.latest_session);
+  accountPortfolio(result.session, result.latest_portfolio);
+  accountPlan(result.session, result.last_rebalance_plan);
+  if (result.session.provider_type === "forward_a_share" && result.latest_bar)
+    throw new Error("Invalid forward paper market state.");
+  validatePaperInputState(result);
   return result;
 }
 
@@ -693,6 +837,7 @@ export const paperParsers = {
   marketBar,
   marketSession,
   calendar: calendarObservation,
+  inputCommit: parsePaperInputCommit,
   signal,
   decision,
   order,
@@ -730,6 +875,15 @@ export function parseWireEvent(value: unknown): PaperWireEvent {
         calendarUtc(item.occurred_at) !== calendarUtc(observation.applied_at)
       )
         throw new Error("Invalid paper calendar event envelope.");
+    } else if (type === "input.committed") {
+      const input = parsePaperInputCommit(payload);
+      if (
+        Number(item.sequence) <= input.journal_last_sequence ||
+        Number(item.sequence) > MAX_SEQUENCE ||
+        paperInputUtc(item.occurred_at) !==
+          paperInputUtc(input.commit_observed_at)
+      )
+        throw new Error("Invalid paper input commit envelope.");
     } else if (type === "signal.created") signal(payload);
     else if (type === "risk.decision") decision(payload);
     else if (type === "order.updated") order(payload);

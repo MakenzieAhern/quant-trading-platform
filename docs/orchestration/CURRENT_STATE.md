@@ -1,5 +1,49 @@
 # Current state
 
+## v1.2 receipt-bound paper isolated integration passed — 2026-10-13
+
+The reviewed implementation connects a deployment-pinned source contract and canonical
+receipts to the existing paper manager, risk/OMS, plan and journal. Synthetic
+warmup plus two forward-shaped days exercise actual proposals and next-day fills;
+this is integration evidence, not actual new-market acceptance. No real contract
+has been registered and the public creation capability remains unavailable.
+
+The strengthened reader now reproduces normalized rows from retained raw bytes.
+A read-only check of all six actual cached bundles passes with all18files unchanged.
+The two documented parser-label exceptions remain inspection-only and strict
+execution rejects them. No original DB or provider was accessed by that probe.
+[Current evidence and original failure](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
+
+Independent review closed stale-clock rejection, wrong frontend source-pin binding,
+the fixed receipt-count ceiling and conflicting/expired base cost schedules.
+Final backend2258PASS/1optional archiveSKIP and frontend950PASS/54files; backend
+Ruff/588format/mypy148 and frontend static/build PASS. Actual isolated PostgreSQL,
+REST, ASGI WebSocket JSON and new-manager resume pass. Failed prior test runs remain
+recorded; no append-only production guard was weakened. Exact-head CI and publication
+are pending, and these synthetic integration tests do not prove actual forward use.
+The served application remains aa5f529; its earlier CI does not cover this work.
+Root owns integration/Git; all authors are frozen and reviewers read-only.
+Next close the real engineering gap: daily context must arrive after start rather
+than requiring all future context in the immutable contract. Retain per-day pins
+and observation times for resume; do not infer missing ST/actions/suspensions.
+Actual source qualification and full U1–U8/M3–M5 remain PARTIAL.
+
+## v1.2 Recheck styling published and visually verified — 2026-10-13
+
+`aa5f529` is served on localhost5173. CI38395584853 passed2177backend/1optional
+archive SKIP and902frontend; the frontend-only publication preserves all four
+container start times and33selected responses,5accounts/417events. Windows checks
+all13served files. Actual Chrome verifies five selected combinations across
+four widths, Chinese/English and light/dark; cash is retained and keyboard flow
+works. A stale first mobile capture is explicitly excluded from passing evidence.
+[Exact evidence and limits](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities-style/README.md>).
+
+Next connect independently admitted daily receipt inputs to the existing paper
+manager, plan and journal transaction. The source-admission contract is missing;
+raw receipts and a constructed ResearchSession are not approval. Source/financial,
+real-forward and full quality/release acceptance remain incomplete. No new account,
+strategy, frozen data, OOS, merge or release action.
+
 ## v1.2 Paper creation checks deployed and browser reviewed — 2026-10-13
 
 The capability and delayed-receipt fixes are served locally from `efd1297`.

@@ -7,6 +7,8 @@ import {
   paperApi,
   paperParsers,
   parseWireEvent,
+  validatePaperAccountEvent,
+  validatePaperInputState,
 } from "../api/paper";
 import type {
   PaperSession,
@@ -73,6 +75,7 @@ function applyPaperStateEvent<T extends PaperState>(
 ): T {
   if (event.sequence === null || event.sequence <= current.last_sequence)
     return current;
+  validatePaperAccountEvent(current.session, event);
   const next = { ...current, last_sequence: event.sequence };
   if (event.type === "session.status") {
     const status = event.payload.status;
@@ -87,20 +90,17 @@ function applyPaperStateEvent<T extends PaperState>(
   }
   if (event.type === "market.bar")
     return { ...next, latest_bar: paperParsers.marketBar(event.payload) };
-  if (event.type === "market.session")
-    return {
+  if (event.type === "market.session") {
+    const updated = {
       ...next,
       latest_session: paperParsers.marketSession(event.payload),
     };
+    validatePaperInputState(updated);
+    return updated;
+  }
   if (event.type === "portfolio.snapshot") {
     const portfolio = paperParsers.portfolio(event.payload);
-    if (
-      portfolio.plan &&
-      (current.session.provider_type !== "historical_a_share" ||
-        portfolio.plan.paper_session_id !== current.session.session_id)
-    )
-      throw new Error("Paper plan does not belong to this account.");
-    return {
+    const updated = {
       ...next,
       latest_portfolio: portfolio,
       last_rebalance_plan:
@@ -108,6 +108,8 @@ function applyPaperStateEvent<T extends PaperState>(
           ? portfolio.plan
           : current.last_rebalance_plan,
     };
+    validatePaperInputState(updated);
+    return updated;
   }
   return next;
 }
@@ -155,7 +157,8 @@ export function usePaperStream(sessionId: string) {
     let hydrateAgain = false;
     let collectionRefresh: number | undefined;
     let verifiedSequence = 0;
-    let provider: PaperSession["provider_type"] | null = null;
+    // Validate incremental state synchronously inside onmessage's error boundary.
+    let accountState: PaperState | null = null;
     let reconnectAttempts = 0;
     let openingChecked = false;
     let openingController: AbortController | null = null;
@@ -186,7 +189,7 @@ export function usePaperStream(sessionId: string) {
           const complete = buffered.reduce(applyPaperStateEvent, hydrated);
           buffered = [];
           verifiedSequence = hydrated.last_sequence;
-          provider = hydrated.session.provider_type;
+          accountState = complete;
           acceptedSequence.current = Math.max(
             acceptedSequence.current ?? complete.last_sequence,
             complete.last_sequence,
@@ -275,15 +278,11 @@ export function usePaperStream(sessionId: string) {
             event.sequence !== null &&
             (acceptedSequence.current === null ||
               event.sequence > acceptedSequence.current);
-          if (!hydrating && advances && event.type === "portfolio.snapshot") {
-            const plan = paperParsers.portfolio(event.payload).plan;
-            if (
-              plan &&
-              (provider !== "historical_a_share" ||
-                plan.paper_session_id !== sessionId)
-            )
-              throw new Error("Paper plan does not belong to this account.");
-          }
+          const incremental =
+            !hydrating && advances && accountState
+              ? applyPaperStateEvent(accountState, event)
+              : null;
+          if (incremental) accountState = incremental;
           if (hydrating && buffered.length >= 256) {
             buffered = [];
             terminal = false;
@@ -323,7 +322,7 @@ export function usePaperStream(sessionId: string) {
             }
             setSnapshot((current) =>
               current?.session.session_id === sessionId
-                ? applyPaperStateEvent(current, event)
+                ? (incremental ?? current)
                 : current,
             );
           }
@@ -396,7 +395,7 @@ export function usePaperStream(sessionId: string) {
                 sequence: openingSnapshot.last_sequence,
               });
               verifiedSequence = openingSnapshot.last_sequence;
-              provider = openingSnapshot.session.provider_type;
+              accountState = openingSnapshot;
               setError(null);
               setConnection("closed");
               socket?.close();

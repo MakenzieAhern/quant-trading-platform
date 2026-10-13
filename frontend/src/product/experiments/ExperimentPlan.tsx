@@ -12,6 +12,17 @@ import type {
 const en = {
   title: "Simulated rebalance preview",
   paperTitle: "This account's historical rebalance plan",
+  forwardTitle: "This account's receipt-bound forward plan",
+  forwardWarning:
+    "Forward simulation using server-recorded receipt lineage. No live broker order or investment advice; this display is not source or financial acceptance.",
+  forwardReplay:
+    "This plan used this account's recorded input and snapshot for the completed date. The account summary may show a later state.",
+  forwardEstimate:
+    "Cash uses completed raw closes; the next accepted session's open and actual costs can differ. This forward simulation cannot place live orders.",
+  forwardLegacy:
+    "No receipt-bound plan has been recorded for this account yet.",
+  admission: "Admission contract checksum",
+  forwardAccount: "Account snapshot checksum",
   legacy:
     "This older result has no saved plan preview. A new exploratory run can record one.",
   paperLegacy:
@@ -92,6 +103,16 @@ const en = {
 const zh: typeof en = {
   title: "模拟调仓预览",
   paperTitle: "此模拟账户的历史调仓计划",
+  forwardTitle: "此模拟账户的回执绑定前向计划",
+  forwardWarning:
+    "使用服务器记录的回执来源进行前向模拟；没有真实券商订单，也不构成投资建议。本展示不代表来源或金融验收通过。",
+  forwardReplay:
+    "本计划使用此账户在已完成日期的记录输入与账户快照；上方账户概览可能显示较晚状态。",
+  forwardEstimate:
+    "现金按已完成日原始收盘价估算；下一已验收交易日开盘价与实际费用可能不同。本前向模拟不能发出真实订单。",
+  forwardLegacy: "此账户尚未记录回执绑定计划。",
+  admission: "准入契约校验和",
+  forwardAccount: "账户快照校验和",
   legacy: "这份较早的结果未保存计划预览。新建探索性实验后可记录计划。",
   paperLegacy: "该较早账户未保存账户专属计划；下方仍可查看原有订单与成交。",
   warning:
@@ -162,11 +183,13 @@ const zh: typeof en = {
 export function ExperimentPlan({
   plan,
   account = false,
+  forward = plan?.mode === "forward_paper",
   quality,
   sourceIntegrity,
 }: {
   plan: SimulationPlan | PaperAccountPlan | null;
   account?: boolean;
+  forward?: boolean;
   quality?: CurrentDatasetQuality;
   sourceIntegrity?: CurrentSourceIntegrity;
 }) {
@@ -177,7 +200,7 @@ export function ExperimentPlan({
       panel.current?.scrollIntoView?.({ block: "start" });
   }, []);
   const c = i18n.language.startsWith("zh") ? zh : en;
-  const title = account ? c.paperTitle : c.title;
+  const title = account ? (forward ? c.forwardTitle : c.paperTitle) : c.title;
   const unverifiedDate = Boolean(
     plan?.account &&
     plan.account_snapshot_trading_date !== plan.as_of_trading_date,
@@ -202,11 +225,17 @@ export function ExperimentPlan({
         </p>
       )}
       {!plan ? (
-        <p>{account ? c.paperLegacy : c.legacy}</p>
+        <p>
+          {account ? (forward ? c.forwardLegacy : c.paperLegacy) : c.legacy}
+        </p>
       ) : (
         <>
           <p className="experimentNotice">
-            {account ? c.paperWarning : c.warning}
+            {account
+              ? forward
+                ? c.forwardWarning
+                : c.paperWarning
+              : c.warning}
           </p>
           {unverifiedDate && (
             <p className="stateCallout" role="alert">
@@ -215,7 +244,9 @@ export function ExperimentPlan({
           )}
           <p>
             {account
-              ? c.paperReplay
+              ? forward
+                ? c.forwardReplay
+                : c.paperReplay
               : plan.mode === "synthetic_demo"
                 ? c.demo
                 : c.replay}
@@ -265,7 +296,11 @@ export function ExperimentPlan({
             </div>
           </dl>
           <p className="experimentHelp">
-            {account ? c.paperEstimate : c.estimate}
+            {account
+              ? forward
+                ? c.forwardEstimate
+                : c.paperEstimate
+              : c.estimate}
           </p>
           {plan.candidates.length ? (
             <>
@@ -341,7 +376,7 @@ export function ExperimentPlan({
           <details className="experimentTechnical">
             <summary>{c.details}</summary>
             <dl>
-              <dt>{c.dataset}</dt>
+              <dt>{forward ? c.admission : c.dataset}</dt>
               <dd title={plan.dataset_sha256}>
                 {shortId(plan.dataset_sha256)}
               </dd>
@@ -349,7 +384,7 @@ export function ExperimentPlan({
               <dd title={plan.data_snapshot_sha256}>
                 {shortId(plan.data_snapshot_sha256)}
               </dd>
-              <dt>{c.account}</dt>
+              <dt>{forward ? c.forwardAccount : c.account}</dt>
               <dd title={plan.account?.snapshot_sha256}>
                 {plan.account
                   ? shortId(plan.account.snapshot_sha256)

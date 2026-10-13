@@ -18,7 +18,8 @@ export type PaperSessionStatus =
 export interface PaperSession {
   session_id: string;
   status: PaperSessionStatus;
-  provider_type: "replay" | "simulated_a_share" | "historical_a_share";
+  provider_type:
+    "replay" | "simulated_a_share" | "historical_a_share" | "forward_a_share";
   dataset_id: string;
   symbol: string;
   strategy_type:
@@ -48,7 +49,7 @@ export type PaperCapabilityReason =
 
 export interface PaperCapabilities {
   providers: {
-    provider_type: PaperSession["provider_type"];
+    provider_type: CreatePaperSessionRequest["provider_type"];
     dataset_id: string;
     symbol: string;
     available: boolean;
@@ -72,7 +73,39 @@ export interface MarketSession {
   security_count: number;
   source:
     | "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1"
-    | "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1";
+    | "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1"
+    | "RECEIPT_BOUND_FORWARD_A_SHARE_V1";
+  input_provenance?: PaperInputProvenance;
+}
+
+export interface PaperInputProvenance {
+  schema_version: "PAPER_DAILY_INPUT_V1";
+  paper_session_id: string;
+  trading_date: string;
+  admission_sha256: string;
+  calendar_sha256: string;
+  authorities_sha256: string;
+  session_sha256: string;
+  input_sha256: string;
+  closed_at: string;
+  next_open_at: string;
+  receipts: {
+    security_id: string;
+    receipt_id: string;
+    manifest_sha256: string;
+    first_received_at: string;
+  }[];
+}
+
+export interface PaperInputCommit {
+  schema_version: "PAPER_INPUT_COMMIT_V1";
+  paper_session_id: string;
+  trading_date: string;
+  input_sha256: string;
+  journal_first_sequence: number;
+  journal_last_sequence: number;
+  commit_observed_at: string;
+  next_open_at: string;
 }
 
 export interface PaperCalendarPayload {
@@ -142,6 +175,7 @@ export interface PaperPosition {
 }
 
 export interface PaperPortfolio {
+  input_provenance?: PaperInputProvenance;
   timestamp: string;
   cash: string;
   market_value: string;
@@ -265,6 +299,7 @@ export interface PaperWireEvent {
     | "market.bar"
     | "market.session"
     | "calendar.observed"
+    | "input.committed"
     | "signal.created"
     | "risk.decision"
     | "order.updated"

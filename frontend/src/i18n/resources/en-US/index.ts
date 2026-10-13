@@ -228,6 +228,7 @@ export const enUS = {
       replay: "Legacy local AAPL fixture · not A-share data",
       simulated_a_share: "Synthetic A-share demo · 2030 scenario",
       historical_a_share: "A-share historical replay",
+      forward_a_share: "Receipt-bound A-share forward simulation",
     },
     strategies: {
       moving_average_crossover: "Moving average crossover",
@@ -370,6 +371,28 @@ export const enUS = {
       resume: "Resume replay",
       pause: "Pause replay",
       stop: "Stop replay",
+      forwardStart: "Start forward simulation",
+      forwardResume: "Resume forward simulation",
+      forwardPause: "Pause forward simulation",
+      forwardStop: "Stop forward simulation",
+      forwardBoundary:
+        "Server-recorded receipt-bound forward simulation. Displaying this lineage does not establish source rights, financial acceptance, or permission for live trading. Public forward creation remains unavailable.",
+      marketInput: "Recorded market input lineage",
+      portfolioInput: "Recorded portfolio input lineage",
+      inputChecksum: "Daily input checksum",
+      admissionChecksum: "Admission contract checksum",
+      closedAt: "Session close (UTC)",
+      nextOpenAt: "Next open (UTC)",
+      receipts:
+        "Security · receipt ID · first received (UTC) · manifest checksum",
+      receiptCount:
+        "Showing {{shown}} of {{total}} recorded receipts. Complete lineage remains in the saved API record.",
+      forwardEndedHelp:
+        "This forward simulation has ended. Preserve its recorded inputs, plans and financial journal; partial records are not a completed validation.",
+      forwardCopyUnavailable:
+        "Forward accounts cannot be copied through the replay creation form. No replacement account will be created.",
+      inputCommitSummary:
+        "Input commit for {{date}}, financial batch {{first}}–{{last}}. Control record only; no new fill or portfolio value.",
       startError:
         "Unable to start the paper session. Check the current session status and connection before retrying.",
       pauseError:
@@ -391,6 +414,8 @@ export const enUS = {
           "Synthetic 2030 scenario · not research evidence",
         FROZEN_HISTORICAL_A_SHARE_REPLAY_V1:
           "Frozen historical archive · not current execution approval",
+        RECEIPT_BOUND_FORWARD_A_SHARE_V1:
+          "Server-recorded receipt-bound forward input · not acceptance approval",
       },
       detailsLabel: "Paper session details",
       provider: "Provider",
@@ -501,6 +526,7 @@ export const enUS = {
         session: { status: "Account status" },
         market: { bar: "Completed bar", session: "Trading session" },
         calendar: { observed: "Calendar control" },
+        input: { committed: "Input commit control" },
         signal: { created: "Strategy signal" },
         risk: { decision: "Risk decision" },
         order: { updated: "Order update" },

@@ -46,6 +46,8 @@ class Settings(BaseSettings):
     backtest_fixture_path: Path = Field(default=PROJECT_DIR / "data" / "fixtures")
     research_data_path: Path = Field(default=Path("/workspace/research"))
     product_data_path: Path = Field(default=PROJECT_DIR / "data" / "product")
+    paper_forward_contract_path: Path | None = None
+    paper_forward_contract_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     frontend_origin: str = "http://localhost:5173"
 
     @property
@@ -74,6 +76,28 @@ class Settings(BaseSettings):
         """Keep real-money execution disabled until a separately reviewed phase."""
         if self.broker_mode == "live":
             raise ValueError("BROKER_MODE=live is intentionally disabled")
+        return self
+
+    @model_validator(mode="after")
+    def validate_forward_pin(self) -> "Settings":
+        if (self.paper_forward_contract_path is None) != (
+            self.paper_forward_contract_sha256 is None
+        ):
+            raise ValueError("paper forward contract requires both path and SHA-256")
+        if self.paper_forward_contract_path is not None:
+            path = self.paper_forward_contract_path
+            self.paper_forward_contract_path = (
+                path if path.is_absolute() else PROJECT_DIR / path
+            ).resolve()
+            if not self.paper_forward_contract_path.is_relative_to(
+                self.product_data_path.resolve()
+            ):
+                raise ValueError("paper forward contract must be in independent product data")
+            if (
+                self.paper_forward_contract_path.is_relative_to(self.research_data_path.resolve())
+                or ".research" in self.paper_forward_contract_path.parts
+            ):
+                raise ValueError("paper forward contract cannot be in research history")
         return self
 
     @model_validator(mode="after")

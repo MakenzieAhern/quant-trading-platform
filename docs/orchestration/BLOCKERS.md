@@ -1,5 +1,24 @@
 # Blockers
 
+## v1.2 current blockers and executable work — 2026-10-13
+
+Docker and GitHub CI are not current blockers. Exact `aa5f529` run38395584853
+is SUCCESS, and the frontend correction has been published. Earlier GitHub HOLD
+and pending-publication entries below are historical.
+
+Full product acceptance remains incomplete. Source/financial admission has
+unresolved 300147 and 000425 findings; the final targeted 300147 supporting
+notice itself contains a conflicting total and does not close that finding.
+Genuine missing-ledger recovery/disposition, lawful forward-source evidence and
+the complete quality/release gates remain separate requirements.
+
+Reader semantic verification and the finite receipt-to-paper integration now pass
+full isolated regression. Safe engineering continues with append-only qualified
+daily context arriving after start; the fixed future-context contract does not
+meet that requirement. This is not permission to activate a raw candidate feed,
+modify frozen research or substitute synthetic sessions for real forward acceptance.
+New code needs exact-head CI/publication; current served aa5f529 remains available.
+
 ## v1.2 stale raw checkpoint defect RESOLVED_SCOPED — 2026-10-08
 
 Shared resume now binds complete input and parser context, rejects stale/legacy
