@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-10-13 candidate audit and execution listing parity
+
+[Proof, test scope and CI](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-listing-audit/README.md>).
+Complete synthetic candidate RED reproduced a false action-session audit PASS
+for a listing rejected by runtime. Both now use the same required next-session
+argument and accepted calendar, with no account mutation in audit. Eight new
+boundary cases,216related tests, Ruff/583format/app-mypy146 and independent review
+PASS. Evidence ec8a5adc binds587files/15codepins and repeats under python-O.
+The bounded-loader4-session case proves wiring only;7full synthetic scans retain
+reference-price FAIL. Financial/strategy/data admission flags remain false.
+No extra runtime restart, real dataset audit, browser or overall product PASS.
+
+## 2026-10-13 date guards loaded in existing local backend
+
+[Publication evidence and limits](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-date-guard-publication/README.md>).
+CI38385449677/a369968 passed backend2152/1optionalSKIP, frontend870 and Compose.
+One backend restart loaded the reviewed ordinary-date guards. Schema0017 and
+PG/Redis/frontend identities/start times remained unchanged.32selected HTTP bodies,
+2legacy runs,5stopped accounts/417events,12research/4updates and product/frontend
+files match before; Windows API/frontendHTTP200. Fresh private backup retained,
+not restored. Independent review and17 publication-verifier tests PASS, including
+missing evidence and active legacy writer refusal. Full browser/restore/all-table
+acceptance is not claimed; whole U1–U8/M3–M5 remains PARTIAL.
+
 ## 2026-10-13 cross tab test scheduling recovery
 
 CI38383415919: backend2152PASS/1optionalSKIP, Compose PASS, frontend869PASS/1FAIL.

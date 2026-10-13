@@ -130,6 +130,12 @@ action dates absent from the accepted calendar remain explicit failures.
 the production research engine, before any financial mutation: ambiguous or
 concurrent actions, supported policies, application dates, holder-class metadata,
 pass-through trading conflicts and surrender resumption-boundary requirements.
+Ordinary share listing dates must be the ex session or the next accepted session.
+Both callers provide the calendar successor explicitly; unknown successor means
+no later listing can be accepted, not that validation is skipped. The audit uses
+the full accepted trading calendar, including a known period-end successor, never
+the affected security's price dates. Null legacy listing metadata remains unknown
+under the existing policy. This check does not establish missing source dates.
 Failures retain the observed session date and reason; the helper's source file
 is bound before input loading and rechecked before report publication. This does
 not prove actual account holder eligibility (the loader supplies event metadata),

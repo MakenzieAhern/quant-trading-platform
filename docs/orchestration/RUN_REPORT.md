@@ -1,5 +1,33 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-13 candidate listing preconditions corrected
+
+- Progress: complete synthetic candidate exposed audit/runtime mismatch; one
+  shared accepted-calendar guard now closes it before financial mutation.
+- 8new retained cases;216relatedPASS, Ruff/583format/app-mypy146PASS. Independent
+  review no scopedP1/P2; proof ec8a5adc binds587fixture files/15codepins and repeats
+  identically with python-O. Original RED tool output retained, old tempfiles absent.
+- [Evidence and exact-head CI](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-listing-audit/README.md>).
+  Reference failure,15unproven financial/lifecycle gates and full productPARTIAL
+  remain. No real dataset/DB/provider/strategy/OOS or additional runtime action.
+- Next required U7 receipt-to-session/plan/processing integration must be advanced
+  from real contracts; lawful source/current authority and actual after-start
+  evidence are still absent. No raw-candidate promotion or fixture-forward claim.
+
+## 2026-10-13 backend publication completed
+
+- Progress: exact-head CI and safe publication, not a status-only continuation.
+- CI38385449677/a369968 SUCCESS: backend2152PASS/1optionalSKIP, frontend870PASS,
+  Compose PASS. Original frontend failure and deterministic test-only fix retained.
+- Fresh pg_dumpd3104ca3/product backup and compatible725source retained. Existing
+  backend restarted once10:50:09.99589481UTC; other services unchanged; schema0017.
+- Selected32HTTP responses and file hashes match before;2legacy/5STOPPEDpaper/
+  417events/12research/4updates. Windows API/frontendHTTP200. No all-table/restore/
+  browser claim. Independent publication review2RED→17PASS; evidence77cda9b2.
+- [Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-date-guard-publication/README.md>).
+  Next shared listing validation in candidate audit, then full remaining U1–U8.
+  Frozen data, original studies/OOS and release state unchanged; full goal active.
+
 ## 2026-10-13 CI recovery and safe publication preparation
 
 - Previous status-only turn was NO_PROGRESS. Current work closes a reproducible

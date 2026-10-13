@@ -1,6 +1,8 @@
 """Candidate audits read real synthetic partitions, never the frozen archive or DB."""
 
 import json
+from datetime import date
+from decimal import Decimal
 from io import BytesIO
 from pathlib import Path
 
@@ -9,9 +11,16 @@ import pyarrow.parquet as pq
 import pytest
 from openpyxl import load_workbook
 
+from app.data.catalog import load_manifest
 from app.data.catalog.checksums import canonical_sha256, sha256_file
+from app.data.full_dataset import FullDataset
 from app.domain.markets import SecurityId
+from app.domain.markets.calendar import TradingCalendar
 from app.domain.markets.corporate_actions import OrdinaryDistributionReference
+from app.execution import FixedCommission
+from app.research.engine import ResearchExecutionEngine
+from app.research.models import ResearchPeriodKind
+from app.research.splits import TemporalPeriod
 from scripts import audit_full_dataset as auditor
 from scripts import materialize_full_dataset as materializer
 from scripts.audit_full_dataset import audit
@@ -20,15 +29,24 @@ from tests.test_full_dataset_build_inputs import build
 from tests.test_full_dataset_raw_checkpoint import _source
 from tests.test_full_dataset_sources import _manifest
 from tests.test_merger_accounting import event as merger
+from tests.test_ordinary_distribution_sessions import NoTargets, _state
 from tests.test_pass_through_accounting import event as pass_through
 from tests.test_successor_reference_inputs import reference_inputs, update_spec
 
 
-def audit_inputs(tmp_path, *, include_reference=True, conflicting_pass_through=False):
+def audit_inputs(
+    tmp_path,
+    *,
+    include_reference=True,
+    conflicting_pass_through=False,
+    bonus_updates=None,
+):
     repository, path, spec, cash, bonus, reference = reference_inputs(tmp_path)
     contracts = {row["name"]: row for row in spec["source_contracts"]}
     sid = SecurityId(value="CN-A:SZSE:000001")
     cash, bonus = (event.model_copy(update={"security_id": sid}) for event in (cash, bonus))
+    if bonus_updates:
+        bonus = bonus.model_copy(update=bonus_updates)
     reference = OrdinaryDistributionReference.model_validate(
         {
             **reference.model_dump(),
@@ -247,7 +265,6 @@ def test_candidate_audit_checks_production_action_boundaries_without_accounting(
     tmp_path, monkeypatch
 ):
     from app.portfolio import PortfolioEngine
-    from app.research.engine import ResearchExecutionEngine
 
     def forbidden(*args, **kwargs):
         pytest.fail("audit must not instantiate a portfolio or strategy execution engine")
@@ -268,6 +285,153 @@ def test_candidate_audit_checks_production_action_boundaries_without_accounting(
     assert report["audit_status"] == "FAIL_CLOSED"
     assert report["gates"]["CORPORATE_ACTION_ACCOUNTING"] == "NOT_EVIDENCED"
     assert not report["accounting_invariant_evidence"]["portfolio_accounting_run"]
+    assert not report["dataset_audited"] and not report["strategy_run"]
+
+
+@pytest.mark.parametrize(
+    ("bonus_updates", "action_date", "next_date"),
+    [
+        ({"listing_date": date(2011, 7, 25)}, date(2011, 2, 1), date(2011, 2, 2)),
+        ({"listing_date": date(2011, 1, 31)}, date(2011, 2, 1), date(2011, 2, 2)),
+        (
+            {
+                "ex_date": date(2015, 12, 30),
+                "effective_date": date(2015, 12, 30),
+                "record_date": date(2015, 12, 29),
+                "listing_date": date(2015, 12, 31),
+            },
+            date(2015, 12, 30),
+            None,
+        ),
+    ],
+    ids=["later-than-next", "before-ex", "no-accepted-next"],
+)
+def test_candidate_listing_precondition_matches_runtime_before_accounting(
+    tmp_path, bonus_updates, action_date, next_date
+):
+    repository, path, spec = audit_inputs(
+        tmp_path,
+        include_reference=False,
+        bonus_updates=bonus_updates,
+    )
+    dataset = Path(spec["final_root"])
+    manifest = load_manifest(dataset / "manifest.json")
+    loader = FullDataset(
+        dataset,
+        manifest,
+        TemporalPeriod(
+            ResearchPeriodKind.FULL_PERIOD, manifest.coverage_start, manifest.coverage_end
+        ),
+    )
+    execution_calendar = (
+        TradingCalendar(
+            market=loader.calendar.market,
+            sessions=(*loader.calendar.sessions, loader.next_session),
+        )
+        if loader.next_session is not None
+        else loader.calendar
+    )
+    engine = ResearchExecutionEngine(
+        NoTargets(),
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=execution_calendar,
+    )
+    session = next(
+        item for item in loader.sessions(execution=True) if item.trading_date == action_date
+    )
+    assert engine.next_accepted_session(session.trading_date) == next_date
+    before = _state(engine)
+    reason = "ORDINARY_DISTRIBUTION_LISTING_DATE_UNSUPPORTED"
+    with pytest.raises(ValueError, match=reason):
+        engine.process_session(session)
+    assert _state(engine) == before
+
+    report = run_audit(repository, path, spec, tmp_path / "audit.json")
+    assert report["gates"]["SOURCE_EVENT_SET_MATCH"] == "PASS"
+    # Omitting the same-ex price companion is honest: this separate gate still fails.
+    assert report["gates"]["REFERENCE_PRICE_CONTINUITY"] == "FAIL"
+    assert report["gates"]["ACTION_SESSION_PRECONDITIONS"] == "FAIL"
+    assert report["runtime_scan"]["action_session_failures"] == [
+        {"trading_date": action_date.isoformat(), "reason": reason}
+    ]
+    assert not report["accounting_invariant_evidence"]["portfolio_accounting_run"]
+    assert not report["full_financial_admission"]
+
+
+@pytest.mark.parametrize("listing_date", [date(2011, 2, 1), date(2011, 2, 2), None])
+def test_candidate_listing_accepts_same_ex_next_and_legacy_unknown_without_accounting(
+    tmp_path, monkeypatch, listing_date
+):
+    from app.portfolio import PortfolioEngine
+
+    repository, path, spec = audit_inputs(
+        tmp_path, include_reference=False, bonus_updates={"listing_date": listing_date}
+    )
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("audit must not instantiate a portfolio or strategy execution engine")
+
+    monkeypatch.setattr(PortfolioEngine, "__init__", forbidden)
+    monkeypatch.setattr(ResearchExecutionEngine, "__init__", forbidden)
+    report = run_audit(repository, path, spec, tmp_path / "audit.json")
+    assert report == run_audit(repository, path, spec, tmp_path / "audit-repeat.json")
+    assert report["gates"]["SOURCE_EVENT_SET_MATCH"] == "PASS"
+    assert report["gates"]["REFERENCE_PRICE_CONTINUITY"] == "FAIL"
+    assert report["gates"]["ACTION_SESSION_PRECONDITIONS"] == "PASS"
+    assert report["runtime_scan"]["action_session_failures"] == []
+    assert report["gates"]["CORPORATE_ACTION_ACCOUNTING"] == "NOT_EVIDENCED"
+    assert not report["accounting_invariant_evidence"]["portfolio_accounting_run"]
+    assert not report["full_financial_admission"]
+
+
+def test_candidate_listing_uses_calendar_not_affected_security_price_dates(tmp_path):
+    repository, path, spec = audit_inputs(
+        tmp_path,
+        include_reference=False,
+        bonus_updates={
+            "ex_date": date(2011, 1, 31),
+            "effective_date": date(2011, 1, 31),
+            "record_date": date(2011, 1, 28),
+            "listing_date": date(2011, 2, 1),
+        },
+    )
+    raw = Path(spec["final_root"]) / "raw/SZSE/2011-02.parquet"
+    assert not any(
+        row["trading_date"] == "2011-02-01" and row["security_id"] == "CN-A:SZSE:000001"
+        for row in pq.read_table(raw).to_pylist()
+    )
+    report = run_audit(repository, path, spec, tmp_path / "audit.json")
+    assert report["gates"]["ACTION_SESSION_PRECONDITIONS"] == "PASS"
+    assert report["runtime_scan"]["sessions"] == 7
+    assert report["runtime_scan"]["action_session_failures"] == []
+    assert not report["full_financial_admission"]
+
+
+def test_candidate_scan_preserves_accepted_next_session_outside_loaded_period(
+    tmp_path, monkeypatch
+):
+    repository, path, spec = audit_inputs(
+        tmp_path, include_reference=False, bonus_updates={"listing_date": date(2011, 2, 2)}
+    )
+
+    class BoundedFullDataset(FullDataset):
+        """Exercise the real loader's period-end successor, not a guessed calendar."""
+
+        def __init__(self, root, manifest, period):
+            super().__init__(
+                root, manifest, TemporalPeriod(period.kind, period.start, date(2011, 2, 1))
+            )
+            assert self.calendar.sessions[-1].session_date == date(2011, 2, 1)
+            assert self.next_session is not None
+            assert self.next_session.session_date == date(2011, 2, 2)
+
+    # This is specifically a period-boundary wiring check, not a full-period audit proof.
+    monkeypatch.setattr(auditor, "FullDataset", BoundedFullDataset)
+    report = run_audit(repository, path, spec, tmp_path / "audit.json")
+    assert report["gates"]["ACTION_SESSION_PRECONDITIONS"] == "PASS"
+    assert report["runtime_scan"]["action_session_failures"] == []
+    assert not report["full_financial_admission"]
     assert not report["dataset_audited"] and not report["strategy_run"]
 
 

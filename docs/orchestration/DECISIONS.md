@@ -1,5 +1,35 @@
 # Decisions
 
+## v1.2 Share accepted calendar action validation with candidate audit — 2026-10-13
+
+The execution-only listing guard left the independent candidate audit's component
+gate incomplete. Move it into the existing holding-independent helper and require
+both callers to supply the accepted successor explicitly. None means no successor
+is known, never skip validation. Use accepted open dates and the loader's period-end
+successor; an absent security bar cannot erase a real trading session.
+
+Preserve same-ex/next/null and rights behavior, pre-mutation refusal and source-code
+pins. Keep the separate reference-price failures and15 financial/lifecycle gates
+unproven. Eight retained synthetic cases and216related tests prove this boundary,
+not actual registry facts, real-data financial admission or full U7 acceptance.
+The original failing temporary directory disappeared before archival; report the
+true RED tool output, not a fabricated retained artifact.
+
+## v1.2 Publish reviewed guards without rebuilding services — 2026-10-13
+
+Only existing backend89aa restarted after exact-head CI, a fresh private logical
+backup, terminal legacy/product jobs, stopped accounts and no pending receipts.
+Schema0017 and migration source were unchanged, so startup Alembic was a no-op.
+All32 selected HTTP bodies and product/frontend file hashes remained equal;
+PG/Redis/frontend were not restarted. Preserve backup d3104ca3 and compatible
+prior source725d6e8; never overwrite later user data with this backup.
+
+Publication verification now fails if both snapshots omit required records or
+pins. Explicit completeness checks survive Python optimization; the prior helper
+is reused with -E without editing its historical evidence.2RED→17PASS and final
+independent review support this scoped check, not every table or raw ledger key.
+The full product goal and all genuine source/financial/browser gates remain open.
+
 ## v1.2 Synchronize test effects before native cross tab events — 2026-10-13
 
 Keep the original failed CI run38383415919 and its complete log. Its sole frontend

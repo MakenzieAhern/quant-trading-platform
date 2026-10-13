@@ -1,5 +1,43 @@
 # Current state
 
+## v1.2 candidate audit shares the runtime listing boundary — 2026-10-13
+
+The candidate audit could report its action-session precondition PASS for a late
+bonus listing that runtime rejected. A complete synthetic build reproduced the
+gap. Both callers now supply the accepted next session to one shared validation
+helper, preserving same-ex/next/null and rights semantics.216related tests and
+all backend static checks PASS; independent review found no scopedP1/P2.
+[Eight retained cases and exact-head CI](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-listing-audit/README.md>),
+proof ec8a5adc, binds587 fixture files and15 codepins. Period-end wiring is scoped,
+not a full-period financial proof; original RED temporary files are no longer
+available, with their failing tool output retained honestly.
+
+No additional service restart: the semantically unchanged guard published at
+a369968 remains loaded. Financial/lifecycle and real-source admission remain
+unproven. U7 also still lacks a production receipt-to-session/plan/processing
+bridge; current modes are replay, simulated A-share and historical A-share only.
+Next advance that required integration from actual contracts, without enabling
+raw candidates, inventing source rights or treating fixtures as real forward
+evidence. Full U1–U8/M3–M5 stays PARTIAL; no merge/release/frozen/OOS action.
+
+## v1.2 date guards deployed with selected state preserved — 2026-10-13
+
+CI38385449677 on a369968 passed all3jobs/36steps: backend2152PASS/1optionalSKIP,
+frontend870PASS and Compose PASS. Existing backend89aa restarted once at
+10:50:09.99589481UTC; schema0017 unchanged, successful startup, no migration.
+PG/Redis/frontend identities and start times are unchanged; Windows API/frontend
+HTTP200. [Publication evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-date-guard-publication/README.md>),
+sealed77cda9b2, retains fresh backup and exact32-body comparison.2legacy runs,
+5stopped accounts/417events,12research/4updates and product/frontend files remain
+unchanged. This is not full-table, restore-drill or browser acceptance.
+
+Next close a reproduced audit discrepancy: candidate action-session preconditions
+do not yet include the engine's calendar-aware listing guard. Share that check
+and prove it through synthetic candidate partitions, preserving valid next-session
+listings and unresolved financial gates. Full U1–U8/M3–M5 stays PARTIAL; remaining
+source/lifecycle, lawful-forward, original-ledger and native-browser gates persist.
+No original dataset, strategy, OOS, merge, tag or release action.
+
 ## v1.2 cross tab test initialization repair — 2026-10-13
 
 Hosted run38383415919 failed one frontend test after backend2152PASS/1optionalSKIP

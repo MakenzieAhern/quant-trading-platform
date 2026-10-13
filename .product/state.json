@@ -1,11 +1,41 @@
 {
+  "candidate_listing_parity_20261013_gate": {
+    "status": "PASS_SHARED_LISTING_PRECONDITION_NOT_FINANCIAL_ADMISSION",
+    "base_head": "a369968d06eb08ae1039cf7048214b56c2eac22a",
+    "defect": "A complete synthetic candidate's late-listing bonus was rejected by runtime before mutation but its ACTION_SESSION_PRECONDITIONS audit item falsely passed. Original RED1failure tool transcript retained; originaltemporary fixture disappeared before archive and is not claimed as retained.",
+    "fix": "One helper requires explicit next_accepted_session. Engine and auditor use the same accepted open-session sequence including a known period-end successor. No price-date calendar inference, skipped None guard, financial-policy change or new Portfolio run by auditor.",
+    "verification": "8new cases retained:3invalid,3same-ex/next/null,1missing-price next,1scoped bounded-loader wiring.187agent/216root relatedPASS; Ruff/583format/app-mypy146PASS. Normal/python-O proof8cases587files15codepins identical ec8a5adc. Independent review no scopedP1/P2, all report codepins verified. Exact-head hosted CI receipt external when complete.",
+    "limits": "7full synthetic session scans retain independent reference FAIL; bounded-loader case only4sessions and explicitly wiring-only. All financial/data/strategy admission flags remain false;15financial/lifecycle obligations remain NOT_EVIDENCED. No real dataset audit or browser acceptance.",
+    "evidence": "product-evidence/v1.2/m4/20261013-candidate-listing-audit/README.md",
+    "proof_sha256": "ec8a5adc6c5757e38ba2c685d39eb268508401e0eb0d631725c144c331411385",
+    "runtime": "No additional restart. Semantically unchanged date guard from a369968 remains loaded; the refactored source is not claimed as reloaded.",
+    "full_product_pass": false
+  },
+  "date_guard_publication_20261013_gate": {
+    "status": "PASS_BACKEND_PUBLICATION_SELECTED_STATE_PRESERVATION",
+    "head": "a369968d06eb08ae1039cf7048214b56c2eac22a",
+    "backend_started_at_utc": "2026-10-13T10:50:09.99589481Z",
+    "ci": "38385449677 SUCCESS: backend2152PASS/1optionalSKIP,frontend870PASS,ComposePASS; all3jobs/36steps passed. Receiptf73344e9 preserves failed predecessor38383415919 and its test-only repair.",
+    "deployment": "Existing89aa backend restarted once; source guard loaded. PG5987/Redisdf3d/frontend a561 IDs/images/mounts/ports/StartedAt unchanged. Schema0017 remains unchanged and Alembic startup performed no migration. Windows API/frontendHTTP200; paper mode.",
+    "preservation": "Before/immediate/after:2terminal legacy backtests,5STOPPED accounts,417events,12terminal research jobs,4terminal updates and no pending receipts.32selectedHTTP bodies exactly equal, product/frontend tree hashes equal, frozen manifest/freeze/researchstate/v1.1tag unchanged. Not all-table or rawJSONB audit.",
+    "backup": "Fresh private pg_dumpd3104ca3 directory/readabilityPASS; producttar8499f626 matches snapshot, compatible prior725d6e8 source retained. No restore performed; do not restore over later user writes. Quiet-window checks are not a lock.",
+    "verification": "Independent review added legacy writer gate and found missing-file/optimized-assert verifier failures.2RED became17PASS; explicit completeness checks, nonoptimized old helper, python-O comparison and final independent reviewPASS. No actual browser or whole-product acceptance.",
+    "evidence": "product-evidence/v1.2/m4/20261013-date-guard-publication/README.md",
+    "publication_sha256": "77cda9b2b452b21c5e9768e162292e210f3e3fd84e942a5df0a8ffcba607ed76",
+    "next": "Close candidate ACTION_SESSION_PRECONDITIONS missing the engine's accepted-calendar listing boundary, using one shared validation path and real synthetic candidate tests. Then continue full source/lifecycle and U1-U8/M3-M5 acceptance, not a source-only goal.",
+    "deployed": true,
+    "dataset_changed": false,
+    "strategy_or_oos_run": false,
+    "browser_acceptance": false,
+    "full_product_pass": false
+  },
   "draft_listener_ci_20261013_gate": {
-    "status": "LOCAL_FIX_REVIEWED_HOSTED_CI_PENDING",
+    "status": "PASS_LOCAL_AND_HOSTED_CI_TEST_ONLY_REPAIR",
     "failed_head": "4675473cb34040ee139c28e64bc8bbe59cead88f",
     "failed_run": 38383415919,
     "failure": "Backend 2152 passed/1 optional skipped and Compose passed; frontend 869 passed/1 failed. A cross-tab beforeunload test dispatched before the wizard's passive listener was installed.",
     "cause_and_fix": "Controlled DOM-mutation probe reproduced listenerReady=false/leaveAllowed=true. Only changing initial render to awaited act made the same probe true/false. Two native cross-tab tests now flush the async capabilities update and passive effects before dispatch; all original conflict/recovery/unload/no-submit assertions retained. No production code, retry, sleep or skipped assertion.",
-    "verification": "Focused90 and full870 tests/49files pass; full ESLint, TypeScript and production build pass.13 files built in temporary output only; existing530.63kB warning retained. Prettier/diff check pass. Independent readonly review confirms the async capability-to-wizard effect chain and preserved render return/unmount behavior. Exact-head hosted CI receipt remains pending beside the preserved original failure.",
+    "verification": "Focused90 and full870 tests/49files pass; full ESLint, TypeScript and production build pass.13 files built in temporary output only; existing530.63kB warning retained. Prettier/diff check pass. Independent readonly review confirms the async capability-to-wizard effect chain and preserved render return/unmount behavior. CI38385449677 on a369968 SUCCESS/all3jobs36steps; receiptf73344e9 beside preserved original failure.",
     "evidence": "product-evidence/v1.2/m4/20261013-dated-distribution-accounting/CI_RECOVERY.md",
     "runtime_deployed": false,
     "browser_acceptance": false,
@@ -4906,8 +4936,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Match dated-distribution-accounting/current-ci.json to currentGitHEAD. After reviewed exact-head CI, safely publish ordinary-date guards using existing backup/service/data preservation procedure. Then continue source/economic/lifecycle and fullU1-U8/M3-M5; source gaps300147/000425, lawful actual after-start data, genuine missing ledgers and native-browser quality remain open. No merge/release/frozen/OOS change.",
-  "local_next_command": "Complete coherent date-guard milestone push/CI and immutable receipt, then inspect existing local-publication procedure and live process/job/account state before any service action. Do not redo accepted proof or source acquisition. Browser preparation is confirmed; do not retry equivalent denied controls without genuine tool-state repair.",
+  "next_task": "Verify exact-head CI for shared candidate listing precondition, then continue the full product goal. U7 production receipt-to-session/plan/processing bridge is still absent, not merely awaiting a browser check. Inspect existing receipt/admission/current-authority contracts before implementing that complete path; no unused placeholder or flipping raw candidates executable. Keep legal source rights/real after-start acceptance unfulfilled until evidenced. Continue source/lifecycle, genuine-ledger and native-browser gates without repeating accepted proof/acquisition.",
+  "local_next_command": "Finish coherent shared-listing milestone commit/push and exact-head CI, keep publication a369968 receipt distinct. Next read ARCHITECTURE/ROADMAP and concrete market-update/receipt/paper contracts to advance required U7 integration while preserving unknown-rights refusal. Existingthree provider modes and async wait/stop/calendar foundations already implemented; do not duplicate them. FullU1-U8/M3-M5 remains incomplete; no merge/release/frozen/OOS change.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

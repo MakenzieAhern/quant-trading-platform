@@ -904,13 +904,20 @@ def audit(
                 ResearchPeriodKind.FULL_PERIOD, manifest.coverage_start, manifest.coverage_end
             ),
         )
+        # Match the execution calendar, including an accepted period-end successor.
+        calendar = loader.calendar.sessions + (
+            (loader.next_session,) if loader.next_session is not None else ()
+        )
+        next_sessions = dict(pairwise(item.session_date for item in calendar if item.is_open))
         runtime_sessions = 0
         unexplained: list[dict[str, str]] = []
         action_session_failures: list[dict[str, str]] = []
         for session in loader.sessions(execution=True):
             runtime_sessions += 1
             try:
-                require_supported_session_actions(session)
+                require_supported_session_actions(
+                    session, next_accepted_session=next_sessions.get(session.trading_date)
+                )
             except ValueError as exc:
                 action_session_failures.append(
                     {"trading_date": session.trading_date.isoformat(), "reason": str(exc)}

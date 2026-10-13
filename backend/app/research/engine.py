@@ -56,8 +56,10 @@ class ResearchStrategy(Protocol):
     def reset(self) -> None: ...
 
 
-def require_supported_session_actions(session: ResearchSession) -> None:
-    """Validate holding-independent action boundaries without running any accounting."""
+def require_supported_session_actions(
+    session: ResearchSession, *, next_accepted_session: date | None
+) -> None:
+    """Validate without accounting; None means no accepted calendar successor is known."""
     require_unambiguous_ordinary_distributions(session.corporate_actions)
     actions = sorted(session.corporate_actions, key=corporate_action_sort_key)
     demergers = sorted(session.demergers, key=lambda e: str(e.parent_security))
@@ -131,6 +133,15 @@ def require_supported_session_actions(session: ResearchSession) -> None:
         if action.ex_date != session.trading_date:
             raise ValueError("corporate action must belong to the research session")
         require_supported_corporate_action(action)
+    for action in actions:
+        if (
+            action.action_type
+            in {CorporateActionType.STOCK_DIVIDEND, CorporateActionType.BONUS_SHARE}
+            and action.listing_date is not None
+            and action.listing_date not in (session.trading_date, next_accepted_session)
+        ):
+            # Ex-day fills are blocked; later listing would need separately locked shares.
+            raise OrdinaryDistributionInputError("ORDINARY_DISTRIBUTION_LISTING_DATE_UNSUPPORTED")
 
 
 @dataclass(frozen=True, slots=True)
@@ -319,19 +330,9 @@ class ResearchExecutionEngine:
         self._previous_date = None
 
     def _process_session(self, session: ResearchSession) -> PortfolioTarget | None:
-        require_supported_session_actions(session)
-        for action in session.corporate_actions:
-            if (
-                action.action_type
-                in {CorporateActionType.STOCK_DIVIDEND, CorporateActionType.BONUS_SHARE}
-                and action.listing_date is not None
-                and action.listing_date
-                not in (session.trading_date, self._next_session.get(session.trading_date))
-            ):
-                # Ex-day fills are blocked; later listing would need separately locked shares.
-                raise OrdinaryDistributionInputError(
-                    "ORDINARY_DISTRIBUTION_LISTING_DATE_UNSUPPORTED"
-                )
+        require_supported_session_actions(
+            session, next_accepted_session=self._next_session.get(session.trading_date)
+        )
         self._active_session = session
         timestamp = datetime.combine(
             session.trading_date, time(15, 0, 0, 1), tzinfo=ZoneInfo("Asia/Shanghai")
