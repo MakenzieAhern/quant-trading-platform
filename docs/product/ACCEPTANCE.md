@@ -1,5 +1,20 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U4/U8 installed linked-date matrix
+
+[Actual browser observations, checker and four screenshots](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-linked-date-matrix/README.md>)
+cover saved study0cdfb0e5 and its March23 date-to-trades/holdings interaction.
+EN/ZH x light/dark x1440/1280/1024/390:16DOM cases, no page overflow, retained
+date and unchanged full-run metrics. Each case's10trades/10positions match fresh
+read-only API exact decimal values. Keyboard linkage/clear, mobile local table
+scroll and reversed-date recovery checked. Four settled views visually inspected;
+not16visual reviews, nativeChrome200%, speech, fullAA, p95 or financial acceptance.
+Source/economic warnings retained; no new study/account/update or deployment.
+ZH/system restored, viewport reset, ownedtab14closed, usertab untouched. This
+closes the scoped current-build interaction matrix, not full U4/U8 or M4.
+Independent read-only artifact review found no scoped discrepancies. Preceding
+022b19f CI38513529445 completedSUCCESS/all3jobs; later docs CI remains separate.
+
 ## 2026-10-14 U5/U7 one real suspension episode, not forward admission
 
 [Original evidence and deterministic reconciliation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-suspension-control/README.md>)
