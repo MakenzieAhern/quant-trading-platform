@@ -764,14 +764,15 @@ async def test_receipt_arrival_during_read_uses_fresh_clock_and_deadline(
         assert any(event.event_type == "fill.created" for event in case.journal)
 
 
-@pytest.mark.parametrize("dynamic", [False, True])
+@pytest.mark.parametrize("context_backend", ["v1", "memory", "durable", "durable_corrupt"])
 async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume(
-    tmp_path, monkeypatch, dynamic
+    tmp_path, monkeypatch, context_backend
 ):
     """Real quant_test PostgreSQL/JSONB only; inputs remain explicitly synthetic."""
     from fastapi import FastAPI
     from httpx import ASGITransport, AsyncClient
-    from sqlalchemy import delete, text
+    from sqlalchemy import delete, event, text
+    from sqlalchemy.sql.dml import Insert
 
     from app.api.routes import paper as routes
     from app.api.schemas.paper import PaperEventResponse
@@ -783,11 +784,73 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
 
     settings = get_settings()
     require_disposable_database(settings.app_env, settings.database_url)
+    dynamic = context_backend != "v1"
+    durable = context_backend.startswith("durable")
     if dynamic:
         # Context oracle/clock synthetic; receipt, account and journal rows use real quant_test.
         from tests.test_paper_daily_context import connect_contexts, dynamic_case
 
         case = connect_contexts(dynamic_case(tmp_path, monkeypatch, patch_repository=False))
+        if durable:
+            from app.application.paper_trading.context_store import DailyContextStore
+            from app.application.paper_trading.qualified_context import QualifiedContextReader
+
+            context_clock = [datetime.combine(case.first, time(8), UTC)]
+            context_reads = asyncio.Event()
+            durable_records = {}
+            source_root = tmp_path / "incoming-contexts"
+            source_root.mkdir()
+            for digest, content in case.originals.items():
+                (source_root / (digest + ".source")).write_bytes(content)
+
+            def new_contexts():
+                store = DailyContextStore(
+                    SessionFactory,
+                    tmp_path / "durable-contexts",
+                    tmp_path / "archive",
+                    clock=lambda: context_clock[0],
+                )
+                original_read = store.read_day
+
+                async def read_day(root, day):
+                    rows = await original_read(root, day)
+                    if not rows:
+                        context_reads.set()
+                    return rows
+
+                # Observe real DB reads; never return an in-memory candidate.
+                store.read_day = read_day
+                return QualifiedContextReader(store, case.contexts.verifiers)
+
+            case.contexts = new_contexts()
+            assert isinstance(case.contexts.store, DailyContextStore)
+
+            def synthetic_registration_clock(conn, statement, multi, params, options):
+                # Only this disposable test INSERT clock is synthetic. SQL persistence,
+                # immutable evidence, qualification, account/journal and replay are real.
+                # This deliberately does not prove PostgreSQL wall-clock causality.
+                if (
+                    isinstance(statement, Insert)
+                    and statement.table.name == "product_paper_context_candidates"
+                ):
+                    statement = statement.values(
+                        registered_at=context_clock[0] + timedelta(seconds=1)
+                    )
+                return statement, multi, params
+
+            async def arrive(day, *, conflict=False):
+                context_clock[0] = datetime.combine(day, time(8), UTC)
+                candidate = case.candidates[day].candidate
+                if conflict:
+                    context_clock[0] += timedelta(minutes=1)
+                    candidate = candidate.model_copy(update={"parser_version": "later-conflict"})
+                record = await case.contexts.store.capture(candidate, source_root)
+                assert record.registered_at == context_clock[0] + timedelta(seconds=1)
+                if not conflict:
+                    durable_records[day] = record
+                    context_clock[0] += timedelta(minutes=1)
+                    assert await case.contexts.store.capture(candidate, source_root) == record
+                return record
     else:
         case = fixture(tmp_path, monkeypatch, patch_repository=False)
     job_id = case.receipts[0].job_id
@@ -799,6 +862,10 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
     outgoing = asyncio.Queue(maxsize=4)
     frames = []
     try:
+        if durable:
+            event.listen(
+                engine.sync_engine, "before_execute", synthetic_registration_clock, retval=True
+            )
         async with SessionFactory() as db, db.begin():
             await db.execute(
                 text(
@@ -806,6 +873,8 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
                     "product_market_update_jobs"
                 )
             )
+            if durable:
+                await db.execute(text("TRUNCATE product_paper_context_candidates"))
             db.add(
                 MarketUpdateJobModel(
                     id=job_id,
@@ -839,7 +908,7 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
                     tmp_path / "admission.json", case.registry.expected_sha256
                 ),
                 CanonicalReceiptReader(SessionFactory, updates),
-                case.contexts if dynamic else None,
+                new_contexts() if durable else (case.contexts if dynamic else None),
             )
             manager = service.PaperTradingManager(
                 SessionFactory,
@@ -932,6 +1001,13 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
             assert manager.hub.subscriber_count(account_id) == 1
             started = await client.post(f"/api/paper-trading/sessions/{account_id}/start")
             assert started.status_code == 200, started.text
+            if durable:
+                await asyncio.wait_for(context_reads.wait(), 10)
+                assert (await manager.get(account_id)).status is PaperSessionStatus.RUNNING
+                assert not any(
+                    item.event_type == "market.session" for item in await manager.events(account_id)
+                )
+                await arrive(case.first)
             await asyncio.wait_for(manager._tasks[account_id], 20)
             await asyncio.gather(*pause_tasks)
             assert (await manager.get(account_id)).status is PaperSessionStatus.PAUSED
@@ -957,12 +1033,41 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
             drain_task = None
             await manager.shutdown()
 
+            if durable:
+                await arrive(case.second)
+                conflict = await arrive(case.first, conflict=True)
+                original = durable_records[case.first]
+                # Rehydration must read the original pinned candidate, not a later
+                # conflicting/corrupt version. Corrupt original must fail closed.
+                digest = (
+                    original.candidate_sha256
+                    if context_backend == "durable_corrupt"
+                    else conflict.candidate_sha256
+                )
+                path = case.contexts.store.root / (digest + ".candidate.json")
+                path.chmod(0o600)
+                path.write_bytes(b"deliberately corrupt private test candidate")
             restarted = new_manager()
+            if context_backend == "durable_corrupt":
+                with pytest.raises(ValueError, match="CONTEXT_EVIDENCE_INVALID"):
+                    await restarted._forward_factory.contexts.store.read_pinned(
+                        case.registry.expected_sha256, case.first, original.candidate_sha256
+                    )
             resumed = await client.post(f"/api/paper-trading/sessions/{account_id}/start")
             assert resumed.status_code == 200, resumed.text
             await asyncio.wait_for(restarted._tasks[account_id], 20)
             after = await restarted.events(account_id)
             assert after[: len(before)] == before
+            if context_backend == "durable_corrupt":
+                failed = await restarted.get(account_id)
+                assert failed.status is PaperSessionStatus.FAILED
+                # Runtime deliberately sanitizes private evidence errors in public state.
+                assert failed.error_message == "ValueError: paper session failed"
+                assert not any(
+                    item.event_type in {"market.session", "fill.created", "input.committed"}
+                    for item in after[len(before) :]
+                )
+                return
             assert (await restarted.get(account_id)).status is PaperSessionStatus.STOPPED
             assert (await restarted.get(account_id)).started_at == original_started_at
             assert len([item for item in after if item.event_type == "market.session"]) == 2
@@ -978,12 +1083,33 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
                 == state["latest_portfolio"]["input_provenance"]
             )
             assert state["latest_portfolio"]["plan"]["mode"] == "forward_paper"
+            if durable:
+                assert restarted._forward_factory.contexts.store is not case.contexts.store
+                for item in after:
+                    if item.event_type == "market.session":
+                        pin = item.payload["input_provenance"]["context"]
+                        day = datetime.fromisoformat(item.payload["trading_date"]).date()
+                        record = durable_records[day]
+                        assert pin["candidate_id"] == str(record.id)
+                        assert pin["candidate_sha256"] == record.candidate_sha256
+                        assert pin["observation_sha256"] == record.observation_sha256
+                        assert datetime.fromisoformat(pin["registered_at"]) == record.registered_at
+                        assert record.first_observed_at > original_started_at
+                assert (
+                    state["latest_portfolio"]["plan"]["input_provenance"]
+                    == state["latest_session"]["input_provenance"]
+                )
             assert state["fills"]
             event_response = await client.get(f"/api/paper-trading/sessions/{account_id}/events")
             assert event_response.status_code == 200
             for item in event_response.json():
                 PaperEventResponse.model_validate(item)
     finally:
+        # Remove the shared-engine clock before any awaited cleanup can fail.
+        if durable and event.contains(
+            engine.sync_engine, "before_execute", synthetic_registration_clock
+        ):
+            event.remove(engine.sync_engine, "before_execute", synthetic_registration_clock)
         if websocket_task is not None:
             incoming.put_nowait({"type": "websocket.disconnect", "code": 1000})
             await asyncio.wait_for(websocket_task, 2)
@@ -1012,3 +1138,5 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
                     "product_market_update_jobs"
                 )
             )
+            if durable:
+                await db.execute(text("TRUNCATE product_paper_context_candidates"))

@@ -58,6 +58,35 @@ async def test_after_start_arrival_and_duplicate_keep_first_observation(context_
     assert read == (first,)
 
 
+async def test_real_clock_registration_survives_new_store_and_duplicate(context_case):
+    _, candidate, root, _ = context_case
+    store = DailyContextStore(SessionFactory, root / "real-clock", root / "research")
+    async with SessionFactory() as db:
+        before = await db.scalar(text("SELECT clock_timestamp()"))
+    # Synthetic, unqualified evidence; neither the application nor SQL clock is replaced.
+    candidate = candidate.model_copy(update={"source_published_at": before - timedelta(seconds=1)})
+    first = await store.capture(candidate, root)
+    async with SessionFactory() as db:
+        after = await db.scalar(text("SELECT clock_timestamp()"))
+        registered = await db.scalar(
+            select(PaperContextCandidateModel.registered_at).where(
+                PaperContextCandidateModel.id == first.id
+            )
+        )
+    assert before <= first.first_observed_at <= first.registered_at <= after
+    assert registered == first.registered_at
+    assert first.source_published_at <= first.first_observed_at
+    assert first.execution_admitted is False
+    reopened = DailyContextStore(SessionFactory, store.root, root / "research")
+    assert (
+        await reopened.read_pinned(
+            candidate.eligibility_sha256, candidate.frame.trading_date, first.candidate_sha256
+        )
+        == first
+    )
+    assert await reopened.capture(candidate, root) == first
+
+
 async def test_repackaged_same_evidence_cannot_move_first_time(context_case):
     store, candidate, root, clock = context_case
     first = await store.capture(candidate, root)

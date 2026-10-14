@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U7/M4 durable context-to-account integration
+
+[Exact test change, retained failures and terminal logs](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-durable-context-bridge/README.md>)
+close the earlier memory-store integration gap: actual candidate evidence files,
+append-only PostgreSQL registration, qualified reader, raw receipts, account,
+plan/journal, REST/ASGI WebSocket and fresh-manager replay now run together.
+Original consumed pins survive a conflicting corrupt later version; corrupt
+original evidence fails closed without additional financial events. The public
+failure remains sanitized. This is synthetic input/oracle/clock integration,
+not official-source admission or genuine forward-market acceptance.
+
+A separate uninjected-clock case verifies actual application capture and PostgreSQL
+default registration ordering, persisted timestamps, fresh-store reads and duplicate
+retention. Full nonroot isolated backend2304PASS/1optional archiveSKIP; related
+suite81PASS, store suite21PASS; Ruff/594format/mypy151PASS. Independent read-only
+review found no remaining scopedP1/P2 after listener cleanup was moved before
+awaited teardown. Two test files only; production/frontend/schema unchanged.
+No original DB write, service restart, provider request or browser acceptance.
+Hosted CI for the resulting commit is recorded separately; full product is PARTIAL.
+
 ## 2026-10-14 U7/M4/M5 scoped publication and database restore
 
 [Exact local publication and restore evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-dynamic-context/publication/README.md>)
