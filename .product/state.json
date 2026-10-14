@@ -1,4 +1,16 @@
 {
+  "daily_context_candidate_20261014_gate": {
+    "status": "PASS_STORAGE_REGRESSION_NOT_SOURCE_ADMISSION_OR_U7_COMPLETION",
+    "base_head": "e19f14510996948f74ffacdd6e8f1b72b591221a",
+    "base_ci": "38409763115 SUCCESS; new checkpoint CI pending",
+    "implementation": "Product-local immutable evidence/context/observation before append-only PG registration. Same candidate/renamed evidence retains first local capture; conflicting versions retained, bounded reads verified. No HTTP admission or execution consumer; V2 integration remains required.",
+    "verification": "19 new synthetic cases; final full2277PASS/1optional archiveSKIP94.73s; Ruff592format/mypy150PASS. Isolated0018 downgrade0017 upgrade0018PASS. Reviewer race reproduced1FAIL/18PASS before fix, final regression passes. No real source/account started.",
+    "incident": "Docker process disappeared. Normal startup auto-restarted original backend and its bind-mounted alembic upgrade head applied uncommitted0018 before planned publication. Explicitly disclosed. No production downgrade/restore. Original schema0018/candidate0/5STOPPED/417events/APIpaperhealthy; not all-table equality or reviewed rollout. Do not use old4eb7bdf receipt as proof for this restart.",
+    "evidence": "product-evidence/v1.2/m4/20261014-daily-context-arrival/README.md",
+    "source_admission": false,
+    "real_forward_acceptance": false,
+    "full_product_pass": false
+  },
   "receipt_bound_paper_20261013_gate": {
     "status": "PASS_SCOPED_INTEGRATION_CI_PUBLICATION_AND_READ_ONLY_BROWSER_NOT_SOURCE_ADMISSION",
     "base_head": "aa5f529b06aae98a323f1223582795fe1e889a75",
@@ -4979,7 +4991,7 @@
     }
   },
   "next_task": "Complete continuous daily-context arrival after account start: separate immutable source eligibility from append-only qualified dated status/action/rule inputs, bind consumption and first-observed UTC into journal/replay, and test both arrival orders and late/missing/conflicting context. Finite receipt bridge full regression passed but is not real-forward acceptance. Actual source/financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain; no repeated broad acquisition or frozen/OOS change.",
-  "local_next_command": "Check the documentation checkpoint CI on the existing branch, then implement the reviewed V2 daily-context arrival slice: immutable eligibility/warmup root, source-validated append-only dated context registration, actual receipt-manager/journal/resume wiring, and RED-to-GREEN after-start arrival/late/conflict/duplicate tests in isolated quant_test. Read source_admission.py and receipt_source.py plus latest DECISIONS; preserve V1 journals. Published4eb7bdf unit is complete and must not be rerun; full objective remains active.",
+  "local_next_command": "Finish candidate storage checkpoint review/CI, then continue V2 immutable eligibility/warmup/calendar, actual registered source qualification and receipt-manager/journal/resume wiring. Use context_store only as unqualified evidence storage, never a self-approval route. Test after-start context/raw arrival in either order, late/missing/conflict and consumed-pin replay, preserve V1 journals/frontend. Inspect runtime schema0018 after documented automatic Docker-start migration; never downgrade original DB. Source isolation is required before another live-mounted migration. Full U1-U8/M0-M5 remains active.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

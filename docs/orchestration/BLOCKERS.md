@@ -1,5 +1,16 @@
 # Blockers
 
+## Current context-arrival work — 2026-10-14
+
+Candidate storage prerequisite passes scoped persistence/regression checks but
+does not resolve U7: qualified-source registration and V2 account consumption are
+still missing. Continue that safe engineering work; no full-goal BLOCKED claim.
+Docker was restored, with an explicitly recorded unplanned automatic empty0018
+migration. Original selected records and health are preserved; do not retry a
+production downgrade or cite the prior rollout as proof of this new restart.
+Source/financial300147/000425, actual lawful after-start source evidence, genuine
+missing-ledger disposition and full remaining product gates stay unresolved.
+
 ## Latest runtime and next engineering gap — 2026-10-13
 
 Receipt milestone4eb7bdf is published and exactCI38406422590 is PASS; Docker,

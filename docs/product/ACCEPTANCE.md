@@ -1,5 +1,16 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U7 candidate context arrival persistence — PARTIAL
+
+[Code-bound tests and incident evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-daily-context-arrival/README.md>)
+cover19 synthetic candidate cases and2277backendPASS/1optional archiveSKIP,
+immutable first time, concurrent duplicate, conflict visibility, file/DB failure,
+integrity and bounded reads. Isolated migration downgrade/upgrade passes.
+This module has no source-admission or execution consumer: V2 actual qualification,
+receipt-manager/journal/resume and real after-start forward flow are NOT PASSED.
+No new frontend/browser acceptance is claimed. Original Docker auto-start applied
+empty0018 unexpectedly; selected counts/health preserved, not a reviewed rollout.
+
 ## 2026-10-13 U5/U7/U8 receipt publication and selected browser checks
 
 `4eb7bdf` exact CI38406422590 PASS:2258backend/1optional archiveSKIP,950frontend,

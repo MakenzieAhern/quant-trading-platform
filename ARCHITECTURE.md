@@ -111,6 +111,22 @@ resume reconstructs from a fresh source through the original journal checks.
 This is a lifecycle contract, not a registered new-market provider, source-use
 authorization, or an endless-feed retention guarantee.
 
+The incremental context-arrival foundation stores unqualified candidate frames
+and their immutable source copies separately from account execution. File and
+observation intent publication precede append-only PostgreSQL registration under
+Alembic0018. Duplicate candidate identities retain the winning local observation;
+conflicting versions are all returned within explicit byte/security/version
+budgets, never silently selected by recency. Reads revalidate archived bytes and
+DB bindings. An orphan intent after DB failure is retried from its archived
+candidate and sources, keeping the old observation time.
+
+This is not a registered source parser or a qualified V2 runtime. The local
+observation belongs to that candidate identity, not global first-seen upstream
+information; changing roots or parsers cannot establish new-market causality.
+No HTTP approved flag, automatic capture worker or financial consumer exists.
+The V2 eligibility, source qualification and actual account/journal binding remain
+required before any candidate can affect an order. No evidence cleanup is automatic.
+
 Phase 9 runtime collections are bounded by the finite, registered replay dataset; the runtime, provider, strategies, OMS, broker, and their in-memory histories are released when the session task reaches a terminal state. Durable history belongs to PostgreSQL. This finite-replay bound is not a claim that the same collections are ready for an endless vendor feed; any future streaming adapter must introduce explicit rolling retention before it is eligible for use.
 
 The lifecycle is `CREATED -> STARTING -> RUNNING -> STOPPING -> STOPPED`, with terminal `FAILED` and `INTERRUPTED` outcomes. Creation, start, and stop are retry-safe. Lifecycle and typed market/signal/risk/order/fill/portfolio events are appended to PostgreSQL in deterministic sequence. A per-session row lock serializes sequence allocation; lifecycle state and its event commit in one transaction, and each completed-Bar financial batch commits before WebSocket publication. Pending local Orders are explicitly moved from `ACCEPTED` to `CANCELLED` on stop/failure/interruption and their OMS reservations are released before the terminal batch is stored. REST snapshots reconstruct current state from that durable journal and are the recovery authority. An active in-memory runtime is never resumed after process loss: graceful shutdown marks it `INTERRUPTED`, and startup converts any orphaned active row to `INTERRUPTED` before serving traffic.

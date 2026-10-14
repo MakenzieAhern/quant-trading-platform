@@ -1,5 +1,27 @@
 # Current state
 
+## v1.2 daily-context candidate persistence — 2026-10-14
+
+The first after-start-context storage layer preserves immutable source bytes,
+candidate/version conflicts and first durable local observation before PG commit.
+19 synthetic persistence/race/budget cases are included in the final isolated
+2277PASS/1optional archiveSKIP suite. Ruff/592format/mypy150PASS. Independent
+review found a stale-clock concurrent-winner rejection; its RED test now passes.
+No candidate is execution-admitted; V2 qualification and manager/journal/resume
+integration remain required, and M3/M4/M5 remain IN_PROGRESS.
+[Evidence and failed runs](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-daily-context-arrival/README.md>).
+
+Unexpected deployment side effect: Docker Desktop stopped during work; normal
+startup caused original backend auto-restart and auto-Alembic to apply the
+bind-mounted0018 addition before planned publication. User informed; no production
+downgrade. Original schema0018/candidate0/5STOPPED/417events/APIpaperhealthy verified,
+not all-table equality. Previous4eb7bdf rollout does not certify this restart.
+Do not restart Docker with unpublished live-mounted migrations without assessing
+automatic startup. Isolated0018→0017→0018 passed; original data was not restored.
+
+Existing branch basee19f145 exactCI38409763115 PASS; new code's CI is pending its
+commit/push. Full source/financial/real-forward and product gates remain PARTIAL.
+
 ## v1.2 receipt bridge published; daily-context arrival is next — 2026-10-13
 
 `4eb7bdf` is now served locally. CI38406422590 passed2258backend/1optional archive

@@ -1,5 +1,29 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-14 — after-start context persistence prerequisite
+
+Previous status-only turn was NO_PROGRESS; this continuation implements an actual
+storage prerequisite for U7, without claiming the missing V2 consumer is complete.
+Product-local immutable evidence and candidate/observation intent precede PG
+append-only registration. Conflicts stay visible, repeat capture retains first
+local time, and byte/version/security limits fail closed.19synthetic cases;
+full2277PASS/1optional archiveSKIP94.73s, Ruff/592format/mypy150PASS.
+Independent read-only review reproduced a concurrent stale-clock P2; new RED
+regression failed, time refreshed after winning-intent read, final suite passes.
+Reviewer now reports no remaining scoped P1/P2, not whole-product approval.
+
+Docker Desktop vanished during work. Ordinary startup auto-restarted original
+services and backend Alembic applied uncommitted0018 through its source mount.
+This unplanned migration was disclosed; no destructive recovery/downgrade.
+Original0018/candidate0/5STOPPED/417events/APIpaperhealthy selected checks preserved;
+test-only downgrade/upgrades succeed. Downgrade drops this candidate index and
+is not a lossless production rollback. Existing evidence files are not deleted.
+[Logs, source hashes, incident and limits](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-daily-context-arrival/README.md>).
+
+Full U1–U8/M0–M5 remains active. Next V2 eligible root, qualified source validation,
+actual receipt-manager/journal/resume and frontend compatibility. No source is
+approved by candidate storage; no real account/source/frozen/OOS/merge/release run.
+
 ## 2026-10-13 receipt publication and scoped browser checkpoint
 
 PROGRESS: reviewed fixes committed38eb9d8/4eb7bdf, pushed to existing draftPR32,

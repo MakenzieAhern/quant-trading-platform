@@ -48,6 +48,24 @@ acceptance or a published v1.2 release.
 
 ## Old-tag code and data rollback — not verified for v1.2
 
+### Bind-mounted development migration warning — 2026-10-14
+
+The current development backend starts with `alembic upgrade head` and Docker's
+`unless-stopped` policy. Starting Docker Desktop can therefore apply unpublished
+migrations from its live backend source mount, without a separate Compose command.
+This occurred for the additive empty0018 context-candidate table; the current
+original database now knows0018. Before restoring Docker or restarting containers,
+inspect mounted source, unpublished migrations and startup commands. Develop future
+migrations in an isolated checkout/test topology or pin immutable runtime source;
+do not rely on “I did not manually run Alembic” as a migration safety boundary.
+
+Do not downgrade the original database to undo this event.0018 downgrade removes
+its candidate registration table (retaining external immutable files), so it is
+not lossless rollback once records exist. The0018→0017→0018 rehearsal used only
+the isolated tmpfs quant_test database. Keep schema-aware code and preserve real
+records. Selected5STOPPEDaccounts/417events and health checks are not a full restore
+or data-equality certification.
+
 At the 2026-09-29 checkpoint, the local database reports Alembic revision
 `20260924_0016`. The published `v1.1.0` tag lacks product migrations
 `20260922_0012` through `20260924_0016`. Do **not** check out `v1.1.0` and run

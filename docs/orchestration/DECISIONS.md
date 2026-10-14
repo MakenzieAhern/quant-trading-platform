@@ -1,5 +1,26 @@
 # Decisions
 
+## 2026-10-14 v1.2 — candidate arrival is not source admission
+
+Implement the daily arrival persistence boundary first, reusing immutable files
+and existing PostgreSQL append-only triggers. Stored candidates have no execution
+approval. Their publication time, first durable local capture and DB registration
+are distinct. Identity includes the root, parser and frame; changing that identity
+is not proof of new upstream information. V2 source qualification must independently
+establish causal source observation, not promote this candidate flag or timestamp.
+Keep original evidence, all conflicts and explicit read budgets; no latest-wins.
+
+Independent review's concurrent later-winner test reproduced stale-clock rejection.
+Refresh current time after reading the immutable winning intent; preserve its time.
+Failed DB registration leaves evidence for retry, not an admitted or consumed input.
+
+Docker restoration unexpectedly auto-started the bind-mounted backend and its
+Alembic command applied0018. Preserve and disclose this additive empty-table state,
+verify selected original records, test rollback only in quant_test, and retain
+schema-aware code. Future Docker starts must inspect unpublished migrations and
+restart commands; use source isolation for migration development. No claim that
+the previous publication backup/equality receipt covers this automatic restart.
+
 ## 2026-10-13 v1.2 — next context-arrival unit and scoped rollout evidence
 
 Independent review maps the next U7 slice to a V2 immutable eligibility/warmup/

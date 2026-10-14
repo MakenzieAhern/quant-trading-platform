@@ -131,7 +131,7 @@ def test_committed_failure_context_survives_distinct_processes(tmp_path):
     assert committed["optimize"] == reopened["optimize"] == 0
     assert committed["storage"] == reopened["storage"]
     assert committed["database"] == reopened["database"]
-    assert committed["schema"] == reopened["schema"] == "20261007_0017"
+    assert committed["schema"] == reopened["schema"] == "20261014_0018"
     rejected = subprocess.run(
         [sys.executable, "-O", str(Path(__file__).resolve()), "write"],
         env={**environment, "APP_ENV": "development"},
