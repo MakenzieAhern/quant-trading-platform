@@ -8,6 +8,11 @@ verification, after-start arrival, existing risk/OMS/plan/journal, exact-pin rep
 missing/late/conflicting context and V1 compatibility. The production composition
 has no qualified verifier and refuses V2 creation/start. Frontend strict transport
 retains V2 lineage without changing financial values. No new browser acceptance.
+Exact code9c12bc1 CI38497564238 passes all3jobs:2301backend/1optional archiveSKIP,
+967frontend, static/build/migration/isolated Compose.13code/test hashes verified.
+Original268e93c CI failure (test-only readonly fixture write) retained; deterministic
+nonroot RED and fixed full2301PASS, independent review; no production protection
+weakened. Code is not yet deployed and previous browser evidence is not promoted.
 
 Real PostgreSQL receipts/accounts/journal, REST/ASGI and manager replacement are
 tested with an in-memory synthetic context oracle. Separate store tests exercise
