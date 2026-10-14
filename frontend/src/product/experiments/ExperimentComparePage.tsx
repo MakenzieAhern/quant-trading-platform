@@ -229,6 +229,9 @@ function Comparison({
           <Link href={`/experiments/${job.job_id}`}>
             {runLabel(job, index)}
           </Link>
+          <p className="experimentMode">
+            {job.mode === "synthetic_demo" ? c.demo : c.historical}
+          </p>
         </th>
       ))}
     </tr>

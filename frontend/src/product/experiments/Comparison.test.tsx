@@ -40,6 +40,55 @@ beforeEach(async () => {
 
 describe("experiment comparison", () => {
   it.each(["en-US", "zh-CN"])(
+    "labels each comparison column by its actual mode, not its user name (%s)",
+    async (locale) => {
+      await i18n.changeLanguage(locale);
+      window.history.replaceState({}, "", comparisonUrl(ids.slice(0, 3)));
+      const modes = [
+        "historical_exploration",
+        "synthetic_demo",
+        "historical_exploration",
+      ] as const;
+      vi.spyOn(experimentApi, "get").mockImplementation(async (id) => ({
+        ...runs.find((run) => run.job_id === id)!,
+        name: "Same arbitrary name",
+        mode: modes[ids.indexOf(id)]!,
+      }));
+      vi.spyOn(experimentApi, "result").mockImplementation(async (id) => ({
+        ...result,
+        mode: modes[ids.indexOf(id)]!,
+      }));
+      render(<ExperimentComparePage />);
+      await screen.findByRole("table", {
+        name:
+          locale === "en-US"
+            ? "Saved full-period results"
+            : "已保存的完整区间结果",
+      });
+      for (const table of screen.getAllByRole("table")) {
+        const headers = within(table).getAllByRole("columnheader").slice(1);
+        expect(headers).toHaveLength(3);
+        headers.forEach((header, index) => {
+          expect(header).toHaveTextContent("Same arbitrary name");
+          expect(header).toHaveTextContent(
+            modes[index] === "synthetic_demo"
+              ? locale === "en-US"
+                ? "Synthetic demo"
+                : "合成演示"
+              : locale === "en-US"
+                ? "Historical exploration"
+                : "历史探索",
+          );
+          expect(within(header).getByRole("link")).toHaveAttribute(
+            "href",
+            `/experiments/${ids[index]}`,
+          );
+        });
+      }
+    },
+  );
+
+  it.each(["en-US", "zh-CN"])(
     "compares actual result dates as well as requested dates (%s)",
     async (locale) => {
       await i18n.changeLanguage(locale);

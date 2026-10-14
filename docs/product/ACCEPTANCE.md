@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U4/U7 comparison identity before financial metrics
+
+[Before/after evidence and scoped review](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-comparison-mode/README.md>)
+record an actual three-study comparison where financial column headers carried
+only arbitrary user names. Shared headers now include existing bilingual
+historical/demo mode labels in both tables. Identically named EN/ZH regression
+RED2, comparison53PASS, full976frontendPASS, lint/typesPASS. Default dist build
+failed on old root-owned assets; a fresh temporary preview build passed without
+changing old permissions/files. Real IAB5175 EN/ZH keeps the saved financial rows,
+source warnings and dates; narrow390 document375/375 and table-local scroll.
+Independent code/guide review found no scoped P1/P2. Current-head CI and installed
+publication remain separate gates, not yet claimed by this entry.
+
+Both user manuals now distinguish current healthy local services and recovered
+CI from still-blocked data execution. The deployed suspension fix is identified
+without asserting that old returns were revalidated. No DB, frozen research,
+strategy or original-service operation. Full product acceptance remains PARTIAL.
+
 ## 2026-10-14 U4/U8 installed linked-date matrix
 
 [Actual browser observations, checker and four screenshots](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-linked-date-matrix/README.md>)
