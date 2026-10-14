@@ -1,12 +1,22 @@
 {
+  "report_download_20261014_gate": {
+    "status": "PASS_SCOPED_ACTUAL_FILES_NOT_FINANCIAL_ACCEPTANCE",
+    "code_head": "847ed6513959cd0669bf02e72c74ef1ce0b209cd",
+    "progress": "Actual installed5173 IAB full JSON,2011-03-22filtered JSON,fallback JSON and equityCSV download events returned Windows paths. Read actual files; fallback bytes equal, all filtered records equal full subsets, full summary/exact equity unchanged and fresh read-only API matches. EN/ZH preserves dates and prepared artifact. Prior current-build file-landing uncertainty closed for this scope.",
+    "evidence": "product-evidence/v1.2/m4/20261014-report-download/README.md",
+    "verification": "verify_downloads.py terminal0:full equity293/trades18/holdings293/decisions70;filtered1/0/1/29. Raw timestamps UTC,trading dates Shanghai. Source failure/economic-gap warnings preserved. Browser files stored in its configured D:/A_Codex_project; existing files not overwritten. Screenshot report-export-en.jpg. One initial AXcheckbox/DOMbutton locator mismatch corrected after fresh DOM.",
+    "preservation": "No new study/account/provider requests, services/DB/methodology/frozen/OOS mutation. Chinese/system restored,ownedtab13closed,user markets tab untouched. Not Chrome/all export edge cases/AA/performance/source or forward acceptance.",
+    "full_product_pass": false
+  },
   "actual_result_period_20261014_gate": {
-    "status": "PASS_SCOPED_PREVIEW_NOT_DEPLOYED",
+    "status": "PASS_SCOPED_FRONTEND_PUBLICATION_NOT_FULL_PRODUCT_ACCEPTANCE",
     "base_head": "b0a903df092bdb303b7d6ef269d6dbb8a3a9df71",
     "progress": "Independent U4 review identified equal requested dates hiding different actual result windows. RED2 EN/ZH reproduced false Same. Shared comparison now checks requested+actual boundaries, labels both in cells, and detail labels requested plus actual interval before money. Stored metrics/API/backend unchanged.",
     "verification": "Full974frontend/55filesPASS12.85s; lint/typecheck/buildPASS544.18kB warning. First140PASS/1old-copy assertion failure retained and updated to precise new matching copy without weakening six-condition assertion. Independent scoped review noP1P2. ActualIAB5175 EN/ZH saved-result-to-comparison, original amounts/warnings preserved; ZH390 document375/375, local table scrollbar and keyboard link focus. Not source/financial/fullAA/native200/p95 acceptance.",
     "evidence": "product-evidence/v1.2/m4/20261014-actual-result-period/README.md",
-    "next": "Exact-headCI then reuse safe frontend-only publication with explicit localhost8000 API base, snapshot/backup/atomic index and actual5173 browser check. Do not deploy same-origin preview build into static nginx. No backend restart or research rerun.",
-    "runtime_deployed": false,
+    "publication": "Exact847ed6513959cd0669bf02e72c74ef1ce0b209cd CI38510911321 backend/frontend/composeSUCCESS. Frontend-only atomic publication with backup and explicit localhost8000 API. Windows13assetSHA and securityheadersPASS; before/after/frontend/browser45public relations and45GET bodies equal, schema0018, no container restart. Actual5173IAB EN/ZH detail/comparison preserves old values and source warnings; ownedtab12closed/settings restored. Independent final receipt/hash review no scopedP1P2. PublicationSHA dbcf71f292e7be4c8280562669b57c2aa67e0910815cb8db3287906aed5cf0e3. Low-level browser_acceptancefalse is not full UI acceptance; separate BROWSER.md records scoped IAB proof.",
+    "next": "Do not repeat prepare/publish/verify, restart or CI watch71049 (terminal success). Preview54369 was stopped. Continue unclosed U1-U8/source/financial/forward and M3-M5 acceptance, not another publication. Later documentation CI is separate.",
+    "runtime_deployed": true,
     "full_product_pass": false
   },
   "experiment_arithmetic_context_20261014_gate": {
@@ -5127,7 +5137,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Read experiment_arithmetic_context_20261014_gate and its private publication/BROWSER.md plus sealed publication.json. Code75a9f1a CI38509116031SUCCESS, one backend restart and after-browser45DB/45HTTP equality complete; do not rerun prepare/restart/seal. Previous status turn NO_PROGRESS; this continuation finished publication and corrects stale undeployed state. Continue highest-impact unclosed U1-U8 workflow gate with independent review; existing300147/000425 source/rights gaps remain. Do not repeat closed source leads, frozen/OOS work or old process IDs. Later docsCI separate; goal ACTIVE/PARTIAL.",
+  "local_next_command": "Read actual_result_period_20261014_gate and report_download_20261014_gate. Previous status-only turn NO_PROGRESS; this continuation reconciles847ed65 completed deployment and actually downloads/verifies JSON/CSV/fallback files from5173. No application deployment/restart or study rerun needed. Continue true unclosed U1-U8/source/financial/forward and M3-M5 gates; no real-source verifier registered,300147/000425 and rights remain. Do not repeat completed publication or frozen/OOS work. Docs-only CI is separate; inspect exact current head before claims. Goal ACTIVE/PARTIAL.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

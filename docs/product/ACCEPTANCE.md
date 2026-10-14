@@ -1,5 +1,30 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U4 actual installed download and publication follow-through
+
+Code847ed65 [CI38510911321](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38510911321)
+passed all three jobs. The next entry is pre-publication chronology, superseded
+by the [installed-browser record](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-actual-result-period/publication/BROWSER.md>).
+The backed-up frontend-only atomic switch retained old assets and explicit
+localhost8000 API origin; all13 served hashes matched the source-bound build.
+Before/after/browser45 public-relation fingerprints and45 GET bodies matched;
+schema and container starts unchanged. Independent final evidence review found
+no scoped discrepancy. Publication manifest SHA256:
+`dbcf71f292e7be4c8280562669b57c2aa67e0910815cb8db3287906aed5cf0e3`.
+
+The following continuation completed [actual report file checks](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-report-download/README.md>)
+on installed5173, not a mocked export or terminal-only substitute. IAB download
+events returned real Windows paths for full JSON, single-day JSON, fallback JSON
+and single-day equity CSV. The fallback is byte-identical; all filtered collections
+equal the matching subset of full records; full-period summary and exact monetary
+strings survive filtering and CSV. A fresh read-only API export matches saved
+records and configuration. EN/ZH switching preserves dates/prepared report.
+Original source/economic warnings remain. No task/account/provider acquisition
+started; Chinese/system restored and ownedtab13closed. This closes this scoped
+current-build file-landing uncertainty, not native Chrome/fullAA/performance,
+all export edge cases, financial validity or real forward acceptance. The next
+docs-only commit has separate CI. U1-U8/M3-M5 are not fully accepted.
+
 ## 2026-10-14 U4 requested versus actual result intervals
 
 [Reproduction, scoped tests and actual preview](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-actual-result-period/README.md>)
@@ -9258,8 +9283,8 @@ closes a bounded disclosure ambiguity, not U7 forward, M4 or release.
 | U3-RECOVER | Real cancellation/retry/interruption; no partial results called success | cancel/retry and durable terminal states | Isolated cancellation, genuine FAILED terminal, controlled restart, and non-graceful SIGKILL recovery all verified. The crash left parent `77354e81` RUNNING 60/1212 with zero result rows; startup reconciled it to INTERRUPTED with HTTP409 result and a truthful Chrome warning. One linked child `52b76f45` completed 1212/1212, with 4108 rows only on the child and identical configuration SHA; two repeated parent retries reopened that child. The separate missing-partition FAILED path displayed specific bilingual integrity guidance and never yielded partial results. Details/screenshots below; this is not whole-machine power-loss or U7 forward-paper evidence | PASS |
 | U3-ISOLATE | Independent exploration names/store; formal reports/OOS/freeze unchanged, dates labeled inspected | Separate product_research_jobs/rows; formal archive GET-only in the local product API | Red/green isolated API test: legacy POST created a formal run, now HTTP 409; GET lineage still reads; live formal 1 dataset/3 runs/310 trades and personal 8 jobs/1110 rows retained with zero shared IDs. Frozen hashes and consumed OOS lock match baseline; inspected-history EN/ZH labels and earlier actual-Chrome job evidence; independent read-only review. Scoped to local product workflow; pre-loss integrity/backup remain M4 FAIL | PASS |
 | U4-RESULT | Return/drawdown/cost/benchmark/limits, null semantics, true records and reasons | Personal result and date-linked holdings/trades, full-precision toggle | Chrome demo+historical results agree with exact APIs; real fill/snapshot2031-04-14 linked; source unavailable remains N/A; U4 tests/review PASS | PASS |
-| U4-COMPARE | Reopen/compare 2–3; six config differences indicated | /experiments/compare?ids= | Chrome three actual runs, six conditions, exact fraction display and refresh preserving URL/results; comparison tests and independent review PASS; `u4/compare-three-results-en-dark-1024.png` | PASS |
-| U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, automatic download and persistent prepared-file link | Injection/precision/API tests PASS, including CSV formula-prefix escaping. On 2026-09-23 21:09 UTC isolated real Chrome 153 with `acceptDownloads` at the documented `http://localhost:5173` origin emitted successful download events for historical job `d9f27183`: trades CSV 29,316 bytes and metadata JSON 258,223 bytes, with expected filenames and `download.failure() = null`; JSON began with report metadata and exact job ID. Earlier in-app-browser download suppression remains an environment-specific observation, not a failed Chrome export. Agent walkthrough, not a real-user study | PASS |
+| U4-COMPARE | Reopen/compare 2–3; six conditions including requested and actual date boundaries | /experiments/compare?ids= | Prior Chrome three-study evidence retained. Oct14 equal-request/different-result EN/ZH RED2 fixed; full974frontend and exact847ed65 CI all3PASS. Installed IAB EN/ZH comparison labels both date pairs, preserves values/warnings. Date-boundary equality is not observation-by-observation, implementation-version, source or financial acceptance; see Oct14 checkpoint above | PASS |
+| U4-EXPORT | Metadata report and formula-safe CSV | Server-streamed export, automatic download and persistent prepared-file link | Prior formula-injection/precision/API tests and Sep23 real Chrome download evidence retained. Oct14 installed5173 IAB actually saved full JSON, single-day JSON, fallback JSON and single-day equity CSV to browser-returned Windows paths. Actual file/API check passed: exact summary/amounts and warnings retained, subsets correct, fallback byte-identical; EN/ZH preserve filter/prepared file. [Current evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-report-download/README.md>). Not all-browser/edge-case or financial validity acceptance | PASS |
 | U5-MARKET | Search/watchlist/raw-adjusted/date/source view | /api/markets and /markets deployed0013 | 20 backend/14 frontend focused tests; independent review PASS; Chrome000001 raw22.45/HFQ874.904325432379995/suspension2010-03-01; watchlist persists fresh tab; dialog dates/locale/Esc;390+1280 no page overflow | PASS |
 | U5-UPDATE | Incremental update/gaps/retry/history with source/license/rules/limits; no archive refetch | /data and /api/market-updates; separate product cache and migration0014/0016 | Real Chrome one-security/one-date job `3b729cf9` succeeded and survived restart/reload. Four-board job `164c947d` had 3 new + 1 cached candidates. Targeted control retry `ed796871` added two 2026-09-22 vendor candidates: 688622 isST=1; 603400 suspended with blank raw turnover normalized to zero, never executable. On 2026-09-24 real Chrome reopened the existing successful child from failed parent `0eecbddb`; live jobs/receipts/observations stayed 4/6/6, with one child. A separate provider-free fixture browser run cancelled a RUNNING task, reopened it, and proved two parent retries resolve to one child, with zero receipts; details below. Separate candidate 2026 rules still authorize no fills. Full 2026 source authority remains | IN_PROGRESS |
 | U6-PLAN | Real candidates/targets/quantities/cash/reasons/rejections; as-of/snapshot/version; insufficiency/staleness | Persisted result preview and account-native plan in the retained historical paper event journal | Historical job `d9f27183` completed 293/293; its independent preview had 32 candidates and 5 risk rejections. A new isolated historical account `2f005ae8` saved its own 2011-03-22 plan with 20 candidates, submitted simulated proposals, and six later fills; the 2011-03-23 snapshot exposes the last actual rebalance plan separately from the latest balance. Real Chrome ZH/EN/mobile evidence below. Current archive source integrity/economics FAIL blocks new execution; retained plans are available for read-only inspection, not accepted new executable plans. New-market plan/receipt and forward-source authority remain pending | IN_PROGRESS |
