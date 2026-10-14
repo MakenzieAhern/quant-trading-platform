@@ -54,6 +54,150 @@ beforeEach(async () => {
   });
 });
 describe("bounded server command search", () => {
+  it.each(["studies", "watchlist"] as const)(
+    "recovers one empty %s page with a stale count without resetting the other page",
+    async (kind) => {
+      const offsets = { studies: [] as number[], watchlist: [] as number[] };
+      vi.mocked(experimentApi.list).mockImplementation(
+        async (_signal, _limit, offset = 0) => {
+          offsets.studies.push(offset);
+          return {
+            items:
+              kind === "studies" && offset === 20
+                ? []
+                : [{ ...job, name: `Study at ${offset}` }],
+            total: 21,
+            limit: 20,
+            offset,
+          };
+        },
+      );
+      vi.mocked(marketApi.watchlist).mockImplementation(async (offset = 0) => {
+        offsets.watchlist.push(offset);
+        return {
+          items: kind === "watchlist" && offset === 20 ? [] : [watched],
+          total: 21,
+          limit: 20,
+          offset,
+        };
+      });
+      render(<CommandPalette onClose={() => undefined} />);
+      const studyPager = screen.getByRole("group", {
+        name: "Matching personal studies — Pagination",
+      });
+      const watchPager = screen.getByRole("group", {
+        name: "Matching watchlist entries — Pagination",
+      });
+      const target = kind === "studies" ? studyPager : watchPager;
+      const other = kind === "studies" ? watchPager : studyPager;
+      await waitFor(() =>
+        expect(
+          within(other).getByRole("button", { name: "Next" }),
+        ).toBeEnabled(),
+      );
+      await userEvent.click(
+        within(other).getByRole("button", { name: "Next" }),
+      );
+      await waitFor(() =>
+        expect(within(other).getByText("21–21 of 21")).toBeInTheDocument(),
+      );
+      await userEvent.click(
+        within(target).getByRole("button", { name: "Next" }),
+      );
+      await waitFor(() => expect(offsets[kind]).toEqual([0, 20, 0]));
+      await waitFor(() =>
+        expect(within(target).getByText("1–20 of 21")).toBeInTheDocument(),
+      );
+      expect(within(other).getByText("21–21 of 21")).toBeInTheDocument();
+      expect(offsets[kind === "studies" ? "watchlist" : "studies"]).toEqual([
+        0, 20,
+      ]);
+      expect(target).toHaveFocus();
+    },
+  );
+
+  it.each([
+    ["studies", 0],
+    ["studies", 1],
+    ["studies", 20],
+    ["watchlist", 0],
+    ["watchlist", 1],
+    ["watchlist", 20],
+  ] as const)(
+    "returns to the valid %s page if matches shrink to %s during pagination",
+    async (kind, total) => {
+      let remaining = 21;
+      vi.mocked(experimentApi.list).mockImplementation(
+        async (_signal, _limit, offset = 0) => ({
+          items:
+            offset < remaining ? [{ ...job, name: "Remaining study" }] : [],
+          total: remaining,
+          limit: 20,
+          offset,
+        }),
+      );
+      vi.mocked(marketApi.watchlist).mockImplementation(async (offset = 0) => ({
+        items: offset < remaining ? [watched] : [],
+        total: remaining,
+        limit: 20,
+        offset,
+      }));
+      render(<CommandPalette onClose={() => undefined} />);
+      fireEvent.change(screen.getByRole("searchbox"), {
+        target: { value: "Match" },
+      });
+      await waitFor(() =>
+        expect(experimentApi.list).toHaveBeenLastCalledWith(
+          expect.any(AbortSignal),
+          20,
+          0,
+          "Match",
+        ),
+      );
+      const label =
+        kind === "studies"
+          ? "Matching personal studies"
+          : "Matching watchlist entries";
+      const pager = screen.getByRole("group", {
+        name: `${label} — Pagination`,
+      });
+      await waitFor(() =>
+        expect(within(pager).getByText("1–20 of 21")).toBeInTheDocument(),
+      );
+      const studyCalls = vi.mocked(experimentApi.list).mock.calls.length;
+      const watchCalls = vi.mocked(marketApi.watchlist).mock.calls.length;
+      remaining = total;
+      await userEvent.click(
+        within(pager).getByRole("button", { name: "Next" }),
+      );
+      await waitFor(() =>
+        expect(
+          within(pager).getByText(`${total ? 1 : 0}–${total} of ${total}`),
+        ).toBeInTheDocument(),
+      );
+      expect(pager).toHaveFocus();
+      expect(
+        within(pager).getByRole("button", { name: "Previous" }),
+      ).toBeDisabled();
+      if (kind === "studies") {
+        expect(experimentApi.list).toHaveBeenLastCalledWith(
+          expect.any(AbortSignal),
+          20,
+          0,
+          "Match",
+        );
+        expect(marketApi.watchlist).toHaveBeenCalledTimes(watchCalls);
+      } else {
+        expect(marketApi.watchlist).toHaveBeenLastCalledWith(
+          0,
+          expect.any(AbortSignal),
+          "Match",
+        );
+        expect(experimentApi.list).toHaveBeenCalledTimes(studyCalls);
+      }
+    },
+  );
+
   it.each([
     ["drawdown", "What is maximum drawdown?"],
     ["benchmark", "Why compare with a benchmark?"],

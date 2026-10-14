@@ -1,5 +1,32 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U8 command search pagination shrink recovery
+
+New scoped defect: Next can race with removed matches and previously showed
+`21–1 of 1` with no result, despite a remaining first-page match. Two RED tests
+reproduced it. Each successful source response now corrects only its own offset;
+an empty later page with stale count falls back once to zero, without a backwards
+scan. Pending searches/errors cannot reset offsets. Other-source page2, query and
+keyboard pager focus survive. Eight added cases; final990 frontend tests/55files,
+lint/types and isolated-output build PASS. Existing544.77kB advisory retained;
+initial root-owned dist/cache EACCES failures did not justify destructive cleanup.
+
+Eight actual IAB **memory-fixture** cases exercise EN/ZH, study/watch and
+total-shrink/stale-count, with20 real rendered fixture rows and independent
+request ledgers. No original API forwarding or CORS changes: all three methods
+are in-memory and fetch throws. This is bounded component UI proof, not persisted
+data, native Chrome/AA/performance, production publication or full U1–U8 PASS.
+Independent read-only final review found no scoped P1/P2. Owned browser/preview
+closed; original services/data/frozen/OOS unchanged. Production remains cb44d90
+until a separately guarded publication after exact-head CI.
+
+[Evidence and verifier](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-command-shrink/README.md>).
+Do not repeat the old orientation-only Tab gap: the subsequent Oct7 dialog-edge
+fix already closed it with16cases; Oct14 orientation8case rerun is regression
+only, not a newly completed gate. Research result eager loading is retained
+because earlier actual request-start evidence justified it; no warning-only
+code splitting or performance PASS claim.
+
 ## 2026-10-14 U7/U8 paper accounting source-failure explanation
 
 Post-commit: exact cb44d90 CI38521115329 backend/frontend/Compose allSUCCESS;

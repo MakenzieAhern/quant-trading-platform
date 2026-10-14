@@ -1,4 +1,16 @@
 {
+  "command_search_shrink_20261014_gate": {
+    "status": "PASS_SCOPED_FIXTURE_BROWSER_NOT_DEPLOYED",
+    "base_head": "d21d1ae",
+    "progress": "Previous turn was status-only NO_PROGRESS. New two-source pagination defect reproduced2RED (21-1 of1). Corrected successful-response offsets plus stale-count empty-page bounded fallback, preserving query/other nonzero page/focus. Earlier orientation8case rerun was redundant, not new closure; use later dialog_edges gate instead of old orientation-only gap.",
+    "verification": "8 new tests;45 command tests and final990frontend/55filesPASS. ESLint/TypeScript PASS; fresh /tmp buildPASS544.77kB warning retained. Original dist/cache root-owned EACCES were not repaired destructively; isolated output/cache used.",
+    "browser": "8 isolated IAB fixture cases EN/ZH x study/watch x total-shrink/stale-count. Actual component+styles, all API calls replaced with memory fixtures/window.fetch throws. Target offset20->0, other20 retained, query and pagerfocus retained. Not original-data/production/browser-network or fullAA acceptance. Owned tab22 closed/viewport reset; identity-verified preview92128 stopped/session96069terminal1. Temporary harness files removed from checkout after evidence copies; production codecb44d90 unchanged.",
+    "review": "Independent readonly final two-file/harness review found no scoped P1/P2; reviewer did not execute tests/browser. Saved verifier uses complete scoped pager text because AX is sometimes a diff; first failed verifier retained in chronology.",
+    "evidence": "product-evidence/v1.2/m4/20261014-command-shrink/README.md",
+    "ci": "PENDING_NEW_COMMIT; prior cb44d90 CI is not this fix",
+    "next": "Commit/push meaningful fix to existing PR32, verify exact CI, then guarded frontend-only publication and installed read-only search regression. Do not fabricate original-data deletions or rerun completed orientation matrix. Full source/financial/forward and remaining product gates unchanged.",
+    "full_product_pass": false
+  },
   "paper_source_failure_20261014_gate": {
     "status": "PASS_SCOPED_DEPLOYED_ERROR_SCENARIO_BROWSER_NOT_RUN",
     "deployed_code_head": "cb44d9095a6d4f0ffe342662a893f16f6054dac9",
@@ -1585,7 +1597,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-14T06:25:00Z",
+  "updated_at_utc": "2026-10-14T06:50:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -1698,6 +1710,7 @@
     "full_product_pass": false
   },
   "orientation_matrix_20261007_gate": {
+    "followup": "The later dialog_edges_20261007_gate closes the original Tab-edge gap with16actualChrome cases. Do not treat this earlier limit as a current standalone blocker; Oct14 IAB8case check is only regression, not new gate closure.",
     "status": "PASS_SCOPED_LAYOUT_COLOR_ENTER_ESCAPE_NOT_FULL_TAB_AA",
     "evidence": "product-evidence/v1.2/m4/20261007-orientation-matrix/README.md",
     "payloads": 7,

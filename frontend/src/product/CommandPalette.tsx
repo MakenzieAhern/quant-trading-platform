@@ -9,6 +9,19 @@ import { productHelpTopics, useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
 import { ProductError } from "./ProductPages";
 
+function availableOffset(
+  offset: number,
+  page: { total: number; items: readonly unknown[] } | null,
+) {
+  if (!page) return offset;
+  const next = Math.min(
+    offset,
+    Math.max(0, Math.ceil(page.total / 20) - 1) * 20,
+  );
+  // Count and rows can observe different moments. One empty-page fallback, never a scan.
+  return next === offset && offset > 0 && page.items.length === 0 ? 0 : next;
+}
+
 export function CommandPalette({ onClose }: { onClose: () => void }) {
   const copy = useProductCopy();
   const { i18n } = useTranslation();
@@ -42,6 +55,16 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
     (signal) => marketApi.watchlist(search.watchOffset, signal, search.q),
     [search.q, search.watchOffset, revision],
   );
+  const jobsOffset = waiting
+    ? search.jobsOffset
+    : availableOffset(search.jobsOffset, jobs.data);
+  const watchOffset = waiting
+    ? search.watchOffset
+    : availableOffset(search.watchOffset, watches.data);
+  if (jobsOffset !== search.jobsOffset || watchOffset !== search.watchOffset) {
+    // Correct before commit: a shrinking result set must not expose an invalid range.
+    setSearch({ ...search, jobsOffset, watchOffset });
+  }
   const searchError = capabilities.error ?? jobs.error ?? watches.error;
   const commands = [
     { label: copy.home, href: "/" },
