@@ -1,4 +1,15 @@
 {
+  "plan_projection_context_20261014_gate": {
+    "status": "PASS_SCOPED_LOCAL_TESTS_NOT_DEPLOYED",
+    "base_head": "94d1d2a34ab8de351b49472c422c689d2533997c",
+    "progress": "Independent review reproduced same immutable plan returning1005.12 vs1005.123456789123456789 and different holdings SHA under caller Decimal contexts. Owned28HALF_EVEN projection arithmetic fixes determinism without changing default28 output, accounting or persisted history.",
+    "verification": "RED newlowprecisiontest;11focusedPASS;54product/legacyplanPASS;full isolated nonroot backend2313PASS/1optional archiveSKIP155.88s. Ruff/594format/mypy151PASS.9precision/rounding combinations check all plan/holdings output, hashes, flags, traps and input preservation. Independent old/new default28 legacy/current comparison equal; no scopedP1P2.",
+    "evidence": "product-evidence/v1.2/m4/20261014-plan-projection-context/README.md",
+    "next": "Fix separately reproduced product target-sizing and benchmark/turnover ambient-context dependencies. Then exact-head CI and scoped safe publication/actual browser compatibility. No repeated source acquisition or frozen/OOS work.",
+    "runtime_deployed": false,
+    "source_admission": false,
+    "full_product_pass": false
+  },
   "official_300147_april_correction_20261014_gate": {
     "status": "HYPOTHESIS_REJECTED_UNRELATED_OFFICIAL_CORRECTION",
     "base_head": "12e0a538160442712e233a346f85e6b6daf8c51e",

@@ -3,7 +3,7 @@ import io
 import json
 from dataclasses import replace
 from datetime import UTC, date, datetime
-from decimal import Decimal
+from decimal import ROUND_DOWN, ROUND_HALF_EVEN, ROUND_UP, Context, Decimal, Inexact, localcontext
 from threading import Event
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
@@ -529,6 +529,62 @@ def test_plan_does_not_relabel_prior_account_snapshot_as_current():
     assert same_day["status"] == "NOT_REBALANCE_SESSION"
     assert same_day["account_snapshot_trading_date"] == "2024-01-03"
     assert same_day["account"]["cash"] == "10000.000000000000000001"
+
+
+@pytest.mark.parametrize("precision", [6, 28, 50])
+@pytest.mark.parametrize("rounding", [ROUND_DOWN, ROUND_HALF_EVEN, ROUND_UP])
+def test_plan_projection_is_independent_of_callers_decimal_context(precision, rounding):
+    from app.application.experiments.runner import _holdings_row
+    from app.execution import FixedCommission
+    from app.research import ResearchExecutionEngine
+    from tests.test_research_execution_engine import CALENDAR, OneTargetStrategy, _session
+
+    request = demo_request(start_date="2024-01-02", end_date="2024-01-03")
+    with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
+        engine = ResearchExecutionEngine(
+            OneTargetStrategy(),
+            initial_cash=Decimal("10000"),
+            commission_model=FixedCommission(Decimal("5.123456789123456789")),
+            calendar=CALENDAR,
+        )
+        buy = engine.process_session(_session(date(2024, 1, 2), opening="10"))
+        held = engine.process_session(_session(date(2024, 1, 3), opening="9.9"))
+
+        def projection():
+            return (
+                build_plan_preview(
+                    request,
+                    DEMO_SHA,
+                    "synthetic_demo",
+                    buy,
+                    buy.target,
+                    date(2024, 1, 3),
+                    253,
+                ),
+                build_plan_preview(
+                    request,
+                    DEMO_SHA,
+                    "synthetic_demo",
+                    held,
+                    held.target,
+                    date(2024, 1, 4),
+                    254,
+                ),
+                _holdings_row(0, held.snapshot),
+            )
+
+        expected = projection()
+    assert expected[0]["estimated_cash_required"] == "1005.123456789123456789"
+    assert expected[1]["account"]["positions"][0]["weight"] == ("0.09905074822284500934353395374")
+    snapshots = (buy.snapshot.model_dump(), held.snapshot.model_dump())
+    with localcontext(Context(prec=precision, rounding=rounding)) as context:
+        before_flags = context.flags.copy()
+        assert projection() == expected
+        assert context.flags == before_flags
+        assert context.prec == precision and context.rounding == rounding
+        context.traps[Inexact] = True
+        assert projection() == expected
+    assert (buy.snapshot.model_dump(), held.snapshot.model_dump()) == snapshots
 
 
 @pytest.mark.parametrize(

@@ -1,5 +1,19 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U6 deterministic account-plan projection
+
+[RED-to-GREEN and complete local test receipts](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-plan-projection-context/README.md>)
+bind the shared projection repair used by research, historical paper and forward
+paper. Caller Decimal precision/rounding previously changed estimated cash, weights
+and account snapshot SHA for the same immutable engine delta. Owned28/HALF_EVEN
+arithmetic now preserves default28 results and caller context. Nine combinations
+include Inexact traps and input preservation;54related tests and isolated full
+backend2313PASS/1optional archiveSKIP;Ruff/format/mypyPASS. Independent read-only
+review found no scopedP1P2 and compared old/new default28 legacy/current output.
+Not evidence of a deployed loss, full engine determinism, source admission or new
+forward acceptance. Undeployed at this checkpoint; exact-head CI/publication and
+the separately reproduced target-sizing/aggregate boundary remain next work.
+
 ## 2026-10-14 U5/U8 blocked-data recovery navigation
 
 [Actual preview and publication checkpoint](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-data-recovery-navigation/README.md>)

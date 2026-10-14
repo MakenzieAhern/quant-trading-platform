@@ -4,7 +4,7 @@ from collections import Counter
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, replace
 from datetime import date, datetime
-from decimal import ROUND_FLOOR, Decimal
+from decimal import ROUND_FLOOR, ROUND_HALF_EVEN, Context, Decimal, localcontext
 from enum import Enum
 from pathlib import Path
 from threading import Event
@@ -38,6 +38,7 @@ from app.research.strategy import ChinaAMomentumLowVolResearchStrategy
 from app.strategies.research import ChinaAMomentumLowVolConfig
 
 TRADING_ZONE = ZoneInfo("Asia/Shanghai")
+PROJECTION_CONTEXT = Context(prec=28, rounding=ROUND_HALF_EVEN)
 
 
 def json_value(value: Any) -> Any:
@@ -463,14 +464,17 @@ def build_plan_preview(
             if proposal
             else ("BUY" if desired > held else "SELL" if desired < held else "HOLD")
         )
-        if proposal and decision and decision.approved and side == "BUY":
-            if decision.reference_price is None or decision.estimated_transaction_cost is None:
-                cash_known = False
-            else:
-                cash_required += (
-                    proposal.quantity * decision.reference_price
-                    + decision.estimated_transaction_cost
-                )
+        # Match the engine's precision without inheriting caller rounding or traps.
+        with localcontext(PROJECTION_CONTEXT):
+            desired_change = abs(desired - held)
+            if proposal and decision and decision.approved and side == "BUY":
+                if decision.reference_price is None or decision.estimated_transaction_cost is None:
+                    cash_known = False
+                else:
+                    cash_required += (
+                        proposal.quantity * decision.reference_price
+                        + decision.estimated_transaction_cost
+                    )
         candidates.append(
             json_value(
                 {
@@ -478,7 +482,7 @@ def build_plan_preview(
                     "target_weight": targets[sid].target_weight if sid in targets else Decimal(0),
                     "held_quantity": held,
                     "target_quantity": desired,
-                    "desired_change_quantity": abs(desired - held),
+                    "desired_change_quantity": desired_change,
                     "proposed_quantity": proposal.quantity if proposal else Decimal(0),
                     "side": side,
                     "reference_raw_close": prices.get(sid),
@@ -511,42 +515,43 @@ def _security_id(symbol: str) -> str:
 
 
 def _holdings_row(sequence: int, snapshot: PortfolioSnapshot) -> dict[str, Any]:
-    result: dict[str, Any] = json_value(
-        {
-            "sequence": sequence,
-            "trading_date": snapshot.timestamp.astimezone(TRADING_ZONE).date(),
-            "timestamp": snapshot.timestamp,
-            "cash": snapshot.cash,
-            "equity": snapshot.equity,
-            "market_value": snapshot.market_value,
-            "realized_pnl": snapshot.realized_pnl,
-            "corporate_action_realized_pnl": snapshot.corporate_action_realized_pnl,
-            "total_pnl": snapshot.total_pnl,
-            "unrealized_pnl": snapshot.unrealized_pnl,
-            "cumulative_commission": snapshot.cumulative_commission,
-            "pending_corporate_action_value": sum(
-                (
-                    item.carrying_value
-                    for item in (*snapshot.pending_demergers, *snapshot.pending_mergers)
+    with localcontext(PROJECTION_CONTEXT):
+        result: dict[str, Any] = json_value(
+            {
+                "sequence": sequence,
+                "trading_date": snapshot.timestamp.astimezone(TRADING_ZONE).date(),
+                "timestamp": snapshot.timestamp,
+                "cash": snapshot.cash,
+                "equity": snapshot.equity,
+                "market_value": snapshot.market_value,
+                "realized_pnl": snapshot.realized_pnl,
+                "corporate_action_realized_pnl": snapshot.corporate_action_realized_pnl,
+                "total_pnl": snapshot.total_pnl,
+                "unrealized_pnl": snapshot.unrealized_pnl,
+                "cumulative_commission": snapshot.cumulative_commission,
+                "pending_corporate_action_value": sum(
+                    (
+                        item.carrying_value
+                        for item in (*snapshot.pending_demergers, *snapshot.pending_mergers)
+                    ),
+                    Decimal(0),
                 ),
-                Decimal(0),
-            ),
-            "positions": [
-                {
-                    "security_id": _security_id(position.symbol),
-                    "quantity": position.quantity,
-                    "average_price": position.average_price,
-                    "market_price": position.market_price,
-                    "market_value": position.quantity * position.market_price,
-                    "weight": (position.quantity * position.market_price / snapshot.equity)
-                    if snapshot.equity > 0
-                    else None,
-                }
-                for position in snapshot.positions
-                if position.quantity != 0
-            ],
-        }
-    )
+                "positions": [
+                    {
+                        "security_id": _security_id(position.symbol),
+                        "quantity": position.quantity,
+                        "average_price": position.average_price,
+                        "market_price": position.market_price,
+                        "market_value": position.quantity * position.market_price,
+                        "weight": (position.quantity * position.market_price / snapshot.equity)
+                        if snapshot.equity > 0
+                        else None,
+                    }
+                    for position in snapshot.positions
+                    if position.quantity != 0
+                ],
+            }
+        )
     return result
 
 
