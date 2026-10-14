@@ -1,5 +1,21 @@
 # Product daily-source readiness
 
+## 2026-10-14 targeted correction lead rejected
+
+One exact cached 300147 lead, official CNINFO59214209 (issuer2011-021), was
+retrieved and its complete sole page visually checked. It corrects the March28
+board resolution2011-016's equity-transfer valuation reference, **not** the
+March offline-share listing table or May distribution table. This ends that
+specific hypothesis; it neither proves absence of another correction nor closes
+300147/000425 source economic integrity. Do not repeat this request or the earlier
+completed query windows without genuinely new evidence.
+
+[Private receipt and complete-page review](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-300147-correction-review/README.md>)
+pin the official URL, cached publication time, HTTP200 retrieval timestamp and
+PDF SHA256 `2241f3efb33f90eaf3874074fc05fb7cca6a51986d2dbe09fba1c0d9d07c6134`.
+No source-admission, frozen-research or original financial-data change. Continue
+independent product workflow/quality work rather than repeat exhausted source leads.
+
 Verified 2026-09-22 for U5/U7. This is a new product-source check, not a change to
 v1.1 frozen data, provider acceptance, methodology, or Official OOS.
 Machine evidence: [bounded probe report](../../.product/evidence/baostock-public-probe-20260922.json).

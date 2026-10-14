@@ -1,4 +1,17 @@
 {
+  "official_300147_april_correction_20261014_gate": {
+    "status": "HYPOTHESIS_REJECTED_UNRELATED_OFFICIAL_CORRECTION",
+    "base_head": "12e0a538160442712e233a346f85e6b6daf8c51e",
+    "progress": "Previous status-answer turn was NO_PROGRESS. One new exact official PDF resolves the remaining April-correction lead as unrelated; do not repeat it. This changes the source-search next action, not financial acceptance.",
+    "source": "CNINFO59214209 / issuer2011-021 corrects March28 board resolution2011-016 equity-transfer valuation basis, not offline-share notice2011-013 or May implementation59435746. Sole complete page visually inspected; no share-table correction.",
+    "pdf_sha256": "2241f3efb33f90eaf3874074fc05fb7cca6a51986d2dbe09fba1c0d9d07c6134",
+    "review": "Independent read-only complete-page/PDF-hash/receipt/three-file diff review: no scoped P1/P2; confirms unrelated2011-016 valuation-reference correction. No independent CI/browser rerun claimed.",
+    "evidence": "product-evidence/v1.2/m4/20261014-300147-correction-review/README.md",
+    "verification": "Pinned existing issuer/index; exactly one HTTP200 request/no retry; complete page rendered and read. Initial local hash-binding mistake stopped before network and was corrected by checking file and row hashes separately. Exact12e0a53 CI38507022139 now SUCCESS/backend/frontend/compose.",
+    "limits": "300147 and000425 unresolved; no absence claim, parser relaxation, financial admission, frozen/OOS/DB/service mutation. No current Chrome connection; read-only IAB paper list/create confirms existing blocked historical/forward choices, not new workflow acceptance. Owned tab7 closed; user tab untouched.",
+    "source_admission": false,
+    "full_product_pass": false
+  },
   "data_recovery_navigation_20261014_gate": {
     "status": "PASS_SCOPED_LOCAL_PUBLICATION_AND_RECOVERY_NAVIGATION",
     "code_head": "98b0e35a4d7252e896e23f157fd7d2a2d292b52f",

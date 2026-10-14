@@ -1,5 +1,16 @@
 # Decisions
 
+## 2026-10-14 v1.2 — stop the unrelated April correction lead
+
+Read the complete official300147 notice59214209/2011-021, not just its generic
+correction title. It changes an equity-transfer appraisal reference in2011-016;
+it does not correct either disputed share-class table. Preserve the PDF, source
+identity, timestamp/checksum and negative finding privately. Do not reacquire this
+notice, silently repair table arithmetic or infer no other correction exists.
+300147/000425 remain unresolved. Move to independent required product checks until
+a materially different source hypothesis is established; source rights, genuine
+missing-ledger evidence and full product acceptance remain separate obligations.
+
 ## 2026-10-14 v1.2 — blocked-data recovery and deployment API origin
 
 Keep execution blocked on failed source/economic verification while providing
