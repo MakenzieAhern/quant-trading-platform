@@ -16,8 +16,12 @@ its exact saved cash/equity and unknown legacy P&L/plan, not a reconstructed led
 [Evidence and scope](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-handoff-and-star-boundary/README.md>).
 Base4c964bd exactCI38517590071SUCCESS. This unit changes tests/docs only; no app
 publication, original DB write, new account, merge or release. FullM3–M5PARTIAL.
-Investor-scope question pending; next independent work is qualified after-start
-daily-context manager/journal/resume integration, preserving all actual-source gates.
+Investor-scope question pending. Dynamic-context and durable-context-bridge gates
+already prove synthetic after-start manager/journal/resume integration; do not
+repeat it. Next close actual fixed-sample effective-dated source coverage and
+remaining financial/quality gates, preserving actual-source rights requirements.
+Older entries below retain their as-of findings; their integration/arrival "next"
+steps are superseded by the later completed gates, not current work instructions.
 
 ## v1.2 STAR control original source and cumulative-buy gap — 2026-10-14
 
