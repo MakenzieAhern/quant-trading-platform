@@ -39,6 +39,75 @@ beforeEach(async () => {
 });
 
 describe("experiment comparison", () => {
+  it.each(["en-US", "zh-CN"])(
+    "compares actual result dates as well as requested dates (%s)",
+    async (locale) => {
+      await i18n.changeLanguage(locale);
+      const saved = [
+        { ...result, date_start: "2023-01-03", date_end: "2023-01-06" },
+        { ...result, date_start: "2023-01-04", date_end: "2023-01-06" },
+      ];
+      const before = JSON.stringify(saved);
+      vi.spyOn(experimentApi, "get").mockImplementation(async (id) => ({
+        ...runs.find((run) => run.job_id === id)!,
+        configuration: {
+          ...job.configuration,
+          start_date: "2023-01-01",
+          end_date: "2023-01-07",
+        },
+      }));
+      vi.spyOn(experimentApi, "result").mockImplementation(
+        async (id) => saved[ids.indexOf(id)]!,
+      );
+      const comparison = render(<ExperimentComparePage />);
+      const table = await screen.findByRole("table", {
+        name:
+          locale === "en-US"
+            ? "Are these conditions the same?"
+            : "这些条件是否一致？",
+      });
+      const period = within(table).getByRole("row", {
+        name: locale === "en-US" ? /^Trading period/ : /^交易区间/,
+      });
+      expect(period).toHaveTextContent(
+        locale === "en-US" ? "Different" : "不同",
+      );
+      expect(period).toHaveTextContent("2023-01-01 → 2023-01-07");
+      expect(period).toHaveTextContent("2023-01-03 → 2023-01-06");
+      expect(period).toHaveTextContent("2023-01-04 → 2023-01-06");
+      expect(period).toHaveTextContent(
+        locale === "en-US" ? "Actual result interval" : "实际结果区间",
+      );
+      expect(
+        screen.getByText(
+          locale === "en-US" ? /Some conditions differ/ : /部分条件不同/,
+        ),
+      ).toBeVisible();
+      comparison.unmount();
+      vi.spyOn(experimentApi, "equity").mockResolvedValue({
+        items: [],
+        total: 0,
+        limit: 100,
+        offset: 0,
+      });
+      render(<ExperimentDetailPage jobId={ids[0]!} />);
+      const interval = await screen.findByText(
+        locale === "en-US"
+          ? "Actual result interval: 2023-01-03 → 2023-01-06 · Asia/Shanghai"
+          : "实际结果区间: 2023-01-03 → 2023-01-06 · Asia/Shanghai",
+      );
+      expect(interval).toBeVisible();
+      expect(
+        screen.getByText(
+          locale === "en-US"
+            ? "Requested interval: 2023-01-01 → 2023-01-07 · Asia/Shanghai"
+            : "请求区间: 2023-01-01 → 2023-01-07 · Asia/Shanghai",
+        ),
+      ).toBeVisible();
+      expect(JSON.stringify(saved)).toBe(before);
+    },
+  );
+
   it.each(
     ["en-US", "zh-CN"].flatMap((locale) =>
       ["KNOWN_ECONOMIC_COVERAGE_GAP", "HISTORICAL_DATASET_QUALITY_UNKNOWN"].map(
@@ -827,8 +896,10 @@ describe("experiment comparison", () => {
         costs: { commission_rate: "0.0003000", minimum_commission: "5.0" },
       },
     };
-    expect(comparisonConditions(equivalent)).toEqual(comparisonConditions(job));
-    expect(Object.keys(comparisonConditions(job))).toEqual([
+    expect(comparisonConditions(equivalent, result)).toEqual(
+      comparisonConditions(job, result),
+    );
+    expect(Object.keys(comparisonConditions(job, result))).toEqual([
       "data",
       "period",
       "costs",
@@ -843,9 +914,14 @@ describe("experiment comparison", () => {
         initial_cash: "100000.000000000000000002",
       },
     };
-    expect(comparisonConditions(differing).cash).not.toBe(
-      comparisonConditions(job).cash,
+    expect(comparisonConditions(differing, result).cash).not.toBe(
+      comparisonConditions(job, result).cash,
     );
+    for (const key of ["date_start", "date_end"] as const) {
+      expect(
+        comparisonConditions(job, { ...result, [key]: "2023-01-04" }).period,
+      ).not.toBe(comparisonConditions(job, result).period);
+    }
   });
 
   it("rejects missing, duplicate and unbounded identifiers before requesting a job", () => {
@@ -1254,7 +1330,9 @@ describe("experiment comparison", () => {
     }));
     render(<ExperimentComparePage />);
     expect(
-      await screen.findByText(/These six configuration conditions match/),
+      await screen.findByText(
+        /These six conditions, including requested and actual result intervals, match/,
+      ),
     ).toBeInTheDocument();
     for (const name of [
       "Saved full-period results",

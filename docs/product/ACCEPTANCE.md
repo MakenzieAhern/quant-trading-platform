@@ -1,5 +1,22 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U4 requested versus actual result intervals
+
+[Reproduction, scoped tests and actual preview](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-actual-result-period/README.md>)
+record an independently found false-Same comparison: equal requested dates can
+have different saved result boundaries. Two EN/ZH regressions failed before the
+shared comparison key was fixed. Both interval pairs are displayed; detail labels
+requested dates and shows actual result dates before metrics. No financial
+recalculation, API/schema/source or stored-result change. Boundary equality does
+not assert every observation or implementation/cost version is equal.
+
+Full974frontend/55files, lint/types/build PASS; independent scoped review noP1P2.
+Actual IAB5175 EN/ZH saved result to two-study comparison preserves original
+amounts/source warnings. ZH390 has375px document/client widths and local table
+scroll with keyboard link focus. Equal-request/different-result case is test
+evidence, not a manufactured live record. Source/financial/fullAA/forward gates
+remain incomplete. This entry precedes exact-head CI and local publication.
+
 ## 2026-10-14 arithmetic repairs deployed and compatibility checked
 
 Code75a9f1a exact [CI38509116031](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38509116031)

@@ -23,11 +23,13 @@ const en = {
   differences:
     "Some conditions differ. These results are not a controlled comparison; review the differences before interpreting returns.",
   matching:
-    "These six configuration conditions match. This does not establish future performance or independent evidence.",
+    "These six conditions, including requested and actual result intervals, match. This does not establish future performance or independent evidence.",
   versionBoundary:
-    "These checks compare saved configuration only. Implementation fingerprints, execution-model versions and effective statutory cost schedules are not verified here and may differ or be missing in older runs. Check the exported report metadata before assuming the same implementation or effective costs.",
+    "These checks compare saved configuration and result date boundaries, not every observation within the interval. Implementation fingerprints, execution-model versions and effective statutory cost schedules are not verified here and may differ or be missing in older runs. Check the exported report metadata before assuming the same implementation or effective costs.",
   dataCondition: "Data version & stock universe",
   periodCondition: "Trading period",
+  requestedPeriod: "Requested interval",
+  actualPeriod: "Actual result interval",
   costCondition: "Cost configuration",
   cashCondition: "Starting capital",
   riskCondition: "Risk configuration",
@@ -113,11 +115,14 @@ const zh: typeof en = {
   same: "一致",
   different: "不同",
   differences: "部分条件不同，这不是受控比较。解读收益前请先检查差异。",
-  matching: "这六项配置条件一致，但不代表未来表现或独立证据已得到验证。",
+  matching:
+    "这六项条件（包括请求与实际结果区间）一致，但不代表未来表现或独立证据已得到验证。",
   versionBoundary:
-    "这里只比较已保存配置，未核对实现指纹、执行模型版本及实际生效的法定费用表；这些信息可能不同，也可能在旧实验中缺失。认定实现或实际成本一致前，请核查导出报告的元数据。",
+    "这里只比较已保存配置和结果日期边界，不逐一核对区间内的观测。实现指纹、执行模型版本及实际生效的法定费用表未核对；这些信息可能不同，也可能在旧实验中缺失。认定实现或实际成本一致前，请核查导出报告的元数据。",
   dataCondition: "数据版本与股票范围",
   periodCondition: "交易区间",
+  requestedPeriod: "请求区间",
+  actualPeriod: "实际结果区间",
   costCondition: "成本配置",
   cashCondition: "初始本金",
   riskCondition: "风险配置",

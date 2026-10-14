@@ -1,4 +1,14 @@
 {
+  "actual_result_period_20261014_gate": {
+    "status": "PASS_SCOPED_PREVIEW_NOT_DEPLOYED",
+    "base_head": "b0a903df092bdb303b7d6ef269d6dbb8a3a9df71",
+    "progress": "Independent U4 review identified equal requested dates hiding different actual result windows. RED2 EN/ZH reproduced false Same. Shared comparison now checks requested+actual boundaries, labels both in cells, and detail labels requested plus actual interval before money. Stored metrics/API/backend unchanged.",
+    "verification": "Full974frontend/55filesPASS12.85s; lint/typecheck/buildPASS544.18kB warning. First140PASS/1old-copy assertion failure retained and updated to precise new matching copy without weakening six-condition assertion. Independent scoped review noP1P2. ActualIAB5175 EN/ZH saved-result-to-comparison, original amounts/warnings preserved; ZH390 document375/375, local table scrollbar and keyboard link focus. Not source/financial/fullAA/native200/p95 acceptance.",
+    "evidence": "product-evidence/v1.2/m4/20261014-actual-result-period/README.md",
+    "next": "Exact-headCI then reuse safe frontend-only publication with explicit localhost8000 API base, snapshot/backup/atomic index and actual5173 browser check. Do not deploy same-origin preview build into static nginx. No backend restart or research rerun.",
+    "runtime_deployed": false,
+    "full_product_pass": false
+  },
   "experiment_arithmetic_context_20261014_gate": {
     "status": "PASS_SCOPED_BACKEND_PUBLICATION_NOT_FULL_PRODUCT_ACCEPTANCE",
     "base_head": "3e33637",

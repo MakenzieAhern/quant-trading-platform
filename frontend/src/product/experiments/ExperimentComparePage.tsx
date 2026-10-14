@@ -141,7 +141,9 @@ function Comparison({
     job: Experiment;
     result: ExperimentResult;
   })[];
-  const conditions = completed.map(({ job }) => comparisonConditions(job));
+  const conditions = completed.map(({ job, result }) =>
+    comparisonConditions(job, result),
+  );
   const rows = [
     {
       key: "data",
@@ -152,8 +154,8 @@ function Comparison({
     {
       key: "period",
       label: u.periodCondition,
-      value: (job: Experiment) =>
-        `${job.configuration.start_date} → ${job.configuration.end_date}\nAsia/Shanghai`,
+      value: (job: Experiment, result: ExperimentResult) =>
+        `${u.requestedPeriod}: ${job.configuration.start_date} → ${job.configuration.end_date}\n${u.actualPeriod}: ${result.date_start} → ${result.date_end}\nAsia/Shanghai`,
     },
     {
       key: "costs",
@@ -320,8 +322,8 @@ function Comparison({
                         : u.same}
                     </span>
                   </th>
-                  {completed.map(({ id, job }) => (
-                    <td key={id}>{row.value(job)}</td>
+                  {completed.map(({ id, job, result }) => (
+                    <td key={id}>{row.value(job, result)}</td>
                   ))}
                 </tr>
               ))}

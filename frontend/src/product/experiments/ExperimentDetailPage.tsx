@@ -29,6 +29,7 @@ export function ExperimentDetailPage({ jobId }: { jobId: string }) {
 
 function ExperimentDetail({ jobId }: { jobId: string }) {
   const c = useExperimentCopy();
+  const u = useComparisonCopy();
   const { i18n } = useTranslation();
   const job = useExperiment(jobId);
   const [observedEnd, setObservedEnd] = useState<string | null>(null);
@@ -137,8 +138,8 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
               {data.name}
             </h1>
             <p>
-              {data.configuration.start_date} → {data.configuration.end_date} ·
-              Asia/Shanghai
+              {u.requestedPeriod}: {data.configuration.start_date} →{" "}
+              {data.configuration.end_date} · Asia/Shanghai
             </p>
             <div
               className="experimentActions"
@@ -377,6 +378,9 @@ function ExperimentResults({
     <>
       <section aria-label={c.resultTitle}>
         <h2>{c.resultTitle}</h2>
+        <p>
+          {u.actualPeriod}: {data.date_start} → {data.date_end} · Asia/Shanghai
+        </p>
         <label className="experimentCheck">
           <input
             type="checkbox"
