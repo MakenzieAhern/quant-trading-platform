@@ -1,5 +1,24 @@
 # Current state
 
+## v1.2 STAR single-account boundary and current handoff — 2026-10-14
+
+Four synthetic regression cases correct the blanket need-for-aggregate inference:
+with qualified STAR per-order100000 and the current one-instruction-per-security
+EOD path, a normal single-account run cannot fill over500000.100000 fills;
+100001/500000/600000 are locally ACCEPTED then next-day MAXIMUM_QUANTITY/CANCELLED.
+Same-day retry and fresh in-memory replay preserve effective orders/results.
+106 related unit tests/Ruff/format PASS; independent review. This is not raw-event
+exactly-once, durable restart, declaration aggregate, cross-account or2026admission.
+
+Actual installed IAB ZH/EN study-to-account preparation preserves saved API config,
+historical dates and source-denial state. A separate stopped account still displays
+its exact saved cash/equity and unknown legacy P&L/plan, not a reconstructed ledger.
+[Evidence and scope](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-handoff-and-star-boundary/README.md>).
+Base4c964bd exactCI38517590071SUCCESS. This unit changes tests/docs only; no app
+publication, original DB write, new account, merge or release. FullM3–M5PARTIAL.
+Investor-scope question pending; next independent work is qualified after-start
+daily-context manager/journal/resume integration, preserving all actual-source gates.
+
 ## v1.2 STAR control original source and cumulative-buy gap — 2026-10-14
 
 New original688622 notice1225239101 supplies the April29 suspension/April30*ST

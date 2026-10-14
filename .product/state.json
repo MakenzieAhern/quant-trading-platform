@@ -1,4 +1,18 @@
 {
+  "star_single_account_boundary_20261014_gate": {
+    "status": "CONDITIONAL_SINGLE_ACCOUNT_BOUNDARY_VERIFIED_NOT_INVESTOR_ADMISSION",
+    "base_head": "4c964bd8b3c89e51d387a5b683dc2a2fd2344992",
+    "previous_turn": "Status-only answer NO_PROGRESS for goal purposes; exact base CI now terminal SUCCESS. This unit adds four regression cases and current installed handoff evidence.",
+    "evidence": "product-evidence/v1.2/m4/20261014-handoff-and-star-boundary/README.md",
+    "verification": "106 engine/execution/paper-runtime unit tests PASS; Ruff/format/diff PASS. APP_ENV=test and unreachable loopback quant_test URL; no DB. Independent read-only review, explicit overnight status assertions added. Actual IAB ZH/EN historical study handoff preserves API config and blocks creation; separate stopped account shows exact saved values/unknowns.",
+    "finding": "Supersedes blanket aggregate implementation assumption: normal single-account EOD path has one effective instruction per security/day. Conditional on qualified STAR per-order maximum100000 it cannot fill over500000. 100000 fills;100001/500000/600000 are locally ACCEPTED then next-day MAXIMUM_QUANTITY/CANCELLED, zero fills. Does not prove aggregate declaration compliance, durable restart or cross-account scope.",
+    "pending_decision": "User asked whether separate simulated accounts are separate investors or explicitly grouped. No grouping assumed; no new account/admission or generic aggregate ledger.",
+    "next": "Continue independent qualified after-start daily-context manager/journal/resume integration with isolated fixtures. Preserve actual-source rights and daily coverage gates; do not conflate source candidates with accepted execution.",
+    "preservation": "Test/docs only. No app code, database, runtime, frozen dataset, methodology, Official OOS, merge, tag or release changes. Five sessions still STOPPED; not full DB equality or ledger recovery.",
+    "source_admission": false,
+    "real_forward_acceptance": false,
+    "full_product_pass": false
+  },
   "star_st_control_20261014_gate": {
     "status": "EVENT_SOURCE_VERIFIED_EXECUTION_AGGREGATE_GAP_IDENTIFIED",
     "base_head": "94b7a3b933d2eab85adde63c0af49007e265e57b",
@@ -1556,7 +1570,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-13T12:38:04Z",
+  "updated_at_utc": "2026-10-14T05:50:01Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -5186,7 +5200,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Read star_st_control_20261014_gate and private README: new official688622 notice exposes daily cumulative-buy scope missing from per-order enforcement. Do not refetch PDF, treat null exit as complete chain, or globally combine independent paper experiments. Qualify effective dates/investor scope and durable filled+open+new accounting while continuing six-control daily coverage and remaining U1-U8/M3-M5. Exact94b7a3bCI38516285636SUCCESS; laterdocsCI separate. beb9f5c stays served; no republish/restart/frozen/OOS work. Full goal ACTIVE/PARTIAL.",
+  "local_next_command": "Read star_single_account_boundary_20261014_gate/private README.106related unit tests and installed ZH/EN handoff pass, but no new source/financial/forward acceptance. Single-account one-instruction/day plus qualified100000cap bounds fills; generic investor aggregate requires explicit scope, not an assumed Windows-global ledger. While investor question is pending, inspect and finish qualified after-start daily-context manager/journal/resume integration using isolated fixtures. Preserve source rights/daily coverage/legacy ledgers and remaining U1-U8/M3-M5. Base4c964bdCI38517590071SUCCESS; new test commit CI separate. No republish/restart/frozen/OOS work. Full goal ACTIVE/PARTIAL.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

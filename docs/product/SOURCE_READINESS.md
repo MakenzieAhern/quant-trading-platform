@@ -1,5 +1,19 @@
 # Product daily-source readiness
 
+## 2026-10-14 clarification: reachable fills versus investor aggregate semantics
+
+[Four synthetic regression cases and independent review](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-handoff-and-star-boundary/README.md>)
+refine the earlier aggregate-gap finding. The currently supported normal
+single-account EOD path emits one effective instruction per security/day; with
+source-qualified STAR100000 per-order rules, fills in this path cannot exceed
+500000. Oversize intents can be locally ACCEPTED before next-day rules cancel
+them, so this does not certify the notice's declaration-plus-filled investor limit.
+Do not invent a cross-account aggregate ledger before simulated investor ownership
+and local ACCEPTED semantics are explicit. The production verifier still must
+qualify the correct effective-dated maximum, not trust an arbitrary frame field.
+Fresh in-memory deterministic replay is not durable restart. No2026source was
+admitted, no actual bad fill was demonstrated, and true-forward remains NOT_RUN.
+
 ## 2026-10-14 STAR control reveals a separate daily-buy constraint
 
 The original [688622 implementation notice,2026--025](https://static.cninfo.com.cn/finalpage/2026-04-29/1225239101.PDF)

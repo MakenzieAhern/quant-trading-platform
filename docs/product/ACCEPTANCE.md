@@ -1,5 +1,23 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U6/U7 handoff and conditional single-account execution boundary
+
+[Current browser and test evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-handoff-and-star-boundary/README.md>)
+records installed historical study→independent account preparation in ZH/EN:
+saved API configuration/dates persist, source failure prevents creation, no copied
+returns or submitted orders. Separately reopened stopped account preserves exact
+saved values and explains unknown legacy P&L/missing native plan. Not a new
+historical execution, source acceptance, ledger recovery or full U6/U7 pass.
+
+Four synthetic STAR cases plus related engine/execution/paper-runtime tests:
+106PASS/Ruff/formatPASS, independent read-only review. Within the normal single
+account EOD path, a qualified per-order100000 cap prevents >500000 fills without
+a generic aggregate counter. Oversize local ACCEPTED orders cancel at next-day
+MAXIMUM_QUANTITY; same-day retry and fresh-memory replay don't duplicate effective
+orders. This is conditional, not2026source qualification, durable restart or
+multi-account aggregate-declaration proof. Investor scope remains a user choice.
+Base4c964bdCI38517590071SUCCESS; new test commit CI separate. FullM3–M5PARTIAL.
+
 ## 2026-10-14 U5/U7 STAR control event and daily-buy admission gap
 
 [Original source and offline proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-star-st-control/README.md>)
