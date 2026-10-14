@@ -1,4 +1,16 @@
 {
+  "experiment_arithmetic_context_20261014_gate": {
+    "status": "PASS_SCOPED_LOCAL_TESTS_NOT_DEPLOYED",
+    "base_head": "3e33637",
+    "progress": "Separate RED-to-GREEN product lot-sizing and summary arithmetic repair. Caller precision6 could change9999.999equity/0.1weight/10price/100lot from0 to100shares; benchmark and turnover also varied. Owned28HALF_EVEN now covers sizing/residual and benchmark/cost/notional/mean plus analytics call, preserving old default output.",
+    "verification": "SizingRED2fail/2pass;aggregateRED1fail.81relatedPASS. Full isolated nonroot backend2340PASS/1optional archiveSKIP153.11s;Ruff/594format/mypy151PASS. Independent old3e33637/new whole-summary+rows default comparison and9precision/rounding cases equal;18lot-threshold/trap cases equal. No scopedP1P2.",
+    "evidence": "product-evidence/v1.2/m4/20261014-experiment-context/README.md",
+    "preservation": "No originalDB/services/schema/frontend/frozen data/OOS mutation. No genuine-market strategy or paper account started. Synthetic in-memory fixtures are not financial/source/forward admission. Generic research analytics/engine unchanged; no whole-engine determinism claim.",
+    "next": "Push coherent fixes to existingPR32; verify exact-headCI. Then safe backend-only publication with backup/rollback and actual browser compatibility before marking runtime deployed. Continue true source/financial and full U1-U8 gates, without repeating completed source leads.",
+    "runtime_deployed": false,
+    "source_admission": false,
+    "full_product_pass": false
+  },
   "plan_projection_context_20261014_gate": {
     "status": "PASS_SCOPED_LOCAL_TESTS_NOT_DEPLOYED",
     "base_head": "94d1d2a34ab8de351b49472c422c689d2533997c",

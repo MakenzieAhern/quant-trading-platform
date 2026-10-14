@@ -38,7 +38,7 @@ from app.research.strategy import ChinaAMomentumLowVolResearchStrategy
 from app.strategies.research import ChinaAMomentumLowVolConfig
 
 TRADING_ZONE = ZoneInfo("Asia/Shanghai")
-PROJECTION_CONTEXT = Context(prec=28, rounding=ROUND_HALF_EVEN)
+EXPERIMENT_CONTEXT = Context(prec=28, rounding=ROUND_HALF_EVEN)
 
 
 def json_value(value: Any) -> Any:
@@ -95,17 +95,18 @@ class ExploratoryStrategy(ChinaAMomentumLowVolResearchStrategy):
             return None
         lots = dict(session.buy_lot_sizes)
         positions = []
-        for item in target.positions:
-            weight = min(item.target_weight, self.max_weight)
-            lot = Decimal(lots[item.security_id])
-            quantity = (available_equity * weight / (item.reference_price * lot)).to_integral_value(
-                rounding=ROUND_FLOOR
-            ) * lot
-            positions.append(replace(item, target_weight=weight, quantity=quantity))
-        invested = sum((p.quantity * p.reference_price for p in positions), Decimal(0))
-        self.last_target = PortfolioTarget(
-            positions=tuple(positions), residual_cash=available_equity - invested
-        )
+        with localcontext(EXPERIMENT_CONTEXT):
+            for item in target.positions:
+                weight = min(item.target_weight, self.max_weight)
+                lot = Decimal(lots[item.security_id])
+                quantity = (
+                    available_equity * weight / (item.reference_price * lot)
+                ).to_integral_value(rounding=ROUND_FLOOR) * lot
+                positions.append(replace(item, target_weight=weight, quantity=quantity))
+            invested = sum((p.quantity * p.reference_price for p in positions), Decimal(0))
+            self.last_target = PortfolioTarget(
+                positions=tuple(positions), residual_cash=available_equity - invested
+            )
         return self.last_target
 
     def reset(self) -> None:
@@ -211,21 +212,22 @@ def run_experiment(
     )
     dates = tuple(s.timestamp.date() for s in snapshots)
     equity = tuple(s.equity for s in snapshots)
-    benchmark = tuple(
-        request.initial_cash
-        * data.benchmark[day.isoformat()]
-        / data.benchmark[dates[0].isoformat()]
-        for day in dates
-    )
-    costs = sum((f.commission for f in result.fills), Decimal(0))
-    traded_notional = sum((f.quantity * f.price for f in result.fills), Decimal(0))
-    mean_equity = sum(equity, Decimal(0)) / Decimal(len(equity))
-    analysis = analyze_research_period(
-        equity=equity,
-        benchmark_equity=benchmark,
-        transaction_costs=costs,
-        turnover=traded_notional / mean_equity,
-    )
+    with localcontext(EXPERIMENT_CONTEXT):
+        benchmark = tuple(
+            request.initial_cash
+            * data.benchmark[day.isoformat()]
+            / data.benchmark[dates[0].isoformat()]
+            for day in dates
+        )
+        costs = sum((f.commission for f in result.fills), Decimal(0))
+        traded_notional = sum((f.quantity * f.price for f in result.fills), Decimal(0))
+        mean_equity = sum(equity, Decimal(0)) / Decimal(len(equity))
+        analysis = analyze_research_period(
+            equity=equity,
+            benchmark_equity=benchmark,
+            transaction_costs=costs,
+            turnover=traded_notional / mean_equity,
+        )
     metrics = json_value(asdict(analysis))
     metrics["number_of_trades"] = len(result.fills)
     metrics["number_of_fills"] = len(result.fills)
@@ -465,7 +467,7 @@ def build_plan_preview(
             else ("BUY" if desired > held else "SELL" if desired < held else "HOLD")
         )
         # Match the engine's precision without inheriting caller rounding or traps.
-        with localcontext(PROJECTION_CONTEXT):
+        with localcontext(EXPERIMENT_CONTEXT):
             desired_change = abs(desired - held)
             if proposal and decision and decision.approved and side == "BUY":
                 if decision.reference_price is None or decision.estimated_transaction_cost is None:
@@ -515,7 +517,7 @@ def _security_id(symbol: str) -> str:
 
 
 def _holdings_row(sequence: int, snapshot: PortfolioSnapshot) -> dict[str, Any]:
-    with localcontext(PROJECTION_CONTEXT):
+    with localcontext(EXPERIMENT_CONTEXT):
         result: dict[str, Any] = json_value(
             {
                 "sequence": sequence,

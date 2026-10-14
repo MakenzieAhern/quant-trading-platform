@@ -1,5 +1,18 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U3/U6 product sizing and aggregate determinism
+
+[Separate reproductions and terminal full-suite evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-experiment-context/README.md>)
+cover ambient Decimal precision changing a capped target across a100-share lot
+boundary and changing benchmark/turnover for the same engine equity. Product-owned
+28/HALF_EVEN context now wraps sizing/residual cash and aggregate/analytics calls,
+with no generic engine/analytics, methodology, stored-result or schema changes.
+81related tests PASS; isolated full backend2340PASS/1optional archiveSKIP;
+Ruff/format/mypy PASS. Independent old/new default-output and27context/threshold
+comparisons agree, no scopedP1P2. This is synthetic software regression evidence,
+not actual source/financial/forward acceptance. Exact-headCI and safe publication
+remain separate; not deployed at this checkpoint.
+
 ## 2026-10-14 U6 deterministic account-plan projection
 
 [RED-to-GREEN and complete local test receipts](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-plan-projection-context/README.md>)

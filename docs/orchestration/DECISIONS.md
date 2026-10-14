@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-10-14 v1.2 — own product arithmetic context
+
+Keep the existing portfolio/risk convention of28 significant digits/HALF_EVEN,
+and explicit ROUND_FLOOR for lots. Do not inherit arbitrary caller precision,
+rounding or traps when computing plan projections, capped targets or product
+summary aggregates. Independent probes showed a plan amount/hash difference,
+a0-to100share sizing difference and benchmark/turnover differences for identical
+inputs. Separate RED-to-GREEN units preserve the previous default28 results.
+No global Decimal mutation, financial policy revision, persisted-plan migration,
+frozen result rewrite or claim of an observed deployed loss. Source financial
+integrity and real after-start forward acceptance remain independent required gates.
+
 ## 2026-10-14 v1.2 — stop the unrelated April correction lead
 
 Read the complete official300147 notice59214209/2011-021, not just its generic

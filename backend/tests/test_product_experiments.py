@@ -587,6 +587,96 @@ def test_plan_projection_is_independent_of_callers_decimal_context(precision, ro
     assert (buy.snapshot.model_dump(), held.snapshot.model_dump()) == snapshots
 
 
+@pytest.mark.parametrize("precision", [6, 28, 50])
+@pytest.mark.parametrize("rounding", [ROUND_DOWN, ROUND_HALF_EVEN, ROUND_UP])
+@pytest.mark.parametrize("equity,quantity", [("9999.999", "0"), ("10000.001", "100")])
+def test_exploratory_lot_sizing_owns_decimal_context(
+    monkeypatch, precision, rounding, equity, quantity
+):
+    from app.application.experiments.runner import ExploratoryStrategy
+    from app.research.models import PortfolioTarget, TargetPosition
+    from app.research.strategy import ChinaAMomentumLowVolResearchStrategy
+    from tests.test_research_execution_engine import SECURITY_ID, _session
+
+    request = demo_request(start_date="2024-01-02", end_date="2024-01-03")
+    session = _session(date(2024, 1, 2), opening="10")
+    parent_target = PortfolioTarget(
+        positions=(
+            TargetPosition(
+                security_id=SECURITY_ID,
+                target_weight=Decimal("0.1"),
+                quantity=Decimal(0),
+                reference_price=Decimal(10),
+            ),
+        ),
+        residual_cash=Decimal(equity),
+    )
+    monkeypatch.setattr(
+        ChinaAMomentumLowVolResearchStrategy,
+        "target_for_completed_session",
+        lambda *args: parent_target,
+    )
+    with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
+        expected = ExploratoryStrategy(request).target_for_completed_session(
+            session, Decimal(equity)
+        )
+    assert expected.positions[0].quantity == Decimal(quantity)
+    with localcontext(Context(prec=precision, rounding=rounding)) as context:
+        before_flags = context.flags.copy()
+        context.traps[Inexact] = True
+        actual = ExploratoryStrategy(request).target_for_completed_session(session, Decimal(equity))
+        assert actual == expected
+        assert context.prec == precision and context.rounding == rounding
+        assert context.flags == before_flags
+    assert parent_target.positions[0].quantity == 0
+
+
+@pytest.mark.parametrize("precision", [6, 28, 50])
+@pytest.mark.parametrize("rounding", [ROUND_DOWN, ROUND_HALF_EVEN, ROUND_UP])
+def test_experiment_aggregate_output_owns_decimal_context(monkeypatch, precision, rounding):
+    from app.application.experiments import runner
+    from tests.test_research_execution_engine import CALENDAR, OneTargetStrategy, _session
+
+    request = demo_request(start_date="2024-01-02", end_date="2024-01-04", initial_cash="10000")
+    sessions = tuple(
+        _session(date(2024, 1, day), opening=price)
+        for day, price in ((2, "10"), (3, "9.9"), (4, "9.99"))
+    )
+    days = tuple(session.trading_date for session in sessions)
+    data = SimpleNamespace(
+        calendar_days=days,
+        calendar=CALENDAR,
+        next_session=None,
+        sessions=lambda: iter(sessions),
+        cost_model=SimpleNamespace(schedules=(sessions[0].trading_rules[0].cost_schedule,)),
+        benchmark=dict(
+            zip(
+                (day.isoformat() for day in days),
+                (Decimal("100"), Decimal("101.123456789"), Decimal("102.234567891")),
+                strict=True,
+            )
+        ),
+    )
+    registry = SimpleNamespace(
+        resolve=lambda _: {
+            "sha256": DEMO_SHA,
+            "mode": "synthetic_demo",
+            "benchmark_id": "synthetic",
+        }
+    )
+    monkeypatch.setattr(runner, "load_experiment_dataset", lambda *args: data)
+    monkeypatch.setattr(runner, "_implementation_checksum", lambda: "b" * 64)
+    monkeypatch.setattr(runner, "ExploratoryStrategy", lambda *args: OneTargetStrategy())
+    with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
+        expected = run_experiment(registry, request, DEMO_SHA, Event(), lambda *args: None)
+    assert expected.rows["equity"][-1]["benchmark"] == "10223.4567891"
+    assert expected.summary["metrics"]["turnover"] == "0.09900336545440301333976679647"
+    with localcontext(Context(prec=precision, rounding=rounding)) as context:
+        actual = run_experiment(registry, request, DEMO_SHA, Event(), lambda *args: None)
+        assert actual == expected
+        assert context.prec == precision and context.rounding == rounding
+
+
 @pytest.mark.parametrize(
     "value",
     ['=HYPERLINK("x")', "+SUM(1,2)", "-1+2", "@SUM(A1)", "  =1+1", "\tformula", "\n=1+1", "\r=1+1"],
