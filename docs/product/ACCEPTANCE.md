@@ -17,8 +17,12 @@ retention. Full nonroot isolated backend2304PASS/1optional archiveSKIP; related
 suite81PASS, store suite21PASS; Ruff/594format/mypy151PASS. Independent read-only
 review found no remaining scopedP1/P2 after listener cleanup was moved before
 awaited teardown. Two test files only; production/frontend/schema unchanged.
-No original DB write, service restart, provider request or browser acceptance.
-Hosted CI for the resulting commit is recorded separately; full product is PARTIAL.
+No original DB write, service restart or provider request. Exact871231a CI38501063452
+passes all3jobs:2304backend/1optionalSKIP,967frontend/55files, static/build/migration/
+isolatedCompose. Two tested file hashes match the commit; receipt in ci.json.
+Subsequent read-only IAB data page retains historical-source failure and candidate
+rights/execution warnings; no submit, preference change or new Chrome/fullAA claim.
+The source remains unqualified and full product is PARTIAL.
 
 ## 2026-10-14 U7/M4/M5 scoped publication and database restore
 
