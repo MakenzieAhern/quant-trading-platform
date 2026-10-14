@@ -1,12 +1,13 @@
 {
   "comparison_mode_20261014_gate": {
-    "status": "PASS_SCOPED_PREVIEW_PENDING_PUBLICATION",
+    "status": "PASS_SCOPED_INSTALLED_MODE_IDENTITY_NOT_FULL_PRODUCT",
     "base_head": "9ed802b9ed0c59cc7f99f96ed475bb78b49291c8",
     "progress": "Previous status-only turn NO_PROGRESS. Actual installed three-study comparison exposed unqualified arbitrary names in financial headers. Shared headers now show existing true historical/demo mode in EN/ZH, without changing money or sources. Both user guides corrected stale operational claims.",
     "verification": "RED2;53comparisonPASS;976frontendPASS/55files12.35s;lint/typesPASS. Default dist buildEACCES(root-owned oldassets) retained; fresh temporary preview buildPASS. Actual IAB5175 ENZH modes aligned, fullprecision rows equal before,390document375/375/localtables307/680. Independent scoped review noP1P2. Original9ed802b CI38514172217 SUCCESS/all3; newhead separate.",
     "evidence": "product-evidence/v1.2/m4/20261014-comparison-mode/README.md",
-    "preservation": "No original services restarted/deployed, no DB/newstudy/account/provider/frozen/OOS writes. Ownedtabs15/16closed,ZH/system/viewport restored,user markets untouched. Preview-only API=/ build must never be published to static5173.",
-    "runtime_deployed": false,
+    "preservation": "Frontend-only backed-up atomic publication; no containerrestart, DB/newstudy/account/provider/frozen/OOS writes. Ownedtabs15/16/17closed,ZH/system/viewport restored,user markets untouched. Preview45243 stopped; publication used separately bound localhost8000 API build, never previewAPI=/.",
+    "publication": "Exactbeb9f5cab15c8ea8bf8c82d23947f548eb3c0382 CI38515549375 all3SUCCESS/watch51747terminal0.9offlineguardsPASS;independent prepublication review noP1P2;353sourcepins/13assets. Freshfrontendbackup,265oldassets retained,Windows13servedSHA/securityheadersPASS. Before/after/browser45publicrelations and45HTTP bodies equal,schema0018,no restarts. Actual5173IAB ENZH tables equal preview/fullprecision preserved; screenshot labels inspected. PublicationSHA4ecb06f0d5569ee124b8f8b054fda80d24d1e69a364a86c4ac1f00ee6e72549a. Later docsCI separate. Not financial/source/fullAA/forward acceptance.",
+    "runtime_deployed": true,
     "full_product_pass": false
   },
   "linked_date_matrix_20261014_gate": {
@@ -5170,7 +5171,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Read comparison_mode_20261014_gate and private README/CHECKPOINT. Commit reviewed frontend headers/tests plus bilingualguide and evidence checkpoint; inspect exact newhead CI, then use source-bound explicit localhost8000 production build and backed-up atomic frontend-only publication. Do not publish API=/ preview or restart originalservices. Previous9edCI38514172217 SUCCESS/watch72314terminal0. Continue full U1-U8/source/financial/forward gates; do not repeat completed date/export/PDF work. Full goal ACTIVE/PARTIAL.",
+  "local_next_command": "Read comparison_mode_20261014_gate and private CHECKPOINT. beb9f5c shipped after exactCI38515549375SUCCESS and actual5173 ENZH verification; do not republish,restart,or resume terminalwatch51747. LaterdocsCI separate. Continue genuinely unclosed U1-U8/M3-M5 and source/financial/dailycoverage/rights/afterstartforward requirements; no repeat of completed comparison/date/export/PDF work. Full goal ACTIVE/PARTIAL; frozen/OOS unchanged.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
