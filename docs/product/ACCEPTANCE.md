@@ -15,6 +15,17 @@ widths pass. Not full Chrome/AA/native200/performance or financial acceptance.
 This entry precedes exact-head CI and local publication; inspect linked receipts
 and the latest state before claiming deployed. No research or simulated run started.
 
+Follow-up: exact98b0e35 CI38506043594 passed all3jobs (2304backend/1optionalSKIP,
+972frontend). Initial byte-serving PASS was not browser acceptance: previewAPIbase
+`/` was wrong for static-only production nginx; actual browser failed, oldindex
+was restored. Failed artifacts remain. Corrected explicitlocalhost8000 build,
+9offline publication guard tests and independent review passed; frontend-only
+publication03:32UTC followed by actual5173ZH/EN help/cache/saved12research and
+ZH390 keyboard/layout checks passed.13Windows served hashes/headers verified;
+45public relations,45HTTP responses, four container start times and frozen pins
+unchanged. No backend restart, originalDB write, research or paper run. Both attempts
+and rollback are documented; no full financial/forward/Chrome/AA/p95 claim.
+
 ## 2026-10-14 U5/U7 retained master instrument-type closure
 
 [Bounded original-source receipts and reconciliation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-real-source-inventory/README.md>)

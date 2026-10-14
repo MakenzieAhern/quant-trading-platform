@@ -1,5 +1,18 @@
 # Decisions
 
+## 2026-10-14 v1.2 — blocked-data recovery and deployment API origin
+
+Keep execution blocked on failed source/economic verification while providing
+read-only cached-version, saved-research and focused bilingual-help navigation.
+Reuse existing Link/help components; no automatic synthetic fallback or new task.
+Actual preview and production browser checks are separate gates. The first build
+incorrectly used the preview's same-origin API address on static-only nginx;
+actual5173 QA failed and the old index was atomically restored. Retain that
+failure. Corrected build explicitly pins existing localhost8000; no nginx/CORS
+security changes, backend restart or data restore. Preserve both asset sets and
+fresh index backups; bytes served and service health alone are not browser proof.
+Full U1-U8 acceptance and source rights/coverage obligations remain unchanged.
+
 ## 2026-10-14 v1.2 — distinguish current inventory type from daily authority
 
 Correct the September23 inventory description:5222 records are not all ordinary

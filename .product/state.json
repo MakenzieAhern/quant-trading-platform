@@ -1,13 +1,17 @@
 {
   "data_recovery_navigation_20261014_gate": {
-    "status": "PASS_SCOPED_PREVIEW_NOT_YET_PUBLISHED",
+    "status": "PASS_SCOPED_LOCAL_PUBLICATION_AND_RECOVERY_NAVIGATION",
+    "code_head": "98b0e35a4d7252e896e23f157fd7d2a2d292b52f",
+    "ci": "38506043594 SUCCESS/all3jobs:2304backendPASS/1optionalSKIP219.84s,972frontendPASS55files,static/build/migration/isolatedCompose. Subsequent docs-only checkpoint is separate.",
+    "publication": "First switch used previewAPIbase / but production nginx has no APIproxy. Actual5173 browser caught service unavailable; oldindex atomically restored and browseronline verified. Failure retained. Separate corrected build explicitly binds localhost8000,9offline guard testsPASS, independent re-reviewPASS. Frontend-only switch03:32UTC retains251old assets;Windows13SHA/headersPASS. Before/after/browser45public relations and45HTTP bodies equal, all4container starts/frozenpins unchanged. No originalDB writes/restart/migration. PublicationSHA f1332a096a768a562cb99695d9dab5320e322bad8d86fc79980fa96bad3c6a05.",
+    "deployed_browser": "Actual5173 IABZH1440 data/source warnings and three actions visible; help opens/focuses and ENtranslation retains openanswer; cache preserves exactdataset; savedresearch12records readable. ZH390Tabfocus/375widthPASS. RestoredZH/systemtheme/viewport and closed ownedtab6. No task/start; usertab1 not navigated. Not Chrome/fullAA/native200/p95 or source/financial acceptance.",
     "base_head": "9aa4b18884a59fdd5e4df1cbb910c21f32ff3694",
     "progress": "Previous status-only turn was NO_PROGRESS. Actual browser found a self-referential Data center error with no recovery actions. Added bilingual read-only cached-dataset, saved-research and focused help links using existing components; admission and financial state unchanged.",
     "verification": "Focused51PASS; full972frontend/55filesPASS12.35s; lint/typecheck/buildPASS. Main chunk543.69kB warning retained. Independent read-only review found no scoped P1/P2.",
     "browser": "Isolated actual IAB preview5175 against original read-only API: EN1440 cache link preserves exact archive and warnings, saved12research visible, help expands and focuses after animation frame. ZH390 keyboard Tab order and Enter helpPASS; document375/375 no horizontal overflow. Not Chrome/native200/fullAA/performance acceptance. No task/account/source requests started; user5173 tab untouched.",
     "evidence": "product-evidence/v1.2/m4/20261014-data-recovery-navigation/README.md",
-    "next": "Commit and verify exact-head CI, bind a clean-source build, publish frontend only with fresh frontend backup and unchanged service/data checks, then recheck actual5173 browser. Continue full source/financial/U1-U8 gates afterward.",
-    "runtime_deployed": false,
+    "next": "Do not republish98b0e35 or repeat successful recovery QA. Continue actual source/financial closure and full U1-U8/M3-M5 quality/delivery. Corrected deployment evidence lives in publication-corrected; original publication/FAILURE.md supersedes its low-level PASS. Subsequent docsCI is separate.",
+    "runtime_deployed": true,
     "source_admission": false,
     "full_product_pass": false
   },
@@ -5076,7 +5080,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Read current_master_type_closure_20261014_gate, its private README/ci.json and SOURCE_READINESS Oct14 table. Collection49916 terminal0 with46success; do not rerun. Final independent review passes; verify exact pushed head/CI from private receipt or gh before continuing. Reuse immutable original receipts but do not invent publication/first-receipt timestamps or no-event coverage. Close a specific actual status/suspension/source-parser gap, keeping independent U3/M4/M5 work moving. Full goal active.",
+  "local_next_command": "Read data_recovery_navigation_20261014_gate and its private README/publication-corrected receipts.98b0e35 codeCI38506043594SUCCESS and actual5173 recovery-navigation checks complete; first APIorigin failure was rolled back and preserved, not a live blocker. Preview87840/test37720/CIwatch9029terminal; no process should be restarted from these IDs. Verify latest docs-only head/CI separately. Continue SOURCE_READINESS Oct14 obligations with original evidence; do not repeat completed46type batch, UI publication, synthetic bridge or frozen/OOS work. Full goal active.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
