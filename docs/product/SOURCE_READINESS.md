@@ -1,5 +1,31 @@
 # Product daily-source readiness
 
+## 2026-10-14 STAR control reveals a separate daily-buy constraint
+
+The original [688622 implementation notice,2026--025](https://static.cninfo.com.cn/finalpage/2026-04-29/1225239101.PDF)
+is now retained and fully visually inspected. It provides April29 full-day
+suspension, April30 resumption/*ST entry, unchanged20% STAR price limits and no
+entry into the SSE risk-warning board. It also specifies a500,000-share daily
+investor buy ceiling including filled and outstanding uncancelled buys plus the
+new order; this is not the existing100,000-share STAR per-order ceiling.
+
+[Private original, receipt, page images and tested event reconciliation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-star-st-control/README.md>)
+pin PDF SHA256`80a6e0aea9ff3f791707c3c29c167cfa3e9c2f4a949e644e6e8af54bcfbb6ed4`,
+response-completed2026-10-14T05:30:35.525376Z and event manifest
+`51ae0540def75e7f9fa060b4e71a8253d7926f2bdebd824e1f165bcaccaeaed4`.
+Exact publication time is unknown. Existing SSE entry HTML was reused unchanged.
+No subsequent exit/no-other-event completeness is inferred.
+
+Source review exposed an additional admission gap: resolved rules and execution
+currently enforce per-order quantity, not this durable investor/security/day gross
+buy aggregate. Selection-time ST filtering alone does not cover overnight status
+changes. Do not change100,000 to500,000 or sum unrelated simulated experiments by
+Windows user. Establish applicable rule dates and simulated investor scope, then
+test filled/open/new reservations, partial fills/cancel, duplicate events, restart
+and day rollover before admission. This does not imply an actual offending fill:
+2026 candidates remain conservative_no_fill and no real verifier is registered.
+Current daily coverage, permission and true after-start acceptance remain PARTIAL.
+
 ## 2026-10-14 dated suspension control source recovered
 
 The earlier603400 September22 PDF-binary gap is closed through the issuer's

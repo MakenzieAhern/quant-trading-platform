@@ -1,5 +1,19 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U5/U7 STAR control event and daily-buy admission gap
+
+[Original source and offline proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-star-st-control/README.md>)
+close the missing original688622 implementation notice, not whole daily coverage.
+Root inspected all5pages; independent review checked source/receipt/producer hashes
+and relevant pages.14offline testsPASS; RuffPASS; normal/optimized manifest identical.
+The newly inspected cumulative daily purchase constraint is not represented by
+the existing per-order cap. It requires separate execution qualification including
+reservations, cancellation, restart and explicit investor scope before promotion.
+Current no-fill/unregistered-verifier gates remain. No actual bad fill, financial
+approval, source license or real-forward PASS is claimed; U5/U7/M3-M5 stay partial.
+No app/DB/service/strategy/frozen/OOS mutation or new browser/full-suite claim.
+Prior exact94b7a3b CI38516285636 completedSUCCESS; later docsCI is separate.
+
 ## 2026-10-14 U4/U7 comparison identity before financial metrics
 
 [Before/after evidence and scoped review](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-comparison-mode/README.md>)

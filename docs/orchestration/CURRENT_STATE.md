@@ -1,5 +1,19 @@
 # Current state
 
+## v1.2 STAR control original source and cumulative-buy gap — 2026-10-14
+
+New original688622 notice1225239101 supplies the April29 suspension/April30*ST
+boundary and an investor daily cumulative purchase condition absent from current
+per-order enforcement. Source, five rendered pages, receipt and tested pinned
+inspection are [retained privately](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-star-st-control/README.md>).
+Independent review agrees this is a source-admission gap, not an observed bad fill.
+14offline tests/Ruff/deterministic reconstruction pass. Existing no-fill and
+unregistered-verifier gates stay closed; no app/data/runtime changes. Full M3-M5
+remain IN_PROGRESS. Next qualify cumulative reservation semantics/effective dates
+and explicit simulated investor scope, without aggregating unrelated experiments.
+Six-control daily completeness, rights and other product gates remain required.
+Exact previous94b7a3bCI38516285636SUCCESS; later documentation CI is separate.
+
 ## v1.2 daily-context candidate persistence — 2026-10-14
 
 The first after-start-context storage layer preserves immutable source bytes,

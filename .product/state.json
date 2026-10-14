@@ -1,4 +1,19 @@
 {
+  "star_st_control_20261014_gate": {
+    "status": "EVENT_SOURCE_VERIFIED_EXECUTION_AGGREGATE_GAP_IDENTIFIED",
+    "base_head": "94b7a3b933d2eab85adde63c0af49007e265e57b",
+    "previous_turn": "User status answer NO_PROGRESS. One targeted original official notice now supplies688622 suspension/resumption and daily-buy semantics; no repetition of prior603400/type/comparison work.",
+    "evidence": "product-evidence/v1.2/m4/20261014-star-st-control/README.md",
+    "pdf_sha256": "80a6e0aea9ff3f791707c3c29c167cfa3e9c2f4a949e644e6e8af54bcfbb6ed4",
+    "manifest_sha256": "51ae0540def75e7f9fa060b4e71a8253d7926f2bdebd824e1f165bcaccaeaed4",
+    "verification": "OneHTTP200request/no retries. All5pages root-inspected; independent source/hash/relevant-page/code review.14offlinePASS0.47s/RuffPASS/normal-optimizedsameSHA including mocked interruption/restart/redirect guards; initial lint failures retained in transcript. Prior exact94b7a3bCI38516285636 completedSUCCESS, laterdocsCI separate.",
+    "finding": "Issuer notice daily500000grossbuy investor cap is not per-orderSTAR100000. Existing Risk/OMS/rule model lacks durable filled+open+new daily aggregate; selection-timeSTfilter alone cannot cover overnight status change. Current2026no-fill/emptyrealverifier prevents source admission; no actual violating fill shown.",
+    "next": "Qualify effective-dated cumulative-buy semantics and explicit simulated investor scope; do not conflate independent experiments or substitute a per-order/holdings cap. Cover partial fills/cancel/duplicates/restart/day rollover. Continue six-control daily completeness and other full product gates; do not refetch this PDF or infer no later ST exit from null.",
+    "preservation": "No application,DB,service,account,strategy,frozen,methodology,OOS changes. No browser/full-suite/source permission/financial/trueforward pass.",
+    "source_admission": false,
+    "real_forward_acceptance": false,
+    "full_product_pass": false
+  },
   "comparison_mode_20261014_gate": {
     "status": "PASS_SCOPED_INSTALLED_MODE_IDENTITY_NOT_FULL_PRODUCT",
     "base_head": "9ed802b9ed0c59cc7f99f96ed475bb78b49291c8",
@@ -5171,7 +5186,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Read comparison_mode_20261014_gate and private CHECKPOINT. beb9f5c shipped after exactCI38515549375SUCCESS and actual5173 ENZH verification; do not republish,restart,or resume terminalwatch51747. LaterdocsCI separate. Continue genuinely unclosed U1-U8/M3-M5 and source/financial/dailycoverage/rights/afterstartforward requirements; no repeat of completed comparison/date/export/PDF work. Full goal ACTIVE/PARTIAL; frozen/OOS unchanged.",
+  "local_next_command": "Read star_st_control_20261014_gate and private README: new official688622 notice exposes daily cumulative-buy scope missing from per-order enforcement. Do not refetch PDF, treat null exit as complete chain, or globally combine independent paper experiments. Qualify effective dates/investor scope and durable filled+open+new accounting while continuing six-control daily coverage and remaining U1-U8/M3-M5. Exact94b7a3bCI38516285636SUCCESS; laterdocsCI separate. beb9f5c stays served; no republish/restart/frozen/OOS work. Full goal ACTIVE/PARTIAL.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
