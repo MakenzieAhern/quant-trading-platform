@@ -543,6 +543,31 @@ export function DataCenterPage() {
                 </Link>
               )}
             </details>
+            {item.mode === "historical_exploration" && executionCode && (
+              <div className="inlineNotice">
+                <h3>{c.dataRecoveryTitle}</h3>
+                <p>{c.dataRecoveryHint}</p>
+                <div className="welcomeActions">
+                  {item.available && (
+                    <Link
+                      className="button secondary"
+                      href={`/markets?dataset=${encodeURIComponent(item.dataset_id)}`}
+                    >
+                      {c.browseCachedData}
+                    </Link>
+                  )}
+                  <Link className="button secondary" href="/experiments">
+                    {c.browseSavedResearch}
+                  </Link>
+                  <Link
+                    className="button secondary"
+                    href="/help#help-data-blocked"
+                  >
+                    {c.blockedDataHelp}
+                  </Link>
+                </div>
+              </div>
+            )}
           </section>
         );
       })}

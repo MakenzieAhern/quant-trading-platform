@@ -27,6 +27,73 @@ import {
 
 afterEach(() => vi.restoreAllMocks());
 
+it.each(["en-US", "zh-CN"])(
+  "offers read-only next steps for blocked historical data (%s)",
+  async (locale) => {
+    await act(() => i18n.changeLanguage(locale));
+    const historical = {
+      ...capabilities.datasets[0]!,
+      dataset_id: "historical id & revision=1",
+      mode: "historical_exploration" as const,
+      current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED" as const,
+      execution_available: false,
+    };
+    const data = { ...capabilities, datasets: [historical] };
+    const before = JSON.stringify(data);
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(data);
+    render(<DataCenterPage />);
+    const cached = await screen.findByRole("link", {
+      name:
+        locale === "en-US"
+          ? "Browse this cached dataset"
+          : "查看此数据集的缓存",
+    });
+    expect(cached).toHaveAttribute(
+      "href",
+      `/markets?dataset=${encodeURIComponent(historical.dataset_id)}`,
+    );
+    expect(
+      screen.getByRole("link", {
+        name: locale === "en-US" ? "View saved research" : "查看已保存研究",
+      }),
+    ).toHaveAttribute("href", "/experiments");
+    expect(
+      screen.getByRole("link", {
+        name:
+          locale === "en-US" ? "Why is execution blocked?" : "为什么不能运行？",
+      }),
+    ).toHaveAttribute("href", "/help#help-data-blocked");
+    expect(JSON.stringify(data)).toBe(before);
+    await act(() => i18n.changeLanguage("en-US"));
+  },
+);
+
+it("does not offer an unreadable dataset as cached or show recovery for an admitted one", async () => {
+  await act(() => i18n.changeLanguage("en-US"));
+  vi.spyOn(experimentApi, "capabilities").mockResolvedValue({
+    ...capabilities,
+    datasets: [
+      {
+        ...capabilities.datasets[0]!,
+        mode: "historical_exploration",
+        available: false,
+      },
+    ],
+  });
+  const view = render(<DataCenterPage />);
+  await screen.findByRole("link", { name: "Why is execution blocked?" });
+  expect(
+    screen.queryByRole("link", { name: "Browse this cached dataset" }),
+  ).not.toBeInTheDocument();
+  view.unmount();
+  vi.mocked(experimentApi.capabilities).mockResolvedValue(capabilities);
+  render(<DataCenterPage />);
+  await screen.findByText("Cached data available");
+  expect(
+    screen.queryByRole("link", { name: "Why is execution blocked?" }),
+  ).not.toBeInTheDocument();
+});
+
 it.each([
   ["QUEUED", "Queued", "排队中"],
   ["RUNNING", "Running", "运行中"],
@@ -70,6 +137,8 @@ it.each([
     "Can I use the local app while GitHub CI/CD is unavailable?",
   ],
   ["zh-CN", "local-app", "GitHub CI/CD 暂停时，本地平台还能用吗？"],
+  ["en-US", "data-blocked", "Why can I view data but not run a new study?"],
+  ["zh-CN", "data-blocked", "为什么能查看数据，却不能运行新的研究？"],
   ["en-US", "backtest", "What is a backtest?"],
   ["en-US", "drawdown", "What is maximum drawdown?"],
   ["en-US", "win", "Is a high win rate the same as a good return?"],

@@ -1,4 +1,16 @@
 {
+  "data_recovery_navigation_20261014_gate": {
+    "status": "PASS_SCOPED_PREVIEW_NOT_YET_PUBLISHED",
+    "base_head": "9aa4b18884a59fdd5e4df1cbb910c21f32ff3694",
+    "progress": "Previous status-only turn was NO_PROGRESS. Actual browser found a self-referential Data center error with no recovery actions. Added bilingual read-only cached-dataset, saved-research and focused help links using existing components; admission and financial state unchanged.",
+    "verification": "Focused51PASS; full972frontend/55filesPASS12.35s; lint/typecheck/buildPASS. Main chunk543.69kB warning retained. Independent read-only review found no scoped P1/P2.",
+    "browser": "Isolated actual IAB preview5175 against original read-only API: EN1440 cache link preserves exact archive and warnings, saved12research visible, help expands and focuses after animation frame. ZH390 keyboard Tab order and Enter helpPASS; document375/375 no horizontal overflow. Not Chrome/native200/fullAA/performance acceptance. No task/account/source requests started; user5173 tab untouched.",
+    "evidence": "product-evidence/v1.2/m4/20261014-data-recovery-navigation/README.md",
+    "next": "Commit and verify exact-head CI, bind a clean-source build, publish frontend only with fresh frontend backup and unchanged service/data checks, then recheck actual5173 browser. Continue full source/financial/U1-U8 gates afterward.",
+    "runtime_deployed": false,
+    "source_admission": false,
+    "full_product_pass": false
+  },
   "current_master_type_closure_20261014_gate": {
     "status": "PASS_RETAINED_INVENTORY_TYPE_INSPECTION_NOT_PIT_OR_SOURCE_ADMISSION",
     "base_head": "72fd8fa",

@@ -103,6 +103,12 @@ const en = {
   available: "Available",
   readableData: "Cached data available",
   readOnlyData: "View only · new execution blocked",
+  dataRecoveryTitle: "What can I do now?",
+  dataRecoveryHint:
+    "Repeated submissions or raw-data updates will not repair this data version. Keep the original records; a maintainer must verify the source and coverage before execution can be restored. These links only open pages and do not start a task.",
+  browseCachedData: "Browse this cached dataset",
+  browseSavedResearch: "View saved research",
+  blockedDataHelp: "Why is execution blocked?",
   unavailable: "Unavailable",
   coverage: "Date coverage",
   securities: "Securities",
@@ -156,6 +162,9 @@ const en = {
   forwardHelp:
     "Not available yet. This mode requires a legally usable, verified source and an explicitly started account that processes newly completed sessions received after start. Historical backfill and the 2030 demo do not prove forward acceptance.",
   helpTitle: "A few ideas that make the results clearer",
+  dataBlockedQuestion: "Why can I view data but not run a new study?",
+  dataBlockedAnswer:
+    "Reading stored prices and results is different from approving them for new execution. Source verification checks whether the evidence matches the registered version; economic coverage checks whether events such as dividends and share changes are modeled. A failed or unverified check blocks new research and historical simulation, even when the service is online. Preserve old records and their warnings; do not treat their returns as validated. Repeated submissions, changing dates or requesting newer raw prices cannot repair the same version. Ask the maintainer to verify and register a corrected version without overwriting frozen evidence. You can still inspect readable cached data and saved results. To learn the controls, deliberately choose the labeled synthetic demonstration in the guided backtest; it does not repair historical data or prove investment performance. New-market forward simulation has its own source and receipt requirements.",
   localAppQuestion:
     "Can I use the local app while GitHub CI/CD is unavailable?",
   localAppAnswer:
@@ -289,6 +298,12 @@ const zh: Record<keyof typeof en, string> = {
   available: "可用",
   readableData: "可查看缓存",
   readOnlyData: "仅可查看 · 禁止新执行",
+  dataRecoveryTitle: "现在可以做什么？",
+  dataRecoveryHint:
+    "重复提交或更新原始行情不能修复此数据版本。请保留原始记录，由维护者核验来源与经济覆盖后再恢复执行。以下入口只打开页面，不会启动任务。",
+  browseCachedData: "查看此数据集的缓存",
+  browseSavedResearch: "查看已保存研究",
+  blockedDataHelp: "为什么不能运行？",
   unavailable: "不可用",
   coverage: "覆盖区间",
   securities: "证券",
@@ -338,6 +353,9 @@ const zh: Record<keyof typeof en, string> = {
   forwardHelp:
     "尚未开放。此模式需要合法可用且经过核验的数据来源，由用户主动启动会话后接收新到达的已完成交易日数据并模拟处理。历史补录和2030演示不能替代前向验收。",
   helpTitle: "读懂结果，从几个概念开始",
+  dataBlockedQuestion: "为什么能查看数据，却不能运行新的研究？",
+  dataBlockedAnswer:
+    "能读取已存价格和结果，不等于获准用它们进行新执行。来源核验检查证据是否匹配登记的数据版本；经济覆盖核验检查分红、股份变动等事件是否已建模。检查失败或尚未验证时，即使服务在线，也会阻止新的研究和历史模拟。保留旧记录及警告，不要把旧收益视为已验证。重复提交、修改日期或请求更新的原始价格，都不能修复同一版本。请维护者核验并登记修正版本，不覆盖冻结证据。你仍可查看可读取的缓存和已保存结果。若只想学习操作，可在引导式回测中主动选择明确标记的合成演示；它不会修复历史数据，也不证明投资表现。真实新行情前向模拟另有来源与接收时间要求。",
   localAppQuestion: "GitHub CI/CD 暂停时，本地平台还能用吗？",
   localAppAnswer:
     "可以，前提是这台 PC 已安装的服务正在运行；在同一浏览器打开 http://localhost:5173/。GitHub CI/CD 用于检查与发布修改，不是使用现有本地平台的前提。本地检查不能替代远端 CI 或发布审批。服务在线不代表行情最新，也不代表经济完整性已验证；请在数据中心查看日期、模式和限制。如果页面或服务无法连接，从 Windows 开始菜单打开已安装的 Docker Desktop，等待引擎运行后刷新原页面。仍然失败时，请维护者检查服务；不要重置 Docker 或删除数据。保留同一地址，避免丢失该浏览器来源下保存的草稿与待确认请求标识。",
@@ -376,6 +394,11 @@ export function useProductCopy(): Record<keyof typeof en, string> {
 
 export function productHelpTopics(copy: ReturnType<typeof useProductCopy>) {
   return [
+    {
+      id: "data-blocked",
+      question: copy.dataBlockedQuestion,
+      answer: copy.dataBlockedAnswer,
+    },
     {
       id: "local-app",
       question: copy.localAppQuestion,

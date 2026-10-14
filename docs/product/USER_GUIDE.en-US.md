@@ -1,5 +1,7 @@
 # A-share workstation guide (v1.2 development build)
 
+When Data center shows “View only · new execution blocked,” use “What can I do now?” to browse that same cached dataset, inspect saved research, or open the focused recovery help. These links do not start tasks. Repeated submissions, changed dates or raw-price updates cannot repair the same version; preserve original records and ask the maintainer to verify a corrected version. Existing returns remain subject to the displayed quality warnings.
+
 This guide describes the local work-in-progress UI, not a released v1.2.0. The app is for local research and simulation only: it has no live broker connection and sends no real-money orders. Historical performance cannot guarantee future returns.
 
 ## Open the app and check the data

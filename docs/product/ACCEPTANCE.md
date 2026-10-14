@@ -1,5 +1,20 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U5/U8 blocked-data recovery navigation
+
+[Actual preview and publication checkpoint](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-data-recovery-navigation/README.md>)
+records the observed self-referential Data center warning and its bilingual
+read-only recovery actions. Cached navigation pins the original dataset, saved
+research remains separate from new execution, and help explains source/economic
+validation without bypasses or automatic demo substitution. Original warnings stay.
+Focused51 and full972frontend tests/55files PASS; lint/types/build PASS (543.69kB
+chunk warning retained). Independent read-only review found no scoped P1/P2.
+Actual IAB preview5175: English desktop three links, original12 saved studies,
+help expansion/focus; Chinese390 keyboard traversal/Enter and375/375 document
+widths pass. Not full Chrome/AA/native200/performance or financial acceptance.
+This entry precedes exact-head CI and local publication; inspect linked receipts
+and the latest state before claiming deployed. No research or simulated run started.
+
 ## 2026-10-14 U5/U7 retained master instrument-type closure
 
 [Bounded original-source receipts and reconciliation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-real-source-inventory/README.md>)
