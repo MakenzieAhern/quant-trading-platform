@@ -2,7 +2,9 @@
   "daily_context_candidate_20261014_gate": {
     "status": "PASS_STORAGE_REGRESSION_NOT_SOURCE_ADMISSION_OR_U7_COMPLETION",
     "base_head": "e19f14510996948f74ffacdd6e8f1b72b591221a",
-    "base_ci": "38409763115 SUCCESS; new checkpoint CI pending",
+    "base_ci": "38409763115 SUCCESS",
+    "code_head": "37dd25d972b95f1fb794e9097a57bae139e170db",
+    "ci": "38494149725 SUCCESS;2277backend/1optionalSKIP,950frontend/54files,static/build/migration/isolatedComposePASS. Six local source hashes match exact commit. Later documentation-only checkpoint is separate.",
     "implementation": "Product-local immutable evidence/context/observation before append-only PG registration. Same candidate/renamed evidence retains first local capture; conflicting versions retained, bounded reads verified. No HTTP admission or execution consumer; V2 integration remains required.",
     "verification": "19 new synthetic cases; final full2277PASS/1optional archiveSKIP94.73s; Ruff592format/mypy150PASS. Isolated0018 downgrade0017 upgrade0018PASS. Reviewer race reproduced1FAIL/18PASS before fix, final regression passes. No real source/account started.",
     "incident": "Docker process disappeared. Normal startup auto-restarted original backend and its bind-mounted alembic upgrade head applied uncommitted0018 before planned publication. Explicitly disclosed. No production downgrade/restore. Original schema0018/candidate0/5STOPPED/417events/APIpaperhealthy; not all-table equality or reviewed rollout. Do not use old4eb7bdf receipt as proof for this restart.",
@@ -4969,9 +4971,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "4eb7bdf4236b90cfae2790d4ee074b928c0669d7",
+      "last_verified_head": "37dd25d972b95f1fb794e9097a57bae139e170db",
       "state": "DRAFT",
-      "ci_run": 38406422590,
+      "ci_run": 38494149725,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
@@ -4991,7 +4993,7 @@
     }
   },
   "next_task": "Complete continuous daily-context arrival after account start: separate immutable source eligibility from append-only qualified dated status/action/rule inputs, bind consumption and first-observed UTC into journal/replay, and test both arrival orders and late/missing/conflicting context. Finite receipt bridge full regression passed but is not real-forward acceptance. Actual source/financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain; no repeated broad acquisition or frozen/OOS change.",
-  "local_next_command": "Finish candidate storage checkpoint review/CI, then continue V2 immutable eligibility/warmup/calendar, actual registered source qualification and receipt-manager/journal/resume wiring. Use context_store only as unqualified evidence storage, never a self-approval route. Test after-start context/raw arrival in either order, late/missing/conflict and consumed-pin replay, preserve V1 journals/frontend. Inspect runtime schema0018 after documented automatic Docker-start migration; never downgrade original DB. Source isolation is required before another live-mounted migration. Full U1-U8/M0-M5 remains active.",
+  "local_next_command": "Candidate storage37dd25d review and exactCI38494149725 complete. Continue V2 immutable eligibility/warmup/calendar, actual registered source qualification and receipt-manager/journal/resume wiring. Use context_store only as unqualified evidence storage, never a self-approval route. Test after-start context/raw arrival in either order, late/missing/conflict and consumed-pin replay, preserve V1 journals/frontend. Inspect runtime schema0018 after documented automatic Docker-start migration; never downgrade original DB. Source isolation is required before another live-mounted migration. Full U1-U8/M0-M5 remains active.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

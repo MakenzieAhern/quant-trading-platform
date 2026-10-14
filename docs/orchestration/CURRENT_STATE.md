@@ -19,8 +19,11 @@ not all-table equality. Previous4eb7bdf rollout does not certify this restart.
 Do not restart Docker with unpublished live-mounted migrations without assessing
 automatic startup. Isolated0018→0017→0018 passed; original data was not restored.
 
-Existing branch basee19f145 exactCI38409763115 PASS; new code's CI is pending its
-commit/push. Full source/financial/real-forward and product gates remain PARTIAL.
+Code37dd25d is pushed to draftPR32; exactCI38494149725 passes all three jobs:
+2277backend/1optionalSKIP,950frontend,static/build/migration/isolatedCompose.
+The final test also verifies a new store can retry only archived candidate/source
+files after original temporary input loss, retaining its first observation time.
+Full source/financial/real-forward and product gates remain PARTIAL.
 
 ## v1.2 receipt bridge published; daily-context arrival is next — 2026-10-13
 

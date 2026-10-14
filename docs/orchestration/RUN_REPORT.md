@@ -2,6 +2,11 @@
 
 ## 2026-10-14 — after-start context persistence prerequisite
 
+Checkpoint37dd25d pushed; exactCI38494149725 SUCCESS:2277backend/1optionalSKIP,
+950frontend/54files,static/build/migration/isolatedCompose. The strengthened archived-
+only recovery test passes in19focused cases and exact CI; six source hashes match
+the commit. ExistingPR32 remains OPEN/DRAFT, no merge/release.
+
 Previous status-only turn was NO_PROGRESS; this continuation implements an actual
 storage prerequisite for U7, without claiming the missing V2 consumer is complete.
 Product-local immutable evidence and candidate/observation intent precede PG
