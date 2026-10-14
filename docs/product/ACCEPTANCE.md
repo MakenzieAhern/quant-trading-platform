@@ -1,5 +1,19 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U5/U7 one real suspension episode, not forward admission
+
+[Original evidence and deterministic reconciliation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-suspension-control/README.md>)
+close the missing603400 official PDF binary and supply its subsequent actual
+resumption boundary. Two CNINFO issuer notices/all4pages independently checked;
+11offline tests and RuffPASS. SuspensionSep15–Sep29inclusive, resumeSep30open for
+this event only. Original vendor candidate stays non-executable with its parser
+label warning. No inference that other restrictions/events are absent; October14
+receipt times are not backdated September first-observations. No runtime/data/
+frozen/OOS changes, source promotion or simulated session start. U5/U7 remain
+IN_PROGRESS pending daily completeness, other authorities and lawful actual
+after-start data. Prior650eadf CI38512287746 completedSUCCESS/all3jobs, not a
+claim about the later documentation commit.
+
 ## 2026-10-14 U4 actual installed download and publication follow-through
 
 Code847ed65 [CI38510911321](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38510911321)

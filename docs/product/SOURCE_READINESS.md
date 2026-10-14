@@ -1,5 +1,32 @@
 # Product daily-source readiness
 
+## 2026-10-14 dated suspension control source recovered
+
+The earlier603400 September22 PDF-binary gap is closed through the issuer's
+official [CNINFO2026-048](https://static.cninfo.com.cn/finalpage/2026-09-22/1225573898.PDF).
+A subsequent [CNINFO2026-051](https://static.cninfo.com.cn/finalpage/2026-09-30/1225588894.PDF)
+provides the actual endpoint: this suspension began at September15open, last
+suspended dateSeptember29 inclusive, and resumptionSeptember30open. Root and
+independent reviewer checked all four pages, including the distinct table columns
+and resumption text. This corrects any indefinite extension of the earlier
+continue-suspended notice; it does not show there were no other restrictions.
+
+Original PDF SHA256 values respectively:
+`5340cd1eeeaf0384177f05a4729b301cfbd83a98e36b5b5ab38ee84b94c5ff2c` and
+`9d13172940225aa643dccd5a26278050d7b689ea5a0bb823044ab9d765f71395`.
+Actual response-completed UTC:2026-10-14T04:40:43.899916Z and04:40:45.174431Z.
+Exact publication timestamps remain unknown; document dates are not receipt times.
+[Originals, event reconciliation and eleven offline checks](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-suspension-control/README.md>)
+remain outside Git. Deterministic event manifest SHA256:
+`999988a1fa430538528748967b2fa00888ab9123d02a4794aac42ddf1694c2ce`.
+
+The retained September22 vendor candidate still says VENDOR_SUSPENDED and
+execution_eligible=false, with its existing parser-label warning. This one event
+corroborates that status, not general vendor qualification. No old receipt was
+rewritten, source promoted, session started or historical forward timestamp
+invented. Complete daily coverage across the six controls and other authority
+types remains missing; real ContextVerifier remains unregistered.
+
 ## 2026-10-14 targeted correction lead rejected
 
 One exact cached 300147 lead, official CNINFO59214209 (issuer2011-021), was

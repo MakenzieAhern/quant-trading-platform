@@ -1,4 +1,17 @@
 {
+  "suspension_control_20261014_gate": {
+    "status": "PASS_ONE_DATED_EVENT_NOT_DAILY_AUTHORITY",
+    "base_head": "650eadfc8962461b9718eaa8c1c8d2b26d3ce092",
+    "progress": "Former603400SSE PDF-binary gap recovered via independent officialCNINFO048; new051 provides actual suspension endSep29inclusive/resumeSep30open instead of indefinite extension or guessed10sessions. Two originalPDFs/all4pages/receipts independently reviewed. No scoped discrepancy.",
+    "evidence": "product-evidence/v1.2/m4/20261014-suspension-control/README.md",
+    "manifest_sha256": "999988a1fa430538528748967b2fa00888ab9123d02a4794aac42ddf1694c2ce",
+    "verification": "Two directHTTP200binary acquisitions/no retries, no oldSSEchallenge route. 11offline testsPASS0.57s, final reconcile/testRuffPASS, normal/optimizedSHAidentical. OriginalAPI603400Sep22 candidate remainsVENDOR_SUSPENDED/executionfalse with knownparser-labelwarning. Preceding650eadf exactCI38512287746 all3SUCCESS/watch55247terminal0; laterdocsCIseparate.",
+    "limits": "Issuer-event-only evidence, not absence of other events/globaltradeability/calendar/currentdailycoverage. Oct14response timestamps are not originalSep first-seen or exactpublicationtime; no after-startsession exists. No productionverifier/authority/data/DB/service/frozen/OOS mutation.",
+    "next": "Do not refetch thesePDFs or repeat exportQA/CI55247. Resolve independently dated status/actions and affirmative no-other-events coverage for fixed6controls; rights and remaining U1-U8/M3-M5 still required.",
+    "source_admission": false,
+    "real_forward_acceptance": false,
+    "full_product_pass": false
+  },
   "report_download_20261014_gate": {
     "status": "PASS_SCOPED_ACTUAL_FILES_NOT_FINANCIAL_ACCEPTANCE",
     "code_head": "847ed6513959cd0669bf02e72c74ef1ce0b209cd",
@@ -5137,7 +5150,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Read actual_result_period_20261014_gate and report_download_20261014_gate. Previous status-only turn NO_PROGRESS; this continuation reconciles847ed65 completed deployment and actually downloads/verifies JSON/CSV/fallback files from5173. No application deployment/restart or study rerun needed. Continue true unclosed U1-U8/source/financial/forward and M3-M5 gates; no real-source verifier registered,300147/000425 and rights remain. Do not repeat completed publication or frozen/OOS work. Docs-only CI is separate; inspect exact current head before claims. Goal ACTIVE/PARTIAL.",
+  "local_next_command": "Read suspension_control_20261014_gate and its private README/control-episode.json. Previous unit PROGRESS. 650eadf CI38512287746 now all3SUCCESS/watch55247terminal0; no repeated watch/exportQA/publication. Source603400 PDFs048/051 and one bounded suspension interval independently checked; do not refetch. Continue remaining fixed6controls daily status/action/no-other-event coverage and lawful rights before any realContextVerifier registration. Original receipts/frozen/OOS remain immutable, no current session/admission. Later docs CI separate; inspect exact head. Full goal ACTIVE/PARTIAL.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
