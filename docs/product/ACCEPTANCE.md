@@ -1,5 +1,26 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 arithmetic repairs deployed and compatibility checked
+
+Code75a9f1a exact [CI38509116031](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38509116031)
+passed backend/frontend/Compose. The two entries below record pre-publication
+chronology; their undeployed wording is superseded by this checkpoint.
+[Private scoped publication evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-experiment-context/publication/BROWSER.md>)
+includes fresh backup and isolated restore, one backend-only restart, and actual
+IAB Chinese/English stopped-account verification. All45 public table/sequence
+fingerprints and45 captured GET bodies match before/after/backend/browser;
+PG/Redis/frontend starts, original product/frontend archives and frozen pins stay
+unchanged. Existing startup invokes Alembic, with no schema change. No original
+restore or application rollback, new study or account start performed.
+
+Six positions/fills, original cash/equity/date, unknown PnL and financial/source
+warnings remain. Chinese/system restored, ownedtab9closed, usertab untouched.
+Publication manifest SHA256:
+`fc350765d5f80c314732b751877db9ed802ff1330e70ed8b4a69132691c33abe`.
+Not Chrome/fullAA/p95 or real financial/forward-source acceptance. Quiet-window
+comparison is not a write lock. Full U1-U8/M3-M5 remain incomplete. This later
+documentation commit requires its own CI; it does not inherit code-head status.
+
 ## 2026-10-14 U3/U6 product sizing and aggregate determinism
 
 [Separate reproductions and terminal full-suite evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-experiment-context/README.md>)
