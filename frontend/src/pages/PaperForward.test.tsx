@@ -304,6 +304,38 @@ describe("receipt-bound forward paper display", () => {
     }
   });
 
+  it.each(["en-US", "zh-CN"])(
+    "explains a forward source gap without offering historical recovery (%s)",
+    async (language) => {
+      await act(async () => i18n.changeLanguage(language));
+      const snapshot = forwardSnapshot();
+      snapshot.session.status = "FAILED";
+      snapshot.session.error_message = "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT";
+      server(snapshot);
+      const view = render(<PaperSessionDetailPage sessionId={PAPER_ID} />);
+      try {
+        await act(async () => MockWebSocket.instances[0]!.open());
+        expect(await screen.findByRole("alert")).toHaveTextContent(
+          language === "en-US"
+            ? "unchanged retries will not repair the source gap"
+            : "沿用相同数据重试不能修复来源缺口",
+        );
+        expect(
+          screen.queryByRole("link", {
+            name: /Check data readiness|查看数据准备状态|Review configuration|查看配置|Create another paper session|创建新模拟会话/,
+          }),
+        ).not.toBeInTheDocument();
+        expect(
+          screen.getByText(
+            i18n.t("detail.forwardCopyUnavailable", { ns: "paper" }),
+          ),
+        ).toBeVisible();
+      } finally {
+        view.unmount();
+      }
+    },
+  );
+
   it("rejects an explicit forward copy deep link instead of choosing a replay default", async () => {
     const snapshot = forwardSnapshot();
     snapshot.session.status = "STOPPED";

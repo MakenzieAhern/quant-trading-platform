@@ -428,6 +428,7 @@ export const enUS = {
       failedHelp:
         "This replay did not complete. Do not treat partial records as a finished result. Check the configuration and create a new session.",
       createAgain: "Create another paper session",
+      reviewConfiguration: "Review configuration (does not repair missing data)",
       auditError: "Original diagnostic (audit)",
       latestBar: "LATEST COMPLETED BAR",
       marketData: "Market data",

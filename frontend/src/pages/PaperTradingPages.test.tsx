@@ -4211,16 +4211,23 @@ describe("paper trading pages", () => {
     expect(screen.getByText("Session connection: closed")).toBeInTheDocument();
   });
 
-  it.each(["en-US", "zh-CN"])(
-    "explains unsupported distribution inputs on a reopened paper account (%s)",
-    async (locale) => {
+  it.each([
+    ["en-US", "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT"],
+    ["zh-CN", "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT"],
+    ["en-US", "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT"],
+    ["zh-CN", "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT"],
+    ["en-US", "UnexplainedReferenceAdjustment: paper session failed"],
+    ["zh-CN", "UnexplainedReferenceAdjustment: paper session failed"],
+  ])(
+    "explains source accounting gaps on a reopened paper account (%s, %s)",
+    async (locale, code) => {
       installWebSocket();
       mockPaperServer().mockResolvedValue(
         jsonResponse({
           ...paperSnapshot("FAILED"),
           session: {
             ...paperSession("FAILED"),
-            error_message: "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT",
+            error_message: code,
           },
         }),
       );
@@ -4233,6 +4240,26 @@ describe("paper trading pages", () => {
           ? "unchanged retries will not repair the source gap"
           : "沿用相同数据重试不能修复来源缺口",
       );
+      expect(
+        screen.getByRole("link", {
+          name:
+            locale === "en-US" ? "Check data readiness" : "查看数据准备状态",
+        }),
+      ).toHaveAttribute("href", "/data");
+      expect(screen.getByText(code)).not.toBeVisible();
+      expect(
+        screen.getByRole("link", {
+          name:
+            locale === "en-US"
+              ? "Review configuration (does not repair missing data)"
+              : "查看配置（不能修复缺失数据）",
+        }),
+      ).toHaveAttribute("href", `/paper/new?from_session=${PAPER_ID}`);
+      expect(
+        screen.queryByRole("link", {
+          name: /Create another paper session|创建新模拟会话/,
+        }),
+      ).not.toBeInTheDocument();
       expect(
         screen.queryByRole("button", { name: /Start replay|开始回放/ }),
       ).not.toBeInTheDocument();

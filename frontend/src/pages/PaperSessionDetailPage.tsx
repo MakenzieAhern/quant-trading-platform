@@ -165,6 +165,15 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
   } = snapshot;
   const active = session.status === "STARTING" || session.status === "RUNNING";
   const forward = session.provider_type === "forward_a_share";
+  // Older saved failures contain the sanitized exception name instead of its code.
+  const failureCode =
+    session.error_message ===
+    "UnexplainedReferenceAdjustment: paper session failed"
+      ? "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT"
+      : session.error_message;
+  const sourceAccountingGap =
+    failureCode === "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT" ||
+    failureCode === "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT";
   const aShare =
     session.provider_type === "simulated_a_share" ||
     session.provider_type === "historical_a_share" ||
@@ -346,8 +355,8 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
         <section className="stateCallout failedCallout" role="alert">
           <h2>{t("detail.failedTitle")}</h2>
           <p>
-            {session.error_message === "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT"
-              ? explainExperimentCode(session.error_message, i18n.language)
+            {sourceAccountingGap
+              ? explainExperimentCode(failureCode, i18n.language)
               : t(
                   forward
                     ? "detail.forwardEndedHelp"
@@ -356,6 +365,11 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
                       : "detail.failedHelp",
                 )}
           </p>
+          {sourceAccountingGap && !forward && (
+            <Link className="button" href="/data">
+              {t("createPage.checkDataReadiness")}
+            </Link>
+          )}
           {forward ? (
             <p>{t("detail.forwardCopyUnavailable")}</p>
           ) : (
@@ -363,7 +377,11 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
               className="button"
               href={`/paper/new?from_session=${encodeURIComponent(session.session_id)}`}
             >
-              {t("detail.createAgain")}
+              {t(
+                sourceAccountingGap
+                  ? "detail.reviewConfiguration"
+                  : "detail.createAgain",
+              )}
             </Link>
           )}
           {session.error_message && (

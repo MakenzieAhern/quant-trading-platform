@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U7/U8 paper accounting source-failure explanation
+
+Fixed a reproduced safe-error-code loss in the paper manager: a typed held-reference
+adjustment failure now persists its fixed public code, not an opaque exception-name
+diagnostic. Generic exceptions remain sanitized; dates/security IDs/private messages
+are not exposed. Existing EN/ZH explanations and exact legacy display alias preserve
+old saved rows. Unchanged retries are explicitly not a source repair. Configuration
+review remains available without the misleading create-again label; historical data
+readiness links are not offered as forward-context recovery.
+
+Full local backend2345PASS/1 optional archiveSKIP; frontend982PASS55files; lint,
+typecheck, build, Ruff359files and mypy151PASS. Independent readonly review's CTA
+conflict repaired and rechecked, no remaining scopedP1/P2. No financial algorithm,
+schema, source admission or frozen/OOS change. Existing bundle warning remains.
+
+Browser recheck **PENDING**: frontend-only preview5175 was rejected by existing
+CORS (400 Disallowed CORS origin), closed without changing security settings or
+workaround. No failed-account browser evidence or installed-runtime publication.
+Exact new CI is separate from the previously successful baseb420f9f run38519527752.
+This is scoped code regression, not full U7/U8/M4 acceptance or v1.2 release.
+
+[Evidence and continuation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-paper-source-failure/README.md>).
+
 ## 2026-10-14 U6/U7 handoff and conditional single-account execution boundary
 
 [Current browser and test evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-handoff-and-star-boundary/README.md>)

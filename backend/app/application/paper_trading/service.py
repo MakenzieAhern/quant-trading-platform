@@ -66,6 +66,7 @@ from app.paper.runtime import (
 )
 from app.research import ResearchExecutionDelta, ResearchSession
 from app.research.costs import EffectiveDatedAShareCommission
+from app.research.engine import UnexplainedReferenceAdjustment
 
 
 class PaperSessionConflictError(ValueError):
@@ -859,7 +860,9 @@ class PaperTradingManager:
                         PaperSessionStatus.FAILED,
                         "session.status",
                         exc.code
-                        if isinstance(exc, OrdinaryDistributionInputError)
+                        if isinstance(
+                            exc, (OrdinaryDistributionInputError, UnexplainedReferenceAdjustment)
+                        )
                         else f"{type(exc).__name__}: paper session failed",
                     )
         finally:

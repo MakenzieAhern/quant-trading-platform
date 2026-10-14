@@ -29,6 +29,7 @@ from app.paper.runtime import (
     SimulatedAShareSessionProvider,
 )
 from app.portfolio import PortfolioEngine
+from app.research.engine import UnexplainedReferenceAdjustment
 from app.risk import RiskEngine
 from app.strategies import MovingAverageCrossoverStrategy
 from tests.test_paper_calendar_journal import INITIAL
@@ -1429,13 +1430,15 @@ async def test_shutdown_marks_an_active_runtime_interrupted(
     assert "backend shutdown" in interrupted.json()["error_message"]
 
 
-@pytest.mark.parametrize("distribution", (False, True))
+@pytest.mark.parametrize("failure", ("generic", "distribution", "held_reference"))
 async def test_runtime_failure_is_persisted_without_exposing_internal_details(
-    client: AsyncClient, monkeypatch: pytest.MonkeyPatch, distribution: bool
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch, failure: str
 ) -> None:
     def fail_to_build_runtime(_session: object, _cursor_date: object) -> object:
-        if distribution:
+        if failure == "distribution":
             raise OrdinaryDistributionInputError("sensitive provider diagnostics")
+        if failure == "held_reference":
+            raise UnexplainedReferenceAdjustment(date(2024, 1, 4), ("sensitive identifier",))
         raise RuntimeError("sensitive provider diagnostics")
 
     monkeypatch.setattr(paper_manager, "_build_runtime", fail_to_build_runtime)
@@ -1451,10 +1454,13 @@ async def test_runtime_failure_is_persisted_without_exposing_internal_details(
         await asyncio.sleep(0.01)
 
     assert detail["status"] == "FAILED"
-    assert detail["error_message"] == (
-        OrdinaryDistributionInputError.code
-        if distribution
-        else "RuntimeError: paper session failed"
+    assert (
+        detail["error_message"]
+        == {
+            "distribution": OrdinaryDistributionInputError.code,
+            "held_reference": UnexplainedReferenceAdjustment.code,
+            "generic": "RuntimeError: paper session failed",
+        }[failure]
     )
     assert "sensitive" not in str(detail)
 

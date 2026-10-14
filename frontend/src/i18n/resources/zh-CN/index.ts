@@ -400,6 +400,7 @@ export const zhCN = {
       failedHelp:
         "本次回放未完成，不能把部分记录当作完整结果。请检查配置后创建新会话。",
       createAgain: "创建新模拟会话",
+      reviewConfiguration: "查看配置（不能修复缺失数据）",
       auditError: "原始诊断（审计）",
       latestBar: "最新完整 K 线",
       marketData: "市场数据",
