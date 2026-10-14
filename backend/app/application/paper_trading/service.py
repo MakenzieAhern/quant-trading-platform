@@ -224,9 +224,7 @@ class PaperTradingManager:
                 or command.strategy_type != FROZEN_A_SHARE_STRATEGY_ID
             ):
                 raise ValueError("FORWARD_SOURCE_NOT_REGISTERED")
-            admitted = await asyncio.to_thread(
-                self._forward_factory.registry.load, command.dataset_id
-            )
+            admitted = await asyncio.to_thread(self._forward_factory.load, command.dataset_id)
             if (
                 command.strategy_parameters.get("start_date")
                 != admitted.contract.first_forward_session
@@ -545,6 +543,8 @@ class PaperTradingManager:
                     self._build_runtime, session, cursor_date
                 )
             assert provider is not None
+            if session.provider_type == "forward_a_share":
+                self._forward_sources[session.id].bind_history(history)
             self._providers[session.id] = provider
             async with self._lock:
                 current = await self.get(session.id)
@@ -709,7 +709,7 @@ class PaperTradingManager:
                         source_stream = self._forward_sources[session.id]
                         forward_input = source_stream.inputs[item.trading_date]
                         if is_new:
-                            dates = [frame.trading_date for frame in source_stream.admitted.frames]
+                            dates = source_stream.admitted.forward_dates
                             index = dates.index(item.trading_date)
                             if index and dates[index - 1] not in confirmed_inputs:
                                 raise ValueError("FORWARD_PREDECESSOR_COMMIT_NOT_CONFIRMED")
@@ -778,6 +778,8 @@ class PaperTradingManager:
                     stored = await persist(events)
                     if forward_input is not None:
                         observed = self._now()
+                        if observed < forward_input.available_at:
+                            raise ValueError("FORWARD_COMMIT_BEFORE_INPUT_AVAILABLE")
                         marker = InputCommitObservation(
                             paper_session_id=session.id,
                             trading_date=item.trading_date,

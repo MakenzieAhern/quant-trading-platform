@@ -201,17 +201,34 @@ class WarmupFrame(AuthorityFrame):
         return AuthorityFrame.model_validate(fields).session(self.bars)
 
 
-class AdmissionContract(ContractModel):
-    schema_version: Literal["PAPER_FORWARD_ADMISSION_V1"]
+class AdmissionTerms(ContractModel):
     admission_id: str = Field(pattern=r"^[a-z0-9][a-z0-9._-]{2,127}$")
     permission: SourcePermission
     authorities: dict[str, AuthorityApproval]
     first_forward_session: date
     last_forward_session: date
     schedule: FilePin
-    daily_context: FilePin
     warmup: FilePin
     transaction_costs: tuple[TransactionCostSchedule, ...] = Field(min_length=1)
+
+
+class AdmissionContract(AdmissionTerms):
+    schema_version: Literal["PAPER_FORWARD_ADMISSION_V1"]
+    daily_context: FilePin
+
+
+class DynamicAdmissionContract(AdmissionTerms):
+    schema_version: Literal["PAPER_FORWARD_ADMISSION_V2"]
+    context_verifier: str = Field(min_length=1, max_length=128)
+    security_ids: tuple[Annotated[str, Field(pattern=r"^CN-A:(SSE|SZSE):[0-9]{6}$")], ...] = Field(
+        min_length=1, max_length=6000
+    )
+
+    @model_validator(mode="after")
+    def universe(self) -> "DynamicAdmissionContract":
+        if self.security_ids != tuple(sorted(set(self.security_ids))):
+            raise ValueError("FORWARD_UNIVERSE_MUST_BE_SORTED_AND_UNIQUE")
+        return self
 
 
 class ReceiptPin(ContractModel):
@@ -226,8 +243,7 @@ class ReceiptPin(ContractModel):
         return self
 
 
-class DailyInputProvenance(ContractModel):
-    schema_version: Literal["PAPER_DAILY_INPUT_V1"] = "PAPER_DAILY_INPUT_V1"
+class DailyInputFields(ContractModel):
     paper_session_id: UUID
     trading_date: date
     admission_sha256: SHA
@@ -239,8 +255,12 @@ class DailyInputProvenance(ContractModel):
     next_open_at: datetime
     receipts: tuple[ReceiptPin, ...] = Field(min_length=1)
 
+    @property
+    def available_at(self) -> datetime:
+        return max(pin.first_received_at for pin in self.receipts)
+
     @model_validator(mode="after")
-    def binding(self) -> "DailyInputProvenance":
+    def binding(self) -> "DailyInputFields":
         utc(self.closed_at)
         utc(self.next_open_at)
         ids = tuple(item.security_id for item in self.receipts)
@@ -256,6 +276,79 @@ class DailyInputProvenance(ContractModel):
         ):
             raise ValueError("FORWARD_INPUT_DIGEST_MISMATCH")
         return self
+
+
+class DailyInputProvenance(DailyInputFields):
+    schema_version: Literal["PAPER_DAILY_INPUT_V1"] = "PAPER_DAILY_INPUT_V1"
+
+
+class ContextSourceObservation(ContractModel):
+    """Verified original source receipt, not a candidate's local capture timestamp."""
+
+    authority_names: tuple[str, ...] = Field(min_length=1)
+    evidence_sha256: SHA
+    receipt_sha256: SHA
+    published_at: datetime
+    completed_at: datetime
+    first_observed_at: datetime
+
+    @model_validator(mode="after")
+    def dates(self) -> "ContextSourceObservation":
+        for value in (self.published_at, self.completed_at, self.first_observed_at):
+            utc(value)
+        if (
+            not self.published_at <= self.completed_at <= self.first_observed_at
+            or self.authority_names != tuple(sorted(set(self.authority_names)))
+            or not set(self.authority_names) <= AUTHORITY_NAMES - {"RAW_OHLCV"}
+        ):
+            raise ValueError("FORWARD_CONTEXT_SOURCE_OBSERVATION_INVALID")
+        return self
+
+
+class ContextPin(ContractModel):
+    candidate_id: UUID
+    candidate_sha256: SHA
+    observation_sha256: SHA
+    verifier: str = Field(min_length=1, max_length=128)
+    first_captured_at: datetime
+    registered_at: datetime
+    sources: tuple[ContextSourceObservation, ...] = Field(min_length=1, max_length=64)
+
+    @model_validator(mode="after")
+    def binding(self) -> "ContextPin":
+        utc(self.first_captured_at)
+        utc(self.registered_at)
+        keys = tuple((item.evidence_sha256, item.receipt_sha256) for item in self.sources)
+        if (
+            keys != tuple(sorted(set(keys)))
+            or {name for item in self.sources for name in item.authority_names}
+            != AUTHORITY_NAMES - {"RAW_OHLCV"}
+            or self.first_captured_at > self.registered_at
+            or any(item.first_observed_at > self.first_captured_at for item in self.sources)
+        ):
+            raise ValueError("FORWARD_CONTEXT_PIN_INVALID")
+        return self
+
+
+class ContextDailyInputProvenance(DailyInputFields):
+    schema_version: Literal["PAPER_DAILY_INPUT_V2"] = "PAPER_DAILY_INPUT_V2"
+    context: ContextPin
+
+    @property
+    def available_at(self) -> datetime:
+        return max(super().available_at, self.context.registered_at)
+
+    @model_validator(mode="after")
+    def available(self) -> "ContextDailyInputProvenance":
+        if self.context.registered_at >= self.next_open_at:
+            raise ValueError("FORWARD_CONTEXT_MISSED_NEXT_OPEN")
+        return self
+
+
+DailyInput = Annotated[
+    DailyInputProvenance | ContextDailyInputProvenance, Field(discriminator="schema_version")
+]
+DAILY_INPUT: TypeAdapter[DailyInput] = TypeAdapter(DailyInput)
 
 
 class InputCommitObservation(ContractModel):
@@ -282,7 +375,7 @@ class InputCommitObservation(ContractModel):
 
 @dataclass(frozen=True)
 class AdmittedSource:
-    contract: AdmissionContract
+    contract: AdmissionContract | DynamicAdmissionContract
     sha256: str
     calendar: TradingCalendar
     schedule: tuple[ExchangeSession, ...]
@@ -293,6 +386,58 @@ class AdmittedSource:
 
     def recheck(self) -> None:
         self.registry.load(self.contract.admission_id, self.sha256)
+
+    @property
+    def forward_dates(self) -> tuple[date, ...]:
+        return tuple(
+            item.trading_date
+            for item in self.schedule
+            if self.contract.first_forward_session
+            <= item.trading_date
+            <= self.contract.last_forward_session
+        )
+
+    def validate_frame(self, frame: AuthorityFrame) -> None:
+        validate_frame(self.contract, self.schedule, self.authorities_sha256, frame)
+
+
+def validate_frame(
+    contract: AdmissionTerms,
+    schedule: tuple[ExchangeSession, ...],
+    digest: str,
+    frame: AuthorityFrame,
+) -> None:
+    times = {item.trading_date: item for item in schedule}
+    if frame.trading_date not in times:
+        raise ValueError("FORWARD_CONTEXT_NOT_IN_CALENDAR")
+    cost = validate_day(contract, times[frame.trading_date])
+    if any(rule.cost_schedule != cost for rule in frame.trading_rules):
+        raise ValueError("FORWARD_TRANSACTION_COST_SOURCE_MISMATCH")
+    if frame.authorities_sha256 != digest:
+        raise ValueError("FORWARD_FRAME_AUTHORITY_MISMATCH")
+    if (
+        isinstance(contract, DynamicAdmissionContract)
+        and tuple(str(item.status.security_id) for item in frame.statuses) != contract.security_ids
+    ):
+        raise ValueError("FORWARD_CONTEXT_UNIVERSE_CHANGED")
+
+
+def validate_day(contract: AdmissionTerms, session: ExchangeSession) -> TransactionCostSchedule:
+    day = session.trading_date
+    applicable = tuple(
+        cost
+        for cost in contract.transaction_costs
+        if cost.valid_from <= day and (cost.valid_to is None or day <= cost.valid_to)
+    )
+    if len(applicable) != 1:
+        raise ValueError("FORWARD_TRANSACTION_COST_SOURCE_MISMATCH")
+    for authority in contract.authorities.values():
+        if (
+            not authority.valid_from <= day <= authority.valid_to
+            or authority.known_at > session.closes_at
+        ):
+            raise ValueError("FORWARD_AUTHORITY_NOT_EFFECTIVE_OR_NOT_KNOWN")
+    return applicable[0]
 
 
 class ForwardAdmissionRegistry:
@@ -316,9 +461,11 @@ class ForwardAdmissionRegistry:
             raise ValueError("FORWARD_SOURCE_NOT_REGISTERED")
         if expected_sha256 is not None and expected_sha256 != self.expected_sha256:
             raise ValueError("FORWARD_SOURCE_CHANGED_SINCE_SUBMISSION")
-        contract = AdmissionContract.model_validate_json(
-            verified_file_bytes(self.path, self.expected_sha256)
-        )
+        contract: AdmissionContract | DynamicAdmissionContract = TypeAdapter(
+            Annotated[
+                AdmissionContract | DynamicAdmissionContract, Field(discriminator="schema_version")
+            ]
+        ).validate_json(verified_file_bytes(self.path, self.expected_sha256))
         if contract.admission_id != admission_id or set(contract.authorities) != AUTHORITY_NAMES:
             raise ValueError("FORWARD_SOURCE_AUTHORITY_SET_INVALID")
         root = self.path.parent
@@ -337,8 +484,10 @@ class ForwardAdmissionRegistry:
         schedule = TypeAdapter(tuple[ExchangeSession, ...]).validate_json(
             contract.schedule.read(root)
         )
-        frames = TypeAdapter(tuple[AuthorityFrame, ...]).validate_json(
-            contract.daily_context.read(root)
+        frames = (
+            TypeAdapter(tuple[AuthorityFrame, ...]).validate_json(contract.daily_context.read(root))
+            if isinstance(contract, AdmissionContract)
+            else ()
         )
         warmup = TypeAdapter(tuple[WarmupFrame, ...]).validate_json(contract.warmup.read(root))
         days = tuple(item.trading_date for item in schedule)
@@ -351,35 +500,22 @@ class ForwardAdmissionRegistry:
         )
         if (
             not expected
-            or tuple(frame.trading_date for frame in frames) != expected
+            or (
+                isinstance(contract, AdmissionContract)
+                and tuple(frame.trading_date for frame in frames) != expected
+            )
             or days[-1] <= expected[-1]
         ):
             raise ValueError("FORWARD_DAILY_COVERAGE_OR_NEXT_SESSION_MISSING")
         warm_days = tuple(day for day in days if day < expected[0])
         if tuple(frame.trading_date for frame in warmup) != warm_days:
             raise ValueError("FORWARD_WARMUP_BOUNDARY_INVALID")
-        times = {item.trading_date: item for item in schedule}
-        costs = EffectiveDatedAShareCommission(contract.transaction_costs)
+        EffectiveDatedAShareCommission(contract.transaction_costs)
+        for scheduled in schedule:
+            if scheduled.trading_date in expected:
+                validate_day(contract, scheduled)
         for frame in (*warmup, *frames):
-            # Compare approved source schedules before the existing user commission overrides.
-            applicable = tuple(
-                cost
-                for cost in costs.schedules
-                if cost.valid_from <= frame.trading_date
-                and (cost.valid_to is None or frame.trading_date <= cost.valid_to)
-            )
-            if len(applicable) != 1 or any(
-                rule.cost_schedule != applicable[0] for rule in frame.trading_rules
-            ):
-                raise ValueError("FORWARD_TRANSACTION_COST_SOURCE_MISMATCH")
-            if frame.authorities_sha256 != digest:
-                raise ValueError("FORWARD_FRAME_AUTHORITY_MISMATCH")
-            for authority in contract.authorities.values():
-                if (
-                    not authority.valid_from <= frame.trading_date <= authority.valid_to
-                    or authority.known_at > times[frame.trading_date].closes_at
-                ):
-                    raise ValueError("FORWARD_AUTHORITY_NOT_EFFECTIVE_OR_NOT_KNOWN")
+            validate_frame(contract, schedule, digest, frame)
         sessions = tuple(frame.session() for frame in warmup)
         for frame, session in zip(warmup, sessions, strict=True):
             if {str(bar.security_id) for bar in session.bars} != {

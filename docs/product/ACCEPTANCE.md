@@ -1,5 +1,21 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U7 dynamic context consumption — PARTIAL, source gate still closed
+
+[Code-bound regression and limitations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-dynamic-context/README.md>)
+cover V2 finite eligibility without prewritten future facts, mandatory independent
+verification, after-start arrival, existing risk/OMS/plan/journal, exact-pin replay,
+missing/late/conflicting context and V1 compatibility. The production composition
+has no qualified verifier and refuses V2 creation/start. Frontend strict transport
+retains V2 lineage without changing financial values. No new browser acceptance.
+
+Real PostgreSQL receipts/accounts/journal, REST/ASGI and manager replacement are
+tested with an in-memory synthetic context oracle. Separate store tests exercise
+real PostgreSQL candidate pins; do not combine those into a claim of a complete
+durable source-to-execution proof. Actual official current-source parsers, source
+coverage/permission, real after-start day and full U1–U8/M3–M5 remain unaccepted.
+The prior storage-only entry below is historical, not the current consumer state.
+
 ## 2026-10-14 U7 candidate context arrival persistence — PARTIAL
 
 [Code-bound tests and incident evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-daily-context-arrival/README.md>)

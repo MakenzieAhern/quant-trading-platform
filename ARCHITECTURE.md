@@ -83,13 +83,24 @@ invented on resume and cannot authorize the next day's processing. This separate
 acknowledgement does not roll back a financial batch already committed before failure.
 Process-loss sessions remain INTERRUPTED, not silently restarted.
 
-The current contract is finite and requires all daily context at creation. It is
-not yet a continuously updateable source admission: a newly observed suspension,
-ST transition or action cannot be presumed in future frames or silently repinned.
-The next required U7 slice must separate immutable account/source eligibility from
-append-only dated context arrivals, bind each consumed context into the journal,
-and wait for both kinds of evidence. That remaining engineering work and actual
-source qualification are not satisfied by the synthetic bridge tests.
+The V1 contract remains finite and requires all daily context at creation for
+compatibility. V2 instead fixes source eligibility, a reviewed verifier identity,
+security scope, warmup and a finite accepted calendar without future daily facts.
+The factory refuses V2 creation/start without that verifier. API composition
+currently registers none: no complete current official-source verifier is accepted.
+Qualification must independently reconstruct facts and coverage from retained
+source bytes and original receipts, not trust candidate fields or absence of events.
+Root authority/cost coverage is checked before creation; daily rules/facts are
+checked on arrival. This engineering interface is not real-source admission.
+
+The same session source waits for qualified context and canonical raw observations.
+V2 daily provenance pins the candidate, immutable capture intent, original source
+receipts and registration time into the plan, market and portfolio journal payloads.
+Resume reads and requalifies that exact candidate, never the latest version; new
+dates reject ambiguous candidate versions and cannot skip a missing day. Live
+commit and resume share the maximum input-availability timestamp; a wall-clock
+rollback fails before acknowledging the batch or advancing to the next day.
+An already committed financial batch is retained, not erased on that failure.
 
 Base transaction-cost schedules must cover each admitted day and agree with its
 rule context; explicit user broker commission overrides retain their existing
@@ -120,12 +131,14 @@ budgets, never silently selected by recency. Reads revalidate archived bytes and
 DB bindings. An orphan intent after DB failure is retried from its archived
 candidate and sources, keeping the old observation time.
 
-This is not a registered source parser or a qualified V2 runtime. The local
+This storage is not itself a registered source parser. The local
 observation belongs to that candidate identity, not global first-seen upstream
 information; changing roots or parsers cannot establish new-market causality.
-No HTTP approved flag, automatic capture worker or financial consumer exists.
-The V2 eligibility, source qualification and actual account/journal binding remain
-required before any candidate can affect an order. No evidence cleanup is automatic.
+No HTTP approved flag or automatic capture worker exists. The V2 qualified reader
+is connected to the existing account/journal path, with an empty production verifier
+registry. Real current-source coverage and a complete durable acquisition-to-runtime
+acceptance remain required; synthetic parsers/clock tests do not satisfy them.
+No evidence cleanup is automatic.
 
 Phase 9 runtime collections are bounded by the finite, registered replay dataset; the runtime, provider, strategies, OMS, broker, and their in-memory histories are released when the session task reaches a terminal state. Durable history belongs to PostgreSQL. This finite-replay bound is not a claim that the same collections are ready for an endless vendor feed; any future streaming adapter must introduce explicit rolling retention before it is eligible for use.
 

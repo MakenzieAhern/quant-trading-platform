@@ -78,8 +78,30 @@ export interface MarketSession {
   input_provenance?: PaperInputProvenance;
 }
 
-export interface PaperInputProvenance {
-  schema_version: "PAPER_DAILY_INPUT_V1";
+export interface PaperContextPin {
+  candidate_id: string;
+  candidate_sha256: string;
+  observation_sha256: string;
+  verifier: string;
+  first_captured_at: string;
+  registered_at: string;
+  sources: {
+    authority_names: string[];
+    evidence_sha256: string;
+    receipt_sha256: string;
+    published_at: string;
+    completed_at: string;
+    first_observed_at: string;
+  }[];
+}
+
+export type PaperInputProvenance = PaperInputFields &
+  (
+    | { schema_version: "PAPER_DAILY_INPUT_V1" }
+    | { schema_version: "PAPER_DAILY_INPUT_V2"; context: PaperContextPin }
+  );
+
+interface PaperInputFields {
   paper_session_id: string;
   trading_date: string;
   admission_sha256: string;

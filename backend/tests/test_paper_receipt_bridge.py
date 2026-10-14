@@ -764,8 +764,9 @@ async def test_receipt_arrival_during_read_uses_fresh_clock_and_deadline(
         assert any(event.event_type == "fill.created" for event in case.journal)
 
 
+@pytest.mark.parametrize("dynamic", [False, True])
 async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, dynamic
 ):
     """Real quant_test PostgreSQL/JSONB only; inputs remain explicitly synthetic."""
     from fastapi import FastAPI
@@ -782,7 +783,13 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
 
     settings = get_settings()
     require_disposable_database(settings.app_env, settings.database_url)
-    case = fixture(tmp_path, monkeypatch, patch_repository=False)
+    if dynamic:
+        # Context oracle/clock synthetic; receipt, account and journal rows use real quant_test.
+        from tests.test_paper_daily_context import connect_contexts, dynamic_case
+
+        case = connect_contexts(dynamic_case(tmp_path, monkeypatch, patch_repository=False))
+    else:
+        case = fixture(tmp_path, monkeypatch, patch_repository=False)
     job_id = case.receipts[0].job_id
     account_id = None
     managers = []
@@ -832,6 +839,7 @@ async def test_disposable_postgres_receipt_bridge_rest_ws_and_new_manager_resume
                     tmp_path / "admission.json", case.registry.expected_sha256
                 ),
                 CanonicalReceiptReader(SessionFactory, updates),
+                case.contexts if dynamic else None,
             )
             manager = service.PaperTradingManager(
                 SessionFactory,

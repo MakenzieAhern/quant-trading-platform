@@ -50,6 +50,8 @@ from app.application.paper_trading import (
     PaperSessionStateError,
     PaperTradingManager,
 )
+from app.application.paper_trading.context_store import DailyContextStore
+from app.application.paper_trading.qualified_context import QualifiedContextReader
 from app.application.paper_trading.receipt_source import (
     CanonicalReceiptReader,
     ReceiptSessionFactory,
@@ -77,6 +79,15 @@ paper_manager = PaperTradingManager(
             settings.paper_forward_contract_path, settings.paper_forward_contract_sha256
         ),
         CanonicalReceiptReader(SessionFactory, market_update_manager),
+        QualifiedContextReader(
+            DailyContextStore(
+                SessionFactory,
+                settings.product_data_path / "paper-context",
+                settings.research_data_path,
+            ),
+            # Only reviewed real source parsers may be registered here; none are qualified yet.
+            {},
+        ),
     ),
 )
 

@@ -11,10 +11,15 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.application.market_updates.contracts import PROVIDER
 from app.application.market_updates.service import MarketUpdateManager
+from app.application.paper_trading.qualified_context import QualifiedContextReader
 from app.application.paper_trading.source_admission import (
+    DAILY_INPUT,
     AdmittedSource,
     AuthorityFrame,
-    DailyInputProvenance,
+    ContextDailyInputProvenance,
+    ContextPin,
+    DailyInput,
+    DynamicAdmissionContract,
     ForwardAdmissionRegistry,
     InputCommitObservation,
     ReceiptPin,
@@ -126,6 +131,7 @@ class ReceiptSessionSource:
         account: PaperSession,
         clock: Callable[[], datetime],
         cursor: date | None,
+        contexts: QualifiedContextReader | None = None,
     ) -> None:
         self.admitted = admitted
         self.reader = reader
@@ -133,7 +139,18 @@ class ReceiptSessionSource:
         self.clock = clock
         self.cursor = cursor
         self.started_at = account.started_at
-        self.inputs: dict[date, DailyInputProvenance] = {}
+        self.inputs: dict[date, DailyInput] = {}
+        self.contexts = contexts
+        self.replay_contexts: dict[date, ContextPin] = {}
+
+    def bind_history(self, history: tuple[PaperEventRecord, ...]) -> None:
+        for event in history:
+            if event.event_type == "market.session":
+                provenance = DAILY_INPUT.validate_python(event.payload.get("input_provenance"))
+                if isinstance(provenance, ContextDailyInputProvenance):
+                    if provenance.trading_date in self.replay_contexts:
+                        raise ValueError("FORWARD_DUPLICATE_REPLAY_CONTEXT")
+                    self.replay_contexts[provenance.trading_date] = provenance.context
 
     def bind_start(self, started_at: datetime | None) -> None:
         if started_at is None:
@@ -150,24 +167,46 @@ class ReceiptSessionSource:
             yield session
         schedule = self.admitted.schedule
         indices = {item.trading_date: index for index, item in enumerate(schedule)}
-        for frame in self.admitted.frames:
-            current = schedule[indices[frame.trading_date]]
-            following = schedule[indices[frame.trading_date] + 1]
-            replay = self.cursor is not None and frame.trading_date <= self.cursor
+        frames = {frame.trading_date: frame for frame in self.admitted.frames}
+        dynamic = isinstance(self.admitted.contract, DynamicAdmissionContract)
+        for day in self.admitted.forward_dates:
+            current = schedule[indices[day]]
+            following = schedule[indices[day] + 1]
+            replay = self.cursor is not None and day <= self.cursor
             if self.started_at is None or self.started_at >= current.closes_at:
                 raise ValueError("FORWARD_SESSION_CLOSED_BEFORE_ACCOUNT_START")
-            # A bounded immutable contract cannot silently acquire or extend its authority.
+            context_pin = None
+            expected = self.replay_contexts.get(day)
+            if dynamic and replay and expected is None:
+                raise ValueError("FORWARD_REPLAY_CONTEXT_PIN_MISSING")
             while True:
                 now = utc(self.clock())
                 if not replay and now >= following.opens_at:
                     raise ValueError("FORWARD_INPUT_MISSED_NEXT_OPEN")
                 if replay or now >= current.closes_at:
+                    if dynamic:
+                        if self.contexts is None:
+                            raise ValueError("FORWARD_CONTEXT_VERIFIER_NOT_REGISTERED")
+                        qualified = await self.contexts.read(self.admitted, day, expected)
+                        if qualified is None:
+                            if replay:
+                                raise ValueError("FORWARD_REPLAY_CONTEXT_DISAPPEARED")
+                            await asyncio.sleep(5)
+                            continue
+                        frame, context_pin = qualified
+                    else:
+                        frame = frames[day]
                     rows = await self.reader.read(frame)
                     if rows is not None:
                         await asyncio.to_thread(self.admitted.recheck)
                         now = utc(self.clock())
                         if not replay and now >= following.opens_at:
                             raise ValueError("FORWARD_INPUT_MISSED_NEXT_OPEN")
+                        if context_pin is not None and (
+                            context_pin.registered_at >= following.opens_at
+                            or context_pin.registered_at > now
+                        ):
+                            raise ValueError("FORWARD_CONTEXT_OUTSIDE_CAUSAL_WINDOW")
                         break
                     if replay:
                         raise ValueError("FORWARD_REPLAY_RECEIPT_DISAPPEARED")
@@ -206,7 +245,7 @@ class ReceiptSessionSource:
                     )
                 )
             session = frame.session(tuple(receipt_bar(row, frame) for row, _ in rows))
-            payload = {
+            payload: dict[str, Any] = {
                 "schema_version": "PAPER_DAILY_INPUT_V1",
                 "paper_session_id": str(self.account.id),
                 "trading_date": frame.trading_date.isoformat(),
@@ -220,16 +259,33 @@ class ReceiptSessionSource:
                 "next_open_at": following.opens_at.isoformat().replace("+00:00", "Z"),
                 "receipts": [pin.model_dump(mode="json") for pin in pins],
             }
-            self.inputs[frame.trading_date] = DailyInputProvenance.model_validate(
+            if context_pin is not None:
+                payload["schema_version"] = "PAPER_DAILY_INPUT_V2"
+                payload["context"] = context_pin.model_dump(mode="json")
+            self.inputs[frame.trading_date] = DAILY_INPUT.validate_python(
                 {**payload, "input_sha256": canonical_sha256(payload)}
             )
             yield session
 
 
 class ReceiptSessionFactory:
-    def __init__(self, registry: ForwardAdmissionRegistry, reader: CanonicalReceiptReader):
+    def __init__(
+        self,
+        registry: ForwardAdmissionRegistry,
+        reader: CanonicalReceiptReader,
+        contexts: QualifiedContextReader | None = None,
+    ):
         self.registry = registry
         self.reader = reader
+        self.contexts = contexts
+
+    def load(self, admission_id: str, expected_sha256: str | None = None) -> AdmittedSource:
+        admitted = self.registry.load(admission_id, expected_sha256)
+        if isinstance(admitted.contract, DynamicAdmissionContract):
+            if self.contexts is None:
+                raise ValueError("FORWARD_CONTEXT_VERIFIER_NOT_REGISTERED")
+            self.contexts.require(admitted)
+        return admitted
 
     def build(
         self, account: PaperSession, clock: Callable[[], datetime], cursor: date | None
@@ -237,7 +293,7 @@ class ReceiptSessionFactory:
         pinned = account.strategy_parameters.get("dataset_sha256")
         if not isinstance(pinned, str):
             raise ValueError("FORWARD_ACCOUNT_ADMISSION_PIN_MISSING")
-        admitted = self.registry.load(account.dataset_id, pinned)
+        admitted = self.load(account.dataset_id, pinned)
         if (
             str(account.strategy_parameters.get("start_date"))
             != admitted.contract.first_forward_session.isoformat()
@@ -245,7 +301,7 @@ class ReceiptSessionFactory:
             != admitted.contract.last_forward_session.isoformat()
         ):
             raise ValueError("FORWARD_ACCOUNT_COVERAGE_CHANGED")
-        return ReceiptSessionSource(admitted, self.reader, account, clock, cursor)
+        return ReceiptSessionSource(admitted, self.reader, account, clock, cursor, self.contexts)
 
 
 def validate_commit_history(
@@ -266,7 +322,7 @@ def validate_commit_history(
             raise ValueError("FORWARD_COMMIT_HISTORY_INVALID")
         commits[marker.trading_date] = (marker, record)
     for index, market in enumerate(markets):
-        provenance = DailyInputProvenance.model_validate(market.payload.get("input_provenance"))
+        provenance = DAILY_INPUT.validate_python(market.payload.get("input_provenance"))
         pair = commits.get(provenance.trading_date)
         if pair is None:
             raise ValueError("FORWARD_COMMITTED_INPUT_ACKNOWLEDGEMENT_MISSING")
@@ -281,7 +337,7 @@ def validate_commit_history(
             or market.payload["trading_date"] != provenance.trading_date.isoformat()
             or marker.input_sha256 != provenance.input_sha256
             or marker.next_open_at != provenance.next_open_at
-            or marker.commit_observed_at < max(pin.first_received_at for pin in provenance.receipts)
+            or marker.commit_observed_at < provenance.available_at
             or not batch
             or batch[0] != market
             or batch[-1].event_type != "portfolio.snapshot"

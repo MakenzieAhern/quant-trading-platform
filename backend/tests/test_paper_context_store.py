@@ -80,6 +80,34 @@ async def test_conflicting_versions_remain_visible_and_original_is_immutable(con
     assert all(not record.execution_admitted for record in records)
 
 
+async def test_pinned_read_keeps_consumed_version_and_revalidates_original_bytes(context_case):
+    store, candidate, root, clock = context_case
+    first = await store.capture(candidate, root)
+    clock[0] += timedelta(minutes=1)
+    second = await store.capture(candidate.model_copy(update={"parser_version": "later"}), root)
+    # Later bad version cannot invalidate the already consumed original on replay.
+    (store.root / f"{second.candidate_sha256}.candidate.json").write_bytes(b"bad later version")
+    assert (
+        await store.read_pinned(
+            candidate.eligibility_sha256, candidate.frame.trading_date, first.candidate_sha256
+        )
+        == first
+    )
+    with pytest.raises(ValueError, match="CONTEXT_EVIDENCE_INVALID"):
+        await store.read_day(candidate.eligibility_sha256, candidate.frame.trading_date)
+    for digest, day in (
+        ("0" * 64, candidate.frame.trading_date),
+        (first.candidate_sha256, candidate.frame.trading_date + timedelta(days=1)),
+    ):
+        with pytest.raises(ValueError, match="FORWARD_REPLAY_CONTEXT_DISAPPEARED"):
+            await store.read_pinned(candidate.eligibility_sha256, day, digest)
+    (store.root / first.candidate.evidence[0].path).write_bytes(b"bad original source")
+    with pytest.raises(ValueError, match="CONTEXT_EVIDENCE_INVALID"):
+        await store.read_pinned(
+            candidate.eligibility_sha256, candidate.frame.trading_date, first.candidate_sha256
+        )
+
+
 async def test_concurrent_same_capture_converges(context_case):
     store, candidate, root, _ = context_case
     results = await asyncio.gather(*(store.capture(candidate, root) for _ in range(4)))

@@ -17,7 +17,7 @@ from app.api.schemas.backtests import (
 )
 from app.application.paper_trading.source_admission import (
     ZONE,
-    DailyInputProvenance,
+    DailyInput,
     InputCommitObservation,
 )
 from app.paper.calendar import CalendarObservation
@@ -233,7 +233,7 @@ class MarketSessionPayload(BaseModel):
         "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1",
         "RECEIPT_BOUND_FORWARD_A_SHARE_V1",
     ]
-    input_provenance: DailyInputProvenance | None = Field(
+    input_provenance: DailyInput | None = Field(
         default=None, exclude_if=lambda value: value is None
     )
 
@@ -286,7 +286,7 @@ class PortfolioPayload(BaseModel):
     drawdown: str
     positions: list[PositionPayload]
     plan: dict[str, Any] | None = None
-    input_provenance: DailyInputProvenance | None = Field(
+    input_provenance: DailyInput | None = Field(
         default=None, exclude_if=lambda value: value is None
     )
     accounting_version: Literal["PNL_BREAKDOWN_V1"] | None = None

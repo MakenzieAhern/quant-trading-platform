@@ -1,5 +1,25 @@
 # Decisions
 
+## 2026-10-14 v1.2 — consume qualified daily facts through the existing paper runtime
+
+Keep V1 journals compatible. V2 removes the requirement to author future daily
+facts but does not remove independent source qualification: server composition
+registers no real verifier until its parsers and completeness evidence are accepted.
+The candidate flag, root hash and local recapture time cannot approve themselves.
+Pin source observations separately from candidate capture/DB registration; validate
+whole-period fixed authority/cost coverage before account creation. Wait for both
+qualified context and raw receipts, preserve exact consumed context on replay,
+reject conflicts for new days and never skip a missing day. Live and resume share
+the input time lower bound, rejecting clock rollback without fabricating UTC.
+
+Independent read-only review reproduced an expired-root creation and a pre-receipt
+commit marker. Both became regression tests and passed the same independent
+counterexamples after repair. Actual PG tests cover receipts/account/journal,
+REST/ASGI and new-manager resume; their V2 context oracle remains synthetic/in-memory.
+Separate candidate-store tests cover real PG exact-pin reads and corrupted sources.
+These are not an end-to-end real official acquisition or full U7 proof. No migration,
+runtime restart, provider acquisition, financial admission, strategy/OOS or release.
+
 ## 2026-10-14 v1.2 — candidate arrival is not source admission
 
 Implement the daily arrival persistence boundary first, reusing immutable files

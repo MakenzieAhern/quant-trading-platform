@@ -253,3 +253,32 @@ class DailyContextStore:
         if len(rows) > MAX_VERSIONS:
             raise ValueError("CONTEXT_VERSION_BUDGET_EXCEEDED")
         return tuple([await asyncio.to_thread(self._verify, row) for row in rows])
+
+    async def read_pinned(
+        self, eligibility_sha256: str, trading_date: date, candidate_sha256: str
+    ) -> ContextRecord:
+        """Replay the consumed identity; later versions cannot replace or poison it."""
+        digest = TypeAdapter(SHA).validate_python(candidate_sha256)
+        root = TypeAdapter(SHA).validate_python(eligibility_sha256)
+        async with self.factory() as db:
+            row = await db.scalar(
+                select(PaperContextCandidateModel).where(
+                    PaperContextCandidateModel.eligibility_sha256 == root,
+                    PaperContextCandidateModel.trading_date == trading_date,
+                    PaperContextCandidateModel.candidate_sha256 == digest,
+                )
+            )
+        if row is None:
+            raise ValueError("FORWARD_REPLAY_CONTEXT_DISAPPEARED")
+        return await asyncio.to_thread(self._verify, row)
+
+    def evidence(self, record: ContextRecord) -> dict[str, bytes]:
+        remaining = MAX_EVIDENCE_BYTES
+        result = {}
+        for pin in record.candidate.evidence:
+            if pin.path != f"{pin.sha256}.source":
+                raise ValueError("CONTEXT_EVIDENCE_PATH_ESCAPE")
+            content = _read(self.root / pin.path, pin.sha256, remaining)
+            remaining -= len(content)
+            result[pin.sha256] = content
+        return result
