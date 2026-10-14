@@ -1,5 +1,29 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U7/M4/M5 scoped publication and database restore
+
+[Exact local publication and restore evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-dynamic-context/publication/README.md>)
+binds353sources/13assets to e845578, whose CI38498204041 passes all3jobs.
+Fresh PostgreSQL backup restored only into isolated network-none/no-ports/tmpfs
+database:45public table/sequence fingerprints equal. Original DB never restored.
+Backend restarted once;0018 unchanged/no new migration.44existing HTTP responses
+equal plus exact optional V2 OpenAPI union;45responses equal after frontend/browser.
+All45public logical fingerprints and frozen assets unchanged;229old frontend
+assets retained; Windows13assetSHA/header/health checksPASS.
+
+Read-only independent review closed readiness timeout and build-source binding
+issues;12focused negative testsPASS. Fingerprints preserve exact database numeric
+text; prior float-roundtrip baseline retained as superseded. Not schema/roles/
+extensions equality, application restore, independent-media recovery or recovery
+of genuinely missing pre-incident ledgers.
+
+Actual in-app bilingual checks retain old account81309.8134cash/99964.8134equity,
+six fills, stopped status and financial/source warnings. Creation retains clear
+demo/legacy choices and blocked history/forward. Chrome connection was unavailable;
+no native bypass attempted. Screenshots inspected in tool output, not saved files.
+This is not new Chrome/fullvisual/AA/performance or real-forward acceptance.
+Runtime is now deployed; actual source qualification and fullU1–U8 remain open.
+
 ## 2026-10-14 U7 dynamic context consumption — PARTIAL, source gate still closed
 
 [Code-bound regression and limitations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-dynamic-context/README.md>)
@@ -12,7 +36,8 @@ Exact code9c12bc1 CI38497564238 passes all3jobs:2301backend/1optional archiveSKI
 967frontend, static/build/migration/isolated Compose.13code/test hashes verified.
 Original268e93c CI failure (test-only readonly fixture write) retained; deterministic
 nonroot RED and fixed full2301PASS, independent review; no production protection
-weakened. Code is not yet deployed and previous browser evidence is not promoted.
+weakened. At that implementation checkpoint code was not deployed; the newer
+publication entry above records deployment separately without promoting old browser evidence.
 
 Real PostgreSQL receipts/accounts/journal, REST/ASGI and manager replacement are
 tested with an in-memory synthetic context oracle. Separate store tests exercise

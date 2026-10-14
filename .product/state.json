@@ -1,4 +1,21 @@
 {
+  "dynamic_context_publication_20261014_gate": {
+    "status": "PASS_SCOPED_LOCAL_PUBLICATION_NOT_SOURCE_ADMISSION",
+    "head": "e8455786a49c8ca95ea231d990d62ab20963bf55",
+    "ci": "38498204041 SUCCESS/all3jobs; source code same9c12bc1 with2301backendPASS/1optionalSKIP and967frontendPASS. Later documentation checkpoint is separate.",
+    "progress": "Previous user status turn was NO_PROGRESS. This unit safely deployed actual V2 runtime/frontend and proved fresh DB backup restore; not another implementation-only claim.",
+    "publication": "353 exact committed sources and13 freshly built assets pinned. Original backend restarted once2026-10-14T02:05UTC; existing PostgreSQL/Redis/frontend unchanged. Schema0018 unchanged/no startup migration;44non-OpenAPI HTTP bodies equal plus exact optional V2 union,45post-frontend/post-browser bodies equal. Windows13assetSHA/security-header checks and paper healthPASS.229old assets preserved.",
+    "preservation": "All45 public ordinary table/sequence fingerprints equal before/after restart/frontend/browser, including5STOPPED accounts/417events. Product tar/frozenmanifest/freeze/researchstate/v1.1tag unchanged. Quiet-window checks are not a write lock; scope excludes other schemas/roles/extensions and financial correctness.",
+    "restore": "Fresh five private backups. Restored pg_dump only into new network-none/no-ports/tmpfs qtp-context-20261014-restore, databasequant_release_restore. All45public logical fingerprints match baseline/current original. Temporary container stopped and retained; original never restored. This is not application/filesystem disaster recovery or missing-ledger recovery.",
+    "review": "Independent readonly reviewer found unbounded readiness subprocess and artifact+manifest source-binding loophole; both fixed before relevant actions and re-reviewed. Root corrected float-roundtrip fingerprinting to exact PostgreSQL text; old baseline retained as superseded.12focused preparation/negative testsPASS.",
+    "browser": "Chrome connection returned unavailable; inventory onlyIAB/MCPApps. Scoped actual in-app ZH/EN workbench,5account list, oldd7044a3c account cash81309.8134/equity99964.8134/six fills and warnings retained; creation keeps forward/history unavailable and demos available. No account submit/start; Chinese restored, owned tab closed, user markets tab untouched. Screenshots inspected in tool outputs, not saved file artifacts. No current Chrome/fullAA/performance/forward acceptance.",
+    "evidence": "product-evidence/v1.2/m4/20261014-dynamic-context/publication/README.md",
+    "publication_sha256": "b4fdc792a5b0d6477efbc91e7599589fd501dd9275fdad500abe03062fb12159",
+    "runtime_deployed": true,
+    "source_admission": false,
+    "real_forward_acceptance": false,
+    "full_product_pass": false
+  },
   "dynamic_context_20261014_gate": {
     "status": "PARTIAL_SOFTWARE_CONSUMPTION_NOT_REAL_SOURCE_ADMISSION",
     "base_head": "ef66bf0bb7bf6246b093a2e4d14aefecbd446f6a",
@@ -5009,8 +5026,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "V2 source9c12bc1 exact CI passed. Prepare scoped safe publication with fresh backups/current0018 baseline and browser read compatibility. Then implement and qualify the actual current official-source verifier/acquisition path and complete durable store-to-runtime proof; no candidate/hash/empty-event self-approval. Actual source/financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain; no repeated broad acquisition or frozen/OOS change.",
-  "local_next_command": "Read product-evidence/v1.2/m4/20261014-dynamic-context/ci.json: exact9c12bc1 CI38497564238SUCCESS and final nonroot2301PASS. Do not rerun completed containers. Check only any later documentation-head CI if live. Prepare fresh source-bound backups/current0018 baseline and safe publication, not the old hardcoded4eb7bdf wrapper. Dynamic source has no production verifier: retain denial and distinguish memory oracle from separate PG store/journal proofs. Continue real source receipt reconstruction, parser/coverage and after-start durable acceptance. Preserve runtime/schema0018/frozen research; no original downgrade. Full U1-U8/M0-M5 remains active.",
+  "next_task": "V2 runtime/frontend are deployed from exacte845578 with scoped preservation/restore/browser evidence. Next complete real durable candidate-store-to-qualified-reader-to-account/journal proof, then actual official-source verifier/acquisition qualification and after-start forward acceptance; memory oracle is not real source evidence. Actual source/financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat publication or broad acquisition/frozen/OOS work.",
+  "local_next_command": "Read publication/publication.json b4fdc792 and README under product-evidence/v1.2/m4/20261014-dynamic-context. Backend/frontend deployed;0018 remains unchanged. Restore container stopped, earlier isolated testPG remains available only after live identity verification. Inspect test_paper_receipt_bridge V2 memory oracle and actual context_store PG fixture; join durable context storage to same manager/API/restart test without pretending synthetic oracle qualifies official facts. Continue actual independent official-source verification, source permission/coverage and actual after-start session; no candidate/hash/empty-event self-approval. Chrome connection currently unavailable, IAB check is scoped only. Check later docsCI only if live. Goal/fullU1-U8 remains active.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
