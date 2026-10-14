@@ -1,5 +1,23 @@
 # Decisions
 
+## 2026-10-14 v1.2 — distinguish current inventory type from daily authority
+
+Correct the September23 inventory description:5222 records are not all ordinary
+A shares. Reuse572 cached official STAR type overviews; acquire only46 specific
+missing overviews in one bounded no-retry batch. Source bytes and receipts reconcile
+the retained inventory to5221ordinaryA/1CDR/0unknown types;689009 is explicitlyCDR.
+Do not rerun the Pilot master collector, which discards186later listings here.
+No backdating, fabricated publication/receipt times, current-name ST inference,
+missing-event normality or source admission. Mixed-date type corroboration is a
+prerequisite, not an executable current universe. Preserve all frozen research.
+
+Independent review found a future restart could retry an interrupted request
+without a terminal receipt. Preserve the actually executedv1 script, add an
+exclusive pre-network attempt marker in the successor and prove interruption
+stops reopening without network tests. Do not rerun or retroactively add attempt
+timestamps to this successful46-response batch. See SOURCE_READINESS and private
+20261014-real-source-inventory evidence for exact hashes and remaining authorities.
+
 ## 2026-10-14 v1.2 — consume qualified daily facts through the existing paper runtime
 
 Keep V1 journals compatible. V2 removes the requirement to author future daily

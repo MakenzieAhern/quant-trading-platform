@@ -307,7 +307,9 @@ each for `000001` and `300750`. All originals are outside Git under
 
 The two SSE current-list responses had no duplicate codes across 2,320 rows;
 the four targeted SSE identities agreed with that broader snapshot. Together
-with the SZSE XLSX, these sources expose 5,222 listed A-share rows at retrieval.
+with the SZSE XLSX, these sources expose 5,222 listed inventory rows, not 5,222
+ordinary A shares. The October 14 type reconciliation below identifies 5,221
+ordinary A shares and one CDR (`689009`) in those retained inventory rows.
 This is a **current inventory**, not a complete 2026 effective-dated universe:
 the exchange requests were separate, no historical delisting/renaming chain
 was collected, and current counts must not be projected backward.
@@ -403,3 +405,53 @@ earlier than the October 8 session and its later data publication. There was
 no new provider request, authority promotion or simulated fill. The written
 source-use rights, current master/calendar/ST/actions/rules and durable
 post-start receipt gates remain unresolved.
+
+## 2026-10-14 retained master type closure — not daily execution authority
+
+The retained September 23 lists contained 5,222 identities. Reusing 572 existing
+official STAR company overviews left 46 explicit type gaps. A single bounded
+batch obtained all 46 missing overviews from the same official SSE
+`https://query.sse.com.cn/commonQuery.do` surface, query
+`COMMON_SSE_CP_GPJCTPZ_GPLB_GPGK_GSGK_C`, with the exact company code. Each response
+matched its inventory code, board and listing date; all 46 explicitly reported
+`SEC_TYPE=科创A`. There was no denial, redirect, failure or retry. The original
+body, URL, requested/completed/local-save UTC and SHA-256 remain outside Git.
+
+The reconciled inventory has **5,221 ordinary A shares, one CDR, zero unresolved
+instrument types**. `689009` is explicitly `科创CDR`, not an ordinary A share;
+its retained overview SHA-256 is
+`20dccbf30cbcb04b23f7b154f1788f946088af8d7e742375ea552a8dca3193b3`.
+This corrects the earlier inventory wording; it does not alter frozen data or
+claim all inventory members are tradeable. The 186 listings after the legacy
+Pilot cutoff (2024-07-31) also show why its master fetcher cannot be reused
+unchanged for current product acquisition.
+
+Private evidence: [type reconciliation and limitations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-real-source-inventory/README.md>).
+Cached report SHA-256 `4feb6658e4a2cf62b0ff7dceec600655c78f8658e681049ad718c67732957423`;
+reconciliation SHA-256 `0e883464a3dbfa685fb56101da6fd5b164609f3282b4d852941347ef069f4b32`.
+Normal and optimized-Python reconstruction agree. The acquired batch used the
+preserved v1 script; independent review identified missing pre-request crash
+markers. Its successor now writes an exclusive attempt before opening a request;
+an offline RED-to-GREEN regression verifies no reopening after interruption.
+The successful batch was not restarted, and no attempt timestamp was backfilled.
+
+These September 12 / September 23 / October 14 records do **not** form a common
+as-of snapshot. Legacy pre-response retrieval labels cannot become actual receipt
+times; provider publication time remains unknown. No ST/non-ST classification is
+derived from these names, and absent events never mean no events. The ten required
+execution authorities remain separate:
+
+| Authority | Remaining evidence needed before forward admission |
+|---|---|
+| SECURITY_MASTER | Effective-dated listing/type/delisting coverage for the intended session, not this mixed-date inventory alone. |
+| SSE_ST / SZSE_ST | Accepted dated status transitions and affirmative interval completeness. |
+| SUSPENSIONS | Dated suspension/resumption facts and covered no-event intervals; listing is not tradeability. |
+| ADJUSTMENTS / CORPORATE_ACTIONS | Applicable dated actions, factors and coverage, independently reconciled with actual raw data. |
+| RAW_OHLCV | Accepted actual raw receipts and source-use rights; the prior six candidate bundles are not admission. |
+| CALENDAR | Actual completed-session coverage; a published holiday schedule alone is insufficient. |
+| MARKET_RULES / TRANSACTION_COSTS | Accepted effective-dated current rules/costs; frozen historical rules cannot silently extend forward. |
+
+This is a list of remaining obligations, not a fresh acceptance audit of the other
+authorities. Production still registers no real `ContextVerifier`.
+`CURRENT_MASTER_AUTHORITY=PARTIAL`, `SOURCE_ADMISSION=NO`,
+`REAL_FORWARD_ACCEPTANCE=NO`, `PRODUCT_GOAL_COMPLETE=false`.

@@ -1,5 +1,28 @@
 # v1.2 acceptance ledger
 
+## 2026-10-14 U5/U7 retained master instrument-type closure
+
+[Bounded original-source receipts and reconciliation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-real-source-inventory/README.md>)
+reuse572 cached STAR overviews and acquire46 exact missing official overviews,
+one attempt each/no failures. All46 match identity/board/listing and explicit
+ordinary-A type. Retained5222inventory rows reconcile to5221ordinaryA/1CDR/0unknown
+types;689009 remainsCDR. Corrected SOURCE_READINESS's all-A wording, not any frozen
+dataset.186post-Pilot listings confirm the legacy cutoff collector is unsuitable
+for current product inventory. Normal/optimized reconstruction yields the same
+reconciliation SHA0e883464a3dbfa685fb56101da6fd5b164609f3282b4d852941347ef069f4b32.
+
+Private26offline testsPASS, RuffPASS; reviewer-found interrupted-attempt retry
+was reproducedRED and fixed with exclusive pre-request markers for future use.
+Actual successful batch code/receipts retained; no acquisition rerun or backfilled
+attempt times. Mixed snapshot dates/publication gaps remain explicit: not PIT,
+rights, ST/suspension/action completeness or true after-start forward acceptance.
+No production implementation, browser UI, DB, service, schema, frozen research or
+financial change. Latest full codeCI871231a/38501063452 was recheckedSUCCESS;
+this later documentation checkpoint has not yet been tested by hostedCI.
+Post-push exact-head result is recorded separately in the private ci.json;
+inspect it rather than assuming a later commit inherits an earlier run.
+Final independent read-only review found no remaining scopedP1/P2 or overclaim.
+
 ## 2026-10-14 U7/M4 durable context-to-account integration
 
 [Exact test change, retained failures and terminal logs](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-durable-context-bridge/README.md>)

@@ -1,4 +1,26 @@
 {
+  "current_master_type_closure_20261014_gate": {
+    "status": "PASS_RETAINED_INVENTORY_TYPE_INSPECTION_NOT_PIT_OR_SOURCE_ADMISSION",
+    "base_head": "72fd8fa",
+    "progress": "Previous turn was status-only NO_PROGRESS. This unit corrects5222 all-A wording and closes46 actual source type gaps using one bounded official batch, not another synthetic integration.",
+    "evidence": "product-evidence/v1.2/m4/20261014-real-source-inventory/README.md",
+    "inventory_rows": 5222,
+    "ordinary_a_share_rows": 5221,
+    "cdr_rows": 1,
+    "unresolved_instrument_types": 0,
+    "cached_star_overviews_reused": 572,
+    "new_targeted_overviews": 46,
+    "failures": 0,
+    "retries": 0,
+    "reconciliation_sha256": "0e883464a3dbfa685fb56101da6fd5b164609f3282b4d852941347ef069f4b32",
+    "verification": "Private26offline testsPASS; RuffPASS; normal/optimized reconciliation sameSHA. Exact priorcode871231a CI38501063452 recheckedSUCCESS, not new docsCI. New docs milestone CI is recorded separately in the private ci.json after push; inspect exact head/result there before claiming success.",
+    "review": "Independent readonly P2: missing pre-request crash marker allowed interrupted retry. OfflineRED reproduced; successor adds exclusive attempt before network, interruption/restart testsPASS. Actually executedv1 script preserved with matching batch hash; successful46batch never rerun or timestamps backfilled. Final readonly review found no remaining scopedP1/P2 or acceptance overclaim; reviewer did not run network/services/tests.",
+    "limits": "Sep12/Sep23/Oct14 mixed evidence corroborates types, not common-asof/daily coverage. Legacy timestamp labels not completed/first receipts; publication unknown.186post-Pilot listings prohibit unmodified legacy collector reuse. Production ContextVerifier registry remains empty.",
+    "preservation": "No production code, DB, services, schema, strategy, frozen data, methodology or OOS writes; original source bytes retained. .research diff empty; peeledv1.1f88b5c unchanged. Actual collection terminal0/session49916; no collector left running.",
+    "source_admission": false,
+    "real_forward_acceptance": false,
+    "full_product_pass": false
+  },
   "durable_context_bridge_20261014_gate": {
     "status": "PASS_SYNTHETIC_DURABLE_INTEGRATION_NOT_REAL_SOURCE_ADMISSION",
     "base_head": "45dda02d37b8b5f7abe3ff4ebbc7df3f3635f8e6",
@@ -5041,8 +5063,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Actual official-source verifier/acquisition qualification and after-start forward acceptance. Durable integration and exact871231a CI are complete; no production verifier is registered. Reuse current master/calendar/rule/cost snapshots but distinguish their saved inventory dates from executable PIT/receipt coverage. Actual source/financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat publication, synthetic bridge proof or broad acquisition/frozen/OOS work.",
-  "local_next_command": "Read durable_context_bridge_20261014_gate/private README/ci.json and docs/product/SOURCE_READINESS.md. qtp-context-durable-20261014-full and gh watch38501063452 are terminal0; no test/watcher expected. Production frome845578 unchanged; no test-only redeploy. Inventory actual retained source receipts against source_admission.AUTHORITY_NAMES and ContextVerifier obligations, then close a specific current source/coverage gap using targeted permitted evidence. Do not infer no events from missing observations or invent rights/receipt times. Keep unrelated U3/source and M4/M5 work moving; full goal active.",
+  "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
+  "local_next_command": "Read current_master_type_closure_20261014_gate, its private README/ci.json and SOURCE_READINESS Oct14 table. Collection49916 terminal0 with46success; do not rerun. Final independent review passes; verify exact pushed head/CI from private receipt or gh before continuing. Reuse immutable original receipts but do not invent publication/first-receipt timestamps or no-event coverage. Close a specific actual status/suspension/source-parser gap, keeping independent U3/M4/M5 work moving. Full goal active.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
