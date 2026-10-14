@@ -1,14 +1,17 @@
 {
   "paper_source_failure_20261014_gate": {
-    "status": "PASS_CODE_REGRESSION_BROWSER_RECHECK_PENDING",
+    "status": "PASS_SCOPED_DEPLOYED_ERROR_SCENARIO_BROWSER_NOT_RUN",
+    "deployed_code_head": "cb44d9095a6d4f0ffe342662a893f16f6054dac9",
+    "publication": "ExactCI38521115329 all3SUCCESS; watcher37066terminal0. Fresh backup isolated network-none tmpfs restore45relationsPASS/stopped.353sources13assets pinned/OpenAPIunchanged; backend restarted once, frontend assets-first atomic switch. Windows13assetSHA/security headersPASS. Postbrowser45HTTP/45relations/preservedpins equal; no account/provider writes. Prior browser-pending entry below is prepublication chronology.",
+    "installed_browser": "IAB20 configured5173 read-only stopped account: settled ZHmain4628characters exactly equal before; ENsame saved date/cash/equity/unknowns/source warnings. No failed account in original data; new source-failure browser scenario NOT_RUN, tests only. Initial loading comparisonfalse and transient English screenshot retained; finalZHJPEG verified. ZH/system restored, ownedtab closed/user markets untouched.",
     "base_head": "b420f9fea4c4010f67dc56924b7698710ec5c248",
     "progress": "Previous goal turn was a status report (NO_PROGRESS). Reproduced and fixed manager-to-UI error-code loss for UnexplainedReferenceAdjustment on execution-admitted paths; no actual production occurrence or source admission claimed.",
     "verification": "106 focused backend PASS/1 optional archive SKIP; full2345 PASS/1 optional archive SKIP156.74s against identity-verified tmpfs quant_test only. Final982frontend PASS55files13.56s/lint/types/buildPASS; Ruff359files and mypy151PASS. Independent readonly P2 CTA conflict fixed and rechecked, no remaining scoped P1/P2.",
     "behavior": "Two typed public accounting codes allowlisted; generic sanitization preserved. EN/ZH explains unchanged retry cannot repair source gaps. Exact legacy sanitized reference error is display-only alias; no saved row rewrite. Nonforward gets data-readiness and explicitly nonrepairing configuration-review links; forward gets neither historical recovery nor copy links.",
     "browser": "Frontend-only5175 preview showed service unavailable; OPTIONS rejected origin with400 Disallowed CORS origin. Stopped without CORS/security change or proxy workaround. Owned tab19 closed and verified preview PID78234 stopped, handle29258 terminal1. No failed-account browser acceptance or runtime publication.",
     "evidence": "product-evidence/v1.2/m4/20261014-paper-source-failure/README.md",
-    "limits": "544.46kB chunk warning retained. Optional archive integration not run. No original app restart/account mutation or frozen/methodology/OOS writes. Whole U1-U8/M3-M5 and release incomplete.",
-    "next": "Check exact new CI, then source-bound guarded publication and browser recheck on configured origin before delivered-UI claim. Preserve denied clean-demo boundary. Continue six-control source completeness/rights, financial gaps and full product gates; do not repeat completed dynamic-context work.",
+    "limits": "544.46kB chunk warning retained. Optional archive integration not run. Backend-only controlled restart; no original account mutation or frozen/methodology/OOS writes. Source-failure actual browser scenario/full U1-U8/M3-M5/release incomplete.",
+    "next": "Publication completed; do not repeat. Continue six-control source completeness/rights, financial gaps and remaining product gates, with source-failure browser scenario still explicitly unverified. Preserve denied clean-demo boundary; do not repeat completed dynamic-context work.",
     "full_product_pass": false
   },
   "star_single_account_boundary_20261014_gate": {
@@ -1582,7 +1585,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-14T06:15:00Z",
+  "updated_at_utc": "2026-10-14T06:25:00Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",

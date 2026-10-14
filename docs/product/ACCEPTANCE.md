@@ -2,6 +2,16 @@
 
 ## 2026-10-14 U7/U8 paper accounting source-failure explanation
 
+Post-commit: exact cb44d90 CI38521115329 backend/frontend/Compose allSUCCESS;
+watch37066 terminal0. Guarded local publication complete with fresh backup and
+45-relation isolated restore;13Windows-served assetSHA/security headersPASS.
+Postbrowser45HTTP/45relations/protected pins equal. Actual configured5173 IAB
+stopped-account regression: settled ZHmain4628characters equal before, EN values,
+dates, unknowns and limitations retained. Initial loading mismatch/transient EN
+paint retained; finalZHJPEG inspected. New failed-account browser scenario still
+NOT_RUN; no account fabricated. Pending-publication wording below is chronology,
+not current deployment state. Whole U1-U8/M3-M5 remains incomplete.
+
 Fixed a reproduced safe-error-code loss in the paper manager: a typed held-reference
 adjustment failure now persists its fixed public code, not an opaque exception-name
 diagnostic. Generic exceptions remain sanitized; dates/security IDs/private messages
