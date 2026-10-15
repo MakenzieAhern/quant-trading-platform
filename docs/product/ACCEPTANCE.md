@@ -1,5 +1,47 @@
 # v1.2 acceptance ledger
 
+## 2026-10-16 current completion audit and SQL crash boundary
+
+This is an evidence reconciliation, not a reduced definition of v1.2 completion.
+The original U1–U8/M0–M5 scope remains required. Older matrix descriptions such
+as "forward not implemented" are historical: the runtime/context bridge exists,
+but no actual forward source is admitted. Current decisive gaps are:
+
+| Requirement | Credit existing proof | Still unproven or failed |
+|---|---|---|
+| U3/U6 historical execution | Saved studies/plans and retained browser journeys | Current financial/source admission, including unresolved300147/000425 evidence; historical success is not new execution approval |
+| U5/U6/U7 forward | Candidate receipt/update UI and synthetic context/runtime integration | Lawful source-use scope, six-control effective-dated coverage, actual after-start receipt → plan → constrained processing |
+| U7 recovery/integrity | Historical process-kill, pause/resume, current-baseline restore and account-isolation evidence | Genuine missing ledgers4b64380f/07d72259 or explicitly accepted loss disposition; never regenerate them from replay |
+| U8/M4 quality | Retained bilingual/dialog/date/export/zoom/performance scoped passes | Consolidated remaining relevant cross-page visual/accessibility/performance and source-failure UI coverage; tool restrictions are not application defects |
+| M5 delivery/release | Draft bilingual guides, media, current restore package and exact-head CI | Complete mandatory acceptance, accurate final evidence package, normal merge/release; no v1.2.0 claim |
+
+Independent read-only completion review found no newly reachable, non-repeated
+read-only user journey to claim complete from the installed STOPPED accounts.
+Independent physical media, unattended login and novice satisfaction studies
+remain additional assurance, not invented mandatory gates. Actual October14
+export file landing is accepted; earlier "awaiting file" text is superseded.
+
+New `tests/test_paper_process_recovery.py` uses the existing disposable quant_test
+database, actual manager/financial runtime/repository and two distinct processes.
+The writer exits73 with `os._exit`, skipping cleanup: after a day3 financial
+batch is flushed but not committed, or after it is committed. The reader invokes
+the same production recovery method and checks complete REST/journal prefix,
+expected day/cash, retained fills, pending-order cancellation, contiguous sequence,
+repeat recovery0 and start409 without any further event.
+
+The uncommitted-batch rollback is new evidence. Committed-batch recovery is a
+repeatable regression for an already-observed historical SIGKILL boundary, not
+the first crash proof. Initial test cleanup failed on FK order; corrected by
+deleting only this test's event rows before its session. No product defect or
+production behavior change was found. Read-only review found no scoped P1/P2;
+its explicit date/cash assertions were added. Final checks are recorded in the
+matching state checkpoint and private evidence receipt.
+
+This test uses ASGITransport and explicit recovery, not real browser/server
+lifespan, host reboot, storage-device failure, actual forward authority or lost
+original-ledger recovery. No production service restart/publication is necessary
+for a test/documentation-only change. PRODUCT_GOAL_COMPLETE remains NO.
+
 ## 2026-10-15 U3/U6/U7 risk boundaries independent of caller precision
 
 Post-commit: exact27bf8f4 CI38736107590 all3SUCCESS; backend2358PASS/1SKIP

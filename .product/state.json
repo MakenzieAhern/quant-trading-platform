@@ -1,4 +1,15 @@
 {
+  "paper_transaction_crash_20261016_gate": {
+    "status": "PASS_SCOPED_SQL_CRASH_BOUNDARIES_CI_PENDING",
+    "base_head": "56fbd12",
+    "previous_turn": "Status/decision confirmation only: NO_PROGRESS. This unit adds uncommitted financial-batch crash rollback evidence and reconciles stale acceptance descriptions.",
+    "scope": "Existing isolated tmpfs quant_test only. Writer actual manager/runtime exits73 without cleanup after SQL flush before commit or after commit; distinct reader checks full saved prefix, cash/date/fills/order cancellation, recovery idempotence and start409. No production behavior changes.",
+    "chronology": "First two tests failed only during test cleanup FK deletion order; corrected. Two focused cases then PASS. Added non-test environment guard checks normal/-O and reviewer-requested explicit date/cash assertions. Full backend2362PASS/1optional archiveSKIP167.22s, handle61427 terminal0; final4casesPASS8.53s covers final assertions. Full Ruff/596format/mypy151PASS; JSON/diff checksPASS. TestPG042f stopped after zero other clients. Final test SHA256 b7169dfad0848c1c717d7ca0f216216a47917ac151e6e8a0bea44f0d5efd5088.",
+    "review": "Independent read-only review no scoped P1/P2. Committed-batch crash is regression of earlier historical SIGKILL proof; only flushed-uncommitted rollback is newly verified. Not first abrupt recovery, server lifespan, physical durability, actual source/forward or missing-ledger recovery.",
+    "evidence": "product-evidence/v1.2/m4/20261016-paper-transaction-crash/README.md",
+    "next": "Meaningful commit/push and exact-head CI. No runtime publication needed for tests/docs only. Then remaining source/financial/quality/delivery gates, no repeated accepted recovery. Local61427 and all test containers terminal; do not restart them.",
+    "full_product_pass": false
+  },
   "risk_decimal_context_20261015_gate": {
     "status": "PASS_SCOPED_DEPLOYED_WITH_INSTALLED_BROWSER_REGRESSION",
     "deployed_code_head": "27bf8f4ef2984cb9374b7186da846524302fbe6a",
@@ -5039,9 +5050,9 @@
     "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay"
   ],
   "not_run": [
-    "Current bbc5cc1 clean-demo runtime/migration/newjob due executionpolicy rejection; native200 Windows input due unconfiguredSkyTrustedRPC; actualJSON/CSV savedfile validation awaiting supplied file/path. Existing narrow/historical passes do not fill these gates. No blocked-operation workaround.",
-    "U5 current master/calendar/ST/suspension/actions/cost reconciliation, executable 2026 rule promotion and source authority promotion; U7 after-start forward receipt and unplanned mid-run recovery",
-    "Full remaining M2-M5 matrix, real-user testing not claimed"
+    "Historical clean-demo execution-policy denial remains respected; do not recreate denied environment. Existing native zoom/performance evidence is scoped, current full visual/AA/performance matrix not accepted. Actual report JSON/CSV file landing was verified October14; obsolete awaiting-file text is superseded.",
+    "U5/U6/U7 current effective-dated source/rule/cost qualification and lawful actual after-start forward chain remain unaccepted. Synthetic forward/context bridge exists. Historical abrupt-process and pause/resume evidence already exists; do not label all crash recovery unimplemented.",
+    "Remaining mandatory U1-U8/M3-M5 consolidation and release incomplete. Genuine two-ledger loss disposition unresolved. Real novice satisfaction, independent physical backup and unattended login are additional assurance, not new completion requirements."
   ],
   "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
   "pull_requests": {
@@ -5256,7 +5267,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "27bf8f4 risk/OMS caller-precision fix deployed after exactCI38736107590 all3SUCCESS/watch44038terminal0. Local full43438 and restart26330 terminal0; do not resume/repeat.45relations/45GETs/OpenAPI/product/frontend/frozenpins preserved; IABEN7759/ZH4628chars equal afterreload. Frontend92d3918 unchanged; testPG042f and isolated restore stopped. Investor scope/isolation already resolved, synthetic bridge complete. Next actual effective-dated coverage for fixed six controls and remaining mandatory quality/financial gates. Source rights,300147/000425 gaps, missing-ledger disposition and fullU1-U8/M3-M5 remain. GoalACTIVE/PARTIAL; no frozen/OOS or release.",
+  "local_next_command": "Oct16 tests/docs-only SQL crash-boundary checkpoint: local full2362PASS/1SKIP167.22s handle61427terminal0, final4PASS8.53s, lint/typesPASS. Commit/push coherent unit and verify exact-head CI; no production publication/restart required. TestPG042f stopped after zero clients. Production backend27bf8f4/frontend92d3918 unchanged. Then consolidate remaining mandatory quality/delivery evidence and actual six-control sources/rights plus300147/000425 financial evidence. Do not repeat accepted crash/export/account-isolation/context bridge work or revive obsolete pending-file/forward-not-implemented claims. Genuine missing-ledger disposition remains open. GoalACTIVE/PARTIAL; no frozen/OOS/merge/release.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
