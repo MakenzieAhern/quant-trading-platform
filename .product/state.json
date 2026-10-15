@@ -1,4 +1,14 @@
 {
+  "risk_decimal_context_20261015_gate": {
+    "status": "SCOPED_FIX_FULL_BACKEND_PASS_CI_PENDING",
+    "base_head": "baff147",
+    "previous_turn": "Status-only NO_PROGRESS; this unit reproduces and repairs a new shared risk/OMS determinism defect.",
+    "finding": "Held+reserved sum, position-limit abs, required/available buying power and OMS sell negation used caller Decimal context. Low precision can alter rejection/diagnostics or round signed reservation100001 to100000. No original ledger corruption established.",
+    "verification": "Nine new cases initiallyRED; final risk+OMS65PASS. Full2358PASS/1optional archiveSKIP158.85s; handle43438 terminal0/container exited0. Full Ruff/595format/mypy151PASS. Independent readonly review no scoped P1/P2. Existing isolated tmpfs042f quant_test only; zero other clients verified after run.",
+    "evidence": "product-evidence/v1.2/m4/20261015-risk-context/README.md",
+    "next": "Stop owned testPG after verified zero clients, commit/push meaningful fix and verify exact-head CI. Guarded runtime publication remains separate; no API/schema/UI changes. Do not rerun43438; it is terminal.",
+    "full_product_pass": false
+  },
   "independent_simulated_investor_20261014_gate": {
     "status": "PASS_SCOPED_SYNTHETIC_ACCOUNT_ISOLATION_AND_SQL_RESUME",
     "decision": "Direct user response: each simulated account is an independent simulated investor; preserve experiment isolation, no shared cross-account daily cap.",

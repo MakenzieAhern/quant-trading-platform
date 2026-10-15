@@ -1,5 +1,22 @@
 # v1.2 acceptance ledger
 
+## 2026-10-15 U3/U6/U7 risk boundaries independent of caller precision
+
+Read-only review found held+reserved quantity addition outside the owned Decimal
+context. Main-agent reproduction exposed three related boundaries: position-limit
+magnitude, required/available buying power, and OMS sell-reservation negation.
+Nine new cases initially failed (decision/diagnostic differences or caller flags).
+The shared fix retains existing28digit risk/OMS arithmetic and uses exact sign/
+magnitude copies. It changes no rule thresholds, accounting policy or source gate.
+
+Risk+OMS65PASS; full Ruff/595format/mypy151PASS. Independent read-only review:
+no remaining scoped P1/P2. Full isolated backend2358PASS/1optional archiveSKIP
+158.85s; handle43438 terminal0. Exact-head CI pending.
+[Private reproduction record](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261015-risk-context/README.md>).
+This is a latent caller-context defect, not proof of corrupted existing ledgers.
+Original/frozen outputs and OOS remain unchanged. No browser or deployment claim;
+M3/M4/M5 and real lawful forward acceptance remain incomplete.
+
 ## 2026-10-15 U7 independent simulated investors and durable isolation
 
 Exactd02e8d5 CI38733799430 completedSUCCESS: backend2349PASS/1SKIP,
