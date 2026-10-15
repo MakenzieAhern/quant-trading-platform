@@ -1,13 +1,24 @@
 {
+  "data_recovery_contrast_20261016_gate": {
+    "status": "PASS_SCOPED_INSTALLED_EN_ZH_LIGHT_DARK",
+    "scope": "Installed /data execution-blocked recovery heading/paragraph, IAB390x844, EN/ZH x light/dark. Actual new copy predates this check only by two days; Oct2 button/link-only contrast did not cover it. Navigation was not repeated.",
+    "verification": "Four actual rendered cases. Heading16px bold:6.190756light/10.118055dark; paragraph13px:6.058200light/7.653382dark. Ancestor chain opacity1/no background images, transparent text element over opaque surface. Text client/scroll dimensions equal; document375/375. All four screenshots visually inspected, finalZHdarkJPEG saved. No style change needed.",
+    "chronology": "Initial mobile theme locator had no match because desktop theme selector is hidden there; inspected actual state, used desktop visible selector, then returned to specified mobile viewport. Not an application defect or policy bypass. OriginalZH/system restored, viewport reset, ownedtab4 closed, user markets tab untouched. No submit/provider/account action.",
+    "evidence": "product-evidence/v1.2/m4/20261016-paper-transaction-crash/data-contrast.json and data-recovery-zh-dark.jpg",
+    "limits": "One important recovery explanation, not full-page/whole-product WCAG, screen-reader, zoom/performance, execution admission or actual forward acceptance.",
+    "full_product_pass": false
+  },
   "paper_transaction_crash_20261016_gate": {
-    "status": "PASS_SCOPED_SQL_CRASH_BOUNDARIES_CI_PENDING",
+    "status": "PASS_SCOPED_SQL_CRASH_BOUNDARIES_EXACT_CI",
+    "code_head": "550baf30a10c70fc5c4692315e59cf68f8af1b8a",
+    "ci": "38740178663 completedSUCCESS exact550baf3, all3jobs. Backend2362PASS/1optionalSKIP230.54s; frontend990PASS55files; migration/lint/types/build/ComposePASS. Watch79932 terminal0. Test/documentation only: productionbackend27bf8f4/frontend92d3918 unchanged, no publication/restart.",
     "base_head": "56fbd12",
     "previous_turn": "Status/decision confirmation only: NO_PROGRESS. This unit adds uncommitted financial-batch crash rollback evidence and reconciles stale acceptance descriptions.",
     "scope": "Existing isolated tmpfs quant_test only. Writer actual manager/runtime exits73 without cleanup after SQL flush before commit or after commit; distinct reader checks full saved prefix, cash/date/fills/order cancellation, recovery idempotence and start409. No production behavior changes.",
     "chronology": "First two tests failed only during test cleanup FK deletion order; corrected. Two focused cases then PASS. Added non-test environment guard checks normal/-O and reviewer-requested explicit date/cash assertions. Full backend2362PASS/1optional archiveSKIP167.22s, handle61427 terminal0; final4casesPASS8.53s covers final assertions. Full Ruff/596format/mypy151PASS; JSON/diff checksPASS. TestPG042f stopped after zero other clients. Final test SHA256 b7169dfad0848c1c717d7ca0f216216a47917ac151e6e8a0bea44f0d5efd5088.",
     "review": "Independent read-only review no scoped P1/P2. Committed-batch crash is regression of earlier historical SIGKILL proof; only flushed-uncommitted rollback is newly verified. Not first abrupt recovery, server lifespan, physical durability, actual source/forward or missing-ledger recovery.",
     "evidence": "product-evidence/v1.2/m4/20261016-paper-transaction-crash/README.md",
-    "next": "Meaningful commit/push and exact-head CI. No runtime publication needed for tests/docs only. Then remaining source/financial/quality/delivery gates, no repeated accepted recovery. Local61427 and all test containers terminal; do not restart them.",
+    "next": "Exact CI complete. No runtime publication needed for tests/docs only. Remaining source/financial/quality/delivery gates, no repeated accepted recovery. Local61427/watch79932 and all test containers terminal; do not restart them. User loss-disposition question sent; no answer or acceptance inferred.",
     "full_product_pass": false
   },
   "risk_decimal_context_20261015_gate": {
@@ -5267,7 +5278,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Oct16 tests/docs-only SQL crash-boundary checkpoint: local full2362PASS/1SKIP167.22s handle61427terminal0, final4PASS8.53s, lint/typesPASS. Commit/push coherent unit and verify exact-head CI; no production publication/restart required. TestPG042f stopped after zero clients. Production backend27bf8f4/frontend92d3918 unchanged. Then consolidate remaining mandatory quality/delivery evidence and actual six-control sources/rights plus300147/000425 financial evidence. Do not repeat accepted crash/export/account-isolation/context bridge work or revive obsolete pending-file/forward-not-implemented claims. Genuine missing-ledger disposition remains open. GoalACTIVE/PARTIAL; no frozen/OOS/merge/release.",
+  "local_next_command": "Oct16 SQL crash-boundary550baf3 exactCI38740178663 all3SUCCESS; local2362PASS/1SKIP, final4PASS;61427/watch79932 terminal0. TestPG042f stopped. Installed /data recovery-copy contrast ENZH/lightdark fourcasesPASS, minimum6.0582; preferences restored/ownedtab4closed. Do not repeat either proof or redeploy tests/docs. Productionbackend27bf8f4/frontend92d3918 unchanged. Next remaining mandatory quality/delivery consolidation and actual six-control sources/rights plus300147/000425 evidence. Human loss-disposition question pending; do not infer approval or reconstruct missing ledgers. No new exact source leads in previous review; avoid refetching old PDFs. GoalACTIVE/PARTIAL; no frozen/OOS/merge/release.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

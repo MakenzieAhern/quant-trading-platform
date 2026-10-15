@@ -2,6 +2,24 @@
 
 ## 2026-10-16 current completion audit and SQL crash boundary
 
+Post-commit verification: exact550baf3 [CI38740178663](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38740178663)
+completedSUCCESS, all three jobs. Backend2362PASS/1optional archiveSKIP230.54s;
+frontend990PASS55files; migrations/lint/types/build/ComposePASS. Watch79932 and
+local full61427 terminal0; local full2362PASS/1SKIP167.22s, final four casesPASS8.53s.
+Production backend27bf8f4/frontend92d3918 unchanged; no publication necessary.
+
+Additional installed-browser evidence: `/data` recovery heading and paragraph,
+IAB390x844, EN/ZH × light/dark. Contrast ratios heading6.190756/10.118055,
+paragraph6.058200/7.653382. Actual ancestor inspection found opacity1, no images,
+transparent element over opaque white or rgb30,33,41 surface. Text client/scroll
+dimensions equal; document375/375; screenshots inspected in all four cases.
+No CSS change needed. This new text was not covered by the earlier October2
+button/link-only contrast audit. Original Chinese/system restored, viewport reset,
+ownedtab4 closed; no task/provider/account action. This is scoped text readability,
+not full AA, native zoom, screen-reader or new financial/source acceptance.
+[Measured DOM evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261016-paper-transaction-crash/data-contrast.json>) ·
+[Actual screenshot](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261016-paper-transaction-crash/data-recovery-zh-dark.jpg>).
+
 This is an evidence reconciliation, not a reduced definition of v1.2 completion.
 The original U1–U8/M0–M5 scope remains required. Older matrix descriptions such
 as "forward not implemented" are historical: the runtime/context bridge exists,
