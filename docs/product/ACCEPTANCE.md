@@ -1,5 +1,25 @@
 # v1.2 acceptance ledger
 
+## 2026-10-16 human-approved historical loss disposition
+
+**HUMAN_ACCEPTED_LOSS_NOT_RECOVERY.** The user explicitly accepted the disclosed
+loss of paper-account records `4b64380f` and `07d72259`, retention of the incident
+record, no fabricated replay and no deletion, with subsequent acceptance using
+the verified post-incident baseline. See the
+[decision](../orchestration/DECISIONS.md#2026-10-16-v12--human-approved-historical-ledger-loss-disposition)
+and `historical_ledger_loss_disposition_20261016_gate` in
+[current state](../../.product/state.json).
+
+This closes the human loss-disposition blocker only. The original records remain
+lost and unrecoverable from available evidence; earlier dated incident reports,
+including uncertainty about other unrecorded post-backup rows, are preserved.
+Older statements that disposition is pending are superseded by this decision,
+not erased. Existing scoped post-incident restore/crash/isolation evidence remains
+valid within its original limits. No database writes, account replay, new recovery
+test or independent disaster-recovery proof is produced by accepting the loss.
+Historical financial/source admission, lawful after-start forward acceptance,
+remaining quality gates and M5 delivery are still incomplete. Product remains PARTIAL.
+
 ## 2026-10-16 installed synthetic PnL display and exact checkpoint CI
 
 Exact6593a3b [CI38743349234](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38743349234)
@@ -90,7 +110,7 @@ but no actual forward source is admitted. Current decisive gaps are:
 |---|---|---|
 | U3/U6 historical execution | Saved studies/plans and retained browser journeys | Current financial/source admission, including unresolved300147/000425 evidence; historical success is not new execution approval |
 | U5/U6/U7 forward | Candidate receipt/update UI and synthetic context/runtime integration | Lawful source-use scope, six-control effective-dated coverage, actual after-start receipt → plan → constrained processing |
-| U7 recovery/integrity | Historical process-kill, pause/resume, current-baseline restore and account-isolation evidence | Genuine missing ledgers4b64380f/07d72259 or explicitly accepted loss disposition; never regenerate them from replay |
+| U7 recovery/integrity | Historical process-kill, pause/resume, current-baseline restore and account-isolation evidence; human accepted disclosed loss on 2026-10-16 | Old ledgers4b64380f/07d72259 remain lost, not restored; disposition no longer blocks continuation on the verified post-incident baseline. Never regenerate originals from replay or infer whole-product durability acceptance. |
 | U8/M4 quality | Retained bilingual/dialog/date/export/zoom/performance scoped passes | Consolidated remaining relevant cross-page visual/accessibility/performance and source-failure UI coverage; tool restrictions are not application defects |
 | M5 delivery/release | Draft bilingual guides, media, current restore package and exact-head CI | Complete mandatory acceptance, accurate final evidence package, normal merge/release; no v1.2.0 claim |
 

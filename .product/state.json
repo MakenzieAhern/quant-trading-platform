@@ -1,4 +1,15 @@
 {
+  "historical_ledger_loss_disposition_20261016_gate": {
+    "status": "HUMAN_ACCEPTED_LOSS_NOT_RECOVERY",
+    "decision_date": "2026-10-16 Australia/Sydney",
+    "approval": "Direct human reply: 接受明确损失处置，保留事故记录. The answered question explicitly permits continued acceptance on the verified post-incident baseline without replay fabrication or deletion.",
+    "affected_account_short_ids": ["4b64380f", "07d72259"],
+    "disposition": "Historical records lost and unrecoverable from available genuine evidence. No original ledger restored; no replacement account, journal, fill or balance may be presented as its recovery. Preserve incident and investigation records, including uncertainty about other unrecorded post-backup rows.",
+    "continuation_baseline": "Use the verified post-incident baseline and its existing scoped backup/restore, crash-recovery and isolation receipts. This decision creates no new restore, whole-DB equality or independent disaster-recovery proof.",
+    "supersedes": "Earlier pending loss-disposition questions and missing-ledger-disposition blockers only. Dated incident evidence remains historical truth. If genuine pre-loss evidence later appears, assess it separately without overwriting current records.",
+    "remaining_gates": "Historical source/economic admission; lawful current-data rights and effective-dated coverage; actual after-start forward processing; remaining browser quality and final delivery. No whole-product PASS, merge or release approval.",
+    "full_product_pass": false
+  },
   "paper_pnl_render_20261016_gate": {
     "status": "PASS_SCOPED_INSTALLED_SYNTHETIC_ZERO_PNL",
     "source_head": "6593a3b3eb1b98f0dd6df5545081407f2bd0d706",
@@ -5093,13 +5104,12 @@
     "RESOLVED: transient Chrome browser-control binding timeouts were followed by successful Chrome Back/Forward and CSV/JSON acceptance; the temporary QA draft name was restored. No app defect was inferred from the tool timeout"
   ],
   "external_blockers": [
-    "U7-FORWARD: lawful product-use rights for a genuinely new A-share market-data feed have not been established; a public SDK or historical candidate receipt does not grant execution authority",
-    "M4-DATA-INTEGRITY: two post-backup historical paper ledgers remain absent; exact recovery requires genuine external pre-loss evidence, not reconstruction from a synthetic replay"
+    "U7-FORWARD: lawful product-use rights for a genuinely new A-share market-data feed have not been established; a public SDK or historical candidate receipt does not grant execution authority"
   ],
   "not_run": [
     "Historical clean-demo execution-policy denial remains respected; do not recreate denied environment. Existing native zoom/performance evidence is scoped, current full visual/AA/performance matrix not accepted. Actual report JSON/CSV file landing was verified October14; obsolete awaiting-file text is superseded.",
     "U5/U6/U7 current effective-dated source/rule/cost qualification and lawful actual after-start forward chain remain unaccepted. Synthetic forward/context bridge exists. Historical abrupt-process and pause/resume evidence already exists; do not label all crash recovery unimplemented.",
-    "Remaining mandatory U1-U8/M3-M5 consolidation and release incomplete. Genuine two-ledger loss disposition unresolved. Real novice satisfaction, independent physical backup and unattended login are additional assurance, not new completion requirements."
+    "Remaining mandatory U1-U8/M3-M5 consolidation and release incomplete. Two-ledger loss disposition accepted by the human on2026-10-16; genuine records remain lost, not recovered. Real novice satisfaction, independent physical backup and unattended login are additional assurance, not new completion requirements."
   ],
   "evidence_root": "C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2",
   "pull_requests": {
@@ -5313,8 +5323,8 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Read paper_pnl_render_20261016_gate and requirement_reconciliation_20261016_gate. New synthetic715ba87f isSTOPPED/retained; total6accounts/allSTOPPED, five older journals/snapshots unchanged. Non-null zero PnL display proved; do not rerun it or label nonzero fees/dividends/financial-source acceptance complete. Exact6593a3b CI38743349234 all3SUCCESS/terminal. Remaining quality: supported system reduced-motion observation, formal first-filter timing diagnosis, genuine source/command-error paths; honor native/clean-demo denials. Real financial/source/rights/six-control forward coverage and human old-ledger disposition remain unresolved. No equivalent source refetch, missing-ledger fabrication, merge/tag/release/frozen/OOS action.",
+  "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425 and full U1-U8/M3-M5 quality/delivery remain. Human accepted historical ledger loss on2026-10-16; do not ask the same disposition question again or reconstruct those ledgers. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
+  "local_next_command": "Read historical_ledger_loss_disposition_20261016_gate first, then paper_pnl_render_20261016_gate and requirement_reconciliation_20261016_gate. Continue from the verified post-incident baseline; old4b64380f/07d72259 are explicitly lost, not recovered. No new runtime observation is implied by this human decision. Retain scoped synthetic PnL and terminal exact6593a3b CI38743349234 evidence without rerunning. Remaining quality: supported system reduced-motion observation, formal first-filter timing diagnosis, genuine source/command-error paths; honor native/clean-demo denials. Real financial/source/rights/six-control forward coverage remains unresolved. No equivalent source refetch, missing-ledger fabrication, merge/tag/release/frozen/OOS action.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

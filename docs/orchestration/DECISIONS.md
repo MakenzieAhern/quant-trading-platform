@@ -1,5 +1,23 @@
 # Decisions
 
+## 2026-10-16 v1.2 — human-approved historical ledger loss disposition
+
+The human answered the explicit loss-disposition question: “接受明确损失处置，保留事故记录”.
+Accounts with short IDs `4b64380f` and `07d72259` are recorded as historical
+records lost and unrecoverable from available genuine evidence. This is acceptance
+of disclosed loss, **not restoration**. Preserve the incident/investigation record,
+including the unresolved possibility of other unrecorded post-backup rows.
+Do not replay, fabricate replacement journals, delete existing data or relabel
+synthetic/new accounts as the originals.
+
+Further acceptance may use the already verified post-incident baseline and its
+scoped restore/recovery evidence. Close only the pending human loss-disposition
+blocker; do not claim new recovery testing, independent disaster recovery, source
+authority, complete U7/product acceptance or release approval. Genuine pre-loss
+evidence found later must be assessed separately without overwriting current data.
+The dated earlier incident entries remain intact; this decision supersedes their
+pending-disposition status, not the facts of the loss.
+
 ## 2026-10-14 v1.2 — human-approved independent simulated investors
 
 The user explicitly selected independent simulated accounts: each account is its
