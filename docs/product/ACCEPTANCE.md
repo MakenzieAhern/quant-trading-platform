@@ -2,6 +2,17 @@
 
 ## 2026-10-15 U3/U6/U7 risk boundaries independent of caller precision
 
+Post-commit: exact27bf8f4 CI38736107590 all3SUCCESS; backend2358PASS/1SKIP
+273.32s, frontend990PASS55files, migration/lint/types/build/ComposePASS.
+watch44038 terminal0. Guarded backend-only publication completed after fresh
+backup and isolated45relation restore.45public relations/45GETs/OpenAPI plus
+product/frontend archives and frozen pins remain unchanged. Only backend restart
+occurred; frontend92d3918 unchanged. Actual IAB ownedtab2 after reload: complete
+EN7759characters and ZH4628characters equal before. Original Chinese/system restored,
+ownedtab closed; Windows APIok/paper and frontend200. No account/provider writes.
+[Installed browser proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261015-risk-context/publication/BROWSER.md>).
+Earlier pending-CI/deployment wording below is pre-publication chronology.
+
 Read-only review found held+reserved quantity addition outside the owned Decimal
 context. Main-agent reproduction exposed three related boundaries: position-limit
 magnitude, required/available buying power, and OMS sell-reservation negation.

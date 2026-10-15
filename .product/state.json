@@ -1,12 +1,16 @@
 {
   "risk_decimal_context_20261015_gate": {
-    "status": "SCOPED_FIX_FULL_BACKEND_PASS_CI_PENDING",
+    "status": "PASS_SCOPED_DEPLOYED_WITH_INSTALLED_BROWSER_REGRESSION",
+    "deployed_code_head": "27bf8f4ef2984cb9374b7186da846524302fbe6a",
     "base_head": "baff147",
     "previous_turn": "Status-only NO_PROGRESS; this unit reproduces and repairs a new shared risk/OMS determinism defect.",
     "finding": "Held+reserved sum, position-limit abs, required/available buying power and OMS sell negation used caller Decimal context. Low precision can alter rejection/diagnostics or round signed reservation100001 to100000. No original ledger corruption established.",
     "verification": "Nine new cases initiallyRED; final risk+OMS65PASS. Full2358PASS/1optional archiveSKIP158.85s; handle43438 terminal0/container exited0. Full Ruff/595format/mypy151PASS. Independent readonly review no scoped P1/P2. Existing isolated tmpfs042f quant_test only; zero other clients verified after run.",
     "evidence": "product-evidence/v1.2/m4/20261015-risk-context/README.md",
-    "next": "Stop owned testPG after verified zero clients, commit/push meaningful fix and verify exact-head CI. Guarded runtime publication remains separate; no API/schema/UI changes. Do not rerun43438; it is terminal.",
+    "ci": "Exact27bf8f4 CI38736107590 all3SUCCESS,watch44038 terminal0. Backend2358PASS/1optionalSKIP273.32s;frontend990PASS55files;lint/type/build/migration/ComposePASS. Local full43438 terminal0; testPG042f stopped after zero clients.",
+    "publication": "Fresh backup/isolated network-none tmpfs restore45relationsPASS/stopped. Guarded original backend restart once,26330 terminal0.45relations/45GETs/OpenAPI/product/frontend archives/frozenpins unchanged. Only backend starttime changed; schema0018 retained. Independent readonly publication review no scoped blocker; quiet checks are not a write lock. Windows APIok/paper and frontend200. Frontend92d3918 unchanged.",
+    "browser": "Actual IAB ownedtab2 historical accountd7044a3c through visible link. After actualreload, complete EN7759chars and ZH4628chars equal before; SHA256 recorded in private BROWSER.md. Cash81309.8134/equity99964.8134/2011-03-23/unknowns/source warnings preserved. Chinese/system restored, actualJPEG inspected, ownedtab closed/user markets untouched. No account/provider action or nativeChrome/fullAA/performance/precision-boundary UI claim.",
+    "next": "Do not repeat this fix, full tests, restore or publication. Continue six-control source coverage/rights, unresolved300147/000425 financial evidence and remaining U1-U8/M3-M5 gates. Native performance and real lawful after-start forward acceptance remain unproven; no new source verifier admitted.",
     "full_product_pass": false
   },
   "independent_simulated_investor_20261014_gate": {
@@ -5252,7 +5256,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Exactd02e8d5 CI38733799430 all3SUCCESS/watch90799 terminal0; do not resume terminal handle. Investor scope resolved independent accounts;176relatedPASS/1optionalSKIP and new SQL/API multi-account fresh-manager proof complete. Do not repeat this matrix, ask ownership again, rebuild synthetic daily-context bridge, or republish92d3918. Next actual effective-dated coverage for fixed six controls and remaining mandatory quality/financial gates. Source rights,300147/000425 gaps, missing-ledger disposition and fullU1-U8/M3-M5 remain. Original services recovered normally Oct15; testPG042f stopped/zero clients. GoalACTIVE/PARTIAL; no frozen/OOS or release.",
+  "local_next_command": "27bf8f4 risk/OMS caller-precision fix deployed after exactCI38736107590 all3SUCCESS/watch44038terminal0. Local full43438 and restart26330 terminal0; do not resume/repeat.45relations/45GETs/OpenAPI/product/frontend/frozenpins preserved; IABEN7759/ZH4628chars equal afterreload. Frontend92d3918 unchanged; testPG042f and isolated restore stopped. Investor scope/isolation already resolved, synthetic bridge complete. Next actual effective-dated coverage for fixed six controls and remaining mandatory quality/financial gates. Source rights,300147/000425 gaps, missing-ledger disposition and fullU1-U8/M3-M5 remain. GoalACTIVE/PARTIAL; no frozen/OOS or release.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
