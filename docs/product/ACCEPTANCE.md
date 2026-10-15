@@ -1,5 +1,38 @@
 # v1.2 acceptance ledger
 
+## 2026-10-16 installed synthetic PnL display and exact checkpoint CI
+
+Exact6593a3b [CI38743349234](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38743349234)
+completedSUCCESS/all3jobs: backend2362PASS/1optional archiveSKIP209.77s,
+frontend990PASS55files; lint/types/build/Ruff596/mypy151/Compose+release smokePASS.
+No new local suite, dependency, application code or deployment change this unit.
+
+The installed capability endpoint still admits its built-in synthetic A-share
+scenario, while historical execution is SOURCE_CONTRACT_INTEGRITY_FAILED and
+forward remains unavailable. Root created only one new synthetic account through
+the UI, `715ba87f-8311-4607-a3ce-89c2a1eb4dd0`, with exact cash100000.123456789.
+Actual UI Start/Pause/Resume completed its finite254-session2030 scenario; it
+automaticallySTOPPED at2026-10-15T13:43:29UTC. This was not a new Docker demo
+environment, real market acquisition, formal study, missing-ledger replay or OOS.
+
+PausedZH/light1440 + EN/dark390 and completedEN/light1440 + ZH/dark390 each
+showed eight exact portfolio values matching the saved API snapshot. Four actual
+screenshots inspected, no page overflow. Final oneBUY4100@23.845 produced cash
+2235.623456789 and market value97764.5; equity remained100000.123456789. Five
+PnL/cost components are recorded zeros with PNL_BREAKDOWN_V1, not legacy unknowns.
+Reload retained the exact final metrics. This closes the installed new-snapshot
+**zero-value display** gap only: nonzero fees/dividends/PnL are not proven by this
+fixture. Financial-source, forward, source/command-failure, native motion/timing
+and full M3–M5 gates remain open; no whole-product PASS.
+
+All five older accounts remainedSTOPPED; ten full snapshot/event response hashes
+match before/after. Finalinventory6/allSTOPPED, new account retained as synthetic
+audit evidence. Not a whole-database checksum/backup claim. OriginalZH/system
+and viewport restored, ownedIABtab5closed, user markets tab1 untouched.
+[Evidence and limits](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261016-paper-pnl-render/README.md>) ·
+[Completed EN view](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261016-paper-pnl-render/final-en-light.jpg>) ·
+[Completed ZH narrow view](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261016-paper-pnl-render/final-zh-dark-390.jpg>).
+
 ## 2026-10-16 requirement-level reconciliation
 
 Read-only independent review at `af4af46` and root inspection of the retained

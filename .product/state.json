@@ -1,4 +1,17 @@
 {
+  "paper_pnl_render_20261016_gate": {
+    "status": "PASS_SCOPED_INSTALLED_SYNTHETIC_ZERO_PNL",
+    "source_head": "6593a3b3eb1b98f0dd6df5545081407f2bd0d706",
+    "account": "715ba87f-8311-4607-a3ce-89c2a1eb4dd0",
+    "runtime": "Actual UI create13:38:02UTC/start13:38:08, pause at2030-04-16, resume, automaticSTOPPED13:43:29UTC after254finite synthetic sessions through2030-12-23. Only new root-owned simulated_a_share account controlled. OneBUY4100@23.845, lastsequence521, oneposition/order/signal. No real provider/broker/historical/formal/OOS execution.",
+    "browser": "IABtab5: pausedZH/light1440 andEN/dark390; completedEN/light1440 andZH/dark390. Four sets of eight exact portfolio title values match respective saved API snapshots; visible numeric text retains exact decimal after grouping removal. Source/date explicitly2030synthetic. Document1425/1425 or375/375. Four screenshots inspected with mobile cropping limits documented. Finalreload matches all eleven market/portfolio metrics. OriginalZH/system+defaultviewport restored;tab5closed, usertab1untouched.",
+    "financial_scope": "Cash2235.623456789,market_value97764.5,equity100000.123456789. PNL_BREAKDOWN_V1 and five recorded zero PnL/cost fields are displayed as0, not unknown. Fixture has zero costs/no corporate actions; nonzero fee/dividend/PnL browser cases remain unverified. No financial-source/economic/forward acceptance inferred.",
+    "preservation": "Five older accounts remainedSTOPPED; ten snapshot/full-event response hashes unchanged before/after. Finalinventory6/allSTOPPED. New synthetic account retained as an audit record. This is not a whole-DB checksum/backup or lost-ledger recovery. No new container/environment, deployment, test suite, frozen change, merge/tag/release.",
+    "ci": "Exact6593a3b CI38743349234 completedSUCCESS/all3jobs. Backend2362PASS/1optionalarchiveSKIP209.77s;frontend990PASS55files;Ruff596/mypy151/lint/types/build/Compose+release smokePASS. No live watcher left; later docs-only head not automatically CI-covered.",
+    "evidence": "product-evidence/v1.2/m4/20261016-paper-pnl-render/README.md; paused/final snapshots and DOM observations; baseline/after old-response hashes; four actual JPEGs. Final eventGET:521records/254market+254portfolio/onefill/terminalSTOPPED. Offline four-case/eight-value/count/geometry checkPASS; independent readonly saved-evidence/image/diff review no scoped issues, not a second execution.",
+    "limits": "Not native motion/timing, paper source/command failure, nonzero corporate-action/cost/PnL browser acceptance or complete U1-U8/M3-M5. Native URL-verification and clean-demo policy denials remain respected; no equivalent retry/bypass.",
+    "full_product_pass": false
+  },
   "requirement_reconciliation_20261016_gate": {
     "status": "PASS_THREE_FUNCTIONAL_CONTRACTS_PRODUCT_PARTIAL",
     "source_head": "af4af46",
@@ -1669,7 +1682,7 @@
   },
   "schema_version": 1,
   "release_target": "v1.2.0 Product Experience Edition",
-  "updated_at_utc": "2026-10-15T13:27:13Z",
+  "updated_at_utc": "2026-10-15T13:46:44Z",
   "saved_scope_and_exit_20261007_gate": {
     "status": "PASS_SCOPED_DISPLAY_AND_DRAFT_KEYBOARD_NOT_FULL_PRODUCT",
     "source_parent": "a3fc595",
@@ -4646,10 +4659,10 @@
     "identity": "MakenzieAhern"
   },
   "ownership": {
-    "latest_verification": "Oct13 aa5f529 exact CI38395584853 SUCCESS freshly rechecked. Backend2177PASS/1optionalSKIP and frontend902PASS. Frontend style publication and five selected Chrome cases complete;33selected responses,5accounts/417events and all4container starts retained. Full productPARTIAL.",
-    "repository_writer": "Root owns integration/docs/Git. Backend agent owns market_updates receipt-verification implementation and related tests only. xcmg reads paper/source-admission design; no paper implementation yet. Frontend author inactive. No overlapping repository writers; identity unchanged.",
-    "database_writer": "Root ran inspected isolated tmpfs quant_test migration/full suite; PostgreSQL042f287 and runner5062fe6 terminal/stopped retained. No original application DB write, financial producer or new account in this capability unit.",
-    "queue_writer": "No original financial/research/provider/task producer or queue write; no new account, strategy, formal/OOS or frozen dataset change. Simulated fixtures exist only in isolated tests.",
+    "latest_verification": "Oct16 exact6593a3b CI38743349234 all3SUCCESS/2362backend1optionalSKIP/990frontend. Installed synthetic715ba87f display unit terminal; current6accounts/allSTOPPED, five older snapshot/event response hashes unchanged. Four scoped PnL UI cases match exact API values, no code/deployment change. Full productPARTIAL.",
+    "repository_writer": "Oct16 root sole repository/docs/Git writer; both active-tree readonly reviewers completed. No application code edit in PnL display unit; Git identity unchanged.",
+    "database_writer": "Oct16 root created and ran one installed-app synthetic account715ba87f through UI; nowSTOPPED/retained. Five older account snapshots/full journals have unchanged ten response hashes; finalinventory6/allSTOPPED. No DB direct edit/migration/restart, old-account control or test-DB operation in this unit.",
+    "queue_writer": "Only the explicitly started finite synthetic715ba87f runtime ran and is terminal. No actual provider, research task, historical/formal/OOS or frozen data action. Do not restart it merely to repeat this proof.",
     "agents": {
       "product_backend_audit": "independent U5 review closed; agent inactive after usage limit",
       "guided_experiments_ui": "U2 and bounded server search code saved; agent inactive after usage limit",
@@ -4659,6 +4672,7 @@
     "process_ids_are_not_reusable_authority": true
   },
   "last_success": [
+    "Oct16 installed synthetic715ba87f UI create/start/pause/resume/automaticstop; four ENZH theme/size PnL cases and reload match persisted exact values, ten older-account responses unchanged. Zero PnL/cost fixture only; nonzero and real-source gates remain. Exact6593a3b CI38743349234 all3SUCCESS/2362backend1SKIP/990frontend.",
     "Oct13 aa5f529 frontend style publication800c85c8 and Windows13asset verificationd0d48295 PASS;5selected Chrome cases cover42px control, cash retention and keyboard flow. CI38395584853 SUCCESS. Prior pending-style entries below are historical, superseded by paper_capabilities_20261013_gate.style_publication; no fullAA/forward/financial claim.",
     "Oct13 efd1297 exact CI38392162439 all3jobs/36stepsPASS; backend2177/1optionalSKIP,frontend902. Scoped existing-runtime publication151916ae retains5accounts/417events and31old selected responses;13served assets verified Windows/WSL. Chrome ZH/EN recheck retains cash/mode and unavailable reasons. Source/financial/actualforward/fullquality still incomplete; later one-line visual fix awaiting publication.",
     "Oct13 paper capability API and bilingual form gates close a real new-account-after-navigation race;2177backend/1optionalSKIP,902frontend/static/buildPASS. Strict noDB configured-source child probe8347e73c binds4actualimports, historyremainsdenied/forwardfalse. Root integration and safe publication preparation only; new code not deployed, full product incomplete.",
@@ -5300,7 +5314,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Read requirement_reconciliation_20261016_gate and top ACCEPTANCE section. UX-DETAIL/VIEWS/CHART nowPASS from retained functional receipts, not new code or reduced scope. Do not repeat saved-view/dialog/chart/zoom/export/media/crash proofs. Remaining quality queue is system reduced-motion observation, formal first-filter timing diagnosis, two actual paper failure-state paths; respect native-tool and clean-demo denials. Financial/source admission, lawful six-control forward coverage/after-start chain and human old-ledger disposition remain unresolved. Pending human question is not approval. Installedbackend27bf8f4/frontend92d3918 unchanged;550baf3 exactCI38740178663 all3SUCCESS, watchers terminal. No merge/tag/release/frozen/OOS action.",
+  "local_next_command": "Read paper_pnl_render_20261016_gate and requirement_reconciliation_20261016_gate. New synthetic715ba87f isSTOPPED/retained; total6accounts/allSTOPPED, five older journals/snapshots unchanged. Non-null zero PnL display proved; do not rerun it or label nonzero fees/dividends/financial-source acceptance complete. Exact6593a3b CI38743349234 all3SUCCESS/terminal. Remaining quality: supported system reduced-motion observation, formal first-filter timing diagnosis, genuine source/command-error paths; honor native/clean-demo denials. Real financial/source/rights/six-control forward coverage and human old-ledger disposition remain unresolved. No equivalent source refetch, missing-ledger fabrication, merge/tag/release/frozen/OOS action.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {
