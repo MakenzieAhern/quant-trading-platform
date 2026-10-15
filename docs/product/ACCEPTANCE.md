@@ -1,6 +1,43 @@
 # v1.2 acceptance ledger
 
+## 2026-10-15 U7 independent simulated investors and durable isolation
+
+The user resolved the investor-scope choice: each simulated account is independent.
+Four new cases verify supported EOD behavior without adding a cross-account ledger:
+six accounts each fill100000 STAR shares per day under explicit synthetic rules;
+oversized orders cancel, duplicate sessions reject and stopping one runtime does
+not release another's reservation. Actual isolated PostgreSQL/API proof creates
+six different account IDs, pauses with oneFILLED and oneACCEPTED instruction each,
+then constructs a fresh manager over the same journals. Resuming one preserves
+the other five journals/statuses; all resume without duplicated fills or changed
+prefixes. Each financial payload sequence equals an uninterrupted seventh baseline.
+Identical deterministic inner order IDs remain correctly account-scoped.
+
+176related tests PASS/1optional historical-archive SKIP7.05s; Ruff/formatPASS.
+Independent read-only review led to explicit nonempty rejection/cancellation counts
+and paused cash/pending-execution-date checks. No production implementation or
+schema change was needed. This is synthetic-input SQL/manager reconstruction,
+not process-kill durability, legal source acceptance, a general500000 declaration
+ledger or full U7/product PASS. No original accounts or frozen assets changed.
+
+Docker Desktop was stopped after interruption; a normal startup restored WSL and
+the four original services. Current readonly checks: DB0018/fiveSTOPPED accounts,
+RedisPONG/API200/paper, installed frontend index matches92d3918. No reset, volume
+deletion or republishing. This is not all-table recovery/equality proof.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261015-investor-isolation/README.md>).
+
 ## 2026-10-14 U8 command search pagination shrink recovery
+
+Publication complete: exact92d3918 CI38524614212 all three jobs SUCCESS.
+Frontend-only assets-first/index-last switch retained280old files and full backup;
+13served hashes verified,179frontend source files pinned, all4service identities
+and start times unchanged. No database or backend operation. Actual installed IAB
+ZH search dialog and two saved study links exactly equal the settled baseline;
+EN results equal, Esc focus returns to opener. ZH/system restored, owned tab24
+closed, user markets tab untouched. Missing oldtab23 and incorrect /workbench
+orientation were recovered without changing user tabs; actual home route is /.
+The shrink/deletion race remains memory-fixture proof, not an original-data test.
+Prior not-deployed wording below is chronology; full U1-U8 remains incomplete.
 
 New scoped defect: Next can race with removed matches and previously showed
 `21–1 of 1` with no result, despite a remaining first-page match. Two RED tests

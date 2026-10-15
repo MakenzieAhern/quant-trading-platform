@@ -1,5 +1,24 @@
 # Product daily-source readiness
 
+## 2026-10-15 independent-investor decision and supported-route proof
+
+The user explicitly chose one independent simulated investor per account. Do not
+pool daily quantities across experiments or ask this scope question again.
+The former ownership question below is resolved; source qualification is not.
+Four new tests include six actual disposable SQL/API accounts with matching
+deterministic inner order IDs, paused next-day instructions and a fresh manager.
+Resuming one leaves the other five journals/statuses unchanged; completed journals
+match an uninterrupted baseline and contain no duplicate fills.176related tests
+PASS/1optional historical-archive SKIP. Evidence is synthetic-input account
+isolation and manager reconstruction, not actual current-source/forward admission.
+
+No generalized declaration ledger was added: the supported EOD route remains one
+instruction/security/day with conditional STAR100000 per-order fill checks. An
+applicable cumulative-limit policy is account/security/exchange-date scoped, but
+correct rule dates, local admission semantics and complete source facts still
+need qualification. No real verifier registration, cap relaxation, historical
+methodology change, cross-account grouping or source-rights approval follows.
+
 ## 2026-10-14 clarification: reachable fills versus investor aggregate semantics
 
 [Four synthetic regression cases and independent review](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-handoff-and-star-boundary/README.md>)

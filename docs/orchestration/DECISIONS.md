@@ -1,5 +1,22 @@
 # Decisions
 
+## 2026-10-14 v1.2 — human-approved independent simulated investors
+
+The user explicitly selected independent simulated accounts: each account is its
+own simulated investor; daily cumulative purchase limits must not pool unrelated
+accounts. Preserve experiment isolation. This resolves only the investor-scope
+choice, not the effective-dated rule/source qualification or implementation gate.
+An applicable cumulative limit is keyed by account, security and exchange trading
+date, not account-wide holdings, net purchases after sales, or shared strategy ID.
+No real broker identity, linked-account grouping, live order or frozen-methodology
+change is authorized. Existing saved ledgers must not be rewritten.
+
+For the supported A-share daily route, separately verify one instruction per
+security/session, order expiry, account isolation and deterministic restoration.
+The existing STAR100000 per-order boundary is conditional on qualified rules and
+is not a general500000 declaration-ledger implementation. Future multiple-order
+paths must prove their own aggregate reservation/fill/cancel/restart behavior.
+
 ## 2026-10-14 v1.2 — own product arithmetic context
 
 Keep the existing portfolio/risk convention of28 significant digits/HALF_EVEN,

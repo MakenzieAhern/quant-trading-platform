@@ -33,8 +33,133 @@ from app.research.engine import UnexplainedReferenceAdjustment
 from app.risk import RiskEngine
 from app.strategies import MovingAverageCrossoverStrategy
 from tests.test_paper_calendar_journal import INITIAL
+from tests.test_paper_investor_scope import DailyStarTarget
 from tests.test_paper_plan_checkpoint import FixtureStrategy
-from tests.test_research_execution_engine import CALENDAR, _session
+from tests.test_research_execution_engine import CALENDAR, _session, _star_session
+
+
+async def test_independent_investors_keep_separate_journals_after_manager_restart(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Actual disposable SQL/API isolation with synthetic STAR sessions, not source admission."""
+    managers = []
+    runtimes = {}
+    items = tuple(_star_session(date(2024, 1, day), is_st=day >= 3) for day in (2, 3, 4))
+
+    def install(*, pause: bool):
+        manager = PaperTradingManager(
+            SessionFactory, paper_manager._datasets, paper_manager._strategies
+        )
+        managers.append(manager)
+
+        def build(session, cursor_date, initial_calendar=None):
+            runtime = ASharePaperTradingRuntime(
+                initial_cash=session.initial_cash,
+                commission_model=FixedCommission(),
+                calendar=initial_calendar or CALENDAR,
+                strategy=DailyStarTarget(100000),
+            )
+            runtimes[session.id] = runtime
+            provider = SimulatedAShareSessionProvider(items, 0)
+            original_start = provider.start
+
+            async def start(handler):
+                async def consume(item):
+                    await handler(item)
+                    if pause and item.trading_date == date(2024, 1, 3):
+                        await manager.pause(session.id)
+
+                await original_start(consume)
+
+            provider.start = start
+            return provider, runtime
+
+        manager._build_runtime = build
+        monkeypatch.setattr(paper_routes, "paper_manager", manager)
+        return manager
+
+    first = install(pause=True)
+    ids = []
+    try:
+        for _ in range(6):
+            response = await client.post(
+                "/api/paper-trading/sessions",
+                json={**a_share_request_body(), "initial_cash": "10000000"},
+            )
+            assert response.status_code == 201
+            ids.append(UUID(response.json()["session_id"]))
+        assert len(set(ids)) == 6
+        await asyncio.gather(*(first.start(sid) for sid in ids))
+        await asyncio.wait_for(asyncio.gather(*(first._tasks[sid] for sid in ids)), 20)
+        before = {sid: await first.events(sid) for sid in ids}
+        for sid in ids:
+            assert (await first.get(sid)).status.value == "PAUSED"
+            assert all(event.session_id == sid for event in before[sid])
+            assert sum(event.event_type == "fill.created" for event in before[sid]) == 1
+            paused_response = await client.get(f"/api/paper-trading/sessions/{sid}/snapshot")
+            assert paused_response.status_code == 200
+            paused = paused_response.json()
+            assert Decimal(paused["latest_portfolio"]["cash"]) == 9000000
+            assert [order["status"] for order in paused["orders"]] == ["FILLED", "ACCEPTED"]
+            assert len(paused["fills"]) == 1
+            pending = runtimes[sid]._engine._oms.orders[-1]
+            assert pending.intended_execution_session == date(2024, 1, 4)
+            assert pending.quantity == 100000
+        await first.shutdown()
+
+        restarted = install(pause=False)
+        assert await restarted.recover_interrupted() == 0
+        # Resume one first: it must not advance any other investor's durable history.
+        await restarted.start(ids[0])
+        await asyncio.wait_for(restarted._tasks[ids[0]], 20)
+        for sid in ids[1:]:
+            assert await restarted.events(sid) == before[sid]
+            assert (await restarted.get(sid)).status.value == "PAUSED"
+        await asyncio.gather(*(restarted.start(sid) for sid in ids[1:]))
+        await asyncio.wait_for(asyncio.gather(*(restarted._tasks[sid] for sid in ids[1:])), 20)
+        total_bought = Decimal(0)
+        order_ids = []
+        for sid in ids:
+            after = await restarted.events(sid)
+            assert after[: len(before[sid])] == before[sid]
+            assert all(event.session_id == sid for event in after)
+            assert [event.sequence for event in after] == list(range(1, len(after) + 1))
+            assert sum(event.event_type == "market.session" for event in after) == 3
+            response = await client.get(f"/api/paper-trading/sessions/{sid}/snapshot")
+            assert response.status_code == 200
+            state = response.json()
+            assert state["session"]["session_id"] == str(sid)
+            assert state["session"]["status"] == "STOPPED"
+            assert len(state["fills"]) == len(state["orders"]) == 2
+            assert Decimal(state["latest_portfolio"]["cash"]) == 8000000
+            assert all(Decimal(fill["quantity"]) == 100000 for fill in state["fills"])
+            total_bought += sum(Decimal(fill["quantity"]) for fill in state["fills"])
+            order_ids.append([order["order_id"] for order in state["orders"]])
+        # Matching deterministic order IDs are scoped to account, never globally deduplicated.
+        assert all(value == order_ids[0] for value in order_ids)
+        assert total_bought == 1200000
+        baseline_response = await client.post(
+            "/api/paper-trading/sessions",
+            json={**a_share_request_body(), "initial_cash": "10000000"},
+        )
+        assert baseline_response.status_code == 201
+        baseline_id = UUID(baseline_response.json()["session_id"])
+        await restarted.start(baseline_id)
+        await asyncio.wait_for(restarted._tasks[baseline_id], 20)
+
+        def financial(events):
+            return [
+                (event.event_type, event.payload)
+                for event in events
+                if event.event_type not in {"session.status", "calendar.observed"}
+            ]
+
+        baseline = financial(await restarted.events(baseline_id))
+        for sid in ids:
+            assert financial(await restarted.events(sid)) == baseline
+    finally:
+        for manager in managers:
+            await manager.shutdown()
 
 
 async def test_calendar_journal_survives_new_manager_and_rest_hydration(
