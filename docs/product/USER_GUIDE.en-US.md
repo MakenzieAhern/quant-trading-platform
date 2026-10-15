@@ -93,6 +93,12 @@ with keyboard focus. Changing language preserves answers you opened or closed.
 
 ## Simulated accounts and recovery
 
+Each simulated account represents an independent simulated investor with separate
+cash, holdings and records. Daily purchase limits are not pooled across different
+accounts; copying the same strategy configuration does not merge them. This is
+local simulation isolation, not permission to split real brokerage accounts to
+evade limits or evidence that current market data is approved for execution.
+
 The development creation page checks current source availability first; see the current checkpoint for deployment and browser-validation status. Unavailable modes remain visible with reasons. New creation is blocked while the check is pending or has failed. Use “Check data readiness” or “Recheck availability”; rechecking keeps entered cash and dates and never changes a historical selection into a demo. Saved-request recovery above remains independent. If you leave while old receipts are being verified, a late response will not create another account. A request already sent still needs reconciliation as described below; leaving is not cancellation.
 
 Development PnL fields (deployed locally October 13; real-browser recheck pending): trading realized PnL excludes corporate-action PnL such as dividends. New complete snapshots show these separately, together with unrealized PnL, transaction costs and total PnL after costs. Transaction costs include applicable brokerage commission, transfer fees and stamp duty. Older snapshots that did not record corporate-action or total PnL show “—” (unknown), not zero; original ledgers are not rewritten. The new fields do not establish economic completeness of historical source data.

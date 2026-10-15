@@ -6,6 +6,8 @@
     "verification": "2026-10-15: four new cases. Six independent EOD runtimes may each fill100000/day; duplicate session rejected, stop isolated, oversized order cancelled. Real disposable SQL/API test pauses six distinct accounts with oneFILLED/oneACCEPTED Jan4 instruction/cash9000000, new manager resumes one without changing the other five journals/status, then resumes all. Every ledger prefix/sequence/account identity preserved and financial payloads equal uninterrupted seventh baseline; API cash8000000 and two fills/account.176relatedPASS/1optional historical archiveSKIP7.05s; Ruff/formatPASS. Independent readonly review's two non-vacuity improvements applied.",
     "environment": "Docker Desktop was not running after interruption; normal installed executable launch restored Docker29.8.0/WSL and original services. No reset/deletion/configchange. Original DB0018/fiveSTOPPED sessions, RedisPONG, API200/paper; deployed frontend index hash matches92d3918. No full DB equality or new actual-forward acceptance claimed. Tests only used existing isolated tmpfs quant_test; source mounts readonly/nonroot, no production account writes.",
     "evidence": "product-evidence/v1.2/m4/20261015-investor-isolation/README.md",
+    "code_head": "d02e8d5c7b27de3533346d02c4dc0c930159aa52",
+    "ci": "38733799430 completedSUCCESS at exactd02e8d5; watch90799 terminal0. Backend2349PASS/1SKIP258.84s, frontend990PASS55files, lint/types/build/migration/ComposePASS. Later docs-only checkpoint is separate.",
     "next": "No repeat of this matrix or cross-account grouping question. Source/rule qualification, actual lawful forward acceptance and remaining full product gates remain. General multi-instruction daily declaration ledger not implemented or claimed; current supported single-instruction EOD path is separately bounded. Earlier pending investor-scope wording is superseded.",
     "full_product_pass": false
   },
@@ -5218,9 +5220,9 @@
     },
     "32": {
       "branch": "codex/product-v1.2-current-rules",
-      "last_verified_head": "9c12bc1e7e4c7eed652ae36158f9f930f85f3149",
+      "last_verified_head": "d02e8d5c7b27de3533346d02c4dc0c930159aa52",
       "state": "DRAFT",
-      "ci_run": 38497564238,
+      "ci_run": 38733799430,
       "backend": "PASS",
       "frontend": "PASS",
       "compose": "PASS",
@@ -5240,7 +5242,7 @@
     }
   },
   "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425, missing-ledger disposition and full U1-U8/M3-M5 quality/delivery remain. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
-  "local_next_command": "Read star_single_account_boundary_20261014_gate/private README and existing durable_context_bridge/dynamic_context publication gates.106related unit tests and installed ZH/EN handoff pass, not source/financial/forward acceptance. Synthetic after-start daily-context integration is already complete: do not rebuild/retest it as new progress. Next close actual effective-dated source coverage for fixed six controls and remaining quality/financial gates; investor scope question pending, no Windows-global aggregation assumption. Source rights/legacy ledgers and full U1-U8/M3-M5 remain. Base4c964bdCI38517590071SUCCESS; a71feaeCI38518957342 in progress, watcher22178 must be revalidated/resumed not duplicated. No republish/restart/frozen/OOS work. Goal ACTIVE/PARTIAL.",
+  "local_next_command": "Exactd02e8d5 CI38733799430 all3SUCCESS/watch90799 terminal0; do not resume terminal handle. Investor scope resolved independent accounts;176relatedPASS/1optionalSKIP and new SQL/API multi-account fresh-manager proof complete. Do not repeat this matrix, ask ownership again, rebuild synthetic daily-context bridge, or republish92d3918. Next actual effective-dated coverage for fixed six controls and remaining mandatory quality/financial gates. Source rights,300147/000425 gaps, missing-ledger disposition and fullU1-U8/M3-M5 remain. Original services recovered normally Oct15; testPG042f stopped/zero clients. GoalACTIVE/PARTIAL; no frozen/OOS or release.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",
   "milestones": {

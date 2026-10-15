@@ -2,6 +2,11 @@
 
 ## 2026-10-15 U7 independent simulated investors and durable isolation
 
+Exactd02e8d5 CI38733799430 completedSUCCESS: backend2349PASS/1SKIP,
+frontend990PASS/55files, lint/types/build/migration/ComposePASS. Watch90799
+terminal0. Private ci.json binds the exact tested commit; subsequent documentation
+checkpoint is not a new runtime deployment or a separately tested code change.
+
 The user resolved the investor-scope choice: each simulated account is independent.
 Four new cases verify supported EOD behavior without adding a cross-account ledger:
 six accounts each fill100000 STAR shares per day under explicit synthetic rules;
