@@ -1,5 +1,34 @@
 # v1.2 acceptance ledger
 
+## 2026-10-16 retained paper-command error evidence reconciliation
+
+**PASS_SCOPED: browser HTTP rejection and explicit recovery.** The pending
+command-error queue overlooked [the retained actual-browser receipt](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260928-paper-command-recovery.json>).
+An isolated synthetic account was operated through visible UI while a guarded
+test-only HTTP fault rejected the selected POST with503 before command dispatch:
+start preserved CREATED/sequence1, pause preserved RUNNING/sequence5, stop
+preserved PAUSED/sequence7. Recorded English/Chinese switches added no commands;
+disarming the fault and explicitly retrying reached STOPPED/sequence8 with the
+alert cleared. This is actual-browser fault-injection evidence, not merely a
+component test and not a naturally occurring backend outage.
+
+Root verified all four retained screenshot SHA256 values and inspected all four
+images; an independent read-only reviewer checked the receipt, hashes and pauseEN/
+stopZH images. Current shared command handling, bilingual next-step text and
+three-action locale/error regressions remain in place. No new browser, test,
+service, account, source or database operation was performed for this review.
+[Pause error EN](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260928-paper-command-pause-en.jpg>) ·
+[Stop error ZH](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20260928-paper-command-stop-zh.jpg>).
+
+The user's actionable service-error requirement does not add a mandatory real
+backend outage to this already proven rejection/retry behavior. Retain the
+separate later persisted-success/late503 race proof. These cases do **not** prove
+nonempty financial recovery or replace its separately retained evidence. Actual
+source-accounting failure UI, the remaining visual/accessibility checks, supported
+system reduced-motion observation, timing and qualified forward execution remain
+open; overall U8/M4 acceptance is still incomplete. Do not recreate a denied demo
+environment or rerun this completed503 scenario.
+
 ## 2026-10-16 human-approved historical loss disposition
 
 **HUMAN_ACCEPTED_LOSS_NOT_RECOVERY.** The user explicitly accepted the disclosed
@@ -77,7 +106,7 @@ it does not supersede raw evidence, expand its scope, or certify all of v1.2.
 | QA-VISUAL | PARTIAL | Keep prior ten-route/200-observation geometry, later 96 observations, representative inspected pixels and actual native 200% home/routes/saved-chart proof below. Do not relabel geometry as pixel inspection or invalidate old zoom proof because a later tool failed. Unavailable paper-failure and qualified forward states still need their relevant visual checks; no new baseline visual defect was established by this reconciliation. |
 | QA-A11Y | PARTIAL | Existing semantics, focus, dialog loops, target/contrast and app motion-off proof retained. System `prefers-reduced-motion=true` behavior remains unobserved, and the outstanding paper failures need focus/readability checks. User already confirmed preparation; native URL-validation rejection is not permission to bypass the tool or ask the same preparation again. |
 | QA-PERF | PARTIAL | Preserve scoped native benchmark p95=16ms and earlier warm/native-zoom results. Exact remaining diagnostic: first date-filter application on saved formal report `b38081a7`, retained 40/3072/56ms and later pointer264ms/Enter32ms observations. Need trustworthy foreground/input/paint evidence and a predeclared follow-up sample; do not discard slow samples or substitute DOM readiness. Native observation is currently tool-blocked. |
-| U8-I18N / UX-ERROR | PARTIAL | Existing bilingual ordinary no-data/no-match/no-trade/offline/403/408/503 recovery remains accepted. Named residuals: genuine paper source-failure state and start/pause/stop command-error browser paths in a legitimately authorized suitable environment. Retain the separate successful-command/late503 race proof; it is not a genuine command failure. Existing original accounts are STOPPED; do not induce financial faults or recreate the denied clean-demo environment. |
+| U8-I18N / UX-ERROR | PARTIAL | Existing bilingual ordinary no-data/no-match/no-trade/offline/403/408/503 recovery remains accepted. Retained actual-browser pre-dispatch503 start/pause/stop rejection and explicit recovery are accepted within the scope above; later successful-command/late503 race proof remains distinct. Actual paper source-accounting failure UI is still unverified and needs a legitimately authorized suitable environment. Do not induce original financial faults or recreate the denied clean-demo environment. |
 | M5 media/manual | PARTIAL | Six-flow before/after index, reconstructed loaded v1.1 strategy/account views, genuine guided-demo/read-only recordings and sampled lifecycle video exist. All 23 unique local references in [DEMO](DEMO.md) resolve to nonempty files (17 images, four WebMs, two provenance JSONs); SHA-256 was read for each. This is artifact availability, not new playback, current-build filming or forward acceptance. Final packaging/release awaits the remaining mandatory gates. |
 
 The two guides now distinguish browser-verified legacy unknown PnL from still
