@@ -8,6 +8,7 @@
     "continuation_baseline": "Use the verified post-incident baseline and its existing scoped backup/restore, crash-recovery and isolation receipts. This decision creates no new restore, whole-DB equality or independent disaster-recovery proof.",
     "supersedes": "Earlier pending loss-disposition questions and missing-ledger-disposition blockers only. Dated incident evidence remains historical truth. If genuine pre-loss evidence later appears, assess it separately without overwriting current records.",
     "remaining_gates": "Historical source/economic admission; lawful current-data rights and effective-dated coverage; actual after-start forward processing; remaining browser quality and final delivery. No whole-product PASS, merge or release approval.",
+    "integration": "Decision and prior synthetic-display checkpoint pushed together to existing OPEN/DRAFT PR32 at a91ae97b5eec403158e9a9eed31793c470030b6b. Exact CI38826409607 completedSUCCESS/all3jobs; backend2362PASS/1SKIP289.45s, frontend990PASS55files, migration/Ruff596/mypy151/lint/types/build/Compose release smokePASS. Watch30129 terminal0. Later receipt-only local commit is not the CI-tested head. No application/deployment/DB/source change or merge/release.",
     "full_product_pass": false
   },
   "paper_pnl_render_20261016_gate": {

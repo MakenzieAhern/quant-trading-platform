@@ -20,6 +20,15 @@ test or independent disaster-recovery proof is produced by accepting the loss.
 Historical financial/source admission, lawful after-start forward acceptance,
 remaining quality gates and M5 delivery are still incomplete. Product remains PARTIAL.
 
+Integration receipt: the decision and preceding synthetic-display checkpoint were
+pushed together to existing OPEN/DRAFT PR32 at `a91ae97b5eec403158e9a9eed31793c470030b6b`.
+[Exact-head CI38826409607](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38826409607)
+completed SUCCESS in all three jobs: backend2362 passed/1 skipped (289.45s),
+frontend990 passed/55 files, migration/Ruff/format/mypy/lint/types/build and Compose
+release smoke passed. Watch30129 exited0; no background CI watcher remains.
+No application, deployment, database, source-admission or release change. This
+receipt's later local docs commit is not itself the CI-tested head.
+
 ## 2026-10-16 installed synthetic PnL display and exact checkpoint CI
 
 Exact6593a3b [CI38743349234](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/38743349234)
