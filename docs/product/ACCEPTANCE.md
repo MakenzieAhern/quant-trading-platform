@@ -1,5 +1,59 @@
 # v1.2 acceptance ledger
 
+## 2026-10-18 human-prepared system motion and first-filter follow-up
+
+**PASS_SCOPED_SYSTEM_REDUCED_FIRST_FILTER; independent timing review passed.**
+The human confirmed Windows animations disabled and foreground Chrome. The
+existing installed Chrome155 now reports system reduced-motion=true and app
+motion=system,1920x855/DPR1. No Windows setting or application code was changed by
+the agent. A separate in-page aggregate over1305 DOM elements and their before/
+after pseudo-elements (3915 computed styles) reports no animation/transition/
+smooth-scroll violations. The returned detailed array contains only2000 records;
+it is partial and cannot independently reconstruct all3915 checks. Actual
+ZH/EN command dialogs open with focus inside; Escape closes and returns focus
+to the search trigger. Language switching preserves the display-date filter;
+originalZH was restored. This closes the pending system-motion observation,
+not an entire WCAG/screen-reader or full product gate.
+
+The unchanged observer first collected7 actions; samples4/5/7 had no thresholded
+event. The batch did not stop immediately at4, a retained protocol deviation.
+No p95 is claimed for those7. The [separate v2 protocol](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261018-system-motion-followup/protocol-v2.json>)
+adds the standard unthresholded first-input observation alongside event16ms
+entries, as specified by [W3C Event Timing](https://www.w3.org/TR/event-timing/#sec-first-input).
+It does not turn missing entries into zero.20 fresh documents yielded20 trusted
+first Apply actions: **native interaction p95=16ms, max24ms**, with8ms browser
+quantization.11 groups have subthreshold bounds; the lower/upper p95 are both16ms.
+ResultDOMp95=73.6ms and two-rAFp95=80ms are separately labeled diagnostics, not
+full asynchronous-result presentation. HTTP/server caches were not cleared.
+Every sample retains22 exact full-period metric values, seven dated200resources
+and40holdings/2rebalances/1trade. No research or financial operation was submitted.
+
+[Analysis, raw sample references and SHA256](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261018-system-motion-followup/summary.json>) ·
+[Actual filtered report ZH](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261018-system-motion-followup/system-reduced-filter-zh.jpg>) ·
+[Actual command dialog EN](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261018-system-motion-followup/system-reduced-command-en.jpg>).
+The old2288ms and other earlier slow observations remain intact; changed human
+preparation/viewport/motion conditions do not isolate their cause. The old
+collector accidentally reused sample-01.json during calibration; originalv1
+sample1 is preserved as sample-01-initial.json and v2sample1 has its canonical
+file. This alias is disclosed in the analysis, not a discarded unique action.
+
+Diagnostic syntax and offline assertions pass. Independent read-only review
+recomputed20 unique samples, all metric/resource/row checks, timing bounds and39
+original manifest hashes, and inspected both images: no blocking calculation
+issue. The250ms delivery interval is a declared observation window, not a promise
+of every future callback; this is a quantized sample p95, not a population
+confidence interval or exact physical latency. The CSS detail/aggregate boundary
+and original capture source are retained in [capture notes](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261018-system-motion-followup/capture-notes.json>).
+The reviewer did not certify live cleanup or whole-product acceptance.
+Original served index restored
+byte-exact to SHA256e7dfb96b923ee76fe390448f59fa2fd564176dcd3593ffe9af342b2445bedda7;
+only the two owned served diagnostic scripts were removed, with private copies
+retained. OriginalURL reload has no diagnostic node/script and22 metrics.
+No full suites/CI rerun for this temporary diagnostic/docs-only checkpoint;
+frozen/OOS/original account data unchanged. Source-use/financial admission,
+qualified forward flow and actual source-accounting failure UI remain open.
+This is not product completion, merge or release evidence.
+
 ## 2026-10-18 runtime recovery and actual Chrome timing — PARTIAL
 
 Docker Desktop was stopped, both WSL distributions were stopped, Docker was
@@ -154,8 +208,8 @@ it does not supersede raw evidence, expand its scope, or certify all of v1.2.
 | UX-VIEWS | PASS | [Saved view/chips](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-research-return-ci-views/README.md>) restores a genuinely fresh history entry; EN/ZH chip removal preserves sort/columns. [Research/task returns](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-research-return/README.md>) and `study_return_20261008_gate` preserve exact link, filters, scroll and focus. Extra 22-record pagination regression is a fixture, not manufactured original studies. |
 | UX-CHART | PASS | Retained exact hover/null/benchmark proof; [formal range/table](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261007-chart-range-table/README.md>) and its separately sealed EN-image correction, bounded 1,944-session paging, empty/invalid dates and unchanged metrics; [personal date linkage](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-linked-date-matrix/README.md>) has 16 DOM cases and four inspected images. Functional display acceptance is not financial-source or timing acceptance. |
 | QA-VISUAL | PARTIAL | Keep prior ten-route/200-observation geometry, later 96 observations, representative inspected pixels and actual native 200% home/routes/saved-chart proof below. Do not relabel geometry as pixel inspection or invalidate old zoom proof because a later tool failed. Unavailable paper-failure and qualified forward states still need their relevant visual checks; no new baseline visual defect was established by this reconciliation. |
-| QA-A11Y | PARTIAL | Existing semantics, focus, dialog loops, target/contrast and app motion-off proof retained. System `prefers-reduced-motion=true` behavior remains unobserved, and the outstanding paper failures need focus/readability checks. User already confirmed preparation; native URL-validation rejection is not permission to bypass the tool or ask the same preparation again. |
-| QA-PERF | PARTIAL | Preserve scoped native benchmark p95=16ms and earlier warm/native-zoom results. Exact remaining diagnostic: first date-filter application on saved formal report `b38081a7`, retained 40/3072/56ms and later pointer264ms/Enter32ms observations. Need trustworthy foreground/input/paint evidence and a predeclared follow-up sample; do not discard slow samples or substitute DOM readiness. Native observation is currently tool-blocked. |
+| QA-A11Y | PARTIAL | Existing semantics, focus, dialog loops, target/contrast and app motion-off proof retained. October18 actual system-reduce=true,3915 computed styles,20 date-filter actions and EN/ZH command/Escape/focus proof close the system-motion gap above. Outstanding source-accounting failure/qualified-forward states still need their relevant focus/readability checks. Do not re-ask completed preparation or bypass native tool restrictions. |
+| QA-PERF | PASS_SCOPED_LOCAL_FLOWS | Preserve prior native benchmark p95=16ms and warm/native-zoom results. October18 separately declared20 fresh-document first-filter actions on report `b38081a7` give native p95 interval[16,16]ms/max24ms under systemreduce=true/1920x855; earlier slow/incomplete samples retained. DOM/rAF are not full async presentation; no claim for every browser/cache condition or unavailable forward states. No product completion inferred. |
 | U8-I18N / UX-ERROR | PARTIAL | Existing bilingual ordinary no-data/no-match/no-trade/offline/403/408/503 recovery remains accepted. Retained actual-browser pre-dispatch503 start/pause/stop rejection and explicit recovery are accepted within the scope above; later successful-command/late503 race proof remains distinct. Actual paper source-accounting failure UI is still unverified and needs a legitimately authorized suitable environment. Do not induce original financial faults or recreate the denied clean-demo environment. |
 | M5 media/manual | PARTIAL | Six-flow before/after index, reconstructed loaded v1.1 strategy/account views, genuine guided-demo/read-only recordings and sampled lifecycle video exist. All 23 unique local references in [DEMO](DEMO.md) resolve to nonempty files (17 images, four WebMs, two provenance JSONs); SHA-256 was read for each. This is artifact availability, not new playback, current-build filming or forward acceptance. Final packaging/release awaits the remaining mandatory gates. |
 
