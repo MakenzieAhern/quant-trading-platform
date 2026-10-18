@@ -1,5 +1,55 @@
 # v1.2 acceptance ledger
 
+## 2026-10-18 runtime recovery and actual Chrome timing — PARTIAL
+
+Docker Desktop was stopped, both WSL distributions were stopped, Docker was
+unavailable inside Ubuntu and nothing listened on5173. One normal Desktop
+launch recovered the existing PostgreSQL, Redis and backend containers; all
+three are healthy, Redis returns PONG and `/api/health` returns200/paper. The
+existing `qtp-v12-frontend-source-map-oct7` serves5173; the unused default Compose
+frontend was not restarted into a port conflict. Engine/client29.8.0 and Compose
+5.5.1 are reachable. Six persisted paper sessions remain STOPPED. No environment
+was recreated and no user data, images or volumes were deleted. This scoped
+inventory check is not a new whole-database integrity or lost-ledger recovery proof.
+
+A newly available Chrome extension connection allowed actual Chrome155 to open
+the installed application. No denied native Windows operation was retried.
+ZH/dark,1920x911/DPR1, app motion=system and system reduced-motion=false were
+observed. Physical foreground and current motion preparation have been requested;
+this does not erase or falsely reuse the earlier human preparation.
+
+[Predeclared protocol](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261018-chrome-recovery/protocol.json>)
+specified20 fresh-document first-filter pointer samples on existing report
+`b38081a7`; HTTP/server caches were not cleared. Only **one** was collected before
+stopping at the unresolved rendering anomaly. The early event snapshot was
+empty; the later snapshot contains native interaction2288ms, click handling17.2ms,
+status DOM18.3ms, result DOM111.1ms and two-rAF1989.1ms. Seven filtered GETs returned
+200;22 exact full-period metric values stayed unchanged and tables contain40
+holdings/2rebalances/1trade. No study or financial operation was submitted.
+
+[Raw-evidence analysis and hashes](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261018-chrome-recovery/summary.json>) ·
+[Inspected actual screenshot](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261018-chrome-recovery/filter-sample-01.jpg>).
+The slow sample is retained. **No p95 or performance PASS** is claimed from1/20;
+DOM/rAF do not prove full asynchronous-result presentation. Visible/focused DOM
+flags and roughly1Hz frames do not identify Windows foreground/compositor state
+or establish an application-code cause. [Event Timing](https://www.w3.org/TR/event-timing/)
+measures event-to-next-render duration, not the entire asynchronous request chain.
+
+Diagnostic syntax and offline assertions passed. Independent read-only review
+recomputed the timings,22 unchanged metrics,40/2/1 rows and seven artifact hashes
+without a blocking issue. The resource entries do not encode HTTP method;
+the analyzer calls them resources, and root separately verified all seven GET200
+methods in the backend access log. That review did not certify live restoration
+or broader acceptance. The original served index was
+restored byte-exact to SHA256
+`e7dfb96b923ee76fe390448f59fa2fd564176dcd3593ffe9af342b2445bedda7`;
+only the owned served probe was removed, with its source retained in private
+evidence. Normal report reload has no diagnostic node/script. Full suites/CI
+were not rerun; app assets, frozen research, OOS and original accounts were not
+changed. The owned Chrome tab remains a handoff, not a running background study.
+Source-use/financial admission, source-failure UI, motion/timing and qualified
+forward acceptance remain open; no merge or release.
+
 ## 2026-10-16 retained paper-command error evidence reconciliation
 
 **PASS_SCOPED: browser HTTP rejection and explicit recovery.** The pending
