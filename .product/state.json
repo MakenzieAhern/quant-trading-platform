@@ -1,4 +1,20 @@
 {
+  "delivery_ci_recovery_20261024_gate": {
+    "status": "PASS_SCOPED_CI_RECOVERY_PRODUCT_PARTIAL",
+    "branch": "codex/product-v1.2-current-rules",
+    "verified_head": "b7336b7bb35ce4bd44c41ec3e00ab4eda000855a",
+    "ci_run": 39942263429,
+    "ci_attempt": 2,
+    "ci_completed_utc": "2026-10-23T16:05:11Z",
+    "initial_failure": "Compose job120376310441 failed on Docker Hub nginx:stable-alpine manifest HTTP502 before image construction. Backend2362PASS/1optional archiveSKIP268.34s and frontend990PASS/55files plus lint/types/build/migration had passed. Failure log retained on GitHub.",
+    "recovery": "One failed-only rerun without source/dependency/workflow changes. Compose120516958966 passed config/frontend image/routes/isolated backend release smoke. All3jobsSUCCESS; backend/frontend successes reused, not rerun. Watch38704 terminal0, no live watcher.",
+    "delivery_correction": "DEMO stale pending historical-ledger wording corrected to human-accepted Oct16 loss disposition, not recovery. Existing README/screenshots remain the pushed b7336b7 portfolio update. This later receipt/docs-only checkpoint is distinct from the CI-tested head.",
+    "ownership": "Root sole writer of docs/product/DEMO.md, ACCEPTANCE.md and this state checkpoint; independent status reviewer read-only and completed. No local app/test stack, DB/account operation or browser session started. Windows Docker Desktop/backend processes absent on bounded read-only observation; not a Docker failure diagnosis or current uptime pass.",
+    "goal_turn_classification": "PROGRESS: resolved a newly verified CI failure and corrected stale user-facing delivery guidance. Full product objective re-read and preserved; this is the first fresh audit after goal resume, not completion.",
+    "remaining": "Historical source/economic gaps300147/000425; lawful current-data use and complete effective-dated facts; real post-session-start receipt/plan/constrained processing; source-accounting failure UI in a suitable authorized environment. Independent review found no new non-repeated reachable user flow to close from stopped accounts.",
+    "next_action": "Continue only on concrete newly available source evidence/use authorization or a legitimately authorized suitable failure scenario. Do not repeat accepted motion/performance/ordinary503/recovery checks, refetch unchanged sources, contact providers without approval, recreate denied environments, fabricate lost ledgers or alter frozen/OOS assets. No merge/release until full required acceptance.",
+    "full_product_pass": false
+  },
   "system_motion_followup_20261018_gate": {
     "status": "PASS_SCOPED_SYSTEM_REDUCED_FIRST_FILTER",
     "base_head": "fbeee3e",

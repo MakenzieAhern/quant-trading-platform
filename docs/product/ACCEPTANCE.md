@@ -1,5 +1,39 @@
 # v1.2 acceptance ledger
 
+## 2026-10-24 resumed goal: delivery CI recovered, product still partial
+
+Re-read the original product objective, PRODUCT_MASTER, repository instructions
+and current state. The preceding portfolio unit made concrete delivery progress
+(bilingual README, real reviewed screenshots and source-linked engineering notes),
+not product completion. Current branch is `codex/product-v1.2-current-rules`;
+`b7336b7bb35ce4bd44c41ec3e00ab4eda000855a` is synchronized to GitHub/PR32.
+
+[CI39942263429](https://github.com/MakenzieAhern/quant-trading-platform/actions/runs/39942263429)
+initially failed only in Compose: Docker Hub returned502 Bad Gateway for the
+`nginx:stable-alpine` manifest before frontend image construction. Original job
+120376310441 retains that failure. Backend2362 passed/1 optional archive test
+skipped (268.34s), frontend990 passed/55files, lint/types/build and migration
+checks already passed. One `--failed` retry, without a code/dependency/workflow
+change, completed SUCCESS at2026-10-23T16:05:11Z (Oct24 Australia/Sydney).
+Compose job120516958966 passed config, frontend image/routes and isolated release
+backend smoke. Watch38704 exited0; no watcher remains. Passed backend/frontend
+results were reused by the failed-only rerun, not executed a second time.
+
+Corrected DEMO's stale pending-loss wording against the October16 human decision:
+the records remain genuinely lost, but loss disposition is accepted. No replay,
+deletion or new recovery proof is implied. This later documentation checkpoint
+is not the CI-tested head above. Application code, accounts, frozen data and OOS
+were not changed; no local application/test stack or browser was started.
+
+Independent read-only review found no additional non-repeated reachable user-flow
+gate to close from the existing stopped-account baseline. Historical source/
+economic gaps300147/000425, lawful current-data use plus effective-dated coverage,
+genuine post-start forward acceptance, and source-accounting failure UI in a
+suitable authorized environment remain unaccepted. Existing motion, scoped
+performance, ordinary error recovery and loss-disposition evidence are retained.
+No source was refetched or contacted and no denied environment was recreated.
+M3/M4/M5 stay IN_PROGRESS and PRODUCT_GOAL_COMPLETE=false; no merge or release.
+
 ## 2026-10-18 human-prepared system motion and first-filter follow-up
 
 **PASS_SCOPED_SYSTEM_REDUCED_FIRST_FILTER; independent timing review passed.**

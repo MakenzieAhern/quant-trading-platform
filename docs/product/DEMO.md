@@ -28,10 +28,14 @@ the app may remember a previous language.
 For other modes, uncertain submissions, account recovery and release limits, see
 the [中文指南](USER_GUIDE.zh-CN.md) or [English guide](USER_GUIDE.en-US.md).
 This script is an agent-validated flow, **not** an independent novice-user test
-or final M5 acceptance. The two historically lost paper-account ledgers, lawful
-new-market feed and remaining required accessibility/delivery/release gates are
-open. Independent physical backup is additional assurance, not a newly imposed
-product gate.
+or final M5 acceptance. The two historical paper-account ledgers remain lost;
+the user accepted explicit loss disposition on October 16, 2026, without replay
+fabrication or deletion. That disposition no longer blocks continuation on the
+verified post-incident baseline and does not restore the records. See the
+[incident and recovery limits](USER_GUIDE.en-US.md#simulated-accounts-and-recovery).
+Historical financial/source admission, lawful genuine forward-market execution
+and remaining required quality/delivery/release gates are still open.
+Independent physical backup is additional assurance, not a newly imposed gate.
 
 ## Six-flow media index (2026-10-03 checkpoint)
 
