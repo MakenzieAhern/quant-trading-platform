@@ -1,4 +1,18 @@
 {
+  "baostock_usage_inquiry_20261025_gate": {
+    "status": "HUMAN_APPROVED_INQUIRY_AWAITING_SENDING_CHANNEL",
+    "decision_date": "2026-10-25 Australia/Sydney",
+    "human_answer": "允许仅咨询使用范围",
+    "scope": "Ask BaoStock about private local single-user SSE/SZSE A-share EOD caching, research, simulated rebalance plans and persistent simulated fills, plus applicable written terms and restrictions. No purchase, contract, credentials, private-data attachments or source admission.",
+    "recipient": "baostock@163.com",
+    "recipient_evidence": "Official https://baostock.com/ search result rechecked; direct web extraction returned only the page shell.",
+    "draft": "docs/product/SOURCE_READINESS.md#written-rights-clarification-needed-unsent",
+    "channel": "Gmail and Outlook Email found available but unconnected; human channel selection/connection requested. No sender chosen.",
+    "sent": false,
+    "source_use_rights_established": false,
+    "next_action": "Confirm a usable sending channel/account and send the prepared approved-scope inquiry once; retain its actual send receipt and assess the provider reply. Do not ask for the same scope approval again or infer a data license from consent to inquire.",
+    "full_product_pass": false
+  },
   "delivery_ci_recovery_20261024_gate": {
     "status": "PASS_SCOPED_CI_RECOVERY_PRODUCT_PARTIAL",
     "branch": "codex/product-v1.2-current-rules",
@@ -5375,7 +5389,7 @@
       "scope": "pytest and CI test-database safety only; no application runtime or financial-data changes"
     }
   },
-  "next_task": "Actual official-source daily coverage verification and after-start forward acceptance. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425 and full U1-U8/M3-M5 quality/delivery remain. Human accepted historical ledger loss on2026-10-16; do not ask the same disposition question again or reconstruct those ledgers. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
+  "next_task": "BaoStock usage-scope inquiry approved2026-10-25; confirm sender/channel and send prepared inquiry once, preserving delivery/reply evidence. No data-use rights granted yet. Continue actual official-source daily coverage verification and after-start forward acceptance when inputs permit. Retained master type gap46closed:5221ordinaryA/1CDR, not PIT. No production verifier registered; determine original effective-dated status/suspension/corporate-action coverage for fixed sample before any execution promotion. Source-use rights, financial gaps300147/000425 and full U1-U8/M3-M5 quality/delivery remain. Human accepted historical ledger loss on2026-10-16; do not ask the same disposition question again or reconstruct those ledgers. Do not repeat completed type acquisition, synthetic bridge, publication or frozen/OOS work.",
   "local_next_command": "Read system_motion_followup_20261018_gate first. Human motion/foreground preparation is complete; realChrome systemreduce=true and20fresh-document first-filter sample p95 interval16ms close that scoped diagnostic, independent review passed within scope. Keep all prior slow/incomplete samples; do not equate DOM/rAF with full async paint or claim old anomaly cause. Temporary index/probes restored/removed. Remaining source-use rights and financial/source qualification, genuine after-start forward chain and source-accounting failure UI require their actual inputs/authorized environment. No new source/contact authority received. Existing HTTP503 recovery, syntheticPnL and human loss disposition remain accepted within scope. Do not recreate denied clean-demo/native-policy paths, re-ask completed preparation, fabricate ledgers, repeat source refetch or alter formal/OOS/frozen assets; no merge/release.",
   "next_command": "Pursue full U1-U8/M0-M5, not only local compatibility. Read this scope audit and original objective; reuse historical scoped evidence honestly. No missing-rights bypass, synthetic forward claims, fake lost-record reconstruction, merge/tag/release until required gates truly pass.",
   "frozen_research_policy": "Read only; no official study or OOS rerun, no freeze/methodology mutation",

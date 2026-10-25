@@ -1,5 +1,21 @@
 # Decisions
 
+## 2026-10-25 v1.2 — human-approved BaoStock usage-scope inquiry
+
+The human answered “允许仅咨询使用范围” to the explicit BaoStock inquiry request.
+This permits asking whether SSE/SZSE A-share EOD data may be cached and used in a
+private single-user local research application for simulated rebalance plans and
+persisted simulated fills, and requesting the applicable written terms. It does
+not authorize purchases, contracts, credential disclosure or actual feed admission.
+
+The [prepared message](../product/SOURCE_READINESS.md#written-rights-clarification-needed-unsent)
+contains no attachments, private market rows or account details. The official-home
+search result lists `baostock@163.com`; the sender/channel is still unconfirmed.
+Gmail and Outlook Email integrations are available but unconnected. No message
+has been sent. Continue with the approved scope after the channel is confirmed,
+without repeating this consent question; retain actual delivery/reply evidence.
+Full source coverage, historical economic gaps and product acceptance stay open.
+
 ## 2026-10-16 v1.2 — human-approved historical ledger loss disposition
 
 The human answered the explicit loss-disposition question: “接受明确损失处置，保留事故记录”.

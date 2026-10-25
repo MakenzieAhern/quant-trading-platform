@@ -122,6 +122,39 @@ or forward execution. The separate 2026 candidate rules remain
 
 ### Written rights clarification needed (unsent)
 
+**2026-10-25 (Australia/Sydney): the human authorized this BaoStock inquiry only**
+with “允许仅咨询使用范围”. This authorizes asking about the use described below,
+not using the data, buying a service, signing a contract or sharing credentials.
+No inquiry has been sent. Gmail and Outlook Email were found available but not
+connected; the sending channel/account remains to be selected. Reuse this approval
+after a suitable channel is confirmed; do not ask for the same scope approval again.
+
+Prepared email (no attachments, CC or project/account data):
+
+**To:** `baostock@163.com`
+
+**Subject:** 咨询 A 股日终数据在个人本地研究与模拟交易中的使用范围
+
+> BaoStock 团队您好：
+>
+> 我正在开发一个个人使用的本地单用户研究工具，拟使用 BaoStock 提供的沪深 A 股日终数据，用于本地缓存、研究回测、生成带日期的模拟调仓计划，以及保存模拟订单和成交记录。
+>
+> 上述用途不连接真实券商、不发送真实订单，不再分发行情或提供公共数据服务。
+>
+> 请问：
+>
+> 1. BaoStock 现有条款及上游数据授权是否覆盖上述用途？
+> 2. 可依据哪些书面条款或授权说明？烦请提供链接或文件。
+> 3. 是否有署名、缓存期限、请求频率或其他使用限制？
+>
+> 本次仅咨询使用范围，不涉及购买或签约。谢谢！
+
+The official-home search result rechecked on this date lists the recipient above;
+the direct web text extraction returned only the page shell. No delivery or reply
+is inferred from preparing the message. Preserve the actual send receipt and
+provider reply when available. Source completeness and real after-start acceptance
+remain separate gates even if the provider confirms this use.
+
 The [SSE 2026 rule, §5.1.3](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml)
 and [SZSE 2026 rule, §5.1.3](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
 do not themselves grant this product a feed-use license. The official
